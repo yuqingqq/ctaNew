@@ -1,5 +1,129 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:47:07Z — **My `PM_DATA_ROOT` finding is corrected in its
+direction: the variable denotes the REPO root, the constants were right, and the
+wrong value was the one in the dispatch.** Gate 1 is 1 of 7. Economics:
+`RESULTS.md` §0.
+
+## READ FIRST — round 119
+
+### 1. The correction, and it is to my own finding
+
+I wrote at rounds 117–118 that the two module constants bind *"the repo root,
+**one level above what the env var means**"*. **Checked three ways today:**
+
+- `_resolve_data_root()` **branch 2 returns `CODE_ROOT`** — the repo root;
+- line 116 is literally **`REPO = DATA_ROOT`**;
+- paths are built as **`DATA_ROOT / "data/pm_5min/…"`** (:117, :118).
+
+> **So `PM_DATA_ROOT` denotes the REPO root — and the two constants are CORRECT
+> AND CONSISTENT**, each consumed as `PM_DATA_ROOT / "data/pm_5min"`, the
+> resolver's own pattern. **The direction of my finding was wrong.**
+
+**What was actually wrong was the value in the dispatch:** exporting
+`…/ctaNew/data` would have given `RAW = …/ctaNew/data/**data**/pm_5min/raw` — I
+computed both. DE measured it; the coordinator corrected in band.
+
+**The defect is real and is a different defect: a variable named `…_DATA_ROOT`
+that denotes the REPO root.** A name/semantics mismatch — the R-507 shape — and
+**it has already caused one wrong dispatch**, which is the strongest evidence a
+naming defect can produce.
+
+*On my method:* **I read the three binding sites and never read the
+consumption.** Two constants and an env var can only be compared through what is
+**appended** to them. **The input I failed to take from the artifact was a
+*usage*** — the round-116 family, one level up.
+
+### 2. The routing answer, in one line
+
+> **BE importing the same resolver RESOLVES the collision for BE's helpers — one
+> definition, semantics from the code rather than from the name. Two things still
+> need routing: the SIX absolute ledger paths no resolver touches (re-measured
+> today: still four `be_*`, two `de_*`), and THE NAME ITSELF, which has already
+> produced one wrong export and will again for the next reader who takes it at
+> face value.**
+
+### 3. DE 74, and the field that answers a standing question
+
+**One imported resolver owns the DE surface**, refusals both ways, and **the
+branch taken is recorded in every receipt.** *That turns "which root did you
+read" — the question every filing has had to answer since R-553 — from a
+reconstruction into a field.* DE's symlink is out and **checkout works again**;
+its shells are deleted.
+
+### 4. The other coordinator error is the other half of what I saw
+
+**A commit without a pathspec swept DE's staged file.** At round 118 I found that
+file staged, **left it alone**, and recorded that it landed one commit later.
+
+> **It landed because the commit took it — not because anyone decided to land
+> it.** And what protected me was not vigilance: **a pathspec commit *cannot*
+> sweep a file it does not name.** The habit is structural, which is why it has
+> held for 119 rounds without needing to be remembered in the moment.
+
+### 5. Approved — and both approvals came with a refusal first
+
+**The runner is approved for the 09-03 smoke once BE's book exists.** And **both
+selftests REFUSED correctly before the reviewer restored its symlink** — *the
+root refusal built to close the reviewer's own item 4 fired on the reviewer, in
+its own worktree, during the review of the thing that added it.*
+
+**The race-read declaration is approved to open, with two v2 items (BE 48, before
+any opening):**
+
+1. **Compute the permutation floor at BOTH readings and put the conservative one
+   in the field** — 0.0625 at G = 5 against **0.25 with three fresh days at
+   m = 2**. *Four times larger; a read quoting only 0.0625 overstates what the
+   fresh days support by that factor.*
+2. Pin the `SEALED_scores` digests, state what the read **writes** with a
+   byte-identity requirement, and **assert no Gate-1 artifact on the read's
+   path.**
+
+> **That last clause is the one I would not have thought of.** 09-03/04/05 sit in
+> **both** the ruled Gate-1 set **and** the race's five — so what I recorded at
+> round 115 as *"kept apart by declaration"* becomes **kept apart by an
+> assertion.**
+
+### 6. DE 75, and a seat declining make-work
+
+The before-picture is **read from the real ledger and committed before the run** —
+09-03/04/05 qualify, 09-06/07/08 pending, R7's relations live. *A before-picture
+costs nothing while the answer is still uninteresting, and it is the only thing
+that makes the after-picture mean anything.*
+
+**And DE stands by until BE's book exists — no make-work.** *A seat with a
+working instrument and nothing to point it at is exactly the situation that
+produces invented tasks, and this one declined.*
+
+### 7. The waiter question, resolved
+
+**The kills were the harness, not the USER** — so the reading that held the loop
+user-prompted is answered and the waiter is **re-armed**.
+
+> **The decision procedure was right even though the premise turned out false.**
+> With an unknown actor and the USER among the candidates, treating the kill as
+> possibly deliberate cost one round of prompting and risked nothing. *A
+> conservative reading later shown unnecessary is not a mistake.*
+
+*Worth watching: the harness has killed it **twice**. A wake mechanism its own
+harness terminates is one more thing that will be found off at the moment it was
+needed — which is how R-541(A)'s ten hours happened.*
+
+### 8. Measured before the sentence
+
+**624 flags, 69 CHECKED, 100 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 169; tasks 19.** *(Two renames, two ORPHANs, caught
+pre-commit.)*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — **455 of 624 flags never
+audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:39:15Z — **The runner's three blockers are closed and the
 fixture run is PROVEN data-free. The `PM_DATA_ROOT` collision is pinned to
 file:line and is still in time.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.

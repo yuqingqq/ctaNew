@@ -63,6 +63,64 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:47:07Z (MEM ROUND 119 -- R-562 AND R-563 SWEPT. STATE ONLY,
+  AND IT LEADS WITH A CORRECTION TO MY OWN FINDING.
+  (1) MY PM_DATA_ROOT FINDING IS WRONG IN ITS DIRECTION, AND I CHECKED THE
+  CORRECTION THREE WAYS. I wrote at rounds 117-118 that the two module constants
+  bind "THE REPO ROOT, ONE LEVEL ABOVE WHAT THE ENV VAR MEANS". BUT
+  pm_tape_density's branch 2 RETURNS CODE_ROOT, line 116 IS LITERALLY
+  `REPO = DATA_ROOT`, and every path is built as DATA_ROOT / "data/pm_5min/...".
+  **PM_DATA_ROOT DENOTES THE REPO ROOT.** So the constants are CORRECT AND
+  CONSISTENT -- both consume it as `PM_DATA_ROOT / "data/pm_5min"`, the
+  resolver's own pattern. WHAT WAS WRONG WAS THE VALUE IN THE DISPATCH: exporting
+  .../ctaNew/**data** would have given RAW = .../ctaNew/data/**data**/pm_5min/raw,
+  which I computed. DE measured it; the coordinator corrected in band.
+  (2) THE DEFECT IS REAL AND IS A DIFFERENT DEFECT: **A VARIABLE NAMED
+  ..._DATA_ROOT THAT DENOTES THE REPO ROOT** -- a name/semantics mismatch, the
+  R-507 shape, WHICH HAS ALREADY CAUSED ONE WRONG DISPATCH. And the honest note
+  about my method: I read the three BINDING SITES and never read the
+  CONSUMPTION. Two constants and an env var can only be compared through what is
+  APPENDED to them. THE INPUT I FAILED TO TAKE FROM THE ARTIFACT WAS A **USAGE**
+  -- the round-116 family one level up.
+  (3) MY ANSWER TO THE ROUTING QUESTION, IN ONE LINE: **BE importing the same
+  resolver RESOLVES the collision for BE's helpers -- one definition, semantics
+  from the code rather than from the name -- and TWO THINGS STILL NEED ROUTING:
+  the SIX absolute ledger paths that no resolver touches (re-measured today:
+  still four be_*, two de_*), and the NAME ITSELF, which has already produced one
+  wrong export and will again for the next person who reads it as "the data
+  root".**
+  (4) DE 74 LANDED ONE IMPORTED RESOLVER FOR THE DE SURFACE, with refusals both
+  ways and **THE BRANCH TAKEN RECORDED IN EVERY RECEIPT** -- which turns "which
+  root did you read", the question every filing has had to answer since R-553,
+  FROM A RECONSTRUCTION INTO A FIELD. DE's symlink is out and checkout works
+  again.
+  (5) AND THE OTHER COORDINATOR ERROR IS THE OTHER HALF OF WHAT I SAW AT ROUND
+  118: A COMMIT WITHOUT A PATHSPEC SWEPT DE'S STAGED FILE. I found that file
+  staged, left it alone, and recorded that it landed one commit later -- **IT
+  LANDED BECAUSE THE COMMIT TOOK IT, NOT BECAUSE ANYONE DECIDED TO.** What
+  protected me was not vigilance: A PATHSPEC COMMIT CANNOT SWEEP A FILE IT DOES
+  NOT NAME.
+  (6) THE RUNNER IS APPROVED FOR THE 09-03 SMOKE once BE's book exists -- AND
+  BOTH SELFTESTS **REFUSED CORRECTLY** BEFORE THE REVIEWER RESTORED ITS SYMLINK.
+  The root refusal built to close the reviewer's own item 4 FIRED ON THE
+  REVIEWER, IN ITS OWN WORKTREE, DURING THE REVIEW OF THE THING THAT ADDED IT.
+  (7) THE RACE-READ DECLARATION IS APPROVED TO OPEN WITH TWO v2 ITEMS (BE 48,
+  BEFORE ANY OPENING). The floor must be COMPUTED AT BOTH READINGS with the
+  CONSERVATIVE ONE IN THE FIELD -- 0.0625 at G = 5 against **0.25 with three
+  fresh days at m = 2**, FOUR TIMES LARGER. And the clause I would not have
+  thought of: **ASSERT NO GATE-1 ARTIFACT ON THE READ'S PATH** -- 09-03/04/05 sit
+  in BOTH the ruled Gate-1 set and the race's five, so what I recorded at round
+  115 as "kept apart by declaration" becomes KEPT APART BY AN ASSERTION.
+  (8) DE 75's before-picture is read from the real ledger and committed BEFORE
+  the run, and **DE STANDS BY UNTIL BE'S BOOK EXISTS -- NO MAKE-WORK.** A seat
+  with a working instrument and nothing to point it at is exactly the situation
+  that produces invented tasks, and this one declined.
+  (9) THE WAITER KILLS WERE THE HARNESS, NOT THE USER, AND IT IS RE-ARMED. The
+  conservative reading cost one round of prompting and risked nothing: **a
+  conservative reading later shown unnecessary is not a mistake.** But the
+  harness has killed it TWICE, and a wake mechanism its own harness terminates
+  will be found off at the moment it was needed.
+  PRIOR CHECKPOINT:
   2026-09-06T04:39:15Z (MEM ROUND 118 -- R-560, R-561 AND THE REVIEWER'S E2.0
   FILING SWEPT. STATE ONLY.
   (1) THE PM_DATA_ROOT COLLISION IS PINNED TO file:line AND IT IS STILL IN TIME.
@@ -2193,6 +2251,30 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
+  de74_ONE_IMPORTED_RESOLVER_OWNS_THE_DE_SURFACE: AND-THE-SYMLINK-IS-OUT
+                             # RELAYED from R-562. DE 74 landed with ONE
+                             # IMPORTED RESOLVER for the DE surface --
+                             # pm_tape_density OWNS IT, 12 checks -- with
+                             # REFUSALS BOTH WAYS and **THE BRANCH TAKEN RECORDED
+                             # IN EVERY RECEIPT**.
+                             # RECORDING THE BRANCH IS THE PART THAT GENERALISES:
+                             # the resolver has three branches and a receipt that
+                             # names which one fired turns "which root did you
+                             # read" -- the question every filing has had to
+                             # answer since R-553 -- FROM A RECONSTRUCTION INTO A
+                             # FIELD.
+                             # ONE DEFINITION RATHER THAN A CONVENTION IS ALSO
+                             # WHY THE NAME/SEMANTICS MISMATCH STOPS BITING
+                             # INSIDE DE'S SURFACE: the meaning now comes from
+                             # the imported code, not from what the name suggests
+                             # to whoever exports it.
+                             # DE'S SYMLINK IS OUT, **CHECKOUT WORKS AGAIN** --
+                             # the conflict that forced DE to land by cherry-pick
+                             # last round is gone -- and DE's preserved shells
+                             # are DELETED, with the 133034Z file standing landed
+                             # at 4a806c0. That is the file I found staged in the
+                             # shared index at round 118 and left alone; it is
+                             # now accounted for at both ends.
   the_data_root_answer_is_PM_DATA_ROOT_IN_THE_CODE_not_a_symlink: SUPERSEDES-MY-ROUND-116-RE-SWEEP
                              # RELAYED from R-558(B) and R-559(C); THE CODE
                              # FACTS CHECKED BY ME.
@@ -2269,7 +2351,59 @@ flags:
                              # A CHORE WITH A DEADLINE -- and this one's deadline
                              # is invisible, because nothing announces that the
                              # bits have lapsed.
-  PM_DATA_ROOT_NAMES_TWO_DIFFERENT_THINGS_IN_THIS_PROGRAMMES_CODE: SECOND-INSTANCE-OF-THE-ROUND-110-SHAPE
+  PM_DATA_ROOT_IS_A_NAME_SEMANTICS_MISMATCH_NOT_TWO_REFERENTS: MY-OWN-FINDING-CORRECTED-IN-ITS-DIRECTION
+                             # CORRECTED 2026-09-06T04:47:07Z, AND THE CORRECTION
+                             # IS TO MY OWN CHARACTERISATION AT ROUNDS 117-118.
+                             # WHAT I WROTE: the two module constants bind
+                             # Path("/home/yuqing/ctaNew") -- "THE REPO ROOT, ONE
+                             # LEVEL ABOVE WHAT THE ENV VAR MEANS" -- and I
+                             # called it a second instance of the round-110
+                             # two-referents shape.
+                             # WHAT IS TRUE, CHECKED BY ME THREE WAYS AT
+                             # pm_tape_density.py: (1) branch 2 of
+                             # _resolve_data_root RETURNS CODE_ROOT, the repo
+                             # root; (2) line 116 is literally `REPO = DATA_ROOT`
+                             # -- the variable IS the repo; (3) every path is
+                             # built as DATA_ROOT / "data/pm_5min/..." at :117
+                             # and :118. **SO PM_DATA_ROOT DENOTES THE REPO
+                             # ROOT.**
+                             # THEREFORE THE TWO CONSTANTS ARE **CORRECT AND
+                             # CONSISTENT**, not divergent: both bind the repo
+                             # root AND both consume it identically --
+                             # phase2_arms.py:59 and build_state_tape_v2.py:221
+                             # are each `pm = PM_DATA_ROOT / "data/pm_5min"`,
+                             # the same pattern as the resolver's own. THE
+                             # DIRECTION OF MY FINDING WAS WRONG.
+                             # WHAT WAS ACTUALLY WRONG WAS THE VALUE IN THE
+                             # DISPATCH: R-559(C) told the seats to export
+                             # PM_DATA_ROOT=/home/yuqing/ctaNew/**data**, which
+                             # by branch 1 would have made RAW =
+                             # /home/yuqing/ctaNew/data/**data**/pm_5min/raw --
+                             # I computed both. DE MEASURED IT AND THE
+                             # COORDINATOR CORRECTED IN BAND (R-562).
+                             # SO THE DEFECT IS REAL AND IS A DIFFERENT DEFECT:
+                             # **A VARIABLE NAMED ..._DATA_ROOT THAT DENOTES THE
+                             # REPO ROOT.** A NAME/SEMANTICS MISMATCH, the R-507
+                             # shape -- and it has ALREADY CAUSED ONE WRONG
+                             # DISPATCH, which is the strongest evidence a naming
+                             # defect can produce.
+                             # AND THE HONEST NOTE ABOUT MY OWN METHOD: I read
+                             # the three BINDING SITES and did not read the
+                             # CONSUMPTION. Two constants and an env var can only
+                             # be compared through what is appended to them, and
+                             # I compared the values alone. THE INPUT I FAILED TO
+                             # TAKE FROM THE ARTIFACT THIS TIME WAS NOT A PATH OR
+                             # A TYPE BUT A **USAGE** -- the same root as the
+                             # round-116 family, one level up.
+                             # WHAT SURVIVES UNCHANGED AND STILL NEEDS ROUTING:
+                             # the SIX FILES holding an absolute ledger path that
+                             # no resolver touches -- re-measured at
+                             # 2026-09-06T04:47:07Z, STILL FOUR be_* AND TWO de_*
+                             # after DE 74. One de_* file imports the resolver;
+                             # whether one importer is the intended shape for
+                             # DE's surface is DE's design and I do not judge it.
+                             # EARLIER VALUE (rule 13):
+                             # SECOND-INSTANCE-OF-THE-ROUND-110-SHAPE
                              # CHECKED 2026-09-06T04:30:05Z, and it is a hazard
                              # sitting directly in front of a dispatch: DE and BE
                              # are about to be told to "honour PM_DATA_ROOT".
@@ -2554,7 +2688,30 @@ flags:
                              # that fire is the coordinator's call. Recorded so
                              # that if it goes wrong, nobody has to reconstruct
                              # that both stakes were known in advance.
-  THE_WAITERS_WERE_KILLED_AND_THE_LOOP_IS_USER_PROMPTED_AGAIN: NOT-RE-ARMED-BY-DECISION
+  THE_WAITER_KILLS_WERE_THE_HARNESS_NOT_THE_USER: RE-ARMED
+                             # UPDATED 2026-09-06T04:47:07Z from R-563, and it
+                             # resolves the question I recorded last round as
+                             # deliberately unresolved.
+                             # THE BACKGROUND WAITER WAS KILLED **TWICE BY THE
+                             # HARNESS**, NOT BY THE USER. So the reading that
+                             # held the loop user-prompted -- "if that was the
+                             # USER's stop, re-arming would override it" -- IS
+                             # ANSWERED, AND THE WAITER IS RE-ARMED.
+                             # THE DECISION PROCEDURE WAS RIGHT EVEN THOUGH THE
+                             # PREMISE TURNED OUT FALSE: with an unknown actor
+                             # and the USER among the candidates, treating the
+                             # kill as possibly deliberate cost one round of
+                             # prompting and risked nothing. **A CONSERVATIVE
+                             # READING THAT IS LATER SHOWN UNNECESSARY IS NOT A
+                             # MISTAKE** -- it is the price of not overriding a
+                             # stop you cannot attribute.
+                             # WHAT IS WORTH WATCHING NOW: the harness has killed
+                             # it TWICE. A wake mechanism that its own harness
+                             # terminates is one more thing that will be found
+                             # off at exactly the moment it was needed -- which
+                             # is how R-541(A)'s ten hours happened.
+                             # EARLIER VALUE (rule 13):
+                             # NOT-RE-ARMED-BY-DECISION
                              # RELAYED from R-561(C), and it reverses the
                              # mechanism I recorded at round 113 as the remedy
                              # for the structural stall.
@@ -2830,6 +2987,33 @@ flags:
                              # not at the recorded commit -- plus B-1.
                              # P-2026-002 E2.0 follows as its second.
                              # NUMBERS MEASURED AND UNFILED: NONE.
+  a_coordinator_commit_WITHOUT_A_PATHSPEC_SWEPT_ANOTHER_SEATS_STAGED_FILE: THE-RULE-I-HAVE-ALWAYS-FOLLOWED
+                             # RELAYED from R-562, the first of two coordinator
+                             # errors recorded there, and it is the other half of
+                             # what I observed at round 118.
+                             # A COORDINATOR COMMIT WITHOUT AN EXPLICIT PATHSPEC
+                             # SWEPT DE'S STAGED FILE INTO IT. **EVERY
+                             # COORDINATOR COMMIT IS NOW
+                             # `git commit -- <paths>`.**
+                             # I SAW THE OTHER SIDE OF THIS AT ROUND 118: I found
+                             # de_section81_arms__20260904T133034Z.json staged in
+                             # the shared index, LEFT IT ALONE because my commits
+                             # are by explicit pathspec, and recorded that it
+                             # landed one commit later. **IT LANDED BECAUSE A
+                             # COMMIT WITHOUT A PATHSPEC TOOK IT** -- not because
+                             # anyone decided to land it.
+                             # SO THE THING THAT PROTECTED ME WAS NOT VIGILANCE:
+                             # IT IS THAT A PATHSPEC COMMIT **CANNOT** SWEEP A
+                             # FILE IT DOES NOT NAME. The habit is structural,
+                             # which is why it has held for 119 rounds without
+                             # ever needing to be remembered in the moment.
+                             # AND THE SECOND ERROR IS THE ENV VALUE, recorded at
+                             # PM_DATA_ROOT_IS_A_NAME_SEMANTICS_MISMATCH: a name
+                             # -versus-semantics error, the R-507 shape. TWO
+                             # ERRORS IN ONE ROUND, BOTH SELF-REPORTED WITH THE
+                             # RULE THEY EARN, which is the disposition this
+                             # programme has settled into and the reason its
+                             # error rate is legible at all.
   a_reset_hard_IN_THE_SHARED_TREE_and_my_commit_survived_BY_SIX_SECONDS: CHECKED-AT-THE-REFLOG
                              # CHECKED 2026-09-06T04:22:04Z. A coordinator error,
                              # self-reported at R-557(D), AND I VERIFIED THE
@@ -3652,6 +3836,64 @@ flags:
                              # than by convention: the other five coins raise
                              # ScoreStreamRefused. Ruled, priced, and refused in
                              # code -- three places agreeing.
+  the_runner_IS_APPROVED_FOR_THE_09-03_SMOKE_ONCE_BES_BOOK_EXISTS: AND-BOTH-SELFTESTS-REFUSED-CORRECTLY-FIRST
+                             # RELAYED from R-563. THE REVIEWER APPROVES THE
+                             # RUNNER for the 09-03 smoke, conditional on BE's
+                             # book existing. Both selftests reproduce.
+                             # AND THE DETAIL THAT MAKES THE APPROVAL WORTH MORE
+                             # THAN THE PASS: **BOTH SELFTESTS REFUSED CORRECTLY
+                             # BEFORE THE REVIEWER RESTORED ITS SYMLINK.** The
+                             # root refusal that DE 73 built to close the
+                             # reviewer's own item 4 -- "a non-ledger root
+                             # returns an EMPTY day set silently" -- FIRED ON THE
+                             # REVIEWER, IN THE REVIEWER'S OWN WORKTREE, DURING
+                             # THE REVIEW OF THE THING THAT ADDED IT. A refusal
+                             # whose first real catch is the reviewer who
+                             # demanded it is as strong a demonstration as a
+                             # falsifier.
+                             # EARLIER VALUE (rule 13):
+                             # THREE-CHANGES-ONE-ON-A-20-HOUR-CLOCK
+  the_race_read_declaration_IS_APPROVED_TO_OPEN_WITH_TWO_v2_ITEMS: BE-48-BEFORE-ANY-OPENING
+                             # RELAYED from R-563. APPROVED TO OPEN, with two v2
+                             # items to land first -- BE 48 BEFORE ANY OPENING.
+                             # (1) **COMPUTE THE PERMUTATION FLOOR AT BOTH
+                             # READINGS AND PUT THE CONSERVATIVE ONE IN THE
+                             # FIELD**: 0.0625 at G = 5, against **0.25 with
+                             # three fresh days at m = 2**. That second number is
+                             # the one a reader would never derive unprompted,
+                             # and it is four times the first -- so a read that
+                             # quotes only 0.0625 overstates what the surviving
+                             # fresh days can support by a factor of four.
+                             # (2) PIN THE SEALED_scores DIGESTS AND STATE WHAT
+                             # THE READ **WRITES**, with a byte-identity
+                             # requirement; and ASSERT NO GATE-1 ARTIFACT ON THE
+                             # READ'S PATH.
+                             # (2)'s LAST CLAUSE IS THE ONE I WOULD NOT HAVE
+                             # THOUGHT OF: the race read and the Gate-1 run share
+                             # days -- 09-03, 09-04, 09-05 are in BOTH the ruled
+                             # Gate-1 set AND the race's five -- so **AN
+                             # ASSERTION THAT THE READ'S PATH TOUCHES NO GATE-1
+                             # ARTIFACT IS WHAT KEEPS TWO READS OF TWO OBJECTS ON
+                             # OVERLAPPING DAYS FROM CONTAMINATING EACH OTHER.**
+                             # I recorded that separation at round 115 as "kept
+                             # apart by declaration"; this makes it kept apart by
+                             # an assertion.
+  de75_THE_SMOKE_PLAYBOOK_AND_THE_BEFORE_PICTURE: DE-STANDS-BY-NO-MAKE-WORK
+                             # RELAYED from R-563. DE 75 verified: the smoke
+                             # playbook WITH ITS UNMET PRECONDITIONS NAMED, and a
+                             # dry-run ledger BEFORE-PICTURE read from the real
+                             # ledger -- 09-03, 09-04, 09-05 QUALIFY; 09-06,
+                             # 09-07, 09-08 PENDING; R7's relations live rather
+                             # than asserted.
+                             # A BEFORE-PICTURE TAKEN AND COMMITTED BEFORE THE
+                             # RUN IS THE ONLY WAY THE AFTER-PICTURE MEANS
+                             # ANYTHING, and it costs nothing to take while the
+                             # answer is still uninteresting.
+                             # **AND DE STANDS BY UNTIL BE'S BOOK EXISTS -- NO
+                             # MAKE-WORK.** Recorded because it is the harder
+                             # discipline: a seat with a working instrument and
+                             # nothing to point it at is the exact situation that
+                             # produces invented tasks, and this one declined.
   the_runner_is_NOT_YET_APPROVED_FOR_THE_SMOKE: THREE-CHANGES-ONE-ON-A-20-HOUR-CLOCK
                              # RELAYED from R-558(A). The reviewer calls it
                              # "the best-built instrument this programme has
@@ -11832,6 +12074,30 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:47:07Z, MY OWN PM_DATA_ROOT FINDING IS CORRECTED IN ITS
+  DIRECTION: the variable DENOTES THE REPO ROOT -- branch 2 returns CODE_ROOT,
+  line 116 is `REPO = DATA_ROOT`, and paths append "data/..." -- SO THE TWO
+  MODULE CONSTANTS ARE CORRECT AND CONSISTENT, and what was wrong was the VALUE
+  IN THE DISPATCH (which would have produced a doubled data/data). The real
+  defect is a NAME/SEMANTICS MISMATCH that has already caused one wrong export.
+  MY ROUTING ANSWER: BE importing the resolver RESOLVES it for BE's helpers;
+  STILL OPEN are the SIX absolute ledger paths no resolver touches (still four
+  be_*, two de_*) and THE NAME ITSELF.
+  THE RUNNER IS APPROVED FOR THE 09-03 SMOKE once BE's book exists, and BOTH
+  SELFTESTS REFUSED CORRECTLY FIRST -- the root refusal fired on the reviewer, in
+  its own worktree, during the review of the thing that added it. THE RACE-READ
+  DECLARATION IS APPROVED TO OPEN WITH TWO v2 ITEMS: the floor computed at BOTH
+  readings with the conservative one in the field (0.25 with three fresh days,
+  FOUR TIMES the 0.0625), and AN ASSERTION THAT NO GATE-1 ARTIFACT SITS ON THE
+  READ'S PATH -- which is what keeps two reads of two objects on overlapping days
+  apart.
+  DE 74 landed ONE IMPORTED RESOLVER with THE BRANCH RECORDED IN EVERY RECEIPT,
+  and DE 75's before-picture is committed before the run while DE STANDS BY --
+  no make-work. The waiter kills were the harness, not the USER, and it is
+  re-armed.
+  Gate 1 is 1 of 7; nothing opens before BE 48 and nothing runs before BE's book.
+  Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:39:15Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:39:15Z, THE RUNNER'S THREE BLOCKERS ARE CLOSED -- the
   R7 assertion is relative to the ruled set with the count an output, SO THE
   09-07T00:06Z FIRE IS BACK TO THREE STAKES -- and the fixture run is PROVEN
@@ -12844,22 +13110,45 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
-  # --- MEM round 118, 2026-09-06T04:39:15Z ------------------------------
-  PM_DATA_ROOT_NAMES_TWO_DIFFERENT_THINGS_IN_THIS_PROGRAMMES_CODE:
+  # --- MEM round 119, 2026-09-06T04:47:07Z ------------------------------
+  PM_DATA_ROOT_IS_A_NAME_SEMANTICS_MISMATCH_NOT_TWO_REFERENTS:
     prov: CHECKED
-    artifact: live/pm_research/phase2_arms.py
-    as_of: 2026-09-06T04:39:15Z
+    artifact: live/pm_research/pm_tape_density.py
+    as_of: 2026-09-06T04:47:07Z
     said: >-
-      the name has exactly three binding sites under live/:
-      pm_tape_density.py:99 `env = os.environ.get("PM_DATA_ROOT")`;
-      phase2_arms.py:41 and build_state_tape_v2.py:206, both
-      `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` -- the repo root, one level
-      above the data root the environment variable denotes. Zero de_* and zero
-      be_* files honour the variable as-of this timestamp, so neither DE 74 nor
-      BE 47 has landed. Separately, four be_* and two de_* files contain the
-      literal /home/yuqing/ctaNew/data (e.g. be_forward_preflight.py:24), and
-      three sampled be_* modules bind _ROOT to the module's own directory. That
-      count is a floor: I grepped one literal over be_*.py and de_*.py only.
+      three readings settle the semantics: branch 2 of _resolve_data_root returns
+      CODE_ROOT (the repo root); line 116 is `REPO = DATA_ROOT`; and lines 117-118
+      build RAW and GAP_LEDGER as DATA_ROOT / "data/pm_5min/...". So
+      PM_DATA_ROOT denotes the REPO root, and the two module constants --
+      phase2_arms.py:41 and build_state_tape_v2.py:206, each consumed at :59 and
+      :221 as `PM_DATA_ROOT / "data/pm_5min"` -- agree with it rather than
+      diverging. My rounds 117-118 characterisation is corrected in its
+      direction. Exporting the dispatched .../ctaNew/data would give RAW =
+      .../ctaNew/data/data/pm_5min/raw, which I computed. Re-measured today: the
+      absolute-ledger-path count is unchanged at four be_* and two de_*, and one
+      de_* file imports the resolver.
+  de74_ONE_IMPORTED_RESOLVER_OWNS_THE_DE_SURFACE:
+    prov: RELAYED
+    from: R-562, verified by the coordinator
+  a_coordinator_commit_WITHOUT_A_PATHSPEC_SWEPT_ANOTHER_SEATS_STAGED_FILE:
+    prov: RELAYED
+    from: >-
+      R-562, self-reported. It explains the observation I filed at round 118: the
+      staged file I left alone landed because a commit without a pathspec took
+      it, not because anyone decided to land it.
+  the_runner_IS_APPROVED_FOR_THE_09-03_SMOKE_ONCE_BES_BOOK_EXISTS:
+    prov: RELAYED
+    from: R-563, the reviewer's approval
+  the_race_read_declaration_IS_APPROVED_TO_OPEN_WITH_TWO_v2_ITEMS:
+    prov: RELAYED
+    from: R-563; BE 48 must land both before any opening
+  de75_THE_SMOKE_PLAYBOOK_AND_THE_BEFORE_PICTURE:
+    prov: RELAYED
+    from: R-563
+  THE_WAITER_KILLS_WERE_THE_HARNESS_NOT_THE_USER:
+    prov: RELAYED
+    from: R-563 -- resolves the question left deliberately open at round 118
+  # --- MEM round 118, 2026-09-06T04:39:15Z ------------------------------
   be46_THE_RACE_READ_AND_THE_BUILDER_ARE_DECLARED_AND_OPEN_NOTHING:
     prov: RELAYED
     from: R-560(A), verified by the coordinator at BE's declaration artifacts
@@ -12878,9 +13167,6 @@ flag_provenance:
       R-561(A) -- the reviewer's push-back on the coordinator's dispatch premise,
       accepted. Related to my own round-110 finding that the same literal sits in
       nine P-003 files under names like ERA_BOUNDARY_NS.
-  THE_WAITERS_WERE_KILLED_AND_THE_LOOP_IS_USER_PROMPTED_AGAIN:
-    prov: RELAYED
-    from: R-561(C)
   # --- MEM round 117, 2026-09-06T04:30:05Z ------------------------------
   the_data_root_answer_is_PM_DATA_ROOT_IN_THE_CODE_not_a_symlink:
     prov: CHECKED
@@ -12894,19 +13180,6 @@ flag_provenance:
       for the name and classifying each hit: ZERO de_* files and ZERO be_* files
       honour it. The two scratch-worktree experiments and their 159-line status
       result are RELAYED from R-558(B); I ran neither.
-  PM_DATA_ROOT_NAMES_TWO_DIFFERENT_THINGS_IN_THIS_PROGRAMMES_CODE:
-    prov: CHECKED
-    artifact: live/pm_research/phase2_arms.py
-    as_of: 2026-09-06T04:30:05Z
-    said: >-
-      eight .py files under live/ mention PM_DATA_ROOT; classifying each by
-      whether it reads the environment or binds a module constant gives ONE
-      env-read (pm_tape_density.py) and TWO const-binds (this file and
-      build_state_tape_v2.py), the remaining five being prose, selftest strings
-      or branch names. Line 41 here is
-      `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` -- the repo root, one level
-      above the data root the environment variable denotes. I have not read the
-      call sites and assert no defect in either constant.
   the_shell_trap_WAS_ALREADY_SOLVED_IN_A_CODE_COMMENT:
     prov: CHECKED
     artifact: live/pm_research/pm_tape_density.py
