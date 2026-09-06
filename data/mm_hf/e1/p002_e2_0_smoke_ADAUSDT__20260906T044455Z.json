@@ -1,0 +1,2545 @@
+{
+  "carrying_commit": "2cf2029be0843991a5cf9c14b1defa8fd34dbb78",
+  "declaration": {
+    "carrying_commit": "f5224f137dac4ed29f9f7ff5d2b843551780a0a4",
+    "path": "live/mm_research/declarations/p002_e2_0_declaration_v2.json",
+    "sha256": "054ff4e7536291ee1a4846dec90e62cb3496e851cb27768a898969b67256c1d6"
+  },
+  "max_rss_kib": 672664,
+  "protocol": "P002_E2_0_TRUE_MID_V1",
+  "symbols": {
+    "ADAUSDT": {
+      "days": [
+        {
+          "admissible": false,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 2005272,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260819",
+          "gap_fraction": 0.5311342592592593,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 12,
+          "n_prints": 386792,
+          "n_sweeps": 100224,
+          "n_trade_hour_files": 12,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 151907360.1063,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 98419,
+              "n_proxy_valid": 98419,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 1805,
+              "share_true_valid_without_proxy": 0.018009658365261815
+            },
+            "0.5": {
+              "n_intersection": 98331,
+              "n_proxy_valid": 98331,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 1893,
+              "share_true_valid_without_proxy": 0.018887691570881226
+            },
+            "1": {
+              "n_intersection": 98216,
+              "n_proxy_valid": 98216,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 2008,
+              "share_true_valid_without_proxy": 0.020035121328224777
+            },
+            "15": {
+              "n_intersection": 96516,
+              "n_proxy_valid": 96516,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 3708,
+              "share_true_valid_without_proxy": 0.03699712643678161
+            },
+            "30": {
+              "n_intersection": 96505,
+              "n_proxy_valid": 96505,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 3719,
+              "share_true_valid_without_proxy": 0.037106880587484035
+            },
+            "300": {
+              "n_intersection": 95841,
+              "n_proxy_valid": 95841,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 4383,
+              "share_true_valid_without_proxy": 0.043732040229885055
+            },
+            "5": {
+              "n_intersection": 97590,
+              "n_proxy_valid": 97590,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 2634,
+              "share_true_valid_without_proxy": 0.026281130268199233
+            },
+            "60": {
+              "n_intersection": 96474,
+              "n_proxy_valid": 96474,
+              "n_sweeps": 100224,
+              "n_true_valid": 100224,
+              "n_true_valid_without_proxy": 3750,
+              "share_true_valid_without_proxy": 0.037416187739463605
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9823994252873564,
+          "quote_age_ms_p50": 13.0,
+          "quote_age_ms_p99": 416.0,
+          "status": "EXCLUDED_INCOMPLETE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.463,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 959,
+            "n_prints_kept": 386792,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 3933234,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260820",
+          "gap_fraction": 0.0009606481481481133,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 693362,
+          "n_sweeps": 157614,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 262447388.8554,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 153976,
+              "n_proxy_valid": 153976,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 3637,
+              "share_true_valid_without_proxy": 0.02307550773096128
+            },
+            "0.5": {
+              "n_intersection": 153746,
+              "n_proxy_valid": 153746,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 3867,
+              "share_true_valid_without_proxy": 0.024534778222608543
+            },
+            "1": {
+              "n_intersection": 153539,
+              "n_proxy_valid": 153539,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 4074,
+              "share_true_valid_without_proxy": 0.025848121665091078
+            },
+            "15": {
+              "n_intersection": 150228,
+              "n_proxy_valid": 150228,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 7385,
+              "share_true_valid_without_proxy": 0.04685527209050015
+            },
+            "30": {
+              "n_intersection": 150095,
+              "n_proxy_valid": 150095,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 7518,
+              "share_true_valid_without_proxy": 0.04769911111393096
+            },
+            "300": {
+              "n_intersection": 149118,
+              "n_proxy_valid": 149118,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 8495,
+              "share_true_valid_without_proxy": 0.05389783837627607
+            },
+            "5": {
+              "n_intersection": 152399,
+              "n_proxy_valid": 152399,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 5214,
+              "share_true_valid_without_proxy": 0.033081027580212294
+            },
+            "60": {
+              "n_intersection": 150074,
+              "n_proxy_valid": 150074,
+              "n_sweeps": 157614,
+              "n_true_valid": 157613,
+              "n_true_valid_without_proxy": 7539,
+              "share_true_valid_without_proxy": 0.04783234885447266
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9773370385879427,
+          "quote_age_ms_p50": 18.0,
+          "quote_age_ms_p99": 467.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.725,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1941,
+            "n_prints_kept": 693362,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 0.9999936553859429
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 6089311,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260821",
+          "gap_fraction": 0.00045138888888884843,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 1216072,
+          "n_sweeps": 256373,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 418491515.4381,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 255729,
+              "n_proxy_valid": 255729,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 644,
+              "share_true_valid_without_proxy": 0.002511964988512831
+            },
+            "0.5": {
+              "n_intersection": 255679,
+              "n_proxy_valid": 255679,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 694,
+              "share_true_valid_without_proxy": 0.002706993326130287
+            },
+            "1": {
+              "n_intersection": 255628,
+              "n_proxy_valid": 255628,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 745,
+              "share_true_valid_without_proxy": 0.0029059222305000917
+            },
+            "15": {
+              "n_intersection": 255062,
+              "n_proxy_valid": 255062,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 1311,
+              "share_true_valid_without_proxy": 0.005113643012329691
+            },
+            "30": {
+              "n_intersection": 254982,
+              "n_proxy_valid": 254982,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 1391,
+              "share_true_valid_without_proxy": 0.005425688352517621
+            },
+            "300": {
+              "n_intersection": 254368,
+              "n_proxy_valid": 254368,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 2005,
+              "share_true_valid_without_proxy": 0.007820636338459978
+            },
+            "5": {
+              "n_intersection": 255474,
+              "n_proxy_valid": 255474,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 899,
+              "share_true_valid_without_proxy": 0.0035066095103618556
+            },
+            "60": {
+              "n_intersection": 254919,
+              "n_proxy_valid": 254919,
+              "n_sweeps": 256373,
+              "n_true_valid": 256373,
+              "n_true_valid_without_proxy": 1454,
+              "share_true_valid_without_proxy": 0.0056714240579156154
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9975894497470482,
+          "quote_age_ms_p50": 12.0,
+          "quote_age_ms_p99": 378.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.447,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1916,
+            "n_prints_kept": 1216072,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 5801333,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260822",
+          "gap_fraction": 0.0008449074074073915,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 1415377,
+          "n_sweeps": 292358,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 426372290.4285999,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 291049,
+              "n_proxy_valid": 291049,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 1309,
+              "share_true_valid_without_proxy": 0.00447738731281511
+            },
+            "0.5": {
+              "n_intersection": 290937,
+              "n_proxy_valid": 290937,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 1421,
+              "share_true_valid_without_proxy": 0.004860479275408916
+            },
+            "1": {
+              "n_intersection": 290831,
+              "n_proxy_valid": 290831,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 1527,
+              "share_true_valid_without_proxy": 0.00522304845429234
+            },
+            "15": {
+              "n_intersection": 289657,
+              "n_proxy_valid": 289657,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 2701,
+              "share_true_valid_without_proxy": 0.009238673133623844
+            },
+            "30": {
+              "n_intersection": 289520,
+              "n_proxy_valid": 289520,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 2838,
+              "share_true_valid_without_proxy": 0.00970727669501091
+            },
+            "300": {
+              "n_intersection": 289218,
+              "n_proxy_valid": 289218,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 3140,
+              "share_true_valid_without_proxy": 0.010740256808433496
+            },
+            "5": {
+              "n_intersection": 290486,
+              "n_proxy_valid": 290486,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 1872,
+              "share_true_valid_without_proxy": 0.006403108517639333
+            },
+            "60": {
+              "n_intersection": 289630,
+              "n_proxy_valid": 289630,
+              "n_sweeps": 292358,
+              "n_true_valid": 292358,
+              "n_true_valid_without_proxy": 2728,
+              "share_true_valid_without_proxy": 0.009331025660320565
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9956286470696886,
+          "quote_age_ms_p50": 8.0,
+          "quote_age_ms_p99": 374.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.291,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 3514,
+            "n_prints_kept": 1415377,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 4124290,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260823",
+          "gap_fraction": 0.0017476851851851993,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 799261,
+          "n_sweeps": 143506,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 211421387.8083,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 140013,
+              "n_proxy_valid": 140013,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 3493,
+              "share_true_valid_without_proxy": 0.024340445695650356
+            },
+            "0.5": {
+              "n_intersection": 139773,
+              "n_proxy_valid": 139773,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 3733,
+              "share_true_valid_without_proxy": 0.026012849636948977
+            },
+            "1": {
+              "n_intersection": 139587,
+              "n_proxy_valid": 139587,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 3919,
+              "share_true_valid_without_proxy": 0.02730896269145541
+            },
+            "15": {
+              "n_intersection": 136159,
+              "n_proxy_valid": 136159,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 7347,
+              "share_true_valid_without_proxy": 0.05119646565300406
+            },
+            "30": {
+              "n_intersection": 135923,
+              "n_proxy_valid": 135923,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 7583,
+              "share_true_valid_without_proxy": 0.052840996195281036
+            },
+            "300": {
+              "n_intersection": 135122,
+              "n_proxy_valid": 135122,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 8384,
+              "share_true_valid_without_proxy": 0.058422644349365185
+            },
+            "5": {
+              "n_intersection": 138747,
+              "n_proxy_valid": 138747,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 4759,
+              "share_true_valid_without_proxy": 0.03316237648600059
+            },
+            "60": {
+              "n_intersection": 136119,
+              "n_proxy_valid": 136119,
+              "n_sweeps": 143506,
+              "n_true_valid": 143506,
+              "n_true_valid_without_proxy": 7387,
+              "share_true_valid_without_proxy": 0.05147519964322049
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9760358451911418,
+          "quote_age_ms_p50": 11.0,
+          "quote_age_ms_p99": 511.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.802,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1615,
+            "n_prints_kept": 799261,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 4353544,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260824",
+          "gap_fraction": 0.0027314814814815014,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 673004,
+          "n_sweeps": 127640,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 191964781.25460002,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 123349,
+              "n_proxy_valid": 123349,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 4291,
+              "share_true_valid_without_proxy": 0.033617988091507366
+            },
+            "0.5": {
+              "n_intersection": 123093,
+              "n_proxy_valid": 123093,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 4547,
+              "share_true_valid_without_proxy": 0.03562362895643999
+            },
+            "1": {
+              "n_intersection": 122831,
+              "n_proxy_valid": 122831,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 4809,
+              "share_true_valid_without_proxy": 0.037676277029144466
+            },
+            "15": {
+              "n_intersection": 118901,
+              "n_proxy_valid": 118901,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 8739,
+              "share_true_valid_without_proxy": 0.06846599811971169
+            },
+            "30": {
+              "n_intersection": 118699,
+              "n_proxy_valid": 118699,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 8941,
+              "share_true_valid_without_proxy": 0.07004857411469759
+            },
+            "300": {
+              "n_intersection": 117546,
+              "n_proxy_valid": 117546,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 10094,
+              "share_true_valid_without_proxy": 0.07908179254152303
+            },
+            "5": {
+              "n_intersection": 121748,
+              "n_proxy_valid": 121748,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 5892,
+              "share_true_valid_without_proxy": 0.046161078031964904
+            },
+            "60": {
+              "n_intersection": 118346,
+              "n_proxy_valid": 118346,
+              "n_sweeps": 127640,
+              "n_true_valid": 127640,
+              "n_true_valid_without_proxy": 9294,
+              "share_true_valid_without_proxy": 0.07281416483860859
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9667972422438107,
+          "quote_age_ms_p50": 12.0,
+          "quote_age_ms_p99": 517.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.846,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1267,
+            "n_prints_kept": 673004,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 3948059,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260825",
+          "gap_fraction": 0.0012152777777777457,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 609049,
+          "n_sweeps": 115911,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 183041514.0727,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 111167,
+              "n_proxy_valid": 111167,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 4744,
+              "share_true_valid_without_proxy": 0.04092795334351356
+            },
+            "0.5": {
+              "n_intersection": 110893,
+              "n_proxy_valid": 110893,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 5018,
+              "share_true_valid_without_proxy": 0.043291835977603506
+            },
+            "1": {
+              "n_intersection": 110583,
+              "n_proxy_valid": 110583,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 5328,
+              "share_true_valid_without_proxy": 0.045966301731500896
+            },
+            "15": {
+              "n_intersection": 106202,
+              "n_proxy_valid": 106202,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 9709,
+              "share_true_valid_without_proxy": 0.08376254195028944
+            },
+            "30": {
+              "n_intersection": 105979,
+              "n_proxy_valid": 105979,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 9932,
+              "share_true_valid_without_proxy": 0.08568643183131885
+            },
+            "300": {
+              "n_intersection": 105310,
+              "n_proxy_valid": 105310,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 10601,
+              "share_true_valid_without_proxy": 0.09145810147440708
+            },
+            "5": {
+              "n_intersection": 109405,
+              "n_proxy_valid": 109405,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 6506,
+              "share_true_valid_without_proxy": 0.05612927159631096
+            },
+            "60": {
+              "n_intersection": 106157,
+              "n_proxy_valid": 106157,
+              "n_sweeps": 115911,
+              "n_true_valid": 115911,
+              "n_true_valid_without_proxy": 9754,
+              "share_true_valid_without_proxy": 0.08415077085004874
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9596845855872178,
+          "quote_age_ms_p50": 16.0,
+          "quote_age_ms_p99": 492.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.946,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1184,
+            "n_prints_kept": 609049,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": false,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 3051817,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260826",
+          "gap_fraction": 0.05552083333333335,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 23,
+          "n_prints": 480272,
+          "n_sweeps": 88478,
+          "n_trade_hour_files": 23,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 130502945.6376,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 82600,
+              "n_proxy_valid": 82600,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 5878,
+              "share_true_valid_without_proxy": 0.0664345939103506
+            },
+            "0.5": {
+              "n_intersection": 82286,
+              "n_proxy_valid": 82286,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 6192,
+              "share_true_valid_without_proxy": 0.06998349872284636
+            },
+            "1": {
+              "n_intersection": 81955,
+              "n_proxy_valid": 81955,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 6523,
+              "share_true_valid_without_proxy": 0.07372454169398042
+            },
+            "15": {
+              "n_intersection": 77297,
+              "n_proxy_valid": 77297,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 11181,
+              "share_true_valid_without_proxy": 0.12637039716087614
+            },
+            "30": {
+              "n_intersection": 76897,
+              "n_proxy_valid": 76897,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 11581,
+              "share_true_valid_without_proxy": 0.13089129501118923
+            },
+            "300": {
+              "n_intersection": 75476,
+              "n_proxy_valid": 75476,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 13002,
+              "share_true_valid_without_proxy": 0.1469517846244264
+            },
+            "5": {
+              "n_intersection": 80445,
+              "n_proxy_valid": 80445,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 8033,
+              "share_true_valid_without_proxy": 0.09079093107891227
+            },
+            "60": {
+              "n_intersection": 76585,
+              "n_proxy_valid": 76585,
+              "n_sweeps": 88478,
+              "n_true_valid": 88478,
+              "n_true_valid_without_proxy": 11893,
+              "share_true_valid_without_proxy": 0.13441759533443343
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9344243766812089,
+          "quote_age_ms_p50": 27.0,
+          "quote_age_ms_p99": 610.0,
+          "status": "EXCLUDED_INCOMPLETE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.306,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 791,
+            "n_prints_kept": 480272,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 3002839,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260827",
+          "gap_fraction": 0.0020486111111110983,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 499996,
+          "n_sweeps": 90486,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 154492677.11969998,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 83367,
+              "n_proxy_valid": 83367,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 7119,
+              "share_true_valid_without_proxy": 0.07867515416749553
+            },
+            "0.5": {
+              "n_intersection": 82973,
+              "n_proxy_valid": 82973,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 7513,
+              "share_true_valid_without_proxy": 0.08302941891563335
+            },
+            "1": {
+              "n_intersection": 82579,
+              "n_proxy_valid": 82579,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 7907,
+              "share_true_valid_without_proxy": 0.0873836836637712
+            },
+            "15": {
+              "n_intersection": 76671,
+              "n_proxy_valid": 76671,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 13815,
+              "share_true_valid_without_proxy": 0.15267555201909688
+            },
+            "30": {
+              "n_intersection": 76293,
+              "n_proxy_valid": 76293,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 14193,
+              "share_true_valid_without_proxy": 0.15685299383330017
+            },
+            "300": {
+              "n_intersection": 74990,
+              "n_proxy_valid": 74990,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 15496,
+              "share_true_valid_without_proxy": 0.17125301151559358
+            },
+            "5": {
+              "n_intersection": 80780,
+              "n_proxy_valid": 80780,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 9706,
+              "share_true_valid_without_proxy": 0.10726521229803505
+            },
+            "60": {
+              "n_intersection": 76309,
+              "n_proxy_valid": 76309,
+              "n_sweeps": 90486,
+              "n_true_valid": 90486,
+              "n_true_valid_without_proxy": 14177,
+              "share_true_valid_without_proxy": 0.15667617089936564
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9222089605021772,
+          "quote_age_ms_p50": 25.0,
+          "quote_age_ms_p99": 592.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.349,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 866,
+            "n_prints_kept": 499996,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 3144485,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260828",
+          "gap_fraction": 0.0014351851851851505,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 514586,
+          "n_sweeps": 97175,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 177163009.90489998,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 90278,
+              "n_proxy_valid": 90278,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 6897,
+              "share_true_valid_without_proxy": 0.07097504502186776
+            },
+            "0.5": {
+              "n_intersection": 89931,
+              "n_proxy_valid": 89931,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 7244,
+              "share_true_valid_without_proxy": 0.07454592230511962
+            },
+            "1": {
+              "n_intersection": 89584,
+              "n_proxy_valid": 89584,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 7591,
+              "share_true_valid_without_proxy": 0.07811679958837149
+            },
+            "15": {
+              "n_intersection": 83865,
+              "n_proxy_valid": 83865,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 13310,
+              "share_true_valid_without_proxy": 0.13696938512992024
+            },
+            "30": {
+              "n_intersection": 83647,
+              "n_proxy_valid": 83647,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 13528,
+              "share_true_valid_without_proxy": 0.1392127604836635
+            },
+            "300": {
+              "n_intersection": 82636,
+              "n_proxy_valid": 82636,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 14539,
+              "share_true_valid_without_proxy": 0.1496166709544636
+            },
+            "5": {
+              "n_intersection": 87940,
+              "n_proxy_valid": 87940,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 9235,
+              "share_true_valid_without_proxy": 0.09503473115513249
+            },
+            "60": {
+              "n_intersection": 83813,
+              "n_proxy_valid": 83813,
+              "n_sweeps": 97175,
+              "n_true_valid": 97175,
+              "n_true_valid_without_proxy": 13362,
+              "share_true_valid_without_proxy": 0.13750450218677643
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9298276305634166,
+          "quote_age_ms_p50": 20.0,
+          "quote_age_ms_p99": 556.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.06,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 984,
+            "n_prints_kept": 514586,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 1628212,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260829",
+          "gap_fraction": 0.0030324074074074003,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 209644,
+          "n_sweeps": 60257,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 57431598.9205,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 49434,
+              "n_proxy_valid": 49434,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 10823,
+              "share_true_valid_without_proxy": 0.17961398675672535
+            },
+            "0.5": {
+              "n_intersection": 49063,
+              "n_proxy_valid": 49063,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 11194,
+              "share_true_valid_without_proxy": 0.18577094777370265
+            },
+            "1": {
+              "n_intersection": 48625,
+              "n_proxy_valid": 48625,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 11632,
+              "share_true_valid_without_proxy": 0.19303981280183216
+            },
+            "15": {
+              "n_intersection": 40267,
+              "n_proxy_valid": 40267,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 19990,
+              "share_true_valid_without_proxy": 0.331745689297509
+            },
+            "30": {
+              "n_intersection": 40167,
+              "n_proxy_valid": 40167,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 20090,
+              "share_true_valid_without_proxy": 0.33340524752310935
+            },
+            "300": {
+              "n_intersection": 38736,
+              "n_proxy_valid": 38736,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 21521,
+              "share_true_valid_without_proxy": 0.35715352573145026
+            },
+            "5": {
+              "n_intersection": 46210,
+              "n_proxy_valid": 46210,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 14047,
+              "share_true_valid_without_proxy": 0.2331181439500805
+            },
+            "60": {
+              "n_intersection": 40250,
+              "n_proxy_valid": 40250,
+              "n_sweeps": 60257,
+              "n_true_valid": 60257,
+              "n_true_valid_without_proxy": 20007,
+              "share_true_valid_without_proxy": 0.3320278141958611
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.8218962112285709,
+          "quote_age_ms_p50": 43.0,
+          "quote_age_ms_p99": 692.4400000000023,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 2.453,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 369,
+            "n_prints_kept": 209644,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 2557645,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260830",
+          "gap_fraction": 0.0013657407407406952,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 385599,
+          "n_sweeps": 94145,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 134302172.76709998,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 86774,
+              "n_proxy_valid": 86774,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 7370,
+              "share_true_valid_without_proxy": 0.0782843303874915
+            },
+            "0.5": {
+              "n_intersection": 86451,
+              "n_proxy_valid": 86451,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 7693,
+              "share_true_valid_without_proxy": 0.08171524473147519
+            },
+            "1": {
+              "n_intersection": 86078,
+              "n_proxy_valid": 86078,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 8066,
+              "share_true_valid_without_proxy": 0.08567726036709722
+            },
+            "15": {
+              "n_intersection": 79823,
+              "n_proxy_valid": 79823,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 14321,
+              "share_true_valid_without_proxy": 0.1521180319510537
+            },
+            "30": {
+              "n_intersection": 79439,
+              "n_proxy_valid": 79439,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 14705,
+              "share_true_valid_without_proxy": 0.15619688987083616
+            },
+            "300": {
+              "n_intersection": 77600,
+              "n_proxy_valid": 77600,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 16544,
+              "share_true_valid_without_proxy": 0.17573079537729436
+            },
+            "5": {
+              "n_intersection": 84288,
+              "n_proxy_valid": 84288,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 9856,
+              "share_true_valid_without_proxy": 0.10469068660774983
+            },
+            "60": {
+              "n_intersection": 79076,
+              "n_proxy_valid": 79076,
+              "n_sweeps": 94145,
+              "n_true_valid": 94144,
+              "n_true_valid_without_proxy": 15068,
+              "share_true_valid_without_proxy": 0.16005268524813052
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.922842423920548,
+          "quote_age_ms_p50": 23.0,
+          "quote_age_ms_p99": 565.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.09,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 706,
+            "n_prints_kept": 385599,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 0.9999893780869935
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 2708290,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260831",
+          "gap_fraction": 0.0013425925925926174,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 394501,
+          "n_sweeps": 91311,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 126805422.51640001,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 85086,
+              "n_proxy_valid": 85086,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 6225,
+              "share_true_valid_without_proxy": 0.06817360449452968
+            },
+            "0.5": {
+              "n_intersection": 84798,
+              "n_proxy_valid": 84798,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 6513,
+              "share_true_valid_without_proxy": 0.07132766041331275
+            },
+            "1": {
+              "n_intersection": 84436,
+              "n_proxy_valid": 84436,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 6875,
+              "share_true_valid_without_proxy": 0.07529213347789424
+            },
+            "15": {
+              "n_intersection": 79186,
+              "n_proxy_valid": 79186,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 12125,
+              "share_true_valid_without_proxy": 0.1327879444973771
+            },
+            "30": {
+              "n_intersection": 78363,
+              "n_proxy_valid": 78363,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 12948,
+              "share_true_valid_without_proxy": 0.14180109734862173
+            },
+            "300": {
+              "n_intersection": 77669,
+              "n_proxy_valid": 77669,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 13642,
+              "share_true_valid_without_proxy": 0.1494014959862448
+            },
+            "5": {
+              "n_intersection": 82744,
+              "n_proxy_valid": 82744,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 8567,
+              "share_true_valid_without_proxy": 0.09382221200074471
+            },
+            "60": {
+              "n_intersection": 78534,
+              "n_proxy_valid": 78534,
+              "n_sweeps": 91311,
+              "n_true_valid": 91311,
+              "n_true_valid_without_proxy": 12777,
+              "share_true_valid_without_proxy": 0.1399283766468443
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9325820547360121,
+          "quote_age_ms_p50": 28.0,
+          "quote_age_ms_p99": 572.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.37,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 830,
+            "n_prints_kept": 394501,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 2473483,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260901",
+          "gap_fraction": 0.0021180555555555536,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 372178,
+          "n_sweeps": 81672,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 122857109.5099,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 74739,
+              "n_proxy_valid": 74739,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 6933,
+              "share_true_valid_without_proxy": 0.08488833382309727
+            },
+            "0.5": {
+              "n_intersection": 74425,
+              "n_proxy_valid": 74425,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 7247,
+              "share_true_valid_without_proxy": 0.088732980703301
+            },
+            "1": {
+              "n_intersection": 74057,
+              "n_proxy_valid": 74057,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 7615,
+              "share_true_valid_without_proxy": 0.09323880889411304
+            },
+            "15": {
+              "n_intersection": 67778,
+              "n_proxy_valid": 67778,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 13894,
+              "share_true_valid_without_proxy": 0.17011950239984328
+            },
+            "30": {
+              "n_intersection": 67408,
+              "n_proxy_valid": 67408,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 14264,
+              "share_true_valid_without_proxy": 0.1746498187873445
+            },
+            "300": {
+              "n_intersection": 66522,
+              "n_proxy_valid": 66522,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 15150,
+              "share_true_valid_without_proxy": 0.18549808992065825
+            },
+            "5": {
+              "n_intersection": 72263,
+              "n_proxy_valid": 72263,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 9409,
+              "share_true_valid_without_proxy": 0.11520472132432168
+            },
+            "60": {
+              "n_intersection": 67157,
+              "n_proxy_valid": 67157,
+              "n_sweeps": 81672,
+              "n_true_valid": 81672,
+              "n_true_valid_without_proxy": 14515,
+              "share_true_valid_without_proxy": 0.17772308747183857
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9162258791262612,
+          "quote_age_ms_p50": 30.0,
+          "quote_age_ms_p99": 618.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.569,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 851,
+            "n_prints_kept": 372178,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 2591045,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260902",
+          "gap_fraction": 0.0019444444444444153,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 330071,
+          "n_sweeps": 77051,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 104815538.6487,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 68988,
+              "n_proxy_valid": 68988,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 8063,
+              "share_true_valid_without_proxy": 0.10464497540589998
+            },
+            "0.5": {
+              "n_intersection": 68637,
+              "n_proxy_valid": 68637,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 8414,
+              "share_true_valid_without_proxy": 0.10920039973524029
+            },
+            "1": {
+              "n_intersection": 68218,
+              "n_proxy_valid": 68218,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 8833,
+              "share_true_valid_without_proxy": 0.11463835641328471
+            },
+            "15": {
+              "n_intersection": 61428,
+              "n_proxy_valid": 61428,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 15623,
+              "share_true_valid_without_proxy": 0.20276180711476813
+            },
+            "30": {
+              "n_intersection": 60929,
+              "n_proxy_valid": 60929,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 16122,
+              "share_true_valid_without_proxy": 0.20923803714422914
+            },
+            "300": {
+              "n_intersection": 59734,
+              "n_proxy_valid": 59734,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 17317,
+              "share_true_valid_without_proxy": 0.22474724533101453
+            },
+            "5": {
+              "n_intersection": 66265,
+              "n_proxy_valid": 66265,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 10786,
+              "share_true_valid_without_proxy": 0.1399852046047423
+            },
+            "60": {
+              "n_intersection": 60969,
+              "n_proxy_valid": 60969,
+              "n_sweeps": 77051,
+              "n_true_valid": 77051,
+              "n_true_valid_without_proxy": 16082,
+              "share_true_valid_without_proxy": 0.20871890046852085
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.896510103697551,
+          "quote_age_ms_p50": 30.0,
+          "quote_age_ms_p99": 587.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.699,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 884,
+            "n_prints_kept": 330071,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 4163685,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260903",
+          "gap_fraction": 0.0007291666666666696,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 698098,
+          "n_sweeps": 149179,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 252987721.57450005,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 144939,
+              "n_proxy_valid": 144939,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 4240,
+              "share_true_valid_without_proxy": 0.02842223101106724
+            },
+            "0.5": {
+              "n_intersection": 144704,
+              "n_proxy_valid": 144704,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 4475,
+              "share_true_valid_without_proxy": 0.029997519758142903
+            },
+            "1": {
+              "n_intersection": 144414,
+              "n_proxy_valid": 144414,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 4765,
+              "share_true_valid_without_proxy": 0.031941493105597976
+            },
+            "15": {
+              "n_intersection": 140744,
+              "n_proxy_valid": 140744,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 8435,
+              "share_true_valid_without_proxy": 0.05654281098546042
+            },
+            "30": {
+              "n_intersection": 140113,
+              "n_proxy_valid": 140113,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 9066,
+              "share_true_valid_without_proxy": 0.06077262885526783
+            },
+            "300": {
+              "n_intersection": 139234,
+              "n_proxy_valid": 139234,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 9945,
+              "share_true_valid_without_proxy": 0.06666487910496786
+            },
+            "5": {
+              "n_intersection": 143146,
+              "n_proxy_valid": 143146,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 6033,
+              "share_true_valid_without_proxy": 0.04044134898343601
+            },
+            "60": {
+              "n_intersection": 139811,
+              "n_proxy_valid": 139811,
+              "n_sweeps": 149179,
+              "n_true_valid": 149179,
+              "n_true_valid_without_proxy": 9368,
+              "share_true_valid_without_proxy": 0.06279704247916933
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.972006783796647,
+          "quote_age_ms_p50": 20.0,
+          "quote_age_ms_p99": 477.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.76,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 2104,
+            "n_prints_kept": 698098,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 4445193,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260904",
+          "gap_fraction": 0.0002546296296296324,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 654797,
+          "n_sweeps": 149660,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 247134659.2124,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 144433,
+              "n_proxy_valid": 144433,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 5227,
+              "share_true_valid_without_proxy": 0.03492583188560738
+            },
+            "0.5": {
+              "n_intersection": 144103,
+              "n_proxy_valid": 144103,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 5557,
+              "share_true_valid_without_proxy": 0.03713082988106375
+            },
+            "1": {
+              "n_intersection": 143732,
+              "n_proxy_valid": 143732,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 5928,
+              "share_true_valid_without_proxy": 0.039609782172925295
+            },
+            "15": {
+              "n_intersection": 138865,
+              "n_proxy_valid": 138865,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 10795,
+              "share_true_valid_without_proxy": 0.072130161699853
+            },
+            "30": {
+              "n_intersection": 138609,
+              "n_proxy_valid": 138609,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 11051,
+              "share_true_valid_without_proxy": 0.07384070559935854
+            },
+            "300": {
+              "n_intersection": 137999,
+              "n_proxy_valid": 137999,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 11661,
+              "share_true_valid_without_proxy": 0.0779166109848991
+            },
+            "5": {
+              "n_intersection": 142238,
+              "n_proxy_valid": 142238,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 7422,
+              "share_true_valid_without_proxy": 0.04959240946144594
+            },
+            "60": {
+              "n_intersection": 138535,
+              "n_proxy_valid": 138535,
+              "n_sweeps": 149660,
+              "n_true_valid": 149660,
+              "n_true_valid_without_proxy": 11125,
+              "share_true_valid_without_proxy": 0.07433515969530936
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9656621675798477,
+          "quote_age_ms_p50": 13.0,
+          "quote_age_ms_p99": 322.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 0.754,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1912,
+            "n_prints_kept": 654797,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": true,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 2838770,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260905",
+          "gap_fraction": 0.00024305555555559355,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 24,
+          "n_prints": 385073,
+          "n_sweeps": 93578,
+          "n_trade_hour_files": 24,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 143179974.19599998,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 86555,
+              "n_proxy_valid": 86555,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 7023,
+              "share_true_valid_without_proxy": 0.07504969116672722
+            },
+            "0.5": {
+              "n_intersection": 86162,
+              "n_proxy_valid": 86162,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 7416,
+              "share_true_valid_without_proxy": 0.07924939622560859
+            },
+            "1": {
+              "n_intersection": 85798,
+              "n_proxy_valid": 85798,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 7780,
+              "share_true_valid_without_proxy": 0.0831391993844707
+            },
+            "15": {
+              "n_intersection": 79379,
+              "n_proxy_valid": 79379,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 14199,
+              "share_true_valid_without_proxy": 0.15173438201286626
+            },
+            "30": {
+              "n_intersection": 79089,
+              "n_proxy_valid": 79089,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 14489,
+              "share_true_valid_without_proxy": 0.15483340101305862
+            },
+            "300": {
+              "n_intersection": 78482,
+              "n_proxy_valid": 78482,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 15096,
+              "share_true_valid_without_proxy": 0.16131996836863366
+            },
+            "5": {
+              "n_intersection": 83738,
+              "n_proxy_valid": 83738,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 9840,
+              "share_true_valid_without_proxy": 0.10515292055825087
+            },
+            "60": {
+              "n_intersection": 79265,
+              "n_proxy_valid": 79265,
+              "n_sweeps": 93578,
+              "n_true_valid": 93578,
+              "n_true_valid_without_proxy": 14313,
+              "share_true_valid_without_proxy": 0.1529526170681143
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9259548184402316,
+          "quote_age_ms_p50": 26.0,
+          "quote_age_ms_p99": 482.0,
+          "status": "ADMISSIBLE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.459,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 1696,
+            "n_prints_kept": 385073,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        },
+        {
+          "admissible": false,
+          "book_read": {
+            "n_nonpositive_or_crossed_quotes": 0,
+            "n_quotes": 520432,
+            "n_unparsed_lines": 0
+          },
+          "date": "20260906",
+          "gap_fraction": 0.8010995370370371,
+          "gap_fraction_max": 0.05,
+          "n_bookticker_hour_files": 5,
+          "n_prints": 79083,
+          "n_sweeps": 17676,
+          "n_trade_hour_files": 5,
+          "n_zero_qty_sweeps": 0,
+          "notional_usd": 28115887.7959,
+          "population_counts_by_tau": {
+            "0.1": {
+              "n_intersection": 16362,
+              "n_proxy_valid": 16362,
+              "n_sweeps": 17676,
+              "n_true_valid": 17676,
+              "n_true_valid_without_proxy": 1314,
+              "share_true_valid_without_proxy": 0.07433808553971487
+            },
+            "0.5": {
+              "n_intersection": 16301,
+              "n_proxy_valid": 16301,
+              "n_sweeps": 17676,
+              "n_true_valid": 17675,
+              "n_true_valid_without_proxy": 1374,
+              "share_true_valid_without_proxy": 0.07773691654879773
+            },
+            "1": {
+              "n_intersection": 16205,
+              "n_proxy_valid": 16205,
+              "n_sweeps": 17676,
+              "n_true_valid": 17675,
+              "n_true_valid_without_proxy": 1470,
+              "share_true_valid_without_proxy": 0.08316831683168317
+            },
+            "15": {
+              "n_intersection": 15153,
+              "n_proxy_valid": 15153,
+              "n_sweeps": 17676,
+              "n_true_valid": 17667,
+              "n_true_valid_without_proxy": 2514,
+              "share_true_valid_without_proxy": 0.1422992019018509
+            },
+            "30": {
+              "n_intersection": 15123,
+              "n_proxy_valid": 15123,
+              "n_sweeps": 17676,
+              "n_true_valid": 17661,
+              "n_true_valid_without_proxy": 2538,
+              "share_true_valid_without_proxy": 0.14370647188720911
+            },
+            "300": {
+              "n_intersection": 14527,
+              "n_proxy_valid": 14527,
+              "n_sweeps": 17676,
+              "n_true_valid": 17380,
+              "n_true_valid_without_proxy": 2853,
+              "share_true_valid_without_proxy": 0.1641542002301496
+            },
+            "5": {
+              "n_intersection": 15864,
+              "n_proxy_valid": 15864,
+              "n_sweeps": 17676,
+              "n_true_valid": 17674,
+              "n_true_valid_without_proxy": 1810,
+              "share_true_valid_without_proxy": 0.10241032024442684
+            },
+            "60": {
+              "n_intersection": 14932,
+              "n_proxy_valid": 14932,
+              "n_sweeps": 17676,
+              "n_true_valid": 17640,
+              "n_true_valid_without_proxy": 2708,
+              "share_true_valid_without_proxy": 0.15351473922902495
+            }
+          },
+          "proxy_incoherent": false,
+          "proxy_mid_valid_frac": 0.9267368182846798,
+          "quote_age_ms_p50": 33.0,
+          "quote_age_ms_p99": 478.25,
+          "status": "EXCLUDED_INCOMPLETE",
+          "symbol": "ADAUSDT",
+          "t_opp_med_s": 1.412,
+          "trade_read": {
+            "n_nonpositive_prints_excluded": 386,
+            "n_prints_kept": 79083,
+            "n_unparsed_lines": 0
+          },
+          "true_incoherent": false,
+          "true_mid_valid_frac": 1.0
+        }
+      ],
+      "predicates": {
+        "delta_rs_bps": -0.006569500734536993,
+        "delta_rs_population": "INTERSECTION (both mids defined at t- and t+tau*), eq-weighted -- reviewer finding 1",
+        "populations": {
+          "n_intersection": 1899255,
+          "n_proxy_valid": 1899255,
+          "n_sweeps": 2077916,
+          "n_true_valid": 2077914,
+          "n_true_valid_without_proxy": 178659,
+          "share_true_valid_without_proxy": 0.08597997799716446,
+          "what_it_means": "the events the PROXY could not see. Delta_rs is computed on the intersection only; this share is how much of the window E1's mid was blind to, and it bounds the reach of the void reading (reviewer finding 1)."
+        },
+        "predicates_from": "e2_0_declare.py (the declaring module), not re-implemented here",
+        "settle_leg": {
+          "ci_hi_bps": 0.12019671769247785,
+          "ci_lo_bps": -1.8611724349075613,
+          "death_bar_bps": 1.8,
+          "decidable": true,
+          "dies": true,
+          "gate1_bar_bps": 2.3,
+          "interval_claimable": true,
+          "interval_clears_gate2": false,
+          "kill_is_interval_robust": true,
+          "point_clears_gate1": false,
+          "rs_true_notional_bps": -0.5551648704303653,
+          "state": "DEAD",
+          "why": "per DOLLAR of maker fill the realized half-spread is below the VIP0 maker fee -- the amendment's kill, a POINT rule because that is its pre-registered text and a kill is not weakened after seeing. Its interval robustness is reported beside it, never instead of it."
+        },
+        "settle_population": "ALL sweeps with a valid TRUE mid, notional-weighted -- the amendment's quantity",
+        "verdict": {
+          "cell_dies": true,
+          "cell_passes_gate1": false,
+          "settle_state": "DEAD",
+          "the_two_legs_are_independent": "one asks whether E1's MEASUREMENT is readable, the other whether the RIGHT quantity pays. Both can fire; neither implies the other; and the settle state is named by the bar it actually crosses, never by one boolean doing duty for two bars.",
+          "verdict": "NOT_VOIDED+DEAD",
+          "voids_e1_pass": false,
+          "why_settle": "per DOLLAR of maker fill the realized half-spread is below the VIP0 maker fee -- the amendment's kill, a POINT rule because that is its pre-registered text and a kill is not weakened after seeing. Its interval robustness is reported beside it, never instead of it.",
+          "why_void": "the proxy mid is within tolerance; E1's number is readable as a measurement, whatever its sign"
+        },
+        "void_leg": {
+          "decidable": true,
+          "delta_rs_bps": -0.006569500734536993,
+          "threshold_bps": 1.0,
+          "voids": false,
+          "why": "the proxy mid is within tolerance; E1's number is readable as a measurement, whatever its sign"
+        }
+      },
+      "summary": {
+        "admissible_days": [
+          "20260820",
+          "20260821",
+          "20260822",
+          "20260823",
+          "20260824",
+          "20260825",
+          "20260827",
+          "20260828",
+          "20260829",
+          "20260830",
+          "20260831",
+          "20260901",
+          "20260902",
+          "20260903",
+          "20260904",
+          "20260905"
+        ],
+        "cells": {
+          "proxy_INTERSECTION|all|eq": {
+            "day_clustered_mean_bps": 1.3512180017977655,
+            "day_values_bps": [
+              1.652,
+              1.1989,
+              -0.3398,
+              0.8669,
+              0.9806,
+              1.1429,
+              1.4829,
+              1.4637,
+              1.9591,
+              1.5273,
+              1.6404,
+              1.717,
+              1.8415,
+              1.4219,
+              1.3353,
+              1.7286
+            ],
+            "days_positive": 15,
+            "n_days": 16
+          },
+          "proxy_INTERSECTION|all|notional": {
+            "day_clustered_mean_bps": -0.5207152590605064,
+            "day_values_bps": [
+              -0.2506,
+              -1.0916,
+              -6.3312,
+              -0.8233,
+              0.2816,
+              0.3089,
+              -0.5574,
+              1.5474,
+              0.1167,
+              0.5314,
+              -0.1007,
+              0.1396,
+              0.0433,
+              -0.4699,
+              -0.7451,
+              -0.9305
+            ],
+            "days_positive": 7,
+            "n_days": 16
+          },
+          "proxy_INTERSECTION|makerask|eq": {
+            "day_clustered_mean_bps": 1.8222435517478792,
+            "day_values_bps": [
+              1.6871,
+              1.2853,
+              7.2098,
+              0.9327,
+              0.7302,
+              0.7117,
+              1.5153,
+              1.4021,
+              2.0127,
+              0.9663,
+              1.6153,
+              1.8227,
+              1.4689,
+              1.083,
+              3.3159,
+              1.3969
+            ],
+            "days_positive": 16,
+            "n_days": 16
+          },
+          "proxy_INTERSECTION|makerask|notional": {
+            "day_clustered_mean_bps": 0.16436352133032336,
+            "day_values_bps": [
+              -0.4657,
+              -1.7992,
+              8.25,
+              -0.8132,
+              -0.8041,
+              -0.9463,
+              -0.4359,
+              0.7705,
+              0.773,
+              -0.5277,
+              -0.2404,
+              0.1244,
+              -0.3002,
+              -1.0996,
+              1.2791,
+              -1.1349
+            ],
+            "days_positive": 5,
+            "n_days": 16
+          },
+          "proxy_INTERSECTION|makerbid|eq": {
+            "day_clustered_mean_bps": 0.9349081290771634,
+            "day_values_bps": [
+              1.6099,
+              1.0991,
+              -7.1576,
+              0.8037,
+              1.2256,
+              1.5788,
+              1.4472,
+              1.5217,
+              1.9208,
+              2.0551,
+              1.6657,
+              1.6042,
+              2.2051,
+              1.8439,
+              -0.5076,
+              2.0431
+            ],
+            "days_positive": 14,
+            "n_days": 16
+          },
+          "proxy_INTERSECTION|makerbid|notional": {
+            "day_clustered_mean_bps": -1.1609563377929746,
+            "day_values_bps": [
+              -0.0354,
+              -0.4074,
+              -19.7301,
+              -0.8324,
+              1.2741,
+              1.3914,
+              -0.6787,
+              2.2445,
+              -0.5892,
+              1.4727,
+              0.0399,
+              0.1527,
+              0.3558,
+              0.1689,
+              -2.6856,
+              -0.7168
+            ],
+            "days_positive": 8,
+            "n_days": 16
+          },
+          "proxy|all|eq": {
+            "day_clustered_mean_bps": 1.3512180017977655,
+            "day_values_bps": [
+              1.652,
+              1.1989,
+              -0.3398,
+              0.8669,
+              0.9806,
+              1.1429,
+              1.4829,
+              1.4637,
+              1.9591,
+              1.5273,
+              1.6404,
+              1.717,
+              1.8415,
+              1.4219,
+              1.3353,
+              1.7286
+            ],
+            "days_positive": 15,
+            "n_days": 16
+          },
+          "proxy|all|notional": {
+            "day_clustered_mean_bps": -0.5207152590605064,
+            "day_values_bps": [
+              -0.2506,
+              -1.0916,
+              -6.3312,
+              -0.8233,
+              0.2816,
+              0.3089,
+              -0.5574,
+              1.5474,
+              0.1167,
+              0.5314,
+              -0.1007,
+              0.1396,
+              0.0433,
+              -0.4699,
+              -0.7451,
+              -0.9305
+            ],
+            "days_positive": 7,
+            "n_days": 16
+          },
+          "proxy|makerask|eq": {
+            "day_clustered_mean_bps": 1.8222435517478792,
+            "day_values_bps": [
+              1.6871,
+              1.2853,
+              7.2098,
+              0.9327,
+              0.7302,
+              0.7117,
+              1.5153,
+              1.4021,
+              2.0127,
+              0.9663,
+              1.6153,
+              1.8227,
+              1.4689,
+              1.083,
+              3.3159,
+              1.3969
+            ],
+            "days_positive": 16,
+            "n_days": 16
+          },
+          "proxy|makerask|notional": {
+            "day_clustered_mean_bps": 0.16436352133032336,
+            "day_values_bps": [
+              -0.4657,
+              -1.7992,
+              8.25,
+              -0.8132,
+              -0.8041,
+              -0.9463,
+              -0.4359,
+              0.7705,
+              0.773,
+              -0.5277,
+              -0.2404,
+              0.1244,
+              -0.3002,
+              -1.0996,
+              1.2791,
+              -1.1349
+            ],
+            "days_positive": 5,
+            "n_days": 16
+          },
+          "proxy|makerbid|eq": {
+            "day_clustered_mean_bps": 0.9349081290771634,
+            "day_values_bps": [
+              1.6099,
+              1.0991,
+              -7.1576,
+              0.8037,
+              1.2256,
+              1.5788,
+              1.4472,
+              1.5217,
+              1.9208,
+              2.0551,
+              1.6657,
+              1.6042,
+              2.2051,
+              1.8439,
+              -0.5076,
+              2.0431
+            ],
+            "days_positive": 14,
+            "n_days": 16
+          },
+          "proxy|makerbid|notional": {
+            "day_clustered_mean_bps": -1.1609563377929746,
+            "day_values_bps": [
+              -0.0354,
+              -0.4074,
+              -19.7301,
+              -0.8324,
+              1.2741,
+              1.3914,
+              -0.6787,
+              2.2445,
+              -0.5892,
+              1.4727,
+              0.0399,
+              0.1527,
+              0.3558,
+              0.1689,
+              -2.6856,
+              -0.7168
+            ],
+            "days_positive": 8,
+            "n_days": 16
+          },
+          "true_INTERSECTION|all|eq": {
+            "day_clustered_mean_bps": 1.3577875025323025,
+            "day_values_bps": [
+              1.6603,
+              1.1927,
+              -0.3357,
+              0.879,
+              0.9676,
+              1.139,
+              1.5129,
+              1.4821,
+              2.0078,
+              1.5186,
+              1.6479,
+              1.7235,
+              1.8311,
+              1.4226,
+              1.3404,
+              1.7347
+            ],
+            "days_positive": 15,
+            "n_days": 16
+          },
+          "true_INTERSECTION|all|notional": {
+            "day_clustered_mean_bps": -0.528263450374626,
+            "day_values_bps": [
+              -0.2064,
+              -1.1076,
+              -6.44,
+              -0.7429,
+              0.2583,
+              0.2535,
+              -0.5429,
+              1.6528,
+              0.1386,
+              0.4599,
+              -0.141,
+              0.1672,
+              -0.0142,
+              -0.5135,
+              -0.782,
+              -0.8921
+            ],
+            "days_positive": 6,
+            "n_days": 16
+          },
+          "true_INTERSECTION|makerask|eq": {
+            "day_clustered_mean_bps": 1.8074436392324595,
+            "day_values_bps": [
+              1.7127,
+              1.2521,
+              7.1126,
+              0.8893,
+              0.6826,
+              0.698,
+              1.5699,
+              1.4151,
+              1.993,
+              0.9358,
+              1.6288,
+              1.8438,
+              1.4744,
+              1.0638,
+              3.2648,
+              1.3822
+            ],
+            "days_positive": 16,
+            "n_days": 16
+          },
+          "true_INTERSECTION|makerask|notional": {
+            "day_clustered_mean_bps": 0.12995838057493075,
+            "day_values_bps": [
+              -0.3853,
+              -1.8394,
+              7.9908,
+              -0.8963,
+              -0.8205,
+              -0.9791,
+              -0.4146,
+              0.8358,
+              0.7831,
+              -0.6154,
+              -0.1783,
+              0.1722,
+              -0.3752,
+              -1.1851,
+              1.1712,
+              -1.1845
+            ],
+            "days_positive": 5,
+            "n_days": 16
+          },
+          "true_INTERSECTION|makerbid|eq": {
+            "day_clustered_mean_bps": 0.9605760062835905,
+            "day_values_bps": [
+              1.5974,
+              1.124,
+              -7.062,
+              0.8692,
+              1.2465,
+              1.5846,
+              1.45,
+              1.5451,
+              2.0184,
+              2.0669,
+              1.6672,
+              1.595,
+              2.1791,
+              1.8692,
+              -0.4503,
+              2.0689
+            ],
+            "days_positive": 14,
+            "n_days": 16
+          },
+          "true_INTERSECTION|makerbid|notional": {
+            "day_clustered_mean_bps": -1.14334286087551,
+            "day_values_bps": [
+              -0.0273,
+              -0.3999,
+              -19.7008,
+              -0.6035,
+              1.2445,
+              1.3166,
+              -0.6707,
+              2.3858,
+              -0.5547,
+              1.4156,
+              -0.1034,
+              0.1629,
+              0.3142,
+              0.1679,
+              -2.6544,
+              -0.5863
+            ],
+            "days_positive": 7,
+            "n_days": 16
+          },
+          "true|all|eq": {
+            "day_clustered_mean_bps": 1.3638832693767378,
+            "day_values_bps": [
+              1.6785,
+              1.1954,
+              -0.3221,
+              0.9032,
+              0.9857,
+              1.1672,
+              1.5011,
+              1.4897,
+              2.0157,
+              1.565,
+              1.628,
+              1.712,
+              1.7894,
+              1.4229,
+              1.3425,
+              1.7478
+            ],
+            "days_positive": 15,
+            "n_days": 16
+          },
+          "true|all|notional": {
+            "day_clustered_mean_bps": -0.5551648704303653,
+            "day_values_bps": [
+              -0.2042,
+              -1.1017,
+              -6.3922,
+              -0.699,
+              0.2584,
+              0.1868,
+              -0.5011,
+              1.4937,
+              0.0675,
+              0.353,
+              -0.1268,
+              0.0455,
+              -0.1435,
+              -0.5115,
+              -0.7598,
+              -0.8477
+            ],
+            "days_positive": 6,
+            "n_days": 16
+          },
+          "true|makerask|eq": {
+            "day_clustered_mean_bps": 1.817621162901173,
+            "day_values_bps": [
+              1.7047,
+              1.2469,
+              7.0381,
+              0.9074,
+              0.7231,
+              0.7823,
+              1.5006,
+              1.4338,
+              2.0563,
+              1.1653,
+              1.5721,
+              1.8104,
+              1.5186,
+              1.0582,
+              3.1234,
+              1.4408
+            ],
+            "days_positive": 16,
+            "n_days": 16
+          },
+          "true|makerask|notional": {
+            "day_clustered_mean_bps": 0.08341253205151009,
+            "day_values_bps": [
+              -0.3927,
+              -1.8446,
+              7.9133,
+              -0.863,
+              -0.8967,
+              -0.9378,
+              -0.431,
+              0.6992,
+              0.6293,
+              -0.5461,
+              -0.2922,
+              0.1002,
+              -0.5332,
+              -1.1964,
+              1.0809,
+              -1.1547
+            ],
+            "days_positive": 5,
+            "n_days": 16
+          },
+          "true|makerbid|eq": {
+            "day_clustered_mean_bps": 0.9631237095350424,
+            "day_values_bps": [
+              1.6467,
+              1.1358,
+              -6.9832,
+              0.8992,
+              1.2415,
+              1.5512,
+              1.5015,
+              1.5419,
+              1.9882,
+              1.9403,
+              1.6842,
+              1.6081,
+              2.0488,
+              1.8828,
+              -0.312,
+              2.0349
+            ],
+            "days_positive": 14,
+            "n_days": 16
+          },
+          "true|makerbid|notional": {
+            "day_clustered_mean_bps": -1.146214116566116,
+            "day_values_bps": [
+              -0.0139,
+              -0.3838,
+              -19.5634,
+              -0.5499,
+              1.3073,
+              1.1753,
+              -0.5712,
+              2.2092,
+              -0.5015,
+              1.1569,
+              0.0366,
+              -0.0027,
+              0.2183,
+              0.1871,
+              -2.5044,
+              -0.5394
+            ],
+            "days_positive": 7,
+            "n_days": 16
+          }
+        },
+        "excluded_counts": {
+          "EXCLUDED_GAP": 0,
+          "EXCLUDED_INCOMPLETE": 3,
+          "NO_DATA": 0,
+          "proxy_incoherent": 0,
+          "true_incoherent": 0
+        },
+        "n_admissible_days": 16,
+        "population_at_tau_star": {
+          "n_intersection": 1899255,
+          "n_proxy_valid": 1899255,
+          "n_sweeps": 2077916,
+          "n_true_valid": 2077914,
+          "n_true_valid_without_proxy": 178659,
+          "share_true_valid_without_proxy": 0.08597997799716446,
+          "what_it_means": "the events the PROXY could not see. Delta_rs is computed on the intersection only; this share is how much of the window E1's mid was blind to, and it bounds the reach of the void reading (reviewer finding 1)."
+        },
+        "primary_ci95": {
+          "B": 2000,
+          "hi_bps": 0.12019671769247785,
+          "lo_bps": -1.8611724349075613,
+          "unit": "day (G>=5, rule 8)"
+        },
+        "size_buckets_at_tau_star": [
+          {
+            "bucket": 0,
+            "mo_eq_bps_day_clustered": 2.2776893846857984,
+            "mo_notional_bps_day_clustered": 2.291256689914828,
+            "n_events": 415433,
+            "notional_usd": 2686527.7264
+          },
+          {
+            "bucket": 1,
+            "mo_eq_bps_day_clustered": 1.9674885533866313,
+            "mo_notional_bps_day_clustered": 1.9767650958445344,
+            "n_events": 415727,
+            "notional_usd": 9248665.4556
+          },
+          {
+            "bucket": 2,
+            "mo_eq_bps_day_clustered": 1.7925589860490025,
+            "mo_notional_bps_day_clustered": 1.7305007546997262,
+            "n_events": 415577,
+            "notional_usd": 39422380.30759999
+          },
+          {
+            "bucket": 3,
+            "mo_eq_bps_day_clustered": 1.134692008863647,
+            "mo_notional_bps_day_clustered": 0.9828206411168965,
+            "n_events": 415584,
+            "notional_usd": 212199700.92640004
+          },
+          {
+            "bucket": 4,
+            "mo_eq_bps_day_clustered": -0.3528731271973785,
+            "mo_notional_bps_day_clustered": -0.6948996206537575,
+            "n_events": 415593,
+            "notional_usd": 2951351293.0501
+          }
+        ],
+        "size_buckets_note": "notional quintiles per symbol-day, day-clustered. Bucket 0 is the smallest fifth by sweep notional, bucket 4 the largest.",
+        "tau_star_s": 30,
+        "tau_star_why": "16 of 16 days have median time-to-opposite <= 30 s (need 13)"
+      },
+      "wall_s": 66.27
+    }
+  },
+  "wall_s_total": 66.27
+}
