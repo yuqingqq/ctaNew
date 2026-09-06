@@ -14481,3 +14481,86 @@ directions.
   sixty-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 172 — archived 2026-09-06T14:53:22Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 190 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:34:57Z (MEM ROUND 187 -- R-657 AND R-658 SWEPT AS ONE BATCH, tip `fedae1a`;
+  REV 71 recorded as LANDED-AND-UNSWEPT. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED
+  VALUE READ, QUOTED OR INFERRED.**
+  (1) ***MY ROUTED NOTE FROM ROUNDS 174 AND 182 IS CLOSED AT THE ARTIFACT.*** *I recorded
+  that `wrapper_measured` and `peak_is_censored` lived in the PRODUCERS and in NO landed
+  receipt, and that the next BE heavy run would be the first to carry them.* **It is: the
+  09-05 book receipt carries `peak_is_censored` TWICE and `wrapper_measured` ONCE, with
+  `lock_mode WRITE`, `n_flock_holders 1`, `in_a_transient_scope False`** -- *beside BE's own
+  caveat that an fd on the lock file only says it is OPEN, so the MODE is the test.*
+  **REV 63 §4's gap is closed in an artifact a reader resolves.**
+  (2) **AND THE CENSORED-PEAK FIELD'S FIRST REAL VALUE IS THE NEGATIVE CASE:**
+  `peak_is_censored: False`, `peak_bytes 5,161,025,536`, *"demand peaked here and was never
+  throttled; the peak is a MEASUREMENT"* -- with the same receipt restating that 09-04's
+  cap-equal peak with 1,199 reclaims *"is a BOUND"*. ***A flag whose first use
+  discriminates is a flag that works.***
+  (3) **THE COVERAGE ARITHMETIC REPRODUCES DIGIT FOR DIGIT:** 248,441 / 266,592 =
+  **0.9319146861121114**, which is the receipt's own `coverage`. *I divided the two numbers
+  rather than reading the ratio.*
+  (4) ***AND THE ROW ACCOUNTING CLOSES WITH NUMBERS I SWEPT ELEVEN ROUNDS AGO.***
+  `rows_published_by_the_tape_receipt 489,434` -- **and at ROUND 173 I recorded that tape
+  receipt's statuses: OK 463,384, PRE_WINDOW 26,027, NO_LEVEL_HISTORY 19, GAP_AT_CUTOFF 4.
+  463,384 + 26,027 + 19 + 4 = 489,434, and the three exclusions sum to exactly the 26,050
+  the register names.** *`rows_pin_receipt` names the tape receipt BY FILENAME: the pin is
+  to the artifact, not to a remembered number.*
+  (5) **THE LANDING RECORD SUPERSEDES BY THE PAIR I HASHED:** the successor
+  (`65048af3fda7…`, `status INCOMPLETE`, `n_arms_agreeing None`) names the 14:08 pre-read at
+  **`24f2191009177b4abe…` -- the digest I hashed MYSELF at round 183** -- in both `chain`
+  and `{path, sha256}`, **and the sealed receipt's digest `5dd3a8f3f5818379…` SURVIVES the
+  supersession.**
+  (6) **`output_format` IS IN THE CODE AND IN NO ARTIFACT YET.** *Six small derived JSONs
+  written since 14:25; ZERO hits; control: the string DOES appear in DA's code, so the zero
+  is an instrument's zero.* ***Fifth instance today of the emitter/artifact distinction --
+  and the first where the claim sits in the REGISTER rather than in a receipt.*** **Routed,
+  not ruled.**
+  (7) **THE 09-04 RUN IS LIVE AND I VERIFIED IT FROM OUTSIDE:** `de101smoke.service`
+  `loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`, `MemoryPeak`
+  2,957,099,008 B, payload at 3:39; **MainPID = `flock` under PPid 1004**, from wt-de2 at
+  `c138f4f` against the 09-04 book `9193206c…`, receipt ≈15:57Z. ***The FIRST run in the
+  programme to carry `-E 75`, and the FIRST whose outcome will still be readable AFTER EXIT
+  (v3's `RemainAfterExit`).***
+  (8) **REV 71 LANDED AND IS NOT IN THIS DISPATCH -- recorded as LANDED-AND-UNSWEPT:** the
+  chain-head resolver **refuses five of six attacks** (a wrong-digest link, a missing
+  `supersedes`, a fork with two heads, an absent predecessor) **AND SILENTLY DEMOTES TO THE
+  SUPERSEDED PREDECESSOR WHEN THE HEAD IS UNREADABLE.** ***That is the chain-head rule's own
+  failure mode: the reader believes it is on the head.*** *Named within an hour of the rule
+  that created it; DE's surface.*
+  ***AT COMMIT TIME, 2026-09-06T14:38:38Z: THE 09-04 RUN WAS STOPPED BEFORE EMIT -- FOUR
+  MINUTES IN, BY ORDER, AND THE STOP IS AN ARTIFACT.***
+  **`p003_de_gate1_day_run_20260904_STOPPED__20260906T143800Z.json` (6,500 B,
+  `82fa43375cf6860b…`): `status STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`, `day 2026-09-04`,
+  carrying `the_five_fields_and_the_id_copied_BEFORE_the_stop`, a `journal_copy`, DE's
+  `my_own_poll`, and the two negative keys `this_is_a_stop_before_emit_not_a_re_roll` and
+  `what_this_is_not`.** ***The day's rules applied in the only moment they matter: the five
+  fields and the id were copied WHILE THE UNIT WAS LOADED, and only then was it stopped --
+  so a run that no longer exists is still fully readable.*** *`de101smoke` now reads
+  `not-found / inactive / dead / 0` with `MemoryPeak [not set]`; that reading is VOID and
+  the record is the copy.*
+  **R-659 REVERSES PART OF R-656, disclosed:** of the four names ruled open, only
+  `n_decisions` is a population SIZE; **`n_fills_arm`, `n_fills_baseline` and
+  `n_cancels_issued` are OUTCOME COUNTS** -- *"the difference between the arm's fills and
+  the baseline's is the intervention's effect in EVENTS, a per-day directional proxy
+  readable before the read"* -- and ***rule 11 forbids the POSSIBILITY, not the MOTIVE.***
+  **They move behind the seal from the next launch (design v23, `ECONOMIC_FIELDS` extended
+  so DA's census follows by construction); the 09-03 receipt carries them open, produced
+  under v21 before the question was asked, and nobody quotes them.** *Cost ≈30 min; the
+  ruled day set unchanged; relaunch under v23 from a NEW rehearsal (rule 12).*
+  **FLAG WORDS: the 09-04 smoke LIVE-WITH-THE-FULL-RULED-FORM (≈15:57Z); the 09-05 book
+  LANDED-AT-260-MB; my routed fields NOW-IN-A-RECEIPT; the resolver
+  SILENTLY-DEMOTES-WHEN-THE-HEAD-IS-UNREADABLE (REV 71, unswept).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,152 -> 1,160, flag_provenance 697 -> 705,
+  tasks 19; **459 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

@@ -5,6 +5,79 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 190
+
+**As of 2026-09-06T14:53:22Z, R-663 swept (tip `4e1bf8c`); BE 65 landed during the round.
+State only — MEM writes no result. No sealed value read, quoted or inferred, and the sealed
+day was not opened.**
+
+### I reproduced the live seam without opening the sealed day
+
+*The coordinator drove it on the real 09-03 receipt; I drove the **mechanism** on a
+**synthetic** receipt of the same shape.* On a synthetic receipt declaring **design v21** and
+carrying the three outcome counts:
+
+| seat | verdict on the same object |
+|---|---|
+| DA `economic_absence` | **`sealed: False`, `n_leaked_fields: 3`** of 6 leaves |
+| DE `design_version_of_receipt` | **v21**, read from `provenance.design.path`, **the original eight in force** |
+
+***Two seats, one object, opposite answers — because DA reads `ECONOMIC_FIELDS` by AST as a
+flat list.*** **DA 95 reads DE's scoping map by the same route; until then no re-run of the
+09-03 pre-read** — *the instrument that would re-judge the day is known to be wrong about it,
+so it is not run rather than run and explained away.*
+
+### AT COMMIT TIME (14:56:45Z): the 09-04 run is relaunched under design v23
+
+**`de102smoke.service` started 14:54:00Z** — `loaded / active / running / 0 / success`,
+`InvocationID a8c7e41ee2d24ff8…`, **`RemainAfterExit=yes`**, `MainPID 3551079` = `flock` with
+**`PPid 1004`**, cmdline `/usr/bin/flock -n -E 75 …/.heavy_run.lock`, payload at **2:54**.
+***The first day in this chain produced under a seal scope written down before the run.***
+
+**REV 73 landed in the same minutes and confirms on the LANDED receipt what I drove
+synthetically** — *"DE scoped the seal and DA did not."* **Two routes to one seam, and mine
+did not open the sealed day.** *BE 65 filed Q-BE-308: ten light items landed, item 11
+ready-and-blocked, item 4 waiting on DA 87.*
+
+### The emitter's correctness rests on an equality — so I drove it
+
+`_strip_economic` strips by the module-level `ECONOMIC_FIELDS`, not by a call to
+`economic_fields_in_force()`. **I drove the identity: `set(ECONOMIC_FIELDS) ==
+set(economic_fields_in_force(None))`, both size 11, symmetric difference empty.** ***Correct
+by an equality that holds while `DESIGN_VERSION_IN_FORCE` is the maximum version in the
+map*** — at v22 the in-force list is 8, so the emitter strips **three more** than a v22
+receipt is judged by: *the safe direction, worth saying because the opposite would be a
+leak.* **A coupling, not a defect.**
+
+### Three more, verified at the artifacts
+
+- **Design v23 supersedes v22 by the pair I hashed** (`d38dba3dcf02491cd1…`), with a `chain`
+  **twenty-two links long** — *the whole lineage in the artifact.* `R30_seal_scope_corrected`
+  carries **`DISCLOSURE_one_of_six_days_was_seen`**, the other five named as not seen.
+- **The dead constant is gone and its name is its own gravestone:** `grep -c` returns **1**,
+  and the line is **the comment recording the removal**. ***A count is not a reading.***
+- **REV 71's four closed:** the parent by `/proc/<ppid>/exe` — ***`argv[0]` is a claim the
+  process makes about itself; `/proc/<pid>/exe` is a fact the kernel keeps about it*** — plus
+  no silent demotion, digests at load **and** emit, and the constant removed.
+
+### BE 65, and the queue
+
+**BE 65 made the launch form's falsifier invocation- and journal-independent, reading the
+scope leaf** — ***both halves of REV 65 §1.1 at once: the `$0` dependence I swept at round
+175 and the journal dependence*** — *with the same remedy the runtime guard uses: read what
+the process **is**.*
+
+**The lock is free and no `de102*` unit exists**; rehearsal v4 emitted, v23 landed. Open:
+**DA 94** (the allowlist's chain head), **DA 95** (the scoping map), **BE 66** (the bytes
+interface), **REV 73**.
+
+**Counts, measured before the sentence:** flags 1,177 → **1,185**, `flag_provenance`
+722 → **730**, tasks 19; **479 CHECKED**, 251 RELAYED, **455 UNMARKED — unchanged for the
+sixty-sixth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 172** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 189
 
 **As of 2026-09-06T14:48:16Z, R-661 and R-662 swept (tip `477d367`). State only — MEM writes

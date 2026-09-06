@@ -63,6 +63,68 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:53:22Z (MEM ROUND 190 -- R-663 SWEPT, tip `4e1bf8c`; BE 65 landed during the
+  round. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED --
+  AND THE SEALED DAY WAS NOT OPENED.**
+  (1) ***I REPRODUCED THE LIVE SEAM WITHOUT OPENING THE SEALED DAY.*** *The coordinator drove
+  it on the real 09-03 receipt; I drove the MECHANISM on a SYNTHETIC receipt of the same
+  shape, because a sealed forward day is not mine to open.* **On a synthetic receipt
+  declaring design v21 and carrying the three outcome counts:
+  `da_gate1_day_verdict.economic_absence` → `sealed: False`, `n_leaked_fields: 3` of 6
+  leaves; `de_multiday_gate1_runner.design_version_of_receipt` → `design_version 21`,
+  `read_from provenance.design.path`, the ORIGINAL EIGHT in force.**
+  ***Two seats, one object, opposite answers -- because DA reads `ECONOMIC_FIELDS` by AST as
+  a FLAT LIST.*** **DA 95 reads DE's scoping map by the same route; until then NO RE-RUN of
+  the 09-03 pre-read.**
+  (2) **AND THE EMITTER'S CORRECTNESS RESTS ON AN EQUALITY I DROVE.** `_strip_economic`
+  strips by the module-level `ECONOMIC_FIELDS`, not by a call to
+  `economic_fields_in_force()` -- correct for an emitter running under v23. **I drove the
+  identity: `set(ECONOMIC_FIELDS) == set(economic_fields_in_force(None))`, both size 11,
+  symmetric difference EMPTY.** ***So it is correct BY AN EQUALITY that holds while
+  `DESIGN_VERSION_IN_FORCE` is the maximum version in the map*** -- *at v22 the in-force list
+  is 8, so the emitter strips THREE MORE than a v22 receipt is judged by: the safe
+  direction, and worth saying because the opposite would be a leak.* **A coupling, not a
+  defect.**
+  (3) **DESIGN v23 SUPERSEDES v22 BY THE PAIR I HASHED** (`d38dba3dcf02491cd1…`), with a
+  `chain` **TWENTY-TWO LINKS LONG** ending at v22 -- *the whole lineage in the artifact, so a
+  reader can walk back rather than trust a version number.* **`R30_seal_scope_corrected`
+  carries `DISCLOSURE_one_of_six_days_was_seen`, with the other five named as NOT seen.**
+  (4) **THE DEAD CONSTANT IS GONE AND ITS NAME IS ITS OWN GRAVESTONE.** *`grep -c
+  SUPERSEDED_PARAMS_REL` returns 1 -- which looked like a constant that had survived its own
+  removal.* **The line is the COMMENT recording the removal.** ***A count is not a reading:
+  the same one-hit answer would have come back if the constant were still live.*** *Third
+  time this week a grep COUNT and a grep READING disagreed.*
+  (5) **REV 71's FOUR CLOSED AT THE CODE:** the parent identified by
+  `_os.readlink("/proc/<ppid>/exe")` -- ***`argv[0]` is a claim the process makes about
+  itself; `/proc/<pid>/exe` is a fact the kernel keeps about it*** -- plus the resolver
+  refusing an unreadable head, digests at LOAD and at EMIT both carried, and the dead
+  constant removed.
+  (6) **THE 09-03 PRE-READ IS HELD UNTIL DA 95** -- ***the instrument that would re-judge the
+  day is known to be wrong about it, so it is not run rather than run and explained away.***
+  *A pre-read reporting a false leak would enter the record ahead of its own explanation.*
+  (7) **BE 65 MADE THE FALSIFIER INVOCATION- AND JOURNAL-INDEPENDENT** (`2f20d83`), reading
+  the scope leaf. ***Both halves of REV 65 §1.1 closed at once -- the `$0` dependence I swept
+  at round 175 and the journal dependence*** -- *with the same remedy the runtime guard uses:
+  read what the process IS.*
+  (8) **THE QUEUE BEFORE THE RELAUNCH:** the lock is FREE, **no `de102*` unit exists**,
+  rehearsal v4 is emitted and v23 is landed; open are DA 94 (the allowlist's chain head), DA
+  95 (the scoping map), BE 66 (the bytes interface) and REV 73.
+  ***AT COMMIT TIME, 2026-09-06T14:56:45Z: THE 09-04 RUN IS RELAUNCHED UNDER DESIGN v23.***
+  **`de102smoke.service` started 14:54:00Z -- `loaded / active / running / 0 / success`,
+  `InvocationID a8c7e41ee2d24ff8…`, `RemainAfterExit=yes`, `MainPID 3551079` = `flock` with
+  `PPid 1004` and cmdline `/usr/bin/flock -n -E 75 …/.heavy_run.lock`, payload at 2:54.**
+  ***The first day in this chain produced under a seal scope written down BEFORE the run.***
+  **And REV 73 landed in the same minutes, confirming ON THE LANDED RECEIPT what I drove
+  synthetically: "DE scoped the seal and DA did not."** *Two routes to one seam -- and mine
+  did not open the sealed day.* *BE 65 filed Q-BE-308: ten light items landed, item 11
+  ready-and-blocked, item 4 waiting on DA 87.*
+  **FLAG WORDS: the seam LIVE-AND-DRIVEN-SYNTHETICALLY (DA flat list vs DE's scoped map);
+  the 09-03 pre-read HELD-UNTIL-DA-95; design v23 SUPERSEDES-BY-A-22-LINK-CHAIN; the 09-04
+  relaunch LOCK-FREE-AWAITING-GO.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,177 -> 1,185, flag_provenance 722 -> 730,
+  tasks 19; **479 CHECKED**, 251 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:48:16Z (MEM ROUND 189 -- R-661 AND R-662 SWEPT AS ONE BATCH, tip `477d367`.
   STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
   (1) ***THE SEAL SCOPE IS VERSIONED, AND I DROVE THE LADDER:*** **v21 → 8 names, v22 → 8,
@@ -200,79 +262,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,161 -> 1,169, flag_provenance 706 -> 714,
   tasks 19; **467 CHECKED**, 247 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:34:57Z (MEM ROUND 187 -- R-657 AND R-658 SWEPT AS ONE BATCH, tip `fedae1a`;
-  REV 71 recorded as LANDED-AND-UNSWEPT. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED
-  VALUE READ, QUOTED OR INFERRED.**
-  (1) ***MY ROUTED NOTE FROM ROUNDS 174 AND 182 IS CLOSED AT THE ARTIFACT.*** *I recorded
-  that `wrapper_measured` and `peak_is_censored` lived in the PRODUCERS and in NO landed
-  receipt, and that the next BE heavy run would be the first to carry them.* **It is: the
-  09-05 book receipt carries `peak_is_censored` TWICE and `wrapper_measured` ONCE, with
-  `lock_mode WRITE`, `n_flock_holders 1`, `in_a_transient_scope False`** -- *beside BE's own
-  caveat that an fd on the lock file only says it is OPEN, so the MODE is the test.*
-  **REV 63 §4's gap is closed in an artifact a reader resolves.**
-  (2) **AND THE CENSORED-PEAK FIELD'S FIRST REAL VALUE IS THE NEGATIVE CASE:**
-  `peak_is_censored: False`, `peak_bytes 5,161,025,536`, *"demand peaked here and was never
-  throttled; the peak is a MEASUREMENT"* -- with the same receipt restating that 09-04's
-  cap-equal peak with 1,199 reclaims *"is a BOUND"*. ***A flag whose first use
-  discriminates is a flag that works.***
-  (3) **THE COVERAGE ARITHMETIC REPRODUCES DIGIT FOR DIGIT:** 248,441 / 266,592 =
-  **0.9319146861121114**, which is the receipt's own `coverage`. *I divided the two numbers
-  rather than reading the ratio.*
-  (4) ***AND THE ROW ACCOUNTING CLOSES WITH NUMBERS I SWEPT ELEVEN ROUNDS AGO.***
-  `rows_published_by_the_tape_receipt 489,434` -- **and at ROUND 173 I recorded that tape
-  receipt's statuses: OK 463,384, PRE_WINDOW 26,027, NO_LEVEL_HISTORY 19, GAP_AT_CUTOFF 4.
-  463,384 + 26,027 + 19 + 4 = 489,434, and the three exclusions sum to exactly the 26,050
-  the register names.** *`rows_pin_receipt` names the tape receipt BY FILENAME: the pin is
-  to the artifact, not to a remembered number.*
-  (5) **THE LANDING RECORD SUPERSEDES BY THE PAIR I HASHED:** the successor
-  (`65048af3fda7…`, `status INCOMPLETE`, `n_arms_agreeing None`) names the 14:08 pre-read at
-  **`24f2191009177b4abe…` -- the digest I hashed MYSELF at round 183** -- in both `chain`
-  and `{path, sha256}`, **and the sealed receipt's digest `5dd3a8f3f5818379…` SURVIVES the
-  supersession.**
-  (6) **`output_format` IS IN THE CODE AND IN NO ARTIFACT YET.** *Six small derived JSONs
-  written since 14:25; ZERO hits; control: the string DOES appear in DA's code, so the zero
-  is an instrument's zero.* ***Fifth instance today of the emitter/artifact distinction --
-  and the first where the claim sits in the REGISTER rather than in a receipt.*** **Routed,
-  not ruled.**
-  (7) **THE 09-04 RUN IS LIVE AND I VERIFIED IT FROM OUTSIDE:** `de101smoke.service`
-  `loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`, `MemoryPeak`
-  2,957,099,008 B, payload at 3:39; **MainPID = `flock` under PPid 1004**, from wt-de2 at
-  `c138f4f` against the 09-04 book `9193206c…`, receipt ≈15:57Z. ***The FIRST run in the
-  programme to carry `-E 75`, and the FIRST whose outcome will still be readable AFTER EXIT
-  (v3's `RemainAfterExit`).***
-  (8) **REV 71 LANDED AND IS NOT IN THIS DISPATCH -- recorded as LANDED-AND-UNSWEPT:** the
-  chain-head resolver **refuses five of six attacks** (a wrong-digest link, a missing
-  `supersedes`, a fork with two heads, an absent predecessor) **AND SILENTLY DEMOTES TO THE
-  SUPERSEDED PREDECESSOR WHEN THE HEAD IS UNREADABLE.** ***That is the chain-head rule's own
-  failure mode: the reader believes it is on the head.*** *Named within an hour of the rule
-  that created it; DE's surface.*
-  ***AT COMMIT TIME, 2026-09-06T14:38:38Z: THE 09-04 RUN WAS STOPPED BEFORE EMIT -- FOUR
-  MINUTES IN, BY ORDER, AND THE STOP IS AN ARTIFACT.***
-  **`p003_de_gate1_day_run_20260904_STOPPED__20260906T143800Z.json` (6,500 B,
-  `82fa43375cf6860b…`): `status STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`, `day 2026-09-04`,
-  carrying `the_five_fields_and_the_id_copied_BEFORE_the_stop`, a `journal_copy`, DE's
-  `my_own_poll`, and the two negative keys `this_is_a_stop_before_emit_not_a_re_roll` and
-  `what_this_is_not`.** ***The day's rules applied in the only moment they matter: the five
-  fields and the id were copied WHILE THE UNIT WAS LOADED, and only then was it stopped --
-  so a run that no longer exists is still fully readable.*** *`de101smoke` now reads
-  `not-found / inactive / dead / 0` with `MemoryPeak [not set]`; that reading is VOID and
-  the record is the copy.*
-  **R-659 REVERSES PART OF R-656, disclosed:** of the four names ruled open, only
-  `n_decisions` is a population SIZE; **`n_fills_arm`, `n_fills_baseline` and
-  `n_cancels_issued` are OUTCOME COUNTS** -- *"the difference between the arm's fills and
-  the baseline's is the intervention's effect in EVENTS, a per-day directional proxy
-  readable before the read"* -- and ***rule 11 forbids the POSSIBILITY, not the MOTIVE.***
-  **They move behind the seal from the next launch (design v23, `ECONOMIC_FIELDS` extended
-  so DA's census follows by construction); the 09-03 receipt carries them open, produced
-  under v21 before the question was asked, and nobody quotes them.** *Cost ≈30 min; the
-  ruled day set unchanged; relaunch under v23 from a NEW rehearsal (rule 12).*
-  **FLAG WORDS: the 09-04 smoke LIVE-WITH-THE-FULL-RULED-FORM (≈15:57Z); the 09-05 book
-  LANDED-AT-260-MB; my routed fields NOW-IN-A-RECEIPT; the resolver
-  SILENTLY-DEMOTES-WHEN-THE-HEAD-IS-UNREADABLE (REV 71, unswept).**
-  MEASURED BEFORE THIS SENTENCE: flags 1,152 -> 1,160, flag_provenance 697 -> 705,
-  tasks 19; **459 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2947,6 +2936,124 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  I_REPRODUCED_THE_LIVE_SEAM_WITHOUT_OPENING_THE_SEALED_DAY: SYNTHETIC_RECEIPT_SAME_SHAPE
+                             # CHECKED 2026-09-06T14:53:22Z. **The coordinator drove the seam on
+                             # the real 09-03 receipt; I drove the MECHANISM on a SYNTHETIC receipt
+                             # of the same shape, because a sealed forward day is not mine to
+                             # open.**
+                             # **On a synthetic receipt declaring `provenance.design.path` =
+                             # `…design_v21.json` and carrying the three outcome counts:
+                             # `da_gate1_day_verdict.economic_absence(...)` → `sealed: False`,
+                             # `n_leaked_fields: 3` of `n_receipt_leaves_walked: 6`. And
+                             # `de_multiday_gate1_runner.design_version_of_receipt(...)` → `{design_
+                             # version: 21, read_from: 'provenance.design.path', fields_in_force:
+                             # [the ORIGINAL EIGHT]}`.**
+                             # ***So the two seats disagree about the SAME OBJECT: DE says the
+                             # receipt obeyed the rule in force when it was produced; DA says three
+                             # fields leaked -- because DA reads `ECONOMIC_FIELDS` by AST as a FLAT
+                             # LIST.*** **DA 95 (after DA 94) reads DE's scoping map by the same
+                             # route and judges each receipt by its own design version; until then
+                             # NO RE-RUN of the 09-03 pre-read.** *A seam found by driving, held
+                             # open deliberately rather than papered over.*
+                             # **EXTENDED IN BAND 2026-09-06T14:56:45Z: THE 09-04 RUN IS RELAUNCHED
+                             # UNDER v23 AND I VERIFIED IT FROM OUTSIDE.** **`de102smoke.service`
+                             # started 14:54:00Z: `loaded / active / running / 0 / success`,
+                             # `InvocationID a8c7e41ee2d24ff8…`, `RemainAfterExit=yes`,
+                             # `MemoryCurrent` 870,588,416 B; `MainPID 3551079` is `flock` with
+                             # `PPid 1004`, its cmdline `/usr/bin/flock -n -E 75
+                             # /home/yuqing/ctaNew/data/.heavy_run.lock …`, payload 3551080 at 2:54
+                             # with RSS 861,388 KiB.**
+                             # ***The first day in this chain produced under a seal scope written
+                             # down BEFORE the run*** -- *and the second run to carry `-E 75`, read
+                             # from `/proc/<pid>/cmdline` rather than from the launcher's script.*
+                             # **REV 73 landed in the same minutes and confirms on the LANDED
+                             # receipt what I drove synthetically: "DE scoped the seal and DA did
+                             # not -- at this tip DA's `economic_absence` reads the LANDED…"** *Two
+                             # routes to one seam, and the synthetic one did not open the day.*
+                             # *BE 65's row (Q-BE-308): ten light items landed, item 11
+                             # ready-and-blocked, item 4 waiting on DA 87.*
+  THE_EMITTERS_CORRECTNESS_RESTS_ON_AN_EQUALITY_I_DROVE: FLAT_EQUALS_IN_FORCE_TODAY
+                             # CHECKED 2026-09-06T14:53:22Z. **`_strip_economic` (:1046) strips by
+                             # the module-level `ECONOMIC_FIELDS`, NOT by a call to
+                             # `economic_fields_in_force()`.** *R-663 describes it as "by the list
+                             # in force for THIS run", and for an EMITTER that is exactly right --
+                             # this run emits under v23.*
+                             # **I drove the identity rather than assuming it:
+                             # `set(ECONOMIC_FIELDS) == set(economic_fields_in_force(None))` is
+                             # TRUE, both of size 11, symmetric difference EMPTY.**
+                             # ***So the emitter is correct BY AN EQUALITY, not by construction: it
+                             # holds while `DESIGN_VERSION_IN_FORCE` is the maximum version in
+                             # `SEALED_FROM_DESIGN_VERSION`.*** *At v22 the in-force list is 8 --
+                             # the emitter would strip THREE MORE names than a v22 receipt is
+                             # judged by, which is the right direction (strip more, judge less) and
+                             # is worth stating because the opposite direction would be a leak.*
+                             # *Recorded as a coupling, not a defect; MEM rules nothing.*
+  DESIGN_V23_SUPERSEDES_V22_BY_THE_PAIR_I_HASHED: A_CHAIN_TWENTY_TWO_LINKS_LONG
+                             # CHECKED 2026-09-06T14:53:22Z. **I hashed v22 myself:
+                             # `d38dba3dcf02491cd1…` -- and v23's `supersedes` names `path`
+                             # `…design_v22.json` with `sha256
+                             # d38dba3dcf02491cd1e8668ac0f06ec2825673ada6e66ec1bcdcc77317c9d094`,
+                             # the same digest.**
+                             # ***And the `chain` is TWENTY-TWO LINKS LONG, ending at v22*** -- *the
+                             # whole lineage from the first design of 2026-09-06T03:18:53Z carried
+                             # in the artifact, so a reader can walk back rather than trust a
+                             # version number.*
+                             # **`R30_seal_scope_corrected` is the new rule, and it carries
+                             # `DISCLOSURE_one_of_six_days_was_seen` with the other five named:
+                             # "2026-09-04..08 are NOT seen: no receipt for them exists, and from
+                             # v23 the counts…" are sealed.**
+  THE_DEAD_CONSTANT_IS_GONE_AND_ITS_NAME_IS_ITS_OWN_GRAVESTONE: ONE_OCCURRENCE_A_COMMENT
+                             # CHECKED 2026-09-06T14:53:22Z. *`grep -c SUPERSEDED_PARAMS_REL`
+                             # returns **1**, which looked at first like a constant that had
+                             # survived its own removal.*
+                             # **READING THE LINE SETTLED IT: `#: (REV 71 S1.4(d):
+                             # `SUPERSEDED_PARAMS_REL` sat here, read by NOTHING, and…" -- the only
+                             # occurrence is the COMMENT recording the removal.**
+                             # ***A count is not a reading: the same one-hit answer would have come
+                             # back if the constant were still live, and the difference is a line I
+                             # had to open.*** *Twenty-second instance of the discipline, and the
+                             # third this week where a grep COUNT and a grep READING disagreed.*
+  REV_71S_FOUR_ITEMS_CLOSED_AT_THE_CODE: EXE_NOT_ARGV_ZERO
+                             # CHECKED 2026-09-06T14:53:22Z. **The parent is identified by
+                             # `_os.readlink(f"/proc/{ppid}/exe")` (:2250) with the reasoning beside
+                             # it (:2279-2288): "`/proc/<ppid>/exe` -- the file the kernel" opened,
+                             # against an `argv[0]` a process can set to anything.**
+                             # *The other three of REV 71 §1: the resolver refuses an unreadable
+                             # head (no silent demotion), digests carried at LOAD and at EMIT, and
+                             # the dead constant removed.*
+                             # ***`argv[0]` is a claim the process makes about itself;
+                             # `/proc/<pid>/exe` is a fact the kernel keeps about it*** -- *the same
+                             # distinction as `is_the_declared_launch_form` versus the cgroup leaf,
+                             # one level down.*
+  THE_09_03_PRE_READ_IS_HELD_UNTIL_DA_95: A_SEAM_LEFT_OPEN_ON_PURPOSE
+                             # RELAYED from R-663, with the mechanism driven by me above.
+                             # **"Until then no re-run of the 09-03 pre-read."** ***The instrument
+                             # that would re-judge the day is known to be wrong about it, so it is
+                             # not run -- rather than run and its answer explained away.***
+                             # *A pre-read that would report `sealed: False, 6 leaked` on a day that
+                             # obeyed the rule in force when it ran would put a false leak into the
+                             # record, and a later reader resolving the pre-read would meet it
+                             # before meeting the explanation.*
+                             # **DA 94 first (the allowlist's chain head), then DA 95 (the scoping
+                             # map read by the same AST route DA already uses for the field list).**
+  BE_65_MADE_THE_FALSIFIER_INVOCATION_AND_JOURNAL_INDEPENDENT: THE_SCOPE_LEAF_READ
+                             # CHECKED 2026-09-06T14:53:22Z at the tip (`2f20d83`, BE round 65):
+                             # **"the launch form's falsifier made INVOCATION-INDEPENDENT and
+                             # JOURNAL-INDEPENDENT, the scope leaf r[ead]…".**
+                             # ***Both halves of REV 65 §1.1 closed at once: the `$0` dependence I
+                             # swept at round 175 (the verdict a function of how the launcher was
+                             # invoked) and the journal dependence (a check that needs lines a
+                             # rotating store may not have).*** *The remedy for both is the same
+                             # one the runtime guard uses -- read what the process IS -- which is
+                             # why the cgroup leaf keeps arriving as the answer.*
+  THE_QUEUE_BEFORE_THE_RELAUNCH: LOCK_FREE_AND_NOTHING_RUNNING
+                             # CHECKED 2026-09-06T14:53:22Z: **`fuser` on the heavy-run lock returns
+                             # NO holder and no `de102*` unit exists** -- *the relaunch has not
+                             # happened; rehearsal v4 is emitted and design v23 is landed.*
+                             # **Open: DA 94 (the allowlist's chain head), DA 95 (the scoping map),
+                             # BE 66 (the bytes interface), REV 73.**
+                             # *The 09-04 day waits on nothing but its GO, and it will be the first
+                             # day produced under a seal scope written down before the run.*
   THE_SEAL_SCOPE_IS_VERSIONED_AND_I_DROVE_THE_LADDER: EIGHT_AT_V22_ELEVEN_AT_V23
                              # CHECKED 2026-09-06T14:48:16Z by driving
                              # `economic_fields_in_force()`. **v21 → 8 names; v22 → 8; v23 → 11;
@@ -22493,6 +22600,89 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 190, 2026-09-06T14:53:22Z ------------------------------
+  I_REPRODUCED_THE_LIVE_SEAM_WITHOUT_OPENING_THE_SEALED_DAY:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      on a synthetic receipt of the same shape, declaring provenance.design.path as design
+      v21 and carrying the three outcome counts, DA's economic_absence returns sealed False
+      with n_leaked_fields 3 of 6 leaves walked, while DE's design_version_of_receipt judges
+      the same object under version 21 with the original eight in force. The two seats
+      disagree about one object because DA reads ECONOMIC_FIELDS by AST as a flat list; DA 95
+      will read DE's scoping map by the same route. I drove the mechanism synthetically
+      because a sealed forward day is not mine to open.
+  THE_EMITTERS_CORRECTNESS_RESTS_ON_AN_EQUALITY_I_DROVE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      _strip_economic strips by the module-level ECONOMIC_FIELDS rather than by a call to
+      economic_fields_in_force, which is right for an emitter running under v23; I drove the
+      identity rather than assuming it, and set(ECONOMIC_FIELDS) equals
+      set(economic_fields_in_force(None)) with both of size 11 and an empty symmetric
+      difference. So the emitter is correct by an equality that holds while
+      DESIGN_VERSION_IN_FORCE is the maximum version in the map; at v22 the in-force list is
+      8, so the emitter strips three more than a v22 receipt is judged by, which is the safe
+      direction. Recorded as a coupling, not a defect.
+  DESIGN_V23_SUPERSEDES_V22_BY_THE_PAIR_I_HASHED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      I hashed v22 at d38dba3dcf02491cd1 and v23's supersedes names that path with that
+      sha256, while its chain is twenty-two links long ending at v22, so a reader can walk
+      the lineage rather than trust a version number. R30_seal_scope_corrected is the new
+      rule and carries DISCLOSURE_one_of_six_days_was_seen with the other five days named as
+      not seen.
+  THE_DEAD_CONSTANT_IS_GONE_AND_ITS_NAME_IS_ITS_OWN_GRAVESTONE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      grep -c for SUPERSEDED_PARAMS_REL returns 1, which looked like a constant that had
+      survived its removal; reading the line shows the only occurrence is the comment
+      recording the removal. A count is not a reading, since the same one-hit answer would
+      have come back if the constant were still live.
+  REV_71S_FOUR_ITEMS_CLOSED_AT_THE_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      the parent is identified by readlink on /proc/<ppid>/exe with the reasoning beside it,
+      against an argv[0] a process can set to anything; the other three items are the
+      resolver refusing an unreadable head rather than demoting silently, digests carried at
+      load and at emit, and the dead constant removed. argv[0] is a claim the process makes
+      about itself while /proc/<pid>/exe is a fact the kernel keeps about it.
+  THE_09_03_PRE_READ_IS_HELD_UNTIL_DA_95:
+    prov: RELAYED
+    from: R-663, with the mechanism driven by me
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      no re-run of the 09-03 pre-read until DA 95, because the instrument that would re-judge
+      the day is known to be wrong about it: a pre-read reporting sealed False and six leaked
+      on a day that obeyed the rule in force when it ran would put a false leak into the
+      record, and a later reader would meet it before meeting the explanation. DA 94 comes
+      first, then DA 95.
+  BE_65_MADE_THE_FALSIFIER_INVOCATION_AND_JOURNAL_INDEPENDENT:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      BE round 65 landed at 2f20d83 making the launch form's falsifier invocation-independent
+      and journal-independent with the scope leaf read, closing both halves of REV 65 section
+      1.1 -- the $0 dependence I swept at round 175 and the journal dependence -- with the
+      same remedy the runtime guard uses, reading what the process is.
+  THE_QUEUE_BEFORE_THE_RELAUNCH:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T14:53:22Z
+    said: >-
+      fuser on the heavy-run lock returns no holder and no de102 unit exists, so the relaunch
+      has not happened while rehearsal v4 is emitted and design v23 is landed; open are DA 94
+      for the allowlist's chain head, DA 95 for the scoping map, BE 66 for the bytes
+      interface, and REV 73.
   # --- MEM round 189, 2026-09-06T14:48:16Z ------------------------------
   THE_SEAL_SCOPE_IS_VERSIONED_AND_I_DROVE_THE_LADDER:
     prov: CHECKED
