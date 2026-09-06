@@ -513,7 +513,12 @@ def merge_links_for_the_fork(directory=None) -> list:
     tips, why = {}, {}
     mine = RUNNER.design_chain()
     for v in mine.get("orphan_branches") or []:
-        f = d / f"p003_de_multiday_gate1_design_v{v}.json"
+        # DE 111: the resolver now returns NAMES (it resolves through
+        # `declaration_chain`); it used to return version INTEGERS. Both
+        # forms are accepted rather than assumed, because this list is
+        # what the repair merges and reading it wrong would merge nothing.
+        f = d / (v if isinstance(v, str)
+                 else f"p003_de_multiday_gate1_design_v{v}.json")
         if f.is_file():
             tips[f.name] = f
             why[f.name] = "de_multiday_gate1_runner.design_chain"

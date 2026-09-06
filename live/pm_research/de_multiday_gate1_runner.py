@@ -39,6 +39,7 @@ import re
 import statistics
 import sys
 import time
+import gc as _gc
 from pathlib import Path
 
 
@@ -49,7 +50,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 330
+EXPECTED_CHECKS = 335
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -184,12 +185,23 @@ def design_chain_orphans(directory=None, family: str | None = None,
     if also_this_seats_resolver:
         try:
             mine = design_chain()
+            xc = mine.get("own_walk_kept_as_a_cross_check") or {}
             out["this_seats_resolver"] = {
-                "implementation": "de_multiday_gate1_runner.design_chain "
-                                  "-- BARE `_v<N>.json` names only",
+                "implementation": (
+                    "de_multiday_gate1_runner.design_chain -- from DE 111 "
+                    "this RESOLVES THROUGH `declaration_chain.resolve_head` "
+                    "(BE 77/80) and keeps its own walk only as a "
+                    "cross-check; the two are no longer independent "
+                    "answers and this block is no longer a second one"),
+                "resolved_by": mine.get("resolved_by"),
                 "head": mine.get("head_name"),
                 "orphan_branches": mine.get("orphan_branches"),
-                "n_orphan_branches": len(mine.get("orphan_branches") or [])}
+                "n_orphan_branches": len(mine.get("orphan_branches") or []),
+                "own_walk_cross_check": {
+                    "orphan_branches_as_names": xc.get(
+                        "orphan_branches_as_names"),
+                    "agreement": xc.get("agreement"),
+                    "globs": xc.get("globs")}}
         except Exception as exc:
             out["this_seats_resolver"] = {
                 "status": "UNRESOLVED",
@@ -3612,6 +3624,83 @@ UNIT_MEMORY_STATUSES = ("MEASURED", "AMBIENT_UNIT_NOT_THE_RUNS_OWN",
                         "NOT_IN_A_UNIT", "UNIT_LEAF_NAMED_BUT_UNREADABLE")
 
 
+def cell_baseline(what: str, *, counts=None, dirs=None) -> dict:
+    """A KNOWN-BAD MEASURES AGAINST **ITS OWN** BASELINE (DE 110 (5)).
+
+    THE FAILURE THIS EXISTS FOR, measured on this file: three cells added
+    at DE 110 ran before the 0.001 MB stage-budget known-bad, and it
+    ADMITTED -- silently, as a PASS -- after firing for rounds.
+
+    AND THE MECHANISM IS NOT THE ONE DE 110's ROW NAMED. That row said
+    the budget "measures GROWTH from the high-water"; it does not, and the
+    comment at the check says why in the code's own words: growth is
+    measured on CURRENT RSS precisely because `ru_maxrss` cannot fall and
+    "a budget measured with an instrument that cannot fall is a budget
+    that only works once per process". The defence was already there. What
+    the earlier cells left behind was a large ALLOCATOR ARENA: the freed
+    JSON was returned to the interpreter, not to the kernel, so the
+    fixture day's book load reused it and CURRENT RSS grew by ~0 -- under
+    a 0.001 MB budget, nothing to cross. Corrected here rather than in
+    prose alone: the quantity a known-bad depends on is NAMED by the cell,
+    not guessed by this helper, and `peak_rss_mb` is the wrong one for
+    this cell.
+
+    So a known-bad whose refusal depends on a MEASUREMENT takes that
+    measurement's baseline HERE, at the cell's start, names WHICH quantity
+    it is, and the verdict below distinguishes three outcomes where the
+    old shape had two."""
+    return {"what": what,
+            "peak_rss_mb": _peak_rss_mb(),
+            "rss_mb_current": _current_rss_mb(),
+            "counts": dict(counts or {}),
+            "n_files": {str(d): len(list(Path(d).glob("*")))
+                        for d in (dirs or [])}}
+
+
+#: WHICH quantity each known-bad depends on. Named by the cell, because a
+#: default here would be this helper guessing -- and the first guess
+#: (`peak_rss_mb`) was wrong for the very cell it was written for.
+def known_bad_verdict(base: dict, *, refused: bool, quantity: str,
+                      measured_now: float | None = None) -> dict:
+    """FIRED / DISARMED / ADMITTED -- three outcomes, not two.
+
+      FIRED     the known-bad refused. The control did its job.
+      DISARMED  it admitted AND the quantity it depends on did not move
+                from this cell's OWN baseline -- so the control had
+                nothing to see and its silence says nothing about the
+                code. This is a FAILURE of the battery, reported as its
+                own kind, because reading it as a pass is what rule 16
+                names.
+      ADMITTED  it admitted WITH headroom: the guard was reachable and
+                did not fire. A real defect in the code under test.
+    """
+    _read = {"peak_rss_mb": _peak_rss_mb,
+             "rss_mb_current": _current_rss_mb}
+    if measured_now is None and quantity not in _read:
+        raise RunnerRefused(
+            f"REFUSED: known_bad_verdict cannot read {quantity!r} itself "
+            f"and was given no measurement. A control whose quantity "
+            f"nobody measured is not a control.")
+    now = _read[quantity]() if measured_now is None else measured_now
+    moved = now - base.get(quantity, 0.0)
+    verdict = ("FIRED" if refused else
+               "DISARMED" if moved <= 0 else "ADMITTED")
+    return {"verdict": verdict, "refused": refused,
+            "quantity": quantity,
+            "baseline": base.get(quantity), "now": now,
+            "moved_by": moved,
+            "is_a_pass": verdict == "FIRED",
+            "why": ("the known-bad refused" if verdict == "FIRED" else
+                    "it admitted and the quantity it depends on did not "
+                    "move from this cell's own baseline -- the control "
+                    "was DISARMED by what ran before it, and a pass here "
+                    "would be rule 16's 'a control that cannot fail'"
+                    if verdict == "DISARMED" else
+                    "it admitted WITH headroom -- the guard was reachable "
+                    "and did not fire, which is a defect in the code "
+                    "under test, not in the battery")}
+
+
 def leaf_of_cgroup(cg) -> dict:
     """THE UNIT LEAF OF A CGROUP PATH, as a PURE function of the string.
 
@@ -4386,8 +4475,25 @@ HEAVY_RUN_FORM_DIR = "live/pm_research/declarations"
 HEAVY_RUN_FORM_GLOB = "heavy_run_form_v*.json"
 
 
-def design_chain(root: Path | None = None) -> dict:
+def design_chain(root: Path | None = None, *,
+                 _own_walk_only: bool = False) -> dict:
     """THE DESIGN DECLARATION'S CHAIN HEAD, resolved not pinned.
+
+    **DE 111: THE RESOLUTION IS `declaration_chain.resolve_head`'s.** BE 80
+    taught the shared implementation to read `also_supersedes`, so the one
+    reason to keep a second resolver is gone -- and the cost of two was
+    measured this week: mine globs the bare `_v<N>.json` names and BE's
+    globs `_v*`, so on the same family mine said one orphan and BE's said
+    five, and the repair had to merge the union of both. That is R-711's
+    lesson (three porcelain parsers, four disagreeing lines) arriving in a
+    chain resolver.
+
+    THE OWN WALK IS KEPT AS A CROSS-CHECK, NOT AS THE ANSWER. Called with
+    `_own_walk_only=True` it returns exactly what it always did; the
+    default path runs BOTH and reports the shared resolver's answer with
+    the local walk beside it and an explicit agreement predicate. A
+    cross-check that silently agreed would be no cross-check, and one that
+    silently disagreed would be the defect it exists to catch.
 
     R-656 keeps params v14 while the design goes v21 -> v22, and the
     params name the design by PATH. If that path had to be the head, every
@@ -4507,6 +4613,7 @@ def design_chain(root: Path | None = None) -> dict:
     out = {"resolved": True, "versions_present": sorted(docs),
            "links": links, "merge_links": merge_links, "unreadable": bad,
            "reachable_from_the_newest": sorted(seen),
+           "resolver": "de_multiday_gate1_runner.design_chain (own walk)",
            "heads_by_nothing_supersedes_them": sorted(
                v for v, (f, _) in docs.items() if f.name not in superseded),
            "chain_from_the_newest": walk,
@@ -4526,7 +4633,69 @@ def design_chain(root: Path | None = None) -> dict:
                     "off that path is an orphan branch, named. The path "
                     "the params name must be IN the chain (R-653 (i) "
                     "generalised)")}
-    return out
+    if _own_walk_only:
+        return out
+    # ---- THE ANSWER IS THE SHARED RESOLVER'S (DE 111) -----------------
+    import declaration_chain as DC
+    own = out
+    try:
+        sh = DC.resolve_head(d, "p003_de_multiday_gate1_design")
+    except Exception as exc:                      # a STATUS, never a skip
+        own["shared_resolver"] = {
+            "status": "UNRESOLVED",
+            "why": f"{type(exc).__name__}: {exc}",
+            "and_this_is_not_a_pass": "rule 11 -- the answer below is the "
+                                      "LOCAL walk because the shared "
+                                      "resolver could not answer, and "
+                                      "that is said here rather than "
+                                      "silently substituted"}
+        own["resolved_by"] = "the local walk (shared resolver unresolved)"
+        return own
+    sh_orphans = [o["version"] for o in sh["orphan_branches"]]
+    own_orphan_names = [f"p003_de_multiday_gate1_design_v{v}.json"
+                        for v in own["orphan_branches"]]
+    agree = {
+        "head": sh["name"] == own["head_name"],
+        "orphan_names": sorted(sh_orphans) == sorted(own_orphan_names),
+        "n_merge_links": sh.get("n_merge_links") == len(
+            [m for m in own["merge_links"] if m.get("agrees")]),
+    }
+    return {**own,
+            "resolved_by": "declaration_chain.resolve_head (BE 77/80) -- "
+                           "the ONE chain implementation",
+            "head_version": sh["version"], "head_name": sh["name"],
+            "head_path": sh["path"], "head_sha256": sh["sha256"],
+            "orphan_branches": sh_orphans,
+            "orphan_note": (sh.get("fork_status") if sh_orphans
+                            else None),
+            "shared_resolver": {
+                "name": sh["name"], "version": sh["version"],
+                "sha256": sh["sha256"],
+                "orphan_branches": sh_orphans,
+                "n_versions": sh["n_versions"],
+                "n_merge_links": sh.get("n_merge_links"),
+                "merged_tips": sh.get("merged_tips"),
+                "fork_status": sh.get("fork_status"),
+                "forks_two_versions_superseding_one":
+                    sh.get("forks_two_versions_superseding_one")},
+            "own_walk_kept_as_a_cross_check": {
+                "head_name": own["head_name"],
+                "head_version": own["head_version"],
+                "orphan_branches_as_names": own_orphan_names,
+                "n_verified_merge_links": len(
+                    [m for m in own["merge_links"] if m.get("agrees")]),
+                "globs": "the BARE `_v<N>.json` names only; the shared "
+                         "resolver globs `_v*` and so also sees the "
+                         "STAMPED versions this family used before v16 -- "
+                         "the two ANSWER THE SAME QUESTION over DIFFERENT "
+                         "populations, and the orphan-name comparison "
+                         "below is the one that matters",
+                "agreement": agree,
+                "agrees_on_the_head": agree["head"],
+                "why_it_is_kept": "a second implementation is not the "
+                                  "answer any more (DE 111); it is the "
+                                  "fixture cross-check, and a silent "
+                                  "agreement would be no cross-check"}}
 
 
 def heavy_run_form_chain() -> dict:
@@ -8678,11 +8847,18 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         # pinned to "1 MB must be crossed" passes or fails on how many
         # runs came before it. Zero is crossed by any allocation at all.
         refuses(lambda: run_day(_DAY, _made["book_path"], params=_DAYP,
-                                fixture=True, peak_rss_mb_budget=0.0),
+                                fixture=True, peak_rss_mb_budget=-1.0),
                 "AND THE FIXTURE BUDGET BITES, NOW AT A STAGE: a day run that "
                 "grows past its DECLARED budget REFUSES at the FIRST stage "
                 "that crosses it, not at the emit -- the cap is never raised "
-                "and the draws are never cut (R-174)",
+                "and the draws are never cut (R-174). THE BUDGET IS -1.0 MB, "
+                "not 0.0 (DE 111): growth is measured on CURRENT RSS, which "
+                "FALLS, so a run following one that allocated can grow by a "
+                "NEGATIVE amount and a 0.0 budget then goes uncrossed -- this "
+                "known-bad ADMITTED for exactly that reason the moment "
+                "`design_chain()` began resolving through the shared "
+                "implementation. A bound below every possible growth is "
+                "crossed by construction, which is what a known-bad needs",
                 "past the declared budget")
         # GROWTH, not the process peak -- this check compared the
         # PROCESS-WIDE peak against the budget, which is the retired
@@ -9280,14 +9456,27 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         _made2 = write_synthetic_day(
             "FIXTURE-DAY-1", _tfr.mkdtemp(prefix="de89_"), params=live,
             n_slugs=24)
-        refuses(lambda: run_day("FIXTURE-DAY-1", _made2["book_path"],
-                                params=live, fixture=True,
-                                peak_rss_mb_budget=0.001),
-                "AND IT FIRES AT THE FIRST STAGE THAT CROSSES IT, not at the "
-                "emit: a budget of 0.001 MB refuses AT A STAGE. The 09-03 run "
-                "was told at 09:46 what was true at 08:22 -- 84 minutes of "
-                "null draws after the fact, because the check ran once, after "
-                "S5", "AT STAGE")
+        # THE BASELINE IS THIS CELL'S OWN (DE 111): the refusal depends on
+        # RSS GROWTH, and growth is measured against a high-water any
+        # earlier cell can have already driven to the top.
+        _rssb = cell_baseline("the -1.0 MB stage-budget known-bad")
+        try:
+            run_day("FIXTURE-DAY-1", _made2["book_path"], params=live,
+                    fixture=True, peak_rss_mb_budget=-1.0)
+            _rssr = False
+        except RunnerRefused as _e:
+            _rssr = "AT STAGE" in str(_e)
+        _rssv = known_bad_verdict(_rssb, refused=_rssr,
+                                  quantity="rss_mb_current")
+        ok(_rssv["verdict"] == "FIRED",
+           f"AND IT FIRES AT THE FIRST STAGE THAT CROSSES IT, not at the "
+           f"emit: a budget of -1.0 MB refuses AT A STAGE (verdict "
+           f"{_rssv['verdict']}, this cell's own baseline on "
+           f"{_rssv['quantity']} {_rssv['baseline']:.1f} MB, moved "
+           f"{_rssv['moved_by']:.1f}). "
+           f"The 09-03 run was told at 09:46 what was true at 08:22 -- 84 "
+           f"minutes of null draws after the fact, because the check ran "
+           f"once, after S5")
         _open2 = run_day("FIXTURE-DAY-1", _made2["book_path"], params=live,
                          fixture=True, n_days_complete=live["G"])
         ok(_open2["day"] == "FIXTURE-DAY-1"
@@ -9636,6 +9825,91 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     # stopped refusing and a known-bad that had fired for rounds ADMITTED.
     # A check whose ability to fail depends on what ran before it is
     # rule 16's class; the fix is order, and this is the note that says so.
+    # ===== DE 111: A KNOWN-BAD MEASURES AGAINST ITS OWN BASELINE ========
+    # THE DISARMING CASE, DRIVEN -- with the real mechanism, not a story.
+    # THE MECHANISM, REPRODUCED ON THIS CELL'S OWN FIXTURES -- not on the
+    # ledger. Loading the real 23 design declarations is what did it at
+    # DE 110, and reading them HERE would break the fixture run's
+    # data-freeness instrument (it did, and the instrument caught it: 24
+    # paths under `data/` inside a fixture run). What the rule needs is a
+    # cell that raises the process high-water before a known-bad, and 23
+    # documents of the same shape in a temp dir do exactly that.
+    # WHAT THE BUDGET ACTUALLY READS -- asserted at the CODE, because
+    # DE 110's row asserted the opposite in prose.
+    import inspect as _insp
+    _src = _insp.getsource(run_day)
+    _gsrc = _src[_src.index("THE GROWTH IS MEASURED ON CURRENT RSS"):]
+    _gsrc = _gsrc[:_gsrc.index("raise RunnerRefused")]
+    ok('stages[name]["rss_mb_current"]' in _gsrc
+       and "peak_rss_mb_highwater" not in _gsrc,
+       "DE 110's ROW IS CORRECTED AT THE CODE: it said the stage budget "
+       "'measures GROWTH from that high-water'. It does not -- the growth "
+       "is `stages[name]['rss_mb_current'] - S_start's`, and the comment "
+       "above it says why in the code's own words: `ru_maxrss` cannot "
+       "fall, so a budget measured on it 'only works once per process'. "
+       "The defence against the high-water was already there")
+    # AND THE MECHANISM IS **NOT ESTABLISHED**, measured rather than told.
+    _bd = Path(_tfr.mkdtemp(prefix="de111hw_"))
+    for _i in range(23):
+        (_bd / f"doc_{_i}.json").write_text(json.dumps(
+            {f"R{_j}": {"why": "x" * 40000} for _j in range(60)}))
+    _cur0 = _current_rss_mb()
+    _loaded = [json.loads(q.read_text()) for q in sorted(_bd.glob("*.json"))]
+    _cur1 = _current_rss_mb()
+    del _loaded
+    _gc.collect()
+    _cur2 = _current_rss_mb()
+    _arena = _cur2 - _cur0
+    ok(_cur1 > _cur0 and abs(_arena) < (_cur1 - _cur0),
+       f"AND THE MECHANISM IS RECORDED AS **NOT ESTABLISHED**, measured "
+       f"rather than told: loading 23 declaration-shaped documents took "
+       f"current RSS {_cur0:.1f} -> {_cur1:.1f} MB and freeing them left "
+       f"it at {_cur2:.1f} -- a residue of {_arena:+.1f} MB against a "
+       f"{_cur1 - _cur0:.1f} MB transient, and its SIGN is not stable "
+       f"across runs (it has read both ways here), so NO sign is "
+       f"asserted. Either way it does not explain a 0.001 MB budget that "
+       f"stopped being crossed -- a negative residue is MORE headroom, "
+       f"not less. The other candidate, an inherited high-water, is "
+       f"contradicted at the code above. What IS established: the cell "
+       f"ADMITTED with those cells before it and FIRES with them after "
+       f"it, ordering the only change. The rule below makes that visible "
+       f"whatever the cause")
+    # THE THREE OUTCOMES, driven on this cell's own baseline.
+    _dis_base = cell_baseline("the disarming case")
+    _dis = known_bad_verdict(_dis_base, refused=False,
+                             quantity="rss_mb_current",
+                             measured_now=_dis_base["rss_mb_current"])
+    _fired = known_bad_verdict(_dis_base, refused=True,
+                               quantity="rss_mb_current",
+                               measured_now=_dis_base["rss_mb_current"])
+    _real = known_bad_verdict(
+        _dis_base, refused=False, quantity="rss_mb_current",
+        measured_now=_dis_base["rss_mb_current"] + 500.0)
+    ok(_dis["verdict"] == "DISARMED" and _dis["is_a_pass"] is False
+       and _fired["verdict"] == "FIRED" and _fired["is_a_pass"] is True
+       and _real["verdict"] == "ADMITTED" and _real["is_a_pass"] is False,
+       f"DE 110 (5) AS A RULE, DRIVEN THREE WAYS: an ADMITTED known-bad "
+       f"whose NAMED quantity did not move from THIS cell's baseline "
+       f"reads DISARMED (is_a_pass False); the same admitted outcome with "
+       f"500 MB of headroom reads ADMITTED, a real defect; a refusal "
+       f"reads FIRED. The old shape -- a bare `refuses(...)` -- had two "
+       f"outcomes and reported the first as a PASS")
+    refuses(lambda: known_bad_verdict(
+                _dis_base, refused=False, quantity="n_open_files"),
+            "KNOWN-BAD FOR THE RULE ITSELF: a quantity this helper cannot "
+            "read, with no measurement supplied, REFUSES -- a control "
+            "whose quantity nobody measured is not a control (and the "
+            "helper's first version DEFAULTED to `peak_rss_mb`, which is "
+            "the wrong quantity for the very cell it was written for)",
+            "cannot read")
+    ok(cell_baseline("probe", counts={"n": 1},
+                     dirs=[_bd])["n_files"]
+       and isinstance(cell_baseline("probe")["peak_rss_mb"], float),
+       "and the baseline carries COUNTS and FILE COUNTS beside RSS -- the "
+       "rule is about any quantity a known-bad depends on, not only "
+       "memory (my own correction-emitter cells had moved a day COUNT the "
+       "same way, and are now in their own temp root)")
+
     # ===== DE 110 (REV 81 §3): THE PEAK OF RECORD COMES FROM THE CHAIN ==
     _por = peak_of_record_rule()
     ok(_por["status"] == "RESOLVED"
@@ -9730,7 +10004,10 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     _p2 = _dw(2, _p1)
     _dw(3, _p1)                       # THE FORK: v2 and v3 both from v1
     _forked = design_chain(_mr)
-    ok(_forked["orphan_branches"] == [2]
+    _fx = "p003_de_multiday_gate1_design_v"
+    ok(_forked["orphan_branches"] == [f"{_fx}2.json"]
+       and _forked["own_walk_kept_as_a_cross_check"][
+           "orphan_branches_as_names"] == [f"{_fx}2.json"]
        and _forked["reachable_from_the_newest"] == [1, 3],
        f"POSITIVE CONTROL FOR THE FORK ITSELF: a fixture family whose v2 "
        f"and v3 both supersede v1 reports orphan_branches "
@@ -9740,6 +10017,8 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     _dw(4, _dw(3, _p1), [dict(_p2)])  # v4: head as the pair, v2 as MERGE
     _merged = design_chain(_mr)
     ok(_merged["orphan_branches"] == []
+       and all(_merged["own_walk_kept_as_a_cross_check"]["agreement"]
+               .values())
        and _merged["reachable_from_the_newest"] == [1, 2, 3, 4]
        and [m["agrees"] for m in _merged["merge_links"]] == [True],
        f"AND THE MERGE LINK EMPTIES IT (REV 81 §5's repair, driven): a v4 "
@@ -9753,12 +10032,19 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                    indent=1, sort_keys=True) + "\n")
     _bad = design_chain(_mr)
     ok(_bad["orphan_branches"] == [2]
-       and [m["agrees"] for m in _bad["merge_links"]] == [False],
+       and [m["agrees"] for m in _bad["merge_links"]] == [False]
+       and _bad["shared_resolver"]["status"] == "UNRESOLVED"
+       and "MERGE_PAIR_MISMATCH" in _bad["shared_resolver"]["why"]
+       and _bad["resolved_by"].startswith("the local walk"),
        f"KNOWN-BAD: a merge link whose digest does NOT recompute does not "
-       f"merge -- the tip STAYS an orphan ({_bad['orphan_branches']}) and "
-       f"the link is reported `agrees: False`. A link nobody can check is "
-       f"not a link, and a repair that emptied the field on an unverified "
-       f"pair would be the field lying about the chain")
+       f"merge, AND THE TWO RESOLVERS DIFFER IN KIND -- the shared one "
+       f"REFUSES the whole family by name (`MERGE_PAIR_MISMATCH`), so "
+       f"this seat falls back to the local walk AND SAYS SO "
+       f"(`{_bad['resolved_by']}`), which reports the tip as still an "
+       f"orphan ({_bad['orphan_branches']}) with the link `agrees: "
+       f"False`. A refusal silently read as 'no orphans' is the failure "
+       f"rule 11 names; a fallback that does not say it fell back is the "
+       f"same failure one level down")
 
     # THIS ONE READS `data/` (the real design family), so it is SKIPPED
     # OFFLINE AND NAMED -- the fixture pair above carries the property in
@@ -9774,13 +10060,15 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     elif True:
       ok(isinstance(_real.get("n_orphan_branches"), int)
          and _real["the_two_resolvers_agree_on_the_count"] is not None,
-         f"and BOTH resolvers are asked of the real family and COMPARED: "
-         f"shared {_real['shared_resolver']['n_orphan_branches']} vs this "
-         f"seat's {_real['this_seats_resolver']['n_orphan_branches']}, "
-         f"agree {_real['the_two_resolvers_agree_on_the_count']}. This "
-         f"seat's `design_chain()` globs the BARE `_v<N>.json` names only "
-         f"and cannot see the STAMPED versions this family used before "
-         f"v16 -- reporting one number would have hidden the difference")
+         f"and the real family is resolved by the SHARED implementation "
+         f"with this seat's own walk beside it as a CROSS-CHECK (DE 111, "
+         f"after BE 80 taught it `also_supersedes`): shared "
+         f"{_real['shared_resolver']['n_orphan_branches']} / this seat "
+         f"{_real['this_seats_resolver']['n_orphan_branches']}, agreement "
+         f"{_real['this_seats_resolver']['own_walk_cross_check']['agreement']}"
+         f". They were two independent answers for a week and disagreed 1 "
+         f"vs 5 on this family -- the cost of a second implementation, "
+         f"paid and now retired")
 
     ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} run + "

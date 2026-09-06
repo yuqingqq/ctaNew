@@ -43,7 +43,7 @@ import be_race_reader as BE                               # noqa: E402
 import de_multiday_gate1_runner as RUNNER                 # noqa: E402
 
 PROTOCOL = "P003_DE_RECEIPT_CORRECTION_V1"
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 27
 
 #: The blocks REV 79 §3 names. NOT the frozen set -- the frozen set is
 #: "everything v1 carries". These are asserted to be INSIDE it, so the
@@ -100,6 +100,111 @@ def sealed_names_in_force_for(rec: dict) -> dict:
             "read_from": scope["read_from"],
             "sealed_names": list(scope["fields_in_force"]),
             "n": len(scope["fields_in_force"])}
+
+
+def scope_at_this_correction() -> dict:
+    """THE SEALED LIST IN FORCE **NOW** -- at the moment this correction is
+    written, not when the artifact it corrects was produced.
+
+    REV 82 §2.3: `seal_census_by_KEY_before_writing` was scoped entirely to
+    the past. All three landed corrections resolve design v21 on BOTH
+    halves of DE 109's union, so the union was EIGHT while the code
+    writing them seals ELEVEN -- an addition carrying `n_fills_arm` would
+    not have been flagged.
+
+    The version is RESOLVED, not read from a literal: this module's
+    `DESIGN_VERSION_IN_FORCE` is a constant that has to track a moving
+    thing, so the chain head is resolved too and the WIDER of the two is
+    used. A resolution failure is a STATUS and falls back to the constant
+    -- never to a narrower list."""
+    v_const = RUNNER.DESIGN_VERSION_IN_FORCE
+    v_head, how = None, None
+    try:
+        v_head = RUNNER.design_chain().get("head_version")
+        how = "design_chain() head, resolved at this emit"
+    except Exception as exc:                     # a STATUS, never a skip
+        how = f"UNRESOLVED: {type(exc).__name__}: {exc}"
+    v = max([x for x in (v_const, v_head) if isinstance(x, int)])
+    return {"design_version": v,
+            "module_constant": v_const,
+            "chain_head_version": v_head,
+            "chain_head_read": how,
+            "rule": "the WIDER of the module's own version and the "
+                    "resolved chain head -- a constant alone is a literal "
+                    "tracking a moving thing, and a failed resolution "
+                    "never narrows the list",
+            "sealed_names": list(RUNNER.economic_fields_in_force(v)),
+            "n": len(RUNNER.economic_fields_in_force(v))}
+
+
+def two_scope_seal_census(v1: dict, v2: dict, *, at_v1: dict,
+                          now: dict) -> dict:
+    """THE SEAL CENSUS BY KEY, UNDER **TWO** SCOPES (R-716 ruling).
+
+    DA 105 forced the distinction and it is the whole of it: the 09-03
+    `.v2` carries the three outcome counts as keys **inherited
+    byte-identical from its v1**, open under that receipt's v21 eight and
+    sealed under today's eleven. A plain union would refuse every
+    correction of an eight-scope receipt -- because the frozen blocks MAY
+    NOT CHANGE, so the correction cannot remove what it is forbidden to
+    touch, and the only obedient act would be not correcting it at all.
+
+    So:
+      INHERITED keys (a sealed-name path the v1 already carries) are
+        judged under **the v1's own scope**. One that is open there is
+        REPORTED as inherited-open, with its paths -- never refused, and
+        never silently dropped either.
+      ADDED keys (a path the .vN introduces) are judged under
+        **v1's scope UNION the scope in force at THIS correction's emit**.
+        A correction is written today and may not carry a name that is
+        sealed today, whatever the artifact it corrects predates.
+    """
+    w1, w2 = set(RUNNER.seal_key_walk(v1)), RUNNER.seal_key_walk(v2)
+    inherited = sorted(p for p in w2 if p in w1)
+    added = sorted(p for p in w2 if p not in w1)
+    at_v1_names = set(at_v1["sealed_names"])
+    added_names = at_v1_names | set(now["sealed_names"])
+
+    def _leaf(path):
+        return path.rsplit(".", 1)[-1]
+
+    inherited_leaks = [p for p in inherited if _leaf(p) in at_v1_names]
+    inherited_open = [p for p in inherited if _leaf(p) not in at_v1_names]
+    added_leaks = [p for p in added if _leaf(p) in added_names]
+    return {
+        "rule": RUNNER.SEAL_RULE,
+        "ruling": "R-716 (coordinator, disclosed to REV 83 for overrule) "
+                  "on REV 82 §2.3 with DA 105's distinction",
+        "inherited": {
+            "judged_under": {
+                "design_version": at_v1["design_version"],
+                "n": at_v1["n"], "sealed_names": at_v1["sealed_names"],
+                "read_from": at_v1["read_from"]},
+            "n_paths_walked": len(inherited),
+            "n_sealed_keys_found": len(inherited_leaks),
+            "found": inherited_leaks,
+            "n_open_under_v1_but_sealed_today": len(inherited_open),
+            "open_under_v1_but_sealed_today": inherited_open,
+            "why_these_are_not_a_refusal": (
+                "the v1 already carried them and the frozen blocks may "
+                "not change -- refusing here would forbid correcting an "
+                "eight-scope receipt at all. They are REPORTED, with "
+                "their paths, so a reader judging under today's list "
+                "sees exactly what DA's independent census sees")},
+        "added": {
+            "judged_under": {
+                "v1_scope_design_version": at_v1["design_version"],
+                "correction_emit_design_version": now["design_version"],
+                "n": len(added_names),
+                "sealed_names": sorted(added_names)},
+            "n_paths_walked": len(added),
+            "n_sealed_keys_found": len(added_leaks),
+            "found": added_leaks},
+        "the_two_version_pair": f"v{at_v1['design_version']} (the "
+                                f"artifact) / v{now['design_version']} "
+                                f"(this correction's emit)",
+        "n_sealed_keys_found": len(inherited_leaks) + len(added_leaks),
+    }
 
 
 def assert_no_reconstruction_under_a_plain_name(v2: dict) -> dict:
@@ -438,13 +543,23 @@ def build_correction(v1_path: Path, additions: dict, *,
     # UNION and both resolutions are recorded below: a widening is never
     # silently escaped, and a narrowing is never silently taken.
     sealed_out = sealed_names_in_force_for(v2)
-    leaks = [k for k in RUNNER.seal_key_walk(v2)
-             if k.rsplit(".", 1)[-1] in set(sealed["sealed_names"])
-             | set(sealed_out["sealed_names"])]
-    if leaks:
+    scope_now = scope_at_this_correction()
+    seal = two_scope_seal_census(v1, v2, at_v1=sealed, now=scope_now)
+    if seal["inherited"]["n_sealed_keys_found"]:
         raise CorrectionRefused(
             f"REFUSED before writing: the correction carries sealed names "
-            f"as KEYS -- {leaks[:6]}. {RUNNER.SEAL_RULE}")
+            f"as KEYS that are sealed under the CORRECTED ARTIFACT'S OWN "
+            f"scope (v{sealed['design_version']}) -- "
+            f"{seal['inherited']['found'][:6]}. {RUNNER.SEAL_RULE}")
+    if seal["added"]["n_sealed_keys_found"]:
+        raise CorrectionRefused(
+            f"REFUSED before writing: an ADDED key carries a name sealed "
+            f"under v{sealed['design_version']} (the artifact) or "
+            f"v{scope_now['design_version']} (this correction's emit) -- "
+            f"{seal['added']['found'][:6]}. A correction is written TODAY "
+            f"and may not introduce a name that is sealed today, whatever "
+            f"the artifact it corrects predates (REV 82 §2.3). "
+            f"{RUNNER.SEAL_RULE}")
     plain = assert_no_reconstruction_under_a_plain_name(v2)
     digests = assert_added_blocks_carry_no_plain_digest(v2, declared)
     v2["correction_census"] = {
@@ -466,13 +581,22 @@ def build_correction(v1_path: Path, additions: dict, *,
                 "this receipt's own emit; if the two lists ever differ, "
                 "the difference is here rather than in nobody's hands")},
         "seal_census_by_KEY_before_writing": {
-            "n_sealed_keys_found": 0,
-            "judged_under": "the UNION of the list in force at this "
-                            "receipt's own emit and the list the .vN "
-                            "itself resolves to",
+            **seal,
             "walked": "every key at every depth of the OUTPUT, before it "
                       "was written; a leak REFUSES and is never repaired",
-            "rule": RUNNER.SEAL_RULE},
+            "scope_at_this_corrections_emit": scope_now,
+            "the_vNs_own_resolution": {
+                "design_version": sealed_out["design_version"],
+                "n": sealed_out["n"],
+                "is_a_subset_of_the_correction_emit_scope": set(
+                    sealed_out["sealed_names"])
+                <= set(scope_now["sealed_names"]),
+                "why_it_no_longer_widens_the_judgement": (
+                    "DE 109 unioned it in; it resolves from the .vN's own "
+                    "(inherited) emit stamp, so it can never exceed the "
+                    "scope in force at this emit. Recorded as a fact, and "
+                    "the predicate above says so rather than assuming it")},
+        },
         "no_reconstruction_under_a_plain_name": plain,
         "no_plain_digest_in_an_added_block": digests,
         "what_a_correction_may_never_do": [
@@ -652,7 +776,80 @@ def selftest() -> int:
     refuses(lambda: build_correction(
                 v1p, {"Z": 1.0}, root=td),
             "KNOWN-BAD: a correction carrying a SEALED NAME as a key is "
-            "refused BEFORE it is written", "sealed names")
+            "refused BEFORE it is written", "a name sealed under")
+
+    # ===== DE 111 / R-716: THE CENSUS IS TWO-SCOPED ====================
+    _now = scope_at_this_correction()
+    ok(_now["n"] == 11 and _now["design_version"] >= 23
+       and set(RUNNER.economic_fields_in_force(22)) < set(
+           _now["sealed_names"]),
+       f"the scope at THIS correction's emit is RESOLVED, not read from a "
+       f"literal: v{_now['design_version']} ({_now['n']} names) -- the "
+       f"wider of the module constant v{_now['module_constant']} and the "
+       f"chain head v{_now['chain_head_version']}. REV 82 §2.3's finding "
+       f"was that the census never looked here at all")
+    # (a) AN ADDITION carrying one of the ELEVEN, under an EIGHT-scope v1.
+    _v1scope = sealed_names_in_force_for(json.loads(v1p.read_text()))
+    ok(_v1scope["n"] == 8,
+       f"and the fixture v1 is an EIGHT-scope receipt "
+       f"(design v{_v1scope['design_version']}), which is the case the "
+       f"whole ruling is about: open under its own list, sealed under "
+       f"today's")
+    refuses(lambda: build_correction(
+                v1p, {"note_RECONSTRUCTED": {"n_fills_arm": 7}}, root=td),
+            "KNOWN-BAD (a): an ADDITION carrying `n_fills_arm` -- OPEN "
+            "under the v1's eight, SEALED under today's eleven -- is "
+            "REFUSED NAMING THE KEY. This is exactly what DE 109's "
+            "past-scoped union would have admitted",
+            "n_fills_arm")
+    # (b) AN INHERITED outcome count under an EIGHT-scope v1: REPORTED.
+    _inh = json.loads(v1p.read_text())
+    _inh["per_day_sealed_artifacts"] = [
+        {"arm": "A", "counts": {"n_fills_arm": 11, "n_cancels_issued": 3}}]
+    # ITS OWN TEMP ROOT (DE 111 second item, applied to itself): these
+    # fixtures are extra SEALED receipts, and dropped into `td` they moved
+    # the day-count cells below -- a cell measuring against what ran
+    # before it.
+    _td2 = Path(tempfile.mkdtemp(prefix="de111_"))
+    (_td2 / "pm_5min/derived").mkdir(parents=True)
+    _ip = _td2 / ("pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__"
+                  "20260906T140156Z.json")
+    _ip.write_text(json.dumps(_inh, indent=2, sort_keys=True) + "\n")
+    _iv2 = build_correction(_ip, {"note_RECONSTRUCTED": {"x": 1}},
+                            root=_td2)
+    _sc = _iv2["correction_census"]["seal_census_by_KEY_before_writing"]
+    ok(_sc["inherited"]["n_sealed_keys_found"] == 0
+       and _sc["inherited"]["n_open_under_v1_but_sealed_today"] == 2
+       and sorted(_sc["inherited"]["open_under_v1_but_sealed_today"]) == [
+           "per_day_sealed_artifacts[0].counts.n_cancels_issued",
+           "per_day_sealed_artifacts[0].counts.n_fills_arm"]
+       and _sc["added"]["n_sealed_keys_found"] == 0,
+       f"POSITIVE CONTROL (b): the SAME two names INHERITED byte-identical "
+       f"from an eight-scope v1 are NOT refused -- they are reported as "
+       f"inherited-open with their paths "
+       f"({_sc['inherited']['n_open_under_v1_but_sealed_today']} of them, "
+       f"judged under v{_sc['inherited']['judged_under']['design_version']}"
+       f"). DA 105's distinction: the frozen blocks may not change, so "
+       f"refusing here would forbid correcting the receipt at all")
+    # (c) AN ELEVEN-scope v1: an outcome count ANYWHERE refuses.
+    _dg = (Path(RUNNER.DR.resolve()["data_root"]) / "pm_5min/derived"
+           / "p003_de_multiday_gate1_design_v23.json")
+    _e11 = dict(_inh, provenance={"design": {
+        "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+        "sha256": hashlib.sha256(_dg.read_bytes()).hexdigest()}})
+    _ep = _td2 / ("pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__"
+                  "20260906T140157Z.json")
+    _ep.write_text(json.dumps(_e11, indent=2, sort_keys=True) + "\n")
+    ok(sealed_names_in_force_for(_e11)["n"] == 11,
+       "and a v1 whose `provenance.design` pair resolves v23 is an "
+       "ELEVEN-scope receipt -- the other side of the ruling")
+    refuses(lambda: build_correction(_ep, {"note_RECONSTRUCTED": {"x": 1}},
+                                     root=_td2),
+            "KNOWN-BAD (c): a correction of an ELEVEN-scope receipt "
+            "carrying an outcome count ANYWHERE -- inherited or added -- "
+            "is REFUSED. Under its own scope the name was never open, so "
+            "there is nothing to inherit",
+            "n_fills_arm")
     refuses(lambda: build_correction(
                 v1p, {"sha256_at_load": "RECONSTRUCTED"}, root=td),
             "KNOWN-BAD: a reconstruction under a PLAIN name is refused -- "
