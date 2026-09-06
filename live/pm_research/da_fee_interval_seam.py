@@ -36,7 +36,7 @@ from pathlib import Path
 #: invisible to a resolver keying on the protocol. The version now comes from
 #: `RECEIPT_VERSION` in one place, so bumping the receipt cannot leave the
 #: protocol behind.
-RECEIPT_VERSION = 3
+RECEIPT_VERSION = 4
 PROTOCOL = f"P003_DA_FEE_INTERVAL_SEAM_V{RECEIPT_VERSION}"
 REPO = Path("/home/yuqing/ctaNew")
 ECON = (REPO / "data/pm_5min/derived"
@@ -76,15 +76,21 @@ WITHDRAWAL_ROW = (
 #: protocol string, so a reader must be able to see both steps.
 SUPERSEDES = {
     "path": "data/pm_5min/derived/"
-            "p003_da_fee_interval_seam_v2__20260906T021955Z.json",
+            "p003_da_fee_interval_seam_v3__20260906T024354Z.json",
     "sha256": "PINNED_AT_EMIT",
     "which_superseded": {
         "path": "data/pm_5min/derived/"
-                "p003_da_fee_interval_seam__20260905T155346Z.json",
+                "p003_da_fee_interval_seam_v2__20260906T021955Z.json",
+        "which_superseded": "p003_da_fee_interval_seam__20260905T155346Z.json",
         "sha256": "a7b562f0ab4673160aa8757083a721c9c90d8b317"
                   "a36beb538674cf22db624f8",
     },
-    "v3_changes_only": (
+    "v4_changes_only": (
+        "the `correction_is_in_band` sentence, which v3 shipped still reading "
+        "\"this is v2\". Derived from RECEIPT_VERSION now. No number, no "
+        "predicate and no field other than the version strings differs from "
+        "v3, and v3 is not edited."),
+    "v3_changed_only": (
         "the `protocol` string, which v2 left reading "
         "P003_DA_FEE_INTERVAL_SEAM_V1 so an automated reader resolving by "
         "protocol saw V1 for both files (reviewer C-2). Every number, every "
@@ -96,9 +102,18 @@ SUPERSEDES = {
         "the call-site AST counts, the guard behaviour and every other field "
         "are unchanged -- v1's arithmetic was right and its ESTIMAND was "
         "wrong"),
+    # ROUND 55: DERIVED, like the protocol. This sentence still read "this is
+    # v2" inside the v3 artifact -- the C-2 defect one field over, in prose
+    # instead of in `protocol`. It is NOT resolution-bearing (a reader follows
+    # `path` and `sha256`), so it is a nit; but a shipped artifact asserting a
+    # false statement about its own version is exactly what the last two
+    # rounds were spent removing, and leaving one in to save a file is the
+    # wrong trade here. Both the number and the predecessor's name come from
+    # RECEIPT_VERSION now, so neither can be left behind again.
     "correction_is_in_band": (
-        "rule 13: this is v2, a superseding receipt. The v1 artifact is not "
-        "edited and stands as provenance"),
+        f"rule 13: this is v{RECEIPT_VERSION}, a superseding receipt. The "
+        f"v{RECEIPT_VERSION - 1} artifact is not edited and stands as "
+        f"provenance, as does every earlier link in the chain"),
 }
 
 

@@ -45,13 +45,14 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-RECEIPT_VERSION = 2
-old_basename = 'p003_da_population_mutation_audit__20260905T161926Z.json'
-old_sha = '16bd11148702def1a7db0287967cc3e93031613619ada00bf16a6d9e6505b087'
+RECEIPT_VERSION = 3
+old_basename = 'p003_da_population_mutation_audit_v2__20260906T024619Z.json'
+old_sha = '8164d495d211ff556c07fef5fbc2b58074dbc9f8a9fc17dc3e6a0082cdac4dcf'
 
 
 def carrying_commit():
@@ -101,12 +102,24 @@ def digest(p: Path) -> str:
 
 
 def run_suite(mod: str, timeout: int = 900) -> dict:
-    # PYTHONDONTWRITEBYTECODE=1: a mutant that changes bytes WITHOUT changing
-    # length can leave a stale __pycache__ entry whose mtime+size still match,
-    # so the interpreter reuses the ORIGINAL bytecode and the mutant reads
-    # green. DE hit exactly this (Q-DE-65). Cheaper to never write the cache.
+    # ROUND 55: PYTHONDONTWRITEBYTECODE IS NOT ENOUGH, AND MY ROUND-54 RUN
+    # RELIED ON IT ALONE. The variable stops the interpreter WRITING a cache;
+    # it does NOT stop it READING one that is already on disk. The reviewer
+    # demonstrated a stale `.pyc` being read under the variable (A-6) and the
+    # coordinator reproduced it. A same-length mutant leaves mtime and size
+    # unchanged, so the cached bytecode still validates and the ORIGINAL code
+    # runs while the source on disk is mutated -- the mutant reads green and
+    # the harness reports a survivor that never ran.
+    #
+    # So the cache is DELETED before every child, which is BE's pattern at
+    # `be_forward_day.py:2903` (R-446). Belt and braces: the variable stays
+    # so nothing new is written, `-B` is passed on the command line so the
+    # flag cannot be lost through the environment, and the directory is
+    # removed so nothing old can be read.
+    shutil.rmtree(HERE / "__pycache__", ignore_errors=True)
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
-    r = subprocess.run([sys.executable, str(HERE / f"{mod}.py"), "--selftest"],
+    r = subprocess.run([sys.executable, "-B", str(HERE / f"{mod}.py"),
+                        "--selftest"],
                        capture_output=True, text=True, cwd=str(HERE),
                        timeout=timeout, env=env)
     tail = (r.stdout or "")[-4000:]
@@ -176,15 +189,29 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
                     "note": "the mutation could not be applied unambiguously; "
                             "reported rather than applied to a guessed site"})
                 continue
-            t.write_bytes(text.replace(old, new, 1).encode())
+            mutated = text.replace(old, new, 1).encode()
+            t.write_bytes(mutated)
+            # WHICH BYTES DID THE INTERPRETER ACTUALLY EXECUTE? Recording the
+            # digest of the source ON DISK at the moment the child ran is the
+            # only way to say the mutant was the thing under test, and it is
+            # what a stale-.pyc run would have made a lie: the source would
+            # hash to the mutant while the interpreter ran the original.
+            # Paired with the cache removal in `run_suite`, the pair is
+            # checkable rather than asserted.
+            shutil.rmtree(HERE / "__pycache__", ignore_errors=True)
+            executed = digest(t)
             caught = {m: run_suite(m) for m in suites}
             t.write_bytes(original)
+            shutil.rmtree(HERE / "__pycache__", ignore_errors=True)
             if digest(t) != before:
                 raise MutationRefused(
                     "REFUSED: restore did not reproduce the original digest")
             results.append({
                 "mutant": name, "surface": surface, "status": "APPLIED",
                 "why_it_matters": why,
+                "source_sha256_while_the_child_ran": executed,
+                "source_differs_from_original": executed != before,
+                "pycache_removed_before_child": True,
                 "caught_by": {m: {"went_red": not v["green"], "rc": v["rc"],
                                   "kill_cause": v["kill_cause"],
                               "why_red": v["why_red"],
@@ -208,20 +235,33 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
                     + old_basename,
             "sha256": old_sha,
             "what_changed": (
-                "the consumer predicate is RENAMED to say SELFTEST, because "
-                "the old name said `consumer` while what ran was DE's "
-                "SELFTEST -- and at c476d0f that selftest asserted nothing on "
-                "PA.compare's output (3 PA. sites), so the 0/4 was "
-                "structurally guaranteed before any mutant was written. The "
-                "limit was in limits[2] and the NAME did not carry it, and "
-                "R-541(F) was written from the name. Re-run at HEAD (DE's "
-                "e67252d, 12 PA. sites, consumer-side falsifier landed): "
-                "4 of 4, every one an ASSERTION_KILL. Kills are now "
-                "classified by CAUSE, which corrects my own round-51 claim "
-                "that all four went red BY NAME: the STATUS mutant is a "
-                "CRASH_KILL."),
-            "correction_is_in_band": "rule 13: superseding receipt, v1 not "
-                                     "edited and standing as provenance",
+                "v3: THE STALE-BYTECODE HAZARD IS CLOSED PROPERLY. v2 set "
+                "PYTHONDONTWRITEBYTECODE=1 and nothing else, which stops the "
+                "interpreter WRITING a cache but NOT reading one already on "
+                "disk (reviewer A-6, reproduced by the coordinator) -- so "
+                "v2's 4/4 was obtained under a harness that could in "
+                "principle have run cached bytecode. The cache is now REMOVED "
+                "before every child and every restore (BE's pattern at "
+                "be_forward_day.py:2903), the -B flag is passed on the "
+                "command line so it cannot be lost through the environment, "
+                "and every mutant records the source digest that was ON DISK "
+                "while its child ran. "
+                "v2 also carried, and v3 keeps: the consumer predicate "
+                "RENAMED to say SELFTEST, because the old name said "
+                "'consumer' while what ran was DE's SELFTEST -- and at "
+                "c476d0f that selftest asserted nothing on PA.compare's "
+                "output (3 PA. sites), so the 0/4 was structurally "
+                "guaranteed before any mutant was written. The limit was in "
+                "limits[2] and the NAME did not carry it, and R-541(F) was "
+                "written from the name. Re-run at HEAD (DE's e67252d, 12 PA. "
+                "sites, consumer-side falsifier landed): 4 of 4, every one "
+                "an ASSERTION_KILL. Kills are classified by CAUSE, which "
+                "corrects my round-51 claim that all four went red BY NAME: "
+                "the STATUS mutant is a CRASH_KILL."),
+            "correction_is_in_band": (
+                f"rule 13: this is v{RECEIPT_VERSION}, a superseding "
+                f"receipt; v{RECEIPT_VERSION - 1} is not edited and stands "
+                f"as provenance, as does every earlier link"),
         },
         "carrying_commit": carrying_commit(),
         "target": (str(t.relative_to(HERE.parents[1]))
@@ -274,6 +314,12 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
                 1 for r in applied
                 if r["caught_by"]["da_population_audit"]["kill_cause"]
                 == "CRASH_KILL"),
+            # The hardening, as a predicate: every mutant must have been
+            # ON DISK and DIFFERENT from the original while its child ran.
+            "every_mutant_was_on_disk_while_its_child_ran": all(
+                r["source_differs_from_original"] for r in applied),
+            "bytecode_cache_removed_before_every_child": all(
+                r["pycache_removed_before_child"] for r in applied),
             "every_red_run_can_say_why": all(
                 bool(v["why_red"]) for r in applied
                 for v in r["caught_by"].values() if v["went_red"]),
@@ -291,10 +337,13 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
             "is now carried in the predicate's own field name and in "
             "`what_the_consumer_number_measures`, because as a limits entry "
             "it was read past (R-541(F))",
-            "mutants are applied to a file the interpreter may have cached: "
-            "a same-length mutant can leave a stale .pyc that makes a red "
-            "mutant read green (DE, Q-DE-65). PYTHONDONTWRITEBYTECODE=1 is "
-            "set for every child here",
+            "the stale-bytecode hazard is closed by DELETING the cache "
+            "before every child and every restore (BE's pattern at "
+            "be_forward_day.py:2903), plus `-B` and "
+            "PYTHONDONTWRITEBYTECODE=1. The variable ALONE does NOT close it "
+            "-- it stops the interpreter WRITING a cache, not READING one "
+            "already on disk (reviewer A-6), and my round-54 re-run relied "
+            "on the variable alone",
         ],
     }
 

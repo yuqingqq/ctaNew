@@ -60,7 +60,10 @@ import json
 import subprocess
 from pathlib import Path
 
-PROTOCOL = "P003_DA_REBATE_CEILING_V1"
+#: ROUND 55: derived from one place, so a bumped receipt cannot leave the
+#: protocol string behind (the C-2 defect, not repeated here).
+RECEIPT_VERSION = 2
+PROTOCOL = f"P003_DA_REBATE_CEILING_V{RECEIPT_VERSION}"
 REPO = Path("/home/yuqing/ctaNew")
 TAPE = (REPO / "data/pm_5min/tier1/trades/day=2026-08-24/coin=btc"
         / "distiller=tier1_v4_r12/part-0.parquet")
@@ -77,6 +80,26 @@ FEE_RATE_CENTS = 7.0          # 0.07 $/share * 100 c/$; fee = 7*p*(1-p)*size
 #: The reviewer's factor: MATERIAL flips only if the true rebate is at least
 #: this multiple of the identity value 0.20*fe. Declared, not derived here.
 HEADROOM_FACTOR = 3.6184
+
+
+#: v2 supersedes v1 in band (rule 13). v1 is not edited.
+SUPERSEDES = {
+    "path": "data/pm_5min/derived/"
+            "p003_da_rebate_ceiling__20260906T022941Z.json",
+    "sha256": "9c66242032289ef6",
+    "sha256_note": "prefix; the full digest is recomputed at emit below",
+    "what_changed": (
+        "reviewer B-4: v1 obtained the treatment's fe by INVERTING the two "
+        "deltas while the ruled receipt carries `fe_cents.treatment` "
+        "directly. The read is now the operative input and the inversion is "
+        "retained as a labelled cross-check. NO NUMBER MOVES -- the two "
+        "agree to machine precision, and `numbers_unchanged_from_v1` "
+        "computes that against v1's own emitted values rather than "
+        "asserting it"),
+    "correction_is_in_band": (
+        f"rule 13: this is v{RECEIPT_VERSION}, a superseding receipt; v1 "
+        f"stands as provenance and is not edited"),
+}
 
 
 class RebateCeilingRefused(RuntimeError):
@@ -234,13 +257,75 @@ def assess(pool: dict, fe_b: float, fe_t: float, ours: dict) -> dict:
     return out
 
 
+def _supersedes_pinned() -> dict:
+    sup = dict(SUPERSEDES)
+    v1 = REPO / sup["path"]
+    sup["sha256"] = (hashlib.sha256(v1.read_bytes()).hexdigest()
+                     if v1.is_file() else "V1_ABSENT_AT_EMIT")
+    sup.pop("sha256_note", None)
+    return sup
+
+
+def _compare_to_v1(a: dict) -> dict:
+    """COMPUTED, not asserted: does v2 reproduce v1's numbers exactly?
+
+    The claim "no number moves" is exactly the kind that gets written beside
+    a table and never evaluated (rule 10). This reads v1's own emitted values
+    and diffs them."""
+    v1p = REPO / SUPERSEDES["path"]
+    if not v1p.is_file():
+        return {"status": "V1_ABSENT", "checked": []}
+    v1 = json.loads(v1p.read_text()).get("assessment") or {}
+    fields = ["rebate_ceiling_cents", "ceiling_below_headroom",
+              "pool_completeness_established", "bound_status",
+              "conclusion_robust_to_incompleteness"]
+    rows = {}
+    for f in fields:
+        rows[f] = {"v1": v1.get(f), "v2": a.get(f),
+                   "same": v1.get(f) == a.get(f)}
+    for arm in sorted(a.get("arms", {})):
+        for k in ("fe_cents", "ratio_ceiling_over_identity",
+                  "ceiling_below_this_arms_headroom"):
+            o = (v1.get("arms", {}).get(arm) or {}).get(k)
+            n = a["arms"][arm][k]
+            same = (o == n if not isinstance(n, float)
+                    else (o is not None and abs(o - n) <= 1e-9))
+            rows[f"arms.{arm}.{k}"] = {"v1": o, "v2": n, "same": same}
+    return {"status": "COMPARED", "n_fields": len(rows),
+            "all_identical": all(r["same"] for r in rows.values()),
+            "fields_that_moved": sorted(k for k, r in rows.items()
+                                        if not r["same"]),
+            "rows": rows}
+
+
 def run_real() -> dict:
     de = json.loads(DE_RECEIPT.read_text())
     s = de["fee_endpoint_summary"]
     fe_b = s["fe_cents"]["baseline"]
     dd = s["decision_delta_cents"]
-    fe_t = (dd["treatment"]["D_E_MINUS_R"]
-            - dd["treatment"]["D_E0"]) / REBATE_SHARE + fe_b
+    # ROUND 55, B-4: READ THE FIELD, DO NOT RECONSTRUCT IT. v1 obtained the
+    # treatment's fe by INVERTING the two deltas, while the receipt carries
+    # `fe_cents.treatment` directly. Reconstructing a number a source states
+    # is the shape this programme keeps finding: it silently asserts the
+    # producer's own identity instead of testing it, and it fails differently
+    # if that identity ever changes. The read is now the OPERATIVE input and
+    # the inversion is kept only as a CROSS-CHECK, which is the direction
+    # that makes it evidence rather than a substitute.
+    fe_t = s["fe_cents"]["treatment"]
+    fe_t_inverted = (dd["treatment"]["D_E_MINUS_R"]
+                     - dd["treatment"]["D_E0"]) / REBATE_SHARE + fe_b
+    fe_t_crosscheck = {
+        "operative_source": "fee_endpoint_summary.fe_cents.treatment (READ)",
+        "value_read": fe_t,
+        "value_by_inversion_of_the_two_deltas": fe_t_inverted,
+        "abs_difference": abs(fe_t - fe_t_inverted),
+        "tolerance": 1e-6,
+        "agree_within_tolerance": abs(fe_t - fe_t_inverted) <= 1e-6,
+        "why_kept": ("the inversion is a real check on DE's own "
+                     "E_MINUS_R = E0 + 0.20*fe identity; keeping it as a "
+                     "cross-check tests that identity, whereas USING it "
+                     "assumed it"),
+    }
     pool = load_pool()
     ours = our_fill_txs()
     tx = pool.pop("tx_set")
@@ -265,6 +350,9 @@ def run_real() -> dict:
         },
         "de_receipt": {"path": str(DE_RECEIPT),
                        "sha256": sha256(DE_RECEIPT)},
+        "fe_treatment_crosscheck": fe_t_crosscheck,
+        "supersedes": _supersedes_pinned(),
+        "numbers_unchanged_from_v1": _compare_to_v1(a),
         "pool": pool,
         "our_fills": ours,
         "n_pool_tx": len(tx),

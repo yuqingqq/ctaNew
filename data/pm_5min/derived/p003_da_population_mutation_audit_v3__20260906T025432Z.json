@@ -1,0 +1,207 @@
+{
+  "baseline": {
+    "da_population_audit": {
+      "green": true,
+      "kill_cause": "NOT_KILLED",
+      "module": "da_population_audit",
+      "named_failures": [],
+      "rc": 0,
+      "stderr_tail": "",
+      "why_red": ""
+    },
+    "de_section81_mid_census": {
+      "green": true,
+      "kill_cause": "NOT_KILLED",
+      "module": "de_section81_mid_census",
+      "named_failures": [],
+      "rc": 0,
+      "stderr_tail": "",
+      "why_red": ""
+    }
+  },
+  "baseline_all_green": true,
+  "carrying_commit": "664f8a176ac28861b075f4513e04901ab6b869d5",
+  "computed_predicates": {
+    "bytecode_cache_removed_before_every_child": true,
+    "every_applied_mutant_caught_by_both_suites": true,
+    "every_applied_mutant_caught_by_its_own_suite": true,
+    "every_applied_mutant_caught_by_the_consumers_SELFTEST": true,
+    "every_mutant_was_on_disk_while_its_child_ran": true,
+    "every_red_run_can_say_why": true,
+    "kill_cause_by_mutant": {
+      "NULL_does_not_permute": {
+        "da_population_audit": "ASSERTION_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      },
+      "STATISTIC_drops_abs": {
+        "da_population_audit": "ASSERTION_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      },
+      "STATISTIC_returns_zero": {
+        "da_population_audit": "ASSERTION_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      },
+      "STATUS_always_nothing_excluded": {
+        "da_population_audit": "CRASH_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      }
+    },
+    "n_assertion_kills_own_suite": 3,
+    "n_crash_kills_own_suite": 1,
+    "n_surviving": 0,
+    "surviving_mutants": [],
+    "what_the_consumer_number_measures": "the consumer's SELFTEST, not its production census. A selftest that never asserts on the imported function's output cannot go red when that function is broken, so a 0 here is a fact about the SUITE's coverage and NOT evidence that the census is unprotected"
+  },
+  "limits": [
+    "four mutants on three surfaces is a SAMPLE of the ways this instrument could be wrong, never a proof that it is right",
+    "a mutant caught by a suite says the suite discriminates on that line, not that the line is correct",
+    "the consumer is run at its own selftest, which is not the same as the production census it performs on real data -- this limit is now carried in the predicate's own field name and in `what_the_consumer_number_measures`, because as a limits entry it was read past (R-541(F))",
+    "the stale-bytecode hazard is closed by DELETING the cache before every child and every restore (BE's pattern at be_forward_day.py:2903), plus `-B` and PYTHONDONTWRITEBYTECODE=1. The variable ALONE does NOT close it -- it stops the interpreter WRITING a cache, not READING one already on disk (reviewer A-6), and my round-54 re-run relied on the variable alone"
+  ],
+  "n_applied": 4,
+  "n_mutants": 4,
+  "protocol": "P003_DA_POPULATION_MUTATION_AUDIT_V3",
+  "results": [
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'COMPARED', 'selective_attributes': [], 'tvd': 0.0, 'p_permutation': 1.0, 'ORACLE_FIRED': False}. No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "mutant": "STATISTIC_returns_zero",
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "7664085027796630c4faac21852454e63c332e956376f80e677c3a20989c62ab",
+      "status": "APPLIED",
+      "surface": "statistic",
+      "survived_in": [],
+      "why_it_matters": "TVD always 0: every exclusion looks perfectly representative, so NOTHING is ever flagged selective -- the always-PASS direction"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 0.487562) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 0.487562) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'COMPARED', 'selective_attributes': [], 'tvd': 0.0, 'p_permutation': 1.0, 'ORACLE_FIRED': False}. No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "mutant": "STATISTIC_drops_abs",
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "b17c0d797844d716216e18d8daf59388c0a3961c1809c4933dedb144d51c4e27",
+      "status": "APPLIED",
+      "surface": "statistic",
+      "survived_in": [],
+      "why_it_matters": "signed differences cancel to ~0 for any distribution, so a real imbalance reads as agreement -- silent and plausible"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 1.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 1.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 1.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'COMPARED', 'selective_attributes': [], 'tvd': 1.0, 'p_permutation': 1.0, 'ORACLE_FIRED': False}. No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 1.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "mutant": "NULL_does_not_permute",
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "cf643d7478f8a7d2332fa7f1a50b2328a3ee60730ef549942266093aecaf2f27",
+      "status": "APPLIED",
+      "surface": "null",
+      "survived_in": [],
+      "why_it_matters": "the null draws become the observed split every time, so the p-value collapses and every exclusion looks extreme or none does"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "CRASH_KILL",
+          "named_failures": [],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "KeyError: 'excluded_fraction'"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd None, p None, fired False) and STAY SILENT on an identical-multiset one (got tvd None, silent False). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'NOTHING_EXCLUDED', 'selective_attributes': [], 'tvd': None, 'p_permutation': None, 'ORACLE_FIRED': False}. No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd None, p None, fired False) and STAY SILENT on an identical-multiset one (got tvd None, silent False). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "mutant": "STATUS_always_nothing_excluded",
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "ad377aed86de32c5c8a58654f9781e53ffd0ee1ebbf88518f7fb3b56614e5c40",
+      "status": "APPLIED",
+      "surface": "status",
+      "survived_in": [],
+      "why_it_matters": "the exact string DE's artifact cites is emitted unconditionally -- the certification would be produced for a population that WAS filtered"
+    }
+  ],
+  "role": "REPORTED, NOT ENFORCED (rule 14). A surviving mutant is a hole in a certification another seat relies on; this names it and decides nothing.",
+  "suites": [
+    "da_population_audit",
+    "de_section81_mid_census"
+  ],
+  "supersedes": {
+    "correction_is_in_band": "rule 13: this is v3, a superseding receipt; v2 is not edited and stands as provenance, as does every earlier link",
+    "path": "data/pm_5min/derived/p003_da_population_mutation_audit_v2__20260906T024619Z.json",
+    "sha256": "8164d495d211ff556c07fef5fbc2b58074dbc9f8a9fc17dc3e6a0082cdac4dcf",
+    "what_changed": "v3: THE STALE-BYTECODE HAZARD IS CLOSED PROPERLY. v2 set PYTHONDONTWRITEBYTECODE=1 and nothing else, which stops the interpreter WRITING a cache but NOT reading one already on disk (reviewer A-6, reproduced by the coordinator) -- so v2's 4/4 was obtained under a harness that could in principle have run cached bytecode. The cache is now REMOVED before every child and every restore (BE's pattern at be_forward_day.py:2903), the -B flag is passed on the command line so it cannot be lost through the environment, and every mutant records the source digest that was ON DISK while its child ran. v2 also carried, and v3 keeps: the consumer predicate RENAMED to say SELFTEST, because the old name said 'consumer' while what ran was DE's SELFTEST -- and at c476d0f that selftest asserted nothing on PA.compare's output (3 PA. sites), so the 0/4 was structurally guaranteed before any mutant was written. The limit was in limits[2] and the NAME did not carry it, and R-541(F) was written from the name. Re-run at HEAD (DE's e67252d, 12 PA. sites, consumer-side falsifier landed): 4 of 4, every one an ASSERTION_KILL. Kills are classified by CAUSE, which corrects my round-51 claim that all four went red BY NAME: the STATUS mutant is a CRASH_KILL."
+  },
+  "target": "live/pm_research/da_population_audit.py",
+  "target_restored_byte_exact": true,
+  "target_sha256_after": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91",
+  "target_sha256_before": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91"
+}
