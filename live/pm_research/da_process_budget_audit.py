@@ -988,6 +988,11 @@ RULE22_BINDS = {
     "live/pm_research/be_daybook_build.py": True,
     "live/pm_research/be_data_root.py": False,
     "live/pm_research/da_book_verify.py": True,
+    #: THIS SEAT'S OWN HEAVY RUNNER. The E2-A smoke ran 84 minutes at 2.4 GB
+    #: under the wrapper, so it is a runner and a heavy producer by rule
+    #: 22's own words. Leaving it False would have exempted my own module
+    #: from the rule I am auditing three of BE's against.
+    "live/mm_research/e2_a_runner.py": True,
     "live/pm_research/de_multiday_gate1_runner.py": True,
 }
 
