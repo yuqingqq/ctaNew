@@ -63,6 +63,60 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T03:54:55Z (MEM ROUND 112 -- R-550, R-551 AND THE RULE-20 REPAIR
+  SWEPT. STATE ONLY.
+  (1) THE DESIGN IS GOOD AND BLOCKED, AND I READ THE BLOCKER AT THE CODE:
+  be_cancel_axis_null.py:188 is `ref, asm = c["fr"]["reference"], c["asm"]`, so
+  THE DECISION POPULATION IS BUILT FROM c["asm"] AND DE'S REQUIREMENT LIST TO BE
+  OMITS IT -- a book without asm RAISES AND THERE IS NO NULL. The same two lines
+  carry both undeclared choices: :189 draws BOTH ARMS from CONDVALUE'S HEAD, and
+  :138 hardcodes COIN = "btc" while the design names no coin set. FILING ON A
+  DESIGN BEFORE TOUCHING DATA COST A ROUND INSTEAD OF A RUN.
+  (2) THE DAY SET RESTED ON A BAR THE USER RULED OUT -- the same R-497(F)(1)
+  shape as round 111's 08-24 hour, one round later, on the DAY SET. 08-30 is
+  correctly excluded FOR THE WRONG REASON; 08-29 is excluded on a bar the USER
+  never set. The reviewer does NOT claim it admissible -- R-500/R-502 are the
+  real question -- and the consequence is not cosmetic: AN UNAUTHORISED BAR IS
+  CURRENTLY DOING THE WORK OF KEEPING THE RUN DIRECTIONAL.
+  (3) SEVEN PLACES A CHOICE CAN STILL BE MADE AFTER SEEING, all routed before
+  data. THE ONE THAT WOULD HAVE BITTEN: THE DAY-1 SMOKE EXPOSES DAY 1's Z BEFORE
+  DAYS 2-5 RUN -- the USER's own smoke recommendation turned into a leak.
+  R-551's sequence answers it: THE SMOKE DAY'S ECONOMIC FIELDS ARE SEALED AND
+  ONLY THE RESOURCE OBSERVATION IS PUBLISHED, and ALL DAYS RUN REGARDLESS.
+  (4) THE DESIGN RECEIPT SAYS 19 CHECKS AND TWENTY RUN -- CHECKED BY ME AT BOTH
+  ENDS. The source declares EXPECTED_CHECKS = 20 at :31 and ASSERTS n+1 == 20 at
+  :518 (so the assertion PASSES), then :544 WRITES "n_checks": EXPECTED_CHECKS -
+  1 INTO THE RECEIPT. The battery is fine; THE EMISSION LIES BY A HARDCODED
+  MINUS ONE -- the producer/emission class DE closed twice in another file,
+  appearing in a third.
+  (5) THE RESOURCE ARITHMETIC WAS MISLABELLED AND I CARRIED IT DOUBLED. The
+  field is named be_null_500_draws_one_hour_TWO_ARMS.wall_s = 290.9, so MY OWN
+  COMPUTATION gives 1.9393 h PER DAY FOR BOTH ARMS, five days = 9.70 h null +
+  1.6 h replay = 11.30 SEQUENTIAL CPU-HOURS. I wrote "~2 hours per ARM-day" at
+  round 111, which implies 20 h -- MORE THAN TWICE THE TRUTH, in front of a
+  decision that is partly about cost. THE FIELD NAME SAID two_arms AND THE PROSE
+  SAID per-arm; I RELAYED THE PROSE.
+  (6) NEW STANDING RULE 20, BINDING ON ME FROM THIS ROUND: one heavy run at a
+  time under flock, -p CPUQuota=100% per scope, the lock REFUSES rather than
+  waits, caps never raised; "heavy" is over 60 s or 1 GiB. Verified at the slice:
+  CPUQuotaPerSecUSec = 2s, i.e. 200% (was 800%). MY STEPS ARE LIGHT SO I TAKE NO
+  LOCK, and I say so rather than leaving it to be asked. The repair commit is
+  part of the rule's story: AN UNQUOTED HEREDOC ATE THE BACKTICKED WRAPPER LINE,
+  so the rule briefly shipped without the command it mandates.
+  (7) THE USER READ THE DESIGN AS YELLOW, NOT GREEN. Three things are missing in
+  order -- reviewer approval, BE's book declaration with asm, the runner -- and
+  NOTHING RUNS BEFORE ALL THREE EXIST. The USER's "six unanimous days for Holm"
+  is the 2^-G floor from a third independent direction.
+  (8) THE DAY-SET QUESTION IS NOW ONE PARAMETER AND BOTH ANSWERS GIVE SIX DAYS,
+  so my round-111 "three days buys significance" framing is SUPERSEDED: the
+  choice is between WAITING THREE DAYS and READING A TEST ON DAYS OPENED FOR A
+  DIFFERENT OBJECT.
+  (9) BE 45 IS VERIFIED AT BOTH COPIES, closing the line I left open at round
+  111 -- and BE RESTORED be_ceiling_null_v1.json to 832faffd, the digest I
+  checked at round 108, so the rule-13 breach I settled at git is REVERSED AT
+  THE ARTIFACT. Three stale headline documents amended; STATUS.yml and
+  HANDOFF.md were current, which is a fact about CADENCE and not about care.
+  PRIOR CHECKPOINT:
   2026-09-06T03:47:19Z (MEM ROUND 111 -- R-549 SWEPT. STATE ONLY, AND IT LEADS
   WITH A CORRECTION TO A PREMISE I BUILT ON LAST ROUND.
   (1) "EVERY SCORE IS SEALED AND UNREAD" WAS FALSE FOR 09-01 AND 09-02.
@@ -1688,13 +1742,144 @@ flags:
                              # (26 per-check label strings -- a copied count
                              # cannot fabricate them), which closes the
                              # reviewer's own section 1.7 gap from two rounds ago.
+  design_receipt_reports_19_checks_while_20_RUN: A-LITERAL-MINUS-ONE-IN-THE-EMISSION
+                             # CHECKED 2026-09-06T03:54:55Z at BOTH the receipt
+                             # and the source, and the defect is smaller and
+                             # worse than "a miscount".
+                             # THE RECEIPT: p003_de_multiday_gate1_design__
+                             # 20260906T031853Z.json carries battery.n_checks =
+                             # 19, outcome PASS, ran_in_the_emitting_process
+                             # true.
+                             # THE SOURCE: de_multiday_design_declaration.py:31
+                             # declares EXPECTED_CHECKS = 20, and :518 ASSERTS
+                             # AT RUN TIME that n[0] + 1 == EXPECTED_CHECKS --
+                             # SO TWENTY CHECKS ACTUALLY RUN AND THE ASSERTION
+                             # PASSES. Then :544 writes
+                             # "n_checks": EXPECTED_CHECKS - 1 INTO THE RECEIPT.
+                             # SO THE BATTERY IS FINE AND THE EMISSION LIES BY A
+                             # HARDCODED "- 1". This is the PRODUCER/EMISSION
+                             # CONTRACT CLASS DE CLOSED TWICE IN ANOTHER FILE
+                             # (DE59-C1, DE60-C1, and the fields() closure at
+                             # DE63b) APPEARING IN A THIRD FILE -- closed as a
+                             # class in one module does not close it in the next.
+                             # AND IT IS EXACTLY THE FAILURE THE BATTERY EXISTS
+                             # TO PREVENT: a receipt asserting how much checking
+                             # it did, wrong, in the declaration that is supposed
+                             # to be the thing nobody can change afterwards.
+                             # DE 70's v2 carries THE PRODUCED COUNT AND THE
+                             # SOURCE'S EXPECTED COUNT WITH A COMPUTED EQUALITY,
+                             # and names the v1 defect.
+  resource_arithmetic_corrected_1_94_h_PER_DAY_BOTH_ARMS: I-OVERSTATED-IT-BY-TWO-FOLD
+                             # CHECKED 2026-09-06T03:54:55Z, computed by me, and
+                             # IT CORRECTS A NUMBER I CARRIED AT ROUND 111.
+                             # THE MEASURED FIELD IS NAMED FOR WHAT IT IS:
+                             # be_null_500_draws_one_hour_two_arms.wall_s = 290.9
+                             # -- ONE HOUR FOR **BOTH ARMS**.
+                             # MY COMPUTATION: 290.9 x 24 / 3600 = 1.9393 h PER
+                             # DAY FOR BOTH ARMS. Five days null = 9.70 h; plus
+                             # ~1.6 h replay = 11.30 SEQUENTIAL CPU-HOURS. Six
+                             # days = 13.56 h.
+                             # WHAT I WROTE AT ROUND 111, FROM DE'S DECLARATION:
+                             # "~2 HOURS OF NULL PER ARM-DAY". That implies 2 x 5
+                             # x 2 = 20 h for five days -- MORE THAN TWICE THE
+                             # TRUE 9.70 h.
+                             # WHY IT MATTERS RATHER THAN BEING A TYPO: THE
+                             # USER'S DAY-SET DECISION IS PARTLY A COST DECISION,
+                             # and I put a doubled cost in front of it. The field
+                             # name said "two_arms" and the prose said "per
+                             # arm-day"; I RELAYED THE PROSE AND DID NOT READ THE
+                             # FIELD NAME. Sixth relay-fidelity instance, and the
+                             # cheapest one yet to have caught.
+                             # R-549(B) is corrected in band at R-551(2); DE 70
+                             # states the fields as COMPUTED FROM THE MEASURED
+                             # SECONDS rather than typed.
+  standing_rule_20_one_heavy_run_at_a_time: CHECKED-AT-THE-PROTOCOL-AND-THE-SLICE
+                             # CHECKED 2026-09-06T03:54:55Z. NEW STANDING RULE,
+                             # binding on me from this round.
+                             # SEAT_PROTOCOL.md:124-131, read verbatim: the
+                             # scorer peaked at 6.95 GiB of its 8 GiB cap ON ONE
+                             # CORE, so two heavy runs cannot share the box.
+                             # Every heavy step runs as
+                             # `flock -n /home/yuqing/ctaNew/data/.heavy_run.lock
+                             # systemd-run --user --scope
+                             # --slice=research.slice -p MemoryMax=8G
+                             # -p CPUQuota=100% <cmd>`; THE LOCK REFUSES
+                             # (exit 1, said so in the report) RATHER THAN
+                             # WAITING; NEITHER CAP IS EVER RAISED. "HEAVY" =
+                             # ANYTHING EXPECTED OVER 60 s WALL OR 1 GiB RSS.
+                             # THE SLICE, VERIFIED BY ME AT systemd:
+                             # CPUQuotaPerSecUSec = 2s, i.e. CPUQuota = 200% (was
+                             # 800%), so LIGHT SUITES MAY OVERLAP ONE HEAVY RUN.
+                             # MY OWN STEPS ARE LIGHT BY THAT DEFINITION --
+                             # sub-second, a few tens of MiB -- SO I TAKE NO
+                             # LOCK; I have added -p CPUQuota=100% to my scopes
+                             # from this round. Recording which side of the line
+                             # I am on rather than assuming nobody will ask.
+                             # THE REPAIR COMMIT (1d66589) IS PART OF THE RULE'S
+                             # OWN STORY: an UNQUOTED HEREDOC ATE THE BACKTICKED
+                             # WRAPPER LINE when rule 20 was written, so the rule
+                             # briefly shipped without the command it mandates.
+                             # Restored; line 127 carries it. A rule whose text
+                             # was destroyed by the shell it regulates is worth
+                             # one sentence.
+  the_operative_sequence_is_YELLOW_NOT_GREEN: SEVEN-STEPS-AND-NOTHING-RUNS-BEFORE-THREE-EXIST
+                             # RELAYED from R-551. The USER read the design as
+                             # YELLOW, NOT GREEN: "the methodology is much better
+                             # specified, but fix the declaration receipt, obtain
+                             # reviewer approval, and run one capped day as a
+                             # smoke before committing roughly 10-12 sequential
+                             # CPU-hours to all five days. A five-day positive
+                             # outcome will be directional only; with
+                             # multiplicity two, six unanimous days are required
+                             # for Holm significance."
+                             # THREE THINGS ARE MISSING, IN THIS ORDER, AND
+                             # NOTHING RUNS BEFORE ALL THREE EXIST: the
+                             # REVIEWER'S APPROVAL (it filed BLOCKING on v1),
+                             # BE'S DAILY-BOOK DECLARATION (with asm), and THE
+                             # EXECUTABLE RUNNER (which does not exist and is not
+                             # built until design v2 is reviewed).
+                             # THE OPERATIVE SEQUENCE: design v2 -> BE's book
+                             # declaration with asm -> the reviewer files on both
+                             # -> THE USER'S DAY-SET PARAMETER FIXES G -> the
+                             # runner is built and reviewed -> ONE DAY AS A
+                             # CAPPED SMOKE WITH ITS ECONOMIC FIELDS SEALED AND
+                             # ONLY THE RESOURCE OBSERVATION PUBLISHED -> THE
+                             # REMAINING DAYS, ALL OF THEM, REGARDLESS OF INTERIM
+                             # RESULTS -> the read.
+                             # THE TWO CLAUSES THAT DO THE WORK ARE THE SEALED
+                             # SMOKE AND "ALL OF THEM, REGARDLESS": together they
+                             # close A.6.4 and A.6.5, the two of the seven
+                             # after-seeing choices that the smoke itself would
+                             # otherwise have created.
+                             # AND THE USER'S OWN ARITHMETIC MATCHES MINE: six
+                             # unanimous days are required for Holm, which is the
+                             # 2^-G floor from a third independent direction.
   all_five_race_days_carry_sealed_scores_and_a_DECLARED-READ-PRECEDES-OPENING: BE-46
                              # RELAYED from R-549(F). BE 45 sealed 09-03 (rc 0
                              # at 03:09:15Z, receipt 9aec99cff1cfc9e6) and 09-04
                              # (rc 0 at 03:42:28Z, receipt 8f08b089c5989dfe),
-                             # read from BE's run logs; verification at both
-                             # copies waits on BE's commit -- NOT YET VERIFIED AT
-                             # THE ARTIFACT, unlike 09-05 which I hashed myself.
+                             # VERIFIED AT BOTH COPIES 2026-09-06T03:54:55Z --
+                             # RESOLVING THE LINE I LEFT OPEN AT ROUND 111.
+                             # R-550(C): 09-03 receipt 9aec99cff1cfc9e6 at the
+                             # run dir AND derived/, with the sealed file on disk
+                             # hashing to c466a3fe590f2d59 = THE RECEIPT'S OWN
+                             # PIN, 12/12 gates, sealed true; 09-04 receipt
+                             # 8f08b089c5989dfe, sealed a610b64ab7e20476, 12/12.
+                             # RELAYED from R-550(C) -- I hashed 09-05 myself at
+                             # round 108 and did NOT re-hash these two.
+                             # ALSO IN THAT FILING AND WORTH CARRYING: BE
+                             # RESTORED be_ceiling_null_v1.json to its
+                             # pre-cb9bf8a bytes -- as_of back to
+                             # 2026-09-05T15:15:22Z, sha 832faffd42192a40 AGAIN,
+                             # the digest I checked at round 108 -- and emitted
+                             # v2 with a supersedes-by-digest. THE RULE-13 BREACH
+                             # I SETTLED AT GIT IS REVERSED AT THE ARTIFACT.
+                             # And be_cancel_axis_null_v2 derives its declaration
+                             # commit by git log --follow (8b930b4, an ancestor)
+                             # and COMPUTES is_ancestor_of_run_head -- the A-1
+                             # dangling-pointer defect I checked at round 107
+                             # fixed by making the ancestry a PREDICATE rather
+                             # than a transcribed sha.
                              # WITH 09-05 (d65cadbc...) ALL FIVE RACE DAYS NOW
                              # CARRY A SEALED SCORE. The condition my round-108
                              # hold flag named is MET.
@@ -1711,6 +1896,27 @@ flags:
                              # ONE: five sealed scores (met) AND a declared read
                              # reviewed (not met). Recorded so "all five are
                              # sealed" is not read as "it can be opened".
+  reviewer_89e81d5_the_classifier_calls_a_real_defect_provenance: SWEPT-AS-FILED-ROUTING-IN-R-552
+                             # RELAYED from the reviewer's filing 89e81d5,
+                             # SWEPT AS FILED -- the coordinator has not yet
+                             # adjudicated it and the routing follows in R-552,
+                             # so nothing here is settled.
+                             # TWO ITEMS AS THE REVIEWER STATES THEM. (1) DE's
+                             # NEW CLASSIFIER CALLS LAST ROUND'S REAL DEFECT
+                             # "PROVENANCE" -- and the reviewer RAN IT ON THAT
+                             # DEFECT rather than arguing from the code, which is
+                             # the falsifier discipline applied to a classifier.
+                             # IF IT HOLDS, the instrument built to compute the
+                             # moved-set would have CLASSIFIED AWAY the very
+                             # finding that caused it to be built. (2) BE'S
+                             # PICKLE DIGEST IS A SECOND READ -- i.e. the digest
+                             # answering my round-107 "rule 10 in substance, not
+                             # in form" may not bind the bytes the run actually
+                             # used.
+                             # I AM RECORDING THESE AS FILED CLAIMS, NOT AS
+                             # FINDINGS. Both bear on things these files already
+                             # carry as fixed, which is exactly why they are
+                             # flagged rather than folded in.
   de69_the_moved_set_and_the_transcription: A-CORRECTION-THAT-WAS-WRONG-ON-ITS-OWN-AXIS
                              # RELAYED from R-549(D), two of three findings
                              # REPRODUCED by the coordinator's own leaf diff.
@@ -2200,7 +2406,49 @@ flags:
                              # deliberately; I HAVE NOT READ ITS CALL SITES AND
                              # CLAIM NOTHING. It is simply the one file where
                              # both vocabularies provably meet.
-  two_options_for_the_gate1_day_set_are_with_the_user: SIX-UNTOUCHED-DAYS-RECOMMENDED
+  two_options_for_the_gate1_day_set_are_with_the_user: RESTATED-AS-ONE-PARAMETER-BOTH-SETS-ARE-SIX
+                             # UPDATED 2026-09-06T03:54:55Z from R-550(D). The
+                             # question is now ONE PARAMETER, and both answers
+                             # give SIX DAYS -- which changes the trade-off I
+                             # recorded at round 111.
+                             # THE PARAMETER: do days previously opened for a
+                             # read of the FROZEN CANDIDATE (the 08-29
+                             # development read; the 09-01/09-02 interim read)
+                             # count as UNTOUCHED for a Gate-1 test of THE ARMS,
+                             # whose thetas were fixed on 08-24?
+                             # YES -> 08-29 + 09-01..09-05 = SIX DAYS THAT EXIST
+                             # NOW, and a unanimous pass CAN clear Holm at m = 2.
+                             # NO -> 09-03, 09-04, 09-05 + 09-06, 09-07, 09-08 =
+                             # SIX UNTOUCHED DAYS, complete at the 09-09T00:06Z
+                             # verdict.
+                             # SO IT IS NO LONGER FIVE-VERSUS-SIX. BOTH SETS ARE
+                             # SIX AND BOTH CAN CLEAR; the choice is between
+                             # THREE DAYS OF WAITING and READING A TEST ON DAYS
+                             # THAT HAVE BEEN OPENED FOR A DIFFERENT OBJECT.
+                             # My round-111 framing -- "three more days convert a
+                             # directional run into a significance-bearing one"
+                             # -- WAS TRUE OF THE OPTIONS AS THEY STOOD AND IS
+                             # SUPERSEDED BY THIS ONE.
+                             # BOTH SETS ARE COMPUTED AND LISTED IN DE'S v2, AND
+                             # G IS FIXED BEFORE ANY RUN. The coordinator's
+                             # recommendation stays NO (THE PURIST SET) unless
+                             # the USER prefers the three-day saving.
+  three_stale_headline_documents_amended: MY-TWO-FILES-WERE-CURRENT
+                             # RELAYED from R-551(4). The V2 plan header (:3),
+                             # PROGRAM.md (:3) and RESULTS.md's introduction
+                             # (:14-16) ALL STILL DESCRIBED THE SUPERSEDED FEE
+                             # BLOCKER. Each now LEADS with the current state
+                             # citing R-547..R-550 and KEEPS THE 09-05 SENTENCE
+                             # BENEATH IT, MARKED SUPERSEDED, AS PROVENANCE --
+                             # rule 13's shape applied to a headline.
+                             # STATUS.yml AND HANDOFF.md WERE CURRENT. Recorded
+                             # without satisfaction: those two are swept every
+                             # round by design, and the three that went stale are
+                             # the ones nobody owns a cadence for. THE LESSON IS
+                             # ABOUT CADENCE, NOT CARE -- a document with a
+                             # weekly reader and no writer goes stale silently,
+                             # and the headline is the line most likely to be
+                             # read alone.
                              # RELAYED from R-549(A), OPEN AND AWAITING THE USER.
                              # (i) RUN ON 09-01..09-05 AS NAMED, with 09-01/02's
                              # prior opening DISCLOSED IN EVERY RECEIPT.
@@ -2220,6 +2468,82 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
+  design_v1_is_BLOCKED_the_null_cannot_be_built_from_the_book_asked_for: asm-MISSING
+                             # CHECKED 2026-09-06T03:54:55Z at the code. The
+                             # reviewer's A.3, and I read the three findings in
+                             # two lines of be_cancel_axis_null.py.
+                             # :188 is `ref, asm = c["fr"]["reference"],
+                             # c["asm"]` -- THE DECISION POPULATION IS BUILT FROM
+                             # c["asm"], THE ASSEMBLED SCORE STREAM -- and DE's
+                             # requirement list to BE OMITS IT. A book without
+                             # asm RAISES, so THERE IS NO NULL. The design is
+                             # good and BLOCKED, which is the best possible
+                             # outcome of filing on a design before touching
+                             # data: the blocker costs a round, not a run.
+                             # AND THE SAME TWO LINES CARRY BOTH UNDECLARED
+                             # CHOICES. :189 is
+                             # asm["by_arm"][(COIN, ARMS["CONDVALUE_X_SKEW"]
+                             # ["head"])][0] -- THE DRAW POOL USES CONDVALUE'S
+                             # HEAD FOR BOTH ARMS, which is a matched-control
+                             # question (rule 7) hiding in an index expression.
+                             # And :138 is
+                             # COIN, LAT, BUDGET = "btc", 250, 0.10 -- COIN IS
+                             # HARDCODED and THE DESIGN NAMES NO COIN SET, so a
+                             # five-day multi-coin claim would rest on a
+                             # single-coin builder.
+                             # DE 70 closes all eight "must exist" items in a
+                             # DESIGN v2 with v1 untouched.
+  the_day_set_rested_on_a_bar_the_USER_RULED_OUT: 08-29-EXCLUDED-FOR-THE-WRONG-REASON
+                             # RELAYED from R-550(A), the reviewer's C.3, and it
+                             # is the SAME R-497(F)(1) shape as round 111's
+                             # 08-24 hour -- one round later, applied to the DAY
+                             # SET instead of the hour.
+                             # R-547(C) excluded 08-29/30/31 ON ERA PURITY. The
+                             # USER's R-497(F)(1) says VERBATIM that VERSION IS
+                             # NOT A BAR, QUALITY IS. 08-30 is CORRECTLY excluded
+                             # but FOR THE WRONG REASON (its quality FAILS);
+                             # 08-29, THE CLEANEST DAY IN THE RECORD, is excluded
+                             # ON A BAR THE USER NEVER SET.
+                             # THE REVIEWER DOES NOT CLAIM 08-29 ADMISSIBLE, and
+                             # that restraint is the point: R-500 WITHDREW it
+                             # from the race and R-502 RATIFIED it for one
+                             # development read -- WHICH IS A REAL REASON WHERE
+                             # ERA PURITY IS NOT. The question is which reason
+                             # governs, not which answer is convenient.
+                             # AND THE CONSEQUENCE IS NOT COSMETIC: at m = 2 the
+                             # difference between G = 5 and G = 6 IS THE
+                             # DIFFERENCE BETWEEN DIRECTIONAL AND
+                             # SIGNIFICANCE-BEARING, SO AN UNAUTHORISED BAR IS
+                             # CURRENTLY DOING THE WORK OF KEEPING THE RUN
+                             # DIRECTIONAL. A wrong reason that happens to
+                             # produce a conservative answer is still a wrong
+                             # reason, and here it decides what the run can
+                             # establish.
+  seven_places_a_choice_can_still_be_made_after_seeing: THE-DAY-1-SMOKE-EXPOSES-ITS-OWN-Z
+                             # RELAYED from R-550(A), the reviewer's A.6, all
+                             # routed BEFORE any data is touched.
+                             # (1) the day set; (2) NO MINIMUM DECISIONS PER
+                             # ARM-DAY -- the rule covers EXACTLY ZERO; (3) NO
+                             # FLOOR ON THE NULL'S sd, and a small nonzero sd
+                             # EXPLODES Z (HAZARD's sd was 0.162 against mean
+                             # 0.400 on the consumed hour); (4) THE DAY-1 SMOKE
+                             # EXPOSES DAY 1's Z BEFORE DAYS 2-5 RUN; (5) no rule
+                             # that ALL days run regardless; (6) theta non-refit
+                             # RECORDED BUT NOT RE-VERIFIED AT RUN TIME; (7) coin
+                             # coverage undeclared.
+                             # (4) IS THE ONE THAT WOULD HAVE BITTEN, and it is
+                             # the USER's own smoke recommendation turned into a
+                             # leak: a capped first day is the right engineering
+                             # and, unsealed, it is a look at one of the five
+                             # signs the test is built on. R-551's sequence
+                             # answers it -- THE SMOKE DAY'S ECONOMIC FIELDS ARE
+                             # SEALED AND ONLY THE RESOURCE OBSERVATION IS
+                             # PUBLISHED -- and (5) is what stops a bad day 1
+                             # from ending the run quietly.
+                             # THE ~20 h ESTIMATE IS PROTECTED BY THE 8G CAP BUT
+                             # NOT BY THE 500-DRAW MINIMUM: REFUSING THE DAY IS
+                             # THE ONLY COMPLIANT ANSWER if a day cannot make its
+                             # draws.
   de68_design_no_arm_can_clear_holm_at_G5: AND-SIX-DAYS-WOULD-CLEAR-IT-COMPUTED-BY-ME
                              # CHECKED 2026-09-06T03:47:19Z -- the arithmetic
                              # computed by me, the rest RELAYED from R-549(B).
@@ -9917,6 +10241,32 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T03:54:55Z, THE DESIGN IS GOOD AND BLOCKED, AND THE USER HAS
+  READ IT AS YELLOW RATHER THAN GREEN. The null cannot be built from the book DE
+  asked for -- be_cancel_axis_null.py:188 needs c["asm"] and the requirement
+  list omits it, read by me at the code -- and the same two lines draw both arms
+  from CONDVALUE's head and hardcode COIN = "btc". NOTHING RUNS UNTIL THREE
+  THINGS EXIST IN ORDER: reviewer approval, BE's book declaration with asm, and
+  the runner.
+  THE DAY SET RESTED ON A BAR THE USER RULED OUT -- the R-497(F)(1) shape again,
+  now on the day set rather than the 08-24 hour -- and AN UNAUTHORISED BAR IS
+  CURRENTLY DOING THE WORK OF KEEPING THE RUN DIRECTIONAL. The question is now
+  ONE PARAMETER and BOTH ANSWERS GIVE SIX DAYS: wait three days, or read a test
+  on days opened for a different object.
+  TWO NUMBERS ARE CORRECTED, ONE OF THEM MINE. The design receipt reports 19
+  checks while 20 run -- :544 writes EXPECTED_CHECKS - 1 into the emission after
+  :518 asserts 20 at run time. And the resource cost is 1.94 h PER DAY FOR BOTH
+  ARMS, 11.30 sequential CPU-hours for five days -- I carried "~2 h per arm-day"
+  at round 111, MORE THAN TWICE THE TRUTH, in front of a decision partly about
+  cost.
+  SEVEN PLACES A CHOICE CAN STILL BE MADE AFTER SEEING are routed before any
+  data; the one that would have bitten is THE DAY-1 SMOKE EXPOSING ITS OWN Z,
+  answered by sealing the smoke's economics and running all days regardless.
+  STANDING RULE 20 BINDS EVERY SEAT: one heavy run at a time, one CPU each, the
+  lock refuses rather than waits. All five race days are verified sealed at both
+  copies, and a declared read still precedes any opening.
+  Gate 1 is 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T03:47:19Z, RETAINED BELOW --
   AS-OF 2026-09-06T03:47:19Z, THE PREMISE UNDER THE FIVE NAMED DAYS IS
   CORRECTED: 09-01 AND 09-02 WERE OPENED UNDER THE INTERIM READ AND ARE
   CONSUMED -- RESULTS.md says so at lines 681-682, read by me. "Every score is
@@ -10754,6 +11104,72 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 112, 2026-09-06T03:54:55Z ------------------------------
+  design_v1_is_BLOCKED_the_null_cannot_be_built_from_the_book_asked_for:
+    prov: CHECKED
+    artifact: live/pm_research/be_cancel_axis_null.py
+    as_of: 2026-09-06T03:54:55Z
+    said: >-
+      line 188 is `ref, asm = c["fr"]["reference"], c["asm"]`, so the decision
+      population requires c["asm"]; line 189 is
+      `scored = asm["by_arm"][(COIN, ARMS["CONDVALUE_X_SKEW"]["head"])][0]`,
+      so both arms draw from CONDVALUE's head; and line 138 is
+      `COIN, LAT, BUDGET = "btc", 250, 0.10`, so the coin is hardcoded. That
+      DE's requirement list to BE omits asm is RELAYED from R-550(A); what I read
+      is that the code needs it.
+  design_receipt_reports_19_checks_while_20_RUN:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_design_declaration.py
+    as_of: 2026-09-06T03:54:55Z
+    said: >-
+      line 31 declares EXPECTED_CHECKS = 20; lines 518-519 assert at run time
+      `ok(n[0] + 1 == EXPECTED_CHECKS, f"check count asserted at run time: ...")`
+      and the run PASSES; line 544 emits `"n_checks": EXPECTED_CHECKS - 1`. At
+      the receipt p003_de_multiday_gate1_design__20260906T031853Z.json,
+      battery.n_checks is 19 with outcome PASS and
+      ran_in_the_emitting_process true. So twenty checks run and the emission
+      reports nineteen by a hardcoded subtraction.
+  resource_arithmetic_corrected_1_94_h_PER_DAY_BOTH_ARMS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design__20260906T031853Z.json
+    as_of: 2026-09-06T03:54:55Z
+    said: >-
+      the measured field is named be_null_500_draws_one_hour_two_arms.wall_s =
+      290.9. My own computation: 290.9 * 24 / 3600 = 1.9393 h per day for BOTH
+      arms; five days = 9.70 h of null, plus ~1.6 h replay = 11.30 sequential
+      CPU-hours; six days = 13.56 h. What I carried at round 111, "~2 hours of
+      null per ARM-day", implies 20 h for five days -- more than twice the
+      measured figure.
+  standing_rule_20_one_heavy_run_at_a_time:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-06T03:54:55Z
+    said: >-
+      lines 124-131 carry rule 20 with the wrapper restored at line 127:
+      `flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user
+      --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% <cmd>`,
+      the lock refusing rather than waiting, caps never raised, and "heavy"
+      defined as over 60 s wall or 1 GiB RSS. At systemd,
+      `systemctl --user show research.slice` gives CPUQuotaPerSecUSec=2s, i.e.
+      CPUQuota=200%. My own steps are light by that definition, so I take no
+      lock and have added -p CPUQuota=100% to my scopes.
+  the_day_set_rested_on_a_bar_the_USER_RULED_OUT:
+    prov: RELAYED
+    from: R-550(A), the reviewer's C.3; the governing ruling is the USER's R-497(F)(1)
+  seven_places_a_choice_can_still_be_made_after_seeing:
+    prov: RELAYED
+    from: R-550(A), the reviewer's A.6
+  the_operative_sequence_is_YELLOW_NOT_GREEN:
+    prov: RELAYED
+    from: R-551, the USER's own review
+  three_stale_headline_documents_amended:
+    prov: RELAYED
+    from: R-551(4)
+  reviewer_89e81d5_the_classifier_calls_a_real_defect_provenance:
+    prov: RELAYED
+    from: >-
+      the reviewer's filing 89e81d5, swept AS FILED. Not adjudicated by the
+      coordinator; routing follows in R-552. Recorded as claims, not findings.
   # --- MEM round 111, 2026-09-06T03:47:19Z ------------------------------
   the_five_named_days_are_the_only_admissible_days_that_exist:
     prov: CHECKED
