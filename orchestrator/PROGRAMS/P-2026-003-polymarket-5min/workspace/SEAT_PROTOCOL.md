@@ -147,7 +147,16 @@ except where marked USER-ONLY.
     `live/pm_research/declarations/heavy_run_form_v2.json` (supersedes v1 by path+sha256; lock path, conflict
     code 75, caps, `RemainAfterExit`, the journal identity fields, the triple); every literal in code reads
     it or asserts equality with it in its selftest, and no runner or producer exits 75 for any other
-    reason. Poll the UNIT, not a
+    reason. THREE GUARDS on those words (R-649, REV 68 §3.1–§3.2): a check that depends on the declaration
+    FAILS when the file is absent — never skips (a skipped check reads as a passed one); the check on a
+    launcher reads the LAUNCHER'S BYTES (the shell literal in `be_heavy_run.sh` is the number the running unit
+    uses; a Python constant agreeing with the declaration proves nothing about it); and the declaration is
+    grounded by exactly ONE DRIVE — a unit launched against a held lock, its ExecMainStatus read as 75 — named
+    in the launcher owner's receipt, because literals agreeing with a literal is not a measurement. 75 is
+    `EX_TEMPFAIL` (sysexits.h), the code a well-behaved program would CHOOSE for "try again": from outside a
+    unit a 75 reads "refused OR a producer that broke the declaration"; the only enforcement is inside each
+    producer (`75 not in <its declared exit codes>`, asserted in its selftest, the map published in its receipt).
+    Poll the UNIT, not a
     child PID; a run's survival of `kill -TERM` on the launching shell's process
     group is a battery falsifier. **The journal is NOT the record (R-641, REV 66 §3.1):**
     it rotates within hours (DE 84's Started line was gone four hours later). A
