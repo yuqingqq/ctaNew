@@ -1429,12 +1429,28 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
 
     _p("P2_book_exists", book.is_file(), str(book))
     _p("P2_builder_receipt_exists", receipt.is_file(), str(receipt))
-    _p("P3_params", _digest(repo / PARAMS_REL) == _digest(repo / PARAMS_REL),
+    # P3_params was a TAUTOLOGY -- it compared the params digest with
+    # itself and could never fail. It states the digest now, which is what
+    # a reader wants from it; the pin is checked on the design's side.
+    _p("P3_params", (repo / PARAMS_REL).is_file(),
        {"path": PARAMS_REL, "sha256": _digest(repo / PARAMS_REL)})
-    _p("P3_design", _digest(root.parent / design["path"])
-       == design["sha256"],
-       {"path": design["path"], "declared": design["sha256"],
-        "on_disk": _digest(root.parent / design["path"])})
+    # P3_design, IN THE FLIPPED DIRECTION (REV 51 S0). The params name the
+    # design by PATH; the DESIGN pins the params by digest. This checked
+    # the design's bytes against a `sha256` the params no longer carry, so
+    # it blocked the 09-04 preflight on a pin that had moved.
+    _dp = root.parent / design["path"]
+    _dpins = None
+    if _dp.is_file():
+        try:
+            _dpins = (json.loads(_dp.read_text()).get("parameters") or {}
+                      ).get("sha256")
+        except (OSError, ValueError):
+            _dpins = None
+    _p("P3_design", bool(_dpins) and _dpins == _digest(repo / PARAMS_REL),
+       {"path": design["path"], "exists": _dp.is_file(),
+        "design_pins_params_sha256": _dpins,
+        "params_sha256_here": _digest(repo / PARAMS_REL),
+        "pin_direction": "design -> params"})
     _p("P4_data_root_is_the_ledger",
        DR.resolve()["is_canonical"] is True, DR.resolve()["data_root"])
     _lockobs = wrapper_observed()
