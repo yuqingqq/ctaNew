@@ -145,7 +145,14 @@ except where marked USER-ONLY.
     REPORT it as stranded, and continue — the coordinator rebases stranded
     commits onto origin at the first clean-tree moment (R-586/R-588; a retry can
     never fast-forward once a local commit exists, and the shared tree is
-    dirty for the length of every MEM batch).
+    dirty for the length of every MEM batch). **Landing CODE from a worktree
+    (R-623):** the worktree's exact bytes are copied into the shared tree and
+    committed by pathspec in the SAME compound command — nothing is edited, no
+    battery is run, and nothing waits in the shared tree; a modified source file
+    seen in the shared tree outside that command is a breach (BE 60, corrected
+    at 11:43Z). A seat that prefers not to copy may push its worktree's commit
+    directly (`git -C <wt> push origin HEAD:mm-research`) when origin has not
+    moved; a refused push is stranded and reported as above.
 
 22. **A heavy run's code is frozen until its receipt lands** (R-603, REV 49 §0):
     a run executes from a worktree whose HEAD is not moved and whose files are
