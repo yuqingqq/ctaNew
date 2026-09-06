@@ -4608,14 +4608,13 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
     # -- DA 97: THE RECEIPT NAMES ITS PINS WHERE DE WRITES THEM ---------
-    _pp = {"path": "live/pm_research/declarations/"
-                   "de_multiday_gate1_params_v14.json",
-           "sha256": hashlib.sha256(
-               (HERE / "declarations"
-                / "de_multiday_gate1_params_v14.json").read_bytes()
-           ).hexdigest()} if (HERE / "declarations"
-                              / "de_multiday_gate1_params_v14.json").is_file() \
-        else None
+    #: THE NEWEST PRESENT, never a version typed here: this fixture
+    #: pinned `_v14` and DE landed `_v15` within the hour, so my own
+    #: census refused my own selftest. A fixture that names a moving
+    #: thing by number goes stale exactly as fast as the thing moves.
+    _pp = {"path": f"live/pm_research/declarations/{PARAMS_PATH.name}",
+           "sha256": hashlib.sha256(PARAMS_PATH.read_bytes()).hexdigest()} \
+        if PARAMS_PATH.is_file() else None
     if _pp:
         _new_shape = params_check({"provenance": {"params": _pp}})
         _old_shape = params_check({"params_declaration": _pp})
@@ -4668,7 +4667,7 @@ def selftest_pre_read() -> list:                              # noqa: C901
            f"is the RECEIPT's, not the params file's")
     else:
         ck("DA 97 PIN-SHAPE CELL -- ***SKIPPED AND NAMED, NOT PASSED***: "
-           "`de_multiday_gate1_params_v14.json` is not in this tree",
+           "no params declaration is present in this tree",
            False, "the fixture needs the params declaration on disk")
 
     # -- R-673(a): THE PATH THE RECEIPT NAMES IS THE PATH THAT IS HASHED -
