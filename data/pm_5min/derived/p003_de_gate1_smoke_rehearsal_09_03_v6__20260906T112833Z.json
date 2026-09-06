@@ -1,0 +1,249 @@
+{
+  "THE_ONE_COMMAND": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --unit=<deNNsmoke> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived",
+  "as_of": "2026-09-06T11:28:33.280849+00:00",
+  "blocking": [],
+  "book": {
+    "REFUSES_NOW_BY_NAME": null,
+    "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260903_btc.json",
+    "builder_receipt_exists": true,
+    "exists": true,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl"
+  },
+  "coin": "btc",
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the smoke rehearsal",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day": "2026-09-03",
+  "day_compact": "20260903",
+  "declarations": {
+    "design": {
+      "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json",
+      "sha256": "NOT_PINNED_HERE -- the pin runs design -> params"
+    },
+    "params": {
+      "path": "live/pm_research/declarations/de_multiday_gate1_params_v13.json",
+      "sha256": "09674cd1c03c1be62ce211149e6be0f3026f8a9bb0c58865072a54a685dbd6c0"
+    }
+  },
+  "informational_and_false_now": [],
+  "name_stamp": {
+    "as_of": "2026-09-06T11:28:33.280849+00:00",
+    "delta_seconds": -0.280849,
+    "name_carries_a_stamp": true,
+    "stamp": "20260906T112833Z",
+    "stamp_is_the_clock": true,
+    "tolerance_s": 300
+  },
+  "preconditions_evaluated_now": [
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+      "holds": true,
+      "precondition": "P2_book_exists"
+    },
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260903_btc.json",
+      "holds": true,
+      "precondition": "P2_builder_receipt_exists"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v13.json",
+        "sha256": "09674cd1c03c1be62ce211149e6be0f3026f8a9bb0c58865072a54a685dbd6c0"
+      },
+      "holds": true,
+      "precondition": "P3_params"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "design_pins_params_sha256": "09674cd1c03c1be62ce211149e6be0f3026f8a9bb0c58865072a54a685dbd6c0",
+        "exists": true,
+        "params_sha256_here": "09674cd1c03c1be62ce211149e6be0f3026f8a9bb0c58865072a54a685dbd6c0",
+        "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json",
+        "pin_direction": "design -> params"
+      },
+      "holds": true,
+      "precondition": "P3_design"
+    },
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data",
+      "holds": true,
+      "precondition": "P4_data_root_is_the_ledger"
+    },
+    {
+      "blocks_go": false,
+      "detail": {
+        "held_by_self_or_ancestor": false,
+        "holder_pids": [],
+        "lock_is_held_by_someone": false,
+        "modes": [],
+        "why_informational": "the lock is TAKEN by the wrapper at GO, so its state now does not gate GO"
+      },
+      "holds": true,
+      "precondition": "P5_lock_free_now"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "declared": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+        "path": "live/pm_research/be_cancel_axis_null.py"
+      },
+      "holds": true,
+      "precondition": "P7_cascade_digest"
+    },
+    {
+      "blocks_go": true,
+      "detail": [
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07",
+        "2026-09-08"
+      ],
+      "holds": true,
+      "precondition": "day_is_in_the_ruled_set"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "declared_convention": "the runner's own: p003_de_gate1_day_run_<YYYYMMDD>_SEALED__<stamp>.json",
+        "directory": "/home/yuqing/ctaNew/data/pm_5min/derived",
+        "example_name_if_emitted_now": "p003_de_gate1_day_run_20260903_SEALED__20260906T112833Z.json",
+        "output_is_a_directory": true,
+        "the_filename_is_composed_by": "day_receipt_name(), from emission_stamp() at the moment of writing",
+        "why_not_the_caller": "a path that must be known in advance cannot carry an honest stamp (DE 88); the directory is knowable in advance and carries none"
+      },
+      "holds": true,
+      "precondition": "P8_output_is_a_directory_and_the_name_is_composed"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "day": "2026-09-03",
+        "expected_glob": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__*.json",
+        "n_sealed_artifacts_present": 0
+      },
+      "holds": true,
+      "precondition": "P9_no_sealed_receipt_for_this_day_yet"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "dirty": false,
+        "dirty_paths": [],
+        "head": "6e32506ac568db1275ebfc4b8f1d7252424e6af7",
+        "n_modules_in_the_import_closure": 4,
+        "why_it_blocks": "a REAL day refuses at import on a dirty worktree, and the emit refuses if any module of the closure or HEAD moves during the run. The run must execute from a worktree frozen for its whole life, and this seat must land from a different one (REV 55 S2.2)",
+        "worktree": "/home/yuqing/ctaNew-wt-de2"
+      },
+      "holds": true,
+      "precondition": "P10_run_worktree_is_clean_at_import"
+    }
+  ],
+  "protocol": "P003_DE_GATE1_SMOKE_REHEARSAL_V1",
+  "resource_observation": {
+    "wall_seconds": 0.028989315032958984
+  },
+  "source_identity": {
+    "carrying_commit": "6e32506ac568db1275ebfc4b8f1d7252424e6af7",
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": false,
+      "dirty_paths": [],
+      "head": "6e32506ac568db1275ebfc4b8f1d7252424e6af7",
+      "worktree": "/home/yuqing/ctaNew-wt-de2"
+    },
+    "head_at_import": {
+      "dirty": false,
+      "dirty_paths": [],
+      "head": "6e32506ac568db1275ebfc4b8f1d7252424e6af7",
+      "worktree": "/home/yuqing/ctaNew-wt-de2"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "captured_at": [
+        "module import",
+        "the cascade's first import",
+        "after the cascade's first load(), which imports harmful_stateful_policy and de_phase4_diag_runner LAZILY -- the closure reached the cascade and stopped there, and the two modules that do the REPLAYING were outside it (REV 53 S1.1)"
+      ],
+      "digested": "from the bytes observed when each module first entered THIS run -- never a second read, because import_module can return a cached module whose file has since moved",
+      "modules": {
+        "de_data_root.py": "faa5871836555684779c0e2e617d8bbeb7f1f8d1378f02398edf6637384109ad",
+        "de_multiday_design_declaration.py": "6257b219249c39728dd783a5e246b783841a24c58b6f9dfa1818bdb3b2cc6767",
+        "de_multiday_gate1_runner.py": "de53fcaf0a8a4ecd4d0c0a7bf50a0aceeb2470678fb852c9b6082abe9840601e",
+        "pm_tape_density.py": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+      },
+      "n_modules": 4,
+      "root": "/home/yuqing/ctaNew-wt-de2/live"
+    },
+    "launch_time_utc": "2026-09-06T11:28:33.230508+00:00",
+    "on_disk_sha256_at_emit": "de53fcaf0a8a4ecd4d0c0a7bf50a0aceeb2470678fb852c9b6082abe9840601e",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "de53fcaf0a8a4ecd4d0c0a7bf50a0aceeb2470678fb852c9b6082abe9840601e",
+    "source_unchanged_during_the_run": true,
+    "tree_dirty": false,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran",
+    "worktree_was_dirty_at_import": false
+  },
+  "status": "READY",
+  "the_null": {
+    "draws_per_arm": 500,
+    "generated": "IN PROCESS, through be_cancel_axis_null at the verified digest (R-572(B)(1))",
+    "metric": "D(E0) per draw = value(draw's fills) - value(baseline fills), from fill_value_cents",
+    "seed_is_derived_from": "the day book's own sha256 and the arm name -- so it cannot be computed until the book exists",
+    "seed_rule": "int(sha256(f'{day_book_sha256}|{arm}|P003_GATE1_MULTIDAY'.encode()).hexdigest()[:8], 16)"
+  },
+  "what_the_run_writes": {
+    "run_receipt": "battery equality, the resolved data root, the BE citation, the wrapper AS MEASURED, and the scope's anon/file/peak/events",
+    "seal_layout": {
+      "conditional_key": "economic",
+      "keys_in_both_states": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary",
+        "sd_over_abs_mean"
+      ]
+    },
+    "sealed_per_day_artifact": "economic fields ABSENT at every depth; counts, statuses, admissibility and draw provenance published"
+  },
+  "what_this_is_not": {
+    "a_run": false,
+    "it_opens_no_book": true,
+    "it_scores_no_arm": true
+  },
+  "what_this_rehearsal_found": [
+    "BE's builder receipt is `be_daybook_receipt_<DAY>_<COIN>.json`, not the book path with a `.json` suffix -- the old derivation would have refused a correct book AT GO for a naming reason",
+    "BE stamps the day COMPACT (`20260903`) and DE names it dashed (`2026-09-03`); the receipt's day check now compares day FORMS",
+    "BE's receipt carries the digest at `book.sha256`, not at a top-level `sha256`"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "HOW_IT_ENDED_-_MEASURED_NOT_INFERRED": {
+    "observed": "both of this session's background tasks -- the run and its PID poll -- were reported stopped at the same moment, and the scope died at 12:03:43Z",
+    "the_mechanism_driven_both_ways": {
+      "TERM_to_the_PROCESS_GROUP": "the scope DIED (probe: ActiveState inactive, no child)",
+      "TERM_to_the_launching_shell_alone": "the scope SURVIVED (probe: the child sleep kept running)",
+      "so": "`systemd-run --scope` registers processes the CALLER forks, so the run sits in the launching shell's process group and a group-level stop takes it down. An 85-minute run must not be a child of a shell anything else may stop"
+    },
+    "what_this_is_NOT": "not a refusal by the runner, not a coordinator stop, not an out-of-memory kill: the cgroup peak was 2.3G against an 8G cap and the declared 4000 MB growth budget never fired"
+  },
+  "NOTHING_WAS_WRITTEN": {
+    "book_digest_unchanged": true,
+    "every_artifact_naming_this_day": [
+      "p003_de_gate1_day_run_20260903_REFUSED__20260906T095058Z.json"
+    ],
+    "find_sealed_day_receipt_status": "MISSING",
+    "n_matches": 0,
+    "sealed_glob": "p003_de_gate1_day_run_20260903_SEALED__*.json",
+    "the_day_is_not_consumed": true
+  },
+  "as_of": "2026-09-06T12:05:55.383058+00:00",
+  "day": "2026-09-03",
+  "launch": {
+    "book": {
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+      "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323"
+    },
+    "ended_at_utc": "2026-09-06T12:03:43Z",
+    "launched_at_utc": "2026-09-06T11:28:44Z",
+    "rehearsal": "p003_de_gate1_smoke_rehearsal_09_03_v6__20260906T112833Z.json",
+    "runner_pid": 3282335,
+    "tip_at_launch": "6e32506ac568db1275ebfc4b8f1d7252424e6af7",
+    "unit": "de93smoke.scope",
+    "worktree": "/home/yuqing/ctaNew-wt-de2"
+  },
+  "measured_by_my_own_poll": {
+    "note": "rss held ~730-767 MB against a cgroup peak of 2435 MB reached at S1_load; the run was inside the null loop when it ended",
+    "samples": [
+      "11:32:35Z elapsed=03:51 rss=742MB cgroup cur=735MB peak=2435MB",
+      "11:37:35Z elapsed=08:51 rss=734MB cgroup cur=728MB peak=2435MB",
+      "11:42:35Z elapsed=13:51 rss=734MB cgroup cur=728MB peak=2435MB",
+      "11:47:35Z elapsed=18:51 rss=731MB cgroup cur=725MB peak=2435MB",
+      "11:52:36Z elapsed=23:51 rss=733MB cgroup cur=726MB peak=2435MB",
+      "11:57:36Z elapsed=28:51 rss=741MB cgroup cur=735MB peak=2435MB",
+      "12:02:36Z elapsed=33:51 rss=767MB cgroup cur=760MB peak=2435MB"
+    ]
+  },
+  "measured_from_the_journal": {
+    "cpu_time": "34min 52.780s",
+    "lines": [
+      "Sep 06 11:28:44 ip-172-31-78-41 systemd[1004]: Started de93smoke.scope - /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.",
+      "Sep 06 12:03:43 ip-172-31-78-41 systemd[1004]: de93smoke.scope: Consumed 34min 52.780s CPU time, 2.3G memory peak, 0B memory swap peak."
+    ],
+    "memory_peak": "2.3G",
+    "swap_peak": "0B"
+  },
+  "protocol": "P003_DE_GATE1_DAY_RUN_KILLED_RECORD_V1",
+  "status": "KILLED_NO_RECEIPT_WRITTEN",
+  "the_remedy_is_NOT_APPLIED_HERE": "changing the wrapper is a declaration change to THE_ONE_COMMAND and it needs a review and its own GO (R-620). Candidates: `setsid` before the wrapper, or a transient SERVICE (`systemd-run --user --unit=X -p Slice=research.slice`, no `--scope`) which systemd forks itself and which outlives the caller. Either must keep the slice, the MemoryMax, the CPUQuota and the lock so `wrapper_observed()` still measures what rule 20 requires",
+  "what_this_record_is": "provenance for a REAL-day run that consumed 35 minutes of work and wrote NOTHING. Without it the CPU time is undocumented and a later reader cannot tell a killed run from a run that never happened",
+  "what_this_record_is_not": {
+    "a_receipt": false,
+    "a_result": false,
+    "an_economic_reading": "NONE. The run was killed inside the null loop; no artifact was written and nothing was read out of the process"
+  }
+}
