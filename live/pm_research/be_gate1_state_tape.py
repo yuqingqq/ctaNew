@@ -274,7 +274,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 20
+EXPECTED_CHECKS = 24
 
 
 def selftest() -> int:
@@ -380,6 +380,71 @@ def selftest() -> int:
        "written BY the stop and a copy taken before it cannot contain them "
        "(DE 106). A unit already gone is REFUSED rather than reported as "
        "defaults (R-653)")
+    # ---- R-711 / REV 81 §1.4: the ONE chain implementation, CAS at write
+    import declaration_chain as _DCH
+    import tempfile as _tfC
+    _dC = Path(_tfC.mkdtemp(prefix="be77_chain_")); _FAM = "fixture_family"
+
+    def _pl(sup=None, note=""):
+        return {"protocol": "FIXTURE", "note": note, "supersedes": sup}
+    (_dC / f"{_FAM}_v1.json").write_text(
+        json.dumps(_pl(None, "first"), indent=1, sort_keys=True) + "\n")
+    _h = _DCH.resolve_head(_dC, _FAM)
+    _w = _DCH.write_next_version(
+        _dC, _FAM, _pl({"path": _h["path"], "sha256": _h["sha256"]}, "second"),
+        _h["pair"])
+    _h2 = _DCH.resolve_head(_dC, _FAM)
+    ok(_h2["name"] == _w["name"] and _h2["sha256"] == _w["sha256"]
+       and _w["version"] == 2,
+       f"POSITIVE CONTROL: `write_next_version` wrote {_w['name']} "
+       f"atomically (temp + rename in the same directory) and "
+       f"`resolve_head` returns it as the head")
+    _codes = []
+    for _lbl, _pay, _hr in (
+            ("two writers from one head",
+             _pl({"path": _h["path"], "sha256": _h["sha256"]}), _h["pair"]),
+            ("a stale head",
+             _pl({"path": _h2["path"], "sha256": _h2["sha256"]}),
+             {"path": str(_dC / f"{_FAM}_v2.json"), "sha256": "0" * 64}),
+            ("a pair naming the wrong digest",
+             _pl({"path": _h2["path"], "sha256": "b" * 64}), _h2["pair"])):
+        try:
+            _DCH.write_next_version(_dC, _FAM, _pay, _hr)
+            _codes.append((_lbl, "NOT REFUSED"))
+        except _DCH.ChainRefused as _eC:
+            _codes.append((_lbl, str(_eC).split(":")[0]))
+    ok([c for _, c in _codes] == ["VERSION_PATH_EXISTS", "HEAD_MOVED",
+                                  "PAIR_MISMATCH"],
+       f"THE THREE REFUSALS ARE DISTINCT AND BY NAME: {_codes}. The closure "
+       f"is a COMPARE-AND-SWAP AT THE WRITE, not a re-read before it -- on "
+       f"2026-09-06 two seats each read v1, composed a v2 and landed it, and "
+       f"a landing-time re-read would not have caught that because both "
+       f"writes were already on disk")
+    _dF = Path(_tfC.mkdtemp(prefix="be77_fork_"))
+    (_dF / f"{_FAM}_v1.json").write_text(
+        json.dumps(_pl(None, "base"), indent=1, sort_keys=True) + "\n")
+    _b = {"path": str(_dF / f"{_FAM}_v1.json"),
+          "sha256": _DCH._sha(_dF / f"{_FAM}_v1.json")}
+    for _n in (2, 3):
+        (_dF / f"{_FAM}_v{_n}.json").write_text(
+            json.dumps(_pl(_b, f"branch {_n}"), indent=1, sort_keys=True) + "\n")
+    _hf = _DCH.resolve_head(_dF, _FAM)
+    ok(_hf["name"] == f"{_FAM}_v3.json"
+       and [o["version"] for o in _hf["orphan_branches"]] == [f"{_FAM}_v2.json"]
+       and _hf["forks_two_versions_superseding_one"],
+       f"REV 81 §5: A FORK IS REPORTED, NOT REFUSED -- head {_hf['name']}, "
+       f"orphan_branches {[o['version'] for o in _hf['orphan_branches']]}, "
+       f"and the head rule stated in the answer ({_hf['head_rule']}). "
+       f"Whether a fork is a defect under rule 13 is a ruling, not this "
+       f"function's to make")
+    _fams = ("heavy_run_form", "be_daybook_structure",
+             "be_race_read_declaration", "producer_exit_maps")
+    _heads = {f: _R22.declaration_head(f) for f in _fams}
+    ok(all(h["resolved_by"].startswith("declaration_chain.resolve_head")
+           for h in _heads.values()),
+       f"AND ALL FOUR OF THIS SEAT'S FAMILIES RESOLVE THROUGH THE SHARED "
+       f"IMPLEMENTATION: "
+       f"{ {f: (h['name'], h['n_versions']) for f, h in _heads.items()} }")
     ok(BUILD := True,
        "usage: --day builds one day only; the split assignment is recorded "
        "as PROVISIONAL and routed to DE (R-574)")

@@ -150,57 +150,48 @@ class DeclarationAbsent(RuntimeError):
 
 
 def declaration_head(family: str) -> dict:
-    """The HEAD of a declaration chain, resolved by {path, sha256}.
+    """The HEAD of a declaration chain -- DELEGATED to the ONE shared
+    implementation (`declaration_chain.resolve_head`, R-711 / REV 81 §1.4).
 
-    R-653: resolve the CHAIN, never a filename -- a filename is a guess
-    about which version governs. A chain of one resolves to itself; a
-    version whose predecessor's digest does not match on disk is refused
-    rather than silently accepted."""
-    import hashlib as _h
-    cands = sorted(DECLARATIONS.glob(f"{family}_v*.json"))
-    if not cands:
-        raise DeclarationAbsent(
-            f"REFUSED: DECLARATION_ABSENT -- no file matching the {family!r} "
-            f"glob exists under {DECLARATIONS}. This check depends on it and "
-            f"therefore FAILS; it does not skip (R-649).")
-    loaded = {}
-    for q in cands:
-        b = q.read_bytes()
-        try:
-            doc = json.loads(b)
-        except json.JSONDecodeError as e:
-            # REV 74 §2(a): an UNPARSEABLE file, a CORRUPTED link and an
-            # ABSENT declaration all arrived as "... is absent". Three
-            # different states, three different repairs, one message.
-            raise DeclarationAbsent(
-                f"REFUSED: DECLARATION_UNPARSEABLE -- {q.name} matches the "
-                f"{family} glob but is not valid JSON ({e}). It is PRESENT "
-                f"and unreadable, which is not the same as absent: the file "
-                f"is there to be fixed.") from e
-        loaded[q.name] = {"path": q, "sha256": _h.sha256(b).hexdigest(),
-                          "doc": doc}
-    superseded = set()
-    for name, e in loaded.items():
-        sup = e["doc"].get("supersedes")
-        if isinstance(sup, dict) and sup.get("path"):
-            prev = Path(sup["path"]).name
-            if prev in loaded and loaded[prev]["sha256"] != sup.get("sha256"):
-                raise DeclarationAbsent(
-                    f"REFUSED: DECLARATION_LINK_CORRUPTED -- {name} "
-                    f"supersedes {prev} by a digest that does not match the "
-                    f"file on disk. Every version is PRESENT and readable; "
-                    f"it is the LINK that is wrong, so the repair is the "
-                    f"link, not the files.")
-            superseded.add(prev)
-    heads = [n for n in loaded if n not in superseded]
-    if len(heads) != 1:
-        raise DeclarationAbsent(
-            f"REFUSED: {family} resolves to {len(heads)} heads ({heads}); a "
-            f"declaration family with two heads has no governing version.")
-    h = loaded[heads[0]]
-    return {"name": heads[0], "sha256": h["sha256"], "doc": h["doc"],
-            "path": str(h["path"]), "n_versions": len(loaded)}
+    This seat had its own resolver. Three implementations of one way of
+    reading a chain would drift exactly as three porcelain parsers did, so
+    the resolver and the version writer are now imported, never re-typed.
+    The refusal names are unchanged (DECLARATION_ABSENT /
+    DECLARATION_UNPARSEABLE / DECLARATION_LINK_CORRUPTED) and are re-raised
+    as `DeclarationAbsent` so this module's callers and their batteries see
+    the same type they always did."""
+    import declaration_chain as _DCH
+    try:
+        h = _DCH.resolve_head(DECLARATIONS, family)
+    except _DCH.ChainRefused as e:
+        raise DeclarationAbsent(str(e)) from e
+    return {"name": h["name"], "sha256": h["sha256"], "doc": h["doc"],
+            "path": h["path"], "n_versions": h["n_versions"],
+            "orphan_branches": h["orphan_branches"],
+            "forks_two_versions_superseding_one":
+                h["forks_two_versions_superseding_one"],
+            "pair": h["pair"], "version": h["version"],
+            "resolved_by": "declaration_chain.resolve_head (the one shared "
+                           "implementation)"}
 
+
+def write_declaration_version(family: str, payload: dict,
+                              head_read: dict) -> dict:
+    """Write the next version of one of THIS SEAT'S declaration families.
+
+    Delegated to `declaration_chain.write_next_version`, whose closure is a
+    COMPARE-AND-SWAP at the write: VERSION_PATH_EXISTS / HEAD_MOVED /
+    PAIR_MISMATCH, each refused by name. Used by every emitter this seat
+    owns -- `heavy_run_form`, `be_daybook_structure`,
+    `be_race_read_declaration`, `producer_exit_maps` -- so none of them can
+    repeat the in-place landing that removed two seats' blocks from the
+    exit-map chain."""
+    import declaration_chain as _DCH
+    try:
+        return _DCH.write_next_version(DECLARATIONS, family, payload,
+                                       head_read)
+    except _DCH.ChainRefused as e:
+        raise DeclarationAbsent(str(e)) from e
 
 def lock_conflict_rc() -> int:
     """THE conflict code, from the declaration -- never a literal here.
