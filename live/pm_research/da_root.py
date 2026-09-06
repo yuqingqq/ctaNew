@@ -59,7 +59,14 @@ DE_MODULE = HERE / "de_data_root.py"
 #: parser is written once, raw, and used everywhere.
 def parse_porcelain(stdout: str) -> dict:
     """Rows of {xy, path, renamed_from, untracked}, and the malformed ones
-    NAMED rather than dropped (rule 11)."""
+    NAMED rather than dropped (rule 11).
+
+    SHARED PROGRAMME INFRASTRUCTURE (R-641 / REV 66 §1.1): DE 96 and BE 65
+    import this parser rather than keeping their own. R-235 forbids sharing
+    a STATISTIC, not a way of reading a tool's output -- two porcelain
+    parsers corroborate nothing and drift apart, which they did three times
+    (the strip, the slice, the rename). The interface is fixed: callers
+    depend on it."""
     rows, malformed = [], []
     for line in (stdout or "").split("\n"):
         if not line:
@@ -247,3 +254,69 @@ def derived_dir(purpose: str = "the derived directory") -> Path:
     follow."""
     b = require_canonical_root(purpose)
     return Path(b["data_root_real_path"]) / "pm_5min" / "derived"
+
+
+# --------------------------------------------------------------- selftest
+
+def selftest() -> tuple:
+    """The reviewer's three-line block, driven (REV 66 / R-641)."""
+    checks, fails = [], 0
+
+    def ck(label, cond, detail=""):
+        nonlocal fails
+        checks.append({"check": label, "pass": bool(cond), "detail": detail})
+        if not cond:
+            fails += 1
+        print(("ok   " if cond else "FAIL ") + label)
+        if detail:
+            print("       " + detail)
+
+    #: THE REVIEWER'S BLOCK. The THIRD line is the one that matters: a
+    #: `[3:]` slice passes the first two and returns `a -> b` where the
+    #: path is `b`.
+    BLOCK = " M live/x.py\n?? data\nR  a -> b\n"
+    out = parse_porcelain(BLOCK)
+    ck("THE SHARED PORCELAIN PARSER ON THE REVIEWER'S THREE LINES: "
+       "` M live/x.py` (leading space), `?? data`, `R  a -> b` -- every "
+       "path recovered exactly, and ***the RENAME returns `b`, not "
+       "`a -> b`***, which is the line a `[3:]` slice passes in direction "
+       "and fails in cause",
+       [r["path"] for r in out["rows"]] == ["live/x.py", "data", "b"]
+       and out["rows"][0]["xy"] == " M"
+       and out["rows"][1]["untracked"] is True
+       and out["rows"][2]["renamed_from"] == "a"
+       and out["n_malformed"] == 0,
+       f"paths {[r['path'] for r in out['rows']]}; xy "
+       f"{[r['xy'] for r in out['rows']]}; rename b<-"
+       f"{out['rows'][2]['renamed_from']}")
+    ck("AND A LINE IT CANNOT READ IS NAMED, NOT DROPPED: an unreadable "
+       "status line is a status, and a caller that treated silence as a "
+       "clean tree would be reading absence as a pass (rule 11)",
+       parse_porcelain("M\n?? ok\n")["n_malformed"] == 1
+       and parse_porcelain("M\n?? ok\n")["rows"][0]["path"] == "ok",
+       "a 1-character line is malformed; the good line beside it parses")
+    ck("AND THE CANONICAL PREDICATE IS READ FROM DE's MODULE, NOT TYPED: "
+       "the canonical repo and data roots come from `de_data_root`'s own "
+       "literals, so this seat cannot hold a root DE has moved",
+       canonical_from_DEs_source().get("status") == "READ_FROM_DES_SOURCE"
+       and canonical_from_DEs_source().get("repo"),
+       f"{canonical_from_DEs_source().get('source')} -> "
+       f"{canonical_from_DEs_source().get('repo')}")
+    print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
+          f"{len(checks)} checks, {fails} failure(s)")
+    return checks, fails
+
+
+def main() -> int:
+    import argparse                                          # noqa: PLC0415
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    a = ap.parse_args()
+    if a.selftest:
+        return 1 if selftest()[1] else 0
+    ap.error("--selftest")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

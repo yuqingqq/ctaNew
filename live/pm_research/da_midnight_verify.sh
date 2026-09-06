@@ -21,6 +21,28 @@ set -u
 # into the PRODUCTION gate log and I misread them as a real refusal -- a log
 # that cannot tell a rehearsal from the real thing is not evidence.
 LOG="${DA_MIDNIGHT_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_verify.log}"
+# R-641 / rule 20: THE JOURNAL IS NOT THE RECORD. This script's own comment
+# below says the record of a drift refusal "is the journal" -- and the
+# journal rotates within hours, so a refusal that happened is a refusal
+# nobody can read tomorrow. THE FILE IS THE RECORD NOW: every run appends
+# its own lines here, stamped from `date -u` AT WRITE TIME, and the journal
+# is secondary.
+#
+# THIS IS NOT THE THING THE GUARDS REFUSE TO DO. A guard that writes a
+# VERDICT before refusing has already done what it refuses; writing that it
+# REFUSED is the opposite act, and it goes to a different file from both
+# the verdict artifacts and $LOG.
+RUNREC="${DA_MIDNIGHT_RUNREC:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_run_record.jsonl}"
+_rec() {  # _rec <event> <detail...>
+  _e="$1"; shift
+  _t="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  _d="$(printf '%s ' "$@" | sed 's/"/\\"/g; s/[[:space:]]*$//')"
+  printf '{"at_utc":"%s","event":"%s","pid":%s,"detail":"%s"}\n' \
+    "$_t" "$_e" "$$" "$_d" >> "$RUNREC" 2>/dev/null || true
+}
+_rec_exit() { _rec run_finished "exit=$1"; }
+trap '_rec_exit "$?"' EXIT
+_rec run_started "$0"
 # Overridable ONLY inside a FULLY isolated rehearsal (see the pair guard
 # below, which this joins). A stub verifier is the only way to exercise what
 # happens when the verifier exits non-zero while still leaving a well-formed
@@ -172,10 +194,10 @@ fi
 # LIKE EVERY GUARD ABOVE IT, THIS ONE REFUSES TO STDERR AND WRITES NOTHING.
 # This file's own lesson -- "a guard that writes before it refuses has already
 # done the thing it refuses" -- cost 46 measured bytes in the production log.
-# So a drift refusal leaves NO line in .da_midnight_verify.log and the record
-# of it is the journal: `journalctl --user -u da-midnight-verify.service`.
-# That gap is a known cost of obeying the rule, stated rather than papered
-# over.
+# So a drift refusal leaves NO line in .da_midnight_verify.log -- and it now
+# leaves one in $RUNREC, the append-only run record, because a refusal that
+# is only in the journal is a refusal that rotates away (R-641 / rule 20).
+# The journal remains as a secondary copy; the FILE is the record.
 DTREE="${DA_DEPLOY_TREE:-$(cd "$SELFDIR/../.." && pwd)}"
 _drec="${DA_DEPLOY_RECORD:-$SELFDIR/systemd/da_deploy_record.json}"
 _dman="${_drec%.json}.sha256"
@@ -200,6 +222,7 @@ if [ "$_canonical" -eq 1 ] || [ -n "${DA_DEPLOY_RECORD:-}" ]; then
          "(or no manifest at $_dman). This unit has never been deployed by" \
          "the explicit act, so nothing says what it should be running." \
          "FIX: run live/pm_research/da_deploy_midnight.sh." >&2
+    _rec refused "DEPLOY_DRIFT RECORD_ABSENT rc=7 record=$_drec"
     exit 7
   fi
   if ! ( cd "$DTREE" && sha256sum -c --status "$_dman" ); then
@@ -208,6 +231,7 @@ if [ "$_canonical" -eq 1 ] || [ -n "${DA_DEPLOY_RECORD:-}" ]; then
     ( cd "$DTREE" && sha256sum -c "$_dman" 2>&1 | grep -v ': OK$' ) >&2
     echo "FIX: re-run live/pm_research/da_deploy_midnight.sh. This night is" \
          "recovered by days_needing_verdict as a catch-up day." >&2
+    _rec refused "DEPLOY_DRIFT REFUSE_TIER_DRIFT rc=7 manifest=$_dman"
     exit 7
   fi
   _dout="$("$PY" "$SELFDIR/da_deploy_guard.py" check \

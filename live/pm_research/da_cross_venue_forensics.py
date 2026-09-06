@@ -315,6 +315,74 @@ def derive_window(day: str, raw_root: Path | None = None,
             "offsets_utc": sorted({v["end_utc"] for v in per_coin.values()})}
 
 
+#: R-641 / rule 20: THE JOURNAL IS NOT THE RECORD. It rotates within hours
+#: -- DE 84's `Started` line was gone four hours after a review quoted it --
+#: so a number read from it is copied into an artifact AT THE MOMENT OF
+#: READING with the source's retention state named. What follows is that
+#: label: the oldest entry the journal still holds FOR THIS UNIT, read from
+#: the entry's own timestamp and never typed, and the line count actually
+#: read.
+RESOURCE_MONITOR_UNIT = "resource-monitor"
+
+
+def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
+    """The unit's retention state, as of NOW.
+
+    `available: False` with `n_lines_available: 0` is an ABSENCE and is
+    reported as one. ***A zero quoted as a measurement is the known-bad
+    this label exists to prevent*** -- an absent host record is not
+    evidence the host was healthy (R-366)."""
+    read_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if _lines is None:
+        try:
+            r = subprocess.run(
+                ["journalctl", "--user", "-u", unit, "--no-pager",
+                 "-o", "short-iso", "--utc"],
+                capture_output=True, text=True, timeout=120)
+            lines = r.stdout.splitlines() if r.returncode == 0 else []
+        except Exception as e:                              # noqa: BLE001
+            return {"unit": unit, "available": None, "read_at_utc": read_at,
+                    "status": "JOURNALCTL_FAILED", "why": repr(e),
+                    "n_lines_available": None,
+                    "oldest_available_utc": None}
+    else:
+        lines = list(_lines)
+    #: `-o short-iso --utc` stamps each line `YYYY-MM-DDTHH:MM:SS+00:00`.
+    #: The timestamp is READ FROM THE ENTRY, never typed and never inferred
+    #: from today's date.
+    stamped = []
+    for ln in lines:
+        try:
+            stamped.append(dt.datetime.strptime(
+                ln[:25], "%Y-%m-%dT%H:%M:%S%z"))
+        except (ValueError, IndexError):
+            continue
+    #: `-- No entries --` is journalctl SAYING THERE IS NOTHING, and it is
+    #: one line long. Counting it as a line would turn an absence into a
+    #: population of one.
+    lines = [ln for ln in lines if not ln.startswith("-- No entries")]
+    if not lines:
+        return {"unit": unit, "available": False, "n_lines_available": 0,
+                "oldest_available_utc": None, "read_at_utc": read_at,
+                "status": "ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT",
+                "why": ("the journal holds no lines for this unit. NO NUMBER "
+                        "IS QUOTED FROM IT: a 0 reported as a measurement "
+                        "is a measurement of nothing")}
+    oldest = min(stamped) if stamped else None
+    return {"unit": unit, "available": True,
+            "n_lines_available": len(lines),
+            "n_lines_with_a_readable_stamp": len(stamped),
+            "oldest_available_utc": (oldest.strftime("%Y-%m-%dT%H:%M:%SZ")
+                                     if oldest else None),
+            "oldest_available_epoch": (oldest.timestamp() if oldest
+                                       else None),
+            "read_at_utc": read_at,
+            "status": "PRESENT",
+            "the_journal_is_not_the_record": (
+                "these numbers are copied into this artifact at the moment "
+                "of reading; the journal behind them rotates (rule 20)")}
+
+
 def host_window(w0: float, w1: float) -> dict[str, Any]:
     """The R-163 resource-monitor CSV over [w0, w1), from the journal."""
     try:
@@ -328,6 +396,27 @@ def host_window(w0: float, w1: float) -> dict[str, Any]:
             capture_output=True, text=True, timeout=120)
     except Exception as e:                                  # pragma: no cover
         return {"status": "UNMEASURED", "why": f"journalctl failed: {e!r}"}
+    #: THE RETENTION LABEL, READ AT THE MOMENT OF READING (R-641).
+    ret = journal_retention(RESOURCE_MONITOR_UNIT)
+    covered = (None if not ret.get("oldest_available_epoch")
+               else ret["oldest_available_epoch"] <= w0)
+    ret["window_fully_covered"] = covered
+    ret["window_start_utc"] = _iso(w0)
+    if ret.get("available") is False:
+        return {"status": "UNMEASURED", "n_rows": 0, "retention": ret,
+                "why": ("the journal holds NO lines for "
+                        f"{RESOURCE_MONITOR_UNIT}, so nothing about this "
+                        "window can be measured from it. An absent host "
+                        "record is NOT evidence the host was healthy "
+                        "(R-366), and no number is quoted")}
+    if covered is False:
+        return {"status": "UNMEASURED", "n_rows": 0, "retention": ret,
+                "why": ("the journal no longer reaches this window: its "
+                        f"oldest entry for {RESOURCE_MONITOR_UNIT} is "
+                        f"{ret['oldest_available_utc']} and the window "
+                        f"starts {_iso(w0)}. A PARTIAL read of a window is "
+                        "not the window (rule 20: the journal is not the "
+                        "record)")}
     rows, alerts = [], []
     for ln in out.stdout.splitlines():
         ln = ln.strip()
@@ -344,7 +433,7 @@ def host_window(w0: float, w1: float) -> dict[str, Any]:
         except ValueError:
             continue
     if not rows:
-        return {"status": "UNMEASURED",
+        return {"status": "UNMEASURED", "retention": ret,
                 "why": "the resource-monitor journal does not reach this "
                        "window. An absent host record is NOT evidence the "
                        "host was healthy (R-366).",
@@ -352,13 +441,14 @@ def host_window(w0: float, w1: float) -> dict[str, Any]:
     inw = [r for r in rows if w0 <= r[0] < w1]
     outw = [r for r in rows if not (w0 <= r[0] < w1)]
     if not inw:
-        return {"status": "UNMEASURED",
+        return {"status": "UNMEASURED", "retention": ret,
                 "why": "rows exist nearby but none inside the window",
                 "n_rows": len(rows), "n_in_window": 0}
     def stat(v, i):
         return {"min": min(x[i] for x in v), "median": statistics.median(
             [x[i] for x in v]), "max": max(x[i] for x in v)}
-    return {"status": "MEASURED", "n_rows": len(rows), "n_in_window": len(inw),
+    return {"status": "MEASURED", "retention": ret,
+            "n_rows": len(rows), "n_in_window": len(inw),
             "n_outside_window_context": len(outw),
             "mem_avail_mib": stat(inw, 1), "swap_used_mib": stat(inw, 2),
             "load1": stat(inw, 3), "collectors_mib": stat(inw, 4),
@@ -604,6 +694,47 @@ def selftest() -> int:
        "RR7-1 DISCRIMINATION: each venue's regex matches its own shape and "
        "REJECTS another venue's -- three parsers that all matched everything "
        "would pass the check above and discriminate nothing")
+
+    # -- R-641 / rule 20: THE JOURNAL IS NOT THE RECORD -------------------
+    live_ret = journal_retention(RESOURCE_MONITOR_UNIT)
+    ok(live_ret["available"] is True
+       and live_ret["n_lines_available"] > 0
+       and live_ret["oldest_available_utc"] is not None
+       and live_ret["read_at_utc"].endswith("Z"),
+       "POSITIVE CONTROL: a unit with live lines carries the retention "
+       f"label -- {live_ret['n_lines_available']} lines, oldest "
+       f"{live_ret['oldest_available_utc']}, read at "
+       f"{live_ret['read_at_utc']}. The numbers are copied into the "
+       "artifact AT THE MOMENT OF READING (rule 20)")
+    absent = journal_retention("da86-no-such-unit")
+    ok(absent["available"] is False
+       and absent["n_lines_available"] == 0
+       and absent["oldest_available_utc"] is None
+       and "no number is quoted" in absent["why"].lower(),
+       "KNOWN-BAD: a unit with NO journal lines is ABSENT with 0 lines and "
+       "quotes NO number -- ***a 0 reported as a measurement is a "
+       "measurement of nothing***, and `-- No entries --` is journalctl "
+       "saying so, not a line of data")
+    stale = journal_retention("x", _lines=[
+        "2026-09-06T09:05:56+00:00 host bash[1]: 2026-09-06T09:05:56Z,1,2,3"])
+    ok(stale["oldest_available_utc"] == "2026-09-06T09:05:56Z"
+       and stale["oldest_available_epoch"] is not None,
+       "the oldest available entry is READ FROM THE ENTRY'S OWN STAMP, "
+       "never typed and never inferred from today's date")
+    _w0 = stale["oldest_available_epoch"] - 3600.0
+    ok(stale["oldest_available_epoch"] > _w0,
+       "KNOWN-BAD (the predicate): a window starting an hour BEFORE the "
+       "oldest available entry is NOT covered -- `window_fully_covered` is "
+       "`oldest_available <= w0`, and a partial read of a window is not "
+       "the window")
+    hw = host_window(0.0, 1.0)
+    ok(hw["status"] == "UNMEASURED"
+       and hw["retention"]["window_fully_covered"] is False
+       and hw["retention"]["oldest_available_utc"] in hw["why"],
+       "DRIVEN ON THE REAL JOURNAL: a 1970 window is UNMEASURED and the "
+       "why NAMES the oldest available entry "
+       f"({hw['retention']['oldest_available_utc']}) -- never a partial "
+       "CSV presented as the window")
 
     print(f"da_cross_venue_forensics selftests: {checks} checks passed")
     return 0
