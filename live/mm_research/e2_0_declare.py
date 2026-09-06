@@ -60,8 +60,39 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "declarations" / "p002_e2_0_declaration_v1.json"
-PROTOCOL = "P002_E2_0_TRUE_MID_DECLARATION_V1"
+DECL_VERSION = 2
+OUT = HERE / "declarations" / f"p002_e2_0_declaration_v{DECL_VERSION}.json"
+PROTOCOL = f"P002_E2_0_TRUE_MID_DECLARATION_V{DECL_VERSION}"
+SUPERSEDES = {
+    "path": "live/mm_research/declarations/p002_e2_0_declaration_v1.json",
+    "sha256": "95aeaf1bc35fd8fba1eb96af54429ec1bf7c366afc9e87f0b5be1248504d442a",
+    "carrying_commit": "a7b5534152e83b59dda196ab6fa07fc9a0131c99",
+    "correction_is_in_band": (
+        "rule 13: v1 is NOT edited and stands as provenance. v2 supersedes it "
+        "on the reviewer's three findings (46030b1, filed 2026-09-06T04:33Z, "
+        "BEFORE the smoke ran and BEFORE any result was read). The smoke's "
+        "receipt is emitted under v2; the v1 run's numbers were never read, "
+        "never cited and its unread receipt was removed."),
+    "what_changed": [
+        "FINDING 1: Delta_rs is now declared on the INTERSECTION of sweeps "
+        "where BOTH mids are defined, with the events dropped for want of a "
+        "proxy counted as a status. v1 said 'the SAME sweep events' -- but "
+        "the true mid has no validity window and the proxy needs two prints "
+        "within 10 s, so v1 would have let a POPULATION difference leak into "
+        "what is supposed to be a MID difference.",
+        "FINDING 2: the settle leg is relabelled by the GATE it clears "
+        "(fee + c_safe = 2.3, EXPERIMENT_PLAN section 1.5 gate 1) and killed "
+        "by the DEATH bar (fee = 1.8, the amendment). v1's SETTLED_ALIVE was "
+        "labelled at 1.8, so a cell at 2.0 would have read ALIVE while "
+        "FAILING gate 1. The 1.8-2.3 band is real and now has its own name.",
+        "FINDING 3: the interval is DECISION-BEARING on the alive side. "
+        "ALIVE requires the point >= 2.3 AND the bootstrap CI lower bound "
+        ">= 1.8 (the plan's gate 2). A point that clears with an interval "
+        "that does not is INCONCLUSIVE, not alive. The KILL stays a point "
+        "rule because that is the pre-registered text and a kill must not be "
+        "weakened after seeing -- but its interval robustness is reported.",
+    ],
+}
 
 # ---- constants, every one carried from a named source, none invented here ---
 FEE_MAKER_VIP0 = 1.8          # bps, +BNB — EXPERIMENT_PLAN §0 / e1_markout_scan FEE_MAKER
@@ -141,25 +172,72 @@ def void_predicate(delta_rs_bps: float | None) -> dict:
 
 
 def settle_predicate(rs_true_notional_bps: float | None,
-                     tier: str = "vip0") -> dict:
+                     tier: str = "vip0",
+                     ci_lo_bps: float | None = None,
+                     ci_hi_bps: float | None = None,
+                     interval_claimable: bool = True) -> dict:
     """(ii) The pre-read amendment: notional-weighted rs on TRUE mids.
 
     "if notional-weighted rs(tau*) < fee at VIP0 on the L2 window, the ADA cell
     dies regardless of eq numbers" -- E1_CODE_REVIEW.md.
     """
     fee = FEE_MAKER_VIP0 if tier == "vip0" else FEE_MAKER_VIP1
+    gate = fee + C_SAFE                     # section 1.5 gate 1: 2.3 at VIP0
     if rs_true_notional_bps is None:
-        return {"decidable": False, "dies": None, "fee_bps": fee,
+        return {"decidable": False, "state": None, "dies": None,
+                "death_bar_bps": fee, "gate1_bar_bps": gate,
                 "why": "no admissible notional-weighted estimate exists"}
-    dies = rs_true_notional_bps < fee
-    return {"decidable": True, "dies": bool(dies), "fee_bps": fee,
-            "rs_true_notional_bps": rs_true_notional_bps,
-            "clears_gate1_margin": bool(rs_true_notional_bps >= fee + C_SAFE),
-            "why": ("per DOLLAR of maker fill the realized half-spread does "
-                    "not cover the VIP0 maker fee, which is the whole of "
-                    "standalone viability" if dies else
-                    "the dollars clear the fee; the cell survives this leg "
-                    "and must then meet the full section 1.5 gate")}
+    x = rs_true_notional_bps
+    dies = x < fee                          # the amendment's rule, UNCHANGED
+    point_clears_gate1 = x >= gate          # the plan's gate 1
+    interval_clears_gate2 = (ci_lo_bps is not None and ci_lo_bps >= fee)
+    if dies:
+        state = "DEAD"
+    elif not point_clears_gate1:
+        state = "NOT_KILLED_PENDING_GATE_1"
+    elif not interval_claimable:
+        state = "INCONCLUSIVE_NO_INTERVAL"
+    elif not interval_clears_gate2:
+        state = "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR"
+    else:
+        state = "ALIVE_CLEARS_GATE_1_AND_2"
+    return {
+        "decidable": True, "state": state, "dies": bool(dies),
+        "death_bar_bps": fee, "gate1_bar_bps": gate,
+        "rs_true_notional_bps": x,
+        "point_clears_gate1": bool(point_clears_gate1),
+        "ci_lo_bps": ci_lo_bps, "ci_hi_bps": ci_hi_bps,
+        "interval_claimable": bool(interval_claimable),
+        "interval_clears_gate2": bool(interval_clears_gate2),
+        "kill_is_interval_robust": (
+            None if (dies is False or ci_hi_bps is None)
+            else bool(ci_hi_bps < fee)),
+        "why": {
+            "DEAD": "per DOLLAR of maker fill the realized half-spread is "
+                    "below the VIP0 maker fee -- the amendment's kill, a "
+                    "POINT rule because that is its pre-registered text and a "
+                    "kill is not weakened after seeing. Its interval "
+                    "robustness is reported beside it, never instead of it.",
+            "NOT_KILLED_PENDING_GATE_1":
+                f"between the death bar {fee} and the plan's own gate {gate}: "
+                f"NOT dead, and NOT a pass. v1 called this band ALIVE, which "
+                f"would have labelled a cell that FAILS section 1.5 gate 1 as "
+                f"surviving.",
+            "INCONCLUSIVE_NO_INTERVAL":
+                "the point clears the gate but G < 5 complete days, so no "
+                "interval is claimable (CLAUDE.md rule 8) and ALIVE cannot be "
+                "asserted from a point",
+            "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR":
+                f"the point clears {gate} but the 95% CI lower bound is below "
+                f"the fee {fee}, failing the plan's gate 2 -- a point that "
+                f"clears with an interval that does not is INCONCLUSIVE",
+            "ALIVE_CLEARS_GATE_1_AND_2":
+                "the point clears gate 1 AND the interval clears gate 2. This "
+                "is the outcome the E1 audit did NOT expect and it carries "
+                "the heavier burden: the remaining section 1.5 conditions "
+                "still apply.",
+        }[state],
+    }
 
 
 def ada_verdict(void: dict, settle: dict) -> dict:
@@ -172,32 +250,21 @@ def ada_verdict(void: dict, settle: dict) -> dict:
         return {"verdict": "UNDECIDABLE",
                 "why": "at least one leg had no admissible estimate; reported "
                        "as a status, never resolved by assumption (rule 4)"}
-    v, d = void["voids"], settle["dies"]
-    if v and d:
-        return {"verdict": "VOID_AND_DEAD", "voids_e1_pass": True,
-                "cell_dies": True,
-                "why": "E1's ADA number is not readable AND the true-mid "
-                       "dollars are below fee: the pass was an artifact and "
-                       "the cell is dead on the new window"}
-    if v and not d:
-        return {"verdict": "VOID_ONLY", "voids_e1_pass": True,
-                "cell_dies": False,
-                "why": "E1's ADA number is not readable, but the true-mid "
-                       "dollars clear the fee: the cell is RE-OPENED on true "
-                       "mids and must meet the full section 1.5 gate. It is "
-                       "not a pass and must never be reported as one"}
-    if (not v) and d:
-        return {"verdict": "SETTLED_DEAD", "voids_e1_pass": False,
-                "cell_dies": True,
-                "why": "the proxy mid was within tolerance -- E1 measured "
-                       "correctly -- and the dollars are still below fee. The "
-                       "cell is settled dead, which is the audit's expectation"}
-    return {"verdict": "SETTLED_ALIVE", "voids_e1_pass": False,
-            "cell_dies": False,
-            "why": "proxy within tolerance and the dollars clear the fee: ADA "
-                   "survives E2.0 and proceeds to the full section 1.5 gate "
-                   "and E2. This is the outcome the audit did NOT expect, so "
-                   "it carries the heavier burden of proof"}
+    v, st = void["voids"], settle["state"]
+    return {
+        "verdict": ("VOIDED+" if v else "NOT_VOIDED+") + st,
+        "voids_e1_pass": bool(v),
+        "settle_state": st,
+        "cell_dies": bool(st == "DEAD"),
+        "cell_passes_gate1": bool(st == "ALIVE_CLEARS_GATE_1_AND_2"),
+        "why_void": void["why"],
+        "why_settle": settle["why"],
+        "the_two_legs_are_independent": (
+            "one asks whether E1's MEASUREMENT is readable, the other whether "
+            "the RIGHT quantity pays. Both can fire; neither implies the "
+            "other; and the settle state is named by the bar it actually "
+            "crosses, never by one boolean doing duty for two bars."),
+    }
 
 
 # --------------------------------------------------------------------------
@@ -205,6 +272,7 @@ def declaration(n_days_expected: int = 16) -> dict:
     return {
         "protocol": PROTOCOL,
         "status": "DECLARATION_NO_DATA_TOUCHED",
+        "supersedes": SUPERSEDES,
         "program": "P-2026-002-hf-market-making",
         "step": "E2.0 -- notional-weighted true-mid recompute of the E1 screen",
         "carrying_commit": carrying_commit(),
@@ -293,6 +361,52 @@ def declaration(n_days_expected: int = 16) -> dict:
                 "is POSITIVE. Driven in both directions by the falsifiers."),
         },
 
+        "which_population_each_leg_is_computed_over": {
+            "why_this_field_exists": (
+                "REVIEWER FINDING 1 (46030b1): v1 said Delta_rs used 'the "
+                "SAME sweep events', but the two mids DO NOT EXIST on the "
+                "same sweeps. The true mid needs only a prior bookTicker "
+                "message; the proxy needs a taker-buy AND a taker-sell print "
+                "within 10 s. In a print drought the proxy is undefined and "
+                "the true mid is not. Unrestricted, Delta_rs would mix a MID "
+                "difference with a POPULATION difference -- the one thing it "
+                "exists not to do."),
+            "VOID_leg_population": (
+                "the INTERSECTION: sweeps of an admissible day where BOTH "
+                "mids are defined at t- AND at t+tau*, i.e. "
+                "v0_true & v1_true & v0_proxy & v1_proxy. Delta_rs is "
+                "computed over exactly this set for both mids, so the only "
+                "thing that differs between the two terms is the mid."),
+            "SETTLE_leg_population": (
+                "ALL sweeps of an admissible day with a valid TRUE mid at t- "
+                "and t+tau*. NOT the intersection: the amendment says "
+                "'notional-weighted rs on true mids', and restricting the "
+                "economics to the events the PROXY happens to see would let "
+                "the proxy's limitations select the settle population."),
+            "membership_weighting": (
+                "membership is a property of the EVENT and is identical under "
+                "eq and notional weighting; the weighting changes only how "
+                "members are averaged. So the two legs' weightings (eq for "
+                "the void, notional for the settle) do not move who is in."),
+            "counted_as_a_status": [
+                "n_sweeps_true_valid", "n_sweeps_proxy_valid",
+                "n_sweeps_intersection",
+                "n_true_valid_without_proxy (the events the proxy could not "
+                "see -- reported as a count AND a share, rule 4)",
+                "the same counts for E1's own window via the reproduction "
+                "control, so the two windows' proxy coverage is comparable",
+            ],
+            "what_a_population_difference_would_do": (
+                "Delta_rs on the intersection licenses a statement about the "
+                "MID on the events both mids see. It does NOT license "
+                "transporting that statement to the settle population, which "
+                "is larger. If n_true_valid_without_proxy is a large share, "
+                "then E1's proxy was blind to that share of its own window "
+                "and the VOID leg's reach is correspondingly narrower -- that "
+                "is a limit on the void reading, reported with it, never a "
+                "reason to widen either population after seeing."),
+        },
+
         "the_gate_quantity": {
             "primary": "notional-weighted rs(tau*) on TRUE mids, per symbol",
             "rs_definition": "rs(tau) == mean MO(tau) (EXPERIMENT_PLAN "
@@ -328,8 +442,8 @@ def declaration(n_days_expected: int = 16) -> dict:
         "what_settles_and_what_voids": {
             "leg_i_VOID": {
                 "quantity": "Delta_rs(tau*) = rs_proxy - rs_true, EQ-WEIGHTED, "
-                            "both computed on the SAME admissible days from "
-                            "the SAME sweep events",
+                            "both computed on the SAME admissible days over "
+                            "the INTERSECTION population defined below",
                 "threshold_bps": VOID_THRESHOLD_BPS,
                 "consequence": "Delta_rs > +1.0 bps VOIDS E1's ADA pass",
                 "source": "EXPERIMENT_PLAN.md section 2, E2.0",
@@ -341,14 +455,59 @@ def declaration(n_days_expected: int = 16) -> dict:
                                "regardless of eq numbers",
                 "source": "E1_CODE_REVIEW.md pre-read amendment item (ii)",
             },
+            "two_bars_not_one": {
+                "why_this_field_exists": (
+                    "REVIEWER FINDING 2 (46030b1): v1's table called anything "
+                    "at or above 1.8 SETTLED_ALIVE. 1.8 is the DEATH bar (the "
+                    "amendment's kill: below the VIP0 maker fee). The PLAN's "
+                    "own pass bar is fee + c_safe = 2.3 (EXPERIMENT_PLAN "
+                    "section 1.5 gate 1). A cell at 2.0 would have read ALIVE "
+                    "while FAILING gate 1. One boolean was doing duty for two "
+                    "bars."),
+                "death_bar_bps": FEE_MAKER_VIP0,
+                "gate1_bar_bps": FEE_MAKER_VIP0 + C_SAFE,
+                "gate2_rule": "the plan's gate 2: block-bootstrap 95% CI "
+                              "lower bound >= fee_maker (no margin)",
+            },
+            "interval_is_decision_bearing": {
+                "why_this_field_exists": (
+                    "REVIEWER FINDING 3 (46030b1): v1 compared a POINT to a "
+                    "threshold while declaring an interval that G = 16 makes "
+                    "claimable. A point that clears with an interval that "
+                    "does not is not a pass."),
+                "on_the_alive_side": "ALIVE requires the point >= 2.3 AND the "
+                                     "95% CI lower bound >= 1.8. Otherwise "
+                                     "INCONCLUSIVE.",
+                "on_the_kill_side": "the kill stays the amendment's POINT "
+                                    "rule, because weakening a pre-registered "
+                                    "kill after seeing is exactly what rule "
+                                    "11 forbids. `kill_is_interval_robust` "
+                                    "(CI upper bound < 1.8) is REPORTED "
+                                    "beside it, never instead of it.",
+                "below_G_5": "no interval is claimable, so ALIVE cannot be "
+                             "asserted at all: the state is "
+                             "INCONCLUSIVE_NO_INTERVAL (CLAUDE.md rule 8)",
+            },
             "outcome_table": {
-                "VOID_AND_DEAD": "Delta_rs > 1.0 AND notional rs_true < 1.8",
-                "VOID_ONLY": "Delta_rs > 1.0 AND notional rs_true >= 1.8 -- "
-                             "cell RE-OPENED, not passed",
-                "SETTLED_DEAD": "Delta_rs <= 1.0 AND notional rs_true < 1.8",
-                "SETTLED_ALIVE": "Delta_rs <= 1.0 AND notional rs_true >= 1.8",
-                "UNDECIDABLE": "either leg has no admissible estimate -- a "
-                               "STATUS, never resolved by assumption",
+                "settle_states": {
+                    "DEAD": "notional rs_true < 1.8 (the death bar)",
+                    "NOT_KILLED_PENDING_GATE_1":
+                        "1.8 <= notional rs_true < 2.3 -- neither dead nor "
+                        "passing; the band v1 mislabelled ALIVE",
+                    "INCONCLUSIVE_NO_INTERVAL":
+                        "point >= 2.3 but G < 5, no interval claimable",
+                    "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR":
+                        "point >= 2.3 but CI-lo < 1.8 (fails gate 2)",
+                    "ALIVE_CLEARS_GATE_1_AND_2":
+                        "point >= 2.3 AND CI-lo >= 1.8",
+                },
+                "void_states": {"VOIDED": "Delta_rs > 1.0",
+                                "NOT_VOIDED": "Delta_rs <= 1.0"},
+                "verdict": "the two are reported as one string "
+                           "'<void>+<settle>' and as separate fields; "
+                           "UNDECIDABLE if either leg has no admissible "
+                           "estimate -- a STATUS, never resolved by "
+                           "assumption",
             },
             "the_expectation_is_recorded_so_it_can_be_wrong": (
                 "the E1 results audit expects SETTLED_DEAD. Recording the "
@@ -495,44 +654,75 @@ def selftest() -> int:
     ok(void_predicate(None)["decidable"] is False,
        "VOID leg: an undefined Delta_rs is UNDECIDABLE, never a pass")
 
-    # --- the SETTLE leg, both directions ---
-    ok(settle_predicate(-0.32)["dies"] is True,
-       "SETTLE leg KNOWN-BAD: E1's own notional ADA number (-0.322) is below "
-       "the 1.8 bps VIP0 fee and KILLS the cell")
-    ok(settle_predicate(2.5)["dies"] is False
-       and settle_predicate(2.5)["clears_gate1_margin"] is True,
-       "SETTLE leg POSITIVE CONTROL: 2.5 bps clears the fee AND the "
-       "fee + c_safe margin -- the rule can admit")
-    ok(settle_predicate(1.8)["dies"] is False
-       and settle_predicate(1.8)["clears_gate1_margin"] is False,
-       "SETTLE leg BOUNDARY: exactly at the fee does not die but does NOT "
-       "clear gate 1's margin -- two different thresholds, not collapsed")
-    ok(settle_predicate(1.5, "vip1")["dies"] is False
-       and settle_predicate(1.5, "vip0")["dies"] is True,
-       "SETTLE leg: the tier is a parameter and changes the answer at 1.5 "
-       "bps -- VIP0 kills, VIP1 does not (a 'conditional pass, tier-gated')")
-    ok(settle_predicate(None)["decidable"] is False,
-       "SETTLE leg: no admissible estimate is UNDECIDABLE, never a kill")
-
-    # --- the 2x2, every cell reachable ---
-    cells = {}
-    for dr in (1.5, 0.5):
-        for rs in (-0.3, 2.5):
-            v = ada_verdict(void_predicate(dr), settle_predicate(rs))
-            cells[(dr > 1.0, rs < 1.8)] = v["verdict"]
-    ok(cells == {(True, True): "VOID_AND_DEAD", (True, False): "VOID_ONLY",
-                 (False, True): "SETTLED_DEAD", (False, False): "SETTLED_ALIVE"},
-       f"THE 2x2 IS TOTAL: all four cells reachable and distinct -- {cells}")
-    ok(ada_verdict(void_predicate(None), settle_predicate(2.0))["verdict"]
-       == "UNDECIDABLE",
-       "THE 2x2: an undecidable leg yields UNDECIDABLE, not a default pass "
-       "and not a default kill")
-    ok(ada_verdict(void_predicate(1.5), settle_predicate(2.5))["cell_dies"]
+    # --- the SETTLE leg: THREE bars, driven at every one (reviewer 2 and 3) ---
+    ok(settle_predicate(-0.32, ci_lo_bps=-1.0, ci_hi_bps=0.4)["state"] == "DEAD",
+       "SETTLE KNOWN-BAD: E1's own notional ADA number (-0.322) is below the "
+       "1.8 bps death bar -> DEAD")
+    ok(settle_predicate(-0.32, ci_lo_bps=-1.0,
+                        ci_hi_bps=0.4)["kill_is_interval_robust"] is True,
+       "SETTLE: a kill whose CI upper bound is also below the fee is reported "
+       "INTERVAL-ROBUST -- beside the point rule, never instead of it")
+    ok(settle_predicate(1.0, ci_lo_bps=-1.0,
+                        ci_hi_bps=3.0)["kill_is_interval_robust"] is False,
+       "SETTLE: a kill whose interval STRADDLES the fee is reported NOT "
+       "interval-robust -- and still kills, because weakening a "
+       "pre-registered kill after seeing is what rule 11 forbids")
+    ok(settle_predicate(2.0, ci_lo_bps=1.9, ci_hi_bps=2.1)["state"]
+       == "NOT_KILLED_PENDING_GATE_1",
+       "SETTLE KNOWN-BAD (reviewer finding 2): 2.0 bps sits BETWEEN the 1.8 "
+       "death bar and the plan's 2.3 gate -- v1 called this ALIVE, which "
+       "would have labelled a cell that FAILS section 1.5 gate 1 as surviving")
+    ok(settle_predicate(2.5, ci_lo_bps=1.0, ci_hi_bps=4.0)["state"]
+       == "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR",
+       "SETTLE KNOWN-BAD (reviewer finding 3): a POINT of 2.5 clears the gate "
+       "but a CI lower bound of 1.0 fails gate 2 -> INCONCLUSIVE, not alive")
+    ok(settle_predicate(2.5, ci_lo_bps=2.0, ci_hi_bps=3.0,
+                        interval_claimable=False)["state"]
+       == "INCONCLUSIVE_NO_INTERVAL",
+       "SETTLE: below G = 5 no interval is claimable, so ALIVE cannot be "
+       "asserted from a point at all (CLAUDE.md rule 8)")
+    ok(settle_predicate(2.5, ci_lo_bps=2.0, ci_hi_bps=3.0)["state"]
+       == "ALIVE_CLEARS_GATE_1_AND_2",
+       "SETTLE POSITIVE CONTROL: point 2.5 >= 2.3 AND CI-lo 2.0 >= 1.8 is the "
+       "ONLY way to ALIVE -- the rule can admit, so it is not a kill wearing "
+       "a gate's name")
+    ok(settle_predicate(1.8, ci_lo_bps=1.8, ci_hi_bps=2.0)["dies"] is False
+       and settle_predicate(1.8, ci_lo_bps=1.8, ci_hi_bps=2.0)["state"]
+       == "NOT_KILLED_PENDING_GATE_1",
+       "SETTLE BOUNDARY: exactly at the death bar does NOT die and does NOT "
+       "pass -- the two bars are 1.8 and 2.3 and neither is the other")
+    ok(settle_predicate(1.5, "vip1", ci_lo_bps=1.5, ci_hi_bps=1.6)["dies"]
        is False
-       and ada_verdict(void_predicate(1.5),
-                       settle_predicate(2.5))["voids_e1_pass"] is True,
-       "VOID_ONLY is NOT a pass: the cell is re-opened, and the verdict says "
-       "so in the same field a reader would key on")
+       and settle_predicate(1.5, "vip0", ci_lo_bps=1.5,
+                            ci_hi_bps=1.6)["dies"] is True,
+       "SETTLE: the tier is a parameter and changes the answer at 1.5 bps -- "
+       "VIP0 kills, VIP1 does not")
+    ok(settle_predicate(None)["decidable"] is False,
+       "SETTLE: no admissible estimate is UNDECIDABLE, never a kill")
+
+    # --- the joint verdict: every settle state, both void states ---
+    seen = set()
+    for dr in (1.5, 0.5):
+        for rs, lo, hi in ((-0.3, -1.0, 0.4), (2.0, 1.9, 2.1),
+                           (2.5, 1.0, 4.0), (2.5, 2.0, 3.0)):
+            seen.add(ada_verdict(void_predicate(dr),
+                                 settle_predicate(rs, ci_lo_bps=lo,
+                                                  ci_hi_bps=hi))["verdict"])
+    ok(len(seen) == 8,
+       f"THE JOINT TABLE IS TOTAL: 2 void states x 4 reachable settle states "
+       f"= {len(seen)} distinct verdicts, every one reachable")
+    ok(ada_verdict(void_predicate(None),
+                   settle_predicate(2.0, ci_lo_bps=1.9,
+                                    ci_hi_bps=2.1))["verdict"] == "UNDECIDABLE",
+       "JOINT: an undecidable leg yields UNDECIDABLE, not a default pass and "
+       "not a default kill")
+    vj = ada_verdict(void_predicate(1.5),
+                     settle_predicate(2.0, ci_lo_bps=1.9, ci_hi_bps=2.1))
+    ok(vj["cell_dies"] is False and vj["cell_passes_gate1"] is False
+       and vj["settle_state"] == "NOT_KILLED_PENDING_GATE_1",
+       "JOINT: `cell_dies` and `cell_passes_gate1` are SEPARATE fields and "
+       "both are False in the 1.8-2.3 band -- no single boolean carries two "
+       "bars, which is the whole of reviewer finding 2")
 
     # --- day-count re-expression, not re-choosing ---
     ok(days_threshold(31, DAYS_POSITIVE_FRACTION) == 22,
@@ -579,12 +769,28 @@ def selftest() -> int:
        f"write_text writes the declaration. No open(), no glob, no reader.")
 
     d = declaration()
-    ok(d["status"] == "DECLARATION_NO_DATA_TOUCHED"
-       and set(d["what_settles_and_what_voids"]["outcome_table"]) ==
-       {"VOID_AND_DEAD", "VOID_ONLY", "SETTLED_DEAD", "SETTLED_ALIVE",
-        "UNDECIDABLE"},
-       "THE EMITTED OBJECT carries the same five outcomes the predicates "
-       "produce -- the table and the code cannot disagree")
+    tbl = set(d["what_settles_and_what_voids"]["outcome_table"]["settle_states"])
+    produced = {settle_predicate(x, ci_lo_bps=lo, ci_hi_bps=hi,
+                                 interval_claimable=ic)["state"]
+                for x, lo, hi, ic in ((-0.3, -1.0, 0.4, True),
+                                      (2.0, 1.9, 2.1, True),
+                                      (2.5, 1.0, 4.0, True),
+                                      (2.5, 2.0, 3.0, False),
+                                      (2.5, 2.0, 3.0, True))}
+    ok(d["status"] == "DECLARATION_NO_DATA_TOUCHED" and tbl == produced,
+       f"THE EMITTED OBJECT and the CODE cannot disagree: the declared "
+       f"settle_states are exactly the states the predicate produces "
+       f"({sorted(tbl)})")
+    ok(d["supersedes"]["sha256"] == SUPERSEDES["sha256"]
+       and len(d["supersedes"]["what_changed"]) == 3,
+       "RULE 13: v2 carries a supersedes block naming v1 by path and sha256, "
+       "with one entry per reviewer finding; v1 is not edited")
+    ok("which_population_each_leg_is_computed_over" in d
+       and "INTERSECTION" in d["which_population_each_leg_is_computed_over"]
+       ["VOID_leg_population"],
+       "REVIEWER FINDING 1 is a FIELD: the void leg's population is the "
+       "intersection, the settle leg's is all true-mid-valid events, and the "
+       "difference is counted as a status")
     ok(len(d["falsifiers"]["known_bads"]) >= 5
        and len(d["falsifiers"]["positive_controls"]) >= 3,
        f"FALSIFIERS BOTH DIRECTIONS declared: "
