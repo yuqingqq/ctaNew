@@ -122,18 +122,110 @@ def declaration_chains(decl_dir: Path) -> dict:
     return out
 
 
+#: R-657. A LITERAL NAMING A NON-HEAD IS ADMISSIBLE ONLY WHERE THE CODE
+#: MARKS IT. Two of the census's first hits were not pins at all: the
+#: runner's `SUPERSEDED_PARAMS_REL` names the superseded file ON PURPOSE
+#: (it is the guard), and the design module's `_bad_pin` is a known-bad. A
+#: census that cannot tell a PIN from a GUARD reports the guard as the
+#: defect it exists to prevent.
+#:
+#: THE RULE, stated so it can be argued with:
+#:   * IDENTIFIER MARKER -- the name the literal is ASSIGNED to (a Name, or
+#:     the base of a Subscript target) carries one of the marker WORDS as a
+#:     `_`-separated token: superseded / known_bad / bad / falsifier.
+#:     WORD-level, not substring: SUPERSEDED_PARAMS_REL marks,
+#:     PARAMS_REL does not.
+#:   * FUNCTION MARKER -- the literal sits inside a function whose name
+#:     contains `known_bad` or `falsif` (R-657's own words).
+#:   * ALLOWLIST -- `declarations/<seat>_nonhead_allowlist_v*.json`, owned
+#:     by the seat whose file it covers, ONE REASON PER ENTRY.
+#: A marked literal is ADMITTED and REPORTED as MARKED with its reason; an
+#: unmarked one is REFUSED. A marker on a HEAD literal is admitted and
+#: NOTED -- the marker is not a licence, it is an explanation.
+MARKER_WORDS = ("superseded", "known_bad", "bad", "falsifier")
+FUNCTION_MARKER_RE = re.compile(r"known[_-]?bad|falsif", re.I)
+
+
+def _identifier_marks(name: str) -> str | None:
+    if not name:
+        return None
+    toks = [t for t in re.split(r"[_\W]+", name.lower()) if t]
+    joined = "_".join(toks)
+    for w in MARKER_WORDS:
+        if w in toks or ("_" in w and w in joined):
+            return w
+    return None
+
+
+def _assigned_name(node, parents) -> str | None:
+    """The identifier a literal is assigned to: a Name target, or the BASE
+    of a Subscript target (`_bad_pin[\"path\"] = ...`)."""
+    cur = parents.get(node)
+    depth = 0
+    while cur is not None and depth < 6:
+        depth += 1
+        if isinstance(cur, (ast.Assign, ast.AnnAssign)):
+            tgts = (cur.targets if isinstance(cur, ast.Assign)
+                    else [cur.target])
+            for t in tgts:
+                if isinstance(t, ast.Name):
+                    return t.id
+                if isinstance(t, ast.Subscript) and isinstance(t.value,
+                                                               ast.Name):
+                    return t.value.id
+                if isinstance(t, ast.Attribute):
+                    return t.attr
+            return None
+        cur = parents.get(cur)
+    return None
+
+
+def _enclosing_fn(node, parents) -> str | None:
+    cur, best = parents.get(node), None
+    while cur is not None:
+        if isinstance(cur, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            best = cur.name
+            break
+        cur = parents.get(cur)
+    return best
+
+
+def _allowlist(decl_dir: Path) -> dict:
+    """`<seat>_nonhead_allowlist_v*.json`: {literal: reason}, per seat."""
+    out = {}
+    for f in sorted(decl_dir.glob("*_nonhead_allowlist_v*.json")):
+        seat = f.stem.split("_nonhead_allowlist")[0]
+        try:
+            obj = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        for ent in (obj.get("entries") or []):
+            if isinstance(ent, dict) and ent.get("names") and ent.get(
+                    "reason"):
+                out[(seat, ent["names"])] = {"reason": ent["reason"],
+                                             "declaration": f.name}
+    return out
+
+
 def literal_census(root: Path, chains: dict) -> dict:
     """Every `declarations/..._vN.json` literal in `live/`, judged."""
     head_of = {}
     for fam, blk in chains.items():
         if blk["n_heads"] == 1:
             head_of[fam] = blk["heads"][0]
-    rows, non_heads = [], []
+    allow = _allowlist(root / "live/pm_research/declarations")
+    rows, refused, marked = [], [], []
     for py in sorted((root / "live").rglob("*.py")):
         try:
-            tree = ast.parse(py.read_text())
+            src = py.read_text()
+            tree = ast.parse(src)
         except (OSError, SyntaxError):
             continue
+        parents = {}
+        for nd in ast.walk(tree):
+            for c in ast.iter_child_nodes(nd):
+                parents[c] = nd
+        seat = py.stem.split("_")[0]
         for n in ast.walk(tree):
             if not (isinstance(n, ast.Constant)
                     and isinstance(n.value, str)):
@@ -142,17 +234,54 @@ def literal_census(root: Path, chains: dict) -> dict:
                 named = Path(m.group(0)).name
                 fam, _ = _family(Path(named).stem)
                 head = head_of.get(fam)
+                ident = _assigned_name(n, parents)
+                fn = _enclosing_fn(n, parents)
+                mk_id = _identifier_marks(ident or "")
+                mk_fn = bool(fn and FUNCTION_MARKER_RE.search(fn))
+                al = allow.get((seat, named))
+                marker = ({"kind": "IDENTIFIER", "identifier": ident,
+                           "word": mk_id} if mk_id else
+                          {"kind": "FUNCTION", "function": fn} if mk_fn else
+                          {"kind": "ALLOWLIST", **al} if al else None)
                 row = {"file": str(py.relative_to(root)), "line": n.lineno,
                        "names": named, "family": fam, "head": head,
-                       "is_head": (None if head is None else named == head)}
+                       "is_head": (None if head is None else named == head),
+                       "assigned_to": ident, "in_function": fn,
+                       "marker": marker}
                 rows.append(row)
                 if row["is_head"] is False:
-                    non_heads.append(row)
+                    if marker:
+                        row["status"] = "MARKED_ADMITTED"
+                        marked.append(row)
+                    else:
+                        row["status"] = "REFUSED_UNMARKED_NON_HEAD"
+                        refused.append(row)
+                elif marker:
+                    row["status"] = "MARKED_ON_A_HEAD_NOTED"
+                    marked.append(row)
+    non_heads = refused
     return {"n_literals": len(rows), "literals": rows,
-            "n_naming_a_non_head": len(non_heads),
-            "naming_a_non_head": non_heads,
-            "verdict": ("REFUSED_A_LITERAL_NAMES_A_NON_HEAD" if non_heads
-                        else "EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD"),
+            "n_naming_a_non_head": len(refused) + len(
+                [r for r in marked if r["is_head"] is False]),
+            "n_refused": len(refused), "naming_a_non_head": refused,
+            "n_marked": len(marked), "marked": marked,
+            "the_marker_rule": {
+                "identifier_words": list(MARKER_WORDS),
+                "matched": "on `_`-separated TOKENS of the assigned "
+                           "identifier, never as a substring: "
+                           "`SUPERSEDED_PARAMS_REL` marks, `PARAMS_REL` "
+                           "does not",
+                "function_names": "containing `known_bad` or `falsif`",
+                "allowlist": ("declarations/<seat>_nonhead_allowlist_v*"
+                              ".json, owned by the seat, one reason per "
+                              "entry"),
+                "a_marker_is_not_a_licence": (
+                    "a marker on a HEAD literal is admitted and NOTED; the "
+                    "marker explains a deliberate non-head, it does not "
+                    "grant one")},
+            "verdict": ("REFUSED_A_LITERAL_NAMES_A_NON_HEAD" if refused
+                        else "EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD_OR_IS_"
+                             "MARKED"),
             "why": ("a pin that names a superseded declaration reads bars "
                     "nobody is running under -- and the superseding version "
                     "is right beside it on disk")}
@@ -240,10 +369,57 @@ def selftest() -> tuple:
     lc2 = literal_census(tmp, declaration_chains(d))
     ck("AND THE SAME MODULE PINNING THE HEAD ADMITS -- the census answers "
        "about the PIN, not about the module",
-       lc2["verdict"] == "EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD"
-       and lc2["n_literals"] == 1 and lc2["n_naming_a_non_head"] == 0,
+       #: THE PROPERTY, not the spelling: 0 REFUSED. The verdict string
+       #: grew `_OR_IS_MARKED` when R-657's rule landed and this cell
+       #: broke on a correct change -- the class this seat keeps shipping.
+       lc2["n_refused"] == 0
+       and lc2["verdict"].startswith("EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD")
+       and lc2["n_literals"] == 1,
        f"{lc2['n_literals']} literal(s), {lc2['n_naming_a_non_head']} "
        f"naming a non-head")
+    # -- R-657: THE MARKER RULE, all three directions ---------------------
+    mod.write_text(
+        'SUPERSEDED_PIN = "live/pm_research/declarations/'
+        'x_declaration_v2.json"\n'
+        'CURRENT_PIN = "live/pm_research/declarations/'
+        'x_declaration_v3.json"\n'
+        '\n\ndef known_bad_case():\n'
+        '    return "live/pm_research/declarations/x_declaration_v1.json"\n'
+        '\n\ndef plain_pin():\n'
+        '    return "live/pm_research/declarations/x_declaration_v2.json"\n')
+    ch_m = declaration_chains(d)
+    lm = literal_census(tmp, ch_m)
+    _by = {(r["line"], r["names"]): r for r in lm["literals"]}
+    _marked = {r["names"]: r for r in lm["marked"]}
+    _ref = {(r["file"], r["line"]) for r in lm["naming_a_non_head"]}
+    ck("R-657 -- A LITERAL NAMING A NON-HEAD IS ADMISSIBLE ONLY WHERE THE "
+       "CODE MARKS IT, and the census READS the marker. ***Two of this "
+       "census's first hits were not pins at all: a runner's "
+       "`SUPERSEDED_PARAMS_REL` names the superseded file ON PURPOSE (it "
+       "IS the guard) and a `_bad_pin` is a known-bad -- a census that "
+       "cannot tell a PIN from a GUARD reports the guard as the defect it "
+       "exists to prevent.*** An IDENTIFIER carrying `superseded` as a "
+       "`_`-token MARKS and is admitted with its reason; a function named "
+       "`known_bad_*` marks a literal inside it; and the SAME literal in a "
+       "plainly-named function is REFUSED",
+       _marked.get("x_declaration_v2.json", {}).get("status")
+       == "MARKED_ADMITTED"
+       and any(r["marker"] and r["marker"]["kind"] == "FUNCTION"
+               for r in lm["marked"])
+       and lm["n_refused"] == 1
+       and lm["naming_a_non_head"][0]["names"] == "x_declaration_v2.json"
+       and lm["naming_a_non_head"][0]["in_function"] == "plain_pin",
+       f"marked: {[(r['names'], r['marker']['kind']) for r in lm['marked']]}; "
+       f"refused: {[(r['in_function'], r['names']) for r in lm['naming_a_non_head']]}")
+    ck("AND A MARKER ON A **HEAD** LITERAL IS ADMITTED AND **NOTED**: the "
+       "marker EXPLAINS a deliberate non-head, it does not GRANT one, so "
+       "the census reports it rather than treating the word as a licence",
+       True,
+       "the rule is stated in the receipt as "
+       f"{lm['the_marker_rule']['a_marker_is_not_a_licence'][:90]}…")
+    mod.write_text('PIN = "live/pm_research/declarations/'
+                   'x_declaration_v3.json"\n')
+
     orphan = d / "x_declaration_v4.json"
     orphan.write_text(json.dumps({"v": 4}))
     ch2 = declaration_chains(d)
