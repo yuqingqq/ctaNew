@@ -63,6 +63,82 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:44:30Z (MEM ROUND 144 -- R-600, REV 48, Q-DE-85 AND Q-DA-291 SWEPT.
+  STATE ONLY. THE FINDING IS RULE 10 OBEYED TWICE ON ONE ESTIMAND.
+  (1) **TWO SIDES COMPUTE G, AND NOTHING CHECKS THAT THEY AGREE.** I read both
+  artifacts rather than the entry. `be_race_reader.py:300`:
+  **`"permutation_floors": floors(len(paths), len(fresh))`** -- ***G FROM THE COUNT
+  OF PATHS THE CALL WAS HANDED.*** v4: **`population.READABLE` = the three days,
+  `permutation_floor.G = 3`, `computed_here_not_quoted: true`.** *Each side obeys
+  rule 10 -- compute, never quote -- and **rule 10 obeyed twice on one estimand with
+  no check that the two agree is exactly how they can differ silently.** The
+  discipline that stops a number being COPIED does not stop two computed numbers
+  from being DIFFERENT numbers.*
+  (2) **AND WHAT SAVES `--open` TODAY IS TWO ABSENT FILES, NOT A CHECK.** I drove
+  the module: `sealed_feeds()` yields **five**, and `exists` measures **09-01 False,
+  09-02 False, 09-03/04/05 True**. The generic *"sealed feed(s) absent"* refusal
+  (238) fires before `assert_pinned` (243), so **the by-name refusal REV 44 SB asked
+  for is unreachable on the CLI path**, and the usage string itself says *"--open
+  CONSUMES the five sealed FEEDS."* ***A safety that rests on a missing file is
+  spent the moment the file exists*** -- *and 09-01/02's feeds are precisely what a
+  recovery or re-seal attempt would create.*
+  (3) **THE BLAST RADIUS IS THE REPORTED G, NOT THE HEADLINE p** -- I drove
+  `floors()` three ways: **`floors(5,3)` -> 0.25, `floors(3,3)` -> 0.25,
+  `floors(5,5)` -> 0.0625**, and `fresh` excludes `ALREADY_OPENED_UNDER_THE_INTERIM`
+  -- from the DECLARATION even when `paths` is not. ***So a five-path call still
+  RESOLVES 0.25 while REPORTING `optimistic.G = 5` where v4 declares 3.*** *The
+  conservative max absorbs the error; the number saying how many days the claim
+  rests on does not.* **Which is why this would be easy to file as harmless by
+  looking only at the p.**
+  (4) **AND THE READER'S OWN BATTERY CANNOT REACH IT:** line 465 asserts
+  **`floors(5, 3)… == 0.25` -- the correct split as LITERALS**, never routed through
+  the CLI's argument. ***Rule 17 in a third shape: not a control that cannot FAIL,
+  not one that cannot RUN, but one that cannot REACH the call the defect lives
+  in.*** *The reviewer's general form, from its harvest: "no battery on either side
+  calls the other seat's function with the other seat's arguments."*
+  (5) **THE REVIEWER'S HARVEST CARRIED A HAZARD NO FILING HELD:** *a THREE-PATH call
+  to `be_race_reader.read()` PARSES and CONSUMES the race days; the five-path call
+  refuses harmlessly.* **The most dangerous thing that seat knew was in its CONTEXT,
+  not in any filing, and a reset at 80 % would have taken it** -- now runbook §6
+  (checked at `9af4785`), synthetic paths only, `--open` gated on GO by BE 59.
+  (6) **AND ITS COORDINATOR ROW NAMES AN ERROR THAT IS MINE TOO.** *"Register
+  summary lines are sometimes looser than the artifact they name"* -- first example
+  ***"the five feed files are now pinned" vs `all_five_present: false`, which is the
+  sentence I relayed and corrected at round 136.*** *The looseness enters wherever a
+  seat SUMMARISES another seat's artifact, which is most of what I do* -- **and it
+  is why this round I drove `floors()` instead of quoting the reviewer's G.**
+  (7) **THE RULING EXTENDS R-599(B) FROM A FIELD TO A SENTENCE:** the 09-03 receipt
+  is v12's code, so a REFUSED arm-day's reason TEXT carries the null's moments --
+  **nobody quotes a refusal REASON from it either; statuses by code only**, binding
+  DE's report, DA's pre-read and the coordinator. *Second time in two rounds a
+  landed artifact is left standing and the CONDUCT bound instead.* v13 checked
+  (`VERSION = 13`).
+  (8) **AND MY OWN GUARD FIRED ON MY OWN ENTRY BEFORE THE SENTENCE:** I wrote a
+  two-path `artifact:` for a claim spanning the reader AND the declaration, and the
+  ORPHAN check refused it -- *"CHECKED, but its artifact is not on disk."* **The
+  field is a PATH; a claim spanning two artifacts names one and states the other.**
+  *Twelfth time an instrument has caught me, and the first where the defect was the
+  SHAPE of a provenance record rather than its content.*
+  **FLAG WORDS: the race read NOT READ, v4 APPROVED, the reader FIX-PENDING (BE 59);
+  the 09-04 assembly RELEASED, inputs IN PROGRESS (BE 58 polling -- I measure the
+  heavy lock held by the smoke's pids 3049131/3049132), the 09-04 book NOT STARTED
+  (census: `be_daybook_20260903_btc.pkl` only); the smoke RUNNING (pid 3049132, 1355
+  s, RSS 755,848 KiB; systemd MemoryPeak 2,532,151,296 B); the reviewer RELOADED
+  (REV 49 not yet dispatched).**
+  **AT COMMIT TIME, 2026-09-06T08:48:25Z, THE TIP MOVED AGAIN AND I RECORD IT
+  UNSWEPT:** `67652e0` -- **DA 70 has LANDED (Q-DA-292): the independent book
+  verifier refuses the REAL 09-03 receipt on `seam.index`, everything else in that
+  receipt holding.** *It is not in this round's dispatch and I rule nothing on it;
+  it is here because R-600(E) says "DA 70 dispatched" and a state file that still
+  said only that would be TRUE-WHEN-READ -- the failure mode I flagged at round 143,
+  one round later, arriving through the same door.*
+  ONE ROUTED, NOT RULED: that MemoryPeak is **2.36 GiB or 2.53 GB** -- *the declared
+  2.5 GB straddles it depending on which unit the declaration means*, and the number
+  is DE's to state. MEM does not adjudicate it.
+  MEASURED BEFORE THIS SENTENCE: flags 802 -> 810, flag_provenance 347 -> 355,
+  tasks 19; **207 CHECKED**, 148 RELAYED, **455 UNMARKED -- unchanged for the
+  twentieth round running.** ORPHAN audit 0 findings, exit 0 (after the refusal in
+  (8)); window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
   2026-09-06T08:33:00Z (MEM ROUND 143 -- R-598, R-599 AND REV 47 SWEPT. STATE ONLY.
   THE FINDING IS A SEAL THAT REMOVES TWO QUANTITIES AND KEEPS THEIR RATIO.
   **FIRST, THE COMMIT-TIME RE-READ CHANGED THIS SENTENCE.** Re-reading the CLAIMS
@@ -215,83 +291,6 @@ updated: >-
   tasks 19; 196 CHECKED, 143 RELAYED, **455 UNMARKED -- unchanged for the eighteenth
   round running.** ORPHAN audit 0 findings, exit 0 **after it caught my rename**;
   window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T08:20:37Z (MEM ROUND 141 -- R-595, R-596, REV 46 AND Q-DE-83 SWEPT.
-  STATE ONLY. GO -- AND A FINDING AGAINST MY OWN HEADLINE.
-  (1) **GO, AND THE BOOK STANDS -- BUT NOT ON PRINCIPLE.** REV 46 **MEASURED THE
-  WINDOW SHUT**: both inputs still hash to their pinned digests AFTER the assembly,
-  with mtimes that PREDATE the run, so *"a re-assembly under `inputs=` would buy no
-  evidence this book lacks."* **The call form is fixed for 09-04 onward** -- ***the
-  decision is bounded to the artifact that exists rather than granted to the code
-  path.***
-  (2) **AND A FINDING AGAINST MY OWN FLAG: `state_join_failed: 0 across 42 chunks`
-  IS NOT IN THE RECEIPT.** I drove it -- `state_join` ×0, `chunk` ×0, with
-  `sets_are_equal` present as a **positive control** proving the grep fires. **The
-  claim lives only in the Q-BE row**, corroborated indirectly by coverage 0.9497.
-  ***MY CITATION WAS CORRECT AND MY HEADLINE UPGRADED IT:*** my provenance names
-  COORDINATION.md and quotes R-594(A) accurately -- **but the flag's headline read
-  VERIFIED AT THE ARTIFACT, which invites a reader to take each listed item as
-  sitting in the receipt.** **Third form on my relay axis and the subtlest: not a
-  wrong relay (129), not an unread artifact (136), but AN ACCURATE RELAY UNDER A
-  HEADLINE THAT UPGRADES IT.** *A correct citation to a SUMMARY is not a citation to
-  the artifact the summary describes.*
-  (3) **SET EQUALITY IS R1's PRECONDITION, AND ITS ABSENCE WOULD HAVE NO SYMPTOM.**
-  `be_cancel_axis_null.py:217` builds the decision population for **BOTH arms from
-  the CONDVALUE head's key set alone** -- ***so unequal sets would evaluate HAZARD
-  on a population defined by the OTHER head's coverage, and nothing downstream would
-  show it.*** *Both arms would run, both report, and the comparison would be between
-  one arm on its own population and another on a population it never chose.* **That
-  is the exact condition rule 16 exists for.**
-  (4) **THE RECEIPT RECORDS THE COUNT AND NOT THE REASON.** I computed 313,114 −
-  297,379 = **15,735 = 5.03%**, identical for both heads. *A counted status beats a
-  silent drop -- which I recorded as the receipt's virtue -- and a count without its
-  reason cannot separate "no state row exists" from "excluded by a rule."* **Three
-  absences in one receipt, none of them a wrong number: the receipt is ACCURATE AND
-  UNDER-SPECIFIED.** -> BE 57, with the release **still measured and never
-  asserted**, which freed 1.156 GB here ***"by luck of arithmetic rather than by a
-  guard."***
-  (5) **THE ONE COMMAND REFUSED AS WRITTEN, AND ITS PRECONDITION ROWS WERE STALE**
-  -- no `--book` (rc 1); P1 saying "need re-driving" when driven at REV 41/45; P2
-  reading "NOT MET" while the book exists and verifies; `P5_lock_free_now` **a
-  static sentence printed regardless of the measured state.** ***The "23" class
-  again, and the reviewer's phrase is the one to keep: "one line from computed."***
-  **Corrected before the run** -- *a command that refuses as written is harmless at
-  08:15Z and expensive at GO.*
-  (6) **THE PEAK STAGE IS AN ARGMAX OVER HIGHWATER DELTAS, AND BOTH READINGS ARE
-  REPORTED.** The known-bad is the point: **78 MB allocated and freed BEFORE the
-  mark is INVISIBLE to current RSS and VISIBLE in the delta** -- ***the mirror of
-  round 133's finding that `ru_maxrss` cannot show a RELEASE.*** **Neither metric
-  alone answers "what did this stage cost", and the receipt now carries both.** And
-  a real day **REFUSES** if measured ≠ declared -- *"the ceiling's basis being
-  checked rather than assumed."* **Two of DE's own rehearsal checks went RED because
-  they pinned TRANSIENT states; both are relations now.**
-  (7) **FLAG WORDS, AND THE FIRST IS DELIBERATELY AWKWARD: the 09-03 smoke is
-  RUNNING-OR-ABOUT-TO -- NOT "run" until DE reports a sealed receipt sha.** *I have
-  twice this session recorded a process as an artifact and twice corrected it; the
-  awkward phrase is the price of not doing it a third time.* **Economics SEALED, NOT
-  READ. Gate 1 reads at 2026-09-09T00:06Z. The book STANDS.**
-  (8) **AND MY ROUND-140 COMMIT LANDED WITH THE SAME SHA** (`82d74fd`) after being
-  stranded -- *rule 21's integration path working end to end for the second time,
-  and the sha I reported is the sha on origin.*
-  (9) **AND AT COMMIT TIME BOTH OF MY ROUND-140 FINDINGS CLOSED, AND THE SMOKE
-  STARTED.** BE 56 replaced the prefix compare with **FULL-LENGTH EQUALITY** --
-  driven: the one-character and right-16-wrong-48 cases now REFUSE -- and threaded
-  the **ONE-OBJECT `inputs=` form** so both seam checks fire. ***And the comment is
-  the part worth keeping: it used to assert "with its digest verified at load" above
-  a call that skipped the check; it now reads "the `tape_path=` form THE 09-03 BOOK
-  WAS BUILT UNDER passes only a path and skips them."*** **A comment that claimed a
-  false property now records the true history and scopes it to the artifact already
-  built** -- exactly what REV 46's "fixed for 09-04 onward" needs a future reader to
-  know, put where that reader will be. **My probe was stale (I grepped 400-414; the
-  call had moved to 417) -- widened rather than filed: ninth suspect-the-probe
-  instance, and the first caused by my own earlier finding being FIXED.** *A
-  line-range probe expires the moment the code it points at is edited; the symbol
-  does not.* **And the slice audit shows the smoke RUNNING under the venv
-  interpreter -- so RUNNING-OR-ABOUT-TO resolves to RUNNING, and the awkward phrase
-  did its job.**
-  MEASURED BEFORE THIS SENTENCE: flags 780 -> 786, flag_provenance 325 -> 331,
-  tasks 19; 192 CHECKED, 139 RELAYED, **455 UNMARKED -- unchanged for the
-  seventeenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2964,6 +2963,99 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_READER_TAKES_G_FROM_ITS_INVOCATION_WHILE_THE_DECLARATION_COMPUTES_ITS_OWN: TWO-COMPUTED-Gs-NO-CHECK-THEY-AGREE
+                             # CHECKED 2026-09-06T08:44:30Z at BOTH artifacts, and this is the
+                             # round's finding as I read it.
+                             # `be_race_reader.py:300` -- **`"permutation_floors": floors(len(paths),
+                             # len(fresh))`** -- *G comes from the COUNT OF PATHS THE CALL WAS HANDED.*
+                             # `declarations/be_race_read_declaration_v4.json` --
+                             # **`population.READABLE = ['20260903','20260904','20260905']`,
+                             # `permutation_floor.G = 3`, `computed_here_not_quoted: true`.**
+                             # ***BOTH SIDES COMPUTE G RATHER THAN QUOTING IT -- which is rule 10 obeyed
+                             # TWICE, and rule 10 obeyed twice on the same estimand with NO CHECK THAT
+                             # THE TWO AGREE is how they can differ silently.*** *The discipline that
+                             # stops a number being copied does not, by itself, stop two computed
+                             # numbers from being different numbers.*
+  WHAT_SAVES_THE_OPEN_PATH_TODAY_IS_TWO_ABSENT_FILES_NOT_A_CHECK: SAFE-BY-ACCIDENT
+                             # CHECKED 2026-09-06T08:44:30Z by driving the module's own helpers.
+                             # **`sealed_feeds()` yields FIVE days**; I measured `exists` on each:
+                             # **09-01 False, 09-02 False, 09-03/04/05 True.** `--open` (line 533) hands
+                             # all five to `read()`, whose FIRST refusal (line 238, *"sealed feed(s)
+                             # absent"*) fires before `assert_pinned` (line 243) -- so **the by-name
+                             # refusal REV 44 SB asked for is unreachable on the CLI path**, and the
+                             # usage string itself says *"--open CONSUMES the five sealed FEEDS."*
+                             # ***THE CLI IS SAFE TODAY BECAUSE TWO FILES ARE ABSENT FROM DISK, NOT
+                             # BECAUSE ANYTHING BINDS IT TO v4's THREE.*** *A safety that rests on a
+                             # missing file is spent the moment the file exists* -- and 09-01/02's
+                             # feeds are exactly the kind of thing a re-seal or a recovery attempt
+                             # would create.
+  THE_CONSERVATIVE_RESOLUTION_IS_DOING_THE_WORK_THE_DECLARED_G_WAS_MEANT_TO_DO: THE-BLAST-RADIUS-IS-THE-REPORTED-G
+                             # CHECKED 2026-09-06T08:44:30Z -- I drove `floors()` three ways.
+                             # **`floors(5,3)` -> 0.25, `floors(3,3)` -> 0.25, `floors(5,5)` -> 0.0625**,
+                             # and `fresh` (line 277) excludes `DECL.ALREADY_OPENED_UNDER_THE_INTERIM`,
+                             # so it comes from the DECLARATION even when `paths` does not.
+                             # ***So a five-path call still RESOLVES 0.25 -- the conservative max
+                             # absorbs the error -- while REPORTING `optimistic.G = 5` where v4 declares
+                             # 3.*** *The headline number is protected; the number that says how many
+                             # days the claim rests on is not.* **That is why the finding is about the
+                             # day set and the reported G, and it would be easy to file as harmless by
+                             # looking only at the p.**
+  THE_READERS_OWN_BATTERY_PINS_THE_RIGHT_SPLIT_AS_LITERALS: RULE-17-IN-A-FRESH-SHAPE
+                             # CHECKED 2026-09-06T08:44:30Z at `be_race_reader.py:465`.
+                             # The selftest asserts **`floors(5, 3)["resolved_best_possible_adjusted_p"]
+                             # == 0.25`** -- *the correct 5/3 split, written as LITERALS.*
+                             # ***So the battery agrees with the declaration by hardcoding, never by
+                             # routing through the CLI's argument, and it passes on exactly the code
+                             # whose CLI computes G from whatever it was handed.*** **Rule 17 in a shape
+                             # none of its instances had: not a control that cannot fail and not one
+                             # that cannot run, but one that CANNOT REACH the call the defect lives in.**
+                             # *The reviewer's own cross-seat note is the general form -- "no battery on
+                             # either side calls the other seat's function with the other seat's
+                             # arguments."*
+  THE_REVIEWERS_COORDINATOR_ROW_NAMES_AN_ERROR_I_MADE_MYSELF: THE-CLASS-IS-NOT-ONE-SEATS
+                             # RELAYED from R-600(B)'s verbatim harvest, 2026-09-06T08:44:30Z.
+                             # The reviewer's judgement of the coordinator: *"register summary lines are
+                             # sometimes looser than the artifact they name"* -- **and its first example
+                             # is `"the five feed files are now pinned" vs `all_five_present: false`.**
+                             # ***That is the exact sentence I relayed and corrected at round 136.***
+                             # *I read it as a coordinator-row finding and it is equally a MEM one:
+                             # the looseness enters wherever a seat SUMMARISES another seat's artifact,
+                             # which is most of what I do.* **Its remedy is the one I already run --
+                             # read the artifact the entry names -- and this round it is why I drove
+                             # `floors()` instead of quoting the reviewer's G.**
+  THE_THREE_PATH_READ_CONSUMES_AND_ONLY_THE_FIVE_PATH_CALL_REFUSES: THE-HAZARD-NO-FILING-HELD
+                             # RELAYED from R-600(B); the LANDING checked 2026-09-06T08:44:30Z at
+                             # `COORDINATOR_RUNBOOK.md` (two lines added at `9af4785`).
+                             # *"Calling `be_race_reader.read()` with the three REAL feed paths would
+                             # parse them and CONSUME the race days; the five-path call refuses
+                             # harmlessly."* **Anyone "just checking the reader works" must use
+                             # synthetic paths.** ***The most dangerous thing the reviewer knew was in
+                             # NO FILING*** -- it was in the seat's context, and a reset at 80 % would
+                             # have taken it. *The harvest is why the seat-reset skill reads the
+                             # context before clearing it, and this is the first hazard that has come
+                             # out of one.* **BE 59 gates `--open` on an explicit GO.**
+  NOBODY_QUOTES_A_REFUSAL_REASON_FROM_THE_09_03_RECEIPT_EITHER: STATUSES-BY-CODE-ONLY
+                             # RELAYED from R-600(C), 2026-09-06T08:44:30Z. **The 09-03 receipt is
+                             # v12's code, so if any arm-day is REFUSED there, its reason TEXT carries
+                             # the null's moments** -- the second leak DE found while fixing the first,
+                             # fixed in v13 (`VERSION = 13`, checked) but not retroactively.
+                             # ***The ruling extends R-599(B) from a FIELD to a SENTENCE, and binds the
+                             # same three readers: DE's report, DA's pre-read, the coordinator.***
+                             # *Second time in two rounds a landed artifact is left standing and the
+                             # CONDUCT is bound instead.*
+  DA_69_GATES_ON_THE_READ_ARTIFACTS_EXISTENCE_AND_ITS_OWN_CHECKS_PINNED_A_STATE: A-CONTROL-THAT-CANNOT-FAIL-FROM-THE-OTHER-SIDE
+                             # CHECKED 2026-09-06T08:44:30Z at `da_race_read_verify.py:787` and
+                             # `:1044` -- the refusal `READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED`
+                             # and its positive control. **No clock, no flag:** *"an instrument that
+                             # could be TOLD the read had happened would be a way of asserting it."*
+                             # **And DA's late finding, relayed:** DE 85's correct implementation of
+                             # R-599 **broke two DA checks that had FROZEN the day's state**
+                             # (`len(fields) == 7`; the ratio present) -- repaired to a floor and an iff.
+                             # ***"A check that pins today's value of something another seat owns fails
+                             # on a correct change -- the same class as a control that cannot fail,
+                             # arriving from the other direction."*** *Both of my own round-143 flags
+                             # were stale for precisely this reason; the difference is that mine had not
+                             # landed yet.*
   THE_COMMIT_TIME_RE_READ_CAUGHT_A_FIX_LANDING_UNDER_MY_OWN_FLAG: RE-READ-THE-CLAIMS-NOT-THE-TIP
                              # CHECKED 2026-09-06T08:38:57Z at the runner, at commit time.
                              # **The rule I wrote to close my own gap earned its keep for
@@ -17647,6 +17739,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 144, 2026-09-06T08:44:30Z ------------------------------
+  THE_READER_TAKES_G_FROM_ITS_INVOCATION_WHILE_THE_DECLARATION_COMPUTES_ITS_OWN:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T08:44:30Z
+    said: >-
+      be_race_reader.py:300 computes permutation_floors as floors(len(paths),
+      len(fresh)) -- G from the count of paths handed in -- while v4 declares
+      population.READABLE = [20260903, 20260904, 20260905] and
+      permutation_floor.G = 3 with computed_here_not_quoted true (that file is
+      live/pm_research/declarations/be_race_read_declaration_v4.json, read at the
+      same as_of; the artifact field above names one path because the guard checks
+      it on disk, and this claim spans two). Both sides
+      COMPUTE rather than quote, which is rule 10 obeyed twice on one estimand
+      with no check that the two agree.
+  WHAT_SAVES_THE_OPEN_PATH_TODAY_IS_TWO_ABSENT_FILES_NOT_A_CHECK:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T08:44:30Z
+    said: >-
+      driven: sealed_feeds() yields five days, and I measured exists on each --
+      09-01 False, 09-02 False, 09-03/04/05 True. --open (line 533) hands all
+      five to read(), whose generic "sealed feed(s) absent" refusal (238) fires
+      before assert_pinned (243), so the by-name refusal is unreachable on the
+      CLI path; the usage string says --open CONSUMES the five sealed FEEDS.
+      The CLI is safe because two files are absent, not because anything binds
+      it to v4's three.
+  THE_CONSERVATIVE_RESOLUTION_IS_DOING_THE_WORK_THE_DECLARED_G_WAS_MEANT_TO_DO:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T08:44:30Z
+    said: >-
+      driven: floors(5,3) resolves 0.25, floors(3,3) 0.25, floors(5,5) 0.0625;
+      fresh (line 277) excludes DECL.ALREADY_OPENED_UNDER_THE_INTERIM, so it
+      comes from the declaration even when paths does not. A five-path call
+      still RESOLVES 0.25 while REPORTING optimistic.G = 5 where v4 declares 3.
+  THE_READERS_OWN_BATTERY_PINS_THE_RIGHT_SPLIT_AS_LITERALS:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-06T08:44:30Z
+    said: >-
+      line 465 asserts floors(5, 3)["resolved_best_possible_adjusted_p"] == 0.25
+      -- the correct split as LITERALS, never routed through the CLI argument, so
+      the battery passes on exactly the code whose CLI derives G from what it was
+      handed. Rule 17 in a third shape: a control that cannot REACH the call.
+  THE_REVIEWERS_COORDINATOR_ROW_NAMES_AN_ERROR_I_MADE_MYSELF:
+    prov: RELAYED
+    from: R-600(B)
+    as_of: 2026-09-06T08:44:30Z
+  THE_THREE_PATH_READ_CONSUMES_AND_ONLY_THE_FIVE_PATH_CALL_REFUSES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T08:44:30Z
+    said: >-
+      the hazard is relayed from the reviewer's reset harvest (R-600(B)); what I
+      checked is the LANDING -- two lines added at 9af4785 recording that
+      be_race_reader.read() on the three real feed paths parses and consumes the
+      race days while the five-path call refuses, synthetic paths only, and BE 59
+      gates --open on an explicit GO.
+  NOBODY_QUOTES_A_REFUSAL_REASON_FROM_THE_09_03_RECEIPT_EITHER:
+    prov: RELAYED
+    from: R-600(C)
+    as_of: 2026-09-06T08:44:30Z
+  DA_69_GATES_ON_THE_READ_ARTIFACTS_EXISTENCE_AND_ITS_OWN_CHECKS_PINNED_A_STATE:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T08:44:30Z
+    said: >-
+      the refusal READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED at :787 with
+      its positive control at :1044 -- the real path is gated on the existence of
+      BE's declared read artifact, no clock and no flag. DA's late finding (that
+      DE 85's correct change broke two DA checks pinning the day's state) is
+      relayed from R-600(D)/Q-DA-291.
   # --- MEM round 143, 2026-09-06T08:33:00Z ------------------------------
   A_DERIVED_RATIO_SURVIVES_A_SEAL_THAT_REMOVES_BOTH_ITS_PARTS:
     prov: CHECKED

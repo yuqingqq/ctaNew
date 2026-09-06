@@ -5,6 +5,87 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 144
+
+**As of 2026-09-06T08:44:30Z. State only — MEM writes no result.**
+
+**The finding is rule 10 obeyed twice on one estimand.** I read both artifacts
+rather than the entry. `be_race_reader.py:300` computes
+`floors(len(paths), len(fresh))` — **G from the count of paths the call was
+handed**; `declarations/be_race_read_declaration_v4.json` declares
+`population.READABLE` = the three days, `permutation_floor.G = 3`,
+`computed_here_not_quoted: true`. Each side **computes rather than quotes**, which
+is rule 10 — and rule 10 obeyed twice on one estimand **with no check that the two
+agree** is how they differ silently. The discipline that stops a number being
+*copied* does not stop two computed numbers from being *different* numbers.
+
+**What saves `--open` today is two absent files, not a check.** Driven:
+`sealed_feeds()` yields **five**, and `exists` measures **09-01 False, 09-02
+False, 09-03/04/05 True**. The generic "sealed feed(s) absent" refusal (line 238)
+fires **before** `assert_pinned` (243), so the by-name refusal REV 44 §B asked for
+is **unreachable on the CLI path**; the usage string itself says "`--open` CONSUMES
+the five sealed FEEDS." A safety resting on a missing file is spent the moment the
+file exists — and 09-01/02's feeds are exactly what a recovery attempt creates.
+
+**The blast radius is the reported G, not the headline p.** `floors(5,3)` → 0.25,
+`floors(3,3)` → 0.25, `floors(5,5)` → 0.0625; `fresh` excludes
+`ALREADY_OPENED_UNDER_THE_INTERIM`, so it comes from the declaration even when
+`paths` does not. **A five-path call still resolves 0.25 while reporting
+`optimistic.G = 5` where v4 declares 3** — easy to file as harmless by looking only
+at the p. And **the reader's own battery cannot reach it**: line 465 pins
+`floors(5, 3) … == 0.25` as **literals**, never routed through the CLI's argument —
+rule 17 in a third shape (not a control that cannot fail, not one that cannot run,
+one that cannot **reach** the call).
+
+**The reviewer's harvest carried a hazard no filing held:** a **three-path** call to
+`be_race_reader.read()` parses and **consumes** the race days; the five-path call
+refuses harmlessly. The most dangerous thing that seat knew was in its **context**,
+not in any filing, and a reset at 80% would have taken it — now **runbook §6**
+(checked at `9af4785`): synthetic paths only, `--open` gated on GO by BE 59. **And
+its coordinator row names an error that is mine too** — "register summary lines are
+sometimes looser than the artifact they name", first example *"the five feed files
+are now pinned"* vs `all_five_present: false`, **the sentence I relayed and
+corrected at round 136**. That is why I drove `floors()` this round instead of
+quoting the reviewer's G.
+
+**The ruling extends R-599(B) from a field to a sentence:** the 09-03 receipt is
+v12's code, so a refused arm-day's reason **text** carries the null's moments —
+**nobody quotes a refusal reason from it either; statuses by code only** (DE's
+report, DA's pre-read, the coordinator). v13 checked (`VERSION = 13`). Second time
+in two rounds a landed artifact is left standing and the **conduct** is bound.
+
+**State (measured this round):**
+- **The race read NOT READ; v4 APPROVED as a declaration; the reader FIX-PENDING
+  (BE 59** — §1.6 the day set + G from the declaration + the usage string, then
+  §1.7**)**.
+- **The 09-04 assembly RELEASED; inputs IN PROGRESS** (BE 58 polling — I measure the
+  heavy lock held by the smoke, pids 3049131/3049132); **the 09-04 book NOT STARTED**
+  (census: `be_daybook_20260903_btc.pkl` only).
+- **The smoke RUNNING** — pid 3049132, 1355 s, RSS 755,848 KiB, systemd `MemoryPeak`
+  2,532,151,296 B. *Routed, not ruled: that is 2.36 GiB or 2.53 GB, and the declared
+  2.5 GB straddles it depending on the unit meant. DE owns the number.*
+- **The reviewer RELOADED** (REV 49 not yet dispatched).
+- **At commit time (2026-09-06T08:48:25Z) the tip moved again — recorded unswept:**
+  `67652e0`, **DA 70 landed (Q-DA-292): the independent book verifier refuses the
+  real 09-03 receipt on `seam.index`**, everything else in that receipt holding.
+  Not in this round's dispatch and MEM rules nothing on it — but R-600(E) says "DA
+  70 dispatched", and a state file that still said only that would be
+  *true-when-read*, the round-143 failure mode arriving one round later through the
+  same door.
+
+**My own guard fired on my own entry before the sentence:** I wrote a two-path
+`artifact:` for a claim spanning the reader *and* the declaration, and the ORPHAN
+check refused it — "CHECKED, but its artifact is not on disk." The field is a
+**path**; a claim spanning two artifacts names one and states the other. Twelfth
+instrument catch, first where the defect was the **shape** of a provenance record.
+
+**Counts, measured before the sentence:** flags 802 → 810, `flag_provenance`
+347 → 355, tasks 19; **207 CHECKED**, 148 RELAYED, **455 UNMARKED — unchanged for
+the twentieth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+3 (Batch 126 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 143
 
 **As of 2026-09-06T08:33:00Z. State only — MEM writes no result.**
