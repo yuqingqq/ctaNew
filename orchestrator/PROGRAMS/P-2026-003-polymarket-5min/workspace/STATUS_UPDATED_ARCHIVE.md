@@ -14871,3 +14871,82 @@ directions.
   sixty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 177 — archived 2026-09-06T15:22:37Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 195 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T15:05:59Z (MEM ROUND 192 -- R-666 SWEPT, tip `6cb89cc`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- EVERY SELECTOR CELL DRIVEN
+  ON A SYNTHETIC RECEIPT.**
+  (1) ***I DROVE THE SELECTOR'S FOUR CELLS AND THE POLARITY IS RIGHT.*** **No provenance →
+  v23, ELEVEN names ("THE STRICTEST LIST IN FORCE -- no verifiable design pair, and nothing
+  positively identifies this receipt as older"); a CORRECT `{path, sha256}` pair naming v21 →
+  v21, EIGHT names ("the PAIR, digest RECOMPUTED from the file the path names"); a MISMATCHED
+  digest → strictest; a path WITHOUT a digest → strictest.** ***Absence and unverifiability
+  now buy NOTHING -- the exact inverse of the hole REV 73 found, where "ABSENCE selected the
+  WEAKER rule inside the scoping built to protect the seal".*** *The third hole is DROPPED,
+  not fixed: "an opened path is not a pin" -- because the 09-03 run opened a stale v10 beside
+  v21.*
+  (2) **AND THE OLD RECEIPT IS RECOGNISED POSITIVELY, BY ITS EMIT STAMP.** *A synthetic
+  receipt stamped `14:01:55.557479Z` -- the 09-03 seal's own emit time -- resolves to **v22 /
+  8** with the reason "POSITIVE recognition of a pre-correction receipt"; stamped 15:00:00 it
+  resolves to **v23 / 11**.* ***The code's principle in five words: "Never by a field being
+  absent."*** **Corroborated by a `carrying_commit` that resolves -- two positive facts, not
+  one absence.** *The shape handed to REV 75 is the seam between the two paths: a
+  positively-old receipt WITH a mismatched pair is judged old and UNFLAGGED.*
+  (3) **BE'S PARSER IS NOW A THIN CALL INTO DA'S**, and its docstring carries the measurement
+  that earned the ruling: ***"three implementations disagreed on FOUR OF TWELVE LINES and NO
+  TWO WERE WRONG IN THE SAME PLACE, which is exactly 'two implementations corroborate
+  nothing'"*** -- *so a way of READING A TOOL'S OUTPUT is not a statistic.* **BE's algorithm
+  won on merit; BE's file now calls DA's.**
+  (4) **THE POLL SETTLES ON THE LAUNCH RECORD, NOT ON `ActiveState`** (`5501d45`, the comment
+  carrying its own measurement time 15:03:14Z) -- ***closing the finding I swept last round:
+  under `RemainAfterExit` a REFUSED unit reads `active`, so a poll waiting for "not active"
+  waits forever and one reading "active" as RUNNING is wrong.*** **The remedy is a different
+  SOURCE, not a better field.** *And the refusal path is reproduced ON THE REAL LOCK.*
+  (5) **THE CENSUS ARTIFACT AND THE LIVE CENSUS DISAGREE, AND BOTH ARE RIGHT** -- R-666
+  verifies my round-191 note: the artifact still says four, the live census reads 0, DA 95
+  re-emits. ***Seventh instance today of fix-in-source versus record-a-reader-resolves, and
+  the remedy is always the same: RE-EMIT, and until then say which object you read.*** **REV
+  74 lands the strongest form: "all eleven declarations are JSON-IDENTICAL to their pre-BE-65
+  selves ONCE THE LINK IS REMOVED."**
+  (6) **R-666 VERIFIED DE 103 BY DRIVE, AND SO DID I** -- four selector cells plus two stamp
+  cells, independently. ***A selector whose three holes were found by driving is verified by
+  driving, not by reading the diff that closed them: a diff shows what CHANGED; a drive shows
+  what the code DOES with an input nobody has typed before.***
+  (7) **THE SEAL SCOPE HAS TWO INDEPENDENT READERS AND ONE IS STILL WRONG** -- DE's selector
+  judges by version; DA's `economic_absence` still reads the flat list. ***The wrong one is
+  HELD OUT OF USE rather than trusted: no re-run of the 09-03 pre-read until DA 95.*** *That
+  is the honest shape while a seam is open -- one instrument named as wrong and not run.*
+  (8) **THE RUN:** `loaded / active / running / 0`, `MemoryPeak` 2,957,488,128 B **unchanged
+  since 14:56**, payload at 11:59, RSS 843,644 KiB. *The peak plateaus early -- the 09-03
+  smoke held its 2,554,003,456 B for all 86 minutes.* **Receipt ≈16:20Z; BE 66's heavy half
+  blocked on the lock; DA 94 and REV 74 in flight.**
+  **AT COMMIT TIME, 2026-09-06T15:09:11Z: R-667 LANDED AND I CHECKED ITS SHARPEST CLAIM.**
+  ***"Content-identical at the objects AND re-serialised": on
+  `be_race_read_declaration_v3.json` the pre-BE-65 blob hashes `603c684784b148b6…` and the
+  current file `3a2fdb28d87d77d9…`, while the parsed content is IDENTICAL once `supersedes`
+  and its note are removed.*** **So BE 65's linking changed those files' DIGESTS without
+  changing a single value -- and any pin taken by digest before BE 65 now fails against a
+  file whose content it would still accept.** *That is the pair form's cost stated plainly:
+  `{path, sha256}` binds the BYTES, and a re-serialisation is a byte change -- which is
+  exactly why R-666's selector RECOMPUTES the digest from the file the path names rather than
+  trusting one carried in a receipt.*
+  **BE 66's heavy half tried and was REFUSED at 15:08:36Z:** *its poll record reads
+  `LoadState loaded / ActiveState failed / SubState failed / Result exit-code /
+  ExecMainStatus "75"` beside "This unit did NO work and wrote nothing (rule 20)" -- the five
+  fields plus the id in a poll line, exactly as ruled.* **And the runbook now lands the
+  register and itself as SEPARATE COMMITS; the next entry is R-668.**
+  **FLAG WORDS: the selector STRICTEST-BY-DEFAULT-POSITIVE-BY-STAMP; the porcelain parser
+  ONE-AND-CALLED-BY-BOTH; the poll SETTLES-ON-THE-RECORD; the seal scope
+  TWO-READERS-ONE-HELD-OUT-OF-USE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,193 -> 1,201, flag_provenance 738 -> 746,
+  tasks 19; **491 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

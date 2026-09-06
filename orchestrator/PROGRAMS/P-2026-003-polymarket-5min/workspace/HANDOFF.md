@@ -5,6 +5,69 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 195
+
+**As of 2026-09-06T15:22:37Z, R-669 swept (tip `3ca9009`). State only — MEM writes no
+result. No sealed value read; the sealed day not opened — every cell driven on a scratch
+file in a temp directory.**
+
+### I drove both refusals at the pin
+
+| input | verdict |
+|---|---|
+| `pin=None` | **`BookRefused`** — *"no builder receipt pin for the book … there is nothing to bind to and **the day is refused, never assumed**"* |
+| real-shaped pin, wrong digest | **`BookRefused`** naming the receipt and **both** digests (`3d833664…` on disk vs `00000000…` pinned) |
+
+***Both happen at the pin — the first before the file's bytes are read at all, the second
+after hashing and before anything is unpickled*** — so a receipt-less or mismatched book
+never reaches a loader. *The docstring names the gap: "This is the check round 59 did not
+have."*
+
+**And my second cell raised a `KeyError` that was my own input.** *I passed a hand-made pin
+without a `receipt` key — which reads like a defect and is not: the refusal message **names**
+the receipt, so a real pin carries that key.* **I read the function, gave the pin its real
+shape, and the cell refused correctly.** ***Twenty-fourth "suspect the probe first" — the
+first where the wrong input came from me inventing a **structure** rather than mistyping a
+value.***
+
+### BE 66's four corrections, verified
+
+- **Three declaration states named apart:** `DECLARATION_ABSENT`, `DECLARATION_UNPARSEABLE`,
+  `DECLARATION_LINK_CORRUPTED`. ***The middle one matters: an unparseable declaration used to
+  look exactly like an absent one, and a seat repairing "absent" would have created a second
+  file beside the broken one.***
+- **The empty book is a named status carrying where:**
+  `STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT <path>`. *A named status with its location is a
+  fact a receipt can carry; an exception is a fact only the traceback had.*
+- **The launch-form checker reads the declarations beside the launcher under test** — a temp
+  `declarations/` with a deliberately malformed file. ***You cannot corrupt the real
+  declaration to prove your checker notices*** — the same shape as BE's `--lock` argument.
+
+### Two of my own, accepted
+
+- **My round-194 finding is accepted and corrected in band:** R-668's 139/48 **were relayed
+  from DA 94's pane report** and do not resolve at the artifact; the register now carries the
+  artifact's `{141, 70}`, `n_head_is_null 211`, 39 pins. ***A number that travels from a pane
+  into a register without passing through the artifact is exactly the kind that cannot be
+  resolved later.***
+- **My round-193 annotations are verified — "two of four citations needing it".** *The split
+  I made by reading is confirmed; annotating by the count would have put a correction on two
+  sentences that did not need one.*
+
+### The run
+
+`loaded / active / running`, **`MemoryPeak` 2,957,488,128 B for the sixth consecutive
+reading** (14:56 → 15:22). **BE 66's heavy half is still blocked on the lock, so the
+structure verifier has not yet run against a real book**; DA 95 and REV 75 remain the open
+gates on the seal-scope seam. *Receipt ≈16:20Z.*
+
+**Counts, measured before the sentence:** flags 1,216 → **1,224**, `flag_provenance`
+761 → **769**, tasks 19; **511 CHECKED**, 258 RELAYED, **455 UNMARKED — unchanged for the
+seventy-first round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 177** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 194
 
 **As of 2026-09-06T15:16:05Z, R-668 swept (tip `d1328d1`). State only — MEM writes no

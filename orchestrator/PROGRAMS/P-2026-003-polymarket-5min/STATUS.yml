@@ -63,6 +63,58 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:22:37Z (MEM ROUND 195 -- R-669 SWEPT, tip `3ca9009`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
+  SCRATCH file in a temp directory.**
+  (1) ***I DROVE BOTH REFUSALS AT THE PIN.*** **`assert_input_matches_its_receipt` with
+  `pin=None` → `BookRefused`: "no builder receipt pin for the book … there is nothing to bind
+  to and THE DAY IS REFUSED, NEVER ASSUMED"; with a real-shaped pin and a wrong digest →
+  `BookRefused` naming the receipt and BOTH digests (`3d833664…` on disk against
+  `00000000…` pinned).** ***Both happen at the PIN -- the first before the file's bytes are
+  read at all, the second after hashing and BEFORE anything is unpickled*** -- *so a
+  receipt-less or mismatched book never reaches a loader.* **The docstring names the gap:
+  "This is the check round 59 did not have."**
+  (2) **AND MY SECOND CELL RAISED A `KeyError` THAT WAS MY OWN INPUT.** *I passed a hand-made
+  pin `{'sha256':…, 'bytes':…}` and got `KeyError: 'receipt'` -- which reads like a defect
+  and is not: the refusal message NAMES the receipt, so a real pin carries that key and MY
+  dict did not.* **I read the function, gave the pin its real shape, and the cell refused
+  correctly.** ***Twenty-fourth "suspect the probe first", and the first where the wrong
+  input came from me inventing a STRUCTURE rather than mistyping a value.***
+  (3) **THE THREE DECLARATION STATES ARE NAMED APART:** `DECLARATION_ABSENT`,
+  `DECLARATION_UNPARSEABLE`, `DECLARATION_LINK_CORRUPTED` -- three refusals, each with its
+  reason, asserted together in the selftest. ***The middle one is the addition that matters:
+  an unparseable declaration used to look exactly like an absent one, and a seat repairing
+  "absent" would have created a SECOND FILE beside the broken one.***
+  (4) **THE EMPTY BOOK IS A NAMED STATUS CARRYING WHERE:**
+  `STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT <path>`. *REV 74's finding was a thin-book
+  `StopIteration` raising through the caller as an exception that names nothing.* **A named
+  status with its location is a fact a RECEIPT can carry; an exception is a fact only the
+  traceback had.**
+  (5) **THE LAUNCH-FORM CHECKER READS THE DECLARATIONS BESIDE THE LAUNCHER UNDER TEST** --
+  the selftest builds a temp `declarations/`, points `_R22.DECLARATIONS` at it, and writes a
+  malformed `heavy_run_form_v1.json` to drive the unparseable case. ***You cannot corrupt the
+  real declaration to prove your checker notices*** -- *the same shape as BE's `--lock`
+  argument: a default that reaches the production object is a falsifier that cannot be run
+  safely.*
+  (6) **MY ROUND-194 FINDING IS ACCEPTED AND CORRECTED IN BAND:** R-668's 139/48 **were
+  RELAYED FROM DA 94's PANE REPORT** and do not resolve at the artifact; the register now
+  carries the artifact's own `{141, 70}`, `n_head_is_null 211`, `39` pins. ***A pane report is
+  a seat's own sentence, and a number that travels from a pane into a register without
+  passing through the artifact is exactly the kind that cannot be resolved later.***
+  (7) **AND MY ROUND-193 ANNOTATIONS ARE VERIFIED -- "two of four citations needing it".**
+  *The split I made by READING is confirmed by the seat that issued the rule; annotating by
+  the COUNT would have put a correction on two sentences that did not need one.*
+  (8) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B for the **SIXTH**
+  consecutive reading (14:56 → 15:22). **BE 66's heavy half is still blocked on the lock, so
+  the structure verifier has not yet run against a real book;** DA 95 and REV 75 remain the
+  open gates on the seal-scope seam. *Receipt ≈16:20Z.*
+  **FLAG WORDS: the pin REFUSES-BEFORE-ANY-OPEN (both cells driven); the declaration states
+  THREE-NAMED-APART; the empty book A-STATUS-NOT-AN-EXCEPTION; my 139/48 finding
+  ACCEPTED-AND-CORRECTED-IN-BAND.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,216 -> 1,224, flag_provenance 761 -> 769,
+  tasks 19; **511 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
+  seventy-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T15:16:05Z (MEM ROUND 194 -- R-668 SWEPT, tip `d1328d1`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
   (1) **THE CENSUS `.V2` CLOSES MY OWN STALE-ARTIFACT NOTE** (`a0c8cb70b8419e3646…`, protocol
@@ -183,75 +235,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,201 -> 1,208, flag_provenance 746 -> 753,
   tasks 19; **497 CHECKED**, 256 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T15:05:59Z (MEM ROUND 192 -- R-666 SWEPT, tip `6cb89cc`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- EVERY SELECTOR CELL DRIVEN
-  ON A SYNTHETIC RECEIPT.**
-  (1) ***I DROVE THE SELECTOR'S FOUR CELLS AND THE POLARITY IS RIGHT.*** **No provenance →
-  v23, ELEVEN names ("THE STRICTEST LIST IN FORCE -- no verifiable design pair, and nothing
-  positively identifies this receipt as older"); a CORRECT `{path, sha256}` pair naming v21 →
-  v21, EIGHT names ("the PAIR, digest RECOMPUTED from the file the path names"); a MISMATCHED
-  digest → strictest; a path WITHOUT a digest → strictest.** ***Absence and unverifiability
-  now buy NOTHING -- the exact inverse of the hole REV 73 found, where "ABSENCE selected the
-  WEAKER rule inside the scoping built to protect the seal".*** *The third hole is DROPPED,
-  not fixed: "an opened path is not a pin" -- because the 09-03 run opened a stale v10 beside
-  v21.*
-  (2) **AND THE OLD RECEIPT IS RECOGNISED POSITIVELY, BY ITS EMIT STAMP.** *A synthetic
-  receipt stamped `14:01:55.557479Z` -- the 09-03 seal's own emit time -- resolves to **v22 /
-  8** with the reason "POSITIVE recognition of a pre-correction receipt"; stamped 15:00:00 it
-  resolves to **v23 / 11**.* ***The code's principle in five words: "Never by a field being
-  absent."*** **Corroborated by a `carrying_commit` that resolves -- two positive facts, not
-  one absence.** *The shape handed to REV 75 is the seam between the two paths: a
-  positively-old receipt WITH a mismatched pair is judged old and UNFLAGGED.*
-  (3) **BE'S PARSER IS NOW A THIN CALL INTO DA'S**, and its docstring carries the measurement
-  that earned the ruling: ***"three implementations disagreed on FOUR OF TWELVE LINES and NO
-  TWO WERE WRONG IN THE SAME PLACE, which is exactly 'two implementations corroborate
-  nothing'"*** -- *so a way of READING A TOOL'S OUTPUT is not a statistic.* **BE's algorithm
-  won on merit; BE's file now calls DA's.**
-  (4) **THE POLL SETTLES ON THE LAUNCH RECORD, NOT ON `ActiveState`** (`5501d45`, the comment
-  carrying its own measurement time 15:03:14Z) -- ***closing the finding I swept last round:
-  under `RemainAfterExit` a REFUSED unit reads `active`, so a poll waiting for "not active"
-  waits forever and one reading "active" as RUNNING is wrong.*** **The remedy is a different
-  SOURCE, not a better field.** *And the refusal path is reproduced ON THE REAL LOCK.*
-  (5) **THE CENSUS ARTIFACT AND THE LIVE CENSUS DISAGREE, AND BOTH ARE RIGHT** -- R-666
-  verifies my round-191 note: the artifact still says four, the live census reads 0, DA 95
-  re-emits. ***Seventh instance today of fix-in-source versus record-a-reader-resolves, and
-  the remedy is always the same: RE-EMIT, and until then say which object you read.*** **REV
-  74 lands the strongest form: "all eleven declarations are JSON-IDENTICAL to their pre-BE-65
-  selves ONCE THE LINK IS REMOVED."**
-  (6) **R-666 VERIFIED DE 103 BY DRIVE, AND SO DID I** -- four selector cells plus two stamp
-  cells, independently. ***A selector whose three holes were found by driving is verified by
-  driving, not by reading the diff that closed them: a diff shows what CHANGED; a drive shows
-  what the code DOES with an input nobody has typed before.***
-  (7) **THE SEAL SCOPE HAS TWO INDEPENDENT READERS AND ONE IS STILL WRONG** -- DE's selector
-  judges by version; DA's `economic_absence` still reads the flat list. ***The wrong one is
-  HELD OUT OF USE rather than trusted: no re-run of the 09-03 pre-read until DA 95.*** *That
-  is the honest shape while a seam is open -- one instrument named as wrong and not run.*
-  (8) **THE RUN:** `loaded / active / running / 0`, `MemoryPeak` 2,957,488,128 B **unchanged
-  since 14:56**, payload at 11:59, RSS 843,644 KiB. *The peak plateaus early -- the 09-03
-  smoke held its 2,554,003,456 B for all 86 minutes.* **Receipt ≈16:20Z; BE 66's heavy half
-  blocked on the lock; DA 94 and REV 74 in flight.**
-  **AT COMMIT TIME, 2026-09-06T15:09:11Z: R-667 LANDED AND I CHECKED ITS SHARPEST CLAIM.**
-  ***"Content-identical at the objects AND re-serialised": on
-  `be_race_read_declaration_v3.json` the pre-BE-65 blob hashes `603c684784b148b6…` and the
-  current file `3a2fdb28d87d77d9…`, while the parsed content is IDENTICAL once `supersedes`
-  and its note are removed.*** **So BE 65's linking changed those files' DIGESTS without
-  changing a single value -- and any pin taken by digest before BE 65 now fails against a
-  file whose content it would still accept.** *That is the pair form's cost stated plainly:
-  `{path, sha256}` binds the BYTES, and a re-serialisation is a byte change -- which is
-  exactly why R-666's selector RECOMPUTES the digest from the file the path names rather than
-  trusting one carried in a receipt.*
-  **BE 66's heavy half tried and was REFUSED at 15:08:36Z:** *its poll record reads
-  `LoadState loaded / ActiveState failed / SubState failed / Result exit-code /
-  ExecMainStatus "75"` beside "This unit did NO work and wrote nothing (rule 20)" -- the five
-  fields plus the id in a poll line, exactly as ruled.* **And the runbook now lands the
-  register and itself as SEPARATE COMMITS; the next entry is R-668.**
-  **FLAG WORDS: the selector STRICTEST-BY-DEFAULT-POSITIVE-BY-STAMP; the porcelain parser
-  ONE-AND-CALLED-BY-BOTH; the poll SETTLES-ON-THE-RECORD; the seal scope
-  TWO-READERS-ONE-HELD-OUT-OF-USE.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,193 -> 1,201, flag_provenance 738 -> 746,
-  tasks 19; **491 CHECKED**, 255 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2947,6 +2930,101 @@ flags:
                              # / Result exit-code / ExecMainStatus "75"` with the refusal text "This
                              # unit did NO work and wrote nothing (rule 20)" -- the five fields plus
                              # the id in a poll line, exactly as ruled.*
+  I_DROVE_THE_RECEIPT_LESS_REFUSAL_AND_THE_WRONG_DIGEST_REFUSAL: BOTH_BEFORE_ANY_OPEN
+                             # CHECKED 2026-09-06T15:22:37Z, driven on a SCRATCH file in a temp
+                             # directory (nothing real opened). **`assert_input_matches_its_receipt`
+                             # with `pin=None` → `BookRefused`: "REFUSED: no builder receipt pin for
+                             # the book. The assembly binds to the digest its producer published;
+                             # without one there is nothing to bind to and THE DAY IS REFUSED, NEVER
+                             # ASSUMED."** **With a pin of the real shape and a wrong digest →
+                             # `BookRefused`: "the book on disk does not match the digest its
+                             # receipt … pins -- `3d833664…` on disk against `00000000…` pinned."**
+                             # ***Both refusals happen at the PIN: the first before the file's bytes
+                             # are read at all, the second after hashing and before anything is
+                             # UNPICKLED -- so a receipt-less or mismatched book never reaches a
+                             # loader.*** *The docstring says which gap it closes: "This is the
+                             # check round 59 did not have… only this says those bytes are the ones
+                             # the producing receipt pinned."*
+  MY_SECOND_CELL_RAISED_A_KEY_ERROR_AND_IT_WAS_MY_INPUT: TWENTY_FOURTH
+                             # CHECKED 2026-09-06T15:22:37Z. *My first attempt at the wrong-digest
+                             # cell passed a hand-made pin `{'sha256':…, 'bytes':…}` and got
+                             # `KeyError: 'receipt'`* -- **which reads like a defect and is not:
+                             # the refusal message NAMES the receipt, so a real pin carries a
+                             # `receipt` key and MY dict did not.**
+                             # ***I read the function before reporting, gave the pin its real shape,
+                             # and the cell then refused correctly.*** **Twenty-fourth "suspect the
+                             # probe first" -- and the first where the wrong input came from me
+                             # inventing a STRUCTURE rather than mistyping a value.**
+                             # *A KeyError from a function fed a malformed argument is a fact about
+                             # the caller; only a KeyError on a well-formed argument would have been
+                             # a finding.*
+  THE_THREE_DECLARATION_STATES_ARE_NAMED_APART: ABSENT_UNPARSEABLE_LINK_CORRUPTED
+                             # CHECKED 2026-09-06T15:22:37Z at `be_rule22.py`: **`DECLARATION_
+                             # ABSENT` (:163, "no file matching the family"), `DECLARATION_
+                             # UNPARSEABLE` (:176), `DECLARATION_LINK_CORRUPTED` (:189)** -- three
+                             # REFUSALS, each with its own reason, **asserted together at
+                             # `be_daybook_build.py:2118-2119`.**
+                             # ***Three ways a declaration can fail to be usable, previously
+                             # indistinguishable: no file, a file that will not parse, and a file
+                             # whose LINK is broken.*** *The middle one is the interesting addition
+                             # -- an unparseable declaration used to look exactly like an absent
+                             # one, and a seat repairing "absent" would have created a second file
+                             # beside the broken one.*
+  THE_EMPTY_BOOK_IS_A_NAMED_STATUS_CARRYING_WHERE: STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT
+                             # CHECKED 2026-09-06T15:22:37Z: the constant at
+                             # `be_daybook_build.py:2000` and its emission at :2524 as
+                             # **`"status": f"STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT {q}"`** --
+                             # *the status carries the PATH at which it was empty.*
+                             # ***REV 74's finding was a thin-book `StopIteration`: a generator
+                             # asked for a row a small book does not have, raising through the
+                             # caller as an exception that names nothing.*** **A named status with
+                             # its location is a fact a receipt can carry; an exception is a fact
+                             # only the traceback had.**
+  THE_LAUNCH_FORM_CHECKER_READS_THE_DECLARATIONS_BESIDE_THE_LAUNCHER: NOT_THE_LIVE_TREES
+                             # CHECKED 2026-09-06T15:22:37Z in the diff at `78290d3`: the selftest
+                             # builds a temp directory with its OWN `declarations/`, sets
+                             # `_R22.DECLARATIONS` to it, and writes a malformed
+                             # `heavy_run_form_v1.json` to drive the unparseable case.
+                             # ***So the checker is exercised against a declarations directory it
+                             # does NOT share with the live tree*** -- **which is what makes the
+                             # known-bads drivable at all: you cannot corrupt the real declaration
+                             # to prove your checker notices.**
+                             # *The same shape as BE's `--lock` argument from round 191: a default
+                             # that reaches the production object is a falsifier that cannot be run
+                             # safely.*
+  MY_ROUND_194_FINDING_IS_ACCEPTED_AND_CORRECTED_IN_BAND: RELAYED_FROM_A_PANE
+                             # CHECKED 2026-09-06T15:22:37Z at R-669. **"R-668's '139 name
+                             # artifacts…, 48 name files present nowhere' were RELAYED FROM DA 94's
+                             # PANE REPORT and do not resolve at the artifact"; the register now
+                             # carries `head_is_null_because: {NAMES_A_DERIVED_ARTIFACT_NOT_A_
+                             # DECLARATION: 141, NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY: 70}`,
+                             # `n_head_is_null 211`, `n_head_is_null_and_a_pin 39`, read by the
+                             # coordinator.**
+                             # ***The cause is worth keeping: a PANE REPORT is a seat's own
+                             # sentence, and a number that travels from a pane into a register
+                             # without passing through the artifact is exactly the kind that cannot
+                             # be resolved later.*** *R-668's original sentence stays; R-669 carries
+                             # the correction -- rule 13's shape, and the second time this session a
+                             # number of mine forced one.*
+  MY_ROUND_193_ANNOTATIONS_ARE_VERIFIED: TWO_OF_FOUR_WAS_THE_RIGHT_SPLIT
+                             # CHECKED 2026-09-06T15:22:37Z at R-669: **"MEM 193 verified (the old
+                             # digests annotated by the R-667 rule, two of four citations needing
+                             # it)".**
+                             # ***So the split I made by READING -- four occurrences, two already
+                             # framed as pre-BE-65 by my own round-192 text, two older citations
+                             # needing the note -- is confirmed by the seat that issued the rule.***
+                             # *Had I annotated by the COUNT, two correct sentences would now carry
+                             # a correction they do not need, and a reader would have four
+                             # annotations where two facts exist.*
+  THE_RUN_AT_THIRTY_MINUTES_AND_A_SIXTH_IDENTICAL_PEAK: NOTHING_ELSE_HAS_MOVED
+                             # CHECKED 2026-09-06T15:22:37Z: **`de102smoke.service` still
+                             # `loaded / active / running`; `MemoryPeak` 2,957,488,128 B for the
+                             # SIXTH consecutive reading (14:56, 15:02, 15:05, 15:11, 15:16,
+                             # 15:22).**
+                             # *Six readings across twenty-six minutes, one number.* **Receipt
+                             # ≈16:20Z; BE 66's heavy half is still blocked on the lock, so the
+                             # structure verifier's own selftest has not run against a real book;
+                             # DA 95 and REV 75 remain the open gates on the seal-scope seam.**
   THE_CENSUS_V2_CLOSES_MY_OWN_STALE_ARTIFACT_NOTE: TWENTY_THREE_FAMILIES_ZERO_HEADLESS
                              # CHECKED 2026-09-06T15:16:05Z at
                              # `p003_da_nonhead_census__20260906T150939Z.json` (357,000 B, sha
@@ -23050,6 +23128,89 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 195, 2026-09-06T15:22:37Z ------------------------------
+  I_DROVE_THE_RECEIPT_LESS_REFUSAL_AND_THE_WRONG_DIGEST_REFUSAL:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      driven on a scratch file in a temp directory: assert_input_matches_its_receipt with
+      pin None raises BookRefused saying there is no builder receipt pin and the day is
+      refused never assumed, and with a real-shaped pin carrying a wrong digest it raises
+      BookRefused naming the receipt and both digests. Both refusals happen at the pin, the
+      first before the file's bytes are read and the second after hashing and before anything
+      is unpickled, so a receipt-less or mismatched book never reaches a loader.
+  MY_SECOND_CELL_RAISED_A_KEY_ERROR_AND_IT_WAS_MY_INPUT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      my first attempt at the wrong-digest cell passed a hand-made pin without a receipt key
+      and got KeyError, which reads like a defect and is not: the refusal message names the
+      receipt, so a real pin carries that key and my dict did not. I read the function before
+      reporting, gave the pin its real shape, and the cell refused correctly. A KeyError from a
+      function fed a malformed argument is a fact about the caller.
+  THE_THREE_DECLARATION_STATES_ARE_NAMED_APART:
+    prov: CHECKED
+    artifact: live/pm_research/be_rule22.py
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      DECLARATION_ABSENT at :163, DECLARATION_UNPARSEABLE at :176 and
+      DECLARATION_LINK_CORRUPTED at :189 are three refusals each with its own reason, asserted
+      together in be_daybook_build's selftest. Three ways a declaration can fail to be usable,
+      previously indistinguishable; the middle one matters because an unparseable declaration
+      used to look exactly like an absent one, and a seat repairing absent would have created a
+      second file beside the broken one.
+  THE_EMPTY_BOOK_IS_A_NAMED_STATUS_CARRYING_WHERE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      the constant at :2000 is emitted at :2524 as a status reading
+      STRUCTURE_DECLARED_BUT_THE_BOOK_IS_EMPTY_AT followed by the path, so the status carries
+      where it was empty. REV 74's finding was a thin-book StopIteration raising through the
+      caller as an exception that names nothing; a named status with its location is a fact a
+      receipt can carry.
+  THE_LAUNCH_FORM_CHECKER_READS_THE_DECLARATIONS_BESIDE_THE_LAUNCHER:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      the selftest builds a temp directory with its own declarations subdirectory, points
+      _R22.DECLARATIONS at it, and writes a malformed heavy_run_form_v1.json to drive the
+      unparseable case, so the checker is exercised against a declarations directory it does
+      not share with the live tree. That is what makes the known-bads drivable at all, and it
+      is the same shape as BE's --lock argument: a default that reaches the production object
+      is a falsifier that cannot be run safely.
+  MY_ROUND_194_FINDING_IS_ACCEPTED_AND_CORRECTED_IN_BAND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      R-669 records that R-668's 139 and 48 were relayed from DA 94's pane report and do not
+      resolve at the artifact, and the register now carries the artifact's own
+      head_is_null_because of 141 and 70 with n_head_is_null 211 and 39 pins, read by the
+      coordinator. A pane report is a seat's own sentence, and a number travelling from a pane
+      into a register without passing through the artifact is exactly the kind that cannot be
+      resolved later.
+  MY_ROUND_193_ANNOTATIONS_ARE_VERIFIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      R-669 verifies MEM 193 with the old digests annotated by the R-667 rule and two of four
+      citations needing it, so the split I made by reading is confirmed by the seat that issued
+      the rule. Had I annotated by the count, two correct sentences would carry a correction
+      they do not need.
+  THE_RUN_AT_THIRTY_MINUTES_AND_A_SIXTH_IDENTICAL_PEAK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T15:22:37Z
+    said: >-
+      de102smoke still reads loaded, active and running with MemoryPeak 2,957,488,128 for the
+      sixth consecutive reading across 14:56, 15:02, 15:05, 15:11, 15:16 and 15:22. Receipt
+      about 16:20Z, BE 66's heavy half still blocked on the lock so the structure verifier's
+      selftest has not run against a real book, and DA 95 and REV 75 remain the open gates.
   # --- MEM round 194, 2026-09-06T15:16:05Z ------------------------------
   THE_CENSUS_V2_CLOSES_MY_OWN_STALE_ARTIFACT_NOTE:
     prov: CHECKED
