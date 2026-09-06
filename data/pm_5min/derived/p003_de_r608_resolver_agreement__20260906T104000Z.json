@@ -1,0 +1,134 @@
+{
+  "agreement": {
+    "agree": true,
+    "diverging_shapes": [],
+    "n_rows_naming_the_verdict_differently": 7,
+    "n_shapes": 8,
+    "n_shapes_expected": 8,
+    "neither_resolver_raised": true,
+    "shapes_where_a_resolver_RAISED": [],
+    "table": [
+      {
+        "da_raised": null,
+        "da_status": "ONE",
+        "da_verdict": "RESOLVE",
+        "de_raised": null,
+        "de_status": "PRESENT",
+        "de_verdict": "RESOLVE",
+        "shape": "1_single_receipt",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "CHAIN_HEAD",
+        "da_verdict": "RESOLVE",
+        "de_raised": null,
+        "de_status": "PRESENT_CHAIN_HEAD",
+        "de_verdict": "RESOLVE",
+        "shape": "2_pair_both_correct",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "SUPERSESSION_LINK_INCOMPLETE",
+        "da_verdict": "REFUSE",
+        "de_raised": null,
+        "de_status": "LINK_NOT_A_PAIR",
+        "de_verdict": "REFUSE",
+        "shape": "3_sha256_only",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "SUPERSESSION_LINK_INCOMPLETE",
+        "da_verdict": "REFUSE",
+        "de_raised": null,
+        "de_status": "LINK_NOT_A_PAIR",
+        "de_verdict": "REFUSE",
+        "shape": "4_path_only",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "SUPERSESSION_TARGET_DIGEST_MISMATCH",
+        "da_verdict": "REFUSE",
+        "de_raised": null,
+        "de_status": "SUPERSEDES_TARGET_DIGEST_MISMATCH",
+        "de_verdict": "REFUSE",
+        "shape": "5_present_wrong_digest",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "SUPERSESSION_TARGET_MOVED",
+        "da_verdict": "REFUSE",
+        "de_raised": null,
+        "de_status": "SUPERSEDES_MOVED",
+        "de_verdict": "REFUSE",
+        "shape": "6_digest_under_another_name",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "AMBIGUOUS",
+        "da_verdict": "REFUSE",
+        "de_raised": null,
+        "de_status": "AMBIGUOUS",
+        "de_verdict": "REFUSE",
+        "shape": "7_two_receipts_no_link",
+        "status_names_differ": false,
+        "verdicts_agree": true
+      },
+      {
+        "da_raised": null,
+        "da_status": "SUPERSESSION_LINK_INCOMPLETE",
+        "da_verdict": "REFUSE",
+        "de_raised": null,
+        "de_status": "SUPERSEDES_MALFORMED",
+        "de_verdict": "REFUSE",
+        "shape": "8_a_bare_string",
+        "status_names_differ": true,
+        "verdicts_agree": true
+      }
+    ],
+    "verdicts_agree_on_every_shape": true,
+    "why_names_may_differ": "two independent implementations naming one verdict differently is R-235 working, not drift. The VERDICT is the property; harmonising the names would replace two readings with one"
+  },
+  "as_of": "2026-09-06T10:40:01.173102+00:00",
+  "falsifier": {
+    "diverging_shapes": [
+      "3_sha256_only",
+      "4_path_only",
+      "5_present_wrong_digest",
+      "6_digest_under_another_name",
+      "7_two_receipts_no_link",
+      "8_a_bare_string"
+    ],
+    "it_did": true,
+    "it_must_report_divergence": true,
+    "what": "the same table against a MUTANT DE resolver that resolves everything",
+    "why": "a checker that has only ever reported AGREE has not been shown able to report anything else (rule 15)"
+  },
+  "head": {
+    "dirty": false,
+    "head": "31790ef14dee771ce143cc8c92d853fbc4fb0974"
+  },
+  "protocol": "P003_DE_R608_RESOLVER_AGREEMENT_V1",
+  "resolvers": {
+    "da": "da_gate1_day_verdict.resolve_chain",
+    "da_sha256": "e86faa5883cd289b66e8190d9133e735e836cf77fd8fe3898e83f79c6c3497ed",
+    "de": "de_multiday_gate1_runner.find_sealed_day_receipt",
+    "de_sha256": "4550676d49c716c84b71b3570fc408016b8cb4e6e8baceb8cfd899e32f8591d3"
+  },
+  "what_this_is": "R-608's eight shapes driven through BOTH seats' resolvers on the same bytes",
+  "what_this_is_not": {
+    "a_day_result": false,
+    "run_inside_a_day": "NEVER. It imports another seat's module; the day runner's import closure must not contain one (rule 22)"
+  }
+}
