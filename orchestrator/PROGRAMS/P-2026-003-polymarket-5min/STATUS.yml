@@ -63,6 +63,69 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:57:50Z (MEM ROUND 168 -- R-624, R-625, Q-BE-62, Q-DA-303 AND REV 59'S
+  FILING SWEPT. STATE ONLY. THE FIRST ITEM IS A CORRECTION AGAINST MYSELF.
+  (1) **I RESOLVED MY OWN AMBIGUITY ON EVIDENCE THAT COULD NOT DISCRIMINATE.** At
+  round 166 I measured `wt-rev/data` as a DIRECTORY at 11:47:17Z and offered two
+  readings -- *the restore has not reached it* or *a refresh re-materialised it inside
+  the minute* -- and at that round's commit time I saw a symlink and concluded the
+  FIRST. ***REV 59 SS8: "the coordinator's 11:46Z symlink destroyed by its own
+  `checkout --detach` at 11:47:14Z". The SECOND was right.*** **A symlink existing at
+  11:50Z fits BOTH stories.** *And the discriminating fact was in the entry I swept
+  that same round: a restore at 11:46Z followed by a directory at 11:47:17Z can only
+  mean destruction in between.* ***I held both facts and took the simpler story*** --
+  **round 155's tidy-narrative failure, committed this time instead of caught.**
+  (2) **AND THE MECHANISM I RECORDED AT ROUND 167 WAS TRIED AND REJECTED.** The script
+  now BEGINS `sparse-checkout disable`, and its header says why: ***"under it git
+  IGNORES `update-index --skip-worktree`."*** *My commit-time note was accurate for the
+  bytes then on disk.* **Recording a fix at commit time buys CURRENCY, not permanence
+  -- and the as_of is what lets the record survive its own correction.**
+  (3) **THE REFRESH IS FIVE STEPS AND A REFUSAL:** drop the symlink (*"so the checkout
+  cannot write THROUGH it"*) -> checkout -> the R-554 sweep *"covering the NEW ones"*
+  -> `rm -rf` + `ln -s` -> ***verify `readlink -f` == the ledger or REFUSE, exit 2***,
+  with a report line printing the skip-worktree count. **Every step exists because a
+  specific failure was measured** -- *writing through a symlink, a new file arriving
+  unswept, and a rule that was followed and still lost.*
+  (4) **BOTH TERMS OF BE'S GROWTH COME FROM THE HIGH-WATER:** `self.baseline_gb =
+  _rss_gb()` and `peak = _rss_gb()`. ***So a second `_Stages` in one process starts
+  from a baseline the first already raised -- growth reads ~0 and the budget CANNOT
+  FIRE.*** *Safe today only because there is one build per process* -- **and BE's
+  known-bads hide it by hand-setting `baseline_gb = 0.0`, testing the ARITHMETIC
+  rather than the INSTRUMENT.** The repair is the one DE already measured: current
+  RSS. **BE 62.**
+  (5) **THREE OF FIVE WORKTREES RE-LINKED, AND FULLY SWEPT:** `wt-be` **265 S of
+  265**, `wt-rev` **265 S**, `wt-da` **235 S** -- every tracked file under `data/`
+  carrying the bit -- *and `wt-da/data` is a symlink now.* wt-de2 after the run; wt-de
+  while it is the frozen evidence.
+  (6) **DA'S RULE IS ONE, AND IT REFUSES BY NAME:** with the env set from a worktree,
+  the canonical derived dir; **unset, `RootRefused` names the worktree as not the
+  canonical ledger and REFUSES.** *"DE's ADMITS from a worktree by finding the ledger
+  on its own; DA's REFUSES -- both safe, DA's stricter."* **And the bare `except` is
+  narrowed to `(ImportError, AttributeError)`, so a resolver whose RETURN SHAPE moves
+  is NAMED rather than swallowed** -- *the exact defect I drove two rounds ago.*
+  **`da_book_verify` had been judging BE's receipt against a STALE COPY of BE's code
+  from a worktree.**
+  (7) **AND THE SWEEP MISREAD BE 60 IN BOTH DIRECTIONS** -- BE's delta budget reported
+  absent (*it was there under names the census did not know*) and the closure reported
+  ABSENT because it lives in a SHARED `be_rule22.py`. ***Both checks pinned to the
+  FINDINGS that produced them rather than to the PROPERTIES they test*** -- **DA's
+  sixth and seventh instances; disjunctions now.** *A checker written from a fix fails
+  when the fix changes shape, and it fails in BOTH directions: missing the repair and
+  inventing the gap.*
+  (8) **THE DISCLOSURE MUST RIDE IN THE KEY.** The `.v2`'s reconstruction is thorough
+  and honest -- and **one field short of safe**: *a consumer keying
+  `producing_code.builder_commit` gets a commit that MATCHES THE BYTES and is NOT the
+  run's head.* ***"Automated readers resolve FIELDS"*** -- so
+  `builder_commit_RECONSTRUCTED`, or a leading `status`, **the pattern BE already uses
+  twice in the same receipt.** *And "NOT RECOVERABLE alone would discard a true,
+  useful fact": the reviewer defending the field while rejecting its NAME.*
+  **FLAG WORDS: the worktree symlinks SURVIVE-BY-SCRIPT (wt-be, wt-rev, wt-da done and
+  counted; wt-de2 and wt-de pending idle moments); the re-run RUNNING -- I measure pid
+  3282335 at 1,720 s (~29 min), RSS 755,572 KiB.**
+  MEASURED BEFORE THIS SENTENCE: flags 999 -> 1,007, flag_provenance 544 -> 552,
+  tasks 19; **335 CHECKED**, 217 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T11:52:30Z (MEM ROUND 167 -- R-623, Q-BE-60 AND THE REWRITTEN Q-DA-302
   SWEPT. STATE ONLY. A CENSUS I MADE TEN ROUNDS AGO CLOSES ON ITS OWN MEASUREMENT.
   (1) **RULE 22 IS NOW IN ALL THREE PRODUCERS.** The same grep I ran at round 157:
@@ -204,83 +267,6 @@ updated: >-
   tasks 19; **326 CHECKED**, 210 RELAYED, **455 UNMARKED -- unchanged for the
   forty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:38:40Z (MEM ROUND 165 -- R-621 AND REV 57'S FILING SWEPT. STATE ONLY.
-  THE FINDING IS A SWALLOWED EXCEPTION THREE LINES BELOW THE SENTENCE DENYING IT.
-  (1) **DA'S SECOND RULE IS AN `except`, NOT A SECOND IMPLEMENTATION.** At
-  `_derived_dir()` (:2685): **`try: import de_data_root as BDR; return
-  Path(BDR.resolve()) / …` -- `except Exception: return HERE.parents[1] / …`.** *So DA
-  DOES import DE's resolver; the intended path IS canonical, and the file-relative
-  rule is the EXCEPT BRANCH.* ***And the docstring reads "through the programme's ONE
-  data-root resolver -- imported, NEVER A SECOND IMPLEMENTATION of 'where is the
-  ledger'" -- while the `except` three lines below IS one.*** **The engine is a bare
-  `except Exception` turning a failure into a PLAUSIBLE WRONG ANSWER.** *Whether the
-  reviewer's drive raised in the try or resolved to the worktree root cannot be told
-  statically -- DA 80's to determine.* ROUTED.
-  (2) **AND THE RISK IS NOT THE ENVIRONMENT VARIABLE.** Driven by the reviewer: **DE's
-  resolver from `wt-rev` with `PM_DATA_ROOT` UNSET -> the canonical
-  `/home/yuqing/ctaNew/data`, ADMITS; DA's `_derived_dir()` from `wt-rev` with the
-  variable SET -> the worktree's partial ledger, the 09-04 book INVISIBLE.** ***"Two
-  rules for one root, one of them silently PARTIAL"*** -- **newly load-bearing because
-  the read gate COUNTS SEALED RECEIPTS AT A ROOT**, and a partial ledger does not
-  error: it returns a smaller, plausible answer the gate's arithmetic then runs on.
-  *(My round-163 flag carried BE's "one unset env" mechanism as RELAYED; this is its
-  correction, and the provenance mark is why the correction lands on the claim rather
-  than on the record.)*
-  (3) **ALL FIVE WORKTREES' `data/` ARE DIRECTORIES -- I COUNTED THEM:** **wt-be 255
-  tracked files, wt-da 235, wt-de 221, wt-de2 257, wt-rev 257**, *my counts matching
-  the coordinator's to the file.* **A rule that says "MUST be a top-level symlink" is
-  violated in all five places it applies** -- *and invisibly, because a materialised
-  `data/` looks exactly like the real one until you ask what is MISSING.* **The
-  mechanism is the refresh itself: `checkout --detach origin/mm-research`
-  re-materialises `data/` whenever a landed commit adds a tracked data path the
-  `skip-worktree` bits do not cover.** *The repair is sequenced against running work --
-  never `wt-de2` while DE 93 runs; `wt-de` stays FROZEN EVIDENCE.*
-  (4) **THE BIGGER DAY PEAKED LOWER, AND THE REVIEWER NAMED IT:**
-  `asm_peak_gb_PUBLISHED` **5.317 for 09-03, 4.913 for 09-04** -- with 09-04 carrying
-  **14 % more data**. ***A day that grew and peaked lower is exactly the kind of number
-  that gets passed over as good news.*** *The reading -- the chunking (48 chunks of 6
-  windows) holding the working set flat while the day grew -- is marked **AGREED AS A
-  READING, NOT DRIVEN**, with "the receipt should say which".* **The discipline is not
-  suspicion; it is refusing to let a favourable number pass unexamined.**
-  (5) **THE GO IS CONFIRMED BY A CENSUS, NOT A SPOT CHECK:** every other
-  `wrapper_observed` takes an INJECTED scratch lock, and the two that read the AMBIENT
-  lock (5905, 6244) **assert SHAPE, NOT STATE** -- so "does anything left refuse a
-  wrapped real run that a standalone battery cannot see?" is answered **No** by
-  enumeration over the whole battery. ***The difference between "we fixed the
-  instance" and "we counted the class".***
-  (6) **THE BOOK STANDS, AND THE REASON IT STANDS IS CHECKABLE:** the digest
-  reproduced; **the BYTES resolve and the POINTER does not** (the `.v3` f-string ->
-  BE 60); the population, statuses and set equality as R1's precondition; every stage
-  inside budget (A0 2.307 / A1 3.701 / A2-A4 4.913 GB; wall 2,379.8 s with **5.7 s
-  unattributed overhead**); `reasons_account_for_the_count: false`. ***"Two disclosed
-  defects that cannot certify anything false" is a stronger claim than "no defects
-  found", and it is the only one the evidence supports.***
-  (7) **AND THE RUN IS AT NINE MINUTES WITH ITS PEAK UNMOVED:** `de93smoke.scope`
-  active, pid 3282335 at **556 s**, RSS **752,440 KiB**, `MemoryPeak` **2,553,352,192
-  -- unchanged since 11:31Z**. *The S1 book load set the peak and nothing since has
-  approached it* -- **the first real day on which the growth-budget's per-stage delta
-  series exists at all.**
-  **AT COMMIT TIME, 2026-09-06T11:41:10Z: DA 80 LANDED (`762102e`) AND THE `except`
-  I FLAGGED IS ALREADY GONE.** *I re-read the same lines: `_derived_dir()` now carries
-  a comment block ending* ***"The read gate COUNTS SEALED RECEIPTS AT A ROOT, so a
-  smaller plausible ledger reads as a pass. Two seats resolving one root by two rules
-  is the defect; this follows the canonical rule and REFUSES BY NAME when the root is
-  not the ledger."*** **So (1) stands as HISTORY at its as-of, and the flag word "DA's
-  resolver HAZARD-OPEN" is true as dispatched and closed -- in FOUR of DA's own
-  modules -- by the time it commits.**
-  ***And the fix's comment states the CONSEQUENCE the code could not have known:***
-  *that the gate counts receipts at a root, so the wrong root reads as a pass* --
-  **the finding travelling from the reviewer to the code as a SENTENCE, not just as a
-  patch.** *Also landed: the 09-03 BOOK TIER ran (set equality holds, 297,379 keys
-  both heads), and the 09-04 tier REFUSED BY RULE 20 -- the re-run holds the lock,
-  exactly as I measured.*
-  **FLAG WORDS: the 09-04 book STANDS (REV 57); the re-run RUNNING-UNDER-GO (second
-  launch, ≈12:55Z); the worktree symlinks DRIFTED-RESTORE-PENDING (all five, counted);
-  DA's resolver HAZARD-OPEN (DA 80).**
-  MEASURED BEFORE THIS SENTENCE: flags 975 -> 983, flag_provenance 520 -> 528,
-  tasks 19; **322 CHECKED**, 206 RELAYED, **455 UNMARKED -- unchanged for the
-  forty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
-  new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2953,6 +2939,92 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  I_RESOLVED_MY_OWN_AMBIGUITY_ON_EVIDENCE_THAT_COULD_NOT_DISCRIMINATE: THE_SECOND_HYPOTHESIS_WAS_RIGHT
+                             # CHECKED 2026-09-06T11:57:50Z against REV 59 SS8, and this is a
+                             # correction against myself. **At round 166 I measured `wt-rev/data` as a
+                             # DIRECTORY at 11:47:17Z (mtime 11:47:15Z) and offered two readings: the
+                             # restore had not yet reached it, OR a refresh re-materialised it inside the
+                             # minute. At that round's COMMIT TIME I saw a symlink and concluded the FIRST.**
+                             # ***REV 59 SS8: "the coordinator's 11:46Z symlink destroyed by its own
+                             # `checkout --detach` at 11:47:14Z". The SECOND was right.***
+                             # **And a symlink existing at 11:50Z is consistent with BOTH stories -- it
+                             # cannot discriminate.** *The discriminating fact was already in the entry I had
+                             # swept that same round: the restore happened at 11:46Z, BEFORE my 11:47:17Z
+                             # directory reading, and a restore-then-directory can only mean destruction in
+                             # between.* ***I held both facts and chose the simpler story*** -- **round 155's
+                             # tidy-narrative failure again, and this time I COMMITTED it rather than
+                             # catching it.**
+  THE_SPARSE_CHECKOUT_MECHANISM_I_RECORDED_WAS_TRIED_AND_REJECTED: AT_THE_MACHINE
+                             # CHECKED 2026-09-06T11:57:50Z: **`scripts/wt_refresh.sh` now BEGINS with
+                             # `sparse-checkout disable`, and its header states the reason: "Sparse-checkout
+                             # does not help: under it git IGNORES `update-index --skip-worktree`."**
+                             # *At round 167's commit time I recorded the sparse-checkout rule as the fix --
+                             # accurately, for the bytes then on disk.* ***It was tried and rejected AT THE
+                             # MACHINE within minutes, and the landed refresh is a different mechanism.***
+                             # **Recording a fix at commit time buys currency and not permanence; the as_of
+                             # is what makes the record survive the correction.**
+  THE_REFRESH_IS_FIVE_STEPS_AND_A_REFUSAL: DROP_CHECKOUT_SWEEP_RELINK_VERIFY
+                             # CHECKED 2026-09-06T11:57:50Z, line by line: **`sparse-checkout disable`;
+                             # `[ -L "$WT/data" ] && rm "$WT/data"` -- *"drop the symlink so the checkout
+                             # cannot write THROUGH it"*; the checkout; `ls-files data | xargs …
+                             # --skip-worktree` -- *"R-554, covering the NEW ones"*; `rm -rf` + `ln -s` the
+                             # ledger (R-553); and `[ "$(readlink -f …)" = "$LEDGER" ] || { echo "REFUSED
+                             # …"; exit 2; }`.**
+                             # ***The verify is the part that makes it a control rather than a procedure***
+                             # -- *and the report line prints the skip-worktree count, so the next reader
+                             # sees the coverage rather than trusting it.* **Every step exists because a
+                             # specific failure was measured: writing through a symlink, a new file arriving
+                             # unswept, and a rule that was followed and still lost.**
+  BOTH_TERMS_OF_THE_GROWTH_COME_FROM_THE_HIGH_WATER: IT_CANNOT_FIRE_TWICE_IN_ONE_PROCESS
+                             # CHECKED 2026-09-06T11:57:50Z at `be_daybook_build`: **`self.baseline_gb =
+                             # _rss_gb()` (:507) and `peak = _rss_gb()` -- BOTH the `ru_maxrss` high-water --
+                             # with `growth_gb = peak - baseline` and `within_budget = growth_gb <= b`.**
+                             # ***So a SECOND `_Stages` in the same process starts from a baseline the first
+                             # one already raised: growth reads ~0 and the budget CANNOT FIRE.***
+                             # *Production is safe today because there is ONE build per process* -- **and
+                             # BE's own known-bads hide it by hand-setting `baseline_gb = 0.0`, testing the
+                             # ARITHMETIC rather than the INSTRUMENT.** *The repair is the one DE already
+                             # measured and adopted: current RSS, and `_rss_now_gb()` is in the module with
+                             # a docstring saying why.* **BE 62.**
+  SKIP_WORKTREE_IS_TWO_SIXTY_FIVE_OF_TWO_SIXTY_FIVE: THREE_OF_FIVE_RELINKED
+                             # CHECKED 2026-09-06T11:57:50Z: **`wt-be` 265 S of 265, `wt-rev` 265 S,
+                             # `wt-da` 235 S -- every tracked file under `data/` carries the skip-worktree
+                             # bit in all three -- and `wt-da/data` is a SYMLINK now.** *Three of five
+                             # re-linked; `wt-de2` and `wt-de` remain directories, as ruled -- wt-de2 after
+                             # the run, wt-de while it is the frozen evidence.*
+  DA_S_RULE_IS_ONE_AND_IT_REFUSES_BY_NAME: STRICTER_THAN_DE_S_AND_BOTH_SAFE
+                             # RELAYED from R-624, 2026-09-06T11:57:50Z, with `RootRefused` located
+                             # by me in the new `da_root.py`. **From a worktree with `PM_DATA_ROOT` SET,
+                             # `_derived_dir()` returns the CANONICAL ledger's derived dir; UNSET,
+                             # `RootRefused` names the worktree as not the canonical ledger and REFUSES.**
+                             # *"DE's resolver ADMITS from a worktree by finding the ledger on its own;
+                             # DA's REFUSES -- both safe, DA's stricter."* **The bare `except` is narrowed
+                             # to `(ImportError, AttributeError)`, so a resolver whose RETURN SHAPE moves is
+                             # NAMED rather than swallowed** -- *the exact defect I drove two rounds ago.*
+                             # **And `da_book_verify` had been judging BE's receipt against a STALE COPY of
+                             # BE's code from a worktree.**
+  THE_SWEEP_MISREAD_BE_60_IN_BOTH_DIRECTIONS: PINNED_TO_FINDINGS_NOT_PROPERTIES
+                             # RELAYED from R-624, 2026-09-06T11:57:50Z. **DA's sweep reported BE's
+                             # delta budget as absent -- it was there under names the census did not know --
+                             # and reported the closure ABSENT because it lives in a SHARED `be_rule22.py`.**
+                             # ***Both checks were pinned to the FINDINGS that produced them rather than to
+                             # the PROPERTIES they test*** -- **DA's sixth and seventh instances of that
+                             # shape; disjunctions now.** *A checker written from a fix rather than from a
+                             # requirement is a checker that fails when the fix changes shape -- and it
+                             # fails in BOTH directions, missing the repair and inventing the gap.*
+  THE_DISCLOSURE_MUST_RIDE_IN_THE_KEY: A_TRUE_FACT_UNDER_A_MISLEADING_NAME
+                             # RELAYED from R-625(A) SS6, 2026-09-06T11:57:50Z. **The `.v2`'s
+                             # reconstruction is thorough and honest -- `reconstructed_after_the_fact`,
+                             # `run_head_recoverable_from_the_receipt: false`, "read from the landing
+                             # record, which is WEAKER and must not be read as a stamp",
+                             # `builder_commit b827ca2e…` digest-matched -- and it is ONE FIELD SHORT OF
+                             # SAFE: a consumer keying `producing_code.builder_commit` gets a commit that
+                             # MATCHES THE BYTES and is NOT the run's head.**
+                             # ***"Automated readers resolve FIELDS"*** -- so the fix is the disclosure IN
+                             # THE KEY (`builder_commit_RECONSTRUCTED`, or a leading `status`), **the
+                             # pattern BE already uses twice in the same receipt.** *And "NOT RECOVERABLE
+                             # alone would discard a true, useful fact" -- the reviewer defending the field
+                             # while rejecting its name.*
   RULE_22_IS_NOW_IN_ALL_THREE_PRODUCERS_AND_MY_OWN_CENSUS_CLOSES: ZERO_ZERO_ZERO_TO_TWO_TWO_TWO
                              # CHECKED 2026-09-06T11:52:30Z with the SAME grep I ran at round 157.
                              # **Then: `import_closure`/`_capture_closure` appeared ZERO times in
@@ -19803,6 +19875,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 168, 2026-09-06T11:57:50Z ------------------------------
+  I_RESOLVED_MY_OWN_AMBIGUITY_ON_EVIDENCE_THAT_COULD_NOT_DISCRIMINATE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T11:57:50Z
+    said: >-
+      at round 166 I measured wt-rev/data as a directory at 11:47:17Z with mtime
+      11:47:15Z and offered two readings -- the restore had not yet reached it, or a
+      refresh re-materialised it inside the minute -- and at that round's commit time I
+      saw a symlink and concluded the first. REV 59 section 8 records that the
+      coordinator's 11:46Z symlink was destroyed by its own checkout --detach at
+      11:47:14Z: the second was right. A symlink existing at 11:50Z is consistent with
+      both stories and cannot discriminate; the discriminating fact was already in the
+      entry I had swept that round, since a restore at 11:46Z followed by a directory
+      at 11:47:17Z can only mean destruction in between.
+  THE_SPARSE_CHECKOUT_MECHANISM_I_RECORDED_WAS_TRIED_AND_REJECTED:
+    prov: CHECKED
+    artifact: scripts/wt_refresh.sh
+    as_of: 2026-09-06T11:57:50Z
+    said: >-
+      the script now begins with sparse-checkout disable and its header states
+      "Sparse-checkout does not help: under it git ignores update-index
+      --skip-worktree." At round 167's commit time I recorded the sparse-checkout rule
+      as the fix, accurately for the bytes then on disk; it was tried and rejected at
+      the machine within minutes and the landed refresh is a different mechanism.
+  THE_REFRESH_IS_FIVE_STEPS_AND_A_REFUSAL:
+    prov: CHECKED
+    artifact: scripts/wt_refresh.sh
+    as_of: 2026-09-06T11:57:50Z
+    said: >-
+      line by line: sparse-checkout disable; [ -L "$WT/data" ] && rm "$WT/data" ("drop
+      the symlink so the checkout cannot write through it"); the checkout; ls-files data
+      | xargs update-index --skip-worktree ("R-554, covering the new ones"); rm -rf plus
+      ln -s the ledger (R-553); and a verify that refuses with exit 2 unless readlink -f
+      equals the ledger, with a report line printing the skip-worktree count.
+  BOTH_TERMS_OF_THE_GROWTH_COME_FROM_THE_HIGH_WATER:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T11:57:50Z
+    said: >-
+      self.baseline_gb = _rss_gb() at :507 and peak = _rss_gb(), both the ru_maxrss
+      high-water, with growth_gb = peak - baseline and within_budget = growth_gb <= b.
+      A second _Stages in the same process starts from a baseline the first already
+      raised, so growth reads about zero and the budget cannot fire; production is safe
+      today because there is one build per process, and BE's known-bads hide it by
+      hand-setting baseline_gb = 0.0, testing the arithmetic rather than the instrument.
+      BE 62.
+  SKIP_WORKTREE_IS_TWO_SIXTY_FIVE_OF_TWO_SIXTY_FIVE:
+    prov: CHECKED
+    artifact: scripts/wt_refresh.sh
+    as_of: 2026-09-06T11:57:50Z
+    said: >-
+      wt-be 265 S of 265, wt-rev 265 S, wt-da 235 S -- every tracked file under data/
+      carries the skip-worktree bit in all three -- and wt-da/data is a symlink now.
+      Three of five re-linked; wt-de2 and wt-de remain directories as ruled.
+  DA_S_RULE_IS_ONE_AND_IT_REFUSES_BY_NAME:
+    prov: RELAYED
+    from: R-624
+    as_of: 2026-09-06T11:57:50Z
+  THE_SWEEP_MISREAD_BE_60_IN_BOTH_DIRECTIONS:
+    prov: RELAYED
+    from: R-624
+    as_of: 2026-09-06T11:57:50Z
+  THE_DISCLOSURE_MUST_RIDE_IN_THE_KEY:
+    prov: RELAYED
+    from: R-625(A)
+    as_of: 2026-09-06T11:57:50Z
   # --- MEM round 167, 2026-09-06T11:52:30Z ------------------------------
   RULE_22_IS_NOW_IN_ALL_THREE_PRODUCERS_AND_MY_OWN_CENSUS_CLOSES:
     prov: CHECKED

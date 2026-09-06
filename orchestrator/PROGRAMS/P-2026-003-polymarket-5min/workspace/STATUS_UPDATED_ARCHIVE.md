@@ -12617,3 +12617,90 @@ directions.
   fortieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 150 — archived 2026-09-06T11:57:50Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 168 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:38:40Z (MEM ROUND 165 -- R-621 AND REV 57'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS A SWALLOWED EXCEPTION THREE LINES BELOW THE SENTENCE DENYING IT.
+  (1) **DA'S SECOND RULE IS AN `except`, NOT A SECOND IMPLEMENTATION.** At
+  `_derived_dir()` (:2685): **`try: import de_data_root as BDR; return
+  Path(BDR.resolve()) / …` -- `except Exception: return HERE.parents[1] / …`.** *So DA
+  DOES import DE's resolver; the intended path IS canonical, and the file-relative
+  rule is the EXCEPT BRANCH.* ***And the docstring reads "through the programme's ONE
+  data-root resolver -- imported, NEVER A SECOND IMPLEMENTATION of 'where is the
+  ledger'" -- while the `except` three lines below IS one.*** **The engine is a bare
+  `except Exception` turning a failure into a PLAUSIBLE WRONG ANSWER.** *Whether the
+  reviewer's drive raised in the try or resolved to the worktree root cannot be told
+  statically -- DA 80's to determine.* ROUTED.
+  (2) **AND THE RISK IS NOT THE ENVIRONMENT VARIABLE.** Driven by the reviewer: **DE's
+  resolver from `wt-rev` with `PM_DATA_ROOT` UNSET -> the canonical
+  `/home/yuqing/ctaNew/data`, ADMITS; DA's `_derived_dir()` from `wt-rev` with the
+  variable SET -> the worktree's partial ledger, the 09-04 book INVISIBLE.** ***"Two
+  rules for one root, one of them silently PARTIAL"*** -- **newly load-bearing because
+  the read gate COUNTS SEALED RECEIPTS AT A ROOT**, and a partial ledger does not
+  error: it returns a smaller, plausible answer the gate's arithmetic then runs on.
+  *(My round-163 flag carried BE's "one unset env" mechanism as RELAYED; this is its
+  correction, and the provenance mark is why the correction lands on the claim rather
+  than on the record.)*
+  (3) **ALL FIVE WORKTREES' `data/` ARE DIRECTORIES -- I COUNTED THEM:** **wt-be 255
+  tracked files, wt-da 235, wt-de 221, wt-de2 257, wt-rev 257**, *my counts matching
+  the coordinator's to the file.* **A rule that says "MUST be a top-level symlink" is
+  violated in all five places it applies** -- *and invisibly, because a materialised
+  `data/` looks exactly like the real one until you ask what is MISSING.* **The
+  mechanism is the refresh itself: `checkout --detach origin/mm-research`
+  re-materialises `data/` whenever a landed commit adds a tracked data path the
+  `skip-worktree` bits do not cover.** *The repair is sequenced against running work --
+  never `wt-de2` while DE 93 runs; `wt-de` stays FROZEN EVIDENCE.*
+  (4) **THE BIGGER DAY PEAKED LOWER, AND THE REVIEWER NAMED IT:**
+  `asm_peak_gb_PUBLISHED` **5.317 for 09-03, 4.913 for 09-04** -- with 09-04 carrying
+  **14 % more data**. ***A day that grew and peaked lower is exactly the kind of number
+  that gets passed over as good news.*** *The reading -- the chunking (48 chunks of 6
+  windows) holding the working set flat while the day grew -- is marked **AGREED AS A
+  READING, NOT DRIVEN**, with "the receipt should say which".* **The discipline is not
+  suspicion; it is refusing to let a favourable number pass unexamined.**
+  (5) **THE GO IS CONFIRMED BY A CENSUS, NOT A SPOT CHECK:** every other
+  `wrapper_observed` takes an INJECTED scratch lock, and the two that read the AMBIENT
+  lock (5905, 6244) **assert SHAPE, NOT STATE** -- so "does anything left refuse a
+  wrapped real run that a standalone battery cannot see?" is answered **No** by
+  enumeration over the whole battery. ***The difference between "we fixed the
+  instance" and "we counted the class".***
+  (6) **THE BOOK STANDS, AND THE REASON IT STANDS IS CHECKABLE:** the digest
+  reproduced; **the BYTES resolve and the POINTER does not** (the `.v3` f-string ->
+  BE 60); the population, statuses and set equality as R1's precondition; every stage
+  inside budget (A0 2.307 / A1 3.701 / A2-A4 4.913 GB; wall 2,379.8 s with **5.7 s
+  unattributed overhead**); `reasons_account_for_the_count: false`. ***"Two disclosed
+  defects that cannot certify anything false" is a stronger claim than "no defects
+  found", and it is the only one the evidence supports.***
+  (7) **AND THE RUN IS AT NINE MINUTES WITH ITS PEAK UNMOVED:** `de93smoke.scope`
+  active, pid 3282335 at **556 s**, RSS **752,440 KiB**, `MemoryPeak` **2,553,352,192
+  -- unchanged since 11:31Z**. *The S1 book load set the peak and nothing since has
+  approached it* -- **the first real day on which the growth-budget's per-stage delta
+  series exists at all.**
+  **AT COMMIT TIME, 2026-09-06T11:41:10Z: DA 80 LANDED (`762102e`) AND THE `except`
+  I FLAGGED IS ALREADY GONE.** *I re-read the same lines: `_derived_dir()` now carries
+  a comment block ending* ***"The read gate COUNTS SEALED RECEIPTS AT A ROOT, so a
+  smaller plausible ledger reads as a pass. Two seats resolving one root by two rules
+  is the defect; this follows the canonical rule and REFUSES BY NAME when the root is
+  not the ledger."*** **So (1) stands as HISTORY at its as-of, and the flag word "DA's
+  resolver HAZARD-OPEN" is true as dispatched and closed -- in FOUR of DA's own
+  modules -- by the time it commits.**
+  ***And the fix's comment states the CONSEQUENCE the code could not have known:***
+  *that the gate counts receipts at a root, so the wrong root reads as a pass* --
+  **the finding travelling from the reviewer to the code as a SENTENCE, not just as a
+  patch.** *Also landed: the 09-03 BOOK TIER ran (set equality holds, 297,379 keys
+  both heads), and the 09-04 tier REFUSED BY RULE 20 -- the re-run holds the lock,
+  exactly as I measured.*
+  **FLAG WORDS: the 09-04 book STANDS (REV 57); the re-run RUNNING-UNDER-GO (second
+  launch, ≈12:55Z); the worktree symlinks DRIFTED-RESTORE-PENDING (all five, counted);
+  DA's resolver HAZARD-OPEN (DA 80).**
+  MEASURED BEFORE THIS SENTENCE: flags 975 -> 983, flag_provenance 520 -> 528,
+  tasks 19; **322 CHECKED**, 206 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
+```

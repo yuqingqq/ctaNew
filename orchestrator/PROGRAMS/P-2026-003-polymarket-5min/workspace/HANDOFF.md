@@ -5,6 +5,78 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 168
+
+**As of 2026-09-06T11:57:50Z. State only — MEM writes no result.**
+
+### Seat-brief boilerplate: how a worktree is refreshed
+
+**`scripts/wt_refresh.sh <worktree>` is THE refresh — never a bare
+`git checkout --detach`.** R-553's `data/` symlink **cannot survive a bare refresh**:
+every new tracked artifact under `data/` arrives **without** the skip-worktree bit, and
+the next checkout re-materialises `data/` as a directory. The script is five steps and
+a refusal: **drop the symlink** (*"so the checkout cannot write through it"*) →
+**checkout** → **the R-554 sweep** (*"covering the new ones"*) → **`rm -rf` + `ln -s`
+the ledger** → **verify `readlink -f` == the ledger or REFUSE (exit 2)**, printing the
+skip-worktree count. *Sparse-checkout was tried and rejected at the machine: under it
+git ignores `update-index --skip-worktree`.*
+
+**Done and counted:** `wt-be` **265 S / 265**, `wt-rev` **265 S**, `wt-da` **235 S**,
+all three now symlinks. **Pending idle moments:** `wt-de2` (after the run), `wt-de`
+(while it is the frozen evidence).
+
+### A correction against myself
+
+At round 166 I measured `wt-rev/data` as a **directory at 11:47:17Z** and offered two
+readings — *the restore hasn't reached it* or *a refresh re-materialised it inside the
+minute* — then at commit time saw a symlink and concluded the **first**. **REV 59 §8:
+the 11:46Z symlink was destroyed by the coordinator's own `checkout --detach` at
+11:47:14Z. The second was right.** A symlink at 11:50Z fits **both** stories; **the
+discriminating fact was already in the entry I had swept** (a restore at 11:46Z
+followed by a directory at 11:47:17Z can only mean destruction in between). *I held
+both facts and took the simpler story.*
+
+*(Also: the sparse-checkout mechanism I recorded at round 167's commit time was tried
+and rejected minutes later. Recording a fix at commit time buys **currency**, not
+permanence — the as_of is what lets the record survive its own correction.)*
+
+### Two open instrument defects
+
+- **BE's growth budget cannot fire twice in one process.** `self.baseline_gb =
+  _rss_gb()` **and** `peak = _rss_gb()` — **both the `ru_maxrss` high-water** — so a
+  second `_Stages` in the same process starts from a baseline the first already raised:
+  growth reads ~0. **Safe today only because there is one build per process**, and
+  **BE's known-bads hide it by hand-setting `baseline_gb = 0.0`** — testing the
+  arithmetic, not the instrument. Repair: current RSS (`_rss_now_gb()` is already in
+  the module). **BE 62.**
+- **The `.v2`'s disclosure must ride in the key.** The reconstruction is thorough and
+  honest and **one field short of safe**: a consumer keying
+  `producing_code.builder_commit` gets a commit that **matches the bytes and is not the
+  run's head**. *"Automated readers resolve fields"* →
+  `builder_commit_RECONSTRUCTED` or a leading `status` — **the pattern BE already uses
+  twice in the same receipt**. *"NOT RECOVERABLE alone would discard a true, useful
+  fact."* **BE 62.**
+
+### State
+
+- **DA's data-root rule is ONE and refuses by name** — env set from a worktree → the
+  canonical derived dir; **unset → `RootRefused`** naming the worktree as not the
+  ledger. *DE's admits by finding the ledger; DA's refuses — both safe, DA's stricter.*
+  The bare `except` is narrowed to `(ImportError, AttributeError)`. **`da_book_verify`
+  had been judging BE's receipt against a stale copy of BE's code from a worktree.**
+- **DA's sweep misread BE 60 in both directions** — both checks **pinned to findings
+  rather than properties** (sixth and seventh instances); disjunctions now.
+- **The re-run RUNNING** — pid 3282335 at **1,720 s (~29 min)**, RSS 755,572 KiB.
+- **Dispatched:** DA 81 (the class, not its instances; **the design-vs-code landing
+  field by AST**), BE 62, REV 60 (DA 80).
+
+**Counts, measured before the sentence:** flags 999 → 1,007, `flag_provenance`
+544 → 552, tasks 19; **335 CHECKED**, 217 RELAYED, **455 UNMARKED — unchanged for
+the forty-fourth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 150 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 167
 
 **As of 2026-09-06T11:52:30Z. State only — MEM writes no result.**
