@@ -5,6 +5,93 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 157
+
+**As of 2026-09-06T10:40:10Z. State only — MEM writes no result.**
+
+### The 09-04 book is BUILDING — and its input pin hashes its own input
+
+**`be59book.scope` active/running**, pid 3221534, `be_daybook_build.py --day 20260904`
+at **45 s** at my read — the **reviewed** builder at origin's tip, the held WIP
+`957cdf0` deliberately excluded (which is why the rule-22 stamp is absent from this
+book and is BE 60's first item).
+
+**The fresh BE's reload finding, confirmed at the call site:**
+
+```python
+inp = R.day_assembly_inputs(_hy,
+    tape={"path": str(_tp), "sha256": _sha_file(_tp)},
+    fragment={"path": str(_fp), "sha256": _sha_file(_fp)})
+```
+
+**The expected digests are computed from the very files being passed.** So the front
+door's "digests recomputed at read time" compares each file against **a hash of itself
+taken seconds earlier**: it can fail only if the file changes *between* the two reads,
+and **a replaced file is admitted** — the expected digest comes from the replacement.
+And the comment directly above claims *"DE 80's FRONT DOOR … the **verified pair**,
+digests recomputed at read time"* — **the comment states the property the call cannot
+have.** BE 60 reads them from the round-58 **receipts**.
+
+**But the missing check was performed by hand, twice, within the hour** — by the
+coordinator at R-612 and by me at round 156 (I hashed the 1,165,058,495-byte tape and
+matched `3727de65…`). **The book building now is not at risk in fact; what is missing
+is the automatic link.** The risk is **structural, not realized**, and the evidence
+covering *this* day lives outside the code. *A day covered by people rather than by
+its own builder is covered until the day nobody looks.*
+
+### The smoke's class is OPEN in BE's builder — one caller away
+
+`be_daybook_build.py:367` is `row["within_budget"] = (b is None or row["peak_gb"] <= b)`
+with `peak_gb = _rss_gb()` = **`ru_maxrss`**, against fixture budgets **flat at 0.7 GB**
+— the smoke's class exactly, **trigger absent** (no battery on the real path today).
+*This is the measurement I made by hand at round 153 and routed as a question; it is
+now DA's flag and BE 60's work.* **And DA's reading is sharper than mine was:** the
+real budgets are cumulative so the real path compensates — *"but a stage's `peak_gb`
+is then the whole run's high-water, not the stage's."* **A number can be safe to
+compare and still be mislabelled** — `A1_index.peak_gb` does not report A1's peak.
+
+**Also in the same file:** at `:665` the seam dict carries `"index": _index_call_made()`
+(**derived**, the round-145 fix) beside `"commit": "6f134a6"` (**typed**) — and that
+literal is the one whose mis-resolution cost R-601's whole episode. BE 60 computes it.
+
+### State
+
+- **At commit time (2026-09-06T10:42:41Z) DE 90 LANDED** (`353c3ad`) —
+  "REV 54's three items closed, plus the two seat-divergences and the
+  two-files-one-version defect found while closing them". **The re-run's gate advances:
+  the order is now REV 55 → GO.**
+- **The re-run: GO-PENDING-REV-55** (was GO-PENDING-DE-90-THEN-REV-55).
+- **Confirmed by my own grep:** `import_closure` / `_capture_closure` appear **zero**
+  times in all three BE producers — so the book building right now carries **no
+  closure stamp**, and "complete in one module of twelve" is checkable on BE's side
+  in one line.
+- **Rule 22, honest number: complete in ONE module of TWELVE.** 12 modules swept, 6
+  budget comparisons, **zero deltas**, one refusing scope mismatch, one battery on a
+  real path. BE's three producers carry **no import closure at all** — *"a landing to
+  any of them mid-run would be invisible in the receipt."*
+- **The sweep exempted its own owner:** DA's two runners lacked the closure (its
+  binding map had exempted them), and its E2-A smoke ran 84 minutes without a closure
+  stamp. **Four defects of DA's caught mid-round, two of which had already produced a
+  false answer** — the sweep read its *worktree* and flagged the DE runner for a
+  comparison DE had removed; an `id(src)` cache could quote the wrong file; **a
+  compound early exit excused the very call the sweep exists to find**; the census
+  counted assertion-only mismatches at zero while the rows carried one.
+- **DE's seam not yet closed:** `_main_day` still calls the in-process battery on a
+  real day at both revisions — **DE 90 (in flight) moves it before the day's work.**
+- **Dispatched:** BE 60 (L367's budget as growth per stage on both paths; the typed
+  `seam.commit` computed; the import closure + HEAD in all three producers, the held
+  WIP being the builder's first half; **plus the input-digest pin read from the
+  receipts**), DE 90, DA 78 (the closure in DA's two runners; the landing digest once
+  or asserted equal; the link definition's authority and a drift refusal). The sweep
+  re-runs against the tip once BE 60 and DE 90 land.
+
+**Counts, measured before the sentence:** flags 911 → 919, `flag_provenance`
+456 → 464, tasks 19; **283 CHECKED**, 181 RELAYED, **455 UNMARKED — unchanged for
+the thirty-third round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 139 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 156
 
 **As of 2026-09-06T10:34:17Z. State only — MEM writes no result.**

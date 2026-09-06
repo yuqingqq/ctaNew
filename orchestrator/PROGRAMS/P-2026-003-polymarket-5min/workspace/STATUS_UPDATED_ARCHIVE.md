@@ -11715,3 +11715,92 @@ directions.
   twenty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 139 — archived 2026-09-06T10:40:10Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 157 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:07:14Z (MEM ROUND 154 -- R-610, Q-DE-89 AND Q-DA-298 SWEPT. STATE
+  ONLY. A FIVE-ROUND THREAD CLOSES AND ONE OPEN ITEM GOES MOOT.
+  (1) **THE PIN CLOSES AT v10/v17, AND THE CLOSING EVIDENCE IS A HASH I COMPUTED.**
+  **Design v17's `parameters.path` is `…/params_v10.json` -- THE RIGHT FILE -- and its
+  `parameters.sha256` is `6ee79b5e…`, v10's ACTUAL digest. FORWARD RESOLVES: TRUE.**
+  Params v10 names the real `…design_v17.json` with `NOT_PINNED_HERE -- the pin runs
+  design -> params`, the one-way shape I established at round 150. ***Round 149 I
+  called it broken BOTH ways; round 150 I corrected myself; 151-152 it still named v2
+  at v15 and v16; here path and digest name the SAME FILE.*** **Five rounds, closed by
+  one line of arithmetic -- which is the argument for the pin having been a computed
+  field all along, and now it is.**
+  (2) **AND THE NEW BUDGET IS A DECLARATION THAT CANNOT DRIFT.**
+  `REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0`, with `REAL_DAY_BUDGET_DERIVATION` beside it
+  -- cap **8192**, BE's reference **2008**, observed **2426**, headroom **1500**,
+  declared **4000**, and ***`fraction_of_cap: 4000.0 / 8192.0` -- AN EXPRESSION***,
+  which I evaluate at **48.83 %**. **A derivation whose ratio is CODE cannot disagree
+  with its own numbers.** *It states its own negatives -- "a budget equal to the cap
+  is the cap with a second name; it can only fire once the kernel is already
+  reclaiming", and "that is a budget derived from the run it is meant to bound" -- and
+  the observed 2,426 MB is a CHECK on the derivation, never its source.*
+  (3) **AND THE CONTROL PROVES ITS OWN DISCRIMINATING POWER:** beside the admit-case
+  sits **`ok(_hw_after > _mp["growth_rss_mb"] + 100, …"same fixture, same
+  budget"…)`** -- ***the two measures must differ by at least 100 MB, so the control
+  cannot pass trivially on a cold process where high-water and growth are the same
+  number.*** **Rule 16 answered by CONSTRUCTION rather than by inspection** -- the
+  first instance in this programme where a control's discriminating power is itself a
+  checked predicate.
+  (4) **THE `.v2` IS MOOT, AND I MEASURED WHY:** `glob(p003_de_gate1_day_run_*20260903*)`
+  returns exactly **ONE** file -- the REFUSED record. ***There is no v1 to supersede;
+  the correction ruled in R-603 has nothing to correct, and the provenance problem it
+  existed to fix disappears with a clean re-run from a frozen worktree.*** **REMOVE
+  IT FROM EVERY OPEN LIST** -- *an item live for five rounds, now moot not because it
+  was fixed but because its artifact never existed.*
+  (5) **THE INSTRUMENT THAT WOULD HAVE CAUGHT IT WAS ALREADY THERE:** the budget
+  "fired at the end because it was checked ONCE, after S5 -- **the highwater series
+  had existed since DE 83 and nobody read it until the emit, so 84 minutes of draws
+  ran after the fact was already true**." *The same shape as my own round-151 miss,
+  where the systemd peak I quoted every round was the very quantity the budget was
+  compared against.* **Two more instances found by RUNNING: growth first measured on
+  the highwater (zero on a warm process, so the budget could never fire), and an old
+  check comparing the process peak that surfaced only because the round's own
+  inflation pushed it past 700.**
+  (6) **THE DE SEAT RESET AT 97 %, AND ITS HARVEST IS THE GO PROCEDURE** -- six
+  numbered steps, verbatim because none of it was in a file: the rehearsal READY with
+  `blocking: []`; run from **wt-de2**, landing NOTHING while it runs, because ***wt-de
+  is the frozen evidence of the refused run***; `flock -n` FIRST, and if held REFUSE
+  and report, never wait; the command from the rehearsal receipt's own
+  `THE_ONE_COMMAND` with `--unit=de90smoke`; before Enter -- unit unused, book digest
+  still `aad816d6…`, worktree clean (**a real day REFUSES on a dirty worktree at
+  import**), ***the output stamp from `date`, not typed***; ~85 min. *And the field
+  lists: what to report, and what must NOT be quoted -- noting that **a 09-03 receipt
+  from pre-v13 code would carry `sd_over_abs_mean` and still must not be quoted**.*
+  (7) **DA 76 MAKES THE LINK PAIR DA'S TOO** (52 + 32): ***a half-written link is NOT
+  "no link"*** -- it would make a botched supersession look like a day that ran twice
+  -- so `SUPERSESSION_TARGET_DIGEST_MISMATCH`; the landing record declared
+  `p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json` with **the day from the FIELD,
+  never the filename**; `matches` True ONLY in the MATCH state. *And DA's own find:
+  **two design picks sorted LEXICOGRAPHICALLY, so v9 came after v16** -- numeric now.*
+  **The same class as my round-145 "latest is not a citation": an ordering that looks
+  total and is not.**
+  **AT COMMIT TIME, 2026-09-06T10:10:12Z: R-611 LANDED (`a96854c`) -- REV 54 finds
+  R-608 holds on SEVEN OF EIGHT shapes and that ***DE's resolver CRASHES on a
+  bare-string `supersedes`***; DA 76 approved; **DE 90 is dispatched BEFORE the
+  re-run**, so the order is DE 90 -> review -> GO.
+  ***AND THE CRASH IS VISIBLE IN THE TWO LINES I SWEPT AT ROUND 152.*** I recorded
+  DE's `sup_of[p] = ((rec.get("supersedes") or {}).get("sha256"))` beside DA's
+  `elif isinstance(sup, str): ref = sup` and read them as a difference in HOW each
+  seat RESOLVES. **They are also a difference in what each seat SURVIVES: on a bare
+  string DA takes it as a path and DE RAISES** -- *I drove it just now:
+  `(s or {}).get("sha256")` on a `str` is `AttributeError: 'str' object has no
+  attribute 'get'`.* **I had the evidence and read only one of its two meanings; a
+  type mismatch does not disagree, it STOPS.** *Recorded unswept.*
+  **FLAG WORDS: the 09-03 smoke FIX-LANDED, RE-RUN-PENDING-REVIEW-THEN-GO; the DE
+  seat RELOADED; the `.v2` MOOT (removed from the open list); the 09-04 tape BUILDING
+  (`be58tape.scope`, measured active).**
+  MEASURED BEFORE THIS SENTENCE: flags 887 -> 895, flag_provenance 432 -> 440,
+  tasks 19; **267 CHECKED**, 173 RELAYED, **455 UNMARKED -- unchanged for the
+  thirtieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
+```

@@ -63,6 +63,75 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T10:40:10Z (MEM ROUND 157 -- R-613, Q-DA-299, Q-BE-59 AND THE FRESH BE'S
+  RELOAD FINDING SWEPT. STATE ONLY. THE FINDING IS A PIN THAT HASHES ITS OWN INPUT.
+  (1) **THE BUILDER HASHES THE FILES IT IS ABOUT TO USE AND CALLS THAT
+  VERIFICATION.** At the call site: **`inp = R.day_assembly_inputs(_hy, tape={"path":
+  str(_tp), "sha256": _sha_file(_tp)}, fragment={"path": str(_fp), "sha256":
+  _sha_file(_fp)})`** -- ***the expected digests are computed FROM THE VERY FILES
+  BEING PASSED.*** **So "digests recomputed at read time" compares each file against a
+  hash OF ITSELF taken seconds earlier: it can fail only if the file changes BETWEEN
+  the two reads, and a REPLACED file is admitted, because the expected digest comes
+  from the replacement.** *And the comment above it says "DE 80's FRONT DOOR … the
+  VERIFIED PAIR, digests recomputed at read time"* -- **the comment states the property
+  the call cannot have. Round 152's shape exactly: a comment is not a control.**
+  (2) **AND THE MISSING CHECK WAS PERFORMED BY HAND, TWICE, WITHIN THE HOUR** -- the
+  coordinator at R-612 and me at round 156, where I hashed the 1,165,058,495-byte tape
+  and matched `3727de65…`. ***So the book building right now is not at risk in FACT;
+  what is missing is the AUTOMATIC link.*** **The risk is STRUCTURAL, not REALIZED,
+  and the evidence covering this day lives OUTSIDE the code, in two independent manual
+  hashes.** *A day covered by people rather than by its own builder is covered until
+  the day nobody looks.* BE 60 reads the digests from the round-58 RECEIPTS.
+  (3) **AND ONE DICT CARRIES A DERIVED FIELD AND A TYPED ONE:** at :665, `"seam":
+  {"commit": "6f134a6", …, "index": _index_call_made(), …}` -- ***`index` DERIVED from
+  the module's own source (the round-145 fix), `commit` a TYPED STRING*** -- **and the
+  typed value is `6f134a6`, the exact literal whose mis-resolution cost R-601's entire
+  episode.** *One field cannot drift; the field beside it is the one that already did.*
+  (4) **L367 IS THE FLAGGED COMPARISON, AND THE TRIGGER IS STILL ABSENT:**
+  `row["within_budget"] = (b is None or row["peak_gb"] <= b)` with `peak_gb =
+  _rss_gb()` = `ru_maxrss`, against fixture budgets **flat at 0.7 GB** -- the smoke's
+  class exactly, no battery on the real path today. ***This is the measurement I made
+  by hand at round 153 and routed as a question for BE 59; it is now DA's flag and BE
+  60's work*** -- **a MEM measurement became another seat's dispatched item without
+  either of us relaying the other.**
+  (5) **AND DA'S READING IS SHARPER THAN MINE WAS:** the real budgets are cumulative
+  by declaration so the real path compensates -- ***"but a stage's `peak_gb` is then
+  the WHOLE RUN'S high-water, not the stage's."*** *I checked monotonicity and
+  concluded the comparison was coherent; DA adds that coherent is not MEANINGFUL --
+  the field named `A1_index.peak_gb` does not report A1's peak.* **A number can be
+  safe to compare and still be mislabelled.**
+  (6) **THE SWEEP EXEMPTED ITS OWN OWNER:** DA's two runners lacked the closure --
+  *its binding map had EXEMPTED them* -- and its E2-A smoke ran 84 minutes without a
+  closure stamp. **Four defects of DA's caught mid-round, TWO of which had already
+  produced a false answer**: the sweep read its WORKTREE and flagged the DE runner for
+  a comparison DE had removed (R-601's class through a THIRD door); an `id(src)` cache
+  could quote the wrong file; ***a compound early exit EXCUSED THE VERY CALL THE SWEEP
+  EXISTS TO FIND and reported the runner CLEAN***; and the census counted
+  assertion-only mismatches at zero while the rows carried one.
+  (7) **THE HONEST NUMBER FOR RULE 22: COMPLETE IN ONE MODULE OF TWELVE.** 12 modules
+  swept, 6 budget comparisons, **ZERO deltas**, one refusing scope mismatch, one
+  battery on a real path. *BE's three producers carry no import closure at all: "a
+  landing to any of them mid-run would be INVISIBLE in the receipt."* ***A rule
+  amended two hours ago is implemented in one twelfth of the modules it governs*** --
+  **which is worth a number rather than an adjective.**
+  **AT COMMIT TIME, 2026-09-06T10:42:41Z: DE 90 LANDED (`353c3ad`, Q-DE-90) --
+  "REV 54's three items closed, plus the two seat-divergences and the
+  two-files-one-version defect found while closing them".** ***So the re-run's gate
+  advances: the order is now REV 55 -> GO, with DE 90 behind it.*** *Recorded unswept;
+  the row's detail is next round's sweep.*
+  **AND I CONFIRMED THE CENSUS CLAIM MYSELF:** `import_closure`/`_capture_closure`
+  appear **ZERO** times in `be_daybook_build.py`, `be_gate1_fragment.py` and
+  `be_gate1_state_tape.py` -- *so "rule 22 complete in ONE module of TWELVE" is
+  checkable on BE's side by one grep, and the book building right now carries no
+  closure stamp.*
+  **FLAG WORDS: the 09-04 book BUILDING (`be59book.scope`, BE 59 -- I measure pid
+  3221534 at 45 s, the REVIEWED builder, the held WIP excluded); the smoke's class
+  OPEN-IN-BE's-BUILDER (one caller away, BE 60); the re-run
+  GO-PENDING-DE-90-THEN-REV-55.**
+  MEASURED BEFORE THIS SENTENCE: flags 911 -> 919, flag_provenance 456 -> 464,
+  tasks 19; **283 CHECKED**, 181 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T10:34:17Z (MEM ROUND 156 -- R-612 AND Q-BE-58 SWEPT. STATE ONLY.
   THE FINDING IS A NUMBER STORED AS A STRING, AND MY OWN PROBE FELL INTO IT FIRST.
   (1) **THE SCOPE OBJECT MIXES STRINGS AND INTS ALONG THE LINE OF WHO PARSED.** In
@@ -201,85 +270,6 @@ updated: >-
   tasks 19; **271 CHECKED**, 177 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T10:07:14Z (MEM ROUND 154 -- R-610, Q-DE-89 AND Q-DA-298 SWEPT. STATE
-  ONLY. A FIVE-ROUND THREAD CLOSES AND ONE OPEN ITEM GOES MOOT.
-  (1) **THE PIN CLOSES AT v10/v17, AND THE CLOSING EVIDENCE IS A HASH I COMPUTED.**
-  **Design v17's `parameters.path` is `…/params_v10.json` -- THE RIGHT FILE -- and its
-  `parameters.sha256` is `6ee79b5e…`, v10's ACTUAL digest. FORWARD RESOLVES: TRUE.**
-  Params v10 names the real `…design_v17.json` with `NOT_PINNED_HERE -- the pin runs
-  design -> params`, the one-way shape I established at round 150. ***Round 149 I
-  called it broken BOTH ways; round 150 I corrected myself; 151-152 it still named v2
-  at v15 and v16; here path and digest name the SAME FILE.*** **Five rounds, closed by
-  one line of arithmetic -- which is the argument for the pin having been a computed
-  field all along, and now it is.**
-  (2) **AND THE NEW BUDGET IS A DECLARATION THAT CANNOT DRIFT.**
-  `REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0`, with `REAL_DAY_BUDGET_DERIVATION` beside it
-  -- cap **8192**, BE's reference **2008**, observed **2426**, headroom **1500**,
-  declared **4000**, and ***`fraction_of_cap: 4000.0 / 8192.0` -- AN EXPRESSION***,
-  which I evaluate at **48.83 %**. **A derivation whose ratio is CODE cannot disagree
-  with its own numbers.** *It states its own negatives -- "a budget equal to the cap
-  is the cap with a second name; it can only fire once the kernel is already
-  reclaiming", and "that is a budget derived from the run it is meant to bound" -- and
-  the observed 2,426 MB is a CHECK on the derivation, never its source.*
-  (3) **AND THE CONTROL PROVES ITS OWN DISCRIMINATING POWER:** beside the admit-case
-  sits **`ok(_hw_after > _mp["growth_rss_mb"] + 100, …"same fixture, same
-  budget"…)`** -- ***the two measures must differ by at least 100 MB, so the control
-  cannot pass trivially on a cold process where high-water and growth are the same
-  number.*** **Rule 16 answered by CONSTRUCTION rather than by inspection** -- the
-  first instance in this programme where a control's discriminating power is itself a
-  checked predicate.
-  (4) **THE `.v2` IS MOOT, AND I MEASURED WHY:** `glob(p003_de_gate1_day_run_*20260903*)`
-  returns exactly **ONE** file -- the REFUSED record. ***There is no v1 to supersede;
-  the correction ruled in R-603 has nothing to correct, and the provenance problem it
-  existed to fix disappears with a clean re-run from a frozen worktree.*** **REMOVE
-  IT FROM EVERY OPEN LIST** -- *an item live for five rounds, now moot not because it
-  was fixed but because its artifact never existed.*
-  (5) **THE INSTRUMENT THAT WOULD HAVE CAUGHT IT WAS ALREADY THERE:** the budget
-  "fired at the end because it was checked ONCE, after S5 -- **the highwater series
-  had existed since DE 83 and nobody read it until the emit, so 84 minutes of draws
-  ran after the fact was already true**." *The same shape as my own round-151 miss,
-  where the systemd peak I quoted every round was the very quantity the budget was
-  compared against.* **Two more instances found by RUNNING: growth first measured on
-  the highwater (zero on a warm process, so the budget could never fire), and an old
-  check comparing the process peak that surfaced only because the round's own
-  inflation pushed it past 700.**
-  (6) **THE DE SEAT RESET AT 97 %, AND ITS HARVEST IS THE GO PROCEDURE** -- six
-  numbered steps, verbatim because none of it was in a file: the rehearsal READY with
-  `blocking: []`; run from **wt-de2**, landing NOTHING while it runs, because ***wt-de
-  is the frozen evidence of the refused run***; `flock -n` FIRST, and if held REFUSE
-  and report, never wait; the command from the rehearsal receipt's own
-  `THE_ONE_COMMAND` with `--unit=de90smoke`; before Enter -- unit unused, book digest
-  still `aad816d6…`, worktree clean (**a real day REFUSES on a dirty worktree at
-  import**), ***the output stamp from `date`, not typed***; ~85 min. *And the field
-  lists: what to report, and what must NOT be quoted -- noting that **a 09-03 receipt
-  from pre-v13 code would carry `sd_over_abs_mean` and still must not be quoted**.*
-  (7) **DA 76 MAKES THE LINK PAIR DA'S TOO** (52 + 32): ***a half-written link is NOT
-  "no link"*** -- it would make a botched supersession look like a day that ran twice
-  -- so `SUPERSESSION_TARGET_DIGEST_MISMATCH`; the landing record declared
-  `p003_da_gate1_pre_read_<YYYYMMDD>__<clock>.json` with **the day from the FIELD,
-  never the filename**; `matches` True ONLY in the MATCH state. *And DA's own find:
-  **two design picks sorted LEXICOGRAPHICALLY, so v9 came after v16** -- numeric now.*
-  **The same class as my round-145 "latest is not a citation": an ordering that looks
-  total and is not.**
-  **AT COMMIT TIME, 2026-09-06T10:10:12Z: R-611 LANDED (`a96854c`) -- REV 54 finds
-  R-608 holds on SEVEN OF EIGHT shapes and that ***DE's resolver CRASHES on a
-  bare-string `supersedes`***; DA 76 approved; **DE 90 is dispatched BEFORE the
-  re-run**, so the order is DE 90 -> review -> GO.
-  ***AND THE CRASH IS VISIBLE IN THE TWO LINES I SWEPT AT ROUND 152.*** I recorded
-  DE's `sup_of[p] = ((rec.get("supersedes") or {}).get("sha256"))` beside DA's
-  `elif isinstance(sup, str): ref = sup` and read them as a difference in HOW each
-  seat RESOLVES. **They are also a difference in what each seat SURVIVES: on a bare
-  string DA takes it as a path and DE RAISES** -- *I drove it just now:
-  `(s or {}).get("sha256")` on a `str` is `AttributeError: 'str' object has no
-  attribute 'get'`.* **I had the evidence and read only one of its two meanings; a
-  type mismatch does not disagree, it STOPS.** *Recorded unswept.*
-  **FLAG WORDS: the 09-03 smoke FIX-LANDED, RE-RUN-PENDING-REVIEW-THEN-GO; the DE
-  seat RELOADED; the `.v2` MOOT (removed from the open list); the 09-04 tape BUILDING
-  (`be58tape.scope`, measured active).**
-  MEASURED BEFORE THIS SENTENCE: flags 887 -> 895, flag_provenance 432 -> 440,
-  tasks 19; **267 CHECKED**, 173 RELAYED, **455 UNMARKED -- unchanged for the
-  thirtieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
-  new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2952,6 +2942,92 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_BUILDER_HASHES_THE_FILES_IT_IS_ABOUT_TO_USE_AND_CALLS_THAT_VERIFICATION: SELF_REFERENTIAL_PIN
+                             # CHECKED 2026-09-06T10:40:10Z at the call site, and this is the fresh
+                             # BE's reload finding confirmed at the code. **`inp = R.day_assembly_inputs(_hy,
+                             # tape={"path": str(_tp), "sha256": _sha_file(_tp)}, fragment={"path":
+                             # str(_fp), "sha256": _sha_file(_fp)})`** -- ***the expected digests are
+                             # computed by `_sha_file()` FROM THE VERY FILES BEING PASSED.***
+                             # **So the front door's "digests recomputed at read time" compares each file
+                             # against a hash OF ITSELF taken seconds earlier: it can fail only if the file
+                             # changes BETWEEN the two reads, and a REPLACED file is admitted, because the
+                             # expected digest is derived from the replacement.**
+                             # *And the comment directly above it reads "DE 80's FRONT DOOR ... the VERIFIED
+                             # PAIR, digests recomputed at read time"* -- ***the comment states the property
+                             # the call cannot have.*** **Round 152's shape exactly: a comment is not a
+                             # control.** BE 60 reads them from the round-58 RECEIPTS instead.
+  AND_THE_MISSING_CHECK_WAS_PERFORMED_BY_HAND_TWICE_IN_THE_LAST_HOUR: STRUCTURAL_NOT_REALIZED
+                             # CHECKED 2026-09-06T10:40:10Z. **The 09-04 inputs WERE verified against
+                             # the round-58 receipts -- twice, by hand, within the hour: the coordinator at
+                             # R-612, and me at round 156, where I hashed the 1,165,058,495-byte tape myself
+                             # and matched `3727de65…`.**
+                             # ***So the book building right now is not at risk in FACT; what is missing is
+                             # the AUTOMATIC link.*** *The distinction is worth keeping in the state file:
+                             # the risk is STRUCTURAL, not REALIZED, and the evidence that covers this
+                             # particular day lives OUTSIDE the code, in two independent manual hashes.*
+                             # **A day covered by people rather than by its own builder is covered until the
+                             # day nobody looks.**
+  ONE_DICT_CARRIES_A_DERIVED_FIELD_AND_A_TYPED_ONE: SIX_F_ONE_THREE_FOUR_AGAIN
+                             # CHECKED 2026-09-06T10:40:10Z at `be_daybook_build.py:665`:
+                             # **`"seam": {"commit": "6f134a6", "front_door":
+                             # "de_phase4_diag_runner.day_assembly_inputs", "index": _index_call_made(), …}`**.
+                             # ***In ONE dict, `index` is DERIVED from the module's own source -- the fix I
+                             # swept at round 145 -- and `commit` is a TYPED STRING.***
+                             # **And the typed value is `6f134a6`: the exact literal whose mis-resolution
+                             # cost R-601's entire episode** (DA judging a receipt against DE's seam commit
+                             # because it was the only commit the receipt named). *One field cannot drift and
+                             # the field beside it is the one that already did.* BE 60 computes it.
+  L367_IS_THE_FLAGGED_COMPARISON_AND_THE_TRIGGER_IS_STILL_ABSENT: MY_ROUND_153_MEASUREMENT_NOW_A_FLAG
+                             # CHECKED 2026-09-06T10:40:10Z: `be_daybook_build.py:367` is
+                             # **`row["within_budget"] = (b is None or row["peak_gb"] <= b)`** with
+                             # `peak_gb = _rss_gb()` = `ru_maxrss`, against `_Stages(FIXTURE_STAGE_BUDGETS_GB
+                             # if fixture else STAGE_BUDGETS_GB)` -- **the five fixture budgets flat at 0.7
+                             # GB.** ***The smoke's class exactly, with the trigger absent: no battery runs
+                             # on the real path today.***
+                             # *This is the measurement I made by hand at round 153 and routed as a question
+                             # for BE 59 -- "will BE's budgets be DELTAS before BE needs the battery" -- now
+                             # carried as DA's flag and BE 60's work.* **A MEM measurement became another
+                             # seat's dispatched item without either of us relaying the other.**
+  BE_59_IS_RUNNING_AND_THE_BOOK_IS_BUILDING: MEASURED_AT_FORTY_FIVE_SECONDS
+                             # CHECKED 2026-09-06T10:40:10Z: **`be59book.scope` is `active / running`;
+                             # pid 3221534 is `/home/yuqing/pricer-sol/venv/bin/python3
+                             # live/pm_research/be_daybook_build.py --day 20260904` at 45 s.**
+                             # ***The 09-04 book is building with the REVIEWED builder at origin's tip*** --
+                             # *the held WIP `957cdf0` deliberately excluded, which is why the rule-22 stamp
+                             # is absent from this book and is BE 60's first item.* **Expect ~2.0 / ~3.2 /
+                             # ~5.3 GB at the stages and `BookRefused` at any stage over budget.**
+  THE_REAL_PATH_COMPENSATES_AND_THE_STAGE_NUMBER_STILL_MEANS_SOMETHING_ELSE: A_SHARPER_READING_THAN_MINE
+                             # RELAYED from R-613(A), 2026-09-06T10:40:10Z. **DA: the real budgets are
+                             # CUMULATIVE BY DECLARATION (3.0 / 6.5 / 7.5 / 7.5 / 7.5) so the real path
+                             # COMPENSATES -- *"but a stage's `peak_gb` is then the WHOLE RUN'S high-water,
+                             # not the stage's."***
+                             # ***That is sharper than what I wrote at round 153.*** *I checked that the
+                             # budgets were monotone and concluded the comparison was coherent; DA adds that
+                             # coherent is not the same as MEANINGFUL -- the field named `A1_index.peak_gb`
+                             # does not report A1's peak.* **A number can be safe to compare and still be
+                             # mislabelled, and only the second reading tells you what the receipt says.**
+  DA_EXEMPTED_ITS_OWN_TWO_RUNNERS_AND_CAUGHT_FOUR_OF_ITS_OWN_DEFECTS: TWO_HAD_ALREADY_ANSWERED_FALSELY
+                             # RELAYED from R-613(A), 2026-09-06T10:40:10Z. **DA's own two runners
+                             # lacked the closure -- *its binding map had EXEMPTED them* -- and its E2-A
+                             # smoke ran 84 minutes without a closure stamp.** *Four defects of DA's caught
+                             # mid-round, **two of which had already produced a false answer**: the sweep
+                             # read its WORKTREE and flagged the DE runner for a comparison DE had removed
+                             # (R-601's class through a THIRD door); a source cache keyed on `id(src)` could
+                             # quote the wrong file; a compound early exit EXCUSED THE VERY CALL THE SWEEP
+                             # EXISTS TO FIND and reported the runner CLEAN; and the census counted
+                             # assertion-only mismatches at zero while the rows carried one.*
+                             # ***An instrument that exempts its own owner is the sweep's oldest failure
+                             # mode, and it appeared in the sweep written to find that failure mode.***
+  RULE_22_IS_COMPLETE_IN_ONE_MODULE_OF_TWELVE: THE_CENSUS_NUMBER
+                             # RELAYED from Q-DA-299 / R-613, 2026-09-06T10:40:10Z. **12 modules
+                             # swept, 6 budget comparisons, ZERO deltas, ONE refusing scope mismatch, ONE
+                             # battery on a real path -- and rule 22 COMPLETE IN ONE MODULE OF TWELVE**
+                             # (DE's runner, with `_capture_closure()` and `_head_state()` at module level).
+                             # *BE's three producers carry no import closure at all: "a landing to any of
+                             # them mid-run would be INVISIBLE in the receipt."*
+                             # ***A rule amended two hours ago is implemented in one twelfth of the modules
+                             # it governs*** -- **which is the honest state of it, and worth a number rather
+                             # than an adjective.**
   THE_SCOPE_OBJECT_MIXES_STRINGS_AND_INTS_ALONG_THE_LINE_OF_WHO_PARSED: A_NUMBER_THAT_COMPARES_FALSE
                              # CHECKED 2026-09-06T10:34:17Z at the tape receipts, and this is the
                              # round's finding as I read it. **In `scope`, `current_bytes`, `max_bytes` and
@@ -18925,6 +19001,74 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 157, 2026-09-06T10:40:10Z ------------------------------
+  THE_BUILDER_HASHES_THE_FILES_IT_IS_ABOUT_TO_USE_AND_CALLS_THAT_VERIFICATION:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:40:10Z
+    said: >-
+      at the call site, inp = R.day_assembly_inputs(_hy, tape={"path": str(_tp),
+      "sha256": _sha_file(_tp)}, fragment={"path": str(_fp), "sha256":
+      _sha_file(_fp)}) -- the expected digests are computed by _sha_file() from the
+      very files being passed, so the front door's "digests recomputed at read time"
+      compares each file against a hash of itself taken seconds earlier and a replaced
+      file is admitted. The comment directly above claims "the VERIFIED PAIR, digests
+      recomputed at read time": the comment states the property the call cannot have.
+      BE 60 reads them from the round-58 receipts instead.
+  AND_THE_MISSING_CHECK_WAS_PERFORMED_BY_HAND_TWICE_IN_THE_LAST_HOUR:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/phase2_state_tape_gate1_20260904_btc.json
+    as_of: 2026-09-06T10:40:10Z
+    said: >-
+      the 09-04 inputs were verified against the round-58 receipts twice within the
+      hour -- by the coordinator at R-612 and by me at round 156, where I hashed the
+      1,165,058,495-byte tape myself and matched 3727de65.... So the book building now
+      is not at risk in fact; what is missing is the automatic link. The risk is
+      structural, not realized, and the evidence covering this day lives outside the
+      code in two independent manual hashes.
+  ONE_DICT_CARRIES_A_DERIVED_FIELD_AND_A_TYPED_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:40:10Z
+    said: >-
+      at :665 the seam dict is {"commit": "6f134a6", "front_door":
+      "de_phase4_diag_runner.day_assembly_inputs", "index": _index_call_made(), ...}
+      -- index derived from the module's own source (the round-145 fix) and commit a
+      typed string, and the typed value is 6f134a6, the exact literal whose
+      mis-resolution cost R-601's episode. BE 60 computes it.
+  L367_IS_THE_FLAGGED_COMPARISON_AND_THE_TRIGGER_IS_STILL_ABSENT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:40:10Z
+    said: >-
+      :367 is row["within_budget"] = (b is None or row["peak_gb"] <= b) with peak_gb =
+      _rss_gb() = ru_maxrss, against _Stages(FIXTURE_STAGE_BUDGETS_GB if fixture else
+      STAGE_BUDGETS_GB) whose five fixture budgets are flat at 0.7 GB -- the smoke's
+      class exactly, with the trigger absent because no battery runs on the real path
+      today. This is the measurement I made by hand at round 153 and routed as a
+      question for BE 59; it is now DA's flag and BE 60's work.
+  BE_59_IS_RUNNING_AND_THE_BOOK_IS_BUILDING:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:40:10Z
+    said: >-
+      be59book.scope is active/running and pid 3221534 is the venv python running
+      be_daybook_build.py --day 20260904 at 45 s. The book is building with the
+      reviewed builder at origin's tip, the held WIP 957cdf0 deliberately excluded,
+      which is why the rule-22 stamp is absent from this book and is BE 60's first
+      item.
+  THE_REAL_PATH_COMPENSATES_AND_THE_STAGE_NUMBER_STILL_MEANS_SOMETHING_ELSE:
+    prov: RELAYED
+    from: R-613(A)
+    as_of: 2026-09-06T10:40:10Z
+  DA_EXEMPTED_ITS_OWN_TWO_RUNNERS_AND_CAUGHT_FOUR_OF_ITS_OWN_DEFECTS:
+    prov: RELAYED
+    from: R-613(A)
+    as_of: 2026-09-06T10:40:10Z
+  RULE_22_IS_COMPLETE_IN_ONE_MODULE_OF_TWELVE:
+    prov: RELAYED
+    from: R-613
+    as_of: 2026-09-06T10:40:10Z
   # --- MEM round 156, 2026-09-06T10:34:17Z ------------------------------
   THE_SCOPE_OBJECT_MIXES_STRINGS_AND_INTS_ALONG_THE_LINE_OF_WHO_PARSED:
     prov: CHECKED
