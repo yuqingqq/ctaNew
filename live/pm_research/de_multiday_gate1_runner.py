@@ -47,14 +47,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 159
+EXPECTED_CHECKS = 167
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v5.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v6.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v4.json")
+                        "de_multiday_gate1_params_v5.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -72,11 +72,74 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 82
+DAY_PATH_CHECKS = 85
+
+
+#: R-603 / REV 49 §0 -- THE DIGEST OF THE BYTES THAT ARE RUNNING, taken
+#: at IMPORT, before any work. `_main_day` stamped `producing_code_sha256`
+#: by a FRESH read of `__file__` AFTER the day was computed, so a file
+#: replaced mid-run made the receipt name code that DID NOT RUN -- and
+#: `producing_code_is_the_committed_bytes` PASSED, because the replacement
+#: was committed. The field built to catch exactly that class certified the
+#: wrong bytes.
+#:
+#: It happened to me: DE 85 committed this file at 08:35:20Z while the
+#: 09-03 smoke was executing it from the same worktree. Python had the
+#: module in memory, so the RUN was unaffected; the RECEIPT was not.
+try:
+    LAUNCH_SOURCE_SHA256 = hashlib.sha256(
+        Path(__file__).resolve().read_bytes()).hexdigest()
+except OSError:                       # pragma: no cover - unreadable source
+    LAUNCH_SOURCE_SHA256 = None
+LAUNCH_TIME_UTC = datetime.datetime.now(
+    datetime.timezone.utc).isoformat()
 
 
 class RunnerRefused(RuntimeError):
     """The run cannot proceed honestly on the inputs given."""
+
+
+def source_identity_at_launch() -> dict:
+    """THE BYTES THAT RAN, and whether the file still holds them.
+
+    A receipt must name the code that PRODUCED it. Reading `__file__` at
+    emit names whatever is on disk THEN, which is a different fact the
+    moment anything lands mid-run."""
+    me = Path(__file__).resolve()
+    try:
+        now = hashlib.sha256(me.read_bytes()).hexdigest()
+    except OSError:
+        now = None
+    return {
+        "producing_code": me.name,
+        "producing_code_sha256": LAUNCH_SOURCE_SHA256,
+        "digest_taken_at": "MODULE IMPORT, before any work",
+        "launch_time_utc": LAUNCH_TIME_UTC,
+        "on_disk_sha256_at_emit": now,
+        "source_unchanged_during_the_run": now == LAUNCH_SOURCE_SHA256,
+    }
+
+
+def assert_source_unchanged(where: str) -> dict:
+    """REFUSE THE EMIT if the file changed under this run.
+
+    Not the RUN -- the run is fine, Python holds the module in memory. What
+    is not fine is a receipt that names bytes which did not produce it."""
+    idy = source_identity_at_launch()
+    if not idy["source_unchanged_during_the_run"]:
+        raise RunnerRefused(
+            f"REFUSED at {where}: THE SOURCE CHANGED UNDER THIS RUN. This "
+            f"process is executing "
+            f"{str(LAUNCH_SOURCE_SHA256)[:16]} (read at import) and "
+            f"{Path(__file__).name} now holds "
+            f"{str(idy['on_disk_sha256_at_emit'])[:16]}. The run itself is "
+            f"unaffected -- the module is in memory -- but a receipt "
+            f"stamped from the file would name code that DID NOT RUN, and "
+            f"`producing_code_is_the_committed_bytes` would PASS if the "
+            f"replacement is committed (R-603 / REV 49 S0). Re-run from a "
+            f"worktree nobody is landing into, or supersede the receipt in "
+            f"band naming the launch digest.")
+    return idy
 
 
 # ------------------------------------------------------------- parameters
@@ -791,8 +854,134 @@ def may_run_day(params: dict, day: str, *, day_row: dict) -> dict:
                                             "may_read_aggregate()"}
 
 
+#: The runner's own naming for a sealed day receipt. The stamp varies, so
+#: a day resolves by PREFIX -- and EXACTLY ONE match is required: zero is a
+#: day that never ran, and two is a day that ran twice, which is an
+#: ambiguity a read must refuse rather than resolve by picking the newest.
+SEALED_DAY_RECEIPT_PREFIX = "p003_de_gate1_day_run_"
+SEALED_DAY_RECEIPT_MIDFIX = "_SEALED__"
+
+
+def sealed_day_receipt_glob(day: str) -> str:
+    compact = [d for d in sorted(day_forms(day)) if "-" not in d][0]
+    return (f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
+            f"{SEALED_DAY_RECEIPT_MIDFIX}*.json")
+
+
+def find_sealed_day_receipt(day: str, root: Path) -> dict:
+    """The one sealed receipt for a day, or a NAMED status."""
+    d = Path(root) / "pm_5min/derived"
+    pat = sealed_day_receipt_glob(day)
+    hits = sorted(d.glob(pat))
+    if not hits:
+        return {"day": day, "present": False, "status": "MISSING",
+                "expected_glob": str(d / pat), "n_matches": 0}
+    if len(hits) > 1:
+        return {"day": day, "present": False, "status": "AMBIGUOUS",
+                "expected_glob": str(d / pat), "n_matches": len(hits),
+                "matches": [str(x) for x in hits],
+                "why": "two sealed receipts for one day is a day that ran "
+                       "twice; a read that picks the newest is a read that "
+                       "chose after seeing"}
+    return {"day": day, "present": True, "status": "PRESENT",
+            "path": str(hits[0]), "n_matches": 1}
+
+
+def verify_sealed_day_receipt(day: str, path: str, root: Path) -> dict:
+    """WHAT A SEALED RECEIPT MUST CARRY for the read to count it.
+
+    Its BOOK DIGEST -- recomputed against the book on disk, so a receipt
+    naming a book that has since moved refuses by name -- and the RUNNER
+    IDENTITY, so a receipt no commit holds cannot be counted."""
+    p = Path(path)
+    rec = json.loads(p.read_text())
+    problems = []
+    bk = (rec.get("reference_book") or {})
+    declared = bk.get("sha256")
+    bpath = Path(bk.get("path") or "")
+    if not declared:
+        problems.append("no reference_book.sha256")
+    if not bpath.is_file():
+        problems.append(f"the book it names is absent: {bpath}")
+    elif declared and sha256_streamed(bpath) != declared:
+        problems.append(
+            f"the book it names hashes to something else "
+            f"({sha256_streamed(bpath)[:16]} vs {declared[:16]})")
+    si = rec.get("source_identity") or {}
+    if not si.get("carrying_commit") or not si.get("producing_code_sha256"):
+        problems.append("no runner identity (carrying_commit / "
+                        "producing_code_sha256)")
+    if rec.get("day") and not (day_forms(rec["day"]) & day_forms(day)):
+        problems.append(f"it is for day {rec.get('day')!r}")
+    sealed = rec.get("per_day_sealed_artifacts") or []
+    if not sealed:
+        problems.append("it carries no per-day artifact")
+    elif not all(a.get("sealed") is True for a in sealed):
+        problems.append("one of its arm-days is NOT sealed")
+    return {"day": day, "path": str(p), "ok": not problems,
+            "problems": problems,
+            "book_digest": declared,
+            "carrying_commit": si.get("carrying_commit"),
+            "n_arm_days": len(sealed)}
+
+
+def read_gate(params: dict, *, now_utc: datetime.datetime,
+              root: Path | None = None) -> dict:
+    """R-602: THE SEAL-OPEN BAR IS A PREDICATE ON ARTIFACTS, NOT A CLOCK.
+
+    DA 72 measured the pipeline at 1.165 h serial per day and found that
+    the sixth ruled day (09-08) completes by calendar at 09-09T00:00:00Z,
+    leaving SIX MINUTES against that build before the ruled 00:06Z. Under a
+    clock bar alone the read would open on five days, and G = 5 gives
+    2^-5 = 0.03125, which FAILS Holm at m = 2 -- the design's own
+    arithmetic. So the bar is a CONJUNCTION: the clock AND all six sealed
+    day receipts present at the ledger root, each verified.
+
+    The day set is UNCHANGED and nothing is chosen on data: this decides
+    WHEN the read may open, never WHICH days are in it (R-555)."""
+    root = Path(root) if root is not None else Path(DR.resolve()["data_root"])
+    days = params["days"]
+    not_before = _iso_utc(params["read_not_before_utc"])
+    clock_ok = now_utc >= not_before
+    found = {d: find_sealed_day_receipt(d, root) for d in days}
+    verified = {}
+    for d, f in found.items():
+        verified[d] = (verify_sealed_day_receipt(d, f["path"], root)
+                       if f["present"] else
+                       {"day": d, "ok": False, "problems": [f["status"]],
+                        "path": None})
+    missing = [d for d in days if not found[d]["present"]]
+    bad = [d for d in days if found[d]["present"] and not verified[d]["ok"]]
+    receipts_ok = not missing and not bad
+    return {
+        "protocol": "P003_DE_GATE1_READ_GATE_V1",
+        "ruling": "R-602 (coordinator)",
+        "clock": {"now_utc": now_utc.isoformat(),
+                  "read_not_before_utc": params["read_not_before_utc"],
+                  "holds": clock_ok},
+        "receipts": {"required": len(days),
+                     "present": sum(1 for d in days if found[d]["present"]),
+                     "verified": sum(1 for d in days if verified[d]["ok"]),
+                     "missing_days": missing, "failing_days": bad,
+                     "holds": receipts_ok,
+                     "per_day": {d: {**found[d], **verified[d]}
+                                 for d in days}},
+        "read_requires_all_ruled_days_sealed":
+            params.get("read_requires_all_ruled_days_sealed"),
+        "may_open": bool(clock_ok and receipts_ok
+                         and params.get(
+                             "read_requires_all_ruled_days_sealed") is True),
+        "the_conjunction": "clock >= read_not_before_utc AND all six ruled "
+                           "days' SEALED receipts present and verified",
+        "what_this_does_NOT_decide": "WHICH days are in the set. R-555 "
+                                     "ruled the population; this rules "
+                                     "only WHEN the read may open",
+    }
+
+
 def may_read_aggregate(params: dict, *, n_days_complete: int,
-                       now_utc: datetime.datetime) -> dict:
+                       now_utc: datetime.datetime,
+                       root: Path | None = None) -> dict:
     """The OTHER clock: the unseal and the section-7 verdict.
 
     BOTH conditions, not either: the declared date AND all G days. The date
@@ -807,10 +996,27 @@ def may_read_aggregate(params: dict, *, n_days_complete: int,
         raise RunnerRefused(
             f"REFUSED: {n_days_complete} of {params['G']} days are complete. "
             f"The read unseals every day at once or not at all (R5).")
+    # R-602: AND THE ARTIFACTS. A clock bar alone would open the read on
+    # five days, and G = 5 fails Holm at m = 2 by the design's own
+    # arithmetic. `root` is threaded so the gate can be driven.
+    gate = read_gate(params, now_utc=now_utc, root=root)
+    if params.get("read_requires_all_ruled_days_sealed") is not True:
+        raise RunnerRefused(
+            "REFUSED: the parameter file does not carry "
+            "`read_requires_all_ruled_days_sealed: true`; without the "
+            "ruling in the file the runner will not infer it (R-602).")
+    if not gate["receipts"]["holds"]:
+        raise RunnerRefused(
+            f"REFUSED: the read requires all {gate['receipts']['required']} "
+            f"ruled days' SEALED receipts. Missing: "
+            f"{gate['receipts']['missing_days']}; failing verification: "
+            f"{gate['receipts']['failing_days']}. A missing or tampered "
+            f"receipt refuses BY NAME (R-602).")
     return {"may_read": True, "n_days_complete": n_days_complete,
             "G": params["G"],
             "read_not_before_utc": params["read_not_before_utc"],
-            "both_conditions_required": True}
+            "both_conditions_required": True,
+            "read_gate": gate}
 
 
 # ------------------------------------------------------------- aggregate
@@ -1267,9 +1473,7 @@ def fixture_run() -> dict:
         "protocol": PROTOCOL,
         "status": "FIXTURE_RUN_NO_DATA",
         "source_identity": {
-            "producing_code": Path(__file__).name,
-            "producing_code_sha256": hashlib.sha256(
-                Path(__file__).resolve().read_bytes()).hexdigest(),
+            **assert_source_unchanged("the fixture-run emit"),
             **carrying_commit_block(Path(__file__).resolve()),
         },
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -2968,7 +3172,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v5.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v6.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -3053,21 +3257,104 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
             "REFUSES rather than inferring the ruling", "does not carry")
     _t = datetime.datetime
     _tz = datetime.timezone.utc
+    # ---- R-602: the seal-open bar is a PREDICATE ON ARTIFACTS ----------
+    import tempfile as _tfr
+
+    def _synth_ledger(days, *, tamper=None):
+        """A ledger root carrying one sealed receipt per day, each naming a
+        book whose digest it declares. Built, never faked: the digest is
+        computed from the book that is written."""
+        d = _tfr.mkdtemp(prefix="de86_")
+        der = Path(d) / "pm_5min/derived"
+        der.mkdir(parents=True)
+        for day in days:
+            compact = [x for x in sorted(day_forms(day))
+                       if "-" not in x][0]
+            bk = der / f"be_daybook_{compact}_btc.pkl"
+            bk.write_bytes(b"book-" + compact.encode())
+            sha = sha256_streamed(bk)
+            if tamper == day:
+                sha = "0" * 64          # the receipt names bytes that moved
+            (der / f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
+                   f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T000000Z.json"
+             ).write_text(json.dumps({
+                 "day": day,
+                 "reference_book": {"path": str(bk), "sha256": sha},
+                 "source_identity": {"carrying_commit": "0" * 40,
+                                     "producing_code_sha256": "a" * 64},
+                 "per_day_sealed_artifacts": [{"arm": "A", "sealed": True}],
+             }))
+        return Path(d)
+
+    _all6 = _synth_ledger(live["days"])
     _read = may_read_aggregate(live, n_days_complete=6,
-                               now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz))
-    ok(_read["may_read"] is True and _read["both_conditions_required"] is True,
-       "AND THE OTHER CLOCK ADMITS at 2026-09-09T00:06Z with all 6 days "
-       "complete -- the date governs the READ, which is the job it was "
-       "actually doing")
+                               now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
+                               root=_all6)
+    ok(_read["may_read"] is True
+       and _read["read_gate"]["may_open"] is True
+       and _read["read_gate"]["receipts"]["verified"] == 6,
+       "R-602 POSITIVE CONTROL, AND IT ADMITS: the clock past 09-09T00:06Z "
+       "AND all six ruled days' SEALED receipts present and verified OPENS "
+       "the read")
+    _five = _synth_ledger(live["days"][:5])
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=6, now_utc=_t(2026, 9, 8, 23, 59, tzinfo=_tz)),
-        "KNOWN-BAD, ONE MINUTE EARLY: six complete days do not open the "
-        "read before the declared date", "not before")
+        live, n_days_complete=6, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
+        root=_five),
+        f"R-602 KNOWN-BAD, THE CASE THAT FORCED THE RULING: the clock is "
+        f"PAST and only FIVE days are sealed -- it REFUSES AND NAMES THE "
+        f"MISSING DAY. DA 72 measured the pipeline at 1.165 h serial and "
+        f"09-08 completes by calendar SIX MINUTES before 00:06Z, so a "
+        f"clock bar alone would have opened the read at G = 5, and 2^-5 = "
+        f"0.03125 FAILS Holm at m = 2 -- the design's own arithmetic",
+        "2026-09-08")
     refuses(lambda: may_read_aggregate(
-        live, n_days_complete=5, now_utc=_t(2026, 9, 12, 0, 0, tzinfo=_tz)),
-        "KNOWN-BAD, FIVE OF SIX AFTER THE DATE: the date does not open a "
-        "read of an incomplete set -- BOTH conditions, never either",
-        "of 6 days are complete")
+        live, n_days_complete=6, now_utc=_t(2026, 9, 8, 23, 59, tzinfo=_tz),
+        root=_all6),
+        "R-602 KNOWN-BAD, ONE MINUTE EARLY WITH ALL SIX SEALED: the "
+        "artifacts do not open the read before the declared date -- BOTH "
+        "conjuncts, never either", "not before")
+    _tamp = _synth_ledger(live["days"], tamper=live["days"][5])
+    refuses(lambda: may_read_aggregate(
+        live, n_days_complete=6, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
+        root=_tamp),
+        "R-602 KNOWN-BAD, A TAMPERED SIXTH: a receipt whose declared book "
+        "digest is not the book's bytes REFUSES on the digest, by name -- "
+        "the receipt is verified AT READ TIME, not trusted because it "
+        "exists", "failing verification")
+    _dbl = _synth_ledger(live["days"])
+    _c6 = [x for x in sorted(day_forms(live["days"][5])) if "-" not in x][0]
+    (_dbl / "pm_5min/derived" /
+     f"{SEALED_DAY_RECEIPT_PREFIX}{_c6}{SEALED_DAY_RECEIPT_MIDFIX}"
+     f"20260906T111111Z.json").write_text("{}")
+    refuses(lambda: may_read_aggregate(
+        live, n_days_complete=6, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz),
+        root=_dbl),
+        "AND A DAY WITH TWO SEALED RECEIPTS REFUSES AS AMBIGUOUS: a day "
+        "that ran twice is not a day with a newest result, and a read that "
+        "picks one has chosen after seeing", "failing verification")
+    _noflag2 = dict(live)
+    _noflag2.pop("read_requires_all_ruled_days_sealed", None)
+    refuses(lambda: may_read_aggregate(
+        _noflag2, n_days_complete=6,
+        now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz), root=_all6),
+        "and without `read_requires_all_ruled_days_sealed` in the FILE the "
+        "runner REFUSES rather than inferring the ruling (R-602)",
+        "does not carry")
+    refuses(lambda: may_read_aggregate(
+        live, n_days_complete=5, now_utc=_t(2026, 9, 12, 0, 0, tzinfo=_tz),
+        root=_all6),
+        "KNOWN-BAD, FIVE OF SIX COMPLETE: the date does not open a read of "
+        "an incomplete set", "of 6 days are complete")
+    _live_gate = read_gate(live, now_utc=_t(2026, 9, 9, 0, 6, tzinfo=_tz))
+    ok(_live_gate["may_open"] is (
+           _live_gate["receipts"]["verified"] == len(live["days"]))
+       and _live_gate["clock"]["holds"] is True,
+       f"AND EVALUATED ON THE REAL LEDGER NOW, as a RELATION: "
+       f"{_live_gate['receipts']['verified']} of "
+       f"{_live_gate['receipts']['required']} ruled days sealed, so "
+       f"may_open is {_live_gate['may_open']}. Asserted as a relation "
+       f"because the count changes as days land -- a check that pinned "
+       f"'0 of 6' would go red on the first receipt")
     ok(live["read_not_before_utc"] == "2026-09-09T00:06:00Z"
        and "run_not_before_utc" not in live
        and live["timing"]["superseded_field"] == "run_not_before_utc",
@@ -3917,6 +4204,41 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"module, not DE's) and would reintroduce the check-and-use "
            f"window REV 43 made me close on the tape")
 
+        # ---- R-603 / REV 49 S0: the source may not change under a run ---
+        _sid = source_identity_at_launch()
+        ok(_sid["producing_code_sha256"] == LAUNCH_SOURCE_SHA256
+           and _sid["digest_taken_at"].startswith("MODULE IMPORT")
+           and _sid["source_unchanged_during_the_run"] is True,
+           f"R-603: the receipt's producing digest is taken at MODULE "
+           f"IMPORT, before any work -- {str(LAUNCH_SOURCE_SHA256)[:16]} -- "
+           f"not by a fresh read of __file__ at emit, which names whatever "
+           f"is on disk THEN")
+        import shutil as _sh
+        _me = Path(__file__).resolve()
+        _bak = Path(_tfl.mkdtemp(prefix="de86src_")) / "runner.bak"
+        _sh.copy2(_me, _bak)
+        try:
+            with open(_me, "ab") as _fh:
+                _fh.write(b"\n# mid-run edit, the R-603 known-bad\n")
+            try:
+                assert_source_unchanged("the known-bad")
+                ok(False, "a mid-run source change was ADMITTED")
+            except RunnerRefused as _e:
+                ok("THE SOURCE CHANGED UNDER THIS RUN" in str(_e),
+                   "R-603 KNOWN-BAD, THE FILE REWRITTEN MID-RUN: the emit "
+                   "REFUSES BY NAME. This is not hypothetical -- DE 85 "
+                   "committed this file at 08:35:20Z while the 09-03 smoke "
+                   "was executing it from the same worktree, so its "
+                   "receipt would have named code that did not run AND "
+                   "producing_code_is_the_committed_bytes would have "
+                   "PASSED, because the replacement was committed")
+        finally:
+            _sh.copy2(_bak, _me)
+        ok(assert_source_unchanged("the restore control")[
+               "source_unchanged_during_the_run"] is True,
+           "AND THE POSITIVE CONTROL: with the file restored the emit "
+           "admits again -- the guard fires on the change, not on the run")
+
         # ---- DE 82 (1): the scope's anon and file, read APART ------------
         _sm = scope_memory_observation()
         ok(_sm["status"] in ("MEASURED", "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
@@ -4264,9 +4586,7 @@ def main() -> int:
         payload = rehearse_smoke(a.rehearse)
         payload["data_root"] = DR.require_canonical("the smoke rehearsal")
         payload["source_identity"] = {
-            "producing_code": Path(__file__).name,
-            "producing_code_sha256": hashlib.sha256(
-                Path(__file__).resolve().read_bytes()).hexdigest(),
+            **assert_source_unchanged("the rehearsal emit"),
             **carrying_commit_block(Path(__file__).resolve())}
         if a.output is not None:
             if a.output.exists():
@@ -4341,9 +4661,7 @@ def _main_day(a) -> int:
     payload = proof.pop("day_result")
     payload["split_residency_proof"] = proof
     payload["source_identity"] = {
-        "producing_code": Path(__file__).name,
-        "producing_code_sha256": hashlib.sha256(
-            Path(__file__).resolve().read_bytes()).hexdigest(),
+        **assert_source_unchanged("the day-run emit"),
         **carrying_commit_block(Path(__file__).resolve()),
     }
     # R-572(B)(4) / the coordinator's DE 78 ruling, as FIELDS.

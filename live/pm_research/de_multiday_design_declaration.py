@@ -43,9 +43,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 13
+VERSION = 14
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 84
+EXPECTED_CHECKS = 89
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -88,12 +88,17 @@ V12_DECLARATION = ("p003_de_multiday_gate1_design_v12__20260906T074622Z"
                    ".json",
                    "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef"
                    "5e73923ff5")
+V13_DECLARATION = ("p003_de_multiday_gate1_design_v13__20260906T083511Z"
+                   ".json",
+                   "c833338cdde61bcd51d3807eba2f72cd1bbc6a08c4e05916edf35a"
+                   "19d3d32b10")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
-                    V10_DECLARATION, V11_DECLARATION, V12_DECLARATION)
+                    V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
+                    V13_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -415,6 +420,75 @@ def verify_declaration_chain(root: Path | None = None,
 RULED_DAYS = ("2026-09-03", "2026-09-04", "2026-09-05",
               "2026-09-06", "2026-09-07", "2026-09-08")
 RULED_G = len(RULED_DAYS)
+
+
+#: DA 72's MEASUREMENT, from the producing receipts -- the cadence the
+#: schedule below is projected from. Serial, one day at a time.
+MEASURED_CADENCE_S = {"fragment": 608.4, "tape_index": 1471.6,
+                      "book_assembly": 2115.7}
+SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
+
+
+def _params_digest() -> str:
+    """The params file's digest, READ at emission -- the design is emitted
+    last, so the params are already final and can be pinned here."""
+    p = (Path(__file__).resolve().parents[2]
+         / "live/pm_research/declarations/de_multiday_gate1_params_v6.json")
+    return (hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file()
+            else "ABSENT")
+
+
+def serial_schedule(smoke_wall_s=None, days=None) -> dict:
+    """EACH REMAINING DAY'S EARLIEST SEAL, PROJECTED -- and labelled one.
+
+    A ruled day cannot start building until it is COMPLETE by calendar
+    (day D closes at D+1 00:00:00Z). DA 72 measured the build at
+    {fragment, tape, book} = 4,195.7 s serial; the SMOKE's wall is unknown
+    until the 09-03 run lands, and is carried as PENDING rather than
+    guessed.
+
+    THE POINT THIS MAKES: 2026-09-08 completes at 2026-09-09T00:00:00Z and
+    the ruled `read_not_before_utc` is 00:06Z -- SIX MINUTES against at
+    least 1.165 h of build. A clock bar alone opens the read at G = 5, and
+    2^-5 = 0.03125 fails Holm at m = 2 by this design's own arithmetic."""
+    import datetime as _dt
+    ds = list(days) if days is not None else list(RULED_DAYS)
+    out, cursor = [], None
+    for d in ds:
+        closes = (_dt.datetime.fromisoformat(d + "T00:00:00+00:00")
+                  + _dt.timedelta(days=1))
+        start = closes if cursor is None else max(closes, cursor)
+        build = SERIAL_BUILD_S + (smoke_wall_s or 0.0)
+        done = start + _dt.timedelta(seconds=build)
+        cursor = done
+        out.append({"day": d,
+                    "completes_by_calendar_utc": closes.isoformat(),
+                    "earliest_start_utc": start.isoformat(),
+                    "build_seconds": build,
+                    "earliest_sealed_utc": done.isoformat()})
+    clock_bar = _dt.datetime.fromisoformat("2026-09-09T00:06:00+00:00")
+    last = _dt.datetime.fromisoformat(out[-1]["earliest_sealed_utc"])
+    return {
+        "IS_A_PROJECTION_NOT_A_MEASUREMENT": True,
+        "measured_cadence_s": dict(MEASURED_CADENCE_S),
+        "serial_build_s": SERIAL_BUILD_S,
+        "serial_build_h": SERIAL_BUILD_S / 3600.0,
+        "smoke_wall_s": smoke_wall_s,
+        "smoke_wall_is": ("MEASURED" if smoke_wall_s is not None
+                          else "PENDING -- recomputed when the 09-03 "
+                               "smoke's wall lands"),
+        "per_day": out,
+        "clock_bar_utc": clock_bar.isoformat(),
+        "earliest_all_six_sealed_utc": last.isoformat(),
+        "earliest_seal_open_utc": max(last, clock_bar).isoformat(),
+        "the_clock_bar_is_NOT_the_binding_constraint": last > clock_bar,
+        "what_this_shows": (
+            "the sixth ruled day completes SIX MINUTES before the ruled "
+            "read_not_before, against at least "
+            f"{SERIAL_BUILD_S / 3600.0:.3f} h of serial build. Under a "
+            "clock bar alone the read opens at G = 5 and fails Holm at "
+            "m = 2 -- which is why R-602 makes the bar a conjunction"),
+    }
 
 
 class DesignRefused(RuntimeError):
@@ -1204,12 +1278,22 @@ def declaration() -> dict:
                     "de_multiday_gate1_params_v2.json",
             "supersedes": "live/pm_research/declarations/"
                           "de_multiday_gate1_params_v1.json",
-            "digest_deliberately_NOT_carried_here": (
-                "params v2 cites THIS declaration by digest. If this "
-                "declaration also cited params by digest neither could ever "
-                "be emitted -- each digest would depend on the other. The "
-                "pin runs in ONE direction, params -> design, and this is "
-                "the statement of which"),
+            # THE PIN DIRECTION, FLIPPED at design v14. params cited the
+            # design BY DIGEST, so every design bump forced a params
+            # version whose only change was a pointer -- twice, and a
+            # third was due this round. The design is emitted LAST (it
+            # needs the code committed for its carrying_commit), so the
+            # DESIGN pins the params and the params names the design by
+            # path. One direction, no churn, and the senior document
+            # holds the pin.
+            "sha256": _params_digest(),
+            "pin_direction": "design -> params (flipped at v14)",
+            "why_flipped": (
+                "each digest cannot depend on the other. Pinning "
+                "params -> design cost a params version per design bump "
+                "for a pointer alone; pinning design -> params costs "
+                "nothing, because the design is emitted after the code "
+                "and the params are already final"),
             "what_v2_changed": [
                 "run_not_before_utc split into read_not_before_utc + "
                 "day_runs_allowed_for_closed_qualifying_days (R-572(B)(2))",
@@ -1366,6 +1450,67 @@ def declaration() -> dict:
                                         "coverage are the builder's guards. "
                                         "This verifies WHICH BYTES reach "
                                         "the pass",
+        },
+        "R19_the_seal_open_bar_is_a_PREDICATE": {
+            "ruling": "R-602 (coordinator), on DA 72's cadence measurement",
+            "the_conjunction": [
+                "the clock >= read_not_before_utc (2026-09-09T00:06:00Z)",
+                "ALL SIX ruled days' SEALED day receipts exist at the "
+                "ledger root, each carrying its book digest and the runner "
+                "identity, VERIFIED at read time",
+            ],
+            "a_missing_or_tampered_receipt_REFUSES_BY_NAME": True,
+            "a_day_with_TWO_receipts_refuses_as_AMBIGUOUS": (
+                "a day that ran twice is not a day with a newest result, "
+                "and a read that picks one has chosen after seeing"),
+            "the_day_set_is_UNCHANGED": "R-555 ruled the population; this "
+                                        "rules only WHEN the read may "
+                                        "open. Nothing is chosen on data",
+            "why_a_clock_alone_fails": (
+                "2026-09-08 completes by calendar at 2026-09-09T00:00:00Z, "
+                "six minutes before the bar, against >= 1.165 h of serial "
+                "build. A clock bar alone opens the read at G = 5, and "
+                "2^-5 = 0.03125 FAILS Holm at m = 2 -- this design's own "
+                "arithmetic"),
+            "enforced_by": ["de_multiday_gate1_runner.read_gate()",
+                            "de_multiday_gate1_runner.may_read_aggregate()"],
+            "driven": ["clock past + 6 receipts -> OPENS",
+                       "clock past + 5 -> REFUSES naming the missing day",
+                       "clock before + 6 -> REFUSES naming the bar",
+                       "a tampered sixth -> REFUSES on the digest",
+                       "a day with two receipts -> REFUSES as ambiguous"],
+        },
+        "R20_the_serial_schedule": serial_schedule(),
+        "R21_a_heavy_runs_code_is_FROZEN_until_its_receipt_lands": {
+            "ruling": "R-603 (coordinator) / REV 49 S0; SEAT_PROTOCOL rule "
+                      "22",
+            "what_happened": "DE 85 committed the runner at 08:35:20Z "
+                             "while the 09-03 smoke was executing it from "
+                             "the SAME worktree. Python held the module in "
+                             "memory, so the RUN was unaffected -- but "
+                             "`_main_day` stamped producing_code_sha256 by "
+                             "a FRESH read of __file__ AFTER the day was "
+                             "computed, so the receipt would name code "
+                             "that DID NOT RUN, and "
+                             "producing_code_is_the_committed_bytes would "
+                             "PASS because the replacement was committed",
+            "the_field_built_to_catch_that_class_certified_the_wrong_bytes":
+                True,
+            "the_durable_repair": "the source digest is captured at MODULE "
+                                  "IMPORT, before any work, and the EMIT "
+                                  "REFUSES BY NAME if the on-disk digest "
+                                  "differs ('the source changed under this "
+                                  "run'). All three emit paths use it",
+            "the_practice": "a heavy run executes from a worktree whose "
+                            "HEAD is not moved and whose files are not "
+                            "edited until its receipt has landed; DE lands "
+                            "code during its own runs from a SECOND "
+                            "worktree",
+            "the_09_03_receipt_is_corrected_in_band_not_re_run": (
+                "restoring the old bytes would make the new guard refuse "
+                "at emit and the only sealed day would be lost. The "
+                "receipt emits, and a .v2 supersedes it naming the LAUNCH "
+                "digest, attested by three independent records"),
         },
         "R17_the_R4_ratio_is_SEALED": {
             "ruling": "R-599 (coordinator), on DA 68's finding",
@@ -2479,6 +2624,53 @@ def selftest(*, quiet: bool = False) -> int:
        "R18: REV 47's observation TAKEN by streaming, with the part "
        "DECLINED and its reason recorded -- collapsing the two reads needs "
        "BE's signature and reintroduces a check-and-use window")
+
+    import hashlib as _h4
+    _pp = (Path(__file__).resolve().parents[2] / "live/pm_research/"
+           "declarations/de_multiday_gate1_params_v6.json")
+    ok(d["parameters"]["sha256"] == _h4.sha256(_pp.read_bytes()).hexdigest()
+       and d["parameters"]["pin_direction"].startswith("design -> params"),
+       "THE PIN DIRECTION IS FLIPPED AND THE PIN IS REAL: the design pins "
+       "the params file by a digest READ at emission. params -> design "
+       "cost a params version per design bump for a pointer alone, twice, "
+       "and a third was due this round")
+
+    _r19 = d["R19_the_seal_open_bar_is_a_PREDICATE"]
+    ok(len(_r19["the_conjunction"]) == 2 and len(_r19["driven"]) == 5
+       and "read_gate" in " ".join(_r19["enforced_by"])
+       and "R-555 ruled the population" in _r19["the_day_set_is_UNCHANGED"],
+       "R19: the seal-open bar is a CONJUNCTION of the clock and all six "
+       "sealed receipts, driven five ways, and the entry states that it "
+       "rules WHEN the read opens and never WHICH days are in it")
+    _sch = d["R20_the_serial_schedule"]
+    ok(_sch["IS_A_PROJECTION_NOT_A_MEASUREMENT"] is True
+       and abs(_sch["serial_build_s"] - 4195.7) < 1e-6
+       and len(_sch["per_day"]) == 6
+       and _sch["smoke_wall_is"].startswith("PENDING")
+       and _sch["the_clock_bar_is_NOT_the_binding_constraint"] is True,
+       f"R20: the serial schedule is COMPUTED from DA 72's measured "
+       f"cadence and LABELLED a projection -- earliest all six sealed "
+       f"{_sch['earliest_all_six_sealed_utc'][:19]} against the clock bar "
+       f"{_sch['clock_bar_utc'][:19]}, so the CLOCK IS NOT THE BINDING "
+       f"CONSTRAINT. The smoke's wall is PENDING, not guessed")
+    _sch2 = serial_schedule(smoke_wall_s=1800.0)
+    ok(_sch2["smoke_wall_is"] == "MEASURED"
+       and _sch2["earliest_all_six_sealed_utc"]
+       > _sch["earliest_all_six_sealed_utc"],
+       "and the projection MOVES when the smoke's wall is supplied -- it "
+       "is a function of the measurement, not a sentence that happens to "
+       "sit beside one")
+    _r21 = d["R21_a_heavy_runs_code_is_FROZEN_until_its_receipt_lands"]
+    ok(_r21["the_field_built_to_catch_that_class_certified_the_wrong_bytes"]
+       is True
+       and "MODULE IMPORT" in _r21["the_durable_repair"]
+       and _RUN.LAUNCH_SOURCE_SHA256
+       and _RUN.source_identity_at_launch()["digest_taken_at"].startswith(
+           "MODULE IMPORT"),
+       "R21: the digest is captured at MODULE IMPORT and the emit refuses "
+       "if the file changed under the run -- and the entry records that "
+       "this happened to DE, and that the field built to catch the class "
+       "would have certified the wrong bytes")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
