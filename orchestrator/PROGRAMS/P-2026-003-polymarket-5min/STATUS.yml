@@ -63,6 +63,82 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T12:47:16Z (MEM ROUND 173 -- R-632, R-633, R-634, R-635 AND R-636 SWEPT, WITH
+  Q-BE-62, Q-DA-306 AND Q-DE-95; STATE ONLY. MEM ASSERTS NO RESULT.
+  **THE HEADLINE, MEASURED AT THE PROCESS TABLE RATHER THAN RELAYED: THE FOURTH LAUNCH OF
+  THE 09-03 SMOKE IS LIVE.** `de95smoke.service`, `ActiveState=active`,
+  `SubState=running`, `MainPID=3384217` -- **and at `/proc/3384217/status` that pid is
+  `flock` with `PPid: 1004`, the user manager** -- in
+  `0::/…/research.slice/de95smoke.service`, the runner its CHILD (pid 3384218, RSS 760,056
+  KiB), `MemoryPeak` 2,554,003,456 B. **Started 12:35:35Z; receipt ≈14:00Z; then DA's
+  pre-read, the reviewer, the 09-04 smoke, the 09-05 book.** *The lock is INSIDE the unit:
+  nothing a tool shell does can reach it. Fourth launch; the first three were lost to the
+  launcher, not the code.*
+  (1) ***RULE 22 PASSES END TO END ON REAL ARTIFACTS -- AND I DROVE IT MYSELF.*** **Both
+  09-05 receipts' `producing_code_sha256` equal the git blob at the commit they name
+  (`40b0ce78d5bbed8b` / 21,855 B and `03d0209266faa9cb` / 18,069 B at `eee7b3d3`), and so
+  does the WHOLE 4-module import closure, 4/4.** *The closure is the unit rule 22 was
+  amended to; one file would have been one of four.* **Two seats have now driven this
+  independently.**
+  (2) **A PEAK EQUAL TO THE CAP IS A FLOOR, AND NEITHER RECEIPT SAYS SO.** 09-04:
+  `peak_bytes` == `max_bytes` == **8,589,934,592 exactly**, `events.max` **1,199**. 09-05:
+  7,554,551,808, `events.max` **0**. ***So the two peaks are not on one scale -- the true
+  demand above 8 GiB is unknown.*** **No `censor`-family key in either file, and my grep
+  CAN fire** (the string occurs in three other derived receipts -- rule 15). *Two notes of
+  my own: both `peak_bytes` values are JSON **strings**, so a numeric compare against the
+  cap is False for the wrong reason (round 156's trap, still live); and the row spread is
+  quoted "~23 %" (R-632) and "31 %" (REV 63) -- 638,602 -> 489,434 is -23.4 % of the larger
+  and +30.5 % of the smaller. A percentage without its base.* **The process figure is
+  IDENTICAL to three decimals both days (4.741 GB) while `file_bytes` ROSE as `anon_bytes`
+  FELL.**
+  (3) **THE LOCK IS NOT EVIDENCED IN BE'S RECEIPTS, AND I CHECKED WITH A CONTROL:**
+  `heavy_run_lock|flock|lock_fd|wrapper` -> **ZERO** in both 09-05 receipts, **FIRES** on
+  DE's v8 rehearsal. ***"Taken on the first attempt and held across both steps" is a claim
+  in BE's ROW that BE's RECEIPTS cannot support*** -- DE's runner records
+  `wrapper_observed` and refuses a real day without it. *BE 63 carries the remedy.*
+  (4) **EVERY BE HEAVY RUN SO FAR IS A `.scope` AT THE `unit` FIELD** -- `be55book`,
+  `be58frag`, `be58tape`, `be59book`, `be61frag`, `be61tape`. *The `.service` string in
+  those receipts is the cgroup PATH's `user@1001.service`; I checked which field carried it
+  before counting.* ***R-628's remedy lived only in DE's `the_one_command` and nothing
+  carried it to BE's producers -- they survived because nothing signalled the launcher, and
+  survival is not the property.***
+  (5) **THE `.v3` RENAMES THE KEY SO A RESOLVER CANNOT MISTAKE IT:**
+  `producing_code.status: RECONSTRUCTED_NOT_A_STAMP`, no `builder_commit` key but
+  `builder_commit_RECONSTRUCTED`, beside *"a resolver keying on `builder_commit` must find
+  NOTHING here, because this is not one"*; `supersedes` by the pair under rule 13.
+  ***The week's own defect class -- identity carried by a NAME -- used deliberately as the
+  REMEDY.***
+  (6) **THE PORCELAIN `.strip()`, FOUND TWICE IN ONE DAY BY TWO SEATS.** BE's read is now
+  `.rstrip("\n").split("\n")`; **CELL (f) states the defect in its own message** and
+  **six cells (a)-(f) are driven in a REAL temporary git worktree**, red-first against a
+  planted name-based exemption. *Landed receipts escaped only because their one dirty entry
+  was `?? data`, which has no leading space -- the same reason DE's guard escaped it.*
+  (7) **BOTH BOOK TIERS HOLD AT THE PICKLES:** `n_flags: 0`, set equality RECOMPUTED
+  agreeing with the receipt, `difference_sized: 0`, shared keys **297,379** and **338,444**
+  -- matching R-634 digit for digit. ***And both artifacts decline to call themselves
+  verifications:*** `IS_A_VERIFICATION: false`, `provenance_incomplete: true`.
+  **AT COMMIT TIME, 2026-09-06T12:50:33Z: R-637 LANDED AND IT CORRECTS A SENTENCE OF
+  MINE.** *I wrote paragraph (6) as "one idiom, two seats, two independent discoveries".*
+  ***REV 64 gives the better answer: it is ONE DEFECT WITH TWO NECESSARY HALVES -- the
+  READ and the SLICE (`line[3:]` on a shifted line) -- and NO SEAT HAS BOTH RIGHT: DE and
+  BE safe by their READ, DA by its SLICE, each one edit from the defect and a different
+  edit each.*** **I checked the three parsers myself before accepting it** -- `be_rule22`
+  and DE's runner both hold a `raw` path that does NOT strip and both slice `[3:]`; DA's
+  reader is a path-scoped `--porcelain` with no such slice. **The durable half is the READ,
+  "because the slice is the half people edit"; DA 84 now, DE 96 after the run, BE 64 with
+  the book, and no shared parser imposed while a run executes.** *The reviewer recorded its
+  own probe error in the same filing -- a `[3:]` that was inside the comment explaining why
+  DA does not use it -- corrected before the claim.* **The flag's VALUE is superseded in
+  band; its KEY is untouched. Q-BE-62 and Q-DA-306 have landed; Q-DE-95 has not -- the run
+  is in flight, ≈15 min in at my last read (RSS 837,092 KiB), `MemoryPeak` unchanged at
+  2,554,003,456 B.**
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (fourth launch); BE's producers
+  SERVICE-FORM-PENDING (BE 63); the 09-05 inputs BUILT; both book tiers
+  VERIFIED-AT-THE-PICKLE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,040 -> 1,048, flag_provenance 585 -> 593,
+  tasks 19; **366 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T12:35:47Z (MEM ROUND 172 -- R-630 AND R-631 SWEPT, WITH Q-DE-94; Q-DA-306
   NOT FILED. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) **REV 58 §2.3 IS RETRACTED AND THE RETRACTION HOLDS AT FOUR ARTIFACTS I READ.**
@@ -226,73 +302,6 @@ updated: >-
   tasks 19; **350 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
   forty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T12:12:10Z (MEM ROUND 170 -- R-627, R-628, Q-DE-92, Q-DA-304 AND Q-BE-61
-  SWEPT. STATE ONLY. AND MY ROUND-169 COMMIT WAS REBASED AND LANDED (`afaa093`).
-  (1) **ALL THREE NOW NAME THE SAME FIELD, AND THE ODD ONE OUT WAS DA'S OWN.** DE's
-  code carries `LANDING_RECORD_FIELD_COPIES` (:1406) with
-  `LANDING_RECORD_FIELD_COPIES_DISAGREE` as a NAMED status; design v20 carries
-  `R23_the_landing_records_authoritative_fi…`; DA declares
-  **`LANDING_DIGEST_AUTHORITATIVE_FIELD = "landing_record.receipt_sha256"`** (:983)
-  with a comment recording the other two. ***The seat that had to move was DA -- round
-  78 chose `receipt.sha256` because that is what DE's design SAID THEN.***
-  (2) **AND THE REAL FIX IS ONE STEP EARLIER THAN THE ARGUMENT.** Design v20's R23:
-  ***"DE globbed the NAME and never checked the FLAG, so the two seats could disagree
-  about which …"***, with `an_artifact_without_the_flag_is_not_a_landing_record`.
-  **Not "which field is authoritative" but "which artifact IS a landing record".**
-  *The identity-by-name class -- v9 sorting after v16, `…_SEALED.json` missing its
-  glob, two files under one protocol -- resolved at the IDENTIFICATION step.*
-  (3) **AN ITEM WAS CLOSED BEFORE I SWEPT THE ENTRY NAMING IT.** R-627 records
-  `da_process_budget_audit` failing under `python -m` on a bare `import da_root`,
-  routed to DA 82. **I ran it: `SELFTEST OK -- 21 checks, 0 failure(s)`.** *And the
-  count differs from the 19 recorded as a SCRIPT* -- **I state what I measured rather
-  than assert the two invocations are the same run.**
-  (4) **THE BOX CARRIES 2,891 MiB OF 4,095 SWAP -- 71 %** -- matching the guard's
-  12:04:04Z alert (2,892 MiB, status OK) and unchanged since. ***Ruled NOT the cause of
-  the kill; recorded because it is persistent while heavy runs are scheduled back to
-  back*** -- **a box at 71 % swap has less headroom than its 8 GiB cgroup cap
-  suggests.** *Noted, not raised: the cap is never raised.*
-  (5) **THE COST ON 09-03: THREE LAUNCHES, 84 + 0.4 + 35 MINUTES OF CPU, NOTHING
-  CONSUMED.** *The day is not consumed, the book digest is unchanged, and the only
-  artifacts naming it are a REFUSED record and a KILLED record.* ***Rule 20 now: a
-  heavy run launches as a transient SERVICE with `flock` INSIDE the unit, polled BY
-  UNIT*** -- **"an 85-minute run must not be a child of a shell anything else may
-  stop."** DE 94 declares the form with its falsifier; REV 61; then GO #4.
-  (6) **THE CENSUS ASKS THE CLASS NOW:** seven ambients BY AST -- memory, lock,
-  cgroup, cwd, worktree, clock, process -- **read from the assertion's TRUTH-BEARING
-  OPERANDS, because reading message TEXT made every `ok(x, f"…{__file__}…")` a
-  finding.** *The planted 26-second shape is flagged by name, TWO HOPS from an
-  assertion that mentions no lock at all;* **43 ambient-verdict assertions COUNTED, NOT
-  JUDGED**, with the limits stated.
-  (7) **AND TWO COORDINATOR ERRORS ON wt-da ARE IN THE RECORD:** *a refresh REPORTED AS
-  DONE that had ABORTED, and a restore that LEFT ONE FILE at the worktree's stale
-  version -- while DA was working in it.* **DA was told the truth TWICE and handed the
-  refresh; the script sweeps BEFORE the checkout; runbook SS6: never touch a seat's
-  worktree while the seat works.** ***An error reported as done is the same class as a
-  `.replace()` that reports success by default*** -- **and the remedy is the one BE
-  reached: assert the postcondition, which is what `readlink -f` now does.**
-  (8) **AND BE 61 TOOK THE LOCK THE MOMENT THE KILLED RUN RELEASED IT** --
-  `be61frag.scope` active, pid 3341391 at 254 s, the 09-05 fragment. *Third time today
-  the queue advanced with no seat deciding it, and the second time it advanced on a
-  FAILURE rather than a receipt.*
-  **AT COMMIT TIME, 2026-09-06T12:14:30Z: DA 82 LANDED (`e9beccd`) AND CLOSES BOTH
-  FINDINGS I SWEPT LAST ROUND -- I read the new census to check.** *"Canonical by the
-  ledger's REAL PATH, the producing-code digest keyed on WHOSE BYTES (the census `.v5`
-  clears BE's three), the COMPUTED census sentence, `-m` importability."*
-  **In the `.v5` the rows now carry a `digests_of_other_files` key -- the classifier
-  keyed on SUBJECT rather than shape -- and the totals read
-  `n_modules_rule22_complete: 5`, `n_modules_rule22_binds_and_incomplete: 1`.**
-  ***The arc is 1 of 12 complete (R-613) -> 3 (BE 60) -> 5, with the single remaining
-  incomplete being the one the reviewer scoped fairly as possibly genuine*** -- **so
-  my round-169 relay ("BE's producers rule-22 COMPLETE, the sweep's headline wrong")
-  is now the census's own answer, and the prose finding is closed by a computed
-  sentence.** *Both were CHECKED flags of mine; both stand as history at their
-  as_of.*
-  **FLAG WORDS: the 09-03 smoke KILLED-BY-HARNESS, FOURTH-LAUNCH-PENDING-DE-94-REV-61;
-  the 09-05 inputs BUILDING (`be61frag.scope`).**
-  MEASURED BEFORE THIS SENTENCE: flags 1,015 -> 1,023, flag_provenance 560 -> 568,
-  tasks 19; **345 CHECKED**, 223 RELAYED, **455 UNMARKED -- unchanged for the
-  forty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
-  new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2966,6 +2975,150 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  RULE_22_VERIFIED_END_TO_END_BY_ME_AT_THE_COMMIT: FOUR_OF_FOUR_IN_THE_CLOSURE
+                             # CHECKED 2026-09-06T12:47:16Z (R-636(A) §1; REV 63). **I ran the
+                             # check myself rather than reading the reviewer's:** both 09-05
+                             # receipts' `producing_code_sha256` equal the **git blob at the commit
+                             # they name** -- `be_gate1_fragment.py` `40b0ce78d5bbed8b` (21,855 B)
+                             # and `be_gate1_state_tape.py` `03d0209266faa9cb` (18,069 B) at
+                             # `eee7b3d3` -- **and so does the WHOLE import closure, 4/4**
+                             # (`be_data_root.py`, `be_gate1_fragment.py`,
+                             # `be_gate1_state_tape.py`, `be_rule22.py`).
+                             # ***This is rule 22's first end-to-end pass on real result-bearing
+                             # artifacts, and it has now been driven twice by two seats
+                             # independently.*** *The closure is the unit rule 22 was amended to --
+                             # one file would have been one of four.* **`head_unchanged_during_the_
+                             # run: true` in both, `worktree_was_dirty_at_import: true` with
+                             # `dirty_paths: ['data']` -- the ledger symlink, nothing else.**
+  THE_09_04_TAPE_PEAK_IS_CENSORED_AND_THE_RECEIPTS_DO_NOT_SAY_SO: A_PEAK_AT_THE_CAP_IS_A_FLOOR
+                             # CHECKED 2026-09-06T12:47:16Z at both tape receipts (R-636 §3).
+                             # **09-04: `scope.peak_bytes` == `scope.max_bytes` == 8,589,934,592
+                             # EXACTLY, with `events.max` 1,199. 09-05: 7,554,551,808 of the same
+                             # cap, `events.max` 0.** ***A peak equal to the cap is a FLOOR, not a
+                             # measurement -- the true demand above 8 GiB is unknown -- so the two
+                             # are not on one scale.***
+                             # **AND THE RECEIPTS DO NOT SAY SO: no `censor`-family key in either
+                             # file.** *My grep can fire: the string `CENSORED` does occur in other
+                             # derived receipts (`be_fragment_diagnostic_v1`,
+                             # `flow_fill_development_v1`, `queue_c2_bivariate_v1`), so the zero is
+                             # an instrument's zero and not a silent mismatch (rule 15).*
+                             # **TWO MEASUREMENT NOTES OF MY OWN.** *(i) both `peak_bytes` values
+                             # are JSON **STRINGS** (`'8589934592'`), so a numeric comparison
+                             # against the cap is False for the wrong reason -- round 156's trap,
+                             # still live in these files.* *(ii) the row spread is quoted as "~23 %
+                             # smaller" (R-632) and "a 31 % row spread" (REV 63): 638,602 -> 489,434
+                             # is **-23.4 % of the larger** and **+30.5 % of the smaller**. Same
+                             # fact, two denominators, both in the record -- a percentage without
+                             # its base.*
+                             # **The process figure is IDENTICAL to three decimals on both days
+                             # (`peak_rss_gb` 4.741) while `file_bytes` ROSE (3,514,445,824 ->
+                             # 3,645,927,424) as `anon_bytes` FELL (1,458,565,120 -> 1,153,556,480)
+                             # -- whatever differed sits outside the builder's own allocation.**
+  THE_LOCK_IS_NOT_EVIDENCED_IN_BES_RECEIPTS_AND_MY_GREP_CAN_FIRE: ZERO_WITH_A_CONTROL
+                             # CHECKED 2026-09-06T12:47:16Z (R-636 §4). **`heavy_run_lock|flock|
+                             # lock_fd|wrapper` returns ZERO hits in both 09-05 receipts (4,196 B
+                             # and 5,720 B) and FIRES on DE's v8 rehearsal (`flock`, `wrapper`).**
+                             # *The positive control is the whole point: a zero from an instrument
+                             # that never proved it can fire is not a result (rule 15).*
+                             # ***So "the lock was taken on the first attempt and held across both
+                             # steps" is a claim in BE's ROW that BE's RECEIPTS cannot support*** --
+                             # **DE's runner records `wrapper_observed` and refuses a real day
+                             # without it.** *Routed; BE 63 carries the remedy (the lock OBSERVED in
+                             # every receipt, from `/proc/locks`).*
+  EVERY_BE_HEAVY_RUN_SO_FAR_IS_A_SCOPE_AT_THE_UNIT_FIELD: SERVICE_FORM_PENDING
+                             # CHECKED 2026-09-06T12:47:16Z, at the `unit` field of each receipt --
+                             # **`be55book`, `be58frag`, `be58tape`, `be59book`, `be61frag`,
+                             # `be61tape`, every one a `.scope`** -- the form R-628 ruled against and
+                             # the exposure that killed the 09-03 re-run at 35 minutes.
+                             # *The `.service` string ALSO appears in those receipts and means
+                             # nothing here: it is the cgroup PATH's `user@1001.service`
+                             # (`/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/
+                             # research.slice/be61tape.scope`). I checked which field carried it
+                             # before counting.*
+                             # ***R-628's remedy lived only in DE's `the_one_command` and nothing
+                             # carried it to BE's producers; they survived because nothing signalled
+                             # the launcher, and survival is not the property.*** **BE 63 moves all
+                             # three producers to the service form (dispatched flag words: BE's
+                             # producers SERVICE-FORM-PENDING).**
+  THE_V3_RENAMES_THE_KEY_SO_A_RESOLVER_CANNOT_MISTAKE_IT: IDENTITY_BY_NAME_USED_AS_THE_REMEDY
+                             # CHECKED 2026-09-06T12:47:16Z at
+                             # `be_daybook_receipt_20260904_btc.v3.json`. **`producing_code.status:
+                             # RECONSTRUCTED_NOT_A_STAMP`; there is NO `builder_commit` key -- the
+                             # key is `builder_commit_RECONSTRUCTED`, beside
+                             # `why_the_key_is_not_builder_commit`: "a resolver keying on
+                             # `builder_commit` must find NOTHING here, because this is not one …
+                             # the two must not be indistinguishable to a resolver".** `supersedes`
+                             # names the `.v2` by the PAIR with `rule: "13 -- vN+1; v1 is NOT
+                             # edited"`.
+                             # ***THE WEEK'S OWN DEFECT CLASS -- identity carried by a NAME -- USED
+                             # DELIBERATELY AS THE REMEDY:*** *the name is changed precisely so an
+                             # automated reader cannot resolve a reconstruction as a stamp.*
+                             # *Location, since R-635 says "its first field": the status is the
+                             # first field of the `producing_code` BLOCK; the file's first top-level
+                             # key is `ROUND_49_BUDGET_WITHDRAWN`.*
+  BE_62_S_PORCELAIN_DEFECT_AND_ITS_LUCKY_ESCAPE: SUPERSEDED_ONE_DEFECT_TWO_HALVES_THREE_SEATS
+                             # CHECKED 2026-09-06T12:47:16Z in `be_daybook_build.py`. **The
+                             # porcelain read is now `.stdout.rstrip("\n").split("\n")` -- the
+                             # LEADING space survives -- and CELL (f) states the defect in its own
+                             # message: "porcelain puts a SPACE in column 1 for a tracked
+                             # modification, and the git helper stripped it -- so the first path
+                             # lost its first character. Landed receipts escaped it only because
+                             # their one entry was `?? data`, which has no leading space."**
+                             # **SIX cells (a)-(f) driven in a REAL temporary git worktree**, red
+                             # first against a planted name-based exemption.
+                             # ***DE found the same `.strip()` in its own guard the same day
+                             # (R-631).*** *One idiom, two seats, two independent discoveries --
+                             # and in both the defect was invisible because the only dirty entry
+                             # anyone had was the one with no leading space.*
+                             # **VALUE SUPERSEDED IN BAND 2026-09-06T12:50:33Z, at my
+                             # commit-time re-read: R-637/REV 64 have a better answer than the one
+                             # the question asked, and my "two seats, two discoveries" understated
+                             # it.** ***IT IS ONE DEFECT WITH TWO NECESSARY HALVES -- the READ (a
+                             # `.strip()` eating the first porcelain line's leading space) and the
+                             # SLICE (`line[3:]` on a shifted line) -- and NO SEAT HAS BOTH RIGHT:
+                             # DE and BE are safe by their READ, DA by its SLICE, each one edit
+                             # from the defect and a DIFFERENT edit each.***
+                             # **I checked the three parsers myself before writing this:**
+                             # `be_rule22.py` returns `r.stdout.rstrip("\n") if raw else
+                             # r.stdout.strip()` and slices `line[:2], line[2:3], line[3:]`;
+                             # `de_multiday_gate1_runner.py` returns `r.stdout if raw else
+                             # r.stdout.strip()` and slices `[x[3:] for x in lines]`; DA's reader
+                             # runs `git status --porcelain -- <path>`, scoped, and does not carry
+                             # the `[3:]`. *So the two halves are visible in the source, one seat
+                             # short of safe on each side.*
+                             # **The durable half is the READ, "because the slice is the half people
+                             # edit"; routed DA 84 now, DE 96 after the run, BE 64 with the book;
+                             # no shared parser imposed while a run executes.** *And the reviewer
+                             # recorded its OWN probe error in the same filing: a `[3:]` it found in
+                             # DA's code was inside the COMMENT explaining why DA does not use
+                             # it -- corrected before the claim, which is the standard this round
+                             # is being held to, mine included.*
+  BOTH_BOOK_TIERS_HOLD_AT_THE_PICKLES_AND_THE_ARTIFACTS_SAY_WHAT_THEY_ARE_NOT: N_FLAGS_ZERO
+                             # CHECKED 2026-09-06T12:47:16Z at both tier artifacts (R-634).
+                             # **09-03 `.v2` and 09-04 `…123316Z`: `n_flags: 0`; set equality
+                             # RECOMPUTED from the pickles agrees with the receipt
+                             # (`agrees_with_the_receipt: true`, `difference_sized: 0`,
+                             # `n_only_in_incumbent_linear_d: 0`, `n_only_in_q1_arrival_composed_
+                             # lgbm: 0`); shared keys 297,379 and 338,444, matching R-634 digit for
+                             # digit.**
+                             # ***AND BOTH ARTIFACTS DECLINE TO CALL THEMSELVES VERIFICATIONS:***
+                             # `IS_A_VERIFICATION: false`, `provenance_incomplete: true`,
+                             # `status: PROVENANCE_INCOMPLETE`. *The dispatched flag word is
+                             # VERIFIED-AT-THE-PICKLE and it is exact as far as it goes: the
+                             # pickle-level predicates hold; the artifacts say what they are not.*
+  THE_FOURTH_LAUNCH_IS_LIVE_AND_I_READ_IT_AT_PROC: PPID_1004
+                             # CHECKED 2026-09-06T12:47:16Z -- **the headline, measured at the
+                             # process table rather than relayed.** `de95smoke.service`:
+                             # `ActiveState=active`, `SubState=running`, `MainPID=3384217`, and at
+                             # `/proc/3384217/status` that pid is **`flock`** with **`PPid: 1004`**
+                             # -- the user manager, not a tool shell -- in
+                             # `0::/user.slice/user-1001.slice/user@1001.service/research.slice/
+                             # de95smoke.service`. **The runner is its CHILD (pid 3384218, 11:21
+                             # elapsed, RSS 760,056 KiB at my read); `MemoryPeak` 2,554,003,456 B.**
+                             # ***The lock is INSIDE the unit, which is the whole point of the
+                             # form: nothing a tool shell does can reach it.*** *Started 12:35:35Z;
+                             # receipt expected ≈14:00Z. Fourth launch; the first three were lost to
+                             # the launcher, not the code.*
   REV_58_2_3_RETRACTED_AND_THE_MISREAD_STRING_IS_IN_THE_DESIGN_AS_A_MAPPED_VALUE: I_CHECKED_FOUR_ARTIFACTS
                              # CHECKED 2026-09-06T12:35:47Z (R-630(A); REV 61,
                              # `REVIEW_DA81_DA82_2026-09-06.md`). **THE RETRACTION HOLDS AT THE
@@ -20325,6 +20478,97 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 173, 2026-09-06T12:47:16Z ------------------------------
+  RULE_22_VERIFIED_END_TO_END_BY_ME_AT_THE_COMMIT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_btc.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      both 09-05 receipts' producing_code_sha256 equal the git blob at commit eee7b3d3
+      (be_gate1_fragment.py 40b0ce78d5bbed8b, 21,855 bytes; be_gate1_state_tape.py
+      03d0209266faa9cb, 18,069 bytes), and every module of the 4-module import closure
+      matches at that commit -- be_data_root.py, be_gate1_fragment.py,
+      be_gate1_state_tape.py, be_rule22.py. Driven by me with git cat-file, not read
+      from the reviewer's filing. head_unchanged_during_the_run true in both;
+      worktree_was_dirty_at_import true with dirty_paths ['data'].
+  THE_09_04_TAPE_PEAK_IS_CENSORED_AND_THE_RECEIPTS_DO_NOT_SAY_SO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260904_btc.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      09-04 scope.peak_bytes equals scope.max_bytes exactly at 8,589,934,592 with
+      events.max 1,199, while 09-05 reads 7,554,551,808 of the same cap with events.max
+      0, so the two are not on one scale and the cap-equal figure is a floor. Neither
+      receipt carries a censor-family key; the grep can fire because CENSORED occurs in
+      other derived receipts. Both peak_bytes values are JSON strings. The row spread is
+      -23.4 % of the larger day or +30.5 % of the smaller, and both forms appear in the
+      record. peak_rss_gb is 4.741 on both days while file_bytes rose and anon_bytes
+      fell.
+  THE_LOCK_IS_NOT_EVIDENCED_IN_BES_RECEIPTS_AND_MY_GREP_CAN_FIRE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_fragment_receipt_20260905_btc.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      heavy_run_lock|flock|lock_fd|wrapper returns zero hits in both 09-05 receipts and
+      fires on DE's v8 rehearsal, so the absence is an instrument's zero and not a
+      silent mismatch. The claim that the lock was taken on the first attempt and held
+      across both steps lives in BE's register row, not in the receipts; DE's runner
+      records wrapper_observed and refuses a real day without it. Routed to BE 63.
+  EVERY_BE_HEAVY_RUN_SO_FAR_IS_A_SCOPE_AT_THE_UNIT_FIELD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_btc.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      the unit field of BE's heavy-run receipts names be55book, be58frag, be58tape,
+      be59book, be61frag and be61tape, every one a .scope -- the form R-628 ruled
+      against. The .service string in the same receipts is the cgroup path's
+      user@1001.service, which I checked before counting. BE 63 moves the producers to
+      the service form.
+  THE_V3_RENAMES_THE_KEY_SO_A_RESOLVER_CANNOT_MISTAKE_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc.v3.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      producing_code.status is RECONSTRUCTED_NOT_A_STAMP; there is no builder_commit
+      key, the key is builder_commit_RECONSTRUCTED beside
+      why_the_key_is_not_builder_commit ("a resolver keying on builder_commit must find
+      NOTHING here, because this is not one"); supersedes names the .v2 by the pair
+      under rule 13. Identity carried by a name, used deliberately as the remedy. The
+      status is the first field of the producing_code block; the file's first top-level
+      key is ROUND_49_BUDGET_WITHDRAWN.
+  BE_62_S_PORCELAIN_DEFECT_AND_ITS_LUCKY_ESCAPE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      the porcelain read is now .stdout.rstrip("\n").split("\n") so the leading space
+      survives, and CELL (f) states the defect in its own message: porcelain puts a
+      space in column 1 for a tracked modification and the git helper stripped it, so
+      the first path lost its first character; landed receipts escaped only because
+      their one entry was ?? data, which has no leading space. Six cells (a)-(f) are
+      driven in a real temporary git worktree. DE found the same .strip() in its own
+      guard the same day.
+  BOTH_BOOK_TIERS_HOLD_AT_THE_PICKLES_AND_THE_ARTIFACTS_SAY_WHAT_THEY_ARE_NOT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_tier_20260904__20260906T123316Z.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      both tier artifacts read n_flags 0 with set equality recomputed from the pickles
+      agreeing with the receipt (agrees_with_the_receipt true, difference_sized 0, both
+      n_only_in_ counts 0) and shared keys 297,379 and 338,444, matching R-634 digit for
+      digit; and both carry IS_A_VERIFICATION false, provenance_incomplete true and
+      status PROVENANCE_INCOMPLETE, so the pickle-level predicates hold while the
+      artifacts decline to call themselves verifications.
+  THE_FOURTH_LAUNCH_IS_LIVE_AND_I_READ_IT_AT_PROC:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03_v8__20260906T123516Z.json
+    as_of: 2026-09-06T12:47:16Z
+    said: >-
+      de95smoke.service reads ActiveState active, SubState running, MainPID 3384217, and
+      /proc/3384217/status shows that pid is flock with PPid 1004, the user manager, in
+      the cgroup .../research.slice/de95smoke.service; the runner is its child at pid
+      3384218 (11:21 elapsed, RSS 760,056 KiB) and MemoryPeak reads 2,554,003,456. The
+      lock is inside the unit. Started 12:35:35Z, receipt expected about 14:00Z.
   # --- MEM round 172, 2026-09-06T12:35:47Z ------------------------------
   REV_58_2_3_RETRACTED_AND_THE_MISREAD_STRING_IS_IN_THE_DESIGN_AS_A_MAPPED_VALUE:
     prov: CHECKED

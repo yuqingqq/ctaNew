@@ -5,6 +5,102 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 173
+
+**As of 2026-09-06T12:47:16Z. State only — MEM writes no result.**
+
+### THE HEADLINE: the fourth launch of the 09-03 smoke is LIVE
+
+**`de95smoke.service` — `ActiveState=active`, `SubState=running`, `MainPID=3384217`,
+started 12:35:35Z.** I read it at the process table, not from a filing:
+`/proc/3384217/status` shows that pid is **`flock`** with **`PPid: 1004`** — the user
+manager — in `0::/…/research.slice/de95smoke.service`, with the runner as its **child**
+(pid 3384218, RSS 760,056 KiB); `MemoryPeak` 2,554,003,456 B. **The lock is inside the
+unit: nothing a tool shell does can reach it.**
+
+**Receipt ≈14:00Z. Then: DA's pre-read → the reviewer → the 09-04 smoke → the 09-05
+book.** *Fourth launch; the first three were lost to the launcher, not the code.*
+
+### Rule 22 passes end to end on real artifacts — and I drove it myself
+
+Both 09-05 receipts' `producing_code_sha256` **equal the git blob at the commit they
+name** — `be_gate1_fragment.py` `40b0ce78d5bbed8b` (21,855 B) and
+`be_gate1_state_tape.py` `03d0209266faa9cb` (18,069 B) at `eee7b3d3` — **and so does the
+whole 4-module import closure, 4/4** (`be_data_root`, `be_gate1_fragment`,
+`be_gate1_state_tape`, `be_rule22`). *The closure is the unit rule 22 was amended to: one
+file would have been one of four.* **Two seats have now driven this independently.**
+
+### Three things a seat should carry out of the receipts
+
+- **A peak equal to the cap is a FLOOR.** 09-04: `peak_bytes` == `max_bytes` ==
+  **8,589,934,592 exactly**, `events.max` **1,199**. 09-05: 7,554,551,808, `events.max`
+  **0**. The two are **not on one scale**, and **neither receipt says so** — my grep can
+  fire (the string occurs in three other derived receipts). *Two notes: both `peak_bytes`
+  values are JSON **strings**, so a numeric compare against the cap is False for the wrong
+  reason; and the row spread is quoted "~23 %" (R-632) and "31 %" (REV 63) — 638,602 →
+  489,434 is −23.4 % of the larger and +30.5 % of the smaller. A percentage without its
+  base.*
+- **The lock is not evidenced in BE's receipts**, checked with a control:
+  `heavy_run_lock|flock|lock_fd|wrapper` → **zero** in both 09-05 receipts, **fires** on
+  DE's v8 rehearsal. "Taken on the first attempt and held across both steps" is a claim in
+  BE's **row** that BE's **receipts** cannot support; DE's runner records
+  `wrapper_observed` and refuses a real day without it. **BE 63 carries the remedy.**
+- **Every BE heavy run so far is a `.scope`** at the `unit` field — `be55book`,
+  `be58frag`, `be58tape`, `be59book`, `be61frag`, `be61tape`. *(The `.service` string in
+  those receipts is the cgroup path's `user@1001.service`; check which field carries it
+  before counting.)* **R-628's remedy lived only in DE's `the_one_command`** and nothing
+  carried it to BE's producers — *they survived because nothing signalled the launcher,
+  and survival is not the property.* **BE's producers are SERVICE-FORM-PENDING (BE 63).**
+
+### AT COMMIT TIME (12:50:33Z): R-637 corrects a sentence of mine
+
+I had written the porcelain defect as *"one idiom, two seats, two independent
+discoveries"*. **REV 64 has the better answer: it is ONE defect with TWO necessary
+halves — the READ (a `.strip()` eating the first line's leading space) and the SLICE
+(`line[3:]` on a shifted line) — and NO seat has both right: DE and BE are safe by their
+READ, DA by its SLICE, each one edit from the defect and a different edit each.**
+
+**I checked the three parsers myself before accepting it:** `be_rule22.py` returns
+`r.stdout.rstrip("\n") if raw else r.stdout.strip()` and slices
+`line[:2], line[2:3], line[3:]`; DE's runner returns `r.stdout if raw else
+r.stdout.strip()` and slices `[x[3:] for x in lines]`; DA's reader is a path-scoped
+`git status --porcelain -- <path>` without that slice. **The durable half is the READ,
+"because the slice is the half people edit."** Routed: **DA 84 now, DE 96 after the run,
+BE 64 with the book** — no shared parser imposed while a run executes. *The reviewer
+recorded its own probe error in the same filing (a `[3:]` that was inside the comment
+explaining why DA does not use it), corrected before the claim.*
+
+**Q-BE-62 and Q-DA-306 have landed; Q-DE-95 has not — the run is in flight** (≈15 min in,
+RSS 837,092 KiB, `MemoryPeak` unchanged at 2,554,003,456 B).
+
+### Two instruments worth copying
+
+- **The `.v3` renames the key so a resolver cannot mistake it**:
+  `producing_code.status: RECONSTRUCTED_NOT_A_STAMP`, no `builder_commit` key but
+  `builder_commit_RECONSTRUCTED`, beside *"a resolver keying on `builder_commit` must find
+  NOTHING here, because this is not one"*; `supersedes` by the pair under rule 13.
+  ***The week's own defect class — identity carried by a name — used deliberately as the
+  remedy.***
+- **The porcelain `.strip()`, found twice in one day by two seats.** BE's read is now
+  `.rstrip("\n").split("\n")`; **CELL (f) states the defect in its own message**, and
+  **six cells (a)–(f) are driven in a real temporary git worktree**, red-first against a
+  planted name-based exemption. *Landed receipts escaped only because their one dirty entry
+  was `?? data`, which has no leading space — the same reason DE's guard escaped it.*
+
+### Both book tiers hold at the pickles
+
+`n_flags: 0`; set equality **recomputed** from the pickles agrees with the receipt
+(`difference_sized: 0`, both `n_only_in_*` 0); shared keys **297,379** (09-03) and
+**338,444** (09-04), matching R-634 digit for digit. **And both artifacts decline to call
+themselves verifications:** `IS_A_VERIFICATION: false`, `provenance_incomplete: true`.
+
+**Counts, measured before the sentence:** flags 1,040 → **1,048**, `flag_provenance`
+585 → **593**, tasks 19; **366 CHECKED**, 227 RELAYED, **455 UNMARKED — unchanged for the
+forty-ninth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 155** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 172
 
 **As of 2026-09-06T12:35:47Z. State only — MEM writes no result.**
