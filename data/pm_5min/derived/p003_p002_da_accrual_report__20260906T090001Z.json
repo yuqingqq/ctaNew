@@ -1,0 +1,915 @@
+{
+  "as_of_utc": "2026-09-06T09:00:02Z",
+  "carrying_commit": "7bf6eb518f9a4082321abc53ee7121c2f25ea9b2",
+  "collectors": {
+    "binance": {
+      "NOT_A_VERDICT": "alive-and-recent is reported; whether a gap voids anything is a ruling, not this field",
+      "heartbeat_age_s": 22.3,
+      "last_heartbeat_utc": "2026-09-06T08:59:40Z",
+      "log": "collector.log",
+      "log_mtime_utc": "2026-09-06T08:59:40Z",
+      "pids": [
+        30901
+      ],
+      "process_alive": true,
+      "script": "collect_hf.py"
+    },
+    "hyperliquid": {
+      "NOT_A_VERDICT": "alive-and-recent is reported; whether a gap voids anything is a ruling, not this field",
+      "heartbeat_age_s": 16.3,
+      "last_heartbeat_utc": "2026-09-06T08:59:46Z",
+      "log": "hl_collector.log",
+      "log_mtime_utc": "2026-09-06T08:59:46Z",
+      "pids": [
+        30902
+      ],
+      "process_alive": true,
+      "script": "collect_hl.py"
+    }
+  },
+  "decides_nothing": "REPORTED (rule 14). Whether a day ACCRUES, whether a gate may be read and whether a collector event voids anything are rulings, and none is made here",
+  "e2a": {
+    "G_needed": 14,
+    "admissible_days": [
+      "20260825",
+      "20260827",
+      "20260828",
+      "20260829",
+      "20260830",
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905"
+    ],
+    "collector_events_since_2026_08_26": [
+      "2026-08-26T05:11:43Z",
+      "2026-08-26T05:26:26Z"
+    ],
+    "days_still_needed": 3,
+    "days_that_could_still_fail_it": [
+      "20260906",
+      "20260907",
+      "20260908"
+    ],
+    "declaration": {
+      "path": "p002_e2_a_declaration_v7.json",
+      "sha256_16": "57c92c9e899eb691"
+    },
+    "declared_minimum_days": 14,
+    "first_utc_moment_G_ge_min_if_every_remaining_day_admits": "2026-09-09T00:00:00Z",
+    "leg_carried": {
+      "era_rule5": "row-wise on recv_ns; carried from the landed smoke",
+      "n_days_it_measured": 15,
+      "smoke_as_of": "20260906T071809Z"
+    },
+    "legs_re_run_today": [
+      "streams (24 hour-files on all three)",
+      "collector liveness (heartbeat + restarts)"
+    ],
+    "n_admissible_post_boundary_today": 11,
+    "n_collector_events_since_2026_08_26": 2,
+    "n_days_seen": 19,
+    "per_day": {
+      "20260819": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": false,
+        "collector_why": "collector NOT live: max heartbeat gap 46355 s against a bar of 120 s, 0 restart(s) in day",
+        "era_rule5": {
+          "status": "UNMEASURED_AFTER_THE_SMOKES_AS_OF",
+          "why": "the era leg is row-wise on recv_ns and is not light; it is carried from the smoke and this day is after its as-of"
+        },
+        "max_heartbeat_gap_s": 46355.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 12,
+          "depth20": 12,
+          "trade": 12
+        },
+        "streams_complete": false
+      },
+      "20260820": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 1.0,
+          "post_boundary": false
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260821": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 1.0,
+          "post_boundary": false
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260822": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 1.0,
+          "post_boundary": false
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260823": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 1.0,
+          "post_boundary": false
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260824": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": false,
+        "collector_why": "collector NOT live: max heartbeat gap 158 s against a bar of 120 s, 2 restart(s) in day",
+        "era_rule5": {
+          "status": "UNMEASURED_AFTER_THE_SMOKES_AS_OF",
+          "why": "the era leg is row-wise on recv_ns and is not light; it is carried from the smoke and this day is after its as-of"
+        },
+        "max_heartbeat_gap_s": 158.0,
+        "n_restarts_in_day": 2,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260825": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260826": {
+        "admissible_post_boundary": false,
+        "calendar_complete": true,
+        "collector_live": false,
+        "collector_why": "collector NOT live: max heartbeat gap 4656 s against a bar of 120 s, 2 restart(s) in day",
+        "era_rule5": {
+          "status": "UNMEASURED_AFTER_THE_SMOKES_AS_OF",
+          "why": "the era leg is row-wise on recv_ns and is not light; it is carried from the smoke and this day is after its as-of"
+        },
+        "max_heartbeat_gap_s": 4656.0,
+        "n_restarts_in_day": 2,
+        "stream_file_counts": {
+          "bookTicker": 23,
+          "depth20": 23,
+          "trade": 23
+        },
+        "streams_complete": false
+      },
+      "20260827": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260828": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260829": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260830": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260831": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260901": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260902": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260903": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260904": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260905": {
+        "admissible_post_boundary": true,
+        "calendar_complete": true,
+        "collector_live": true,
+        "collector_why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day",
+        "era_rule5": {
+          "legacy_share": 0.0,
+          "post_boundary": true
+        },
+        "max_heartbeat_gap_s": 61.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 24,
+          "depth20": 24,
+          "trade": 24
+        },
+        "streams_complete": true
+      },
+      "20260906": {
+        "admissible_post_boundary": false,
+        "calendar_complete": false,
+        "collector_live": false,
+        "collector_why": "collector NOT live: max heartbeat gap 54020 s against a bar of 120 s, 0 restart(s) in day",
+        "era_rule5": {
+          "status": "UNMEASURED_AFTER_THE_SMOKES_AS_OF",
+          "why": "the era leg is row-wise on recv_ns and is not light; it is carried from the smoke and this day is after its as-of"
+        },
+        "max_heartbeat_gap_s": 54020.0,
+        "n_restarts_in_day": 0,
+        "stream_file_counts": {
+          "bookTicker": 10,
+          "depth20": 9,
+          "trade": 9
+        },
+        "streams_complete": false
+      }
+    },
+    "programme": "P-2026-002 E2-A",
+    "symbol": "BTCUSDT",
+    "what_would_move_the_date": "any collector restart or heartbeat gap beyond 2x the measured cadence on one of the days still needed removes that day and pushes the date out by one"
+  },
+  "every_number_is_computed": "the ruled day set from params v5, the artifacts from the directory, the cadence from the producing receipts' own wall clocks, the E2-A admission by re-running the legs, and the collectors from their pids and their own heartbeat lines. Nothing is typed from another document",
+  "fixture": {
+    "both_directions": true,
+    "checks": [
+      {
+        "check": "A SYNTHETIC LEDGER WITH A KNOWN DAY SET REPRODUCES ITS COUNTS: three ruled days, all three calendar-complete at the fixed clock, and exactly the two that were given all four inputs are counted",
+        "detail": "3 ruled, 3 complete, 2 with all four; 09-05 holds 2 of 4",
+        "passed": true
+      },
+      {
+        "check": "KNOWN-BAD: REMOVING ONE ARTIFACT MOVES THE COUNT -- the count is read off the directory, so it cannot be right by memory",
+        "detail": "09-04's book removed -> 1 day(s) with all four, was 2",
+        "passed": true
+      },
+      {
+        "check": "A FUTURE DAY IS INCOMPLETE, AND THE EDGE IS EXACT: a day is complete only once the NEXT day has begun. One second before midnight it is not, at midnight it is -- however much of it has elapsed",
+        "detail": "09-08 at the fixed clock: incomplete, 63.0 h remaining; the 09-06 edge flips exactly at 2026-09-07T00:00:00Z",
+        "passed": true
+      },
+      {
+        "check": "THE CADENCE IS READ FROM THE PRODUCING RECEIPTS AND THE SMOKE'S COST IS DECLARED UNKNOWN -- an estimate typed in would be the one number in this report nobody measured, and the projection says it bounds the count from ABOVE because of it",
+        "detail": "cadence covers fragment + tape + book, on 2026-09-03, btc; excludes the smoke, which has no measured cost; 4 assumptions stated, model SERIAL -- rule 20 allows",
+        "passed": true
+      },
+      {
+        "check": "THE SCHEDULE IS SERIAL AND NO DAY STARTS BEFORE IT COMPLETES: every row's earliest start is at or after its own calendar completion, which is what makes a day that completes minutes before the bar visibly impossible rather than quietly counted",
+        "detail": "1 scheduled row(s); every earliest start >= its own completion: True",
+        "passed": true
+      },
+      {
+        "check": "AN ABSENT PARAMS DECLARATION REFUSES: the ruled day set is not this report's to invent",
+        "detail": "a missing params path raises AccrualRefused",
+        "passed": true
+      },
+      {
+        "check": "E2-A's LEGS ARE RE-RUN TODAY AND THE SPLIT IS STATED: the streams and the collector liveness are cheap and are re-measured; the ERA leg is row-wise on recv_ns and is CARRIED from the smoke that measured it, with its as-of. Days after that as-of are UNMEASURED and say so",
+        "detail": "re-run ['streams (24 hour-files on all three)', 'collector liveness (heartbeat + restarts)']; era carried from 20260906T071809Z over 15 days",
+        "passed": true
+      },
+      {
+        "check": "AND THE G-DATE IS DERIVED, NOT TYPED: the days still needed are counted, the future days that would supply them are named, and the date is the moment the last of them completes",
+        "detail": "11 admissible today, 3 still needed (['20260906', '20260907', '20260908']) -> 2026-09-09T00:00:00Z",
+        "passed": true
+      },
+      {
+        "check": "THE COLLECTORS ARE REPORTED AS A FACT, BOTH VENUES: pid, alive, and the last heartbeat off the log's own lines -- with the field saying in so many words that whether a gap voids anything is a ruling",
+        "detail": "binance: alive=True pids=[30901] last=2026-09-06T08:59:40Z; hyperliquid: alive=True pids=[30902] last=2026-09-06T08:59:46Z",
+        "passed": true
+      }
+    ],
+    "n_checks": 9,
+    "n_failed": 0
+  },
+  "gate1": {
+    "cadence_measured": {
+      "book": {
+        "from_receipt": "be_daybook_receipt_20260903_btc.json",
+        "wall_s": 2115.7
+      },
+      "covers": "fragment + tape + book, on 2026-09-03, btc",
+      "excludes": "the smoke, which has no measured cost",
+      "fragment": {
+        "from_receipt": "be_gate1_fragment_receipt_20260903_btc.json",
+        "wall_s": 608.4
+      },
+      "measured_total_h": 1.165,
+      "measured_total_s": 4195.7,
+      "smoke": {
+        "status": "NEVER_RUN_ON_A_REAL_DAY",
+        "wall_s": null,
+        "why": "DE's `--day` has run on a synthetic book only, so there is no measured cost. An estimate typed here would be the one number in this report nobody measured"
+      },
+      "tape": {
+        "from_receipt": "be_gate1_state_tape_receipt_20260903_btc.v3.json",
+        "wall_s": 1471.6
+      }
+    },
+    "hours_until_seal_opens": 63.1,
+    "n_complete_by_calendar": 3,
+    "n_ruled_days": 6,
+    "n_with_all_four_inputs": 0,
+    "params": {
+      "expected_G": 6,
+      "path": "de_multiday_gate1_params_v5.json",
+      "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V5",
+      "sha256_16": "306bfdb0491afdad"
+    },
+    "per_day": {
+      "20260903": {
+        "admissible_by_the_instruments_as_they_stand": {
+          "instrument": "live/pm_research/da_gate1_day_verdict.py",
+          "rules_it_applies": [
+            "the book's digest against the receipt (verify_book_digest)",
+            "the seal detected by DE's OWN economic field list, read at the source of de_multiday_gate1_runner",
+            "R4's DECISION half: n_decisions >= 30 (its SD half needs the sealed null and is not verifiable pre-read)",
+            "the seed re-derived from the book digest and the arm",
+            "the read bar 2026-09-09T00:06:00Z on the FULL path; the PRE-READ path runs before it"
+          ],
+          "verdict": "INPUTS_INCOMPLETE",
+          "why_not_a_verdict_here": "this report states which inputs exist. Running the day verdict is the coordinator's GO and needs the sealed receipt, which no day has yet"
+        },
+        "artifacts": {
+          "book": {
+            "bytes": 290758834,
+            "path": "be_daybook_20260903_btc.pkl",
+            "present": true,
+            "sha256_16": "aad816d637f8445a"
+          },
+          "book_receipt": {
+            "bytes": 10039,
+            "path": "be_daybook_receipt_20260903_btc.json",
+            "present": true,
+            "sha256_16": "70d583d87090def4"
+          },
+          "fragment": {
+            "bytes": 604605715,
+            "path": "harmful_exposure_rows_v3_gate1_20260903_btc.json",
+            "present": true,
+            "sha256_16": "2860832a66e820ca"
+          },
+          "sealed_day_receipt": {
+            "present": false,
+            "searched_patterns": [
+              "p003_de_multiday_gate1_day_*20260903*.json",
+              "*multiday*gate1*20260903*sealed*.json",
+              "*gate1*sealed*20260903*.json"
+            ]
+          },
+          "tape": {
+            "bytes": 991078272,
+            "path": "phase2_state_tape_gate1_20260903_btc.json",
+            "present": true,
+            "sha256_16": "9de88da950598e86"
+          }
+        },
+        "calendar": {
+          "complete": true,
+          "day": "20260903",
+          "ends_utc": "2026-09-04T00:00:00Z",
+          "hours_remaining": null
+        },
+        "has_all_four_inputs": false,
+        "n_of_four_present": 3
+      },
+      "20260904": {
+        "admissible_by_the_instruments_as_they_stand": {
+          "instrument": "live/pm_research/da_gate1_day_verdict.py",
+          "rules_it_applies": [
+            "the book's digest against the receipt (verify_book_digest)",
+            "the seal detected by DE's OWN economic field list, read at the source of de_multiday_gate1_runner",
+            "R4's DECISION half: n_decisions >= 30 (its SD half needs the sealed null and is not verifiable pre-read)",
+            "the seed re-derived from the book digest and the arm",
+            "the read bar 2026-09-09T00:06:00Z on the FULL path; the PRE-READ path runs before it"
+          ],
+          "verdict": "INPUTS_INCOMPLETE",
+          "why_not_a_verdict_here": "this report states which inputs exist. Running the day verdict is the coordinator's GO and needs the sealed receipt, which no day has yet"
+        },
+        "artifacts": {
+          "book": {
+            "expected_path": "be_daybook_20260904_btc.pkl",
+            "present": false
+          },
+          "book_receipt": {
+            "expected_path": "be_daybook_receipt_20260904_btc.json",
+            "present": false
+          },
+          "fragment": {
+            "expected_path": "harmful_exposure_rows_v3_gate1_20260904_btc.json",
+            "present": false
+          },
+          "sealed_day_receipt": {
+            "present": false,
+            "searched_patterns": [
+              "p003_de_multiday_gate1_day_*20260904*.json",
+              "*multiday*gate1*20260904*sealed*.json",
+              "*gate1*sealed*20260904*.json"
+            ]
+          },
+          "tape": {
+            "expected_path": "phase2_state_tape_gate1_20260904_btc.json",
+            "present": false
+          }
+        },
+        "calendar": {
+          "complete": true,
+          "day": "20260904",
+          "ends_utc": "2026-09-05T00:00:00Z",
+          "hours_remaining": null
+        },
+        "has_all_four_inputs": false,
+        "n_of_four_present": 0
+      },
+      "20260905": {
+        "admissible_by_the_instruments_as_they_stand": {
+          "instrument": "live/pm_research/da_gate1_day_verdict.py",
+          "rules_it_applies": [
+            "the book's digest against the receipt (verify_book_digest)",
+            "the seal detected by DE's OWN economic field list, read at the source of de_multiday_gate1_runner",
+            "R4's DECISION half: n_decisions >= 30 (its SD half needs the sealed null and is not verifiable pre-read)",
+            "the seed re-derived from the book digest and the arm",
+            "the read bar 2026-09-09T00:06:00Z on the FULL path; the PRE-READ path runs before it"
+          ],
+          "verdict": "INPUTS_INCOMPLETE",
+          "why_not_a_verdict_here": "this report states which inputs exist. Running the day verdict is the coordinator's GO and needs the sealed receipt, which no day has yet"
+        },
+        "artifacts": {
+          "book": {
+            "expected_path": "be_daybook_20260905_btc.pkl",
+            "present": false
+          },
+          "book_receipt": {
+            "expected_path": "be_daybook_receipt_20260905_btc.json",
+            "present": false
+          },
+          "fragment": {
+            "expected_path": "harmful_exposure_rows_v3_gate1_20260905_btc.json",
+            "present": false
+          },
+          "sealed_day_receipt": {
+            "present": false,
+            "searched_patterns": [
+              "p003_de_multiday_gate1_day_*20260905*.json",
+              "*multiday*gate1*20260905*sealed*.json",
+              "*gate1*sealed*20260905*.json"
+            ]
+          },
+          "tape": {
+            "expected_path": "phase2_state_tape_gate1_20260905_btc.json",
+            "present": false
+          }
+        },
+        "calendar": {
+          "complete": true,
+          "day": "20260905",
+          "ends_utc": "2026-09-06T00:00:00Z",
+          "hours_remaining": null
+        },
+        "has_all_four_inputs": false,
+        "n_of_four_present": 0
+      },
+      "20260906": {
+        "admissible_by_the_instruments_as_they_stand": {
+          "instrument": "live/pm_research/da_gate1_day_verdict.py",
+          "rules_it_applies": [
+            "the book's digest against the receipt (verify_book_digest)",
+            "the seal detected by DE's OWN economic field list, read at the source of de_multiday_gate1_runner",
+            "R4's DECISION half: n_decisions >= 30 (its SD half needs the sealed null and is not verifiable pre-read)",
+            "the seed re-derived from the book digest and the arm",
+            "the read bar 2026-09-09T00:06:00Z on the FULL path; the PRE-READ path runs before it"
+          ],
+          "verdict": "NOT_YET_DETERMINABLE",
+          "why_not_a_verdict_here": "this report states which inputs exist. Running the day verdict is the coordinator's GO and needs the sealed receipt, which no day has yet"
+        },
+        "artifacts": {
+          "book": {
+            "expected_path": "be_daybook_20260906_btc.pkl",
+            "present": false
+          },
+          "book_receipt": {
+            "expected_path": "be_daybook_receipt_20260906_btc.json",
+            "present": false
+          },
+          "fragment": {
+            "expected_path": "harmful_exposure_rows_v3_gate1_20260906_btc.json",
+            "present": false
+          },
+          "sealed_day_receipt": {
+            "present": false,
+            "searched_patterns": [
+              "p003_de_multiday_gate1_day_*20260906*.json",
+              "*multiday*gate1*20260906*sealed*.json",
+              "*gate1*sealed*20260906*.json"
+            ]
+          },
+          "tape": {
+            "expected_path": "phase2_state_tape_gate1_20260906_btc.json",
+            "present": false
+          }
+        },
+        "calendar": {
+          "complete": false,
+          "day": "20260906",
+          "ends_utc": "2026-09-07T00:00:00Z",
+          "hours_remaining": 15.0
+        },
+        "has_all_four_inputs": false,
+        "n_of_four_present": 0
+      },
+      "20260907": {
+        "admissible_by_the_instruments_as_they_stand": {
+          "instrument": "live/pm_research/da_gate1_day_verdict.py",
+          "rules_it_applies": [
+            "the book's digest against the receipt (verify_book_digest)",
+            "the seal detected by DE's OWN economic field list, read at the source of de_multiday_gate1_runner",
+            "R4's DECISION half: n_decisions >= 30 (its SD half needs the sealed null and is not verifiable pre-read)",
+            "the seed re-derived from the book digest and the arm",
+            "the read bar 2026-09-09T00:06:00Z on the FULL path; the PRE-READ path runs before it"
+          ],
+          "verdict": "NOT_YET_DETERMINABLE",
+          "why_not_a_verdict_here": "this report states which inputs exist. Running the day verdict is the coordinator's GO and needs the sealed receipt, which no day has yet"
+        },
+        "artifacts": {
+          "book": {
+            "expected_path": "be_daybook_20260907_btc.pkl",
+            "present": false
+          },
+          "book_receipt": {
+            "expected_path": "be_daybook_receipt_20260907_btc.json",
+            "present": false
+          },
+          "fragment": {
+            "expected_path": "harmful_exposure_rows_v3_gate1_20260907_btc.json",
+            "present": false
+          },
+          "sealed_day_receipt": {
+            "present": false,
+            "searched_patterns": [
+              "p003_de_multiday_gate1_day_*20260907*.json",
+              "*multiday*gate1*20260907*sealed*.json",
+              "*gate1*sealed*20260907*.json"
+            ]
+          },
+          "tape": {
+            "expected_path": "phase2_state_tape_gate1_20260907_btc.json",
+            "present": false
+          }
+        },
+        "calendar": {
+          "complete": false,
+          "day": "20260907",
+          "ends_utc": "2026-09-08T00:00:00Z",
+          "hours_remaining": 39.0
+        },
+        "has_all_four_inputs": false,
+        "n_of_four_present": 0
+      },
+      "20260908": {
+        "admissible_by_the_instruments_as_they_stand": {
+          "instrument": "live/pm_research/da_gate1_day_verdict.py",
+          "rules_it_applies": [
+            "the book's digest against the receipt (verify_book_digest)",
+            "the seal detected by DE's OWN economic field list, read at the source of de_multiday_gate1_runner",
+            "R4's DECISION half: n_decisions >= 30 (its SD half needs the sealed null and is not verifiable pre-read)",
+            "the seed re-derived from the book digest and the arm",
+            "the read bar 2026-09-09T00:06:00Z on the FULL path; the PRE-READ path runs before it"
+          ],
+          "verdict": "NOT_YET_DETERMINABLE",
+          "why_not_a_verdict_here": "this report states which inputs exist. Running the day verdict is the coordinator's GO and needs the sealed receipt, which no day has yet"
+        },
+        "artifacts": {
+          "book": {
+            "expected_path": "be_daybook_20260908_btc.pkl",
+            "present": false
+          },
+          "book_receipt": {
+            "expected_path": "be_daybook_receipt_20260908_btc.json",
+            "present": false
+          },
+          "fragment": {
+            "expected_path": "harmful_exposure_rows_v3_gate1_20260908_btc.json",
+            "present": false
+          },
+          "sealed_day_receipt": {
+            "present": false,
+            "searched_patterns": [
+              "p003_de_multiday_gate1_day_*20260908*.json",
+              "*multiday*gate1*20260908*sealed*.json",
+              "*gate1*sealed*20260908*.json"
+            ]
+          },
+          "tape": {
+            "expected_path": "phase2_state_tape_gate1_20260908_btc.json",
+            "present": false
+          }
+        },
+        "calendar": {
+          "complete": false,
+          "day": "20260908",
+          "ends_utc": "2026-09-09T00:00:00Z",
+          "hours_remaining": 63.0
+        },
+        "has_all_four_inputs": false,
+        "n_of_four_present": 0
+      }
+    },
+    "programme": "P-2026-003 Gate 1",
+    "projection_at_the_measured_cadence": {
+      "IMPORTANT": "the smoke's cost is NOT in `measured_hours_per_day` because it has never run on a real day. This projection therefore bounds the count from ABOVE: adding a stage cannot make more days fit",
+      "and_it_assumes": [
+        "one day at a time (rule 20: one heavy run at a time)",
+        "no failures and no re-runs",
+        "the remaining days' inputs cost what 09-03's did",
+        "a build starts the instant its day completes"
+      ],
+      "days_already_holding_all_four": [],
+      "days_that_CANNOT_fit": [
+        "20260908"
+      ],
+      "days_that_could": [
+        "20260903",
+        "20260904",
+        "20260905",
+        "20260906",
+        "20260907"
+      ],
+      "decides_nothing": "whether a ruled day that cannot hold its inputs by the bar moves the bar, shrinks G, or is handled some third way is a ruling and is not made here",
+      "hours_until_the_bar": 63.1,
+      "measured_hours_per_day": 1.165,
+      "model": "SERIAL -- rule 20 allows one heavy run at a time, and a day cannot start before it is calendar-complete",
+      "n_days_that_could_hold_all_four_by_the_bar": 5,
+      "schedule": [
+        {
+          "complete_at_utc": "2026-09-04T00:00:00Z",
+          "day": "20260903",
+          "earliest_start_utc": "2026-09-06T09:00:02Z",
+          "fits_before_the_bar": true,
+          "hours_between_that_start_and_the_bar": 63.1,
+          "measured_cost_h": 1.165,
+          "would_finish_utc": "2026-09-06T10:09:56Z"
+        },
+        {
+          "complete_at_utc": "2026-09-05T00:00:00Z",
+          "day": "20260904",
+          "earliest_start_utc": "2026-09-06T10:09:56Z",
+          "fits_before_the_bar": true,
+          "hours_between_that_start_and_the_bar": 61.93,
+          "measured_cost_h": 1.165,
+          "would_finish_utc": "2026-09-06T11:19:50Z"
+        },
+        {
+          "complete_at_utc": "2026-09-06T00:00:00Z",
+          "day": "20260905",
+          "earliest_start_utc": "2026-09-06T11:19:50Z",
+          "fits_before_the_bar": true,
+          "hours_between_that_start_and_the_bar": 60.77,
+          "measured_cost_h": 1.165,
+          "would_finish_utc": "2026-09-06T12:29:44Z"
+        },
+        {
+          "complete_at_utc": "2026-09-07T00:00:00Z",
+          "day": "20260906",
+          "earliest_start_utc": "2026-09-07T00:00:00Z",
+          "fits_before_the_bar": true,
+          "hours_between_that_start_and_the_bar": 48.1,
+          "measured_cost_h": 1.165,
+          "would_finish_utc": "2026-09-07T01:09:54Z"
+        },
+        {
+          "complete_at_utc": "2026-09-08T00:00:00Z",
+          "day": "20260907",
+          "earliest_start_utc": "2026-09-08T00:00:00Z",
+          "fits_before_the_bar": true,
+          "hours_between_that_start_and_the_bar": 24.1,
+          "measured_cost_h": 1.165,
+          "would_finish_utc": "2026-09-08T01:09:54Z"
+        },
+        {
+          "complete_at_utc": "2026-09-09T00:00:00Z",
+          "day": "20260908",
+          "earliest_start_utc": "2026-09-09T00:00:00Z",
+          "fits_before_the_bar": false,
+          "hours_between_that_start_and_the_bar": 0.1,
+          "measured_cost_h": 1.165,
+          "would_finish_utc": "2026-09-09T01:09:54Z"
+        }
+      ],
+      "why_they_cannot": {
+        "20260908": "completes 2026-09-09T00:00:00Z, leaving 0.1 h before the bar against a measured 1.165 h of build"
+      }
+    },
+    "ruled_days": [
+      "20260903",
+      "20260904",
+      "20260905",
+      "20260906",
+      "20260907",
+      "20260908"
+    ],
+    "seal_opens_utc": "2026-09-09T00:06:00Z"
+  },
+  "protocol": "P003_P002_DA_ACCRUAL_REPORT_V1",
+  "reporter_identity": {
+    "commit_best_effort": "7bf6eb518f9a4082321abc53ee7121c2f25ea9b2",
+    "path": "live/pm_research/da_accrual_report.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "b7dfcc0b49d15246211bea9512b5fbbe8278bcafdebbdd786e5eb6ce917579b4",
+    "tree_head": "7bf6eb518f9a4082321abc53ee7121c2f25ea9b2"
+  },
+  "the_two_headline_dates": {
+    "e2a_first_moment_G_ge_min": "2026-09-09T00:00:00Z",
+    "gate1_seal_opens_utc": "2026-09-09T00:06:00Z",
+    "they_are_different_clocks": "the Gate-1 bar is a RULED moment in params v5; the E2-A date is DERIVED from a day count that has to accrue. They coincide by arithmetic, not by design, and either can move without the other"
+  }
+}
