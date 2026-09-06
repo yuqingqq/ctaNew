@@ -437,7 +437,7 @@ def _params_digest() -> str:
     """The params file's digest, READ at emission -- the design is emitted
     last, so the params are already final and can be pinned here."""
     p = (Path(__file__).resolve().parents[2]
-         / "live/pm_research/declarations/de_multiday_gate1_params_v7.json")
+         / "live/pm_research/declarations/de_multiday_gate1_params_v8.json")
     return (hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file()
             else "ABSENT")
 
@@ -1478,6 +1478,23 @@ def declaration() -> dict:
                 "arithmetic"),
             "enforced_by": ["de_multiday_gate1_runner.read_gate()",
                             "de_multiday_gate1_runner.may_read_aggregate()"],
+            "conjunct_ids": ["clock_ge_read_not_before",
+                             "six_ruled_days_from_params",
+                             "receipt_at_landing_digest",
+                             "at_least_one_admissible_arm",
+                             "ledger_verdict",
+                             "producing_code_locatable",
+                             "horizon_fallback_G5_directional",
+                             "params_field_required"],
+            "ONE_FIELD_AND_BOTH_SEATS_EVALUATE_IT_BY_ID": (
+                "params v7 carried the eight under `read_gate_predicate` "
+                "while `read_gate.the_bar_is_a_CONJUNCTION` still listed "
+                "R-602's TWO strings -- and DA 74 read the latter and "
+                "reported '2 conjuncts declared'. Two fields, two "
+                "implementations, silently different bars, which is item 8 "
+                "itself, live in landed artifacts. params v8 carries ONE "
+                "list of OBJECTS with stable ids; a declared id with no "
+                "evaluator CLOSES the gate on either side"),
             "driven": ["clock past + 6 receipts -> OPENS",
                        "clock past + 5 -> REFUSES naming the missing day",
                        "clock before + 6 -> REFUSES naming the bar",
@@ -2631,7 +2648,7 @@ def selftest(*, quiet: bool = False) -> int:
 
     import hashlib as _h4
     _pp = (Path(__file__).resolve().parents[2] / "live/pm_research/"
-           "declarations/de_multiday_gate1_params_v7.json")
+           "declarations/de_multiday_gate1_params_v8.json")
     ok(d["parameters"]["sha256"] == _h4.sha256(_pp.read_bytes()).hexdigest()
        and d["parameters"]["pin_direction"].startswith("design -> params"),
        "THE PIN DIRECTION IS FLIPPED AND THE PIN IS REAL: the design pins "

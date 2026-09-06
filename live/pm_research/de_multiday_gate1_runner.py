@@ -47,14 +47,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 172
+EXPECTED_CHECKS = 182
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v7.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v8.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v6.json")
+                        "de_multiday_gate1_params_v7.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -869,22 +869,72 @@ def sealed_day_receipt_glob(day: str) -> str:
 
 
 def find_sealed_day_receipt(day: str, root: Path) -> dict:
-    """The one sealed receipt for a day, or a NAMED status."""
+    """THE CHAIN HEAD for a day -- not "exactly one file".
+
+    REV 51 §1.5: requiring exactly one glob match made RULE 13'S OWN FORM
+    look like a defect. A superseding `.v2` sitting beside its `v1` -- which
+    is what rule 13 requires, since a landed artifact is never edited --
+    returned AMBIGUOUS and the gate refused the day as missing. The
+    correction of the 09-03 receipt would have closed the gate on 09-03.
+
+    So the chain is FOLLOWED: a receipt whose `supersedes.sha256` names
+    another receipt PRESENT for this day is a link, and the HEAD is the one
+    nothing else supersedes. AMBIGUOUS is reserved for what it always
+    meant -- two receipts with NO chain between them, a day that ran twice.
+    And a `.v2` whose `supersedes.sha256` matches nothing present refuses
+    by name: a supersession whose predecessor is absent is a claim about a
+    file nobody can check."""
     d = Path(root) / "pm_5min/derived"
     pat = sealed_day_receipt_glob(day)
     hits = sorted(d.glob(pat))
     if not hits:
         return {"day": day, "present": False, "status": "MISSING",
                 "expected_glob": str(d / pat), "n_matches": 0}
-    if len(hits) > 1:
+    by_digest, sup_of, recs = {}, {}, {}
+    for p in hits:
+        try:
+            rec = json.loads(p.read_text())
+        except (OSError, ValueError):
+            rec = {}
+        recs[p] = rec
+        by_digest[sha256_streamed(p)] = p
+        sup_of[p] = ((rec.get("supersedes") or {}).get("sha256"))
+    if len(hits) == 1:
+        p = hits[0]
+        return {"day": day, "present": True, "status": "PRESENT",
+                "path": str(p), "n_matches": 1, "chain": [str(p)],
+                "chain_head_is": "the only receipt"}
+    # every supersedes.sha256 that names a present receipt is an edge
+    superseded = set()
+    dangling = []
+    for p, sup in sup_of.items():
+        if sup is None:
+            continue
+        if sup in by_digest:
+            superseded.add(by_digest[sup])
+        else:
+            dangling.append({"path": str(p), "supersedes_sha256": sup})
+    if dangling:
+        return {"day": day, "present": False, "status": "DANGLING_SUPERSEDES",
+                "n_matches": len(hits), "dangling": dangling,
+                "why": "a receipt supersedes a digest that is not present "
+                       "for this day; a supersession whose predecessor is "
+                       "absent is a claim about a file nobody can check"}
+    heads = [p for p in hits if p not in superseded]
+    if len(heads) != 1:
         return {"day": day, "present": False, "status": "AMBIGUOUS",
                 "expected_glob": str(d / pat), "n_matches": len(hits),
                 "matches": [str(x) for x in hits],
-                "why": "two sealed receipts for one day is a day that ran "
-                       "twice; a read that picks the newest is a read that "
-                       "chose after seeing"}
-    return {"day": day, "present": True, "status": "PRESENT",
-            "path": str(hits[0]), "n_matches": 1}
+                "heads": [str(x) for x in heads],
+                "why": "two receipts for one day with NO chain between "
+                       "them is a day that ran twice; a read that picks "
+                       "the newest has chosen after seeing"}
+    head = heads[0]
+    return {"day": day, "present": True, "status": "PRESENT_CHAIN_HEAD",
+            "path": str(head), "n_matches": len(hits),
+            "chain": [str(x) for x in hits],
+            "superseded": [str(x) for x in sorted(superseded)],
+            "chain_head_is": "the receipt nothing else supersedes"}
 
 
 def verify_sealed_day_receipt(day: str, path: str, root: Path) -> dict:
@@ -999,16 +1049,24 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
     root = Path(root) if root is not None else Path(DR.resolve()["data_root"])
     repo = Path(__file__).resolve().parents[2]
     days = params["days"]
-    spec = params.get("read_gate_predicate")
-    # (8) THE FIELD IS REQUIRED. DA's gate reads the SAME field; two
-    # implementations of one bar must not disagree silently, and a params
-    # file that lacks it is a file that has not been updated to the ruling.
-    if not isinstance(spec, dict):
+    # (8) ONE FIELD, AND IT IS REQUIRED. R-604 item 8 was LIVE: params v7
+    # carried the eight under `read_gate_predicate` while
+    # `read_gate.the_bar_is_a_CONJUNCTION` still listed R-602's TWO
+    # strings, and DA read the latter and reported "2 conjuncts declared".
+    # There is ONE list now, of objects with stable ids, and both seats
+    # evaluate it BY ID.
+    rg = params.get("read_gate") or {}
+    spec_list = rg.get("the_bar_is_a_CONJUNCTION")
+    if not isinstance(spec_list, list) or not spec_list or not all(
+            isinstance(c, dict) and c.get("id") for c in spec_list):
         raise RunnerRefused(
-            "REFUSED: the parameter file carries no `read_gate_predicate`. "
-            "R-604 makes the field REQUIRED -- DA's gate reads the same "
-            "one, and a bar implemented twice from different files is a "
-            "bar that can disagree without anybody noticing.")
+            "REFUSED: the parameter file carries no "
+            "`read_gate.the_bar_is_a_CONJUNCTION` as a list of objects "
+            "with ids. R-604 item 8: DA's gate reads the SAME field, and a "
+            "bar implemented twice from different fields is a bar that can "
+            "disagree without anybody noticing.")
+    declared_ids = [c["id"] for c in spec_list]
+    spec = {"horizon_utc": rg.get("horizon_utc", READ_HORIZON_UTC)}
     not_before = _iso_utc(params["read_not_before_utc"])
     horizon = _iso_utc(spec.get("horizon_utc", READ_HORIZON_UTC))
     C = []
@@ -1136,8 +1194,31 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
        {"failing": [d for d in days
                     if not per_day[d]["code_locatable"]["holds"]]})
     _c("8_params_carries_the_predicate", True,
-       {"field": "read_gate_predicate", "note": "checked above; a file "
-        "lacking it refuses before any day is examined"})
+       {"field": "read_gate.the_bar_is_a_CONJUNCTION",
+        "note": "checked above; a file lacking it refuses before any day "
+                "is examined"})
+    # EVERY DECLARED ID MUST HAVE AN EVALUATOR HERE, and every evaluator a
+    # declared id. An id nobody evaluates is a bar nobody applies; an
+    # evaluator with no id is a bar nobody declared.
+    _EVAL = {"clock_ge_read_not_before": "1_clock",
+             "six_ruled_days_from_params":
+                 "2_all_six_ruled_days_have_a_receipt",
+             "receipt_at_landing_digest":
+                 "3_digest_matches_the_landing_record",
+             "at_least_one_admissible_arm":
+                 "4_each_day_has_an_admissible_arm",
+             "ledger_verdict": "5_ledger_verdict_holds",
+             "producing_code_locatable": "6_producing_code_is_locatable",
+             "horizon_fallback_G5_directional": "horizon",
+             "params_field_required": "8_params_carries_the_predicate"}
+    unbound = [i for i in declared_ids if i not in _EVAL]
+    unused = [i for i in _EVAL if i not in declared_ids]
+    if unbound or unused:
+        raise RunnerRefused(
+            f"REFUSED: the declared conjunct ids and this runner's "
+            f"evaluators do not correspond. Declared with no evaluator: "
+            f"{unbound}; evaluated but not declared: {unused}. A conjunct "
+            f"id without an evaluator CLOSES the gate (R-604 item 8).")
 
     landed = [d for d in days if found[d]["present"]]
     all_hold = all(c["holds"] for c in C)
@@ -1154,6 +1235,8 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
         "protocol": "P003_DE_GATE1_READ_GATE_V2",
         "ruling": "R-602, completed as eight conjuncts by R-604",
         "conjuncts": C,
+        "declared_conjunct_ids": declared_ids,
+        "id_to_evaluator": dict(_EVAL),
         "per_day": per_day,
         "ruled_days": list(days),
         "n_landed": len(landed),
@@ -3399,7 +3482,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v7.json")
+        ok(any(x.endswith("de_multiday_gate1_params_v8.json")
                for x in _seen),
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
@@ -3605,13 +3688,40 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "2026-09-03 the .v2 supersession is exactly what makes this hold",
         "6_producing_code_is_locatable")
     refuses(lambda: may_read_aggregate(
-        {**live, "read_gate_predicate": None}, n_days_complete=6,
+        {**live, "read_gate": {}}, n_days_complete=6,
         now_utc=_after, root=_all6, ledger_rows=_rows6),
         "R-604 (8) KNOWN-BAD, THE FIELD ABSENT: a params file without "
-        "`read_gate_predicate` REFUSES before any day is examined -- DA's "
-        "gate reads the same field, and a bar implemented twice from "
-        "different files can disagree without anybody noticing",
-        "carries no `read_gate_predicate`")
+        "`read_gate.the_bar_is_a_CONJUNCTION` REFUSES before any day is "
+        "examined -- DA's gate reads the SAME field, and a bar implemented "
+        "twice from different fields can disagree without anybody noticing",
+        "no `read_gate.the_bar_is_a_CONJUNCTION`")
+    _bar = live["read_gate"]["the_bar_is_a_CONJUNCTION"]
+    ok(len(_bar) == 8 and all(c.get("id") and c.get("text")
+                              and c.get("evaluated_by_runner")
+                              for c in _bar),
+       f"R-604 (8) ONE FIELD, EIGHT OBJECTS WITH STABLE IDS: "
+       f"{[c['id'] for c in _bar]}. v7 carried the eight under a SECOND "
+       f"key while this one still listed R-602's TWO strings, and DA read "
+       f"the latter and reported '2 conjuncts declared' -- two fields, two "
+       f"implementations, silently different bars")
+    _idmap = read_gate(live, now_utc=_after, root=_all6,
+                       ledger_rows=_rows6)
+    ok(_idmap["declared_conjunct_ids"] == [c["id"] for c in _bar]
+       and set(_idmap["id_to_evaluator"]) == set(_idmap[
+           "declared_conjunct_ids"]),
+       "and EVERY declared id has an evaluator here, and every evaluator a "
+       "declared id -- the correspondence is checked, not assumed")
+    _extra = {**live, "read_gate": {
+        **live["read_gate"],
+        "the_bar_is_a_CONJUNCTION": _bar + [
+            {"id": "a_bar_nobody_evaluates", "text": "x",
+             "evaluated_by_runner": "none"}]}}
+    refuses(lambda: may_read_aggregate(
+        _extra, n_days_complete=6, now_utc=_after, root=_all6,
+        ledger_rows=_rows6),
+        "AND A CONJUNCT ID WITH NO EVALUATOR CLOSES THE GATE: a bar nobody "
+        "applies is not a bar, which is what DA already does for an "
+        "unknown string", "no evaluator")
     _five = _synth_ledger(_D6[:5])
     _hz = may_read_aggregate(live, n_days_complete=5,
                              now_utc=_t(2026, 9, 9, 12, 0, tzinfo=_tz),
@@ -3632,6 +3742,97 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- REV 51 S0: the pin chain must RESOLVE, in one direction -----
+    _PLACEHOLDERS = ("<emitted", "PENDING", "TBD", "<the ", "ABSENT")
+    _pdd = live.get("design_declaration") or {}
+    _dpath = Path(DR.resolve()["data_root"]).parent / _pdd.get("path", "")
+    _bad_ph = [t for t in _PLACEHOLDERS if t in str(_pdd.get("path", ""))]
+    ok(not _bad_ph and _pdd.get("pin_direction") == "design -> params",
+       f"REV 51 S0: the params name the design at a REAL path with no "
+       f"literal placeholder, and record that the pin runs design -> "
+       f"params. params v6 named it at a path containing "
+       f"'<emitted this round>', which resolves nowhere")
+    if offline:
+        offline_skip("the params -> design -> params walk (it reads the "
+                     "design artifact under data/)")
+    else:
+        _walk = {"params_names": str(_pdd.get("path")),
+                 "design_exists": _dpath.is_file()}
+        if _dpath.is_file():
+            _dj = json.loads(_dpath.read_text())
+            _here = hashlib.sha256(
+                (Path(__file__).resolve().parents[2] / PARAMS_REL
+                 ).read_bytes()).hexdigest()
+            _walk["design_pins"] = (_dj.get("parameters") or {}).get("sha256")
+            _walk["closes"] = _walk["design_pins"] == _here
+            ok(_walk["closes"] is True,
+               f"AND THE WALK CLOSES: params name the design at "
+               f"{_dpath.name}, and that design pins THIS params file by "
+               f"digest -- params -> design -> params, by path AND digest. "
+               f"design v14 named params at v2's PATH with v6's DIGEST, so "
+               f"it resolved in neither direction")
+        else:
+            ok(True,
+               f"the design named by the params ({_dpath.name}) is not "
+               f"emitted yet in this tree; the walk is driven the moment "
+               f"it is, and the placeholder check above has already run")
+
+    # ---- REV 51 S1.5: rule 13's own form must not read as AMBIGUOUS ---
+    def _add_v2(rootp, day, *, chained=True):
+        der = rootp / "pm_5min/derived"
+        compact = [x for x in sorted(day_forms(day)) if "-" not in x][0]
+        v1 = sorted(der.glob(sealed_day_receipt_glob(day)))[0]
+        rec = json.loads(v1.read_text())
+        rec["supersedes"] = {"sha256": (sha256_streamed(v1) if chained
+                                        else "0" * 64)}
+        rec["note"] = "the .v2 correction"
+        (der / f"{SEALED_DAY_RECEIPT_PREFIX}{compact}"
+               f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T999999Z.json"
+         ).write_text(json.dumps(rec))
+        return v1
+
+    _one = _synth_ledger(_D6)
+    _f1 = find_sealed_day_receipt(_D6[0], _one)
+    ok(_f1["present"] is True and _f1["n_matches"] == 1,
+       "REV 51 S1.5 POSITIVE CONTROL: one receipt for a day resolves to "
+       "itself")
+    _chain = _synth_ledger(_D6)
+    _v1 = _add_v2(_chain, _D6[0], chained=True)
+    _f2 = find_sealed_day_receipt(_D6[0], _chain)
+    ok(_f2["present"] is True
+       and _f2["status"] == "PRESENT_CHAIN_HEAD"
+       and _f2["path"] != str(_v1) and _f2["n_matches"] == 2,
+       "REV 51 S1.5, THE FIX: a superseding .v2 beside its v1 -- RULE 13'S "
+       "OWN FORM -- resolves to the CHAIN HEAD. It returned AMBIGUOUS "
+       "before, so the .v2 correction of the 09-03 receipt would have "
+       "CLOSED THE GATE on 09-03")
+    _unch = _synth_ledger(_D6)
+    _add_v2(_unch, _D6[0], chained=False)
+    _f3 = find_sealed_day_receipt(_D6[0], _unch)
+    ok(_f3["present"] is False and _f3["status"] == "DANGLING_SUPERSEDES",
+       "KNOWN-BAD: a .v2 whose `supersedes.sha256` matches nothing present "
+       "REFUSES BY NAME -- a supersession whose predecessor is absent is a "
+       "claim about a file nobody can check")
+    _twice = _synth_ledger(_D6)
+    _der = _twice / "pm_5min/derived"
+    _c0 = [x for x in sorted(day_forms(_D6[0])) if "-" not in x][0]
+    (_der / f"{SEALED_DAY_RECEIPT_PREFIX}{_c0}"
+            f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T888888Z.json"
+     ).write_text(json.dumps({"day": _D6[0], "note": "a second, unchained"}))
+    _f4 = find_sealed_day_receipt(_D6[0], _twice)
+    ok(_f4["present"] is False and _f4["status"] == "AMBIGUOUS"
+       and len(_f4["heads"]) == 2,
+       "AND AMBIGUOUS IS RESERVED FOR WHAT IT MEANT: two receipts with NO "
+       "chain between them is a day that RAN TWICE, and a read that picks "
+       "the newest has chosen after seeing")
+    _gate_chain = read_gate(live, now_utc=_after, root=_chain,
+                            ledger_rows=_rows6)
+    ok(_gate_chain["per_day"][_D6[0]]["receipt"]["status"]
+       == "PRESENT_CHAIN_HEAD",
+       "and the GATE reads the chain head, so a corrected day is a present "
+       "day rather than a missing one")
+
+
     if offline:
         offline_skip("the live read-gate evaluation (it reads the day verdicts "
                      "under data/, which a fixture run may not touch)")
