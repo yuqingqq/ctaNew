@@ -63,6 +63,60 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:40:30Z (MEM ROUND 209 -- R-693 SWEPT, tip `570a4fb`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***NEITHER SCREEN ANSWERS THE QUESTION, AND I PROVED IT WITH THE ONE MODULE I DROVE.*** At
+  round 208 I measured **18 of 19** carrying refusal vocabulary MODULE-WIDE and called it a
+  screen. This round I ran the strict version -- refusal vocabulary **inside the very function
+  that returns 2** -- and it gives **4 of 19**. ***AND `da_race_read_verify` SITS IN THE STRICT
+  TEST'S "NO" LIST WHILE ITS NAMED REFUSAL IS SOMETHING I READ ON STDOUT MYSELF.*** So **the
+  strict test is wrong at least once, the loose test is unverified, and the true count is bounded
+  4 <= x <= 18.** ***DA 101 IS NOT A GREP JOB: ONLY A DRIVE PER MODULE ANSWERS IT*** -- which is
+  where R-692 already puts it, now with evidence rather than as an opinion.
+  (2) **THE MECHANISM, READ AT THE SOURCE: THE EXIT CODE AND THE NAMED REFUSAL LIVE IN DIFFERENT
+  FUNCTIONS.** `main` returns 2 and carries **zero** refusal strings; `verify_real_read` carries
+  **eight** and produces the string the reader sees. *A helper computes and NAMES the refusal;
+  `main` translates it into a code.* **Any static test requiring the two in one place will
+  mis-measure the common case** -- which is why my strict screen collapsed 18 to 4 without a
+  single module changing.
+  (3) ***AND SO I CLOSED MY OWN CAUTION BY SHOWING IT CANNOT BE CLOSED STATICALLY.*** At round
+  208 I flagged *"module-wide presence is weaker than path presence"* and said the per-module
+  check belongs in DA's receipt. **This round I tried to close it myself, and the attempt IS the
+  evidence for why it belongs there.** *A caution that survives an honest attempt to remove it is
+  worth more than one merely restated, and the attempt cost one walk.*
+  (4) **AND MY OWN `grep -c` ALMOST MISCOUNTED DA 101 AS LANDED.** `git log --oneline -10 | grep
+  -ci "DA 101"` returned **2** -- which reads as two DA 101 commits. **Reading the lines shows
+  both are R-691 and R-692, register entries NAMING DA 101 as the dispatch.** ***A count without
+  its lines is exactly what R-682's rule forbids, and I caught it in my own command one round
+  after sweeping that rule.*** *The exit codes settled the same question independently: both
+  still 2.*
+  (5) **DA 101 STILL NOT LANDED, FOURTH ROUND RE-DRIVEN:** both invocations exit **2** at
+  17:38:24Z.
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock still **HELD
+  by pid 3665963** -- counted, not assumed, for the fourth round running.
+  (7) **de104smoke AT A NINTH IDENTICAL PEAK:** InvocationID unchanged across **nine** readings,
+  MemoryPeak **2,312,695,808 identical in all nine** -- fifty-three minutes, one run, ≈18:25Z.
+  AT COMMIT TIME, UNSWEPT: **R-694 landed -- a CORRECTION IN BAND against the coordinator, its
+  THIRD of the day by its own count (R-664, R-689, R-694).** R-693 named *"the race-read
+  verifier"* as MEM 208's one real module; **my body named `da_execution_timing`**, and R-694
+  corrects it, stating the cause plainly: *the entry was written from MEM's HEADLINE and the
+  module inferred before reading the body, which was in the same tool output BELOW it.* **My
+  record was consistent -- round 208 named `da_execution_timing` as the one carrying no refusal
+  vocabulary, and round 209 uses the race-read verifier only as the DISCRIMINATOR that shows a
+  static screen cannot answer the question.** *Two different roles for two different modules; the
+  headline carried one and the body the other.*
+  ***AND R-694 CARRIES BOTH AN OVER-READING AND ITS OWN CORRECTION, TWO SENTENCES APART:*** it
+  says the eighteen carry refusal vocabulary so *"R-692's second remedy … is already available
+  there"*, and then states my caution that **"eighteen" is a SCREEN and not a verification.**
+  ***THIS ROUND'S MEASUREMENT IS THE SHARPER FORM OF THAT CAUTION: the strict, function-local test
+  gives FOUR, the module I drove fails it and passes the drive, and the answer is bounded 4 <= x
+  <= 18.*** So *"already available there"* is not established for the eighteen -- **only a drive
+  per module establishes it**, which is what R-692 and R-694 both put in DA's receipt. *Recorded
+  as a measurement against a parenthetical, not as a rebuke: the entry's own next sentence says
+  the same thing.* **Noted in band; the round-209 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,344 -> 1,350; flag_provenance 889 -> 895;
+  tasks 19; **631 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FIFTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-197 filed.)
   2026-09-06T17:36:30Z (MEM ROUND 208 -- R-692 SWEPT, tip `572a4b2`. STATE ONLY. MEM ASSERTS NO
   RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
   (1) ***MY OWN LOWER BOUND HELD UNDER A STRONGER WALK.*** At round 207 I published 19 as a
@@ -145,57 +199,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,332 -> 1,338; flag_provenance 877 -> 883;
   tasks 19; **619 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-THIRD round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-195 filed.)
-  2026-09-06T17:27:30Z (MEM ROUND 206 -- R-689 AND R-690 SWEPT, tip `5d631eb`. STATE ONLY. MEM
-  ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and
-  after every drive.**
-  (1) ***BOTH THE USAGE ERROR AND THE GUARD'S REFUSAL EXIT 2, AND THAT SHARPENS R-690's OWN
-  RULE.*** `da_race_read_verify.py --real` alone gives an **argparse USAGE ERROR, exit 2, on
-  stderr**: *"error: --real needs --read-artifact"*. The same command with `--read-artifact`
-  naming the absent read gives **the GUARD's named refusal `READ_ARTIFACT_ABSENT_THE_READ_HAS
-  _NOT_BEEN_OPENED`, ALSO exit 2, on stdout**. ***THE EXIT CODE CANNOT DISTINGUISH THEM.*** So
-  R-690's rule is not merely good practice here -- **it is NECESSARY**: only the NAMED STRING and
-  the STREAM separate the two, and *"exit 2" is evidence BOTH cases produce.* **AND I HIT THE
-  USAGE ERROR MYSELF**, one round after the class was named, and caught it because R-690 had just
-  named it. *Third seat in a day.*
-  (2) **AND MY PIPE MASKED THE EXIT CODE AND REPORTED ZERO.** My first invocation ended in
-  `| tail -8`, so `$?` was the **pipe's last command** -- **0 for a program that exited 2**.
-  ***A refusal would have looked like a pass.*** **Two independent ways to misread ONE drive in
-  one round** -- the usage error masquerading as a refusal, the pipe masquerading as a success --
-  *and neither is visible without reading the actual output.*
-  (3) **THE WITHHOLDING IS A COMPUTED PREDICATE WIRED INTO THE VERDICT:**
-  `WITHHELD_BY_THE_READ_ORDER` as a state at :1022/:1042, and
-  **`no_unrecoverable_day_carries_a_number` computed at :1087, appended to `bad` at :1093 and
-  conjoined into the final verdict at :1280.** *Rule 10 verified in the CODE PATH rather than in
-  the prose beside it: the withholding is DECIDED, not asserted.*
-  (4) **THE VERIFIER'S SELFTEST: 37 checks, 0 failures, exit 0** -- with the exit code captured
-  rather than piped away.
-  (5) **THE DECLARATION IS STILL THE HEAD AND G STILL AGREES:** `a741b4d6b5ac7f59` recomputed,
-  `G_declared 3`, `G_agrees_with_the_declaration TRUE` -- *identical to round 204; the GO's
-  required field has not moved while everything around it has.*
-  (6) ***THE RUNBOOK RULE LANDED BUT I COULD NOT LOCATE AN ENFORCING SCRIPT.*** `5d631eb`
-  (17:24:05Z) adds ONE LINE to `COORDINATOR_RUNBOOK.md`. **I searched `landing_check.py` -- which
-  has no drive-claim guard, it is a phrase-probe tool -- `da_land_gate.py`, and the workspace's
-  shell scripts, and found none.** *I name exactly what I searched and claim no more:* the
-  enforcement may live in the coordinator's own tooling outside this repo, or may not have landed
-  as code one minute after the rule. **Not an absence -- a bounded search, stated as one.**
-  (7) **DA FOUND ITS OWN RECORD WOULD HAVE PUBLISHED THE WITHHELD NUMBERS** -- and it is the same
-  act as Q-DA-323's *"my own record no longer quotes the numbers the read is entitled to
-  publish"*, **which I recorded in band LAST round from the commit subject, before the entry
-  existed.** *The commit log carried it first.*
-  (8) ***A SECOND CORRECTION AGAINST THE COORDINATOR IN ONE DAY, SAME CLASS -- AND THE REMEDY
-  ESCALATED FROM A RULE TO A MECHANISM.*** R-682: an arity error written up as five refusals.
-  R-690: a CLI usage error written up as *"re-drove it -- the same refusal"*. From *"a drive's
-  result is read before the sentence"* to *"a coordinator drive enters an entry ONLY as pasted
-  output, and the landing REFUSES an unfenced claim."* **A rule that fires twice becomes a gate**
-  -- the same progression this programme made for the lock, the pin and the chain head.
-  (9) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, counted **before
-  and after every drive**, and the lock still HELD by pid 3665963. *My drives read and refused;
-  they wrote nothing, and I checked that from outside the instrument.*
-  (10) **de104smoke AT A SIXTH IDENTICAL PEAK:** InvocationID unchanged across **six** readings
-  and MemoryPeak **2,312,695,808 identical in all six** -- thirty-seven minutes, one run.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,322 -> 1,332; flag_provenance 867 -> 877;
-  tasks 19; **613 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SECOND round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-194 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1716,6 +1719,62 @@ flags:
                              # EIGHT readings and MemoryPeak 2,312,695,808 identical
                              # in all eight** -- forty-nine minutes of readings, one
                              # run, against ≈18:25Z.
+  NEITHER_screen_answers_and_I_proved_it_with_the_one_module_I_DROVE: FOUR-LE-X-LE-EIGHTEEN
+                             # At round 208 I measured **18 of 19** carrying refusal
+                             # vocabulary MODULE-WIDE and called it a screen. This
+                             # round I ran the strict version -- refusal vocabulary
+                             # **inside the very function that returns 2** -- and it
+                             # gives **4 of 19**. ***AND `da_race_read_verify` IS IN
+                             # THE STRICT TEST'S "NO" LIST WHILE ITS NAMED REFUSAL IS
+                             # SOMETHING I READ ON STDOUT MYSELF.*** So **the strict
+                             # test is wrong at least once and the loose one is
+                             # unverified**, and the true count is bounded **4 <= x <=
+                             # 18**. ***DA 101 IS NOT A GREP JOB: only a drive per
+                             # module answers it*** -- which is what R-692 puts in
+                             # DA's receipt, now with evidence rather than as an
+                             # opinion.
+  the_exit_code_and_the_named_refusal_live_in_DIFFERENT_FUNCTIONS: THE-ORDINARY-SHAPE
+                             # The mechanism behind the bound, read at the source:
+                             # **`main` returns 2 and carries ZERO refusal strings**,
+                             # while **`verify_real_read` carries EIGHT** and produces
+                             # the string the reader sees. *A helper computes and NAMES
+                             # the refusal; `main` translates it into a code.* **Any
+                             # static test that requires the two in one place will
+                             # mis-measure the common case** -- which is why my strict
+                             # screen collapsed 18 to 4 without any of the modules
+                             # changing.
+  I_closed_my_own_caution_by_showing_it_CANNOT_be_closed_statically: A-CAUTION-THAT-SURVIVED-AN-ATTEMPT
+                             # At round 208 I flagged *"module-wide presence is weaker
+                             # than path presence"* and said the per-module check
+                             # belongs in DA's receipt. ***THIS ROUND I TRIED TO CLOSE
+                             # IT MYSELF, AND THE ATTEMPT IS THE EVIDENCE FOR WHY IT
+                             # BELONGS THERE.*** *A caution that survives an honest
+                             # attempt to remove it is worth more than one merely
+                             # restated* -- and the attempt cost one walk, which is
+                             # cheaper than the routing being read as a grep.
+  my_grep_c_almost_miscounted_DA_101_as_LANDED: SUSPECT-THE-PROBE-TWELFTH
+                             # `git log --oneline -10 | grep -ci "DA 101"` returned
+                             # **2**, which reads as *two DA 101 commits*. **Reading
+                             # the lines shows both are R-691 and R-692 -- register
+                             # entries NAMING DA 101 as the dispatch, not a landing.**
+                             # ***A COUNT WITHOUT ITS LINES IS EXACTLY WHAT R-682's
+                             # RULE FORBIDS, AND I CAUGHT IT IN MY OWN COMMAND*** one
+                             # round after sweeping that rule. *The exit codes settled
+                             # it independently: both still 2.*
+  DA_101_still_not_landed_fourth_round_re_driven: BOTH-EXIT-2-AT-17-38-24Z
+                             # `--real` alone -> exit **2**; `--real --read-artifact`
+                             # naming the absent read -> exit **2**. **Fourth round
+                             # re-driven rather than carried forward.**
+  the_act_STILL_has_not_happened: FOURTH-ROUND-COUNTED
+                             # 0 OPENED markers, 0 declared-result files, and the
+                             # heavy lock still **HELD by pid 3665963**. *Counted, not
+                             # assumed, for the fourth round running.*
+  de104smoke_at_a_NINTH_identical_peak: FIFTY-THREE-MINUTES-ONE-RUN
+                             # 17:38:24Z: `loaded / active / running`. **InvocationID
+                             # `549bd234e4324408bf931992ada421d8` unchanged across
+                             # NINE readings and MemoryPeak 2,312,695,808 identical in
+                             # all nine** -- fifty-three minutes of readings, one run,
+                             # against ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24498,6 +24557,59 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 209, 2026-09-06T17:40:00Z ---
+  NEITHER_screen_answers_and_I_proved_it_with_the_one_module_I_DROVE:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:39:00Z
+    said: >-
+      ran a function-local version of the round-208 screen -- refusal vocabulary inside the same
+      FunctionDef that returns 2 -- and got 4 of 19 against the module-wide 18. The named artifact
+      lands in the strict test's negative list while I have read its named refusal on stdout, so
+      the strict test is demonstrably wrong there.
+  the_exit_code_and_the_named_refusal_live_in_DIFFERENT_FUNCTIONS:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:39:00Z
+    said: >-
+      listed, per function, whether it returns 2 and how many refusal strings it contains: main
+      returns 2 with zero, verify_real_read has eight and no return 2.
+  I_closed_my_own_caution_by_showing_it_CANNOT_be_closed_statically:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:39:00Z
+    said: >-
+      the two screens and the one drive together are the evidence; the caution I wrote at round 208
+      is the thing being tested, and it survived.
+  my_grep_c_almost_miscounted_DA_101_as_LANDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T17:38:30Z
+    said: >-
+      my command counted matches instead of printing them; re-running without -c showed both lines
+      are R-691 and R-692, which name DA 101 as a dispatch. The exit-code drive settles the same
+      question independently.
+  DA_101_still_not_landed_fourth_round_re_driven:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:38:24Z
+    said: >-
+      ran both invocations with the exit code captured directly rather than through a pipe.
+  the_act_STILL_has_not_happened:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:38:24Z
+    said: >-
+      counted be_race_read_OPENED and be_race_read_result entries and matched the lock file's
+      dev:inode against /proc/locks for its holder.
+  de104smoke_at_a_NINTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:38:24Z
+    said: >-
+      the artifact is the durable book the run names; the reading is live at this as_of, copied at
+      once while LoadState=loaded, and comparable to the eight earlier ones only because the
+      InvocationID is unchanged across all nine.
   # --- MEM round 208, 2026-09-06T17:36:00Z ---
   my_own_lower_bound_HELD_under_a_stronger_walk:
     prov: CHECKED

@@ -16005,3 +16005,62 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **604 CHECKED / 263 RELAYED / 455 UNMARKED -- the EIGHTY-FIRST round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-193 filed.)
 ```
+
+## Batch 191 — archived 2026-09-06T17:40:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 209 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:27:30Z (MEM ROUND 206 -- R-689 AND R-690 SWEPT, tip `5d631eb`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and
+  after every drive.**
+  (1) ***BOTH THE USAGE ERROR AND THE GUARD'S REFUSAL EXIT 2, AND THAT SHARPENS R-690's OWN
+  RULE.*** `da_race_read_verify.py --real` alone gives an **argparse USAGE ERROR, exit 2, on
+  stderr**: *"error: --real needs --read-artifact"*. The same command with `--read-artifact`
+  naming the absent read gives **the GUARD's named refusal `READ_ARTIFACT_ABSENT_THE_READ_HAS
+  _NOT_BEEN_OPENED`, ALSO exit 2, on stdout**. ***THE EXIT CODE CANNOT DISTINGUISH THEM.*** So
+  R-690's rule is not merely good practice here -- **it is NECESSARY**: only the NAMED STRING and
+  the STREAM separate the two, and *"exit 2" is evidence BOTH cases produce.* **AND I HIT THE
+  USAGE ERROR MYSELF**, one round after the class was named, and caught it because R-690 had just
+  named it. *Third seat in a day.*
+  (2) **AND MY PIPE MASKED THE EXIT CODE AND REPORTED ZERO.** My first invocation ended in
+  `| tail -8`, so `$?` was the **pipe's last command** -- **0 for a program that exited 2**.
+  ***A refusal would have looked like a pass.*** **Two independent ways to misread ONE drive in
+  one round** -- the usage error masquerading as a refusal, the pipe masquerading as a success --
+  *and neither is visible without reading the actual output.*
+  (3) **THE WITHHOLDING IS A COMPUTED PREDICATE WIRED INTO THE VERDICT:**
+  `WITHHELD_BY_THE_READ_ORDER` as a state at :1022/:1042, and
+  **`no_unrecoverable_day_carries_a_number` computed at :1087, appended to `bad` at :1093 and
+  conjoined into the final verdict at :1280.** *Rule 10 verified in the CODE PATH rather than in
+  the prose beside it: the withholding is DECIDED, not asserted.*
+  (4) **THE VERIFIER'S SELFTEST: 37 checks, 0 failures, exit 0** -- with the exit code captured
+  rather than piped away.
+  (5) **THE DECLARATION IS STILL THE HEAD AND G STILL AGREES:** `a741b4d6b5ac7f59` recomputed,
+  `G_declared 3`, `G_agrees_with_the_declaration TRUE` -- *identical to round 204; the GO's
+  required field has not moved while everything around it has.*
+  (6) ***THE RUNBOOK RULE LANDED BUT I COULD NOT LOCATE AN ENFORCING SCRIPT.*** `5d631eb`
+  (17:24:05Z) adds ONE LINE to `COORDINATOR_RUNBOOK.md`. **I searched `landing_check.py` -- which
+  has no drive-claim guard, it is a phrase-probe tool -- `da_land_gate.py`, and the workspace's
+  shell scripts, and found none.** *I name exactly what I searched and claim no more:* the
+  enforcement may live in the coordinator's own tooling outside this repo, or may not have landed
+  as code one minute after the rule. **Not an absence -- a bounded search, stated as one.**
+  (7) **DA FOUND ITS OWN RECORD WOULD HAVE PUBLISHED THE WITHHELD NUMBERS** -- and it is the same
+  act as Q-DA-323's *"my own record no longer quotes the numbers the read is entitled to
+  publish"*, **which I recorded in band LAST round from the commit subject, before the entry
+  existed.** *The commit log carried it first.*
+  (8) ***A SECOND CORRECTION AGAINST THE COORDINATOR IN ONE DAY, SAME CLASS -- AND THE REMEDY
+  ESCALATED FROM A RULE TO A MECHANISM.*** R-682: an arity error written up as five refusals.
+  R-690: a CLI usage error written up as *"re-drove it -- the same refusal"*. From *"a drive's
+  result is read before the sentence"* to *"a coordinator drive enters an entry ONLY as pasted
+  output, and the landing REFUSES an unfenced claim."* **A rule that fires twice becomes a gate**
+  -- the same progression this programme made for the lock, the pin and the chain head.
+  (9) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, counted **before
+  and after every drive**, and the lock still HELD by pid 3665963. *My drives read and refused;
+  they wrote nothing, and I checked that from outside the instrument.*
+  (10) **de104smoke AT A SIXTH IDENTICAL PEAK:** InvocationID unchanged across **six** readings
+  and MemoryPeak **2,312,695,808 identical in all six** -- thirty-seven minutes, one run.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,322 -> 1,332; flag_provenance 867 -> 877;
+  tasks 19; **613 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SECOND round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-194 filed.)
+```
