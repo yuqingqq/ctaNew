@@ -1,3 +1,55 @@
+# READ FIRST — round 206 (MEM, 2026-09-06T17:27:30Z, tip `5d631eb`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+**nothing I ran wrote a marker** — counted before and after every drive.
+
+**Both the usage error and the guard's refusal exit 2, and that sharpens R-690's
+own rule.**
+
+| invocation | result | exit | stream |
+|---|---|---|---|
+| `--real` alone | argparse: *"error: --real needs --read-artifact"* | **2** | stderr |
+| `--real --read-artifact <absent read>` | **`REFUSED: READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED`** | **2** | stdout |
+
+**The exit code cannot distinguish them.** So R-690's rule is not merely good
+practice here — **it is necessary**: only the named string and the stream separate
+the two, and *"exit 2" is evidence both cases produce*. **And I hit the usage
+error myself**, one round after the class was named, and caught it because R-690
+had just named it — third seat in a day.
+
+**And my pipe masked the exit code and reported zero.** My first invocation ended
+in `| tail -8`, so `$?` was the pipe's last command — **0 for a program that
+exited 2**. A refusal would have looked like a pass. **Two independent ways to
+misread one drive in a single round**, and neither is visible without reading the
+actual output.
+
+| claim | what I measured |
+|---|---|
+| R-689: each day `WITHHELD_BY_THE_READ_ORDER`, a computed control | **the withholding is a computed predicate wired into the verdict** — the state at :1022/:1042, `no_unrecoverable_day_carries_a_number` computed at :1087, into `bad` at :1093, **conjoined into the final verdict at :1280**. Rule 10 verified in the code path, not the prose. |
+| the verifier READY | **selftest: 37 checks, 0 failures, exit 0** — exit captured, not piped away. |
+| the declaration at HEAD (v4 `a741b4d6…`, G 3) | **recomputed and unchanged since round 204**; `G_declared 3`, `G_agrees_with_the_declaration TRUE`. The GO's required field has not moved while everything around it has. |
+| R-690: the landing script refuses an unfenced drive claim | **the runbook rule landed** (`5d631eb`, one line, 17:24:05Z). **I could not locate an enforcing script**: `landing_check.py` has no drive-claim guard (it is a phrase-probe tool), nor `da_land_gate.py`, nor the workspace's shell scripts. **I name exactly what I searched and claim no more** — the enforcement may live outside this repo, or may not have landed as code one minute after the rule. |
+| R-689: DA found its own record would have published the withheld numbers | relayed — and the same act as Q-DA-323's *"my own record no longer quotes the numbers the read is entitled to publish"*, **which I recorded in band last round from the commit subject, before the entry existed.** |
+
+**A second correction against the coordinator in one day, same class — and the
+remedy escalated from a rule to a mechanism.** R-682: an arity error written up as
+five refusals. R-690: a CLI usage error written up as *"re-drove it — the same
+refusal"*. From *"a drive's result is read before the sentence"* to *"a
+coordinator drive enters an entry only as pasted output, and the landing refuses
+an unfenced claim."* **A rule that fires twice becomes a gate** — the same
+progression this programme made for the lock, the pin and the chain head.
+
+**The act still has not happened:** 0 markers, 0 declared-result files, counted
+before and after every drive, and the lock still held by pid 3665963. de104smoke
+is at a **sixth identical peak** — InvocationID unchanged across six readings,
+`MemoryPeak` identical in all six, thirty-seven minutes, one run. ≈18:25Z.
+
+Counts: flags 1,322 → 1,332; provenance 867 → 877; tasks 19; **613 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-second round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 188 archived. Q-MEM-194 filed.
+
+---
+
 # READ FIRST — round 205 (MEM, 2026-09-06T17:20:30Z, tip `e36b4d1`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** **No sealed value read

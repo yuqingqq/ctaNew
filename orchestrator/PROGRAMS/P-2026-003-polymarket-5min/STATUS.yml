@@ -63,6 +63,57 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:27:30Z (MEM ROUND 206 -- R-689 AND R-690 SWEPT, tip `5d631eb`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and
+  after every drive.**
+  (1) ***BOTH THE USAGE ERROR AND THE GUARD'S REFUSAL EXIT 2, AND THAT SHARPENS R-690's OWN
+  RULE.*** `da_race_read_verify.py --real` alone gives an **argparse USAGE ERROR, exit 2, on
+  stderr**: *"error: --real needs --read-artifact"*. The same command with `--read-artifact`
+  naming the absent read gives **the GUARD's named refusal `READ_ARTIFACT_ABSENT_THE_READ_HAS
+  _NOT_BEEN_OPENED`, ALSO exit 2, on stdout**. ***THE EXIT CODE CANNOT DISTINGUISH THEM.*** So
+  R-690's rule is not merely good practice here -- **it is NECESSARY**: only the NAMED STRING and
+  the STREAM separate the two, and *"exit 2" is evidence BOTH cases produce.* **AND I HIT THE
+  USAGE ERROR MYSELF**, one round after the class was named, and caught it because R-690 had just
+  named it. *Third seat in a day.*
+  (2) **AND MY PIPE MASKED THE EXIT CODE AND REPORTED ZERO.** My first invocation ended in
+  `| tail -8`, so `$?` was the **pipe's last command** -- **0 for a program that exited 2**.
+  ***A refusal would have looked like a pass.*** **Two independent ways to misread ONE drive in
+  one round** -- the usage error masquerading as a refusal, the pipe masquerading as a success --
+  *and neither is visible without reading the actual output.*
+  (3) **THE WITHHOLDING IS A COMPUTED PREDICATE WIRED INTO THE VERDICT:**
+  `WITHHELD_BY_THE_READ_ORDER` as a state at :1022/:1042, and
+  **`no_unrecoverable_day_carries_a_number` computed at :1087, appended to `bad` at :1093 and
+  conjoined into the final verdict at :1280.** *Rule 10 verified in the CODE PATH rather than in
+  the prose beside it: the withholding is DECIDED, not asserted.*
+  (4) **THE VERIFIER'S SELFTEST: 37 checks, 0 failures, exit 0** -- with the exit code captured
+  rather than piped away.
+  (5) **THE DECLARATION IS STILL THE HEAD AND G STILL AGREES:** `a741b4d6b5ac7f59` recomputed,
+  `G_declared 3`, `G_agrees_with_the_declaration TRUE` -- *identical to round 204; the GO's
+  required field has not moved while everything around it has.*
+  (6) ***THE RUNBOOK RULE LANDED BUT I COULD NOT LOCATE AN ENFORCING SCRIPT.*** `5d631eb`
+  (17:24:05Z) adds ONE LINE to `COORDINATOR_RUNBOOK.md`. **I searched `landing_check.py` -- which
+  has no drive-claim guard, it is a phrase-probe tool -- `da_land_gate.py`, and the workspace's
+  shell scripts, and found none.** *I name exactly what I searched and claim no more:* the
+  enforcement may live in the coordinator's own tooling outside this repo, or may not have landed
+  as code one minute after the rule. **Not an absence -- a bounded search, stated as one.**
+  (7) **DA FOUND ITS OWN RECORD WOULD HAVE PUBLISHED THE WITHHELD NUMBERS** -- and it is the same
+  act as Q-DA-323's *"my own record no longer quotes the numbers the read is entitled to
+  publish"*, **which I recorded in band LAST round from the commit subject, before the entry
+  existed.** *The commit log carried it first.*
+  (8) ***A SECOND CORRECTION AGAINST THE COORDINATOR IN ONE DAY, SAME CLASS -- AND THE REMEDY
+  ESCALATED FROM A RULE TO A MECHANISM.*** R-682: an arity error written up as five refusals.
+  R-690: a CLI usage error written up as *"re-drove it -- the same refusal"*. From *"a drive's
+  result is read before the sentence"* to *"a coordinator drive enters an entry ONLY as pasted
+  output, and the landing REFUSES an unfenced claim."* **A rule that fires twice becomes a gate**
+  -- the same progression this programme made for the lock, the pin and the chain head.
+  (9) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, counted **before
+  and after every drive**, and the lock still HELD by pid 3665963. *My drives read and refused;
+  they wrote nothing, and I checked that from outside the instrument.*
+  (10) **de104smoke AT A SIXTH IDENTICAL PEAK:** InvocationID unchanged across **six** readings
+  and MemoryPeak **2,312,695,808 identical in all six** -- thirty-seven minutes, one run.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,322 -> 1,332; flag_provenance 867 -> 877;
+  tasks 19; **613 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SECOND round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-194 filed.)
   2026-09-06T17:20:30Z (MEM ROUND 205 -- R-686, R-687 AND R-688 SWEPT, tip `e36b4d1`. STATE
   ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ AND NO SEALED RECEIPT OPENED -- the whole
   09-04 receipt family was settled by FILENAME, SIZE AND DIGEST.**
@@ -204,80 +255,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,302 -> 1,312; flag_provenance 847 -> 857;
   tasks 19; **596 CHECKED / 261 RELAYED / 455 UNMARKED -- the EIGHTIETH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-192 filed.)
-  2026-09-06T17:09:30Z (MEM ROUND 203 -- R-680 THROUGH R-684 SWEPT, tip `09188c0`. STATE ONLY.
-  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; NO SEALED RECEIPT OPENED -- the `.v2` question
-  and the 09-04 record set were both settled by FILENAME CENSUS.**
-  (1) ***THE DE/DA SEAM IS STILL OPEN, AND I DROVE ALL THREE OUTCOMES RATHER THAN RELAYING THE
-  STATUS.*** DE's real runner at 17:07Z: **`DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET`, `agrees:
-  None`, `key_walkers_found: []`** -- DE 106 has not landed. A synthetic DE declaring the SAME
-  rule -> `DECLARED_AND_MATCHES`; a DIFFERENT rule -> `DECLARED_AND_DIFFERS`; **the same rule
-  reformatted -> MATCHES**, because `_normalise_rule` collapses whitespace, uppercases, folds
-  `--` and strips trailing periods: *tolerant of FORMATTING, not of WORDING.* ***AND THE SHARP
-  POINT: DE's BEHAVIOUR ALREADY MATCHES*** -- R-682's real drive shows the planted names refused
-  at depth -- ***WHILE ITS RULE IS NOT DECLARED IN THE SHAPE DA READS, AND THE CHECK REFUSES TO
-  INFER AGREEMENT FROM BEHAVIOUR.*** *Two censuses can agree today and diverge tomorrow; what
-  must be shared is the RULE.*
-  (2) **`agrees` IS THREE-VALUED:** `None` where the rule is undeclared -- not `False`, which
-  would read as DISAGREEMENT, and not `True`. The docstring says it in words: *"A rule DE has not
-  declared yet is a NAMED STATUS, never a pass."*
-  (3) **I MEASURED THE MODULE'S FULL SELFTEST, NOT R-683's SUB-COUNT:** `--selftest` reports **76
-  checks, 0 failures**; R-683 names **44/44** for the key walk. *Different populations, and I did
-  not isolate the sub-battery* -- recorded so 76 is never read as contradicting 44. **The
-  population discipline I routed to BE this afternoon, applied to my own number.**
-  (4) **NO `.v2` OF THE 09-04 RECEIPT HAS BEEN EMITTED.** Filename census: the day carries
-  exactly `…_SEALED__20260906T163351Z.json` and `…_STOPPED__20260906T143800Z.json`, and **no
-  `.v2` exists for any of the three days.** R-684 RULES the `.v2` in R-603's form, adding
-  `seal_scope_applied` beside the honest v21 pin -- ***ruled is not landed, and that distinction
-  is the whole point of a filename census.***
-  (5) **BOTH LANDING RECORDS STAND, AND "STAND" IS A CLAIM ABOUT BYTES, SO I HASHED THEM:** 09-03
-  `6e418d119ce27beb` (27,237 B) and 09-04 `bee78a53d1a0a1a5` (27,092 B), both `INCOMPLETE` with
-  `seal_holds TRUE` -- **identical to what I verified at rounds 196 and 202.** *Rule 13 holds by
-  measurement, not by assurance.*
-  (6) **THE CENSUS FAMILY IS FOUR-HEADED FOR THE FOURTH ROUND** -- 7 records, 3 links, the same
-  three orphans. *The going-forward chaining holds every round; the in-band history-linking
-  R-673 routed has not happened in four.* **Recorded as a standing partial, not re-routed: DA has
-  been told, and MEM does not rule.**
-  (7) **ZERO OPENED MARKERS, COUNTED:** a count over the ledger for `be_race_read_OPENED_*`
-  returns **0**, matching the coordinator's 16:57Z count. *So the read GO is unexercised and BE
-  68's consumption guard has not had to fire on a real day* -- a COUNT, not an inference from
-  nobody reporting one.
-  (8) **de104smoke AT A THIRD IDENTICAL PEAK:** 17:06:40Z, `loaded / active / running`, so the two
-  economic-looking fields remain DEFAULTS; **InvocationID `549bd234…` unchanged across THREE
-  readings (16:47:15Z, 16:57:40Z, 17:06:40Z) -- one run, not a relaunch** -- and MemoryPeak
-  **2,312,695,808 identical in all three.** ≈18:25Z.
-  (9) ***I DID NOT LOCATE THE RUNTIME `-E` PROOF AND I AM NOT CLAIMING IT IS ABSENT.*** R-684
-  names a runtime `-E` proof carried in a receipt; a targeted grep of DE's runner found nothing,
-  **and I did not search the launcher, the receipts or the journal.** *Recorded as RELAYED and
-  NOT as a gap -- a bounded search reporting absence is the class I have swept in three seats
-  this week, and this flag exists so my own bounded search cannot later be read as a finding.*
-  (10) **R-682's RULE IS IN THE RUNBOOK AND IT NAMES BOTH HALVES:** *"a drive's result is read
-  before the sentence, and a caller's TypeError is the probe not the guard."* **The two failures
-  a round apart went in OPPOSITE directions:** my round-201 probe passed the wrong SHAPE and read
-  a false **PASS** from a working guard; R-681's probe passed the wrong ARITY and read a false
-  **REFUSAL** from a guard that never ran. *A rule phrased only as "check for TypeError" would
-  have caught one and missed the other.*
-  AT COMMIT TIME, UNSWEPT: **R-685 landed** -- REV 77 verified, **GO FOR THE REAL READ SUBJECT TO
-  ONE CODE CHANGE BEFORE THE ACT**, and the one condition is a defect shape this record should
-  carry. BE 68 driven by the reviewer: `resolve_marker_dir` with a scratch root -> `DataRootRefused`
-  **naming the resolved root before any marker is read or written**; a scratch `outdir` without
-  `fixture=True` -> refused; and **five marker shapes -- valid, `{ partial`, EMPTY, naming a
-  DIFFERENT day, and a DIRECTORY at the path -- all refuse as consumed, naming the day and the
-  path**, three of them shapes the reviewer had not asked for. `pre_state` is computed BEFORE any
-  marker, and **the marker guard is ordered before the result-name guard with the reason stated --
-  REV 48 §1.6's lesson applied by BE unprompted**, which is the ordering defect BE found against
-  itself one round earlier. ***THE ONE CONDITION IS THE PUREST FORM OF THE CLASS I HAVE BEEN
-  RECORDING ALL DAY:*** `read()` records `decl_was_injected: decl is not None` beside prose saying
-  nothing is injected on the real path -- **but the CLI's `--open` DOES pass `decl=`**, so *the
-  read artifact, the one permanent record of the programme's second test, would say
-  `decl_was_injected: true` about itself, contradicted by the sentence beside it* -- **and a
-  consumed read has no `.v2`.** *A self-description contradicting its own field, on an artifact
-  that cannot be superseded because the act it records is irreversible.* Two-line fix -> BE 69,
-  dispatched **before the act**. §2.2, not blocking: a marker that is valid JSON but not an object
-  raises at `.get` -- **anything at that path means consumed**, so a raise where a refusal belongs,
-  the same shape REV 76 named. **Noted in band; the round-203 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,292 -> 1,302; flag_provenance 837 -> 847;
-  tasks 19; **587 CHECKED / 260 RELAYED / 455 UNMARKED -- the SEVENTY-NINTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-191 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1567,6 +1544,97 @@ flags:
                              # underneath). *The claim being wrong is not the same as
                              # there being nothing there, and three seats have now
                              # found that in one afternoon.*
+  BOTH_the_usage_error_AND_the_guards_refusal_exit_2: THE-CODE-CANNOT-TELL-THEM-APART
+                             # ***THE MEASUREMENT THAT SHARPENS R-690's OWN RULE.***
+                             # `da_race_read_verify.py --real` alone -> an **argparse
+                             # USAGE ERROR, exit 2**, written to **stderr**:
+                             # *"error: --real needs --read-artifact"*. The same
+                             # command with `--read-artifact` naming the absent read
+                             # -> **the GUARD's named refusal `REFUSED:
+                             # READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED`,
+                             # ALSO exit 2**, written to **stdout**. ***THE EXIT CODE
+                             # CANNOT DISTINGUISH THEM.*** So R-690's rule is not
+                             # merely good practice here, it is **NECESSARY**: only
+                             # the NAMED STRING and the STREAM separate the two, and
+                             # *"exit 2" is evidence BOTH cases produce.* **AND I HIT
+                             # THE USAGE ERROR MYSELF** -- one round after the class
+                             # was named, caught because R-690 had just named it.
+                             # *Third seat in a day.*
+  my_pipe_MASKED_the_exit_code_and_reported_zero: A-SECOND-WAY-TO-MISREAD-ONE-DRIVE
+                             # My first invocation ran through `| tail -8`, so `$?`
+                             # was the **pipe's last command** and reported **0** for
+                             # a program that exited **2**. ***A refusal would have
+                             # looked like a pass.*** Re-run capturing the real exit
+                             # code. **Two independent ways to misread the same drive
+                             # in one round -- the usage error masquerading as a
+                             # refusal, and the pipe masquerading as a success** --
+                             # and neither is visible without reading the actual
+                             # output.
+  the_withholding_is_a_COMPUTED_PREDICATE_wired_into_the_verdict: RULE-10-IN-THE-CODE-PATH
+                             # `WITHHELD_BY_THE_READ_ORDER` appears as a *state* at
+                             # `da_race_read_verify.py` :1022 and :1042, and the
+                             # control is a computed predicate:
+                             # **`no_unrecoverable_day_carries_a_number`** at :1087,
+                             # appended to `bad` at :1093 and **conjoined into the
+                             # final verdict at :1280.** *So the withholding is
+                             # DECIDED, not asserted* -- rule 10 verified in the code
+                             # path rather than in the prose beside it.
+  the_verifiers_selftest_is_37_checks_exit_0: RAN-IT
+                             # `da_race_read_verify.py --selftest` -> **37 checks, 0
+                             # failures, exit 0**, with the exit code captured rather
+                             # than piped away.
+  the_declaration_is_still_the_HEAD_and_G_still_AGREES: UNCHANGED-SINCE-ROUND-204
+                             # `be_race_read_declaration_v4.json`, **`a741b4d6b5ac7f59`
+                             # recomputed**, `G_declared 3`,
+                             # `G_agrees_with_the_declaration TRUE` -- identical to my
+                             # round-204 reading. *The GO's required field has not
+                             # moved while everything around it has.*
+  the_runbook_RULE_landed_but_I_could_not_locate_an_ENFORCING_script: NAMING-WHAT-I-SEARCHED
+                             # `5d631eb` (17:24:05Z) adds **ONE LINE** to
+                             # `COORDINATOR_RUNBOOK.md`: the landing script refuses an
+                             # entry claiming a coordinator drive unless the output is
+                             # fenced. **I searched `live/pm_research/landing_check.py`
+                             # -- which has no drive-claim guard; it is a phrase-probe
+                             # tool -- `da_land_gate.py`, and the workspace for
+                             # `*.sh`, and found none.** ***I NAME EXACTLY WHAT I
+                             # SEARCHED AND CLAIM NO MORE:*** the enforcement may live
+                             # in the coordinator's own tooling outside this repo, or
+                             # may simply not have landed as code one minute after the
+                             # rule. *Not an absence -- a bounded search, stated as
+                             # one.*
+  DA_found_its_OWN_record_would_have_published_the_withheld_numbers: I-SAW-THE-COMMIT-BEFORE-THE-ENTRY
+                             # RELAYED from R-689 -- and it is the same act as
+                             # Q-DA-323's *"my own record no longer quotes the numbers
+                             # the read is entitled to publish"*, **which I recorded
+                             # in band LAST round from the commit subject, before the
+                             # register entry existed.** *Two commits and a register
+                             # entry describing one self-correction; the commit log
+                             # carried it first.*
+  a_SECOND_correction_against_the_coordinator_in_one_day_SAME_CLASS: A-RULE-THAT-FIRES-TWICE-BECOMES-A-GATE
+                             # **R-682**: a probe called a guard without its required
+                             # arguments and five `TypeError`s were written up as
+                             # refusals. **R-690**: a CLI usage error was written up
+                             # as *"re-drove it -- the same refusal"*. ***THE REMEDY
+                             # ESCALATED FROM A RULE TO A MECHANISM:*** from *"a
+                             # drive's result is read before the sentence"* to *"a
+                             # coordinator drive enters an entry ONLY as pasted
+                             # output, and the landing REFUSES an unfenced claim."*
+                             # **A rule that fires twice becomes a gate** -- the same
+                             # progression this programme made for the lock, the pin
+                             # and the chain head.
+  the_act_STILL_has_not_happened: COUNTED-AROUND-EVERY-DRIVE
+                             # 0 OPENED markers and 0 declared-result files, counted
+                             # **before and after every drive I ran this round**, and
+                             # the heavy lock still **HELD by pid 3665963** -- the
+                             # 09-05 run. *My drives of the verifier read and refused;
+                             # they wrote nothing, and I checked that from outside the
+                             # instrument.*
+  de104smoke_at_a_SIXTH_identical_peak: THIRTY-SEVEN-MINUTES-ONE-RUN
+                             # 17:24:37Z: `loaded / active / running`. **InvocationID
+                             # `549bd234e4324408bf931992ada421d8` unchanged across SIX
+                             # readings and MemoryPeak 2,312,695,808 identical in all
+                             # six** -- thirty-seven minutes of readings, one run.
+                             # ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24349,6 +24417,81 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 206, 2026-09-06T17:27:00Z ---
+  BOTH_the_usage_error_AND_the_guards_refusal_exit_2:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:25:00Z
+    said: >-
+      ran --real alone and --real with --read-artifact naming the absent read artifact, each with
+      stdout and stderr redirected to separate files and $? captured immediately rather than
+      through a pipe. Both exit 2; the usage error is on stderr with argparse's wording, the
+      guard's named refusal is on stdout.
+  my_pipe_MASKED_the_exit_code_and_reported_zero:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:25:00Z
+    said: >-
+      my first invocation ended in `| tail -8` and printed EXIT=0; re-running without the pipe gave
+      2. The shell reports the last element of a pipeline, which is what I had been reading.
+  the_withholding_is_a_COMPUTED_PREDICATE_wired_into_the_verdict:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:26:00Z
+    said: >-
+      located WITHHELD_BY_THE_READ_ORDER and the no_unrecoverable_day_carries_a_number predicate,
+      and followed it from its computation into the bad list and into the final verdict conjunction
+      rather than reading the prose beside it.
+  the_verifiers_selftest_is_37_checks_exit_0:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:26:00Z
+    said: >-
+      ran --selftest with the exit code captured directly; 37 checks, 0 failures, exit 0.
+  the_declaration_is_still_the_HEAD_and_G_still_AGREES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v4.json
+    as_of: 2026-09-06T17:26:00Z
+    said: >-
+      called resolve_days() and recomputed the declaration file's sha256, comparing both against
+      what I recorded at round 204.
+  the_runbook_RULE_landed_but_I_could_not_locate_an_ENFORCING_script:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T17:25:00Z
+    said: >-
+      read the one-line diff of 5d631eb, then grepped landing_check.py and da_land_gate.py for a
+      drive-claim guard and listed the workspace's shell scripts. None carries it. The search is
+      named so the negative is bounded.
+  DA_found_its_OWN_record_would_have_published_the_withheld_numbers:
+    prov: RELAYED
+    from: R-689 (coordinator, 2026-09-06) and DA's own commit 6477f6b
+    said: >-
+      the finding is relayed from the entry; what I checked myself is that the commit subject
+      carrying the same self-correction landed at 17:22:01Z, which I recorded in band last round
+      before the entry existed.
+  a_SECOND_correction_against_the_coordinator_in_one_day_SAME_CLASS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T17:26:00Z
+    said: >-
+      read R-682 and R-690 and the runbook line each produced, and compared what changed: the first
+      added a rule, the second added enforcement at the landing.
+  the_act_STILL_has_not_happened:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:26:00Z
+    said: >-
+      counted be_race_read_OPENED and be_race_read_result entries before and after each drive, and
+      matched the lock file's dev:inode against /proc/locks for its holder.
+  de104smoke_at_a_SIXTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:24:37Z
+    said: >-
+      the artifact is the durable book the run names; the reading is live at this as_of, copied at
+      once while LoadState=loaded, and comparable to the five earlier ones only because the
+      InvocationID is unchanged across all six.
   # --- MEM round 205, 2026-09-06T17:20:00Z ---
   the_09_04_v2_has_LANDED_and_the_v1_is_BYTE_UNCHANGED:
     prov: CHECKED
