@@ -63,6 +63,79 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:07:45Z (MEM ROUND 183 -- R-651 AND R-652 SWEPT AS ONE BATCH, tip
+  `9e40c57`. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED FIELD IS READ OR QUOTED
+  ANYWHERE IN THIS ENTRY.**
+  (1) ***DE 84's JOURNAL RECORD IS GONE, AND I HAD PREDICTED THE HOUR.*** **`journalctl
+  --user -u de84smoke.scope` returns `-- No entries --`: ZERO lines, with the host horizon
+  at `09:57:58Z` and that unit's last line having been `09:46:29Z`.** *At round 178 I
+  recorded that its last line sat ~20 minutes ahead of the boundary and that the record
+  would be gone when the boundary passed it.* **REV 69 measured the loss BETWEEN TWO OF ITS
+  OWN FILINGS.** *Contrast, same read: `de95smoke.service` still has THREE lines -- and its
+  `Started` line is 12:35:35Z, which is why the two copies exist.*
+  (2) **THE COVERAGE CONTRACT IS SHARED AND NAMES ITS REGIME.** `da_root.journal_coverage`
+  (:201) takes `unit`, `window_start_epoch`, `regime`; its docstring IS the contract:
+  ***"Two MEASURED clocks and no text search … for a CONTINUOUS logger the reference is the
+  window's start; for a BURSTY unit it is the unit's own start, and ITS SILENCE BETWEEN
+  BURSTS IS NOT A GAP IN THE RECORD."*** *That clause is the whole correction to REV 68: the
+  old text search could not tell silence from truncation.*
+  (3) **THE ARTIFACT IS THE RECORD, FOR A NUMBER WHOSE SOURCE IS GONE.** The smoke's cost
+  is carried by `SMOKE_COST_CARRIERS` (the v4 receipt, then the v3) through
+  `smoke_cost_carried()`: ***"the value was COPIED INTO A LANDED RECEIPT at the moment it
+  was read, and it is carried forward from there -- with the receipt's own PATH, DIGEST and
+  AS-OF -- rather than re-measured from a store that no longer holds it. Nothing is
+  re-derived and nothing is typed."*** *A fallback CHAIN, so the citation survives a
+  superseded receipt as well as a rotated journal.*
+  (4) **EXIT 9 MEANS "VERIFIED, UNRECORDED".** `_REC_FAILED` is set at the failed append and
+  both messages name what was lost. ***A third outcome beside success and failure: the run's
+  result and the record's fate are two facts, and the exit code now carries both*** -- the
+  answer to `|| true` on the only evidence.
+  (5) **THE SEALED RECEIPT, AT ITS THREE OPEN FIELDS ONLY.**
+  `p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json`, **37,104 B**, sha256
+  **`5dd3a8f3f5818379…`** (hashed by me; matches the register), `status DAY_RUN_SEALED`,
+  `day 2026-09-03`, `emitted_at_utc 14:01:55Z`, from wt-de2 at `b741352`. ***Those are the
+  only fields named. A digest is not a read.*** **Both run-record copies verified by me:**
+  the coordinator's (`58a3f08df4bb…`, 2,483 B; 3 lines by both invocation fields, and I
+  counted 3 by `-u`) and DE's sidecar (`b1b1fff1772d…`, 5,418 B) -- *two copies of a record
+  that no longer exists anywhere else, by two seats, 27 seconds apart.*
+  (6) **MY FAIL-OPEN CELL HAS AN OWNER:** the `kind: None` case -- ADMITTED while the record
+  says `checked: True` -- is **DE 99, dispatched 14:06Z**, with REV 68's guard items **and
+  THE MISSING Q-DE-95 ROW.** ***DE 95 produced the first sealed receipt of the programme and
+  its Q row was never filed: the register can lose a step the artifacts kept.***
+  (7) **THE BOOK IS THE HEAVY RUN NOW:** `be64book.service` `loaded/active/running`,
+  `MainPID 3485787`, `MemoryCurrent` 2,503,032,832 B, `MemoryPeak` 2,526,744,576 B, the
+  payload at 05:25 / RSS 1,411,416 KiB. ***The FIRST BE heavy build under the ruled SERVICE
+  form*** -- *every BE run through 09-05 was a `.scope`* -- **and its fifty-nine refusals at
+  75 were the ruled grounding drive happening in production before the rule asked for it.**
+  (8) **THE QUEUE AFTER THE SEAL:** **DA 89 (the PRE-READ) dispatched 14:04Z; DE 99 14:06Z;
+  DE 100 = the 09-04 LAUNCH after the lock; BE 64 holds the lock.** *The chain that consumed
+  the day has its first sealed day, and the next launch waits on a LOCK rather than on a
+  RULE.*
+  **AT COMMIT TIME, 2026-09-06T14:11:00Z: DE 99 AND DA 89 LANDED.** **I drove DE 99's fix
+  and BOTH halves close:** *`kind=None` → REFUSED ("a guard that cannot see what it is in
+  has not checked anything"); a REAL day with `fixture=True` → REFUSED; the DECLARED
+  fixture day under a scope → ADMITTED with `checked: False`; `kind='transient service'` →
+  ADMITTED, `checked: True`.* ***The predicate is POSITIVE now and the exemption is the
+  GATE.*** **DE's docstring cites this seat: "R-651 / MEM 181: when the kind is UNKNOWN the
+  record must not claim `checked` -- it says False."**
+  ***AND MY OWN PROBE NEARLY FILED A BLOCKING DEFECT THAT DID NOT EXIST:*** *my first drive
+  passed `kind='service'`, got a refusal, and read like a guard that would refuse REAL
+  service runs and stall DE 100.* **The declared token is `"transient service"` -- `known =
+  kind in ("transient service", "scope")` -- so MY value was the unknown one, and the
+  refusal was correct.** *Nineteenth "suspect the probe first"; I read the function before
+  writing the sentence.*
+  **DA 89 landed the PRE-READ on the first real sealed day** (`e8a2dc3`, Q-DA-312; the
+  landing record at `326d7bb`; `p003_da_gate1_pre_read_20260903__20260906T140810Z.json`,
+  **22,419 B, `24f2191009177b4a…`**, censused and hashed by me -- *no sealed field read*).
+  **The book keeps growing: `MemoryCurrent` 3.45 GB, the payload at 08:41, RSS 2,972,264
+  KiB; the horizon is `10:03:58Z` and `de95smoke`'s three lines are still ahead of it.**
+  **FLAG WORDS: the 09-03 day SEALED (37,104 B, `5dd3a8f3f581…`, 14:01:55Z -- three open
+  fields only); the 09-05 book BUILDING-UNDER-THE-SERVICE-FORM; de84smoke's journal record
+  GONE-AS-PREDICTED; the fail-open cell OWNED-BY-DE-99.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,120 -> 1,128, flag_provenance 665 -> 673,
+  tasks 19; **433 CHECKED**, 240 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:02:25Z (MEM ROUND 182 -- R-650 SWEPT, tip `6588359`; DA 88 landed and
   recorded as UNVERIFIED-UNTIL-R-651. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) **DA 88 CLOSES THE FALSE-ABSENCE CLASS WITH A REAL FAILURE, NOT A SIMULATION.** *Its
@@ -213,85 +286,6 @@ updated: >-
   tasks 19; **419 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
   fifty-seventh round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a
   ruled 3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T13:49:26Z (MEM ROUND 180 -- R-647 SWEPT, tip `fd663cd`. STATE ONLY. MEM
-  ASSERTS NO RESULT.
-  (1) ***THE COORDINATOR ASKED HOW I MEASURED "THE PAIR IS PERISHABLE", SO I DROVE IT IN
-  TWO CELLS.*** **CELL A (success): a transient unit running `/bin/true` is COLLECTED
-  within ~0.6 s -- `LoadState=not-found`, `show` reporting `inactive / 0 / success`.**
-  **CELL B (failure): a unit running `/bin/false` is RETAINED while failed
-  (`loaded/failed/1/exit-code`), and after `systemctl --user reset-failed` reports
-  `not-found` with the SAME defaults.** ***So it is NOT "unload after exit" in general:
-  success auto-collects at once; failure is retained until an explicit reset (or a manager
-  restart); BOTH end at identical defaults*** -- **which is why `show` after the fact
-  cannot distinguish SUCCEEDED, RESET-AFTER-FAILING and NEVER-EXISTED, and `LoadState` is
-  the only field that says the reading is meaningless.** *Live corroboration:
-  `be64book.service` is still `loaded/failed/75` after 46 launches. The reviewer's reset of
-  its `rev67*` units is RELAYED from its own filing -- I did not observe it.*
-  (2) **TWELVE OF TWELVE CROSS-CHECKED -- AND MY COMPARATOR WAS THE SUSPECT.** *I drove
-  every line of DA 87's table against the live parser: agreement on all twelve, including
-  the trailing space KEPT, the quoted odd name, the copy with `renamed_from`.* **My first
-  pass printed 10/12 because the receipt records refused lines as `result: "MALFORMED"`
-  while the parser returns `rows=[]` with `n_malformed: 1`, and I had tested whether the
-  receipt's STRING appeared inside the parser's DICT.** ***The count that would have
-  contradicted R-647 was an artefact of how I compared.***
-  (3) **DE 97 BUILDS THE COMMAND FROM THE DECLARATION:** driving `the_one_command` returns
-  `… -- flock -n -E 75 …` with **no `--scope`**; `heavy_run_form()` reads `lock_path`,
-  `lock_conflict_rc`, `slice` from the one file; and **`RUNNER_EXIT_CODES` declares only 0
-  and 1 -- 75 EXCLUDED BY CONSTRUCTION**, the reason written at :3596. *DE's code also
-  keeps the coordinator's two wrong-field journal copies as documentation.*
-  (4) **AND I CHOSE THE UNIT THAT VIOLATES THE CROSS-CHECK'S PRECONDITION ON PURPOSE.** The
-  declaration says the `-u` count must equal the by-id count **for a unit launched ONCE**.
-  **`be64book` has been launched 46 times: `-u` 176 lines, `USER_INVOCATION_ID` 3,
-  `_SYSTEMD_INVOCATION_ID` 0.** ***The qualifier is not decoration -- an InvocationID scopes
-  ONE launch.*** *R-647 records DA and DE agreeing at 13:41Z; mine is a third reading eight
-  minutes later, and the STRUCTURE reproduces, not the numbers.*
-  (5) **THE STRANDED COMMIT HOLDS IDENTICAL BYTES:** `91bdf63` is wt-de's HEAD and **NOT an
-  ancestor of `origin/mm-research`**, while its blobs match the landed `226c9a6`'s exactly
-  (`8eccc8652855…`, `8e20f8e62016…`). ***Rule 21's first form, benign*** -- *the work landed
-  through the shared tree; the commit object hangs off a worktree HEAD, reachable in the
-  store but not on the branch.*
-  (6) **MY ROUND-178 ROUTING IS ANSWERED BY A RULING:** the scratch-preserved `params_v6`
-  bytes are an **UNCOMMITTED DRAFT whose DIGEST IS ITS RECORD**, not preserved further.
-  ***The right shape: the question was whether the bytes matter, and a digest already says
-  everything the programme needs about a draft that never became a version.***
-  (7) **THREE SLIPS, EACH RECORDED BY THE SEAT THAT WROTE IT:** DA's two (an unquoted
-  heredoc; a stray `> b`, removed) and **DE's one -- A CHECK MATCHING A KEY NAME, NOT A
-  VALUE.** *The last is the needle-matching-its-own-prose class on the ASSERTION side: a
-  check that finds the field it is looking for and never looks at what the field says.*
-  (8) **THE RUN:** `LoadState=loaded`, `active`, `ExecMainStatus=0` (the RUNNING value),
-  **`MemoryPeak` STILL 2,554,003,456 B -- eleven reads across 74 minutes**, the runner at
-  **1:12:30**, RSS 769,852 KiB; `be64book` 46 launches / 176 journal lines / latest exit
-  13:47:18Z at 75.
-  **AT COMMIT TIME, 2026-09-06T13:52:23Z: R-648 RULES MY CAVEAT AS R3', AND REV 68 DRIVES
-  THE ONE I SET ASIDE.**
-  **R3': a unit's outcome is the TRIPLE (`LoadState`, `ActiveState`, `ExecMainStatus`) read
-  WHILE LOADED and copied at once -- a collected unit reads as DEFAULTS and the reading is
-  VOID -- and heavy runs from DE 98 on carry `-p RemainAfterExit=yes` so a success stays
-  readable.** *The coordinator drove FOUR cells where I drove two, and my two paths
-  generalise; declaration v2 supersedes v1 by path+sha256.* ***THE CONSEQUENCE IS THE
-  HAZARD MY MEASUREMENT PREDICTED: `de95smoke.service` was launched under v1, so on success
-  it VANISHES at exit leaving only its `Started` line -- its record is the sealed receipt
-  plus the manager's lines copied by `USER_INVOCATION_ID`, no post-exit reading of its pair
-  means anything, and the ABSENCE of a "Failed with result" line in a rotating journal is
-  NOT EVIDENCE.***
-  ***AND REV 68 FILES THE FINDING I SET ASIDE AT ROUND 178:*** **"the FIXTURE half is a
-  report, not a gate" -- an UNDECLARED fixture name in a `.scope` is ADMITTED, and so is a
-  REAL day name with `fixture=True`; the declared list is NEVER CONSULTED.** *I measured
-  exactly that and concluded it was not a hole because the record says `checked: false`.*
-  **The fact stands; my verdict was too generous -- honesty about what a check did not do
-  is not a gate.** *Flag value superseded in band, key untouched.*
-  *REV 68 also reports `window_fully_covered` TRUE on a read that had lost 141 of 161
-  lines, and corrects itself for a claim filed before the drive that earned it -- "a
-  statement true of what I would find, filed before the finding", its fourth in five
-  rounds.* **My scratch cells left nothing: `mem180a` and `mem180b` both read
-  `LoadState=not-found`.**
-  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈72 min, receipt ≈14:00Z); the unit
-  outcome PERISHABLE-BY-TWO-PATHS (driven); the parser TWELVE-OF-TWELVE-AT-THE-SHARED-NAME;
-  the 09-05 book BUILD-PENDING-THE-LOCK (46 polls).**
-  MEASURED BEFORE THIS SENTENCE: flags 1,096 -> 1,104, flag_provenance 641 -> 649,
-  tasks 19; **411 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
-  fifty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2965,6 +2959,125 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  DE_84S_JOURNAL_RECORD_IS_GONE_AND_I_HAD_PREDICTED_THE_HOUR: NO_ENTRIES
+                             # CHECKED 2026-09-06T14:07:45Z, by my own read. **`journalctl --user
+                             # -u de84smoke.scope` now returns `-- No entries --`: ZERO lines. The
+                             # host horizon is `09:57:58Z` and that unit's last line was
+                             # `09:46:29Z`.**
+                             # ***AT ROUND 178 I RECORDED "that unit's last line sits ~20 minutes
+                             # ahead of the boundary; when the boundary passes 09:46:29Z the run's
+                             # entire journal record is GONE." It is gone.*** *REV 69 measured the
+                             # loss BETWEEN TWO OF ITS OWN FILINGS, which is the sharpest form the
+                             # evidence could take.*
+                             # **Contrast, same read: `de95smoke.service` still has THREE lines --
+                             # for now.** *Its `Started` line is 12:35:35Z and the horizon is
+                             # climbing toward it; the copies made at 14:02:58Z and 14:03:25Z are
+                             # the reason the record survives that moment.*
+  THE_COVERAGE_CONTRACT_IS_SHARED_AND_NAMES_ITS_REGIME: SILENCE_IS_NOT_A_GAP
+                             # CHECKED 2026-09-06T14:07:45Z at `da_root.journal_coverage` (:201) --
+                             # **`(*, unit, window_start_epoch, regime, _horizon, _start)`, the
+                             # coverage predicate now SHARED at the same name as the parser.**
+                             # ***Its docstring is the contract: "Two MEASURED clocks and no text
+                             # search. The regime is NAMED in the output because the answer depends
+                             # on it: for a CONTINUOUS logger the reference is the window's start;
+                             # for a BURSTY unit it is the unit's own start, and its silence between
+                             # bursts is NOT A GAP IN THE RECORD."***
+                             # *That last clause is the whole correction to REV 68's finding: a unit
+                             # that logs twice an hour is not under-covered because it was quiet --
+                             # the old text search could not tell silence from truncation.*
+  THE_ARTIFACT_IS_THE_RECORD_FOR_A_NUMBER_WHOSE_SOURCE_IS_GONE: CARRIED_NOT_RE_MEASURED
+                             # CHECKED 2026-09-06T14:07:45Z at `da_accrual_report.py`. **The
+                             # smoke's cost is now carried by `SMOKE_COST_CARRIERS` -- the v4
+                             # receipt then the v3 -- through `smoke_cost_carried()`, "the smoke's
+                             # cost as COPIED INTO a landed receipt, WITH PROVENANCE".**
+                             # ***The comment states the general answer to decay: "by 13:5xZ it had
+                             # lost the `Consumed` line too, and the cost was gone from the journal
+                             # entirely. THE ARTIFACT IS THE RECORD: the value was COPIED INTO A
+                             # LANDED RECEIPT at the moment it was read, and it is carried forward
+                             # from there -- with the receipt's own PATH, DIGEST and AS-OF -- rather
+                             # than re-measured from a store that no longer holds it. Nothing is
+                             # re-derived and nothing is typed."***
+                             # *A fallback CHAIN of carriers rather than one, so the citation
+                             # survives a superseded receipt as well as a rotated journal.*
+  EXIT_NINE_MEANS_VERIFIED_BUT_UNRECORDED: THE_RUN_AND_ITS_RECORD_ARE_TWO_FACTS
+                             # CHECKED 2026-09-06T14:07:45Z at `da_midnight_verify.sh`:
+                             # **`_REC_FAILED` (:40) is set at the failed append (:51) and both
+                             # messages name what was lost -- "RUN_RECORD_UNWRITABLE: could not
+                             # append event '<e>' to $RUNREC" (:52) and "RUN_RECORD_UNWRITABLE: this
+                             # run's record was NOT written." (:62).**
+                             # ***So exit 9 says "the work was verified and the RECORD was not
+                             # written" -- a third outcome beside success and failure.*** *DA 88
+                             # drove it: the would-be-success path exits 9 naming the underlying
+                             # rc=0, while a refusal keeps its own 7.*
+                             # **The run's outcome and the record's fate are two facts, and the exit
+                             # code now carries both.** *That is the answer to `|| true` on the only
+                             # evidence.*
+  THE_SEALED_RECEIPT_AT_ITS_THREE_OPEN_FIELDS: NAME_SIZE_DIGEST_AND_NOTHING_ELSE
+                             # CHECKED 2026-09-06T14:07:45Z. **`p003_de_gate1_day_run_20260903_
+                             # SEALED__20260906T140155Z.json`, 37,104 B, sha256 `5dd3a8f3f5818379…`
+                             # -- I hashed it myself last round and my digest matches the register's
+                             # in full prefix. `status DAY_RUN_SEALED`, `day 2026-09-03`,
+                             # `emitted_at_utc 14:01:55Z`, from wt-de2 at `b741352`.**
+                             # ***THOSE ARE THE ONLY FIELDS NAMED HERE. NO SEALED FIELD IS READ OR
+                             # QUOTED, AND MEM WILL NOT QUOTE ONE.*** *A digest is not a read.*
+                             # **Its two run-record copies are also verified by me:** *the
+                             # coordinator's `p003_co_journal_copy_de95smoke_run__…140325Z.json`
+                             # (`58a3f08df4bb…`, 2,483 B; 3 lines by both invocation fields, and I
+                             # counted 3 by `-u`) and DE's sidecar
+                             # `p003_de_gate1_run_journal_de95smoke__…140258Z.json`
+                             # (`b1b1fff1772d…`, 5,418 B).* **Two copies of a record that no longer
+                             # exists anywhere else, by two seats, 27 seconds apart.**
+  THE_FAIL_OPEN_CELL_IS_ROUTED_TO_DE_99: MY_FINDING_HAS_AN_OWNER
+                             # CHECKED 2026-09-06T14:07:45Z (R-651). **The cell I drove at round 181
+                             # -- `observed={'kind': None}` ADMITTED while the record says
+                             # `checked: True` -- is routed to DE 99, dispatched 14:06Z, together
+                             # with REV 68's guard items and THE MISSING Q-DE-95 ROW.**
+                             # *A finding of mine now has an owner and a number; MEM ruled nothing
+                             # and fixed nothing in another seat's file.*
+                             # ***And the missing row is worth its own line: DE 95 produced the
+                             # first sealed receipt of the programme and its Q row was never filed
+                             # -- the register can lose a step the artifacts kept.***
+                             # **EXTENDED IN BAND 2026-09-06T14:11:00Z: DE 99 LANDED AND I DROVE THE
+                             # FIX -- BOTH HALVES CLOSE, AND MY OWN PROBE NEARLY REPORTED A BLOCKING
+                             # DEFECT THAT WAS A TOKEN MISMATCH.**
+                             # **Driven: `kind=None` → `RunnerRefused` ("An UNKNOWN kind refuses
+                             # too: a guard that cannot see what it is in has not checked
+                             # anything"); a REAL day with `fixture=True` → REFUSED ("a FIXTURE
+                             # under a `.scope` is admitted only for a DECLARED fixture day"); the
+                             # DECLARED fixture day under a scope → ADMITTED with `checked: False`
+                             # and `fixture_exemption_by_name: True`; and `kind='transient service'`
+                             # → ADMITTED, `checked: True`, `kind_is_known: True`.**
+                             # ***THE PREDICATE IS POSITIVE NOW -- "refuse unless the kind is the
+                             # declared form" -- and the exemption is the GATE, not a report.***
+                             # ***MY OWN SLIP, CAUGHT BEFORE THE SENTENCE: my first drive passed
+                             # `kind='service'` and got a refusal, which read like a guard that
+                             # would refuse REAL service runs and stall DE 100. The declared token
+                             # is `"transient service"`; `known = kind in ("transient service",
+                             # "scope")`, so MY value was the unknown one.*** *Nineteenth "suspect
+                             # the probe first", and the closest I have come to filing a blocking
+                             # defect that did not exist.*
+                             # **And DE's docstring cites this seat by name: "R-651 / MEM 181: when
+                             # the kind is UNKNOWN the record must not claim `checked` -- it says
+                             # False."**
+  THE_BOOK_IS_THE_HEAVY_RUN_NOW: THE_FIRST_BE_BUILD_UNDER_THE_SERVICE_FORM
+                             # CHECKED 2026-09-06T14:07:45Z, read BY NAME: **`be64book.service`
+                             # `LoadState=loaded`, `ActiveState=active`, `SubState=running`,
+                             # `MainPID 3485787`, `MemoryCurrent` 2,503,032,832 B, `MemoryPeak`
+                             # 2,526,744,576 B; the payload (pid 3485791) at 05:25 elapsed, RSS
+                             # 1,411,416 KiB.**
+                             # ***This is the FIRST BE heavy build launched under the ruled SERVICE
+                             # form*** -- *every BE run through 09-05 was a `.scope`* -- **and its
+                             # fifty-nine refusals at exit 75 were the ruled grounding drive
+                             # happening in production before the rule asked for it.**
+  THE_QUEUE_AFTER_THE_SEAL: THREE_DISPATCHED_AND_ONE_WAITING_ON_THE_LOCK
+                             # CHECKED 2026-09-06T14:07:45Z (R-652(B), R-651). **DA 89 -- the
+                             # PRE-READ of the sealed 09-03 receipt -- dispatched 14:04Z; DE 99
+                             # (REV 68's guard items, my fail-open cell, the missing Q-DE-95)
+                             # dispatched 14:06Z; DE 100 = the 09-04 LAUNCH, after the lock; BE 64
+                             # holds the lock building the 09-05 book.**
+                             # *The chain that has consumed the day now has its first sealed day and
+                             # a queue behind it -- and the next launch waits on a lock rather than
+                             # on a rule.*
   DA_88_CLOSES_THE_FALSE_ABSENCE_WITH_A_REAL_FAILURE: PERMISSION_DENIED_NOT_A_SIMULATION
                              # CHECKED 2026-09-06T14:02:25Z at
                              # `p003_da_rev68_findings__20260906T140030Z.json` (sha
@@ -21671,6 +21784,91 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 183, 2026-09-06T14:07:45Z ------------------------------
+  DE_84S_JOURNAL_RECORD_IS_GONE_AND_I_HAD_PREDICTED_THE_HOUR:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      journalctl --user -u de84smoke.scope now returns -- No entries --, zero lines, with
+      the host horizon at 09:57:58Z and that unit's last line having been 09:46:29Z. At
+      round 178 I recorded that its last line sat about twenty minutes ahead of the
+      boundary and that the record would be gone when the boundary passed it; it is gone,
+      and REV 69 measured the loss between two of its own filings. de95smoke still has
+      three lines, which is why the two copies exist.
+  THE_COVERAGE_CONTRACT_IS_SHARED_AND_NAMES_ITS_REGIME:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      journal_coverage at :201 takes unit, window_start_epoch and regime, and its docstring
+      is the contract: two measured clocks and no text search, the regime named in the
+      output because the answer depends on it, with the continuous logger referenced to the
+      window's start and a bursty unit to its own start, whose silence between bursts is
+      not a gap in the record. That last clause is the correction to REV 68's finding: the
+      old text search could not tell silence from truncation.
+  THE_ARTIFACT_IS_THE_RECORD_FOR_A_NUMBER_WHOSE_SOURCE_IS_GONE:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      the smoke's cost is carried by SMOKE_COST_CARRIERS, the v4 receipt then the v3,
+      through smoke_cost_carried, described as the cost copied into a landed receipt with
+      provenance; the comment states the general answer to decay -- the artifact is the
+      record, the value was copied into a landed receipt at the moment it was read and is
+      carried forward with the receipt's own path, digest and as-of rather than re-measured
+      from a store that no longer holds it, with nothing re-derived and nothing typed.
+  EXIT_NINE_MEANS_VERIFIED_BUT_UNRECORDED:
+    prov: CHECKED
+    artifact: live/pm_research/da_midnight_verify.sh
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      _REC_FAILED is set at the failed append and both messages name what was lost, could
+      not append event to RUNREC and this run's record was NOT written, so exit 9 says the
+      work was verified and the record was not written -- a third outcome beside success and
+      failure, driven by DA 88 with the would-be-success path exiting 9 while a refusal keeps
+      its own 7.
+  THE_SEALED_RECEIPT_AT_ITS_THREE_OPEN_FIELDS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_co_journal_copy_de95smoke_run__20260906T140325Z.json
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      the sealed receipt is 37,104 bytes with sha256 5dd3a8f3f5818379..., which I hashed
+      myself and which matches the register's digest, and its only fields named here are
+      status DAY_RUN_SEALED, day 2026-09-03 and emitted_at_utc 14:01:55Z, from wt-de2 at
+      b741352; no sealed field is read or quoted. Its two run-record copies are verified by
+      me: the coordinator's at 58a3f08df4bb over 2,483 bytes with 3 lines by both invocation
+      fields, which I counted as 3 by -u, and DE's sidecar at b1b1fff1772d over 5,418 bytes.
+  THE_FAIL_OPEN_CELL_IS_ROUTED_TO_DE_99:
+    prov: RELAYED
+    from: R-651
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      the cell I drove at round 181, where observed kind None is admitted while the record
+      says checked true, is routed to DE 99 dispatched at 14:06Z together with REV 68's
+      guard items and the missing Q-DE-95 row. DE 95 produced the first sealed receipt of
+      the programme and its Q row was never filed: the register can lose a step the
+      artifacts kept.
+  THE_BOOK_IS_THE_HEAVY_RUN_NOW:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      read by name, be64book.service is loaded, active and running with MainPID 3485787,
+      MemoryCurrent 2,503,032,832 and MemoryPeak 2,526,744,576, its payload at pid 3485791
+      with 05:25 elapsed and RSS 1,411,416 KiB. This is the first BE heavy build launched
+      under the ruled service form, every BE run through 09-05 having been a scope, and its
+      fifty-nine refusals at exit 75 were the ruled grounding drive happening in production
+      before the rule asked for it.
+  THE_QUEUE_AFTER_THE_SEAL:
+    prov: RELAYED
+    from: R-652(B) and R-651
+    as_of: 2026-09-06T14:07:45Z
+    said: >-
+      DA 89, the pre-read of the sealed 09-03 receipt, was dispatched at 14:04Z; DE 99 at
+      14:06Z with REV 68's guard items, my fail-open cell and the missing Q-DE-95 row; DE 100
+      is the 09-04 launch after the lock; and BE 64 holds the lock building the 09-05 book.
+      The next launch waits on a lock rather than on a rule.
   # --- MEM round 182, 2026-09-06T14:02:25Z ------------------------------
   DA_88_CLOSES_THE_FALSE_ABSENCE_WITH_A_REAL_FAILURE:
     prov: CHECKED

@@ -13907,3 +13907,92 @@ directions.
   fifty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 165 — archived 2026-09-06T14:07:45Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 183 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T13:49:26Z (MEM ROUND 180 -- R-647 SWEPT, tip `fd663cd`. STATE ONLY. MEM
+  ASSERTS NO RESULT.
+  (1) ***THE COORDINATOR ASKED HOW I MEASURED "THE PAIR IS PERISHABLE", SO I DROVE IT IN
+  TWO CELLS.*** **CELL A (success): a transient unit running `/bin/true` is COLLECTED
+  within ~0.6 s -- `LoadState=not-found`, `show` reporting `inactive / 0 / success`.**
+  **CELL B (failure): a unit running `/bin/false` is RETAINED while failed
+  (`loaded/failed/1/exit-code`), and after `systemctl --user reset-failed` reports
+  `not-found` with the SAME defaults.** ***So it is NOT "unload after exit" in general:
+  success auto-collects at once; failure is retained until an explicit reset (or a manager
+  restart); BOTH end at identical defaults*** -- **which is why `show` after the fact
+  cannot distinguish SUCCEEDED, RESET-AFTER-FAILING and NEVER-EXISTED, and `LoadState` is
+  the only field that says the reading is meaningless.** *Live corroboration:
+  `be64book.service` is still `loaded/failed/75` after 46 launches. The reviewer's reset of
+  its `rev67*` units is RELAYED from its own filing -- I did not observe it.*
+  (2) **TWELVE OF TWELVE CROSS-CHECKED -- AND MY COMPARATOR WAS THE SUSPECT.** *I drove
+  every line of DA 87's table against the live parser: agreement on all twelve, including
+  the trailing space KEPT, the quoted odd name, the copy with `renamed_from`.* **My first
+  pass printed 10/12 because the receipt records refused lines as `result: "MALFORMED"`
+  while the parser returns `rows=[]` with `n_malformed: 1`, and I had tested whether the
+  receipt's STRING appeared inside the parser's DICT.** ***The count that would have
+  contradicted R-647 was an artefact of how I compared.***
+  (3) **DE 97 BUILDS THE COMMAND FROM THE DECLARATION:** driving `the_one_command` returns
+  `… -- flock -n -E 75 …` with **no `--scope`**; `heavy_run_form()` reads `lock_path`,
+  `lock_conflict_rc`, `slice` from the one file; and **`RUNNER_EXIT_CODES` declares only 0
+  and 1 -- 75 EXCLUDED BY CONSTRUCTION**, the reason written at :3596. *DE's code also
+  keeps the coordinator's two wrong-field journal copies as documentation.*
+  (4) **AND I CHOSE THE UNIT THAT VIOLATES THE CROSS-CHECK'S PRECONDITION ON PURPOSE.** The
+  declaration says the `-u` count must equal the by-id count **for a unit launched ONCE**.
+  **`be64book` has been launched 46 times: `-u` 176 lines, `USER_INVOCATION_ID` 3,
+  `_SYSTEMD_INVOCATION_ID` 0.** ***The qualifier is not decoration -- an InvocationID scopes
+  ONE launch.*** *R-647 records DA and DE agreeing at 13:41Z; mine is a third reading eight
+  minutes later, and the STRUCTURE reproduces, not the numbers.*
+  (5) **THE STRANDED COMMIT HOLDS IDENTICAL BYTES:** `91bdf63` is wt-de's HEAD and **NOT an
+  ancestor of `origin/mm-research`**, while its blobs match the landed `226c9a6`'s exactly
+  (`8eccc8652855…`, `8e20f8e62016…`). ***Rule 21's first form, benign*** -- *the work landed
+  through the shared tree; the commit object hangs off a worktree HEAD, reachable in the
+  store but not on the branch.*
+  (6) **MY ROUND-178 ROUTING IS ANSWERED BY A RULING:** the scratch-preserved `params_v6`
+  bytes are an **UNCOMMITTED DRAFT whose DIGEST IS ITS RECORD**, not preserved further.
+  ***The right shape: the question was whether the bytes matter, and a digest already says
+  everything the programme needs about a draft that never became a version.***
+  (7) **THREE SLIPS, EACH RECORDED BY THE SEAT THAT WROTE IT:** DA's two (an unquoted
+  heredoc; a stray `> b`, removed) and **DE's one -- A CHECK MATCHING A KEY NAME, NOT A
+  VALUE.** *The last is the needle-matching-its-own-prose class on the ASSERTION side: a
+  check that finds the field it is looking for and never looks at what the field says.*
+  (8) **THE RUN:** `LoadState=loaded`, `active`, `ExecMainStatus=0` (the RUNNING value),
+  **`MemoryPeak` STILL 2,554,003,456 B -- eleven reads across 74 minutes**, the runner at
+  **1:12:30**, RSS 769,852 KiB; `be64book` 46 launches / 176 journal lines / latest exit
+  13:47:18Z at 75.
+  **AT COMMIT TIME, 2026-09-06T13:52:23Z: R-648 RULES MY CAVEAT AS R3', AND REV 68 DRIVES
+  THE ONE I SET ASIDE.**
+  **R3': a unit's outcome is the TRIPLE (`LoadState`, `ActiveState`, `ExecMainStatus`) read
+  WHILE LOADED and copied at once -- a collected unit reads as DEFAULTS and the reading is
+  VOID -- and heavy runs from DE 98 on carry `-p RemainAfterExit=yes` so a success stays
+  readable.** *The coordinator drove FOUR cells where I drove two, and my two paths
+  generalise; declaration v2 supersedes v1 by path+sha256.* ***THE CONSEQUENCE IS THE
+  HAZARD MY MEASUREMENT PREDICTED: `de95smoke.service` was launched under v1, so on success
+  it VANISHES at exit leaving only its `Started` line -- its record is the sealed receipt
+  plus the manager's lines copied by `USER_INVOCATION_ID`, no post-exit reading of its pair
+  means anything, and the ABSENCE of a "Failed with result" line in a rotating journal is
+  NOT EVIDENCE.***
+  ***AND REV 68 FILES THE FINDING I SET ASIDE AT ROUND 178:*** **"the FIXTURE half is a
+  report, not a gate" -- an UNDECLARED fixture name in a `.scope` is ADMITTED, and so is a
+  REAL day name with `fixture=True`; the declared list is NEVER CONSULTED.** *I measured
+  exactly that and concluded it was not a hole because the record says `checked: false`.*
+  **The fact stands; my verdict was too generous -- honesty about what a check did not do
+  is not a gate.** *Flag value superseded in band, key untouched.*
+  *REV 68 also reports `window_fully_covered` TRUE on a read that had lost 141 of 161
+  lines, and corrects itself for a claim filed before the drive that earned it -- "a
+  statement true of what I would find, filed before the finding", its fourth in five
+  rounds.* **My scratch cells left nothing: `mem180a` and `mem180b` both read
+  `LoadState=not-found`.**
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈72 min, receipt ≈14:00Z); the unit
+  outcome PERISHABLE-BY-TWO-PATHS (driven); the parser TWELVE-OF-TWELVE-AT-THE-SHARED-NAME;
+  the 09-05 book BUILD-PENDING-THE-LOCK (46 polls).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,096 -> 1,104, flag_provenance 641 -> 649,
+  tasks 19; **411 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-sixth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
