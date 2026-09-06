@@ -3412,8 +3412,16 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
 
     #: (b) THE POPULATION, recomputed from the book at the declared thetas.
     #: NO REPLAY. NO NULL.
+    #: DA 99, FOUND BY THE HEAVY RUN ITSELF: this loop is the JSON book's
+    #: shape (`rows` + `scores_by_arm`), and the PICKLE path has neither
+    #: -- it went straight into `bk["scores_by_arm"]` and died with a
+    #: KeyError under the lock. ***A traceback where a verdict belongs***,
+    #: for the third time today, in my own heavy path. The pickle's
+    #: population comes from `recompute_population_from_book`, and this
+    #: loop is skipped BY NAME.
     arms_out, agree = {}, []
-    for arm, spec in ([] if book_refusal
+    _pickle_path = bool(bk and bk.get("kind") == "PICKLE")
+    for arm, spec in ([] if (book_refusal or _pickle_path)
                       else sorted(params["arms"].items())):
         r_arm = arms_in.get(arm)
         if r_arm is None:
@@ -3587,7 +3595,19 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             "resolves one -- so it cannot compute an economic value, let "
             "alone emit it"),
         "book": book_meta,
+        "peak_rss_bytes_in_this_process": (
+            __import__("resource").getrusage(
+                __import__("resource").RUSAGE_SELF).ru_maxrss * 1024),
+        "peak_rss_note": (
+            "ru_maxrss of THIS process, which is where BE 66 measured "
+            "2.079 GB for the open; systemd's MemoryPeak is the cgroup's "
+            "and is reported beside it, not instead of it"),
         "population_recomputed_from_the_book": (book_refusal is None),
+        **({"the_row_loop_was_skipped_because":
+                ("the book is BE's PICKLE, whose population is recomputed "
+                 "through the structure declaration rather than from "
+                 "`rows` + `scores_by_arm`, which is the JSON book's "
+                 "shape")} if _pickle_path else {}),
         **({"population_from_the_book": pop_out,
             "the_structure_it_was_mapped_through":
                 bk.get("structure_declaration")} if pop_out else {}),
