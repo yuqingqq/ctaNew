@@ -59,6 +59,7 @@ import ast
 import datetime
 import hashlib
 import json
+import re
 import math
 import statistics
 import subprocess
@@ -1247,7 +1248,6 @@ def main() -> int:
 
 #: Design v12, pinned. The pre-read matches provenance BY DIGEST, so the
 #: declaration it matches against must itself be named.
-DESIGN_V12_SHA = "c32c72455b26ac3ea5df5cc5c8e2b7be1d2eb4d2ab0c50a91b9b26be5c2c8e79"
 
 
 def _fn_source(name: str) -> str:
@@ -1296,34 +1296,211 @@ def economic_absence(receipt) -> dict:
                 "failure this check exists to prevent -- not a lesser one")}
 
 
-def emitted_census(emitted: dict, receipt) -> dict:
-    """PROVE the emission carried no economic value.
+#: The receipt's own fields whose STRINGS may never be echoed. A refusal
+#: reason quotes the very moments the seal withholds in order to explain
+#: itself, so its text is treated as sealed material.
+#: NARROW ON PURPOSE. The first version matched every `why` and `detail`
+#: field, whose numbers are DECLARED thresholds -- 0.25, 30, 500, 14 -- that
+#: this verifier legitimately repeats everywhere. Watching those made the
+#: census refuse its own honest output. What is sealed material is the R4
+#: REASONS text, which quotes the null moments to explain itself, and any
+#: string that NAMES a sealed quantity.
+FORBIDDEN_ECHO_MARKERS = ("reasons",)
+MOMENT_FIELDS = ("null_mean", "null_sd", "sd_over_abs_mean", "Z", "D_E0",
+                 "p_location")
+#: How many significant figures a numeric token must carry before it can be
+#: evidence that a sealed float leaked. Sealed moments are long floats; a
+#: one- or two-figure token is noise, and treating it as evidence made this
+#: census flag the digits inside its own protocol string.
+MIN_SIG_DIGITS_TO_BE_EVIDENCE = 6
 
-    Two independent things are checked. (a) No economic field NAME appears
-    in what was emitted. (b) No VALUE that sits under an economic name in
-    the receipt appears anywhere in the emission -- which is the half that
-    still holds when the receipt LEAKS, because a name-only check would pass
-    while the number rode out under a different key."""
+NUM_TOKEN = re.compile(r"-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?")
+
+
+def _textual_forms(v: float) -> set:
+    """The ways one number can appear INSIDE a string.
+
+    A value does not have to be emitted as a number to be emitted. DE 85's
+    own finding was a sealed quantity riding out in the TEXT of a refusal
+    reason, where a leaf-typed scan cannot see it."""
+    out = {str(v), repr(v), f"{v}"}
+    try:
+        for fmt in (".1f", ".2f", ".3f", ".4f", ".6f", ".6g", ".9g", ".12g",
+                    ".15g", "g", "e", ".3e", ".6e"):
+            out.add(format(float(v), fmt))
+        out.add(str(int(float(v))) if float(v).is_integer() else str(v))
+    except (TypeError, ValueError, OverflowError):
+        pass
+    return {x for x in out if x and any(c.isdigit() for c in x)}
+
+
+def emitted_census(emitted: dict, receipt) -> dict:
+    """PROVE the emission carried no economic value -- INCLUDING AS TEXT.
+
+    Three independent checks, and the third is REV 49 section 2.4's:
+
+      (a) no economic field NAME appears in what was emitted;
+      (b) no numeric LEAF equal to a sealed value appears in it;
+      (c) NO SEALED NUMBER APPEARS INSIDE A STRING. Checks (a) and (b) are
+          both leaf-typed and both blind to a value embedded in prose --
+          which is exactly the class DE 85 found: a sealed quantity carried
+          in the TEXT of a refusal reason. Every numeric token in every
+          string-valued field is parsed and compared, AND every sealed
+          value is rendered in its textual forms and searched for.
+          BOTH DIRECTIONS, because a token scan misses a value written in a
+          format it does not parse back, and a form scan misses a value
+          written in a format nobody listed.
+    """
     names = [p for p, _ in _walk_paths(emitted)
              if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS]
     econ_vals = {v for p, v in _walk_paths(receipt)
                  if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS
                  and isinstance(v, (int, float))
                  and not isinstance(v, bool)}
+    #: the null MOMENTS specifically -- they are the ones that travel in
+    #: prose, because a refusal reason quotes them to explain itself.
+    moment_vals = {v for p, v in _walk_paths(receipt)
+                   if p.rsplit(".", 1)[-1].split("[")[0] in MOMENT_FIELDS
+                   and isinstance(v, (int, float))
+                   and not isinstance(v, bool)}
+    #: AND THE ONE THE FIRST VERSION MISSED. Both sets above are drawn from
+    #: the receipt's NUMERIC leaves -- and a properly SEALED receipt has
+    #: none, so the watch list came out EMPTY and a number hidden in prose
+    #: had nothing to be compared against. The census could only ever catch
+    #: a leak in a receipt that had already leaked.
+    #: The receipt's own PROSE is the third source: any numeric token
+    #: sitting in a string the pre-read is forbidden to echo -- a refusal
+    #: reason quoting `null sd 0.144337` is the sealed quantity in textual
+    #: form, which is precisely what DE 85 found.
+    prose_vals, prose_paths = set(), []
+    for path_, v in _walk_paths(receipt):
+        if not isinstance(v, str):
+            continue
+        leafish = path_.lower()
+        #: WORD BOUNDARIES, AND NO ONE-CHARACTER NAMES. `Z` is a moment
+        #: field AND the UTC suffix of every timestamp, so a bare substring
+        #: test made every filename in the receipt "sealed material" and
+        #: turned its digit runs into watched values -- after which "3" in
+        #: `P003` matched. Measured: it flagged this verifier's own protocol
+        #: string.
+        names_a_sealed_quantity = any(
+            re.search(r"\b" + re.escape(f.lower().replace("_", "[ _]")) + r"\b",
+                      v.lower())
+            for f in MOMENT_FIELDS if len(f) >= 4)
+        if not (any(m in leafish for m in FORBIDDEN_ECHO_MARKERS)
+                or names_a_sealed_quantity):
+            continue
+        prose_paths.append(path_)
+        for m in NUM_TOKEN.finditer(v):
+            try:
+                prose_vals.add(float(m.group()))
+            except ValueError:
+                continue
+    #: DECLARED thresholds are public by declaration and appear in honest
+    #: prose everywhere. Watching them would make the census refuse its own
+    #: correct output -- which it did, on the first attempt.
+    declared = set()
+    try:
+        _p = load_params()
+        for k in ("sd_floor_fraction", "min_decisions_per_arm_day",
+                  "min_draws_per_arm_day", "alpha", "multiplicity_m",
+                  "expected_G", "head_overlap_floor", "per_day_deadline_s"):
+            if isinstance(_p.get(k), (int, float)):
+                declared.add(float(_p[k]))
+    except Exception:                                         # noqa: BLE001
+        pass
+    declared |= {0.0, 1.0, 2.0, 100.0}
+    watched = (econ_vals | moment_vals | prose_vals) - declared
     emitted_vals = {v for _, v in _walk_paths(emitted)
                     if isinstance(v, (int, float))
                     and not isinstance(v, bool)}
-    echoed = sorted(econ_vals & emitted_vals)
+    echoed = sorted(watched & emitted_vals)
+
+    strings = [(p, v) for p, v in _walk_paths(emitted) if isinstance(v, str)]
+
+    def _sig_digits(tok: str) -> int:
+        return len(tok.replace("-", "").replace(".", "").lstrip("0"))
+
+    #: WHOLE TOKENS, NOT SUBSTRINGS. The first version searched for each
+    #: watched value's textual FORMS as raw substrings, and a short form like
+    #: "3.2" matches inside "63.21" -- it flagged this verifier's own honest
+    #: output ten times over. A number is only evidence of a leak if it
+    #: appears as a COMPLETE token, and only if it carries enough precision
+    #: to identify the value it came from.
+    text_hits = []
+    for path_, sval in strings:
+        for m in NUM_TOKEN.finditer(sval):
+            tok = m.group()
+            try:
+                t = float(tok)
+            except ValueError:
+                continue
+            #: A SEALED MOMENT IS A FLOAT WITH MANY DIGITS. A token of one
+            #: or two significant figures is never evidence that one leaked
+            #: -- and treating it as such is how this check first flagged
+            #: the digits inside its own protocol string.
+            if _sig_digits(tok) < MIN_SIG_DIGITS_TO_BE_EVIDENCE:
+                continue
+            for w in watched:
+                exact = (t == w)
+                near = format(t, ".6g") == format(float(w), ".6g")
+                if exact or near:
+                    text_hits.append({
+                        "path": path_,
+                        "how": ("exact numeric token" if exact
+                                else "token matching to 6 significant "
+                                     "figures"),
+                        "min_sig_digits_required":
+                            MIN_SIG_DIGITS_TO_BE_EVIDENCE,
+                        "token_significant_digits": _sig_digits(tok),
+                        "NOTE": "the value is NOT reproduced here"})
+                    break
+
+    #: dedupe on path+how, and NEVER carry the value itself
+    seen, uniq = set(), []
+    for h in text_hits:
+        k = (h["path"], h["how"])
+        if k not in seen:
+            seen.add(k)
+            uniq.append(h)
     return {"n_leaves_emitted": sum(1 for _ in _walk_paths(emitted)),
             "n_economic_field_names_in_the_emission": len(names),
             "economic_field_names_in_the_emission": sorted(names),
-            "n_economic_values_from_the_receipt": len(econ_vals),
-            "n_of_them_echoed_in_the_emission": len(echoed),
-            "clean": not names and not echoed,
-            "why_two_checks": (
+            "n_watched_values_from_the_receipt": len(watched),
+            "n_watched_from_numeric_leaves": len(econ_vals | moment_vals),
+            "n_watched_from_the_receipts_PROSE": len(prose_vals - declared),
+            "n_declared_thresholds_excluded": len(
+                (econ_vals | moment_vals | prose_vals) & declared),
+            "why_declared_thresholds_are_excluded": (
+                "0.25, 30, 500 and the rest are public BY DECLARATION and "
+                "appear in honest prose everywhere. Watching them made this "
+                "census refuse its own correct output on the first attempt"),
+            "receipt_string_paths_that_may_not_be_echoed": sorted(
+                set(prose_paths))[:12],
+            "why_the_prose_matters": (
+                "a SEALED receipt has no economic numeric leaves, so a watch "
+                "list built from them alone is EMPTY -- and a number hidden "
+                "in prose has nothing to be compared against. The census "
+                "could then only catch a leak in a receipt that had already "
+                "leaked, which is no catch at all"),
+            "n_of_them_echoed_as_a_NUMERIC_LEAF": len(echoed),
+            "n_string_fields_scanned": len(strings),
+            "n_of_them_carrying_a_watched_number_AS_TEXT": len(uniq),
+            "string_hits_by_path_only": uniq[:20],
+            "clean": not names and not echoed and not uniq,
+            "why_three_checks": (
                 "a name check alone passes while the NUMBER rides out under "
-                "a different key; a value check alone passes while an empty "
-                "economic key rides out. Both, or neither proves anything")}
+                "a different key; a leaf check alone passes while the number "
+                "rides out INSIDE A STRING -- REV 49 section 2.4, and the "
+                "exact class DE 85 found. The third check reads the prose, "
+                "as WHOLE TOKENS: matching textual forms as raw substrings "
+                "flagged this verifier's own honest output, because '3.2' "
+                "sits inside '63.21'"),
+            "values_are_never_reproduced_here": (
+                "a hit is reported by PATH and by HOW. Printing the value "
+                "would publish what the seal withholds, in the very field "
+                "that exists to prevent it"),
+            }
 
 
 def pre_read_day(day: str, book_path: str, receipt_path: str, *,
@@ -1451,6 +1628,27 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
                 "prevent"),
             "sd_over_abs_mean_present_in_the_sealed_receipt": (
                 "sd_over_abs_mean" in radm),
+            #: REV 49 section 2.5: the CONSISTENCY, computed per receipt.
+            #: The ratio is a quotient of two sealed quantities; whether it
+            #: survives is DE's to decide, and this reports whether THIS
+            #: receipt agrees with DE's CURRENT list. A v12-shaped receipt
+            #: under a v13 list is INCONSISTENT -- and that is a real
+            #: signal, not noise: it says the receipt was produced by older
+            #: code, which is a provenance fact worth surfacing.
+            "sd_over_abs_mean_consistency": {
+                "present_in_this_receipt": "sd_over_abs_mean" in radm,
+                "in_DEs_current_field_list":
+                    "sd_over_abs_mean" in ECONOMIC_FIELDS,
+                "consistent": (("sd_over_abs_mean" in radm)
+                               is not ("sd_over_abs_mean" in ECONOMIC_FIELDS)),
+                "reading": (
+                    "present while DE's list says it should be stripped: "
+                    "this receipt was produced by code older than the list. "
+                    "A PROVENANCE signal, not a defect in the day"
+                    if ("sd_over_abs_mean" in radm
+                        and "sd_over_abs_mean" in ECONOMIC_FIELDS) else
+                    "the receipt agrees with DE's current field list"),
+            },
         }
         agree.append(not bad)
 
@@ -1461,7 +1659,7 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
                    "sha256": params["_sha256"],
                    "expected_prefix": "306bfdb0",
                    "matches": params["_sha256"].startswith("306bfdb0")},
-        "design_v12": _design_v12_check(),
+        "design": design_check(receipt, params),
         "runner_economic_field_list": de,
         "verifier": verifier_identity(),
     }
@@ -1512,7 +1710,7 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: which this artifact carries either way, and a reader who needs the
     #: stricter reading has the flag in front of them.
     prov_ok = bool(prov["params"]["matches"]
-                   and prov["design_v12"]["matches"])
+                   and prov["design"]["matches"])
     out["status"] = (
         "PRE_READ_VERIFIED" if (agree and all(agree) and absence["sealed"]
                                 and prov_ok)
@@ -1531,10 +1729,13 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         raise VerifierRefused(
             f"REFUSED: the emission carries "
             f"{out['emitted_census']['n_economic_field_names_in_the_emission']}"
-            f" economic field name(s) and echoes "
-            f"{out['emitted_census']['n_of_them_echoed_in_the_emission']} "
-            f"economic value(s). A pre-read that emits what it exists to "
-            f"withhold is worse than no pre-read.")
+            f" economic field name(s), echoes "
+            f"{out['emitted_census']['n_of_them_echoed_as_a_NUMERIC_LEAF']} "
+            f"as numeric leaves and carries "
+            f"{out['emitted_census']['n_of_them_carrying_a_watched_number_AS_TEXT']}"
+            f" inside string fields. A pre-read that emits what it exists to "
+            f"withhold is worse than no pre-read. Hits BY PATH ONLY: "
+            f"{[h['path'] for h in out['emitted_census']['string_hits_by_path_only'][:6]]}")
     if output:
         Path(output).write_text(
             json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
@@ -1588,23 +1789,54 @@ def _derived_dir() -> Path:
         return HERE.parents[1] / "data" / "pm_5min" / "derived"
 
 
-def _design_v12_check() -> dict:
-    root = _derived_dir()
-    hits = sorted(root.glob("p003_de_multiday_gate1_design_v12__*.json"))
-    if not hits:
-        return {"found": False, "matches": False,
-                "why": "design v12 is not on disk; provenance cannot be "
-                       "matched by digest and MUST NOT be assumed"}
-    p = hits[-1]
+def design_check(receipt: dict, params: dict) -> dict:
+    """The design declaration, READ FROM THE RECEIPT and verified at the file
+    it names.
+
+    REV 49 section 2.6: this was pinned to a v12 prefix in this file and
+    never bound to the receipt at all -- so it would keep passing on a v12
+    file while the receipt under test was produced against v13 or v14. The
+    version is the RECEIPT's to state; this verifies the artifact it names.
+    """
+    blk = (receipt.get("design_declaration")
+           or (receipt.get("declaration") or {}).get("design")
+           or params.get("design_declaration"))
+    src = ("the receipt" if receipt.get("design_declaration")
+           or (receipt.get("declaration") or {}).get("design")
+           else "the params declaration (the receipt names none)")
+    if not isinstance(blk, dict) or not blk.get("path"):
+        return {"found": False, "matches": False, "named_by": src,
+                "why": ("no design declaration is named by the receipt or by "
+                        "params, so the version under test cannot be "
+                        "identified and MUST NOT be assumed")}
+    named = Path(blk["path"])
+    p = named if named.is_absolute() else (_derived_dir().parent.parent
+                                           / blk["path"])
+    if not p.is_file():
+        p = _derived_dir() / named.name
+    if not p.is_file():
+        return {"found": False, "matches": False, "named_by": src,
+                "path_named": blk["path"],
+                "why": "the named design declaration is not on disk"}
     sha = hashlib.sha256(p.read_bytes()).hexdigest()
-    return {"found": True, "path": p.name, "sha256": sha,
-            "expected_prefix": "c32c7245",
-            "matches": sha.startswith("c32c7245")}
+    return {"found": True, "named_by": src, "path": p.name,
+            "sha256": sha, "sha256_declared": blk.get("sha256"),
+            "protocol_declared": blk.get("protocol"),
+            "version_from_the_name": (
+                "".join(c for c in p.name.split("design_")[-1][:4]
+                        if c.isalnum()) if "design_" in p.name else None),
+            "matches": sha == blk.get("sha256"),
+            "why": ("the digest of the file the receipt NAMES, against the "
+                    "digest the receipt DECLARES -- not against a version "
+                    "hardcoded in the verifier")}
+
 
 
 def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
                              name: str = "sealed_de.json",
-                             leak: tuple | None = None) -> Path:
+                             leak: tuple | None = None,
+                             shape: str = "v13",
+                             design: dict | None = None) -> Path:
     """A receipt in DE's OWN emitted shape: per-day arm blocks in a LIST,
     each with `admissibility`, `draw_provenance.book_digest`, `seed`, and
     the economic fields STRIPPED at every depth."""
@@ -1629,13 +1861,24 @@ def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
                                 "seed": v["seed"], "n_draws": v["n_draws"],
                                 "recomputed_by_the_runner": True},
         }
+        ratio = v["admissibility"].get("sd_over_abs_mean")
         blk = _strip_like_DE(blk)
+        #: REV 49 section 2.5. The `iff` could not FIRE on a fixture that
+        #: only ever produced the CURRENT shape. A v12-shaped receipt keeps
+        #: `sd_over_abs_mean` -- v12's stripper did not know it -- while the
+        #: live field list says it should be gone, and THAT is the state the
+        #: real 09-03 receipt is in.
+        if shape == "v12" and ratio is not None:
+            blk["admissibility"]["sd_over_abs_mean"] = ratio
         if leak and leak[0] == arm:
             blk[leak[1]] = econ.get(leak[1], leak[2])
         blocks.append(blk)
     p = d / name
-    p.write_text(json.dumps({"day": "2026-09-03",
-                             "per_day_sealed_artifacts": blocks}))
+    body = {"day": "2026-09-03", "per_day_sealed_artifacts": blocks,
+            "receipt_shape_for_the_fixture": shape}
+    if design:
+        body["design_declaration"] = design
+    p.write_text(json.dumps(body))
     return p
 
 
@@ -1668,7 +1911,16 @@ def selftest_pre_read() -> list:                              # noqa: C901
                           "sd_over_abs_mean":
                               m["admissibility"]["sd_over_abs_mean"]},
                       "economic": dict(m["economic"] or {})}
-    spath = _sealed_de_shape_receipt(td, payload, bsha)
+    #: the fixture names a REAL design declaration so 2.6's check has a
+    #: file to verify against -- whichever version is current.
+    dsn = sorted(_derived_dir().glob(
+        "p003_de_multiday_gate1_design_v*__*.json"))
+    design = None
+    if dsn:
+        design = {"path": dsn[-1].name,
+                  "sha256": hashlib.sha256(dsn[-1].read_bytes()).hexdigest(),
+                  "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION"}
+    spath = _sealed_de_shape_receipt(td, payload, bsha, design=design)
 
     # -- A. it RUNS BEFORE THE BAR and verifies ---------------------------
     pre = pre_read_day("2026-09-03", str(bpath), str(spath),
@@ -1709,10 +1961,10 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "passes while the number rides out under another key",
        cen["clean"] is True
        and cen["n_economic_field_names_in_the_emission"] == 0
-       and cen["n_of_them_echoed_in_the_emission"] == 0,
+       and cen["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 0,
        f"{cen['n_leaves_emitted']} leaves emitted, "
        f"{cen['n_economic_field_names_in_the_emission']} economic names, "
-       f"{cen['n_of_them_echoed_in_the_emission']} echoed values")
+       f"{cen['n_of_them_echoed_as_a_NUMERIC_LEAF']} echoed values")
 
     # -- D. AFTER the bar it still runs and still reads nothing -----------
     post = pre_read_day("2026-09-03", str(bpath), str(spath),
@@ -1778,11 +2030,123 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and any("D_E0" in p
                for p in pl["economic_absence"]["leaked_field_paths"])
        and repr(leak_val) not in emitted_text
-       and pl["emitted_census"]["n_of_them_echoed_in_the_emission"] == 0,
+       and pl["emitted_census"]["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 0,
        f"leak named at "
        f"{pl['economic_absence']['leaked_field_paths']}; the value appears "
        f"0 times in the emission and the census confirms "
-       f"{pl['emitted_census']['n_of_them_echoed_in_the_emission']} echoed")
+       f"{pl['emitted_census']['n_of_them_echoed_as_a_NUMERIC_LEAF']} echoed")
+
+    # -- G2. REV 49 section 2.4: A SEALED NUMBER HIDDEN IN PROSE ---------
+    #: the exact class DE 85 found. The receipt is properly SEALED, so it
+    #: carries no economic numeric leaf -- the value exists only in the TEXT
+    #: of a refusal reason, and both leaf-typed checks are blind to it.
+    hidden_val = float(payload[sorted(payload)[0]]["economic"]["null_sd"])
+    r_hidden = json.loads(spath.read_text())
+    r_hidden["per_day_sealed_artifacts"][0]["admissibility"]["reasons"] = [
+        f"null sd {hidden_val} < 0.25 * |mean|; Z explodes as sd -> 0"]
+    hp = td / "sealed_hidden_in_prose.json"
+    hp.write_text(json.dumps(r_hidden))
+    rh = json.loads(hp.read_text())
+    #: the CENSUS is the unit under test: an emission that echoes the reason
+    #: must be caught, and the real pre-read's emission must be clean.
+    leaky_emission = {"arms": {"A": {"note": (
+        f"refused: null sd {hidden_val} below the floor")}}}
+    cen_bad = emitted_census(leaky_emission, rh)
+    cen_ok = emitted_census({"arms": {"A": {"note": "refused on the floor"}}},
+                            rh)
+    ck("REV 49 section 2.4 CLOSED -- A SEALED NUMBER HIDDEN IN PROSE IS "
+       "CAUGHT. The receipt is properly sealed and carries NO economic "
+       "numeric leaf, so the value lives only in a refusal reason's TEXT: an "
+       "emission repeating it is caught by the string scan, and one that "
+       "does not is clean. ***The first version's watch list was built from "
+       "numeric leaves alone, so on a SEALED receipt it was EMPTY -- the "
+       "census could only catch a leak in a receipt that had already "
+       "leaked***",
+       cen_bad["clean"] is False
+       and cen_bad["n_of_them_carrying_a_watched_number_AS_TEXT"] >= 1
+       and cen_bad["n_watched_from_the_receipts_PROSE"] >= 1
+       and cen_bad["n_watched_from_numeric_leaves"] == 0
+       and cen_ok["clean"] is True,
+       f"watch list: {cen_bad['n_watched_from_numeric_leaves']} from numeric "
+       f"leaves (a sealed receipt has none) + "
+       f"{cen_bad['n_watched_from_the_receipts_PROSE']} from the receipt's "
+       f"prose. The echoing emission -> "
+       f"{cen_bad['n_of_them_carrying_a_watched_number_AS_TEXT']} string hit(s); "
+       f"the clean one -> {cen_ok['n_of_them_carrying_a_watched_number_AS_TEXT']}")
+    ck("AND THE HIT IS REPORTED BY PATH AND HOW, NEVER BY VALUE -- a census "
+       "that printed the number it caught would publish exactly what the "
+       "seal withholds, in the field that exists to prevent it",
+       all("NOTE" in h and "path" in h and "how" in h
+           for h in cen_bad["string_hits_by_path_only"])
+       and str(hidden_val) not in json.dumps(
+           cen_bad["string_hits_by_path_only"]),
+       f"hits: {[(h['path'], h['how']) for h in cen_bad['string_hits_by_path_only']][:2]}; "
+       f"the value appears 0 times in them")
+    #: and the REAL pre-read must not echo the reasons at all.
+    ph = pre_read_day("2026-09-03", str(bpath), str(hp), params=params,
+                      now=BAR_BEFORE)
+    echoed_paths = [p_ for p_, _ in _walk_paths(ph)
+                    if "reasons" in p_.lower()]
+    ck("AND THE PRE-READ NEVER ECHOES `admissibility.reasons` AT ALL: with "
+       "the reason carrying a sealed number, its own emission is still "
+       "clean, because it copies the STATUS and the COUNTS and not the prose",
+       ph["emitted_census"]["clean"] is True and echoed_paths == [],
+       f"{len(echoed_paths)} `reasons` paths in the emission; census clean "
+       f"{ph['emitted_census']['clean']} over "
+       f"{ph['emitted_census']['n_string_fields_scanned']} string fields")
+
+    # -- G3. REV 49 section 2.5: THE iff FIRES AND ADMITS -----------------
+    v12 = _sealed_de_shape_receipt(td, payload, bsha, name="sealed_v12.json",
+                                   shape="v12", design=design)
+    p12 = pre_read_day("2026-09-03", str(bpath), str(v12), params=params,
+                       now=BAR_BEFORE)
+    a12 = p12["arms"][sorted(params["arms"])[0]]["sd_over_abs_mean_consistency"]
+    a13 = pre["arms"][sorted(params["arms"])[0]][
+        "sd_over_abs_mean_consistency"]
+    ck("REV 49 section 2.5 CLOSED -- THE `iff` NOW FIRES AND ADMITS, because "
+       "the fixture carries BOTH states: a v12-shaped receipt KEEPS "
+       "`sd_over_abs_mean` (v12's stripper did not know it) while DE's "
+       "current list says it should be gone, and a v13-shaped one strips it. "
+       "***A check that could only ever see one state was pinning nothing***",
+       a12["present_in_this_receipt"] is True
+       and a12["consistent"] is False
+       and a13["present_in_this_receipt"] is False
+       and a13["consistent"] is True
+       and a12["in_DEs_current_field_list"] is True,
+       f"v12-shaped: present={a12['present_in_this_receipt']}, "
+       f"consistent={a12['consistent']}; v13-shaped: "
+       f"present={a13['present_in_this_receipt']}, "
+       f"consistent={a13['consistent']}")
+    ck("AND THE INCONSISTENT STATE IS READ AS A PROVENANCE SIGNAL, NOT A "
+       "DEFECT IN THE DAY: a receipt carrying the ratio while the list seals "
+       "it was produced by code older than the list -- which is the state "
+       "the REAL 09-03 receipt is in",
+       "produced by code older than the list" in a12["reading"]
+       and "PROVENANCE signal" in a12["reading"],
+       f"reading: '{a12['reading'][:96]}...'")
+
+    # -- G4. REV 49 section 2.6: the design pin is BOUND TO THE RECEIPT ---
+    dz = pre["provenance"]["design"]
+    r_bad_design = json.loads(spath.read_text())
+    if r_bad_design.get("design_declaration"):
+        r_bad_design["design_declaration"]["sha256"] = "0" * 64
+        bdp = td / "sealed_bad_design.json"
+        bdp.write_text(json.dumps(r_bad_design))
+        pbd = pre_read_day("2026-09-03", str(bpath), str(bdp), params=params,
+                           now=BAR_BEFORE)
+        bad_ok = (pbd["provenance"]["design"]["matches"] is False
+                  and pbd["status"] == "FLAGGED")
+    else:
+        bad_ok = False
+    ck("REV 49 section 2.6 CLOSED -- THE DESIGN PIN IS READ FROM THE RECEIPT "
+       "AND VERIFIED AT THE FILE IT NAMES, not against a version hardcoded "
+       "here. A receipt declaring a digest the named file does not have is "
+       "FLAGGED",
+       dz["found"] is True and dz["matches"] is True
+       and dz["named_by"].startswith("the receipt") and bad_ok,
+       f"the receipt names {dz['path']} and declares its digest; verified "
+       f"{dz['sha256'][:16]}. A declared digest that the file does not have "
+       f"-> FLAGGED ({bad_ok})")
 
     # -- H. a wrong book REFUSES ------------------------------------------
     wb = td / "wrong_book.json"
@@ -1829,15 +2193,17 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "306bfdb0..., design v12 c32c7245..., DE's economic field list from "
        "the runner's own source, and the verifier's own committed-bytes flag",
        pv["params"]["matches"] is True
-       and pv["design_v12"]["found"] is True
-       and pv["design_v12"]["matches"] is True
+       and pv["design"]["found"] is True
+       and pv["design"]["matches"] is True
+       and pv["design"]["named_by"].startswith("the receipt")
        and pv["runner_economic_field_list"][
            "stripper_references_the_same_name"] is True
        and pre["provenance_all_matched"] is True
        and isinstance(pre["code_is_committed"], bool)
        and len(pre["verifier_sha256"]) == 64,
-       f"params {pv['params']['sha256'][:16]}, design v12 "
-       f"{pv['design_v12']['sha256'][:16]}, field list from "
+       f"params {pv['params']['sha256'][:16]}, design "
+       f"{pv['design']['path']} sha {pv['design']['sha256'][:16]} named by "
+       f"{pv['design']['named_by']}, field list from "
        f"{pv['runner_economic_field_list']['source_sha256'][:16]}; the "
        f"verifier's own committed-bytes flag is REPORTED "
        f"({pre['code_is_committed']}) beside its content digest "

@@ -730,7 +730,21 @@ def da_hash_and_parse_feed(path, latency_ms: int) -> dict:
 
 def da_day_from_pinned_feed(path, pin_sha: str, *,
                             latency_ms: int = LATENCY_MS) -> dict:
-    """One day: hash-and-parse in one pass, verify the pin, THEN compute."""
+    """One day: hash-and-parse in one pass, verify the pin, THEN compute.
+
+    REV 49 section 3.4: THE INFORMATIVE REFUSAL MUST BE REACHABLE. A pinned
+    feed that is not on disk used to surface as a bare `FileNotFoundError`
+    from deep inside the parser -- a generic refusal standing in front of the
+    one that says what is wrong. The existence check comes FIRST now, and it
+    refuses by name."""
+    p = Path(path)
+    if not p.is_file():
+        raise RaceVerifyRefused(
+            f"REFUSED: PINNED_FEED_ABSENT — the pins mark {p.name} as "
+            f"present with a digest, and it is not on disk at {p}. A day the "
+            f"pins promise and the ledger does not hold is a REFUSAL by "
+            f"name, not a parser error: the pin and the ledger disagree "
+            f"about what exists.")
     parsed = da_hash_and_parse_feed(path, latency_ms)
     if parsed["parsed_stream_sha256"] != pin_sha:
         raise RaceVerifyRefused(
@@ -762,6 +776,52 @@ def da_day_from_pinned_feed(path, pin_sha: str, *,
             "parsed_stream_sha256": parsed["parsed_stream_sha256"],
             "parsed_stream_bytes": parsed["parsed_stream_bytes"],
             "pin_holds": True}
+
+
+def day_status_in_artifact(art, day: str) -> dict:
+    """What does the read artifact SAY about this day?
+
+    REV 49 section 3.3: SILENCE PASSED. An artifact that never mentioned
+    09-01 or 09-02 verified, because the day-set check only looked for a
+    NUMBER against those days and found none. Absence read as compliance --
+    which is the same failure as a zero from a check that never ran.
+
+    Every day in the pins must be SAID, one way or the other:
+      READABLE_WITH_A_NUMBER   -- in `per_day` with a numeric increment
+      READ_BUT_UNRECOVERABLE   -- named, with an unrecoverable status and
+                                  NO number
+      PRESENT_BUT_NO_STATUS    -- the string appears and says nothing
+      ABSENT                   -- the artifact does not mention it at all
+    """
+    blk = (art.get("per_day") or {}).get(day)
+    has_number = isinstance(blk, dict) and any(
+        isinstance(v, (int, float)) and not isinstance(v, bool)
+        for _, v in _leaves(blk))
+    if has_number:
+        return {"status": "READABLE_WITH_A_NUMBER", "said": True}
+    #: hunt the day anywhere in the artifact, and ask whether what it sits
+    #: beside calls it unrecoverable.
+    mentioned, unrecoverable = False, False
+    for path_, v in _leaves(art):
+        hay = f"{path_} {v}"
+        if day in hay:
+            mentioned = True
+            if "UNRECOVERABLE" in path_.upper() or (
+                    isinstance(v, str) and "UNRECOVERABLE" in v.upper()):
+                unrecoverable = True
+        if isinstance(v, str) and v == day and "UNRECOVERABLE" in path_.upper():
+            unrecoverable = True
+    if unrecoverable:
+        return {"status": "READ_BUT_UNRECOVERABLE", "said": True}
+    if mentioned:
+        return {"status": "PRESENT_BUT_NO_STATUS", "said": False,
+                "why": ("the day is mentioned and nothing says what it is. A "
+                        "day named without a status is not a statement about "
+                        "it")}
+    return {"status": "ABSENT", "said": False,
+            "why": ("the artifact does not mention this day at all. Silence "
+                    "is not compliance: the read must SAY what it did with "
+                    "every day the pins name")}
 
 
 def verify_real_read(read_artifact: str, pins_path: str, *,
@@ -857,7 +917,30 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
             for _, v in _leaves(blk))
         if has_number:
             numbered_unrecoverable.append(day)
+    #: REV 49 section 3.3: every day in the pins must be SAID.
+    said, unsaid = {}, []
+    for day in sorted(per_day_pins):
+        st = day_status_in_artifact(art, day)
+        expected = ("READABLE_WITH_A_NUMBER" if day in readable
+                    else "READ_BUT_UNRECOVERABLE")
+        st["expected"] = expected
+        st["matches_the_pin"] = st["status"] == expected
+        said[day] = st
+        if not st["matches_the_pin"]:
+            unsaid.append(day)
+            bad.append(f"day_set.{day}.{st['status']}")
+
     day_set = {
+        "every_day_in_the_pins_must_be_SAID": said,
+        "n_days_in_the_pins": len(per_day_pins),
+        "n_days_said_as_the_pins_expect": sum(
+            1 for v in said.values() if v["matches_the_pin"]),
+        "days_not_said_as_the_pins_expect": unsaid,
+        "silence_does_not_pass": (
+            "an artifact that never mentioned 09-01/02 used to VERIFY, "
+            "because the check only looked for a NUMBER against them and "
+            "found none. Absence read as compliance -- the same failure as a "
+            "zero from a check that never ran"),
         "readable_from_the_pins": readable,
         "read_but_unrecoverable_from_the_pins": unrecoverable,
         "days_in_the_artifact": sorted(art.get("days") or []),
@@ -933,7 +1016,8 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
     out["IS_A_VERIFICATION"] = bool(
         not bad and readable
         and out["the_gate_is_the_artifacts_existence"]["is_BEs_declared_shape"]
-        and day_set["no_unrecoverable_day_carries_a_number"])
+        and day_set["no_unrecoverable_day_carries_a_number"]
+        and not day_set["days_not_said_as_the_pins_expect"])
     out["status"] = "VERIFIED" if out["IS_A_VERIFICATION"] else "FLAGGED"
     if output:
         Path(output).write_text(
@@ -973,7 +1057,8 @@ def _synthetic_pins(d: Path, feeds: dict, absent: list) -> Path:
 
 def _synthetic_read_artifact(d: Path, per_day: dict, *,
                              name: str = "be_race_read_result_v1.json",
-                             extra_days: dict | None = None) -> Path:
+                             extra_days: dict | None = None,
+                             unrecoverable: list | None = None) -> Path:
     """BE's declared shape, read from `be_race_reader.read()` as a document."""
     days = sorted(per_day)
     signs = {k: v["day_sign"] for k, v in per_day.items()}
@@ -993,6 +1078,8 @@ def _synthetic_read_artifact(d: Path, per_day: dict, *,
             "neither_clears_0_05": MULTIPLICITY_M / 2 ** g > 0.05},
         "decides_nothing": "REPORTED (rule 14).",
     }
+    if unrecoverable:
+        body["population"] = {"READ_BUT_UNRECOVERABLE": list(unrecoverable)}
     if extra_days:
         body["per_day"].update(extra_days)
     p = d / name
@@ -1028,7 +1115,9 @@ def selftest_real() -> list:                                  # noqa: C901
     for day in sorted(feeds):
         mine_days[day] = da_day_from_pinned_feed(pins[day]["path"],
                                                  pins[day]["sha256"])
-    art_p = _synthetic_read_artifact(td, mine_days)
+    UNREC = ["20260901", "20260902"]
+    art_p = _synthetic_read_artifact(td, mine_days,
+                                     unrecoverable=UNREC)
 
     # -- 1. THE GATE IS THE ARTIFACT'S EXISTENCE --------------------------
     why_absent = ""
@@ -1099,7 +1188,7 @@ def selftest_real() -> list:                                  # noqa: C901
 
     # -- 5. A NUMBER FOR AN UNRECOVERABLE DAY IS FLAGGED ------------------
     numbered = _synthetic_read_artifact(
-        td, mine_days, name="art_numbered.json",
+        td, mine_days, name="art_numbered.json", unrecoverable=UNREC,
         extra_days={"20260901": {"day_increment_cents": -12.5,
                                  "day_sign": -1, "n_feed_rows": 10}})
     out_n = verify_real_read(str(numbered), str(pins_p))
@@ -1122,6 +1211,61 @@ def selftest_real() -> list:                                  # noqa: C901
        == ["20260901", "20260902"],
        f"{out['day_set']['read_but_unrecoverable_from_the_pins']} present in "
        f"the pins, 0 of them numbered")
+
+    # -- 5b. REV 49 section 3.3: SILENCE MUST NOT PASS --------------------
+    silent = _synthetic_read_artifact(td, mine_days, name="art_silent.json")
+    out_sil = verify_real_read(str(silent), str(pins_p))
+    ck("REV 49 section 3.3 CLOSED -- SILENCE NO LONGER PASSES: an artifact "
+       "that never MENTIONS 09-01/02 is FLAGGED BY NAME. It used to VERIFY, "
+       "because the check only looked for a NUMBER against those days and "
+       "found none. ***Absence read as compliance -- the same failure as a "
+       "zero from a check that never ran***",
+       out_sil["IS_A_VERIFICATION"] is False
+       and out_sil["day_set"]["days_not_said_as_the_pins_expect"]
+       == ["20260901", "20260902"]
+       and all(out_sil["day_set"]["every_day_in_the_pins_must_be_SAID"][d][
+           "status"] == "ABSENT" for d in ("20260901", "20260902"))
+       and "day_set.20260901.ABSENT" in out_sil["mismatched_fields"],
+       f"the artifact says nothing about "
+       f"{out_sil['day_set']['days_not_said_as_the_pins_expect']} -> each "
+       f"ABSENT and flagged by name")
+    ck("AND THE POSITIVE CONTROL: an artifact that SAYS "
+       "READ_BUT_UNRECOVERABLE for both, without a number, is accepted -- so "
+       "the check demands a STATEMENT and not a particular silence",
+       out["day_set"]["n_days_said_as_the_pins_expect"] == 5
+       and all(out["day_set"]["every_day_in_the_pins_must_be_SAID"][d][
+           "status"] == "READ_BUT_UNRECOVERABLE"
+           for d in ("20260901", "20260902"))
+       and out["IS_A_VERIFICATION"] is True,
+       f"{out['day_set']['n_days_said_as_the_pins_expect']} of "
+       f"{out['day_set']['n_days_in_the_pins']} days said as the pins "
+       f"expect; the three readable ones carry numbers and the two "
+       f"unrecoverable ones carry a status")
+
+    # -- 5c. REV 49 section 3.4: the informative refusal is REACHABLE -----
+    import shutil
+    d3 = td / "absentfeed"
+    d3.mkdir(exist_ok=True)
+    shutil.copy(pins_p, d3 / "pins.json")
+    pj = json.loads((d3 / "pins.json").read_text())
+    gone_day = sorted(feeds)[0]
+    pj["per_day"][gone_day]["path"] = str(d3 / "not_here.jsonl")
+    (d3 / "pins.json").write_text(json.dumps(pj))
+    why_abs = ""
+    try:
+        verify_real_read(str(art_p), str(d3 / "pins.json"))
+    except RaceVerifyRefused as e:
+        why_abs = str(e)
+    except Exception as e:                                    # noqa: BLE001
+        why_abs = f"GENERIC {type(e).__name__}: {e}"
+    ck("REV 49 section 3.4 CLOSED -- THE INFORMATIVE REFUSAL IS REACHABLE: a "
+       "pinned feed that is not on disk refuses as PINNED_FEED_ABSENT, "
+       "naming the disagreement between the pin and the ledger. It used to "
+       "surface as a bare FileNotFoundError from inside the parser -- a "
+       "generic refusal standing in front of the one that says what is wrong",
+       "PINNED_FEED_ABSENT" in why_abs and "GENERIC" not in why_abs
+       and "not on disk" in why_abs,
+       f"'{why_abs[:112]}...'")
 
     # -- 6. THE FLOORS, re-derived ----------------------------------------
     f3 = da_floors(3)
