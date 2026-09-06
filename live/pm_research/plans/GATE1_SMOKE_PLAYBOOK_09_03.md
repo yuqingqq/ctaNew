@@ -21,11 +21,11 @@ sha256 `3064bb46580baadd0e1b04685aedd1183eda3e8a682cd7b1e07b149abb7d2900bb5a424e
 
 | # | precondition | state | checked by |
 |---|---|---|---|
-| P1 | The reviewer's runner-approval filing covers the runner **as it now stands** | **MET, conditionally** — REV 38 (`REVIEW_DAY_PATH_DE78_2026-09-06.md`, `b9acc44`) **APPROVED `--day` for the 09-03 smoke once BE's book exists**, on three wiring items being closed first. All three are closed in DE 79 and need re-driving; the coordinator's GO is the gate | human; cite the filing by path in the run receipt |
-| P2 | BE's 09-03 reference book, by path + sha256, **carrying `asm`** for both pinned heads, plus BE's builder receipt | **NOT MET and further away than it looked** — R-573: the build is BLOCKED on a feature fragment that covers only the consumed 08-24/25 era. A per-day top-up feature pass and an assembly that fits 8 GB come first (BE 49) | `verify_day_inputs()` (book digest); design v12 `R1_asm_the_scored_book` |
+| P1 | The reviewer's approval covers the runner **as it now stands** | **MET** — REV 38 approved `--day`; its three wiring items were closed in DE 79 and **driven** at REV 41 and REV 45; REV 46 (`78df14b`) gives **GO for the sealed smoke on `be_daybook_20260903_btc.pkl`**. This row said "need re-driving" after they had been driven | human; cite the filing by path in the run receipt |
+| P2 | BE's 09-03 reference book, by path + sha256, **carrying `asm`** for both pinned heads, plus BE's builder receipt | **MET** — `be_daybook_20260903_btc.pkl` exists and its digest verifies against BE's own `be_daybook_receipt_20260903_btc.json` (rehearsal v2: `P2_book_exists` True, `P2_builder_receipt_exists` True). This row still read "NOT MET and further away than it looked" | `verify_book_against_builder_receipt()`; design v12 `R1_asm_the_scored_book` |
 | P3 | Params file `…/de_multiday_gate1_params_v5.json` reads sha256 `306bfdb0…` | met | `load_params()` — refuses an empty set, a duplicate day, a set whose size ≠ `expected_G`, or a day whose `previously_opened_for` ≠ `none` |
 | P4 | `PM_DATA_ROOT` exported as **the repo root** `/home/yuqing/ctaNew` | met in the DE tmux session (set 2026-09-06T05:36Z; it was **unset** at reload) | `de_data_root.require_canonical()` |
-| P5 | `/home/yuqing/ctaNew/data/.heavy_run.lock` free | check at run time | `flock -n` in the wrapper refuses if held |
+| P5 | `/home/yuqing/ctaNew/data/.heavy_run.lock` free | **INFORMATIONAL** — the wrapper TAKES the lock at GO, so its state beforehand does not gate GO. The rehearsal reports it **computed** (holder pids, modes, held-by-self-or-ancestor), after printing "held by BE 55" while the lock was free | `flock -n` refuses if held; `wrapper_observed()` measures it |
 | P6 | The three pinned model files and both thetas match their pins | met as of this writing | `verify_pinned_models()`, `verify_pinned_thetas()` — a mismatch refuses **the run** |
 | P7 | BE's cascade module digest is `93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef` | met — **re-pointed AGAIN this round** (BE round 50, `68b34bd`), see below | `verify_be_module()` and `import_be_cascade()` — a different digest refuses |
 
@@ -51,12 +51,17 @@ path never uses.**
 
 ```
 flock -n /home/yuqing/ctaNew/data/.heavy_run.lock \
-  systemd-run --user --scope --slice=research.slice \
-    -p MemoryMax=8G -p CPUQuota=100% \
-    --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew \
+  systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew \
     python3 live/pm_research/de_multiday_gate1_runner.py \
-      --day 2026-09-03 --output <receipt path>
+      --day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl \
+      --output <receipt path>
 ```
+
+**This is the command, verbatim, from the rehearsal receipt's
+`THE_ONE_COMMAND`** — not retyped. The block that stood here omitted
+`--book` and **refused as written** (`rc 1`, *"--day requires --book"*): a
+playbook whose one command does not run is worse than no playbook, and it
+sat here through three rounds because nobody executed it.
 
 `--day` **exists** as of DE 78, and so does `--synthetic-day <DAY>`,
 which builds a day book of BE's declared shape, runs the same path on it

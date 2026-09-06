@@ -925,10 +925,18 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
         "on_disk": _digest(root.parent / design["path"])})
     _p("P4_data_root_is_the_ledger",
        DR.resolve()["is_canonical"] is True, DR.resolve()["data_root"])
-    _p("P5_lock_free_now", not wrapper_observed()["lock_is_held_by_someone"],
-       "INFORMATIONAL: the lock is TAKEN by the wrapper at GO, so its "
-       "state now does not gate GO. Held right now by BE 55's assembly, "
-       "which is the correct state while a book is being built",
+    _lockobs = wrapper_observed()
+    _p("P5_lock_free_now", not _lockobs["lock_is_held_by_someone"],
+       # COMPUTED, not narrated. This said "held right now by BE 55's
+       # assembly" and went on saying it after BE 55 finished -- a
+       # hardcoded state beside a measured one, the same class as the
+       # literal 23 beside a constant of 49 (rule 10).
+       {"lock_is_held_by_someone": _lockobs["lock_is_held_by_someone"],
+        "holder_pids": _lockobs["flock_holder_pids"],
+        "modes": _lockobs["flock_modes_on_the_inode"],
+        "held_by_self_or_ancestor": _lockobs["held_by_self_or_ancestor"],
+        "why_informational": "the lock is TAKEN by the wrapper at GO, so "
+                             "its state now does not gate GO"},
        blocks=False)
     _p("P7_cascade_digest",
        _digest(repo / params["be_module"]["path"])
@@ -2325,8 +2333,17 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             f"declared budget {budget:.0f} MB. The DAY refuses -- the cap "
             f"is never raised and the draw count is never cut (R-174).")
     scope_mem = scope_memory_observation()
+    import os as _os3
     return {
         "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+        # THE INTERPRETER THAT ACTUALLY RAN, resolved. The venv's python3
+        # is a SYMLINK, so the path invoked and the binary executed are
+        # two different facts and both travel.
+        "interpreter": {
+            "sys_executable": sys.executable,
+            "realpath": _os3.path.realpath(sys.executable),
+            "is_a_symlink": _os3.path.islink(sys.executable),
+            "version": sys.version.split()[0]},
         "status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
                    else "DAY_RUN_SEALED"),
         "day": day,
