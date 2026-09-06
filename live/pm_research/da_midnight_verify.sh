@@ -136,11 +136,99 @@ if [ -n "${DA_MIDNIGHT_VERIFY_BIN:-}" ] && \
        "writing production verdicts is worse than no isolation at all." >&2
   exit 5
 fi
+# ============================ THE DEPLOY GATE =============================
+# R-549(E) item 4, filed twice by DA and bitten once: `ExecStart` is an
+# ABSOLUTE PATH INTO /home/yuqing/ctaNew, a tree NO SEAT OWNS. Every seat
+# commits there and nothing checked it, so at 00:06:00Z this unit ran whatever
+# that tree happened to hold -- and because `SuccessExitStatus=2` maps the
+# expected open-day deferral to success, a night on stale or half-landed code
+# reported GREEN and wrote a governed verdict that fed race accrual.
+# MEASURED, not hypothetical: at 2026-09-06T03:56Z the deploy tree stood at
+# 1d66589 while origin/mm-research stood at e25c69d -- one commit behind, and
+# nothing would have said so.
+#
+# `deployed` is now a RECORD written ONLY by live/pm_research/
+# da_deploy_midnight.sh, and this gate recomputes its digests BEFORE any
+# write. Drift => rc 7, and NOTHING RUNS.
+#
+# 7, NOT THE 5 THE DISPATCH SUGGESTED: 5 is taken twice above (pair guard,
+# verifier substitution) and 6 by the unnamed-canonical-write refusal.
+# Reusing one would make two different refusals indistinguishable in
+# `systemctl` -- the defect this programme keeps re-finding.
+#
+# TWO INSTRUMENTS, DELIBERATELY NOT THE SAME ONE. First `sha256sum -c`
+# (coreutils) over a manifest of the REFUSE tier; the guard's OWN digest is in
+# that manifest, so the guard is verified by something that is not the guard
+# before the guard is asked anything. Then the guard itself, which adds the
+# installed unit files, the REPORT tier, the interpreter and the git anchor.
+#
+# THE COST IS STATED: a refusal loses this night's verdict. Verified
+# affordable rather than assumed -- `days_needing_verdict`
+# (da_forward_day_verify.py:97) derives the day list FROM DISK, floored at the
+# earliest existing verdict, and returns any day inside the range with no
+# artifact or one written while it was open. The night is recovered by the
+# next successful run, with a late `as_of` and a catch-up reason.
+#
+# LIKE EVERY GUARD ABOVE IT, THIS ONE REFUSES TO STDERR AND WRITES NOTHING.
+# This file's own lesson -- "a guard that writes before it refuses has already
+# done the thing it refuses" -- cost 46 measured bytes in the production log.
+# So a drift refusal leaves NO line in .da_midnight_verify.log and the record
+# of it is the journal: `journalctl --user -u da-midnight-verify.service`.
+# That gap is a known cost of obeying the rule, stated rather than papered
+# over.
+DTREE="${DA_DEPLOY_TREE:-$(cd "$SELFDIR/../.." && pwd)}"
+_drec="${DA_DEPLOY_RECORD:-$SELFDIR/systemd/da_deploy_record.json}"
+_dman="${_drec%.json}.sha256"
+_canonical=0
+if [ -z "${DA_MIDNIGHT_OUTDIR:-}" ] && [ -z "${DA_MIDNIGHT_LOG:-}" ]; then
+  _canonical=1
+fi
+# A CANONICAL RUN MAY NOT BE POINTED AT A RECORD OF SOMEONE'S CHOOSING.
+# The overrides exist so the falsifier can drive both directions on a fake
+# tree; allowing them on the nightly path would let a forged record certify
+# anything, which is worse than having no gate. Same shape as the
+# pin-vs-substitution rule for DA_MIDNIGHT_VERIFY_BIN above.
+if [ "$_canonical" -eq 1 ] && \
+   { [ -n "${DA_DEPLOY_RECORD:-}" ] || [ -n "${DA_DEPLOY_TREE:-}" ]; }; then
+  echo "REFUSED (rc 7): DA_DEPLOY_RECORD/DA_DEPLOY_TREE are set on a" \
+       "CANONICAL run. A record chosen by the caller certifies nothing." >&2
+  exit 7
+fi
+if [ "$_canonical" -eq 1 ] || [ -n "${DA_DEPLOY_RECORD:-}" ]; then
+  if [ ! -f "$_drec" ] || [ ! -f "$_dman" ]; then
+    echo "DEPLOY_DRIFT (RECORD_ABSENT), rc 7: no deploy record at $_drec" \
+         "(or no manifest at $_dman). This unit has never been deployed by" \
+         "the explicit act, so nothing says what it should be running." \
+         "FIX: run live/pm_research/da_deploy_midnight.sh." >&2
+    exit 7
+  fi
+  if ! ( cd "$DTREE" && sha256sum -c --status "$_dman" ); then
+    echo "DEPLOY_DRIFT (REFUSE_TIER_DRIFT), rc 7: the bytes this unit would" \
+         "execute are NOT the bytes it was deployed at. Nothing ran." >&2
+    ( cd "$DTREE" && sha256sum -c "$_dman" 2>&1 | grep -v ': OK$' ) >&2
+    echo "FIX: re-run live/pm_research/da_deploy_midnight.sh. This night is" \
+         "recovered by days_needing_verdict as a catch-up day." >&2
+    exit 7
+  fi
+  _dout="$("$PY" "$SELFDIR/da_deploy_guard.py" check \
+             --record "$_drec" --tree "$DTREE" 2>&1)"
+  _drc=$?
+  if [ "$_drc" -ne 0 ]; then
+    echo "$_dout" >&2
+    exit 7
+  fi
+  _deploy_line="$_dout"
+else
+  _deploy_line="SKIPPED -- isolated rehearsal, and the gate protects the
+CANONICAL write. Set DA_DEPLOY_RECORD (with DA_DEPLOY_TREE) to drive it."
+fi
+# ==========================================================================
 mkdir -p "$OUTDIR"
 {
   echo
   echo "======== fired $(date -u +%FT%TZ) ========"
   echo "admission: ${_admission:-REHEARSAL (isolated overrides); canonical admission would be: $_leg}"
+  echo "deploy: $_deploy_line"
   echo "verifier: $V"
   echo "verifier_sha256: $(sha256sum "$V" 2>/dev/null | cut -d" " -f1)"
   echo "script_tree: $SELFDIR"
