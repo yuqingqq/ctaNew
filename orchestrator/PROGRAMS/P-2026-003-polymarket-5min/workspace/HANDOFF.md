@@ -5,6 +5,95 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 148
+
+**As of 2026-09-06T09:19:07Z. State only — MEM writes no result.**
+
+### The read predicate: ruled as eight conjuncts, declared nowhere yet
+
+**R-602 is sound as a ruling and insufficient as a predicate.** §3.1: not a choice
+after seeing — what could have been seen is only that the pipeline is slow. §3.2:
+G = 6 under the predicate keeps §7's arithmetic **exactly**, in both formulations.
+§3.3: as worded it can be satisfied by **six days that produce nothing**, or by a day
+**re-rolled until it lands** — eight refusals required, **two live today**.
+
+**The live one, checked at the code:**
+`"status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture else "DAY_RUN_SEALED")` —
+**the only branch is fixture-ness.** Nothing in it looks at whether a single arm was
+admissible, so a day whose arms were all `DEGENERATE_ARM_DAY_REFUSED` emits
+`DAY_RUN_SEALED` exactly like a day that produced six signs. **The field answers
+"was this a fixture?" and the bar reads it as "did this day produce a result?"** — the
+name is not the definition, now load-bearing on the Gate-1 read. A day with no
+admissible arm must carry its own status.
+
+**The horizon: 2026-09-09T12:00:00Z.** The sixth day's smoke starts 00:00Z after a
+~1.2 h build, expected ≈03:00–04:00Z — twelve hours is **margin, not hope**. Past it
+the read opens at **G = 5, DIRECTIONAL ONLY** (2⁻⁵ = 0.03125 fails Holm at m = 2),
+the sixth day disclosed as **UNBUILT** and why. The seventh refusal is **unbounded
+waiting** — a bar that cannot be falsified by the passage of time is not a bar — and
+the fallback is declared **now**, not chosen when the deadline arrives.
+
+**But `params_v7.json` does not exist on disk.** v6 is the landed declaration and
+carries the clock and `read_requires_all_ruled_days_sealed: true` — **not** the
+horizon, **not** the other six refusals. **Do not read this file as if the eight
+conjuncts are in force in code today.** DE 87 declares them (params v7 / design v15);
+DA 74 evaluates the **same field** or refuses.
+
+### Two findings from reading the code rather than the entries
+
+**A fallback writes its own warning into a field nobody reads.** In
+`da_book_verify.py`, when the receipt's builder commit doesn't resolve,
+`builder_index_call` sets `src_from = "working tree (FALLBACK — the requested commit
+did not resolve: …)"` and returns it as **`"source"` (:227)** — while `check_seam`
+computes `agrees` from `call["calls"]` **alone** and files it under
+**`call_at_the_builder_commit`**. A sentence written purely to warn, in a field the
+consumer never consults, under a key naming the commit the value did not come from.
+**Information published and unread** — R-601's class through the other door.
+**Fixed at commit time (2026-09-06T09:22:04Z):** `3a234c6` — DA 74 closed
+REV 50 §1.3 ahead of BE 59's `.v2`. The consumer reads `call["source"]` now, and an
+unresolvable builder commit returns **`PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED`**
+with `the_literal_was_NOT_judged: true` and `contradicts_the_code: null` instead of a
+verdict from HEAD. The finding above stands as history at its as-of. The fix's own
+comment names the asymmetry: `front_door_at`, two functions above, never fell back and
+never returned a verdict on a commit it could not read — "this did both." **The
+correct behaviour was already in the file, two functions away.**
+
+**And the cross-check I found missing at round 144 exists in DE's params.** v6's
+note: *"G IS DERIVED FROM len(days) AND IS NEVER A CONSTANT; `expected_G` below is a
+CROSS-CHECK."* Derive **and** compare, in one file — the pattern the race reader
+lacks (it computes G from `len(paths)`, v4 declares its own, nothing compares them).
+
+**And the accrual finding is stronger than its stated basis** (§2.2): from 09-06 on
+every day's earliest start equals its own calendar completion, so the calendar
+dominates — the conclusion needs only *"the pipeline costs more than six minutes"*,
+surviving the cadence estimate being wrong by an order of magnitude. The mirror of
+round 147's correction against myself: there my headline was looser than the
+artifact; here the artifact was stronger than its basis.
+
+### State
+
+- **Gate-1 read predicate: RULED-EIGHT-CONJUNCTS**, horizon **2026-09-09T12:00Z →
+  G = 5 directional**, **USER-PENDING for overrule** (R-602 stands meanwhile).
+- **The smoke RUNNING** — pid 3049132 at **3,423 s (~57 min)**, output **not yet**.
+  DE 86's `.v2` and DA's pre-read GO both wait on it.
+- **The 09-03 receipt's provenance WILL-BE-SUPERSEDED** — v13's digest stamped, v12
+  ran; the `.v2` is specified and attested before it exists (rule 22).
+- **Verified this round:** DE 86 (params v6, design v14, launch-time capture, 167
+  checks; DE's own catch — a fixture receipt emitted from old code after an aborted
+  checkout, caught by reading the emitted count rather than trusting the exit);
+  DA 73 (32 + 28 checks, REV 49's five closed, the substring census taking three
+  tries, each a defect DA named).
+- **Dispatched:** DE 87, DA 74, REV 51 (DE 86; DA 73; **whether rule 22 closes the
+  class REV 49 §0 named or only this instance, and what a check would enforce it**).
+  BE 58 polling; round 146's continuous schedule still stands.
+
+**Counts, measured before the sentence:** flags 835 → 843, `flag_provenance`
+380 → 388, tasks 19; **230 CHECKED**, 158 RELAYED, **455 UNMARKED — unchanged for
+the twenty-fourth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 130 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 147
 
 **As of 2026-09-06T09:11:48Z. State only — MEM writes no result.**

@@ -10961,3 +10961,87 @@ directions.
   twentieth round running.** ORPHAN audit 0 findings, exit 0 (after the refusal in
   (8)); window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 130 — archived 2026-09-06T09:19:07Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 148 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T08:51:30Z (MEM ROUND 145 -- R-601 AND Q-DA-292 SWEPT. STATE ONLY.
+  THE FINDING IS A RECEIPT THAT CANNOT CONTRADICT ITSELF AND CANNOT BE LOCATED.
+  (1) **THE LITERAL WAS TRUE AT BOTH PRODUCING COMMITS, AND THE RECEIPT NAMES
+  NEITHER.** I checked the code, not the entry: **`3589a14` and `f301731`, both at
+  line 406, read `tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"])`.**
+  Then I enumerated every commit-shaped field in the 09-03 receipt: ***the only one
+  is `seam.commit = 6f134a6`, which is DE's SEAM commit -- no `builder_commit`, no
+  `carrying_commit`, no producing-code digest.*** **So DA held the receipt to the
+  only code the receipt let it find, and the ruling is right on both halves: the
+  literal is HISTORY, the defect is PROVENANCE (R-387).**
+  (2) **AND THE DRIFT WAS ALREADY FIXED, WHICH IS THE DANGEROUS PART.** BE's
+  `_index_call_made` derives the seam call from the module's own source -- *"never
+  restated ... the THIRD of that class this seat has shipped ... it cannot drift."*
+  ***Deriving and provenance are ORTHOGONAL fixes: a derived literal is always true
+  of SOME moment and names NONE.*** **A receipt that cannot contradict itself and
+  cannot be located either is worse than one that can, because the visible failure
+  is gone and the unlocatability is not.** *Routed to BE 59's `.v2` and DA 71.*
+  (3) **AND THE DERIVED FORM READS THE FILE WHERE THE RUN USED THE LOADED MODULE**
+  -- `Path(__file__).read_text()` at emit time reports what the FILE said, not the
+  BYTES that ran. *Narrow window, and this programme produced an instance THIS
+  MORNING: the smoke is running v12's bytes while v13 landed underneath it.* **Same
+  class as `producing_code_is_the_committed_bytes`, which DE dropped as a gate
+  "because a commit id can be rewritten out from under a citation."** Routed.
+  (4) **TWO IMPLEMENTATIONS AGREE TODAY AND ONLY ONE CAN REPORT THE COUNT.** I ran
+  both: **BE's regex finds exactly 1 match, line 516, `R.build_tape_index(splits,
+  inputs=inp)`; DA's AST read publishes `n_calls: 1`, `keywords: ['inputs']`.**
+  ***R-235 doing exactly its job*** -- *and the edge is that `re.search` returns the
+  FIRST match and cannot say how many there were, while the AST read PUBLISHES the
+  count.* **Not a disagreement; a difference in what each can SAY when the code
+  moves.**
+  (5) **THE REVIEWER'S `PM_DATA_ROOT` FLAG REPRODUCES ON A SECOND SEAT -- MINE.**
+  `echo "[$PM_DATA_ROOT]"` -> **`[]`**; `env | grep -c` -> **0**. ***The tmux export
+  does not reach a seat's tool calls, and it is not reviewer-specific.*** *"A
+  silently empty root is exactly the class that makes a check pass on nothing"* --
+  **and the reason it has not bitten is that every drive sets it explicitly and the
+  resolvers require it BY NAME: rule 11 paying for itself in an environment nobody
+  designed.**
+  (6) **DA'S OWN KNOWN-BAD FOUND THE HOLE THE MISSING FIELD OPENS:** with no seam
+  commit the contradiction rule returned `None` and **a contradicting literal went
+  through** -- *"an unreadable provenance field became a free pass."* ***Rule 16 in
+  the provenance layer: the absence of the thing being checked disabled the
+  check.*** **Third seat this session to find its own probe's hole first** -- DE's
+  falsifier matching its own prose, my two-path `artifact:` field, this.
+  (7) **AND EVERYTHING ELSE IN THAT RECEIPT HOLDS:** the digest chain (290,758,834
+  bytes matching `sha256` AND `readback_sha256`), both pinned inputs present and
+  matching, **all six population sums**, both heads' coverage, every stage in budget
+  with the builder's booleans agreeing with the arithmetic. **The BOOK stands (REV
+  46); what is incomplete is the record of WHO BUILT IT.** DA 70's fixture says so
+  in the field a reader resolves first -- `n_checks 15`, `n_failed 0`, **`status =
+  FIXTURE_NO_REAL_BOOK`** -- *the status stating the LIMIT of the run rather than
+  its result*; the heavy tier (2.0 GB expected against a declared 4.0 GB cap) waits
+  for a GO.
+  **FLAG WORDS: the 09-03 book receipt PROVENANCE-INCOMPLETE (builder commit
+  missing; `.v2` pending at BE 59), the book itself STANDS (REV 46) and every
+  population sum HOLDS (DA 70); the smoke RUNNING -- I measure pid 3049132, started
+  08:22:03Z, 1,748 s (~29 min), RSS 749,248 KiB, systemd MemoryPeak 2,532,151,296 B;
+  the race read NOT READ.**
+  **AT COMMIT TIME, 2026-09-06T08:54:37Z, THE TIP MOVED AND I RECORD IT UNSWEPT:**
+  `407afc5` -- **DA 71 has LANDED (Q-DA-293): R-601 accepted at the artifact, and
+  the probe error HAS A NAME -- "I treated `seam.commit` as the builder's
+  `carrying_commit`" -- the round-70 refusal RETRACTED IN BAND.** *I checked the
+  supersession itself rather than the prose:* **v1's sha256 is
+  `6f0c7788e46c2a1a` as DA states and v2's is `73a65403b9394ec1`, v1 UNTOUCHED,
+  v2 carrying a `supersedes` block, 17 checks, 0 failures, `status =
+  FIXTURE_PLUS_THE_REAL_RECEIPT_TIER`.** *Rule 13 done exactly.*
+  **AND THE SAME MOVE PROVED THE CITATION RULE:** my commit-time re-check by GLOB
+  resolved to the NEW file and died on a missing key, while ***my flag, which cites
+  the fixture BY NAME, still reads exactly what I wrote*** (`n_calls 1`,
+  `['inputs']`, line 516, `FIXTURE_NO_REAL_BOOK`, 15/0). *"Latest" is not a
+  citation; a name is.*
+  MEASURED BEFORE THIS SENTENCE: flags 810 -> 818, flag_provenance 355 -> 363,
+  tasks 19; **213 CHECKED**, 150 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
