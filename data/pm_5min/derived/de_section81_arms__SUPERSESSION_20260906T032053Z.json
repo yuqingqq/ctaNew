@@ -1,0 +1,26 @@
+{
+ "record": "SUPERSESSION",
+ "as_of": "2026-09-06T03:22Z",
+ "superseding": "de_section81_arms__20260906T032053Z.json",
+ "superseding_sha256": "5da816b0407b966f5a6e959363c9bf5c1c21f01bbd7487a4170eb59d6293c02a",
+ "superseding_carrying_commit": "9211d82",
+ "superseding_carrying_commit_is_published": "yes -- pushed before the emission",
+ "superseding_code_identity_differences_at_that_commit": "0 of 7",
+ "numbers_moved": false,
+ "numbers_check": "leaf-wise against de_section81_arms__20260906T025943Z.json: 4,224 shared leaves compared, volatile provenance/resource fields excluded by name. MOVED 0, REMOVED 0, ADDED 19. Ruling v2 is PURELY ADDITIVE: it renames nothing, deletes nothing and moves no number -- it labels what was already there and emits the second reading beside the first.",
+ "what_changed": "R-548(C), accepting the reviewer's B-3. (1) fills_per_generation stays BOOK-WIDE and is marked NOT_THE_NULL, with where_the_null_lives pointing at arms[*].cascade_baseline_rate_used -- writing a per-arm rate into a field that is book-wide by name and position is a schema-level category error. (2) cascade_spread is emitted BOTH ways under separation.cascade_spread_by_denominator, each naming its denominator and which is the ruled null: 1.5626300 under the arm-local replayed nulls (ruled) and 1.9398838 under one shared book-wide rate (not ruled), with the algebra (n_C/B_C)/(n_H/B_H) = (n_C/n_H)*(B_H/B_C) recorded so the cancellation is visible. (3) the ordering claim is RE-DERIVED under the arm-local null in separation.ordering_derivation, which states it is NOT inherited from the shared-denominator invariance proof of round 65 that B-3 refuted, and reports that it independently also holds under the book-wide rate -- two derivations stated as two, never as one invariance.",
+ "the_ordering_conclusion": "CHEAP FILLS FIRST, FEW FILLS SECOND -- selectivity spread 5.6453 exceeds the cascade spread under BOTH denominators (1.5626 ruled, 1.9399 book-wide), so the claim survives on two independent derivations rather than on the refuted invariance.",
+ "superseded": [
+  {"artifact": "de_section81_arms__20260906T025943Z.json",
+   "sha256": "19479bc6064bc14ae2a9383ee1e450ba05cadfdb9f9bbbf0276c5aabdc39aa13",
+   "committed": true,
+   "reason": "content only: it carries the cited per-arm baseline correctly but does not mark the book-wide field NOT_THE_NULL, does not emit the spread both ways with denominators named, and states the ordering without re-deriving it under the arm-local null. Every number in it is unchanged here. Retained in place as provenance (rule 13)."}
+ ],
+ "still_open_on_this_surface": [
+  "the multi-day Gate-1 run itself -- the design is declared and committed; the run waits on the reviewer's filing and the coordinator's verification (R-547 item 6)",
+  "the declined fills' keys are still not emitted (R-519(F) item 4)",
+  "attempt_bound/required_attempts remain UNWIRED; RANDOM_MATCHED still REFUSED at 60 attempts, all 60 rejected at P4",
+  "fields() is a closure inside run_arms, so its emission guards are AST source pins rather than driven checks",
+  "the stale-__pycache__ hazard: the durable fix is rmtree per mutant in DA's harness; the census records the oracle source digest it imported"
+ ]
+}
