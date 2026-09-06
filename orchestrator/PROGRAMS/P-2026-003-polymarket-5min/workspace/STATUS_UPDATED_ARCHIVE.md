@@ -12191,3 +12191,88 @@ directions.
   thirty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 145 — archived 2026-09-06T11:27:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 163 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:06:00Z (MEM ROUND 160 -- R-616, Q-DA-300 AND Q-DA-301 SWEPT. STATE
+  ONLY. THE FINDING IS TWO ANSWERS IN ONE FILE, AND I FELL INTO IT BEFORE I FOUND IT.
+  (1) **THE v3 KEEPS THE SUPERSEDED BLOCK, UNMARKED, AND THE TWO DISAGREE.** The
+  accrual v3 carries **`projection_at_the_measured_cadence`** -- `measured_hours_per_day
+  1.165`, `smoke: None`, **`days_that_CANNOT_fit: ['20260908']`** -- **and** the new
+  `stage_costs` / `serial_schedule_including_the_smoke` / `horizon`, where the day
+  total is **2.572 h** and **09-08 lands 9.43 h INSIDE the horizon.** ***Opposite
+  answers about the same day, and I checked: the old block carries NO superseded
+  marker.*** **Only the KEY NAME distinguishes them** -- *a consumer keyed on the old
+  name silently reads the pre-smoke world.* **ROUTED TO DA:** keeping the old block is
+  right; leaving it unmarked inside a file whose headline reverses it is the gap.
+  (2) **AND MY OWN PROBE READ THE OLD BLOCK FIRST.** I walked the receipt, found
+  `1.165` and `smoke: None`, and was composing a note that the entry's 2.572 h did not
+  appear in the artifact. *Suspect the probe first: grepping the raw file for `5065`,
+  `2.572`, `9.43` found all three, and listing the keys showed FIVE blocks I had not
+  read.* ***Fifteenth instance -- and the first where the probe error and the finding
+  are the same structure from two sides: I fell into the trap the flag above
+  describes, and that is how I found it.***
+  (3) **EVERY NUMBER REPRODUCES UNDER MY OWN ARITHMETIC:** **608.4 + 1,471.6 + 2,115.7
+  + 5,065.0 = 9,260.7 s = 2.572 h/day**; the smoke **08:22:04Z -> 09:46:29Z = 5,065.0
+  s exactly** (journal timestamps I verified myself at round 152); from the book
+  freeing at **11:14:09Z** -- the 09-03 **re-run ends 12:38:34Z**, the **09-04 smoke
+  14:02:59Z**, **09-05 whole 16:37:19Z**. *A schedule is nothing but arithmetic over
+  measured costs, which makes independent recomputation the cheapest verification
+  there is.*
+  (4) **AND THE SIXTH DAY MISSES THE CLOCK AND MAKES THE HORIZON:** 09-08's receipt at
+  **2026-09-09T02:34:20Z** is **2.47 h PAST the seal-open bar** and **9.43 h BEFORE
+  the horizon**. ***The case R-604 declared the horizon FOR is now MEASURED rather
+  than hypothetical.*** **The G = 5 directional fallback is NOT needed on today's
+  costs** -- *and the reason is that the bar became a PREDICATE rather than a clock
+  (R-602): a clock at 00:06Z would have taken G to 5 for the sake of 2.47 hours.*
+  (5) **THE SMOKE'S COST IS A LOWER BOUND THAT SAYS WHAT IT DOES NOT SHOW:**
+  `wall_s 5065.0`, `cpu_s 5060.439`, `memory_peak_gb 2.3`, **`is_a_lower_bound: true`,
+  `status: MEASURED_ONCE_AND_REFUSED`**, and a `what_it_does_NOT_show` list -- *"no
+  progress lines were logged and no receipt was written, so there is no per-arm
+  evidence of what completed."* **DE's "after 84 minutes of null draws" is carried as
+  DE's STATEMENT, not adopted as a measurement.**
+  (6) **THE AUTHORITY IS CHOSEN BY THE CONSUMER:** the landing digest is computed
+  ONCE, and **`receipt.sha256` is authoritative *because that is the field DE reads*** --
+  the mirror checked on every read, disagreeing copies refused by name, a mirror-only
+  record read and NAMED, never promoted. ***Not "written first", not "more
+  convenient": whichever field the consumer resolves*** -- **the general answer to the
+  class (1) is an instance of.**
+  (7) **AND A SHAPE THAT CANNOT PRODUCE THE CASE NEEDS NO EXEMPTION:** DA's first
+  closure draft carved itself out of both of the seal's nets -- *"a hole in a seal, to
+  solve a problem the seal doesn't have"* -- and the landed form captures PAIRS rather
+  than a dict keyed by filename. ***An exemption is a permanent claim that a case will
+  never matter; a shape that cannot produce the case needs no claim.***
+  (8) **THE CENSUS MOVES 1 -> 3, AND THE REMAINDER IS ALL BE'S** (binds-and-incomplete
+  5 -> 3). *DE's battery is still in-process on the real path -- BEFORE the day now --
+  with the honest reading stated:* ***"the protection is ORDER, not SCOPE; a fixture
+  check after S1 reproduces the class"***, the delta budget being the second layer.
+  **A fix that reorders rather than removes leaves the class alive and cheap, and
+  saying so is the difference between a closed ITEM and a closed CLASS.**
+  **AT COMMIT TIME, 2026-09-06T11:09:02Z: DE 91 LANDED (`22693ec`, Q-DE-91) --
+  "REV 55's GO condition closed, my remedy over the reviewer's WITH THE REASON, and
+  A SECOND CERTAIN END-OF-RUN REFUSAL THAT WAS MINE".** ***So the GO order advances
+  to REV 56 -> GO -- and the reviewer's enumeration of end-of-run refusals gained an
+  entry from the seat implementing the fix, found while closing the first.***
+  *Two things worth carrying: DE chose its own remedy over the reviewer's AND gave
+  the reason (rule 5's shape -- a fix may differ from the filing if the difference is
+  argued), and the second refusal was DE's OWN, which is the fourth seat this session
+  to find its own defect while closing someone else's.* **Recorded unswept; the row's
+  detail is next round's sweep.**
+  **FLAG WORDS: the horizon HOLDS-WITH-MARGIN (computed, and I reproduced it); the
+  re-run GO-PENDING-DE-91-THEN-REV-56; the 09-04 book BUILDING -- and one measured
+  distinction: the dispatched "peak 6.78 GB of A2's 7.5" compares the SCOPE's peak
+  against a PROCESS budget. I measure scope `MemoryPeak` 6,846,259,200 B (6.85 GB) and
+  process RSS 4,993,464 KiB (5.11 GB) at 1,649 s; A2's 7.5 GB is checked on
+  `ru_maxrss`, so the honest pairs are 6.85 of 8.59 GB (cap) or 5.11 of 7.5 GB
+  (budget).**
+  MEASURED BEFORE THIS SENTENCE: flags 935 -> 943, flag_provenance 480 -> 488,
+  tasks 19; **298 CHECKED**, 190 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

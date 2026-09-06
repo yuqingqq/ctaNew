@@ -5,6 +5,87 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 163
+
+**As of 2026-09-06T11:27:40Z. State only — MEM writes no result.**
+
+### AT COMMIT TIME (2026-09-06T11:30:09Z): GO #3 IS RUNNING
+
+**`de93smoke.scope` active/running**, pid 3282335, **92 s**, RSS **745,172 KiB**, the
+same 09-03 command with `--output` the directory, holding the heavy lock. **92 s is
+3.5x the 26 s exit and 745 MB is past the 843 MB the failed attempt peaked at — the
+pre-day battery has passed and the day's work has begun.** *Expect ~85 min from
+≈11:28Z.* **And DE 92's artifacts landed** (`6e32506`): **design v20 — "the check
+count is a SNAPSHOT, said so in the field"** — a count that must track something
+moving, answered by changing what the number **claims** rather than by chasing it —
+plus the v5 rehearsal the GO run was launched from.
+
+### The 09-04 book EXISTS and verifies; the 09-03 re-run EXITED at 26 s (attempt #2)
+
+**The book, hashed by me:** 340,969,199 bytes → **`9193206c2fa33878…`**, equal to the
+receipt's **`book.sha256`** and **`readback_sha256`**; **`sets_are_equal: true` at
+338,444 shared keys**; **`state_join_failed: 0` across 48 chunks**; asm peak
+**4.913 GB** published, inside every stage budget. **BUILT-VERIFIED-PENDING-REV-57.**
+
+**The re-run: EXITED, not failed.** Journal — started **11:19:05Z**, *"Consumed
+21.315s CPU time, 842.9M memory peak"* at **11:19:31Z**: **26 seconds**. The only
+09-03 day-run artifact on disk is still the **09:50:58Z REFUSED record** — **the
+re-run wrote nothing at all**. **26 s against the 5,065 s the first attempt cost is
+~1/195th** — the battery-before-the-day move's first real payoff, measured. *"Zero
+draws performed" was a falsifier two rounds ago; today it is an outcome.*
+
+**What stopped it:** the pre-day battery refused on a check whose verdict depends on
+the **ambient heavy lock — which the run itself holds**. DE reproduced it in one line;
+the guard becomes a **predicate driven with an injected observation, both ways**. *The
+same shape as the fixture budget against the process-wide peak (R-609), one layer out:
+there the **measurement** was ambient, here the **condition** is.* **GO #3 after
+REV 58.**
+
+**The schedule absorbs it:** re-run **≈11:50Z → ≈13:15Z**; the **09-04 smoke ≈14:40Z**;
+09-05's inputs after.
+
+### Three things I checked in the book receipt
+
+- **It names a file that does not exist.** `inputs_pinned.tape.receipt =
+  `…_20260904_btc.v3.json`` — **EXISTS: False** (the head is `.v2`). An f-string
+  literal beside a resolver that binds correctly — **R-601's class, fourth round
+  running, first appearance in a real day's receipt.** Found by BE reading the receipt
+  it had just produced.
+- **`reasons_account_for_the_count` is FALSE** on the first real day — 19,663
+  uncovered reference generations vs 29,465 fragment rows, **two populations compared
+  as one**. The fixture's known-bad **supplied both sides from one unit**, so it could
+  not reveal the difference. It **reports rather than refuses**, so the book stands and
+  the field under-claims.
+- **Both gaps confirmed:** **no `scope` block** (the fragment and tape receipts carry
+  one) and **no `builder_commit`** of any kind — the second because the WIP is
+  unreviewed by design. And `seam.index` is **derived and matches the call** while
+  `seam.commit: "6f134a6"` is **still typed** — my round-157 observation, now on the
+  real receipt.
+
+### State
+
+- **Dispatched:** **DA 80** — the **book tier on both books under the wrapper now**,
+  while the lock is idle (≈2 GB each, minutes), **and every resolver driven with
+  `PM_DATA_ROOT` unset: each must REFUSE, never fall back**. **BE 60** — the builder's
+  seven debts, including the **WIP as a reviewed change**, the scope block, L367's
+  growth budget, the typed `seam.commit`, the `.v3` f-string, the one-population count
+  predicate, the inputs' digests against the round-58 receipts, and the 09-04 receipt
+  `.v2`. **REV 57** — the 09-04 book. **DE** — the battery's lock check → **REV 58 →
+  GO #3**.
+- **The worktree finding:** every seat worktree's `data/` is a **materialised**
+  directory, so the ledger's untracked artifacts are invisible under a worktree path —
+  **this run was correct only because `PM_DATA_ROOT` was passed explicitly.** *"Four
+  worktrees are one unset env from reading a shell fact as a ledger fact."* (The
+  reviewer measured `PM_DATA_ROOT` empty in its tool environment at round 145 and I
+  reproduced it in mine; what was a curiosity then is the mechanism now.)
+
+**Counts, measured before the sentence:** flags 959 → 967, `flag_provenance`
+504 → 512, tasks 19; **312 CHECKED**, 200 RELAYED, **455 UNMARKED — unchanged for
+the thirty-ninth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 145 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 162
 
 **As of 2026-09-06T11:16:50Z. State only — MEM writes no result.**
