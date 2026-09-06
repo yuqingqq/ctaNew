@@ -1,5 +1,135 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:09:46Z — **The shell trap is structural, and measured per seat
+it is not the same everywhere: BE has NO route to the ledger at all.** Gate 1 is
+1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 114
+
+### 1. The trap, measured rather than relayed
+
+R-553 describes the ledger symlink as nested at `data/data` inside each shell.
+**Measured from the main tree, with a probe that reports only what it found:**
+
+| seat | route to the ledger |
+|---|---|
+| **be** | `data/data` **DOES NOT EXIST** — shell, **no route at all** |
+| **da** | shell, but `data/data` → `/home/yuqing/ctaNew/data` |
+| **de** | `data/` **is** the symlink (swapped 04:07Z) |
+| **rev** | `data/` **is** the symlink (swapped 04:02Z) |
+
+> **The documented workaround works for DA and not for BE.** A seat told to read
+> through `data/data` would find nothing in BE's worktree.
+
+**And BE is worst placed on every axis at once:** no route, **three uncommitted
+files** in its shell (all three located by me at
+`~/ctaNew-wt-be/data/pm_5min/derived/`), and **BE 46 and BE 47 in flight.** Its
+swap is rightly deferred to its next idle — never under a running batch.
+
+*The one mercy: an absent `data/data` **fails loudly** where a partial shell
+answers plausibly. BE's worse configuration is the safer failure mode.*
+
+**Counts measured, not reconciled:** 147 tracked under `data/` in the main tree;
+DA's shell holds 137 outside its nested link, BE's 139. R-553 says ~135, R-554
+~137. *I report what I counted and do not explain the difference, because I did
+not establish it.*
+
+### 2. The class, flagged for every seat
+
+> **A seat verifying "at the artifact" in its worktree, against an UNCOMMITTED
+> artifact, verified against ABSENCE.** The check silently changed its own
+> question from *"is this artifact as claimed"* to *"is this artifact in git"*.
+
+Two seats paid it in one round **in opposite directions** — the reviewer saw
+seven verdicts where there are twelve and filed BLOCKING on a data gap that did
+not exist; DE saw three qualifying days where there are six, and caught it **only
+because the count disagreed with a hand check.**
+
+**In a worktree, "at the artifact" means at the LEDGER only through the symlink.
+State which root you read** — DE's v3 now carries the root as a field, which
+should be the norm rather than a remedy.
+
+**And it generalises past worktrees:** *an absent artifact and an uncommitted one
+are indistinguishable to a checker that only asks whether a path resolves —
+**which is exactly the predicate my own instrument uses**, and the gap I recorded
+at round 100 as "the file is there" versus "the file is the one this claim was
+checked against".*
+
+### 3. I committed the defect I have been naming for three rounds
+
+My first probe was `test -L "$p" && echo yes || echo "NO — it is a real
+directory"`. **The path did not exist, so my own else-branch asserted a state the
+test never established** — and I reported it that way before re-testing.
+Separately, `readlink -f` **printed a canonical path for a non-existent file**,
+which I read as evidence of existence.
+
+> **Rule 10 in a shell echo** — the exact defect I swept at round 107, carried
+> into these files at 106, and wrote up as a lesson at 109. **Three rounds after
+> naming it, I wrote one.**
+
+The corrected probe prints only what it found — symlink / real directory / DOES
+NOT EXIST — **with no branch carrying a conclusion.** *A probe whose else-branch
+names a state is a probe that can only confirm.* **Nothing downstream rests on
+the wrong form: the surviving finding is stronger than the one I first wrote.**
+
+### 4. The symlink's own cost
+
+With `data/` a symlink, **git does not traverse it**, so `git status` reports the
+147 tracked files as **DELETED**. Nothing is lost — **but a careless `git add -A`
+would delete them from the branch.**
+
+**Rule now:** `git ls-files data | xargs git update-index --skip-worktree` once
+per worktree; **never stage those paths**; land artifacts under `data/` **from
+the MAIN tree by pathspec.** *Which is what R-397 said all along — and the shells
+had let seats skip it without noticing. **A workaround that silently makes a rule
+unnecessary is how the rule stops being followed.*** My own practice is unchanged
+and I say so rather than assume it.
+
+### 5. Design v3, and the right shape for a withdrawn sentence
+
+**42 = 42 computed.** The sentence R-549(A) withdrew is now a **per-day field the
+derivation reads** — `previously_opened_for`: 08-29 `development_read`,
+09-01/09-02 `interim_read_of_frozen_candidate`. *What was a false sentence in v1
+and a stale quotation in v2 cannot go stale without the derivation changing.* R8
+is a **computed reference** with the removed prose kept beneath it. The **root
+this emission read is a field.**
+
+*"sealed and unread" still occurs four times — **all as quotations**, none as a
+live claim, checked at each context. **A grep count is not a finding; the context
+is.***
+
+### 6. The withdrawal, and what it does and does not fix
+
+The reviewer read **twelve** verdicts at the ledger where its shell showed
+**seven**. Both sets are evaluable; **Set A holds.**
+
+> **The three I found untracked at round 113 — 08-26, 08-27, 08-31 — are three of
+> the seven that were invisible.** Same fact from two sides: **the swap fixes
+> VISIBILITY for the seats; it does not fix DISTRIBUTION**, and **08-31, the
+> era-boundary day, is still not in git.**
+
+**Set B's 09-06 is a timing artifact**, not a quality failure — the verdict was
+written six minutes into the day and is re-verdicted at 09-07 00:06Z. **Either
+branch is six days, provided the unit re-verdicts.** *And that same fire is the
+first production test of the rc-2/rc-4 classification — **two things now ride on
+one 00:06Z fire.***
+
+### 7. Measured before the sentence
+
+**602 flags, 62 CHECKED, 85 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 147; tasks 19.** *(Fifth consecutive ORPHAN on the same
+rename pattern, caught before shipping; cause diagnosed at round 113.)*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — and this round shows the
+first is not only mine: an instrument that asks whether a path resolves cannot
+tell absent from uncommitted. **455 of 602 flags never audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:03:05Z — **Design v2 verified; the blockers are fields. And
 "the ledger stops at 09-02" was a tracking gap that MY OWN round-101 census
 already contradicted.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.

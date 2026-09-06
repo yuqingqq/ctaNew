@@ -63,6 +63,56 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:09:46Z (MEM ROUND 114 -- R-553 AND R-554 SWEPT. STATE ONLY.
+  (1) THE SHELL TRAP IS STRUCTURAL AND I MEASURED IT PER SEAT RATHER THAN
+  RELAYING THE SHAPE -- AND THE SHAPE IS NOT TRUE OF EVERY SEAT. R-553 describes
+  the ledger symlink as nested at data/data inside the shell. MEASURED: DA yes,
+  BE **data/data DOES NOT EXIST -- shell, NO ROUTE TO THE LEDGER AT ALL**, DE and
+  REV swapped (04:07Z, 04:02Z). SO THE DOCUMENTED WORKAROUND WORKS FOR DA AND NOT
+  FOR BE. And BE is worst placed on every axis at once: no route, THREE
+  UNCOMMITTED FILES in its shell (all located by me under
+  ~/ctaNew-wt-be/data/pm_5min/derived/), and BE 46 AND BE 47 IN FLIGHT. The one
+  mercy: an absent data/data FAILS LOUDLY where a partial shell answers
+  plausibly.
+  (2) THE CLASS, FLAGGED FOR EVERY SEAT AS ROUTED TO ME: A SEAT VERIFYING "AT THE
+  ARTIFACT" IN ITS WORKTREE AGAINST AN UNCOMMITTED ARTIFACT VERIFIED AGAINST
+  ABSENCE. The check silently changes its own question from "is this artifact as
+  claimed" to "is this artifact in git". Two seats paid it in one round IN
+  OPPOSITE DIRECTIONS. And it generalises past worktrees: AN ABSENT ARTIFACT AND
+  AN UNCOMMITTED ONE ARE INDISTINGUISHABLE TO A CHECKER THAT ONLY ASKS WHETHER A
+  PATH RESOLVES -- WHICH IS THE PREDICATE MY OWN INSTRUMENT USES, and the gap I
+  named at round 100.
+  (3) AND I COMMITTED THE DEFECT I HAVE BEEN NAMING FOR THREE ROUNDS, INSIDE THIS
+  ROUND'S OWN MEASUREMENT: my probe was `test -L "$p" && echo yes || echo "NO --
+  it is a real directory"`, and when the path DID NOT EXIST MY OWN ELSE-BRANCH
+  ASSERTED A STATE THE TEST NEVER ESTABLISHED. I reported it before re-testing.
+  RULE 10 IN A SHELL ECHO -- the exact thing I swept at round 107 and wrote up as
+  a lesson at 109. The re-test prints only what it found, with no branch carrying
+  a conclusion. The surviving finding is STRONGER than the wrong one.
+  (4) A SYMLINKED data/ MAKES git status REPORT THE TRACKED FILES AS DELETED --
+  git does not traverse it -- so a careless `git add -A` WOULD DELETE THEM FROM
+  THE BRANCH. Rule now: skip-worktree once per worktree, never stage those paths,
+  LAND ARTIFACTS FROM THE MAIN TREE BY PATHSPEC. Which is what R-397 said all
+  along, and THE SHELLS HAD LET SEATS SKIP IT WITHOUT NOTICING -- a workaround
+  that silently makes a rule unnecessary is how the rule stops being followed. My
+  own practice is unchanged and I say so rather than assume it.
+  (5) DESIGN v3 VERIFIED, 42 = 42 computed, AND THE WITHDRAWN SENTENCE IS NOW A
+  PER-DAY FIELD THE DERIVATION READS -- so what was a false sentence in v1 and a
+  stale quotation in v2 CANNOT GO STALE WITHOUT THE DERIVATION CHANGING. The root
+  it read is A FIELD, which is the general fix and DE got there first. "sealed and
+  unread" still occurs four times, ALL AS QUOTATIONS, none as a live claim -- a
+  grep count is not a finding, the context is.
+  (6) THE REVIEWER WITHDREW A.3 AT THE LEDGER: twelve verdicts where its shell
+  showed seven. AND THE THREE I FOUND UNTRACKED AT ROUND 113 -- 08-26, 08-27,
+  08-31 -- ARE THREE OF THE SEVEN THAT WERE INVISIBLE. Same fact from two sides:
+  the swap fixes VISIBILITY for the seats and NOT DISTRIBUTION, and 08-31, the
+  era-boundary day, IS STILL NOT IN GIT.
+  (7) SET B's 09-06 IS A TIMING ARTIFACT -- day_quality_pass False because the
+  verdict was written six minutes into the day, re-verdicted at 09-07 00:06Z.
+  EITHER BRANCH IS SIX DAYS, PROVIDED THE UNIT RE-VERDICTS. AND THAT SAME 00:06Z
+  FIRE IS THE FIRST PRODUCTION TEST OF THE rc-2/rc-4 CLASSIFICATION: TWO THINGS
+  NOW RIDE ON ONE SCHEDULED FIRE.
+  PRIOR CHECKPOINT:
   2026-09-06T04:03:05Z (MEM ROUND 113 -- R-552 AND THE 398cc94 LANDING SWEPT.
   STATE ONLY.
   (1) "THE LEDGER STOPS AT 09-02" WAS A TRACKING GAP, NOT A DATA GAP -- and MY
@@ -1840,7 +1890,57 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
-  the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks: TWO-SEATS-READ-A-SHELL
+  the_shell_trap_MEASURED_PER_SEAT_and_BE_HAS_NO_ROUTE_TO_THE_LEDGER: CHECKED-BY-ME-AT-04:09Z
+                             # CHECKED 2026-09-06T04:09:46Z. I measured every
+                             # seat's route rather than relaying the structural
+                             # description, AND THE DESCRIPTION IS NOT TRUE OF
+                             # EVERY SEAT.
+                             # R-553(A) states the shape as: data/ is a partial
+                             # directory AND "the R-397 ledger symlink exists as
+                             # data/data INSIDE that directory". MEASURED, with a
+                             # test that reports what it found rather than what I
+                             # expected:
+                             #   be   data/data DOES NOT EXIST -> shell, NO ROUTE
+                             #        TO THE LEDGER AT ALL
+                             #   da   data/data -> /home/yuqing/ctaNew/data ->
+                             #        shell, but the nested route works
+                             #   de   data/ IS the symlink (swapped 04:07Z)
+                             #   rev  data/ IS the symlink (swapped 04:02Z)
+                             # SO THE DOCUMENTED WORKAROUND EXISTS FOR DA AND NOT
+                             # FOR BE. A seat told "read through data/data" would
+                             # find nothing in BE's worktree.
+                             # AND BE IS THE WORST PLACED OF THE FOUR ON EVERY
+                             # AXIS AT ONCE: it is the only seat with NO route,
+                             # it is the seat holding UNCOMMITTED FILES in its
+                             # shell (be_forward_day_receipt_20260903.v2.json,
+                             # ...20260904.v2.json,
+                             # be_generation_count_derivation_v1.json -- all
+                             # three located by me at
+                             # ~/ctaNew-wt-be/data/pm_5min/derived/), and it is
+                             # the seat with BE 46 AND BE 47 IN FLIGHT. Its swap
+                             # is deferred to its next idle, which is correct --
+                             # never under a running batch -- and until then
+                             # every "at the artifact" check BE makes against an
+                             # uncommitted ledger file is a check against
+                             # absence.
+                             # THE ONE MERCY IN BE'S CASE: an absent data/data
+                             # FAILS LOUDLY where a partial shell answers
+                             # plausibly. BE's worse configuration is the safer
+                             # failure mode.
+                             # SHELL SIZES MEASURED, NOT RECONCILED: 147 files
+                             # tracked under data/ in the main tree; DA's shell
+                             # holds 137 outside its nested link; BE's holds 139.
+                             # R-553 says ~135 and R-554 ~137. I report what I
+                             # counted and DO NOT reconcile the three figures --
+                             # worktree materialisation can differ with branch
+                             # state and I did not establish which explains it.
+                             # MY OWN ROOT, RE-CHECKED AT THE SAME MOMENT: main
+                             # tree, data/ a real directory, readlink -f gives
+                             # /home/yuqing/ctaNew/data, AND NO data/data NESTING
+                             # EXISTS HERE. Every census and digest I have filed
+                             # is a ledger read.
+                             # EARLIER VALUE (rule 13):
+                             # TWO-SEATS-READ-A-SHELL
                              # RELAYED from R-552's flag to every seat, and it is
                              # the mechanism behind this round's document round.
                              # THE SEAT WORKTREES' data/ ARE DIRECTORIES --
@@ -1866,6 +1966,38 @@ flags:
                              # main-tree read. Stated because "which root did you
                              # read" is now a question every filing has to
                              # answer, and mine has one answer.
+  I_ASSERTED_A_CONCLUSION_IN_A_SHELL_ECHO_WHILE_MEASURING_THIS: RULE-10-IN-MY-OWN-PROBE
+                             # RECORDED 2026-09-06T04:09:46Z, against myself, and
+                             # it happened inside this round's own measurement.
+                             # Probing BE's data/data I wrote
+                             # `test -L "$p" && echo "yes ..." || echo "NO -- it
+                             # is a real directory"`. THE PATH DOES NOT EXIST, so
+                             # the test failed and MY OWN ELSE-BRANCH ASSERTED
+                             # "it is a real directory" -- A CONCLUSION THE TEST
+                             # NEVER ESTABLISHED. I reported it that way before
+                             # re-testing.
+                             # AND EARLIER IN THE SAME PROBE, `readlink -f
+                             # $d/data` PRINTED A CANONICAL PATH FOR A
+                             # NON-EXISTENT FILE -- readlink -f does not fail on
+                             # absence -- which I read as evidence the nesting
+                             # existed.
+                             # THIS IS EXACTLY THE DEFECT CLASS I SWEPT AT ROUND
+                             # 107 AND NAMED AT ROUND 109: "rule 10 in a shell
+                             # echo", the printed conclusion beside a passing
+                             # test set in da_midnight_rc_falsifier.sh, which I
+                             # carried into these files at round 106 and then
+                             # wrote up as a lesson. THREE ROUNDS AFTER NAMING
+                             # IT, I WROTE ONE.
+                             # THE CORRECTED FORM AND THE FIX ARE THE SAME
+                             # THING: the re-test prints only what it found --
+                             # symlink / real directory / DOES NOT EXIST -- with
+                             # NO branch carrying a conclusion. A probe whose
+                             # else-branch names a state is a probe that can
+                             # only confirm.
+                             # NOTHING DOWNSTREAM RESTS ON THE WRONG FORM: the
+                             # finding that survives -- BE has NO route to the
+                             # ledger -- is STRONGER than the one I first wrote,
+                             # and it is established by the corrected probe.
   the_coordinator_wake_mechanism_WORKS: THREE-WAKES-THIS-HOUR-EACH-ACTED-ON
                              # RELAYED from R-552(C). The between-turn stall I
                              # recorded at round 109 as STRUCTURAL -- "the monitor
@@ -2590,6 +2722,72 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
+  design_v3_VERIFIED_42_EQUALS_42_AND_THE_READ_STATE_IS_A_FIELD: THE-ROOT-IT-READ-IS-RECORDED
+                             # RELAYED from R-554(A).
+                             # p003_de_multiday_gate1_design_v3__20260906T040539Z.json,
+                             # sha a1016a8762fffdfe, NO DATA.
+                             # battery.n_checks_run = 42 = expected, EQUALITY
+                             # COMPUTED.
+                             # THE WITHDRAWN SENTENCE IS NOW A FIELD, WHICH IS
+                             # THE RIGHT FIX: R7_the_day_set.day_read_state
+                             # carries previously_opened_for PER DAY -- 08-29
+                             # development_read, 09-01 and 09-02
+                             # interim_read_of_frozen_candidate, the rest none --
+                             # AND THE DERIVATION READS THE FIELD. The thing that
+                             # was a false sentence in v1 and a stale quotation
+                             # in v2 is now DATA THE RULE CONSUMES, so it cannot
+                             # go stale without the derivation changing.
+                             # R8 is a COMPUTED REFERENCE to resources.totals
+                             # with agrees_with_resources_totals true, and the
+                             # removed prose kept under _R8_removed_prose --
+                             # rule 13 applied inside a receipt.
+                             # worktree_data_shell_trap IS A FIELD: how it bit,
+                             # THE ROOT THIS EMISSION READ
+                             # (.../ctaNew-wt-de/data/data), and its two prior
+                             # instances. NAMING THE ROOT IN THE ARTIFACT IS THE
+                             # GENERAL FIX and DE got there first.
+                             # The provenance class rule is tightened per A-1b
+                             # WITH THE ROUND-69 DEFECT AS THE KNOWN-BAD.
+                             # AND THE ONE THING THAT LOOKS WRONG AND IS NOT:
+                             # "sealed and unread" still occurs FOUR TIMES in v3
+                             # -- all as QUOTATIONS of the withdrawn v1/v2
+                             # wording inside supersedes and read-state
+                             # explanations, NONE as a live claim, checked at
+                             # each context. A grep count is not a finding; the
+                             # context is.
+  the_reviewer_WITHDREW_its_A3_at_the_ledger: TWELVE-VERDICTS-WHERE-ITS-SHELL-SHOWED-SEVEN
+                             # RELAYED from R-554(B), and it closes the loop I
+                             # opened at round 113 from the other side.
+                             # From its now-symlinked worktree the reviewer read
+                             # TWELVE da_dayverdict_ files (08-26 -> 09-06) WHERE
+                             # ITS SHELL SHOWED SEVEN -- 08-26, 08-27, 08-31 and
+                             # 09-03..09-06 had been INVISIBLE TO IT. Both
+                             # R-550(D) sets ARE evaluable; SET A HOLDS.
+                             # AND THE THREE I FOUND STILL UNTRACKED AT ROUND 113
+                             # -- 08-26, 08-27, 08-31 -- ARE THREE OF THE SEVEN
+                             # THAT WERE INVISIBLE. The two findings are the same
+                             # fact seen from two sides: TRACKING decides what a
+                             # shell can see, so an untracked verdict is
+                             # invisible to every unswapped worktree AND to every
+                             # clone. The swap fixes the VISIBILITY half for the
+                             # seats; it does not fix the DISTRIBUTION half, and
+                             # 08-31 -- the era-boundary day -- is still not in
+                             # git.
+                             # SET B's 09-06 IS A TIMING ARTIFACT, NOT A QUALITY
+                             # FAILURE: day_quality_pass reads False only because
+                             # 09-06's verdict was WRITTEN SIX MINUTES INTO THE
+                             # DAY, and it is re-verdicted at 09-07 00:06Z as
+                             # every closed day is. The R-550(D) rule's quality
+                             # conjunct is evaluated ON COMPLETE DAYS ONLY and
+                             # the current day's in-progress verdict IS NOT AN
+                             # INPUT -- a clarification recorded in R-555, not a
+                             # rule change. EITHER BRANCH IS SIX DAYS, provided
+                             # the unit re-verdicts 09-06.
+                             # THAT PROVISO IS THE ONE TO WATCH: Set B's G now
+                             # depends on a scheduled unit firing correctly at
+                             # 09-07 00:06Z -- which is also the FIRST PRODUCTION
+                             # TEST of the rc-2/rc-4 classification (DA's harvest
+                             # item 5). Two things now ride on one 00:06Z fire.
   design_v2_VERIFIED_36_EQUALS_36_AND_BOTH_DAY_SETS_DRIVEN: THE-BLOCKERS-ARE-FIELDS-NOW
                              # RELAYED from R-552(A) for the contents; the
                              # resource arithmetic RECOMPUTED BY ME.
@@ -2679,6 +2877,68 @@ flags:
                              # single-coin builder.
                              # DE 70 closes all eight "must exist" items in a
                              # DESIGN v2 with v1 untouched.
+  verified_at_the_artifact_IN_A_WORKTREE_MEANS_THROUGH_THE_SYMLINK_ONLY: THE-CLASS-FLAG
+                             # RELAYED from R-553(C), which routes this class to
+                             # me to flag for every seat, and it is the sharpest
+                             # standing-rule consequence this programme has hit.
+                             # THE CLASS: a seat verifying "at the artifact"
+                             # inside its worktree, against an UNCOMMITTED
+                             # artifact, VERIFIED AGAINST ABSENCE. The tracked
+                             # shell contains only what is committed, so the
+                             # check silently changed its own question from "is
+                             # this artifact as claimed" to "is this artifact in
+                             # git".
+                             # TWO SEATS PAID IT IN ONE ROUND, IN OPPOSITE
+                             # DIRECTIONS: the reviewer's A.3 read seven verdicts
+                             # where the ledger has twelve and filed BLOCKING on
+                             # a data gap that did not exist; DE's R7 derivation
+                             # read three qualifying days where the ledger has
+                             # six and caught it ONLY because the count
+                             # disagreed with a hand check.
+                             # THE RULE FOR EVERY SEAT: in a worktree, "at the
+                             # artifact" means AT THE LEDGER ONLY THROUGH THE
+                             # SYMLINK. State which root you read -- DE's v3 now
+                             # carries the root as a field, which is the right
+                             # shape and should be the norm rather than a
+                             # remedy.
+                             # THE PART THAT GENERALISES BEYOND WORKTREES: this
+                             # is a VERIFICATION THAT CANNOT FAIL LOUDLY. An
+                             # absent artifact and an uncommitted artifact are
+                             # indistinguishable to a checker that only asks
+                             # whether a path resolves -- which is the exact
+                             # predicate my own instrument uses, and the gap I
+                             # recorded at round 100 as "the file is there" versus
+                             # "the file is the one this claim was checked
+                             # against". Same shape, different surface, and this
+                             # time it cost two seats a round.
+  a_symlinked_data_makes_git_report_the_tracked_files_DELETED: SKIP-WORKTREE-ONCE-PER-WORKTREE
+                             # RELAYED from R-554(B), the reviewer's new
+                             # structural finding, and it is the price of the
+                             # fix.
+                             # With data/ a symlink, GIT DOES NOT TRAVERSE IT, so
+                             # `git status` in the worktree reports the ~147
+                             # tracked files under data/ AS DELETED. The files
+                             # are present through the link and NOTHING IS LOST
+                             # -- but A CARELESS `git add -A` WOULD DELETE THEM
+                             # FROM THE BRANCH.
+                             # THE RULE, EFFECTIVE NOW: in every symlinked
+                             # worktree run
+                             # `git ls-files data | xargs git update-index
+                             # --skip-worktree` ONCE (status clean, refresh
+                             # unaffected); NEVER stage those paths; and LAND
+                             # ARTIFACTS UNDER data/ FROM THE MAIN TREE BY
+                             # PATHSPEC (`git -C /home/yuqing/ctaNew add -f
+                             # <path>`).
+                             # WHICH IS WHAT R-397 SAID ALL ALONG -- and the
+                             # shells had let seats skip it without noticing.
+                             # A WORKAROUND THAT SILENTLY MAKES A RULE
+                             # UNNECESSARY IS HOW THE RULE STOPS BEING FOLLOWED.
+                             # THIS DOES NOT CHANGE MY OWN PRACTICE AND I SAY SO
+                             # RATHER THAN ASSUME IT: I work in the main tree and
+                             # commit by explicit pathspec, which is the
+                             # prescribed path, and I have never staged a data/
+                             # file from a worktree because I have never worked
+                             # in one.
   the_day_verdict_tracking_gap_is_NARROWED_NOT_CLOSED: 08-31-THE-ERA-BOUNDARY-DAY-IS-STILL-UNTRACKED
                              # CHECKED 2026-09-06T04:03:05Z, and the finding is
                              # mine: the landing commit fixed the gap the
@@ -10484,6 +10744,30 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:09:46Z, THE SHELL TRAP IS THE ROUND'S STRUCTURAL FACT AND
+  I MEASURED IT PER SEAT: DE and REV are swapped, DA reaches the ledger through
+  data/data, and BE HAS NO ROUTE AT ALL -- while holding three uncommitted files
+  and running two batches. THE CLASS, FOR EVERY SEAT: verifying "at the artifact"
+  in a worktree against an UNCOMMITTED artifact IS A VERIFICATION AGAINST
+  ABSENCE, and an absent artifact is indistinguishable from an uncommitted one to
+  any checker that only asks whether a path resolves -- INCLUDING MINE.
+  A SYMLINKED data/ MAKES git REPORT THE TRACKED FILES AS DELETED, so
+  skip-worktree once, never stage those paths, and land under data/ from the MAIN
+  TREE BY PATHSPEC -- R-397 as written, which the shells had let seats skip.
+  DESIGN v3 IS VERIFIED (42 = 42) AND THE WITHDRAWN SENTENCE IS NOW A PER-DAY
+  FIELD THE DERIVATION READS, so it cannot go stale silently; the root the
+  emission read is recorded as a field, which should be the norm.
+  THE REVIEWER WITHDREW A.3 AT THE LEDGER -- twelve verdicts where its shell
+  showed seven -- and the three I found untracked at round 113 are three of those
+  seven: the swap fixes VISIBILITY, not DISTRIBUTION, and 08-31, the era-boundary
+  day, IS STILL NOT IN GIT. Set B's 09-06 is a TIMING ARTIFACT and either branch
+  is six days provided the unit re-verdicts at 09-07 00:06Z -- the same fire that
+  is the first production test of the rc-2/rc-4 classification.
+  DE 72 builds the runner ON FIXTURES ONLY; the USER's day-set parameter is still
+  open and nothing touches data until it, the reviewer's filing on v3, and BE's
+  book declaration all exist. Gate 1 is 1 of 7. Economics:
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:03:05Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:03:05Z, DESIGN v2 IS VERIFIED AND THE BLOCKERS ARE
   FIELDS: 36 = 36 computed, the shared pool refuses below 0.90 overlap, btc-only
   is priced in multiplicity rather than asserted, the degeneracy floors are
@@ -11373,6 +11657,53 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 114, 2026-09-06T04:09:46Z ------------------------------
+  # renamed from the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks;
+  # the ORPHAN check caught the stale key for the FIFTH consecutive round, same
+  # separate-replacements cause diagnosed at round 113, caught before shipping again.
+  the_shell_trap_MEASURED_PER_SEAT_and_BE_HAS_NO_ROUTE_TO_THE_LEDGER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T04:09:46Z
+    said: >-
+      measured from the main tree with a probe that reports only what it found:
+      ~/ctaNew-wt-be/data/data DOES NOT EXIST (shell, no route to the ledger);
+      ~/ctaNew-wt-da/data/data is a symlink to /home/yuqing/ctaNew/data;
+      ~/ctaNew-wt-de/data and ~/ctaNew-wt-rev/data are themselves symlinks to the
+      ledger, with their shells preserved as data.shell_20260906T040735Z and
+      data.shell_20260906T040258Z. BE's three uncommitted files are at
+      ~/ctaNew-wt-be/data/pm_5min/derived/. git ls-files data returns 147 in the
+      main tree; DA's shell holds 137 outside its nested link and BE's 139 -- I
+      report the counts and do not reconcile them against R-553's ~135 or
+      R-554's ~137. My own root: main tree, data/ a real directory resolving to
+      /home/yuqing/ctaNew/data, with no data/data nesting.
+  I_ASSERTED_A_CONCLUSION_IN_A_SHELL_ECHO_WHILE_MEASURING_THIS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T04:09:46Z
+    said: >-
+      my first probe was `test -L "$p" && echo "yes -> ..." || echo "NO -- it is
+      a real directory"`, and for a path that does not exist the else-branch
+      printed a state the test never established; separately `readlink -f` on a
+      non-existent path printed a canonical path, which I read as evidence of
+      existence. Both were corrected by re-testing with a probe whose branches
+      report symlink / real directory / DOES NOT EXIST and assert nothing. The
+      surviving finding is the stronger one.
+  verified_at_the_artifact_IN_A_WORKTREE_MEANS_THROUGH_THE_SYMLINK_ONLY:
+    prov: RELAYED
+    from: R-553(C), routed to MEM to flag as a class for every seat
+  a_symlinked_data_makes_git_report_the_tracked_files_DELETED:
+    prov: RELAYED
+    from: R-554(B), the reviewer's structural finding
+  design_v3_VERIFIED_42_EQUALS_42_AND_THE_READ_STATE_IS_A_FIELD:
+    prov: RELAYED
+    from: R-554(A) -- I did not open the v3 receipt
+  the_reviewer_WITHDREW_its_A3_at_the_ledger:
+    prov: RELAYED
+    from: >-
+      R-554(B). The connection to my round-113 finding is mine: the three
+      verdicts I measured as still untracked (08-26, 08-27, 08-31) are three of
+      the seven that were invisible to the reviewer's shell.
   # --- MEM round 113, 2026-09-06T04:03:05Z ------------------------------
   the_day_verdict_tracking_gap_is_NARROWED_NOT_CLOSED:
     prov: CHECKED
@@ -11416,12 +11747,6 @@ flag_provenance:
       `flag_provenance:` in SEPARATE replacements, so the two halves can never
       be atomic by construction. The audit-first order has caught all four
       before they shipped, which is the working arrangement and not the fix.
-  the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks:
-    prov: RELAYED
-    from: >-
-      R-552's flag to every seat. My own root I checked: pwd /home/yuqing/ctaNew
-      with data/ a real directory, so every census and digest I have filed is a
-      main-tree read.
   the_coordinator_wake_mechanism_WORKS:
     prov: RELAYED
     from: R-552(C)
