@@ -352,7 +352,14 @@ def resolve_marker_dir(outdir=None, *, fixture: bool = False,
                            "finds no markers and reopens spent days"}
 
 
-#: The three blocks a correction may NEVER touch: they are the read itself.
+#: The three blocks a correction may NEVER touch IN THE RACE READ's family:
+#: they are the read itself. THE LIST IS THE FAMILY'S, NOT THE CENSUS'S
+#: (REV 83 §1.3). `supersede_result` passes it as a caller's belt over the
+#: derivation below; the shared predicate knows no family's names. It TOOK
+#: its frozen set from this constant until REV 83 -- which is why, on the
+#: first family that was not the read (DE 110's design write), the frozen
+#: half compared three absent keys against three absent keys and PASSED.
+#: DE imports this name for its own fixtures; it stays exported.
 FROZEN_BLOCKS = ("day_signs", "permutation_floors", "byte_identity")
 
 #: Fields whose PLAIN names must never carry a reconstruction, because an
@@ -360,15 +367,57 @@ FROZEN_BLOCKS = ("day_signs", "permutation_floors", "byte_identity")
 PLAIN_STAMP_FIELDS = ("builder_commit", "reader_sha256", "producing_code_sha256")
 
 
+def derived_frozen_set(v1: dict, permitted) -> list:
+    """THE FROZEN SET, READ FROM THE ARTIFACT (REV 83 §1.3, REV 82 §2.2).
+
+    Everything the v1 already carries is frozen; the permitted keys -- the
+    declared additions and the declared exemptions -- are the only ones that
+    may appear or move. This is the form DE's receipt corrections already
+    compute (`de_receipt_correction.frozen_set_of`), lifted into the shared
+    predicate so that no family maintains a list and no family's census is
+    vacuous.
+
+    WHY `also_permitted` IS SUBTRACTED TOO. `correction_census` is written by
+    the caller AFTER this runs, so a v1 that already carries a census block
+    -- every design version does -- would be frozen against the very field
+    the emitter is about to write. That is the emitter refusing itself, the
+    mirror of the reason `added` is REQUIRED while `also_permitted` is only
+    allowed."""
+    return sorted(set(v1) - set(permitted))
+
+
 def correction_census(v1: dict, v2: dict,
                       added=("pinned_days_not_in_READABLE",
                              "producing_code", "supersedes"),
-                      also_permitted=("correction_census",)) -> dict:
+                      also_permitted=("correction_census",),
+                      frozen=None,
+                      family: str | None = None) -> dict:
     """PROVE a correction added only what it declared, and touched nothing.
 
     Extracted so the falsifier can drive THE PREDICATE rather than trying to
     make the emitter misbehave: the first form of that known-bad patched
-    `json.dumps` and tested nothing."""
+    `json.dumps` and tested nothing.
+
+    THE FROZEN SET IS DERIVED FROM THE ARTIFACT (REV 83 §1.3). It was a
+    module constant naming the race read's three blocks, so on the first
+    family that was not the read it compared nothing and passed -- a control
+    that cannot fail, which is the shape rule 16 exists for. Now:
+
+      * `frozen = set(v1) - (declared additions | declared exemptions)`, so
+        every family gets a real frozen half and none needs maintenance;
+      * a census whose DERIVED frozen set is EMPTY REFUSES, naming the
+        family -- empty is not "nothing to check", it is "this control
+        cannot fire here";
+      * `frozen=` lets a caller NAME blocks it insists on, as a belt over
+        the derivation's braces (DE's `rev79_named_blocks_present_and_frozen`
+        pattern). That list belongs to the family, never to this module.
+
+    WHAT IT DOES NOT CHANGE. A key present in v1 that moved is, by
+    construction, also outside the permitted set -- so the derived frozen
+    half refuses a SUBSET of what the changed-key half below already refused,
+    and no call that admits today is refused by it. What it adds is the
+    SPECIFIC claim, made first and named: an INHERITED key moved, which is
+    rule 13, rather than the generic "a key outside the declared set"."""
     # `added` are REQUIRED to be present in v2; `also_permitted` may change
     # without being required -- `correction_census` is written by the caller
     # AFTER this runs, so requiring it here would refuse the emitter itself.
@@ -382,15 +431,50 @@ def correction_census(v1: dict, v2: dict,
     # specific one -- the third time this ordering has bitten (the generic
     # `sealed feed(s) absent` in REV 48 §1.6, the result-name guard in BE
     # 68). The more specific claim goes first.
+    frozen_keys = derived_frozen_set(v1, permitted)
+    fam = repr(family) if family else ("(unnamed -- the caller passed no "
+                                       "family=)")
+    if not frozen_keys:
+        # REFUSED ON THE CENSUS, NOT ON THE .v2 -- said so, because a
+        # generic refusal that hides a specific one is this module's oldest
+        # defect and the reader must not go repair the artifact.
+        raise ReadRefused(
+            f"REFUSED: the DERIVED frozen set is EMPTY for family {fam}. "
+            f"The v1 carries {sorted(v1)} and every one of those keys is a "
+            f"declared addition or a declared exemption "
+            f"({sorted(permitted)}), so the frozen half compares nothing "
+            f"and cannot fail. Empty is not 'nothing to check'; it is a "
+            f"control that cannot fire, and under rule 16 that is a "
+            f"refusal (REV 83 §1.3). This refuses the CENSUS, not the .v2.")
+    named_present, named_absent = {}, []
+    for _b in (frozen or ()):
+        (named_present.__setitem__(_b, _b in frozen_keys) if _b in v1
+         else named_absent.append(_b))
+    _not_frozen = sorted(b for b, okv in named_present.items() if not okv)
+    if _not_frozen:
+        raise ReadRefused(
+            f"REFUSED: the caller NAMES {_not_frozen} as blocks it insists "
+            f"are frozen, and the v1 carries them -- but they are declared "
+            f"here as additions or exemptions ({sorted(permitted)}), so the "
+            f"derivation makes them writable. The belt and the braces "
+            f"disagree, and a correction adds; it does not redefine what is "
+            f"already recorded.")
     frozen_ok = {b: (json.dumps(v1.get(b), sort_keys=True, default=str)
                      == json.dumps(v2.get(b), sort_keys=True, default=str))
-                 for b in FROZEN_BLOCKS}
+                 for b in frozen_keys}
     if not all(frozen_ok.values()):
+        _broke = [b for b, okv in frozen_ok.items() if not okv]
+        _also = sorted(set(_broke) & set(named_present))
         raise ReadRefused(
-            f"REFUSED: a FROZEN block changed -- "
-            f"{[b for b, okv in frozen_ok.items() if not okv]}. "
-            f"{list(FROZEN_BLOCKS)} are the read itself, and a correction "
-            f"that touches them is not a correction.")
+            f"REFUSED: a FROZEN block changed -- {_broke}. The frozen set is "
+            f"READ from the v1 ({len(frozen_keys)} keys), never typed: "
+            f"everything the artifact already carries is INHERITED, and the "
+            f"declared additions {sorted(added)} are the only keys that may "
+            f"appear. Rule 13 -- a correction adds, it does not edit what is "
+            f"recorded, so a correction that touches an inherited key is not "
+            f"a correction."
+            + (f" {_also} was ALSO named by the caller as a block it insists "
+               f"on." if _also else ""))
     outside = sorted(set(changed) - permitted)
     if outside:
         raise ReadRefused(
@@ -441,6 +525,21 @@ def correction_census(v1: dict, v2: dict,
             "difference_is_exactly_the_additions":
                 set(changed) >= added and not (set(changed) - permitted),
             "permitted_but_not_required": sorted(also_permitted),
+            "frozen_set": {
+                "family": family,
+                "frozen_keys": frozen_keys,
+                "n_frozen": len(frozen_keys),
+                "read_from": "the v1's own keys MINUS the declared additions "
+                             "and exemptions -- DERIVED from the artifact, "
+                             "never a list this module maintains "
+                             "(REV 83 §1.3, REV 82 §2.2)",
+                "named_blocks_present_and_frozen": named_present,
+                "named_blocks_ABSENT_from_v1": sorted(named_absent),
+                "the_named_list_is_the_caller_s": "a belt over the "
+                    "derivation's braces; the names belong to the family, "
+                    "never to this module. An ABSENT named block checked "
+                    "nothing and is listed rather than inferred.",
+            },
             "compared_against": "the declared additions THEMSELVES, not the "
                                 "subset v2 happens to carry (REV 79 §1.3)",
             "frozen_blocks_byte_identical": frozen_ok}
@@ -533,7 +632,8 @@ def supersede_result(*, outdir: Path | None = None,
                         "not reopened and cannot be.",
     }
 
-    census = correction_census(v1, v2)
+    census = correction_census(v1, v2, frozen=FROZEN_BLOCKS,
+                               family="be_race_read_result")
     v2["correction_census"] = dict(census, **{
         "nothing_recomputed": "no field in this file is derived from the "
                               "feeds; they are consumed and the read cannot "
@@ -908,7 +1008,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 53
+EXPECTED_CHECKS = 60
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1392,6 +1492,94 @@ def selftest() -> int:
        "POSITIVE CONTROL STILL PASSES: a .v2 carrying ALL the declared "
        "additions and touching nothing else admits, with "
        "missing_declared_additions empty")
+
+    # ---- REV 83 §1.3: THE FROZEN SET IS DERIVED FROM THE ARTIFACT -------
+    # The half that was vacuous, driven on the family that exposed it. A
+    # design declaration carries none of the race read's three blocks, so
+    # the module-constant form compared three absent keys against three
+    # absent keys and PASSED. These cells show the vacuity, then fire the
+    # cell that could not fire.
+    _design = {"arms": {"A": 1}, "estimand": "net_value", "bars": [1, 2],
+               "n_days": 4, "correction_census": {"from_the_v1": True}}
+    ok(not (set(FROZEN_BLOCKS) & set(_design)),
+       f"THE VACUITY, SHOWN RATHER THAN DESCRIBED: a design-shaped v1 "
+       f"carries NONE of {list(FROZEN_BLOCKS)}, so the old module-constant "
+       f"frozen half compared absent-to-absent and passed on every design "
+       f"write. This is the precondition the two cells below stand on")
+    _dv2_bad = dict(_design, arms={"A": 2},
+                    supersedes={"path": "p", "sha256": "a" * 64})
+    try:
+        correction_census(_design, _dv2_bad, added=("supersedes",),
+                          family="p003_de_multiday_gate1_design")
+        _d_msg = ""
+    except ReadRefused as _eD:
+        _d_msg = str(_eD)
+    ok("FROZEN block changed" in _d_msg and "arms" in _d_msg
+       and "READ from the v1" in _d_msg and "INHERITED" in _d_msg,
+       f"THE CELL THAT WAS VACUOUS NOW FIRES: a design-shaped correction "
+       f"that changes the INHERITED key `arms` is REFUSED BY NAME, on a "
+       f"family whose keys this module has never heard of -- the frozen "
+       f"set came from the artifact: {_d_msg!r}")
+    _dv2_ok = correction_census(
+        _design, dict(_design, supersedes={"path": "p", "sha256": "a" * 64}),
+        added=("supersedes",), family="p003_de_multiday_gate1_design")
+    ok(_dv2_ok["frozen_set"]["n_frozen"] == 4
+       and _dv2_ok["frozen_set"]["frozen_keys"] == ["arms", "bars",
+                                                    "estimand", "n_days"]
+       and "correction_census" not in _dv2_ok["frozen_set"]["frozen_keys"],
+       f"AND IT ADMITS THE GOOD ONE, over a REAL frozen set of "
+       f"{_dv2_ok['frozen_set']['n_frozen']} derived keys "
+       f"{_dv2_ok['frozen_set']['frozen_keys']} -- the declared exemption "
+       f"`correction_census` is excluded, because the caller writes it "
+       f"AFTER this runs and the emitter must not refuse itself")
+    try:
+        correction_census(
+            {"supersedes": {}, "producing_code": {"status": "X"}},
+            {"supersedes": {"path": "p"}, "producing_code": {"status": "X"}},
+            added=("supersedes", "producing_code"),
+            family="a_family_with_no_inherited_keys")
+        _e_msg = ""
+    except ReadRefused as _eE:
+        _e_msg = str(_eE)
+    ok("DERIVED frozen set is EMPTY" in _e_msg
+       and "a_family_with_no_inherited_keys" in _e_msg
+       and "cannot fire" in _e_msg and "not the .v2" in _e_msg,
+       f"KNOWN-BAD: a family whose every key is a declared addition has an "
+       f"EMPTY derived frozen set, and the census REFUSES NAMING THE FAMILY "
+       f"instead of passing -- and says it refuses the CENSUS, not the "
+       f".v2, so the reader does not go repair the artifact: {_e_msg!r}")
+    try:
+        correction_census(_design, dict(_design, arms={"A": 1}),
+                          added=("arms",), frozen=("arms",),
+                          family="p003_de_multiday_gate1_design")
+        _belt = ""
+    except ReadRefused as _eBt:
+        _belt = str(_eBt)
+    ok("NAMES ['arms']" in _belt and "the derivation makes them writable"
+       in _belt,
+       f"KNOWN-BAD FOR THE BELT: a caller that NAMES a block as frozen "
+       f"while declaring it an addition is REFUSED -- the belt may only "
+       f"tighten the braces, never contradict them: {_belt!r}")
+    _rv1 = Path(_BDR.derived()) / "be_race_read_result_v1.json"
+    _rv2 = Path(_BDR.derived()) / "be_race_read_result_v2.json"
+    ok(_rv1.exists() and _rv2.exists(),
+       f"the LANDED race-read v1 and .v2 are both present at "
+       f"{_BDR.derived()} -- the derived form is re-driven on the real "
+       f"artifacts, not only on fixtures")
+    _rc = correction_census(json.loads(_rv1.read_text()),
+                            json.loads(_rv2.read_text()),
+                            frozen=FROZEN_BLOCKS,
+                            family="be_race_read_result")
+    ok(_rc["difference_is_exactly_the_additions"] is True
+       and _rc["missing_declared_additions"] == []
+       and _rc["frozen_set"]["n_frozen"] >= 3
+       and all(_rc["frozen_set"]["named_blocks_present_and_frozen"].values())
+       and set(FROZEN_BLOCKS) <= set(_rc["frozen_set"]["frozen_keys"]),
+       f"AND THE LANDED .v2 STILL PASSES UNDER THE DERIVED SET: "
+       f"{_rc['frozen_set']['n_frozen']} inherited keys byte-identical, "
+       f"changed exactly {sorted(_rc['keys_changed_vs_v1'])} -- the three "
+       f"named blocks are INSIDE the derived set rather than being it, so "
+       f"the belt checks the construction rather than replacing it")
 
     # FALSIFIER 2: a reconstruction under a PLAIN field name is REFUSED
     _plain = dict(_base,
