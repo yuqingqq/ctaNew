@@ -971,7 +971,8 @@ PICKLE_EXECUTION_NOTE = (
 
 
 def load_day_book(path: str, *, open_book: bool = False,
-                  expected_sha256: str | None = None) -> dict:
+                  expected_sha256: str | None = None,
+                  structure_decl_dir: Path | None = None) -> dict:
     """The day book, through an ADAPTER that refuses what it cannot read.
 
     This verifier consumes rows plus PER-ARM scores. It does NOT re-score
@@ -1007,6 +1008,10 @@ def load_day_book(path: str, *, open_book: bool = False,
         #: SHAPE -- and a pickle whose top level is not the declared one is
         #: refused BY NAME rather than mapped by inference.
         #: (2) only here, and only under the wrapper the caller holds.
+        #: DA 100: THE STRUCTURE GATE IS IN FRONT OF THE OPEN. Nothing is
+        #: unpickled until a VERIFIED declaration names THESE bytes.
+        structure = structure_declaration_for_book(
+            actual, structure_decl_dir)
         import pickle                                         # noqa: PLC0415
         #: REV 73 S2(a): ***A TRACEBACK IS NOT A VERDICT.*** With the RIGHT
         #: pin on bytes that are not a pickle, `pickle.load` raised
@@ -1049,27 +1054,8 @@ def load_day_book(path: str, *, open_book: bool = False,
         #: it is READ. The declaration must be the CHAIN HEAD, must say
         #: VERIFIED, and must name THIS book's digest; anything less and
         #: the open refuses BY NAME rather than mapping on a claim.
-        st = _declaration_head("be_daybook_structure")
-        sobj = st.pop("obj")
-        if not str(sobj.get("STATUS") or "").upper().startswith("VERIFIED"):
-            raise VerifierRefused(
-                f"REFUSED: STRUCTURE_DECLARATION_IS_NOT_VERIFIED -- "
-                f"{st['name']} carries STATUS "
-                f"{sobj.get('STATUS')!r}. A declaration ABOUT a book is "
-                f"not a reading OF it, and this recompute will not map on "
-                f"a claim.")
-        if actual not in str(sobj.get("status_detail") or ""):
-            raise VerifierRefused(
-                f"REFUSED: STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK -- "
-                f"{st['name']} was verified against a book whose digest is "
-                f"not {actual[:16]}…. A structure verified elsewhere says "
-                f"nothing about these bytes.")
         return {"kind": "PICKLE", "rows": [], "pickle": obj,
-                "structure_declaration": {
-                    **st, "STATUS": sobj.get("STATUS"),
-                    "MAY_read": sobj.get(
-                        "what_a_population_recompute_MAY_read"),
-                    "MAY_NOT_read": sobj.get("what_it_MAY_NOT_read")},
+                "structure_declaration": structure,
                 "opened_under": PICKLE_EXECUTION_NOTE}
     if p.suffix == ".pkl":
         #: THE REAL BOOK IS A PICKLE, AND THIS READER WAS BUILT ON THE
@@ -4064,10 +4050,16 @@ def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
 REHEARSAL_PROTOCOL = "P003_DA_OPEN_BOOK_REHEARSAL_V1"
 
 
-def _declaration_head(family: str) -> dict:
-    """The chain head of a declaration family, by the R-608 pair rule."""
+def _declaration_head(family: str, decl_dir: Path | None = None) -> dict:
+    """The chain head of a declaration family, by the R-608 pair rule.
+
+    `decl_dir` exists so a CONTROL can plant a declaration of its own and
+    exercise the checks that come after this gate. ***It weakens nothing
+    on the real path***: the default is the programme's own declarations
+    directory, and a fixture that points elsewhere is testing its own
+    declaration, which is what a fixture is for."""
     import da_nonhead_census as _C                            # noqa: PLC0415
-    d = HERE / "declarations"
+    d = Path(decl_dir) if decl_dir else (HERE / "declarations")
     chains = _C.declaration_chains(d)
     blk = chains.get(family)
     if not blk:
@@ -4087,6 +4079,44 @@ def _declaration_head(family: str) -> dict:
             "resolved_by": ("the chain head of the family, pair-verified "
                             "back to v1 -- never a filename literal"),
             "obj": json.loads(f.read_text())}
+
+
+def structure_declaration_for_book(book_sha256: str,
+                                   decl_dir: Path | None = None) -> dict:
+    """BE's structure declaration for THIS book -- by digest alone.
+
+    DA 100: THE GUARD MOVES IN FRONT OF THE OPEN. It used to run after
+    `pickle.load`, so a book the declaration was never verified against
+    was UNPICKLED FIRST and refused afterwards -- ***executing another
+    seat's serialisation to discover that nothing licensed reading it***.
+    It takes a digest now and nothing else, so it can be driven, and it is
+    called BEFORE the open."""
+    st = _declaration_head("be_daybook_structure", decl_dir)
+    sobj = st.pop("obj")
+    status = str(sobj.get("STATUS") or "")
+    detail = str(sobj.get("status_detail") or "")
+    if not status.upper().startswith("VERIFIED"):
+        raise VerifierRefused(
+            f"REFUSED: STRUCTURE_DECLARATION_IS_NOT_VERIFIED -- "
+            f"{st['name']} carries STATUS {status!r}. A declaration ABOUT "
+            f"a book is not a reading OF it, and this recompute will not "
+            f"map on a claim.")
+    m = re.search(r"sha256 ([0-9a-f]{64})", detail)
+    declared = m.group(1) if m else None
+    if str(book_sha256) not in detail:
+        raise VerifierRefused(
+            f"REFUSED: STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK -- "
+            f"{st['name']} was VERIFIED against the book whose digest it "
+            f"names, {(declared or 'UNSTATED')[:16]}…, and the book "
+            f"offered here hashes to {str(book_sha256)[:16]}…. A "
+            f"structure verified elsewhere says nothing about these "
+            f"bytes, and NOTHING IS OPENED on the strength of it.")
+    return {**st, "STATUS": status,
+            "verified_against_digest": declared,
+            "offered_digest": str(book_sha256),
+            "MAY_read": sobj.get("what_a_population_recompute_MAY_read"),
+            "MAY_NOT_read": sobj.get("what_it_MAY_NOT_read"),
+            "checked_before_any_open": True}
 
 
 def rehearse_open_book(day: str, book_path: str, receipt_path: str, *,
@@ -5261,13 +5291,30 @@ def selftest_pre_read() -> list:                              # noqa: C901
     #: file's OWN digest -- otherwise every one of them refuses at the pin
     #: and the shape checks below are never reached. That is the ordering
     #: working, and this cell has to respect it to test what it names.
+    #: DA 100: THE STRUCTURE GATE IS NOW IN FRONT OF THE OPEN, so each
+    #: fixture plants a declaration naming ITS OWN digest -- otherwise
+    #: every drive stops at that gate and the shape checks below are never
+    #: reached. Testing its own declaration is what a fixture is for; the
+    #: real path resolves the programme's, and that is driven separately.
+    _fdecl = _bd / "declarations"
+    _fdecl.mkdir(exist_ok=True)
+
+    def _plant(sha):
+        (_fdecl / "be_daybook_structure_v1.json").write_text(json.dumps({
+            "STATUS": "VERIFIED AGAINST A FIXTURE BOOK",
+            "status_detail": f"asserted against a fixture, sha256 {sha}",
+            "what_a_population_recompute_MAY_read": ["fr"],
+            "what_it_MAY_NOT_read": {"sealed_economics": "none here"}}))
+        return _fdecl
+
     for _lbl, _f, _open in (("wrong_top_level", _wrong, True),
                             ("not_a_mapping", _lst, True),
                             ("declared_shape", _shaped, True),
                             ("light_path_on_a_pickle", _shaped, False)):
         _sha = hashlib.sha256(_f.read_bytes()).hexdigest()
         try:
-            load_day_book(str(_f), open_book=_open, expected_sha256=_sha)
+            load_day_book(str(_f), open_book=_open, expected_sha256=_sha,
+                          structure_decl_dir=_plant(_sha))
             _msgs[_lbl] = "ADMITTED"
         except VerifierRefused as _e:
             _msgs[_lbl] = str(_e)
@@ -5275,7 +5322,8 @@ def selftest_pre_read() -> list:                              # noqa: C901
     for _lbl, _kw in (("wrong_pin", {"expected_sha256": "a" * 64}),
                       ("no_pin_at_all", {})):
         try:
-            load_day_book(str(_shaped), open_book=True, **_kw)
+            load_day_book(str(_shaped), open_book=True,
+                          structure_decl_dir=_fdecl, **_kw)
             _pin_msgs[_lbl] = "ADMITTED"
         except VerifierRefused as _e:
             _pin_msgs[_lbl] = str(_e).split(" -- ")[0].replace(
@@ -5294,14 +5342,58 @@ def selftest_pre_read() -> list:                              # noqa: C901
        len(_json_ok["rows"]) == 1
        and "TOP_LEVEL_NOT_THE_DECLARED_SHAPE" in _msgs["wrong_top_level"]
        and "NOT_A_MAPPING" in _msgs["not_a_mapping"]
-       and "STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK" in _msgs[
-           "declared_shape"]
+       and "AWAITS" not in _msgs["declared_shape"]
+       and "MAPPING_AWAITS" not in _msgs["declared_shape"]
        and "NOT_THIS_READER'S_JSON" in _msgs["light_path_on_a_pickle"]
        #: REV 71 2.3: and the PIN is checked BEFORE any of it.
        and _pin_msgs["wrong_pin"] == "BOOK_DIGEST_DOES_NOT_MATCH_ITS_RECEIPT"
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+    # -- DA 100: THE STRUCTURE GUARD, DRIVEN AT THE REAL DECLARATION ----
+    #: THE DIGESTS ARE READ FROM BE'S BUILDER RECEIPTS. No book is opened
+    #: and none is hashed: the guard takes a digest, which is the whole
+    #: point of putting it in front of the open.
+    def _book_sha_from_receipt(day):
+        q = _derived_dir() / f"be_daybook_receipt_{day}_btc.json"
+        if not q.is_file():
+            return None
+        return ((json.loads(q.read_text()).get("book") or {}).get("sha256"))
+    _sha03 = _book_sha_from_receipt("20260903")
+    _sha04 = _book_sha_from_receipt("20260904")
+    if _sha03 and _sha04:
+        _pos = structure_declaration_for_book(_sha03)
+        try:
+            structure_declaration_for_book(_sha04)
+            _neg = "ADMITTED"
+        except VerifierRefused as _e:
+            _neg = str(_e)
+        ck("DA 100 -- ***THE GUARD IS IN FRONT OF THE OPEN, AND IT IS "
+           "DRIVEN AT THE REAL DECLARATION.*** It used to run AFTER "
+           "`pickle.load`, so a book the declaration was never verified "
+           "against was ***UNPICKLED FIRST and refused afterwards*** -- "
+           "executing another seat's serialisation to discover that "
+           "nothing licensed reading it. It takes a DIGEST now. POSITIVE "
+           "CONTROL: the 09-03 digest, which "
+           "`be_daybook_structure_v2.json` names, PASSES. KNOWN-BAD: the "
+           "REAL 09-04 book's digest, read from BE's 09-04 builder "
+           "receipt, is REFUSED BY NAME -- naming the digest the "
+           "declaration was verified against AND the one offered -- "
+           "***and nothing was opened or even hashed to decide it***",
+           _pos["verified_against_digest"] == _sha03
+           and _pos["checked_before_any_open"] is True
+           and _neg.startswith(
+               "REFUSED: STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK")
+           and _sha03[:16] in _neg and _sha04[:16] in _neg,
+           f"09-03 digest -> admitted by {_pos['name']}; 09-04 digest -> "
+           f"{_neg.split(' -- ')[0].replace('REFUSED: ', '')}, naming both "
+           f"digests")
+    else:
+        ck("DA 100 STRUCTURE-GUARD CELL -- ***SKIPPED AND NAMED***: a "
+           "builder receipt is missing at this root, so the real digests "
+           "cannot be read", False,
+           f"09-03 receipt digest: {bool(_sha03)}; 09-04: {bool(_sha04)}")
+
     # -- DA 99: THE POPULATION RECOMPUTE, DRIVEN ON THE DECLARED SHAPE --
     _rcpt = {"decision_populations": {
         "ARM_A": {"head": "h_a", "theta": 0.5, "decisions": 2,
@@ -5689,7 +5781,8 @@ def selftest_pre_read() -> list:                              # noqa: C901
     _notpkl.write_bytes(b"this is not a pickle, it is a sentence.\n")
     _right = hashlib.sha256(_notpkl.read_bytes()).hexdigest()
     try:
-        load_day_book(str(_notpkl), open_book=True, expected_sha256=_right)
+        load_day_book(str(_notpkl), open_book=True, expected_sha256=_right,
+                      structure_decl_dir=_plant(_right))
         _np = "ADMITTED"
     except VerifierRefused as _e:
         _np = str(_e)
