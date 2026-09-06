@@ -1,0 +1,847 @@
+{
+  "as_of_utc": "2026-09-06T14:35:49Z",
+  "both_directions": true,
+  "chains": {
+    "be_assembly_budget_declaration": {
+      "heads": [
+        "be_assembly_budget_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_assembly_budget_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_cancel_axis_null_declaration": {
+      "heads": [
+        "be_cancel_axis_null_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_cancel_axis_null_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_candidate_identity": {
+      "heads": [
+        "be_candidate_identity_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_candidate_identity_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_ceiling_null_declaration": {
+      "heads": [
+        "be_ceiling_null_declaration_v1.json",
+        "be_ceiling_null_declaration_v2.json"
+      ],
+      "links": [],
+      "members": [
+        "be_ceiling_null_declaration_v1.json",
+        "be_ceiling_null_declaration_v2.json"
+      ],
+      "n_heads": 2,
+      "n_members": 2,
+      "status": "MULTIPLE_HEADS_UNLINKED",
+      "unlinked_or_broken": [
+        {
+          "file": "be_ceiling_null_declaration_v2.json",
+          "has": [
+            "path"
+          ],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        }
+      ],
+      "why": "a family with more than one head has no answer to 'which one should a pin name?' -- the versions exist and nothing links them"
+    },
+    "be_daybook_builder_declaration": {
+      "heads": [
+        "be_daybook_builder_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_daybook_builder_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_forward_arm_identity": {
+      "heads": [
+        "be_forward_arm_identity_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_forward_arm_identity_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_forward_family_declaration": {
+      "heads": [
+        "be_forward_family_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_forward_family_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_gate1_fragment_declaration": {
+      "heads": [
+        "be_gate1_fragment_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_gate1_fragment_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_interim_declaration": {
+      "heads": [
+        "be_interim_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_interim_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_operating_point_declaration": {
+      "heads": [
+        "be_operating_point_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_operating_point_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_operating_point_declaration_SENSITIVITY": {
+      "heads": [
+        "be_operating_point_declaration_SENSITIVITY_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_operating_point_declaration_SENSITIVITY_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_operating_point_verification": {
+      "heads": [
+        "be_operating_point_verification_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_operating_point_verification_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_q4_matched_random_null": {
+      "heads": [
+        "be_q4_matched_random_null_v1.json",
+        "be_q4_matched_random_null_v2.json"
+      ],
+      "links": [],
+      "members": [
+        "be_q4_matched_random_null_v1.json",
+        "be_q4_matched_random_null_v2.json"
+      ],
+      "n_heads": 2,
+      "n_members": 2,
+      "status": "MULTIPLE_HEADS_UNLINKED",
+      "unlinked_or_broken": [
+        {
+          "file": "be_q4_matched_random_null_v2.json",
+          "has": [
+            "path"
+          ],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        }
+      ],
+      "why": "a family with more than one head has no answer to 'which one should a pin name?' -- the versions exist and nothing links them"
+    },
+    "be_r_survey_declaration": {
+      "heads": [
+        "be_r_survey_declaration_v1.json",
+        "be_r_survey_declaration_v2.json",
+        "be_r_survey_declaration_v3.json"
+      ],
+      "links": [],
+      "members": [
+        "be_r_survey_declaration_v1.json",
+        "be_r_survey_declaration_v2.json",
+        "be_r_survey_declaration_v3.json"
+      ],
+      "n_heads": 3,
+      "n_members": 3,
+      "status": "MULTIPLE_HEADS_UNLINKED",
+      "unlinked_or_broken": [
+        {
+          "file": "be_r_survey_declaration_v2.json",
+          "has": [
+            "path"
+          ],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        },
+        {
+          "file": "be_r_survey_declaration_v3.json",
+          "has": [
+            "path"
+          ],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        }
+      ],
+      "why": "a family with more than one head has no answer to 'which one should a pin name?' -- the versions exist and nothing links them"
+    },
+    "be_race_read_declaration": {
+      "heads": [
+        "be_race_read_declaration_v1.json",
+        "be_race_read_declaration_v2.json",
+        "be_race_read_declaration_v3.json",
+        "be_race_read_declaration_v4.json"
+      ],
+      "links": [],
+      "members": [
+        "be_race_read_declaration_v1.json",
+        "be_race_read_declaration_v2.json",
+        "be_race_read_declaration_v3.json",
+        "be_race_read_declaration_v4.json"
+      ],
+      "n_heads": 4,
+      "n_members": 4,
+      "status": "MULTIPLE_HEADS_UNLINKED",
+      "unlinked_or_broken": [
+        {
+          "file": "be_race_read_declaration_v2.json",
+          "has": [],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        },
+        {
+          "file": "be_race_read_declaration_v3.json",
+          "has": [],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        },
+        {
+          "file": "be_race_read_declaration_v4.json",
+          "has": [
+            "sha256"
+          ],
+          "status": "SUPERSESSION_LINK_INCOMPLETE"
+        }
+      ],
+      "why": "a family with more than one head has no answer to 'which one should a pin name?' -- the versions exist and nothing links them"
+    },
+    "be_race_read_feed_pins": {
+      "heads": [
+        "be_race_read_feed_pins_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_race_read_feed_pins_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "be_read_declaration": {
+      "heads": [
+        "be_read_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "be_read_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "da_multiday_recompute_declaration": {
+      "heads": [
+        "da_multiday_recompute_declaration_v1.json"
+      ],
+      "links": [],
+      "members": [
+        "da_multiday_recompute_declaration_v1.json"
+      ],
+      "n_heads": 1,
+      "n_members": 1,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "de_multiday_gate1_params": {
+      "heads": [
+        "de_multiday_gate1_params_v14.json"
+      ],
+      "links": [
+        {
+          "from": "de_multiday_gate1_params_v2.json",
+          "to": "de_multiday_gate1_params_v1.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v3.json",
+          "to": "de_multiday_gate1_params_v2.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v4.json",
+          "to": "de_multiday_gate1_params_v3.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v5.json",
+          "to": "de_multiday_gate1_params_v4.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v6.json",
+          "to": "de_multiday_gate1_params_v5.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v7.json",
+          "to": "de_multiday_gate1_params_v6.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v8.json",
+          "to": "de_multiday_gate1_params_v7.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v9.json",
+          "to": "de_multiday_gate1_params_v8.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v10.json",
+          "to": "de_multiday_gate1_params_v9.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v11.json",
+          "to": "de_multiday_gate1_params_v10.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v12.json",
+          "to": "de_multiday_gate1_params_v11.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v13.json",
+          "to": "de_multiday_gate1_params_v12.json"
+        },
+        {
+          "from": "de_multiday_gate1_params_v14.json",
+          "to": "de_multiday_gate1_params_v13.json"
+        }
+      ],
+      "members": [
+        "de_multiday_gate1_params_v1.json",
+        "de_multiday_gate1_params_v2.json",
+        "de_multiday_gate1_params_v3.json",
+        "de_multiday_gate1_params_v4.json",
+        "de_multiday_gate1_params_v5.json",
+        "de_multiday_gate1_params_v6.json",
+        "de_multiday_gate1_params_v7.json",
+        "de_multiday_gate1_params_v8.json",
+        "de_multiday_gate1_params_v9.json",
+        "de_multiday_gate1_params_v10.json",
+        "de_multiday_gate1_params_v11.json",
+        "de_multiday_gate1_params_v12.json",
+        "de_multiday_gate1_params_v13.json",
+        "de_multiday_gate1_params_v14.json"
+      ],
+      "n_heads": 1,
+      "n_members": 14,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    },
+    "heavy_run_form": {
+      "heads": [
+        "heavy_run_form_v3.json"
+      ],
+      "links": [
+        {
+          "from": "heavy_run_form_v2.json",
+          "to": "heavy_run_form_v1.json"
+        },
+        {
+          "from": "heavy_run_form_v3.json",
+          "to": "heavy_run_form_v2.json"
+        }
+      ],
+      "members": [
+        "heavy_run_form_v1.json",
+        "heavy_run_form_v2.json",
+        "heavy_run_form_v3.json"
+      ],
+      "n_heads": 1,
+      "n_members": 3,
+      "status": "ONE_HEAD",
+      "unlinked_or_broken": [],
+      "why": "one head: every other member is superseded by a PAIR-VERIFIED link"
+    }
+  },
+  "checks": [
+    {
+      "check": "THE CHAIN RESOLVES TO EXACTLY ONE HEAD, pair-verified: v1 <- v2 <- v3 leaves v3 as the only member nothing supersedes",
+      "detail": "3 members -> head ['x_declaration_v3.json']",
+      "pass": true
+    },
+    {
+      "check": "KNOWN-BAD: A LITERAL NAMING v2 WHILE v3 IS THE HEAD IS REFUSED BY NAME, with the head it should have named. ***This is the shape found three times in one day -- a module reading bars nobody is running under, with the superseding version right beside it on disk***",
+      "detail": "live/pm_research/pins_v2.py:1 names x_declaration_v2.json, head is x_declaration_v3.json",
+      "pass": true
+    },
+    {
+      "check": "AND THE SAME MODULE PINNING THE HEAD ADMITS -- the census answers about the PIN, not about the module",
+      "detail": "1 literal(s), 0 naming a non-head",
+      "pass": true
+    },
+    {
+      "check": "R-657 -- A LITERAL NAMING A NON-HEAD IS ADMISSIBLE ONLY WHERE THE CODE MARKS IT, and the census READS the marker. ***Two of this census's first hits were not pins at all: a runner's `SUPERSEDED_PARAMS_REL` names the superseded file ON PURPOSE (it IS the guard) and a `_bad_pin` is a known-bad -- a census that cannot tell a PIN from a GUARD reports the guard as the defect it exists to prevent.*** An IDENTIFIER carrying `superseded` as a `_`-token MARKS and is admitted with its reason; a function named `known_bad_*` marks a literal inside it; and the SAME literal in a plainly-named function is REFUSED",
+      "detail": "marked: [('x_declaration_v2.json', 'IDENTIFIER'), ('x_declaration_v1.json', 'FUNCTION')]; refused: [('plain_pin', 'x_declaration_v2.json')]",
+      "pass": true
+    },
+    {
+      "check": "AND A MARKER ON A **HEAD** LITERAL IS ADMITTED AND **NOTED**: the marker EXPLAINS a deliberate non-head, it does not GRANT one, so the census reports it rather than treating the word as a licence",
+      "detail": "the rule is stated in the receipt as a marker on a HEAD literal is admitted and NOTED; the marker explains a deliberate non-hea\u2026",
+      "pass": true
+    },
+    {
+      "check": "KNOWN-BAD: TWO HEADS IN ONE FAMILY REFUSE -- an unlinked v4 beside the chained v3 leaves no answer to 'which one should a pin name?', and a census that picked the highest number would be inventing the link the seat did not write",
+      "detail": "heads ['x_declaration_v3.json', 'x_declaration_v4.json']",
+      "pass": true
+    },
+    {
+      "check": "AND A HALF-WRITTEN LINK IS NOT A LINK (R-608): a `supersedes` carrying only a path leaves BOTH versions as heads and is reported as SUPERSESSION_LINK_INCOMPLETE, never silently followed",
+      "detail": "y_declaration heads ['y_declaration_v1.json', 'y_declaration_v2.json'], broken ['SUPERSESSION_LINK_INCOMPLETE']",
+      "pass": true
+    }
+  ],
+  "decides_nothing": "each literal belongs to the seat that wrote it; this census names them",
+  "declarations_dir": "/home/yuqing/ctaNew/live/pm_research/declarations",
+  "families_without_exactly_one_head": {
+    "be_ceiling_null_declaration": {
+      "heads": [
+        "be_ceiling_null_declaration_v1.json",
+        "be_ceiling_null_declaration_v2.json"
+      ],
+      "status": "MULTIPLE_HEADS_UNLINKED"
+    },
+    "be_q4_matched_random_null": {
+      "heads": [
+        "be_q4_matched_random_null_v1.json",
+        "be_q4_matched_random_null_v2.json"
+      ],
+      "status": "MULTIPLE_HEADS_UNLINKED"
+    },
+    "be_r_survey_declaration": {
+      "heads": [
+        "be_r_survey_declaration_v1.json",
+        "be_r_survey_declaration_v2.json",
+        "be_r_survey_declaration_v3.json"
+      ],
+      "status": "MULTIPLE_HEADS_UNLINKED"
+    },
+    "be_race_read_declaration": {
+      "heads": [
+        "be_race_read_declaration_v1.json",
+        "be_race_read_declaration_v2.json",
+        "be_race_read_declaration_v3.json",
+        "be_race_read_declaration_v4.json"
+      ],
+      "status": "MULTIPLE_HEADS_UNLINKED"
+    }
+  },
+  "infrastructure_not_a_statistic": "this reads FILENAMES and the seats' own `supersedes` links; it re-derives no seat's number (R-235)",
+  "literal_census": {
+    "literals": [
+      {
+        "assigned_to": "SUPERSEDES",
+        "family": "p002_e2_0_declaration",
+        "file": "live/mm_research/e2_0_declare.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 67,
+        "marker": null,
+        "names": "p002_e2_0_declaration_v1.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "p002_e2_0_declaration",
+        "file": "live/mm_research/e2_0_true_mid.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 1,
+        "marker": null,
+        "names": "p002_e2_0_declaration_v1.json"
+      },
+      {
+        "assigned_to": "SUPERSEDES",
+        "family": "p002_e2_a_declaration",
+        "file": "live/mm_research/e2_a_declare.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 67,
+        "marker": null,
+        "names": "p002_e2_a_declaration_v6.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "p002_e2_0_declaration",
+        "file": "live/mm_research/e2_a_declare.py",
+        "head": null,
+        "in_function": "declaration",
+        "is_head": null,
+        "line": 1115,
+        "marker": null,
+        "names": "p002_e2_0_declaration_v2.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "p002_e2_a_declaration",
+        "file": "live/mm_research/e2_a_runner.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 1,
+        "marker": null,
+        "names": "p002_e2_a_declaration_v7.json"
+      },
+      {
+        "assigned_to": "DECLARATION",
+        "family": "be_cancel_axis_null_declaration",
+        "file": "live/pm_research/be_cancel_axis_null.py",
+        "head": "be_cancel_axis_null_declaration_v1.json",
+        "in_function": null,
+        "is_head": true,
+        "line": 89,
+        "marker": null,
+        "names": "be_cancel_axis_null_declaration_v1.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "be_ceiling_null_declaration",
+        "file": "live/pm_research/be_ceiling_null.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 1,
+        "marker": null,
+        "names": "be_ceiling_null_declaration_v1.json"
+      },
+      {
+        "assigned_to": "DECLARATION",
+        "family": "be_ceiling_null_declaration",
+        "file": "live/pm_research/be_ceiling_null.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 102,
+        "marker": null,
+        "names": "be_ceiling_null_declaration_v2.json"
+      },
+      {
+        "assigned_to": "DECLARATION_V1",
+        "family": "be_ceiling_null_declaration",
+        "file": "live/pm_research/be_ceiling_null.py",
+        "head": null,
+        "in_function": null,
+        "is_head": null,
+        "line": 103,
+        "marker": null,
+        "names": "be_ceiling_null_declaration_v1.json"
+      },
+      {
+        "assigned_to": "OPEN_FACTORS",
+        "family": "be_operating_point_declaration_SENSITIVITY",
+        "file": "live/pm_research/be_forward_family.py",
+        "head": "be_operating_point_declaration_SENSITIVITY_v1.json",
+        "in_function": null,
+        "is_head": true,
+        "line": 92,
+        "marker": null,
+        "names": "be_operating_point_declaration_SENSITIVITY_v1.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "be_race_read_declaration",
+        "file": "live/pm_research/be_race_read_declaration.py",
+        "head": null,
+        "in_function": "build",
+        "is_head": null,
+        "line": 366,
+        "marker": null,
+        "names": "be_race_read_declaration_v1.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "be_interim_declaration",
+        "file": "live/pm_research/be_race_read_declaration_v3.py",
+        "head": "be_interim_declaration_v1.json",
+        "in_function": "interim_evidence",
+        "is_head": true,
+        "line": 111,
+        "marker": null,
+        "names": "be_interim_declaration_v1.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 343,
+        "marker": null,
+        "names": "x_declaration_v2.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 367,
+        "marker": null,
+        "names": "x_declaration_v3.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 382,
+        "marker": null,
+        "names": "x_declaration_v2.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 382,
+        "marker": null,
+        "names": "x_declaration_v3.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 382,
+        "marker": null,
+        "names": "x_declaration_v1.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 382,
+        "marker": null,
+        "names": "x_declaration_v2.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "x_declaration",
+        "file": "live/pm_research/da_nonhead_census.py",
+        "head": null,
+        "in_function": "selftest",
+        "is_head": null,
+        "line": 420,
+        "marker": null,
+        "names": "x_declaration_v3.json"
+      },
+      {
+        "assigned_to": null,
+        "family": "be_race_read_feed_pins",
+        "file": "live/pm_research/da_race_read_verify.py",
+        "head": "be_race_read_feed_pins_v1.json",
+        "in_function": null,
+        "is_head": true,
+        "line": 1,
+        "marker": null,
+        "names": "be_race_read_feed_pins_v1.json"
+      },
+      {
+        "assigned_to": "PARAMS_REL",
+        "family": "de_multiday_gate1_params",
+        "file": "live/pm_research/de_multiday_design_declaration.py",
+        "head": "de_multiday_gate1_params_v14.json",
+        "in_function": null,
+        "is_head": true,
+        "line": 567,
+        "marker": null,
+        "names": "de_multiday_gate1_params_v14.json"
+      },
+      {
+        "assigned_to": "_bad_pin",
+        "family": "de_multiday_gate1_params",
+        "file": "live/pm_research/de_multiday_design_declaration.py",
+        "head": "de_multiday_gate1_params_v14.json",
+        "in_function": "selftest",
+        "is_head": false,
+        "line": 3362,
+        "marker": {
+          "identifier": "_bad_pin",
+          "kind": "IDENTIFIER",
+          "word": "bad"
+        },
+        "names": "de_multiday_gate1_params_v2.json",
+        "status": "MARKED_ADMITTED"
+      },
+      {
+        "assigned_to": "PARAMS_REL",
+        "family": "de_multiday_gate1_params",
+        "file": "live/pm_research/de_multiday_gate1_runner.py",
+        "head": "de_multiday_gate1_params_v14.json",
+        "in_function": null,
+        "is_head": true,
+        "line": 57,
+        "marker": null,
+        "names": "de_multiday_gate1_params_v14.json"
+      },
+      {
+        "assigned_to": "SUPERSEDED_PARAMS_REL",
+        "family": "de_multiday_gate1_params",
+        "file": "live/pm_research/de_multiday_gate1_runner.py",
+        "head": "de_multiday_gate1_params_v14.json",
+        "in_function": null,
+        "is_head": false,
+        "line": 58,
+        "marker": {
+          "identifier": "SUPERSEDED_PARAMS_REL",
+          "kind": "IDENTIFIER",
+          "word": "superseded"
+        },
+        "names": "de_multiday_gate1_params_v13.json",
+        "status": "MARKED_ADMITTED"
+      },
+      {
+        "assigned_to": null,
+        "family": "be_daybook_builder_declaration",
+        "file": "live/pm_research/de_multiday_gate1_runner.py",
+        "head": "be_daybook_builder_declaration_v1.json",
+        "in_function": "synthetic_day_book",
+        "is_head": true,
+        "line": 5035,
+        "marker": null,
+        "names": "be_daybook_builder_declaration_v1.json"
+      }
+    ],
+    "marked": [
+      {
+        "assigned_to": "_bad_pin",
+        "family": "de_multiday_gate1_params",
+        "file": "live/pm_research/de_multiday_design_declaration.py",
+        "head": "de_multiday_gate1_params_v14.json",
+        "in_function": "selftest",
+        "is_head": false,
+        "line": 3362,
+        "marker": {
+          "identifier": "_bad_pin",
+          "kind": "IDENTIFIER",
+          "word": "bad"
+        },
+        "names": "de_multiday_gate1_params_v2.json",
+        "status": "MARKED_ADMITTED"
+      },
+      {
+        "assigned_to": "SUPERSEDED_PARAMS_REL",
+        "family": "de_multiday_gate1_params",
+        "file": "live/pm_research/de_multiday_gate1_runner.py",
+        "head": "de_multiday_gate1_params_v14.json",
+        "in_function": null,
+        "is_head": false,
+        "line": 58,
+        "marker": {
+          "identifier": "SUPERSEDED_PARAMS_REL",
+          "kind": "IDENTIFIER",
+          "word": "superseded"
+        },
+        "names": "de_multiday_gate1_params_v13.json",
+        "status": "MARKED_ADMITTED"
+      }
+    ],
+    "n_literals": 25,
+    "n_marked": 2,
+    "n_naming_a_non_head": 2,
+    "n_refused": 0,
+    "naming_a_non_head": [],
+    "the_marker_rule": {
+      "a_marker_is_not_a_licence": "a marker on a HEAD literal is admitted and NOTED; the marker explains a deliberate non-head, it does not grant one",
+      "allowlist": "declarations/<seat>_nonhead_allowlist_v*.json, owned by the seat, one reason per entry",
+      "function_names": "containing `known_bad` or `falsif`",
+      "identifier_words": [
+        "superseded",
+        "known_bad",
+        "bad",
+        "falsifier"
+      ],
+      "matched": "on `_`-separated TOKENS of the assigned identifier, never as a substring: `SUPERSEDED_PARAMS_REL` marks, `PARAMS_REL` does not"
+    },
+    "verdict": "EVERY_LITERAL_NAMES_ITS_CHAIN_HEAD_OR_IS_MARKED",
+    "why": "a pin that names a superseded declaration reads bars nobody is running under -- and the superseding version is right beside it on disk"
+  },
+  "n_checks": 7,
+  "n_failed": 0,
+  "n_families": 20,
+  "n_families_without_exactly_one_head": 4,
+  "protocol": "P003_DA_NONHEAD_CENSUS_V1",
+  "root": "/home/yuqing/ctaNew"
+}
