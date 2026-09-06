@@ -569,7 +569,30 @@ BOOK_REQUIRED_KEYS = ("rows", "scores_by_arm")
 PICKLE_BOOK_TOP_LEVEL = ("asm", "fr")
 
 
-def load_day_book(path: str, *, open_book: bool = False) -> dict:
+#: REV 71 2.3. `pickle.load` EXECUTES THE PAYLOAD'S OPCODES; a shape check
+#: that runs after it has already run on whatever the bytes said to run.
+#: "Validated after loading" is not safety, so the ORDER is part of the
+#: contract and it is stated in the record:
+#:   1. the book's bytes are DIGEST-PINNED to BE's receipt BEFORE the open,
+#:      and a mismatch REFUSES WITHOUT OPENING;
+#:   2. the open happens only under the heavy lock and the 8 GiB cap, in
+#:      the service form (rule 20);
+#:   3. the record says the reader EXECUTED ANOTHER SEAT'S SERIALISATION
+#:      and what that means.
+PICKLE_ORDER = (
+    "digest-pinned to BE's receipt BEFORE the open (a mismatch refuses "
+    "without opening); the open only under the heavy lock and the 8 GiB "
+    "cap in the service form; and the record states that this reader "
+    "EXECUTED another seat's serialisation")
+PICKLE_EXECUTION_NOTE = (
+    "`pickle.load` runs the opcodes in the file: opening a book is "
+    "EXECUTING BYTES ANOTHER SEAT WROTE, and no check that runs afterwards "
+    "can undo it. The only control before that point is the DIGEST, which "
+    "is why it is pinned first and why a mismatch never reaches the open")
+
+
+def load_day_book(path: str, *, open_book: bool = False,
+                  expected_sha256: str | None = None) -> dict:
     """The day book, through an ADAPTER that refuses what it cannot read.
 
     This verifier consumes rows plus PER-ARM scores. It does NOT re-score
@@ -582,12 +605,29 @@ def load_day_book(path: str, *, open_book: bool = False) -> dict:
     if not p.is_file():
         raise VerifierRefused(f"REFUSED: day book absent at {path}")
     if p.suffix == ".pkl" and open_book:
+        #: (1) THE PIN COMES FIRST, AND A MISMATCH NEVER REACHES THE OPEN.
+        if not expected_sha256:
+            raise VerifierRefused(
+                f"REFUSED: NO_PIN_NO_OPEN -- {p.name} would be unpickled "
+                f"with no digest to pin it to. {PICKLE_EXECUTION_NOTE}")
+        h = hashlib.sha256()
+        with p.open("rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 20), b""):
+                h.update(chunk)
+        actual = h.hexdigest()
+        if actual != expected_sha256:
+            raise VerifierRefused(
+                f"REFUSED: BOOK_DIGEST_DOES_NOT_MATCH_ITS_RECEIPT -- "
+                f"{p.name} hashes to {actual[:16]}… and the receipt names "
+                f"{expected_sha256[:16]}…. NOTHING WAS OPENED: "
+                f"{PICKLE_EXECUTION_NOTE}")
         #: THE HEAVY PATH DA 91 WILL RUN, under the wrapper and the lock.
         #: R-654: the recompute needs BE's DECLARATION of the book's
         #: structure (`asm.by_arm`, `fr`), which BE 65 ships as a
         #: declaration and not as prose. Until it lands this refuses on the
         #: SHAPE -- and a pickle whose top level is not the declared one is
         #: refused BY NAME rather than mapped by inference.
+        #: (2) only here, and only under the wrapper the caller holds.
         import pickle                                         # noqa: PLC0415
         with p.open("rb") as fh:
             obj = pickle.load(fh)
@@ -2625,7 +2665,8 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: census and the landing record -- needs no book CONTENTS at all.
     book_refusal = None
     try:
-        bk = load_day_book(book_path, open_book=open_book)
+        bk = load_day_book(book_path, open_book=open_book,
+                           expected_sha256=r_sha)
         rows = bk["rows"]
     except VerifierRefused as e:
         if open_book:
@@ -2801,6 +2842,18 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             "alone emit it"),
         "book": book_meta,
         "population_recomputed_from_the_book": (book_refusal is None),
+        "the_open_book_contract": {
+            "order": PICKLE_ORDER,
+            "what_opening_a_book_is": PICKLE_EXECUTION_NOTE,
+            "book_was_opened": bool(open_book and not book_refusal),
+            "digest_pinned_to": ("the receipt's own book digest, verified "
+                                 "before any open"),
+            "rule_20": ("the heavy lock and the 8 GiB cap, in the service "
+                        "form -- this run did not open a book"
+                        if not open_book else
+                        "the heavy lock and the 8 GiB cap, in the service "
+                        "form"),
+        },
         "why_the_population_was_not_recomputed": book_refusal,
         "n_arms_with_a_recomputed_population": len(arms_out),
         "builder_receipt": builder,

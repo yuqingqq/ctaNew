@@ -41,7 +41,12 @@ if str(HERE) not in sys.path:
 
 PROTOCOL = "P003_DA_NONHEAD_CENSUS_V1"
 DECL_RE = re.compile(r"declarations/([A-Za-z0-9_\-]+?)_v(\d+)\.json$")
-LITERAL_RE = re.compile(r"declarations/[A-Za-z0-9_\-]+_v\d+\.json")
+#: BOTH FORMS: `declarations/<family>_vN.json` AND a bare
+#: `<family>_vN.json`. The reviewer's regex saw the bare ones too, and a
+#: census that could not see them could not DISPOSE of them -- the gates
+#: below are what disposes of them, not the pattern.
+LITERAL_RE = re.compile(
+    r"(?:declarations/)?[A-Za-z0-9_\-]+_v\d+\.json")
 
 
 def _root() -> Path:
@@ -207,6 +212,101 @@ def _allowlist(decl_dir: Path) -> dict:
     return out
 
 
+#: REV 71 4.3. THE FIRST GATE IS DATAFLOW, NOT TEXT. A regex over source
+#: text cannot tell a stale PIN from a supersession CHAIN, a KNOWN-BAD or
+#: PROSE -- the reviewer's naive version found ELEVEN pairs and most were
+#: false. A literal is a PIN only when it FLOWS INTO A FILE OPEN: an
+#: argument of `Path(...)` / `open` / `read_text` / `read_bytes` /
+#: `json.load(open(...))`, directly or through ONE assignment. Everything
+#: else -- a chain entry, a fixture's version that must not exist, a
+#: comment -- is not a pin and is not reported as one. The marker rule
+#: (R-657) is the SECOND gate, for literals that survive this one.
+OPEN_FUNCS = ("open", "read_text", "read_bytes", "load", "loads",
+              "read_json", "is_file", "exists")
+OPEN_CTORS = ("Path", "PosixPath")
+FIXTURE_CALLS = ("refuses", "raises")
+
+
+def _flows_into_an_open(node, parents, assigned_uses) -> dict:
+    """Does this literal reach a file open? DIRECT, or via ONE assignment."""
+    #: THE FIXTURE ANCESTRY IS CHECKED FIRST. Walking up and stopping at
+    #: the FIRST open found `Path(...)` INSIDE `refuses(lambda: ...)` and
+    #: called it a pin -- the exclusion never fired, because the open is
+    #: always nearer to the literal than the fixture that wraps it.
+    chain_up, cur, depth = [], parents.get(node), 0
+    while cur is not None and depth < 12:
+        depth += 1
+        chain_up.append(cur)
+        if isinstance(cur, (ast.FunctionDef, ast.AsyncFunctionDef,
+                            ast.Module)):
+            break
+        cur = parents.get(cur)
+    for anc in chain_up:
+        if isinstance(anc, ast.Call):
+            f = anc.func
+            name = (f.id if isinstance(f, ast.Name)
+                    else f.attr if isinstance(f, ast.Attribute) else "")
+            if name in FIXTURE_CALLS:
+                return {"flows": False,
+                        "how": f"inside a {name}() fixture -- excluded by "
+                               f"construction"}
+    for anc in chain_up:
+        if isinstance(anc, ast.Call):
+            f = anc.func
+            name = (f.id if isinstance(f, ast.Name)
+                    else f.attr if isinstance(f, ast.Attribute) else "")
+            if name in OPEN_CTORS or name in OPEN_FUNCS:
+                return {"flows": True, "how": f"DIRECT argument of {name}()"}
+    ident = _assigned_name(node, parents)
+    if ident and ident in assigned_uses:
+        return {"flows": True,
+                "how": f"through ONE assignment: `{ident}` is used at "
+                       f"{assigned_uses[ident]}"}
+    return {"flows": False, "how": ("the literal reaches no file open -- "
+                                    "not a pin")}
+
+
+def _names_used_in_opens(tree, parents) -> dict:
+    """identifier -> where it is used as a path in an open."""
+    out = {}
+    for n in ast.walk(tree):
+        if not isinstance(n, ast.Call):
+            continue
+        f = n.func
+        name = (f.id if isinstance(f, ast.Name)
+                else f.attr if isinstance(f, ast.Attribute) else "")
+        cands = list(n.args)
+        if isinstance(f, ast.Attribute) and name in OPEN_FUNCS:
+            cands.append(f.value)
+        if name not in OPEN_CTORS and name not in OPEN_FUNCS:
+            continue
+        for a in cands:
+            for sub in ast.walk(a):
+                if isinstance(sub, ast.Name):
+                    out.setdefault(sub.id, f"line {n.lineno} ({name})")
+    return out
+
+
+def _inside_a_supersession_field(node, parents) -> bool:
+    """A chain entry is not a pin: a `supersedes` block NAMES the file it
+    replaces on purpose, and every declaration in a chain names its
+    predecessor."""
+    cur, depth = parents.get(node), 0
+    while cur is not None and depth < 8:
+        depth += 1
+        if isinstance(cur, ast.Dict):
+            for k in cur.keys:
+                if isinstance(k, ast.Constant) and isinstance(k.value, str) \
+                        and k.value in ("supersedes", "chain",
+                                        "superseded_by", "v1_untouched"):
+                    return True
+        if isinstance(cur, (ast.FunctionDef, ast.AsyncFunctionDef,
+                            ast.Module)):
+            break
+        cur = parents.get(cur)
+    return False
+
+
 def literal_census(root: Path, chains: dict) -> dict:
     """Every `declarations/..._vN.json` literal in `live/`, judged."""
     head_of = {}
@@ -214,7 +314,7 @@ def literal_census(root: Path, chains: dict) -> dict:
         if blk["n_heads"] == 1:
             head_of[fam] = blk["heads"][0]
     allow = _allowlist(root / "live/pm_research/declarations")
-    rows, refused, marked = [], [], []
+    rows, refused, marked, not_pins = [], [], [], []
     for py in sorted((root / "live").rglob("*.py")):
         try:
             src = py.read_text()
@@ -226,6 +326,7 @@ def literal_census(root: Path, chains: dict) -> dict:
             for c in ast.iter_child_nodes(nd):
                 parents[c] = nd
         seat = py.stem.split("_")[0]
+        opens = _names_used_in_opens(tree, parents)
         for n in ast.walk(tree):
             if not (isinstance(n, ast.Constant)
                     and isinstance(n.value, str)):
@@ -236,6 +337,10 @@ def literal_census(root: Path, chains: dict) -> dict:
                 head = head_of.get(fam)
                 ident = _assigned_name(n, parents)
                 fn = _enclosing_fn(n, parents)
+                #: GATE ONE: dataflow. A literal that reaches no file open
+                #: is not a pin and is not reported as one.
+                flow = _flows_into_an_open(n, parents, opens)
+                in_chain = _inside_a_supersession_field(n, parents)
                 mk_id = _identifier_marks(ident or "")
                 mk_fn = bool(fn and FUNCTION_MARKER_RE.search(fn))
                 al = allow.get((seat, named))
@@ -247,9 +352,25 @@ def literal_census(root: Path, chains: dict) -> dict:
                        "names": named, "family": fam, "head": head,
                        "is_head": (None if head is None else named == head),
                        "assigned_to": ident, "in_function": fn,
+                       "flows_into_an_open": flow["flows"],
+                       "flow": flow["how"],
+                       "inside_a_supersession_field": in_chain,
                        "marker": marker}
                 rows.append(row)
-                if row["is_head"] is False:
+                if not flow["flows"] or in_chain:
+                    #: BOTH FACTS, not one: the dataflow gate says it is
+                    #: not a pin, and where the code ALSO marks it the
+                    #: marker is reported -- the guard is visible as a
+                    #: guard, which is what R-657 asked the census to see.
+                    row["status"] = (
+                        "NOT_A_PIN__IN_A_SUPERSESSION_FIELD" if in_chain
+                        else "MARKED_AND_NOT_A_PIN" if (
+                            marker and row["is_head"] is False)
+                        else "NOT_A_PIN__NO_OPEN")
+                    if row["status"] == "MARKED_AND_NOT_A_PIN":
+                        marked.append(row)
+                    not_pins.append(row)
+                elif row["is_head"] is False:
                     if marker:
                         row["status"] = "MARKED_ADMITTED"
                         marked.append(row)
@@ -261,6 +382,14 @@ def literal_census(root: Path, chains: dict) -> dict:
                     marked.append(row)
     non_heads = refused
     return {"n_literals": len(rows), "literals": rows,
+            "n_not_pins": len(not_pins), "not_pins": not_pins,
+            "n_pins": len(rows) - len(not_pins),
+            "the_first_gate_is_dataflow": (
+                "a literal is a PIN only when it FLOWS INTO A FILE OPEN -- "
+                "`Path()`/`open`/`read_text`/`read_bytes`/`json.load`, "
+                "directly or through ONE assignment. A supersession chain "
+                "entry and a `refuses(...)` fixture are excluded BY "
+                "CONSTRUCTION. The marker rule (R-657) is the SECOND gate"),
             "n_naming_a_non_head": len(refused) + len(
                 [r for r in marked if r["is_head"] is False]),
             "n_refused": len(refused), "naming_a_non_head": refused,
@@ -339,9 +468,14 @@ def selftest() -> tuple:
     v3 = d / "x_declaration_v3.json"
     v3.write_text(json.dumps({"v": 3, "supersedes": {"path": v2.name,
                                                      "sha256": v2sha}}))
+    #: REV 71 4.3: A LITERAL IS A PIN ONLY WHERE IT FLOWS INTO AN OPEN, so
+    #: the fixture's module must actually OPEN what it names -- a bare
+    #: assignment is no longer a pin, which is the whole point.
     mod = tmp / "live" / "pm_research" / "pins_v2.py"
-    mod.write_text('PIN = "live/pm_research/declarations/'
-                   'x_declaration_v2.json"\n')
+    mod.write_text('from pathlib import Path\n'
+                   'PIN = "live/pm_research/declarations/'
+                   'x_declaration_v2.json"\n'
+                   'DATA = Path(PIN).read_text()\n')
     ch = declaration_chains(d)
     lc = literal_census(tmp, ch)
     ck("THE CHAIN RESOLVES TO EXACTLY ONE HEAD, pair-verified: v1 <- v2 <- "
@@ -364,8 +498,10 @@ def selftest() -> tuple:
        f"{lc['naming_a_non_head'][0]['file']}:"
        f"{lc['naming_a_non_head'][0]['line']} names {v2.name}, head is "
        f"{v3.name}")
-    mod.write_text('PIN = "live/pm_research/declarations/'
-                   'x_declaration_v3.json"\n')
+    mod.write_text('from pathlib import Path\n'
+                   'PIN = "live/pm_research/declarations/'
+                   'x_declaration_v3.json"\n'
+                   'DATA = Path(PIN).read_text()\n')
     lc2 = literal_census(tmp, declaration_chains(d))
     ck("AND THE SAME MODULE PINNING THE HEAD ADMITS -- the census answers "
        "about the PIN, not about the module",
@@ -379,14 +515,19 @@ def selftest() -> tuple:
        f"naming a non-head")
     # -- R-657: THE MARKER RULE, all three directions ---------------------
     mod.write_text(
+        'from pathlib import Path\n'
         'SUPERSEDED_PIN = "live/pm_research/declarations/'
         'x_declaration_v2.json"\n'
         'CURRENT_PIN = "live/pm_research/declarations/'
         'x_declaration_v3.json"\n'
+        'A = Path(SUPERSEDED_PIN).read_text()\n'
+        'B = Path(CURRENT_PIN).read_text()\n'
         '\n\ndef known_bad_case():\n'
-        '    return "live/pm_research/declarations/x_declaration_v1.json"\n'
+        '    return Path("live/pm_research/declarations/'
+        'x_declaration_v1.json").read_text()\n'
         '\n\ndef plain_pin():\n'
-        '    return "live/pm_research/declarations/x_declaration_v2.json"\n')
+        '    return Path("live/pm_research/declarations/'
+        'x_declaration_v2.json").read_text()\n')
     ch_m = declaration_chains(d)
     lm = literal_census(tmp, ch_m)
     _by = {(r["line"], r["names"]): r for r in lm["literals"]}
@@ -408,7 +549,8 @@ def selftest() -> tuple:
                for r in lm["marked"])
        and lm["n_refused"] == 1
        and lm["naming_a_non_head"][0]["names"] == "x_declaration_v2.json"
-       and lm["naming_a_non_head"][0]["in_function"] == "plain_pin",
+       and lm["naming_a_non_head"][0]["in_function"] == "plain_pin"
+       and lm["naming_a_non_head"][0]["flows_into_an_open"] is True,
        f"marked: {[(r['names'], r['marker']['kind']) for r in lm['marked']]}; "
        f"refused: {[(r['in_function'], r['names']) for r in lm['naming_a_non_head']]}")
     ck("AND A MARKER ON A **HEAD** LITERAL IS ADMITTED AND **NOTED**: the "
@@ -419,6 +561,47 @@ def selftest() -> tuple:
        f"{lm['the_marker_rule']['a_marker_is_not_a_licence'][:90]}…")
     mod.write_text('PIN = "live/pm_research/declarations/'
                    'x_declaration_v3.json"\n')
+
+    # -- REV 71 4.3: THE DATAFLOW GATE, on the shapes the reviewer's -----
+    # -- naive regex could not tell apart --------------------------------
+    noise = tmp / "live" / "pm_research" / "noise_shapes.py"
+    noise.write_text(
+        'from pathlib import Path\n'
+        '#: a COMMENT naming live/pm_research/declarations/'
+        'x_declaration_v1.json\n'
+        'PROSE = "see x_declaration_v1.json for the old bars"\n'
+        'CHAIN = {"supersedes": {"path": "x_declaration_v2.json",\n'
+        '                        "sha256": "0" * 64}}\n'
+        'DEAD = "live/pm_research/declarations/x_declaration_v1.json"\n'
+        '\n\ndef falsifier():\n'
+        '    return refuses(lambda: Path("x_declaration_v999.json"'
+        ').read_text())\n'
+        '\n\ndef real_pin():\n'
+        '    return Path("live/pm_research/declarations/'
+        'x_declaration_v3.json").read_text()\n')
+    lnoise = literal_census(tmp, declaration_chains(d))
+    _rows = {(Path(r["file"]).name, r["line"]): r
+             for r in lnoise["literals"]}
+    _noise = [r for r in lnoise["literals"]
+              if Path(r["file"]).name == "noise_shapes.py"]
+    _pins = [r for r in _noise if r["flows_into_an_open"]
+             and not r["inside_a_supersession_field"]]
+    ck("REV 71 4.3 -- THE FIRST GATE IS DATAFLOW, and it disposes of the "
+       "shapes a regex cannot tell apart. ***The reviewer's naive version "
+       "found ELEVEN pairs and most were false: a `params_v999` known-bad, "
+       "a declaration module naming its OWN chain, a dead constant, "
+       "comments.*** Driven on all of them at once: PROSE, a `supersedes` "
+       "chain entry, a DEAD constant and a `refuses(...)` fixture are all "
+       "NOT PINS -- only the literal that actually reaches "
+       "`Path(...).read_text()` is",
+       len(_pins) == 1
+       and _pins[0]["names"] == "x_declaration_v3.json"
+       and _pins[0]["in_function"] == "real_pin"
+       and any(r["inside_a_supersession_field"] for r in _noise)
+       and any(r["status"] == "NOT_A_PIN__NO_OPEN" for r in _noise),
+       f"{len(_noise)} literals in the noise module -> {len(_pins)} pin: "
+       f"{_pins[0]['names']} in {_pins[0]['in_function']}; the rest are "
+       f"{sorted({r['status'] for r in _noise if r is not _pins[0]})}")
 
     orphan = d / "x_declaration_v4.json"
     orphan.write_text(json.dumps({"v": 4}))

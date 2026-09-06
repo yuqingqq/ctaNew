@@ -445,7 +445,25 @@ def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
     #: QUERY THIS FUNCTION BUILDS: both field names must be present, which
     #: makes the `+` disjunction unloseable, and no count can substitute
     #: for it.
+    #: REV 71 2.2: SET EQUALITY, NOT CONTAINMENT. A superset -- say
+    #: `(A, B, "_PID")` -- satisfied "both names present" and the query
+    #: this function builds became a THREE-WAY OR, pulling unrelated lines
+    #: into a copy marked COPIED and LARGER THAN THE RUN. A guard that
+    #: cannot be short-circuited can still be padded.
     missing = [f for f in INVOCATION_FIELDS if f not in tuple(fields)]
+    extra = [f for f in tuple(fields) if f not in INVOCATION_FIELDS]
+    if extra:
+        return {"unit": unit, "status": "REFUSED_EXTRA_FIELDS_IN_THE_QUERY",
+                "fields": list(fields), "extra_fields": extra,
+                "required_fields": list(INVOCATION_FIELDS),
+                "read_at_utc": read_at, "lines": None,
+                "n_lines_copied": None, "n_lines_for_the_unit": None,
+                "why": ("the query is a DISJUNCTION: every extra field "
+                        f"widens it. {extra} would pull lines this run did "
+                        "not write into a copy marked COPIED and LARGER "
+                        "than the run -- the field set is compared for "
+                        "EQUALITY, and an extra is as wrong as a missing "
+                        "one")}
     if missing:
         return {"unit": unit, "status": "REFUSED_INCOMPLETE_FIELD_SET",
                 "fields": list(fields), "missing_fields": missing,
