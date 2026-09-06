@@ -344,7 +344,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 23
 
 
 def selftest() -> int:
@@ -512,6 +512,22 @@ def selftest() -> int:
        "KNOWN-BAD, DRIVEN WHERE IT LIVES: a process whose own cgroup leaf is "
        "a `.scope` REFUSES a real day by name -- nine BE heavy runs were "
        "scopes and every receipt said so in `scope.unit`; no seat read it")
+
+    # ---- REV 84 §3.2: THE SHARED MODULE'S FALSIFIER IS ONE CELL HERE ----
+    # One implementation, N detectors. This battery imports
+    # `declaration_chain` through `be_rule22`, so a regression in it is this
+    # battery's problem too -- and BE 82's was found by DA's kept cell, not
+    # by the module's own. Run as a SUBPROCESS, so a module that no longer
+    # runs at all fails here rather than being routed around.
+    _dcf = _R22.shared_falsifier()
+    ok(_dcf["ok"],
+       f"REV 84 §3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery RUNS "
+       f"`declaration_chain.py --falsify` as a subprocess -> rc "
+       f"{_dcf['rc']}, {_dcf['summary']!r}. A regression in the shared "
+       f"module fails every importer's battery at once, and no importer "
+       f"re-implements the logic. "
+       f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
+
 
     print()
     if fails:

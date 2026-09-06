@@ -962,7 +962,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 124
+EXPECTED_CHECKS = 125
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -2154,6 +2154,22 @@ def selftest() -> int:
        "the declaration, which is the fix working; "
        "`launcher_sources_it_from_the_declaration` carries the content, and "
        "the receipt says so in the field itself")
+
+    # ---- REV 84 §3.2: THE SHARED MODULE'S FALSIFIER IS ONE CELL HERE ----
+    # One implementation, N detectors. This battery imports
+    # `declaration_chain` through `be_rule22`, so a regression in it is this
+    # battery's problem too -- and BE 82's was found by DA's kept cell, not
+    # by the module's own. Run as a SUBPROCESS, so a module that no longer
+    # runs at all fails here rather than being routed around.
+    _dcf = _R22.shared_falsifier()
+    ok(_dcf["ok"],
+       f"REV 84 §3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery RUNS "
+       f"`declaration_chain.py --falsify` as a subprocess -> rc "
+       f"{_dcf['rc']}, {_dcf['summary']!r}. A regression in the shared "
+       f"module fails every importer's battery at once, and no importer "
+       f"re-implements the logic. "
+       f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
+
 
     return _finish(checks, fails, skipped)
 

@@ -274,7 +274,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 23
 
 
 def selftest() -> int:
@@ -380,70 +380,81 @@ def selftest() -> int:
        "written BY the stop and a copy taken before it cannot contain them "
        "(DE 106). A unit already gone is REFUSED rather than reported as "
        "defaults (R-653)")
-    # ---- R-711 / REV 81 §1.4: the ONE chain implementation, CAS at write
-    import declaration_chain as _DCH
-    import tempfile as _tfC
-    _dC = Path(_tfC.mkdtemp(prefix="be77_chain_")); _FAM = "fixture_family"
+    # ---- REV 84 §3.2: THE SHARED MODULE'S FALSIFIER IS ONE CELL HERE --
+    # This battery carried FIVE properties of `declaration_chain` typed out
+    # again: the positive write, the three CAS refusals by name, and the
+    # fork reported-not-refused. Every one of them is a cell of the module's
+    # own `--falsify` since BE 79/81, so keeping them here was a second
+    # implementation of the TEST -- the same divergence one implementation
+    # was adopted to end. They are replaced by the invocation below.
+    #
+    # WHAT STAYS INDEPENDENT, AND WHY (REV 84 §3.1): the module's falsifier
+    # runs on FIXTURES it builds itself. It cannot know that this seat's
+    # four real families resolve through it, and it does not assert the
+    # INTERFACE `be_rule22.declaration_head` consumes -- nine keys by name,
+    # every one of which a KeyError would take out of every emitter this
+    # seat owns. Those are the properties this seat's verdicts rest on, so
+    # the cell below keeps them, now asserting the KEYS EXIST rather than
+    # reading values out of them (REV 83 §3: a `.get` that returns None is
+    # a property of the query, not of the object).
+    _dcf = _R22.shared_falsifier()
+    ok(_dcf["ok"],
+       f"REV 84 §3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery RUNS "
+       f"`declaration_chain.py --falsify` as a subprocess -> rc "
+       f"{_dcf['rc']}, {_dcf['summary']!r}. A regression in the shared "
+       f"module now fails every importer's battery at once, without any "
+       f"importer re-implementing the logic -- BE 82's `and want` guard was "
+       f"caught by DA's kept cell, not by mine. "
+       f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
+    # AND THE CELL ABOVE SHIPS ITS OWN FALSIFIER (rule 15). A cell that runs
+    # someone's falsifier and reports a green is worth nothing until it has
+    # been shown to go red -- REV 83 §1.3 ruled on exactly that shape one
+    # round ago. Driven on THE PREDICATE with known-bad stand-ins rather
+    # than by mutating the real module, which a battery must never do: the
+    # two ways this could be vacuous are trusting `rc` alone and trusting
+    # the summary alone, so both are driven.
+    import tempfile as _tfF
+    _dS = Path(_tfF.mkdtemp(prefix="be83_falsifier_"))
 
-    def _pl(sup=None, note=""):
-        return {"protocol": "FIXTURE", "note": note, "supersedes": sup}
-    (_dC / f"{_FAM}_v1.json").write_text(
-        json.dumps(_pl(None, "first"), indent=1, sort_keys=True) + "\n")
-    _h = _DCH.resolve_head(_dC, _FAM)
-    _w = _DCH.write_next_version(
-        _dC, _FAM, _pl({"path": _h["path"], "sha256": _h["sha256"]}, "second"),
-        _h["pair"])
-    _h2 = _DCH.resolve_head(_dC, _FAM)
-    ok(_h2["name"] == _w["name"] and _h2["sha256"] == _w["sha256"]
-       and _w["version"] == 2,
-       f"POSITIVE CONTROL: `write_next_version` wrote {_w['name']} "
-       f"atomically (temp + rename in the same directory) and "
-       f"`resolve_head` returns it as the head")
-    _codes = []
-    for _lbl, _pay, _hr in (
-            ("two writers from one head",
-             _pl({"path": _h["path"], "sha256": _h["sha256"]}), _h["pair"]),
-            ("a stale head",
-             _pl({"path": _h2["path"], "sha256": _h2["sha256"]}),
-             {"path": str(_dC / f"{_FAM}_v2.json"), "sha256": "0" * 64}),
-            ("a pair naming the wrong digest",
-             _pl({"path": _h2["path"], "sha256": "b" * 64}), _h2["pair"])):
-        try:
-            _DCH.write_next_version(_dC, _FAM, _pay, _hr)
-            _codes.append((_lbl, "NOT REFUSED"))
-        except _DCH.ChainRefused as _eC:
-            _codes.append((_lbl, str(_eC).split(":")[0]))
-    ok([c for _, c in _codes] == ["VERSION_PATH_EXISTS", "HEAD_MOVED",
-                                  "PAIR_MISMATCH"],
-       f"THE THREE REFUSALS ARE DISTINCT AND BY NAME: {_codes}. The closure "
-       f"is a COMPARE-AND-SWAP AT THE WRITE, not a re-read before it -- on "
-       f"2026-09-06 two seats each read v1, composed a v2 and landed it, and "
-       f"a landing-time re-read would not have caught that because both "
-       f"writes were already on disk")
-    _dF = Path(_tfC.mkdtemp(prefix="be77_fork_"))
-    (_dF / f"{_FAM}_v1.json").write_text(
-        json.dumps(_pl(None, "base"), indent=1, sort_keys=True) + "\n")
-    _b = {"path": str(_dF / f"{_FAM}_v1.json"),
-          "sha256": _DCH._sha(_dF / f"{_FAM}_v1.json")}
-    for _n in (2, 3):
-        (_dF / f"{_FAM}_v{_n}.json").write_text(
-            json.dumps(_pl(_b, f"branch {_n}"), indent=1, sort_keys=True) + "\n")
-    _hf = _DCH.resolve_head(_dF, _FAM)
-    ok(_hf["name"] == f"{_FAM}_v3.json"
-       and [o["version"] for o in _hf["orphan_branches"]] == [f"{_FAM}_v2.json"]
-       and _hf["forks_two_versions_superseding_one"],
-       f"REV 81 §5: A FORK IS REPORTED, NOT REFUSED -- head {_hf['name']}, "
-       f"orphan_branches {[o['version'] for o in _hf['orphan_branches']]}, "
-       f"and the head rule stated in the answer ({_hf['head_rule']}). "
-       f"Whether a fork is a defect under rule 13 is a ruling, not this "
-       f"function's to make")
+    def _stub(nm, body):
+        q = _dS / nm
+        q.write_text(body)
+        return _R22.shared_falsifier(prog=str(q))
+    _bad_rc = _stub("bad_rc.py", "print('PASS: x')\n"
+                                 "print('3 cells, 1 failures')\n"
+                                 "raise SystemExit(1)\n")
+    _bad_txt = _stub("bad_text.py", "print('FAIL: CELL 9 something broke')\n"
+                                    "print('3 cells, 1 failures')\n")
+    _good = _stub("good.py", "print('PASS: x')\n"
+                             "print('3 cells, 0 failures')\n")
+    ok(_bad_rc["ok"] is False and _bad_txt["ok"] is False
+       and _good["ok"] is True and _bad_txt["rc"] == 0
+       and _bad_txt["failed_cells"],
+       f"KNOWN-BAD FOR THE CELL ABOVE: a falsifier that EXITS NON-ZERO is "
+       f"caught (rc {_bad_rc['rc']}, ok {_bad_rc['ok']}), and so is one "
+       f"that exits ZERO while printing a failed cell (rc "
+       f"{_bad_txt['rc']}, {_bad_txt['summary']!r}, ok {_bad_txt['ok']}) -- "
+       f"reading only the exit status would have called that second one a "
+       f"pass. POSITIVE CONTROL: a clean run admits ({_good['summary']!r}, "
+       f"ok {_good['ok']})")
     _fams = ("heavy_run_form", "be_daybook_structure",
              "be_race_read_declaration", "producer_exit_maps")
     _heads = {f: _R22.declaration_head(f) for f in _fams}
+    _CONSUMED = ("name", "sha256", "doc", "path", "n_versions",
+                 "orphan_branches", "forks_two_versions_superseding_one",
+                 "pair", "version")
+    _missing = {f: [k for k in _CONSUMED if k not in h]
+                for f, h in _heads.items()}
     ok(all(h["resolved_by"].startswith("declaration_chain.resolve_head")
-           for h in _heads.values()),
-       f"AND ALL FOUR OF THIS SEAT'S FAMILIES RESOLVE THROUGH THE SHARED "
-       f"IMPLEMENTATION: "
+           for h in _heads.values())
+       and not any(_missing.values()),
+       f"THE PROPERTY THIS SEAT'S VERDICTS REST ON, KEPT INDEPENDENT: ALL "
+       f"FOUR OF THIS SEAT'S REAL FAMILIES RESOLVE THROUGH THE SHARED "
+       f"IMPLEMENTATION, and every one of the {len(_CONSUMED)} keys "
+       f"`be_rule22.declaration_head` consumes is PRESENT in the answer "
+       f"(missing {_missing}) -- a renamed key is a KeyError in every "
+       f"emitter this seat owns, and the module's fixture falsifier cannot "
+       f"see this interface at all: "
        f"{ {f: (h['name'], h['n_versions']) for f, h in _heads.items()} }")
     ok(BUILD := True,
        "usage: --day builds one day only; the split assignment is recorded "

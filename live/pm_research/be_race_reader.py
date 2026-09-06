@@ -1008,7 +1008,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 60
+EXPECTED_CHECKS = 61
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1791,6 +1791,23 @@ def selftest() -> int:
        f"started and holds {len(_after)} now -- the same set. Every "
        f"consumption drive above ran under a DECLARED fixture marker "
        f"directory on days 2099xxxx, and none reached the ledger")
+
+    # ---- REV 84 §3.2: THE SHARED MODULE'S FALSIFIER IS ONE CELL HERE ----
+    # One implementation, N detectors. This battery imports
+    # `declaration_chain` through `be_rule22`, so a regression in it is this
+    # battery's problem too -- and BE 82's was found by DA's kept cell, not
+    # by the module's own. Run as a SUBPROCESS, so a module that no longer
+    # runs at all fails here rather than being routed around.
+    import be_rule22 as _R22b
+    _dcf = _R22b.shared_falsifier()
+    ok(_dcf["ok"],
+       f"REV 84 §3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery RUNS "
+       f"`declaration_chain.py --falsify` as a subprocess -> rc "
+       f"{_dcf['rc']}, {_dcf['summary']!r}. A regression in the shared "
+       f"module fails every importer's battery at once, and no importer "
+       f"re-implements the logic. "
+       f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
+
 
     print()
     if fails:

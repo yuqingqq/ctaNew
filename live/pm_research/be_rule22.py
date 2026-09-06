@@ -149,6 +149,46 @@ class DeclarationAbsent(RuntimeError):
     on."""
 
 
+def shared_falsifier(timeout: int = 300, prog=None) -> dict:
+    """RUN `declaration_chain.py --falsify` AS A SUBPROCESS (REV 84 §3.2).
+
+    Every importer runs the shared module's own falsifier as ONE cell of its
+    own battery, so a regression in the one implementation fails every
+    importer at once and no importer re-implements the logic. That is the
+    price of sharing an implementation, and it is smaller than three
+    parsers: BE 82's regression was found by DA's kept cell, not by mine.
+
+    IT IS SPAWNED AS A PROCESS, not called as a function. The point is to
+    drive the module the way a person would: a broken `__main__`, a syntax
+    error under an edit, an import that fails in this environment, or a
+    falsifier that no longer runs at all is then itself a failure of this
+    cell rather than something an in-process call would route around.
+
+    What this cell does NOT do is replace the properties a seat's own
+    verdicts rest on (REV 84 §3.1). Those stay as independent cells in the
+    seat's battery; this one covers the module's own fixtures.
+    """
+    import subprocess as _sp
+    import sys as _sys
+    #: `prog` is an argument ONLY so this cell's own falsifier can drive
+    #: the PREDICATE against known-bad stand-ins (rule 15). Production
+    #: callers pass nothing and get the sibling module.
+    prog = Path(prog) if prog else (Path(__file__).resolve().parent
+                                    / "declaration_chain.py")
+    r = _sp.run([_sys.executable, str(prog), "--falsify"],
+                capture_output=True, text=True, timeout=timeout)
+    lines = r.stdout.splitlines()
+    summary = ([l for l in lines if " cells, " in l] or [""])[-1].strip()
+    failed = [l for l in lines if l.startswith("FAIL")]
+    return {"ran": str(prog), "rc": r.returncode, "summary": summary,
+            "failed_cells": failed,
+            "n_cells": len([l for l in lines if l.startswith(("PASS:",
+                                                              "FAIL:"))]),
+            "stderr_tail": r.stderr.strip().splitlines()[-1:],
+            "ok": (r.returncode == 0 and summary.endswith("0 failures")
+                   and not failed)}
+
+
 def declaration_head(family: str) -> dict:
     """The HEAD of a declaration chain -- DELEGATED to the ONE shared
     implementation (`declaration_chain.resolve_head`, R-711 / REV 81 §1.4).
