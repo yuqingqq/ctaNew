@@ -4719,6 +4719,102 @@ def exit_map_head(decl_dir: Path | None = None) -> dict:
             "no_producer_declares_75": True}
 
 
+#: REV 81 S2. THE CAPTURE RECORD, WITH ITS TWO RESIDUES CLOSED.
+#: (a) ***THE MAPPING'S PROVENANCE WAS IMPLIED.*** A capture said "VERDICT
+#: by name" and left a reader to infer WHICH of the two claims that came
+#: from -- the producer's own block, or the map's `runtime_default`.
+#: `mapped_by` states it, and names the head it was resolved in by
+#: {path, sha256}.
+#: (b) ***A CLAIM ABOUT TWO READINGS IN A RECORD HOLDING ONE.*** The 04
+#: capture carried systemd's property and no leaf read, so "the two agree"
+#: was unsupported by its own bytes. The emitter REQUIRES the leaf read:
+#: a mapping of the cgroup values, or an explicitly DECLARED status saying
+#: it was not taken -- and where it is a status, the agreement claim is
+#: withheld by name rather than made.
+CAPTURE_PROTOCOL = "P003_DA_CAPTURE_V2"
+LEAF_NOT_TAKEN = ("NOT_MEASURED_IN_THIS_RUN", "NOT_READ_BY_THIS_CAPTURE")
+
+
+def capture_record(*, unit: str, invocation_id: str, five_fields: dict,
+                   producer: str, producing_commit: str,
+                   producer_sha256: str, leaf_read,
+                   memory_peak_property, journal: dict, record: dict,
+                   expected_head: dict | None = None,
+                   decl_dir: Path | None = None) -> dict:
+    """A capture that states where its mapping came from and holds both
+    readings, or says by name that it holds one."""
+    code = str(five_fields.get("ExecMainStatus"))
+    if leaf_read is None:
+        raise VerifierRefused(
+            "REFUSED: CAPTURE_WITHOUT_THE_LEAF_READ -- a capture carrying "
+            "systemd's MemoryPeak property and no cgroup-leaf reading "
+            "cannot support a claim about the two, and BE 74 measured that "
+            "the property after exit is not the run's peak. Give the leaf "
+            f"read, or one of {list(LEAF_NOT_TAKEN)} to say by name that "
+            f"this capture does not hold it.")
+    if isinstance(leaf_read, str) and leaf_read not in LEAF_NOT_TAKEN:
+        raise VerifierRefused(
+            f"REFUSED: CAPTURE_LEAF_STATUS_IS_NOT_DECLARED -- "
+            f"{leaf_read!r} is not one of {list(LEAF_NOT_TAKEN)}. A free "
+            f"string in place of a measurement is how an absence stops "
+            f"being visible.")
+    em = exit_map_head(decl_dir)
+    if expected_head and (expected_head.get("sha256") != em["sha256"]
+                          or expected_head.get("head") != em["head"]):
+        raise VerifierRefused(
+            f"REFUSED: CAPTURE_NAMES_ANOTHER_EXIT_MAP_HEAD -- the capture "
+            f"names {expected_head.get('head')} "
+            f"({str(expected_head.get('sha256'))[:16]}…) and the chain "
+            f"resolves to {em['head']} ({em['sha256'][:16]}…). A mapping "
+            f"read in one version and cited as another is not a mapping "
+            f"anyone can follow.")
+    if code == "75":
+        mapped_by = ("the WRAPPER, not the map: 75 is flock's refusal, and "
+                     "no producer may declare it")
+        kind = "REFUSAL by the wrapper (a held lock)"
+    elif code in em["my_codes"]:
+        mapped_by = (f"the producer's block in {em['head']} "
+                     f"(sha256 {em['sha256']})")
+        kind = f"VERDICT by name: {em['my_codes'][code]}"
+    else:
+        mapped_by = "UNMAPPED"
+        kind = ("UNMAPPED -- a number observed and nothing learned; it "
+                "does not satisfy a GO conditioned on this run")
+    holds_both = not isinstance(leaf_read, str)
+    return {
+        "protocol": CAPTURE_PROTOCOL, "unit": unit,
+        "invocation_id": invocation_id,
+        "producer_module": producer, "producing_commit": producing_commit,
+        "producer_sha256": producer_sha256,
+        "the_five_fields_at_exit": five_fields,
+        "exec_main_status_verbatim": code,
+        "resolved_kind": kind,
+        "mapped_by": mapped_by,
+        "why_mapped_by_exists": (
+            "REV 81 S2: the mapping's provenance was IMPLIED. A reader had "
+            "to infer whether a kind came from the producer's own block or "
+            "from the map's runtime_default; now it is stated, with the "
+            "head it was resolved in named by {path, sha256}"),
+        "exit_map": {"head": em["head"], "sha256": em["sha256"]},
+        "MemoryPeak_property_verbatim": memory_peak_property,
+        "MemoryPeak_property_source": (
+            "systemd's MemoryPeak property -- BE 74 measured that this, "
+            "read after the unit exits, is NOT the run's peak"),
+        "cgroup_leaf_read_inside_the_run": leaf_read,
+        "this_capture_holds_both_readings": holds_both,
+        "the_two_disagree": (
+            None if not holds_both else
+            str(memory_peak_property) != str(
+                (leaf_read or {}).get("memory.peak"))),
+        "why_no_agreement_claim": (
+            None if holds_both else
+            "this capture holds ONE of the two readings, so it makes no "
+            "claim about the other; the claim is not restated from "
+            "elsewhere and no number is reconstructed here"),
+        "journal_copy": journal, "the_record_it_produced": record,
+    }
+
+
 def selftest_pre_read() -> list:                              # noqa: C901
     """The PRE-READ battery. Returned to the main selftest so the module has
     one check list and one count."""
@@ -5615,6 +5711,99 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+    # -- REV 81 S2: THE CAPTURE STATES ITS MAPPING AND HOLDS BOTH READS -
+    _cargs = dict(unit="u.service", invocation_id="i" * 32,
+                  producer=THIS_PRODUCER, producing_commit="deadbee",
+                  producer_sha256="f" * 64,
+                  memory_peak_property="369401856",
+                  journal={"n_lines_by_id": 5}, record={"path": "r.json"})
+    _cap = capture_record(
+        five_fields={"ExecMainStatus": "3", "Result": "exit-code"},
+        leaf_read={"memory.peak": "2032193536"}, **_cargs)
+    _cap_um = capture_record(
+        five_fields={"ExecMainStatus": "9"}, leaf_read={"memory.peak": "1"},
+        **_cargs)
+    _cap_75 = capture_record(
+        five_fields={"ExecMainStatus": "75"}, leaf_read={"memory.peak": "1"},
+        **_cargs)
+    _cap_ns = capture_record(
+        five_fields={"ExecMainStatus": "3"},
+        leaf_read="NOT_READ_BY_THIS_CAPTURE", **_cargs)
+    try:
+        capture_record(five_fields={"ExecMainStatus": "3"}, leaf_read=None,
+                       **_cargs)
+        _no_leaf = "ADMITTED"
+    except VerifierRefused as _e:
+        _no_leaf = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    try:
+        capture_record(five_fields={"ExecMainStatus": "3"},
+                       leaf_read={"memory.peak": "1"},
+                       expected_head={"head": "producer_exit_maps_v3.json",
+                                      "sha256": "c" * 64}, **_cargs)
+        _wrong_head = "ADMITTED"
+    except VerifierRefused as _e:
+        _wrong_head = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    ck("REV 81 S2 -- ***A CAPTURE MUST SAY WHERE ITS MAPPING CAME FROM, "
+       "AND MUST NOT CLAIM ABOUT A READING IT DOES NOT HOLD.*** (a) "
+       "`mapped_by` names WHICH claim a kind came from -- the producer's "
+       "block IN A NAMED HEAD by {path, sha256}, the WRAPPER's 75, or "
+       "UNMAPPED -- so a reader never infers it. (b) The emitter "
+       "***REQUIRES the leaf read***: a capture holding systemd's property "
+       "alone cannot support a claim about the two, and BE 74 measured "
+       "that the property after exit is not the run's peak. Where the leaf "
+       "read is a DECLARED status rather than a measurement, "
+       "`this_capture_holds_both_readings` is false, `the_two_disagree` is "
+       "None and the reason is stated -- ***the claim is WITHHELD, not "
+       "restated from elsewhere***. A capture citing a head whose digest "
+       "is not the resolved one REFUSES",
+       _cap["mapped_by"].startswith("the producer's block in "
+                                    "producer_exit_maps_v")
+       and _cap["exit_map"]["sha256"] in _cap["mapped_by"]
+       and _cap["this_capture_holds_both_readings"] is True
+       and _cap["the_two_disagree"] is True
+       and _cap_um["mapped_by"] == "UNMAPPED"
+       and _cap_75["mapped_by"].startswith("the WRAPPER")
+       and _cap_ns["this_capture_holds_both_readings"] is False
+       and _cap_ns["the_two_disagree"] is None
+       and bool(_cap_ns["why_no_agreement_claim"])
+       and _no_leaf == "CAPTURE_WITHOUT_THE_LEAF_READ"
+       and _wrong_head == "CAPTURE_NAMES_ANOTHER_EXIT_MAP_HEAD",
+       f"3 -> mapped_by names the producer's block in "
+       f"{_cap['exit_map']['head']}; 9 -> {_cap_um['mapped_by']}; 75 -> "
+       f"the wrapper; a declared status -> holds_both "
+       f"{_cap_ns['this_capture_holds_both_readings']}, the_two_disagree "
+       f"{_cap_ns['the_two_disagree']}; no leaf read -> {_no_leaf}; "
+       f"another head -> {_wrong_head}")
+
+    # -- R-709 (RESTORED): THE EXIT MAP, AND 75 IS NEVER A PRODUCER'S ---
+    #: ***THIS CELL WAS LANDED AT DA 101 AND I DELETED IT AT DA 102***, by
+    #: replacing a span of the battery between two comment anchors without
+    #: checking what else lived in it. The check count fell 86 -> 84 and
+    #: nothing said so. A falsifier that disappears is a guard that stops
+    #: guarding silently.
+    _em = exit_map_head()
+    _emt = Path(tempfile.mkdtemp(prefix="da103em_"))
+    (_emt / "producer_exit_maps_v1.json").write_text(json.dumps({
+        "producers": {THIS_PRODUCER: {"codes": {"3": "x", "75": "mine"}}}}))
+    try:
+        exit_map_head(_emt)
+        _bad75 = "ADMITTED"
+    except VerifierRefused as _e:
+        _bad75 = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    ck("R-709 -- ***THE EXIT CODE RESOLVES IN THE MAP, NOT IN THIS SOURCE, "
+       "AND 75 IS NEVER A PRODUCER'S.*** This producer's block is read at "
+       "the chain head by the pair, and ***a map in which ANY producer "
+       "declares 75 is REFUSED***: 75 is what a HELD LOCK exits with, so a "
+       "producer claiming it would make a lock conflict read as one of its "
+       "own verdicts",
+       _em["i_am_declared"] is True
+       and sorted(_em["my_codes"]) == ["0", "1", "2", "3"]
+       and "75" not in _em["my_codes"]
+       and _bad75 == "A_PRODUCER_DECLARES_75",
+       f"head {_em['head']} ({_em['sha256'][:16]}) declares "
+       f"{sorted(_em['my_codes'])} across {_em['n_producers']} producers; a "
+       f"planted map declaring 75 -> {_bad75}")
+
     # -- REV 80 S3.2: THE THRESHOLD IS A FUNCTION OF THE KIND ----------
     _ae = anti_echo_declaration()
     _long = 6.135792468013579
