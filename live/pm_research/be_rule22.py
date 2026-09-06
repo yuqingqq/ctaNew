@@ -96,36 +96,41 @@ _PORCELAIN_STATES = set(" MTADRCU?!")
 
 
 def parse_porcelain_line(line: str) -> tuple:
-    """(status_code, path) from ONE porcelain v1 line -- SHAPE CHECKED.
+    """(status_code, path) from ONE porcelain v1 line -- A THIN CALL into
+    `da_root.parse_porcelain`, which now carries this algorithm.
 
-    R-637: the defect has two halves and no seat had both right. The READ
-    half is a `.strip()` eating the leading space of the first line; this
-    module fixed that in round 62 with a raw read. THE SLICE HALF is
-    `line[3:]`, which is correct ONLY while the read stays raw -- so the
-    fix is one edit away from the defect for anyone who touches the helper,
-    and the slice is the half people edit.
+    R-646 R1 / REV 71 §1.5: the programme has ONE porcelain parser. The
+    reviewer measured what three implementations cost -- four of twelve
+    lines disagreed and no two were wrong in the same place, which is
+    exactly "two implementations corroborate nothing" -- and ruled that a
+    way of READING A TOOL'S OUTPUT is not a statistic, so R-235's
+    do-not-harmonize does not bite. DA 87 lifted this algorithm; this seat
+    is now the caller.
 
-    So the offset is no longer assumed. Porcelain v1 is `XY<space>path`
-    with X and Y drawn from a fixed alphabet; a line that does not have
-    that shape is REFUSED by name instead of being sliced into a path that
-    is silently one character short. A rename or copy carries
-    `old -> new`, and the path that exists in the worktree is the NEW one.
+    WHAT IS KEPT: the refusal BY NAME. `da_root.parse_porcelain` REPORTS
+    malformed rows rather than raising, because its callers want the whole
+    census; this seat's callers want the line refused, so a malformed line
+    raises here exactly as before. WHAT IS GAINED: git's C-style unquoting
+    on both the path and a rename's old name, driven by DA against git's
+    own quoting on a scratch repo -- which this seat's version handled only
+    for the simple double-quote case.
     """
-    if (len(line) < 4 or line[2] != " "
-            or line[0] not in _PORCELAIN_STATES
-            or line[1] not in _PORCELAIN_STATES):
+    import da_root as _DR
+    res = _DR.parse_porcelain(line)
+    if res.get("malformed"):
         raise PorcelainMalformed(
             f"REFUSED: {line!r} is not a porcelain v1 line (expected two "
             f"status characters then a space). A line that lost its leading "
             f"space -- what a `.strip()` on the whole output does to the "
             f"FIRST line -- still slices to a path that is one character "
-            f"short, and nothing downstream can tell (R-637).")
-    code, rest = line[:2], line[3:]
-    if ("R" in code or "C" in code) and " -> " in rest:
-        rest = rest.split(" -> ", 1)[1]      # the path in the worktree NOW
-    if len(rest) >= 2 and rest[0] == '"' and rest[-1] == '"':
-        rest = rest[1:-1]                    # git quotes unusual paths
-    return code, rest
+            f"short, and nothing downstream can tell (R-637). "
+            f"da_root reports: {res['malformed'][0]}")
+    rows = res.get("rows") or []
+    if not rows:
+        raise PorcelainMalformed(
+            f"REFUSED: {line!r} produced no porcelain row and no malformed "
+            f"report -- absence is not a parse (rule 11).")
+    return rows[0]["xy"], rows[0]["path"]
 
 
 class HeavyRunRefused(RuntimeError):

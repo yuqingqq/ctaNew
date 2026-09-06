@@ -164,13 +164,47 @@ def scope_stats() -> dict:
     except OSError:
         return {"status": "NO_CGROUP"}
     out = {"cgroup": str(base), "unit": base.name}
+    # THE INTERFACE, DECIDED (R-659(B), R-662 §3.1, REV 72 §3.1): these
+    # three are EMITTED AS INTS, with the cgroup file's literal text kept in
+    # a sibling `*_text`. They were strings -- the raw bytes of the cgroup
+    # file -- beside int `anon_bytes`/`file_bytes` and int
+    # `peak_censoring.*`, so a consumer comparing `scope.peak_bytes` with
+    # `peak_censoring.cap_bytes` compared a str with an int and got False
+    # for the wrong reason. BE 60 closed the one CONSUMER (the censoring
+    # predicate casts) and never closed the TYPE; DA's pre-read and the
+    # structure declaration read these receipts directly, so the residue was
+    # an interface risk for the next reader.
+    #
+    # WHY INTS AND NOT A DECLARED STRING TYPE: every consumer compares these
+    # numerically, so a string transmits its own hazard to each of them in
+    # turn, and "declared" only means the next reader was warned. WHY THE
+    # TEXT SURVIVES: `memory.max` is literally `max` when no cap is set --
+    # an int cast has nothing to return there -- and the exact bytes are the
+    # provenance of the reading. So: int where the file holds a number,
+    # None where it does not, and the text always present beside it.
     for f, key in (("memory.peak", "peak_bytes"),
                    ("memory.current", "current_bytes"),
                    ("memory.max", "max_bytes")):
         try:
-            out[key] = (base / f).read_text().strip()
+            raw = (base / f).read_text().strip()
         except OSError:
-            out[key] = None
+            out[key], out[f"{key}_text"] = None, None
+            continue
+        out[f"{key}_text"] = raw
+        try:
+            out[key] = int(raw)
+        except (TypeError, ValueError):
+            out[key] = None          # e.g. memory.max == "max" (no cap)
+    out["byte_field_types"] = {
+        "peak_bytes/current_bytes/max_bytes": "int, or null when the cgroup "
+                                              "file holds a non-numeric "
+                                              "value such as `max`",
+        "*_text": "the cgroup file's literal text, kept for provenance and "
+                  "for the non-numeric cases",
+        "anon_bytes/file_bytes": "int (already)",
+        "ruling": "R-659(B) / R-662 §3.1 / REV 72 §3.1 -- BE 66 decided the "
+                  "interface: ints, with the raw text in a sibling",
+    }
     for f, key in (("memory.stat", "stat"), ("memory.events", "events")):
         try:
             d = {}
@@ -193,6 +227,8 @@ def scope_stats() -> dict:
     # censoring is now a FIELD, so a reader does not have to notice that two
     # numbers happen to be equal.
     try:
+        # these are ints now; the casts stay so an older receipt (or a
+        # non-numeric `max`) still parses rather than raising here
         _pk = int(out.get("peak_bytes") or 0)
         _mx = int(out.get("max_bytes") or 0)
         _ev = (out.get("events") or {}).get("max", 0)

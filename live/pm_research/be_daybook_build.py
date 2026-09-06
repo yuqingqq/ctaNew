@@ -962,7 +962,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 100
+EXPECTED_CHECKS = 120
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -1986,6 +1986,83 @@ def selftest() -> int:
        f"POSITIVE CONTROL: a pickle with the declared shape ADMITS on all "
        f"{_r['n_checks']} claims -- a verifier shown only to refuse has not "
        f"been shown to work")
+
+    # ---- THE INTERFACE, DECIDED (R-659(B), R-662 §3.1, REV 72 §3.1) -----
+    _sc9 = _BDR.scope_stats()
+    ok(all(isinstance(_sc9.get(k), (int, type(None)))
+           for k in ("peak_bytes", "current_bytes", "max_bytes"))
+       and all(f"{k}_text" in _sc9
+               for k in ("peak_bytes", "current_bytes", "max_bytes"))
+       and isinstance(_sc9["anon_bytes"], int),
+       f"THE SCOPE'S BYTE FIELDS ARE INTS NOW, with the cgroup file's text "
+       f"beside them ({_sc9.get('peak_bytes')!r} / "
+       f"{_sc9.get('peak_bytes_text')!r}). They were STRINGS next to int "
+       f"anon/file and int peak_censoring -- BE 60 closed the one CONSUMER "
+       f"and never the TYPE, and DA's pre-read and the structure "
+       f"declaration read these receipts directly")
+    # the falsifier: a consumer comparing WITHOUT a cast, both ways
+    _cen9 = _sc9["peak_censoring"]
+    _uncast_ok = (_sc9["peak_bytes"] >= _cen9["cap_bytes"]) is _sc9[
+        "peak_is_censored"]
+    ok(_uncast_ok,
+       f"POSITIVE: an uncast `scope.peak_bytes >= peak_censoring.cap_bytes` "
+       f"now agrees with `peak_is_censored` ({_sc9['peak_is_censored']}) -- "
+       f"the comparison the next reader will write, working without knowing "
+       f"it had to cast")
+    try:
+        _ = str(_sc9["peak_bytes"]) >= _cen9["cap_bytes"]
+        _raised = False
+    except TypeError:
+        _raised = True
+    ok(_raised,
+       "KNOWN-BAD, THE SHAPE BEFORE THIS CHANGE: the same comparison with "
+       "the field as a STRING raises TypeError -- so the old receipt did "
+       "not merely risk a wrong answer, it broke the reader that did the "
+       "natural thing")
+    _fake = {"peak_bytes": 8589934592, "max_bytes": 8589934592,
+             "events": {"max": 1199}}
+    ok(_fake["peak_bytes"] >= _fake["max_bytes"],
+       "AND AT THE CAP THE UNCAST COMPARISON IS DECIDABLE: 09-04's own "
+       "numbers (8,589,934,592 against the same cap, 1,199 reclaims) "
+       "compare TRUE as ints, where as strings they compared by lexical "
+       "order -- right answer, wrong reason, and only by accident")
+
+    # ---- R-646 R1: ONE porcelain parser, and this is the caller ---------
+    for _ln9, _want9 in ((" M live/pm_research/x.py",
+                          (" M", "live/pm_research/x.py")),
+                         ("?? data", ("??", "data")),
+                         ("R  a -> b", ("R ", "b")),
+                         ("C  a -> b", ("C ", "b")),
+                         ("A  file with spaces.py",
+                          ("A ", "file with spaces.py")),
+                         ("MM a -> b.py", ("MM", "a -> b.py")),
+                         ('?? "odd name.py"', ("??", "odd name.py")),
+                         ("?? trailing  ", ("??", "trailing  ")),
+                         (" D gone.py", (" D", "gone.py")),
+                         ("AM new.py", ("AM", "new.py")),
+                         ("UU conflict.py", ("UU", "conflict.py")),
+                         ("!! ignored.py", ("!!", "ignored.py"))):
+        ok(_R22.parse_porcelain_line(_ln9) == _want9,
+           f"TWELVE-LINE BATTERY through da_root.parse_porcelain: {_ln9!r}")
+    for _bad9 in ("M live/x.py", "## main...origin/main", "ab"):
+        try:
+            _R22.parse_porcelain_line(_bad9)
+            ok(False, f"{_bad9!r} must refuse")
+        except _R22.PorcelainMalformed as _e9:
+            ok("not a porcelain v1 line" in str(_e9)
+               and "da_root reports" in str(_e9),
+               f"AND THE REFUSAL BY NAME SURVIVES THE THIN CALL: {_bad9!r} "
+               f"refuses, quoting da_root's own malformed report -- DA's "
+               f"parser REPORTS malformed rows because its callers want the "
+               f"whole census; this seat's callers want the line refused")
+    import da_root as _DR9
+    ok("da_root" in Path(__file__).parent.joinpath("be_rule22.py").read_text()
+       and _DR9.parse_porcelain(" M x.py")["rows"][0]["path"] == "x.py",
+       "ONE PARSER (R-646 R1, REV 71 §1.5): `be_rule22.parse_porcelain_line` "
+       "is now a thin call into `da_root.parse_porcelain`, which carries "
+       "this seat's algorithm with DA's row structure. Three "
+       "implementations disagreed on four of twelve lines and no two were "
+       "wrong in the same place")
 
     return _finish(checks, fails, skipped)
 
