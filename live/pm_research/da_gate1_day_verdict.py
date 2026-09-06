@@ -972,8 +972,16 @@ def pre_read_artifact_naming() -> dict:
 #: AUTHORITY. `receipt.sha256` is the authority because it is the field DE's
 #: `landing_record_for` reads (`(rec.get("receipt") or {}).get("sha256")`),
 #: and conjunct 3 -- the one that stops a re-roll -- resolves through it.
-LANDING_DIGEST_AUTHORITATIVE_FIELD = "receipt.sha256"
-LANDING_DIGEST_MIRROR_FIELD = "landing_record.receipt_sha256"
+#: THE AUTHORITY FOLLOWS DE, AND DE HAS MOVED. Round 78 declared
+#: `receipt.sha256` authoritative BECAUSE THAT WAS THE FIELD DE'S READER
+#: TOOK. At the tip DE's `LANDING_RECORD_FIELD_COPIES` puts
+#: `landing_record.receipt_sha256` FIRST and design v20's R23 names the
+#: same field, so the reason for the old choice is gone and the choice goes
+#: with it. ***The constant is not the authority: DE's declaration is, and
+#: this seat's job is to follow it and to NAME any disagreement rather than
+#: hold its own.***
+LANDING_DIGEST_AUTHORITATIVE_FIELD = "landing_record.receipt_sha256"
+LANDING_DIGEST_MIRROR_FIELD = "receipt.sha256"
 
 
 def landing_digest_fields() -> dict:
@@ -1023,12 +1031,139 @@ def _design_names_landing_digest_field() -> dict:
                     "reads")}
 
 
+def de_landing_field_from_code(root: Path | None = None) -> dict:
+    """The HEAD of DE's `LANDING_RECORD_FIELD_COPIES`, read BY AST.
+
+    Not by import and not by grep: the tuple's FIRST element is the
+    authoritative field and its shape is `(name, (auth...), (other...))`.
+    Reading it structurally means a reordering is seen the day it lands."""
+    import da_root as _R                                      # noqa: PLC0415
+    base = Path(root) if root else _R.code_root(
+        "reading DE's landing-record field order")
+    f = base / "live/pm_research/de_multiday_gate1_runner.py"
+    if not f.is_file():
+        return {"status": "DE_RUNNER_ABSENT", "field": None,
+                "source": str(f)}
+    try:
+        tree = ast.parse(f.read_text())
+    except SyntaxError as e:
+        return {"status": "DE_RUNNER_UNPARSEABLE", "field": None,
+                "why": str(e)}
+    for n in ast.walk(tree):
+        if not (isinstance(n, ast.Assign) and len(n.targets) == 1
+                and isinstance(n.targets[0], ast.Name)
+                and n.targets[0].id == "LANDING_RECORD_FIELD_COPIES"):
+            continue
+        try:
+            rows = ast.literal_eval(n.value)
+        except (ValueError, SyntaxError):
+            return {"status": "CONSTANT_NOT_A_LITERAL", "field": None}
+        if not rows or len(rows[0]) < 2:
+            return {"status": "CONSTANT_EMPTY_OR_MALFORMED", "field": None}
+        name, auth = rows[0][0], rows[0][1]
+        other = rows[0][2] if len(rows[0]) > 2 else None
+        return {"status": "READ_FROM_DES_CODE_BY_AST",
+                "constant": "LANDING_RECORD_FIELD_COPIES",
+                "row_name": name,
+                "field": ".".join(auth),
+                "second_copy": (".".join(other) if other else None),
+                "n_rows": len(rows),
+                "source": f.name,
+                "sha256_16": hashlib.sha256(f.read_bytes()).hexdigest()[:16]}
+    return {"status": "CONSTANT_NOT_PRESENT_IN_DES_CODE", "field": None,
+            "source": f.name}
+
+
+#: where DE's design states the same thing
+DESIGN_AUTHORITY_KEYS = ("R23_the_landing_records_authoritative_fields",
+                         "authoritative", "receipt_digest_at_landing")
+
+
+def de_landing_field_from_design(derived: Path | None = None) -> dict:
+    """The field DE's NEWEST design names as authoritative."""
+    designs = _designs_by_version(derived)
+    if not designs:
+        return {"status": "NO_DE_DESIGN_ON_DISK", "field": None}
+    d = designs[-1]
+    try:
+        obj = json.loads(d.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {"status": "DE_DESIGN_UNREADABLE", "field": None,
+                "source": d.name}
+    cur = obj
+    for k in DESIGN_AUTHORITY_KEYS:
+        if not isinstance(cur, dict) or k not in cur:
+            return {"status": "DESIGN_NAMES_NO_AUTHORITATIVE_DIGEST_FIELD",
+                    "field": None, "source": d.name,
+                    "path_looked_for": ".".join(DESIGN_AUTHORITY_KEYS)}
+        cur = cur[k]
+    return {"status": "READ_FROM_DES_DESIGN", "field": cur,
+            "source": d.name,
+            "sha256_16": hashlib.sha256(d.read_bytes()).hexdigest()[:16]}
+
+
+def landing_authority_agreement(root: Path | None = None,
+                                derived: Path | None = None,
+                                mine: str | None = None) -> dict:
+    """THREE STATEMENTS OF ONE FIELD, AND WHOSE DISAGREEMENT IT IS.
+
+    DE's CODE, DE's DESIGN and this seat's DECLARATION. REV 58 section 2.3
+    asked for the first two to be compared -- nothing did, and a check that
+    compared the design against MY OWN constant would report a
+    disagreement of mine as one of DE's."""
+    code = de_landing_field_from_code(root)
+    design = de_landing_field_from_design(derived)
+    da = mine or LANDING_DIGEST_AUTHORITATIVE_FIELD
+    pairs = {
+        "DE_code_vs_DE_design": (code.get("field"), design.get("field")),
+        "DA_declaration_vs_DE_code": (da, code.get("field")),
+        "DA_declaration_vs_DE_design": (da, design.get("field")),
+    }
+    out = {"DE_code": code, "DE_design": design, "DA_declaration": da,
+           "pairs": {}}
+    flags = []
+    for k, (a, b) in pairs.items():
+        if a is None or b is None:
+            st = "NOT_COMPARABLE"
+        elif a == b:
+            st = "AGREE"
+        else:
+            st = "DISAGREE"
+            flags.append(k)
+        out["pairs"][k] = {"status": st, "left": a, "right": b}
+    out["flags"] = flags
+    out["n_flags"] = len(flags)
+    out["whose"] = ("DE" if "DE_code_vs_DE_design" in flags
+                    else "DA" if flags else None)
+    out["verdict"] = (
+        f"FLAGGED_{out['whose']}" if flags else "ALL_THREE_AGREE")
+    out["why_it_matters"] = (
+        "conjunct 3 -- the one that stops a re-roll -- resolves the day's "
+        "receipt digest through THIS field. Two seats reading different "
+        "copies of one digest is a gate that passes on whichever copy each "
+        "happens to read")
+    out["what_is_NOT_flagged_here"] = (
+        "this seat's own constant is not the authority and is never the "
+        "thing asserted: the check names WHICH PAIR disagrees and WHOSE it "
+        "is to reconcile")
+    return out
+
+
 def landing_digest_of(record: dict) -> dict:
     """The landing digest READ THROUGH THE AUTHORITY, with the mirror
     checked. Disagreement REFUSES BY NAME -- it is never resolved by
     preferring one copy."""
-    auth = (record.get("receipt") or {}).get("sha256")
-    mirror = (record.get("landing_record") or {}).get("receipt_sha256")
+    def _at(path):
+        cur = record
+        for part in path.split("."):
+            if not isinstance(cur, dict):
+                return None
+            cur = cur.get(part)
+        return cur
+
+    #: BY THE DECLARED PATHS, so moving the authority moves the reader too.
+    auth = _at(LANDING_DIGEST_AUTHORITATIVE_FIELD)
+    mirror = _at(LANDING_DIGEST_MIRROR_FIELD)
     if auth and mirror and auth != mirror:
         return {"status": "LANDING_RECORD_DIGEST_FIELDS_DISAGREE",
                 "sha256": None, "authoritative": auth, "mirror": mirror,
@@ -3499,10 +3634,19 @@ def selftest_pre_read() -> list:                              # noqa: C901
         rec["day"] = "2026-09-03"
         #: ONE digest in BOTH homes, as the emitter now writes it. `mirror`
         #: is here ONLY so the disagreement can be DRIVEN.
-        rec["receipt"] = dict(pre["receipt"], sha256=sha)
-        rec["landing_record"] = dict(
-            pre["landing_record"],
-            receipt_sha256=(sha if mirror is None else mirror))
+        #: BY ROLE, THROUGH THE DECLARED PATHS. Writing `receipt.sha256`
+        #: and `landing_record.receipt_sha256` by name pinned the fixture
+        #: to round 78's choice of authority; when DE moved, the fixture
+        #: was testing the roles backwards.
+        def _put(path, value):
+            blk, key = path.split(".", 1)
+            base = dict(pre.get(blk) or {})
+            base[key] = value
+            rec[blk] = base
+
+        _put(LANDING_DIGEST_AUTHORITATIVE_FIELD, sha)
+        _put(LANDING_DIGEST_MIRROR_FIELD,
+             sha if mirror is None else mirror)
         if sup is not None:
             rec["supersedes"] = {
                 "path": Path(sup).name,
@@ -3563,7 +3707,18 @@ def selftest_pre_read() -> list:                              # noqa: C901
         except _DR.RootRefused as _e:
             _wt = f"REFUSED: {str(_e)[:60]}"
         os.environ.pop("PM_DATA_ROOT", None)
-        _unset = _derived_dir()
+        #: THE SYMLINK RESTORE (11:52Z) MOVED THIS ANSWER. With a
+        #: worktree's `data/` a SYMLINK to the ledger, the resolver of
+        #: record's branch 2 -- "the code tree carries the tape" -- now
+        #: FIRES in a worktree and returns the WORKTREE root. Its data is
+        #: the ledger's, but its IDENTITY is not canonical, so the gate
+        #: refuses by name. The declared property is the DISJUNCTION: the
+        #: canonical root OR a named refusal, never the worktree's own
+        #: partial data.
+        try:
+            _unset = _derived_dir()
+        except (VerifierRefused, _DR.RootRefused) as _e:
+            _unset = f"REFUSED: {str(_e)[:60]}"
     finally:
         if _env_hold is None:
             os.environ.pop("PM_DATA_ROOT", None)
@@ -3575,8 +3730,13 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "module the variable changes nothing on the passing side, so a pass "
        "under both proves INSENSITIVITY, not correctness. Correctness is "
        "the equality above***",
-       str(_wt).startswith("REFUSED") and _unset == shared,
-       f"PM_DATA_ROOT=<worktree> -> {str(_wt)[:48]}; unset -> {_unset}")
+       str(_wt).startswith("REFUSED")
+       and (_unset == shared or str(_unset).startswith("REFUSED")),
+       f"PM_DATA_ROOT=<worktree> -> {str(_wt)[:44]}; unset -> "
+       f"{str(_unset)[:44]} (the canonical dir OR a named refusal -- since "
+       f"the R-553 symlink was restored at 11:52Z the resolver's "
+       f"tape-carrying branch fires in a worktree, so the identity check "
+       f"refuses there)")
     _stub = type(sys)("pm_tape_density_stub")
     _stub._resolve_data_root = lambda: {"data_root": "/somewhere"}
     _hold_mod = sys.modules.get("pm_tape_density")
@@ -3620,13 +3780,19 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "block as a MIRROR that says so. ***Two copies written by two calls "
        "agreed until they did not, and conjunct 3, the one that stops a "
        "re-roll, resolved through the copy this seat was NOT checking***",
-       lf["authoritative"] == "receipt.sha256"
-       and lf["mirror"] == "landing_record.receipt_sha256"
+       #: THE ROLE, NOT THE NAME. Pinning `authoritative == "receipt.sha256"`
+       #: made this check a statement about round 78's CHOICE rather than
+       #: about the property, and it failed the moment the authority
+       #: followed DE (REV 58 2.3). What must hold is that the two fields
+       #: are DISTINCT, that DE's code head is the authoritative one, and
+       #: that both carry the SAME digest from ONE call.
+       lf["authoritative"] == de_landing_field_from_code().get("field")
+       and lf["mirror"] != lf["authoritative"]
        and pre["receipt"]["sha256"]
        == pre["landing_record"]["receipt_sha256"]
        == hashlib.sha256(spath.read_bytes()).hexdigest()
        and pre["landing_record"]["the_authoritative_field_is"]
-       == "receipt.sha256",
+       == lf["authoritative"],
        f"authority {lf['authoritative']}, mirror {lf['mirror']}, both "
        f"{pre['receipt']['sha256'][:16]}; DE's design "
        f"{lf['named_in_DEs_design']['status']}")
@@ -3638,12 +3804,20 @@ def selftest_pre_read() -> list:                              # noqa: C901
     ok_read = landing_digest_of(json.loads(good.read_text()))
     for f in lrd.glob("*.json"):
         f.unlink()
+    #: `_lr(sha, mirror=...)` writes the AUTHORITY from `sha` and the other
+    #: copy from `mirror`, by the DECLARED paths -- so this drive follows
+    #: the authority wherever DE puts it.
     bad = _lr("p003_da_gate1_pre_read_20260903__20260906T161000Z.json",
               "a" * 64, mirror="f" * 64)
     bad_read = landing_digest_of(json.loads(bad.read_text()))
     bad_res = landing_record_for("2026-09-03", lrd)
     rec_old = json.loads(bad.read_text())
-    rec_old.pop("receipt", None)
+    #: THE AUTHORITY MOVED (REV 58 2.3), so the "older shape" is a record
+    #: carrying only the OTHER copy -- whichever that now is. Dropping the
+    #: block by its NAME rather than by its ROLE would have tested the
+    #: authority-present case and called it authority-absent.
+    _auth_block = LANDING_DIGEST_AUTHORITATIVE_FIELD.split(".")[0]
+    rec_old.pop(_auth_block, None)
     (lrd / "old_shape.json").write_text(json.dumps(rec_old, default=str))
     mirror_only = landing_digest_of(rec_old)
     lrd = lrd_hold
@@ -3663,6 +3837,50 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{bad_read['authoritative'][:8]} vs mirror "
        f"{bad_read['mirror'][:8]}); mirror-only -> "
        f"{mirror_only['status']}")
+
+    # -- H2g2. REV 58 section 2.3: DE's CODE vs DE's DESIGN --------------
+    agree = landing_authority_agreement()
+    dd = td / "designs_landing"
+    dd.mkdir(exist_ok=True)
+    (dd / "p003_de_multiday_gate1_design_v99.json").write_text(json.dumps({
+        "supersedes": {"chain": [["a.json", "b" * 64]]},
+        "R23_the_landing_records_authoritative_fields": {
+            "authoritative": {"receipt_digest_at_landing": "receipt.sha256"}}
+    }))
+    de_split = landing_authority_agreement(derived=dd)
+    mine_split = landing_authority_agreement(mine="receipt.sha256")
+    ck("REV 58 section 2.3 -- DE's CODE AND DE's DESIGN ARE COMPARED TO "
+       "EACH OTHER, by AST and by artifact, and this seat's own constant is "
+       "never the thing asserted. The head of "
+       "`LANDING_RECORD_FIELD_COPIES` is read STRUCTURALLY (the tuple's "
+       "first element), and the design's R23 authority is read from the "
+       "newest design. ***Nothing compared those two before: a check that "
+       "measured the design against MY constant would report a "
+       "disagreement of MINE as one of DE's***",
+       agree["DE_code"]["status"] == "READ_FROM_DES_CODE_BY_AST"
+       and agree["DE_design"]["status"] == "READ_FROM_DES_DESIGN"
+       and agree["pairs"]["DE_code_vs_DE_design"]["status"] == "AGREE"
+       and agree["verdict"] == "ALL_THREE_AGREE",
+       f"DE code head {agree['DE_code']['field']} (second copy "
+       f"{agree['DE_code']['second_copy']}); "
+       f"{agree['DE_design']['source']} names "
+       f"{agree['DE_design']['field']}; DA declares "
+       f"{agree['DA_declaration']} -> {agree['verdict']}")
+    ck("AND EACH DISAGREEMENT IS FLAGGED BY NAME **WITH WHOSE IT IS**: a "
+       "design naming a different field than DE's code is FLAGGED_DE; this "
+       "seat declaring a different field is FLAGGED_DA. ***Round 78 chose "
+       "`receipt.sha256` BECAUSE THAT WAS THE FIELD DE'S READER TOOK; DE "
+       "has since put `landing_record.receipt_sha256` first in both its "
+       "code and its design, so the reason for the old choice is gone and "
+       "the choice goes with it. The constant is not the authority***",
+       de_split["verdict"] == "FLAGGED_DE"
+       and de_split["pairs"]["DE_code_vs_DE_design"]["status"] == "DISAGREE"
+       and mine_split["verdict"] == "FLAGGED_DA"
+       and mine_split["pairs"]["DE_code_vs_DE_design"]["status"] == "AGREE"
+       and "DA_declaration_vs_DE_code" in mine_split["flags"],
+       f"planted design -> {de_split['verdict']} on "
+       f"{de_split['flags']}; a DA constant of `receipt.sha256` -> "
+       f"{mine_split['verdict']} on {mine_split['flags']}")
 
     # -- H2h. REV 54 section 1.1's residual: the definition is BOUND ------
     d_ok = assert_definition_matches_enforcement(force=True)

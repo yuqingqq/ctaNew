@@ -619,6 +619,183 @@ def _compare_verdict(measured: str, is_delta: bool, b_scope: str) -> str:
     return UNCLASSIFIED
 
 
+# --------------------------------------- THE CLASS: ambient process state
+
+#: REV 58 section 1.2. THE THREE QUESTIONS ABOVE ARE INSTANCES; THIS IS THE
+#: CLASS. "Does an assertion's verdict depend on state this process happens
+#: to be IN, rather than on the property it claims to test?" Memory was one
+#: ambient and the sweep asked only about memory -- so the 26-second
+#: refusal, a `refuses(lambda: run_day(...))` whose needle appears ONLY
+#: when the calling process does NOT hold the heavy lock, was none of its
+#: three questions. The lock, the cgroup, the cwd, the worktree and the
+#: clock are ambients too, and an assertion that reads one DIRECTLY --
+#: rather than being handed an OBSERVATION -- is judging the process it
+#: happens to be running in.
+AMBIENT_READERS = {
+    "memory": ("getrusage", "ru_maxrss", "/proc/self/statm",
+               "/proc/self/status", "memory.peak", "memory.current"),
+    "lock": ("flock", "/proc/locks", "lockf", ".heavy_run.lock", "LOCK_EX",
+             "LOCK_NB"),
+    "cgroup": ("/proc/self/cgroup", "/sys/fs/cgroup", "systemd-run",
+               "MemoryMax"),
+    "cwd": ("getcwd", "cwd()", "Path.cwd"),
+    "worktree": ("__file__", "parents[", "HERE"),
+    "clock": ("datetime.now", "time.time", "time.monotonic", "utcnow",
+              "date.today", "perf_counter"),
+    "process": ("getpid", "os.environ", "sys.argv", "psutil"),
+}
+#: a parameter named like an OBSERVATION is the injection that makes a
+#: check about the property instead of about the process.
+OBSERVATION_PARAM_RE = re.compile(
+    r"^(obs|observation|stages|peak|peak_[a-z_]*|rss|now|clock|when|"
+    r"held|lock_held|root|data_root|cwd|env|measured|reading|sample|"
+    r"snapshot|state|budget|declared|proof|capture)$", re.I)
+CHECK_CALLS_AMBIENT = ("ok", "ck", "check", "assert_", "expect", "refuses",
+                       "raises")
+
+
+def _ambient_kinds(text: str) -> list:
+    t = text or ""
+    return sorted(k for k, needles in AMBIENT_READERS.items()
+                  if any(n in t for n in needles))
+
+
+def ambient_state_census(tree: ast.AST, src: str) -> dict:
+    """Every ASSERTION whose verdict can turn on ambient process state.
+
+    An assertion is a call to a check helper (`ok`, `ck`, `refuses`, ...)
+    or a bare `assert`. Its operands are read for DIRECT ambient reads --
+    including one hop into a `lambda` body, which is exactly how the
+    26-second shape hides: `refuses(lambda: run_day(...))` reads no ambient
+    ITSELF, and the call it wraps decides the verdict by whether the
+    process holds the lock."""
+    parents = {}
+    for n in ast.walk(tree):
+        for c in ast.iter_child_nodes(n):
+            parents[c] = n
+
+    def enclosing_fn(n):
+        cur = parents.get(n)
+        while cur is not None:
+            if isinstance(cur, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                return cur
+            cur = parents.get(cur)
+        return None
+
+    #: the module's own functions, so a wrapped callee can be opened ONE
+    #: hop to ask whether ITS refusal can come from an ambient.
+    fn_src = {}
+    for n in ast.walk(tree):
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            fn_src[n.name] = _seg(src, n) or ""
+
+    def _truth_text(node) -> str:
+        """THE TRUTH-BEARING PART ONLY. An assertion's MESSAGE often names
+        a path or a clock; the VERDICT is the comparison. Reading the whole
+        call made every `ok(x, f"...{__file__}...")` an ambient finding --
+        the too-wide watch list of REV 49 section 2.4, again."""
+        out = []
+        for sub in ast.walk(node):
+            if isinstance(sub, (ast.Compare, ast.BoolOp, ast.UnaryOp)):
+                out.append(_seg(src, sub) or "")
+        if not out and isinstance(node, ast.Call) and node.args:
+            out.append(_seg(src, node.args[0]) or "")
+        return " ".join(out)
+
+    rows, n_assertions = [], 0
+    for n in ast.walk(tree):
+        is_assert = isinstance(n, ast.Assert)
+        callee = ""
+        if isinstance(n, ast.Call):
+            callee = (n.func.id if isinstance(n.func, ast.Name)
+                      else n.func.attr if isinstance(n.func, ast.Attribute)
+                      else "")
+            if callee not in CHECK_CALLS_AMBIENT \
+                    and not callee.startswith("assert"):
+                continue
+        elif not is_assert:
+            continue
+        n_assertions += 1
+        seg = _seg(src, n) or ""
+        kinds = _ambient_kinds(_truth_text(n))
+        #: ONE HOP for the lambda, TWO for what it calls.
+        #: `refuses(lambda: run_day(...))` reads no ambient ITSELF -- and
+        #: `run_day` does, which is where the verdict comes from. That is
+        #: the 26-second shape, and it is invisible one hop up.
+        wrapped, wrapped_ambient = [], []
+        for sub in ast.walk(n):
+            if not isinstance(sub, ast.Lambda):
+                continue
+            body = _seg(src, sub.body) or ""
+            wrapped.append(body[:120])
+            kinds = sorted(set(kinds) | set(_ambient_kinds(body)))
+            for c2 in ast.walk(sub.body):
+                if isinstance(c2, ast.Call) and isinstance(c2.func, ast.Name):
+                    ik = _ambient_kinds(fn_src.get(c2.func.id, ""))
+                    if ik:
+                        wrapped_ambient.append(
+                            {"callee": c2.func.id, "ambient_kinds": ik})
+                        kinds = sorted(set(kinds) | set(ik))
+        fn = enclosing_fn(n)
+        params = [a.arg for a in
+                  (getattr(getattr(fn, "args", None), "args", []) or [])]
+        injected = sorted(a for a in params if OBSERVATION_PARAM_RE.match(a))
+        expects_refusal = callee in ("refuses", "raises") or any(
+            isinstance(sub, ast.Call)
+            and ((isinstance(sub.func, ast.Name)
+                  and sub.func.id in ("refuses", "raises"))
+                 or (isinstance(sub.func, ast.Attribute)
+                     and sub.func.attr in ("refuses", "raises")))
+            for sub in ast.walk(n))
+        if not kinds:
+            continue
+        if expects_refusal and wrapped_ambient:
+            verdict = "REFUSAL_EXPECTATION_WHOSE_CAUSE_CAN_BE_AMBIENT"
+        elif injected and not wrapped_ambient:
+            verdict = "INJECTED_OBSERVATION"
+        else:
+            verdict = "AMBIENT_IN_THE_VERDICT"
+        rows.append({
+            "line": n.lineno,
+            "in_function": (fn.name if fn else "<module>"),
+            "check": callee or "assert",
+            "ambient_kinds": kinds,
+            "wrapped_callables": wrapped,
+            "wrapped_callees_reading_an_ambient": wrapped_ambient,
+            "observation_parameters": injected,
+            "verdict": verdict,
+            "expr": " ".join(seg.split())[:160],
+        })
+    by_kind = {}
+    for r in rows:
+        for k in r["ambient_kinds"]:
+            by_kind[k] = by_kind.get(k, 0) + 1
+    flagged = [r for r in rows if r["verdict"] != "INJECTED_OBSERVATION"]
+    return {
+        "question": ("does any assertion's verdict depend on state this "
+                     "process happens to be IN, rather than on the "
+                     "property?"),
+        "n_assertions_seen": n_assertions,
+        "n_assertions_touching_an_ambient": len(rows),
+        "n_flagged": len(flagged),
+        "by_ambient_kind": dict(sorted(by_kind.items())),
+        "rows": rows[:60],
+        "n_rows_listed": min(len(rows), 60),
+        "ambients_tested": sorted(AMBIENT_READERS),
+        "what_this_CANNOT_see_from_source": [
+            "MAGNITUDE: that a budget is 700 MB and the process is at 2.4 "
+            "GB is a runtime fact; the source shows only that the "
+            "comparison reads an ambient",
+            "a CALLABLE CHOSEN AT RUNTIME: `refuses(fn)` where `fn` comes "
+            "from a variable, a registry or a parameter -- the wrapped "
+            "call cannot be read here, and the row says `wrapped` with no "
+            "body rather than claiming it is clean",
+            "whether an ambient READ is also the ambient the verdict TURNS "
+            "on: a check may read the clock only to stamp a message",
+        ],
+    }
+
+
 # ------------------------------------------------- fixtures on a real path
 
 BATTERY_RE = re.compile(r"^(selftest|fixture)$|battery|_checks$|"
@@ -1105,6 +1282,7 @@ def audit_module(path: Path, role: str) -> dict:
     fx_sel = fixture_selected_budgets(tree, src)
     cmps, looks = budget_comparisons(tree, src, meas, consts, fx_sel)
     frp = fixture_on_real_path(tree, src)
+    amb = ambient_state_census(tree, src)
     r22 = rule22_stamp(tree, src)
     mism = [c for c in cmps if c["verdict"] == SCOPE_MISMATCH]
     #: THE PREFIX IS "SCOPE_MISMATCH", not the whole refusing verdict
@@ -1141,10 +1319,14 @@ def audit_module(path: Path, role: str) -> dict:
             "n_unresolved_measure_lookalikes": len(looks),
             "n_fixture_selected_budget_sites": len(fx_sel),
             "n_battery_calls_on_the_real_path": frp["n_findings"],
+            "n_assertions_touching_an_ambient":
+                amb["n_assertions_touching_an_ambient"],
+            "n_assertions_whose_verdict_is_ambient": amb["n_flagged"],
         },
         "budget_comparisons": cmps,
         "unresolved_measure_lookalikes": looks,
         "fixture_on_real_path": frp,
+        "ambient_state_census": amb,
         "rule22": r22,
         "verdict": ("FLAGGED" if (mism or frp["n_findings"]) else
                     "UNCLASSIFIED_PRESENT" if unc else "CLEAN"),
@@ -1289,6 +1471,9 @@ def build_report(now: datetime.datetime | None = None,
                 m.get("census", {}).get(
                     "n_scope_mismatch_inside_an_assertion", 0)
                 for m in sw["modules"]),
+            "n_assertions_whose_verdict_is_ambient": sum(
+                m.get("ambient_state_census", {}).get("n_flagged", 0)
+                for m in sw["modules"]),
             "n_battery_calls_on_the_real_path": sum(
                 m.get("census", {}).get(
                     "n_battery_calls_on_the_real_path", 0)
@@ -1416,6 +1601,52 @@ LAUNCH_DIGEST = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 def emit():
     return {"producing_code_sha256": LAUNCH_DIGEST}
+'''
+
+#: THE 26-SECOND SHAPE, planted. `refuses(...)` sees a needle ONLY when the
+#: calling process does NOT hold the lock -- so the verdict is about the
+#: process, not about `run_day`. Nothing in the assertion mentions a lock.
+AMBIENT_26_SECOND_SRC = '''
+import fcntl
+
+
+def refuses(fn):
+    try:
+        fn()
+        return False
+    except Exception:
+        return True
+
+
+def run_day(day, book):
+    with open("/home/yuqing/ctaNew/data/.heavy_run.lock") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    return {"day": day}
+
+
+def ok(cond, label):
+    assert cond, label
+
+
+def selftest():
+    ok(refuses(lambda: run_day("2026-09-03", "/b.pkl")),
+       "a real day refuses")
+'''
+
+#: THE FIXED SHAPE: the observation is HANDED IN, so the assertion is about
+#: the property and gives the same answer in any process.
+AMBIENT_INJECTED_SRC = '''
+def ok(cond, label):
+    assert cond, label
+
+
+def peak_stage_predicate(stages, declared):
+    return {"holds": stages["S1"]["growth_mb"] <= declared}
+
+
+def check(stages, declared, obs):
+    ok(peak_stage_predicate(stages, declared)["holds"], "within budget")
+    ok(obs["flock_modes_on_the_inode"] is not None, "the lock was observed")
 '''
 
 PLANTED_LOOKALIKE_SRC = '''
@@ -1555,6 +1786,45 @@ def selftest() -> tuple:                                      # noqa: C901
        f" module-level -> "
        f"{imp_d['rule22']['status']['producing_code_digest']}")
 
+    # -- E2. REV 58 section 1.2: THE CLASS, not its instances ------------
+    amb_bad = _audit_text(tmp, "ambient_26s.py", AMBIENT_26_SECOND_SRC)
+    amb_ok = _audit_text(tmp, "ambient_injected.py", AMBIENT_INJECTED_SRC)
+    bad_rows = amb_bad["ambient_state_census"]["rows"]
+    ok_rows = amb_ok["ambient_state_census"]["rows"]
+    ck("REV 58 section 1.2 -- THE GENERAL QUESTION IS ASKED NOW: ***does an "
+       "assertion's verdict depend on state this process happens to be IN, "
+       "rather than on the property?*** Memory was ONE ambient and the "
+       "sweep asked only about memory, so the 26-second refusal -- a "
+       "`refuses(lambda: run_day(...))` whose needle appears only when the "
+       "caller does NOT hold the lock -- was none of its three questions. "
+       "The planted shape is FLAGGED, and it takes TWO HOPS to see: the "
+       "assertion mentions no lock, the lambda mentions no lock, and "
+       "`run_day` holds the flock",
+       any(r["verdict"] == "REFUSAL_EXPECTATION_WHOSE_CAUSE_CAN_BE_AMBIENT"
+           and any(w["callee"] == "run_day" and "lock" in w["ambient_kinds"]
+                   for w in r["wrapped_callees_reading_an_ambient"])
+           for r in bad_rows),
+       f"planted 26-second shape -> "
+       f"{[ (r['verdict'], r['ambient_kinds']) for r in bad_rows ]}")
+    ck("AND THE FIXED SHAPE ADMITS: an assertion over an observation HANDED "
+       "IN (`stages`, `obs`) is INJECTED_OBSERVATION -- it gives the same "
+       "answer in any process, which is the whole difference. ***Six "
+       "ambients are tested (memory, lock, cgroup, cwd, worktree, clock, "
+       "process), and the truth-bearing OPERANDS are read rather than the "
+       "whole call: reading the message text made every `ok(x, f\"...{"
+       "__file__}...\")` a finding***",
+       all(r["verdict"] == "INJECTED_OBSERVATION" for r in ok_rows)
+       and amb_ok["ambient_state_census"]["n_flagged"] == 0
+       and set(AMBIENT_READERS) >= {"memory", "lock", "cgroup", "cwd",
+                                    "worktree", "clock"}
+       and len(amb_bad["ambient_state_census"][
+           "what_this_CANNOT_see_from_source"]) >= 3,
+       f"injected -> {amb_ok['ambient_state_census']['n_flagged']} flagged "
+       f"of {len(ok_rows)} ambient-touching row(s); "
+       f"{len(AMBIENT_READERS)} ambients tested; the census states "
+       f"{len(amb_bad['ambient_state_census']['what_this_CANNOT_see_from_source'])} "
+       f"things it cannot see from source (magnitude, runtime-chosen "
+       f"callables, read-but-not-decisive)")
     # -- F. THE LOOKALIKE IS REPORTED, NEVER COUNTED, NEVER DROPPED ------
     look = _audit_text(tmp, "planted_lookalike.py", PLANTED_LOOKALIKE_SRC)
     ck("A SUBSCRIPT THAT ONLY LOOKS LIKE A MEASUREMENT IS REPORTED AS A "
@@ -1700,6 +1970,20 @@ def selftest() -> tuple:                                      # noqa: C901
        f"be_daybook_build.py:{typed[0]['line']} commit=\"{typed[0]['value']}\""
        f" -- and e2_a_declare's supersedes literal reads as "
        f"{by['live/mm_research/e2_a_declare.py']['rule22']['typed_literals'][0]['kind']}")
+
+    _tot = sum(m["ambient_state_census"]["n_flagged"] for m in rep["modules"]
+               if m.get("census"))
+    ck("AND THE PROGRAMME'S CENSUS IS REPORTED PER MODULE AND PER AMBIENT "
+       "KIND, as a count and not a verdict: an ambient READ is not by "
+       "itself a defect, and this sweep names sites for their owners "
+       "rather than ruling on them",
+       _tot == rep["totals"]["n_assertions_whose_verdict_is_ambient"]
+       and rep["totals"]["n_assertions_whose_verdict_is_ambient"] >= 1,
+       f"{rep['totals']['n_assertions_whose_verdict_is_ambient']} "
+       f"ambient-verdict assertions across "
+       f"{sum(1 for m in rep['modules'] if m.get('census') and m['ambient_state_census']['n_flagged'])} "
+       f"module(s); by kind: "
+       f"{ {k: sum(m['ambient_state_census']['by_ambient_kind'].get(k, 0) for m in rep['modules'] if m.get('census')) for k in sorted(AMBIENT_READERS)} }")
 
     # -- I2. THE CENSUS AGREES WITH THE ROWS IT SUMMARISES ---------------
     bad = []
