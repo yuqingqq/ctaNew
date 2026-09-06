@@ -2771,8 +2771,18 @@ def main() -> int:
                          supersedes=a.supersedes,
                          what_changed=a.what_changed,
                          builder_receipt=a.builder_receipt)
+        #: DA 99: the CLI line must not say NO POPULATION RECOMPUTED when
+        #: one was -- on the pickle path `n_arms_agreeing` is None because
+        #: the ROW comparison did not run, and the population verdict is
+        #: in `population_from_the_book`. ***A headline looser than its
+        #: artifact is the class this seat keeps being caught on.***
+        _pop = r.get("population_from_the_book")
+        _popline = ("POPULATION RECOMPUTED THROUGH BE'S STRUCTURE: "
+                    f"{'AGREES' if _pop.get('IS_A_POPULATION_VERIFICATION')
+                       else 'FLAGGED ' + str(_pop.get('flags'))}"
+                    if _pop else "NO POPULATION RECOMPUTED")
         print(f"{a.day}: {r['status']} -- "
-              f"{r['n_arms_agreeing'] if r['n_arms_agreeing'] is not None else 'NO POPULATION RECOMPUTED'}"
+              f"{r['n_arms_agreeing'] if r['n_arms_agreeing'] is not None else _popline}"
               f"{'' if r['n_arms_agreeing'] is None else '/' + str(r['n_arms_declared']) + ' arms agree'}, "
               f"sealed={r['economic_absence']['sealed']}, "
               f"economics read: NONE "
