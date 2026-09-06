@@ -1,0 +1,261 @@
+{
+  "carrying_commit": "d9fe7dc2bd6c47a6323a7575cb815d85ee555585",
+  "container_census": {
+    "bool_rule": "JSON booleans are NOT counted as numeric",
+    "independent_of_the_name_nets": "v1's `numeric_keys_that_survived` is a census by VOCABULARY and both seal nets decide on names. This one decides on WHERE a number sits, so a leaf added under an innocuous name -- invisible to both nets -- moves a container count by one and is flagged",
+    "list_residency_rule": "a numeric leaf is LIST-RESIDENT if ANY level of its container path is a list, not only its immediate parent. On this receipt the two readings are 1,119 and 0: the narrow one would report a clean bill on the region where almost every number lives",
+    "n_containers": 33,
+    "profile": {
+      "": 3,
+      "inherited_control.regimes.csv.sweep": 1,
+      "inherited_control.regimes.csv.touch": 1,
+      "sealed_payload": 3,
+      "sealed_payload.leak_scan": 1,
+      "sealed_payload.second_net_economic_shaped_leak_scan": 1,
+      "symbols.BTCUSDT": 6,
+      "symbols.BTCUSDT.admissions[].collector_health": 114,
+      "symbols.BTCUSDT.admissions[].era_rule5": 90,
+      "symbols.BTCUSDT.admissions[].stream_file_counts": 57,
+      "symbols.BTCUSDT.days[]": 66,
+      "symbols.BTCUSDT.days[].cells.3600": 77,
+      "symbols.BTCUSDT.days[].cells.60": 77,
+      "symbols.BTCUSDT.days[].cells.600": 77,
+      "symbols.BTCUSDT.days[].decision_time_quote_age_ms": 66,
+      "symbols.BTCUSDT.days[].label_counts": 22,
+      "symbols.BTCUSDT.days[].status_counts": 44,
+      "symbols.BTCUSDT.days[].stream_meta.book": 33,
+      "symbols.BTCUSDT.days[].stream_meta.depth20": 55,
+      "symbols.BTCUSDT.days[].stream_meta.trades": 33,
+      "symbols.BTCUSDT.era_leg": 4,
+      "symbols.BTCUSDT.era_leg.legacy_share_by_day": 15,
+      "symbols.BTCUSDT.icp_rule": 2,
+      "symbols.BTCUSDT.ordering_property": 6,
+      "symbols.BTCUSDT.placement_quality": 5,
+      "symbols.BTCUSDT.resource_observation[].after_book": 33,
+      "symbols.BTCUSDT.resource_observation[].after_depth20": 33,
+      "symbols.BTCUSDT.resource_observation[].after_evaluate": 33,
+      "symbols.BTCUSDT.resource_observation[].after_trades": 33,
+      "symbols.BTCUSDT.resource_observation[].book": 55,
+      "symbols.BTCUSDT.resource_observation[].depth20": 66,
+      "symbols.BTCUSDT.resource_observation[].evaluate": 11,
+      "symbols.BTCUSDT.resource_observation[].trades": 44
+    },
+    "reproduces_the_reviewers_independent_walk": {
+      "here": {
+        "leaves": 1759,
+        "list_resident": 1119,
+        "numeric": 1167
+      },
+      "identical": true,
+      "reviewer": {
+        "leaves": 1759,
+        "list_resident": 1119,
+        "numeric": 1167
+      }
+    },
+    "top_containers_by_numeric_leaves": [
+      {
+        "container": "symbols.BTCUSDT.admissions[].collector_health",
+        "n_numeric": 114
+      },
+      {
+        "container": "symbols.BTCUSDT.admissions[].era_rule5",
+        "n_numeric": 90
+      },
+      {
+        "container": "symbols.BTCUSDT.days[].cells.3600",
+        "n_numeric": 77
+      },
+      {
+        "container": "symbols.BTCUSDT.days[].cells.60",
+        "n_numeric": 77
+      },
+      {
+        "container": "symbols.BTCUSDT.days[].cells.600",
+        "n_numeric": 77
+      },
+      {
+        "container": "symbols.BTCUSDT.days[]",
+        "n_numeric": 66
+      },
+      {
+        "container": "symbols.BTCUSDT.days[].decision_time_quote_age_ms",
+        "n_numeric": 66
+      },
+      {
+        "container": "symbols.BTCUSDT.resource_observation[].depth20",
+        "n_numeric": 66
+      },
+      {
+        "container": "symbols.BTCUSDT.admissions[].stream_file_counts",
+        "n_numeric": 57
+      },
+      {
+        "container": "symbols.BTCUSDT.days[].stream_meta.depth20",
+        "n_numeric": 55
+      },
+      {
+        "container": "symbols.BTCUSDT.resource_observation[].book",
+        "n_numeric": 55
+      },
+      {
+        "container": "symbols.BTCUSDT.days[].status_counts",
+        "n_numeric": 44
+      }
+    ],
+    "totals": {
+      "max_depth": 7,
+      "n_bool": 185,
+      "n_containers_with_numbers": 33,
+      "n_leaves": 1759,
+      "n_null": 3,
+      "n_numeric": 1167,
+      "n_numeric_list_resident": 1119,
+      "n_str": 404
+    }
+  },
+  "emitter_identity": {
+    "commit_best_effort": "8c867c0a79e6d3b349ab9ee3921c49e71bc4c872",
+    "path": "live/mm_research/da_e2a_receipt_v2.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "51bf8c813f6a7869240de4cb56207223d02d6bc3664d0e88ba3e95ce21030a1d",
+    "tree_head": "d9fe7dc2bd6c47a6323a7575cb815d85ee555585"
+  },
+  "nothing_was_re_run": true,
+  "protocol": "P002_E2_A_SMOKE_RECEIPT_V2",
+  "resource_block": {
+    "THE_ANSWER": "the smoke's scope reached 7.7888 GiB of an 8 GiB MemoryMax -- within 0.2112 GiB of the cap, and that is an UPPER bound on the headroom because memory.peak is monotone and the sample precedes the run's end. Meanwhile the anon component was 1.11 GiB against 5.17 GiB of reclaimable page cache",
+    "headroom_against_the_cap": {
+      "cap_bytes": 8589934592,
+      "cap_gib": 8.0,
+      "fraction_of_cap_used": 0.9736037254333496,
+      "headroom_bytes": 226742272,
+      "headroom_gib": 0.21117019653320312,
+      "is_an_upper_bound_on_headroom": true,
+      "peak_bytes": 8363192320,
+      "peak_gib": 7.788829803466797,
+      "why": "memory.peak is monotone and this sample precedes the end of the run, so the true headroom is this or less"
+    },
+    "instrument": {
+      "function": "da_scope_memory",
+      "never_zeros": "absence is a STATUS. A zero here would read as 'measured, and nothing happened'",
+      "reads": [
+        "memory.peak",
+        "memory.stat:anon",
+        "memory.stat:file",
+        "memory.events:max",
+        "memory.events:oom"
+      ],
+      "source": "DE 82 `e255e72` built this for the Gate-1 runner; READ AS A DOCUMENT and re-implemented (R-235), not imported",
+      "statuses": [
+        "MEASURED",
+        "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
+        "NOT_IN_A_SCOPE",
+        "SCOPE_NAMED_BUT_UNREADABLE"
+      ]
+    },
+    "observation_at_the_EMITTERS_OWN_process": {
+      "WHOSE_MEMORY_IS_THIS": "the process EMITTING this v2, not the smoke. The smoke ended at 07:28Z and its scope is gone. This block is here to show the instrument answering on a live process, and it is labelled so no reader can take its numbers for the run's -- which is the ambient-scope hazard DE 82 named and this very field demonstrates: measured here, the emitter's ambient scope carries a peak many times the smoke's",
+      "anon_bytes": 719515648,
+      "anon_gib": 0.6701011657714844,
+      "cap_was_hit": false,
+      "cgroup": "/user.slice/user-1001.slice/user@1001.service/app.slice/run-r324799b229734b96a812ff93f6624164.scope",
+      "events": {
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0
+      },
+      "expected_slice": "research.slice",
+      "file_bytes": 6789791744,
+      "file_gib": 6.323486328125,
+      "in_research_slice": false,
+      "is_this_runs_own_memory": false,
+      "memory_peak_bytes": 16460849152,
+      "memory_peak_gib": 15.330360412597656,
+      "path": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/app.slice/run-r324799b229734b96a812ff93f6624164.scope",
+      "status": "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
+      "why_anon_and_file_apart": "rule 20's cap counts PAGE CACHE. One number cannot tell 'this run needs 7.8 GiB' from 'this run touched a lot of file and the kernel had no reason to reclaim'. Those call for different decisions"
+    },
+    "the_cap_was_never_enforced": {
+      "computed": true,
+      "memory_events_max": 0,
+      "memory_events_oom": 0,
+      "reading": "`max` counts the times allocation was throttled at the limit and `oom` the times it killed. Both zero: the peak was near the cap and the cap never bit"
+    },
+    "the_smokes_own_scope_THIS_IS_THE_RUNS": {
+      "is_this_runs_own_memory": true,
+      "provenance": "read by the DA seat from /sys/fs/cgroup and `systemctl --user show` while `da63smoke.scope` was live. NOT emitted by the run, NOT recomputable from the v1 receipt's bytes, and NOT a substitute for the instrument -- which is why the instrument is in this module",
+      "samples": [
+        {
+          "anon_bytes": 1012506624,
+          "as_of_utc": "2026-09-06T07:24:17Z",
+          "file_bytes": 5445939200,
+          "memory_current_bytes": 6477246464,
+          "memory_peak_bytes": 6494429184,
+          "process_rss_kib": 1054296,
+          "slab_bytes": 11464432
+        },
+        {
+          "anon_bytes": 1192460288,
+          "as_of_utc": "2026-09-06T07:25:16Z",
+          "events": {
+            "high": 0,
+            "low": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_group_kill": 0,
+            "oom_kill": 0
+          },
+          "file_bytes": 5553000448,
+          "memory_current_bytes": 6765334528,
+          "memory_peak_bytes": 8363192320,
+          "process_rss_kib": 1230216
+        }
+      ],
+      "scope": "da63smoke.scope",
+      "the_last_sample_is_not_the_end_of_the_run": "07:25:16Z is about three and a half minutes before the run finished, and `memory.peak` is monotone. So 8,363,192,320 bytes is a LOWER BOUND on the scope's final peak: the run came AT LEAST as close to the cap as this says, and possibly closer. The scope was gone when it was next read, which is the gap the instrument closes"
+    },
+    "v1_carried_only": {
+      "max_rss_gib": 2.717388153076172,
+      "max_rss_kib": 2849388
+    },
+    "why_that_was_not_enough": "`ru_maxrss` is the PROCESS high-water. Rule 20's cap is on the CGROUP and counts page cache, so the process figure cannot show what the run did to the cap -- in either direction"
+  },
+  "sealed_payload_of_record": "0e8b832924ddc5e64f4ca30c902e7984292dcb3edbdd2f83453128dae9900bf4",
+  "status": "SUPERSEDING_RECEIPT_COMPUTED_FROM_V1_BYTES",
+  "supersedes": {
+    "path": "p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json",
+    "rule": "CLAUDE.md rule 13: a frozen artifact is never edited; the correction supersedes IN BAND and v1 stays as provenance",
+    "sha256": "ec50c88809bdaa3f54a0d0e3f6e275801a0c258172fc646c5b8d2b7df5627bd0",
+    "untouched": true,
+    "version": 1
+  },
+  "the_marginal_regimes_zero": {
+    "THE_READING": "0 violations in 261 marginal episodes is the ABSENCE OF THE ADVERSARIAL CASE, not evidence that the ordering is arithmetic there. It is arithmetic ONLY where some trade reaches front = 0, and these 261 episodes are exactly the ones where none does. The declaration's own regimes show the property FAILING here -- on realisations at about half of seeds, and on the EXPECTATION at 9.986301369863014 against 10 -- so a zero count on real data says the marginal regime on BTC did not happen to produce a disagreement, and says nothing about whether it could",
+    "n_episodes_marginal": 261,
+    "n_episodes_testable": 1287,
+    "n_violations_in_the_marginal_regime": 0,
+    "why_it_matters": "read the other way it would retire the v7 narrowing as unnecessary, on evidence that cannot support it: the pre-v7 runner would have survived THIS run, which is not the same as the pre-v7 trigger being sound"
+  },
+  "the_sealed_payload_was_not_opened": true,
+  "wall_attribution": {
+    "era_leg_recv_ns_rows_read": 534499718,
+    "inside_the_symbol_but_not_in_any_stage_s": 268.9,
+    "n_days_the_era_leg_ran_on": 15,
+    "n_days_with_a_stage_record": 11,
+    "outside_the_symbol_block_s": 100.55,
+    "per_day_stage_wall_s": 262.35,
+    "symbol_block_wall_s": 531.25,
+    "terms_sum_to_the_total": true,
+    "wall_s_total": 631.8,
+    "what_is_outside": "the E1-A reproduction control, which runs FIRST and GATES the run, plus module import, the declaration load and the data-root check. The symbol clock (`wall_s`) starts after them, so it cannot include the control that decides whether the run may happen at all",
+    "what_that_is": "the ADMISSION LEGS, chiefly the rule-5 era leg reading recv_ns row-wise over 15 pre-admissible days (534,499,718 rows). `resource_observation` records the 11 ADMITTED days only, so the cost of deciding admissibility is invisible in it -- which is a reporting gap this line exists to close, not a discrepancy"
+  },
+  "what_this_receipt_adds": [
+    "a CONTAINER census beside v1's NAME census -- the independent axis, because both of the seal's nets decide on a leaf's name",
+    "a RESOURCE block reading the scope's memory.peak, memory.stat anon and file apart, and memory.events max/oom",
+    "the attribution of wall_s_total against the symbol block",
+    "the reading of 0 violations in 261 marginal episodes"
+  ]
+}
