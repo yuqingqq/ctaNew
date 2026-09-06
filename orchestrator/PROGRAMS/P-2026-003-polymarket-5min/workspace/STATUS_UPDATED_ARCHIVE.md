@@ -17429,3 +17429,64 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-SEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 213 archived. Q-MEM-219 filed through the script.)
 ```
+
+## Batch 217 — archived 2026-09-06T20:54:45Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T20:38:44Z (MEM ROUND 232 -- R-727 AND R-728 SWEPT, tip `5d8dc1b`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **I OPENED NO RESULT** -- the v5 artifact is a PRE-REGISTRATION, and the result
+  family it names does not exist.
+  (1) **THE v5 DECLARATION VERIFIED AT THE ARTIFACT.** v5 hashes to `b1aa349ed276bc41` and v4 to
+  `a741b4d6b5ac7f59`, both matching R-728. Drove the shared resolver with **key membership
+  ASSERTED, not merely printed** (round 231's remedy): head `..._v5.json`, 5 versions,
+  `orphan_branches []`, `forks {}`. ***AND EVERY LINK IN THAT CHAIN IS A VERIFIED PAIR NOW*** --
+  worth saying why that reads differently than it would have three rounds ago: at round 228 I
+  reproduced a cell where `link_shapes` said `'pair'` for a link with NO digest, and BE 82 closed
+  it. **The field now means what it says.**
+  (2) ***RULE 11 RECOMPUTED BY ME, NOT READ FROM THE ARTIFACT.*** The artifact CLAIMS
+  `declared_before_any_of_its_days_closed`; I computed the ordering instead: `as_of_utc`
+  **2026-09-06T20:27:58Z** against the first declared day's close **2026-09-07T00:00:00Z** -> True,
+  **margin 3 h 32 m 02 s**. READABLE is 09-06..09-09, G = 4, every declared day open. And the
+  RESULT family is **absent** -- `result.artifact` names `be_race_read2_result_v1.json` and no such
+  file exists, which is what a pre-registration is.
+  (3) ***DA's RACE-READ VERIFIER IS RED RIGHT NOW, AND I RAN IT RATHER THAN REASONING FROM THE
+  SOURCE.*** `da_race_read_verify --selftest` -> **rc 1, uncaught `KeyError: '20260906'`** at line
+  1956 in `selftest_real()`, which `selftest()` calls UNCONDITIONALLY. The mechanism, measured: the
+  loop is `for _d in _real_head['READABLE']`, the head is now v5 whose READABLE is 09-06..09-09,
+  and `be_race_read_feed_pins_v1`'s `per_day` keys are **09-01..09-05** -- **no intersection**, so
+  it raises on the first day. **It is a BARE EXCEPTION where this programme rules a NAMED REFUSAL
+  belongs** (R-705's class, which DA itself fixed for `da_mutation_audit`).
+  (4) ***AND IT DIES BEFORE THE v4 ASSERTION CELL IS REACHED.*** That cell (line 1910) asserts FOUR
+  things -- name v4, sha `a741b4d6`, `G_declared == 3`, READABLE 09-03..05 -- **all four now false**;
+  but the `KeyError` at 1956 fires first, so **the cell that would say WHY is not the cell that
+  fails**, and a reader of the traceback alone would not learn that the head moved.
+  (5) **STATED FOR FAIRNESS, because a reader could take that for a gap in BE's work and it is
+  not one:** R-728 **reports** the consequence for DA in its own words and routes it to **DA 112**,
+  in the same entry. Its re-run list names `be_race_reader` 61->70, `da_nonhead_census` 18/0,
+  `da_gate1_day_verdict` 90 and `de_multiday_gate1_runner` 342 -- and not `da_race_read_verify`,
+  the one BE separately reported and dispatched. **What I add is only the measured state and its
+  shape.** ***AND IT IS CLOSED WITHIN THIS ROUND***: DA 112 landed (`7a648d0`) while I wrote, and
+  I re-ran the battery at **20:40:16Z** -- **rc 0, `SELFTEST OK -- 37 checks, 0 failure(s)`**, with
+  the literal `be_race_read_declaration_v4.json` now **gone from the file** (0 grep hits): a read is
+  verified against the declaration **it names**, never against today's head. Both measurements stand
+  with their as-of -- red at 20:38:00Z, green at 20:40:16Z.
+  (6) **THE PINS LANDMINE IS DEFUSED IN THE READ PATH, AND TODAY ONLY THE CODE CAN SHOW IT.** The
+  pins family has exactly ONE version, so the literal and the chain head are the same file and **no
+  behaviour can distinguish fixed from unfixed**; the evidence available now is the code path, and
+  it is there -- `pins(family=...)` resolves the family and refuses by name if it does not resolve.
+  The behavioural proof arrives with v2 at the 09-06 close. **Recording that the control cannot fire
+  yet is the honest status, not a defect.** One small hazard for BE, not ruled: the old constant
+  survives at `str(PINS.name)` in a `copied_from` LABEL, which will keep printing `_v1.json` after
+  v2 lands -- a literal tracking a moving thing in a provenance field.
+  (7) **DE 114's CORRECTION IS NOW THE REGISTER'S OWN**, and more fully than I had it: the runner
+  emits no supersession on a fixture day run, so the GO asked for a pair that could not exist and
+  the seat said so rather than manufacturing one. My check was the key's absence; R-727 gives the
+  reason for it.
+  UNSWEPT, FOR MEM 233: **R-729** (`37cc0e5`) -- REV 86: v5 a valid pre-registration, **whether a
+  second read happens at all is the USER's** and must be put before the horizon, pooling foreclosed,
+  and a rule stated once: *readers of history resolve by the pair the act recorded, never the head*
+  (`c0dc836`); **BE 85** dispatched; and **DA 112** (`7a648d0`), whose landed code I re-ran above.
+  Counts: flags 1,497 -> 1,507; provenance 1,042 -> 1,052; tasks 19; **779 CHECKED / 273 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-EIGHTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 214 archived. Q-MEM-220 filed through the script.)
+```

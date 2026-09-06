@@ -63,6 +63,55 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T20:54:45Z (MEM ROUND 235 -- R-732 AND R-733 SWEPT, tip `39135da`. STATE ONLY. MEM
+  ASSERTS NO RESULT. Opened no result; every drive below is on a synthetic fixture.
+  (1) ***MY ROUND-234 ESCAPE CELL IS CLOSED, AND I RE-DROVE IT.*** The cell I drove last round as a
+  positive control -- a second read naming a predecessor but NOT naming its consumed set -- rendered
+  no clause then and **REFUSES now**: `CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED`, quoting the
+  declaration its `supersedes` names. Re-driven on a fresh fixture, not relayed.
+  (2) ***AND THE TEST IS BROADER THAN THE RESOLVER, WHICH IS WHAT DECIDES WHETHER THE FIX IS REAL***:
+  a `supersedes` given as a **BARE STRING** -- a shape the chain resolver refuses to follow -- still
+  counts as naming a predecessor and still refuses by the same name. **A test narrow enough to
+  require a well-formed pair would itself have been the next escape.**
+  (3) **A STATED EMPTY SET AND A GENUINE FIRST READ ARE DISTINGUISHABLE.** R-733 says a stated empty
+  set renders no clause AND SAYS WHY, so I checked that a reader can tell it from silence: both
+  return `applies False` with no sentence, and **three fields differ** -- `consumed_set_is_STATED`
+  True/False, `named_predecessor` True/False, and **`why`** ("this declaration STATES an empty
+  consumed set..." against "names NO predecessor... it is a first read"). Rule 4's shape -- a status,
+  never a silent drop -- in this instrument. **And the first-read control STILL ADMITS**: a fix that
+  closed the escape by refusing everything would have been the failure.
+  (4) **BE 86 WROTE NO DECLARATION VERSION AND v5 STILL STANDS:** `80c05a5` (20:51:47Z) touches
+  **exactly one file**; all five digests unmoved (v5 `b1aa349ed276bc41`), no v6. **Two rounds running**
+  that a clause fix touched only the generator and left the pre-registration alone -- the property
+  rule 11 needs while the days are open.
+  (5) **THE COORDINATOR'S DURATION SLIP, RECOMPUTED -- AND SO IS THE CORRECTION.** The dispatch said
+  "2 h 10 min" to the boundary; from R-732's 20:49Z stamp the interval is **3 h 11 min**, so the
+  disclosure is accurate and the figure was an hour out; the ANCHOR (00:00Z) was correct, which is
+  why nothing acted on it. **I checked the corrected figure too**, because a correction taken on
+  trust is the same failure one step later: R-733's "3 h 07 min by the clock at 20:52Z" is right for
+  any stamp inside that minute. This is the times-from-the-clock class, and it is now checked in
+  both directions rather than accepted on its word.
+  (6) ***AND I GUESSED A KEY BY SUBSTRING AGAIN.*** My first pass hunted the reason field with
+  `'why' in k or 'not_' in k` over the key names and printed **None** -- the very shape my round-232
+  remedy forbids, which is to ASSERT membership rather than guess. I printed `sorted(r.keys())` and
+  the key is plainly `why`. **THIRD instance of the key-reading class this session** (round 225
+  published defaults for three rounds; round 232 read an absent `head`; this one returned None). The
+  trend is real -- the last two were caught before any sentence, this one inside one command
+  sequence -- **but the class has not gone away, and a probe that guesses a name is a probe that can
+  report an absence as a finding.**
+  (7) **BE's CHECK COUNT 76 -> 79 IS RELAYED, third round running and for the same stated reason:**
+  the clause cell calls `not_pooled_clause()` with no arguments, resolving the REAL head and
+  rendering against the first read's `day_signs`, so running the battery would have BE's code open
+  that result inside my process. **Every property above I drove on a fixture; the COUNT alone is
+  relayed.**
+  (8) **NEXT STATE: A QUIET HOLD.** The 00:00Z chain is BE 72 (fragment, tape, book, structure v4,
+  pins v2), then DE's launch as one GO, then DA's 09-06 pre-read, then REV 88 with BE 86 included;
+  the wake is armed. **The USER's four open items stand**, item (d) time-bound to
+  **2026-09-10T01:00:00Z**. MEM has nothing to sweep until **R-734** exists, and **a quiet hold is a
+  valid state rather than a gap.**
+  Counts: flags 1,527 -> 1,537; provenance 1,072 -> 1,082; tasks 19; **806 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-ELEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 217 archived. Q-MEM-223 filed through the script.)
   2026-09-06T20:49:20Z (MEM ROUND 234 -- R-731 SWEPT, tip `f451eac`. STATE ONLY. MEM ASSERTS NO
   RESULT. ***I OPENED NO RESULT THIS ROUND EITHER*** -- a declaration, a source file, a git object,
   a directory listing, and a synthetic fixture I built in a temp directory.
@@ -165,62 +214,6 @@ updated: >-
   Counts: flags 1,507 -> 1,517; provenance 1,052 -> 1,062; tasks 19; **788 CHECKED / 274 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-NINTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 215 archived. Q-MEM-221 filed through the script.)
-  2026-09-06T20:38:44Z (MEM ROUND 232 -- R-727 AND R-728 SWEPT, tip `5d8dc1b`. STATE ONLY. MEM
-  ASSERTS NO RESULT. **I OPENED NO RESULT** -- the v5 artifact is a PRE-REGISTRATION, and the result
-  family it names does not exist.
-  (1) **THE v5 DECLARATION VERIFIED AT THE ARTIFACT.** v5 hashes to `b1aa349ed276bc41` and v4 to
-  `a741b4d6b5ac7f59`, both matching R-728. Drove the shared resolver with **key membership
-  ASSERTED, not merely printed** (round 231's remedy): head `..._v5.json`, 5 versions,
-  `orphan_branches []`, `forks {}`. ***AND EVERY LINK IN THAT CHAIN IS A VERIFIED PAIR NOW*** --
-  worth saying why that reads differently than it would have three rounds ago: at round 228 I
-  reproduced a cell where `link_shapes` said `'pair'` for a link with NO digest, and BE 82 closed
-  it. **The field now means what it says.**
-  (2) ***RULE 11 RECOMPUTED BY ME, NOT READ FROM THE ARTIFACT.*** The artifact CLAIMS
-  `declared_before_any_of_its_days_closed`; I computed the ordering instead: `as_of_utc`
-  **2026-09-06T20:27:58Z** against the first declared day's close **2026-09-07T00:00:00Z** -> True,
-  **margin 3 h 32 m 02 s**. READABLE is 09-06..09-09, G = 4, every declared day open. And the
-  RESULT family is **absent** -- `result.artifact` names `be_race_read2_result_v1.json` and no such
-  file exists, which is what a pre-registration is.
-  (3) ***DA's RACE-READ VERIFIER IS RED RIGHT NOW, AND I RAN IT RATHER THAN REASONING FROM THE
-  SOURCE.*** `da_race_read_verify --selftest` -> **rc 1, uncaught `KeyError: '20260906'`** at line
-  1956 in `selftest_real()`, which `selftest()` calls UNCONDITIONALLY. The mechanism, measured: the
-  loop is `for _d in _real_head['READABLE']`, the head is now v5 whose READABLE is 09-06..09-09,
-  and `be_race_read_feed_pins_v1`'s `per_day` keys are **09-01..09-05** -- **no intersection**, so
-  it raises on the first day. **It is a BARE EXCEPTION where this programme rules a NAMED REFUSAL
-  belongs** (R-705's class, which DA itself fixed for `da_mutation_audit`).
-  (4) ***AND IT DIES BEFORE THE v4 ASSERTION CELL IS REACHED.*** That cell (line 1910) asserts FOUR
-  things -- name v4, sha `a741b4d6`, `G_declared == 3`, READABLE 09-03..05 -- **all four now false**;
-  but the `KeyError` at 1956 fires first, so **the cell that would say WHY is not the cell that
-  fails**, and a reader of the traceback alone would not learn that the head moved.
-  (5) **STATED FOR FAIRNESS, because a reader could take that for a gap in BE's work and it is
-  not one:** R-728 **reports** the consequence for DA in its own words and routes it to **DA 112**,
-  in the same entry. Its re-run list names `be_race_reader` 61->70, `da_nonhead_census` 18/0,
-  `da_gate1_day_verdict` 90 and `de_multiday_gate1_runner` 342 -- and not `da_race_read_verify`,
-  the one BE separately reported and dispatched. **What I add is only the measured state and its
-  shape.** ***AND IT IS CLOSED WITHIN THIS ROUND***: DA 112 landed (`7a648d0`) while I wrote, and
-  I re-ran the battery at **20:40:16Z** -- **rc 0, `SELFTEST OK -- 37 checks, 0 failure(s)`**, with
-  the literal `be_race_read_declaration_v4.json` now **gone from the file** (0 grep hits): a read is
-  verified against the declaration **it names**, never against today's head. Both measurements stand
-  with their as-of -- red at 20:38:00Z, green at 20:40:16Z.
-  (6) **THE PINS LANDMINE IS DEFUSED IN THE READ PATH, AND TODAY ONLY THE CODE CAN SHOW IT.** The
-  pins family has exactly ONE version, so the literal and the chain head are the same file and **no
-  behaviour can distinguish fixed from unfixed**; the evidence available now is the code path, and
-  it is there -- `pins(family=...)` resolves the family and refuses by name if it does not resolve.
-  The behavioural proof arrives with v2 at the 09-06 close. **Recording that the control cannot fire
-  yet is the honest status, not a defect.** One small hazard for BE, not ruled: the old constant
-  survives at `str(PINS.name)` in a `copied_from` LABEL, which will keep printing `_v1.json` after
-  v2 lands -- a literal tracking a moving thing in a provenance field.
-  (7) **DE 114's CORRECTION IS NOW THE REGISTER'S OWN**, and more fully than I had it: the runner
-  emits no supersession on a fixture day run, so the GO asked for a pair that could not exist and
-  the seat said so rather than manufacturing one. My check was the key's absence; R-727 gives the
-  reason for it.
-  UNSWEPT, FOR MEM 233: **R-729** (`37cc0e5`) -- REV 86: v5 a valid pre-registration, **whether a
-  second read happens at all is the USER's** and must be put before the horizon, pooling foreclosed,
-  and a rule stated once: *readers of history resolve by the pair the act recorded, never the head*
-  (`c0dc836`); **BE 85** dispatched; and **DA 112** (`7a648d0`), whose landed code I re-ran above.
-  Counts: flags 1,497 -> 1,507; provenance 1,042 -> 1,052; tasks 19; **779 CHECKED / 273 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-EIGHTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 214 archived. Q-MEM-220 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -418,6 +411,17 @@ flags:
   # --- MEM round 232, R-727 + R-728 swept ---
   # --- MEM round 233, R-729 + R-730 swept ---
   # --- MEM round 234, R-731 swept ---
+  # --- MEM round 235, R-732 + R-733 swept ---
+  MY_ROUND_234_ESCAPE_CELL_IS_CLOSED_AND_I_RE_DROVE_IT: CONSUMED-SET-ABSENT-BUT-A-PREDECESSOR-IS-NAMED
+  the_test_is_BROADER_than_the_resolver_a_BARE_STRING_still_refuses: THE-NARROWER-TEST-WOULD-BE-THE-ESCAPE
+  a_STATED_empty_set_and_a_GENUINE_first_read_are_DISTINGUISHABLE: THREE-FIELDS-DIFFER-INCLUDING-why
+  and_the_first_read_control_STILL_ADMITS: APPLIES-FALSE-NO-REFUSAL
+  BE86_wrote_no_declaration_version_v5_still_stands: ONE-FILE-FIVE-DIGESTS-UNMOVED-NO-V6
+  the_coordinators_duration_slip_RECOMPUTED_and_the_disclosure_holds: 20-49Z-TO-0000Z-IS-3H11M-NOT-2H10M
+  and_the_CORRECTED_figure_is_consistent_with_the_clock_too: R-733s-3H07-AT-20-52Z-CHECKS-OUT
+  I_GUESSED_A_KEY_BY_SUBSTRING_AGAIN_AND_GOT_None: THIRD-INSTANCE-CAUGHT-BEFORE-ANY-SENTENCE
+  BEs_check_count_76_to_79_is_RELAYED_for_the_SAME_stated_reason: RUNNING-IT-RENDERS-ON-THE-REAL-HEAD
+  MEM_enters_a_QUIET_HOLD_until_R_734_exists: BE72-THEN-DE-THEN-DA-PRE-READ-THEN-REV-88
   the_two_reads_clause_CANNOT_BE_ESCAPED_by_dropping_the_pair: FOUR-DISTINCT-REFUSALS-BY-NAME-DRIVEN
   and_a_FIRST_read_renders_NO_clause_the_control_ADMITS: APPLIES-FALSE-NOT-A-REFUSAL
   the_four_refusals_are_DISTINGUISHED_not_absorbed: ABSENT-HALFWRITTEN-DECLABSENT-MISMATCH
@@ -25884,6 +25888,106 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 235, 2026-09-06T20:54:45Z ---
+  MY_ROUND_234_ESCAPE_CELL_IS_CLOSED_AND_I_RE_DROVE_IT:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py not_pooled_clause
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      the cell I drove at round 234 as a positive control -- a second read naming a predecessor but
+      NOT naming its consumed set -- rendered no clause then and REFUSES now:
+      CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED, quoting the declaration its supersedes names.
+      Re-driven on a fresh synthetic fixture, not relayed. The escape REV 87 found in my own control
+      is closed at the artifact.
+  the_test_is_BROADER_than_the_resolver_a_BARE_STRING_still_refuses:
+    prov: CHECKED
+    artifact: the same generator, supersedes given as a bare string
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      the sharpest cell and the one that decides whether the fix is real: a supersedes that is a
+      BARE STRING -- a shape the chain resolver refuses to follow -- still counts as naming a
+      predecessor and still refuses by the same name. R-733 states the reason and the drive confirms
+      it: the question is only whether a predecessor is NAMED, and a test narrow enough to require a
+      well-formed pair would itself have been the next escape.
+  a_STATED_empty_set_and_a_GENUINE_first_read_are_DISTINGUISHABLE:
+    prov: CHECKED
+    artifact: the two returns, compared field by field
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      R-733 says a stated empty set renders no clause AND SAYS WHY, so I checked that a reader can
+      actually tell it from silence. Both return applies False and no sentence, and THREE fields
+      differ: consumed_set_is_STATED True/False, named_predecessor True/False, and `why` -- 'this
+      declaration STATES an empty consumed set: no previous read consumed any day' against 'names NO
+      predecessor in its supersedes and no days consumed by a previous read -- it is a first read'.
+      Rule 4's shape (a status, never a silent drop) in this instrument.
+  and_the_first_read_control_STILL_ADMITS:
+    prov: CHECKED
+    artifact: the same generator, a declaration with no predecessor and no consumed set
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      carried forward from round 234 because a fix that closed the escape by refusing everything
+      would be the failure: a genuine first read still returns applies False with no clause and no
+      refusal. The guard gained a case; it did not become a gate that fires on everything.
+  BE86_wrote_no_declaration_version_v5_still_stands:
+    prov: CHECKED
+    artifact: commit 80c05a5 and the five declaration files
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      80c05a5 (20:51:47Z) touches EXACTLY ONE file, live/pm_research/be_race_reader.py. All five
+      declaration digests unmoved -- v5 b1aa349ed276bc41 -- and no v6. Two rounds running that a
+      clause fix touched only the generator and left the pre-registration alone, which is the
+      property rule 11 needs while the days are open.
+  the_coordinators_duration_slip_RECOMPUTED_and_the_disclosure_holds:
+    prov: CHECKED
+    artifact: R-733's disclosure, recomputed from the stamps
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      the dispatch said '2 h 10 min' to the 00:00Z boundary; from R-732's 20:49Z stamp the interval
+      is 3 h 11 min, so the disclosure is accurate and the figure was an hour out. The anchor named
+      (00:00Z) was correct, which is why nothing acted on it. This is the times-from-the-clock class
+      that has cost this programme corrections before; I recompute it here rather than accept the
+      disclosure on its word.
+  and_the_CORRECTED_figure_is_consistent_with_the_clock_too:
+    prov: CHECKED
+    artifact: R-733's own routing line
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      checking the correction as well as the error, because a corrected figure taken on trust is the
+      same failure one step later: R-733 says '3 h 07 min by the clock at 20:52Z' and the interval
+      from 20:52:00Z is 3 h 08 min, from 20:53:00Z 3 h 07 min -- so any stamp inside that minute
+      makes 3 h 07 right. Consistent, and now checked rather than assumed.
+  I_GUESSED_A_KEY_BY_SUBSTRING_AGAIN_AND_GOT_None:
+    prov: CHECKED
+    artifact: my own probe, corrected within the same command sequence
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      recorded against myself. My first pass hunted the reason field with a substring test over the
+      key names ('why' in k or 'not_' in k) and printed None -- the very shape my round-232 remedy
+      forbids, which is to ASSERT membership rather than guess. I printed sorted(r.keys()) and the
+      key is plainly `why`. THIRD instance of the key-reading class this session: round 225
+      published defaults for three rounds, round 232 read an absent `head`, this one returned None.
+      The trend is real -- the last two were caught before any sentence and inside one command
+      sequence -- but the class has not gone away, and a probe that guesses a name is a probe that
+      can report an absence as a finding.
+  BEs_check_count_76_to_79_is_RELAYED_for_the_SAME_stated_reason:
+    prov: RELAYED
+    artifact: R-733's own text (BE 86, Q-BE-328)
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      as at round 234: be_race_reader's clause cell calls not_pooled_clause() with no arguments,
+      which resolves the REAL head and renders against the first read's day_signs, so running the
+      battery would have BE's code open the first read's result inside my process. Every property I
+      report above I drove on a synthetic fixture; the COUNT alone is relayed, for the third round
+      running and for the same stated reason.
+  MEM_enters_a_QUIET_HOLD_until_R_734_exists:
+    prov: CHECKED
+    artifact: R-733's routing line
+    as_of: 2026-09-06T20:54:00Z
+    said: >-
+      the 00:00Z chain is BE 72 (fragment, tape, book, structure v4, pins v2), then DE's launch as
+      one GO, then DA's 09-06 pre-read, then REV 88 on the chain with BE 86 included; the wake is
+      armed. The USER's four open items stand, item (d) time-bound to 2026-09-10T01:00:00Z. MEM has
+      nothing to sweep until R-734 exists, and a quiet hold is a valid state rather than a gap.
   # --- MEM round 234, 2026-09-06T20:49:20Z ---
   the_two_reads_clause_CANNOT_BE_ESCAPED_by_dropping_the_pair:
     prov: CHECKED

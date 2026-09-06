@@ -1,3 +1,79 @@
+# READ FIRST — round 235 (MEM, 2026-09-06T20:54:45Z, tip `39135da`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-732 and R-733 swept.
+Opened no result; every drive below is on a synthetic fixture.
+
+## 1. My round-234 escape cell is closed — and I re-drove it
+
+| cell | round 234 | now |
+|---|---|---|
+| predecessor named, **no consumed key** | rendered no clause | **`CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED`** |
+| predecessor named, **`CONSUMED_BY_THE_FIRST_READ: []`** | — | `applies False`, no clause, **and says why** |
+| **a genuine first read** (no predecessor) | `applies False` | `applies False` — **still admits** |
+| **`supersedes` as a BARE STRING** | — | **refuses by the same name** |
+
+**The bare-string cell is the one that decides whether the fix is real.** A shape
+the chain resolver refuses to follow still counts as naming a predecessor — **a
+test narrow enough to require a well-formed pair would itself have been the next
+escape.**
+
+**A stated empty set is distinguishable from silence.** Both return `applies
+False` with no sentence, and **three fields differ**: `consumed_set_is_STATED`,
+`named_predecessor`, and **`why`** — *"this declaration STATES an empty consumed
+set…"* against *"names NO predecessor… it is a first read"*. Rule 4's shape — a
+status, never a silent drop. **And the first-read control still admits**: a fix
+that closed the escape by refusing everything would have been the failure.
+
+## 2. BE 86 wrote no declaration version; v5 still stands
+
+`80c05a5` (20:51:47Z) touches **exactly one file**. All five digests unmoved (v5
+`b1aa349ed276bc41`), no v6. **Two rounds running** that a clause fix touched only
+the generator and left the pre-registration alone — the property rule 11 needs
+while the days are open.
+
+**BE's check count 76 → 79 is RELAYED**, third round running and for the same
+stated reason: the clause cell calls `not_pooled_clause()` with no arguments,
+resolving the real head and rendering against the first read's `day_signs`.
+**Every property above I drove on a fixture; the count alone is relayed.**
+
+## 3. The duration slip, recomputed — and so is the correction
+
+The dispatch said **"2 h 10 min"** to the boundary; from R-732's 20:49Z stamp the
+interval is **3 h 11 min** — the disclosure is accurate and the figure was an hour
+out. The **anchor** (00:00Z) was correct, which is why nothing acted on it.
+
+**I checked the corrected figure too**, because a correction taken on trust is the
+same failure one step later: R-733's *"3 h 07 min by the clock at 20:52Z"* is right
+for any stamp inside that minute.
+
+## 4. And I guessed a key by substring again
+
+My first pass hunted the reason field with `'why' in k or 'not_' in k` over the
+key names and printed **None** — the very shape my round-232 remedy forbids, which
+is to **assert** membership rather than guess. I printed `sorted(r.keys())`; the
+key is plainly `why`.
+
+**Third instance of the key-reading class this session** — round 225 published
+defaults for three rounds; round 232 read an absent `head`; this one returned
+None. The trend is real (the last two caught before any sentence, this one inside
+one command sequence), **but the class has not gone away, and a probe that guesses
+a name is a probe that can report an absence as a finding.**
+
+## 5. Next state: a quiet hold
+
+The 00:00Z chain is **BE 72** (fragment → tape → book → structure v4 → pins v2),
+then **DE's launch as one GO**, then **DA's 09-06 pre-read**, then **REV 88** with
+BE 86 included; the wake is armed. **The USER's four open items stand**, item (d)
+time-bound to **2026-09-10T01:00:00Z**. MEM has nothing to sweep until **R-734**
+exists, and **a quiet hold is a valid state rather than a gap.**
+
+Counts: flags 1,527 → 1,537; provenance 1,072 → 1,082; tasks 19; **806 CHECKED /
+276 RELAYED / 455 UNMARKED — hundred-and-eleventh round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 217 archived. Q-MEM-223
+filed through the script.
+
+---
+
 # READ FIRST — round 234 (MEM, 2026-09-06T20:49:20Z, tip `f451eac`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-731 swept.
