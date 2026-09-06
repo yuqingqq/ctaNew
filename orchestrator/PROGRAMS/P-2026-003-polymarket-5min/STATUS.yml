@@ -63,6 +63,101 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T15:46:30Z (MEM ROUND 197 -- R-671 SWEPT, tip `3427357`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every version cell driven on
+  a SYNTHETIC receipt against the REAL v21/v23 design declarations.**
+  (1) ***R-671 NAMES TWO GUARDS ON THE SCOPE MAP; I DROVE FIVE CELLS AND THERE ARE THREE.***
+  A map **no function consults** REFUSES; a name in `ECONOMIC_FIELDS` **absent from the map**
+  REFUSES; and -- unnamed in R-671 -- **a scope bound INSIDE a function rather than at module
+  level** REFUSES too. *Positive control: DE's real source copied to another path ADMITS, 11
+  names, `design_version_in_force` 23, `referenced_by_functions` exactly
+  `['economic_fields_in_force']`.* An absent source REFUSES. **Every guard has a falsifier AND
+  the instrument has a control it admits** -- rule 15 satisfied by driving it, not by reading it.
+  (2) **THE VERSION-FROM-A-PAIR RESOLVER DRIVES CORRECTLY IN SEVEN CELLS, AND IT HASHES A
+  BASENAME.** Route (1) against the real `..._design_v21.json` (`a52b463c89498332`) resolves
+  **v21 with EIGHT names in force** -- *the same eight Q-DA-318 filed for the 09-03 seal, which
+  I could therefore check without opening the sealed day.* v23 (`f248e8438e525499`) -> 23, 11
+  names. **A v23 PATH carrying v21's digest resolves to NOTHING** -- the version is unknown, not
+  the one the path claims. Route (2), `carrying_commit` paired with the receipt's own closure
+  digest for DE's design module at HEAD (`8e6d2e5b8454f586`), resolves. Wrong digest, no digest,
+  empty receipt: all UNRESOLVED. ***AND EVERY UNRESOLVED CELL TAKES THE FULL 11 -- absence never
+  selects the weaker rule.*** **THE ONE SEAM: route (1) hashes `_derived_dir() / basename`**, so
+  I made it report `pair_verified True` for a copy under /tmp it never opened. *It FAILS CLOSED
+  the moment the contents differ*, so no wrong version is admitted -- but "recomputed from the
+  file the path names" is not what the code does. **ROUTED TO DA.**
+  (3) ***THE PRODUCING-PLACE FIX IS REAL AND ITS SEARCH IS BOUNDED TO TWO BINDING SHAPES.***
+  Driven: DE's real runner gives **0 producing places, 1 name-only-in-a-declaration**, so
+  `so_there_is_nothing_to_compare` is TRUE, and the constant-vs-expression separator works
+  (a dict CONSTANT is a table entry, a dict EXPRESSION an emission). **But five other binding
+  shapes are MISSED -- annotated, tuple-target, walrus, subscript, and `+=` alone -- and each
+  leaves the claim reading TRUE.** *All five are in heavy live use across live/pm_research's
+  252 modules: AnnAssign 1505 in 148, tuple-target 1841 in 216, subscript 2691 in 209, AugAssign
+  1715 in 232, walrus 21 in 21.* **By DA'S OWN note-vs-hole test, stated one function earlier in
+  the SAME file, a gate not extended for a shape the tree uses everywhere is a HOLE.** The claim
+  is true TODAY; the predicate would not notice if it stopped being. **ROUTED, NOT RULED.**
+  (4) **THE TWO SHAPE COUNTS OVERLAP: `de_multiday_gate1_runner.py:5319` IS IN BOTH LISTS**, so
+  "7 multi-hop and 1 returning-function" is **SEVEN** distinct pins, not eight -- and the single
+  returning-function pin is in **DE's runner**, not DA's own file.
+  (5) ***A FOURTH NUMBER FOR ONE QUANTITY, AND THE RE-EMISSION I ROUTED AT ROUND 196 IS STILL
+  OWED.*** The newest emitted census is unchanged -- `...150939Z.json`, `a0c8cb70b8419e36`,
+  as_of 15:09:45Z -> **271 -> 62 -> 1** -- and I checked POSITIVELY that `shapes_the_tree_uses`
+  is absent from the whole file, rather than concluding absence from a key walk. **My own run at
+  the tip, to my scratchpad and NOT emitted, gives 281 -> 66 -> 0.** R-670 said 279 -> 66 -> 1;
+  R-671 quotes 7 / 1 / 16; I measure 7 / 1 / 17, *of which only **2** reach an open -- and a
+  composed name that never reaches an open is not a pin, so the sharp number is the one nobody
+  quoted.* **ONE QUANTITY, FOUR VALUES IN AN AFTERNOON, THREE OF THEM IN NO ARTIFACT.** *My 281
+  is perishable too; that is the point, not a correction.* Ninth instance today. Re-emit, then
+  cite by digest.
+  (6) **THE SUPERSEDING LINK IS WRITTEN BY THE EMITTER AND THE CHAIN IS THREE DEEP, VERIFIED BY
+  RECOMPUTATION:** `...140810Z` (`24f2191009177b4a`, FLAGGED, `seal_holds` None) <- `...142749Z`
+  (`65048af3fda79195`, INCOMPLETE, `seal_holds` True) <- `...152649Z` (`6e418d119ce27beb`,
+  INCOMPLETE, `seal_holds` True). *Each record names its predecessor by `{path, sha256}` and
+  both declared digests recompute to the files they name.* No fourth record has landed; the
+  fixture record is a separate root and correctly not in the day's chain.
+  (7) **A RUNNING UNIT READS `success`.** de102smoke at 15:42:51Z: LoadState=loaded,
+  ActiveState=active, **SubState=running** -- and in the same read `ExecMainStatus=0`,
+  `Result=success`, for a process that has not exited. *The triple says it has not finished; the
+  two economic-looking fields alone would say it had.* **R3'/R3'' firing on a live unit rather
+  than in the abstract.** InvocationID `a8c7e41ee2d24ff8`; MemoryPeak 2,957,488,128 for the
+  **eighth** consecutive reading; started 14:54:00Z (48 min at my read). **AND THE DAY IS
+  2026-09-04, NOT 09-03**, on `be_daybook_20260904_btc.pkl`, read from the unit's own command
+  line -- the day whose earlier record was `STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`.
+  (8) **BE 66's HEAVY HALF IS BLOCKED BY A REFUSAL WHOSE HOLDER I CAN NAME.** `/proc/locks`,
+  matched to `data/.heavy_run.lock` by dev:inode (103:01, 1053378), gives **pid 3551079**, whose
+  cmdline is de102smoke's own `flock -n -E 75` main process. *EX_TEMPFAIL -- a refusal, not a
+  failure -- and measured at the lock, not inferred from BE's report.*
+  (9) ***MY OWN GREP TALLY DISAGREED WITH THE PARSE BY FOURTEEN.*** `grep -c "^    prov:
+  CHECKED"` gave 526/265, summing to 791 against 777 entries; the parse gives 519/258. The
+  extras are those same strings quoted **inside `said:` blocks** -- *the needle matching my own
+  prose*, the class I have swept in three other seats' files, caught here in mine before the
+  sentence. Twenty-sixth "suspect the probe first".
+  (10) ***AND MY OWN AUDIT REFUSED MY OWN ENTRY.*** I first cited the running unit as the
+  artifact for (7); `mem_flag_provenance --audit` returned **1 FINDING -- "CHECKED, but its
+  artifact is not on disk"** -- because a live unit is not a file. *The fix is not a looser
+  rule: the artifact is the transient unit file systemd wrote* (`FragmentPath` read from the
+  unit, 924 B, `5f06b2d6b95902a2`), *which pins WHAT was launched, while the five-field OUTCOME
+  reading stays what it is -- a LIVE read at a stated clock, re-checkable only while
+  `InvocationID a8c7e41ee2d24ff8` is the live one.* **An instrument that has never refused me is
+  not an instrument** (rule 15), and this one refused me on the round I used it hardest.
+  AT COMMIT TIME, UNSWEPT: **R-672 LANDED** (`864822e`, tip `9f5ed41`) -- DA 96 verified, and
+  it lands ON TOP OF what I had just routed. **THE COORDINATOR DROVE THE CENSUS AT THE TIP
+  INDEPENDENTLY AND GOT `281 literals -> 66 pins -> 0 refused, 1 marked` -- IDENTICAL TO MY OWN
+  RUN, TO THE LITERAL.** *So the quantity is reproducible; what is missing is an EMISSION, which
+  is exactly the routing and not a dispute about the number.* **AND R-669's 139/48 RECONCILES
+  ARITHMETICALLY, WHICH I CHECKED AT THE ARTIFACT RATHER THAN ACCEPTING:** the 15:09:45Z census
+  carries `head_is_null_because.NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION = 141` and
+  `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY = 70`, summing to `n_head_is_null = 211` exactly; the
+  pane's 139 / 48 / 187 came from a 14:58:27Z run over 247 literals, and 139+2, 48+22, 187+24
+  land on 141 / 70 / 211. *Same predicate, later tree -- the drift came from a screen, not from
+  the file that had just been emitted.* **The last refused pin is also gone for a reason I can
+  name:** `live/mm_research/e2_a_episodes.py` pinned `p002_e2_a_declaration_v2.json`, five
+  supersessions behind, and now pins **v7** through `declaration_is_the_chain_head()` -- which is
+  why my run reads `n_refused 0` where the emitted artifact still reads 1. **Unswept into the
+  round-197 flags above by design: this landed after they were written, and the note supersedes
+  in band rather than editing them (rule 13).**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,232 -> 1,241; flag_provenance 777 -> 786;
+  tasks 19; **528 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-THIRD round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-185 filed.)
   2026-09-06T15:28:14Z (MEM ROUND 196 -- R-670 SWEPT, tip `f151cad`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
   SYNTHETIC receipt.**
@@ -178,63 +273,6 @@ updated: >-
   tasks 19; **511 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
   seventy-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T15:16:05Z (MEM ROUND 194 -- R-668 SWEPT, tip `d1328d1`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
-  (1) **THE CENSUS `.V2` CLOSES MY OWN STALE-ARTIFACT NOTE** (`a0c8cb70b8419e3646…`, protocol
-  V2, 15 checks / 0 failed): **271 literals → 62 PINS → ONE refused; TWENTY-THREE families,
-  ZERO not `ONE_HEAD`; `supersedes` names the 144403Z census by `{path, sha256}`.**
-  ***Rounds 191 and 192 recorded that the linking was in the files while the census ARTIFACT
-  still said four; this closes it by the only means that could -- a RE-EMISSION.***
-  (2) **AND THE ROW ARITHMETIC CLOSES TWICE OVER THE SAME ROWS, SUMMED BY ME:** *190 no-open
-  + 39 head-unknown + 22 admitted + 19 in-a-supersession-field + 1 refused = **271** =
-  `n_literals`; and 22 + 39 + 1 = **62** = `n_pins`.* **Two independent sums, both closing --
-  which is what makes the headline numbers checkable rather than quotable.**
-  (3) **THE ONE REFUSAL IS DA'S OWN FILE:** `live/mm_research/e2_a_episodes.py:53` names
-  `p002_e2_a_declaration_v2.json` where the head is **v7**, `marker: null`, status
-  `REFUSED_UNMARKED_NON_HEAD` -- *with the row carrying its dataflow ("through ONE
-  assignment: `DECL_PATH` is used at line 522 (loads)", `flows_into_an_open: true`), so the
-  refusal rests on what the literal DOES.* ***The census's single refusal is in the seat's
-  own code, five versions behind the head, found by the seat's own instrument.***
-  (4) ***AND THE REGISTER'S "139 / 48" DO NOT RESOLVE AT EITHER CENSUS -- I COUNTED FOUR
-  WAYS.*** **At V2: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` = 141 ROWS / 81 DISTINCT
-  NAMES; `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` = 70 ROWS / 32 DISTINCT NAMES; 141 + 70 =
-  211 = `n_head_is_null`. The earlier census carries NO null-reason field at all, and no
-  census file contains the string "139".** *Neither figure resolves by rows or by names.*
-  **Routed, not ruled: the artifact's numbers are the four above, each with its field name.**
-  (5) **NO NULL IS SILENT, AND 39 OF THEM ARE PINS.** *"Rule 11: every null head carries
-  WHY"* -- and `n_head_is_null_and_a_pin` is **39**: literals that FLOW INTO AN OPEN whose
-  family the census cannot resolve. ***Neither admitted nor refused but `HEAD_UNKNOWN` -- the
-  third value again, because "no family found" is not "names a non-head".***
-  (6) **THE COMPOSED RULE, AND THE ONE LEGITIMATE NON-HEAD READER:** *a literal flowing into
-  an open that names a non-head is REFUSED whatever the code calls it, and every refused row
-  says the marker is **THE AUTHOR'S CLAIM**.* **The R-608 link-writer is the single
-  legitimate exception, and WHAT THE BYTES DO separates it: its literals sit in a
-  supersession FIELD and never flow into an open -- 19 rows.** *An exemption that needs no
-  allowlist because the dataflow already distinguishes it.*
-  (7) **BOTH DECLARATION DIRECTORIES ARE SCANNED NOW** -- *the earlier censuses scanned one,
-  so "50 nulls" were UNSCANNED rather than HEADLESS:* ***an instrument reporting the limit of
-  its own search as a property of the world, at the level of a whole directory.*** **And the
-  allowlist goes through the head rule, so the file deciding which literals are admissible is
-  subject to the rule it enforces.**
-  (8) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B -- **the FIFTH
-  identical reading (14:56, 15:02, 15:05, 15:11, 15:16)**. *A number that has not moved in
-  twenty minutes of a working run is not coincidence: the peak is the LOAD.* **Receipt
-  ≈16:20Z; BE 66's heavy half still refused on the lock; DA 95 and REV 75 remain the open
-  gates on the seal-scope seam.**
-  **AT COMMIT TIME, 2026-09-06T15:19:40Z: BE 66 LANDED REV 74's FOUR CORRECTIONS BEFORE THE
-  HEAVY RUN (`78290d3`) -- and the first is named exactly right: "an empty book is a NAMED
-  STATUS, not a `StopIteration`".** ***A generator asked for a row a small book does not have
-  raises through the caller; a named status is a fact the receipt can carry.*** *The
-  correction went in BEFORE the heavy item that would have written the residue into an
-  artifact -- the ordering R-667 recorded, held.*
-  **FLAG WORDS: the census RE-EMITTED-AND-MY-NOTE-CLOSED (23 families, 0 headless); the one
-  refusal DAS-OWN-FILE-FIVE-VERSIONS-BEHIND; the register's 139/48 UNRESOLVED-AT-THE-ARTIFACT
-  (routed); the run FIFTH-IDENTICAL-PEAK.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,208 -> 1,216, flag_provenance 753 -> 761,
-  tasks 19; **503 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
-  seventieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
-  new flags vs HEAD 0 without provenance.)
-
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -427,6 +465,147 @@ flags:
   # would manufacture provenance after the fact, which is the defect this rule
   # exists to prevent.
   # =====================================================================
+  the_scope_map_carries_THREE_refusals_not_two: DRIVEN-FIVE-CELLS-ALL-CORRECT
+                             # R-671 names two guards on
+                             # `de_sealed_from_design_version_at_source`; I drove
+                             # five cells and there are THREE refusals. (a) a map
+                             # NO function consults -> REFUSED; (b) a name in
+                             # ECONOMIC_FIELDS absent from the map -> REFUSED
+                             # (driven by dropping one name); (c) **a scope bound
+                             # INSIDE a function rather than at module level ->
+                             # REFUSED** -- the `scope is None` path, which R-671
+                             # does not name. Positive control: DE's real source
+                             # copied to another path ADMITS, 11 names,
+                             # `design_version_in_force` 23, referenced by exactly
+                             # ONE function (`economic_fields_in_force`). Source
+                             # absent -> REFUSED. So the instrument has a
+                             # falsifier for each guard AND a control it admits:
+                             # rule 15 satisfied by drive, not by reading.
+  the_producing_place_counter_is_bounded_to_TWO_binding_shapes: TRUE-TODAY-BUT-IT-WOULD-NOT-NOTICE
+                             # ROUTED TO DA, NOT RULED. R-671's fix is real and I
+                             # drove it: `declared_limits(...)[0]["computed"]` on
+                             # DE's real runner gives `n_places_the_runner_produces_it`
+                             # 0 and `n_places_it_is_only_NAMED_in_a_declaration` 1,
+                             # so `so_there_is_nothing_to_compare` is TRUE and the
+                             # constant-vs-expression separator drives correctly (a
+                             # dict CONSTANT lands in the declaration count, a dict
+                             # EXPRESSION in the producing count). **BUT THE WALK
+                             # SEES ONLY `ast.Assign` WITH A `Name` TARGET, AND DICT
+                             # VALUES.** Driven on synthetic sources appended to the
+                             # real runner, five binding shapes are MISSED and each
+                             # leaves `nothing_to_compare` TRUE: annotated
+                             # (`D_E_MINUS_R: float = f()`), tuple-target
+                             # (`a, D_E_MINUS_R = f()`), walrus, subscript
+                             # (`d['D_E_MINUS_R'] = f()`), and augmented (`+=`)
+                             # alone. **AND ALL FIVE ARE IN HEAVY LIVE USE**: over
+                             # live/pm_research's 252 modules, AnnAssign 1505 in 148,
+                             # tuple-target 1841 in 216, subscript-target 2691 in
+                             # 209, AugAssign 1715 in 232, walrus 21 in 21. By DA's
+                             # OWN note-vs-hole test -- REV 73 S2(b), stated one
+                             # function earlier in the SAME file -- "which shapes the
+                             # tree actually uses decides note vs hole", so a gate
+                             # not extended for a shape the tree uses everywhere is
+                             # a HOLE. The claim is TRUE today because DE binds the
+                             # name nowhere by any shape; the predicate would not
+                             # notice if that stopped being true.
+  the_two_shape_counts_OVERLAP_so_seven_plus_one_is_seven: SAME-ROW-IN-BOTH-LISTS
+                             # `de_multiday_gate1_runner.py:5319` appears in BOTH
+                             # `pins_through_a_multi_hop_assignment` and
+                             # `pins_through_a_returning_function`. The union is
+                             # SEVEN distinct pins; a reader summing R-671's "7
+                             # multi-hop and 1 returning-function" gets eight. And
+                             # the single returning-function pin is in **DE's
+                             # runner**, not in DA's own file -- R-671 does not say
+                             # whose it is, and the seat that must fix it is named
+                             # only by the row.
+  a_FOURTH_number_for_one_quantity_and_the_re_emission_is_still_owed: ROUTED-NINTH-INSTANCE
+                             # ROUTED, NOT RULED, and the SECOND round running.
+                             # THE ARTIFACT at the tip is unchanged since round 196:
+                             # `p003_da_nonhead_census__20260906T150939Z.json`,
+                             # 357,000 B, `a0c8cb70b8419e36`, as_of 15:09:45Z ->
+                             # **271 literals, 62 pins, 1 refused, 23 families**, and
+                             # it carries NO `shapes_the_tree_uses` KEY AT ALL
+                             # (checked positively, not by my search coming up
+                             # empty: the string is absent from the whole file).
+                             # **MY OWN RUN of the same census at the tip, written to
+                             # my scratchpad and NOT emitted: 281 -> 66 -> 0**, with
+                             # the shapes block present. R-670 said 279 -> 66 -> 1;
+                             # R-671 quotes 7 / 1 / 16. So ONE QUANTITY HAS FOUR
+                             # VALUES IN ONE AFTERNOON (271 artifact, 279 R-670, 281
+                             # mine, and a refused count that has gone 1 -> 0) and
+                             # THREE OF THEM ARE IN NO ARTIFACT. My 281 is perishable
+                             # too -- that is the point, not a correction. The
+                             # remedy is unchanged and now larger by three numbers:
+                             # re-emit, then cite by digest.
+  the_composed_name_count_that_MATTERS_is_not_the_one_quoted: SEVENTEEN-CENSUSED-TWO-REACH-AN-OPEN
+                             # At the tip `n_composed_declaration_names` is 17 and
+                             # `n_composed_that_reach_an_open` is **2**. A declaration
+                             # name built at runtime that never reaches a file open
+                             # is not a pin, so the consequential number is 2. R-671
+                             # carries the loud one (16, itself a run's) and not the
+                             # sharp one. Same shape as the dataflow gate's own
+                             # lesson: a literal is a PIN only when it flows into an
+                             # open.
+  the_pair_resolver_hashes_a_BASENAME_not_the_path_it_names: SEVEN-CELLS-FAILS-CLOSED
+                             # `receipt_design_version` driven on SYNTHETIC receipts
+                             # (the sealed day NOT opened). Route (1)
+                             # `provenance.design` PAIR against the real
+                             # `p003_de_multiday_gate1_design_v21.json`
+                             # (`a52b463c89498332`) -> resolved v21, pair_verified,
+                             # **8 names in force** -- the same eight Q-DA-318 filed
+                             # for the 09-03 seal. v23 (`f248e8438e525499`) -> 23, 11
+                             # names. A v23 PATH carrying v21's digest -> UNRESOLVED
+                             # (the version is unknown, NOT the one the path claims).
+                             # A path with no digest -> UNRESOLVED. Route (2)
+                             # `carrying_commit` + the receipt's own closure digest
+                             # for `de_multiday_design_declaration.py` at HEAD
+                             # (`8e6d2e5b8454f586`) -> 23; a wrong closure digest ->
+                             # UNRESOLVED; an empty receipt -> UNRESOLVED. **EVERY
+                             # UNRESOLVED CELL TAKES THE FULL 11 -- absence never
+                             # selects the weaker rule.** THE ONE SEAM: route (1)
+                             # hashes `_derived_dir() / Path(pth).name`, the
+                             # BASENAME forced into derived/, so I made it report
+                             # `pair_verified True` for a copy under /tmp that it
+                             # never opened. It FAILS CLOSED the moment the contents
+                             # differ, so no wrong version is ever admitted -- but
+                             # the docstring's "recomputed from the file the path
+                             # names" is not what the code does. Routed to DA.
+  a_RUNNING_unit_reads_success_and_the_triple_is_why_that_is_not_an_outcome: R3-PRIME-LIVE
+                             # de102smoke.service read at 2026-09-06T15:42:51Z:
+                             # LoadState=loaded, ActiveState=active,
+                             # **SubState=running** -- and in the SAME read
+                             # ExecMainStatus=0 and Result=success, for a process
+                             # that has not exited. The two economic-looking fields
+                             # alone would say "success"; the TRIPLE says it has not
+                             # finished. This is R3'/R3'' firing on a live unit
+                             # rather than in the abstract. InvocationID
+                             # a8c7e41ee2d24ff8 (the tie). ExecMainStartTimestamp
+                             # 14:54:00Z, so 48 min at my read. **AND THE DAY IS
+                             # 2026-09-04, NOT 09-03** -- `--day 2026-09-04 --book
+                             # be_daybook_20260904_btc.pkl` read from the unit's own
+                             # command line -- the day whose earlier record was
+                             # STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN.
+  BE_66_is_blocked_by_a_refusal_whose_holder_I_can_NAME: MEASURED-AT-PROC-LOCKS
+                             # The heavy lock `data/.heavy_run.lock` (dev 103:01,
+                             # inode 1053378) is held by **pid 3551079**, and that
+                             # pid's cmdline is `/usr/bin/flock -n -E 75 ...
+                             # de_multiday_gate1_runner.py` -- de102smoke's OWN main
+                             # process, the declared launch form. So BE 66's heavy
+                             # half is blocked by a REFUSAL (EX_TEMPFAIL), not a
+                             # failure, and I read the holder out of /proc/locks by
+                             # matching the lock file's dev:inode rather than
+                             # inferring it from BE's report or from the unit list.
+  my_own_grep_tally_disagreed_with_the_parse_by_FOURTEEN: SUSPECT-THE-PROBE-TWENTY-SIXTH
+                             # Counting provenance kinds with `grep -c "^    prov:
+                             # CHECKED"` gave 526 CHECKED and 265 RELAYED -- summing
+                             # to 791 against 777 entries. The parse gives 519 / 258.
+                             # The extra 14 are the strings `prov: CHECKED` and
+                             # `prov: RELAYED` occurring INSIDE `said:` blocks at the
+                             # same indentation: **the needle matching my own prose**,
+                             # the class I have swept in three other seats' files.
+                             # Caught before the sentence, which is what the
+                             # count-before-you-write rule is for. The parse is the
+                             # authority; the greps are not.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -23209,6 +23388,98 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 197, 2026-09-06T15:45:00Z ---
+  the_scope_map_carries_THREE_refusals_not_two:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:39:00Z
+    said: >-
+      drove de_sealed_from_design_version_at_source five ways -- a map no function
+      consults, a map missing one ECONOMIC_FIELDS name, a scope bound inside a function,
+      the real source copied elsewhere, and an absent source. Four REFUSED, the control
+      ADMITTED with 11 names and in_force 23, referenced_by_functions
+      ['economic_fields_in_force']. R-671 names two guards; the module-level-assignment
+      refusal is a third.
+  the_producing_place_counter_is_bounded_to_TWO_binding_shapes:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:41:00Z
+    said: >-
+      drove declared_limits with DE_RUNNER_PATH pointed at the real runner plus one
+      appended binding each. Baseline produces=0 named=1 nothing_to_compare=True. Plain
+      assign and a dict EXPRESSION are COUNTED; a dict CONSTANT lands in the declaration
+      count; annotated, tuple-target, walrus, subscript and augmented-alone are MISSED and
+      each leaves nothing_to_compare True. Counted the five shapes across
+      live/pm_research's 252 modules by ast.walk -- every one is in live use, which is
+      DA's own note-vs-hole criterion.
+  the_two_shape_counts_OVERLAP_so_seven_plus_one_is_seven:
+    prov: CHECKED
+    artifact: live/pm_research/da_nonhead_census.py
+    as_of: 2026-09-06T15:37:00Z
+    said: >-
+      took the two lists out of my own census run and intersected them by (file, line):
+      de_multiday_gate1_runner.py:5319 is in both, so the union is 7 and not 8. Read the
+      flow strings to confirm the same literal is described both ways.
+  a_FOURTH_number_for_one_quantity_and_the_re_emission_is_still_owed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T150939Z.json
+    as_of: 2026-09-06T15:37:00Z
+    said: >-
+      hashed the newest emitted census (a0c8cb70b8419e36, 357,000 B, as_of 15:09:45Z) and
+      read 271/62/1/23 from it; checked positively that the string shapes_the_tree_uses
+      is absent from the whole file rather than concluding absence from a key walk. Then
+      ran the census at the tip to my scratchpad and read 281/66/0 with the shapes block
+      present. No re-emission has landed since round 196.
+  the_composed_name_count_that_MATTERS_is_not_the_one_quoted:
+    prov: CHECKED
+    artifact: live/pm_research/da_nonhead_census.py
+    as_of: 2026-09-06T15:37:00Z
+    said: >-
+      read n_composed_declaration_names 17 and n_composed_that_reach_an_open 2 from my own
+      run at the tip, and the_composed_name_limit's own prose for why a composed name
+      cannot be resolved without evaluating the module.
+  the_pair_resolver_hashes_a_BASENAME_not_the_path_it_names:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T15:44:00Z
+    said: >-
+      drove receipt_design_version and fields_in_force_for on seven synthetic receipts
+      against the real v21/v23 design declarations and against DE's design module at HEAD;
+      then copied v21 to a temp directory and declared THAT path with the matching digest,
+      which resolved pair_verified True while the file hashed was derived/'s copy. Made
+      the temp copy differ and it failed closed to the full list. The sealed day was never
+      opened.
+  a_RUNNING_unit_reads_success_and_the_triple_is_why_that_is_not_an_outcome:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    as_of: 2026-09-06T15:42:51Z
+    said: >-
+      THE AUDIT REFUSED MY FIRST FORM OF THIS ENTRY, AND IT WAS RIGHT: I had named the
+      running unit as the artifact, and a live unit is not a file on disk. The artifact is
+      the transient unit file systemd wrote, FragmentPath read from the unit itself, 924 B,
+      sha256 5f06b2d6b95902a2 -- that is what pins WHAT was launched. The five-field
+      OUTCOME reading is a LIVE read at the as_of above (systemctl --user show -p LoadState
+      -p ActiveState -p SubState -p Result -p ExecMainStatus -p InvocationID -p MemoryPeak
+      -p ExecMainStartTimestamp, copied at once while LoadState=loaded), not an artifact,
+      and it is re-checkable only while InvocationID a8c7e41ee2d24ff8 is the live one. The
+      day and book come from the unit's own command line. MemoryPeak 2957488128 for the
+      eighth consecutive reading.
+  BE_66_is_blocked_by_a_refusal_whose_holder_I_can_NAME:
+    prov: CHECKED
+    artifact: /proc/locks
+    as_of: 2026-09-06T15:44:00Z
+    said: >-
+      stat'd data/.heavy_run.lock for its dev:inode and matched that against /proc/locks
+      to get the holding pid, then read that pid's cmdline. The holder is de102smoke's own
+      flock main process with -n -E 75, so the block is EX_TEMPFAIL.
+  my_own_grep_tally_disagreed_with_the_parse_by_FOURTEEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T15:45:00Z
+    said: >-
+      counted prov kinds two ways -- grep -c on the indented key, and a yaml parse of
+      flag_provenance -- and took the difference. 526/265 by grep, 519/258 by parse, the
+      14 extras being the same strings quoted inside said: blocks.
   MY_Q_ROW_LANDED_IN_ANOTHER_SEATS_COMMIT:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md

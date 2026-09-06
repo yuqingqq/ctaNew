@@ -15025,3 +15025,67 @@ directions.
   sixty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 179 — archived 2026-09-06T15:46:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 197 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T15:16:05Z (MEM ROUND 194 -- R-668 SWEPT, tip `d1328d1`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
+  (1) **THE CENSUS `.V2` CLOSES MY OWN STALE-ARTIFACT NOTE** (`a0c8cb70b8419e3646…`, protocol
+  V2, 15 checks / 0 failed): **271 literals → 62 PINS → ONE refused; TWENTY-THREE families,
+  ZERO not `ONE_HEAD`; `supersedes` names the 144403Z census by `{path, sha256}`.**
+  ***Rounds 191 and 192 recorded that the linking was in the files while the census ARTIFACT
+  still said four; this closes it by the only means that could -- a RE-EMISSION.***
+  (2) **AND THE ROW ARITHMETIC CLOSES TWICE OVER THE SAME ROWS, SUMMED BY ME:** *190 no-open
+  + 39 head-unknown + 22 admitted + 19 in-a-supersession-field + 1 refused = **271** =
+  `n_literals`; and 22 + 39 + 1 = **62** = `n_pins`.* **Two independent sums, both closing --
+  which is what makes the headline numbers checkable rather than quotable.**
+  (3) **THE ONE REFUSAL IS DA'S OWN FILE:** `live/mm_research/e2_a_episodes.py:53` names
+  `p002_e2_a_declaration_v2.json` where the head is **v7**, `marker: null`, status
+  `REFUSED_UNMARKED_NON_HEAD` -- *with the row carrying its dataflow ("through ONE
+  assignment: `DECL_PATH` is used at line 522 (loads)", `flows_into_an_open: true`), so the
+  refusal rests on what the literal DOES.* ***The census's single refusal is in the seat's
+  own code, five versions behind the head, found by the seat's own instrument.***
+  (4) ***AND THE REGISTER'S "139 / 48" DO NOT RESOLVE AT EITHER CENSUS -- I COUNTED FOUR
+  WAYS.*** **At V2: `NAMES_A_DERIVED_ARTIFACT_NOT_A_DECLARATION` = 141 ROWS / 81 DISTINCT
+  NAMES; `NAMED_FILE_IS_IN_NO_SCANNED_DIRECTORY` = 70 ROWS / 32 DISTINCT NAMES; 141 + 70 =
+  211 = `n_head_is_null`. The earlier census carries NO null-reason field at all, and no
+  census file contains the string "139".** *Neither figure resolves by rows or by names.*
+  **Routed, not ruled: the artifact's numbers are the four above, each with its field name.**
+  (5) **NO NULL IS SILENT, AND 39 OF THEM ARE PINS.** *"Rule 11: every null head carries
+  WHY"* -- and `n_head_is_null_and_a_pin` is **39**: literals that FLOW INTO AN OPEN whose
+  family the census cannot resolve. ***Neither admitted nor refused but `HEAD_UNKNOWN` -- the
+  third value again, because "no family found" is not "names a non-head".***
+  (6) **THE COMPOSED RULE, AND THE ONE LEGITIMATE NON-HEAD READER:** *a literal flowing into
+  an open that names a non-head is REFUSED whatever the code calls it, and every refused row
+  says the marker is **THE AUTHOR'S CLAIM**.* **The R-608 link-writer is the single
+  legitimate exception, and WHAT THE BYTES DO separates it: its literals sit in a
+  supersession FIELD and never flow into an open -- 19 rows.** *An exemption that needs no
+  allowlist because the dataflow already distinguishes it.*
+  (7) **BOTH DECLARATION DIRECTORIES ARE SCANNED NOW** -- *the earlier censuses scanned one,
+  so "50 nulls" were UNSCANNED rather than HEADLESS:* ***an instrument reporting the limit of
+  its own search as a property of the world, at the level of a whole directory.*** **And the
+  allowlist goes through the head rule, so the file deciding which literals are admissible is
+  subject to the rule it enforces.**
+  (8) **THE RUN:** `loaded / active / running`, `MemoryPeak` 2,957,488,128 B -- **the FIFTH
+  identical reading (14:56, 15:02, 15:05, 15:11, 15:16)**. *A number that has not moved in
+  twenty minutes of a working run is not coincidence: the peak is the LOAD.* **Receipt
+  ≈16:20Z; BE 66's heavy half still refused on the lock; DA 95 and REV 75 remain the open
+  gates on the seal-scope seam.**
+  **AT COMMIT TIME, 2026-09-06T15:19:40Z: BE 66 LANDED REV 74's FOUR CORRECTIONS BEFORE THE
+  HEAVY RUN (`78290d3`) -- and the first is named exactly right: "an empty book is a NAMED
+  STATUS, not a `StopIteration`".** ***A generator asked for a row a small book does not have
+  raises through the caller; a named status is a fact the receipt can carry.*** *The
+  correction went in BEFORE the heavy item that would have written the residue into an
+  artifact -- the ordering R-667 recorded, held.*
+  **FLAG WORDS: the census RE-EMITTED-AND-MY-NOTE-CLOSED (23 families, 0 headless); the one
+  refusal DAS-OWN-FILE-FIVE-VERSIONS-BEHIND; the register's 139/48 UNRESOLVED-AT-THE-ARTIFACT
+  (routed); the run FIFTH-IDENTICAL-PEAK.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,208 -> 1,216, flag_provenance 753 -> 761,
+  tasks 19; **503 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
+  seventieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
+  new flags vs HEAD 0 without provenance.)
+```
