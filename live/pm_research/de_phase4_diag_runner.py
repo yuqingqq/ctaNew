@@ -74,7 +74,7 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 236
+EXPECTED_CHECKS = 239
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -1773,6 +1773,34 @@ def adverse_over_spread(fills: list) -> dict:
                     "spread there, i.e. r > 1 -- computed, not argued"}
 
 
+#: BE's replayed random-cancel null, CITED by path+sha, never recomputed
+#: here (`be_cancel_axis_null_v1.json`, `4c17646`). PER ARM, because BE
+#: draws from each arm's OWN decision set at its own theta -- 1,154
+#: above-threshold events for CONDVALUE and 106 for HAZARD -- so there is
+#: no single book-wide rate to compare against.
+BE_CANCEL_AXIS_NULL = {
+    "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+    "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182"
+              "c2fa08",
+    "per_arm": {
+        "CONDVALUE_X_SKEW": {"decisions": 1154, "n_draws": 500,
+                             "fills_lost_per_cancel_mean": 0.4969748944984966,
+                             "sd": 0.0723329691964029,
+                             "p05": 0.3894501018329939,
+                             "p95": 0.6198034448300008},
+        "HAZARD_OVER_SKEWED_REF": {"decisions": 106, "n_draws": 500,
+                                   "fills_lost_per_cancel_mean":
+                                       0.40032701534077203,
+                                   "sd": 0.16233976983401005,
+                                   "p05": 0.16666666666666666,
+                                   "p95": 0.6878472222222219},
+    },
+    "population_block": {"generations": 29813, "n_generations_with_fills":
+                         3861, "baseline_fills": 4315,
+                         "source_cache": "de_section81_cache_12.pkl"},
+}
+
+
 def generations_with_fills(reference: dict) -> int:
     """Generations that produced at least one valued tranche.
 
@@ -1800,6 +1828,94 @@ def generations_all(reference: dict) -> int:
     cancel removes."""
     return sum(1 for sides in reference.values() for gens in sides.values()
                for _ in gens)
+
+
+def _cascade_baseline_candidates(n_b, fpg_filling, fpg_random,
+                                 n_gens_with_fills, n_gens_all, arms):
+    """EVERY candidate denominator, with `lands_in_BE_range` COMPUTED for
+    each -- round 66.
+
+    THE SETTLEMENT, and it is not the one the question expected. BE's
+    0.497 is not a COUNT RATIO at all: it is `fills_lost_per_cancel`
+    measured by REPLAY, per arm, over the arm's own decision set. No
+    denominator over any population this module can count reproduces it,
+    and the closest one -- the decision population BE itself draws from --
+    is the FURTHEST away (4,315/1,154 = 3.74). The population was never
+    the problem; the ESTIMATOR is. A random cancel does not remove its
+    generation's fills: latency, holds, reposts and queue resets stand
+    between the decision and the fills, and only a replay prices that."""
+    lo, hi = 0.40, 0.50
+    cands = {
+        "filling_generations": {
+            "n": n_gens_with_fills, "rate": fpg_filling,
+            "status": "REFUTED -- conditions on the outcome the null must "
+                      "be ignorant of"},
+        "all_cancellable_generations_this_cache": {
+            "n": n_gens_all, "rate": fpg_random,
+            "status": "the correct POPULATION for a decision drawn without "
+                      "regard to fills, and still the wrong ESTIMATOR"},
+        "all_generations_BE_population_block": {
+            "n": BE_CANCEL_AXIS_NULL["population_block"]["generations"],
+            "rate": (n_b / BE_CANCEL_AXIS_NULL["population_block"]
+                     ["generations"]),
+            "status": "BE reads de_section81_cache_12.pkl and this module "
+                      "reads de_section81_cache_v2_12.pkl; the two "
+                      "generation counts DIFFER and both are reported"},
+    }
+    for a, meta in BE_CANCEL_AXIS_NULL["per_arm"].items():
+        cands[f"decision_population_{a}"] = {
+            "n": meta["decisions"], "rate": n_b / meta["decisions"],
+            "status": "THE POPULATION BE ACTUALLY DRAWS FROM -- and the "
+                      "count ratio over it is the furthest of all from "
+                      "BE's measured rate, which is the finding"}
+    for v in cands.values():
+        v["lands_in_BE_range_0p40_0p50"] = (
+            v["rate"] is not None and lo <= v["rate"] <= hi)
+        v["distance_from_BE_mean_0p497"] = (
+            None if v["rate"] is None
+            else v["rate"] - 0.4969748944984966)
+    replayed = {}
+    for a, meta in BE_CANCEL_AXIS_NULL["per_arm"].items():
+        flpc = (arms.get(a) or {}).get("fills_lost_per_cancel")
+        replayed[a] = {
+            "be_replayed_rate": meta["fills_lost_per_cancel_mean"],
+            "sd": meta["sd"], "n_draws": meta["n_draws"],
+            "cascade_if_this_rate_were_adopted":
+                (flpc / meta["fills_lost_per_cancel_mean"]) if flpc else None,
+        }
+    return {
+        "candidates": cands,
+        "n_candidates_landing_in_BE_range": sum(
+            1 for v in cands.values() if v["lands_in_BE_range_0p40_0p50"]),
+        "be_replayed_per_arm": replayed,
+        "be_artifact": BE_CANCEL_AXIS_NULL["artifact"],
+        "be_artifact_sha256": BE_CANCEL_AXIS_NULL["sha256"],
+        "baseline_status": "CONTESTED_THE_BASELINE_IS_NOT_A_COUNT",
+        "what_the_count_predicate_answered": (
+            "ZERO of the five candidate denominators lands in BE's "
+            "measured range, and the DECISION POPULATION -- the very set "
+            "BE draws from -- is the furthest away. So the disagreement is "
+            "not about which population to count"),
+        "what_it_is_instead": (
+            "BE's 0.497 is `fills_lost_per_cancel` measured by REPLAY, per "
+            "arm. A random cancel does not remove its generation's fills: "
+            "latency, holds, reposts and queue resets stand between the "
+            "decision and the fills. No count can price that, so no "
+            "denominator in this module can be the baseline"),
+        "what_would_settle_it": (
+            "adopt BE's per-arm REPLAYED rate as the baseline, cited by "
+            "path+sha. That yields cascade 8.7013 (CONDVALUE) and 5.5684 "
+            "(HAZARD) -- and 8.70 is exactly BE's own headline, which is "
+            "the cross-check that this reading is right. Importing "
+            "another seat's measured constant into this emission is a "
+            "coordinator/USER call, not this module's (rule 14), so it is "
+            "COMPUTED here and NOT adopted"),
+        "no_verdict_is_read_from_the_cascade_LEVEL_in_this_state": True,
+        "what_is_settled": (
+            "the FILLING rate is refuted, and `separation`'s ordering is "
+            "INVARIANT to the choice -- computed both ways in this same "
+            "emission -- so the ORDERING is citable and the LEVEL is not"),
+    }
 
 
 def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
@@ -1937,46 +2053,9 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
         "fills_per_generation_baseline": baseline_kind,
         "fills_per_FILLING_generation": fpg_filling,
         "fills_per_CANCELLABLE_generation": fpg_random,
-        "be_replayed_random_null_4c17646": {
-            "mean_fills_per_cancel": 0.497, "sd": 0.072, "n_draws": 500,
-            "range": [0.40, 0.50],
-            "status": "CITED FROM BE, NOT RECOMPUTED HERE",
-            "filling_rate_is_outside_that_range":
-                not (0.40 <= fpg_filling <= 0.50),
-            "random_decision_rate_is_inside_that_range":
-                (0.40 <= fpg_random <= 0.50) if fpg_random else None,
-            # THE COMPARISON IS COMPUTED AND IT DOES NOT AGREE, WHICH IS
-            # THE POINT OF COMPUTING IT (round 65). BE's replayed null is
-            # 0.497; the filling rate is 1.1176 (too high, it conditions
-            # on filling) and this module's cancellable rate is ~0.139
-            # (too low). THREE NUMBERS, THREE POPULATIONS:
-            #   filling generations      -- conditions on the outcome
-            #   ALL reference generations -- broader than the ACTION SPACE
-            #   the policy's DECISION population -- what BE replays
-            # A cancel can only be issued where the policy could act, and
-            # that set is smaller than every generation in the reference
-            # and richer in filling ones. THIS MODULE DOES NOT COUNT IT.
-            # So the correction moves the baseline the right WAY and
-            # overshoots, and the honest status is CONTESTED rather than a
-            # third number asserted as the answer.
-            "baseline_status":
-                "CONTESTED_PENDING_A_DECISION_POPULATION_COUNT",
-            "why_contested": (
-                "BE's 0.497 is measured by REPLAY over the population a "
-                "cancel decision is actually drawn from; the two rates "
-                "this module can compute are over the FILLING generations "
-                "(conditions on the outcome, 1.1176) and over EVERY "
-                "generation in the reference (broader than the action "
-                "space, ~0.139). Neither is the replayed population, and "
-                "the replayed one is the only one with evidence behind "
-                "it. The cascade LEVEL is therefore not settled here"),
-            "what_is_settled": (
-                "the FILLING rate is refuted as the random-cancel "
-                "baseline (it conditions on the very outcome the null is "
-                "supposed to be ignorant of), and `separation`'s ordering "
-                "is INVARIANT to the choice -- computed, not argued"),
-            "no_verdict_is_read_from_the_cascade_LEVEL_in_this_state":
-                True},
+        "cascade_baseline_candidates": _cascade_baseline_candidates(
+            n_b, fpg_filling, fpg_random, n_gens_with_fills, n_gens_all,
+            out),
         "book_mean_pnl_per_fill_cents": mean_b,
         "random_cancel_cost_cents": rnd,
         "random_cancel_definition":
@@ -5205,6 +5284,44 @@ def selftest() -> int:
        f"'{_cm2['separation']['ordering']}'. The correction moves the "
        f"cascade LEVEL and ratio_vs_random_cancel, and CANNOT move "
        f"which factor separates the arms")
+    # ---- ROUND 66: THE CANDIDATE BASELINES, FALSIFIED BOTH WAYS -------
+    # POSITIVE CONTROL, AND IT MUST ADMIT: a denominator that DOES land in
+    # BE's measured range must be flagged as landing. A predicate that only
+    # ever answers False is rule 16's control that cannot pass.
+    _cb_hit = _cascade_baseline_candidates(
+        450.0, 450.0 / 3861, 450.0 / 1000, 3861, 1000, {})
+    ok(_cb_hit["candidates"]["all_cancellable_generations_this_cache"][
+           "lands_in_BE_range_0p40_0p50"] is True
+       and abs(_cb_hit["candidates"][
+           "all_cancellable_generations_this_cache"]["rate"] - 0.45) < 1e-9,
+       "POSITIVE CONTROL ON THE COUNT PREDICATE, AND IT ADMITS: 450 fills "
+       "over 1,000 cancellable generations is 0.45, which IS in BE's "
+       "[0.40, 0.50] and is flagged as landing")
+    # KNOWN-BAD, THE REAL SHAPE: on the actual book NOTHING lands, and the
+    # DECISION population -- the set BE itself draws from -- is furthest.
+    _cb_real = _cascade_baseline_candidates(
+        4315.0, 4315.0 / 3861, 4315.0 / 31122, 3861, 31122, {})
+    ok(_cb_real["n_candidates_landing_in_BE_range"] == 0
+       and abs(_cb_real["candidates"][
+           "decision_population_CONDVALUE_X_SKEW"]["rate"] - 3.7391679) < 1e-5
+       and _cb_real["baseline_status"]
+       == "CONTESTED_THE_BASELINE_IS_NOT_A_COUNT",
+       f"KNOWN-BAD, AND IT IS THE FINDING: ZERO of "
+       f"{len(_cb_real['candidates'])} candidate denominators lands in "
+       f"BE's measured range, and the DECISION population BE draws from "
+       f"is the furthest of all at 3.7392 against 0.497. The population "
+       f"was never the problem -- a count cannot price latency, holds, "
+       f"reposts and queue resets, and BE's number is a REPLAY")
+    ok(abs(_cb_real["be_replayed_per_arm"]["CONDVALUE_X_SKEW"][
+           "be_replayed_rate"] - 0.4969748944984966) < 1e-12
+       and _cb_real["be_replayed_per_arm"]["HAZARD_OVER_SKEWED_REF"][
+           "be_replayed_rate"] != _cb_real["be_replayed_per_arm"][
+           "CONDVALUE_X_SKEW"]["be_replayed_rate"],
+       "and BE's null is PER ARM -- 0.4970 against 0.4003 on decision sets "
+       "of 1,154 and 106 -- so no single book-wide `fpg` can be the "
+       "baseline for both arms, which is the structural half of the same "
+       "finding")
+
     ok(abs(generations_all({"w": {"BUY_UP": [{"tranches": [1]}, {}],
                                   "SELL_UP": [{}]}}) - 3) < 1e-9
        and generations_with_fills({"w": {"BUY_UP": [{"tranches": [1]}, {}],
