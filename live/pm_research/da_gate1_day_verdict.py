@@ -59,6 +59,7 @@ import ast
 import datetime
 import hashlib
 import json
+import os
 import re
 import math
 import statistics
@@ -3535,6 +3536,80 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{lr_one['receipt_sha256'][:8]}; chained -> {lr_chain['status']} at "
        f"{lr_chain['head']} ({lr_chain['receipt_sha256'][:8]}); unchained "
        f"pair -> {lr_amb['status']}")
+
+    # -- H2f2. REV 58 section 4: THE TRY-BRANCH MUST RETURN --------------
+    import da_root as _DR                                     # noqa: PLC0415
+    import de_data_root as _DE                                # noqa: PLC0415
+    shared = Path(_DE.resolve()["data_root"]) / "pm_5min" / "derived"
+    ck("REV 58 section 4 (test 1) -- `_derived_dir()` EQUALS THE SHARED "
+       "RESOLVER'S ANSWER, which is the only test that could have caught "
+       "the old one. It read `Path(de_data_root.resolve())` -- and "
+       "`resolve()` returns a DICT, so `Path(<dict>)` raised TypeError, a "
+       "BARE `except Exception` swallowed it, and the tree-relative "
+       "fallback ran on EVERY call. ***From the shared tree the fallback "
+       "gives the right answer, so a test run there could not see it: the "
+       "equality can***",
+       _derived_dir() == shared,
+       f"{_derived_dir()} == de_data_root.resolve()['data_root'] + "
+       f"/pm_5min/derived")
+    _env_hold = os.environ.get("PM_DATA_ROOT")
+    try:
+        os.environ["PM_DATA_ROOT"] = "/home/yuqing/ctaNew-wt-da"
+        _wt = None
+        try:
+            _wt = _derived_dir()
+        except VerifierRefused as _e:
+            _wt = f"REFUSED: {str(_e)[:60]}"
+        except _DR.RootRefused as _e:
+            _wt = f"REFUSED: {str(_e)[:60]}"
+        os.environ.pop("PM_DATA_ROOT", None)
+        _unset = _derived_dir()
+    finally:
+        if _env_hold is None:
+            os.environ.pop("PM_DATA_ROOT", None)
+        else:
+            os.environ["PM_DATA_ROOT"] = _env_hold
+    ck("AND (test 3) THE VARIABLE IS DRIVEN BOTH WAYS -- set to a WORKTREE "
+       "and UNSET -- with the result stated for what it is: a worktree root "
+       "REFUSES BY NAME and unset gives the CANONICAL root. ***For this "
+       "module the variable changes nothing on the passing side, so a pass "
+       "under both proves INSENSITIVITY, not correctness. Correctness is "
+       "the equality above***",
+       str(_wt).startswith("REFUSED") and _unset == shared,
+       f"PM_DATA_ROOT=<worktree> -> {str(_wt)[:48]}; unset -> {_unset}")
+    _stub = type(sys)("pm_tape_density_stub")
+    _stub._resolve_data_root = lambda: {"data_root": "/somewhere"}
+    _hold_mod = sys.modules.get("pm_tape_density")
+    sys.modules["pm_tape_density"] = _stub
+    try:
+        _shape = ""
+        try:
+            _DR.resolve_root()
+        except _DR.RootRefused as _e:
+            _shape = str(_e)
+        sys.modules.pop("pm_tape_density")
+        _gone = ""
+        _hold_path = list(sys.path)
+        sys.path[:] = [p for p in sys.path if "pm_research" not in p]
+        try:
+            _DR.resolve_root()
+        except _DR.RootRefused as _e:
+            _gone = str(_e)
+        sys.path[:] = _hold_path
+    finally:
+        if _hold_mod is not None:
+            sys.modules["pm_tape_density"] = _hold_mod
+        else:
+            sys.modules.pop("pm_tape_density", None)
+    ck("AND (test 4) THE BARE `except` IS GONE: a resolver of record whose "
+       "RETURN SHAPE moved is NAMED, not swallowed, and an unreachable one "
+       "refuses by name. ***A bare except around a resolver turns the NEXT "
+       "resolver change into a silent fallback -- which is exactly how the "
+       "last one ran for weeks while its docstring claimed otherwise***",
+       "not a path" in _shape and "dict" in _shape
+       and "not reachable" in _gone,
+       f"moved return shape -> {_shape[:70]}…; unreachable -> "
+       f"{_gone[:52]}…")
 
     # -- H2g. REV 54 section 1.3: ONE DIGEST, ONE AUTHORITY --------------
     lf = landing_digest_fields()

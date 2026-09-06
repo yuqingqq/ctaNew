@@ -58,7 +58,27 @@ sys.path.insert(0, str(HERE))
 
 PROTOCOL = "P003_DA_BOOK_VERIFIER_V1"
 BE_RECEIPT_PROTOCOL = "BE_DAYBOOK_V1"
-BUILDER_PATH = HERE / "be_daybook_build.py"
+def _builder_path() -> Path:
+    """BE's builder, READ FROM THE CANONICAL TREE.
+
+    REV 58 section 4: there were THREE root rules in this seat's modules --
+    this one (`HERE`-relative), the gate verifier's dead try-branch, and
+    the accrual report's env-first fallback. They are ONE now
+    (`da_root.require_canonical_root`). Reading the builder from `HERE`
+    meant that, run from a worktree, this verifier judged BE's receipt
+    against a STALE COPY of BE's code -- the finding DA 77 shipped against
+    DE's runner and had to retract."""
+    import da_root as _R                                      # noqa: PLC0415
+    try:
+        return _R.code_root("reading BE's builder source") / \
+            "live/pm_research/be_daybook_build.py"
+    except _R.RootRefused:
+        #: NAMED, never a silent tree-relative answer: the caller decides
+        #: what to do with a builder it cannot locate canonically.
+        raise
+
+
+#: ONE rule, one call site. `HERE / "be_daybook_build.py"` is gone.
 
 #: What loading the real 09-03 book is expected to cost, DECLARED before the
 #: run so the receipt can be held to it: the pickle is 290,758,834 bytes on
@@ -376,7 +396,7 @@ def builder_index_call(path: Path | None = None, *,
         if r.returncode == 0 and r.stdout:
             src, src_from = r.stdout, f"git {at_commit}"
     if src is None:
-        p = Path(path) if path else BUILDER_PATH
+        p = Path(path) if path else _builder_path()
         if not p.is_file():
             raise BookVerifyRefused(
                 f"REFUSED: the builder is absent at {p}; the seam literal "

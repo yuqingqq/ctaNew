@@ -180,7 +180,13 @@ STAGE_RE = re.compile(r"stage", re.I)
 PROCESS_CAP_RE = re.compile(r"(MEM|RSS|MEMORY|DAY)_?.*CAP|CAP_GI?B|"
                             r"MEMORY_?MAX", re.I)
 BUDGET_WORD_RE = re.compile(r"budget|cap|limit|quota|ceiling|bar", re.I)
-MEASURED_KEY_RE = re.compile(r"peak|rss|maxrss|highwater|mem", re.I)
+#: `growth_gb` and `delta_gb` are measured names too -- and they are the
+#: names the REPAIR wears. Round 77's list had only the high-water words,
+#: so when BE 60 landed `growth_gb = peak - baseline` the census could not
+#: see the fix arrive: it read 0 mismatches AND 0 deltas, which says
+#: nothing at all.
+MEASURED_KEY_RE = re.compile(
+    r"peak|rss|maxrss|highwater|mem|growth|delta|baseline", re.I)
 
 FIXTURE_SCOPE = "FIXTURE_scope"
 STAGE_SCOPE = "STAGE_scope"
@@ -230,7 +236,8 @@ def _resolve_scope(name: str, consts: dict, fixture_sel: list) -> str:
     return UNKNOWN_SCOPE
 
 
-def _dict_key_scopes(fn: ast.AST, src: str, meas: dict) -> dict:
+def _dict_key_scopes(fn: ast.AST, src: str, meas: dict,
+                     assigns: dict | None = None) -> dict:
     """Keys BOUND TO A MEASUREMENT inside this function.
 
     `row = {"peak_gb": _rss_gb()}` binds `peak_gb` to a process high-water,
@@ -245,7 +252,7 @@ def _dict_key_scopes(fn: ast.AST, src: str, meas: dict) -> dict:
         for k, v in zip(n.keys, n.values):
             if not (isinstance(k, ast.Constant) and isinstance(k.value, str)):
                 continue
-            sc, dl, _ = _measured_scope_of(v, src, meas, {}, {})
+            sc, dl, _ = _measured_scope_of(v, src, meas, assigns or {}, {})
             if sc and sc not in (UNKNOWN_SCOPE, "LOOKALIKE"):
                 #: THE DELTA FLAG TRAVELS WITH THE KEY. Keeping only the
                 #: scope made `{"peak_gb": _rss_gb() - base}` -- the delta
@@ -272,6 +279,11 @@ def _measured_scope_of(node: ast.AST, src: str, meas: dict,
     if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
         if node.func.id in meas:
             return meas[node.func.id], False, f"calls {node.func.id}()"
+        if node.func.id in ("round", "float", "int", "abs") and node.args:
+            #: a DELTA wrapped in `round(...)` is still a delta. BE 60's
+            #: repair is literally `round(peak - self.baseline_gb, 3)`.
+            return _measured_scope_of(node.args[0], src, meas, assigns,
+                                      key_scopes)
         if node.func.id in ("max", "min", "sum") and node.args:
             a = node.args[0]
             inner = (a.elt if isinstance(a, (ast.GeneratorExp, ast.ListComp))
@@ -498,15 +510,26 @@ def budget_comparisons(tree: ast.AST, src: str, meas: dict,
             owner = up
         scope_fn = owner or tree
         if id(scope_fn) not in cache:
-            ks = _dict_key_scopes(scope_fn, src, meas)
-            asg = {}
-            for a in ast.walk(scope_fn):
-                if isinstance(a, ast.Assign) and len(a.targets) == 1 \
-                        and isinstance(a.targets[0], ast.Name):
-                    sc, dl, how = _measured_scope_of(a.value, src, meas, {},
-                                                     ks)
-                    if sc and sc != "LOOKALIKE":
-                        asg[a.targets[0].id] = (sc, dl, how)
+            #: TWO PASSES, because the two maps feed each other. `peak =
+            #: _rss_gb()` must be known before `{"growth_gb": round(peak -
+            #: baseline, 3)}` can be read as a DELTA -- and BE 60's repair
+            #: is exactly that shape. One pass left the repair invisible:
+            #: the census reported 0 mismatches AND 0 deltas, which says
+            #: nothing at all.
+            def _assigns(ks):
+                out = {}
+                for a in ast.walk(scope_fn):
+                    if isinstance(a, ast.Assign) and len(a.targets) == 1 \
+                            and isinstance(a.targets[0], ast.Name):
+                        sc, dl, how = _measured_scope_of(a.value, src, meas,
+                                                        {}, ks)
+                        if sc and sc != "LOOKALIKE":
+                            out[a.targets[0].id] = (sc, dl, how)
+                return out
+
+            asg0 = _assigns({})
+            ks = _dict_key_scopes(scope_fn, src, meas, asg0)
+            asg = _assigns(ks)
             cache[id(scope_fn)] = (ks, asg)
         key_scopes, assigns = cache[id(scope_fn)]
         left, right = n.left, n.comparators[0]
@@ -1513,22 +1536,31 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{frag['budget_comparisons'][0]['verdict']}")
     bm = [c for c in book["budget_comparisons"]
           if c["verdict"] == SCOPE_MISMATCH]
-    ck("BE's DAYBOOK CARRIES THE SHAPE: its per-stage budget is compared "
-       "against `_rss_gb()` = `ru_maxrss`, the PROCESS-WIDE high-water, and "
-       "the comparison GATES A REFUSAL -- and the budget dict is chosen by "
-       "the FIXTURE FLAG, so on the fixture path all five stages share a "
-       "flat 0.7 GB. ***The trigger is absent today (`--selftest` and "
-       "`--day` are exclusive, 0 battery calls on the real path), so it "
-       "CANNOT FIRE today -- it is one caller away from the smoke***",
-       book["verdict"] == "FLAGGED" and len(bm) == 1
-       and bm[0]["gates"] == GATES_REFUSAL
-       and bm[0]["budget_scope"].startswith(FIXTURE_SCOPE)
-       and book["census"]["n_battery_calls_on_the_real_path"] == 0
-       and book["census"]["n_deltas"] == 0,
-       f"be_daybook_build.py:{bm[0]['line']} `{bm[0]['expr']}` -- budget "
-       f"scope {bm[0]['budget_scope']}, {bm[0]['gates']}; fixture-selected "
-       f"budget site at line "
-       f"{book['fixture_selected_budgets'][0]['line']}")
+    deltas = [c for c in book["budget_comparisons"] if c["is_delta"]]
+    #: TWO STATES, BOTH NAMED. Round 77 found the shape here and BE 60
+    #: landed the growth budget; a check asserting `len(bm) == 1` was
+    #: pinned to the FINDING rather than to the property, and it broke on
+    #: the FIX -- rounds 69/72/74/75/77/78, the same defect again. What is
+    #: asserted now is the disjunction, with the state SAID.
+    open_state = bool(bm) and bm[0]["gates"] == GATES_REFUSAL \
+        and bm[0]["budget_scope"].startswith(FIXTURE_SCOPE)
+    closed_state = not bm and bool(deltas)
+    ck("BE's DAYBOOK: THE SHAPE ROUND 77 FOUND IS EITHER STILL OPEN (a "
+       "per-stage/fixture budget against `ru_maxrss`, GATING A REFUSAL) OR "
+       "CLOSED BY A DELTA -- and the census says WHICH. ***Round 77's "
+       "check asserted the FINDING (`len(bm) == 1`) and broke on BE 60's "
+       "FIX: a check pinned to a defect fails when the defect is repaired, "
+       "which is the sixth instance of this seat's own recurring class***",
+       open_state or closed_state,
+       (f"OPEN: be_daybook_build.py:{bm[0]['line']} `{bm[0]['expr']}` -- "
+        f"{bm[0]['budget_scope']}, {bm[0]['gates']}"
+        if open_state else
+        f"CLOSED: 0 refusing scope mismatches and "
+        f"{len(deltas)} delta-measured budget comparison(s) at "
+        f"line(s) {[c['line'] for c in deltas]} -- BE 60 landed the growth "
+        f"budget, and the census carries the change rather than a stale "
+        f"assertion"))
+
     da = [m for m in rep["modules"] if m["role"] == "DA_instrument"]
     ck("AND THIS SEAT'S OWN INSTRUMENTS CARRY NEITHER HALF: no scope "
        "mismatch and no battery on a real path across all seven. The one "

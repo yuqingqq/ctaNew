@@ -267,6 +267,30 @@ def data_root():
                 or Path(__file__).resolve().parents[1])
 '''
 
+#: THE EXACT SHAPE REV 58 section 4 DISSECTED. The try-branch cannot
+#: return -- `resolve()` hands back a DICT and `Path(<dict>)` raises
+#: TypeError -- and the BARE except swallows it, so the tree-relative
+#: fallback runs on EVERY call while the docstring claims the shared
+#: resolver. From the shared tree the fallback gives the right answer, so
+#: only a drive FROM A WORKTREE separates the two branches.
+DEAD_TRY_BRANCH = '''
+from pathlib import Path
+
+
+class _FakeShared:
+    @staticmethod
+    def resolve():
+        return {"data_root": "/home/yuqing/ctaNew/data"}
+
+
+def data_root():
+    """Through the programme's ONE data-root resolver."""
+    try:
+        return Path(_FakeShared.resolve()) / "pm_5min"
+    except Exception:                                         # noqa: BLE001
+        return Path(__file__).resolve().parents[1] / "pm_5min"
+'''
+
 REFUSES = '''
 import os
 from pathlib import Path
@@ -314,6 +338,7 @@ def selftest() -> tuple:
     (pkg / "planted_cwd.py").write_text(FALLS_BACK_TO_CWD)
     (pkg / "planted_own_tree.py").write_text(FALLS_BACK_TO_ITS_OWN_TREE)
     (pkg / "planted_refuses.py").write_text(REFUSES)
+    (pkg / "planted_dead_try.py").write_text(DEAD_TRY_BRANCH)
     planted = {
         "planted.falls_back_to_cwd": (
             "resolver",
@@ -324,6 +349,9 @@ def selftest() -> tuple:
         "planted.refuses": (
             "gate",
             "import planted_refuses as M; print('OK', M.data_root())"),
+        "planted.dead_try_branch": (
+            "resolver",
+            "import planted_dead_try as M; print('OK', M.data_root())"),
     }
     neutral = tmp / "neutral"
     neutral.mkdir()
@@ -380,6 +408,21 @@ def selftest() -> tuple:
        f"unset -> {c_ref['A_unset']['outcome']}; worktree -> "
        f"{c_ref['B_worktree']['outcome']}; ledger -> "
        f"{c_ref['C_ledger']['path_class']}")
+    c_dead = run_planted("planted.dead_try_branch")
+    ck("REV 58 section 4 (test 2) -- THE DEAD TRY-BRANCH IS CAUGHT, AND "
+       "ONLY FROM A WORKTREE. The planted module has the exact shape: a "
+       "try that CANNOT return (`Path(<dict>)` raises TypeError), a BARE "
+       "except, and a tree-relative fallback -- with a docstring claiming "
+       "the shared resolver. ***Driven with the environment set CORRECTLY "
+       "it still answers with its own tree, which is the only signal there "
+       "is: from the shared tree the fallback gives the right answer and "
+       "no test run there can see it***",
+       c_dead["C_ledger"]["path_class"] == "WORKTREE"
+       and c_dead["A_unset"]["path_class"] == "WORKTREE",
+       f"env set to the LEDGER -> {c_dead['C_ledger']['path_class']} "
+       f"({c_dead['C_ledger']['path']}); unset -> "
+       f"{c_dead['A_unset']['path_class']}")
+
     ck("THE CLASSIFIER SEPARATES THE FOUR ANSWERS BY THE PATH ITSELF, not "
        "by what a module says about itself",
        classify_path("/home/yuqing/ctaNew", "/tmp/x") == "LEDGER"

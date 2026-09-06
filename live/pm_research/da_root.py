@@ -61,15 +61,45 @@ def canonical_from_DEs_source(path: Path | None = None) -> dict:
 
 def resolve_root() -> Path:
     """THE ROOT, from the programme's resolver of record. Never this file's
-    own tree: that is the shell fact BE 59 named."""
+    own tree: that is the shell fact BE 59 named.
+
+    THE `except` IS NARROW ON PURPOSE (REV 58 section 4, test 4). The
+    defect this module replaces was a BARE `except Exception` wrapped
+    around `Path(de_data_root.resolve())`: `resolve()` returns a DICT,
+    `Path(<dict>)` raises TypeError, and the bare clause swallowed it, so
+    the tree-relative fallback ran on EVERY call while the docstring
+    claimed the shared resolver. ***A bare except around a resolver turns
+    the NEXT resolver change into a silent fallback.*** Only the two errors
+    that mean "the resolver of record is not reachable" are caught here;
+    anything else -- a TypeError from a changed return shape included --
+    propagates as itself and is seen."""
     try:
         import pm_tape_density as _T                          # noqa: PLC0415
-        return Path(_T._resolve_data_root())
-    except Exception as e:                                    # noqa: BLE001
+        root = _T._resolve_data_root()
+    except (ImportError, AttributeError) as e:
         raise RootRefused(
             "REFUSED: the data-root resolver of record "
-            "(pm_tape_density._resolve_data_root) is not importable, and "
+            "(pm_tape_density._resolve_data_root) is not reachable, and "
             "this seat will not answer with its own tree instead. " + str(e))
+    if not isinstance(root, (str, Path)):
+        #: NOT swallowed, NAMED. This is precisely the shape that broke the
+        #: last one: a resolver whose return type moved.
+        raise RootRefused(
+            f"REFUSED: the resolver of record returned "
+            f"{type(root).__name__}, not a path. The last time a resolver's "
+            f"return SHAPE moved, a bare except turned it into a silent "
+            f"tree-relative fallback that ran for weeks.")
+    return Path(root)
+
+
+def code_root(purpose: str = "reading another seat's source") -> Path:
+    """The CANONICAL tree for reading CODE.
+
+    A verifier that judges another seat's receipt against that seat's
+    SOURCE must read the source from the ledger, not from its own
+    worktree's copy -- DA 77 shipped exactly that finding against DE's
+    runner and had to retract it."""
+    return Path(require_canonical_root(purpose)["root"])
 
 
 def require_canonical_root(purpose: str, *, fixture: bool = False,
