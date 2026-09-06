@@ -1964,8 +1964,18 @@ def selftest() -> int:
        f"that it is derived from the producing code and NOT yet asserted "
        f"against a real book, because that is heavy and needs the lock")
     import pickle as _pk
-    _bad = Path(_tf.mkdtemp(prefix="be65_struct_")) / "wrong.pkl"
-    _bad.write_bytes(_pk.dumps({"fr": {}, "not_asm": {}}))
+    def _fixture_book(where, payload):
+        """a fixture book AND the receipt that pins it -- the verifier now
+        refuses to open a pickle no receipt vouches for (REV 71 §2.3), so a
+        fixture without one would exercise that refusal instead of the one
+        under test."""
+        b = Path(where) / "be_daybook_19700101_btc.pkl"
+        b.write_bytes(_pk.dumps(payload))
+        (Path(where) / "be_daybook_receipt_19700101_btc.json").write_text(
+            json.dumps({"book": {"sha256": _sha_file(b)}}))
+        return b
+    _bad = _fixture_book(_tf.mkdtemp(prefix="be65_struct_"),
+                         {"fr": {}, "not_asm": {}})
     try:
         verify_structure(_bad)
         ok(False, "a book with the wrong top-level keys must refuse")
@@ -1975,12 +1985,11 @@ def selftest() -> int:
            "KNOWN-BAD: a pickle whose top-level keys are not the declared "
            "ones REFUSES BY NAME -- the verifier does not report a shape it "
            "did not find")
-    _good = Path(_tf.mkdtemp(prefix="be65_structok_")) / "right.pkl"
-    _good.write_bytes(_pk.dumps({
+    _good = _fixture_book(_tf.mkdtemp(prefix="be65_structok_"), {
         "fr": {"reference": {}},
         "asm": {"by_arm": {("btc", "h"): [{"k": 1}, {}]},
                 "assembly": {"n_chunks": 1, "kept_by_coin": {},
-                             "drops_by_coin": {}}}}))
+                             "drops_by_coin": {}}}})
     _r = verify_structure(_good)
     ok(_r["all_hold"] and _r["n_checks"] >= 6,
        f"POSITIVE CONTROL: a pickle with the declared shape ADMITS on all "
@@ -2371,6 +2380,47 @@ def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
     if not q.exists():
         raise BookRefused(f"REFUSED: no book at {q}")
     t0 = time.time()
+    # REV 71 §2.3: `pickle.load` EXECUTES the payload's opcodes before any
+    # shape check can run, so "validated after loading" is not a safety
+    # property. What IS available: pin the bytes to BE's own receipt BEFORE
+    # the open, and say plainly that this executes another seat's
+    # serialisation under the lock and the cap.
+    _pin = {"digest_checked_before_open": False, "receipt": None}
+    _rc_path = q.with_name(q.name.replace("be_daybook_", "be_daybook_receipt_")
+                           .replace(".pkl", ".json"))
+    # the receipt sits BESIDE the book, which is not always OUT_DERIVED
+    # (a fixture lives in a temp dir), so resolve the head in the book's own
+    # directory rather than assuming the ledger.
+    import re as _re
+    _stem = _rc_path.name.replace(".json", "")
+    _sib = sorted(q.parent.glob(f"{_stem}*.json"),
+                  key=lambda z: int(_m.group(1))
+                  if (_m := _re.search(r"\.v(\d+)\.json$", z.name)) else 1,
+                  reverse=True)
+    _rc = _sib[0] if _sib else None
+    if _rc is None:
+        raise BookRefused(
+            f"REFUSED: no receipt beside {q.name} to pin its bytes to. A "
+            f"pickle is opened by EXECUTING it; opening one whose digest no "
+            f"receipt vouches for is not a verification, it is a risk "
+            f"(REV 71 §2.3).")
+    _want = (json.loads(_rc.read_text()).get("book") or {}).get("sha256")
+    _got = _sha_file(q)
+    if not _want or _want != _got:
+        raise BookRefused(
+            f"REFUSED: {q.name} hashes {_got[:16]}… but its receipt "
+            f"{_rc.name} pins {str(_want)[:16]}… -- the bytes about to be "
+            f"EXECUTED are not the bytes BE published.")
+    _pin = {"digest_checked_before_open": True, "receipt": _rc.name,
+            "sha256": _got,
+            "what_this_does_not_make_safe": "pickle.load executes the "
+                                            "payload's opcodes; pinning the "
+                                            "digest says WHICH bytes are "
+                                            "executed, not that executing "
+                                            "them is harmless. This runs "
+                                            "under the heavy lock and the "
+                                            "declared cap, on another "
+                                            "seat's serialisation."}
     with q.open("rb") as fh:
         book = pickle.load(fh)
     checked = []
@@ -2399,7 +2449,8 @@ def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
     _need(all(k in a for k in ("n_chunks", "kept_by_coin", "drops_by_coin")),
           "asm.assembly carries the chunk and drop accounting")
     return {"book": str(q), "bytes": q.stat().st_size,
-            "sha256": _sha_file(q),
+            "sha256": _pin["sha256"],
+            "digest_pin": _pin,
             "declaration": _R22.declaration_head("be_daybook_structure")["name"],
             "checks": checked, "n_checks": len(checked),
             "all_hold": all(c["holds"] for c in checked),
