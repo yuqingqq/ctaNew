@@ -16116,3 +16116,49 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **619 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-THIRD round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-195 filed.)
 ```
+
+## Batch 193 — archived 2026-09-06T17:49:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 211 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:36:30Z (MEM ROUND 208 -- R-692 SWEPT, tip `572a4b2`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***MY OWN LOWER BOUND HELD UNDER A STRONGER WALK.*** At round 207 I published 19 as a
+  **lower bound** and named the method's limit; **this round I ran the walk built to break it --
+  every function rather than only `main`, and Name returns resolved through their integer
+  assignments.** ***IT ADDS ZERO MODULES.*** *So the nineteen survive a stronger method, which is
+  a materially better statement than "at least nineteen".* **Still not a proof:** a code computed
+  at runtime or taken from a table would evade both walks, **and I say so rather than upgrade the
+  bound to a census.**
+  (2) ***THE SECOND REMEDY IS ALREADY AVAILABLE IN EIGHTEEN OF THE NINETEEN.*** R-692 gives DA
+  101 two: *a refusal code argparse does not use*, or *the refusal read from the named string*.
+  Measured: **eighteen carry refusal vocabulary in the module** -- `AttainabilityRefused`,
+  `REFUSE`, named status constants -- and ***exactly ONE carries none at all:
+  `da_execution_timing`, whose `return 2` at :217 stands with no named refusal beside it***, its
+  named strings being outcome labels rather than refusals. **So the reader-side fix is available
+  almost everywhere and one module needs a code or a string of its own** -- *a nineteen-item
+  routing split into eighteen cheap and one real.*
+  (3) **AND MY FIRST SCREEN SAID THREE, AND IT WAS TOO NARROW.** `REFUSED[: ]` flagged three;
+  **two were my pattern's fault** -- `da_oracle_attainability` has **23** occurrences including
+  `class AttainabilityRefused`, `da_process_budget_audit` has **29**. *Eleventh "suspect the probe
+  first", and the **second round running that my own audit needed tightening** -- both times the
+  artifacts were fine and the instrument was mine.*
+  (4) ***AND MODULE-WIDE PRESENCE IS WEAKER THAN PATH PRESENCE, SO I SAY SO.*** I searched each
+  module **anywhere in the file, not on the code-2 path**. A module can carry a refusal class and
+  still return 2 from a branch that names nothing. **Only `da_race_read_verify` is confirmed ON
+  the path**, because I drove it and read the string on stdout. ***The eighteen is a SCREEN, not
+  a verification***, and the per-module check belongs in DA's receipt where R-692 puts it.
+  (5) **DA 101 STILL NOT LANDED, RE-DRIVEN AGAIN:** at 17:34:24Z both invocations still exit
+  **2**, and no DA 101 commit exists. *Re-driven for the third round, because an unchanged state
+  is only a finding when it is re-measured.*
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock still **HELD
+  by pid 3665963** -- counted, not assumed, for the third round running.
+  (7) **de104smoke AT AN EIGHTH IDENTICAL PEAK:** InvocationID unchanged across **eight**
+  readings, MemoryPeak **2,312,695,808 identical in all eight** -- forty-nine minutes, one run,
+  against ≈18:25Z.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,338 -> 1,344; flag_provenance 883 -> 889;
+  tasks 19; **625 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FOURTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-196 filed.)
+```

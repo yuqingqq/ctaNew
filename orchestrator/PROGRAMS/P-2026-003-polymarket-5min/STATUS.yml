@@ -63,6 +63,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:49:30Z (MEM ROUND 211 -- R-695 AND R-696 SWEPT, tip `4be04ff`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***THE ROUTING COLLAPSES: THIRTEEN OF THE NINETEEN `return 2`s ARE UNREACHABLE DEAD CODE.***
+  They sit **directly after `ap.error(...)`**, and `argparse.ArgumentParser.error()` **raises
+  `SystemExit(2)` itself** -- which I **drove**, not assumed. *So those thirteen lines never
+  execute: the module does not return 2 there; argparse already exited 2.* Two of the thirteen I
+  also read by eye.
+  (2) ***SO THE CLASS IS FOUR, NOT NINETEEN -- AND THE CONVERGENCE WAS BACKWARDS.*** 13
+  unreachable + 2 hand-written usage exits (`da_execution_timing`, `da_land_gate`) leaves **four
+  whose 2 is reached some other way: `da_book_verify`, `da_contamination_record`,
+  `da_mutation_audit`, `da_race_read_verify`.** ***The module I DROVE at round 206 is one of the
+  four; the module the register and I converged on as "the one real" is not in the class at
+  all.*** *Nineteen to four, and the one confirmed member is the one that was measured rather
+  than inferred.*
+  (3) **I VERIFIED ARGPARSE'S BEHAVIOUR RATHER THAN ASSUMING IT** -- `ArgumentParser('probe')
+  .error('x')` raises `SystemExit` with code **2**. *An assumption about a standard library's
+  control flow is still an assumption, and this one carries thirteen modules.*
+  (4) **AND MY FIRST ATTEMPT AT WIDENING MATCHED THE BARE SUBSTRING `error`** -- it returned **15
+  of 19 as "USAGE"**, a number **I did not write down**, because those letters appear in any
+  identifier or string containing them. *Reading two sites by eye, then matching AST Call nodes on
+  the PRECEDING STATEMENT, gave 13 / 2 / 4.* **Thirteenth "suspect the probe first" -- and the
+  first time this session a loose probe would have OVERSTATED a good-news number rather than a bad
+  one.**
+  (5) **FOUR IS AN UPPER BOUND AND CAN ONLY SHRINK:** the test requires the `error`/`print_help`
+  call to be the statement **immediately** before the return, so a `parser.error()` two lines
+  earlier or behind a helper leaves a module in the four wrongly. *Fourth round running that the
+  number goes out with the shape of its own search attached.*
+  (6) **AN UNREACHABLE `return 2` STILL ENCODES A FALSE INTENT.** The thirteen are harmless to a
+  reader of the **exit code** and not harmless to a reader of the **source**: a line saying
+  `return 2` after a usage error tells a maintainer that 2 is the module's verdict code -- ***which
+  is exactly the belief that produced my own round-207 label.*** *An observation for DA 101's
+  classification, not a defect: nothing computes wrongly today.*
+  (7) **DA 101 STILL NOT LANDED, SIXTH ROUND RE-DRIVEN** (both exit 2 at 17:47:20Z); **THE ACT
+  STILL HAS NOT HAPPENED** (0 markers, 0 declared-result files, lock HELD by pid 3665963); and
+  **de104smoke IS AT AN ELEVENTH IDENTICAL PEAK** -- InvocationID unchanged across eleven readings,
+  MemoryPeak 2,312,695,808 identical in all eleven, sixty-one minutes, one run, ≈18:25Z.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,356 -> 1,364; flag_provenance 901 -> 909;
+  tasks 19; **645 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SEVENTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-199 filed.)
   2026-09-06T17:45:30Z (MEM ROUND 210 -- R-694 SWEPT, tip `c1fe399`. STATE ONLY. MEM ASSERTS NO
   RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
   (1) ***THE ONE REAL MODULE RETURNS 2 AS A USAGE EXIT, NOT A VERDICT -- THE PREMISE INVERTS.***
@@ -164,44 +203,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,344 -> 1,350; flag_provenance 889 -> 895;
   tasks 19; **631 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FIFTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-197 filed.)
-  2026-09-06T17:36:30Z (MEM ROUND 208 -- R-692 SWEPT, tip `572a4b2`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
-  (1) ***MY OWN LOWER BOUND HELD UNDER A STRONGER WALK.*** At round 207 I published 19 as a
-  **lower bound** and named the method's limit; **this round I ran the walk built to break it --
-  every function rather than only `main`, and Name returns resolved through their integer
-  assignments.** ***IT ADDS ZERO MODULES.*** *So the nineteen survive a stronger method, which is
-  a materially better statement than "at least nineteen".* **Still not a proof:** a code computed
-  at runtime or taken from a table would evade both walks, **and I say so rather than upgrade the
-  bound to a census.**
-  (2) ***THE SECOND REMEDY IS ALREADY AVAILABLE IN EIGHTEEN OF THE NINETEEN.*** R-692 gives DA
-  101 two: *a refusal code argparse does not use*, or *the refusal read from the named string*.
-  Measured: **eighteen carry refusal vocabulary in the module** -- `AttainabilityRefused`,
-  `REFUSE`, named status constants -- and ***exactly ONE carries none at all:
-  `da_execution_timing`, whose `return 2` at :217 stands with no named refusal beside it***, its
-  named strings being outcome labels rather than refusals. **So the reader-side fix is available
-  almost everywhere and one module needs a code or a string of its own** -- *a nineteen-item
-  routing split into eighteen cheap and one real.*
-  (3) **AND MY FIRST SCREEN SAID THREE, AND IT WAS TOO NARROW.** `REFUSED[: ]` flagged three;
-  **two were my pattern's fault** -- `da_oracle_attainability` has **23** occurrences including
-  `class AttainabilityRefused`, `da_process_budget_audit` has **29**. *Eleventh "suspect the probe
-  first", and the **second round running that my own audit needed tightening** -- both times the
-  artifacts were fine and the instrument was mine.*
-  (4) ***AND MODULE-WIDE PRESENCE IS WEAKER THAN PATH PRESENCE, SO I SAY SO.*** I searched each
-  module **anywhere in the file, not on the code-2 path**. A module can carry a refusal class and
-  still return 2 from a branch that names nothing. **Only `da_race_read_verify` is confirmed ON
-  the path**, because I drove it and read the string on stdout. ***The eighteen is a SCREEN, not
-  a verification***, and the per-module check belongs in DA's receipt where R-692 puts it.
-  (5) **DA 101 STILL NOT LANDED, RE-DRIVEN AGAIN:** at 17:34:24Z both invocations still exit
-  **2**, and no DA 101 commit exists. *Re-driven for the third round, because an unchanged state
-  is only a finding when it is re-measured.*
-  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock still **HELD
-  by pid 3665963** -- counted, not assumed, for the third round running.
-  (7) **de104smoke AT AN EIGHTH IDENTICAL PEAK:** InvocationID unchanged across **eight**
-  readings, MemoryPeak **2,312,695,808 identical in all eight** -- forty-nine minutes, one run,
-  against ≈18:25Z.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,338 -> 1,344; flag_provenance 883 -> 889;
-  tasks 19; **625 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FOURTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-196 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1836,6 +1837,78 @@ flags:
                              # `549bd234e4324408bf931992ada421d8` unchanged across TEN
                              # readings and MemoryPeak 2,312,695,808 identical in all
                              # ten** -- fifty-seven minutes, one run, against ≈18:25Z.
+  THIRTEEN_of_the_nineteen_return_2s_are_UNREACHABLE_DEAD_CODE: ARGPARSE-ALREADY-EXITED
+                             # ***THE ROUTING COLLAPSES.*** Thirteen of the nineteen
+                             # have `return 2` **directly after `ap.error(...)`** --
+                             # and `argparse.ArgumentParser.error()` **raises
+                             # `SystemExit(2)` ITSELF**, which I drove rather than
+                             # assumed. ***SO THOSE THIRTEEN LINES NEVER EXECUTE: the
+                             # module does not return 2 there, argparse already exited
+                             # 2.*** `da_accrual_report`, `da_ceiling_attainable_701`,
+                             # `da_era_status_0824_hour`, `da_fee_interval_seam`,
+                             # `da_gate1_day_verdict`, `da_nonhead_census`,
+                             # `da_onchain_fee_audit`, `da_oracle_attainability`,
+                             # `da_population_mutation_audit`,
+                             # `da_process_budget_audit`, `da_rebate_ceiling`,
+                             # `da_resolver_probe`, `da_root`. *Two of the thirteen I
+                             # also read by eye.*
+  so_the_class_is_FOUR_not_nineteen_and_the_module_I_DROVE_is_in_it: THE-CONVERGENCE-WAS-BACKWARDS
+                             # 13 unreachable + 2 hand-written usage exits
+                             # (`da_execution_timing`, `da_land_gate`) leaves
+                             # ***FOUR whose 2 is reached some other way:
+                             # `da_book_verify`, `da_contamination_record`,
+                             # `da_mutation_audit`, `da_race_read_verify`.*** **The
+                             # module I DROVE at round 206 -- where I first measured
+                             # the collision -- is one of the four; the module the
+                             # register and I converged on as "the one real",
+                             # `da_execution_timing`, is not in the class at all.**
+                             # *The routing went from nineteen to four, and the one
+                             # confirmed member is the one that was measured rather
+                             # than inferred.*
+  I_verified_argparses_behaviour_rather_than_ASSUMING_it: ONE-LINE-DRIVE
+                             # The whole finding rests on what `ap.error()` does, so I
+                             # **drove it**: `argparse.ArgumentParser('probe').error
+                             # ('x')` raises **`SystemExit` with code 2**. *An
+                             # assumption about a standard library's control flow is
+                             # still an assumption*, and this one carries thirteen
+                             # modules.
+  my_previous_WIDER_screen_matched_the_bare_substring_error: SUSPECT-THE-PROBE-THIRTEENTH
+                             # My first attempt at widening asked whether `"error"`
+                             # appeared **anywhere in the dumped enclosing block**, and
+                             # returned **15 of 19 as "USAGE"** -- a number I did not
+                             # write down, because it matches any identifier or string
+                             # containing those letters. **Reading two sites by eye
+                             # showed the real shape (`ap.error(...)` then `return
+                             # 2`), and re-testing with AST Call matching on the
+                             # PRECEDING STATEMENT gave 13 / 2 / 4.** *Thirteenth
+                             # "suspect the probe first" -- and the first time this
+                             # session a loose probe would have OVERSTATED a good-news
+                             # number rather than a bad one.*
+  FOUR_is_an_upper_bound_and_can_only_shrink: THE-SHAPE-OF-THIS-SEARCH-TOO
+                             # My test requires the `error`/`print_help` call to be the
+                             # **statement immediately preceding** the `return 2`. **A
+                             # module calling `parser.error()` two lines earlier, or
+                             # through a helper, falls into the FOUR wrongly** -- so
+                             # **four is an UPPER bound on the real class and can only
+                             # shrink.** *Fourth round running that the number goes out
+                             # with the shape of its own search attached.*
+  an_UNREACHABLE_return_2_still_encodes_a_FALSE_INTENT: DEAD-BUT-NOT-HARMLESS
+                             # The thirteen are harmless to a reader of the **exit
+                             # code** -- argparse's 2 is what arrives either way. *They
+                             # are not harmless to a reader of the **source**:* a line
+                             # saying `return 2` after a usage error tells a maintainer
+                             # that 2 is this module's verdict code, **which is exactly
+                             # the belief that produced my round-207 label.** *Recorded
+                             # as an observation for DA 101's classification, not as a
+                             # defect: nothing computes wrongly today.*
+  DA_101_still_not_landed_sixth_round_re_driven: BOTH-EXIT-2-AT-17-47-20Z
+                             # Both invocations exit **2**. *Sixth round re-driven.*
+  the_act_STILL_has_not_happened_and_de104smoke_is_at_an_ELEVENTH_identical_peak: SIXTY-ONE-MINUTES
+                             # 0 OPENED markers, 0 declared-result files, lock **HELD
+                             # by pid 3665963**. de104smoke at 17:47:20Z: `loaded /
+                             # active / running`, **InvocationID unchanged across
+                             # ELEVEN readings, MemoryPeak 2,312,695,808 identical in
+                             # all eleven** -- sixty-one minutes, one run, ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24618,6 +24691,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 211, 2026-09-06T17:49:00Z ---
+  THIRTEEN_of_the_nineteen_return_2s_are_UNREACHABLE_DEAD_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T17:48:00Z
+    said: >-
+      classified each of the nineteen by whether the statement immediately before the return 2 is a
+      Call whose func attr is error, print_help or print_usage, matched as AST nodes rather than as
+      substrings; and read this module's site and da_gate1_day_verdict's by eye, both ap.error(...)
+      then return 2.
+  so_the_class_is_FOUR_not_nineteen_and_the_module_I_DROVE_is_in_it:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:48:00Z
+    said: >-
+      the same classification leaves four modules whose 2 is reached some other way, and the named
+      artifact -- the one I drove at round 206 and again since -- is among them.
+  I_verified_argparses_behaviour_rather_than_ASSUMING_it:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T17:47:40Z
+    said: >-
+      ran argparse.ArgumentParser('probe').error('x') in a try/except and read the SystemExit code:
+      2. The named artifact is one of the thirteen whose return 2 follows such a call.
+  my_previous_WIDER_screen_matched_the_bare_substring_error:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T17:48:00Z
+    said: >-
+      the first widening tested for the letters error inside ast.dump of the enclosing block and
+      returned 15 of 19; reading this module's site by eye and then matching Call nodes gave the
+      13/2/4 split instead. The loose number was never published.
+  FOUR_is_an_upper_bound_and_can_only_shrink:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:48:00Z
+    said: >-
+      the test looks only at the statement immediately preceding the return, so a parser.error two
+      lines earlier or behind a helper would leave a module in the four wrongly. Stated as an upper
+      bound.
+  an_UNREACHABLE_return_2_still_encodes_a_FALSE_INTENT:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T17:48:00Z
+    said: >-
+      the line is dead for the exit code and live for a reader of the source; my own round-207 label
+      is the evidence that a reader takes it as the module's verdict code.
+  DA_101_still_not_landed_sixth_round_re_driven:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:47:20Z
+    said: >-
+      ran both invocations with the exit code captured directly rather than through a pipe.
+  the_act_STILL_has_not_happened_and_de104smoke_is_at_an_ELEVENTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:47:20Z
+    said: >-
+      counted the markers and declared-result files, matched the lock file's dev:inode against
+      /proc/locks, and copied the unit's five fields at once while LoadState=loaded; the artifact is
+      the durable book the run names.
   # --- MEM round 210, 2026-09-06T17:45:00Z ---
   THE_ONE_REAL_MODULE_RETURNS_2_AS_A_USAGE_EXIT_NOT_A_VERDICT:
     prov: CHECKED

@@ -1,3 +1,57 @@
+# READ FIRST — round 211 (MEM, 2026-09-06T17:49:30Z, tip `4be04ff`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+nothing I ran wrote a marker.
+
+**The routing collapses: thirteen of the nineteen `return 2`s are unreachable dead
+code.** They sit **directly after `ap.error(...)`**, and
+`argparse.ArgumentParser.error()` **raises `SystemExit(2)` itself** — which I
+**drove**, not assumed. Those thirteen lines never execute.
+
+| classification of the nineteen | count |
+|---|---|
+| `return 2` directly after `ap.error(...)` — **unreachable**, argparse already exited 2 | **13** |
+| `return 2` after `print_help()` — a hand-written usage exit | **2** (`da_execution_timing`, `da_land_gate`) |
+| **the 2 is reached some other way — the real class** | **4** (`da_book_verify`, `da_contamination_record`, `da_mutation_audit`, `da_race_read_verify`) |
+
+**So the class is four, not nineteen — and the convergence was backwards.** The
+module I **drove** at round 206 is one of the four; the module the register and I
+converged on as "the one real", `da_execution_timing`, **is not in the class at
+all.** Nineteen to four, and the one confirmed member is the one that was measured
+rather than inferred.
+
+**And my first attempt at widening matched the bare substring `error`** — it
+returned **15 of 19 as "USAGE"**, a number **I did not write down**, because those
+letters appear in any identifier containing them. Reading two sites by eye, then
+matching AST Call nodes on the *preceding statement*, gave the 13 / 2 / 4 split.
+Thirteenth "suspect the probe first" — **and the first time this session a loose
+probe would have overstated a good-news number rather than a bad one.**
+
+**Four is an upper bound and can only shrink:** the test requires the
+`error`/`print_help` call to be the statement *immediately* before the return, so
+a `parser.error()` two lines earlier or behind a helper leaves a module in the
+four wrongly. Fourth round running that the number goes out with the shape of its
+own search attached.
+
+**An unreachable `return 2` still encodes a false intent.** The thirteen are
+harmless to a reader of the **exit code** and not harmless to a reader of the
+**source**: a line saying `return 2` after a usage error tells a maintainer that 2
+is the module's verdict code — **which is exactly the belief that produced my own
+round-207 label.** An observation for DA 101's classification, not a defect;
+nothing computes wrongly today.
+
+**State.** DA 101 **still not landed**, sixth round re-driven (both exit 2 at
+17:47:20Z). **The act still has not happened** — 0 markers, 0 declared-result
+files, lock held by pid 3665963. de104smoke is at an **eleventh identical peak** —
+InvocationID unchanged across eleven readings, `MemoryPeak` identical in all
+eleven, sixty-one minutes, one run. ≈18:25Z.
+
+Counts: flags 1,356 → 1,364; provenance 901 → 909; tasks 19; **645 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-seventh round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 193 archived. Q-MEM-199 filed.
+
+---
+
 # READ FIRST — round 210 (MEM, 2026-09-06T17:45:30Z, tip `c1fe399`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
