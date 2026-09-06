@@ -1,0 +1,552 @@
+{
+  "aggregate": {
+    "G": 3,
+    "any_arm_fails": true,
+    "multiplicity_m": 2,
+    "per_arm": {
+      "CONDVALUE_X_SKEW": {
+        "FAILS_THE_SECTION_7_PREDICATE": false,
+        "G": 3,
+        "a_pass_is_significance_bearing": false,
+        "alpha": 0.05,
+        "best_attainable_p_at_this_G": 0.125,
+        "clears_holm": false,
+        "cluster_unit": "UTC day",
+        "days": [
+          "FIXTURE-1",
+          "FIXTURE-2",
+          "FIXTURE-3"
+        ],
+        "holm_threshold_for_the_smaller_p": 0.025,
+        "mean_standardised_excess": 2.489053200986309,
+        "multiplicity_m": 2,
+        "n_days_positive": 3,
+        "p_one_sided_sign_test": 0.125,
+        "signs_unanimous": true,
+        "smallest_G_that_clears_holm": 6,
+        "smallest_G_that_clears_holm_at_m_1": 5,
+        "verdict": "BEATS_DIRECTIONALLY_NOT_SIGNIFICANTLY",
+        "why_a_pass_cannot_be_significant_here": "2^-3 = 0.125 against a Holm threshold of 0.025 at m = 2; the smallest G that clears is 6 at m = 2 and 5 at m = 1",
+        "z_by_day": {
+          "FIXTURE-1": 2.4869710419511253,
+          "FIXTURE-2": 2.5256153124786445,
+          "FIXTURE-3": 2.4545732485291585
+        }
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "FAILS_THE_SECTION_7_PREDICATE": true,
+        "G": 3,
+        "a_pass_is_significance_bearing": false,
+        "alpha": 0.05,
+        "best_attainable_p_at_this_G": 0.125,
+        "clears_holm": false,
+        "cluster_unit": "UTC day",
+        "days": [
+          "FIXTURE-1",
+          "FIXTURE-2",
+          "FIXTURE-3"
+        ],
+        "holm_threshold_for_the_smaller_p": 0.025,
+        "mean_standardised_excess": -0.2046869750014975,
+        "multiplicity_m": 2,
+        "n_days_positive": 0,
+        "p_one_sided_sign_test": null,
+        "signs_unanimous": false,
+        "smallest_G_that_clears_holm": 6,
+        "smallest_G_that_clears_holm_at_m_1": 5,
+        "verdict": "FAILS_TO_BEAT_THE_REPLAY_NULL",
+        "why_a_pass_cannot_be_significant_here": "2^-3 = 0.125 against a Holm threshold of 0.025 at m = 2; the smallest G that clears is 6 at m = 2 and 5 at m = 1",
+        "z_by_day": {
+          "FIXTURE-1": -0.24412971976115436,
+          "FIXTURE-2": -0.22482760506096616,
+          "FIXTURE-3": -0.14510360018237195
+        }
+      }
+    },
+    "section_7": {
+      "CONDVALUE_X_SKEW": false,
+      "HAZARD_OVER_SKEWED_REF": true
+    },
+    "the_rule": "the harmful-fill route STOPS if EITHER arm fails to beat the replay null at day-cluster level (R-547 item 5)"
+  },
+  "as_of": "2026-09-06T08:13:00.947224+00:00",
+  "battery": {
+    "expected_checks_in_the_source": 152,
+    "n_checks_run": 65,
+    "n_checks_skipped_offline": 87,
+    "offline": true,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "run_plus_skipped_equals_source_expected": true,
+    "skipped_offline": [
+      "R6 positive control (reads the pinned model files)",
+      "R6 known-bad: a planted model byte",
+      "R6 known-bad: an absent pinned model",
+      "R6 known-bad: a theta disagreeing with its pin",
+      "(3) the instrumented fixture-run data-freeness probe (it calls fixture_run, which would recurse)",
+      "(3) the non-vacuity check on that probe",
+      "(3) the fixture-claim-carries-its-proof check (it calls fixture_run_proven, which would recurse)",
+      "(3) the laundering known-bad on require_canonical",
+      "(3) the literal sweep over the emitted receipt (it calls fixture_run_proven, which would recurse)",
+      "(3) the committed-day-set computation check",
+      "(3) the derived runnable-from-a-shell-worktree check",
+      "DE 78 day-path check 1/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 2/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 3/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 4/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 5/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 6/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 7/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 8/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 9/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 10/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 11/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 12/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 13/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 14/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 15/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 16/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 17/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 18/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 19/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 20/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 21/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 22/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 23/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 24/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 25/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 26/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 27/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 28/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 29/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 30/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 31/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 32/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 33/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 34/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 35/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 36/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 37/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 38/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 39/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 40/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 41/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 42/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 43/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 44/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 45/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 46/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 47/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 48/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 49/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 50/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 51/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 52/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 53/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 54/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 55/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 56/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 57/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 58/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 59/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 60/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 61/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 62/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 63/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 64/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 65/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 66/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 67/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 68/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 69/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 70/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 71/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 72/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 73/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 74/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 75/75 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check count agreement (online only)"
+    ],
+    "why_skipped": "these checks READ `data/`; a fixture run must open no path under it, and a skipped check that is silent is a check that has stopped existing"
+  },
+  "be_module_citation": {
+    "FIXTURE": "a stand-in digest; the real citation is verified only on a real run",
+    "cited_not_copied": true,
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "verified_at_run_time": false
+  },
+  "committed_ruled_days": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+  ],
+  "data_free_proof": {
+    "data_paths_opened": [],
+    "distinct_paths": [
+      "/home/yuqing/ctaNew-wt-de/live/pm_research/_de77_carrying_commit_knownbad.tmp.py",
+      "/home/yuqing/ctaNew-wt-de/live/pm_research/be_cancel_axis_null.py",
+      "/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py",
+      "/home/yuqing/ctaNew-wt-de/live/pm_research/declarations/de_multiday_gate1_params_v5.json",
+      "/tmp/tmp08t4rrwv/stub_cascade.py",
+      "/tmp/tmpodiu0rrs/p.json",
+      "/tmp/tmpodiu0rrs/p2.json",
+      "/tmp/tmpxdwako_n/empty.json",
+      "/tmp/tmpxdwako_n/five.json",
+      "/tmp/tmpxdwako_n/touched.json"
+    ],
+    "distinct_paths_truncated": false,
+    "instrument": "builtins.open + Path.read_bytes + Path.read_text",
+    "n_distinct_paths": 10,
+    "n_paths_opened": 40,
+    "no_path_under_data_was_opened": true,
+    "non_vacuous": true,
+    "pid": 3038905,
+    "produced_in_the_same_process_as_the_claim": true
+  },
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_free_proof": {
+      "data_paths_opened": [],
+      "distinct_paths": [
+        "/home/yuqing/ctaNew-wt-de/live/pm_research/_de77_carrying_commit_knownbad.tmp.py",
+        "/home/yuqing/ctaNew-wt-de/live/pm_research/be_cancel_axis_null.py",
+        "/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py",
+        "/home/yuqing/ctaNew-wt-de/live/pm_research/declarations/de_multiday_gate1_params_v5.json",
+        "/tmp/tmp08t4rrwv/stub_cascade.py",
+        "/tmp/tmpodiu0rrs/p.json",
+        "/tmp/tmpodiu0rrs/p2.json",
+        "/tmp/tmpxdwako_n/empty.json",
+        "/tmp/tmpxdwako_n/five.json",
+        "/tmp/tmpxdwako_n/touched.json"
+      ],
+      "distinct_paths_truncated": false,
+      "instrument": "builtins.open + Path.read_bytes + Path.read_text",
+      "n_distinct_paths": 10,
+      "n_paths_opened": 40,
+      "no_path_under_data_was_opened": true,
+      "non_vacuous": true,
+      "pid": 3038905,
+      "produced_in_the_same_process_as_the_claim": true
+    },
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": true,
+    "is_canonical": true,
+    "purpose": "the fixture run",
+    "refusal": "NOT_APPLICABLE_FIXTURE_RUN",
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "design_battery": {
+    "NOT_RUN_IN_FIXTURE_MODE": "the design module's selftest READS THE LEDGER, so running it here would make FIXTURE_RUN_NO_DATA false. It is run separately and its result is cited, not embedded"
+  },
+  "design_declaration": {
+    "carrying_commit": "c7422c6ce55e4899cb062dbf8fe17638e40373f5",
+    "note": "the pin runs params -> design in ONE direction only; the design cites params by PATH, because two digest pins would be circular",
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json",
+    "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V12",
+    "sha256": "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef5e73923ff5",
+    "supersedes": "data/pm_5min/derived/p003_de_multiday_gate1_design_v11__20260906T071214Z.json"
+  },
+  "literal_audit": {
+    "classified": {
+      "declared_before_any_draw": "INTENT -- a statement about when this declaration was written, not a measurement of the run",
+      "no_day_book_was_read": "COMPUTED -- from whether this path opened a book; corroborated by the data-free proof",
+      "no_path_under_data_was_opened": "COMPUTED -- by the instrument",
+      "runnable_from_a_shell_worktree": "COMPUTED -- derived from the data-free proof: a run that opens no path under data/ needs no ledger",
+      "the_committed_day_set_is_empty": "COMPUTED -- len(ruled_day_set()); was a hardcoded True and was FALSE"
+    },
+    "exhaustiveness_is_checked": "the battery asserts every top-level boolean in the emitted receipt has an entry here",
+    "rule": "10 -- compute predicates, never print conclusions",
+    "why": "a receipt of bare booleans cannot tell a reader which were computed. `the_committed_day_set_is_empty` was a hardcoded True, asserted by nothing, and FALSE"
+  },
+  "n_committed_ruled_days": 6,
+  "no_day_book_was_read": true,
+  "no_path_under_data_was_opened": true,
+  "params_used": {
+    "G": 3,
+    "G_derived_from_len_days": true,
+    "alpha": 0.05,
+    "coin": "btc",
+    "min_decisions_per_arm_day": 30,
+    "min_draws_per_arm_day": 500,
+    "multiplicity_m": 2,
+    "per_day_deadline_s": 43200,
+    "sd_floor_fraction": 0.25
+  },
+  "per_day_sealed_artifacts": [
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 89.38924890677114,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-1",
+      "draw_provenance": {
+        "arm": "CONDVALUE_X_SKEW",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "945ec10ab8d07da4a49856843f7e1c32f09245d390db4d9f7235fbf13b10f126",
+        "draw_source": "SUPPLIED_FIXTURE_ONLY",
+        "generated_in_process": false,
+        "module_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "n_draws": null,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": null,
+        "seed": 4078102352
+      },
+      "seal_status": "SEALED -- 1 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 4078102352,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 22.144783087064937,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-1",
+      "draw_provenance": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "945ec10ab8d07da4a49856843f7e1c32f09245d390db4d9f7235fbf13b10f126",
+        "draw_source": "SUPPLIED_FIXTURE_ONLY",
+        "generated_in_process": false,
+        "module_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "n_draws": null,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": null,
+        "seed": 1251488242
+      },
+      "seal_status": "SEALED -- 1 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 1251488242,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 48.30426197263814,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-2",
+      "draw_provenance": {
+        "arm": "CONDVALUE_X_SKEW",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "1e2124fca0adac8e06a86a9bfd8953862d7dfaa3e18428e91785cb6fb85c9f8b",
+        "draw_source": "SUPPLIED_FIXTURE_ONLY",
+        "generated_in_process": false,
+        "module_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "n_draws": null,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": null,
+        "seed": 2843645714
+      },
+      "seal_status": "SEALED -- 2 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 2843645714,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "reasons": [],
+        "sd_over_abs_mean": 41.81374381385027,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-2",
+      "draw_provenance": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "1e2124fca0adac8e06a86a9bfd8953862d7dfaa3e18428e91785cb6fb85c9f8b",
+        "draw_source": "SUPPLIED_FIXTURE_ONLY",
+        "generated_in_process": false,
+        "module_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "n_draws": null,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": null,
+        "seed": 3791040828
+      },
+      "seal_status": "SEALED -- 2 of 3 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 3791040828,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "null_mean": 0.006658810494571176,
+        "null_sd": 1.0157941674788076,
+        "reasons": [],
+        "sd_over_abs_mean": 152.5488926748957,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-3",
+      "draw_provenance": {
+        "arm": "CONDVALUE_X_SKEW",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "af554ca7655dcef9a88688329a5b4f03c7828239715fc5fb98be3e874429df11",
+        "draw_source": "SUPPLIED_FIXTURE_ONLY",
+        "generated_in_process": false,
+        "module_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "n_draws": null,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": null,
+        "seed": 3620666193
+      },
+      "economic": {
+        "D_E0": 2.5,
+        "Z": 2.4545732485291585,
+        "null_draws_summary": {
+          "n": 600
+        },
+        "null_mean": 0.006658810494571176,
+        "null_sd": 1.0157941674788076,
+        "p_location": 0.008319467554076539
+      },
+      "seal_status": "UNSEALED_ALL_DAYS_COMPLETE",
+      "sealed": false,
+      "sealed_at_every_depth": false,
+      "sealed_field_names": [],
+      "seed": 3620666193,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 200,
+        "null_mean": -0.05267442230958869,
+        "null_sd": 1.0153130418903922,
+        "reasons": [],
+        "sd_over_abs_mean": 19.275257276159397,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-3",
+      "draw_provenance": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "af554ca7655dcef9a88688329a5b4f03c7828239715fc5fb98be3e874429df11",
+        "draw_source": "SUPPLIED_FIXTURE_ONLY",
+        "generated_in_process": false,
+        "module_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "n_draws": null,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": null,
+        "seed": 882242147
+      },
+      "economic": {
+        "D_E0": -0.2,
+        "Z": -0.14510360018237195,
+        "null_draws_summary": {
+          "n": 600
+        },
+        "null_mean": -0.05267442230958869,
+        "null_sd": 1.0153130418903922,
+        "p_location": 0.5823627287853578
+      },
+      "seal_status": "UNSEALED_ALL_DAYS_COMPLETE",
+      "sealed": false,
+      "sealed_at_every_depth": false,
+      "sealed_field_names": [],
+      "seed": 882242147,
+      "status": "OK"
+    }
+  ],
+  "protocol": "P003_DE_MULTIDAY_GATE1_RUNNER_V2",
+  "resources_observed": {
+    "max_rss_kib": 36636,
+    "user_cpu_seconds": 0.08945299999999999,
+    "wall_seconds": 0.16535496711730957
+  },
+  "run_input_verification_R6": {
+    "FIXTURE_MODE": "verify_pinned_models() and verify_pinned_thetas() are NOT called here -- they read `data/`. They are driven in the battery, both directions, and run for real on a real day",
+    "closed_the_reviewers_half_a_code_path": "the book digest was already a verifier; the THETA and MODEL digests were pinned and never compared. Both now READ BYTES at run time and a mismatch REFUSES THE RUN",
+    "models": {
+      "FIXTURE": "no model file was read"
+    },
+    "thetas": {
+      "FIXTURE": "no theta source was read"
+    }
+  },
+  "runnable_from_a_shell_worktree": true,
+  "source_identity": {
+    "carrying_commit": "0cec7ce48c9c89a4dba6cbd3477f9dca19bd579e",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "645f8509d502d13c5a86401df8bfe92ce9e1e53506d149f7fbe97f4727d8406d",
+    "tree_dirty": false,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran"
+  },
+  "status": "FIXTURE_RUN_NO_DATA",
+  "the_committed_day_set_is_empty": false,
+  "what_this_receipt_is_not": {
+    "a_day_run": false,
+    "a_result": false,
+    "it_says_nothing_about_either_arm": true,
+    "the_fixture_arms_are_synthetic": "CONDVALUE's fixture is planted above the null and HAZARD's below it, to drive both verdict branches"
+  },
+  "why_fixtures": "the reviewer has not filed on design v3 and BE's book declaration is in flight; nothing may touch a day. This proves the runner EXECUTES, not that any arm does anything",
+  "wrapper_used": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}
