@@ -33,6 +33,10 @@ class ChainRefused(RuntimeError):
 #: anchored on `_v<N>.json$` parsed EVERY one of them as version 0.
 VERSION_RE = re.compile(r"_v(\d+)(?:__[^/]*)?\.json$")
 
+#: A LINK IS A PAIR (R-608), and a digest that is not 64 lowercase hex is
+#: not a digest. Used by every link shape this resolver follows.
+DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")
+
 
 def _sha(p: Path) -> str:
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -85,6 +89,24 @@ def resolve_head(directory, family: str) -> dict:
             f"fixed. ({unparseable[0]['error']})")
     superseded, broken, shapes = {}, [], {}
 
+    def _digest_fault(want):
+        """None if `want` is a usable digest; else WHAT IT HAS, said plainly.
+
+        R-608: the link IS the pair. A digest that is not 64 lowercase hex
+        verifies nothing -- `None`, an empty string, a truncated value, a
+        placeholder -- and a link that cannot verify is HALF-WRITTEN.
+        """
+        if want is None:
+            return "no `sha256` at all"
+        if not isinstance(want, str):
+            return f"a {type(want).__name__} where the digest belongs"
+        if not want:
+            return "an empty `sha256`"
+        if not DIGEST_RE.match(want):
+            return (f"`sha256` = {want[:16]!r}... ({len(want)} chars), which "
+                    f"is not 64 lowercase hex")
+        return None
+
     def _predecessor(sup):
         """(name, sha256, shape) of the DIRECT predecessor, or (None, …).
 
@@ -105,8 +127,15 @@ def resolve_head(directory, family: str) -> dict:
         if isinstance(sup, dict) and isinstance(sup.get("chain"), list) \
                 and sup["chain"]:
             last = sup["chain"][-1]
-            if isinstance(last, (list, tuple)) and len(last) >= 2:
-                return Path(str(last[0])).name, str(last[1]), "chain"
+            if isinstance(last, (list, tuple)) and len(last) >= 1:
+                # THE DIGEST IS RETURNED RAW, never `str()`-ed: `str(None)`
+                # is the string "None", which would have been compared as a
+                # digest and reported as a MISMATCH -- the wrong name for a
+                # link that simply has none. A chain element is a pair like
+                # any other, so an element without a digest is HALF-WRITTEN
+                # and refuses under that name (BE 82).
+                return (Path(str(last[0])).name,
+                        last[1] if len(last) >= 2 else None, "chain")
             return None, None, "chain-malformed"
         if isinstance(sup, str) and sup:
             return None, None, "bare-string"
@@ -140,6 +169,17 @@ def resolve_head(directory, family: str) -> dict:
                                           "names a version that is not in "
                                           "this family on disk"})
                     continue
+                _f = _digest_fault(item.get("sha256"))
+                if _f is not None:
+                    broken.append({"version": name, "shape": "half-written",
+                                   "names": tname,
+                                   "link_shape": "also_supersedes",
+                                   "has": _f,
+                                   "why": "HALF_WRITTEN_LINK: a merge link "
+                                          "is a {path, sha256} pair like any "
+                                          "other, and this one has no usable "
+                                          "digest -- it closes nothing"})
+                    continue
                 if loaded[tname]["sha256"] != item.get("sha256"):
                     broken.append({"version": name, "shape": "merge-mismatch",
                                    "names": tname,
@@ -166,7 +206,27 @@ def resolve_head(directory, family: str) -> dict:
             continue
         if prev is None:
             continue
-        if prev in loaded and want and loaded[prev]["sha256"] != want:
+        # THE REGRESSION THIS REPLACES (DA 106's own cell, R-718, MEM 228).
+        # `_predecessor` returned `(path, None, "pair")` for a `{path}`-only
+        # `supersedes`, and the comparison below was guarded by `and want`
+        # -- so a missing digest SKIPPED the check, the link was followed
+        # unverified, and `link_shapes` even called it a `pair`. The
+        # coordinator's drive: `fam_v2 {supersedes: {path: fam_v1.json}}`
+        # resolved to head `fam_v2.json`, orphans [], shapes `{'fam_v2':
+        # 'pair'}`. A guard that skips its own check when the input is
+        # missing is not a guard; it is the input deciding whether to be
+        # checked.
+        _fault = _digest_fault(want)
+        if _fault is not None:
+            shapes[name] = shapes[name] + "-HALF_WRITTEN"
+            broken.append({"version": name, "shape": "half-written",
+                           "names": prev, "link_shape": shape,
+                           "has": _fault,
+                           "why": "HALF_WRITTEN_LINK: the supersession "
+                                  "carries a path and no usable digest, so "
+                                  "it verifies nothing"})
+            continue
+        if prev in loaded and loaded[prev]["sha256"] != want:
             broken.append({"version": name, "names": prev,
                            "shape": shape,
                            "pair_sha256": want,
@@ -180,6 +240,23 @@ def resolve_head(directory, family: str) -> dict:
             f"names a version not present in this family cannot make it "
             f"reachable, and a tip that does not exist is not a tip that "
             f"was closed.")
+    # ORDER. After MERGE_TARGET_ABSENT (a named file that is not there is a
+    # stronger fact than a link that cannot verify) and BEFORE the mismatch
+    # refusals, because "the bytes moved" MISSTATES a link that never
+    # carried a digest -- and a message that misstates the cause sends the
+    # reader to repair the wrong thing (REV 54 §0).
+    half = [b for b in broken if b.get("shape") == "half-written"]
+    if half:
+        raise ChainRefused(
+            "HALF_WRITTEN_LINK: "
+            + "; ".join(f"{b['version']} names {b['names']} in its "
+                        f"`{b['link_shape']}` link with {b['has']}"
+                        for b in half)
+            + ". R-608: the link IS the pair. A supersession carrying a path "
+              "and no usable digest verifies nothing, so it is never "
+              "followed, never counted as a `pair`, and never reported as "
+              "an orphan -- the repair is the link, and it belongs to the "
+              "seat that wrote it.")
     m_bad = [b for b in broken if b.get("shape") in ("merge-mismatch",
                                                      "merge-malformed")]
     if m_bad:
@@ -465,6 +542,85 @@ def _falsify() -> int:
     ok(unsup == "LINK_SHAPE_UNSUPPORTED",
        f"CELL 7 an unfollowable shape is REFUSED BY NAME ({unsup}), never "
        f"reported as an orphan")
+
+    # THE HALF-WRITTEN LINK (R-718; DA 106's cell, the coordinator's drive,
+    # MEM 228). THREE OUTCOMES ON ONE FIXTURE, so the cells distinguish a
+    # link with NO digest from one with a WRONG digest from one that is
+    # right: before BE 82 the first two were not distinguished -- the digest
+    # comparison was guarded by `and want`, so an absent digest skipped the
+    # check entirely and the link was FOLLOWED and counted as a `pair`.
+    dh = Path(tempfile.mkdtemp(prefix="dc_half_"))
+    (dh / f"{FAM}_v1.json").write_text(
+        json.dumps(pl(None, "root"), indent=1, sort_keys=True) + "\n")
+    v1p = dh / f"{FAM}_v1.json"
+    v2p = dh / f"{FAM}_v2.json"
+
+    def _v2(sup):
+        v2p.write_text(json.dumps(pl(sup, "second"), indent=1,
+                                  sort_keys=True) + "\n")
+
+    _v2({"path": f"{FAM}_v1.json"})            # the coordinator's drive
+    try:
+        rh = resolve_head(dh, FAM)
+        half = (f"NOT REFUSED -- head {rh['name']}, orphans "
+                f"{[o['version'] for o in rh['orphan_branches']]}, shapes "
+                f"{rh['link_shapes']}")
+    except ChainRefused as e:
+        half = str(e)
+    ok(half.startswith("HALF_WRITTEN_LINK:") and f"{FAM}_v2.json" in half
+       and "no `sha256` at all" in half,
+       f"CELL 11 A PATH-ONLY LINK IS REFUSED BY NAME, naming the file and "
+       f"WHAT IT HAS: {half[:200]!r}. This is the coordinator's drive "
+       f"(R-718): it used to answer `head {FAM}_v2.json, orphans [], "
+       f"link_shapes {{'{FAM}_v2.json': 'pair'}}` -- an unverified link "
+       f"followed, and counted as a pair")
+    _v2({"path": f"{FAM}_v1.json", "sha256": "0" * 64})
+    try:
+        resolve_head(dh, FAM)
+        wrong = "NOT REFUSED"
+    except ChainRefused as e:
+        wrong = str(e).split(":")[0]
+    ok(wrong == "DECLARATION_LINK_CORRUPTED",
+       f"CELL 12 and a link whose digest is WELL-FORMED BUT WRONG is still "
+       f"refused under its own name ({wrong}) -- the two faults are not the "
+       f"same fault, and `the bytes moved` misstates a link that never "
+       f"carried a digest")
+    _v2({"path": f"{FAM}_v1.json", "sha256": _sha(v1p)})
+    rok = resolve_head(dh, FAM)
+    ok(rok["name"] == f"{FAM}_v2.json" and rok["version"] == 2
+       and rok["orphan_branches"] == []
+       and rok["link_shapes"][f"{FAM}_v2.json"] == "pair",
+       f"CELL 13 POSITIVE CONTROL ON THE SAME FIXTURE: with the RIGHT "
+       f"digest the link is followed, head {rok['name']}, orphans [], shape "
+       f"`pair` -- the refusal is about the missing digest, not about the "
+       f"link")
+    _v2({"chain": [[f"{FAM}_v1.json"]]})
+    try:
+        resolve_head(dh, FAM)
+        chain_half = "NOT REFUSED"
+    except ChainRefused as e:
+        chain_half = str(e)
+    ok(chain_half.startswith("HALF_WRITTEN_LINK:")
+       and "no `sha256` at all" in chain_half and "`chain`" in chain_half,
+       f"CELL 14 THE EARLY `chain` FORM KEEPS THE SAME RULE -- its elements "
+       f"are pairs too, so an element without a digest is HALF-WRITTEN and "
+       f"refuses under that name, not as a broken shape: {chain_half[:160]!r}")
+    _v2({"path": f"{FAM}_v1.json", "sha256": _sha(v1p)})
+    (dh / f"{FAM}_v3.json").write_text(json.dumps(
+        dict(pl({"path": f"{FAM}_v2.json", "sha256": _sha(v2p)}, "merge"),
+             also_supersedes=[{"path": f"{FAM}_v1.json"}]), indent=1,
+        sort_keys=True) + "\n")
+    try:
+        resolve_head(dh, FAM)
+        merge_half = "NOT REFUSED"
+    except ChainRefused as e:
+        merge_half = str(e)
+    ok(merge_half.startswith("HALF_WRITTEN_LINK:")
+       and "also_supersedes" in merge_half,
+       f"CELL 15 AND A MERGE LINK IS A PAIR LIKE ANY OTHER: an "
+       f"`also_supersedes` entry with no digest refuses as HALF_WRITTEN_LINK "
+       f"-- it used to be reported as MERGE_PAIR_MISMATCH, which says the "
+       f"bytes moved when there was nothing to compare: {merge_half[:160]!r}")
     print()
     print(f"{ok_n} cells, {len(fails)} failures")
     return 1 if fails else 0
