@@ -2763,10 +2763,18 @@ def selftest_pre_read() -> list:                              # noqa: C901
            "each named -- so the gate says WHICH bar is not met",
            pred_pre["open"] is False and pred_post["open"] is False
            and pred_pre["n_conjuncts_declared"] >= 2
-           and any("clock" in str(c["conjunct"]).lower()
+           #: ASSERT ON THE EVALUATOR, NOT THE PROSE. This check used to grep
+           #: the conjunct TEXT for "clock" -- prose matching, the very
+           #: thing the id binding replaced -- and it broke the moment DE
+           #: landed params v8 with objects whose text does not carry the
+           #: word. The check was behind the code it tests.
+           and any(c.get("evaluator")
+                   == "clock_at_or_after_read_not_before_utc"
                    and c.get("holds") is False for c in pred_pre["conjuncts"])
-           and any("clock" in str(c["conjunct"]).lower()
-                   and c.get("holds") is True for c in pred_post["conjuncts"]),
+           and any(c.get("evaluator")
+                   == "clock_at_or_after_read_not_before_utc"
+                   and c.get("holds") is True
+                   for c in pred_post["conjuncts"]),
            f"{pred_pre['n_conjuncts_declared']} conjuncts declared in "
            f"{pred_pre['source_field']} ({pred_pre['params_protocol']}); "
            f"before the bar {pred_pre['n_holding']} hold, after it "
