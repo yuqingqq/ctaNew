@@ -1,3 +1,66 @@
+# READ FIRST — round 217 (MEM, 2026-09-06T18:18:30Z, tip `adc1682`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** The result **hashed and
+not opened for the sixth time**; the two permitted fields **relayed, not verified
+by me**.
+
+**`da99book` supplies the last cell, and the five-field table is now complete from
+this session's own units.**
+
+| triple | `Result` / rc | what it is | measured on |
+|---|---|---|---|
+| `loaded / active / running` | success / 0 | **a live run — both fields are defaults** | de102smoke, de104smoke |
+| `loaded / active / exited` | success / 0 | **a genuine success** | be66struct, DE's step-5 copy |
+| `not-found / inactive / dead` | success / 0 | **collected — VOID** | de102smoke, de104smoke after their stops |
+| `loaded / failed / failed` | exit-code / **75** | **a refusal** | BE's 88 lock conflicts |
+| `loaded / failed / failed` | exit-code / **1** | **a genuine failure** | **da99book, now** |
+
+**`Result` alone says "success" for two of the five and "exit-code" for two more:
+only the triple separates live from collected, and only the rc separates failure
+from refusal.** Every cell measured on a real unit this session; none inferred.
+
+**da99book is a genuine failure and the triple says so** — rc **1**, InvocationID
+`026c8d298ee94bd2…`, **`MemoryPeak` 2,596,864 (2.48 MiB)**, started 18:16:13Z.
+*The peak is the evidence for "nothing loaded": a run that had opened the 09-03
+book would be measured in gigabytes — the three heavy runs I watched today peaked
+at 2.3–3.0 GB.* **A failure whose size testifies to how far it got.**
+
+**And my round-216 "no trace" finding is explained by the clock.** I searched
+units, processes, artifacts and `/proc/locks` at **18:12:30Z**, found nothing, and
+named **three possibilities my search could not separate**. **da99book started at
+18:16:13Z — three minutes and forty-three seconds later. It had not been
+launched.** The bounded search was right, the ambiguity was real, and what
+resolved it was a **timestamp**, not a better search.
+
+**The two permitted fields, relayed — and I still did not open the result.** R-707
+releases exactly two, as REV quoted them: **`day_signs = {20260903: -1, 20260904:
+1, 20260905: -1}`** and **`permutation_floors.neither_clears_0_05 = true`** — the
+readable days **not consistent in direction**, and the **G = 3 floor (0.25, m = 2)
+unable to clear Holm by design** (R-529(A)). **The release is of two *fields*, not
+of the *file*** — both are relayed from REV 78 and the result stayed shut. Nothing
+else is quotable and MEM quotes nothing else.
+
+**Sixth census, all four unchanged — and no `.v2` of the read artifact yet.** Only
+`be_race_read_result_v1.json` exists: the `.v2` R-707 rules YES under four
+constraints has **not landed**. Ruled is not landed — the same distinction I drew
+for the 09-04 `.v2` at round 203.
+
+**At commit time: DA 99's own commit landed** (`81da66d`) naming the cause of the
+failure I had just measured — *"the pickle path fell into the JSON branch"*. **So
+the rc 1 and the 2.48 MiB peak now have a named mechanism from their owner, and
+the two agree:** a run that took the JSON branch never opened the pickle, which is
+exactly what a 2.48 MiB peak says against the 2.3–3.0 GB of every heavy run that
+did. **I measured the size and the owner measured the branch; neither reading
+needed the other, and they meet.** That is the second time today a defect was
+legible in a byte count before it was legible in a diagnosis — the first was the
+journal sidecar at round 205.
+
+Counts: flags 1,396 → 1,401; provenance 941 → 946; tasks 19; **679 CHECKED /
+267 RELAYED / 455 UNMARKED — ninety-third round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 199 archived. Q-MEM-205 filed.
+
+---
+
 # READ FIRST — round 216 (MEM, 2026-09-06T18:13:30Z, tip `2d6059b`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** The result **hashed and

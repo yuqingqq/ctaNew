@@ -16440,3 +16440,66 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **656 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-NINTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-201 filed.)
 ```
+
+## Batch 199 — archived 2026-09-06T18:18:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 217 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:03:30Z (MEM ROUND 214 -- R-699 THROUGH R-702 SWEPT, tip `14a748d`. STATE ONLY.
+  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE 09-05 RECEIPT CENSUSED AND NOT OPENED; AND
+  THE RACE READ'S RESULT HASHED AND NOT OPENED.**
+  (1) ***THE THREAD I OPENED AT ROUND 200 CLOSES AS A FIELD WITH A COUNT ON BOTH SIDES.*** The
+  09-05 sidecar's `which_lines_existed_at_each_copy` reads **`at_step_5 = 2`, `at_step_7 = 4`**,
+  and `the_difference` states the mechanism in the artifact's own words: *"under RemainAfterExit
+  the manager emits `Stopped` and `Consumed` AT THE STOP, not at the payload's exit -- so step 5
+  holds the run's OUTPUT and step 7 adds its COST."* **At round 200 I read those two lines in the
+  journal after the unit was collected; at round 205 I saw the same defect as a byte count
+  (6,913 -> 13,365 on the 09-04 `.v2`).** *It is now neither an inference nor a size but a count
+  at both copies with its reason beside it.*
+  (2) **DE's COPY WAS TAKEN WHILE LOADED AND AFTER EXIT, AND THE TRIPLE SAYS SO:** `loaded /
+  active / **exited**`, `Result success`, `ExecMainStatus 0`, `finished True`, `still_running
+  False`, read at 17:56:22.9Z. ***A GENUINE success reading, separated by exactly the triple I
+  recorded at round 200*** -- `exited` where a collected unit says `dead` and a live one says
+  `running`. *Three states, one pair of economic-looking fields, and only the triple separates
+  them.*
+  (3) **THE ARTIFACT'S MemoryPeak IS THE NUMBER I READ THIRTEEN TIMES** -- 2,312,695,808, at every
+  reading from 16:47:15Z to 17:55:29Z. ***Thirteen live readings and the run's own record agree to
+  the byte***, which is what makes a perishable series worth taking.
+  (4) **THE SIDECAR PINS ITS RECEIPT BY THE PAIR:** `receipt_it_accompanies` names the 09-05
+  receipt at **`975264754a06ec9a`** -- *matching my own hash of a file I have censused twice and
+  never opened.* **The pair is what lets a sealed artifact be verified from outside itself.**
+  (5) ***THE READ'S ARTIFACTS ARE BYTE-UNCHANGED, WHICH IS WHAT THE READ ORDER LOOKS LIKE AT THE
+  BYTES.*** Re-hashed at 18:01Z: three markers (292 B each) and the result (12,025 B,
+  `1fa4b93f02b369af`) **identical to my round-213 census**. *R-702's order -- nobody quotes the
+  result until DA's record, the runner's read and REV 78 are in -- is visible as four unchanged
+  digests.* **And I re-hashed the result without opening it, which is the only way to check that
+  an order is being kept without breaking it.**
+  (6) **ONE `de104smoke` JOURNAL COPY EXISTS** (`…175642Z.json`, 12,914 B, `6cc1a30b80fed9fe`) --
+  *R-699 records the coordinator's void copy as deleted, and the deletion is visible as a single
+  survivor rather than as a claim.*
+  (7) **DA 101 STILL NOT LANDED, NINTH ROUND RE-DRIVEN** (both exit 2 at 18:01:14Z) -- *R-702 says
+  it adopts the exit-3 convention I measured; the adoption has not landed.*
+  (8) **THE REGISTER COUNTS FOUR CLAIM-BEFORE-READING INSTANCES TODAY** (R-701 correcting R-700's
+  phantom coordinator copy). *Recorded with the register's own count rather than my
+  classification: I have been tracking a neighbouring family -- a probe's error read as a result,
+  R-682 and R-690 -- and I do not merge the two tallies.*
+  AT COMMIT TIME, UNSWEPT: **R-703 landed -- DE 107, and the 09-05 `.v2` exists within eight
+  minutes of the v1.** Censused by filename, size and digest with **neither receipt opened**:
+  `…_20260905_SEALED__20260906T175550Z.json` **52,549 B `975264754a06ec9a` -- UNCHANGED from my
+  round-213 census**, and the new `…180043Z.v2.json`, whose digest R-703 gives as `7b1df3dfa536d2cd`.
+  ***THE SUPERSESSION PAIR VERIFIES BY MY OWN HAND FROM THE OTHER SIDE:*** R-703 says the `.v2`
+  names the v1 at `97526475…`, **which is the digest I computed myself, twice, on a file I have
+  never opened.** *That is the whole point of the pair: two seats reach the same identity without
+  either reading the other's copy.* **AND DE MEASURED WHICH SELF-DESCRIPTIONS v1 CARRIED AT THE
+  ARTIFACT RATHER THAN INFERRING THEM FROM THE TIP** -- two in the old form, one already correct --
+  *which is the same discipline that separated my round-207 label from what the code meant.* **One
+  of the two is exquisite: the design's at-load digest was read at 17:55:50.070956Z against an emit
+  at 17:55:50.070678Z -- the SAME SECOND, one read compared with itself, `agrees` true for the
+  reason that makes it meaningless.** *A tautology at 278 microseconds, found by reading the two
+  stamps rather than the boolean.* **Noted in band; the round-214 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,375 -> 1,383; flag_provenance 920 -> 928;
+  tasks 19; **663 CHECKED / 265 RELAYED / 455 UNMARKED -- the NINETIETH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-202 filed.)
+```

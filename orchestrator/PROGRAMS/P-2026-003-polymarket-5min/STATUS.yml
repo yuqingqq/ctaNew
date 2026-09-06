@@ -63,6 +63,48 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:18:30Z (MEM ROUND 217 -- R-706 AND R-707 SWEPT, tip `adc1682`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE SIXTH TIME; THE TWO PERMITTED
+  FIELDS RELAYED, NOT VERIFIED BY ME.**
+  (1) ***da99book SUPPLIES THE LAST CELL, AND THE FIVE-FIELD TABLE IS NOW COMPLETE FROM THIS
+  SESSION'S OWN UNITS.*** **(1) `loaded / active / running`** -- a LIVE run: success and 0 are
+  **DEFAULTS**. **(2) `loaded / active / exited`** + success + 0 -- a **GENUINE SUCCESS**. **(3)
+  `not-found / inactive / dead`** + success + 0 -- **COLLECTED, VOID**. **(4) `loaded / failed /
+  failed` + rc 75** -- a **REFUSAL**. **(5) `loaded / failed / failed` + rc 1** -- a **GENUINE
+  FAILURE**. ***`Result` ALONE SAYS "success" FOR TWO OF THE FIVE AND "exit-code" FOR TWO MORE:
+  ONLY THE TRIPLE SEPARATES LIVE FROM COLLECTED, AND ONLY THE RC SEPARATES FAILURE FROM
+  REFUSAL.*** *Every cell measured on a real unit this session; none inferred.*
+  (2) **da99book IS A GENUINE FAILURE AND THE TRIPLE SAYS SO:** `loaded / failed / failed`,
+  `Result=exit-code`, **rc 1**, InvocationID `026c8d298ee94bd2…`, **MemoryPeak 2,596,864** (2.48
+  MiB), started 18:16:13Z. *The peak is the evidence for "nothing loaded": a run that had opened
+  the 09-03 book would be measured in GIGABYTES -- the three heavy runs I watched today peaked at
+  2.3-3.0 GB.* **A failure whose SIZE testifies to how far it got.**
+  (3) ***AND MY ROUND-216 "NO TRACE" FINDING IS EXPLAINED BY THE CLOCK.*** I searched units,
+  processes, artifacts and `/proc/locks` at **18:12:30Z**, found nothing, and named **three
+  possibilities my search could not separate**. **da99book started at 18:16:13Z -- three minutes
+  and forty-three seconds later. IT HAD NOT BEEN LAUNCHED.** *The bounded search was right, the
+  ambiguity was real, and what resolved it was a TIMESTAMP rather than a better search.*
+  (4) **THE TWO PERMITTED FIELDS, RELAYED, AND I STILL DID NOT OPEN THE RESULT.** R-707 releases
+  exactly two, as REV quoted them: **`day_signs = {20260903: -1, 20260904: 1, 20260905: -1}`** and
+  **`permutation_floors.neither_clears_0_05 = true`** -- the readable days **not consistent in
+  direction**, and the **G = 3 floor (0.25, m = 2) unable to clear Holm BY DESIGN** (R-529(A)).
+  ***THE RELEASE IS OF TWO FIELDS, NOT OF THE FILE***, so both are RELAYED from REV 78 and the
+  result stayed shut. **Nothing else is quotable and MEM quotes nothing else.**
+  (5) **SIXTH CENSUS, ALL FOUR UNCHANGED -- AND NO `.v2` OF THE READ ARTIFACT YET.** A filename
+  census shows only `be_race_read_result_v1.json`: the `.v2` R-707 rules YES under four
+  constraints has **not landed**. *Ruled is not landed -- the same distinction I drew for the
+  09-04 `.v2` at round 203, and it held there too.*
+  AT COMMIT TIME, UNSWEPT: **DA 99's own commit landed** (`81da66d`) naming the cause of the
+  failure I had just measured -- *"the pickle path fell into the JSON branch"*. ***SO THE rc 1 AND
+  THE 2.48 MiB PEAK NOW HAVE A NAMED MECHANISM FROM THEIR OWNER, AND THE TWO AGREE:*** a run that
+  took the JSON branch never opened the pickle, which is exactly what a **2.48 MiB** peak says
+  against the **2.3-3.0 GB** of every heavy run that did. **I measured the size and the owner
+  measured the branch; neither reading needed the other, and they meet.** *That is the second time
+  today a defect was legible in a byte count before it was legible in a diagnosis -- the first was
+  the journal sidecar at round 205.* **Noted in band; the round-217 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,396 -> 1,401; flag_provenance 941 -> 946;
+  tasks 19; **679 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-THIRD round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-205 filed.)
   2026-09-06T18:13:30Z (MEM ROUND 216 -- R-704 AND R-705 SWEPT, tip `2d6059b`. STATE ONLY. MEM
   ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE FIFTH TIME; DA'S RECORD NOT
   OPENED; NO VERDICT QUOTED.**
@@ -174,61 +216,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,383 -> 1,390; flag_provenance 928 -> 935;
   tasks 19; **669 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-FIRST round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-203 filed.)
-  2026-09-06T18:03:30Z (MEM ROUND 214 -- R-699 THROUGH R-702 SWEPT, tip `14a748d`. STATE ONLY.
-  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; THE 09-05 RECEIPT CENSUSED AND NOT OPENED; AND
-  THE RACE READ'S RESULT HASHED AND NOT OPENED.**
-  (1) ***THE THREAD I OPENED AT ROUND 200 CLOSES AS A FIELD WITH A COUNT ON BOTH SIDES.*** The
-  09-05 sidecar's `which_lines_existed_at_each_copy` reads **`at_step_5 = 2`, `at_step_7 = 4`**,
-  and `the_difference` states the mechanism in the artifact's own words: *"under RemainAfterExit
-  the manager emits `Stopped` and `Consumed` AT THE STOP, not at the payload's exit -- so step 5
-  holds the run's OUTPUT and step 7 adds its COST."* **At round 200 I read those two lines in the
-  journal after the unit was collected; at round 205 I saw the same defect as a byte count
-  (6,913 -> 13,365 on the 09-04 `.v2`).** *It is now neither an inference nor a size but a count
-  at both copies with its reason beside it.*
-  (2) **DE's COPY WAS TAKEN WHILE LOADED AND AFTER EXIT, AND THE TRIPLE SAYS SO:** `loaded /
-  active / **exited**`, `Result success`, `ExecMainStatus 0`, `finished True`, `still_running
-  False`, read at 17:56:22.9Z. ***A GENUINE success reading, separated by exactly the triple I
-  recorded at round 200*** -- `exited` where a collected unit says `dead` and a live one says
-  `running`. *Three states, one pair of economic-looking fields, and only the triple separates
-  them.*
-  (3) **THE ARTIFACT'S MemoryPeak IS THE NUMBER I READ THIRTEEN TIMES** -- 2,312,695,808, at every
-  reading from 16:47:15Z to 17:55:29Z. ***Thirteen live readings and the run's own record agree to
-  the byte***, which is what makes a perishable series worth taking.
-  (4) **THE SIDECAR PINS ITS RECEIPT BY THE PAIR:** `receipt_it_accompanies` names the 09-05
-  receipt at **`975264754a06ec9a`** -- *matching my own hash of a file I have censused twice and
-  never opened.* **The pair is what lets a sealed artifact be verified from outside itself.**
-  (5) ***THE READ'S ARTIFACTS ARE BYTE-UNCHANGED, WHICH IS WHAT THE READ ORDER LOOKS LIKE AT THE
-  BYTES.*** Re-hashed at 18:01Z: three markers (292 B each) and the result (12,025 B,
-  `1fa4b93f02b369af`) **identical to my round-213 census**. *R-702's order -- nobody quotes the
-  result until DA's record, the runner's read and REV 78 are in -- is visible as four unchanged
-  digests.* **And I re-hashed the result without opening it, which is the only way to check that
-  an order is being kept without breaking it.**
-  (6) **ONE `de104smoke` JOURNAL COPY EXISTS** (`…175642Z.json`, 12,914 B, `6cc1a30b80fed9fe`) --
-  *R-699 records the coordinator's void copy as deleted, and the deletion is visible as a single
-  survivor rather than as a claim.*
-  (7) **DA 101 STILL NOT LANDED, NINTH ROUND RE-DRIVEN** (both exit 2 at 18:01:14Z) -- *R-702 says
-  it adopts the exit-3 convention I measured; the adoption has not landed.*
-  (8) **THE REGISTER COUNTS FOUR CLAIM-BEFORE-READING INSTANCES TODAY** (R-701 correcting R-700's
-  phantom coordinator copy). *Recorded with the register's own count rather than my
-  classification: I have been tracking a neighbouring family -- a probe's error read as a result,
-  R-682 and R-690 -- and I do not merge the two tallies.*
-  AT COMMIT TIME, UNSWEPT: **R-703 landed -- DE 107, and the 09-05 `.v2` exists within eight
-  minutes of the v1.** Censused by filename, size and digest with **neither receipt opened**:
-  `…_20260905_SEALED__20260906T175550Z.json` **52,549 B `975264754a06ec9a` -- UNCHANGED from my
-  round-213 census**, and the new `…180043Z.v2.json`, whose digest R-703 gives as `7b1df3dfa536d2cd`.
-  ***THE SUPERSESSION PAIR VERIFIES BY MY OWN HAND FROM THE OTHER SIDE:*** R-703 says the `.v2`
-  names the v1 at `97526475…`, **which is the digest I computed myself, twice, on a file I have
-  never opened.** *That is the whole point of the pair: two seats reach the same identity without
-  either reading the other's copy.* **AND DE MEASURED WHICH SELF-DESCRIPTIONS v1 CARRIED AT THE
-  ARTIFACT RATHER THAN INFERRING THEM FROM THE TIP** -- two in the old form, one already correct --
-  *which is the same discipline that separated my round-207 label from what the code meant.* **One
-  of the two is exquisite: the design's at-load digest was read at 17:55:50.070956Z against an emit
-  at 17:55:50.070678Z -- the SAME SECOND, one read compared with itself, `agrees` true for the
-  reason that makes it meaningless.** *A tautology at 278 microseconds, found by reading the two
-  stamps rather than the boolean.* **Noted in band; the round-214 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,375 -> 1,383; flag_provenance 920 -> 928;
-  tasks 19; **663 CHECKED / 265 RELAYED / 455 UNMARKED -- the NINETIETH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-202 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2249,6 +2236,68 @@ flags:
                              # finished, may run under a name I did not match, or may
                              # not have started, and my search does not separate
                              # those.*
+  the_FIVE_FIELDS_now_distinguish_FIVE_STATES_and_I_have_measured_EVERY_ONE: THE-TABLE-IS-COMPLETE
+                             # ***da99book SUPPLIES THE LAST CELL, AND THE TABLE IS
+                             # NOW COMPLETE FROM THIS SESSION'S OWN UNITS:***
+                             # **(1) `loaded / active / running`** -- a LIVE run
+                             # (de102smoke, de104smoke): `Result=success`,
+                             # `ExecMainStatus=0` are **DEFAULTS**, not an outcome.
+                             # **(2) `loaded / active / exited`** + success + 0 -- a
+                             # **GENUINE SUCCESS** (be66struct; DE's step-5 copy).
+                             # **(3) `not-found / inactive / dead`** + success + 0 --
+                             # **COLLECTED, VOID** (de102smoke and de104smoke after
+                             # their stops). **(4) `loaded / failed / failed` +
+                             # `Result=exit-code` + rc 75** -- a **REFUSAL** (BE's 88
+                             # lock conflicts). **(5) `loaded / failed / failed` +
+                             # `Result=exit-code` + rc 1** -- a **GENUINE FAILURE**
+                             # (da99book, now). ***`Result` ALONE SAYS "success" FOR
+                             # TWO OF THE FIVE AND "exit-code" FOR TWO MORE: ONLY THE
+                             # TRIPLE SEPARATES LIVE FROM COLLECTED, AND ONLY THE RC
+                             # SEPARATES FAILURE FROM REFUSAL.*** *Every cell measured
+                             # on a real unit in this session, none inferred.*
+  da99book_is_a_GENUINE_failure_and_the_triple_says_so: RC-1-AND-2-6-MB
+                             # Five fields copied at once while `LoadState=loaded`:
+                             # `ActiveState=failed`, `SubState=failed`,
+                             # `Result=exit-code`, **`ExecMainStatus=1`**, InvocationID
+                             # `026c8d298ee94bd2…`, **`MemoryPeak=2,596,864`** (2.48
+                             # MiB), started **18:16:13Z**. *The peak is the evidence
+                             # for "nothing loaded": a run that had opened the 09-03
+                             # book would be measured in GIGABYTES -- the three heavy
+                             # runs I watched today peaked at 2.3-3.0 GB.* **A failure
+                             # whose SIZE testifies to how far it got.**
+  my_round_216_NO_TRACE_finding_is_explained_BY_THE_CLOCK: NOT-YET-LAUNCHED
+                             # At round 216 I searched for DA 99 heavy -- units,
+                             # processes, derived artifacts, `/proc/locks` -- found
+                             # nothing, and named **three possibilities my search could
+                             # not separate: finished, running under a name I did not
+                             # match, or not started.** ***THE CLOCK SEPARATES THEM: I
+                             # searched at 18:12:30Z and da99book started at
+                             # 18:16:13Z -- THREE MINUTES AND FORTY-THREE SECONDS
+                             # LATER. IT HAD NOT BEEN LAUNCHED.*** *The bounded search
+                             # was right, the ambiguity was real, and the thing that
+                             # resolved it was a timestamp rather than a better
+                             # search.*
+  the_TWO_PERMITTED_FIELDS_are_RELAYED_and_I_still_did_not_open_the_result: THE-RELEASE-IS-OF-TWO-FIELDS-NOT-THE-FILE
+                             # R-707 releases exactly two fields of the race read for
+                             # quoting, as REV quoted them: **`day_signs = {20260903:
+                             # -1, 20260904: 1, 20260905: -1}`** and
+                             # **`permutation_floors.neither_clears_0_05 = true`** --
+                             # the readable days **not consistent in direction**, and
+                             # the **G = 3 floor (0.25, m = 2) unable to clear Holm BY
+                             # DESIGN** (R-529(A)). ***I RECORD BOTH AS RELAYED FROM
+                             # REV 78 AND I STILL DID NOT OPEN THE RESULT:*** *the
+                             # release is of two FIELDS, not of the FILE*, and
+                             # verifying them myself would mean opening it. **Nothing
+                             # else from the result is quotable, and MEM quotes
+                             # nothing else.**
+  the_read_artifacts_are_unchanged_for_a_SIXTH_census_and_there_is_no_v2_yet: HASHED-NEVER-OPENED
+                             # Three markers at **292 B** each and the result at
+                             # **12,025 B `1fa4b93f02b369af`** -- identical for the
+                             # sixth time. **A filename census shows only
+                             # `be_race_read_result_v1.json`: the `.v2` R-707 rules
+                             # YES under four constraints (BE 73) has NOT landed.**
+                             # *Ruled is not landed -- the same distinction I drew for
+                             # the 09-04 `.v2` at round 203, and it held there too.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25031,6 +25080,46 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 217, 2026-09-06T18:18:00Z ---
+  the_FIVE_FIELDS_now_distinguish_FIVE_STATES_and_I_have_measured_EVERY_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
+    as_of: 2026-09-06T18:17:08Z
+    said: >-
+      assembled the table from readings I took myself this session: the running state from
+      de102smoke and de104smoke, the exited state from BE's record and DE's sidecar, the collected
+      state from my own post-stop reads, the rc-75 refusal from the named artifact's 88 exit rows,
+      and the rc-1 failure from da99book now. No cell is inferred.
+  da99book_is_a_GENUINE_failure_and_the_triple_says_so:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260903_btc.pkl
+    as_of: 2026-09-06T18:17:08Z
+    said: >-
+      copied the five fields at once while LoadState=loaded and read MemoryPeak and
+      ExecMainStartTimestamp beside them; the artifact named is the book the run would have opened,
+      whose size is why a 2.5 MiB peak means it did not.
+  my_round_216_NO_TRACE_finding_is_explained_BY_THE_CLOCK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T18:17:08Z
+    said: >-
+      compared the as_of on my round-216 search, 18:12:30Z, against da99book's
+      ExecMainStartTimestamp of 18:16:13Z. The artifact named is my own file because the finding is
+      about my own earlier search.
+  the_TWO_PERMITTED_FIELDS_are_RELAYED_and_I_still_did_not_open_the_result:
+    prov: RELAYED
+    from: R-707 (coordinator, 2026-09-06), quoting REV 78
+    said: >-
+      the two fields are quoted as the register quotes them; I did not open the result to check
+      them, because the release names two fields and not the file. The result was hashed, as in the
+      five censuses before.
+  the_read_artifacts_are_unchanged_for_a_SIXTH_census_and_there_is_no_v2_yet:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_race_read_result_v1.json
+    as_of: 2026-09-06T18:17:08Z
+    said: >-
+      re-hashed the three markers and the result and compared against the five earlier censuses, and
+      listed be_race_read_result* by filename; only v1 exists.
   # --- MEM round 216, 2026-09-06T18:13:00Z ---
   the_09_06_blocker_is_a_CLOCK_FACT_not_a_judgement:
     prov: CHECKED
