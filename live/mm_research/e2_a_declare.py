@@ -62,24 +62,95 @@ import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DECL_VERSION = 2
+DECL_VERSION = 3
 SUPERSEDES = {
-    "path": "live/mm_research/declarations/p002_e2_a_declaration_v1.json",
-    "sha256": "405ddb7ab10486c21141b1d8c18dd6908d2892bbb29c91e50ecff424a9124a0b",
-    "carrying_commit": "367b80014178",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v2.json",
+    "sha256": "6567a25f04d7fb892d001da3dee7d7db00f3df342197d7ab9663e8a2f8e03ed1",
+    "carrying_commit": "0cbaba6",
+    "chain": ["v1 405ddb7ab10486c2 (367b800)",
+              "v2 6567a25f04d7fb89 (0cbaba6)"],
     "correction_is_in_band": (
         "rule 13: v1 is NOT edited and stands as provenance. v2 adds the "
         "data-root discipline the E2.0 RESULT review (section 6) requires of "
         "the P-002 surface. No tape was touched under either version."),
     "what_changed": [
-        "the resources section now carries `data_root_discipline`: the "
-        "P-002 surface resolves through the SAME imported resolver as "
-        "P-003 (de_data_root, itself delegating to "
-        "pm_tape_density._resolve_data_root), every receipt records the "
-        "root and the branch, and a result-bearing run off the canonical "
-        "ledger REFUSES. The falsifier named is the reviewer's precise "
-        "case: a PARTIAL root refuses, never a smaller census.",
+        "v3, REVIEWER CONDITION (4e73cdd): the two queue models were pinned "
+        "only at the BOUNDARIES. Each now carries an INTERIOR control -- a "
+        "case inside the queue-position range whose outcome is derivable by "
+        "hand from the model's own published definition -- with a declared "
+        "tolerance and a refusal if it misses. The reference implementations "
+        "live in this declaring module, so the declaration pins the "
+        "semantics EXECUTABLY rather than in prose.",
+        "AND THE INTERIOR CONTROL IMMEDIATELY CAUGHT A DEFECT IN v2's OWN "
+        "FORMULA. v2 declared ProbQueue-f3's fill probability as "
+        "f(front)/(f(front)+f(back)) with front = queue ahead. That makes "
+        "the fill probability RISE as the queue ahead GROWS, which is "
+        "backwards: hand-computed at front=30/back=70 it gives 0.072973 when "
+        "the order is nearly at the head, and 0.927027 when it is nearly at "
+        "the back. v3 states it as f(back)/(f(front)+f(back)) and the "
+        "interior control pins 0.927027 at front=30/back=70, with the "
+        "DIRECTION itself as a second control. No run had happened, so "
+        "nothing is retracted -- but a boundary-only battery would have "
+        "carried this into the first smoke.",
+        "carried from v2: the data_root_discipline block.",
     ],
+}
+
+
+def f_power3(x: float) -> float:
+    """PowerProbQueueFunc3: f(x) = x**3, the plan's n = 3."""
+    return float(x) ** 3
+
+
+def riskaverse_filled_qty(queue_ahead: float, order_qty: float,
+                          volume_through: float) -> float:
+    """RiskAverse, in closed form. Everything ahead trades first.
+
+    Filled quantity = clip(volume_through - queue_ahead, 0, order_qty).
+    Deterministic, so its interior is exactly derivable: at queue_ahead 1000,
+    order 10 and volume 1005, five units are filled -- not zero (the boundary
+    a 'did it fill at all' test would check) and not ten.
+    """
+    return float(min(max(volume_through - queue_ahead, 0.0), order_qty))
+
+
+def probqueue_f3_fill_prob(queue_ahead: float, depth_behind: float) -> float:
+    """ProbQueue with PowerProbQueueFunc3, n = 3.
+
+    p = f(back) / (f(front) + f(back)), f(x) = x**3.
+
+    THE ORIENTATION IS THE POINT AND v2 HAD IT BACKWARDS. A fill probability
+    must RISE as the queue AHEAD shrinks; v2's f(front)/(f(front)+f(back))
+    fell instead. Both directions are driven in the battery below.
+    """
+    fa, fb = f_power3(queue_ahead), f_power3(depth_behind)
+    if fa + fb <= 0:
+        return 0.0
+    return fb / (fa + fb)
+
+
+#: The interior cases, with values computed BY HAND from the definitions above
+#: and written here as literals so the code must match the arithmetic, not the
+#: other way round. 27000/(27000+343000) = 0.0729729729...;
+#: 343000/370000 = 0.9270270270...
+INTERIOR_CONTROLS = {
+    "tolerance": 1e-9,
+    "RiskAverse": {
+        "case": "queue_ahead 1000, order_qty 10, volume_through 1005",
+        "hand_derivation": "clip(1005 - 1000, 0, 10) = 5",
+        "expected_filled_qty": 5.0,
+        "why_interior": "not 0 (no volume) and not 10 (fully through) -- the "
+                        "order is HALF filled, which only a model that counts "
+                        "the queue can produce",
+    },
+    "ProbQueue_f3": {
+        "case": "queue_ahead 30, depth_behind 70",
+        "hand_derivation": "f(70)/(f(30)+f(70)) = 343000/370000",
+        "expected_prob": 343000.0 / 370000.0,
+        "why_interior": "not 0 and not 1 -- a strictly interior probability "
+                        "whose value follows from the published f(x) = x**3 "
+                        "and nothing else",
+    },
 }
 OUT = HERE / "declarations" / f"p002_e2_a_declaration_v{DECL_VERSION}.json"
 PROTOCOL = f"P002_E2_A_OVERLAY_QUEUE_BRACKET_DECLARATION_V{DECL_VERSION}"
@@ -142,12 +213,14 @@ QUEUE_MODELS = {
     "ProbQueue_f3": {
         "role": "OPTIMISTIC bracket end -- reported, never the gate",
         "rule": (
-            "hftbacktest's ProbQueueModel with PowerProbQueueFunc3, n = 3: at "
+            "ProbQueueModel with PowerProbQueueFunc3, n = 3: at "
             "each opposite-side trade the resting order fills with "
-            "probability f(front)/f(front)+f(back) where f(x) = x**3, front = "
-            "queue ahead remaining, back = depth behind. Implemented here in "
-            "closed form because the library is not installed; the n = 3 "
-            "exponent is the plan's, not chosen here."),
+            "probability f(back)/(f(front)+f(back)) where f(x) = x**3, "
+            "front = queue ahead remaining, back = depth behind -- so the "
+            "probability RISES as the queue ahead shrinks. v2 had this "
+            "inverted and the interior control caught it before any run. "
+            "Implemented here in closed form because the library is not "
+            "installed; the n = 3 exponent is the plan's, not chosen here."),
         "determinism": (
             "the fill draw is seeded per (symbol, day, hour, direction) from "
             "sha256 of those fields plus the declaration digest, so the "
@@ -380,6 +453,7 @@ def declaration() -> dict:
         },
 
         "the_queue_bracket": QUEUE_MODELS,
+        "interior_controls": INTERIOR_CONTROLS,
         "hftbacktest_is_absent": {
             "checked": "import hftbacktest raises ModuleNotFoundError on this "
                        "interpreter, as-of 2026-09-06T05:01Z",
@@ -657,6 +731,44 @@ def selftest() -> int:                                        # noqa: C901
     ok(icp_predicate(None, True)["decidable"] is False,
        "ICP: no episode census is UNDECIDABLE, never a silent pass")
 
+    # --- THE INTERIOR CONTROLS (reviewer condition 4e73cdd) ---
+    tol = INTERIOR_CONTROLS["tolerance"]
+    ra = INTERIOR_CONTROLS["RiskAverse"]
+    got = riskaverse_filled_qty(1000.0, 10.0, 1005.0)
+    ok(abs(got - ra["expected_filled_qty"]) <= tol,
+       f"RISKAVERSE INTERIOR: queue_ahead 1000, order 10, volume 1005 fills "
+       f"{got} -- the hand-derived clip(1005-1000, 0, 10) = 5. Strictly "
+       f"between the two boundaries a fill/no-fill test would check")
+    ok(riskaverse_filled_qty(1000.0, 10.0, 999.0) == 0.0
+       and riskaverse_filled_qty(1000.0, 10.0, 2000.0) == 10.0,
+       "RISKAVERSE BOUNDARIES still hold: below the queue nothing fills, far "
+       "beyond it the whole order does -- the interior control is an "
+       "ADDITION, not a replacement")
+    ok(riskaverse_filled_qty(1000.0, 10.0, 1005.0)
+       > riskaverse_filled_qty(1000.0, 10.0, 1002.0),
+       "RISKAVERSE MONOTONE in volume: more volume through never fills less")
+
+    pq = INTERIOR_CONTROLS["ProbQueue_f3"]
+    gotp = probqueue_f3_fill_prob(30.0, 70.0)
+    ok(abs(gotp - pq["expected_prob"]) <= tol,
+       f"PROBQUEUE INTERIOR: front 30 / back 70 gives {gotp:.9f} -- the "
+       f"hand-derived 343000/370000 = {pq['expected_prob']:.9f} from "
+       f"f(x) = x**3 and nothing else. Strictly interior: not 0, not 1")
+    ok(probqueue_f3_fill_prob(30.0, 70.0)
+       > probqueue_f3_fill_prob(70.0, 30.0),
+       "PROBQUEUE ORIENTATION -- THE DEFECT v2 CARRIED: the fill probability "
+       "must RISE as the queue AHEAD shrinks. v2's f(front)/(f(front)+f(back)) "
+       "fell instead, giving 0.073 near the head and 0.927 near the back. A "
+       "boundary-only battery would have carried that into the first smoke")
+    ok(abs(probqueue_f3_fill_prob(0.0, 100.0) - 1.0) <= tol
+       and abs(probqueue_f3_fill_prob(100.0, 0.0) - 0.0) <= tol,
+       "PROBQUEUE BOUNDARIES still hold: nothing ahead fills with certainty, "
+       "nothing behind never fills")
+    ok(all(probqueue_f3_fill_prob(a, 100.0 - a)
+           < probqueue_f3_fill_prob(a - 10.0, 110.0 - a)
+           for a in (90.0, 70.0, 50.0, 30.0)),
+       "PROBQUEUE MONOTONE across the whole interior, not just at one point")
+
     # --- the declaration cannot read data (AST, not substring) ---
     tree = ast.parse(Path(__file__).read_text())
     imported: set[str] = set()
@@ -716,6 +828,12 @@ def selftest() -> int:                                        # noqa: C901
        "THE LIMITS ARE IN THE DECLARATION: the window is not E1-A's, and "
        "five conditions are named that would refute the DESIGN rather than a "
        "symbol")
+    ok(d["interior_controls"]["ProbQueue_f3"]["expected_prob"]
+       == probqueue_f3_fill_prob(30.0, 70.0)
+       and d["interior_controls"]["RiskAverse"]["expected_filled_qty"]
+       == riskaverse_filled_qty(1000.0, 10.0, 1005.0),
+       "THE DECLARED INTERIOR VALUES ARE THE ONES THE CODE PRODUCES -- the "
+       "hand-derived literals and the implementations cannot drift apart")
     ok(d["reproduction_control_inherited"]["eff_rt_sweep_bps"] == 6.2645,
        "THE INHERITED CONTROL pins E1-A's published T_p=600 numbers, so a "
        "superseding number cannot come from a different estimator unnoticed")
