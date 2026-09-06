@@ -5,6 +5,81 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 170
+
+**As of 2026-09-06T12:12:10Z. State only — MEM writes no result.**
+
+### The 09-03 smoke: KILLED-BY-HARNESS; fourth launch pending DE 94 → REV 61
+
+**Cost so far: three launches, 84 + 0.4 + 35 minutes of CPU, nothing consumed.** The
+day is **not consumed**, the book digest is unchanged, and the only artifacts naming it
+are a **REFUSED** record and a **KILLED** record. **Rule 20 now: a heavy run launches
+as a transient SERVICE with `flock` inside the unit, polled by unit** — *"an 85-minute
+run must not be a child of a shell anything else may stop."* DE 94 declares the launch
+form **with its falsifier**; REV 61 reviews it; **then GO #4 at the lock's next free
+moment.**
+
+**The 09-05 inputs are BUILDING** — `be61frag.scope` active, pid 3341391 at 254 s. *BE
+took the lock the moment the killed run released it: the third time today the queue
+advanced with no seat deciding it, and the second time it advanced on a **failure**
+rather than a receipt.*
+
+**And the box carries 2,891 MiB of 4,095 swap — 71 %** — matching the guard's
+12:04:04Z alert (status OK, no violation) and unchanged since. **Ruled not the cause of
+the kill**; recorded because it is persistent while heavy runs are scheduled
+back-to-back: **a box at 71 % swap has less headroom than its 8 GiB cap suggests.**
+*Noted, not raised.*
+
+**At commit time (2026-09-06T12:14:30Z) DA 82 landed** (`e9beccd`) and closes both
+findings swept last round: *"canonical by the ledger's **real path**, the
+producing-code digest keyed on **whose bytes** (the census `.v5` clears BE's three),
+the **computed** census sentence, `-m` importability."* I read the `.v5`: rows now
+carry `digests_of_other_files` — **the classifier keyed on subject, not shape** — and
+the totals read **`n_modules_rule22_complete: 5`**, `…binds_and_incomplete: 1`.
+**The arc: 1 of 12 (R-613) → 3 (BE 60) → 5**, the single remaining incomplete being
+the one the reviewer scoped fairly as possibly genuine (**BE 63**).
+
+### The landing field: all three agree, and the real fix was one step earlier
+
+DE's code (`LANDING_RECORD_FIELD_COPIES`, with `…_DISAGREE` as a named status), design
+v20's R23, and DA's `LANDING_DIGEST_AUTHORITATIVE_FIELD =
+"landing_record.receipt_sha256"` **now name the same field** — and **the seat that had
+to move was DA**, whose round-78 choice matched what DE's design *said then*.
+
+**But R23's real content is earlier:** *"DE globbed the **name** and never checked the
+**flag**, so the two seats could disagree about which …"* —
+`an_artifact_without_the_flag_is_not_a_landing_record`. **Not "which field is
+authoritative" but "which artifact IS a landing record."** *The identity-by-name class
+— v9 sorting after v16, `…_SEALED.json` missing its glob, two files under one protocol
+— resolved at the identification step.*
+
+### Two more things worth carrying
+
+- **An item was closed before I swept the entry naming it.** R-627 routes
+  `da_process_budget_audit`'s `python -m` failure to DA 82; **I ran it: `SELFTEST OK —
+  21 checks, 0 failures`.** The count differs from the **19** recorded as a script —
+  **I state what I measured rather than assert the two invocations are one run.**
+- **Two coordinator errors on `wt-da` are in the record:** a refresh **reported as done
+  that had aborted**, and a restore that **left one file at the worktree's stale
+  version while DA worked in it**. DA was told **twice** and handed the refresh; **the
+  script now sweeps before the checkout**; runbook §6: **never touch a seat's worktree
+  while the seat works.** *An error reported as done is the `.replace()` class — and
+  the remedy is the one BE reached: **assert the postcondition**, which is what the
+  refresh's `readlink -f` check does.*
+
+**The census asks the class now** — seven ambients **by AST** (memory, lock, cgroup,
+cwd, worktree, clock, process), read from the assertion's **truth-bearing operands**
+because reading message text made every `ok(x, f"…{__file__}…")` a finding; the planted
+26-second shape flagged **two hops** from an assertion that mentions no lock; **43
+ambient-verdict assertions counted, not judged**, with the limits stated.
+
+**Counts, measured before the sentence:** flags 1,015 → 1,023, `flag_provenance`
+560 → 568, tasks 19; **345 CHECKED**, 223 RELAYED, **455 UNMARKED — unchanged for the
+forty-sixth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3
+(Batch 152 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 169
 
 **As of 2026-09-06T12:03:40Z. State only — MEM writes no result.**

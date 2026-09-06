@@ -63,6 +63,73 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T12:12:10Z (MEM ROUND 170 -- R-627, R-628, Q-DE-92, Q-DA-304 AND Q-BE-61
+  SWEPT. STATE ONLY. AND MY ROUND-169 COMMIT WAS REBASED AND LANDED (`afaa093`).
+  (1) **ALL THREE NOW NAME THE SAME FIELD, AND THE ODD ONE OUT WAS DA'S OWN.** DE's
+  code carries `LANDING_RECORD_FIELD_COPIES` (:1406) with
+  `LANDING_RECORD_FIELD_COPIES_DISAGREE` as a NAMED status; design v20 carries
+  `R23_the_landing_records_authoritative_fi…`; DA declares
+  **`LANDING_DIGEST_AUTHORITATIVE_FIELD = "landing_record.receipt_sha256"`** (:983)
+  with a comment recording the other two. ***The seat that had to move was DA -- round
+  78 chose `receipt.sha256` because that is what DE's design SAID THEN.***
+  (2) **AND THE REAL FIX IS ONE STEP EARLIER THAN THE ARGUMENT.** Design v20's R23:
+  ***"DE globbed the NAME and never checked the FLAG, so the two seats could disagree
+  about which …"***, with `an_artifact_without_the_flag_is_not_a_landing_record`.
+  **Not "which field is authoritative" but "which artifact IS a landing record".**
+  *The identity-by-name class -- v9 sorting after v16, `…_SEALED.json` missing its
+  glob, two files under one protocol -- resolved at the IDENTIFICATION step.*
+  (3) **AN ITEM WAS CLOSED BEFORE I SWEPT THE ENTRY NAMING IT.** R-627 records
+  `da_process_budget_audit` failing under `python -m` on a bare `import da_root`,
+  routed to DA 82. **I ran it: `SELFTEST OK -- 21 checks, 0 failure(s)`.** *And the
+  count differs from the 19 recorded as a SCRIPT* -- **I state what I measured rather
+  than assert the two invocations are the same run.**
+  (4) **THE BOX CARRIES 2,891 MiB OF 4,095 SWAP -- 71 %** -- matching the guard's
+  12:04:04Z alert (2,892 MiB, status OK) and unchanged since. ***Ruled NOT the cause of
+  the kill; recorded because it is persistent while heavy runs are scheduled back to
+  back*** -- **a box at 71 % swap has less headroom than its 8 GiB cgroup cap
+  suggests.** *Noted, not raised: the cap is never raised.*
+  (5) **THE COST ON 09-03: THREE LAUNCHES, 84 + 0.4 + 35 MINUTES OF CPU, NOTHING
+  CONSUMED.** *The day is not consumed, the book digest is unchanged, and the only
+  artifacts naming it are a REFUSED record and a KILLED record.* ***Rule 20 now: a
+  heavy run launches as a transient SERVICE with `flock` INSIDE the unit, polled BY
+  UNIT*** -- **"an 85-minute run must not be a child of a shell anything else may
+  stop."** DE 94 declares the form with its falsifier; REV 61; then GO #4.
+  (6) **THE CENSUS ASKS THE CLASS NOW:** seven ambients BY AST -- memory, lock,
+  cgroup, cwd, worktree, clock, process -- **read from the assertion's TRUTH-BEARING
+  OPERANDS, because reading message TEXT made every `ok(x, f"…{__file__}…")` a
+  finding.** *The planted 26-second shape is flagged by name, TWO HOPS from an
+  assertion that mentions no lock at all;* **43 ambient-verdict assertions COUNTED, NOT
+  JUDGED**, with the limits stated.
+  (7) **AND TWO COORDINATOR ERRORS ON wt-da ARE IN THE RECORD:** *a refresh REPORTED AS
+  DONE that had ABORTED, and a restore that LEFT ONE FILE at the worktree's stale
+  version -- while DA was working in it.* **DA was told the truth TWICE and handed the
+  refresh; the script sweeps BEFORE the checkout; runbook SS6: never touch a seat's
+  worktree while the seat works.** ***An error reported as done is the same class as a
+  `.replace()` that reports success by default*** -- **and the remedy is the one BE
+  reached: assert the postcondition, which is what `readlink -f` now does.**
+  (8) **AND BE 61 TOOK THE LOCK THE MOMENT THE KILLED RUN RELEASED IT** --
+  `be61frag.scope` active, pid 3341391 at 254 s, the 09-05 fragment. *Third time today
+  the queue advanced with no seat deciding it, and the second time it advanced on a
+  FAILURE rather than a receipt.*
+  **AT COMMIT TIME, 2026-09-06T12:14:30Z: DA 82 LANDED (`e9beccd`) AND CLOSES BOTH
+  FINDINGS I SWEPT LAST ROUND -- I read the new census to check.** *"Canonical by the
+  ledger's REAL PATH, the producing-code digest keyed on WHOSE BYTES (the census `.v5`
+  clears BE's three), the COMPUTED census sentence, `-m` importability."*
+  **In the `.v5` the rows now carry a `digests_of_other_files` key -- the classifier
+  keyed on SUBJECT rather than shape -- and the totals read
+  `n_modules_rule22_complete: 5`, `n_modules_rule22_binds_and_incomplete: 1`.**
+  ***The arc is 1 of 12 complete (R-613) -> 3 (BE 60) -> 5, with the single remaining
+  incomplete being the one the reviewer scoped fairly as possibly genuine*** -- **so
+  my round-169 relay ("BE's producers rule-22 COMPLETE, the sweep's headline wrong")
+  is now the census's own answer, and the prose finding is closed by a computed
+  sentence.** *Both were CHECKED flags of mine; both stand as history at their
+  as_of.*
+  **FLAG WORDS: the 09-03 smoke KILLED-BY-HARNESS, FOURTH-LAUNCH-PENDING-DE-94-REV-61;
+  the 09-05 inputs BUILDING (`be61frag.scope`).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,015 -> 1,023, flag_provenance 560 -> 568,
+  tasks 19; **345 CHECKED**, 223 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T12:03:40Z (MEM ROUND 169 -- R-626 AND REV 60'S FILING SWEPT. STATE ONLY.
   THE FINDING IS A SENTENCE THAT DENIES THE BOOLEAN TWO KEYS AWAY.
   (1) **THE PROSE ASSERTS WHAT ITS OWN BOOLEAN DENIES.** At the 09-03 book tier:
@@ -208,77 +275,6 @@ updated: >-
   tasks 19; **335 CHECKED**, 217 RELAYED, **455 UNMARKED -- unchanged for the
   forty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:52:30Z (MEM ROUND 167 -- R-623, Q-BE-60 AND THE REWRITTEN Q-DA-302
-  SWEPT. STATE ONLY. A CENSUS I MADE TEN ROUNDS AGO CLOSES ON ITS OWN MEASUREMENT.
-  (1) **RULE 22 IS NOW IN ALL THREE PRODUCERS.** The same grep I ran at round 157:
-  **then `import_closure`/`_capture_closure` appeared ZERO times in
-  `be_daybook_build`, `be_gate1_fragment`, `be_gate1_state_tape`; now 2 / 2 / 2, with
-  HEAD references 15 / 2 / 3.** ***The census I made at 157 and repeated at 163 -- "the
-  book building right now carries no closure stamp" -- closes on the same one-line
-  measurement.*** **Rule 22 was complete in ONE module of twelve when DA counted it;
-  BE's three are the three that build every day's inputs.**
-  (2) **AND THE RECEIPT NAMES WHO SUPPLIED THE VALUE IT COULD NOT DERIVE.** The
-  `.v2`'s `producing_code`: **`run_head_recoverable_…: False`; `run_head_source:
-  "SUPPLIED ON THE COMMAND LINE from the seat's landing report (Q-BE-301 and commit
-  50f30d9's message …)"`; `sha256_at_the_run_head: 6a09f7e3…`** -- the reviewed builder
-  digest BE verified at round 158. ***A field recording that its value came from a
-  HUMAN REPORT rather than the machine, and naming the channel*** -- **the opposite of
-  every other provenance field here, all computed, and the only honest option when the
-  run predates the capture.** *A third category beside computed and relayed:
-  NAMED-HUMAN-SUPPLIED -- my own CHECKED/RELAYED split, arrived at independently in
-  another seat's artifact.*
-  (3) **THE PAIR HASHES AS STATED:** v1 **`1f15d54f6101041b…`**, `.v2`
-  **`2ff7b754db24b185…`** (unchanged since last round), v1 byte-identical, superseded
-  by the PAIR. *Fourth in-band supersession today, second I have hashed on both sides.*
-  (4) **AND RULE 21 NOW SAYS HOW CODE IS LANDED** -- the worktree's EXACT BYTES copied
-  and committed in the SAME COMPOUND COMMAND, nothing edited or run in the shared tree;
-  or the worktree's commit pushed DIRECTLY when origin has not moved. ***Rule 21 said
-  WHERE to land and never said HOW*** -- **and the gap was found by a seat asking for a
-  ruling on the thing it had just been corrected for.**
-  (5) **THE SHARED-TREE EDITING WAS A LANDING-MECHANICS GAP, NOT A BREACH:** all
-  development and every battery run in wt-be; at landing BE **copied** the four files
-  in and ran the batteries there once; the correction arrived as the commit completed
-  -- ***so the "modified" files were THE COPY AWAITING ITS COMMIT.*** *And BE declined
-  the restore, correctly: the commit had consumed the modifications, so a `checkout --`
-  would revert to the landed bytes --* **a no-op spending a command from a prohibited
-  class.** *A seat refusing a remedy because the remedy had become vacuous, and saying
-  why.*
-  (6) **BE'S FIRST `.v2` RECONSTRUCTED THE RUN HEAD WRONGLY** -- as the landing
-  commit's parent, **`9ad6a16`, the SHARED TREE's position**, while the run executed
-  from **`b827ca2` in a WORKTREE**. ***A reconstruction that assumed the landing tree
-  and the running tree were the same tree*** -- *in a programme whose entire week has
-  been about their being different.* **The helper deleted, the source named, and absent
-  it the block SAYS SO.**
-  (7) **AND A CHECKER THAT NAMES A FORBIDDEN STRING CONTAINS IT -- THREE TIMES**;
-  scoped to `build()` now, **driven red by planting the round-59 line back.**
-  ***The needle-matches-its-own-prose class, fourth appearance*** (DE's falsifier
-  matching `sealed_field_names`, my two-path artifact field, DA's census, this) --
-  **every instance found by the seat that wrote it, and every one found by RUNNING
-  it.**
-  (8) **THE 09-03 BOOK IS INDEPENDENTLY VERIFIED AT THE PICKLE:** DA 80's book tier --
-  **set equality HOLDS at 297,379 keys for BOTH heads, recomputed FROM THE PICKLE**,
-  not from the receipt that claims it; the 09-04 tier **refused by rule 20**, DEFERRED.
-  *And Q-DA-302 had to be REWRITTEN after an unquoted heredoc expanded every backticked
-  identifier out of the row* -- ***the fourth idiom from BE's harvest, biting a
-  different seat within the hour.***
-  **AT COMMIT TIME, 2026-09-06T11:54:59Z, THE QUESTION I ROUTED AT ROUND 166 HAS A
-  TOOL:** `935ae4c` lands **`scripts/wt_refresh.sh`** -- *"Refresh a seat worktree to
-  origin's tip WITHOUT materialising `data/` (R-625). `data/` is a symlink to the
-  canonical ledger (R-553); **sparse-checkout excludes the tracked artifacts under
-  `data/` so no checkout can replace the symlink**"* (REV 59 SS8), the mechanism being
-  `sparse-checkout set '/*' '!/data/'`.
-  ***I measured at 11:47Z that restoring is not the whole repair -- "the next refresh
-  recreates it" -- and the answer landed seven minutes later as a script that removes
-  the REGENERATION PATH rather than the state.*** **A restore fixes an instance; a
-  sparse-checkout rule makes the instance unreachable.** *And R-624/R-625 are now
-  ahead of my sweep, which stands at R-623.*
-  **FLAG WORDS: the 09-03 book INDEPENDENTLY-VERIFIED-AT-THE-PICKLE (DA 80); the 09-04
-  tier DEFERRED; the re-run RUNNING -- I measure pid 3282335 at 1,399 s (~23 min), RSS
-  754,544 KiB; rule 21 AMENDED (landing code).**
-  MEASURED BEFORE THIS SENTENCE: flags 991 -> 999, flag_provenance 536 -> 544,
-  tasks 19; **330 CHECKED**, 214 RELAYED, **455 UNMARKED -- unchanged for the
-  forty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
-  new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2951,6 +2947,83 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  ALL_THREE_NAME_THE_SAME_FIELD_NOW: THE_ODD_ONE_OUT_WAS_DA_S_OWN
+                             # CHECKED 2026-09-06T12:12:10Z at all three: **DE's code --
+                             # `LANDING_RECORD_FIELD_COPIES` (:1406) with `LANDING_RECORD_FIELD_COPIES_DISAGREE`
+                             # as a NAMED status; DE's design v20 -- `R23_the_landing_records_authoritative_fi…`;
+                             # DA's `LANDING_DIGEST_AUTHORITATIVE_FIELD = "landing_record.receipt_sha256"`
+                             # (:983), its comment recording that DE's code reads it FIRST and v20's R23 names
+                             # it.**
+                             # ***Three parties, ONE name.*** *And the party that had to move was DA's own
+                             # declaration -- round 78 chose `receipt.sha256` because that is what DE's
+                             # design SAID THEN.* **A cross-seat disagreement whose resolution was a seat
+                             # discovering its own copy was the stale one, and moving it WITH THE REASON.**
+  AND_THE_LANDING_RECORD_IS_IDENTIFIED_BY_A_FLAG_NOT_A_NAME: THE_IDENTIFICATION_STEP
+                             # CHECKED 2026-09-06T12:12:10Z at design v20's R23:
+                             # ***"DE globbed the NAME and never checked the FLAG, so the two seats could
+                             # disagree about which …"***, with
+                             # `an_artifact_without_the_flag_is_not_a_landing_record`.
+                             # **The fix is one step EARLIER than the disagreement everyone was arguing
+                             # about: not "which field is authoritative" but "which artifact IS a landing
+                             # record".** *The identity-by-name class -- the one that gave v9 sorting after
+                             # v16, `…_SEALED.json` missing its glob, and two files under one protocol --
+                             # resolved at the IDENTIFICATION step rather than at the comparison.*
+  THE_M_IMPORT_IS_ALREADY_FIXED_AND_REPORTS_TWENTY_ONE: CLOSED_BEFORE_I_SWEPT_IT
+                             # CHECKED 2026-09-06T12:12:10Z: R-627 records that
+                             # `da_process_budget_audit.py` **fails under `python -m` on a bare `import
+                             # da_root`** and routes it to DA 82. *I ran it:* **`python3 -m
+                             # live.pm_research.da_process_budget_audit --selftest` -> `SELFTEST OK -- 21
+                             # checks, 0 failure(s)`.**
+                             # ***The item was closed before I swept the entry naming it.*** **And the count
+                             # differs from the 19 the entry records as a SCRIPT: I state what I measured
+                             # rather than assert the two runs are the same run** -- *two invocation modes
+                             # reporting different totals is the sort of thing this programme has learned to
+                             # write down rather than reconcile in prose.*
+  THE_BOX_CARRIES_TWO_POINT_NINE_GIGABYTES_OF_SWAP: MEASURED_NOT_THE_CAUSE
+                             # CHECKED 2026-09-06T12:12:10Z: `free -m` reports **2,891 MiB of 4,095 in
+                             # use -- 71 %** -- matching the resource guard's 12:04:04Z alert (`ALERT
+                             # SWAP_IN_USE 2892MiB`, status OK, no violation) and **unchanged across the
+                             # intervening minutes.**
+                             # ***Ruled NOT the cause of the kill, and recorded because it is persistent
+                             # state while heavy runs are scheduled back to back*** -- **a box at 71 % swap
+                             # is a box whose next 8 GiB run has less headroom than its cgroup cap
+                             # suggests.** *Noted, not raised: the cap is never raised.*
+  BE_61_IS_BUILDING_THE_09_05_FRAGMENT: THE_LOCK_MOVED_ON
+                             # CHECKED 2026-09-06T12:12:10Z: **`be61frag.scope` `active / running`; pid
+                             # 3341391, `be_gate1_fragment.py`, 254 s.** *BE took the lock the moment the
+                             # killed run released it* -- **the third time today the queue advanced with no
+                             # seat deciding it, and the second time it advanced on a FAILURE rather than a
+                             # receipt.**
+  THE_KILL_S_COST_AND_WHAT_SURVIVED_IT: THREE_LAUNCHES_NOTHING_CONSUMED
+                             # RELAYED from R-628, 2026-09-06T12:12:10Z. **Cost on the 09-03 day so
+                             # far: 84 + 0.4 + 35 minutes of CPU across THREE launches -- and NOTHING
+                             # CONSUMED.** *The day is not consumed, the book digest is unchanged, and the
+                             # only artifacts naming it are a REFUSED record and a KILLED record.*
+                             # ***Rule 20 now: a heavy run launches as a transient SERVICE with `flock`
+                             # INSIDE the unit, polled BY UNIT*** -- **"an 85-minute run must not be a child
+                             # of a shell anything else may stop."** *DE 94 declares the form with its
+                             # falsifier; REV 61; then GO #4 at the lock's next free moment.*
+  THE_CENSUS_ASKS_THE_CLASS_NOW: SEVEN_AMBIENTS_BY_AST
+                             # RELAYED from R-627(A), 2026-09-06T12:12:10Z. **Seven ambients read BY AST
+                             # -- memory, lock, cgroup, cwd, worktree, clock, process -- from the
+                             # assertion's TRUTH-BEARING OPERANDS, because reading message TEXT made every
+                             # `ok(x, f"…{__file__}…")` a finding (REV 49's class).** *The planted
+                             # 26-second shape is flagged `REFUSAL_EXPECTATION_WHOSE_CAUSE_CAN_BE_AMBIENT`,
+                             # naming `run_day` and the lock, TWO HOPS from an assertion that mentions no
+                             # lock at all.* **43 ambient-verdict assertions COUNTED, NOT JUDGED** -- *and
+                             # the limits stated: magnitude, runtime-chosen callables, and whether the
+                             # ambient read is the one the verdict turns on.*
+  TWO_COORDINATOR_ERRORS_ON_WT_DA_RECORDED_AND_TOLD_TWICE: NEVER_WHILE_THE_SEAT_WORKS
+                             # RELAYED from R-627, 2026-09-06T12:12:10Z. **A refresh REPORTED AS DONE
+                             # that had ABORTED; and a restore of five byte-identical files that LEFT ONE AT
+                             # THE WORKTREE'S STALE VERSION -- while DA was working in it.** *DA was told the
+                             # truth TWICE and handed the refresh; the script now sweeps BEFORE the
+                             # checkout; runbook SS6: **never touch a seat's worktree while the seat
+                             # works**.*
+                             # ***An error reported as done is the same class as a `.replace()` that reports
+                             # success by default*** -- **and the remedy is the same one BE reached: assert
+                             # the postcondition, which is exactly what the refresh script's `readlink -f`
+                             # check now does.**
   THE_PROSE_ASSERTS_WHAT_THE_BOOLEAN_BESIDE_IT_DENIES: RULE_10_INSIDE_A_NAME_CENSUS
                              # CHECKED 2026-09-06T12:03:40Z at
                              # `p003_da_book_tier_20260903__20260906T112813Z.json`. **The block reads
@@ -19973,6 +20046,71 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 170, 2026-09-06T12:12:10Z ------------------------------
+  ALL_THREE_NAME_THE_SAME_FIELD_NOW:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T12:12:10Z
+    said: >-
+      DE's code carries LANDING_RECORD_FIELD_COPIES at :1406 with
+      LANDING_RECORD_FIELD_COPIES_DISAGREE as a named status; design v20 carries
+      R23_the_landing_records_authoritative_fi...; and DA declares
+      LANDING_DIGEST_AUTHORITATIVE_FIELD = "landing_record.receipt_sha256" at :983 with
+      a comment recording that DE's code reads it first and v20's R23 names it. Three
+      parties, one name -- and the party that moved was DA's own declaration, which had
+      chosen receipt.sha256 because that is what DE's design said then.
+  AND_THE_LANDING_RECORD_IS_IDENTIFIED_BY_A_FLAG_NOT_A_NAME:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json
+    as_of: 2026-09-06T12:12:10Z
+    said: >-
+      design v20's R23 records "DE globbed the NAME and never checked the FLAG, so the
+      two seats could disagree about which ...", with
+      an_artifact_without_the_flag_is_not_a_landing_record. The fix is one step earlier
+      than the disagreement being argued: not which field is authoritative but which
+      artifact is a landing record -- the identity-by-name class resolved at the
+      identification step.
+  THE_M_IMPORT_IS_ALREADY_FIXED_AND_REPORTS_TWENTY_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/da_process_budget_audit.py
+    as_of: 2026-09-06T12:12:10Z
+    said: >-
+      R-627 records that the module fails under python -m on a bare import da_root and
+      routes it to DA 82; I ran python3 -m live.pm_research.da_process_budget_audit
+      --selftest and it printed SELFTEST OK -- 21 checks, 0 failure(s). The item was
+      closed before I swept the entry naming it, and the count differs from the 19 the
+      entry records as a script: I state what I measured rather than assert the two
+      runs are the same run.
+  THE_BOX_CARRIES_TWO_POINT_NINE_GIGABYTES_OF_SWAP:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T12:12:10Z
+    said: >-
+      free -m reports 2,891 MiB of 4,095 swap in use, 71 percent, matching the resource
+      guard's 12:04:04Z alert of 2892 MiB (status OK, no violation) and unchanged across
+      the intervening minutes. Ruled not the cause of the kill; recorded because it is
+      persistent state while heavy runs are scheduled back to back.
+  BE_61_IS_BUILDING_THE_09_05_FRAGMENT:
+    prov: CHECKED
+    artifact: live/pm_research/be_gate1_fragment.py
+    as_of: 2026-09-06T12:12:10Z
+    said: >-
+      be61frag.scope is active/running with pid 3341391 at 254 s: BE took the lock the
+      moment the killed run released it -- the third time today the queue advanced with
+      no seat deciding it, and the second time it advanced on a failure rather than a
+      receipt.
+  THE_KILL_S_COST_AND_WHAT_SURVIVED_IT:
+    prov: RELAYED
+    from: R-628
+    as_of: 2026-09-06T12:12:10Z
+  THE_CENSUS_ASKS_THE_CLASS_NOW:
+    prov: RELAYED
+    from: R-627(A)
+    as_of: 2026-09-06T12:12:10Z
+  TWO_COORDINATOR_ERRORS_ON_WT_DA_RECORDED_AND_TOLD_TWICE:
+    prov: RELAYED
+    from: R-627
+    as_of: 2026-09-06T12:12:10Z
   # --- MEM round 169, 2026-09-06T12:03:40Z ------------------------------
   THE_PROSE_ASSERTS_WHAT_THE_BOOLEAN_BESIDE_IT_DENIES:
     prov: CHECKED
