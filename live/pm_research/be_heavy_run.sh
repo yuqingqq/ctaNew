@@ -185,9 +185,24 @@ if [ "${1:-}" = "--poll" ]; then
     # RESET BEFORE EVERY ATTEMPT: without it systemd refuses the name and
     # the next reading would be the PREVIOUS attempt's, unchanged.
     systemctl --user reset-failed "$PUNIT.service" >/dev/null 2>&1
+    REC="$REPO/data/pm_5min/derived/be_heavy_run_record_${PUNIT}.jsonl"
+    MARK=$(wc -l < "$REC" 2>/dev/null || echo 0)
     "$SELFP" "$PUNIT" "$@" >/dev/null 2>&1
-    for _ in $(seq 1 60); do
-      [ "$(systemctl --user show "$PUNIT.service" -p ActiveState --value)" = "activating" ] || break
+    # SETTLE ON THE RECORD, NOT ON ActiveState. Measured 15:03:14Z on the
+    # real lock: the poll read `active/running` and called it LOCK TAKEN in
+    # the SAME SECOND the record showed the payload exiting 75. The unit IS
+    # running at that instant -- the wrapper is -- and `flock` has not yet
+    # decided; `RemainAfterExit` then keeps it `active` after it does. So
+    # the discriminator is the launcher's own exit event: if one appears
+    # within the settle window the run is over, and if none does it is
+    # genuinely running (a real heavy run holds for tens of minutes).
+    SETTLE=0
+    for _ in $(seq 1 25); do
+      NOW=$(wc -l < "$REC" 2>/dev/null || echo 0)
+      if [ "$NOW" -gt "$MARK" ] && tail -n +$((MARK+1)) "$REC" 2>/dev/null | grep -q '"event":"exit"'; then
+        SETTLE=1; break
+      fi
+      sleep 0.4
     done
     LS=$(systemctl --user show "$PUNIT.service" -p LoadState --value)
     AS=$(systemctl --user show "$PUNIT.service" -p ActiveState --value)
@@ -200,13 +215,13 @@ if [ "${1:-}" = "--poll" ]; then
       "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$N" "$LS" "$AS" "$SS" "$RS" "$MS" "$ID" "$SAME" >> "$REC"
     if [ "$LS" = "not-found" ]; then
       echo "VOID attempt $N: the unit is not loaded -- a collected unit and one that never ran are indistinguishable (R-653). Not a verdict."
-    elif [ "$MS" = "$LOCK_CONFLICT_RC" ]; then
+    elif [ "$SETTLE" = "1" ] && [ "$MS" = "$LOCK_CONFLICT_RC" ]; then
       if [ "$SAME" = true ]; then
         echo "REFUSAL #$N $(date -u +%Y-%m-%dT%H:%M:%SZ) -- SAME InvocationID $ID as the previous read: this is the SAME refusal, not a new one"
       else
         echo "REFUSAL #$N $(date -u +%Y-%m-%dT%H:%M:%SZ) rc=$MS id=$ID (did no work)"
       fi
-    elif [ "$AS" = "active" ] && [ "$SS" = "running" ]; then
+    elif [ "$SETTLE" = "0" ] && [ "$AS" = "active" ] && [ "$SS" = "running" ]; then
       # SUBSTATE DECIDES, NOT ActiveState. With RemainAfterExit=yes a unit
       # that has ALREADY EXITED stays `active` -- measured at 14:42:23Z,
       # where a poll read `active` and called it LOCK TAKEN while the
