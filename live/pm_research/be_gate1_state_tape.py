@@ -274,7 +274,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 19
+EXPECTED_CHECKS = 20
 
 
 def selftest() -> int:
@@ -367,6 +367,19 @@ def selftest() -> int:
        "refuses with the distinct conflict code 75 having done no work, "
        "with the refusal in the journal. Nothing short of a real unit can "
        "show a claim about process ownership")
+    _lsrc2 = _R22.LAUNCHER.read_text()
+    _cap_i = _lsrc2.index('"--capture"')
+    _stop_i = _lsrc2.index('systemctl --user stop "$CUNIT.service"', _cap_i)
+    _out_i = _lsrc2.index('"event":"outcome"', _cap_i)
+    _jrn_i = _lsrc2.index('"event":"journal_copy"', _cap_i)
+    ok(_out_i < _stop_i < _jrn_i and "read_while" in _lsrc2
+       and "not-found" in _lsrc2[_cap_i:_stop_i],
+       "THE CAPTURE STEP EXISTS AND ITS ORDER IS THE POINT: the five fields "
+       "are read WHILE LOADED, then the unit is stopped, then the journal "
+       "is copied -- in that order, because the Stopped/Consumed lines are "
+       "written BY the stop and a copy taken before it cannot contain them "
+       "(DE 106). A unit already gone is REFUSED rather than reported as "
+       "defaults (R-653)")
     ok(BUILD := True,
        "usage: --day builds one day only; the split assignment is recorded "
        "as PROVISIONAL and routed to DE (R-574)")

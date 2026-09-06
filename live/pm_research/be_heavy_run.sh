@@ -169,6 +169,49 @@ PYEOF
   exit $RC
 fi
 
+if [ "${1:-}" = "--capture" ]; then
+  # THE OUTCOME INTO THE RECORD (REV 78 / step 7). The launcher wrote only
+  # `launch` and `exit` rows: for be70race the five fields and the
+  # InvocationID were read by the SEAT and lived in its report, not in the
+  # record -- a fact in prose, which is the class this programme keeps
+  # closing. This appends them, then STOPS the unit, then copies the
+  # journal -- in that order, because the Stopped/Consumed lines are
+  # written BY the stop and a copy taken before it cannot contain them
+  # (DE 106).
+  shift
+  CUNIT="${1:?usage: --capture <unit>}"; shift
+  CREC="$REPO/data/pm_5min/derived/be_heavy_run_record_${CUNIT}.jsonl"
+  LS=$(systemctl --user show "$CUNIT.service" -p LoadState --value)
+  if [ "$LS" = "not-found" ]; then
+    echo "REFUSED: $CUNIT is not loaded (LoadState=not-found). Its five" \
+         "fields and InvocationID are unobtainable -- a collected unit and" \
+         "one that never ran are indistinguishable (R-653). Capture BEFORE" \
+         "the stop." >&2
+    exit 76
+  fi
+  AS=$(systemctl --user show "$CUNIT.service" -p ActiveState --value)
+  SS=$(systemctl --user show "$CUNIT.service" -p SubState --value)
+  RS=$(systemctl --user show "$CUNIT.service" -p Result --value)
+  MS=$(systemctl --user show "$CUNIT.service" -p ExecMainStatus --value)
+  ID=$(systemctl --user show "$CUNIT.service" -p InvocationID --value)
+  MP=$(systemctl --user show "$CUNIT.service" -p MemoryPeak --value)
+  printf '{"event":"outcome","utc":"%s","read_while":"LOADED","LoadState":"%s","ActiveState":"%s","SubState":"%s","Result":"%s","ExecMainStatus":"%s","InvocationID":"%s","MemoryPeak":"%s"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$LS" "$AS" "$SS" "$RS" "$MS" "$ID" "$MP" >> "$CREC"
+  systemctl --user stop "$CUNIT.service" >/dev/null 2>&1
+  printf '{"event":"stopped","utc":"%s","unit":"%s","InvocationID":"%s"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$CUNIT" "$ID" >> "$CREC"
+  # the journal AFTER the stop, filtered on the run's own id with BOTH
+  # fields, with the retention state measured beside it (R-641)
+  OLDEST=$(journalctl --user --no-pager -o short-iso 2>/dev/null | head -1 | cut -d' ' -f1)
+  NP=$(journalctl --user _SYSTEMD_INVOCATION_ID="$ID" --no-pager -o cat 2>/dev/null | wc -l)
+  NM=$(journalctl --user USER_INVOCATION_ID="$ID" --no-pager -o cat 2>/dev/null | wc -l)
+  NS=$(journalctl --user USER_INVOCATION_ID="$ID" --no-pager -o cat 2>/dev/null | grep -c -e Stopped -e Consumed)
+  printf '{"event":"journal_copy","utc":"%s","taken":"AFTER the stop","InvocationID":"%s","n_payload_lines":%s,"n_manager_lines":%s,"n_stopped_or_consumed_lines":%s,"retention_oldest_entry":"%s","why_after":"the Stopped/Consumed lines are written BY the stop; a copy taken before it cannot contain them (DE 106)"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ID" "$NP" "$NM" "$NS" "$OLDEST" >> "$CREC"
+  echo "captured $CUNIT: $LS/$AS/$SS/$RS/$MS id=$ID; stopped; journal by id payload=$NP manager=$NM stopped_or_consumed=$NS"
+  exit 0
+fi
+
 if [ "${1:-}" = "--poll" ]; then
   # DECLARED POLL (R-653). Every attempt records the FIVE declared outcome
   # fields AND the InvocationID it observed, because a unit NAME names every

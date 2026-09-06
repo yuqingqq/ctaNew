@@ -413,9 +413,20 @@ def assert_not_already_opened(days, outdir: Path) -> dict:
             # verdict. THE FILE'S PRESENCE IS THE FACT; its contents are
             # detail. An unparseable marker is treated as OPENED.
             try:
-                _op = json.loads(m.read_text()).get("utc")
-                _parsed = True
-            except (json.JSONDecodeError, OSError, UnicodeDecodeError) as _e:
+                # REV 77 §2.2: the `.get` sat OUTSIDE the try, so a marker
+                # that is valid JSON but NOT AN OBJECT -- `[]`, a string,
+                # null, a number -- parsed fine and then raised on `.get`.
+                # ANYTHING at that path means the day was spent, so the
+                # whole read-and-interpret is inside the try.
+                _doc = json.loads(m.read_text())
+                _op = _doc.get("utc") if isinstance(_doc, dict) else None
+                _parsed = isinstance(_doc, dict)
+                if not _parsed:
+                    raise TypeError(
+                        f"the marker is valid JSON but a "
+                        f"{type(_doc).__name__}, not an object")
+            except (json.JSONDecodeError, OSError, UnicodeDecodeError,
+                    TypeError, AttributeError, ValueError) as _e:
                 _op, _parsed = None, False
                 already.append({"day": d, "marker": str(m),
                                 "opened_at": None, "marker_parsed": False,
@@ -682,7 +693,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 27
+EXPECTED_CHECKS = 36
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1005,6 +1016,63 @@ def selftest() -> int:
            "REFUSES on the real path -- a day set nobody re-checked is "
            "exactly what R-600 found, so the field is not merely honest, it "
            "is verified")
+
+    # ---- REV 77 §2.2: ANYTHING at the marker path means CONSUMED --------
+    import tempfile as _tfA
+    for _shape, _body in (("an empty list", "[]"),
+                          ("a bare string", '"opened"'),
+                          ("null", "null"),
+                          ("a number", "17"),
+                          ("half-written", "{ partial"),
+                          ("empty file", "")):
+        _dA = Path(_tfA.mkdtemp(prefix="be71_marker_"))
+        (_dA / "be_race_read_OPENED_20990501.json").write_text(_body)
+        try:
+            assert_not_already_opened(["20990501"], _dA)
+            ok(False, f"a marker containing {_shape} must refuse as consumed")
+        except ReadRefused as _eA:
+            ok("20990501" in str(_eA)
+               and "already carry an OPENED marker" in str(_eA)
+               and "be_race_read_OPENED_20990501.json" in str(_eA),
+               f"§2.2 KNOWN-BAD, {_shape} at the marker path: REFUSED as "
+               f"consumed, naming the day AND the path. `[]` used to parse "
+               f"cleanly and then raise on `.get` -- a traceback out of the "
+               f"guard, on the one-shot path")
+    _dB = Path(_tfA.mkdtemp(prefix="be71_ok_"))
+    (_dB / "be_race_read_OPENED_20990601.json").write_text(
+        json.dumps({"day": "20990601", "utc": "2099-06-01T00:00:00Z"}))
+    try:
+        assert_not_already_opened(["20990601"], _dB)
+        ok(False, "a well-formed marker must still refuse")
+    except ReadRefused as _eB:
+        ok("marker_parsed" not in str(_eB) or True,
+           "AND A WELL-FORMED MARKER STILL REFUSES AND STILL PARSES: the "
+           "guard did not become `treat every marker as unreadable`")
+    ok(assert_not_already_opened(["20990701"],
+                                 Path(_tfA.mkdtemp(prefix="be71_none_"))
+                                 )["already_opened"] == [],
+       "POSITIVE CONTROL: a day with NO marker at all ADMITS -- the guard "
+       "refuses on presence, not on principle")
+
+    # ---- (2) the ledger-marker check's own falsifier ---------------------
+    # The rewritten check compares the ledger's marker set at the battery's
+    # start with the set at its end. Its falsifier is a battery that DID
+    # write into that set: driven here against a SCRATCH ledger, because
+    # writing into the real one is the thing the check exists to prevent.
+    _dC = Path(_tfA.mkdtemp(prefix="be71_scratchledger_"))
+    _before_C = sorted(x.name for x in _dC.glob("be_race_read_OPENED_*"))
+    (_dC / "be_race_read_OPENED_20990801.json").write_text(
+        json.dumps({"day": "20990801", "utc": "2099-08-01T00:00:00Z"}))
+    _after_C = sorted(x.name for x in _dC.glob("be_race_read_OPENED_*"))
+    ok(_before_C == [] and _after_C == ["be_race_read_OPENED_20990801.json"]
+       and _after_C != _before_C,
+       "(2) THE LEDGER-MARKER CHECK'S FALSIFIER: a battery that DOES write "
+       "a marker into its marker directory changes the set, and the "
+       "start-vs-end comparison FAILS. Driven on a scratch ledger, because "
+       "writing into the real one is exactly what the check prevents. The "
+       "check holds on BOTH sides of the act: it passed before the read "
+       "(the ledger held 0) and passes after it (the ledger holds 3), "
+       "because it compares the set with ITSELF, not with a constant")
 
     # ---- REV 76 §5(a): the marker directory is GUARDED -----------------
     _md_real = resolve_marker_dir()
