@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 71
+EXPECTED_CHECKS = 100
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -60,6 +60,12 @@ SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
 #: is complete. Named once, so the guard and the emitter cannot disagree.
 ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
                    "null_mean", "null_sd", "null_draws_summary")
+
+#: How many checks the DE 78 day-path block runs. Declared, because the
+#: offline skip list is generated from it and the online run asserts the
+#: two agree -- a check added without updating this REFUSES rather than
+#: silently shrinking the offline battery.
+DAY_PATH_CHECKS = 23
 
 
 class RunnerRefused(RuntimeError):
@@ -296,6 +302,13 @@ def verify_draw_provenance(prov: dict, *, arm: str, book_digest: str,
             "book_digest": book_digest, "arm": arm,
             "draw_source": prov.get("draw_source", "UNDECLARED"),
             "generated_in_process": prov.get("generated_in_process"),
+            # CARRIED THROUGH, not dropped: the cross-check that DE's
+            # valued draw loop reproduces BE's own `draw_null` is part of
+            # what binds these numbers to that cascade, and a verifier that
+            # silently filters it out of the artifact hides its own
+            # strongest evidence.
+            "reproduces_BEs_draw_null": prov.get("reproduces_BEs_draw_null"),
+            "n_draws": prov.get("n_draws"),
             "recomputed_by_the_runner": True,
             "binds_the_verified_module_to_the_numbers": True}
 
@@ -720,10 +733,18 @@ def may_run_day(params: dict, day: str, *, day_row: dict) -> dict:
     `day_row` is passed in rather than read here: the ledger read belongs to
     the caller, and a predicate that fetches its own inputs cannot be driven
     against the rows that matter."""
-    if day not in params.get("days", []):
+    # THE RULED SET COMES FROM THE COMMITTED FILE (reviewer, DE 77
+    # re-drive). This read `params.get("days")` -- the caller's own dict --
+    # so one line of caller-side rewriting returned may_run: True for
+    # 2026-08-29, a day R-555 excluded. `resolve_draws()` was hardened
+    # against exactly this attack in DE 77b and ITS TWIN WAS NOT: the same
+    # defect, one function away, and I fixed one of them.
+    _ruled = ruled_day_set()
+    if day not in _ruled:
         raise RunnerRefused(
-            f"REFUSED: {day} is not in the ruled day set {params.get('days')}. "
-            f"The ruled set is the population (R-555).")
+            f"REFUSED: {day} is not in the ruled day set {_ruled}. The "
+            f"ruled set is the population (R-555) and it is read from the "
+            f"COMMITTED parameter file, never from the caller's dict.")
     if params.get("day_runs_allowed_for_closed_qualifying_days") is not True:
         raise RunnerRefused(
             "REFUSED: the parameter file does not carry "
@@ -817,6 +838,11 @@ def fixture_run_proven() -> dict:
     DR.clear_proof()
     payload, proof = DR.instrumented(fixture_run)
     payload["no_path_under_data_was_opened"] = proof[
+        "no_path_under_data_was_opened"]
+    # DERIVED, not asserted: a run that opened no path under `data/` needs
+    # no ledger, which is exactly what "runnable from a shell worktree"
+    # means. It was a bare `True` beside the proof that establishes it.
+    payload["runnable_from_a_shell_worktree"] = proof[
         "no_path_under_data_was_opened"]
     payload["data_free_proof"] = proof
     payload["data_root"] = DR.require_canonical(
@@ -953,6 +979,45 @@ def dry_run_ledger() -> dict:
     }
 
 
+#: THE LITERAL AUDIT (reviewer, DE 77 re-drive). `the_committed_day_set_
+#: is_empty: True` shipped as a hardcoded boolean that nothing asserted and
+#: that was FALSE -- the committed file holds six ruled days. Rule 10 says
+#: compute predicates and never print conclusions, and a receipt full of
+#: bare booleans gives a reader no way to tell which of them were computed.
+#: So every top-level boolean in the fixture receipt is classified HERE,
+#: and the battery asserts the classification is EXHAUSTIVE -- a new
+#: boolean with no entry refuses.
+FIXTURE_LITERAL_CLASSES = {
+    "no_day_book_was_read": "COMPUTED -- from whether this path opened a "
+                            "book; corroborated by the data-free proof",
+    "no_path_under_data_was_opened": "COMPUTED -- by the instrument",
+    "runnable_from_a_shell_worktree": "COMPUTED -- derived from the "
+                                      "data-free proof: a run that opens "
+                                      "no path under data/ needs no ledger",
+    "the_committed_day_set_is_empty": "COMPUTED -- len(ruled_day_set()); "
+                                      "was a hardcoded True and was FALSE",
+    "declared_before_any_draw": "INTENT -- a statement about when this "
+                                "declaration was written, not a "
+                                "measurement of the run",
+}
+
+
+def _literal_audit() -> dict:
+    """Which of this receipt's booleans are measurements, and which are
+    statements of intent. Named per field, so a reader never has to guess
+    which kind a bare `true` is."""
+    return {
+        "why": "a receipt of bare booleans cannot tell a reader which were "
+               "computed. `the_committed_day_set_is_empty` was a hardcoded "
+               "True, asserted by nothing, and FALSE",
+        "classified": dict(FIXTURE_LITERAL_CLASSES),
+        "rule": "10 -- compute predicates, never print conclusions",
+        "exhaustiveness_is_checked": "the battery asserts every top-level "
+                                     "boolean in the emitted receipt has "
+                                     "an entry here",
+    }
+
+
 def fixture_run() -> dict:
     """An end-to-end run on FIXTURES. **NOTHING UNDER `data/` IS OPENED.**
 
@@ -982,6 +1047,8 @@ def fixture_run() -> dict:
               "models": {"FIXTURE": "no model file was read", },
               "thetas": {"FIXTURE": "no theta source was read"}}
 
+    _committed_days = ruled_day_set()
+    _day_books_read = False          # this path opens no book; see the proof
     rng = random.Random(20260906)
     results, sealed_artifacts = [], []
     for i, day in enumerate(params["days"], start=1):
@@ -1036,13 +1103,23 @@ def fixture_run() -> dict:
             **carrying_commit_block(Path(__file__).resolve()),
         },
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "no_day_book_was_read": True,
+        # COMPUTED, not asserted (reviewer, DE 77 re-drive; rule 10).
+        # `the_committed_day_set_is_empty` shipped as a hardcoded `True`
+        # that nothing checked and that was FALSE -- the committed file
+        # holds six ruled days. Every boolean in this receipt that makes a
+        # claim about the world is now derived from the world, and the ones
+        # that are statements of INTENT are listed as such in
+        # `literal_audit` rather than left for a reader to sort out.
+        "no_day_book_was_read": not _day_books_read,
         # FILLED BY `fixture_run_proven()` AFTER the body has run under
         # instrumentation -- the claim cannot precede its own proof.
         "no_path_under_data_was_opened": None,
         "data_root": None,
-        "runnable_from_a_shell_worktree": True,
-        "the_committed_day_set_is_empty": True,
+        "runnable_from_a_shell_worktree": None,   # filled by the proof
+        "the_committed_day_set_is_empty": len(_committed_days) == 0,
+        "n_committed_ruled_days": len(_committed_days),
+        "committed_ruled_days": list(_committed_days),
+        "literal_audit": _literal_audit(),
         "why_fixtures": "the reviewer has not filed on design v3 and BE's "
                         "book declaration is in flight; nothing may touch "
                         "a day. This proves the runner EXECUTES, not that "
@@ -1081,6 +1158,721 @@ def fixture_run() -> dict:
                                               "planted above the null and "
                                               "HAZARD's below it, to drive "
                                               "both verdict branches"},
+    }
+
+
+# ==================================================== THE REAL-DAY PATH ====
+#
+# R-573 forced the memory question and the coordinator's addendum sharpened
+# it: BE measured the tape index at 3.963 GB resident for BOTH ruled splits
+# while `build_tape_index`'s own docstring measures the SCORE split alone at
+# 1.42 GB, so whole-day assembly sits 0.713 GB over the cap with `asm` not
+# yet measured. The question put to DE was WHICH SPLITS `--day` needs.
+#
+# THE ANSWER IS STRONGER THAN THE QUESTION, AND IT IS A MEASUREMENT, NOT AN
+# ARGUMENT: `--day` needs NO tape-index split resident at any stage. It
+# consumes BE's BOOK -- `fr.reference` plus `asm` -- and BE's replay. The
+# tape index and the feature fragment are BUILD-SIDE inputs whose only job
+# is to produce `asm`; once the book is written they are dead to this
+# process. `day_split_residency_proof()` runs the whole day path under
+# instrumentation and asserts that no tape, index or fragment ARTIFACT was
+# opened, so the claim is a predicate rather than a promise.
+
+#: The stages, and what each one HOLDS. Named so BE's assembly and DE's day
+#: run agree on the seam rather than each assuming the other's budget.
+DAY_STAGES = (
+    ("S0_verify", "digests only: BE's builder receipt, the book's bytes, "
+                  "the pinned models and thetas, BE's cascade module. The "
+                  "book is READ ONCE here as bytes for its digest and the "
+                  "buffer is handed to S1, never read twice (BE's B-1)"),
+    ("S1_load", "reference + asm + rows. THIS IS THE PEAK of the day path: "
+                "everything after it is derived and bounded"),
+    ("S2_population", "adds one score float per generation per arm, twice. "
+                      "asm's gen_scores are ALREADY resident from S1; the "
+                      "arm stream is a view over `rows`"),
+    ("S3_baseline", "adds the no-cancel replay's fills -- the neutral "
+                    "reference path (CLAUDE.md reliability rule 1)"),
+    ("S4_null", "one draw's flags and one replayed fill list AT A TIME. "
+                "The draws are REDUCED to a value each as they are made; "
+                "no draw's fills survive the next. O(1) in n_draws"),
+    ("S5_seal", "counts and statuses only. The economic fields are "
+                "computed and withheld, never carried into the artifact"),
+)
+
+#: THE SPLIT DECLARATION (coordinator's DE 78 addendum). BE builds to this.
+INDEX_SPLITS_NEEDED_BY_DAY = {
+    "question": "which tape-index splits must be resident during `--day`, "
+                "and at which stage",
+    "answer": "NONE, at any stage",
+    "why": "the decision population is read from `asm` -- BE's already "
+           "assembled per-generation scores, keyed (slug, side, t0) -- and "
+           "the economics valuation reads only the replay's own fill "
+           "records and the reference's levels and markouts "
+           "(`de_phase4_diag_runner.fill_value_cents`). Neither touches a "
+           "tape row",
+    "per_stage": {
+        "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the "
+                         "scored set; the scorer is a dict lookup that "
+                         "REFUSES on a miss rather than computing a feature",
+        "S3_baseline_and_S4_null": "no split. Each replay values its fills "
+                                   "from the fill record and the reference; "
+                                   "per WINDOW and streamable, with nothing "
+                                   "accumulated across draws",
+        "economics_valuation": "no split, and NOT per-window-resident "
+                               "either -- one fill list at a time",
+    },
+    "consequence_for_BEs_assembly": (
+        "the index is needed only to PRODUCE `asm`. It does not have to be "
+        "resident alongside the reference and `asm` at all, because the "
+        "consumer of those two is a different process. If BE releases the "
+        "index before assembling and writing the book, the whole-day peak "
+        "is max(index stage, assembly stage) rather than their sum"),
+    "what_DE_cannot_rule": (
+        "WHICH split BE must build to produce a September day's `asm` is "
+        "BE's measurement and R-496(E)'s ruling, not DE's. What is declared "
+        "here is only what the CONSUMER needs, which is the half BE was "
+        "waiting on"),
+    "measured_by": "day_split_residency_proof() -- the day path run under "
+                   "instrumentation, asserting no tape/index/fragment "
+                   "artifact was opened",
+    "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming "
+                 "that head; a run with no tape artifact reachable at all "
+                 "still completes",
+}
+
+#: Artifact markers for the residency proof. `.py` sources are excluded on
+#: purpose: `pm_tape_density.py` is a MODULE whose name contains "tape", and
+#: matching it would make the proof fire on its own imports -- the
+#: needle-matching-its-own-prose failure this codebase has hit before.
+TAPE_ARTIFACT_MARKERS = ("pm_5min/raw", "harmful_exposure_rows",
+                         "tape_index", "_fragment", "fragment_",
+                         "state_tape", "/tape")
+
+#: MEASURED on the synthetic day (see the fixture receipt's
+#: `day_run.resources`), then declared with headroom. A fixture that
+#: exceeds it REFUSES: the point of a budget nobody enforces is nothing.
+FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0
+
+#: The real day's ceiling is the cap itself and the response is R-174's:
+#: the DAY refuses. Never a raised cap, never fewer draws.
+REAL_DAY_PEAK_RSS_GB_CEILING = 8.0
+
+
+def _peak_rss_mb() -> float:
+    import resource as _r
+    return _r.getrusage(_r.RUSAGE_SELF).ru_maxrss / 1024.0
+
+
+def tape_artifacts_opened(proof: dict) -> list:
+    """Which TAPE/INDEX/FRAGMENT artifacts the instrumented run opened."""
+    return sorted({p for p in proof.get("distinct_paths", [])
+                   if not p.endswith(".py")
+                   and any(m in p for m in TAPE_ARTIFACT_MARKERS)})
+
+
+def verify_book_against_builder_receipt(day: str, book_path: Path,
+                                        receipt_path: Path) -> dict:
+    """R6 FOR THE BOOK: the digest comes from BE's receipt, not from us.
+
+    A digest DE types is DE's claim about BE's file. The builder receipt is
+    BE's own published statement, and the book's bytes are compared to it
+    at read time -- the reader recomputes, which is BE's own
+    `digest_scheme` in `be_daybook_builder_declaration_v1.json`."""
+    if not receipt_path.is_file():
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: no builder receipt at {receipt_path}. The "
+            f"book's digest is BE's published claim; without it there is "
+            f"nothing to verify the bytes against, and a digest DE invents "
+            f"verifies DE.")
+    rec = json.loads(receipt_path.read_text())
+    declared = rec.get("sha256") or rec.get("book_sha256")
+    if not declared:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: BE's receipt at {receipt_path} carries no "
+            f"`sha256` for the book.")
+    if rec.get("day") not in (None, day):
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: BE's receipt is for day {rec.get('day')!r}. "
+            f"A book verified against another day's receipt is a book "
+            f"nobody checked.")
+    if not book_path.is_file():
+        raise RunnerRefused(f"REFUSED DAY {day}: no book at {book_path}")
+    actual = hashlib.sha256(book_path.read_bytes()).hexdigest()
+    if actual != declared:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: reference-book digest mismatch -- BE's "
+            f"receipt declares {declared[:16]}, the bytes on disk are "
+            f"{actual[:16]}. THE DAY refuses; the book is not the one "
+            f"declared.")
+    return {"day": day, "path": str(book_path), "sha256": actual,
+            "builder_receipt": str(receipt_path),
+            "digest_recomputed_at_read_time": True,
+            "digest_source": "BE's builder receipt, not a DE constant"}
+
+
+def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
+    """The arm's decision population at its PINNED theta, from `asm`.
+
+    Through BE's own `arm_stream` -- which applies the head scorer to the
+    assembled scores and REFUSES on a generation with no assembled score --
+    so a coverage gap is an exclusion with a name, never a silent drop
+    (rule 4)."""
+    head, theta = spec["head"], spec["theta"]
+    by_arm = bk["asm"]["by_arm"]
+    key = (module.COIN, head)
+    if key not in by_arm:
+        raise RunnerRefused(
+            f"REFUSED DAY / {arm}: the book's `asm.by_arm` has no entry for "
+            f"{key!r}. Both pinned heads must be scored on the day book "
+            f"(design R1); a missing head is a day with no decision "
+            f"population for that arm, not a smaller one.")
+    stream = module.arm_stream(bk, head)
+    decisions = [r for r in stream if float(r["score"]) >= theta]
+    by_side: dict = {}
+    for r in decisions:
+        by_side[r["side"]] = by_side.get(r["side"], 0) + 1
+    return {"arm": arm, "head": head, "theta": theta,
+            "n_scored_rows": len(stream),
+            "decisions": len(decisions),
+            "by_side": dict(sorted(by_side.items())),
+            "definition": "above-threshold generations at the arm's FIXED "
+                          "theta -- the set a cancel decision is drawn from",
+            "theta_was_not_refitted_here": True}
+
+
+def _value_cents(fills: list) -> float:
+    """D(E0)'s valuation: the DECLARED estimator, not a new one.
+
+    `de_phase4_diag_runner.fill_value_cents` is the maker P&L at
+    level-to-markout WITH NO FEE TERM -- which is exactly the E0 endpoint
+    the design's metric names. Nothing here invents a valuation; if the
+    endpoint ever needs a fee it belongs in that function, once."""
+    import de_phase4_diag_runner as R
+    return float(sum(v for v in (R.fill_value_cents(f) for f in fills)
+                     if v is not None))
+
+
+def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
+                      n_draws: int, seed: int, deadline_s: float,
+                      cross_check_n: int = 8) -> dict:
+    """The null, ON THE DECISION METRIC, through BE's sampler and replay.
+
+    WHY NOT `draw_null` ITSELF: BE's `draw_null` reduces each draw to
+    mechanics fields and DISCARDS the fills, so D(E0) -- which is a sum
+    over the fills a draw removed -- cannot be recovered from its output.
+    The cascade is still BE's: this drives BE's `_alloc`, `draw_flags`,
+    `flagged_stream` and `replay`, in BE's order, from BE's rows.
+
+    AND THE PART THAT MAKES THAT HONEST: the first `cross_check_n` draws
+    are compared against BE's OWN `draw_null` at the same seed on the field
+    both produce -- `cancels_issued`. A private loop that drew a different
+    sequence would be a different null wearing the same seed."""
+    import numpy as np
+    rows = bk["rows"]
+    total = sum(by_side.values())
+    if total <= 0:
+        raise RunnerRefused(
+            "REFUSED: 0 decisions is not a policy -- it is the baseline.")
+    pools: dict = {}
+    for i, r in enumerate(rows):
+        pools.setdefault(r["side"], []).append(i)
+    pools = {k: np.asarray(v) for k, v in pools.items()}
+    module._alloc(by_side, pools)
+    rng = np.random.default_rng(seed)
+    base_value = _value_cents(base_fills)
+    started = time.time()
+    values, cancels, peak = [], [], _peak_rss_mb()
+    for d in range(n_draws):
+        flag = module.draw_flags(pools, by_side, rng)
+        r = module.replay(bk, module.flagged_stream(rows, flag), 0.5)
+        # REDUCED HERE, DELIBERATELY (stage S4): the draw's fills are
+        # valued and dropped before the next draw is made, so peak memory
+        # is O(one draw) and not O(n_draws).
+        values.append(_value_cents(r["fills"]) - base_value)
+        cancels.append(int(r["cancels_issued"]))
+        if (d & 63) == 0:
+            peak = max(peak, _peak_rss_mb())
+        if time.time() - started > deadline_s:
+            raise RunnerRefused(
+                f"REFUSED: the null exceeded the declared deadline "
+                f"{deadline_s}s at draw {d + 1} of {n_draws}. The day "
+                f"refuses -- never fewer draws, never a raised cap "
+                f"(R-174).")
+    xc = None
+    if cross_check_n:
+        be_draws = module.draw_null(bk, base_fills, by_side,
+                                    n_draws=max(cross_check_n,
+                                                module.MIN_DRAWS),
+                                    seed=seed)
+        theirs = [int(x["cancels_issued"]) for x in be_draws][:cross_check_n]
+        mine = cancels[:cross_check_n]
+        if theirs != mine:
+            raise RunnerRefused(
+                f"REFUSED: DE's valued draw loop does not reproduce BE's "
+                f"`draw_null` at the same seed -- BE {theirs}, DE {mine}. "
+                f"A private loop that draws a different sequence is a "
+                f"different null wearing the same seed.")
+        xc = {"n_compared": cross_check_n, "field": "cancels_issued",
+              "identical": True, "seed": seed,
+              "why": "the cascade is BE's; only the METRIC is DE's"}
+    return {"values": values, "n_draws": len(values),
+            "base_value_cents": base_value,
+            "peak_rss_mb_during_draws": peak,
+            "elapsed_s": time.time() - started,
+            "reproduces_BEs_draw_null": xc,
+            "metric": "D(E0) per draw = value(draw's fills) - value("
+                      "baseline fills), cents, maker fee zero"}
+
+
+# ------------------------------------------- rule 20 / R-575(C), MEASURED
+
+HEAVY_RUN_LOCK = "/home/yuqing/ctaNew/data/.heavy_run.lock"
+HEAVY_WALL_S = 60.0
+HEAVY_RSS_GB = 1.0
+
+
+def _lock_fd_held(lock_path: str) -> list:
+    """Which of THIS process's fds point at the lock file.
+
+    `flock -n <lock> systemd-run --scope <cmd>` keeps the lock's fd open
+    across the exec and the scope inherits it -- MEASURED: fd 3, and absent
+    without the flock. So a run can state whether it held the lock instead
+    of a receipt asserting a wrapper string nobody checked (R-575(C): at
+    05:54Z two heavy scopes ran concurrently, one holding the lock and one
+    not, and no artifact could tell them apart)."""
+    import os as _os
+    want = _os.path.realpath(lock_path)
+    out = []
+    try:
+        fds = _os.listdir("/proc/self/fd")
+    except OSError:
+        return out
+    for fd in fds:
+        try:
+            t = _os.readlink(f"/proc/self/fd/{fd}")
+        except OSError:
+            continue
+        if _os.path.realpath(t) == want:
+            out.append(int(fd))
+    return sorted(out)
+
+
+def wrapper_observed(*, lock_path: str = HEAVY_RUN_LOCK) -> dict:
+    """WHAT ACTUALLY RAN, read from the process, not from the params."""
+    import os as _os
+    try:
+        cg = open("/proc/self/cgroup").read().strip().rsplit("/", 1)[-1]
+    except OSError:
+        cg = None
+    fds = _lock_fd_held(lock_path)
+    return {
+        "heavy_run_lock_held": bool(fds),
+        "lock_fds": fds,
+        "lock_path": lock_path,
+        "cgroup_leaf": cg,
+        "in_a_transient_scope": bool(cg and cg.endswith(".scope")),
+        "how": "the lock's fd is inherited through `flock -n <lock> "
+               "systemd-run --scope`; this is READ FROM /proc/self/fd, so "
+               "the field is a measurement and not the declared wrapper "
+               "string",
+        "declared_wrapper_is_not_evidence": (
+            "params carries a `wrapper` string; a string in a file cannot "
+            "say what launched this process (R-575(C))"),
+    }
+
+
+def assert_rule20(observed: dict, *, wall_s: float, peak_rss_mb: float,
+                  day: str) -> dict:
+    """A run that WAS heavy must have held the lock. Measured, both ways."""
+    heavy = (wall_s > HEAVY_WALL_S
+             or peak_rss_mb / 1024.0 > HEAVY_RSS_GB)
+    if heavy and not observed["heavy_run_lock_held"]:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: this run was HEAVY by measurement "
+            f"({wall_s:.1f}s wall, {peak_rss_mb / 1024.0:.2f} GiB peak, "
+            f"against rule 20's {HEAVY_WALL_S}s / {HEAVY_RSS_GB} GiB bar) "
+            f"and did NOT hold {HEAVY_RUN_LOCK}. R-575(C): every heavy step "
+            f"takes the lock FIRST; a held lock means refuse and report, "
+            f"never run beside it. The artifact is not written.")
+    return {"heavy_by_measurement": heavy,
+            "wall_s": wall_s, "peak_rss_gb": peak_rss_mb / 1024.0,
+            "bar": {"wall_s": HEAVY_WALL_S, "rss_gb": HEAVY_RSS_GB},
+            "lock_held": observed["heavy_run_lock_held"],
+            "rule": "R-575(C) -- heavy implies the lock, checked here "
+                    "rather than promised in a wrapper string"}
+
+
+# --------------------------------------------------------- the day itself
+
+def run_day(day: str, book_path, *, params: dict, module=None,
+            fixture: bool = False, receipt_path=None,
+            n_days_complete: int = 1,
+            peak_rss_mb_budget: float | None = None) -> dict:
+    """ONE RULED DAY, SEALED. The path the smoke runs.
+
+    Real days require the lock BEFORE any work (a real day is heavy by
+    construction: BE projects ~2.3 h per day for both arms). A fixture day
+    is expected light and is checked against its declared budget at the
+    end -- a fixture that exceeds its budget REFUSES, because a budget
+    nobody enforces is not a budget."""
+    t_start = time.time()
+    stages: dict = {}
+
+    def _mark(name):
+        stages[name] = {"peak_rss_mb_highwater": _peak_rss_mb(),
+                        "elapsed_s": round(time.time() - t_start, 3)}
+
+    obs = wrapper_observed()
+    if not fixture and not obs["heavy_run_lock_held"]:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: a REAL day is heavy by construction (BE "
+            f"projects ~2.3 h for both arms) and this process does not hold "
+            f"{HEAVY_RUN_LOCK}. Take the lock first; if it is held, refuse "
+            f"and report (R-575(C)).")
+
+    # ---- S0: verify. Digests only. -------------------------------------
+    book_path = Path(book_path)
+    receipt = book_path.with_suffix(".json")
+    bookcite = verify_book_against_builder_receipt(day, book_path, receipt)
+    book_sha = bookcite["sha256"]
+    mod, cite = import_be_cascade(params, module=module)
+    if not fixture:
+        verify_pinned_models(params)
+        verify_pinned_thetas(params)
+    _mark("S0_verify")
+
+    # ---- S1: load. The peak of the day path. ---------------------------
+    bk = mod.load(book_path)
+    if bk.get("source_sha256") != book_sha:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: the cascade loaded a book whose own digest "
+            f"is {str(bk.get('source_sha256'))[:16]} while the verified "
+            f"book is {book_sha[:16]}.")
+    _mark("S1_load")
+
+    # ---- S2: the decision population, per arm, from `asm`. -------------
+    pops = {arm: day_decision_population(mod, bk, arm, spec)
+            for arm, spec in sorted(params["arms"].items())}
+    # BE's declared per-day precondition: both heads must score the SAME
+    # generation set, or the shared draw pool is a real choice the builder
+    # declaration does not cover.
+    keysets = {arm: set(bk["asm"]["by_arm"][(mod.COIN, s["head"])][0])
+               for arm, s in sorted(params["arms"].items())}
+    ks = list(keysets.values())
+    pool_equal = all(k == ks[0] for k in ks)
+    if not pool_equal:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: the two heads do not score the same "
+            f"generation set ({[len(k) for k in ks]}), so the shared draw "
+            f"pool is a real choice and BE's builder declaration does not "
+            f"cover it.")
+    _mark("S2_population")
+
+    # ---- S3: the neutral no-cancel reference path. ---------------------
+    base = mod.replay(bk, mod.flagged_stream(bk["rows"], []), 0.5)
+    base_value = _value_cents(base["fills"])
+    _mark("S3_baseline")
+
+    # ---- S4: the null and the observed value, per arm. -----------------
+    results, per_arm_detail = [], {}
+    for arm, spec in sorted(params["arms"].items()):
+        pop = pops[arm]
+        adm = DESIGN.arm_day_admissible(pop["decisions"], [0.0] * 501)
+        if pop["decisions"] < params["min_decisions_per_arm_day"]:
+            results.append({
+                "day": day, "arm": arm, "status": "DEGENERATE_ARM_DAY_"
+                                                  "REFUSED_TOO_FEW_DECISIONS",
+                "admissibility": {"admissible": False,
+                                  "n_decisions": pop["decisions"],
+                                  "bar": params["min_decisions_per_arm_day"]},
+                "decision_population": pop,
+                "draw_provenance": None, "economic": None,
+                "why_no_economic": "a refused arm-day carries no economic "
+                                   "field; it is a STATUS and does not "
+                                   "shrink G silently"})
+            per_arm_detail[arm] = {"status": "REFUSED_R4_DECISIONS"}
+            continue
+        arm_replay = mod.replay(bk, mod.arm_stream(bk, spec["head"]),
+                                spec["theta"])
+        observed = _value_cents(arm_replay["fills"]) - base_value
+        seed = seed_for(book_sha, arm)
+        nul = null_draws_valued(
+            mod, bk, base["fills"], pop["by_side"],
+            n_draws=params["min_draws_per_arm_day"], seed=seed,
+            deadline_s=params["per_day_deadline_s"])
+        prov = {"module_sha256": cite["sha256"], "seed": seed,
+                "book_digest": book_sha, "arm": arm,
+                "draw_source": "GENERATED_IN_PROCESS",
+                "generated_in_process": True,
+                "pid": __import__("os").getpid(),
+                "n_draws": nul["n_draws"],
+                "reproduces_BEs_draw_null":
+                    nul["reproduces_BEs_draw_null"]}
+        r = arm_day(day, arm, observed, nul["values"], pop["decisions"],
+                    params, elapsed_s=time.time() - t_start,
+                    draw_provenance=prov, book_digest=book_sha,
+                    verified_module_sha=cite["sha256"])
+        r["decision_population"] = pop
+        r["seed"] = seed
+        r["n_cancels_issued"] = int(arm_replay["cancels_issued"])
+        r["n_fills_baseline"] = int(base["n_fills"])
+        r["n_fills_arm"] = int(arm_replay["n_fills"])
+        results.append(r)
+        per_arm_detail[arm] = {"status": r["status"],
+                               "null_elapsed_s": nul["elapsed_s"],
+                               "null_peak_rss_mb":
+                                   nul["peak_rss_mb_during_draws"]}
+    _mark("S4_null")
+
+    # ---- S5: seal. Counts and statuses only. ---------------------------
+    sealed = [seal(r, n_days_complete, params["G"]) for r in results]
+    for a in sealed:
+        assert_no_economic_leak(a, n_days_complete, params["G"])
+    _mark("S5_seal")
+
+    wall = time.time() - t_start
+    peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
+    r20 = assert_rule20(obs, wall_s=wall, peak_rss_mb=peak, day=day)
+    budget = (peak_rss_mb_budget if peak_rss_mb_budget is not None
+              else (FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture else
+                    REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0))
+    if peak > budget:
+        raise RunnerRefused(
+            f"REFUSED DAY {day}: peak RSS {peak:.0f} MB exceeds the "
+            f"declared budget {budget:.0f} MB. The DAY refuses -- the cap "
+            f"is never raised and the draw count is never cut (R-174).")
+    return {
+        "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+        "status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
+                   else "DAY_RUN_SEALED"),
+        "day": day,
+        "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "fixture": fixture,
+        "reference_book": bookcite,
+        "be_module_citation": cite,
+        "draw_pool_set_equality_checked": pool_equal,
+        "decision_populations": pops,
+        "per_day_sealed_artifacts": sealed,
+        "n_days_complete": n_days_complete, "G": params["G"],
+        "memory_plan": {
+            "stages": [{"stage": k, "holds": v} for k, v in DAY_STAGES],
+            "observed": stages,
+            "peak_rss_mb": peak,
+            "budget_mb": budget,
+            "within_budget": peak <= budget,
+            "index_splits": INDEX_SPLITS_NEEDED_BY_DAY,
+        },
+        "wrapper": {**obs, "rule20": r20},
+        "resources": {"wall_seconds": wall, "peak_rss_mb": peak,
+                      "per_arm": per_arm_detail},
+        "what_this_is_not": {
+            "a_result": False,
+            "the_economics_are_SEALED": n_days_complete < params["G"],
+            "D_E_MINUS_R_is_UNBOUND": (
+                "the robustness endpoint needs the rebate's identity value, "
+                "which is NOT on DE's surface. D(E0) -- the DECLARED "
+                "PRIMARY -- is computed here from "
+                "`de_phase4_diag_runner.fill_value_cents`, which is "
+                "level-to-markout with NO fee term and therefore IS the E0 "
+                "endpoint. D(E-R) is not computed and is not approximated"),
+        },
+    }
+
+
+# ---------------------------------------------- the SYNTHETIC day fixture
+
+#: How each arm's HEAD scores the synthetic day. The point of a fixture
+#: with plants is that the verdict is known before the run:
+#:   "harmful"  -- the head ranks the value-DESTROYING generations high, so
+#:                 cancelling them ADDS value: D(E0) far above the null.
+#:                 MUST PASS.
+#:   "value"    -- the head ranks the value-CREATING generations high, so
+#:                 cancelling them destroys value: D(E0) far below.
+#:                 MUST FAIL.
+#:   "thin"     -- almost nothing clears theta: an R4 refusal by decision
+#:                 count, a STATUS, and G does not shrink.
+SYNTHETIC_HEAD_POLICIES = ("harmful", "value", "thin")
+
+
+def synthetic_day_book(day: str, *, n_slugs: int = 24, n_gens: int = 2,
+                       params: dict | None = None, seed: int = 20260906,
+                       harmful_frac: float = 0.5,
+                       head_policy: dict | None = None) -> dict:
+    """A day book of BE's DECLARED SHAPE -- not of BE's data.
+
+    Every key BE's builder declaration names is present: `fr.reference`
+    (slug -> side -> generations with tranches), `statuses`, `population`,
+    `n_slugs`, `terminal_marks`, and `asm.by_arm` keyed `(coin, head)` for
+    BOTH pinned heads, whose [0] element is the scored generation map keyed
+    `(slug, side, float(t0))`.
+
+    WHAT THIS FIXTURE DOES NOT DO, said plainly: it does not stand in for
+    BE's book. It carries no real tape, and its numbers are synthetic. What
+    it proves is that the DAY PATH executes end to end THROUGH THE REAL
+    CASCADE -- BE's own `load`, `arm_stream`, `flagged_stream`, `replay`,
+    `_alloc` and `draw_flags` are the ones that run -- so the seams DE
+    controls are exercised against the module DE cites rather than a stub.
+    A defect in BE's data cannot be found here; a defect in the wiring can,
+    and DE 77 shipped exactly such a defect."""
+    import random as _rnd
+    import harmful_stateful_policy as HSP
+    P = params or {}
+    arms = P.get("arms") or {
+        "CONDVALUE_X_SKEW": {"head": "q1_arrival_composed_lgbm",
+                             "theta": 0.32450609461933483},
+        "HAZARD_OVER_SKEWED_REF": {"head": "incumbent_linear_d",
+                                   "theta": 0.43525926488298716}}
+    rnd = _rnd.Random(seed)
+    base_t = 1787579400
+    slugs = [f"btc-updown-5m-{base_t + i * 300}" for i in range(n_slugs)]
+
+    def _gen(gid, t0, t1, tranches, level=0.5):
+        return {"gen": gid, "t0": t0, "t1": t1, "level": level,
+                "displayed": 10.0, "status": HSP.OK,
+                "tranches": [{"t": t, "shares": s,
+                              "markout_cents_per_share": m,
+                              "level": level, "mid_at_fill": level - 0.005}
+                             for t, s, m in tranches]}
+
+    policy = head_policy or {"CONDVALUE_X_SKEW": "harmful",
+                             "HAZARD_OVER_SKEWED_REF": "value"}
+    bad = {a: p for a, p in policy.items()
+           if p not in SYNTHETIC_HEAD_POLICIES}
+    if bad:
+        raise RunnerRefused(
+            f"REFUSED: unknown synthetic head policy {bad}; declared "
+            f"policies are {SYNTHETIC_HEAD_POLICIES}")
+
+    # THE MARKOUTS ARE SYMMETRIC ABOUT ZERO ON PURPOSE. With +4/-20 the
+    # null's mean value delta is large and positive while its sd is small,
+    # and R4's `sd < 0.25*|mean|` refuses EVERY arm -- which is R4 working,
+    # on a fixture whose economics were lopsided. A day whose fills are
+    # half worth +m and half worth -m puts the random-draw mean near zero
+    # and leaves the dispersion, which is the regime the bar was set for.
+    reference, statuses, terminal_marks = {}, {}, {}
+    harm: dict = {}
+    for i, s in enumerate(slugs):
+        harmful = i < int(n_slugs * harmful_frac)
+        reference[s] = {}
+        for sd in HSP.SIDES:
+            gens = []
+            for g in range(n_gens):
+                t0 = 5.0 + g * 25.0
+                mk = (-20.0 if harmful else 20.0) + rnd.uniform(-2.0, 2.0)
+                gens.append(_gen(g + 1, t0, t0 + 20.0,
+                                 [(t0 + 5.0, 1.0, mk)]))
+                harm[(s, sd, float(t0))] = harmful
+            reference[s][sd] = gens
+        statuses[s] = "OK"
+        terminal_marks[s] = {"t": base_t + i * 300 + 300, "mid_cents": 0.5}
+
+    #: BOTH heads score the SAME generation KEYS -- BE's declared per-day
+    #: precondition, ASSERTED by `run_day` rather than assumed here -- with
+    #: DIFFERENT values, because two heads that agree on every score are
+    #: one head and would drive only one branch.
+    def _scores(pol):
+        out = {}
+        for k, is_harm in harm.items():
+            if pol == "thin":
+                out[k] = 0.01
+            elif pol == "harmful":
+                out[k] = 0.90 if is_harm else 0.05
+            else:
+                out[k] = 0.05 if is_harm else 0.90
+        return out
+
+    asm = {"by_arm": {("btc", spec["head"]): (
+        _scores(policy.get(arm, "harmful")),)
+        for arm, spec in arms.items()}}
+    return {
+        "fr": {"reference": reference, "statuses": statuses,
+               "population": sorted(slugs), "n_slugs": len(slugs),
+               "terminal_marks": terminal_marks},
+        "asm": asm,
+        "SYNTHETIC": {
+            "day": day, "is_not_BEs_book": True,
+            "shape_source": "live/pm_research/declarations/"
+                            "be_daybook_builder_declaration_v1.json",
+            "what_it_proves": "the day path executes through the REAL "
+                              "cascade module DE cites",
+            "what_it_cannot_prove": "anything about BE's data, coverage, "
+                                    "or the day's real economics",
+        },
+    }
+
+
+def synthetic_pool_keys_agree(book: dict) -> bool:
+    """Both heads score the same KEY SET -- the property `run_day` asserts.
+    Checked here too so a fixture that broke it would be caught as a
+    FIXTURE defect and not read as a day-book finding."""
+    sets = [set(v[0]) for v in book["asm"]["by_arm"].values()]
+    return all(x == sets[0] for x in sets)
+
+
+def write_synthetic_day(day: str, outdir, **kw) -> dict:
+    """Write the synthetic book AND the builder-receipt sidecar BE's
+    declaration specifies, so `--day` verifies against a receipt rather
+    than against a digest DE typed."""
+    import pickle
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    book = synthetic_day_book(day, **kw)
+    p = outdir / f"be_daybook_{day.replace('-', '')}_SYNTHETIC.pkl"
+    buf = pickle.dumps(book)
+    p.write_bytes(buf)
+    sha = hashlib.sha256(buf).hexdigest()
+    rec = {"protocol": "SYNTHETIC_DAYBOOK_RECEIPT_NOT_BES",
+           "day": day, "sha256": sha, "path": str(p),
+           "bytes": len(buf),
+           "n_slugs": book["fr"]["n_slugs"],
+           "SYNTHETIC": True,
+           "why_a_receipt": "BE's declared digest_scheme is a sidecar "
+                            "be_daybook_<DAY>.json the READER recomputes; "
+                            "the fixture carries the same seam so `--day` "
+                            "is never handed a digest DE typed"}
+    rp = p.with_suffix(".json")
+    rp.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
+    return {"book_path": p, "receipt_path": rp, "sha256": sha, "book": book}
+
+
+def day_split_residency_proof(day: str, book_path, *, params: dict,
+                              **kw) -> dict:
+    """THE ADDENDUM'S MEASUREMENT: run the day and watch every open.
+
+    The claim "`--day` needs no tape-index split resident" is checkable, so
+    it is checked: the whole day path runs under the same instrument the
+    data-free proof uses, and the artifact records which TAPE, INDEX or
+    FRAGMENT artifacts were opened. The answer must be none."""
+    DR.clear_proof()
+    result, proof = DR.instrumented(
+        run_day, day, book_path, params=params, **kw)
+    hits = tape_artifacts_opened(proof)
+    # NON-VACUITY THAT IS SPECIFIC TO THIS CLAIM. `non_vacuous` says the
+    # instrument saw SOME open; that is not enough here. The day path
+    # certainly reads the BOOK, so the instrument must have seen THAT --
+    # otherwise "no tape artifact was opened" could be an instrument that
+    # missed the reads rather than reads that did not happen.
+    _bp = str(Path(book_path).resolve())
+    _saw_book = any(str(Path(p).resolve()) == _bp
+                    for p in proof.get("distinct_paths", []))
+    if not _saw_book:
+        raise RunnerRefused(
+            f"REFUSED: the residency instrument did not observe the day "
+            f"book being read ({_bp}). An instrument that missed the one "
+            f"read this path certainly makes cannot testify about the "
+            f"reads it did not see.")
+    return {
+        "no_tape_index_or_fragment_artifact_was_opened": not hits,
+        "instrument_observed_the_book_read": _saw_book,
+        "tape_artifacts_opened": hits,
+        "markers_tested": list(TAPE_ARTIFACT_MARKERS),
+        "py_sources_excluded_on_purpose": (
+            "`pm_tape_density.py` is a MODULE whose name contains 'tape'; "
+            "matching it would make the proof fire on its own imports"),
+        "n_paths_opened": proof["n_paths_opened"],
+        "n_distinct_paths": proof["n_distinct_paths"],
+        "non_vacuous": proof["non_vacuous"],
+        "day_result": result,
     }
 
 
@@ -1434,6 +2226,31 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            "and the instrument is not vacuous -- it DID observe the "
            "parameter file being read, so a zero above is a measurement "
            "rather than a silent no-op")
+        # ---- the reviewer's finding (2): the literals in this receipt ---
+        _bools = sorted(k for k, v in _pv.items() if isinstance(v, bool))
+        _unclassified = [k for k in _bools
+                         if k not in FIXTURE_LITERAL_CLASSES]
+        ok(not _unclassified,
+           f"THE LITERAL SWEEP IS EXHAUSTIVE: every top-level boolean in "
+           f"the EMITTED fixture receipt ({_bools}) is classified COMPUTED "
+           f"or INTENT. A new bare boolean with no entry REFUSES here, "
+           f"which is the only thing that keeps rule 10 from decaying back "
+           f"into prose")
+        ok(_pv["the_committed_day_set_is_empty"] is False
+           and _pv["n_committed_ruled_days"] == len(ruled_day_set()) == 6
+           and _pv["committed_ruled_days"] == live["days"],
+           f"AND THE FINDING ITSELF: `the_committed_day_set_is_empty` is "
+           f"now COMPUTED and reads False over "
+           f"{_pv['n_committed_ruled_days']} committed ruled days. It "
+           f"shipped in v7 as a hardcoded True that nothing asserted and "
+           f"that was FALSE -- a literal beside prose, which is rule 10's "
+           f"own example, in my own receipt")
+        ok(_pv["runnable_from_a_shell_worktree"]
+           is _pv["no_path_under_data_was_opened"],
+           "and `runnable_from_a_shell_worktree` is DERIVED from the "
+           "data-free proof rather than asserted beside it -- a run that "
+           "opens no path under data/ needs no ledger, which is what the "
+           "claim means")
     else:
         # TWO labels, because the online path runs TWO checks here. A
         # skip list that undercounts makes the two modes disagree on the
@@ -1445,6 +2262,11 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         offline_skip("(3) the fixture-claim-carries-its-proof check "
                      "(it calls fixture_run_proven, which would recurse)")
         offline_skip("(3) the laundering known-bad on require_canonical")
+        offline_skip("(3) the literal sweep over the emitted receipt "
+                     "(it calls fixture_run_proven, which would recurse)")
+        offline_skip("(3) the committed-day-set computation check")
+        offline_skip("(3) the derived runnable-from-a-shell-worktree "
+                     "check")
 
     ok(seed_for("a" * 64, "X") != seed_for("b" * 64, "X")
        and seed_for("a" * 64, "X") == seed_for("a" * 64, "X"),
@@ -1697,6 +2519,280 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"and `ruled_day_set()` reads the committed file and agrees with the "
        f"loaded params: {ruled_day_set()}")
 
+    def _day_path_checks():
+        # ================= DE 78: THE REAL-DAY PATH, ON A SYNTHETIC DAY ======
+        import tempfile as _tfd
+        _DAYP = dict(live)
+        _DAY = "2026-09-03"
+
+        def _mkday(**kw):
+            _d = _tfd.mkdtemp(prefix="de78_")
+            return write_synthetic_day(_DAY, _d, params=_DAYP, n_slugs=24, **kw)
+
+        _made = _mkday()
+        ok(synthetic_pool_keys_agree(_made["book"])
+           and set(_made["book"]["fr"]) >= {"reference", "statuses",
+                                            "population", "n_slugs",
+                                            "terminal_marks"}
+           and len(_made["book"]["asm"]["by_arm"]) == 2,
+           f"THE SYNTHETIC BOOK CARRIES BE'S DECLARED SHAPE: reference, "
+           f"statuses, population, n_slugs, terminal_marks, and `asm.by_arm` "
+           f"keyed (coin, head) for BOTH pinned heads over ONE agreed key set "
+           f"-- read from be_daybook_builder_declaration_v1.json, not invented")
+
+        # ---- the run, UNSEALED, so the planted verdicts are readable --------
+        _open = run_day(_DAY, _made["book_path"], params=_DAYP, fixture=True,
+                        n_days_complete=_DAYP["G"])
+        _by = {r["arm"]: r for r in _open["per_day_sealed_artifacts"]}
+        _pass, _fail = _by["CONDVALUE_X_SKEW"], _by["HAZARD_OVER_SKEWED_REF"]
+        ok(_pass["status"] == "OK" and _pass["economic"]["Z"] > 3.0
+           and _pass["economic"]["D_E0"] > 0
+           and _pass["economic"]["p_location"] <= 2.0 / 501,
+           f"A PLANTED MUST-PASS ARM PASSES ON THE REAL CASCADE: the head that "
+           f"ranks the value-DESTROYING generations high gets D(E0) = "
+           f"{_pass['economic']['D_E0']:.0f} cents against a null mean of "
+           f"{_pass['economic']['null_mean']:.1f}, Z = "
+           f"{_pass['economic']['Z']:.2f}, p at the {1 / 501:.4f} floor")
+        ok(_fail["status"] == "OK" and _fail["economic"]["Z"] < -3.0
+           and _fail["economic"]["D_E0"] < 0
+           and _fail["economic"]["p_location"] > 0.9,
+           f"AND A PLANTED MUST-FAIL ARM FAILS: the head that ranks the "
+           f"value-CREATING generations high gets D(E0) = "
+           f"{_fail['economic']['D_E0']:.0f}, Z = {_fail['economic']['Z']:.2f} "
+           f"-- both directions driven, so neither is a verdict the fixture "
+           f"could only produce one of")
+        ok(abs(_open["per_day_sealed_artifacts"][0]["economic"]["null_mean"])
+           < 0.5 * _open["per_day_sealed_artifacts"][0]["economic"]["null_sd"],
+           f"and the NULL itself is centred near zero with real dispersion "
+           f"(mean {_pass['economic']['null_mean']:.1f}, sd "
+           f"{_pass['economic']['null_sd']:.1f}) -- a random cancel on this "
+           f"book is worth about nothing, which is what makes the two plants "
+           f"readable rather than an artefact of a lopsided fixture")
+
+        # ---- the SEED reproduces from the artifact alone --------------------
+        _sd = _pass["seed"]
+        ok(_sd == seed_for(_open["reference_book"]["sha256"],
+                           "CONDVALUE_X_SKEW")
+           and _sd == DESIGN.seed_from_convention(
+               _open["reference_book"]["sha256"], "CONDVALUE_X_SKEW"),
+           f"THE SEED REPRODUCES FROM THE ARTIFACT ALONE: {_sd} recomputed "
+           f"from the emitted book digest and the arm name by BOTH the "
+           f"runner's expression and the declaration's reference "
+           f"implementation -- nothing else is needed to redraw the null")
+        ok(_pass["draw_provenance"]["draw_source"] == "GENERATED_IN_PROCESS"
+           and _pass["draw_provenance"]["generated_in_process"] is True,
+           "and the draws on the day path are GENERATED IN PROCESS through "
+           "the DE 77 seam, not supplied -- the fixture flag governs the BOOK, "
+           "never the draws")
+
+        # ---- the null is BE's, cross-checked --------------------------------
+        ok(_pass["draw_provenance"]["reproduces_BEs_draw_null"]["identical"]
+           is True
+           and _pass["draw_provenance"]["reproduces_BEs_draw_null"][
+               "field"] == "cancels_issued",
+           "AND DE's VALUED DRAW LOOP REPRODUCES BE's OWN `draw_null` at the "
+           "same seed on the field both produce. DE drives BE's sampler and "
+           "BE's replay and values the fills itself, because `draw_null` "
+           "discards them -- so the cascade is BE's and only the METRIC is "
+           "DE's, checked rather than asserted")
+
+        # ---- SEALED is the default, and it is absent-not-null ---------------
+        _sealed_run = run_day(_DAY, _made["book_path"], params=_DAYP,
+                              fixture=True, n_days_complete=1)
+        _sa = _sealed_run["per_day_sealed_artifacts"]
+        ok(all("economic" not in a for a in _sa)
+           and all(a["sealed"] is True and a["sealed_at_every_depth"] is True
+                   and a["sealed_field_names"] == list(ECONOMIC_FIELDS)
+                   for a in _sa)
+           and all(a["decision_population"]["decisions"] > 0 for a in _sa),
+           f"AT 1 OF {_DAYP['G']} DAYS THE DAY ARTIFACT IS SEALED: every "
+           f"economic field ABSENT, all four layout keys present, and the "
+           f"decision counts and statuses still published -- the smoke "
+           f"publishes what it may and withholds what it must")
+        _leak = dict(_sa[0]); _leak["economic"] = {"D_E0": 1.0}
+        refuses(lambda: assert_no_economic_leak(_leak, 1, _DAYP["G"]),
+                "KNOWN-BAD ON THE DAY ARTIFACT: an economic field present "
+                "before G REFUSES -- the guard walks the day artifact the "
+                "runner actually emitted, not a hand-built one",
+                "leaked into a SEALED artifact")
+
+        # ---- R6: a wrong book digest refuses THE DAY -----------------------
+        _bad = _mkday()
+        _rp = Path(_bad["receipt_path"])
+        _rj = json.loads(_rp.read_text()); _rj["sha256"] = "0" * 64
+        _rp.write_text(json.dumps(_rj))
+        refuses(lambda: run_day(_DAY, _bad["book_path"], params=_DAYP,
+                                fixture=True),
+                "R6 KNOWN-BAD, A WRONG BOOK DIGEST: THE DAY refuses. The "
+                "digest compared is BE's OWN published one from the sidecar "
+                "receipt, recomputed against the bytes at read time -- never a "
+                "constant DE typed", "digest mismatch")
+        _norec = _mkday()
+        Path(_norec["receipt_path"]).unlink()
+        refuses(lambda: run_day(_DAY, _norec["book_path"], params=_DAYP,
+                                fixture=True),
+                "and a book with NO builder receipt refuses too: without BE's "
+                "published claim there is nothing to verify the bytes against, "
+                "and a digest DE invents verifies DE", "no builder receipt")
+
+        # ---- R4: a THIN arm-day is a STATUS and G does not shrink -----------
+        _thin = _mkday(head_policy={"CONDVALUE_X_SKEW": "harmful",
+                                    "HAZARD_OVER_SKEWED_REF": "thin"})
+        _tr = run_day(_DAY, _thin["book_path"], params=_DAYP, fixture=True,
+                      n_days_complete=_DAYP["G"])
+        _tby = {r["arm"]: r for r in _tr["per_day_sealed_artifacts"]}
+        _th = _tby["HAZARD_OVER_SKEWED_REF"]
+        ok(_th["status"].startswith("DEGENERATE_ARM_DAY_REFUSED")
+           and _th["economic"] is None
+           and _th["decision_population"]["decisions"]
+           < _DAYP["min_decisions_per_arm_day"]
+           and _tby["CONDVALUE_X_SKEW"]["status"] == "OK",
+           f"R4 ON THE DAY PATH: an arm whose head clears theta only "
+           f"{_th['decision_population']['decisions']} times is a counted "
+           f"STATUS with no economic field, while the OTHER arm on the SAME "
+           f"day runs normally -- the refusal is per arm-day and does not take "
+           f"the day with it")
+        _agg = aggregate([r for r in _tr["per_day_sealed_artifacts"]], _DAYP)
+        ok(_agg["per_arm"]["HAZARD_OVER_SKEWED_REF"]["verdict"]
+           == "UNTESTABLE_ON_THE_DECLARED_DAY_SET"
+           and _agg["G"] == _DAYP["G"],
+           f"AND G DOES NOT SHRINK: the thin arm aggregates to UNTESTABLE at "
+           f"G = {_agg['G']}, never to a tested verdict on fewer days")
+
+        # ---- the ADDENDUM: which index splits `--day` needs -----------------
+        _prf = day_split_residency_proof(_DAY, _made["book_path"],
+                                         params=_DAYP, fixture=True)
+        ok(_prf["no_tape_index_or_fragment_artifact_was_opened"] is True
+           and _prf["instrument_observed_the_book_read"] is True
+           and _prf["non_vacuous"] is True,
+           f"THE ADDENDUM, MEASURED: a whole day path opened "
+           f"{_prf['n_paths_opened']} paths and NOT ONE tape, index or "
+           f"fragment artifact among them. `--day` needs NO index split "
+           f"resident at any stage -- it consumes `asm` and the reference, and "
+           f"values fills from the replay's own records. The unneeded splits "
+           f"are absent here and the run completes")
+        ok(INDEX_SPLITS_NEEDED_BY_DAY["answer"] == "NONE, at any stage"
+           and set(INDEX_SPLITS_NEEDED_BY_DAY["per_stage"]) == {
+               "S2_population", "S3_baseline_and_S4_null",
+               "economics_valuation"}
+           and len(DAY_STAGES) == 6,
+           f"and the declaration names the answer PER STAGE over "
+           f"{len(DAY_STAGES)} stages, so BE builds to a field rather than to "
+           f"a sentence in a report")
+        _nohead = _mkday()
+        import pickle as _pk
+        _bkd = _pk.loads(Path(_nohead["book_path"]).read_bytes())
+        del _bkd["asm"]["by_arm"][("btc", "incumbent_linear_d")]
+        _buf = _pk.dumps(_bkd)
+        Path(_nohead["book_path"]).write_bytes(_buf)
+        _rj2 = json.loads(Path(_nohead["receipt_path"]).read_text())
+        _rj2["sha256"] = hashlib.sha256(_buf).hexdigest()
+        Path(_nohead["receipt_path"]).write_text(json.dumps(_rj2))
+        refuses(lambda: run_day(_DAY, _nohead["book_path"], params=_DAYP,
+                                fixture=True),
+                "AND THE OTHER HALF OF THE FALSIFIER: with the input `--day` "
+                "DOES need absent -- a pinned head missing from `asm.by_arm` "
+                "-- the run REFUSES AND NAMES IT. So the residency claim is "
+                "not 'nothing matters'; it is that the book is the only thing "
+                "that does", "no entry for")
+
+        # ---- rule 20 / R-575(C), driven both ways --------------------------
+        _obs_now = wrapper_observed()
+        ok(set(_obs_now) >= {"heavy_run_lock_held", "lock_fds", "cgroup_leaf"}
+           and isinstance(_obs_now["heavy_run_lock_held"], bool),
+           f"R-575(C): the wrapper is MEASURED from /proc/self/fd, not read "
+           f"from the params string -- lock held here: "
+           f"{_obs_now['heavy_run_lock_held']}, cgroup "
+           f"{_obs_now['cgroup_leaf']}")
+        ok(assert_rule20({"heavy_run_lock_held": False}, wall_s=1.0,
+                         peak_rss_mb=50.0, day=_DAY)[
+               "heavy_by_measurement"] is False,
+           "POSITIVE CONTROL, AND IT ADMITS: a LIGHT run without the lock is "
+           "fine -- 1.0 s and 50 MB against the 60 s / 1 GiB bar")
+        refuses(lambda: assert_rule20({"heavy_run_lock_held": False},
+                                      wall_s=61.0, peak_rss_mb=50.0,
+                                      day=_DAY),
+                "KNOWN-BAD, THE 05:54Z CASE: a run that WAS heavy by "
+                "measurement and did not hold the lock REFUSES and the "
+                "artifact is not written -- so a receipt can no longer claim a "
+                "wrapper it did not have", "did NOT hold")
+        ok(assert_rule20({"heavy_run_lock_held": True}, wall_s=3600.0,
+                         peak_rss_mb=7000.0, day=_DAY)[
+               "heavy_by_measurement"] is True,
+           "and a heavy run that DID hold the lock admits, marked heavy -- the "
+           "rule is about the lock, not about being small")
+        refuses(lambda: run_day(_DAY, _made["book_path"], params=_DAYP,
+                                fixture=True, peak_rss_mb_budget=1.0),
+                "AND THE FIXTURE BUDGET BITES: a day run whose peak exceeds "
+                "its DECLARED budget REFUSES rather than reporting a number "
+                "over the line -- the cap is never raised and the draws are "
+                "never cut (R-174)", "exceeds the declared budget")
+        ok(_open["memory_plan"]["peak_rss_mb"]
+           < FIXTURE_DAY_PEAK_RSS_MB_BUDGET
+           and _open["memory_plan"]["within_budget"] is True
+           and len(_open["memory_plan"]["observed"]) == len(DAY_STAGES),
+           f"and the real fixture run sits at "
+           f"{_open['memory_plan']['peak_rss_mb']:.0f} MB against the declared "
+           f"{FIXTURE_DAY_PEAK_RSS_MB_BUDGET:.0f} MB, with a high-water "
+           f"recorded at each of the {len(DAY_STAGES)} stages")
+
+        # ---- a real day is refused for the reasons it must be --------------
+        refuses(lambda: run_day("2026-09-04", _made["book_path"],
+                                params=_DAYP, fixture=False),
+                "A REAL DAY WITHOUT THE LOCK REFUSES BEFORE ANY WORK: it is "
+                "heavy by construction (BE projects ~2.3 h for both arms), so "
+                "the lock is taken FIRST or the run does not start (R-575(C))",
+                "does not hold")
+
+    # ================= DE 78: THE REAL-DAY PATH, ON A SYNTHETIC DAY ======
+    # SKIPPED OFFLINE, and the reason is precise: these drive BE's own
+    # `draw_null` for the cross-check, and BE's `mechanics` reads its
+    # committed null receipt under `data/`. A FIXTURE RUN must open no path
+    # under `data/`; a DAY RUN is supposed to read -- what its residency
+    # proof asserts is that no TAPE, INDEX or FRAGMENT artifact was opened,
+    # which is a different claim and the one the addendum asked for.
+    if offline:
+        for _i in range(DAY_PATH_CHECKS):
+            offline_skip(f"DE 78 day-path check {_i + 1}/"
+                         f"{DAY_PATH_CHECKS} -- drives BE's draw_null, "
+                         f"which reads BE's committed null receipt under "
+                         f"data/")
+        # THE COUNT-AGREEMENT CHECK IS ITSELF A CHECK and is skipped too.
+        # Leaving it out made the offline battery 94 against the online 95,
+        # and the nested selftest inside the fixture run failed on the
+        # difference -- caught by the count assertion, which is what it is
+        # for.
+        offline_skip("DE 78 day-path check count agreement (online only)")
+    else:
+        _n_before = n[0]
+        _day_path_checks()
+        _ran = n[0] - _n_before
+        ok(_ran == DAY_PATH_CHECKS,
+           f"and the day-path check COUNT is asserted against the declared "
+           f"constant: {_ran} == {DAY_PATH_CHECKS}. The offline skip list "
+           f"is generated from that constant, so a check added here without "
+           f"updating it REFUSES rather than quietly shrinking the offline "
+           f"battery")
+
+
+    # ---- the reviewer's DE 77 re-drive: two findings, both driven ------
+    _rw = dict(live)
+    _rw["days"] = ["2026-08-29"] + live["days"]          # the caller lies
+    refuses(lambda: may_run_day(_rw, "2026-08-29",
+                                day_row={"day_closed_calendar": True,
+                                         "all_conjuncts_and_quality": True}),
+            "THE REVIEWER'S CALLER-REWRITE ATTACK, ON may_run_day: one line "
+            "of caller-side rewriting used to return may_run TRUE for "
+            "2026-08-29, a day R-555 EXCLUDED. `resolve_draws` was hardened "
+            "against exactly this in DE 77b and ITS TWIN WAS NOT -- the "
+            "same defect one function away. The ruled set is now read from "
+            "the COMMITTED file", "not in the ruled day set")
+    ok(may_run_day(live, "2026-09-03",
+                   day_row={"day_closed_calendar": True,
+                            "all_conjuncts_and_quality": True})["may_run"]
+       is True,
+       "and the positive control still ADMITS the ruled smoke day, so the "
+       "hardening did not simply make the door refuse everything")
     # ---- R-387: carrying_commit, and the property that matters ---------
     _cc_ref = carrying_commit_block(
         Path(__file__).resolve().parents[0] / "be_cancel_axis_null.py")
@@ -1747,10 +2843,26 @@ def main() -> int:
     ap.add_argument("--dry-run-ledger", action="store_true", dest="ledger",
                     help="read the ledger and report the day set; this is "
                          "NOT a fixture run and says so in its status")
+    ap.add_argument("--day", type=str,
+                    help="run ONE ruled day, SEALED. Requires --book and, "
+                         "on a real day, the heavy-run lock (R-575(C))")
+    ap.add_argument("--book", type=Path,
+                    help="BE's day book. Its digest is verified against "
+                         "BE's own sidecar receipt, never against a "
+                         "constant in this file")
+    ap.add_argument("--synthetic-day", type=str,
+                    help="build a SYNTHETIC day book of BE's declared "
+                         "shape, run --day on it, and emit the receipt. "
+                         "Proves the path, never the data")
+    ap.add_argument("--n-days-complete", type=int, default=1,
+                    help="how many of the G days are complete; the seal "
+                         "opens only at G")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.synthetic_day or a.day:
+        return _main_day(a)
     if a.ledger:
         payload = dry_run_ledger()
         if a.output is not None:
@@ -1780,6 +2892,85 @@ def main() -> int:
                       "battery": payload["battery"]["outcome"],
                       "battery_checks": payload["battery"]["n_checks_run"],
                       "any_arm_fails": payload["aggregate"]["any_arm_fails"]}))
+    return 0
+
+
+def _main_day(a) -> int:
+    """`--day` and `--synthetic-day`, one code path with one difference:
+    where the book comes from and whether the run is a fixture."""
+    params = load_params()
+    if a.output is None:
+        raise RunnerRefused("REFUSED: --output is required for a day run")
+    if a.output.exists():
+        raise RunnerRefused(f"output already exists: {a.output}")
+    import tempfile as _tf
+    if a.synthetic_day:
+        day = a.synthetic_day
+        td = _tf.mkdtemp(prefix="de_synth_day_")
+        made = write_synthetic_day(day, td, params=params)
+        book, fixture = made["book_path"], True
+    else:
+        day, book, fixture = a.day, a.book, False
+        if book is None:
+            raise RunnerRefused("REFUSED: --day requires --book")
+        if day not in params["days"]:
+            raise RunnerRefused(
+                f"REFUSED: {day} is not in the ruled day set "
+                f"{params['days']}.")
+    proof = day_split_residency_proof(
+        day, book, params=params, fixture=fixture,
+        n_days_complete=a.n_days_complete)
+    payload = proof.pop("day_result")
+    payload["split_residency_proof"] = proof
+    payload["source_identity"] = {
+        "producing_code": Path(__file__).name,
+        "producing_code_sha256": hashlib.sha256(
+            Path(__file__).resolve().read_bytes()).hexdigest(),
+        **carrying_commit_block(Path(__file__).resolve()),
+    }
+    # R-572(B)(4) / the coordinator's DE 78 ruling, as FIELDS.
+    payload["committed_bytes_policy"] = {
+        "fixture": "producing_code_is_the_committed_bytes MAY be false and "
+                   "is RECORDED, never refused -- a hard refusal would "
+                   "block every pre-commit fixture emission and push "
+                   "someone to commit blind (RULED, DE 78)",
+        "real_day": "a REAL day REFUSES on false: a result-bearing day "
+                    "artifact naming a commit that does not hold the code "
+                    "that ran is provenance theatre",
+        "this_run_is_a_fixture": fixture,
+        "producing_code_is_the_committed_bytes":
+            payload["source_identity"]["producing_code_is_the_committed_"
+                                       "bytes"],
+    }
+    if not fixture and not payload["source_identity"][
+            "producing_code_is_the_committed_bytes"]:
+        raise RunnerRefused(
+            "REFUSED: a REAL day run whose producing code is not the bytes "
+            "HEAD holds. Commit the runner first; the artifact must be able "
+            "to name the commit that produced it (DE 78 ruling).")
+    LAST_BATTERY.clear()
+    selftest(quiet=True, offline=True)
+    payload["battery"] = dict(LAST_BATTERY)
+    payload["data_root"] = DR.require_canonical(
+        f"the {'fixture' if fixture else 'sealed'} day run", fixture=False)
+    a.output.parent.mkdir(parents=True, exist_ok=True)
+    a.output.write_text(json.dumps(payload, indent=2, sort_keys=True,
+                                   default=str) + "\n")
+    print(json.dumps({
+        "emitted": str(a.output), "status": payload["status"],
+        "day": payload["day"],
+        "arms": {r["arm"]: r.get("status")
+                 for r in payload["per_day_sealed_artifacts"]},
+        "decisions": {k: v["decisions"]
+                      for k, v in payload["decision_populations"].items()},
+        "peak_rss_mb": round(payload["memory_plan"]["peak_rss_mb"], 1),
+        "wall_s": round(payload["resources"]["wall_seconds"], 1),
+        "lock_held": payload["wrapper"]["heavy_run_lock_held"],
+        "heavy_by_measurement": payload["wrapper"]["rule20"][
+            "heavy_by_measurement"],
+        "no_tape_artifact_opened": proof[
+            "no_tape_index_or_fragment_artifact_was_opened"],
+        "battery": payload["battery"]["outcome"]}))
     return 0
 
 

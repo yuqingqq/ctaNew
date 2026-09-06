@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pm_tape_density as TD  # noqa: E402
 
 
-EXPECTED_CHECKS = 16
+EXPECTED_CHECKS = 18
 
 #: The only root a RESULT-BEARING emission may be produced against.
 CANONICAL_REPO_ROOT = "/home/yuqing/ctaNew"
@@ -53,6 +53,12 @@ class DataRootRefused(RuntimeError):
 #: proof carries its own non-vacuity, because an instrument that observed
 #: nothing cannot testify that nothing was opened.
 _LAST_PROOF: dict = {}
+
+
+#: The proof carries the paths it saw, capped: an unbounded list inside a
+#: receipt is a receipt nobody reads. The cap is DECLARED and the proof says
+#: whether it bit, so a truncated list can never be read as a complete one.
+PATH_LIST_CAP = 200
 
 
 def instrumented(fn, *args, **kwargs):
@@ -83,6 +89,13 @@ def instrumented(fn, *args, **kwargs):
         "n_paths_opened": len(seen),
         "n_distinct_paths": len(set(seen)),
         "data_paths_opened": data_hits,
+        # THE PATH LIST, not only a count (the reviewer's open item on the
+        # v6 witness). A boolean says "nothing under data/"; the list is
+        # what lets a DIFFERENT predicate be run against the same evidence
+        # -- DE 78 asks it whether any TAPE INDEX or FRAGMENT artifact was
+        # opened, which a data/-only boolean cannot answer.
+        "distinct_paths": sorted(set(seen))[:PATH_LIST_CAP],
+        "distinct_paths_truncated": len(set(seen)) > PATH_LIST_CAP,
         "no_path_under_data_was_opened": not data_hits,
         # NON-VACUITY: an instrument that saw nothing at all proves
         # nothing. It must have observed SOME open to testify about the
@@ -331,6 +344,23 @@ def selftest() -> int:
     ok(os.environ.get("PM_DATA_ROOT") == saved,
        "and the environment is RESTORED after the test -- a suite that "
        "leaves PM_DATA_ROOT set poisons every check after it")
+
+    _r, _p = instrumented(lambda: Path(__file__).read_text())
+    ok(_p["distinct_paths"] and __file__ in _p["distinct_paths"]
+       and _p["distinct_paths_truncated"] is False
+       and len(_p["distinct_paths"]) <= PATH_LIST_CAP,
+       f"THE PROOF CARRIES ITS PATHS, not only a count: "
+       f"{len(_p['distinct_paths'])} distinct, the observed read among "
+       f"them, and `distinct_paths_truncated` states whether the cap of "
+       f"{PATH_LIST_CAP} bit -- so a truncated list cannot be read as a "
+       f"complete one (the reviewer's open item on the v6 witness)")
+    _big = instrumented(lambda: [Path(__file__).read_text()
+                                 for _ in range(3)])[1]
+    ok(_big["n_paths_opened"] == 3 and _big["n_distinct_paths"] == 1
+       and len(_big["distinct_paths"]) == 1,
+       "and repeated opens of ONE path are 3 opens over 1 distinct path -- "
+       "the count and the list answer different questions and neither is "
+       "derived from the other")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

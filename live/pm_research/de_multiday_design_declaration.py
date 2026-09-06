@@ -28,6 +28,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import de_data_root as DR  # noqa: E402
+#: The runner is imported for its DECLARED CONSTANTS only (the day
+#: stages, the split residency, the budgets). The battery still
+#: compares independently-authored lists rather than reading one
+#: constant twice -- see the dry-run scope check.
+import de_multiday_gate1_runner as RUNNER  # noqa: E402
 
 
 #: THE VERSION LIVES IN ONE PLACE. It travelled in THREE and they
@@ -38,9 +43,9 @@ import de_data_root as DR  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 8
+VERSION = 9
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 65
+EXPECTED_CHECKS = 71
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -63,11 +68,15 @@ V6_DECLARATION = ("p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
 V7_DECLARATION = ("p003_de_multiday_gate1_design_v7__20260906T045059Z.json",
                   "bd33daf5beb4774b40cadcf7239f830ee0ea3edd12b617b6d5a161"
                   "1f9213072f")
+V8_DECLARATION = ("p003_de_multiday_gate1_design_v8__20260906T055810Z"
+                  ".json",
+                  "139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b8745"
+                  "2a55d32555")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
-                    V7_DECLARATION)
+                    V7_DECLARATION, V8_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -1164,6 +1173,99 @@ def declaration() -> dict:
             ],
         },
         "R9_timing": TIMING_RULE,
+        "R11_memory_and_index_residency": {
+            "why": "R-573: BE's 09-03 build reached 6.4 GB of the 8 GB cap "
+                   "BEFORE the slice, and the coordinator's DE 78 addendum "
+                   "asked which index splits `--day` needs. The answer "
+                   "belongs in the design because BE builds to it",
+            "the_measured_facts_this_rests_on": {
+                "BE_tape_index_both_ruled_splits_gb": 3.963,
+                "DE_build_tape_index_docstring_score_split_gb": 1.42,
+                "DE_build_tape_index_docstring_train_split_gb": 3.90,
+                "source": "de_phase4_diag_runner.build_tape_index.__doc__ "
+                          "and the chunked-assembly docstring's profile "
+                          "table -- read from the code, not retyped",
+            },
+            "day_run_stages": [{"stage": k, "holds": v}
+                               for k, v in RUNNER.DAY_STAGES],
+            "index_splits_needed_by_day":
+                RUNNER.INDEX_SPLITS_NEEDED_BY_DAY,
+            "fixture_peak_rss_mb_budget":
+                RUNNER.FIXTURE_DAY_PEAK_RSS_MB_BUDGET,
+            "real_day_peak_rss_gb_ceiling":
+                RUNNER.REAL_DAY_PEAK_RSS_GB_CEILING,
+            "on_an_overrun": "THE DAY REFUSES. The cap is never raised and "
+                             "the draw count is never cut (R-174)",
+            "what_this_lets_BE_do": (
+                "if the consumer needs no index resident, the index need "
+                "not be alive when the reference and `asm` are: BE's peak "
+                "becomes max(index stage, assembly stage) instead of their "
+                "sum. On the measured numbers that is the difference "
+                "between fitting the 8 GB cap and not"),
+            "and_what_it_does_not_settle": (
+                "WHICH split BE must build to produce a September day's "
+                "`asm` is BE's measurement and R-496(E)'s ruling. DE "
+                "declares only the consumer's requirement, which is the "
+                "half BE was waiting on"),
+        },
+        "R12_wrapper_is_measured": {
+            "ruling": "R-575(C): at 05:54Z two heavy scopes ran "
+                      "concurrently, one holding the lock and one not",
+            "what_changed": "the day receipt's `wrapper` is READ FROM "
+                            "/proc/self/fd rather than copied from the "
+                            "params string. `flock -n <lock> systemd-run "
+                            "--scope` passes the lock's fd through the "
+                            "exec -- MEASURED at fd 3, and absent without "
+                            "the flock",
+            "the_rule_enforced": "a run that was HEAVY by measurement "
+                                 "(> 60 s wall or > 1 GiB peak) and did "
+                                 "not hold the lock REFUSES and the "
+                                 "artifact is not written",
+            "a_real_day_takes_the_lock_FIRST": "a real day is heavy by "
+                                               "construction (BE projects "
+                                               "~2.3 h for both arms), so "
+                                               "`--day` refuses before any "
+                                               "work if the lock is not "
+                                               "held",
+            "implemented_by": ["de_multiday_gate1_runner.wrapper_observed",
+                               "de_multiday_gate1_runner.assert_rule20"],
+        },
+        "R13_committed_bytes_policy": {
+            "ruling": "the coordinator's DE 78 ruling",
+            "fixture": "producing_code_is_the_committed_bytes MAY be false "
+                       "and is RECORDED, never refused -- a hard refusal "
+                       "would block every pre-commit fixture emission and "
+                       "push someone to commit blind",
+            "real_day": "a REAL day REFUSES on false",
+            "why_the_asymmetry_is_right": (
+                "a fixture receipt is evidence about CODE; a day artifact "
+                "is evidence about a RESULT, and a result naming a commit "
+                "that does not hold the code that produced it is "
+                "provenance theatre"),
+        },
+        "D_E0_is_computed_from_the_declared_estimator": {
+            "estimator": "de_phase4_diag_runner.fill_value_cents",
+            "what_it_is": "the maker P&L at level-to-markout, signed by "
+                          "side, times size -- WITH NO FEE TERM, which is "
+                          "exactly the E0 endpoint this design's metric "
+                          "names",
+            "so_nothing_new_was_invented": True,
+            "D_E_MINUS_R_is_UNBOUND": (
+                "the robustness endpoint needs the rebate's identity "
+                "value, which is not on DE's surface. It is NOT computed "
+                "and NOT approximated; the design's primary metric is "
+                "D(E0) and that is what the day path produces"),
+            "per_draw": "value(the draw's fills) - value(the baseline "
+                        "fills), so arm and null are the SAME statistic",
+            "why_not_BEs_draw_null_directly": (
+                "`draw_null` reduces each draw to mechanics fields and "
+                "discards the fills, and D(E0) is a sum over the fills a "
+                "draw removed. DE drives BE's `_alloc`, `draw_flags`, "
+                "`flagged_stream` and `replay` and values them itself -- "
+                "and the first draws are compared against BE's own "
+                "`draw_null` at the same seed, so the cascade is provably "
+                "BE's and only the metric is DE's"),
+        },
         "R10_seal_layout": SEAL_LAYOUT,
         "dry_run_ledger_scope": DRY_RUN_LEDGER_SCOPE_DECLARED,
         "seed_convention": SEED_CONVENTION,
@@ -1911,6 +2013,52 @@ def selftest(*, quiet: bool = False) -> int:
        "FALSE -- it read True for four hours after the USER answered, and "
        "the CLI summary was printing that stale value -- and the ruled set "
        "here EQUALS the one the runner loads, so the two cannot drift")
+
+    # ---- v9: the memory plan and the split declaration ------------------
+    _r11 = d["R11_memory_and_index_residency"]
+    ok(_r11["index_splits_needed_by_day"]["answer"] == "NONE, at any stage"
+       and len(_r11["day_run_stages"]) == 6
+       and _r11["real_day_peak_rss_gb_ceiling"] == 8.0
+       and _r11["the_measured_facts_this_rests_on"][
+           "DE_build_tape_index_docstring_score_split_gb"] == 1.42,
+       f"R11: the day's stage-by-stage residency and the SPLIT answer are "
+       f"fields -- NONE at any stage, over "
+       f"{len(_r11['day_run_stages'])} stages, against the 8 GB ceiling "
+       f"the day refuses at rather than raises")
+    import de_phase4_diag_runner as _PD
+    _doc = _PD.build_tape_index.__doc__ or ""
+    ok("1.42 GB" in _doc and "3.90 GB" in _doc,
+       "AND THE TWO SPLIT NUMBERS ARE READ FROM THE CODE THAT MEASURED "
+       "THEM -- `build_tape_index.__doc__` still carries 1.42 GB for the "
+       "score split and 3.90 for the train split, so the design is not "
+       "quoting a number that has since moved (rule 16: verify at the "
+       "artifact the claim names)")
+    _r12 = d["R12_wrapper_is_measured"]
+    ok("/proc/self/fd" in _r12["what_changed"]
+       and _r12["implemented_by"] == [
+           "de_multiday_gate1_runner.wrapper_observed",
+           "de_multiday_gate1_runner.assert_rule20"],
+       "R12: the wrapper is a MEASUREMENT (R-575(C)) and the declaration "
+       "names the two functions that make it one")
+    _r13 = d["R13_committed_bytes_policy"]
+    ok(_r13["fixture"].startswith("producing_code_is_the_committed_bytes")
+       and "REFUSES on false" in _r13["real_day"],
+       "R13: recorded for a fixture, REFUSED for a real day -- the "
+       "asymmetry the coordinator ruled, as a field rather than a habit")
+    _de0 = d["D_E0_is_computed_from_the_declared_estimator"]
+    ok(_de0["estimator"] == "de_phase4_diag_runner.fill_value_cents"
+       and _de0["so_nothing_new_was_invented"] is True
+       and "NOT computed and NOT approximated" in _de0[
+           "D_E_MINUS_R_is_UNBOUND"],
+       "and D(E0) names the EXISTING estimator it is computed from -- "
+       "level-to-markout with no fee term IS the E0 endpoint -- while "
+       "D(E-R) is declared UNBOUND rather than approximated")
+    import inspect as _insp
+    _src = _insp.getsource(_PD.fill_value_cents)
+    ok("fee" not in _src.lower() and "rebate" not in _src.lower(),
+       "AND THAT CLAIM IS CHECKED AT THE FUNCTION: `fill_value_cents`'s "
+       "source carries no fee or rebate term, so calling it the E0 "
+       "endpoint is a property of the code and not a reading of its name")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
