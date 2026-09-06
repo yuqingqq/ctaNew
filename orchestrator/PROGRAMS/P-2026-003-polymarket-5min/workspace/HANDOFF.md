@@ -5,6 +5,97 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 147
+
+**As of 2026-09-06T09:11:48Z. State only — MEM writes no result.**
+
+### Both stop-the-lines are closed, and the run was never touched
+
+**The receipt will contain the proof that its own identity field is wrong.** I
+parsed both blobs: **`a7e28e6^` — the bytes that ran — has `ECONOMIC_FIELDS` with
+seven entries and no `sd_over_abs_mean`; `a7e28e6` — the bytes the stamp will name —
+has eight, with it.** So when the artifact lands it will carry `sealed_field_names`
+with **7** entries and `admissibility.sd_over_abs_mean` **present**, beside a
+`producing_code_sha256` of `ba65c248…` that only v13 could have produced. **The
+error and its disproof in one file, in non-economic fields, readable before 09-09
+with nothing consumed** — a falsifiable prediction written *before* the artifact
+exists.
+
+**After a mid-run rewrite the two halves of provenance cannot both be true.**
+Restoring v12's bytes makes the digest **true** and
+`producing_code_is_the_committed_bytes` **false** — a refusal at emit after 1.5 h;
+leaving v13 makes the digest **false** and the guard **true**. No on-disk state
+satisfies both: the digest describes **bytes**, the guard describes the **index**,
+and the run belongs to neither. **That is why the repair is a launch-time capture
+plus an emit-time refusal, not a choice between routes.** Checked myself:
+`producing_code_sha256` at **:1271, :4268, :4345**, each a fresh `read_bytes()` of
+`__file__`, with nothing capturing it at import.
+
+**The ruling:** the run **emits untouched** — restoring bytes or killing loses the
+only sealed day — and **DE supersedes the receipt in band** (`.v2`, v1 untouched,
+the sealed payload untouched) with `producing_code_sha256 = 2089d74e…`, **attested
+by three independent records named by path**: DA's Q-DA-290 record, the reviewer's
+§0 blob hash, and the receipt's own v12 fingerprints. The correction doesn't rest on
+anyone remembering what ran; it rests on three artifacts that agree — one of them
+the wrong receipt itself.
+
+**Rule 22 is in force**, and the coordinator named its own miss: "DE 85 was **my**
+dispatch, at 08:31Z, **nine minutes into** DE 84's run … I wrote the words and did
+not see that landing the module **is** touching the process's provenance." A process
+is touched through **the files it will read**, not only through its memory. Second
+seat this session to name its own miss in the register rather than have it named.
+
+**The live hazard is closed** — `~/ctaNew-wt-de`'s runner hashes `ba65c248…` (the
+uncommitted edit reversed at 09:09:48Z, before the emit) and `~/ctaNew-wt-de2`
+exists at `2ef2186`. **One precision, measured:** `git status --short` in wt-de is
+not empty — it carries an untracked
+`live/pm_research/declarations/de_multiday_gate1_params_v6.json`, present in my
+round-146 reading too. The emit predicate reads the **runner's** bytes, which are
+restored, so this changes nothing about the emit; rule 22 asks that further work
+live in the second worktree, and this one artifact has not moved. **Routed, not
+ruled.**
+
+**And my own round-146 record was right in mechanism and understated the
+consequence.** I wrote that the committed-bytes flag "flips … does not fail in a
+stable direction." What I did not price: **in that state the emit refuses, and the
+only sealed day is lost after 1.5 hours of compute.** The same measurement one
+minute apart, read as *instability* by me and as a *loss* by the coordinator — the
+difference is carrying what the field does downstream.
+
+**At commit time (2026-09-06T09:14:48Z) two landings — recorded unswept.** **DE 86
+(`f27298f`) landed the durable repair**: the source digest captured at **import**
+(`LAUNCH_SOURCE_SHA256`, `source_identity_at_launch()`, `launch_time_utc`, a refusal
+naming the launch digest, and a selftest pinning the emitted value to the launch
+value), plus the bar-as-predicate and the flipped pin. So the "three fresh reads, no
+launch capture" census above is **history at its as-of** — and **the running smoke is
+untouched by it**: it holds v12's loaded bytes, and the file it re-reads at emit is
+now a third thing again. **`d82c54d`: DA 73 closed REV 49's five findings** —
+"closing 2.4 took **three tries**, each one a defect this seat shipped."
+
+### State
+
+- **The 09-03 smoke RUNNING** — pid 3049132 at **2,983 s (~50 min)**; output
+  artifact **absent**, so REV 49's prediction is still unfalsified.
+- **Its receipt: PROVENANCE-WILL-BE-WRONG-AND-SUPERSEDED** — v13's digest stamped,
+  v12 ran; the `.v2` is already specified and attested before it exists.
+- **Rule 22 IN FORCE** — a heavy run's code is frozen until its receipt lands;
+  landings during one's own run come from a **second worktree**; never dispatch a
+  code change to a module a running process imports from the same worktree.
+- **The seal-open bar RULED-AS-PREDICATE (R-602), USER-PENDING for overrule** —
+  clock ≥ 09-09T00:06Z **and** all six sealed day receipts, verified by digest.
+- **Dispatched:** DA 73 (REV 49 §2.4/§2.5/§2.6/§3.3/§3.4, then READY for the GO on
+  the real receipt), REV 50 (DA 70/71/72 and R-602's ruling as a design question),
+  DE 86 in wt-de2 (`.v2`, the launch-time capture, design v14, params v6), DE 87
+  (§1.5 the fixed function off the refusing path; §1.6 params v5 still pinning v12).
+  BE 58 polling; the continuous schedule in round 146's block still stands.
+
+**Counts, measured before the sentence:** flags 827 → 835, `flag_provenance`
+372 → 380, tasks 19; **225 CHECKED**, 155 RELAYED, **455 UNMARKED — unchanged for
+the twenty-third round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 129 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 146
 
 **As of 2026-09-06T09:04:15Z. State only — MEM writes no result.**

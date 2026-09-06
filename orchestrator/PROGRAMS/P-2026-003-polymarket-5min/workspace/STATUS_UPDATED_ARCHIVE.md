@@ -10875,3 +10875,89 @@ directions.
   nineteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 129 — archived 2026-09-06T09:11:48Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 147 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T08:44:30Z (MEM ROUND 144 -- R-600, REV 48, Q-DE-85 AND Q-DA-291 SWEPT.
+  STATE ONLY. THE FINDING IS RULE 10 OBEYED TWICE ON ONE ESTIMAND.
+  (1) **TWO SIDES COMPUTE G, AND NOTHING CHECKS THAT THEY AGREE.** I read both
+  artifacts rather than the entry. `be_race_reader.py:300`:
+  **`"permutation_floors": floors(len(paths), len(fresh))`** -- ***G FROM THE COUNT
+  OF PATHS THE CALL WAS HANDED.*** v4: **`population.READABLE` = the three days,
+  `permutation_floor.G = 3`, `computed_here_not_quoted: true`.** *Each side obeys
+  rule 10 -- compute, never quote -- and **rule 10 obeyed twice on one estimand with
+  no check that the two agree is exactly how they can differ silently.** The
+  discipline that stops a number being COPIED does not stop two computed numbers
+  from being DIFFERENT numbers.*
+  (2) **AND WHAT SAVES `--open` TODAY IS TWO ABSENT FILES, NOT A CHECK.** I drove
+  the module: `sealed_feeds()` yields **five**, and `exists` measures **09-01 False,
+  09-02 False, 09-03/04/05 True**. The generic *"sealed feed(s) absent"* refusal
+  (238) fires before `assert_pinned` (243), so **the by-name refusal REV 44 SB asked
+  for is unreachable on the CLI path**, and the usage string itself says *"--open
+  CONSUMES the five sealed FEEDS."* ***A safety that rests on a missing file is
+  spent the moment the file exists*** -- *and 09-01/02's feeds are precisely what a
+  recovery or re-seal attempt would create.*
+  (3) **THE BLAST RADIUS IS THE REPORTED G, NOT THE HEADLINE p** -- I drove
+  `floors()` three ways: **`floors(5,3)` -> 0.25, `floors(3,3)` -> 0.25,
+  `floors(5,5)` -> 0.0625**, and `fresh` excludes `ALREADY_OPENED_UNDER_THE_INTERIM`
+  -- from the DECLARATION even when `paths` is not. ***So a five-path call still
+  RESOLVES 0.25 while REPORTING `optimistic.G = 5` where v4 declares 3.*** *The
+  conservative max absorbs the error; the number saying how many days the claim
+  rests on does not.* **Which is why this would be easy to file as harmless by
+  looking only at the p.**
+  (4) **AND THE READER'S OWN BATTERY CANNOT REACH IT:** line 465 asserts
+  **`floors(5, 3)… == 0.25` -- the correct split as LITERALS**, never routed through
+  the CLI's argument. ***Rule 17 in a third shape: not a control that cannot FAIL,
+  not one that cannot RUN, but one that cannot REACH the call the defect lives
+  in.*** *The reviewer's general form, from its harvest: "no battery on either side
+  calls the other seat's function with the other seat's arguments."*
+  (5) **THE REVIEWER'S HARVEST CARRIED A HAZARD NO FILING HELD:** *a THREE-PATH call
+  to `be_race_reader.read()` PARSES and CONSUMES the race days; the five-path call
+  refuses harmlessly.* **The most dangerous thing that seat knew was in its CONTEXT,
+  not in any filing, and a reset at 80 % would have taken it** -- now runbook §6
+  (checked at `9af4785`), synthetic paths only, `--open` gated on GO by BE 59.
+  (6) **AND ITS COORDINATOR ROW NAMES AN ERROR THAT IS MINE TOO.** *"Register
+  summary lines are sometimes looser than the artifact they name"* -- first example
+  ***"the five feed files are now pinned" vs `all_five_present: false`, which is the
+  sentence I relayed and corrected at round 136.*** *The looseness enters wherever a
+  seat SUMMARISES another seat's artifact, which is most of what I do* -- **and it
+  is why this round I drove `floors()` instead of quoting the reviewer's G.**
+  (7) **THE RULING EXTENDS R-599(B) FROM A FIELD TO A SENTENCE:** the 09-03 receipt
+  is v12's code, so a REFUSED arm-day's reason TEXT carries the null's moments --
+  **nobody quotes a refusal REASON from it either; statuses by code only**, binding
+  DE's report, DA's pre-read and the coordinator. *Second time in two rounds a
+  landed artifact is left standing and the CONDUCT bound instead.* v13 checked
+  (`VERSION = 13`).
+  (8) **AND MY OWN GUARD FIRED ON MY OWN ENTRY BEFORE THE SENTENCE:** I wrote a
+  two-path `artifact:` for a claim spanning the reader AND the declaration, and the
+  ORPHAN check refused it -- *"CHECKED, but its artifact is not on disk."* **The
+  field is a PATH; a claim spanning two artifacts names one and states the other.**
+  *Twelfth time an instrument has caught me, and the first where the defect was the
+  SHAPE of a provenance record rather than its content.*
+  **FLAG WORDS: the race read NOT READ, v4 APPROVED, the reader FIX-PENDING (BE 59);
+  the 09-04 assembly RELEASED, inputs IN PROGRESS (BE 58 polling -- I measure the
+  heavy lock held by the smoke's pids 3049131/3049132), the 09-04 book NOT STARTED
+  (census: `be_daybook_20260903_btc.pkl` only); the smoke RUNNING (pid 3049132, 1355
+  s, RSS 755,848 KiB; systemd MemoryPeak 2,532,151,296 B); the reviewer RELOADED
+  (REV 49 not yet dispatched).**
+  **AT COMMIT TIME, 2026-09-06T08:48:25Z, THE TIP MOVED AGAIN AND I RECORD IT
+  UNSWEPT:** `67652e0` -- **DA 70 has LANDED (Q-DA-292): the independent book
+  verifier refuses the REAL 09-03 receipt on `seam.index`, everything else in that
+  receipt holding.** *It is not in this round's dispatch and I rule nothing on it;
+  it is here because R-600(E) says "DA 70 dispatched" and a state file that still
+  said only that would be TRUE-WHEN-READ -- the failure mode I flagged at round 143,
+  one round later, arriving through the same door.*
+  ONE ROUTED, NOT RULED: that MemoryPeak is **2.36 GiB or 2.53 GB** -- *the declared
+  2.5 GB straddles it depending on which unit the declaration means*, and the number
+  is DE's to state. MEM does not adjudicate it.
+  MEASURED BEFORE THIS SENTENCE: flags 802 -> 810, flag_provenance 347 -> 355,
+  tasks 19; **207 CHECKED**, 148 RELAYED, **455 UNMARKED -- unchanged for the
+  twentieth round running.** ORPHAN audit 0 findings, exit 0 (after the refusal in
+  (8)); window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
+```

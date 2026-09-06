@@ -63,6 +63,74 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T09:11:48Z (MEM ROUND 147 -- R-603 AND REV 49'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS AN ARTIFACT THAT WILL CARRY ITS OWN REFUTATION.
+  (1) **THE RECEIPT WILL CONTAIN THE PROOF THAT ITS OWN IDENTITY FIELD IS WRONG.** I
+  parsed both blobs: **`a7e28e6^` -- the bytes that RAN -- has `ECONOMIC_FIELDS` with
+  SEVEN entries and NO `sd_over_abs_mean`; `a7e28e6` -- the bytes the stamp will NAME
+  -- has EIGHT, with it.** ***So the artifact will carry `sealed_field_names` with 7
+  entries and `admissibility.sd_over_abs_mean` PRESENT, beside a
+  `producing_code_sha256` of `ba65c248…` that only v13 could have produced.*** **The
+  error and its disproof in one file, in NON-ECONOMIC fields, readable before 09-09
+  with nothing consumed** -- *a falsifiable prediction written BEFORE the artifact
+  exists, which is rule 6's shape applied to a defect instead of a result.*
+  (2) **AND AFTER A MID-RUN REWRITE THE TWO HALVES OF PROVENANCE CANNOT BOTH BE
+  TRUE.** Restoring v12's bytes makes the digest TRUE and
+  `producing_code_is_the_committed_bytes` FALSE -- **a REFUSAL at emit after 1.5 h**;
+  leaving v13 makes the digest FALSE and the guard TRUE. ***No on-disk state
+  satisfies both: the digest describes BYTES, the guard describes the INDEX, and the
+  run belongs to neither.*** **Which is why the repair is a LAUNCH-TIME CAPTURE plus
+  an emit-time refusal and not a choice between the routes** -- *a state that cannot
+  be reached by picking, only by recording earlier.* The census I could check
+  myself: **`producing_code_sha256` at :1271, :4268 and :4345, each a fresh
+  `read_bytes()` of `__file__`, and nothing capturing it at import.**
+  (3) **THE LIVE HAZARD IS CLOSED, AND I MEASURE ONE THING MORE PRECISELY.**
+  `~/ctaNew-wt-de`'s runner hashes **`ba65c248…`** -- the uncommitted edit reversed
+  (caught 09:06:07Z, reversed 09:09:48Z, before the emit) -- and **`~/ctaNew-wt-de2`
+  exists at `2ef2186`.** *One precision: `git status --short` in wt-de is not empty;
+  it carries `?? …declarations/de_multiday_gate1_params_v6.json`, untracked, present
+  in my round-146 reading too.* **The emit predicate reads the RUNNER's bytes, which
+  are restored, so this changes nothing about the emit** -- *but rule 22 asks that
+  further work live in the second worktree, and one artifact has not moved.* ROUTED.
+  (4) **AND MY OWN ROUND-146 RECORD WAS RIGHT IN MECHANISM AND UNDERSTATED THE
+  CONSEQUENCE.** I wrote that the flag *"flips … does not fail in a stable
+  direction."* ***What I did not price: in that state the emit does not record
+  something false -- it REFUSES, and the only sealed day is lost after 1.5 hours of
+  compute.*** *The same measurement, one minute apart, read as INSTABILITY by me and
+  as a LOSS by the coordinator; the difference is carrying what the field DOES
+  downstream.* **My own recurring shape: the headline looser than the artifact.**
+  (5) **THE RULING:** the run is **NOT touched and emits** -- restoring bytes or
+  killing loses the only sealed day -- and **DE supersedes the receipt IN BAND
+  (`.v2`, v1 untouched, the SEALED PAYLOAD untouched) with `producing_code_sha256 =
+  2089d74e…`, attested by THREE independent records named by path: DA's Q-DA-290
+  record, the reviewer's SS0 blob hash, and the receipt's own v12 fingerprints.**
+  ***The correction does not rest on anyone remembering what ran; it rests on three
+  artifacts that agree, one of them being the wrong receipt itself.***
+  (6) **RULE 22 IS IN FORCE, AND THE COORDINATOR NAMED ITS OWN MISS:** *"DE 85 was
+  MY dispatch, at 08:31Z, NINE MINUTES into DE 84's run -- 'LIGHT, while your smoke
+  runs (do not touch the running process…)'. I wrote the words and did not see that
+  landing the module IS touching the process's provenance."* ***The instruction was
+  correct and the model of "touching" was one level too narrow: a process is touched
+  through the FILES IT WILL READ, not only through its memory.*** **Second seat this
+  session to name its own miss in the register rather than have it named.**
+  **FLAG WORDS: the 09-03 smoke RUNNING -- I measure pid 3049132 at 2,983 s (~50
+  min), output artifact ABSENT; its receipt PROVENANCE-WILL-BE-WRONG-AND-SUPERSEDED
+  (v13's digest stamped, v12 ran); rule 22 IN FORCE; the seal-open bar
+  RULED-AS-PREDICATE (R-602), USER-PENDING for overrule.**
+  **AT COMMIT TIME, 2026-09-06T09:14:48Z, TWO LANDINGS AND I RECORD THEM UNSWEPT:**
+  ***(a) DE 86 (`f27298f`) LANDED THE DURABLE REPAIR*** -- the source digest captured
+  at IMPORT (`LAUNCH_SOURCE_SHA256`, `source_identity_at_launch()`, a refusal naming
+  the launch digest, a selftest pinning the emitted value to the launch value), plus
+  the bar-as-predicate and the flipped pin. **So (2)'s "three fresh reads, no launch
+  capture" is now HISTORY at its as-of, and the fix is exactly the one the ruling
+  named.** ***(b) `d82c54d`: DA 73 closed REV 49's five findings*** -- *"closing 2.4
+  took THREE TRIES, each one a defect this seat shipped"*, **a seat counting its own
+  failed attempts in the headline**. *Neither is in this round's dispatch; both are
+  here because the file is what a fresh seat reads first.*
+  MEASURED BEFORE THIS SENTENCE: flags 827 -> 835, flag_provenance 372 -> 380,
+  tasks 19; **225 CHECKED**, 155 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T09:04:15Z (MEM ROUND 146 -- R-602, Q-DA-293 AND Q-DA-294 SWEPT. STATE
   ONLY. AND A LIVE STOP-THE-LINE RECORDED, NOT RULED.
   (1) **THE RUNNING SMOKE WILL STAMP A DIGEST FOR CODE THAT DID NOT RUN -- I
@@ -220,82 +288,6 @@ updated: >-
   tasks 19; **213 CHECKED**, 150 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T08:44:30Z (MEM ROUND 144 -- R-600, REV 48, Q-DE-85 AND Q-DA-291 SWEPT.
-  STATE ONLY. THE FINDING IS RULE 10 OBEYED TWICE ON ONE ESTIMAND.
-  (1) **TWO SIDES COMPUTE G, AND NOTHING CHECKS THAT THEY AGREE.** I read both
-  artifacts rather than the entry. `be_race_reader.py:300`:
-  **`"permutation_floors": floors(len(paths), len(fresh))`** -- ***G FROM THE COUNT
-  OF PATHS THE CALL WAS HANDED.*** v4: **`population.READABLE` = the three days,
-  `permutation_floor.G = 3`, `computed_here_not_quoted: true`.** *Each side obeys
-  rule 10 -- compute, never quote -- and **rule 10 obeyed twice on one estimand with
-  no check that the two agree is exactly how they can differ silently.** The
-  discipline that stops a number being COPIED does not stop two computed numbers
-  from being DIFFERENT numbers.*
-  (2) **AND WHAT SAVES `--open` TODAY IS TWO ABSENT FILES, NOT A CHECK.** I drove
-  the module: `sealed_feeds()` yields **five**, and `exists` measures **09-01 False,
-  09-02 False, 09-03/04/05 True**. The generic *"sealed feed(s) absent"* refusal
-  (238) fires before `assert_pinned` (243), so **the by-name refusal REV 44 SB asked
-  for is unreachable on the CLI path**, and the usage string itself says *"--open
-  CONSUMES the five sealed FEEDS."* ***A safety that rests on a missing file is
-  spent the moment the file exists*** -- *and 09-01/02's feeds are precisely what a
-  recovery or re-seal attempt would create.*
-  (3) **THE BLAST RADIUS IS THE REPORTED G, NOT THE HEADLINE p** -- I drove
-  `floors()` three ways: **`floors(5,3)` -> 0.25, `floors(3,3)` -> 0.25,
-  `floors(5,5)` -> 0.0625**, and `fresh` excludes `ALREADY_OPENED_UNDER_THE_INTERIM`
-  -- from the DECLARATION even when `paths` is not. ***So a five-path call still
-  RESOLVES 0.25 while REPORTING `optimistic.G = 5` where v4 declares 3.*** *The
-  conservative max absorbs the error; the number saying how many days the claim
-  rests on does not.* **Which is why this would be easy to file as harmless by
-  looking only at the p.**
-  (4) **AND THE READER'S OWN BATTERY CANNOT REACH IT:** line 465 asserts
-  **`floors(5, 3)… == 0.25` -- the correct split as LITERALS**, never routed through
-  the CLI's argument. ***Rule 17 in a third shape: not a control that cannot FAIL,
-  not one that cannot RUN, but one that cannot REACH the call the defect lives
-  in.*** *The reviewer's general form, from its harvest: "no battery on either side
-  calls the other seat's function with the other seat's arguments."*
-  (5) **THE REVIEWER'S HARVEST CARRIED A HAZARD NO FILING HELD:** *a THREE-PATH call
-  to `be_race_reader.read()` PARSES and CONSUMES the race days; the five-path call
-  refuses harmlessly.* **The most dangerous thing that seat knew was in its CONTEXT,
-  not in any filing, and a reset at 80 % would have taken it** -- now runbook §6
-  (checked at `9af4785`), synthetic paths only, `--open` gated on GO by BE 59.
-  (6) **AND ITS COORDINATOR ROW NAMES AN ERROR THAT IS MINE TOO.** *"Register
-  summary lines are sometimes looser than the artifact they name"* -- first example
-  ***"the five feed files are now pinned" vs `all_five_present: false`, which is the
-  sentence I relayed and corrected at round 136.*** *The looseness enters wherever a
-  seat SUMMARISES another seat's artifact, which is most of what I do* -- **and it
-  is why this round I drove `floors()` instead of quoting the reviewer's G.**
-  (7) **THE RULING EXTENDS R-599(B) FROM A FIELD TO A SENTENCE:** the 09-03 receipt
-  is v12's code, so a REFUSED arm-day's reason TEXT carries the null's moments --
-  **nobody quotes a refusal REASON from it either; statuses by code only**, binding
-  DE's report, DA's pre-read and the coordinator. *Second time in two rounds a
-  landed artifact is left standing and the CONDUCT bound instead.* v13 checked
-  (`VERSION = 13`).
-  (8) **AND MY OWN GUARD FIRED ON MY OWN ENTRY BEFORE THE SENTENCE:** I wrote a
-  two-path `artifact:` for a claim spanning the reader AND the declaration, and the
-  ORPHAN check refused it -- *"CHECKED, but its artifact is not on disk."* **The
-  field is a PATH; a claim spanning two artifacts names one and states the other.**
-  *Twelfth time an instrument has caught me, and the first where the defect was the
-  SHAPE of a provenance record rather than its content.*
-  **FLAG WORDS: the race read NOT READ, v4 APPROVED, the reader FIX-PENDING (BE 59);
-  the 09-04 assembly RELEASED, inputs IN PROGRESS (BE 58 polling -- I measure the
-  heavy lock held by the smoke's pids 3049131/3049132), the 09-04 book NOT STARTED
-  (census: `be_daybook_20260903_btc.pkl` only); the smoke RUNNING (pid 3049132, 1355
-  s, RSS 755,848 KiB; systemd MemoryPeak 2,532,151,296 B); the reviewer RELOADED
-  (REV 49 not yet dispatched).**
-  **AT COMMIT TIME, 2026-09-06T08:48:25Z, THE TIP MOVED AGAIN AND I RECORD IT
-  UNSWEPT:** `67652e0` -- **DA 70 has LANDED (Q-DA-292): the independent book
-  verifier refuses the REAL 09-03 receipt on `seam.index`, everything else in that
-  receipt holding.** *It is not in this round's dispatch and I rule nothing on it;
-  it is here because R-600(E) says "DA 70 dispatched" and a state file that still
-  said only that would be TRUE-WHEN-READ -- the failure mode I flagged at round 143,
-  one round later, arriving through the same door.*
-  ONE ROUTED, NOT RULED: that MemoryPeak is **2.36 GiB or 2.53 GB** -- *the declared
-  2.5 GB straddles it depending on which unit the declaration means*, and the number
-  is DE's to state. MEM does not adjudicate it.
-  MEASURED BEFORE THIS SENTENCE: flags 802 -> 810, flag_provenance 347 -> 355,
-  tasks 19; **207 CHECKED**, 148 RELAYED, **455 UNMARKED -- unchanged for the
-  twentieth round running.** ORPHAN audit 0 findings, exit 0 (after the refusal in
-  (8)); window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2968,6 +2960,100 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_RECEIPT_WILL_CARRY_ITS_OWN_REFUTATION_IN_NON_ECONOMIC_FIELDS: THE-PROOF-AND-THE-ERROR-IN-ONE-ARTIFACT
+                             # CHECKED 2026-09-06T09:11:48Z at both blobs, and this is the round's
+                             # finding as I read it. **`a7e28e6^` -- the bytes that RAN -- has
+                             # `ECONOMIC_FIELDS` with **7** entries and **no** `sd_over_abs_mean`;
+                             # `a7e28e6` -- the bytes the stamp will NAME -- has **8**, with it.**
+                             # ***So when the receipt lands it will carry `sealed_field_names` with SEVEN
+                             # entries and `admissibility.sd_over_abs_mean` PRESENT, beside a
+                             # `producing_code_sha256` of `ba65c248…` that only v13 could have produced.***
+                             # **The artifact will contain, in NON-ECONOMIC fields, the proof that its own
+                             # identity field is wrong** -- *readable before 09-09, no seal opened, nothing
+                             # consumed.* **A falsifiable prediction written BEFORE the artifact exists
+                             # (REV 49), which is rule 6's shape applied to a defect rather than a result.**
+  THE_TWO_HALVES_OF_PROVENANCE_CANNOT_BOTH_BE_TRUE_AFTER_A_MID_RUN_REWRITE: WHY-A-POLICY-CHOICE-CANNOT-FIX-IT
+                             # CHECKED 2026-09-06T09:11:48Z at the emit sites, the pricing
+                             # relayed from R-603(A)/(B). **Restoring v12's bytes makes
+                             # `producing_code_sha256` TRUE and `producing_code_is_the_committed_bytes`
+                             # FALSE -- a REFUSAL at emit after 1.5 h. Leaving v13 in place makes the digest
+                             # FALSE and the guard TRUE.**
+                             # ***Once the file has been rewritten mid-run, NO on-disk state satisfies both
+                             # halves: the digest describes bytes, the guard describes the index, and the
+                             # run belongs to neither.*** *Which is exactly why the repair is a LAUNCH-TIME
+                             # CAPTURE and an emit-time refusal, not a choice between the two routes* --
+                             # **a state that cannot be reached by picking; only by recording earlier.**
+  THREE_EMIT_SITES_AND_NO_LAUNCH_TIME_CAPTURE: THE-CENSUS-I-COULD-CHECK
+                             # CHECKED 2026-09-06T09:11:48Z: `producing_code_sha256` appears at
+                             # **:1271, :4268 and :4345** of the runner -- *the three sites the reviewer's
+                             # AST census named, each a fresh `read_bytes()` of `__file__`*, **and nothing
+                             # on the day path captures the digest at import.** *The durable repair (R-603
+                             # (B)(iii)) is one capture at module import plus an emit-time refusal when the
+                             # on-disk digest differs, with a mid-run-rewrite falsifier.* **A count I could
+                             # verify in one grep is worth more here than the conclusion it supports: three
+                             # sites means three places a future edit must not miss.**
+                             # **CORRECTED AT COMMIT TIME, 2026-09-06T09:14:48Z: THE REPAIR HAS
+                             # LANDED.** `DE 86` (`f27298f`, now an ancestor of origin)
+                             # replaced the three fresh reads with a capture at IMPORT --
+                             # **`LAUNCH_SOURCE_SHA256`, `source_identity_at_launch()`,
+                             # `launch_time_utc`, a refusal "naming the launch digest",
+                             # and a selftest asserting the emitted value IS the launch
+                             # value.** *The three-site census above stands as HISTORY at
+                             # its as-of; the state it describes no longer exists.*
+                             # ***Third round running that the commit-time re-read has
+                             # found a fix landing under a flag*** -- **and the running
+                             # smoke is untouched by it: it holds v12's loaded bytes, and
+                             # a file it will re-read at emit is now a THIRD thing again.**
+  THE_REVERSAL_HOLDS_AND_ONE_UNTRACKED_FILE_REMAINS_IN_THE_RUNS_WORKTREE: MEASURED-PRECISELY-ROUTED-NOT-RULED
+                             # CHECKED 2026-09-06T09:11:48Z. **`~/ctaNew-wt-de`'s runner hashes
+                             # `ba65c248…` -- HEAD's blob, the uncommitted edit reversed** (R-603(C):
+                             # caught 09:06:07Z, reversed 09:09:48Z, before the emit). **`~/ctaNew-wt-de2`
+                             # exists at `2ef2186`.**
+                             # *One precision, measured: `git status --short` in wt-de is not empty -- it
+                             # carries `?? live/pm_research/declarations/de_multiday_gate1_params_v6.json`,
+                             # untracked, and it was there in my round-146 reading too.* ***The emit
+                             # predicate reads the RUNNER's bytes, which are restored, so this changes
+                             # nothing about the emit*** -- **but rule 22 asks that further work live in the
+                             # second worktree, and one artifact of DE 86's has not moved.** *ROUTED, NOT
+                             # RULED.*
+  MY_ROUND_146_RECORD_WAS_RIGHT_IN_MECHANISM_AND_UNDERSTATED_THE_CONSEQUENCE: THE-CORRECTION-IS-MINE
+                             # CHECKED 2026-09-06T09:11:48Z against R-603(C). I wrote that the
+                             # committed-bytes flag *"flips with it -- TRUE against a landing, FALSE against
+                             # an uncommitted edit ... the field does not even fail in a stable direction."*
+                             # **The mechanism was right. The CONSEQUENCE I did not price: in that state the
+                             # emit does not merely record something false -- it REFUSES, and the only
+                             # sealed day is lost after 1.5 hours of compute.**
+                             # ***I recorded a state as unstable where the coordinator, one minute earlier,
+                             # had recorded it as a LOSS.*** *The same measurement, two readings, and the
+                             # difference is whether you carry what the field DOES downstream.* **My own
+                             # recurring shape, named at round 128 by the reviewer for another seat: the
+                             # headline looser than the artifact.**
+  THE_RUN_EMITS_UNTOUCHED_AND_THE_RECEIPT_IS_SUPERSEDED_IN_BAND: THE-DIGEST-THAT-RAN-IS-HELD-BY-THREE-RECORDS
+                             # RELAYED from R-603(B), 2026-09-06T09:11:48Z. **(i) The run is NOT
+                             # touched and emits -- restoring bytes or killing loses the only sealed day.
+                             # (ii) DE supersedes the day receipt in band (`.v2`, v1 untouched, the SEALED
+                             # PAYLOAD untouched) with `producing_code_sha256 = 2089d74e…`, attested by
+                             # THREE independent records named by path: DA's Q-DA-290 record, the reviewer's
+                             # SS0 blob hash, and the receipt's own internal v12 fingerprints.**
+                             # ***The correction is not "we remember what ran" -- it is three artifacts that
+                             # agree, one of them being the wrong receipt itself.***
+  RULE_22_IS_IN_FORCE_AND_THE_COORDINATOR_NAMED_ITS_OWN_MISS: THE-DISPATCH-WAS-NINE-MINUTES-IN
+                             # RELAYED from R-603(A)/(B)(iv), 2026-09-06T09:11:48Z; rule 22's text
+                             # checked at `SEAT_PROTOCOL.md` last round. **"DE 85 was MY dispatch, at
+                             # 08:31Z, NINE MINUTES into DE 84's run -- 'LIGHT, while your smoke runs (do
+                             # not touch the running process…)'. I wrote the words and did not see that
+                             # landing the module IS touching the process's provenance."**
+                             # ***The instruction was correct and the mental model of "touching" was one
+                             # level too narrow*** -- *a process is touched through the FILES IT WILL READ,
+                             # not only through its memory.* **Second seat this session to name its own miss
+                             # in the register rather than have it named** (DA 71's `seam.commit`, this).
+  THE_SMOKE_AT_FIFTY_MINUTES_HAS_NOT_EMITTED: THE-WINDOW-IS-STILL-OPEN
+                             # CHECKED 2026-09-06T09:11:48Z: pid 3049132 at **2,983 s (~50 min)**,
+                             # output artifact **absent**. *The prediction in REV 49 is still unfalsified
+                             # because the artifact does not exist yet* -- **and everything ruled in R-603
+                             # (B) is arranged so that when it does, the receipt is wrong in a way that is
+                             # already documented, already attested, and already scheduled to be
+                             # superseded.**
   RULE_22_LANDED_AND_THE_WORKTREE_IT_GOVERNS_IS_DIRTY_RIGHT_NOW: MEASURED-AT-COMMIT-TIME-ROUTED-NOT-RULED
                              # CHECKED 2026-09-06T09:07:54Z at `SEAT_PROTOCOL.md` and at the
                              # worktree. **Rule 22 (R-603, from REV 49 SS0) landed at `2ef2186`: *"A heavy
@@ -17955,6 +18041,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 147, 2026-09-06T09:11:48Z ------------------------------
+  THE_RECEIPT_WILL_CARRY_ITS_OWN_REFUTATION_IN_NON_ECONOMIC_FIELDS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:11:48Z
+    said: >-
+      parsed ECONOMIC_FIELDS out of both blobs: a7e28e6^ (the bytes that ran) has 7
+      entries and no sd_over_abs_mean; a7e28e6 (the bytes the stamp will name) has 8,
+      with it. So the receipt will carry sealed_field_names with seven entries and
+      admissibility.sd_over_abs_mean present, beside a producing_code_sha256 of
+      ba65c248... that only v13 could have produced -- the artifact carrying, in
+      non-economic fields, the proof that its own identity field is wrong, readable
+      before 09-09 with nothing consumed.
+  THE_TWO_HALVES_OF_PROVENANCE_CANNOT_BOTH_BE_TRUE_AFTER_A_MID_RUN_REWRITE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:11:48Z
+    said: >-
+      restoring v12's bytes makes producing_code_sha256 true and
+      producing_code_is_the_committed_bytes false, refusing at emit after 1.5 h;
+      leaving v13 makes the digest false and the guard true. Once the file is
+      rewritten mid-run no on-disk state satisfies both halves -- the digest
+      describes bytes, the guard describes the index, and the run belongs to
+      neither -- which is why the repair is a launch-time capture plus an emit-time
+      refusal rather than a choice between routes. The pricing of the two routes is
+      relayed from R-603(A)/(B).
+  THREE_EMIT_SITES_AND_NO_LAUNCH_TIME_CAPTURE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:11:48Z
+    said: >-
+      producing_code_sha256 appears at :1271, :4268 and :4345, each a fresh
+      read_bytes() of __file__, matching the reviewer's AST census, with no
+      launch-time capture on the day path. Three sites means three places a future
+      edit must not miss.
+  THE_REVERSAL_HOLDS_AND_ONE_UNTRACKED_FILE_REMAINS_IN_THE_RUNS_WORKTREE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:11:48Z
+    said: >-
+      ~/ctaNew-wt-de's runner hashes ba65c248... (HEAD's blob), the uncommitted edit
+      reversed per R-603(C); ~/ctaNew-wt-de2 exists at 2ef2186. Measured precisely:
+      git status --short in wt-de is not empty, carrying an untracked
+      live/pm_research/declarations/de_multiday_gate1_params_v6.json, present in my
+      round-146 reading too. The emit predicate reads the runner's bytes, which are
+      restored, so this changes nothing about the emit; rule 22 asks that further
+      work live in the second worktree. Routed, not ruled.
+  MY_ROUND_146_RECORD_WAS_RIGHT_IN_MECHANISM_AND_UNDERSTATED_THE_CONSEQUENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T09:11:48Z
+    said: >-
+      round 146 recorded that the committed-bytes flag flips with the file and does
+      not fail in a stable direction. R-603(C) prices what I did not: in that state
+      the emit REFUSES and the only sealed day is lost after 1.5 h of compute. Same
+      measurement, two readings; the difference is carrying what the field does
+      downstream.
+  THE_RUN_EMITS_UNTOUCHED_AND_THE_RECEIPT_IS_SUPERSEDED_IN_BAND:
+    prov: RELAYED
+    from: R-603(B)
+    as_of: 2026-09-06T09:11:48Z
+  RULE_22_IS_IN_FORCE_AND_THE_COORDINATOR_NAMED_ITS_OWN_MISS:
+    prov: RELAYED
+    from: R-603(B)(iv)
+    as_of: 2026-09-06T09:11:48Z
+  THE_SMOKE_AT_FIFTY_MINUTES_HAS_NOT_EMITTED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T09:11:48Z
+    said: >-
+      pid 3049132 at 2,983 s (~50 min) and the output artifact
+      p003_de_gate1_day_run_20260903_SEALED__20260906T082155Z.json absent, so REV 49's
+      prediction is still unfalsified because the artifact does not exist yet.
   # --- MEM round 146, 2026-09-06T09:04:15Z ------------------------------
   RULE_22_LANDED_AND_THE_WORKTREE_IT_GOVERNS_IS_DIRTY_RIGHT_NOW:
     prov: CHECKED
