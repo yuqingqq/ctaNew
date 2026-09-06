@@ -1,6 +1,8 @@
 # Harmful-fill recovery plan v2 — control first, cascade before promotion
 
-**Status:** V2 TERMINALLY STOPPED AT 1/7 / GATE 1D FINITE ACTING CONTROL GREEN /
+**Status (2026-09-06, USER ruling R-547; header amended by the coordinator, the 09-05 status kept below as provenance):** V2 RESUMED — Gate 1's control is the REPLAY NULL; a ≥5-day run on named days decides the §7 stopping rule; the fee blocker is DISSOLVED (maker fee measured zero on-chain and published, R-541/R-537); design v1 declared and under review, design v2 in progress, NO DATA TOUCHED.
+
+**Superseded status (2026-09-05):** V2 TERMINALLY STOPPED AT 1/7 / GATE 1D FINITE ACTING CONTROL GREEN /
 GATE 1E LIFECYCLE LEDGER COMPLETE BUT GATE 1 REFUSED FOR UNAVAILABLE
 OWNED-ORDER PER-FILL MAKER FEES / GATE 1F INPUT AUDIT REFUSED—NO OWNED
 EXECUTION EXPORT / GATES 2–6 NOT STARTED / NOT FROZEN

@@ -11,9 +11,9 @@ user-directed v2 build at 2026-09-04T15:27:56Z, pipeline-status updated at
 2026-09-05T05:14:39Z, which reached its fixed refusal at
 2026-09-05T05:28:23Z; the continued Gate-1f input audit refused at
 2026-09-05T05:50:05Z, with bounded regression reconciliation completed at
-2026-09-05T09:54:58Z. **Current state: the lifecycle gross ledger is complete,
+2026-09-05T09:54:58Z. **Current state (2026-09-06T03:53Z, R-547..R-550): V2 RESUMED — the fee blocker is DISSOLVED (maker fee zero, measured on-chain and published; the ruled Gate-1e re-run is INVARIANT and IMMATERIAL), Gate 1's control is the REPLAY NULL by USER ruling, and a ≥5-day run on named days decides §7; design under review, no data touched. The sentence that follows is the superseded 09-05 state, kept as provenance:** the lifecycle gross ledger is complete,
 but Gate 1 refused because owned-order per-fill maker fees are unavailable;
-the v2 route is stopped at 1/7. No strategy-net or matched decision statistic
+the v2 route was stopped at 1/7. No strategy-net or matched decision statistic
 exists, no gross value is promoted as its substitute, and no broad survey
 result exists. Single writer remains the coordinator; the later
 user instruction is not yet a register entry.** This

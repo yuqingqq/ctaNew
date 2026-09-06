@@ -1,6 +1,8 @@
 # P-2026-003: Polymarket Crypto 5-min Markets
 
-> **Current state (updated 2026-09-05T09:54:58Z): GATE 1F INPUT AUDIT REFUSED—
+> **Current state (updated 2026-09-06T03:53Z, R-547..R-550):** V2 RESUMED under the USER's ruling R-547 — Gate 1's control is the replay null; a ≥5-day run on named days decides §7; the maker-fee blocker DISSOLVED (measured zero on-chain, published "makers are never charged"); the forward race has G = 5 with all five days sealed (09-01/09-02 opened earlier under the interim read); design under review, no data touched; the day set awaits one USER parameter (R-550(D)).
+>
+> **Superseded state (updated 2026-09-05T09:54:58Z): GATE 1F INPUT AUDIT REFUSED—
 > NO OWNED EXECUTION EXPORT; GATE 1 REFUSED FOR UNAVAILABLE OWNED MAKER FEES;
 > V2 TERMINALLY
 > STOPPED AT 1/7; GATE 0 ONLY FULLY CLEARED; BROAD/HEAVY RUNS OFF.**
