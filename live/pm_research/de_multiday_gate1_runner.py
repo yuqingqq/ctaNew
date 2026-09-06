@@ -47,7 +47,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 149
+EXPECTED_CHECKS = 152
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -65,7 +65,7 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 72
+DAY_PATH_CHECKS = 75
 
 
 class RunnerRefused(RuntimeError):
@@ -1333,6 +1333,14 @@ def fixture_run() -> dict:
 # instrumentation and asserts that no tape, index or fragment ARTIFACT was
 # opened, so the claim is a predicate rather than a promise.
 
+#: THE DECLARED PEAK IS A MARKER **INSIDE** THE STAGE TABLE, and
+#: `declared_peak_stage()` reads it. It was a DEFAULT ARGUMENT on
+#: `peak_stage_predicate`, which made the declaration (the stage's prose)
+#: and the predicate (the default) two spellings of one fact -- REV 43
+#: §4.4, still open at REV 45 §1.6. One string now, in one place, and a
+#: table with no marker or with two REFUSES rather than defaulting.
+DAY_STAGE_PEAK_MARKER = "[DECLARED PEAK]"
+
 #: The stages, and what each one HOLDS. Named so BE's assembly and DE's day
 #: run agree on the seam rather than each assuming the other's budget.
 DAY_STAGES = (
@@ -1340,7 +1348,8 @@ DAY_STAGES = (
                   "the pinned models and thetas, BE's cascade module. The "
                   "book is READ ONCE here as bytes for its digest and the "
                   "buffer is handed to S1, never read twice (BE's B-1)"),
-    ("S1_load", "reference + asm + rows. THE PEAK OF THE DAY PATH WHEN "
+    ("S1_load", "[DECLARED PEAK] reference + asm + rows. THE PEAK OF "
+                "THE DAY PATH WHEN "
                 "THE BOOK DOMINATES -- which is the real-day regime (BE "
                 "measured a day's reference at 2.008 GB) and is NOT true "
                 "on a small fixture: on the synthetic book, measured, the "
@@ -1417,6 +1426,25 @@ FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0
 #: The real day's ceiling is the cap itself and the response is R-174's:
 #: the DAY refuses. Never a raised cap, never fewer draws.
 REAL_DAY_PEAK_RSS_GB_CEILING = 8.0
+
+
+def declared_peak_stage() -> str:
+    """THE DECLARED PEAK, READ FROM THE STAGE TABLE -- never a default.
+
+    Exactly one stage must carry the marker. Zero means the declaration was
+    lost and the predicate would silently invent one; two means the table
+    disagrees with itself. Both REFUSE, because the 8 GiB ceiling rests on
+    this claim and a ceiling resting on a default is a ceiling resting on
+    nothing."""
+    marked = [k for k, v in DAY_STAGES if DAY_STAGE_PEAK_MARKER in v]
+    if len(marked) != 1:
+        raise RunnerRefused(
+            f"REFUSED: the stage table carries {len(marked)} stages marked "
+            f"{DAY_STAGE_PEAK_MARKER!r} ({marked}); exactly one must. The "
+            f"declared peak is read from the table and is NEVER defaulted "
+            f"-- a default argument made the declaration and the predicate "
+            f"two spellings of one fact (REV 43 S4.4).")
+    return marked[0]
 
 
 def _peak_rss_mb() -> float:
@@ -1554,24 +1582,54 @@ def _current_rss_mb() -> float:
     return pages * _os.sysconf("SC_PAGE_SIZE") / (1024.0 * 1024.0)
 
 
-def peak_stage_predicate(stages: dict, *, declared: str = "S1_load") -> dict:
-    """WHICH STAGE WAS THE PEAK -- computed from the falling instrument.
+def peak_stage_predicate(stages: dict, *, declared: str) -> dict:
+    """WHICH STAGE WAS THE PEAK -- the argmax over the highwater DELTAS.
 
-    `DAY_STAGES` declares S1_load "THIS IS THE PEAK of the day path", and
-    the 8 GiB real-day ceiling rests on that shape. It was prose beside a
-    highwater series; it is a predicate now."""
+    THE DELTA IS THE MISSING LINE (REV 43 S4.3, REV 45 S1.6). The two
+    instruments answer different questions and neither alone is the peak:
+
+      * the CURRENT-RSS series says what a stage was still HOLDING at its
+        boundary. A transient that a stage allocated and freed before the
+        mark is INVISIBLE to it;
+      * the HIGHWATER is non-decreasing, so its per-stage DELTA is the
+        growth attributable to that stage -- INCLUDING that transient,
+        because the highwater recorded it and never came down.
+
+    So the delta argmax is the peak stage, and the current series is
+    reported beside it as what was still resident. `declared` has NO
+    DEFAULT: it comes from `declared_peak_stage()`, which reads the stage
+    table, so the declaration and the predicate are one fact."""
+    hi = {k: v.get("peak_rss_mb_highwater") for k, v in stages.items()
+          if isinstance(v.get("peak_rss_mb_highwater"), float)}
     cur = {k: v.get("rss_mb_current") for k, v in stages.items()
            if isinstance(v.get("rss_mb_current"), float)}
-    if not cur:
+    order = [k for k, _ in DAY_STAGES if k in hi]
+    if not hi or not order:
         return {"computable": False,
-                "why": "no current-RSS samples were recorded"}
-    arg = max(cur, key=lambda k: cur[k])
-    hi = {k: v.get("peak_rss_mb_highwater") for k, v in stages.items()}
+                "why": "no highwater samples were recorded"}
+    base = stages.get("S_start", {}).get("peak_rss_mb_highwater")
+    deltas, prev = {}, (base if isinstance(base, float) else hi[order[0]])
+    for k in order:
+        deltas[k] = round(hi[k] - prev, 4)
+        prev = hi[k]
+    arg = max(deltas, key=lambda k: deltas[k])
+    arg_cur = max(cur, key=lambda k: cur[k]) if cur else None
     return {
         "computable": True,
         "declared_peak_stage": declared,
+        "declared_read_from": "DAY_STAGES marker "
+                              f"{DAY_STAGE_PEAK_MARKER!r}",
         "measured_peak_stage": arg,
         "declared_stage_is_the_measured_peak": arg == declared,
+        "highwater_delta_mb_by_stage": deltas,
+        "baseline_highwater_mb": prev if base is None else base,
+        "measured_peak_stage_by_current_rss": arg_cur,
+        "the_two_readings_agree": arg == arg_cur,
+        "why_the_DELTA_is_the_peak": (
+            "a transient a stage allocates and frees before its mark is "
+            "invisible to the current-RSS series and VISIBLE in the "
+            "highwater delta, because the highwater recorded it and never "
+            "came down. The delta is what attributes growth to a stage"),
         "current_rss_mb_by_stage": cur,
         "highwater_by_stage": hi,
         "highwater_is_non_decreasing_BY_CONSTRUCTION": True,
@@ -2121,6 +2179,9 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     t_start = time.time()
     stages: dict = {}
 
+    # THE BASELINE, so S0's delta is a measurement and not the whole
+    # process's history. Without it the first stage's delta is everything
+    # that ever ran, and the argmax is decided before the day starts.
     def _mark(name):
         stages[name] = {"peak_rss_mb_highwater": _peak_rss_mb(),
                         "rss_mb_current": _current_rss_mb(),
@@ -2131,6 +2192,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # with the smoke day from a synthetic book. Disclosed, but exactly the
     # collision the lock was built to forbid.
     day_lock = assert_fixture_day_lock(day, fixture, what="day run")
+    _mark("S_start")
     obs = wrapper_observed()
     if not fixture and not obs["heavy_run_lock_held"]:
         raise RunnerRefused(
@@ -2251,7 +2313,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
     r20 = assert_rule20(obs, wall_s=wall, peak_rss_mb=peak, day=day)
-    peak_pred = peak_stage_predicate(stages)
+    peak_pred = peak_stage_predicate(stages,
+                                     declared=declared_peak_stage())
     peak_shape = assert_peak_stage(peak_pred, fixture=fixture, day=day)
     budget = (peak_rss_mb_budget if peak_rss_mb_budget is not None
               else (FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture else
@@ -3395,11 +3458,14 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         ok(_open["memory_plan"]["peak_rss_mb"]
            < FIXTURE_DAY_PEAK_RSS_MB_BUDGET
            and _open["memory_plan"]["within_budget"] is True
-           and len(_open["memory_plan"]["observed"]) == len(DAY_STAGES),
+           and set(_open["memory_plan"]["observed"])
+           == {k for k, _ in DAY_STAGES} | {"S_start"},
            f"and the real fixture run sits at "
            f"{_open['memory_plan']['peak_rss_mb']:.0f} MB against the declared "
            f"{FIXTURE_DAY_PEAK_RSS_MB_BUDGET:.0f} MB, with a high-water "
-           f"recorded at each of the {len(DAY_STAGES)} stages")
+           f"recorded at each of the {len(DAY_STAGES)} stages PLUS the S_start "
+           f"baseline -- without which the first stage's delta is everything "
+           f"that ever ran and the argmax is decided before the day starts")
 
         # ---- reviewer §2.3: the instrument tests the LOCK, not an fd -------
         import tempfile as _tfl
@@ -3763,13 +3829,30 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
 
         # ---- DE 82 (2): the smoke, rehearsed -----------------------------
         _rh = rehearse_smoke("2026-09-03")
-        ok(_rh["book"]["exists"] is False
-           and "P2_book_exists" in _rh["blocking"]
-           and _rh["book"]["REFUSES_NOW_BY_NAME"]
-           and _rh["status"].startswith("NOT_READY"),
-           f"DE 82 (2): the rehearsal REFUSES NOW BY NAME on the book that "
-           f"does not exist -- blocking {_rh['blocking']} -- so GO is one "
-           f"verified command and nothing is typed at GO time")
+        # A RELATION, NOT A STATE. This asserted `book.exists is False`,
+        # which was true when written and went RED the moment BE landed the
+        # book mid-round -- the same defect as the check that pinned
+        # `G_is_PENDING` after the USER had answered. What must hold is the
+        # RELATION between the filesystem and the receipt, in both states.
+        _bp_live = Path(_rh["book"]["path"])
+        ok(_rh["book"]["exists"] is _bp_live.is_file()
+           and (("P2_book_exists" in _rh["blocking"])
+                is (not _bp_live.is_file()))
+           and ((_rh["book"]["REFUSES_NOW_BY_NAME"] is not None)
+                is (not _bp_live.is_file())),
+           f"DE 82 (2): the rehearsal's book report AGREES WITH THE "
+           f"FILESYSTEM in whichever state it is in -- exists="
+           f"{_rh['book']['exists']}, blocking={_rh['blocking']}. Asserted "
+           f"as a RELATION: the first version pinned `exists is False` and "
+           f"went red the moment BE landed the book mid-round")
+        _rh_absent = rehearse_smoke("2026-09-08")
+        ok(_rh_absent["book"]["exists"] is False
+           and "P2_book_exists" in _rh_absent["blocking"]
+           and _rh_absent["book"]["REFUSES_NOW_BY_NAME"]
+           and _rh_absent["status"].startswith("NOT_READY"),
+           "AND THE ABSENT BRANCH IS DRIVEN ON A DAY WHOSE BOOK CANNOT YET "
+           "EXIST (09-08, still in the future): it REFUSES NOW BY NAME, so "
+           "GO is one verified command and nothing is typed at GO time")
         ok(_rh["THE_ONE_COMMAND"].startswith(f"flock -n {HEAVY_RUN_LOCK}")
            and f"--slice={RESEARCH_SLICE}" in _rh["THE_ONE_COMMAND"]
            and "MemoryMax=8G" in _rh["THE_ONE_COMMAND"]
@@ -3779,11 +3862,17 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "dashed day DE names and the COMPACT-day book path BE writes -- "
            "the two conventions meeting in one string that was executed as "
            "a value rather than typed")
-        ok("P5_lock_free_now" in _rh["informational_and_false_now"]
-           and "P5_lock_free_now" not in _rh["blocking"],
-           "and the lock's state NOW is INFORMATIONAL, not blocking: the "
-           "wrapper takes it at GO. Counting it as blocking would inflate "
-           "the status and train a reader to ignore it")
+        _p5 = [x for x in _rh["preconditions_evaluated_now"]
+               if x["precondition"] == "P5_lock_free_now"][0]
+        ok(_p5["blocks_go"] is False
+           and "P5_lock_free_now" not in _rh["blocking"]
+           and (("P5_lock_free_now" in _rh["informational_and_false_now"])
+                is (not _p5["holds"])),
+           f"and the lock is INFORMATIONAL, not blocking, IN EITHER STATE "
+           f"(holds={_p5['holds']} right now): the wrapper takes it at GO. "
+           f"Asserted as a relation for the same reason as the book -- the "
+           f"first version pinned 'held', and BE 55 finishing mid-round "
+           f"turned it red")
         ok(len(_rh["what_this_rehearsal_found"]) == 3
            and any("be_daybook_receipt_" in x
                    for x in _rh["what_this_rehearsal_found"]),
@@ -3825,50 +3914,95 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         # ---- reviewer §4.3: the peak stage is a PREDICATE -------------------
         _ps = _open["memory_plan"]["peak_stage"]
         ok(_ps["computable"] is True
-           and set(_ps["current_rss_mb_by_stage"]) == {k for k, _ in DAY_STAGES}
-           and _ps["declared_peak_stage"] == "S1_load",
-           f"REVIEWER §4.3: the peak stage is COMPUTED over all "
-           f"{len(DAY_STAGES)} stages from a CURRENT-RSS series that can FALL "
-           f"-- measured peak {_ps['measured_peak_stage']}, declared "
-           f"{_ps['declared_peak_stage']}, agree: "
-           f"{_ps['declared_stage_is_the_measured_peak']}")
-        _hw = [_open["memory_plan"]["observed"][k]["peak_rss_mb_highwater"]
-               for k, _ in DAY_STAGES]
-        ok(all(b >= a for a, b in zip(_hw, _hw[1:])),
-           f"AND THE OLD INSTRUMENT'S DEFECT IS SHOWN RATHER THAN ASSERTED: "
-           f"the highwater series {[round(x, 1) for x in _hw]} is "
-           f"non-decreasing BY CONSTRUCTION, so it could never have located a "
-           f"peak anywhere but the last stage that allocated")
-        _shape = _open["memory_plan"]["peak_stage_assertion"]
-        ok(_shape["asserted"] is False
-           and _shape["agrees"] is False
-           and _ps["measured_peak_stage"] == "S4_null",
-           f"AND A CORRECTION TO MY OWN DESIGN v9, MEASURED: it declared "
-           f"S1_load 'THIS IS THE PEAK' flatly, and on the only book I can "
-           f"measure the peak is {_ps['measured_peak_stage']} -- the "
-           f"fixture's book is a few hundred KB and the draw loop's fixed "
-           f"cost is larger. The claim is CONDITIONAL on the book "
-           f"dominating, which is the real-day regime, and it is recorded "
-           f"rather than refused here")
-        _bad_pred = dict(_ps); _bad_pred["declared_stage_is_the_measured_peak"] = False
-        refuses(lambda: assert_peak_stage(_bad_pred, fixture=False,
-                                          day="2026-09-03"),
-                "AND ON A REAL DAY IT REFUSES: a measured peak that is not "
-                "where the plan says it is means the 8 GiB ceiling's basis "
-                "is wrong, so the DAY stops -- the cap is never raised "
-                "(R-174)", "the memory plan declares")
-        _ok_pred = dict(_ps); _ok_pred["declared_stage_is_the_measured_peak"] = True
-        ok(assert_peak_stage(_ok_pred, fixture=False,
-                             day="2026-09-03")["asserted"] is True,
-           "and a real day whose peak IS where the plan says it is admits, "
-           "marked asserted -- both directions, so the predicate is one "
-           "that can fail and one that can pass")
-        refuses(lambda: assert_peak_stage({"computable": False},
-                                          fixture=True, day="X"),
-                "and an UNCOMPUTABLE peak refuses in either mode -- a plan "
-                "whose central claim cannot be checked at all is worse "
-                "than one that disagrees", "not computable")
+           and set(_ps["highwater_delta_mb_by_stage"])
+           == {k for k, _ in DAY_STAGES}
+           and _ps["declared_peak_stage"] == declared_peak_stage()
+           and DAY_STAGE_PEAK_MARKER in _ps["declared_read_from"],
+           f"REV 45 S1.6 / REV 43 S4.3: the peak stage is the ARGMAX OVER "
+           f"THE HIGHWATER DELTAS over all {len(DAY_STAGES)} stages -- "
+           f"measured {_ps['measured_peak_stage']}, declared "
+           f"{_ps['declared_peak_stage']}, agree "
+           f"{_ps['declared_stage_is_the_measured_peak']} -- and the "
+           f"declaration is READ FROM THE STAGE TABLE, never a default")
+        ok(_ps["measured_peak_stage_by_current_rss"] is not None
+           and "transient" in _ps["why_the_DELTA_is_the_peak"],
+           f"AND BOTH READINGS ARE REPORTED because they answer different "
+           f"questions: the delta argmax is "
+           f"{_ps['measured_peak_stage']} (growth caused, transients "
+           f"included) and the current-RSS argmax is "
+           f"{_ps['measured_peak_stage_by_current_rss']} (still resident at "
+           f"the mark). They agree here: {_ps['the_two_readings_agree']}")
 
+        # ---- the three falsifiers REV 45 asks for, on synthetic series ---
+        def _series(hw):
+            out = {"S_start": {"peak_rss_mb_highwater": 100.0,
+                               "rss_mb_current": 100.0}}
+            for k, v in hw.items():
+                out[k] = {"peak_rss_mb_highwater": v,
+                          "rss_mb_current": 100.0}
+            return out
+        _names = [k for k, _ in DAY_STAGES]
+        # A TRANSIENT INSIDE S4: the highwater jumps and comes back down in
+        # the current series, so the CURRENT reading cannot see it at all.
+        _tr = _series(dict(zip(_names, [101.0, 102.0, 102.0, 102.0,
+                                        180.0, 180.0])))
+        _pt = peak_stage_predicate(_tr, declared="S1_load")
+        ok(_pt["measured_peak_stage"] == "S4_null"
+           and _pt["declared_stage_is_the_measured_peak"] is False
+           and _pt["measured_peak_stage_by_current_rss"] != "S4_null",
+           f"KNOWN-BAD, THE TRANSIENT: a stage that allocates 78 MB and "
+           f"FREES IT before its mark is INVISIBLE to the current-RSS "
+           f"series (which reads flat at 100 and argmaxes to "
+           f"{_pt['measured_peak_stage_by_current_rss']}) and VISIBLE in "
+           f"the highwater delta, which argmaxes to "
+           f"{_pt['measured_peak_stage']} and FLAGS the disagreement. That "
+           f"transient is exactly what REV 43 S4.3 said was invisible")
+        _ok_series = _series(dict(zip(_names, [180.0, 181.0, 181.0, 181.0,
+                                               182.0, 182.0])))
+        _po = peak_stage_predicate(_ok_series, declared="S0_verify")
+        ok(_po["measured_peak_stage"] == "S0_verify"
+           and _po["declared_stage_is_the_measured_peak"] is True
+           and assert_peak_stage(_po, fixture=False,
+                                 day="2026-09-03")["asserted"] is True,
+           "POSITIVE CONTROL, AND IT ADMITS: a series whose largest "
+           "highwater delta IS the declared stage agrees, and a REAL day "
+           "on it passes assert_peak_stage -- so the known-bad above fires "
+           "on the disagreement and not on the shape of the input")
+        refuses(lambda: assert_peak_stage(_pt, fixture=False,
+                                          day="2026-09-03"),
+                "and on a REAL day the transient's disagreement REFUSES: "
+                "the 8 GiB ceiling rests on the declared shape, and a "
+                "shape that is wrong is a ceiling that is not established",
+                "the memory plan declares")
+        _saved = globals()["DAY_STAGES"]
+        try:
+            globals()["DAY_STAGES"] = tuple(
+                (k, v.replace(DAY_STAGE_PEAK_MARKER, "")) for k, v in _saved)
+            try:
+                declared_peak_stage()
+                ok(False, "a stage table with NO declared peak was ADMITTED")
+            except RunnerRefused as _e:
+                ok("exactly one must" in str(_e),
+                   "KNOWN-BAD, A MISSING DECLARATION: a stage table with no "
+                   "marked peak REFUSES rather than defaulting. It WAS a "
+                   "default argument, which made the declaration and the "
+                   "predicate two spellings of one fact -- so the ceiling "
+                   "would have rested on a default nobody wrote down")
+            globals()["DAY_STAGES"] = tuple(
+                (k, DAY_STAGE_PEAK_MARKER + " " + v) for k, v in _saved)
+            try:
+                declared_peak_stage()
+                ok(False, "a table with TWO declared peaks was ADMITTED")
+            except RunnerRefused as _e:
+                ok("stages marked" in str(_e),
+                   "and a table that marks TWO peaks refuses as well -- a "
+                   "declaration that disagrees with itself is not a "
+                   "declaration")
+        finally:
+            globals()["DAY_STAGES"] = _saved
+        ok(declared_peak_stage() == "S1_load",
+           "and the table is RESTORED, so the mutation above cannot leak "
+           "into any later check")
 
         # ---- a real day is refused for the reasons it must be --------------
         refuses(lambda: run_day("2026-09-04", _made["book_path"],
