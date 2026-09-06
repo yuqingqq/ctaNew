@@ -222,6 +222,7 @@ Append-only. Entries are `### R-NNN — <UTC stamp> — coordinator — …`.
   `assert '### R-NNN' not in s; assert '\x60\x60\x60' not in entry; anchor=s.index('### R-<NNN-1>'); sec=s.find('\n## 6. Build-readiness'); nxt=s.find('\n### ', anchor+10); ins = sec if (nxt==-1 or sec<nxt) else nxt; s=s[:ins].rstrip('\n')+'\n\n'+entry+'\n'+s[ins:].lstrip('\n')`
 - `git pull -q --ff-only origin mm-research` **first**; commit by pathspec
   (`git add $R && git commit -q -m "…" -- $R`); push.
+- **BEFORE every register insertion**, `git status --short -- $R` must be EMPTY (R-661, MEM 187's landing note): the coordinator commits the register by pathspec, so a seat's uncommitted row in the shared tree lands INSIDE the coordinator's commit — rule 21's third landing form, the silent one; nothing is lost but attribution is wrong and a half-written row could be committed. A dirty register HOLDS the entry in the scratchpad until the seat's commit lands; never `git add` a file another seat has open.
 - **After every register commit**, check:
   - placeholders on the NEW entry only —
     `sed -n '/^### R-NNN/,/^## 6/p' $R | grep -c 'SSTAMP\|xZ\|TBD'` → 0
