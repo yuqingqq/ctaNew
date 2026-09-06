@@ -16630,3 +16630,53 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **675 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-SECOND round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-204 filed.)
 ```
+
+## Batch 202 — archived 2026-09-06T18:45:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 220 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:18:30Z (MEM ROUND 217 -- R-706 AND R-707 SWEPT, tip `adc1682`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE SIXTH TIME; THE TWO PERMITTED
+  FIELDS RELAYED, NOT VERIFIED BY ME.**
+  (1) ***da99book SUPPLIES THE LAST CELL, AND THE FIVE-FIELD TABLE IS NOW COMPLETE FROM THIS
+  SESSION'S OWN UNITS.*** **(1) `loaded / active / running`** -- a LIVE run: success and 0 are
+  **DEFAULTS**. **(2) `loaded / active / exited`** + success + 0 -- a **GENUINE SUCCESS**. **(3)
+  `not-found / inactive / dead`** + success + 0 -- **COLLECTED, VOID**. **(4) `loaded / failed /
+  failed` + rc 75** -- a **REFUSAL**. **(5) `loaded / failed / failed` + rc 1** -- a **GENUINE
+  FAILURE**. ***`Result` ALONE SAYS "success" FOR TWO OF THE FIVE AND "exit-code" FOR TWO MORE:
+  ONLY THE TRIPLE SEPARATES LIVE FROM COLLECTED, AND ONLY THE RC SEPARATES FAILURE FROM
+  REFUSAL.*** *Every cell measured on a real unit this session; none inferred.*
+  (2) **da99book IS A GENUINE FAILURE AND THE TRIPLE SAYS SO:** `loaded / failed / failed`,
+  `Result=exit-code`, **rc 1**, InvocationID `026c8d298ee94bd2…`, **MemoryPeak 2,596,864** (2.48
+  MiB), started 18:16:13Z. *The peak is the evidence for "nothing loaded": a run that had opened
+  the 09-03 book would be measured in GIGABYTES -- the three heavy runs I watched today peaked at
+  2.3-3.0 GB.* **A failure whose SIZE testifies to how far it got.**
+  (3) ***AND MY ROUND-216 "NO TRACE" FINDING IS EXPLAINED BY THE CLOCK.*** I searched units,
+  processes, artifacts and `/proc/locks` at **18:12:30Z**, found nothing, and named **three
+  possibilities my search could not separate**. **da99book started at 18:16:13Z -- three minutes
+  and forty-three seconds later. IT HAD NOT BEEN LAUNCHED.** *The bounded search was right, the
+  ambiguity was real, and what resolved it was a TIMESTAMP rather than a better search.*
+  (4) **THE TWO PERMITTED FIELDS, RELAYED, AND I STILL DID NOT OPEN THE RESULT.** R-707 releases
+  exactly two, as REV quoted them: **`day_signs = {20260903: -1, 20260904: 1, 20260905: -1}`** and
+  **`permutation_floors.neither_clears_0_05 = true`** -- the readable days **not consistent in
+  direction**, and the **G = 3 floor (0.25, m = 2) unable to clear Holm BY DESIGN** (R-529(A)).
+  ***THE RELEASE IS OF TWO FIELDS, NOT OF THE FILE***, so both are RELAYED from REV 78 and the
+  result stayed shut. **Nothing else is quotable and MEM quotes nothing else.**
+  (5) **SIXTH CENSUS, ALL FOUR UNCHANGED -- AND NO `.v2` OF THE READ ARTIFACT YET.** A filename
+  census shows only `be_race_read_result_v1.json`: the `.v2` R-707 rules YES under four
+  constraints has **not landed**. *Ruled is not landed -- the same distinction I drew for the
+  09-04 `.v2` at round 203, and it held there too.*
+  AT COMMIT TIME, UNSWEPT: **DA 99's own commit landed** (`81da66d`) naming the cause of the
+  failure I had just measured -- *"the pickle path fell into the JSON branch"*. ***SO THE rc 1 AND
+  THE 2.48 MiB PEAK NOW HAVE A NAMED MECHANISM FROM THEIR OWNER, AND THE TWO AGREE:*** a run that
+  took the JSON branch never opened the pickle, which is exactly what a **2.48 MiB** peak says
+  against the **2.3-3.0 GB** of every heavy run that did. **I measured the size and the owner
+  measured the branch; neither reading needed the other, and they meet.** *That is the second time
+  today a defect was legible in a byte count before it was legible in a diagnosis -- the first was
+  the journal sidecar at round 205.* **Noted in band; the round-217 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,396 -> 1,401; flag_provenance 941 -> 946;
+  tasks 19; **679 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-THIRD round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-205 filed.)
+```

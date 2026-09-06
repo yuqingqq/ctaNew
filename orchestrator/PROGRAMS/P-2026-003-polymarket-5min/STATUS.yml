@@ -63,6 +63,60 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:45:30Z (MEM ROUND 220 -- R-710 SWEPT, tip `51864fe`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***R-710 CALLS THE MECHANISM UNEXPLAINED, SO I BUILT THE SMALLEST UNIT THAT COULD TEST IT.***
+  A transient user unit allocating 300 MiB with `RemainAfterExit=yes` -- **no lock, no ledger
+  write, unique name, cleaned up.** **FOUR STAGES:** (1) live -- **property 319,537,152 == leaf
+  319,537,152**, current 319,180,800; (2) after the free -- **both still 319,537,152** while
+  current fell to **3,985,408**; (3) after the payload exits, unit `loaded / active / exited` --
+  ***`ControlGroup=` EMPTY, the leaf file GONE, and the property STILL 319,537,152***; (4) after
+  stop -- `[not set]`. ***SO SYSTEMD RETAINS THE LAST VALUE CORRECTLY, AND "THE PROPERTY AFTER EXIT
+  IS NOT A RUN'S PEAK" IS NOT A GENERAL PROPERTY OF SYSTEMD: ON A SINGLE-CGROUP UNIT IT IS EXACTLY
+  THE PEAK.***
+  (2) **SO THE DIVERGENCE NEEDS AN ASYMMETRY MY PROBE LACKED, AND I NAME THE LIKELY ONE.** One
+  process, one cgroup, agreement at every stage -- **so it cannot be staleness**; the two reads
+  must address **different cgroups**. *And cgroup v2 charges a descendant upward, so a CHILD would
+  still appear in the unit's own leaf.* ***THE ASYMMETRY THAT WOULD FIT IS A SIBLING: a payload
+  that re-launches its work into its own unit or scope elsewhere under the slice, where the
+  original unit's leaf never sees the charge*** -- which is also why an IN-PROCESS read, taken
+  where the memory actually is, sees 2.58 GB while systemd's unit-level read sees 847 MB.
+  **STATED AS A HYPOTHESIS I DID NOT TEST.** *What I established is the negative: the retention
+  path is sound.*
+  (3) **THE PEAK DOES NOT DECAY WHILE THE CGROUP LIVES** -- current fell **eightyfold** and the
+  peak did not move. *So a LOW property reading cannot be explained by the memory having been
+  released*, which removes the most natural innocent account of the 21.9 MB anomaly.
+  (4) ***AND THE CGROUP DIES BEFORE THE UNIT DOES.*** At stage 3 the unit reads `loaded / active /
+  exited` -- alive by every field I have tracked all session -- while **`ControlGroup=` is empty
+  and the leaf is gone.** ***THREE LIFETIMES, NOT TWO: the payload's, the CGROUP's, and the
+  unit's, ending in that order.*** **That is why an in-process read is the only one that can ever
+  see the leaf** -- by the time any outside reader, including me, sees `exited`, the file is
+  already gone. *It also explains why my round-219 "I cannot re-drive it" was right for a reason I
+  had not yet measured.*
+  (5) **DA 100's TWO ARTIFACTS MATCH AT THE DIGEST** -- the 09-05 light pre-read **28,858 B
+  `1183f39b0bbe473a`** and the guard falsifier **2,696 B `a45a884e3ae13b5d`**. *A falsifier that
+  admits two positive controls and refuses the 09-04 tape digest BY NAME is the rule-15 shape, and
+  it is a separate ARTIFACT rather than a paragraph.*
+  (6) **THE STRUCTURE RECORDS' `.v2`s EXIST FOR 09-04 AND 09-05 ONLY** -- 09-03 stands alone.
+  ***The same 2-of-3 shape as the sealed day-runs at round 215***, in a second, independent
+  artifact family, for the same reason: 09-03 was produced before the corrections and has not
+  needed one.
+  AT COMMIT TIME, UNSWEPT: ***REV 80 LANDED*** (`835c006`) and it rules exactly the question my
+  probe was built for: **"the leaf read while the payload LIVES is the run's peak, the post-exit
+  property is an OBSERVATION and not a READING."** ***MY FOUR-STAGE PROBE SUPPORTS THAT RULING FROM
+  A DIRECTION THE REVIEW DID NOT TAKE, AND SHARPENS ONE HALF OF IT:*** *on a single-cgroup unit
+  the post-exit property IS the peak -- retained exactly -- so **"an observation and not a
+  reading" is the right rule for the WRONG-CASE reason: the property is not unreliable in itself,
+  it is unreliable because you cannot tell FROM IT whether the memory was charged where it was
+  looking.*** **The ruling holds either way; the mechanism is the part still open, and my sibling
+  hypothesis stands untested beside it.** *The review also names ONE COLLISION in the exit map --
+  the collision class I measured across the 44 CLIs at rounds 207-213, now appearing in the map
+  built to end it -- and calibrates DA 100's precision predicate for the EIGHT rather than the
+  eleven, which is the version-scoped seal I drove at round 196 reaching a second instrument.*
+  **Noted in band; the round-220 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,413 -> 1,419; flag_provenance 958 -> 964;
+  tasks 19; **697 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SIXTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-208 filed.)
   2026-09-06T18:40:30Z (MEM ROUND 219 -- R-709 SWEPT, tip `4afa849`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) ***MY THIRTEEN READINGS AND DE's SIDECAR ARE ONE INSTRUMENT READ TWICE.*** R-709 measures
@@ -137,48 +191,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,401 -> 1,407; flag_provenance 946 -> 952;
   tasks 19; **685 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FOURTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-206 filed.)
-  2026-09-06T18:18:30Z (MEM ROUND 217 -- R-706 AND R-707 SWEPT, tip `adc1682`. STATE ONLY. MEM
-  ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE SIXTH TIME; THE TWO PERMITTED
-  FIELDS RELAYED, NOT VERIFIED BY ME.**
-  (1) ***da99book SUPPLIES THE LAST CELL, AND THE FIVE-FIELD TABLE IS NOW COMPLETE FROM THIS
-  SESSION'S OWN UNITS.*** **(1) `loaded / active / running`** -- a LIVE run: success and 0 are
-  **DEFAULTS**. **(2) `loaded / active / exited`** + success + 0 -- a **GENUINE SUCCESS**. **(3)
-  `not-found / inactive / dead`** + success + 0 -- **COLLECTED, VOID**. **(4) `loaded / failed /
-  failed` + rc 75** -- a **REFUSAL**. **(5) `loaded / failed / failed` + rc 1** -- a **GENUINE
-  FAILURE**. ***`Result` ALONE SAYS "success" FOR TWO OF THE FIVE AND "exit-code" FOR TWO MORE:
-  ONLY THE TRIPLE SEPARATES LIVE FROM COLLECTED, AND ONLY THE RC SEPARATES FAILURE FROM
-  REFUSAL.*** *Every cell measured on a real unit this session; none inferred.*
-  (2) **da99book IS A GENUINE FAILURE AND THE TRIPLE SAYS SO:** `loaded / failed / failed`,
-  `Result=exit-code`, **rc 1**, InvocationID `026c8d298ee94bd2…`, **MemoryPeak 2,596,864** (2.48
-  MiB), started 18:16:13Z. *The peak is the evidence for "nothing loaded": a run that had opened
-  the 09-03 book would be measured in GIGABYTES -- the three heavy runs I watched today peaked at
-  2.3-3.0 GB.* **A failure whose SIZE testifies to how far it got.**
-  (3) ***AND MY ROUND-216 "NO TRACE" FINDING IS EXPLAINED BY THE CLOCK.*** I searched units,
-  processes, artifacts and `/proc/locks` at **18:12:30Z**, found nothing, and named **three
-  possibilities my search could not separate**. **da99book started at 18:16:13Z -- three minutes
-  and forty-three seconds later. IT HAD NOT BEEN LAUNCHED.** *The bounded search was right, the
-  ambiguity was real, and what resolved it was a TIMESTAMP rather than a better search.*
-  (4) **THE TWO PERMITTED FIELDS, RELAYED, AND I STILL DID NOT OPEN THE RESULT.** R-707 releases
-  exactly two, as REV quoted them: **`day_signs = {20260903: -1, 20260904: 1, 20260905: -1}`** and
-  **`permutation_floors.neither_clears_0_05 = true`** -- the readable days **not consistent in
-  direction**, and the **G = 3 floor (0.25, m = 2) unable to clear Holm BY DESIGN** (R-529(A)).
-  ***THE RELEASE IS OF TWO FIELDS, NOT OF THE FILE***, so both are RELAYED from REV 78 and the
-  result stayed shut. **Nothing else is quotable and MEM quotes nothing else.**
-  (5) **SIXTH CENSUS, ALL FOUR UNCHANGED -- AND NO `.v2` OF THE READ ARTIFACT YET.** A filename
-  census shows only `be_race_read_result_v1.json`: the `.v2` R-707 rules YES under four
-  constraints has **not landed**. *Ruled is not landed -- the same distinction I drew for the
-  09-04 `.v2` at round 203, and it held there too.*
-  AT COMMIT TIME, UNSWEPT: **DA 99's own commit landed** (`81da66d`) naming the cause of the
-  failure I had just measured -- *"the pickle path fell into the JSON branch"*. ***SO THE rc 1 AND
-  THE 2.48 MiB PEAK NOW HAVE A NAMED MECHANISM FROM THEIR OWNER, AND THE TWO AGREE:*** a run that
-  took the JSON branch never opened the pickle, which is exactly what a **2.48 MiB** peak says
-  against the **2.3-3.0 GB** of every heavy run that did. **I measured the size and the owner
-  measured the branch; neither reading needed the other, and they meet.** *That is the second time
-  today a defect was legible in a byte count before it was legible in a diagnosis -- the first was
-  the journal sidecar at round 205.* **Noted in band; the round-217 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,396 -> 1,401; flag_provenance 941 -> 946;
-  tasks 19; **679 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-THIRD round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-205 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2392,6 +2404,80 @@ flags:
                              # **The rc 3 I watched become a verdict last round is
                              # UNMAPPED until DA declares it**, which is the ruling
                              # doing exactly what a declaration is for.
+  I_PROBED_THE_MECHANISM_MYSELF_AND_THE_RETENTION_PATH_IS_NOT_THE_DEFECT: PROPERTY-EQUALS-LEAF
+                             # R-710 calls the property-vs-leaf divergence
+                             # **"mechanism unexplained"**, so I built the smallest
+                             # unit that could test it: a transient user unit
+                             # allocating 300 MiB, `RemainAfterExit=yes`, **no lock,
+                             # no ledger write, unique name, cleaned up.** ***FOUR
+                             # STAGES, ALL MEASURED:*** **(1) while the payload lives
+                             # -- property 319,537,152 == leaf 319,537,152**, current
+                             # 319,180,800. **(2) after the memory is freed, before
+                             # exit -- property == leaf == 319,537,152 STILL**, while
+                             # current fell to 3,985,408. **(3) after the payload
+                             # exits, unit `loaded / active / exited` --
+                             # `ControlGroup=` EMPTY, the leaf file GONE, and the
+                             # property STILL 319,537,152.** **(4) after stop --
+                             # `[not set]`.** ***SO SYSTEMD RETAINS THE LAST VALUE
+                             # CORRECTLY AND "THE PROPERTY AFTER EXIT IS NOT A RUN'S
+                             # PEAK" IS NOT A GENERAL PROPERTY OF SYSTEMD: ON A
+                             # SINGLE-CGROUP UNIT IT IS EXACTLY THE PEAK.***
+  so_the_divergence_needs_an_asymmetry_MY_PROBE_LACKED_and_I_name_the_likely_one: A-SIBLING-NOT-A-DESCENDANT
+                             # My probe had **one process in one cgroup** and the two
+                             # readings agreed at every stage, so **the divergence
+                             # cannot be staleness** -- it must be that the two reads
+                             # address **DIFFERENT CGROUPS**. *And cgroup v2 charges a
+                             # descendant's memory to every ancestor, so a CHILD would
+                             # still show in the unit's own leaf.* ***THE ASYMMETRY
+                             # THAT WOULD FIT IS A SIBLING: a payload that re-launches
+                             # its work into its own unit or scope elsewhere under the
+                             # slice, where the original unit's leaf never sees the
+                             # charge -- which is also why BE's IN-PROCESS read (taken
+                             # where the memory actually is) sees 2.58 GB while
+                             # systemd's unit-level read sees 847 MB.*** **STATED AS A
+                             # HYPOTHESIS I DID NOT TEST**, and offered because the
+                             # register records the mechanism as unexplained; **what I
+                             # DID establish is the negative: the retention path is
+                             # sound.**
+  the_peak_does_NOT_decay_while_the_cgroup_lives: HIGH-WATER-CONFIRMED
+                             # Between stage 1 and stage 2 the allocation was freed:
+                             # **`memory.current` fell 319,180,800 -> 3,985,408, an 80x
+                             # drop, while `memory.peak` and the property both held at
+                             # 319,537,152.** *So the peak is a genuine high-water mark
+                             # within the cgroup's life* -- which matters because it
+                             # means a LOW property reading cannot be explained by the
+                             # memory having been released.
+  and_the_CGROUP_dies_BEFORE_the_UNIT_does: A-THIRD-LIFETIME
+                             # At stage 3 the unit reads **`loaded / active / exited`**
+                             # -- alive by every field I have been tracking -- while
+                             # **`ControlGroup=` is EMPTY and the leaf file is gone.**
+                             # ***SO THERE ARE THREE LIFETIMES, NOT TWO: the payload's,
+                             # the CGROUP's, and the unit's, ending in that order.***
+                             # **That is why an in-process read is the only one that
+                             # can ever see the leaf** -- by the time any outside
+                             # reader, including me, sees `exited`, the file it would
+                             # read no longer exists. *It also explains why my
+                             # round-219 "I cannot re-drive it" was right for a reason
+                             # I had not yet measured.*
+  DA_100s_two_artifacts_match_at_the_digest: 1183F39B-AND-A45A884E
+                             # `p003_da_gate1_pre_read_20260905__20260906T183508Z.json`
+                             # **28,858 B `1183f39b0bbe473a`** and
+                             # `p003_da_structure_guard_falsifier__20260906T183845Z.json`
+                             # **2,696 B `a45a884e3ae13b5d`** -- *both matching the
+                             # digests R-710 names.* **A falsifier that admits two
+                             # positive controls and refuses the 09-04 tape digest by
+                             # name is the rule-15 shape**, and it is a separate
+                             # artifact rather than a paragraph.
+  the_structure_records_v2s_exist_for_09_04_and_09_05_ONLY: THE-SAME-SHAPE-AS-THE-SEALED-DAYS
+                             # Filename census: `…_20260903_btc.json` alone, but
+                             # `…_20260904_btc.json` **and** `…_20260904_btc.v2.json`,
+                             # `…_20260905_btc.json` **and** `…_20260905_btc.v2.json`.
+                             # ***THE SAME SHAPE AS THE SEALED DAY-RUNS -- two days
+                             # superseded once, 09-03 standing as produced*** -- and
+                             # the same shape I recorded at round 215. *Two independent
+                             # artifact families landing on the same 2-of-3 pattern,
+                             # for the same reason: 09-03 was produced before the
+                             # corrections and has not needed one.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25174,6 +25260,53 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 220, 2026-09-06T18:45:00Z ---
+  I_PROBED_THE_MECHANISM_MYSELF_AND_THE_RETENTION_PATH_IS_NOT_THE_DEFECT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04b.jsonl
+    as_of: 2026-09-06T18:44:30Z
+    said: >-
+      launched a transient user unit of my own -- 300 MiB allocated and touched, RemainAfterExit,
+      no lock, no ledger write, unique name, reset-failed afterwards -- and read systemd's
+      MemoryPeak property beside the cgroup leaf's memory.peak at four stages: live, after the free,
+      after exit, after stop. The artifact named is BE's record carrying the systemd half of the
+      divergence this probe was built to explain.
+  so_the_divergence_needs_an_asymmetry_MY_PROBE_LACKED_and_I_name_the_likely_one:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04b.jsonl
+    as_of: 2026-09-06T18:44:30Z
+    said: >-
+      the probe's agreement at every stage rules out staleness; the sibling-cgroup account is a
+      hypothesis I did not test and is labelled as one. What is established is the negative.
+  the_peak_does_NOT_decay_while_the_cgroup_lives:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04.jsonl
+    as_of: 2026-09-06T18:44:00Z
+    said: >-
+      read memory.current beside memory.peak before and after the payload freed its allocation; the
+      current fell eightyfold and the peak did not move. The artifact named is the record whose 21.9
+      MB reading a released allocation cannot explain.
+  and_the_CGROUP_dies_BEFORE_the_UNIT_does:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04b.jsonl
+    as_of: 2026-09-06T18:44:30Z
+    said: >-
+      read ControlGroup and the leaf path at the moment the unit reported loaded / active / exited:
+      the property was still populated, the ControlGroup value was empty and the leaf file did not
+      exist.
+  DA_100s_two_artifacts_match_at_the_digest:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_structure_guard_falsifier__20260906T183845Z.json
+    as_of: 2026-09-06T18:43:36Z
+    said: >-
+      hashed both artifacts and compared against the digests R-710 names.
+  the_structure_records_v2s_exist_for_09_04_and_09_05_ONLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_structure_verification_20260903_btc.json
+    as_of: 2026-09-06T18:43:36Z
+    said: >-
+      listed every daybook_structure_verification record by filename; the named artifact is the one
+      day with no .v2 beside it.
   # --- MEM round 219, 2026-09-06T18:40:00Z ---
   MY_THIRTEEN_READINGS_AND_THE_SIDECAR_ARE_ONE_INSTRUMENT_READ_TWICE:
     prov: CHECKED
