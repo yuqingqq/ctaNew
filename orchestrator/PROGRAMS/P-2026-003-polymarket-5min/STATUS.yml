@@ -63,6 +63,60 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:39:15Z (MEM ROUND 118 -- R-560, R-561 AND THE REVIEWER'S E2.0
+  FILING SWEPT. STATE ONLY.
+  (1) THE PM_DATA_ROOT COLLISION IS PINNED TO file:line AND IT IS STILL IN TIME.
+  THREE BINDING SITES: pm_tape_density.py:99 (the environment read),
+  phase2_arms.py:41 AND build_state_tape_v2.py:206 -- BOTH BINDING
+  Path("/home/yuqing/ctaNew"), **THE REPO ROOT, ONE LEVEL ABOVE WHAT THE ENV VAR
+  MEANS**. ZERO de_* AND ZERO be_* FILES HONOUR IT YET, so NEITHER BATCH HAS
+  LANDED and this is filable before the change.
+  (2) AND THE SAME GREPS FOUND SOMETHING THAT MATTERS MORE FOR THE WORK: "the
+  same for BE's helpers" IS NOT THE SAME JOB. BE reaches the ledger as ROOT /
+  "data/pm_5min/derived", and three sampled be_* modules bind _ROOT to THE
+  MODULE'S OWN DIRECTORY. **SIX FILES HOLD AN ABSOLUTE LEDGER PATH NO ENV VAR
+  WILL REDIRECT** -- four be_*, two de_* -- e.g. be_forward_preflight.py:24. AN
+  ENV-VAR HELPER THAT LEAVES THOSE IN PLACE GIVES A PARTIALLY PORTABLE SEAT,
+  WHICH IS THE PARTIAL-SHELL FAILURE MODE MOVED FROM THE FILESYSTEM INTO THE
+  CODE. Limit stated: I grepped one literal over be_*/de_*, so SIX IS A FLOOR.
+  (3) THE RACE READ AND THE BUILDER ARE DECLARED AND OPEN AND BUILD NOTHING.
+  multiplicity READ FROM THE FREEZE not typed; 09-01/09-02 NAMED AS RE-READS;
+  what the read opens listed FROM seal(), THE WRITER. The builder refuses the
+  other five coins AT SELECTION, and THE DRAW POOL IS EMPTY ON THIS BOOK because
+  both heads score the same 29,813 -- MEASURED -- so set-equality is asserted PER
+  DAY and the day refuses otherwise. C-1's supersessions carry
+  every_other_byte_identical COMPUTED BY CANONICAL RE-SERIALISATION.
+  (4) MY 20-HOUR BLOCKER IS GONE: the R7 assertion is now RELATIVE TO THE RULED
+  SET WITH THE COUNT AN OUTPUT, SO THE 09-07T00:06Z FIRE IS BACK TO THREE STAKES,
+  NOT FOUR. And the fixture run is PROVEN data-free BY INSTRUMENTING open /
+  read_bytes / read_text -- 9 paths, none under data/ -- **WITH A NON-VACUITY
+  CHECK THAT THE PROBE OBSERVED THE PARAMS FILE**, which is exactly what my own
+  round-116 zero-length loop lacked.
+  (5) THE COIN SET IS RULED btc-ONLY FOR ALL SIX DAYS, and it is ruled, priced
+  and refused in code: R3 priced eth as A DIFFERENT FROZEN OBJECT taking m from 2
+  to 4 and the clearing G from 6 to 7 -- with G bound at 6, ADDING A COIN WOULD
+  HAVE MADE THE RUN UNABLE TO CLEAR.
+  (6) E2.0 IS APPROVED FOR THE ADA SMOKE with three v2 items, none blocking. The
+  one to keep is (2): SETTLED_ALIVE IS LABELLED AT THE **DEATH** BAR 1.8 WHILE
+  THE GATE IS 2.3, SO A CELL AT 2.0 WOULD READ ALIVE WHILE FAILING GATE 1 -- the
+  round-107 user_admission shape in another programme, FOUND BEFORE ANY CELL
+  EXISTED TO BE MISLABELLED.
+  (7) THE REVIEWER'S PUSH-BACK ON RULE 5 IS ACCEPTED: the hf_ws_v2 boundary IS
+  NOT AN ADMISSIBILITY FLOOR FOR A DESIGN READING EXCHANGE transact_time, and a
+  floor would have CUT G FROM 16 TO 11 FOR NOTHING. **RULE 5 BINDS SUB-SECOND
+  recv_ns FEATURES, NOT EXCHANGE-CLOCK READS.** Third time in eight rounds that
+  boundary has been reached for where it does not apply.
+  (8) BOTH WAITERS WERE KILLED AT ~04:37Z BY SOMETHING OTHER THAN THE
+  COORDINATOR, AND ARE NOT RE-ARMED -- because IF THAT WAS THE USER'S STOP,
+  RE-ARMING WOULD OVERRIDE IT. So the loop is user-prompted again, and the
+  ten-hour stall of R-541(A) becomes possible the moment prompting stops.
+  (9) A SHARED-TREE OBSERVATION I ACTED ON BY NOT ACTING: I found another seat's
+  artifact STAGED IN THE MAIN TREE'S INDEX mid-round
+  (de_section81_arms__20260904T133034Z.json, 113,804 B). I left it alone -- my
+  commits are by explicit pathspec -- and it landed one commit later at 4a806c0.
+  The R-557 prohibition seen from the other side: THE CORRECT HANDLING OF
+  ANOTHER SEAT'S IN-FLIGHT STATE IS TO REPORT IT AND TOUCH NOTHING.
+  PRIOR CHECKPOINT:
   2026-09-06T04:30:05Z (MEM ROUND 117 -- R-558, R-559 AND THE REVIEWER'S DA-57
   FILING SWEPT. STATE ONLY.
   (1) THE RUNNER IS **NOT YET APPROVED** FOR THE 09-03 SMOKE -- three changes,
@@ -2247,6 +2301,59 @@ flags:
                              # THAT A SEAT IMPLEMENTING R-559(C) BY GREPPING THE
                              # NAME FINDS TWO OF ITS THREE BINDING HITS ARE THE
                              # OTHER THING.
+                             # ---- PINNED TO file:line 2026-09-06T04:39:15Z, FOR
+                             # ROUTING BEFORE DE 74 AND BE 47 TOUCH THE HELPERS.
+                             # THE NAME HAS EXACTLY THREE BINDING SITES IN
+                             # live/, and I list all three:
+                             #   live/pm_research/pm_tape_density.py:99
+                             #     env = os.environ.get("PM_DATA_ROOT")
+                             #     <- THE ENVIRONMENT READ. The standing answer.
+                             #   live/pm_research/phase2_arms.py:41
+                             #     PM_DATA_ROOT = Path("/home/yuqing/ctaNew")
+                             #   live/pm_research/build_state_tape_v2.py:206
+                             #     PM_DATA_ROOT = Path("/home/yuqing/ctaNew")
+                             # BOTH CONSTANTS HOLD THE **REPO** ROOT, IDENTICAL,
+                             # ONE LEVEL ABOVE THE DATA ROOT THE ENV VAR MEANS.
+                             # So after the seats export
+                             # PM_DATA_ROOT=/home/yuqing/ctaNew/data, TWO MODULES
+                             # WILL CARRY A CONSTANT OF THAT NAME POINTING
+                             # SOMEWHERE ELSE, and a later reader reconciling
+                             # them is off by one level.
+                             # IN TIME, AND I CHECKED: zero de_* and zero be_*
+                             # files honour the variable as-of 2026-09-06T04:39:15Z,
+                             # so NEITHER BATCH HAS LANDED. This is filable
+                             # before the change, which is the only moment it is
+                             # cheap.
+                             # ---- AND A SECOND THING THE SAME GREPS FOUND,
+                             # WHICH MATTERS MORE FOR THE WORK ITSELF.
+                             # THE TWO SEATS' HELPERS ARE NOT THE SAME SHAPE, SO
+                             # "the same for BE's helpers" IS NOT THE SAME JOB.
+                             # BE reaches the ledger as DERIVED = ROOT /
+                             # "data/pm_5min/derived" (be_race_read_declaration
+                             # :39, be_receipt_c1_supersede:40,
+                             # be_cancel_axis_null:65, be_operating_point:41 via
+                             # REPO), while three sampled be_* modules bind
+                             # _ROOT = str(Path(__file__).resolve().parent) --
+                             # THE MODULE'S OWN DIRECTORY, not a data root at
+                             # all.
+                             # AND SIX FILES HOLD AN ABSOLUTE LEDGER PATH THAT NO
+                             # ENVIRONMENT VARIABLE WILL REDIRECT: FOUR be_* and
+                             # TWO de_* contain the literal
+                             # /home/yuqing/ctaNew/data -- e.g.
+                             # be_forward_preflight.py:24
+                             # MAIN_DERIVED = Path("/home/yuqing/ctaNew/data/
+                             # pm_5min/derived").
+                             # AN ENV-VAR HELPER THAT LEAVES THOSE IN PLACE GIVES
+                             # A **PARTIALLY** PORTABLE SEAT -- WHICH IS THE
+                             # PARTIAL-SHELL FAILURE MODE MOVED FROM THE
+                             # FILESYSTEM INTO THE CODE: most reads follow the
+                             # root, a few do not, nothing errors, and the answer
+                             # is quietly wrong.
+                             # LIMIT OF MY SURFACE, STATED: I grepped the LITERAL
+                             # "/home/yuqing/ctaNew/data" over be_*.py and
+                             # de_*.py under live/pm_research/. Other absolute
+                             # forms, string-built paths and non-be/de modules
+                             # are OUTSIDE what I counted, so SIX IS A FLOOR.
   the_shell_trap_WAS_ALREADY_SOLVED_IN_A_CODE_COMMENT: TEST-FOR-THE-TAPE-NOT-THE-DIRECTORY
                              # CHECKED 2026-09-06T04:30:05Z at
                              # live/pm_research/pm_tape_density.py:103-107, and
@@ -2447,6 +2554,33 @@ flags:
                              # that fire is the coordinator's call. Recorded so
                              # that if it goes wrong, nobody has to reconstruct
                              # that both stakes were known in advance.
+  THE_WAITERS_WERE_KILLED_AND_THE_LOOP_IS_USER_PROMPTED_AGAIN: NOT-RE-ARMED-BY-DECISION
+                             # RELAYED from R-561(C), and it reverses the
+                             # mechanism I recorded at round 113 as the remedy
+                             # for the structural stall.
+                             # BOTH BACKGROUND WAITERS -- the old seat monitor
+                             # b635omjf1 and the current bibogx2s4 -- WERE
+                             # REPORTED KILLED AT ~04:37Z **BY SOMETHING OTHER
+                             # THAN THE COORDINATOR**.
+                             # NOT RE-ARMED, AND THE REASONING IS THE RIGHT ONE:
+                             # **IF THAT WAS THE USER'S STOP, RE-ARMING WOULD
+                             # OVERRIDE IT.** An unexplained kill is treated as
+                             # possibly deliberate rather than as a fault to
+                             # repair -- which is the only safe reading when the
+                             # actor is unknown and one candidate actor is the
+                             # USER.
+                             # SO THE LOOP ADVANCES ONLY ON A PROMPT UNTIL THE
+                             # USER SAYS OTHERWISE. The between-turn stall I
+                             # recorded at round 109 as STRUCTURAL, and at round
+                             # 113 as SOLVED BY A MECHANISM, IS BACK IN FORCE BY
+                             # CHOICE RATHER THAN BY DEFECT. Both facts stand:
+                             # the mechanism worked while armed (three wakes,
+                             # each acted on within a minute), and it is off.
+                             # WORTH RECORDING BECAUSE OF WHAT IT COSTS IF
+                             # FORGOTTEN: with the waiters off, a seat finishing
+                             # a batch produces no wake, and the ten-hour stall
+                             # of R-541(A) becomes possible again the moment the
+                             # USER stops prompting.
   the_coordinator_wake_mechanism_WORKS: THREE-WAKES-THIS-HOUR-EACH-ACTED-ON
                              # RELAYED from R-552(C). The between-turn stall I
                              # recorded at round 109 as STRUCTURAL -- "the monitor
@@ -2789,6 +2923,68 @@ flags:
                              # DESCRIBES IT. The corrected check did both and
                              # returned 7 of 7 with a second, independent
                              # confirmation from `sha256sum -c`.
+  E2_0_IS_APPROVED_FOR_THE_ADA_SMOKE_WITH_THREE_v2_ITEMS: NONE-BLOCKING-THE-RUN
+                             # RELAYED from R-561(A) and the reviewer's filing
+                             # 46030b1. "The most carefully pre-registered
+                             # declaration I have reviewed in either programme."
+                             # WHAT THE REVIEWER VERIFIED RATHER THAN ACCEPTED:
+                             # the +1.0 bps void threshold PRE-REGISTERED at
+                             # EXPERIMENT_PLAN:316-319; the E1 reproduction
+                             # control pinning four numbers MATCHING
+                             # E1_RESULTS:22-23 VERBATIM and refusing on a miss
+                             # > 0.05 bps; and one falsifier that PLANTS THE
+                             # PHENOMENON UNDER TEST -- many small positives, few
+                             # large negatives, so eq > 0 while notional < 0.
+                             # THREE ITEMS FOR v2, NONE BLOCKING THE RUN, and all
+                             # three are about a quantity meaning what it says:
+                             # (1) delta_rs is declared on "the same sweep
+                             # events" BUT THE TWO MIDS HAVE DIFFERENT EXISTENCE
+                             # CONDITIONS -- the proxy needs two prints within
+                             # 10 s, the true mid none -- so compute ON THE
+                             # INTERSECTION with the excluded events AS A STATUS;
+                             # (2) SETTLED_ALIVE IS LABELLED AT 1.8 bps, THE
+                             # **DEATH** BAR, WHILE THE PLAN'S GATE IS 2.3 -- so
+                             # a cell at 2.0 WOULD READ ALIVE WHILE FAILING GATE
+                             # 1; label by the GATE, kill by the DEATH bar, BOTH
+                             # COMPUTED; (3) the settle is A POINT against a
+                             # threshold while AN INTERVAL IS DECLARED and G = 16
+                             # MAKES ONE CLAIMABLE -- the decision rule must use
+                             # it.
+                             # (2) IS THE ONE I WOULD KEEP: A LABEL DERIVED FROM
+                             # THE WRONG ONE OF TWO BARS READS AS THE OPPOSITE OF
+                             # THE VERDICT BESIDE IT -- the round-107
+                             # user_admission shape, in another programme, found
+                             # before any cell existed to be mislabelled.
+                             # The coordinator's first addendum SUMMARISED TWO
+                             # ITEMS IMPRECISELY and was corrected in a second.
+  rule_5_does_NOT_BIND_A_DESIGN_READING_EXCHANGE_TIME: THE-REVIEWER-PUSHED-BACK-AND-WAS-RIGHT
+                             # RELAYED from R-561(A), and it is the THIRD time in
+                             # eight rounds that CLAUDE.md rule 5's boundary has
+                             # been reached for where it does not apply -- after
+                             # R-547(B)'s drafting error and my own round-110
+                             # finding that the literal sits in nine P-003 files
+                             # under names like ERA_BOUNDARY_NS.
+                             # THE COORDINATOR'S DISPATCH PREMISE WAS THAT THE
+                             # hf_ws_v2 BOUNDARY (2026-08-24T13:48:54Z) SHOULD BE
+                             # AN ADMISSIBILITY FLOOR FOR E2.0. THE REVIEWER
+                             # PUSHED BACK AND THE PUSH-BACK IS ACCEPTED: **THE
+                             # DESIGN READS EXCHANGE transact_time, WHICH
+                             # POST-PARSE STAMPING DOES NOT TOUCH.** A floor
+                             # would have DISCARDED 08-20..08-24 AND CUT G FROM
+                             # 16 TO 11 FOR NOTHING.
+                             # CLAUDE.md RULE 5 BINDS SUB-SECOND recv_ns
+                             # **FEATURES**, NOT EXCHANGE-CLOCK READS. That
+                             # sentence is the general form and it is worth
+                             # carrying, because the rule's text is about DATA
+                             # and the question is always about WHICH CLOCK A
+                             # QUANTITY IS READ FROM.
+                             # AND THE DECLARATION HANDLES IT THE RIGHT WAY
+                             # RATHER THAN IGNORING IT: it STATES the boundary
+                             # with its exact ns, EXPLAINS why it does not bind,
+                             # AND PRE-DECLARES A POST-BOUNDARY RECOMPUTATION OF
+                             # EVERY GATE "SO IT CANNOT BECOME A RESCUE." A
+                             # robustness split declared before the result is the
+                             # difference between a caveat and an escape hatch.
   A_SECOND_PROGRAMME_IS_MOVING_P_2026_002_E2_0_DECLARED: ITS-OWN-STATUS-IS-DA-S-AND-IS-16-DAYS-STALE
                              # RELAYED from R-559(B). P-2026-002's E2.0 is
                              # DECLARED BEFORE ANY TAPE IS OPENED:
@@ -3365,6 +3561,97 @@ flags:
                              # NEITHER OPTION CHANGES THE DESIGN, and BE's
                              # book-building starts with 09-03 EITHER WAY -- so
                              # the work is not blocked on the ruling.
+  be46_THE_RACE_READ_AND_THE_BUILDER_ARE_DECLARED_AND_OPEN_NOTHING: BUILT-NOTHING-OPENED-NOTHING
+                             # RELAYED from R-560(A), verified by the
+                             # coordinator at the artifacts.
+                             # THE RACE READ (be_race_read_declaration_v1.json,
+                             # sha 27e2fa5d): the G = 5 DIRECTIONAL read of the
+                             # frozen candidate, with race_multiplicity_at_freeze
+                             # = 2 **READ FROM THE FREEZE, NOT TYPED**; the
+                             # permutation floor 0.0625 STATED UP FRONT; 09-01
+                             # AND 09-02 NAMED AS RE-READS; rule 11 in force
+                             # ("consumed the moment they are opened"); and what
+                             # the read opens listed FROM seal(), THE WRITER --
+                             # not from a description of it.
+                             # **FILING THE DECLARATION OPENS NOTHING.** The
+                             # opening stays the coordinator's or the USER's act,
+                             # AFTER the reviewer files on the declaration.
+                             # THE BUILDER (be_daybook_builder_declaration_v1.json,
+                             # sha c2d3c10f, "DECLARED -- NOTHING BUILT"):
+                             # btc only, with bnb/doge/hype/sol/xrp raising
+                             # ScoreStreamRefused AT SELECTION -- a refusal, not
+                             # an omission; 715,512 generations per coin-day;
+                             # 2.33 h/day both arms; overrun REFUSES the day.
+                             # AND THE DRAW POOL IS **EMPTY ON THIS BOOK**: both
+                             # heads score the same 29,813 generations --
+                             # MEASURED -- so the builder ASSERTS SET-EQUALITY
+                             # PER DAY AND REFUSES THE DAY OTHERWISE. That turns
+                             # the shared-pool choice I read at
+                             # be_cancel_axis_null.py:189 as an undeclared index
+                             # expression into a per-day predicate that can fail.
+                             # C-1 FIXED AT THE SCORER, both receipts superseded
+                             # in band, with every_other_byte_identical = true
+                             # **COMPUTED BY CANONICAL RE-SERIALISATION WITH THE
+                             # ADDED KEYS REMOVED** -- the right way to claim
+                             # "nothing else moved".
+                             # THE 1,309 IS A PROPERTY OF THE ASSEMBLY, NOT OF
+                             # EITHER MODEL: 31,122 - 29,813 on BE's own cache by
+                             # digest, IDENTICAL FOR BOTH PINNED HEADS. My
+                             # round-109 "one published population block is
+                             # wrong" stays withdrawn, and this is the
+                             # confirmation from BE's side that R-548(A)
+                             # anticipated.
+                             # AND BE CORRECTED ITSELF: its "no PASS line in
+                             # 900 s" WAS ITS OWN GREP PATTERN, not a silent
+                             # suite. A seat finding that its alarm was its own
+                             # regex is the fourth instance of that class in this
+                             # programme.
+  de73b_THE_20_HOUR_BLOCKER_IS_DEFUSED_AND_THE_FIXTURE_RUN_IS_PROVEN_DATA_FREE: BY-INSTRUMENTING-open
+                             # RELAYED from R-560(B); the coordinator's own runs
+                             # give design selftest 53 PASS and runner 42 PASS.
+                             # ALL THREE REVIEWER CHANGES CLOSED. The 20-hour
+                             # blocker is defused -- **the R7 assertion is now
+                             # RELATIVE TO THE RULED SET WITH THE COUNT AN
+                             # OUTPUT** -- so the thing I recorded last round as
+                             # breaking at 09-07T00:06Z no longer does, and that
+                             # fire is back to THREE stakes. The cascade digest
+                             # is BOUND TO THE DRAWS.
+                             # AND THE THIRD IS THE ONE WORTH COPYING: THE
+                             # FIXTURE RUN IS **PROVEN** DATA-FREE BY
+                             # INSTRUMENTING open / read_bytes / read_text DURING
+                             # A FULL RUN -- no_path_under_data_was_opened = true
+                             # over 9 opened paths (module source and the
+                             # committed params) -- **WITH A NON-VACUITY CHECK
+                             # THAT THE PROBE OBSERVED THE PARAMS FILE.**
+                             # A "no data touched" claim proved by WATCHING THE
+                             # SYSCALLS, with a positive control that the watcher
+                             # was awake, is the strongest form of that claim
+                             # this programme has produced -- and the non-vacuity
+                             # check is exactly what my own round-116 zero-length
+                             # loop lacked.
+                             # THE BATTERY'S OFFLINE MODE NAMES ITS SKIPPED
+                             # CHECKS and the count assertion carries run +
+                             # skipped (36 + 6 = 42) -- **DE's first skip list
+                             # UNDERCOUNTED BY ONE AND THE ASSERTION REFUSED.**
+                             # DE could not `git checkout --detach` in its
+                             # worktree (the symlink-vs-tracked-paths conflict)
+                             # and landed BY CHERRY-PICK from the main tree --
+                             # the interim rule's cost, paid.
+  coin_set_is_RULED_btc_only_for_all_six_days: CONSISTENT-WITH-THE-APPROVED-R3
+                             # RELAYED from R-560(A). The coordinator RULES the
+                             # coin set btc for all six days, consistent with
+                             # design R3 as approved.
+                             # WHAT MAKES IT A RULING RATHER THAN A DEFAULT: R3
+                             # priced it in MULTIPLICITY -- the pinned thetas are
+                             # btc thetas, eth siblings carry different digests,
+                             # so including eth would be A DIFFERENT FROZEN
+                             # OBJECT taking m from 2 to 4 and THE CLEARING G
+                             # FROM 6 TO 7. With G bound at 6, adding a coin
+                             # would have made the run unable to clear.
+                             # AND BE's builder enforces it AT SELECTION rather
+                             # than by convention: the other five coins raise
+                             # ScoreStreamRefused. Ruled, priced, and refused in
+                             # code -- three places agreeing.
   the_runner_is_NOT_YET_APPROVED_FOR_THE_SMOKE: THREE-CHANGES-ONE-ON-A-20-HOUR-CLOCK
                              # RELAYED from R-558(A). The reviewer calls it
                              # "the best-built instrument this programme has
@@ -11545,6 +11832,33 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:39:15Z, THE RUNNER'S THREE BLOCKERS ARE CLOSED -- the
+  R7 assertion is relative to the ruled set with the count an output, SO THE
+  09-07T00:06Z FIRE IS BACK TO THREE STAKES -- and the fixture run is PROVEN
+  data-free by instrumenting open/read_bytes/read_text, WITH A NON-VACUITY CHECK
+  THAT THE PROBE WAS AWAKE.
+  THE RACE READ AND THE DAY-BOOK BUILDER ARE DECLARED AND OPEN AND BUILD
+  NOTHING; the coin set is RULED btc-only for all six days, priced in
+  multiplicity (eth would take the clearing G to 7 against a bound 6) and
+  refused in code at selection. THE DRAW POOL IS EMPTY ON THIS BOOK because both
+  heads score the same 29,813 -- measured, asserted per day, the day refused
+  otherwise.
+  THE PM_DATA_ROOT COLLISION IS PINNED AND STILL IN TIME: three binding sites,
+  and the two constants hold THE REPO ROOT, one level above what the env var
+  means; zero de_* and zero be_* files honour it yet. AND SIX FILES HOLD AN
+  ABSOLUTE LEDGER PATH NO ENV VAR WILL REDIRECT -- an env-var helper that leaves
+  them is the partial-shell failure mode moved into the code.
+  E2.0 IS APPROVED FOR THE ADA SMOKE with three v2 items, the sharpest being
+  SETTLED_ALIVE labelled at the DEATH bar while the gate is higher. And the
+  reviewer's push-back is accepted: RULE 5 BINDS SUB-SECOND recv_ns FEATURES,
+  NOT EXCHANGE-CLOCK READS.
+  BOTH WAITERS WERE KILLED BY SOMETHING OTHER THAN THE COORDINATOR AND ARE NOT
+  RE-ARMED, because if that was the USER's stop, re-arming would override it --
+  so the loop is user-prompted again.
+  Gate 1 is 1 of 7; nothing opens or runs before the reviewer files on the
+  runner re-drive and the race-read declaration. Economics:
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:30:05Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:30:05Z, THE RUNNER IS NOT YET APPROVED FOR THE 09-03
   SMOKE AND ONE OF ITS THREE BLOCKERS IS ON A CLOCK: the design's R7 selftest
   hardcodes today's day counts and the runner calls it, SO BOTH BREAK AT
@@ -12530,6 +12844,43 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 118, 2026-09-06T04:39:15Z ------------------------------
+  PM_DATA_ROOT_NAMES_TWO_DIFFERENT_THINGS_IN_THIS_PROGRAMMES_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/phase2_arms.py
+    as_of: 2026-09-06T04:39:15Z
+    said: >-
+      the name has exactly three binding sites under live/:
+      pm_tape_density.py:99 `env = os.environ.get("PM_DATA_ROOT")`;
+      phase2_arms.py:41 and build_state_tape_v2.py:206, both
+      `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` -- the repo root, one level
+      above the data root the environment variable denotes. Zero de_* and zero
+      be_* files honour the variable as-of this timestamp, so neither DE 74 nor
+      BE 47 has landed. Separately, four be_* and two de_* files contain the
+      literal /home/yuqing/ctaNew/data (e.g. be_forward_preflight.py:24), and
+      three sampled be_* modules bind _ROOT to the module's own directory. That
+      count is a floor: I grepped one literal over be_*.py and de_*.py only.
+  be46_THE_RACE_READ_AND_THE_BUILDER_ARE_DECLARED_AND_OPEN_NOTHING:
+    prov: RELAYED
+    from: R-560(A), verified by the coordinator at BE's declaration artifacts
+  de73b_THE_20_HOUR_BLOCKER_IS_DEFUSED_AND_THE_FIXTURE_RUN_IS_PROVEN_DATA_FREE:
+    prov: RELAYED
+    from: R-560(B), with the coordinator's own selftest runs (design 53, runner 42)
+  coin_set_is_RULED_btc_only_for_all_six_days:
+    prov: RELAYED
+    from: R-560(A), a coordinator ruling consistent with the approved design R3
+  E2_0_IS_APPROVED_FOR_THE_ADA_SMOKE_WITH_THREE_v2_ITEMS:
+    prov: RELAYED
+    from: R-561(A) and the reviewer's filing 46030b1
+  rule_5_does_NOT_BIND_A_DESIGN_READING_EXCHANGE_TIME:
+    prov: RELAYED
+    from: >-
+      R-561(A) -- the reviewer's push-back on the coordinator's dispatch premise,
+      accepted. Related to my own round-110 finding that the same literal sits in
+      nine P-003 files under names like ERA_BOUNDARY_NS.
+  THE_WAITERS_WERE_KILLED_AND_THE_LOOP_IS_USER_PROMPTED_AGAIN:
+    prov: RELAYED
+    from: R-561(C)
   # --- MEM round 117, 2026-09-06T04:30:05Z ------------------------------
   the_data_root_answer_is_PM_DATA_ROOT_IN_THE_CODE_not_a_symlink:
     prov: CHECKED

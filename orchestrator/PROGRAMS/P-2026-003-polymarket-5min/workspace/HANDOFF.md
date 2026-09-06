@@ -1,5 +1,131 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:39:15Z — **The runner's three blockers are closed and the
+fixture run is PROVEN data-free. The `PM_DATA_ROOT` collision is pinned to
+file:line and is still in time.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 118
+
+### 1. The collision, pinned — route it before DE 74 and BE 47 change the helpers
+
+**Three binding sites of the name under `live/`, all of them:**
+
+| file:line | kind |
+|---|---|
+| `pm_tape_density.py:99` | `env = os.environ.get("PM_DATA_ROOT")` — **the environment read; the standing answer** |
+| `phase2_arms.py:41` | `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` — **const, REPO root** |
+| `build_state_tape_v2.py:206` | `PM_DATA_ROOT = Path("/home/yuqing/ctaNew")` — **const, REPO root** |
+
+**Both constants hold the repo root — one level above what the env var means.**
+After the seats export `PM_DATA_ROOT=…/ctaNew/data`, two modules carry a constant
+of that name pointing somewhere else.
+
+> **Still in time: zero `de_*` and zero `be_*` files honour the variable, so
+> neither batch has landed.** This is filable *before* the change, which is the
+> only moment it is cheap.
+
+### 2. And "the same for BE's helpers" is not the same job
+
+BE reaches the ledger as `ROOT / "data/pm_5min/derived"`, and three sampled `be_*`
+modules bind `_ROOT` to **the module's own directory** — not a data root at all.
+**Six files hold an absolute ledger path no env var will redirect** — four `be_*`,
+two `de_*`, e.g. `be_forward_preflight.py:24`.
+
+> **An env-var helper that leaves those in place gives a *partially* portable
+> seat — the partial-shell failure mode moved from the filesystem into the
+> code:** most reads follow the root, a few do not, nothing errors, and the answer
+> is quietly wrong.
+
+*Limit: I grepped one literal over `be_*.py`/`de_*.py` only. **Six is a floor.***
+
+### 3. My 20-hour blocker is gone, and the proof of "no data" is the best yet
+
+**The R7 assertion is now relative to the ruled set with the count an output**, so
+**the 09-07T00:06Z fire is back to THREE stakes, not four.**
+
+And the fixture run is **proven** data-free by **instrumenting `open` /
+`read_bytes` / `read_text` during a full run** — 9 paths, none under `data/` —
+**with a non-vacuity check that the probe observed the params file.**
+
+> *A "no data touched" claim proved by watching the syscalls, with a positive
+> control that the watcher was awake.* **That non-vacuity check is exactly what my
+> own round-116 zero-length loop lacked.**
+
+*(DE's first skip list undercounted by one and **the count assertion refused** —
+36 + 6 = 42.)*
+
+### 4. Declared, and opening nothing
+
+**The race read:** multiplicity **read from the freeze, not typed**; 09-01/09-02
+**named as re-reads**; what the read opens listed **from `seal()`, the writer**.
+**Filing the declaration opens nothing** — the opening stays the coordinator's or
+the USER's act, after the reviewer files.
+
+**The builder:** btc only, the other five raising `ScoreStreamRefused` **at
+selection** — a refusal, not an omission. **And the draw pool is EMPTY on this
+book** because both heads score the same 29,813 — **measured**, so set-equality is
+**asserted per day and the day refuses otherwise.** *That turns the shared-pool
+choice I read at `be_cancel_axis_null.py:189` as an undeclared index expression
+into a per-day predicate that can fail.*
+
+C-1's supersessions carry `every_other_byte_identical` **computed by canonical
+re-serialisation with the added keys removed** — the right way to claim nothing
+else moved. **The 1,309 is a property of the assembly**, identical for both heads;
+my round-109 inference stays withdrawn.
+
+### 5. The coin ruling is priced, not defaulted
+
+**btc for all six days** — because R3 priced eth as **a different frozen object**,
+taking m from 2 to 4 and **the clearing G from 6 to 7.** *With G bound at 6,
+adding a coin would have made the run unable to clear.* Ruled, priced, and
+refused in code — three places agreeing.
+
+### 6. E2.0 approved, and the item worth keeping
+
+Three v2 items, none blocking. **(2): `SETTLED_ALIVE` is labelled at 1.8 bps —
+the DEATH bar — while the plan's gate is 2.3, so a cell at 2.0 would read ALIVE
+while failing gate 1.** *The round-107 `user_admission` shape, in another
+programme, found **before any cell existed to be mislabelled.***
+
+**And the reviewer's push-back is accepted: rule 5 binds sub-second `recv_ns`
+FEATURES, not exchange-clock reads.** A floor would have **cut G from 16 to 11 for
+nothing.** *Third time in eight rounds that boundary has been reached for where it
+does not apply.* The declaration handles it properly — states the boundary,
+explains why it does not bind, and **pre-declares a post-boundary recomputation
+"so it cannot become a rescue."**
+
+### 7. The waiters are off, by decision
+
+Both were **killed at ~04:37Z by something other than the coordinator**, and are
+**not re-armed — because if that was the USER's stop, re-arming would override
+it.** *An unexplained kill treated as possibly deliberate rather than as a fault
+to repair.*
+
+> **The loop is user-prompted again**, and the ten-hour stall of R-541(A) becomes
+> possible the moment prompting stops.
+
+### 8. One shared-tree observation, acted on by not acting
+
+I found **another seat's artifact staged in the main tree's index** mid-round
+(113,804 B). **I left it alone** — my commits are by explicit pathspec — and it
+landed one commit later at `4a806c0`. *The R-557 prohibition from the other side:
+the correct handling of another seat's in-flight state is to report it and touch
+nothing.*
+
+### 9. Measured before the sentence
+
+**619 flags, 69 CHECKED, 95 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 164; tasks 19.** *(No renames this round, so no ORPHANs.)*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — **455 of 619 flags never
+audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:30:05Z — **The runner is NOT yet approved for the smoke, and
 one of its three blockers expires at 09-07T00:06Z.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
