@@ -4183,34 +4183,37 @@ REHEARSAL_PROTOCOL = "P003_DA_OPEN_BOOK_REHEARSAL_V1"
 
 
 def _declaration_head(family: str, decl_dir: Path | None = None) -> dict:
-    """The chain head of a declaration family, by the R-608 pair rule.
+    """The chain head of a declaration family.
+
+    DA 104: RESOLVED BY THE SHARED IMPLEMENTATION -- BE 77's
+    `declaration_chain.resolve_head`, imported and never re-derived. This
+    function had its own glob-and-pair rule, and so did two other DA
+    modules: three readers of one rule, each able to drift from it alone.
+    A FORK is REPORTED by the resolver (`orphan_branches`) and REFUSED
+    here, because a reader pinned to a version something else supersedes
+    satisfies the words of the guard without the property.
 
     `decl_dir` exists so a CONTROL can plant a declaration of its own and
-    exercise the checks that come after this gate. ***It weakens nothing
-    on the real path***: the default is the programme's own declarations
-    directory, and a fixture that points elsewhere is testing its own
-    declaration, which is what a fixture is for."""
-    import da_nonhead_census as _C                            # noqa: PLC0415
+    exercise the checks that come after this gate. It weakens nothing on
+    the real path: the default is the programme's own declarations
+    directory."""
+    import declaration_chain as _DC                           # noqa: PLC0415
     d = Path(decl_dir) if decl_dir else (HERE / "declarations")
-    chains = _C.declaration_chains(d)
-    blk = chains.get(family)
-    if not blk:
+    try:
+        r = _DC.resolve_head(d, family)
+    except _DC.ChainRefused as e:
+        raise VerifierRefused(f"REFUSED: {e}") from e
+    if r["orphan_branches"]:
         raise VerifierRefused(
-            f"REFUSED: DECLARATION_FAMILY_ABSENT -- no `{family}_v*.json` "
-            f"under {d}; the form this run must take cannot be assumed.")
-    if blk["n_heads"] != 1:
-        raise VerifierRefused(
-            f"REFUSED: {family.upper()}_DOES_NOT_RESOLVE_TO_ONE_HEAD -- "
-            f"heads {blk['heads']}. A reader pinned to a superseded "
-            f"version satisfies the words of the guard without the "
-            f"property.")
-    f = d / blk["heads"][0]
-    return {"family": family, "path": str(f), "name": f.name,
-            "sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
-            "n_members": blk["n_members"],
-            "resolved_by": ("the chain head of the family, pair-verified "
-                            "back to v1 -- never a filename literal"),
-            "obj": json.loads(f.read_text())}
+            f"REFUSED: {family.upper()}_DOES_NOT_RESOLVE_TO_ONE_HEAD -- the "
+            f"shared resolver names {r['name']} as the head and reports "
+            f"orphan branch(es) "
+            f"{[o['version'] for o in r['orphan_branches']]}.")
+    return {"family": family, "path": r["path"], "name": r["name"],
+            "sha256": r["sha256"], "n_members": r["n_versions"],
+            "resolved_by": ("declaration_chain.resolve_head (BE 77) -- "
+                            + r["head_rule"]),
+            "obj": r["doc"]}
 
 
 #: R-709 / REV 79 S2.2 and BE 74's correction. ***THE RUN MUST NAME
@@ -5774,6 +5777,50 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{_cap_ns['this_capture_holds_both_readings']}, the_two_disagree "
        f"{_cap_ns['the_two_disagree']}; no leaf read -> {_no_leaf}; "
        f"another head -> {_wrong_head}")
+
+    # -- DA 104: THE CHAIN IS RESOLVED AND WRITTEN BY THE SHARED CODE ---
+    import declaration_chain as _DC                           # noqa: PLC0415
+    _ct = Path(tempfile.mkdtemp(prefix="da104chain_"))
+    (_ct / "fam_v1.json").write_text(json.dumps({"v": 1}))
+    _h1 = _DC.resolve_head(_ct, "fam")
+    #: TWO WRITERS FROM ONE HEAD -- the shape that cost two seats their
+    #: exit-map blocks: each read v1 and each wrote v2, and the second
+    #: landing overwrote the first IN PLACE.
+    _DC.write_next_version(_ct, "fam", {"v": 2, "supersedes": _h1["pair"]},
+                           _h1)
+    try:
+        _DC.write_next_version(_ct, "fam",
+                               {"v": 2, "supersedes": _h1["pair"]}, _h1)
+        _second = "ADMITTED"
+    except Exception as _e:                                   # noqa: BLE001
+        _second = str(_e).split(":")[0].strip()
+    #: A FORK: a second version superseding v1 beside the chained v2.
+    (_ct / "fam_v9.json").write_text(json.dumps(
+        {"v": 9, "supersedes": _h1["pair"]}))
+    _hf = _DC.resolve_head(_ct, "fam")
+    try:
+        _declaration_head("fam", _ct)
+        _fork_here = "ADMITTED"
+    except VerifierRefused as _e:
+        _fork_here = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    ck("DA 104 -- ***THE CHAIN RESOLVES AND WRITES THROUGH THE SHARED "
+       "IMPLEMENTATION*** (`declaration_chain`, BE 77): this seat had "
+       "THREE of its own glob-and-pair resolvers, each able to drift from "
+       "the rule alone. Driven THROUGH THE IMPORT: a SECOND writer from "
+       "the same head is refused by name -- ***the shape that cost two "
+       "seats their exit-map blocks, each reading v1 and each writing "
+       "v2***; and on a FORKED family the resolver still RESOLVES (the "
+       "highest unsuperseded version) while REPORTING the orphan branch, "
+       "which this verifier then REFUSES, because reporting a fork and "
+       "ruling on it are different jobs",
+       _second in ("VERSION_PATH_EXISTS", "HEAD_MOVED")
+       and _hf["name"] == "fam_v9.json"
+       and [o["version"] for o in _hf["orphan_branches"]] == ["fam_v2.json"]
+       and _fork_here == "FAM_DOES_NOT_RESOLVE_TO_ONE_HEAD",
+       f"two writers from one head -> {_second}; the forked family "
+       f"resolves to {_hf['name']} with orphan "
+       f"{[o['version'] for o in _hf['orphan_branches']]}; this verifier "
+       f"-> {_fork_here}")
 
     # -- R-709 (RESTORED): THE EXIT MAP, AND 75 IS NEVER A PRODUCER'S ---
     #: ***THIS CELL WAS LANDED AT DA 101 AND I DELETED IT AT DA 102***, by

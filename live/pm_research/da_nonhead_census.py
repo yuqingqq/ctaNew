@@ -72,66 +72,75 @@ def _family(name: str) -> tuple:
     return (m.group(1), int(m.group(2))) if m else (name, None)
 
 
+#: DA 104. ***THE HEAD IS RESOLVED BY THE SHARED IMPLEMENTATION.*** This
+#: function grew its own glob-and-pair resolver, and so did two other DA
+#: modules -- three readers of one rule, each able to drift from it alone.
+#: BE 77's `declaration_chain.resolve_head` is now the ONLY code in this
+#: seat that decides which version is the head; what stays here is what
+#: this census ADDS: the per-family view, and the RULING that a family
+#: with an orphan branch cannot answer "which one should a pin name?".
+#: A fork is REPORTED by the shared resolver and REFUSED by this census --
+#: those are different jobs and they now live in different places.
 def declaration_chains(decl_dir: Path) -> dict:
     """Families, their heads, and the links that make them.
 
-    A head is a member NO OTHER MEMBER supersedes. The link is the R-608
-    PAIR: both halves must land on one present file, or it is not a link
-    and the family is reported as unlinked rather than chained."""
-    files = sorted(p for p in decl_dir.glob("*.json") if p.is_file())
-    present = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-               for p in files}
+    The head, the pairs and any orphan branches come from
+    `declaration_chain.resolve_head`; the refusal on a fork is this
+    census's own ruling on top of it."""
+    import declaration_chain as _DC                           # noqa: PLC0415
+    d = Path(decl_dir)
+    files = sorted(q for q in d.glob("*.json") if q.is_file())
     fams: dict = {}
-    for p in files:
-        fam, ver = _family(p.stem)
-        fams.setdefault(fam, []).append((ver, p))
+    for q in files:
+        fam, ver = _family(q.stem)
+        fams.setdefault(fam, []).append((ver, q))
     out = {}
     for fam, members in sorted(fams.items()):
         members.sort(key=lambda t: (t[0] is None, t[0]))
-        superseded, links, bad = set(), [], []
-        for _, p in members:
-            try:
-                obj = json.loads(p.read_text())
-            except (OSError, ValueError) as e:
-                bad.append({"file": p.name, "status": "UNREADABLE",
-                            "why": str(e)[:120]})
-                continue
-            blk = obj.get("supersedes")
-            if isinstance(blk, str):
-                blk = {"path": blk}
-            if not isinstance(blk, dict):
-                continue
-            path, sha = blk.get("path"), blk.get("sha256")
-            if not path or not sha:
-                bad.append({"file": p.name,
-                            "status": "SUPERSESSION_LINK_INCOMPLETE",
-                            "has": [k for k in ("path", "sha256")
-                                    if blk.get(k)]})
-                continue
-            target = Path(path).name
-            if target not in present:
-                bad.append({"file": p.name, "status": "TARGET_ABSENT",
-                            "target": target})
-                continue
-            if present[target] != sha:
-                bad.append({"file": p.name,
-                            "status": "TARGET_DIGEST_MISMATCH",
-                            "target": target})
-                continue
-            superseded.add(target)
-            links.append({"from": p.name, "to": target})
-        heads = [p.name for _, p in members if p.name not in superseded]
+        names = [q.name for _, q in members]
+        try:
+            r = _DC.resolve_head(d, fam)
+        except _DC.ChainRefused as e:
+            #: PRESENT-AND-UNFOLLOWABLE is not ABSENT: the shared resolver
+            #: refuses a corrupted link by name, and that refusal is the
+            #: family's status here rather than a head this census invents.
+            out[fam] = {
+                "members": names, "n_members": len(members),
+                "heads": [], "n_heads": 0, "links": [],
+                "unlinked_or_broken": [{"status": str(e).split(":")[0],
+                                        "detail": str(e)[:200]}],
+                "status": "CHAIN_REFUSED_BY_THE_SHARED_RESOLVER",
+                "resolved_by": "declaration_chain.resolve_head (BE 77)",
+                "why": ("the shared resolver refuses this family by name; "
+                        "a census that answered anyway would be inventing "
+                        "the chain the seat did not write")}
+            continue
+        orphans = [x["version"] for x in r["orphan_branches"]]
+        heads = orphans + [r["name"]]
+        links = [{"from": v, "to": Path(str(
+            (json.loads((d / v).read_text()).get("supersedes") or {})
+            .get("path") or "")).name}
+            for v in names
+            if isinstance((json.loads((d / v).read_text()) or {}).get(
+                "supersedes"), dict)]
         out[fam] = {
-            "members": [p.name for _, p in members],
-            "n_members": len(members),
+            "members": names, "n_members": len(members),
+            #: `heads` keeps this census's vocabulary -- the head plus any
+            #: ORPHAN BRANCH -- because its ruling is about how many
+            #: versions a pin could point at, not about which one the
+            #: resolver picks.
             "heads": heads, "n_heads": len(heads),
-            "links": links, "unlinked_or_broken": bad,
+            "resolved_head": r["name"], "head_rule": r["head_rule"],
+            "orphan_branches": r["orphan_branches"],
+            "forks_two_versions_superseding_one": r[
+                "forks_two_versions_superseding_one"],
+            "resolved_by": "declaration_chain.resolve_head (BE 77)",
+            "links": links, "unlinked_or_broken": [],
             "status": ("ONE_HEAD" if len(heads) == 1
-                       else "NO_HEAD" if not heads
                        else "MULTIPLE_HEADS_UNLINKED"),
-            "why": ("a family with more than one head has no answer to "
-                    "'which one should a pin name?' -- the versions exist "
-                    "and nothing links them"
+            "why": ("a family with an ORPHAN BRANCH has no answer to "
+                    "'which one should a pin name?' -- the shared resolver "
+                    "REPORTS the fork and this census REFUSES it"
                     if len(heads) != 1 else
                     "one head: every other member is superseded by a "
                     "PAIR-VERIFIED link"),
@@ -1348,14 +1357,22 @@ def selftest() -> tuple:
     half.write_text(json.dumps({"v": 2, "supersedes": {"path":
                                                        "y_declaration_v1.json"}}))
     ch3 = declaration_chains(d)
-    ck("AND A HALF-WRITTEN LINK IS NOT A LINK (R-608): a `supersedes` "
-       "carrying only a path leaves BOTH versions as heads and is reported "
-       "as SUPERSESSION_LINK_INCOMPLETE, never silently followed",
-       ch3["y_declaration"]["n_heads"] == 2
-       and any(b["status"] == "SUPERSESSION_LINK_INCOMPLETE"
+    ck("AND A HALF-WRITTEN LINK IS NOT A LINK (R-608) -- ***now by the "
+       "SHARED resolver's rule, which is STRICTER than the one this "
+       "census had.*** A `supersedes` carrying only a path used to leave "
+       "BOTH versions as heads here; `declaration_chain.resolve_head` "
+       "REFUSES THE WHOLE FAMILY by name (`DECLARATION_LINK_CORRUPTED`), "
+       "because every version is present and readable and it is the LINK "
+       "that is wrong -- so the repair is the link, not a head anyone "
+       "picks. The property this cell exists for is unchanged: ***a "
+       "half-written link is never silently followed***",
+       ch3["y_declaration"]["status"]
+       == "CHAIN_REFUSED_BY_THE_SHARED_RESOLVER"
+       and ch3["y_declaration"]["n_heads"] == 0
+       and any(b["status"] == "DECLARATION_LINK_CORRUPTED"
                for b in ch3["y_declaration"]["unlinked_or_broken"]),
-       f"y_declaration heads {sorted(ch3['y_declaration']['heads'])}, "
-       f"broken {[b['status'] for b in ch3['y_declaration']['unlinked_or_broken']]}")
+       f"y_declaration -> {ch3['y_declaration']['status']}, "
+       f"{[b['status'] for b in ch3['y_declaration']['unlinked_or_broken']]}")
 
     # -- REV 72 2.3: THE ALLOWLIST IS A DECLARATION LIKE ANY OTHER --------
     tmp2 = Path(tempfile.mkdtemp(prefix="da94_"))

@@ -886,33 +886,33 @@ def _derived_for_markers() -> Path:
 
 
 def race_declaration_head() -> dict:
-    """The chain head of BE's race-read declaration family, by the pair."""
-    import da_nonhead_census as _C                            # noqa: PLC0415
+    """The chain head of BE's race-read declaration family, by the pair.
+
+    DA 104: resolved by the SHARED implementation
+    (`declaration_chain.resolve_head`, BE 77) -- imported, never
+    re-derived. A FORK is REPORTED by it and REFUSED here."""
+    import declaration_chain as _DC                           # noqa: PLC0415
     d = Path(__file__).resolve().parent / "declarations"
-    blk = _C.declaration_chains(d).get(RACE_DECL_FAMILY)
-    if not blk:
+    try:
+        r = _DC.resolve_head(d, RACE_DECL_FAMILY)
+    except _DC.ChainRefused as e:
+        raise RaceVerifyRefused(f"REFUSED: {e}") from e
+    if r["orphan_branches"]:
         raise RaceVerifyRefused(
-            f"REFUSED: RACE_DECLARATION_FAMILY_ABSENT — no "
-            f"`{RACE_DECL_FAMILY}_v*.json` under {d}. The day set and G "
-            f"cannot be assumed.")
-    if blk["n_heads"] != 1:
-        raise RaceVerifyRefused(
-            f"REFUSED: RACE_DECLARATION_DOES_NOT_RESOLVE_TO_ONE_HEAD — "
-            f"heads {blk['heads']}. Which one a read was taken under has "
-            f"no answer, and picking the highest number would invent the "
-            f"link the seat did not write.")
-    f = d / blk["heads"][0]
-    obj = json.loads(f.read_text())
+            f"REFUSED: RACE_DECLARATION_DOES_NOT_RESOLVE_TO_ONE_HEAD — the "
+            f"shared resolver names {r['name']} and reports orphan "
+            f"branch(es) {[o['version'] for o in r['orphan_branches']]}. "
+            f"Which one a read was taken under has no answer.")
+    obj = r["doc"]
     pop = obj.get("population") or {}
-    return {"name": f.name, "path": str(f),
-            "sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
+    return {"name": r["name"], "path": r["path"], "sha256": r["sha256"],
             "G_declared": obj.get("G"),
             "READABLE": sorted(pop.get("READABLE") or []),
             "READ_BUT_UNRECOVERABLE": sorted(
                 pop.get("READ_BUT_UNRECOVERABLE") or []),
-            "n_members": blk["n_members"],
-            "resolved_by": ("the chain head of the family, pair-verified "
-                            "back to v1 -- never a filename literal")}
+            "n_members": r["n_versions"],
+            "resolved_by": ("declaration_chain.resolve_head (BE 77) -- "
+                            + r["head_rule"])}
 
 
 def opened_markers(marker_dir: Path, declared_days) -> dict:
