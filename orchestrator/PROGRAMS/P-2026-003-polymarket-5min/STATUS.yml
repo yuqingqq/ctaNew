@@ -63,6 +63,77 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:06:40Z (MEM ROUND 139 -- R-593, Q-DA-287 AND Q-DE-82 SWEPT. STATE
+  ONLY. FLAG WORDS UNCHANGED.
+  (1) **A KNOWN-BAD FAILED AND WAS RIGHT TO -- THE FALSIFIER WAS THE WRONG ONE.**
+  Moving a row the statistic **correctly ignores** (below theta, outside the matched
+  top-K) **by 1e-9, or by A MILLION CENTS, leaves the day at −250.0.** ***So the
+  falsifier was wrong, not the statistic:*** a known-bad that perturbs an input the
+  estimand is DEFINED to ignore tests nothing, and its failure is the instrument
+  reporting its own mis-specification. **AND THE DISPOSITION IS BETTER THAN A
+  REPLACEMENT** -- the falsifier now moves a row the candidate ACTS ON, and ***the
+  original case is KEPT as the control for what it shows.*** *Twice this session a
+  control has been RE-ROLED rather than discarded (08-29/30 was the first), and both
+  times the re-roling preserved evidence deletion would have lost.* **The magnitude
+  is the tell: 1e-9 and a million cents give the same answer, so the perturbation
+  was not small -- it was IRRELEVANT.**
+  (2) **TWO INDEPENDENT IMPLEMENTATIONS AGREE EXACTLY -- AND THE CHECK STATES ITS
+  OWN EPISTEMICS.** 13 fields `==` (13 checks, 0 failures **under my own run**), day
+  −250.0 both sides, **hand-known: btc 60 − 270 = −210, eth 15 − 55 = −40**, and the
+  assertion text ends *"equal, not within a tolerance"* and ***"agreement is only
+  evidence because neither imported the other's statistic."*** *A check that says
+  why its own passing means something is the answer to the class this programme
+  keeps finding -- green results whose significance nobody wrote down.* **A no-fill
+  row contributes 0.0 and is STILL AN ACTION; the pinned paths are NOT OPENED.**
+  (3) **AND MY GREP SAID THE OPPOSITE, BECAUSE THE MODULE IS CAREFUL.** R-593 says
+  "no import of" three BE modules; **I found 3, 3 and 4 mentions.** They are the
+  module's own docstring naming what it did NOT import -- *"Those were read as
+  DOCUMENTS"* -- **and the single real import sits INSIDE the comparison test**,
+  where BE's reader is loaded only to obtain `theirs` after `mine` is already
+  computed. ***A module careful enough to name what it did not import is
+  indistinguishable, to a grep, from one that imported it: the care produces the
+  hits.*** **Eighth suspect-the-probe instance, and the first where the false signal
+  was CAUSED BY the discipline it was checking.**
+  (4) **FORM (3) NOW RESTS ON TWO INDEPENDENT VERIFICATIONS.** DA's audit,
+  independent of REV 44: **zero of EIGHT value names across all four receipts**, no
+  aggregation, no latency, **the interim's output NONE** -- two raw matches, both
+  excluded with reasons, *one of them DA's own fixture from the same round.* **My
+  own check of the new fact: 09-02's canonical receipt IS A REFUSAL** (*"not closed
+  by calendar"*, `wall_seconds 0.0`) **and the SCORED run lives elsewhere** -- *a
+  reader resolving 09-02 by name gets the day that did not run.* **And a correction
+  inside DA's own audit: its "1 statistic field" was `rows.n_actions` -- A COUNT.**
+  *The distinction I drew at round 136 between a census and a claim, in another
+  form.*
+  (5) **THE REHEARSAL RESOLVED BE'S CONVENTIONS RATHER THAN ASSUMING THEM** -- the
+  receipt's NAME, **the COMPACT vs DASHED day**, the digest at `book.sha256`;
+  ***each would have refused a correct book AT GO with the receipt sitting beside
+  it.*** **And the resource block's own falsifier caught DE's first version
+  reporting the login shell's AMBIENT scope: a 15.5 GiB peak against an 8 MB run**
+  -- *three orders of magnitude, and it would have read as a plausible number on any
+  other day.* `THE_ONE_COMMAND` is a VALUE in the receipt; the lock is
+  INFORMATIONAL, held by BE 55, **the correct state.**
+  (6) **AND MY ROUND-137 AUDIT RAN AHEAD OF A CORRECTION FOR THE FIRST TIME.**
+  Q-DA-286's "G ≥ 14" for Gate-1 is corrected in band to **G = 6**; *I audited my
+  own file for exactly that conflation at round 137 and found it clean, before the
+  correction landed anywhere* -- **a currency check run because the slip was
+  AVAILABLE to me, not because I had made it.**
+  (7) **FLAG WORDS -- AND ONE CHANGED AT MY COMMIT-TIME RE-READ.** ***THE 09-03
+  BOOK IS ASSEMBLED.*** `be_daybook_20260903_btc.pkl`, 290,758,834 B, and the
+  builder receipt carries **`book.sha256: aad816d6…`** -- **the sha I named as the
+  condition at rounds 136, 137 and 138 and refused to call it assembled without.**
+  `peak_gb 5.317` of 8, **297,379 scored generations, both heads, SETS EQUAL, every
+  stage inside budget.** ***And the two preconditions the smoke was NOT_READY on
+  now both have their artifacts*** -- **I do NOT claim the smoke is READY: that
+  status is a computed field and re-evaluating the rehearsal is DE's.** *This is
+  the blocker that ran through fifteen of my rounds -- the fragment, the state
+  tape, the split, `TAPE_PATH` on two surfaces, the assembly budget -- and every
+  one was closed by a named owner rather than worked around.* **The race read stays
+  NOT READ (RULED form 3; reader APPROVED-PENDING-TWO-FIXES); the smoke stays
+  REHEARSED, NOT RUN.**
+  MEASURED BEFORE THIS SENTENCE: flags 765 -> 772, flag_provenance 310 -> 317,
+  tasks 19; 183 CHECKED, 133 RELAYED, **455 UNMARKED -- unchanged for the fifteenth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags
+  vs HEAD 0 without provenance.)
   2026-09-06T08:00:21Z (MEM ROUND 138 -- R-592 AND Q-DE-82 SWEPT. STATE ONLY. A
   RULING'S OWN FALSIFIER FIRED ONE ROUND AFTER IT WAS WRITTEN.
   (1) **R-590(C) IS VOID AS POSED, AND I DROVE THE EVIDENCE.** It made the
@@ -203,84 +274,6 @@ updated: >-
   tasks 19; 173 CHECKED, 130 RELAYED, **455 UNMARKED -- unchanged for the
   thirteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T07:41:40Z (MEM ROUND 136 -- R-589, R-590, REV 43 AND Q-DA-285 SWEPT.
-  STATE ONLY. THE ROUND'S CORRECTION IS AGAINST MY OWN LAST ROUND.
-  (1) **ONLY THREE OF THE FIVE FEED FILES EXIST -- AND I RELAYED THE PROSE, NOT THE
-  PIN FILE.** R-589(B): "the five … pinned". R-590(A): **"only THREE … 09-01 and
-  09-02 never had one."** **My own two checks: the pin file records
-  `all_five_present: False` with `exists: False` for both days, and a filename
-  census across /home/yuqing returns EXACTLY THREE.** ***My round-135 flag said
-  "the five feed files are now pinned" -- taken from the register's sentence, when
-  the pin file it names already said otherwise.*** *The coordinator states it
-  exactly: "the prose overstated the artifact; the artifact was right."* **Second
-  relay instance in seven rounds, and worse than round 129's: the artifact here was
-  a 4 KB declaration whose first field answers the question.**
-  (2) **AND THE REASON IS MECHANICAL, WHICH I CHECKED AT THE LOG.** `git log -S
-  FEED_FIELDS` puts the emitter at **`5565e39`, 09-03 06:34:05Z**; the 09-01 run
-  directory is **09-02 14:37:31Z** and the 09-02 directory **09-03 04:30:25Z** --
-  ***both before the emitter existed.*** **So "the interim read computed
-  MATCHED_VOLUME on the FEED" cannot be literally true of 09-01/02.** *A capability
-  cannot have been used before it was written, and a commit date settles it in one
-  command -- the command I did not run last round.*
-  (3) **THE POPULATION IS RULED-CONDITIONAL, NOT RULED.** Five NAMED days --
-  09-01/02 from the interim's own receipts, 09-03/04/05 from the feed at the pinned
-  digests -- **no re-seal, DIRECTIONAL, no interval** -- ***subject to REV 44
-  establishing what the two interim receipts carry, and VOID if they carry no
-  incumbent increment.*** **A ruling that names its own falsifier before the
-  evidence is in.** *Two days read one way and three another is a heterogeneous
-  population, and the declaration says so rather than smoothing it.*
-  (4) **THE REVIEWER'S OWN PROPOSED FIX FAILS TOO, AND DA DROVE IT.** Fourth level
-  of the ordering falsifier: declared -> cost half false -> quantity half false ->
-  **the reviewer's restatement false as well** (queue 100, order 10, one trade of
-  110, depth 1000 -> RiskAverse fills 10 while **E[ProbQueue] = 9.9863**, *in the
-  marginal regime with NO defect present*). ***So the expectation is true EXACTLY
-  on the testable set and the `front = 0` predicate is doing all the work*** --
-  declared as a regime with its hand derivation, and **the reviewer's 993/2000 =
-  0.4965 reproduces exactly in DA's code.** *Rule 1 says no seat's claim is
-  accepted from a report; a proposed FIX is a claim.*
-  (5) **THE STALENESS BAR NAMES THE NUMBER IT IS NOT** -- 1,000 ms from rule 5's
-  own "≥ 1 s bars only" line, **and the declaration names ICP's measured 517 ms as
-  the number it did NOT use.** ***The cleanest anti-tuning device this programme
-  has produced:*** a bar from a standing rule is defensible, a bar from a
-  measurement is suspect, and naming the measured value you rejected lets a reader
-  verify the distinction instead of trusting it. **Same move as last round's ruling
-  chosen "because it is the one with a RULE cited" -- twice in two rounds, two
-  seats.**
-  (6) **AND v7 STATES THE MISREADING IT INVITES:** under the USER's BTC ruling,
-  **"BTC is the most active symbol in the set, so the placement-quality problem is
-  at its WEAKEST there."** *A declaration naming the flattering direction of its own
-  scope restriction, before anyone can accuse it.* With: cap **6.0 GiB = 75% of the
-  wrapper's 8 GiB because a cgroup kill is SILENT**, streaming parity as a CONTROL,
-  and an off-grid target REFUSING because *"silence there is a wrong EXCLUSION."*
-  (7) **MY ROUND-130 COUNT WAS INDEPENDENTLY REPRODUCED, AND THE THING I COULD ONLY
-  BOUND IS NOW MEASURED.** I computed 11 post-boundary admissible days from the
-  census; **DA derives the same 11 as 12 complete days less 08-26's reboot** --
-  *two routes, one number, neither from the other.* And my note that a DATE-based
-  selection "admits forty-six seconds of legacy rows" is now quantified row-wise:
-  **08-24 is 56.0459% legacy-stamped on ADA, 2,337,473 of 4,170,641 rows.**
-  ***Forty-six seconds of wall clock is more than half the day's rows, because the
-  rows are not uniform in time.*** **And the 08-29/30 withdrawal I swept as a
-  RULING is now pinned BY A CHECK** -- it cannot creep back into the positive list.
-  (8) **THE THREE TESTS, DRIVEN BY ME. The 09-03 BOOK is RUNNING and NOT
-  ASSEMBLED** (`be55book.scope`, 765 s, 3.93 GB, `heavy=True locked=True`) --
-  ***not assembled until BE reports a sha; a running process is not an artifact,
-  and this file has twice this session recorded a file's existence as readiness.***
-  **The E2-A smoke is COMPLETE with NO GATE READ** (`gate_read` false at 11 < 14,
-  gate at ~09-09; DA's 631.8 s / 2.717 GiB reconciling with the receipt I read last
-  round). **The RACE READ is UNBLOCKED and NOT READ.**
-  (9) **AND REV 43's ROUTING, WITH DE 81 CLOSING ITS FOUR WHILE I WROTE
-  (`4a345f4`).** The exclusivity finding is CLOSED in the shape filed -- **two
-  `flock -s` holders in TWO PROCESSES both refused** -- and among DE 81's four is
-  **the `/proc/locks` parse ignoring the DEVICE, my own round-133 finding reaching
-  a dispatch**, beside **"23 day-path checks" against `DAY_PATH_CHECKS = 49`** (a
-  count in prose against a constant in code). *I verified the tip, not the four
-  closures.* **The reviewer states its own resources rather than implying them:
-  18.45 s / 66 MB and 22.92 s / 22 MB, the lock never taken, no sealed file
-  opened.**
-  MEASURED BEFORE THIS SENTENCE: flags 740 -> 750, flag_provenance 285 -> 295,
-  tasks 19; 167 CHECKED, 128 RELAYED, **455 UNMARKED -- unchanged for the twelfth
-  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
-  flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2934,6 +2927,180 @@ flags:
                              # The reviewer's own resources stated rather than implied:
                              # 18.45 s / 66 MB and 22.92 s / 22 MB, **the lock never
                              # taken, no sealed file opened.**
+  THE_09_03_BOOK_IS_ASSEMBLED_AND_THE_SHA_CONDITION_I_SET_IS_MET: THE-BLOCKER-OF-FIFTEEN-ROUNDS-IS-CLEARED
+                             # CHECKED 2026-09-06T08:10:20Z at the artifacts, at my
+                             # commit-time re-read. ***THE 09-03 BOOK IS BUILT.***
+                             # `be_daybook_20260903_btc.pkl`, **290,758,834 bytes**,
+                             # 08:04:41Z; the builder receipt carries **`book.sha256:
+                             # aad816d6…`** -- ***the sha I named as the condition, three
+                             # rounds running, for calling it assembled rather than
+                             # running.*** `wall_s 2115.7`, **`peak_gb 5.317` of 8 --
+                             # inside the cap.** BE's own line: **297,379 scored
+                             # generations, both heads, SETS EQUAL, every stage inside
+                             # budget.**
+                             # **SO THE FLAG WORD CHANGES: the 09-03 book is ASSEMBLED.**
+                             # *I wrote "NOT ASSEMBLED until BE reports a sha" at rounds
+                             # 136, 137 and 138 and refused to say otherwise while a
+                             # process was merely running; the condition was met at
+                             # 08:04:41Z and I am saying so at 08:10:20Z.*
+                             # ***AND THE TWO PRECONDITIONS THE SMOKE WAS NOT_READY ON
+                             # NOW BOTH HAVE THEIR ARTIFACTS*** -- `P2_book_exists` and
+                             # `P2_builder_receipt_exists` were the ONLY two unmet, every
+                             # other precondition already holding. **I do NOT claim the
+                             # smoke is READY: re-evaluating the rehearsal is DE's, and
+                             # the status is a computed field, not an inference of mine.**
+                             # **This is the blocker that has run through fifteen of my
+                             # rounds** -- the fragment (127), the state tape (129), the
+                             # split (132), `TAPE_PATH` on two surfaces (133-135), the
+                             # assembly budget (136) -- **and every one of them was
+                             # closed by a named owner rather than worked around.**
+  A_KNOWN_BAD_FAILED_AND_WAS_RIGHT_TO_AND_THE_FALSIFIER_WAS_THE_WRONG_ONE: BY-1e-9-OR-BY-A-MILLION-CENTS-THE-DAY-STAYS-MINUS-250
+                             # CHECKED 2026-09-06T08:06:40Z at R-593(B), and it is the
+                             # sharpest item in the round.
+                             # One of DA's own known-bads **FAILED, and was right to**:
+                             # moving a row the statistic **correctly ignores** (below
+                             # theta, outside the matched top-K) **by 1e-9 -- or by a
+                             # MILLION CENTS -- leaves the day at −250.0.**
+                             # ***SO THE FALSIFIER WAS WRONG, NOT THE STATISTIC.*** A
+                             # known-bad that perturbs an input the estimand is DEFINED to
+                             # ignore tests nothing, and its failure is the instrument
+                             # reporting its own mis-specification.
+                             # **AND THE DISPOSITION IS BETTER THAN A REPLACEMENT:** the
+                             # falsifier now moves a row **the candidate ACTS ON**, and
+                             # ***the original case is KEPT as the control for what it
+                             # shows*** -- that the statistic is insensitive to rows
+                             # outside its own decision set. *A wrong falsifier demoted to
+                             # a correct control rather than deleted: the same move as
+                             # 08-29/30 going from a failed positive control to the
+                             # negative one.* **Twice now this session a control has been
+                             # RE-ROLED rather than discarded, and both times the
+                             # re-roling preserved evidence the deletion would have
+                             # lost.**
+                             # *The magnitude is the tell: 1e-9 and a million cents give
+                             # the same answer, so the perturbation was not small -- it
+                             # was irrelevant.*
+  TWO_INDEPENDENT_IMPLEMENTATIONS_AGREE_EXACTLY_AND_THE_CODE_STATES_WHY_THAT_IS_EVIDENCE: 13-FIELDS-EQUAL-NOT-WITHIN-A-TOLERANCE
+                             # CHECKED 2026-09-06T08:06:40Z: **13 checks, 0 failures under my
+                             # own run**, and the comparison read at the source.
+                             # DA's verifier re-derives MATCHED_VOLUME **from the
+                             # declarations** and compares against BE's reader on **all 13
+                             # fields EXACTLY (`==`)** -- day −250.0 both sides, **known
+                             # by hand: btc 60 − 270 = −210, eth 15 − 55 = −40**, with the
+                             # check text ending *"equal, not within a tolerance."*
+                             # ***AND THE CHECK STATES ITS OWN EPISTEMICS IN THE ASSERTION
+                             # TEXT:*** "TWO SEPARATE IMPLEMENTATIONS AGREE ON EVERY
+                             # FIELD, EXACTLY (R-235) … **and agreement is only evidence
+                             # because neither imported the other's statistic**."
+                             # *A check that says why its own passing means something is
+                             # the answer to the class this programme keeps finding --
+                             # green results whose significance nobody wrote down.*
+                             # Pinned both ways: a one-arm feed **refuses by name in BOTH
+                             # implementations on the same missing `score_incumbent`**;
+                             # first crossing acts and is not the first row; **a no-fill
+                             # row contributes 0.0 and is STILL AN ACTION**; the R-234
+                             # tie-break; the window bucket is the slug. **And the pinned
+                             # paths are NOT OPENED** -- before GO the refusal is on the
+                             # gate; after GO, "declared and NOT OPENED". *The pins read 3
+                             # of 5 present, which is the form-(3) population showing up
+                             # in the instrument.*
+  A_MODULE_THAT_NAMES_WHAT_IT_DID_NOT_IMPORT_LOOKS_LIKE_ONE_THAT_DID_TO_A_GREP: EIGHTH-SUSPECT-THE-PROBE-INSTANCE
+                             # CHECKED 2026-09-06T08:06:40Z, filed because the non-finding
+                             # has a shape I have not recorded before.
+                             # R-593(B) says the verifier has **"no import of
+                             # `be_read_cells`, `be_forward_metric` or `be_race_reader`
+                             # (checked at the source)"**. **My grep found 3, 3 and 4
+                             # mentions.**
+                             # **SUSPECTED THE PROBE, AND IT WAS THE PROBE.** The mentions
+                             # are the module's own DOCSTRING declaring what it did NOT
+                             # import -- *"not `be_read_cells.matched_volume`, not
+                             # `be_forward_metric`'s primitives, not `be_race_reader`'s
+                             # day statistic. **Those were read as DOCUMENTS**"* -- plus
+                             # field citations of the form "`be_race_reader.LATENCY_MS`,
+                             # read as a document."
+                             # **AND THE ONE REAL IMPORT IS INSIDE THE COMPARISON TEST
+                             # ITSELF** (`import be_race_reader as RR; theirs =
+                             # RR.day_matched_volume(feed)`) -- ***which is the OPPOSITE
+                             # of a dependency: `mine` is computed from the declarations
+                             # first, and BE's reader is imported only to obtain
+                             # `theirs`.***
+                             # ***THE SHAPE: A MODULE CAREFUL ENOUGH TO NAME WHAT IT DID
+                             # NOT IMPORT IS INDISTINGUISHABLE, TO A GREP, FROM ONE THAT
+                             # IMPORTED IT.*** *The care produces the hits.* **Eighth
+                             # instance of "suspect the probe first" and the first where
+                             # the false signal was CAUSED BY the discipline it was
+                             # checking.**
+  FORM_3_NOW_RESTS_ON_TWO_INDEPENDENT_VERIFICATIONS: DA-CORROBORATES-REV-44-WITHOUT-READING-IT
+                             # CHECKED 2026-09-06T08:06:40Z: **the 09-02 refusal read by me
+                             # at the receipt**, the rest RELAYED from R-593(B).
+                             # DA's own audit of the interim receipts, independent of REV
+                             # 44: protocol `BE_FORWARD_DAY_SEAL_RELOCATION_V2`,
+                             # `seal_state: SEALED — NOT OPENED BY THIS ACT`; **a
+                             # recursive search for EIGHT value names finds ZERO across
+                             # all four receipts**; no aggregation, no latency; each says
+                             # *"this receipt carries counts, identities and hashes and NO
+                             # metric."* **The interim's output for those days: NONE** --
+                             # two raw matches, **both excluded with reasons in the
+                             # artifact, one of them this seat's own fixture from the same
+                             # round.**
+                             # **MY OWN CHECK OF THE ONE NEW FACT:** 09-02's receipt at
+                             # the canonical path **IS A REFUSAL** -- *"REFUSED: 20260902
+                             # is not closed by calendar (day_closed_calendar=False).
+                             # Scoring an OPEN day scores a populati[on]…"*,
+                             # `wall_seconds: 0.0` -- **and the SCORED 09-02 run lives at
+                             # `~/ctaNew_forward_runs/20260902_be13/`.** *So the canonical
+                             # path holds the refusal and the work sits elsewhere: a
+                             # reader resolving 09-02 by name gets the day that did not
+                             # run.*
+                             # **AND A CORRECTION INSIDE DA'S OWN AUDIT:** its "1
+                             # statistic field" on 09-01 was `rows.n_actions` -- **a
+                             # COUNT.** Counts and values separated, the answer computed
+                             # from values alone. *The distinction I drew at round 136
+                             # between a file census and a readiness claim, in another
+                             # form: a count is not a value.*
+                             # ***R-592's form (3) now stands on TWO independent
+                             # verifications*** -- the corroboration axis spent exactly
+                             # where a ruling turns on it, as I recorded it would be.
+  THE_REHEARSAL_RESOLVED_BEs_CONVENTIONS_RATHER_THAN_ASSUMING_THEM: THREE-HANDOFF-DEFECTS-AND-AN-AMBIENT-SCOPE-CAUGHT-BY-ITS-OWN-FALSIFIER
+                             # CHECKED 2026-09-06T08:06:40Z at the rehearsal receipt and
+                             # R-593(A).
+                             # **`THE_ONE_COMMAND` is a VALUE in the receipt**, not prose:
+                             # the full `flock` + `systemd-run` invocation with
+                             # `--setenv=PM_DATA_ROOT`, the dashed day, the book path and
+                             # the output. **Status `NOT_READY_P2_book_exists_P2_builder_
+                             # receipt_exists` -- every OTHER precondition HOLDS** (params
+                             # v5 and design v12 declared = on disk, the ledger root), and
+                             # **the lock is recorded INFORMATIONAL, not blocking** --
+                             # *held now by BE 55, which is the correct state, and the
+                             # wrapper takes it at GO.*
+                             # **THREE HANDOFF DEFECTS, EACH FOUND BY RESOLVING BE's REAL
+                             # CONVENTION RATHER THAN ASSUMING IT:** the builder receipt
+                             # is `be_daybook_receipt_<DAY>_<COIN>.json` where DE derived
+                             # `book_path.with_suffix('.json')`; **BE stamps the day
+                             # COMPACT where DE names it DASHED**; and the digest sits at
+                             # `book.sha256`, not top-level -- **the resolver now names
+                             # the field it read.**
+                             # ***EACH WOULD HAVE REFUSED A CORRECT BOOK AT GO, WITH THE
+                             # RECEIPT SITTING BESIDE IT*** -- a refusal that reads as a
+                             # data problem and is a naming problem.
+                             # **AND THE RESOURCE BLOCK'S FALSIFIER CAUGHT DE'S OWN FIRST
+                             # VERSION**, which reported the login shell's AMBIENT scope:
+                             # ***a 15.5 GiB peak against an 8 MB run.*** MEASURED holds
+                             # only inside `research.slice`; anything else is
+                             # `AMBIENT_SCOPE_NOT_THE_RUNS_OWN`. *A three-orders-of-
+                             # magnitude error that would have read as a plausible number
+                             # on any other day.*
+  DAs_G14_SLIP_IS_CORRECTED_IN_BAND_AND_MY_ROUND_137_AUDIT_ANTICIPATED_IT: I-CHECKED-MY-FILE-BEFORE-THE-CORRECTION-LANDED
+                             # CHECKED 2026-09-06T08:06:40Z at Q-DA-287(0).
+                             # Q-DA-286's **"G ≥ 14"** for the Gate-1 seal is corrected in
+                             # band: **Gate-1 opens at the ruled `read_not_before` with
+                             # G = 6; G ≥ 14 is E2-A's bar.**
+                             # ***AT ROUND 137 I AUDITED MY OWN FILE FOR EXACTLY THIS
+                             # CONFLATION AND FOUND IT CLEAN*** -- every "14 post-boundary
+                             # days" in an E2-A context, "G = 6" 22 times -- **before the
+                             # correction landed anywhere.** *A currency check run because
+                             # the slip was AVAILABLE to me, not because I had made it.*
+                             # **That is the first time this session my own audit ran
+                             # ahead of a correction rather than behind one.**
   DAs_RACE_READ_VERIFIER_AGREES_WITH_BEs_READ: A-SECOND-IMPLEMENTATION-OF-THE-STATISTIC-NOT-OF-THE-ENGINE
                              # CHECKED 2026-09-06T08:04:01Z at the log, at my
                              # commit-time re-read: `f18a375`, **"Q-DA-287: the race-read
@@ -16843,6 +17010,88 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 139, 2026-09-06T08:06:40Z ------------------------------
+  THE_09_03_BOOK_IS_ASSEMBLED_AND_THE_SHA_CONDITION_I_SET_IS_MET:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc.json
+    as_of: 2026-09-06T08:10:20Z
+    said: >-
+      be_daybook_20260903_btc.pkl exists at 290,758,834 bytes stamped 08:04:41Z,
+      and the builder receipt carries book.sha256 aad816d6..., book.bytes
+      290,758,834, wall_s 2115.7 and peak_gb 5.317 against the 8 GiB cap; BE's
+      commit subject records 297,379 scored generations, both heads, sets equal,
+      every stage inside budget. The sha is the condition I named at rounds 136,
+      137 and 138 for calling the book assembled rather than running, and the two
+      preconditions the smoke was NOT_READY on -- P2_book_exists and
+      P2_builder_receipt_exists -- now both have their artifacts. I do not claim
+      the smoke is READY; that status is a computed field and re-evaluating the
+      rehearsal is DE's.
+  A_KNOWN_BAD_FAILED_AND_WAS_RIGHT_TO_AND_THE_FALSIFIER_WAS_THE_WRONG_ONE:
+    prov: RELAYED
+    from: R-593(B)
+    as_of: 2026-09-06T08:06:40Z
+  TWO_INDEPENDENT_IMPLEMENTATIONS_AGREE_EXACTLY_AND_THE_CODE_STATES_WHY_THAT_IS_EVIDENCE:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T08:06:40Z
+    said: >-
+      da_race_read_verify.py --selftest reports SELFTEST OK -- 13 checks, 0
+      failure(s) under my run; the comparison block computes `mine` from the
+      declarations, then imports be_race_reader only to obtain `theirs`, and its
+      assertion text reads "TWO SEPARATE IMPLEMENTATIONS AGREE ON EVERY FIELD,
+      EXACTLY (R-235) ... and agreement is only evidence because neither imported
+      the other's statistic", with the hand arithmetic btc 60 - 270 = -210, eth
+      15 - 55 = -40, day -250.0, "equal, not within a tolerance".
+  A_MODULE_THAT_NAMES_WHAT_IT_DID_NOT_IMPORT_LOOKS_LIKE_ONE_THAT_DID_TO_A_GREP:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T08:06:40Z
+    said: >-
+      grepping the module for be_read_cells, be_forward_metric and be_race_reader
+      returns 3, 3 and 4 hits against R-593(B)'s "no import", but the hits are the
+      module's own docstring declaring what it did not import -- "not
+      be_read_cells.matched_volume, not be_forward_metric's primitives, not
+      be_race_reader's day statistic. Those were read as DOCUMENTS" -- plus field
+      citations; and the single real import sits inside the comparison test, where
+      BE's reader is loaded only to obtain `theirs` after `mine` is already
+      computed from the declarations.
+  FORM_3_NOW_RESTS_ON_TWO_INDEPENDENT_VERIFICATIONS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_forward_day_receipt_20260902.json
+    as_of: 2026-09-06T08:06:40Z
+    said: >-
+      the canonical 09-02 receipt carries refusal "REFUSED: 20260902 is not closed
+      by calendar (day_closed_calendar=False). Scoring an OPEN day scores a
+      populati..." with wall_seconds 0.0, so the canonical path holds the refusal
+      while the scored run lives at ~/ctaNew_forward_runs/20260902_be13/. R-593(B)
+      records DA's independent audit finding zero of eight value names across all
+      four receipts, no aggregation, no latency, the interim output NONE with both
+      raw matches excluded with reasons, and a correction inside DA's own audit
+      that its "1 statistic field" was rows.n_actions, a count.
+  THE_REHEARSAL_RESOLVED_BEs_CONVENTIONS_RATHER_THAN_ASSUMING_THEM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03__20260906T075707Z.json
+    as_of: 2026-09-06T08:06:40Z
+    said: >-
+      THE_ONE_COMMAND is a value in the receipt carrying the full flock plus
+      systemd-run invocation, and status is
+      NOT_READY_P2_book_exists_P2_builder_receipt_exists with every other
+      precondition holding and the lock recorded informational rather than
+      blocking. R-593(A) records the three handoff defects found by resolving BE's
+      conventions -- the builder receipt's name, the compact versus dashed day,
+      the digest at book.sha256 -- and the resource block's falsifier catching DE's
+      own first version reporting the login shell's ambient scope, a 15.5 GiB peak
+      against an 8 MB run.
+  DAs_G14_SLIP_IS_CORRECTED_IN_BAND_AND_MY_ROUND_137_AUDIT_ANTICIPATED_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:06:40Z
+    said: >-
+      Q-DA-287(0) corrects Q-DA-286's "G >= 14" in band: Gate-1 opens at the ruled
+      read_not_before with G = 6 and G >= 14 is E2-A's bar. My round-137 flag
+      records auditing my own file for that exact conflation and finding it clean
+      -- every "14 post-boundary days" in an E2-A context, "G = 6" 22 times --
+      before the correction landed.
   # --- MEM round 138, 2026-09-06T08:00:21Z ------------------------------
   DAs_RACE_READ_VERIFIER_AGREES_WITH_BEs_READ:
     prov: RELAYED

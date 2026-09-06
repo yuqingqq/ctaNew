@@ -10208,3 +10208,91 @@ directions.
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
   flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 121 — archived 2026-09-06T08:06:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 139 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T07:41:40Z (MEM ROUND 136 -- R-589, R-590, REV 43 AND Q-DA-285 SWEPT.
+  STATE ONLY. THE ROUND'S CORRECTION IS AGAINST MY OWN LAST ROUND.
+  (1) **ONLY THREE OF THE FIVE FEED FILES EXIST -- AND I RELAYED THE PROSE, NOT THE
+  PIN FILE.** R-589(B): "the five … pinned". R-590(A): **"only THREE … 09-01 and
+  09-02 never had one."** **My own two checks: the pin file records
+  `all_five_present: False` with `exists: False` for both days, and a filename
+  census across /home/yuqing returns EXACTLY THREE.** ***My round-135 flag said
+  "the five feed files are now pinned" -- taken from the register's sentence, when
+  the pin file it names already said otherwise.*** *The coordinator states it
+  exactly: "the prose overstated the artifact; the artifact was right."* **Second
+  relay instance in seven rounds, and worse than round 129's: the artifact here was
+  a 4 KB declaration whose first field answers the question.**
+  (2) **AND THE REASON IS MECHANICAL, WHICH I CHECKED AT THE LOG.** `git log -S
+  FEED_FIELDS` puts the emitter at **`5565e39`, 09-03 06:34:05Z**; the 09-01 run
+  directory is **09-02 14:37:31Z** and the 09-02 directory **09-03 04:30:25Z** --
+  ***both before the emitter existed.*** **So "the interim read computed
+  MATCHED_VOLUME on the FEED" cannot be literally true of 09-01/02.** *A capability
+  cannot have been used before it was written, and a commit date settles it in one
+  command -- the command I did not run last round.*
+  (3) **THE POPULATION IS RULED-CONDITIONAL, NOT RULED.** Five NAMED days --
+  09-01/02 from the interim's own receipts, 09-03/04/05 from the feed at the pinned
+  digests -- **no re-seal, DIRECTIONAL, no interval** -- ***subject to REV 44
+  establishing what the two interim receipts carry, and VOID if they carry no
+  incumbent increment.*** **A ruling that names its own falsifier before the
+  evidence is in.** *Two days read one way and three another is a heterogeneous
+  population, and the declaration says so rather than smoothing it.*
+  (4) **THE REVIEWER'S OWN PROPOSED FIX FAILS TOO, AND DA DROVE IT.** Fourth level
+  of the ordering falsifier: declared -> cost half false -> quantity half false ->
+  **the reviewer's restatement false as well** (queue 100, order 10, one trade of
+  110, depth 1000 -> RiskAverse fills 10 while **E[ProbQueue] = 9.9863**, *in the
+  marginal regime with NO defect present*). ***So the expectation is true EXACTLY
+  on the testable set and the `front = 0` predicate is doing all the work*** --
+  declared as a regime with its hand derivation, and **the reviewer's 993/2000 =
+  0.4965 reproduces exactly in DA's code.** *Rule 1 says no seat's claim is
+  accepted from a report; a proposed FIX is a claim.*
+  (5) **THE STALENESS BAR NAMES THE NUMBER IT IS NOT** -- 1,000 ms from rule 5's
+  own "≥ 1 s bars only" line, **and the declaration names ICP's measured 517 ms as
+  the number it did NOT use.** ***The cleanest anti-tuning device this programme
+  has produced:*** a bar from a standing rule is defensible, a bar from a
+  measurement is suspect, and naming the measured value you rejected lets a reader
+  verify the distinction instead of trusting it. **Same move as last round's ruling
+  chosen "because it is the one with a RULE cited" -- twice in two rounds, two
+  seats.**
+  (6) **AND v7 STATES THE MISREADING IT INVITES:** under the USER's BTC ruling,
+  **"BTC is the most active symbol in the set, so the placement-quality problem is
+  at its WEAKEST there."** *A declaration naming the flattering direction of its own
+  scope restriction, before anyone can accuse it.* With: cap **6.0 GiB = 75% of the
+  wrapper's 8 GiB because a cgroup kill is SILENT**, streaming parity as a CONTROL,
+  and an off-grid target REFUSING because *"silence there is a wrong EXCLUSION."*
+  (7) **MY ROUND-130 COUNT WAS INDEPENDENTLY REPRODUCED, AND THE THING I COULD ONLY
+  BOUND IS NOW MEASURED.** I computed 11 post-boundary admissible days from the
+  census; **DA derives the same 11 as 12 complete days less 08-26's reboot** --
+  *two routes, one number, neither from the other.* And my note that a DATE-based
+  selection "admits forty-six seconds of legacy rows" is now quantified row-wise:
+  **08-24 is 56.0459% legacy-stamped on ADA, 2,337,473 of 4,170,641 rows.**
+  ***Forty-six seconds of wall clock is more than half the day's rows, because the
+  rows are not uniform in time.*** **And the 08-29/30 withdrawal I swept as a
+  RULING is now pinned BY A CHECK** -- it cannot creep back into the positive list.
+  (8) **THE THREE TESTS, DRIVEN BY ME. The 09-03 BOOK is RUNNING and NOT
+  ASSEMBLED** (`be55book.scope`, 765 s, 3.93 GB, `heavy=True locked=True`) --
+  ***not assembled until BE reports a sha; a running process is not an artifact,
+  and this file has twice this session recorded a file's existence as readiness.***
+  **The E2-A smoke is COMPLETE with NO GATE READ** (`gate_read` false at 11 < 14,
+  gate at ~09-09; DA's 631.8 s / 2.717 GiB reconciling with the receipt I read last
+  round). **The RACE READ is UNBLOCKED and NOT READ.**
+  (9) **AND REV 43's ROUTING, WITH DE 81 CLOSING ITS FOUR WHILE I WROTE
+  (`4a345f4`).** The exclusivity finding is CLOSED in the shape filed -- **two
+  `flock -s` holders in TWO PROCESSES both refused** -- and among DE 81's four is
+  **the `/proc/locks` parse ignoring the DEVICE, my own round-133 finding reaching
+  a dispatch**, beside **"23 day-path checks" against `DAY_PATH_CHECKS = 49`** (a
+  count in prose against a constant in code). *I verified the tip, not the four
+  closures.* **The reviewer states its own resources rather than implying them:
+  18.45 s / 66 MB and 22.92 s / 22 MB, the lock never taken, no sealed file
+  opened.**
+  MEASURED BEFORE THIS SENTENCE: flags 740 -> 750, flag_provenance 285 -> 295,
+  tasks 19; 167 CHECKED, 128 RELAYED, **455 UNMARKED -- unchanged for the twelfth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
+```

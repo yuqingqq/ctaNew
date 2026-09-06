@@ -1,9 +1,117 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T08:00:21Z — **R-590(C)'s conditional fired its own falsifier one
-round after it was written: the two interim receipts carry no economics, and the read
-now rests on G = 3 at v2's own pessimistic floor — with nothing chosen after
-seeing.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T08:06:40Z — **A known-bad failed and was right to: the falsifier
+was the wrong one. Form (3) now rests on two independent verifications.** Flag words
+unchanged. Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 139
+
+### 1. A known-bad failed and was right to — the falsifier was the wrong one
+
+Moving a row the statistic **correctly ignores** (below theta, outside the matched
+top-K) **by 1e-9 — or by a million cents — leaves the day at −250.0.**
+
+> ***So the falsifier was wrong, not the statistic.*** A known-bad that perturbs an
+> input the estimand is **defined to ignore** tests nothing, and its failure is the
+> instrument reporting its own mis-specification.
+
+**And the disposition is better than a replacement**: the falsifier now moves a row
+the candidate **acts on**, and ***the original case is kept as the control for what it
+shows.*** *Twice this session a control has been **re-roled** rather than discarded —
+08-29/30 was the first — and both times the re-roling preserved evidence deletion
+would have lost.*
+
+*The magnitude is the tell: 1e-9 and a million cents give the same answer, so the
+perturbation was not small — it was **irrelevant**.*
+
+### 2. Two independent implementations agree exactly — and the check states its own epistemics
+
+**13 checks, 0 failures under my own run**; 13 fields `==`; day −250.0 both sides,
+hand-known as **btc 60 − 270 = −210, eth 15 − 55 = −40**; the assertion text ending
+*"equal, not within a tolerance"* and:
+
+> ***"agreement is only evidence because neither imported the other's statistic."***
+
+*A check that says why its own passing means something is the answer to the class this
+programme keeps finding — green results whose significance nobody wrote down.* **A
+no-fill row contributes 0.0 and is still an action; the pinned paths are not opened.**
+
+### 3. And my grep said the opposite — because the module is careful
+
+R-593 says *"no import of"* three BE modules; **I found 3, 3 and 4 mentions.** They are
+the module's own docstring naming what it did **not** import — *"Those were read as
+DOCUMENTS"* — and the single real import sits **inside the comparison test**, where
+BE's reader is loaded only to obtain `theirs` after `mine` is already computed.
+
+> ***A module careful enough to name what it did not import is indistinguishable, to a
+> grep, from one that imported it: the care produces the hits.***
+
+**Eighth suspect-the-probe instance — and the first where the false signal was *caused
+by* the discipline it was checking.**
+
+### 4. Form (3) now rests on two independent verifications
+
+DA's audit, independent of REV 44: **zero of eight value names across all four
+receipts**, no aggregation, no latency, **the interim's output NONE** — two raw
+matches, both excluded with reasons, *one of them DA's own fixture from the same
+round.*
+
+**My own check of the new fact:** 09-02's canonical receipt **is a refusal** — *"not
+closed by calendar"*, `wall_seconds 0.0` — and the **scored** run lives at
+`~/ctaNew_forward_runs/20260902_be13/`. *A reader resolving 09-02 by name gets the day
+that did not run.*
+
+**And a correction inside DA's own audit:** its *"1 statistic field"* was
+`rows.n_actions` — **a count.** *The distinction I drew at round 136 between a census
+and a claim, in another form.*
+
+### 5. The rehearsal resolved BE's conventions rather than assuming them
+
+The receipt's **name**; the **compact vs dashed** day; the digest at `book.sha256`.
+***Each would have refused a correct book at GO, with the receipt sitting beside it.***
+
+**And the resource block's own falsifier caught DE's first version reporting the login
+shell's ambient scope — a 15.5 GiB peak against an 8 MB run.** *Three orders of
+magnitude, and it would have read as a plausible number on any other day.*
+
+`THE_ONE_COMMAND` is a **value** in the receipt; the lock is **informational**, held by
+BE 55 — **the correct state.**
+
+### 6. And my round-137 audit ran ahead of a correction, for the first time
+
+Q-DA-286's *"G ≥ 14"* for Gate-1 is corrected in band to **G = 6**. *I audited my own
+file for exactly that conflation at round 137 and found it clean — before the
+correction landed anywhere.* **A currency check run because the slip was *available* to
+me, not because I had made it.**
+
+### 7. Flag words — unchanged
+
+| test | state |
+|---|---|
+| **race read** | **NOT READ** — population **RULED form (3)**; reader **APPROVED-PENDING-TWO-FIXES** |
+| **09-03 book** | **ASSEMBLED** — `book.sha256: aad816d6…`, 290,758,834 B, peak 5.317 GB of 8 *(changed at my commit-time re-read)* |
+| **Gate-1 smoke** | **REHEARSED, NOT RUN** |
+
+### 8. The book is assembled — the sha condition I set is met
+
+`be_daybook_20260903_btc.pkl`, **290,758,834 bytes**, 08:04:41Z; the builder receipt
+carries **`book.sha256: aad816d6…`** — ***the sha I named as the condition at rounds
+136, 137 and 138, and refused to call it assembled without.*** `wall_s 2115.7`,
+**`peak_gb 5.317` of 8**; BE's own line: **297,379 scored generations, both heads,
+sets equal, every stage inside budget.**
+
+***And the two preconditions the smoke was NOT_READY on now both have their
+artifacts.*** **I do not claim the smoke is READY** — that status is a computed field,
+and re-evaluating the rehearsal is DE's.
+
+> *This is the blocker that ran through fifteen of my rounds — the fragment, the state
+> tape, the split, `TAPE_PATH` on two surfaces, the assembly budget — and **every one
+> was closed by a named owner rather than worked around.***
+
+**Counts, measured before this was written:** flags 765 → 772, flag_provenance
+310 → 317, tasks 19; 184 CHECKED, 133 RELAYED, **455 UNMARKED — unchanged for the
+fifteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+flags vs HEAD 0 without provenance.
 
 ## READ FIRST — round 138
 
