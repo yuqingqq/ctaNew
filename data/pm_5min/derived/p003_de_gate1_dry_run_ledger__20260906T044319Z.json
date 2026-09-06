@@ -1,0 +1,179 @@
+{
+  "G_from_the_ruled_set": 6,
+  "SET_A": {
+    "days": [
+      "2026-08-29",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "holm": {
+      "G": 6,
+      "best_attainable_one_sided_p": 0.015625,
+      "clears_holm_at_m1": true,
+      "clears_holm_at_m2": true,
+      "holm_threshold_m2": 0.025,
+      "smallest_G_that_clears_m1": 5,
+      "smallest_G_that_clears_m2": 6
+    }
+  },
+  "SET_B": {
+    "days": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "derived_from_the_field": true,
+    "holm": {
+      "G": 3,
+      "best_attainable_one_sided_p": 0.125,
+      "clears_holm_at_m1": false,
+      "clears_holm_at_m2": false,
+      "holm_threshold_m2": 0.025,
+      "smallest_G_that_clears_m1": 5,
+      "smallest_G_that_clears_m2": 6
+    }
+  },
+  "as_of": "2026-09-06T04:43:19.371553+00:00",
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the dry-run ledger read",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "ledger_root_resolved": "/home/yuqing/ctaNew/data",
+  "n_verdict_files_read": 12,
+  "per_ruled_day": {
+    "2026-09-03": {
+      "all_conjuncts_and_quality": true,
+      "conjuncts": {
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "in_the_ruled_set": true,
+      "previously_opened_for": "none",
+      "status": "CLOSED_AND_QUALIFIES",
+      "untouched": true
+    },
+    "2026-09-04": {
+      "all_conjuncts_and_quality": true,
+      "conjuncts": {
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "in_the_ruled_set": true,
+      "previously_opened_for": "none",
+      "status": "CLOSED_AND_QUALIFIES",
+      "untouched": true
+    },
+    "2026-09-05": {
+      "all_conjuncts_and_quality": true,
+      "conjuncts": {
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "in_the_ruled_set": true,
+      "previously_opened_for": "none",
+      "status": "CLOSED_AND_QUALIFIES",
+      "untouched": true
+    },
+    "2026-09-06": {
+      "all_conjuncts_and_quality": false,
+      "conjuncts": {
+        "day_closed_calendar": false,
+        "day_quality_pass": false,
+        "era_pure": true,
+        "post_freeze_pass": false
+      },
+      "in_the_ruled_set": true,
+      "previously_opened_for": "none",
+      "status": "OPEN_NOT_YET_CLOSED",
+      "untouched": true
+    },
+    "2026-09-07": {
+      "counts_toward_G_when": "its verdict lands AND it passes the four conjuncts and quality",
+      "previously_opened_for": "none",
+      "status": "PENDING_NO_VERDICT_FILE",
+      "why": "the day has not been verdicted; a day-verdict file appears at 00:06Z on the following day"
+    },
+    "2026-09-08": {
+      "counts_toward_G_when": "its verdict lands AND it passes the four conjuncts and quality",
+      "previously_opened_for": "none",
+      "status": "PENDING_NO_VERDICT_FILE",
+      "why": "the day has not been verdicted; a day-verdict file appears at 00:06Z on the following day"
+    }
+  },
+  "protocol": "P003_DE_MULTIDAY_GATE1_DRY_RUN_LEDGER_V1",
+  "qualifying_on_quality_whole_ledger": [
+    "2026-08-29",
+    "2026-09-01",
+    "2026-09-02",
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05"
+  ],
+  "r7_assertion_evaluated_live": {
+    "SET_A_equals_qualifying": true,
+    "SET_B_subset_of_SET_A": true,
+    "all_relations_hold": true,
+    "every_SET_B_day_is_untouched": true,
+    "every_ruled_closed_day_qualifies": true,
+    "holm_consistent_with_own_G": true,
+    "ruled_closed_days_not_qualifying": []
+  },
+  "resource_observation": {
+    "max_rss_kib": 20468,
+    "wall_seconds": 0.0050201416015625
+  },
+  "root_branch": "1_env_PM_DATA_ROOT",
+  "ruled_day_set": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+  ],
+  "status": "DRY_RUN_LEDGER_READ_NOT_A_FIXTURE_RUN",
+  "summary": {
+    "closed": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "n_ruled_closed": 3,
+    "n_ruled_pending": 3,
+    "pending": [
+      "2026-09-06",
+      "2026-09-07",
+      "2026-09-08"
+    ]
+  },
+  "what_this_does_NOT_read": [
+    "any reference book",
+    "any arm",
+    "any score stream",
+    "any economics"
+  ],
+  "what_this_reads": [
+    "day-verdict files",
+    "the declared read-state table"
+  ],
+  "why_a_before_picture": "at 00:06Z on 09-07 the 09-06 verdict lands and the qualifying count changes. The R7 assertion was rewritten from three hardcoded counts to these relations precisely so that event does not break it; this receipt is what the after-picture is compared against"
+}
