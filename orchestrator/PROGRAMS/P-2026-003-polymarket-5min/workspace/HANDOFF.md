@@ -5,6 +5,89 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 158
+
+**As of 2026-09-06T10:45:30Z. State only — MEM writes no result.**
+
+### The re-run is blocked by nothing technical
+
+The **v3** rehearsal (as_of **10:40:01Z**) is **READY, `blocking: []`**; the code is
+fixed; the day is unconsumed; `be59book.scope` runs at 371 s. **Only REV 55's filing
+stands between it and GO** — and REV 55 answers three questions from the code: does
+`--day` reach the emit **without the seam** under any configuration, does the receipt
+**name the bytes that run**, and **what else could refuse at the end rather than the
+start**. *The third is the one the 84 minutes bought.*
+
+**Use the v3 rehearsal, not the earlier two — and here is why it matters.** All three
+09-03 rehearsals on disk: **07:57:18 NOT_READY** (the two book preconditions);
+**08:13:03 READY, `blocking: []`**; **10:40:01 READY, `blocking: []`**. **The 08:13
+one says READY and predates the run that refused.** A reader citing "the rehearsal
+says READY" without the as_of would be citing evidence produced *before* the failure
+it is meant to clear. **The status field cannot separate them; only the as_of can.**
+
+### Two files carried one protocol identity — and I had verified one of them
+
+`design_v16.json` → `…_DESIGN_DECLARATION_V16`; `design_v17.json` → **also
+`…_V16`**; `design_v18.json` → `…_V18` (the series skips 17 because 17's identity was
+already spent). **At round 154 I verified v17** — hashed its `parameters` pin,
+confirmed forward-resolves-true, called the five-round pin thread closed — **and never
+read the `protocol` field two lines away.** **Verification is per-property: "I
+verified v17" meant "I verified v17's pin."** The honest form of a CHECKED flag is the
+**property**, not the file.
+
+**The pin itself stays closed across the bump:** design v18 → `params_v11.json` with
+`a82a6320…`, **v11's actual digest, forward resolves true**; params v11 is
+**pointer-only** (the design pin's path and the supersedes block; days and horizon
+unchanged). *A pin that resolves once may be luck; one that resolves across a bump is
+a mechanism.*
+
+### The two failures that cost the 09-03 run are closed in one commit
+
+**`SUPERSEDES_MALFORMED` appears 5 times** — the crash I drove at round 154 and
+confirmed unwrapped at 155 is now a **named refusal** — and **the in-run battery is
+moved before the day's work**, the emit keeping only the closure/HEAD check and the
+growth-budget read. **220 checks.** *A check that could only fire at the end, and a
+gate that could raise instead of refusing.*
+
+**And R-609's precondition holds in BE's builder by control flow** — I checked it
+myself: `main()` is `if "--selftest" in argv: return selftest()` at `:1020-1021`, only
+then `if "--day" in argv:` at `:1022`. **A fixture build and a real build never share
+a process** — which is the structural reason the 0.7 GB fixture budgets at `:367`
+cannot fire on the real path today. **The trigger's absence has a location.**
+
+### State
+
+- **The re-run: GO-PENDING-REV-55** (DE standing by; the rehearsal READY).
+- **The 09-04 book: BUILDING** (`be59book.scope`, 371 s at my read).
+- **DA's landing-record assertion: CLOSED at commit time (2026-09-06T10:47:50Z).**
+  `633b5fa` — *"this seat's own two runners now carry rule 22's import closure, the
+  landing digest has **one authority**, and the link's definition can no longer be
+  enforced **unread**."* The self-exemption swept last round (DA's binding map
+  excusing DA's own runners) is closed in the same landing. It was **open as
+  dispatched**. Two seat-divergences remain named:
+  on **disagreeing landing-digest copies DE refuses while DA resolves on its own
+  field**, and the pair definition's binding is **one-way**. *Neither is a defect in
+  either seat — two correct implementations of a rule that doesn't yet say which side
+  owns the disagreement.*
+- **BE 60 carries:** the input-digest pin read from the **round-58 receipts** (the
+  builder currently checks its inputs against digests it computed itself); L367's
+  budget as **growth per stage** on both paths; the typed `seam.commit` computed; the
+  import closure + HEAD in all three producers (the held WIP is the builder's first
+  half). **BE verified the builder at the tip is the reviewed one** (`6a09f7e3…`, last
+  touched by BE 57).
+- **Two more literals that had to track moving things:** the fixture non-vacuity check
+  testing for `params_v10.json` **by name**; and the peak-stage falsifiers'
+  **`zip(names, [six floats])` silently shifting** when the stage table grew — a
+  length mismatch **truncates** rather than raising, so every falsifier after the
+  insertion point quietly tested the wrong stage.
+
+**Counts, measured before the sentence:** flags 919 → 927, `flag_provenance`
+464 → 472, tasks 19; **289 CHECKED**, 183 RELAYED, **455 UNMARKED — unchanged for
+the thirty-fourth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 140 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 157
 
 **As of 2026-09-06T10:40:10Z. State only — MEM writes no result.**

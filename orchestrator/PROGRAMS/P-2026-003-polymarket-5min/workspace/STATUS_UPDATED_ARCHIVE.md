@@ -11804,3 +11804,75 @@ directions.
   thirtieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 140 — archived 2026-09-06T10:45:30Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 158 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:13:20Z (MEM ROUND 155 -- R-611 AND REV 54'S FILING SWEPT. STATE ONLY.
+  THE ROUND'S BEST WORK IS A STORY I TESTED AND THREW AWAY.
+  (1) **THE LEXICOGRAPHIC PICK IS v9 AND THE NUMERIC PICK IS v17, ON THE LIVE
+  DIRECTORY.** 16 design artifacts; sorted as STRINGS the maximum is
+  **`…design_v9__20260906T062115Z.json`**, sorted by the INTEGER it is
+  **`…design_v17.json`.** ***"Take the newest design" by string order selects v9 over
+  v17 -- eight versions apart.*** **And the wrong pick is not a crash and not a
+  mismatch: it returns an artifact that is valid in every other respect**, which is
+  why nothing downstream would object.
+  (2) **AND I ALMOST BLAMED THE STAMP FIX FOR IT.** I had the tidy version written --
+  DE 88's version-only rename stripped v17's stamp while v9 kept one, *"two correct
+  fixes interacting"*, exactly the shape this programme keeps producing. **So I
+  tested it: `"…design_v17__20260906T094500Z.json" < "…design_v9__20260906T062115Z.json"`
+  is ALSO True.** ***The failure is the UNPADDED INTEGER -- `1` sorts before `9` --
+  and it would be there with or without the stamp. The rename neither caused it nor
+  cured it.*** **A narrative that FITS the facts is not a finding, and the test that
+  separates them costs one line.** *Thirteenth "suspect the probe first", and the
+  first where the probe was a STORY rather than a command.*
+  (3) **THE CRASH HAS NOWHERE TO LAND:** `read_gate` begins at :1198 and the nearest
+  `except Exception` handlers are OUTSIDE it -- :1191, and :1264 whose comment reads
+  *"ledger unreadable"*. **Nothing wraps the resolver call on the gate's path**, so
+  the `AttributeError` I drove last round propagates OUT of the gate. *The driven
+  result -- "the gate aborts", measured through the whole of `read_gate` -- is the
+  reviewer's.* ***A gate that can RAISE is a gate that can be ABSENT, and an absent
+  gate is not a closed one.***
+  (4) **AND THE EXPOSURE IS FOR A SHAPE NO CODE WRITES YET** -- *"driven because the
+  gate must refuse malformed input rather than crash on it."* ***A defect found for
+  an input that does not exist: the opposite of every other finding this week, which
+  were all live in an artifact on disk.*** **Rule 15 taken one step further -- not
+  "prove your checker fires on a known-bad" but "prove your gate SURVIVES an input
+  nobody has written".** DE 90 makes it `SUPERSEDES_MALFORMED` BY NAME, never raised,
+  with the eight-shape table matched to DA's verdicts.
+  (5) **R-608 HOLDS, AND WHAT THE REVIEW ADDS IS ABOUT SURVIVAL:** both resolvers,
+  driven side by side ON THE SAME BYTES, agree on **seven of eight** shapes -- **with
+  different STATUS NAMES, which is R-235 working.** *The eighth is not a disagreement:
+  DA refuses by name, DE raises.* ***Agreement on a VERDICT says nothing about
+  agreement on SURVIVAL.*** **And DA's architecture for the pair is READ FROM DE'S
+  DESIGN ARTIFACT rather than typed** -- *"the strongest answer to a cross-seat
+  finding this seat has had"*, the one-way binding its residual.
+  (6) **THE LANDING DIGEST IS WRITTEN TWICE AND TODAY CANNOT DIFFER** -- both copies
+  come from ONE hash call. ***So the finding is not a wrong value but an ABSENT
+  ASSERTION***: correct by construction today, unprotected tomorrow. **"These two
+  agree" and "nothing could make them disagree" are different states, and only the
+  second is a guarantee.**
+  (7) **AND THE BATTERY MOVES BEFORE THE DAY'S WORK** -- after the book digest,
+  before S1; the emit keeps only the closure/HEAD check and the growth-budget read;
+  the falsifier is ***"a battery that would refuse does so with ZERO DRAWS
+  PERFORMED."*** *The first soft spot from the DE reset's harvest, turned into work
+  within one round of being written down -- and the falsifier states the property
+  that matters, not the mechanism.*
+  (8) **MEASURED ABSENCE:** Q-DE-90 and Q-DA-299 are **both absent** from the
+  register (0 matches each) -- the dispatch's "if landed" resolves to **NOT LANDED**,
+  recorded rather than left to inference. **`be58tape.scope` active, pid 3177600 at
+  771 s (~13 min).** *The lock's schedule is what makes DE 90 and REV 55 free: they
+  fit inside a wait that was already happening.*
+  **FLAG WORDS: the read gate CRASH-ON-MALFORMED-SUPERSEDES (DE 90 in flight); the
+  re-run GO-PENDING-REV-55; the 09-04 tape BUILDING (`be58tape.scope` since
+  09:59:58Z).**
+  MEASURED BEFORE THIS SENTENCE: flags 895 -> 903, flag_provenance 440 -> 448,
+  tasks 19; **271 CHECKED**, 177 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

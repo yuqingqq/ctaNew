@@ -63,6 +63,77 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T10:45:30Z (MEM ROUND 158 -- R-614 AND Q-DE-90 SWEPT. STATE ONLY.
+  THE FINDING TOUCHES A FLAG OF MY OWN FROM FOUR ROUNDS AGO.
+  (1) **TWO FILES CARRIED ONE PROTOCOL IDENTITY -- AND I HAD VERIFIED ONE OF THEM.**
+  Reading the field: **`design_v16.json` -> `…_DESIGN_DECLARATION_V16`;
+  `design_v17.json` -> `…_DESIGN_DECLARATION_V16`; `design_v18.json` -> `…_V18`** --
+  *two files, one identity, the live pin on the second, and the series skips 17
+  because 17's identity was already spent.* ***AT ROUND 154 I VERIFIED v17: I hashed
+  its `parameters` pin, confirmed FORWARD RESOLVES TRUE, and called the five-round pin
+  thread closed -- and never read the `protocol` field two lines away.***
+  **Verification is PER-PROPERTY. "I verified v17" meant "I verified v17's pin", and
+  the honest form of a CHECKED flag is the PROPERTY, not the file.**
+  (2) **AND THE STALE REHEARSAL ALSO SAYS READY.** All three 09-03 rehearsals:
+  **07:57:18 NOT_READY** (the two book preconditions); **08:13:03 READY, blocking
+  `[]`**; **10:40:01 READY, blocking `[]`.** ***The 08:13 one says READY and PREDATES
+  the run that refused.*** **So a reader citing "the rehearsal says READY" without the
+  as_of would be citing evidence produced BEFORE the failure it is meant to clear** --
+  *the status field cannot separate them; only the as_of can.* **Which is exactly why
+  DE names the v3 rehearsal as the GO precondition and rules the other two out:** my
+  round-145 rule again -- *latest is not a citation, and neither is READY.*
+  (3) **THE PIN STAYS CLOSED ACROSS A VERSION BUMP:** design v18 -> `params_v11.json`
+  with `a82a6320…`, **v11's actual digest, FORWARD RESOLVES TRUE**; params v11
+  POINTER-ONLY (the design pin's path and the supersedes block; days and horizon
+  unchanged). ***A pin that resolves once may be luck; a pin that resolves across a
+  bump is a mechanism.***
+  (4) **THE TWO FAILURES THAT COST THE 09-03 RUN ARE CLOSED IN ONE COMMIT:**
+  **`SUPERSEDES_MALFORMED` appears 5 times** -- the crash I drove at round 154 and
+  confirmed unwrapped at 155 is now a NAMED REFUSAL -- **and the in-run battery is
+  moved BEFORE the day's work**, the emit keeping only the closure/HEAD check and the
+  growth-budget read. *A check that could only fire at the end, and a gate that could
+  raise instead of refusing.* **220 checks.**
+  (5) **AND R-609'S PRECONDITION HOLDS IN BE'S BUILDER BY CONTROL FLOW** -- I checked
+  it myself: `main()` is **`if "--selftest" in argv: return selftest()` at :1020-1021,
+  and only then `if "--day" in argv:` at :1022.** ***A fixture build and a real build
+  never share a process*** -- *which is the structural reason the 0.7 GB fixture
+  budgets at L367 cannot fire on the real path today.* **The trigger's absence has a
+  location, and this is it.**
+  (6) **TWO MORE LITERALS THAT HAD TO TRACK MOVING THINGS** -- the fixture non-vacuity
+  check testing for `params_v10.json` **by name**, and the peak-stage falsifiers'
+  **`zip(names, [six floats])` SILENTLY SHIFTING when the stage table grew.**
+  ***The `zip` is the sharper: a length mismatch does not raise, it TRUNCATES, so
+  every falsifier after the insertion point quietly tested the wrong stage.*** **A
+  control that keeps passing while testing something else is rule 16 with no visible
+  symptom at all.**
+  (7) **THE TWO SEAT-DIVERGENCES REMAIN OPEN AND NAMED:** on disagreeing
+  landing-digest copies **DE REFUSES while DA RESOLVES on its own field** (DA 78
+  carries the assertion), and the pair definition's binding is **one-way**. ***Neither
+  is a defect in either seat: they are two correct implementations of a rule that does
+  not yet say which side owns the disagreement*** -- *the residual R-608 answered for
+  the LINK and has not yet answered for the COPIES.*
+  (8) **AND THE RE-RUN IS BLOCKED BY NOTHING TECHNICAL:** the v3 rehearsal
+  (10:40:01Z) is **READY, `blocking: []`**; the code is fixed; the day is unconsumed;
+  `be59book.scope` runs at 371 s. ***Only REV 55's filing stands between it and GO***
+  -- and REV 55 answers three questions from the code: does `--day` reach the emit
+  without the seam under ANY configuration, does the receipt name the bytes that RUN,
+  and **what else could refuse at the END rather than the start.** *The third is the
+  one the 84 minutes bought.*
+  **AT COMMIT TIME, 2026-09-06T10:47:50Z: DA 78 LANDED (`633b5fa`) AND CLOSES TWO OF
+  THE ITEMS THIS ROUND RECORDS AS OPEN** -- *"this seat's own two runners now carry
+  rule 22's import closure, the landing digest has ONE AUTHORITY, and the link's
+  definition can no longer be enforced UNREAD".* **So the flag word "DA's
+  landing-record assertion OPEN" is true as dispatched and closed by the time this
+  sentence commits; the SELF-EXEMPTION I swept last round (DA's binding map excusing
+  DA's own runners) is closed in the same landing.** *Sixth time this session the
+  commit-time re-read has caught a landing under a flag -- and the first where it
+  closes a divergence rather than a defect.* **Recorded unswept.**
+  **FLAG WORDS: the re-run GO-PENDING-REV-55 (DE standing by, the rehearsal READY);
+  the 09-04 book BUILDING; DA's landing-record assertion OPEN (DA 78).**
+  MEASURED BEFORE THIS SENTENCE: flags 919 -> 927, flag_provenance 464 -> 472,
+  tasks 19; **289 CHECKED**, 183 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T10:40:10Z (MEM ROUND 157 -- R-613, Q-DA-299, Q-BE-59 AND THE FRESH BE'S
   RELOAD FINDING SWEPT. STATE ONLY. THE FINDING IS A PIN THAT HASHES ITS OWN INPUT.
   (1) **THE BUILDER HASHES THE FILES IT IS ABOUT TO USE AND CALLS THAT
@@ -207,68 +278,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 903 -> 911, flag_provenance 448 -> 456,
   tasks 19; **278 CHECKED**, 178 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T10:13:20Z (MEM ROUND 155 -- R-611 AND REV 54'S FILING SWEPT. STATE ONLY.
-  THE ROUND'S BEST WORK IS A STORY I TESTED AND THREW AWAY.
-  (1) **THE LEXICOGRAPHIC PICK IS v9 AND THE NUMERIC PICK IS v17, ON THE LIVE
-  DIRECTORY.** 16 design artifacts; sorted as STRINGS the maximum is
-  **`…design_v9__20260906T062115Z.json`**, sorted by the INTEGER it is
-  **`…design_v17.json`.** ***"Take the newest design" by string order selects v9 over
-  v17 -- eight versions apart.*** **And the wrong pick is not a crash and not a
-  mismatch: it returns an artifact that is valid in every other respect**, which is
-  why nothing downstream would object.
-  (2) **AND I ALMOST BLAMED THE STAMP FIX FOR IT.** I had the tidy version written --
-  DE 88's version-only rename stripped v17's stamp while v9 kept one, *"two correct
-  fixes interacting"*, exactly the shape this programme keeps producing. **So I
-  tested it: `"…design_v17__20260906T094500Z.json" < "…design_v9__20260906T062115Z.json"`
-  is ALSO True.** ***The failure is the UNPADDED INTEGER -- `1` sorts before `9` --
-  and it would be there with or without the stamp. The rename neither caused it nor
-  cured it.*** **A narrative that FITS the facts is not a finding, and the test that
-  separates them costs one line.** *Thirteenth "suspect the probe first", and the
-  first where the probe was a STORY rather than a command.*
-  (3) **THE CRASH HAS NOWHERE TO LAND:** `read_gate` begins at :1198 and the nearest
-  `except Exception` handlers are OUTSIDE it -- :1191, and :1264 whose comment reads
-  *"ledger unreadable"*. **Nothing wraps the resolver call on the gate's path**, so
-  the `AttributeError` I drove last round propagates OUT of the gate. *The driven
-  result -- "the gate aborts", measured through the whole of `read_gate` -- is the
-  reviewer's.* ***A gate that can RAISE is a gate that can be ABSENT, and an absent
-  gate is not a closed one.***
-  (4) **AND THE EXPOSURE IS FOR A SHAPE NO CODE WRITES YET** -- *"driven because the
-  gate must refuse malformed input rather than crash on it."* ***A defect found for
-  an input that does not exist: the opposite of every other finding this week, which
-  were all live in an artifact on disk.*** **Rule 15 taken one step further -- not
-  "prove your checker fires on a known-bad" but "prove your gate SURVIVES an input
-  nobody has written".** DE 90 makes it `SUPERSEDES_MALFORMED` BY NAME, never raised,
-  with the eight-shape table matched to DA's verdicts.
-  (5) **R-608 HOLDS, AND WHAT THE REVIEW ADDS IS ABOUT SURVIVAL:** both resolvers,
-  driven side by side ON THE SAME BYTES, agree on **seven of eight** shapes -- **with
-  different STATUS NAMES, which is R-235 working.** *The eighth is not a disagreement:
-  DA refuses by name, DE raises.* ***Agreement on a VERDICT says nothing about
-  agreement on SURVIVAL.*** **And DA's architecture for the pair is READ FROM DE'S
-  DESIGN ARTIFACT rather than typed** -- *"the strongest answer to a cross-seat
-  finding this seat has had"*, the one-way binding its residual.
-  (6) **THE LANDING DIGEST IS WRITTEN TWICE AND TODAY CANNOT DIFFER** -- both copies
-  come from ONE hash call. ***So the finding is not a wrong value but an ABSENT
-  ASSERTION***: correct by construction today, unprotected tomorrow. **"These two
-  agree" and "nothing could make them disagree" are different states, and only the
-  second is a guarantee.**
-  (7) **AND THE BATTERY MOVES BEFORE THE DAY'S WORK** -- after the book digest,
-  before S1; the emit keeps only the closure/HEAD check and the growth-budget read;
-  the falsifier is ***"a battery that would refuse does so with ZERO DRAWS
-  PERFORMED."*** *The first soft spot from the DE reset's harvest, turned into work
-  within one round of being written down -- and the falsifier states the property
-  that matters, not the mechanism.*
-  (8) **MEASURED ABSENCE:** Q-DE-90 and Q-DA-299 are **both absent** from the
-  register (0 matches each) -- the dispatch's "if landed" resolves to **NOT LANDED**,
-  recorded rather than left to inference. **`be58tape.scope` active, pid 3177600 at
-  771 s (~13 min).** *The lock's schedule is what makes DE 90 and REV 55 free: they
-  fit inside a wait that was already happening.*
-  **FLAG WORDS: the read gate CRASH-ON-MALFORMED-SUPERSEDES (DE 90 in flight); the
-  re-run GO-PENDING-REV-55; the 09-04 tape BUILDING (`be58tape.scope` since
-  09:59:58Z).**
-  MEASURED BEFORE THIS SENTENCE: flags 895 -> 903, flag_provenance 440 -> 448,
-  tasks 19; **271 CHECKED**, 177 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2942,6 +2951,86 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  TWO_FILES_CARRIED_ONE_PROTOCOL_IDENTITY_AND_I_HAD_VERIFIED_ONE_OF_THEM: VERIFICATION_IS_PER_PROPERTY
+                             # CHECKED 2026-09-06T10:45:30Z by reading the `protocol` field of each:
+                             # **`design_v16.json` -> `…_DESIGN_DECLARATION_V16`; `design_v17.json` ->
+                             # `…_DESIGN_DECLARATION_V16`; `design_v18.json` -> `…_V18`.** *Two files, ONE
+                             # protocol identity, with the live pin on the second -- and the version series
+                             # skips 17 because 17's identity was already spent.*
+                             # ***AND AT ROUND 154 I VERIFIED v17.*** **I hashed its `parameters` pin,
+                             # confirmed FORWARD RESOLVES TRUE, and wrote that the five-round pin thread
+                             # closed -- and I never read the `protocol` field two lines away.**
+                             # *Verification is PER-PROPERTY: "I verified v17" meant "I verified v17's
+                             # pin", and the artifact was defective in a field I had no reason to open.*
+                             # **The honest form of a CHECKED flag is the property, not the file.**
+  THE_STALE_REHEARSAL_ALSO_SAYS_READY: ONLY_THE_AS_OF_SEPARATES_THEM
+                             # CHECKED 2026-09-06T10:45:30Z across all three 09-03 rehearsals:
+                             # **`…075707Z` -> `NOT_READY_P2_book_exists_P2_builder_receipt_exists`,
+                             # blocking the two book preconditions, as_of 07:57:18; `…v2__081252Z` ->
+                             # **`READY`, blocking `[]`**, as_of 08:13:03; `…v3__104001Z` -> `READY`,
+                             # blocking `[]`, as_of 10:40:01.**
+                             # ***The 08:13 rehearsal says READY and it PREDATES the run that refused.***
+                             # **So a reader citing "the rehearsal says READY" without the as_of would be
+                             # citing evidence produced BEFORE the failure it is meant to clear** -- *and
+                             # the status field cannot tell them apart; only the as_of can.* **That is
+                             # exactly why DE names the v3 rehearsal as the GO precondition and rules the
+                             # other two out**, and it is the same shape as my own round-145 rule: latest is
+                             # not a citation, and neither is READY.
+  THE_PIN_STAYS_CLOSED_ACROSS_A_VERSION_BUMP: V11_V18
+                             # CHECKED 2026-09-06T10:45:30Z: **design v18's `parameters.path` is
+                             # `…/de_multiday_gate1_params_v11.json` and its `parameters.sha256` is
+                             # `a82a6320…`, which I computed as v11's ACTUAL digest -- FORWARD RESOLVES
+                             # TRUE.** *The thread I closed at v10/v17 last round survives its first
+                             # version bump, which is the only test that matters for a fix of this kind:
+                             # **a pin that resolves once may be luck; a pin that resolves across a bump is
+                             # a mechanism.*** **And params v11 is POINTER-ONLY -- the design pin's path and
+                             # the supersedes block, days and horizon unchanged -- diffed by the
+                             # coordinator.**
+  THE_NAMED_REFUSAL_IS_PRESENT_AND_THE_BATTERY_HAS_MOVED: THE_GATE_REFUSES_INSTEAD_OF_RAISING
+                             # CHECKED 2026-09-06T10:45:30Z: **`SUPERSEDES_MALFORMED` appears 5 times
+                             # in the runner** -- the crash I drove at round 154 and confirmed unwrapped at
+                             # 155 is now a NAMED REFUSAL. *And the in-run battery is moved BEFORE the day's
+                             # work, the emit keeping only the closure/HEAD check and the growth-budget
+                             # read.* ***The two failures that cost the 09-03 run -- a check that could only
+                             # fire at the end, and a gate that could raise instead of refusing -- are both
+                             # closed in the same commit.*** **220 checks under the coordinator's run.**
+  BE_S_MAIN_RETURNS_ON_SELFTEST_BEFORE_DAY_IS_READ: R-609_S_PRECONDITION_HOLDS_IN_BE
+                             # CHECKED 2026-09-06T10:45:30Z MYSELF rather than relayed:
+                             # `be_daybook_build.main()` is **`if "--selftest" in argv: return selftest()`
+                             # at :1020-1021, and only then `if "--day" in argv:` at :1022.**
+                             # ***So a fixture build and a real build never share a process, and R-609's
+                             # precondition -- NO FIXTURE INSIDE A REAL DAY -- holds in BE's builder by
+                             # CONTROL FLOW, not by convention.*** *That is the structural reason the
+                             # 0.7 GB fixture budgets at L367 cannot fire on the real path today* --
+                             # **the trigger's absence has a location, and this is it.**
+  TWO_MORE_LITERALS_THAT_HAD_TO_TRACK_MOVING_THINGS: A_ZIP_THAT_SHIFTS_SILENTLY
+                             # RELAYED from R-614(A), 2026-09-06T10:45:30Z. **The fixture non-vacuity
+                             # check tested for `params_v10.json` BY NAME; and the peak-stage falsifiers'
+                             # `zip(names, [six floats])` SILENTLY SHIFTED when the stage table grew.**
+                             # ***The `zip` is the sharper of the two: a mismatched length does not raise --
+                             # it TRUNCATES, so every falsifier after the insertion point quietly tested the
+                             # wrong stage.*** *A control that keeps passing while testing something else is
+                             # rule 16's shape with no visible symptom at all.* **BE's recurring class,
+                             # found in DE's file, while closing a review item.**
+  THE_TWO_SEAT_DIVERGENCES_REMAIN_OPEN_AND_ARE_NAMED: DE_REFUSES_WHERE_DA_RESOLVES
+                             # RELAYED from R-614(A), 2026-09-06T10:45:30Z. **On DISAGREEING
+                             # landing-digest copies, DE REFUSES while DA RESOLVES on its own field** (DA 78
+                             # carries the assertion); **and the pair definition's binding is ONE-WAY.**
+                             # ***Both are open, both are named, and neither is a defect in either seat: they
+                             # are two correct implementations of a rule that does not yet say which side
+                             # owns the disagreement.*** *R-235 produces this by design -- and the residual
+                             # is exactly the question R-608 answered for the LINK and has not yet answered
+                             # for the COPIES.*
+  THE_REHEARSAL_IS_READY_AND_THE_GATE_IS_THE_FILING: GO_PENDING_REV_55
+                             # CHECKED 2026-09-06T10:45:30Z: **the v3 rehearsal (10:40:01Z) is READY
+                             # with `blocking: []`**, and `be59book.scope` is `active / running` at 371 s.
+                             # ***So the re-run is blocked by NOTHING TECHNICAL: the code is fixed, the
+                             # rehearsal passes, the day is unconsumed, and the only thing between it and
+                             # GO is REV 55's filing on DE 89 + DE 90.*** *REV 55 answers three questions
+                             # from the code: does `--day` reach the emit without the seam under ANY
+                             # configuration, does the receipt name the bytes that RUN, and **what else
+                             # could refuse at the END rather than the start.*** **The third is the one the
+                             # 84 minutes bought.**
   THE_BUILDER_HASHES_THE_FILES_IT_IS_ABOUT_TO_USE_AND_CALLS_THAT_VERIFICATION: SELF_REFERENTIAL_PIN
                              # CHECKED 2026-09-06T10:40:10Z at the call site, and this is the fresh
                              # BE's reload finding confirmed at the code. **`inp = R.day_assembly_inputs(_hy,
@@ -19001,6 +19090,76 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 158, 2026-09-06T10:45:30Z ------------------------------
+  TWO_FILES_CARRIED_ONE_PROTOCOL_IDENTITY_AND_I_HAD_VERIFIED_ONE_OF_THEM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json
+    as_of: 2026-09-06T10:45:30Z
+    said: >-
+      reading the protocol field of each: design_v16.json is
+      ..._DESIGN_DECLARATION_V16, design_v17.json is also ..._DESIGN_DECLARATION_V16,
+      and design_v18.json is ..._V18 -- two files, one protocol identity, with the live
+      pin on the second. At round 154 I verified v17's parameters pin, confirmed
+      forward resolves true and called the pin thread closed, and never read the
+      protocol field two lines away. Verification is per-property.
+  THE_STALE_REHEARSAL_ALSO_SAYS_READY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03_v2__20260906T081252Z.json
+    as_of: 2026-09-06T10:45:30Z
+    said: >-
+      the three 09-03 rehearsals read NOT_READY (as_of 07:57:18, blocking the two book
+      preconditions), READY with blocking [] (as_of 08:13:03), and READY with blocking
+      [] (as_of 10:40:01). The 08:13 rehearsal says READY and predates the run that
+      refused, so a reader citing "the rehearsal says READY" without the as_of would be
+      citing evidence produced before the failure it is meant to clear; the status
+      field cannot tell them apart and only the as_of can.
+  THE_PIN_STAYS_CLOSED_ACROSS_A_VERSION_BUMP:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v18.json
+    as_of: 2026-09-06T10:45:30Z
+    said: >-
+      design v18's parameters.path is .../de_multiday_gate1_params_v11.json and its
+      parameters.sha256 is a82a6320..., which I computed as v11's actual digest --
+      forward resolves true. The thread closed at v10/v17 survives its first version
+      bump: a pin that resolves once may be luck, one that resolves across a bump is a
+      mechanism.
+  THE_NAMED_REFUSAL_IS_PRESENT_AND_THE_BATTERY_HAS_MOVED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:45:30Z
+    said: >-
+      SUPERSEDES_MALFORMED appears five times in the runner -- the crash driven at
+      round 154 and confirmed unwrapped at 155 is now a named refusal -- and the in-run
+      battery is moved before the day's work, the emit keeping only the closure/HEAD
+      check and the growth-budget read. The two failures that cost the 09-03 run are
+      closed in the same commit; 220 checks under the coordinator's run.
+  BE_S_MAIN_RETURNS_ON_SELFTEST_BEFORE_DAY_IS_READ:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:45:30Z
+    said: >-
+      main() is "if --selftest in argv: return selftest()" at :1020-1021 and only then
+      "if --day in argv:" at :1022, so a fixture build and a real build never share a
+      process and R-609's no-fixture-inside-a-real-day precondition holds in BE's
+      builder by control flow rather than convention -- which is the structural reason
+      the 0.7 GB fixture budgets at :367 cannot fire on the real path today.
+  TWO_MORE_LITERALS_THAT_HAD_TO_TRACK_MOVING_THINGS:
+    prov: RELAYED
+    from: R-614(A)
+    as_of: 2026-09-06T10:45:30Z
+  THE_TWO_SEAT_DIVERGENCES_REMAIN_OPEN_AND_ARE_NAMED:
+    prov: RELAYED
+    from: R-614(A)
+    as_of: 2026-09-06T10:45:30Z
+  THE_REHEARSAL_IS_READY_AND_THE_GATE_IS_THE_FILING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03_v3__20260906T104001Z.json
+    as_of: 2026-09-06T10:45:30Z
+    said: >-
+      the v3 rehearsal (as_of 10:40:01Z) is READY with blocking [], and be59book.scope
+      is active/running at 371 s, so the re-run is blocked by nothing technical: the
+      code is fixed, the rehearsal passes, the day is unconsumed, and only REV 55's
+      filing stands between it and GO.
   # --- MEM round 157, 2026-09-06T10:40:10Z ------------------------------
   THE_BUILDER_HASHES_THE_FILES_IT_IS_ABOUT_TO_USE_AND_CALLS_THAT_VERIFICATION:
     prov: CHECKED
