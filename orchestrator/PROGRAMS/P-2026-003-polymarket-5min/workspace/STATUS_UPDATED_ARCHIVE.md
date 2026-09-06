@@ -12276,3 +12276,90 @@ directions.
   thirty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 146 — archived 2026-09-06T11:33:20Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 164 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:11:50Z (MEM ROUND 161 -- R-617 AND Q-DE-91 SWEPT. STATE ONLY.
+  THE GO CONDITION IS CLOSED AND ONE GATE REMAINS.
+  (1) **THE RECEIPT'S NAME IS NO LONGER THE OPERATOR'S TO TYPE.** Rehearsal v4:
+  **`status READY`, `blocking []`, as_of 11:06:00 -- and `THE_ONE_COMMAND` carries
+  `--output /home/yuqing/ctaNew/data/pm_5min/derived`, a DIRECTORY, with
+  `--unit=<deNNsmoke>` the ONE substitution left.** ***The name the emit checks is
+  composed by the code that emits it; the operator supplies a PLACE, not a NAME.***
+  **The class this closes is the one this session keeps meeting from every side: a
+  value typed in one context and validated in another.**
+  (2) **AND THE ARGUMENT REFUSES BEFORE ANY WORK, TWICE, BY NAME:** `:1259` -- *"…
+  --output {o} is an existing FILE"*; `:1265-1267` -- *"… --output {o.name} looks like
+  a … names a DIRECTORY."* ***REV 55's zero-draws falsifier, applied to the OPERATOR's
+  argument rather than to a battery.*** *The 84 minutes bought the principle; this is
+  its second application.*
+  (3) **THE PIN HOLDS ACROSS A THIRD CONSECUTIVE BUMP:** design v19 pins
+  **`params_v12.json` with `7576ae1b…`, v12's ACTUAL digest, computed by me.** *v17 ->
+  v10, v18 -> v11, v19 -> v12.* ***Three bumps, three resolutions, each verified by my
+  own hash*** -- **the mechanism I doubted for five rounds now has a longer record
+  than the defect did, and checking it costs one line, so it gets checked every bump.**
+  (4) **AND THE BOOK'S RSS FELL BETWEEN TWO SAMPLES WHILE THE SCOPE PEAK HELD:**
+  **5,128,372 KiB at 1,808 s -> 4,807,808 KiB at 1,955 s (~313 MB), `MemoryPeak`
+  flat at 7,063,289,856.** ***A falling current RSS beside a flat high-water is the
+  signature of a RELEASE*** -- *consistent with A3, whose `assert_index_released`
+  refuses unless ≥10 % of the A1 peak is freed.* **Two samples cannot attribute it with
+  certainty from outside** -- *but it is visible AT ALL only because `ps` reports
+  CURRENT RSS, which is exactly why BE added `_rss_now_gb()`: "`ru_maxrss` cannot show
+  a release, so the claim needs a FALLING number to rest on."*
+  (5) **DE TOOK ITS OWN REMEDY OVER THE REVIEWER'S, WITH THREE REASONS THAT HOLD:**
+  *(a) a launch stamp is still a TYPED stamp -- bounding how wrong a chosen name can
+  be is not REMOVING the choice; (b) the 300 s tolerance becomes a race against the
+  operator's own pre-flight -- **six minutes of care refuses the run**; (c) the
+  receipt's stamp would mean LAUNCH here and WRITE-TIME everywhere else.*
+  ***Rule 5's shape: a fix may differ from the filing when the difference is ARGUED***
+  -- **and (b) is the one a reviewer could not have seen, because it is about the
+  OPERATOR's behaviour, not the code's.**
+  (6) **AND BOTH HALVES WERE REPRODUCED BEFORE EITHER WAS REPAIRED:** the
+  launch-stamped name refuses at **-5,074 s**; the stamp-free escape **passes the emit
+  and does NOT match the sealed glob**, so *the receipt would EXIST and the read gate
+  would report the day ABSENT*. ***"Neither name an operator can type is right."***
+  **The second half is the measurement I made at round 159** -- `…_SEALED.json` fails
+  the glob while `…_SEALED__.json` passes it looking like a truncation -- *and DE
+  reached it independently, from the FAILURE rather than from the pattern.*
+  (7) **A SECOND CERTAIN END-OF-RUN REFUSAL, DE'S OWN, FOUND BY RUNNING THE PATH
+  INSTEAD OF THE FUNCTION.** *Recorded in Q-DE-91; REV 56 drives it.* ***The
+  reviewer's four-class enumeration gained an entry from the seat implementing the
+  fix, one round after it was written*** -- **which is the argument for enumerating: a
+  list nobody adds to is a list nobody used.**
+  (8) **REV 56 IS THE LAST GATE, AND IT MUST ANSWER IN ONE LINE:** DE's remedy and
+  reason; the glob and DA's landing record resolving the EMITTED name; the second
+  refusal driven and closed; the GO question re-asked at the tip; **SS2.4 (the battery
+  at 850 MB / 23.6 s, near the heavy bar) as a NOTE or a BLOCKER**; **GO / NO-GO in
+  one line.** *Then DE 92: wt-de2 at the tip and UNTOUCHED FOR THE RUN'S LIFE, the
+  fresh rehearsal, `flock -n` once the book frees (≈11:14Z), `--unit=de92smoke`, the
+  OPEN FIELDS ONLY.* ***A review item that must come back as "note" or "blocker" is
+  rule 10 applied to a review's own output.***
+  **AT COMMIT TIME, 2026-09-06T11:14:08Z: REV 56 LANDED AND IT IS *GO* (`c8886e1`).**
+  ***"GO. Nothing certain can refuse at the end any more -- I DROVE THE WHOLE DAY PATH
+  END TO END AND IT EMITTED; DE chose its remedy over mine and its reasoning is right
+  on all three counts, ONE OF WHICH I MEASURED AGAINST MY OWN RECOMMENDATION."***
+  **So the last gate is cleared: the re-run is GO on the coordinator's act, into the
+  slot the 09-04 book frees.** *Two things worth carrying: the reviewer DROVE THE
+  WHOLE PATH rather than the functions -- the same move that found DE's second refusal
+  -- and it MEASURED DE's counter-argument against its own recommendation rather than
+  conceding it.* ***A reviewer testing the seat's reason against its own is the
+  strongest form of R-235 this session has produced.*** **Recorded unswept; the
+  filing is next round's sweep.**
+  **AND THE LOCK IS STILL BE'S:** `be59book.scope` active at 2,114 s, process RSS
+  4,760,584 KiB -- **still falling** (5,128,372 -> 4,807,808 -> 4,760,584 across three
+  samples) -- and no `be_daybook_20260904` file on disk yet.
+  **FLAG WORDS: the re-run GO-PENDING-REV-56 (everything else READY); the 09-04 book
+  BUILDING at 7.06 GB against A2's 7.5 -- with the round-160 distinction still
+  standing: that 7.06 GB is the SCOPE's peak and A2's 7.5 GB is checked on the
+  PROCESS's `ru_maxrss`, which I measure at 4.92 GB.**
+  MEASURED BEFORE THIS SENTENCE: flags 943 -> 951, flag_provenance 488 -> 496,
+  tasks 19; **302 CHECKED**, 194 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

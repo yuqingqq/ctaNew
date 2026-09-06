@@ -63,6 +63,83 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:33:20Z (MEM ROUND 164 -- R-620 AND Q-DE-92 SWEPT. STATE ONLY.
+  THE 26-SECOND EXIT WAS CAUSED BY THE FIX THAT MADE IT CHEAP.
+  (1) **THE BATTERY'S MOVE IS WHAT MADE THIS CHECK REFUSE.** The guard's own
+  docstring: ***"It was an inline `if` inside `run_day`, and the battery drove it by
+  CALLING `run_day` and reading the message. That check could therefore only pass when
+  THE BATTERY'S OWN PROCESS did not hold the lock -- and the battery NOW RUNS INSIDE
+  EVERY REAL DAY, which by construction holds it."*** **So round 158's fix -- moving
+  the battery BEFORE the day's work, which made a battery finding cost 0.03 s instead
+  of a day -- is exactly what made this check unpassable.** ***Third instance this
+  session of two correct changes composing into a refusal, and the cheapest: the
+  refusal it produced cost 26 seconds.***
+  (2) **AND TWO OF THE CHECK'S THREE CELLS WERE UNREACHABLE BEFORE** -- it *"passed
+  for every seat's standalone battery (NO LOCK) and could only refuse inside a wrapped
+  real run, which holds the lock BY CONSTRUCTION."* **Now a predicate over an INJECTED
+  observation: all three cells driven, 235 checks holding the lock and 235 without.**
+  *Rule 17's family again -- not suite-green versus wired, but suite-green in a
+  configuration the real run never has.*
+  (3) **THE SNAPSHOT IS DESCRIPTIVE AND THE ASSERTION IS LIVE.** Design v20:
+  ***"a SNAPSHOT of `DAY_PATH_CHECKS` read at emission, NOT a pin. The runner COMPUTES
+  ITS OWN COUNT at run time and ASSERTS it against …"*** -- *(it had gone stale at 100
+  vs 101, which is how it was found).* **The class I have followed since round 133 --
+  23 in prose, then 49, 75, 82 -- resolved by separating what the artifact REPORTS
+  from what the code ENFORCES.** ***A number in a document is a snapshot; a number in
+  a check is a bar; the defect was calling one the other.***
+  (4) **THE BOOK IS UNCHANGED AND THE ONLY ARTIFACT IS THE REFUSAL** -- I hashed it:
+  **`aad816d637f8445a…`, the digest carried since round 143**, and the only
+  `day_run_20260903` artifact is still the **09:50:58Z REFUSED record.** ***So "the day
+  was not consumed" is a MEASUREMENT, not an assertion*** -- **which is what makes
+  "fixing the instrument and re-running is not choosing after seeing" true OF THE
+  DATA.** *And DE marks the limit itself: true of the data, NOT of the gate.*
+  (5) **MY GREP MISSED THE NEW RULE BECAUSE OF CASE -- AGAIN.** Zero hits for "every
+  launch is a separate GO"; the rule is at `COORDINATOR_RUNBOOK.md:364` **in
+  CAPITALS.** ***Sixteenth "suspect the probe first", and the SECOND time CASE is the
+  cause*** (round 142's `UNCOVERED_GENERATIONS`). **The other fifteen had fifteen
+  different mechanisms; this one has now cost me twice.**
+  (6) **AND THE RULE ENCODES THE DISPOSITION OF THE CASE THAT PRODUCED IT:** *"EVERY
+  LAUNCH IS A SEPARATE GO (R-620). After any refusal of a real run, the fix is
+  reviewed BEFORE the next launch; a seat does not fix-and-relaunch inside one batch.
+  The coordinator issues GO per launch, naming the commit the run executes from.
+  **A launch made without it stays up only by the coordinator's explicit ruling, and a
+  NO-GO from the reviewer stops it.**"* ***A future reader finds the rule AND its
+  precedent in one place, and cannot mistake "it stayed up" for "it was allowed".***
+  (7) **THE RULING AND THE RULE MOVE IN OPPOSITE DIRECTIONS, ON PURPOSE:** DE fixed
+  and relaunched inside one batch before the reviewer filed; **the run STAYS** (zero
+  draws seen, the change is a guard predicate, a NO-GO stops it at the cost of
+  minutes) **and the practice CHANGES**. *This run is cheap to allow; the precedent is
+  expensive to leave open.*
+  (8) **THE RUN IS LIVE AND PAST WHAT STOPPED IT:** `de93smoke.scope` active since
+  **11:28:44Z**, pid 3282335 at **238 s**, RSS **750,248 KiB**, with a **2.55 GB peak
+  at 11:31Z (the S1 book load)**. ***Past the 26-second exit by an order of magnitude
+  and past the S1 load the first attempt never reached.*** *And DA 80's book tier,
+  dispatched into the idle lock at 11:26Z, found it HELD and refuses by rule 20 --
+  deferred to the next idle window, its light resolver check proceeding.*
+  **AT COMMIT TIME, 2026-09-06T11:35:56Z: REV 57 LANDED (`0d44854`) WITH THREE
+  OUTCOMES, ONE OF WHICH CORRECTS A MECHANISM I RELAYED LAST ROUND.**
+  ***(a) The 09-04 book STANDS*** -- *"with two disclosed defects that cannot certify
+  anything false"*, which is the precise form: the defects are real, disclosed, and
+  incapable of making a true-looking false claim. ***(b) DE 92's lock-dependent check
+  is CLOSED, and it is GO for the 09-03 re-run*** -- so this round's flag word
+  "UNREVIEWED-FIX-UNDER-REVIEW" is true as dispatched and resolves to REVIEWED-AND-GO
+  by the time it commits.
+  ***(c) AND BE's WORKTREE FINDING IS A HAZARD BUT "IT IS NOT THE ENVIRONMENT
+  VARIABLE -- DA's own resolver reads the shell with `PM_DATA_ROOT` CORRECTLY
+  SET".*** **My round-163 flag carried BE's mechanism ("four worktrees are one unset
+  env from reading a shell fact as a ledger fact") as RELAYED, and the reviewer has
+  now refined it: the hazard survives, the MECHANISM named for it does not.**
+  *The provenance mark is what makes that survivable -- a RELAYED flag carries whose
+  claim it is, so a correction lands on the claim rather than on the record.*
+  **REV 57's filing is next round's sweep; I record the correction and adjudicate
+  nothing.**
+  **FLAG WORDS: the 09-03 re-run RUNNING (second launch, since 11:28:44Z, expected
+  ≈12:55Z) -- UNREVIEWED-FIX-UNDER-REVIEW (REV 57's addendum); the book tier DEFERRED
+  to the next idle lock.**
+  MEASURED BEFORE THIS SENTENCE: flags 967 -> 975, flag_provenance 512 -> 520,
+  tasks 19; **318 CHECKED**, 202 RELAYED, **455 UNMARKED -- unchanged for the
+  fortieth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T11:27:40Z (MEM ROUND 163 -- R-619, Q-BE-59 AND Q-DE-92 SWEPT. STATE ONLY.
   THE 09-04 BOOK EXISTS; THE RE-RUN EXITED AT 26 SECONDS HAVING WRITTEN NOTHING.
   (1) **THE BOOK'S DIGEST REPRODUCES UNDER MY OWN HASH.** 340,969,199 bytes ->
@@ -209,83 +286,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 951 -> 959, flag_provenance 496 -> 504,
   tasks 19; **306 CHECKED**, 198 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:11:50Z (MEM ROUND 161 -- R-617 AND Q-DE-91 SWEPT. STATE ONLY.
-  THE GO CONDITION IS CLOSED AND ONE GATE REMAINS.
-  (1) **THE RECEIPT'S NAME IS NO LONGER THE OPERATOR'S TO TYPE.** Rehearsal v4:
-  **`status READY`, `blocking []`, as_of 11:06:00 -- and `THE_ONE_COMMAND` carries
-  `--output /home/yuqing/ctaNew/data/pm_5min/derived`, a DIRECTORY, with
-  `--unit=<deNNsmoke>` the ONE substitution left.** ***The name the emit checks is
-  composed by the code that emits it; the operator supplies a PLACE, not a NAME.***
-  **The class this closes is the one this session keeps meeting from every side: a
-  value typed in one context and validated in another.**
-  (2) **AND THE ARGUMENT REFUSES BEFORE ANY WORK, TWICE, BY NAME:** `:1259` -- *"…
-  --output {o} is an existing FILE"*; `:1265-1267` -- *"… --output {o.name} looks like
-  a … names a DIRECTORY."* ***REV 55's zero-draws falsifier, applied to the OPERATOR's
-  argument rather than to a battery.*** *The 84 minutes bought the principle; this is
-  its second application.*
-  (3) **THE PIN HOLDS ACROSS A THIRD CONSECUTIVE BUMP:** design v19 pins
-  **`params_v12.json` with `7576ae1b…`, v12's ACTUAL digest, computed by me.** *v17 ->
-  v10, v18 -> v11, v19 -> v12.* ***Three bumps, three resolutions, each verified by my
-  own hash*** -- **the mechanism I doubted for five rounds now has a longer record
-  than the defect did, and checking it costs one line, so it gets checked every bump.**
-  (4) **AND THE BOOK'S RSS FELL BETWEEN TWO SAMPLES WHILE THE SCOPE PEAK HELD:**
-  **5,128,372 KiB at 1,808 s -> 4,807,808 KiB at 1,955 s (~313 MB), `MemoryPeak`
-  flat at 7,063,289,856.** ***A falling current RSS beside a flat high-water is the
-  signature of a RELEASE*** -- *consistent with A3, whose `assert_index_released`
-  refuses unless ≥10 % of the A1 peak is freed.* **Two samples cannot attribute it with
-  certainty from outside** -- *but it is visible AT ALL only because `ps` reports
-  CURRENT RSS, which is exactly why BE added `_rss_now_gb()`: "`ru_maxrss` cannot show
-  a release, so the claim needs a FALLING number to rest on."*
-  (5) **DE TOOK ITS OWN REMEDY OVER THE REVIEWER'S, WITH THREE REASONS THAT HOLD:**
-  *(a) a launch stamp is still a TYPED stamp -- bounding how wrong a chosen name can
-  be is not REMOVING the choice; (b) the 300 s tolerance becomes a race against the
-  operator's own pre-flight -- **six minutes of care refuses the run**; (c) the
-  receipt's stamp would mean LAUNCH here and WRITE-TIME everywhere else.*
-  ***Rule 5's shape: a fix may differ from the filing when the difference is ARGUED***
-  -- **and (b) is the one a reviewer could not have seen, because it is about the
-  OPERATOR's behaviour, not the code's.**
-  (6) **AND BOTH HALVES WERE REPRODUCED BEFORE EITHER WAS REPAIRED:** the
-  launch-stamped name refuses at **-5,074 s**; the stamp-free escape **passes the emit
-  and does NOT match the sealed glob**, so *the receipt would EXIST and the read gate
-  would report the day ABSENT*. ***"Neither name an operator can type is right."***
-  **The second half is the measurement I made at round 159** -- `…_SEALED.json` fails
-  the glob while `…_SEALED__.json` passes it looking like a truncation -- *and DE
-  reached it independently, from the FAILURE rather than from the pattern.*
-  (7) **A SECOND CERTAIN END-OF-RUN REFUSAL, DE'S OWN, FOUND BY RUNNING THE PATH
-  INSTEAD OF THE FUNCTION.** *Recorded in Q-DE-91; REV 56 drives it.* ***The
-  reviewer's four-class enumeration gained an entry from the seat implementing the
-  fix, one round after it was written*** -- **which is the argument for enumerating: a
-  list nobody adds to is a list nobody used.**
-  (8) **REV 56 IS THE LAST GATE, AND IT MUST ANSWER IN ONE LINE:** DE's remedy and
-  reason; the glob and DA's landing record resolving the EMITTED name; the second
-  refusal driven and closed; the GO question re-asked at the tip; **SS2.4 (the battery
-  at 850 MB / 23.6 s, near the heavy bar) as a NOTE or a BLOCKER**; **GO / NO-GO in
-  one line.** *Then DE 92: wt-de2 at the tip and UNTOUCHED FOR THE RUN'S LIFE, the
-  fresh rehearsal, `flock -n` once the book frees (≈11:14Z), `--unit=de92smoke`, the
-  OPEN FIELDS ONLY.* ***A review item that must come back as "note" or "blocker" is
-  rule 10 applied to a review's own output.***
-  **AT COMMIT TIME, 2026-09-06T11:14:08Z: REV 56 LANDED AND IT IS *GO* (`c8886e1`).**
-  ***"GO. Nothing certain can refuse at the end any more -- I DROVE THE WHOLE DAY PATH
-  END TO END AND IT EMITTED; DE chose its remedy over mine and its reasoning is right
-  on all three counts, ONE OF WHICH I MEASURED AGAINST MY OWN RECOMMENDATION."***
-  **So the last gate is cleared: the re-run is GO on the coordinator's act, into the
-  slot the 09-04 book frees.** *Two things worth carrying: the reviewer DROVE THE
-  WHOLE PATH rather than the functions -- the same move that found DE's second refusal
-  -- and it MEASURED DE's counter-argument against its own recommendation rather than
-  conceding it.* ***A reviewer testing the seat's reason against its own is the
-  strongest form of R-235 this session has produced.*** **Recorded unswept; the
-  filing is next round's sweep.**
-  **AND THE LOCK IS STILL BE'S:** `be59book.scope` active at 2,114 s, process RSS
-  4,760,584 KiB -- **still falling** (5,128,372 -> 4,807,808 -> 4,760,584 across three
-  samples) -- and no `be_daybook_20260904` file on disk yet.
-  **FLAG WORDS: the re-run GO-PENDING-REV-56 (everything else READY); the 09-04 book
-  BUILDING at 7.06 GB against A2's 7.5 -- with the round-160 distinction still
-  standing: that 7.06 GB is the SCOPE's peak and A2's 7.5 GB is checked on the
-  PROCESS's `ru_maxrss`, which I measure at 4.92 GB.**
-  MEASURED BEFORE THIS SENTENCE: flags 943 -> 951, flag_provenance 488 -> 496,
-  tasks 19; **302 CHECKED**, 194 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2959,6 +2959,85 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_BATTERY_S_MOVE_IS_WHAT_MADE_THIS_CHECK_REFUSE: TWO_CORRECT_CHANGES_COMPOSING
+                             # CHECKED 2026-09-06T11:33:20Z at `assert_real_day_has_the_lock`'s own
+                             # docstring: ***"It was an inline `if` inside `run_day`, and the battery drove
+                             # it by CALLING `run_day` and reading the message. That check could therefore
+                             # only pass when THE BATTERY'S OWN PROCESS did not hold the lock -- and the
+                             # battery NOW RUNS INSIDE EVERY REAL DAY, which by construction holds it."***
+                             # **So the round-158 fix -- moving the battery BEFORE the day's work, which
+                             # made a battery finding cost 0.03 s instead of a day -- is exactly what made
+                             # this check unpassable.** ***Third instance this session of two correct
+                             # changes composing into a refusal*** -- *and the cheapest one, because the
+                             # refusal it produced cost 26 seconds.*
+  THE_SNAPSHOT_IS_DESCRIPTIVE_AND_THE_ASSERTION_IS_LIVE: THE_133_THREAD_RESOLVED
+                             # CHECKED 2026-09-06T11:33:20Z at design v20:
+                             # `R15_a_real_days_battery_is_the_FULL_battery.what_` = ***"a SNAPSHOT of
+                             # `de_multiday_gate1_runner.DAY_PATH_CHECKS` read at emission, NOT a pin. The
+                             # runner COMPUTES ITS OWN COUNT at run time and ASSERTS it against …"***
+                             # **The class I have followed since round 133 -- 23 in prose, then 49, 75, 82 --
+                             # is resolved by SEPARATING what the artifact REPORTS from what the code
+                             # ENFORCES.** *(It had gone stale at 100 vs 101, which is how it was found.)*
+                             # ***A number in a document is a snapshot; a number in a check is a bar. The
+                             # defect was calling one the other.***
+  THE_BOOK_IS_UNCHANGED_AND_THE_ONLY_ARTIFACT_IS_THE_REFUSAL: MEASURED_NOT_ASSERTED
+                             # CHECKED 2026-09-06T11:33:20Z: **I hashed the 09-03 book --
+                             # `aad816d637f8445a…`, the same digest carried since round 143 -- and the only
+                             # `day_run_20260903` artifact on disk is still the 09:50:58Z REFUSED record.**
+                             # ***So "the day was not consumed" is a MEASUREMENT, not an assertion*** --
+                             # **which is what makes DE's "fixing the instrument and re-running is not
+                             # choosing after seeing" TRUE OF THE DATA.** *DE says so itself and marks the
+                             # limit: it is true of the data and NOT of the gate -- the honest half most
+                             # such sentences omit.*
+  MY_GREP_MISSED_THE_RULE_BECAUSE_OF_CASE_AGAIN: SIXTEENTH_AND_A_REPEAT_CAUSE
+                             # CHECKED 2026-09-06T11:33:20Z. **My grep for "every launch is a separate
+                             # GO" in the runbook returned ZERO -- and the rule is there, at line 364, in
+                             # CAPITALS.** *Suspect the probe first: a case-insensitive grep found it
+                             # immediately.*
+                             # ***Sixteenth instance -- and the SECOND time CASE is the cause*** (round 142's
+                             # `UNCOVERED_GENERATIONS` was the first). **A recurring cause rather than a
+                             # fresh one, which is worth marking: the other fifteen had fifteen different
+                             # mechanisms, and this one has now cost me twice.** *`grep -i` when the corpus
+                             # writes rules in caps.*
+  THE_RULE_ENCODES_THE_DISPOSITION_OF_THE_CASE_THAT_PRODUCED_IT: A_RULE_THAT_SETTLES_ITS_OWN_ORIGIN
+                             # CHECKED 2026-09-06T11:33:20Z verbatim at `COORDINATOR_RUNBOOK.md:364`:
+                             # ***"EVERY LAUNCH IS A SEPARATE GO (R-620). After any refusal of a real run,
+                             # the fix is reviewed BEFORE the next launch; a seat does not fix-and-relaunch
+                             # inside one batch. The coordinator issues GO per launch, naming the commit the
+                             # run executes from. A launch made without it stays up only by the
+                             # coordinator's explicit ruling, and a NO-GO from the reviewer stops it."***
+                             # **The last sentence is the disposition of the very launch that produced the
+                             # rule** -- *so a future reader finds the rule AND the precedent in one place,
+                             # and cannot mistake "it stayed up" for "it was allowed".*
+  THE_RUN_IS_AT_FOUR_MINUTES_AND_PAST_S1: SECOND_LAUNCH_LIVE
+                             # CHECKED 2026-09-06T11:33:20Z: **`de93smoke.scope` active since 11:28:44Z;
+                             # pid 3282335 at 238 s, RSS 750,248 KiB** -- and the coordinator measured a
+                             # **2.55 GB peak at 11:31Z, the S1 book load**. *Expected ≈12:55Z.*
+                             # ***Past the 26-second exit by an order of magnitude, and past the S1 load
+                             # that the first attempt never reached.*** **The pre-day battery, the guard
+                             # that refused, and the S1 load are all behind it.**
+  TWO_OF_THREE_CELLS_WERE_UNREACHABLE_BEFORE: THE_CHECK_COULD_ONLY_FIRE_WHERE_NOBODY_RAN_IT
+                             # RELAYED from R-620(A), 2026-09-06T11:33:20Z. **The check "passed for
+                             # every seat's standalone battery (NO LOCK) and could only refuse inside a
+                             # wrapped real run, which holds the lock BY CONSTRUCTION -- two of its three
+                             # cells were UNREACHABLE before."** *Now a predicate over an INJECTED
+                             # observation, all three cells driven: **235 checks holding the lock and 235
+                             # without.***
+                             # ***A guard whose verdict depended on where it ran, verified in the only place
+                             # it could not fire*** -- **rule 17's family again: not suite-green versus
+                             # wired, but suite-green in a configuration the real run never has.**
+  THE_SECOND_LAUNCH_WITHOUT_A_RE_ISSUED_GO_AND_THE_RULING: THE_RUN_STAYS_THE_RULE_CHANGES
+                             # RELAYED from R-620(B), 2026-09-06T11:33:20Z. **DE fixed the instrument,
+                             # landed it, and launched again INSIDE THE SAME BATCH -- before the reviewer
+                             # filed on the fix.** *Ruled: **the run stays** -- zero draws were seen by
+                             # anyone, the change is a guard predicate, and a NO-GO stops it at the cost of
+                             # minutes.* **And the rule changes from here: after any refusal the fix is
+                             # reviewed BEFORE the next launch, and every launch is a separate GO.**
+                             # ***The disposition and the rule move in opposite directions on purpose: this
+                             # run is cheap to allow and the precedent is expensive to leave open.***
+                             # *And DA 80's book tier, dispatched into the idle lock at 11:26Z, found it
+                             # HELD at its launch and refuses by rule 20 -- deferred to the next idle
+                             # window, the light resolver check proceeding.*
   THE_BOOK_S_DIGEST_REPRODUCES_UNDER_MY_OWN_HASH: THE_09_04_BOOK_EXISTS
                              # CHECKED 2026-09-06T11:27:40Z: I hashed the 340,969,199-byte book myself
                              # -- **`9193206c2fa33878…`, equal to the receipt's `book.sha256` AND its
@@ -19498,6 +19577,78 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 164, 2026-09-06T11:33:20Z ------------------------------
+  THE_BATTERY_S_MOVE_IS_WHAT_MADE_THIS_CHECK_REFUSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T11:33:20Z
+    said: >-
+      assert_real_day_has_the_lock's docstring records that the check was an inline if
+      inside run_day driven by the battery calling run_day and reading the message, so
+      it could only pass when the battery's own process did not hold the lock -- and
+      the battery now runs inside every real day, which by construction holds it. The
+      round-158 fix that moved the battery before the day's work is what made this
+      check unpassable: two correct changes composing into a refusal, and the cheapest
+      such instance because it cost 26 seconds.
+  THE_SNAPSHOT_IS_DESCRIPTIVE_AND_THE_ASSERTION_IS_LIVE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json
+    as_of: 2026-09-06T11:33:20Z
+    said: >-
+      R15_a_real_days_battery_is_the_FULL_battery.what_ reads "a SNAPSHOT of
+      de_multiday_gate1_runner.DAY_PATH_CHECKS read at emission, NOT a pin. The runner
+      computes its own count at run time and asserts it against ...". The class
+      followed since round 133 (23 in prose, then 49, 75, 82) is resolved by separating
+      what the artifact reports from what the code enforces; it had gone stale at 100
+      vs 101, which is how it was found.
+  THE_BOOK_IS_UNCHANGED_AND_THE_ONLY_ARTIFACT_IS_THE_REFUSAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260903_btc.pkl
+    as_of: 2026-09-06T11:33:20Z
+    said: >-
+      I hashed the 09-03 book to aad816d637f8445a..., the same digest carried since
+      round 143, and the only day_run_20260903 artifact on disk is still the 09:50:58Z
+      REFUSED record. "The day was not consumed" is a measurement rather than an
+      assertion, which is what makes DE's "fixing the instrument and re-running is not
+      choosing after seeing" true of the data -- and DE marks the limit itself: true of
+      the data, not of the gate.
+  MY_GREP_MISSED_THE_RULE_BECAUSE_OF_CASE_AGAIN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T11:33:20Z
+    said: >-
+      my grep for "every launch is a separate GO" returned zero and the rule is at line
+      364 in capitals; a case-insensitive grep found it immediately. Sixteenth
+      suspect-the-probe-first instance and the second time case is the cause, after
+      round 142's UNCOVERED_GENERATIONS -- a recurring cause rather than a fresh one.
+  THE_RULE_ENCODES_THE_DISPOSITION_OF_THE_CASE_THAT_PRODUCED_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T11:33:20Z
+    said: >-
+      at :364 the rule reads that after any refusal of a real run the fix is reviewed
+      before the next launch, a seat does not fix-and-relaunch inside one batch, the
+      coordinator issues GO per launch naming the commit the run executes from, and a
+      launch made without it stays up only by the coordinator's explicit ruling with a
+      NO-GO from the reviewer stopping it. The last sentence is the disposition of the
+      very launch that produced the rule.
+  THE_RUN_IS_AT_FOUR_MINUTES_AND_PAST_S1:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T11:33:20Z
+    said: >-
+      de93smoke.scope has been active since 11:28:44Z and pid 3282335 is at 238 s with
+      RSS 750,248 KiB; the coordinator measured a 2.55 GB peak at 11:31Z, the S1 book
+      load. Past the 26-second exit by an order of magnitude and past the S1 load the
+      first attempt never reached; expected about 12:55Z.
+  TWO_OF_THREE_CELLS_WERE_UNREACHABLE_BEFORE:
+    prov: RELAYED
+    from: R-620(A)
+    as_of: 2026-09-06T11:33:20Z
+  THE_SECOND_LAUNCH_WITHOUT_A_RE_ISSUED_GO_AND_THE_RULING:
+    prov: RELAYED
+    from: R-620(B)
+    as_of: 2026-09-06T11:33:20Z
   # --- MEM round 163, 2026-09-06T11:27:40Z ------------------------------
   THE_BOOK_S_DIGEST_REPRODUCES_UNDER_MY_OWN_HASH:
     prov: CHECKED

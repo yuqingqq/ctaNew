@@ -5,6 +5,88 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 164
+
+**As of 2026-09-06T11:33:20Z. State only — MEM writes no result.**
+
+### AT COMMIT TIME (2026-09-06T11:35:56Z): REV 57 LANDED — GO, and a correction
+
+`0d44854`: **the 09-04 book STANDS** — *"with two disclosed defects that cannot
+certify anything false"*; **DE 92's lock-dependent check is CLOSED**; and **GO for
+the 09-03 re-run** (so this block's *UNREVIEWED-FIX-UNDER-REVIEW* resolves to
+**reviewed-and-GO**). **And BE's worktree finding is a HAZARD but *not* the
+environment variable** — *"DA's own resolver reads the shell with `PM_DATA_ROOT`
+correctly set."* **My round-163 flag carried BE's mechanism as RELAYED; the hazard
+survives, the mechanism named for it does not.** REV 57's filing is next round's
+sweep.
+
+### The 09-03 re-run is RUNNING (second launch) — and past what stopped the first
+
+`de93smoke.scope` **active since 11:28:44Z**, pid 3282335 at **238 s**, RSS
+**750,248 KiB**, peak **2.55 GB at 11:31Z** (the S1 book load). **Past the 26-second
+exit by an order of magnitude, and past the S1 load the first attempt never reached.**
+Expected **≈12:55Z**. **Status: UNREVIEWED-FIX-UNDER-REVIEW** — REV 57's addendum is
+in flight; **a NO-GO stops it.**
+
+**The 26-second exit was caused by the fix that made it cheap.** The guard's own
+docstring: *"It was an inline `if` inside `run_day`, and the battery drove it by
+**calling** `run_day` and reading the message. That check could therefore only pass
+when **the battery's own process** did not hold the lock — and the battery **now runs
+inside every real day**, which by construction holds it."* **Round 158's move — the
+battery before the day's work — is exactly what made this check unpassable.** Third
+instance this session of two correct changes composing into a refusal, and the
+cheapest: it cost 26 seconds. **Two of the check's three cells were unreachable
+before**; it is now a predicate over an **injected observation**, all three cells
+driven, **235 checks holding the lock and 235 without**.
+
+### The rule that came out of it
+
+**`COORDINATOR_RUNBOOK.md:364`** — *"**EVERY LAUNCH IS A SEPARATE GO (R-620).** After
+any refusal of a real run, the fix is reviewed **before** the next launch; a seat does
+not fix-and-relaunch inside one batch. The coordinator issues GO per launch, **naming
+the commit the run executes from**. A launch made without it stays up only by the
+coordinator's explicit ruling, and a NO-GO from the reviewer stops it."*
+
+**The ruling and the rule move in opposite directions on purpose:** DE fixed and
+relaunched inside one batch before the reviewer filed — **the run stays** (zero draws
+seen; the change is a guard predicate; a NO-GO costs minutes) **and the practice
+changes**. *This run is cheap to allow; the precedent is expensive to leave open.*
+And the rule's last sentence **is the disposition of the very launch that produced
+it** — a future reader cannot mistake "it stayed up" for "it was allowed".
+
+### Two things I verified myself
+
+- **The book is unchanged and the only artifact is the refusal.** I hashed the 09-03
+  book: **`aad816d637f8445a…`**, the digest carried since round 143; the only
+  `day_run_20260903` artifact is still the **09:50:58Z REFUSED record**. **"The day was
+  not consumed" is a measurement, not an assertion** — which is what makes *"fixing
+  the instrument and re-running is not choosing after seeing"* true **of the data**.
+  DE marks the limit itself: true of the data, **not of the gate**.
+- **The snapshot is descriptive and the assertion is live.** Design v20: *"a SNAPSHOT
+  of `DAY_PATH_CHECKS` read at emission, **NOT a pin**. The runner **computes its own
+  count** at run time and **asserts** it against …"* (it had gone stale at 100 vs 101 —
+  that is how it was found). **The class followed since round 133 — 23 → 49 → 75 → 82 —
+  resolved by separating what the artifact reports from what the code enforces.**
+
+*(And my grep for the new rule returned zero because the runbook writes rules in
+**capitals** — sixteenth "suspect the probe first", second time case is the cause.)*
+
+### State
+
+- **The book tier: DEFERRED to the next idle lock.** DA 80 was dispatched into the
+  idle window at 11:26Z, found the lock **held** at its launch, and **refuses by rule
+  20**; its light resolver check (every resolver driven with `PM_DATA_ROOT` **unset**,
+  each must **refuse**) proceeds.
+- **Queued:** REV 57 (the 09-04 book) + its addendum on the ambient-lock predicate;
+  BE 60's seven debts; then the 09-04 smoke.
+
+**Counts, measured before the sentence:** flags 967 → 975, `flag_provenance`
+512 → 520, tasks 19; **318 CHECKED**, 202 RELAYED, **455 UNMARKED — unchanged for
+the fortieth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3
+(Batch 146 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 163
 
 **As of 2026-09-06T11:27:40Z. State only — MEM writes no result.**
