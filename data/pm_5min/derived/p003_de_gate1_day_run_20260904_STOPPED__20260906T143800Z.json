@@ -1,0 +1,113 @@
+{
+  "as_of": "2026-09-06T14:38:00.132520+00:00",
+  "day": "2026-09-04",
+  "journal_copy": {
+    "copied_at_the_moment_of_reading": true,
+    "counts_agree": true,
+    "counts_note": "they differ legitimately when the NAME has been used more than once; the id is the run",
+    "coverage": {
+      "covered": true,
+      "host_horizon": {
+        "oldest_epoch": 1788690239.0,
+        "oldest_utc": "2026-09-06T10:23:59Z",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-06T14:38:00Z",
+        "status": "MEASURED"
+      },
+      "reference_is": "the unit's own start",
+      "reference_utc": "2026-09-06T14:31:18Z",
+      "regime": "BURSTY_UNIT__the_reference_is_the_unit_start",
+      "status": "MEASURED",
+      "two_clocks_no_text_search": true,
+      "unit_start": {
+        "query": "systemctl --user show de101smoke.service -p ExecMainStartTimestamp --value",
+        "raw": "Sun 2026-09-06 14:31:18 UTC",
+        "start_epoch": 1788705078.0,
+        "start_utc": "2026-09-06T14:31:18Z",
+        "status": "MEASURED",
+        "unit": "de101smoke.service"
+      },
+      "why": "the journal's oldest retained entry is 2026-09-06T10:23:59Z and the unit's own start is 2026-09-06T14:31:18Z; the journal reaches back past it"
+    },
+    "cross_check": "the by-id count against `-u <unit>`; a unit NAME names every run ever launched under it, an id names ONE",
+    "field_not_used_here": "INVOCATION_ID -- the SYSTEM manager's field; it matches nothing under --user",
+    "fields_matched": [
+      "_SYSTEMD_INVOCATION_ID (the payload's lines)",
+      "USER_INVOCATION_ID (the user manager's lines: Started, Consumed, Failed)"
+    ],
+    "how_that_is_computed": "da_root.journal_coverage: the host journal's oldest retained entry against the unit's own start timestamp -- TWO MEASURED CLOCKS, no needle. The old predicate searched the copied lines for ' Started ' and reported TRUE on a tail that had lost 141 of 161 lines",
+    "invocation_id": "499d6470b7844459a7178b2cb810a03e",
+    "invocation_id_source": "the unit's own `InvocationID` property",
+    "journalctl_error_by_id": null,
+    "journalctl_error_by_unit": null,
+    "lines": [
+      "2026-09-06T14:31:18.434414+00:00 ip-172-31-78-41 systemd[1004]: Started de101smoke.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-04 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived."
+    ],
+    "n_lines_by_id": 1,
+    "n_lines_by_unit_name": 1,
+    "oldest_line_raw": "2026-09-06T14:31:18.434414+00:00",
+    "oldest_line_utc": "2026-09-06T14:31:18.434414+00:00",
+    "output_format": "short-iso-precise",
+    "output_format_note": "journalctl -o short-iso-precise: an ISO timestamp, the host and the process prefix, then the message. A copy that does not name its format cannot be diffed against one that used another",
+    "query": "journalctl --user _SYSTEMD_INVOCATION_ID=499d6470b7844459a7178b2cb810a03e + USER_INVOCATION_ID=499d6470b7844459a7178b2cb810a03e",
+    "read_at_utc": "2026-09-06T14:38:00.197785+00:00",
+    "retention": {
+      "it_is_a_MEASUREMENT_not_a_property": "five reads across one hour walked the window's start from 08:45Z to 09:29:57Z -- about as fast as the clock. A retention state named once is stale within minutes, so it carries its own as-of and query (R-646 R4)",
+      "measured_at_utc": "2026-09-06T14:38:00.197785+00:00",
+      "oldest_entry_from": "the entry's OWN clock, as journald printed it -- never typed, never a policy setting",
+      "oldest_entry_raw": "2026-09-06T10:23:59.757490+00:00",
+      "oldest_user_journal_entry_utc": "2026-09-06T10:23:59.757490+00:00",
+      "query": "journalctl --user --no-pager -o short-iso-precise (first line = the oldest entry retained)"
+    },
+    "status": "PRESENT",
+    "unit": "de101smoke.service",
+    "window_fully_covered": true
+  },
+  "launch": {
+    "book": {
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+      "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858"
+    },
+    "launched_at_utc": "2026-09-06T14:31:18Z",
+    "tip": "c138f4f",
+    "wall_before_the_stop_s_approx": 402.1,
+    "worktree": "/home/yuqing/ctaNew-wt-de2"
+  },
+  "my_own_poll": {
+    "lines": [
+      "2026-09-06T14:31:34Z LoadState=loaded ActiveState=active SubState=running ExecMainStatus=0 Result=success MemoryPeak=847MB InvocationID=499d6470b7844459a7178b2cb810a03e",
+      "2026-09-06T14:36:34Z LoadState=loaded ActiveState=active SubState=running ExecMainStatus=0 Result=success MemoryPeak=2820MB InvocationID=499d6470b7844459a7178b2cb810a03e"
+    ],
+    "note": "five fields + id at every sample, \u22645 min apart"
+  },
+  "protocol": "P003_DE_GATE1_DAY_RUN_STOPPED_RECORD_V1",
+  "reason": "R-659: stopped by the coordinator before emit -- design v22's seal scope superseded by v23. The run was emitting under v22, which leaves three OUTCOME counts open (n_fills_arm, n_fills_baseline, n_cancels_issued) that v23 SEALS; a receipt emitted under v22 would carry them open",
+  "status": "STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN",
+  "the_five_fields_and_the_id_copied_BEFORE_the_stop": {
+    "ActiveState": "active",
+    "ExecMainStartTimestamp": "Sun 2026-09-06 14:31:18 UTC",
+    "ExecMainStatus": "0",
+    "InvocationID": "499d6470b7844459a7178b2cb810a03e",
+    "LoadState": "loaded",
+    "MemoryPeak": "2957099008",
+    "Result": "success",
+    "SubState": "running",
+    "read_at_utc": "2026-09-06T14:38:00.132526+00:00",
+    "status": "READABLE",
+    "why_before": "after `systemctl stop` the unit is stopped and after collection every field is a DEFAULT; the reading has to be taken while it is loaded and running"
+  },
+  "this_is_a_stop_before_emit_not_a_re_roll": {
+    "glob_matches": 0,
+    "no_receipt_exists_for_the_day": true,
+    "nothing_economic_was_read_or_written": true,
+    "sealed_glob": "p003_de_gate1_day_run_20260904_SEALED__*.json",
+    "the_ruled_day_set_is_unchanged": "R-555; 2026-09-04 remains in it",
+    "why_that_is_not_a_re_roll": "a re-roll discards a RESULT and runs again. No result existed: the run had not reached its emit and no artifact under the sealed layout was written"
+  },
+  "unit": "de101smoke.service",
+  "what_this_is_not": {
+    "a_receipt": false,
+    "a_result": false,
+    "an_economic_reading": "NONE"
+  }
+}
