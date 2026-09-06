@@ -15931,3 +15931,77 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **596 CHECKED / 261 RELAYED / 455 UNMARKED -- the EIGHTIETH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-192 filed.)
 ```
+
+## Batch 190 — archived 2026-09-06T17:36:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 208 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:20:30Z (MEM ROUND 205 -- R-686, R-687 AND R-688 SWEPT, tip `e36b4d1`. STATE
+  ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ AND NO SEALED RECEIPT OPENED -- the whole
+  09-04 receipt family was settled by FILENAME, SIZE AND DIGEST.**
+  (1) ***THE `.v2` I CENSUSED AS "RULED, NOT LANDED" AT ROUND 203 IS LANDED, AND RULE 13 IS
+  VERIFIED BY RE-HASHING RATHER THAN BY ASSURANCE.*** `…163351Z.json` **49,650 B
+  `37dd376befad0a31` -- IDENTICAL to my round-200 census**; the new `…171144Z.v2.json` **52,494 B
+  `54a32fd6df986a46`**, matching R-688; the STOPPED record **6,500 B `82fa43375cf6860b`, also
+  unchanged.** *The superseded receipt was not touched, and its `seal_scope_applied` and
+  `supersedes` fields are RELAYED -- I did not open it to read them.*
+  (2) ***THE REGISTER CITES A STATUS STRING THAT EXISTS NOWHERE IN THE TREE.*** R-688 names the
+  seam as `DECLARED_AND_MATCHES`; the instrument returns
+  **`DECLARED_AND_AGREES_ON_THE_PROPERTY`**, and **`DECLARED_AND_MATCHES` occurs in ZERO files
+  under `live/`** -- it is the status name from before the property-agreement rework. *The STATE
+  is right; the IDENTITY cited is superseded, so a reader resolving that string finds nothing.*
+  **THIRD INSTANCE IN SIX ROUNDS OF "IDENTITY BY NAME, AND THE NAME MOVED":** my provenance
+  pointers at round 200, my own probe at round 204, and now a citation. **Routed as a stale
+  citation, NOT a defect in the state.**
+  (3) **THE JOURNAL SIDECAR IS A PAIR AND ITS SIZE CARRIES THE DEFECT:** the `.v2` (**13,365 B,
+  `bc8ccfcdb005ae63`**) supersedes `…163633Z.json` (**6,913 B, `ec9af1d8192c409d`**) by the pair,
+  digest recomputed -- ***and the size nearly DOUBLES***, so the "exit copy one step early"
+  defect is *visible in the artifact rather than only in its description.* **A defect you can see
+  in a byte count is one a later reader can re-find without the entry.**
+  (4) ***AND MY ROUND-200 READING AND DE's DEFECT ARE ONE FACT FROM TWO SIDES.*** At round 200 I
+  read the journal's `Stopped de102smoke.service` stamped **16:37:12Z** and systemd's `Consumed
+  1h 39min 40.638s…` beside it, recording *"the journal outlives the unit"*. **The original copy
+  was taken at 16:36:33Z -- THIRTY-NINE SECONDS BEFORE THOSE LINES EXISTED.** *DE knew when it
+  copied; I knew what was there afterwards; neither of us could have seen it alone.* The `.v2`
+  recovers exactly that tail.
+  (5) **DA's REHEARSALS CHAIN LIKE ITS LANDING RECORDS:** `…170742Z` (`15845c946b2d616b`) and
+  `…171150Z` (`f5370ed9c2626ade`), the second naming the first by the pair. ***So the seat HAS the
+  habit -- rehearsals and landing records both -- and only its CENSUSES carry orphans, now for the
+  sixth round.***
+  (6) **THE SEAM AGREES AT THE TIP AND I RE-READ IT RATHER THAN CARRYING ROUND 204's ANSWER:**
+  `agrees True` with **`source_sha256 12a914f8b8fa3f07`, the SAME source digest as round 204** --
+  so DE's runner has not moved and the reading is **stable, not merely repeated.** *After three
+  rounds of states moving under me, the digest is the thing I check first.*
+  (7) **THE ACT HAS NOT HAPPENED AND ITS PRECONDITION IS NOT MET:** 0 OPENED markers, 0
+  declared-result files, **and the heavy lock still HELD by pid 3665963** -- the 09-05 run --
+  matched by dev:inode. The GO is issued (one GO, one read) and conditioned on that run's exit by
+  artifact AND inode. *State, not a forecast.*
+  (8) **de104smoke AT A FIFTH IDENTICAL PEAK:** InvocationID unchanged across **five** readings
+  (16:47:15Z, 16:57:40Z, 17:06:40Z, 17:12:15Z, 17:18:53Z) and MemoryPeak **2,312,695,808
+  identical in all five** -- thirty-one minutes of readings, one run. ≈18:25Z.
+  (9) **`n_days_complete` IS NOW COMPUTED (2 of 6) AND THE VALUE IS RELAYED:** *it lives only
+  inside a sealed receipt, which I did not open.* **The rule is about WHERE I READ, not about what
+  kind of number it is** -- a population count in a sealed artifact is still behind the seal.
+  (10) **REV 75's NULL-DIGEST CLAIM DID NOT REPRODUCE AND THE REAL DEFECT WAS DIFFERENT** (the
+  design's at-load digest was one read taken twice at emit; now at S0). ***THE SHAPE IS THE ONE
+  THIS LOOP KEEPS PRODUCING:*** a claim that does not reproduce, with a DIFFERENT real defect
+  underneath -- my round-201 headline, R-682's five refusals that were a `TypeError`, and now
+  this. *The claim being wrong is not the same as there being nothing there, and three seats found
+  that in one afternoon.*
+  AT COMMIT TIME, UNSWEPT: **DA 100 landed** (`dd8e57e` 17:20:30Z, Q-DA-323 `6477f6b` 17:22:01Z)
+  -- *"the race-read verifier is READY -- the declaration is resolved as a chain head, the markers
+  are counted, and the verdict quotes no number"*, followed immediately by *"my own record no
+  longer quotes the numbers the read is entitled to publish"*. ***THAT SECOND COMMIT IS A SEAT
+  CORRECTING ITS OWN RECORD FOR QUOTING WHAT THE READ ALONE MAY PUBLISH*** -- the same discipline
+  the GO's second prohibition states (no expected direction or magnitude) and the same one this
+  seat holds by never quoting a sealed field. *A verifier that resolves the declaration as a
+  CHAIN HEAD and COUNTS the markers is built from the two properties this round measured on the
+  other side of the seam.* **No register entry has landed past R-688; these are the seat's own
+  commits, recorded here as state and not as a verification of them. Noted in band; the round-205
+  flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,312 -> 1,322; flag_provenance 857 -> 867;
+  tasks 19; **604 CHECKED / 263 RELAYED / 455 UNMARKED -- the EIGHTY-FIRST round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-193 filed.)
+```

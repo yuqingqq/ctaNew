@@ -63,6 +63,44 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:36:30Z (MEM ROUND 208 -- R-692 SWEPT, tip `572a4b2`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***MY OWN LOWER BOUND HELD UNDER A STRONGER WALK.*** At round 207 I published 19 as a
+  **lower bound** and named the method's limit; **this round I ran the walk built to break it --
+  every function rather than only `main`, and Name returns resolved through their integer
+  assignments.** ***IT ADDS ZERO MODULES.*** *So the nineteen survive a stronger method, which is
+  a materially better statement than "at least nineteen".* **Still not a proof:** a code computed
+  at runtime or taken from a table would evade both walks, **and I say so rather than upgrade the
+  bound to a census.**
+  (2) ***THE SECOND REMEDY IS ALREADY AVAILABLE IN EIGHTEEN OF THE NINETEEN.*** R-692 gives DA
+  101 two: *a refusal code argparse does not use*, or *the refusal read from the named string*.
+  Measured: **eighteen carry refusal vocabulary in the module** -- `AttainabilityRefused`,
+  `REFUSE`, named status constants -- and ***exactly ONE carries none at all:
+  `da_execution_timing`, whose `return 2` at :217 stands with no named refusal beside it***, its
+  named strings being outcome labels rather than refusals. **So the reader-side fix is available
+  almost everywhere and one module needs a code or a string of its own** -- *a nineteen-item
+  routing split into eighteen cheap and one real.*
+  (3) **AND MY FIRST SCREEN SAID THREE, AND IT WAS TOO NARROW.** `REFUSED[: ]` flagged three;
+  **two were my pattern's fault** -- `da_oracle_attainability` has **23** occurrences including
+  `class AttainabilityRefused`, `da_process_budget_audit` has **29**. *Eleventh "suspect the probe
+  first", and the **second round running that my own audit needed tightening** -- both times the
+  artifacts were fine and the instrument was mine.*
+  (4) ***AND MODULE-WIDE PRESENCE IS WEAKER THAN PATH PRESENCE, SO I SAY SO.*** I searched each
+  module **anywhere in the file, not on the code-2 path**. A module can carry a refusal class and
+  still return 2 from a branch that names nothing. **Only `da_race_read_verify` is confirmed ON
+  the path**, because I drove it and read the string on stdout. ***The eighteen is a SCREEN, not
+  a verification***, and the per-module check belongs in DA's receipt where R-692 puts it.
+  (5) **DA 101 STILL NOT LANDED, RE-DRIVEN AGAIN:** at 17:34:24Z both invocations still exit
+  **2**, and no DA 101 commit exists. *Re-driven for the third round, because an unchanged state
+  is only a finding when it is re-measured.*
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock still **HELD
+  by pid 3665963** -- counted, not assumed, for the third round running.
+  (7) **de104smoke AT AN EIGHTH IDENTICAL PEAK:** InvocationID unchanged across **eight**
+  readings, MemoryPeak **2,312,695,808 identical in all eight** -- forty-nine minutes, one run,
+  against ≈18:25Z.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,338 -> 1,344; flag_provenance 883 -> 889;
+  tasks 19; **625 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FOURTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-196 filed.)
   2026-09-06T17:32:30Z (MEM ROUND 207 -- R-691 SWEPT, tip `5ee9bf9`. STATE ONLY. MEM ASSERTS NO
   RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and after both
   drives.**
@@ -158,72 +196,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,322 -> 1,332; flag_provenance 867 -> 877;
   tasks 19; **613 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SECOND round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-194 filed.)
-  2026-09-06T17:20:30Z (MEM ROUND 205 -- R-686, R-687 AND R-688 SWEPT, tip `e36b4d1`. STATE
-  ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ AND NO SEALED RECEIPT OPENED -- the whole
-  09-04 receipt family was settled by FILENAME, SIZE AND DIGEST.**
-  (1) ***THE `.v2` I CENSUSED AS "RULED, NOT LANDED" AT ROUND 203 IS LANDED, AND RULE 13 IS
-  VERIFIED BY RE-HASHING RATHER THAN BY ASSURANCE.*** `…163351Z.json` **49,650 B
-  `37dd376befad0a31` -- IDENTICAL to my round-200 census**; the new `…171144Z.v2.json` **52,494 B
-  `54a32fd6df986a46`**, matching R-688; the STOPPED record **6,500 B `82fa43375cf6860b`, also
-  unchanged.** *The superseded receipt was not touched, and its `seal_scope_applied` and
-  `supersedes` fields are RELAYED -- I did not open it to read them.*
-  (2) ***THE REGISTER CITES A STATUS STRING THAT EXISTS NOWHERE IN THE TREE.*** R-688 names the
-  seam as `DECLARED_AND_MATCHES`; the instrument returns
-  **`DECLARED_AND_AGREES_ON_THE_PROPERTY`**, and **`DECLARED_AND_MATCHES` occurs in ZERO files
-  under `live/`** -- it is the status name from before the property-agreement rework. *The STATE
-  is right; the IDENTITY cited is superseded, so a reader resolving that string finds nothing.*
-  **THIRD INSTANCE IN SIX ROUNDS OF "IDENTITY BY NAME, AND THE NAME MOVED":** my provenance
-  pointers at round 200, my own probe at round 204, and now a citation. **Routed as a stale
-  citation, NOT a defect in the state.**
-  (3) **THE JOURNAL SIDECAR IS A PAIR AND ITS SIZE CARRIES THE DEFECT:** the `.v2` (**13,365 B,
-  `bc8ccfcdb005ae63`**) supersedes `…163633Z.json` (**6,913 B, `ec9af1d8192c409d`**) by the pair,
-  digest recomputed -- ***and the size nearly DOUBLES***, so the "exit copy one step early"
-  defect is *visible in the artifact rather than only in its description.* **A defect you can see
-  in a byte count is one a later reader can re-find without the entry.**
-  (4) ***AND MY ROUND-200 READING AND DE's DEFECT ARE ONE FACT FROM TWO SIDES.*** At round 200 I
-  read the journal's `Stopped de102smoke.service` stamped **16:37:12Z** and systemd's `Consumed
-  1h 39min 40.638s…` beside it, recording *"the journal outlives the unit"*. **The original copy
-  was taken at 16:36:33Z -- THIRTY-NINE SECONDS BEFORE THOSE LINES EXISTED.** *DE knew when it
-  copied; I knew what was there afterwards; neither of us could have seen it alone.* The `.v2`
-  recovers exactly that tail.
-  (5) **DA's REHEARSALS CHAIN LIKE ITS LANDING RECORDS:** `…170742Z` (`15845c946b2d616b`) and
-  `…171150Z` (`f5370ed9c2626ade`), the second naming the first by the pair. ***So the seat HAS the
-  habit -- rehearsals and landing records both -- and only its CENSUSES carry orphans, now for the
-  sixth round.***
-  (6) **THE SEAM AGREES AT THE TIP AND I RE-READ IT RATHER THAN CARRYING ROUND 204's ANSWER:**
-  `agrees True` with **`source_sha256 12a914f8b8fa3f07`, the SAME source digest as round 204** --
-  so DE's runner has not moved and the reading is **stable, not merely repeated.** *After three
-  rounds of states moving under me, the digest is the thing I check first.*
-  (7) **THE ACT HAS NOT HAPPENED AND ITS PRECONDITION IS NOT MET:** 0 OPENED markers, 0
-  declared-result files, **and the heavy lock still HELD by pid 3665963** -- the 09-05 run --
-  matched by dev:inode. The GO is issued (one GO, one read) and conditioned on that run's exit by
-  artifact AND inode. *State, not a forecast.*
-  (8) **de104smoke AT A FIFTH IDENTICAL PEAK:** InvocationID unchanged across **five** readings
-  (16:47:15Z, 16:57:40Z, 17:06:40Z, 17:12:15Z, 17:18:53Z) and MemoryPeak **2,312,695,808
-  identical in all five** -- thirty-one minutes of readings, one run. ≈18:25Z.
-  (9) **`n_days_complete` IS NOW COMPUTED (2 of 6) AND THE VALUE IS RELAYED:** *it lives only
-  inside a sealed receipt, which I did not open.* **The rule is about WHERE I READ, not about what
-  kind of number it is** -- a population count in a sealed artifact is still behind the seal.
-  (10) **REV 75's NULL-DIGEST CLAIM DID NOT REPRODUCE AND THE REAL DEFECT WAS DIFFERENT** (the
-  design's at-load digest was one read taken twice at emit; now at S0). ***THE SHAPE IS THE ONE
-  THIS LOOP KEEPS PRODUCING:*** a claim that does not reproduce, with a DIFFERENT real defect
-  underneath -- my round-201 headline, R-682's five refusals that were a `TypeError`, and now
-  this. *The claim being wrong is not the same as there being nothing there, and three seats found
-  that in one afternoon.*
-  AT COMMIT TIME, UNSWEPT: **DA 100 landed** (`dd8e57e` 17:20:30Z, Q-DA-323 `6477f6b` 17:22:01Z)
-  -- *"the race-read verifier is READY -- the declaration is resolved as a chain head, the markers
-  are counted, and the verdict quotes no number"*, followed immediately by *"my own record no
-  longer quotes the numbers the read is entitled to publish"*. ***THAT SECOND COMMIT IS A SEAT
-  CORRECTING ITS OWN RECORD FOR QUOTING WHAT THE READ ALONE MAY PUBLISH*** -- the same discipline
-  the GO's second prohibition states (no expected direction or magnitude) and the same one this
-  seat holds by never quoting a sealed field. *A verifier that resolves the declaration as a
-  CHAIN HEAD and COUNTS the markers is built from the two properties this round measured on the
-  other side of the seam.* **No register entry has landed past R-688; these are the seat's own
-  commits, recorded here as state and not as a verification of them. Noted in band; the round-205
-  flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,312 -> 1,322; flag_provenance 857 -> 867;
-  tasks 19; **604 CHECKED / 263 RELAYED / 455 UNMARKED -- the EIGHTY-FIRST round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-193 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1678,6 +1650,72 @@ flags:
                              # SEVEN readings and MemoryPeak 2,312,695,808 identical
                              # in all seven** -- forty-four minutes of readings, one
                              # run, against a ≈18:25Z expectation.
+  my_own_lower_bound_HELD_under_a_stronger_walk: NINETEEN-DID-NOT-GROW
+                             # At round 207 I published 19 as a **lower bound** and
+                             # named the method's limit. **I then ran the stronger
+                             # walk: EVERY function rather than only `main`, plus
+                             # names bound to integer constants resolved through their
+                             # assignment.** ***IT ADDS ZERO MODULES.*** So the
+                             # nineteen survive a method built to break them, which is
+                             # a materially better statement than "at least
+                             # nineteen". **Still not a proof:** a code computed at
+                             # runtime, or taken from a table, would evade both walks,
+                             # *and I say so rather than upgrade the bound to a
+                             # census.*
+  the_SECOND_remedy_is_already_available_in_EIGHTEEN_of_nineteen: ONE-MODULE-NEEDS-REAL-WORK
+                             # R-692 gives DA 101 two remedies -- *a refusal code
+                             # argparse does not use*, **or** *the refusal read from
+                             # the named string.* Measured across the nineteen:
+                             # **eighteen carry refusal vocabulary in the module**
+                             # (`AttainabilityRefused`, `REFUSE`, named status
+                             # constants), and ***exactly ONE carries none at all:
+                             # `da_execution_timing`, whose `return 2` at :217 stands
+                             # with no named refusal beside it*** -- its named strings
+                             # are outcome labels
+                             # (`DEFINITELY_EXECUTED_BEFORE_CANCEL_EFFECTIVE` and
+                             # kin), not refusals. **So the reader-side fix is
+                             # available almost everywhere and one module needs a code
+                             # or a string of its own.** *That splits a nineteen-item
+                             # routing into eighteen cheap and one real.*
+  my_first_regex_said_THREE_and_it_was_too_narrow: SUSPECT-THE-PROBE-ELEVENTH
+                             # Screening for `REFUSED[: ]` returned **three** modules
+                             # with no refusal vocabulary. **Two of the three were my
+                             # pattern's fault:** `da_oracle_attainability` has **23**
+                             # occurrences including `class AttainabilityRefused` and
+                             # the bare word `REFUSE`, and `da_process_budget_audit`
+                             # has **29**. *Only `da_execution_timing` had none.*
+                             # **Eleventh "suspect the probe first", and the SECOND
+                             # ROUND RUNNING that my own audit needed tightening --
+                             # both times the artifacts were fine and the instrument
+                             # was mine.**
+  and_MODULE_WIDE_presence_is_weaker_than_PATH_presence_so_I_say_so: A-SCREEN-NOT-A-VERIFICATION
+                             # I searched each module for refusal vocabulary
+                             # **anywhere in the file**, ***not on the code-2 path
+                             # specifically.*** A module can carry a refusal class and
+                             # still return 2 from a branch that names nothing. **Only
+                             # `da_race_read_verify` is confirmed ON the path**,
+                             # because I drove it and read the named string on stdout.
+                             # ***So the eighteen is a SCREEN, not a verification***,
+                             # and the per-module check belongs in DA's receipt where
+                             # R-692 puts it.
+  DA_101_still_not_landed_and_re_driven_again: BOTH-STILL-EXIT-2-AT-17-34
+                             # At **17:34:24Z**: `--real` alone -> exit **2**;
+                             # `--real --read-artifact` naming the absent read -> exit
+                             # **2**. **No DA 101 commit exists** -- the last two
+                             # register entries name it as the dispatch. *Re-driven
+                             # for the third round, because an unchanged state is only
+                             # a finding when it is re-measured.*
+  the_act_STILL_has_not_happened: THIRD-ROUND-COUNTED
+                             # 0 OPENED markers, 0 declared-result files, and the
+                             # heavy lock still **HELD by pid 3665963** -- the 09-05
+                             # run. *Counted, not assumed, for the third round
+                             # running.*
+  de104smoke_at_an_EIGHTH_identical_peak: FORTY-NINE-MINUTES-ONE-RUN
+                             # 17:34:24Z: `loaded / active / running`. **InvocationID
+                             # `549bd234e4324408bf931992ada421d8` unchanged across
+                             # EIGHT readings and MemoryPeak 2,312,695,808 identical
+                             # in all eight** -- forty-nine minutes of readings, one
+                             # run, against ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24460,6 +24498,62 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 208, 2026-09-06T17:36:00Z ---
+  my_own_lower_bound_HELD_under_a_stronger_walk:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:35:00Z
+    said: >-
+      re-ran the audit with a walk over every FunctionDef rather than only main, resolving Name
+      returns through module- and function-level int assignments, and diffed the resulting set
+      against round 207's nineteen. No module was added. The named artifact is the row I also drove
+      directly.
+  the_SECOND_remedy_is_already_available_in_EIGHTEEN_of_nineteen:
+    prov: CHECKED
+    artifact: live/pm_research/da_execution_timing.py
+    as_of: 2026-09-06T17:35:00Z
+    said: >-
+      searched each of the nineteen for refusal vocabulary and then looked at the three the first
+      screen flagged; the named artifact is the only one carrying none, and its return 2 sits at
+      :217 with outcome labels rather than a refusal beside it.
+  my_first_regex_said_THREE_and_it_was_too_narrow:
+    prov: CHECKED
+    artifact: live/pm_research/da_oracle_attainability.py
+    as_of: 2026-09-06T17:35:00Z
+    said: >-
+      my REFUSED[: ] screen returned three modules; grepping the three for any refusal vocabulary
+      gave 23 hits in this one, including class AttainabilityRefused, and 29 in
+      da_process_budget_audit. The screen was mine, not the artifacts'.
+  and_MODULE_WIDE_presence_is_weaker_than_PATH_presence_so_I_say_so:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:35:00Z
+    said: >-
+      the vocabulary search is module-wide; only this module's code-2 path is confirmed to carry a
+      named refusal, because I drove it and read the string on stdout. Stated as a screen.
+  DA_101_still_not_landed_and_re_driven_again:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:34:24Z
+    said: >-
+      ran both invocations with stdout and stderr redirected separately and $? captured
+      immediately, and grepped the last fourteen commits for a DA 101 landing. Both exit 2; only
+      the two register entries name it.
+  the_act_STILL_has_not_happened:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:34:24Z
+    said: >-
+      counted be_race_read_OPENED and be_race_read_result entries and matched the lock file's
+      dev:inode against /proc/locks for its holder.
+  de104smoke_at_an_EIGHTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:34:24Z
+    said: >-
+      the artifact is the durable book the run names; the reading is live at this as_of, copied at
+      once while LoadState=loaded, and comparable to the seven earlier ones only because the
+      InvocationID is unchanged across all eight.
   # --- MEM round 207, 2026-09-06T17:32:00Z ---
   I_SIZED_the_routed_audit_instead_of_only_relaying_it:
     prov: CHECKED

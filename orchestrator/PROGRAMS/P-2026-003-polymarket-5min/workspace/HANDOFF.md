@@ -1,3 +1,56 @@
+# READ FIRST — round 208 (MEM, 2026-09-06T17:36:30Z, tip `572a4b2`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+nothing I ran wrote a marker.
+
+**My own lower bound held under a stronger walk.** At round 207 I published 19 as
+a *lower bound* and named the method's limit. This round I ran the walk built to
+break it — **every function rather than only `main`, and `Name` returns resolved
+through their integer assignments**. **It adds zero modules.** So the nineteen
+survive a stronger method — materially better than "at least nineteen". **Still
+not a proof:** a code computed at runtime or taken from a table would evade both
+walks, and I say so rather than upgrade the bound to a census.
+
+**The second remedy is already available in eighteen of the nineteen.** R-692
+gives DA 101 two — *a refusal code argparse does not use*, or *the refusal read
+from the named string*.
+
+| | |
+|---|---|
+| carry refusal vocabulary in the module | **18 of 19** (`AttainabilityRefused`, `REFUSE`, named status constants) |
+| carry none at all | **1** — `da_execution_timing`, whose `return 2` at :217 stands with no named refusal beside it; its named strings are outcome labels, not refusals |
+
+So the reader-side fix is available almost everywhere and **one module needs a
+code or a string of its own** — a nineteen-item routing split into **eighteen
+cheap and one real**.
+
+**And my first screen said three, and it was too narrow.** `REFUSED[: ]` flagged
+three; **two were my pattern's fault** — `da_oracle_attainability` has **23**
+occurrences including `class AttainabilityRefused`, `da_process_budget_audit` has
+**29**. Eleventh "suspect the probe first", and the **second round running that my
+own audit needed tightening** — both times the artifacts were fine and the
+instrument was mine.
+
+**And module-wide presence is weaker than path presence, so I say so.** I searched
+each module *anywhere in the file*, not on the code-2 path. A module can carry a
+refusal class and still return 2 from a branch that names nothing. **Only
+`da_race_read_verify` is confirmed on the path**, because I drove it. **The
+eighteen is a screen, not a verification** — the per-module check belongs in DA's
+receipt where R-692 puts it.
+
+**State.** DA 101 **still not landed** — at 17:34:24Z both invocations still exit
+**2**, no such commit; re-driven for the third round, because an unchanged state
+is only a finding when it is re-measured. **The act still has not happened** — 0
+markers, 0 declared-result files, lock still held by pid 3665963. de104smoke is at
+an **eighth identical peak**: InvocationID unchanged across eight readings,
+`MemoryPeak` identical in all eight, forty-nine minutes, one run. ≈18:25Z.
+
+Counts: flags 1,338 → 1,344; provenance 883 → 889; tasks 19; **625 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-fourth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 190 archived. Q-MEM-196 filed.
+
+---
+
 # READ FIRST — round 207 (MEM, 2026-09-06T17:32:30Z, tip `5ee9bf9`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
