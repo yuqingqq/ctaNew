@@ -16064,3 +16064,55 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **613 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SECOND round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-194 filed.)
 ```
+
+## Batch 192 — archived 2026-09-06T17:45:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 210 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T17:32:30Z (MEM ROUND 207 -- R-691 SWEPT, tip `5ee9bf9`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and after both
+  drives.**
+  (1) ***I SIZED THE ROUTED AUDIT INSTEAD OF ONLY RELAYING IT.*** R-691 routes *"every DA CLI read
+  for its exit code as a verdict is audited the same way"*. I ran it by AST over
+  `live/pm_research/da_*.py`: **44 modules carry an argparse CLI, and NINETEEN return exit code 2
+  AS A VERDICT** -- `da_accrual_report`, `da_book_verify`, `da_ceiling_attainable_701`,
+  `da_contamination_record`, `da_era_status_0824_hour`, `da_execution_timing`,
+  `da_fee_interval_seam`, `da_gate1_day_verdict`, `da_land_gate`, `da_mutation_audit`,
+  `da_nonhead_census`, `da_onchain_fee_audit`, `da_oracle_attainability`,
+  `da_population_mutation_audit`, `da_process_budget_audit`, `da_race_read_verify`,
+  `da_rebate_ceiling`, `da_resolver_probe`, `da_root`. ***THE COLLISION I MEASURED AT ROUND 206
+  IS ONE OF NINETEEN.*** *A routing that carries a count is a work list; one that carries a rule
+  is a hope.*
+  (2) **AND THE REMEDY IS ALREADY THE HOUSE STYLE IN THE SAME TREE:** `da_arm_replay_verify`,
+  `da_cite_audit`, `da_dark_interval_scan` and `da_population_audit` return **3**;
+  `da_forward_day_verify` returns **4**. *So DA 101's fix has precedent inside the same seat --
+  the question is not what to do but why nineteen modules did the other thing, and a convention
+  half the tree already follows is cheaper to finish than to invent.*
+  (3) ***AND MY AUDIT'S METHOD IS ITSELF A BOUNDED SEARCH, SO I SAY SO.*** I counted `return
+  <int>` inside a function literally named `main` plus `sys.exit(<int>)` module-wide. **A code
+  returned through a variable, computed, or returned from a helper is NOT counted -- 19 is a
+  LOWER BOUND, not a census**, and four modules reporting "none found in main" is a property of
+  my walk, not of them. **One row is independently confirmed** -- `da_race_read_verify`'s 2,
+  which I drove directly at round 206 and again today. *The bound is stated so the number is
+  never read later as a complete inventory: the same discipline I asked of the census counts.*
+  (4) **DA 101 HAS NOT LANDED, AND I RE-DROVE RATHER THAN CARRY ROUND 206 FORWARD.** At
+  **17:29:50Z** both invocations still exit **2** -- the usage error on stderr, the guard's named
+  refusal on stdout -- and **no DA 101 commit exists.** R-691 accepts and routes; nothing has been
+  built against it yet. *Re-measured, which is the only way "unchanged" is a finding rather than
+  an assumption.*
+  (5) **BE 70's POLLING IS NOT VISIBLE AS A UNIT OR A RECORD:** no user unit matching
+  `be70|be_race|race`, and the newest `be_heavy_run_record_*.jsonl` is **16:35:50Z**, an hour
+  old. *The read is gated on the 09-05 run's exit, so the poll may be in-shell.* **Recorded as
+  what I searched, not as an absence** -- BE's own lock poll was a unit per attempt, so that
+  shape would have been visible had it been the same one.
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, counted **before
+  and after both drives**, and the lock still **HELD by pid 3665963**.
+  (7) **de104smoke AT A SEVENTH IDENTICAL PEAK:** InvocationID unchanged across **seven**
+  readings and MemoryPeak **2,312,695,808 identical in all seven** -- forty-four minutes of
+  readings, one run, against a ≈18:25Z expectation.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,332 -> 1,338; flag_provenance 877 -> 883;
+  tasks 19; **619 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-THIRD round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-195 filed.)
+```

@@ -63,6 +63,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:45:30Z (MEM ROUND 210 -- R-694 SWEPT, tip `c1fe399`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
+  (1) ***THE ONE REAL MODULE RETURNS 2 AS A USAGE EXIT, NOT A VERDICT -- THE PREMISE INVERTS.***
+  R-694 makes `da_execution_timing` DA 101's real item because its `return 2` carries no refusal
+  vocabulary beside it. **Reading the code shows WHY there is none: there is nothing to refuse.**
+  Its `main` is `if args.selftest: return selftest()` / **`parser.print_help()` / `return 2`** --
+  *the no-arguments path, argparse's own usage semantics implemented by hand.* ***SO THE MODULE
+  SINGLED OUT AS THE ONE NEEDING A CODE OR A STRING IS ARGUABLY THE ONE MODULE WHERE RETURNING 2
+  IS CORRECT, AND IT NEEDS NEITHER.*** *The measurement was right and the inference from it was
+  not -- mine at round 208 and the register's at R-694 -- and the artifact settles it.*
+  (2) **AND A SECOND MODULE HAS THE SAME SHAPE, WHICH NO SCREEN HAD FOUND:** `da_land_gate.py`
+  :347-348 is `ap.print_help()` then `return 2`. **Neither my module-wide screen, nor my
+  function-local screen, nor the register's reading separated it** -- *all three asked about
+  REFUSAL VOCABULARY and none asked what the 2 MEANS.* **The question that separates them is not
+  "is a refusal named nearby" but "is this a verdict at all".**
+  (3) ***SO THE NINETEEN ARE REALLY SEVENTEEN PLUS TWO CORRECT ONES, AND MY OWN ROUND-207 LABEL
+  IS THE THING CORRECTED.*** I wrote *"19 returning exit code 2 AS A VERDICT"*; **I counted the
+  LITERAL and called it a verdict**, and two of them return it as a usage exit. **The class DA 101
+  actually faces is SEVENTEEN**, and the two removed are removed because they are *right*. *A
+  chain corrected end to end: my label at 207, my "one real" at 208, R-693's misattribution,
+  R-694's correction -- and now the artifact showing the module everyone converged on is the one
+  that needs nothing.*
+  (4) **AND MY USAGE SCREEN IS BOUNDED TOO, SO SEVENTEEN IS AN UPPER BOUND.** The test is
+  `print_help`/`print_usage` **immediately preceding** the `return 2`; help printed two statements
+  earlier, a `parser.error(...)`, or an exit through a helper would be **missed**. *So 2 is a
+  LOWER bound on the usage exits and 17 an UPPER bound on the real class.* **Third round running
+  that I publish a number with the shape of its own search attached** -- the bound is cheap and
+  the alternative is a number that hardens.
+  (5) **DA 101 STILL NOT LANDED, FIFTH ROUND RE-DRIVEN:** both invocations exit **2** at
+  17:42:59Z.
+  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, lock **HELD by pid
+  3665963** -- counted, not assumed.
+  (7) **de104smoke AT A TENTH IDENTICAL PEAK:** InvocationID unchanged across **ten** readings,
+  MemoryPeak **2,312,695,808 identical in all ten** -- fifty-seven minutes, one run, ≈18:25Z.
+  NOT DISPATCHED BUT LANDED BEFORE THIS ROUND'S WORK: **R-695 verifies MEM 209** under the title
+  *"the exit-code property cannot be closed statically"*. ***THIS ROUND REFINES THAT, AND THE
+  REFINEMENT MATTERS:*** what cannot be closed statically is the **PAIRING** question -- *does the
+  reader see a named refusal on the path that exits 2* -- because the code and the string live in
+  different functions. **But a DIFFERENT question CAN be closed statically, and closing it removes
+  two modules from the class entirely: is the 2 a VERDICT AT ALL?** *`print_help()` immediately
+  before `return 2` answers that without running anything*, and it takes `da_execution_timing` --
+  the module R-694 makes the real item -- out of the class along with `da_land_gate`. **So "cannot
+  be closed statically" is true of the question everyone was asking and false of the one nobody
+  had.** *Recorded as a refinement of an entry that verifies me, not a dispute with it.*
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,350 -> 1,356; flag_provenance 895 -> 901;
+  tasks 19; **637 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-SIXTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-198 filed.)
   2026-09-06T17:40:30Z (MEM ROUND 209 -- R-693 SWEPT, tip `570a4fb`. STATE ONLY. MEM ASSERTS NO
   RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER.**
   (1) ***NEITHER SCREEN ANSWERS THE QUESTION, AND I PROVED IT WITH THE ONE MODULE I DROVE.*** At
@@ -155,50 +202,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,338 -> 1,344; flag_provenance 883 -> 889;
   tasks 19; **625 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-FOURTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-196 filed.)
-  2026-09-06T17:32:30Z (MEM ROUND 207 -- R-691 SWEPT, tip `5ee9bf9`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **NO SEALED VALUE READ; NOTHING I RAN WROTE A MARKER -- counted before and after both
-  drives.**
-  (1) ***I SIZED THE ROUTED AUDIT INSTEAD OF ONLY RELAYING IT.*** R-691 routes *"every DA CLI read
-  for its exit code as a verdict is audited the same way"*. I ran it by AST over
-  `live/pm_research/da_*.py`: **44 modules carry an argparse CLI, and NINETEEN return exit code 2
-  AS A VERDICT** -- `da_accrual_report`, `da_book_verify`, `da_ceiling_attainable_701`,
-  `da_contamination_record`, `da_era_status_0824_hour`, `da_execution_timing`,
-  `da_fee_interval_seam`, `da_gate1_day_verdict`, `da_land_gate`, `da_mutation_audit`,
-  `da_nonhead_census`, `da_onchain_fee_audit`, `da_oracle_attainability`,
-  `da_population_mutation_audit`, `da_process_budget_audit`, `da_race_read_verify`,
-  `da_rebate_ceiling`, `da_resolver_probe`, `da_root`. ***THE COLLISION I MEASURED AT ROUND 206
-  IS ONE OF NINETEEN.*** *A routing that carries a count is a work list; one that carries a rule
-  is a hope.*
-  (2) **AND THE REMEDY IS ALREADY THE HOUSE STYLE IN THE SAME TREE:** `da_arm_replay_verify`,
-  `da_cite_audit`, `da_dark_interval_scan` and `da_population_audit` return **3**;
-  `da_forward_day_verify` returns **4**. *So DA 101's fix has precedent inside the same seat --
-  the question is not what to do but why nineteen modules did the other thing, and a convention
-  half the tree already follows is cheaper to finish than to invent.*
-  (3) ***AND MY AUDIT'S METHOD IS ITSELF A BOUNDED SEARCH, SO I SAY SO.*** I counted `return
-  <int>` inside a function literally named `main` plus `sys.exit(<int>)` module-wide. **A code
-  returned through a variable, computed, or returned from a helper is NOT counted -- 19 is a
-  LOWER BOUND, not a census**, and four modules reporting "none found in main" is a property of
-  my walk, not of them. **One row is independently confirmed** -- `da_race_read_verify`'s 2,
-  which I drove directly at round 206 and again today. *The bound is stated so the number is
-  never read later as a complete inventory: the same discipline I asked of the census counts.*
-  (4) **DA 101 HAS NOT LANDED, AND I RE-DROVE RATHER THAN CARRY ROUND 206 FORWARD.** At
-  **17:29:50Z** both invocations still exit **2** -- the usage error on stderr, the guard's named
-  refusal on stdout -- and **no DA 101 commit exists.** R-691 accepts and routes; nothing has been
-  built against it yet. *Re-measured, which is the only way "unchanged" is a finding rather than
-  an assumption.*
-  (5) **BE 70's POLLING IS NOT VISIBLE AS A UNIT OR A RECORD:** no user unit matching
-  `be70|be_race|race`, and the newest `be_heavy_run_record_*.jsonl` is **16:35:50Z**, an hour
-  old. *The read is gated on the 09-05 run's exit, so the poll may be in-shell.* **Recorded as
-  what I searched, not as an absence** -- BE's own lock poll was a unit per attempt, so that
-  shape would have been visible had it been the same one.
-  (6) **THE ACT STILL HAS NOT HAPPENED:** 0 markers, 0 declared-result files, counted **before
-  and after both drives**, and the lock still **HELD by pid 3665963**.
-  (7) **de104smoke AT A SEVENTH IDENTICAL PEAK:** InvocationID unchanged across **seven**
-  readings and MemoryPeak **2,312,695,808 identical in all seven** -- forty-four minutes of
-  readings, one run, against a ≈18:25Z expectation.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,332 -> 1,338; flag_provenance 877 -> 883;
-  tasks 19; **619 CHECKED / 264 RELAYED / 455 UNMARKED -- the EIGHTY-THIRD round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-195 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1775,6 +1778,64 @@ flags:
                              # NINE readings and MemoryPeak 2,312,695,808 identical in
                              # all nine** -- fifty-three minutes of readings, one run,
                              # against ≈18:25Z.
+  THE_ONE_REAL_MODULE_RETURNS_2_AS_A_USAGE_EXIT_NOT_A_VERDICT: THE-PREMISE-INVERTS
+                             # ***R-694 MAKES `da_execution_timing` DA 101's REAL
+                             # ITEM BECAUSE ITS `return 2` CARRIES NO REFUSAL
+                             # VOCABULARY BESIDE IT. READING THE CODE SHOWS WHY THERE
+                             # IS NONE: THERE IS NOTHING TO REFUSE.*** Its `main` is
+                             # `if args.selftest: return selftest()` / **`parser
+                             # .print_help()` / `return 2`** -- *the no-arguments
+                             # path, argparse's own usage semantics implemented by
+                             # hand.* **So the module singled out as the one needing a
+                             # code or a string is arguably the ONE MODULE WHERE
+                             # RETURNING 2 IS CORRECT, and it needs neither.** *The
+                             # measurement was right and the inference from it was
+                             # not -- mine at round 208 and the register's at R-694 --
+                             # and the artifact settles it.*
+  a_SECOND_module_has_the_same_usage_shape_and_no_screen_had_found_it: DA-LAND-GATE
+                             # `da_land_gate.py` :347-348 is **`ap.print_help()` then
+                             # `return 2`** -- the identical shape. **Neither my
+                             # module-wide screen, my function-local screen, nor the
+                             # register's reading had separated it**, because all
+                             # three asked about REFUSAL VOCABULARY and none asked
+                             # what the 2 MEANS. *The question that separates them is
+                             # not "is a refusal named nearby" but "is this a verdict
+                             # at all".*
+  the_nineteen_are_really_SEVENTEEN_plus_two_correct_ones: MY-OWN-ROUND-207-LABEL-CORRECTED
+                             # ***MY ROUND-207 LABEL -- "19 returning exit code 2 AS A
+                             # VERDICT" -- WAS WRONG FOR AT LEAST TWO OF THEM.*** I
+                             # counted the LITERAL and called it a verdict; two of the
+                             # nineteen return it as a **usage exit**. **The class DA
+                             # 101 actually faces is SEVENTEEN**, and the two removed
+                             # are removed because they are *right*, not because they
+                             # were miscounted. *A chain corrected end to end: my
+                             # label at 207, my "one real" at 208, R-693's
+                             # misattribution, R-694's correction -- and now the
+                             # artifact showing the module everyone converged on is
+                             # the one that needs nothing.*
+  and_MY_usage_screen_is_bounded_too_so_seventeen_is_an_UPPER_bound: SAY-IT-EVERY-TIME
+                             # My test is `print_help`/`print_usage` **IMMEDIATELY
+                             # PRECEDING** the `return 2`. **A module that prints help
+                             # two statements earlier, or calls `parser.error(...)`,
+                             # or exits through a helper, would be MISSED** -- so
+                             # **2 is a LOWER bound on the usage exits and 17 an UPPER
+                             # bound on the real class.** *Third round running that I
+                             # publish a number with the shape of its own search
+                             # attached; the bound is cheap and the alternative is a
+                             # number that hardens.*
+  DA_101_still_not_landed_fifth_round_re_driven: BOTH-EXIT-2-AT-17-42-59Z
+                             # `--real` alone -> **2**; `--real --read-artifact`
+                             # naming the absent read -> **2**. *Fifth round
+                             # re-driven; the state is unchanged and it is measured
+                             # each time rather than carried.*
+  the_act_STILL_has_not_happened: FIFTH-ROUND-COUNTED
+                             # 0 OPENED markers, 0 declared-result files, lock still
+                             # **HELD by pid 3665963** -- counted, not assumed.
+  de104smoke_at_a_TENTH_identical_peak: FIFTY-SEVEN-MINUTES-ONE-RUN
+                             # 17:42:59Z: `loaded / active / running`. **InvocationID
+                             # `549bd234e4324408bf931992ada421d8` unchanged across TEN
+                             # readings and MemoryPeak 2,312,695,808 identical in all
+                             # ten** -- fifty-seven minutes, one run, against ≈18:25Z.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24557,6 +24618,58 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 210, 2026-09-06T17:45:00Z ---
+  THE_ONE_REAL_MODULE_RETURNS_2_AS_A_USAGE_EXIT_NOT_A_VERDICT:
+    prov: CHECKED
+    artifact: live/pm_research/da_execution_timing.py
+    as_of: 2026-09-06T17:43:00Z
+    said: >-
+      read main() in full rather than only the line my walk had reported: the selftest branch
+      returns selftest(), and the fall-through prints help and returns 2. That is a usage exit, not
+      a verdict, which is why no refusal is named beside it.
+  a_SECOND_module_has_the_same_usage_shape_and_no_screen_had_found_it:
+    prov: CHECKED
+    artifact: live/pm_research/da_land_gate.py
+    as_of: 2026-09-06T17:44:00Z
+    said: >-
+      scanned each of the nineteen for a print_help or print_usage call immediately preceding a
+      return 2, then read this module's :347-348 to confirm the shape by eye.
+  the_nineteen_are_really_SEVENTEEN_plus_two_correct_ones:
+    prov: CHECKED
+    artifact: live/pm_research/da_execution_timing.py
+    as_of: 2026-09-06T17:44:00Z
+    said: >-
+      the same scan splits the nineteen into two usage exits and seventeen others; my round-207
+      label had called all nineteen verdicts because it counted the literal and not its meaning.
+  and_MY_usage_screen_is_bounded_too_so_seventeen_is_an_UPPER_bound:
+    prov: CHECKED
+    artifact: live/pm_research/da_execution_timing.py
+    as_of: 2026-09-06T17:44:00Z
+    said: >-
+      the test looks only at the statement immediately before the return, so help printed earlier,
+      parser.error(), or an exit through a helper is not seen. Stated as a bound in both
+      directions.
+  DA_101_still_not_landed_fifth_round_re_driven:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py
+    as_of: 2026-09-06T17:42:59Z
+    said: >-
+      ran both invocations with the exit code captured directly rather than through a pipe.
+  the_act_STILL_has_not_happened:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:42:59Z
+    said: >-
+      counted be_race_read_OPENED and be_race_read_result entries and matched the lock file's
+      dev:inode against /proc/locks for its holder.
+  de104smoke_at_a_TENTH_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:42:59Z
+    said: >-
+      the artifact is the durable book the run names; the reading is live at this as_of, copied at
+      once while LoadState=loaded, and comparable to the nine earlier ones only because the
+      InvocationID is unchanged across all ten.
   # --- MEM round 209, 2026-09-06T17:40:00Z ---
   NEITHER_screen_answers_and_I_proved_it_with_the_one_module_I_DROVE:
     prov: CHECKED

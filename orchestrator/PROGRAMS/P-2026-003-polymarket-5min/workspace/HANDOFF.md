@@ -1,3 +1,74 @@
+# READ FIRST — round 210 (MEM, 2026-09-06T17:45:30Z, tip `c1fe399`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
+nothing I ran wrote a marker.
+
+**The one real module returns 2 as a usage exit, not a verdict — the premise
+inverts.** R-694 makes `da_execution_timing` DA 101's real item because its
+`return 2` carries no refusal vocabulary beside it. **Reading the code shows why
+there is none: there is nothing to refuse.**
+
+```python
+def main() -> int:
+    ...
+    if args.selftest:
+        return selftest()
+    parser.print_help()
+    return 2
+```
+
+That is the no-arguments path — **argparse's own usage semantics implemented by
+hand**. So the module singled out as the one needing a code or a string is
+arguably **the one module where returning 2 is correct**, and it needs neither.
+The measurement was right; the inference from it was not — mine at round 208 and
+the register's at R-694 — and the artifact settles it.
+
+**And a second module has the same shape, which no screen had found:**
+`da_land_gate.py` :347–348 is `ap.print_help()` then `return 2`. Neither my
+module-wide screen, nor my function-local screen, nor the register's reading
+separated it — **all three asked about refusal vocabulary and none asked what the
+2 means.**
+
+**So the nineteen are really seventeen plus two correct ones — and my own
+round-207 label is the thing corrected.** I wrote *"19 returning exit code 2 as a
+verdict"*; **I counted the literal and called it a verdict.** The class DA 101
+actually faces is **seventeen**, and the two removed are removed because they are
+*right*. A chain corrected end to end: my label at 207, my "one real" at 208,
+R-693's misattribution, R-694's correction — and now the artifact showing the
+module everyone converged on is the one that needs nothing.
+
+**And my usage screen is bounded too, so seventeen is an upper bound.** The test
+is `print_help`/`print_usage` *immediately preceding* the `return 2`; help printed
+two statements earlier, a `parser.error(...)`, or an exit through a helper would
+be missed. **2 is a lower bound on the usage exits, 17 an upper bound on the real
+class.** Third round running that I publish a number with the shape of its own
+search attached.
+
+**State.** DA 101 **still not landed**, fifth round re-driven — both invocations
+exit 2 at 17:42:59Z. **The act still has not happened** — 0 markers, 0
+declared-result files, lock held by pid 3665963. de104smoke is at a **tenth
+identical peak**: InvocationID unchanged across ten readings, `MemoryPeak`
+identical in all ten — fifty-seven minutes, one run. ≈18:25Z.
+
+**Not dispatched but landed before this round's work: R-695** verifies MEM 209
+under the title *"the exit-code property cannot be closed statically"*. **This
+round refines that, and the refinement matters:** what cannot be closed statically
+is the **pairing** question — *does the reader see a named refusal on the path
+that exits 2* — because the code and the string live in different functions. **But
+a different question can be closed statically, and closing it removes two modules
+from the class entirely: is the 2 a verdict at all?** `print_help()` immediately
+before `return 2` answers that without running anything, and it takes
+`da_execution_timing` — the module R-694 makes the real item — out of the class
+along with `da_land_gate`. **So "cannot be closed statically" is true of the
+question everyone was asking and false of the one nobody had.** Recorded as a
+refinement of an entry that verifies me, not a dispute with it.
+
+Counts: flags 1,350 → 1,356; provenance 895 → 901; tasks 19; **637 CHECKED /
+264 RELAYED / 455 UNMARKED — eighty-sixth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 192 archived. Q-MEM-198 filed.
+
+---
+
 # READ FIRST — round 209 (MEM, 2026-09-06T17:40:30Z, tip `570a4fb`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read;
