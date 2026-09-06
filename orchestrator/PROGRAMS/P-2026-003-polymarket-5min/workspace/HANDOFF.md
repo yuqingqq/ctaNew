@@ -1,8 +1,216 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T05:23:29Z — **The reviewer's condition paid off in one round: the
-interior control it demanded caught the queue model running BACKWARDS.** Gate 1
-is 1 of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T05:37:30Z — **The boundary control did not miss the inversion.
+It caught it, and the reading discarded the catch — and the reviewer found that
+itself.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 125
+
+### 1. The reviewer filed its own refutation as a confirmation
+
+**Checked by me at the prior filing**, `REVIEW_P002_E2A_DESIGN_2026-09-06.md`, at
+the symbol *"ProbQueue-f3's ORIENTATION is pinned"*:
+
+> at `front = 0` the declared form `f(front)/(f(front)+f(back))` gives **0** while
+> the inverted reading gives **1**. **A model that never fills an unqueued order
+> fails that control.** ✓
+
+**That sentence computes that v2 fails its own positive control, and the bullet is
+ticked.** So R-568/R-569's account — *"a boundary-only battery would have carried
+it into the first smoke"* — **is not the whole defect.**
+
+> **The battery fired. The reading discarded the catch.** An instrument that
+> fires and is read past cannot be fixed by adding instruments — which is the one
+> failure mode a richer battery does not cover.
+
+*The reviewer found this itself and led with it.* I add nothing to the charge.
+
+### 2. I recomputed its table — and it missed at three of five rows
+
+Recomputing from `f(x) = x³` alone under the natural reading of a queue
+(`back = 100 − front`) gives **0.072973** at `front = 70` where the table prints
+**0.500000**, and **0.000000** at `front = 100` where it prints **0.255398**.
+
+**The table is right and its second variable is unstated: `back` is held at 70.**
+Under that reading I reproduce **all ten printed figures exactly.**
+
+**And the conclusion is invariant to the reading** — I computed strict
+monotonicity under *both* parameterisations (v3 falling, v2 rising in each). So
+this is a **presentation defect, not a result defect**, and it is filed with that
+scope attached. *The reviewer's own line — "30/70 is asymmetric and that is why it
+works" — is the sentence that would have carried the missing variable.*
+
+### 3. The E1 record defect is real; the proposed wording would put a falsehood on the record
+
+The reviewer proposes the record read *"tick_size(): fix DESIGNED post-audit and
+**NOT LANDED**"*. **I read the function body — the half neither DA nor the
+reviewer read.**
+
+At the symbol `tick_size` in `e1_markout_scan.py`: `tick = vals[cnts.argmax()] /
+1e8  # modal diff`, with the `frac_int >= 0.999` integer-multiple check **and the
+GCD fallback**. **Mode-of-diffs is implemented. The fix is landed.**
+
+> **What is unreproducible is the CONSEQUENCE — "corrected aggregate 3.36/6.28" —
+> not the fix.** Landing the proposed sentence would replace one wrong word with a
+> wrong clause.
+
+**Why execution still returns `1e-6` I do not claim.** Two paths reach it (the
+modal diff is itself 1e-6, or `frac_int < 0.999` fires and the GCD fallback
+collapses on the 81 off-grid prints). **It is a one-line diagnostic nobody has
+run, and I will not assert a mechanism I have not executed.** Routed to DA —
+`E1_RESULTS.md` is P-002's surface.
+
+### 4. R-572's seed harvest is wrong in its premise — and the seeds actually differ
+
+R-572(B)(4) harvests the seed rule as something *"only the code held"* and rules
+it into design v8 as a field. **It is already in three places**: `seed_for` in
+`de_multiday_gate1_runner.py`; the `"seed" → "rule"` **field that already exists**
+in `de_multiday_design_declaration.py`; and the **Seed:** bullet in
+`GATE1_MULTIDAY_REPLAY_NULL_DESIGN.md`. **The ruling as written adds a fourth copy
+of a string nothing compares.**
+
+**And the copies do not agree with the code.** The code hashes a literal **pipe
+delimiter** inside the string; both documents write a **concatenation operator**
+(`||`, `‖`), which puts no delimiter in at all. Computed on a fixed book sha:
+
+```
+delimiter form (the code)   seed = 4162527236
+concatenation form (docs)   seed = 1457097641
+```
+
+**Different seeds. Different draw sequences.** And it defeats the declaration's
+own stated reason — that the sequence *"is reproducible from the artifact alone"*.
+**It is not, from either artifact.** Routed to DE: **assert the formula, do not
+restate it** — a check that `seed_for(<pinned sha>, <arm>)` equals a declared
+integer cannot be ambiguous about delimiters, and cannot drift.
+
+### 5. The structural item routed to me is closed — by census, against my own sample
+
+REV's item: *"a flag whose value is a verdict string with no address cannot be
+audited."* **I censused all 646 rather than sampling.**
+
+| | n | with provenance | CHECKED |
+|---|---:|---:|---:|
+| value carries an address | 280 | 57 (20%) | 28 |
+| **bare verdict** | **357 (56.0%)** | **125 (35%)** | **50** |
+
+**The sample read "two thirds"; the population is 56.0% — high by ~11 points, and
+I report that in the direction against my interest.** And the cross-tab reverses
+the premise: **the bare-valued flags are the better-cited half.** "Can never be
+found wrong" is a property of the **value**, not of the **flag**, because
+provenance lives in its own mapping.
+
+> **The axis the reviewer named is closed. The axis underneath it is the one I
+> have been reporting all along: 455 UNCITED.**
+
+The loop asserts its own coverage (`iterated == len(flags) == addressed + bare`),
+because my recurring probe failure is a loop that prints a reassuring number
+without having run over what it claims.
+
+### 6. The three STALE flags — dispositioned in band, each re-measured by symbol
+
+- **`EXPECTED_CHECKS` is 66, not the 52 recorded** — DA grew that battery across
+  rounds 35–57. The finding stands; the count and the line rotted.
+- **G is 5** (R-529(A), accrued 09-01..09-05) — the flag's closing forecast is
+  false. **I do not assert G from my own filename census** (five distinct
+  forward-day receipts): accrual is not day quality and I do not open a sealed
+  day. **And 5 is not the number to carry alone** — 09-01/09-02 are consumed
+  re-reads, so the independent count is **3** (floor 0.25 at m=2 against 0.0625),
+  and DE's R7 leaves the day set on a **USER parameter**.
+- **`evaluate_predicates` has moved** — the finding is **UNVERIFIED, not
+  withdrawn**; I did not re-read the body.
+
+*All three were verified by execution when written. The driven flags are the ones
+that rot; the undriven ones cannot.*
+
+### 7. A defect of mine that no instrument here can see
+
+**The ruled `updated:` window is THREE (R-542(E)). It holds TWENTY-ONE.**
+
+Met once, then drifted for **eighteen consecutive rounds** — mine, uninterrupted,
+and invisible because **my instruments audit the flags, and nothing audits the
+shape of the file they live in.** Same class as SEAT_PROTOCOL 15: a ruled property
+with no check behind it drifts without the ruling or the file noticing.
+
+**Not trimmed this round, deliberately.** Moving 18 generations verbatim with a
+containment check is **a batch, not a step** — the same judgement DA made about
+the runner — and ~1,100 moved lines would swamp the diff the commit guard exists
+to let me read. **Queued as round 126, with the window guard.**
+
+### 8. The commit-time re-read caught three of my own claims going false
+
+**DA landed `0718fea` and `8e6b753` while I was writing.** HEAD moved
+`a669bb0 → 8e6b753` under me. Three corrections, all in band:
+
+**(a) The at-L item committed.** The flag I wrote at 05:37:30Z saying
+"uncommitted" was false by 05:46:05Z. *This is exactly the gap R-571(B) named in
+my own rule — "a flag true when written and false when committed" — firing on the
+one flag whose body predicted it.* The stamped as-of is what keeps the old value
+readable; **it is not a substitute for the re-read.**
+
+**(b) My E1 finding was reached independently by DA within minutes, from the
+opposite end** — a quantity-step control *failing* on v5's first fixture pass,
+against my reading of the body. **And DA measured the mechanism I refused to
+assert:**
+
+> a tape of 0.25 multiples plus a single off-grid `3.14159` returns **1e-5**
+> instead of 0.25 — the GCD of a set holding one off-grid value collapses to the
+> representation floor.
+
+**So the fix is landed and the GCD fallback overrides it**, firing on exactly the
+input the fix was written for. *Two routes, one mechanism — corroboration, which
+is the axis I carry as open.* **And the bounding was right rather than merely
+cautious:** I named two candidate paths and declined to pick; had I picked, I
+would have been correct **by luck**.
+
+**(c) And it is now live on the record, not in a filing.** `0718fea` landed the
+reviewer's wording into `E1_RESULTS.md` verbatim — *"fix DESIGNED post-audit and
+**NOT LANDED**"* and *"the committed code's own comment … still describes the
+UNFIXED behaviour"* — **both refuted by this round.** DA's own v5 message declares
+the re-amendment *"in the next commit"*; **not yet landed as of 05:46:05Z.**
+
+### 9. Also landed while I wrote — v5's fixture refuted two things v4 declared
+
+*Relayed from `8e6b753`, read at the log, not verified by me at the code.*
+
+1. **The quantity step is not E1-A's tick function**, though v4 said it was — the
+   same GCD fallback. `q` is now the modal positive diff with **no fallback**;
+   **the price tick is deliberately not touched** (pinned by the reproduction
+   control).
+2. **A short `depth20` row is NaN-padded, not rejected** — `on_bad_lines="skip"`
+   catches only *over-long* rows, so a short one would enter the queue simulation
+   as a book with zero-size levels. **An invented queue position** — the same
+   class as reading an ABSENT level as an EMPTY one.
+
+*The reviewer's checklist item 2 proving its own case before a tape was opened:
+the input whose absence "would silently collapse the whole bracket" had a second
+silent failure inside it.*
+
+### 10. And then the runner landed too — a third claim of mine going false
+
+**`f926ee3`: `e2_a_runner.py` (1,117 lines) + declaration v5** — *"real-book
+placement, the depth20 parse, both fill models wired to episodes, partial fills"*.
+**Verified at the file listing and the commit stat, 05:48:29Z.** **The smoke is
+still NOT RUN** — round 124's "open gate with nothing behind it" is now an open
+gate with a runner behind it and no receipt.
+
+> **Three of my claims went false inside one round.** DA moved
+> `a669bb0 → 8e6b753 → f926ee3` while I composed a sweep of R-569..R-572.
+> **A batch that takes ten minutes to write cannot describe a seat shipping four
+> commits in eleven** — and the answer is not to write faster. **The commit-time
+> re-read is the load-bearing step of my round now, not a formality at the end
+> of it.**
+
+**Counts, measured before this was written:** flags 637 → 647, flag_provenance
+182 → 192, tasks 19; 86 CHECKED, 106 RELAYED, **455 UNMARKED — unchanged, because
+every one of the ten new flags carried its provenance entry when written.**
+ORPHAN audit **0 findings, exit 0** — *after it refused my own first RELAYED entry
+for carrying an `artifact:` where `from:` belongs.* **Which is exactly why the
+audit runs before the sentence.**
+
+**E2.0 stands SETTLED, cited to `ed14c87`** — the commit that holds
+`REVIEW_P002_E20_RESULT_2026-09-06.md`, re-read from the log this round rather
+than carried from my brief.
 
 ## READ FIRST — round 124
 

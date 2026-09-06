@@ -63,6 +63,84 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T05:37:30Z (MEM ROUND 125 -- R-570, R-571, R-572 AND THE REVIEWER'S
+  DA-60 FILING SWEPT; R-569 WAS ALREADY IN THESE FILES. STATE ONLY, AND THE
+  HEADLINE IS THAT THE BOUNDARY CONTROL DID NOT MISS THE INVERSION -- IT CAUGHT
+  IT AND WAS READ PAST.
+  (1) **THE REVIEWER FILED ITS OWN REFUTATION AS A CONFIRMATION, FOUND IT
+  ITSELF, AND LED WITH IT.** Checked by me at the prior filing: the sentence
+  computes that v2's declared form gives 0 where the positive control requires
+  1 -- "A model that never fills an unqueued order fails that control" -- and
+  the bullet is marked with a tick. **So R-568/R-569's account ("a boundary-only
+  battery would have carried it into the first smoke") is not the whole defect.
+  THE BATTERY FIRED. THE READING DISCARDED THE CATCH** -- and an instrument that
+  fires and is read past cannot be fixed by adding instruments.
+  (2) **I RECOMPUTED THE ORIENTATION TABLE AND IT DID NOT MATCH AT THREE OF FIVE
+  ROWS -- BECAUSE ITS SECOND VARIABLE IS UNSTATED.** Under the natural reading
+  (back = 100 - front) I get 0.072973 where it prints 0.500000. **Holding back
+  at 70 reproduces all ten printed figures exactly.** The table is right and
+  under-specified. **AND THE CONCLUSION IS INVARIANT** -- strict monotonicity
+  computed TRUE under both parameterisations -- so this is a presentation
+  defect, filed with its scope attached, not a scare.
+  (3) **THE E1 RECORD DEFECT IS REAL AND THE PROPOSED FIX WOULD PUT A FALSEHOOD
+  ON THE RECORD.** I read the function body, which is the half neither DA nor
+  the reviewer read: at the symbol tick_size the mode-of-diffs fix **IS
+  IMPLEMENTED** (vals[cnts.argmax()], the frac_int >= 0.999 check, the GCD
+  fallback). So "fix DESIGNED and NOT LANDED" is false in its first half. **What
+  is unreproducible is the CONSEQUENCE, not the fix.** Why execution still
+  returns 1e-6 has two candidate paths and **I DID NOT RUN IT, SO I ASSERT
+  NEITHER.** Routed to DA (P-002's surface), not fixed by me.
+  (4) **R-572's SEED HARVEST IS WRONG IN ITS PREMISE AND THE RULING WOULD ADD A
+  FOURTH COPY.** The convention is NOT "only in seed_for()": it is already a
+  declaration field and a plan bullet. **And the two documentary copies write a
+  CONCATENATION OPERATOR where the code has a PIPE DELIMITER inside the hashed
+  string -- I computed both: 4162527236 vs 1457097641. DIFFERENT SEEDS.** Which
+  defeats the declaration's own stated reason that the sequence "is reproducible
+  from the artifact alone". Routed to DE: assert the formula, do not restate it.
+  (5) **THE STRUCTURAL ITEM ROUTED TO ME IS CLOSED, BY CENSUS AND AGAINST MY OWN
+  SAMPLE'S RATE.** 357 of 646 flag values carry no address -- **56.0%, where the
+  40-flag sample read two thirds.** And the cross-tab reverses the premise: the
+  bare-valued flags are the BETTER-cited half (35% carry provenance against
+  20%). "Can never be found wrong" is a property of the VALUE, not of the FLAG,
+  because provenance lives in its own mapping. **The axis underneath is the one
+  I already report: 455 UNCITED.**
+  (6) **THE THREE STALE FLAGS ARE DISPOSITIONED IN BAND, EACH RE-MEASURED BY
+  SYMBOL** -- EXPECTED_CHECKS is 66 not 52; G is 5 by R-529(A) with the
+  independent count 3 and the day set still on a USER parameter; and
+  evaluate_predicates has moved, so that finding is UNVERIFIED, not withdrawn.
+  (7) **AND A DEFECT OF MINE NO INSTRUMENT CAN SEE: THE RULED updated: WINDOW IS
+  THREE AND IT HOLDS TWENTY-ONE.** Met once at R-542(E), then drifted for
+  eighteen consecutive rounds because nothing audits the SHAPE of the file my
+  instruments audit the flags of. **NOT TRIMMED THIS ROUND, DELIBERATELY** --
+  moving 18 generations verbatim is a batch, not a step, and it would swamp the
+  diff the commit guard exists to let me read. **QUEUED AS ROUND 126, with the
+  window guard that stops the next drift.**
+  (8) **AND THE COMMIT-TIME RE-READ CAUGHT THREE OF MY OWN CLAIMS GOING FALSE
+  WHILE I WROTE.** DA landed `0718fea` and `8e6b753` in the shared tree and HEAD
+  moved a669bb0 -> 8e6b753 under me. **(a) The at-L item COMMITTED** -- the flag
+  I wrote saying "uncommitted" is superseded in band, ***which is R-571(B)'s
+  named gap in my own rule firing on the very flag whose body predicted it.***
+  **(b) MY E1 FINDING WAS REACHED INDEPENDENTLY BY DA WITHIN MINUTES, FROM THE
+  OPPOSITE END** (a quantity-step control failing on v5's fixture, against my
+  reading of the body) -- **and DA MEASURED the mechanism I refused to assert:**
+  a tape of 0.25 multiples plus ONE off-grid 3.14159 returns 1e-5, so the GCD
+  fallback is what overrides the landed fix. *Two routes, one mechanism --
+  corroboration, the axis I carry as open.* **My bounding was right rather than
+  merely cautious: I named two paths and would have been correct BY LUCK had I
+  picked.** **(c) AND IT IS NOW LIVE ON THE RECORD, NOT IN A FILING:** `0718fea`
+  landed the reviewer's wording into E1_RESULTS.md verbatim -- "NOT LANDED" and
+  "the committed comment still describes the UNFIXED behaviour", **both refuted
+  by this round** -- and DA's own v5 message declares the re-amendment "in the
+  next commit", **not yet landed.**
+  MEASURED BEFORE THIS SENTENCE: flags 637 -> 647, flag_provenance 182 -> 192,
+  tasks 19; 86 CHECKED, 106 RELAYED, **455 UNMARKED -- UNCHANGED, because every
+  one of the ten new flags carried its provenance entry when written.** ORPHAN
+  audit 0 findings, exit 0 -- **after it REFUSED my own first RELAYED entry for
+  having an artifact: where from: belongs**, which is the whole reason the audit
+  runs before the sentence and not after.
+  E2.0 stands SETTLED, cited to **ed14c87** -- the commit that holds
+  REVIEW_P002_E20_RESULT_2026-09-06.md, re-read from the log this round, not
+  carried from the brief.)
   2026-09-06T05:23:29Z (MEM ROUND 124 -- R-569 SWEPT. STATE ONLY, AND THE
   HEADLINE IS A CRITIQUE PAYING OFF IN ONE ROUND.
   (1) **THE INTERIOR CONTROL CAUGHT v2's ProbQueue-f3 ORIENTATION BACKWARDS --
@@ -3504,7 +3582,362 @@ flags:
                              # for a boundary case.**
                              # EARLIER VALUE (rule 13):
                              # PINNED-AT-THE-BOUNDARIES-NOT-IN-THE-INTERIOR
-  the_E2_A_SMOKE_GATE_IS_OPEN_AND_NOT_RUN: THE-RUNNER-DOES-NOT-EXIST-YET
+  THE_REVIEWER_FILED_ITS_OWN_REFUTATION_AS_A_CONFIRMATION: THE-ANSWER-WAS-INSIDE-ITS-OWN-SENTENCE
+                             # CHECKED 2026-09-06T05:37:30Z AT THE PRIOR FILING, and it
+                             # is the finding of the round because the reviewer found it
+                             # itself and led with it.
+                             # REVIEW_P002_E2A_DESIGN_2026-09-06.md, at the symbol
+                             # "ProbQueue-f3's ORIENTATION is pinned", reads: "at
+                             # front = 0 the declared form f(front)/(f(front)+f(back))
+                             # gives 0 while the inverted reading gives 1. A model that
+                             # never fills an unqueued order fails that control."
+                             # -- AND IT IS MARKED WITH A TICK.
+                             # **THE SENTENCE COMPUTES THAT v2 FAILS ITS OWN POSITIVE
+                             # CONTROL AND THEN CONCLUDES THE ORIENTATION IS FINE.**
+                             # SO THE BOUNDARY CONTROL DID NOT MISS THE INVERSION -- IT
+                             # CAUGHT IT, AND THE READING DISCARDED THE CATCH. That is a
+                             # different defect from the one R-568 and R-569 recorded
+                             # ("a boundary-only battery would have carried it into the
+                             # first smoke"), and it is worse in one specific way: an
+                             # instrument that fires and is read past cannot be fixed by
+                             # adding instruments.
+                             # I RECORD IT AS THE REVIEWER STATED IT and add nothing to
+                             # the charge -- "It should not have needed to: the boundary
+                             # control already had."
+  THE_ORIENTATION_TABLE_HOLDS_back_AT_70_AND_NEVER_SAYS_SO: REPRODUCES-EXACTLY-UNDER-ONE-UNSTATED-READING
+                             # CHECKED 2026-09-06T05:37:30Z BY RECOMPUTING IT MYSELF
+                             # FROM f(x) = x**3 AND NOTHING ELSE, both orientations, at
+                             # front = 0, 10, 30, 70, 100.
+                             # **MY FIRST COMPUTATION DID NOT MATCH THE FILING AT THREE
+                             # OF FIVE ROWS.** Taking the natural reading of a queue --
+                             # back = 100 - front -- gives v3 = 0.072973 at front = 70
+                             # where the table prints 0.500000, and 0.000000 at
+                             # front = 100 where it prints 0.255398.
+                             # **THE TABLE IS RIGHT AND ITS SECOND VARIABLE IS UNSTATED:
+                             # back IS HELD AT 70** (the interior control's depth_behind).
+                             # Under that reading I reproduce ALL TEN PRINTED FIGURES
+                             # EXACTLY -- 1.000000/0.000000, 0.997093/0.002907,
+                             # 0.927027/0.072973, 0.500000/0.500000, 0.255398/0.744602.
+                             # **AND THE CONCLUSION IS INVARIANT TO THE READING**, which
+                             # is why this is a presentation defect and NOT a result
+                             # defect: I computed strict monotonicity under BOTH
+                             # parameterisations -- v3 strictly falling and v2 strictly
+                             # rising in each. The inversion finding stands either way.
+                             # I FILE IT WITH ITS SCOPE ATTACHED, which is the form DA's
+                             # record defect took and the form that separates a
+                             # correction from a scare: **the table's numbers are
+                             # reproducible only if you already know the parameter it
+                             # does not name**, and the reviewer's own remark that
+                             # "30/70 is asymmetric and that is why it works" is the
+                             # sentence that would have carried the missing variable.
+  E1_S_TICK_FIX_IS_IN_THE_COMMITTED_BODY: CONFIRMED-INDEPENDENTLY-BY-DA-AND-THE-MECHANISM-IS-NOW-MEASURED
+                             # UPDATED-IN-BAND 2026-09-06T05:46:05Z at my commit-time
+                             # re-read. **MY FINDING WAS REACHED INDEPENDENTLY BY DA
+                             # WITHIN MINUTES, BY A DIFFERENT ROUTE, AND DA ESTABLISHED
+                             # THE HALF I DECLINED TO ASSERT.**
+                             # DA's `8e6b753` message: "The modal-diff fix that
+                             # E1_RESULTS calls 'FIXED post-audit' IS present in the
+                             # committed tick_size; what returns 1e-6 for FIL is the GCD
+                             # FALLBACK the same docstring says was 'kept', firing on
+                             # exactly the input the fix was written for. 'Designed and
+                             # not landed' is not the whole account -- it was landed, and
+                             # it is overridden."
+                             # **AND DA MEASURED THE MECHANISM I SAID NOBODY HAD RUN:**
+                             # a tape of 0.25 multiples plus a SINGLE off-grid 3.14159
+                             # returns 1e-5 instead of 0.25 -- the GCD of a set holding
+                             # one off-grid value collapses to the representation floor.
+                             # **THAT IS THE ONE-LINE DIAGNOSTIC. IT NOW EXISTS.**
+                             # DA found it from the opposite end -- a quantity-step
+                             # control FAILING on v5's first fixture pass -- while I
+                             # found it by reading the body. **TWO ROUTES, ONE
+                             # MECHANISM: CORROBORATION, WHICH IS THE AXIS I HAVE BEEN
+                             # CARRYING AS OPEN.**
+                             # **AND MY BOUNDING WAS THE RIGHT CALL, NOT CAUTION FOR ITS
+                             # OWN SAKE:** I named two candidate paths and refused to
+                             # pick one without executing it; the executed answer is the
+                             # fallback, which is one of the two. *Had I asserted it I
+                             # would have been right by luck.*
+                             # **WHAT IS STILL OWED, AND IT IS LIVE:** `0718fea` LANDED
+                             # the reviewer's wording into E1_RESULTS.md verbatim --
+                             # "fix DESIGNED post-audit and **NOT LANDED**" plus "The
+                             # committed code's own comment at e1_markout_scan.py:148
+                             # still describes the UNFIXED behaviour". **BOTH ARE THE
+                             # CLAIMS THIS FLAG REFUTES, AND THEY ARE NOW ON THE RECORD
+                             # RATHER THAN IN A FILING.** DA's own v5 message says the
+                             # note "is amended accordingly in the next commit" -- **NOT
+                             # YET LANDED as of 05:46:05Z.** Routed, not fixed: P-002's
+                             # surface, DA's batch, already declared by DA.
+                             # EARLIER VALUE (rule 13):
+                             # THE-PROPOSED-WORDING-WOULD-PUT-A-FALSEHOOD-ON-THE-RECORD
+                             # CHECKED 2026-09-06T05:37:30Z BY READING THE FUNCTION BODY,
+                             # which is the half neither DA nor the reviewer read.
+                             # THE REVIEWER PROPOSES the record be changed to
+                             # "tick_size(): fix DESIGNED post-audit (mode-of-diffs) and
+                             # NOT LANDED -- the committed function still returns
+                             # FIL = 1e-6".
+                             # **THE FIRST HALF IS FALSE. THE FIX IS LANDED.** At the
+                             # symbol tick_size in live/mm_research/e1_markout_scan.py
+                             # the body computes vals, cnts = np.unique(scaled,
+                             # return_counts=True) then tick = vals[cnts.argmax()] / 1e8
+                             # with the trailing comment "modal diff" --
+                             # **MODE-OF-DIFFS IS IMPLEMENTED**, together with the
+                             # >=99.9% integer-multiple check the docstring names
+                             # (frac_int) and the GCD fallback it says was "kept".
+                             # SO THE TWO DOCUMENTARY HALVES DO NOT SAY WHAT THE FILING
+                             # READS THEM AS SAYING. The docstring describes the fix as
+                             # LANDED ("MODE of positive diffs, not min") and cites the
+                             # pre-fix symptom as its REASON; the reviewer read it as "a
+                             # live comment describing the unfixed behaviour". It is the
+                             # opposite: it describes the fixed behaviour.
+                             # **WHICH MAKES THE TENSION SHARPER, NOT WEAKER** -- the
+                             # mode is implemented AND execution still returns 1e-6
+                             # (DA's run; my own round-124 call on FILUSDT).
+                             # WHAT I DO NOT CLAIM, BECAUSE I HAVE NOT RUN IT: WHY. Two
+                             # paths reach 1e-6 -- the modal diff is itself 1e-6, or
+                             # frac_int < 0.999 fires and the **GCD fallback** returns
+                             # the gcd of the integer-scaled diffs, which off-grid prints
+                             # collapse. **81 off-grid prints on FIL is exactly the input
+                             # that trips a 0.999 bar.** Which path fires is a one-line
+                             # diagnostic NOBODY HAS RUN, and I will not assert a
+                             # mechanism I have not executed.
+                             # **DISPOSITION, AND IT CHANGES THE ROUTING:** the record
+                             # defect is REAL and "record defect, not a blocker" is
+                             # RIGHT -- but the word to change is NOT "FIXED". What is
+                             # unreproducible is the CONSEQUENCE ("corrected aggregate
+                             # 3.36/6.28"), not the fix. Landing the reviewer's sentence
+                             # would replace one wrong word with a wrong clause.
+                             # ROUTED, NOT FIXED: E1_RESULTS.md is P-2026-002's surface
+                             # and DA amends it in band (R-570 D).
+  THE_SEED_CONVENTION_IS_IN_THREE_PLACES_NOT_ONLY_seed_for: THE-RULING-WOULD-MAKE-IT-A-FOURTH
+                             # CHECKED 2026-09-06T05:37:30Z at all three sites by symbol.
+                             # R-572(B)(4) harvests the seed convention as a thing "only
+                             # the code held" -- "the literal and the 8-hex truncation
+                             # exist only in seed_for(); change either and every draw
+                             # sequence changes silently" -- and RULES it into design v8
+                             # as a field.
+                             # **THE PREMISE IS WRONG. IT IS ALREADY IN THREE PLACES:**
+                             # (1) at the symbol seed_for in de_multiday_gate1_runner.py
+                             # -- the f-string with day_book_sha, arm and the literal,
+                             # then int(h[:8], 16); (2) as an EXISTING DECLARATION FIELD
+                             # at the key "seed" -> "rule" in
+                             # de_multiday_design_declaration.py -- "seed = int(sha256(
+                             # day_book_sha256 || arm || 'P003_GATE1_MULTIDAY')[:8], 16)";
+                             # (3) in the design plan GATE1_MULTIDAY_REPLAY_NULL_DESIGN.md
+                             # under the bullet "Seed:".
+                             # **SO THE RULING AS WRITTEN ADDS A FOURTH COPY OF A STRING
+                             # THAT NOTHING COMPARES.** And the hazard is the INVERSE of
+                             # the one named: not "change it and every draw changes
+                             # silently" but **change it in one of three places and the
+                             # other two go stale** -- a divergence hazard, and the class
+                             # rule 15 exists for (a property of code stated in prose,
+                             # with no check behind it).
+                             # ROUTED, NOT FIXED (DE's surface): the declaration should
+                             # not restate the formula, it should ASSERT it -- a check
+                             # that seed_for(<pinned book sha>, <arm>) equals a declared
+                             # integer, so the field and the function cannot drift apart
+                             # without the battery failing.
+  THE_SEED_NOTATION_DIVERGES_FROM_THE_CODE_AND_THE_SEEDS_DIFFER: CONCAT-OPERATOR-WHERE-THE-CODE-HAS-A-PIPE-DELIMITER
+                             # CHECKED 2026-09-06T05:37:30Z, COMPUTED not read.
+                             # The code hashes sha, then a PIPE, then arm, then a PIPE,
+                             # then the literal -- **a delimiter INSIDE the hashed
+                             # string.** Both documentary copies write a CONCATENATION
+                             # OPERATOR instead: the declaration has day_book_sha256 ||
+                             # arm || 'P003_GATE1_MULTIDAY' and the plan the same with
+                             # U+2016, the double vertical line used for concatenation.
+                             # **NEITHER NOTATION PUTS THE PIPE IN THE HASHED STRING**, so
+                             # a reader reproducing the seed from either artifact
+                             # concatenates without delimiters.
+                             # I COMPUTED BOTH on a fixed book sha and arm CONDVALUE:
+                             # delimiter form 4162527236, concatenation form 1457097641.
+                             # **DIFFERENT SEEDS. DIFFERENT DRAW SEQUENCES.**
+                             # AND IT DEFEATS THE DECLARATION'S OWN STATED REASON, which
+                             # is the part that makes it more than notation: the "why"
+                             # beside it says the sequence "is reproducible from the
+                             # artifact alone". **IT IS NOT, FROM EITHER ARTIFACT.**
+                             # ROUTED, NOT FIXED (DE's surface). The assert-not-restate
+                             # fix above closes this one too: an expected integer cannot
+                             # be ambiguous about its delimiters.
+  THE_BARE_VERDICT_AXIS_CENSUSED_OVER_ALL_637_NOT_SAMPLED: 357-OF-637-IS-56.0-PERCENT
+                             # CHECKED 2026-09-06T05:37:30Z on STATUS.yml itself, and
+                             # this is REV 32's structural item, which R-572(C) routes to
+                             # me by name: "a flag whose value is a verdict string with
+                             # no address cannot be audited".
+                             # **I CENSUSED IT RATHER THAN SAMPLING IT.** Every flag
+                             # value classified as carrying an ADDRESS (a path with an
+                             # extension, a 7-40 char hex digest, an R- or Q- entry, an
+                             # ISO date, or a symbol written with parens or dot-notation)
+                             # or not. **357 of 637 = 56.0% carry NO address in the
+                             # value; 280 do.**
+                             # THE LOOP ASSERTS ITS OWN COVERAGE -- iterated == len(flags)
+                             # == addressed + bare, asserted, not printed -- because my
+                             # recurring probe failure is a loop that reports a
+                             # reassuring number without having run over what it claims.
+                             # **THE SAMPLE OVERSTATED IT AND I SAY SO IN THE DIRECTION
+                             # THAT IS AGAINST MY INTEREST TO CORRECT:** the audit read
+                             # "two thirds of the sample" (~67% of 40); the population is
+                             # 56.0%. The class is confirmed DOMINANT; the rate was high
+                             # by ~11 points.
+                             # **AND THE CROSS-TAB REVERSES THE PREMISE'S IMPLICATION.**
+                             # "A flag of that shape can never be found wrong" is true of
+                             # the VALUE and FALSE of the FLAG, because provenance lives
+                             # in its own mapping: of the 357 bare flags **125 carry a
+                             # flag_provenance entry (35%) and 50 are CHECKED**, against
+                             # 57 of 280 (20%) and 28 for the addressed ones. **The bare
+                             # flags are the BETTER-cited half.**
+                             # SO THE STRUCTURAL ITEM RESOLVES, AND NOT IN MY FAVOUR
+                             # EITHER: the answer already existed (the provenance
+                             # mapping, built at R-512), and what it exposes is that the
+                             # real gap is neither shape nor sample but the 455 flags
+                             # with NO provenance entry at all -- 637 - 182, which is the
+                             # UNCITED count I already carry. **The axis the reviewer
+                             # named is closed; the axis underneath it is the one I have
+                             # been reporting all along.**
+  THE_RULED_updated_WINDOW_IS_THREE_AND_IT_HOLDS_TWENTY_ONE: A-RULED-BAR-WITH-NO-GUARD-DRIFTED-SEVENFOLD
+                             # CHECKED 2026-09-06T05:37:30Z BY COUNTING THE GENERATION
+                             # MARKERS IN MY OWN FILE, and it is a defect of mine that no
+                             # instrument in this programme can see.
+                             # R-542(E) RULED the updated: rolling window back to THREE
+                             # generations, older ones MOVED VERBATIM to
+                             # STATUS_UPDATED_ARCHIVE.md -- "trim by MOVING, never by
+                             # interpreting". I executed that ruling once.
+                             # **IT NOW HOLDS 21.** Counted between updated: and the next
+                             # top-level key: 21 generation headers, rounds 124 down to
+                             # 104. The archive holds 98.
+                             # **EVERY ROUND SINCE HAS PREPENDED A GENERATION AND MOVED
+                             # NONE.** The bar was met once and then drifted for
+                             # eighteen consecutive rounds -- **mine, uninterrupted, and
+                             # invisible because nothing checks it.**
+                             # THE SHAPE IS THE ONE THIS PROGRAMME KEEPS NAMING: a ruled
+                             # property with no check behind it drifts without either the
+                             # ruling or the file noticing (SEAT_PROTOCOL 15, and rule 15
+                             # of CLAUDE.md applied to my own state file). My instruments
+                             # audit FLAGS; **nothing audits the SHAPE of the file they
+                             # live in.**
+                             # **I DO NOT TRIM IT THIS ROUND, DELIBERATELY.** Moving 18
+                             # generations verbatim with a containment check is a BATCH,
+                             # not a step -- the same judgement DA made about the runner
+                             # -- and landing ~1,100 moved lines inside a sweep commit
+                             # would swamp exactly the diff the commit guard exists to
+                             # let me read. **QUEUED AS MY ROUND-126 BATCH**, with the
+                             # guard for it: a check that the window is <= 3, so the next
+                             # drift fails instead of accumulating.
+  DA_61_IS_WRITING_THE_AT_L_CONTROL_UNCOMMITTED: IT-COMMITTED-WHILE-I-WROTE-v4-AND-v5-LANDED
+                             # SUPERSEDED-IN-BAND 2026-09-06T05:46:05Z, AT MY OWN
+                             # COMMIT-TIME RE-READ, AND THIS IS THE GAP IN MY OWN RULE
+                             # FIRING ON THE VERY FLAG I WROTE ABOUT IT.
+                             # I wrote the value below at 05:37:30Z, when the diff was
+                             # uncommitted. **BY 05:46:05Z IT WAS COMMITTED** -- DA landed
+                             # `0718fea` (E2-A v4: the three ruled boundaries, the owed
+                             # +q attribution, the at-L direction, and E1_RESULTS' note)
+                             # and `8e6b753` (v5) in the shared tree; HEAD moved from
+                             # a669bb0 to 8e6b753 under me.
+                             # **THE AT-L ITEM IS CLOSED, NOT IN FLIGHT.** The committed
+                             # file carries the EXACTLY-L control.
+                             # THE STAMPED as-of IS WHAT MAKES THE OLD VALUE READABLE
+                             # RATHER THAN FALSE, which is why I stamp it -- but **a
+                             # stamp is not a substitute for the re-read**, and R-571(B)
+                             # named this gap two entries ago: "every new flag cites when
+                             # written" cannot catch a flag true when written and false
+                             # when committed. ***This round it fired, on schedule, on a
+                             # flag whose own body predicted it.***
+                             # EARLIER VALUE (rule 13): OBSERVED-NOT-A-FACT-UNTIL-IT-COMMITS
+                             # CHECKED 2026-09-06T05:37:30Z by git diff --stat in the
+                             # main tree; I READ IT AND TOUCHED NOTHING.
+                             # The reviewer's one open item before the runner's first
+                             # smoke (REVIEW_DA60 section 2) is the at-or-through-L
+                             # boundary: "whether an opposite-side trade exactly AT L
+                             # counts is a directional choice that changes the fill count,
+                             # and no control pins it -- the interior control uses
+                             # volume_through, which PRESUPPOSES THE ANSWER."
+                             # **live/mm_research/e2_a_declare.py IS MODIFIED AND
+                             # UNCOMMITTED IN THE SHARED TREE (+419 lines as of
+                             # 05:37:30Z)**, and the added text includes "a trade AT L
+                             # COUNTS", the resting-BUY reasoning, and a the_control
+                             # entry for "a single opposite-side trade at EXACTLY L".
+                             # **SO THE ITEM IS BEING CLOSED IN FLIGHT. I RECORD IT AS
+                             # OBSERVED, NOT AS CLOSED** -- an uncommitted diff is not an
+                             # artifact, and the whole point of R-571's open gap in my own
+                             # rule is that a thing true when I look may be false when I
+                             # commit. The as-of is stamped for that reason.
+                             # AND IT IS DA'S FILE: **I ROUTE, I DO NOT FIX.** Recorded
+                             # here only so the register does not later read the item as
+                             # open when it was being closed while I wrote.
+  R572_DE_AND_REV_RESET_HARVESTS: RELAYED-THREE-DE-RULINGS-AND-REV-S-OPEN-LIST
+                             # RELAYED from R-572 2026-09-06T05:32Z; not re-derived by me
+                             # except where a separate flag in this round says otherwise.
+                             # DE's three boundaries RULED: (1) the runner INVOKES BE's
+                             # be_cancel_axis_null directly, in-process, at the digest it
+                             # verified -- a supplied-draws path exists only for fixtures
+                             # and refuses on real days; (2) per-day SEALED runs are
+                             # admissible NOW for any closed qualifying ruled day, and
+                             # run_not_before_utc is SPLIT into read_not_before_utc plus
+                             # day_runs_allowed_for_closed_qualifying_days -- **the
+                             # not-before governs the READ, not the run**; (3) the
+                             # sealed/unsealed key asymmetry (sealed_at_every_depth and
+                             # sealed_field_names present in one state, economic in the
+                             # other, a consumer keying on either getting None) is made
+                             # SYMMETRIC with a consumer falsifier driving both states.
+                             # REV's OPEN FINDINGS, none closed: de_supersession_diff
+                             # still classifies a top-level as_of as provenance, so a
+                             # cb9bf8a-class in-place edit would report as moving nothing;
+                             # the fixture receipt's data-free witness re-checked by the
+                             # fresh reviewer; **and the currency audit's three STALE
+                             # flags plus the structural item, which are MINE and are
+                             # dispositioned in this round's other flags.**
+                             # REV's CONVENTION WORTH CARRYING, because it is my own
+                             # CHECKED/RELAYED split arrived at independently: **CHECKED
+                             # (a second observation at the artifact) vs AGREED (the same
+                             # summary read twice; only CHECKED counts).**
+  E2_A_v5_THE_RUNNERS_OWN_FIXTURE_REFUTED_TWO_THINGS_v4_DECLARED: BEFORE-ANY-TAPE-WAS-OPENED
+                             # RELAYED from DA's commit `8e6b753` 2026-09-06, read at the
+                             # log during my commit-time re-read; **NOT verified by me at
+                             # the code** -- it landed while I was writing and my batch
+                             # was already composed.
+                             # TWO CORRECTIONS, BOTH FORCED BY CONTROLS THAT FAILED ON
+                             # THE FIRST FIXTURE PASS, v4 not edited (rule 13):
+                             # (i) **THE QUANTITY STEP IS NOT E1-A's TICK FUNCTION**,
+                             # although v4 declared it was "the same estimator, and the
+                             # same function". The GCD fallback fires below the 99.9%
+                             # bar and collapses to the representation floor. q is now
+                             # the MODAL positive diff with NO fallback; **the PRICE
+                             # tick is deliberately NOT touched -- it is pinned by the
+                             # E1-A reproduction control and must not move.**
+                             # (ii) **A SHORT depth20 ROW IS NaN-PADDED, NOT REJECTED** --
+                             # `on_bad_lines="skip"` catches only rows with MORE fields
+                             # than names, so a short row would have entered the queue
+                             # simulation as a book with zero-size levels. **An invented
+                             # queue position: the same class as reading an ABSENT level
+                             # as an EMPTY one**, which boundary 1 already refuses.
+                             # Ragged rows now excluded and counted BOTH directions.
+                             # **WHY I RECORD IT IN A SWEEP ROUND:** it is the reviewer's
+                             # checklist item 2 (depth20 queue-ahead) proving its own
+                             # case before a tape was opened -- *the input whose absence
+                             # "would silently collapse the whole bracket" turns out to
+                             # have a second silent failure inside it* -- and it is the
+                             # runner refuting its own declaration, which is the shape
+                             # R-569 said the handover would have to survive.
+  the_E2_A_SMOKE_GATE_IS_OPEN_AND_NOT_RUN: THE-RUNNER-EXISTS-AS-OF-f926ee3-AND-THE-SMOKE-IS-STILL-NOT-RUN
+                             # SUPERSEDED-IN-BAND 2026-09-06T05:48:29Z, at my SECOND
+                             # commit-time re-read of this round. **THE RUNNER NOW
+                             # EXISTS.** `f926ee3` lands
+                             # live/mm_research/e2_a_runner.py (1,117 lines) plus
+                             # declaration v5 (sha 90a9a99f6cb2a2cc, carrying 8e6b753):
+                             # "real-book placement, the depth20 parse, both fill models
+                             # wired to episodes, partial fills". **VERIFIED BY ME AT THE
+                             # FILE LISTING AND THE COMMIT STAT**, 05:48:29Z.
+                             # **WHAT IS UNCHANGED: THE SMOKE IS STILL NOT RUN.** The
+                             # distinction round 124 drew -- an open gate with nothing
+                             # behind it -- now becomes an open gate with a runner behind
+                             # it and no receipt. **Recorded, not inferred.**
+                             # **AND THIS IS THE THIRD CLAIM OF MINE TO GO FALSE INSIDE
+                             # ONE ROUND** (the at-L flag, the E1 routing, this). DA
+                             # moved a669bb0 -> 8e6b753 -> f926ee3 while I wrote a sweep
+                             # of R-569..R-572. ***A batch that takes ten minutes to
+                             # compose cannot describe a seat that ships four commits in
+                             # eleven -- and the fix is not to write faster, it is that
+                             # the commit-time re-read is now the load-bearing step of my
+                             # round, not a formality at the end of it.***
+                             # EARLIER VALUE (rule 13): THE-RUNNER-DOES-NOT-EXIST-YET
                              # CHECKED 2026-09-06T05:23:29Z. The gate is OPEN --
                              # the control passed, v3 landed, the escalations are
                              # ruled -- **AND THE SMOKE IS NOT RUN BECAUSE THE
@@ -9930,7 +10363,7 @@ flags:
   # blob" IS EXACTLY WHAT MAKES A MOVED LINE INVISIBLE -- the blob it was
   # verified against is not the file a reader opens. Re-cite by SYMBOL:
   # de_phase4_diag_runner.evaluate_predicates.
-  de39_r1_open: "LOW-MEDIUM: the predicate row has NO null field, so POINT_ESTIMATE_NO_INTERVAL is emitted whenever null_quantiles is falsy -- A COLLAPSED NULL AND A NEVER-RUN NULL READ IDENTICALLY (evaluate_predicates :770-798, verified at the blob); the comment claims the label says what it is, and it does not"
+  de39_r1_open: "LOW-MEDIUM: the predicate row has NO null field, so POINT_ESTIMATE_NO_INTERVAL is emitted whenever null_quantiles is falsy -- A COLLAPSED NULL AND A NEVER-RUN NULL READ IDENTICALLY (evaluate_predicates :770-798, verified at the blob); the comment claims the label says what it is, and it does not [SUPERSEDED-IN-BAND 2026-09-06T05:37:30Z, MEM round 125, on REV 32's currency audit routing this flag to me as STALE: THE CITATION NO LONGER REACHES THE CODE IT IS ABOUT. Re-measured by me at the symbol: evaluate_predicates is defined in live/pm_research/de_phase4_diag_runner.py and lines 770-798 are now unrelated. THE CLAIM MAY STILL HOLD AT THE NEW LOCATION AND I DO NOT RE-ASSERT IT -- I did not re-read the body this round, so the finding is UNVERIFIED, not withdrawn. AND 'verified at the blob' is precisely the phrase that makes a moved line invisible: the blob it was verified against is not the file a reader opens. Cite the symbol, never the line.]"
   de39_r2_open: "LOW: len(_ca) == 1 at :2492 encodes today's single changed_at -- group by it. The coordinator had it as NOTED, NOT A FINDING; THE REVIEWER'S READING WAS ADOPTED"
   reviewer_de_r39_released: "650569c 22:55:56Z, 194 lines; EVERY DE38 closure CONFIRMED, each DRIVEN; the six literals verified at BOTH sides of 851edaf by the reviewer's own _fn_asts -- a THIRD independent parser on that seal"
   de_r40_executed: "35452c0 (Q-DE-58): counts 31/119/26/21/26/21/184/92; rulings (i)(ii)(iii), DE39-R1 and DE39-R2 ALL DRIVEN, plus the IN-SUITE REORDERING INVARIANCE; runner 3f4bf21da2dfa188 (3,329 lines, EXPECTED_CHECKS = 119) -- verified by MEM at the blob"
@@ -10450,6 +10883,25 @@ flags:
     "clob_v3_1": False # pre-O1 at the tip; the only 08-29 artifact on disk still
     carries race_accrual_eligible FALSE; no new day verdict exists. G REMAINS 2
     OF 5 AND THE EARLIEST G=5 IS UNCHANGED AT 2026-09-06.
+
+    SUPERSEDED-IN-BAND 2026-09-06T05:37:30Z (MEM round 125), on REV 32's
+    currency audit routing this flag to me as STALE. **THE CLOSING SENTENCE IS
+    FALSE AS WRITTEN.** The race accrued 09-01..09-05 and R-529(A) records
+    G = 5, DIRECTIONAL, with all five days carrying a sealed score (R-547(F)).
+    THE FLAG'S SUBSTANCE STANDS: the era ruling did not grow the race AT THE
+    TIME, which is what it was written to say. Its forecast did not.
+    WHAT I ESTABLISH MYSELF AND WHAT I DO NOT: a FILENAME CENSUS of
+    data/pm_5min/derived/ shows forward-day receipts for five distinct days,
+    09-01 through 09-05. **I DO NOT ASSERT G FROM THAT** -- accrual is not day
+    quality (R-240 split_verdict), a receipt existing is not a day accruing, and
+    I do not open a sealed forward day. G's value is RELAYED from R-529(A).
+    AND THE NUMBER A READER SHOULD CARRY IS NOT 5 ALONE: the reviewer's
+    race-read item (1) holds that five INDEPENDENT days is an over-count,
+    because 09-01 and 09-02 are consumed re-reads (R-549(A)) -- three fresh days
+    give a permutation floor of 0.25 at m = 2 against 0.0625 at G = 5. BE 48
+    computes both readings before the opening. Separately, DE's design R7 leaves
+    the day set on a USER parameter (SET A: G = 6, clears Holm; SET B: G = 3,
+    clears nothing yet), so `G_is_PENDING_the_USER_parameter` remains true.
   closed_findings_are_not_a_release: >-
     BE round 17 (5565e39 code + e78a710 row Q-BE-242) closed the reviewer's three
     HIGH findings ON THE PATH and in the same commit as the producer half, as the
@@ -11901,6 +12353,20 @@ flags:
     SOURCES ARE INDEPENDENT; agreement about DE36-R3 was not, because all three
     readings came off one artifact (see
     COMMON_SOURCE_PROPAGATION_a_citation_check_is_not_a_claim_check).
+
+    SUPERSEDED-IN-BAND 2026-09-06T05:37:30Z (MEM round 125), on REV 32's
+    currency audit routing this flag to me as STALE. **THE VERIFICATION ABOVE IS
+    OF A BATTERY THAT NO LONGER EXISTS AT THAT SIZE.** Re-measured by me at the
+    symbol EXPECTED_CHECKS in live/pm_research/da_race_withdrawals.py: it now
+    reads 66, not the 52 this flag recorded; DA grew that battery 52 -> 57 -> 59
+    -> 64 -> 66 across its rounds 35-57. THE FINDING THE FLAG CARRIES IS
+    UNAFFECTED -- the run happened, all checks passed, and the codomain
+    predicate was reached independently. WHAT ROTTED IS THE COUNT AND THE LINE.
+    AND THE LESSON IS THE ONE I MADE A RULE OF AT R-571(B): the citation named a
+    LINE NUMBER and a COUNT, both of which move. The symbol EXPECTED_CHECKS is
+    the durable address and is what this note cites. **A DRIVEN FLAG ROTTED
+    WHILE UNDRIVEN ONES CANNOT** -- the reviewer's asymmetry, demonstrated on
+    one of mine.
   SECTION_8_1_two_of_three_fields_are_BUILDABLE: >-
     ONE DETAIL CORRECTED BY Q-DA-234 (MEM round 89): `side` IS NOT ON THE TRANCHE
     -- it is MISSING_KEY on 4315 of 4315 and lives as the key of the containing
@@ -14313,6 +14779,128 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 125, 2026-09-06T05:37:30Z ------------------------------
+  E2_A_v5_THE_RUNNERS_OWN_FIXTURE_REFUTED_TWO_THINGS_v4_DECLARED:
+    prov: RELAYED
+    from: DA commit 8e6b753
+    as_of: 2026-09-06T05:46:05Z
+  THE_REVIEWER_FILED_ITS_OWN_REFUTATION_AS_A_CONFIRMATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_P002_E2A_DESIGN_2026-09-06.md
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      at the symbol "ProbQueue-f3's ORIENTATION is pinned" the filing computes
+      that at front = 0 the declared form f(front)/(f(front)+f(back)) gives 0
+      while the inverted reading gives 1, states "A model that never fills an
+      unqueued order fails that control", and marks the bullet with a tick. The
+      line therefore contains the refutation of the orientation it certifies. I
+      read the sentence at the prior filing rather than accepting the fresh
+      filing's account of it; the two agree.
+  THE_ORIENTATION_TABLE_HOLDS_back_AT_70_AND_NEVER_SAYS_SO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_DA60_2026-09-06.md
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      the filing's section 2 table prints front/v3/v2 rows 0:1.000000/0.000000,
+      10:0.997093/0.002907, 30:0.927027/0.072973, 70:0.500000/0.500000,
+      100:0.255398/0.744602 and names no value for back. Recomputing from
+      f(x)=x**3 with back = 100 - front reproduces only rows 0 and 30 and gives
+      0.072973 and 0.000000 where the table gives 0.500000 and 0.255398;
+      recomputing with back held at 70 reproduces all ten printed figures
+      exactly. Strict monotonicity (v3 falling, v2 rising) computed TRUE under
+      both parameterisations, so the orientation conclusion does not depend on
+      the unstated variable.
+  E1_S_TICK_FIX_IS_IN_THE_COMMITTED_BODY:
+    prov: CHECKED
+    artifact: live/mm_research/e1_markout_scan.py
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      the body at the symbol tick_size computes vals, cnts = np.unique(scaled,
+      return_counts=True) then tick = vals[cnts.argmax()] / 1e8 with the
+      trailing comment "modal diff", followed by the frac_int >= 0.999
+      integer-multiple check and a GCD fallback when it fails. Mode-of-diffs is
+      implemented in the committed function, so the proposed record wording
+      "fix DESIGNED post-audit and NOT LANDED" is false in its first half. Which
+      of the two paths returns 1e-6 for FIL is NOT established here -- I did not
+      execute it this round and name that as unrun.
+  THE_SEED_CONVENTION_IS_IN_THREE_PLACES_NOT_ONLY_seed_for:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_design_declaration.py
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      the declaration already carries the convention as a field -- key "seed"
+      with "rule" = "seed = int(sha256(day_book_sha256 || arm ||
+      'P003_GATE1_MULTIDAY')[:8], 16)" and a "why" -- so it is not held only in
+      code. The other two sites, verified by symbol: seed_for in
+      de_multiday_gate1_runner.py, and the "Seed:" bullet in
+      plans/GATE1_MULTIDAY_REPLAY_NULL_DESIGN.md. Three copies, nothing
+      comparing them; R-572(B)(4)'s ruling to add a design-v8 field would make a
+      fourth.
+  THE_SEED_NOTATION_DIVERGES_FROM_THE_CODE_AND_THE_SEEDS_DIFFER:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      seed_for hashes an f-string carrying a literal pipe between day_book_sha,
+      arm and P003_GATE1_MULTIDAY; both documentary copies write a concatenation
+      operator (|| and U+2016) which places no delimiter in the hashed string. I
+      computed both readings on a fixed 64-char book sha with arm CONDVALUE:
+      delimiter form 4162527236, concatenation form 1457097641 -- different
+      seeds, therefore different draw sequences. The declaration's own "why"
+      claims the sequence is reproducible from the artifact alone, which the
+      notation defeats.
+  THE_BARE_VERDICT_AXIS_CENSUSED_OVER_ALL_637_NOT_SAMPLED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      censused every flag value in the file for an address (path with extension,
+      7-40 char hex digest, R- or Q- entry, ISO date, or a symbol with parens or
+      dot-notation): 357 of 637 carry none (56.0%), 280 do; the loop asserts
+      iterated == len(flags) == addressed + bare rather than printing a count.
+      Cross-tabbed against flag_provenance: 125 of the 357 bare flags carry a
+      provenance entry (50 CHECKED) against 57 of 280 addressed (28 CHECKED), so
+      the bare-valued flags are the better-cited half and the structural item's
+      "can never be found wrong" is a property of the value, not of the flag.
+      The audit's sampled rate (two thirds of 40) is high by about 11 points
+      against the population.
+  THE_RULED_updated_WINDOW_IS_THREE_AND_IT_HOLDS_TWENTY_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      counted the generation headers between the updated: key and the next
+      top-level key: 21, running from round 124 back to round 104, against the
+      window of THREE ruled at R-542(E); STATUS_UPDATED_ARCHIVE.md holds 98. The
+      bar was met once and has drifted for eighteen consecutive rounds because
+      no instrument audits the shape of the file. Not trimmed this round by
+      deliberate scope: moving 18 generations verbatim with a containment check
+      is a batch and is queued for round 126 with a window guard.
+  DA_61_IS_WRITING_THE_AT_L_CONTROL_UNCOMMITTED:
+    prov: CHECKED
+    artifact: live/mm_research/e2_a_declare.py
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      git diff --stat in the main tree reports the file modified and uncommitted
+      at +419/-8 lines; the added lines include "a trade AT L COUNTS", the
+      resting-BUY reasoning for an aggressive sell printing at exactly L, and a
+      the_control entry for "a single opposite-side trade at EXACTLY L". This is
+      the reviewer's one open item from REVIEW_DA60 section 2 being closed in
+      flight. Recorded as observed, not as closed: an uncommitted diff is not an
+      artifact, and it is DA's file -- routed, not touched.
+  R572_DE_AND_REV_RESET_HARVESTS:
+    prov: RELAYED
+    from: R-572
+    as_of: 2026-09-06T05:37:30Z
+    said: >-
+      relayed from R-572 (coordinator, 2026-09-06T05:32Z): DE's three rulings
+      (in-process invocation of BE's null module at the verified digest; per-day
+      sealed runs admissible now with run_not_before_utc split into
+      read_not_before_utc and day_runs_allowed_for_closed_qualifying_days; the
+      sealed/unsealed key layout made symmetric with a consumer falsifier), and
+      REV's open-findings list. Not re-derived by me except where this round's
+      other flags say otherwise; the seed-convention half of (B)(4) IS
+      re-derived and is filed against it.
   # --- MEM round 124, 2026-09-06T05:23:29Z ------------------------------
   THE_INTERIOR_CONTROL_CAUGHT_v2s_QUEUE_MODEL_ORIENTATION_BACKWARDS:
     prov: CHECKED
