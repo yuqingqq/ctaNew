@@ -1,0 +1,979 @@
+"""P-2026-003 THE INDEPENDENT DAY-BOOK VERIFIER -- DA's separate stack.
+
+R-235 (do-not-harmonize). `be_daybook_build.py`, the BE_DAYBOOK_V1 receipt
+and `de_phase4_diag_runner.day_assembly_inputs` were read as DOCUMENTS; none
+of BE's builder is imported. The whole Gate-1 test rests on this book and
+until now only the reviewer had checked it by hand.
+
+FOUR GROUPS, and what each may and may not say.
+
+  (1) THE DIGEST CHAIN. The book's bytes against the receipt's `sha256` AND
+      its `readback_sha256` -- two independent statements of the same bytes,
+      compared to one streamed hash of the file as it now stands. The pinned
+      inputs (tape, fragment) against the files on disk WHEN PRESENT; an
+      absent input is a STATUS, never a pass.
+  (2) THE POPULATION, RECOMPUTED FROM THE BOOK. Windows, generations, the
+      status sums, both pinned heads at their pinned thetas with SET
+      EQUALITY recomputed over the scored keys rather than read off
+      `sets_are_equal`, coverage recomputed as n_covered / generations, and
+      the uncovered reason classes summing to the uncovered count.
+  (3) THE RESOURCES AS FACTS, NEVER VERDICTS. Every stage's peak against its
+      own declared budget, the index release fraction, the wall. These are
+      reported; nothing here passes or fails a run on them.
+  (4) IDENTITY AND HONESTY OF THE RECEIPT. A receipt naming a different day
+      or coin REFUSES. And `seam.index` -- a LITERAL describing a call -- is
+      compared to the builder's actual call READ BY AST, at the commit the
+      receipt itself names.
+
+TWO TIERS, BECAUSE THE BOOK IS 290 MB OF PICKLE.
+  RECEIPT tier (light): groups 1, 3 and 4, plus every predicate the receipt
+      can be held to internally. Hashing the file streams and costs no
+      memory worth naming.
+  BOOK tier (HEAVY, rule 20): group 2 needs the pickle loaded -- about 2 GB
+      resident -- so it takes the lock and runs under the wrapper. The real
+      09-03 run is a coordinator GO, not something this module does on its
+      own initiative.
+
+    python3 live/pm_research/da_book_verify.py --selftest
+    python3 live/pm_research/da_book_verify.py --receipt-tier \\
+        --book <path> --receipt <path> [--output <path>]
+    python3 live/pm_research/da_book_verify.py --full \\
+        --book <path> --receipt <path> [--output <path>]   # HEAVY
+"""
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+
+PROTOCOL = "P003_DA_BOOK_VERIFIER_V1"
+BE_RECEIPT_PROTOCOL = "BE_DAYBOOK_V1"
+BUILDER_PATH = HERE / "be_daybook_build.py"
+
+#: What loading the real 09-03 book is expected to cost, DECLARED before the
+#: run so the receipt can be held to it: the pickle is 290,758,834 bytes on
+#: disk and unpickles to roughly 2 GB resident. The guard sits above that
+#: with room to write its own refusal, and BELOW the rule-20 cap so a breach
+#: is this module's refusal and never the cgroup's kill.
+BOOK_LOAD_EXPECTED_PEAK_GB = 2.0
+BOOK_LOAD_CAP_GB = 4.0
+GIB = 1024.0 ** 3
+
+
+class BookVerifyRefused(RuntimeError):
+    """The verification cannot proceed honestly on the inputs given."""
+
+
+def carrying_commit() -> str:
+    r = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                       text=True, cwd=str(HERE))
+    return r.stdout.strip() if r.returncode == 0 else "UNKNOWN"
+
+
+def verifier_identity() -> dict:
+    src = Path(__file__).resolve()
+    r = subprocess.run(["git", "log", "-1", "--format=%H", "--", str(src)],
+                       capture_output=True, text=True, cwd=str(src.parent))
+    d = subprocess.run(["git", "status", "--porcelain", "--", str(src)],
+                       capture_output=True, text=True, cwd=str(src.parent))
+    return {"path": "live/pm_research/da_book_verify.py",
+            "sha256": hashlib.sha256(src.read_bytes()).hexdigest(),
+            "commit_best_effort": (r.stdout.strip() or None),
+            "tree_head": carrying_commit(),
+            "producing_code_is_the_committed_bytes":
+                d.returncode == 0 and d.stdout.strip() == ""}
+
+
+def _rss_gb() -> float:
+    try:
+        with open("/proc/self/statm", "rb") as fh:
+            return int(fh.read().split()[1]) * 4096 / GIB
+    except Exception:                                         # noqa: BLE001
+        return float("nan")
+
+
+def sha256_stream(path, chunk: int = 1 << 20) -> dict:
+    """Streamed, so a 290 MB book costs a megabyte of memory, not 290."""
+    h, n = hashlib.sha256(), 0
+    with Path(path).open("rb") as fh:
+        while True:
+            b = fh.read(chunk)
+            if not b:
+                break
+            h.update(b)
+            n += len(b)
+    return {"sha256": h.hexdigest(), "bytes": n}
+
+
+# ------------------------------------------------------ (1) the digest chain
+
+def digest_chain(book_path, receipt: dict, *,
+                 verify_inputs: bool = True) -> dict:
+    bk = receipt.get("book") or {}
+    got = sha256_stream(book_path)
+    declared = bk.get("sha256")
+    readback = bk.get("readback_sha256")
+    out = {
+        "book_path": str(book_path),
+        "bytes_on_disk": got["bytes"],
+        "bytes_declared": bk.get("bytes"),
+        "bytes_match": got["bytes"] == bk.get("bytes"),
+        "sha256_recomputed": got["sha256"],
+        "sha256_declared": declared,
+        "readback_sha256_declared": readback,
+        "matches_declared": got["sha256"] == declared,
+        "matches_readback": got["sha256"] == readback,
+        "declared_and_readback_agree": declared == readback,
+        "why_both": (
+            "the write-side digest is of the buffer that was written and the "
+            "readback is a SECOND, independent statement of the same bytes. "
+            "Checking one and calling it the chain would leave the other "
+            "unchecked -- and they can disagree"),
+        "inputs": {},
+    }
+    for name, blk in sorted((receipt.get("inputs_pinned") or {}).items()):
+        p = Path(blk.get("path", ""))
+        rec = {"declared_sha256": blk.get("sha256"), "path": str(p)}
+        if not p.is_file():
+            rec.update({"status": "INPUT_ABSENT_NOT_CHECKED",
+                        "matches": None,
+                        "why": ("the pinned input is not on disk. An absent "
+                                "input is a STATUS: a `matches: true` here "
+                                "would be a pass for a check that never ran")})
+        elif not verify_inputs:
+            rec.update({"status": "NOT_HASHED_BY_REQUEST", "matches": None})
+        else:
+            g = sha256_stream(p)
+            rec.update({"status": "HASHED", "sha256_recomputed": g["sha256"],
+                        "bytes": g["bytes"],
+                        "matches": g["sha256"] == blk.get("sha256")})
+        out["inputs"][name] = rec
+    checked = [v for v in out["inputs"].values() if v.get("matches") is not None]
+    out["n_inputs"] = len(out["inputs"])
+    out["n_inputs_checked"] = len(checked)
+    out["n_inputs_absent"] = sum(
+        1 for v in out["inputs"].values()
+        if v.get("status") == "INPUT_ABSENT_NOT_CHECKED")
+    out["all_checked_inputs_match"] = all(v["matches"] for v in checked)
+    out["chain_holds"] = bool(out["matches_declared"] and out["matches_readback"]
+                              and out["bytes_match"]
+                              and out["all_checked_inputs_match"])
+    return out
+
+
+# ------------------------------------ (4) identity, and the seam literal
+
+def builder_index_call(path: Path | None = None, *,
+                       at_commit: str | None = None) -> dict:
+    """The builder's ACTUAL `build_tape_index` call, read BY AST.
+
+    A literal in a receipt describing a call is rule 10's shape: it drifts
+    from the code beside it and neither notices. This renders the call from
+    the syntax tree -- positional argument names and keyword names -- so the
+    comparison is against what the code DOES.
+
+    `at_commit` reads the builder as it stood at the commit the receipt
+    itself names, which is the only fair comparison: a receipt is a
+    historical record and must be held to the code of its own moment."""
+    src = None
+    src_from = None
+    if at_commit:
+        r = subprocess.run(
+            ["git", "show", f"{at_commit}:live/pm_research/be_daybook_build.py"],
+            capture_output=True, text=True, cwd=str(HERE))
+        if r.returncode == 0 and r.stdout:
+            src, src_from = r.stdout, f"git {at_commit}"
+    if src is None:
+        p = Path(path) if path else BUILDER_PATH
+        if not p.is_file():
+            raise BookVerifyRefused(
+                f"REFUSED: the builder is absent at {p}; the seam literal "
+                f"cannot be compared to the call it describes and MUST NOT "
+                f"be taken on trust.")
+        src, src_from = p.read_text(), "working tree"
+    tree = ast.parse(src)
+    calls = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        fn = node.func
+        name = (fn.attr if isinstance(fn, ast.Attribute)
+                else (fn.id if isinstance(fn, ast.Name) else None))
+        if name != "build_tape_index":
+            continue
+        pos = [(a.id if isinstance(a, ast.Name) else "<expr>")
+               for a in node.args]
+        kw = [k.arg for k in node.keywords if k.arg]
+        calls.append({"positional": pos, "keywords": sorted(kw),
+                      "rendered": f"build_tape_index({', '.join(pos + [k + '=…' for k in sorted(kw)])})",
+                      "line": node.lineno})
+    return {"source": src_from, "n_calls": len(calls), "calls": calls,
+            "keyword_names": sorted({k for c in calls for k in c["keywords"]}),
+            "read_by": "ast over the builder's source; not imported, not "
+                       "regexed, not restated"}
+
+
+def check_identity(receipt: dict, *, day: str | None = None,
+                   coin: str | None = None) -> dict:
+    """A receipt for a different day or coin REFUSES."""
+    r_day, r_coin = receipt.get("day"), receipt.get("coin")
+    if day is not None and r_day != day:
+        raise BookVerifyRefused(
+            f"REFUSED: the receipt is for day {r_day!r} and the verification "
+            f"was asked for {day!r}. A receipt for another day is not this "
+            f"day's evidence, however well its numbers hold together.")
+    if coin is not None and r_coin != coin:
+        raise BookVerifyRefused(
+            f"REFUSED: the receipt is for coin {r_coin!r} and the "
+            f"verification was asked for {coin!r}.")
+    return {"day": r_day, "coin": r_coin,
+            "protocol": receipt.get("protocol"),
+            "is_BEs_declared_shape":
+                receipt.get("protocol") == BE_RECEIPT_PROTOCOL}
+
+
+def check_seam(receipt: dict) -> dict:
+    """`seam.index` against the call the builder actually makes.
+
+    REFUSES on a contradiction. A literal that describes a different call
+    than the code makes is the defect rule 10 exists for, and a verifier
+    that shrugged at it would be certifying the prose."""
+    seam = receipt.get("seam") or {}
+    literal = seam.get("index")
+    commit = seam.get("commit")
+    at_commit = builder_index_call(at_commit=commit) if commit else None
+    at_head = builder_index_call()
+    kw_in_literal = sorted({
+        tok.split("=")[0].strip()
+        for tok in (literal or "").split("(", 1)[-1].rstrip(")").split(",")
+        if "=" in tok})
+    def _agrees(block):
+        if block is None or block["n_calls"] == 0:
+            return None
+        return any(sorted(c["keywords"]) == kw_in_literal
+                   for c in block["calls"])
+    agrees_commit = _agrees(at_commit)
+    agrees_head = _agrees(at_head)
+    out = {
+        "literal_in_the_receipt": literal,
+        "keywords_the_literal_claims": kw_in_literal,
+        "seam_commit_named_by_the_receipt": commit,
+        "call_at_that_commit": at_commit,
+        "call_at_head": at_head,
+        "agrees_with_the_call_at_its_own_commit": agrees_commit,
+        "agrees_with_the_call_at_head": agrees_head,
+        #: THE RULE, and the hole my own known-bad found. With a readable
+        #: seam commit the fair comparison is against the code OF THAT
+        #: MOMENT, and a contradiction needs BOTH that and HEAD to disagree
+        #: -- a receipt is a historical record. WITHOUT a commit there is no
+        #: historical code to be fair to, so HEAD is the only comparison
+        #: there is. The first version returned None in that branch and let
+        #: a contradicting literal through: an unreadable provenance field
+        #: became a free pass.
+        "contradicts_the_code": (
+            (agrees_commit is False and agrees_head is not True)
+            if agrees_commit is not None else (agrees_head is False)),
+        "how_the_contradiction_was_decided": (
+            "against the call at the receipt's own seam commit"
+            if agrees_commit is not None else
+            "against the call at HEAD -- the receipt names no seam commit, "
+            "so there is no historical code to be fair to"),
+    }
+    if out["contradicts_the_code"]:
+        raise BookVerifyRefused(
+            f"REFUSED: `seam.index` is a LITERAL that contradicts the call. "
+            f"The receipt says {literal!r}, claiming keyword(s) "
+            f"{kw_in_literal}; the builder at the receipt's OWN seam commit "
+            f"{commit} calls it with "
+            f"{[c['keywords'] for c in (at_commit or {}).get('calls', [])]} "
+            f"and at HEAD with "
+            f"{[c['keywords'] for c in at_head['calls']]}. A literal "
+            f"describing a call the code does not make is rule 10's shape, "
+            f"and a verifier that accepted it would be certifying the prose "
+            f"beside the number.")
+    return out
+
+
+# ------------------------------- (2) the population, RECOMPUTED FROM THE BOOK
+
+def receipt_population_predicates(receipt: dict) -> dict:
+    """Everything the receipt can be held to WITHOUT opening the book."""
+    ref = receipt.get("reference") or {}
+    sel = receipt.get("selection") or {}
+    asm = receipt.get("asm") or {}
+    st = ref.get("statuses") or {}
+    windows = ref.get("windows")
+    gens = ref.get("generations")
+    excl = ("BINANCE_GAP_EXCLUDED", "NO_REPLAY", "RECONCILIATION_FAILED")
+    admitted_plus_excluded = (st.get("ADMITTED", 0)
+                              + sum(st.get(k, 0) for k in excl))
+    marks = st.get("TERMINAL_MARK_OK", 0) + st.get("TERMINAL_MARK_MISSING", 0)
+    cov = asm.get("coverage_by_head") or {}
+    per_head = {}
+    for head, blk in sorted(cov.items()):
+        n_cov, n_unc = blk.get("n_covered"), blk.get("n_uncovered")
+        n_ref = blk.get("n_reference_generations")
+        recomputed = (None if not n_ref else n_cov / n_ref)
+        per_head[head] = {
+            "theta": blk.get("theta"),
+            "n_covered": n_cov, "n_uncovered": n_unc,
+            "n_reference_generations": n_ref,
+            "coverage_declared": blk.get("coverage"),
+            "coverage_recomputed": recomputed,
+            "coverage_matches": (recomputed is not None
+                                 and recomputed == blk.get("coverage")),
+            "covered_plus_uncovered_equals_generations":
+                (None if None in (n_cov, n_unc, n_ref)
+                 else n_cov + n_unc == n_ref),
+            "n_scored_keys_equals_n_covered":
+                blk.get("n_scored_keys") == n_cov,
+            "reference_generations_matches_the_reference_block":
+                n_ref == gens,
+        }
+    return {
+        "windows": windows,
+        "windows_equals_reference_windows": windows == ref.get("windows"),
+        "windows_equals_n_supplied_slugs":
+            windows == sel.get("n_supplied_slugs"),
+        "windows_equals_reference_n_slugs": windows == ref.get("n_slugs"),
+        "generations": gens,
+        "admitted_plus_excluded": admitted_plus_excluded,
+        "admitted_plus_excluded_equals_windows":
+            admitted_plus_excluded == windows,
+        "terminal_mark_ok_plus_missing": marks,
+        "terminal_marks_equal_windows": marks == windows,
+        "n_terminal_marks_equals_windows":
+            ref.get("n_terminal_marks") == windows,
+        "both_heads_present_declared": asm.get("both_heads_present"),
+        "n_heads_in_coverage": len(cov),
+        "per_head": per_head,
+        "n_shared_keys_declared": asm.get("n_shared_keys"),
+        "sets_are_equal_declared": asm.get("sets_are_equal"),
+        "NOTE": ("these hold the receipt to ITSELF. Set equality and the "
+                 "scored keys are RECOMPUTED only in the BOOK tier -- "
+                 "`sets_are_equal: true` is a claim until the keys are "
+                 "compared"),
+    }
+
+
+def book_population_predicates(book: dict, receipt: dict,
+                               params_thetas: dict | None = None) -> dict:
+    """RECOMPUTED FROM THE BOOK. This is the tier that needs the pickle."""
+    asm = book.get("asm") or {}
+    by_arm = asm.get("by_arm") or {}
+    ref = book.get("fr") or {}
+    r_asm = receipt.get("asm") or {}
+    keys_by_head, thetas = {}, {}
+    for k, v in by_arm.items():
+        coin, head = (k if isinstance(k, tuple) else tuple(k))
+        scored = v[0] if isinstance(v, (list, tuple)) else v
+        keys_by_head[head] = set(scored)
+        if isinstance(v, (list, tuple)) and len(v) > 1:
+            thetas[head] = v[1]
+    heads = sorted(keys_by_head)
+    out = {"heads_in_the_book": heads, "n_heads": len(heads),
+           "by_arm_keys": sorted([list(k) if not isinstance(k, str) else k
+                                  for k in by_arm], key=str)}
+    if len(heads) == 2:
+        a, b = heads
+        sa, sb = keys_by_head[a], keys_by_head[b]
+        only_a, only_b = sa - sb, sb - sa
+        out["set_equality"] = {
+            "recomputed": not only_a and not only_b,
+            "declared": r_asm.get("sets_are_equal"),
+            "agrees_with_the_receipt":
+                (not only_a and not only_b) == bool(r_asm.get("sets_are_equal")),
+            "n_shared_recomputed": len(sa & sb),
+            "n_shared_declared": r_asm.get("n_shared_keys"),
+            "n_only_in_" + a: len(only_a),
+            "n_only_in_" + b: len(only_b),
+            "difference_sized": len(only_a) + len(only_b),
+            "why_recomputed": (
+                "`sets_are_equal: true` is the builder's own claim about its "
+                "own output. Two heads scoring different key sets is exactly "
+                "the precondition the null rests on, so it is compared, not "
+                "read"),
+        }
+    n_gen = (receipt.get("reference") or {}).get("generations")
+    per_head = {}
+    for head in heads:
+        n_scored = len(keys_by_head[head])
+        d = (r_asm.get("coverage_by_head") or {}).get(head, {})
+        per_head[head] = {
+            "n_scored_keys_recomputed": n_scored,
+            "n_scored_keys_declared": d.get("n_scored_keys"),
+            "matches": n_scored == d.get("n_scored_keys"),
+            "coverage_recomputed": (None if not n_gen else n_scored / n_gen),
+            "coverage_declared": d.get("coverage"),
+            "coverage_matches": (n_gen is not None
+                                 and n_scored / n_gen == d.get("coverage")),
+            "theta_in_the_book": thetas.get(head),
+            "theta_declared": d.get("theta"),
+            "theta_matches": (head not in thetas
+                              or thetas[head] == d.get("theta")),
+        }
+        if params_thetas and head in params_thetas:
+            per_head[head]["theta_in_params"] = params_thetas[head]
+            per_head[head]["theta_matches_params"] = (
+                d.get("theta") == params_thetas[head])
+    out["per_head"] = per_head
+    out["reference_generations_in_the_book"] = ref.get("generations", n_gen)
+    return out
+
+
+# ------------------------------------------- (3) the resources, as FACTS
+
+def resource_facts(receipt: dict) -> dict:
+    res = receipt.get("resources") or {}
+    stages = res.get("stages") or []
+    rows = []
+    for s in stages:
+        peak, budget = s.get("peak_gb"), s.get("budget_gb")
+        rows.append({"stage": s.get("stage"), "peak_gb": peak,
+                     "budget_gb": budget, "wall_s": s.get("wall_s"),
+                     "within_budget_recomputed":
+                         (None if None in (peak, budget) else peak <= budget),
+                     "within_budget_declared": s.get("within_budget")})
+    rel = res.get("index_released") or {}
+    before, after = rel.get("current_gb_before"), rel.get("current_gb_after")
+    return {
+        "stages": rows,
+        "n_stages": len(rows),
+        "every_stage_within_its_budget": all(
+            r["within_budget_recomputed"] for r in rows
+            if r["within_budget_recomputed"] is not None),
+        "declared_agrees_with_recomputed": all(
+            r["within_budget_recomputed"] == r["within_budget_declared"]
+            for r in rows if r["within_budget_recomputed"] is not None),
+        "peak_gb": res.get("peak_gb"),
+        "wall_s": res.get("wall_s"),
+        "wall_s_equals_sum_of_stages": (
+            None if not rows or any(r["wall_s"] is None for r in rows)
+            else abs(sum(r["wall_s"] for r in rows)
+                     - (res.get("wall_s") or 0)) < 1.0),
+        "index_release": {
+            "freed_gb_declared": rel.get("freed_gb"),
+            "freed_gb_recomputed": (None if None in (before, after)
+                                    else round(before - after, 6)),
+            "release_fraction": (None if not before
+                                 else (before - after) / before),
+            "measured_on": rel.get("measured_on_CURRENT_rss"),
+        },
+        "THESE_ARE_FACTS_NOT_VERDICTS": (
+            "budgets are the builder's own and are reported against its own "
+            "measurements. Nothing here passes or fails the run; a reader "
+            "who wants a verdict has the numbers to form one"),
+    }
+
+
+# ---------------------------------------------------------------- the tiers
+
+def verify_receipt_tier(book_path, receipt_path, *,
+                        day: str | None = None, coin: str | None = None,
+                        verify_inputs: bool = True,
+                        output: Path | None = None) -> dict:
+    """LIGHT. Everything that does not need the pickle opened."""
+    rp = Path(receipt_path)
+    if not rp.is_file():
+        raise BookVerifyRefused(f"REFUSED: receipt absent at {receipt_path}")
+    receipt = json.loads(rp.read_text())
+    ident = check_identity(receipt, day=day, coin=coin)
+    seam = check_seam(receipt)
+    chain = digest_chain(book_path, receipt, verify_inputs=verify_inputs)
+    pop = receipt_population_predicates(receipt)
+    res = resource_facts(receipt)
+    flags = []
+    if not chain["chain_holds"]:
+        flags.append("digest_chain")
+    for k in ("windows_equals_reference_windows",
+              "windows_equals_n_supplied_slugs",
+              "windows_equals_reference_n_slugs",
+              "admitted_plus_excluded_equals_windows",
+              "terminal_marks_equal_windows",
+              "n_terminal_marks_equals_windows"):
+        if pop[k] is not True:
+            flags.append(f"population.{k}")
+    for head, blk in pop["per_head"].items():
+        for k in ("coverage_matches", "covered_plus_uncovered_equals_generations",
+                  "n_scored_keys_equals_n_covered",
+                  "reference_generations_matches_the_reference_block"):
+            if blk[k] is not True:
+                flags.append(f"population.{head}.{k}")
+    if not res["declared_agrees_with_recomputed"]:
+        flags.append("resources.declared_agrees_with_recomputed")
+    if not ident["is_BEs_declared_shape"]:
+        flags.append("identity.is_BEs_declared_shape")
+    out = {
+        "protocol": PROTOCOL + "_RECEIPT_TIER",
+        "tier": "RECEIPT",
+        "status": "VERIFIED" if not flags else "FLAGGED",
+        "IS_A_VERIFICATION": not flags,
+        "what_this_tier_cannot_say": (
+            "the set equality and the scored-key counts are the BOOK's, and "
+            "this tier never opens it. `sets_are_equal: true` stays a claim "
+            "until the BOOK tier compares the keys"),
+        "identity": ident, "seam": seam, "digest_chain": chain,
+        "population_from_the_receipt": pop, "resources": res,
+        "flags": flags, "n_flags": len(flags),
+        "receipt": {"path": rp.name,
+                    "sha256": hashlib.sha256(rp.read_bytes()).hexdigest()},
+        "verifier_identity": verifier_identity(),
+        "resource_observation": {"rss_gb_at_end": round(_rss_gb(), 3),
+                                 "book_was_opened": False},
+        "the_book_tier_is_HEAVY": {
+            "why": ("the book is a pickle of "
+                    f"{(receipt.get('book') or {}).get('bytes')} bytes and "
+                    "unpickling it is expected to cost about "
+                    f"{BOOK_LOAD_EXPECTED_PEAK_GB} GB resident"),
+            "expected_peak_gb": BOOK_LOAD_EXPECTED_PEAK_GB,
+            "declared_cap_gb": BOOK_LOAD_CAP_GB,
+            "rule_20": ("over 60 s or 1 GiB, so it takes the heavy lock and "
+                        "runs under the wrapper; the real 09-03 run is a "
+                        "coordinator GO, not this module's own initiative"),
+        },
+    }
+    if output:
+        Path(output).write_text(
+            json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
+    return out
+
+
+def verify_full(book_path, receipt_path, *, day: str | None = None,
+                coin: str | None = None, output: Path | None = None,
+                _book_obj=None, params_thetas: dict | None = None) -> dict:
+    """HEAVY. The receipt tier plus the population RECOMPUTED FROM THE BOOK."""
+    out = verify_receipt_tier(book_path, receipt_path, day=day, coin=coin,
+                              verify_inputs=True)
+    receipt = json.loads(Path(receipt_path).read_text())
+    if _book_obj is not None:
+        book = _book_obj
+        loaded_from = "supplied in process (fixture)"
+    else:
+        import pickle                                         # noqa: PLC0415
+        before = _rss_gb()
+        with Path(book_path).open("rb") as fh:
+            book = pickle.load(fh)
+        after = _rss_gb()
+        loaded_from = str(book_path)
+        if after > BOOK_LOAD_CAP_GB:
+            raise BookVerifyRefused(
+                f"REFUSED: loading the book took {after:.2f} GB resident, "
+                f"over the declared {BOOK_LOAD_CAP_GB} GB cap (expected "
+                f"about {BOOK_LOAD_EXPECTED_PEAK_GB}). The cap is not raised "
+                f"and the book is not read in pieces to fit it.")
+        out["resource_observation"].update(
+            {"rss_gb_before_load": round(before, 3),
+             "rss_gb_after_load": round(after, 3),
+             "load_delta_gb": round(after - before, 3),
+             "expected_peak_gb": BOOK_LOAD_EXPECTED_PEAK_GB,
+             "declared_cap_gb": BOOK_LOAD_CAP_GB})
+    out["resource_observation"]["book_was_opened"] = True
+    out["resource_observation"]["book_loaded_from"] = loaded_from
+    bp = book_population_predicates(book, receipt, params_thetas)
+    flags = list(out["flags"])
+    se = bp.get("set_equality")
+    if se is not None:
+        if not se["recomputed"]:
+            flags.append("book.set_equality_recomputed_false")
+        if not se["agrees_with_the_receipt"]:
+            flags.append("book.set_equality_disagrees_with_the_receipt")
+        if se["n_shared_recomputed"] != se["n_shared_declared"]:
+            flags.append("book.n_shared_keys")
+    if bp["n_heads"] != 2:
+        flags.append("book.n_heads")
+    for head, blk in bp["per_head"].items():
+        for k in ("matches", "coverage_matches", "theta_matches"):
+            if blk[k] is not True:
+                flags.append(f"book.{head}.{k}")
+        if blk.get("theta_matches_params") is False:
+            flags.append(f"book.{head}.theta_matches_params")
+    out.update({
+        "protocol": PROTOCOL + "_FULL",
+        "tier": "FULL",
+        "population_from_the_book": bp,
+        "flags": flags, "n_flags": len(flags),
+        "status": "VERIFIED" if not flags else "FLAGGED",
+        "IS_A_VERIFICATION": not flags,
+        "what_this_tier_cannot_say": (
+            "that the day's TAPE and FRAGMENT were built correctly -- schema, "
+            "splits, coverage. Those are the builder's own guards. This "
+            "verifies WHICH BYTES reached the pass and what the book says "
+            "about itself"),
+    })
+    if output:
+        Path(output).write_text(
+            json.dumps(out, indent=2, sort_keys=True, default=str) + "\n")
+    return out
+
+
+# --------------------------------------------------------------- the fixture
+
+def synthetic_book_and_receipt(d: Path, *, windows: int = 12,
+                               gens: int = 400, uncovered: int = 40,
+                               day: str = "20260903", coin: str = "btc",
+                               heads=("q1_arrival_composed_lgbm",
+                                      "incumbent_linear_d"),
+                               thetas=(0.32450609461933483,
+                                       0.43525926488298716),
+                               unequal_sets: bool = False) -> tuple:
+    """A book of BE's OWN shape -- {"fr": …, "asm": {"by_arm": {(coin, head):
+    (scored, theta)}}} -- with a receipt of BE_DAYBOOK_V1's shape built from
+    it, so every predicate has something true to be true OF."""
+    import pickle
+    keys = [f"g{i}" for i in range(gens - uncovered)]
+    by_arm = {}
+    for i, (h, th) in enumerate(zip(heads, thetas)):
+        k = list(keys)
+        if unequal_sets and i == 1:
+            k = k[:-3] + ["EXTRA_A", "EXTRA_B"]
+        by_arm[(coin, h)] = (k, th)
+    book = {"fr": {"generations": gens, "windows": windows},
+            "asm": {"by_arm": by_arm}}
+    bp = d / f"be_daybook_{day}_{coin}.pkl"
+    buf = pickle.dumps(book, protocol=pickle.HIGHEST_PROTOCOL)
+    bp.write_bytes(buf)
+    sha = hashlib.sha256(buf).hexdigest()
+    tape = d / "tape.json"
+    tape.write_text('{"tape": 1}')
+    frag = d / "fragment.json"
+    frag.write_text('{"fragment": 1}')
+    n_cov = gens - uncovered
+    #: the seam literal is DERIVED from the builder's real call so the
+    #: fixture's receipt is HONEST by construction; the known-bad plants a
+    #: contradicting one.
+    call = builder_index_call()
+    lit = (call["calls"][0]["rendered"] if call["calls"]
+           else "build_tape_index(splits)")
+    receipt = {
+        "protocol": BE_RECEIPT_PROTOCOL, "day": day, "coin": coin,
+        "book": {"bytes": len(buf), "path": str(bp), "sha256": sha,
+                 "readback_sha256": sha, "readback_matches": True},
+        "inputs_pinned": {
+            "tape": {"path": str(tape),
+                     "sha256": hashlib.sha256(tape.read_bytes()).hexdigest(),
+                     "split": "score"},
+            "fragment": {"path": str(frag),
+                         "sha256": hashlib.sha256(
+                             frag.read_bytes()).hexdigest()}},
+        "seam": {"commit": None, "index": lit,
+                 "front_door": "de_phase4_diag_runner.day_assembly_inputs"},
+        "selection": {"n_supplied_slugs": windows},
+        "reference": {"windows": windows, "n_slugs": windows,
+                      "generations": gens, "n_terminal_marks": windows,
+                      "statuses": {"ADMITTED": windows,
+                                   "BINANCE_GAP_EXCLUDED": 0,
+                                   "NO_REPLAY": 0,
+                                   "RECONCILIATION_FAILED": 0,
+                                   "TERMINAL_MARK_OK": windows,
+                                   "TERMINAL_MARK_MISSING": 0}},
+        "asm": {"both_heads_present": True,
+                "by_arm_keys": [[coin, h] for h in heads],
+                "n_shared_keys": len(keys) if not unequal_sets
+                                 else len(set(keys) & set(
+                                     by_arm[(coin, heads[1])][0])),
+                "sets_are_equal": not unequal_sets,
+                "coverage_by_head": {
+                    h: {"coverage": n_cov / gens, "n_covered": n_cov,
+                        "n_reference_generations": gens,
+                        "n_scored_keys": n_cov, "n_uncovered": uncovered,
+                        "theta": th} for h, th in zip(heads, thetas)}},
+        "resources": {
+            "peak_gb": 5.317, "wall_s": 30.0,
+            "stages": [{"stage": "A0_reference", "peak_gb": 2.0,
+                        "budget_gb": 3.0, "wall_s": 10.0,
+                        "within_budget": True, "current_gb": 2.0},
+                       {"stage": "A2_assemble", "peak_gb": 5.317,
+                        "budget_gb": 7.5, "wall_s": 20.0,
+                        "within_budget": True, "current_gb": 4.0}],
+            "index_released": {"current_gb_before": 4.096,
+                               "current_gb_after": 2.94, "freed_gb": 1.156,
+                               "measured_on_CURRENT_rss": "VmRSS"}},
+    }
+    rp = d / f"be_daybook_receipt_{day}_{coin}.json"
+    rp.write_text(json.dumps(receipt, indent=1, sort_keys=True, default=str))
+    return bp, rp, book
+
+
+def selftest() -> tuple:                                      # noqa: C901
+    checks: list[dict] = []
+
+    def ck(name, passed, detail):
+        checks.append({"check": name, "passed": bool(passed),
+                       "detail": detail})
+
+    td = Path(tempfile.mkdtemp(prefix="da70_"))
+    bp, rp, book = synthetic_book_and_receipt(td)
+
+    # -- 1. the happy path, BOTH tiers ------------------------------------
+    r_tier = verify_receipt_tier(bp, rp, day="20260903", coin="btc")
+    full = verify_full(bp, rp, day="20260903", coin="btc")
+    ck("BOTH TIERS VERIFY A BOOK OF BE's OWN SHAPE: the RECEIPT tier holds "
+       "the receipt to itself and to the bytes; the FULL tier opens the book "
+       "and recomputes what only the book can say",
+       r_tier["IS_A_VERIFICATION"] is True
+       and full["IS_A_VERIFICATION"] is True
+       and r_tier["tier"] == "RECEIPT" and full["tier"] == "FULL",
+       f"receipt tier {r_tier['status']} ({r_tier['n_flags']} flags), full "
+       f"{full['status']} ({full['n_flags']} flags)")
+
+    # -- 2. THE DIGEST CHAIN, both statements -----------------------------
+    ch = r_tier["digest_chain"]
+    ck("THE DIGEST CHAIN CHECKS BOTH STATEMENTS OF THE SAME BYTES: the "
+       "write-side `sha256` AND the independent `readback_sha256`, against "
+       "one streamed hash of the file. Checking one and calling it the chain "
+       "leaves the other unchecked -- and they can disagree",
+       ch["matches_declared"] and ch["matches_readback"]
+       and ch["declared_and_readback_agree"] and ch["bytes_match"]
+       and ch["chain_holds"] and ch["n_inputs_checked"] == 2,
+       f"{ch['bytes_on_disk']} bytes hashing to "
+       f"{ch['sha256_recomputed'][:16]}; both declared statements agree; "
+       f"{ch['n_inputs_checked']} pinned inputs hashed, "
+       f"{ch['n_inputs_absent']} absent")
+
+    # -- 3. A TAMPERED BOOK REFUSES ON THE DIGEST -------------------------
+    tb = td / "tampered.pkl"
+    tb.write_bytes(bp.read_bytes() + b"\x00")
+    tam = verify_receipt_tier(tb, rp, day="20260903", coin="btc")
+    ck("KNOWN-BAD: A TAMPERED BOOK FAILS THE CHAIN -- one appended byte "
+       "moves the digest and the chain does not hold, against BOTH declared "
+       "statements",
+       tam["IS_A_VERIFICATION"] is False
+       and tam["digest_chain"]["chain_holds"] is False
+       and tam["digest_chain"]["matches_declared"] is False
+       and tam["digest_chain"]["matches_readback"] is False
+       and "digest_chain" in tam["flags"],
+       f"one byte appended -> {tam['digest_chain']['sha256_recomputed'][:16]} "
+       f"against declared {tam['digest_chain']['sha256_declared'][:16]}")
+
+    # -- 4. AN ABSENT PINNED INPUT IS A STATUS, NEVER A PASS --------------
+    r2 = json.loads(rp.read_text())
+    r2["inputs_pinned"]["tape"]["path"] = str(td / "gone.json")
+    rp2 = td / "receipt_absent_input.json"
+    rp2.write_text(json.dumps(r2, default=str))
+    ab = verify_receipt_tier(bp, rp2, day="20260903", coin="btc")
+    ck("AN ABSENT PINNED INPUT IS A STATUS, NEVER A PASS: it is reported "
+       "INPUT_ABSENT_NOT_CHECKED with `matches: null`, because a `true` "
+       "there would be a pass for a check that never ran",
+       ab["digest_chain"]["inputs"]["tape"]["status"]
+       == "INPUT_ABSENT_NOT_CHECKED"
+       and ab["digest_chain"]["inputs"]["tape"]["matches"] is None
+       and ab["digest_chain"]["n_inputs_absent"] == 1
+       and ab["digest_chain"]["n_inputs_checked"] == 1,
+       f"tape absent -> status "
+       f"{ab['digest_chain']['inputs']['tape']['status']}, matches "
+       f"{ab['digest_chain']['inputs']['tape']['matches']}")
+
+    # -- 5. A MOVED COUNT IS FLAGGED --------------------------------------
+    r3 = json.loads(rp.read_text())
+    r3["reference"]["statuses"]["ADMITTED"] += 1
+    rp3 = td / "receipt_moved.json"
+    rp3.write_text(json.dumps(r3, default=str))
+    mv = verify_receipt_tier(bp, rp3, day="20260903", coin="btc")
+    ck("KNOWN-BAD: ONE MOVED COUNT IS FLAGGED. ADMITTED + the excluded "
+       "classes must equal the windows, so a receipt whose statuses no "
+       "longer sum is flagged on the sum, not on the field",
+       mv["IS_A_VERIFICATION"] is False
+       and "population.admitted_plus_excluded_equals_windows" in mv["flags"],
+       f"ADMITTED +1 -> {[f for f in mv['flags'] if 'admitted' in f]}")
+
+    # -- 6. UNEQUAL HEAD KEY SETS ARE FLAGGED WITH THE DIFFERENCE SIZED ---
+    d2 = td / "unequal"
+    d2.mkdir(exist_ok=True)
+    bp_u, rp_u, _ = synthetic_book_and_receipt(d2, unequal_sets=True)
+    ru = json.loads(rp_u.read_text())
+    ru["asm"]["sets_are_equal"] = True          # the builder's CLAIM
+    rp_u2 = d2 / "receipt_claims_equal.json"
+    rp_u2.write_text(json.dumps(ru, default=str))
+    un = verify_full(bp_u, rp_u2, day="20260903", coin="btc")
+    se = un["population_from_the_book"]["set_equality"]
+    ck("KNOWN-BAD, AND THE ONE THAT MATTERS MOST: UNEQUAL HEAD KEY SETS ARE "
+       "FLAGGED AND THE DIFFERENCE IS SIZED -- the receipt CLAIMS "
+       "`sets_are_equal: true` and the recomputation over the book's own "
+       "keys disagrees. Set equality is the precondition the null rests on, "
+       "so it is compared, never read",
+       un["IS_A_VERIFICATION"] is False
+       and se["recomputed"] is False
+       and se["agrees_with_the_receipt"] is False
+       and se["difference_sized"] == 5
+       and "book.set_equality_recomputed_false" in un["flags"],
+       f"the book's two heads differ by {se['difference_sized']} keys "
+       f"({se['n_only_in_q1_arrival_composed_lgbm']} only in one, "
+       f"{se['n_only_in_incumbent_linear_d']} only in the other) while the "
+       f"receipt claims equality")
+
+    # -- 7. and the POSITIVE control on the same axis ---------------------
+    se_ok = full["population_from_the_book"]["set_equality"]
+    ck("POSITIVE CONTROL ON THE SAME AXIS: equal key sets RECOMPUTE equal, "
+       "agree with the receipt, and the shared count matches -- so the flag "
+       "means something",
+       se_ok["recomputed"] is True and se_ok["agrees_with_the_receipt"] is True
+       and se_ok["n_shared_recomputed"] == se_ok["n_shared_declared"]
+       and se_ok["difference_sized"] == 0,
+       f"{se_ok['n_shared_recomputed']} shared keys recomputed against "
+       f"{se_ok['n_shared_declared']} declared, difference 0")
+
+    # -- 8. coverage and the thetas, recomputed ---------------------------
+    ph = full["population_from_the_book"]["per_head"]
+    ck("COVERAGE AND THE THETAS ARE RECOMPUTED FROM THE BOOK: n_scored_keys "
+       "counted off the book's own key sets, coverage divided out again, and "
+       "each head's theta compared to the one the receipt pins",
+       all(b["matches"] and b["coverage_matches"] and b["theta_matches"]
+           for b in ph.values()) and len(ph) == 2,
+       "; ".join(f"{h}: {b['n_scored_keys_recomputed']} keys, coverage "
+                 f"{b['coverage_recomputed']:.6f}, theta "
+                 f"{b['theta_declared']}" for h, b in sorted(ph.items())))
+
+    # -- 9. a receipt for the WRONG DAY or COIN REFUSES -------------------
+    why_day = why_coin = ""
+    try:
+        verify_receipt_tier(bp, rp, day="20260904", coin="btc")
+    except BookVerifyRefused as e:
+        why_day = str(e)
+    try:
+        verify_receipt_tier(bp, rp, day="20260903", coin="eth")
+    except BookVerifyRefused as e:
+        why_coin = str(e)
+    ck("A RECEIPT FOR A DIFFERENT DAY OR COIN REFUSES: a receipt for another "
+       "day is not this day's evidence, however well its numbers hold "
+       "together",
+       "receipt is for day" in why_day and "20260904" in why_day
+       and "coin" in why_coin and "'eth'" in why_coin,
+       f"day: '{why_day[:64]}...'; coin: '{why_coin[:56]}...'")
+
+    # -- 10. THE SEAM LITERAL, read by AST --------------------------------
+    call = builder_index_call()
+    ck("THE BUILDER'S `build_tape_index` CALL IS READ BY AST FROM ITS OWN "
+       "SOURCE -- argument names off the syntax tree, not a regex over text "
+       "and not the receipt's word for it",
+       call["n_calls"] >= 1 and call["keyword_names"]
+       and all("rendered" in c for c in call["calls"]),
+       f"{call['n_calls']} call(s) at line(s) "
+       f"{[c['line'] for c in call['calls']]}, keywords "
+       f"{call['keyword_names']}, rendered "
+       f"{call['calls'][0]['rendered']!r}")
+    r4 = json.loads(rp.read_text())
+    r4["seam"]["index"] = "build_tape_index(splits, tape_path=…)"
+    rp4 = td / "receipt_bad_seam.json"
+    rp4.write_text(json.dumps(r4, default=str))
+    why_seam = ""
+    try:
+        verify_receipt_tier(bp, rp4, day="20260903", coin="btc")
+    except BookVerifyRefused as e:
+        why_seam = str(e)
+    ck("KNOWN-BAD: A `seam.index` LITERAL THAT CONTRADICTS THE CALL REFUSES "
+       "-- a literal describing a call the code does not make is rule 10's "
+       "shape, and a verifier that shrugged would be certifying the prose "
+       "beside the number",
+       "contradicts the call" in why_seam and "tape_path" in why_seam,
+       f"'{why_seam[:120]}...'")
+    ck("AND THE POSITIVE CONTROL: the fixture's own literal is DERIVED from "
+       "the builder's real call, and it passes -- so the check admits a "
+       "truthful receipt and is not a wall",
+       r_tier["seam"]["contradicts_the_code"] is False
+       and r_tier["seam"]["agrees_with_the_call_at_head"] is True,
+       f"literal {r_tier['seam']['literal_in_the_receipt']!r} agrees with the "
+       f"call at HEAD")
+
+    # -- 11. THE RESOURCES AS FACTS ---------------------------------------
+    rf = r_tier["resources"]
+    ck("THE RESOURCES ARE FACTS, NOT VERDICTS: every stage's peak is "
+       "compared to its OWN declared budget and the builder's "
+       "`within_budget` is checked against the recomputation, with the index "
+       "release fraction divided out",
+       rf["every_stage_within_its_budget"] is True
+       and rf["declared_agrees_with_recomputed"] is True
+       and abs(rf["index_release"]["freed_gb_recomputed"] - 1.156) < 1e-9
+       and abs(rf["index_release"]["release_fraction"] - 1.156 / 4.096) < 1e-9,
+       f"{rf['n_stages']} stages all within budget; index release "
+       f"{rf['index_release']['freed_gb_recomputed']} GB = "
+       f"{rf['index_release']['release_fraction']:.3f} of what was held")
+    r5 = json.loads(rp.read_text())
+    r5["resources"]["stages"][0]["within_budget"] = False
+    rp5 = td / "receipt_budget_lie.json"
+    rp5.write_text(json.dumps(r5, default=str))
+    bl = verify_receipt_tier(bp, rp5, day="20260903", coin="btc")
+    ck("KNOWN-BAD: A `within_budget` FLAG THAT DISAGREES WITH THE "
+       "ARITHMETIC IS FLAGGED -- the builder's own boolean is checked "
+       "against peak <= budget rather than taken",
+       bl["IS_A_VERIFICATION"] is False
+       and "resources.declared_agrees_with_recomputed" in bl["flags"],
+       "stage A0 declares within_budget false at peak 2.0 <= budget 3.0")
+
+    # -- 12. the RECEIPT tier says what it CANNOT say ---------------------
+    ck("THE RECEIPT TIER STATES WHAT IT CANNOT SAY, and the heavy tier's "
+       "cost is DECLARED before it runs: set equality stays a CLAIM until "
+       "the book is opened, and opening it is expected to cost about "
+       f"{BOOK_LOAD_EXPECTED_PEAK_GB} GB against a declared "
+       f"{BOOK_LOAD_CAP_GB} GB cap",
+       "stays a claim" in r_tier["what_this_tier_cannot_say"]
+       and r_tier["resource_observation"]["book_was_opened"] is False
+       and r_tier["the_book_tier_is_HEAVY"]["expected_peak_gb"]
+       == BOOK_LOAD_EXPECTED_PEAK_GB
+       and full["resource_observation"]["book_was_opened"] is True,
+       f"receipt tier opened no book; the full tier did. Expected peak "
+       f"{BOOK_LOAD_EXPECTED_PEAK_GB} GB, cap {BOOK_LOAD_CAP_GB} GB, "
+       f"rule-20 wrapper required for the real book")
+
+    n_fail = sum(1 for c in checks if not c["passed"])
+    for c in checks:
+        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
+        print("       " + c["detail"])
+    print(f"\n{'SELFTEST OK' if not n_fail else 'SELFTEST FAILED'} -- "
+          f"{len(checks)} checks, {n_fail} failure(s)")
+    return checks, n_fail
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--receipt-tier", action="store_true")
+    ap.add_argument("--full", action="store_true", help="HEAVY: opens the book")
+    ap.add_argument("--book")
+    ap.add_argument("--receipt")
+    ap.add_argument("--day")
+    ap.add_argument("--coin")
+    ap.add_argument("--output", type=Path, default=None)
+    a = ap.parse_args()
+    if a.selftest:
+        checks, n_fail = selftest()
+        if a.output:
+            a.output.write_text(json.dumps({
+                "protocol": PROTOCOL + "_FIXTURE",
+                "status": "FIXTURE_NO_REAL_BOOK",
+                "verifier_identity": verifier_identity(),
+                "builder_call_read_by_ast": builder_index_call(),
+                "the_real_book_tier_is_HEAVY": {
+                    "expected_peak_gb": BOOK_LOAD_EXPECTED_PEAK_GB,
+                    "declared_cap_gb": BOOK_LOAD_CAP_GB,
+                    "why": "the 09-03 book is a 290,758,834-byte pickle; "
+                           "unpickling is expected to cost about 2 GB "
+                           "resident, which is heavy under rule 20",
+                    "the_real_run_is_a_coordinator_GO": True},
+                "checks": checks, "n_checks": len(checks),
+                "n_failed": n_fail, "both_directions": True,
+            }, indent=2, sort_keys=True, default=str) + "\n")
+        return 1 if n_fail else 0
+    if not (a.book and a.receipt):
+        ap.error("--selftest, or --receipt-tier/--full with --book and "
+                 "--receipt [--day --coin --output]")
+    try:
+        fn = verify_full if a.full else verify_receipt_tier
+        r = fn(a.book, a.receipt, day=a.day, coin=a.coin, output=a.output)
+    except BookVerifyRefused as e:
+        print(str(e))
+        return 2
+    print(f"{r['tier']} tier: {r['status']} -- IS_A_VERIFICATION="
+          f"{r['IS_A_VERIFICATION']}, {r['n_flags']} flag(s) {r['flags']}")
+    return 0 if r["IS_A_VERIFICATION"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
