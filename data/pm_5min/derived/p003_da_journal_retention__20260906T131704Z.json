@@ -1,0 +1,89 @@
+{
+  "as_of_utc": "2026-09-06T13:17:04Z",
+  "decides_nothing": "the readers are labelled; no verdict here",
+  "known_bad_absent_unit": {
+    "available": false,
+    "n_lines_available": 0,
+    "oldest_available_utc": null,
+    "status": "ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT",
+    "unit": "da86-no-such-unit",
+    "why": "the journal holds no lines for this unit. NO NUMBER IS QUOTED FROM IT: a 0 reported as a measurement is a measurement of nothing"
+  },
+  "known_bad_midnight_drift_refusal_now_leaves_a_file": [
+    {
+      "at_utc": "2026-09-06T13:15:25Z",
+      "detail": "live/pm_research/da_midnight_verify.sh",
+      "event": "run_started",
+      "pid": 3431845
+    },
+    {
+      "at_utc": "2026-09-06T13:15:25Z",
+      "detail": "DEPLOY_DRIFT RECORD_ABSENT rc=7 record=/tmp/claude-1001/-home-yuqing-ctaNew/f39956e0-9036-4820-9583-883ec184e424/scratchpad/da86drive/nosuch.json",
+      "event": "refused",
+      "pid": 3431845
+    },
+    {
+      "at_utc": "2026-09-06T13:15:25Z",
+      "detail": "exit=7",
+      "event": "run_finished",
+      "pid": 3431845
+    }
+  ],
+  "known_bad_window_before_the_oldest_entry": {
+    "oldest_available_utc": "2026-09-06T09:05:56Z",
+    "status": "UNMEASURED",
+    "why": "the journal no longer reaches this window: its oldest entry for resource-monitor is 2026-09-06T09:05:56Z and the window starts 1970-01-01T00:00:00Z. A PARTIAL read of a window is not the window (rule 20: the journal is not the record)",
+    "window_fully_covered": false
+  },
+  "positive_control": {
+    "retention": {
+      "available": true,
+      "n_lines_available": 502,
+      "n_lines_with_a_readable_stamp": 502,
+      "oldest_available_epoch": 1788685556.0,
+      "oldest_available_utc": "2026-09-06T09:05:56Z",
+      "read_at_utc": "2026-09-06T13:17:04Z",
+      "status": "PRESENT",
+      "the_journal_is_not_the_record": "these numbers are copied into this artifact at the moment of reading; the journal behind them rotates (rule 20)",
+      "unit": "resource-monitor"
+    },
+    "unit": "resource-monitor",
+    "window_fully_covered": true,
+    "window_inside_the_retained_range": {
+      "n_in_window": 60,
+      "n_rows": 121,
+      "status": "MEASURED"
+    }
+  },
+  "protocol": "P003_DA_JOURNAL_RETENTION_R641_V1",
+  "readers_closed": [
+    "live/pm_research/da_cross_venue_forensics.py",
+    "live/pm_research/da_midnight_verify.sh"
+  ],
+  "ruling": "R-641 / rule 20: the journal is NOT the record",
+  "shared_porcelain_parser": {
+    "n_malformed": 0,
+    "rows": [
+      {
+        "path": "live/x.py",
+        "renamed_from": null,
+        "untracked": false,
+        "xy": " M"
+      },
+      {
+        "path": "data",
+        "renamed_from": null,
+        "untracked": true,
+        "xy": "??"
+      },
+      {
+        "path": "b",
+        "renamed_from": "a",
+        "untracked": false,
+        "xy": "R "
+      }
+    ],
+    "the_rename_returns": "b"
+  },
+  "the_numbers_are_copied_at_the_moment_of_reading": true
+}
