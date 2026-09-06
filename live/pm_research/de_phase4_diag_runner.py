@@ -2241,9 +2241,33 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
         if len(_alt) >= 2:
             _cr_alt = max(_alt.values()) / min(_alt.values())
             sep["cascade_spread_under_the_other_baseline"] = _cr_alt
+            # R-546 CHANGED THIS, AND THE CHANGE IS REPORTED RATHER THAN
+            # ABSORBED. Under a single book-wide baseline the SPREAD
+            # cancelled the denominator and was invariant. The adopted
+            # baseline is PER ARM, so it no longer cancels: the spread is
+            # now baseline-DEPENDENT. What survives is the ORDERING, and
+            # that is computed under every baseline rather than asserted.
+            sep["cascade_spread_is_invariant_to_the_baseline_choice"] = (
+                abs(_cr_alt - _cr) <= 1e-9)
+            sep["why_the_spread_is_no_longer_invariant"] = (
+                "a per-arm baseline does not cancel in a max/min ratio; "
+                "under one book-wide rate it did. This is a consequence of "
+                "adopting the cited per-arm replayed rate, not a defect")
+            _ord = {}
+            for _lab, _map in (("primary_cited", {a: v.get("cascade_factor")
+                                                  for a, v in out.items()}),
+                               ("filling_generation_rate", _alt)):
+                _vals = {a: x for a, x in _map.items() if x}
+                if len(_vals) >= 2:
+                    _r = max(_vals.values()) / min(_vals.values())
+                    _ord[_lab] = ("CHEAP FILLS FIRST, FEW FILLS SECOND"
+                                  if _sr > _r else
+                                  "FEW FILLS FIRST, CHEAP FILLS SECOND")
+            sep["ordering_under_each_baseline"] = _ord
+            sep["ordering_agrees_under_all_baselines"] = (
+                len(set(_ord.values())) == 1 if _ord else None)
             sep["ordering_is_invariant_to_the_baseline_choice"] = (
-                abs(_cr_alt - _cr) <= 1e-9
-                and ((_sr > _cr) == (_sr > _cr_alt)))
+                sep["ordering_agrees_under_all_baselines"])
     return {
         "separation": sep,
         "n_baseline_fills": n_b, "baseline_pnl_cents": pnl_b,
