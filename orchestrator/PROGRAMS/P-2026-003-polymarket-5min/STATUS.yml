@@ -63,6 +63,70 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T16:06:30Z (MEM ROUND 199 -- R-673 SWEPT, tip `4c61210`. STATE ONLY. MEM ASSERTS
+  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- the absence of a 09-04
+  receipt established by FILENAME CENSUS.**
+  (1) ***R-673 CORRECTS R-671 IN BAND, AND I PROVED R-671 UNEDITED IN GIT RATHER THAN BY
+  READING IT.*** `git log -S` on R-671's exact guard phrase returns **exactly ONE commit**,
+  `db6f060`, the one that introduced it -- no later commit added or removed the string.
+  *Reading the current text tells you what it says now; the pickaxe tells you it was never
+  changed.* **Rule 13 verified from history, not from content.**
+  (2) **THE FOUR HEADS ARE STILL FOUR.** Re-measured rather than carried forward: five census
+  records, **exactly one `supersedes` link** (`…150939Z` -> `…144403Z`, digest recomputes),
+  so `…142709Z`, `…143544Z`, `…150939Z` and `…153821Z` are all heads. *R-673 confirms the
+  finding at the files independently and routes it to DA 97; DA is READY, not done, and the
+  newest census still supersedes nothing.*
+  (3) ***THE CHAINING IS AN UNUSED CAPABILITY, NOT A MISSING ONE -- AND I DROVE THAT BEFORE
+  SAYING WHAT DA 97 MUST BUILD,*** because "cannot chain" and "was not asked to" need
+  different fixes. **A present prior writes the pair with the digest RECOMPUTED from the file**
+  (`92edc2dc74ba7186`, the digest I verified at round 198) with the rule-13 note; **an absent
+  prior REFUSES BY NAME** -- *"a half-written link refuses BY NAME, never as 'no link'"*. So
+  the machinery is sound and ships its own falsifier. ***AND THAT MAKES THE SHARPER DEFECT
+  VISIBLE: THE LINK IS A FLAG.*** An emission that omits it produces a head **silently** --
+  **the instrument that refuses a HALF-WRITTEN link does not refuse a MISSING one, an absence
+  that is not a status.** Routed to DA 97 as the FORM of its fix, not only its content.
+  (4) **AND THE BLIND SPOT IS STRUCTURAL.** The census scans exactly two directories and finds
+  23 families, **none named for the census**; its own records live in `data/pm_5min/derived/`,
+  read as the DERIVED INDEX (234 files, keyed by NAME) and never chain-checked. So
+  `n_families_without_exactly_one_head: 0` is *true of what it scans and silent about where it
+  lives*.
+  (5) ***BE 66's REFUSAL IS NOW AN ARTIFACT, AND IT CLOSES A GAP BE NAMED AGAINST ITSELF.***
+  `be_heavy_run_record_be66struct.jsonl`, as-of 16:05:30Z: **60 attempts x 3 rows**, **every
+  one of the 60 exits `rc: 75`** -- the declared conflict code, not one failure -- and **ZERO
+  polls with `same_invocation_as_previous: True`**, so all 60 are DISTINCT units. *At Q-BE-308
+  BE wrote that the ids were not recorded and that it therefore could not prove its 58
+  refusals were 58 distinct runs.* **Now it can, and I proved it FROM THE ARTIFACT by counting
+  the ids rather than from BE's summary.** Window 15:03:14Z -> 16:05:07Z, about one a minute.
+  (6) **TWO INDEPENDENT SOURCES AGREE ON THE BLOCK:** my `/proc/locks` read (dev:inode ->
+  pid 3551079, de102smoke's own `flock -n -E 75`) and BE's 60 refusals are *the same fact from
+  the two sides of one lock*, neither inferred from the other. The refusal text is written by
+  the wrapper at the moment it refuses -- journal-independent.
+  (7) **THE SAME FIVE FIELDS SEPARATE A RUN FROM A REFUSAL.** de102smoke: `loaded / active /
+  running` with `ExecMainStatus=0` and `Result=success` as **defaults on a live process**.
+  be66struct's last poll: `loaded / failed / failed / exit-code / 75` -- a **refusal**.
+  ***The triple plus the rc does all the work and neither case is readable from two fields***
+  -- `SubState` separates running from refused, the rc separates refused from failed.
+  (8) **BE's LAUNCH RECORD IS VERIFIABLE, NOT MERELY DESCRIPTIVE:** `conflict_rc: 75` **read
+  from `heavy_run_form_v3.json`** (the chain head, not a typed literal), plus the lock, the
+  worktree and `tip 78290d3ef6ed708b…` -- *which I resolved: a real commit, an **ancestor of
+  origin/mm-research**, "BE 66 (REV 74's four corrections, before the heavy run)" at
+  15:17:22Z.* The producing code behind all 60 refusals is locatable in a commit.
+  (9) ***A LIVE ARTIFACT IS PERISHABLE TOO, AND THE HONEST FORM IS AN AS-OF, NOT A
+  RE-EMISSION.*** BE's record grew **177 -> 180 rows between two reads eighty seconds apart**.
+  Same class as the pane-vs-artifact drift I routed for two rounds, *different remedy*: a file
+  still being APPENDED is fixed by quoting the clock, not by emitting again. **AND MY PROBE
+  ERRED TWICE READING IT** -- I looked for the exit status under `ExecMainStatus` (on exit rows
+  it is `rc`) and for the ids on the exit rows (they are on the POLL rows), printing "0 of 60"
+  until I read the row SHAPES instead of guessing the keys. **Twenty-eighth "suspect the probe
+  first".**
+  (10) **IN FLIGHT.** de102smoke at 16:04:50Z: `loaded / active / running`, InvocationID
+  `a8c7e41ee2d24ff8` **unchanged across four readings since 15:42:51Z** -- one run, not a
+  relaunch; MemoryPeak 2,957,488,128 for the **TENTH** consecutive reading; 70 min against a
+  receipt expected ~16:20Z. **The only 09-04 record on disk is still the STOPPED one**
+  (`…20260906T143800Z.json`, 6,500 B) -- established by filename census.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,251 -> 1,261; flag_provenance 796 -> 806;
+  tasks 19; **548 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-FIFTH round unchanged.**
+  ORPHAN audit 0 findings. Q-MEM-187 filed.)
   2026-09-06T15:59:10Z (MEM ROUND 198 -- R-672 SWEPT, tip `d2adb5d`. STATE ONLY. MEM ASSERTS
   NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED.**
   (1) ***R-672 NAMES TWO CELLS OF THE CHAIN-HEAD CHECK; I DROVE ALL SEVEN.*** `v1..v6` each
@@ -232,69 +296,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,232 -> 1,241; flag_provenance 777 -> 786;
   tasks 19; **528 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-THIRD round unchanged.**
   ORPHAN audit 0 findings. Q-MEM-185 filed.)
-  2026-09-06T15:28:14Z (MEM ROUND 196 -- R-670 SWEPT, tip `f151cad`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ; THE SEALED DAY NOT OPENED -- every cell driven on a
-  SYNTHETIC receipt.**
-  (1) ***THE SEAM I DROVE OPEN AT ROUND 190 IS CLOSED, AND I DROVE THE LADDER.***
-  **`economic_absence` with a VERIFIABLE pair: v21 → `sealed True` / 0 leaked; v22 → `True` /
-  0; v23 → `False` / 3, each with `judged_against` naming the list in force.** *At round 190
-  DA said three fields leaked where DE said the receipt obeyed the rule in force when it was
-  produced.* **The two readers now agree, version for version** -- *DA reading
-  `SEALED_FROM_DESIGN_VERSION` by the same AST route it already used for the field list, so
-  the seats share a FACT rather than a convention.*
-  (2) **AND MY FIRST CELL FELL TO THE STRICTEST LIST BECAUSE I OMITTED THE DIGEST.** *A path
-  with no `sha256` gave `sealed False, 3 leaked` for BOTH v21 and v23 -- which reads as "the
-  version made no difference".* **It made none because the PAIR was unverifiable, exactly the
-  behaviour I verified on DE's selector at round 192.** ***The two sides are symmetric in
-  their refusals as well as their admissions.*** *Twenty-fifth "suspect the probe first".*
-  (3) **THE LANDING RECORD IS RE-EMITTED BY PAIR AND THE SEAL HOLDS:** 27,237 B,
-  `6e418d119ce27bebf0…`, superseding `…142749Z.json` at `65048af3fda79195de78…` -- *the
-  digest I verified at round 191* -- `status INCOMPLETE`, `n_arms_agreeing None`,
-  **`seal_holds TRUE`**, and the sealed receipt's digest `5dd3a8f3f5818379` carried through.
-  ***Three supersessions of one record in ninety minutes, each by the PAIR, each leaving its
-  predecessor intact -- and the fact that survives all three unchanged is the receipt
-  digest.***
-  (4) ***THE TRANSITIVE CLOSURE FOUND A STALE DEFAULT IN DA'S OWN VERIFIER:*** *"the old tail
-  was `best or (d / '…_params_v6.json')` -- a stale default that would be OPENED whenever the
-  glob found nothing -- while the head is v14."* **One hop could not see it: "the literal is
-  returned, the return lands in `PARAMS_PATH`, and `PARAMS_PATH` is opened".** **The remedy
-  is rule 11 -- "an absence is a NAMED REFUSAL, not a default" -- now
-  `NO_PARAMS_DECLARATION_PRESENT`.** *"Reading a version nobody is running under is the exact
-  failure this verifier exists to catch elsewhere."*
-  (5) ***AND IT IS THE SAME v6 MY ROUND-184 LISTING SURFACED.*** *My `ls … | tail -4` showed
-  v6–v9 and hid v13/v14 because `v14` sorts before `v6`; the stale default was pinned at
-  **v6**.* **Two independent routes to one stale version -- a listing that showed v6 as
-  newest, and a default that would have OPENED v6 when the glob found nothing.** *Mine was a
-  probe error; DA's would have been a verifier reading bars nobody runs under.*
-  (6) **`BOOK_PIN_MATCHED_BUT_NOT_A_PICKLE` IS A NAMED REFUSAL** (:871, selftest
-  :4466-4471), replacing a raise that escaped the verifier -- *"a traceback with the
-  verifier's name nowhere in it"*. ***A raise that escapes its own verifier is
-  indistinguishable from a crash; a named refusal is a verdict the caller can record.***
-  (7) **THE CENSUS NUMBERS "AT THE TIP" ARE A RUN'S, NOT AN ARTIFACT'S.** *R-670 reports 279
-  → 66 pins → 1; the newest EMITTED census is still `…150939Z.json` at 271 → 62 → 1, re-read
-  by me this round.* **The sentence says "at the tip" and is true of a RUN; no artifact
-  carries 279 or 66, so a reader who resolves the census meets 271/62 and a RE-EMISSION IS
-  STILL OWED.** *Eighth instance today -- one round after R-669 corrected the same class.*
-  **Routed, not ruled.**
-  (8) **THE PRE-READ IS ADMISSIBLE AGAIN** -- *lifting the hold I recorded at round 190,
-  where an instrument known to be wrong about the day was kept OUT OF USE rather than
-  trusted.* ***The hold lasted five rounds and ended when the instrument was fixed, not when
-  the pressure to re-run rose.*** **The run: `active / running`, `MemoryPeak` 2,957,488,128 B
-  for the SEVENTH consecutive reading; BE 66's heavy half still blocked on the lock; REV 75
-  open on the positively-old-with-a-bad-pair shape.**
-  **AT COMMIT TIME, 2026-09-06T15:31:55Z: Q-DA-318 LANDED (`6d3f04e`) -- "R-663 closed: the
-  09-03 seal HOLDS, judged against the EIGHT names in force at design v21".** ***So the
-  filing says on the real receipt what I drove synthetically this round: at v21 the eight are
-  the list, and the day obeys it.*** *The seam that opened at round 190, was confirmed by REV
-  73 on the landed receipt, and closed on DA's side at DA 95, is now filed closed by the seat
-  that carried it -- with the day's verdict unchanged throughout.*
-  **FLAG WORDS: the seal-scope seam CLOSED-BOTH-SIDES (v21/v22 sealed, v23 not); the landing
-  record RE-EMITTED-SEAL-HOLDS; a stale default FOUND-BY-THE-TRANSITIVE-CLOSURE (params v6
-  again); the census 279/66 A-RUN-NOT-AN-ARTIFACT.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,224 -> 1,232, flag_provenance 769 -> 777,
-  tasks 19; **519 CHECKED**, 258 RELAYED, **455 UNMARKED -- unchanged for the
-  seventy-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -756,6 +757,124 @@ flags:
                              # a receipt expected ~16:20Z. `/proc/locks` matched by
                              # dev:inode still gives pid 3551079 -- the same flock --
                              # so BE 66's heavy half is still refused, not failed.
+  R_671_stands_UNEDITED_and_I_proved_it_in_GIT_not_by_reading_it: RULE-13-BY-HISTORY
+                             # R-673 corrects R-671 in band (three guards, not
+                             # two). The check that matters is not that R-671
+                             # still SAYS "two guards" -- it is that nobody went
+                             # back and changed it. `git log -S"scope map read
+                             # from DE's source by AST with two guards"` over
+                             # COORDINATION.md returns **exactly ONE commit**,
+                             # `db6f060`, the one that introduced the string: no
+                             # later commit added or removed it. **Reading the
+                             # current text tells you what it says now; the
+                             # pickaxe tells you it was never edited.** Rule 13
+                             # verified from history rather than from content.
+  the_census_family_still_has_FOUR_heads_and_DA_97_has_not_landed: STATE-AT-16-02Z
+                             # Re-measured, not carried forward: five
+                             # `p003_da_nonhead_census__*.json` records, exactly
+                             # ONE `supersedes` link (`…150939Z` -> `…144403Z`,
+                             # digest recomputes), so `…142709Z`, `…143544Z`,
+                             # `…150939Z` and `…153821Z` are all heads. R-673
+                             # confirms the finding at the files independently and
+                             # routes it to DA 97; DA is READY, not done. **The
+                             # newest census still supersedes nothing.**
+  the_chaining_is_an_UNUSED_capability_not_a_MISSING_one: DROVE-BOTH-CELLS
+                             # I drove `--supersedes` before saying what DA 97
+                             # must build, because "the emitter cannot chain" and
+                             # "the emitter was not asked to" call for different
+                             # fixes. **A PRESENT prior writes the pair with the
+                             # digest RECOMPUTED from the file** (`92edc2dc74ba7186`
+                             # -- the same digest I verified at round 198) with the
+                             # rule-13 note beside it; **an ABSENT prior REFUSES BY
+                             # NAME** (`SUPERSEDED_RECEIPT_NOT_PRESENT`, "a
+                             # half-written link refuses BY NAME, never as 'no
+                             # link'"). So the machinery is sound and shipped with
+                             # its falsifier. ***AND THAT MAKES THE SHARPER DEFECT
+                             # VISIBLE: THE LINK IS A FLAG.*** An emission that
+                             # omits `--supersedes` produces a head **silently** --
+                             # the instrument that refuses a HALF-WRITTEN link does
+                             # not refuse a MISSING one. **An absence that is not a
+                             # status**, which is the class this programme has paid
+                             # for repeatedly. Routed to DA 97 as the FORM of its
+                             # fix, not just its content.
+  the_instruments_blind_spot_is_STRUCTURAL_not_an_oversight_in_the_count: BY-CONSTRUCTION
+                             # The census scans exactly two directories --
+                             # `live/pm_research/declarations` and
+                             # `live/mm_research/declarations` -- and finds 23
+                             # families, **none of them named for the census**. Its
+                             # own records live in `data/pm_5min/derived/`, which it
+                             # reads as the DERIVED INDEX (234 files, indexed by
+                             # NAME) and never chain-checks. So
+                             # `n_families_without_exactly_one_head: 0` is **true of
+                             # what it scans and silent about where it lives**. The
+                             # blind spot is where the outputs are written, not a
+                             # miscount.
+  BE_66s_refusal_is_now_an_ARTIFACT_and_it_closes_a_gap_BE_NAMED_ITSELF: SIXTY-DISTINCT-UNITS
+                             # `be_heavy_run_record_be66struct.jsonl`, as-of
+                             # 16:05:30Z: **60 attempts x 3 rows** (launch / poll /
+                             # exit), **every one of the 60 exits carrying `rc: 75`**
+                             # -- the declared conflict code, not one failure -- and
+                             # **ZERO attempts with `same_invocation_as_previous:
+                             # True`**, so all 60 are DISTINCT units. **At Q-BE-308
+                             # BE wrote that the ids were NOT recorded and that it
+                             # therefore could not prove from the artifacts that its
+                             # 58 refusals were 58 distinct runs. Now it can -- and I
+                             # proved it FROM THE ARTIFACT by counting the ids, not
+                             # from BE's summary.** Window 15:03:14Z -> 16:05:07Z,
+                             # about one per minute.
+  two_independent_sources_agree_on_the_block: LOCK-AND-LEDGER
+                             # My `/proc/locks` read (lock file dev:inode 103:01 /
+                             # 1053378 -> pid 3551079, which is de102smoke's own
+                             # `flock -n -E 75` main process) and BE's 60 refusals at
+                             # 75 are **the same fact from the two sides of the same
+                             # lock**. The refusal text is written by the wrapper at
+                             # the moment it refuses and is journal-independent:
+                             # *"REFUSED: the heavy-run lock … is held by another
+                             # run. This unit did NO work and wrote nothing (rule
+                             # 20)."* Neither source was inferred from the other.
+  the_same_five_fields_separate_a_RUN_from_a_REFUSAL: THE-TRIPLE-PLUS-THE-RC
+                             # de102smoke reads `loaded / active / running` with
+                             # `ExecMainStatus=0` and `Result=success` -- **defaults
+                             # on a live process**. be66struct's last poll reads
+                             # `loaded / failed / failed / exit-code / 75` -- a
+                             # REFUSAL. **The triple plus the rc does all the work,
+                             # and NEITHER case is readable from two fields.** After
+                             # `RemainAfterExit=yes` made a refused unit read
+                             # `active`, `SubState` is what separates them; the rc
+                             # is what separates a refusal from a failure.
+  BEs_launch_record_is_VERIFIABLE_not_merely_descriptive: TIP-RESOLVED-ON-THE-BRANCH
+                             # The launch rows carry `unit`, `conflict_rc: 75` **read
+                             # from `declarations/heavy_run_form_v3.json`** (the chain
+                             # head, not a typed literal), the lock path, the worktree
+                             # and `tip 78290d3ef6ed708b…`. **I resolved that tip:** a
+                             # real commit, **an ancestor of `origin/mm-research`**,
+                             # "BE 66 (REV 74's four corrections, before the heavy
+                             # run)" at 15:17:22Z. So the producing code behind every
+                             # one of those 60 refusals is locatable in a commit.
+  a_LIVE_artifact_is_perishable_too_and_the_honest_form_is_an_AS_OF: NOT-A-RE-EMISSION
+                             # The record grew **177 -> 180 rows between two reads
+                             # about eighty seconds apart**, so every count I took of
+                             # it carries a clock. Same class as the pane-vs-artifact
+                             # drift I routed for two rounds -- **but the remedy is
+                             # different: a file still being APPENDED is not fixed by
+                             # re-emission, it is fixed by quoting the as-of.** ***AND
+                             # MY PROBE ERRED TWICE READING IT:*** I looked for the
+                             # exit status under `ExecMainStatus` (on exit rows it is
+                             # `rc`) and for the InvocationIDs on the exit rows (they
+                             # are on the POLL rows), which printed "0 of 60" until I
+                             # read the row SHAPES instead of guessing the keys.
+                             # Twenty-eighth "suspect the probe first".
+  de102smoke_at_the_TENTH_identical_peak_and_no_09_04_receipt_yet: MEASURED-16-04-50Z
+                             # Five-field read at 16:04:50Z: `loaded / active /
+                             # running`, InvocationID `a8c7e41ee2d24ff8` **unchanged
+                             # since 15:42:51Z across four readings**, so it is one
+                             # run and not a relaunch; MemoryPeak 2,957,488,128 for
+                             # the **TENTH** consecutive reading; 70 min since
+                             # ExecMainStartTimestamp 14:54:00Z against a receipt
+                             # expected ~16:20Z. **The only 09-04 record on disk is
+                             # still the STOPPED one** (`…20260906T143800Z.json`,
+                             # 6,500 B, `STOPPED_BEFORE_EMIT_NO_RECEIPT_WRITTEN`) --
+                             # checked by filename census, no receipt has landed.
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -23538,6 +23657,92 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 199, 2026-09-06T16:06:00Z ---
+  R_671_stands_UNEDITED_and_I_proved_it_in_GIT_not_by_reading_it:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T16:03:00Z
+    said: >-
+      ran git log -S on R-671's exact guard phrase over COORDINATION.md and got exactly one
+      commit, db6f060, the one that introduced it -- so the string was never added or removed
+      afterwards. Reading the current text would only show what it says now.
+  the_census_family_still_has_FOUR_heads_and_DA_97_has_not_landed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T153821Z.json
+    as_of: 2026-09-06T16:02:40Z
+    said: >-
+      re-listed the five census records, re-read each one's supersedes block and re-applied
+      the chain-head predicate rather than carrying round 198's answer forward. One link, four
+      heads, and no census emitted since 15:38:36Z.
+  the_chaining_is_an_UNUSED_capability_not_a_MISSING_one:
+    prov: CHECKED
+    artifact: live/pm_research/da_nonhead_census.py
+    as_of: 2026-09-06T16:03:30Z
+    said: >-
+      ran the census twice to my scratchpad -- once with --supersedes naming the present
+      153821Z artifact, once naming a file that does not exist. The first wrote the pair with
+      the digest recomputed (92edc2dc74ba7186) and the rule-13 note; the second raised
+      SUPERSEDED_RECEIPT_NOT_PRESENT by name. Then read supersession_block itself to confirm
+      the digest is taken from the file rather than passed in.
+  the_instruments_blind_spot_is_STRUCTURAL_not_an_oversight_in_the_count:
+    prov: CHECKED
+    artifact: live/pm_research/da_nonhead_census.py
+    as_of: 2026-09-06T16:04:00Z
+    said: >-
+      read declarations_dirs_scanned out of my own census run, listed the 23 family names and
+      checked none is the census family, then compared the census records' directory against
+      each scanned directory. Its own outputs are in the derived index, which is keyed by name
+      and not chain-checked.
+  BE_66s_refusal_is_now_an_ARTIFACT_and_it_closes_a_gap_BE_NAMED_ITSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
+    as_of: 2026-09-06T16:05:30Z
+    said: >-
+      parsed the jsonl, grouped rows by event, and read the key set of each group before
+      counting anything. 60 launch / 60 poll / 60 exit; every exit rc is 75; no poll row has
+      same_invocation_as_previous true. The count carries this as-of because the file was
+      still being appended.
+  two_independent_sources_agree_on_the_block:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_refusal_be66struct.txt
+    as_of: 2026-09-06T16:04:50Z
+    said: >-
+      read the refusal text BE's wrapper writes at the moment it refuses, and separately
+      matched the lock file's dev:inode against /proc/locks to get the holding pid and its
+      cmdline. Neither reading was derived from the other.
+  the_same_five_fields_separate_a_RUN_from_a_REFUSAL:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    as_of: 2026-09-06T16:04:50Z
+    said: >-
+      the artifact pins what was launched; the outcome readings are live reads at this as_of --
+      de102smoke from systemctl show, be66struct's from the last poll row of BE's own record.
+      Placing the two side by side is what shows the triple and the rc are both load-bearing.
+  BEs_launch_record_is_VERIFIABLE_not_merely_descriptive:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
+    as_of: 2026-09-06T16:05:40Z
+    said: >-
+      read the last launch row's fields, then resolved its tip with git cat-file and
+      merge-base --is-ancestor against origin/mm-research and read the commit subject. It
+      resolves and it is on the branch.
+  a_LIVE_artifact_is_perishable_too_and_the_honest_form_is_an_AS_OF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be66struct.jsonl
+    as_of: 2026-09-06T16:05:30Z
+    said: >-
+      read the file twice about eighty seconds apart and compared row counts -- 177 then 180.
+      The two probe errors are recorded because they produced a wrong printed answer before I
+      read the row shapes.
+  de102smoke_at_the_TENTH_identical_peak_and_no_09_04_receipt_yet:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/de102smoke.service
+    as_of: 2026-09-06T16:04:50Z
+    said: >-
+      the artifact is the transient unit file; the five-field reading is a live read at this
+      as_of, copied at once while LoadState=loaded, with the InvocationID unchanged across
+      four readings. The absence of a 09-04 receipt is a filename census over
+      data/pm_5min/derived, not a read of any sealed day.
   # --- MEM round 198, 2026-09-06T15:58:00Z ---
   the_E2A_chain_resolves_UNBROKEN_v1_to_v7_and_v7_is_the_SOLE_head:
     prov: CHECKED
