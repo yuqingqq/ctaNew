@@ -55,7 +55,18 @@ REPO = HERE.parents[1]
 #: R-601 class exactly (an address that names a different object). The
 #: modules are read from the LEDGER tree, and every row carries the digest
 #: it was read at plus whether that tree has it committed.
-AUDIT_ROOT = Path(os.environ.get("PM_DATA_ROOT") or REPO).resolve()
+def _resolve_root() -> Path:
+    """The tree under audit, through the ONE canonical predicate.
+
+    `os.environ.get("PM_DATA_ROOT") or REPO` answered with THIS SEAT'S
+    WORKTREE when the variable was unset -- this module's own probe caught
+    it. A sweep of another seat's modules read from a worktree is a sweep
+    of stale copies (DA 77 shipped exactly that)."""
+    import da_root as _R                                      # noqa: PLC0415
+    return Path(_R.require_canonical_root("the module sweep")["root"])
+
+
+AUDIT_ROOT = _resolve_root()
 
 #: THE MODULES UNDER AUDIT. BE's three heavy producers, the shared module
 #: they all measure through, and this seat's own instruments. DE's runner is

@@ -2682,15 +2682,25 @@ def _receipt_book_digest(receipt):
     return _find_first(receipt, ("book_sha256", "book_digest"))
 
 
+#: ONE PREDICATE, IN ONE PLACE (`da_root`). REV 57 A.6: DE's resolver finds
+#: the canonical ledger without the env, and this module's `_derived_dir()`
+#: resolved relative to ITS OWN FILE -- so from a seat worktree it returned
+#: the worktree's PARTIAL `data/` even with PM_DATA_ROOT set correctly, and
+#: the 09-04 book is invisible there. The read gate COUNTS SEALED RECEIPTS
+#: AT A ROOT, so a smaller plausible ledger reads as a pass. Two seats
+#: resolving one root by two rules is the defect; this follows the
+#: canonical rule and REFUSES BY NAME when the root is not the ledger.
 def _derived_dir() -> Path:
-    """The ledger's derived directory, through the programme's ONE data-root
-    resolver -- imported, never a second implementation of 'where is the
-    ledger' (R-562/R-564)."""
-    try:
-        import de_data_root as BDR                            # noqa: PLC0415
-        return Path(BDR.resolve()) / "data" / "pm_5min" / "derived"
-    except Exception:                                         # noqa: BLE001
-        return HERE.parents[1] / "data" / "pm_5min" / "derived"
+    """The CANONICAL ledger's derived directory, or a refusal by name.
+
+    IT CLAIMED THE PROGRAMME'S RESOLVER BEFORE AND IT WAS NOT TRUE:
+    `Path(BDR.resolve())` raises TypeError -- `resolve()` returns a DICT --
+    so the `except` under it caught every call and the function answered
+    with ITS OWN TREE while the docstring said otherwise. A docstring
+    asserting a property the code does not have is the defect REV 53 named
+    in DE's `digested` field, one module over."""
+    import da_root as _R                                      # noqa: PLC0415
+    return _R.derived_dir("the Gate-1 read gate's day set")
 
 
 def params_check(receipt: dict) -> dict:

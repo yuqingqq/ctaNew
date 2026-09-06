@@ -102,12 +102,16 @@ def reporter_identity() -> dict:
                 d.returncode == 0 and d.stdout.strip() == ""}
 
 
+
+#: ONE PREDICATE, IN ONE PLACE (`da_root`) -- see REV 57 A.6.
 def data_root() -> Path:
-    try:
-        import de_data_root as BDR                            # noqa: PLC0415
-        return Path(BDR.resolve())
-    except Exception:                                         # noqa: BLE001
-        return Path(os.environ.get("PM_DATA_ROOT", HERE.parents[1]))
+    """THE LEDGER ROOT. `Path(BDR.resolve())` used to head this function --
+    and `resolve()` returns a DICT, so it raised TypeError on EVERY call
+    and the environment fallback below it was the only branch that ever
+    ran. A branch that has never executed is not a fallback; it is
+    decoration."""
+    import da_root as _R                                      # noqa: PLC0415
+    return Path(_R.require_canonical_root("the accrual report")["root"])
 
 
 def sha_head(p: Path, n: int = 16) -> str | None:
