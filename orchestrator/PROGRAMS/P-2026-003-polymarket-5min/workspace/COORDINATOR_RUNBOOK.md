@@ -391,8 +391,11 @@ recorded as R-495.
 **⚠ STRUCTURAL FACT, learned three times — WITH A REMEDY SINCE R-552: the seat
 monitor's notifications reach the coordinator ONLY inside a running turn, but a
 Background Bash (`run_in_background`) that EXITS when a seat idles or origin moves
-RE-INVOKES the coordinator (`scratchpad/seatwait.sh`; re-arm it at the end of every
-turn). Without it, between turns NOTHING wakes it. The
+RE-INVOKES the coordinator — BUT the harness stops such shells within seconds to a
+minute of arming (five kills, R-566..R-569). THE MECHANISM THAT SURVIVES is the
+harness-native `Monitor` tool with `persistent: true`, a poll loop emitting one
+line per seat transition or new origin commit (R-569(B)); its events wake the
+coordinator between turns. Arm it once per session; re-arm only if reported stopped. The
 loop stalls at the coordinator whenever the USER is not prompting** — 40 min on
 09-05, then TEN HOURS overnight with five finished seats idle and G reached. A
 coordinator session must be prompted, or the standing duty is a fiction.
@@ -414,7 +417,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-568: **R-569**.
+- **Tip:** see `git log`. Next register entry after R-569: **R-570**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
