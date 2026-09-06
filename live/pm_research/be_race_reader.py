@@ -472,7 +472,8 @@ def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
 def read(paths: dict, *, outdir: Path = None, write: bool = True,
          per_day_pins: dict | None = None, decl: dict | None = None,
          consume: bool = True, marker_fixture: bool = False,
-         marker_fixture_why: str | None = None) -> dict:
+         marker_fixture_why: str | None = None,
+         decl_dir: Path | None = None) -> dict:
     opened = [Path(v) for v in paths.values()]
     sep = assert_separation(opened)
     per_day, before, pinned = {}, {}, {}
@@ -503,7 +504,41 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
                 f"{q.name} is not on disk. Named, not folded into a generic "
                 f"absence.")
     # the day set and G come from the DECLARATION, never from len(paths)
-    _dc = decl if decl is not None else resolve_days()
+    # REV 77 §2.1: this recorded `decl_was_injected: decl is not None`
+    # beside prose saying "on the real path nothing is injected" -- while
+    # the CLI's --open DOES pass `decl=_dc`. The read artifact is the one
+    # permanent record of this test: it cannot be re-run and has no .v2, so
+    # a field contradicting the sentence next to it would stand forever.
+    #
+    # The field now says WHAT HAPPENED, and a supplied decl is RE-VERIFIED
+    # against a fresh resolution of the same declarations directory: on the
+    # real path the CLI's decl must BE the chain head, and if it is not, the
+    # read refuses rather than recording a decl nobody checked.
+    _fresh = resolve_days(decl_dir=decl_dir)
+    if decl is None:
+        _dc, _supplied = _fresh, False
+    else:
+        _dc, _supplied = decl, True
+    _is_head = (_dc.get("declaration") == _fresh.get("declaration")
+                and _dc.get("declaration_sha256")
+                == _fresh.get("declaration_sha256"))
+    if _supplied and not _is_head and not marker_fixture:
+        raise ReadRefused(
+            f"REFUSED: the caller supplied a declaration "
+            f"({_dc.get('declaration')} / "
+            f"{str(_dc.get('declaration_sha256'))[:16]}…) that is NOT the "
+            f"chain head resolved here ({_fresh.get('declaration')} / "
+            f"{str(_fresh.get('declaration_sha256'))[:16]}…). On the real "
+            f"path the day set comes from the head, and a supplied set "
+            f"nobody re-checked is exactly what R-600 found.")
+    _decl_source = (
+        "resolve_days() against the declaration chain head, resolved inside "
+        "read()" if not _supplied else
+        ("resolve_days() against the declaration chain head, supplied by the "
+         "caller and RE-VERIFIED here against a fresh resolution (same "
+         "declaration, same digest)" if _is_head else
+         "supplied by the caller and NOT the chain head -- a fixture "
+         "declaration; this is not the real path"))
     if sorted(paths) != sorted(_dc["days"]):
         raise ReadRefused(
             f"REFUSED: the paths handed to read() are {sorted(paths)} but "
@@ -608,13 +643,21 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
                                             "durable as that directory -- "
                                             "not in git, not in any receipt "
                                             "chain (REV 76 §5(c))",
-                        "decl_was_injected": decl is not None,
-                        "how_decl_is_built_on_the_real_path":
-                            "`decl=` is an INJECTED OBSERVATION for the "
-                            "battery; the CLI's --open builds it from "
-                            "`resolve_days()` against the declaration chain "
-                            "head, so on the real path nothing is injected "
-                            "(REV 76 §2)",
+                        "decl_source": _decl_source,
+                        "decl_supplied_by_the_caller": _supplied,
+                        "decl_is_the_chain_head": _is_head,
+                        "decl_declaration": _dc.get("declaration"),
+                        "decl_declaration_sha256":
+                            _dc.get("declaration_sha256"),
+                        "why_this_field_replaced_decl_was_injected":
+                            "REV 77 §2.1: `decl_was_injected` would have "
+                            "read TRUE on the real path -- the CLI passes "
+                            "the output of resolve_days() -- beside prose "
+                            "claiming nothing is injected. The record of "
+                            "this test cannot be re-run and has no .v2, so "
+                            "the field says what happened and the supplied "
+                            "declaration is re-verified against a fresh "
+                            "resolution rather than trusted",
                         "runbook": "§6 -- a three-path call to the race "
                                    "reader CONSUMES the race days"},
         "byte_identity": {"pinned_before": before, "after": after,
@@ -639,7 +682,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 25
+EXPECTED_CHECKS = 27
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -909,6 +952,55 @@ def selftest() -> int:
            f"whose feed is gone refuses NAMING THE DAY, and the generic "
            f"`sealed feed(s) absent` -- which used to fire first and hide it "
            f"-- does not appear in the message")
+
+    # ---- REV 77 §2.1: the field says what HAPPENED, and is CHECKED ------
+    # A call structurally identical to the CLI's --open: the day set is
+    # resolved from a chain head and SUPPLIED to read(), which re-resolves
+    # the same directory and verifies it. The field this emits is the field
+    # the real path will emit -- scratch declaration, scratch feeds, days
+    # 2099xxxx, nothing in the ledger touched.
+    import tempfile as _tf9
+    _d9 = Path(_tf9.mkdtemp(prefix="be69_cli_"))
+    (_d9 / "decl").mkdir()
+    (_d9 / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
+        "protocol": "FIXTURE-CLI-SHAPED", "supersedes": None,
+        "population": {"READABLE": ["20990301", "20990302"]},
+        "permutation_floor": {"G": 2, "multiplicity": 2}}))
+    _dc9 = resolve_days(decl_dir=_d9 / "decl")          # what --open does
+    _p9 = {"20990301": _feed(_d9, "20990301", pos),
+           "20990302": _feed(_d9, "20990302", neg)}
+    _pins9 = {dd: {"exists": True,
+                   "sha256": hashlib.sha256(Path(q).read_bytes()).hexdigest(),
+                   "bytes": Path(q).stat().st_size}
+              for dd, q in _p9.items()}
+    _r9 = read(_p9, outdir=_d9, per_day_pins=_pins9, decl=_dc9,
+               decl_dir=_d9 / "decl", marker_fixture=True,
+               marker_fixture_why="battery: the CLI-shaped call on scratch "
+                                  "feeds; the ledger is never touched")
+    _c9 = _r9["consumption"]
+    ok(_c9["decl_is_the_chain_head"] is True
+       and _c9["decl_supplied_by_the_caller"] is True
+       and "RE-VERIFIED here" in _c9["decl_source"]
+       and "decl_was_injected" not in _c9,
+       f"REV 77 §2.1: THE CLI-SHAPED CALL EMITS "
+       f"decl_source={_c9['decl_source'][:60]!r}… with "
+       f"decl_is_the_chain_head=True. `decl_was_injected` is GONE: it would "
+       f"have read TRUE on the real path -- the CLI passes resolve_days()'s "
+       f"output -- beside prose saying nothing is injected, in the one "
+       f"permanent record of this test")
+    _fake9 = dict(_dc9, declaration="not_the_head_v9.json",
+                  declaration_sha256="9" * 64)
+    try:
+        read(_p9, outdir=_d9, per_day_pins=_pins9, decl=_fake9,
+             decl_dir=_d9 / "decl", consume=False)
+        ok(False, "a supplied declaration that is not the head must refuse")
+    except ReadRefused as _e9:
+        ok("is NOT the chain head resolved here" in str(_e9)
+           and "R-600" in str(_e9),
+           "KNOWN-BAD: a supplied declaration that is NOT the chain head "
+           "REFUSES on the real path -- a day set nobody re-checked is "
+           "exactly what R-600 found, so the field is not merely honest, it "
+           "is verified")
 
     # ---- REV 76 §5(a): the marker directory is GUARDED -----------------
     _md_real = resolve_marker_dir()
