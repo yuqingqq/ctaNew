@@ -2547,9 +2547,30 @@ def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
     a = asm["assembly"]
     _need(all(k in a for k in ("n_chunks", "kept_by_coin", "drops_by_coin")),
           "asm.assembly carries the chunk and drop accounting")
+    # THE PAYLOAD'S OWN CGROUP READS, at the END of the run (BE 74
+    # correction). be74struct04 reported a unit MemoryPeak of 21,946,368
+    # against a measured 2.405 GB in-process -- while be74struct05 reported
+    # 2,011,267,072 against 1.879 GB. `memory.peak` is a high-watermark
+    # that does not drop when the payload exits, so the 04 reading is an
+    # ANOMALY, not the rule, and it bears on rule 20's own property: does
+    # MemoryMax bind the payload? Measured here rather than explained.
+    try:
+        _leaf = open("/proc/self/cgroup").read().strip().rsplit(":", 1)[-1]
+        _cg = Path("/sys/fs/cgroup") / _leaf.lstrip("/")
+        _cgroup = {"cgroup_line": open("/proc/self/cgroup").read().strip(),
+                   "leaf": _leaf, "base": str(_cg), "base_exists": _cg.exists(),
+                   "read_at": "the END of the run, in-process"}
+        for _f in ("memory.current", "memory.peak", "memory.max"):
+            try:
+                _cgroup[_f.replace(".", "_")] = (_cg / _f).read_text().strip()
+            except OSError as _e:
+                _cgroup[_f.replace(".", "_")] = f"<{type(_e).__name__}>"
+    except OSError as _e:
+        _cgroup = {"error": f"{type(_e).__name__}"}
     return {"book": str(q), "bytes": q.stat().st_size,
             "sha256": _pin["sha256"],
             "digest_pin": _pin,
+            "payload_cgroup": _cgroup,
             "declaration": _R22.declaration_head("be_daybook_structure")["name"],
             "checks": checked, "n_checks": len(checked),
             "all_hold": all(c["holds"] for c in checked),
