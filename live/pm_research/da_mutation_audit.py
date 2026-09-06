@@ -99,6 +99,15 @@ def refusal_bearing(src: str) -> set[str]:
 
 def audit(module: Path, targets: set[str], suite_arg: str = "--selftest",
           marker: str = ASSERT_MARKER, excluded: set[str] | None = None) -> dict:
+    #: DA 101, found by DRIVING the refusal path R-697 names: an absent
+    #: module died here with a bare FileNotFoundError -- ***a traceback
+    #: standing where a verdict belongs***, and exiting 1, which this
+    #: module uses for "survivors found". The named refusal comes first.
+    if not Path(module).is_file():
+        raise HarnessRefused(
+            f"REFUSED: MODULE_ABSENT -- no module at {module}. There is "
+            f"nothing to mutate, and an audit that cannot read its target "
+            f"reports no survivors for the wrong reason.")
     src = module.read_text(encoding="utf-8")
 
     excluded = excluded or set()
@@ -269,6 +278,14 @@ if __name__ == "__main__":
     return 0
 
 
+#: R-697 / MEM 211-212. THE EXIT CODE OF A REFUSAL. `argparse` exits 2
+#: on a MIS-FORMED INVOCATION and writes its usage to STDERR, so a
+#: refusal that also exits 2 on stderr is indistinguishable from "you
+#: typed the command wrong" -- by code AND by stream. This module's
+#: refusal takes 3, a code argparse does not use.
+REFUSAL_EXIT = 3
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("module", nargs="?", type=Path)
@@ -289,8 +306,12 @@ def main() -> int:
         r = audit(a.module, set(a.targets.split(",")), a.suite_arg, a.marker,
                   {x for x in a.exclude.split(",") if x})
     except HarnessRefused as e:
+        #: R-697: 3, NOT 2. `argparse` owns 2 for a mis-formed invocation
+        #: and writes to the same stream, so a refusal at 2 on stderr is
+        #: not separable from "you typed the command wrong" -- by code or
+        #: by stream. The usage exits stay 2, which is argparse's.
         print(e, file=sys.stderr)
-        return 2
+        return REFUSAL_EXIT
     print(f"{r['module']}  sites={r['sites']}  {r['tally']}")
     print(f"  controls: A unmutated passes / B canary reported survivor / "
           f"C syntax error not a kill / D every refusal-bearing function in "

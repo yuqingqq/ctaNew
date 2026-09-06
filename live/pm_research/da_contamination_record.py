@@ -237,6 +237,14 @@ def _selftests() -> int:
     return 0
 
 
+#: R-697 / MEM 211-212. THE EXIT CODE OF A REFUSAL. `argparse` exits 2
+#: on a MIS-FORMED INVOCATION and writes its usage to STDERR, so a
+#: refusal that also exits 2 on stderr is indistinguishable from "you
+#: typed the command wrong" -- by code AND by stream. This module's
+#: refusal takes 3, a code argparse does not use.
+REFUSAL_EXIT = 3
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--raw-dir", type=Path)
@@ -258,8 +266,12 @@ def main() -> int:
                            span_epoch=(a.span_start_epoch, a.span_end_epoch)
                            if a.span_start_epoch and a.span_end_epoch else None)
     except Refused as e:
+        #: R-697: 3, NOT 2. `argparse` owns 2 for a mis-formed invocation
+        #: and writes to the same stream, so a refusal at 2 on stderr is
+        #: not separable from "you typed the command wrong" -- by code or
+        #: by stream. The usage exits stay 2, which is argparse's.
         print(e, file=sys.stderr)
-        return 2
+        return REFUSAL_EXIT
     a.out.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
     print(f"{a.out}: {rec['files_affected']} files across "
           f"{len(rec['windows_affected'])} windows, "

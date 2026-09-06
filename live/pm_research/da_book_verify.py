@@ -1881,6 +1881,11 @@ def main() -> int:
             kw["supersedes"] = a.supersedes
         r = fn(a.book, a.receipt, **kw)
     except BookVerifyRefused as e:
+        #: R-697: this refusal stays at 2 and is SEPARABLE from argparse's
+        #: usage exit by STREAM and by STRING -- it prints the named
+        #: refusal to STDOUT, where argparse never writes; argparse's
+        #: usage goes to STDERR. A reader distinguishes them without
+        #: knowing the code.
         print(str(e))
         return 2
     print(f"{r['tier']} tier: {r['status']} -- IS_A_VERIFICATION="

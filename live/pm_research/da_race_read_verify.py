@@ -49,6 +49,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import math
 import subprocess
 import sys
@@ -620,6 +621,8 @@ def main() -> int:
     ap.add_argument("--read-artifact")
     ap.add_argument("--pins", default=str(PINS_DECL))
     ap.add_argument("--output", type=Path, default=None)
+    ap.add_argument("--supersedes", default=None,
+                    help="the record this one replaces, by the R-608 pair")
     a = ap.parse_args()
     if a.real:
         if not a.read_artifact:
@@ -630,8 +633,13 @@ def main() -> int:
         #: means it verified. A caller that could not tell 2 from 1 would
         #: read "the read has not happened yet" as "the read disagrees".
         try:
-            r = verify_real_read(a.read_artifact, a.pins, output=a.output)
+            r = verify_real_read(a.read_artifact, a.pins, output=a.output,
+                                 supersedes=a.supersedes)
         except RaceVerifyRefused as e:
+            #: R-697: this refusal stays at 2 and is SEPARABLE from
+            #: argparse's usage exit by STREAM and by STRING -- it prints
+            #: the named refusal to STDOUT, where argparse never writes;
+            #: argparse's usage goes to STDERR.
             print(str(e))
             return 2
         print(f"{r['status']} -- IS_A_VERIFICATION="
@@ -861,6 +869,14 @@ def day_status_in_artifact(art, day: str) -> dict:
 #: be read at all, and what G is. A verifier that checked only the pins
 #: would admit a read of the right bytes over the wrong day set.
 RACE_DECL_FAMILY = "be_race_read_declaration"
+#: THIS RECORD'S DECLARED NAME, so a reader resolves it by rule rather
+#: than by looking: `p003_da_race_read_verify__<UTC>.json` in the ledger's
+#: derived directory, the stamp read from the clock at the moment of the
+#: run. A correction supersedes in band by the R-608 pair.
+RECORD_NAME_RULE = ("p003_da_race_read_verify__<YYYYmmddTHHMMSSZ>.json in "
+                    "the LEDGER's derived directory; the stamp is read "
+                    "from the clock, never forward-estimated; a "
+                    "correction is a superseding record carrying the pair")
 
 
 def _derived_for_markers() -> Path:
@@ -923,8 +939,28 @@ def opened_markers(marker_dir: Path, declared_days) -> dict:
                                  "durable as that directory")}
 
 
+def _record_supersession(prior) -> dict:
+    """R-608's PAIR, with the prior record's chain extended."""
+    f = Path(prior)
+    if not f.is_file():
+        raise RaceVerifyRefused(
+            f"REFUSED: SUPERSEDED_RECORD_NOT_PRESENT — {f}. A link is the "
+            f"pair {{path, sha256}} on ONE present file.")
+    sha = hashlib.sha256(f.read_bytes()).hexdigest()
+    try:
+        chain = [list(x) for x in (json.loads(f.read_text()).get(
+            "supersedes") or {}).get("chain") or []]
+    except (OSError, json.JSONDecodeError):
+        chain = []
+    chain.append([f.name, sha])
+    return {"path": f.name, "sha256": sha, "chain": chain,
+            "the_link_is_the_PAIR": ["path", "sha256"],
+            "rule": "13 -- vN+1; the superseded record is not edited"}
+
+
 def verify_real_read(read_artifact: str, pins_path: str, *,
                      output: Path | None = None,
+                     supersedes=None,
                      latency_ms: int = LATENCY_MS) -> dict:
     """THE REAL PATH.
 
@@ -1174,6 +1210,125 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
     if markers["extra_days_opened"]:
         bad.append("opened_markers.extra_days_opened")
 
+    #: DA 101, THE SEVEN ITEMS REV 77 WILL CHECK AFTER ME. Each is a
+    #: PREDICATE over the artifact's own fields, reported by NAME AND
+    #: STATE; no quantity of the read appears in any of them.
+    ps_days = (ps.get("per_day") or {})
+    ps_flags = {d: {k: bool((ps_days.get(d) or {}).get(k))
+                    for k in ("pin_present", "pin_exists_true",
+                              "feed_on_disk", "feed_matches_its_pin")}
+                for d in head["READABLE"]}
+    canonical_derived = str(_derived_for_markers())
+    pre_state_checked = {
+        "present": bool(ps),
+        "declaration_sha256_is_the_chain_head": (
+            ps.get("declaration_sha256") == head["sha256"]
+            if ps.get("declaration_sha256") else None),
+        "per_day_pin_flags": ps_flags,
+        "every_declared_day_pinned_and_matching": all(
+            all(v.values()) for v in ps_flags.values()) if ps_flags else None,
+        "zero_markers_before_the_act": ps.get(
+            "zero_markers_before_the_act"),
+        "declared_result_absent_before_the_act": ps.get(
+            "declared_result_absent_before_the_act"),
+        "marker_dir_realpath": ps.get("marker_dir_realpath"),
+        "marker_dir_is_the_canonical_ledger": (
+            ps.get("marker_dir_realpath") == canonical_derived
+            if ps.get("marker_dir_realpath") else None),
+        "as_of": ps.get("as_of"),
+        "as_of_is_a_utc_stamp": bool(
+            re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+                         str(ps.get("as_of") or ""))),
+        "as_of_precedes_every_marker_stamp": None,
+        "why": ("the pre-state is what was true BEFORE the act; a "
+                "post-hoc reading of the same fields would describe what "
+                "the act left behind"),
+    }
+    #: THE MARKERS' CONTENTS, not only their count: each must name ITS day
+    #: and the PIN that day was read at.
+    marker_rows, marker_stamps = {}, []
+    for d in head["READABLE"]:
+        mp = Path(markers["marker_dir"]) / f"be_race_read_OPENED_{d}.json"
+        row = {"present": mp.is_file()}
+        if mp.is_file():
+            try:
+                mo = json.loads(mp.read_text())
+            except json.JSONDecodeError:
+                row["status"] = "UNPARSEABLE_BUT_PRESENT_COUNTS_AS_OPENED"
+                marker_rows[d] = row
+                continue
+            pin_declared = (per_day_pins.get(d) or {}).get("sha256")
+            mpin = str(mo.get("pin") or mo.get("pin_sha256") or "")
+            row.update({
+                "names_its_day": mo.get("day") == d,
+                "names_a_pin": bool(mpin),
+                "pin_matches_the_pins_declaration": bool(
+                    mpin and pin_declared
+                    and pin_declared.startswith(mpin[:32])),
+                "has_a_utc_stamp": bool(mo.get("utc")),
+            })
+            if mo.get("utc"):
+                marker_stamps.append(str(mo["utc"]))
+        marker_rows[d] = row
+    markers["per_marker"] = marker_rows
+    markers["every_marker_names_its_day_and_its_pin"] = all(
+        r.get("names_its_day") and r.get("pin_matches_the_pins_declaration")
+        for r in marker_rows.values()) if marker_rows else None
+    if ps.get("as_of") and marker_stamps:
+        pre_state_checked["as_of_precedes_every_marker_stamp"] = all(
+            str(ps["as_of"]) <= t for t in marker_stamps)
+    #: THE READER'S OWN IDENTITY -- and its ABSENCE is a named gap.
+    def _find(o, want, p_="$"):
+        out = []
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if any(w in k.lower() for w in want) and isinstance(v, str):
+                    out.append(f"{p_}.{k}")
+                out += _find(v, want, f"{p_}.{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                out += _find(v, want, f"{p_}[{i}]")
+        return out
+    commit_fields = _find(art, ("carrying_commit", "commit", "head_at"))
+    module_fields = [q for q in _find(art, ("module", "reader_sha",
+                                            "import_closure"))]
+    reader_identity = {
+        "the_artifact_names_a_commit_for_itself": bool(commit_fields),
+        "commit_fields_found": commit_fields,
+        "the_artifact_names_its_reader_module_digest": bool(module_fields),
+        "module_fields_found": module_fields,
+        "be_race_reader_py_digest_AT_MY_TIP": hashlib.sha256(
+            (Path(__file__).resolve().parent
+             / "be_race_reader.py").read_bytes()).hexdigest()
+        if (Path(__file__).resolve().parent
+            / "be_race_reader.py").is_file() else None,
+        "and_that_digest_is_NOT_evidence_about_the_run": (
+            "it is what the file says HERE AND NOW; the artifact names no "
+            "commit and no module digest for itself, so what ran cannot "
+            "be resolved from it -- a named gap, not an inference"),
+    }
+    if pre_state_checked["declaration_sha256_is_the_chain_head"] is False:
+        bad.append("pre_state.declaration_sha256")
+    if pre_state_checked["every_declared_day_pinned_and_matching"] is False:
+        bad.append("pre_state.per_day.pins")
+    if pre_state_checked["zero_markers_before_the_act"] is not True:
+        bad.append("pre_state.zero_markers_before_the_act")
+    if pre_state_checked["declared_result_absent_before_the_act"] is not True:
+        bad.append("pre_state.declared_result_absent_before_the_act")
+    #: SELF-CONSISTENCY is the checkable half: the artifact must name the
+    #: directory the markers are ACTUALLY in. Canonicality is REPORTED
+    #: beside it -- on a scratch root a fixture is legitimately not the
+    #: ledger, and a check that could not pass there would be a check no
+    #: control could exercise.
+    pre_state_checked["marker_dir_is_where_the_markers_are"] = (
+        None if not ps.get("marker_dir_realpath") else
+        str(Path(ps["marker_dir_realpath"]).resolve())
+        == str(Path(markers["marker_dir"]).resolve()))
+    if pre_state_checked["marker_dir_is_where_the_markers_are"] is False:
+        bad.append("pre_state.marker_dir_realpath")
+    if markers["every_marker_names_its_day_and_its_pin"] is False:
+        bad.append("opened_markers.contents")
+
     #: THE FLOORS, re-derived.
     g = len(readable)
     mine_floor = da_floors(g)
@@ -1188,6 +1343,8 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
 
     out = {
         "protocol": PROTOCOL + "_REAL_READ",
+        **({"supersedes": _record_supersession(supersedes)}
+           if supersedes else {}),
         "status": None,
         "the_gate_is_the_artifacts_existence": {
             "read_artifact": ap.name,
@@ -1225,6 +1382,9 @@ def verify_real_read(read_artifact: str, pins_path: str, *,
         "day_set_against_the_declaration": day_set_declared,
         "byte_identity_block": byte_identity,
         "opened_markers": markers,
+        "pre_state_checked": pre_state_checked,
+        "the_readers_own_identity": reader_identity,
+        "record_name_rule": RECORD_NAME_RULE,
         "what_this_verifier_VERIFIES": [
             "the read artifact EXISTS (the gate), is BE's declared "
             "protocol, and is readable JSON",
@@ -1322,6 +1482,7 @@ def _synthetic_read_artifact(d: Path, per_day: dict, *,
                              unrecoverable: list | None = None,
                              decl_sha: str | None = None,
                              markers: bool = True,
+                             pins_path: Path | None = None,
                              extra_marker: str | None = None) -> Path:
     """BE's declared shape, read from `be_race_reader.read()` as a document.
 
@@ -1333,9 +1494,16 @@ def _synthetic_read_artifact(d: Path, per_day: dict, *,
     days = sorted(per_day)
     _head = race_declaration_head()
     if markers:
+        #: THE PINS THIS FIXTURE IS ACTUALLY VERIFIED AGAINST -- a marker
+        #: carrying the REAL pin beside a synthetic pins file is a marker
+        #: that names a digest nothing in the fixture has.
+        _pins_now = json.loads(
+            Path(pins_path or PINS_DECL).read_text()).get("per_day", {})
         for _dy in days:
-            (d / f"be_race_read_OPENED_{_dy}.json").write_text(
-                json.dumps({"day": _dy, "synthetic": True}))
+            (d / f"be_race_read_OPENED_{_dy}.json").write_text(json.dumps({
+                "day": _dy,
+                "pin": (_pins_now.get(_dy) or {}).get("sha256"),
+                "utc": "2026-01-01T00:00:01Z", "synthetic": True}))
         if extra_marker:
             (d / f"be_race_read_OPENED_{extra_marker}.json").write_text(
                 json.dumps({"day": extra_marker, "synthetic": True}))
@@ -1359,9 +1527,16 @@ def _synthetic_read_artifact(d: Path, per_day: dict, *,
             "declaration": _head["name"],
             "declaration_sha256": decl_sha or _head["sha256"],
             "marker_dir": str(d),
+            "marker_dir_realpath": str(Path(d).resolve()),
+            "as_of": "2026-01-01T00:00:00Z",
             "existing_OPENED_markers": [],
             "n_existing_OPENED_markers": 0,
             "zero_markers_before_the_act": True,
+            "declared_result_absent_before_the_act": True,
+            "per_day": {dd: {"pin_present": True, "pin_exists_true": True,
+                             "feed_on_disk": True,
+                             "feed_matches_its_pin": True}
+                        for dd in days},
             "days": days},
         "day_set": {"from": _head["name"],
                     "declaration_sha256": decl_sha or _head["sha256"],
@@ -1419,7 +1594,7 @@ def selftest_real() -> list:                                  # noqa: C901
                                                  pins[day]["sha256"])
     UNREC = ["20260901", "20260902"]
     art_p = _synthetic_read_artifact(td, mine_days,
-                                     unrecoverable=UNREC)
+                                     unrecoverable=UNREC, pins_path=pins_p)
 
     # -- 1. THE GATE IS THE ARTIFACT'S EXISTENCE --------------------------
     why_absent = ""
@@ -1489,10 +1664,9 @@ def selftest_real() -> list:                                  # noqa: C901
        f"{pins[tamper_day]['sha256'][:16]}")
 
     # -- 5. A NUMBER FOR AN UNRECOVERABLE DAY IS FLAGGED ------------------
-    numbered = _synthetic_read_artifact(
-        td, mine_days, name="art_numbered.json", unrecoverable=UNREC,
+    numbered = _synthetic_read_artifact(td, mine_days, name="art_numbered.json", unrecoverable=UNREC,
         extra_days={"20260901": {"day_increment_cents": -12.5,
-                                 "day_sign": -1, "n_feed_rows": 10}})
+                                 "day_sign": -1, "n_feed_rows": 10}}, pins_path=pins_p)
     out_n = verify_real_read(str(numbered), str(pins_p))
     ck("KNOWN-BAD: A READ ARTIFACT CARRYING A NUMBER FOR 09-01 IS FLAGGED. "
        "The pins mark it `exists: false`; it was READ under the interim and "
@@ -1515,7 +1689,7 @@ def selftest_real() -> list:                                  # noqa: C901
        f"the pins, 0 of them numbered")
 
     # -- 5b. REV 49 section 3.3: SILENCE MUST NOT PASS --------------------
-    silent = _synthetic_read_artifact(td, mine_days, name="art_silent.json")
+    silent = _synthetic_read_artifact(td, mine_days, name="art_silent.json", pins_path=pins_p)
     out_sil = verify_real_read(str(silent), str(pins_p))
     ck("REV 49 section 3.3 CLOSED -- SILENCE NO LONGER PASSES: an artifact "
        "that never MENTIONS 09-01/02 is FLAGGED BY NAME. It used to VERIFY, "
@@ -1743,7 +1917,7 @@ def selftest_real() -> list:                                  # noqa: C901
     _wrongd = Path(tempfile.mkdtemp(prefix="da100wd_"))
     _bad_art = _synthetic_read_artifact(td, mine_days,
                                         name="art_wrong_decl.json",
-                                        decl_sha="9" * 64)
+                                        decl_sha="9" * 64, pins_path=pins_p)
     try:
         verify_real_read(str(_bad_art), str(pins_p))
         _wd = "ADMITTED"
@@ -1756,10 +1930,10 @@ def selftest_real() -> list:                                  # noqa: C901
        _wd == "READ_ARTIFACT_DECLARATION_DIGEST_DIFFERS",
        f"a planted declaration digest -> {_wd}")
     _md = Path(tempfile.mkdtemp(prefix="da100mk_"))
-    _art4 = _synthetic_read_artifact(_md, mine_days, extra_marker="20260906")
+    _art4 = _synthetic_read_artifact(_md, mine_days, extra_marker="20260906", pins_path=pins_p)
     _o4 = verify_real_read(str(_art4), str(pins_p))
     _md3 = Path(tempfile.mkdtemp(prefix="da100mk3_"))
-    _art0 = _synthetic_read_artifact(_md3, mine_days, markers=False)
+    _art0 = _synthetic_read_artifact(_md3, mine_days, markers=False, pins_path=pins_p)
     _o0 = verify_real_read(str(_art0), str(pins_p))
     ck("DA 100 (3) -- ONE OPENED MARKER PER DECLARED DAY, AND NO FOURTH. "
        "***The marker is the ONLY record that a day was spent***, so a "
