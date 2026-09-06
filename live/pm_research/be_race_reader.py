@@ -289,6 +289,109 @@ def resolve_days(cli_days=None, *, decl_dir: Path | None = None) -> dict:
             "cli_days_supplied": cli_days is not None}
 
 
+def resolve_marker_dir(outdir=None, *, fixture: bool = False,
+                       why: str | None = None) -> dict:
+    """THE MARKER DIRECTORY, THROUGH `require_ledger()`.
+
+    REV 76 §5(a): this module never called `require_ledger()`. The markers
+    were resolved through the UNGUARDED `derived()`, so from a MATERIALISED
+    worktree the reader would look for OPENED markers in a partial shell,
+    find none, and open days the LEDGER records as consumed. **The
+    consumption guard must be as strong as the act it guards.**
+
+    A fixture may direct the markers elsewhere, but it must say what it is
+    -- `require_ledger` refuses `fixture=True` without a reason, so an
+    exemption cannot be invisible to a reader."""
+    if fixture:
+        if not why:
+            raise ReadRefused(
+                "REFUSED: a fixture marker directory without `why`. An "
+                "exemption from the ledger that does not say what it is, is "
+                "invisible to a reader.")
+        d = Path(outdir)
+        d.mkdir(parents=True, exist_ok=True)
+        return {"dir": d, "is_the_ledger": False, "fixture": True,
+                "why": why, "realpath": str(d.resolve()),
+                "ledger_check": "EXEMPT_FIXTURE"}
+    res = _BDR.require_ledger(why=None)          # refuses a non-ledger root
+    d = Path(_BDR.derived())
+    real = str(Path(d).resolve())
+    ledger_derived = str(Path(_BDR.derived()).resolve())
+    if real != ledger_derived:
+        raise ReadRefused(
+            f"REFUSED: the marker directory resolves to {real}, not the "
+            f"ledger's derived directory {ledger_derived}. Markers read from "
+            f"anywhere else would find none and open days the ledger records "
+            f"as consumed (REV 76 §5(a)).")
+    if outdir is not None and str(Path(outdir).resolve()) != real:
+        raise ReadRefused(
+            f"REFUSED: outdir {Path(outdir).resolve()} is not the ledger's "
+            f"derived directory {real}, and this is not a declared fixture.")
+    return {"dir": d, "is_the_ledger": True, "fixture": False,
+            "realpath": real, "readlink_f": real,
+            "equals_the_ledger_derived_dir": real == ledger_derived,
+            "ledger_check": res.get("ledger_check"),
+            "data_root": res.get("data_root"),
+            "why_guarded": "REV 76 §5(a): resolved through require_ledger(), "
+                           "because a marker directory in a partial shell "
+                           "finds no markers and reopens spent days"}
+
+
+def pre_state(days, marker_dir: Path, feeds: dict, pd: dict,
+              decl: dict) -> dict:
+    """THE STATE BEFORE THE ACT, recorded as `--open`'s FIRST step.
+
+    REV 76 §6 condition 3. Everything here is read BEFORE a single marker is
+    written, so the artifact carries what was true when the act began rather
+    than what remained after it."""
+    import subprocess as _sp
+    now = _sp.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], capture_output=True,
+                  text=True, timeout=30).stdout.strip()
+    existing = sorted(str(x) for x in Path(marker_dir).glob(
+        "be_race_read_OPENED_*"))
+    per_day = {}
+    for d in sorted(days):
+        pin = (pd or {}).get(d) or {}
+        q = Path(feeds[d]) if d in feeds else None
+        on_disk = bool(q and q.exists())
+        got = None
+        if on_disk:
+            h = hashlib.sha256()
+            with q.open("rb") as fh:
+                for c in iter(lambda: fh.read(1 << 20), b""):
+                    h.update(c)
+            got = h.hexdigest()
+        per_day[d] = {
+            "pin_present": bool(pin), "pin_exists_true": bool(pin.get("exists")),
+            "pinned_sha256": pin.get("sha256"),
+            "feed": str(q) if q else None, "feed_on_disk": on_disk,
+            "feed_sha256_now": got,
+            "feed_matches_its_pin": bool(got and got == pin.get("sha256")),
+        }
+    result_name = Path(marker_dir) / OUT_NAME
+    return {
+        "as_of": now,
+        "marker_dir": str(marker_dir),
+        "marker_dir_realpath": str(Path(marker_dir).resolve()),
+        "existing_OPENED_markers": existing,
+        "n_existing_OPENED_markers": len(existing),
+        "zero_markers_before_the_act": len(existing) == 0,
+        "declaration": decl.get("declaration"),
+        "declaration_sha256": decl.get("declaration_sha256"),
+        "days": sorted(days),
+        "per_day": per_day,
+        "all_pins_present_and_true": all(
+            v["pin_present"] and v["pin_exists_true"] for v in per_day.values()),
+        "all_feeds_on_disk_at_their_pins": all(
+            v["feed_matches_its_pin"] for v in per_day.values()),
+        "declared_result_name": OUT_NAME,
+        "declared_result_absent_before_the_act": not result_name.exists(),
+        "why": "REV 76 §6 condition 3: recorded as the FIRST step of the "
+               "act, before any marker is written, so the artifact carries "
+               "the state the act began from",
+    }
+
+
 def marker_path(day: str, outdir: Path) -> Path:
     return Path(outdir) / f"be_race_read_OPENED_{day}.json"
 
@@ -305,14 +408,36 @@ def assert_not_already_opened(days, outdir: Path) -> dict:
     for d in sorted(days):
         m = marker_path(d, outdir)
         if m.exists():
-            already.append({"day": d, "marker": str(m),
-                            "opened_at": json.loads(m.read_text()).get("utc")})
+            # REV 76 §5(b): a HALF-WRITTEN marker raised JSONDecodeError out
+            # of this guard, and on the one-shot path a traceback is not a
+            # verdict. THE FILE'S PRESENCE IS THE FACT; its contents are
+            # detail. An unparseable marker is treated as OPENED.
+            try:
+                _op = json.loads(m.read_text()).get("utc")
+                _parsed = True
+            except (json.JSONDecodeError, OSError, UnicodeDecodeError) as _e:
+                _op, _parsed = None, False
+                already.append({"day": d, "marker": str(m),
+                                "opened_at": None, "marker_parsed": False,
+                                "why": f"the marker exists but could not be "
+                                       f"parsed ({type(_e).__name__}); its "
+                                       f"PRESENCE is the fact that the day "
+                                       f"was spent"})
+                continue
+            already.append({"day": d, "marker": str(m), "opened_at": _op,
+                            "marker_parsed": _parsed})
     if already:
+        _unp = [a for a in already if a.get("marker_parsed") is False]
         raise ReadRefused(
             f"REFUSED: {[a['day'] for a in already]} already carry an OPENED "
             f"marker ({[a['marker'] for a in already]}). The race read "
             f"CONSUMES the days it opens; a second read of a consumed day "
-            f"would report a fresh result from a spent one.")
+            f"would report a fresh result from a spent one."
+            + (f" {len(_unp)} of these markers could not be parsed "
+               f"({[a['day'] for a in _unp]} at "
+               f"{[a['marker'] for a in _unp]}) -- an unparseable marker is "
+               f"treated as OPENED, because the file's PRESENCE is the fact."
+               if _unp else ""))
     return {"checked": sorted(days), "already_opened": []}
 
 
@@ -346,7 +471,8 @@ def floors(g_opt: int, g_pess: int, m: int = 2) -> dict:
 
 def read(paths: dict, *, outdir: Path = None, write: bool = True,
          per_day_pins: dict | None = None, decl: dict | None = None,
-         consume: bool = True) -> dict:
+         consume: bool = True, marker_fixture: bool = False,
+         marker_fixture_why: str | None = None) -> dict:
     opened = [Path(v) for v in paths.values()]
     sep = assert_separation(opened)
     per_day, before, pinned = {}, {}, {}
@@ -383,9 +509,22 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
             f"REFUSED: the paths handed to read() are {sorted(paths)} but "
             f"the declaration's READABLE set is {sorted(_dc['days'])}. G "
             f"would be a property of the call (R-600).")
-    _out_d = Path(outdir) if outdir is not None else _BDR.derived()
+    _md = resolve_marker_dir(outdir, fixture=marker_fixture,
+                             why=marker_fixture_why)
+    _out_d = _md["dir"]
+    _pre = pre_state(_dc["days"], _out_d, {d: str(v) for d, v in paths.items()},
+                     pd or {}, _dc) if consume else None
     if consume:
+        # THE MARKER GUARD FIRST: it NAMES THE DAYS. The result-name guard
+        # is true of the whole read and would hide it -- the same ordering
+        # defect as the generic `sealed feed(s) absent` in REV 48 §1.6.
         assert_not_already_opened(_dc["days"], _out_d)
+        if not _pre["declared_result_absent_before_the_act"]:
+            raise ReadRefused(
+                f"REFUSED: {OUT_NAME} already exists in {_out_d}. The "
+                f"declared result of this read is present before the act, "
+                f"so the read has been done -- even though no day carries a "
+                f"marker.")
         _markers = write_open_markers(_dc["days"], _out_d, pd or {})
     else:
         _markers = []
@@ -458,8 +597,24 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
                     "G_agrees_with_the_declaration":
                         _dc["G_agrees_with_the_declaration"],
                     "the_cli_cannot_widen_or_narrow_it": True},
+        "pre_state": _pre,
         "consumption": {"markers_written_before_reading": _markers,
                         "the_read_consumes": True,
+                        "marker_dir": _md,
+                        "what_a_marker_IS": "an UNTRACKED file under the "
+                                            "ledger's derived directory. It "
+                                            "is the ONLY record that a day "
+                                            "was spent, and it is exactly as "
+                                            "durable as that directory -- "
+                                            "not in git, not in any receipt "
+                                            "chain (REV 76 §5(c))",
+                        "decl_was_injected": decl is not None,
+                        "how_decl_is_built_on_the_real_path":
+                            "`decl=` is an INJECTED OBSERVATION for the "
+                            "battery; the CLI's --open builds it from "
+                            "`resolve_days()` against the declaration chain "
+                            "head, so on the real path nothing is injected "
+                            "(REV 76 §2)",
                         "runbook": "§6 -- a three-path call to the race "
                                    "reader CONSUMES the race days"},
         "byte_identity": {"pinned_before": before, "after": after,
@@ -484,7 +639,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 20
+EXPECTED_CHECKS = 25
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -607,6 +762,8 @@ def selftest() -> int:
         # A.3 KNOWN-BADS, driven
         try:
             read(paths, outdir=d, decl=_fd, consume=False,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched",
                  per_day_pins=dict(
                      _pins, **{"20260901": dict(_pins["20260901"],
                                                 sha256="0" * 64)}))
@@ -617,6 +774,8 @@ def selftest() -> int:
                "the bytes changed between the pin and the read")
         try:
             read(paths, outdir=d, decl=_fd, consume=False,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched",
                  per_day_pins=dict(
                      _pins, **{"20260901": {"exists": False,
                                             "sha256": None}}))
@@ -629,7 +788,9 @@ def selftest() -> int:
                "`exists: false` is actionable, and skipping it would report "
                "a smaller G as though it were the declared one")
         r = read(paths, outdir=d, per_day_pins=_pins, decl=_fd,
-                 consume=False)
+                 consume=False,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched")
         ok(all(c["digest_covers_every_byte_parsed"]
                for c in r["byte_identity"]["digest_covers_every_byte_parsed"]
                .values()),
@@ -681,7 +842,9 @@ def selftest() -> int:
         _g["day_matched_volume"] = _mut
         try:
             read(paths, outdir=d, per_day_pins=_pins, decl=_fd,
-                 consume=False)
+                 consume=False,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched")
             ok(False, "a tampered feed must VOID the read")
         except ReadVoid as e:
             ok("THE READ IS VOID" in str(e)
@@ -734,7 +897,9 @@ def selftest() -> int:
               for dd, q in _p3.items()}
     Path(_p3["19700102"]).unlink()          # the FILE goes, the pin stays
     try:
-        read(_p3, outdir=_d3, per_day_pins=_pins3, decl=_dc3, consume=False)
+        read(_p3, outdir=_d3, per_day_pins=_pins3, decl=_dc3, consume=False,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched")
         ok(False, "a declared day whose feed is gone must refuse by name")
     except ReadRefused as _e3:
         ok("19700102 is DECLARED READABLE and pinned" in str(_e3)
@@ -744,6 +909,61 @@ def selftest() -> int:
            f"whose feed is gone refuses NAMING THE DAY, and the generic "
            f"`sealed feed(s) absent` -- which used to fire first and hide it "
            f"-- does not appear in the message")
+
+    # ---- REV 76 §5(a): the marker directory is GUARDED -----------------
+    _md_real = resolve_marker_dir()
+    ok(_md_real["is_the_ledger"] and _md_real["equals_the_ledger_derived_dir"]
+       and _md_real["readlink_f"] == str(Path(_BDR.derived()).resolve()),
+       f"§5(a): the marker directory resolves THROUGH require_ledger() to "
+       f"{_md_real['readlink_f']}, and its readlink -f equals the ledger's "
+       f"derived directory. It was the UNGUARDED `derived()`: from a "
+       f"materialised worktree the reader would have looked for markers in "
+       f"a partial shell, found none, and opened days the ledger records as "
+       f"consumed")
+    import os as _os7
+    import tempfile as _tf7
+    _nl = Path(_tf7.mkdtemp(prefix="be68_notledger_"))
+    (_nl / "data" / "pm_5min" / "derived").mkdir(parents=True)
+    _saved_env = _os7.environ.get("PM_DATA_ROOT")
+    try:
+        _os7.environ["PM_DATA_ROOT"] = str(_nl)
+        import importlib as _il7
+        _il7.reload(_BDR)
+        try:
+            resolve_marker_dir()
+            ok(False, "a non-ledger root must refuse")
+        except Exception as _e7:
+            ok("ledger" in str(_e7).lower(),
+               f"KNOWN-BAD §5(a): a root that is NOT the ledger "
+               f"({_nl}) is REFUSED by name before a marker is read or "
+               f"written -- {type(_e7).__name__}")
+    finally:
+        if _saved_env is None:
+            _os7.environ.pop("PM_DATA_ROOT", None)
+        else:
+            _os7.environ["PM_DATA_ROOT"] = _saved_env
+        _il7.reload(_BDR)
+    ok(resolve_marker_dir()["is_the_ledger"],
+       "AND THE LEDGER STILL RESOLVES AFTERWARDS: the known-bad restored "
+       "the environment it changed, so the check that follows it is not "
+       "measuring the probe's leftovers")
+    # ---- REV 76 §5(b): a HALF-WRITTEN marker is CONSUMED, not a crash ---
+    _hw = Path(_tf7.mkdtemp(prefix="be68_partial_"))
+    (_hw / "be_race_read_OPENED_20990101.json").write_text("{ partial")
+    try:
+        assert_not_already_opened(["20990101"], _hw)
+        ok(False, "a half-written marker must refuse as consumed")
+    except ReadRefused as _e8:
+        ok("20990101" in str(_e8) and "already carry an OPENED marker" in str(_e8)
+           and "could not be parsed" in str(_e8)
+           and "PRESENCE is the fact" in str(_e8),
+           "KNOWN-BAD §5(b): a HALF-WRITTEN marker (`{ partial`) is treated "
+           "as OPENED and REFUSED, naming the day and the path -- it used to "
+           "raise JSONDecodeError out of the guard, and on the one-shot path "
+           "a traceback is not a verdict")
+    ok(json.loads(json.dumps({"ok": True}))["ok"],
+       "and the guard still parses a WELL-FORMED marker rather than "
+       "treating every marker as unreadable")
 
     # ---- (5) THE THREE-PATH READ CONSUMES (runbook §6) ------------------
     # Driven on a SCRATCH declaration and SCRATCH feeds. The real pins are
@@ -762,7 +982,9 @@ def selftest() -> int:
                    "sha256": hashlib.sha256(Path(q).read_bytes()).hexdigest(),
                    "bytes": Path(q).stat().st_size}
               for dd, q in _p5.items()}
-    _r5 = read(_p5, outdir=_d5, per_day_pins=_pins5, decl=_dc5)
+    _r5 = read(_p5, outdir=_d5, per_day_pins=_pins5, decl=_dc5,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched")
     _mk = [marker_path(dd, _d5) for dd in _p5]
     ok(all(m.exists() for m in _mk)
        and len(_r5["consumption"]["markers_written_before_reading"]) == 2
@@ -772,7 +994,9 @@ def selftest() -> int:
        f"-- so a read that dies mid-way still leaves the day marked, which "
        f"is the safe direction")
     try:
-        read(_p5, outdir=_d5, per_day_pins=_pins5, decl=_dc5)
+        read(_p5, outdir=_d5, per_day_pins=_pins5, decl=_dc5,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched")
         ok(False, "a second read of a consumed day must refuse")
     except ReadRefused as _e5:
         ok("already carry an OPENED marker" in str(_e5)
@@ -786,7 +1010,9 @@ def selftest() -> int:
                    "sha256": hashlib.sha256(Path(q).read_bytes()).hexdigest(),
                    "bytes": Path(q).stat().st_size}
               for dd, q in _p6.items()}
-    _r6 = read(_p6, outdir=_d6, per_day_pins=_pins6, decl=_dc5)
+    _r6 = read(_p6, outdir=_d6, per_day_pins=_pins6, decl=_dc5,
+                 marker_fixture=True,
+                 marker_fixture_why="battery: scratch feeds under a scratch declaration; the ledger is never touched")
     ok(_r6["consumption"]["the_read_consumes"] is True
        and len(_r6["consumption"]["markers_written_before_reading"]) == 2,
        "POSITIVE CONTROL: the same days in a tree with NO markers open "
