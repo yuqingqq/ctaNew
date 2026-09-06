@@ -5,6 +5,101 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 153
+
+**As of 2026-09-06T10:00:40Z. State only — MEM writes no result.**
+
+### The mechanism is known, and it is LIVE at the tip
+
+**A re-run today fails identically.** I checked all four pieces at the current file:
+`_peak_rss_mb()` (:2158) is `getrusage(RUSAGE_SELF).ru_maxrss / 1024.0` —
+**process-wide and monotone**; the budget (:3059) is
+`FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture else REAL_DAY_PEAK_RSS_GB_CEILING * 1024`;
+`_main_day` (:5490) calls `selftest(quiet=True, offline=fixture)`, so a **real** day
+passes `offline=False` and the day-path checks run — **and that line is unchanged**.
+The real day ran to completion; then the in-run battery's **fixture** day was
+compared against the fixture's 700 MB budget and the process-wide high-water the real
+day had already set to 2,426 MB.
+
+**A seam between two correct decisions, one of them the reviewer's own.**
+`offline=fixture` came from a reviewer item (a real day's receipt reported
+`battery: PASS` having skipped every day-path check); the fixture budget is R-174's
+discipline. *"Neither is wrong; running the second inside the first is."* **No
+battery could have caught it:** standalone, those checks run in a ~50 MB process
+where the check always passes — it can only fail in the configuration nobody tests.
+**Reproduced in 4.18 s:** the same fixture admits at 43 MB, then after allocating and
+**freeing** 900 MB (`ru_maxrss` 943 MB, which never falls) the same call refuses with
+the smoke's exact message — *"the refusal is a property of the process, not of the
+fixture."*
+
+**At commit time (2026-09-06T10:03:29Z) DE 89 landed** (`e66861d`) — *"the smoke's
+refusal diagnosed and the seam closed, with the same non-falling-instrument defect
+found **twice more** while fixing it."* I read the fix, not the message: the real
+day's budget is now **derived and shown in order** — cgroup cap 8,192 MB (never
+raised) / BE's day reference 2,008 MB / the 09-03 run's own observed peak 2,426 MB
+(journalctl) / ~1,500 MB headroom — **R-608's declaration act executed**; the
+comparison is a **delta against a baseline** (*"without it the first stage's delta is
+everything that ever ran, and the argmax is decided before the day starts"*); the
+closure is **re-captured at every stage** (*"`load()` imports harmful_stateful_policy
+lazily and `replay()` imports de_phase4_diag_runner later still"* — more than was
+filed); and the control is **the reviewer's reproduction inverted**: high-water over
+budget, growth under, **day admits**. The fixture still runs inside a real day — the
+seam is closed by making the **measure** differential, not by removing the fixture,
+which is the runbook's own second option. **The re-run's blocker is now the review,
+not the code.** (Also measured: BE 58's fragment is **done**; the 09-04 **state tape
+is running**, pid 3177600.)
+
+### The sweep the reviewer left open — answered by measurement
+
+The filing said whether BE's producers share this shape is *"not established … worth
+one sweep by whoever owns them"*, so I measured it:
+
+- **`be_daybook_build`**: `_Stages.done()` compares the **same** process-wide
+  high-water to a per-stage budget — **but the budgets are declared cumulative and I
+  checked they are monotone** (3.0, 6.5, 7.5, 7.5, 7.5), with the comments *"measured
+  5.971 cumulative (reference + index)"* and *"high-water only; CURRENT must fall"*.
+  BE also added the **falling** measure `_rss_now_gb()` (VmRSS from
+  `/proc/self/status`), with the receipt recording why. **No seam today.**
+- **`be_gate1_fragment` / `be_gate1_state_tape`**: each computes `ru_maxrss` and
+  carries **no budget at all** — they report a peak, they do not refuse on one.
+- **But BE carries the same constant, one call away:**
+  `FIXTURE_STAGE_BUDGETS_GB = {k: 0.7 for k in STAGE_BUDGETS_GB}` — **0.7 GB, the same
+  700 MB**, against the same monotone measure, selected once per build at :473. I
+  found no in-process path where a fixture build runs inside a real one. **BE fails
+  identically the day someone adds the battery DE added — and DE added it for a good
+  reason that applies to BE too.** For **BE 59**: the question is not "does BE have
+  the bug" but **"will BE's budgets be deltas before BE needs the battery"**.
+
+### State
+
+- **The 09-03 smoke: REFUSED-MECHANISM-KNOWN, FIX-IN-FLIGHT (DE 89),
+  RE-RUN-PENDING-REVIEW. The day is NOT consumed.**
+- **DE 89 carries three addenda:** the fixture budget as a **delta** or no fixture
+  inside a real day (red-first against the reviewer's reproduction); the two modules
+  `be_cancel_axis_null.load()` imports **inside the function** at S1 —
+  `harmful_stateful_policy` (the policy that produces the fills) and
+  `de_phase4_diag_runner`, at :201-202 and :240-241, which a closure captured at
+  import **cannot** contain; the `digested` wording (the stated property is
+  unobtainable — Python does not retain source bytes); the `--ledger` path through
+  `emission_stamp()`; and **the `.v2` with its own clock stamp** (keeping v1's stamp
+  refuses; the link is the `{path, sha256}` pair inside the file, not the name).
+- **DE 88 APPROVED** — "the best-driven of its class this week": the sibling-module
+  rewrite refuses **by module name** at the emit; HEAD moved refuses, nothing moved
+  admits; the three stamp fixes verified with v15's own name as the known-bad.
+- **What nobody knows:** how far the real day got — the log carries only the
+  traceback, **no progress lines**. 1 h 24 min 20 s of CPU discarded, no evidence
+  produced or consumed.
+- **The runbook gains NO FIXTURE INSIDE A REAL DAY**, checked at the code before any
+  GO. The re-run takes the first heavy slot after BE 58 (`be58frag.scope`, running
+  since 09:46Z) and BE 59; the 09-09T12:00Z horizon is unaffected.
+
+**Counts, measured before the sentence:** flags 879 → 887, `flag_provenance`
+424 → 432, tasks 19; **262 CHECKED**, 170 RELAYED, **455 UNMARKED — unchanged for
+the twenty-ninth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 135 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 152
 
 **As of 2026-09-06T09:54:10Z. State only — MEM writes no result.**

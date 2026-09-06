@@ -63,6 +63,77 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T10:00:40Z (MEM ROUND 153 -- R-609 AND REV 53'S FILING SWEPT. STATE ONLY.
+  THE MECHANISM IS KNOWN, LIVE AT THE TIP, AND THE FIX IS IN FLIGHT.
+  (1) **I CHECKED ALL FOUR PIECES AT THE CURRENT FILE, NOT THE REPORT.**
+  **`_peak_rss_mb()` (:2158) = `getrusage(RUSAGE_SELF).ru_maxrss / 1024.0` --
+  PROCESS-WIDE, MONOTONE; the budget (:3059) = `FIXTURE_DAY_PEAK_RSS_MB_BUDGET if
+  fixture else REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0`; `_main_day` (:5490) calls
+  `selftest(quiet=True, offline=fixture)`, so a REAL day passes `offline=False` and
+  the day-path checks RUN -- and that line is UNCHANGED at the tip.**
+  ***So the refusal is not history: a re-run today fails IDENTICALLY, at the same
+  place, after the same 84 minutes.*** **That is the difference between a diagnosis
+  and a fix, and it is why the GO waits on DE 89.**
+  (2) **THE SEAM IS BETWEEN TWO CORRECT DECISIONS, ONE OF THEM THE REVIEWER'S OWN.**
+  `offline=fixture` came from a REVIEWER ITEM -- *a real day's receipt reported
+  `battery: PASS` having skipped every day-path check* -- and the fixture budget is
+  R-174's discipline. ***"Neither is wrong; running the second inside the first
+  is."*** **And no battery could have caught it: standalone, those checks run in a
+  ~50 MB process where the check ALWAYS passes -- it can only fail in the
+  configuration nobody tests, a real day.** *Rule 17 one level down: not suite-green
+  versus wired, but suite-green in the only environment the suite ever runs in.*
+  (3) **AND THE REPRODUCTION ISOLATES IT BY CHANGING ONLY THE PROCESS'S HISTORY:**
+  the same fixture ADMITS at 43 MB, then after allocating and FREEING 900 MB
+  (`ru_maxrss` 943 MB, which never falls) **the SAME call REFUSES with the smoke's
+  exact message** -- 4.18 s, sized under the 1 GiB bar so it needed no lock.
+  ***"The refusal is a property of the process, not of the fixture."***
+  (4) **I ANSWERED THE SWEEP THE REVIEWER LEFT OPEN.** *"Whether BE's producers share
+  this shape is not established ... worth one sweep by whoever owns them"* -- so I
+  measured it. **`be_daybook_build._Stages.done()` compares the SAME process-wide
+  high-water to a per-stage budget -- but the budgets are declared CUMULATIVE and I
+  checked they are MONOTONE (3.0, 6.5, 7.5, 7.5, 7.5), and BE already added the
+  FALLING measure `_rss_now_gb()` from `/proc/self/status` with the receipt saying
+  why.** ***So BE's builder does NOT have DE's seam today.*** **And
+  `be_gate1_fragment` and `be_gate1_state_tape` each measure `ru_maxrss` and carry NO
+  budget at all -- they report, they do not refuse.** *"Sweep the producers" reads as
+  three unknowns; it is one.*
+  (5) **BUT BE CARRIES THE SAME CONSTANT, ONE CALL AWAY:** `FIXTURE_STAGE_BUDGETS_GB
+  = {k: 0.7 for k in STAGE_BUDGETS_GB}` -- **0.7 GB, the same 700 MB, against the same
+  monotone measure**, selected once per build at :473. *I found no in-process path
+  where a fixture build runs inside a real one.* ***The ingredients are present and
+  the seam is not: BE fails identically the day someone adds the battery DE added --
+  and DE added it for a good reason that applies to BE exactly as much.*** **The
+  question for BE 59 is not "does BE have the bug" but "will BE's budgets be DELTAS
+  before BE needs the battery".**
+  (6) **THE CLOSURE MISSES WHAT IS IMPORTED LATE:** `import harmful_stateful_policy
+  as HSP` and `import de_phase4_diag_runner as R` are INDENTED inside functions in
+  `be_cancel_axis_null.py` (:201-202, :240-241) -- ***a closure captured at IMPORT
+  cannot contain a module imported at S1, and one of the two is the policy that
+  PRODUCES THE FILLS.*** *"Every module under `live/` in `sys.modules`" is a snapshot
+  of a MOMENT, not a property of the run.*
+  (7) **WHAT IT COST, AND WHAT NOBODY KNOWS:** 1 h 24 min 20 s of CPU discarded; no
+  evidence produced or consumed; **and how far the real day got is UNKNOWN TO ANYONE
+  -- the log carries only the traceback, no progress lines.** *DE 88's second item is
+  a WORDING fix: `import_closure.digested` claims "never a second read" while
+  `_digest_module` reads the file, and the stated property is unobtainable because
+  Python does not retain source bytes.* **And the `.v2` trap: a `.v2` keeping its
+  v1's stamp REFUSES the new stamp assertion; a FRESH stamp admits -- safe only
+  because R-608 made the link the PAIR inside the file rather than the name.**
+  **AT COMMIT TIME, 2026-09-06T10:03:29Z: DE 89 LANDED (`e66861d`) AND THE SEAM IS
+  CLOSED** -- *"the smoke's refusal diagnosed and the seam closed, with the same
+  non-falling-instrument defect found TWICE MORE while fixing it".* **I read the fix:
+  the real day's budget DERIVED in order (8,192 cap / 2,008 reference / 2,426 observed
+  / ~1,500 headroom); the comparison a DELTA against a baseline; the closure
+  re-captured at EVERY stage; and the control the reviewer's reproduction INVERTED --
+  high-water over budget, growth under, day ADMITS.** *So (1) was true when I read it
+  and is closed now; the re-run's blocker is the REVIEW, not the code.* **And BE 58's
+  fragment is DONE -- the 09-04 state tape is RUNNING (pid 3177600).**
+  **FLAG WORDS AS DISPATCHED: the 09-03 smoke REFUSED-MECHANISM-KNOWN, FIX-IN-FLIGHT
+  (DE 89 -- LANDED at commit time), RE-RUN-PENDING-REVIEW; the day NOT CONSUMED.**
+  MEASURED BEFORE THIS SENTENCE: flags 879 -> 887, flag_provenance 424 -> 432,
+  tasks 19; **262 CHECKED**, 170 RELAYED, **455 UNMARKED -- unchanged for the
+  twenty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T09:54:10Z (MEM ROUND 152 -- R-608 AND REV 52'S FILING SWEPT. STATE ONLY.
   THE FIRST SEALED GATE-1 SMOKE DAY REFUSED, AND IT IS TO BE RE-RUN.
   (1) **THE FILE STATES THE DISTINCTION IT THEN FAILS TO MAKE.** At `a7e28e6^` -- the
@@ -219,74 +290,6 @@ updated: >-
   tasks 19; **252 CHECKED**, 164 RELAYED, **455 UNMARKED -- unchanged for the
   twenty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a
   ruled 3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T09:39:31Z (MEM ROUND 150 -- R-606, Q-DE-87 AND Q-DA-297 SWEPT. STATE
-  ONLY. THE FIRST THING IN IT IS A CORRECTION AGAINST MYSELF.
-  (1) **MY ROUND-149 "RESOLVES IN NEITHER DIRECTION" WAS WRONG, AND THE ANSWER WAS
-  PAST MY OWN TRUNCATION.** Params v8's `design_declaration` reads **`pin_direction:
-  "design -> params"`** and **`sha256: "NOT_PINNED_HERE -- the pin runs design ->
-  params"`**, with `why_flipped`: *"each digest cannot depend on the other."*
-  ***The reverse direction is DECLARED ABSENT, not missing -- I applied a two-way
-  criterion to a deliberately one-way pin.*** **And I had already read the string: I
-  printed `sha256[:16]`, which shows `NOT_PINNED_HERE ` and cuts off exactly before
-  `-- the pin runs design -> params`.** *Twelfth "suspect the probe first", and the
-  first where the artifact answered me inside a field my own FORMATTING truncated.*
-  (2) **WHAT REMAINS IS A QUESTION, NOT A RULING.** Design v15's `parameters` names
-  **`path: …/de_multiday_gate1_params_v2.json`** with **`sha256: 8c3f2676…` (v8's
-  ACTUAL digest)**, plus `supersedes: …params_v1.json` and `what_v2_changed` -- *the
-  object DESCRIBES v2 and carries v8's digest.* **And DE has already named this
-  mechanism in code:** *"OLDEST FIRST. `supersedes.path` is the LAST element, never a
-  typed constant -- **that is how v7 came to name v2**"*; *"THE VERSION LIVES IN ONE
-  PLACE. It travelled in THREE and they disagreed."* ***Whether v15's `path` is the
-  chain ROOT by design or that mechanism surviving cannot be settled from the
-  artifact alone -- the resolver's verdict is DE's and the coordinator's.*** **ROUTED
-  AS A QUESTION. What I can say: a consumer reading `parameters.path` naively gets
-  v2, and that is what I did.**
-  (3) **THE GATE IS ONE FIELD NOW.** `read_gate.the_bar_is_a_CONJUNCTION` is EIGHT
-  objects whose ids I read out in order -- **`clock_ge_read_not_before`,
-  `six_ruled_days_from_params`, `receipt_at_landing_digest`,
-  `at_least_one_admissible_arm`, `ledger_verdict`, `producing_code_locatable`,
-  `horizon_fallback_G5_directional`, `params_field_required`** -- with
-  **`horizon_utc = 2026-09-09T12:00:00Z`** beside them. ***Every refusal REV 50
-  demanded is a NAMED ID in ONE field, and both implementations bind to the ids
-  rather than to prose*** -- DA's 46 + 30 checks bound against the REAL v8, its ids
-  matching DE's exactly. *And DA still found one of its OWN checks matching PROSE
-  while its ids matched: the vocabulary bound, the check unbound, in one instrument.*
-  (4) **THE STAMP FINDING IS A CHANGEPOINT, NOT A HABIT -- I CENSUSED IT.** Fourteen
-  of DE's newest stamped artifacts, name-stamp minus own `as_of`: **ELEVEN are 8-13
-  SECONDS BEHIND** (name written first, work runs, `as_of` follows -- clock-derived),
-  **and the LAST THREE are +730 s, +1,024 s, +1,024 s AHEAD**: `design_v15` (094500
-  vs 093250), `fixture_run_v16` and `smoke_rehearsal_09_04` (095100 vs 093356).
-  ***The three ahead all end in `00`; none of the eleven behind do.*** **So it starts
-  at design v15** -- *which hands DE 88 a signature (round minute AND ahead) and a
-  date, rather than "check your stamps".* Rule 12 either way.
-  (5) **THE 09-04 PREFLIGHT IS UNBLOCKED ON DESIGN:** `status:
-  NOT_READY_P2_book_exists_P2_builder_receipt_exists`, `blocking: ['P2_book_exists',
-  'P2_builder_receipt_exists']` -- **REV 51 SS0's `P3_design` block is GONE**, and the
-  run waits on exactly what it should: the book, behind the lock the smoke holds.
-  (6) **AND DE'S FIVE DEFECTS WERE ALL CAUGHT BY RUNNING, NOT READING:** a local
-  `per_day, ledger_rows = {}, {}` shadowing the parameter; the completeness check
-  refusing the very horizon case item 7 exists to ALLOW; the live gate evaluation
-  making the FIXTURE touch `data/`; ***`P3_params` comparing the params digest WITH
-  ITSELF -- a check that could never fail, sitting in the preflight a GO reads***;
-  and a battery emitted from stale code after an aborted checkout, twice. *"The two
-  addenda both found that my fix for one ruling would have broken another."*
-  **AT COMMIT TIME, 2026-09-06T09:42:30Z, DE 88 LANDED (`403aac7`) AND NAMES THE
-  STAMP FINDING IN ITS OWN WORDS:** *"rule 22 as amended -- the launch capture is the
-  IMPORT CLOSURE and HEAD -- and my artifact filenames were stamped with **times that
-  had not yet occurred**."* ***My census is the quantification of exactly that: the
-  changepoint at design v15, +730 s and +1,024 s, round minutes*** -- **and the two
-  arrived independently, one from the coordinator's spot-check and one from a
-  fourteen-artifact scan, which is why the onset DATE is now recoverable rather than
-  just the fault.** *Recorded unswept.*
-  **FLAG WORDS: the read gate ONE-FIELD-EIGHT-IDS, both implementations bound; the
-  09-04 preflight UNBLOCKED (book pending); the smoke RUNNING -- I measure pid
-  3049132 at 4,647 s (~77 min), output ABSENT, and its landing releases THREE queues
-  at once (DA's pre-read GO, DE's `.v2`, BE 58's lock -- 63 refusals at 09:31Z,
-  ceiling 10:58Z); DE's stamps UNDER-CORRECTION (DE 88).**
-  MEASURED BEFORE THIS SENTENCE: flags 851 -> 859, flag_provenance 396 -> 404,
-  tasks 19; **242 CHECKED**, 162 RELAYED, **455 UNMARKED -- unchanged for the
-  twenty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2959,6 +2962,124 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_MECHANISM_IS_LIVE_AT_THE_TIP_AND_I_CHECKED_ALL_FOUR_PIECES: A-RE-RUN-FAILS-IDENTICALLY
+                             # CHECKED 2026-09-06T10:00:40Z at the current file, piece by piece.
+                             # **(a) `_peak_rss_mb()` (:2158) is
+                             # `getrusage(RUSAGE_SELF).ru_maxrss / 1024.0` -- PROCESS-WIDE and MONOTONE.
+                             # (b) the budget (:3059) is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET if fixture else
+                             # REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0`. (c) `_main_day` (:5490) calls
+                             # `selftest(quiet=True, offline=fixture)` -- so a REAL day passes
+                             # `offline=False` and the day-path checks RUN, fixture day and all. (d) the
+                             # line is UNCHANGED at the tip, with the comment justifying the offline choice
+                             # beside it.**
+                             # ***So the smoke's refusal is not history: a re-run today fails IDENTICALLY,
+                             # at the same place, after the same 84 minutes.*** **That is the difference
+                             # between a diagnosis and a fix, and it is why the GO waits on DE 89.**
+                             # **CLOSED AT COMMIT TIME, 2026-09-06T10:03:29Z (`e66861d`, DE 89) --
+                             # and I read the fix rather than the message.** *The real
+                             # day's budget is now `REAL_DAY_PEAK_RSS_MB_BUDGET`,
+                             # **DERIVED and shown in order**: cgroup cap 8,192 MB
+                             # (never raised) / BE's day reference 2,008 MB / the 09-03
+                             # run's own observed peak 2,426 MB (journalctl) / ~1,500 MB
+                             # headroom -- ***R-608's declaration act executed, "not the
+                             # measured peak plus a margin".*** **And the comparison is a
+                             # DELTA now, with a baseline: "without it the first stage's
+                             # delta is everything that ever ran, and the argmax is
+                             # decided before the day starts."** *The fixture still runs
+                             # inside a real day -- the seam is closed by making the
+                             # MEASURE differential, not by removing the fixture, which
+                             # is the runbook's own second option.* **And the control is
+                             # the reviewer's reproduction INVERTED: the high-water
+                             # EXCEEDS the budget while the growth does not, and the day
+                             # ADMITS.** *Fifth round running that the commit-time
+                             # re-read finds a fix landing under a flag.*
+  THE_TWO_LAZY_IMPORTS_ARE_INSIDE_THE_FUNCTION_THE_CLOSURE_CANNOT_SEE: FOUR_LINES_TWO_MODULES
+                             # CHECKED 2026-09-06T10:00:40Z at `be_cancel_axis_null.py`: **`import
+                             # harmful_stateful_policy as HSP` and `import de_phase4_diag_runner as R` are
+                             # INDENTED, inside functions, at :201-202 and again at :240-241.**
+                             # ***A closure captured at IMPORT cannot contain a module that is imported at
+                             # S1*** -- *and one of the two is `harmful_stateful_policy`, the policy that
+                             # PRODUCES THE FILLS.* **The fix is one `_capture_closure()` after the book
+                             # load; the finding is that "every module under `live/` in `sys.modules`" is
+                             # a snapshot of a moment, not a property of the run.**
+                             # **CLOSED AT COMMIT TIME, 2026-09-06T10:03:29Z, and MORE than was
+                             # filed:** the closure is **re-captured at EVERY STAGE**,
+                             # its comment naming both -- *"`load()` imports
+                             # harmful_stateful_policy lazily and `replay()` imports
+                             # de_phase4_diag_runner LATER STILL, so a capture taken
+                             # once -- at import, or even after the first load --
+                             # misses the modules that do the REPLAYING."*
+                             # ***The filed fix was one capture after the book load;
+                             # the landed fix is PER-STAGE, because the second module
+                             # arrives later than the filed fix would have looked.***
+  THE_SWEEP_THE_REVIEWER_LEFT_OPEN_ANSWERED_FOR_BE: NOT_PRESENT_TODAY
+                             # CHECKED 2026-09-06T10:00:40Z -- the reviewer wrote that whether BE's
+                             # producers share this shape is "not established ... worth one sweep by
+                             # whoever owns them", so I measured it rather than leaving it open.
+                             # **`be_daybook_build._Stages.done()` sets `peak_gb = _rss_gb()` -- the SAME
+                             # process-wide high-water -- and refuses when `peak_gb > budget`. BUT the
+                             # budgets are declared CUMULATIVE and I checked that they are MONOTONE:
+                             # `{A0_reference 3.0, A1_index 6.5, A2_assemble 7.5, A3_release_index 7.5,
+                             # A4_write_book 7.5}`, non-decreasing** -- *"measured 5.971 CUMULATIVE
+                             # (reference + index)", "high-water only; CURRENT must fall"*. **And BE
+                             # already added the FALLING measure: `_rss_now_gb()` reads `VmRSS` from
+                             # `/proc/self/status`, with the receipt saying `measured_on_CURRENT_rss:
+                             # "ru_maxrss is a high-water mark and cannot show a release; this is VmRSS"`.**
+                             # ***So BE's builder does NOT have DE's seam today: a monotone measure against
+                             # monotone budgets is coherent, and the one claim that needs a falling number
+                             # has one.***
+  BUT_BE_CARRIES_THE_SAME_CONSTANT_ONE_CALL_AWAY: THE_SHAPE_IS_A_BATTERY_AWAY
+                             # CHECKED 2026-09-06T10:00:40Z: **`FIXTURE_STAGE_BUDGETS_GB = {k: 0.7 for
+                             # k in STAGE_BUDGETS_GB}` -- 0.7 GB, the SAME 700 MB, against the SAME
+                             # monotone measure -- selected at :473 by `_Stages(FIXTURE_STAGE_BUDGETS_GB if
+                             # fixture else STAGE_BUDGETS_GB)`, ONCE per build call.** *I found no
+                             # in-process path where a fixture build runs inside a real one.*
+                             # ***So the ingredients are present and the seam is not: BE fails identically
+                             # the day someone adds the battery DE added*** -- **and DE added it for a
+                             # GOOD reason (a real day's receipt reporting `battery: PASS` having skipped
+                             # every day-path check), which applies to BE exactly as much.** *Routed to BE
+                             # 59 as a measurement, not a fix: the question is not "does BE have the bug"
+                             # but "will BE's budgets be DELTAS before BE needs the battery".*
+  THE_OTHER_TWO_PRODUCERS_MEASURE_WITHOUT_REFUSING: REPORT_NOT_REFUSE
+                             # CHECKED 2026-09-06T10:00:40Z: `be_gate1_fragment.py:156` and
+                             # `be_gate1_state_tape.py:92` each compute
+                             # `getrusage(...).ru_maxrss / 2**20` and **carry NO budget comparison at all**.
+                             # ***They REPORT a peak; they do not REFUSE on one*** -- *so two of the three
+                             # producers in the sweep cannot have this defect, for the simple reason that
+                             # they have no budget to compare against.* **Worth stating because "sweep the
+                             # producers" reads as three unknowns and it is one.**
+  A_SEAM_BETWEEN_TWO_CORRECT_DECISIONS: AND_WHY_NO_BATTERY_COULD_CATCH_IT
+                             # RELAYED from R-609(A) / REV 53 SS0.2, 2026-09-06T10:00:40Z. **`offline=fixture`
+                             # came from A REVIEWER ITEM** -- a real day's receipt reported `battery: PASS`
+                             # having skipped every day-path check -- **and the fixture budget is R-174's
+                             # discipline. "Neither is wrong; running the second inside the first is."**
+                             # ***And why no battery caught it: standalone, the day-path checks run in a
+                             # ~50 MB process where the check ALWAYS PASSES; it can only fail in the
+                             # configuration nobody tests -- a real day.*** **Rule 17 one level down: not
+                             # suite-green versus wired, but suite-green in the only environment the suite
+                             # ever runs in.**
+  REPRODUCED_IN_FOUR_SECONDS_AND_THE_REFUSAL_IS_A_PROPERTY_OF_THE_PROCESS: THE_CONTROL_THAT_FIRES
+                             # RELAYED from R-609(A) SS0.3, 2026-09-06T10:00:40Z. **The same fixture
+                             # ADMITS in a small process (peak seen 43 MB); then, after allocating and
+                             # FREEING 900 MB -- `ru_maxrss` 943 MB, which never falls -- the SAME call
+                             # REFUSES with the smoke's exact message.** *4.18 s, 943 MB, deliberately
+                             # sized under the 1 GiB bar so it needed no lock.*
+                             # ***"The refusal is a property of the process, not of the fixture"*** --
+                             # **a reproduction that isolates the cause by changing only the process's
+                             # history, which is the cleanest control this programme has produced.**
+  WHAT_IT_COST_AND_WHAT_NOBODY_KNOWS: NO_PROGRESS_LINES
+                             # RELAYED from R-609(A) SS0.5 and SS1, 2026-09-06T10:00:40Z. **1 h 24 min
+                             # 20 s of CPU discarded; no evidence produced or consumed; and HOW FAR THE
+                             # REAL DAY GOT IS UNKNOWN TO ANYONE -- the log carries only the traceback, no
+                             # progress lines.** *A run that cost 84 minutes left no record of what it
+                             # achieved before it refused.* **DE 88's two items: the closure misses the two
+                             # lazily imported modules; `import_closure.digested` claims "never a second
+                             # read" while `_digest_module` reads the file -- microseconds, not minutes,
+                             # but the STATED PROPERTY is unobtainable because Python does not retain
+                             # source bytes, so the honest fix is the WORDING.** *And the `.v2` trap: a
+                             # `.v2` keeping its v1's stamp REFUSES `assert_name_stamp_is_the_clock`; a
+                             # FRESH stamp admits -- safe only because R-608 made the link the PAIR inside
+                             # the file rather than the name.*
   THE_CODE_DOCUMENTS_THE_DISTINCTION_IT_THEN_FAILS_TO_MAKE: BOTH_SENTENCES_ARE_IN_THE_FILE
                              # CHECKED 2026-09-06T09:54:10Z at `a7e28e6^` -- the bytes that RAN.
                              # Line 1432 is `FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0`, and the comment above
@@ -18552,6 +18673,76 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 153, 2026-09-06T10:00:40Z ------------------------------
+  THE_MECHANISM_IS_LIVE_AT_THE_TIP_AND_I_CHECKED_ALL_FOUR_PIECES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:00:40Z
+    said: >-
+      _peak_rss_mb() at :2158 is getrusage(RUSAGE_SELF).ru_maxrss / 1024.0,
+      process-wide and monotone; the budget at :3059 is FIXTURE_DAY_PEAK_RSS_MB_BUDGET
+      if fixture else REAL_DAY_PEAK_RSS_GB_CEILING * 1024.0; _main_day at :5490 calls
+      selftest(quiet=True, offline=fixture), so a real day passes offline=False and
+      the day-path checks run, fixture day included; and that line is unchanged at the
+      tip. A re-run today fails identically, at the same place, after the same 84
+      minutes.
+  THE_TWO_LAZY_IMPORTS_ARE_INSIDE_THE_FUNCTION_THE_CLOSURE_CANNOT_SEE:
+    prov: CHECKED
+    artifact: live/pm_research/be_cancel_axis_null.py
+    as_of: 2026-09-06T10:00:40Z
+    said: >-
+      import harmful_stateful_policy as HSP and import de_phase4_diag_runner as R are
+      indented inside functions at :201-202 and :240-241, so a closure captured at
+      import cannot contain them; one of the two is the policy that produces the
+      fills. The fix is one _capture_closure() after the book load, and the finding is
+      that "every module under live/ in sys.modules" is a snapshot of a moment rather
+      than a property of the run.
+  THE_SWEEP_THE_REVIEWER_LEFT_OPEN_ANSWERED_FOR_BE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:00:40Z
+    said: >-
+      _Stages.done() sets peak_gb = _rss_gb(), the same process-wide high-water, and
+      refuses when peak_gb > budget -- but the budgets are declared cumulative and I
+      checked they are monotone: A0_reference 3.0, A1_index 6.5, A2_assemble 7.5,
+      A3_release_index 7.5, A4_write_book 7.5, non-decreasing, with the comments
+      "measured 5.971 cumulative (reference + index)" and "high-water only; CURRENT
+      must fall". BE also added the falling measure _rss_now_gb() reading VmRSS from
+      /proc/self/status, with the receipt recording why. So BE's builder does not have
+      DE's seam today.
+  BUT_BE_CARRIES_THE_SAME_CONSTANT_ONE_CALL_AWAY:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:00:40Z
+    said: >-
+      FIXTURE_STAGE_BUDGETS_GB = {k: 0.7 for k in STAGE_BUDGETS_GB} -- 0.7 GB, the
+      same 700 MB, against the same monotone measure -- selected at :473 by
+      _Stages(FIXTURE_STAGE_BUDGETS_GB if fixture else STAGE_BUDGETS_GB), once per
+      build call, and I found no in-process path where a fixture build runs inside a
+      real one. The ingredients are present and the seam is not: BE fails identically
+      the day someone adds the battery DE added, and DE added it for a good reason
+      that applies to BE too. Routed to BE 59 as a measurement, not a fix.
+  THE_OTHER_TWO_PRODUCERS_MEASURE_WITHOUT_REFUSING:
+    prov: CHECKED
+    artifact: live/pm_research/be_gate1_fragment.py
+    as_of: 2026-09-06T10:00:40Z
+    said: >-
+      be_gate1_fragment.py:156 and be_gate1_state_tape.py:92 each compute
+      getrusage(...).ru_maxrss / 2**20 and carry no budget comparison at all: they
+      report a peak, they do not refuse on one. Two of the three producers in the
+      sweep cannot have this defect because they have no budget to compare against.
+  A_SEAM_BETWEEN_TWO_CORRECT_DECISIONS:
+    prov: RELAYED
+    from: R-609(A)
+    as_of: 2026-09-06T10:00:40Z
+  REPRODUCED_IN_FOUR_SECONDS_AND_THE_REFUSAL_IS_A_PROPERTY_OF_THE_PROCESS:
+    prov: RELAYED
+    from: R-609(A)
+    as_of: 2026-09-06T10:00:40Z
+  WHAT_IT_COST_AND_WHAT_NOBODY_KNOWS:
+    prov: RELAYED
+    from: R-609(A)
+    as_of: 2026-09-06T10:00:40Z
   # --- MEM round 152, 2026-09-06T09:54:10Z ------------------------------
   THE_CODE_DOCUMENTS_THE_DISTINCTION_IT_THEN_FAILS_TO_MAKE:
     prov: CHECKED
