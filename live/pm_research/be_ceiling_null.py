@@ -21,6 +21,31 @@ not keep one here either.
 
 WHAT IS ADDED IS THE SAMPLING AND THE RANKING, AND NOTHING ELSE.
 
+SUPERSEDED IN PART BY ROUND 43 (rule 13) -- READ THIS BEFORE THE CANCEL-AXIS
+NUMBERS BELOW. `be_cancel_axis_null.py` gave the CANCEL axis its own drawn
+null and split this module's cancel-axis reading in two:
+
+  * THE CASCADE IS SELECTION, AND THAT HELD. Random decisions replayed
+    through the same stateful policy cascade at 0.497 fills/cancel (sd
+    0.072, n=500); CONDVALUE's 4.324 is 8.70x that and ENTIRELY OUTSIDE the
+    null, HAZARD's 2.229 is 5.57x and also outside.
+
+  * THE COST CLAIM DID NOT. "CONDVALUE is 1.29x worse than a blind cancel"
+    rests on DE's ASSUMED point (2.2271 c/cancel) which has no dispersion.
+    Against a DRAWN null, CONDVALUE's 2.8646 sits INSIDE it -- mean 2.108,
+    sd 3.808, range [-13.14, +15.29], p 0.6228. The whole effect is a sixth
+    of the null's sd.
+
+  * AND DE'S ASSUMED BLIND RATE IS MEASURABLY WRONG. 1.1176 is fills per
+    FILLING generation (4315/3861); a random cancel mostly lands on
+    generations that never fill, and the measured rate is 0.40-0.50 --
+    outside both drawn ranges. Routed to DE; their module is not edited.
+
+THE CITABLE FORM IS NOW: THE FILL AXIS SHOWED A DIRECTION; THE CANCEL AXIS IS
+UNINFORMATIVE AT THIS SAMPLE. "The two axes disagree" is withdrawn as stated.
+Nothing below is edited -- it stays as provenance, and the fields it computes
+against DE's assumed null are true OF THAT COMPARISON and are labelled so.
+
 THE TWO AXES, AND THEY ANSWER DIFFERENT QUESTIONS.
 
   THE FILL AXIS (here). Decline k FILLS drawn at random. Answers: DOES THE
@@ -562,6 +587,13 @@ def evaluate(out: dict) -> dict:
             "the_axes_disagree_for_HAZARD":
                 arms["HAZARD_OVER_SKEWED_REF"]["above_null_mean"]
                 != cx["HAZARD_better_than_a_random_cancel"],
+            "WHAT_THE_DISAGREE_FIELDS_ARE_COMPUTED_AGAINST":
+                "DE's ASSUMED per-cancel point (2.2271 c), which has NO "
+                "dispersion. Round 43 drew that null and found CONDVALUE "
+                "INSIDE it at p 0.6228, so these booleans are true of the "
+                "assumed comparison and are NOT a separation. See "
+                "cancel_axis_NOT_recomputed_here.SUPERSEDED_IN_PART_BY_"
+                "ROUND_43 for the citable form.",
         },
         "orderings_not_identified_in_at_least_one_cell": sorted(
             {nm for r in cells.values() for nm, d in r["naive"].items()
@@ -678,6 +710,40 @@ def run(outdir: Path | None = None) -> dict:
                 "the fill axis asks whether the ranker FINDS the losing "
                 "fills; the cancel axis asks whether an overlay CAN PAY. "
                 "They are different questions and they can disagree."),
+            "SUPERSEDED_IN_PART_BY_ROUND_43": {
+                "by": "be_cancel_axis_null.py / "
+                      "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+                "rule": "13 -- corrections supersede IN BAND; nothing here "
+                        "is edited and this block is the pointer",
+                "what_HELD": "the cascade is SELECTION, not machinery. "
+                             "Random decisions through the same stateful "
+                             "policy cascade at 0.497 fills/cancel (sd "
+                             "0.072, n=500); CONDVALUE's 4.324 is 8.70x and "
+                             "ENTIRELY OUTSIDE the null, HAZARD's 2.229 is "
+                             "5.57x and outside.",
+                "what_DID_NOT_HOLD": "the COST claim. Against a DRAWN null "
+                                     "CONDVALUE's 2.8646 c/cancel is INSIDE "
+                                     "it -- mean 2.108, sd 3.808, range "
+                                     "[-13.14, +15.29], p_at_least_as_cheap "
+                                     "0.6228. The whole effect is a sixth "
+                                     "of the null's sd.",
+                "the_assumed_rate_is_WRONG": "1.1176 fills/generation is "
+                                             "fills per FILLING generation "
+                                             "(4315/3861); a random cancel "
+                                             "mostly lands on generations "
+                                             "that never fill. Measured "
+                                             "0.40-0.50, outside both drawn "
+                                             "ranges. Routed to DE.",
+                "THE_CITABLE_FORM": "THE FILL AXIS SHOWED A DIRECTION; THE "
+                                    "CANCEL AXIS IS UNINFORMATIVE AT THIS "
+                                    "SAMPLE. 'The two axes disagree' is "
+                                    "WITHDRAWN as stated.",
+                "the_booleans_here_are_still_true_OF_WHAT_THEY_COMPARE":
+                    "`CONDVALUE_better_than_a_random_cancel: false` is a "
+                    "comparison against DE's ASSUMED point and remains a "
+                    "correct statement about that point. It is not a "
+                    "separation, and round 43 is what establishes that.",
+            },
         },
         "limits": {
             "cluster_unit_n": 1,
