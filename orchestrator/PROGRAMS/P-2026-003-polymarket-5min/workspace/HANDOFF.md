@@ -1,5 +1,107 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T02:44:55Z — **09-05 IS SCORED AND SEALED, AND NOBODY HAS READ
+IT. The unseal is HELD until all five days carry a sealed score, then opened in
+one act.** Gate 1 unmoved, **1 of 7**. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 108
+
+### 1. The first race day scored since 09-02 — provenance verified by me
+
+| check | result |
+|---|---|
+| receipt sha256, **both copies** (derived + run dir) | `d65cadbcf4af6818…` — **identical** |
+| sealed file on disk vs the digest the receipt pins | `1370598870c5fa75…` — **matches** (42,663,031 B) |
+| gates | **twelve, distinct status value PASS and nothing else** |
+| windows | **2,016 with rows, 0 masked** |
+
+> **A digest is not a read.** I hashed the sealed file and did not open it — a
+> sha256 reveals nothing about a single score. The receipt says it plainly:
+> *"no metric, rho, net value or sign appears outside this file."* **BE did not
+> open it, the coordinator did not, and neither did I.**
+
+This is the first ever run of the step my round-105 flag established **was never
+wired to a unit**.
+
+### 2. The unseal is HELD — and the reason is rule 11 in an unfamiliar place
+
+**Five accrued days. Three sealed scores** — 09-01, 09-02, 09-05. **09-03 and
+09-04 were never scored;** BE 45 is scoring both, sealed, one at a time.
+
+**Held until all five carry a sealed score, then all five open in one act.**
+
+> A one-day read now and four later is **a read taken in parts**, and the ruled
+> bar is five days. Reading 09-05 alone and then deciding whether to read the
+> rest is **selection on the seen — rule 11, arriving through the ORDER OF
+> OPENING rather than through a threshold.**
+
+**The USER may open earlier by saying so. Nobody else may.** And what the read
+will be is already fixed: **a DIRECTION, not a significance** — 0.0625 at
+G = 5, m = 2, and V2's HANDOFF holds the prior race cannot validate the changed
+pipeline. **Five sealed scores change neither limit.**
+
+### 3. Two caveats ride out of the receipt with every number
+
+- **The decision metric has NEVER been reconciled against any published number
+  — *"and cannot be from existing artifacts."*** `increment()` is BY_THRESHOLD;
+  iteration 011's cells are BY_COUNT; **the 36/36 validated the BRIDGE arm, not
+  the primary estimand.** The receipt's own `for_the_reader`: *"do not carry the
+  reconciliation's authority onto any number derived from this run."*
+- **Coin coverage: only btc and eth carry a frozen fit.** `bnb`, `doge`, `hype`,
+  `sol`, `xrp` are supplied without one — **1,440 of the 2,016 scored windows,
+  71%.** Whatever the unseal shows, it shows it about a day whose **majority of
+  windows had no frozen fit behind them.** Carried here so that reaches the read
+  rather than being rediscovered after it.
+
+### 4. BE edited a landed artifact in place — settled by me in two commands
+
+`git show cb9bf8a^:…/be_ceiling_null_v1.json | sha256sum` → **`832faffd42192a40`**
+`git show cb9bf8a:…/be_ceiling_null_v1.json  | sha256sum` → **`d22852cc133964b8`**
+
+**The bytes of a landed artifact changed under its own name.** Rule 13.
+
+> **The commit message says *"nothing in round 42 is edited"*; at the artifact it
+> is. That gap between the message and the blob is the finding — a reader
+> trusting the message would never look.**
+
+`as_of` was rewritten, which is the **worst** field to move: an `as_of` is what a
+reader uses to decide whether a claim is current. **The content is right and the
+place is wrong.** The old digest is pinned **nowhere** — my grep over the repo
+for `*.md/*.json/*.py/*.yml/*.sh` returns **exactly one file**, the register
+entry reporting the change. *(My surface is wider than the coordinator's on size,
+narrower on type.)* Routed to BE 45: restore v1, emit v2.
+
+### 5. DE 66's vN+1 — verified, and it closes my round-106 gap
+
+sha256 **`8bfa0edef587a86a`** matches, and **my own key walk returns ZERO keys
+named `gate1_exit` at any depth** — the trap a vN+1 is exactly the place to
+reintroduce by accident. All six reviewer points are fields; **the battery is
+recorded by running it** (26 checks, 9 falsifiers); and
+`fee_endpoint_summary_is_bit_identical_to_v1` **is a refusal in the emitter, not
+a claim.** **The gap I recorded at round 106 — the receipt not saying its own
+battery ran — is CLOSED.**
+
+**One residual, and it is a shape question rather than a number:** because the
+summary is bit-identical by design, resolving
+`fee_endpoint_summary.endpoints.E_MINUS_R.meaning` **inside v2 still returns the
+withdrawn wording.** *Bit-identity and per-field correction pull against each
+other — keeping the summary verbatim is what makes "no number moved" checkable;
+a per-field `superseded_by` is what makes a path resolve honestly. You cannot
+have both in one block.* Reviewer's call.
+
+### 6. Instrument, run before the sentence — third round with the order right
+
+**565 flags, 49 CHECKED, 61 RELAYED, 455 UNMARKED, 0 findings.**
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — three named axes, none
+built; **455 of 565 flags never audited for staleness.**
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T02:37:28Z — **Two entries these files carried are corrected in
 band, and both corrections are about READING.** Gate 1 unmoved, **1 of 7**;
 G = 5, directional; BE 44's score **not landed**. Economics: `RESULTS.md` §0.

@@ -63,6 +63,54 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T02:44:55Z (MEM ROUND 108 -- R-544 AND R-545 SWEPT. STATE ONLY.
+  (1) 09-05 IS SCORED AND SEALED, AND I VERIFIED THE PROVENANCE MYSELF. The
+  receipt hashes to d65cadbcf4af6818 AT BOTH COPIES (derived and the run dir),
+  the receipt pins sealed_file.sha256 1370598870c5fa75... for a 42,663,031-byte
+  file, and THAT FILE ON DISK HASHES TO THE SAME DIGEST. Twelve gates, the
+  distinct status set is PASS and nothing else. 2,016 windows with rows, 0
+  masked. A DIGEST IS NOT A READ: I hashed the sealed file and did not open it,
+  and the receipt's own field says "no metric, rho, net value or sign appears
+  outside this file". NOBODY HAS READ IT -- not BE, not the coordinator, not me.
+  (2) THE UNSEAL IS HELD UNTIL ALL FIVE DAYS CARRY A SEALED SCORE, THEN OPENED
+  IN ONE ACT. Five accrued days, THREE sealed scores (09-01, 09-02, 09-05);
+  09-03 and 09-04 WERE NEVER SCORED and BE 45 is scoring them. THE REASON IS
+  RULE 11 ARRIVING THROUGH THE ORDER OF OPENING: reading 09-05 alone and then
+  deciding whether to read the rest is selection on the seen. The USER may open
+  earlier by saying so; nobody else may. And what the read will be is already
+  fixed -- A DIRECTION, NOT A SIGNIFICANCE (0.0625 at G=5, m=2; and the prior
+  race cannot validate the changed pipeline). FIVE SEALED SCORES CHANGE NEITHER
+  LIMIT.
+  (3) TWO CAVEATS RIDE OUT OF THE RECEIPT WITH EVERY NUMBER, both read by me at
+  the artifact. THE DECISION METRIC HAS NEVER BEEN RECONCILED AGAINST ANY
+  PUBLISHED NUMBER "AND CANNOT BE FROM EXISTING ARTIFACTS" -- increment() is
+  BY_THRESHOLD, iteration 011's cells are BY_COUNT, and the 36/36 validated the
+  BRIDGE arm, not the primary estimand. AND COIN COVERAGE: only btc and eth
+  carry a frozen fit; 1,440 of the 2,016 scored windows -- 71% -- ARE SUPPLIED
+  WITHOUT A FIT.
+  (4) BE EDITED A LANDED ARTIFACT IN PLACE, CHECKED BY ME AT GIT IN TWO
+  COMMANDS: be_ceiling_null_v1.json goes 832faffd42192a40 -> d22852cc133964b8
+  across cb9bf8a. THE COMMIT MESSAGE SAYS "nothing in round 42 is edited"; AT
+  THE ARTIFACT IT IS -- and that gap between message and blob is the finding,
+  because a reader trusting the message would never look. Rewriting as_of is
+  the worst field to move, since an as_of is what a reader uses to decide
+  whether a claim is current. THE CONTENT IS RIGHT AND THE PLACE IS WRONG. The
+  old digest is pinned NOWHERE: my own grep over the repo for *.md/*.json/*.py/
+  *.yml/*.sh returns EXACTLY ONE FILE, the register entry reporting the change.
+  Routed to BE 45 to restore v1 and emit v2.
+  (5) DE 66's vN+1 VERIFIED AT THE BLOB: sha256 8bfa0edef587a86a matches, and
+  MY OWN KEY WALK returns ZERO keys named gate1_exit at any depth -- the trap a
+  vN+1 is exactly the place to reintroduce by accident. All six reviewer points
+  are fields; the battery is recorded BY RUNNING IT; and
+  fee_endpoint_summary_is_bit_identical_to_v1 IS A REFUSAL IN THE EMITTER, NOT A
+  CLAIM. THE GAP I RECORDED AT ROUND 106 -- the receipt not saying its own
+  battery ran -- IS CLOSED.
+  (6) ONE RESIDUAL, AND IT IS A SHAPE QUESTION RATHER THAN A NUMBER: because
+  the summary is bit-identical by design, resolving
+  fee_endpoint_summary.endpoints.E_MINUS_R.meaning inside v2 STILL RETURNS THE
+  WITHDRAWN WORDING. Bit-identity and per-field correction pull against each
+  other and you cannot have both in one block. Reviewer's call.
+  PRIOR CHECKPOINT:
   2026-09-06T02:37:28Z (MEM ROUND 107 -- R-543 SWEPT, INCLUDING TWO IN-BAND
   CORRECTIONS TO ENTRIES MY OWN FLAGS CARRIED. STATE ONLY.
   (1) MY ROUND-105 STOP-THE-LINE IS CORRECTED AND CLOSED. "DE's certification
@@ -1225,6 +1273,93 @@ flags:
                              # A CORRECTION THAT OVERSHOT AND WAS CAUGHT BY THE
                              # CORRECTOR'S OWN NEW PREDICATE IS THE BEST SHAPE IN
                              # THIS ROUND.
+  be_edited_a_landed_artifact_in_place: CHECKED-BY-ME-AT-GIT-832faffd-TO-d22852cc
+                             # CHECKED 2026-09-06T02:44:55Z, and this one I could
+                             # settle myself in two commands, so I did.
+                             # git show cb9bf8a^:data/pm_5min/derived/
+                             # be_ceiling_null_v1.json | sha256sum gives
+                             # 832faffd42192a40...; git show cb9bf8a:<same> gives
+                             # d22852cc133964b8... THE BYTES OF A LANDED
+                             # ARTIFACT CHANGED UNDER ITS OWN NAME. Rule 13.
+                             # WHAT MOVED: as_of rewritten 2026-09-05T15:15:22Z
+                             # -> 2026-09-06T02:13:44Z, plus a
+                             # SUPERSEDED_IN_PART_BY_ROUND_43 block and a
+                             # WHAT_THE_DISAGREE_FIELDS_ARE_COMPUTED_AGAINST
+                             # field inserted (RELAYED from R-544(C); I diffed
+                             # digests, not contents).
+                             # THE COMMIT MESSAGE SAYS "nothing in round 42 is
+                             # edited"; AT THE ARTIFACT IT IS. That gap between
+                             # the message and the blob is the whole finding --
+                             # a reader trusting the message would never look.
+                             # THE CONTENT IS RIGHT AND THE PLACE IS WRONG. The
+                             # pointer block says what R-541(E) already carries
+                             # in citable form; rewriting as_of on a landed
+                             # artifact is what rule 13 exists to stop, because
+                             # an as_of is the one field a reader uses to decide
+                             # whether a claim is current.
+                             # THE OLD DIGEST IS PINNED NOWHERE, AND I CHECKED
+                             # WITH MY OWN SURFACE: grep -rl "832faffd" over the
+                             # repo excluding .git for *.md/*.json/*.py/*.yml/
+                             # *.sh returns EXACTLY ONE FILE, whole output --
+                             # workspace/COORDINATION.md, i.e. R-544(C) ITSELF
+                             # REPORTING THE CHANGE. Zero pins elsewhere. MY
+                             # SURFACE IS WIDER THAN THE COORDINATOR'S ON SIZE
+                             # (no 2 MB filter) AND NARROWER ON TYPE (a .jsonl
+                             # would not match, and the run-dir sealed files sit
+                             # outside the repo). AS-OF 2026-09-06T02:44:55Z.
+                             # ROUTED TO BE 45 as an addendum: restore v1 to its
+                             # pre-cb9bf8a bytes, emit v2 with the pointer and a
+                             # supersedes block. SECOND DELIBERATE R-378
+                             # EXCEPTION THIS HOUR, both recorded with reasons --
+                             # and an exception that is named is not a lapse.
+  de66_vN_plus_1_verified_at_the_blob: SEVEN-FIELDS-AND-THE-SUMMARY-IDENTICAL-BY-REFUSAL
+                             # CHECKED 2026-09-06T02:44:55Z at the blob for the
+                             # identity half, RELAYED for the field contents.
+                             # p003_v2_fee_endpoint_sensitivity_v2__20260906T023951Z.json
+                             # hashes to 8bfa0edef587a86a... -- MATCHES DE's
+                             # statement -- and MY OWN KEY WALK returns ZERO keys
+                             # named gate1_exit at any depth, which is the trap
+                             # I checked on v1 at round 105 and which a vN+1 is
+                             # exactly the place to reintroduce by accident.
+                             # THE HEADROOM VALUE 3.6184181716360566 occurs ONCE
+                             # in the file.
+                             # RELAYED from R-545(A): supersedes names v1's path
+                             # and f4974039c1fc99c0 with no_re_run true and
+                             # numbers_moved false;
+                             # fee_endpoint_summary_is_bit_identical_to_v1 IS A
+                             # REFUSAL IN THE EMITTER, NOT A CLAIM -- which is
+                             # the right construction and the one this programme
+                             # has had to learn three times;
+                             # invariant_conjuncts_by_status separates
+                             # unconditional (same_sign, with fe_T <= fe_B on
+                             # 201/201 arms, 0 violations) from conditional
+                             # (p_shift, both_p_same_side, MATERIAL); the battery
+                             # is recorded BY RUNNING IT (26 checks, 9 falsifiers
+                             # listed by text); and cited_measurements carries
+                             # the seam v2 pointer that reviewer C-2 asked for.
+                             # ALL SIX REVIEWER POINTS ARE FIELDS. The gap I
+                             # recorded at round 106 -- the receipt not saying
+                             # its own battery ran -- IS CLOSED.
+  de66_v2_residual_the_summary_still_carries_withdrawn_wording: A-SHAPE-QUESTION-NOT-A-NUMBER
+                             # RELAYED from R-545(B), and routed to the REVIEWER,
+                             # not to DE.
+                             # BECAUSE THE SUMMARY BLOCK IS A BIT-IDENTICAL COPY
+                             # OF v1 BY DESIGN, fee_endpoint_summary.endpoints.
+                             # E_MINUS_R.meaning STILL READS "exact and not an
+                             # interval" INSIDE v2. The correction lives at top
+                             # level and the withdrawn wording is retained under
+                             # withdrawn_wording_in_v1.
+                             # SO A READER RESOLVING THAT ONE SUMMARY PATH IN v2
+                             # GETS THE WITHDRAWN WORDING. Deliberate and
+                             # disclosed.
+                             # THE QUESTION IS A SHAPE QUESTION AND IT IS A GOOD
+                             # ONE: bit-identity and per-field correction pull
+                             # against each other. Keeping the summary verbatim
+                             # is what makes "no number moved" checkable; adding
+                             # a per-field superseded_by marker is what makes a
+                             # path resolve honestly. You cannot have both in one
+                             # block, and which one wins is the reviewer's call,
+                             # not mine and not DE's.
   be_book_is_a_pickle_with_no_digest: RULE-10-SATISFIED-IN-SUBSTANCE-NOT-IN-FORM
                              # RELAYED from R-543(C). The cascade IS the
                              # treatment's own replay_policy -- seven delegated
@@ -1677,6 +1812,85 @@ flags:
                              # TURN FROM `ps`, WITH THE OBSERVER EXCLUDED.
                              # A pattern that fails three times is a rule
                              # missing, not three seats being careless.
+  day_09_05_is_scored_and_sealed: CHECKED-BY-ME-AT-BOTH-COPIES-AND-THE-SEALED-DIGEST
+                             # CHECKED 2026-09-06T02:44:55Z. The first race day
+                             # scored since 09-02, and the first ever run of the
+                             # step my round-105 flag established was never
+                             # wired.
+                             # RECEIPT IDENTICAL AT BOTH COPIES, hashed by me:
+                             # data/pm_5min/derived/
+                             # be_forward_day_receipt_20260905.json and
+                             # /home/yuqing/ctaNew_forward_runs/20260905_be44/
+                             # be_forward_day_receipt_20260905.json BOTH give
+                             # sha256 d65cadbcf4af6818..., 26,894 B.
+                             # THE SEAL HOLDS AT THE DIGEST: the receipt pins
+                             # sealed_file.sha256 =
+                             # 1370598870c5fa754f21c79203a98ea306c340d687d912d
+                             # 27655e5b002863705 for a 42,663,031-byte file, and
+                             # sha256sum of that file on disk returns
+                             # 1370598870c5fa754f21c792... -- MATCHES.
+                             # A DIGEST IS NOT A READ. I hashed the sealed file
+                             # and did not open it; a sha256 reveals nothing
+                             # about a single score. The receipt's own
+                             # sealed_file.not_in_receipt says it plainly: "no
+                             # metric, rho, net value or sign appears outside
+                             # this file."
+                             # TWELVE GATES, ALL PASS -- read from the receipt's
+                             # gates array, twelve entries, the distinct status
+                             # set is exactly PASS and nothing else. 2,016 windows with rows,
+                             # mask_total_masked_windows 0, masked_fraction_total
+                             # 0.0.
+                             # NOBODY HAS READ IT. BE did not open it, the
+                             # coordinator did not, and neither did I.
+  the_unseal_is_held_until_all_five_days_are_sealed: NO-DAY-IS-READ-ALONE
+                             # RELAYED from R-544(B), the coordinator's ruling,
+                             # and this is the flag that must not be lost.
+                             # THE RACE HAS FIVE ACCRUED DAYS AND THREE SEALED
+                             # SCORES: 09-01, 09-02 and 09-05. 09-03 AND 09-04
+                             # WERE NEVER SCORED -- BE 45 is scoring both now,
+                             # sealed, one at a time, ~25 min each.
+                             # THE UNSEAL IS HELD UNTIL ALL FIVE CARRY A SEALED
+                             # SCORE, THEN ALL FIVE OPEN IN ONE ACT. The reason
+                             # is the one that matters: A ONE-DAY READ NOW AND
+                             # FOUR LATER IS A READ TAKEN IN PARTS, and the
+                             # ruled bar is five days. Reading 09-05 alone and
+                             # then deciding whether to read the rest is
+                             # selection on the seen -- rule 11, arriving
+                             # through the order of opening rather than through
+                             # a threshold.
+                             # THE USER MAY OPEN EARLIER BY SAYING SO. Nobody
+                             # else may.
+                             # AND WHAT THE READ WILL BE WHEN IT IS TAKEN IS
+                             # ALREADY FIXED: A DIRECTION, NOT A SIGNIFICANCE.
+                             # At G = 5 with m = 2 the best achievable adjusted
+                             # p is 0.0625, and V2's HANDOFF holds that the
+                             # prior race cannot validate the changed pipeline.
+                             # Five sealed scores will not change either limit.
+  score_receipt_carries_two_caveats_forward: RECONCILIATION-AND-COIN-COVERAGE
+                             # CHECKED 2026-09-06T02:44:55Z at the receipt, both
+                             # fields read by me.
+                             # (1) /reconciliation_caveat.claim: "the decision
+                             # metric has NEVER been reconciled against any
+                             # published number, AND CANNOT BE FROM EXISTING
+                             # ARTIFACTS", with /for_the_reader: "do not carry
+                             # the reconciliation's authority onto any number
+                             # derived from this run". increment() is
+                             # BY_THRESHOLD; iteration 011's cells are BY_COUNT;
+                             # THE 36/36 VALIDATED THE BRIDGE ARM, NOT THE
+                             # PRIMARY ESTIMAND. A receipt that carries its own
+                             # unreconciled status in a named field is doing the
+                             # right thing; the caveat rides with every number
+                             # taken from this day.
+                             # (2) /coin_coverage: coins_with_a_frozen_fit are
+                             # ['btc','eth'] ONLY; coins_supplied_without_a_fit
+                             # are ['bnb','doge','hype','sol','xrp'];
+                             # n_windows_supplied_without_a_fit = 1,440 of the
+                             # 2,016 scored. SO FIVE SEVENTHS OF THE COINS AND
+                             # 71% OF THE WINDOWS ARE SUPPLIED WITHOUT A FIT.
+                             # Whatever the unseal shows, it shows it about a
+                             # day whose majority of windows had no frozen fit
+                             # behind them -- carried here so that fact reaches
+                             # the read rather than being rediscovered after it.
   scorer_was_never_wired_to_a_unit: CHECKED-BY-ME-ZERO-UNIT-FILES-REFERENCE-IT
                              # CHECKED 2026-09-06T02:14:36Z. A NEGATIVE EXISTENCE
                              # CLAIM, SO IT CARRIES ITS SURFACE AND AN AS-OF.
@@ -8815,6 +9029,28 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T02:44:55Z, 09-05 IS SCORED AND SEALED AND NOBODY HAS READ
+  IT. Receipt identical at both copies, the sealed file hashing to the digest
+  the receipt pins, twelve gates PASS, 2,016 windows, 0 masked -- all verified
+  by me, and A DIGEST IS NOT A READ. THE RACE HAS FIVE ACCRUED DAYS AND THREE
+  SEALED SCORES; 09-03 and 09-04 were never scored and BE 45 is scoring them.
+  THE UNSEAL IS HELD UNTIL ALL FIVE ARE SEALED AND THEN OPENED IN ONE ACT --
+  because a one-day read now and four later is a read taken in parts, which is
+  rule 11 arriving through the order of opening. The USER may open earlier by
+  saying so. WHEN IT IS TAKEN IT IS A DIRECTION, NOT A SIGNIFICANCE, and five
+  sealed scores change neither that nor V2's separate limit.
+  TWO CAVEATS RIDE WITH EVERY NUMBER FROM THAT DAY: the decision metric has
+  NEVER been reconciled against a published number and CANNOT BE from existing
+  artifacts, and 1,440 of the 2,016 scored windows -- 71% -- carry NO FROZEN
+  FIT (btc and eth only).
+  BE EDITED A LANDED ARTIFACT IN PLACE (832faffd -> d22852cc, checked by me at
+  git; the commit message says otherwise) -- content right, place wrong, routed.
+  DE 66's vN+1 is verified at the blob with zero gate1_exit keys and the battery
+  recorded by running it, which CLOSES the round-106 gap; one residual is a
+  shape question for the reviewer, because bit-identity and per-field correction
+  cannot both hold in one block.
+  Gate 1 unmoved, 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T02:37:28Z, RETAINED BELOW --
   AS-OF 2026-09-06T02:37:28Z, TWO ENTRIES MY OWN FLAGS CARRIED ARE CORRECTED
   IN BAND, AND BOTH CORRECTIONS ARE ABOUT READING. My round-105 stop-the-line
   ("0 of 4 on DE's census") measured DE's SELFTEST, not its census -- the
@@ -9558,6 +9794,63 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 108, 2026-09-06T02:44:55Z ------------------------------
+  day_09_05_is_scored_and_sealed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_forward_day_receipt_20260905.json
+    as_of: 2026-09-06T02:44:55Z
+    said: >-
+      sha256 of this file and of the run-dir copy at
+      /home/yuqing/ctaNew_forward_runs/20260905_be44/ both begin
+      d65cadbcf4af6818; sealed_file.sha256 pins
+      1370598870c5fa754f21c79203a98ea306c340d687d912d27655e5b002863705 for a
+      42,663,031-byte file and sha256sum of that file on disk returns
+      1370598870c5fa754f21c792...; the gates array has twelve entries whose
+      distinct status value is PASS and nothing else;
+      cluster_disclosure.n_windows_with_rows 2016,
+      blackout_accounting.mask_total_masked_windows 0. I hashed the sealed file
+      and did not open it.
+  score_receipt_carries_two_caveats_forward:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_forward_day_receipt_20260905.json
+    as_of: 2026-09-06T02:44:55Z
+    said: >-
+      /reconciliation_caveat.claim reads "the decision metric has NEVER been
+      reconciled against any published number, and cannot be from existing
+      artifacts", with for_the_reader "do not carry the reconciliation's
+      authority onto any number derived from this run"; /coin_coverage gives
+      coins_with_a_frozen_fit ['btc','eth'], coins_supplied_without_a_fit
+      ['bnb','doge','hype','sol','xrp'] and n_windows_supplied_without_a_fit
+      1440 against 2,016 scored.
+  be_edited_a_landed_artifact_in_place:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_ceiling_null_v1.json
+    as_of: 2026-09-06T02:44:55Z
+    said: >-
+      git show cb9bf8a^:<this path> | sha256sum gives 832faffd42192a40... and
+      git show cb9bf8a:<this path> | sha256sum gives d22852cc133964b8..., so the
+      bytes of a landed artifact changed under its own name. Which fields moved
+      is RELAYED from R-544(C) -- I diffed digests, not contents. grep -rl
+      "832faffd" over the repo excluding .git for *.md/*.json/*.py/*.yml/*.sh
+      returns exactly one file, workspace/COORDINATION.md, the entry reporting
+      the change; my surface is wider than the coordinator's on size and
+      narrower on type.
+  de66_vN_plus_1_verified_at_the_blob:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_v2_fee_endpoint_sensitivity_v2__20260906T023951Z.json
+    as_of: 2026-09-06T02:44:55Z
+    said: >-
+      sha256 begins 8bfa0edef587a86a, matching DE's statement; a key walk over
+      the whole payload returns ZERO keys named gate1_exit at any depth; the
+      value 3.6184181716360566 occurs once. The field contents -- supersedes,
+      the conjunct split, the battery record, the seam v2 pointer -- are RELAYED
+      from R-545(A).
+  the_unseal_is_held_until_all_five_days_are_sealed:
+    prov: RELAYED
+    from: R-544(B), the coordinator's ruling; the USER may open earlier by saying so
+  de66_v2_residual_the_summary_still_carries_withdrawn_wording:
+    prov: RELAYED
+    from: R-545(B), routed to the reviewer rather than to DE
   # --- MEM round 107, 2026-09-06T02:37:28Z ------------------------------
   da_certification_of_nothing_excluded_has_no_independent_check:
     prov: CHECKED
