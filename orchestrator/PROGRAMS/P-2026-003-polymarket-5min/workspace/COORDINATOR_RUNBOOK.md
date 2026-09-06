@@ -395,8 +395,9 @@ loop stalls at the coordinator whenever the USER is not prompting** — 40 min o
 coordinator session must be prompted, or the standing duty is a fiction.
 
 **Race: G = 5 REACHED** (09-05 accrued at 00:06:01Z, four conjuncts, CONTENT_LIVE,
-mask WRITTEN). DIRECTIONAL by USER ruling. **Sealed scores: 09-01, 09-02, 09-05
-(BE 44, R-544); 09-03 and 09-04 scoring in BE 45.** The scorer is manual. **UNSEAL
+mask WRITTEN). DIRECTIONAL by USER ruling. **All five race days carry a sealed score (BE 44/45, R-549(F)); 09-01 and 09-02
+were OPENED earlier under the interim read and are CONSUMED (RESULTS §3).** The
+scorer is manual. A declared read (`be_read_declaration.py`) precedes any opening. **UNSEAL
 HELD until all five are sealed, then opened in one act** (coordinator's or USER's
 act; R-544(B)).
 
@@ -410,7 +411,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-548: **R-549**.
+- **Tip:** see `git log`. Next register entry after R-549: **R-550**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
