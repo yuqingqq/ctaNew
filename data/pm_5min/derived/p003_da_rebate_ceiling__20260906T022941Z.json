@@ -1,0 +1,86 @@
+{
+  "assessment": {
+    "arms": {
+      "baseline": {
+        "ceiling_below_this_arms_headroom": false,
+        "fe_cents": 1971.5171314202,
+        "headroom_cents": 1426.7475176661703,
+        "identity_value_0p20_fe_cents": 394.30342628404003,
+        "ratio_ceiling_over_identity": 53.839195362982764
+      },
+      "treatment": {
+        "ceiling_below_this_arms_headroom": false,
+        "fe_cents": 1388.958405890998,
+        "headroom_cents": 1005.1614191751975,
+        "identity_value_0p20_fe_cents": 277.7916811781996,
+        "ratio_ceiling_over_identity": 76.42050010267154
+      }
+    },
+    "bound_status": "PARTIAL_LOWER_BOUND_ON_THE_CEILING",
+    "ceiling_below_headroom": false,
+    "completeness_evidence": {
+      "join_status": "the reference tranches carry no transaction hash, so a tx-level superset join is not possible from this cache",
+      "manifest_partial_is_false": true,
+      "our_fills_join_by_transaction_hash": false,
+      "why_join_matters": "a pool that does not contain our own fills is a different slice, not a superset, and would bound nothing",
+      "window_carries_trades": true
+    },
+    "conclusion_robust_to_incompleteness": true,
+    "directions_in_which_this_understates": [
+      "the fee formula understates on 22 of 901 decoded legs (Q-DA-255, mechanism open), so the pool is a slight lower bound",
+      "flooring to the chain's 10 uUSDC grid rounds every leg DOWN",
+      "COMPLETENESS IS NOT ESTABLISHED: this is a lower bound on the ceiling and does NOT bound the rebate from above"
+    ],
+    "headroom_factor": 3.6184,
+    "pool_completeness_established": false,
+    "rebate_ceiling_cents": 21228.979199999903,
+    "why_robust": "an incomplete pool understates P_m, so the true ceiling is at least the measured one. A measured ceiling ABOVE the headroom therefore stays above it however much of the pool is missing; only a 'below' reading would need completeness to stand."
+  },
+  "carrying_commit": "cf36f89e2d27ab4db0e6c99704b497ecfa385f76",
+  "de_receipt": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_v2_fee_endpoint_sensitivity__20260905T161824Z.json",
+    "sha256": "f4974039c1fc99c0ad848e188522380b96895e03203a4170cb2fe05db3956238"
+  },
+  "declared_before_run": {
+    "ceiling": "0.20 * SUM_m P_m",
+    "comparison": "ceiling vs 3.6184 * 0.20 * fe, per arm",
+    "completeness": "manifest partial==false AND the window carries trades AND our own fills join by transaction_hash",
+    "headroom_factor_source": "reviewer 30646c3 s6.3",
+    "pool": "P_m = SUM 7*p*(1-p)*size cents, floored to the chain's 10 uUSDC grid (formula verified in Q-DA-251)",
+    "refutes": "a ceiling at or above the headroom for EITHER arm",
+    "surface": "tier1 public trade tape day=2026-08-24 coin=btc distiller=tier1_v4_r12, slug btc-updown-5m-1787579400, [t0, t0+300) -- ALL takers, not only our counterparties"
+  },
+  "limits": [
+    "one market, one 5-minute window, G=0 complete UTC days",
+    "the pool is the FULL taker fee of that market; our pro-rata share is strictly smaller and is NOT estimated here",
+    "the rebate also has a $1/day minimum accrual and pays in pUSD, neither of which is modelled"
+  ],
+  "n_pool_tx": 3827,
+  "our_fills": {
+    "available": false,
+    "n_our_fills": 458,
+    "tranche_tx_fields": [],
+    "why": "the reference tranches carry no transaction hash, so a tx-level superset join is not possible from this cache"
+  },
+  "pool": {
+    "distiller_version": "tier1_v4_r12",
+    "era": "b2e8b531586d3befd2fff78f1888f2ec269cb901dd6a9f1856cfaf26bfb5a7d8",
+    "manifest_output_sha256": "574b0ae2d4d5917f98e4d4c876fd07e30135076d419b27febe8fa7fbff670699",
+    "manifest_partial": false,
+    "n_distinct_tx": 3827,
+    "n_trades_in_window": 3837,
+    "pool_taker_fee_cents": 106144.89599999951,
+    "price_range": [
+      0.009999999999999998,
+      0.9900000000000001
+    ],
+    "slug": "btc-updown-5m-1787579400",
+    "tape": "/home/yuqing/ctaNew/data/pm_5min/tier1/trades/day=2026-08-24/coin=btc/distiller=tier1_v4_r12/part-0.parquet",
+    "tape_sha256": "574b0ae2d4d5917f98e4d4c876fd07e30135076d419b27febe8fa7fbff670699",
+    "total_shares": 122249.791991,
+    "window_s": 300,
+    "window_t0": 1787579400
+  },
+  "protocol": "P003_DA_REBATE_CEILING_V1",
+  "role": "REPORTED, NOT ENFORCED (rule 14). This bounds a quantity; it promotes nothing and clears no gate."
+}
