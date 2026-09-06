@@ -44,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 24
+VERSION = 25
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 111
+EXPECTED_CHECKS = 114
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -142,6 +142,10 @@ V23_DECLARATION = ("p003_de_multiday_gate1_design_v23.json",
                    "c9a4e586ce")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
+V24_DECLARATION = ("p003_de_multiday_gate1_design_v24.json",
+                   "e208e83191d8d08057dff77c86ef350ea287b4a66a59e4f90d5f2"
+                   "2b6e5ab04b6")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -150,7 +154,7 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
                     V19_DECLARATION, V20_DECLARATION,
                     V21_DECLARATION, V22_DECLARATION,
-                    V23_DECLARATION)
+                    V23_DECLARATION, V24_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -485,6 +489,49 @@ def _name_version(name: str) -> int | None:
     carry it; the very first artifact carries none."""
     m = re.search(r"_design_v(\d+)(?:__|\.json$)", str(name))
     return int(m.group(1)) if m else None
+
+
+def merge_links_for_the_fork(directory=None) -> list:
+    """THE ORPHAN BRANCH TIPS, AS PAIRS -- MEASURED, never typed.
+
+    REV 81 §5's repair is a version whose links name BOTH branch tips: the
+    head under `supersedes` (the pair the chain rule already requires) and
+    every other unsuperseded tip under `also_supersedes`, each as its own
+    {path, sha256}. The tips are READ from the resolver at emit rather
+    than typed here, because a typed list is a claim about the chain that
+    the chain stops checking (rule 15's own class).
+
+    BOTH resolvers are asked and the UNION is merged. They disagree on
+    this family -- this seat's `design_chain()` globs the BARE
+    `_v<N>.json` names and BE 77's `declaration_chain.resolve_head` globs
+    `_v*` and so also sees the STAMPED versions used before v16 -- and a
+    repair that merged only one resolver's tips would leave the other's
+    unmerged while reporting success."""
+    import declaration_chain as DC
+    d = (Path(directory) if directory else
+         Path(RUNNER.DR.resolve()["data_root"]) / "pm_5min/derived")
+    tips, why = {}, {}
+    mine = RUNNER.design_chain()
+    for v in mine.get("orphan_branches") or []:
+        f = d / f"p003_de_multiday_gate1_design_v{v}.json"
+        if f.is_file():
+            tips[f.name] = f
+            why[f.name] = "de_multiday_gate1_runner.design_chain"
+    shared = DC.resolve_head(d, "p003_de_multiday_gate1_design")
+    for o in shared.get("orphan_branches") or []:
+        f = d / o["version"]
+        if f.is_file():
+            tips.setdefault(f.name, f)
+            why[f.name] = (why.get(f.name, "") + " + " if f.name in why
+                           else "") + "declaration_chain.resolve_head"
+    return [{"path": f"data/pm_5min/derived/{n}",
+             "sha256": hashlib.sha256(tips[n].read_bytes()).hexdigest(),
+             "reported_as_an_orphan_tip_by": why[n],
+             "what_this_link_is": "a MERGE link: this version supersedes "
+                                  "the branch tip too, so the tip is "
+                                  "REACHABLE and stops being an orphan. "
+                                  "No design content is taken from it"}
+            for n in sorted(tips)]
 
 
 def assert_output_name_matches_version(output) -> dict:
@@ -1240,6 +1287,19 @@ def declaration() -> dict:
         "theta": THETA,
         "theta_pins": THETA_PINS,
         "theta_is_not_refitted_on_any_of_the_five_days": True,
+        # REV 81 §5's REPAIR, and it is a LINK field, not design content:
+        # this version supersedes the branch tips too, so `orphan_branches`
+        # empties and every historical pin still resolves. MEASURED at the
+        # emit from BOTH resolvers; an empty list means the resolvers
+        # reported no orphan tip, which is a fact and not a default.
+        "also_supersedes": merge_links_for_the_fork(),
+        "also_supersedes_is": (
+            "the MERGE half of REV 81 §5's repair. `supersedes` is the "
+            "chain head's pair; each entry here is another unsuperseded "
+            "TIP, by {path, sha256}. NO design content comes from any of "
+            "them -- this declaration's every other key is byte-identical "
+            "to the version it supersedes, and the census in this artifact "
+            "is the proof"),
         "supersedes": {
             # THE LAST ELEMENT OF THE CHAIN, never a typed constant. v7 named
             # v2 here and a reader resolving this field walked past v3..v6.
@@ -3602,6 +3662,64 @@ def selftest(*, quiet: bool = False) -> int:
        "this happened to DE, and that the field built to catch the class "
        "would have certified the wrong bytes")
 
+    # ===== DE 110 (REV 81 §5): THE MERGE VERSION'S GATE ================
+    import declaration_chain as _DC
+    import be_race_reader as _BE
+    _dd = Path(RUNNER.DR.resolve()["data_root"]) / "pm_5min/derived"
+    _hd = _DC.resolve_head(_dd, "p003_de_multiday_gate1_design")
+    # TWO WORLDS, AND THE CELL SAYS WHICH IT IS IN. Before the merge
+    # version lands, the gate is driven on the payload this module WOULD
+    # write. After it lands, the head IS this module's version and the
+    # payload cannot be rebuilt against it -- so the gate is re-driven on
+    # the two artifacts THEMSELVES, which is the stronger check: the
+    # landed merge's own census, recomputed from the files.
+    if _hd["version"] == VERSION:
+        _prev = _dd / Path(_hd["doc"]["supersedes"]["path"]).name
+        _base, _pl = json.loads(_prev.read_text()), _hd["doc"]
+        _world = (f"the LANDED merge, re-verified from the files: "
+                  f"{_prev.name} -> {_hd['name']}")
+    else:
+        _base = _hd["doc"]
+        _pl = merge_payload(_hd, _DC.next_version_path(
+            _dd, "p003_de_multiday_gate1_design", _hd),
+            run_the_battery=False)
+        _world = "the payload this module WOULD write against the head"
+    _hd = {**_hd, "doc": _base}
+    _cen = _BE.correction_census(_base, _pl,
+                                 added=MERGE_DECLARED_CHANGES,
+                                 also_permitted=("correction_census",))
+    ok(_cen["difference_is_exactly_the_additions"] is True
+       and _cen["missing_declared_additions"] == [],
+       f"POSITIVE CONTROL FOR THE MERGE GATE ({_world}): it "
+       f"differs from the version it supersedes in EXACTLY "
+       f"{sorted(_cen['keys_changed_vs_v1'])} -- the declared set -- so "
+       f"every DESIGN key is byte-identical and the merge changes no "
+       f"estimand, no bar, no scope. The census is BE's, imported")
+    _bad = json.loads(json.dumps(_pl))
+    _bad["arms"] = list(_bad["arms"]) + ["A_THIRD_ARM"]
+    try:
+        _BE.correction_census(_base, _bad,
+                              added=MERGE_DECLARED_CHANGES,
+                              also_permitted=("correction_census",))
+        _refused = False
+    except _BE.ReadRefused as _e:
+        _refused = "arms" in str(_e)
+    ok(_refused is True,
+       "KNOWN-BAD FOR THE MERGE GATE: a payload that also changes a "
+       "DESIGN key (`arms`) is REFUSED BY NAME before anything is "
+       "written -- so 'no design change of any kind' is a predicate over "
+       "the two documents, not a sentence in the commit message")
+    _ml = merge_links_for_the_fork()
+    ok(all(isinstance(e.get("sha256"), str) and len(e["sha256"]) == 64
+           and e["path"].startswith("data/pm_5min/derived/")
+           and e.get("reported_as_an_orphan_tip_by")
+           for e in _ml),
+       f"and the merge links are MEASURED at the emit, not typed: "
+       f"{len(_ml)} tip(s) -- "
+       f"{[Path(e['path']).name for e in _ml]} -- each with the resolver "
+       f"that reported it. A typed list is a claim the chain stops "
+       f"checking")
+
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     LAST_BATTERY.update({
@@ -3624,16 +3742,147 @@ def selftest(*, quiet: bool = False) -> int:
     return 0
 
 
+#: WHAT MAY DIFFER between a MERGE version and the version it supersedes.
+#: Everything else must be byte-identical, and BE's `correction_census`
+#: is what proves it -- the same predicate the receipt corrections use.
+#: Four of these are the emission's own provenance (a version whose
+#: `as_of` or `source_identity` were copied forward would be claiming
+#: another act's authorship) and two are the version identity itself.
+MERGE_DECLARED_CHANGES = ("supersedes", "also_supersedes",
+                          "also_supersedes_is", "protocol",
+                          "output_name_check", "as_of", "source_identity",
+                          "battery")
+
+
+def merge_payload(head: dict, dst, *, run_the_battery: bool) -> dict:
+    """THE MERGE VERSION'S BYTES -- ONE builder, used by the emit AND by
+    the battery cell that gates it. Two constructions of one payload would
+    let the gate pass on a document the emit never writes."""
+    payload = declaration()
+    payload["as_of"] = datetime.datetime.now(
+        datetime.timezone.utc).isoformat()
+    me = Path(__file__).resolve()
+    payload["source_identity"] = {
+        "producing_code": me.name,
+        "producing_code_sha256": hashlib.sha256(me.read_bytes()).hexdigest(),
+        **carrying_commit_block(me)}
+    if run_the_battery:
+        LAST_BATTERY.clear()
+        selftest(quiet=True)
+        payload["battery"] = dict(LAST_BATTERY)
+    else:
+        # THE GATE CELL RUNS INSIDE THE BATTERY, so it cannot run the
+        # battery again. `battery` is a DECLARED change either way, so the
+        # placeholder cannot hide a design difference -- and it is named
+        # rather than copied from the head, which would make the emitted
+        # version claim another run's counts.
+        payload["battery"] = {"outcome": "NOT_RUN_IN_THE_GATE_CELL"}
+    payload["data_root"] = DR.require_canonical(
+        "the multi-day design declaration")
+    payload["worktree_data_shell_trap"]["root_read_this_emission"] = \
+        payload["R7_the_day_set"]["ledger_root_read"]
+    payload["withdrawn_phrase_audit"] = _withdrawn_phrase_audit(payload)
+    payload["output_name_check"] = assert_output_name_matches_version(dst)
+    payload["supersedes"] = {**payload["supersedes"],
+                             "path": f"data/pm_5min/derived/{head['name']}",
+                             "sha256": head["sha256"]}
+    return payload
+
+
+def emit_merge_version() -> dict:
+    """WRITE THE NEXT DESIGN VERSION AS A MERGE, through BE 77's CAS.
+
+    The chain resolution and the write are `declaration_chain`'s -- the
+    ONE implementation, imported, never re-implemented (the exit-map
+    collision is what that module exists for). What this function adds is
+    the GATE: the payload must differ from the head in exactly
+    `MERGE_DECLARED_CHANGES` and in nothing else, proven by BE's
+    `correction_census`, BEFORE the write."""
+    import declaration_chain as DC
+    import be_race_reader as BE
+    d = Path(RUNNER.DR.resolve()["data_root"]) / "pm_5min/derived"
+    fam = "p003_de_multiday_gate1_design"
+    head = DC.resolve_head(d, fam)
+    if head["version"] + 1 != VERSION:
+        raise DesignRefused(
+            f"REFUSED: the chain head is v{head['version']} and this "
+            f"module is V{VERSION}. A merge version is the head's "
+            f"successor; anything else is a second file claiming a "
+            f"version somebody else holds (DE 90).")
+    dst = DC.next_version_path(d, fam, head)
+    payload = merge_payload(head, dst, run_the_battery=True)
+    if not payload.get("also_supersedes"):
+        raise DesignRefused(
+            "REFUSED: this is a MERGE version and the resolvers reported "
+            "no orphan tip to merge. Landing it would add a version that "
+            "repairs nothing -- if the fork is already closed, say so "
+            "rather than writing a file.")
+    census = BE.correction_census(head["doc"], payload,
+                                  added=MERGE_DECLARED_CHANGES,
+                                  also_permitted=("correction_census",))
+    payload["correction_census"] = {
+        "census_by": "be_race_reader.correction_census -- IMPORTED, never "
+                     "re-implemented (REV 79 §3(1))",
+        "declared_changes": list(MERGE_DECLARED_CHANGES),
+        "census": census,
+        "what_it_proves": (
+            "the difference between this version and the one it "
+            "supersedes is EXACTLY the declared set -- so every DESIGN "
+            "key is byte-identical and this version changes no estimand, "
+            "no bar, no scope"),
+        "what_it_does_NOT_prove": (
+            "BE's FROZEN_BLOCKS are the race read's (`day_signs`, "
+            "`permutation_floors`, `byte_identity`) and a design "
+            "declaration carries none of them, so that half of the census "
+            "is VACUOUS here and is not evidence. The operative half is "
+            "the changed-key set, which is a predicate over both "
+            "documents"),
+        "n_keys_byte_identical": len(
+            [k for k in head["doc"]
+             if k not in MERGE_DECLARED_CHANGES
+             and json.dumps(head["doc"][k], sort_keys=True)
+             == json.dumps(payload.get(k), sort_keys=True)]),
+    }
+    written = DC.write_next_version(d, fam, payload, head["pair"])
+    after_shared = DC.resolve_head(d, fam)
+    after_mine = RUNNER.design_chain()
+    return {"written": written, "head_before": {"name": head["name"],
+                                                "sha256": head["sha256"]},
+            "census": census,
+            "orphans_before": {
+                "declaration_chain_resolve_head":
+                    [o["version"] for o in head["orphan_branches"]],
+                "runner_design_chain": _ORPHANS_BEFORE},
+            "orphans_after": {
+                "declaration_chain_resolve_head":
+                    [o["version"] for o in after_shared["orphan_branches"]],
+                "runner_design_chain": after_mine["orphan_branches"]},
+            "head_after": {
+                "declaration_chain_resolve_head": after_shared["name"],
+                "runner_design_chain": after_mine["head_name"]}}
+
+
+_ORPHANS_BEFORE: list = []
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--emit", action="store_true")
+    ap.add_argument("--emit-merge", action="store_true", dest="merge",
+                    help="write the next version as a MERGE of the fork's "
+                         "branch tips, through declaration_chain's CAS")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.merge:
+        global _ORPHANS_BEFORE
+        _ORPHANS_BEFORE = RUNNER.design_chain()["orphan_branches"]
+        print(json.dumps(emit_merge_version(), indent=2, sort_keys=True))
+        return 0
     if not a.emit or a.output is None:
-        ap.error("choose --selftest or --emit --output PATH")
+        ap.error("choose --selftest, --emit --output PATH, or --emit-merge")
     me = Path(__file__).resolve()
     payload = declaration()
     payload["as_of"] = datetime.datetime.now(

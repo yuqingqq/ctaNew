@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 320
+EXPECTED_CHECKS = 330
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -135,6 +135,74 @@ SCOPE_BEFORE_THE_CORRECTION = 22
 #: sealed, and the moment after which every receipt carries a design pair.
 SCOPE_CORRECTED_AT_DESIGN_VERSION = 23
 SCOPE_CORRECTION_UTC = "2026-09-06T14:45:00Z"
+
+
+def design_chain_orphans(directory=None, family: str | None = None,
+                         *, also_this_seats_resolver: bool = True) -> dict:
+    """ORPHAN BRANCHES AT EMIT -- the field a receipt CONSUMES (REV 81 §5).
+
+    REV 81 ruled the fork a RESOLVABILITY defect and the resolver right to
+    name the orphan and still resolve a head: refusing would take every
+    reader down for a defect in an old branch. But a field nobody reads is
+    a condition that sits unnoticed, so every receipt that carries a design
+    pin carries this.
+
+    TWO RESOLVERS ARE ASKED, and their answers are COMPARED. BE 77's
+    `declaration_chain.resolve_head` is the shared implementation; this
+    module's own `design_chain()` predates it and globs only the BARE
+    `_v<N>.json` names, so it cannot see the STAMPED versions this family
+    used before v16. That difference is a MEASUREMENT here, not a comment:
+    the two disagreed on 2026-09-06 (this seat's said [16]; the shared one
+    said five tips, because v3..v6 all supersede a stamped v2 and only v7
+    was continued). Reporting one number would have hidden four of them."""
+    import declaration_chain as DC
+    directory = (Path(directory) if directory is not None else
+                 Path(DR.resolve()["data_root"]) / "pm_5min/derived")
+    family = family or "p003_de_multiday_gate1_design"
+    out = {"family": family, "dir": str(directory),
+           "rule": "REV 81 §5 -- a fork is REPORTED, never resolved by "
+                   "picking; while this is non-empty every receipt with a "
+                   "design pin carries it"}
+    try:
+        shared = DC.resolve_head(directory, family)
+        out["shared_resolver"] = {
+            "implementation": "declaration_chain.resolve_head (BE 77) -- "
+                              "the one chain implementation",
+            "head": shared["name"], "head_sha256": shared["sha256"],
+            "n_versions": shared["n_versions"],
+            "orphan_branches": [o["version"] for o in
+                                shared["orphan_branches"]],
+            "n_orphan_branches": len(shared["orphan_branches"]),
+            "forks_two_versions_superseding_one":
+                shared["forks_two_versions_superseding_one"]}
+    except Exception as exc:                       # a STATUS, never a skip
+        out["shared_resolver"] = {
+            "status": "UNRESOLVED", "why": f"{type(exc).__name__}: {exc}",
+            "and_this_is_not_a_pass": "rule 11 -- a resolver that could "
+                                      "not answer has not answered 'no "
+                                      "orphans'"}
+    if also_this_seats_resolver:
+        try:
+            mine = design_chain()
+            out["this_seats_resolver"] = {
+                "implementation": "de_multiday_gate1_runner.design_chain "
+                                  "-- BARE `_v<N>.json` names only",
+                "head": mine.get("head_name"),
+                "orphan_branches": mine.get("orphan_branches"),
+                "n_orphan_branches": len(mine.get("orphan_branches") or [])}
+        except Exception as exc:
+            out["this_seats_resolver"] = {
+                "status": "UNRESOLVED",
+                "why": f"{type(exc).__name__}: {exc}"}
+    a = out.get("shared_resolver", {}).get("n_orphan_branches")
+    b = out.get("this_seats_resolver", {}).get("n_orphan_branches")
+    out["the_two_resolvers_agree_on_the_count"] = (
+        None if a is None or b is None else a == b)
+    out["n_orphan_branches"] = a if a is not None else b
+    out["chain_has_an_orphan_branch"] = (
+        None if out["n_orphan_branches"] is None
+        else out["n_orphan_branches"] > 0)
+    return out
 
 
 def design_version_of_receipt(rec: dict) -> dict:
@@ -3536,6 +3604,77 @@ def _read_kv(p: Path) -> dict:
     return out
 
 
+#: EVERY STATUS `scope_memory_observation` can report, in ONE place --
+#: DE 110 renamed three of them (the ruled leaf is a `.service`, so
+#: "SCOPE" was the wrong word) and a battery cell was carrying the old
+#: literals. A status set typed in two places drifts silently.
+UNIT_MEMORY_STATUSES = ("MEASURED", "AMBIENT_UNIT_NOT_THE_RUNS_OWN",
+                        "NOT_IN_A_UNIT", "UNIT_LEAF_NAMED_BUT_UNREADABLE")
+
+
+def leaf_of_cgroup(cg) -> dict:
+    """THE UNIT LEAF OF A CGROUP PATH, as a PURE function of the string.
+
+    Pulled out so the classification can be DRIVEN on a `.service` leaf, a
+    `.scope` leaf and a non-unit path without patching `/proc/self/cgroup`
+    -- the fixture supplies the INPUT, never the peak the code must read."""
+    leaf = (cg or "").rstrip("/").rsplit("/", 1)[-1]
+    return {"cgroup": cg, "leaf": leaf or None,
+            "is_a_unit_leaf": leaf.endswith((".service", ".scope")),
+            "is_the_ruled_launch_form": leaf.endswith(".service"),
+            "why": "rule 20's form is a transient SERVICE (R-628); a "
+                   "`.scope` leaf is a run in the CALLER's process group "
+                   "and is read but flagged, and anything else is not a "
+                   "per-run cgroup at all"}
+
+
+def peak_of_record_rule(form: dict | None = None) -> dict:
+    """WHICH NUMBER THIS RECEIPT'S PEAK FIELD MAY HOLD -- FROM THE CHAIN.
+
+    REV 81 §3: BE's producers reach this rule through `be_heavy_run.sh`;
+    this one does not launch through it, so for this producer the rule
+    existed only as PROSE. It is resolved here from the `heavy_run_form`
+    chain head (the same head this module already resolves for the lock
+    path and the conflict code), and the head's pair is named in the
+    receipt so a reader can check WHICH declaration was in force.
+
+    A head that carries no `memory_peak_reading` is a STATUS, never a
+    default: a rule that cannot be resolved has not been satisfied."""
+    form = heavy_run_form() if form is None else form
+    ch = form.get("_chain") or {}
+    block = form.get("memory_peak_reading")
+    out = {"resolved_from": {"path": ch.get("head_path"),
+                             "sha256": ch.get("head_sha256"),
+                             "version": ch.get("head_version")},
+           "resolved_as": "the chain head, not a filename literal"}
+    if not isinstance(block, dict) or not block.get("the_runs_peak"):
+        out["status"] = "RULE_NOT_IN_THE_CHAIN_HEAD"
+        out["why"] = (
+            "the resolved head declares no `memory_peak_reading`. A "
+            "producer that cannot resolve the rule records that it could "
+            "not; it does not fall back to a number of its own (rule 11, "
+            "and R-649: a check that depends on a declaration FAILS when "
+            "it is absent -- it does not skip)")
+        return out
+    out["status"] = "RESOLVED"
+    out["the_runs_peak"] = block["the_runs_peak"]
+    out["the_post_exit_property"] = block.get("the_post_exit_property")
+    out["this_receipts_peak_of_record_field"] = (
+        "resources.scope_memory.memory_peak_bytes -- the unit leaf's "
+        "`memory.peak`, read IN-PROCESS at the emit, while the payload "
+        "lives")
+    out["what_this_receipt_does_NOT_carry"] = (
+        "systemd's post-exit `MemoryPeak` property: a process inside the "
+        "unit cannot read it after its own exit, so it is the launcher's "
+        "or the coordinator's copy and is recorded verbatim there")
+    out["and_the_in_process_rss_is_a_different_quantity"] = (
+        "`memory_plan.peak_rss_mb` / `resources.peak_rss_mb` are "
+        "ru_maxrss, the PROCESS's RSS high-water. They are kept -- the "
+        "stage budget is built on them -- and they are NOT the peak of "
+        "record, which is the cgroup leaf's")
+    return out
+
+
 def scope_memory_observation() -> dict:
     """THE SCOPE'S OWN MEMORY, WITH ANON AND FILE READ APART.
 
@@ -3554,14 +3693,24 @@ def scope_memory_observation() -> dict:
     A run OUTSIDE a scope records `NOT_IN_A_SCOPE` -- never zeros. Zeros
     would read as 'measured, and nothing happened', which is the silent-
     absence failure this programme has hit repeatedly (rule 11)."""
+    # THE LEAF IS THE UNIT'S, AND THE RULED UNIT IS A SERVICE (R-628).
+    # This test read `.scope` ONLY -- written before rule 20 moved the form
+    # off `--scope` -- so on every run under the ruled form it returned
+    # NOT_IN_A_SCOPE with a null peak while `cgroup` NAMED the leaf right
+    # beside it. It never lied (a status, never zeros) and it never read
+    # the number REV 80/81 made the peak of record either: DE's three day
+    # receipts carry `memory_peak_bytes: null` under a leaf that existed.
     cg = cgroup_path()
-    if not cg or not cg.rstrip("/").endswith(".scope"):
-        return {"status": "NOT_IN_A_SCOPE",
-                "cgroup": cg, "in_research_slice": False,
-                "why": "no transient scope in /proc/self/cgroup, so there "
-                       "is no per-run cgroup to read. Reported as a STATUS "
-                       "rather than as zeros: a zero here would read as a "
-                       "measurement (rule 11)",
+    _lk = leaf_of_cgroup(cg)
+    leaf = _lk["leaf"] or ""
+    if not cg or not _lk["is_a_unit_leaf"]:
+        return {"status": "NOT_IN_A_UNIT",
+                "cgroup": cg, "leaf": leaf or None,
+                "in_research_slice": False,
+                "why": "no transient unit leaf in /proc/self/cgroup, so "
+                       "there is no per-run cgroup to read. Reported as a "
+                       "STATUS rather than as zeros: a zero here would "
+                       "read as a measurement (rule 11)",
                 "anon_bytes": None, "file_bytes": None,
                 "memory_peak_bytes": None, "events": None}
     in_slice = f"/{RESEARCH_SLICE}/" in cg
@@ -3574,7 +3723,7 @@ def scope_memory_observation() -> dict:
     except (OSError, ValueError):
         peak = None
     if not stat and peak is None:
-        return {"status": "SCOPE_NAMED_BUT_UNREADABLE",
+        return {"status": "UNIT_LEAF_NAMED_BUT_UNREADABLE",
                 "cgroup": cg, "path": str(base),
                 "in_research_slice": in_slice,
                 "why": "the cgroup is named in /proc/self/cgroup and its "
@@ -3590,8 +3739,30 @@ def scope_memory_observation() -> dict:
         # MEASURED. Attributing an ambient 16.6 GiB peak to an 8 MB run
         # would be a measurement of the wrong object, which is worse than
         # no measurement.
-        "status": "MEASURED" if in_slice else "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
+        "status": "MEASURED" if in_slice else "AMBIENT_UNIT_NOT_THE_RUNS_OWN",
         "in_research_slice": in_slice,
+        "leaf": leaf,
+        "leaf_is_the_ruled_launch_form": _lk["is_the_ruled_launch_form"],
+        # REV 80 §1.1 / form chain v4: THIS is the run's peak, and it is
+        # read from inside while the payload lives. systemd's post-exit
+        # `MemoryPeak` property is a different number and is not read here
+        # -- a process inside the unit cannot take it after its own exit.
+        # COMPUTED, never asserted (rule 10). An AMBIENT leaf's peak is a
+        # real number about the WRONG OBJECT -- the ambient shell scope,
+        # not this run -- so it is not the peak of record and says so.
+        "this_is_the_peak_of_record": in_slice,
+        "why_not_the_peak_of_record": (
+            None if in_slice else
+            "this leaf is the ambient one the shell was already in, not a "
+            "unit launched for this run; its peak measures the wrong "
+            "object"),
+        "read_while_the_payload_lives": True,
+        "the_post_exit_property": {
+            "status": "NOT_READ_FROM_INSIDE_THE_UNIT",
+            "why": "`systemctl show -p MemoryPeak` after the payload exits "
+                   "is the launcher's or the coordinator's read, recorded "
+                   "VERBATIM beside this one and never as a reading of the "
+                   "run's peak (form chain v4, memory_peak_reading)"},
         "expected_slice": RESEARCH_SLICE,
         "cgroup": cg, "path": str(base),
         "anon_bytes": anon, "file_bytes": filed,
@@ -4284,10 +4455,58 @@ def design_chain(root: Path | None = None) -> dict:
         link = next((l for l in links if l["version"] == cur), None)
         cur = nxt if (nxt is not None and link and link.get("agrees")) \
             else None
+    # ---- `also_supersedes`: THE MERGE LINK (REV 81 §5) -----------------
+    # The primary walk above is ONE path and a fork has two, so a version
+    # off the path is an orphan however sound it is. REV 81's repair is a
+    # version whose links name BOTH branch tips: the head as the pair, the
+    # other tip(s) under `also_supersedes`, each as its own {path, sha256}.
+    # REACHABILITY, not the single walk, is what makes an orphan an
+    # orphan -- so the traversal follows the merge links too, and each is
+    # VERIFIED by recomputation exactly as the primary link is. An
+    # unverified merge link does not merge: it is reported and the tip
+    # stays an orphan, because a link nobody can check is not a link.
+    merge_links = []
+    frontier, reach = list(seen), set(seen)
+    while frontier:
+        v = frontier.pop()
+        f, doc = docs[v]
+        for entry in (doc.get("also_supersedes") or []):
+            if not isinstance(entry, dict):
+                continue
+            nm, sh = Path(str(entry.get("path") or "")).name, \
+                entry.get("sha256")
+            # THE LINK IS VERIFIED AT THE FILE, not at this resolver's own
+            # universe. A merge link may name a STAMPED version -- this
+            # function enumerates only the BARE `_v<N>.json` names, and a
+            # target outside that set is still a real file whose digest
+            # recomputes. Judging such a link `agrees: False` would report
+            # a sound link as broken; it is verified, and separately
+            # marked as not one of the versions this walk can reach.
+            tf = d / nm
+            got = (hashlib.sha256(tf.read_bytes()).hexdigest()
+                   if tf.is_file() else None)
+            agrees = bool(sh) and got == sh
+            in_universe = by_name.get(nm)
+            merge_links.append({
+                "version": v, "also_supersedes": nm,
+                "declared_sha256": sh, "recomputed_sha256": got,
+                "agrees": agrees,
+                "target_present": tf.is_file(),
+                "target_is_a_bare_versioned_design": in_universe is not None,
+                "why_if_not": (None if in_universe is not None else
+                               "a STAMPED version; this resolver "
+                               "enumerates the bare `_v<N>.json` names "
+                               "only, so the link is VERIFIED here and "
+                               "the target is outside this walk")})
+            if agrees and in_universe is not None and in_universe not in reach:
+                reach.add(in_universe)
+                frontier.append(in_universe)
+    seen = reach
     orphans = sorted(set(docs) - seen)
     hf, _ = docs[newest]
     out = {"resolved": True, "versions_present": sorted(docs),
-           "links": links, "unreadable": bad,
+           "links": links, "merge_links": merge_links, "unreadable": bad,
+           "reachable_from_the_newest": sorted(seen),
            "heads_by_nothing_supersedes_them": sorted(
                v for v, (f, _) in docs.items() if f.name not in superseded),
            "chain_from_the_newest": walk,
@@ -6706,19 +6925,38 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                      "design artifacts under data/)")
     else:
         _dch101 = design_chain()
+        # THE FORK IS A FACT ABOUT THE FAMILY AND THE ORPHAN LIST IS A
+        # FACT ABOUT THE LINKS -- and only the second moves when a merge
+        # version lands. This cell asserted `orphan_branches == [16]`, a
+        # literal about a world that DE 110 changed on purpose; it now
+        # asserts the PROPERTY: v16 and v17 still both supersede v15 (the
+        # fork is still visible, nothing was edited away) AND every
+        # version is reachable, each merge link recomputed.
+        _v15n = next((l["supersedes"] for l in _dch101["links"]
+                      if l["version"] == 17), None)
+        _both = sorted(l["version"] for l in _dch101["links"]
+                       if l.get("supersedes") == _v15n and l.get("agrees"))
         ok(_dch101.get("resolved") is True
            and all(l.get("agrees") for l in _dch101["links"])
            and _dch101["head_version"] == max(_dch101["versions_present"])
-           and _dch101["orphan_branches"] == [16],
+           and _both == [16, 17]
+           and all(m.get("agrees") for m in _dch101["merge_links"])
+           and set(_dch101["reachable_from_the_newest"])
+           == set(_dch101["versions_present"])
+           and _dch101["orphan_branches"] == [],
            f"and the DESIGN is resolved to its chain head too "
            f"(v{_dch101.get('head_version')} of "
-           f"{len(_dch101.get('versions_present') or [])} present, every pair "
-           f"recomputed), and the FORK is REPORTED rather than resolved: "
-           f"orphan branches {_dch101['orphan_branches']} -- v16 and v17 both "
-           f"supersede v15, which is DE 94's two-artifacts-one-version defect "
-           f"showing up as a chain fork. params v14 names v21 while v22 is "
-           f"the head, and requiring the named path to BE the head would "
-           f"force a params bump per design version for a pointer alone")
+           f"{len(_dch101.get('versions_present') or [])} present, every "
+           f"pair recomputed). THE FORK IS STILL THERE AND IS STILL "
+           f"REPORTED -- v{_both} both supersede {_v15n}, DE 94's "
+           f"two-artifacts-one-version defect showing up as a chain fork, "
+           f"and nothing was edited to hide it -- but it is no longer an "
+           f"ORPHAN: {len(_dch101['merge_links'])} verified merge link(s) "
+           f"make every version reachable, so orphan branches "
+           f"{_dch101['orphan_branches']} (REV 81 §5's repair, DE 110). "
+           f"params v14 names v21 while the head is later, and requiring "
+           f"the named path to BE the head would force a params bump per "
+           f"design version for a pointer alone")
 
     # ---- R-653 (i): THE CHAIN HEAD, never a filename literal ----------
     # This runner PINNED v1 at 14:00Z while v2 existed, then pinned v2 by
@@ -9065,15 +9303,18 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
 
 
         # ---- DE 82 (1): the scope's anon and file, read APART ------------
+        # THE STATUS NAMES MOVED AT DE 110: the leaf the ruled form
+        # produces is a `.service`, so "SCOPE" was the wrong word in every
+        # one of them. The PROPERTY is unchanged and is what is checked.
         _sm = scope_memory_observation()
-        ok(_sm["status"] in ("MEASURED", "AMBIENT_SCOPE_NOT_THE_RUNS_OWN",
-                             "NOT_IN_A_SCOPE", "SCOPE_NAMED_BUT_UNREADABLE")
-           and (_sm["status"] != "NOT_IN_A_SCOPE"
+        ok(_sm["status"] in UNIT_MEMORY_STATUSES
+           and (_sm["status"] != "NOT_IN_A_UNIT"
                 or _sm["anon_bytes"] is None),
-           f"DE 82 (1): the scope observation reports a STATUS "
-           f"({_sm['status']}), and when there is no scope to read it "
-           f"reports None -- NEVER zeros. A zero would read as 'measured, "
-           f"and nothing happened', which is rule 11's silent absence")
+           f"DE 82 (1): the unit-leaf observation reports a STATUS "
+           f"({_sm['status']}, one of {list(UNIT_MEMORY_STATUSES)}), and "
+           f"when there is no unit leaf to read it reports None -- NEVER "
+           f"zeros. A zero would read as 'measured, and nothing "
+           f"happened', which is rule 11's silent absence")
         ok(scope_memory_observation.__doc__
            and "5.17" in scope_memory_observation.__doc__
            and "memory.events" in scope_memory_observation.__doc__,
@@ -9083,19 +9324,19 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "-- rule 20's cap counts the cache, so one number cannot tell "
            "'this run needs 7.8 GiB' from 'the kernel had no reason to "
            "reclaim'")
-        _fake_none = {"status": "NOT_IN_A_SCOPE", "anon_bytes": None,
+        _fake_none = {"status": "NOT_IN_A_UNIT", "anon_bytes": None,
                       "file_bytes": None, "memory_peak_bytes": None,
                       "events": None}
         ok(all(_fake_none[k] is None for k in
                ("anon_bytes", "file_bytes", "memory_peak_bytes", "events"))
-           and _fake_none["status"] == "NOT_IN_A_SCOPE",
-           "KNOWN-BAD SHAPE, NAMED: the scope-less record is Nones under a "
+           and _fake_none["status"] == "NOT_IN_A_UNIT",
+           "KNOWN-BAD SHAPE, NAMED: the leafless record is Nones under a "
            "status, and a receipt carrying zeros there would be claiming a "
            "measurement it never made")
         ok(_sm.get("in_research_slice") is not None
            and (_sm["status"] == "MEASURED") == bool(
                _sm.get("in_research_slice")),
-           f"AND AN AMBIENT SCOPE IS NOT THE RUN'S: MEASURED holds only "
+           f"AND AN AMBIENT UNIT IS NOT THE RUN'S: MEASURED holds only "
            f"inside {RESEARCH_SLICE}. Measured while writing this: the "
            f"login shell's own scope carries a 15.5 GiB peak against an "
            f"8 MB run, and attributing that to the run would be a "
@@ -9388,6 +9629,159 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     finally:
         _tmp_in_repo.unlink(missing_ok=True)
 
+    # PLACED AT THE END OF THE BATTERY DELIBERATELY. Put earlier, these
+    # cells loaded the 23 design declarations and raised this process's
+    # ru_maxrss high-water -- and the RSS-budget known-bad a few checks
+    # below measures GROWTH from that high-water, so a 0.001 MB budget
+    # stopped refusing and a known-bad that had fired for rounds ADMITTED.
+    # A check whose ability to fail depends on what ran before it is
+    # rule 16's class; the fix is order, and this is the note that says so.
+    # ===== DE 110 (REV 81 §3): THE PEAK OF RECORD COMES FROM THE CHAIN ==
+    _por = peak_of_record_rule()
+    ok(_por["status"] == "RESOLVED"
+       and _por["resolved_from"]["path"] == heavy_run_form_chain()[
+           "head_path"]
+       and _por["resolved_from"]["sha256"] == heavy_run_form_chain()[
+           "head_sha256"]
+       and "memory.peak" in _por["the_runs_peak"],
+       f"REV 81 §3: which number this receipt's peak field may hold is "
+       f"RESOLVED from the form chain head "
+       f"({Path(_por['resolved_from']['path']).name} at "
+       f"{str(_por['resolved_from']['sha256'])[:12]}…), not from prose -- "
+       f"BE's producers reach the rule through their launcher and this "
+       f"producer does not launch through one")
+    _noform = dict(heavy_run_form())
+    _noform.pop("memory_peak_reading", None)
+    _fal = peak_of_record_rule(_noform)
+    ok(_fal["status"] == "RULE_NOT_IN_THE_CHAIN_HEAD"
+       and "does not fall back" in _fal["why"],
+       "KNOWN-BAD: a head that declares no `memory_peak_reading` yields "
+       "RULE_NOT_IN_THE_CHAIN_HEAD -- a producer that cannot resolve the "
+       "rule records that it could not; it does not invent a number "
+       "(R-649: the check FAILS when the declaration is absent, it does "
+       "not skip)")
+    _svc = leaf_of_cgroup("/user.slice/user-1001.slice/user@1001.service/"
+                          "research.slice/de104smoke.service")
+    _scp = leaf_of_cgroup("/user.slice/user-1001.slice/run-u32934.scope")
+    _non = leaf_of_cgroup("/user.slice/user-1001.slice")
+    ok(_svc["is_a_unit_leaf"] and _svc["is_the_ruled_launch_form"]
+       and _scp["is_a_unit_leaf"] and not _scp["is_the_ruled_launch_form"]
+       and not _non["is_a_unit_leaf"],
+       f"AND THE LEAF CLASSIFIER ADMITS THE RULED FORM: `.service` is a "
+       f"unit leaf AND the ruled form; `.scope` is a unit leaf and NOT the "
+       f"ruled form; a slice path is neither. The old test read `.scope` "
+       f"ONLY -- written before R-628 moved the form off `--scope` -- so "
+       f"under the ruled form it returned NOT_IN_A_SCOPE with a null peak "
+       f"while `cgroup` named the leaf beside it: DE's three sealed day "
+       f"receipts carry `memory_peak_bytes: null` under a leaf that "
+       f"existed. That is the number REV 80 made the peak of record")
+    _obs = scope_memory_observation()
+    ok(_obs["status"] in UNIT_MEMORY_STATUSES
+       and (_obs.get("this_is_the_peak_of_record") is True)
+       == (_obs["status"] == "MEASURED"),
+       f"and `this_is_the_peak_of_record` is COMPUTED from the status "
+       f"({_obs['status']}), never asserted: an AMBIENT leaf's peak is a "
+       f"real number about the WRONG OBJECT and must not be quoted as the "
+       f"run's (rule 10)")
+
+    # ===== DE 110 (REV 81 §5): THE ORPHAN BRANCH IS CONSUMED =============
+    _od = Path(_tfr.mkdtemp(prefix="de110fork_"))
+    def _decl(name, sup=None):
+        q = _od / name
+        q.write_text(json.dumps(
+            {"what": "fixture", "supersedes": sup} if sup else
+            {"what": "fixture"}, indent=1, sort_keys=True) + "\n")
+        return {"path": str(q),
+                "sha256": hashlib.sha256(q.read_bytes()).hexdigest()}
+    _f1 = _decl("fam_v1.json")
+    _decl("fam_v2.json", _f1)          # a straight chain first
+    _clean = design_chain_orphans(_od, "fam", also_this_seats_resolver=False)
+    ok(_clean["shared_resolver"]["orphan_branches"] == []
+       and _clean["chain_has_an_orphan_branch"] is False,
+       "POSITIVE CONTROL for the orphan consumer: an UNFORKED fixture "
+       "family reports NO orphan branch -- the field admits a clean chain "
+       "and is not a check that only ever fires")
+    _decl("fam_v3.json", _f1)          # a SECOND version superseding v1
+    _fork = design_chain_orphans(_od, "fam", also_this_seats_resolver=False)
+    ok(_fork["shared_resolver"]["orphan_branches"] == ["fam_v2.json"]
+       and _fork["chain_has_an_orphan_branch"] is True
+       and _fork["shared_resolver"][
+           "forks_two_versions_superseding_one"].get("fam_v1.json"),
+       f"KNOWN-BAD: a FORKED fixture family -- v2 and v3 both superseding "
+       f"v1 -- reports the orphan by name "
+       f"({_fork['shared_resolver']['orphan_branches']}) and names the "
+       f"fork's base. Driven on a fixture family in a temp dir, so the "
+       f"control does not depend on the ledger's own fork surviving")
+    # ---- the MERGE LINK, driven on a fixture design family -----------
+    _mr = Path(_tfr.mkdtemp(prefix="de110merge_"))
+    _md = _mr / "pm_5min/derived"
+    _md.mkdir(parents=True)
+    def _dw(v, sup=None, also=None):
+        q = _md / f"p003_de_multiday_gate1_design_v{v}.json"
+        body = {"fixture": True}
+        if sup:
+            body["supersedes"] = sup
+        if also:
+            body["also_supersedes"] = also
+        q.write_text(json.dumps(body, indent=1, sort_keys=True) + "\n")
+        return {"path": f"data/pm_5min/derived/{q.name}",
+                "sha256": hashlib.sha256(q.read_bytes()).hexdigest()}
+    _p1 = _dw(1)
+    _p2 = _dw(2, _p1)
+    _dw(3, _p1)                       # THE FORK: v2 and v3 both from v1
+    _forked = design_chain(_mr)
+    ok(_forked["orphan_branches"] == [2]
+       and _forked["reachable_from_the_newest"] == [1, 3],
+       f"POSITIVE CONTROL FOR THE FORK ITSELF: a fixture family whose v2 "
+       f"and v3 both supersede v1 reports orphan_branches "
+       f"{_forked['orphan_branches']} -- the single walk back from the "
+       f"newest reaches {_forked['reachable_from_the_newest']} and v2 is "
+       f"off it")
+    _dw(4, _dw(3, _p1), [dict(_p2)])  # v4: head as the pair, v2 as MERGE
+    _merged = design_chain(_mr)
+    ok(_merged["orphan_branches"] == []
+       and _merged["reachable_from_the_newest"] == [1, 2, 3, 4]
+       and [m["agrees"] for m in _merged["merge_links"]] == [True],
+       f"AND THE MERGE LINK EMPTIES IT (REV 81 §5's repair, driven): a v4 "
+       f"naming the head as its `supersedes` pair AND the orphan tip "
+       f"under `also_supersedes` makes every version reachable "
+       f"({_merged['reachable_from_the_newest']}), orphan_branches "
+       f"{_merged['orphan_branches']}")
+    (_md / "p003_de_multiday_gate1_design_v4.json").write_text(
+        json.dumps({"fixture": True, "supersedes": _dw(3, _p1),
+                    "also_supersedes": [dict(_p2, sha256="f" * 64)]},
+                   indent=1, sort_keys=True) + "\n")
+    _bad = design_chain(_mr)
+    ok(_bad["orphan_branches"] == [2]
+       and [m["agrees"] for m in _bad["merge_links"]] == [False],
+       f"KNOWN-BAD: a merge link whose digest does NOT recompute does not "
+       f"merge -- the tip STAYS an orphan ({_bad['orphan_branches']}) and "
+       f"the link is reported `agrees: False`. A link nobody can check is "
+       f"not a link, and a repair that emptied the field on an unverified "
+       f"pair would be the field lying about the chain")
+
+    # THIS ONE READS `data/` (the real design family), so it is SKIPPED
+    # OFFLINE AND NAMED -- the fixture pair above carries the property in
+    # both modes.
+    if offline:
+        offline_skip("DE 110: both resolvers compared on the REAL design "
+                     "family (reads data/pm_5min/derived)")
+        _real = None
+    else:
+        _real = design_chain_orphans()
+    if offline:
+        pass
+    elif True:
+      ok(isinstance(_real.get("n_orphan_branches"), int)
+         and _real["the_two_resolvers_agree_on_the_count"] is not None,
+         f"and BOTH resolvers are asked of the real family and COMPARED: "
+         f"shared {_real['shared_resolver']['n_orphan_branches']} vs this "
+         f"seat's {_real['this_seats_resolver']['n_orphan_branches']}, "
+         f"agree {_real['the_two_resolvers_agree_on_the_count']}. This "
+         f"seat's `design_chain()` globs the BARE `_v<N>.json` names only "
+         f"and cannot see the STAMPED versions this family used before "
+         f"v16 -- reporting one number would have hidden the difference")
+
     ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} run + "
        f"{len(skipped)} skipped == {EXPECTED_CHECKS}")
@@ -9675,6 +10069,16 @@ def _main_day(a) -> int:
             "to infer both (R-654)"),
         "pin_direction": (params.get("design_declaration") or {}).get(
             "pin_direction"),
+        # REV 81 §5 CONSUMED. While the design chain reports an orphan
+        # branch, the receipt that pins a design SAYS SO -- otherwise the
+        # condition sits unnoticed "for another eight versions", which is
+        # the reviewer's own words for how this one survived.
+        "design_chain_orphans_at_emit": design_chain_orphans(),
+        # REV 81 §3 CONSUMED. Which number this receipt's peak field may
+        # hold is resolved from the FORM CHAIN, not from prose -- BE's
+        # producers reach the rule through their launcher and this one
+        # does not.
+        "peak_of_record_rule": peak_of_record_rule(),
     }
     _uid = unit_identity()
     payload["launch_form"] = {
