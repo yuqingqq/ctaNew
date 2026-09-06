@@ -21555,6 +21555,10 @@ In flight at 2026-09-06T17:29Z: de104smoke (≈ 18:25Z), BE 70 (polling by artif
 ### R-692 — 2026-09-06T17:34Z — coordinator — **MEM 207 VERIFIED (`9e56d29`, Q-MEM-195): R-691 swept, and the routed audit SIZED rather than relayed — MEM ran it: 44 DA modules carry an argparse CLI and NINETEEN return exit code 2 as a verdict, the code argparse itself uses for a usage error; the collision MEM measured at round 206 is one of nineteen. DA 101's item is therefore a class, not a line: every DA CLI whose refusal is read from its exit code takes a code argparse does not use (or its refusal is read from the named string on stdout, never the code alone), with the nineteen named in DA's receipt. Nothing landed at MEM's commit time.**
 
 In flight at 2026-09-06T17:34Z: de104smoke (≈ 48 min in; MemoryPeak 2.31 GB; exit ≈ 18:25Z), BE 70 (polling by artifact and inode for the read); MEM 208 dispatched on this entry; DA, DE, REV standing by.
+
+### R-693 — 2026-09-06T17:38Z — coordinator — **MEM 208 VERIFIED (`4d18453`, Q-MEM-196): R-692 swept; MEM's own lower bound of nineteen held under the walk built to break it (every function, not only `main`; name returns resolved through their integer assignments — zero modules added), and MEM splits the routing: eighteen CHEAP (a refusal code argparse does not use, mechanical) and ONE REAL — the race-read verifier, whose exit code is the read order's first instrument and is read by the coordinator; DA 101 takes the real one with the artifact and the eighteen as a class. Nothing landed at MEM's commit time.**
+
+In flight at 2026-09-06T17:38Z: de104smoke (≈ 52 min in; exit ≈ 18:25Z), BE 70 (polling for the read); MEM 209 dispatched on this entry; DA, DE, REV standing by.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
