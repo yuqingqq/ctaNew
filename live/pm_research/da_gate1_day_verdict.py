@@ -3211,7 +3211,27 @@ def emitted_census(emitted: dict, receipt) -> dict:
     emitted_vals = {v for _, v in _walk_paths(emitted)
                     if isinstance(v, (int, float))
                     and not isinstance(v, bool)}
-    echoed = sorted(watched & emitted_vals)
+    #: DA 100, FOUND ON THE REAL 09-05 RECEIPT. ***A COINCIDENCE IS NOT AN
+    #: ECHO.*** Since R-659 the sealed list carries three OUTCOME COUNTS --
+    #: small integers -- and this set-intersection refused my own honest
+    #: emission because one of MY structural counters happened to equal
+    #: one of them. The same standard the PROSE scan already declares
+    #: applies here: a number is evidence only if it carries enough
+    #: precision to identify the value it came from
+    #: (MIN_SIG_DIGITS_TO_BE_EVIDENCE). A low-precision collision is
+    #: REPORTED BY PATH as a coincidence -- visible, not silently dropped,
+    #: and not a refusal.
+    def _sig(v) -> int:
+        t = repr(float(v))
+        return len(t.replace("-", "").replace(".", "").rstrip("0")
+                   .lstrip("0")) if "e" not in t else 17
+
+    _raw_hits = sorted(watched & emitted_vals)
+    echoed = [v for v in _raw_hits if _sig(v) >= MIN_SIG_DIGITS_TO_BE_EVIDENCE]
+    coincidences = sorted(
+        {p_ for p_, v in _walk_paths(emitted)
+         if isinstance(v, (int, float)) and not isinstance(v, bool)
+         and v in set(_raw_hits) - set(echoed)})
 
     strings = [(p, v) for p, v in _walk_paths(emitted) if isinstance(v, str)]
 
@@ -3281,6 +3301,15 @@ def emitted_census(emitted: dict, receipt) -> dict:
                 "could then only catch a leak in a receipt that had already "
                 "leaked, which is no catch at all"),
             "n_of_them_echoed_as_a_NUMERIC_LEAF": len(echoed),
+            "n_low_precision_coincidences": len(coincidences),
+            "low_precision_coincidence_paths": coincidences,
+            "why_a_coincidence_is_not_an_echo": (
+                "since R-659 the sealed list carries three OUTCOME COUNTS, "
+                "which are small integers; one of this record's own "
+                "structural counters equalling one of them identifies "
+                "nothing. The same precision standard the prose scan "
+                "declares applies to numeric leaves, and the collision is "
+                "REPORTED BY PATH rather than dropped"),
             "n_string_fields_scanned": len(strings),
             "n_of_them_carrying_a_watched_number_AS_TEXT": len(uniq),
             "string_hits_by_path_only": uniq[:20],
@@ -5350,6 +5379,33 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+    # -- DA 100: A COINCIDENCE IS NOT AN ECHO, BUT AN ECHO STILL IS -----
+    _long = 6.135792468013579
+    _cnt = 431
+    _rec_c = {"per_day_sealed_artifacts": [
+        {"arm": "A", "economic": {"null_sd": _long},
+         "counts": {"n_cancels_issued": _cnt}}]}
+    _co = emitted_census({"my": {"n_leaves_emitted": _cnt}}, _rec_c)
+    _ec = emitted_census({"my": {"a_value": _long}}, _rec_c)
+    ck("DA 100, FOUND ON THE REAL 09-05 RECEIPT -- ***A COINCIDENCE IS NOT "
+       "AN ECHO, AND THIS CONTROL REFUSED MY OWN HONEST EMISSION.*** Since "
+       "R-659 the sealed list carries three OUTCOME COUNTS -- small "
+       "integers -- and a set-intersection over numeric leaves flagged a "
+       "structural counter of mine that happened to equal one. The "
+       "precision standard the PROSE scan already declares now applies to "
+       "numeric leaves too: a low-precision collision is REPORTED BY PATH "
+       "as a coincidence, ***visible and not silently dropped***, while a "
+       "value carrying enough digits to identify what it came from is "
+       "still an ECHO and still refuses",
+       _co["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 0
+       and _co["n_low_precision_coincidences"] == 1
+       and _co["low_precision_coincidence_paths"] == ["my.n_leaves_emitted"]
+       and _ec["n_of_them_echoed_as_a_NUMERIC_LEAF"] == 1
+       and _ec["clean"] is False,
+       f"a 3-digit count collision -> coincidence at "
+       f"{_co['low_precision_coincidence_paths']}, clean={_co['clean']}; a "
+       f"16-digit sealed value -> echoed, clean={_ec['clean']}")
+
     # -- DA 100: THE STRUCTURE GUARD, DRIVEN AT THE REAL DECLARATION ----
     #: THE DIGESTS ARE READ FROM BE'S BUILDER RECEIPTS. No book is opened
     #: and none is hashed: the guard takes a digest, which is the whole
