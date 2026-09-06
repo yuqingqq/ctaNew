@@ -46,7 +46,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V1"
-EXPECTED_CHECKS = 26
+EXPECTED_CHECKS = 29
 PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v1.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
@@ -80,6 +80,30 @@ def load_params(path: Path | None = None) -> dict:
         raise RunnerRefused(f"REFUSED: duplicate days in the ruled set")
     d["G"] = len(days)                      # DERIVED, never a constant
     d["G_derived_from_len_days"] = True
+    # R-555: `expected_G` is a CROSS-CHECK, never the source of G. A set
+    # that has quietly become five is the shape the USER's ruling forbids
+    # -- "G stays 6 and nothing is chosen" -- so it refuses here rather
+    # than testing at a smaller G later.
+    exp = d.get("expected_G")
+    if exp is not None and d["G"] != exp:
+        raise RunnerRefused(
+            f"REFUSED: the ruled set has {d['G']} days against the declared "
+            f"expected_G {exp}. R-555 fixes G at {exp}; a set that shrank "
+            f"is a day chosen after the fact, not a smaller test.")
+    req = d.get("required_previously_opened_for")
+    if req is not None:
+        bad = {}
+        for day in days:
+            st = DESIGN.DAY_READ_STATE.get(day)
+            if st is None:
+                bad[day] = "NO_READ_STATE_RECORDED"
+            elif st["previously_opened_for"] != req:
+                bad[day] = st["previously_opened_for"]
+        if bad:
+            raise RunnerRefused(
+                f"REFUSED: the ruled set contains days whose "
+                f"previously_opened_for is not {req!r}: {bad}. R-555 is "
+                f"untouched days only.")
     return d
 
 
@@ -402,11 +426,38 @@ def selftest(*, quiet: bool = False) -> int:
     P = json.loads((root / PARAMS_REL).read_text())
 
     # ---- G is derived, and an empty ruled set refuses ------------------
-    refuses(lambda: load_params(),
-            "THE COMMITTED DAY SET IS EMPTY AND THE RUNNER REFUSES -- it "
-            "will not default to SET A or SET B while the USER's R7 "
-            "parameter is unanswered", "ruled day set is EMPTY")
+    # ---- R-555, the RULED set --------------------------------------
+    live = load_params()
+    ok(live["G"] == 6 and live["G"] == live["expected_G"]
+       and live["days"] == ["2026-09-03", "2026-09-04", "2026-09-05",
+                            "2026-09-06", "2026-09-07", "2026-09-08"]
+       and live["ruling"]["smoke_day"] == "2026-09-03",
+       f"R-555 POSITIVE CONTROL, AND IT ADMITS: the ruled set loads, G is "
+       f"DERIVED as {live['G']} and agrees with the declared expected_G, "
+       f"and the smoke day is {live['ruling']['smoke_day']}")
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td0:
+        five = dict(live); five["days"] = live["days"][:5]
+        f5 = Path(td0) / "five.json"; f5.write_text(json.dumps(five))
+        refuses(lambda: load_params(f5),
+                "R-555 KNOWN-BAD, A SET OF FIVE: it refuses rather than "
+                "testing at a smaller G -- 'G stays 6 and nothing is "
+                "chosen'", "against the declared expected_G")
+        touched = dict(live)
+        touched["days"] = ["2026-09-01"] + live["days"][1:]
+        ft = Path(td0) / "touched.json"; ft.write_text(json.dumps(touched))
+        refuses(lambda: load_params(ft),
+                "R-555 KNOWN-BAD, A TOUCHED DAY: 09-01's "
+                "previously_opened_for is interim_read_of_frozen_candidate "
+                "and the set REFUSES -- untouched days only",
+                "not 'none'")
+        empty = dict(live); empty["days"] = []
+        fe = Path(td0) / "empty.json"; fe.write_text(json.dumps(empty))
+        refuses(lambda: load_params(fe),
+                "and an EMPTY set still refuses -- G is derived from it "
+                "and there is nothing to derive", "ruled day set is EMPTY")
     tmp = dict(P); tmp["days"] = ["a", "b", "c", "d", "e", "f"]
+    tmp.pop("expected_G", None); tmp.pop("required_previously_opened_for", None)
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         f = Path(td) / "p.json"; f.write_text(json.dumps(tmp))
@@ -415,7 +466,7 @@ def selftest(*, quiet: bool = False) -> int:
            f"POSITIVE CONTROL, AND IT ADMITS: G is DERIVED from len(days) "
            f"= {got['G']}, never read from a constant -- the defect design "
            f"v2 shipped")
-        tmp2 = dict(tmp); tmp2["days"] = ["a", "a", "b"]
+        tmp2 = dict(tmp); tmp2["days"] = ["a", "a", "b", "c", "d", "e"]
         f2 = Path(td) / "p2.json"; f2.write_text(json.dumps(tmp2))
         refuses(lambda: load_params(f2),
                 "KNOWN-BAD: a duplicated day refuses rather than inflating "

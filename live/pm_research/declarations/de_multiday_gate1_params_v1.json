@@ -37,19 +37,38 @@
     ]
   },
   "coin": "btc",
-  "days": [],
+  "days": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06",
+    "2026-09-07",
+    "2026-09-08"
+  ],
   "design_declaration": {
     "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
     "sha256": "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c658a65289c"
   },
+  "expected_G": 6,
   "head_overlap_floor": 0.9,
   "min_decisions_per_arm_day": 30,
   "min_draws_per_arm_day": 500,
   "multiplicity_m": 2,
-  "note": "G IS DERIVED FROM len(days) AT RUN TIME AND IS NEVER A CONSTANT. `days` is empty until the USER answers design v3's R7 parameter (SET A = 6 days, SET B = 3); the runner REFUSES on an empty set rather than defaulting to either.",
+  "note": "G IS DERIVED FROM len(days) AND IS NEVER A CONSTANT; `expected_G` below is a CROSS-CHECK the loader must satisfy, not the source of G.",
   "per_day_deadline_s": 43200,
-  "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V1",
+  "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V2",
+  "required_previously_opened_for": "none",
+  "ruling": {
+    "authority": "R-555 (USER): untouched days only",
+    "completion": "the 2026-09-09T00:06Z verdict; the run does not start before it",
+    "if_a_future_day_fails_its_verdict": "the set waits for the next qualifying CLOSED day in calendar order. G STAYS 6 and nothing is chosen",
+    "rule": "the four ledger conjuncts AND day-quality, on COMPLETE days only, AND previously_opened_for == none",
+    "smoke_day": "2026-09-03",
+    "smoke_publishes": "resource observations only; its economic fields are SEALED until all 6 days are complete",
+    "why_not_SET_A": "SET A included 08-29, 09-01 and 09-02, whose previously_opened_for is development_read or interim_read_of_frozen_candidate. The USER ruled untouched days only"
+  },
+  "run_not_before_utc": "2026-09-09T00:06:00Z",
   "sd_floor_fraction": 0.25,
-  "status": "PARAMETERS_PENDING_THE_USER_DAY_SET_RULING",
+  "status": "DAY_SET_RULED_R555_USER",
   "wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
 }

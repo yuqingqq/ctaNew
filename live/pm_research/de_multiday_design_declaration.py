@@ -74,6 +74,20 @@ DAY_READ_STATE = {
                    "what_was_read": None},
     "2026-09-05": {"previously_opened_for": OPENED_NONE, "authority": None,
                    "what_was_read": None},
+    # R-555's set reaches beyond the days that exist at declaration time.
+    # A day that has not CLOSED cannot have been read, and that is a fact
+    # about the calendar rather than a claim about anyone's discipline --
+    # but it is recorded rather than left to the absent-key refusal, so
+    # the runner's check has something to compare against.
+    "2026-09-06": {"previously_opened_for": OPENED_NONE,
+                   "authority": "R-555; not closed at declaration time",
+                   "what_was_read": None},
+    "2026-09-07": {"previously_opened_for": OPENED_NONE,
+                   "authority": "R-555; not closed at declaration time",
+                   "what_was_read": None},
+    "2026-09-08": {"previously_opened_for": OPENED_NONE,
+                   "authority": "R-555; not closed at declaration time",
+                   "what_was_read": None},
 }
 
 DAYS = ("2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05")
