@@ -76,12 +76,12 @@
     "2026-09-08"
   ],
   "design_declaration": {
-    "carrying_commit": "8deee7a1981ea50833bd5834b1e737d61d263254",
+    "carrying_commit": "e29f984d8a33a4e578917c45d989e5db00405768",
     "note": "params v1 cited design v3 while v7 was operative. The pin runs params -> design in ONE direction only; the design cites params by PATH, because two digest pins would be circular",
-    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
-    "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V8",
-    "sha256": "139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b87452a55d32555",
-    "supersedes": "data/pm_5min/derived/p003_de_multiday_gate1_design_v7__20260906T045059Z.json"
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v9__20260906T062115Z.json",
+    "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V9",
+    "sha256": "fe4b0db4ddfdcc3a942fef9a35cd702646a9c020704ca81b5f28ff175f7aff2e",
+    "supersedes": "data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json"
   },
   "expected_G": 6,
   "head_overlap_floor": 0.9,

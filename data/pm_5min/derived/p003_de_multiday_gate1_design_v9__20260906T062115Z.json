@@ -1,0 +1,825 @@
+{
+  "D_E0_is_computed_from_the_declared_estimator": {
+    "D_E_MINUS_R_is_UNBOUND": "the robustness endpoint needs the rebate's identity value, which is not on DE's surface. It is NOT computed and NOT approximated; the design's primary metric is D(E0) and that is what the day path produces",
+    "estimator": "de_phase4_diag_runner.fill_value_cents",
+    "per_draw": "value(the draw's fills) - value(the baseline fills), so arm and null are the SAME statistic",
+    "so_nothing_new_was_invented": true,
+    "what_it_is": "the maker P&L at level-to-markout, signed by side, times size -- WITH NO FEE TERM, which is exactly the E0 endpoint this design's metric names",
+    "why_not_BEs_draw_null_directly": "`draw_null` reduces each draw to mechanics fields and discards the fills, and D(E0) is a sum over the fills a draw removed. DE drives BE's `_alloc`, `draw_flags`, `flagged_stream` and `replay` and values them itself -- and the first draws are compared against BE's own `draw_null` at the same seed, so the cascade is provably BE's and only the metric is DE's"
+  },
+  "R10_seal_layout": {
+    "consumer_falsifier": "de_multiday_gate1_runner.assert_seal_layout_symmetric() -- driven on BOTH states, with the pre-fix layout as the known-bad",
+    "keys_present_in_BOTH_states": [
+      "sealed",
+      "seal_status",
+      "sealed_at_every_depth",
+      "sealed_field_names",
+      "economic"
+    ],
+    "ruling": "R-572(B)(3) (coordinator)",
+    "sealed_values": {
+      "economic": "ABSENT -- the one key that is absent by design, because a field a reader can see is a field a reader can quote",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": "the full ECONOMIC_FIELDS list"
+    },
+    "the_asymmetry_it_fixes": "a sealed artifact carried `sealed_at_every_depth` and `sealed_field_names`; an unsealed one dropped BOTH and gained `economic`. A consumer keying on either key got None after unsealing and could not tell 'unsealed' from 'a field I misspelled'",
+    "unsealed_values": {
+      "economic": "present; None with a stated reason on a refused arm-day",
+      "sealed": false,
+      "sealed_at_every_depth": false,
+      "sealed_field_names": "[] -- nothing is sealed"
+    },
+    "why_economic_is_the_exception": "symmetry of KEYS is for the consumer; the seal is for the reader. Present-and-null would leak the shape of what is sealed and invites a reader to quote a null as a result. So four keys are symmetric by value and the fifth is symmetric by RULE: present iff unsealed, stated in both states"
+  },
+  "R11_memory_and_index_residency": {
+    "and_what_it_does_not_settle": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling. DE declares only the consumer's requirement, which is the half BE was waiting on",
+    "day_run_stages": [
+      {
+        "holds": "digests only: BE's builder receipt, the book's bytes, the pinned models and thetas, BE's cascade module. The book is READ ONCE here as bytes for its digest and the buffer is handed to S1, never read twice (BE's B-1)",
+        "stage": "S0_verify"
+      },
+      {
+        "holds": "reference + asm + rows. THIS IS THE PEAK of the day path: everything after it is derived and bounded",
+        "stage": "S1_load"
+      },
+      {
+        "holds": "adds one score float per generation per arm, twice. asm's gen_scores are ALREADY resident from S1; the arm stream is a view over `rows`",
+        "stage": "S2_population"
+      },
+      {
+        "holds": "adds the no-cancel replay's fills -- the neutral reference path (CLAUDE.md reliability rule 1)",
+        "stage": "S3_baseline"
+      },
+      {
+        "holds": "one draw's flags and one replayed fill list AT A TIME. The draws are REDUCED to a value each as they are made; no draw's fills survive the next. O(1) in n_draws",
+        "stage": "S4_null"
+      },
+      {
+        "holds": "counts and statuses only. The economic fields are computed and withheld, never carried into the artifact",
+        "stage": "S5_seal"
+      }
+    ],
+    "fixture_peak_rss_mb_budget": 700.0,
+    "index_splits_needed_by_day": {
+      "answer": "NONE, at any stage",
+      "consequence_for_BEs_assembly": "the index is needed only to PRODUCE `asm`. It does not have to be resident alongside the reference and `asm` at all, because the consumer of those two is a different process. If BE releases the index before assembling and writing the book, the whole-day peak is max(index stage, assembly stage) rather than their sum",
+      "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming that head; a run with no tape artifact reachable at all still completes",
+      "measured_by": "day_split_residency_proof() -- the day path run under instrumentation, asserting no tape/index/fragment artifact was opened",
+      "per_stage": {
+        "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the scored set; the scorer is a dict lookup that REFUSES on a miss rather than computing a feature",
+        "S3_baseline_and_S4_null": "no split. Each replay values its fills from the fill record and the reference; per WINDOW and streamable, with nothing accumulated across draws",
+        "economics_valuation": "no split, and NOT per-window-resident either -- one fill list at a time"
+      },
+      "question": "which tape-index splits must be resident during `--day`, and at which stage",
+      "what_DE_cannot_rule": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling, not DE's. What is declared here is only what the CONSUMER needs, which is the half BE was waiting on",
+      "why": "the decision population is read from `asm` -- BE's already assembled per-generation scores, keyed (slug, side, t0) -- and the economics valuation reads only the replay's own fill records and the reference's levels and markouts (`de_phase4_diag_runner.fill_value_cents`). Neither touches a tape row"
+    },
+    "on_an_overrun": "THE DAY REFUSES. The cap is never raised and the draw count is never cut (R-174)",
+    "real_day_peak_rss_gb_ceiling": 8.0,
+    "the_measured_facts_this_rests_on": {
+      "BE_tape_index_both_ruled_splits_gb": 3.963,
+      "DE_build_tape_index_docstring_score_split_gb": 1.42,
+      "DE_build_tape_index_docstring_train_split_gb": 3.9,
+      "source": "de_phase4_diag_runner.build_tape_index.__doc__ and the chunked-assembly docstring's profile table -- read from the code, not retyped"
+    },
+    "what_this_lets_BE_do": "if the consumer needs no index resident, the index need not be alive when the reference and `asm` are: BE's peak becomes max(index stage, assembly stage) instead of their sum. On the measured numbers that is the difference between fitting the 8 GB cap and not",
+    "why": "R-573: BE's 09-03 build reached 6.4 GB of the 8 GB cap BEFORE the slice, and the coordinator's DE 78 addendum asked which index splits `--day` needs. The answer belongs in the design because BE builds to it"
+  },
+  "R12_wrapper_is_measured": {
+    "a_real_day_takes_the_lock_FIRST": "a real day is heavy by construction (BE projects ~2.3 h for both arms), so `--day` refuses before any work if the lock is not held",
+    "implemented_by": [
+      "de_multiday_gate1_runner.wrapper_observed",
+      "de_multiday_gate1_runner.assert_rule20"
+    ],
+    "ruling": "R-575(C): at 05:54Z two heavy scopes ran concurrently, one holding the lock and one not",
+    "the_rule_enforced": "a run that was HEAVY by measurement (> 60 s wall or > 1 GiB peak) and did not hold the lock REFUSES and the artifact is not written",
+    "what_changed": "the day receipt's `wrapper` is READ FROM /proc/self/fd rather than copied from the params string. `flock -n <lock> systemd-run --scope` passes the lock's fd through the exec -- MEASURED at fd 3, and absent without the flock"
+  },
+  "R13_committed_bytes_policy": {
+    "fixture": "producing_code_is_the_committed_bytes MAY be false and is RECORDED, never refused -- a hard refusal would block every pre-commit fixture emission and push someone to commit blind",
+    "real_day": "a REAL day REFUSES on false",
+    "ruling": "the coordinator's DE 78 ruling",
+    "why_the_asymmetry_is_right": "a fixture receipt is evidence about CODE; a day artifact is evidence about a RESULT, and a result naming a commit that does not hold the code that produced it is provenance theatre"
+  },
+  "R1_asm_the_scored_book": {
+    "blocking_in_v1": true,
+    "discharge_on_one_day_first": "the 'same cascade' premise is currently a live refutation condition, not a hypothetical. BE emits day 1's book with `asm` and the null is driven on it BEFORE the other four are built",
+    "how_its_digest_enters_the_seed": "the seed is derived from the digest of the WHOLE day book as BE publishes it, which contains `asm`; so a book whose score stream changed cannot reuse a draw sequence. The declaration additionally requires BE to publish sha256(asm) separately, so a reader can tell a score-stream change from a reference change",
+    "verified_by_DE_at_the_code": "be_cancel_axis_null.py:188-192 -- `ref, asm = c['fr']['reference'], c['asm']` then `scored = asm['by_arm'][(COIN, ARMS['CONDVALUE_X_SKEW']['head'])][0]` and rows are the generations IN `scored`. A book without `asm` raises on c['asm'] and there is no decision population at all",
+    "what_asm_must_contain_per_day": {
+      "by_arm": "a mapping keyed by (coin, head) for BOTH pinned heads -- q1_arrival_composed_lgbm and incumbent_linear_d -- whose [0] element is the set of scored (slug, side, t0) generation keys",
+      "coverage": "every generation the reference carries for that day, so a generation absent from `scored` is a scorer-coverage fact and not a silent drop",
+      "scored_at": "the arms' PINNED thetas, not refitted ones"
+    }
+  },
+  "R2_the_draw_pool": {
+    "as_the_loader_stands": "ONE SHARED scored pool, built from CONDVALUE's head only, used for both arms (be_cancel_axis_null.py:189)",
+    "declared_choice": "SHARED",
+    "floor_calibration": {
+      "and_it_is_a_ONE_DAY_measurement": "one hour of one coin. Two heads agreeing perfectly there does not establish they agree on an unseen day, which is exactly why the floor is a per-arm-day REFUSAL and not an assumption",
+      "floor": 0.9,
+      "floor_admits_the_consumed_hour": true,
+      "measured_on": "the CONSUMED 2026-08-24 13:50-14:50Z hour, the one population already seen -- the same basis R4's 0.25 was set on",
+      "measurement": {
+        "asm_key_shape": "asm['by_arm'][(coin, head)][0]",
+        "cache": "de_section81_cache_v2_12.pkl",
+        "intersection": 29813,
+        "jaccard": 1.0,
+        "overlap_over_the_smaller": 1.0,
+        "scored_CONDVALUE_X_SKEW_q1_arrival_composed_lgbm": 29813,
+        "scored_HAZARD_OVER_SKEWED_REF_incumbent_linear_d": 29813
+      },
+      "observed_overlap": 1.0,
+      "what_the_measurement_says": "the two heads score the SAME 29,813 generations -- identical sets, Jaccard 1.0. On the precedent run the shared-pool choice costs EXACTLY NOTHING, because there is only one pool to share",
+      "why_this_floor_cannot_be_read_as_tuned": "the observed value is 1.0, which is the CEILING of the statistic -- an overlap cannot exceed 1. So no floor below 1.0 can have been chosen to clear the seen value, and the ONLY floor that would exclude the consumed hour is one strictly above 1.0, which is unattainable. 0.90 leaves day-to-day headroom without being fitted to anything"
+    },
+    "refuses_if": "the two heads' scored sets overlap by less than 0.9 of the smaller -- a REFUSAL of the arm-day, not a note",
+    "the_cost_stated": "HAZARD's decisions are drawn from a pool defined by CONDVALUE's head. If the two heads score materially different generation sets, HAZARD's null is drawn from a pool its own head would not have produced. THE DESIGN REQUIRES BE TO PUBLISH |scored(head)| PER HEAD PER DAY and their overlap, so the size of that cost is measured rather than assumed",
+    "why": "ruling v2 (R-548(C)) separates the NULL from the DENOMINATOR. The null is per arm because the DRAW is matched to that arm's own decision count and side split; the POOL those draws come from is the set of generations a decision could have been made on, which is a property of the book and not of the arm. Making the pool per-arm would make each arm's random cancel land in a different universe and the two nulls incomparable -- the same category error as a per-arm shared denominator, in the other direction"
+  },
+  "R3_the_coin_set": {
+    "declared": [
+      "btc"
+    ],
+    "what_a_btc_only_run_measures": "whether these two arms, at these two btc thetas, beat a replay null ON BTC. It says nothing about eth and must not be reported as a venue-level or programme-level result",
+    "what_an_eth_arm_would_cost": "m goes from 2 to 4, so the Holm threshold halves to 0.0125 and the smallest clearing G rises from 6 to 7",
+    "why_btc_only": "the pinned thetas ARE btc thetas: CONDVALUE's comes from lgbm_thresholds_btc.json (0fa2f1f7a5a4c58f) and HAZARD's from linear_d_btc.json (18701008c2bd18c6). DE verified that eth siblings EXIST in the same fits directory (lgbm_thresholds_eth.json ce67009e38a07e8c, linear_d_eth.json fb371f6352214a92) and that they are DIFFERENT artifacts. Running eth would mean a second (coin, theta) pair -- a different frozen object, and a different multiplicity"
+  },
+  "R4_degeneracy_bars": {
+    "a_refused_arm_day_is_a_STATUS": "it does not shrink G silently; the arm cannot be aggregated and the run reports the arm as UNTESTABLE on the declared day set",
+    "calibration_from_the_consumed_hour": "HAZARD's null had sd 0.16234 against mean 0.40033, a ratio of 0.4055 -- ABOVE the 0.25 floor, so the bar as declared would have admitted the consumed hour. That is stated so the floor cannot be read as chosen to exclude something already seen",
+    "min_decisions_per_arm_day": 30,
+    "sd_floor_fraction": 0.25,
+    "sd_rule": "refuse the arm-day when sd(null) < f * |mean(null)| with f = 0.25. Z_d = (D - mean)/sd explodes as sd -> 0, and the v1 degenerate-null falsifier covered only sd == 0 exactly",
+    "why_30": "below ~30 matched draws the side split cannot be honoured without repetition and the null's own dispersion is dominated by the discreteness of the count. The number is declared NOW, before any day, precisely so nobody decides after seeing whether a day with four decisions counts"
+  },
+  "R5_the_smoke_is_sealed": {
+    "IT_IS_NOW_A_CODE_PATH_NOT_A_PROMISE": {
+      "emitter": "de_multiday_gate1_runner.seal()",
+      "fixture_receipt": "p003_de_multiday_gate1_fixture_run_v2__20260906T041609Z.json",
+      "fixture_receipt_field": "per_day_sealed_artifacts[*].seal_status and .sealed",
+      "guard": "de_multiday_gate1_runner.assert_no_economic_leak()",
+      "proof_it_fired": "the guard caught the emitter on its first run: sealing only the top-level `economic` block left `admissibility.null_sd` and `null_mean` behind, because the R4 block carries null statistics",
+      "shared_name_list": "de_multiday_gate1_runner.ECONOMIC_FIELDS -- the emitter and the guard read ONE list and ONE traversal, so they cannot disagree",
+      "what_that_field_shows": "six per-day artifacts, sealed True until the last day and False after -- both states present in one receipt"
+    },
+    "all_G_days_run_regardless_of_interim_results": true,
+    "artifact_level_refusal": "the per-day emitter REFUSES to write any economic field while `n_days_complete < G`; the sealed fields are absent from the artifact, not present-and-ignored",
+    "day_1_does_NOT_publish": [
+      "D(E0)",
+      "D(E-R)",
+      "Z",
+      "any per-day location",
+      "any null summary statistic"
+    ],
+    "day_1_publishes": [
+      "resource observations",
+      "population counts",
+      "refusal statuses"
+    ],
+    "sealed_until": "all G days are complete",
+    "why": "whoever runs days 2..G must not have seen day 1's Z. v1 said the smoke publishes its resource observation and did not say the economic fields are withheld, which left early stopping reachable"
+  },
+  "R6_runtime_verification": {
+    "on_mismatch": "REFUSE the run -- not the day, the RUN, because a moved model means the object under test is not the frozen one",
+    "verified_at_run_time_not_merely_recorded": true,
+    "what": [
+      "each arm's theta against its pinned JSON path",
+      "each model artifact's sha256 against the pinned digest"
+    ],
+    "why_not_a_record": "a recorded digest that nobody compares is provenance theatre; it makes a refit detectable and does not detect it"
+  },
+  "R7_the_day_set": {
+    "SET_A_reads_count_as_untouched": {
+      "days": [
+        "2026-08-29",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05"
+      ],
+      "holm": {
+        "G": 6,
+        "best_attainable_one_sided_p": 0.015625,
+        "clears_holm_at_m1": true,
+        "clears_holm_at_m2": true,
+        "holm_threshold_m2": 0.025,
+        "smallest_G_that_clears_m1": 5,
+        "smallest_G_that_clears_m2": 6
+      }
+    },
+    "SET_B_reads_consume_the_day": {
+      "days": [
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05"
+      ],
+      "derived_from_the_field": true,
+      "holm": {
+        "G": 3,
+        "best_attainable_one_sided_p": 0.125,
+        "clears_holm_at_m1": false,
+        "clears_holm_at_m2": false,
+        "holm_threshold_m2": 0.025,
+        "smallest_G_that_clears_m1": 5,
+        "smallest_G_that_clears_m2": 6
+      }
+    },
+    "THE_PARAMETER_FOR_THE_USER": "do days previously opened for a read of the FROZEN CANDIDATE count as UNTOUCHED for a Gate-1 test of the ARMS? The arms are a different object with thetas fixed on the consumed 08-24 hour, and no arm score has been read on any of these days -- but the tape has been looked at.",
+    "accrual_schedule": {
+      "2026-09-06": "OPEN at declaration time (day_closed_calendar false); closes 00:00Z 09-07 and is verdicted at 00:06Z 09-07",
+      "G_is_fixed_before_any_run": true,
+      "rule": "each further day is verdicted at 00:06Z the following day, so set A reaches G = 7 on 09-07 and set B reaches G = 4"
+    },
+    "conjuncts": [
+      "day_closed_calendar",
+      "post_freeze_pass",
+      "era_pure",
+      "day_quality_pass"
+    ],
+    "day_read_state": {
+      "2026-08-29": {
+        "authority": "R-500 withdrew it from the race; R-502 ratified ONE development read",
+        "previously_opened_for": "development_read",
+        "what_was_read": "the FROZEN CANDIDATE, not the arms"
+      },
+      "2026-09-01": {
+        "authority": "R-549(A); RESULTS.md:681 records it as CONSUMED",
+        "previously_opened_for": "interim_read_of_frozen_candidate",
+        "what_was_read": "the FROZEN CANDIDATE, not the arms"
+      },
+      "2026-09-02": {
+        "authority": "R-549(A); RESULTS.md:681 records it as CONSUMED",
+        "previously_opened_for": "interim_read_of_frozen_candidate",
+        "what_was_read": "the FROZEN CANDIDATE, not the arms"
+      },
+      "2026-09-03": {
+        "authority": null,
+        "previously_opened_for": "none",
+        "what_was_read": null
+      },
+      "2026-09-04": {
+        "authority": null,
+        "previously_opened_for": "none",
+        "what_was_read": null
+      },
+      "2026-09-05": {
+        "authority": null,
+        "previously_opened_for": "none",
+        "what_was_read": null
+      }
+    },
+    "declared_ledger_root": "/home/yuqing/ctaNew/data",
+    "ledger_root_read": "/home/yuqing/ctaNew/data",
+    "ledger_root_resolved": "/home/yuqing/ctaNew/data",
+    "ledger_rows_as_read": {
+      "2026-08-26": {
+        "all_conjuncts_and_quality": false,
+        "day_closed_calendar": true,
+        "day_quality_pass": null,
+        "era_pure": null,
+        "post_freeze_pass": null
+      },
+      "2026-08-27": {
+        "all_conjuncts_and_quality": false,
+        "day_closed_calendar": true,
+        "day_quality_pass": false,
+        "era_pure": null,
+        "post_freeze_pass": false
+      },
+      "2026-08-28": {
+        "all_conjuncts_and_quality": false,
+        "day_closed_calendar": true,
+        "day_quality_pass": false,
+        "era_pure": null,
+        "post_freeze_pass": false
+      },
+      "2026-08-29": {
+        "all_conjuncts_and_quality": true,
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "2026-08-30": {
+        "all_conjuncts_and_quality": false,
+        "day_closed_calendar": true,
+        "day_quality_pass": false,
+        "era_pure": false,
+        "post_freeze_pass": true
+      },
+      "2026-08-31": {
+        "all_conjuncts_and_quality": false,
+        "day_closed_calendar": true,
+        "day_quality_pass": false,
+        "era_pure": false,
+        "post_freeze_pass": false
+      },
+      "2026-09-01": {
+        "all_conjuncts_and_quality": true,
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "2026-09-02": {
+        "all_conjuncts_and_quality": true,
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "2026-09-03": {
+        "all_conjuncts_and_quality": true,
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "2026-09-04": {
+        "all_conjuncts_and_quality": true,
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "2026-09-05": {
+        "all_conjuncts_and_quality": true,
+        "day_closed_calendar": true,
+        "day_quality_pass": true,
+        "era_pure": true,
+        "post_freeze_pass": true
+      },
+      "2026-09-06": {
+        "all_conjuncts_and_quality": false,
+        "day_closed_calendar": false,
+        "day_quality_pass": false,
+        "era_pure": true,
+        "post_freeze_pass": false
+      }
+    },
+    "n_verdict_files_read": 12,
+    "qualifying_on_quality": [
+      "2026-08-29",
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "root_resolution": {
+      "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+      "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+      "branch": "1_env_PM_DATA_ROOT",
+      "data_root": "/home/yuqing/ctaNew/data",
+      "data_root_resolved": "/home/yuqing/ctaNew/data",
+      "is_canonical": true,
+      "repo_root": "/home/yuqing/ctaNew",
+      "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+      "tape_present": true
+    },
+    "root_verified_at_run_time": true,
+    "rule": "the four ledger conjuncts AND day-quality AND (under set B only) not previously opened for any read",
+    "set_b_rule": "a day is in SET B iff its `previously_opened_for` field reads `none`; a day with no field REFUSES rather than defaulting into it",
+    "version_is_NOT_a_bar": "R-497(F)(1), the USER verbatim: 'collector version is NOT a bar; QUALITY is the bar'. R-547(C)'s 'only era-pure clob_v4_1 days' imported a bar the USER never set, and v1 of this declaration inherited it. WITHDRAWN HERE.",
+    "what_the_answer_decides": "SET A gives G = 6, which CLEARS Holm at m = 2 -- a significance-bearing answer is possible. SET B gives G = 3, which clears at NEITHER m = 2 NOR m = 1. The parameter is the difference between a run that can settle section 7 with a p-value and one that can only ever be directional.",
+    "why_the_root_is_recorded": "in a seat worktree `<root>/data` is the git-materialised shell of COMMITTED artifacts only; the real tree hangs off the R-397 symlink at `<root>/data/data`. Reading the shell silently produced a 3-day qualifying set where the ledger has 6. The root that was read travels with the answer",
+    "withdrawn_sentence": {
+      "carried_in": [
+        "design v1",
+        "design v2"
+      ],
+      "text": "the race scored a different object on these days, sealed and unread",
+      "what_survives_of_it": "the thetas were fixed on the consumed 08-24 hour and NOTHING ABOUT THE ARMS was chosen on any of these days -- which is the half that bears on rule 11, and it is now stated on its own",
+      "why": "09-01 and 09-02 were OPENED under the interim read and are CONSUMED, so 'unread' was false for two of the five days v1 named",
+      "withdrawn_by": "R-549(A); RESULTS.md:681"
+    }
+  },
+  "R8_time_overrun": {
+    "agrees_with_resources_totals": true,
+    "estimate_source": "resources.totals -- COMPUTED from the measured seconds, not typed",
+    "never_by": [
+      "lowering the draw count",
+      "raising the cap",
+      "sampling fewer days"
+    ],
+    "null_hours": {
+      "G5": 9.696666666666667,
+      "G6": 11.636
+    },
+    "sequential_cpu_hours": {
+      "G5": 11.263333333333334,
+      "G6": 13.516
+    },
+    "the_500_draw_minimum_is_protected_by": "REFUSING THE ARM-DAY",
+    "the_estimate_is_an_ESTIMATE": "a linear 24x extrapolation from one hour; the day-1 smoke replaces it with a measurement",
+    "why_written_down": "the cap is protected and the DRAW COUNT was not; the tempting response to a time overrun is to cut draws, and that response is forbidden in advance"
+  },
+  "R9_timing": {
+    "day_runs_allowed_for_closed_qualifying_days": true,
+    "read_not_before_utc": "2026-09-09T00:06:00Z",
+    "ruling": "R-572(B)(2) (coordinator)",
+    "superseded_field": "run_not_before_utc (params v1), a whole-set property that read as a bar on every run",
+    "what_still_refuses": [
+      "a day that is not closed",
+      "a day that does not qualify on the four conjuncts and day-quality",
+      "a day outside the ruled set",
+      "the aggregate read before the date",
+      "the aggregate read before all G days are complete"
+    ],
+    "what_that_date_governs": "the AGGREGATE READ only -- the unsealing of the economic fields and the section-7 verdict",
+    "why": "a per-day run is SEALED: it publishes resources, counts and statuses and no economic field, so running 09-03 today cannot inform any later choice. Holding the runs behind the aggregate date bought nothing and cost the calendar"
+  },
+  "_R8_removed_prose": {
+    "why": "it sat beside `resources.totals`, which computes 11.26 CPU-hours at G=5 -- a typed sentence contradicting the computed field next to it. R8's estimate is now a REFERENCE to those totals, so the two cannot diverge",
+    "withdrawn_text": "~20 hours of null across 2 arms x 5 days, plus ~3 hours of replay"
+  },
+  "arms": [
+    "CONDVALUE_X_SKEW",
+    "HAZARD_OVER_SKEWED_REF"
+  ],
+  "as_of": "2026-09-06T06:21:22.283464+00:00",
+  "battery": {
+    "expected_checks_in_the_source": 71,
+    "n_checks_run": 71,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "run_count_equals_source_expected": true,
+    "v1_defect_this_closes": "v1's receipt recorded n_checks 19 while the source's EXPECTED_CHECKS was 20 -- main() wrote EXPECTED_CHECKS - 1 instead of the count the run produced. The source hash matched, so it was a RECEIPT-COUNT defect and not a code difference. Both numbers are now carried WITH their computed equality, so a receipt cannot disagree with its own source again"
+  },
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the multi-day design declaration",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day_cluster_aggregation": {
+    "cluster_unit": "UTC day (rule 8)",
+    "estimate": "mean of Z_d over the G = 5 days",
+    "interval": "reported ONLY because G >= 5; the exact sign test over the 5 day signs is the test, and the interval is the 5 Z values themselves -- no normal approximation is claimed at n = 5",
+    "per_day_value": "Z_d = (D_d - mean(null_d)) / sd(null_d)",
+    "why_not_pooled_over_draws": "pooling 2,500 draws across days would treat the DRAW as the cluster unit and inflate by the number of draws, which is free"
+  },
+  "days": {
+    "G_RULED": 6,
+    "G_is_PENDING_the_USER_parameter": false,
+    "STATUS": "RULED BY R-555 (USER). v1's five named days rested on the imported era bar and are superseded; R7's candidate sets are superseded too -- the ruled set is NEITHER of them",
+    "admissibility_source": "da_dayverdict_<YYYYMMDD>.json, the era-admission block -- NOT CLAUDE.md rule 5's mm_hf Binance boundary, which does not govern this tape (R-547(B))",
+    "if_a_future_day_fails_its_verdict": "the set is NOT extended by choosing another day: it waits for the next qualifying CLOSED day in calendar order and G stays 6 (R-555(B))",
+    "nothing_about_the_ARMS_has_been_chosen_on_them": "the thetas were fixed on the consumed 08-24 hour and no arm score has been read on any of these days. THE STRONGER CLAIM v1 AND v2 MADE -- that the tape itself was sealed and unread -- IS WITHDRAWN (R-549(A)); see R7_the_day_set.withdrawn_sentence and the per-day `previously_opened_for` field",
+    "ruled_set": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06",
+      "2026-09-07",
+      "2026-09-08"
+    ],
+    "ruling": "R-555 (USER): untouched days only. Days opened for a read of the frozen candidate (08-29, 09-01, 09-02) do NOT count as untouched",
+    "the_ruled_set_is_neither_candidate": "SET A held 08-29/09-01/09-02, which the ruling excludes; SET B held the three untouched days that EXISTED on 09-06 and G would have been 3. The ruling keeps SET B's predicate and extends it forward to 09-06, 09-07 and 09-08 as each closes and is verdicted -- so G is 6 and the set completes at the 2026-09-09T00:06Z verdict",
+    "v1_G": 5,
+    "v1_named": [
+      "2026-09-01",
+      "2026-09-02",
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05"
+    ],
+    "why_these": "the only era-pure clob_v4_1 days in existence (R-547(C)); 08-29/30/31 straddle era boundaries and are inadmissible; 08-20..08-25 are consumed"
+  },
+  "decision_population": {
+    "a_day_with_too_few_decisions_is_a_STATUS": "if an arm's decision count on a day is 0, that day is reported as a counted status for that arm and the arm cannot be aggregated over G = 5 -- it does not silently become a 4-day test",
+    "definition": "the arm's above-threshold events on day d at the arm's FIXED theta -- the set a cancel decision is drawn from",
+    "on_the_consumed_hour_it_was": {
+      "CONDVALUE_X_SKEW": {
+        "by_side": {
+          "BUY_UP": 586,
+          "SELL_UP": 568
+        },
+        "decisions": 1154
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "by_side": {
+          "BUY_UP": 41,
+          "SELL_UP": 65
+        },
+        "decisions": 106
+      }
+    },
+    "per_day_values_are_UNKNOWN_and_are_an_OUTPUT": true
+  },
+  "declared_before_any_draw": true,
+  "dry_run_ledger_scope": {
+    "checked_by": "the battery compares this declared scope against the runner's own what_this_reads / what_this_does_NOT_read",
+    "does_NOT_read": [
+      "any reference book",
+      "any arm",
+      "any score stream",
+      "any economics"
+    ],
+    "does_NOT_verify": {
+      "P2_BE_reference_book": "verify_day_inputs() is not called",
+      "P6_pinned_models_and_thetas": "verify_pinned_models() and verify_pinned_thetas() are not called",
+      "P7_BE_cascade_module_digest": "verify_be_module() is not called"
+    },
+    "entry_point": "de_multiday_gate1_runner.py --dry-run-ledger",
+    "reads": [
+      "day-verdict files",
+      "the declared read-state table"
+    ],
+    "therefore": "a GREEN dry run is evidence about the LEDGER and the ruled day set, and about nothing else. It is a before-picture, not a preflight",
+    "what_it_writes": "a dry-run ledger receipt; no book, no arm, no economics, no seal"
+  },
+  "falsifiers": {
+    "a_degenerate_null": "zero dispersion is a STATUS, not a large Z",
+    "a_missing_day": "G != 5 refuses rather than testing on 4",
+    "a_planted_arm_that_MUST_FAIL": "an arm whose D sits at the null's median on every day",
+    "a_planted_arm_that_MUST_PASS": "an arm above every draw on every day -- and the pass is asserted to be DIRECTIONAL, with clears_holm FALSE",
+    "a_planted_day_with_a_WRONG_BOOK_DIGEST": "refuses that day outright",
+    "an_under_sampled_null": "fewer than 500 draws refuses"
+  },
+  "metric": {
+    "primary": "D(E0) -- net value delta at maker fee zero (our signed rate), arm minus QR_SKEW_ONLY, per day",
+    "robustness": "D(E-R) at the rebate's identity value, reported beside it and never substituted for it",
+    "unchanged_from": "R-537 / the fee-endpoint receipt v1-v3"
+  },
+  "null": {
+    "design": "random decisions matched to the arm's OWN count and side split on that day, drawn from that day's decision population, replayed through the SAME stateful cascade",
+    "draw_source": {
+      "de_does_not_reimplement_the_cascade": true,
+      "how": "the runner imports be_cancel_axis_null, verifies the digest of the file the import actually loaded (module.__file__), and calls its draw_null() itself",
+      "on_a_real_day": "GENERATED_IN_PROCESS",
+      "ruling": "R-572(B)(1) (coordinator)",
+      "supplied_draws": "FIXTURE ONLY. A supplied draw set on a ruled day REFUSES",
+      "the_door_is_shut_structurally_not_on_the_callers_word": "fixture mode is refused when the day is IN the ruled set, and real mode is refused when the day is NOT -- the same lock DE 76 put on `fixture=True` in de_data_root, in the second place a caller could have walked through on its own word",
+      "why_in_process": "generation in the SAME process is what binds the verified digest to the numbers. A digest verified here and draws handed over from elsewhere says which cascade EXISTS, not which one produced these draws (reviewer efba2b6 item 2)"
+    },
+    "explicitly_not_matched_on": [
+      "realised cancel count",
+      "realised cancel set",
+      "fills lost -- a decision is not a cancel"
+    ],
+    "machinery": {
+      "de_does_not_reimplement_it": true,
+      "owner": "BE",
+      "path": "live/pm_research/be_cancel_axis_null.py",
+      "why": "two implementations of one cascade is two cascades; the null must run through the SAME stateful policy the arm ran through or it is not a control for it (R-547 item 1)"
+    },
+    "matched_on": [
+      "decision count",
+      "side split"
+    ],
+    "min_draws_per_arm_per_day": 500,
+    "seed": {
+      "convention": {
+        "checked_by": "the battery drives seed_from_convention() against seed_for() and against one mutation per declared field",
+        "domain_separator": "P003_GATE1_MULTIDAY",
+        "encoding": "utf-8",
+        "expression": "int(sha256(f'{day_book_sha256}|{arm}|P003_GATE1_MULTIDAY'.encode()).hexdigest()[:8], 16)",
+        "field_order": [
+          "day_book_sha256",
+          "arm",
+          "domain_separator"
+        ],
+        "hash": "sha256",
+        "hex_truncation_chars": 8,
+        "implemented_by": "de_multiday_gate1_runner.seed_for()",
+        "int_base": 16,
+        "joiner": "|",
+        "what_it_pins": "THE DATA, not merely the RNG (R-234 / protocol rule 10): the book digest is an input, so a book that moved cannot reuse a draw sequence",
+        "why_the_truncation_is_declared": "8 hex characters is a 32-bit seed. It is not a safety property and it is not arbitrary -- it is the number that fixes WHICH integer the RNG is started from, and a silent change to 16 would reseed every arm-day while every other field in the receipt read the same"
+      },
+      "not_a_bare_integer": true,
+      "rule": "seed = int(sha256(day_book_sha256 || arm || 'P003_GATE1_MULTIDAY')[:8], 16)",
+      "why": "the seed PINS THE DATA: it is derived from the day's book digest, so a book that moved cannot reuse the same draw sequence, and the sequence is reproducible from the artifact alone"
+    }
+  },
+  "parameters": {
+    "digest_deliberately_NOT_carried_here": "params v2 cites THIS declaration by digest. If this declaration also cited params by digest neither could ever be emitted -- each digest would depend on the other. The pin runs in ONE direction, params -> design, and this is the statement of which",
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v2.json",
+    "supersedes": "live/pm_research/declarations/de_multiday_gate1_params_v1.json",
+    "what_v2_changed": [
+      "run_not_before_utc split into read_not_before_utc + day_runs_allowed_for_closed_qualifying_days (R-572(B)(2))",
+      "BE's cascade digest re-pointed at ab75b41, justified by a COMPUTED per-definition diff rather than by BE's commit message -- see params v2 `be_module_repoint`"
+    ]
+  },
+  "per_day_location": {
+    "floor_at_500_draws": 0.001996007984031936,
+    "statistic": "p = (1 + #{null >= observed}) / (1 + K), ONE-SIDED, larger D is better"
+  },
+  "protocol": "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V9",
+  "resources": {
+    "basis": "measured on the consumed 08-24 hour",
+    "cap": "one CPU, MemoryMax=8G, never raised (R-174); if a day exceeds the cap the day REFUSES rather than the cap rising",
+    "extrapolation_factor": 24.0,
+    "mandatory_first_run": "the ONE-DAY SMOKE -- economic fields SEALED, resource observation published -- before any further day is run",
+    "mandatory_wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% <cmd>",
+    "measured": {
+      "be_null_500_draws_one_hour_BOTH_arms_s": 290.9,
+      "de_arms_replay_one_hour_s": 47.0,
+      "de_arms_replay_peak_gb": 0.61,
+      "windows_in_a_utc_day": 288,
+      "windows_in_the_measured_hour": 12
+    },
+    "per_day_BOTH_arms": {
+      "null_hours": 1.9393333333333331,
+      "null_s": 6981.599999999999,
+      "replay_hours": 0.31333333333333335,
+      "replay_s": 1128.0
+    },
+    "the_estimate_is_an_ESTIMATE": "a linear 24x extrapolation from one hour; the day-1 smoke replaces it with a measurement",
+    "totals": {
+      "G5": {
+        "G": 5,
+        "null_hours": 9.696666666666667,
+        "replay_hours": 1.5666666666666667,
+        "sequential_cpu_hours": 11.263333333333334
+      },
+      "G6": {
+        "G": 6,
+        "null_hours": 11.636,
+        "replay_hours": 1.88,
+        "sequential_cpu_hours": 13.516
+      }
+    },
+    "v1_mislabelled_this": "v1 read 290.9 s as one hour for ONE arm and wrote '~2 hours of null per ARM-day'. It is one hour for BOTH arms, so the figure is ~1.94 h per DAY for both arms and v1 overstated the null by a factor of two. Corrected here as computed fields from the measured seconds",
+    "wrapper_rule": "SEAT_PROTOCOL rule 20: every heavy step runs under this wrapper. The flock REFUSES if another heavy run holds the lock, so two seats cannot contend for the same 8G"
+  },
+  "ruling": "R-547 (USER). Gate 1's control is the REPLAY NULL; the five named days decide the section-7 stopping rule; design and null committed before data.",
+  "section_7_predicate": {
+    "THE_ASYMMETRY_IS_THE_POINT": "FAIL is cheap and needs no significance -- 'did not beat the null' is not a claim that needs power. PASS is capped by arithmetic: at G = 5 the smallest attainable one-sided sign-test p is 2^-5 = 0.03125, and Holm at m = 2 compares it against 0.025. NO ARM CAN CLEAR HOLM ON THIS RUN even if every day goes its way",
+    "alpha": 0.05,
+    "and_that_is_ONE_MORE_DAY": "at m = 2 the smallest clearing G is 6, so a SIXTH admissible day would make a unanimous pass significance-bearing. There is none yet -- 09-06 is the next candidate and is not complete -- but the price of a significant answer is one day, and that is worth knowing before the run rather than after it",
+    "declared_before_any_day_is_seen": true,
+    "multiplicity_m": 2,
+    "smallest_G_that_would_clear_holm": {
+      "m_1": 5,
+      "m_2": 6
+    },
+    "so_a_pass_means": "DIRECTIONAL AND CONSISTENT, NEVER SIGNIFICANCE-BEARING -- the same limit R-529(A) ruled for the forward race, declared here BEFORE the run rather than discovered after it",
+    "statement": "arm a FAILS iff mean_d Z_(a,d) <= 0 OR the five day signs are not unanimous",
+    "this_is_stated_now_so_nobody_reads_a_pass_as_a_validation": true
+  },
+  "seed_convention": {
+    "checked_by": "the battery drives seed_from_convention() against seed_for() and against one mutation per declared field",
+    "domain_separator": "P003_GATE1_MULTIDAY",
+    "encoding": "utf-8",
+    "expression": "int(sha256(f'{day_book_sha256}|{arm}|P003_GATE1_MULTIDAY'.encode()).hexdigest()[:8], 16)",
+    "field_order": [
+      "day_book_sha256",
+      "arm",
+      "domain_separator"
+    ],
+    "hash": "sha256",
+    "hex_truncation_chars": 8,
+    "implemented_by": "de_multiday_gate1_runner.seed_for()",
+    "int_base": 16,
+    "joiner": "|",
+    "what_it_pins": "THE DATA, not merely the RNG (R-234 / protocol rule 10): the book digest is an input, so a book that moved cannot reuse a draw sequence",
+    "why_the_truncation_is_declared": "8 hex characters is a 32-bit seed. It is not a safety property and it is not arbitrary -- it is the number that fixes WHICH integer the RNG is started from, and a silent change to 16 would reseed every arm-day while every other field in the receipt read the same"
+  },
+  "source_identity": {
+    "carrying_commit": "e29f984d8a33a4e578917c45d989e5db00405768",
+    "producing_code": "de_multiday_design_declaration.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_design_declaration.py",
+    "producing_code_sha256": "867936be51f0ac33a40a27d777f9814d4c3d92641151cc531dfffa46c42e68c4",
+    "tree_dirty": false,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran"
+  },
+  "status": "DESIGN_DECLARATION_NO_DATA_TOUCHED",
+  "supersedes": {
+    "chain": [
+      [
+        "p003_de_multiday_gate1_design__20260906T031853Z.json",
+        "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b781c7bd6f"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
+        "c4da696f60ca62700d18551f523e571aab09bc5b8b42f6970112aba6490ce903"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+        "a1016a8762fffdfeb368c5ff217e8bcc83141b1567e218a2f1b69c658a65289c"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+        "24db4e1bd5bfc04bbdcd13ecdd28bb4260d2854539ac90b7df40e671eee78a3d"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+        "dfc599ba46a7c4a7dd4d0e274df128a780f27c7ccc732e84a72df8fed9046cec"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
+        "966ca76d2803fa5aa45cb5b15c3b6eff498c7888e9d9bb33b53612effcbd39d2"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v7__20260906T045059Z.json",
+        "bd33daf5beb4774b40cadcf7239f830ee0ea3edd12b617b6d5a1611f9213072f"
+      ],
+      [
+        "p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
+        "139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b87452a55d32555"
+      ]
+    ],
+    "defects_in_v1_this_names": [
+      "the imported era bar -- v1 said 'the only era-pure clob_v4_1 days', which R-497(F)(1) rules out: version is not a bar, QUALITY is. WITHDRAWN",
+      "the battery count -- v1's receipt recorded n_checks 19 against the source's EXPECTED_CHECKS 20, because main() wrote EXPECTED_CHECKS - 1 rather than the count the run produced. The source hash matched: a RECEIPT-COUNT defect, not a code difference",
+      "the resource arithmetic -- v1 read 290.9 s as one arm-hour and wrote '~2 hours of null per ARM-day'; it is one hour for BOTH arms, so v1 overstated the null by a factor of two",
+      "the smoke -- v1 published day 1's economic result before days 2..G were run, leaving early stopping reachable"
+    ],
+    "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
+    "sha256": "139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b87452a55d32555",
+    "the_version_travels_in_ONE_place": "VERSION; the protocol suffix, the emitted filename and the head of this chain are derived from it and the battery asserts all three agree. v7 on disk read protocol V4, filename v7 and supersedes v2 -- three axes, three answers",
+    "v1_and_v2_untouched": true,
+    "v3_closes": [
+      "the withdrawn 'sealed and unread' sentence, replaced by a per-day `previously_opened_for` field that R7 derives SET B from (reviewer 41cba2c A.2)",
+      "R8's typed '~20 hours' estimate, replaced by a computed reference to resources.totals",
+      "the worktree data-shell trap, recorded as a field with the root this emission read"
+    ],
+    "version": 9,
+    "why": "the reviewer's be03d4d found two blocking items and seven places a choice could still be made after seeing a day. Every one is closed here as a FIELD"
+  },
+  "theta": {
+    "CONDVALUE_X_SKEW": 0.32450609461933483,
+    "HAZARD_OVER_SKEWED_REF": 0.43525926488298716
+  },
+  "theta_is_not_refitted_on_any_of_the_five_days": true,
+  "theta_pins": {
+    "CONDVALUE_X_SKEW": {
+      "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+      "head": "q1_arrival_composed_lgbm",
+      "json_path": "cells.CONDVALUE_X_SKEW.arm_filed.theta",
+      "model_artifacts": {
+        "lgbm_haz_btc.txt": "ec52055214a01ed5",
+        "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f"
+      },
+      "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182c2fa08"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+      "head": "incumbent_linear_d",
+      "json_path": "cells.HAZARD_OVER_SKEWED_REF.arm_filed.theta",
+      "model_artifacts": {
+        "linear_d_btc.json": "18701008c2bd18c6"
+      },
+      "sha256": "6951f57d2b8a23bd2d51f24d25659ddffc671c5932aaba89246b025182c2fa08"
+    }
+  },
+  "what_DE_needs_from_BE_per_day": {
+    "de_does_not_build_the_book_and_does_not_open_BEs_pickle": true,
+    "digest_pinning": "BE publishes, per day, the book path and its sha256 in a builder declaration. DE's per-day artifact carries `reference_book: {day, path, sha256}` and RECOMPUTES the digest at read time; a mismatch REFUSES that day",
+    "object": "the day's reference book -- the same shape as the 08-24 arms cache's `fr`: reference (slug -> side -> generations with tranches), statuses, population, n_slugs, and terminal_marks",
+    "why_terminal_marks": "the inventory leg is valued to each window's terminal mark; a book without them reads NO_TERMINAL_MARK on every fill"
+  },
+  "what_this_declaration_is_not": {
+    "a_result": false,
+    "a_run": false,
+    "gates_2_to_6": "if an arm passes, Gates 2-6 need FIVE FURTHER admissible days (09-06 onward, earliest complete set 09-10, readable 09-11) -- these five are consumed by this run",
+    "it_touches_no_data": true
+  },
+  "what_would_REFUTE_this_design": [
+    "if the per-day decision population for an arm is systematically empty or tiny on the admissible days, the matched null cannot be built and Gate 1's control fails for a reason that is not about the arm -- that refutes the DESIGN, not the arm",
+    "if BE's cascade cannot be driven on a day's book without re-fitting anything, the 'same cascade' premise is false",
+    "if the five days' books are not independent in the way the day-cluster unit assumes (a single market event spanning days), the interval is wrong even at G = 5",
+    "if the arm's theta is found to have been fitted on any of these five days, they are consumed and the run is void (rule 11)"
+  ],
+  "withdrawn_phrase_audit": {
+    "all_in_a_withdrawal_context": true,
+    "declared_contexts": [
+      "R7_the_day_set.withdrawn_sentence.text",
+      "days.nothing_about_the_ARMS_has_been_chosen_on_them",
+      "supersedes.v3_closes[0]"
+    ],
+    "n_occurrences": 3,
+    "occurrences": [
+      "days.nothing_about_the_ARMS_has_been_chosen_on_them",
+      "supersedes.v3_closes[0]",
+      "R7_the_day_set.withdrawn_sentence.text"
+    ],
+    "phrase": "sealed and unread",
+    "why_it_appears_at_all": "a sentence cannot be withdrawn without being named; the audit is what separates naming it from asserting it"
+  },
+  "worktree_data_shell_trap": {
+    "how_it_bit_this_declaration": "the R7 derivation read `<root>/data` and returned THREE qualifying days where the ledger has SIX -- 09-03, 09-04 and 09-05's verdicts were simply not in the shell. It was caught only because the count disagreed with a hand check made minutes earlier, not by any guard",
+    "prior_instances": [
+      "de_v2_owned_execution_input's 11th check FAILS in every seat worktree and PASSES in the main tree on byte-identical source (Q-DE-63)",
+      "the reviewer hit the same trap from the other side this round -- its 'the ledger stops at 09-02' was a tracking gap, R-552"
+    ],
+    "root_read_this_emission": "/home/yuqing/ctaNew/data",
+    "the_fix": "the derivation resolves the symlink when it exists and RECORDS the root it read, so a reader can tell which tree produced the day set",
+    "the_general_shape": "a path that resolves in both trees but means different things in each. A digest cannot catch it, a green suite cannot catch it, and a count that nobody compares to a hand check cannot either",
+    "what": "in a seat worktree `<root>/data` is the git-materialised shell holding only COMMITTED artifacts; the real tree hangs off the R-397 symlink at `<root>/data/data`"
+  }
+}

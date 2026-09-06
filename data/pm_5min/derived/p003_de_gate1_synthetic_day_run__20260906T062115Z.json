@@ -1,0 +1,380 @@
+{
+  "G": 6,
+  "as_of": "2026-09-06T06:21:32.810318+00:00",
+  "battery": {
+    "expected_checks_in_the_source": 100,
+    "n_checks_run": 65,
+    "n_checks_skipped_offline": 35,
+    "offline": true,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "run_plus_skipped_equals_source_expected": true,
+    "skipped_offline": [
+      "R6 positive control (reads the pinned model files)",
+      "R6 known-bad: a planted model byte",
+      "R6 known-bad: an absent pinned model",
+      "R6 known-bad: a theta disagreeing with its pin",
+      "(3) the instrumented fixture-run data-freeness probe (it calls fixture_run, which would recurse)",
+      "(3) the non-vacuity check on that probe",
+      "(3) the fixture-claim-carries-its-proof check (it calls fixture_run_proven, which would recurse)",
+      "(3) the laundering known-bad on require_canonical",
+      "(3) the literal sweep over the emitted receipt (it calls fixture_run_proven, which would recurse)",
+      "(3) the committed-day-set computation check",
+      "(3) the derived runnable-from-a-shell-worktree check",
+      "DE 78 day-path check 1/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 2/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 3/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 4/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 5/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 6/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 7/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 8/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 9/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 10/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 11/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 12/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 13/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 14/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 15/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 16/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 17/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 18/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 19/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 20/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 21/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 22/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 23/23 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check count agreement (online only)"
+    ],
+    "why_skipped": "these checks READ `data/`; a fixture run must open no path under it, and a skipped check that is silent is a check that has stopped existing"
+  },
+  "be_module_citation": {
+    "cited_not_copied": true,
+    "digest_is_of_the_file_the_import_loaded": true,
+    "loaded_from": "/home/yuqing/ctaNew-wt-de/live/pm_research/be_cancel_axis_null.py",
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274",
+    "verified_at_run_time": true
+  },
+  "committed_bytes_policy": {
+    "fixture": "producing_code_is_the_committed_bytes MAY be false and is RECORDED, never refused -- a hard refusal would block every pre-commit fixture emission and push someone to commit blind (RULED, DE 78)",
+    "producing_code_is_the_committed_bytes": true,
+    "real_day": "a REAL day REFUSES on false: a result-bearing day artifact naming a commit that does not hold the code that ran is provenance theatre",
+    "this_run_is_a_fixture": true
+  },
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the fixture day run",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day": "2026-09-03",
+  "decision_populations": {
+    "CONDVALUE_X_SKEW": {
+      "arm": "CONDVALUE_X_SKEW",
+      "by_side": {
+        "BUY_UP": 24,
+        "SELL_UP": 24
+      },
+      "decisions": 48,
+      "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+      "head": "q1_arrival_composed_lgbm",
+      "n_scored_rows": 96,
+      "theta": 0.32450609461933483,
+      "theta_was_not_refitted_here": true
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "by_side": {
+        "BUY_UP": 24,
+        "SELL_UP": 24
+      },
+      "decisions": 48,
+      "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+      "head": "incumbent_linear_d",
+      "n_scored_rows": 96,
+      "theta": 0.43525926488298716,
+      "theta_was_not_refitted_here": true
+    }
+  },
+  "draw_pool_set_equality_checked": true,
+  "fixture": true,
+  "memory_plan": {
+    "budget_mb": 700.0,
+    "index_splits": {
+      "answer": "NONE, at any stage",
+      "consequence_for_BEs_assembly": "the index is needed only to PRODUCE `asm`. It does not have to be resident alongside the reference and `asm` at all, because the consumer of those two is a different process. If BE releases the index before assembling and writing the book, the whole-day peak is max(index stage, assembly stage) rather than their sum",
+      "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming that head; a run with no tape artifact reachable at all still completes",
+      "measured_by": "day_split_residency_proof() -- the day path run under instrumentation, asserting no tape/index/fragment artifact was opened",
+      "per_stage": {
+        "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the scored set; the scorer is a dict lookup that REFUSES on a miss rather than computing a feature",
+        "S3_baseline_and_S4_null": "no split. Each replay values its fills from the fill record and the reference; per WINDOW and streamable, with nothing accumulated across draws",
+        "economics_valuation": "no split, and NOT per-window-resident either -- one fill list at a time"
+      },
+      "question": "which tape-index splits must be resident during `--day`, and at which stage",
+      "what_DE_cannot_rule": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling, not DE's. What is declared here is only what the CONSUMER needs, which is the half BE was waiting on",
+      "why": "the decision population is read from `asm` -- BE's already assembled per-generation scores, keyed (slug, side, t0) -- and the economics valuation reads only the replay's own fill records and the reference's levels and markouts (`de_phase4_diag_runner.fill_value_cents`). Neither touches a tape row"
+    },
+    "observed": {
+      "S0_verify": {
+        "elapsed_s": 0.153,
+        "peak_rss_mb_highwater": 37.8671875
+      },
+      "S1_load": {
+        "elapsed_s": 0.157,
+        "peak_rss_mb_highwater": 39.1171875
+      },
+      "S2_population": {
+        "elapsed_s": 0.157,
+        "peak_rss_mb_highwater": 39.1171875
+      },
+      "S3_baseline": {
+        "elapsed_s": 0.159,
+        "peak_rss_mb_highwater": 39.1328125
+      },
+      "S4_null": {
+        "elapsed_s": 1.888,
+        "peak_rss_mb_highwater": 42.33984375
+      },
+      "S5_seal": {
+        "elapsed_s": 1.888,
+        "peak_rss_mb_highwater": 42.33984375
+      }
+    },
+    "peak_rss_mb": 42.33984375,
+    "stages": [
+      {
+        "holds": "digests only: BE's builder receipt, the book's bytes, the pinned models and thetas, BE's cascade module. The book is READ ONCE here as bytes for its digest and the buffer is handed to S1, never read twice (BE's B-1)",
+        "stage": "S0_verify"
+      },
+      {
+        "holds": "reference + asm + rows. THIS IS THE PEAK of the day path: everything after it is derived and bounded",
+        "stage": "S1_load"
+      },
+      {
+        "holds": "adds one score float per generation per arm, twice. asm's gen_scores are ALREADY resident from S1; the arm stream is a view over `rows`",
+        "stage": "S2_population"
+      },
+      {
+        "holds": "adds the no-cancel replay's fills -- the neutral reference path (CLAUDE.md reliability rule 1)",
+        "stage": "S3_baseline"
+      },
+      {
+        "holds": "one draw's flags and one replayed fill list AT A TIME. The draws are REDUCED to a value each as they are made; no draw's fills survive the next. O(1) in n_draws",
+        "stage": "S4_null"
+      },
+      {
+        "holds": "counts and statuses only. The economic fields are computed and withheld, never carried into the artifact",
+        "stage": "S5_seal"
+      }
+    ],
+    "within_budget": true
+  },
+  "n_days_complete": 1,
+  "per_day_sealed_artifacts": [
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 48,
+        "reasons": [],
+        "sd_over_abs_mean": 19.909446780245002,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "2026-09-03",
+      "decision_population": {
+        "arm": "CONDVALUE_X_SKEW",
+        "by_side": {
+          "BUY_UP": 24,
+          "SELL_UP": 24
+        },
+        "decisions": 48,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "q1_arrival_composed_lgbm",
+        "n_scored_rows": 96,
+        "theta": 0.32450609461933483,
+        "theta_was_not_refitted_here": true
+      },
+      "draw_provenance": {
+        "arm": "CONDVALUE_X_SKEW",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "9da319cfce7a1f3b17526a173dcaada6f12877e5470f6562747bc297c011d582",
+        "draw_source": "GENERATED_IN_PROCESS",
+        "generated_in_process": true,
+        "module_sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274",
+        "n_draws": 500,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": {
+          "field": "cancels_issued",
+          "identical": true,
+          "n_compared": 8,
+          "seed": 2667379366,
+          "why": "the cascade is BE's; only the METRIC is DE's"
+        },
+        "seed": 2667379366
+      },
+      "n_cancels_issued": 24,
+      "n_fills_arm": 48,
+      "n_fills_baseline": 96,
+      "seal_status": "SEALED -- 1 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 2667379366,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 48,
+        "reasons": [],
+        "sd_over_abs_mean": 331.36420097704547,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "2026-09-03",
+      "decision_population": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "by_side": {
+          "BUY_UP": 24,
+          "SELL_UP": 24
+        },
+        "decisions": 48,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "incumbent_linear_d",
+        "n_scored_rows": 96,
+        "theta": 0.43525926488298716,
+        "theta_was_not_refitted_here": true
+      },
+      "draw_provenance": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "9da319cfce7a1f3b17526a173dcaada6f12877e5470f6562747bc297c011d582",
+        "draw_source": "GENERATED_IN_PROCESS",
+        "generated_in_process": true,
+        "module_sha256": "2b164df2ec0653a51c6db71fd69db052564b1dcc6c8956ea576d9840d89d9274",
+        "n_draws": 500,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": {
+          "field": "cancels_issued",
+          "identical": true,
+          "n_compared": 8,
+          "seed": 2585293649,
+          "why": "the cascade is BE's; only the METRIC is DE's"
+        },
+        "seed": 2585293649
+      },
+      "n_cancels_issued": 24,
+      "n_fills_arm": 48,
+      "n_fills_baseline": 96,
+      "seal_status": "SEALED -- 1 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 2585293649,
+      "status": "OK"
+    }
+  ],
+  "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+  "reference_book": {
+    "builder_receipt": "/tmp/de_synth_day_uvr1v75j/be_daybook_20260903_SYNTHETIC.json",
+    "day": "2026-09-03",
+    "digest_recomputed_at_read_time": true,
+    "digest_source": "BE's builder receipt, not a DE constant",
+    "path": "/tmp/de_synth_day_uvr1v75j/be_daybook_20260903_SYNTHETIC.pkl",
+    "sha256": "9da319cfce7a1f3b17526a173dcaada6f12877e5470f6562747bc297c011d582"
+  },
+  "resources": {
+    "peak_rss_mb": 42.33984375,
+    "per_arm": {
+      "CONDVALUE_X_SKEW": {
+        "null_elapsed_s": 0.8715980052947998,
+        "null_peak_rss_mb": 42.08984375,
+        "status": "OK"
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "null_elapsed_s": 0.8482232093811035,
+        "null_peak_rss_mb": 42.33984375,
+        "status": "OK"
+      }
+    },
+    "wall_seconds": 1.8879027366638184
+  },
+  "source_identity": {
+    "carrying_commit": "e29f984d8a33a4e578917c45d989e5db00405768",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "2a93f2c5c9e92d10f1fd0c9c16b445229df80ba1edd5234fc6d9aa4655f9c199",
+    "tree_dirty": false,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran"
+  },
+  "split_residency_proof": {
+    "instrument_observed_the_book_read": true,
+    "markers_tested": [
+      "pm_5min/raw",
+      "harmful_exposure_rows",
+      "tape_index",
+      "_fragment",
+      "fragment_",
+      "state_tape",
+      "/tape"
+    ],
+    "n_distinct_paths": 5,
+    "n_paths_opened": 6,
+    "no_tape_index_or_fragment_artifact_was_opened": true,
+    "non_vacuous": true,
+    "py_sources_excluded_on_purpose": "`pm_tape_density.py` is a MODULE whose name contains 'tape'; matching it would make the proof fire on its own imports",
+    "tape_artifacts_opened": []
+  },
+  "status": "FIXTURE_DAY_RUN_NO_REAL_DATA",
+  "what_this_is_not": {
+    "D_E_MINUS_R_is_UNBOUND": "the robustness endpoint needs the rebate's identity value, which is NOT on DE's surface. D(E0) -- the DECLARED PRIMARY -- is computed here from `de_phase4_diag_runner.fill_value_cents`, which is level-to-markout with NO fee term and therefore IS the E0 endpoint. D(E-R) is not computed and is not approximated",
+    "a_result": false,
+    "the_economics_are_SEALED": true
+  },
+  "wrapper": {
+    "cgroup_leaf": "run-u70080.scope",
+    "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+    "heavy_run_lock_held": false,
+    "how": "the lock's fd is inherited through `flock -n <lock> systemd-run --scope`; this is READ FROM /proc/self/fd, so the field is a measurement and not the declared wrapper string",
+    "in_a_transient_scope": true,
+    "lock_fds": [],
+    "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "rule20": {
+      "bar": {
+        "rss_gb": 1.0,
+        "wall_s": 60.0
+      },
+      "heavy_by_measurement": false,
+      "lock_held": false,
+      "peak_rss_gb": 0.041347503662109375,
+      "rule": "R-575(C) -- heavy implies the lock, checked here rather than promised in a wrapper string",
+      "wall_s": 1.8879027366638184
+    }
+  }
+}

@@ -6,14 +6,14 @@ preconditions in §1 include three that are **not yet met**, and each says so.
 
 **Authority:** R-547 (USER), R-555 (the ruled day set, G = 6),
 R-572(B) (the draws source, the two clocks, the seal layout).
-**Design:** `p003_de_multiday_gate1_design_v8__20260906T055810Z.json`,
-sha256 `139052dfa87db3fe11f24ec9c25906825f84bf03d4b324439b87452a55d32555`.
+**Design:** `p003_de_multiday_gate1_design_v9__20260906T062115Z.json`,
+sha256 `fe4b0db4ddfdcc3a942fef9a35cd702646a9c020704ca81b5f28ff175f7aff2e`.
 **Parameters:** `live/pm_research/declarations/de_multiday_gate1_params_v2.json`,
-sha256 `76f25d5564ecff730e3003a1f6169eed758c0e039e0065c07aecc3e35dc0cc39`.
+sha256 `ce46b5775d8f17a4b417640b620db275868a9efec19abdde6caaecd4dbd405dd`.
 **Before-picture:** `p003_de_gate1_dry_run_ledger__20260906T044319Z.json`,
 sha256 `56882c75a14322e5ee816e1e033dcde9ae371d229824b225b76c4f5c15cd7912`.
-**Fixture receipt:** `p003_de_multiday_gate1_fixture_run_v7__20260906T055819Z.json`,
-sha256 `4b180748e70754e82c36227b6c923e06c2b34f403f3cddb532c90ec77e657122`.
+**Fixture receipt:** `p003_de_multiday_gate1_fixture_run_v8__20260906T062115Z.json`,
+sha256 `f6950e9e5dd6e25875bc01b48038fea01384d1965fdc1d1a4fbc961d6c9d4bb2`.
 
 ---
 
@@ -21,9 +21,9 @@ sha256 `4b180748e70754e82c36227b6c923e06c2b34f403f3cddb532c90ec77e657122`.
 
 | # | precondition | state | checked by |
 |---|---|---|---|
-| P1 | The reviewer's runner-approval filing covers the runner **as it now stands** | **NOT MET** — `REVIEW_RUNNER_REDRIVE_AND_RACE_READ_2026-09-06.md` (`4daaea9`) approved the runner at 42 checks. DE 77 changed it materially (in-process draws, the seal layout, params v2, the re-pointed cascade) and is queued for review | human; cite the filing by path in the run receipt |
-| P2 | BE's 09-03 reference book, by path + sha256, **carrying `asm`** for both pinned heads, plus BE's builder receipt | **NOT MET and further away than it looked** — R-573: the build is BLOCKED on a feature fragment that covers only the consumed 08-24/25 era. A per-day top-up feature pass and an assembly that fits 8 GB come first (BE 49) | `verify_day_inputs()` (book digest); design v8 `R1_asm_the_scored_book` |
-| P3 | Params file `…/de_multiday_gate1_params_v2.json` reads sha256 `76f25d55…` | met | `load_params()` — refuses an empty set, a duplicate day, a set whose size ≠ `expected_G`, or a day whose `previously_opened_for` ≠ `none` |
+| P1 | The reviewer's runner-approval filing covers the runner **as it now stands** | **NOT MET** — REV 37 (`REVIEW_RUNNER_REDRIVE_DE77_2026-09-06.md`) approved the FIXTURE path and stated the smoke cannot be approved while `--day` did not exist. `--day` exists as of DE 78 and has not been reviewed; the two admission-layer findings from that filing are fixed here and need re-driving | human; cite the filing by path in the run receipt |
+| P2 | BE's 09-03 reference book, by path + sha256, **carrying `asm`** for both pinned heads, plus BE's builder receipt | **NOT MET and further away than it looked** — R-573: the build is BLOCKED on a feature fragment that covers only the consumed 08-24/25 era. A per-day top-up feature pass and an assembly that fits 8 GB come first (BE 49) | `verify_day_inputs()` (book digest); design v9 `R1_asm_the_scored_book` |
+| P3 | Params file `…/de_multiday_gate1_params_v2.json` reads sha256 `ce46b577…` | met | `load_params()` — refuses an empty set, a duplicate day, a set whose size ≠ `expected_G`, or a day whose `previously_opened_for` ≠ `none` |
 | P4 | `PM_DATA_ROOT` exported as **the repo root** `/home/yuqing/ctaNew` | met in the DE tmux session (set 2026-09-06T05:36Z; it was **unset** at reload) | `de_data_root.require_canonical()` |
 | P5 | `/home/yuqing/ctaNew/data/.heavy_run.lock` free | check at run time | `flock -n` in the wrapper refuses if held |
 | P6 | The three pinned model files and both thetas match their pins | met as of this writing | `verify_pinned_models()`, `verify_pinned_thetas()` — a mismatch refuses **the run** |
@@ -54,17 +54,43 @@ flock -n /home/yuqing/ctaNew/data/.heavy_run.lock \
       --day 2026-09-03 --output <receipt path>
 ```
 
-`--day` **does not exist yet**: the runner today has `--selftest`,
-`--fixture-run` and `--dry-run-ledger`. Its two hardest seams are now built
-and driven — `resolve_draws()` / `generate_draws_in_process()` produce the
-draws in this process from BE's verified module, and `may_run_day()` decides
-whether a day may run at all — but the `--day` entry point that assembles
-them is still to be written. It is named here so the gap is visible rather
-than discovered at the console.
+`--day` **exists** as of DE 78, and so does `--synthetic-day <DAY>`,
+which builds a day book of BE's declared shape, runs the same path on it
+through BE's **real** cascade, and emits the receipt. What the synthetic
+run proves is the WIRING; it proves nothing about BE's data.
+
+**A real day takes the lock FIRST or does not start.** `--day` refuses
+before any work if this process does not hold
+`/home/yuqing/ctaNew/data/.heavy_run.lock` — a real day is heavy by
+construction (BE projects ~2.3 h for both arms), and R-575(C) records two
+heavy scopes running concurrently because a wrapper string in a file cannot
+say what launched a process. The receipt's `wrapper` block is now READ FROM
+`/proc/self/fd`: `flock` passes the lock's fd through the exec (fd 3,
+measured), so the artifact states what actually ran.
+
+**A real day also refuses if its producing code is not the bytes HEAD
+holds** — a result naming a commit that does not contain the code that made
+it is provenance theatre. A fixture RECORDS that field instead of refusing
+(ruled, DE 78), because a hard refusal there would block every pre-commit
+emission.
 
 Caps are never raised (R-174). If the day exceeds the cap or the declared
 deadline, **the day refuses** — never a lower draw count, never a bigger
-cap (design v8 `R8_time_overrun`; `arm_day()` deadline branch).
+cap (design v9 `R8_time_overrun`; `arm_day()` deadline branch).
+
+**What `--day` holds, and which index splits it needs: NONE.**
+Six declared stages (design v9 `R11_memory_and_index_residency`), a
+high-water recorded at each boundary, and a budget that REFUSES rather than
+reports a number over the line. `--day` consumes BE's book — `fr.reference`
+plus `asm` — and values fills from the replay's own records, so no tape
+index or feature fragment is resident at any stage. That is MEASURED: the
+whole day path runs under instrumentation and the receipt records that not
+one tape, index or fragment artifact was opened, with a non-vacuity control
+that the instrument DID observe the book being read. **Consequence for BE:
+the index need not be alive when the reference and `asm` are, so the
+whole-day peak is max(index stage, assembly stage) rather than their sum.**
+Which split BE must build to produce a September day's `asm` is BE's
+measurement and R-496(E)'s ruling, not DE's.
 
 **R8's budget is DE's arm-day, not the whole pipeline.** The 12-hour
 `per_day_deadline_s` and R8's CPU-hour table cover the null and the replay.
@@ -107,7 +133,7 @@ section-7 verdict — and not the runs. A closed, qualifying, ruled day may be
 run sealed today: `may_run_day()` admits it, `may_read_aggregate()` refuses
 the read until BOTH the date has passed AND all six days are complete.
 
-All six days run **regardless of interim results** (design v8
+All six days run **regardless of interim results** (design v9
 `R5_the_smoke_is_sealed.all_G_days_run_regardless_of_interim_results`).
 
 ## 5. The refusal exits, and what each means
@@ -148,7 +174,7 @@ All six days run **regardless of interim results** (design v8
    while sealed.
 4. **The draw provenance** — `draw_source == "GENERATED_IN_PROCESS"`,
    `pid` equal to the run's, `module_sha256` equal to P7's digest, and the
-   seed reproducible from the book digest and the arm by design v8's
+   seed reproducible from the book digest and the arm by design v9's
    `seed_convention` fields.
 5. **The battery equality** — `n_checks_run + n_checks_skipped_offline ==
    expected_checks_in_the_source`, and every skipped check **named**.
