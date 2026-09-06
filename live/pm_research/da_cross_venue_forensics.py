@@ -436,6 +436,27 @@ def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
         except Exception as e:                              # noqa: BLE001
             return {"unit": unit, "status": "SYSTEMCTL_FAILED",
                     "why": repr(e), "read_at_utc": read_at}
+    #: REV 69 2.2: THE CROSS-CHECK CAUGHT THE EMPTY WRONG FIELD AND NOT A
+    #: PARTIAL RIGHT ONE. `_SYSTEMD_INVOCATION_ID` alone returned 1 line of
+    #: 4 and `USER_INVOCATION_ID` alone 3 of 4 -- NON-EMPTY, so both were
+    #: marked COPIED, and a partial copy of a run is the thing this
+    #: function exists to prevent. The guard is now a SHAPE CHECK ON THE
+    #: QUERY THIS FUNCTION BUILDS: both field names must be present, which
+    #: makes the `+` disjunction unloseable, and no count can substitute
+    #: for it.
+    missing = [f for f in INVOCATION_FIELDS if f not in tuple(fields)]
+    if missing:
+        return {"unit": unit, "status": "REFUSED_INCOMPLETE_FIELD_SET",
+                "fields": list(fields), "missing_fields": missing,
+                "required_fields": list(INVOCATION_FIELDS),
+                "read_at_utc": read_at, "lines": None,
+                "n_lines_copied": None, "n_lines_for_the_unit": None,
+                "why": ("a run's lines are split across BOTH invocation "
+                        f"fields -- {list(INVOCATION_FIELDS)} -- and a "
+                        f"query missing {missing} returns a NON-EMPTY "
+                        "PARTIAL copy that the zero-line cross-check "
+                        "cannot see. The completeness of the query is "
+                        "checked on the QUERY, not on its output")}
     if not invocation_id:
         return {"unit": unit, "status": "NO_INVOCATION_ID",
                 "read_at_utc": read_at,
@@ -483,6 +504,14 @@ def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
            "unit_query": " ".join(unit_argv),
            "n_lines_for_the_unit": len(unit_lines),
            "n_lines_copied": len(lines), "read_at_utc": read_at}
+    #: THE COUNT MISMATCH IS A NOTE, NOT A REFUSAL: `-u <unit>` spans every
+    #: invocation of a REUSED unit name, so it mismatches by design.
+    if unit_lines is not None and lines is not None \
+            and len(lines) != len(unit_lines):
+        out["count_note"] = (
+            f"{len(lines)} line(s) for this invocation against "
+            f"{len(unit_lines)} for the unit NAME across all its "
+            f"invocations -- a mismatch by design, not a finding")
     if unit_lines and not lines:
         out["status"] = "REFUSED_ZERO_LINE_COPY"
         out["lines"] = None
@@ -896,15 +925,31 @@ def selftest() -> int:
            "manager's Started/Consumed lines carry USER_INVOCATION_ID and "
            "the payload carries _SYSTEMD_INVOCATION_ID; either alone is a "
            "PARTIAL copy of the run")
-        ok(wrong["status"] == "REFUSED_ZERO_LINE_COPY"
-           and wrong["n_lines_copied"] == 0
-           and wrong["n_lines_for_the_unit"] > 0
-           and wrong.get("lines") is None,
-           "KNOWN-BAD: the SYSTEM manager's `INVOCATION_ID` matches nothing "
-           f"here -- 0 lines copied where the unit has "
-           f"{wrong['n_lines_for_the_unit']} -- and the cross-check "
-           "REFUSES. ***A record written from that copy would say the run "
-           "was silent when it was not***")
+        partial_sys = copy_journal_lines(
+            _u, fields=("_SYSTEMD_INVOCATION_ID",))
+        partial_usr = copy_journal_lines(_u, fields=("USER_INVOCATION_ID",))
+        ok(wrong["status"] == "REFUSED_INCOMPLETE_FIELD_SET"
+           and wrong["missing_fields"] == list(INVOCATION_FIELDS)
+           and wrong.get("lines") is None
+           and partial_sys["status"] == "REFUSED_INCOMPLETE_FIELD_SET"
+           and partial_usr["status"] == "REFUSED_INCOMPLETE_FIELD_SET"
+           and partial_sys["missing_fields"] == ["USER_INVOCATION_ID"]
+           and partial_usr["missing_fields"] == ["_SYSTEMD_INVOCATION_ID"],
+           "KNOWN-BAD, REV 69 2.2: ***the zero-line cross-check caught the "
+           "EMPTY wrong field and NOT a PARTIAL right one*** -- "
+           "`_SYSTEMD_INVOCATION_ID` alone returned 1 line of 4 and "
+           "`USER_INVOCATION_ID` alone 3 of 4, both NON-EMPTY, both marked "
+           "COPIED. The guard is a SHAPE CHECK ON THE QUERY THIS FUNCTION "
+           "BUILDS: both field names must be present, which makes the `+` "
+           "UNLOSEABLE, and no count can substitute for it. Driven: the "
+           "system manager's field -> missing BOTH; either correct field "
+           "alone -> missing its twin, REFUSED before a single line is "
+           "read")
+        ok("count_note" in both or both["n_lines_copied"]
+           == both["n_lines_for_the_unit"],
+           "AND THE COUNT MISMATCH IS A NOTE, NEVER A REFUSAL: `-u <unit>` "
+           "spans every invocation of a REUSED unit name, so it mismatches "
+           f"BY DESIGN -- {both.get('count_note') or 'the counts agree here'}")
     else:
         ok(both.get("status") in ("NO_INVOCATION_ID", "SYSTEMCTL_FAILED"),
            "the unit has not run under this manager; the copy is a NAMED "

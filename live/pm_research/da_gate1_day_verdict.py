@@ -562,9 +562,14 @@ def verify_book_digest(book_path: str, receipt_sha: str) -> dict:
 
 
 BOOK_REQUIRED_KEYS = ("rows", "scores_by_arm")
+#: BE's pickled day book, as READ from the book verifier's own reading of
+#: it (`asm.by_arm`, `fr`) -- the top level only. The MAPPING onto rows and
+#: per-arm scores is BE's to declare (R-654), and this verifier will not
+#: infer it.
+PICKLE_BOOK_TOP_LEVEL = ("asm", "fr")
 
 
-def load_day_book(path: str) -> dict:
+def load_day_book(path: str, *, open_book: bool = False) -> dict:
     """The day book, through an ADAPTER that refuses what it cannot read.
 
     This verifier consumes rows plus PER-ARM scores. It does NOT re-score
@@ -576,6 +581,37 @@ def load_day_book(path: str) -> dict:
     p = Path(path)
     if not p.is_file():
         raise VerifierRefused(f"REFUSED: day book absent at {path}")
+    if p.suffix == ".pkl" and open_book:
+        #: THE HEAVY PATH DA 91 WILL RUN, under the wrapper and the lock.
+        #: R-654: the recompute needs BE's DECLARATION of the book's
+        #: structure (`asm.by_arm`, `fr`), which BE 65 ships as a
+        #: declaration and not as prose. Until it lands this refuses on the
+        #: SHAPE -- and a pickle whose top level is not the declared one is
+        #: refused BY NAME rather than mapped by inference.
+        import pickle                                         # noqa: PLC0415
+        with p.open("rb") as fh:
+            obj = pickle.load(fh)
+        if not isinstance(obj, dict):
+            raise VerifierRefused(
+                f"REFUSED: BOOK_PICKLE_IS_NOT_A_MAPPING -- {p.name} "
+                f"unpickles to {type(obj).__name__}. A book this verifier "
+                f"cannot address by key is not a book it may score.")
+        missing = [k for k in PICKLE_BOOK_TOP_LEVEL if k not in obj]
+        if missing:
+            raise VerifierRefused(
+                f"REFUSED: BOOK_PICKLE_TOP_LEVEL_NOT_THE_DECLARED_SHAPE -- "
+                f"{p.name} is missing {missing} (it carries "
+                f"{sorted(k for k in obj if isinstance(k, str))[:6]}). The "
+                f"mapping from BE's structure onto rows and per-arm scores "
+                f"is BE's to DECLARE (R-654); this verifier will not infer "
+                f"it from a pickle's shape.")
+        raise VerifierRefused(
+            f"REFUSED: BOOK_MAPPING_AWAITS_BES_DECLARATION -- {p.name} has "
+            f"the declared top level {list(PICKLE_BOOK_TOP_LEVEL)}, and the "
+            f"recompute still needs BE 65's declaration of how "
+            f"`asm.by_arm` and `fr` become rows and per-arm scores. The "
+            f"pickle was OPENED and the shape CHECKED; nothing is "
+            f"inferred (R-654).")
     if p.suffix == ".pkl":
         #: THE REAL BOOK IS A PICKLE, AND THIS READER WAS BUILT ON THE
         #: FIXTURE'S JSON. Found at the FIRST REAL GO -- a fixture/real seam
@@ -2576,7 +2612,7 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: census and the landing record -- needs no book CONTENTS at all.
     book_refusal = None
     try:
-        bk = load_day_book(book_path)
+        bk = load_day_book(book_path, open_book=open_book)
         rows = bk["rows"]
     except VerifierRefused as e:
         if open_book:
@@ -3718,6 +3754,58 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"{lr_one['receipt_sha256'][:8]}; chained -> {lr_chain['status']} at "
        f"{lr_chain['head']} ({lr_chain['receipt_sha256'][:8]}); unchained "
        f"pair -> {lr_amb['status']}")
+
+    # -- R-654: THE --open-book PATH DA 91 WILL RUN, driven both ways -----
+    import pickle as _pk                                      # noqa: PLC0415
+    _bd = td / "openbook"
+    _bd.mkdir(exist_ok=True)
+    _js = _bd / "fixture_book.json"
+    _js.write_text(json.dumps({"rows": [{"side": "BUY", "t": 1}],
+                               "scores_by_arm": {"A": [0.5]}}))
+    _json_ok = load_day_book(str(_js))
+    _wrong = _bd / "wrong_shape.pkl"
+    with _wrong.open("wb") as fh:
+        _pk.dump({"not_asm": 1, "other": 2}, fh)
+    _lst = _bd / "not_a_map.pkl"
+    with _lst.open("wb") as fh:
+        _pk.dump([1, 2, 3], fh)
+    _shaped = _bd / "declared_shape.pkl"
+    with _shaped.open("wb") as fh:
+        _pk.dump({"asm": {"by_arm": {}}, "fr": {}}, fh)
+    _msgs = {}
+    for _lbl, _f, _open in (("wrong_top_level", _wrong, True),
+                            ("not_a_mapping", _lst, True),
+                            ("declared_shape", _shaped, True),
+                            ("light_path_on_a_pickle", _shaped, False)):
+        try:
+            load_day_book(str(_f), open_book=_open)
+            _msgs[_lbl] = "ADMITTED"
+        except VerifierRefused as _e:
+            _msgs[_lbl] = str(_e)
+    ck("R-654 -- THE `--open-book` PATH IS BUILT AND DRIVEN BOTH WAYS, so "
+       "DA 91 has something to run on the lock. A JSON fixture book ADMITS; "
+       "a pickle whose top level is NOT the declared shape is REFUSED BY "
+       "NAME; one that is not a mapping at all is refused by name; and one "
+       "WITH the declared top level is still refused, because ***the "
+       "mapping from `asm.by_arm` and `fr` onto rows and per-arm scores is "
+       "BE's to DECLARE (R-654) and this verifier will not infer it from a "
+       "pickle's shape***. The light path refuses any pickle before opening "
+       "it, because opening one is HEAVY under rule 20",
+       len(_json_ok["rows"]) == 1
+       and "TOP_LEVEL_NOT_THE_DECLARED_SHAPE" in _msgs["wrong_top_level"]
+       and "NOT_A_MAPPING" in _msgs["not_a_mapping"]
+       and "AWAITS_BES_DECLARATION" in _msgs["declared_shape"]
+       and "NOT_THIS_READER'S_JSON" in _msgs["light_path_on_a_pickle"],
+       "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
+                 for k, v in _msgs.items()))
+    ck("AND THE SEED RE-DERIVATION AND PER-SIDE COUNTS STAY **NOT DONE BY "
+       "NAME** until that run: the pre-read reports "
+       "`population_recomputed_from_the_book: false` with the refusal text "
+       "and `n_arms_with_a_recomputed_population: 0` -- ***never 0 arms "
+       "AGREEING presented as arms checked***",
+       True,
+       "the 09-03 landing record carries both fields; DA 91 runs the heavy "
+       "half under the wrapper with the lock, after DE 100's 09-04 launch")
 
     # -- H2f2. REV 58 section 4: THE TRY-BRANCH MUST RETURN --------------
     import da_root as _DR                                     # noqa: PLC0415

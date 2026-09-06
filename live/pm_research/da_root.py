@@ -66,6 +66,46 @@ DE_MODULE = HERE / "de_data_root.py"
 _PORCELAIN_STATES = set(" MTADRCU?!")
 
 
+def _c_unquote(field: str) -> tuple:
+    """git's C-style quoting, undone -- (value, was_quoted).
+
+    REV 69 2.1: the old code stripped the surrounding quotes and stopped,
+    so `\"`, `\\` and `\nnn` survived into a path this seat then compared
+    against a real filename. A quote strip is not a decode. Regime: no
+    caller passes `-z` and no tracked path needs quoting today, so this
+    fires on nothing in the tree -- it fires on the day one does."""
+    if not (isinstance(field, str) and len(field) >= 2
+            and field[0] == '"' and field[-1] == '"'):
+        return field, False
+    body, out, i = field[1:-1], [], 0
+    simple = {"n": "\n", "t": "\t", "r": "\r", "b": "\b", "f": "\f",
+              "v": "\v", "a": "\a", "\\": "\\", '"': '"'}
+    raw = bytearray()
+    while i < len(body):
+        c = body[i]
+        if c != "\\":
+            raw += c.encode("utf-8")
+            i += 1
+            continue
+        if i + 1 >= len(body):
+            raw += b"\\"
+            break
+        nxt = body[i + 1]
+        if nxt.isdigit() and i + 3 < len(body) + 1:
+            oct3 = body[i + 1:i + 4]
+            if len(oct3) == 3 and all(ch in "01234567" for ch in oct3):
+                raw.append(int(oct3, 8))
+                i += 4
+                continue
+        if nxt in simple:
+            raw += simple[nxt].encode("utf-8")
+            i += 2
+            continue
+        raw += nxt.encode("utf-8")
+        i += 2
+    return raw.decode("utf-8", "surrogateescape"), True
+
+
 def parse_porcelain(stdout: str) -> dict:
     """Rows of {xy, path, renamed_from, untracked}, and the malformed ones
     NAMED rather than dropped (rule 11).
@@ -86,7 +126,9 @@ def parse_porcelain(stdout: str) -> dict:
         short that nothing downstream can detect;
       * `old -> new` is split ONLY when the code carries R or C, so a file
         merely NAMED `a -> b` keeps its name;
-      * git's own quoting of unusual paths is undone;
+      * git's C-style quoting is UNDONE on BOTH the path and the rename's
+        old name, through one helper (`\"`, `\\`, `\nnn`), with
+        `path_was_c_quoted` / `renamed_from_was_c_quoted` reported;
       * trailing spaces are part of the path and are kept.
     """
     rows, malformed = [], []
@@ -104,9 +146,15 @@ def parse_porcelain(stdout: str) -> dict:
         old = None
         if ("R" in code or "C" in code) and " -> " in rest:
             old, rest = rest.split(" -> ", 1)
-        if len(rest) >= 2 and rest[0] == '"' and rest[-1] == '"':
-            rest = rest[1:-1]
+        #: BOTH FIELDS THROUGH ONE HELPER (REV 69 2.1). The old name was
+        #: left QUOTED while the new one was unquoted -- one field decoded
+        #: and its twin not -- and the "unquoting" was a quote STRIP, which
+        #: leaves git's C escapes (`\"`, `\\`, `\nnn`) as written.
+        rest, rest_enc = _c_unquote(rest)
+        old, old_enc = _c_unquote(old) if old is not None else (None, False)
         rows.append({"xy": code, "path": rest, "renamed_from": old,
+                     "path_was_c_quoted": rest_enc,
+                     "renamed_from_was_c_quoted": old_enc,
                      "untracked": code == "??"})
     return {"rows": rows, "malformed": malformed,
             "n_rows": len(rows), "n_malformed": len(malformed),
@@ -440,6 +488,18 @@ def selftest() -> tuple:
         (" D gone.py",        "row", " D", "gone.py",   None),
         ("UU both.py",        "row", "UU", "both.py",   None),
         ("C  src.py -> cp.py", "row", "C ", "cp.py",    "src.py"),
+        #: REV 69 2.1's TEN, added to the same table.
+        ("??  leading.py",    "row", "??", " leading.py", None),
+        (" R old.py -> new.py", "row", " R", "new.py",  "old.py"),
+        ("RM keep.py",        "row", "RM", "keep.py",   None),
+        ("M",                 "malformed", None, None,  None),
+        ("?? ",               "malformed", None, None,  None),
+        ("XY nope.py",        "malformed", None, None,  None),
+        ("?z nope.py",        "malformed", None, None,  None),
+        ("?? nul\x00keep.py", "row", "??", "nul\x00keep.py", None),
+        ('R  "a\\"b.py" -> "c\\td.py"', "row", "R ", "c\td.py",
+         'a"b.py'),
+        ('?? "caf\\303\\251.py"', "row", "??", "caf\u00e9.py", None),
     ]
     out = parse_porcelain("\n".join(t[0] for t in TABLE) + "\n")
     got_rows = {r["path"]: r for r in out["rows"]}
@@ -456,7 +516,12 @@ def selftest() -> tuple:
        "`--branch` header are MALFORMED BY NAME (this parser used to take "
        "the header as a path); `?? a -> b` keeps its NAME because the "
        "split is gated on R/C (this parser used to truncate it to `b`); "
-       "and `?? trailing ` keeps its trailing space",
+       "and `?? trailing ` keeps its trailing space. ***REV 69 2.1's ten "
+       "join it:*** a LEADING space in the path is kept, ` R` and `RM` "
+       "carry their rename, a ONE-CHARACTER code, an EMPTY path and "
+       "UNDECLARED letters are MALFORMED, a NUL is kept, and git's C "
+       "quoting is decoded on BOTH the path and the OLD name -- the old "
+       "one used to stay quoted while its twin was stripped",
        rows_ok and out["malformed"] == exp_mal
        and got_rows["a -> b"]["renamed_from"] is None
        and got_rows["b"]["renamed_from"] == "a"
@@ -468,36 +533,50 @@ def selftest() -> tuple:
 
     #: REV 68 FINDING 2: the two-clock coverage form, both regimes.
     hz = host_journal_horizon()
-    st = unit_start("de95smoke.service")
-    if hz.get("oldest_epoch") and st.get("start_epoch"):
-        bursty = journal_coverage(unit="de95smoke.service",
-                                  _horizon=hz, _start=st)
-        one_min_earlier = journal_coverage(
-            regime=CONTINUOUS, window_start_epoch=st["start_epoch"] - 60,
-            _horizon=hz)
-        before = journal_coverage(
-            regime=CONTINUOUS,
-            window_start_epoch=hz["oldest_epoch"] - 3600, _horizon=hz)
-        ck("R-649 / REV 68 FINDING 2 -- COVERAGE IS TWO MEASURED CLOCKS, "
-           "NOT THE UNIT'S OWN OLDEST LINE. ***`de95smoke.service` has ONE "
-           "line, so `oldest_available <= w0` called a window a minute "
-           "earlier UNCOVERED for a journal that is COMPLETE.*** The host's "
-           "horizon against the unit's own start says covered; a window "
-           "before the horizon says UNCOVERED and NAMES it; and neither "
-           "answer comes from searching text",
-           bursty["covered"] is True
-           and one_min_earlier["covered"] is True
-           and before["covered"] is False
-           and hz["oldest_utc"] in before["why"]
-           and bursty["regime"] == BURSTY
-           and one_min_earlier["regime"] == CONTINUOUS,
-           f"horizon {hz['oldest_utc']}; de95smoke starts "
-           f"{st['start_utc']} -> covered {bursty['covered']}; a window one "
-           f"minute before its single line -> {one_min_earlier['covered']}; "
-           f"a window an hour before the horizon -> {before['covered']}")
-    else:
-        ck("the two clocks are readable", False,
-           f"horizon {hz.get('status')}, unit start {st.get('status')}")
+    #: THE ARITHMETIC IS DRIVEN ON INJECTED CLOCKS, because a check that
+    #: needs a NAMED UNIT to still exist is pinned to an ambient -- and
+    #: de95smoke.service was collected on success between rounds, so the
+    #: cell that drove it turned red for a reason that is not the property
+    #: (REV 58 1.2's own class, arriving in my own suite).
+    HZ = {"status": "MEASURED", "oldest_utc": "2026-09-06T09:53:58Z",
+          "oldest_epoch": 1788690838.0}
+    ST = {"status": "MEASURED", "unit": "a bursty unit",
+          "start_utc": "2026-09-06T12:35:35Z", "start_epoch": 1788698135.0}
+    bursty = journal_coverage(unit="x", _horizon=HZ, _start=ST)
+    one_min_earlier = journal_coverage(
+        regime=CONTINUOUS, window_start_epoch=ST["start_epoch"] - 60,
+        _horizon=HZ)
+    before = journal_coverage(
+        regime=CONTINUOUS, window_start_epoch=HZ["oldest_epoch"] - 3600,
+        _horizon=HZ)
+    ck("R-649 / REV 68 FINDING 2 -- COVERAGE IS TWO MEASURED CLOCKS, NOT "
+       "THE UNIT'S OWN OLDEST LINE. ***A bursty unit with ONE line made "
+       "`oldest_available <= w0` call a window a minute earlier UNCOVERED "
+       "for a journal that is COMPLETE.*** The host's horizon against the "
+       "unit's own start says covered; a window before the horizon says "
+       "UNCOVERED and NAMES it; and neither answer comes from searching "
+       "text",
+       bursty["covered"] is True
+       and one_min_earlier["covered"] is True
+       and before["covered"] is False
+       and HZ["oldest_utc"] in before["why"]
+       and bursty["regime"] == BURSTY
+       and one_min_earlier["regime"] == CONTINUOUS,
+       f"horizon {HZ['oldest_utc']} vs a unit starting {ST['start_utc']} "
+       f"-> covered {bursty['covered']}; a window one minute before its "
+       f"single line -> {one_min_earlier['covered']}; a window an hour "
+       f"before the horizon -> {before['covered']}")
+    live_units = [u for u in ("resource-monitor.service", "resource-monitor")
+                  if unit_start(u).get("start_epoch")]
+    ck("AND THE HOST CLOCK IS READ LIVE: the journal's horizon is measured "
+       "on this machine right now, whatever units happen to exist -- a "
+       "cell that needed a NAMED unit to still be there would be pinned to "
+       "an ambient, and the unit this was written against was collected on "
+       "success between rounds",
+       hz["status"] == "MEASURED" and hz["oldest_epoch"],
+       f"live horizon {hz['oldest_utc']} (query {hz['query']}); units with "
+       f"a readable start right now: {live_units or 'none named here'}")
+
     unread = journal_coverage(
         regime=CONTINUOUS, window_start_epoch=0.0,
         _horizon={"status": "JOURNALCTL_FAILED", "oldest_epoch": None,
