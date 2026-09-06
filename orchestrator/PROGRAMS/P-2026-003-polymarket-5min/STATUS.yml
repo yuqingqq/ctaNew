@@ -63,6 +63,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T05:06:00Z (MEM ROUND 121 -- R-566 AND THE E2.0 RESULT REVIEW SWEPT.
+  STATE ONLY, AND THREE OF THE FOUR ITEMS ARE CITATION OR TIMING CHECKS.
+  (1) MY ROUND-120 "PENDING-REVIEW, NOT SETTLED" WAS ALREADY SUPERSEDED WHEN I
+  COMMITTED IT. The reviewer filed **SETTLED** at ed14c87, 04:56:42Z; my commit
+  landed 04:59:02Z. THE HONEST ACCOUNT: my pull returned "up to date" at
+  04:54:04Z, BEFORE the review existed, so the flag was TRUE WHEN WRITTEN -- and
+  **MY PUSH REBASED OVER THE FILING THAT SUPERSEDED IT, IN THE SAME OPERATION
+  THAT LANDED IT.** A marking true when written and false when committed, THREE
+  MINUTES APART, in the round whose whole subject was the currency axis.
+  (2) AND IT SHOWS THE LIMIT OF THE FIX I ADOPTED LAST ROUND: "every new flag
+  carries a provenance entry when written" WOULD NOT HAVE CAUGHT THIS -- the
+  entry would have been correct too. **THE GAP IS BETWEEN WRITING AND
+  COMMITTING, AND NOTHING IN MY PROCEDURE RE-READS THE WORLD IN THAT WINDOW.** I
+  have re-read the TIP before every commit for twenty rounds and never re-read
+  the CLAIMS.
+  (3) R-566(C) CITES `867f647` FOR REV 33's REVIEW. CHECKED: 867f647 contains
+  EXACTLY ONE FILE, p002_e2_a_declaration_v1.json -- it is the E2-A DECLARATION
+  commit. **THE REVIEW IS AT ed14c87.** The entry's substance is unaffected, so
+  it is a citation defect and not a content one -- and the sha RESOLVES, which
+  makes it worse than a dangling one, because a reader who follows it lands
+  somewhere plausible.
+  (4) R-566(C) ROUTES THE P-002 RESOLVER GAP TO DA 59 "before E2-A opens any
+  tape". **DA 59 HAD ALREADY CLOSED IT** -- 1872663 at 05:00:42Z, an ANCESTOR of
+  R-566 at 05:05:52Z, five minutes earlier. Confirmed at the code, not the commit
+  message: `ROOT = HERE.parents[1]` is gone; `_resolve_root()` at :61,
+  `ROOT = _resolve_root()` at :74, `de_data_root` imported at :1105 with
+  require_canonical at :1098. **STATE RECORDS CLOSED, NOT ROUTED.**
+  (5) AND THE SHAPE OF THAT FIX IS THE ROUND-119 LESSON APPLIED BY SOMEONE WHO
+  DID NOT HAVE TO LEARN IT: `CODE_ROOT = HERE.parents[1]` SURVIVES UNDER ITS OWN
+  NAME BESIDE `ROOT = _resolve_root()`. **THE TWO ROOTS THAT WERE ONE NAME ARE
+  NOW TWO NAMES.** I spent two rounds getting the direction of a name/semantics
+  mismatch wrong; DA 59 simply did not create one.
+  (6) DE 76 LOCKED THE FIXTURE DOOR WITH ITS OWN PROOF: `data_free_proof`
+  PRODUCED IN THE SAME PROCESS and REQUIRED BY require_canonical(fixture=True),
+  with design v7 recording R5 as **"a code path, not a promise"**. A fixture flag
+  settable without producing the proof is a promise; this is a predicate. DE also
+  caught a silent `replace` no-op -- **the third seat to hit an operation that
+  does nothing and reports success.**
+  (7) THE CURRENCY DISPOSITION IS ADOPTED VERBATIM AT R-566(B): UNCITED not
+  "not yet audited"; NO BULK RETRO-CITATION; attrition when next touched; every
+  new flag cites. **455 of 628 now read UNCITED** in the coordinator's own words.
+  (8) THE WAITER IS RE-ARMED AT THE USER'S INSTRUCTION, with the kills analysed
+  as far as they can be seen: **three stops by the harness, 30-80 s after arming,
+  TRIGGER NOT VISIBLE FROM INSIDE**, and re-arm on every future kill. That is not
+  a fix -- it is a decision to pay the chore deliberately, and stating the window
+  is what makes the next kill recognisable rather than surprising.
+  PRIOR CHECKPOINT:
   2026-09-06T04:54:04Z (MEM ROUND 120 -- R-564, R-565 AND TWO REVIEWER FILINGS
   SWEPT. STATE ONLY, AND THE ONE THAT MATTERS LANDS ON MY OWN FILES.
   (1) REV 32's CURRENCY AUDIT MEASURED THE AXIS I NAMED AT ROUND 100 AND NEVER
@@ -2322,7 +2369,70 @@ flags:
                              # R-549(B) is corrected in band at R-551(2); DE 70
                              # states the fields as COMPUTED FROM THE MEASURED
                              # SECONDS rather than typed.
-  P_2026_002_E2_0_IS_RUN_AND_READ_ADA_SETTLED_DEAD: PENDING-REVIEW-NOT-SETTLED
+  R566_CITES_867f647_FOR_REV33_AND_THE_REVIEW_IS_AT_ed14c87: CHECKED-BY-ME-AT-BOTH-COMMITS
+                             # CHECKED 2026-09-06T05:06:00Z, and filed because my
+                             # own brief inherited the citation.
+                             # R-566(C) opens "THE E2.0 RESULT REVIEW (REV 33,
+                             # `867f647`)". **867f647 CONTAINS EXACTLY ONE FILE:
+                             # live/mm_research/declarations/
+                             # p002_e2_a_declaration_v1.json** -- it is the E2-A
+                             # DECLARATION commit, not a review.
+                             # **THE REVIEW IS AT ed14c87**, whose single file is
+                             # workspace/reviews/
+                             # REVIEW_P002_E20_RESULT_2026-09-06.md, committed
+                             # 2026-09-06T04:56:42Z with the subject "P-002 E2.0
+                             # result is SETTLED - ADA dead, E1-B empty."
+                             # Both established by `git show --name-only` at each
+                             # commit.
+                             # THE ENTRY'S SUBSTANCE IS UNAFFECTED -- everything
+                             # R-566(C) reports about the review is consistent
+                             # with the review -- SO THIS IS A CITATION DEFECT
+                             # AND NOT A CONTENT ONE. Same class as R-536's
+                             # header timestamp: **A SHA COMPOSED FROM CONTEXT
+                             # RATHER THAN READ FROM THE COMMIT THAT HOLDS THE
+                             # FILE.**
+                             # AND IT IS THE CLASS THE CURRENCY AUDIT JUST
+                             # FINISHED MEASURING, ONE ENTRY LATER: a citation
+                             # that does not reach the thing it names. Here the
+                             # sha resolves -- it is a real commit -- which is
+                             # what makes it worse than a dangling one, because
+                             # a reader who follows it lands somewhere plausible.
+  P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER: MY-ROUND-120-PENDING-MARKING-IS-SUPERSEDED
+                             # CORRECTED 2026-09-06T05:06:00Z. My round-120 flag
+                             # read PENDING-REVIEW-NOT-SETTLED. **THE REVIEWER
+                             # HAD ALREADY FILED SETTLED.**
+                             # CHECKED AT THE COMMITS: ed14c87 landed
+                             # **04:56:42Z** -- "P-002 E2.0 result is SETTLED -
+                             # ADA dead, E1-B empty. Every number reproduces,
+                             # **the kill survives leave-one-out on all 16
+                             # days**, one instrument gap remains" -- and my
+                             # round-120 commit landed **04:59:02Z**, two minutes
+                             # and twenty seconds later.
+                             # THE HONEST ACCOUNT OF HOW, BECAUSE IT IS NOT
+                             # SIMPLY CARELESSNESS AND NOT SIMPLY BAD LUCK: my
+                             # round-120 pull returned "Already up to date" at
+                             # 04:54:04Z, BEFORE the review existed. The flag was
+                             # TRUE WHEN I WROTE IT. Then my push rebased over
+                             # the intervening commits and **BROUGHT IN THE
+                             # FILING THAT SUPERSEDED MY OWN FLAG, IN THE SAME
+                             # OPERATION THAT LANDED IT.**
+                             # SO A MARKING WAS TRUE AT THE MOMENT IT WAS WRITTEN
+                             # AND FALSE AT THE MOMENT IT WAS COMMITTED, THREE
+                             # MINUTES APART -- WHICH IS THE CURRENCY AXIS AT ITS
+                             # SHORTEST INTERVAL YET, in the round whose whole
+                             # subject was that axis.
+                             # WHAT IT SAYS ABOUT THE FIX I ADOPTED LAST ROUND:
+                             # "every new flag carries a provenance entry at the
+                             # moment it is written" WOULD NOT HAVE CAUGHT THIS.
+                             # The entry would have been correct too. **THE GAP
+                             # IS BETWEEN WRITING AND COMMITTING, AND NOTHING IN
+                             # MY PROCEDURE RE-READS THE WORLD IN THAT WINDOW.**
+                             # I have re-read the tip before every commit for
+                             # twenty rounds and never re-read the CLAIMS.
+                             # THE RESULT ITSELF IS UNCHANGED AND IS NOW SETTLED:
+                             # ADA dead, E1-B empty, E1's proxy vindicated. The
+                             # numbers in the superseded flag stand.
+                             # EARLIER VALUE (rule 13): PENDING-REVIEW-NOT-SETTLED
                              # RELAYED from R-565, verified by the coordinator at
                              # the receipt (sha 6942eb5f matching DA's row,
                              # selftest OK under its wrapper run). **MARKED
@@ -2873,7 +2983,34 @@ flags:
                              # that fire is the coordinator's call. Recorded so
                              # that if it goes wrong, nobody has to reconstruct
                              # that both stakes were known in advance.
-  THE_WAITER_WAS_KILLED_A_THIRD_TIME_AND_RE_ARMING_IS_STOPPED: THE-LOOP-IS-PROMPT-DRIVEN
+  THE_WAITER_IS_RE_ARMED_AT_THE_USERS_INSTRUCTION_WITH_ITS_KILLS_ANALYSED: 30-TO-80s-AFTER-ARMING
+                             # UPDATED 2026-09-06T05:06:00Z from R-566, and this
+                             # is the fourth state this flag has held in three
+                             # rounds -- re-armed, stopped, re-armed.
+                             # **RE-ARMED AT THE USER'S INSTRUCTION**, which
+                             # settles it: the stop I recorded last round was the
+                             # right default under an unattributable kill, and
+                             # the USER has now attributed it.
+                             # AND THE KILLS ARE ANALYSED AS FAR AS THEY CAN BE
+                             # SEEN: **THREE STOPS BY THE HARNESS, 30-80 SECONDS
+                             # AFTER ARMING, WITH THE TRIGGER NOT VISIBLE FROM
+                             # INSIDE.** The standing disposition is now
+                             # **RE-ARM ON EVERY FUTURE KILL**.
+                             # THE HONEST READING OF THAT DISPOSITION: it is not
+                             # a fix, it is a decision to pay the chore. I wrote
+                             # last round that a mechanism needing restart after
+                             # every failure is a chore rather than a mechanism;
+                             # THE ANSWER IS TO KEEP PAYING IT DELIBERATELY
+                             # RATHER THAN TO PRETEND IT IS FIXED -- and stating
+                             # the 30-80 s window is what makes the next kill
+                             # recognisable instead of surprising.
+                             # WHAT IS STILL NOT KNOWN AND IS NAMED AS NOT KNOWN:
+                             # **THE TRIGGER IS NOT VISIBLE FROM INSIDE.** A
+                             # mechanism that cannot observe its own killer will
+                             # be re-armed blind every time, and the count of
+                             # kills is the only diagnostic anyone has.
+                             # EARLIER VALUE (rule 13):
+                             # THE-LOOP-IS-PROMPT-DRIVEN
                              # UPDATED 2026-09-06T04:54:04Z from R-564, and it
                              # closes the thread the other way from last round.
                              # THE HARNESS KILLED THE BACKGROUND WAITER **A THIRD
@@ -2899,6 +3036,67 @@ flags:
                              # between the two states and it is the whole value
                              # of stopping.
                              # EARLIER VALUE (rule 13): RE-ARMED
+  the_P_002_RESOLVER_GAP_WAS_CLOSED_BEFORE_R566_ROUTED_IT: AND-THE-TWO-ROOTS-NOW-HAVE-TWO-NAMES
+                             # CHECKED 2026-09-06T05:06:00Z. R-566(C) routes the
+                             # P-002 resolver gap to DA 59 "before E2-A opens any
+                             # tape". **DA 59 HAD ALREADY CLOSED IT.**
+                             # THE ORDERING, READ AT THE COMMITS: DA 59's closure
+                             # 1872663 -- "P-002 adopts DE's data-root resolver
+                             # -- imported, not copied -- closing the reviewer's
+                             # section 6" -- landed **05:00:42Z**; R-566
+                             # (43717e7) landed **05:05:52Z**; and
+                             # `merge-base --is-ancestor` confirms the closure is
+                             # an ANCESTOR of the entry that routes it. FIVE
+                             # MINUTES.
+                             # AND THE CODE CONFIRMS IT RATHER THAN THE COMMIT
+                             # MESSAGE: the review flagged
+                             # `e2_0_true_mid.py:46 ROOT = HERE.parents[1]`. That
+                             # line is gone. The module now carries
+                             # `_resolve_root()` at :61, `ROOT = _resolve_root()`
+                             # at :74, and imports `de_data_root` at :1105 with
+                             # `require_canonical` named at :1098 -- IMPORTED,
+                             # NOT COPIED, which is the whole point of DE 74's
+                             # single owner.
+                             # THE PART WORTH KEEPING IS HOW THE FIX IS SHAPED:
+                             # **`CODE_ROOT = HERE.parents[1]` SURVIVES AT :47
+                             # UNDER ITS OWN NAME, BESIDE `ROOT = _resolve_root()`
+                             # AT :74.** The two roots that were one name are now
+                             # TWO NAMES -- the code root for finding modules,
+                             # the resolved root for finding data.
+                             # THAT IS THE ROUND-119 LESSON APPLIED BY SOMEONE
+                             # WHO DID NOT HAVE TO LEARN IT THE WAY I DID: I
+                             # spent two rounds getting the direction of a
+                             # name/semantics mismatch wrong, and DA 59 simply
+                             # did not create one.
+                             # SO THE STATE FILES RECORD **CLOSED**, NOT ROUTED.
+                             # A routing that is already satisfied is harmless
+                             # here -- DA will find nothing to do -- but recorded
+                             # as open it would have read as a live gate on E2-A.
+  de76_THE_FIXTURE_DOOR_HAS_ITS_LOCK: THE-PROOF-IS-PRODUCED-IN-THE-SAME-PROCESS
+                             # RELAYED from R-566(A). Fixture v6 (a0fb6501)
+                             # carries `data_free_proof` -- instrument
+                             # `builtins.open + Path.read_bytes +
+                             # Path.read_text`, `data_paths_opened = []`,
+                             # `no_path_under_data_was_opened = true` --
+                             # **PRODUCED IN THE SAME PROCESS AND REQUIRED BY
+                             # `require_canonical(fixture=True)`.**
+                             # THAT IS THE DOOR LOCKED WITH ITS OWN PROOF RATHER
+                             # THAN CLOSED: the override no longer asserts the
+                             # claim, it MUST CARRY THE EVIDENCE, and the
+                             # evidence must come from the same process that made
+                             # the claim. A fixture flag that can be set without
+                             # producing the proof is a promise; this is a
+                             # predicate.
+                             # Design v7 (bd33daf5) records R5 as **"a code path,
+                             # not a promise"** WITH THE PROOF IT FIRED. The
+                             # coordinator's runs: de_data_root 16 checks, runner
+                             # 44.
+                             # AND DE CAUGHT A SILENT `replace` NO-OP BEFORE
+                             # LANDING -- **the third seat to hit an operation
+                             # that does nothing and reports success**, after my
+                             # round-116 zero-length loop and DA's stale-pycache
+                             # green. Three seats, three forms, one shape.
+                             # DE STANDS BY FOR BE'S BOOK. Second round running.
   the_de74_resolver_is_SOUND_WITH_ONE_DOOR_NOW_BOUND: fixture-True-CLOSED-BY-DE-76
                              # RELAYED from R-564 and Q-DE-76. The reviewer found
                              # the DE 74 resolver SOUND with ONE DOOR --
@@ -12338,6 +12536,31 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T05:06:00Z, P-2026-002's E2.0 IS **SETTLED** BY THE REVIEWER
+  (ed14c87, 04:56:42Z: ADA dead, E1-B empty, every number reproducing, **the kill
+  surviving leave-one-out on all 16 days**) -- which supersedes the
+  PENDING-REVIEW I filed at round 120 two minutes and twenty seconds later.
+  **THE FLAG WAS TRUE WHEN WRITTEN AND FALSE WHEN COMMITTED**, because my push
+  rebased over the filing that superseded it. My round-120 rule would not have
+  caught it: **the gap is between writing and committing, and nothing in my
+  procedure re-reads the CLAIMS in that window -- only the tip.**
+  TWO CITATION/TIMING CHECKS ON R-566 ITSELF: it cites `867f647` for REV 33 when
+  **that sha is the E2-A declaration and the review is at `ed14c87`** -- a sha
+  that RESOLVES, which is worse than a dangling one; and it routes the P-002
+  resolver gap that **DA 59 had already closed five minutes earlier**, confirmed
+  at the code rather than the commit message. State records CLOSED.
+  AND THE SHAPE OF DA 59's FIX IS THE ROUND-119 LESSON APPLIED WITHOUT HAVING TO
+  LEARN IT: `CODE_ROOT` survives under its own name beside `ROOT =
+  _resolve_root()` -- **two roots, two names.**
+  DE 76 LOCKED THE FIXTURE DOOR WITH ITS OWN PROOF, produced in the same process
+  and required by the caller -- R5 is now "a code path, not a promise". THE
+  CURRENCY DISPOSITION IS ADOPTED VERBATIM: 455 of 628 read UNCITED, attrition
+  not bulk. THE WAITER IS RE-ARMED at the USER's instruction with its kills
+  analysed -- three by the harness, 30-80 s after arming, trigger invisible from
+  inside.
+  Gate 1 is 1 of 7; DE stands by for BE's book. Economics:
+  workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:54:04Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:54:04Z, THE CURRENCY AXIS I NAMED AT ROUND 100 HAS BEEN
   MEASURED -- BY SOMEONE ELSE, IN ONE ROUND, WITH A SEED. 40 flags: 36 CURRENT,
   3 STALE, 0 UNSUPPORTED, 1 unsettled, **AND 27 OF 40 CITE NOTHING AT ALL**.
@@ -13399,6 +13622,45 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 121, 2026-09-06T05:06:00Z ------------------------------
+  R566_CITES_867f647_FOR_REV33_AND_THE_REVIEW_IS_AT_ed14c87:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_P002_E20_RESULT_2026-09-06.md
+    as_of: 2026-09-06T05:06:00Z
+    said: >-
+      `git show --name-only 867f647` lists exactly one file,
+      live/mm_research/declarations/p002_e2_a_declaration_v1.json; `git show
+      --name-only ed14c87` lists exactly this review file, committed
+      2026-09-06T04:56:42Z with the subject "P-002 E2.0 result is SETTLED - ADA
+      dead, E1-B empty." So R-566(C)'s sha for REV 33 names the E2-A declaration
+      commit rather than the review.
+  P_2026_002_E2_0_IS_SETTLED_BY_THE_REVIEWER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_P002_E20_RESULT_2026-09-06.md
+    as_of: 2026-09-06T05:06:00Z
+    said: >-
+      the filing's subject reads SETTLED with the kill surviving leave-one-out on
+      all 16 days, committed 04:56:42Z; my round-120 commit 898af42 landed
+      04:59:02Z, and `merge-base --is-ancestor ed14c87 898af42` succeeds, so the
+      filing was on the branch my commit rebased onto. My round-120 pull returned
+      up-to-date at 04:54:04Z, before the review existed.
+  the_P_002_RESOLVER_GAP_WAS_CLOSED_BEFORE_R566_ROUTED_IT:
+    prov: CHECKED
+    artifact: live/mm_research/e2_0_true_mid.py
+    as_of: 2026-09-06T05:06:00Z
+    said: >-
+      the line the review flagged, `ROOT = HERE.parents[1]` at :46, is gone; the
+      module now carries `_resolve_root()` at :61, `ROOT = _resolve_root()` at
+      :74, `de_data_root` imported at :1105 and require_canonical named at :1098,
+      with `CODE_ROOT = HERE.parents[1]` surviving separately at :47. DA 59's
+      closing commit 1872663 is timestamped 05:00:42Z and `merge-base
+      --is-ancestor 1872663 43717e7` succeeds against R-566 at 05:05:52Z.
+  de76_THE_FIXTURE_DOOR_HAS_ITS_LOCK:
+    prov: RELAYED
+    from: R-566(A), verified by the coordinator's own runs
+  THE_WAITER_IS_RE_ARMED_AT_THE_USERS_INSTRUCTION_WITH_ITS_KILLS_ANALYSED:
+    prov: RELAYED
+    from: R-566
   # --- MEM round 120, 2026-09-06T04:54:04Z ------------------------------
   REV32_CURRENCY_AUDIT_MEASURED_THE_AXIS_I_NAMED_AND_NEVER_BUILT:
     prov: CHECKED
@@ -13413,18 +13675,9 @@ flag_provenance:
       de_phase4_diag_runner.evaluate_predicates is defined at line 1085 while
       lines 770-772 are an unrelated DE37-C2 comment. My own instrument's census
       of the same property is 455 UNMARKED of 624.
-  P_2026_002_E2_0_IS_RUN_AND_READ_ADA_SETTLED_DEAD:
-    prov: RELAYED
-    from: >-
-      R-565, verified by the coordinator at receipt sha 6942eb5f with the
-      selftest run under its wrapper. PENDING-REVIEW: REV 33 has the result
-      review and nothing here is settled. P-002's own state files are DA's.
   the_de74_resolver_is_SOUND_WITH_ONE_DOOR_NOW_BOUND:
     prov: RELAYED
     from: R-564 and Q-DE-76 (4981d00, a3368b8)
-  THE_WAITER_WAS_KILLED_A_THIRD_TIME_AND_RE_ARMING_IS_STOPPED:
-    prov: RELAYED
-    from: R-564
   # --- MEM round 119, 2026-09-06T04:47:07Z ------------------------------
   PM_DATA_ROOT_IS_A_NAME_SEMANTICS_MISMATCH_NOT_TWO_REFERENTS:
     prov: CHECKED

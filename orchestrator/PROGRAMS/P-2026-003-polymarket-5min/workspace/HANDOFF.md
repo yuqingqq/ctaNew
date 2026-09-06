@@ -1,5 +1,105 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T05:06:00Z — **E2.0 is SETTLED — and my round-120 "PENDING" was
+already superseded when I committed it, by three minutes.** Gate 1 is 1 of 7.
+Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 121
+
+### 1. A flag true when written and false when committed
+
+The reviewer filed **SETTLED** at `ed14c87`, **04:56:42Z** — *"ADA dead, E1-B
+empty. Every number reproduces, **the kill survives leave-one-out on all 16
+days**."* My round-120 commit landed **04:59:02Z**, marking it PENDING-REVIEW.
+
+**The honest account:** my pull returned "up to date" at **04:54:04Z, before the
+review existed** — so the flag was **true when written**. Then **my push rebased
+over the filing that superseded it, in the same operation that landed it.**
+
+> **A marking true at the moment of writing and false at the moment of
+> committing, three minutes apart — in the round whose whole subject was the
+> currency axis.**
+
+**And it shows the limit of the rule I adopted last round.** *"Every new flag
+carries a provenance entry at the moment it is written"* **would not have caught
+this** — the entry would have been correct too.
+
+> **The gap is between writing and committing, and nothing in my procedure
+> re-reads the world in that window.** I have re-read the **tip** before every
+> commit for twenty rounds and never re-read the **claims**.
+
+### 2. Two checks on R-566 itself
+
+**(a) It cites `867f647` for REV 33's review.** `git show --name-only 867f647`
+lists **exactly one file: `p002_e2_a_declaration_v1.json`** — the E2-A
+declaration commit. **The review is at `ed14c87`.**
+
+> The entry's substance is unaffected, so this is a **citation defect, not a
+> content one** — and **the sha resolves**, which makes it worse than a dangling
+> one, *because a reader who follows it lands somewhere plausible.*
+
+**(b) It routes the P-002 resolver gap to DA 59 — which had already closed it.**
+`1872663` at **05:00:42Z**, an **ancestor** of R-566 at 05:05:52Z. **Confirmed at
+the code, not the commit message:** `ROOT = HERE.parents[1]` is gone;
+`_resolve_root()` at `:61`, `ROOT = _resolve_root()` at `:74`, `de_data_root`
+imported at `:1105`, `require_canonical` at `:1098`. **State records CLOSED, not
+routed** — recorded as open it would have read as a live gate on E2-A.
+
+### 3. And DA 59's fix is the round-119 lesson, applied without having to learn it
+
+**`CODE_ROOT = HERE.parents[1]` survives under its own name at `:47`, beside
+`ROOT = _resolve_root()` at `:74`.** *The two roots that were one name are now two
+names.* **I spent two rounds getting the direction of a name/semantics mismatch
+wrong; DA 59 simply did not create one.**
+
+### 4. DE 76 — the door is locked with its own proof
+
+`data_free_proof` — `builtins.open + Path.read_bytes + Path.read_text`,
+`data_paths_opened = []` — **produced in the same process and required by
+`require_canonical(fixture=True)`.** Design v7 records R5 as **"a code path, not
+a promise"**, with the proof it fired.
+
+> *A fixture flag settable without producing the proof is a promise; this is a
+> predicate.*
+
+DE also caught **a silent `replace` no-op** before landing — **the third seat to
+hit an operation that does nothing and reports success**, after my round-116
+zero-length loop and DA's stale-pycache green.
+
+### 5. The currency disposition, adopted verbatim
+
+R-566(B) takes it as written: **UNCITED, not "not yet audited"; no bulk
+retro-citation, which would manufacture provenance after the fact; each flag
+cited, superseded or closed when next touched; every new flag carries an artifact
+or an R-entry.** **455 of 631 read UNCITED.**
+
+### 6. The waiter, fourth state in three rounds
+
+**Re-armed at the USER's instruction** — which settles it: the stop was the right
+default under an unattributable kill, and the USER has now attributed it. **The
+kills are analysed as far as they can be seen: three by the harness, 30–80 s
+after arming, trigger not visible from inside**, and re-arm on every future kill.
+
+> **That is not a fix; it is a decision to pay the chore deliberately** — and
+> stating the 30–80 s window is what makes the next kill **recognisable rather
+> than surprising.** What remains unknown is named as unknown: **a mechanism that
+> cannot observe its own killer will be re-armed blind every time.**
+
+### 7. Measured before the sentence
+
+**631 flags, 73 CHECKED, 103 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 176; tasks 19.** *(Two renames, two ORPHANs, caught
+pre-commit.)*
+
+### Still open, still mine
+
+**RELAY FIDELITY**, **CORROBORATION** — and CURRENCY has now bitten me at a
+three-minute interval. **455 of 631 UNCITED.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:54:04Z — **The CURRENCY axis I named at round 100 has been
 measured — by someone else, in one round, with a seed. 27 of 40 flags cite
 nothing at all.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
