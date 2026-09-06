@@ -87,13 +87,89 @@ def sealed_feeds() -> dict:
     return out
 
 
-def pins() -> dict:
-    """The pinned feed digests, taken BEFORE the read."""
-    if not PINS.exists():
-        raise ReadRefused(f"REFUSED: no pin file at {PINS}. A read that "
-                          f"cannot check what it opens against a pin taken "
-                          f"beforehand is not the declared read.")
-    return json.loads(PINS.read_text())["per_day"]
+def pins(family: str = "be_race_read_feed_pins") -> dict:
+    """The pinned feed digests, taken BEFORE the read -- FROM THE CHAIN HEAD.
+
+    This read a LITERAL version path (`…_feed_pins_v1.json`). One version
+    was all the family had, so the literal WAS the head and nothing showed.
+    The second race read pins four days at four different closes, so the
+    family grows a version per close (rule 20: a landed version is
+    immutable, so `written day by day` means vN+1, never an edit) -- and on
+    the day the family gains v2 a literal would go on reading v1: a pin file
+    that no longer names the days being opened, and a non-head literal that
+    DA's census refuses on sight.
+    """
+    import be_rule22 as _R22
+    try:
+        head = _R22.declaration_head(family)
+    except Exception as e:
+        raise ReadRefused(
+            f"REFUSED: the pins family {family!r} does not resolve to a head "
+            f"({type(e).__name__}: {str(e)[:160]}). A read that cannot check "
+            f"what it opens against a pin taken beforehand is not the "
+            f"declared read.") from e
+    per_day = (head["doc"] or {}).get("per_day")
+    if not isinstance(per_day, dict) or not per_day:
+        raise ReadRefused(
+            f"REFUSED: the pins head {head['name']} carries no `per_day` "
+            f"block. A pin file with no pins in it is not a pin file.")
+    return per_day
+
+
+def assert_every_declared_day_is_pinned(days, per_day: dict) -> dict:
+    """EVERY declared day carries a usable pin -- checked BEFORE the act.
+
+    `assert_pinned` refuses day by day, at the moment that day is opened.
+    That is too late for a multi-day read whose days are CONSUMED as they
+    are opened: day 1 opens and is spent, day 4 turns out to have no pin,
+    and the read dies having burnt three days for nothing. The whole set is
+    checked before the first marker is written.
+    """
+    absent = sorted(d for d in days if not (per_day.get(d) or {}).get("exists"))
+    nodigest = sorted(d for d in days
+                      if (per_day.get(d) or {}).get("exists")
+                      and not (per_day.get(d) or {}).get("sha256"))
+    if absent or nodigest:
+        raise ReadRefused(
+            f"REFUSED: the declared day set is not fully pinned. "
+            + (f"No pin marking the feed present for {absent} -- a day the "
+               f"pins do not carry cannot be checked against anything it "
+               f"was pinned to. " if absent else "")
+            + (f"A pin without a digest for {nodigest} -- R-608: the pin IS "
+               f"the pair, and a path with no digest verifies nothing. "
+               if nodigest else "")
+            + "No marker is written and no day is consumed; the days stay "
+              "readable until every one of them is pinned.")
+    return {"days": sorted(days), "n": len(days),
+            "every_day_pinned_before_the_act": True,
+            "checked": "the WHOLE set before the first marker, not day by "
+                       "day as each is opened -- a consumed day cannot be "
+                       "given back when a later day turns out unpinned"}
+
+
+def assert_read_horizon(decl: dict, now=None) -> dict:
+    """The read does not run before its last declared day has closed."""
+    now = now or dt.datetime.now(dt.timezone.utc)
+    txt = str(decl["horizon_utc"])
+    try:
+        hz = dt.datetime.fromisoformat(txt.replace("Z", "+00:00"))
+    except ValueError as e:
+        raise ReadRefused(
+            f"REFUSED: the declared read horizon {txt!r} is not an ISO-8601 "
+            f"instant, so it cannot be compared to a clock.") from e
+    if hz.tzinfo is None:
+        hz = hz.replace(tzinfo=dt.timezone.utc)
+    if now < hz:
+        raise ReadRefused(
+            f"REFUSED: the declared read horizon {txt} has not passed -- it "
+            f"is {now.strftime('%Y-%m-%dT%H:%M:%SZ')}, "
+            f"{int((hz - now).total_seconds())} s before it. The last "
+            f"declared day has not closed and its tape is still being "
+            f"written, so this read would read a PARTIAL day -- and the day "
+            f"is consumed by the act, so there is no second attempt at it.")
+    return {"horizon_utc": txt, "now_utc": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "seconds_past_the_horizon": int((now - hz).total_seconds()),
+            "read_from": "the declaration, never the invocation"}
 
 
 def assert_pinned(day: str, path, per_day: dict | None = None) -> dict:
@@ -263,9 +339,43 @@ def declared_read(decl_dir: Path | None = None) -> dict:
             f"read whose day set is empty is not a smaller read, it is a "
             f"different question.")
     g_declared = ((doc.get("permutation_floor") or {}).get("G"))
+    # THE THREE FIELDS THE ACT NEEDS AND MAY NOT DEFAULT (BE 84). Each is
+    # REQUIRED, not read-if-present: a gate that skips itself when its input
+    # is missing is the shape BE 82 found in the chain resolver, where an
+    # absent digest skipped the digest check. Each omission carries ITS OWN
+    # consequence (Q-DE-109), because a shared clause sends the reader to
+    # repair the wrong thing.
+    _why = {
+        "result.artifact":
+            "the read would have to CHOOSE a name for the artifact it "
+            "writes, and a second read writing into the first read's family "
+            "makes two different questions look like one chain",
+        "read_horizon.not_before_utc":
+            "the read could run before its last declared day has closed, "
+            "and the days are consumed by the act -- a partial day cannot be "
+            "read again",
+        "pins.family":
+            "the read would not know which pin file to check what it opens "
+            "against, and a pin resolved from a literal goes stale the "
+            "moment the pins family gains a version",
+    }
+    _got = {"result.artifact": ((doc.get("result") or {}).get("artifact")),
+            "read_horizon.not_before_utc":
+                ((doc.get("read_horizon") or {}).get("not_before_utc")),
+            "pins.family": ((doc.get("pins") or {}).get("family"))}
+    _absent = sorted(k for k, v in _got.items() if not v)
+    if _absent:
+        raise ReadRefused(
+            f"REFUSED: {head['name']} does not declare {_absent}. "
+            + "; ".join(f"`{k}` is absent, so {_why[k]}" for k in _absent)
+            + ". The declaration is what the act is bound to; a field it "
+              "does not carry is not a default this reader may supply.")
     return {"declaration": head["name"], "declaration_sha256": head["sha256"],
             "n_versions": head["n_versions"], "READABLE": sorted(readable),
             "G_declared": g_declared,
+            "result_name": _got["result.artifact"],
+            "horizon_utc": _got["read_horizon.not_before_utc"],
+            "pins_family": _got["pins.family"],
             "resolved_from": "the chain head, never a filename"}
 
 
@@ -548,7 +658,8 @@ def correction_census(v1: dict, v2: dict,
 def supersede_result(*, outdir: Path | None = None,
                      builder_commit: str, reader_sha256: str,
                      source: str, fixture: bool = False,
-                     why: str | None = None) -> dict:
+                     why: str | None = None,
+                     decl_dir: Path | None = None) -> dict:
     """THE `.v2` OF THE READ ARTIFACT (R-707, REV 78 §3). NO RECOMPUTE.
 
     DA 101 found two things v1 does not SAY: the pins name FIVE days while
@@ -579,7 +690,23 @@ def supersede_result(*, outdir: Path | None = None,
     v2 = copy.deepcopy(v1)
 
     pd = pins()
-    decl = declared_read()
+    # `decl_dir` exists so the guard below can be DRIVEN on a scratch
+    # declaration rather than switched off for fixtures: a check that a flag
+    # can skip is the shape BE 82 found in the chain resolver.
+    decl = declared_read(decl_dir)
+    # THIS CORRECTION BELONGS TO THE FIRST READ. `declared_read()` resolves
+    # the chain HEAD, and from BE 84 the head declares the SECOND read --
+    # whose result is a different family. A .v2 of the first read's artifact
+    # composed against the second read's declaration would carry the wrong
+    # provenance under the right-looking field names.
+    if decl["result_name"] != OUT_NAME:
+        raise ReadRefused(
+            f"REFUSED: this supersedes {OUT_NAME}, the FIRST read's result, "
+            f"but the declaration head {decl['declaration']} declares "
+            f"{decl['result_name']}. A correction is resolved against the "
+            f"declaration its artifact was written under, and that "
+            f"declaration is no longer the head; the correction for the "
+            f"first read is closed (v2 landed, R-707).")
     unrec = [x for x in sorted(pd) if x not in decl["READABLE"]]
     v2["pinned_days_not_in_READABLE"] = {
         "days": unrec,
@@ -683,7 +810,7 @@ def pre_state(days, marker_dir: Path, feeds: dict, pd: dict,
             "feed_sha256_now": got,
             "feed_matches_its_pin": bool(got and got == pin.get("sha256")),
         }
-    result_name = Path(marker_dir) / OUT_NAME
+    result_name = Path(marker_dir) / decl["result_name"]
     return {
         "as_of": now,
         "marker_dir": str(marker_dir),
@@ -699,7 +826,7 @@ def pre_state(days, marker_dir: Path, feeds: dict, pd: dict,
             v["pin_present"] and v["pin_exists_true"] for v in per_day.values()),
         "all_feeds_on_disk_at_their_pins": all(
             v["feed_matches_its_pin"] for v in per_day.values()),
-        "declared_result_name": OUT_NAME,
+        "declared_result_name": decl["result_name"],
         "declared_result_absent_before_the_act": not result_name.exists(),
         "why": "REV 76 §6 condition 3: recorded as the FIRST step of the "
                "act, before any marker is written, so the artifact carries "
@@ -873,6 +1000,12 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     _md = resolve_marker_dir(outdir, fixture=marker_fixture,
                              why=marker_fixture_why)
     _out_d = _md["dir"]
+    # THE TWO DECLARATION-BORNE PRECONDITIONS, BEFORE ANY MARKER (BE 84).
+    # Both are checked on the WHOLE set and before the act, because the act
+    # consumes: a horizon crossed halfway through, or a fourth day with no
+    # pin, cannot be undone once the first three days are spent.
+    _horizon = assert_read_horizon(_dc)
+    _pinned_all = assert_every_declared_day_is_pinned(_dc["days"], pd or {})
     _pre = pre_state(_dc["days"], _out_d, {d: str(v) for d, v in paths.items()},
                      pd or {}, _dc) if consume else None
     if consume:
@@ -882,7 +1015,8 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
         assert_not_already_opened(_dc["days"], _out_d)
         if not _pre["declared_result_absent_before_the_act"]:
             raise ReadRefused(
-                f"REFUSED: {OUT_NAME} already exists in {_out_d}. The "
+                f"REFUSED: {_dc['result_name']} already exists in "
+                f"{_out_d}. The "
                 f"declared result of this read is present before the act, "
                 f"so the read has been done -- even though no day carries a "
                 f"marker.")
@@ -996,19 +1130,25 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
                                                    "hash, not a literal",
                           "on_mismatch": "the read is VOID -- enforced"},
         "gate1_separation": sep,
-        "writes": {"artifact": OUT_NAME, "and_nothing_else": True},
+        "writes": {"artifact": _dc["result_name"], "and_nothing_else": True,
+                   "named_by": "the declaration, never this module -- the "
+                               "second read writes its own family so the "
+                               "first read's chain is never confused with "
+                               "it"},
+        "read_horizon": _horizon,
+        "every_day_pinned_before_the_act": _pinned_all,
         "data_root": _BDR.receipt_block(),
         "decides_nothing": "REPORTED (rule 14).",
     }
     if write:
         d = Path(outdir) if outdir is not None else _BDR.derived()
-        (d / OUT_NAME).write_text(json.dumps(out, indent=1, sort_keys=True,
-                                             default=str))
-        out["_written"] = str(d / OUT_NAME)
+        (d / _dc["result_name"]).write_text(
+            json.dumps(out, indent=1, sort_keys=True, default=str))
+        out["_written"] = str(d / _dc["result_name"])
     return out
 
 
-EXPECTED_CHECKS = 61
+EXPECTED_CHECKS = 70
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1123,6 +1263,9 @@ def selftest() -> int:
         _fdecl.mkdir(exist_ok=True)
         (_fdecl / "be_race_read_declaration_v1.json").write_text(json.dumps({
             "protocol": "FIXTURE", "supersedes": None,
+            "result": {"artifact": OUT_NAME},
+            "read_horizon": {"not_before_utc": "1970-01-01T00:00:00Z"},
+            "pins": {"family": "be_race_read_feed_pins"},
             "population": {"READABLE": sorted(paths)},
             "permutation_floor": {"G": len(paths), "multiplicity": 2}}))
         _fd = resolve_days(decl_dir=_fdecl)
@@ -1261,6 +1404,9 @@ def selftest() -> int:
     (_d3 / "decl").mkdir()
     (_d3 / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
         "protocol": "FIXTURE-NAMED", "supersedes": None,
+            "result": {"artifact": OUT_NAME},
+            "read_horizon": {"not_before_utc": "1970-01-01T00:00:00Z"},
+            "pins": {"family": "be_race_read_feed_pins"},
         "population": {"READABLE": sorted(_p3)},
         "permutation_floor": {"G": len(_p3), "multiplicity": 2}}))
     _dc3 = resolve_days(decl_dir=_d3 / "decl")
@@ -1294,6 +1440,9 @@ def selftest() -> int:
     (_d9 / "decl").mkdir()
     (_d9 / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
         "protocol": "FIXTURE-CLI-SHAPED", "supersedes": None,
+            "result": {"artifact": OUT_NAME},
+            "read_horizon": {"not_before_utc": "1970-01-01T00:00:00Z"},
+            "pins": {"family": "be_race_read_feed_pins"},
         "population": {"READABLE": ["20990301", "20990302"]},
         "permutation_floor": {"G": 2, "multiplicity": 2}}))
     _dc9 = resolve_days(decl_dir=_d9 / "decl")          # what --open does
@@ -1348,10 +1497,22 @@ def selftest() -> int:
     _v1 = {"day_signs": {"20990101": 1}, "permutation_floors": {"x": 0.25},
            "byte_identity": {"all_unchanged": True}, "days": ["20990101"]}
     (_dV / OUT_NAME).write_text(json.dumps(_v1, indent=1, sort_keys=True))
+    # THE CORRECTION IS RESOLVED AGAINST THE DECLARATION ITS ARTIFACT WAS
+    # WRITTEN UNDER. On the real head that is now v5, which declares the
+    # SECOND read's family -- so this drive supplies a scratch declaration
+    # of the FIRST read, and the known-bad below drives the real head.
+    (_dV / "decl").mkdir()
+    (_dV / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
+        "protocol": "FIXTURE-FIRST-READ", "supersedes": None,
+        "result": {"artifact": OUT_NAME},
+        "read_horizon": {"not_before_utc": "1970-01-01T00:00:00Z"},
+        "pins": {"family": "be_race_read_feed_pins"},
+        "population": {"READABLE": ["20260903", "20260904", "20260905"]},
+        "permutation_floor": {"G": 3, "multiplicity": 2}}))
     _res = supersede_result(outdir=_dV, builder_commit="deadbee",
                             reader_sha256="f" * 64,
                             source="battery fixture",
-                            fixture=True,
+                            fixture=True, decl_dir=_dV / "decl",
                             why="battery: a scratch v1 under a scratch "
                                 "marker directory; the ledger is untouched")
     _v2 = json.loads(Path(_res["v2"]).read_text())
@@ -1731,6 +1892,9 @@ def selftest() -> int:
     (_d5 / "decl").mkdir()
     (_d5 / "decl" / "be_race_read_declaration_v1.json").write_text(json.dumps({
         "protocol": "FIXTURE-CONSUME", "supersedes": None,
+            "result": {"artifact": OUT_NAME},
+            "read_horizon": {"not_before_utc": "1970-01-01T00:00:00Z"},
+            "pins": {"family": "be_race_read_feed_pins"},
         "population": {"READABLE": sorted(_p5)},
         "permutation_floor": {"G": len(_p5), "multiplicity": 2}}))
     _dc5 = resolve_days(decl_dir=_d5 / "decl")
@@ -1780,6 +1944,103 @@ def selftest() -> int:
     # the programme is about to change is a check with an expiry date.
     #
     # The DURABLE property is the one worth guarding: THIS BATTERY writes no
+    # ---- BE 84: THE SECOND RACE READ, DECLARED BEFORE ITS DAYS CLOSE ---
+    # Driven ON THE REAL HEAD, because the point of pre-declaring is that
+    # the gates bind NOW -- while every declared day is still open and
+    # nothing has been seen. Each of the three refusals the declaration
+    # names is driven here, with a positive control beside it.
+    _v5 = declared_read()
+    ok(_v5["declaration"] == "be_race_read_declaration_v5.json"
+       and _v5["READABLE"] == ["20260906", "20260907", "20260908", "20260909"]
+       and _v5["G_declared"] == 4
+       and _v5["result_name"] == "be_race_read2_result_v1.json"
+       and _v5["horizon_utc"] == "2026-09-10T01:00:00Z"
+       and _v5["pins_family"] == "be_race_read_feed_pins",
+       f"THE HEAD IS v5 AND THE ACT IS BOUND TO IT: READABLE "
+       f"{_v5['READABLE']}, G {_v5['G_declared']}, result "
+       f"{_v5['result_name']} (a NEW family -- the first read's "
+       f"`be_race_read_result` chain keeps v1/v2 and is never confused with "
+       f"this one), horizon {_v5['horizon_utc']}, pins family "
+       f"{_v5['pins_family']}. Every one read from the declaration, none "
+       f"from a constant in this module")
+    _rd5 = resolve_days()
+    ok(_rd5["G_computed"] == 4 and _rd5["G_agrees_with_the_declaration"],
+       f"AND G IS COMPUTED FROM THE SET, NOT COPIED: {_rd5['G_computed']} "
+       f"from {len(_rd5['days'])} declared days, asserted equal to the "
+       f"declaration's own G -- rule 10 obeyed once and CHECKED twice")
+    try:
+        resolve_days(["20260906", "20260907", "20260908"])
+        _outside = "NOT REFUSED"
+    except ReadRefused as _e5a:
+        _outside = str(_e5a)
+    ok("is not the declared READABLE set" in _outside
+       and "20260909" in _outside and "Narrowed by" in _outside,
+       f"FALSIFIER 1 -- A DAY OUTSIDE `READABLE` IS REFUSED BY NAME, and "
+       f"the refusal says WHICH way it differs: {_outside[:180]!r}")
+    try:
+        assert_read_horizon(_v5)
+        _early = "NOT REFUSED"
+    except ReadRefused as _e5b:
+        _early = str(_e5b)
+    ok("read horizon" in _early and "has not passed" in _early
+       and "2026-09-10T01:00:00Z" in _early and "PARTIAL day" in _early,
+       f"FALSIFIER 2 -- A READ BEFORE THE HORIZON IS REFUSED BY NAME, "
+       f"driven on the real declaration at the real clock: {_early[:200]!r}")
+    _past = assert_read_horizon({"horizon_utc": "1970-01-01T00:00:00Z"})
+    ok(_past["seconds_past_the_horizon"] > 0,
+       f"POSITIVE CONTROL: a horizon already passed ADMITS "
+       f"({_past['seconds_past_the_horizon']} s past it) -- the gate is "
+       f"about the clock, not about refusing")
+    try:
+        assert_every_declared_day_is_pinned(_v5["READABLE"], pins())
+        _unpinned = "NOT REFUSED"
+    except ReadRefused as _e5c:
+        _unpinned = str(_e5c)
+    ok("not fully pinned" in _unpinned
+       and all(d in _unpinned for d in _v5["READABLE"])
+       and "No marker is written and no day is consumed" in _unpinned,
+       f"FALSIFIER 3 -- AN ABSENT PIN REFUSES THE WHOLE READ, naming every "
+       f"unpinned day, BEFORE any marker is written. The four days are not "
+       f"pinned yet -- they have not closed -- so this refuses today and "
+       f"goes on refusing until the pins chain head carries all four: "
+       f"{_unpinned[:200]!r}")
+    _fullpins = {d: {"exists": True, "sha256": "a" * 64, "bytes": 1}
+                 for d in _v5["READABLE"]}
+    ok(assert_every_declared_day_is_pinned(
+           _v5["READABLE"], _fullpins)["every_day_pinned_before_the_act"]
+       and "not fully pinned" in str(_unpinned),
+       "POSITIVE CONTROL: the same four days with a complete pin set ADMIT "
+       "-- the refusal is about the missing pins, not about the days")
+    try:
+        assert_every_declared_day_is_pinned(
+            _v5["READABLE"], dict(_fullpins, **{"20260909": {"exists": True}}))
+        _nodig = "NOT REFUSED"
+    except ReadRefused as _e5d:
+        _nodig = str(_e5d)
+    ok("A pin without a digest" in _nodig and "20260909" in _nodig
+       and "the pin IS the pair" in _nodig,
+       f"AND A PIN WITH NO DIGEST IS NOT A PIN (R-608): refused by name "
+       f"even though `exists` is true -- a path with no digest verifies "
+       f"nothing: {_nodig[:160]!r}")
+    _dG = Path(_tfV.mkdtemp(prefix="be84_guard_"))
+    (_dG / OUT_NAME).write_text(json.dumps(_v1, indent=1, sort_keys=True))
+    try:
+        supersede_result(outdir=_dG,
+                         builder_commit="deadbee", reader_sha256="f" * 64,
+                         source="battery known-bad", fixture=True,
+                         why="battery: proves the correction path refuses "
+                             "under the SECOND read's declaration")
+        _wrongdecl = "NOT REFUSED"
+    except ReadRefused as _e5e:
+        _wrongdecl = str(_e5e)
+    ok("the FIRST read's result" in _wrongdecl
+       and "be_race_read2_result_v1.json" in _wrongdecl,
+       f"AND THE FIRST READ'S CORRECTION PATH IS CLOSED BY THE NEW HEAD: a "
+       f".v2 of `be_race_read_result_v1.json` composed against v5 -- which "
+       f"declares a different family -- is REFUSED BY NAME, so a correction "
+       f"can never carry the wrong read's provenance under right-looking "
+       f"field names: {_wrongdecl[:170]!r}")
+
     # markers into the ledger. It is compared against the ledger's marker
     # set as it stood when the battery started, so it holds before the read
     # and after it, and fails the moment a fixture leaks into the ledger.
