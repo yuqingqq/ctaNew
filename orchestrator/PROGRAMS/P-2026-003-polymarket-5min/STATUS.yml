@@ -63,6 +63,65 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T10:53:20Z (MEM ROUND 159 -- R-615 AND REV 55'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS MY OWN ROUND-151 FLAG READ FROM THE OTHER DIRECTION.
+  (1) **THE STAMP TOLERANCE IS TWO-SIDED.** At `assert_name_stamp_is_the_clock`:
+  `delta = (st - wrote).total_seconds()` then **`if abs(delta) > tolerance_s:`** -- so
+  **an output name stamped at LAUNCH refuses at the emit on any run longer than 300
+  seconds**, and for an 85-minute run the delta is ~-5,100 s (the reviewer drove
+  **-5,074**). ***AND I MEASURED THAT SAME CONSTANT AT ROUND 151.*** I compared it to
+  my census band of -1 to -13 s, wrote that it *"admits any stamp up to FIVE MINUTES
+  AHEAD ... roughly 23x the widest honest deviation"*, and routed it as possibly too
+  LOOSE. **The live consequence is the opposite: `abs()` makes 300 s a bound in BOTH
+  directions, and the convention that fixes the name at launch collides with it every
+  time.** *One constant, two directions, and I examined one.*
+  (2) **AND THE ONLY STAMP-FREE NAME THE GLOB ACCEPTS LOOKS LIKE A BUG.** The glob is
+  `{PREFIX}{day}_SEALED__*.json`; I drove three names: **a stamped name MATCHES;
+  `…_SEALED__.json` MATCHES (the `*` accepts empty); `…_SEALED.json` does NOT.**
+  ***So the natural stamp-free form is invisible to the reader, and the one variant
+  that satisfies both the stamp check and the glob ends in a DANGLING SEPARATOR.***
+  **Which is why "drop the stamp" is not the fix** -- DE 91's shape (compose the name
+  AT THE EMIT from the clock; `--output` a DIRECTORY; a caller-supplied stamped name
+  refusing BEFORE any work, zero draws) keeps both.
+  (3) **I EVALUATED THE HEADROOM:** 2008 + 26.1 + 1500 = **3534.1 MB** against the
+  declared **4000** -- **465.9 MB in reserve**, 12 % of the budget. *The observed
+  2,426 MB is a CHECK on the declaration, never its source, which is what makes it a
+  declaration act rather than a measurement in costume.*
+  (4) **AND THE BOOK IS RUNNING AT 55 % OF ITS OWN BUDGET AND 75 % OF THE CAP:** scope
+  **`MemoryPeak` 6,399,197,184 (5.96 GiB)**, `MemoryCurrent` 5.90 GiB -- **process RSS
+  4,333,876 KiB (4.13 GiB)** at 833 s. ***The two differ by ~1.8 GiB, and the budget
+  the builder checks is the PROCESS one*** (`ru_maxrss` against 7.5 GB stages) --
+  *round 156's page-cache finding, live on the next build.*
+  (5) **THE SEAM IS CLOSED STRUCTURALLY, AND THE BATTERY'S MOVE IS WHAT MAKES IT
+  CHEAP:** ***"not by moving the battery, but by making the budget a PER-RUN DELTA --
+  and the battery's move is what makes a battery finding cost 0.03 s instead of a
+  day."*** **Two fixes, two jobs: the delta makes the check CORRECT, the move makes
+  its failure CHEAP** -- and the reviewer checked that the repair did not DISARM the
+  control, which is the half a "fixed" claim usually omits.
+  (6) **AND IT STATES, BEFORE THE RUN, WHAT THE RUN COULD STILL FALSIFY:** *"the real
+  book has never been through this code path END TO END; the growth drives are on a
+  24-slug fixture, so the RULE is verified and NOT the HEADROOM."* ***If the real day's
+  growth exceeds 4000 MB the per-stage check refuses EARLY -- which is the point of
+  the fix.*** **The cleanest rule-6 shape I have swept: a null declared for a REPAIR
+  rather than for a result.**
+  (7) **WHAT CAN STILL REFUSE AT THE END, IN FOUR CLASSES:** **CERTAIN** (the output's
+  name -- the GO condition); **OPERATIONAL** (`assert_source_unchanged`: *nothing may
+  land to the run's closure during the run* -- a discipline, not a defect); **KNOWN
+  AND RULED** (the peak-stage predicate, R-598); **CHEAP** (one line before an
+  85-minute run). *The question the 84 wasted minutes bought, answered as a LIST
+  rather than as a reassurance.*
+  (8) **AND THE REVIEWER MARKS ITS OWN REMEDY UNVERIFIED:** ***"my recommendation, not
+  a verified fix: I DROVE THE FAILURE, NOT THE REPAIR."*** **A reviewer separating,
+  inside one filing, what it EXHIBITED from what it ADVISES** -- *load-bearing here,
+  because the failure is certain and driven while the remedy is a judgement DE 91 must
+  implement and REV 56 must drive.* **The same discipline as CHECKED versus RELAYED,
+  inside a review.**
+  **FLAG WORDS: the re-run GO-CONDITIONAL-ON-DE-91 (the output's name), then REV 56,
+  then GO; the 09-04 book BUILDING.**
+  MEASURED BEFORE THIS SENTENCE: flags 927 -> 935, flag_provenance 472 -> 480,
+  tasks 19; **293 CHECKED**, 187 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T10:45:30Z (MEM ROUND 158 -- R-614 AND Q-DE-90 SWEPT. STATE ONLY.
   THE FINDING TOUCHES A FLAG OF MY OWN FROM FOUR ROUNDS AGO.
   (1) **TWO FILES CARRIED ONE PROTOCOL IDENTITY -- AND I HAD VERIFIED ONE OF THEM.**
@@ -202,82 +261,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 911 -> 919, flag_provenance 456 -> 464,
   tasks 19; **283 CHECKED**, 181 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T10:34:17Z (MEM ROUND 156 -- R-612 AND Q-BE-58 SWEPT. STATE ONLY.
-  THE FINDING IS A NUMBER STORED AS A STRING, AND MY OWN PROBE FELL INTO IT FIRST.
-  (1) **THE SCOPE OBJECT MIXES STRINGS AND INTS ALONG THE LINE OF WHO PARSED.** In
-  `scope`: **`current_bytes`, `max_bytes` and `peak_bytes` are STRINGS** -- the three
-  values read straight out of the cgroup text files -- **while `anon_bytes`,
-  `file_bytes` and every `events` value are INTS.** ***So
-  `scope.peak_bytes == 8 * 2**30` is FALSE while `int(scope.peak_bytes) == 8 * 2**30`
-  is TRUE, difference ZERO*** -- **the comparison the field exists to support returns
-  the wrong answer in its obvious form, silently.** *The receipt's own
-  `cap_was_hit: true` is right because BE compared the two STRINGS to each other; a
-  consumer comparing to a numeric cap gets False.* **ROUTED to BE 60, NOT RULED.**
-  (2) **AND MY OWN PROBE FELL INTO IT INSIDE THIS ROUND.** My line printed
-  `peak == 8 GiB: False` and I was one sentence from writing that the peak was not
-  exactly the cap. *Suspect the probe first: `repr()` gave `'8589934592'`, a `str`.*
-  ***Fourteenth instance -- and the first where the probe error and the finding are
-  THE SAME FACT.*** **A wrong reading and a real finding one measurement apart, with
-  only the type check between them.**
-  (3) **THE FALSE LITERAL WAS AN INVERSION, NOT A WORDING.** v1 (`9f458246…`,
-  untouched exactly as stated) reads *"day fragment -> TRAIN; an explicitly EMPTY file
-  -> SCORE"*; v2 (`7bf5f108…`) reads *"day fragment -> SCORE; … -> TRAIN"*. ***The two
-  are INVERSES*** -- and **R-560 rules that a ruled forward day is NOT trained on**,
-  so ***the false field asserted precisely what the rule forbids***, in a receipt, on
-  the record. **It shipped because a `.replace()` reports success by default** -- BE's
-  own words: *"a fix that reports success by default -- and I have now used it in most
-  of these rounds."*
-  (4) **I HASHED THE TAPE MYSELF:** 1,165,058,495 bytes hashing **`3727de6533712057…`**,
-  the digest its receipt carries; the fragment **711,128,106 bytes**, its own receipt's
-  count. *Reading the whole 1.16 GB was the only way to check it.* **The 09-04 book's
-  inputs exist at the digests the book will pin.**
-  (5) **THE WIP IS REACHABLE ONLY BY ITS TAG:** `957cdf0` exists, `git branch -r
-  --contains` is **EMPTY** (never pushed), and `~/ctaNew-wt-be` has been refreshed
-  **past** it to `e436753`, clean. ***The tag `wip/be-rule22-stamp` is the only
-  reference keeping that commit alive*** -- *the right call (unreviewed code must not
-  ride into a build) on the thinnest possible thread, which is why it is BE 60's first
-  item.*
-  (6) **THREE SEATS RESET TODAY, NOT TWO** -- the register carries **THE REVIEWER
-  RESET (R-600), THE DE RESET (R-610) and THE BE RESET (R-612)**, each named twice.
-  *My dispatch's flag words said "two seats" and named three; I record the count the
-  register supports.* ***Three of the working seats reloaded inside ninety minutes,
-  and every one was HARVESTED first*** -- **which is the only reason the GO procedure,
-  the assembly command and the patch-idiom hazards exist anywhere at all.**
-  (7) **THE CAP WAS HIT 1,199 TIMES, ON PAGE CACHE:** `events.max = 1199`, oom /
-  oom_kill / oom_group_kill all **0**; **anon 1.358 GiB against file 3.273 GiB**;
-  process RSS peaked **4.741 GB** and never approached 8. ***"A run that completes
-  under a cap it repeatedly hit is not the same as one that fits."*** **And
-  `ru_maxrss`, which every 09-03 receipt carried, could not have shown it -- so
-  09-03's tape very likely had the same property, unseen.** *Cache reclaim cannot
-  corrupt written bytes, and the seam recomputes the tape digest at read time, so a
-  changed tape refuses the day.*
-  (8) **AND THE BE HARVEST IS FOUR IDIOMS WHOSE FAILURE MODE IS A FALSE PASS:**
-  `.replace()` without an assert; **`rc=$?` after a failed `if cmd; then … fi` reads
-  the IF STATEMENT's status (0)**, which printed "CHAIN FAILED rc=0" on a plain
-  refusal; **`pgrep -f "<pattern>"` matches its own `bash -c` line**, so a waiter never
-  terminates; and **a selftest run as `__main__` that does `import <itself>` patches a
-  SECOND module object.** *Plus the operational one: `PM_DATA_ROOT` is a REPO ROOT,
-  never `…/data` -- that resolves the tape one level too deep and **empties it
-  silently**.*
-  **AT COMMIT TIME, 2026-09-06T10:37:28Z: R-613 LANDED (`b827ca2`) AND DA 77 REACHES MY
-  ROUND-153 CONCLUSION BY ITS OWN INSTRUMENT** -- *"the smoke's shape ONE CALLER AWAY
-  in the book builder, a typed `seam.commit`, no closure in BE's producers; DE's
-  in-process battery still on the real path".* **I measured that at round 153 by
-  hand -- monotone budgets, the falling VmRSS measure, and
-  `FIXTURE_STAGE_BUDGETS_GB` at 0.7 GB selected once per build -- and concluded "the
-  ingredients are present and the seam is not".** ***Two seats, two instruments, one
-  conclusion, arrived at independently*** -- **R-235 working on a finding of MINE, and
-  the first time this session that another seat's sweep has confirmed a MEM
-  measurement rather than the other way round.** *Routed onward to BE 60 / DE 90 /
-  DA 78; recorded unswept.*
-  **FLAG WORDS: the 09-04 inputs BUILT (I hashed the tape; both sizes match); the
-  09-04 book NOT STARTED (BE 59 pending BE's reload confirmation -- `be59book.scope`
-  inactive and the lock FREE, measured); BE RELOADED; the WIP HELD-UNREVIEWED; and
-  the seat resets today number THREE (REV, DE, BE).**
-  MEASURED BEFORE THIS SENTENCE: flags 903 -> 911, flag_provenance 448 -> 456,
-  tasks 19; **278 CHECKED**, 178 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2951,6 +2934,83 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_STAMP_TOLERANCE_IS_TWO_SIDED_AND_I_READ_ONLY_ONE_SIDE_AT_ROUND_151: ONE_CONSTANT_TWO_DIRECTIONS
+                             # CHECKED 2026-09-06T10:53:20Z at `assert_name_stamp_is_the_clock`:
+                             # **`delta = (st - wrote).total_seconds()` then `if abs(delta) > tolerance_s:`
+                             # -- TWO-SIDED.** *So an output name stamped at LAUNCH refuses at the emit on
+                             # any run longer than 300 seconds; for an 85-minute run the delta is about
+                             # -5,100 s, and the reviewer drove **-5,074 s**: a CERTAIN end-of-run refusal.*
+                             # ***AND THIS IS MY OWN ROUND-151 FLAG FROM THE OTHER SIDE.*** **I measured that
+                             # same constant, compared it to my census band of -1 to -13 s, wrote that it
+                             # "admits any stamp up to FIVE MINUTES AHEAD ... roughly 23x the widest honest
+                             # deviation", and routed it as possibly too LOOSE.** *The live consequence is
+                             # the opposite: `abs()` makes 300 s a bound in BOTH directions, and the
+                             # convention that fixes the name at launch collides with it every time.*
+                             # **One constant, two directions, and I examined one.**
+  THE_ONLY_STAMP_FREE_NAME_THE_GLOB_ACCEPTS_LOOKS_LIKE_A_BUG: A_DANGLING_SEPARATOR
+                             # CHECKED 2026-09-06T10:53:20Z: the glob is
+                             # **`{PREFIX}{day}{MIDFIX}*.json` with `MIDFIX = "_SEALED__"`**, and I
+                             # drove three names against it: **a stamped name MATCHES;
+                             # `…_SEALED__.json` MATCHES (the `*` accepts empty); `…_SEALED.json` does
+                             # NOT.**
+                             # ***So the reviewer's "the stamp-free alternative is invisible to the glob" is
+                             # right for the NATURAL form -- and the one stamp-free name the reader would
+                             # accept is a name ending in a DANGLING SEPARATOR.***
+                             # **Which is why "drop the stamp" is not the fix**: the only variant that
+                             # satisfies both the stamp check and the glob is one that looks like a
+                             # truncation bug. *DE 91's shape -- compose the name AT THE EMIT from the
+                             # clock, `--output` a DIRECTORY -- is the answer that keeps both.*
+  THE_HEADROOM_ARITHMETIC_IS_FOUR_HUNDRED_AND_SIXTY_FIVE_MEGABYTES: I_EVALUATED_IT
+                             # CHECKED 2026-09-06T10:53:20Z: **2008 + 26.1 + 1500 = 3534.1 MB against
+                             # the declared 4000 -- headroom 465.9 MB.** *The reviewer states the arithmetic
+                             # as evaluated; I evaluated it.* ***The declaration is a plan-derived number
+                             # with 12 % of itself in reserve, and the observed 2,426 MB is a CHECK on it,
+                             # never its source*** -- **which is what makes it a declaration act rather than
+                             # a measurement dressed as one.**
+  BE_59_S_SCOPE_IS_AT_FIVE_POINT_NINE_SIX_GIB_WHILE_ITS_PROCESS_IS_AT_FOUR_POINT_ONE_THREE: THE_GAP_IS_PAGE_CACHE
+                             # CHECKED 2026-09-06T10:53:20Z: **`be58/59book` scope
+                             # `MemoryPeak = 6,399,197,184` (5.96 GiB), `MemoryCurrent` 5.90 GiB -- and the
+                             # process RSS is 4,333,876 KiB (4.13 GiB) at 833 s.**
+                             # ***The two differ by ~1.8 GiB right now, and the budget the builder actually
+                             # checks is the PROCESS one*** (`_rss_gb()` = `ru_maxrss`) *against stage
+                             # budgets of 7.5 GB* -- **so the run is at 55 % of its own budget and at 75 %
+                             # of the cgroup cap, and only the second number is anywhere near a limit.**
+                             # *Round 156's finding, live on the next build: the scope's number carries page
+                             # cache and the builder's does not.*
+  THE_SEAM_IS_CLOSED_STRUCTURALLY_AND_THE_BATTERY_MOVE_IS_WHAT_MAKES_IT_CHEAP: TWO_FIXES_ONE_PURPOSE
+                             # RELAYED from R-615(A) SS1.1, 2026-09-06T10:53:20Z. ***"Not by moving the
+                             # battery, but by making the budget a PER-RUN DELTA -- and the battery's move
+                             # is what makes a battery finding cost 0.03 s instead of a day."***
+                             # **The structural fix and the scheduling fix do different jobs**: *the delta
+                             # makes the check CORRECT; moving the battery makes its failure CHEAP.* **The
+                             # control still fires** -- the reviewer checked that the repair did not disarm
+                             # it, which is the half a "fixed" claim usually omits.
+  THE_RULE_IS_VERIFIED_AND_THE_HEADROOM_IS_NOT: A_DISTINCTION_STATED_BEFORE_THE_RUN
+                             # RELAYED from R-615(A), 2026-09-06T10:53:20Z. **"The real book has never
+                             # been through this code path END TO END; the growth-budget drives are on a
+                             # 24-slug fixture, so the RULE is verified and NOT the HEADROOM -- whether the
+                             # real day's growth stays under 4000 MB is unknown until it runs."**
+                             # ***And if it does not, the per-stage check refuses EARLY, which is the point
+                             # of the fix.*** *A reviewer stating, before the run, exactly which of its own
+                             # conclusions the run could still falsify* -- **the cleanest form of rule 6 I
+                             # have swept: the null declared for a repair rather than for a result.**
+  WHAT_CAN_STILL_REFUSE_AT_THE_END_IS_ENUMERATED_IN_FOUR_CLASSES: CERTAIN_OPERATIONAL_RULED_CHEAP
+                             # RELAYED from R-615(A) SS2, 2026-09-06T10:53:20Z. **SS2.1 CERTAIN -- the
+                             # output's name (the GO condition); SS2.2 OPERATIONAL -- `assert_source_unchanged`
+                             # at the emit: *nothing may land to the run's closure during the run*, a
+                             # DISCIPLINE not a defect; SS2.3 KNOWN AND RULED -- the peak-stage predicate
+                             # (R-598); SS2.4 one line before an 85-minute run.**
+                             # ***An enumeration of end-of-run refusals, classified by whether they are
+                             # certain, procedural, already-ruled, or cheap*** -- **the question the 84
+                             # wasted minutes bought, answered as a list rather than as a reassurance.**
+  THE_REVIEWER_MARKS_ITS_OWN_REMEDY_UNVERIFIED: I_DROVE_THE_FAILURE_NOT_THE_REPAIR
+                             # RELAYED from R-615(A) SS2.1, 2026-09-06T10:53:20Z. ***"My
+                             # recommendation, not a verified fix: I DROVE THE FAILURE, NOT THE REPAIR."***
+                             # **A reviewer separating, inside one filing, what it EXHIBITED from what it
+                             # ADVISES** -- *and the distinction is load-bearing here, because the failure
+                             # is certain (-5,074 s, driven) while the remedy's shape is a judgement DE 91
+                             # must still implement and REV 56 must still drive.* **The same discipline as a
+                             # CHECKED-versus-RELAYED split, inside a review.**
   TWO_FILES_CARRIED_ONE_PROTOCOL_IDENTITY_AND_I_HAD_VERIFIED_ONE_OF_THEM: VERIFICATION_IS_PER_PROPERTY
                              # CHECKED 2026-09-06T10:45:30Z by reading the `protocol` field of each:
                              # **`design_v16.json` -> `…_DESIGN_DECLARATION_V16`; `design_v17.json` ->
@@ -19090,6 +19150,64 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 159, 2026-09-06T10:53:20Z ------------------------------
+  THE_STAMP_TOLERANCE_IS_TWO_SIDED_AND_I_READ_ONLY_ONE_SIDE_AT_ROUND_151:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:53:20Z
+    said: >-
+      assert_name_stamp_is_the_clock computes delta = (st - wrote).total_seconds() and
+      refuses on abs(delta) > tolerance_s -- two-sided -- so an output name stamped at
+      launch refuses at the emit on any run longer than 300 s; for an 85-minute run the
+      delta is about -5,100 s and the reviewer drove -5,074 s. At round 151 I measured
+      the same constant against my census band of -1 to -13 s, wrote that it admits any
+      stamp up to five minutes ahead, and routed it as possibly too loose; the live
+      consequence is the opposite, because abs() makes 300 s a bound in both directions.
+  THE_ONLY_STAMP_FREE_NAME_THE_GLOB_ACCEPTS_LOOKS_LIKE_A_BUG:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:53:20Z
+    said: >-
+      the glob is PREFIX + day + MIDFIX + "*.json" with MIDFIX = "_SEALED__", and I
+      drove three names: a stamped name matches, ..._SEALED__.json matches because the
+      star accepts empty, and ..._SEALED.json does not. So the stamp-free alternative
+      is invisible to the glob in its natural form, and the only stamp-free name the
+      reader accepts ends in a dangling separator -- which is why dropping the stamp is
+      not the fix and DE 91 composes the name at the emit with --output a directory.
+  THE_HEADROOM_ARITHMETIC_IS_FOUR_HUNDRED_AND_SIXTY_FIVE_MEGABYTES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T10:53:20Z
+    said: >-
+      2008 + 26.1 + 1500 = 3534.1 MB against the declared 4000, leaving 465.9 MB of
+      headroom; I evaluated the arithmetic the review states as evaluated. The observed
+      2,426 MB is a check on the declaration, never its source.
+  BE_59_S_SCOPE_IS_AT_FIVE_POINT_NINE_SIX_GIB_WHILE_ITS_PROCESS_IS_AT_FOUR_POINT_ONE_THREE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T10:53:20Z
+    said: >-
+      the book scope's MemoryPeak is 6,399,197,184 (5.96 GiB) with MemoryCurrent 5.90
+      GiB, while the process RSS is 4,333,876 KiB (4.13 GiB) at 833 s -- a gap of about
+      1.8 GiB. The budget the builder checks is the process one (_rss_gb() = ru_maxrss)
+      against stage budgets of 7.5 GB, so the run is at 55 percent of its own budget and
+      75 percent of the cgroup cap, and only the second is near a limit.
+  THE_SEAM_IS_CLOSED_STRUCTURALLY_AND_THE_BATTERY_MOVE_IS_WHAT_MAKES_IT_CHEAP:
+    prov: RELAYED
+    from: R-615(A)
+    as_of: 2026-09-06T10:53:20Z
+  THE_RULE_IS_VERIFIED_AND_THE_HEADROOM_IS_NOT:
+    prov: RELAYED
+    from: R-615(A)
+    as_of: 2026-09-06T10:53:20Z
+  WHAT_CAN_STILL_REFUSE_AT_THE_END_IS_ENUMERATED_IN_FOUR_CLASSES:
+    prov: RELAYED
+    from: R-615(A)
+    as_of: 2026-09-06T10:53:20Z
+  THE_REVIEWER_MARKS_ITS_OWN_REMEDY_UNVERIFIED:
+    prov: RELAYED
+    from: R-615(A)
+    as_of: 2026-09-06T10:53:20Z
   # --- MEM round 158, 2026-09-06T10:45:30Z ------------------------------
   TWO_FILES_CARRIED_ONE_PROTOCOL_IDENTITY_AND_I_HAD_VERIFIED_ONE_OF_THEM:
     prov: CHECKED

@@ -5,6 +5,79 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 159
+
+**As of 2026-09-06T10:53:20Z. State only — MEM writes no result.**
+
+### GO is conditional on one thing: the output's NAME
+
+**The stamp tolerance is two-sided.** `assert_name_stamp_is_the_clock` computes
+`delta = (st - wrote).total_seconds()` and refuses on **`abs(delta) > tolerance_s`**
+— so **an output name stamped at launch refuses at the emit on any run longer than
+300 seconds.** For an 85-minute run the delta is ~−5,100 s; the reviewer drove
+**−5,074 s**. A **certain** end-of-run refusal.
+
+**And I measured that same constant at round 151** — compared it to my census band of
+−1 to −13 s, wrote that it *"admits any stamp up to five minutes ahead … ~23× the
+widest honest deviation"*, and routed it as possibly **too loose**. The live
+consequence is the opposite: `abs()` makes 300 s a bound in **both** directions.
+**One constant, two directions, and I examined one.**
+
+**Why "drop the stamp" is not the answer:** the glob is `{PREFIX}{day}_SEALED__*.json`.
+Driven — a stamped name **matches**; `…_SEALED__.json` **matches** (the `*` accepts
+empty); `…_SEALED.json` **does not**. **The only stamp-free name the reader accepts
+ends in a dangling separator.** DE 91's shape keeps both: **the runner composes the
+receipt's filename at the emit from the clock; `--output` takes a directory;** a
+caller-supplied stamped name refuses **before any work** (zero draws);
+`launched_at_utc` and `emitted_at_utc` both from the clock; the declared convention
+preserved so the glob and DA's landing record still resolve it.
+
+**Order: DE 91 → REV 56 (light, drives the repair) → GO**, into the slot after the
+09-04 book.
+
+### What REV 55 established, and what it did not
+
+- **(a) the tip reaches the emit without the seam; (b) the receipt names the bytes that
+  run; (c) the rehearsal is READY** — all pass.
+- **The seam is closed structurally** — *"not by moving the battery, but by making the
+  budget a per-run delta; and the battery's move is what makes a battery finding cost
+  0.03 s instead of a day."* **Two fixes, two jobs**: the delta makes the check
+  correct, the move makes its failure cheap. The control still fires.
+- **The headroom, which I evaluated:** 2008 + 26.1 + 1500 = **3534.1 MB** against
+  **4000** — **465.9 MB in reserve**. The observed 2,426 MB is a **check** on the
+  declaration, never its source.
+- **NOT established, stated before the run:** the real book has never been through
+  this code path **end to end**; the growth drives are on a 24-slug fixture — **the
+  rule is verified, the headroom is not.** If the real day's growth exceeds 4,000 MB
+  **the per-stage check refuses early, which is the point of the fix.**
+- **What can still refuse at the end, in four classes:** **CERTAIN** (the name);
+  **OPERATIONAL** (`assert_source_unchanged` — *nothing may land to the run's closure
+  during the run*, a discipline); **KNOWN AND RULED** (the peak-stage predicate,
+  R-598); **CHEAP** (one line before an 85-minute run).
+- **The reviewer marks its own remedy unverified:** *"my recommendation, not a
+  verified fix: I drove the failure, not the repair."*
+
+### State
+
+- **The re-run: GO-CONDITIONAL-ON-DE-91** (the output's name), **then REV 56, then
+  GO.** DE 91 runs from `wt-de2`, light; design v19 if the naming block moves; the
+  rehearsal re-emitted as v4 from the new code.
+- **The 09-04 book: BUILDING** — scope `MemoryPeak` **5.96 GiB**, `MemoryCurrent`
+  5.90 GiB, **process RSS 4.13 GiB** at 833 s. **The builder's budget is the process
+  number** (`ru_maxrss` vs 7.5 GB stages), so the run is at **55 % of its own budget
+  and 75 % of the cgroup cap** — round 156's page-cache gap, live on the next build.
+- **DA 78 landed** (149 checks, 0 failures) with its census **re-emitted in band
+  because four audited modules moved** — and `--supersedes` applied to the battery
+  emission too: *"a superseding census that dropped its checks would be a weaker
+  statement wearing a later name."*
+
+**Counts, measured before the sentence:** flags 927 → 935, `flag_provenance`
+472 → 480, tasks 19; **293 CHECKED**, 187 RELAYED, **455 UNMARKED — unchanged for
+the thirty-fifth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a
+ruled 3 (Batch 141 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 158
 
 **As of 2026-09-06T10:45:30Z. State only — MEM writes no result.**

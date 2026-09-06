@@ -11876,3 +11876,89 @@ directions.
   thirty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 141 — archived 2026-09-06T10:53:20Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 159 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:34:17Z (MEM ROUND 156 -- R-612 AND Q-BE-58 SWEPT. STATE ONLY.
+  THE FINDING IS A NUMBER STORED AS A STRING, AND MY OWN PROBE FELL INTO IT FIRST.
+  (1) **THE SCOPE OBJECT MIXES STRINGS AND INTS ALONG THE LINE OF WHO PARSED.** In
+  `scope`: **`current_bytes`, `max_bytes` and `peak_bytes` are STRINGS** -- the three
+  values read straight out of the cgroup text files -- **while `anon_bytes`,
+  `file_bytes` and every `events` value are INTS.** ***So
+  `scope.peak_bytes == 8 * 2**30` is FALSE while `int(scope.peak_bytes) == 8 * 2**30`
+  is TRUE, difference ZERO*** -- **the comparison the field exists to support returns
+  the wrong answer in its obvious form, silently.** *The receipt's own
+  `cap_was_hit: true` is right because BE compared the two STRINGS to each other; a
+  consumer comparing to a numeric cap gets False.* **ROUTED to BE 60, NOT RULED.**
+  (2) **AND MY OWN PROBE FELL INTO IT INSIDE THIS ROUND.** My line printed
+  `peak == 8 GiB: False` and I was one sentence from writing that the peak was not
+  exactly the cap. *Suspect the probe first: `repr()` gave `'8589934592'`, a `str`.*
+  ***Fourteenth instance -- and the first where the probe error and the finding are
+  THE SAME FACT.*** **A wrong reading and a real finding one measurement apart, with
+  only the type check between them.**
+  (3) **THE FALSE LITERAL WAS AN INVERSION, NOT A WORDING.** v1 (`9f458246…`,
+  untouched exactly as stated) reads *"day fragment -> TRAIN; an explicitly EMPTY file
+  -> SCORE"*; v2 (`7bf5f108…`) reads *"day fragment -> SCORE; … -> TRAIN"*. ***The two
+  are INVERSES*** -- and **R-560 rules that a ruled forward day is NOT trained on**,
+  so ***the false field asserted precisely what the rule forbids***, in a receipt, on
+  the record. **It shipped because a `.replace()` reports success by default** -- BE's
+  own words: *"a fix that reports success by default -- and I have now used it in most
+  of these rounds."*
+  (4) **I HASHED THE TAPE MYSELF:** 1,165,058,495 bytes hashing **`3727de6533712057…`**,
+  the digest its receipt carries; the fragment **711,128,106 bytes**, its own receipt's
+  count. *Reading the whole 1.16 GB was the only way to check it.* **The 09-04 book's
+  inputs exist at the digests the book will pin.**
+  (5) **THE WIP IS REACHABLE ONLY BY ITS TAG:** `957cdf0` exists, `git branch -r
+  --contains` is **EMPTY** (never pushed), and `~/ctaNew-wt-be` has been refreshed
+  **past** it to `e436753`, clean. ***The tag `wip/be-rule22-stamp` is the only
+  reference keeping that commit alive*** -- *the right call (unreviewed code must not
+  ride into a build) on the thinnest possible thread, which is why it is BE 60's first
+  item.*
+  (6) **THREE SEATS RESET TODAY, NOT TWO** -- the register carries **THE REVIEWER
+  RESET (R-600), THE DE RESET (R-610) and THE BE RESET (R-612)**, each named twice.
+  *My dispatch's flag words said "two seats" and named three; I record the count the
+  register supports.* ***Three of the working seats reloaded inside ninety minutes,
+  and every one was HARVESTED first*** -- **which is the only reason the GO procedure,
+  the assembly command and the patch-idiom hazards exist anywhere at all.**
+  (7) **THE CAP WAS HIT 1,199 TIMES, ON PAGE CACHE:** `events.max = 1199`, oom /
+  oom_kill / oom_group_kill all **0**; **anon 1.358 GiB against file 3.273 GiB**;
+  process RSS peaked **4.741 GB** and never approached 8. ***"A run that completes
+  under a cap it repeatedly hit is not the same as one that fits."*** **And
+  `ru_maxrss`, which every 09-03 receipt carried, could not have shown it -- so
+  09-03's tape very likely had the same property, unseen.** *Cache reclaim cannot
+  corrupt written bytes, and the seam recomputes the tape digest at read time, so a
+  changed tape refuses the day.*
+  (8) **AND THE BE HARVEST IS FOUR IDIOMS WHOSE FAILURE MODE IS A FALSE PASS:**
+  `.replace()` without an assert; **`rc=$?` after a failed `if cmd; then … fi` reads
+  the IF STATEMENT's status (0)**, which printed "CHAIN FAILED rc=0" on a plain
+  refusal; **`pgrep -f "<pattern>"` matches its own `bash -c` line**, so a waiter never
+  terminates; and **a selftest run as `__main__` that does `import <itself>` patches a
+  SECOND module object.** *Plus the operational one: `PM_DATA_ROOT` is a REPO ROOT,
+  never `…/data` -- that resolves the tape one level too deep and **empties it
+  silently**.*
+  **AT COMMIT TIME, 2026-09-06T10:37:28Z: R-613 LANDED (`b827ca2`) AND DA 77 REACHES MY
+  ROUND-153 CONCLUSION BY ITS OWN INSTRUMENT** -- *"the smoke's shape ONE CALLER AWAY
+  in the book builder, a typed `seam.commit`, no closure in BE's producers; DE's
+  in-process battery still on the real path".* **I measured that at round 153 by
+  hand -- monotone budgets, the falling VmRSS measure, and
+  `FIXTURE_STAGE_BUDGETS_GB` at 0.7 GB selected once per build -- and concluded "the
+  ingredients are present and the seam is not".** ***Two seats, two instruments, one
+  conclusion, arrived at independently*** -- **R-235 working on a finding of MINE, and
+  the first time this session that another seat's sweep has confirmed a MEM
+  measurement rather than the other way round.** *Routed onward to BE 60 / DE 90 /
+  DA 78; recorded unswept.*
+  **FLAG WORDS: the 09-04 inputs BUILT (I hashed the tape; both sizes match); the
+  09-04 book NOT STARTED (BE 59 pending BE's reload confirmation -- `be59book.scope`
+  inactive and the lock FREE, measured); BE RELOADED; the WIP HELD-UNREVIEWED; and
+  the seat resets today number THREE (REV, DE, BE).**
+  MEASURED BEFORE THIS SENTENCE: flags 903 -> 911, flag_provenance 448 -> 456,
+  tasks 19; **278 CHECKED**, 178 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
