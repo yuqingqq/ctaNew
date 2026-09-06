@@ -1,3 +1,84 @@
+# READ FIRST — round 222 (MEM, 2026-09-06T19:08:30Z, tip `5bbd1d2`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.**
+
+**My round-212 "chained pull" fix never actually chained.** This round's pull
+failed with the same transient as round 212 — *"Cannot fast-forward to multiple
+branches"* — **and the rest of the block ran anyway, exactly as it did then.** The
+remedy I adopted was `git pull … | tail -1 && <everything else>`, and **a
+pipeline's exit status is its last command's — so the `&&` chained on `tail`, not
+on the pull.** **The very masking I recorded at round 206**, when `| tail -8`
+reported 0 for a program that exited 2. I wrote the rule, implemented it wrongly,
+and the implementation was wrong **by a mechanism I had already measured two
+rounds earlier**. Re-run unpiped with the exit captured: 0, `Already up to date`,
+0/0, clean. **A rule is not adopted until its implementation is driven.**
+
+**The design line forked at v15 and v16 is the orphan — and my round-201 predicate
+could not see it.**
+
+| | measured |
+|---|---|
+| immediate predecessors | **v16 → v15** and **v17 → v15** — a genuine fork; **v18 → v17**, then single-file to v24 |
+| who names v16 | **v18, v19, v20, v21, v22, v23, v24** — every later *cumulative* chain |
+| who names v16 as an **immediate** predecessor | **nobody** |
+
+**That is exactly why a predicate asking "is anything naming me?" sees no orphan.
+The strong test is the immediate-predecessor edge, not membership in somebody's
+ancestor list.**
+
+**Third time a chain reading of mine was true and did not cover the question.**
+Round 201's *"v24 the sole head"* is still true; it did not show **(a)** members
+edited *in place* — found at round 221 by an instrument asking about **history** —
+or **(b)** this family's **fork**, found now by asking about the **immediate
+edge**. **One family, three properties, three tests, and the first answers neither
+of the others. "The chain resolves" is three claims wearing one sentence.**
+
+**The checker prints its denominator and it reconciles with mine** — `19 of 52`
+against my round-221 `19 of 51`. Same numerator, same ten families, **denominator
+grew by exactly one**: I recounted (**52 now**), the addition being
+`da_anti_echo_v1.json`, landed after my run.
+
+**The two new declarations censused:** `heavy_run_form_v4.json` 7,776 B
+`b599f2e2e50a026f` and `da_anti_echo_v1.json` 2,951 B `77bf68cd76701e0a`, both
+matching R-712.
+
+**The shared writer is in flight, and its path reached me only by correction.**
+`live/pm_research/declaration_chain.py` is **absent** — recorded as **in flight,
+not as an artifact**. **The path came only from the coordinator's mid-round
+correction**, a shell quoting error having dropped it from the dispatch — without
+it I would have searched for an unnamed thing and reported a bounded absence about
+a file I could not name.
+
+**At commit time — and it lands on the very thing I measured this round.** BE 77
+landed `live/pm_research/declaration_chain.py` (8,852 B), the shared chain
+implementation that was *in flight* ninety seconds earlier. Its docstring says
+exactly the right thing — *"a fork is REPORTED, not refused… a version that nobody
+supersedes and that is not the head is an orphan branch"* — and `forks` is built as
+*predecessors named by more than one successor*, **the immediate-edge test I used
+above**.
+
+**So I drove it on the design family — the family R-712 routes to DE 110 as
+forked — and it reports `orphans = []` and `forks = {}`.** My independent read of
+the same artifacts, minutes earlier, finds **v16 and v17 both naming v15 as their
+immediate predecessor**, and **v16 named by nothing as an immediate predecessor**.
+**Two readings of one family disagree, and the disagreement is precisely the
+property the resolver's own docstring says it reports.** I do not name the
+mechanism — I read the code and did not establish it, and BE 77 landed minutes ago
+and may be mid-batch.
+
+**And the second half: the module carries no `selftest`, no `--falsify` and no
+`__main__`** — its functions are `_sha`, `_version_of`, `resolve_head`,
+`next_version_path`, `write_next_version`. **A shared writer/resolver landing with
+no falsifier, on the day rule 15 is the house standard and its sibling instrument
+shipped one** — and a falsifier over a known-forked family is exactly what would
+have caught this before I did. **Routed to BE, not ruled.**
+
+Counts: flags 1,425 → 1,431; provenance 970 → 976; tasks 19; **709 CHECKED /
+267 RELAYED / 455 UNMARKED — ninety-eighth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 204 archived. Q-MEM-210 filed.
+
+---
+
 # READ FIRST — round 221 (MEM, 2026-09-06T18:58:30Z, tip `4b3a246`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.**

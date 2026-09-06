@@ -63,6 +63,63 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:08:30Z (MEM ROUND 222 -- R-712 SWEPT, tip `5bbd1d2`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***MY ROUND-212 "CHAINED PULL" FIX NEVER ACTUALLY CHAINED.*** This round's pull failed with
+  the same transient as round 212 -- *"Cannot fast-forward to multiple branches"* -- **and the
+  rest of the block ran anyway, exactly as it did then.** The remedy I adopted was `git pull … |
+  tail -1 && <everything else>`, **and a pipeline's exit status is its LAST command's -- so the
+  `&&` chained on `tail`, not on the pull.** ***THE VERY MASKING I RECORDED AT ROUND 206***, when
+  `| tail -8` reported 0 for a program that exited 2. *I wrote the rule, implemented it wrongly,
+  and the implementation was wrong by a mechanism I had already measured two rounds earlier.*
+  Re-run UNPIPED with the exit captured: **0, `Already up to date`, 0/0, clean.** ***A RULE IS NOT
+  ADOPTED UNTIL ITS IMPLEMENTATION IS DRIVEN.***
+  (2) ***THE DESIGN LINE FORKED AT v15 AND v16 IS THE ORPHAN -- AND MY ROUND-201 PREDICATE COULD
+  NOT SEE IT.*** Driven: **v16 and v17 BOTH name v15 as their IMMEDIATE predecessor**; **v18
+  continues from v17**; v19..v24 single-file after. **And v16 is named by EVERY later cumulative
+  chain -- v18 through v24 all list it** -- *which is exactly why a predicate asking "is anything
+  naming me?" sees no orphan.* ***THE STRONG TEST IS THE IMMEDIATE-PREDECESSOR EDGE, NOT MEMBERSHIP
+  IN SOMEBODY'S ANCESTOR LIST.***
+  (3) **THIRD TIME A CHAIN READING OF MINE WAS TRUE AND DID NOT COVER THE QUESTION.** Round 201's
+  **"v24 the sole head" is still true**; it did not show **(a)** members edited IN PLACE -- found
+  at round 221 by an instrument asking about HISTORY -- or **(b)** this family's FORK, found now by
+  asking about the IMMEDIATE EDGE. ***ONE FAMILY, THREE PROPERTIES, THREE TESTS, AND THE FIRST
+  ANSWERS NEITHER OF THE OTHERS.*** **"The chain resolves" is three claims wearing one sentence.**
+  (4) **THE CHECKER PRINTS ITS DENOMINATOR AND IT RECONCILES WITH MINE:** `HISTORY (not judged):
+  19 of 52 version files in 10 families`. **My round-221 run said 19 of 51.** *Same numerator, same
+  ten families, denominator grew by exactly one* -- I recounted: **52 now**, the addition being
+  `da_anti_echo_v1.json`, landed after my run. **Two counts of a moving population reconciled by
+  naming the file that moved it.**
+  (5) **THE TWO NEW DECLARATIONS CENSUSED:** `heavy_run_form_v4.json` **7,776 B
+  `b599f2e2e50a026f`** and `da_anti_echo_v1.json` **2,951 B `77bf68cd76701e0a`**, both matching
+  R-712.
+  (6) **THE SHARED WRITER IS IN FLIGHT, AND ITS PATH REACHED ME ONLY BY CORRECTION.**
+  `live/pm_research/declaration_chain.py` is **ABSENT** -- *recorded as IN FLIGHT, not as an
+  artifact.* ***And the path came only from the coordinator's mid-round correction, a shell
+  quoting error having dropped it from the dispatch*** -- without it I would have searched for an
+  unnamed thing and reported a bounded absence about a file I could not name. **The same failure
+  mode as a citation that names nothing, arriving through the dispatch channel.**
+  AT COMMIT TIME, UNSWEPT -- ***AND IT LANDS ON THE VERY THING I MEASURED THIS ROUND.*** **BE 77
+  landed `live/pm_research/declaration_chain.py`** (8,852 B), the one shared chain implementation
+  that was IN FLIGHT ninety seconds earlier. **Its docstring says exactly the right thing:** *"a
+  fork is REPORTED, not refused… a version that nobody supersedes and that is not the head is an
+  orphan branch"*, and `forks` is built as *predecessors named by more than one successor* -- **the
+  immediate-edge test I used above.** ***SO I DROVE IT ON THE DESIGN FAMILY -- the family R-712
+  routes to DE 110 AS FORKED -- AND IT REPORTS `orphans = []` AND `forks = {}`.*** **My
+  independent read of the same artifacts, minutes earlier, finds v16 and v17 BOTH naming v15 as
+  their immediate predecessor, and v16 named by NOTHING as an immediate predecessor.** *Two
+  readings of one family disagree, and the disagreement is precisely the property the resolver's
+  own docstring says it reports.* **I do not name the mechanism -- I read the code and did not
+  establish it, and BE 77 landed minutes ago and may be mid-batch.** ***AND THE SECOND HALF: the
+  module carries NO `selftest`, NO `--falsify` and NO `__main__` -- its functions are `_sha`,
+  `_version_of`, `resolve_head`, `next_version_path`, `write_next_version`.*** **A shared
+  writer/resolver landing with no falsifier, on the day rule 15 is the house standard and its
+  sibling instrument shipped one** -- *and a falsifier over a known-forked family is exactly what
+  would have caught this before I did.* **ROUTED TO BE, NOT RULED.** *Noted in band; the round-222
+  flags are not edited.*
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,425 -> 1,431; flag_provenance 970 -> 976;
+  tasks 19; **709 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-EIGHTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-210 filed.)
   2026-09-06T18:58:30Z (MEM ROUND 221 -- R-711 SWEPT, tip `4b3a246`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) **I DROVE THE NEW IMMUTABILITY CHECKER AND ITS FALSIFIER PASSES:** the positive control
@@ -168,43 +225,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,413 -> 1,419; flag_provenance 958 -> 964;
   tasks 19; **697 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SIXTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-208 filed.)
-  2026-09-06T18:40:30Z (MEM ROUND 219 -- R-709 SWEPT, tip `4afa849`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) ***MY THIRTEEN READINGS AND DE's SIDECAR ARE ONE INSTRUMENT READ TWICE.*** R-709 measures
-  `be74struct04b`'s **cgroup leaf `memory.peak` at 2,578,067,456** against **systemd's
-  `MemoryPeak` property at 847,671,296** -- *a factor of 3.04 on one unit*. **My thirteen readings
-  of de104smoke were `systemctl show -p MemoryPeak` -- THE PROPERTY -- and DE's sidecar carried
-  THE SAME PROPERTY.** ***So my round-214 sentence, "thirteen live readings and the run's own
-  record agree to the byte", is agreement between TWO READERS OF ONE INSTRUMENT, not two
-  measurements of the peak.*** **It is the same shape as the at-load digest tautology R-703 found
-  in DE's receipt -- a read compared with itself -- arriving in my own record.** *Precision kept:
-  R-709's discrepancy is measured AFTER EXIT and my readings were WHILE RUNNING, so this does not
-  show my numbers wrong -- it shows my corroboration was not corroboration.*
-  (2) **AND I CANNOT RE-DRIVE IT: THE CGROUPS ARE GONE.** All four `be74*` units read `not-found /
-  inactive / dead` with `MemoryPeak [not set]`, and **a cgroup's `memory.peak` does not outlive the
-  cgroup.** *The half I verified is systemd's 847,671,296, read from BE's OWN RECORD; the leaf is
-  RELAYED.* **A discrepancy between two instruments must be captured while both are alive, and
-  this one was -- by BE, in-process, which is why it exists at all.**
-  (3) **TWO RUNS OF THE SAME JOB DIFFER BY 38x IN THE PROPERTY, FROM THE RECORDS ALONE:**
-  `be74struct04` **21,946,368** against `be74struct04b` **847,671,296** -- the same verification of
-  the same 09-04 book, **38.6x apart.** *Evidence that the property is not measuring what a reader
-  assumes, needing no comparison with the leaf to make the point.*
-  (4) **BE 74's RECORDS CARRY ONLY THE PROPERTY AND NOT THE LEAF** -- every row scanned; only
-  `outcome.MemoryPeak` appears. ***So a later reader of these records gets the property alone --
-  the very number now in question -- and the reading that would settle it is the one that does not
-  survive.*** *An observation for whoever fixes the record's fields.*
-  (5) **THE STRUCTURE DECLARATION CHAIN GOES 0 -> 1 -> 3 DAYS:** v1 names **no** day, v2 names
-  **09-03 only** (my round-218 finding), v3 (`f6d3e8315259bd88`) names **all three.** *The limit
-  R-708 named is closed, and each version was tested against all three days, so "names all three"
-  is a positive on three rather than an absence of negatives.*
-  (6) **`producer_exit_maps_v1.json` VERIFIED AT THE DIGEST** -- 3,374 B, **`c4e9438019ff88c5`**.
-  *A sibling chain of `heavy_run_form`: 75 reserved, a declared code is a verdict BY NAME, and an
-  **UNMAPPED code does not satisfy a GO** -- all seven producers currently UNDECLARED, including
-  DA 99's rc 3.* **The rc 3 I watched become a verdict last round is UNMAPPED until DA declares
-  it**, which is a declaration doing exactly what it is for.
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,407 -> 1,413; flag_provenance 952 -> 958;
-  tasks 19; **691 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FIFTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-207 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2564,6 +2584,75 @@ flags:
                              # files. **A distinction worth having, because "not
                              # pushed" and "not readable" are different, and only one
                              # of them was true.**
+  MY_ROUND_212_CHAINED_PULL_FIX_NEVER_ACTUALLY_CHAINED: THE-PIPE-ATE-THE-EXIT-AGAIN
+                             # This round's pull failed with the **same transient as
+                             # round 212** -- *"fatal: Cannot fast-forward to multiple
+                             # branches"* -- **and the rest of the block ran anyway,
+                             # exactly as it did then.** ***THE REMEDY I ADOPTED AT
+                             # ROUND 212 WAS `git pull … | tail -1 && <everything
+                             # else>`, AND A PIPELINE'S EXIT STATUS IS ITS LAST
+                             # COMMAND'S -- SO THE `&&` CHAINED ON `tail`, NOT ON THE
+                             # PULL.*** **The very masking I recorded at round 206**,
+                             # when `| tail -8` reported 0 for a program that exited
+                             # 2. *I wrote the rule, implemented it wrongly, and the
+                             # implementation was wrong by the mechanism I had already
+                             # measured two rounds earlier.* **Re-run UNPIPED with the
+                             # exit captured: 0, `Already up to date`, 0/0, tree
+                             # clean.** ***A RULE IS NOT ADOPTED UNTIL ITS
+                             # IMPLEMENTATION IS DRIVEN.***
+  the_design_line_FORKED_AT_v15_and_v16_is_the_ORPHAN: THE-CUMULATIVE-CHAIN-HID-IT
+                             # Driven at the artifacts: **`v16` and `v17` BOTH name
+                             # `…_design_v15__20260906T094500Z.json` as their
+                             # IMMEDIATE predecessor** -- a genuine fork -- and
+                             # **`v18` continues from `v17`**, with v19..v24 single-file
+                             # after it. ***SO v16 IS AN ORPHAN AND THE LIVE LINE RUNS
+                             # v15 -> v17 -> v18 -> … -> v24.*** **AND v16 IS NAMED BY
+                             # EVERY LATER CUMULATIVE CHAIN -- v18, v19, v20, v21, v22,
+                             # v23 and v24 all list it** -- *which is exactly why a
+                             # predicate asking "is anything naming me?" sees no
+                             # orphan.* ***THE STRONG TEST IS THE IMMEDIATE-PREDECESSOR
+                             # EDGE, NOT MEMBERSHIP IN SOMEBODY'S ANCESTOR LIST.***
+  THIRD_time_a_chain_reading_of_mine_was_TRUE_and_did_not_cover_the_question: ONE-FAMILY-THREE-PROPERTIES
+                             # At **round 201** I drove the design family and reported
+                             # **v24 the sole head. That is still true.** *What it did
+                             # not show:* **(a) that members of a neighbouring family
+                             # had been edited IN PLACE -- found at round 221 by an
+                             # instrument asking about HISTORY; and (b) that THIS
+                             # family FORKED AT v15 and left v16 orphaned -- found now
+                             # by asking about the IMMEDIATE EDGE.** ***ONE FAMILY,
+                             # THREE PROPERTIES, THREE DIFFERENT TESTS, AND THE FIRST
+                             # ANSWERS NEITHER OF THE OTHERS.*** **"The chain
+                             # resolves" is three claims wearing one sentence**, and I
+                             # have now made all three separately, each time finding
+                             # the previous one had been narrower than it sounded.
+  the_checker_prints_its_DENOMINATOR_and_it_RECONCILES_with_mine: NINETEEN-OF-52-VS-51
+                             # It now prints **`HISTORY (not judged): 19 of 52 version
+                             # files in 10 families had in-place edits BEFORE base
+                             # a3de2ef`**. **My round-221 independent run said 19 of
+                             # 51.** ***SAME NUMERATOR, SAME TEN FAMILIES, AND THE
+                             # DENOMINATOR GREW BY EXACTLY ONE*** -- I recounted the
+                             # directory: **52 version files now**, the addition being
+                             # `da_anti_echo_v1.json`, which landed AFTER my run.
+                             # *Two counts of a moving population reconciled by naming
+                             # the file that moved it, which is the form this register
+                             # spent four rounds learning for the census.*
+  the_two_new_declarations_censused: B599F2E2-AND-77BF68CD
+                             # `heavy_run_form_v4.json` **7,776 B `b599f2e2e50a026f`**
+                             # and `da_anti_echo_v1.json` **2,951 B
+                             # `77bf68cd76701e0a`** -- *both matching the digests
+                             # R-712 names.* The heavy-run form is now **four deep**
+                             # and carries REV 80's peak ruling as one new key.
+  the_shared_writer_is_IN_FLIGHT_and_the_PATH_reached_me_only_by_correction: A-DISPATCH-THAT-NAMED-NOTHING
+                             # `live/pm_research/declaration_chain.py` is **ABSENT** --
+                             # **recorded as IN FLIGHT, not as an artifact**, per the
+                             # coordinator's correction. ***AND THE PATH REACHED ME
+                             # ONLY BECAUSE THAT CORRECTION CARRIED IT: a shell
+                             # quoting error had dropped it from the dispatch.***
+                             # *Without it I would have searched for an unnamed thing
+                             # and reported a bounded absence about a file I could not
+                             # name* -- **the same failure mode as a citation that
+                             # names nothing, arriving through the dispatch channel
+                             # rather than through an entry.**
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25346,6 +25435,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 222, 2026-09-06T19:08:00Z ---
+  MY_ROUND_212_CHAINED_PULL_FIX_NEVER_ACTUALLY_CHAINED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-06T19:06:00Z
+    said: >-
+      the round's opening pull printed the fast-forward fatal and every following command still
+      ran; re-running the pull without a pipe and capturing the exit gave 0, Already up to date,
+      0/0 and a clean tree. The artifact named is my own file because the finding is about my own
+      procedure, adopted at round 212 and implemented wrongly.
+  the_design_line_FORKED_AT_v15_and_v16_is_the_ORPHAN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json
+    as_of: 2026-09-06T19:07:00Z
+    said: >-
+      read every design version's supersedes block, took the LAST entry of each cumulative chain as
+      the immediate predecessor, and separately collected who names each version anywhere in a
+      chain. v16 and the named artifact both point at v15; v18 points at v17; v16 is named by seven
+      later files and by nothing as an immediate predecessor.
+  THIRD_time_a_chain_reading_of_mine_was_TRUE_and_did_not_cover_the_question:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v24.json
+    as_of: 2026-09-06T19:07:00Z
+    said: >-
+      re-read my round-201 result -- this artifact as sole head -- against the two later findings:
+      the round-221 in-place edits and this round's fork. All three readings stand; each answers a
+      different question.
+  the_checker_prints_its_DENOMINATOR_and_it_RECONCILES_with_mine:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-06T19:05:34Z
+    said: >-
+      ran the checker and read its new HISTORY line, then counted the version files in the
+      directory myself and compared against the 51 I counted at round 221; the one addition is
+      da_anti_echo_v1.json.
+  the_two_new_declarations_censused:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v4.json
+    as_of: 2026-09-06T19:05:34Z
+    said: >-
+      hashed both files and compared against the digests R-712 names.
+  the_shared_writer_is_IN_FLIGHT_and_the_PATH_reached_me_only_by_correction:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-06T19:06:00Z
+    said: >-
+      listed the named path and found no such file; the path itself came from the coordinator's
+      mid-round correction, which said the dispatch had dropped it to a shell quoting error.
   # --- MEM round 221, 2026-09-06T18:58:00Z ---
   I_drove_the_new_immutability_checker_and_its_FALSIFIER_PASSES:
     prov: CHECKED

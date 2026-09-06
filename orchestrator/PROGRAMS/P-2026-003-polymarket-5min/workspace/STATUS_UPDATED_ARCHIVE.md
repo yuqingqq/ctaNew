@@ -16725,3 +16725,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **685 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FOURTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-206 filed.)
 ```
+
+## Batch 204 — archived 2026-09-06T19:08:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 222 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:40:30Z (MEM ROUND 219 -- R-709 SWEPT, tip `4afa849`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***MY THIRTEEN READINGS AND DE's SIDECAR ARE ONE INSTRUMENT READ TWICE.*** R-709 measures
+  `be74struct04b`'s **cgroup leaf `memory.peak` at 2,578,067,456** against **systemd's
+  `MemoryPeak` property at 847,671,296** -- *a factor of 3.04 on one unit*. **My thirteen readings
+  of de104smoke were `systemctl show -p MemoryPeak` -- THE PROPERTY -- and DE's sidecar carried
+  THE SAME PROPERTY.** ***So my round-214 sentence, "thirteen live readings and the run's own
+  record agree to the byte", is agreement between TWO READERS OF ONE INSTRUMENT, not two
+  measurements of the peak.*** **It is the same shape as the at-load digest tautology R-703 found
+  in DE's receipt -- a read compared with itself -- arriving in my own record.** *Precision kept:
+  R-709's discrepancy is measured AFTER EXIT and my readings were WHILE RUNNING, so this does not
+  show my numbers wrong -- it shows my corroboration was not corroboration.*
+  (2) **AND I CANNOT RE-DRIVE IT: THE CGROUPS ARE GONE.** All four `be74*` units read `not-found /
+  inactive / dead` with `MemoryPeak [not set]`, and **a cgroup's `memory.peak` does not outlive the
+  cgroup.** *The half I verified is systemd's 847,671,296, read from BE's OWN RECORD; the leaf is
+  RELAYED.* **A discrepancy between two instruments must be captured while both are alive, and
+  this one was -- by BE, in-process, which is why it exists at all.**
+  (3) **TWO RUNS OF THE SAME JOB DIFFER BY 38x IN THE PROPERTY, FROM THE RECORDS ALONE:**
+  `be74struct04` **21,946,368** against `be74struct04b` **847,671,296** -- the same verification of
+  the same 09-04 book, **38.6x apart.** *Evidence that the property is not measuring what a reader
+  assumes, needing no comparison with the leaf to make the point.*
+  (4) **BE 74's RECORDS CARRY ONLY THE PROPERTY AND NOT THE LEAF** -- every row scanned; only
+  `outcome.MemoryPeak` appears. ***So a later reader of these records gets the property alone --
+  the very number now in question -- and the reading that would settle it is the one that does not
+  survive.*** *An observation for whoever fixes the record's fields.*
+  (5) **THE STRUCTURE DECLARATION CHAIN GOES 0 -> 1 -> 3 DAYS:** v1 names **no** day, v2 names
+  **09-03 only** (my round-218 finding), v3 (`f6d3e8315259bd88`) names **all three.** *The limit
+  R-708 named is closed, and each version was tested against all three days, so "names all three"
+  is a positive on three rather than an absence of negatives.*
+  (6) **`producer_exit_maps_v1.json` VERIFIED AT THE DIGEST** -- 3,374 B, **`c4e9438019ff88c5`**.
+  *A sibling chain of `heavy_run_form`: 75 reserved, a declared code is a verdict BY NAME, and an
+  **UNMAPPED code does not satisfy a GO** -- all seven producers currently UNDECLARED, including
+  DA 99's rc 3.* **The rc 3 I watched become a verdict last round is UNMAPPED until DA declares
+  it**, which is a declaration doing exactly what it is for.
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,407 -> 1,413; flag_provenance 952 -> 958;
+  tasks 19; **691 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FIFTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-207 filed.)
+```
