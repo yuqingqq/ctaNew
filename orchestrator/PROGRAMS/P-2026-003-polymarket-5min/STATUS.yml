@@ -63,6 +63,88 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T13:24:37Z (MEM ROUND 177 -- R-643 AND THE RUNBOOK CORRECTION `46a7ad5` SWEPT
+  AS ONE BATCH. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***MY FIRST PROBE REPORTED AN ABSENCE THAT WAS FALSE, AND IT FAILED THE WAY THE
+  FINDING IT WAS CHECKING FAILS.*** *I searched `ps` output for `e2_a_runner.py --run`, got
+  nothing, and nearly wrote that DA's three waiters were already gone.* **They are ALIVE:
+  2982152 (06:09:46), 2987365 (06:05:00), 2992920 (05:58:54) at 13:23:38Z, the pids R-643
+  names.** **The visible head of each command line is Claude Code's shell-snapshot wrapper
+  and I had cut the output at 135 columns -- A BOUNDED SEARCH REPORTING ABSENCE.** *Fixed
+  with a pattern that cannot match its own command line (`e2_a[_]runner`) and by reading
+  the NAMED pids.* **Third time this session a grep's SHAPE, not its subject, gave the
+  wrong answer.**
+  (2) **THE WAITER SHAPE ITSELF:** `pgrep -f "e2_a_runner.py --run"` sits INSIDE the
+  `bash -c` line that runs it, **so `pgrep` finds the waiter and the condition is never
+  false** -- three idle shells watching a smoke that ended this morning; DA kills them
+  next round (DA 85's GO). ***THE CONTRAST IS IN THIS ROUND'S OWN DATA: BE 64 polls the
+  LOCK by asking the UNIT -- twenty starts, every one `ExecMainStatus=75` -- and every one
+  of those polls ENDS.*** *A poller that asks the process table about itself cannot
+  terminate; one that asks systemd about a unit always can.*
+  (3) **SEVEN JOURNAL READERS ARE SIX, AND DA 86 REMOVED A DEPENDENCY RATHER THAN
+  LABELLING IT.** **`da_midnight_verify.sh` now contains ZERO `journalctl` calls (it had
+  ONE at 13:16:43Z)**, replaced by an **APPEND-ONLY RUN RECORD** -- `RUNREC`
+  (`.da_midnight_run_record.jsonl`, :35), appended at :41 under `trap '_rec_exit "$?"'
+  EXIT` (:44). *`da_cross_venue_forensics.py` closed the other way, by labelling:
+  `journalctl` 2 → 5 with 37 retention hits where it had none.* ***So the population REV 66
+  §3.1 defined is itself MOVING -- and a census must carry its PATTERN as well as its
+  as-of: my two rounds used different keyword sets, so their per-file numbers are not
+  comparable.***
+  (4) **THE RUNBOOK LITERAL THAT HAD TO TRACK A MOVING THING, AND I RAN THE CHECK.**
+  `46a7ad5` changes the register check from "exactly ONE ratification fence → 1" to
+  **"exactly TWO (R-419's block and the USER's 08-29 ratification at R-502; the count moves
+  only with a new ratification, and the entry adding one updates this line)"**. **I ran it:
+  the register holds TWO fences, at lines 18716 and 19662, and both entries exist** -- *so
+  the line had been FALSE since before the 08-29 ratification.* **The remedy is the shape
+  of the new line: it names WHICH two and WHO updates it.**
+  (5) **DA 86 VERIFIED AT ITS DIGEST:** `p003_da_journal_retention__20260906T131704Z.json`
+  hashes to **`e79492d6a8bc40fb…`, 2,954 B**. *R-643 adds the reason the zero is refused:
+  `journalctl`'s "-- No entries --" is NOT counted as a line, which would turn an absence
+  into a population of one.* **`da_root.parse_porcelain` is named the programme's shared
+  infrastructure, with the reviewer's three lines as its selftest and DE 96 / BE 65 named
+  in the docstring as the importers.**
+  (6) **THE COORDINATOR'S COUNT CORRECTED BY DA: FOUR BYTE-IDENTICAL FILES, NOT THREE**
+  (`da_root.py` was the fourth), each verified against origin before restoring.
+  ***THIS SUPERSEDES MY OWN ROUND-171 SWEEP IN BAND*** -- *I recorded three from DA 82's
+  account.* **Second time in a week a seat has corrected the coordinator's account of the
+  seat's own tree, and the correction sits in the coordinator's own entry.**
+  (7) **THE QUEUE IS RECAST:** **DE 96 is now the LIGHT wt-de batch** (the slice half via
+  DA's parser, rule 20 in the runner and the launch probe, the RUNTIME scope-leaf refusal
+  with a scratch-scope falsifier) **and the 09-04 smoke GO is DE 97 -- after the receipt AND
+  the lock.** *One dispatch became two, so the light fixes land while the heavy run holds
+  the lock.* **REV 67 takes BE 64a's slice half, its AST census, and MY exit-75
+  measurement -- "who reads the state and where 75 lives".**
+  (8) **THE RUN:** active/running at **48:02, RSS 768,740 KiB**, `MemoryPeak` **STILL
+  2,554,003,456 B -- seven reads, 45 minutes, one number.** *My index.lock collision is in
+  band at `a2c0b54`; the coordinator files it at R-644 (rule 21's second form: no commit
+  existed, nothing stranded).*
+  **AT COMMIT TIME, 2026-09-06T13:27:29Z: R-644 AND DE 96 LANDED, AND I DROVE DE'S NEW
+  GUARD AGAINST MY OWN SHELL.** **`unit_identity()` from this tool shell returns `kind:
+  'scope'`, leaf `run-rdb87176d7efe4cbcbb31b333e8a24946.scope`,
+  `is_the_declared_launch_form: False`** -- so the runtime refusal (`if not fixture and
+  kind == "scope"`) fires on the exact environment that lost the 09-03 re-run 35 minutes.
+  ***That is the hardest positive control available, proved from the seat that would break
+  it: R-628 is a PROPERTY now, not a rule.*** *DE also imports DA's parser rather than
+  writing a third, and COPIES the journal at emit with a computed coverage predicate; DE's
+  own instrument confirms the decay finding independently (`de84smoke.scope`: one line,
+  oldest 09:46:29Z, `window_fully_covered` FALSE) -- **the third seat to measure it, and my
+  three readings are the fourth line of evidence.***
+  **R-644 VERIFIES MEM 176 AND TURNS MY COLLISION INTO A RULE:** *"a refused commit is
+  re-read at `git status --short` (all lines) and `git log -1`, then retried; never assumed
+  either way"*, verified at the objects (the coordinator's `46a7ad5` at 13:21:31Z holding
+  the index; my retry clean at 13:21:59Z). ***AND ONE CITATION TO ROUTE: R-644(A) names
+  "Q-MEM-165" for the round-176 row; the register's MEM rows run 160..164 and the row it
+  verifies is Q-MEM-164, which carries the counts R-644 itself quotes.*** *Q-MEM-165 does
+  not exist until this round lands. Routed, not fixed.*
+  **Counters at commit time: the run 51:54; `be64book` TWENTY-FOUR polls, all 75; the three
+  waiters still alive (06:12:54 / 06:08:09 / 06:02:03).**
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈48 min, receipt ≈14:00Z); the 09-05
+  book BUILD-PENDING-THE-LOCK (twenty polls, all 75); the journal readers SEVEN-NOW-SIX;
+  the ratification fences TWO-AND-CHECKED.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,072 -> 1,080, flag_provenance 617 -> 625,
+  tasks 19; **390 CHECKED**, 235 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T13:16:43Z (MEM ROUND 176 -- R-641 AND R-642 SWEPT AS ONE BATCH, tip
   `a7dfc94`. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) ***THE RETENTION WINDOW MOVED WHILE I WORKED, AND THAT IS THE ROUND'S OWN
@@ -225,84 +307,6 @@ updated: >-
   tasks 19; **380 CHECKED**, 229 RELAYED, **455 UNMARKED -- unchanged for the
   fifty-first round running.** ORPHAN audit 0 findings, exit 0 (after two MALFORMED rows of
   my own, fixed); window trimmed to a ruled 3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T12:56:38Z (MEM ROUND 174 -- R-637 SWEPT, WITH Q-BE-63 AND Q-DA-307. STATE
-  ONLY. MEM ASSERTS NO RESULT.
-  (1) **DA 84 CLOSES BOTH HALVES IN ONE PARSER (`512be70`, 12:54:26Z).**
-  `da_root.parse_porcelain`: **raw read, `XY` by fixed width, path from column 4,
-  `R old -> new` split on the arrow -- and a line the parser cannot read is NAMED in
-  `malformed` rather than dropped (rule 11).** *Each half red first, separately: the strip
-  ALONE shifts the first line so a correct parser cannot read it at all; the fixed slice
-  ALONE is right on a raw line;* ***the two TOGETHER return `ive/x.py`, the character the
-  receipts actually lost.***
-  (2) ***AND CLOSING IT EXPOSED WORSE, IN DA'S OWN INSTRUMENT -- WHICH I MEASURED AT THE
-  PRE-FIX BLOB RATHER THAN ACCEPTING THE ACCOUNT.*** **`292a1cc:live/pm_research/
-  da_book_verify.py`: the count-and-print block sat at line 1576 with SEVEN `ck(` calls
-  BELOW it out of 26 -- so the summary printed and counted 19 OF 26**, and every check
-  appended since round 82 (the census pair, the launch capture, this round's porcelain
-  checks) was invisible to it. **A battery whose summary cannot see its own last checks is
-  a battery that cannot fail (rule 15) -- and it is the instrument DA uses to hold OTHER
-  seats to their receipts.** *Fixed at the tip: count and print after the LAST check, with
-  an assertion that "the summary agrees with the list it summarises". My own run: `SELFTEST
-  OK -- 29 checks, 0 failure(s)`, exit 0, on a file whose sha256 `ac98459…` EQUALS the blob
-  at `512be70` -- hashed before believing.*
-  (3) **AND THREE NUMBERS IN DA'S ACCOUNT DO NOT AGREE -- ROUTED, NOT RULED.** The commit
-  message says the summary reported "29 checks" with **TWO** failing; the code comment
-  beside the fix says **one**; the pre-fix blob would have printed **19**. *Three witnesses
-  to one event -- a commit message, a comment, and the blob -- and only the blob is the
-  artifact.* **The gap is LARGER than either failure count: seven checks, not two.** *DA
-  owns the reconciliation; the finding itself is DA's and is the hard half.*
-  (4) **THE PORCELAIN HALVES, MEASURED PER CALL SITE:** BE's read is safe and its slice is
-  still `line[3:]` (BE 64, with the book); DE's PARSING site reads `raw=True` and still
-  slices `[x[3:]]` (DE 96, after the run); **DE's SECOND porcelain site strips but is only
-  read as `bool(status)` -- no path parsed, so the strip is harmless THERE**; DA has both.
-  ***Safe-by-the-read is a property of a CALL SITE, not of a file.***
-  (5) **BE 63 LANDS THE SERVICE-FORM LAUNCHER FOR ALL THREE PRODUCERS** (`be_heavy_run.sh`,
-  `0312e34`): the lock is the unit's OWN main process; **`flock -E 75` makes a held lock a
-  REFUSAL that cannot be misread as a build failure**; the journal is the log; the unit is
-  polled BY NAME, "never by a child PID -- there is no child of this shell to poll"; and
-  `BE_HEAVY_LOCK` lets the launcher's falsifiers use a scratch lock **without weakening a
-  real build, because the producers verify the REAL lock BY INODE**.
-  (6) **THE LOCK MODE IS READ FROM `/proc/locks`, AND ONLY `WRITE` IS EVIDENCE.**
-  `_flock_mode` is driven both ways (`LOCK_EX -> WRITE`, `LOCK_SH -> READ`) with the
-  finding stated: ***two `flock -s` holders BOTH certify -- holding the fd is not evidence
-  of exclusion.*** *R-636 §4's gap answered at the instrument rather than in a row.*
-  (7) **THE CENSORED PEAK IS IN THE CODE AND IN NO RECEIPT YET.**
-  `scope.peak_is_censored` is the named field with REV 63 §3's sentence written out and an
-  UNCENSORED cell driven -- **and no landed BE receipt carries it** (the string occurs
-  twice in the code, so my scan matches where the thing exists). ***Rule 17: green battery,
-  pipeline not yet wired -- the next BE heavy run emits the first receipt that carries
-  it.*** *BE's battery 73 -> 78, run by me at exit 0.*
-  (8) **THE RUN:** `de95smoke.service` active/running, the runner at **21:02 elapsed, RSS
-  762,824 KiB**, `MemoryPeak` unchanged at 2,554,003,456 B since 12:39Z. *RSS rose and fell
-  across three reads while the cgroup peak did not move -- the peak is a HIGH-WATER mark
-  and the current figure is not.*
-  **AT COMMIT TIME, 2026-09-06T12:59:05Z: R-638 AND R-639 LANDED.** **R-638 (BE 63
-  verified; batteries 78 / 19 / 16): the held-lock cell was driven AGAINST THE REAL LOCK
-  WHILE DE 95 HELD IT -- `ExecMainStatus 75`, the unit failed, the journal REFUSED, no work
-  done, DE's run undisturbed** -- *a falsifier proved in the only place it could be* -- and
-  **three defects of BE's own found BY DRIVING** (the launch-form checker refusing BE's own
-  launcher twice on its own text, the third round of the forbidden-string class;
-  `systemd-run` forwarding only `--setenv` NAMES so the unit hit the REAL lock, exit 75 for
-  the WRONG reason; a tape battery case now declaring itself a fixture). **REV 65 releases
-  the 09-05 book (BE 64).**
-  ***AND ONE MEASUREMENT AGAINST BOTH ENTRIES' WORDING, ROUTED NOT RULED:*** R-638 reads
-  "the lock is evidence now -- `wrapper_measured` in the fragment and tape receipts", **and
-  no BE receipt on disk carries `wrapper_measured` or `peak_is_censored`; none has been
-  re-emitted since 12:28:57Z** -- true of the EMITTER (2 sites in each producer), not yet
-  of the artifacts a reader resolves. **R-639 repeats "29 checks, 0 failures while two were
-  failing"; the committed pre-fix blob would have printed 19 of 26.** *The fair alternative
-  is a run made against an uncommitted working-tree version -- the bytes that RAN not being
-  the bytes committed, my own round-171 class -- so it is filed as an OPEN RECONCILIATION,
-  not an error, and DA can settle it from one reflog.*
-  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (fourth launch, ≈21 min); the
-  porcelain defect THREE-SEATS-EACH-HALF-FIXED and ONE-SEAT-BOTH **LANDED** (DA 84,
-  12:54:26Z) -- BE 64 and DE 96 carry the remaining slice halves; BE's producers
-  SERVICE-FORM-LANDED-NOT-YET-EXERCISED; the 09-05 inputs BUILT; both book tiers
-  VERIFIED-AT-THE-PICKLE.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,048 -> 1,056, flag_provenance 593 -> 601,
-  tasks 19; **374 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
-  fiftieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
-  new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2976,6 +2980,145 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  MY_FIRST_PROBE_REPORTED_AN_ABSENCE_THAT_WAS_FALSE: THE_WAITERS_ARE_ALIVE
+                             # CHECKED 2026-09-06T13:23:38Z -- **and the probe error is the same
+                             # class as the finding it was checking.** *I searched `ps` output for
+                             # `e2_a_runner.py --run` and got nothing, and nearly wrote that DA's
+                             # three waiters were already gone.* **They are ALIVE: the pids R-643
+                             # names -- 2982152 (06:09:46), 2987365 (06:05:00), 2992920 (05:58:54)
+                             # -- all answer `ps -o etime -p`.**
+                             # ***WHY THE FIRST PROBE MISSED THEM: the visible head of each
+                             # command line is Claude Code's shell-snapshot wrapper, and I had cut
+                             # the output at 135 columns -- a BOUNDED SEARCH REPORTING ABSENCE.***
+                             # **The fix was a pattern that cannot match its own command line
+                             # (`e2_a[_]runner`, the bracket trick) plus reading the NAMED pids
+                             # directly.** *Checking a self-matching-pattern finding with a
+                             # self-matching pattern; the third time this session a grep's SHAPE,
+                             # not its subject, produced the wrong answer.*
+  THE_SELF_MATCHING_WAITER_IS_A_POLLER_THAT_CANNOT_END: THE_DURABLE_POLL_IS_THE_UNIT
+                             # RELAYED from R-643(B) for the mechanism, CHECKED by me for the ages
+                             # (above). **`pgrep -f "e2_a_runner.py --run"` is INSIDE the `bash -c`
+                             # command line that runs it, so `pgrep` finds the WAITER ITSELF and the
+                             # loop's condition is never false.** *Three idle shells, ≈6 h each; the
+                             # E2-A smoke they watched ended this morning; cost is three shells and
+                             # nothing else.* **Routed to DA 85's GO; DA kills them next round.**
+                             # ***THE CONTRAST IS IN THIS ROUND'S OWN DATA: BE 64 polls the LOCK by
+                             # asking the UNIT -- twenty starts, every one `ExecMainStatus=75` --
+                             # and every one of those polls ENDS.*** *A poller that asks the process
+                             # table about itself cannot terminate; a poller that asks systemd about
+                             # a unit always can.*
+  THE_SEVEN_JOURNAL_READERS_ARE_SIX: DA_86_REMOVED_A_DEPENDENCY_RATHER_THAN_LABELLING_IT
+                             # CHECKED 2026-09-06T13:23:38Z, re-measuring my own round-176 census.
+                             # **`da_midnight_verify.sh` now contains ZERO `journalctl` calls (it
+                             # had ONE at 13:16:43Z).** *DA 86 did not label the journal there -- it
+                             # REMOVED THE DEPENDENCY,* **replacing it with an APPEND-ONLY RUN
+                             # RECORD: `RUNREC` (`.da_midnight_run_record.jsonl`, :35), written with
+                             # `>>` (:41) under `trap '_rec_exit "$?"' EXIT` (:44), because "a
+                             # refusal that … leaves one in $RUNREC" (:198).**
+                             # **`da_cross_venue_forensics.py` closed the OTHER way -- by labelling:
+                             # `journalctl` 2 → 5 and 37 retention-vocabulary hits where it had
+                             # none.**
+                             # ***SO THE POPULATION REV 66 §3.1 DEFINED IS ITSELF MOVING: seven
+                             # readers are six.*** **And a census must carry its PATTERN as well as
+                             # its as-of** -- *my two rounds used different keyword sets, so the
+                             # per-file numbers are NOT comparable across them; each is stated with
+                             # the pattern that produced it.*
+  THE_RUNBOOK_LITERAL_THAT_HAD_TO_TRACK_A_MOVING_THING: I_RAN_THE_CHECK
+                             # CHECKED 2026-09-06T13:24:37Z at the diff AND by running it.
+                             # **`46a7ad5` changes the register check from "exactly ONE ratification
+                             # fence -- `grep -c '^```ratification' $R` → 1" to "exactly TWO (R-419's
+                             # block and the USER's 08-29 ratification at R-502; the count moves only
+                             # with a new ratification, and the entry adding one updates this
+                             # line)".**
+                             # ***I ran the check the line names: the register holds TWO fences, at
+                             # lines 18716 and 19662, and both `### R-419` and `### R-502` exist.***
+                             # **So the line had been FALSE since before the user's 08-29
+                             # ratification** -- *a literal that had to track something that moves,
+                             # the class BE's harvest named, in the coordinator's own runbook.*
+                             # **The remedy is the SHAPE of the new line: it names WHICH two and WHO
+                             # updates it, so the next ratification cannot leave it stale silently.**
+  THE_DA_86_RECEIPT_HASHES_TO_ITS_NAMED_DIGEST: E79492D6
+                             # CHECKED 2026-09-06T13:23:38Z: `sha256sum` of
+                             # `p003_da_journal_retention__20260906T131704Z.json` is
+                             # **`e79492d6a8bc40fb…`, 2,954 B** -- the digest R-643(A) names.
+                             # *Contents verified at my last round's commit-time read: the absent
+                             # unit quoting NO number, the pre-retention window `UNMEASURED` rather
+                             # than zero, the `resource-monitor` positive control PRESENT with 502
+                             # lines and `window_fully_covered true`.* **R-643 adds the reason the
+                             # zero is refused: `journalctl`'s "-- No entries --" is NOT counted as
+                             # a line, which would turn an absence into a population of one.**
+                             # *`da_root.parse_porcelain` is named the programme's shared
+                             # infrastructure with the reviewer's three lines as its selftest, and
+                             # its docstring names DE 96 and BE 65 as the importers.*
+                             # **EXTENDED IN BAND 2026-09-06T13:27:29Z: DE 96 LANDED AND I DROVE ITS
+                             # GUARD AGAINST MY OWN SHELL.** `unit_identity()` called from this tool
+                             # shell returns **`kind: 'scope'`, `cgroup_leaf:
+                             # 'run-rdb87176d7efe4cbcbb31b333e8a24946.scope'`,
+                             # `is_the_declared_launch_form: False`** with its own reason -- *"a
+                             # `.scope` leaf means the run is in a CALLER's process group and dies
+                             # with it -- that is how the 09-03 re-run lost 35 minutes"* -- and the
+                             # refusal at :2081 (`if not fixture and kind == "scope"`) would fire on
+                             # any real day launched from here.
+                             # ***THE HARDEST POSITIVE CONTROL AVAILABLE: the guard refuses the
+                             # exact environment that caused the original loss, proved from the seat
+                             # that would break it.*** **R-628 is a PROPERTY now, not a rule.**
+                             # *DE also imports DA's parser rather than writing a third
+                             # (`import da_root as DAROOT` :46, `DAROOT.parse_porcelain` :191, the
+                             # receipt's `porcelain.parser` field :220) and COPIES the journal at
+                             # emit with a computed coverage predicate.*
+  THE_COORDINATORS_COUNT_CORRECTED_BY_DA_FOUR_NOT_THREE: SECOND_TIME_IN_A_WEEK
+                             # RELAYED from R-643. **The wt-da refresh refused on FOUR byte-identical
+                             # files, not three -- `da_root.py` was the fourth -- each verified
+                             # against origin before restoring.**
+                             # ***THIS SUPERSEDES MY OWN ROUND-171 SWEEP IN BAND:*** *I recorded
+                             # "three files untracked only by a stale HEAD, all byte-identical to
+                             # origin" from DA 82's account; the count is FOUR.* **A seat correcting
+                             # the coordinator's account of the seat's own tree for the second time
+                             # in a week (R-629 was the first), and the coordinator recording the
+                             # correction in its own entry -- the half that makes the first half
+                             # safe.**
+  THE_QUEUE_RECAST_DE_96_IS_LIGHT_AND_DE_97_IS_THE_GO: AFTER_THE_RECEIPT_AND_THE_LOCK
+                             # RELAYED from R-643(C). **DE 96 is now the LIGHT wt-de batch
+                             # (dispatched 13:18Z): the `[3:]` half via DA's parser, rule 20 in the
+                             # runner and the launch probe, and the RUNTIME scope-leaf refusal with
+                             # a scratch-scope falsifier.** ***The 09-04 smoke GO is DE 97 -- after
+                             # the receipt AND the lock*** -- *so the launch that was one dispatch
+                             # is now two, with the light fixes landing while the heavy run holds
+                             # the lock.*
+                             # *wt-de carried one untracked stale file
+                             # (`declarations/de_multiday_gate1_params_v6.json`); DE reports it after
+                             # the refresh.* **REV 67 at `a7dfc94` takes BE 64a's slice half and AST
+                             # census, and MY exit-75 measurement -- "who reads the state and where
+                             # 75 lives" -- plus the two rule-20 texts.**
+  THE_RUN_AT_FORTY_EIGHT_MINUTES_AND_TWENTY_REFUSED_POLLS: MEMORYPEAK_STILL_UNMOVED
+                             # CHECKED 2026-09-06T13:23:38Z. **`de95smoke.service` active/running,
+                             # the runner at 48:02, RSS 768,740 KiB, `MemoryPeak` STILL
+                             # 2,554,003,456 B -- seven reads, 45 minutes, one number.**
+                             # **`be64book` at TWENTY starts, every one `ExecMainStatus=75`.**
+                             # *R-643 records MEM's five-refusal measurement at 13:10Z; it is twenty
+                             # at 13:23Z, which is the poll cadence made visible.*
+                             # **My own index.lock collision is recorded in band at `a2c0b54` and
+                             # the coordinator files it at R-644: rule 21's second form -- no commit
+                             # existed, nothing stranded.**
+                             # **EXTENDED IN BAND 2026-09-06T13:27:29Z:** the run at **51:54, RSS
+                             # 763,640 KiB**, `MemoryPeak` still 2,554,003,456 B (eight reads);
+                             # **`be64book` at TWENTY-FOUR starts, all 75**; the three waiters STILL
+                             # alive (06:12:54 / 06:08:09 / 06:02:03).
+                             # **R-644 VERIFIES MEM 176 AND MAKES MY COLLISION A RULE:** *"a refused
+                             # commit is re-read at `git status --short` (all lines) and `git log
+                             # -1`, then retried; never assumed either way"* -- **verified at the
+                             # objects: the coordinator's `46a7ad5` was written 13:21:31Z, my
+                             # commit was refused while it held the index, I retried clean at
+                             # 13:21:59Z (`82b8858`) and noted it at 13:22:18Z.** *"The refusal
+                             # arrives before the commit exists, so nothing is stranded -- but a
+                             # seat that reads REFUSED as COMMITTED would be."*
+                             # ***AND ONE CITATION TO ROUTE: R-644(A) names "Q-MEM-165" for the
+                             # round-176 row. The register's MEM rows run Q-MEM-160..164; the row it
+                             # verifies is Q-MEM-164 (13:19:51Z), which carries the very counts
+                             # R-644 quotes (1,064 → 1,072). Q-MEM-165 does not exist until THIS
+                             # round lands.*** *Routed, not fixed -- the coordinator's file. Second
+                             # coordinator citation error I have caught (R-571 was the first), and
+                             # both times the internal evidence named the right row.*
   THE_SEVEN_JOURNAL_READERS_CENSUSED_AND_ONE_LABELS_RETENTION: KEYWORD_SAID_TWO_READING_SAID_ONE
                              # CHECKED 2026-09-06T13:16:43Z. **All seven files REV 66 §3.1 names
                              # exist and each contains `journalctl`** -- `be_daybook_build.py` 1,
@@ -20890,6 +21033,92 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 177, 2026-09-06T13:24:37Z ------------------------------
+  MY_FIRST_PROBE_REPORTED_AN_ABSENCE_THAT_WAS_FALSE:
+    prov: CHECKED
+    artifact: live/pm_research/da_midnight_verify.sh
+    as_of: 2026-09-06T13:23:38Z
+    said: >-
+      searching ps output for the literal e2_a_runner.py --run returned nothing and I
+      nearly wrote that DA's three waiters were gone; the pids R-643 names are alive at
+      06:09:46, 06:05:00 and 05:58:54. The visible head of each command line is Claude
+      Code's shell-snapshot wrapper and I had cut the output at 135 columns -- a bounded
+      search reporting absence. Fixed with a pattern that cannot match its own command
+      line and by reading the named pids directly.
+  THE_SELF_MATCHING_WAITER_IS_A_POLLER_THAT_CANNOT_END:
+    prov: RELAYED
+    from: R-643(B), with the three ages measured by me
+    as_of: 2026-09-06T13:23:38Z
+    said: >-
+      pgrep -f "e2_a_runner.py --run" sits inside the bash -c command line that runs it,
+      so pgrep finds the waiter itself and the loop's condition is never false; three
+      idle shells of about six hours each, watching a smoke that ended this morning,
+      routed to DA 85's GO. The contrast is in this round's own data: BE 64 polls the
+      lock by asking the unit, twenty starts each ending at ExecMainStatus 75.
+  THE_SEVEN_JOURNAL_READERS_ARE_SIX:
+    prov: CHECKED
+    artifact: live/pm_research/da_midnight_verify.sh
+    as_of: 2026-09-06T13:23:38Z
+    said: >-
+      da_midnight_verify.sh now contains zero journalctl calls where it had one at
+      13:16:43Z: DA 86 removed the dependency rather than labelling it, replacing it with
+      an append-only run record (RUNREC at :35, appended at :41 under trap '_rec_exit
+      "$?"' EXIT at :44, the refusal case at :198), while da_cross_venue_forensics.py
+      closed the other way with journalctl 2 to 5 and 37 retention-vocabulary hits. The
+      population REV 66 section 3.1 defined is itself moving, and a census must carry its
+      pattern as well as its as-of: my two rounds used different keyword sets and their
+      per-file numbers are not comparable.
+  THE_RUNBOOK_LITERAL_THAT_HAD_TO_TRACK_A_MOVING_THING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T13:24:37Z
+    said: >-
+      46a7ad5 changes the register check from exactly one ratification fence to exactly
+      two, naming R-419's block and the USER's 08-29 ratification at R-502 and saying the
+      count moves only with a new ratification whose entry updates the line. I ran the
+      check the line names: the register holds two fences, at lines 18716 and 19662, and
+      both entries exist, so the line had been false since before the 08-29 ratification.
+  THE_DA_86_RECEIPT_HASHES_TO_ITS_NAMED_DIGEST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_journal_retention__20260906T131704Z.json
+    as_of: 2026-09-06T13:23:38Z
+    said: >-
+      sha256sum returns e79492d6a8bc40fb... over 2,954 bytes, the digest R-643(A) names;
+      contents verified at my previous commit-time read, and R-643 adds that journalctl's
+      "-- No entries --" is not counted as a line, which would turn an absence into a
+      population of one. da_root.parse_porcelain is named the programme's shared
+      infrastructure with the reviewer's three lines as its selftest.
+  THE_COORDINATORS_COUNT_CORRECTED_BY_DA_FOUR_NOT_THREE:
+    prov: RELAYED
+    from: R-643, correcting my own round-171 sweep in band
+    as_of: 2026-09-06T13:24:37Z
+    said: >-
+      the wt-da refresh refused on four byte-identical files, not three, da_root.py being
+      the fourth, each verified against origin before restoring. I recorded three from DA
+      82's account at round 171; the count is four. A seat correcting the coordinator's
+      account of the seat's own tree for the second time in a week, with the correction
+      recorded in the coordinator's own entry.
+  THE_QUEUE_RECAST_DE_96_IS_LIGHT_AND_DE_97_IS_THE_GO:
+    prov: RELAYED
+    from: R-643(C)
+    as_of: 2026-09-06T13:24:37Z
+    said: >-
+      DE 96 is the light wt-de batch dispatched 13:18Z -- the slice half via DA's parser,
+      rule 20 in the runner and the launch probe, and the runtime scope-leaf refusal with
+      a scratch-scope falsifier -- and the 09-04 smoke GO is DE 97, after the receipt and
+      the lock; wt-de carried one untracked stale declarations file. REV 67 at a7dfc94
+      takes BE 64a's slice half and AST census and MEM 175's exit-75 measurement, asking
+      who reads the state and where 75 lives.
+  THE_RUN_AT_FORTY_EIGHT_MINUTES_AND_TWENTY_REFUSED_POLLS:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T13:23:38Z
+    said: >-
+      de95smoke.service active and running with the runner at 48:02 and RSS 768,740 KiB
+      and MemoryPeak still 2,554,003,456 across seven reads spanning 45 minutes;
+      be64book at twenty starts, every one ExecMainStatus 75, where R-643 records five at
+      13:10Z. My index.lock collision is recorded in band at a2c0b54 and filed by the
+      coordinator at R-644.
   # --- MEM round 176, 2026-09-06T13:16:43Z ------------------------------
   THE_SEVEN_JOURNAL_READERS_CENSUSED_AND_ONE_LABELS_RETENTION:
     prov: CHECKED
