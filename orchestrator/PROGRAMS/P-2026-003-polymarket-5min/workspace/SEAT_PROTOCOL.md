@@ -138,7 +138,11 @@ except where marked USER-ONLY.
     (no `--scope`; `flock` inside the unit holds the lock for the run's life; a held
     lock still refuses with exit 1 — read the unit's result). Poll the UNIT, not a
     child PID; a run's survival of `kill -TERM` on the launching shell's process
-    group is a battery falsifier.
+    group is a battery falsifier. **The journal is NOT the record (R-641, REV 66 §3.1):**
+    it rotates within hours (DE 84's Started line was gone four hours later). A
+    number read from the journal is copied into an artifact at the moment it is
+    read, with the source's retention state named; a receipt or record carries its
+    own journal lines at emit; no control's verdict may depend on journal retention.
 
 21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
     a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly
