@@ -410,7 +410,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-544: **R-545**.
+- **Tip:** see `git log`. Next register entry after R-545: **R-546**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
