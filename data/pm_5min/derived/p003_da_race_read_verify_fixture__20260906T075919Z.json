@@ -1,0 +1,107 @@
+{
+  "both_directions": true,
+  "checks": [
+    {
+      "check": "THETA IS READ FROM THE OPERATING-POINT DECLARATION, NEVER TYPED -- and a coin with no frozen theta REFUSES rather than defaulting to zero, which would cancel everything and call it a policy",
+      "detail": "btc 0.7230267681941027, eth 0.10284589538586741 at the 10% budget, read from be_operating_point_declaration_v1.json; an unknown coin raises",
+      "passed": true
+    },
+    {
+      "check": "A KNOWN INCREMENT BY CONSTRUCTION REPRODUCES EXACTLY: the candidate acts at its frozen theta, the incumbent is matched to that COUNT on its own ranking, and the day increment is the hand arithmetic",
+      "detail": "btc 60 - 270 = -210.0; eth 15 - 55 = -40.0; day -250.0 -- equal, not within a tolerance",
+      "passed": true
+    },
+    {
+      "check": "TWO SEPARATE IMPLEMENTATIONS AGREE ON EVERY FIELD, EXACTLY (R-235): mine re-derived from the declarations, BE's through `be_read_cells.matched_volume` -- and agreement is only evidence because neither imported the other's statistic",
+      "detail": "13 fields compared EXACTLY, 0 mismatches; day -250.0 == -250.0",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: ONE MOVED ROW FLAGS. A row the candidate ACTS on, shifted by 1e-9 cents, changes the day increment and the comparison FLAGS -- the comparison is exact, so a near-miss is a mismatch, not a pass",
+      "detail": "row 0 (in the candidate's selection, +1e-9 cents) -> day -249.999999999 against -250.0; flagged ['day_increment_cents', 'per_coin.btc.MATCHED_VOLUME_increment_cents', 'per_coin.btc.candidate_net_cents']",
+      "passed": true
+    },
+    {
+      "check": "AND THE OTHER DIRECTION, WHICH MY OWN FAILING TEST TAUGHT ME: a row in NEITHER selection moved by a MILLION cents does NOT move the statistic. That is the estimand behaving -- MATCHED_VOLUME depends only on the actions the two arms take -- and it is why the known-bad above had to move a row that is actually acted on",
+      "detail": "btc gen 4 (candidate score below theta, incumbent rank 5 of a top-3) +1e6 cents -> day -250.0, unchanged. A statistic that moved here would be reading rows outside both selections",
+      "passed": true
+    },
+    {
+      "check": "A ONE-ARM FEED REFUSES BY NAME -- and BOTH implementations refuse on the same missing field. The failure this prevents is the quiet one: with no incumbent column a caller gets an increment of exactly ZERO that looks like a measurement",
+      "detail": "mine: 'REFUSED: feed row 1 carries no `score_incumbent`. This is a ONE-ARM fe...'; BE's refuses on the same field",
+      "passed": true
+    },
+    {
+      "check": "FIRST CROSSING ACTS, AND IT IS NOT THE FIRST ROW: a generation whose earliest row is BELOW the cutoff and whose later row is above is valued at the LATER row -- 11.0, not 7.0 and not their sum",
+      "detail": "gen A: rows at t 1000 (score 0.10, 7c) and 2000 (0.95, 11c) at theta 0.7230 -> candidate_net 11.0",
+      "passed": true
+    },
+    {
+      "check": "A ROW WITH NO FILL AHEAD CONTRIBUTES 0.0 AND IS STILL AN ACTION: its 50 cents do not enter the value, and the cancellation COUNT still includes it -- which is what keeps the matched volume matched",
+      "detail": "two generations act, net 20.0 (the no-fill 50c row contributes 0.0), count 2",
+      "passed": true
+    },
+    {
+      "check": "THE TIE-BREAK IS ON THE KEY (R-234): two generations with EQUAL incumbent maxima are ordered lexicographically, so the matched selection is reproducible instead of falling back to dict order",
+      "detail": "both incumbent maxima 0.5; the matched pick is the lexicographically smaller key (\u2026-A, 1.0c), not the one that happened to be inserted first (\u2026-B, 100.0c)",
+      "passed": true
+    },
+    {
+      "check": "THE WINDOW BUCKET IS THE SLUG, NOT A TIME BUCKET: two distinct actions on ONE slug land in ONE window key, which is what `increment_by_window` counts",
+      "detail": "2 actions, 1 window key ['btc-updown-5m-A'], net 10.0",
+      "passed": true
+    },
+    {
+      "check": "THE FIVE PINNED REAL PATHS REFUSE BEFORE GO -- AND THE REFUSAL REASON CHANGES ACROSS THE GATE: 'REFUSED BEFORE GO' before, 'declared and NOT OPENED' after. A control that refused identically on both sides of its own predicate would prove nothing",
+      "detail": "pre: 'REFUSED BEFORE GO: the race read is the coordinator's act;...'; post: 'REFUSED: declared and NOT OPENED. The real-feed path is sp...'",
+      "passed": true
+    },
+    {
+      "check": "AND THE PINS ARE READ RATHER THAN ASSUMED -- the declaration itself records that the feed exists for only SOME of the pinned days, which is a population fact the read cannot wish away",
+      "detail": "3 of 5 feeds present; absent ['20260901', '20260902']; pins sha 2cca55c64ffca8e7",
+      "passed": true
+    },
+    {
+      "check": "AN EMPTY FEED IS A FAILURE, NOT AN EMPTY RESULT -- a zero increment from no rows is the shape a silent miss takes",
+      "detail": "an empty feed raises rather than returning 0.0",
+      "passed": true
+    }
+  ],
+  "latency_ms": 50,
+  "n_checks": 13,
+  "n_failed": 0,
+  "pins": {
+    "absent_days": [
+      "20260901",
+      "20260902"
+    ],
+    "all_five_present": false,
+    "days": [
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905"
+    ],
+    "n_days": 5,
+    "n_present": 3,
+    "pins_sha256": "2cca55c64ffca8e78937533da617a52501a5af1f7418f4b4be8e538a683f9b04",
+    "the_read_voids_on_mismatch": true
+  },
+  "protocol": "P003_DA_RACE_READ_VERIFIER_V1_FIXTURE",
+  "statistic": "MATCHED_VOLUME (the interim's PRIMARY)",
+  "status": "FIXTURE_NO_REAL_FEED_OPENED",
+  "theta_source": "be_operating_point_declaration_v1.json",
+  "tolerance": {
+    "rule": "EXACT (==) on every compared quantity",
+    "where_it_could_NOT_be_exact": "nowhere on this statistic. If a future variant averages over a sampled null the equality would have to become a seeded reproduction, and that is a different claim -- said here so the exactness is not read as a general licence.",
+    "why_exact": "MATCHED_VOLUME is a difference of two `math.fsum` reductions over values selected by a deterministic rule from the same rows. fsum is exactly rounded, so summation ORDER cannot separate two correct implementations, and a tolerance would only hide a selection difference -- which is the defect worth catching."
+  },
+  "verifier_identity": {
+    "commit_best_effort": "20f87d59295f5bc4aefbd83ecb2c971235123e4d",
+    "path": "live/pm_research/da_race_read_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "2e002f58060e45fcae2aae6415f55c8cb885edac691f936e9992d3662879130f",
+    "tree_head": "20f87d59295f5bc4aefbd83ecb2c971235123e4d"
+  }
+}
