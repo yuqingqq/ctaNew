@@ -927,7 +927,80 @@ def _import_time_functions(tree: ast.AST, src: str) -> set:
 SHA_RE = re.compile(r"^[0-9a-f]{7,64}$")
 
 
-def rule22_stamp(tree: ast.AST, src: str) -> dict:
+def _module_level_imports(tree: ast.AST) -> dict:
+    """alias -> module name, for imports at MODULE level only."""
+    out = {}
+    for st in tree.body:
+        if isinstance(st, ast.Import):
+            for a in st.names:
+                out[a.asname or a.name.split(".")[0]] = a.name
+        elif isinstance(st, ast.ImportFrom) and st.module and not st.level:
+            out[st.module.split(".")[0]] = st.module
+    return out
+
+
+def _sibling_source(mod: str) -> tuple:
+    for pkg in ("live/pm_research", "live/mm_research"):
+        f = AUDIT_ROOT / pkg / f"{mod}.py"
+        if f.is_file():
+            try:
+                return f, f.read_text()
+            except OSError:
+                return None, None
+    return None, None
+
+
+def rule22_via_a_shared_module(tree: ast.AST, src: str) -> dict:
+    """THE CAPTURE MAY LIVE IN A SIBLING, AND IT STILL COUNTS.
+
+    BE 60 put the launch capture in `be_rule22.py` and the three producers
+    import it. A per-FILE detector reports ABSENT for all three and that is
+    a FALSE NEGATIVE about another seat's work -- the same 'half a
+    predicate reported as the predicate' this sweep exists to catch. One
+    hop: a module-level import of a sibling that HAS the construct, plus a
+    call through that alias, is the property PRESENT VIA that sibling."""
+    aliases = _module_level_imports(tree)
+    used = {n.func.value.id for n in ast.walk(tree)
+            if isinstance(n, ast.Call)
+            and isinstance(n.func, ast.Attribute)
+            and isinstance(n.func.value, ast.Name)}
+    #: WHEN the shared capture runs is decided HERE, in the importer: an
+    #: alias called at MODULE LEVEL captures at import. BE's three
+    #: producers each call `_R22.init(...)` at module level, and a checker
+    #: that stopped at "the construct lives in another file" would report
+    #: the timing it could not see.
+    at_module_level = set()
+    for st in tree.body:
+        if isinstance(st, (ast.FunctionDef, ast.AsyncFunctionDef,
+                           ast.ClassDef)):
+            continue
+        if isinstance(st, ast.If) and "__name__" in (_seg(src, st.test) or ""):
+            continue
+        for n in ast.walk(st):
+            if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute) \
+                    and isinstance(n.func.value, ast.Name):
+                at_module_level.add(n.func.value.id)
+    out = {}
+    for alias, mod in aliases.items():
+        if alias not in used or not mod.startswith(("be_", "de_", "da_",
+                                                    "pm_", "e2_")):
+            continue
+        f, txt = _sibling_source(mod)
+        if not txt:
+            continue
+        try:
+            sub = ast.parse(txt)
+        except SyntaxError:
+            continue
+        st = rule22_stamp(sub, txt, _via=False)["status"]
+        when = (AT_IMPORT if alias in at_module_level else AT_EMIT)
+        for k, v in st.items():
+            if v != ABSENT and out.get(k) in (None, ABSENT):
+                out[k] = f"{when}__VIA_{mod}"
+    return out
+
+
+def rule22_stamp(tree: ast.AST, src: str, _via: bool = True) -> dict:
     """Rule 22 / R-605, computed: the producing-code digest, the import
     closure and HEAD -- and WHEN each is captured.
 
@@ -1007,8 +1080,15 @@ def rule22_stamp(tree: ast.AST, src: str) -> dict:
                      else AT_IMPORT if any(r["when"] == AT_IMPORT
                                            for r in rows)
                      else AT_EMIT)
+    if _via:
+        via = rule22_via_a_shared_module(tree, src)
+        for k, v in via.items():
+            if status.get(k) == ABSENT:
+                status[k] = v
+        out["present_via_a_shared_module"] = via
     out["status"] = status
-    out["rule22_complete"] = all(v == AT_IMPORT for v in status.values())
+    out["rule22_complete"] = all(v.startswith(AT_IMPORT)
+                                 for v in status.values())
     out["typed_stamps_of_this_run"] = [t for t in out["typed_literals"]
                                        if t["kind"].startswith("TYPED_STAMP")]
     out["n_typed_stamps_of_this_run"] = len(out["typed_stamps_of_this_run"])
@@ -1577,34 +1657,33 @@ def selftest() -> tuple:                                      # noqa: C901
        f"path")
 
     # -- I. RULE 22, the census REV 51 section 3 counted at zero ----------
-    ck("RULE 22 / R-605, COMPUTED AT THE SOURCE: BE's three heavy producers "
-       "carry NO import closure at all, and their code digest and HEAD are "
-       "at EMIT time or ABSENT -- so a landing to any of them mid-run would "
-       "be invisible in the receipt. DE's runner is the ONLY module in the "
-       "sweep that is rule-22 COMPLETE (closure, digest and HEAD all "
-       "captured AT IMPORT). ***`_capture_closure()` and `_head_state()` "
-       "are CALLED at module level: the capture is import-time even though "
-       "the code sits in a function, and a checker reading only the "
-       "enclosing block would mark the one runner that HAS the property as "
-       "lacking it***",
-       all(by[p]["rule22"]["status"]["import_closure"] == ABSENT
-           for p in BE_PRODUCERS)
+    def _r22(path):
+        st = by[path]["rule22"]["status"]
+        return {k: v.split("__VIA_")[0] for k, v in st.items()}, st
+
+    be_state = {Path(p2).name: _r22(p2) for p2 in BE_PRODUCERS}
+    be_closure_at_import = all(
+        v[0]["import_closure"] == AT_IMPORT for v in be_state.values())
+    ck("RULE 22 / R-605, COMPUTED AT THE SOURCE -- AND THE CAPTURE MAY LIVE "
+       "IN A SHARED MODULE. BE 60 put it in `be_rule22.py` and each "
+       "producer calls `_R22.init(...)` AT MODULE LEVEL, so the closure is "
+       "captured at IMPORT even though the construct is in another file. "
+       "***A per-FILE detector reported ABSENT for all three, which is a "
+       "FALSE NEGATIVE about another seat's work -- exactly the 'half a "
+       "predicate reported as the predicate' this sweep exists to catch. "
+       "One hop, and the WHEN decided by the IMPORTER's call site.*** DE's "
+       "runner captures it directly, at module level, in its own file",
+       be_closure_at_import
        and by["live/pm_research/de_multiday_gate1_runner.py"][
            "rule22"]["rule22_complete"] is True
-       #: THE COUNT IS RECOMPUTED, NEVER PINNED. Round 77 asserted it was
-       #: exactly ONE -- true that day, and DA 78 closing this seat's own
-       #: two runners would have broken a check that was measuring the
-       #: calendar rather than the property. Rounds 69/72/74/75/77: the
-       #: same defect, caught before landing this time.
        and rep["totals"]["n_modules_rule22_complete"] == sum(
            1 for m in rep["modules"]
            if m.get("rule22", {}).get("rule22_complete"))
        and rep["totals"]["n_modules_rule22_complete"] >= 1,
-       "; ".join(f"{Path(p).name}: closure="
-                 f"{by[p]['rule22']['status']['import_closure']}, code="
-                 f"{by[p]['rule22']['status']['producing_code_digest'][:9]},"
-                 f" head={by[p]['rule22']['status']['head_sha'][:9]}"
-                 for p in BE_PRODUCERS))
+       "; ".join(f"{k}: closure={v[1]['import_closure'][:9]}"
+                 f"{'(via be_rule22)' if '__VIA_' in v[1]['import_closure'] else ''}"
+                 f", head={v[1]['head_sha'][:9]}"
+                 for k, v in be_state.items()))
     typed = by["live/pm_research/be_daybook_build.py"][
         "rule22"]["typed_stamps_of_this_run"]
     ck("AND THE DAYBOOK'S ONE PROVENANCE LITERAL IS TYPED, NOT DERIVED: "
