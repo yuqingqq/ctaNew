@@ -115,43 +115,18 @@ def declaration_chains(decl_dir: Path) -> dict:
                         "a census that answered anyway would be inventing "
                         "the chain the seat did not write")}
             continue
-        #: DA 106, FOUND BY MY OWN CELL AFTER BE 79/80. ***THE SHARED
-        #: RESOLVER NOW FOLLOWS A HALF-WRITTEN LINK.*** Its `_predecessor`
-        #: returns the path with `sha256 = None` for a `{path}`-only
-        #: `supersedes`, and the digest comparison is guarded by `and
-        #: want`, so the link is followed unverified: `y_v2` superseding
-        #: `y_v1` with NO digest resolves to ONE_HEAD. R-608 is that the
-        #: link IS THE PAIR -- a half-written one refuses BY NAME, never
-        #: as "no link" and never as a followed one. The head still comes
-        #: from the shared resolver; ***this refusal is this census's own
-        #: ruling on top of it***, exactly as the fork refusal is.
-        half = []
-        for nm in names:
-            try:
-                sup = (json.loads((d / nm).read_text()) or {}).get(
-                    "supersedes")
-            except (OSError, ValueError):
-                continue
-            if isinstance(sup, dict) and sup.get("path") \
-                    and not sup.get("sha256") and not sup.get("chain"):
-                half.append({"file": nm,
-                             "status": "SUPERSESSION_LINK_INCOMPLETE",
-                             "names": Path(str(sup["path"])).name,
-                             "has": ["path"]})
-        if half:
-            out[fam] = {
-                "members": names, "n_members": len(members),
-                "heads": [], "n_heads": 0, "links": [],
-                "unlinked_or_broken": half,
-                "status": "HALF_WRITTEN_LINK",
-                "resolved_by": ("declaration_chain.resolve_head (BE 77) "
-                                "for the head; this refusal is this "
-                                "census's own ruling"),
-                "why": ("R-608: the link IS the pair. A `supersedes` "
-                        "carrying only a path is not a link, and the "
-                        "shared resolver follows it unverified since BE "
-                        "79/80 -- reported to the reviewer, refused here")}
-            continue
+        #: DA 106 -> DA 110. ***THIS BLOCK IS RETIRED: BE 82 FIXED THE
+        #: MODULE.*** After BE 79/80 the shared resolver FOLLOWED a
+        #: `{path}`-only link (its `_predecessor` returned `sha256 = None`
+        #: and the digest comparison was guarded by `and want`), so this
+        #: census carried the R-608 property itself. At BE 82 the module
+        #: raises `ChainRefused HALF_WRITTEN_LINK` BEFORE this scan can
+        #: run -- the branch became code that cannot fire, and ***a guard
+        #: that cannot fire is a guard that cannot prove it works***. What
+        #: stays is the TRANSLATION below: the module's refusal becomes a
+        #: per-family STATUS carrying its name, so one bad family does not
+        #: end the census, and `_declaration_head` turns the same refusal
+        #: into a named `VerifierRefused` rather than a foreign exception.
         orphans = [x["version"] for x in r["orphan_branches"]]
         heads = orphans + [r["name"]]
         links = [{"from": v, "to": Path(str(
@@ -1394,22 +1369,26 @@ def selftest() -> tuple:
     half.write_text(json.dumps({"v": 2, "supersedes": {"path":
                                                        "y_declaration_v1.json"}}))
     ch3 = declaration_chains(d)
-    ck("AND A HALF-WRITTEN LINK IS NOT A LINK (R-608) -- ***AND SINCE BE "
-       "79/80 THE SHARED RESOLVER FOLLOWS ONE.*** Its `_predecessor` "
-       "returns the path with `sha256 = None` for a `{path}`-only "
-       "`supersedes` and the digest comparison is guarded by `and want`, "
-       "so `y_v2` superseding `y_v1` with NO digest resolves to ONE_HEAD "
-       "-- an unverified link followed as if it were a pair. The head "
-       "still comes from the shared resolver; ***this refusal is this "
-       "census's own ruling on top of it***, as the fork refusal is, and "
-       "the finding is reported rather than patched into someone else's "
-       "module: `HALF_WRITTEN_LINK`, naming the file and what it has",
-       ch3["y_declaration"]["status"] == "HALF_WRITTEN_LINK"
+    ck("AND A HALF-WRITTEN LINK IS NOT A LINK (R-608) -- ***THE RULE IS "
+       "THE MODULE'S AGAIN, AND WHAT THIS CELL ASSERTS IS MY "
+       "TRANSLATION OF IT.*** BE 79/80 followed a `{path}`-only link and "
+       "this census carried the property itself (DA 106); **BE 82 fixed "
+       "the module**, which now raises `ChainRefused HALF_WRITTEN_LINK` "
+       "before this scan can run -- so my own branch is retired rather "
+       "than left as code that cannot fire. What a verdict of mine still "
+       "rests on is the TRANSLATION: the module's refusal arrives as a "
+       "per-family STATUS carrying its NAME, so ***one unfollowable "
+       "family does not end the census***, and every other family still "
+       "gets an answer",
+       ch3["y_declaration"]["status"]
+       == "CHAIN_REFUSED_BY_THE_SHARED_RESOLVER"
        and ch3["y_declaration"]["n_heads"] == 0
-       and any(b["status"] == "SUPERSESSION_LINK_INCOMPLETE"
-               for b in ch3["y_declaration"]["unlinked_or_broken"]),
-       f"y_declaration -> {ch3['y_declaration']['status']}, "
-       f"{[b['status'] for b in ch3['y_declaration']['unlinked_or_broken']]}")
+       and any("HALF_WRITTEN_LINK" in b["status"]
+               for b in ch3["y_declaration"]["unlinked_or_broken"])
+       and len(ch3) > 1,
+       f"y_declaration -> {ch3['y_declaration']['status']} carrying "
+       f"{[b['status'] for b in ch3['y_declaration']['unlinked_or_broken']]}"
+       f"; {len(ch3) - 1} other family/families still answered")
 
     # -- REV 72 2.3: THE ALLOWLIST IS A DECLARATION LIKE ANY OTHER --------
     tmp2 = Path(tempfile.mkdtemp(prefix="da94_"))
