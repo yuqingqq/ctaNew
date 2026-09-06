@@ -149,6 +149,45 @@ def require_ledger(res: dict | None = None, *, fixture: bool = False,
            if r["env_value"] and Path(r["env_value"]).name == "data" else ""))
 
 
+def scope_stats() -> dict:
+    """The SCOPE's own memory accounting, read from its cgroup.
+
+    `ru_maxrss` is this process's high-water mark; the SCOPE is what the
+    MemoryMax cap applies to, and it accounts descendants. anon vs file
+    separates what the run actually held from what the kernel cached for it,
+    and `memory.events` says whether the cap was ever approached
+    (`max`/`high` non-zero) rather than leaving that to be inferred from a
+    peak that happened to fit."""
+    try:
+        leaf = open("/proc/self/cgroup").read().strip().rsplit(":", 1)[-1]
+        base = Path("/sys/fs/cgroup") / leaf.lstrip("/")
+    except OSError:
+        return {"status": "NO_CGROUP"}
+    out = {"cgroup": str(base), "unit": base.name}
+    for f, key in (("memory.peak", "peak_bytes"),
+                   ("memory.current", "current_bytes"),
+                   ("memory.max", "max_bytes")):
+        try:
+            out[key] = (base / f).read_text().strip()
+        except OSError:
+            out[key] = None
+    for f, key in (("memory.stat", "stat"), ("memory.events", "events")):
+        try:
+            d = {}
+            for line in (base / f).read_text().splitlines():
+                k, _, v = line.partition(" ")
+                d[k] = int(v) if v.strip().isdigit() else v
+            if key == "stat":
+                out["anon_bytes"] = d.get("anon")
+                out["file_bytes"] = d.get("file")
+            else:
+                out["events"] = d
+                out["cap_was_hit"] = bool(d.get("max", 0) or d.get("oom", 0))
+        except OSError:
+            out[key] = None
+    return out
+
+
 def repo_root(code_root: Path | str | None = None) -> Path:
     """What `PM_DATA_ROOT` names. Consumers append `data/` to this."""
     return Path(resolve(code_root)["repo_root"])

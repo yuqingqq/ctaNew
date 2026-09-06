@@ -297,6 +297,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
                   "refuses_any_existing_path": True,
                   "required_stem": GATE1_STEM},
         "data_root": _BDR.receipt_block(),
+        "scope": _BDR.scope_stats(),
         "one_file_per_day": True,
         "no_book_built": True, "no_assembly_run": True,
         "decides_nothing": "REPORTED (rule 14).",
