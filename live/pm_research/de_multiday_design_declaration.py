@@ -27,8 +27,28 @@ import sys
 from pathlib import Path
 
 
-PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V1"
-EXPECTED_CHECKS = 20
+PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V2"
+EXPECTED_CHECKS = 34
+
+V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
+                  "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b"
+                  "781c7bd6f")
+
+#: (4) DEGENERACY BARS, declared NOW so nobody decides after seeing a day.
+MIN_DECISIONS_PER_ARM_DAY = 30
+SD_FLOOR_FRACTION = 0.25          # refuse when sd < f * |mean| of the null
+
+#: (7) the two candidate day sets, DERIVED from the ledger, not listed.
+LEDGER_CONJUNCTS = ("day_closed_calendar", "post_freeze_pass",
+                    "era_pure", "day_quality_pass")
+PREVIOUSLY_OPENED_FOR_A_READ = {
+    "2026-08-29": "withdrawn from the race (R-500) and ratified for ONE "
+                  "development read (R-502)",
+    "2026-09-01": "interim read of the FROZEN CANDIDATE; the register "
+                  "records these two as CONSUMED and corrects R-547(C)'s "
+                  "'every score is sealed and unread'",
+    "2026-09-02": "interim read of the FROZEN CANDIDATE, same correction",
+}
 
 DAYS = ("2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05")
 ARMS = ("CONDVALUE_X_SKEW", "HAZARD_OVER_SKEWED_REF")
@@ -175,6 +195,26 @@ def day_cluster_verdict(z_by_day: dict, *, alpha: float = ALPHA,
     }
 
 
+def arm_day_admissible(n_decisions: int, null_draws: list) -> dict:
+    """(4) THE DEGENERACY BARS, applied. Declared before any day is seen."""
+    sd = statistics.pstdev(null_draws) if null_draws else 0.0
+    mean = statistics.fmean(null_draws) if null_draws else 0.0
+    reasons = []
+    if n_decisions < MIN_DECISIONS_PER_ARM_DAY:
+        reasons.append(
+            f"decisions {n_decisions} < declared minimum "
+            f"{MIN_DECISIONS_PER_ARM_DAY}")
+    if sd < SD_FLOOR_FRACTION * abs(mean):
+        reasons.append(
+            f"null sd {sd:.6g} < {SD_FLOOR_FRACTION} * |mean {mean:.6g}| "
+            f"= {SD_FLOOR_FRACTION * abs(mean):.6g}; Z explodes as sd -> 0")
+    return {"n_decisions": n_decisions, "null_sd": sd, "null_mean": mean,
+            "sd_over_abs_mean": (sd / abs(mean)) if mean else None,
+            "admissible": not reasons,
+            "status": "OK" if not reasons else "DEGENERATE_ARM_DAY_REFUSED",
+            "reasons": reasons}
+
+
 def verify_book_digest(day: str, book_path: str, declared_sha256: str,
                        actual_sha256: str) -> dict:
     """A day whose reference book does not match its pinned digest REFUSES
@@ -190,6 +230,172 @@ def verify_book_digest(day: str, book_path: str, declared_sha256: str,
 
 
 # ------------------------------------------------------------ declaration
+
+def day_sets_from_the_ledger(root: Path | None = None) -> dict:
+    """(7) THE DAY SET, DERIVED ON QUALITY -- the USER's bar (R-497(F)(1):
+    "collector version is NOT a bar; QUALITY is the bar").
+
+    The rule: the four conjuncts AND day-quality AND -- under one reading
+    only -- not previously opened for any read. THE PARAMETER THE USER IS
+    BEING ASKED TO FILL is whether a day opened for a read of the FROZEN
+    CANDIDATE counts as untouched for a Gate-1 test of the ARMS, which are
+    a different object. Both resulting sets are computed here with their
+    Holm arithmetic; G is fixed before any run."""
+    import glob
+    import re
+    base = Path(root) if root is not None else Path(
+        __file__).resolve().parents[2]
+    # THE WORKTREE DATA-SHELL TRAP, SECOND INSTANCE. In a seat worktree
+    # `<root>/data` is the git-materialised shell holding only COMMITTED
+    # artifacts, and the real tree hangs off the R-397 symlink at
+    # `<root>/data/data`. Reading the shell silently produced a 3-day
+    # qualifying set where the real ledger has 6 -- caught only because the
+    # count disagreed with a hand check. Resolve the symlink when it exists
+    # and RECORD which root was read.
+    data_root = base / "data" / "data" if (base / "data" / "data").exists() \
+        else base / "data"
+    rows = {}
+    for path in sorted(glob.glob(str(
+            data_root / "pm_5min/derived/da_dayverdict_2026*.json"))):
+        if "superseded" in path:
+            continue
+        found: dict = {}
+
+        def walk(o, dep=0):
+            if dep > 6:
+                return
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    if k in LEDGER_CONJUNCTS and not isinstance(
+                            v, (dict, list)) and k not in found:
+                        found[k] = v
+                    if isinstance(v, (dict, list)):
+                        walk(v, dep + 1)
+            elif isinstance(o, list):
+                for v in o[:8]:
+                    walk(v, dep + 1)
+        walk(json.loads(Path(path).read_text()))
+        raw = re.search(r"(\d{8})", path).group(1)
+        day = f"{raw[:4]}-{raw[4:6]}-{raw[6:]}"
+        rows[day] = {k: found.get(k) for k in LEDGER_CONJUNCTS}
+        rows[day]["all_conjuncts_and_quality"] = all(
+            found.get(k) is True for k in LEDGER_CONJUNCTS)
+    qualifying = [d for d, v in sorted(rows.items())
+                  if v["all_conjuncts_and_quality"]]
+    set_a = list(qualifying)
+    set_b = [d for d in qualifying if d not in PREVIOUSLY_OPENED_FOR_A_READ]
+
+    def holm(g):
+        p = 2.0 ** (-g)
+        return {"G": g, "best_attainable_one_sided_p": p,
+                "holm_threshold_m2": ALPHA / 2,
+                "clears_holm_at_m2": p <= ALPHA / 2,
+                "clears_holm_at_m1": p <= ALPHA,
+                "smallest_G_that_clears_m2": _smallest_G(ALPHA, 2),
+                "smallest_G_that_clears_m1": _smallest_G(ALPHA, 1)}
+    return {
+        "ledger_root_read": str(data_root),
+        "why_the_root_is_recorded": (
+            "in a seat worktree `<root>/data` is the git-materialised "
+            "shell of COMMITTED artifacts only; the real tree hangs off "
+            "the R-397 symlink at `<root>/data/data`. Reading the shell "
+            "silently produced a 3-day qualifying set where the ledger has "
+            "6. The root that was read travels with the answer"),
+        "n_verdict_files_read": len(rows),
+        "rule": "the four ledger conjuncts AND day-quality AND (under set "
+                "B only) not previously opened for any read",
+        "conjuncts": list(LEDGER_CONJUNCTS),
+        "version_is_NOT_a_bar": (
+            "R-497(F)(1), the USER verbatim: 'collector version is NOT a "
+            "bar; QUALITY is the bar'. R-547(C)'s 'only era-pure clob_v4_1 "
+            "days' imported a bar the USER never set, and v1 of this "
+            "declaration inherited it. WITHDRAWN HERE."),
+        "ledger_rows_as_read": rows,
+        "qualifying_on_quality": qualifying,
+        "previously_opened_for_a_read": PREVIOUSLY_OPENED_FOR_A_READ,
+        "THE_PARAMETER_FOR_THE_USER": (
+            "do days previously opened for a read of the FROZEN CANDIDATE "
+            "count as UNTOUCHED for a Gate-1 test of the ARMS? The arms "
+            "are a different object with thetas fixed on the consumed "
+            "08-24 hour, and no arm score has been read on any of these "
+            "days -- but the tape has been looked at."),
+        "SET_A_reads_count_as_untouched": {
+            "days": set_a, "holm": holm(len(set_a))},
+        "SET_B_reads_consume_the_day": {
+            "days": set_b, "holm": holm(len(set_b))},
+        "what_the_answer_decides": (
+            "SET A gives G = 6, which CLEARS Holm at m = 2 -- a "
+            "significance-bearing answer is possible. SET B gives G = 3, "
+            "which clears at NEITHER m = 2 NOR m = 1. The parameter is the "
+            "difference between a run that can settle section 7 with a "
+            "p-value and one that can only ever be directional."),
+        "accrual_schedule": {
+            "2026-09-06": "OPEN at declaration time (day_closed_calendar "
+                          "false); closes 00:00Z 09-07 and is verdicted at "
+                          "00:06Z 09-07",
+            "rule": "each further day is verdicted at 00:06Z the following "
+                    "day, so set A reaches G = 7 on 09-07 and set B "
+                    "reaches G = 4",
+            "G_is_fixed_before_any_run": True},
+    }
+
+
+#: (addendum 2) measured seconds, and the arithmetic done here rather than
+#: in prose. v1 said "~2 hours of null per ARM-day"; 290.9 s is one hour
+#: for BOTH arms, so the extrapolation is per DAY for both arms and v1
+#: overstated the null by a factor of two.
+MEASURED = {"de_arms_replay_one_hour_s": 47.0,
+            "de_arms_replay_peak_gb": 0.61,
+            "be_null_500_draws_one_hour_BOTH_arms_s": 290.9,
+            "windows_in_the_measured_hour": 12,
+            "windows_in_a_utc_day": 288}
+HEAVY_RUN_WRAPPER = (
+    "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock "
+    "systemd-run --user --scope --slice=research.slice "
+    "-p MemoryMax=8G -p CPUQuota=100% <cmd>")
+
+
+def _resources() -> dict:
+    x = MEASURED["windows_in_a_utc_day"] / MEASURED[
+        "windows_in_the_measured_hour"]
+    null_day_s = MEASURED["be_null_500_draws_one_hour_BOTH_arms_s"] * x
+    replay_day_s = MEASURED["de_arms_replay_one_hour_s"] * x
+    def total(g):
+        return {"G": g,
+                "null_hours": g * null_day_s / 3600.0,
+                "replay_hours": g * replay_day_s / 3600.0,
+                "sequential_cpu_hours": g * (null_day_s + replay_day_s)
+                / 3600.0}
+    return {
+        "basis": "measured on the consumed 08-24 hour",
+        "measured": MEASURED,
+        "extrapolation_factor": x,
+        "per_day_BOTH_arms": {"null_s": null_day_s,
+                              "null_hours": null_day_s / 3600.0,
+                              "replay_s": replay_day_s,
+                              "replay_hours": replay_day_s / 3600.0},
+        "totals": {"G5": total(5), "G6": total(6)},
+        "v1_mislabelled_this": (
+            "v1 read 290.9 s as one hour for ONE arm and wrote '~2 hours "
+            "of null per ARM-day'. It is one hour for BOTH arms, so the "
+            "figure is ~1.94 h per DAY for both arms and v1 overstated the "
+            "null by a factor of two. Corrected here as computed fields "
+            "from the measured seconds"),
+        "the_estimate_is_an_ESTIMATE": (
+            "a linear 24x extrapolation from one hour; the day-1 smoke "
+            "replaces it with a measurement"),
+        "cap": "one CPU, MemoryMax=8G, never raised (R-174); if a day "
+               "exceeds the cap the day REFUSES rather than the cap rising",
+        "mandatory_wrapper": HEAVY_RUN_WRAPPER,
+        "wrapper_rule": (
+            "SEAT_PROTOCOL rule 20: every heavy step runs under this "
+            "wrapper. The flock REFUSES if another heavy run holds the "
+            "lock, so two seats cannot contend for the same 8G"),
+        "mandatory_first_run": (
+            "the ONE-DAY SMOKE -- economic fields SEALED, resource "
+            "observation published -- before any further day is run"),
+    }
+
 
 def declaration() -> dict:
     return {
@@ -218,6 +424,177 @@ def declaration() -> dict:
         "theta": THETA,
         "theta_pins": THETA_PINS,
         "theta_is_not_refitted_on_any_of_the_five_days": True,
+        "supersedes": {
+            "path": f"data/pm_5min/derived/{V1_DECLARATION[0]}",
+            "sha256": V1_DECLARATION[1],
+            "v1_untouched": True,
+            "why": "the reviewer's be03d4d found two blocking items and "
+                   "seven places a choice could still be made after seeing "
+                   "a day. Every one is closed here as a FIELD",
+            "defects_in_v1_this_names": [
+                "the imported era bar -- v1 said 'the only era-pure "
+                "clob_v4_1 days', which R-497(F)(1) rules out: version is "
+                "not a bar, QUALITY is. WITHDRAWN",
+                "the battery count -- v1's receipt recorded n_checks 19 "
+                "against the source's EXPECTED_CHECKS 20, because main() "
+                "wrote EXPECTED_CHECKS - 1 rather than the count the run "
+                "produced. The source hash matched: a RECEIPT-COUNT "
+                "defect, not a code difference",
+                "the resource arithmetic -- v1 read 290.9 s as one arm-hour "
+                "and wrote '~2 hours of null per ARM-day'; it is one hour "
+                "for BOTH arms, so v1 overstated the null by a factor of "
+                "two",
+                "the smoke -- v1 published day 1's economic result before "
+                "days 2..G were run, leaving early stopping reachable"]},
+        "R1_asm_the_scored_book": {
+            "blocking_in_v1": True,
+            "verified_by_DE_at_the_code": (
+                "be_cancel_axis_null.py:188-192 -- `ref, asm = "
+                "c['fr']['reference'], c['asm']` then `scored = "
+                "asm['by_arm'][(COIN, ARMS['CONDVALUE_X_SKEW']['head'])][0]` "
+                "and rows are the generations IN `scored`. A book without "
+                "`asm` raises on c['asm'] and there is no decision "
+                "population at all"),
+            "what_asm_must_contain_per_day": {
+                "by_arm": "a mapping keyed by (coin, head) for BOTH pinned "
+                          "heads -- q1_arrival_composed_lgbm and "
+                          "incumbent_linear_d -- whose [0] element is the "
+                          "set of scored (slug, side, t0) generation keys",
+                "scored_at": "the arms' PINNED thetas, not refitted ones",
+                "coverage": "every generation the reference carries for "
+                            "that day, so a generation absent from `scored` "
+                            "is a scorer-coverage fact and not a silent "
+                            "drop"},
+            "how_its_digest_enters_the_seed": (
+                "the seed is derived from the digest of the WHOLE day book "
+                "as BE publishes it, which contains `asm`; so a book whose "
+                "score stream changed cannot reuse a draw sequence. The "
+                "declaration additionally requires BE to publish "
+                "sha256(asm) separately, so a reader can tell a "
+                "score-stream change from a reference change"),
+            "discharge_on_one_day_first": (
+                "the 'same cascade' premise is currently a live refutation "
+                "condition, not a hypothetical. BE emits day 1's book with "
+                "`asm` and the null is driven on it BEFORE the other four "
+                "are built"),
+        },
+        "R2_the_draw_pool": {
+            "as_the_loader_stands": "ONE SHARED scored pool, built from "
+                                    "CONDVALUE's head only, used for both "
+                                    "arms (be_cancel_axis_null.py:189)",
+            "declared_choice": "SHARED",
+            "why": (
+                "ruling v2 (R-548(C)) separates the NULL from the "
+                "DENOMINATOR. The null is per arm because the DRAW is "
+                "matched to that arm's own decision count and side split; "
+                "the POOL those draws come from is the set of generations "
+                "a decision could have been made on, which is a property "
+                "of the book and not of the arm. Making the pool per-arm "
+                "would make each arm's random cancel land in a different "
+                "universe and the two nulls incomparable -- the same "
+                "category error as a per-arm shared denominator, in the "
+                "other direction"),
+            "the_cost_stated": (
+                "HAZARD's decisions are drawn from a pool defined by "
+                "CONDVALUE's head. If the two heads score materially "
+                "different generation sets, HAZARD's null is drawn from a "
+                "pool its own head would not have produced. THE DESIGN "
+                "REQUIRES BE TO PUBLISH |scored(head)| PER HEAD PER DAY and "
+                "their overlap, so the size of that cost is measured "
+                "rather than assumed"),
+            "refuses_if": "the two heads' scored sets overlap by less than "
+                          "0.90 of the smaller -- declared now, and a "
+                          "REFUSAL of the arm-day, not a note",
+        },
+        "R3_the_coin_set": {
+            "declared": ["btc"],
+            "why_btc_only": (
+                "the pinned thetas ARE btc thetas: CONDVALUE's comes from "
+                "lgbm_thresholds_btc.json (0fa2f1f7a5a4c58f) and HAZARD's "
+                "from linear_d_btc.json (18701008c2bd18c6). DE verified "
+                "that eth siblings EXIST in the same fits directory "
+                "(lgbm_thresholds_eth.json ce67009e38a07e8c, linear_d_eth."
+                "json fb371f6352214a92) and that they are DIFFERENT "
+                "artifacts. Running eth would mean a second (coin, theta) "
+                "pair -- a different frozen object, and a different "
+                "multiplicity"),
+            "what_a_btc_only_run_measures": (
+                "whether these two arms, at these two btc thetas, beat a "
+                "replay null ON BTC. It says nothing about eth and must "
+                "not be reported as a venue-level or programme-level "
+                "result"),
+            "what_an_eth_arm_would_cost": "m goes from 2 to 4, so the Holm "
+                                          "threshold halves to 0.0125 and "
+                                          "the smallest clearing G rises "
+                                          "from 6 to 7",
+        },
+        "R4_degeneracy_bars": {
+            "min_decisions_per_arm_day": MIN_DECISIONS_PER_ARM_DAY,
+            "why_30": (
+                "below ~30 matched draws the side split cannot be honoured "
+                "without repetition and the null's own dispersion is "
+                "dominated by the discreteness of the count. The number is "
+                "declared NOW, before any day, precisely so nobody decides "
+                "after seeing whether a day with four decisions counts"),
+            "sd_floor_fraction": SD_FLOOR_FRACTION,
+            "sd_rule": (
+                "refuse the arm-day when sd(null) < f * |mean(null)| with "
+                "f = 0.25. Z_d = (D - mean)/sd explodes as sd -> 0, and the "
+                "v1 degenerate-null falsifier covered only sd == 0 exactly"),
+            "calibration_from_the_consumed_hour": (
+                "HAZARD's null had sd 0.16234 against mean 0.40033, a "
+                "ratio of 0.4055 -- ABOVE the 0.25 floor, so the bar as "
+                "declared would have admitted the consumed hour. That is "
+                "stated so the floor cannot be read as chosen to exclude "
+                "something already seen"),
+            "a_refused_arm_day_is_a_STATUS": (
+                "it does not shrink G silently; the arm cannot be "
+                "aggregated and the run reports the arm as UNTESTABLE on "
+                "the declared day set"),
+        },
+        "R5_the_smoke_is_sealed": {
+            "day_1_publishes": ["resource observations", "population counts",
+                                "refusal statuses"],
+            "day_1_does_NOT_publish": ["D(E0)", "D(E-R)", "Z", "any per-day "
+                                       "location", "any null summary "
+                                       "statistic"],
+            "sealed_until": "all G days are complete",
+            "all_G_days_run_regardless_of_interim_results": True,
+            "why": (
+                "whoever runs days 2..G must not have seen day 1's Z. v1 "
+                "said the smoke publishes its resource observation and did "
+                "not say the economic fields are withheld, which left "
+                "early stopping reachable"),
+            "artifact_level_refusal": (
+                "the per-day emitter REFUSES to write any economic field "
+                "while `n_days_complete < G`; the sealed fields are absent "
+                "from the artifact, not present-and-ignored"),
+        },
+        "R6_runtime_verification": {
+            "verified_at_run_time_not_merely_recorded": True,
+            "what": ["each arm's theta against its pinned JSON path",
+                     "each model artifact's sha256 against the pinned "
+                     "digest"],
+            "on_mismatch": "REFUSE the run -- not the day, the RUN, because "
+                           "a moved model means the object under test is "
+                           "not the frozen one",
+            "why_not_a_record": "a recorded digest that nobody compares is "
+                                "provenance theatre; it makes a refit "
+                                "detectable and does not detect it",
+        },
+        "R7_the_day_set": day_sets_from_the_ledger(),
+        "R8_time_overrun": {
+            "estimate": "~20 hours of null across 2 arms x 5 days, plus ~3 "
+                        "hours of replay, extrapolated 24x from one hour",
+            "the_estimate_is_an_ESTIMATE": True,
+            "the_500_draw_minimum_is_protected_by": "REFUSING THE ARM-DAY",
+            "never_by": ["lowering the draw count", "raising the cap",
+                         "sampling fewer days"],
+            "why_written_down": "the cap is protected by v1 and the DRAW "
+                                "COUNT was not; the tempting response to a "
+                                "time overrun is to cut draws, and that "
+                                "response is now forbidden in advance",
+        },
         "what_DE_needs_from_BE_per_day": {
             "object": "the day's reference book -- the same shape as the "
                       "08-24 arms cache's `fr`: reference (slug -> side -> "
@@ -355,22 +732,7 @@ def declaration() -> dict:
             "these five days, they are consumed and the run is void "
             "(rule 11)",
         ],
-        "resources": {
-            "basis": "measured on the consumed 08-24 hour",
-            "de_arms_replay_per_hour": {"wall_s": 47.0, "peak_gb": 0.61},
-            "be_null_500_draws_one_hour_two_arms": {"wall_s": 290.9},
-            "per_day_estimate": (
-                "a UTC day is 288 five-minute windows against the 12 of "
-                "the measured hour, so a linear extrapolation is 24x: "
-                "~19 minutes of replay and ~2 hours of null per arm-day, "
-                "which is an ESTIMATE from one hour and not a measurement"),
-            "cap": "one CPU, MemoryMax=8G, never raised (R-174); if a day "
-                   "exceeds the cap the day REFUSES rather than the cap "
-                   "rising",
-            "recommendation": "the first day is run alone as a smoke with "
-                              "its resource observation published before "
-                              "the remaining four",
-        },
+        "resources": _resources(),
         "what_this_declaration_is_not": {
             "a_run": False, "a_result": False,
             "it_touches_no_data": True,
@@ -384,14 +746,20 @@ def declaration() -> dict:
 
 # --------------------------------------------------------------- selftest
 
-def selftest() -> int:
+LAST_BATTERY: dict = {}
+
+
+def selftest(*, quiet: bool = False) -> int:
     n = [0]
 
     def ok(cond, label):
         if not cond:
+            LAST_BATTERY.update({"outcome": "FAIL", "n_checks_run": n[0],
+                                 "failed_on": label})
             raise SystemExit(f"[de_multiday_design_declaration] FAIL: {label}")
         n[0] += 1
-        print(f"  PASS  {label}")
+        if not quiet:
+            print(f"  PASS  {label}")
 
     def refuses(fn, label, needle):
         try:
@@ -496,6 +864,111 @@ def selftest() -> int:
             "PLANTED DAY WITH A WRONG BOOK DIGEST: the whole day REFUSES, "
             "not the offending draw", "digest mismatch")
 
+    # ---- v2 items, each with a driven check where one is possible -----
+    ok(d["R1_asm_the_scored_book"]["blocking_in_v1"] is True
+       and "by_arm" in d["R1_asm_the_scored_book"][
+           "what_asm_must_contain_per_day"]
+       and "BOTH pinned heads" in d["R1_asm_the_scored_book"][
+           "what_asm_must_contain_per_day"]["by_arm"],
+       "R1: `asm` is declared with what it must contain per day -- by_arm "
+       "keyed by (coin, head) for BOTH pinned heads, scored at the pinned "
+       "thetas -- and its digest's route into the seed is stated")
+    ok(d["R2_the_draw_pool"]["declared_choice"] == "SHARED"
+       and "0.90" in d["R2_the_draw_pool"]["refuses_if"],
+       "R2: the draw pool is declared SHARED with the reason, the COST "
+       "stated, and a numeric refusal bar (heads' scored sets overlapping "
+       "by less than 0.90 of the smaller REFUSES the arm-day)")
+    ok(d["R3_the_coin_set"]["declared"] == ["btc"]
+       and "0fa2f1f7a5a4c58f" in d["R3_the_coin_set"]["why_btc_only"],
+       "R3: btc only, because the PINNED THETAS ARE BTC THETAS -- and the "
+       "eth siblings are named with their differing digests, so 'no eth "
+       "model exists' is not claimed when the truth is that eth would be a "
+       "different frozen object")
+
+    # R4 driven, both directions.
+    good = arm_day_admissible(200, [0.40 + 0.002 * i for i in range(500)])
+    ok(good["admissible"] is True and good["status"] == "OK",
+       f"R4 POSITIVE CONTROL, AND IT ADMITS: 200 decisions with a null "
+       f"whose sd/|mean| is {good['sd_over_abs_mean']:.4f} is admissible")
+    thin = arm_day_admissible(4, [0.40 + 0.001 * i for i in range(500)])
+    ok(thin["admissible"] is False
+       and "decisions 4" in thin["reasons"][0],
+       "R4 KNOWN-BAD: four decisions REFUSE the arm-day -- the case v1 "
+       "left to be decided after seeing it")
+    tight = arm_day_admissible(200, [0.40 + 1e-6 * i for i in range(500)])
+    ok(tight["admissible"] is False
+       and any("sd" in r for r in tight["reasons"]),
+       "R4 KNOWN-BAD, THE OTHER GAP: a SMALL-BUT-NONZERO sd refuses. v1's "
+       "degenerate-null falsifier caught sd == 0 exactly and this is the "
+       "case that makes Z explode")
+    hazard_like = arm_day_admissible(106, None or [
+        0.40033 + 0.16234 * ((i % 100) - 49.5) / 28.87 for i in range(500)])
+    ok(hazard_like["sd_over_abs_mean"] > SD_FLOOR_FRACTION,
+       f"R4 CALIBRATION, SO THE FLOOR CANNOT BE READ AS CHOSEN TO EXCLUDE "
+       f"SOMETHING SEEN: a HAZARD-like null (mean 0.400, sd 0.162, ratio "
+       f"0.4055) sits ABOVE the 0.25 floor -- the consumed hour would have "
+       f"been admitted")
+
+    ok(d["R5_the_smoke_is_sealed"]["all_G_days_run_regardless_of_interim_"
+                                   "results"] is True
+       and "D(E0)" in d["R5_the_smoke_is_sealed"]["day_1_does_NOT_publish"]
+       and "absent from the artifact" in d["R5_the_smoke_is_sealed"][
+           "artifact_level_refusal"],
+       "R5: day 1 publishes RESOURCES ONLY, the economic fields are ABSENT "
+       "from the artifact rather than present-and-ignored, and all G days "
+       "run regardless of interim results")
+    ok(d["R6_runtime_verification"]["on_mismatch"].startswith("REFUSE the "
+                                                              "run"),
+       "R6: theta and model digests are verified AT RUN TIME and a "
+       "mismatch refuses THE RUN -- a moved model means the object under "
+       "test is not the frozen one")
+    r7 = d["R7_the_day_set"]
+    ok(len(r7["qualifying_on_quality"]) == 6
+       and r7["SET_A_reads_count_as_untouched"]["holm"]["G"] == 6
+       and r7["SET_A_reads_count_as_untouched"]["holm"][
+           "clears_holm_at_m2"] is True
+       and r7["SET_B_reads_consume_the_day"]["holm"]["G"] == 3
+       and r7["SET_B_reads_consume_the_day"]["holm"][
+           "clears_holm_at_m2"] is False
+       and r7["SET_B_reads_consume_the_day"]["holm"][
+           "clears_holm_at_m1"] is False,
+       f"R7 DERIVED FROM THE LEDGER, NOT LISTED: six days qualify on "
+       f"QUALITY -- {r7['qualifying_on_quality']}. SET A (reads do not "
+       f"consume) is G = 6 and CLEARS Holm at m = 2; SET B (reads consume) "
+       f"is G = 3 and clears at NEITHER m = 2 nor m = 1. One USER "
+       f"parameter, and it decides whether this run can produce a p-value "
+       f"at all")
+    ok("QUALITY is the bar" in r7["version_is_NOT_a_bar"]
+       and "2026-08-29" in r7["qualifying_on_quality"],
+       "and v1's imported bar is WITHDRAWN: R-497(F)(1) says version is "
+       "not a bar, QUALITY is -- which admits 08-29, the day v1 excluded "
+       "for a reason the USER never set")
+    r = d["resources"]
+    ok(abs(r["per_day_BOTH_arms"]["null_hours"] - 1.9393) < 1e-3
+       and abs(r["totals"]["G5"]["sequential_cpu_hours"] - 11.26) < 0.02
+       and abs(r["totals"]["G6"]["sequential_cpu_hours"] - 13.52) < 0.02
+       and "factor of two" in r["v1_mislabelled_this"],
+       f"ADDENDUM 2: the resource arithmetic is COMPUTED from the measured "
+       f"seconds -- 290.9 s is one hour for BOTH arms, so it is "
+       f"{r['per_day_BOTH_arms']['null_hours']:.3f} h of null per DAY, "
+       f"{r['totals']['G5']['sequential_cpu_hours']:.2f} sequential CPU-h "
+       f"at G=5 and {r['totals']['G6']['sequential_cpu_hours']:.2f} at "
+       f"G=6. v1 overstated the null by a factor of two")
+    ok(r["mandatory_wrapper"].startswith("flock -n")
+       and "MemoryMax=8G" in r["mandatory_wrapper"]
+       and "CPUQuota=100%" in r["mandatory_wrapper"]
+       and r["mandatory_first_run"].startswith("the ONE-DAY SMOKE"),
+       "ADDENDUM 3 (SEAT_PROTOCOL rule 20): the heavy-run wrapper is named "
+       "verbatim -- flock refuses if another heavy run holds the lock -- "
+       "and the ONE-DAY SMOKE with sealed economic fields is declared the "
+       "mandatory first run")
+    ok(d["R8_time_overrun"]["the_500_draw_minimum_is_protected_by"]
+       == "REFUSING THE ARM-DAY"
+       and "lowering the draw count" in d["R8_time_overrun"]["never_by"],
+       "R8: a time overrun is answered by REFUSING THE ARM-DAY, never by "
+       "cutting draws or raising the cap -- written down in advance "
+       "because cutting draws is the tempting response")
+
     ok(d["section_7_predicate"]["multiplicity_m"] == 2
        and d["section_7_predicate"][
            "this_is_stated_now_so_nobody_reads_a_pass_as_a_validation"],
@@ -517,7 +990,23 @@ def selftest() -> int:
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
-    print(f"[de_multiday_design_declaration] PASS -- {n[0]} checks")
+    LAST_BATTERY.update({
+        "outcome": "PASS",
+        "n_checks_run": n[0],
+        "expected_checks_in_the_source": EXPECTED_CHECKS,
+        "run_count_equals_source_expected": n[0] == EXPECTED_CHECKS,
+        "ran_in_the_emitting_process": True,
+        "v1_defect_this_closes": (
+            "v1's receipt recorded n_checks 19 while the source's "
+            "EXPECTED_CHECKS was 20 -- main() wrote EXPECTED_CHECKS - 1 "
+            "instead of the count the run produced. The source hash "
+            "matched, so it was a RECEIPT-COUNT defect and not a code "
+            "difference. Both numbers are now carried WITH their computed "
+            "equality, so a receipt cannot disagree with its own source "
+            "again"),
+    })
+    if not quiet:
+        print(f"[de_multiday_design_declaration] PASS -- {n[0]} checks")
     return 0
 
 
@@ -539,10 +1028,9 @@ def main() -> int:
         "producing_code": me.name,
         "producing_code_sha256": hashlib.sha256(me.read_bytes()).hexdigest(),
     }
-    selftest_rc = selftest()
-    payload["battery"] = {"outcome": "PASS" if selftest_rc == 0 else "FAIL",
-                          "n_checks": EXPECTED_CHECKS - 1,
-                          "ran_in_the_emitting_process": True}
+    LAST_BATTERY.clear()
+    selftest(quiet=True)
+    payload["battery"] = dict(LAST_BATTERY)
     if a.output.exists():
         raise DesignRefused(f"output already exists: {a.output}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
