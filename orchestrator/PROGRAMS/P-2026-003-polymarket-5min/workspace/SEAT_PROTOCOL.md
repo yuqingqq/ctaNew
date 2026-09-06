@@ -214,6 +214,15 @@ except where marked USER-ONLY.
     the process shares (REV 83 §5, R-717; third instance: REV 53 §0, REV 59 §3, DE 110).** A battery whose verdict
     changes when its cells are reordered is measuring history, not the property: run the cell alone and run the battery
     shuffled -- if either verdict differs, the cell is measuring the process.
+    **A shared implementation's falsifier is a shared cell; an importer's independent cell tests the importer's OWN
+    behaviour at the seam (REV 84 §3.2 as amended by REV 85 §3, R-726).** Every importer RUNS `declaration_chain --falsify`
+    (as a subprocess) as one cell of its own battery, so a regression in the module fails every importer at once; an
+    importer keeps independent cells only for what its own verdicts rest on AT THE SEAM (its translation of a refusal
+    into a named per-family status, its scope resolution) -- never a re-test of the module's invariant, which is the
+    unreachable duplicate DA retired at DA 110.
+    **A cited artifact is locatable (R-601, REV 85 §4, R-726):** a row naming a receipt or record by digest names its
+    PATH in the ledger, or states it is scratch-only with the absolute path -- a digest without a resolvable location is
+    a pin to nothing.
     **A halted seat's worktree (R-627's clause, REV 81 §4).** "Never touch a seat's worktree while the seat works" --
     *idle* includes *halted for a reset*: a preservation-only commit in a halted worktree is permitted, UNPUSHED, the
     bytes unaltered, the act disclosed in the register by commit id; the rows then land in the shared register attributed.
