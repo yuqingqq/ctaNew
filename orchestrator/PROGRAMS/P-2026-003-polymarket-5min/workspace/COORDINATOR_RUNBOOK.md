@@ -462,7 +462,11 @@ shared tree is REVERTED, never reset. Commit messages by heredoc or `-F`, never 
 expanded into `git checkout --detach` in the shared tree). Never `--autostash` over another seat's dirty
 file — wait for its commit. Every coordinator commit is `git commit -- <paths>` (R-562: a commit without a
 pathspec swept a seat's staged file). `PM_DATA_ROOT` names the REPO root
-(`/home/yuqing/ctaNew`), not the data directory (R-562). Seat refresh is ONE command:
+(`/home/yuqing/ctaNew`), not the data directory (R-562). When seats' landing commits are STRANDED in the shared tree (origin moved while
+another seat held files dirty, so rule 21 made them wait), the coordinator rebases them
+onto origin at the first CLEAN-tree moment (`git status --short` empty but for
+untracked files) and pushes — never with a dirty tree, never `--autostash` (R-586, 07:08Z:
+DA's and MEM's commits, ahead 2 / behind 2, landed this way). Seat refresh is ONE command:
 `git checkout --detach mm-research && git ls-files data | xargs git update-index --skip-worktree`.
 
 ## Seat context (R-571)
