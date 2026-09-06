@@ -1,0 +1,2522 @@
+{
+  "carrying_commit": "77644ed70d43a7140e390de63763c909a5203f22",
+  "data_root_check": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "adopted_from": "live/pm_research/de_data_root.py, imported not copied",
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "mm_hf_tape_present": true,
+    "purpose": "P-2026-002 E2-A result-bearing emission",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "declaration": {
+    "carrying_commit": "7a1e582dace24fec608481d5ea81bb3536ec0c83",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v7.json",
+    "sha256": "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0"
+  },
+  "inherited_control": {
+    "gates_the_run": true,
+    "regimes": {
+      "csv": {
+        "sweep": {
+          "n_days": 31
+        },
+        "touch": {
+          "n_days": 31
+        }
+      }
+    },
+    "reproduced": true
+  },
+  "ledger_root": {
+    "code_and_data_are_the_same_tree": false,
+    "code_root": "/home/yuqing/ctaNew-wt-da",
+    "data_root": "/home/yuqing/ctaNew",
+    "data_root_branch": "1_env_PM_DATA_ROOT"
+  },
+  "max_rss_kib": 2849388,
+  "memory_cap_gib": 6.0,
+  "protocol": "P002_E2_A_OVERLAY_RUNNER_V1",
+  "runner_identity": {
+    "producing_code_is_the_committed_bytes": true,
+    "runner_commit_best_effort": "77644ed70d43a7140e390de63763c909a5203f22",
+    "runner_path": "live/mm_research/e2_a_runner.py",
+    "runner_sha256": "2d813fe4267ebcf5bc6d70895abc3c10f9e54169f0b5fcf5dc8f6f1a3903368a",
+    "runner_sha256_is_the_durable_citation": "the digest identifies the code that produced this receipt whatever happens to the history above it. Resolve it first.",
+    "tree_head_at_run": "77644ed70d43a7140e390de63763c909a5203f22",
+    "why_that_field": "false means the module had uncommitted edits when it ran, so the commit ids below it describe a DIFFERENT file than the one that produced these numbers. Stated, never inferred."
+  },
+  "scope_R584": {
+    "ruling": "R-584 (USER, 2026-09-06): scope is BTC for now",
+    "the_thin_name_cell": "DEFERRED_NOT_RESOLVED",
+    "the_twelve": "CONTEXT, not re-run as a population"
+  },
+  "sealed_payload": {
+    "NOT_READ_BY_THIS_RUN": true,
+    "keys_removed": [
+      "REPORTED_not_gated",
+      "aggregate_by_tp",
+      "aggregate_by_tp_fresh_quotes_only",
+      "ci_hi",
+      "ci_lo",
+      "eff_rt_ProbQueue_f3_residual_chased",
+      "eff_rt_ProbQueue_f3_residual_chased_fresh",
+      "eff_rt_ProbQueue_f3_whole_leg_charged",
+      "eff_rt_ProbQueue_f3_whole_leg_charged_fresh",
+      "eff_rt_RiskAverse_residual_chased",
+      "eff_rt_RiskAverse_residual_chased_fresh",
+      "eff_rt_RiskAverse_whole_leg_charged",
+      "eff_rt_RiskAverse_whole_leg_charged_fresh",
+      "eff_rt_bps",
+      "excluded_from_aggregate",
+      "fill_rate_ProbQueue_f3",
+      "fill_rate_RiskAverse",
+      "gate_symbol",
+      "in_aggregate_as_run",
+      "is_the_gate_symbol_under_R584",
+      "marginal_violations_do_NOT_silence_the_gate",
+      "mean_phi_ProbQueue_f3",
+      "mean_phi_RiskAverse",
+      "staleness_sensitivity",
+      "verdict"
+    ],
+    "leak_scan": {
+      "leaks": [],
+      "n_leaks": 0
+    },
+    "n_bytes": 123014,
+    "n_keys_removed_from_the_open_receipt": 431,
+    "n_numeric_keys_that_survived": 91,
+    "numeric_keys_that_survived": [
+      "20260820",
+      "20260821",
+      "20260822",
+      "20260823",
+      "20260825",
+      "20260827",
+      "20260828",
+      "20260829",
+      "20260830",
+      "20260831",
+      "20260901",
+      "20260902",
+      "20260903",
+      "20260904",
+      "20260905",
+      "NO_BOOK_AT_TP",
+      "NO_QUOTE_BEFORE_T0",
+      "ORDERING_NOT_TESTABLE_MARGINAL",
+      "QUEUE_AHEAD_UNDEFINED",
+      "QUOTE_STALE_AT_DECISION",
+      "RESOLVED",
+      "bar",
+      "bar_s",
+      "bookTicker",
+      "boundary_recv_ns",
+      "cadence_s",
+      "cap_gib",
+      "declared_bar_ms",
+      "depth20",
+      "gate_row_tp_s",
+      "legacy_share",
+      "max",
+      "max_heartbeat_gap_s",
+      "max_recv_ns",
+      "max_rss_kib",
+      "mean_E_filled_ProbQueue_f3",
+      "mean_filled_RiskAverse",
+      "memory_cap_gib",
+      "min_recv_ns",
+      "n",
+      "n_admissible_days",
+      "n_attempted",
+      "n_bad_quotes",
+      "n_beats",
+      "n_collector_restarts_in_day",
+      "n_days",
+      "n_days_admissible_after_the_era_leg",
+      "n_days_admissible_before_the_era_leg",
+      "n_days_lost_to_the_era_leg",
+      "n_distinct_quantities",
+      "n_episodes",
+      "n_episodes_fresh_quote",
+      "n_episodes_marginal_ORDERING_NOT_TESTABLE",
+      "n_episodes_over_the_declared_bar",
+      "n_episodes_testable",
+      "n_gaps_over_bar",
+      "n_hour_files",
+      "n_legacy_stamped",
+      "n_nonpositive_prints_excluded",
+      "n_ordering_marginal",
+      "n_ordering_testable",
+      "n_ordering_violations_marginal",
+      "n_ordering_violations_testable",
+      "n_over_declared_bar",
+      "n_prints_kept",
+      "n_ragged_overlong",
+      "n_ragged_rows",
+      "n_ragged_short_nan_padded",
+      "n_raw_rows",
+      "n_rows",
+      "n_rows_streamed",
+      "n_snapshots",
+      "n_unparsed_lines",
+      "n_violations_in_the_marginal_regime",
+      "n_violations_in_the_testable_regime",
+      "p50",
+      "p90",
+      "partial_share_ProbQueue_f3",
+      "partial_share_RiskAverse",
+      "peak_single_hour_file_rss_gib",
+      "qty_step",
+      "quote_age_max_ms",
+      "quote_age_p50_ms_median_over_days",
+      "quote_age_p90_ms_median_over_days",
+      "rss_now_gib",
+      "rss_peak_gib",
+      "skip_rate",
+      "tick",
+      "trade",
+      "wall_s",
+      "wall_s_total"
+    ],
+    "path": "data/mm_hf/e1/sealed/p002_e2a_SEALED_BTCUSDT__20260906T071809Z.json",
+    "second_net_economic_shaped_leak_scan": {
+      "leaks": [],
+      "n_leaks": 0,
+      "why_a_second_net": "the marker scan and the redactor share a list, so they share a blind spot. This net censuses numeric leaves by NAME SHAPE instead and refuses on anything economic-shaped, including a field nobody thought to mark."
+    },
+    "sha256": "0e8b832924ddc5e64f4ca30c902e7984292dcb3edbdd2f83453128dae9900bf4",
+    "what_is_sealed": "every economic quantity: eff_RT under either model and either pricing, the per-episode costs, the fill rates, the bootstrap intervals and the overlay verdict. Written once, digested, and NOT READ.",
+    "when_the_gate_may_be_read": "at G >= 14 admissible post-boundary complete days, approximately 2026-09-09"
+  },
+  "symbols": {
+    "BTCUSDT": {
+      "REFUSED": "11 admissible days < the declared minimum 14: no gate is read for this symbol and the cap is not relaxed",
+      "admissible_days": [
+        "20260825",
+        "20260827",
+        "20260828",
+        "20260829",
+        "20260830",
+        "20260831",
+        "20260901",
+        "20260902",
+        "20260903",
+        "20260904",
+        "20260905"
+      ],
+      "admissions": [
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": false,
+            "max_heartbeat_gap_s": 46355.0,
+            "n_beats": 668,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 1,
+            "why": "collector NOT live: max heartbeat gap 46355 s against a bar of 120 s, 0 restart(s) in day"
+          },
+          "day": "20260819",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "evaluated": false,
+            "why": "this caller did not measure the era leg; admissibility here is NOT the E2-A gate population"
+          },
+          "reasons_excluded": [
+            "bookTicker_files=12",
+            "trade_files=12",
+            "depth20_files=12",
+            "collector_not_live: collector NOT live: max heartbeat gap 46355 s against a bar of 120 s, 0 restart(s) in day",
+            "ERA_LEG_NOT_EVALUATED: rule 5 admissibility was not measured for this symbol-day, so it cannot be admitted"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 12,
+            "depth20": 12,
+            "trade": 12
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260820",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 1.0,
+            "max_recv_ns": 1787270398983995793,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787183997321575280,
+            "n_legacy_stamped": 43345739,
+            "n_rows": 43345739,
+            "post_boundary": false,
+            "why": "43345739 of 43345739 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          },
+          "reasons_excluded": [
+            "rule5_legacy_stamped: 43345739 of 43345739 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260821",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 1.0,
+            "max_recv_ns": 1787356799909119800,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787270398994303960,
+            "n_legacy_stamped": 64344442,
+            "n_rows": 64344442,
+            "post_boundary": false,
+            "why": "64344442 of 64344442 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          },
+          "reasons_excluded": [
+            "rule5_legacy_stamped: 64344442 of 64344442 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260822",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 1.0,
+            "max_recv_ns": 1787443198997805478,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787356799910560269,
+            "n_legacy_stamped": 40318572,
+            "n_rows": 40318572,
+            "post_boundary": false,
+            "why": "40318572 of 40318572 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          },
+          "reasons_excluded": [
+            "rule5_legacy_stamped: 40318572 of 40318572 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1440,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260823",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 1.0,
+            "max_recv_ns": 1787529595086618481,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787443199013558282,
+            "n_legacy_stamped": 34147812,
+            "n_rows": 34147812,
+            "post_boundary": false,
+            "why": "34147812 of 34147812 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          },
+          "reasons_excluded": [
+            "rule5_legacy_stamped: 34147812 of 34147812 bookTicker rows are LEGACY-STAMPED (recv_ns < 1787579334881534478); a queue simulation on recv_ns cannot use them"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": false,
+            "max_heartbeat_gap_s": 158.0,
+            "n_beats": 1437,
+            "n_collector_restarts_in_day": 2,
+            "n_gaps_over_bar": 1,
+            "why": "collector NOT live: max heartbeat gap 158 s against a bar of 120 s, 2 restart(s) in day"
+          },
+          "day": "20260824",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "evaluated": false,
+            "why": "this caller did not measure the era leg; admissibility here is NOT the E2-A gate population"
+          },
+          "reasons_excluded": [
+            "collector_not_live: collector NOT live: max heartbeat gap 158 s against a bar of 120 s, 2 restart(s) in day",
+            "ERA_LEG_NOT_EVALUATED: rule 5 admissibility was not measured for this symbol-day, so it cannot be admitted"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1440,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260825",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1787702398831174828,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787615997322391537,
+            "n_legacy_stamped": 0,
+            "n_rows": 47944227,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": false,
+            "max_heartbeat_gap_s": 4656.0,
+            "n_beats": 1361,
+            "n_collector_restarts_in_day": 2,
+            "n_gaps_over_bar": 1,
+            "why": "collector NOT live: max heartbeat gap 4656 s against a bar of 120 s, 2 restart(s) in day"
+          },
+          "day": "20260826",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "evaluated": false,
+            "why": "this caller did not measure the era leg; admissibility here is NOT the E2-A gate population"
+          },
+          "reasons_excluded": [
+            "bookTicker_files=23",
+            "trade_files=23",
+            "depth20_files=23",
+            "collector_not_live: collector NOT live: max heartbeat gap 4656 s against a bar of 120 s, 2 restart(s) in day",
+            "ERA_LEG_NOT_EVALUATED: rule 5 admissibility was not measured for this symbol-day, so it cannot be admitted"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 23,
+            "depth20": 23,
+            "trade": 23
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1440,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260827",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1787875198869626714,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787788796200269986,
+            "n_legacy_stamped": 0,
+            "n_rows": 38139973,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260828",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1787961598455191578,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787875198884047768,
+            "n_legacy_stamped": 0,
+            "n_rows": 38793610,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260829",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788047999859426508,
+            "measured_row_wise": true,
+            "min_recv_ns": 1787961598576910665,
+            "n_legacy_stamped": 0,
+            "n_rows": 12482434,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260830",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788134399855898172,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788048000072324391,
+            "n_legacy_stamped": 0,
+            "n_rows": 20195530,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260831",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788220795812231731,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788134399862005711,
+            "n_legacy_stamped": 0,
+            "n_rows": 39594967,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1440,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260901",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788307199009446850,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788220796038675009,
+            "n_legacy_stamped": 0,
+            "n_rows": 36924783,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260902",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788393594998007423,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788307199009998813,
+            "n_legacy_stamped": 0,
+            "n_rows": 32404548,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260903",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788479995851003351,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788393595000282167,
+            "n_legacy_stamped": 0,
+            "n_rows": 42466249,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260904",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788566397533463685,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788479996103650359,
+            "n_legacy_stamped": 0,
+            "n_rows": 32782737,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": true,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": true,
+            "max_heartbeat_gap_s": 61.0,
+            "n_beats": 1439,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 0,
+            "why": "collector live: every heartbeat gap is within 2x its own measured cadence and no restart falls inside the day"
+          },
+          "day": "20260905",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "boundary_recv_ns": 1787579334881534478,
+            "boundary_utc": "2026-08-24T13:48:54Z",
+            "legacy_share": 0.0,
+            "max_recv_ns": 1788652798756589563,
+            "measured_row_wise": true,
+            "min_recv_ns": 1788566398013466631,
+            "n_legacy_stamped": 0,
+            "n_rows": 10614095,
+            "post_boundary": true,
+            "why": "every bookTicker row carries recv_ns at or after the hf_ws_v2 stamp boundary"
+          },
+          "reasons_excluded": [],
+          "stream_file_counts": {
+            "bookTicker": 24,
+            "depth20": 24,
+            "trade": 24
+          },
+          "streams_complete": {
+            "bookTicker": true,
+            "depth20": true,
+            "trade": true
+          }
+        },
+        {
+          "admissible": false,
+          "collector_health": {
+            "bar_s": 120.0,
+            "cadence_s": 60.0,
+            "live": false,
+            "max_heartbeat_gap_s": 60045.0,
+            "n_beats": 440,
+            "n_collector_restarts_in_day": 0,
+            "n_gaps_over_bar": 1,
+            "why": "collector NOT live: max heartbeat gap 60045 s against a bar of 120 s, 0 restart(s) in day"
+          },
+          "day": "20260906",
+          "era_leg_enforced": true,
+          "era_rule5": {
+            "evaluated": false,
+            "why": "this caller did not measure the era leg; admissibility here is NOT the E2-A gate population"
+          },
+          "reasons_excluded": [
+            "bookTicker_files=8",
+            "trade_files=8",
+            "depth20_files=8",
+            "collector_not_live: collector NOT live: max heartbeat gap 60045 s against a bar of 120 s, 0 restart(s) in day",
+            "ERA_LEG_NOT_EVALUATED: rule 5 admissibility was not measured for this symbol-day, so it cannot be admitted"
+          ],
+          "stream_file_counts": {
+            "bookTicker": 8,
+            "depth20": 8,
+            "trade": 8
+          },
+          "streams_complete": {
+            "bookTicker": false,
+            "depth20": false,
+            "trade": false
+          }
+        }
+      ],
+      "cell_label": null,
+      "days": [
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009787234042553192,
+              "mean_filled_RiskAverse": 0.0009787234042553192,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 46,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0008796525295278349,
+              "mean_filled_RiskAverse": 0.000872340425531915,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 41,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009574468085106386,
+              "mean_filled_RiskAverse": 0.0009574468085106386,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 45,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260825",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 298.0,
+            "n": 141,
+            "n_over_declared_bar": 0,
+            "p50": 29.0,
+            "p90": 220.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 9,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 4748,
+          "n_ordering_marginal": 9,
+          "n_ordering_testable": 132,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 3,
+            "RESOLVED": 141
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 49891066,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 822268,
+              "n_snapshots": 822268
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 18484,
+              "n_prints_kept": 5743178,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009787234042553195,
+              "mean_filled_RiskAverse": 0.0009574468085106386,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 45,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0008299493248531703,
+              "mean_filled_RiskAverse": 0.0007872340425531916,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 37,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009346647138906782,
+              "mean_filled_RiskAverse": 0.0008936170212765959,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 42,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260827",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 338.0,
+            "n": 141,
+            "n_over_declared_bar": 0,
+            "p50": 25.0,
+            "p90": 87.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 17,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 4239,
+          "n_ordering_marginal": 17,
+          "n_ordering_testable": 124,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 3,
+            "RESOLVED": 141
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 39475012,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 811539,
+              "n_snapshots": 811539
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 14883,
+              "n_prints_kept": 3800933,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.000980842859200524,
+              "mean_filled_RiskAverse": 0.0009347826086956524,
+              "n_episodes": 46,
+              "n_episodes_fresh_quote": 46,
+              "n_ordering_testable": 43,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.000755547126165448,
+              "mean_filled_RiskAverse": 0.0006521739130434784,
+              "n_episodes": 46,
+              "n_episodes_fresh_quote": 46,
+              "n_ordering_testable": 30,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009158077533881638,
+              "mean_filled_RiskAverse": 0.0008695652173913045,
+              "n_episodes": 46,
+              "n_episodes_fresh_quote": 46,
+              "n_ordering_testable": 40,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260828",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 244.0,
+            "n": 138,
+            "n_over_declared_bar": 0,
+            "p50": 11.0,
+            "p90": 84.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 25,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 4917,
+          "n_ordering_marginal": 25,
+          "n_ordering_testable": 113,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 6,
+            "RESOLVED": 138
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 39434995,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 817837,
+              "n_snapshots": 817837
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 16402,
+              "n_prints_kept": 4679799,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009394004764787653,
+              "mean_filled_RiskAverse": 0.0009375,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 45,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0006469886099782874,
+              "mean_filled_RiskAverse": 0.0005208333333333333,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 25,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0008339406722911299,
+              "mean_filled_RiskAverse": 0.0008125000000000002,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 39,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260829",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 591.0,
+            "n": 144,
+            "n_over_declared_bar": 0,
+            "p50": 42.5,
+            "p90": 157.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 35,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 2691,
+          "n_ordering_marginal": 35,
+          "n_ordering_testable": 109,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 0,
+            "RESOLVED": 144
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 12987466,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 799654,
+              "n_snapshots": 799654
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 8076,
+              "n_prints_kept": 1207021,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009106207621993025,
+              "mean_filled_RiskAverse": 0.0009090909090909093,
+              "n_episodes": 44,
+              "n_episodes_fresh_quote": 44,
+              "n_ordering_testable": 40,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0007410280917165862,
+              "mean_filled_RiskAverse": 0.0005681818181818183,
+              "n_episodes": 44,
+              "n_episodes_fresh_quote": 44,
+              "n_ordering_testable": 25,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0008550494544571869,
+              "mean_filled_RiskAverse": 0.0008181818181818183,
+              "n_episodes": 44,
+              "n_episodes_fresh_quote": 44,
+              "n_ordering_testable": 36,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260830",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 366.0,
+            "n": 132,
+            "n_over_declared_bar": 0,
+            "p50": 54.5,
+            "p90": 210.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 31,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 3436,
+          "n_ordering_marginal": 31,
+          "n_ordering_testable": 101,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 12,
+            "RESOLVED": 132
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 22171636,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 803833,
+              "n_snapshots": 803833
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 9525,
+              "n_prints_kept": 2268611,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.000978355409158868,
+              "mean_filled_RiskAverse": 0.0009782608695652175,
+              "n_episodes": 46,
+              "n_episodes_fresh_quote": 46,
+              "n_ordering_testable": 45,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0008298737775291385,
+              "mean_filled_RiskAverse": 0.0007391304347826087,
+              "n_episodes": 46,
+              "n_episodes_fresh_quote": 46,
+              "n_ordering_testable": 34,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009525108111426228,
+              "mean_filled_RiskAverse": 0.0009130434782608698,
+              "n_episodes": 46,
+              "n_episodes_fresh_quote": 46,
+              "n_ordering_testable": 42,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260831",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 181.0,
+            "n": 138,
+            "n_over_declared_bar": 0,
+            "p50": 44.0,
+            "p90": 123.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 17,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 3808,
+          "n_ordering_marginal": 17,
+          "n_ordering_testable": 121,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 6,
+            "RESOLVED": 138
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 40637014,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 824789,
+              "n_snapshots": 824789
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 16984,
+              "n_prints_kept": 3544787,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009375,
+              "mean_filled_RiskAverse": 0.0009375,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 45,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0007300096944600163,
+              "mean_filled_RiskAverse": 0.0006875000000000001,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 33,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0008958333444026674,
+              "mean_filled_RiskAverse": 0.0008958333333333332,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 43,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260901",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 288.0,
+            "n": 144,
+            "n_over_declared_bar": 0,
+            "p50": 23.0,
+            "p90": 94.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 23,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 4093,
+          "n_ordering_marginal": 23,
+          "n_ordering_testable": 121,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 0,
+            "RESOLVED": 144
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 38252859,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 822107,
+              "n_snapshots": 822107
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 16208,
+              "n_prints_kept": 3622749,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009787233276850418,
+              "mean_filled_RiskAverse": 0.0009574468085106386,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 45,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0008197395509289624,
+              "mean_filled_RiskAverse": 0.0006595744680851065,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 31,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009124536992997544,
+              "mean_filled_RiskAverse": 0.0008510638297872343,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 40,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260902",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 312.0,
+            "n": 141,
+            "n_over_declared_bar": 0,
+            "p50": 38.0,
+            "p90": 210.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 25,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 4152,
+          "n_ordering_marginal": 25,
+          "n_ordering_testable": 116,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 3,
+            "RESOLVED": 141
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 33402971,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 816282,
+              "n_snapshots": 816282
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 16123,
+              "n_prints_kept": 3363949,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009791666666666666,
+              "mean_filled_RiskAverse": 0.0009791666666666666,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 47,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0008228418420516695,
+              "mean_filled_RiskAverse": 0.0008125000000000002,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 39,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009667296589336636,
+              "mean_filled_RiskAverse": 0.0009583333333333333,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 46,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260903",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 415.0,
+            "n": 144,
+            "n_over_declared_bar": 0,
+            "p50": 6.5,
+            "p90": 49.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 12,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 5185,
+          "n_ordering_marginal": 12,
+          "n_ordering_testable": 132,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 0,
+            "RESOLVED": 144
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 43826249,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 826242,
+              "n_snapshots": 826242
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 17419,
+              "n_prints_kept": 4931465,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009561524431146847,
+              "mean_filled_RiskAverse": 0.0009361702127659577,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 44,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0007143827747704063,
+              "mean_filled_RiskAverse": 0.0006382978723404256,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 30,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.000853218308063297,
+              "mean_filled_RiskAverse": 0.0008085106382978725,
+              "n_episodes": 47,
+              "n_episodes_fresh_quote": 47,
+              "n_ordering_testable": 38,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260904",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 143.0,
+            "n": 141,
+            "n_over_declared_bar": 0,
+            "p50": 12.0,
+            "p90": 63.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 29,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 4725,
+          "n_ordering_marginal": 29,
+          "n_ordering_testable": 112,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 3,
+            "RESOLVED": 141
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 33298268,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 821703,
+              "n_snapshots": 821703
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 15011,
+              "n_prints_kept": 3790641,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        },
+        {
+          "cells": {
+            "3600": {
+              "mean_E_filled_ProbQueue_f3": 0.0009595094490788959,
+              "mean_filled_RiskAverse": 0.0009583333333333333,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 46,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "60": {
+              "mean_E_filled_ProbQueue_f3": 0.0006078370754759975,
+              "mean_filled_RiskAverse": 0.0004583333333333333,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 22,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            },
+            "600": {
+              "mean_E_filled_ProbQueue_f3": 0.0008387853755970122,
+              "mean_filled_RiskAverse": 0.0007916666666666666,
+              "n_episodes": 48,
+              "n_episodes_fresh_quote": 48,
+              "n_ordering_testable": 38,
+              "partial_share_ProbQueue_f3": 0.0,
+              "partial_share_RiskAverse": 0.0
+            }
+          },
+          "day": "20260905",
+          "decision_time_quote_age_ms": {
+            "declared_bar_ms": 1000.0,
+            "max": 284.0,
+            "n": 144,
+            "n_over_declared_bar": 0,
+            "p50": 53.5,
+            "p90": 237.0
+          },
+          "label_counts": {
+            "ORDERING_NOT_TESTABLE_MARGINAL": 38,
+            "QUOTE_STALE_AT_DECISION": 0
+          },
+          "n_attempted": 144,
+          "n_distinct_quantities": 2696,
+          "n_ordering_marginal": 38,
+          "n_ordering_testable": 106,
+          "ordering_violations_marginal": [],
+          "ordering_violations_testable": [],
+          "qty_step": 0.001,
+          "status_counts": {
+            "NO_BOOK_AT_TP": 0,
+            "NO_QUOTE_BEFORE_T0": 0,
+            "QUEUE_AHEAD_UNDEFINED": 0,
+            "RESOLVED": 144
+          },
+          "stream_meta": {
+            "book": {
+              "n_bad_quotes": 0,
+              "n_hour_files": 25,
+              "n_rows": 11048410,
+              "streamed": true
+            },
+            "depth20": {
+              "n_ragged_overlong": 0,
+              "n_ragged_rows": 0,
+              "n_ragged_short_nan_padded": 0,
+              "n_raw_rows": 752721,
+              "n_snapshots": 752721
+            },
+            "trades": {
+              "n_nonpositive_prints_excluded": 7280,
+              "n_prints_kept": 1094469,
+              "n_unparsed_lines": 0
+            }
+          },
+          "tick": 0.1,
+          "usable": true
+        }
+      ],
+      "era_leg": {
+        "boundary_recv_ns": 1787579334881534478,
+        "boundary_utc": "2026-08-24T13:48:54Z",
+        "legacy_share_by_day": {
+          "20260820": 1.0,
+          "20260821": 1.0,
+          "20260822": 1.0,
+          "20260823": 1.0,
+          "20260825": 0.0,
+          "20260827": 0.0,
+          "20260828": 0.0,
+          "20260829": 0.0,
+          "20260830": 0.0,
+          "20260831": 0.0,
+          "20260901": 0.0,
+          "20260902": 0.0,
+          "20260903": 0.0,
+          "20260904": 0.0,
+          "20260905": 0.0
+        },
+        "n_days_admissible_after_the_era_leg": 11,
+        "n_days_admissible_before_the_era_leg": 15,
+        "n_days_lost_to_the_era_leg": 4,
+        "why": "CLAUDE.md rule 5: E2-A's estimand is sub-second arrival order on recv_ns, so a legacy-stamped row carries up to ~0.6 s of parse-backlog error into the queue simulation"
+      },
+      "gate_read": false,
+      "gate_row_tp_s": 600,
+      "icp_rule": {
+        "bar": 0.5,
+        "decidable": true,
+        "skip_rate": 0.022727272727272707,
+        "state": "RESOLVED",
+        "why": "enough episodes survive for the cell to be read on the same footing as every other symbol"
+      },
+      "memory_cap_gib": 6.0,
+      "n_admissible_days": 11,
+      "n_ordering_violations_marginal": 0,
+      "n_ordering_violations_testable": 0,
+      "ordering_property": {
+        "mean_E_filled_ProbQueue_f3": 0.0009014945999978922,
+        "mean_filled_RiskAverse": 0.0008699783768217878,
+        "n_episodes_marginal_ORDERING_NOT_TESTABLE": 261,
+        "n_episodes_testable": 1287,
+        "n_violations_in_the_marginal_regime": 0,
+        "n_violations_in_the_testable_regime": 0,
+        "population_expectation_is_REPORTED_not_refuting": "the expectation ordering is violable in the marginal regime with no defect present (ORDERING_REGIMES, the DA-63 counterexample), so a population-level inversion is reported beside the marginal share and never raises REFUTES",
+        "population_expectation_ordering_holds": true,
+        "property": "E[filled_ProbQueue_f3] >= filled_RiskAverse",
+        "state": "ORDERING_HOLDS_WHERE_TESTABLE",
+        "testability_predicate": "some trade in the episode has front = 0",
+        "why": "a violation where some trade cleared the queue is arithmetic and can only be an implementation defect; a violation where none did is the two models disagreeing in the regime neither claims"
+      },
+      "placement_quality": {
+        "declared_bar_ms": 1000.0,
+        "n_episodes_over_the_declared_bar": 0,
+        "quote_age_max_ms": 591.0,
+        "quote_age_p50_ms_median_over_days": 29.0,
+        "quote_age_p90_ms_median_over_days": 123.0
+      },
+      "resource_observation": [
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260825",
+            "rss_now_gib": 1.051,
+            "rss_peak_gib": 1.301,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260825",
+            "rss_now_gib": 2.168,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260825",
+            "rss_now_gib": 2.169,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260825",
+            "rss_now_gib": 1.202,
+            "rss_peak_gib": 1.33,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 49891066,
+            "peak_single_hour_file_rss_gib": 1.133,
+            "wall_s": 25.17
+          },
+          "day": "20260825",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 822268,
+            "n_snapshots": 822268,
+            "wall_s": 5.21
+          },
+          "evaluate": {
+            "wall_s": 1.36
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 18484,
+            "n_prints_kept": 5743178,
+            "n_unparsed_lines": 0,
+            "wall_s": 3.02
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260827",
+            "rss_now_gib": 1.173,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260827",
+            "rss_now_gib": 2.11,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260827",
+            "rss_now_gib": 2.11,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260827",
+            "rss_now_gib": 1.194,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 39475012,
+            "peak_single_hour_file_rss_gib": 1.225,
+            "wall_s": 19.44
+          },
+          "day": "20260827",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 811539,
+            "n_snapshots": 811539,
+            "wall_s": 4.6
+          },
+          "evaluate": {
+            "wall_s": 0.92
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 14883,
+            "n_prints_kept": 3800933,
+            "n_unparsed_lines": 0,
+            "wall_s": 1.95
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260828",
+            "rss_now_gib": 1.054,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260828",
+            "rss_now_gib": 1.972,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260828",
+            "rss_now_gib": 1.996,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260828",
+            "rss_now_gib": 1.144,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 39434995,
+            "peak_single_hour_file_rss_gib": 1.115,
+            "wall_s": 20.36
+          },
+          "day": "20260828",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 817837,
+            "n_snapshots": 817837,
+            "wall_s": 4.68
+          },
+          "evaluate": {
+            "wall_s": 1.1
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 16402,
+            "n_prints_kept": 4679799,
+            "n_unparsed_lines": 0,
+            "wall_s": 2.56
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260829",
+            "rss_now_gib": 1.222,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260829",
+            "rss_now_gib": 2.049,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260829",
+            "rss_now_gib": 2.049,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260829",
+            "rss_now_gib": 1.222,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 12987466,
+            "peak_single_hour_file_rss_gib": 1.222,
+            "wall_s": 6.91
+          },
+          "day": "20260829",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 799654,
+            "n_snapshots": 799654,
+            "wall_s": 4.35
+          },
+          "evaluate": {
+            "wall_s": 0.35
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 8076,
+            "n_prints_kept": 1207021,
+            "n_unparsed_lines": 0,
+            "wall_s": 0.72
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260830",
+            "rss_now_gib": 1.179,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260830",
+            "rss_now_gib": 2.031,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260830",
+            "rss_now_gib": 2.031,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260830",
+            "rss_now_gib": 1.179,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 22171636,
+            "peak_single_hour_file_rss_gib": 1.179,
+            "wall_s": 11.38
+          },
+          "day": "20260830",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 803833,
+            "n_snapshots": 803833,
+            "wall_s": 4.44
+          },
+          "evaluate": {
+            "wall_s": 0.58
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 9525,
+            "n_prints_kept": 2268611,
+            "n_unparsed_lines": 0,
+            "wall_s": 1.23
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260831",
+            "rss_now_gib": 1.267,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260831",
+            "rss_now_gib": 2.139,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260831",
+            "rss_now_gib": 2.139,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260831",
+            "rss_now_gib": 1.267,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 40637014,
+            "peak_single_hour_file_rss_gib": 1.267,
+            "wall_s": 20.52
+          },
+          "day": "20260831",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 824789,
+            "n_snapshots": 824789,
+            "wall_s": 4.66
+          },
+          "evaluate": {
+            "wall_s": 0.84
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 16984,
+            "n_prints_kept": 3544787,
+            "n_unparsed_lines": 0,
+            "wall_s": 1.83
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260901",
+            "rss_now_gib": 1.468,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260901",
+            "rss_now_gib": 2.142,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260901",
+            "rss_now_gib": 2.142,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260901",
+            "rss_now_gib": 1.468,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 38252859,
+            "peak_single_hour_file_rss_gib": 1.468,
+            "wall_s": 18.89
+          },
+          "day": "20260901",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 822107,
+            "n_snapshots": 822107,
+            "wall_s": 4.54
+          },
+          "evaluate": {
+            "wall_s": 0.9
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 16208,
+            "n_prints_kept": 3622749,
+            "n_unparsed_lines": 0,
+            "wall_s": 1.87
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260902",
+            "rss_now_gib": 1.468,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260902",
+            "rss_now_gib": 1.955,
+            "rss_peak_gib": 2.657,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260902",
+            "rss_now_gib": 2.0,
+            "rss_peak_gib": 2.657,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260902",
+            "rss_now_gib": 1.468,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 33402971,
+            "peak_single_hour_file_rss_gib": 1.468,
+            "wall_s": 16.95
+          },
+          "day": "20260902",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 816282,
+            "n_snapshots": 816282,
+            "wall_s": 4.46
+          },
+          "evaluate": {
+            "wall_s": 0.81
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 16123,
+            "n_prints_kept": 3363949,
+            "n_unparsed_lines": 0,
+            "wall_s": 1.72
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260903",
+            "rss_now_gib": 1.514,
+            "rss_peak_gib": 2.657,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260903",
+            "rss_now_gib": 1.961,
+            "rss_peak_gib": 2.717,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260903",
+            "rss_now_gib": 1.962,
+            "rss_peak_gib": 2.717,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260903",
+            "rss_now_gib": 1.514,
+            "rss_peak_gib": 2.657,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 43826249,
+            "peak_single_hour_file_rss_gib": 1.514,
+            "wall_s": 21.69
+          },
+          "day": "20260903",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 826242,
+            "n_snapshots": 826242,
+            "wall_s": 4.55
+          },
+          "evaluate": {
+            "wall_s": 1.22
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 17419,
+            "n_prints_kept": 4931465,
+            "n_unparsed_lines": 0,
+            "wall_s": 2.47
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260904",
+            "rss_now_gib": 1.47,
+            "rss_peak_gib": 2.717,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260904",
+            "rss_now_gib": 2.158,
+            "rss_peak_gib": 2.717,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260904",
+            "rss_now_gib": 2.158,
+            "rss_peak_gib": 2.717,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260904",
+            "rss_now_gib": 1.47,
+            "rss_peak_gib": 2.717,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 33298268,
+            "peak_single_hour_file_rss_gib": 1.47,
+            "wall_s": 16.41
+          },
+          "day": "20260904",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 821703,
+            "n_snapshots": 821703,
+            "wall_s": 4.41
+          },
+          "evaluate": {
+            "wall_s": 0.9
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 15011,
+            "n_prints_kept": 3790641,
+            "n_unparsed_lines": 0,
+            "wall_s": 1.93
+          }
+        },
+        {
+          "after_book": {
+            "cap_gib": 6.0,
+            "day": "20260905",
+            "rss_now_gib": 1.47,
+            "rss_peak_gib": 2.717,
+            "where": "after the streamed book"
+          },
+          "after_depth20": {
+            "cap_gib": 6.0,
+            "day": "20260905",
+            "rss_now_gib": 2.021,
+            "rss_peak_gib": 2.717,
+            "where": "after depth20"
+          },
+          "after_evaluate": {
+            "cap_gib": 6.0,
+            "day": "20260905",
+            "rss_now_gib": 2.021,
+            "rss_peak_gib": 2.717,
+            "where": "after the episodes"
+          },
+          "after_trades": {
+            "cap_gib": 6.0,
+            "day": "20260905",
+            "rss_now_gib": 1.47,
+            "rss_peak_gib": 2.717,
+            "where": "after the trade tape"
+          },
+          "book": {
+            "kept": "the episode grid only",
+            "n_bad_quotes": 0,
+            "n_hour_files": 25,
+            "n_rows_streamed": 11048410,
+            "peak_single_hour_file_rss_gib": 1.47,
+            "wall_s": 5.6
+          },
+          "day": "20260905",
+          "depth20": {
+            "n_ragged_overlong": 0,
+            "n_ragged_rows": 0,
+            "n_ragged_short_nan_padded": 0,
+            "n_raw_rows": 752721,
+            "n_snapshots": 752721,
+            "wall_s": 3.89
+          },
+          "evaluate": {
+            "wall_s": 0.31
+          },
+          "trades": {
+            "n_nonpositive_prints_excluded": 7280,
+            "n_prints_kept": 1094469,
+            "n_unparsed_lines": 0,
+            "wall_s": 0.65
+          }
+        }
+      ],
+      "scope_label": null,
+      "the_population_collapse_is_the_ERA_LEG": true,
+      "wall_s": 531.25,
+      "why_no_gate_is_read": "11 admissible days < the declared minimum 14: no gate is read for this symbol and the cap is not relaxed | SEALED SMOKE (R-580(C)(2)): the mechanism ran on the admissible post-boundary days, every economic quantity is sealed and NOT read, and the gate is read only at G >= 14 post-boundary complete days (~2026-09-09)"
+    }
+  },
+  "symbols_in_scope": [
+    "AAVEUSDT",
+    "ADAUSDT",
+    "AVAXUSDT",
+    "BNBUSDT",
+    "BTCUSDT",
+    "DOGEUSDT",
+    "ETHUSDT",
+    "FILUSDT",
+    "ICPUSDT",
+    "LTCUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "the_arm_that_ran": "MIN_SIZE_NOT_THE_E2A_GATE",
+  "the_size_aware_arm": {
+    "status": "REFUSED_NO_DECLARED_REBALANCE_NOTIONAL",
+    "why": "the runner REFUSES the size-aware arm and reports the min-size arm ONLY, labelled as NOT the E2-A gate -- because a min-size answer is exactly the E1-A answer with a better fill model, and calling it E2-A would quietly drop the third of the three things section 2 asks for. It is a refusal with a named status, never a default."
+  },
+  "wall_s_total": 631.8,
+  "wrapper": {
+    "heavy_run_lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "note": "false means this step was NOT inside the capped scope. That is correct only for a step under 60 s and 1 GiB that opens no tape; anything else takes the lock FIRST and REFUSES if it is held.",
+    "ran_under_the_rule20_wrapper": true,
+    "read_from": "/proc/self/cgroup, in this process",
+    "rule": "SEAT_PROTOCOL rule 20 / R-575(C)",
+    "systemd_scope": "da63smoke.scope",
+    "systemd_slice": "research.slice",
+    "why_the_SLICE_and_not_the_scope": "the first version of this field tested `scope.startswith('run-')` and reported TRUE for an UNWRAPPED run, because the calling shell is itself inside a transient scope (app.slice). A field that is true either way is a control that cannot fail. `--slice=research.slice` is what the rule-20 wrapper adds and nothing else in this session does."
+  }
+}
