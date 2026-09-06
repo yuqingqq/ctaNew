@@ -35,7 +35,7 @@ sys.path.insert(0, str(HERE))
 import be_data_root as _BDR
 
 ROOT = HERE.parents[1]
-OUT_DERIVED = ROOT / "data/pm_5min/derived"
+OUT_DERIVED = _BDR.derived()  # BE48 B.4: one root, from the resolver. This was `ROOT / 'data/...'` -- a data root built on a CODE root, which the first version of `audit_derived_roots` could not see because the value holds no `parents` and no literal.
 
 CAP_GB = 8.0
 

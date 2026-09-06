@@ -42,6 +42,14 @@ CANONICAL_REPO_ROOT = Path("/home/yuqing/ctaNew")
 LEDGER_DATA_ROOT = CANONICAL_REPO_ROOT / "data"
 ENV_VAR = "PM_DATA_ROOT"
 
+#: THE FORWARD-RUN DIRECTORIES. These are NOT under the data root -- they are
+#: where the scorer's sealed outputs live -- so the resolver does not cover
+#: them and they would otherwise be literals in whichever module names them.
+#: `be_race_read_declaration` held four; this is their declared home, in the
+#: one file permitted to hold a literal.
+FORWARD_RUN_ROOT = Path("/home/yuqing/ctaNew_forward_runs")
+RELOCATED_RUN_ROOT = Path("/home/yuqing/.local/state/pm-co")
+
 BRANCHES = ("1_env_PM_DATA_ROOT", "2_code_tree_carries_the_tape",
             "3_canonical")
 
@@ -186,6 +194,114 @@ def audit_literals(pkg: Path | None = None) -> dict:
                    "the run actually reads"}
 
 
+#: Names that mean "a place data lives". A `parents[N]` root assigned to one
+#: of these is the defect BE48 §B.4 named: the audit looked for the SPELLING
+#: (`/home/yuqing/ctaNew`) and not for the ACT, so it passed a module whose
+#: root was wrong. A CODE root is legitimate and is not flagged.
+MARKER = "be_data_root: allow-second-root"
+#: EXACT names, not substrings. The first widening matched by substring and
+#: caught `N_DRAWS` (via "RAW"), `OUT_NAME` (via "OUT") and `GATE1_TAPE_STEM`
+#: (via "TAPE") -- 33 "offenders", almost all of them constants that are not
+#: roots at all. An audit that cries wolf is an audit that gets muted.
+DATA_ROOT_NAMES = frozenset((
+    "DERIVED", "DATA_ROOT", "OUT_DERIVED", "MAIN_DERIVED", "LOCAL_DERIVED",
+    "LEDGER_DERIVED", "CACHE", "FRAGMENT", "TOPUP", "OUT_DIR", "TAPE_PATH",
+    "RAW", "DEST"))
+
+
+def audit_derived_roots(pkg: Path | None = None) -> dict:
+    """A SECOND ROOT, found by the ACT and not by the spelling.
+
+    `audit_literals` greps for the canonical path string. `HERE.parents[1]`
+    contains no string, so a module that derives a data root from its own
+    file location passed the audit whose docstring names exactly that defect:
+    *"BE modules each computed `parents[1]` or `parents[2]` on their own, so
+    a BE receipt could not say WHICH tree it read."* The reviewer drove it:
+    27 `parents[N]` lines across 14 files, and the audit saw none.
+
+    This walks the AST for MODULE-LEVEL assignments whose target names a
+    place data lives and whose value derives from `parents`. A code root --
+    `ROOT = HERE.parents[1]` used only for source paths -- is NOT flagged,
+    because it is not the defect."""
+    import ast
+    d = Path(pkg) if pkg is not None else Path(__file__).resolve().parent
+    hits = []
+    declared = []
+    for f in sorted(d.glob("be_*.py")):
+        if f.name == LITERAL_OWNER:
+            continue
+        try:
+            tree = ast.parse(f.read_text())
+        except SyntaxError:
+            hits.append({"file": f.name, "line": 0, "target": "<unparsable>",
+                         "expr": "<unparsable>"})
+            continue
+        # names bound from `parents[...]` in this module: the CODE roots a
+        # data root must not be built on
+        code_roots = {t2.id for n2 in tree.body
+                      if isinstance(n2, ast.Assign)
+                      and "parents" in ast.unparse(n2.value)
+                      for t2 in n2.targets if isinstance(t2, ast.Name)}
+        for node in tree.body:
+            if not isinstance(node, ast.Assign):
+                continue
+            src = ast.unparse(node.value)
+            if "_BDR." in src or "be_data_root." in src or "_RES" in src:
+                continue                     # comes from the resolver
+            # TWO FORMS, BOTH NARROW. (a) the value derives from `parents`
+            # directly. (b) it is `<code-root name> / "...data..."` -- the
+            # form this audit MISSED on its first run
+            # (`DERIVED = ROOT / "data/pm_5min/derived"`), which is the same
+            # defect one variable removed. Nothing else is flagged: the
+            # widened "must come from the resolver" rule reported 33 lines,
+            # almost all constants that are not roots.
+            form_a = "parents" in src
+            form_b = (isinstance(node.value, ast.BinOp)
+                      and isinstance(node.value.op, ast.Div)
+                      and isinstance(node.value.left, ast.Name)
+                      and node.value.left.id in code_roots
+                      and "data" in src)
+            if not (form_a or form_b):
+                continue
+            for t in node.targets:
+                name = getattr(t, "id", None)
+                if not (name and name.upper() in DATA_ROOT_NAMES):
+                    continue
+                # AN EXEMPTION A READER CAN SEE. A deliberate second root --
+                # `be_forward_preflight.LOCAL_DERIVED` mirrors ledger files
+                # INTO the local tree, so it must be the local tree -- is
+                # allowed only with an inline marker carrying its reason.
+                # Silence is not permitted; the same rule as `fixture=True`
+                # needing a `why`.
+                line = f.read_text().splitlines()[node.lineno - 1]
+                if MARKER in line:
+                    declared.append({"file": f.name, "line": node.lineno,
+                                     "target": name,
+                                     "reason": line.split(MARKER, 1)[1].strip()})
+                    continue
+                hits.append({"file": f.name, "line": node.lineno,
+                             "target": name, "expr": src[:90]})
+    return {"n_offending": len(hits), "offenders": hits, "clean": not hits,
+            "declared_second_roots": declared,
+            "n_declared": len(declared),
+            "an_exemption_must_be_visible": f"an intentional second root "
+                                            f"carries `{MARKER} <reason>` on "
+                                            f"its own line and is REPORTED "
+                                            f"here; an undeclared one is an "
+                                            f"offender",
+            "what_it_looks_for": "a MODULE-LEVEL assignment whose target "
+                                 "names a data location and whose value does "
+                                 "NOT come from the resolver -- the ACT, not "
+                                 "the spelling. Stated positively because the "
+                                 "first version looked for `parents` and "
+                                 "missed `DERIVED = ROOT / 'data/...'`, which "
+                                 "is the same defect one variable removed.",
+            "what_it_deliberately_allows": "a CODE root (e.g. ROOT = "
+                                           "HERE.parents[1]) used for source "
+                                           "paths; that is not the defect",
+            "names_treated_as_data_locations": list(DATA_ROOT_NAMES)}
+
+
 def receipt_block(res: dict | None = None, **kw) -> dict:
     """What every BE receipt carries so the tree it read is never a guess."""
     r = require_ledger(res, **kw)
@@ -196,7 +312,7 @@ def receipt_block(res: dict | None = None, **kw) -> dict:
                       if "exemption_reason" in r else {})
 
 
-EXPECTED_CHECKS = 15
+EXPECTED_CHECKS = 17
 
 
 def selftest() -> int:
@@ -316,6 +432,29 @@ def selftest() -> int:
            f"{_bad['offenders'][0]['line']}) and does NOT fire on a comment "
            f"that merely mentions it -- so the clean result above is a "
            f"measurement, not a flag that cannot go red")
+
+    # ---- BE48 B.4: THE AUDIT CAN NOW SEE A SECOND ROOT --------------------
+    dr = audit_derived_roots()
+    ok(dr["clean"],
+       f"NO BE module derives a DATA root from `parents[N]` any more "
+       f"({dr['n_offending']} offending assignments)"
+       + ("" if dr["clean"] else
+          f"; OFFENDERS: {[(h['file'], h['line'], h['target']) for h in dr['offenders']]}"))
+    import tempfile as _t2
+    with _t2.TemporaryDirectory() as _td2:
+        _d2 = Path(_td2)
+        (_d2 / "be_planted_second_root.py").write_text(
+            "from pathlib import Path\n"
+            "HERE = Path(__file__).resolve().parent\n"
+            "ROOT = HERE.parents[1]\n"                # a CODE root: allowed
+            "DERIVED = HERE.parents[1] / 'data/pm_5min/derived'\n")
+        _pl = audit_derived_roots(_d2)
+        ok(not _pl["clean"] and _pl["n_offending"] == 1
+           and _pl["offenders"][0]["target"] == "DERIVED",
+           f"KNOWN-BAD, PLANTED: the audit FIRES on `DERIVED = "
+           f"HERE.parents[1] / ...` and does NOT fire on the `ROOT = "
+           f"HERE.parents[1]` code root beside it -- it finds the ACT, and "
+           f"it distinguishes a data root from a source root")
 
     print()
     if fails:

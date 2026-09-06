@@ -44,9 +44,18 @@ sys.path.insert(0, str(HERE))
 
 import be_data_root as _BDR
 
-ROOT = HERE.parents[1]
+#: BE48 §B.4: THIS MODULE HAD TWO ROOTS. The book went through the resolver
+#: while the scratch fragment and the receipt went to `HERE.parents[1]` -- so
+#: from a worktree the receipt named a book that was not beside it, and a
+#: multi-hundred-MB scratch file landed in the worktree's `data/`, which is
+#: the act that manufactures the shells this seat spent three rounds
+#: removing. My round-47 reasoning for the split (don't write into the main
+#: tree) was WRONG: R-397/R-554 already rule that artifacts under `data/`
+#: are landed from the main tree by pathspec, so the ledger IS where they go.
+#: ONE ROOT NOW, and `require_ledger` guards the result-bearing emission.
+ROOT = HERE.parents[1]                    # CODE root only; never a data root
 LEDGER_DERIVED = _BDR.derived()
-OUT_DERIVED = ROOT / "data/pm_5min/derived"
+OUT_DERIVED = LEDGER_DERIVED
 
 COIN = "btc"
 HEADS = {"CONDVALUE_X_SKEW": "q1_arrival_composed_lgbm",
@@ -62,12 +71,20 @@ def _rss_gb() -> float:
     return round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 2**20, 3)
 
 
-def day_slugs(day: str, coin: str = COIN) -> list:
-    """The day's SUPPLIED slugs, from the forward scorer's own supply."""
-    import be_forward_day as FD
-    import de_admissible_windows as AW
-    sup = AW.supply(day, FD.present_from_ledger(day))
-    w = (sup.get("windows") or {}).get(coin) or []
+def day_slugs(day: str, coin: str = COIN, *, supply: dict = None) -> list:
+    """The day's SUPPLIED slugs, from the forward scorer's own supply.
+
+    `supply` is an INJECTION POINT and it exists because of a real defect the
+    reviewer drove (BE48 §B.2). The refusal below was UNREACHABLE: for any
+    day with no ledger entry, `present_from_ledger` refuses one call earlier,
+    so this module's own empty-supply refusal had ZERO driven coverage in a
+    battery that reported "both guards driven". Injecting the supply reaches
+    it, so the check tests THIS module rather than `be_forward_day`."""
+    if supply is None:
+        import be_forward_day as FD
+        import de_admissible_windows as AW
+        supply = AW.supply(day, FD.present_from_ledger(day))
+    w = (supply.get("windows") or {}).get(coin) or []
     out = [x["slug"] for x in w]
     if not out:
         raise BookRefused(
@@ -216,6 +233,7 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     equal = assert_pool_equality(a, b)
     assert_coverage(cov, n_gen, day)
 
+    _BDR.require_ledger()          # result-bearing: refuse a non-ledger tree
     book = {"fr": fr, "asm": asm}
     buf = pickle.dumps(book, protocol=pickle.HIGHEST_PROTOCOL)
     digest = hashlib.sha256(buf).hexdigest()
@@ -266,11 +284,33 @@ def build(day: str, *, coin: str = COIN, chunk_windows: int = 6,
     }
 
 
-EXPECTED_CHECKS = 8
+EXPECTED_CHECKS = 9
+
+
+def real_data_reachable(day: str = "20260903") -> tuple:
+    """Can this battery see the ledger's day inputs? BE48 §B.5.
+
+    From a worktree it cannot: `de_admissible_windows` computes its own root
+    as `parents[2]` with no resolver, so it looks for
+    `<worktree>/data/pm_5min/derived/da_blackout_mask_<day>.json`, which is
+    present at the ledger and NOT tracked. The battery used to REFUSE at
+    check 1 there, so a reviewer in an R-397 worktree could not drive it at
+    all. It now runs the fixture-driven checks everywhere and reports the
+    real-data ones as SKIPPED WITH THEIR REASON (rule 4: an exclusion is a
+    status, never a silent drop)."""
+    import de_admissible_windows as AW
+    mask = Path(AW.ROOT) / "data/pm_5min/derived" / f"da_blackout_mask_{day}.json"
+    if mask.exists():
+        return True, str(mask)
+    return False, (f"{mask} not present. `de_admissible_windows.ROOT` is "
+                   f"parents[2] with no resolver, so from a worktree it "
+                   f"looks for the mask in the worktree. Set PM_DATA_ROOT "
+                   f"and run at the ledger tree, or drive the fixture "
+                   f"checks alone.")
 
 
 def selftest() -> int:
-    checks, fails = 0, []
+    checks, fails, skipped = 0, [], []
 
     def ok(cond, label):
         nonlocal checks
@@ -278,6 +318,12 @@ def selftest() -> int:
         print(("PASS: " if cond else "FAIL: ") + label)
         if not cond:
             fails.append(label)
+
+    def skip(label, why):
+        skipped.append(label)
+        print(f"SKIP: {label}  [{why[:110]}]")
+
+    reachable, why_not = real_data_reachable()
 
     import harmful_exposure_rows as HER
     iv = HER.POPULATION_SLUG_INTERVALS
@@ -288,23 +334,54 @@ def selftest() -> int:
        f"cannot reach a September day and a book built through it would be "
        f"EMPTY, not small")
 
-    sl = day_slugs("20260903")
-    ok(len(sl) == 247 and all(s.startswith("btc-") for s in sl),
-       f"the day supply returns {len(sl)} btc slugs for 20260903, matching "
-       f"the forward receipt's supplied count for that coin")
-    sel = day_selector("20260903")
-    ent, ngap = sel(("btc",), None)
-    ok(len(ent) == len(sl) and len(ent[0]) == 5,
-       f"and the selector returns {len(ent)} entries in select_v2_era's own "
-       f"5-tuple shape, so `build_reference` needs no change to consume them")
+    if reachable:
+        sl = day_slugs("20260903")
+        ok(len(sl) == 247 and all(s.startswith("btc-") for s in sl),
+           f"the day supply returns {len(sl)} btc slugs for 20260903, "
+           f"matching the forward receipt's supplied count for that coin")
+        sel = day_selector("20260903")
+        ent, ngap = sel(("btc",), None)
+        ok(len(ent) == len(sl) and len(ent[0]) == 5,
+           f"and the selector returns {len(ent)} entries in select_v2_era's "
+           f"own 5-tuple shape, so `build_reference` needs no change")
+    else:
+        skip("the day supply returns 247 btc slugs for 20260903", why_not)
+        skip("the selector returns entries in the 5-tuple shape", why_not)
 
+    # BE48 §B.2. The previous version of this check was carried by
+    # `isinstance(e, Exception)` inside `except Exception` -- TRUE BY
+    # CONSTRUCTION -- and the refusal it named was never reached, because
+    # `present_from_ledger` refuses a day with no ledger entry one call
+    # earlier. Both halves are fixed: the refusal is REACHED by injecting a
+    # supply, and the assertion names the TYPE as well as the text.
+    try:
+        day_slugs("20260903", supply={"windows": {"eth": [{"slug": "x"}]}})
+        ok(False, "an empty btc supply must refuse")
+    except BookRefused as e:
+        ok("no supplied btc windows for 20260903" in str(e),
+           "KNOWN-BAD, AND IT NOW REACHES THIS MODULE'S OWN REFUSAL: a "
+           "supply carrying eth windows and NO btc raises BookRefused here, "
+           "not an upstream refusal -- the previous check was carried by "
+           "`isinstance(e, Exception)` and tested be_forward_day instead")
+    except Exception as e:                               # noqa: BLE001
+        ok(False, f"expected BookRefused, got {type(e).__name__}")
+    # and the UPSTREAM refusal is still asserted, BY TYPE, as its own case
+    import be_forward_day as _FD
+    if not reachable:
+        skip("the upstream ForwardDayRefused case", why_not)
+        raise SystemExit(_finish(checks, fails, skipped))
     try:
         day_slugs("19700101")
-        ok(False, "an empty day must refuse")
-    except Exception as e:
-        ok("no supplied" in str(e) or isinstance(e, Exception),
-           "KNOWN-BAD: a day with no supplied windows REFUSES -- a book over "
-           "an empty day is a different question, not a smaller one")
+        ok(False, "a day with no ledger entry must refuse")
+    except BookRefused as e:
+        ok(False, f"expected the UPSTREAM refusal, got BookRefused: {e}")
+    except Exception as e:                               # noqa: BLE001
+        ok(type(e).__name__ == "ForwardDayRefused"
+           and "ledger holds no window" in str(e),
+           f"KNOWN-BAD, THE OTHER PATH, NAMED BY TYPE: a day with no ledger "
+           f"entry raises {type(e).__name__} from be_forward_day -- a "
+           f"different refusal from a different module, and the battery now "
+           f"says which is which")
 
     # ---- THE TWO GUARDS, DRIVEN BOTH WAYS ---------------------------------
     ok(assert_pool_equality({1, 2, 3}, {3, 2, 1}) is True,
@@ -328,14 +405,26 @@ def selftest() -> int:
            "KNOWN-BAD: zero coverage on every head REFUSES -- an empty "
            "decision population is the failure that looks like a result")
 
+    return _finish(checks, fails, skipped)
+
+
+def _finish(checks, fails, skipped) -> int:
     print()
+    if skipped:
+        print(f"{len(skipped)} check(s) SKIPPED — real ledger data not "
+              f"reachable from this tree (BE48 §B.5). The fixture-driven "
+              f"guards ran.")
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
         return 1
-    if checks != EXPECTED_CHECKS:
-        print(f"FAIL: ran {checks} checks, EXPECTED_CHECKS={EXPECTED_CHECKS}")
+    expect = EXPECTED_CHECKS - len(skipped)
+    if checks != expect:
+        print(f"FAIL: ran {checks} checks, expected {expect} "
+              f"(EXPECTED_CHECKS={EXPECTED_CHECKS} minus {len(skipped)} "
+              f"skipped)")
         return 1
-    print(f"{checks} checks passed")
+    print(f"{checks} checks passed"
+          + (f", {len(skipped)} skipped" if skipped else ""))
     return 0
 
 

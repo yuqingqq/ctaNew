@@ -61,7 +61,7 @@ import be_data_root as _BDR
 
 ROOT = HERE.parents[1]
 DERIVED = _BDR.derived()
-OUT_DERIVED = ROOT / "data/pm_5min/derived"
+OUT_DERIVED = _BDR.derived()  # BE48 B.4: one root, from the resolver. This was `ROOT / 'data/...'` -- a data root built on a CODE root, which the first version of `audit_derived_roots` could not see because the value holds no `parents` and no literal.
 
 #: EVERY exposure-row dataset on disk, not the two the top-up guard named.
 #: A name that is not pinned today can be pinned tomorrow; the cheap rule is

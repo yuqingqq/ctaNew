@@ -83,12 +83,14 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
+import be_data_root as _BDR
+
 # HERE is the DIRECTORY, so the repo root is parents[1] -- not
 # parents[2], which is the runner-module idiom where `__file__` adds a
 # level. The worktree symlinks `data/pm_5min/derived` at the main tree,
 # so a worktree run reads the same artifacts DA and DE read.
 ROOT = HERE.parents[1]
-DERIVED = ROOT / "data/pm_5min/derived"
+DERIVED = _BDR.derived()  # BE48 B.4: one root, from the resolver. This was `ROOT / 'data/...'` -- a data root built on a CODE root, which the first version of `audit_derived_roots` could not see because the value holds no `parents` and no literal.
 CACHE = DERIVED / "de_section81_cache_12.pkl"
 FILED_ARMS = DERIVED / "de_section81_arms__20260904T140543Z.json"
 

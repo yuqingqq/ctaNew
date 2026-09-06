@@ -43,7 +43,7 @@ ROOT = HERE.parents[1]
 #: WRITES stay in this seat's worktree -- the ledger's
 #: derived/ is the MAIN TREE's checkout.
 _DATA_ROOT = Path(_BDR.resolve(ROOT)["data_root"])
-DERIVED = ROOT / "data/pm_5min/derived"          # WRITE (this seat)
+DERIVED = _BDR.derived()  # BE48 B.4: one root, from the resolver. This was `ROOT / 'data/...'` -- a data root built on a CODE root, which the first version of `audit_derived_roots` could not see because the value holds no `parents` and no literal.          # WRITE (this seat)
 CACHE = _DATA_ROOT / "pm_5min/derived/de_section81_cache_12.pkl"  # READ (ledger)
 HEADS = ("q1_arrival_composed_lgbm", "incumbent_linear_d")
 COIN = "btc"

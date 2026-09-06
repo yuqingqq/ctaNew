@@ -35,25 +35,38 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
-ROOT = HERE.parents[1]
-DERIVED = ROOT / "data/pm_5min/derived"
+import be_data_root as _BDR
+
+ROOT = HERE.parents[1]                    # CODE root only
+DERIVED = _BDR.derived()                  # R-559(C) / BE48 §B.4
 
 RACE_DAYS = ("20260901", "20260902", "20260903", "20260904", "20260905")
 
 #: Where each day's sealed scores live. DIGESTED, NEVER OPENED -- a sha256
 #: reveals no score, and pinning them is what makes a post-read byte-identity
 #: check possible at all.
+def _sealed(day: str, run_dir: str, *, relocated: bool = False) -> str:
+    root = (_BDR.RELOCATED_RUN_ROOT if relocated else _BDR.FORWARD_RUN_ROOT)
+    return str(root / run_dir / f"be_forward_day_SEALED_scores_{day}.json")
+
+
+#: 09-01's sealed scores sit under the RELOCATED run root while the other
+#: four sit under the forward-run root -- the asymmetry the reviewer noted is
+#: DISCLOSED here rather than hidden in four look-alike strings. Both roots
+#: are declared in `be_data_root`, which is the one module permitted a
+#: literal (BE48 §B.4).
 SEALED_SCORES = {
-    "20260901": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/"
-                "be_forward_day_SEALED_scores_20260901.json",
-    "20260902": "/home/yuqing/ctaNew_forward_runs/20260902_be13/"
-                "be_forward_day_SEALED_scores_20260902.json",
-    "20260903": "/home/yuqing/ctaNew_forward_runs/20260903_be45/"
-                "be_forward_day_SEALED_scores_20260903.json",
-    "20260904": "/home/yuqing/ctaNew_forward_runs/20260904_be45/"
-                "be_forward_day_SEALED_scores_20260904.json",
-    "20260905": "/home/yuqing/ctaNew_forward_runs/20260905_be44/"
-                "be_forward_day_SEALED_scores_20260905.json",
+    "20260901": _sealed("20260901", "race_record_20260901_fwd5",
+                        relocated=True),
+    "20260902": _sealed("20260902", "20260902_be13"),
+    "20260903": _sealed("20260903", "20260903_be45"),
+    "20260904": _sealed("20260904", "20260904_be45"),
+    "20260905": _sealed("20260905", "20260905_be44"),
+}
+SEALED_SCORES_ROOTS = {
+    "20260901": "RELOCATED_RUN_ROOT (~/.local/state/pm-co) -- relocated for "
+                "durability at R-496; the other four were never moved",
+    "others": "FORWARD_RUN_ROOT (~/ctaNew_forward_runs)",
 }
 
 #: The Gate-1 line's objects. NONE of them is on this read's path, and §B.6
@@ -275,7 +288,8 @@ def what_is_opened() -> dict:
         rec = DERIVED / f"be_forward_day_receipt_{d}.json"
         rows.append({
             "day": d,
-            "receipt": str(rec.relative_to(ROOT)) if rec.exists() else None,
+            "receipt": (str(rec.relative_to(_BDR.repo_root()))
+                        if rec.exists() else None),
             "receipt_sha256": _sha(rec) if rec.exists() else None,
             "receipt_present": rec.exists(),
             "sealed_scores_file":

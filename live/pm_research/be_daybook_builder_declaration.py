@@ -25,8 +25,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
+
+import be_data_root as _BDR
 ROOT = HERE.parents[1]
-DERIVED = ROOT / "data/pm_5min/derived"
+DERIVED = _BDR.derived()  # BE48 B.4: one root, from the resolver. This was `ROOT / 'data/...'` -- a data root built on a CODE root, which the first version of `audit_derived_roots` could not see because the value holds no `parents` and no literal.
 CACHE = DERIVED / "de_section81_cache_12.pkl"
 
 HEADS = {"CONDVALUE_X_SKEW": "q1_arrival_composed_lgbm",

@@ -30,7 +30,7 @@ if str(HERE) not in sys.path:
 #: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
 #: absolute literal, which no env var could redirect.
 MAIN_DERIVED = _BDR.derived()
-LOCAL_DERIVED = HERE.parents[1] / "data" / "pm_5min" / "derived"
+LOCAL_DERIVED = HERE.parents[1] / "data" / "pm_5min" / "derived"  # be_data_root: allow-second-root the mirror TARGET must be the local tree by definition -- refresh_local_mirror copies ledger files INTO it
 
 
 def refresh_local_mirror() -> dict:

@@ -63,6 +63,8 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
+
+import be_data_root as _BDR
 import be_data_root as BDR
 
 #: R-559(C): the root resolves through the SHARED helper (env PM_DATA_ROOT ->
@@ -81,7 +83,7 @@ _RES = BDR.resolve(ROOT)
 #: reach the main tree the way everything else does: by commit and pull
 #: (R-397/R-554). Both roots travel in the receipt so neither is a guess.
 DERIVED = Path(_RES["data_root"]) / "pm_5min/derived"      # READ
-OUT_DERIVED = ROOT / "data/pm_5min/derived"                # WRITE
+OUT_DERIVED = _BDR.derived()  # BE48 B.4: one root, from the resolver. This was `ROOT / 'data/...'` -- a data root built on a CODE root, which the first version of `audit_derived_roots` could not see because the value holds no `parents` and no literal.                # WRITE
 CACHE = DERIVED / "de_section81_cache_12.pkl"
 
 DECLARATION = HERE / "declarations/be_cancel_axis_null_declaration_v1.json"
