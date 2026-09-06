@@ -33,20 +33,29 @@ from pathlib import Path
 
 
 PROTOCOL = "P003_DE_SUPERSESSION_LEAF_DIFF_V1"
-EXPECTED_CHECKS = 15
+EXPECTED_CHECKS = 18
 EPSILON = 1e-9
 
-#: Leaf names whose movement is provenance or resource, never a result.
-PROVENANCE_LEAVES = frozenset({
-    "run_id", "as_of", "carrying_commit", "carrying_commit_short",
-    "producing_code", "producing_code_path", "producing_code_sha256",
-    "wall_s", "feed_wall_s", "tape_index_s", "assembly_s", "total_wall_s",
-    "peak_gb", "peak_rss_gb", "max_rss_gb", "max_rss_kib", "emitted",
-    "generated_at", "elapsed_s", "wall_seconds", "user_cpu_seconds",
-    "system_cpu_seconds", "n_bytes",
+#: A-1b (reviewer 89e81d5). THE OLD RULE WAS `name OR parent`, so ANY leaf
+#: called `as_of` or `producing_code` was provenance WHEREVER IT SAT --
+#: `cancellation_economics.as_of` classified provenance with its parent
+#: ignored. A provenance NAME under a result-bearing parent is a result.
+#:
+#: The rule is now (container OR declared pair), never name alone:
+#:   CONTAINERS -- every leaf beneath one of these is provenance
+#:   PAIRS      -- an explicit (parent, leaf) allowlist for stamps that sit
+#:                 outside a container, built from the leaves that actually
+#:                 occur in this programme's artifacts rather than guessed
+PROVENANCE_CONTAINERS = ("code_identity", "provenance", "source_identity",
+                         "resource_observation", "supersedes")
+PROVENANCE_PAIRS = frozenset({
+    ("", "run_id"), ("", "as_of"), ("", "total_wall_s"),
+    ("", "peak_rss_gb"), ("", "max_rss_gb"), ("", "emitted"),
+    ("", "generated_at"), ("", "elapsed_s"),
+    ("population", "as_of"), ("population", "feed_wall_s"),
+    ("population", "tape_index_s"), ("population", "assembly_s"),
+    ("population", "peak_gb"), ("population", "wall_s"),
 })
-PROVENANCE_PARENTS = ("code_identity", "source_identity",
-                      "resource_observation")
 
 #: A residual is a numeric leaf whose job is to be ~0; it moves with the
 #: magnitude of the quantity it checks.
@@ -75,10 +84,17 @@ def leaves(obj, path=""):
 
 
 def _is_provenance(path: str) -> bool:
-    last = path.rsplit(".", 1)[-1].split("[")[0]
-    if last in PROVENANCE_LEAVES:
+    """Provenance requires a CONTAINER or a declared (parent, leaf) PAIR.
+
+    A provenance-sounding NAME is not enough: `cancellation_economics.as_of`
+    is a result-bearing field that happens to be called `as_of`, and the
+    old `name OR parent` rule swallowed it (A-1b)."""
+    parts = [x.split("[")[0] for x in path.split(".")]
+    last = parts[-1]
+    parent = parts[-2] if len(parts) > 1 else ""
+    if any(par in parts[:-1] for par in PROVENANCE_CONTAINERS):
         return True
-    return any(f".{par}." in f".{path}." for par in PROVENANCE_PARENTS)
+    return (parent, last) in PROVENANCE_PAIRS
 
 
 def _is_residual(path: str) -> bool:
@@ -184,8 +200,40 @@ def selftest() -> int:
        "025943Z record made")
     ok(d["moved"]["run_id"]["class"] == "provenance"
        and d["moved"]["deep.code_identity.f.py"]["class"] == "provenance",
-       "provenance is recognised by LEAF NAME and by PARENT, so a digest "
-       "nested under code_identity is not counted as a result")
+       "provenance is recognised by a declared top-level PAIR and by "
+       "CONTAINER, so a digest nested under code_identity is not counted "
+       "as a result")
+    # ---- A-1b: a provenance NAME under a result-bearing parent ---------
+    hole = diff({"cancellation_economics": {"as_of": "2026-09-05T10:00Z"},
+                 "arms": {"X": {"producing_code": "aaaa"}},
+                 "provenance": {"as_of": "2026-09-05T10:00Z"}},
+                {"cancellation_economics": {"as_of": "2026-09-06T10:00Z"},
+                 "arms": {"X": {"producing_code": "bbbb"}},
+                 "provenance": {"as_of": "2026-09-06T10:00Z"}})
+    ok(hole["moved"]["cancellation_economics.as_of"]["class"] == "string"
+       and hole["moved"]["arms.X.producing_code"]["class"] == "string",
+       "A-1b KNOWN-BAD, THE HOLE ITSELF: a leaf CALLED `as_of` or "
+       "`producing_code` sitting under a RESULT-BEARING parent is "
+       "SUBSTANTIVE, not provenance. The old rule was `name OR parent` and "
+       "classified both as provenance with the parent ignored")
+    ok(hole["moved"]["provenance.as_of"]["class"] == "provenance",
+       "AND THE OTHER DIRECTION, so the fix is not just a refusal: a "
+       "GENUINE `provenance.as_of` is still provenance -- the container "
+       "carries it, and tightening the rule did not break the case it "
+       "exists for")
+    ok(_is_provenance("population.as_of")
+       and _is_provenance("provenance.code_identity.f.py")
+       and _is_provenance("run_id")
+       and not _is_provenance("cascade_baseline_candidates.population_block"
+                              ".source_cache"),
+       "and the pairs are built from leaves that ACTUALLY OCCUR in this "
+       "programme's artifacts -- population.as_of, the provenance "
+       "container, top-level run_id -- while "
+       "`population_block.source_cache` is NOT provenance under either "
+       "rule. THE REVIEWER'S MECHANISM IS RIGHT AND ITS EXAMPLE IS NOT: "
+       "last round's real transcription defect was never at risk of being "
+       "hidden, and saying so is the difference between adopting a finding "
+       "and inheriting it")
     big = {"r": {"identity_residual": 1.0}}
     big2 = {"r": {"identity_residual": 3.0}}
     ok(diff(big, big2)["counts_by_class"]["numeric-substantive"] == 1,
@@ -229,8 +277,10 @@ def selftest() -> int:
        and not _is_residual("arms.X.cascade_factor"),
        "the residual marker matches residual paths and not others")
     ok(_is_provenance("resource_observation.max_rss_kib")
-       and not _is_provenance("arms.X.cascade_factor"),
-       "and the provenance marker does not swallow a result field")
+       and not _is_provenance("arms.X.cascade_factor")
+       and not _is_provenance("arms.X.max_rss_kib"),
+       "and the provenance marker does not swallow a result field -- nor "
+       "does a resource NAME parked under an arm")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

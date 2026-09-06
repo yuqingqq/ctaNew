@@ -27,12 +27,15 @@ import sys
 from pathlib import Path
 
 
-PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V2"
-EXPECTED_CHECKS = 36
+PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V3"
+EXPECTED_CHECKS = 42
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b"
                   "781c7bd6f")
+V2_DECLARATION = ("p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
+                  "c4da696f60ca62700d18551f523e571aab09bc5b8b42f6970112aba"
+                  "6490ce903")
 
 #: (4) DEGENERACY BARS, declared NOW so nobody decides after seeing a day.
 MIN_DECISIONS_PER_ARM_DAY = 30
@@ -41,13 +44,36 @@ SD_FLOOR_FRACTION = 0.25          # refuse when sd < f * |mean| of the null
 #: (7) the two candidate day sets, DERIVED from the ledger, not listed.
 LEDGER_CONJUNCTS = ("day_closed_calendar", "post_freeze_pass",
                     "era_pure", "day_quality_pass")
-PREVIOUSLY_OPENED_FOR_A_READ = {
-    "2026-08-29": "withdrawn from the race (R-500) and ratified for ONE "
-                  "development read (R-502)",
-    "2026-09-01": "interim read of the FROZEN CANDIDATE; the register "
-                  "records these two as CONSUMED and corrects R-547(C)'s "
-                  "'every score is sealed and unread'",
-    "2026-09-02": "interim read of the FROZEN CANDIDATE, same correction",
+#: (1) THE TRUE STATE PER DAY, AS A FIELD. v1 and v2 carried the sentence
+#: "the race scored a different object on these days, sealed and unread".
+#: R-549(A) withdrew it: 09-01 and 09-02 were OPENED under the interim read
+#: and are CONSUMED (RESULTS.md:681). The substantive half survives -- the
+#: thetas were fixed on the consumed 08-24 hour and nothing about the ARMS
+#: was chosen on any of these days -- and it is stated separately from the
+#: withdrawn half so the two cannot travel together again.
+OPENED_NONE = "none"
+OPENED_INTERIM = "interim_read_of_frozen_candidate"
+OPENED_DEV = "development_read"
+
+DAY_READ_STATE = {
+    "2026-08-29": {"previously_opened_for": OPENED_DEV,
+                   "authority": "R-500 withdrew it from the race; R-502 "
+                                "ratified ONE development read",
+                   "what_was_read": "the FROZEN CANDIDATE, not the arms"},
+    "2026-09-01": {"previously_opened_for": OPENED_INTERIM,
+                   "authority": "R-549(A); RESULTS.md:681 records it as "
+                                "CONSUMED",
+                   "what_was_read": "the FROZEN CANDIDATE, not the arms"},
+    "2026-09-02": {"previously_opened_for": OPENED_INTERIM,
+                   "authority": "R-549(A); RESULTS.md:681 records it as "
+                                "CONSUMED",
+                   "what_was_read": "the FROZEN CANDIDATE, not the arms"},
+    "2026-09-03": {"previously_opened_for": OPENED_NONE, "authority": None,
+                   "what_was_read": None},
+    "2026-09-04": {"previously_opened_for": OPENED_NONE, "authority": None,
+                   "what_was_read": None},
+    "2026-09-05": {"previously_opened_for": OPENED_NONE, "authority": None,
+                   "what_was_read": None},
 }
 
 DAYS = ("2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05")
@@ -288,7 +314,18 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
     qualifying = [d for d, v in sorted(rows.items())
                   if v["all_conjuncts_and_quality"]]
     set_a = list(qualifying)
-    set_b = [d for d in qualifying if d not in PREVIOUSLY_OPENED_FOR_A_READ]
+    # SET B IS DERIVED FROM THE FIELD, not from a membership test against a
+    # prose dict: a day is excluded iff its `previously_opened_for` is not
+    # `none`. A day absent from the table is UNKNOWN, not clean, and
+    # refuses rather than defaulting into set B.
+    unknown = [d for d in qualifying if d not in DAY_READ_STATE]
+    if unknown:
+        raise DesignRefused(
+            f"REFUSED: {unknown} qualify on the ledger but carry no "
+            f"read-state field. A day whose read state is unrecorded "
+            f"cannot be declared untouched by omission.")
+    set_b = [d for d in qualifying
+             if DAY_READ_STATE[d]["previously_opened_for"] == OPENED_NONE]
 
     def holm(g):
         p = 2.0 ** (-g)
@@ -317,7 +354,23 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
             "declaration inherited it. WITHDRAWN HERE."),
         "ledger_rows_as_read": rows,
         "qualifying_on_quality": qualifying,
-        "previously_opened_for_a_read": PREVIOUSLY_OPENED_FOR_A_READ,
+        "day_read_state": {d: DAY_READ_STATE[d] for d in qualifying},
+        "set_b_rule": "a day is in SET B iff its `previously_opened_for` "
+                      "field reads `none`; a day with no field REFUSES "
+                      "rather than defaulting into it",
+        "withdrawn_sentence": {
+            "text": "the race scored a different object on these days, "
+                    "sealed and unread",
+            "carried_in": ["design v1", "design v2"],
+            "withdrawn_by": "R-549(A); RESULTS.md:681",
+            "why": "09-01 and 09-02 were OPENED under the interim read and "
+                   "are CONSUMED, so 'unread' was false for two of the "
+                   "five days v1 named",
+            "what_survives_of_it": "the thetas were fixed on the consumed "
+                                   "08-24 hour and NOTHING ABOUT THE ARMS "
+                                   "was chosen on any of these days -- "
+                                   "which is the half that bears on rule "
+                                   "11, and it is now stated on its own"},
         "THE_PARAMETER_FOR_THE_USER": (
             "do days previously opened for a read of the FROZEN CANDIDATE "
             "count as UNTOUCHED for a Gate-1 test of the ARMS? The arms "
@@ -327,7 +380,8 @@ def day_sets_from_the_ledger(root: Path | None = None) -> dict:
         "SET_A_reads_count_as_untouched": {
             "days": set_a, "holm": holm(len(set_a))},
         "SET_B_reads_consume_the_day": {
-            "days": set_b, "holm": holm(len(set_b))},
+            "days": set_b, "holm": holm(len(set_b)),
+            "derived_from_the_field": True},
         "what_the_answer_decides": (
             "SET A gives G = 6, which CLEARS Holm at m = 2 -- a "
             "significance-bearing answer is possible. SET B gives G = 3, "
@@ -402,6 +456,71 @@ def _resources() -> dict:
     }
 
 
+#: Paths at which the withdrawn phrase may appear -- because it is being
+#: WITHDRAWN there, not asserted. A grep at the artifact finds the string;
+#: this field says where and why, and REFUSES an occurrence anywhere else.
+WITHDRAWN_PHRASE = "sealed and unread"
+WITHDRAWAL_CONTEXTS = (
+    "R7_the_day_set.withdrawn_sentence.text",
+    "days.nothing_about_the_ARMS_has_been_chosen_on_them",
+    "supersedes.v3_closes[0]",
+)
+
+
+def _withdrawn_phrase_audit(payload: dict) -> dict:
+    """Every occurrence of the withdrawn phrase must be a WITHDRAWAL."""
+    found = []
+
+    def walk(o, path=""):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{path}.{k}" if path else k)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]")
+        elif isinstance(o, str) and WITHDRAWN_PHRASE in o:
+            found.append(path)
+    walk(payload)
+    stray = [f for f in found if f not in WITHDRAWAL_CONTEXTS]
+    if stray:
+        raise DesignRefused(
+            f"REFUSED: the withdrawn phrase {WITHDRAWN_PHRASE!r} appears "
+            f"outside a declared withdrawal context at {stray}. A grep at "
+            f"the artifact must find it ONLY where it is being withdrawn.")
+    return {"phrase": WITHDRAWN_PHRASE, "n_occurrences": len(found),
+            "occurrences": found,
+            "all_in_a_withdrawal_context": True,
+            "why_it_appears_at_all": "a sentence cannot be withdrawn "
+                                     "without being named; the audit is "
+                                     "what separates naming it from "
+                                     "asserting it",
+            "declared_contexts": list(WITHDRAWAL_CONTEXTS)}
+
+
+def _r8_from_resources() -> dict:
+    """(3) R8's estimate is a REFERENCE to `resources.totals`, computed --
+    never a typed sentence that can drift from the field beside it."""
+    r = _resources()
+    return {
+        "estimate_source": "resources.totals -- COMPUTED from the measured "
+                           "seconds, not typed",
+        "sequential_cpu_hours": {
+            "G5": r["totals"]["G5"]["sequential_cpu_hours"],
+            "G6": r["totals"]["G6"]["sequential_cpu_hours"]},
+        "null_hours": {"G5": r["totals"]["G5"]["null_hours"],
+                       "G6": r["totals"]["G6"]["null_hours"]},
+        "the_estimate_is_an_ESTIMATE": r["the_estimate_is_an_ESTIMATE"],
+        "the_500_draw_minimum_is_protected_by": "REFUSING THE ARM-DAY",
+        "never_by": ["lowering the draw count", "raising the cap",
+                     "sampling fewer days"],
+        "why_written_down": "the cap is protected and the DRAW COUNT was "
+                            "not; the tempting response to a time overrun "
+                            "is to cut draws, and that response is "
+                            "forbidden in advance",
+        "agrees_with_resources_totals": True,
+    }
+
+
 def declaration() -> dict:
     return {
         "protocol": PROTOCOL,
@@ -425,19 +544,31 @@ def declaration() -> dict:
                                     "rule 5's mm_hf Binance boundary, "
                                     "which does not govern this tape "
                                     "(R-547(B))",
-            "nothing_has_been_chosen_on_them": (
-                "the thetas were fixed on the consumed 08-24 hour and the "
-                "race scored a different object on these days, sealed and "
-                "unread"),
+            "nothing_about_the_ARMS_has_been_chosen_on_them": (
+                "the thetas were fixed on the consumed 08-24 hour and no "
+                "arm score has been read on any of these days. THE "
+                "STRONGER CLAIM v1 AND v2 MADE -- that the tape itself was "
+                "sealed and unread -- IS WITHDRAWN (R-549(A)); see "
+                "R7_the_day_set.withdrawn_sentence and the per-day "
+                "`previously_opened_for` field"),
         },
         "arms": list(ARMS),
         "theta": THETA,
         "theta_pins": THETA_PINS,
         "theta_is_not_refitted_on_any_of_the_five_days": True,
         "supersedes": {
-            "path": f"data/pm_5min/derived/{V1_DECLARATION[0]}",
-            "sha256": V1_DECLARATION[1],
-            "v1_untouched": True,
+            "path": f"data/pm_5min/derived/{V2_DECLARATION[0]}",
+            "sha256": V2_DECLARATION[1],
+            "chain": [V1_DECLARATION, V2_DECLARATION],
+            "v1_and_v2_untouched": True,
+            "v3_closes": [
+                "the withdrawn 'sealed and unread' sentence, replaced by a "
+                "per-day `previously_opened_for` field that R7 derives "
+                "SET B from (reviewer 41cba2c A.2)",
+                "R8's typed '~20 hours' estimate, replaced by a computed "
+                "reference to resources.totals",
+                "the worktree data-shell trap, recorded as a field with "
+                "the root this emission read"],
             "why": "the reviewer's be03d4d found two blocking items and "
                    "seven places a choice could still be made after seeing "
                    "a day. Every one is closed here as a FIELD",
@@ -593,18 +724,43 @@ def declaration() -> dict:
                                 "detectable and does not detect it",
         },
         "R7_the_day_set": day_sets_from_the_ledger(),
-        "R8_time_overrun": {
-            "estimate": "~20 hours of null across 2 arms x 5 days, plus ~3 "
-                        "hours of replay, extrapolated 24x from one hour",
-            "the_estimate_is_an_ESTIMATE": True,
-            "the_500_draw_minimum_is_protected_by": "REFUSING THE ARM-DAY",
-            "never_by": ["lowering the draw count", "raising the cap",
-                         "sampling fewer days"],
-            "why_written_down": "the cap is protected by v1 and the DRAW "
-                                "COUNT was not; the tempting response to a "
-                                "time overrun is to cut draws, and that "
-                                "response is now forbidden in advance",
+        "worktree_data_shell_trap": {
+            "what": "in a seat worktree `<root>/data` is the "
+                    "git-materialised shell holding only COMMITTED "
+                    "artifacts; the real tree hangs off the R-397 symlink "
+                    "at `<root>/data/data`",
+            "how_it_bit_this_declaration": (
+                "the R7 derivation read `<root>/data` and returned THREE "
+                "qualifying days where the ledger has SIX -- 09-03, 09-04 "
+                "and 09-05's verdicts were simply not in the shell. It was "
+                "caught only because the count disagreed with a hand check "
+                "made minutes earlier, not by any guard"),
+            "the_fix": "the derivation resolves the symlink when it exists "
+                       "and RECORDS the root it read, so a reader can tell "
+                       "which tree produced the day set",
+            "root_read_this_emission": None,
+            "prior_instances": [
+                "de_v2_owned_execution_input's 11th check FAILS in every "
+                "seat worktree and PASSES in the main tree on "
+                "byte-identical source (Q-DE-63)",
+                "the reviewer hit the same trap from the other side this "
+                "round -- its 'the ledger stops at 09-02' was a tracking "
+                "gap, R-552"],
+            "the_general_shape": (
+                "a path that resolves in both trees but means different "
+                "things in each. A digest cannot catch it, a green suite "
+                "cannot catch it, and a count that nobody compares to a "
+                "hand check cannot either"),
         },
+        "R8_time_overrun": _r8_from_resources(),
+        "_R8_removed_prose": {
+            "withdrawn_text": "~20 hours of null across 2 arms x 5 days, "
+                              "plus ~3 hours of replay",
+            "why": "it sat beside `resources.totals`, which computes 11.26 "
+                   "CPU-hours at G=5 -- a typed sentence contradicting the "
+                   "computed field next to it. R8's estimate is now a "
+                   "REFERENCE to those totals, so the two cannot diverge"},
+
         "what_DE_needs_from_BE_per_day": {
             "object": "the day's reference book -- the same shape as the "
                       "08-24 arms cache's `fr`: reference (slug -> side -> "
@@ -969,6 +1125,59 @@ def selftest(*, quiet: bool = False) -> int:
        "and v1's imported bar is WITHDRAWN: R-497(F)(1) says version is "
        "not a bar, QUALITY is -- which admits 08-29, the day v1 excluded "
        "for a reason the USER never set")
+    # ---- (1) the withdrawn sentence, and the per-day field ------------
+    r7d = d["R7_the_day_set"]
+    ok(r7d["day_read_state"]["2026-09-01"]["previously_opened_for"]
+       == OPENED_INTERIM
+       and r7d["day_read_state"]["2026-09-03"]["previously_opened_for"]
+       == OPENED_NONE
+       and r7d["SET_B_reads_consume_the_day"]["derived_from_the_field"]
+       is True,
+       "(1) the per-day read state is a FIELD -- 09-01/09-02 "
+       "interim_read_of_frozen_candidate, 08-29 development_read, "
+       "09-03..05 none -- and SET B is DERIVED FROM IT rather than from a "
+       "membership test against prose")
+    ok(r7d["withdrawn_sentence"]["withdrawn_by"].startswith("R-549(A)")
+       and "sealed and unread" in r7d["withdrawn_sentence"]["text"]
+       and "NOTHING ABOUT THE ARMS" in r7d["withdrawn_sentence"][
+           "what_survives_of_it"],
+       "and the withdrawn sentence is carried ONLY as the thing being "
+       "withdrawn, with its surviving half stated separately -- the two "
+       "halves travelled together in v1 and v2 and that is how the false "
+       "one survived")
+    _dsr = d["days"]
+    ok("IS WITHDRAWN" in _dsr[
+           "nothing_about_the_ARMS_has_been_chosen_on_them"],
+       "and the `days` block no longer ASSERTS the withdrawn claim; it "
+       "names it as withdrawn and points at the field")
+    ok(d["R8_time_overrun"]["estimate_source"].startswith(
+        "resources.totals")
+       and abs(d["R8_time_overrun"]["sequential_cpu_hours"]["G5"]
+               - d["resources"]["totals"]["G5"]["sequential_cpu_hours"])
+       < 1e-12
+       and "20 hours" in d["_R8_removed_prose"]["withdrawn_text"],
+       "(3) R8's estimate is a COMPUTED REFERENCE to resources.totals, "
+       "equal to it by construction; the withdrawn '~20 hours' sentence is "
+       "carried as removed prose with the reason -- it sat beside a "
+       "computed field that said 11.26")
+    _fake = {"a": {"b": "the race scored it sealed and unread"}}
+    try:
+        _withdrawn_phrase_audit(_fake)
+        ok(False, "KNOWN-BAD: the withdrawn phrase in an UNDECLARED "
+                  "context was admitted")
+    except DesignRefused as _e:
+        ok("outside a declared withdrawal context" in str(_e),
+           "KNOWN-BAD: the withdrawn phrase appearing anywhere but a "
+           "declared withdrawal context REFUSES the emission -- so a grep "
+           "hit at the artifact is answerable by a field instead of by "
+           "reading three sentences")
+    ok(d["worktree_data_shell_trap"]["how_it_bit_this_declaration"]
+       .startswith("the R7 derivation read")
+       and len(d["worktree_data_shell_trap"]["prior_instances"]) == 2,
+       "and the worktree data-shell trap is recorded as a field with how "
+       "it bit THIS declaration and its two prior instances -- a path that "
+       "resolves in both trees and means different things in each")
+
     r = d["resources"]
     ok(abs(r["per_day_BOTH_arms"]["null_hours"] - 1.9393) < 1e-3
        and abs(r["totals"]["G5"]["sequential_cpu_hours"] - 11.26) < 0.02
@@ -1057,6 +1266,9 @@ def main() -> int:
     LAST_BATTERY.clear()
     selftest(quiet=True)
     payload["battery"] = dict(LAST_BATTERY)
+    payload["worktree_data_shell_trap"]["root_read_this_emission"] = \
+        payload["R7_the_day_set"]["ledger_root_read"]
+    payload["withdrawn_phrase_audit"] = _withdrawn_phrase_audit(payload)
     if a.output.exists():
         raise DesignRefused(f"output already exists: {a.output}")
     a.output.parent.mkdir(parents=True, exist_ok=True)
