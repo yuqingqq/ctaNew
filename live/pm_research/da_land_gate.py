@@ -27,6 +27,8 @@ never for a light batch.
 from __future__ import annotations
 
 import argparse
+import ast
+import hashlib
 import json
 import re
 import subprocess
@@ -202,6 +204,66 @@ def register_hold(tree: Path = Path("/home/yuqing/ctaNew"),
             f"landing carries rows.")
     else:
         out["may_commit"] = True
+    return out
+
+
+#: REV 83 S4 / R-717. ***THE CLOSURE IS THE POST-CONDITION ON THE
+#: COMMIT'S OWN DIFF, MADE LEGIBLE BY A TRAILER*** -- and it lives in ONE
+#: shared script, `scripts/land_register_row.sh`, not in each seat's copy
+#: of a rule. This gate keeps its tests-before-landing and MY DA 106 hold
+#: as the PRE-check, and then CALLS that script: this module never adds or
+#: commits COORDINATION.md itself again.
+REGISTER_SCRIPT = Path("/home/yuqing/ctaNew/scripts/land_register_row.sh")
+TRAILER_PREFIX = "Landed-By: land_register_row.sh "
+
+
+def land_register(ids_regex: str, msg_file, *, dry: bool = False,
+                  tree: Path = Path("/home/yuqing/ctaNew")) -> dict:
+    """PRE-check with this seat's hold, then hand the landing to the
+    shared script and read its verdict -- never our own add/commit."""
+    if not REGISTER_SCRIPT.is_file():
+        return {"status": "REGISTER_SCRIPT_ABSENT",
+                "path": str(REGISTER_SCRIPT),
+                "why": ("the shared landing script is the closure; this "
+                        "gate does not fall back to its own add/commit, "
+                        "because a fallback is how one seat's rule "
+                        "quietly becomes two")}
+    hold = register_hold(tree)
+    out = {"pre_check": hold,
+           "script": str(REGISTER_SCRIPT),
+           "script_sha256": hashlib.sha256(
+               REGISTER_SCRIPT.read_bytes()).hexdigest(),
+           "ids_regex": ids_regex, "dry": dry}
+    if not hold["may_commit"]:
+        out["status"] = "REFUSED_BY_MY_OWN_PRE_CHECK"
+        out["refusal"] = hold["refusal"]
+        return out
+    argv = ["bash", str(REGISTER_SCRIPT), ids_regex, str(msg_file)]
+    if dry:
+        argv.append("--dry")
+    r = subprocess.run(argv, capture_output=True, text=True, timeout=300,
+                       cwd=str(tree))
+    out["returncode"] = r.returncode
+    out["stdout"] = (r.stdout or "").strip().splitlines()
+    out["stderr"] = (r.stderr or "").strip().splitlines()[-3:]
+    #: THE SCRIPT'S REFUSAL NAME SURFACES HERE, verbatim.
+    ref = [l for l in out["stdout"] if l.startswith("REFUSED")
+           or "FAILED" in l]
+    out["script_refusal"] = ref[0] if ref else None
+    out["status"] = ("LANDED" if r.returncode == 0 and not dry
+                     else "DRY_OK" if r.returncode == 0
+                     else "REFUSED_BY_THE_SCRIPT")
+    if out["status"] == "LANDED":
+        b = subprocess.run(["git", "-C", str(tree), "log", "-1",
+                            "--format=%B"], capture_output=True, text=True,
+                           timeout=60).stdout
+        trailer = [l for l in b.splitlines()
+                   if l.startswith(TRAILER_PREFIX)]
+        out["trailer"] = trailer[0] if trailer else None
+        out["trailer_names_the_script_that_ran"] = bool(
+            trailer and out["script_sha256"] in trailer[0])
+        if not out["trailer_names_the_script_that_ran"]:
+            out["status"] = "LANDED_BUT_THE_TRAILER_DOES_NOT_MATCH"
     return out
 
 
@@ -421,6 +483,40 @@ def selftest() -> tuple:
        f"{_edited['refusal'].split(':')[0]}; a non-row line -> "
        f"{_nonrow['refusal'].split(':')[0]}")
 
+    # -- REV 83 S4 / R-717: THE REGISTER LANDING IS THE SHARED SCRIPT ---
+    ck("REV 83 S4 -- ***THE CLOSURE IS THE POST-CONDITION ON THE COMMIT'S "
+       "OWN DIFF, AND IT LIVES IN ONE SHARED SCRIPT.*** This gate keeps "
+       "its tests-before-landing and my DA 106 hold as the PRE-check, and "
+       "then CALLS `scripts/land_register_row.sh`: ***this module never "
+       "adds or commits COORDINATION.md itself again***, and there is no "
+       "fallback to its own add/commit -- a fallback is how one seat's "
+       "rule quietly becomes two. The script's own refusal name surfaces "
+       "in this gate's output, and after a landing the trailer is read "
+       "back from `git log -1 --format=%B` and matched against the "
+       "DIGEST of the script that actually ran",
+       REGISTER_SCRIPT.is_file()
+       and "land_register" in globals()
+       and TRAILER_PREFIX.startswith("Landed-By: ")
+       #: and this module no longer commits the register itself
+       #: THE PROPERTY, BY AST: no subprocess argv in this module names
+       #: BOTH `commit` and the register. A prose scan for the word
+       #: "commit" flagged `may_commit` and the docstring -- an
+       #: instrument reading its own explanation instead of its code.
+       and not [c for c in ast.walk(ast.parse(
+           Path(__file__).read_text()))
+           if isinstance(c, ast.Call)
+           and any(isinstance(a, ast.List) for a in c.args)
+           for lst in [a for a in c.args if isinstance(a, ast.List)]
+           if {"commit"} <= {e.value for e in lst.elts
+                             if isinstance(e, ast.Constant)
+                             and isinstance(e.value, str)}
+           and any(isinstance(e, ast.Constant)
+                   and isinstance(e.value, str)
+                   and "COORDINATION.md" in e.value for e in lst.elts)],
+       f"the shared script at {REGISTER_SCRIPT.name} "
+       f"({hashlib.sha256(REGISTER_SCRIPT.read_bytes()).hexdigest()[:16]});"
+       f" this gate calls it and asserts the trailer afterwards")
+
     good = land_command("git -C /repo commit -F - -- a.py",
                         "git -C /repo push -q origin HEAD")
     semi = good.replace(" && git -C /repo commit", " ; git -C /repo commit")
@@ -460,6 +556,11 @@ def main() -> int:
                     help="every da_*.py -- runs past 60 s, which is rule "
                          "20's heavy threshold: for a round holding the "
                          "lock, not for a light batch")
+    ap.add_argument("--land-register", metavar="IDS_REGEX", default=None,
+                    help="hand the register landing to the shared script "
+                         "after this seat's own pre-check")
+    ap.add_argument("--msg", type=Path, default=None)
+    ap.add_argument("--dry", action="store_true")
     ap.add_argument("--register", action="store_true",
                     help="check the register hold: may this seat commit "
                          "COORDINATION.md right now?")
@@ -479,6 +580,18 @@ def main() -> int:
                 {"protocol": PROTOCOL, "checks": checks,
                  "n_failed": n_fail}, indent=2) + "\n")
         return 1 if n_fail else 0
+    if a.land_register:
+        if not a.msg:
+            ap.error("--land-register needs --msg <commit message file>")
+        res = land_register(a.land_register, a.msg, dry=a.dry)
+        print(json.dumps({k: v for k, v in res.items()
+                          if k != "pre_check"}, indent=2, sort_keys=True))
+        print(f"PRE-CHECK: {'PASS' if res['pre_check']['may_commit'] else res['pre_check']['refusal']}")
+        for line in res.get("stdout", []):
+            print(f"  script: {line}")
+        if res.get("trailer"):
+            print(f"  trailer: {res['trailer']}")
+        return 0 if res["status"] in ("LANDED", "DRY_OK") else REFUSAL_EXIT
     if a.register or a.register_post:
         h = register_hold(ref="HEAD~1" if a.register_post else "HEAD")
         print(json.dumps(h, indent=2, sort_keys=True))
