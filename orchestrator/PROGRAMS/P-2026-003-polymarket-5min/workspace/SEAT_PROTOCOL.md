@@ -124,9 +124,9 @@ except where marked USER-ONLY.
 20. **One heavy run at a time, one CPU each** (R-551, USER review 2026-09-06):
     the scorer peaked at 6.95 GiB of its 8 GiB cap on one core, so two heavy
     runs cannot share the box. Every heavy step runs as
-    `flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% <cmd>` —
-    the lock REFUSES (exit 1, say so in the report) if another heavy run holds
-    it; never wait on it silently, never raise either cap. The slice itself is
+    (SUPERSEDED FORM, kept for the record: `flock -n <lock> systemd-run --user --scope …` — the R-628 hazard) —
+    the lock REFUSES with the DECLARED conflict code **75** (`flock -n -E 75`; R-646, REV 67 §2.1 — without `-E` a refusal and a payload crash are both `ExecMainStatus=1`, measured) if another heavy run holds
+    it, say so in the report; never wait on it silently, never raise either cap. The slice itself is
     capped at CPUQuota=200% so light suites can overlap a heavy run. "Heavy" =
     anything expected over 60 s wall or 1 GiB RSS. **A heavy run is never a child
     of a tool shell (R-628):** `systemd-run --scope` registers processes the CALLER
@@ -134,15 +134,27 @@ except where marked USER-ONLY.
     harness stops that shell's background task — the 09-03 re-run was killed at 35
     minutes that way, nothing written. Launch as a transient SERVICE the manager
     forks, the lock held inside it:
-    `systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew -- flock -n /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>`
+    `systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>`
     (no `--scope`; `flock` inside the unit holds the lock for the run's life; a held
-    lock still refuses with exit 1 — read the unit's result). Poll the UNIT, not a
+    lock refuses with **75**, the declared conflict code, never the payload's own 1 — read the unit's
+    result as the PAIR (`ActiveState`, `ExecMainStatus`): a RUNNING unit reports `ExecMainStatus=0`,
+    so neither field alone says finished or refused). **The form's constants are declared ONCE** in
+    `live/pm_research/declarations/heavy_run_form_v1.json` (lock path, conflict code 75, caps, the
+    journal identity fields); every literal in code reads it or asserts equality with it in its
+    selftest, and no runner or producer exits 75 for any other reason. Poll the UNIT, not a
     child PID; a run's survival of `kill -TERM` on the launching shell's process
     group is a battery falsifier. **The journal is NOT the record (R-641, REV 66 §3.1):**
     it rotates within hours (DE 84's Started line was gone four hours later). A
     number read from the journal is copied into an artifact at the moment it is
-    read, with the source's retention state named; a receipt or record carries its
-    own journal lines at emit; no control's verdict may depend on journal retention.
+    read, with the source's retention state named — the retention state is a MEASUREMENT
+    (the oldest entry the journal holds, the query that produced it, and its own as-of; the
+    window's start advanced ~15 min in 18 min on 09-06, so a state named once and re-quoted
+    later is stale; a typed string satisfies the words and not the property — REV 67 §3.1a);
+    a receipt or record carries its own journal lines at emit, filtered on the run's
+    **InvocationID** with BOTH fields (`_SYSTEMD_INVOCATION_ID=<id> + INVOCATION_ID=<id>`: the
+    payload's lines carry the first, the manager's Started/Consumed lines the second — a unit
+    NAME names every run ever launched under it, 23 Started lines for be64book by 13:26Z), and
+    a check compares the id to the unit's; no control's verdict may depend on journal retention.
 
 21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
     a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly

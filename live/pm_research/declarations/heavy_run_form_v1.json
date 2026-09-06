@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "declared_at_utc": "2026-09-06T13:36:55Z",
+  "declared_by": "coordinator (R-646; REV 67 §2.1-§2.3)",
+  "what": "THE ONE DECLARATION of the heavy-run launch form's constants. Every literal in code that names these values reads this file or asserts equality with it in its selftest; two definitions of the conflict code (be_heavy_run.sh:36 and be_rule22.py:134) and two bare literals were measured drifting-capable at REV 67 §2.3 (a launcher refusing with 76 was published as 75).",
+  "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+  "lock_conflict_rc": 75,
+  "lock_conflict_rc_why": "flock -E 75: a held lock exits with the declared code, distinct from any payload exit; without -E a refusal and a crash are both ExecMainStatus=1 (REV 67 §2.1, measured). No runner or producer may exit 75 for any other reason; each declares its own exit codes and asserts 75 is not among them.",
+  "form": "systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew --working-directory=<worktree> -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>",
+  "memory_max_bytes": 8589934592,
+  "cpu_quota_percent": 100,
+  "slice": "research.slice",
+  "unit_outcome_minimum_read": ["ActiveState", "ExecMainStatus"],
+  "unit_outcome_note": "a RUNNING unit reports ExecMainStatus=0 (REV 67 §2.1, measured on de95smoke.service at 13:28:51Z); ExecMainStatus alone answers neither 'finished?' nor 'refused?'",
+  "journal_identity": {"payload_lines_field": "_SYSTEMD_INVOCATION_ID", "manager_lines_field": "INVOCATION_ID", "query_form": "journalctl --user _SYSTEMD_INVOCATION_ID=<id> + INVOCATION_ID=<id>", "note": "a unit NAME names every run ever launched under it (be64book: 23 Started lines by 13:26Z); the invocation id names one run; the Started/Consumed lines are the manager's and carry INVOCATION_ID, not _SYSTEMD_INVOCATION_ID (a copy filtered on the payload field alone returned 0 lines, coordinator 13:35Z)"},
+  "decidable_launch_form_property": "the process's own cgroup leaf suffix from /proc/self/cgroup: '.service' admits a real day, '.scope' refuses it (DE 96 assert_launch_form_at_runtime); the PPid test in the runbook is the OUTSIDE diagnostic and holds of MainPID (flock), not of the payload (a grandchild)"
+}
