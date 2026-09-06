@@ -222,6 +222,8 @@ def host_journal_horizon() -> dict:
                   if not ln.startswith("-- ")), "")
     t = _stamp(first[:25])
     return {"status": "MEASURED" if t else "NO_READABLE_STAMP",
+            #: REV 70 section 3: the format is part of the measurement.
+            "output_format": "short-iso --utc",
             "oldest_utc": (t.strftime("%Y-%m-%dT%H:%M:%SZ") if t else None),
             "oldest_epoch": (t.timestamp() if t else None),
             "query": " ".join(argv),

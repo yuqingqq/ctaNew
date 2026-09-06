@@ -2272,7 +2272,8 @@ def main() -> int:
               f"economics read: NONE "
               f"(verification of the economics="
               f"{r['IS_A_VERIFICATION_OF_THE_ECONOMICS']})")
-        return 0 if r["status"] == "PRE_READ_VERIFIED" else 1
+        return {"PRE_READ_VERIFIED": 0, "INCOMPLETE": 3,
+                "PROVENANCE_INCOMPLETE": 3}.get(r["status"], 1)
     if a.day and a.book and a.receipt:
         r = verify_real_day(a.day, a.book, a.receipt, output=a.output)
         print(f"{a.day}: {r['status']} -- verification="
@@ -2327,9 +2328,20 @@ def economic_absence(receipt) -> dict:
     copied anywhere, not into this dict, not into a message, not into a log
     line. A checker that reported `D_E0 = 6.13 leaked` would have published
     the number it exists to protect."""
-    leaks = [p for p, _ in _walk_paths(receipt)
+    walked = list(_walk_paths(receipt))
+    leaks = [p for p, _ in walked
              if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS]
     return {"economic_fields_declared": list(ECONOMIC_FIELDS),
+            #: REV 70 / R-656: NAME WHAT EACH COUNT COUNTS. This walks THE
+            #: RECEIPT; `emitted_census` walks THIS SEAT'S OWN RECORD. The
+            #: register read them as one number ("0 leaked in 299 leaves")
+            #: and 299 is the RECORD's leaf count, not the receipt's.
+            "walks": "THE RECEIPT under test",
+            "n_receipt_leaves_walked": len(walked),
+            "not_to_be_confused_with": (
+                "`emitted_census.n_leaves_emitted`, which walks THIS "
+                "RECORD -- the anti-echo control on what this seat itself "
+                "publishes"),
             "n_leaked_fields": len(leaks),
             "leaked_field_paths": sorted(leaks),
             "sealed": not leaks,
@@ -2800,7 +2812,16 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
         "economic_absence": absence,
         "arms": arms_out,
         "n_arms_declared": len(params["arms"]),
-        "n_arms_agreeing": sum(1 for a in agree if a),
+        #: REV 70 section 2: **NONE, NEVER 0.** `n_arms_agreeing: 0` read
+        #: alone says "the two arms DISAGREE with the receipt"; when no
+        #: population was recomputed it means NOTHING WAS COMPARED. Same
+        #: rule DA 84 applied to the absence flag, one field over: a
+        #: predicate that was not evaluated is None.
+        "n_arms_agreeing": (None if book_refusal
+                            else sum(1 for a in agree if a)),
+        "why_n_arms_agreeing_is_none": (
+            "no population was recomputed, so no arm was compared. 0 would "
+            "read as two arms DISAGREEING" if book_refusal else None),
         "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
         "why_never_a_verification_of_the_economics": (
             "this mode reads no economic field and computes no economic "
@@ -2822,13 +2843,59 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     prov_ok = bool(prov["params"]["matches"] and prov["design"]["matches"]
                    and pnamed["matches"] is not False)
     params_incomplete = pnamed["matches"] is None
+    #: REV 70 section 2: THE STATUS IS RULED FROM THE FACTS, and FLAGGED
+    #: is for a FLAG IN THE DAY. `FLAGGED` collapsed three separate facts --
+    #: the seal HOLDS, the provenance is INCOMPLETE, a half was REFUSED and
+    #: not attempted -- into the one word a reader takes as "something is
+    #: wrong with this day". The three states are named and the reasons
+    #: travel with them.
+    #: A MISMATCH AND AN ABSENCE ARE DIFFERENT FACTS. A DECLARED digest the
+    #: file does not have is a CONTRADICTION -- a flag. A pin the receipt
+    #: never made is an ABSENCE -- incomplete. Collapsing them was the
+    #: defect REV 70 names, and collapsing them the other way would be
+    #: worse.
+    _mismatch = [k for k in ("params", "design")
+                 if prov[k].get("matches") is False]
+    if pnamed.get("matches") is False:
+        _mismatch.append("params_named_by_the_receipt")
+    _incomplete_because = []
+    if params_incomplete:
+        _incomplete_because.append(
+            "the receipt names no params declaration, so a conjunct's INPUT "
+            f"is missing ({pnamed.get('status')})")
+    if book_refusal:
+        _incomplete_because.append(
+            "the population half was REFUSED BY NAME and NOT ATTEMPTED: "
+            + book_refusal.split(" -- ")[0].replace("REFUSED: ", ""))
+    _day_flag = bool(agree) and not all(agree)
+    _seal_holds = bool(absence["sealed"]) and not absence.get(
+        "leaked_field_paths")
     out["status"] = (
-        "PRE_READ_VERIFIED" if (agree and all(agree) and absence["sealed"]
-                                and prov_ok and not params_incomplete)
-        else "PROVENANCE_INCOMPLETE" if (agree and all(agree)
-                                         and absence["sealed"]
-                                         and params_incomplete)
-        else "FLAGGED")
+        "PRE_READ_VERIFIED" if (agree and all(agree) and _seal_holds
+                                and prov_ok and not params_incomplete
+                                and not book_refusal)
+        #: A FLAG **IN THE DAY**: something WAS compared and disagreed, a
+        #: declared digest contradicts its file, or the seal leaked.
+        else "FLAGGED" if (_day_flag or not _seal_holds or _mismatch)
+        #: the ONLY gap is the params pin -- the state this scheme already
+        #: had a name for.
+        else "PROVENANCE_INCOMPLETE" if (params_incomplete
+                                         and not book_refusal)
+        #: nothing disagreed; something was not evaluated.
+        else "INCOMPLETE")
+    out["incomplete_because"] = _incomplete_because or None
+    out["provenance_mismatches"] = _mismatch or None
+    out["why_this_status"] = (
+        "FLAGGED is reserved for a flag IN THE DAY -- an arm COMPARED and "
+        "disagreeing, a DECLARED digest its file does not have, or a seal "
+        "that leaked. A clean seal beside an unevaluated half and a missing "
+        "provenance INPUT is INCOMPLETE, and a reader must be able to tell "
+        "those apart (REV 70 section 2)")
+    out["seal_holds"] = _seal_holds
+    out["exit_code_meaning"] = {
+        "PRE_READ_VERIFIED": 0, "PROVENANCE_INCOMPLETE": 3,
+        "INCOMPLETE": 3, "FLAGGED": 1,
+        "why": "the four-state scheme this seat already uses (DA 71)"}
     out["provenance_all_matched"] = prov_ok
     out["code_is_committed"] = bool(
         prov["verifier"]["producing_code_is_the_committed_bytes"])

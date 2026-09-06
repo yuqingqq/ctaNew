@@ -389,7 +389,7 @@ def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
     if not lines:
         return {"unit": unit, "available": False, "n_lines_available": 0,
                 "oldest_available_utc": None, "read_at_utc": read_at,
-                "query": " ".join(argv),
+                "query": " ".join(argv), "output_format": "short-iso --utc",
                 "status": "ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT",
                 "why": ("the journal holds no lines for this unit. NO NUMBER "
                         "IS QUOTED FROM IT: a 0 reported as a measurement "
@@ -397,6 +397,7 @@ def journal_retention(unit: str, *, _lines: list | None = None) -> dict:
     oldest = min(stamped) if stamped else None
     return {"unit": unit, "available": True,
             "query": " ".join(argv),
+            "output_format": "short-iso --utc",
             "n_lines_available": len(lines),
             "n_lines_with_a_readable_stamp": len(stamped),
             "oldest_available_utc": (oldest.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -502,6 +503,16 @@ def copy_journal_lines(unit: str, *, invocation_id: str | None = None,
     out = {"unit": unit, "invocation_id": invocation_id,
            "fields": list(fields), "query": " ".join(q),
            "unit_query": " ".join(unit_argv),
+           #: REV 70 section 3: NAME THE OUTPUT FORMAT. Two copies of ONE
+           #: run in different `-o` formats diff as a MISMATCH that is
+           #: entirely the formatting -- the reviewer's first diff reported
+           #: exactly that false mismatch.
+           "output_format": "short-iso --utc",
+           "unit_query_output_format": "cat",
+           "why_the_format_is_named": (
+               "a copy is comparable only to a copy in the SAME format; "
+               "`short-iso` carries a stamp and `cat` carries none, so a "
+               "diff of the two reports a mismatch that is the format"),
            "n_lines_for_the_unit": len(unit_lines),
            "n_lines_copied": len(lines), "read_at_utc": read_at}
     #: THE COUNT MISMATCH IS A NOTE, NOT A REFUSAL: `-u <unit>` spans every
