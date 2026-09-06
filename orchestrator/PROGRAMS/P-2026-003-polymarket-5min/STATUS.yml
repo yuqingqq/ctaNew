@@ -63,6 +63,68 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:21:55Z (MEM ROUND 185 -- R-655 SWEPT, tip `20db97a`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
+  (1) ***THE PARTIAL RIGHT ONE IS WORSE THAN A ZERO, AND THE CODE SAYS SO IN ITS OWN
+  MEASUREMENT:*** **"`_SYSTEMD_INVOCATION_ID` alone returned 1 line of 4 and
+  `USER_INVOCATION_ID` alone 3 of 4 -- NON-EMPTY, so both were" plausible.** *A zero
+  announces itself; a wrong-sized non-empty result does not.* **The remedy is a SHAPE CHECK
+  ON THE QUERY: any incomplete field set is `REFUSED_INCOMPLETE_FIELD_SET` BEFORE a line is
+  read.** **My drive on the live `be64book`: BOTH → `COPIED`, `n_lines_copied 64`; each
+  single field → REFUSED with `n_lines_copied None` -- `None`, not 0, the same discipline as
+  the failed read.**
+  (2) **AND THE SAME COPY SHOWS THE "LAUNCHED ONCE" QUALIFIER IN NUMBERS:** `n_lines_copied
+  64` for the CURRENT invocation against `n_lines_for_the_unit 287` for the NAME across all
+  its launches. ***The by-id scoping is what makes a copy belong to A RUN rather than to a
+  NAME -- and this name has been reused sixty-odd times.***
+  (3) **ONE C-UNQUOTING HELPER, BOTH PATH FIELDS, DRIVEN.** `?? "caf\\303\\251.py"` →
+  **`café.py`** with `path_was_c_quoted: True`; `R  "old name.py" -> "new name.py"` →
+  `new name.py` with `renamed_from: 'old name.py'`, **both unquoted, each with its own
+  flag**; a plain rename unchanged. *The asymmetry that would have been the next defect --
+  unquoting the path and not the rename source -- is closed by construction.*
+  (4) **THE OPEN-BOOK PATH IS BLOCKED ON A DECLARATION, NOT ON WORK:**
+  `BOOK_MAPPING_AWAITS_BES_DECLARATION`, its known-bads ready; BE 65 declares the
+  structure, DA 91 then runs it heavy on the lock. ***And the seed/per-side recompute is
+  still NOT DONE, BY NAME*** -- *carried for the third round rather than aging quietly out
+  of the entries.*
+  (5) **DA CAUGHT TWO OF ITS OWN: A CELL PINNED TO A UNIT THAT WAS COLLECTED BETWEEN
+  ROUNDS, and a third unquoted heredoc.** ***The first is the perishability class biting an
+  INSTRUMENT'S FIXTURE: a test that names a live unit now has an expiry measured in
+  MINUTES, because a successful transient unit is collected at once.***
+  (6) **REV 70's INDEPENDENT CENSUS HOLDS THE SEAL AT 545 LEAVES:** 0 of the eight names as
+  a KEY at any depth; **no `admissibility.reasons` key exists at all**; 0 leaves whose NAME
+  is rank/quantile/exceedance-shaped. ***And the two counts are RECONCILED rather than
+  contested -- "the receipt's census was never over 299" -- both denominators named.*** *A
+  number that disagrees with another number is a defect only when nobody says what each one
+  counted.*
+  (7) ***AND THE REVIEWER CAUGHT ITS OWN PROBE TOO:*** "the 40 string hits are … MY probe's
+  fault, since `Z` matches inside every ISO timestamp; I SAY SO RATHER THAN REPORTING 40
+  HITS." **The same shape as my round-184 listing, where `tail` showed the highest STRINGS
+  and not the highest VERSIONS.** *Two seats, two rounds, two probes caught by their own
+  authors before the sentence.*
+  (8) **THE BOOK AT 19:36 AND FOUR GIGABYTES:** `loaded / active / running / 0 / success`,
+  `InvocationID e1460575980f488f…`, `MemoryCurrent` 4,064,149,504 B, `MemoryPeak`
+  4,150,992,896 B -- **the first BE run past 4 GB** -- payload RSS 3,424,412 KiB. **DE 100
+  landed: "the declaration RESOLVED instead of pinned, FIVE fields instead of three, the
+  `-E` half decided AT RUNTIME".** *Resolved-not-pinned is the chain-head rule reaching the
+  runner: a reader that pins a filename goes stale at the next supersession.*
+  **AT COMMIT TIME, 2026-09-06T14:25:11Z: DE 100 FILED READY-AND-BLOCKED -- AND THE
+  REHEARSAL IS THE DAY'S DECLARATIONS IN ONE STRING.**
+  **`p003_de_gate1_smoke_rehearsal_09_04_v2__20260906T142116Z.json` (14,295 B,
+  `862252360579b779…`): `status READY`, `blocking []`, `THE_ONE_COMMAND` carrying `-p
+  RemainAfterExit=yes`, `flock -n -E 75`, `--unit=`, and NO `--scope`.** ***Every rule ruled
+  since 12:35Z is in that one line -- and the run has NOT started, because the lock is
+  BE's.*** **DE filed READY-AND-BLOCKED rather than launching, which is R-654's gate working
+  as written and the record distinguishing READY from LAUNCHED** -- *the distinction three
+  lost runs were argued over.* **DE 101 will be a separate GO.** *The book meanwhile:
+  `MemoryPeak` 4,700,561,408 B at 22:52, still `loaded/active/running`.*
+  **FLAG WORDS: the field set REFUSED-IF-INCOMPLETE (partial is worse than empty); the
+  09-05 book PAST-FOUR-GIGABYTES-ON-THE-LOCK; the seal HELD-AT-545-LEAVES; DE 100
+  LANDED-AWAITING-THE-LOCK.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,136 -> 1,144, flag_provenance 681 -> 689,
+  tasks 19; **444 CHECKED**, 245 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:15:29Z (MEM ROUND 184 -- R-653 AND R-654 SWEPT AS ONE BATCH, tip
   `43abbd9`. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED FIELD IS READ OR QUOTED.**
   (1) ***THE INVOCATION-ID TIE, DRIVEN ON ONE LIVE UNIT AND ONE GONE.*** **`be64book`:
@@ -205,81 +267,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,120 -> 1,128, flag_provenance 665 -> 673,
   tasks 19; **433 CHECKED**, 240 RELAYED, **455 UNMARKED -- unchanged for the
   fifty-ninth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:02:25Z (MEM ROUND 182 -- R-650 SWEPT, tip `6588359`; DA 88 landed and
-  recorded as UNVERIFIED-UNTIL-R-651. STATE ONLY. MEM ASSERTS NO RESULT.
-  (1) **DA 88 CLOSES THE FALSE-ABSENCE CLASS WITH A REAL FAILURE, NOT A SIMULATION.** *Its
-  receipt (`p003_da_rev68_findings__20260906T140030Z.json`, sha `187704982c8dbc4d6a…`,
-  5,299 B, hashed by me) drives finding 1 against* **`journalctl: Failed to open journal:
-  Permission denied`, `returncode 1` -- and every count comes back `None`, NOT 0**, with the
-  reason in the artifact: ***"A failed read reported as 0 lines would be an absence
-  INVENTED."*** *Five instances of that class today across four seats; this one closed at
-  the instrument with a failure DA actually caused.*
-  (2) **COVERAGE IS TWO MEASURED CLOCKS AND TWO NAMED REGIMES -- AND I REDID THE
-  ARITHMETIC.** Every cell carries `two_clocks_no_text_search: True` and names its regime:
-  **`BURSTY_UNIT` (reference = the unit's own start)** or **`CONTINUOUS_LOGGER` (reference =
-  the window start)**. *de95smoke's start `12:35:35Z` against the host horizon `09:53:58Z`
-  → covered TRUE; a window starting `08:53:58Z` → FALSE; one minute before its single line
-  → TRUE;* ***an unreadable clock → `covered: None`, `NOT_DETERMINABLE`, "never assumed
-  either way".*** **My check: `12:35:35Z > 09:53:58Z` and `08:53:58Z > 09:53:58Z` -- both
-  verdicts follow.** ***This is the answer to "TRUE on a read that had lost 141 of 161
-  lines": the predicate no longer reads TEXT.***
-  (3) **NEVER `|| true` ON THE ONLY EVIDENCE.** Driven on **the script's own `_rec_exit`
-  bytes** (extracted with `sed`) against a record directory at mode 500: **the would-be-
-  success path exits 9 with `RUN_RECORD_UNWRITABLE: this run's record was NOT written.
-  Underlying outcome rc=0.`**; the refusal keeps its own **7** and names **four** unwritten
-  events; the normal path unchanged; the writable control exits 0 on the same bytes.
-  *The drive is on the DEPLOYED bytes -- rule 20's guard from this morning, applied by the
-  seat it was written for.*
-  (4) ***MY FIFTH HORIZON READING AGREES WITH DA'S TO THE SECOND:*** **`09:53:58Z`** (DA at
-  14:00:30Z, me at 14:02:25Z). *My five: 09:00:20Z → 09:05:56Z → 09:09:57Z → 09:25:57Z →
-  09:53:58Z.* **The window's start has advanced ~53 minutes in the 57 I have watched it --
-  and I still assert NO RATE, because one of my own intervals moved nothing at all.**
-  (5) **R-650(C) CORRECTS ITS OWN TABLE HEADER IN BAND:** R-648's header was in FLAG order
-  over `--value` output systemd emits in ITS order; **the four rulings were made from the
-  VALUES, which are unambiguous by content, so they stand and the HEADER was wrong.**
-  ***The distinction worth keeping: a mislabelled header over self-identifying values is a
-  PRESENTATION defect; the same header over ambiguous values is a RESULT defect -- which is
-  what DE's poll had, because it acted on the order.***
-  (6) **MY ROUND-181 NOTE IS NOW THE RULE:** MEM reads `Key=Value` BY NAME, never `--value`
-  for a multi-property read. **And DE reached the same property from the other side: in
-  `unit_outcome` "every property here is read in its OWN CALL", with its own defect recorded
-  beside it.** ***One call per property and one name per value are the same guarantee --
-  neither can be mis-ordered.***
-  (7) **R3' IS IN THE RUNNER, NOT ONLY IN THE RULING:** `unit_outcome` (:3774) reads the
-  TRIPLE and reports **VOID with its reason** -- a collected unit's defaults *"wearing the
-  shape of a SUCCESS"* -- under the rule **"VOID, NEVER SUCCESS"**; and **the stop is a
-  DECLARED step of the chain**, because a unit left unstopped keeps its name taken.
-  (8) **THE RUN, READ BY NAME:** `loaded / active / running / 0`, `MemoryPeak` STILL
-  2,554,003,456 B -- **thirteen reads across 87 minutes** -- the runner at **1:26:04**, RSS
-  825,460 KiB; **`be64book` at FIFTY-EIGHT launches, all 75.** *The receipt was expected
-  ≈14:00Z and the run continues; no state file makes a wall-clock estimate a deadline.*
-  ***AT COMMIT TIME, 2026-09-06T14:05:01Z: THE RUN FINISHED AND THE FIRST REAL SEALED
-  RECEIPT EXISTS.*** **`p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json`,
-  37,104 B, emitted 14:01:55Z -- hashed by me as `5dd3a8f3f581…`, the digest R-652 names;
-  FILENAME CENSUS AND DIGEST ONLY, no sealed field read or quoted.** *Produced by
-  `de95smoke.service` from wt-de2 at `b741352`, launched 12:35:35Z under v1's form, wall
-  ≈86 min, `Consumed` 1 h 26 min 12.243 s CPU / 2.3 G peak.*
-  ***AND THE UNIT VANISHED ON SUCCESS EXACTLY AS R3' PREDICTED -- I READ THE VOID TRIPLE
-  MYSELF: `not-found / inactive / dead / 0 / success` at 14:05:01Z, the DEFAULT reading,
-  which is VOID and not a success.*** **The coordinator's monitor read the same at
-  14:02:06Z; what I swept as a prediction at round 181 is now a measurement from three
-  instruments.** *The run's record is therefore the journal copy at 14:03:25Z
-  (`58a3f08df4bb…`, 2,483 B), 3 lines by both invocation fields -- and I confirmed 3 by
-  `-u`: Started, the payload's "emitted" line naming the receipt, Consumed.*
-  **THE LOCK PASSED TO BE 64 WITHIN THE MINUTE:** `be64book.service` started **14:02:19Z**,
-  reads `loaded/active/running`, `MainPID 3485787` with PPid 1004, `MemoryCurrent` 1.64 GB
-  -- **the 09-05 book is BUILDING after FIFTY-NINE refused polls, and the ruled form is
-  visible in the live process tree (`be_heavy_run.sh --inner` → `flock -n -E 75 <lock>` →
-  python).** *R-651 verified MEM 181 and DA 88; DA 89 (the pre-read) dispatched 14:04Z.*
-  ***The day's rules were written for this minute: a unit that vanished on success, a
-  reading that says VOID instead of success, and a record that survives in a copy.***
-  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈86 min, past its ≈14:00Z estimate,
-  v1 form -- VANISHES ON SUCCESS); coverage TWO-MEASURED-CLOCKS; the false absence
-  CLOSED-WITH-A-REAL-FAILURE; DA 88 LANDED-UNVERIFIED-UNTIL-R-651.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,112 -> 1,120, flag_provenance 657 -> 665,
-  tasks 19; **427 CHECKED**, 238 RELAYED, **455 UNMARKED -- unchanged for the
-  fifty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2954,6 +2941,121 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_C_UNQUOTING_HELPER_DOES_BOTH_PATH_FIELDS: DRIVEN_ON_OCTAL_AND_A_QUOTED_RENAME
+                             # CHECKED 2026-09-06T14:21:55Z by driving `da_root.parse_porcelain`.
+                             # **`?? "caf\\303\\251.py"` → `path: 'café.py'` with
+                             # `path_was_c_quoted: True`; `R  "old name.py" -> "new name.py"` →
+                             # `path: 'new name.py'`, `renamed_from: 'old name.py'`, BOTH unquoted,
+                             # each with its own `…_was_c_quoted` flag; `R  a -> b` unchanged with
+                             # both flags False.**
+                             # ***So ONE helper serves BOTH path fields and the row RECORDS which of
+                             # them was quoted*** -- *the alternative (unquoting the path and not
+                             # the rename source, or reporting neither) is exactly the asymmetry
+                             # that made the porcelain family a four-round thread.*
+                             # **Octal escapes decode to UTF-8: `caf\\303\\251` is `café`, so a
+                             # non-ASCII filename now arrives as itself rather than as its
+                             # transport.**
+  THE_PARTIAL_RIGHT_ONE_IS_WORSE_THAN_A_ZERO: REFUSED_BEFORE_A_LINE_IS_READ
+                             # CHECKED 2026-09-06T14:21:55Z at
+                             # `da_cross_venue_forensics.copy_journal_lines` AND driven by me on the
+                             # LIVE unit. ***The code's own measurement is the finding:
+                             # "`_SYSTEMD_INVOCATION_ID` alone returned 1 line of 4 and
+                             # `USER_INVOCATION_ID` alone 3 of 4 -- NON-EMPTY, so both were"***
+                             # plausible. **A partial answer is worse than an empty one: a zero
+                             # announces itself, a wrong-sized non-empty result does not.**
+                             # **The remedy is a SHAPE CHECK ON THE QUERY: any incomplete field set
+                             # is `REFUSED_INCOMPLETE_FIELD_SET` BEFORE a line is read (:449), with
+                             # the selftest driving all three wrong shapes.**
+                             # **My drive on `be64book.service`: BOTH fields → `COPIED`,
+                             # `n_lines_copied 64`; `_SYSTEMD_INVOCATION_ID` alone → REFUSED,
+                             # `n_lines_copied None`; `USER_INVOCATION_ID` alone → REFUSED, `None`.**
+                             # *`None` and not 0 -- the same discipline as the failed read.*
+  SIXTY_FOUR_OF_TWO_HUNDRED_EIGHTY_SEVEN: THE_LAUNCHED_ONCE_QUALIFIER_IN_NUMBERS
+                             # CHECKED 2026-09-06T14:21:55Z. **The same copy reports
+                             # `n_lines_copied 64` for the CURRENT invocation against
+                             # `n_lines_for_the_unit 287` for the name across all its launches.**
+                             # ***That is my round-180 point in the instrument's own numbers: the
+                             # declaration's cross-check ("the `-u` count equals the by-id count for
+                             # a unit launched ONCE") holds only for a unit launched once, and
+                             # `be64book` has been launched sixty-odd times.***
+                             # *The by-id scoping is what makes a copy belong to A RUN rather than
+                             # to a NAME -- and the name is reused every poll.*
+  THE_OPEN_BOOK_PATH_AWAITS_BES_DECLARATION: KNOWN_BADS_READY_AND_WAITING
+                             # RELAYED from R-655, with DA 90's receipt censused by me last round.
+                             # **The open-book path carries its known-bads and answers
+                             # `BOOK_MAPPING_AWAITS_BES_DECLARATION`** -- *the instrument is built,
+                             # its falsifiers exist, and it is BLOCKED ON A DECLARATION rather than
+                             # on work.* **BE 65 declares the book structure; DA 91 then runs the
+                             # open-book half heavy on the lock.**
+                             # ***AND THE SEED/PER-SIDE RECOMPUTE IS STILL NOT DONE, BY NAME*** --
+                             # *carried as a named not-done for the third round rather than
+                             # quietly aging out of the entries.*
+  DAS_TWO_SELF_CAUGHT_SLIPS: A_FIXTURE_PINNED_TO_A_UNIT_THAT_WAS_COLLECTED
+                             # RELAYED from R-655. **DA caught two of its own: a cell PINNED TO A
+                             # UNIT THAT WAS COLLECTED BETWEEN ROUNDS, and a third unquoted
+                             # heredoc.**
+                             # ***The first is the perishability class biting an INSTRUMENT'S
+                             # FIXTURE: a test that names a live unit is a test with an expiry date,
+                             # and the expiry is now measured in minutes because a successful
+                             # transient unit is collected at once.*** *Every seat now has a way to
+                             # write a check that passes today and cannot run tomorrow.*
+                             # **The third heredoc is the same shape as R-647's and DA 90's own --
+                             # a defect a seat has now reported three times and hit three times,
+                             # which is what a persistent recurrence looks like when it is being
+                             # tracked rather than forgotten.**
+  REV_70S_CENSUS_HOLDS_THE_SEAL_AT_545_LEAVES: TWO_DENOMINATORS_BOTH_NAMED
+                             # RELAYED from REV 70 (`1f71240`), read as names and counts only.
+                             # **An INDEPENDENT census of ALL 545 leaves: 0 of the eight sealed
+                             # names as a KEY at any depth; no `admissibility.reasons` key exists at
+                             # all; 0 leaves whose NAME is rank/quantile/exceedance-shaped.**
+                             # ***And the two counts are reconciled rather than contested: "the
+                             # receipt's census was never over 299" -- DA counted a narrower
+                             # population than the reviewer's 545, and BOTH DENOMINATORS ARE
+                             # NAMED.*** *A number that disagrees with another number is a defect
+                             # only when nobody says what each one counted.*
+                             # **Sealed discipline held by both seats and by me: no value of the
+                             # eight fields read, quoted or inferred; no refusal-reason text read;
+                             # the receipt hashes `5dd3a8f3…` over 37,104 B, which is R-652's
+                             # citation.**
+  THE_REVIEWER_CAUGHT_ITS_OWN_PROBE_TOO: Z_MATCHES_INSIDE_EVERY_ISO_TIMESTAMP
+                             # RELAYED from REV 70. ***"The 40 string hits are … MY probe's fault,
+                             # since `Z` matches inside every ISO timestamp; I SAY SO RATHER THAN
+                             # REPORTING 40 HITS."***
+                             # **A one-character needle inside a field name matched every timestamp
+                             # in the document** -- *the same shape as my own round-184 listing,
+                             # where `tail` showed the highest STRINGS and not the highest
+                             # VERSIONS.* ***Two seats, two rounds, two probes caught by their own
+                             # authors before the sentence.*** *The programme's error rate is not
+                             # falling because seats stopped making probe errors; it is falling
+                             # because they check the probe before the claim.*
+  THE_BOOK_AT_NINETEEN_MINUTES_AND_FOUR_GIGABYTES: DE_100_LANDED_BEHIND_IT
+                             # CHECKED 2026-09-06T14:21:55Z, five fields plus the tie: **`loaded /
+                             # active / running / 0 / success`, `InvocationID e1460575980f488f…`;
+                             # `MemoryCurrent` 4,064,149,504 B and `MemoryPeak` 4,150,992,896 B --
+                             # the first BE run to pass 4 GB -- with the payload at 19:36, RSS
+                             # 3,424,412 KiB.**
+                             # **DE 100 landed (`91cfb80`): "the declaration RESOLVED instead of
+                             # pinned, FIVE fields instead of three, the `-E` half decided AT
+                             # RUNTIME".** *Resolved-not-pinned is the chain-head rule reaching the
+                             # runner: a reader that pins a filename goes stale the next time the
+                             # declaration is superseded.*
+                             # *REV 70 filed; BE 64's book still holds the lock; DE 100 is the 09-04
+                             # launch when it frees.*
+                             # **EXTENDED IN BAND 2026-09-06T14:25:11Z: DE 100 FILED
+                             # READY-AND-BLOCKED, AND I VERIFIED THE REHEARSAL AT THE ARTIFACT.**
+                             # **`p003_de_gate1_smoke_rehearsal_09_04_v2__20260906T142116Z.json`
+                             # (14,295 B, `862252360579b779…`): `status READY`, `blocking []`, and
+                             # `THE_ONE_COMMAND` carrying `-p RemainAfterExit=yes`, `flock -n -E
+                             # 75`, `--unit=`, and NO `--scope`.**
+                             # ***So every declaration this day produced is in ONE command string,
+                             # and the run it describes HAS NOT STARTED: DE filed READY-AND-BLOCKED
+                             # rather than launching, because the lock is BE's.***
+                             # **That is the gate R-654 wrote working exactly as written -- and the
+                             # record now distinguishes READY from LAUNCHED, which is the
+                             # distinction three lost runs were argued over.** *DE 101 will be a
+                             # SEPARATE GO.*
+                             # *The book meanwhile: `MemoryPeak` 4,700,561,408 B at 22:52, still
+                             # `loaded/active/running`.*
   THE_INVOCATION_ID_TIE_IS_NON_EMPTY_ONLY_WHILE_LOADED: DRIVEN_ON_ONE_LIVE_AND_ONE_GONE
                              # CHECKED 2026-09-06T14:15:29Z, driven on the two units that exist
                              # right now. **`be64book.service`: `LoadState=loaded`,
@@ -21900,6 +22002,89 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 185, 2026-09-06T14:21:55Z ------------------------------
+  THE_C_UNQUOTING_HELPER_DOES_BOTH_PATH_FIELDS:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      driving parse_porcelain: an untracked C-quoted octal name decodes to café.py with
+      path_was_c_quoted true; a quoted rename yields new name.py with renamed_from old
+      name.py, both unquoted, each with its own was_c_quoted flag; and a plain rename is
+      unchanged with both flags false. One helper serves both path fields and the row
+      records which were quoted.
+  THE_PARTIAL_RIGHT_ONE_IS_WORSE_THAN_A_ZERO:
+    prov: CHECKED
+    artifact: live/pm_research/da_cross_venue_forensics.py
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      the code's own measurement is the finding: _SYSTEMD_INVOCATION_ID alone returned 1
+      line of 4 and USER_INVOCATION_ID alone 3 of 4, non-empty and therefore plausible, so
+      the remedy is a shape check on the query that refuses any incomplete field set before
+      a line is read. My drive on the live be64book: both fields COPIED with n_lines_copied
+      64, each single field REFUSED_INCOMPLETE_FIELD_SET with n_lines_copied None rather
+      than 0.
+  SIXTY_FOUR_OF_TWO_HUNDRED_EIGHTY_SEVEN:
+    prov: CHECKED
+    artifact: live/pm_research/da_cross_venue_forensics.py
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      the same copy reports 64 lines for the current invocation against 287 for the unit
+      across all its launches, which is the declaration's launched-once qualifier in the
+      instrument's own numbers: the by-id scoping is what makes a copy belong to a run
+      rather than to a name, and be64book's name has been reused sixty-odd times.
+  THE_OPEN_BOOK_PATH_AWAITS_BES_DECLARATION:
+    prov: RELAYED
+    from: R-655, with DA 90's receipt censused by me at round 184
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      the open-book path carries its known-bads and answers
+      BOOK_MAPPING_AWAITS_BES_DECLARATION, so the instrument is built and blocked on a
+      declaration rather than on work; BE 65 declares the book structure and DA 91 then runs
+      the open-book half heavy on the lock. The seed and per-side recompute is still not
+      done, carried by name for the third round.
+  DAS_TWO_SELF_CAUGHT_SLIPS:
+    prov: RELAYED
+    from: R-655
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      DA caught two of its own: a cell pinned to a unit that was collected between rounds,
+      and a third unquoted heredoc. The first is the perishability class biting an
+      instrument's fixture -- a test that names a live unit has an expiry measured in
+      minutes now that a successful transient unit is collected at once -- and the second is
+      a recurrence the seat has reported three times and hit three times.
+  REV_70S_CENSUS_HOLDS_THE_SEAL_AT_545_LEAVES:
+    prov: RELAYED
+    from: REV 70 (1f71240), read as names and counts only
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      an independent census of all 545 leaves finds none of the eight sealed names as a key
+      at any depth, no admissibility.reasons key at all, and no leaf whose name is
+      rank/quantile/exceedance-shaped; and the two counts are reconciled rather than
+      contested, since the receipt's census was never over 299 -- a narrower population,
+      with both denominators named. No value of the eight fields was read, quoted or
+      inferred by either seat or by me.
+  THE_REVIEWER_CAUGHT_ITS_OWN_PROBE_TOO:
+    prov: RELAYED
+    from: REV 70
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      the reviewer reports that its 40 string hits were its own probe's fault because Z
+      matches inside every ISO timestamp, and says so rather than reporting 40 hits -- the
+      same shape as my round-184 listing, where tail showed the highest strings rather than
+      the highest versions. Two seats, two rounds, two probes caught by their own authors
+      before the sentence.
+  THE_BOOK_AT_NINETEEN_MINUTES_AND_FOUR_GIGABYTES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/heavy_run_form_v3.json
+    as_of: 2026-09-06T14:21:55Z
+    said: >-
+      five fields plus the tie: loaded, active, running, ExecMainStatus 0, Result success,
+      InvocationID e1460575980f488f, with MemoryCurrent 4,064,149,504 and MemoryPeak
+      4,150,992,896 -- the first BE run past 4 GB -- and the payload at 19:36 with RSS
+      3,424,412 KiB. DE 100 landed with the declaration resolved instead of pinned, five
+      fields instead of three, and the -E half decided at runtime; resolved-not-pinned is
+      the chain-head rule reaching the runner.
   # --- MEM round 184, 2026-09-06T14:15:29Z ------------------------------
   THE_INVOCATION_ID_TIE_IS_NON_EMPTY_ONLY_WHILE_LOADED:
     prov: CHECKED

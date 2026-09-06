@@ -5,6 +5,83 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 185
+
+**As of 2026-09-06T14:21:55Z, R-655 swept (tip `20db97a`). State only — MEM writes no
+result. No sealed value read, quoted or inferred.**
+
+### The partial right one is worse than a zero
+
+The code's own measurement is the finding: ***"`_SYSTEMD_INVOCATION_ID` alone returned 1
+line of 4 and `USER_INVOCATION_ID` alone 3 of 4 — NON-EMPTY, so both were" plausible.*** *A
+zero announces itself; a wrong-sized non-empty result does not.* **The remedy is a shape
+check on the query: any incomplete field set is `REFUSED_INCOMPLETE_FIELD_SET` before a
+line is read.**
+
+**My drive on the live `be64book`:** both fields → **`COPIED`, `n_lines_copied 64`**; each
+single field → **REFUSED**, `n_lines_copied` **`None`** — *not 0, the same discipline as the
+failed read.* **And the same copy shows the "launched once" qualifier in numbers: 64 for
+the current invocation against `n_lines_for_the_unit` 287 for the name across all its
+launches.** *By-id scoping is what makes a copy belong to a run rather than to a name.*
+
+### AT COMMIT TIME (14:25:11Z): DE 100 filed READY-AND-BLOCKED
+
+**`p003_de_gate1_smoke_rehearsal_09_04_v2__20260906T142116Z.json`** (14,295 B,
+`862252360579b779…`): **`status READY`, `blocking []`**, and `THE_ONE_COMMAND` carrying
+**`-p RemainAfterExit=yes`**, **`flock -n -E 75`**, `--unit=`, and **no `--scope`**.
+***Every rule ruled since 12:35Z is in that one line — and the run has not started, because
+the lock is BE's.*** **DE filed READY-AND-BLOCKED rather than launching** — R-654's gate
+working as written, and the record distinguishing **READY** from **LAUNCHED**, the
+distinction three lost runs were argued over. **DE 101 is a separate GO.** *The book:
+`MemoryPeak` 4,700,561,408 B at 22:52, still `loaded/active/running`.*
+
+### One C-unquoting helper, both path fields — driven
+
+`?? "caf\303\251.py"` → **`café.py`**, `path_was_c_quoted: True`;
+`R  "old name.py" -> "new name.py"` → `new name.py` with **`renamed_from: 'old name.py'`**,
+both unquoted, each with its own flag; a plain rename unchanged. *The asymmetry that would
+have been the next defect — unquoting the path and not the rename source — is closed by
+construction.*
+
+### Blocked on a declaration, not on work
+
+**`BOOK_MAPPING_AWAITS_BES_DECLARATION`** — the open-book instrument is built and its
+known-bads are ready; **BE 65 declares the structure, DA 91 then runs it heavy on the
+lock**. ***And the seed/per-side recompute is still NOT DONE, by name*** — carried for the
+third round rather than ageing quietly out of the entries.
+
+**DA caught two of its own:** a cell **pinned to a unit that was collected between rounds**,
+and a third unquoted heredoc. ***The first is the perishability class biting an instrument's
+fixture: a test that names a live unit now has an expiry measured in minutes.***
+
+### The seal holds at 545 leaves — and both denominators are named
+
+REV 70's independent census: **0 of the eight names as a key at any depth; no
+`admissibility.reasons` key at all; 0 leaves whose name is rank/quantile/exceedance-shaped.**
+***The two counts are reconciled rather than contested — "the receipt's census was never
+over 299".*** *A number that disagrees with another number is a defect only when nobody says
+what each one counted.*
+
+***And the reviewer caught its own probe too:*** *"the 40 string hits are … MY probe's
+fault, since `Z` matches inside every ISO timestamp; I say so rather than reporting 40
+hits."* **The same shape as my round-184 listing.** *Two seats, two rounds, two probes
+caught by their own authors before the sentence.*
+
+### The book
+
+`loaded / active / running / 0 / success`, `InvocationID e1460575980f488f…`;
+**`MemoryCurrent` 4,064,149,504 B, `MemoryPeak` 4,150,992,896 B — the first BE run past
+4 GB** — payload at **19:36**, RSS 3,424,412 KiB. **DE 100 landed:** *"the declaration
+**resolved** instead of pinned, **five** fields instead of three, the `-E` half decided **at
+runtime**"* — *resolved-not-pinned is the chain-head rule reaching the runner.*
+
+**Counts, measured before the sentence:** flags 1,136 → **1,144**, `flag_provenance`
+681 → **689**, tasks 19; **444 CHECKED**, 245 RELAYED, **455 UNMARKED — unchanged for the
+sixty-first round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 167** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 184
 
 **As of 2026-09-06T14:15:29Z, R-653 and R-654 swept (tip `43abbd9`). State only — MEM
