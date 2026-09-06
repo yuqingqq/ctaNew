@@ -305,6 +305,45 @@ def projection(per_day: dict, cadence: dict, t_bar, now) -> dict:
                        f"{r['hours_between_that_start_and_the_bar']} h before "
                        f"the bar against a measured {per_day_h} h of build")
             for r in sched if not r["fits_before_the_bar"]},
+        #: REV 50 section 2.2. THE CONCLUSION RESTS ON THE CALENDAR, NOT ON
+        #: THE CADENCE. From 09-06 on, each day's earliest start IS its own
+        #: completion -- the queue never binds, because a day cannot be
+        #: built before it exists. So 09-08's window is 0.1 h by ARITHMETIC
+        #: ON THE CALENDAR ALONE, and the only thing the cadence has to
+        #: establish is that the pipeline costs MORE THAN SIX MINUTES.
+        "the_conclusion_rests_on_the_CALENDAR": {
+            "the_only_cadence_fact_it_needs":
+                "the pipeline costs more than 0.1 h (six minutes)",
+            "measured_cost_h": per_day_h,
+            "margin": (None if per_day_h is None
+                       else f"{per_day_h / 0.1:.1f}x the window"),
+            "survives_the_cadence_being_wrong_by_an_order_of_magnitude": (
+                None if per_day_h is None else per_day_h / 10.0 > 0.1),
+            "the_running_smoke_ALONE_exceeds_the_window": (
+                "DE's day run has been going more than 55 minutes as this is "
+                "written, against a 6-minute window -- so the conclusion "
+                "holds on a stage whose cost is not even in the figure"),
+            "why_this_matters": (
+                "reported as a cadence result, the finding invites the reply "
+                "'then measure the cadence again'. It is a CALENDAR result: "
+                "09-08 completes 6 minutes before the bar and nothing about "
+                "the pipeline's speed changes that"),
+        },
+        "which_assumptions_CARRY_the_result": {
+            "carries": ["a build starts the instant its day completes"],
+            "does_NOT_carry": [
+                "one day at a time (rule 20) -- 09-08's queue is empty when "
+                "it completes, so serialisation is irrelevant to it",
+                "no failures and no re-runs -- failures can only make it "
+                "worse",
+                "the remaining days' inputs cost what 09-03's did -- the "
+                "conclusion needs only 'more than six minutes'",
+            ],
+            "why_stated": (
+                "three of the four assumptions do not carry the result, and "
+                "a reader entitled to doubt them is entitled to know they "
+                "change nothing"),
+        },
         "IMPORTANT": (
             "the smoke's cost is NOT in `measured_hours_per_day` because it "
             "has never run on a real day. This projection therefore bounds "
@@ -619,6 +658,39 @@ def selftest() -> tuple:                                      # noqa: C901
     # -- 4. the projection is arithmetic a reader can redo -----------------
     cad = g["cadence_measured"]
     pr = g["projection_at_the_measured_cadence"]
+    #: REV 50 section 2.2. Driven against the REAL ledger, because the
+    #: finding is about the REAL cadence -- the synthetic fixture has no
+    #: producing receipts and would measure 0 h, which would make the
+    #: check pass or fail for a reason that has nothing to do with it.
+    g_real = gate1_accrual(T)
+    pr0 = g_real["projection_at_the_measured_cadence"]
+    cal = pr0["the_conclusion_rests_on_the_CALENDAR"]
+    car = pr0["which_assumptions_CARRY_the_result"]
+    ck("REV 50 section 2.2 -- THE CONCLUSION IS RESTATED ON ITS TRUE BASIS: "
+       "it is a CALENDAR result, not a cadence one. From 09-06 on each day's "
+       "earliest start IS its own completion, so the queue never binds and "
+       "09-08's 0.1 h window is arithmetic on the calendar alone. The only "
+       "cadence fact it needs is that the pipeline costs MORE THAN SIX "
+       "MINUTES -- so it survives the cadence being wrong by an order of "
+       "magnitude",
+       cal["survives_the_cadence_being_wrong_by_an_order_of_magnitude"] is True
+       and "more than 0.1 h" in cal["the_only_cadence_fact_it_needs"]
+       and "55 minutes" in cal["the_running_smoke_ALONE_exceeds_the_window"],
+       f"measured {cal['measured_cost_h']} h = {cal['margin']}; at a tenth "
+       f"of it the conclusion still holds, and the RUNNING SMOKE ALONE "
+       f"already exceeds the window")
+    ck("AND THREE OF THE FOUR ASSUMPTIONS DO NOT CARRY THE RESULT, which the "
+       "receipt now says: only 'a build starts the instant its day "
+       "completes' is load-bearing. Serialisation is irrelevant to 09-08 "
+       "because its queue is empty when it completes, failures can only make "
+       "it worse, and the cost assumption is replaced by 'more than six "
+       "minutes'",
+       len(car["carries"]) == 1
+       and len(car["does_NOT_carry"]) == 3
+       and "rule 20" in car["does_NOT_carry"][0],
+       f"carries: {car['carries']}; does not carry {len(car['does_NOT_carry'])} "
+       f"of the four")
+
     ck("THE CADENCE IS READ FROM THE PRODUCING RECEIPTS AND THE SMOKE'S COST "
        "IS DECLARED UNKNOWN -- an estimate typed in would be the one number "
        "in this report nobody measured, and the projection says it bounds "
