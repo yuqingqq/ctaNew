@@ -9607,3 +9607,121 @@ check in all three directions.
   round running**, because all twelve new flags carried provenance when written.
   ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
 ```
+
+## Batch 115 — archived 2026-09-06T07:08:52Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 133 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T06:41:49Z (MEM ROUND 130 -- R-580 AND THE ROUND'S LANDINGS SWEPT.
+  STATE ONLY. THE HEADLINE IS A POPULATION COLLAPSE THAT NOBODY LOWERED A BAR TO
+  ESCAPE.
+  (1) **EVERY SYMBOL HAS EXACTLY 11 POST-BOUNDARY ADMISSIBLE DAYS -- I COMPUTED
+  IT.** All twelve show `n_days_seen` 19, `n_admissible` 15, and **exactly 11**
+  admissible days at or after 2026-08-25. R-580(C)(2)'s "at most 11" is exact
+  **and UNIFORM, which is itself the finding: the constraint is CALENDAR-WIDE, not
+  symbol-specific**, so no symbol substitutes for another. ***The era leg removes
+  exactly four days per symbol, and v6's own leg gives 15 against a minimum of 14
+  -- so E2-A passes admission today and fails it the moment rule 5 is applied.***
+  (2) **AND THE 09-09 DATE RECONCILES, WHICH MY FIRST ARITHMETIC DID NOT.** A
+  naive calendar count of 08-25..09-05 gives TWELVE days and a 14th on 09-07 --
+  *neither figure matches, and I nearly filed that as a discrepancy.* The claim is
+  about ADMISSIBLE days: **11 + 09-06 + 09-07 + 09-08 = 14 on 2026-09-08, read at
+  the 09-09 verdict -- the same date as the Gate-1 read.** *The difference between
+  a calendar and a population is one day at each end, and it was the whole gap.*
+  (3) **NO THRESHOLD CHANGE AFTER SEEING.** The tempting move was available --
+  lower the minimum and E2-A runs today -- and was refused (rule 11). **The answer
+  is the P-003 pattern: a SEALED SMOKE at G = 11, economics sealed, resources and
+  statuses published, and the gate read only at G >= 14.** *Which separates
+  exercising the machinery from reading a number; only the second needs the
+  population.* **USER-VISIBLE and reversible by the USER**, which is where a bar
+  change belongs.
+  (4) **THE 08-29/30 POSITIVE CONTROL IS WITHDRAWN -- I VERIFIED THE RESTARTS
+  MYSELF.** The ledger holds four, at 08-24 13:48:08Z and 13:48:54Z and 08-26
+  05:11:43Z and 05:26:26Z -- **none on 08-29/30.** ***The discriminant is
+  COMPOSITION, not level: an outage suppresses EVERY stream; a quiet market
+  suppresses only the event-driven ones*** -- and depth20 held at ~92-93% while
+  the event-driven streams fell ~40%. **And the reason it matters beyond the fact:
+  requiring the liveness leg to flag a quiet weekend would rebuild the
+  activity-selecting defect v6 removed -- through the CONTROL rather than the
+  predicate.** *A wrong positive control does not merely fail to test; it drags
+  the instrument back to the defect.* 08-29/30 is now the NEGATIVE control.
+  (5) **AND THE BOUNDARY IS THE SECOND OF TWO RESTARTS 46 SECONDS APART** --
+  sharpening round 129's finding that rule 5's constant is a ledger row. *So
+  anything selecting on `>= 2026-08-24` rather than the exact `recv_ns` admits
+  forty-six seconds of legacy-stamped rows.* No artifact I have read does.
+  (6) **MY ROUND-129 ENTRY RELAYED A RECEIPT'S SELF-DESCRIPTION INSTEAD OF
+  TESTING IT.** I recorded the state tape's split as PROVISIONAL and routed to DE,
+  because its own field says so. **R-580(A) rules it a DEFECT: every row sits in
+  the TRAIN split with an EMPTY score split, and for a ruled forward day every row
+  is a SCORE row.** ***A receipt that flags its own provisionality reads as
+  diligence, and I let that stand in for checking the thing it was provisional
+  about.*** *"Which split does this population belong to" is a question; "a
+  forward day has no train rows" is an answer available from the definition.*
+  Relay fidelity, one of my two standing open axes, landing on me again.
+  (7) **BOTH MISSING INPUTS EXIST FOR ONE DAY AND THE READER EXISTS.** The 09-03
+  state tape (544,286 rows, 4.74 GB of 8) and **`be_race_reader.py` -- 9 checks
+  under MY run**: a clean read admits, a file mutated between the two digest
+  passes VOIDS, a planted Gate-1 path refuses. *The reader REV 36 said had no code
+  to run in now has code.*
+  (8) **AND THE SLICE AUDIT PASSES ON A NON-EMPTY ROOM** -- rc 0 under my run
+  while naming a live scope, `be51tape.scope`, **heavy=True locked=True**, 333 s,
+  rebuilding 09-03's tape. ***The instrument R-575(C) owed is doing real work on
+  its first outing, and it proves compliance rather than proving nothing because
+  nothing was running.***
+  (9) **WHAT DIRTIED 41 .pyc FILES, STATED SO IT CANNOT RECUR -- AND ONLY ONE HALF
+  WAS MINE.** BE 50's landing made bytecode TRACKED (gitignore never applies to
+  tracked files); **I then drove four selftests from the repo root with no
+  `PYTHONDONTWRITEBYTECODE=1`.** *Neither half alone dirties anything.* **DRIVEN
+  RECURRENCE TEST: clean tree -> unguarded selftest -> `git status --short` still
+  0 lines**, 95 `.pyc` on disk, all ignored. **The structural half closed at
+  `b474e34` and it cannot recur** -- not because I will remember. *My own practice
+  stands anyway and is now stated: the guard on every suite, in any tree -- a
+  habit that depends on which directory I am in is not a habit.*
+  (10) **v7 SUPERSEDES v6 BECAUSE A LANDED RECEIPT ALREADY CITES v6** -- *the test
+  is not whether an artifact is frozen but whether anything has already resolved
+  through it.* **REV 39 APPROVED `--day`** for the smoke once BE's book exists
+  (three wiring items -> DE 79); **REV 40 on the reader is in flight and the
+  opening waits on it**; BE 51 builds the streaming assembly and the book; DA 63
+  is GO. *Every one of the four items I listed at round 127 as standing between
+  here and the smoke has now landed or has a named owner in flight.*
+  (11) **AND THE COMMIT-TIME RE-READ MADE ITS MOST CONSEQUENTIAL CATCH: R-581
+  LANDED AND THE RACE READER IS NOT APPROVED.** My "9 checks passed" was TRUE AND
+  INSUFFICIENT. **The statistic is not the declared estimand** -- the declaration
+  commits in four places to net cents against the INCUMBENT at the ACTION unit
+  with L = 50 ms and BY_THRESHOLD pairing; the reader nets sign-flips between
+  consecutive scores within a coin. **And on the writer's real shape the day sign
+  is ARITHMETICALLY FORCED TO +1** -- 604,512 up / 287 down, identical across
+  three draws *and on a strictly collapsing day*; the same series gives -1 when
+  values tie exactly and +1 when they differ by 1e-9. ***"Had the coordinator
+  opened the read with this reader, ALL FIVE RACE DAYS WOULD HAVE BEEN CONSUMED
+  on a degenerate statistic, with no sixth day."*** **THE CLASS IS NEW AND IT IS
+  MINE TO NAME: SUITE-GREEN IS NOT ESTIMAND-CORRECT** -- SEAT_PROTOCOL 17
+  separates a control that cannot FAIL from one that cannot RUN; *this is a third,
+  nine checks that all run, all pass, and all test the wrong quantity.* **The
+  opening is HELD, not waiting; BE 52 rebuilds the reader.**
+  (12) **AND I CORRECT MY OWN SELF-CRITICISM, WHICH WAS OVERSTATED.** I charged
+  myself above with relaying a receipt's self-description instead of testing it,
+  on R-580(A)'s "defect" reading. **REV 40 read the CODE: the split label is
+  assigned by input file and its only behavioural consequence in the builder is an
+  embargo comparison an empty `score` split passes trivially.** ***So three
+  readings exist and none is ruled -- and my round-129 entry was closer to right
+  than my round-130 charge allowed.*** **What I actually got wrong was accepting
+  the NEXT reading as settled just as readily as the first**: the habit is taking
+  a stated disposition for a checked one, in either direction. *Re-scoped, not
+  withdrawn.*
+  (13) **AND ONE LEVEL FINER ON THE LOCK:** REV 39 requires the lock instrument to
+  test **the LOCK, not the fd**. *I recorded last round that reading
+  `/proc/self/fd` is the right shape; an fd is evidence a file is OPEN, not that a
+  LOCK is held. A descriptor and a lock are different objects and I took the
+  stronger reading.* **REV 39 otherwise stands: `--day` APPROVED once the book
+  exists, three wiring items (DE 79).** The reviewer is at ~82% and resets;
+  harvest at R-582.
+  MEASURED BEFORE THIS SENTENCE: flags 691 -> 700, flag_provenance 236 -> 245,
+  tasks 19; 128 CHECKED, 117 RELAYED, **455 UNMARKED -- unchanged for the sixth
+  round running**, because all nine new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
+```

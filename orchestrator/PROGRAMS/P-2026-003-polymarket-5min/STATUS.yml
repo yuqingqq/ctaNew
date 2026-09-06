@@ -63,6 +63,85 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T07:08:52Z (MEM ROUND 133 -- R-584, R-585 AND REV 41 SWEPT. STATE
+  ONLY. THE ROUND'S FINDING IS A PROGRESSION I CARRIED EVERY STEP OF, TWICE ON THE
+  WRONG SIDE.
+  (1) **ONE SENTENCE -- "IS THIS RUN HOLDING THE HEAVY LOCK?" -- HAS NOW BEEN
+  ANSWERED WRONGLY AT FOUR SUCCESSIVE LEVELS, EACH LOOKING LIKE CLOSURE WHEN IT
+  LANDED.** A caller FLAG (refuted by R12's own text); an open FD -- **which I
+  recorded at round 129 as "the right shape" and conceded at round 130**; a LOCK --
+  **which I recorded at round 132 as closed and driven**; and now **EXCLUSIVITY**:
+  REV 41 reproduced **two concurrent `flock -s` holders, each reading
+  `heavy_run_lock_held: true` and each ADMITTED by `assert_rule20`** -- ***the
+  05:54Z two-heavy-runs condition the instrument exists to make impossible, on
+  current code.***
+  (2) **AND THE PHRASE I USED AT ROUND 132 IS THE THING THAT WAS WRONG: "two
+  independent mechanisms for one predicate."** It was true and **both mechanisms
+  shared one blind spot** -- `LOCK_EX` fails against a shared lock exactly as
+  against an exclusive one, so ***the redundancy bought nothing.*** **Independence
+  must be in what the checks can DISTINGUISH, not in how they are implemented.**
+  (3) **THE PARSE NEVER READS FIELD 3 -- AND ITS OWN EXAMPLE COMMENT DISPLAYS
+  IT.** Checked by me at the code and against `/proc/locks` here: it tests `f[1]`,
+  matches `f[5]`, appends `f[4]`, **and never examines `f[3]`, which a real line
+  shows is `WRITE`.** ***The docstring's illustration carries the field the code
+  does not read.*** **Fourth instance this session of the answer already sitting in
+  the repository.** Lower-severity sibling: **the inode comparison drops the
+  DEVICE** -- `MAJ:MIN:INO` reduced to `INO`, and inode numbers are unique only
+  within a device.
+  (4) **THE SPLIT IS RULED AND MY CORRECTION-AGAINST-MYSELF HOLDS.** The tape is
+  verified at the receipts (sha `9de88da9…`, **score_split = the day's rows**,
+  train empty by construction). *I had inferred from an identical byte count that
+  the change moved labels not rows; `tape_index` filters on the label, so the label
+  decides which index a row enters.* **The coordinator's reading was right and my
+  inference from a file size was worthless.**
+  (5) **AND THE ASSEMBLY'S BUDGET HAD TO CHANGE ITS INSTRUMENT TO BE CHECKABLE:**
+  five stages each refusing when exceeded, with the index released after `asm` and
+  before the book is written, **measured on VmRSS because `ru_maxrss` is a
+  high-water mark and cannot show a release.** *A budget that must observe a
+  DECREASE cannot use the metric that only ever rises.*
+  (6) **THE BOOK IS BLOCKED AND ROUTED TO BOTH OWNERS, NOT ONE.**
+  `phase2_arms.TAPE_PATH` is a module constant on the August tape;
+  **`phase2_arms.py` is BE's module and the eight read sites are DE's seam.** *One
+  defect, two surfaces, neither seat able to fix it alone without editing the
+  other's file* -- **"coordination by Q rows, never by editing each other's
+  module."** `assert_day_tape` refuses before any work, 10/10 driven.
+  (7) **AND THE ONE SENTENCE A READER MOST NEEDS, NOW ITS OWN FLAG: NONE OF THE
+  THREE TESTS HAS A NUMBER YET.** Gate-1 behind DE 80 + BE 52(1); the race read
+  behind BE 52(2) and its review; E2-A on BTC under the USER's ruling, gate at 14
+  post-boundary days. ***Every blocker is named and owned, none is a measurement
+  problem, and the honest summary is that the machinery is close and the results
+  are absent.***
+  (8) **AND MY ROUND-132 BATCH SURVIVED THE REBASE INTACT** -- 745 insertions
+  across my four files, Q-MEM-120 present, all four round-132 flags present, and
+  DA's commit preserved as `acd393a`. *The divergence I refused to resolve was
+  resolved by the seat that could, and nothing was lost.*
+  (9) **AND THE COMMIT-TIME RE-READ FOUND A RECEIPT WHOSE DIGEST DOES NOT MATCH ITS
+  OWN NAMED ARTIFACT.** My grep for the cited `9de88da9…` returned ZERO hits in any
+  receipt, so **I computed the file's sha256 myself (53 s over 991 MB): it IS
+  `9de88da9…`, so the REGISTER is right** -- and
+  `be_gate1_state_tape_receipt_20260903_btc.json` carries
+  **`tape.sha256 = 7206101d…`, the round-50 WRONG_SPLIT tape's digest**, while
+  `tape.path` names the REBUILT file. ***And this is the dangerous shape, not a
+  typo: `bytes` MATCHES, `n_rows` MATCHES, the path MATCHES -- only the digest
+  disagrees.*** *A reader checking size or row count is reassured; the one field
+  that exists to catch substitution is the one that is wrong.* **And it is exactly
+  why the digest matters here: the two tapes share byte count and row count and
+  differ in content -- the identical size I wrongly reasoned from last round is what
+  makes every other field indistinguishable.** Receipt mtime 07:10:49Z is LATER than
+  the tape's 07:01:11Z. **ROUTED, not fixed -- BE's surface.** *And on my own
+  method: I put that digest into this round's flag by copying it from R-585 without
+  checking it. The relay happened to be correct and the receipt was not -- luck, not
+  method; the check I ran afterwards is what makes it a finding.*
+  (10) **AND DE 80 CLOSED THE EXCLUSIVITY FINDING IN THE SAME BATCH AS THE PATH
+  PARAMETER -- ABOUT FOUR MINUTES AFTER REV 41 FILED IT.** `_flock_holders` now
+  reads `f[3]` with the comment *"READ (a SHARED hold) or WRITE (an EXCLUSIVE
+  one)"* and carries the mode with the pid. **So level four of the lock predicate is
+  answered while this sweep was being written** -- *the docstring line that exposed
+  the defect is still there as the format example.*
+  MEASURED BEFORE THIS SENTENCE: flags 716 -> 723, flag_provenance 261 -> 268,
+  tasks 19; 147 CHECKED, 121 RELAYED, **455 UNMARKED -- unchanged for the ninth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
   2026-09-06T06:57:19Z (MEM ROUND 132 -- R-583 SWEPT, PLUS A CURRENCY AUDIT ON MY
   OWN FILE. STATE ONLY, AND THE CURRENCY DEFECT IS MINE AND IS NOT THE ONE THE
   QUESTION ANTICIPATED.
@@ -218,114 +297,6 @@ updated: >-
   round running, and from this round it is enforced rather than remembered.**
   ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags vs HEAD 0
   without provenance.)
-  2026-09-06T06:41:49Z (MEM ROUND 130 -- R-580 AND THE ROUND'S LANDINGS SWEPT.
-  STATE ONLY. THE HEADLINE IS A POPULATION COLLAPSE THAT NOBODY LOWERED A BAR TO
-  ESCAPE.
-  (1) **EVERY SYMBOL HAS EXACTLY 11 POST-BOUNDARY ADMISSIBLE DAYS -- I COMPUTED
-  IT.** All twelve show `n_days_seen` 19, `n_admissible` 15, and **exactly 11**
-  admissible days at or after 2026-08-25. R-580(C)(2)'s "at most 11" is exact
-  **and UNIFORM, which is itself the finding: the constraint is CALENDAR-WIDE, not
-  symbol-specific**, so no symbol substitutes for another. ***The era leg removes
-  exactly four days per symbol, and v6's own leg gives 15 against a minimum of 14
-  -- so E2-A passes admission today and fails it the moment rule 5 is applied.***
-  (2) **AND THE 09-09 DATE RECONCILES, WHICH MY FIRST ARITHMETIC DID NOT.** A
-  naive calendar count of 08-25..09-05 gives TWELVE days and a 14th on 09-07 --
-  *neither figure matches, and I nearly filed that as a discrepancy.* The claim is
-  about ADMISSIBLE days: **11 + 09-06 + 09-07 + 09-08 = 14 on 2026-09-08, read at
-  the 09-09 verdict -- the same date as the Gate-1 read.** *The difference between
-  a calendar and a population is one day at each end, and it was the whole gap.*
-  (3) **NO THRESHOLD CHANGE AFTER SEEING.** The tempting move was available --
-  lower the minimum and E2-A runs today -- and was refused (rule 11). **The answer
-  is the P-003 pattern: a SEALED SMOKE at G = 11, economics sealed, resources and
-  statuses published, and the gate read only at G >= 14.** *Which separates
-  exercising the machinery from reading a number; only the second needs the
-  population.* **USER-VISIBLE and reversible by the USER**, which is where a bar
-  change belongs.
-  (4) **THE 08-29/30 POSITIVE CONTROL IS WITHDRAWN -- I VERIFIED THE RESTARTS
-  MYSELF.** The ledger holds four, at 08-24 13:48:08Z and 13:48:54Z and 08-26
-  05:11:43Z and 05:26:26Z -- **none on 08-29/30.** ***The discriminant is
-  COMPOSITION, not level: an outage suppresses EVERY stream; a quiet market
-  suppresses only the event-driven ones*** -- and depth20 held at ~92-93% while
-  the event-driven streams fell ~40%. **And the reason it matters beyond the fact:
-  requiring the liveness leg to flag a quiet weekend would rebuild the
-  activity-selecting defect v6 removed -- through the CONTROL rather than the
-  predicate.** *A wrong positive control does not merely fail to test; it drags
-  the instrument back to the defect.* 08-29/30 is now the NEGATIVE control.
-  (5) **AND THE BOUNDARY IS THE SECOND OF TWO RESTARTS 46 SECONDS APART** --
-  sharpening round 129's finding that rule 5's constant is a ledger row. *So
-  anything selecting on `>= 2026-08-24` rather than the exact `recv_ns` admits
-  forty-six seconds of legacy-stamped rows.* No artifact I have read does.
-  (6) **MY ROUND-129 ENTRY RELAYED A RECEIPT'S SELF-DESCRIPTION INSTEAD OF
-  TESTING IT.** I recorded the state tape's split as PROVISIONAL and routed to DE,
-  because its own field says so. **R-580(A) rules it a DEFECT: every row sits in
-  the TRAIN split with an EMPTY score split, and for a ruled forward day every row
-  is a SCORE row.** ***A receipt that flags its own provisionality reads as
-  diligence, and I let that stand in for checking the thing it was provisional
-  about.*** *"Which split does this population belong to" is a question; "a
-  forward day has no train rows" is an answer available from the definition.*
-  Relay fidelity, one of my two standing open axes, landing on me again.
-  (7) **BOTH MISSING INPUTS EXIST FOR ONE DAY AND THE READER EXISTS.** The 09-03
-  state tape (544,286 rows, 4.74 GB of 8) and **`be_race_reader.py` -- 9 checks
-  under MY run**: a clean read admits, a file mutated between the two digest
-  passes VOIDS, a planted Gate-1 path refuses. *The reader REV 36 said had no code
-  to run in now has code.*
-  (8) **AND THE SLICE AUDIT PASSES ON A NON-EMPTY ROOM** -- rc 0 under my run
-  while naming a live scope, `be51tape.scope`, **heavy=True locked=True**, 333 s,
-  rebuilding 09-03's tape. ***The instrument R-575(C) owed is doing real work on
-  its first outing, and it proves compliance rather than proving nothing because
-  nothing was running.***
-  (9) **WHAT DIRTIED 41 .pyc FILES, STATED SO IT CANNOT RECUR -- AND ONLY ONE HALF
-  WAS MINE.** BE 50's landing made bytecode TRACKED (gitignore never applies to
-  tracked files); **I then drove four selftests from the repo root with no
-  `PYTHONDONTWRITEBYTECODE=1`.** *Neither half alone dirties anything.* **DRIVEN
-  RECURRENCE TEST: clean tree -> unguarded selftest -> `git status --short` still
-  0 lines**, 95 `.pyc` on disk, all ignored. **The structural half closed at
-  `b474e34` and it cannot recur** -- not because I will remember. *My own practice
-  stands anyway and is now stated: the guard on every suite, in any tree -- a
-  habit that depends on which directory I am in is not a habit.*
-  (10) **v7 SUPERSEDES v6 BECAUSE A LANDED RECEIPT ALREADY CITES v6** -- *the test
-  is not whether an artifact is frozen but whether anything has already resolved
-  through it.* **REV 39 APPROVED `--day`** for the smoke once BE's book exists
-  (three wiring items -> DE 79); **REV 40 on the reader is in flight and the
-  opening waits on it**; BE 51 builds the streaming assembly and the book; DA 63
-  is GO. *Every one of the four items I listed at round 127 as standing between
-  here and the smoke has now landed or has a named owner in flight.*
-  (11) **AND THE COMMIT-TIME RE-READ MADE ITS MOST CONSEQUENTIAL CATCH: R-581
-  LANDED AND THE RACE READER IS NOT APPROVED.** My "9 checks passed" was TRUE AND
-  INSUFFICIENT. **The statistic is not the declared estimand** -- the declaration
-  commits in four places to net cents against the INCUMBENT at the ACTION unit
-  with L = 50 ms and BY_THRESHOLD pairing; the reader nets sign-flips between
-  consecutive scores within a coin. **And on the writer's real shape the day sign
-  is ARITHMETICALLY FORCED TO +1** -- 604,512 up / 287 down, identical across
-  three draws *and on a strictly collapsing day*; the same series gives -1 when
-  values tie exactly and +1 when they differ by 1e-9. ***"Had the coordinator
-  opened the read with this reader, ALL FIVE RACE DAYS WOULD HAVE BEEN CONSUMED
-  on a degenerate statistic, with no sixth day."*** **THE CLASS IS NEW AND IT IS
-  MINE TO NAME: SUITE-GREEN IS NOT ESTIMAND-CORRECT** -- SEAT_PROTOCOL 17
-  separates a control that cannot FAIL from one that cannot RUN; *this is a third,
-  nine checks that all run, all pass, and all test the wrong quantity.* **The
-  opening is HELD, not waiting; BE 52 rebuilds the reader.**
-  (12) **AND I CORRECT MY OWN SELF-CRITICISM, WHICH WAS OVERSTATED.** I charged
-  myself above with relaying a receipt's self-description instead of testing it,
-  on R-580(A)'s "defect" reading. **REV 40 read the CODE: the split label is
-  assigned by input file and its only behavioural consequence in the builder is an
-  embargo comparison an empty `score` split passes trivially.** ***So three
-  readings exist and none is ruled -- and my round-129 entry was closer to right
-  than my round-130 charge allowed.*** **What I actually got wrong was accepting
-  the NEXT reading as settled just as readily as the first**: the habit is taking
-  a stated disposition for a checked one, in either direction. *Re-scoped, not
-  withdrawn.*
-  (13) **AND ONE LEVEL FINER ON THE LOCK:** REV 39 requires the lock instrument to
-  test **the LOCK, not the fd**. *I recorded last round that reading
-  `/proc/self/fd` is the right shape; an fd is evidence a file is OPEN, not that a
-  LOCK is held. A descriptor and a lock are different objects and I took the
-  stronger reading.* **REV 39 otherwise stands: `--day` APPROVED once the book
-  exists, three wiring items (DE 79).** The reviewer is at ~82% and resets;
-  harvest at R-582.
-  MEASURED BEFORE THIS SENTENCE: flags 691 -> 700, flag_provenance 236 -> 245,
-  tasks 19; 128 CHECKED, 117 RELAYED, **455 UNMARKED -- unchanged for the sixth
-  round running**, because all nine new flags carried provenance when written.
-  ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2707,6 +2678,176 @@ flags:
                              # is touched -- **a coordinator ruling, not mine.**
                              # *I state it in my own Q-row too, so the register's own
                              # record of who carried it is not silently wrong.*
+  THE_LOCK_PREDICATE_HAS_BEEN_WRONG_AT_FOUR_SUCCESSIVE_LEVELS: FLAG-THEN-FD-THEN-LOCK-NOW-EXCLUSIVITY
+                             # CHECKED 2026-09-06T07:08:52Z at the code, and **I carried
+                             # every step of this progression, twice on the wrong side.**
+                             # **The question is one sentence -- "is this run holding the
+                             # heavy lock?" -- and it has now been answered wrongly FOUR
+                             # TIMES, each answer looking complete when it landed:**
+                             # **(1) A CALLER FLAG.** Refuted by R12's own text: *a
+                             # wrapper string in a file cannot say what launched a
+                             # process.*
+                             # **(2) AN OPEN FILE DESCRIPTOR** (`/proc/self/fd`). **I
+                             # recorded this at round 129 as "the right shape"**; REV 39
+                             # refuted it and **I conceded at round 130: an fd is evidence
+                             # a file is OPEN, not that a LOCK is held.**
+                             # **(3) A LOCK** (`/proc/locks` + a fresh-fd probe). **I
+                             # recorded this at round 132 as closed, driven, "two
+                             # independent mechanisms for one predicate."**
+                             # **(4) AND NOW: A LOCK IS NOT AN EXCLUSIVE LOCK.** REV 41
+                             # reproduced **two concurrent `flock -s` holders, each
+                             # reading `heavy_run_lock_held: true` and each ADMITTED by
+                             # `assert_rule20`** -- ***the 05:54Z two-heavy-runs condition
+                             # the instrument exists to make impossible, on the current
+                             # code.***
+                             # ***THE SHAPE, AND IT IS THE ROUND'S LESSON: EACH LEVEL WAS
+                             # A REAL IMPROVEMENT AND EACH LOOKED LIKE CLOSURE.*** *"Two
+                             # independent mechanisms" was true and both mechanisms shared
+                             # the same blind spot -- `LOCK_EX` fails against a shared
+                             # lock exactly as it fails against an exclusive one, so
+                             # redundancy bought nothing.* **Independence must be in what
+                             # the checks can DISTINGUISH, not in how they are
+                             # implemented.**
+                             # Severity, as the reviewer states it honestly: it needs a
+                             # deviation from rule 20's mandated `flock -n`. **But the
+                             # same argument that killed the caller flag applies -- if the
+                             # flags are not evidence, `-s` is not excluded by being
+                             # un-declared.** One token fixes it: skip any `/proc/locks`
+                             # line whose field 3 is not `WRITE`. **Sent to DE 80; BE's
+                             # check gets the same.**
+  THE_FLOCK_PARSE_NEVER_READS_FIELD_3_AND_ITS_OWN_COMMENT_DISPLAYS_IT: CLOSED-BY-DE-80-IN-THE-SAME-BATCH-AS-THE-PATH-PARAMETER
+                             # SUPERSEDED-IN-BAND 2026-09-06T07:13Z at my commit-time
+                             # re-read. **DE 80 (`7e26b9a`) CLOSED IT** -- "the day's tape
+                             # and fragment become PARAMETERS of the runner seam **and
+                             # REV 41's exclusivity finding closed in the same batch**".
+                             # `_flock_holders` now reads `f[3]` with the comment
+                             # **"f[3] is READ (a SHARED hold) or WRITE (an EXCLUSIVE
+                             # one)"** and appends `(int(f[4]), f[3])` -- **the mode
+                             # travels with the pid instead of being discarded.**
+                             # *The field the docstring displayed and the code ignored is
+                             # now the field the code reads, and the docstring line that
+                             # exposed the defect is still there as the format example.*
+                             # **Roughly four minutes between REV 41's filing and the
+                             # close.** The device half of the parse I did not re-check
+                             # this round and do not claim.
+                             # EARLIER VALUE (rule 13):
+                             # I-CHECKED-THE-CODE-AND-A-REAL-PROC-LOCKS-LINE
+                             # CHECKED 2026-09-06T07:08:52Z at the code and against
+                             # `/proc/locks` on this machine.
+                             # `_flock_holders` tests `f[1] != "FLOCK"`, then matches
+                             # `f[5]` (device:inode), then appends `f[4]` (the pid).
+                             # **`f[3]` IS NEVER EXAMINED** -- and a real line here reads
+                             # `1: FLOCK ADVISORY **WRITE** 1205 103:01:790556 0 EOF`, so
+                             # **field 3 is exactly the READ/WRITE discriminator.**
+                             # ***AND THE FUNCTION'S OWN EXAMPLE COMMENT CARRIES IT:*** the
+                             # docstring line is `"6: FLOCK ADVISORY WRITE 2916372
+                             # 103:01:1053378 0 EOF"` -- **the comment DISPLAYS the field
+                             # the code does not read.**
+                             # *The evidence needed to spot the defect was inside the
+                             # function, in the author's own illustration of the format.*
+                             # **Fourth instance this session of the answer already being
+                             # in the repository** -- the shell trap in a code comment, the
+                             # seed convention in a declaration field, the streaming
+                             # assembly already built, and now a parse's own example.
+  THE_INODE_COMPARISON_DROPS_THE_DEVICE: TWO-FILES-WITH-ONE-INODE-NUMBER-ON-DIFFERENT-DEVICES-COLLIDE
+                             # CHECKED 2026-09-06T07:08:52Z at the code.
+                             # `int(f[5].rsplit(":", 1)[-1]) != ino` **takes only the LAST
+                             # colon-segment** of `MAJ:MIN:INO`, so the device is
+                             # discarded. Real lines here carry `103:01:790556` and
+                             # `00:1d:1115` -- **two different devices, and inode numbers
+                             # are unique only WITHIN a device.**
+                             # *Lower severity than the exclusivity finding and the same
+                             # family: a parse that reads the field it wants and not the
+                             # field that qualifies it.* **REV 41's 2.6; routed with the
+                             # exclusivity item.**
+  THE_TAPE_RECEIPTS_DIGEST_DOES_NOT_MATCH_ITS_OWN_NAMED_ARTIFACT: BYTES-AND-ROWS-AGREE-ONLY-THE-DIGEST-IS-STALE
+                             # CHECKED 2026-09-06T07:13Z BY COMPUTING THE FILE'S sha256
+                             # MYSELF (53 s over 991 MB), after my own grep for the cited
+                             # digest returned ZERO hits in any receipt.
+                             # **THE FILE'S ACTUAL DIGEST IS
+                             # `9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383
+                             # b63310bf`** -- exactly what R-585(A) and BE's Q-row cite,
+                             # **so the register is RIGHT.**
+                             # **AND THE RECEIPT IS NOT.**
+                             # `be_gate1_state_tape_receipt_20260903_btc.json` carries
+                             # `tape.sha256 = 7206101d…` -- **the round-50 WRONG_SPLIT
+                             # tape's digest** -- while `tape.path` names the REBUILT file
+                             # (`..._btc.json`, not `.WRONG_SPLIT.json`).
+                             # ***AND THIS IS THE DANGEROUS SHAPE, NOT A TYPO:*** `bytes`
+                             # 991,078,272 **MATCHES**, `n_rows` 544,286 **MATCHES**, the
+                             # path **MATCHES** -- **only the digest disagrees.** *A
+                             # reader checking size or row count is reassured; the one
+                             # field that exists precisely to catch substitution is the
+                             # one that is wrong.*
+                             # **AND IT IS EXACTLY WHY THE DIGEST MATTERS HERE:** the two
+                             # tapes have the SAME byte count and the SAME row count and
+                             # DIFFERENT content -- *the identical size I wrongly reasoned
+                             # from last round is what makes every other field
+                             # indistinguishable between them.*
+                             # The receipt's mtime (07:10:49Z) is LATER than the rebuilt
+                             # tape's (07:01:11Z), so this is not a receipt written before
+                             # its artifact. **ROUTED, NOT FIXED -- BE's surface.**
+                             # **AND ON MY OWN METHOD:** I put `9de88da9…` into this
+                             # round's flag by copying it from R-585 **without checking it
+                             # at a receipt.** *The relay happened to be correct and the
+                             # receipt was not -- which is luck, not method, and the check
+                             # I ran afterwards is what makes it a finding rather than a
+                             # repetition.*
+  THE_SPLIT_IS_RULED_THE_TAPE_IS_REBUILT_AND_MY_ROUND_132_CORRECTION_HOLDS: SCORE-SPLIT-sha-9de88da9
+                             # CHECKED 2026-09-06T07:08:52Z at R-585(A).
+                             # The corrected tape is verified at the receipts: **sha
+                             # `9de88da9…`, 4.741 GB peak, `score_split` = the day's rows
+                             # (the 545,240-row fragment `2860832a…`), `train_split
+                             # EMPTY_BY_CONSTRUCTION`**, with the receipt stating which
+                             # split the assembly scores from and why, and the first tape
+                             # moved aside.
+                             # **AND IT CONFIRMS THE CORRECTION I MADE AGAINST MYSELF LAST
+                             # ROUND:** I had inferred from an identical byte count that
+                             # the change moved labels not rows and "pointed at" the
+                             # reviewer's reading; **`phase2_arms.tape_index` filters on
+                             # the label, so the label decides which index a row enters.**
+                             # *The coordinator's reading was right, my inference from a
+                             # file size was worthless, and the correction stands as
+                             # filed.*
+                             # The streaming assembly, to DE's v9: **five stages -- A0
+                             # reference 3.0 GB / A1 index 6.5 / A2 assemble 7.5 / A3
+                             # release index / A4 write book -- each REFUSING when
+                             # exceeded**, the index released after `asm` and BEFORE the
+                             # book is written, **measured on VmRSS because `ru_maxrss` is
+                             # a high-water mark and cannot show a release.** *A budget
+                             # that must observe a DECREASE cannot use the metric that
+                             # only ever rises -- the instrument had to change to make the
+                             # claim checkable.*
+  THE_BOOK_IS_BLOCKED_AND_ROUTED_TO_BOTH_OWNERS_NOT_ONE: BEs-MODULE-DEs-SEAM
+                             # CHECKED 2026-09-06T07:08:52Z at R-585(B).
+                             # `phase2_arms.TAPE_PATH` is a module constant on the live
+                             # August tape and neither index builder takes a path;
+                             # `assert_day_tape` refuses before any work (10/10 driven).
+                             # **AND THE ROUTING IS THE POINT: `phase2_arms.py` is BE's
+                             # module (phase-2 model code) and the eight `PA.TAPE_PATH`
+                             # READ SITES are in DE's runner seam.** *One defect, two
+                             # surfaces, and neither seat can fix it alone without editing
+                             # the other's file* -- **BE 52 adds the `path` parameter with
+                             # the digest verified at load and the default refused for a
+                             # ruled day; DE 80 threads the day's paths and digests through
+                             # the seam and refuses the consumed constants.**
+                             # **"Coordination by Q rows, never by editing each other's
+                             # module"** -- *the same rule I follow when I route rather
+                             # than fix, stated for a two-owner defect.*
+  NONE_OF_THE_THREE_TESTS_HAS_A_NUMBER_YET: THE-USER-FACING-STATE-IN-ONE-LINE
+                             # CHECKED 2026-09-06T07:08:52Z at R-585(C).
+                             # **Gate-1 smoke:** behind DE 80 + BE 52(1) -> the book -> the
+                             # reviewer's book filing -> GO. **Race read:** behind BE 52(2)
+                             # (the reader rebuilt to the declared estimand) and its
+                             # review. **E2-A:** DA 63 on BTC under R-584, v7 + a sealed
+                             # smoke, gate read at 14 post-boundary days (~09-09).
+                             # ***I record it as its own flag because it is the one
+                             # sentence a reader of these files most needs and it is
+                             # currently spread across three entries: none of the three
+                             # tests has produced a number.*** *Every blocker is named and
+                             # owned; none is a measurement problem; and the honest
+                             # summary is that the machinery is close and the results are
+                             # absent.*
   MY_OWN_BOTH_INPUTS_EXIST_CLAIM_IS_FALSE_AT_THIS_MOMENT: THE-TAPE-IS-REBUILT-AND-MY-BYTE-COUNT-INFERENCE-WAS-WRONG
                              # CORRECTED-IN-BAND 2026-09-06T07:03Z, **against my own
                              # inference of ten minutes earlier**, at BE 51's landed
@@ -15741,6 +15882,88 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 133, 2026-09-06T07:08:52Z ------------------------------
+  THE_TAPE_RECEIPTS_DIGEST_DOES_NOT_MATCH_ITS_OWN_NAMED_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260903_btc.json
+    as_of: 2026-09-06T07:13Z
+    said: >-
+      sha256sum over the 991 MB file at tape.path returns
+      9de88da950598e8603f913a4166491e1a3d0da7c3c355f0ebaef8383b63310bf, matching
+      R-585(A) and BE's Q-row; the receipt's tape.sha256 is
+      7206101d9378b1911841d1c3a2b8779c7760f9841adec62db5cb5ee9c66204f1, the
+      round-50 WRONG_SPLIT tape's digest, while tape.path names the rebuilt file.
+      tape.bytes 991,078,272 and tape.n_rows 544,286 both match the rebuilt file,
+      so only the digest disagrees; the receipt's mtime 07:10:49Z is later than
+      the tape's 07:01:11Z. The two tapes share byte count and row count and
+      differ in content, which is what makes the digest the only distinguishing
+      field.
+  THE_LOCK_PREDICATE_HAS_BEEN_WRONG_AT_FOUR_SUCCESSIVE_LEVELS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_DAY_WIRING_DE79_2026-09-06.md
+    as_of: 2026-09-06T07:08:52Z
+    said: >-
+      section 2.5 reproduces two concurrent flock -s holders on the same lock, both
+      reading heavy_run_lock_held true and both admitted by assert_rule20 -- the
+      05:54Z two-heavy-runs condition on current code -- and states why the
+      fresh-fd probe cannot separate them: LOCK_EX fails against a shared lock
+      exactly as against an exclusive one. The four levels are the caller flag
+      (refuted by R12's own text), the open fd (my round-129 entry, conceded at
+      130), the lock (my round-132 entry), and now exclusivity.
+  THE_FLOCK_PARSE_NEVER_READS_FIELD_3_AND_ITS_OWN_COMMENT_DISPLAYS_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T07:08:52Z
+    said: >-
+      _flock_holders tests f[1] != "FLOCK", matches f[5] as device:inode and
+      appends f[4] as the pid; f[3] is never examined. A real /proc/locks line on
+      this machine reads "1: FLOCK ADVISORY WRITE 1205 103:01:790556 0 EOF", so
+      field 3 is the READ/WRITE discriminator -- and the function's own example
+      comment, "6: FLOCK ADVISORY WRITE 2916372 103:01:1053378 0 EOF", displays
+      the field the code does not read.
+  THE_INODE_COMPARISON_DROPS_THE_DEVICE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T07:08:52Z
+    said: >-
+      the parse computes int(f[5].rsplit(":", 1)[-1]) != ino, taking only the last
+      colon-segment of MAJ:MIN:INO, so the device is discarded; real lines here
+      carry 103:01:790556 and 00:1d:1115, and inode numbers are unique only within
+      a device. REV 41 section 2.6.
+  THE_SPLIT_IS_RULED_THE_TAPE_IS_REBUILT_AND_MY_ROUND_132_CORRECTION_HOLDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:08:52Z
+    said: >-
+      R-585(A) verifies the corrected tape at the receipts -- sha 9de88da9..., 4.741
+      GB peak, score_split the day's rows (the 545,240-row fragment 2860832a...),
+      train_split EMPTY_BY_CONSTRUCTION, the first tape moved aside -- and states
+      that phase2_arms.tape_index filters on the label so the label decides which
+      index a row enters, confirming the correction I filed against my own
+      byte-count inference. The streaming assembly's five stages each refuse when
+      exceeded, with the index released after asm and before the book is written,
+      measured on VmRSS because ru_maxrss is a high-water mark.
+  THE_BOOK_IS_BLOCKED_AND_ROUTED_TO_BOTH_OWNERS_NOT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:08:52Z
+    said: >-
+      R-585(B): phase2_arms.py is BE's module while the eight PA.TAPE_PATH read
+      sites are in DE's runner seam, so the single defect is routed to both --
+      BE 52 adds the path parameter with the digest verified at load and the
+      default refused for a ruled day, DE 80 threads the day's paths and digests
+      through the seam -- with "coordination by Q rows, never by editing each
+      other's module". assert_day_tape refuses before any work, 10/10 driven.
+  NONE_OF_THE_THREE_TESTS_HAS_A_NUMBER_YET:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T07:08:52Z
+    said: >-
+      R-585(C) states it for the USER: the Gate-1 smoke is behind DE 80 and
+      BE 52(1) then the book then the reviewer's filing then GO; the race read is
+      behind BE 52(2) and its review; E2-A is DA 63 on BTC under R-584 with v7 and
+      a sealed smoke. Every blocker is named and owned and none is a measurement
+      problem.
   # --- MEM round 132, 2026-09-06T06:57:19Z ------------------------------
   THE_SHARED_TREE_IS_DIVERGED_WITH_ANOTHER_SEATS_UNPUSHED_COMMIT:
     prov: CHECKED
