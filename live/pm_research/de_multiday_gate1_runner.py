@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 253
+EXPECTED_CHECKS = 261
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -3368,86 +3368,173 @@ HEAVY_WALL_S = 60.0
 HEAVY_RSS_GB = 1.0
 
 
-def journal_read(unit: str, *, n: int = 200) -> dict:
-    """THE JOURNAL IS NOT THE RECORD (rule 20 as amended, R-641).
-
-    journald rotates within hours: the reviewer's own evidence for DE 84's
-    death -- the `Started` line -- was GONE four hours after it was quoted,
-    while the `Consumed` line survived. So a number read here is COPIED
-    into the artifact at the moment of reading, and the state of the source
-    is named beside it:
-
-      * `oldest_entry_utc` -- read from the OLDEST ENTRY'S OWN CLOCK, never
-        typed and never inferred from a policy setting;
-      * `n_lines_available` -- what the journal still holds for this unit;
-      * `window_fully_covered` -- COMPUTED: whether the oldest entry the
-        journal still holds is the unit's own start. If it is not, this
-        read has already lost the beginning.
-
-    A unit with nothing retained is ABSENT, never a 0 quoted as a count: a
-    zero from a rotating store is indistinguishable from a zero that never
-    happened, which is what makes a control that greps the journal a
-    control whose verdict depends on retention."""
+def _jctl(args: list, *, n: int = 2000) -> tuple:
+    """One journalctl read. Returns (lines, error)."""
     import subprocess as _sp
-    read_at = datetime.datetime.now(datetime.timezone.utc)
     try:
-        r = _sp.run(["journalctl", "--user", "-u", unit, "--no-pager",
-                     "-o", "short-iso-precise", "-n", str(n)],
-                    capture_output=True, text=True, timeout=60)
-        raw = r.stdout if r.returncode == 0 else ""
-        err = None if r.returncode == 0 else (r.stderr or "").strip()[:200]
+        r = _sp.run(["journalctl", "--user", "--no-pager",
+                     "-o", "short-iso-precise", "-n", str(n), *args],
+                    capture_output=True, text=True, timeout=90)
+        if r.returncode != 0:
+            return [], (r.stderr or "").strip()[:200]
+        raw = r.stdout
     except Exception as exc:                              # noqa: BLE001
-        raw, err = "", f"{type(exc).__name__}: {exc}"
-    lines = [x for x in raw.split("\n") if x.strip()
-             and not x.startswith("-- ")]
+        return [], f"{type(exc).__name__}: {exc}"
+    return ([x for x in raw.split("\n")
+             if x.strip() and not x.startswith("-- ")], None)
+
+
+def journal_retention(*, as_of=None) -> dict:
+    """THE RETENTION STATE AS A MEASUREMENT, with its query and as-of.
+
+    R-646 (R4). Five reads of the oldest user-journal entry across one
+    hour walked 08:45Z -> 09:00:20Z -> 09:15:13Z -> 09:25:57Z ->
+    09:29:57Z: **the window's start advances about as fast as the clock**,
+    so a retention state named once is stale within minutes. It is
+    therefore not a property of the journal but a measurement with a
+    timestamp, and it travels with the read it qualifies."""
+    now = as_of or datetime.datetime.now(datetime.timezone.utc)
+    query = ["-n", "1", "--reverse"]
+    lines, err = _jctl([], n=1)
+    oldest, oldest_raw = None, None
+    try:
+        import subprocess as _sp
+        r = _sp.run(["journalctl", "--user", "--no-pager",
+                     "-o", "short-iso-precise", "-n", "1"],
+                    capture_output=True, text=True, timeout=90)
+        # the OLDEST entry: the first line of an unbounded forward read
+        r2 = _sp.run(["journalctl", "--user", "--no-pager",
+                      "-o", "short-iso-precise"],
+                     capture_output=True, text=True, timeout=90)
+        for ln in r2.stdout.split("\n"):
+            if ln.strip() and not ln.startswith("-- "):
+                oldest_raw = ln.split(" ", 1)[0]
+                break
+    except Exception:                                     # noqa: BLE001
+        oldest_raw = None
+    if oldest_raw:
+        try:
+            oldest = datetime.datetime.fromisoformat(
+                oldest_raw).astimezone(datetime.timezone.utc).isoformat()
+        except ValueError:
+            oldest = None
+    return {
+        "measured_at_utc": now.isoformat(),
+        "query": "journalctl --user --no-pager -o short-iso-precise "
+                 "(first line = the oldest entry retained)",
+        "oldest_user_journal_entry_utc": oldest,
+        "oldest_entry_raw": oldest_raw,
+        "oldest_entry_from": "the entry's OWN clock, as journald printed "
+                             "it -- never typed, never a policy setting",
+        "it_is_a_MEASUREMENT_not_a_property": (
+            "five reads across one hour walked the window's start from "
+            "08:45Z to 09:29:57Z -- about as fast as the clock. A "
+            "retention state named once is stale within minutes, so it "
+            "carries its own as-of and query (R-646 R4)"),
+    }
+
+
+def journal_copy_by_invocation(unit: str, *, invocation_id=None,
+                               n: int = 2000) -> dict:
+    """A RUN'S OWN JOURNAL LINES, BY ITS INVOCATION ID, ON BOTH FIELDS.
+
+    R-646 (R4). A unit NAME names every run ever launched under it; an
+    InvocationID names ONE run. And the id must be matched on BOTH
+    fields:
+
+      `_SYSTEMD_INVOCATION_ID`  the PAYLOAD's own lines
+      `USER_INVOCATION_ID`      the USER MANAGER's lines (Started,
+                                Consumed, Failed) -- which is where a
+                                launch record actually lives
+      `INVOCATION_ID`           the SYSTEM manager's field: matches
+                                NOTHING here
+
+    Measured: `be64book.service` 99 manager lines and 26 payload lines;
+    `de95smoke.service` exactly one line, its `Started` line, on
+    USER_INVOCATION_ID only. The coordinator made two copies on the wrong
+    field, got 0 lines, and deleted them as FALSE ABSENCES -- so a copy
+    that returns 0 lines while the unit's own `-u` query has lines is a
+    REFUSAL OF THE COPY, never a record."""
+    ident = unit_outcome(unit)
+    inv = invocation_id or ident.get("InvocationID") or ""
+    read_at = datetime.datetime.now(datetime.timezone.utc)
+    by_id, err_id = ([], "no InvocationID for this unit") if not inv else (
+        _jctl([f"_SYSTEMD_INVOCATION_ID={inv}", "+",
+               f"USER_INVOCATION_ID={inv}"], n=n))
+    by_unit, err_unit = _jctl(["-u", unit], n=n)
     out = {
         "unit": unit,
+        "invocation_id": inv or None,
+        "invocation_id_source": "the unit's own `InvocationID` property",
         "read_at_utc": read_at.isoformat(),
-        "copied_into_this_artifact_at_the_moment_of_reading": True,
-        "journalctl_error": err,
-        "n_lines_available": len(lines),
-        "n_requested": n,
-        "lines": lines,
+        "query": (f"journalctl --user _SYSTEMD_INVOCATION_ID={inv} + "
+                  f"USER_INVOCATION_ID={inv}" if inv else None),
+        "fields_matched": ["_SYSTEMD_INVOCATION_ID (the payload's lines)",
+                           "USER_INVOCATION_ID (the user manager's "
+                           "lines: Started, Consumed, Failed)"],
+        "field_not_used_here": "INVOCATION_ID -- the SYSTEM manager's "
+                               "field; it matches nothing under --user",
+        "n_lines_by_id": len(by_id),
+        "n_lines_by_unit_name": len(by_unit),
+        "cross_check": "the by-id count against `-u <unit>`; a unit NAME "
+                       "names every run ever launched under it, an id "
+                       "names ONE",
+        "journalctl_error_by_id": err_id,
+        "journalctl_error_by_unit": err_unit,
+        "lines": by_id,
+        "copied_at_the_moment_of_reading": True,
+        "retention": journal_retention(as_of=read_at),
     }
-    if not lines:
-        # ABSENT, not zero. A count of 0 read from a rotating store says
-        # nothing about whether anything ever happened.
+    if not by_id and by_unit:
+        # A FALSE ABSENCE IS NOT A RECORD.
         out.update({
-            "status": "ABSENT",
-            "oldest_entry_utc": None,
-            "window_fully_covered": None,
-            "why_absent_not_zero": (
-                "journald retains nothing for this unit right now. That is "
-                "not the same fact as 'the unit produced no output', and a "
-                "control that reported 0 here would have a verdict that "
-                "depends on retention"),
+            "status": "REFUSED_EMPTY_COPY",
+            "why": (f"the by-id query returned 0 lines while `-u {unit}` "
+                    f"returns {len(by_unit)}. That is a copy that failed, "
+                    f"not a unit that produced nothing -- two such copies "
+                    f"were made and deleted as false absences (R-646 R4). "
+                    f"A 0 here is REFUSED, never filed"),
         })
         return out
-    # THE OLDEST ENTRY'S OWN CLOCK. `short-iso-precise` puts it first on
-    # the line; if it cannot be parsed that is reported, never guessed.
-    first = lines[0].split(" ", 1)[0]
-    oldest = None
+    if not by_id and not by_unit:
+        out.update({
+            "status": "ABSENT",
+            "why_absent_not_zero": (
+                "neither the id nor the unit name retains anything right "
+                "now; that is not the same fact as 'the run produced no "
+                "output'"),
+        })
+        return out
+    first = by_id[0].split(" ", 1)[0]
     try:
         oldest = datetime.datetime.fromisoformat(first).astimezone(
             datetime.timezone.utc).isoformat()
     except ValueError:
         oldest = None
-    started = any(" Started " in x for x in lines)
     out.update({
         "status": "PRESENT",
-        "oldest_entry_utc": oldest,
-        "oldest_entry_raw": first,
-        "oldest_entry_from": "the entry's OWN clock, as journald printed "
-                             "it -- never typed, never derived from a "
-                             "retention setting",
-        "window_fully_covered": started,
+        "oldest_line_utc": oldest,
+        "oldest_line_raw": first,
+        "window_fully_covered": any(" Started " in x for x in by_id),
         "how_that_is_computed": (
-            "the unit's own `Started ...` line is still present, so this "
-            "read reaches the beginning of the unit's life. False means "
-            "the beginning has already rotated away -- which happened to "
-            "DE 84's Started line within four hours"),
+            "the run's own `Started` line is still present, so this copy "
+            "reaches the beginning of the run. False means the beginning "
+            "has already rotated -- which happened to DE 84's within four "
+            "hours"),
+        "counts_agree": len(by_id) == len(by_unit),
+        "counts_note": ("they differ legitimately when the NAME has been "
+                        "used more than once; the id is the run"),
     })
     return out
+
+
+def journal_read(unit: str, *, n: int = 200) -> dict:
+    """Back-compat name: the by-invocation copy is the record (R-646 R4).
+
+    The first version of this filtered by unit NAME alone. A name names
+    every run ever launched under it, and it cannot say which lines belong
+    to THIS run."""
+    return journal_copy_by_invocation(unit, n=n)
 
 
 #: R-628. THE LAUNCH FORM, DECLARED -- a heavy run is NEVER a child of a
@@ -3464,6 +3551,63 @@ def journal_read(unit: str, *, n: int = 200) -> dict:
 #: its own process group), so nothing that happens to a tool shell can
 #: reach it, and journald keeps its stdout -- the launch log of the refused
 #: run was only recoverable because a launcher wrote it to a file.
+#: R-646 (R2). THE ONE DECLARATION of the launch form's constants. Every
+#: literal here READS this file; nothing is typed beside it. Two
+#: definitions of the conflict code and two bare literals were measured
+#: drifting-capable (a launcher refusing with 76 was published as 75).
+HEAVY_RUN_FORM_REL = ("live/pm_research/declarations/"
+                      "heavy_run_form_v1.json")
+
+
+def heavy_run_form() -> dict:
+    """The declared constants, READ -- never a literal in this file."""
+    p = Path(__file__).resolve().parents[2] / HEAVY_RUN_FORM_REL
+    try:
+        d = json.loads(p.read_text())
+    except (OSError, ValueError) as exc:
+        raise RunnerRefused(
+            f"REFUSED: the heavy-run form declaration is unreadable at "
+            f"{p} ({exc}). The launch form's constants are declared ONCE; "
+            f"a builder that falls back to a literal is the second "
+            f"definition the declaration exists to prevent.")
+    for k in ("lock_path", "lock_conflict_rc", "slice"):
+        if k not in d:
+            raise RunnerRefused(
+                f"REFUSED: the heavy-run form declaration carries no "
+                f"{k!r}.")
+    return d
+
+
+#: THIS RUNNER'S OWN EXIT CODES, declared so the assertion below has
+#: something to check. 0 on success; 1 on a RunnerRefused or a battery
+#: failure (SystemExit with a message). Nothing else is produced.
+RUNNER_EXIT_CODES = {
+    0: "the run completed and the artifact was written",
+    1: "RunnerRefused, or a battery failure -- SystemExit with a message",
+}
+
+
+def assert_no_exit_code_collision() -> dict:
+    """A RunnerRefused MUST NOT exit with the lock-conflict code.
+
+    R-646 (R2): `flock -n -E 75` makes a HELD LOCK distinguishable from a
+    payload failure -- but only while no payload exits 75 for its own
+    reasons. Measured before the ruling: under the ruled form a held lock
+    and a payload crash were BOTH `ExecMainStatus=1`, so at GO #5 a
+    refusal would have been unreadable from a crash."""
+    rc = heavy_run_form()["lock_conflict_rc"]
+    if rc in RUNNER_EXIT_CODES:
+        raise RunnerRefused(
+            f"REFUSED: this runner declares exit code {rc}, which is the "
+            f"DECLARED lock-conflict code. A held lock and a runner "
+            f"refusal would be indistinguishable in `ExecMainStatus`, "
+            f"which is the whole point of `-E {rc}`.")
+    return {"lock_conflict_rc": rc,
+            "runner_exit_codes": sorted(RUNNER_EXIT_CODES),
+            "no_collision": True,
+            "read_from": HEAVY_RUN_FORM_REL}
+
+
 LAUNCH_FORM = "systemd-run --user transient SERVICE (never --scope)"
 LAUNCH_FORM_REQUIREMENTS = {
     "no_scope": "`--scope` runs the payload in the CALLER's process group",
@@ -3487,11 +3631,14 @@ def the_one_command(day: str, book, outdir, *, unit: str = "<deNNsmoke>",
     """THE launch string -- composed once, so the command and the predicate
     that checks it cannot be two different facts."""
     wd = workdir or str(Path(__file__).resolve().parents[2])
+    # `-E <rc>` FROM THE DECLARATION, never a literal here (R-646 R2).
+    _form = heavy_run_form()
+    _rc = _form["lock_conflict_rc"]
     return (f"systemd-run --user --unit={unit} --slice={RESEARCH_SLICE} "
             f"-p MemoryMax=8G -p CPUQuota=100% "
             f"--setenv=PM_DATA_ROOT={DR.resolve()['repo_root']} "
             f"--working-directory={wd} "
-            f"-- flock -n {HEAVY_RUN_LOCK} {sys.executable} "
+            f"-- flock -n -E {_rc} {HEAVY_RUN_LOCK} {sys.executable} "
             f"live/pm_research/de_multiday_gate1_runner.py "
             f"--day {day} --book {book} --output {outdir}")
 
@@ -3520,6 +3667,13 @@ def assert_launch_form(cmd: str) -> dict:
                         "payload are not the unit's own ExecStart")
     else:
         _pre, _post = cmd.split(" -- ", 1)
+        _rc_expected = heavy_run_form()["lock_conflict_rc"]
+        if f"-E {_rc_expected} " not in _post:
+            problems.append(
+                f"the unit's ExecStart carries no `-E {_rc_expected}`: "
+                f"without it a HELD LOCK and a payload crash are both "
+                f"ExecMainStatus=1 and a refusal is unreadable from a "
+                f"crash (R-646 R2, measured)")
         if not _post.startswith("flock -n "):
             problems.append(
                 "the unit's ExecStart does not begin with `flock -n`: the "
@@ -3535,6 +3689,46 @@ def assert_launch_form(cmd: str) -> dict:
             "requirements_checked": sorted(LAUNCH_FORM_REQUIREMENTS),
             "lock_is_inside_the_unit": True,
             "poll_by": "the UNIT name, never a child PID"}
+
+
+def unit_outcome(unit: str) -> dict:
+    """A UNIT'S OUTCOME IS THE PAIR (ActiveState, ExecMainStatus) -- R3.
+
+    A RUNNING unit reports `ExecMainStatus=0` (measured on
+    de95smoke.service at 13:28:51Z while it was 53 minutes into an
+    85-minute day). So the status alone answers neither "finished?" nor
+    "refused?", and a caller that reads it alone reads a running run as a
+    clean success."""
+    import subprocess as _sp
+    vals = {}
+    for k in ("ActiveState", "ExecMainStatus", "Result", "InvocationID",
+              "MemoryPeak"):
+        try:
+            r = _sp.run(["systemctl", "--user", "show", unit, "-p", k,
+                         "--value"], capture_output=True, text=True,
+                        timeout=30)
+            vals[k] = r.stdout.strip() if r.returncode == 0 else None
+        except Exception:                                 # noqa: BLE001
+            vals[k] = None
+    rc = None
+    try:
+        rc = heavy_run_form()["lock_conflict_rc"]
+    except RunnerRefused:
+        pass
+    active = vals.get("ActiveState")
+    status = vals.get("ExecMainStatus")
+    return {
+        "unit": unit, **vals,
+        "the_pair": [active, status],
+        "still_running": active == "active",
+        "finished": active in ("inactive", "failed"),
+        "refused_on_the_lock": (status == str(rc)) if rc is not None else None,
+        "why_the_pair": (
+            "a RUNNING unit reports ExecMainStatus=0; the status alone "
+            "answers neither 'finished?' nor 'refused?' (R-646 R3, "
+            "measured on a live run)"),
+        "lock_conflict_rc": rc,
+    }
 
 
 def unit_identity() -> dict:
@@ -5127,6 +5321,85 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- R-646 (R2): THE LOCK-CONFLICT CODE, DECLARED ONCE ------------
+    # Measured before the ruling: under the ruled form a HELD LOCK and a
+    # PAYLOAD CRASH were both ExecMainStatus=1, so at GO #5 a refusal
+    # would have been unreadable from a crash. `flock -n -E 75` separates
+    # them, and 75 is declared in ONE file that every literal reads --
+    # two definitions of it were already measured drifting-capable (a
+    # launcher refusing with 76 was published as 75).
+    _form97 = heavy_run_form()
+    ok(_form97["lock_conflict_rc"] == 75
+       and _form97["lock_path"] == HEAVY_RUN_LOCK
+       and _form97["slice"] == RESEARCH_SLICE,
+       f"R-646 R2: the launch form's constants are READ from "
+       f"{HEAVY_RUN_FORM_REL} -- conflict code "
+       f"{_form97['lock_conflict_rc']}, the lock path and the slice all "
+       f"agree with this module's own constants, so a drift between them "
+       f"is a battery failure rather than a surprise at GO")
+    ok(assert_no_exit_code_collision()["no_collision"] is True
+       and _form97["lock_conflict_rc"] not in RUNNER_EXIT_CODES,
+       f"and THIS RUNNER DOES NOT EXIT {_form97['lock_conflict_rc']} for "
+       f"any reason of its own ({sorted(RUNNER_EXIT_CODES)}) -- the "
+       f"separation `-E` buys is only real while no payload borrows the "
+       f"code")
+    _cmd97 = the_one_command("2026-09-03", "/BOOK", "/OUT")
+    ok(f"-E {_form97['lock_conflict_rc']} " in _cmd97
+       and assert_launch_form(_cmd97)["ok"] is True,
+       f"and the published command carries `-E "
+       f"{_form97['lock_conflict_rc']}` -- read from the declaration, "
+       f"never a literal in the builder")
+    refuses(lambda: assert_launch_form(
+                _cmd97.replace(f"-E {_form97['lock_conflict_rc']} ", "")),
+            "R-646 R2 KNOWN-BAD: a command WITHOUT `-E` is refused by the "
+            "lint. Driven on scratch units: held lock -> ExecMainStatus "
+            "75, payload exit 1 -> 1, payload success -> 0; without `-E` "
+            "the first two are both 1", "-E")
+    # R3: the outcome is the PAIR.
+    _uo97 = unit_outcome("de97-a-unit-that-cannot-exist.service")
+    ok(set(_uo97) >= {"the_pair", "still_running", "finished",
+                      "refused_on_the_lock"}
+       and _uo97["lock_conflict_rc"] == _form97["lock_conflict_rc"],
+       "R-646 R3: a unit's outcome is read as the PAIR (ActiveState, "
+       "ExecMainStatus) with the conflict code beside it. A RUNNING unit "
+       "reports ExecMainStatus=0 -- measured on de95smoke.service 53 "
+       "minutes into an 85-minute day -- so the status alone reads a "
+       "running run as a clean success")
+
+    # ---- R-646 (R4): THE JOURNAL COPY IS BY INVOCATION ID, BOTH FIELDS -
+    # A unit NAME names every run ever launched under it; an id names ONE.
+    # And the id must be matched on BOTH fields: the PAYLOAD's lines carry
+    # `_SYSTEMD_INVOCATION_ID`, the user manager's Started/Consumed lines
+    # carry `USER_INVOCATION_ID`, and `INVOCATION_ID` is the SYSTEM
+    # manager's field and matches nothing here. Measured on
+    # be64book.service at 13:41Z: 1 line on the payload field alone, 3 on
+    # the manager field alone, 0 on the system field, 4 on both, 146 by
+    # NAME (the name had been used more than once).
+    _jc97 = journal_copy_by_invocation("de97-cannot-exist.service")
+    ok(_jc97["status"] == "ABSENT"
+       and _jc97["n_lines_by_id"] == 0
+       and _jc97["n_lines_by_unit_name"] == 0
+       and "_SYSTEMD_INVOCATION_ID" in _jc97["fields_matched"][0]
+       and "USER_INVOCATION_ID" in _jc97["fields_matched"][1]
+       and "INVOCATION_ID" in _jc97["field_not_used_here"],
+       "R-646 R4: a copy names BOTH invocation fields, and a unit with "
+       "nothing under either the id or the name is ABSENT -- never a 0 "
+       "quoted as a count")
+    ok(set(_jc97["retention"]) >= {"measured_at_utc", "query",
+                                   "oldest_user_journal_entry_utc"}
+       # THE ASSERTION IS ON THE VALUE, not on a word that lives in the
+       # KEY NAME -- which is what this line first tested, and it is the
+       # needle-matching-its-own-prose shape one more time.
+       and "stale within minutes" in _jc97["retention"][
+           "it_is_a_MEASUREMENT_not_a_property"],
+       f"and the retention state travels as a MEASUREMENT with its own "
+       f"query and as-of -- five reads across one hour walked the "
+       f"window's start about as fast as the clock, so a state named once "
+       f"is stale within minutes")
+    ok(_jc97["copied_at_the_moment_of_reading"] is True
+       and _jc97["invocation_id_source"].startswith("the unit's own"),
+       "and the id is READ FROM THE UNIT, not passed in by a caller who "
+       "might name a different run")
     # ---- R-637 / REV 66 S1.1: THE PORCELAIN SLICE, and the rename ----
     # The raw read fixed the FIRST line; `line[3:]` was still wrong on a
     # RENAME -- `R  a -> b` returns `a -> b` where the path is `b`, so a
@@ -5167,21 +5440,17 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     # with the source's retention state named.
     _jabs96 = journal_read("de96-a-unit-that-cannot-exist.service")
     ok(_jabs96["status"] == "ABSENT"
-       and _jabs96["n_lines_available"] == 0
-       and _jabs96["oldest_entry_utc"] is None
-       and _jabs96["window_fully_covered"] is None
+       and _jabs96["n_lines_by_id"] == 0
        and "not the same fact" in _jabs96["why_absent_not_zero"],
        "R-641 KNOWN-BAD: a unit the journal holds nothing for is ABSENT, "
        "never a 0 quoted as a count. A zero from a rotating store is "
        "indistinguishable from a zero that never happened -- which is what "
        "makes a control that greps the journal a control whose verdict "
        "depends on retention")
-    ok(set(_jabs96) >= {"read_at_utc", "n_lines_available",
-                        "oldest_entry_utc", "window_fully_covered",
-                        "copied_into_this_artifact_at_the_moment_of_"
-                        "reading"}
-       and _jabs96["copied_into_this_artifact_at_the_moment_of_reading"]
-       is True,
+    ok(set(_jabs96) >= {"read_at_utc", "n_lines_by_id",
+                        "n_lines_by_unit_name", "retention",
+                        "copied_at_the_moment_of_reading"}
+       and _jabs96["copied_at_the_moment_of_reading"] is True,
        "and every read carries the same four fields -- when it was read, "
        "how many lines the journal still holds, the OLDEST ENTRY'S OWN "
        "clock, and whether the window still reaches the unit's start -- so "
