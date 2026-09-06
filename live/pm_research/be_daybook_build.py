@@ -75,6 +75,105 @@ STAGE_BUDGETS_GB = {
 FIXTURE_STAGE_BUDGETS_GB = {k: 0.7 for k in STAGE_BUDGETS_GB}
 CHUNK_WINDOWS = 6             # as declared in be_assembly_budget
 
+#: REV 46 (5). The index release was MEASURED and never ASSERTED -- a
+#: number in a receipt that nothing checks. A no-op release would have
+#: reported `freed_gb: 0.0` and passed. The release must free at least this
+#: fraction of the A1 index peak or the build REFUSES.
+MIN_RELEASE_FRACTION = 0.10
+
+
+def _index_call_made() -> str:
+    """The seam call, READ FROM THIS MODULE'S SOURCE, never restated.
+
+    The receipt carried the literal "build_tape_index(splits, tape_path=…)"
+    while the call had already moved to the one-object `inputs=` form -- a
+    literal contradicting the code beside it (rule 10), and the third of that
+    class this seat has shipped. It is derived now, so it cannot drift."""
+    import re
+    src = Path(__file__).read_text()
+    m = re.search(r"R\.build_tape_index\(([^)]*)\)", src)
+    return f"build_tape_index({m.group(1)})" if m else "UNKNOWN"
+
+
+def _assembly_evidence(asm: dict, ref: dict, cov: dict, n_gen: int,
+                       chunk_windows: int) -> dict:
+    """REV 46 (2) and (3): the numbers that PROVE the seam worked, as FIELDS.
+
+    (2) `state_join_failed` and the chunk count lived only in a Q-row and in
+    the run log. The number that establishes the day's rows joined the day's
+    tape belongs in the receipt a reader resolves.
+
+    (3) The uncovered generations get their REASON CLASS beside the count,
+    and the classes are CHECKED to sum to it -- a count without a reason
+    invites the reading that the gap is unexplained."""
+    a = asm.get("assembly", {}) or {}
+    drops = {c: dict(v) for c, v in (a.get("drops_by_coin") or {}).items()}
+    kept = dict(a.get("kept_by_coin") or {})
+    n_chunks = -(-len(ref) // chunk_windows) if chunk_windows else None
+    uncovered = {h: c["n_uncovered"] for h, c in cov.items()}
+    per_reason = {}
+    for c, dd in drops.items():
+        for k, v in dd.items():
+            per_reason[k] = per_reason.get(k, 0) + int(v)
+    total_drops = sum(per_reason.values())
+    one_uncovered = sorted(set(uncovered.values()))
+    return {
+        "state_join_failed": per_reason.get("state_join_failed"),
+        "state_join_failed_is_zero":
+            per_reason.get("state_join_failed") == 0,
+        "why_that_matters": "a non-zero state_join_failed would mean the "
+                            "day's generations did not find rows in the "
+                            "day's tape -- which is exactly what the "
+                            "parameterised seam exists to make impossible",
+        "n_chunks": n_chunks,
+        "chunk_windows": chunk_windows,
+        "n_windows": len(ref),
+        "kept_by_coin": kept,
+        "UNCOVERED_GENERATIONS": {
+            "count": one_uncovered[0] if len(one_uncovered) == 1 else uncovered,
+            "identical_across_heads": len(one_uncovered) == 1,
+            "by_reason": per_reason,
+            "reasons_sum": total_drops,
+            "reasons_account_for_the_count":
+                (len(one_uncovered) == 1 and total_drops == one_uncovered[0]),
+            "if_they_do_not_sum": "the residual is UNEXPLAINED and is "
+                                  "reported as such rather than absorbed -- "
+                                  "a count without a reason invites the "
+                                  "reading that the gap is understood",
+            "n_reference_generations": n_gen,
+        },
+        "computed_from": "asm['assembly']['drops_by_coin'] and the reference, "
+                         "not from the run log",
+    }
+
+
+def assert_index_released(before_gb: float, after_gb: float,
+                          index_peak_gb: float,
+                          fraction: float = MIN_RELEASE_FRACTION) -> dict:
+    """The index is GONE after A3, or the day refuses.
+
+    DE v9 R11 makes the whole-day peak `max(index, assembly)` instead of
+    their sum ONLY IF the index is actually released. Reporting a number
+    nobody checks is how that becomes a claim rather than a fact."""
+    freed = before_gb - after_gb
+    need = fraction * index_peak_gb
+    out = {"current_gb_before": before_gb, "current_gb_after": after_gb,
+           "freed_gb": round(freed, 3), "index_peak_gb": index_peak_gb,
+           "required_fraction": fraction, "required_freed_gb": round(need, 3),
+           "freed_fraction_of_index_peak":
+               round(freed / index_peak_gb, 4) if index_peak_gb else None,
+           "asserted_not_only_measured": True}
+    if freed < need:
+        raise BookRefused(
+            f"REFUSED at A3_release_index: only {freed:.3f} GB was freed, "
+            f"below the required {need:.3f} GB ({fraction:.0%} of the "
+            f"{index_peak_gb:.3f} GB index peak). R11's whole-day budget "
+            f"rests on the index being GONE before the book is written; a "
+            f"release that frees nothing makes `max(index, assembly)` a "
+            f"claim rather than a fact.")
+    out["released"] = True
+    return out
+
 HEADS = {"CONDVALUE_X_SKEW": "q1_arrival_composed_lgbm",
          "HAZARD_OVER_SKEWED_REF": "incumbent_linear_d"}
 BUDGET = 0.10
@@ -449,17 +548,16 @@ def build(day: str, *, coin: str = COIN,
     del tape
     gc.collect()
     _after_release = _rss_now_gb()
+    _a1 = next((r["peak_gb"] for r in stages.rows if r["stage"] == "A1_index"),
+               0.0)
+    obs["index_released"] = dict(
+        assert_index_released(_before_release, _after_release, _a1),
+        measured_on_CURRENT_rss="ru_maxrss is a high-water mark and cannot "
+                                "show a release; this is VmRSS",
+        index_is_build_time_only="DE design v9 R11 -- "
+                                 "INDEX_SPLITS_NEEDED_BY_DAY = NONE at any "
+                                 "stage")
     stages.done("A3_release_index", t)
-    obs["index_released"] = {
-        "current_gb_before": _before_release,
-        "current_gb_after": _after_release,
-        "freed_gb": round(_before_release - _after_release, 3),
-        "measured_on_CURRENT_rss": "ru_maxrss is a high-water mark and "
-                                   "cannot show a release; this is VmRSS",
-        "index_is_build_time_only": "DE design v9 R11 -- "
-                                    "INDEX_SPLITS_NEEDED_BY_DAY = NONE at "
-                                    "any stage",
-    }
     if progress:
         print(json.dumps({"stage": "assembled", **{k: obs[k] for k in
                           ("assembly_s", "peak_gb")}}), flush=True)
@@ -531,16 +629,42 @@ def build(day: str, *, coin: str = COIN,
                       "n_slugs": fr.get("n_slugs"),
                       "terminal_marks_present": bool(fr.get("terminal_marks")),
                       "n_terminal_marks": len(fr.get("terminal_marks") or {})},
+        "assembly_evidence": _assembly_evidence(asm, ref, cov, n_gen,
+                                                chunk_windows),
         "asm": {"by_arm_keys": [list(k) for k in asm["by_arm"]],
                 "coverage_by_head": cov,
                 "both_heads_present": True,
                 "set_equality_asserted": True,
                 "sets_are_equal": equal,
                 "n_shared_keys": len(a)},
+        "stage_budgets_gb": STAGE_BUDGETS_GB,
+        "ROUND_49_BUDGET_WITHDRAWN": {
+            "what_was_declared": "be_assembly_budget_declaration_v1.json "
+                                 "computed 8.713 GB against the 8 GB cap "
+                                 "(resident floor 5.971 + whole fragment "
+                                 "2.742) and answered NO",
+            "what_it_rested_on": "an A1_index peak of 5.971 GB, MEASURED "
+                                 "while indexing the LIVE v5 tape -- the "
+                                 "consumed hour's, not the day's",
+            "what_was_measured_once_the_seam_took_a_path": "A1_index 3.190 "
+                                                           "GB, from the "
+                                                           "day's 991 MB "
+                                                           "tape",
+            "so_the_floor_was_an_ARTEFACT": "of indexing the wrong tape, not "
+                                            "a property of the day. The "
+                                            "budget's arithmetic was right "
+                                            "and its input was wrong.",
+            "status": "WITHDRAWN. The declaration is not edited (rule 13); "
+                      "this records the withdrawal where the budgets are "
+                      "read.",
+            "and_the_term_it_could_not_close_is_now_measured":
+                "asm's own peak, published per run as "
+                "resources.asm_peak_gb_PUBLISHED",
+        },
         "resources": obs,
         "seam": {"commit": "6f134a6",
                  "front_door": "de_phase4_diag_runner.day_assembly_inputs",
-                 "index": "build_tape_index(splits, tape_path=…)",
+                 "index": _index_call_made(),
                  "digests_recomputed_at_read_time": True},
         "inputs_pinned": {
             "tape": {"path": str(_tp), "sha256": _sha_file(_tp),
@@ -556,7 +680,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 30
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -794,6 +918,79 @@ def selftest() -> int:
         for _lbl in ("one character", "16 hex", "right 16, wrong 48",
                      "UPPERCASE full"):
             skip(f"REV-45 known-bad: {_lbl}", why_not)
+
+    # ---- REV 46's FOUR, EACH DRIVEN BOTH WAYS -----------------------------
+    # (5) the release is ASSERTED
+    _rel = assert_index_released(4.096, 2.940, 3.190)
+    ok(_rel["released"] and _rel["freed_gb"] == 1.156
+       and _rel["freed_fraction_of_index_peak"] > MIN_RELEASE_FRACTION,
+       f"REV 46(5) POSITIVE CONTROL: the 09-03 release (4.096 -> 2.940, "
+       f"{_rel['freed_gb']} GB = "
+       f"{_rel['freed_fraction_of_index_peak']:.1%} of the index peak) "
+       f"passes the assertion")
+    try:
+        assert_index_released(4.096, 4.096, 3.190)
+        ok(False, "a no-op release must refuse")
+    except BookRefused as e:
+        ok("only 0.000 GB was freed" in str(e) and "claim rather than a "
+           "fact" in str(e),
+           "KNOWN-BAD: a NO-OP release REFUSES -- it would have reported "
+           "`freed_gb: 0.0` and passed, because the number was measured and "
+           "never asserted")
+    try:
+        assert_index_released(4.096, 3.900, 3.190)
+        ok(False, "an under-threshold release must refuse")
+    except BookRefused as e:
+        ok("below the required" in str(e),
+           "KNOWN-BAD: a release below the declared 10% of the index peak "
+           "REFUSES too -- the threshold is a fraction, not merely non-zero")
+
+    # (2)+(3) the seam's evidence, computed
+    _ref = {f"s{i}": {"BUY_UP": [{"t0": 1.0, "gen": 0}]} for i in range(12)}
+    _asm = {"assembly": {"drops_by_coin": {"btc": {
+        "state_join_failed": 0, "pre_window_excluded": 10,
+        "gap_at_cutoff_excluded": 3, "no_level_history_excluded": 2}},
+        "kept_by_coin": {"btc": 85}}}
+    _cov = {"h1": {"n_uncovered": 15}, "h2": {"n_uncovered": 15}}
+    _ev = _assembly_evidence(_asm, _ref, _cov, 100, 6)
+    ok(_ev["state_join_failed"] == 0 and _ev["state_join_failed_is_zero"]
+       and _ev["n_chunks"] == 2 and _ev["n_windows"] == 12,
+       f"REV 46(2): `state_join_failed` ({_ev['state_join_failed']}) and "
+       f"`n_chunks` ({_ev['n_chunks']} over {_ev['n_windows']} windows) are "
+       f"RECEIPT FIELDS now -- the 09-03 receipt carried neither, and the "
+       f"number proving the seam worked lived only in a Q-row")
+    ok(_ev["UNCOVERED_GENERATIONS"]["reasons_account_for_the_count"]
+       and _ev["UNCOVERED_GENERATIONS"]["by_reason"]["pre_window_excluded"]
+       == 10 and _ev["UNCOVERED_GENERATIONS"]["identical_across_heads"],
+       f"REV 46(3): the uncovered count carries its REASON CLASS "
+       f"({_ev['UNCOVERED_GENERATIONS']['by_reason']}) and the reasons are "
+       f"CHECKED to sum to it")
+    _bad = _assembly_evidence(_asm, _ref, {"h1": {"n_uncovered": 99},
+                                           "h2": {"n_uncovered": 99}}, 100, 6)
+    ok(not _bad["UNCOVERED_GENERATIONS"]["reasons_account_for_the_count"],
+       "KNOWN-BAD: when the reasons do NOT sum to the count the predicate "
+       "reads FALSE and the residual is reported as unexplained -- it is not "
+       "absorbed, and the flag can go red")
+
+    # (4) the round-49 withdrawal, beside the budgets
+    import re as _re4
+    _src4 = Path(__file__).read_text()
+    _blk4 = _src4[_src4.index('"ROUND_49_BUDGET_WITHDRAWN"'):]
+    _blk4 = _blk4[:_blk4.index('"resources": obs,')]
+    ok(all(x in _blk4 for x in ("8.713", "5.971", "3.190", "WITHDRAWN")),
+       "REV 46(4): the round-49 budget WITHDRAWAL sits beside "
+       "`stage_budgets_gb` with all three numbers -- the 8.713 GB that "
+       "answered NO, the 5.971 GB floor it rested on, and the 3.190 GB "
+       "actually measured once the seam took a path. The declaration itself "
+       "is NOT edited (rule 13)")
+
+    # the seam literal, now computed
+    _idx = _index_call_made()
+    ok("inputs=inp" in _idx and "tape_path" not in _idx,
+       f"THE SEAM LITERAL IS GONE: `seam.index` is derived from this "
+       f"module's own source and reads {_idx!r}. The 09-03 receipt said "
+       f"`tape_path=…` while the call was already `inputs=` -- a literal "
+       f"contradicting the code beside it, the third of that class here")
 
     return _finish(checks, fails, skipped)
 
