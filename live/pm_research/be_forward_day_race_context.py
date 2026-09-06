@@ -31,7 +31,13 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+import be_data_root as _BDR
+
 ROOT = HERE.parents[1]
+#: READ root resolves through the shared helper (R-559(C));
+#: WRITES stay in this seat's worktree -- the ledger's
+#: derived/ is the MAIN TREE's checkout.
+_DATA_ROOT = Path(_BDR.resolve(ROOT)["data_root"])
 DERIVED = ROOT / "data/pm_5min/derived"
 
 #: The race, as RULED. Not inferred from anything this module can see.
@@ -119,6 +125,7 @@ def build(day: str, run_dir: Path, *, preflight: dict | None = None) -> dict:
             f"{RACE['days']}.")
     return {
         "protocol": "BE_FORWARD_DAY_RACE_CONTEXT_V2",
+        "data_root": _BDR.receipt_block(),
         "day": day,
         "what_this_is": "a COMPANION to one sealed forward-day receipt. It "
                         "resolves BY DIGEST to exactly those bytes and "

@@ -513,7 +513,23 @@ def publication_provenance(symbols=("matched_volume", "compute", "emit",
     }
 
 
-REPO_ROOT = HERE.parents[1]
+#: R-559(C): resolved through the SHARED helper (env PM_DATA_ROOT -> code
+#: tree if it carries the tape -> canonical), the same precedence
+#: `pm_tape_density` uses and DA's modules take. It was `HERE.parents[1]`,
+#: which silently meant "whichever tree this file happens to sit in" -- from
+#: a worktree that is NOT the ledger, and no receipt said so.
+import be_data_root as _BDR
+
+_ROOT_RES = _BDR.resolve(HERE.parents[1])
+REPO_ROOT = Path(_ROOT_RES["repo_root"])
+DATA_ROOT = Path(_ROOT_RES["data_root"])
+CODE_ROOT = HERE.parents[1]
+
+
+def data_root_receipt(**kw) -> dict:
+    """The block every result-bearing emission from this module carries."""
+    return _BDR.receipt_block(_ROOT_RES, **kw)
+
 
 
 # ---------------------------------------------------------------------------

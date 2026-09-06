@@ -34,6 +34,11 @@ import math
 import sys
 from pathlib import Path
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+import be_data_root as _BDR
+
 _ROOT = str(Path(__file__).resolve().parent)
 if sys.path and sys.path[0] != _ROOT:
     sys.path.insert(0, _ROOT)
@@ -43,7 +48,10 @@ import phase2_declaration as D                        # noqa: E402
 import harmful_exposure_rows as HER                   # noqa: E402
 import harmful_action_eval as HAE                     # noqa: E402
 
-DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+#: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
+#: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
+#: absolute literal, which no env var could redirect.
+DERIVED = _BDR.derived()
 DA_RECEIPT = DERIVED / "da_fragment_censoring_v1.json"
 FREEZE = DERIVED / "harmful_phase2_lgbm_btc_freeze_v3.json"
 OUT = DERIVED / "be_fragment_diagnostic_v1.json"

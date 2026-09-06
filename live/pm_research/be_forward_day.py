@@ -32,9 +32,15 @@ import os
 import sys
 from pathlib import Path
 
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-REPO = Path("/home/yuqing/ctaNew")
+import be_data_root as _BDR
+
+#: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
+#: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
+#: absolute literal, which no env var could redirect.
+REPO = _BDR.repo_root()
 
 
 def _exec_tree_is_repo(tree: Path = None) -> bool:

@@ -56,13 +56,32 @@ import sys
 import time
 from pathlib import Path
 
+import hashlib
+
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
+import be_data_root as BDR
+
+#: R-559(C): the root resolves through the SHARED helper (env PM_DATA_ROOT ->
+#: code tree if it carries the tape -> canonical), the same precedence
+#: `pm_tape_density` uses and DA's modules take. `ROOT` stays the CODE root --
+#: the module's own source tree -- while DATA comes from the resolution, so a
+#: worktree run reads the LEDGER and says so in the receipt.
 ROOT = HERE.parents[1]
-DERIVED = ROOT / "data/pm_5min/derived"
+_RES = BDR.resolve(ROOT)
+
+#: READ from the resolved LEDGER root; WRITE into this seat's own worktree.
+#: THEY ARE NOT THE SAME DIRECTORY AND MUST NOT BE. The ledger's
+#: `data/pm_5min/derived` IS THE MAIN TREE'S GIT CHECKOUT -- the coordinator's
+#: working copy. A BE run that emitted there would be writing into another
+#: seat's tree, which this seat is barred from. Artifacts are written here and
+#: reach the main tree the way everything else does: by commit and pull
+#: (R-397/R-554). Both roots travel in the receipt so neither is a guess.
+DERIVED = Path(_RES["data_root"]) / "pm_5min/derived"      # READ
+OUT_DERIVED = ROOT / "data/pm_5min/derived"                # WRITE
 CACHE = DERIVED / "de_section81_cache_12.pkl"
 
 DECLARATION = HERE / "declarations/be_cancel_axis_null_declaration_v1.json"
@@ -184,7 +203,14 @@ def load(path: Path | None = None) -> dict:
         raise CancelNullRefused(
             f"REFUSED: no cached reference at {p}. This module builds none "
             f"-- a replay of the raw tape is out of scope.")
-    c = pickle.loads(p.read_bytes())
+    # B-1 (reviewer 89e81d5): the digest must be of THE BYTES THAT WERE
+    # UNPICKLED, not of a second read of the same path. Two reads can differ
+    # -- a writer mid-flight, a symlink repointed, a filesystem that lies --
+    # and a digest taken separately would attest to bytes the null never saw.
+    # One read, one buffer, hashed and unpickled from the SAME object.
+    buf = p.read_bytes()
+    digest = hashlib.sha256(buf).hexdigest()
+    c = pickle.loads(buf)
     ref, asm = c["fr"]["reference"], c["asm"]
     scored = asm["by_arm"][(COIN, ARMS["CONDVALUE_X_SKEW"]["head"])][0]
     rows = [{"t": g["t0"], "slug": s_, "side": sd, "gen": g["gen"]}
@@ -193,17 +219,19 @@ def load(path: Path | None = None) -> dict:
     if not rows:
         raise CancelNullRefused("REFUSED: the scored generation population "
                                 "is empty; there is nothing to decide over.")
-    import hashlib
-    # RULE 10 FROM OUTSIDE THIS WORKTREE. The book is a pickle inside
-    # ~/ctaNew-wt-be with no digest anywhere: the 3-point reproduction gate
-    # satisfies rule 10 BEHAVIOURALLY (baseline 0/4315 and both arms come
-    # out with their filed numbers), but a reader outside this worktree had
-    # no way to check they were fed the same bytes. One line fixes that.
+    # RULE 10 FROM OUTSIDE THIS WORKTREE, AND NOW OF THE RIGHT BYTES. The
+    # book is a pickle with no digest anywhere: the 3-point reproduction gate
+    # satisfies rule 10 BEHAVIOURALLY, and this makes it checkable by bytes.
+    # `source_sha256` is now taken from the SAME buffer that was unpickled
+    # (B-1); `read_once` records that so a reader need not trust the claim.
     return {"ref": ref, "asm": asm, "rows": rows,
             "n_gens_with_fills": R.generations_with_fills(ref),
             "source": str(p),
-            "source_sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
-            "source_bytes": p.stat().st_size}
+            "source_sha256": digest,
+            "source_bytes": len(buf),
+            "digest_is_of_the_loaded_buffer": True,
+            "read_once": True,
+            "data_root": BDR.receipt_block(_RES)}
 
 
 def params_for(theta: float):
@@ -559,9 +587,21 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
                 1 for d in draws if d["cancels_issued"] == 0),
         }
     out = {
-        "protocol": "BE_CANCEL_AXIS_NULL_V2",
+        "protocol": "BE_CANCEL_AXIS_NULL_V3",
         "supersedes": {
-            "artifact": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+            "artifact": "data/pm_5min/derived/be_cancel_axis_null_v2.json",
+            "and_before_it": "data/pm_5min/derived/be_cancel_axis_null_v1.json",
+            "v3_changes": [
+                "B-1 (reviewer 89e81d5): population.source_sha256 was a "
+                "SECOND READ of the pickle. It is now the digest of the SAME "
+                "BUFFER that was unpickled -- one read, one buffer.",
+                "R-559(C): the data root resolves through the shared helper "
+                "and the resolved root and branch travel in the receipt.",
+            ],
+            "v3_changes_no_number": "same cache (ee1f150b...), same seed, "
+                                    "same n=500, same grid.",
+            "original_v1_supersession_reasons": "data/pm_5min/derived/"
+                                                "be_cancel_axis_null_v1.json",
             "rule": "13 -- a superseding receipt, vN+1. v1 is NOT edited and "
                     "stays as provenance.",
             "why": [
@@ -595,6 +635,20 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
                        "source": bk["source"],
                        "source_sha256": bk["source_sha256"],
                        "source_bytes": bk["source_bytes"],
+                       "digest_is_of_the_loaded_buffer":
+                           bk["digest_is_of_the_loaded_buffer"],
+                       "digest_provenance": "hashed from the SAME buffer that "
+                                            "was unpickled -- not a second "
+                                            "read of the path (B-1)",
+                       "data_root": bk["data_root"],
+                       "read_root": str(DERIVED),
+                       "write_root": str(OUT_DERIVED),
+                       "why_they_differ": "reads come from the resolved "
+                                          "LEDGER; writes go to this seat's "
+                                          "worktree, because the ledger's "
+                                          "derived/ is the MAIN TREE's git "
+                                          "checkout and this seat does not "
+                                          "write into another seat's tree",
                        "why_the_digest": "the book is a pickle inside this "
                                          "seat's worktree. The reproduction "
                                          "gate satisfies rule 10 "
@@ -639,7 +693,7 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
     out["predicates"] = evaluate(out)
     out["wall_s"] = round(time.time() - t0, 1)
     if outdir is not None:
-        p = Path(outdir) / "be_cancel_axis_null_v2.json"
+        p = Path(outdir) / "be_cancel_axis_null_v3.json"
         p.write_text(json.dumps(out, indent=1, sort_keys=True, default=float))
         out["_written"] = str(p)
     return out
@@ -818,7 +872,7 @@ def main(argv=None) -> int:
         for i, a in enumerate(argv):
             if a == "--n" and i + 1 < len(argv):
                 n = int(argv[i + 1])
-        out = run(outdir=DERIVED, n_draws=n)
+        out = run(outdir=OUT_DERIVED, n_draws=n)
         print(json.dumps({"written": out.get("_written"),
                           "wall_s": out["wall_s"]}))
         return 0

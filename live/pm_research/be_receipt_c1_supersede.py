@@ -36,7 +36,13 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+import be_data_root as _BDR
+
 ROOT = HERE.parents[1]
+#: READ root resolves through the shared helper (R-559(C));
+#: WRITES stay in this seat's worktree -- the ledger's
+#: derived/ is the MAIN TREE's checkout.
+_DATA_ROOT = Path(_BDR.resolve(ROOT)["data_root"])
 DERIVED = ROOT / "data/pm_5min/derived"
 
 GATE = "user_admission"
@@ -135,6 +141,7 @@ def build(day: str, *, derived: Path | None = None) -> dict:
                           capture_output=True, text=True).stdout.strip()
     return {
         "protocol": "BE_FORWARD_DAY_RECEIPT_C1_SUPERSEDE_V2",
+        "data_root": _BDR.receipt_block(),
         "day": day,
         "supersedes_version": 1,
         "supersedes_receipt": {

@@ -39,7 +39,15 @@ from __future__ import annotations
 import json, math, random, sys
 from pathlib import Path
 
-DERIVED = Path('/home/yuqing/ctaNew/data/pm_5min/derived')
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+import be_data_root as _BDR
+
+#: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
+#: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
+#: absolute literal, which no env var could redirect.
+DERIVED = _BDR.derived()
 
 # --- HIGHEST-VERSION RESOLUTION (R-139(3)) ---------------------------------
 # The harness must NOT hardcode a receipt filename. v2 carries a superseded

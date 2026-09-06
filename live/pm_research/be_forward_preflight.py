@@ -17,11 +17,19 @@ import subprocess
 import sys
 from pathlib import Path
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+import be_data_root as _BDR
+
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-MAIN_DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+#: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
+#: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
+#: absolute literal, which no env var could redirect.
+MAIN_DERIVED = _BDR.derived()
 LOCAL_DERIVED = HERE.parents[1] / "data" / "pm_5min" / "derived"
 
 

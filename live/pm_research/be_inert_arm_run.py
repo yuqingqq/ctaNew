@@ -35,6 +35,11 @@ import os
 import sys
 from pathlib import Path
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+import be_data_root as _BDR
+
 _ROOT = str(Path(__file__).resolve().parent)
 if sys.path and sys.path[0] != _ROOT:
     sys.path.insert(0, _ROOT)
@@ -43,9 +48,12 @@ import be_trajectory_export as BE                     # noqa: E402
 import harmful_rows_loader as RL                      # noqa: E402
 
 SELFTEST_FLAG = "--selftest"
-DEFAULT_TAPE = Path("/home/yuqing/ctaNew/data/pm_5min/derived/"
+DEFAULT_TAPE = _BDR.derived() / (
                     "harmful_exposure_rows_v3_topup.json")
-OUT_DIR = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+#: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
+#: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
+#: absolute literal, which no env var could redirect.
+OUT_DIR = _BDR.derived()
 
 # Declared by DA and transcribed here INDEPENDENTLY, like BE_EVENT_FIELDS. The
 # agreement check compares the two rather than importing one as truth.

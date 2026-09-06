@@ -32,12 +32,18 @@ import json
 import sys
 from pathlib import Path
 
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import be_data_root as _BDR
 
 import harmful_forward_scorer as FS
 import phase2_declaration as PD
 
-REPO = Path("/home/yuqing/ctaNew")
+#: R-559(C) / Q-MEM-106: resolved through the shared resolver, which
+#: DELEGATES to `pm_tape_density._resolve_data_root()`. This was an
+#: absolute literal, which no env var could redirect.
+REPO = _BDR.repo_root()
 DERIVED = REPO / "data/pm_5min/derived"
 
 #: The population the freeze's manifest binds. Not chosen here.

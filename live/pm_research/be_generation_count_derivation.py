@@ -36,9 +36,15 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
+import be_data_root as _BDR
+
 ROOT = HERE.parents[1]
-DERIVED = ROOT / "data/pm_5min/derived"
-CACHE = DERIVED / "de_section81_cache_12.pkl"
+#: READ root resolves through the shared helper (R-559(C));
+#: WRITES stay in this seat's worktree -- the ledger's
+#: derived/ is the MAIN TREE's checkout.
+_DATA_ROOT = Path(_BDR.resolve(ROOT)["data_root"])
+DERIVED = ROOT / "data/pm_5min/derived"          # WRITE (this seat)
+CACHE = _DATA_ROOT / "pm_5min/derived/de_section81_cache_12.pkl"  # READ (ledger)
 HEADS = ("q1_arrival_composed_lgbm", "incumbent_linear_d")
 COIN = "btc"
 
@@ -76,7 +82,17 @@ def derive(path: Path | None = None) -> dict:
            if "dropped" in v}
     vals = sorted(set(got.values()))
     return {
-        "protocol": "BE_GENERATION_COUNT_DERIVATION_V1",
+        "protocol": "BE_GENERATION_COUNT_DERIVATION_V2",
+        "supersedes": {
+            "artifact": "data/pm_5min/derived/"
+                        "be_generation_count_derivation_v1.json",
+            "rule": "13 -- vN+1; v1 is NOT edited and stays at its bytes",
+            "what_changed": "PROVENANCE ONLY: the resolved data root and the "
+                            "branch taken now travel in the receipt "
+                            "(R-559(C)). Every count is unchanged and the "
+                            "checker asserts them.",
+        },
+        "data_root": _BDR.receipt_block(),
         "as_of_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "this_is_BEs_derivation_only": (
             "it publishes WHICH FILE, WHICH STAGE and WHICH COUNT so BE's and "
@@ -178,7 +194,7 @@ def main(argv=None) -> int:
         return selftest()
     if "--emit" in argv:
         out = derive()
-        dst = DERIVED / "be_generation_count_derivation_v1.json"
+        dst = DERIVED / "be_generation_count_derivation_v2.json"
         dst.write_text(json.dumps(out, indent=1, sort_keys=True))
         print(json.dumps({"written": str(dst),
                           "stage_1": out["stage_1"]["count"],
