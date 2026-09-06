@@ -1,9 +1,151 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T07:27:43Z — **The race read is UNBLOCKED and NOT READ — the
-ruling is made, the reader is not landed. And for the first time today one of the
-three tests is executing on real data.** Gate 1 is 1 of 7. Economics: `RESULTS.md`
-§0.
+Updated: 2026-09-06T07:41:40Z — **Only THREE of the five feed files exist — and my
+round-135 flag relayed the prose, not the pin file. The book is RUNNING, not
+assembled; the smoke is COMPLETE with no gate read.** Gate 1 is 1 of 7. Economics:
+`RESULTS.md` §0.
+
+## READ FIRST — round 136
+
+### 1. Only three feed files exist — and I relayed the prose, not the pin file
+
+**Both texts, quoted.** R-589(B): *"the five `be_forward_day_SEALED_feed_<DAY>.jsonl`
+… pinned"*. R-590(A): ***"only THREE of the five feed files exist — 09-01 and 09-02
+never had one."***
+
+**My own two checks:**
+
+```
+pin file   all_five_present: False
+           20260901.exists: False      20260902.exists: False
+           09-03  283,925,031 B  19d03c5d…
+           09-04  297,461,852 B  f38841cc…
+           09-05                 9a7d6b01…
+census     exactly THREE feed files on disk: 09-03, 09-04, 09-05
+```
+
+***My round-135 flag said "the five feed files are now pinned" — taken from the
+register's sentence, when the pin file it names already said
+`all_five_present: false`.*** *The coordinator states it exactly: "the prose
+overstated the artifact; the artifact was right."*
+
+**Second relay instance in seven rounds — and worse than round 129's**: the artifact
+here was a 4 KB declaration whose first field answers the question.
+
+### 2. And the reason is mechanical, which I checked at the log
+
+```
+git log -S FEED_FIELDS   →  5565e39   09-03 06:34:05Z   (BE17)
+09-01 run directory mtime   09-02 14:37:31Z
+09-02 run directory mtime   09-03 04:30:25Z      ← both BEFORE the emitter existed
+```
+
+**So *"the interim read computed MATCHED_VOLUME on the FEED"* cannot be literally
+true of 09-01/02.** *A capability cannot have been used before it was written, and a
+commit date settles it in one command — the command I did not run last round.*
+
+### 3. The population is RULED-CONDITIONAL, not ruled
+
+Five **named** days — 09-01/02 from the interim's own receipts, 09-03/04/05 from the
+feed at the pinned digests — **no re-seal, directional, no interval** — ***subject to
+REV 44 establishing what the two interim receipts carry, and void if they carry no
+incumbent increment.***
+
+> **A ruling that names its own falsifier before the evidence is in.** *Two days read
+> one way and three another is a heterogeneous population, and the declaration says so
+> rather than smoothing it.*
+
+### 4. The reviewer's own proposed fix fails too — and DA drove it
+
+Fourth level of the ordering falsifier: declared → cost half false → quantity half
+false → **the reviewer's restatement false as well.**
+
+```
+queue_ahead 100, order 10, ONE trade of 110, depth at L 1000
+  RiskAverse fills 10        E[ProbQueue] = 9.986301369863014  <  10
+  marginal regime, NO defect present
+```
+
+***So the expectation is true exactly on the testable set, and the `front = 0`
+predicate is doing all the work*** — declared as a regime with its hand derivation,
+and **the reviewer's 993/2000 = 0.4965 reproduces exactly in DA's code.**
+
+*Rule 1 says no seat's claim — including the reviewer's — is accepted from a report.
+**A proposed fix is a claim.***
+
+### 5. The staleness bar names the number it is *not*
+
+1,000 ms, taken from **rule 5's own "≥ 1 s bars only" line** — and the declaration
+names **ICP's measured 517 ms as the number it did not use.**
+
+> ***The cleanest anti-tuning device this programme has produced.*** A bar from a
+> standing rule is defensible; a bar from a measurement is suspect; **naming the
+> measured value you rejected lets a reader verify the distinction instead of
+> trusting it.**
+
+Same move as last round's ruling chosen *"because it is the one with a rule cited"* —
+**twice in two rounds, in two seats.**
+
+### 6. And v7 states the misreading it invites
+
+Under the USER's BTC ruling: ***"BTC is the most active symbol in the set, so the
+placement-quality problem is at its WEAKEST there."*** *A declaration naming the
+flattering direction of its own scope restriction, before anyone can accuse it.*
+
+With: cap **6.0 GiB = 75% of the wrapper's 8 GiB, because a cgroup kill is silent and
+leaves nothing written**; **streaming parity as a control**; and an off-grid target
+**refusing**, because *"silence there is a wrong exclusion."*
+
+### 7. My round-130 count was independently reproduced — and what I could only bound is now measured
+
+I computed **11** post-boundary admissible days from the census; **DA derives the same
+11** as 12 complete days less 08-26's reboot. *Two routes, one number, neither from the
+other.*
+
+And my note that a date-based selection *"admits forty-six seconds of legacy rows"* is
+now quantified **row-wise**: **08-24 is 56.0459% legacy-stamped on ADA — 2,337,473 of
+4,170,641 rows.**
+
+> ***Forty-six seconds of wall clock is more than half the day's rows, because the
+> rows are not uniform in time.***
+
+**And the 08-29/30 withdrawal I swept as a ruling is now pinned by a check** — it
+cannot creep back into the positive list.
+
+### 8. The three tests, driven by me
+
+| test | state |
+|---|---|
+| **09-03 book** | **RUNNING, NOT ASSEMBLED** — `be55book.scope`, 765 s, 3.93 GB, `heavy=True locked=True` |
+| **E2-A smoke** | **COMPLETE, NO GATE READ** — `gate_read` false at 11 < 14; gate at ≈09-09 |
+| **race read** | **UNBLOCKED, NOT READ** — population RULED-CONDITIONAL |
+
+***Not assembled until BE reports a sha.*** *A running process is not an artifact —
+and this file has twice this session recorded a file's existence as readiness.* DA's
+measured **631.8 s / 2.717 GiB** reconciles with the 2,849,388 KiB I read off the
+receipt last round.
+
+### 9. REV 43's routing — and DE 81 closed its four while I wrote
+
+The exclusivity finding is **closed in the shape filed** — *two `flock -s` holders in
+**two processes** both refused; one shared refused; exclusive admits; nobody-holding
+fail-closed.* And the TypeError, unthreaded fragment and uncalled front door were
+**true at BE 52/53 and addressed at BE 54**, verified in the diff rather than the
+report.
+
+**Four items to DE 81** — including **the `/proc/locks` parse ignoring the device,
+*my own round-133 finding reaching a dispatch***, and *"23 day-path checks"* beside
+`DAY_PATH_CHECKS = 49` (a count in prose against a constant in code). **Three to
+BE 56**, queued behind the book. **DE 81 landed at `4a345f4` while I wrote** — *I
+verified the tip, not the four closures.*
+
+*The reviewer states its own resources rather than implying them: 18.45 s / 66 MB and
+22.92 s / 22 MB, the lock never taken, no sealed file opened.*
+
+**Counts, measured before this was written:** flags 740 → 750, flag_provenance
+285 → 295, tasks 19; 167 CHECKED, 128 RELAYED, **455 UNMARKED — unchanged for the
+twelfth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+flags vs HEAD 0 without provenance.
 
 ## READ FIRST — round 135
 

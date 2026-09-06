@@ -9900,3 +9900,92 @@ directions.
   existed (7 findings, exit 1) and cleared to 0 once written -- its second
   consecutive live positive control.**)
 ```
+
+## Batch 118 — archived 2026-09-06T07:41:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 136 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T07:08:52Z (MEM ROUND 133 -- R-584, R-585 AND REV 41 SWEPT. STATE
+  ONLY. THE ROUND'S FINDING IS A PROGRESSION I CARRIED EVERY STEP OF, TWICE ON THE
+  WRONG SIDE.
+  (1) **ONE SENTENCE -- "IS THIS RUN HOLDING THE HEAVY LOCK?" -- HAS NOW BEEN
+  ANSWERED WRONGLY AT FOUR SUCCESSIVE LEVELS, EACH LOOKING LIKE CLOSURE WHEN IT
+  LANDED.** A caller FLAG (refuted by R12's own text); an open FD -- **which I
+  recorded at round 129 as "the right shape" and conceded at round 130**; a LOCK --
+  **which I recorded at round 132 as closed and driven**; and now **EXCLUSIVITY**:
+  REV 41 reproduced **two concurrent `flock -s` holders, each reading
+  `heavy_run_lock_held: true` and each ADMITTED by `assert_rule20`** -- ***the
+  05:54Z two-heavy-runs condition the instrument exists to make impossible, on
+  current code.***
+  (2) **AND THE PHRASE I USED AT ROUND 132 IS THE THING THAT WAS WRONG: "two
+  independent mechanisms for one predicate."** It was true and **both mechanisms
+  shared one blind spot** -- `LOCK_EX` fails against a shared lock exactly as
+  against an exclusive one, so ***the redundancy bought nothing.*** **Independence
+  must be in what the checks can DISTINGUISH, not in how they are implemented.**
+  (3) **THE PARSE NEVER READS FIELD 3 -- AND ITS OWN EXAMPLE COMMENT DISPLAYS
+  IT.** Checked by me at the code and against `/proc/locks` here: it tests `f[1]`,
+  matches `f[5]`, appends `f[4]`, **and never examines `f[3]`, which a real line
+  shows is `WRITE`.** ***The docstring's illustration carries the field the code
+  does not read.*** **Fourth instance this session of the answer already sitting in
+  the repository.** Lower-severity sibling: **the inode comparison drops the
+  DEVICE** -- `MAJ:MIN:INO` reduced to `INO`, and inode numbers are unique only
+  within a device.
+  (4) **THE SPLIT IS RULED AND MY CORRECTION-AGAINST-MYSELF HOLDS.** The tape is
+  verified at the receipts (sha `9de88da9…`, **score_split = the day's rows**,
+  train empty by construction). *I had inferred from an identical byte count that
+  the change moved labels not rows; `tape_index` filters on the label, so the label
+  decides which index a row enters.* **The coordinator's reading was right and my
+  inference from a file size was worthless.**
+  (5) **AND THE ASSEMBLY'S BUDGET HAD TO CHANGE ITS INSTRUMENT TO BE CHECKABLE:**
+  five stages each refusing when exceeded, with the index released after `asm` and
+  before the book is written, **measured on VmRSS because `ru_maxrss` is a
+  high-water mark and cannot show a release.** *A budget that must observe a
+  DECREASE cannot use the metric that only ever rises.*
+  (6) **THE BOOK IS BLOCKED AND ROUTED TO BOTH OWNERS, NOT ONE.**
+  `phase2_arms.TAPE_PATH` is a module constant on the August tape;
+  **`phase2_arms.py` is BE's module and the eight read sites are DE's seam.** *One
+  defect, two surfaces, neither seat able to fix it alone without editing the
+  other's file* -- **"coordination by Q rows, never by editing each other's
+  module."** `assert_day_tape` refuses before any work, 10/10 driven.
+  (7) **AND THE ONE SENTENCE A READER MOST NEEDS, NOW ITS OWN FLAG: NONE OF THE
+  THREE TESTS HAS A NUMBER YET.** Gate-1 behind DE 80 + BE 52(1); the race read
+  behind BE 52(2) and its review; E2-A on BTC under the USER's ruling, gate at 14
+  post-boundary days. ***Every blocker is named and owned, none is a measurement
+  problem, and the honest summary is that the machinery is close and the results
+  are absent.***
+  (8) **AND MY ROUND-132 BATCH SURVIVED THE REBASE INTACT** -- 745 insertions
+  across my four files, Q-MEM-120 present, all four round-132 flags present, and
+  DA's commit preserved as `acd393a`. *The divergence I refused to resolve was
+  resolved by the seat that could, and nothing was lost.*
+  (9) **AND THE COMMIT-TIME RE-READ FOUND A RECEIPT WHOSE DIGEST DOES NOT MATCH ITS
+  OWN NAMED ARTIFACT.** My grep for the cited `9de88da9…` returned ZERO hits in any
+  receipt, so **I computed the file's sha256 myself (53 s over 991 MB): it IS
+  `9de88da9…`, so the REGISTER is right** -- and
+  `be_gate1_state_tape_receipt_20260903_btc.json` carries
+  **`tape.sha256 = 7206101d…`, the round-50 WRONG_SPLIT tape's digest**, while
+  `tape.path` names the REBUILT file. ***And this is the dangerous shape, not a
+  typo: `bytes` MATCHES, `n_rows` MATCHES, the path MATCHES -- only the digest
+  disagrees.*** *A reader checking size or row count is reassured; the one field
+  that exists to catch substitution is the one that is wrong.* **And it is exactly
+  why the digest matters here: the two tapes share byte count and row count and
+  differ in content -- the identical size I wrongly reasoned from last round is what
+  makes every other field indistinguishable.** Receipt mtime 07:10:49Z is LATER than
+  the tape's 07:01:11Z. **ROUTED, not fixed -- BE's surface.** *And on my own
+  method: I put that digest into this round's flag by copying it from R-585 without
+  checking it. The relay happened to be correct and the receipt was not -- luck, not
+  method; the check I ran afterwards is what makes it a finding.*
+  (10) **AND DE 80 CLOSED THE EXCLUSIVITY FINDING IN THE SAME BATCH AS THE PATH
+  PARAMETER -- ABOUT FOUR MINUTES AFTER REV 41 FILED IT.** `_flock_holders` now
+  reads `f[3]` with the comment *"READ (a SHARED hold) or WRITE (an EXCLUSIVE
+  one)"* and carries the mode with the pid. **So level four of the lock predicate is
+  answered while this sweep was being written** -- *the docstring line that exposed
+  the defect is still there as the format example.*
+  MEASURED BEFORE THIS SENTENCE: flags 716 -> 723, flag_provenance 261 -> 268,
+  tasks 19; 147 CHECKED, 121 RELAYED, **455 UNMARKED -- unchanged for the ninth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
+```
