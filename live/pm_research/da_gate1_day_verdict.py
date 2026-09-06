@@ -2762,6 +2762,93 @@ def _fn_source(name: str) -> str:
     raise VerifierRefused(f"REFUSED: no function named {name} in this module")
 
 
+#: REV 76 S0. ***A LEAF WALK CANNOT SEE AN EMPTY CONTAINER.*** `D_E0:
+#: 0.0` leaked and `D_E0: []` came back SEALED -- the key was PRESENT and
+#: the walk yielded nothing to judge, so a sealed name emitted as `[]`,
+#: `{}` (or as `null`, which is a leaf but an easy one to mistake for
+#: absence) was invisible. The receipt's own `seal_status` says
+#: present-and-ignored never happens; nothing produces it today, because
+#: DE's `_strip_economic` removes KEYS. The census is what must make it
+#: impossible tomorrow.
+#:
+#: THE SHARED RULE, in one line, which DE 105 implements on its side and
+#: this implements here, independently (R-235):
+#:   ***A SEALED NAME PRESENT AS A KEY REFUSES, WHATEVER ITS VALUE --
+#:   INCLUDING AN EMPTY CONTAINER AND `null`. ABSENCE IS THE ONLY SEAL.***
+SEAL_RULE = ("A SEALED NAME PRESENT AS A KEY REFUSES, WHATEVER ITS VALUE "
+             "-- including an empty container and null. ABSENCE IS THE "
+             "ONLY SEAL.")
+
+
+def _normalise_rule(t: str) -> str:
+    return " ".join(str(t).split()).upper().replace("--", "-").strip(" .")
+
+
+def de_seal_rule_at_source(path: Path | None = None) -> dict:
+    """DE's side of the SAME rule, read at DE's source by AST.
+
+    REV 76 S0 asks the two censuses to agree BY CONSTRUCTION. They are not
+    one implementation (R-235: DE's declaration, this seat's judgement) --
+    what must be shared is the RULE, so it is read from DE's source as a
+    STRING and compared with the one this module states. ***A rule DE has
+    not declared yet is a NAMED STATUS, never a pass***, and a rule
+    declared DIFFERENTLY is a flag: two censuses agreeing by accident is
+    what this check exists to prevent."""
+    src = Path(path) if path else DE_RUNNER_PATH
+    if not src.is_file():
+        raise VerifierRefused(
+            f"REFUSED: DE's runner is absent at {src}; the shared seal "
+            f"rule cannot be read at its source and MUST NOT be assumed.")
+    raw = src.read_bytes()
+    tree = ast.parse(raw.decode())
+    declared, where = None, None
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for t in node.targets:
+                if isinstance(t, ast.Name) and "SEAL_RULE" in t.id:
+                    try:
+                        declared, where = ast.literal_eval(node.value), t.id
+                    except ValueError:
+                        pass
+    walkers = sorted(
+        n.name for n in ast.walk(tree)
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and "key" in n.name.lower()
+        and ("walk" in n.name.lower() or "seal" in n.name.lower()))
+    if declared is None:
+        return {"status": "DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET",
+                "agrees": None, "key_walkers_found": walkers,
+                "source_path": "live/pm_research/de_multiday_gate1_runner.py",
+                "source_sha256": hashlib.sha256(raw).hexdigest(),
+                "this_seat_s_rule": SEAL_RULE,
+                "why": ("DE 105 is landing it; an absence is reported by "
+                        "name and never read as agreement")}
+    same = _normalise_rule(declared) == _normalise_rule(SEAL_RULE)
+    return {"status": ("DECLARED_AND_MATCHES" if same
+                       else "DECLARED_AND_DIFFERS"),
+            "agrees": same, "declared_as": where,
+            "key_walkers_found": walkers,
+            "source_path": "live/pm_research/de_multiday_gate1_runner.py",
+            "source_sha256": hashlib.sha256(raw).hexdigest(),
+            "this_seat_s_rule": SEAL_RULE, "de_s_rule": declared,
+            "why": ("the two censuses are independent implementations of "
+                    "ONE rule; the rule is what is shared, and it is read "
+                    "rather than assumed")}
+
+
+def _walk_keys(o, path=""):
+    """(path, key, value) for EVERY key at every depth -- including keys
+    whose value is an empty container, which a leaf walk never reaches."""
+    if isinstance(o, dict):
+        for k, v in o.items():
+            q = f"{path}.{k}" if path else str(k)
+            yield q, str(k), v
+            yield from _walk_keys(v, q)
+    elif isinstance(o, list):
+        for i, v in enumerate(o):
+            yield from _walk_keys(v, f"{path}[{i}]")
+
+
 def _walk_paths(o, path=""):
     """(path, value) for every leaf, at full depth, dicts and lists."""
     if isinstance(o, dict):
@@ -2791,8 +2878,14 @@ def economic_absence(receipt) -> dict:
                                   else {})
     judged = inforce["fields"]
     walked = list(_walk_paths(receipt))
-    leaks = [p for p, _ in walked
-             if p.rsplit(".", 1)[-1].split("[")[0] in judged]
+    #: REV 76 S0: THE KEYS, not the leaves. A sealed name present as a key
+    #: refuses whatever its value -- `[]`, `{}` and `null` included.
+    keys = list(_walk_keys(receipt))
+    leaks = sorted({q for q, k, _ in keys if k in judged})
+    empties = sorted({q for q, k, v in keys
+                      if k in judged
+                      and (v is None or (isinstance(v, (list, dict, str))
+                                         and len(v) == 0))})
     return {"economic_fields_declared": list(ECONOMIC_FIELDS),
             "judged_against": list(judged),
             "n_judged_against": len(judged),
@@ -2809,14 +2902,23 @@ def economic_absence(receipt) -> dict:
             #: RECEIPT; `emitted_census` walks THIS SEAT'S OWN RECORD. The
             #: register read them as one number ("0 leaked in 299 leaves")
             #: and 299 is the RECORD's leaf count, not the receipt's.
-            "walks": "THE RECEIPT under test",
+            "walks": "THE RECEIPT under test, BY KEY",
+            "the_rule": SEAL_RULE,
+            "n_receipt_keys_walked": len(keys),
             "n_receipt_leaves_walked": len(walked),
+            "n_leaked_that_a_leaf_walk_could_not_see": len(empties),
+            "leaked_but_empty_or_null_paths": empties,
+            "why_by_key": (
+                "a leaf walk never reaches an empty container, so a sealed "
+                "name emitted as `[]` or `{}` was PRESENT AND IGNORED -- "
+                "the one state the receipt's own seal_status says cannot "
+                "happen. Absence is the only seal"),
             "not_to_be_confused_with": (
                 "`emitted_census.n_leaves_emitted`, which walks THIS "
                 "RECORD -- the anti-echo control on what this seat itself "
                 "publishes"),
             "n_leaked_fields": len(leaks),
-            "leaked_field_paths": sorted(leaks),
+            "leaked_field_paths": leaks,
             "sealed": not leaks,
             "values_were_not_read": True,
             "why_paths_only": (
@@ -2880,8 +2982,11 @@ def emitted_census(emitted: dict, receipt) -> dict:
           format it does not parse back, and a form scan misses a value
           written in a format nobody listed.
     """
-    names = [p for p, _ in _walk_paths(emitted)
-             if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS]
+    #: REV 76 S0: BY KEY. `{"D_E0": []}` in an emission of mine carries
+    #: the NAME of a sealed quantity and no leaf -- check (a) is about the
+    #: NAME, so it must see the key whatever the value is.
+    names = sorted({q for q, k, _ in _walk_keys(emitted)
+                    if k in ECONOMIC_FIELDS})
     econ_vals = {v for p, v in _walk_paths(receipt)
                  if p.rsplit(".", 1)[-1].split("[")[0] in ECONOMIC_FIELDS
                  and isinstance(v, (int, float))
@@ -4669,6 +4774,91 @@ def selftest_pre_read() -> list:                              # noqa: C901
         ck("DA 97 PIN-SHAPE CELL -- ***SKIPPED AND NAMED, NOT PASSED***: "
            "no params declaration is present in this tree",
            False, "the fixture needs the params declaration on disk")
+
+    # -- REV 76 S0: THE CENSUS WALKS KEYS, NOT LEAVES -------------------
+    _forms = {"an empty list": [], "an empty mapping": {},
+              "a zero": 0.0, "a null": None}
+    _rows, _missed = [], 0
+    for _name in ECONOMIC_FIELDS:
+        for _lbl, _val in _forms.items():
+            _r = economic_absence({"protocol": "SYNTHETIC_NO_PROVENANCE",
+                                   "per_day_sealed_artifacts": [
+                                       {"arm": "A", "nested": {
+                                           "deeper": {_name: _val}}}]})
+            _rows.append((_name, _lbl, _r["sealed"], _r["n_leaked_fields"],
+                          _r["leaked_field_paths"][:1]))
+            if _r["sealed"] or _r["n_leaked_fields"] != 1:
+                _missed += 1
+    _leafblind = sum(1 for n, l, *_ in _rows if l != "a zero")
+    _e903 = _e904 = None
+    for _f, _lbl in (("p003_de_gate1_day_run_20260903_SEALED__"
+                      "20260906T140155Z.json", "09-03"),
+                     ("p003_de_gate1_day_run_20260904_SEALED__"
+                      "20260906T163351Z.json", "09-04")):
+        _q = _derived_dir() / _f
+        if _q.is_file():
+            _x = economic_absence(json.loads(_q.read_text()))
+            if _lbl == "09-03":
+                _e903 = _x
+            else:
+                _e904 = _x
+    ck("REV 76 S0 -- ***A LEAF WALK CANNOT SEE AN EMPTY CONTAINER.*** "
+       "`D_E0: 0.0` leaked and `D_E0: []` came back SEALED: the key was "
+       "PRESENT and the walk yielded nothing to judge, so a sealed name "
+       "emitted as `[]`, `{}` or `null` was ***present and ignored*** -- "
+       "the one state the receipt's own `seal_status` says cannot happen. "
+       "Nothing produces it today (DE's `_strip_economic` removes KEYS); "
+       "***the census is what must make it impossible tomorrow***. It "
+       "walks KEYS now: a sealed name present as a key refuses WHATEVER "
+       "its value. Driven on ALL ELEVEN names in ALL FOUR forms at depth "
+       "-- 44 drives, 44 refusals, and 33 of them are ones the old leaf "
+       "walk could not have seen",
+       len(_rows) == 4 * len(ECONOMIC_FIELDS) and _missed == 0
+       and _leafblind == 33,
+       f"{len(_rows)} drives across {len(ECONOMIC_FIELDS)} names x "
+       f"{len(_forms)} forms -> {len(_rows) - _missed} refused, "
+       f"{_missed} missed; {_leafblind} of them empty-or-null, which a "
+       f"leaf walk never reaches")
+    ck("AND THE TWO REAL SEALED RECEIPTS ARE STILL SEALED UNDER THE KEY "
+       "WALK -- ***the rule got stricter and the artifacts did not "
+       "move***: DE strips the KEYS, so there is nothing for a key walk "
+       "to find that a leaf walk missed. `seal_holds` would read the SAME "
+       "for both days, which is why neither landing record needs "
+       "re-emission",
+       _e903 is not None and _e904 is not None
+       and _e903["sealed"] is True and _e903["n_leaked_fields"] == 0
+       and _e904["sealed"] is True and _e904["n_leaked_fields"] == 0
+       and _e903["n_leaked_that_a_leaf_walk_could_not_see"] == 0
+       and _e904["n_leaked_that_a_leaf_walk_could_not_see"] == 0,
+       (f"09-03: {_e903['n_receipt_keys_walked']} keys, 0 leaked; 09-04: "
+        f"{_e904['n_receipt_keys_walked']} keys, 0 leaked"
+        if _e903 and _e904 else
+        "ABSENT: one of the two sealed receipts is not at this root -- "
+        "reported, never passed"))
+    _echo = emitted_census({"mine": {"D_E0": []}}, {"day": "2026-09-04"})
+    ck("AND MY OWN ANTI-ECHO CENSUS WALKS KEYS TOO: `{\"D_E0\": []}` in "
+       "something I emit carries the NAME of a sealed quantity and no "
+       "leaf at all -- check (a) is about the NAME, so it must see the "
+       "key whatever the value is",
+       _echo["n_economic_field_names_in_the_emission"] >= 1,
+       f"a sealed NAME with an empty value in an emission -> "
+       f"{_echo['n_economic_field_names_in_the_emission']} name(s) found")
+    _de = de_seal_rule_at_source()
+    ck("AND THE TWO CENSUSES SHARE A RULE, NOT AN IMPLEMENTATION (R-235). "
+       "The rule is stated here as `SEAL_RULE` and READ FROM DE'S SOURCE "
+       "by AST, exactly as the field list and the per-name scope map are. "
+       "***A rule DE has not declared yet is a NAMED STATUS, never a "
+       "pass***, and one declared DIFFERENTLY is a flag -- ***two "
+       "censuses agreeing by accident is what this check exists to "
+       "prevent***. At this tip DE 105 has not landed its side, so the "
+       "seam is reported as NOT YET DRIVEABLE with DE's source digest "
+       "beside it",
+       _de["status"] in ("DECLARED_AND_MATCHES",
+                         "DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET")
+       and (_de["agrees"] is True if _de["status"].startswith("DECLARED")
+            else _de["agrees"] is None),
+       f"{_de['status']}; DE's runner at {_de['source_sha256'][:16]}; key "
+       f"walkers found there: {_de['key_walkers_found']}")
 
     # -- R-673(a): THE PATH THE RECEIPT NAMES IS THE PATH THAT IS HASHED -
     _pt = Path(tempfile.mkdtemp(prefix="da97path_"))
