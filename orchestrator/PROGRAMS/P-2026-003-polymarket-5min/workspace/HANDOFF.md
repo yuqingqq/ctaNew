@@ -1,3 +1,85 @@
+# READ FIRST — round 233 (MEM, 2026-09-06T20:44:26Z, tip `d6ad970`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-729 and R-730 swept.
+**I opened no result this round and quoted no sealed field** — everything I
+opened is a declaration, a source file, a git object or a directory listing.
+
+## 1. The four open user items, carried here with the horizon
+
+| # | item |
+|---|---|
+| a | the overnight cadence |
+| b | the V2 line's ruling |
+| c | the XS rebalance notional's source |
+| **d** | **NEW — whether a SECOND four-day race read happens at all**, which rests on R-531 being read as authorising it, and which **no field in v5 claims to supply** |
+
+**Item (d) is time-bound.** `read_horizon.not_before_utc` = **2026-09-10T01:00:00Z**
+— computed as **3 days 4 h 17 m** from my round-start clock (20:42:41Z). Until it
+is ruled: **v5 stands (it opens nothing), the pins are taken at each close, and no
+read is dispatched.** MEM carries the item; the decision is the USER's and MEM
+asserts nothing about it.
+
+## 2. REV's substance claim, confirmed independently — with a control that fires
+
+`be_forward_day_SEALED_feed_<day>.jsonl` is present **exactly once** for each of
+09-03, 09-04, 09-05 and **zero** times for 09-06 and 09-07. **The day is
+unopened**, so the pre-registration is one *in substance*, not only in wording.
+
+**And my first probe could not discriminate, so it proved nothing.** It searched
+`~/.local/state/pm-co` and `ctaNew/data/pm_5min`, returned 0 for 09-06 — and its
+control, a **consumed** day, **also returned 0**, because the feeds live in
+`~/ctaNew_forward_runs/`, which I had not searched. **A probe whose positive
+control does not fire reports nothing, whatever its answer looks like.** I read
+the pins declaration for the real paths and re-ran it; only then did the answer
+mean anything. One step earlier it caught a looser error too: my first grep
+matched P-2026-002 artifacts merely *stamped* 20260906, which are not race feeds.
+
+## 3. Pooling, and DA 112
+
+**Pooling is foreclosed by v5's own sentence**, read at the artifact: it *"needs
+its own declaration, written BEFORE either read is opened — which for the first
+read is already impossible."* Permanent, and the artifact's own words.
+
+**DA 112 verified at the source:** `declaration_of_the_read(art)` resolves by the
+artifact's own pair; a digest no version carries refuses
+`READ_ARTIFACT_DECLARATION_NOT_IN_THE_CHAIN`; the head is consulted **only to
+say** (`is_the_current_head` / `the_current_head`), never to judge — the rule
+`c0dc836` states, implemented. Battery re-run at this tip: **rc 0, 37 checks, 0
+failures** — the same battery I measured red at round 232, still green across the
+round boundary.
+
+**The in-band correction, checked in both directions.** `c0dc836` (20:39:00Z)
+adds 4 lines to SEAT_PROTOCOL.md carrying the rule; R-730 corrects R-729's
+placeholder; **and R-729's own line still reads `` `c…` `` — it was not edited.**
+Rule 13 working both ways at once, and the check is cheap: **a correction that
+also tidied the original would be the failure.**
+
+## 4. The first read's day-set closure is RELAYED, not checked by me
+
+R-730 records that the corrected artifact now says both unrecoverable days and
+that the first read's verdict is VERIFIED. **I did not verify it: doing so would
+mean opening the first read's result, which my line forbids.** Marked RELAYED
+deliberately — the distinction is the whole value of that field, and it is why
+**RELAYED moves this round for the first time in many**.
+
+What I *could* check without opening anything is consistent with it: the pins
+declare `exists false` for 09-01 and 09-02 and true for 09-03..05, and all five
+declared paths agree with the filesystem now — **the two days the first read could
+not recover are the two with no feed, said in the pins rather than inferred.**
+
+## 5. Landed at commit time — UNSWEPT, for MEM 234
+
+**BE 85** (`9ef0e47`, Q-BE-327) — REV 86 §5 closed: the second read's artifact
+carries the two-reads clause, **generated from the declaration, refusing by name
+when it cannot be**, never typed.
+
+Counts: flags 1,507 → 1,517; provenance 1,052 → 1,062; tasks 19; **788 CHECKED /
+274 RELAYED / 455 UNMARKED — hundred-and-ninth round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 215 archived. Q-MEM-221
+filed through the script.
+
+---
+
 # READ FIRST — round 232 (MEM, 2026-09-06T20:38:44Z, tip `5d8dc1b`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-727 and R-728 swept.
