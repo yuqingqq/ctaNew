@@ -634,6 +634,75 @@ def receipt_population_predicates(receipt: dict) -> dict:
     }
 
 
+#: NOTHING ECONOMIC IS IN A BOOK -- and that is a CENSUS, not a promise.
+#: The book carries the scored generations and the arms' thetas; the
+#: economics (D(E0), the null, the ratio) live in the DAY RECEIPT, which is
+#: sealed. A reader entitled to know the book is safe to open before the
+#: read bar is entitled to see the names that are in it.
+BOOK_ECONOMIC_MARKERS = ("bps", "eff_rt", "eff_", "cost", "ci_", "capture",
+                         "pnl", "spread", "fee", "rebate", "markout",
+                         "cents", "profit", "edge", "revenue", "d_e0",
+                         "null_", "p_location", "sd_over", "phi_",
+                         "fill_rate", "verdict")
+CENSUS_VISIT_BUDGET = 400_000
+
+
+def economic_census(book, budget: int = CENSUS_VISIT_BUDGET) -> dict:
+    """Every STRING field name in the book, and whether any is economic.
+
+    WHAT THIS ESTABLISHES: the set of named fields the book carries, and
+    that none of them names an economic quantity.
+    WHAT IT CANNOT: that a float under an innocent name is not secretly a
+    price. Names and shapes are checkable; intent is not. Said here rather
+    than left for a reader to assume.
+    """
+    names: set = set()
+    kinds: dict = {}
+    visited = [0]
+    truncated = [False]
+
+    def walk(o, depth=0):
+        if visited[0] >= budget:
+            truncated[0] = True
+            return
+        visited[0] += 1
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if isinstance(k, str):
+                    names.add(k)
+                walk(v, depth + 1)
+        elif isinstance(o, (list, tuple, set)):
+            for v in list(o)[:64]:
+                walk(v, depth + 1)
+        else:
+            kinds[type(o).__name__] = kinds.get(type(o).__name__, 0) + 1
+
+    walk(book)
+    hits = sorted(n for n in names
+                  if any(m in n.lower() for m in BOOK_ECONOMIC_MARKERS))
+    return {
+        "n_distinct_string_field_names": len(names),
+        "field_names": sorted(names)[:200],
+        "leaf_type_census": dict(sorted(kinds.items(),
+                                        key=lambda kv: -kv[1])[:12]),
+        "economic_markers_tested": len(BOOK_ECONOMIC_MARKERS),
+        "n_field_names_matching_an_economic_marker": len(hits),
+        "matching_field_names": hits,
+        "NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK": not hits,
+        "nodes_visited": visited[0],
+        "budget": budget,
+        "truncated": truncated[0],
+        "what_this_establishes": (
+            "the set of NAMED fields the book carries and that none of them "
+            "names an economic quantity -- the book is arm SCORES and the "
+            "arms' thetas; D(E0), the null and the ratio live in the day "
+            "receipt, which is sealed"),
+        "what_it_cannot_establish": (
+            "that a float under an innocent name is not secretly a price. "
+            "Names and shapes are checkable; intent is not"),
+    }
+
+
 def book_population_predicates(book: dict, receipt: dict,
                                params_thetas: dict | None = None) -> dict:
     """RECOMPUTED FROM THE BOOK. This is the tier that needs the pickle."""
@@ -898,9 +967,13 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
         if blk.get("theta_matches_params") is False:
             flags.append(f"book.{head}.theta_matches_params")
     incomplete = bool(out.get("provenance_incomplete"))
+    census = economic_census(book)
+    if not census["NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK"]:
+        flags.append("book.an_economic_field_name_is_present")
     out.update({
         "protocol": PROTOCOL + "_FULL",
         "tier": "FULL",
+        "economic_census_of_the_book": census,
         "population_from_the_book": bp,
         "flags": flags, "n_flags": len(flags),
         "status": ("FLAGGED" if flags
@@ -1310,6 +1383,24 @@ def selftest() -> tuple:                                      # noqa: C901
     for c in checks:
         print(("ok   " if c["passed"] else "FAIL ") + c["check"])
         print("       " + c["detail"])
+    # -- THE ECONOMIC CENSUS OF A BOOK, BOTH DIRECTIONS ------------------
+    clean_c = economic_census(book)
+    dirty_c = economic_census({**book, "leak": {"eff_rt_bps": 3.21}})
+    ck("NOTHING ECONOMIC IS NAMED IN A BOOK, AND THAT IS A CENSUS RATHER "
+       "THAN A PROMISE: every STRING field name in the book is collected "
+       "and tested against the economic markers, and a planted "
+       "`eff_rt_bps` is FLAGGED by name. ***The census says what it "
+       "establishes -- the NAMES -- and what it cannot: that a float under "
+       "an innocent name is not secretly a price***",
+       clean_c["NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK"] is True
+       and clean_c["n_field_names_matching_an_economic_marker"] == 0
+       and dirty_c["NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK"] is False
+       and "eff_rt_bps" in dirty_c["matching_field_names"]
+       and clean_c["what_it_cannot_establish"],
+       f"clean book: {clean_c['n_distinct_string_field_names']} field "
+       f"name(s), 0 economic; planted -> "
+       f"{dirty_c['matching_field_names']}")
+
     # -- RULE 22 / R-605: THE LAUNCH CAPTURE, BOTH DIRECTIONS ------------
     idy = source_identity_at_launch()
     ck("RULE 22 / R-605 -- THE LAUNCH CAPTURE EXISTS AND IT IS THE CLOSURE, "
