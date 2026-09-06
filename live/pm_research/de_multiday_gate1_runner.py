@@ -35,6 +35,7 @@ import datetime
 import hashlib
 import json
 import random
+import re
 import statistics
 import sys
 import time
@@ -47,14 +48,14 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 201
+EXPECTED_CHECKS = 220
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
 #: stays as provenance (rule 13).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v10.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v11.json"
 SUPERSEDED_PARAMS_REL = ("live/pm_research/declarations/"
-                        "de_multiday_gate1_params_v9.json")
+                        "de_multiday_gate1_params_v10.json")
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -72,7 +73,10 @@ ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location",
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 99
+DAY_PATH_CHECKS = 100
+#: R-610's battery-order checks. They perform real draws (see the guard at
+#: their site), so they are online-only and their count is DECLARED.
+BATTERY_ORDER_CHECKS = 6
 
 
 #: R-603 / REV 49 §0 -- THE DIGEST OF THE BYTES THAT ARE RUNNING, taken
@@ -148,6 +152,18 @@ def _head_state() -> dict:
 
 _capture_closure()
 LAUNCH_HEAD = _head_state()
+
+
+#: REV 54 / R-610. WHAT THE RUN HAS ACTUALLY SPENT, so "the battery
+#: refused BEFORE any replay was run" is a MEASUREMENT and not the reading
+#: of a line number. The 09-03 smoke ran 84 minutes of null draws and was
+#: then refused by a fixture check at the emit; the fix is an ORDER, and an
+#: order is checkable only if the work is counted.
+RUN_COUNTERS = {"draws_performed": 0, "replays_performed": 0}
+
+
+def run_counters() -> dict:
+    return dict(RUN_COUNTERS)
 
 
 class RunnerRefused(RuntimeError):
@@ -1003,102 +1019,213 @@ def sealed_day_receipt_glob(day: str) -> str:
             f"{SEALED_DAY_RECEIPT_MIDFIX}*.json")
 
 
+#: R-608 / REV 54 S0.1. THE FIELDS OF A SUPERSESSION LINK. The link is the
+#: PAIR and BOTH halves are required; this tuple is the one place on this
+#: side of the seam that says so.
+SUPERSEDES_PAIR_FIELDS = ("path", "sha256")
+
+#: Every status this seat's chain resolver can REFUSE with, and the two it
+#: RESOLVES with. A caller asking "did it refuse" asks these, never a
+#: string it typed.
+CHAIN_RESOLVED_STATUSES = ("PRESENT", "PRESENT_CHAIN_HEAD")
+CHAIN_REFUSAL_STATUSES = (
+    "SUPERSEDES_MALFORMED", "LINK_NOT_A_PAIR",
+    "SUPERSEDES_TARGET_DIGEST_MISMATCH", "SUPERSEDES_MOVED",
+    "DANGLING_SUPERSEDES", "AMBIGUOUS", "ARTIFACT_UNREADABLE")
+
+
+def supersedes_shape(rec) -> dict:
+    """WHAT `supersedes` IS, judged BEFORE anything is read out of it.
+
+    REV 54 S0.1 drove a `.v2` whose `supersedes` was a BARE PATH STRING
+    through the whole read gate. `rec.get("supersedes") or {}` returns the
+    STRING -- a non-empty string is truthy -- and `.get` on it raises
+    `AttributeError`, which left `find_sealed_day_receipt`, which
+    `read_gate` calls FOR EVERY RULED DAY. One malformed artifact took the
+    gate DOWN where DA refused it by name. **A gate that crashes on bad
+    input has not judged it**, and the traceback is not a verdict.
+
+    So the value's SHAPE is a named verdict, and no field is read out of
+    it until the shape says a field exists:
+
+      key absent, or null          ABSENT     declares no link
+      not a mapping                MALFORMED  REFUSED BY NAME
+      a mapping missing either
+        half -- or carrying a
+        non-string for one         INCOMPLETE REFUSED BY NAME: half a link
+                                              is not "no link"
+      both halves, both strings    PAIR       the only shape that binds
+    """
+    if not isinstance(rec, dict) or "supersedes" not in rec:
+        return {"kind": "ABSENT", "status": "NO_SUPERSEDES_BLOCK",
+                "is_a_pair": False,
+                "why": "no `supersedes` key: this artifact claims to "
+                       "supersede nothing"}
+    raw = rec.get("supersedes")
+    if raw is None:
+        return {"kind": "ABSENT", "status": "NO_SUPERSEDES_BLOCK",
+                "is_a_pair": False,
+                "why": "`supersedes` is null: present and declaring "
+                       "nothing, which is not a half-written link"}
+    if not isinstance(raw, dict):
+        return {"kind": "MALFORMED", "status": "SUPERSEDES_MALFORMED",
+                "is_a_pair": False, "observed_type": type(raw).__name__,
+                "required_fields": list(SUPERSEDES_PAIR_FIELDS),
+                "why": ("a `supersedes` that is not an OBJECT carrying "
+                        "both `path` and `sha256` is REFUSED BY NAME. "
+                        "Reading a bare string as the path half would be "
+                        "resolving by NAME, which R-608 forbids; RAISING "
+                        "on it takes the whole read gate down over one "
+                        "malformed artifact (REV 54 S0.1)")}
+    have = {f: raw.get(f) for f in SUPERSEDES_PAIR_FIELDS}
+    missing = [f for f, v in have.items() if not isinstance(v, str) or not v]
+    if missing:
+        return {"kind": "INCOMPLETE", "status": "LINK_NOT_A_PAIR",
+                "is_a_pair": False, "missing_fields": missing,
+                "present_fields": [f for f in SUPERSEDES_PAIR_FIELDS
+                                   if f not in missing],
+                "why": ("R-608: the link is the PAIR. A block carrying one "
+                        "half -- or a non-string where a digest belongs -- "
+                        "is NOT a link and is REFUSED BY NAME. Reporting "
+                        "it as 'no link' would make a half-written "
+                        "supersession look like two independent runs, i.e. "
+                        "a day that ran twice")}
+    return {"kind": "PAIR", "status": "PAIR", "is_a_pair": True,
+            "path": have["path"], "sha256": have["sha256"]}
+
+
+def resolve_day_chain(files, *, kind: str) -> dict:
+    """ONE RESOLVER FOR BOTH OF THIS SEAT'S SAME-DAY CHAINS.
+
+    The sealed day receipts and DA's landing records are two chains under
+    ONE rule, and this seat had two implementations of it: the receipt side
+    followed `supersedes` and the landing side did not, so DA's own
+    DECLARED correction path for a landing record -- a `.v2` carrying the
+    pair -- resolved on DA's side and read AMBIGUOUS on DE's. Two
+    implementations of one rule is the defect R-608 was opened for, and DA
+    closed it on its side by reading the rule from one place. This is that,
+    here: the rule, once.
+
+      none                        MISSING
+      one                         PRESENT
+      v1 + a PAIR-VALID v2        PRESENT_CHAIN_HEAD (the v2)
+      two with no link            AMBIGUOUS
+      a link that is not a PAIR   that link's own refusal, BY NAME
+    """
+    files = sorted(Path(f) for f in files)
+    if not files:
+        return {"resolved": False, "status": "MISSING", "head": None,
+                "n_matches": 0}
+    if len(files) == 1:
+        return {"resolved": True, "status": "PRESENT", "head": files[0],
+                "n_matches": 1, "chain": [str(files[0])], "links": [],
+                "chain_head_is": f"the only {kind}"}
+    present = {f.name: sha256_streamed(f) for f in files}
+    links, refusals, superseded = [], [], set()
+    for f in files:
+        try:
+            rec = json.loads(f.read_text())
+        except (OSError, ValueError) as exc:
+            # RULE 11 AT THE SEAM: an unreadable artifact is a STATUS. It
+            # was parsed into `{}` and became "declares no link", so a
+            # corrupt receipt read as a clean second run.
+            refusals.append({"declared_in": f.name,
+                             "status": "ARTIFACT_UNREADABLE",
+                             "why": str(exc)})
+            continue
+        shape = supersedes_shape(rec)
+        if shape["kind"] == "ABSENT":
+            continue
+        if shape["kind"] != "PAIR":
+            refusals.append(dict(shape, declared_in=f.name))
+            continue
+        name, sha = Path(shape["path"]).name, shape["sha256"]
+        links.append({"declared_in": f.name, "target": name, "sha256": sha})
+        # THE ORDER IS THE NAME FIRST, THEN THE DIGEST ELSEWHERE -- so a
+        # named file that is PRESENT with other bytes is reported as what
+        # it is. It used to fall through to DANGLING_SUPERSEDES, "the
+        # predecessor is absent", which is the right VERDICT under a
+        # message that misdescribes the cause (REV 54 S0).
+        if name in present:
+            if present[name] == sha:
+                superseded.add(name)
+                continue
+            refusals.append({
+                "declared_in": f.name,
+                "status": "SUPERSEDES_TARGET_DIGEST_MISMATCH",
+                "target": name, "declared_sha256": sha,
+                "actual_sha256": present[name],
+                "why": "the named file is PRESENT and its bytes are not "
+                       "the ones the link declares"})
+            continue
+        elsewhere = sorted(n for n, h in present.items() if h == sha)
+        if elsewhere:
+            refusals.append({
+                "declared_in": f.name, "status": "SUPERSEDES_MOVED",
+                "declared_path": name, "found_as": elsewhere,
+                "why": "the declared DIGEST is present under a DIFFERENT "
+                       "name -- a MOVED file, not a link. Resolving by "
+                       "digest alone would accept it; the pair does not"})
+            continue
+        refusals.append({
+            "declared_in": f.name, "status": "DANGLING_SUPERSEDES",
+            "declared_path": name, "declared_sha256": sha,
+            "why": "a supersession whose predecessor is absent -- NEITHER "
+                   "the name NOR the digest is present for this day -- is "
+                   "a claim about a file nobody can check"})
+    if refusals:
+        return {"resolved": False, "status": refusals[0]["status"],
+                "head": None, "n_matches": len(files),
+                "chain": [str(f) for f in files], "links": links,
+                "refusals": refusals,
+                "why": f"a supersession link on this {kind} is not the "
+                       f"PAIR {{path, sha256}} landing on ONE present file "
+                       f"(R-608). This is REFUSED BY NAME and is NOT the "
+                       f"same finding as 'no link'"}
+    heads = [f for f in files if f.name not in superseded]
+    if len(heads) != 1:
+        return {"resolved": False, "status": "AMBIGUOUS", "head": None,
+                "n_matches": len(files),
+                "matches": [str(f) for f in files],
+                "heads": [str(f) for f in heads], "links": links,
+                "why": f"two {kind}s for one day with NO chain between "
+                       f"them is a day that RAN TWICE; a read that picks "
+                       f"the newest has chosen after seeing"}
+    return {"resolved": True, "status": "PRESENT_CHAIN_HEAD",
+            "head": heads[0], "n_matches": len(files),
+            "chain": [str(f) for f in files],
+            "superseded": sorted(str(f) for f in files
+                                 if f.name in superseded),
+            "links": links,
+            "chain_head_is": f"the {kind} nothing else supersedes"}
+
+
 def find_sealed_day_receipt(day: str, root: Path) -> dict:
     """THE CHAIN HEAD for a day -- not "exactly one file".
 
-    REV 51 §1.5: requiring exactly one glob match made RULE 13'S OWN FORM
-    look like a defect. A superseding `.v2` sitting beside its `v1` -- which
-    is what rule 13 requires, since a landed artifact is never edited --
-    returned AMBIGUOUS and the gate refused the day as missing. The
-    correction of the 09-03 receipt would have closed the gate on 09-03.
+    REV 51 S1.5: requiring exactly one glob match made RULE 13'S OWN FORM
+    look like a defect. A superseding `.v2` sitting beside its `v1` --
+    which is what rule 13 requires, since a landed artifact is never
+    edited -- returned AMBIGUOUS and the gate refused the day as missing.
 
-    So the chain is FOLLOWED: a receipt whose `supersedes.sha256` names
-    another receipt PRESENT for this day is a link, and the HEAD is the one
-    nothing else supersedes. AMBIGUOUS is reserved for what it always
-    meant -- two receipts with NO chain between them, a day that ran twice.
-    And a `.v2` whose `supersedes.sha256` matches nothing present refuses
-    by name: a supersession whose predecessor is absent is a claim about a
-    file nobody can check."""
+    The chain rule itself lives in `resolve_day_chain`, which the landing
+    records go through too, so the two chains cannot drift apart."""
     d = Path(root) / "pm_5min/derived"
     pat = sealed_day_receipt_glob(day)
     hits = sorted(d.glob(pat))
-    if not hits:
-        return {"day": day, "present": False, "status": "MISSING",
-                "expected_glob": str(d / pat), "n_matches": 0}
-    # R-608: A SUPERSESSION LINK IS THE PAIR {path, sha256}, and BOTH
-    # must match a present file. DE resolved links by DIGEST and DA by
-    # NAME, so on the same bytes exactly one seat refused -- and nothing
-    # declared which was right. A name without the digest is not a link; a
-    # matching digest under a DIFFERENT name is a MOVED file and refuses.
-    by_digest, by_name, sup_of, recs = {}, {}, {}, {}
-    for p in hits:
-        try:
-            rec = json.loads(p.read_text())
-        except (OSError, ValueError):
-            rec = {}
-        recs[p] = rec
-        by_digest[sha256_streamed(p)] = p
-        by_name[p.name] = p
-        _sup = rec.get("supersedes") or {}
-        sup_of[p] = {"path": _sup.get("path"), "sha256": _sup.get("sha256")}
-    if len(hits) == 1:
-        p = hits[0]
-        return {"day": day, "present": True, "status": "PRESENT",
-                "path": str(p), "n_matches": 1, "chain": [str(p)],
-                "chain_head_is": "the only receipt"}
-    # every supersedes.sha256 that names a present receipt is an edge
-    superseded = set()
-    dangling, moved, half = [], [], []
-    for p, sup in sup_of.items():
-        sp, sh = sup.get("path"), sup.get("sha256")
-        if sp is None and sh is None:
-            continue
-        if sp is None or sh is None:
-            # HALF A LINK IS NOT A LINK (R-608).
-            half.append({"path": str(p), "supersedes": sup,
-                         "why": "a supersession link is the PAIR "
-                                "{path, sha256}; one field alone does not "
-                                "bind"})
-            continue
-        name = Path(sp).name
-        hit_d = by_digest.get(sh)
-        hit_n = by_name.get(name)
-        if hit_d is not None and hit_n is not None and hit_d == hit_n:
-            superseded.add(hit_d)
-        elif hit_d is not None and hit_n is None:
-            moved.append({"path": str(p), "supersedes": sup,
-                          "found_digest_under": str(hit_d),
-                          "why": "the digest is present under a DIFFERENT "
-                                 "name -- a MOVED file, not a link"})
-        else:
-            dangling.append({"path": str(p), "supersedes": sup})
-    if half or moved:
-        return {"day": day, "present": False,
-                "status": "LINK_NOT_A_PAIR" if half else "SUPERSEDES_MOVED",
-                "n_matches": len(hits), "half_links": half, "moved": moved,
-                "why": "R-608: a supersession link is the pair "
-                       "{path, sha256} and BOTH must match a present file"}
-    if dangling:
-        return {"day": day, "present": False, "status": "DANGLING_SUPERSEDES",
-                "n_matches": len(hits), "dangling": dangling,
-                "why": "a receipt supersedes a digest that is not present "
-                       "for this day; a supersession whose predecessor is "
-                       "absent is a claim about a file nobody can check"}
-    heads = [p for p in hits if p not in superseded]
-    if len(heads) != 1:
-        return {"day": day, "present": False, "status": "AMBIGUOUS",
-                "expected_glob": str(d / pat), "n_matches": len(hits),
-                "matches": [str(x) for x in hits],
-                "heads": [str(x) for x in heads],
-                "why": "two receipts for one day with NO chain between "
-                       "them is a day that ran twice; a read that picks "
-                       "the newest has chosen after seeing"}
-    head = heads[0]
-    return {"day": day, "present": True, "status": "PRESENT_CHAIN_HEAD",
-            "path": str(head), "n_matches": len(hits),
-            "chain": [str(x) for x in hits],
-            "superseded": [str(x) for x in sorted(superseded)],
-            "chain_head_is": "the receipt nothing else supersedes"}
+    res = resolve_day_chain(hits, kind="receipt")
+    out = {"day": day, "present": res["resolved"],
+           "status": "MISSING" if res["status"] == "MISSING"
+                     else res["status"],
+           "n_matches": res["n_matches"],
+           "expected_glob": str(d / pat)}
+    for k in ("chain", "chain_head_is", "links", "refusals", "matches",
+              "heads", "superseded", "why"):
+        if k in res:
+            out[k] = res[k]
+    if res.get("head") is not None:
+        out["path"] = str(res["head"])
+    return out
 
 
 def verify_sealed_day_receipt(day: str, path: str, root: Path) -> dict:
@@ -1149,38 +1276,167 @@ LEDGER_MEMBERSHIP_CONJUNCTS = ("day_quality_pass", "era_pure",
                                "counts_toward_race")
 
 
+#: DA's pre-read artifact, as DA DECLARES it: the glob, and the flag that
+#: says an artifact IS a landing record. DE globbed the name and never
+#: checked the flag, so any `p003_da_gate1_pre_read*.json` carrying a
+#: matching `day` counted here while DA -- which requires the flag --
+#: would not have seen it at all.
+LANDING_RECORD_GLOB = "p003_da_gate1_pre_read_*.json"
+LANDING_RECORD_DECLARED_FLAG = "is_the_declared_LANDING_RECORD"
+
+#: REV 54 S1.3. THE LANDING RECORD WRITES EACH FACT TWICE and the two
+#: seats read different copies. DA's emitter writes
+#: `landing_record.receipt_sha256` -- its own declared field, the one DA's
+#: reader resolves -- AND the older top-level `receipt.sha256`; DE took the
+#: second. The reviewer drove the two deliberately disagreeing:
+#:
+#:     landing_record.receipt_sha256 = aaaa...   receipt.sha256 = ffff...
+#:        DA reads aaaa      DE reads ffff      NEITHER COMPLAINED
+#:
+#: Today both are written from ONE `hashlib.sha256(rp.read_bytes())` call
+#: and cannot differ. Nothing asserts that they must -- and conjunct 3 is
+#: the conjunct that stops a re-roll.
+#:
+#: THE AUTHORITATIVE COPY IS THE FIRST OF EACH PAIR: the field under
+#: `landing_record`, which is the block DA declares with
+#: `is_the_declared_LANDING_RECORD` and the block DA's own reader resolves.
+#: The other copy is READ TOO, and a disagreement is REFUSED BY NAME.
+LANDING_RECORD_FIELD_COPIES = (
+    ("receipt_sha256_at_landing",
+     ("landing_record", "receipt_sha256"), ("receipt", "sha256")),
+    ("receipt_name_at_landing",
+     ("landing_record", "receipt_path"), ("receipt", "path")),
+    ("day_at_landing",
+     ("landing_record", "day"), ("day",)),
+)
+
+
+def _at_path(obj, path):
+    """One leaf by its key path, with no `.get` on a non-mapping."""
+    cur = obj
+    for k in path:
+        if not isinstance(cur, dict) or k not in cur:
+            return None
+        cur = cur[k]
+    return cur
+
+
+def landing_record_copies(rec: dict) -> dict:
+    """READ BOTH COPIES OF EVERY TWICE-WRITTEN FIELD, and compare them.
+
+    A field written twice and read once is a field with no reader on one
+    of its copies. The comparison is what makes the second copy mean
+    anything; without it the duplicate is not redundancy, it is a second
+    fact that happens to agree today."""
+    fields, disagree = {}, []
+    for name, auth, other in LANDING_RECORD_FIELD_COPIES:
+        a, b = _at_path(rec, auth), _at_path(rec, other)
+        fields[name] = {
+            "authoritative_field": ".".join(auth), "authoritative_value": a,
+            "second_copy_field": ".".join(other), "second_copy_value": b,
+            "both_present": a is not None and b is not None,
+            "agree": (a == b) if (a is not None and b is not None) else None,
+            "value": a if a is not None else b,
+            "read_from": (".".join(auth) if a is not None
+                          else (".".join(other) if b is not None else None)),
+        }
+        if fields[name]["both_present"] and not fields[name]["agree"]:
+            disagree.append(name)
+    return {"fields": fields, "disagreeing": disagree,
+            "all_present_copies_agree": not disagree}
+
+
 def landing_record_for(day: str, root: Path) -> dict:
     """DA's PRE-READ artifact for a day -- the LANDING RECORD.
 
     R-604 item 3: the digest a day's receipt had WHEN IT LANDED. A re-run
     after landing produces a different receipt, and waiting must not become
     re-rolling: the gate compares against this, not against whatever is on
-    disk at read time."""
+    disk at read time.
+
+    Three things this now does that it did not:
+      * it requires DA'S DECLARED FLAG, so the two seats agree on WHICH
+        artifacts are landing records at all;
+      * it resolves through `resolve_day_chain`, so DA's own declared
+        `.v2` correction path for a landing record resolves here too --
+        it read AMBIGUOUS before, which would refuse a day whose landing
+        record had been corrected exactly as DA declares corrections;
+      * it reads BOTH copies of every twice-written field and REFUSES BY
+        NAME if they differ (REV 54 S1.3).
+    Records that are unreadable, undeclared or dayless are NAMED STATUSES
+    in `refused_records`, never silent drops (rule 11)."""
     d = Path(root) / "pm_5min/derived"
-    hits = []
-    for p in sorted(d.glob("p003_da_gate1_pre_read*.json")):
+    mine, refused = [], []
+    for p in sorted(d.glob(LANDING_RECORD_GLOB)):
         try:
             rec = json.loads(p.read_text())
-        except (OSError, ValueError):
+        except (OSError, ValueError) as exc:
+            refused.append({"file": p.name,
+                            "status": "LANDING_RECORD_UNREADABLE",
+                            "why": str(exc)})
             continue
-        if rec.get("day") and (day_forms(rec["day"]) & day_forms(day)):
-            hits.append((p, rec))
-    if not hits:
-        return {"day": day, "present": False, "status": "NO_LANDING_RECORD",
-                "why": "DA's pre-read artifact is the landing record; "
-                       "without it there is nothing to compare the "
-                       "receipt's digest against, and a re-run after "
-                       "landing would be invisible"}
-    if len(hits) > 1:
-        return {"day": day, "present": False, "status": "AMBIGUOUS",
-                "n": len(hits), "paths": [str(p) for p, _ in hits]}
-    p, rec = hits[0]
-    return {"day": day, "present": True, "status": "PRESENT",
-            "path": str(p),
-            "receipt_sha256_at_landing": (rec.get("receipt") or {}
-                                          ).get("sha256"),
-            "receipt_name_at_landing": (rec.get("receipt") or {}
-                                        ).get("path")}
+        if not (isinstance(rec, dict)
+                and rec.get(LANDING_RECORD_DECLARED_FLAG)):
+            refused.append({
+                "file": p.name, "status": "NOT_DECLARED_A_LANDING_RECORD",
+                "why": f"it does not carry `{LANDING_RECORD_DECLARED_FLAG}`, "
+                       f"so DA's own reader does not see it as one either"})
+            continue
+        fd = rec.get("day") or _at_path(rec, ("landing_record", "day"))
+        if not fd:
+            refused.append({"file": p.name,
+                            "status": "LANDING_RECORD_NO_DAY_FIELD",
+                            "why": "the day comes from the FIELD, never "
+                                   "the filename; a record carrying no "
+                                   "day is a status, not a drop"})
+            continue
+        if day_forms(str(fd)) & day_forms(day):
+            mine.append(p)
+    res = resolve_day_chain(mine, kind="landing record")
+    out = {"day": day, "present": False,
+           "status": ("NO_LANDING_RECORD" if res["status"] == "MISSING"
+                      else res["status"]),
+           "n_matches": res["n_matches"], "refused_records": refused,
+           "receipt_sha256_at_landing": None,
+           "receipt_name_at_landing": None}
+    for k in ("chain", "matches", "heads", "refusals", "links", "why"):
+        if k in res:
+            out[k] = res[k]
+    if not res["resolved"]:
+        if res["status"] == "MISSING":
+            out["why"] = ("DA's pre-read artifact is the landing record; "
+                          "without it there is nothing to compare the "
+                          "receipt's digest against, and a re-run after "
+                          "landing would be invisible")
+        return out
+    head = res["head"]
+    rec = json.loads(head.read_text())
+    copies = landing_record_copies(rec)
+    out["path"] = str(head)
+    out["field_copies"] = copies
+    out["name_matches_convention"] = bool(re.match(
+        r"^p003_da_gate1_pre_read_\d{8}__.+\.json$", head.name))
+    if not copies["all_present_copies_agree"]:
+        out["status"] = "LANDING_RECORD_FIELD_COPIES_DISAGREE"
+        out["why"] = (
+            f"the landing record writes "
+            f"{copies['disagreeing']} TWICE and the copies do not agree. "
+            f"DE read one and DA the other, so the two seats would resolve "
+            f"conjunct 3 -- the conjunct that stops a re-roll -- against "
+            f"different digests without either noticing (REV 54 S1.3)")
+        return out
+    out["present"] = True
+    out["receipt_sha256_at_landing"] = copies["fields"][
+        "receipt_sha256_at_landing"]["value"]
+    out["receipt_name_at_landing"] = copies["fields"][
+        "receipt_name_at_landing"]["value"]
+    if out["receipt_sha256_at_landing"] is None:
+        out["present"] = False
+        out["status"] = "LANDING_RECORD_NO_RECEIPT_DIGEST"
+        out["why"] = ("a landing record carrying no receipt digest in "
+                      "either copy records nothing the gate can compare "
+                      "against")
+    return out
 
 
 def _blob_sha256_at(commit: str, rel: str, repo: Path) -> str | None:
@@ -1276,7 +1532,10 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
             # (3) THE DIGEST AT LANDING.
             land = landing_record_for(d, root)
             here = sha256_streamed(Path(f["path"]))
-            sup = ((rec.get("supersedes") or {}).get("sha256"))
+            # THE SAME `.get` ON AN UNKNOWN TYPE, one function
+            # away -- the shape is judged here too (REV 54 S0.1).
+            _shape = supersedes_shape(rec)
+            sup = _shape.get("sha256") if _shape["is_a_pair"] else None
             row["landing"] = {
                 **land, "receipt_sha256_now": here,
                 "supersedes_sha256": sup,
@@ -2090,6 +2349,9 @@ def fixture_run() -> dict:
 #: §4.4, still open at REV 45 §1.6. One string now, in one place, and a
 #: table with no marker or with two REFUSES rather than defaulting.
 DAY_STAGE_PEAK_MARKER = "[DECLARED PEAK]"
+#: The one stage that is marked ONLY when a `before_work` hook is passed.
+#: Named here so the predicate and the stage table are one fact.
+HOOK_STAGE = "S0b_battery"
 
 #: The stages, and what each one HOLDS. Named so BE's assembly and DE's day
 #: run agree on the seam rather than each assuming the other's budget.
@@ -2098,6 +2360,14 @@ DAY_STAGES = (
                   "the pinned models and thetas, BE's cascade module. The "
                   "book is READ ONCE here as bytes for its digest and the "
                   "buffer is handed to S1, never read twice (BE's B-1)"),
+    ("S0b_battery", "THE IN-RUN BATTERY, MOVED HERE FROM THE EMIT "
+                    "(R-610). It ran AFTER the day's work: ~15 s of "
+                    "fixture runs and a 13-module closure re-capture at "
+                    "the end of 85 minutes, and if it refused, the day was "
+                    "lost -- which is exactly what happened to the 09-03 "
+                    "smoke. Its memory is INSIDE the day's growth budget "
+                    "on purpose: a stage whose cost escapes the budget is "
+                    "a stage nobody bounded"),
     ("S1_load", "[DECLARED PEAK] reference + asm + rows. THE PEAK OF "
                 "THE DAY PATH WHEN "
                 "THE BOOK DOMINATES -- which is the real-day regime (BE "
@@ -2131,6 +2401,12 @@ INDEX_SPLITS_NEEDED_BY_DAY = {
            "(`de_phase4_diag_runner.fill_value_cents`). Neither touches a "
            "tape row",
     "per_stage": {
+        "S0b_battery": "no split. The battery reads BE's committed null "
+                       "receipt and the ledger -- declared reads, none of "
+                       "them a tape, index or fragment artifact -- and it "
+                       "runs under its OWN residency instrument, whose "
+                       "opens are SUBTRACTED from the day path's claim so "
+                       "that claim stays about the day path (R-610)",
         "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the "
                          "scored set; the scorer is a dict lookup that "
                          "REFUSES on a miss rather than computing a feature",
@@ -2189,6 +2465,14 @@ FIXTURE_DAY_PEAK_RSS_MB_BUDGET = 700.0
 #: outer guard and gives this run a bar it can cross while the machine is
 #: still healthy.
 REAL_DAY_PEAK_RSS_MB_BUDGET = 4000.0
+#: MEASURED 2026-09-06 in a FRESH process at the tip: baseline current RSS
+#: 18.7 MB -> 44.9 MB after `selftest(offline=False)`, high-water 838.2 MB,
+#: 23.6 s. The two numbers are different facts and the budget uses the
+#: FIRST: the per-stage check is on CURRENT RSS growth, and the battery
+#: frees its transient (most of it one check's deliberate 800 MB
+#: inflation) before it returns.
+BATTERY_RETAINED_MB_MEASURED = 26.1
+BATTERY_PEAK_MB_MEASURED = 838.2
 REAL_DAY_BUDGET_DERIVATION = {
     "cgroup_cap_mb": 8192.0,
     "be_day_reference_measured_mb": 2008.0,
@@ -2196,6 +2480,25 @@ REAL_DAY_BUDGET_DERIVATION = {
     "headroom_for_null_and_seal_mb": 1500.0,
     "declared_mb": 4000.0,
     "fraction_of_cap": 4000.0 / 8192.0,
+    # R-610 MOVED THE BATTERY INSIDE THE MEASURED WINDOW, so it is a TERM
+    # of this derivation now and not a thing that happens afterwards. The
+    # cap was NOT raised to make room for it (R-174); the term was
+    # measured and the headroom checked against it.
+    "battery_retained_mb_measured": BATTERY_RETAINED_MB_MEASURED,
+    "battery_peak_mb_measured": BATTERY_PEAK_MB_MEASURED,
+    "measured_how": "a fresh process at the tip: current RSS before and "
+                    "after `selftest(offline=False)`, plus ru_maxrss "
+                    "(2026-09-06)",
+    "why_the_RETAINED_number_is_the_one_that_counts": (
+        "the per-stage budget compares CURRENT-RSS growth from the S_start "
+        "baseline. The battery's 838 MB high-water is a transient it frees "
+        "before returning -- and `ru_maxrss` cannot fall, which is the "
+        "instrument defect that cost the 09-03 smoke 85 minutes"),
+    "terms_sum_mb": 2008.0 + BATTERY_RETAINED_MB_MEASURED + 1500.0,
+    "headroom_against_the_declared_budget_mb": (
+        4000.0 - (2008.0 + BATTERY_RETAINED_MB_MEASURED + 1500.0)),
+    "the_declared_budget_still_covers_the_terms": (
+        2008.0 + BATTERY_RETAINED_MB_MEASURED + 1500.0) <= 4000.0,
     "why_not_the_cap": "a budget equal to the cap is the cap with a second "
                        "name; it can only fire once the kernel is already "
                        "reclaiming",
@@ -2397,8 +2700,19 @@ def peak_stage_predicate(stages: dict, *, declared: str) -> dict:
     for k in order:
         deltas[k] = round(hi[k] - prev, 4)
         prev = hi[k]
-    arg = max(deltas, key=lambda k: deltas[k])
-    arg_cur = max(cur, key=lambda k: cur[k]) if cur else None
+    # THE ARGMAX IS OVER THE DAY-PATH STAGES. The `before_work` hook is
+    # not the day path: it is the battery, and its high-water is a
+    # TRANSIENT it frees before it returns -- MEASURED at 838 MB peak
+    # against 26 MB retained, most of it one check's deliberate 800 MB
+    # inflation. Left in the argmax it would compete with S1_load for the
+    # peak on a real day (S1 delta ~1196 MB against the hook's ~820) and
+    # a flip would REFUSE the day over a stage the 8 GiB ceiling does not
+    # rest on. Its delta is COMPUTED and REPORTED -- so the attribution of
+    # every later stage is right -- and excluded from the argmax alone.
+    day_path = {k: v for k, v in deltas.items() if k != HOOK_STAGE}
+    arg = max(day_path, key=lambda k: day_path[k])
+    cur_day = {k: v for k, v in cur.items() if k != HOOK_STAGE}
+    arg_cur = max(cur_day, key=lambda k: cur_day[k]) if cur_day else None
     return {
         "computable": True,
         "declared_peak_stage": declared,
@@ -2407,6 +2721,16 @@ def peak_stage_predicate(stages: dict, *, declared: str) -> dict:
         "measured_peak_stage": arg,
         "declared_stage_is_the_measured_peak": arg == declared,
         "highwater_delta_mb_by_stage": deltas,
+        "argmax_taken_over": sorted(day_path),
+        "before_work_hook_highwater_delta_mb": deltas.get(HOOK_STAGE),
+        "why_the_hook_is_not_in_the_argmax": (
+            "the `before_work` hook is the BATTERY, not the day path. Its "
+            "high-water is a transient it frees before returning (measured "
+            "838 MB peak, 26 MB retained); the 8 GiB ceiling rests on the "
+            "DAY PATH's shape, and letting a freed transient win the "
+            "argmax would refuse a day over a stage the ceiling does not "
+            "rest on. Its delta is computed, reported, and counted in the "
+            "day's GROWTH BUDGET -- only the argmax excludes it"),
         "baseline_highwater_mb": prev if base is None else base,
         "measured_peak_stage_by_current_rss": arg_cur,
         "the_two_readings_agree": arg == arg_cur,
@@ -2455,8 +2779,17 @@ def assert_peak_stage(pred: dict, *, fixture: bool, day: str) -> dict:
 
 
 def tape_artifacts_opened(proof: dict) -> list:
-    """Which TAPE/INDEX/FRAGMENT artifacts the instrumented run opened."""
-    return sorted({p for p in proof.get("distinct_paths", [])
+    """Which TAPE/INDEX/FRAGMENT artifacts the instrumented run opened.
+
+    IT READS THE UNCAPPED LIST TOO. `distinct_paths` is capped at
+    `DR.PATH_LIST_CAP`, so a run opening more paths than the cap could
+    drop a tape artifact off the end and the scan would report a clean
+    surface it never saw -- the silent-regex failure with a different
+    mechanism. `data_paths_opened` is NOT capped and every marker lives
+    under `data/`, so the union is what the predicate is computed on, and
+    whether the capped list bit is reported beside the answer."""
+    return sorted({p for p in (set(proof.get("distinct_paths") or [])
+                               | set(proof.get("data_paths_opened") or []))
                    if not p.endswith(".py")
                    and any(m in p for m in TAPE_ARTIFACT_MARKERS)})
 
@@ -2662,6 +2995,8 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     for d in range(n_draws):
         flag = module.draw_flags(pools, by_side, rng)
         r = module.replay(bk, module.flagged_stream(rows, flag), 0.5)
+        RUN_COUNTERS["draws_performed"] += 1
+        RUN_COUNTERS["replays_performed"] += 1
         # REDUCED HERE, DELIBERATELY (stage S4): the draw's fills are
         # valued and dropped before the next draw is made, so peak memory
         # is O(one draw) and not O(n_draws).
@@ -2984,16 +3319,36 @@ def assert_rule20(observed: dict, *, wall_s: float, peak_rss_mb: float,
 def run_day(day: str, book_path, *, params: dict, module=None,
             fixture: bool = False, receipt_path=None,
             n_days_complete: int = 1,
-            peak_rss_mb_budget: float | None = None) -> dict:
+            peak_rss_mb_budget: float | None = None,
+            before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
     Real days require the lock BEFORE any work (a real day is heavy by
     construction: BE projects ~2.3 h per day for both arms). A fixture day
     is expected light and is checked against its declared budget at the
     end -- a fixture that exceeds its budget REFUSES, because a budget
-    nobody enforces is not a budget."""
+    nobody enforces is not a budget.
+
+    `before_work` RUNS AFTER THE BOOK DIGEST IS VERIFIED AND BEFORE S1
+    (R-610). The emitter passes the battery here. It used to run at the
+    EMIT: 85 minutes of real work, then ~15 s of fixture runs and a
+    13-module closure re-capture, and a refusal there LOST THE DAY -- which
+    is what the 09-03 smoke did. Everything the battery can refuse is
+    knowable before the book is loaded, so it is checked before the book is
+    loaded. It is run under its OWN residency instrument so the day path's
+    "no tape artifact was opened" claim stays a claim about the day path."""
     t_start = time.time()
     stages: dict = {}
+    # THE DAY'S OWN DRAWS, separated from anything the `before_work` hook
+    # draws. The battery runs FIXTURE days and those DO draw, so a bare
+    # process counter would answer "did the day draw before the battery
+    # refused?" with the battery's own draws. The counters are deltas.
+    _draws_at_entry = RUN_COUNTERS["draws_performed"]
+    _hook_draws = 0
+
+    def _day_draws():
+        return (RUN_COUNTERS["draws_performed"] - _draws_at_entry
+                - _hook_draws)
 
     # THE BASELINE, so S0's delta is a measurement and not the whole
     # process's history. Without it the first stage's delta is everything
@@ -3061,6 +3416,34 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         verify_pinned_models(params)
         verify_pinned_thetas(params)
     _mark("S0_verify")
+
+    # ---- S0b: THE BATTERY, BEFORE THE DAY'S WORK (R-610) ---------------
+    # Nested under its OWN instrument: the battery reads `data/` by
+    # design, and the day path's residency claim must stay a claim about
+    # the DAY PATH. The inner instrument's patches wrap the outer ones, so
+    # every open it sees the outer one sees too -- the day-path set is the
+    # difference, computed, never assumed.
+    before_work_proof = None
+    if before_work is not None:
+        _dr0 = RUN_COUNTERS["draws_performed"]
+        _res_bw, before_work_proof = DR.instrumented(before_work)
+        _hook_draws = RUN_COUNTERS["draws_performed"] - _dr0
+        before_work_proof = {
+            **{k: before_work_proof[k] for k in
+               ("n_paths_opened", "n_distinct_paths", "non_vacuous",
+                "distinct_paths_truncated")},
+            "tape_artifacts_opened": tape_artifacts_opened(
+                before_work_proof),
+            "data_paths_opened": before_work_proof["data_paths_opened"],
+            "what_it_was": "the in-run battery, run BEFORE the day's work",
+            # THE FALSIFIER'S MEASUREMENT: what THIS DAY had drawn at the
+            # moment the hook returned. Zero, by the order -- and the
+            # order is what R-610 asked for, so it is measured and not
+            # read off a line number.
+            "day_draws_when_the_hook_returned": _day_draws(),
+            "draws_the_hook_itself_made": _hook_draws,
+        }
+        _mark("S0b_battery")
 
     # ---- S1: load. The peak of the day path. ---------------------------
     bk = mod.load(book_path)
@@ -3214,6 +3597,22 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "fixture": fixture,
         "reference_book": bookcite,
+        "before_work": (
+            {"ran": before_work is not None,
+             "when": "after the book digest was verified, before S1 -- "
+                     "NOT at the emit (R-610)",
+             "residency": before_work_proof}
+            if before_work is not None else
+            {"ran": False,
+             "when": "no hook was passed; the day path ran alone"}),
+        "work_counters": {
+            "draws_performed_by_this_day": _day_draws(),
+            "draws_performed_by_the_before_work_hook": _hook_draws,
+            "process_total_draws": RUN_COUNTERS["draws_performed"],
+            "why_deltas": "the battery runs FIXTURE days and those draw; "
+                          "a process-wide counter would credit the day "
+                          "with the battery's work",
+        },
         "be_module_citation": cite,
         "draw_pool_set_equality_checked": pool_equal,
         "decision_populations": pops,
@@ -3240,10 +3639,22 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "time battery refused its own fixture on the real day's "
                 "high-water"),
             "within_budget": growth <= budget,
+            # THE HOOK'S MEMORY IS INSIDE THE BUDGET, and that is a fact
+            # about the baseline, not a hope: the baseline is taken at
+            # S_start, BEFORE the hook, so everything the hook allocates
+            # counts against the day's declared growth. A stage whose cost
+            # escapes the budget is a stage nobody bounded.
+            "hook_stage_growth_mb": (
+                (stages.get(HOOK_STAGE, {}).get("rss_mb_current", 0.0)
+                 - _base) if (HOOK_STAGE in stages
+                              and isinstance(_base, float)) else None),
             "peak_stage": peak_pred,
             "peak_stage_assertion": peak_shape,
             "index_splits": INDEX_SPLITS_NEEDED_BY_DAY,
         },
+        "battery_stage_is_inside_the_budget": (
+            HOOK_STAGE in stages and isinstance(_base, float)
+            and stages[HOOK_STAGE]["rss_mb_current"] >= _base),
         "wrapper": {**obs, "rule20": r20},
         "resources": {"wall_seconds": wall, "peak_rss_mb": peak,
                       "per_arm": per_arm_detail,
@@ -3432,7 +3843,13 @@ def day_split_residency_proof(day: str, book_path, *, params: dict,
     DR.clear_proof()
     result, proof = DR.instrumented(
         run_day, day, book_path, params=params, **kw)
-    hits = tape_artifacts_opened(proof)
+    # THE CLAIM IS ABOUT THE DAY PATH. If a `before_work` hook ran inside
+    # the instrumented region (the battery does, since R-610), the opens
+    # it made are ITS opens and are subtracted -- reported, never dropped.
+    _all_hits = tape_artifacts_opened(proof)
+    _hook = ((result.get("before_work") or {}).get("residency") or {})
+    _hook_hits = list(_hook.get("tape_artifacts_opened") or [])
+    hits = sorted(set(_all_hits) - set(_hook_hits))
     # NON-VACUITY THAT IS SPECIFIC TO THIS CLAIM. `non_vacuous` says the
     # instrument saw SOME open; that is not enough here. The day path
     # certainly reads the BOOK, so the instrument must have seen THAT --
@@ -3451,6 +3868,17 @@ def day_split_residency_proof(day: str, book_path, *, params: dict,
         "no_tape_index_or_fragment_artifact_was_opened": not hits,
         "instrument_observed_the_book_read": _saw_book,
         "tape_artifacts_opened": hits,
+        "tape_artifacts_opened_by_the_whole_process": _all_hits,
+        "tape_artifacts_opened_by_the_before_work_hook": _hook_hits,
+        "the_claim_is_about": "the DAY PATH: the whole-process set MINUS "
+                              "the before_work hook's own set. Both are "
+                              "reported, so the subtraction is auditable",
+        "path_list_capped_at": DR.PATH_LIST_CAP,
+        "capped_list_truncated": proof.get("distinct_paths_truncated"),
+        "why_truncation_does_not_hide_a_hit": (
+            "the tape scan reads `data_paths_opened`, which is NOT capped, "
+            "in union with the capped list -- every marker lives under "
+            "`data/`"),
         "markers_tested": list(TAPE_ARTIFACT_MARKERS),
         "py_sources_excluded_on_purpose": (
             "`pm_tape_density.py` is a MODULE whose name contains 'tape'; "
@@ -3807,11 +4235,19 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"fixture run opens {len(_seen)} paths, ZERO of them under "
            f"`data/`. It reads only its own module source and the "
            f"committed parameter file, so it runs from a shell worktree")
-        ok(any(x.endswith("de_multiday_gate1_params_v10.json")
-               for x in _seen),
-           "and the instrument is not vacuous -- it DID observe the "
-           "parameter file being read, so a zero above is a measurement "
-           "rather than a silent no-op")
+        # THE NAME COMES FROM `PARAMS_REL`, never typed beside it. It read
+        # `..._params_v10.json` as a literal, so the params bump this
+        # round would have turned a non-vacuity check into a check of a
+        # file nobody reads -- and it would have gone GREEN by failing to
+        # find what it was no longer looking for. (Same shape as the
+        # `zip(names, [six floats])` above: a literal that has to track
+        # something that moves.)
+        _pname = PARAMS_REL.rsplit("/", 1)[-1]
+        ok(any(x.endswith(_pname) for x in _seen),
+           f"and the instrument is not vacuous -- it DID observe the "
+           f"parameter file ({_pname}, read from PARAMS_REL and not typed "
+           f"here) being read, so a zero above is a measurement rather "
+           f"than a silent no-op")
         # ---- the reviewer's finding (2): the literals in this receipt ---
         _bools = sorted(k for k, v in _pv.items() if isinstance(v, bool))
         _unclassified = [k for k in _bools
@@ -3940,9 +4376,18 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 rp.write_text(rp.read_text().replace('"arm": "A"',
                                                      '"arm": "A "'))
             if skip_landing != day:
+                # DA'S DECLARED SHAPE, not a shape DE invented for its own
+                # fixture: the flag that says this IS a landing record,
+                # and the digest in BOTH the places DA's emitter writes it
+                # (REV 54 S1.3). A fixture built to a shape only one seat
+                # writes tests only that seat.
                 (der / f"p003_da_gate1_pre_read_{compact}__"
                        f"20260906T000000Z.json").write_text(json.dumps({
                            "day": day, "mode": "PRE_READ",
+                           LANDING_RECORD_DECLARED_FLAG: True,
+                           "landing_record": {
+                               "day": day, "receipt_path": rp.name,
+                               "receipt_sha256": landed},
                            "receipt": {"path": rp.name,
                                        "sha256": landed}}))
         return Path(d)
@@ -4067,6 +4512,189 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- REV 54 S0/S0.1: THE EIGHT SHAPES, driven, verdicts asserted --
+    # The reviewer drove both seats' resolvers side by side and found row
+    # 8 -- a BARE-STRING `supersedes` -- taking DE's read gate DOWN with an
+    # uncaught AttributeError where DA refused by name. The table is driven
+    # here on THIS seat's resolver, with the VERDICT (resolve / refuse)
+    # asserted per row and the status NAMES only recorded: two independent
+    # implementations may name a verdict differently (R-235); they may not
+    # reach a different one. Cross-seat AGREEMENT is measured by
+    # `de_r608_resolver_agreement.py`, which imports BOTH resolvers -- it
+    # is NOT imported here, because a day run's import closure must not
+    # contain another seat's module (rule 22: DA landing a commit mid-run
+    # would refuse this seat's emit).
+    def _shape_root(sup, *, two=True):
+        rp = Path(_tfr.mkdtemp(prefix="de90shape_"))
+        der = rp / "pm_5min/derived"
+        der.mkdir(parents=True)
+        _cx = [x for x in sorted(day_forms(_D6[0])) if "-" not in x][0]
+        v1 = (der / f"{SEALED_DAY_RECEIPT_PREFIX}{_cx}"
+                    f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T010000Z.json")
+        v1.write_text(json.dumps({"day": _D6[0], "n": 1}))
+        if not two:
+            return rp, v1
+        rec = {"day": _D6[0], "n": 2}
+        if sup is not _SHAPE_ABSENT:
+            rec["supersedes"] = (sup(v1) if callable(sup) else sup)
+        (der / f"{SEALED_DAY_RECEIPT_PREFIX}{_cx}"
+               f"{SEALED_DAY_RECEIPT_MIDFIX}20260906T020000Z.json"
+         ).write_text(json.dumps(rec))
+        return rp, v1
+
+    _SHAPE_ABSENT = object()
+    _SHAPES = [
+        ("1 a single receipt", None, "RESOLVE", dict(two=False)),
+        ("2 {path, sha256} both correct",
+         lambda v: {"path": v.name, "sha256": sha256_streamed(v)},
+         "RESOLVE", {}),
+        ("3 {sha256} only",
+         lambda v: {"sha256": sha256_streamed(v)}, "REFUSE", {}),
+        ("4 {path} only", lambda v: {"path": v.name}, "REFUSE", {}),
+        ("5 named file present, WRONG digest",
+         lambda v: {"path": v.name, "sha256": "0" * 64}, "REFUSE", {}),
+        ("6 digest present under a DIFFERENT name",
+         lambda v: {"path": "somewhere_else.json",
+                    "sha256": sha256_streamed(v)}, "REFUSE", {}),
+        ("7 two receipts, NO link", _SHAPE_ABSENT, "REFUSE", {}),
+        ("8 a BARE STRING", lambda v: v.name, "REFUSE", {}),
+    ]
+    _table, _raised = [], []
+    for _lbl, _sup, _want, _kw in _SHAPES:
+        _rp, _ = _shape_root(_sup, **_kw)
+        try:
+            _r = find_sealed_day_receipt(_D6[0], _rp)
+            _got = "RESOLVE" if _r["present"] else "REFUSE"
+            _st = _r["status"]
+        except Exception as _exc:                 # noqa: BLE001
+            _got, _st = "RAISED", f"{type(_exc).__name__}: {_exc}"
+            _raised.append(_lbl)
+        _table.append({"shape": _lbl, "want": _want, "got": _got,
+                       "status": _st})
+    ok(not _raised and all(t["got"] == t["want"] for t in _table)
+       and len(_table) == 8,
+       f"REV 54 S0, THE EIGHT SHAPES DRIVEN: every row reaches the "
+       f"VERDICT it must and NONE RAISES -- "
+       f"{[t['status'] for t in _table]}. Row 8, a bare-string "
+       f"`supersedes`, used to leave `find_sealed_day_receipt` with an "
+       f"uncaught AttributeError, and `read_gate` calls it for EVERY "
+       f"ruled day: one malformed artifact took the whole gate down "
+       f"where DA refused by name")
+    ok(all(t["status"] in (CHAIN_RESOLVED_STATUSES if t["want"] == "RESOLVE"
+                           else CHAIN_REFUSAL_STATUSES) for t in _table),
+       f"and every row's status is a DECLARED one -- resolutions in "
+       f"{list(CHAIN_RESOLVED_STATUSES)}, refusals in "
+       f"{list(CHAIN_REFUSAL_STATUSES)} -- so a refusal cannot be a "
+       f"status nobody declared")
+    _row5 = [t for t in _table if t["shape"].startswith("5")][0]
+    ok(_row5["status"] == "SUPERSEDES_TARGET_DIGEST_MISMATCH",
+       "REV 54 S0's ACCURACY NOTE, CLOSED: row 5 -- the named file is "
+       "PRESENT with other bytes -- said DANGLING_SUPERSEDES, 'a "
+       "supersession whose predecessor is absent'. Right verdict, a "
+       "message that misdescribes the cause; the two causes are now two "
+       "names")
+    _rp8, _v18 = _shape_root(lambda v: v.name)
+    _gate8 = read_gate(live, now_utc=_after, root=_rp8, ledger_rows=_rows6)
+    ok(_gate8["per_day"][_D6[0]]["receipt"]["status"]
+       == "SUPERSEDES_MALFORMED"
+       and _gate8["may_open"] is False,
+       "AND THROUGH THE WHOLE GATE, not just the resolver: the malformed "
+       "day is REFUSED BY NAME and the read stays shut. The reviewer "
+       "drove this half too, and it is the half that mattered -- the "
+       "exception left `read_gate` itself")
+    refuses(lambda: (_ for _ in ()).throw(RunnerRefused(
+        "SUPERSEDES_MALFORMED" if supersedes_shape(
+            {"supersedes": ["a", "list"]})["kind"] == "MALFORMED"
+        else "the shape judge did not fire")),
+        "AND THE SHAPE JUDGE FIRES ON A TYPE NOBODY WROTE A ROW FOR: a "
+        "LIST is not an object carrying both halves either, so it is "
+        "MALFORMED rather than whatever `.get` would have done to it",
+        "SUPERSEDES_MALFORMED")
+    ok(supersedes_shape({})["kind"] == "ABSENT"
+       and supersedes_shape({"supersedes": None})["kind"] == "ABSENT"
+       and supersedes_shape({"supersedes": {}})["kind"] == "INCOMPLETE"
+       and supersedes_shape({"supersedes": {"path": 5, "sha256": "a" * 64}}
+                            )["kind"] == "INCOMPLETE"
+       and supersedes_shape({"supersedes": {"path": "p", "sha256": "s"}}
+                            )["kind"] == "PAIR",
+       "and the shape judge's own table: absent and null declare NO LINK, "
+       "an empty object and a NON-STRING half are INCOMPLETE (a link that "
+       "was attempted and not written), and only two strings are a PAIR")
+
+    # ---- REV 54 S1.3: the landing record's twice-written fields -------
+    def _lr_root(*docs):
+        rp = Path(_tfr.mkdtemp(prefix="de90lr_"))
+        der = rp / "pm_5min/derived"
+        der.mkdir(parents=True)
+        out = []
+        for _i, _doc in enumerate(docs):
+            _f = (der / f"p003_da_gate1_pre_read_20260903__"
+                        f"2026090{6 + _i}T03000{_i}Z.json")
+            _f.write_text(json.dumps(_doc))
+            out.append(_f)
+        return rp, der, out
+
+    def _lr(sha_lr, sha_top, **extra):
+        return {"day": _D6[0], LANDING_RECORD_DECLARED_FLAG: True,
+                "landing_record": {"day": _D6[0], "receipt_path": "R.json",
+                                   "receipt_sha256": sha_lr},
+                "receipt": {"path": "R.json", "sha256": sha_top}, **extra}
+
+    _rp, _der, _ = _lr_root(_lr("a" * 64, "a" * 64))
+    _l_ok = landing_record_for(_D6[0], _rp)
+    ok(_l_ok["present"] is True
+       and _l_ok["receipt_sha256_at_landing"] == "a" * 64
+       and _l_ok["field_copies"]["fields"]["receipt_sha256_at_landing"][
+           "read_from"] == "landing_record.receipt_sha256",
+       "REV 54 S1.3 POSITIVE CONTROL: a landing record whose two copies "
+       "AGREE resolves, and the value is read from the DECLARED field "
+       "`landing_record.receipt_sha256` -- the one under "
+       "`is_the_declared_LANDING_RECORD` and the one DA's own reader "
+       "resolves. DE read the older top-level `receipt.sha256`")
+    _rp, _der, _ = _lr_root(_lr("a" * 64, "f" * 64))
+    _l_bad = landing_record_for(_D6[0], _rp)
+    ok(_l_bad["present"] is False
+       and _l_bad["status"] == "LANDING_RECORD_FIELD_COPIES_DISAGREE"
+       and _l_bad["field_copies"]["disagreeing"]
+       == ["receipt_sha256_at_landing"],
+       "REV 54 S1.3 KNOWN-BAD: the SAME digest written TWICE and "
+       "disagreeing is REFUSED BY NAME. The reviewer drove exactly this "
+       "and NEITHER SEAT COMPLAINED -- DA read aaaa, DE read ffff, and "
+       "conjunct 3 is the conjunct that stops a re-roll")
+    _rp, _der, _fs = _lr_root(_lr("a" * 64, "a" * 64))
+    _v1lr = _fs[0]
+    (_der / "p003_da_gate1_pre_read_20260903__20260907T040000Z.v2.json"
+     ).write_text(json.dumps(_lr(
+         "b" * 64, "b" * 64,
+         supersedes={"path": _v1lr.name,
+                     "sha256": sha256_streamed(_v1lr)})))
+    _l_ch = landing_record_for(_D6[0], _rp)
+    ok(_l_ch["present"] is True
+       and _l_ch["status"] == "PRESENT_CHAIN_HEAD"
+       and _l_ch["receipt_sha256_at_landing"] == "b" * 64,
+       "AND DA'S OWN DECLARED CORRECTION PATH FOR A LANDING RECORD "
+       "RESOLVES HERE: a `.v2` carrying the pair. It read AMBIGUOUS -- "
+       "the landing side did not follow `supersedes` at all -- so a day "
+       "whose landing record had been corrected exactly as DA declares "
+       "corrections would have been refused by this seat. One rule, one "
+       "resolver, both chains")
+    _rp, _der, _ = _lr_root({"day": _D6[0],
+                             "landing_record": {"receipt_sha256": "a" * 64}})
+    _l_nf = landing_record_for(_D6[0], _rp)
+    ok(_l_nf["status"] == "NO_LANDING_RECORD"
+       and _l_nf["refused_records"][0]["status"]
+       == "NOT_DECLARED_A_LANDING_RECORD",
+       "and an artifact that does NOT carry "
+       f"`{LANDING_RECORD_DECLARED_FLAG}` is a NAMED STATUS, not a "
+       "landing record: DE globbed the NAME and never checked the flag, "
+       "so the two seats could disagree about which artifacts are "
+       "landing records at all")
+    _rp, _der, _ = _lr_root({LANDING_RECORD_DECLARED_FLAG: True,
+                             "landing_record": {"receipt_sha256": "a" * 64}})
+    ok(landing_record_for(_D6[0], _rp)["refused_records"][0]["status"]
+       == "LANDING_RECORD_NO_DAY_FIELD",
+       "and a declared record carrying NO DAY is a named status too "
+       "(rule 11): it was dropped silently by a truthiness test")
     # ---- REV 51 S0: the pin chain must RESOLVE, in one direction -----
     _PLACEHOLDERS = ("<emitted", "PENDING", "TBD", "<the ", "ABSENT")
     _pdd = live.get("design_declaration") or {}
@@ -4179,6 +4807,138 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"high-water is {_hw_after:.0f} MB against a growth of "
        f"{_mp['growth_rss_mb']:.1f} MB -- same fixture, same budget, "
        f"opposite verdicts")
+    # These checks DRIVE REAL DRAWS, and `null_draws_valued`
+    # cross-checks the first draws against BE's own `draw_null`, which
+    # reads BE's committed null receipt under `data/`. A FIXTURE run must
+    # open no path under it, so they are skipped offline -- from a
+    # DECLARED count, so a check added here without updating it refuses
+    # rather than quietly shrinking the offline battery.
+    if offline:
+        for _i in range(BATTERY_ORDER_CHECKS):
+            offline_skip(f"R-610 battery-order check {_i + 1}/"
+                         f"{BATTERY_ORDER_CHECKS} -- it performs real "
+                         f"draws, which cross-check against BE's "
+                         f"committed null receipt under data/")
+    else:
+        # ---- R-610: THE BATTERY RUNS BEFORE THE DAY'S WORK ----------------
+        # The 09-03 smoke's budget defect is closed (growth, per stage), but
+        # the ORDER was the other half of it: the battery ran at the EMIT, so
+        # the refusal arrived after 84 minutes of null draws and the day was
+        # lost with nothing written. The property is "a check that can refuse
+        # refuses before the work it would waste", and it is MEASURED -- the
+        # draws this day performed -- not read off a line number.
+        # n_slugs=24, NOT 12: at 12 both arms refuse on decision count and
+        # the day performs ZERO draws -- which would make the falsifier's
+        # "zero draws" reading true for the wrong reason. The measurement has
+        # to be able to come out non-zero, and the check below drives that.
+        _mk_ord = write_synthetic_day(
+            "FIXTURE-DAY-ORDER", _tfr.mkdtemp(prefix="de90ord_"),
+            params=live, n_slugs=24)
+
+        def _hook_that_refuses():
+            raise RunnerRefused(
+                "REFUSED: a before_work hook that refuses -- standing in for "
+                "the battery that refused the 09-03 smoke")
+
+        _d0 = RUN_COUNTERS["draws_performed"]
+        _order_refused, _draws_when_it_refused = None, None
+        try:
+            run_day("FIXTURE-DAY-ORDER", _mk_ord["book_path"], params=live,
+                    fixture=True, before_work=_hook_that_refuses)
+        except RunnerRefused as _e:
+            _order_refused = str(_e)
+            _draws_when_it_refused = RUN_COUNTERS["draws_performed"] - _d0
+        ok(_order_refused is not None and _draws_when_it_refused == 0,
+           f"R-610, THE FALSIFIER: a `before_work` hook that REFUSES stops the "
+           f"day with {_draws_when_it_refused} draws performed. ZERO -- the "
+           f"day had not started. That is the whole property: the refusal "
+           f"costs the run nothing, where the 09-03 smoke paid 84 minutes for "
+           f"the same verdict")
+        # THE OTHER WAY, so the measurement is shown able to be non-zero. The
+        # SAME refusal at the OLD position -- after the day -- is a refusal
+        # that has already spent the work.
+        _d1 = RUN_COUNTERS["draws_performed"]
+        _late = run_day("FIXTURE-DAY-ORDER", _mk_ord["book_path"],
+                        params=live, fixture=True)
+        _draws_before_a_late_check = RUN_COUNTERS["draws_performed"] - _d1
+        ok(_draws_before_a_late_check > 0
+           and _late["work_counters"]["draws_performed_by_this_day"]
+           == _draws_before_a_late_check
+           and _late["before_work"]["ran"] is False,
+           f"AND THE MEASUREMENT CAN BE NON-ZERO, which is what makes the zero "
+           f"above a result: the same day run WITHOUT the hook reaches the "
+           f"point where a battery used to run having already performed "
+           f"{_draws_before_a_late_check} draws. A refusal there is a refusal "
+           f"that has already spent the day")
+        _d2 = RUN_COUNTERS["draws_performed"]
+        _hook_calls = []
+
+        def _hook_that_passes():
+            _hook_calls.append(RUN_COUNTERS["draws_performed"] - _d2)
+            return {"outcome": "PASS", "n_checks_run": 0}
+
+        _with = run_day("FIXTURE-DAY-ORDER", _mk_ord["book_path"],
+                        params=live, fixture=True,
+                        before_work=_hook_that_passes)
+        _bw = _with["before_work"]
+        ok(_bw["ran"] is True
+           and _bw["residency"]["day_draws_when_the_hook_returned"] == 0
+           and _hook_calls == [0]
+           and HOOK_STAGE in _with["memory_plan"]["observed"]
+           and _with["work_counters"]["draws_performed_by_this_day"] > 0,
+           f"POSITIVE CONTROL, AND IT ADMITS: a hook that PASSES lets the day "
+           f"run to completion -- the hook saw 0 of this day's draws, the day "
+           f"went on to perform "
+           f"{_with['work_counters']['draws_performed_by_this_day']}, and "
+           f"{HOOK_STAGE} is a MARKED STAGE so its memory sits inside the "
+           f"day's growth budget rather than escaping it")
+        ok(_with["memory_plan"]["peak_stage"]["highwater_delta_mb_by_stage"]
+           .get(HOOK_STAGE) is not None
+           and _with["battery_stage_is_inside_the_budget"] is True,
+           f"and the hook's growth is ATTRIBUTED TO ITS OWN STAGE "
+           f"({_with['memory_plan']['peak_stage']['highwater_delta_mb_by_stage'][HOOK_STAGE]:.1f} "
+           f"MB) rather than landing on S1_load: a stage whose cost is "
+           f"charged to the next stage is a peak predicate reading the wrong "
+           f"argmax")
+        # AND A HOOK WHOSE TRANSIENT DWARFS EVERY DAY STAGE MUST NOT WIN
+        # THE ARGMAX. This is the risk the move CREATED: the real battery
+        # high-waters at 838 MB (measured; 26 MB retained), S1_load's own
+        # delta on a real day is ~1196 MB after it, and a flip would
+        # REFUSE the day over a stage the 8 GiB ceiling does not rest on.
+        _fat = dict(_with["memory_plan"]["observed"])
+        _fat[HOOK_STAGE] = {"peak_rss_mb_highwater": 9_000.0,
+                            "rss_mb_current": 9_000.0}
+        for _k in ("S1_load", "S2_population", "S3_baseline", "S4_null",
+                   "S5_seal"):
+            _fat[_k] = {"peak_rss_mb_highwater": 9_001.0,
+                        "rss_mb_current": 20.0}
+        _pf = peak_stage_predicate(_fat, declared=declared_peak_stage())
+        ok(_pf["measured_peak_stage"] == "S1_load"
+           and HOOK_STAGE not in _pf["argmax_taken_over"]
+           and _pf["before_work_hook_highwater_delta_mb"] > 8_000.0
+           and assert_peak_stage(_pf, fixture=False,
+                                 day="2026-09-03")["asserted"] is True,
+           f"AND THE ARGMAX EXCLUDES THE HOOK, DRIVEN AT THE EXTREME: a "
+           f"battery high-watering "
+           f"{_pf['before_work_hook_highwater_delta_mb']:.0f} MB -- more "
+           f"than every day stage -- still leaves the measured peak at "
+           f"{_pf['measured_peak_stage']} and a REAL day passes. Its "
+           f"delta is REPORTED, and counted in the growth budget; only "
+           f"the argmax excludes it, because the ceiling rests on the DAY "
+           f"PATH's shape")
+        # AND THE HOOK'S OWN READS ARE SUBTRACTED FROM THE DAY-PATH CLAIM.
+        _rp_ord = day_split_residency_proof(
+            "FIXTURE-DAY-ORDER", _mk_ord["book_path"], params=live,
+            fixture=True, before_work=_hook_that_passes)
+        ok(_rp_ord["no_tape_index_or_fragment_artifact_was_opened"] is True
+           and _rp_ord["the_claim_is_about"].startswith("the DAY PATH")
+           and set(_rp_ord["tape_artifacts_opened"])
+           == (set(_rp_ord["tape_artifacts_opened_by_the_whole_process"])
+               - set(_rp_ord["tape_artifacts_opened_by_the_before_work_hook"])),
+           "and the residency claim is COMPUTED as the whole-process set MINUS "
+           "the hook's own set. The battery reads `data/` by design; without "
+           "the subtraction, moving it inside the instrumented region would "
+           "have made the day path's claim about the battery's reads")
     _cl = source_identity_at_launch()["import_closure"]
     ok("de_phase4_diag_runner.py" in _cl["modules"]
        and "harmful_stateful_policy.py" in _cl["modules"]
@@ -4237,10 +4997,22 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     _unch = _synth_ledger(_D6)
     _add_v2(_unch, _D6[0], chained=False)
     _f3 = find_sealed_day_receipt(_D6[0], _unch)
-    ok(_f3["present"] is False and _f3["status"] == "DANGLING_SUPERSEDES",
-       "KNOWN-BAD: a .v2 whose `supersedes.sha256` matches nothing present "
-       "REFUSES BY NAME -- a supersession whose predecessor is absent is a "
-       "claim about a file nobody can check")
+    ok(_f3["present"] is False
+       and _f3["status"] == "SUPERSEDES_TARGET_DIGEST_MISMATCH",
+       "KNOWN-BAD: a .v2 naming a PRESENT predecessor at the WRONG DIGEST "
+       "REFUSES BY NAME. It used to report DANGLING_SUPERSEDES -- 'the "
+       "predecessor is absent' -- about a file sitting right there: the "
+       "right verdict under a message that misdescribes the cause "
+       "(REV 54 S0)")
+    _dang = _synth_ledger(_D6)
+    _add_v2(_dang, _D6[0], chained=False, moved=True)
+    _f3b = find_sealed_day_receipt(_D6[0], _dang)
+    ok(_f3b["present"] is False
+       and _f3b["status"] == "DANGLING_SUPERSEDES",
+       "AND THE NAME NOW MEANS WHAT IT SAYS: a .v2 whose link names "
+       "NEITHER a present file NOR a present digest is DANGLING -- a "
+       "supersession whose predecessor is absent is a claim about a file "
+       "nobody can check")
     _twice = _synth_ledger(_D6)
     _der = _twice / "pm_5min/derived"
     _c0 = [x for x in sorted(day_forms(_D6[0])) if "-" not in x][0]
@@ -4621,9 +5393,9 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"are absent here and the run completes")
         ok(INDEX_SPLITS_NEEDED_BY_DAY["answer"] == "NONE, at any stage"
            and set(INDEX_SPLITS_NEEDED_BY_DAY["per_stage"]) == {
-               "S2_population", "S3_baseline_and_S4_null",
+               "S0b_battery", "S2_population", "S3_baseline_and_S4_null",
                "economics_valuation"}
-           and len(DAY_STAGES) == 6,
+           and len(DAY_STAGES) == 7,
            f"and the declaration names the answer PER STAGE over "
            f"{len(DAY_STAGES)} stages, so BE builds to a field rather than to "
            f"a sentence in a report")
@@ -4725,12 +5497,14 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            < FIXTURE_DAY_PEAK_RSS_MB_BUDGET
            and _open["memory_plan"]["within_budget"] is True
            and set(_open["memory_plan"]["observed"])
-           == {k for k, _ in DAY_STAGES} | {"S_start"},
+           == ({k for k, _ in DAY_STAGES} - {HOOK_STAGE}) | {"S_start"},
            f"and the real fixture run GREW "
            f"{_open['memory_plan']['growth_rss_mb']:.0f} MB against the declared "
            f"{FIXTURE_DAY_PEAK_RSS_MB_BUDGET:.0f} MB, with a high-water "
-           f"recorded at each of the {len(DAY_STAGES)} stages PLUS the S_start "
-           f"baseline -- without which the first stage's delta is everything "
+           f"recorded at each of the {len(DAY_STAGES) - 1} stages this run "
+           f"has -- {HOOK_STAGE} is marked only when a `before_work` hook "
+           f"is passed, and this run passed none -- PLUS the S_start "
+           f"baseline, without which the first stage's delta is everything "
            f"that ever ran and the argmax is decided before the day starts")
 
         # ---- reviewer §2.3: the instrument tests the LOCK, not an fd -------
@@ -5278,6 +6052,24 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "admits again -- the guard fires on the change, not on the run")
 
         # ---- R-608's DECLARATION ACT: the budget and the label ----------
+        _der = REAL_DAY_BUDGET_DERIVATION
+        ok(_der["the_declared_budget_still_covers_the_terms"] is True
+           and abs(_der["terms_sum_mb"]
+                   - (_der["be_day_reference_measured_mb"]
+                      + _der["battery_retained_mb_measured"]
+                      + _der["headroom_for_null_and_seal_mb"])) < 1e-9
+           and _der["headroom_against_the_declared_budget_mb"] > 0
+           and _der["declared_mb"] == REAL_DAY_PEAK_RSS_MB_BUDGET,
+           f"R-610: THE BATTERY IS NOW A TERM OF THE BUDGET DERIVATION, "
+           f"and the arithmetic is EVALUATED: "
+           f"{_der['be_day_reference_measured_mb']:.0f} + "
+           f"{_der['battery_retained_mb_measured']:.1f} + "
+           f"{_der['headroom_for_null_and_seal_mb']:.0f} = "
+           f"{_der['terms_sum_mb']:.1f} MB against the declared "
+           f"{_der['declared_mb']:.0f} MB, leaving "
+           f"{_der['headroom_against_the_declared_budget_mb']:.1f} MB. "
+           f"The cap was NOT raised to make room for the move (R-174); "
+           f"the term was measured and the headroom checked")
         ok(REAL_DAY_PEAK_RSS_MB_BUDGET == 4000.0
            and REAL_DAY_BUDGET_DERIVATION["declared_mb"] == 4000.0
            and REAL_DAY_BUDGET_DERIVATION["cgroup_cap_mb"] == 8192.0
@@ -5440,11 +6232,12 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         _ps = _open["memory_plan"]["peak_stage"]
         ok(_ps["computable"] is True
            and set(_ps["highwater_delta_mb_by_stage"])
-           == {k for k, _ in DAY_STAGES}
+           == {k for k, _ in DAY_STAGES} - {HOOK_STAGE}
            and _ps["declared_peak_stage"] == declared_peak_stage()
            and DAY_STAGE_PEAK_MARKER in _ps["declared_read_from"],
            f"REV 45 S1.6 / REV 43 S4.3: the peak stage is the ARGMAX OVER "
-           f"THE HIGHWATER DELTAS over all {len(DAY_STAGES)} stages -- "
+           f"THE HIGHWATER DELTAS over all {len(DAY_STAGES) - 1} stages "
+           f"this run marked -- "
            f"measured {_ps['measured_peak_stage']}, declared "
            f"{_ps['declared_peak_stage']}, agree "
            f"{_ps['declared_stage_is_the_measured_peak']} -- and the "
@@ -5466,11 +6259,17 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                 out[k] = {"peak_rss_mb_highwater": v,
                           "rss_mb_current": 100.0}
             return out
-        _names = [k for k, _ in DAY_STAGES]
+        # KEYED BY NAME, NEVER POSITIONALLY. These series were built with
+        # `zip(names, [six floats])`, so adding a stage to the table
+        # SILENTLY SHIFTED every reading by one and the falsifier began
+        # testing a different claim -- a list literal that has to track a
+        # table it does not name.
+        _names = [k for k, _ in DAY_STAGES if k != HOOK_STAGE]
         # A TRANSIENT INSIDE S4: the highwater jumps and comes back down in
         # the current series, so the CURRENT reading cannot see it at all.
-        _tr = _series(dict(zip(_names, [101.0, 102.0, 102.0, 102.0,
-                                        180.0, 180.0])))
+        _tr = _series({"S0_verify": 101.0, "S1_load": 102.0,
+                       "S2_population": 102.0, "S3_baseline": 102.0,
+                       "S4_null": 180.0, "S5_seal": 180.0})
         _pt = peak_stage_predicate(_tr, declared="S1_load")
         ok(_pt["measured_peak_stage"] == "S4_null"
            and _pt["declared_stage_is_the_measured_peak"] is False
@@ -5482,8 +6281,9 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"the highwater delta, which argmaxes to "
            f"{_pt['measured_peak_stage']} and FLAGS the disagreement. That "
            f"transient is exactly what REV 43 S4.3 said was invisible")
-        _ok_series = _series(dict(zip(_names, [180.0, 181.0, 181.0, 181.0,
-                                               182.0, 182.0])))
+        _ok_series = _series({"S0_verify": 180.0, "S1_load": 181.0,
+                              "S2_population": 181.0, "S3_baseline": 181.0,
+                              "S4_null": 182.0, "S5_seal": 182.0})
         _po = peak_stage_predicate(_ok_series, declared="S0_verify")
         ok(_po["measured_peak_stage"] == "S0_verify"
            and _po["declared_stage_is_the_measured_peak"] is True
@@ -5739,9 +6539,25 @@ def _main_day(a) -> int:
             raise RunnerRefused(
                 f"REFUSED: {day} is not in the ruled day set "
                 f"{params['days']}.")
+    # THE BATTERY RUNS BEFORE THE DAY'S WORK (R-610), not at the emit.
+    # It used to be called here, AFTER `day_split_residency_proof` had
+    # already spent the day: on 2026-09-03 that was 84 minutes of null
+    # draws followed by a refusal from a FIXTURE check, and the day was
+    # lost with nothing written. Everything the battery can refuse is
+    # knowable before the book is loaded. `_battery_first` is handed to
+    # `run_day`, which calls it after the book digest is verified and
+    # before S1.
+    _battery: dict = {}
+
+    def _battery_first():
+        LAST_BATTERY.clear()
+        selftest(quiet=True, offline=fixture)
+        _battery.update(LAST_BATTERY)
+        return dict(LAST_BATTERY)
+
     proof = day_split_residency_proof(
         day, book, params=params, fixture=fixture,
-        n_days_complete=a.n_days_complete)
+        n_days_complete=a.n_days_complete, before_work=_battery_first)
     payload = proof.pop("day_result")
     payload["split_residency_proof"] = proof
     payload["source_identity"] = {
@@ -5776,11 +6592,29 @@ def _main_day(a) -> int:
     # excluded the path being run. The offline choice is right for a
     # fixture, where it preserves the data-free property; a real day is
     # already reading the ledger and has no such justification.
-    LAST_BATTERY.clear()
-    selftest(quiet=True, offline=fixture)
-    payload["battery"] = dict(LAST_BATTERY)
+    if not _battery:
+        raise RunnerRefused(
+            "REFUSED at the emit: the in-run battery did not run. It is "
+            "handed to `run_day` as `before_work` and must have completed "
+            "BEFORE the day's work; an empty result here means the hook "
+            "was never called, and a receipt carrying no battery is a "
+            "receipt whose instruments never fired (rule 15).")
+    payload["battery"] = dict(_battery)
     payload["battery_scope"] = {
         "offline": fixture,
+        "ran_before_the_days_work": True,
+        "why_not_at_the_emit": (
+            "it WAS at the emit. On 2026-09-03 the day's 84 minutes "
+            "finished and a FIXTURE check inside the battery refused on "
+            "the real day's process-wide high-water; nothing was written "
+            "and the day was lost. The budget defect is fixed (growth, "
+            "per stage), but the ORDER was the other half: a check that "
+            "can refuse must refuse before the work it would waste. "
+            "Measured by `before_work.residency."
+            "day_draws_when_the_hook_returned`, which is 0"),
+        "day_draws_when_the_battery_returned":
+            ((payload.get("before_work") or {}).get("residency")
+             or {}).get("day_draws_when_the_hook_returned"),
         "why": ("a FIXTURE run skips the checks that read `data/`, because "
                 "that is what makes it a fixture" if fixture else
                 f"a REAL day runs the FULL battery -- the four R6 "

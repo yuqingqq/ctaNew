@@ -22,6 +22,7 @@ import datetime
 import hashlib
 import json
 import math
+import re
 import statistics
 import sys
 from pathlib import Path
@@ -43,9 +44,9 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 16
+VERSION = 18
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 94
+EXPECTED_CHECKS = 100
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -100,13 +101,35 @@ V15_DECLARATION = ("p003_de_multiday_gate1_design_v15__20260906T094500Z"
                    ".json",
                    "0c83afb1b1bc52016994116aae03237222b3f2463099d9534fc8f3"
                    "421cc9c799")
+#: DE 90. TWO ARTIFACTS ON DISK BOTH CARRY PROTOCOL V16 -- the file named
+#: `_v16` (pinning params v9) and the file named `_v17` (pinning params
+#: v10, the one params v10 names back). They are SUBSTANTIVELY different
+#: declarations sharing one version identity, so a reader resolving by
+#: `protocol` finds two answers. The version-only naming landed at v16 and
+#: the next emission took a new FILENAME without bumping VERSION, and
+#: nothing checked the filename against it.
+#:
+#: BOTH are entered here, because both exist and the chain is the record of
+#: what exists. VERSION goes to 18 rather than 17: `_v17` is taken by a
+#: V16-protocol artifact, and re-using the name would make a THIRD file
+#: claiming a version somebody else holds. From v18 the filename version,
+#: the protocol version and `len(chain) + 1` are ONE number, and
+#: `assert_output_name_matches_version` refuses an emission where they are
+#: not.
+V16_DECLARATION = ("p003_de_multiday_gate1_design_v16.json",
+                   "7a8ffa9a336261d1b900e7649a1bcb09f4b2d9852698d8856d3eb4"
+                   "e15e0b1852")
+V17_DECLARATION = ("p003_de_multiday_gate1_design_v17.json",
+                   "56645012b707ffc0ed78fa0c96dcd3b9e478bb84b0d7d355ef952b"
+                   "313ae5a02d")
 #: OLDEST FIRST. `supersedes.path` is the LAST element, never a typed
 #: constant -- that is how v7 came to name v2.
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
                     V10_DECLARATION, V11_DECLARATION, V12_DECLARATION,
-                    V13_DECLARATION, V14_DECLARATION, V15_DECLARATION)
+                    V13_DECLARATION, V14_DECLARATION, V15_DECLARATION,
+                    V16_DECLARATION, V17_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -434,6 +457,53 @@ def verify_params_pin(pin: dict, root: Path | None = None) -> dict:
             "walked": "path AND digest, both ways"}
 
 
+def _name_version(name: str) -> int | None:
+    """The version token in a declaration FILENAME, or None.
+
+    `p003_..._design_v17.json` and `p003_..._design_v15__<stamp>.json` both
+    carry it; the very first artifact carries none."""
+    m = re.search(r"_design_v(\d+)(?:__|\.json$)", str(name))
+    return int(m.group(1)) if m else None
+
+
+def assert_output_name_matches_version(output) -> dict:
+    """THE FILENAME'S VERSION IS THE ARTIFACT'S VERSION, or the emit stops.
+
+    DE 90 found two artifacts on disk both carrying protocol V16 -- one
+    named `_v16` pinning params v9, one named `_v17` pinning params v10.
+    Different declarations, one version identity, and the params pointed at
+    the second. The version-only naming (v16) removed the stamp that used
+    to make every filename unique, and nothing replaced the uniqueness with
+    a CHECK: the emitter would write V16's bytes to any name it was given.
+
+    `protocol`, `len(DECLARATION_CHAIN) + 1` and the filename are three
+    spellings of one number, and this is where they are made to agree."""
+    v = _name_version(Path(output).name)
+    if v is None:
+        raise DesignRefused(
+            f"REFUSED: the output name {Path(output).name!r} carries no "
+            f"version token. The declaration's version must be readable "
+            f"from the file it is written to -- a reader resolving "
+            f"`protocol` found TWO artifacts claiming V16 because the name "
+            f"was free to say anything (DE 90).")
+    if v != VERSION:
+        raise DesignRefused(
+            f"REFUSED: the output name says v{v} and this declaration is "
+            f"V{VERSION}. Two artifacts on disk already carry protocol V16 "
+            f"under the names `_v16` and `_v17`; a third disagreement is "
+            f"not a naming preference, it is a second file claiming a "
+            f"version somebody else holds (DE 90).")
+    if len(DECLARATION_CHAIN) + 1 != VERSION:
+        raise DesignRefused(
+            f"REFUSED: the chain holds {len(DECLARATION_CHAIN)} "
+            f"predecessors, so this is declaration "
+            f"{len(DECLARATION_CHAIN) + 1} and VERSION says {VERSION}.")
+    return {"output_name": Path(output).name, "name_version": v,
+            "module_version": VERSION,
+            "chain_length_plus_one": len(DECLARATION_CHAIN) + 1,
+            "all_three_agree": True}
+
+
 def verify_declaration_chain(root: Path | None = None,
                              chain=None) -> dict:
     """Every chain entry's digest READ from the file, never trusted typed.
@@ -480,7 +550,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 #: The params file this design pins. ONE name, and everything in the pin
 #: block is derived from it.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v10.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v11.json"
 
 
 def _params_path() -> Path:
@@ -1570,6 +1640,111 @@ def declaration() -> dict:
                        "a tampered sixth -> REFUSES on the digest",
                        "a day with two receipts -> REFUSES as ambiguous"],
         },
+        # ---- DE 90 / REV 54 S1.3: the landing record's twice-written
+        # fields, and WHICH COPY IS AUTHORITATIVE. Declared HERE because
+        # two seats read this artifact and they were reading different
+        # copies of the same fact; the field is now named in the design
+        # both of them resolve, not in either seat's code alone.
+        "R23_the_landing_records_authoritative_fields": {
+            "the_defect": (
+                "DA's pre-read writes each fact TWICE -- under "
+                "`landing_record` (its own declared block) and again at "
+                "the older top level. DE read the top-level copy and DA "
+                "its own. REV 54 S1.3 drove them deliberately disagreeing "
+                "(aaaa vs ffff) and NEITHER SEAT COMPLAINED. Today both "
+                "are written from one hash call and cannot differ; nothing "
+                "asserted that they must, and this is the conjunct that "
+                "stops a re-roll"),
+            "authoritative": {
+                "receipt_digest_at_landing":
+                    "landing_record.receipt_sha256",
+                "receipt_name_at_landing": "landing_record.receipt_path",
+                "day": "landing_record.day, or the top-level `day`",
+            },
+            "second_copies_that_must_agree": {
+                "landing_record.receipt_sha256": "receipt.sha256",
+                "landing_record.receipt_path": "receipt.path",
+                "landing_record.day": "day",
+            },
+            "why_the_landing_record_block_is_the_authority": (
+                "it is the block under `is_the_declared_LANDING_RECORD`, "
+                "the flag by which an artifact IS a landing record, and it "
+                "is the block DA's own reader resolves. The top-level "
+                "copies predate it"),
+            "on_a_disagreement": "REFUSED BY NAME -- "
+                                 "LANDING_RECORD_FIELD_COPIES_DISAGREE. "
+                                 "The gate does not pick a copy",
+            "an_artifact_without_the_flag_is_not_a_landing_record": (
+                "DE globbed the NAME and never checked the flag, so the "
+                "two seats could disagree about which artifacts ARE "
+                "landing records at all. It is now a named status, not a "
+                "silent drop (rule 11)"),
+            "the_landing_chain_follows_supersedes_too": (
+                "DA declares `.v2` carrying the {path, sha256} pair as the "
+                "landing record's correction path. DE's landing side did "
+                "not follow `supersedes` at all and read a corrected "
+                "record as AMBIGUOUS -- refusing a day whose landing "
+                "record had been corrected exactly as DA declares "
+                "corrections. Both chains now resolve through ONE "
+                "function, `de_multiday_gate1_runner.resolve_day_chain`"),
+            "enforced_by": [
+                "de_multiday_gate1_runner.landing_record_for()",
+                "de_multiday_gate1_runner.landing_record_copies()",
+            ],
+            "driven": [
+                "two copies agreeing -> resolves, value read from the "
+                "declared field",
+                "two copies disagreeing -> REFUSES BY NAME",
+                "a chained .v2 landing record -> resolves to the v2",
+                "no `is_the_declared_LANDING_RECORD` -> a named status",
+                "declared but no day field -> a named status",
+            ],
+        },
+        # ---- DE 90 / R-610: the in-run battery's PLACE in the day.
+        "R24_the_battery_runs_before_the_days_work": {
+            "the_defect": (
+                "the battery ran at the EMIT. On 2026-09-03 the day's 84 "
+                "minutes of null draws finished, a FIXTURE check inside "
+                "the battery refused on the real day's process-wide "
+                "high-water, and NOTHING WAS WRITTEN. The budget half is "
+                "closed (growth, per stage); the ORDER was the other half"),
+            "the_rule": "a check that can refuse must refuse BEFORE the "
+                        "work it would waste",
+            "where_it_runs": "after the book digest is verified, before "
+                             "S1 -- `run_day(before_work=...)`, stage "
+                             "S0b_battery",
+            "what_remains_at_the_emit": [
+                "the import-closure and HEAD unchanged check (rule 22)",
+                "the final growth-budget read",
+            ],
+            "measured_not_asserted": (
+                "`RUN_COUNTERS` counts draws and the receipt carries "
+                "`before_work.residency.day_draws_when_the_hook_returned`. "
+                "A hook that refuses stops the day at ZERO; the same day "
+                "without the hook reaches that point having drawn 1000, so "
+                "the zero is a measurement and not a line number"),
+            "the_three_consequences_of_the_move": {
+                "memory": "the battery's cost is INSIDE the day's growth "
+                          "budget -- measured 838.2 MB high-water, 26.1 MB "
+                          "RETAINED, and the budget is on current-RSS "
+                          "growth. It is a TERM of the derivation now and "
+                          "the cap was NOT raised (R-174)",
+                "the_peak_stage_argmax": "the hook's 838 MB transient "
+                                         "would compete with S1_load for "
+                                         "the argmax and a flip REFUSES a "
+                                         "real day. The argmax is over the "
+                                         "DAY-PATH stages; the hook's "
+                                         "delta is computed, reported and "
+                                         "budgeted, excluded from the "
+                                         "argmax alone",
+                "residency": "the battery reads `data/` by design, so the "
+                             "day-path claim is COMPUTED as the "
+                             "whole-process set MINUS the hook's own set, "
+                             "both reported",
+            },
+            "enforced_by": ["de_multiday_gate1_runner.run_day()",
+                            "de_multiday_gate1_runner._main_day()"],
+        },
         "R20_the_serial_schedule": serial_schedule(),
         "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
             "ruling": "SEAT_PROTOCOL rule 22 AS AMENDED (REV 51 S3)",
@@ -2578,13 +2753,66 @@ def selftest(*, quiet: bool = False) -> int:
 
     # ---- the version axis ------------------------------------------------
     ok(PROTOCOL.endswith(f"_V{VERSION}")
-       and DECLARATION_CHAIN[-1][0].startswith(
-           f"p003_de_multiday_gate1_design_v{VERSION - 1}__")
+       and _name_version(DECLARATION_CHAIN[-1][0]) == VERSION - 1
        and len(DECLARATION_CHAIN) == VERSION - 1,
        f"THE VERSION TRAVELS IN ONE PLACE: protocol {PROTOCOL} ends in "
        f"V{VERSION}, the chain holds {len(DECLARATION_CHAIN)} = VERSION - 1 "
        f"predecessors and its head is v{VERSION - 1}. v7 on disk read "
        f"protocol V4, filename v7 and supersedes v2")
+    # ---- DE 90: the landing record's authority, and the battery's place
+    _r23 = d["R23_the_landing_records_authoritative_fields"]
+    ok(_r23["authoritative"]["receipt_digest_at_landing"]
+       == "landing_record.receipt_sha256"
+       and _r23["second_copies_that_must_agree"][
+           "landing_record.receipt_sha256"] == "receipt.sha256"
+       and "REFUSED BY NAME" in _r23["on_a_disagreement"]
+       and len(_r23["driven"]) == 5,
+       "DE 90 / REV 54 S1.3: the landing record's AUTHORITATIVE field is "
+       "NAMED IN THE DESIGN both seats read -- "
+       "`landing_record.receipt_sha256`, with `receipt.sha256` as the copy "
+       "that must agree -- so the two seats cannot resolve conjunct 3 "
+       "against different digests. It was named in neither, and they "
+       "already read different copies")
+    _r24 = d["R24_the_battery_runs_before_the_days_work"]
+    ok("before S1" in _r24["where_it_runs"]
+       and len(_r24["what_remains_at_the_emit"]) == 2
+       and set(_r24["the_three_consequences_of_the_move"])
+       == {"memory", "the_peak_stage_argmax", "residency"},
+       "and R-610's ORDER is a declared field with its three consequences "
+       "named: the battery's memory inside the budget, its transient out "
+       "of the peak argmax, and its reads out of the day path's residency "
+       "claim. A move whose consequences are not written down is a move "
+       "nobody can check")
+    # ---- DE 90: the FILENAME's version is the artifact's version -----
+    ok(assert_output_name_matches_version(
+           f"p003_de_multiday_gate1_design_v{VERSION}.json"
+       )["all_three_agree"] is True,
+       f"DE 90 POSITIVE CONTROL: an output named "
+       f"`..._design_v{VERSION}.json` is ADMITTED -- the filename version, "
+       f"`protocol` V{VERSION} and len(chain) + 1 = "
+       f"{len(DECLARATION_CHAIN) + 1} are ONE number")
+    for _bad, _needle in (
+            (f"p003_de_multiday_gate1_design_v{VERSION - 1}.json",
+             "somebody else holds"),
+            ("p003_de_multiday_gate1_design.json", "no version token")):
+        try:
+            assert_output_name_matches_version(_bad)
+            ok(False, f"DE 90 KNOWN-BAD: {_bad} was ADMITTED")
+        except DesignRefused as _e:
+            ok(_needle in str(_e),
+               f"DE 90 KNOWN-BAD: an emission to {_bad!r} REFUSES. TWO "
+               f"artifacts on disk carry protocol V16 -- `_v16` pinning "
+               f"params v9 and `_v17` pinning params v10 -- because the "
+               f"version-only naming removed the stamp that made names "
+               f"unique and nothing replaced it with a check")
+    ok(_name_version("p003_de_multiday_gate1_design_v17.json") == 17
+       and _name_version(
+           "p003_de_multiday_gate1_design_v15__20260906T094500Z.json") == 15
+       and _name_version(
+           "p003_de_multiday_gate1_design__20260906T031853Z.json") is None,
+       "and the version reader handles all three naming eras on disk: "
+       "version-only, version-plus-stamp, and the very first artifact "
+       "which carries no version at all")
     _sup = d["supersedes"]
     ok(_sup["path"].endswith(DECLARATION_CHAIN[-1][0])
        and _sup["sha256"] == DECLARATION_CHAIN[-1][1]
@@ -2626,7 +2854,10 @@ def selftest(*, quiet: bool = False) -> int:
     # ---- v9: the memory plan and the split declaration ------------------
     _r11 = d["R11_memory_and_index_residency"]
     ok(_r11["index_splits_needed_by_day"]["answer"] == "NONE, at any stage"
-       and len(_r11["day_run_stages"]) == 6
+       # SEVEN FROM DE 90: `S0b_battery`, the in-run battery moved from
+       # the EMIT to before the day's work (R-610). Read from the runner's
+       # own table, never a literal that has to track it.
+       and len(_r11["day_run_stages"]) == 7
        and _r11["real_day_peak_rss_gb_ceiling"] == 8.0
        and _r11["the_measured_facts_this_rests_on"][
            "DE_build_tape_index_docstring_score_split_gb"] == 1.42,
@@ -2773,8 +3004,10 @@ def selftest(*, quiet: bool = False) -> int:
        "BE's signature and reintroduces a check-and-use window")
 
     import hashlib as _h4
-    _pp = (Path(__file__).resolve().parents[2] / "live/pm_research/"
-           "declarations/de_multiday_gate1_params_v10.json")
+    # FROM `PARAMS_REL`, never typed beside it: this literal named v10
+    # while PARAMS_REL moved to v11, and the check would have compared the
+    # pin against a file the design no longer pins.
+    _pp = Path(__file__).resolve().parents[2] / PARAMS_REL
     ok(d["parameters"]["sha256"] == _h4.sha256(_pp.read_bytes()).hexdigest()
        and d["parameters"]["pin_direction"].startswith("design -> params"),
        "THE PIN DIRECTION IS FLIPPED AND THE PIN IS REAL: the design pins "
@@ -2919,6 +3152,8 @@ def main() -> int:
     payload["withdrawn_phrase_audit"] = _withdrawn_phrase_audit(payload)
     if a.output.exists():
         raise DesignRefused(f"output already exists: {a.output}")
+    payload["output_name_check"] = assert_output_name_matches_version(
+        a.output)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
     r7 = payload["R7_the_day_set"]
