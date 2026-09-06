@@ -1112,9 +1112,6 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
     if bp["n_heads"] != 2:
         flags.append("book.n_heads")
     not_computable = []
-    if census["sealed_statistic_check"] == "NOT_ESTABLISHED_WALK_TRUNCATED":
-        not_computable.append(
-            "book.no_sealed_day_statistic_is_named__WALK_TRUNCATED")
     for head, blk in bp["per_head"].items():
         for k in ("matches", "coverage_matches", "theta_matches"):
             if blk[k] is False:
@@ -1136,6 +1133,9 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
     #: itself.
     if census["sealed_statistic_check"] == "REFUTED":
         flags.append("book.a_SEALED_DAY_STATISTIC_is_named_in_the_book")
+    elif census["sealed_statistic_check"] == "NOT_ESTABLISHED_WALK_TRUNCATED":
+        not_computable.append(
+            "book.no_sealed_day_statistic_is_named__WALK_TRUNCATED")
     out.update({
         "protocol": PROTOCOL + "_FULL",
         "tier": "FULL",
