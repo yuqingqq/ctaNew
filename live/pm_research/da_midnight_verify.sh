@@ -181,13 +181,33 @@ OPENED=$(date -u +%Y%m%d)
 # which is the safe direction.
 classify_mask_failure() {
   _c="$1"; _l="$2"
-  if [ "$_c" = "0" ] \
-     && grep -qE 'CONTENT_LIVENESS_(UNRESOLVED|UNJUDGEABLE)' "$_l" 2>/dev/null
-  then
-    echo "DEFERRED"
-  else
-    echo "FAILURE"
+  # ROUND 54, C-1: THIS USED TO KEY ON PROSE AND THE REVIEWER BROKE IT.
+  # The old test grepped the builder's TRACEBACK for the liveness token, so a
+  # log carrying BOTH the token and a real failure --
+  #     RuntimeError: while handling CONTENT_LIVENESS_UNJUDGEABLE the writer died
+  #     OSError: [Errno 28] No space left on device
+  # -- classified as DEFERRED, mapped to rc 2, and `systemctl` reported
+  # SUCCESS on a disk-full night. A wrapper that handles MaskRefused and then
+  # dies produces exactly that shape, so it is not exotic.
+  #
+  # TWO CONJUNCTS NOW, BOTH REQUIRED, AND THEY FAIL DIFFERENTLY:
+  #   (a) the builder must EMIT `MASK_STATUS=<token>` on a line of its own.
+  #       A message that merely MENTIONS the token cannot forge this, because
+  #       the anchor is the line start and the only writer is the builder's
+  #       own except-branch (`da_blackout_mask.main`).
+  #   (b) the log must carry NO failure marker -- a traceback, an OSError, a
+  #       MemoryError, a kill. So a run that refused CORRECTLY and then died
+  #       anyway is a FAILURE, which is what it is.
+  if [ "$_c" != "0" ]; then echo "FAILURE"; return; fi
+  if ! grep -qE '^MASK_STATUS=(CONTENT_LIVENESS_UNRESOLVED|CONTENT_LIVENESS_UNJUDGEABLE)$' \
+       "$_l" 2>/dev/null; then
+    echo "FAILURE"; return
   fi
+  if grep -qE '^Traceback|^[A-Za-z_.]*(Error|Exception):|Killed|Segmentation fault|MemoryError' \
+       "$_l" 2>/dev/null; then
+    echo "FAILURE"; return
+  fi
+  echo "DEFERRED"
 }
 
 # THE UNIT'S EXIT CODE, DECLARED IN ONE PLACE (round 52). `broke` is the

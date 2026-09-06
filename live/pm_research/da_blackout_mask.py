@@ -196,12 +196,20 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
     frozen = CLR.measure_day(day, gaps=gaps, raw_root=raw_root)
     if frozen.get("status") in ("CONTENT_LIVENESS_UNRESOLVED",
                                 "CONTENT_LIVENESS_UNJUDGEABLE"):
-        raise MaskRefused(
+        # ROUND 54: THE REFUSAL CARRIES ITS STATUS TOKEN, so `main` can emit
+        # it as ONE STRUCTURED LINE. The midnight unit classified this refusal
+        # by grepping the traceback PROSE, and the reviewer broke that by
+        # driving a log which QUOTED the token inside a real disk-full
+        # failure. A token the builder EMITS cannot be forged by a message
+        # that merely mentions it.
+        _refusal = MaskRefused(
             f"REFUSED: the frozen detector reports {frozen['status']} for "
             f"{day} ({frozen.get('why')}). A day the detector cannot judge "
             f"has no mask, and an empty mask there would read as 'nothing "
             f"was dark' — the empty-set trap on the artifact the scorer "
             f"consumes.")
+        _refusal.status = frozen["status"]
+        raise _refusal
     try:
         agg = TD.scan_day(day, TD.RAW if raw_root is None else raw_root)
     except TD.Refused as e:
@@ -625,7 +633,22 @@ def selftest() -> int:
            "the mask names the detector it came from, by version and content "
            "hash, and the ruling it serves")
 
-        cq = complement_quality("20260905", m, raw_root=root)
+        # ROUND 54 — A PRE-EXISTING RED, AND IT IS A DATE-DEPENDENT FIXTURE.
+        # `build_mask` above is isolated with `gaps={}`, but this call was not
+        # given a `gaps_path`, so it loaded the REAL ledger. The fixture names
+        # day "20260905", which was in the FUTURE when this check was written
+        # and is now a real day with real logged gaps -- so the check went RED
+        # the moment its own fixture date arrived, and stayed red on the
+        # nightly governed path. Found while patching this file for C-1, not
+        # by any check that was watching for it.
+        #
+        # Isolated the same way the mask is: an EMPTY ledger written into the
+        # fixture's own root. The bars are unchanged and nothing is weakened --
+        # the check now measures the synthetic day it claims to measure.
+        _empty_gaps = root / "empty_gaps.jsonl"
+        _empty_gaps.write_text("")
+        cq = complement_quality("20260905", m, raw_root=root,
+                                gaps_path=_empty_gaps)
         c = cq["coins"]["btc"]
         # BY HAND: 288 - 2 = 286 unmasked windows = 23.8333 h, no gaps at all.
         ok(c["n_windows_unmasked"] == 286
@@ -676,23 +699,36 @@ def selftest() -> int:
            "EMPTY-MASK CONTROL: a clean day emits an EMPTY mask with "
            "n_masked=0 — present and empty, which is not the same artifact as "
            "absent")
-        cq0 = complement_quality("20260906", m0, raw_root=root)
+        cq0 = complement_quality("20260906", m0, raw_root=root,
+                                 gaps_path=_empty_gaps)
         ok(cq0["coins"]["btc"]["n_windows_unmasked"] == 288
            and cq0["coins"]["btc"]["complement_fraction_of_PRESENT"] == 1.0,
            "and its complement is the WHOLE day, so the complement bars and "
            "the frozen bars are the same numbers by construction")
 
-        # BOTH DIRECTIONS on the closed flag: the 20260905 fixture is a
-        # FUTURE day, so it must read False; a past-dated one must read True.
+        # BOTH DIRECTIONS on the closed flag. ROUND 54: this used to assert
+        # the FUTURE direction on the hardcoded "20260905" fixture, which was
+        # future when written and is now the past -- so the check inverted
+        # itself with the calendar and the suite went red on a correct module.
+        # The future day is now DERIVED FROM THE CLOCK, so it cannot rot
+        # again; the past day stays hardcoded because the past stays past.
         # A flag asserted in one direction only proves nothing about the
         # other, which is the direction a scorer depends on.
+        # +30 rather than +2: a later fixture in this same suite already
+        # creates today+2 with a bare mkdir, and colliding on it is a
+        # FileExistsError, not a test result.
+        _future = (dt.datetime.now(dt.timezone.utc)
+                   + dt.timedelta(days=30)).strftime("%Y%m%d")
+        mk(_future, thin_idx={7})
+        m_future = build_mask(_future, raw_root=root, gaps={})
         mk("20260401", thin_idx={5})
         m_past = build_mask("20260401", raw_root=root, gaps={})
-        ok(m["day_closed_calendar"] is False
+        ok(m_future["day_closed_calendar"] is False
            and m_past["day_closed_calendar"] is True
-           and "REFUSE this artifact" in m["consumer_note"],
-           "the mask states whether its day is CLOSED -- False on a future "
-           "fixture and True on a past one -- and carries the instruction to "
+           and "REFUSE this artifact" in m_future["consumer_note"],
+           f"the mask states whether its day is CLOSED -- False on a future "
+           f"fixture ({_future}, derived from the clock) and True on a past "
+           f"one (20260401) -- and carries the instruction to "
            "refuse a mid-day mask for scoring, because a partial mask would "
            "score the complement of a day that had not finished")
 
@@ -1462,7 +1498,18 @@ def main() -> int:
         return selftest()
     if not a.day:
         raise SystemExit("REFUSED: --day YYYYMMDD")
-    m = build_mask(a.day)
+    # ONE TOKEN, ONE LINE, EMITTED BY THE BUILDER ITSELF (round 54). The
+    # consumer deciding whether a missing mask is an EXPECTED deferral or an
+    # INSTRUMENT FAILURE must not have to read prose to find out. This is the
+    # only place `MASK_STATUS=` is ever written, and it is written on its own
+    # line with no surrounding text.
+    try:
+        m = build_mask(a.day)
+    except MaskRefused as e:
+        print(f"MASK_STATUS={getattr(e, 'status', 'MASK_REFUSED_OTHER')}")
+        print(f"MaskRefused: {e}", file=sys.stderr)
+        return 1
+    print("MASK_STATUS=OK")
     if a.write:
         p = write_mask(a.day, Path(a.outdir) if a.outdir else None)
         print(f"wrote {p}")

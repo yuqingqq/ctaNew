@@ -44,11 +44,23 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
-PROTOCOL = "P003_DA_POPULATION_MUTATION_AUDIT_V1"
+RECEIPT_VERSION = 2
+old_basename = 'p003_da_population_mutation_audit__20260905T161926Z.json'
+old_sha = '16bd11148702def1a7db0287967cc3e93031613619ada00bf16a6d9e6505b087'
+
+
+def carrying_commit():
+    import subprocess as _sp
+    r=_sp.run(['git','rev-parse','HEAD'],capture_output=True,text=True,cwd=str(HERE))
+    return r.stdout.strip() if r.returncode==0 else 'UNKNOWN'
+
+
+PROTOCOL = f"P003_DA_POPULATION_MUTATION_AUDIT_V{RECEIPT_VERSION}"
 HERE = Path(__file__).resolve().parent
 TARGET = HERE / "da_population_audit.py"
 #: The suites that must catch a broken instrument: its own, and the consumer
@@ -89,15 +101,51 @@ def digest(p: Path) -> str:
 
 
 def run_suite(mod: str, timeout: int = 900) -> dict:
+    # PYTHONDONTWRITEBYTECODE=1: a mutant that changes bytes WITHOUT changing
+    # length can leave a stale __pycache__ entry whose mtime+size still match,
+    # so the interpreter reuses the ORIGINAL bytecode and the mutant reads
+    # green. DE hit exactly this (Q-DE-65). Cheaper to never write the cache.
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     r = subprocess.run([sys.executable, str(HERE / f"{mod}.py"), "--selftest"],
                        capture_output=True, text=True, cwd=str(HERE),
-                       timeout=timeout)
+                       timeout=timeout, env=env)
     tail = (r.stdout or "")[-4000:]
     fails = [ln.strip() for ln in tail.splitlines()
              if ln.strip().startswith(("FAIL", "FAILED"))
              or " FAIL" in ln or "SELFTEST FAILED" in ln]
+    # ROUND 54, ITEM 4: A KILL IS CLASSIFIED BY CAUSE, AND A RED RUN MUST
+    # ALWAYS BE ABLE TO SAY WHY. The STATUS mutant sent this suite red with
+    # `named_failures: []` -- red, and unable to say what caught it. Measured:
+    # the mutant makes `compare` return the NOTHING_EXCLUDED dict, which has
+    # no `excluded_fraction`, so the suite dies with a KeyError BEFORE any
+    # FAIL line is printed. That is a CRASH-KILL, not an ASSERTION-KILL.
+    #
+    # The distinction is not cosmetic and it is not mine: the pre-existing
+    # `da_mutation_audit` harness draws exactly this line in its own
+    # docstring -- a crash-kill is still a detection, but it does NOT show
+    # the defect is ASSERTED, and a defensive check added elsewhere later
+    # would silently delete that coverage. My round-51 row said "red BY NAME"
+    # for all four; for the STATUS mutant that was wrong, and this is the
+    # correction.
+    exc = ""
+    for ln in reversed((r.stderr or "").splitlines()):
+        t = ln.strip()
+        if t and not ln.startswith((" ", "\t")) and ":" in t:
+            exc = t
+            break
+    if r.returncode == 0:
+        cause = "NOT_KILLED"
+    elif fails:
+        cause = "ASSERTION_KILL"
+    elif exc:
+        cause = "CRASH_KILL"
+    else:
+        cause = "RED_WITHOUT_A_REASON"
     return {"module": mod, "rc": r.returncode, "green": r.returncode == 0,
             "named_failures": fails[:6],
+            "kill_cause": cause,
+            "why_red": (exc if cause == "CRASH_KILL"
+                        else (fails[0] if fails else "")),
             "stderr_tail": (r.stderr or "")[-400:] if r.returncode else ""}
 
 
@@ -138,7 +186,9 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
                 "mutant": name, "surface": surface, "status": "APPLIED",
                 "why_it_matters": why,
                 "caught_by": {m: {"went_red": not v["green"], "rc": v["rc"],
-                                  "named_failures": v["named_failures"]}
+                                  "kill_cause": v["kill_cause"],
+                              "why_red": v["why_red"],
+                              "named_failures": v["named_failures"]}
                               for m, v in caught.items()},
                 "survived_in": sorted(m for m, v in caught.items()
                                       if v["green"]),
@@ -153,6 +203,27 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
     survivors = [r for r in applied if r["survived_in"]]
     return {
         "protocol": PROTOCOL,
+        "supersedes": {
+            "path": "data/pm_5min/derived/"
+                    + old_basename,
+            "sha256": old_sha,
+            "what_changed": (
+                "the consumer predicate is RENAMED to say SELFTEST, because "
+                "the old name said `consumer` while what ran was DE's "
+                "SELFTEST -- and at c476d0f that selftest asserted nothing on "
+                "PA.compare's output (3 PA. sites), so the 0/4 was "
+                "structurally guaranteed before any mutant was written. The "
+                "limit was in limits[2] and the NAME did not carry it, and "
+                "R-541(F) was written from the name. Re-run at HEAD (DE's "
+                "e67252d, 12 PA. sites, consumer-side falsifier landed): "
+                "4 of 4, every one an ASSERTION_KILL. Kills are now "
+                "classified by CAUSE, which corrects my own round-51 claim "
+                "that all four went red BY NAME: the STATUS mutant is a "
+                "CRASH_KILL."),
+            "correction_is_in_band": "rule 13: superseding receipt, v1 not "
+                                     "edited and standing as provenance",
+        },
+        "carrying_commit": carrying_commit(),
         "target": (str(t.relative_to(HERE.parents[1]))
                    if HERE.parents[1] in t.parents else str(t)),
         "target_sha256_before": before,
@@ -168,13 +239,44 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
             "every_applied_mutant_caught_by_its_own_suite": all(
                 r["caught_by"]["da_population_audit"]["went_red"]
                 for r in applied),
-            "every_applied_mutant_caught_by_the_consumer": all(
+            # ROUND 54, B-2: RENAMED, AND THE RENAME IS THE CORRECTION.
+            # This field was `every_applied_mutant_caught_by_the_consumer`,
+            # which NAMES DE's census. What actually ran was DE's SELFTEST,
+            # and at c476d0f that selftest asserted nothing about
+            # `PA.compare`'s output -- so 0/4 was structurally guaranteed
+            # before any mutant was written. My own limits[2] said exactly
+            # that and the FIELD NAME did not, and the coordinator wrote
+            # R-541(F) from the name. A limit that only a careful reader
+            # reaches is not a limit; it belongs in the predicate.
+            "every_applied_mutant_caught_by_the_consumers_SELFTEST": all(
                 r["caught_by"]["de_section81_mid_census"]["went_red"]
                 for r in applied),
-            "every_applied_mutant_caught_everywhere": all(
+            "what_the_consumer_number_measures": (
+                "the consumer's SELFTEST, not its production census. A "
+                "selftest that never asserts on the imported function's "
+                "output cannot go red when that function is broken, so a 0 "
+                "here is a fact about the SUITE's coverage and NOT evidence "
+                "that the census is unprotected"),
+            "every_applied_mutant_caught_by_both_suites": all(
                 r["caught_everywhere"] for r in applied),
             "surviving_mutants": [r["mutant"] for r in survivors],
             "n_surviving": len(survivors),
+            # HOW each suite caught each mutant, not merely THAT it did.
+            "kill_cause_by_mutant": {
+                r["mutant"]: {m: v["kill_cause"]
+                              for m, v in r["caught_by"].items()}
+                for r in applied},
+            "n_assertion_kills_own_suite": sum(
+                1 for r in applied
+                if r["caught_by"]["da_population_audit"]["kill_cause"]
+                == "ASSERTION_KILL"),
+            "n_crash_kills_own_suite": sum(
+                1 for r in applied
+                if r["caught_by"]["da_population_audit"]["kill_cause"]
+                == "CRASH_KILL"),
+            "every_red_run_can_say_why": all(
+                bool(v["why_red"]) for r in applied
+                for v in r["caught_by"].values() if v["went_red"]),
         },
         "role": "REPORTED, NOT ENFORCED (rule 14). A surviving mutant is a "
                 "hole in a certification another seat relies on; this names "
@@ -185,7 +287,14 @@ def audit(mutants=MUTANTS, suites=SUITES, target: Path | None = None) -> dict:
             "a mutant caught by a suite says the suite discriminates on that "
             "line, not that the line is correct",
             "the consumer is run at its own selftest, which is not the same "
-            "as the production census it performs on real data",
+            "as the production census it performs on real data -- this limit "
+            "is now carried in the predicate's own field name and in "
+            "`what_the_consumer_number_measures`, because as a limits entry "
+            "it was read past (R-541(F))",
+            "mutants are applied to a file the interpreter may have cached: "
+            "a same-length mutant can leave a stale .pyc that makes a red "
+            "mutant read green (DE, Q-DE-65). PYTHONDONTWRITEBYTECODE=1 is "
+            "set for every child here",
         ],
     }
 

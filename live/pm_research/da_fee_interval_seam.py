@@ -25,11 +25,19 @@ population, not one.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import ast
 import json
 from pathlib import Path
 
-PROTOCOL = "P003_DA_FEE_INTERVAL_SEAM_V1"
+#: ROUND 54, C-2: DERIVED, NEVER TYPED. v2 shipped still carrying the V1
+#: string, so an automated reader resolving by `protocol` saw V1 for BOTH
+#: files -- the supersession was legible to a human reading `supersedes` and
+#: invisible to a resolver keying on the protocol. The version now comes from
+#: `RECEIPT_VERSION` in one place, so bumping the receipt cannot leave the
+#: protocol behind.
+RECEIPT_VERSION = 3
+PROTOCOL = f"P003_DA_FEE_INTERVAL_SEAM_V{RECEIPT_VERSION}"
 REPO = Path("/home/yuqing/ctaNew")
 ECON = (REPO / "data/pm_5min/derived"
         / "p003_v2_gate1_economics_smoke__20260905T052605Z.json")
@@ -63,11 +71,25 @@ WITHDRAWAL_ROW = (
     "Crossing costs ~2.25 c/share ATM -- TAKER LEG ONLY | 0.50 c half-spread "
     "+ 1.75 c fee ~= 225 bps on a $1 binary. BOTH TERMS ARE THE SAME SIDE. "
     "DO NOT SUBTRACT THIS FROM A MAKER NET.")
+#: v3 supersedes v2, which superseded v1. The chain is kept whole rather than
+#: collapsed: v2 is what withdrew the endpoint, and v3 changes only the
+#: protocol string, so a reader must be able to see both steps.
 SUPERSEDES = {
     "path": "data/pm_5min/derived/"
-            "p003_da_fee_interval_seam__20260905T155346Z.json",
-    "sha256": "a7b562f0ab4673160aa8757083a721c9c90d8b317"
-              "a36beb538674cf22db624f8",
+            "p003_da_fee_interval_seam_v2__20260906T021955Z.json",
+    "sha256": "PINNED_AT_EMIT",
+    "which_superseded": {
+        "path": "data/pm_5min/derived/"
+                "p003_da_fee_interval_seam__20260905T155346Z.json",
+        "sha256": "a7b562f0ab4673160aa8757083a721c9c90d8b317"
+                  "a36beb538674cf22db624f8",
+    },
+    "v3_changes_only": (
+        "the `protocol` string, which v2 left reading "
+        "P003_DA_FEE_INTERVAL_SEAM_V1 so an automated reader resolving by "
+        "protocol saw V1 for both files (reviewer C-2). Every number, every "
+        "predicate and the withdrawal itself are UNCHANGED from v2, and v2 "
+        "is not edited"),
     "what_changed": (
         "the lower endpoint is WITHDRAWN as a non-economic quantity and "
         "`arms_whose_bracket_straddles_zero` is now EMPTY. The E0 endpoint, "
@@ -228,7 +250,11 @@ def probe() -> dict:
             not a["computed_predicates"]["bracket_straddles_zero"]
             for a in arms.values()),
     }
-    out["supersedes"] = SUPERSEDES
+    sup = dict(SUPERSEDES)
+    v2 = REPO / sup["path"]
+    sup["sha256"] = (hashlib.sha256(v2.read_bytes()).hexdigest()
+                     if v2.is_file() else "V2_ARTIFACT_ABSENT_AT_EMIT")
+    out["supersedes"] = sup
     out["role"] = ("REPORTED, NOT ENFORCED (rule 14). This says the "
                    "bound-endpoint re-run is runnable and what it yields on "
                    "the two arms the receipt carries. It clears no gate and "

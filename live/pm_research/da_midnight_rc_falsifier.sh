@@ -40,11 +40,27 @@ TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 fails=0
 say() { if [ "$1" = "$2" ]; then echo "ok   $3"; else echo "FAIL $3 (got $2, want $1)"; fails=$((fails+1)); fi; }
 
-# The two real refusal texts, copied from the unit's own log.
-printf '%s\n' "MaskRefused: REFUSED: the frozen detector reports CONTENT_LIVENESS_UNJUDGEABLE for 20260906 (no coin had enough windows for a median)." > "$TMP/unjudgeable"
-printf '%s\n' "MaskRefused: REFUSED: the frozen detector reports CONTENT_LIVENESS_UNRESOLVED for 20260905 (20260905 has a raw directory but NO window files)." > "$TMP/unresolved"
+# The refusal logs, in the STRUCTURED form the builder now emits: one token
+# on a line of its own, written only by `da_blackout_mask.main`.
+printf '%s\n' "MASK_STATUS=CONTENT_LIVENESS_UNJUDGEABLE" > "$TMP/unjudgeable"
+printf '%s\n' "MASK_STATUS=CONTENT_LIVENESS_UNRESOLVED" > "$TMP/unresolved"
 printf '%s\n' "Traceback (most recent call last):" "OSError: [Errno 28] No space left on device" > "$TMP/realfail"
 printf '%s\n' "" > "$TMP/empty"
+# THE CASE THE REVIEWER DROVE AND THIS BATTERY DID NOT (C-1): a log carrying
+# BOTH the liveness token AND a real failure. Under the old prose match this
+# returned DEFERRED -- a disk-full night reported as success.
+printf '%s\n' "MASK_STATUS=CONTENT_LIVENESS_UNJUDGEABLE" \
+  "Traceback (most recent call last):" \
+  "RuntimeError: while handling CONTENT_LIVENESS_UNJUDGEABLE the writer died" \
+  "OSError: [Errno 28] No space left on device" > "$TMP/mixed"
+# The same failure WITHOUT the structured line, only the token in prose --
+# which is exactly what the old matcher accepted.
+printf '%s\n' "Traceback (most recent call last):" \
+  "RuntimeError: while handling CONTENT_LIVENESS_UNJUDGEABLE the writer died" \
+  > "$TMP/prose_only"
+# A token quoted mid-line must not satisfy the line-anchored match.
+printf '%s\n' "note: MASK_STATUS=CONTENT_LIVENESS_UNJUDGEABLE was seen" \
+  > "$TMP/inline"
 
 echo "== the nightly case: an OPEN day refusing for want of windows =="
 say DEFERRED "$(classify_mask_failure 0 "$TMP/unjudgeable")" \
@@ -73,17 +89,58 @@ say FAILURE "$(classify_mask_failure '?' "$TMP/unjudgeable")" \
   "UNKNOWN closed-ness -> FAILURE: '?' is not '0', so a verdict that cannot \
 be read falls to the safe side"
 
+echo "== C-1: the mixed log, in both directions =="
+say FAILURE "$(classify_mask_failure 0 "$TMP/mixed")" \
+  "OPEN + structured refusal AND a real disk-full failure -> FAILURE. This is \
+the exact log the reviewer drove; under the prose match it returned DEFERRED \
+and systemctl reported success on a broken night"
+say FAILURE "$(classify_mask_failure 0 "$TMP/prose_only")" \
+  "OPEN + the token ONLY IN PROSE, no structured line -> FAILURE: a message \
+that mentions the token cannot forge one the builder never emitted"
+say FAILURE "$(classify_mask_failure 0 "$TMP/inline")" \
+  "OPEN + the token quoted MID-LINE -> FAILURE: the match is anchored to the \
+line start, so a mention inside other text does not satisfy it"
+say DEFERRED "$(classify_mask_failure 0 "$TMP/unjudgeable")" \
+  "OPEN + a PURE structured refusal, no failure marker -> DEFERRED: the \
+tightening did not close the path it exists to allow"
+
 echo "== the guard moves with its input, in both directions =="
 say DEFERRED "$(classify_mask_failure 0 "$TMP/unjudgeable")" \
   "same input, same answer -- deterministic"
 say FAILURE "$(classify_mask_failure 0 "$TMP/nonexistent-file")" \
   "a missing mask log -> FAILURE, never a deferral"
 
+# ROUND 54: THE SUMMARY IS COMPUTED, NOT ASSERTED. It used to echo
+# "rc 2 is reachable ONLY for an open day refusing for want of windows" --
+# a conclusion printed beside a passing test set, which is rule 10 in a shell
+# echo, and the coordinator quoted it as verification in R-542(A). The
+# reviewer then reached rc 2 by another route, so the sentence was false while
+# every case passed. What the battery can honestly say is a COUNT over its own
+# outcomes: how many inputs reached DEFERRED, and which.
+echo
+echo "== the summary, COMPUTED over this battery's own outcomes =="
+n_def=0; n_fail=0; deferring=""
+for f in unjudgeable unresolved realfail empty mixed prose_only inline; do
+  for c in 0 1 '?'; do
+    r="$(classify_mask_failure "$c" "$TMP/$f")"
+    if [ "$r" = "DEFERRED" ]; then
+      n_def=$((n_def+1)); deferring="$deferring closed=$c/$f"
+    else
+      n_fail=$((n_fail+1))
+    fi
+  done
+done
+echo "   inputs driven: $((n_def+n_fail))   DEFERRED: $n_def   FAILURE: $n_fail"
+echo "   every input that reached DEFERRED:$deferring"
+want=" closed=0/unjudgeable closed=0/unresolved"
+say "$want" "$deferring" \
+  "COMPUTED PREDICATE: the ONLY inputs in this battery that reach DEFERRED are \
+the two pure structured open-day refusals -- enumerated, not asserted. This \
+replaces the echoed claim the reviewer refuted."
 echo
 if [ "$fails" -eq 0 ]; then
-  echo "da_midnight_rc_falsifier: 10 checks PASSED -- rc 2 is reachable ONLY \
-for an open day refusing for want of windows, and rc 4 still fires on \
-everything else"
+  echo "da_midnight_rc_falsifier: $((n_def+n_fail)) drives + 15 named checks \
+PASSED"
   exit 0
 fi
 echo "da_midnight_rc_falsifier: $fails FAILURE(S)"; exit 1
