@@ -128,7 +128,17 @@ except where marked USER-ONLY.
     the lock REFUSES (exit 1, say so in the report) if another heavy run holds
     it; never wait on it silently, never raise either cap. The slice itself is
     capped at CPUQuota=200% so light suites can overlap a heavy run. "Heavy" =
-    anything expected over 60 s wall or 1 GiB RSS.
+    anything expected over 60 s wall or 1 GiB RSS. **A heavy run is never a child
+    of a tool shell (R-628):** `systemd-run --scope` registers processes the CALLER
+    forks, so the run sits in the launching shell's process group and dies when the
+    harness stops that shell's background task — the 09-03 re-run was killed at 35
+    minutes that way, nothing written. Launch as a transient SERVICE the manager
+    forks, the lock held inside it:
+    `systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew -- flock -n /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>`
+    (no `--scope`; `flock` inside the unit holds the lock for the run's life; a held
+    lock still refuses with exit 1 — read the unit's result). Poll the UNIT, not a
+    child PID; a run's survival of `kill -TERM` on the launching shell's process
+    group is a battery falsifier.
 
 21. **Landing in the shared tree is add, commit, push — nothing else** (R-576):
     a seat that lands an artifact from `/home/yuqing/ctaNew` runs exactly

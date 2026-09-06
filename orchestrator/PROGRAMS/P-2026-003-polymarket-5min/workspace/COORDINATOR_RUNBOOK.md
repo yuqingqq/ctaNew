@@ -361,6 +361,8 @@ recorded as R-495.
 
 ## 6. Standing prohibitions (coordinator)
 
+**A HEAVY RUN IS NEVER A CHILD OF A TOOL SHELL (R-628).** `systemd-run --scope` from a Claude Code Bash task dies when the harness stops that task (the same mechanism that killed the coordinator's shell waiters earlier today). Heavy runs launch as transient SERVICES (`systemd-run --user --unit=… -- flock -n <lock> <cmd>`, no `--scope`); a GO names that form.
+
 **NEVER TOUCH A SEAT'S WORKTREE WHILE THE SEAT WORKS (R-627).** Symlink restores, refreshes and file restores in a seat worktree happen only when that seat is idle and told; read every script's output before reporting it done (two coordinator errors on wt-da, 12:03–12:04Z).
 
 **EVERY LAUNCH IS A SEPARATE GO (R-620).** After any refusal of a real run, the fix is reviewed BEFORE the next launch; a seat does not fix-and-relaunch inside one batch. The coordinator issues GO per launch, naming the commit the run executes from. A launch made without it stays up only by the coordinator's explicit ruling, and a NO-GO from the reviewer stops it.
