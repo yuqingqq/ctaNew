@@ -414,11 +414,27 @@ def correction_census(v1: dict, v2: dict,
     # artifact it claims to replace.
     missing = sorted(k for k in added if k not in v2)
     if missing:
+        # Q-DE-109 (1): the consequence clause here was written for
+        # `supersedes` and printed for EVERY omission -- "cannot be resolved
+        # to what it supersedes … an orphan file beside the artifact it
+        # claims to replace" is simply untrue of a missing `provenance`.
+        # The right verdict under a message that misstates the reason is
+        # REV 54 §0's class, and a reader who acts on the message rather
+        # than the verdict is sent to repair the wrong thing. Each omitted
+        # addition now carries ITS OWN consequence.
+        why = {
+            "supersedes": "`supersedes` is absent, so the correction cannot "
+                          "be resolved to what it supersedes -- it is an "
+                          "orphan file beside the artifact it claims to "
+                          "replace",
+        }
+        clauses = [why.get(k, f"the declared addition `{k}` is absent, so "
+                              f"the correction does not carry what its "
+                              f"declaration says it carries")
+                   for k in missing]
         raise ReadRefused(
             f"REFUSED: the .v2 is missing declared addition(s) {missing}. "
-            f"A correction that omits {'`supersedes`' if 'supersedes' in missing else 'a declared block'} "
-            f"cannot be resolved to what it supersedes -- it is an orphan "
-            f"file beside the artifact it claims to replace.")
+            + "; ".join(clauses) + ".")
     return {"keys_changed_vs_v1": changed,
             "declared_additions": sorted(added),
             "missing_declared_additions": missing,
@@ -892,7 +908,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 50
+EXPECTED_CHECKS = 53
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1322,6 +1338,48 @@ def selftest() -> int:
            f"against `added` FILTERED TO WHAT v2 CARRIED, so an omission "
            f"passed -- `supersedes` first among them, which would leave an "
            f"orphan file beside the artifact it claims to replace")
+    # Q-DE-109 (1): the CLAUSE must follow the OMISSION, not `supersedes`.
+    # DE imports this function (de_receipt_correction) and its declared
+    # additions include `provenance`, for which the old clause -- "cannot be
+    # resolved to what it supersedes … an orphan file" -- was simply untrue:
+    # the right verdict under a message that misstates the reason sends a
+    # reader to repair the wrong thing (REV 54 §0's class).
+    _prov = dict(_base, producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP"},
+                 supersedes={"sha256": "a" * 64})
+    try:
+        correction_census(_base, _prov,
+                          added=("provenance", "producing_code", "supersedes"))
+        _prov_msg = ""
+    except ReadRefused as _eP:
+        _prov_msg = str(_eP)
+    ok("`provenance` is absent" in _prov_msg
+       and "does not carry what its declaration says it carries" in _prov_msg
+       and "orphan file" not in _prov_msg
+       and "resolved to what it supersedes" not in _prov_msg,
+       f"Q-DE-109 (1): A NON-`supersedes` OMISSION NAMES ITS OWN "
+       f"CONSEQUENCE and NOT the chain clause -- {_prov_msg!r}")
+    try:
+        correction_census(_base, dict(_base,
+                                      producing_code={"status": "X"},
+                                      provenance={}),
+                          added=("provenance", "producing_code", "supersedes"))
+        _sup_msg = ""
+    except ReadRefused as _eS:
+        _sup_msg = str(_eS)
+    ok("`supersedes` is absent" in _sup_msg and "orphan file" in _sup_msg
+       and "does not carry what its declaration says" not in _sup_msg,
+       f"AND `supersedes` KEEPS ITS OWN, WHICH IS THE TRUE ONE FOR IT: "
+       f"{_sup_msg!r}")
+    try:
+        correction_census(_base, dict(_base, producing_code={"status": "X"}),
+                          added=("provenance", "producing_code", "supersedes"))
+        _both = ""
+    except ReadRefused as _eB2:
+        _both = str(_eB2)
+    ok("`provenance` is absent" in _both and "`supersedes` is absent" in _both,
+       f"AND TWO OMISSIONS CARRY TWO CLAUSES, one each rather than one "
+       f"borrowed for both: {_both!r}")
+
     _full = dict(_base, producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP"},
                  supersedes={"sha256": "a" * 64},
                  pinned_days_not_in_READABLE={"days": []})
