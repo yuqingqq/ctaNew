@@ -38,6 +38,17 @@ now on the journal*, beside `decides_nothing` and
 porcelain parser (`the_rename_returns: b`, `n_malformed: 0`). **The run is at 44:16;
 `be64book` at sixteen refused polls; `MemoryPeak` still 2,554,003,456 B across six reads.**
 
+**AT LANDING (13:20–13:22Z): an index.lock collision, recorded.** My first commit attempt
+was **refused because the coordinator's own `git commit` (`46a7ad5`, 13:21:31Z) held the
+index** in the shared tree. **Nothing was stranded** — no commit was created and all four
+files stayed modified. *My own probe then truncated the status list to three files
+(`head -5` over a four-file status), which I checked before believing it.* Retried after
+the lock cleared: **MEM 176 landed at `82b8858`**, and the push carried `46a7ad5` with it.
+***Rule 21's landing hazard has a second form: not a refused push leaving a stranded
+commit, but two seats' git processes colliding on one index — the refusal arriving before
+the commit exists. The remedy is the same: read what git actually refused, change nothing,
+retry.***
+
 ### The seven journal readers, censused with a control
 
 All seven exist and each contains `journalctl` — `be_daybook_build` 1, `da_accrual_report`
