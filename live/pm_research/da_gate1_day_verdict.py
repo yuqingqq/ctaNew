@@ -100,6 +100,109 @@ class VerifierRefused(RuntimeError):
     """The verification cannot proceed honestly on the inputs given."""
 
 
+#: R-673(b). ***A SEARCH BOUNDED TO TWO SHAPES LEAVES THE CLAIM READING
+#: TRUE.*** The producing-place scan understood exactly `NAME = ...` and a
+#: dict key, so an annotated assignment, a tuple target, a walrus, a
+#: subscript target and an augmented assignment -- ALL FIVE IN LIVE USE in
+#: this tree -- each made "the runner produces it in ZERO places" true by
+#: not being looked at. The scan is over STORE CONTEXTS now, which is what
+#: a binding IS, and ***a shape it does not understand REFUSES rather than
+#: returning a zero***.
+_BINDING_STMTS = (ast.Assign, ast.AnnAssign, ast.AugAssign, ast.NamedExpr)
+
+
+def binding_sites(tree, name: str) -> dict:
+    """Every place `name` is BOUND, every place it is only NAMED, and every
+    shape this scan does not understand."""
+    parents = {}
+    for nd in ast.walk(tree):
+        for c in ast.iter_child_nodes(nd):
+            parents[c] = nd
+    binds, declares, unhandled = [], [], []
+    for n in ast.walk(tree):
+        #: a STORE of the identifier, in any statement shape
+        if isinstance(n, ast.Name) and n.id == name and isinstance(
+                n.ctx, ast.Store):
+            cur, depth, owner = parents.get(n), 0, None
+            while cur is not None and depth < 6:
+                depth += 1
+                if isinstance(cur, _BINDING_STMTS + (
+                        ast.For, ast.AsyncFor, ast.With, ast.AsyncWith,
+                        ast.comprehension, ast.Try, ast.FunctionDef,
+                        ast.AsyncFunctionDef, ast.ClassDef, ast.Import,
+                        ast.ImportFrom, ast.Global, ast.Nonlocal)):
+                    owner = cur
+                    break
+                cur = parents.get(cur)
+            kind = type(owner).__name__ if owner is not None else None
+            if isinstance(owner, ast.AnnAssign) and owner.value is None:
+                declares.append({"line": n.lineno, "shape": "AnnAssign "
+                                                            "without a "
+                                                            "value"})
+            elif isinstance(owner, _BINDING_STMTS):
+                binds.append({"line": n.lineno, "shape": kind})
+            else:
+                unhandled.append({"line": n.lineno,
+                                  "shape": kind or "no enclosing statement "
+                                                   "within 6 hops"})
+        #: a SUBSCRIPT or ATTRIBUTE store on the name (`X["k"] = ...`)
+        if isinstance(n, (ast.Subscript, ast.Attribute)) and isinstance(
+                getattr(n, "ctx", None), ast.Store):
+            base = n
+            while isinstance(base, (ast.Subscript, ast.Attribute)):
+                base = base.value
+            if isinstance(base, ast.Name) and base.id == name:
+                binds.append({"line": n.lineno,
+                              "shape": f"{type(n).__name__} target"})
+        #: `out["D_E_MINUS_R"] = <expr>` -- the shape a receipt field is
+        #: most likely to be EMITTED in, and one a Dict-literal scan cannot
+        #: see. Same rule as the literal: a constant is a table entry, an
+        #: expression is an emission.
+        if isinstance(n, ast.Assign):
+            for t in n.targets:
+                if not (isinstance(t, ast.Subscript)
+                        and isinstance(t.slice, ast.Constant)
+                        and t.slice.value == name):
+                    continue
+                if isinstance(n.value, ast.Constant) and isinstance(
+                        n.value.value, (int, float, str, bool)):
+                    declares.append({"line": t.lineno,
+                                     "shape": "subscript key with a "
+                                              "constant value"})
+                else:
+                    binds.append({"line": t.lineno,
+                                  "shape": "subscript key with an "
+                                           "expression"})
+        #: a dict ENTRY: a constant beside the name is a TABLE entry
+        #: (DE's per-name seal scope says `D_E_MINUS_R: 1`, a VERSION);
+        #: an expression beside it is an EMISSION.
+        if isinstance(n, ast.Dict):
+            for k, v in zip(n.keys, n.values):
+                if not (isinstance(k, ast.Constant) and k.value == name):
+                    continue
+                if isinstance(v, ast.Constant) and isinstance(
+                        v.value, (int, float, str, bool)):
+                    declares.append({"line": k.lineno,
+                                     "shape": "dict entry with a constant "
+                                              "value"})
+                else:
+                    binds.append({"line": k.lineno,
+                                  "shape": "dict entry with an expression"})
+    return {"n_binds": len(binds), "binds": binds,
+            "n_declares": len(declares), "declares": declares,
+            "unhandled": unhandled,
+            "shapes_understood": [
+                "Assign (Name, tuple/list element, subscript, attribute)",
+                "AnnAssign (with a value; without one it DECLARES)",
+                "AugAssign", "NamedExpr (walrus)",
+                'dict entry and `x["NAME"] = ...` (constant = a table '
+                'entry, expression = an emission)'],
+            "why_it_refuses": (
+                "a shape this scan does not understand would make 'the "
+                "runner produces it in ZERO places' true by not being "
+                "looked at")}
+
+
 def _newest_params() -> Path:
     """The HIGHEST-numbered params declaration present.
 
@@ -322,6 +425,54 @@ def _design_version_in_a_tree(commit: str) -> dict:
             "read_by": f"git show {commit[:12]}:{DE_DESIGN_REL}, then ast"}
 
 
+#: R-673(a). ***A PAIR VERIFIED AGAINST A FILE NOBODY OPENED IS NOT A
+#: PAIR.*** Route 1 took the receipt's design path, threw away everything
+#: but the BASENAME, and hashed `<derived>/<basename>` -- so a receipt
+#: naming `/tmp/x/p003_..._design_v23.json` came back `pair_verified
+#: true` whenever a same-named file in the ledger happened to have the
+#: same bytes, and the record named a path the verifier never read. The
+#: path the receipt GIVES is the path that is hashed: absolute as given,
+#: relative resolved against the CODE ROOT (where `data/` is the ledger
+#: link the receipts mean). A path that is not there REFUSES BY NAME --
+#: the basename is never a second chance.
+def resolve_named_path(named: str) -> dict:
+    """The file a receipt NAMES, or a named refusal -- never a basename."""
+    import da_root as _R                                       # noqa: PLC0415
+    raw = Path(str(named))
+    #: A BARE BASENAME IS NOT A PATH WITH ITS DIRECTORIES THROWN AWAY.
+    #: The defect is DISCARDING a directory the receipt gave; a name that
+    #: never had one is a weaker binding, and it is resolved in the
+    #: DECLARED search roots and SAID to be a basename in the record.
+    basename_only = (raw.parent == Path("."))
+    tried = []
+    if raw.is_absolute():
+        tried.append(raw)
+        how = "the path the receipt NAMES, absolute as given"
+    elif basename_only:
+        tried += [HERE / "declarations" / raw.name, _derived_dir() / raw.name]
+        how = ("a BARE BASENAME -- the receipt gave no directory, so it is "
+               "resolved in the declared search roots and named as such")
+    else:
+        root = _R.code_root("resolving a path a receipt names")
+        tried.append(Path(root) / raw)
+        how = ("the path the receipt NAMES, resolved against the canonical "
+               "code root")
+    for c in tried:
+        if c.is_file():
+            return {"resolved": True, "path_hashed": str(c),
+                    "as_named": str(named), "basename_only": basename_only,
+                    "how": how,
+                    "paths_tried": [str(x) for x in tried],
+                    "sha256": hashlib.sha256(c.read_bytes()).hexdigest()}
+    return {"resolved": False, "as_named": str(named),
+            "path_hashed": None, "basename_only": basename_only,
+            "paths_tried": [str(x) for x in tried], "sha256": None,
+            "why": ("the file this receipt NAMES is not present. The "
+                    "basename is NOT tried elsewhere: a digest computed "
+                    "over a file the receipt did not name verifies "
+                    "nothing about the file it did")}
+
+
 def receipt_design_version(rec: dict) -> dict:
     """WHICH LIST A RECEIPT IS JUDGED AGAINST -- resolved from the receipt.
 
@@ -347,16 +498,20 @@ def receipt_design_version(rec: dict) -> dict:
     pth, dig = str(prov.get("path") or ""), prov.get("sha256")
     m = re.search(r"_design_v(\d+)(?:__|\.)", Path(pth).name) if pth else None
     if m:
-        f = _derived_dir() / Path(pth).name
-        actual = (hashlib.sha256(f.read_bytes()).hexdigest()
-                  if f.is_file() else None)
+        res = resolve_named_path(pth)
+        actual = res["sha256"]
         if dig and actual and dig == actual:
             return {"design_version": int(m.group(1)), "resolved": True,
                     "how": "provenance.design PAIR {path, sha256}, digest "
-                           "recomputed from the file the path names",
+                           "recomputed from THE PATH THE RECEIPT NAMES",
+                    "path_hashed": res["path_hashed"],
+                    "path_as_named": res["as_named"],
+                    "resolution": res["how"],
                     "pair_verified": True}
         ev.append({"route": "provenance.design",
-                   "path": Path(pth).name, "declared_sha256": dig,
+                   "path": pth, "path_hashed": res.get("path_hashed"),
+                   "paths_tried": res.get("paths_tried"),
+                   "declared_sha256": dig,
                    "recomputed_sha256": actual, "pair_verified": False,
                    "why": "the path names a version and the digest beside "
                           "it does not match the file -- the version is "
@@ -1912,29 +2067,16 @@ def declared_limits(receipt_arm_seals: list, params: dict,
     #: never produces it -- counted from the source, not asserted.
     src = DE_RUNNER_PATH.read_text()
     tree = ast.parse(src)
-    #: A PRODUCING PLACE BINDS A VALUE; A DECLARATION ONLY NAMES THE
-    #: FIELD. R-663: DE's new per-name scope map carries `"D_E_MINUS_R": 1`
-    #: -- a VERSION, not a quantity -- and counting every dict key made
-    #: this limit read "1 producing place" the hour that map landed. The
-    #: separating property is the VALUE: a constant int or string beside
-    #: the name is a table entry, an expression is an emission. The
-    #: declarations are counted too, so the exclusion is VISIBLE.
-    n_assign, n_named_in_declarations = 0, 0
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign):
-            for t in node.targets:
-                if isinstance(t, ast.Name) and t.id == "D_E_MINUS_R":
-                    n_assign += 1
-        if isinstance(node, ast.Dict):
-            for k, v in zip(node.keys, node.values):
-                if not (isinstance(k, ast.Constant)
-                        and k.value == "D_E_MINUS_R"):
-                    continue
-                if isinstance(v, ast.Constant) and isinstance(
-                        v.value, (int, float, str, bool)):
-                    n_named_in_declarations += 1
-                else:
-                    n_assign += 1
+    _b = binding_sites(tree, "D_E_MINUS_R")
+    n_assign = _b["n_binds"]
+    n_named_in_declarations = _b["n_declares"]
+    if _b["unhandled"]:
+        raise VerifierRefused(
+            f"REFUSED: UNHANDLED_BINDING_SHAPE_TOUCHES_A_WATCHED_NAME -- "
+            f"{_b['unhandled']}. This limit CLAIMS the runner never "
+            f"produces D(E-R); a binding shape this scan does not "
+            f"understand leaves that claim reading TRUE for a reason "
+            f"nobody checked.")
     n_sealed = sum(1 for s in receipt_arm_seals if s)
     return [
         {"limit": "D_E_MINUS_R_IS_NOT_VERIFIED",
@@ -3382,6 +3524,41 @@ def _derived_dir() -> Path:
     return _R.derived_dir("the Gate-1 read gate's day set")
 
 
+#: DA 97, FOUND BY RUNNING THE PRE-READ ON THE 09-04 RECEIPT. ***THE
+#: RECEIPT NAMED ITS PINS AND THIS VERIFIER REPORTED "the receipt names
+#: none".*** DE writes both pairs in a top-level `provenance` block --
+#: `provenance.params = {path, sha256}`, `provenance.design = {path,
+#: sha256}` -- and these readers looked only at the older
+#: `params_declaration` / `declaration.design` shapes, so a receipt that
+#: DID carry v14 and v21 by pair came back PROVENANCE_INCOMPLETE. ***A
+#: gap reported where the artifact is complete is the same defect as a
+#: pass reported where it is not*** -- both are the verifier describing
+#: itself instead of the receipt. Every place the receipt may state a pin
+#: is read, and two of its own statements that DISAGREE are a named
+#: CONFLICT, never a silent choice between them.
+def receipt_pin_candidates(receipt: dict, kind: str) -> dict:
+    """Every block in which THE RECEIPT ITSELF names a `kind` pin."""
+    found = []
+    prov = (receipt.get("provenance") or {}).get(kind)
+    if isinstance(prov, dict) and (prov.get("path") or prov.get("protocol")):
+        found.append({"where": f"provenance.{kind}", "block": prov})
+    for where, blk in ((f"{kind}_declaration", receipt.get(
+                            f"{kind}_declaration")),
+                       (f"declaration.{kind}",
+                        (receipt.get("declaration") or {}).get(kind)),
+                       (f"{kind}_used", receipt.get(f"{kind}_used"))):
+        if isinstance(blk, dict) and (blk.get("path") or blk.get("protocol")):
+            found.append({"where": where, "block": blk})
+    ident = {(Path(str(f["block"].get("path") or "")).name,
+              f["block"].get("sha256")) for f in found}
+    return {"found": found, "n_places": len(found),
+            "conflict": len(ident) > 1,
+            "identities": sorted((n, (h or "")[:16]) for n, h in ident),
+            "why": ("the receipt is the authority on what it read; where "
+                    "it says so twice and the two disagree, that is a "
+                    "finding, not a choice for this verifier to make")}
+
+
 def params_check(receipt: dict) -> dict:
     """The PARAMS declaration the RECEIPT names, verified at the file it
     names -- the same binding the design pin already had.
@@ -3393,8 +3570,18 @@ def params_check(receipt: dict) -> dict:
     that is what gets verified. A receipt naming a params file this
     worktree cannot resolve is a PROVENANCE GAP -- never a fall back to
     whatever happens to be newest, because the newest is not what ran."""
-    blk = (receipt.get("params_declaration") or receipt.get("params_used")
-           or (receipt.get("declaration") or {}).get("params"))
+    cand = receipt_pin_candidates(receipt, "params")
+    if cand["conflict"]:
+        return {"named_by_the_receipt": True, "matches": None,
+                "status": "PROVENANCE_CONFLICT_THE_RECEIPT_NAMES_TWO",
+                "places": [f["where"] for f in cand["found"]],
+                "identities": cand["identities"],
+                "why": ("the receipt names its params declaration in more "
+                        "than one place and the pins disagree; choosing "
+                        "one would be this verifier deciding which of the "
+                        "receipt's own statements to believe")}
+    blk = cand["found"][0]["block"] if cand["found"] else None
+    named_at = cand["found"][0]["where"] if cand["found"] else None
     if not isinstance(blk, dict) or not (blk.get("path") or blk.get("protocol")):
         return {"named_by_the_receipt": False,
                 "status": "PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED",
@@ -3417,7 +3604,8 @@ def params_check(receipt: dict) -> dict:
         q = HERE / "declarations" / f"de_multiday_gate1_params_v{ver}.json"
         p = q if q.is_file() else None
     if p is None:
-        return {"named_by_the_receipt": True, "path_named": name,
+        return {"named_by_the_receipt": True, "named_at": named_at,
+                "path_named": name,
                 "protocol_named": blk.get("protocol"),
                 "status": "PROVENANCE_INCOMPLETE_PARAMS_UNRESOLVED",
                 "matches": None,
@@ -3428,7 +3616,8 @@ def params_check(receipt: dict) -> dict:
                         "under")}
     sha = hashlib.sha256(p.read_bytes()).hexdigest()
     declared = blk.get("sha256")
-    return {"named_by_the_receipt": True, "path": p.name, "sha256": sha,
+    return {"named_by_the_receipt": True, "named_at": named_at,
+            "path": p.name, "sha256": sha,
             "sha256_declared": declared,
             "protocol": json.loads(p.read_text()).get("protocol"),
             "status": ("PARAMS_VERIFIED" if (declared is None or sha == declared)
@@ -3449,28 +3638,35 @@ def design_check(receipt: dict, params: dict) -> dict:
     file while the receipt under test was produced against v13 or v14. The
     version is the RECEIPT's to state; this verifies the artifact it names.
     """
-    blk = (receipt.get("design_declaration")
-           or (receipt.get("declaration") or {}).get("design")
-           or params.get("design_declaration"))
-    src = ("the receipt" if receipt.get("design_declaration")
-           or (receipt.get("declaration") or {}).get("design")
+    cand = receipt_pin_candidates(receipt, "design")
+    if cand["conflict"]:
+        return {"found": True, "matches": None,
+                "named_by": "the receipt, in two places that disagree",
+                "places": [f["where"] for f in cand["found"]],
+                "identities": cand["identities"],
+                "status": "PROVENANCE_CONFLICT_THE_RECEIPT_NAMES_TWO",
+                "why": ("the receipt names its design declaration twice "
+                        "and the pins disagree; this verifier will not "
+                        "pick which of the receipt's statements to hold "
+                        "it to")}
+    blk = (cand["found"][0]["block"] if cand["found"]
+           else params.get("design_declaration"))
+    src = (f"the receipt ({cand['found'][0]['where']})" if cand["found"]
            else "the params declaration (the receipt names none)")
     if not isinstance(blk, dict) or not blk.get("path"):
         return {"found": False, "matches": False, "named_by": src,
                 "why": ("no design declaration is named by the receipt or by "
                         "params, so the version under test cannot be "
                         "identified and MUST NOT be assumed")}
-    named = Path(blk["path"])
-    p = named if named.is_absolute() else (_derived_dir().parent.parent
-                                           / blk["path"])
-    if not p.is_file():
-        p = _derived_dir() / named.name
-    if not p.is_file():
+    res = resolve_named_path(blk["path"])
+    if not res["resolved"]:
         return {"found": False, "matches": False, "named_by": src,
                 "path_named": blk["path"],
-                "why": "the named design declaration is not on disk"}
-    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+                "paths_tried": res["paths_tried"], "why": res["why"]}
+    p, sha = Path(res["path_hashed"]), res["sha256"]
     return {"found": True, "named_by": src, "path": p.name,
+            "path_hashed": res["path_hashed"],
+            "path_as_named": res["as_named"], "resolution": res["how"],
             "sha256": sha, "sha256_declared": blk.get("sha256"),
             "protocol_declared": blk.get("protocol"),
             "version_from_the_name": (
@@ -3755,20 +3951,17 @@ def selftest_pre_read() -> list:                              # noqa: C901
         f.write_text(json.dumps({"design_version": version}))
         d = hashlib.sha256(f.read_bytes()).hexdigest()
         return {"protocol": "P003_SYNTHETIC_FOR_THE_SCOPE_TEST",
+                #: ABSOLUTE, so the pair is verified at the path the
+                #: receipt NAMES (R-673(a)) and not at a basename
                 "provenance": {"design": {
-                    "path": f"derived/{f.name}",
+                    "path": str(f),
                     "sha256": ("0" * 64 if corrupt_digest else d)}},
                 "per_day_sealed_artifacts": [
                     {"arm": "A", "admissibility": {"n_decisions": 7},
                      "counts": {"n_fills_arm": 3}}]}
-    _real_derived = globals()["_derived_dir"]
-    globals()["_derived_dir"] = lambda: vtmp
-    try:
-        a21 = economic_absence(_pinned(21))
-        a23 = economic_absence(_pinned(23))
-        abad = economic_absence(_pinned(23, corrupt_digest=True))
-    finally:
-        globals()["_derived_dir"] = _real_derived
+    a21 = economic_absence(_pinned(21))
+    a23 = economic_absence(_pinned(23))
+    abad = economic_absence(_pinned(23, corrupt_digest=True))
     ck("KNOWN-BAD IN BOTH DIRECTIONS, ONE FIELD, TWO SCOPES: a receipt "
        "carrying `n_fills_arm` AT DEPTH is CLEAN under a v21 pin (the "
        "count was open by ruling then) and ***LEAKED under a v23 pin***, "
@@ -4414,6 +4607,151 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+    # -- DA 97: THE RECEIPT NAMES ITS PINS WHERE DE WRITES THEM ---------
+    _pp = {"path": "live/pm_research/declarations/"
+                   "de_multiday_gate1_params_v14.json",
+           "sha256": hashlib.sha256(
+               (HERE / "declarations"
+                / "de_multiday_gate1_params_v14.json").read_bytes()
+           ).hexdigest()} if (HERE / "declarations"
+                              / "de_multiday_gate1_params_v14.json").is_file() \
+        else None
+    if _pp:
+        _new_shape = params_check({"provenance": {"params": _pp}})
+        _old_shape = params_check({"params_declaration": _pp})
+        _conflict = params_check({
+            "provenance": {"params": _pp},
+            "params_declaration": {**_pp, "sha256": "b" * 64}})
+        _neither = params_check({"day": "2026-09-04"})
+        ck("DA 97, FOUND BY RUNNING THE PRE-READ ON THE 09-04 RECEIPT -- "
+           "***THE RECEIPT NAMED ITS PINS AND THIS VERIFIER SAID \"the "
+           "receipt names none\".*** DE writes both pairs in a top-level "
+           "`provenance` block; these readers looked only at the older "
+           "`params_declaration` / `declaration.design` shapes, so a "
+           "receipt carrying v14 and v21 BY PAIR came back "
+           "PROVENANCE_INCOMPLETE. ***A gap reported where the artifact is "
+           "complete is the same defect as a pass reported where it is "
+           "not*** -- both are the verifier describing itself instead of "
+           "the receipt. Driven four ways: the NEW shape resolves and says "
+           "WHERE it read the pin, the OLD shape still resolves, ***two of "
+           "the receipt's own statements that DISAGREE are a named "
+           "CONFLICT*** rather than a silent choice between them, and a "
+           "receipt naming neither is the unchanged named gap",
+           _new_shape["matches"] is True
+           and _new_shape["named_at"] == "provenance.params"
+           and _old_shape["matches"] is True
+           and _old_shape["named_at"] == "params_declaration"
+           and _conflict["status"]
+           == "PROVENANCE_CONFLICT_THE_RECEIPT_NAMES_TWO"
+           and _conflict["matches"] is None
+           and _neither["status"] == "PROVENANCE_INCOMPLETE_NO_PARAMS_NAMED",
+           f"provenance.params -> {_new_shape['matches']} at "
+           f"{_new_shape['named_at']}; params_declaration -> "
+           f"{_old_shape['matches']}; both, disagreeing -> "
+           f"{_conflict['status']} over {len(_conflict['places'])} places; "
+           f"neither -> {_neither['status']}")
+        _dpin = {"path": "data/pm_5min/derived/"
+                         "p003_de_multiday_gate1_design_v21.json",
+                 "sha256": "c" * 64}
+        _d_receipt = design_check({"provenance": {"design": _dpin}},
+                                  {"design_declaration": {
+                                      "path": _dpin["path"],
+                                      "sha256": "d" * 64}})
+        ck("AND THE RECEIPT'S OWN STATEMENT OUTRANKS THE PARAMS "
+           "DECLARATION'S: where both name a design pin, the verdict is "
+           "about what THE RECEIPT says it read -- the params file "
+           "describes what a run SHOULD read, the receipt records what it "
+           "DID. The source is named in the record either way",
+           _d_receipt["named_by"] == "the receipt (provenance.design)"
+           and _d_receipt["sha256_declared"] == "c" * 64,
+           f"named_by {_d_receipt['named_by']}; the digest judged against "
+           f"is the RECEIPT's, not the params file's")
+    else:
+        ck("DA 97 PIN-SHAPE CELL -- ***SKIPPED AND NAMED, NOT PASSED***: "
+           "`de_multiday_gate1_params_v14.json` is not in this tree",
+           False, "the fixture needs the params declaration on disk")
+
+    # -- R-673(a): THE PATH THE RECEIPT NAMES IS THE PATH THAT IS HASHED -
+    _pt = Path(tempfile.mkdtemp(prefix="da97path_"))
+    _real = _derived_dir() / "p003_de_multiday_gate1_design_v21.json"
+    _twin = _pt / _real.name
+    _twin.write_bytes(_real.read_bytes())          # identical bytes, elsewhere
+    _twin_sha = hashlib.sha256(_twin.read_bytes()).hexdigest()
+    _here = resolve_named_path(str(_twin))
+    _gone = _pt / "never_written" / _real.name
+    _miss = resolve_named_path(str(_gone))
+    _one_byte = _pt / "changed" / _real.name
+    _one_byte.parent.mkdir()
+    _b = bytearray(_real.read_bytes())
+    _b[10] = (_b[10] + 1) % 256
+    _one_byte.write_bytes(bytes(_b))
+    _chg = resolve_named_path(str(_one_byte))
+    _v_missing = receipt_design_version(
+        {"provenance": {"design": {"path": str(_gone),
+                                   "sha256": _twin_sha}}})
+    _v_changed = receipt_design_version(
+        {"provenance": {"design": {"path": str(_one_byte),
+                                   "sha256": _twin_sha}}})
+    ck("R-673(a) -- ***A PAIR VERIFIED AGAINST A FILE NOBODY OPENED IS NOT "
+       "A PAIR.*** Route 1 threw away everything but the BASENAME and "
+       "hashed `<derived>/<basename>`, so a receipt naming a /tmp copy "
+       "came back `pair_verified true` on the strength of a ledger file it "
+       "never opened. Driven three ways on a REAL design declaration: a "
+       "same-bytes twin at another absolute path is hashed AT THAT PATH "
+       "and the record NAMES it; ***a path that is not there REFUSES BY "
+       "NAME even though a same-basename file with identical bytes sits in "
+       "the ledger*** -- the version comes back UNRESOLVED and the full "
+       "list applies; and one byte changed at the named path is a digest "
+       "MISMATCH, not a fallback. ***The basename is never a second "
+       "chance.***",
+       _here["resolved"] is True and _here["path_hashed"] == str(_twin)
+       and _here["sha256"] == _twin_sha
+       and _miss["resolved"] is False and _miss["path_hashed"] is None
+       and _real.is_file()
+       and _v_missing["resolved"] is False
+       and _chg["resolved"] is True and _chg["sha256"] != _twin_sha
+       and _v_changed["resolved"] is False,
+       f"twin at {_twin.parent.name}/ -> hashed at the path named; absent "
+       f"named path -> resolved {_miss['resolved']} while the ledger twin "
+       f"exists; one byte changed -> digest differs and the version is "
+       f"{_v_changed['design_version']}")
+
+    # -- R-673(b): EVERY BINDING SHAPE, OR A REFUSAL --------------------
+    _src = ("W: int = 1\n"                       # AnnAssign with a value
+            "W, other = 2, 3\n"                  # tuple target
+            "d = {}\n"
+            "d['k'] = (W := 4)\n"                # walrus
+            "W['k'] = 5\n"                       # subscript ON the name
+            "W += 1\n"                            # augmented alone
+            "TABLE = {'W': 23}\n"                # a table entry
+            "OUT = {'W': compute()}\n"           # an emission
+            "out['W'] = compute()\n"             # emitted by key
+            "tbl['W'] = 23\n")                   # a table entry, by key
+    _bs = binding_sites(ast.parse(_src.replace("W", "D_E_MINUS_R")),
+                        "D_E_MINUS_R")
+    _un = binding_sites(ast.parse("for D_E_MINUS_R in rows:\n    pass\n"),
+                        "D_E_MINUS_R")
+    _shapes = sorted({b["shape"] for b in _bs["binds"]})
+    ck("R-673(b) -- ***A SEARCH BOUNDED TO TWO SHAPES LEAVES THE CLAIM "
+       "READING TRUE.*** The producing-place scan understood `NAME = ...` "
+       "and a dict key, so an ANNOTATED assignment, a TUPLE target, a "
+       "WALRUS, a SUBSCRIPT target and an AUGMENTED assignment each made "
+       "*the runner produces D(E-R) in ZERO places* true by not being "
+       "looked at -- and all five are in live use in this tree. The scan "
+       "is over STORE CONTEXTS now, which is what a binding IS; a dict "
+       "entry with a CONSTANT is a table entry and one with an EXPRESSION "
+       "is an emission; and ***a shape it does not understand REFUSES "
+       "rather than returning a zero*** (a `for` target, driven)",
+       _bs["n_binds"] == 7 and _bs["n_declares"] == 2
+       and {"AnnAssign", "Assign", "AugAssign", "NamedExpr",
+            "Subscript target", "subscript key with an expression"}
+       <= set(_shapes)
+       and not _bs["unhandled"]
+       and _un["unhandled"] and _un["unhandled"][0]["shape"] == "For",
+       f"{_bs['n_binds']} bindings across {_shapes}; "
+       f"{_bs['n_declares']} table entries; a `for` target -> unhandled "
+       f"({_un['unhandled'][0]['shape']}) and the limit refuses")
+
     # -- REV 73 S0: THE SUPERSEDING LINK IS WRITTEN BY THE EMITTER ------
     _sd = Path(tempfile.mkdtemp(prefix="da95sup_"))
     _g1 = _sd / "rec_v1.json"

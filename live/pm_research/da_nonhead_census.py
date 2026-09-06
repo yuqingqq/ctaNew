@@ -776,11 +776,18 @@ def literal_census(root: Path, chains: dict,
     #: REV 73 S2(b): WHICH SHAPES THE TREE ACTUALLY USES decides note vs
     #: hole. A gate extended for a shape nobody writes is a note; one
     #: extended for a shape in live code was a HOLE while it was missing.
-    _multi = [r for r in rows
-              if "assignment closure" in (r.get("flow") or "")
-              and "->" in (r.get("flow") or "")]
+    #: R-673(b): ONE ROW, ONE BUCKET. The multi-hop filter matched any
+    #: flow containing `->`, which every RETURNING FUNCTION flow also
+    #: contains -- so one row sat in both lists and the two counts added
+    #: up to more rows than exist. A row is classified once, by the
+    #: strongest thing that is true of it.
     _retfn = [r for r in rows
               if "RETURNING FUNCTION" in (r.get("flow") or "")]
+    _seen = {id(r) for r in _retfn}
+    _multi = [r for r in rows
+              if id(r) not in _seen
+              and "assignment closure" in (r.get("flow") or "")
+              and "->" in (r.get("flow") or "")]
     _nulls = [r for r in rows if r["is_head"] is None]
     _null_pins = [r for r in _nulls if r["flows_into_an_open"]]
     return {"n_literals": len(rows), "literals": rows,
@@ -796,6 +803,10 @@ def literal_census(root: Path, chains: dict,
                 "pins_through_a_returning_function": [
                     {"file": r["file"], "line": r["line"],
                      "flow": r["flow"]} for r in _retfn],
+                "one_row_one_bucket": (
+                    "a returning-function flow also contains `->`, so the "
+                    "two lists overlapped and their counts added up to "
+                    "more rows than exist; each row is classified once"),
                 "why_it_is_censused": (
                     "one hop is a refactor away from blind; whether a real "
                     "module uses the shape is what decides between a NOTE "
@@ -871,8 +882,20 @@ def literal_census(root: Path, chains: dict,
                     "is right beside it on disk")}
 
 
-def supersession_block(prior: Path | None) -> dict | None:
-    """R-608: the PAIR {path, sha256}, both halves on ONE present file."""
+#: R-673(c) / MEM 198-199. ***MY OWN FAMILY HAD FOUR HEADS.*** Five
+#: `p003_da_nonhead_census__*.json` in the ledger, ONE link between them,
+#: and the newest superseding nothing -- the census that refuses a
+#: declaration family with two heads was itself a family with four. And
+#: the link was a FLAG: passing `--supersedes` wrote a pair, omitting it
+#: produced a head SILENTLY, while a half-written link refused loudly.
+#: ***An omission that is easier than an error is the thing that
+#: happens.*** So the link is MANDATORY: an emission either names its
+#: prior or DECLARES ITSELF FIRST-OF-FAMILY, and there is no third way.
+def supersession_block(prior, *, chain_over=(), what_changed=None):
+    """R-608: the PAIR {path, sha256} on ONE present file, with the chain
+    EXTENDED -- and, where a history was never linked, the older records
+    named in the chain so the family resolves to one head without editing
+    any of them."""
     if prior is None:
         return None
     p = Path(prior)
@@ -881,23 +904,117 @@ def supersession_block(prior: Path | None) -> dict | None:
             f"REFUSED: SUPERSEDED_RECEIPT_NOT_PRESENT -- {p}. A link is "
             f"the pair {{path, sha256}} landing on one PRESENT file; a "
             f"half-written link refuses BY NAME, never as 'no link'")
-    return {"path": str(p), "sha256": hashlib.sha256(
-        p.read_bytes()).hexdigest(),
-        "rule": "13 -- vN+1; the superseded receipt is not edited",
-        "what_changes": WHAT_CHANGES_IN_V2}
+    sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    try:
+        prior_chain = (json.loads(p.read_text()).get("supersedes")
+                       or {}).get("chain") or []
+    except (OSError, ValueError):
+        prior_chain = []
+    chain = [list(x) for x in prior_chain]
+    for extra in chain_over:
+        f = Path(extra)
+        if not f.is_file():
+            raise FileNotFoundError(
+                f"REFUSED: CHAINED_RECORD_NOT_PRESENT -- {f}. Every entry "
+                f"in a chain is a PAIR on a present file; naming one that "
+                f"is not there would link a history to nothing")
+        e = [f.name, hashlib.sha256(f.read_bytes()).hexdigest()]
+        if e not in chain and f.name != p.name:
+            chain.append(e)
+    chain.append([p.name, sha])
+    return {"path": str(p), "sha256": sha, "chain": chain,
+            "the_link_is_the_PAIR": ["path", "sha256"],
+            "rule": "13 -- vN+1; the superseded record is not edited",
+            "what_changes": what_changed or WHAT_CHANGES_IN_V2}
+
+
+CENSUS_RECORD_GLOB = "p003_da_nonhead_census__*.json"
+
+
+def own_family_chain(derived=None) -> dict:
+    """THIS CENSUS'S OWN RECORDS, judged by the predicate it applies to
+    everyone else: a family must resolve to EXACTLY ONE HEAD, and a record
+    is superseded only by a PAIR -- as `supersedes.path` + `sha256`, or as
+    an entry in a successor's `supersedes.chain`."""
+    d = Path(derived) if derived else None
+    if d is None:
+        ix = derived_index()
+        if ix["status"] != "INDEXED":
+            return {"status": ix["status"], "n_records": None,
+                    "why": ("the ledger's derived tree is not readable, so "
+                            "this census cannot judge its own family")}
+        d = Path(ix["dir"])
+    files = sorted(d.glob(CENSUS_RECORD_GLOB))
+    present = {f.name: hashlib.sha256(f.read_bytes()).hexdigest()
+               for f in files}
+    superseded, links, broken = set(), [], []
+    for f in files:
+        try:
+            blk = (json.loads(f.read_text()).get("supersedes") or {})
+        except (OSError, ValueError):
+            broken.append({"file": f.name, "status": "UNREADABLE"})
+            continue
+        if not isinstance(blk, dict):
+            continue
+        pairs = [(blk.get("path"), blk.get("sha256"))] + [
+            (x[0], x[1]) for x in (blk.get("chain") or [])
+            if isinstance(x, (list, tuple)) and len(x) == 2]
+        for pth, sha in pairs:
+            if not pth or not sha:
+                if pth or sha:
+                    broken.append({"file": f.name,
+                                   "status": "SUPERSESSION_LINK_INCOMPLETE"})
+                continue
+            tgt = Path(str(pth)).name
+            if tgt == f.name:
+                continue
+            if tgt not in present:
+                broken.append({"file": f.name, "status": "TARGET_ABSENT",
+                               "target": tgt})
+            elif present[tgt] != sha:
+                broken.append({"file": f.name,
+                               "status": "TARGET_DIGEST_MISMATCH",
+                               "target": tgt})
+            else:
+                superseded.add(tgt)
+                #: ONE LINK, COUNTED ONCE: the pair in `supersedes` is
+                #: also the last entry of the chain, and counting both
+                #: reports more links than exist (the same double-count
+                #: R-673(b) names one module over).
+                if {"from": f.name, "to": tgt} not in links:
+                    links.append({"from": f.name, "to": tgt})
+    heads = [f.name for f in files if f.name not in superseded]
+    return {"status": ("NO_RECORDS" if not files else
+                       "ONE_HEAD" if len(heads) == 1 else
+                       "NO_HEAD" if not heads else "MULTIPLE_HEADS"),
+            "dir": str(d), "n_records": len(files),
+            "records": [f.name for f in files],
+            "heads": heads, "n_heads": len(heads),
+            "n_links": len(links), "links": links,
+            "unlinked_or_broken": broken,
+            "judged_by": ("the same predicate this census applies to a "
+                          "declaration family: one head, superseded only "
+                          "by a PAIR, as `supersedes` or as a chain entry"),
+            "why": ("the instrument that refuses a family with two heads "
+                    "was itself a family with four -- and its own records "
+                    "live in the derived tree, not in a declarations "
+                    "directory, so nothing was looking")}
 
 
 def build_report(root: Path | None = None,
-                 prior: Path | None = None) -> dict:
+                 prior: Path | None = None,
+                 chain_over=(), what_changed=None) -> dict:
     r = Path(root) if root else _root()
     chains = merged_chains(r)
     dix = derived_index()
     lits = literal_census(r, chains, dix)
     composed = composed_declaration_names(r)
+    own = own_family_chain()
     multi = {k: v for k, v in chains.items() if v["n_heads"] != 1}
     return {
         "protocol": PROTOCOL,
-        "supersedes": supersession_block(prior),
+        "supersedes": supersession_block(prior, chain_over=chain_over,
+                                         what_changed=what_changed),
         "as_of_utc": datetime.datetime.now(
             datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "root": str(r),
@@ -913,6 +1030,7 @@ def build_report(root: Path | None = None,
         "n_families_without_exactly_one_head": len(multi),
         "chains": chains,
         "literal_census": lits,
+        "this_census_s_own_family": own,
         "composed_declaration_names": composed,
         "n_composed_declaration_names": len(composed),
         "n_composed_that_reach_an_open": sum(
@@ -1395,6 +1513,45 @@ def selftest() -> tuple:
        f"{chBoth['p002_declaration']['status']}, heads "
        f"{sorted(chBoth['p002_declaration']['heads'])}")
 
+    # -- R-673(c) / MEM 198-199: THE CENSUS ON ITS OWN FAMILY ----------
+    fam = Path(tempfile.mkdtemp(prefix="da97fam_"))
+    r1 = fam / "p003_da_nonhead_census__20260101T000000Z.json"
+    r2 = fam / "p003_da_nonhead_census__20260101T010000Z.json"
+    r1.write_text(json.dumps({"protocol": "x"}))
+    r2.write_text(json.dumps({"protocol": "x"}))
+    before = own_family_chain(fam)
+    r3 = fam / "p003_da_nonhead_census__20260101T020000Z.json"
+    r3.write_text(json.dumps({"protocol": "x",
+                              "supersedes": supersession_block(
+                                  r2, chain_over=[r1])}))
+    after = own_family_chain(fam)
+    r4 = fam / "p003_da_nonhead_census__20260101T030000Z.json"
+    r4.write_text(json.dumps({"protocol": "x", "supersedes": {
+        "path": r3.name, "sha256": "e" * 64}}))
+    bad = own_family_chain(fam)
+    ck("R-673(c) / MEM 198 -- ***THE CENSUS THAT REFUSES A FAMILY WITH TWO "
+       "HEADS WAS ITSELF A FAMILY WITH FOUR.*** Five of its own records sat "
+       "in the ledger with ONE link between them, and its own records live "
+       "in the DERIVED tree rather than a declarations directory, ***so "
+       "nothing was looking***. It judges them now by the predicate it "
+       "applies to everyone else: two unlinked records are MULTIPLE_HEADS; "
+       "a successor naming one by the PAIR and the other in its CHAIN "
+       "resolves the family to ONE HEAD ***without editing either older "
+       "record***; and a chain entry whose digest does not match the file "
+       "is TARGET_DIGEST_MISMATCH -- the target stays a head, because a "
+       "link that does not verify is not a link",
+       before["status"] == "MULTIPLE_HEADS" and before["n_heads"] == 2
+       and after["status"] == "ONE_HEAD" and after["heads"] == [r3.name]
+       and after["n_links"] == 2
+       and bad["n_heads"] == 2
+       and any(x["status"] == "TARGET_DIGEST_MISMATCH"
+               for x in bad["unlinked_or_broken"]),
+       f"two unlinked -> {before['status']} ({before['n_heads']} heads); "
+       f"one successor with a chain -> {after['status']} via "
+       f"{after['n_links']} links; a chain entry with a wrong digest -> "
+       f"{[x['status'] for x in bad['unlinked_or_broken']]}, heads "
+       f"{bad['n_heads']}")
+
     pri = tmp2 / "prior_receipt.json"
     pri.write_text(json.dumps({"protocol": "P003_DA_NONHEAD_CENSUS_V1"}))
     blk = supersession_block(pri)
@@ -1425,11 +1582,39 @@ def main() -> int:
     ap.add_argument("--census", action="store_true")
     ap.add_argument("--output", type=Path, default=None)
     ap.add_argument("--supersedes", type=Path, default=None)
+    ap.add_argument("--chain-over", type=Path, action="append", default=[],
+                    help="older records of this family to name in the "
+                         "chain, so a history that was never linked "
+                         "resolves to one head without editing any of them")
+    ap.add_argument("--first-of-family", action="store_true",
+                    help="declare that no prior record of this family "
+                         "exists -- the ONLY alternative to naming one")
+    ap.add_argument("--what-changed", default=None)
     a = ap.parse_args()
+    #: R-673(c) / MEM 199: THE LINK IS MANDATORY. An emission that names
+    #: no prior and does not DECLARE itself first-of-family refuses --
+    #: ***an omission that is easier than an error is the thing that
+    #: happens***, and it is how this family grew four heads.
+    if a.output and not a.supersedes and not a.first_of_family:
+        fam = own_family_chain()
+        print(f"REFUSED: NO_PRIOR_NAMED -- this family already has "
+              f"{fam.get('n_records')} record(s) at {fam.get('dir')}. "
+              f"Name the record this one supersedes with --supersedes, or "
+              f"declare --first-of-family. A record that silently becomes "
+              f"a second head is how this census's own family reached "
+              f"four.")
+        return 1
+    if a.first_of_family and a.supersedes:
+        print("REFUSED: FIRST_OF_FAMILY_NAMES_A_PRIOR -- a record cannot "
+              "be both the first of its family and the successor of "
+              "another.")
+        return 1
     if a.selftest:
         checks, n_fail = selftest()
         if a.output:
-            rep = build_report(prior=a.supersedes)
+            rep = build_report(prior=a.supersedes,
+                               chain_over=a.chain_over,
+                               what_changed=a.what_changed)
             rep["checks"] = checks
             rep["n_checks"] = len(checks)
             rep["n_failed"] = n_fail
@@ -1438,7 +1623,8 @@ def main() -> int:
                                            default=str) + "\n")
         return 1 if n_fail else 0
     if a.census:
-        rep = build_report(prior=a.supersedes)
+        rep = build_report(prior=a.supersedes, chain_over=a.chain_over,
+                           what_changed=a.what_changed)
         if a.output:
             a.output.write_text(json.dumps(rep, indent=2, sort_keys=True,
                                            default=str) + "\n")
