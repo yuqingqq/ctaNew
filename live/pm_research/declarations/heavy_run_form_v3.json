@@ -1,0 +1,41 @@
+{
+  "version": 3,
+  "declared_at_utc": "2026-09-06T14:09:53Z",
+  "declared_by": "coordinator (R-653; REV 69 \u00a73.1, \u00a73.3, \u00a73.5, \u00a71.3, \u00a74)",
+  "what": "THE ONE DECLARATION of the heavy-run launch form's constants. Every literal in code that names these values reads this file or asserts equality with it in its selftest; two definitions of the conflict code (be_heavy_run.sh:36 and be_rule22.py:134) and two bare literals were measured drifting-capable at REV 67 \u00a72.3 (a launcher refusing with 76 was published as 75).",
+  "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+  "lock_conflict_rc": 75,
+  "lock_conflict_rc_why": "flock -E 75: a held lock exits with the declared code, distinct from any payload exit; without -E a refusal and a crash are both ExecMainStatus=1 (REV 67 \u00a72.1, measured). No runner or producer may exit 75 for any other reason; each declares its own exit codes and asserts 75 is not among them.",
+  "form": "systemd-run --user --unit=<name> --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew --working-directory=<worktree> -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <cmd>",
+  "memory_max_bytes": 8589934592,
+  "cpu_quota_percent": 100,
+  "slice": "research.slice",
+  "unit_outcome_minimum_read": [
+    "LoadState",
+    "ActiveState",
+    "SubState",
+    "ExecMainStatus",
+    "Result"
+  ],
+  "unit_outcome_note": "read the FIVE fields while LoadState=loaded and COPY them with the unit's InvocationID at once; LoadState=not-found makes the rest defaults and the reading VOID; under RemainAfterExit=yes a FINISHED unit is loaded/active/EXITED and a RUNNING one loaded/active/RUNNING with ExecMainStatus 0 in both \u2014 SubState is the discriminator; a killed or OOM-killed unit reports Result=signal with ExecMainStatus = the signal number (not in any exit map); THE PROPERTY-SIDE TIE (REV 69 \u00a73.5): InvocationID is non-empty only while the unit is loaded and empty after stop or collection, so a copy carrying a non-empty InvocationID could only have been taken while the unit existed \u2014 a copy without one is VOID whatever its LoadState string says; after the receipt lands and the five fields + id are copied, the owner stops the unit (MemoryPeak and InvocationID are retained while loaded/exited and [not set]/empty after stop \u2014 copy BEFORE stopping); a unit name that is still loaded (active/exited OR failed) makes systemd-run FAIL at launch ('already loaded') \u2014 unique names per launch, reset-failed/stop hygiene by the owner",
+  "journal_identity": {
+    "payload_lines_field": "_SYSTEMD_INVOCATION_ID",
+    "manager_lines_field_under_the_user_manager": "USER_INVOCATION_ID",
+    "system_manager_field_not_used_here": "INVOCATION_ID",
+    "query_form": "journalctl --user _SYSTEMD_INVOCATION_ID=<id> + USER_INVOCATION_ID=<id>",
+    "cross_check": "journalctl --user -u <unit> -o cat | wc -l must equal the by-id count for a unit launched once under that name",
+    "measured": "de95smoke.service: 1 line (the Started line, USER_INVOCATION_ID only); be64book.service: 99 manager lines (USER_INVOCATION_ID), 26 payload lines (_SYSTEMD_INVOCATION_ID), 1 neither \u2014 13:37Z; a unit NAME names every run ever launched under it",
+    "note": "a copy that returns 0 lines for a unit whose -u query has lines is a REFUSAL of the copy, never a record (two coordinator copies were exactly that, 13:35Z/13:36Z, deleted)"
+  },
+  "decidable_launch_form_property": "the process's own cgroup leaf suffix from /proc/self/cgroup: '.service' admits a real day, '.scope' refuses it (DE 96 assert_launch_form_at_runtime); the PPid test in the runbook is the OUTSIDE diagnostic and holds of MainPID (flock), not of the payload (a grandchild)",
+  "supersedes": {
+    "path": "live/pm_research/declarations/heavy_run_form_v2.json",
+    "sha256": "4a9409a1f712921abe5c7cc6f464df55f84f919b84a62454dfd5ba101ccfd7a4",
+    "why": "v2's three-field minimum read is insufficient under the RemainAfterExit it declares: RUNNING and FINISHED are both loaded/active/0 (measured, REV 69 \u00a73.3); SubState discriminates (running vs exited) and Result carries the signal case (Result=signal, ExecMainStatus=<signal number>, REV 69 \u00a71.3)"
+  },
+  "remain_after_exit": true,
+  "remain_after_exit_why": "with RemainAfterExit=yes a unit that exits 0 stays LOADED as active/exited with ExecMainStatus 0 and Result success until `systemctl --user stop <unit>`; the lock is a process-held flock and is released when the payload exits regardless of the unit object. Measured 13:48Z: exit 0 without it -> not-found/inactive/dead/0/success (defaults); exit 3 without it -> loaded/failed/3; exit 0 with it -> loaded/active/exited/0/success; exit 3 with it -> loaded/failed/3.",
+  "chain_head_rule": "readers resolve THE CHAIN HEAD of heavy_run_form_v*.json in this directory (the newest version whose supersedes pair {path, sha256} verifies against the file it names, back to v1) \u2014 never a filename literal; a reader pinned to a superseded version satisfies the words of rule 20's guard 1 without the property (REV 69 \u00a73.1/\u00a74: the runner pinned v1 at 14:00Z while v2 existed)",
+  "runtime_form_check": "the -E half is decidable at runtime exactly as the --scope half is: the payload's parent IS flock, so /proc/<PPid>/cmdline carries 'flock -n -E <rc> <lock_path> ...' \u2014 a runner asserts its own parent's cmdline against this declaration (REV 69 \u00a71.2); the composed-string lint is a lint",
+  "grounding_drive": "exactly ONE drive grounds the conflict code's BEHAVIOUR: a unit launched against a HELD scratch lock with a payload whose own exit map excludes 75, its five fields and InvocationID read while loaded and copied into the launcher owner's receipt (REV 69 \u00a74 guard 3); the declared lock_path is grounded separately by inode (wrapper_observed), never by that drive"
+}

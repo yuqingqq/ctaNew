@@ -140,19 +140,28 @@ except where marked USER-ONLY.
     its Started line; a failed one stays loaded until `reset-failed`; measured on four scratch units 13:48Z).
     (no `--scope`; `flock` inside the unit holds the lock for the run's life; a held
     lock refuses with **75**, the declared conflict code, never the payload's own 1 — read the unit's
-    outcome as the TRIPLE (`LoadState`, `ActiveState`, `ExecMainStatus`) WHILE `LoadState=loaded` and copy it
-    into the record at once: `not-found` makes the reading VOID, never "success"; a RUNNING unit reports
-    `ExecMainStatus=0`, so no field alone says finished or refused; after the receipt lands and the triple is
-    copied, stop the unit so the name is free). **The form's constants are declared ONCE** in
-    `live/pm_research/declarations/heavy_run_form_v2.json` (supersedes v1 by path+sha256; lock path, conflict
-    code 75, caps, `RemainAfterExit`, the journal identity fields, the triple); every literal in code reads
-    it or asserts equality with it in its selftest, and no runner or producer exits 75 for any other
-    reason. THREE GUARDS on those words (R-649, REV 68 §3.1–§3.2): a check that depends on the declaration
+    outcome as FIVE fields (`LoadState`, `ActiveState`, `SubState`, `ExecMainStatus`, `Result`) WHILE
+    `LoadState=loaded`, copied into the record at once WITH the unit's `InvocationID` (R-653, REV 69 §3.3/§3.5:
+    under `RemainAfterExit` a finished unit is loaded/active/EXITED and a running one loaded/active/RUNNING,
+    both `ExecMainStatus=0` — `SubState` discriminates; a killed unit reports `Result=signal` with the signal
+    number as the status; `InvocationID` is non-empty only while the unit exists, so a copy without one is
+    VOID whatever its `LoadState` string says); `not-found` makes the reading VOID, never "success"; after
+    the receipt lands and the five fields + id are copied, stop the unit so the name is free — a loaded name,
+    exited or failed, makes the next `systemd-run` FAIL). **The form's constants are declared ONCE** in
+    `live/pm_research/declarations/heavy_run_form_v*.json` — readers resolve THE CHAIN HEAD (the newest version
+    whose `supersedes` pair verifies), never a filename literal (v3 supersedes v2 supersedes v1); every literal
+    in code reads it or asserts equality with it in its selftest, and no runner or producer exits 75 for any
+    other reason. THREE GUARDS on those words (R-649, REV 68 §3.1–§3.2): a check that depends on the declaration
     FAILS when the file is absent — never skips (a skipped check reads as a passed one); the check on a
     launcher reads the LAUNCHER'S BYTES (the shell literal in `be_heavy_run.sh` is the number the running unit
-    uses; a Python constant agreeing with the declaration proves nothing about it); and the declaration is
-    grounded by exactly ONE DRIVE — a unit launched against a held lock, its ExecMainStatus read as 75 — named
-    in the launcher owner's receipt, because literals agreeing with a literal is not a measurement. 75 is
+    uses; a Python constant agreeing with the declaration proves nothing about it); and the declaration's CONFLICT CODE is
+    grounded by exactly ONE DRIVE — a unit launched against a HELD scratch lock with a payload whose exit map
+    excludes 75, its five fields and `InvocationID` read while loaded and copied into the launcher owner's
+    receipt (the drive grounds the code's behaviour; the declared lock PATH is grounded separately by inode) —
+    because literals agreeing with a literal is not a measurement; and "the check on a launcher reads the
+    launcher's bytes" means the bytes the RUNNING unit executed — the unit's own `ExecStart`, or
+    `/proc/<PPid>/cmdline` from inside (four worktrees share one filename; a check reading its own tree's
+    launcher satisfies the words, not the property — REV 69 §4). 75 is
     `EX_TEMPFAIL` (sysexits.h), the code a well-behaved program would CHOOSE for "try again": from outside a
     unit a 75 reads "refused OR a producer that broke the declaration"; the only enforcement is inside each
     producer (`75 not in <its declared exit codes>`, asserted in its selftest, the map published in its receipt).
