@@ -2719,7 +2719,8 @@ def main() -> int:
                      "and --builder-receipt")
         r = rehearse_open_book(a.day, a.book, a.receipt,
                                builder_receipt=a.builder_receipt,
-                               unit=a.unit)
+                               unit=a.unit, supersedes=a.supersedes,
+                               what_changed=a.what_changed)
         txt = json.dumps(r, indent=2, sort_keys=True, default=str) + "\n"
         if a.output:
             a.output.write_text(txt)
@@ -4023,6 +4024,8 @@ def _declaration_head(family: str) -> dict:
 
 def rehearse_open_book(day: str, book_path: str, receipt_path: str, *,
                        builder_receipt: str, unit: str = "da99book",
+                       supersedes: str | Path | None = None,
+                       what_changed: str | None = None,
                        now: datetime.datetime | None = None) -> dict:
     """Compose the heavy run. NOTHING IS OPENED and no lock is taken."""
     bp, rp = Path(book_path), Path(receipt_path)
@@ -4089,6 +4092,16 @@ def rehearse_open_book(day: str, book_path: str, receipt_path: str, *,
            f"{sup_arg}--output {out}")
     return {
         "protocol": REHEARSAL_PROTOCOL,
+        #: a rehearsal is an artifact like any other: a second one for the
+        #: same day names the first by the PAIR rather than standing
+        #: beside it as a second head.
+        **({"supersedes": supersession_block(
+            supersedes,
+            what_changed=(what_changed or "re-composed; see the round's "
+                                          "report"),
+            what_did_not=("the pin, the structure declaration and the "
+                          "form -- all three resolved to the same "
+                          "artifacts"))} if supersedes else {}),
         "READY": True,
         "day": day,
         "nothing_was_opened": (
