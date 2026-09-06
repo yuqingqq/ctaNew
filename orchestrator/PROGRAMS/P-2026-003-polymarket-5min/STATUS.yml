@@ -63,6 +63,90 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:33:00Z (MEM ROUND 143 -- R-598, R-599 AND REV 47 SWEPT. STATE ONLY.
+  THE FINDING IS A SEAL THAT REMOVES TWO QUANTITIES AND KEEPS THEIR RATIO.
+  **FIRST, THE COMMIT-TIME RE-READ CHANGED THIS SENTENCE.** Re-reading the CLAIMS
+  before committing -- not the tip -- found **DE 85 landed `a7e28e6` between my read
+  and my commit**: `sd_over_abs_mean` **is in the sealed tuple now** and
+  `DAY_PATH_CHECKS` **is 82, not 75**. ***The finding below HELD when R-599 was
+  filed and is FIXED at commit time, and I record both*** -- *third round the
+  re-read has changed what I was about to write, and the first where it caught a
+  FIX rather than an error of mine; the flag it prevented was not wrong but
+  TRUE-WHEN-READ, which is worse in a file other seats read first.*
+  (1) **A DERIVED RATIO SURVIVED A SEAL THAT REMOVES BOTH ITS PARTS.** I read the
+  list: `ECONOMIC_FIELDS = ("D_E0", "D_E_MINUS_R", "Z", "p_location", "null_mean",
+  "null_sd", "null_draws_summary")` -- **`null_sd` and `null_mean` sealed,
+  `admissibility.sd_over_abs_mean` NOT** (as filed; **sealed at commit time**).** ***The seal is a NAME list, and a derived
+  quantity has a different name. Sealing the parts does not seal the whole*** --
+  and nothing in the mechanism could have noticed, because the stripper did exactly
+  what it was told.
+  (2) **AND IT EXTENDS MY OWN ROUND-137 FLAG, AGAINST IT.** I recorded then that
+  "the emitter and the guard now share ONE name list … so they cannot disagree
+  again", and called it the right fix. ***It is -- and it solves DISAGREEMENT, not
+  INCOMPLETENESS. Two consumers agreeing perfectly on a list that is missing an
+  entry agree perfectly and leak.*** **AND THE FIX PROVES IT HARDER THAN I ARGUED
+  IT:** DE's message records that *fixing the ratio exposed a **SECOND LEAK OF THE
+  SAME CLASS, in a string rather than a key** -- the refusal REASONS carried sd and
+  mean as **TEXT**, and the stripper removes **KEYS, NOT SUBSTRINGS**, firing only
+  on a REFUSED arm-day, exactly where the numbers are most tempting to quote.*
+  ***So the list cannot see a value carried in PROSE at all; adding an entry closes
+  one instance of a class the mechanism cannot enumerate.*** **And DE's falsifier
+  for it was wrong first time in my own recurring shape** -- it matched the string
+  `"sd_over_abs_mean"` against a payload that contains `sealed_field_names`, *the
+  needle-matching-its-own-prose failure that module's docstring warns about, walked
+  into inside the check written to close a leak.* **Eleventh "suspect the probe
+  first", the first I swept from another seat's commit message rather than found in
+  my own run.** *DA 66's container census -- counting by
+  CONTAINER rather than by NAME, which I swept at round 140 -- is the shape that
+  would catch this, and it lives in a different instrument in a different seat.*
+  (3) **THE RULING IS A CONDUCT RULE WHERE AN EDIT WAS AVAILABLE.** Nobody quotes
+  the ratio from the 09-03 receipt -- DE omits it, DA's pre-read records **presence
+  only**, the coordinator does not read it -- and DE 85 seals it from 09-04 with
+  **the sd half published as a VERDICT ONLY** and the stripper's falsifier
+  **planting the ratio at depth.** ***And v12 is untouched because the RUNNING SMOKE
+  CITES IT*** -- *rule 13 extended from artifacts to declarations-in-use.* **Twice
+  in two rounds the answer to "this artifact is wrong" was "leave it and bind what
+  people may do with it."**
+  (4) **THE PRE-READ PROVES ITS EMISSION CLEAN TWO WAYS -- AND SAYS WHAT EACH ONE
+  MISSES:** no economic field NAME in the output AND none of its economic VALUES
+  anywhere, ***because "a name check alone lets the number ride out under another
+  key, a value check alone passes an empty economic key."*** **The first time in
+  this programme two checks are paired with an explicit account of each one's blind
+  spot** -- *contrast the lock predicate's "two independent mechanisms" (round 132),
+  which shared a blind spot precisely because nobody wrote that down.* And it cannot
+  leak structurally: the statistic is never called, **asserted at the source by
+  AST**, and a leaked field is named **with its value appearing 0 times.**
+  (5) **THE RUNNER'S DIGEST MOVED, AND "A COPIED FIELD TUPLE WOULD NOT HAVE
+  NOTICED"** (`2089d74e…` against `645f8509…`). *A consumer that COPIES a producer's
+  constant is correct until the producer changes and then silently wrong; one that
+  READS it at the source is wrong only if the producer is.* **And
+  `producing_code_is_the_committed_bytes` no longer gates the verdict, "because a
+  commit id can be rewritten out from under a citation"** -- ***DA's own round-138
+  incident, now load-bearing on a design decision.***
+  (6) **THE PEAK-STAGE REFUSAL WAS WRITTEN BEFORE DE 84'S RECEIPT EXISTS** -- a
+  declaration act, never widen, never raise the cap. **Third instance this session
+  of a rule written before the thing it governs produces a number** (the read order,
+  v7's ICP form, this) -- *and each says so IN the artifact rather than leaving a
+  reader to compare timestamps.*
+  (7) **AND THE "23" THREAD CLOSES PROPERLY: `DAY_PATH_CHECKS = 82` (75 when I
+  read it; +7 from DE 85, runner battery 152 -> 159), and the
+  constant now GENERATES the offline skip list with the online run asserting they
+  agree** -- *"a check added without updating this REFUSES rather than silently
+  shrinking the offline battery."* **23 in prose -> 49 -> 75, and the number stopped
+  mattering the moment nothing could disagree with it -- which is why it moving
+  under me mid-round cost nothing but this clause.**
+  (8) **THE REVIEWER'S DE LEDGER HAS NO OPEN ITEM**, §1.6 closed **on the reviewer's
+  own constructed case** -- *the first seat column to empty since the ledger was
+  built at R-582, and closed on a case the reviewer built rather than the seat's own
+  fixture, which is what makes the closure the reviewer's to declare.*
+  **FLAG WORDS: the smoke RUNNING (`de84smoke.scope` since 08:21:55Z; I measure 688
+  s and 841,224 KiB current RSS); `sd_over_abs_mean` UNQUOTED-BY-RULING; the
+  reviewer's DE ledger CLEAR; the race read NOT READ, v4 UNDER REVIEW (REV 48); the
+  09-04 inputs IN PROGRESS behind the lock poll, the 09-04 book NOT STARTED.**
+  MEASURED BEFORE THIS SENTENCE: flags 794 -> 802, flag_provenance 339 -> 347,
+  tasks 19; **201 CHECKED**, 146 RELAYED, **455 UNMARKED -- unchanged for the
+  nineteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T08:27:02Z (MEM ROUND 142 -- R-597 AND THE BE/DA/DE ROWS SWEPT. STATE
   ONLY. THE SEALED SMOKE IS RUNNING.
   (1) **THE FIX REFUSED ITS OWN BATTERY.** The compare is now
@@ -208,75 +292,6 @@ updated: >-
   tasks 19; 192 CHECKED, 139 RELAYED, **455 UNMARKED -- unchanged for the
   seventeenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T08:13:30Z (MEM ROUND 140 -- R-594, Q-BE-55 AND Q-DA-288 SWEPT. STATE
-  ONLY. THE BOOK EXISTS AND WHETHER IT MAY BE USED IS AN OPEN QUESTION.
-  (1) **THE DIGEST CHECK IS A PREFIX COMPARE, AND I DROVE ALL FOUR CASES.**
-  `if not got.startswith(expect_sha256.lower()[:16]):` -- **equality is never
-  tested.** Against the real tape digest: the true value admits (correct), **a
-  right-16-wrong-48 admits, a 16-char stub admits, and a ONE-CHARACTER `"9"`
-  admits** -- every one emitting `digest_verified_at_load: True`. ***A 256-bit
-  digest cut to a 64-bit prefix would still be a check; this reduces it to whatever
-  the caller supplies -- the guarantee is not weakened, it is handed to the party
-  being checked.***
-  (2) **AND THE SHAPE IS NEW: A DISPLAY CONVENTION LEAKED INTO THE COMPARISON.**
-  The refusal message truncates to 16 hex, **which is exactly right for a
-  message**; the comparison one line above truncates the same way, for what must
-  have been the same reason -- ***at which point it stops being a comparison.***
-  **Not a control that cannot FAIL, not one that cannot RUN, not one testing the
-  wrong quantity -- a control whose COMPARISON INHERITED A FORMATTING DECISION.**
-  *And it is invisible to every test that supplies a real digest, which is every
-  honest test.*
-  (3) **AND THE COMMENT ABOVE BE'S CALL CLAIMS THE PROPERTY THE CALL OMITS -- my
-  own addition.** REV 45 §1.3 establishes the call passes neither `day` nor
-  `expect_sha256`; **I confirmed it, and the comment three lines above reads "ITEM
-  1 IS IN: the index is built from THE DAY'S OWN TAPE, WITH ITS DIGEST VERIFIED AT
-  LOAD."** ***Rule 10's family -- a printed conclusion contradicted by what sits
-  beside it -- but in a SOURCE COMMENT, where no instrument in this programme
-  looks.*** Check #1 runs; check #2, *which design v12 says is the point*, does
-  not.
-  (4) **THE BOOK IS BUILT AND VERIFIED AT THE ARTIFACT -- AND ITS STANDING IS NOT
-  DECIDED.** 290,758,834 B, `sha256` = `readback_sha256` = **the digest recomputed
-  on disk**; both pinned heads over the **SAME 297,379 keys with `sets_are_equal`
-  ASSERTED**; **15,735 uncovered as a COUNTED STATUS**; `state_join_failed: 0` on
-  42 chunks; **asm's peak PUBLISHED at 5.317 GB.** ***And it was assembled with the
-  front-door check only, the stream unverified*** -- put to REV 46, **GO waits on
-  it.** *A book that exists, reproduces its own digest, and whose right to be used
-  is an open question is a distinction this programme can now hold.*
-  (5) **AND A NUMBER I CARRIED DISSOLVES: BE'S ROUND-49 BUDGET WAS AN ARTEFACT OF
-  INDEXING THE WRONG TAPE.** The index costs **3.190 GB, not 5.971** -- so the
-  **8.713 GB "NO" I swept at round 136 as the assembly's binding constraint** was
-  measuring a configuration that no longer applied; the real total came in at
-  **5.317 GB, every stage inside budget.** ***The lesson is not "check harder" -- I
-  DID check, by importing the module and calling it.*** **It is that a budget is a
-  statement about a CONFIGURATION, and I recorded the number without recording
-  which configuration it assumed** -- *the `what_DE_cannot_rule` self-scoping I
-  praised at round 133 is exactly what that number lacked.*
-  (6) **DA'S REAL-DAY VERIFIER PATH IS NOT BUILT** -- `verify_real_day` refuses
-  unconditionally and `main()` takes only `--selftest`, ***so the read order I
-  swept at round 137 names a step that cannot currently run.*** **Declared by DA
-  rather than found by the reviewer**, and it has a date. *The read order was
-  written before the read existed, which I praised as the only honest timing; the
-  cost of that timing is exactly this. Both halves are true and the second does not
-  retract the first.*
-  (7) **AND THE READ ORDER GAINS FOUR LIMITS OF WHAT THE VERIFIER WILL NEVER
-  VERIFY** -- including ***"an error in the DECLARATION itself: two implementations
-  of a wrong spec agree."*** **That is the limit of the corroboration I celebrated
-  last round:** neither implementation imported the other, **and both read the same
-  declaration.** *Independence in implementation does not buy independence from the
-  spec.*
-  (8) **DA 66's CENSUS COUNTS BY CONTAINER, NOT BY NAME -- and catches a planted
-  list leaf BOTH name-based nets miss.** *The answer to the redactor-and-scanner
-  blind spot from round 136: names can be chosen unluckily; a leaf is a leaf.* **And
-  the smoke ran at 7.7888 GiB of 8 -- 97.36% of its cap** -- anon 1.11 vs file
-  5.17, max 0 / oom 0. *Most of it was page cache, which is why it survived; an
-  anon-heavy run at that fraction would have been killed silently.*
-  **FLAG WORDS: the 09-03 book BUILT, VERIFIED-AT-THE-ARTIFACT,
-  STANDING-PENDING-REV-46; the smoke REHEARSED, NOT RUN; the race read NOT READ
-  (v4 in flight at BE 56).**
-  MEASURED BEFORE THIS SENTENCE: flags 772 -> 780, flag_provenance 317 -> 325,
-  tasks 19; 189 CHECKED, 136 RELAYED, **455 UNMARKED -- unchanged for the sixteenth
-  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
-  flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2949,6 +2964,177 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_COMMIT_TIME_RE_READ_CAUGHT_A_FIX_LANDING_UNDER_MY_OWN_FLAG: RE-READ-THE-CLAIMS-NOT-THE-TIP
+                             # CHECKED 2026-09-06T08:38:57Z at the runner, at commit time.
+                             # **The rule I wrote to close my own gap earned its keep for
+                             # the third time**: re-reading the CLAIMS (not the tip) found
+                             # `sd_over_abs_mean` now IN `ECONOMIC_FIELDS` and
+                             # `DAY_PATH_CHECKS = 82`, both landed by **DE 85 at
+                             # `a7e28e6`** between my read and my commit.
+                             # ***And the first time it caught a FIX rather than an error
+                             # of mine*** -- *the failure mode it prevents here is not a
+                             # wrong flag but a TRUE-WHEN-READ one, which is worse: it
+                             # would have carried a pre-fix state as current into the file
+                             # other seats read first.*
+  A_DERIVED_RATIO_SURVIVES_A_SEAL_THAT_REMOVES_BOTH_ITS_PARTS: SEALING-THE-PARTS-DOES-NOT-SEAL-THE-WHOLE
+                             # **CORRECTED AT COMMIT TIME, 2026-09-06T08:38:57Z: THE CODE MOVED
+                             # WHILE I WAS WRITING THIS FLAG.** My re-read before the
+                             # commit -- not the tip, the CLAIMS -- found
+                             # **`sd_over_abs_mean` IS IN THE TUPLE NOW** (line 69, with
+                             # the R-599 rationale in a comment beside it) and
+                             # **`DAY_PATH_CHECKS = 82`, not 75**: DE 85 landed at
+                             # `a7e28e6` between my read and my commit. ***The finding
+                             # below HELD when R-599 was filed and is FIXED at commit
+                             # time; I record both, because a flag that reported the
+                             # pre-fix state as current would have been false the hour it
+                             # landed.*** **This is the third round the commit-time re-read
+                             # has changed what I was about to write, and the first where
+                             # it caught a FIX rather than an error of mine.**
+                             # **AND THE FIX CONFIRMS THE INCOMPLETENESS POINT IN A
+                             # STRONGER FORM THAN I MADE IT.** DE's own message: *"fixing
+                             # it exposed a SECOND LEAK OF THE SAME CLASS, in a string
+                             # rather than a key ... the refusal REASONS embedded sd and
+                             # mean as TEXT, and the stripper removes KEYS, NOT
+                             # SUBSTRINGS. It fired only on a REFUSED arm-day -- exactly
+                             # the case where the numbers are most tempting to quote."*
+                             # ***So the name list did not merely miss a derived NAME: it
+                             # cannot see a value carried in PROSE at all.*** *Adding an
+                             # entry closes one instance of a class the mechanism has no
+                             # way to enumerate.*
+                             # **AND DE'S FALSIFIER FOR IT WAS WRONG THE FIRST TIME, IN MY
+                             # OWN RECURRING SHAPE:** it tested the serialised payload for
+                             # the STRING `"sd_over_abs_mean"` and failed, because
+                             # `sealed_field_names` is a list of the names being sealed --
+                             # *the needle-matches-its-own-prose failure the module's own
+                             # docstring warns about, walked into inside the check written
+                             # to close a leak.* **It tests KEYS at depth now, planted in a
+                             # nested list inside a dict, with the unseal as the positive
+                             # control** -- *the seal WITHHOLDS the ratio, it does not
+                             # delete it.* **Eleventh instance of "suspect the probe
+                             # first", and the first I have swept from another seat's
+                             # commit message rather than found in my own run.**
+                             # CHECKED 2026-09-06T08:33:00Z at `ECONOMIC_FIELDS` in the
+                             # runner, and it is the round's finding.
+                             # The list is **`("D_E0", "D_E_MINUS_R", "Z", "p_location",
+                             # "null_mean", "null_sd", "null_draws_summary")`** -- so
+                             # **`null_sd` and `null_mean` ARE sealed and
+                             # `admissibility.sd_over_abs_mean` IS NOT**, which
+                             # `_strip_economic` therefore keeps.
+                             # ***A NULL-DERIVED RATIO SURVIVES A SEAL THAT REMOVES BOTH
+                             # QUANTITIES IT IS FORMED FROM.*** *The seal is a NAME list,
+                             # and a derived quantity has a DIFFERENT NAME.* **Sealing the
+                             # parts does not seal the whole**, and nothing in the
+                             # mechanism could have noticed: the stripper did exactly what
+                             # it was told.
+                             # **AND IT EXTENDS MY OWN ROUND-137 FLAG, AGAINST IT.** I
+                             # recorded then that "the emitter and the guard now share ONE
+                             # name list and one traversal, so they cannot disagree
+                             # again", and called it the right fix for the
+                             # redactor-and-scanner blind spot. ***It is -- and it solves
+                             # DISAGREEMENT, not INCOMPLETENESS. Two consumers agreeing
+                             # perfectly on a list that is missing an entry agree
+                             # perfectly and leak.*** **The shared list removed one
+                             # failure mode and left this one untouched.**
+                             # *DA 66's container census -- counting by CONTAINER rather
+                             # than by NAME, which I swept at round 140 -- is the shape
+                             # that WOULD catch this, and it is a different instrument in
+                             # a different seat.*
+  THE_RULING_IS_NOBODY_QUOTES_IT_RATHER_THAN_EDIT_THE_LANDED_RECEIPT: AND-v12-IS-UNTOUCHED-BECAUSE-THE-RUNNING-SMOKE-CITES-IT
+                             # CHECKED 2026-09-06T08:33:00Z at R-599(B).
+                             # **Ruled: (i) NOBODY QUOTES the ratio from the 09-03 sealed
+                             # receipt** -- DE reports the open fields without it, DA's
+                             # pre-read records **presence only**, the coordinator does
+                             # not read it; **(ii) DE 85 seals it from 09-04 onward**,
+                             # publishing R4's two booleans (the decision half with its
+                             # numbers, **the sd half as a VERDICT ONLY**), with the
+                             # stripper's falsifier **planting the ratio at depth.**
+                             # ***AND design v12 IS UNTOUCHED BECAUSE THE RUNNING SMOKE
+                             # CITES IT*** -- v13 in band. *A declaration cannot be
+                             # amended while a process is executing against it, which is
+                             # rule 13 extended from artifacts to declarations-in-use.*
+                             # **The disposition is a CONDUCT rule where an EDIT was
+                             # available** -- *the same shape as the 09-03 receipt's four
+                             # gaps going into the builder for 09-04 rather than into the
+                             # landed file. Twice in two rounds the answer to "this
+                             # artifact is wrong" was "leave it and bind what people may
+                             # do with it."*
+  THE_PRE_READ_PROVES_ITS_EMISSION_CLEAN_TWO_WAYS_AND_EITHER_ALONE_IS_INSUFFICIENT: NAMES-AND-VALUES
+                             # RELAYED from R-599(A) 2026-09-06T08:33:00Z; **26 checks under
+                             # the coordinator's run**, not re-driven by me.
+                             # The emission is proven clean **two ways: no economic field
+                             # NAME in the output, AND none of the receipt's economic
+                             # VALUES anywhere in it** -- refusing if either fires.
+                             # ***AND THE REASON EACH IS INSUFFICIENT IS STATED: "a name
+                             # check alone lets the number ride out under another key, a
+                             # value check alone passes an empty economic key."***
+                             # *That is the first time in this programme I have seen two
+                             # checks paired with an explicit account of what each one
+                             # misses.* **Contrast the lock predicate's "two independent
+                             # mechanisms" (round 132), which shared a blind spot BECAUSE
+                             # nobody wrote down what each could not see.**
+                             # And it **cannot leak structurally**: `pre_read_day` never
+                             # calls the arm-day statistic, **asserted at the source by
+                             # AST**; a leaked field is flagged BY NAME **with its value
+                             # never echoed** (driven: named at
+                             # `per_day_sealed_artifacts[0].D_E0`, the value appearing
+                             # **0 times** in the emission).
+  THE_RUNNERS_DIGEST_MOVED_AND_A_COPIED_FIELD_TUPLE_WOULD_NOT_HAVE_NOTICED: READ-AT-THE-SOURCE
+                             # RELAYED from R-599(A) 2026-09-06T08:33:00Z.
+                             # DE's economic field list is read **at the SOURCE by AST**,
+                             # with an assertion that `_strip_economic` references that
+                             # same name -- **and the runner's digest MOVED (`2089d74e…`
+                             # at DE 84 against `645f8509…` at round 67).**
+                             # ***"A copied field tuple would not have noticed."*** *A
+                             # consumer that COPIES a producer's constant is correct until
+                             # the producer changes and then is silently wrong; one that
+                             # READS it at the source is wrong only if the producer is.*
+                             # **And `producing_code_is_the_committed_bytes` no longer
+                             # gates the verdict** -- the declarations gate it, the flag
+                             # reported beside the content digest, *"because a commit id
+                             # can be rewritten out from under a citation"* -- **which is
+                             # DA's own round-138 incident, now load-bearing on a design
+                             # decision.**
+  THE_PEAK_STAGE_REFUSAL_WAS_WRITTEN_BEFORE_THE_RECEIPT_EXISTS: THIRD-INSTANCE-OF-THE-RULE-BEFORE-THE-NUMBER
+                             # CHECKED 2026-09-06T08:33:00Z in the runbook.
+                             # The rule is recorded **"(REV 47 §2.3, written before DE
+                             # 84's receipt exists)"** -- a declaration act, **never
+                             # widen, never raise the cap.**
+                             # ***THIRD INSTANCE THIS SESSION OF A RULE WRITTEN BEFORE THE
+                             # THING IT GOVERNS PRODUCES A NUMBER***: the Gate-1 read
+                             # order (round 137), the ICP label's reporting form (v7,
+                             # round 136), and now the peak-stage refusal. *Each names the
+                             # only window in which the rule can be written without the
+                             # numbers influencing it, and each says so in the artifact
+                             # rather than relying on the reader to notice the
+                             # timestamps.*
+  DAY_PATH_CHECKS_GUARDS_ITS_OWN_CONSISTENCY_AND_MOVED_75_TO_82_MID_ROUND: THE-23-THREAD-CLOSED-PROPERLY
+                             # CHECKED 2026-09-06T08:33:00Z at the constant.
+                             # `DAY_PATH_CHECKS = 82` at commit time (**75 when I read
+                             # it this round; DE 85 added seven checks at `a7e28e6`
+                             # between the two, runner battery 152 -> 159**) --
+                             # **and it carries its own
+                             # guard**: *"the offline skip list is generated from it and
+                             # the online run asserts the two agree -- a check added
+                             # without updating this REFUSES rather than silently
+                             # shrinking the offline battery."*
+                             # ***THE THREAD I HAVE FOLLOWED SINCE ROUND 133 CLOSES
+                             # PROPERLY:*** "23 day-path checks" in prose against
+                             # `DAY_PATH_CHECKS = 49` (REV 43, routed to DE 81); the
+                             # literal swept at the source; **and now the constant
+                             # GENERATES the dependent list and refuses on divergence.**
+                             # *23 -> 49 -> 75 -> 82, and the number stopped mattering the
+                             # moment nothing could disagree with it.*
+  THE_REVIEWERS_DE_LEDGER_IS_CLEAR_AND_1_6_CLOSED_ON_ITS_OWN_CONSTRUCTED_CASE: NO-OPEN-ITEM
+                             # RELAYED from R-598 2026-09-06T08:33:00Z.
+                             # **REV 47: §1.6 CLOSED on the reviewer's OWN CONSTRUCTED
+                             # CASE**, DA 66 closes both §C.4 gaps, and **the reviewer's
+                             # DE ledger has NO OPEN ITEM.**
+                             # *A ledger that reaches zero for one seat, five rounds after
+                             # it was built at the reviewer's reset (R-582), is the first
+                             # time this session any seat's column has emptied.* **And
+                             # §1.6 closed on a case the reviewer CONSTRUCTED rather than
+                             # on the seat's own fixture** -- *which is what makes the
+                             # closure the reviewer's to declare.*
   THE_FIX_REFUSED_ITS_OWN_BATTERY: BEs-TESTS-HAD-BEEN-PASSING-A-16-HEX-STUB
                              # CHECKED 2026-09-06T08:27:02Z at `phase2_arms.py:494` and
                              # driven by me on all four inputs.
@@ -17461,6 +17647,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 143, 2026-09-06T08:33:00Z ------------------------------
+  A_DERIVED_RATIO_SURVIVES_A_SEAL_THAT_REMOVES_BOTH_ITS_PARTS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T08:33:00Z
+    said: >-
+      ECONOMIC_FIELDS is the tuple ("D_E0", "D_E_MINUS_R", "Z", "p_location",
+      "null_mean", "null_sd", "null_draws_summary"), so null_sd and null_mean are
+      sealed and admissibility.sd_over_abs_mean is not -- a ratio formed from two
+      sealed quantities survives the seal that removes both, because the seal is a
+      name list and a derived quantity has a different name. This is the
+      incompleteness the round-137 shared-name-list fix does not address: two
+      consumers agreeing on a list missing an entry agree perfectly and leak.
+      CORRECTED AT COMMIT TIME (2026-09-06T08:38:57Z): sd_over_abs_mean IS in the tuple now, DE 85
+      landed a7e28e6 between my read and my commit -- the finding held at R-599 and
+      is fixed now, and fixing it exposed a SECOND leak of the same class (the
+      refusal REASONS carried sd and mean as TEXT; the stripper removes keys, not
+      substrings), so the list could not see a value carried in prose at all.
+  THE_RULING_IS_NOBODY_QUOTES_IT_RATHER_THAN_EDIT_THE_LANDED_RECEIPT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T08:33:00Z
+    said: >-
+      R-599(B) rules that nobody quotes the ratio from the 09-03 sealed receipt --
+      DE reporting the open fields without it, DA's pre-read recording presence
+      only, the coordinator not reading it -- and that DE 85 seals it from 09-04
+      onward publishing R4's two booleans with the sd half a verdict only, the
+      stripper's falsifier planting the ratio at depth; design v12 untouched
+      because the running smoke cites it, v13 in band.
+  THE_PRE_READ_PROVES_ITS_EMISSION_CLEAN_TWO_WAYS_AND_EITHER_ALONE_IS_INSUFFICIENT:
+    prov: RELAYED
+    from: R-599(A)
+    as_of: 2026-09-06T08:33:00Z
+  THE_RUNNERS_DIGEST_MOVED_AND_A_COPIED_FIELD_TUPLE_WOULD_NOT_HAVE_NOTICED:
+    prov: RELAYED
+    from: R-599(A)
+    as_of: 2026-09-06T08:33:00Z
+  THE_PEAK_STAGE_REFUSAL_WAS_WRITTEN_BEFORE_THE_RECEIPT_EXISTS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T08:33:00Z
+    said: >-
+      the runbook records THE PEAK-STAGE REFUSAL as "(REV 47 section 2.3, written
+      before DE 84's receipt exists)" -- a declaration act, never widen, never
+      raise the cap. Third instance this session of a rule written before the
+      thing it governs produces a number, after the Gate-1 read order and v7's ICP
+      reporting form, and each says so in the artifact rather than relying on the
+      reader to compare timestamps.
+  DAY_PATH_CHECKS_GUARDS_ITS_OWN_CONSISTENCY_AND_MOVED_75_TO_82_MID_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T08:38:57Z
+    said: >-
+      DAY_PATH_CHECKS is 82 at commit time (75 when I read it earlier this round;
+      DE 85 landed seven more at a7e28e6 in between, runner battery 152 -> 159) and its comment records that the offline skip list is
+      generated from it and the online run asserts the two agree, so a check added
+      without updating it REFUSES rather than silently shrinking the offline
+      battery. The thread runs 23 in prose (REV 43) to 49 to 75, and the number
+      stopped mattering once nothing could disagree with it.
+  THE_REVIEWERS_DE_LEDGER_IS_CLEAR_AND_1_6_CLOSED_ON_ITS_OWN_CONSTRUCTED_CASE:
+    prov: RELAYED
+    from: R-598
+    as_of: 2026-09-06T08:33:00Z
+  THE_COMMIT_TIME_RE_READ_CAUGHT_A_FIX_LANDING_UNDER_MY_OWN_FLAG:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T08:38:57Z
+    said: >-
+      re-reading the CLAIMS at commit time (not the tip) found two of this round's
+      flags stale: sd_over_abs_mean is in ECONOMIC_FIELDS at line 69 and
+      DAY_PATH_CHECKS is 82, both from DE 85 at a7e28e6, landed between my read and
+      my commit. Third round the commit-time re-read has changed what I was about to
+      write and the first where it caught a FIX rather than an error of mine.
   # --- MEM round 142, 2026-09-06T08:27:02Z ------------------------------
   THE_FIX_REFUSED_ITS_OWN_BATTERY:
     prov: CHECKED

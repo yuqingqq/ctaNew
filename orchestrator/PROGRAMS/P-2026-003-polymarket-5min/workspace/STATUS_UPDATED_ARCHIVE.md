@@ -10537,3 +10537,82 @@ directions.
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags
   vs HEAD 0 without provenance.)
 ```
+
+## Batch 125 — archived 2026-09-06T08:33:00Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 143 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T08:13:30Z (MEM ROUND 140 -- R-594, Q-BE-55 AND Q-DA-288 SWEPT. STATE
+  ONLY. THE BOOK EXISTS AND WHETHER IT MAY BE USED IS AN OPEN QUESTION.
+  (1) **THE DIGEST CHECK IS A PREFIX COMPARE, AND I DROVE ALL FOUR CASES.**
+  `if not got.startswith(expect_sha256.lower()[:16]):` -- **equality is never
+  tested.** Against the real tape digest: the true value admits (correct), **a
+  right-16-wrong-48 admits, a 16-char stub admits, and a ONE-CHARACTER `"9"`
+  admits** -- every one emitting `digest_verified_at_load: True`. ***A 256-bit
+  digest cut to a 64-bit prefix would still be a check; this reduces it to whatever
+  the caller supplies -- the guarantee is not weakened, it is handed to the party
+  being checked.***
+  (2) **AND THE SHAPE IS NEW: A DISPLAY CONVENTION LEAKED INTO THE COMPARISON.**
+  The refusal message truncates to 16 hex, **which is exactly right for a
+  message**; the comparison one line above truncates the same way, for what must
+  have been the same reason -- ***at which point it stops being a comparison.***
+  **Not a control that cannot FAIL, not one that cannot RUN, not one testing the
+  wrong quantity -- a control whose COMPARISON INHERITED A FORMATTING DECISION.**
+  *And it is invisible to every test that supplies a real digest, which is every
+  honest test.*
+  (3) **AND THE COMMENT ABOVE BE'S CALL CLAIMS THE PROPERTY THE CALL OMITS -- my
+  own addition.** REV 45 §1.3 establishes the call passes neither `day` nor
+  `expect_sha256`; **I confirmed it, and the comment three lines above reads "ITEM
+  1 IS IN: the index is built from THE DAY'S OWN TAPE, WITH ITS DIGEST VERIFIED AT
+  LOAD."** ***Rule 10's family -- a printed conclusion contradicted by what sits
+  beside it -- but in a SOURCE COMMENT, where no instrument in this programme
+  looks.*** Check #1 runs; check #2, *which design v12 says is the point*, does
+  not.
+  (4) **THE BOOK IS BUILT AND VERIFIED AT THE ARTIFACT -- AND ITS STANDING IS NOT
+  DECIDED.** 290,758,834 B, `sha256` = `readback_sha256` = **the digest recomputed
+  on disk**; both pinned heads over the **SAME 297,379 keys with `sets_are_equal`
+  ASSERTED**; **15,735 uncovered as a COUNTED STATUS**; `state_join_failed: 0` on
+  42 chunks; **asm's peak PUBLISHED at 5.317 GB.** ***And it was assembled with the
+  front-door check only, the stream unverified*** -- put to REV 46, **GO waits on
+  it.** *A book that exists, reproduces its own digest, and whose right to be used
+  is an open question is a distinction this programme can now hold.*
+  (5) **AND A NUMBER I CARRIED DISSOLVES: BE'S ROUND-49 BUDGET WAS AN ARTEFACT OF
+  INDEXING THE WRONG TAPE.** The index costs **3.190 GB, not 5.971** -- so the
+  **8.713 GB "NO" I swept at round 136 as the assembly's binding constraint** was
+  measuring a configuration that no longer applied; the real total came in at
+  **5.317 GB, every stage inside budget.** ***The lesson is not "check harder" -- I
+  DID check, by importing the module and calling it.*** **It is that a budget is a
+  statement about a CONFIGURATION, and I recorded the number without recording
+  which configuration it assumed** -- *the `what_DE_cannot_rule` self-scoping I
+  praised at round 133 is exactly what that number lacked.*
+  (6) **DA'S REAL-DAY VERIFIER PATH IS NOT BUILT** -- `verify_real_day` refuses
+  unconditionally and `main()` takes only `--selftest`, ***so the read order I
+  swept at round 137 names a step that cannot currently run.*** **Declared by DA
+  rather than found by the reviewer**, and it has a date. *The read order was
+  written before the read existed, which I praised as the only honest timing; the
+  cost of that timing is exactly this. Both halves are true and the second does not
+  retract the first.*
+  (7) **AND THE READ ORDER GAINS FOUR LIMITS OF WHAT THE VERIFIER WILL NEVER
+  VERIFY** -- including ***"an error in the DECLARATION itself: two implementations
+  of a wrong spec agree."*** **That is the limit of the corroboration I celebrated
+  last round:** neither implementation imported the other, **and both read the same
+  declaration.** *Independence in implementation does not buy independence from the
+  spec.*
+  (8) **DA 66's CENSUS COUNTS BY CONTAINER, NOT BY NAME -- and catches a planted
+  list leaf BOTH name-based nets miss.** *The answer to the redactor-and-scanner
+  blind spot from round 136: names can be chosen unluckily; a leaf is a leaf.* **And
+  the smoke ran at 7.7888 GiB of 8 -- 97.36% of its cap** -- anon 1.11 vs file
+  5.17, max 0 / oom 0. *Most of it was page cache, which is why it survived; an
+  anon-heavy run at that fraction would have been killed silently.*
+  **FLAG WORDS: the 09-03 book BUILT, VERIFIED-AT-THE-ARTIFACT,
+  STANDING-PENDING-REV-46; the smoke REHEARSED, NOT RUN; the race read NOT READ
+  (v4 in flight at BE 56).**
+  MEASURED BEFORE THIS SENTENCE: flags 772 -> 780, flag_provenance 317 -> 325,
+  tasks 19; 189 CHECKED, 136 RELAYED, **455 UNMARKED -- unchanged for the sixteenth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
+  flags vs HEAD 0 without provenance.)
+```
