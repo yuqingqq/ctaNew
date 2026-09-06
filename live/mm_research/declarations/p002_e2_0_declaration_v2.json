@@ -1,0 +1,210 @@
+{
+  "carrying_commit": "f5224f137dac4ed29f9f7ff5d2b843551780a0a4",
+  "declared_by": "DA seat (pm-da), single-seat program",
+  "e1_reproduction_control": {
+    "days_eq_positive": 31,
+    "days_notional_positive": 7,
+    "n_days": 31,
+    "rs_eq_bps": 2.443,
+    "rs_notional_bps": -0.322,
+    "source": "live/mm_research/E1_RESULTS.md + E1_CODE_REVIEW.md section (b)",
+    "tau_star_s": 30,
+    "tolerance_bps": 0.05,
+    "why_required": "Delta_rs is a difference between two mids. If the proxy leg is a reimplementation that does not match E1's, Delta_rs is a difference between two CODEBASES and the voiding rule means nothing.",
+    "window": "2026-07-18..2026-08-17 (31 d Vision tick aggTrades)"
+  },
+  "falsifiers": {
+    "both_directions_required": true,
+    "known_bads": [
+      "a synthetic book where the mid always moves AGAINST the maker must return rs NEGATIVE at the known magnitude",
+      "a day with an injected gap above the threshold must be EXCLUDED with a named status and counted, never dropped",
+      "a sweep whose t+tau falls past the end of available book must be EXCLUDED and counted, never valued at the last known mid",
+      "reversing the is_buyer_maker convention must FLIP the sign of rs -- if it does not, the sign convention is not wired",
+      "the runner must REFUSE if this declaration's sha256 differs from the one it was built against",
+      "the runner must REFUSE a symbol with fewer than 14 admissible days",
+      "the runner must REFUSE if the E1 reproduction control misses E1's published ADA numbers by more than 0.05 bps"
+    ],
+    "positive_controls": [
+      "a synthetic book where the mid always moves IN the maker's favour by a known number of bps must return rs = that number (both maker-bid and maker-ask events)",
+      "a synthetic population of many small POSITIVE events and few large NEGATIVE ones must give eq > 0 AND notional < 0 -- the H1 shape itself, so the weighting code is shown to discriminate rather than merely to run",
+      "a clean day with no gaps must be ADMITTED",
+      "the identity mean es - mean Lambda == mean MO must hold exactly on synthetic data built from a known mid path"
+    ]
+  },
+  "population": {
+    "cluster_unit": "UTC day (CLAUDE.md rule 8)",
+    "day_admission_predicate": "a UTC day is ADMISSIBLE iff (a) 24 hour-files exist for BOTH bookTicker and trade, and (b) the intra-day gap fraction is < 0.05 measured as the share of the day's seconds with no bookTicker message. Both computed at run time.",
+    "event_unit": "the SWEEP, not the print: prints are collapsed on (transact_time, is_buyer_maker) exactly as EXPERIMENT_PLAN section 1.1 and e1_markout_scan.sweeps do, with the qty-weighted sweep price. The collected `trade` stream is per-match and FINER than E1's aggTrades, so without this collapse the event populations would not be comparable.",
+    "min_complete_days": 14,
+    "refuses_below_min": true,
+    "sign_convention": "q_j = -1 when is_buyer_maker (taker sold, the maker's BID was filled), +1 otherwise. MO_j(tau) = -q_j * (m(t_j+tau) - p_j) / p_j * 1e4 bps -- a maker-bid fill followed by a rising mid is POSITIVE. Driven in both directions by the falsifiers.",
+    "symbol_list": [
+      "AAVEUSDT",
+      "ADAUSDT",
+      "APTUSDT",
+      "ARBUSDT",
+      "ATOMUSDT",
+      "AVAXUSDT",
+      "BNBUSDT",
+      "BTCUSDT",
+      "DOGEUSDT",
+      "ETHUSDT",
+      "FILUSDT",
+      "GMXUSDT",
+      "ICPUSDT",
+      "LTCUSDT",
+      "SOLUSDT",
+      "XRPUSDT"
+    ],
+    "symbols": "ALL 16 collected symbols, not a subset. The plan asks for 'E1-B passers + 3 fixed negative controls + XS-overlap'; running all 16 is a superset, drops nothing, and removes every question about which three controls were meant.",
+    "the_admissible_set_is_an_OUTPUT": "declared as an output, never as an expectation, so no belief about which days should qualify can become a filter. Structural file-count as-of 2026-09-06T04:20Z: 16 complete days for every symbol (08-20..08-25, 08-27..09-05); 08-19 is a 12-hour partial, 08-26 a 23-hour partial (reboot), 09-06 in progress. The gap-fraction leg has NOT been evaluated."
+  },
+  "program": "P-2026-002-hf-market-making",
+  "protocol": "P002_E2_0_TRUE_MID_DECLARATION_V2",
+  "resources": {
+    "cap": "one CPU, MemoryMax=8G, under the rule-20 wrapper (flock + systemd-run --scope --slice=research.slice). NEVER RAISED: a symbol that exceeds the cap REFUSES, the cap does not rise.",
+    "estimate_is_labelled_an_estimate": "no wall-clock estimate is offered before the smoke measures one. The smoke IS the estimate.",
+    "measured_input_sizes_as_of_2026-09-06T04:21Z": {
+      "ADAUSDT bookTicker per day (gz)": "41 MB",
+      "ADAUSDT trade per day (gz)": "4.3 MB",
+      "BTCUSDT bookTicker per day (gz)": "480 MB",
+      "BTCUSDT trade per day (gz)": "39 MB",
+      "note": "BTC is ~12x ADA. This is why the smoke is ONE symbol with its resource observation before any fan-out, and why the reader is day-at-a-time and streaming."
+    },
+    "smoke": "ADAUSDT alone, all admissible days, RSS and wall recorded, BEFORE any other symbol runs. ADA is also the cell this step exists to settle."
+  },
+  "robustness_splits_declared_now": {
+    "per_side": "maker-bid and maker-ask separately (section 1.5 gate 4)",
+    "post_era_boundary": "every gate recomputed on days entirely at or after 1787579334881534478 (2026-08-24T13:48:54Z). Declared BEFORE the run so it cannot become a rescue: the gate quantities do not use recv_ns, and this split is the check on that claim. Expected admissible post-boundary days: 08-25 and 08-27..09-05 = 11, above the G>=5 floor.",
+    "size_buckets": "notional quintiles, per the amendment's 'size-bucketed'",
+    "tau_sensitivity": "the full tau grid is reported; the GATE is read only at tau*"
+  },
+  "sources": {
+    "amendment": "live/mm_research/E1_CODE_REVIEW.md -- 'What E1x/E2.0 must check', item (ii)",
+    "e1_code": "live/mm_research/e1_markout_scan.py",
+    "e1_verdict": "live/mm_research/E1_RESULTS.md",
+    "prereg": "live/mm_research/EXPERIMENT_PLAN.md sections 1.3, 1.5, 2"
+  },
+  "statistics": {
+    "day_clustered_mean": "gates 1 and 4 are day-clustered means over admissible days",
+    "days_positive_threshold": "gate 3 is '> 0 on >= 70% of days'; for G=16 that is 12",
+    "interval": "stationary block bootstrap of the ratio-of-sums (B=2000, seed=20260906, 30-min bins, 4h blocks) per EXPERIMENT_PLAN section 1.4",
+    "interval_floor": "CLAUDE.md rule 8: below G=5 complete days, point estimate and NO interval, said so"
+  },
+  "status": "DECLARATION_NO_DATA_TOUCHED",
+  "step": "E2.0 -- notional-weighted true-mid recompute of the E1 screen",
+  "supersedes": {
+    "carrying_commit": "a7b5534152e83b59dda196ab6fa07fc9a0131c99",
+    "correction_is_in_band": "rule 13: v1 is NOT edited and stands as provenance. v2 supersedes it on the reviewer's three findings (46030b1, filed 2026-09-06T04:33Z, BEFORE the smoke ran and BEFORE any result was read). The smoke's receipt is emitted under v2; the v1 run's numbers were never read, never cited and its unread receipt was removed.",
+    "path": "live/mm_research/declarations/p002_e2_0_declaration_v1.json",
+    "sha256": "95aeaf1bc35fd8fba1eb96af54429ec1bf7c366afc9e87f0b5be1248504d442a",
+    "what_changed": [
+      "FINDING 1: Delta_rs is now declared on the INTERSECTION of sweeps where BOTH mids are defined, with the events dropped for want of a proxy counted as a status. v1 said 'the SAME sweep events' -- but the true mid has no validity window and the proxy needs two prints within 10 s, so v1 would have let a POPULATION difference leak into what is supposed to be a MID difference.",
+      "FINDING 2: the settle leg is relabelled by the GATE it clears (fee + c_safe = 2.3, EXPERIMENT_PLAN section 1.5 gate 1) and killed by the DEATH bar (fee = 1.8, the amendment). v1's SETTLED_ALIVE was labelled at 1.8, so a cell at 2.0 would have read ALIVE while FAILING gate 1. The 1.8-2.3 band is real and now has its own name.",
+      "FINDING 3: the interval is DECISION-BEARING on the alive side. ALIVE requires the point >= 2.3 AND the bootstrap CI lower bound >= 1.8 (the plan's gate 2). A point that clears with an interval that does not is INCONCLUSIVE, not alive. The KILL stays a point rule because that is the pre-registered text and a kill must not be weakened after seeing -- but its interval robustness is reported."
+    ]
+  },
+  "the_gate_quantity": {
+    "also_reported": [
+      "eq-weighted (so Delta_rs is comparable to what E1 gated on)",
+      "per side (maker-bid / maker-ask)",
+      "Lambda(tau) and es",
+      "size-bucketed rs by notional quintile (amendment item ii says 'and size-bucketed')"
+    ],
+    "identity_check": "|mean es - mean Lambda(tau) - mean MO(tau)| > 0.2 bps on a (symbol, day) flags that day proxy_incoherent and EXCLUDES it from gates; the excluded fraction is reported with every table (rule 4).",
+    "primary": "notional-weighted rs(tau*) on TRUE mids, per symbol",
+    "rs_definition": "rs(tau) == mean MO(tau) (EXPERIMENT_PLAN section 1.3c: es = rs + Lambda, so MO already IS rs; the 'ES - 2|MO|' form double-counts)",
+    "tau_grid_s": [
+      0.1,
+      0.5,
+      1,
+      5,
+      15,
+      30,
+      60,
+      300
+    ],
+    "tau_star_rule": "tau* = 30 s if the day-median time-to-next-opposite-sweep <= 30 s on at least ceil(0.774194 * G) days (the plan's '>= 24 of 31', re-expressed as its own fraction for a G-day window; G=16 -> 13); else min(300, 2 x median) rounded up to {60, 300}. Stated ex ante to forbid horizon shopping.",
+    "weights": "Q * p, the USD notional of the sweep",
+    "why_notional": "economics are per DOLLAR; an eq-weighted markout is a per-EVENT statistic. E1's own audit measured the gap at eq - notional ~ 2.8 bps on ADA, twenty times ADA's 0.14 bps margin over fee."
+  },
+  "the_proxy_mid": {
+    "definition": "EXPERIMENT_PLAN section 1.2: two-sided last-print mid, (last taker-buy sweep price + last taker-sell sweep price)/2, both required within 10000 ms of the query time.",
+    "why_recomputed_here": "so that Delta_rs isolates the MID and not the period -- see the reproduction control"
+  },
+  "the_true_mid": {
+    "clock": "exchange transact_time T (milliseconds)",
+    "definition": "m_true(u) = (best_bid + best_ask) / 2 taken from the LAST bookTicker message with exchange transact_time T <= u; for m(t-) the search is STRICTLY BEFORE the sweep's own T.",
+    "schema": "recv_ns,E,T,u,bid,bid_qty,ask,ask_qty",
+    "source_stream": "data/mm_hf/raw/bookTicker/<SYM>/<YYYYMMDD>_<HH>.csv[.gz]",
+    "staleness_is_reported_not_filtered": "age of the standing quote at each query time is reported (p50/p99 per symbol-day) so a reader can see whether 'true' meant 'fresh'. It does not filter events, because filtering on quote age would select on activity.",
+    "validity_rule": "NONE. The book is continuous: a bookTicker message stands until the next one. The 10 s validity window belongs to the PROXY mid, which is built from prints and goes stale.",
+    "why_not_recv_ns": "recv_ns is OUR stamp. CLAUDE.md rule 5 makes sub-second recv_ns reliable only from 2026-08-24T13:48:54Z (ns 1787579334881534478), which would make the first third of this window inadmissible; and it carries ~74 ms of measured one-way latency plus clock offset straight into the markout. Exchange T is the stamp the event itself carries (CLAUDE.md rule 3)."
+  },
+  "what_settles_and_what_voids": {
+    "interval_is_decision_bearing": {
+      "below_G_5": "no interval is claimable, so ALIVE cannot be asserted at all: the state is INCONCLUSIVE_NO_INTERVAL (CLAUDE.md rule 8)",
+      "on_the_alive_side": "ALIVE requires the point >= 2.3 AND the 95% CI lower bound >= 1.8. Otherwise INCONCLUSIVE.",
+      "on_the_kill_side": "the kill stays the amendment's POINT rule, because weakening a pre-registered kill after seeing is exactly what rule 11 forbids. `kill_is_interval_robust` (CI upper bound < 1.8) is REPORTED beside it, never instead of it.",
+      "why_this_field_exists": "REVIEWER FINDING 3 (46030b1): v1 compared a POINT to a threshold while declaring an interval that G = 16 makes claimable. A point that clears with an interval that does not is not a pass."
+    },
+    "leg_i_VOID": {
+      "consequence": "Delta_rs > +1.0 bps VOIDS E1's ADA pass",
+      "quantity": "Delta_rs(tau*) = rs_proxy - rs_true, EQ-WEIGHTED, both computed on the SAME admissible days over the INTERSECTION population defined below",
+      "source": "EXPERIMENT_PLAN.md section 2, E2.0",
+      "threshold_bps": 1.0
+    },
+    "leg_ii_SETTLE": {
+      "consequence": "below the VIP0 maker fee KILLS the ADA cell regardless of eq numbers",
+      "quantity": "notional-weighted rs(tau*) on true mids",
+      "source": "E1_CODE_REVIEW.md pre-read amendment item (ii)",
+      "threshold_bps": 1.8
+    },
+    "outcome_table": {
+      "settle_states": {
+        "ALIVE_CLEARS_GATE_1_AND_2": "point >= 2.3 AND CI-lo >= 1.8",
+        "DEAD": "notional rs_true < 1.8 (the death bar)",
+        "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR": "point >= 2.3 but CI-lo < 1.8 (fails gate 2)",
+        "INCONCLUSIVE_NO_INTERVAL": "point >= 2.3 but G < 5, no interval claimable",
+        "NOT_KILLED_PENDING_GATE_1": "1.8 <= notional rs_true < 2.3 -- neither dead nor passing; the band v1 mislabelled ALIVE"
+      },
+      "verdict": "the two are reported as one string '<void>+<settle>' and as separate fields; UNDECIDABLE if either leg has no admissible estimate -- a STATUS, never resolved by assumption",
+      "void_states": {
+        "NOT_VOIDED": "Delta_rs <= 1.0",
+        "VOIDED": "Delta_rs > 1.0"
+      }
+    },
+    "the_expectation_is_recorded_so_it_can_be_wrong": "the E1 results audit expects SETTLED_DEAD. Recording the expectation is not a prediction the result must meet: SETTLED_ALIVE is a live outcome and carries the heavier burden, which is why the full section 1.5 gate is computed for every symbol whatever the verdict.",
+    "two_bars_not_one": {
+      "death_bar_bps": 1.8,
+      "gate1_bar_bps": 2.3,
+      "gate2_rule": "the plan's gate 2: block-bootstrap 95% CI lower bound >= fee_maker (no margin)",
+      "why_this_field_exists": "REVIEWER FINDING 2 (46030b1): v1's table called anything at or above 1.8 SETTLED_ALIVE. 1.8 is the DEATH bar (the amendment's kill: below the VIP0 maker fee). The PLAN's own pass bar is fee + c_safe = 2.3 (EXPERIMENT_PLAN section 1.5 gate 1). A cell at 2.0 would have read ALIVE while FAILING gate 1. One boolean was doing duty for two bars."
+    },
+    "what_this_CANNOT_settle": [
+      "the window is 2026-08-20..09-05, NOT E1's 07-18..08-17. A dead cell here is dead ON THIS PERIOD; it does not retroactively re-measure E1's window, and a live cell here would not either.",
+      "rs is still a POPULATION statistic over all sweeps -- hazard H1 (population vs marginal) is measured by the notional weighting, not removed by it. Only E2's queue replay puts a marginal order at the back of the queue.",
+      "no queue position, no own impact, no fees beyond the maker fee comparison. E2.0 cannot establish economic sign; it can only kill or fail to kill."
+    ]
+  },
+  "what_would_refute_this_DESIGN_rather_than_a_symbol": [
+    "the E1 reproduction control failing -- then the proxy leg is a different estimator and Delta_rs is not the pre-registered quantity",
+    "the true-mid quote age being routinely large (a book that is not actually continuous in our capture) -- then 'true mid' is a second proxy and must be called one",
+    "a systematically empty admissible-day set -- that refutes the population predicate, not the symbols",
+    "the identity check failing on true mids across most symbol-days -- es = rs + Lambda is arithmetic, so a broad failure means the reader is wrong, not the market"
+  ],
+  "which_population_each_leg_is_computed_over": {
+    "SETTLE_leg_population": "ALL sweeps of an admissible day with a valid TRUE mid at t- and t+tau*. NOT the intersection: the amendment says 'notional-weighted rs on true mids', and restricting the economics to the events the PROXY happens to see would let the proxy's limitations select the settle population.",
+    "VOID_leg_population": "the INTERSECTION: sweeps of an admissible day where BOTH mids are defined at t- AND at t+tau*, i.e. v0_true & v1_true & v0_proxy & v1_proxy. Delta_rs is computed over exactly this set for both mids, so the only thing that differs between the two terms is the mid.",
+    "counted_as_a_status": [
+      "n_sweeps_true_valid",
+      "n_sweeps_proxy_valid",
+      "n_sweeps_intersection",
+      "n_true_valid_without_proxy (the events the proxy could not see -- reported as a count AND a share, rule 4)",
+      "the same counts for E1's own window via the reproduction control, so the two windows' proxy coverage is comparable"
+    ],
+    "membership_weighting": "membership is a property of the EVENT and is identical under eq and notional weighting; the weighting changes only how members are averaged. So the two legs' weightings (eq for the void, notional for the settle) do not move who is in.",
+    "what_a_population_difference_would_do": "Delta_rs on the intersection licenses a statement about the MID on the events both mids see. It does NOT license transporting that statement to the settle population, which is larger. If n_true_valid_without_proxy is a large share, then E1's proxy was blind to that share of its own window and the VOID leg's reach is correspondingly narrower -- that is a limit on the void reading, reported with it, never a reason to widen either population after seeing.",
+    "why_this_field_exists": "REVIEWER FINDING 1 (46030b1): v1 said Delta_rs used 'the SAME sweep events', but the two mids DO NOT EXIST on the same sweeps. The true mid needs only a prior bookTicker message; the proxy needs a taker-buy AND a taker-sell print within 10 s. In a print drought the proxy is undefined and the true mid is not. Unrestricted, Delta_rs would mix a MID difference with a POPULATION difference -- the one thing it exists not to do."
+  }
+}
