@@ -124,7 +124,7 @@ except where marked USER-ONLY.
 20. **One heavy run at a time, one CPU each** (R-551, USER review 2026-09-06):
     the scorer peaked at 6.95 GiB of its 8 GiB cap on one core, so two heavy
     runs cannot share the box. Every heavy step runs as
-     —
+    `flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% <cmd>` —
     the lock REFUSES (exit 1, say so in the report) if another heavy run holds
     it; never wait on it silently, never raise either cap. The slice itself is
     capped at CPUQuota=200% so light suites can overlap a heavy run. "Heavy" =
