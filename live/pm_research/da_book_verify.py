@@ -1061,9 +1061,33 @@ def verify_receipt_tier(book_path, receipt_path, *,
     return out
 
 
+def supersession_block(prior: Path) -> dict:
+    """The R-608 PAIR for an in-band re-emission, chain carried forward."""
+    b = prior.read_bytes()
+    sha = hashlib.sha256(b).hexdigest()
+    try:
+        blk = (json.loads(prior.read_text()).get("supersedes") or {})
+    except (OSError, ValueError):
+        blk = {}
+    chain = [list(e) for e in (blk.get("chain") or [])
+             if isinstance(e, (list, tuple)) and len(e) == 2]
+    return {"path": prior.name, "sha256": sha,
+            "chain": chain + [[prior.name, sha]],
+            "the_link_is_the_PAIR": ["path", "sha256"],
+            "v1_untouched": True,
+            "what_changed": (
+                "the prose. The superseded artifact carried "
+                "`NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: false` beside a "
+                "sentence saying none of them names an economic quantity, "
+                "and two theta MISMATCHES that were a misread of the "
+                "book's count map. The numbers about the BOOK -- set "
+                "equality, key counts, coverage -- are unchanged and were "
+                "right in the superseded artifact too")}
+
+
 def verify_full(book_path, receipt_path, *, day: str | None = None,
                 coin: str | None = None, output: Path | None = None,
-                fixture: bool = True,
+                fixture: bool = True, supersedes: Path | None = None,
                 _book_obj=None, params_thetas: dict | None = None) -> dict:
     """HEAVY. The receipt tier plus the population RECOMPUTED FROM THE BOOK."""
     out = verify_receipt_tier(book_path, receipt_path, day=day, coin=coin,
@@ -1139,6 +1163,8 @@ def verify_full(book_path, receipt_path, *, day: str | None = None,
     out.update({
         "protocol": PROTOCOL + "_FULL",
         "tier": "FULL",
+        "supersedes": (supersession_block(Path(supersedes))
+                       if supersedes else None),
         "economic_census_of_the_book": census,
         "population_from_the_book": bp,
         "predicates_not_computable": not_computable,
@@ -1727,6 +1753,9 @@ def main() -> int:
     ap.add_argument("--day")
     ap.add_argument("--coin")
     ap.add_argument("--output", type=Path, default=None)
+    ap.add_argument("--supersedes", type=Path, default=None,
+                    help="a prior receipt this re-emission supersedes; the "
+                         "R-608 PAIR is computed from its bytes")
     a = ap.parse_args()
     if a.selftest:
         checks, n_fail = selftest()
@@ -1757,8 +1786,11 @@ def main() -> int:
         fn = verify_full if a.full else verify_receipt_tier
         #: A REAL artifact: rule 22's dirty bar REFUSES here, and is only a
         #: recorded fact inside the fixture.
-        r = fn(a.book, a.receipt, day=a.day, coin=a.coin, output=a.output,
-               fixture=False)
+        kw = {"day": a.day, "coin": a.coin, "output": a.output,
+              "fixture": False}
+        if a.full:
+            kw["supersedes"] = a.supersedes
+        r = fn(a.book, a.receipt, **kw)
     except BookVerifyRefused as e:
         print(str(e))
         return 2
