@@ -1,0 +1,330 @@
+{
+  "baseline": {
+    "da_population_audit": {
+      "green": true,
+      "kill_cause": "NOT_KILLED",
+      "module": "da_population_audit",
+      "named_failures": [],
+      "rc": 0,
+      "stderr_tail": "",
+      "why_red": ""
+    },
+    "de_section81_mid_census": {
+      "green": true,
+      "kill_cause": "NOT_KILLED",
+      "module": "de_section81_mid_census",
+      "named_failures": [],
+      "rc": 0,
+      "stderr_tail": "",
+      "why_red": ""
+    }
+  },
+  "baseline_all_green": true,
+  "baseline_probe": {
+    "cache_path": "/home/yuqing/ctaNew-wt-da/live/pm_research/__pycache__/da_population_audit.cpython-312.pyc",
+    "cached": "/home/yuqing/ctaNew-wt-da/live/pm_research/__pycache__/da_population_audit.cpython-312.pyc",
+    "clear_cache": true,
+    "functions_code_sha256": "22eac8054629a0f8d196edf3f2783f24d490b4b2387dfe77551fbfebae1ad389",
+    "loader_code_sha256": "e21fbfde28446d07bc677015c86dbd9bf7bc6190574e66d3e9ca56d51d261204",
+    "loader_source_sha256": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91",
+    "module": "da_population_audit",
+    "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py",
+    "n_code_objects": 5,
+    "ok": true,
+    "pre_cache_existed": false,
+    "python": "3.12.3"
+  },
+  "cache_cleared_before_every_child": true,
+  "carrying_commit": "0dce2a49b92abfcab9c3b4d32ee832d62571f32f",
+  "computed_predicates": {
+    "bytecode_cache_removed_before_every_child": true,
+    "every_applied_mutant_caught_by_both_suites": true,
+    "every_applied_mutant_caught_by_its_own_suite": true,
+    "every_applied_mutant_caught_by_the_consumers_SELFTEST": true,
+    "every_mutant_REACHED_THE_INTERPRETER": true,
+    "every_mutant_moved_a_loaded_function_code_object": true,
+    "every_mutant_moved_the_loader_code_object": true,
+    "every_mutant_was_on_disk_while_its_child_ran": true,
+    "every_red_run_can_say_why": true,
+    "kill_cause_by_mutant": {
+      "NULL_does_not_permute": {
+        "da_population_audit": "ASSERTION_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      },
+      "STATISTIC_drops_abs": {
+        "da_population_audit": "ASSERTION_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      },
+      "STATISTIC_returns_zero": {
+        "da_population_audit": "ASSERTION_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      },
+      "STATUS_always_nothing_excluded": {
+        "da_population_audit": "CRASH_KILL",
+        "de_section81_mid_census": "ASSERTION_KILL"
+      }
+    },
+    "loader_read_the_file_on_disk_for_every_mutant": true,
+    "n_assertion_kills_own_suite": 3,
+    "n_crash_kills_own_suite": 1,
+    "n_surviving": 0,
+    "suites_actually_run": [
+      "da_population_audit",
+      "de_section81_mid_census"
+    ],
+    "surviving_mutants": [],
+    "the_same_module_file_was_resolved_every_time": true,
+    "what_the_consumer_number_measures": "the consumer's SELFTEST, not its production census. A selftest that never asserts on the imported function's output cannot go red when that function is broken, so a 0 here is a fact about the SUITE's coverage and NOT evidence that the census is unprotected",
+    "what_the_interpreter_predicates_add": "`every_mutant_was_on_disk_while_its_child_ran` is a statement about the FILESYSTEM and was v3's whole answer to the stale-bytecode hazard. These are statements about the CODE OBJECTS the child actually held. A stale .pyc makes the first true and the second false."
+  },
+  "limits": [
+    "four mutants on three surfaces is a SAMPLE of the ways this instrument could be wrong, never a proof that it is right",
+    "a mutant caught by a suite says the suite discriminates on that line, not that the line is correct",
+    "the consumer is run at its own selftest, which is not the same as the production census it performs on real data -- this limit is now carried in the predicate's own field name and in `what_the_consumer_number_measures`, because as a limits entry it was read past (R-541(F))",
+    "the interpreter evidence is a DIFFERENTIAL against the baseline probe. It proves the mutant's code objects are not the original's; it does not prove they are the code objects the MUTATION intended -- a mutation that changed something else in the file would also move the digest",
+    "marshal.dumps of a code object is compared only WITHIN one interpreter version, never across; the receipt records the child's python version so a cross-version comparison of two receipts cannot be made by accident",
+    "the stale-bytecode hazard is closed by DELETING the cache before every child and every restore (BE's pattern at be_forward_day.py:2903), plus `-B` and PYTHONDONTWRITEBYTECODE=1. The variable ALONE does NOT close it -- it stops the interpreter WRITING a cache, not READING one already on disk (reviewer A-6), and my round-54 re-run relied on the variable alone"
+  ],
+  "n_applied": 4,
+  "n_mutants": 4,
+  "protocol": "P003_DA_POPULATION_MUTATION_AUDIT_V4",
+  "results": [
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'COMPARED', 'selective_attributes': [], 'tvd': 0.0, 'p_permutation': 1.0, 'ORACLE_FIRED': False}. The oracle SOURCE digest at probe time was 7664085027796630c4faac21852454e63c332e956376f80e677c3a20989c62ab -- record it, because a stale __pycache__ can make the bytes that RAN differ from the bytes on disk (reviewer A-6). No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "interpreter_evidence": {
+        "cache_existed_before_import": false,
+        "disk_sha256": "7664085027796630c4faac21852454e63c332e956376f80e677c3a20989c62ab",
+        "functions_code_sha256_moved": true,
+        "loader_code_sha256_moved": true,
+        "loader_source_matches_disk": true,
+        "loader_source_sha256": "7664085027796630c4faac21852454e63c332e956376f80e677c3a20989c62ab",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py",
+        "module_file_unchanged": true,
+        "n_code_objects": 5,
+        "probes_ok": true,
+        "reached_the_interpreter": true,
+        "what_this_adds_over_the_disk_digest": "the disk digest says the mutant was on disk. These say the interpreter produced DIFFERENT code objects for it -- which a stale .pyc would make false while the disk digest stayed true"
+      },
+      "mutant": "STATISTIC_returns_zero",
+      "probe_baseline": {
+        "functions_code_sha256": "22eac8054629a0f8d196edf3f2783f24d490b4b2387dfe77551fbfebae1ad389",
+        "loader_code_sha256": "e21fbfde28446d07bc677015c86dbd9bf7bc6190574e66d3e9ca56d51d261204",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "probe_under_mutant": {
+        "functions_code_sha256": "f7ab124bfe3908f5fed65e67f9e877b512f4d0b0fb4dffec2b3c8741d01ebc56",
+        "loader_code_sha256": "273064ca55ee1ec9803490c2e225a97f6445162d9430d1d423c965a08dd1149f",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "7664085027796630c4faac21852454e63c332e956376f80e677c3a20989c62ab",
+      "status": "APPLIED",
+      "surface": "statistic",
+      "survived_in": [],
+      "why_it_matters": "TVD always 0: every exclusion looks perfectly representative, so NOTHING is ever flagged selective -- the always-PASS direction"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 0.487562) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 0.0, p 0.487562) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'COMPARED', 'selective_attributes': [], 'tvd': 0.0, 'p_permutation': 1.0, 'ORACLE_FIRED': False}. The oracle SOURCE digest at probe time was b17c0d797844d716216e18d8daf59388c0a3961c1809c4933dedb144d51c4e27 -- record it, because a stale __pycache__ can make the bytes that RAN differ from the bytes on disk (reviewer A-6). No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 0.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "interpreter_evidence": {
+        "cache_existed_before_import": false,
+        "disk_sha256": "b17c0d797844d716216e18d8daf59388c0a3961c1809c4933dedb144d51c4e27",
+        "functions_code_sha256_moved": true,
+        "loader_code_sha256_moved": true,
+        "loader_source_matches_disk": true,
+        "loader_source_sha256": "b17c0d797844d716216e18d8daf59388c0a3961c1809c4933dedb144d51c4e27",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py",
+        "module_file_unchanged": true,
+        "n_code_objects": 5,
+        "probes_ok": true,
+        "reached_the_interpreter": true,
+        "what_this_adds_over_the_disk_digest": "the disk digest says the mutant was on disk. These say the interpreter produced DIFFERENT code objects for it -- which a stale .pyc would make false while the disk digest stayed true"
+      },
+      "mutant": "STATISTIC_drops_abs",
+      "probe_baseline": {
+        "functions_code_sha256": "22eac8054629a0f8d196edf3f2783f24d490b4b2387dfe77551fbfebae1ad389",
+        "loader_code_sha256": "e21fbfde28446d07bc677015c86dbd9bf7bc6190574e66d3e9ca56d51d261204",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "probe_under_mutant": {
+        "functions_code_sha256": "afe277594f1c8d8f311fe85c3718595d6f342e2e69aaaf6c565e6cf6235785c5",
+        "loader_code_sha256": "3dd3bb5b9a07dec249cc296e708c98c55576f6857926567bbc11ba1441b49de3",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "b17c0d797844d716216e18d8daf59388c0a3961c1809c4933dedb144d51c4e27",
+      "status": "APPLIED",
+      "surface": "statistic",
+      "survived_in": [],
+      "why_it_matters": "signed differences cancel to ~0 for any distribution, so a real imbalance reads as agreement -- silent and plausible"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 1.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: POP-2 FIRES: the SAME COUNT taken entirely from one hour is selective on `hour` (tvd 1.0, p 1.0) -- and the count, the fraction and the rule-4 status are IDENTICAL to POP-1. That is the whole point: the token reads the same either way"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 1.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'COMPARED', 'selective_attributes': [], 'tvd': 1.0, 'p_permutation': 1.0, 'ORACLE_FIRED': False}. The oracle SOURCE digest at probe time was cf643d7478f8a7d2332fa7f1a50b2328a3ee60730ef549942266093aecaf2f27 -- record it, because a stale __pycache__ can make the bytes that RAN differ from the bytes on disk (reviewer A-6). No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd 1.0, p 1.0, fired False) and STAY SILENT on an identical-multiset one (got tvd 0.0, silent True). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "interpreter_evidence": {
+        "cache_existed_before_import": false,
+        "disk_sha256": "cf643d7478f8a7d2332fa7f1a50b2328a3ee60730ef549942266093aecaf2f27",
+        "functions_code_sha256_moved": true,
+        "loader_code_sha256_moved": true,
+        "loader_source_matches_disk": true,
+        "loader_source_sha256": "cf643d7478f8a7d2332fa7f1a50b2328a3ee60730ef549942266093aecaf2f27",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py",
+        "module_file_unchanged": true,
+        "n_code_objects": 5,
+        "probes_ok": true,
+        "reached_the_interpreter": true,
+        "what_this_adds_over_the_disk_digest": "the disk digest says the mutant was on disk. These say the interpreter produced DIFFERENT code objects for it -- which a stale .pyc would make false while the disk digest stayed true"
+      },
+      "mutant": "NULL_does_not_permute",
+      "probe_baseline": {
+        "functions_code_sha256": "22eac8054629a0f8d196edf3f2783f24d490b4b2387dfe77551fbfebae1ad389",
+        "loader_code_sha256": "e21fbfde28446d07bc677015c86dbd9bf7bc6190574e66d3e9ca56d51d261204",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "probe_under_mutant": {
+        "functions_code_sha256": "d16b029e8657b2ac63af0eabf2295209995473a2f7ffb7907170d796b0891578",
+        "loader_code_sha256": "6593adfa58d00f600a6560eeab9b2bf6ec5201f0ee4f345a9739bd4e2a0c0d82",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "cf643d7478f8a7d2332fa7f1a50b2328a3ee60730ef549942266093aecaf2f27",
+      "status": "APPLIED",
+      "surface": "null",
+      "survived_in": [],
+      "why_it_matters": "the null draws become the observed split every time, so the p-value collapses and every exclusion looks extreme or none does"
+    },
+    {
+      "caught_by": {
+        "da_population_audit": {
+          "kill_cause": "CRASH_KILL",
+          "named_failures": [],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "KeyError: 'excluded_fraction'"
+        },
+        "de_section81_mid_census": {
+          "kill_cause": "ASSERTION_KILL",
+          "named_failures": [
+            "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd None, p None, fired False) and STAY SILENT on an identical-multiset one (got tvd None, silent False). ORACLE_IS_LIVE=False",
+            "FAIL: assert_oracle_live REFUSED THE SHIPPED ORACLE: REFUSED: the imported oracle DID NOT FLAG a maximally selective exclusion (hours disjoint, TVD 1.0 by construction). It answered {'construction': 'excluded all in hour 3, retained all in hour 9 -- DISJOINT, so TVD is 1.0 by construction', 'status': 'NOTHING_EXCLUDED', 'selective_attributes': [], 'tvd': None, 'p_permutation': None, 'ORACLE_FIRED': False}. The oracle SOURCE digest at probe time was ad377aed86de32c5c8a58654f9781e53ffd0ee1ebbf88518f7fb3b56614e5c40 -- record it, because a stale __pycache__ can make the bytes that RAN differ from the bytes on disk (reviewer A-6). No NOTHING_EXCLUDED or INDISTINGUISHABLE certification may be taken from an instrument in this state."
+          ],
+          "rc": 1,
+          "went_red": true,
+          "why_red": "FAIL: ORACLE LIVENESS, BOTH DIRECTIONS ON THE SHIPPED INSTRUMENT: the oracle must FLAG a disjoint-hour exclusion (got tvd None, p None, fired False) and STAY SILENT on an identical-multiset one (got tvd None, silent False). ORACLE_IS_LIVE=False"
+        }
+      },
+      "caught_everywhere": true,
+      "interpreter_evidence": {
+        "cache_existed_before_import": false,
+        "disk_sha256": "ad377aed86de32c5c8a58654f9781e53ffd0ee1ebbf88518f7fb3b56614e5c40",
+        "functions_code_sha256_moved": true,
+        "loader_code_sha256_moved": true,
+        "loader_source_matches_disk": true,
+        "loader_source_sha256": "ad377aed86de32c5c8a58654f9781e53ffd0ee1ebbf88518f7fb3b56614e5c40",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py",
+        "module_file_unchanged": true,
+        "n_code_objects": 5,
+        "probes_ok": true,
+        "reached_the_interpreter": true,
+        "what_this_adds_over_the_disk_digest": "the disk digest says the mutant was on disk. These say the interpreter produced DIFFERENT code objects for it -- which a stale .pyc would make false while the disk digest stayed true"
+      },
+      "mutant": "STATUS_always_nothing_excluded",
+      "probe_baseline": {
+        "functions_code_sha256": "22eac8054629a0f8d196edf3f2783f24d490b4b2387dfe77551fbfebae1ad389",
+        "loader_code_sha256": "e21fbfde28446d07bc677015c86dbd9bf7bc6190574e66d3e9ca56d51d261204",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "probe_under_mutant": {
+        "functions_code_sha256": "8ca29ca09dc2773da72531852183c6af4ff11fd6acafee5fa01428cf6c836858",
+        "loader_code_sha256": "f98807ba992f2e1c5ed5dd153c95615c0a1232aa0a6784cb30578df519db7834",
+        "module_file": "/home/yuqing/ctaNew-wt-da/live/pm_research/da_population_audit.py"
+      },
+      "pycache_removed_before_child": true,
+      "source_differs_from_original": true,
+      "source_sha256_while_the_child_ran": "ad377aed86de32c5c8a58654f9781e53ffd0ee1ebbf88518f7fb3b56614e5c40",
+      "status": "APPLIED",
+      "surface": "status",
+      "survived_in": [],
+      "why_it_matters": "the exact string DE's artifact cites is emitted unconditionally -- the certification would be produced for a population that WAS filtered"
+    }
+  ],
+  "role": "REPORTED, NOT ENFORCED (rule 14). A surviving mutant is a hole in a certification another seat relies on; this names it and decides nothing.",
+  "suites": [
+    "da_population_audit",
+    "de_section81_mid_census"
+  ],
+  "supersedes": {
+    "correction_is_in_band": "rule 13: this is v4, a superseding receipt; v3 is not edited and stands as provenance, as does every earlier link",
+    "path": "data/pm_5min/derived/p003_da_population_mutation_audit_v3__20260906T025432Z.json",
+    "sha256": "1077875e6b90a16db72f706a162429e1be93b2a3ecf072612a3cbb3697a69efe",
+    "what_changed": "v4: THE HARNESS NOW PROVES WHICH BYTES THE INTERPRETER RAN, NOT WHICH BYTES WERE ON DISK (reviewer B-1, filed at 3563fd2 and accepted). v3's `source_sha256_while_the_child_ran` digests the FILE after writing the mutant; that establishes the mutant was WRITTEN and nothing about which code the child executed. Under a valid stale `.pyc` the two answers differ -- the disk reads as the mutant while the ORIGINAL bytecode runs -- so a 'survivor' would be a mutant that never ran and a 'kill' would be evidence about the wrong code. v4 adds a PROBE CHILD that imports the module and reports, from inside the interpreter that loaded it: the resolved `__file__`, the loader's source digest, sha256(marshal.dumps(get_code)) for the whole module, and sha256 over marshal.dumps of every function/method object actually present. Each mutant's probe is compared to a BASELINE probe of the unmutated module, and a mutant whose code objects are IDENTICAL to the original REFUSES THE AUDIT rather than reporting a result. A loader that read a different file from the one on disk also refuses. The disk digest is RETAINED -- it is still the right answer to 'was the mutant written?' -- and is no longer used as the answer to 'did it run?'. v3's cache deletion, `-B` and PYTHONDONTWRITEBYTECODE all stand; the known-bad below shows they were necessary and, on their own, unprovable: only the code-object digest can tell a cleared cache from an uncleared one AFTER the fact. v3 also carried, and v4 keeps: the consumer predicate named SELFTEST rather than 'consumer', and kills classified by CAUSE (the STATUS mutant is a CRASH_KILL)."
+  },
+  "target": "live/pm_research/da_population_audit.py",
+  "target_restored_byte_exact": true,
+  "target_sha256_after": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91",
+  "target_sha256_before": "f8b7dfa7a01826050c1e2a3a58ebbcd91fd6318f6149ae7b42e464a0b9095b91"
+}
