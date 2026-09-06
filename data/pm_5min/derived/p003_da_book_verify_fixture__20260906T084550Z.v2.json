@@ -1,0 +1,168 @@
+{
+  "both_directions": true,
+  "builder_call_read_by_ast_at_head": {
+    "calls": [
+      {
+        "keywords": [
+          "inputs"
+        ],
+        "line": 516,
+        "positional": [
+          "splits"
+        ],
+        "rendered": "build_tape_index(splits, inputs=\u2026)"
+      }
+    ],
+    "keyword_names": [
+      "inputs"
+    ],
+    "n_calls": 1,
+    "read_by": "ast over the builder's source; not imported, not regexed, not restated",
+    "source": "working tree"
+  },
+  "carrying_commit": "ad026b981b9ebaaa160173a2c59dd2f0ac6949a5",
+  "checks": [
+    {
+      "check": "BOTH TIERS VERIFY A BOOK OF BE's OWN SHAPE: the RECEIPT tier holds the receipt to itself and to the bytes; the FULL tier opens the book and recomputes what only the book can say",
+      "detail": "receipt tier VERIFIED (0 flags), full VERIFIED (0 flags)",
+      "passed": true
+    },
+    {
+      "check": "THE DIGEST CHAIN CHECKS BOTH STATEMENTS OF THE SAME BYTES: the write-side `sha256` AND the independent `readback_sha256`, against one streamed hash of the file. Checking one and calling it the chain leaves the other unchecked -- and they can disagree",
+      "detail": "3647 bytes hashing to df3abe060b6aacc7; both declared statements agree; 2 pinned inputs hashed, 0 absent",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A TAMPERED BOOK FAILS THE CHAIN -- one appended byte moves the digest and the chain does not hold, against BOTH declared statements",
+      "detail": "one byte appended -> 3e26c771079eca83 against declared df3abe060b6aacc7",
+      "passed": true
+    },
+    {
+      "check": "AN ABSENT PINNED INPUT IS A STATUS, NEVER A PASS: it is reported INPUT_ABSENT_NOT_CHECKED with `matches: null`, because a `true` there would be a pass for a check that never ran",
+      "detail": "tape absent -> status INPUT_ABSENT_NOT_CHECKED, matches None",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: ONE MOVED COUNT IS FLAGGED. ADMITTED + the excluded classes must equal the windows, so a receipt whose statuses no longer sum is flagged on the sum, not on the field",
+      "detail": "ADMITTED +1 -> ['population.admitted_plus_excluded_equals_windows']",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD, AND THE ONE THAT MATTERS MOST: UNEQUAL HEAD KEY SETS ARE FLAGGED AND THE DIFFERENCE IS SIZED -- the receipt CLAIMS `sets_are_equal: true` and the recomputation over the book's own keys disagrees. Set equality is the precondition the null rests on, so it is compared, never read",
+      "detail": "the book's two heads differ by 5 keys (3 only in one, 2 only in the other) while the receipt claims equality",
+      "passed": true
+    },
+    {
+      "check": "POSITIVE CONTROL ON THE SAME AXIS: equal key sets RECOMPUTE equal, agree with the receipt, and the shared count matches -- so the flag means something",
+      "detail": "360 shared keys recomputed against 360 declared, difference 0",
+      "passed": true
+    },
+    {
+      "check": "COVERAGE AND THE THETAS ARE RECOMPUTED FROM THE BOOK: n_scored_keys counted off the book's own key sets, coverage divided out again, and each head's theta compared to the one the receipt pins",
+      "detail": "incumbent_linear_d: 360 keys, coverage 0.900000, theta 0.43525926488298716; q1_arrival_composed_lgbm: 360 keys, coverage 0.900000, theta 0.32450609461933483",
+      "passed": true
+    },
+    {
+      "check": "A RECEIPT FOR A DIFFERENT DAY OR COIN REFUSES: a receipt for another day is not this day's evidence, however well its numbers hold together",
+      "detail": "day: 'REFUSED: the receipt is for day '20260903' and the verification ...'; coin: 'REFUSED: the receipt is for coin 'btc' and the verificat...'",
+      "passed": true
+    },
+    {
+      "check": "THE BUILDER'S `build_tape_index` CALL IS READ BY AST FROM ITS OWN SOURCE -- argument names off the syntax tree, not a regex over text and not the receipt's word for it",
+      "detail": "1 call(s) at line(s) [516], keywords ['inputs']",
+      "passed": true
+    },
+    {
+      "check": "R-601, THE CORRECTION TO MY OWN PROBE: a receipt naming NO BUILDER COMMIT gets PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT BY NAME, and its literal is NOT JUDGED -- even a literal that would contradict HEAD. ***Computing a contradiction against HEAD or another seat's commit is an answer about code the receipt never ran.*** A gap, not a defect",
+      "detail": "literal 'build_tape_index(splits, tape_path=\u2026)' left unjudged; status PROVENANCE_INCOMPLETE with 0 flags -- incomplete is a THIRD state, neither VERIFIED nor FLAGGED",
+      "passed": true
+    },
+    {
+      "check": "A RECEIPT NAMING A BUILDER COMMIT WHOSE CALL MATCHES IS VERIFIED: the literal is judged against the code that actually produced the receipt, and nowhere else",
+      "detail": "builder_commit HEAD, literal 'build_tape_index(splits, inputs=\u2026)' agrees with the call there",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A LITERAL CONTRADICTING THE CALL **AT THE RECEIPT'S OWN BUILDER COMMIT** REFUSES -- the check still has teeth, it is just pointed at the right object now",
+      "detail": "'REFUSED: `seam.index` is a LITERAL that contradicts the call AT THE RECEIPT'S OWN BUILDER COMMIT HEAD. The recei...'",
+      "passed": true
+    },
+    {
+      "check": "AND `seam.commit` IS CHECKED AGAINST DE's MODULE -- WHICH IS WHAT IT NAMES. My round-70 probe read BE's BUILDER there and reported a contradiction: `6f134a6` is a Q-DE-80 register entry touching only COORDINATION.md, so reading BE's builder at it returned a real file at a real commit with nothing to do with the field. ***A commit id names a specific object; using it to locate a different one returns something true and tells you nothing.***",
+      "detail": "live/pm_research/de_phase4_diag_runner.py at HEAD defines day_assembly_inputs: True",
+      "passed": true
+    },
+    {
+      "check": "THE RESOURCES ARE FACTS, NOT VERDICTS: every stage's peak is compared to its OWN declared budget and the builder's `within_budget` is checked against the recomputation, with the index release fraction divided out",
+      "detail": "2 stages all within budget; index release 1.156 GB = 0.282 of what was held",
+      "passed": true
+    },
+    {
+      "check": "KNOWN-BAD: A `within_budget` FLAG THAT DISAGREES WITH THE ARITHMETIC IS FLAGGED -- the builder's own boolean is checked against peak <= budget rather than taken",
+      "detail": "stage A0 declares within_budget false at peak 2.0 <= budget 3.0",
+      "passed": true
+    },
+    {
+      "check": "THE RECEIPT TIER STATES WHAT IT CANNOT SAY, and the heavy tier's cost is DECLARED before it runs: set equality stays a CLAIM until the book is opened, and opening it is expected to cost about 2.0 GB against a declared 4.0 GB cap",
+      "detail": "receipt tier opened no book; the full tier did. Expected peak 2.0 GB, cap 4.0 GB, rule-20 wrapper required for the real book",
+      "passed": true
+    }
+  ],
+  "exit_codes": {
+    "0": "VERIFIED",
+    "1": "FLAGGED",
+    "2": "REFUSED",
+    "3": "PROVENANCE_INCOMPLETE"
+  },
+  "n_checks": 17,
+  "n_failed": 0,
+  "protocol": "P003_DA_BOOK_VERIFIER_V1_FIXTURE_V2",
+  "status": "FIXTURE_PLUS_THE_REAL_RECEIPT_TIER",
+  "supersedes": {
+    "path": "p003_da_book_verify_fixture__20260906T084550Z.json",
+    "rule": "CLAUDE.md rule 13 -- v1 is not edited; the correction supersedes IN BAND and v1 stays as provenance",
+    "sha256": "6f0c7788e46c2a1a81d8e75448fa949628386293987052fac8563b1de5670263",
+    "untouched": true,
+    "version": 1,
+    "what_changed": "R-601: my round-70 probe judged `seam.index` against BE's BUILDER at `seam.commit`, which names DE's FRONT DOOR. The literal is now judged at the receipt's OWN builder commit and nowhere else; a receipt naming none gets PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT by name. v1's REFUSAL of the real 09-03 receipt is RETRACTED: the literal was true of the producing code"
+  },
+  "the_error_named": "a commit id names a specific object. Using it to locate a DIFFERENT object returns something true and tells you nothing -- 6f134a6 is a Q-DE-80 register entry touching only COORDINATION.md, and reading BE's builder there was a coincidence of the tree reported as a defect",
+  "the_real_09_03_v1_receipt": {
+    "IS_A_VERIFICATION": false,
+    "digest_chain_holds": true,
+    "exit_code": 3,
+    "flags": [],
+    "front_door_resolves": true,
+    "n_flags": 0,
+    "reading": "everything checkable holds and nothing is flagged; the seam literal was not judged because the receipt names no builder commit. A GAP, not a defect -- and not a verification either",
+    "seam": {
+      "builder_commit": null,
+      "contradicts_the_code": null,
+      "literal_in_the_receipt": "build_tape_index(splits, tape_path=\u2026)",
+      "seam_commit": "6f134a6",
+      "status": "PROVENANCE_INCOMPLETE_NO_BUILDER_COMMIT",
+      "the_literal_was_NOT_judged": true
+    },
+    "status": "PROVENANCE_INCOMPLETE"
+  },
+  "the_real_book_tier_is_HEAVY": {
+    "declared_cap_gb": 4.0,
+    "expected_peak_gb": 2.0,
+    "the_real_run_is_a_coordinator_GO": true
+  },
+  "verified_at_the_artifact_before_accepting": {
+    "6f134a6_touches": [
+      "COORDINATION.md"
+    ],
+    "builder_call_at_3589a14_and_f301731": "tape = R.build_tape_index(splits, tape_path=inp['tape']['path'])",
+    "seam_commit_names": "DE's front door's commit, not BE's builder",
+    "so_the_literal_was_true_of_the_producing_code": true
+  },
+  "verifier_identity": {
+    "commit_best_effort": "ad026b981b9ebaaa160173a2c59dd2f0ac6949a5",
+    "path": "live/pm_research/da_book_verify.py",
+    "producing_code_is_the_committed_bytes": true,
+    "sha256": "0924bb5e036a1a38b7e13088fc4100f00ebdf99aeb354482de26c9388c7ee4c4",
+    "tree_head": "ad026b981b9ebaaa160173a2c59dd2f0ac6949a5"
+  }
+}
