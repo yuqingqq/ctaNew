@@ -49,7 +49,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 261
+EXPECTED_CHECKS = 268
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -2096,6 +2096,43 @@ def assert_launch_form_at_runtime(day: str, *, fixture: bool,
                 "the process is IN. The lint stays as a lint")}
 
 
+def declared_chain() -> list:
+    """THE CHAIN, DECLARED -- not described in prose somewhere a launcher
+    will not read.
+
+    R-648 (R3'). With `RemainAfterExit=yes` the unit stays LOADED after it
+    exits, which is what makes the triple readable; it therefore also has
+    to be STOPPED, or the name stays taken and the next launch under it
+    refuses. It is a FUNCTION so the battery can drive it without running
+    the rehearsal, which reads `data/` -- a fixture run must open no path
+    under it, and my first version of that check broke exactly that."""
+    return [
+            {"step": 1, "do": "run THE_ONE_COMMAND with one substitution "
+                              "(the unit name)",
+             "then": "read the TRIPLE at once: a held lock is "
+                     f"ExecMainStatus={heavy_run_form()['lock_conflict_rc']}"
+                     " and the payload never started"},
+            {"step": 2, "do": "poll the UNIT (LoadState, ActiveState, "
+                              "ExecMainStatus), never a child PID",
+             "then": "a running unit reports ExecMainStatus=0; that is "
+                     "not a finish"},
+            {"step": 3, "do": "when the unit leaves `active`, COPY the "
+                              "triple and the journal by InvocationID on "
+                              "both fields WHILE LoadState=loaded",
+             "then": "after collection every field is a DEFAULT; a "
+                     "reading taken then is VOID, never success"},
+            {"step": 4, "do": "read the receipt the runner named under "
+                              "the output directory",
+             "then": "the receipt is the record; the unit reading "
+                     "corroborates it"},
+            {"step": 5, "do": "`systemctl --user stop <unit>` -- the "
+                              "owner stops it once the triple is copied",
+             "then": "the name is free for the next launch. "
+                     "RemainAfterExit keeps a finished unit loaded until "
+                     "someone does this"},
+            ]
+
+
 def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
     """THE SMOKE INVOCATION, REHEARSED -- so GO is one verified command.
 
@@ -2259,6 +2296,7 @@ def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
             datetime.timezone.utc).isoformat(),
         "day": dashed, "day_compact": compact, "coin": coin,
         "THE_ONE_COMMAND": cmd,
+        "THE_DECLARED_CHAIN": declared_chain(),
         "book": {"path": str(book), "exists": book.is_file(),
                  "builder_receipt": str(receipt),
                  "builder_receipt_exists": receipt.is_file(),
@@ -3556,12 +3594,18 @@ def journal_read(unit: str, *, n: int = 200) -> dict:
 #: definitions of the conflict code and two bare literals were measured
 #: drifting-capable (a launcher refusing with 76 was published as 75).
 HEAVY_RUN_FORM_REL = ("live/pm_research/declarations/"
-                      "heavy_run_form_v1.json")
+                      "heavy_run_form_v2.json")
 
 
 def heavy_run_form() -> dict:
-    """The declared constants, READ -- never a literal in this file."""
-    p = Path(__file__).resolve().parents[2] / HEAVY_RUN_FORM_REL
+    """The declared constants, READ -- never a literal in this file.
+
+    R-648 (R3'): v2 supersedes v1, and the SUPERSESSION PAIR is walked
+    here rather than trusted -- {path, sha256}, both required, the digest
+    recomputed from the file the link names. A declaration that claims to
+    supersede a file nobody checked is the shape R-608 ruled on."""
+    root = Path(__file__).resolve().parents[2]
+    p = root / HEAVY_RUN_FORM_REL
     try:
         d = json.loads(p.read_text())
     except (OSError, ValueError) as exc:
@@ -3570,11 +3614,33 @@ def heavy_run_form() -> dict:
             f"{p} ({exc}). The launch form's constants are declared ONCE; "
             f"a builder that falls back to a literal is the second "
             f"definition the declaration exists to prevent.")
-    for k in ("lock_path", "lock_conflict_rc", "slice"):
+    for k in ("lock_path", "lock_conflict_rc", "slice",
+              "remain_after_exit"):
         if k not in d:
             raise RunnerRefused(
                 f"REFUSED: the heavy-run form declaration carries no "
                 f"{k!r}.")
+    sup = d.get("supersedes")
+    if not isinstance(sup, dict) or not sup.get("path") \
+            or not sup.get("sha256"):
+        raise RunnerRefused(
+            "REFUSED: the heavy-run form declaration carries no "
+            "supersession PAIR {path, sha256}. v2 replaces v1 and the "
+            "link is what says so.")
+    prev = root / sup["path"]
+    if not prev.is_file():
+        raise RunnerRefused(
+            f"REFUSED: the declaration supersedes {sup['path']}, which is "
+            f"absent -- a claim about a file nobody can check.")
+    got = hashlib.sha256(prev.read_bytes()).hexdigest()
+    if got != sup["sha256"]:
+        raise RunnerRefused(
+            f"REFUSED: the declaration supersedes {sup['path']} at "
+            f"{sup['sha256'][:16]} and that file hashes to "
+            f"{got[:16]}.")
+    d["_supersession_walked"] = {"path": sup["path"],
+                                 "declared_sha256": sup["sha256"],
+                                 "recomputed_sha256": got, "agrees": True}
     return d
 
 
@@ -3634,8 +3700,15 @@ def the_one_command(day: str, book, outdir, *, unit: str = "<deNNsmoke>",
     # `-E <rc>` FROM THE DECLARATION, never a literal here (R-646 R2).
     _form = heavy_run_form()
     _rc = _form["lock_conflict_rc"]
+    # `RemainAfterExit=yes` FROM THE DECLARATION (R-648 R3'). Without it a
+    # transient unit that exits 0 is COLLECTED at exit: LoadState goes
+    # not-found and `systemctl show` then returns DEFAULTS
+    # (inactive/dead/0/success). A reading taken then is a DEFAULT wearing
+    # the shape of a success.
+    _rae = ("-p RemainAfterExit=yes " if _form.get("remain_after_exit")
+            else "")
     return (f"systemd-run --user --unit={unit} --slice={RESEARCH_SLICE} "
-            f"-p MemoryMax=8G -p CPUQuota=100% "
+            f"-p MemoryMax=8G -p CPUQuota=100% {_rae}"
             f"--setenv=PM_DATA_ROOT={DR.resolve()['repo_root']} "
             f"--working-directory={wd} "
             f"-- flock -n -E {_rc} {HEAVY_RUN_LOCK} {sys.executable} "
@@ -3657,6 +3730,13 @@ def assert_launch_form(cmd: str) -> dict:
     if "--unit=" not in cmd:
         problems.append("names no `--unit=`, so the run could only be "
                         "polled by a child PID")
+    if heavy_run_form().get("remain_after_exit") \
+            and "-p RemainAfterExit=yes" not in cmd:
+        problems.append(
+            "carries no `-p RemainAfterExit=yes`: a transient unit that "
+            "exits 0 is COLLECTED at exit, and `systemctl show` then "
+            "returns DEFAULTS -- the outcome would be unreadable "
+            "(R-648 R3')")
     if f"--slice={RESEARCH_SLICE}" not in cmd:
         problems.append(f"is not in {RESEARCH_SLICE}")
     if "--working-directory=" not in cmd:
@@ -3692,17 +3772,29 @@ def assert_launch_form(cmd: str) -> dict:
 
 
 def unit_outcome(unit: str) -> dict:
-    """A UNIT'S OUTCOME IS THE PAIR (ActiveState, ExecMainStatus) -- R3.
+    """A UNIT'S OUTCOME IS THE TRIPLE (LoadState, ActiveState,
+    ExecMainStatus), READ WHILE IT IS STILL LOADED -- R-648 (R3').
 
-    A RUNNING unit reports `ExecMainStatus=0` (measured on
-    de95smoke.service at 13:28:51Z while it was 53 minutes into an
-    85-minute day). So the status alone answers neither "finished?" nor
-    "refused?", and a caller that reads it alone reads a running run as a
-    clean success."""
+    Two ways this reading lies, both measured:
+
+      * a RUNNING unit reports `ExecMainStatus=0`, so the status alone
+        reads a running run as a clean success (R3, measured on
+        de95smoke.service 53 minutes into an 85-minute day);
+      * a transient unit that exits 0 is COLLECTED at exit -- LoadState
+        goes `not-found` and `systemctl show` then returns DEFAULTS
+        (`inactive`/`dead`/`0`/`success`). That reading is a DEFAULT
+        wearing the shape of a success, and it is reported here as VOID.
+
+    And a third, found by my own poll script this round: `systemctl show
+    -p A -p B --value` returns the properties in SYSTEMD'S order, not the
+    flag order (measured: Result, ExecMainStatus, LoadState, ActiveState,
+    SubState). A positional read of `--value` mislabels every field -- it
+    declared a live run VOID. Every property here is read in its own call
+    and NAMED."""
     import subprocess as _sp
-    vals = {}
-    for k in ("ActiveState", "ExecMainStatus", "Result", "InvocationID",
-              "MemoryPeak"):
+    vals, read_at = {}, datetime.datetime.now(datetime.timezone.utc)
+    for k in ("LoadState", "ActiveState", "SubState", "ExecMainStatus",
+              "Result", "InvocationID", "MemoryPeak"):
         try:
             r = _sp.run(["systemctl", "--user", "show", unit, "-p", k,
                          "--value"], capture_output=True, text=True,
@@ -3715,20 +3807,54 @@ def unit_outcome(unit: str) -> dict:
         rc = heavy_run_form()["lock_conflict_rc"]
     except RunnerRefused:
         pass
+    load = vals.get("LoadState")
     active = vals.get("ActiveState")
     status = vals.get("ExecMainStatus")
-    return {
+    out = {
         "unit": unit, **vals,
-        "the_pair": [active, status],
-        "still_running": active == "active",
-        "finished": active in ("inactive", "failed"),
-        "refused_on_the_lock": (status == str(rc)) if rc is not None else None,
-        "why_the_pair": (
-            "a RUNNING unit reports ExecMainStatus=0; the status alone "
-            "answers neither 'finished?' nor 'refused?' (R-646 R3, "
-            "measured on a live run)"),
+        "read_at_utc": read_at.isoformat(),
+        "read_property_by_property": (
+            "each in its own `systemctl show -p K --value` call. A single "
+            "multi-property `--value` read returns systemd's own order, "
+            "not the flag order, and a positional parse of it mislabels "
+            "every field -- it declared a live run VOID"),
+        "the_triple": [load, active, status],
         "lock_conflict_rc": rc,
     }
+    if load != "loaded":
+        # VOID, NEVER SUCCESS. After collection every field below is a
+        # DEFAULT: inactive / dead / 0 / success.
+        out.update({
+            "status": "VOID",
+            "outcome_readable": False,
+            "why_void": (
+                f"LoadState is {load!r}, not `loaded`. A transient unit "
+                f"that exits 0 is COLLECTED at exit and `systemctl show` "
+                f"then returns DEFAULTS (inactive/dead/0/success). "
+                f"Whatever ExecMainStatus says here is a default, not an "
+                f"outcome, and reporting it as success would report a "
+                f"result nobody measured (R-648 R3')"),
+            "what_to_do": (
+                "launch with `-p RemainAfterExit=yes` so the unit stays "
+                "loaded until it is stopped, and read the triple while it "
+                "is; failing that, the RECEIPT is the record and the unit "
+                "reading is void"),
+        })
+        return out
+    out.update({
+        "status": "READABLE",
+        "outcome_readable": True,
+        "still_running": active == "active",
+        "finished": active in ("inactive", "failed"),
+        "refused_on_the_lock": (status == str(rc)) if rc is not None
+                               else None,
+        "why_the_triple": (
+            "LoadState says whether the reading MEANS anything, "
+            "ActiveState whether it is finished, and ExecMainStatus how "
+            "it ended. Any two of the three answer a question the third "
+            "was asked"),
+    })
+    return out
 
 
 def unit_identity() -> dict:
@@ -5321,6 +5447,69 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- R-648 (R3'): THE TRIPLE, AND WHAT A COLLECTED UNIT REPORTS ---
+    # A transient unit that exits 0 is COLLECTED at exit: LoadState goes
+    # not-found and `systemctl show` then returns DEFAULTS --
+    # inactive/dead/0/success. Driven on scratch units with a scratch
+    # lock, and the shape of the trap is the first row:
+    #   exit 0, no RemainAfterExit -> not-found / inactive / 0 / success
+    #   exit 0, WITH               -> loaded / active(exited) / 0
+    #   exit 3, WITH               -> loaded / failed / 3
+    #   held lock, WITH            -> loaded / failed / 75
+    _form98 = heavy_run_form()
+    ok(_form98["version"] == 2
+       and _form98["remain_after_exit"] is True
+       and _form98["_supersession_walked"]["agrees"] is True,
+       f"R-648: the builder reads declaration v{_form98['version']} and "
+       f"WALKS its supersession pair -- v1 at "
+       f"{_form98['_supersession_walked']['declared_sha256'][:16]} "
+       f"recomputed from the file the link names. A declaration that "
+       f"claims to supersede a file nobody checked is R-608's shape")
+    _cmd98 = the_one_command("2026-09-03", "/BOOK", "/OUT")
+    ok("-p RemainAfterExit=yes" in _cmd98
+       and assert_launch_form(_cmd98)["ok"] is True,
+       "and THE_ONE_COMMAND carries `-p RemainAfterExit=yes`, read from "
+       "the declaration -- without it a unit that exits 0 is collected "
+       "and its outcome is unreadable")
+    refuses(lambda: assert_launch_form(
+                _cmd98.replace("-p RemainAfterExit=yes ", "")),
+            "R-648 KNOWN-BAD: a command without `RemainAfterExit` is "
+            "refused by the lint -- the unit would vanish at exit and the "
+            "reading afterwards would be a DEFAULT wearing the shape of a "
+            "success", "COLLECTED")
+    _void98 = unit_outcome("de98-a-unit-that-cannot-exist.service")
+    ok(_void98["status"] == "VOID"
+       and _void98["outcome_readable"] is False
+       and _void98["the_triple"][0] == "not-found"
+       and _void98["ExecMainStatus"] == "0"
+       and _void98["Result"] == "success",
+       f"R-648 R3' KNOWN-BAD, AND THIS IS THE WHOLE POINT: a unit that "
+       f"does not exist reports {_void98['the_triple']} with "
+       f"Result={_void98['Result']!r} -- `inactive`, `0`, `success`, "
+       f"every one of them a DEFAULT. Read without LoadState that is "
+       f"indistinguishable from a clean finish, and it is reported here "
+       f"as VOID")
+    ok("DEFAULTS" in _void98["why_void"]
+       and "RemainAfterExit" in _void98["what_to_do"]
+       and _void98["lock_conflict_rc"] == _form98["lock_conflict_rc"],
+       "and the VOID reading says WHY it is void and what would have made "
+       "it readable, rather than leaving a caller to wonder why a "
+       "successful-looking triple was refused")
+    ok(len(_void98["the_triple"]) == 3
+       and "systemd's own order" in _void98["read_property_by_property"],
+       "and every property is read in ITS OWN call and NAMED: "
+       "`systemctl show -p A -p B --value` returns systemd's order, not "
+       "the flag order (measured: Result, ExecMainStatus, LoadState, "
+       "ActiveState, SubState), so a positional parse mislabels every "
+       "field -- mine declared a LIVE run VOID before it was fixed")
+    _chain98 = declared_chain()
+    ok(len(_chain98) == 5
+       and _chain98[-1]["do"].startswith("`systemctl --user stop")
+       and any("VOID" in st["then"] for st in _chain98),
+       f"and the chain is a DECLARED FIELD of the rehearsal "
+       f"({len(_chain98)} steps ending in the STOP that frees the name), "
+       f"not prose in a runbook a launcher may not read. "
+       f"RemainAfterExit is what makes step 5 necessary")
     # ---- R-646 (R2): THE LOCK-CONFLICT CODE, DECLARED ONCE ------------
     # Measured before the ruling: under the ruled form a HELD LOCK and a
     # PAYLOAD CRASH were both ExecMainStatus=1, so at GO #5 a refusal
@@ -5357,11 +5546,11 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
             "the first two are both 1", "-E")
     # R3: the outcome is the PAIR.
     _uo97 = unit_outcome("de97-a-unit-that-cannot-exist.service")
-    ok(set(_uo97) >= {"the_pair", "still_running", "finished",
-                      "refused_on_the_lock"}
+    ok(set(_uo97) >= {"the_triple", "status", "outcome_readable"}
        and _uo97["lock_conflict_rc"] == _form97["lock_conflict_rc"],
-       "R-646 R3: a unit's outcome is read as the PAIR (ActiveState, "
-       "ExecMainStatus) with the conflict code beside it. A RUNNING unit "
+       "R-646 R3, as R-648 completes it: a unit's outcome is the TRIPLE "
+       "(LoadState, ActiveState, ExecMainStatus) with the conflict code "
+       "beside it. A RUNNING unit "
        "reports ExecMainStatus=0 -- measured on de95smoke.service 53 "
        "minutes into an 85-minute day -- so the status alone reads a "
        "running run as a clean success")
