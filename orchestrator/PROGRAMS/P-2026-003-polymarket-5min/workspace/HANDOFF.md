@@ -1,8 +1,127 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T05:37:30Z — **The boundary control did not miss the inversion.
-It caught it, and the reading discarded the catch — and the reviewer found that
-itself.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T05:51:29Z — **The 09-03 book is blocked on an input nobody
+scoped: September was never materialised into the feature fragment. The 09-09 date
+is now a conditional.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 126
+
+### 1. The block is a missing input, not a memory failure — and the receipt says so
+
+The day path works. 247 btc slugs selected through `de_admissible_windows.supply`
+because `select_v2_era` **cannot reach September** — measured: the declared
+population intervals end `2026-08-26T00:00`. Then:
+
+| step | result |
+|---|---|
+| reference | **BUILT** — 247 windows, 313,114 generations, 531.1 s, 2.008 GB *(first full day, 10.06× the consumed hour)* |
+| tape index | **BUILT** — 387.4 s, 1,764,206 rows, 5.971 GB cumulative |
+| fragment slice | **REFUSED** — "the slice is EMPTY … An empty slice measures nothing and would extrapolate from zero" |
+
+**The refusal is DE's guard, and BE names it as such**: *"whose guard: DE's, not
+mine — and it did exactly the right thing."* *One seat's guard stopping another
+seat's build from emitting a hollow artifact is worth recording as a success, not
+only as a block.* And the receipt bounds its own reading — **a missing input, not
+a builder failure and not a memory failure** — which matters because the same run
+reproduced the memory pressure that killed an earlier one.
+
+### 2. I verified the negative existence claim myself, and my check is broader
+
+A streaming scan of **all 1,241,115,096 bytes** of
+`harmful_exposure_rows_v3_eraB.json` for `2026-09` returns **zero**, in 1.2 s.
+
+BE checked the *247 wanted slugs*. **The fragment contains no September at all** —
+which is what makes "the consumed era only" a description rather than a
+coincidence of slug naming. *Surface and as-of stated; I do not extend it to the
+other two fragments, which I did not scan.*
+
+### 3. The finding against the entry I was sent to sweep
+
+R-573(C): *"The design needs a partitioned or streaming assembly before any book
+exists."*
+
+**It exists and it is wired.** `def assemble_streaming` is defined in
+`de_phase4_diag_runner.py` and **called by `be_daybook_build.py` — the very
+builder that just ran** — at `chunk_windows=6`, with a driven check on the call
+shape. The receipt says so too: *"The chunked path … is what this builder calls."*
+
+> **So the open question is not whether a streaming assembly exists. It is
+> whether the one that exists FITS under 8 GB at 313,114 generations** — much
+> narrower, and the question REV 36 should actually be asked.
+
+**Third instance in three rounds of one shape:** the shell trap already solved in
+a code comment (117); the seed convention already a declaration field (125); the
+streaming assembly already built and called (now). **The register asks for what
+the repository already carries, and each time the cost is a dispatch aimed at the
+wrong question.**
+
+### 4. The cost gap now has a number — and it is a floor
+
+R-551's estimate is confirmed as **null + replay only** (1.939 + 0.313 h/day).
+Adding the two newly *measured* components (reference + index = 0.2551 h/day):
+
+```
+G = 5:  11.26  ->  12.54 CPU-h
+G = 6:  13.51  ->  15.04 CPU-h      +11.3% from those two alone
+```
+
+**Arithmetic over measured parts, labelled as such — and a FLOOR**, because the
+feature pass is unmeasured and the assembly may not fit at all. Fragment scale,
+same status: **0.651 GB per btc day, 3.91 GB over six days** (assumes equal
+windows).
+
+### 5. The top-up guard, and why it matters now
+
+`PINNED` holds **two** paths, and `guard_output` raises on either with a positive
+control that drives both — **proven to fire, not merely present.** Its stated
+hazard is the one the critical path has just arrived at: a September pass writing
+to the pinned name *"would replace the frozen population's data with a different
+population under the same name — silently, with nothing raising."*
+
+### 6. Race-read v2 — the conservative number is in the resolved field
+
+`best_possible_adjusted_p = 0.25`, not 0.0625, with the optimistic G = 5 reading
+beside it under its own name and a field stating which is which: *"A reader
+resolving one number gets the worse one."* All five `SEALED_scores` pinned by
+sha256 with a post-read recompute that **VOIDS the read on mismatch** — *"a read
+that moved the bytes it read is not a read, it is an edit."* Gate-1 separation
+**computed** over 7 surfaces, 0 matches. **The opening waits on REV 36.**
+
+### 7. The 09-09 date is a conditional, not a schedule
+
+It holds **only if a day fits the cap**, which is unmeasured. BE 49 measures one
+day and **refuses rather than raising the cap or shrinking the population.**
+*Flagged because a date that has appeared in four entries as a plain verdict will
+be read as one, and its condition lives only in prose.*
+
+### 8. I trimmed my own window — and the guard I owed failed silently first
+
+**23 generations against a ruled 3**, drifted eighteen rounds. Trimmed by
+**moving**: 20 generations, 1,043 lines, verbatim into
+`STATUS_UPDATED_ARCHIVE.md` as Batch 108, under a containment check driven in all
+three directions (present before, present in the archive, **absent after**).
+
+The guard now lives in `mem_flag_provenance.py` and **fires on the real files**:
+22 generations / over by 19 / **findings 1, exit 1** on the pre-trim file; 3 /
+findings 0 / exit 0 on the trimmed one.
+
+> **But my first version returned a silent zero and its selftest passed.** It
+> matched a line-start pattern against the *parsed* field — and `updated:` is a
+> `>-` **folded** scalar, so PyYAML returns one long line and nothing is at a
+> line start. **It counted 0 on a file holding 23 generations.**
+
+**The selftest passed because I authored its input** with newlines and indents —
+the recurring probe failure the register names against me by count, happening
+again *inside the guard built to close a different unguarded bar*. **It was caught
+only because I ran it on the pre-trim file as a positive control instead of
+trusting the green selftest.** Fixed to read raw text; the selftest now requires a
+**nonzero count on the live file** — the exact check the broken version failed.
+25 checks pass.
+
+**Counts, measured before this was written:** flags 647 → 655, flag_provenance
+192 → 200, tasks 19; 93 CHECKED, 107 RELAYED, **455 UNMARKED — unchanged for the
+second round running.** ORPHAN audit 0 findings, exit 0, and the window reports
+**3 of a ruled 3** in that same run.
 
 ## READ FIRST — round 125
 

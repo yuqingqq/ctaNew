@@ -7937,3 +7937,1066 @@ post-commit `STATUS.yml`, compared alnum-normalised.
   LEAVES EXACTLY ONE CURRENT-TREE IDENTITY FILE DIFFERENT FROM EACH SUCCESSFUL
   SMOKE RECEIPT; THE RECEIPTS RETAIN THEIR OWN HASHES AND WERE NOT RERUN.
 ```
+
+## Batch 108 — archived 2026-09-06T05:51:29Z (20 entries, R-542(E) rolling-window restoration)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 126 entered the field.
+**The window had reached 23 generations against its ruled size of three** — it
+was restored once at Batch 107 and then drifted for **eighteen consecutive
+rounds**, because every round prepended a generation and moved none, and no
+instrument in this programme audits the SHAPE of the file whose flags it
+audits. MEM measured and flagged that at round 125 and deferred the move as a
+batch rather than landing ~1,100 shifted lines inside a sweep commit; this is
+that batch.
+
+**Trim by MOVING, never by interpreting** — boundaries taken exactly at the
+generation markers as they stand, no splitting, no completion, no reordering.
+Verified by an alnum-normalised containment check in all three directions:
+present in the pre-trim `STATUS.yml`, present here, absent from the post-trim
+`STATUS.yml`.
+
+```
+  2026-09-06T05:18:48Z (MEM ROUND 123 -- R-568 AND THE E1-A CONTROL SWEPT.
+  STATE ONLY.
+  (1) E2-A IS **APPROVED TO RUN** ON ONE CONDITION, AND THE CONDITION IS THE
+  SHARPEST FALSIFIER CRITIQUE I HAVE SWEPT: **the closed-form queue models are
+  PINNED BY KNOWN-BADS AT THE BOUNDARIES AND BY NOTHING IN THE INTERIOR.** A
+  boundary known-bad proves a model is not constant and not inverted; it says
+  nothing about the curve between the endpoints. **A REIMPLEMENTATION CAN AGREE
+  AT BOTH ENDS AND BE WRONG EVERYWHERE ELSE.** v3 adds an interior control per
+  model whose expected fill is **DERIVABLE BY HAND FROM THE PUBLISHED
+  DEFINITION** -- which is what makes it a control rather than a second
+  implementation of the same mistake.
+  (2) AND THREE CLOSURES RIDE WITH IT, EACH DRIVEN RATHER THAN ASSERTED: DA 59's
+  resolver **REPRODUCES AT THE REVIEWER'S OWN SCRATCH ROOT** (2 of 19 days,
+  every directory present -> DataRootRefused at run():1167 BEFORE ANY DAY IS
+  READ); all three E2.0 findings are now DRIVEN CHECKS, including **the interval
+  decision-bearing WITH A POSITIVE CONTROL THAT ADMITS**; and the supersession
+  sidecar is independently confirmed field by field, with the convention to be
+  WRITTEN DOWN in P-002's HANDOFF -- NOT MINE TO WRITE.
+  (3) THE E1-A INHERITED CONTROL **PASSES**, CHECKED BY ME AT THE RECEIPT:
+  abs_error_bps 1.0628e-05 (touch) and 2.7032e-05 (sweep) against a declared
+  0.05 bps, all three checks within tolerance. E1-A's published T_p = 600
+  numbers reproduce on E1-A's OWN aggTrades before any real-book number.
+  (4) **AND IT FOUND A DEFECT IN E1's OWN RECORD, WHICH IS WHAT A REPRODUCTION
+  CONTROL IS FOR:** E1_RESULTS claims "tick_size() FIXED post-audit; corrected
+  aggregate 3.36/6.28", but **E1's OWN COMMITTED tick_size('FILUSDT'), EXECUTED
+  DIRECTLY RATHER THAN TRANSCRIBED, RETURNS 1e-6 -- THE PRE-FIX VALUE.** The
+  corrections queue records a fix the committed code does not carry:
+  NOT_REPRODUCIBLE_FROM_THE_COMMITTED_CODE. And the receipt BOUNDS ITS OWN
+  FINDING -- "it does not impugn E1-A's operative number, which reproduces here
+  EXACTLY" -- routed as A RECORD DEFECT, NOT A BLOCKER. **A finding filed with
+  its own scope limit attached is the difference between a correction and a
+  scare.**
+  (5) BE 47 CLOSED WITHOUT THE BOOK. It polled at 04:39 for an approval whose
+  commit 4daaea9 I timestamped at **04:42:46Z** -- a **3 m 46 s** miss, not the
+  "~04:41" the dispatch rounds to; I record the clock value because a time in
+  prose is the thing this programme has corrected four times.
+  (6) AND THE PART THAT IS NOT A MISS: **BE CORRECTLY REFUSED TO MATCH THE E2.0
+  "APPROVED" BY WORD.** There was an APPROVED in the tree belonging to a
+  different object in a different programme. **A poll matching on a VERDICT
+  STRING rather than on the ARTIFACT IT QUALIFIES would have fired on it.** BE 48
+  now builds the 09-03 book with the approval **READ BY PATH** -- the same lesson
+  as my round-120 symbols-not-line-numbers rule, in another medium.
+  (7) THE WAITER STORY RESOLVES BY REPLACEMENT, NOT REPAIR. **FIVE KILLS; the
+  shell waiter AS A FORM is what the harness stops, regardless of duration or
+  condition** -- four rounds of re-arming produced the diagnosis no single kill
+  could. **THE HARNESS-NATIVE MONITOR SURVIVED AND WOKE THE COORDINATOR AT
+  05:18:20Z.** Same shape as the data root: neither symlink worked because both
+  fought git, and the answer left the filesystem; neither waiter survived because
+  both fought the harness, and the answer became harness-native. **THE TRIGGER
+  WAS NEVER VISIBLE FROM INSIDE** -- the mechanism was replaced without the cause
+  being understood, which is sound engineering and NOT an explanation.
+  PRIOR CHECKPOINT:
+  2026-09-06T05:11:53Z (MEM ROUND 122 -- R-567 SWEPT. STATE ONLY.
+  (1) E2.0 IS **SETTLED**: "I could not find a reading that rescues it." And it
+  is a settlement by RECOMPUTATION -- delta_rs re-derived from the per-day cells
+  (-0.006570 against the receipt's -0.006570), the verdict IDENTICAL UNDER EITHER
+  CI READING, and **LEAVE-ONE-DAY-OUT ON ALL 16 DAYS WITH ci_hi RECOMPUTED EACH
+  TIME: THE KILL SURVIVES EVERY DROP.** tau* was PRE-DECLARED before any rs was
+  seen. The earlier receipt is retired with its 49 differing leaves COUNTED AND
+  LOCATED, none on what the verdict rests on.
+  (2) AND R-567(A) REPEATS `867f647` FOR REV 33 -- **THE SHA I CORRECTED ONE
+  ENTRY EARLIER.** `ed14c87` occurs in the register EXACTLY ONCE, IN MY OWN
+  Q-MEM-109 ROW. R-566 cannot be edited and I do not ask for that; what is new is
+  that A FRESH ENTRY REPEATED IT, so the address is being carried forward from
+  entry to entry rather than read from the commit that holds the file. **FOURTH
+  INSTANCE IN TEN ROUNDS OF "the thing that would have prevented it was already
+  in the repository" -- and this time I put it there on purpose, for this.** I
+  route no fix: what a coordinator reads before writing an entry is not my
+  surface.
+  (3) Q-DA-279 SHARPENS MY OWN ROUND-116/117 ENTRIES AGAINST ME. **`git checkout
+  --detach` REPLACES A WORKTREE'S data SYMLINK**, and the R-557 refresh command
+  BEGINS WITH THAT COMMAND -- **so the refresh UNDID THE R-553 FIX EVERY TIME IT
+  RAN.** I called it "a fix that decays" and "a chore with an invisible
+  deadline". **BOTH UNDERSTATED IT: IT WAS A REMEDY WHOSE FIRST ACT REVERSED THE
+  REPAIR.** And I had the evidence -- at round 117 I recorded DE landing by
+  CHERRY-PICK because it could not run that command, and read it as the
+  conflict's COST rather than asking what the command DID when it succeeded.
+  (4) A BACKTICK IN A `-m` STRING RAN `git checkout --detach` IN THE SHARED TREE,
+  the commit landed detached, **AND THE PUSH SILENTLY NO-OP'D** -- the fourth
+  member of the "operation that does nothing and reports success" family. **MY
+  OWN EXPOSURE, MEASURED: 5 of my 119 commit messages contain a backtick; ZERO
+  contain the other expanders.** All five messages are intact, and **I CANNOT
+  ESTABLISH FROM THE LOG WHY, SO I DO NOT CLAIM I WAS SAFE BY DESIGN** -- five
+  carried the hazardous character, they happen to have survived, and the rule
+  removes the question. **COMMIT MESSAGES BY HEREDOC OR -F FROM THIS COMMIT ON;
+  this one uses -F.**
+  (5) DA 59 VERIFIED: the earlier E2.0 receipt superseded by a sidecar whose
+  same-result claim is COMPUTED FIELD BY FIELD; the deploy record STATES ITS
+  BOUNDARY and that deployed_commit is provenance; the P-002 surface resolves
+  through the IMPORTED de_data_root, **and splitting the roots EXPOSED A LATENT
+  relative_to(ROOT) BUG** -- fixed and pinned. **The partial-root falsifier was
+  DRIVEN THROUGH run(): a real tape holding 2 of 19 days with every directory
+  present PRINTS ITS CENSUS AND THEN REFUSES BEFORE ANY DAY IS READ.** That is
+  the reviewer's gap closed at the mechanism rather than by inspection.
+  (6) E2-A IS DECLARED (21 checks both directions, no data) WITH TWO ESCALATIONS
+  RULED -- **not two defaults**. No dependency is installed and the closed forms
+  are attacked by the reviewer before any run; the size-aware arm REFUSES and the
+  min-size arm runs **LABELLED NOT THE GATE**, which is only safe while the label
+  travels with every number. **AND THE NOTIONAL'S SOURCE IS USER-PENDING** -- it
+  exists only in P-2026-001's paper-trading exports, "if anywhere", and that "if
+  anywhere" is the honest part.
+  PRIOR CHECKPOINT:
+  2026-09-06T05:06:00Z (MEM ROUND 121 -- R-566 AND THE E2.0 RESULT REVIEW SWEPT.
+  STATE ONLY, AND THREE OF THE FOUR ITEMS ARE CITATION OR TIMING CHECKS.
+  (1) MY ROUND-120 "PENDING-REVIEW, NOT SETTLED" WAS ALREADY SUPERSEDED WHEN I
+  COMMITTED IT. The reviewer filed **SETTLED** at ed14c87, 04:56:42Z; my commit
+  landed 04:59:02Z. THE HONEST ACCOUNT: my pull returned "up to date" at
+  04:54:04Z, BEFORE the review existed, so the flag was TRUE WHEN WRITTEN -- and
+  **MY PUSH REBASED OVER THE FILING THAT SUPERSEDED IT, IN THE SAME OPERATION
+  THAT LANDED IT.** A marking true when written and false when committed, THREE
+  MINUTES APART, in the round whose whole subject was the currency axis.
+  (2) AND IT SHOWS THE LIMIT OF THE FIX I ADOPTED LAST ROUND: "every new flag
+  carries a provenance entry when written" WOULD NOT HAVE CAUGHT THIS -- the
+  entry would have been correct too. **THE GAP IS BETWEEN WRITING AND
+  COMMITTING, AND NOTHING IN MY PROCEDURE RE-READS THE WORLD IN THAT WINDOW.** I
+  have re-read the TIP before every commit for twenty rounds and never re-read
+  the CLAIMS.
+  (3) R-566(C) CITES `867f647` FOR REV 33's REVIEW. CHECKED: 867f647 contains
+  EXACTLY ONE FILE, p002_e2_a_declaration_v1.json -- it is the E2-A DECLARATION
+  commit. **THE REVIEW IS AT ed14c87.** The entry's substance is unaffected, so
+  it is a citation defect and not a content one -- and the sha RESOLVES, which
+  makes it worse than a dangling one, because a reader who follows it lands
+  somewhere plausible.
+  (4) R-566(C) ROUTES THE P-002 RESOLVER GAP TO DA 59 "before E2-A opens any
+  tape". **DA 59 HAD ALREADY CLOSED IT** -- 1872663 at 05:00:42Z, an ANCESTOR of
+  R-566 at 05:05:52Z, five minutes earlier. Confirmed at the code, not the commit
+  message: `ROOT = HERE.parents[1]` is gone; `_resolve_root()` at :61,
+  `ROOT = _resolve_root()` at :74, `de_data_root` imported at :1105 with
+  require_canonical at :1098. **STATE RECORDS CLOSED, NOT ROUTED.**
+  (5) AND THE SHAPE OF THAT FIX IS THE ROUND-119 LESSON APPLIED BY SOMEONE WHO
+  DID NOT HAVE TO LEARN IT: `CODE_ROOT = HERE.parents[1]` SURVIVES UNDER ITS OWN
+  NAME BESIDE `ROOT = _resolve_root()`. **THE TWO ROOTS THAT WERE ONE NAME ARE
+  NOW TWO NAMES.** I spent two rounds getting the direction of a name/semantics
+  mismatch wrong; DA 59 simply did not create one.
+  (6) DE 76 LOCKED THE FIXTURE DOOR WITH ITS OWN PROOF: `data_free_proof`
+  PRODUCED IN THE SAME PROCESS and REQUIRED BY require_canonical(fixture=True),
+  with design v7 recording R5 as **"a code path, not a promise"**. A fixture flag
+  settable without producing the proof is a promise; this is a predicate. DE also
+  caught a silent `replace` no-op -- **the third seat to hit an operation that
+  does nothing and reports success.**
+  (7) THE CURRENCY DISPOSITION IS ADOPTED VERBATIM AT R-566(B): UNCITED not
+  "not yet audited"; NO BULK RETRO-CITATION; attrition when next touched; every
+  new flag cites. **455 of 628 now read UNCITED** in the coordinator's own words.
+  (8) THE WAITER IS RE-ARMED AT THE USER'S INSTRUCTION, with the kills analysed
+  as far as they can be seen: **three stops by the harness, 30-80 s after arming,
+  TRIGGER NOT VISIBLE FROM INSIDE**, and re-arm on every future kill. That is not
+  a fix -- it is a decision to pay the chore deliberately, and stating the window
+  is what makes the next kill recognisable rather than surprising.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:54:04Z (MEM ROUND 120 -- R-564, R-565 AND TWO REVIEWER FILINGS
+  SWEPT. STATE ONLY, AND THE ONE THAT MATTERS LANDS ON MY OWN FILES.
+  (1) REV 32's CURRENCY AUDIT MEASURED THE AXIS I NAMED AT ROUND 100 AND NEVER
+  BUILT. 40 flags at seed 20260906: 36 CURRENT, 3 STALE, 0 UNSUPPORTED, 1
+  unsettled -- **AND 27 OF 40 (67.5%) CARRY NO CITATION OF ANY KIND**, their
+  whole value a verdict string. THE REVIEWER'S SENTENCE, ADOPTED VERBATIM: "They
+  are CURRENT only in the sense that nothing contradicts them, because there is
+  nothing to check them against." AND MY OWN CENSUS AGREES BY A DIFFERENT
+  METHOD: 455 UNMARKED of 624 = 72.9% against the sample's 67.5%.
+  (2) I VERIFIED ALL THREE STALE MYSELF BEFORE SUPERSEDING THEM.
+  da_race_withdrawals.py:59 now reads EXPECTED_CHECKS = 66 against the flag's 52;
+  G IS 5 against "G REMAINS 2 OF 5"; and `def evaluate_predicates` is at
+  de_phase4_diag_runner.py:**1085** with 770-772 an unrelated DE37-C2 comment.
+  All three superseded in band with the text kept.
+  (3) AND THE ASYMMETRY IS THE FINDING, NOT THE COUNT: **THE FLAGS THAT CARRY THE
+  MOST EVIDENCE ARE THE ONES THAT GO STALE, AND THE FLAGS THAT CARRY NONE
+  CANNOT.** All three STALE were VERIFIED BY EXECUTION WHEN WRITTEN and rotted on
+  LINE DRIFT. **CITING WELL IS WHAT EXPOSES YOU TO BEING FOUND WRONG.**
+  (4) TWO RULES ADOPTED AT THE HEAD OF THE FLAGS BLOCK. **EVERY NEW FLAG CARRIES
+  A flag_provenance ENTRY AT THE MOMENT IT IS WRITTEN -- CHECKED with artifact and
+  as-of, or RELAYED with a source. NO FLAG WITHOUT ONE.** And **CITATIONS NAME
+  SYMBOLS AND DIGESTS, NEVER LINE NUMBERS ALONE**, because all three that rotted
+  rotted on line drift.
+  (5) ON THE 455 THAT ALREADY EXIST, PLAINLY: **I WILL NOT RETRO-CITE THEM AND I
+  WILL NOT CALL THEM A BACKLOG.** The reviewer is right that it is "not a backlog
+  so much as a description of what most flags are". THE DISPOSITION IS ATTRITION
+  -- each cited, superseded or closed WHEN NEXT TOUCHED, never in bulk -- because
+  BULK RETRO-CITATION WOULD MANUFACTURE PROVENANCE AFTER THE FACT, which is the
+  defect the rule exists to prevent. A flag with no entry is **UNCITED**, not
+  "not yet audited".
+  (6) MY PM_DATA_ROOT COLLISION IS **DISSOLVED** -- all three sites mean the repo
+  root and my finding rested on the wrong dispatched value, which is what I said
+  at round 119 and R-564 states independently. **AND MY SECOND FINDING IS REAL
+  AND LARGER THAN I MEASURED: ELEVEN BE MODULES, against the four be_* I counted.
+  MY SIX WAS A FLOOR AND I SAID SO.** In BE 47's sweep.
+  (7) P-2026-002's E2.0 IS RUN AND READ -- **MARKED PENDING-REVIEW, NOT SETTLED**
+  (REV 33 has it). ADA SETTLED DEAD: notional rs -0.5552 bps, CI95 [-1.8612,
+  +0.1202] day-clustered at G = 16, all four gates fail. AND E1's PROXY MID IS
+  VINDICATED at delta_rs -0.0066 bps -- **the +2.44 WAS NEVER A MID ARTIFACT; E1
+  DIES ON THE WEIGHTING.** Monotone by quintile with the top carrying $2.95bn of
+  $3.21bn: SMALL PRINTS EARN THE HALF-TICK, THE DOLLARS ARE ADVERSELY SELECTED.
+  THE REPRODUCTION CONTROL IS WHY IT IS READABLE -- without it delta_rs would be
+  a difference between two codebases.
+  (8) THE WAITER WAS KILLED A THIRD TIME BY THE HARNESS AND **RE-ARMING IS
+  STOPPED**; the loop is prompt-driven and THE USER HAS BEEN TOLD. Last round I
+  wrote that a mechanism its own harness terminates will be found off when
+  needed; it was killed again within the round. **A MECHANISM THAT MUST BE
+  RESTARTED AFTER EVERY FAILURE IS NOT A MECHANISM, IT IS A CHORE** -- and the
+  stall is now DISCLOSED rather than discovered.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:47:07Z (MEM ROUND 119 -- R-562 AND R-563 SWEPT. STATE ONLY,
+  AND IT LEADS WITH A CORRECTION TO MY OWN FINDING.
+  (1) MY PM_DATA_ROOT FINDING IS WRONG IN ITS DIRECTION, AND I CHECKED THE
+  CORRECTION THREE WAYS. I wrote at rounds 117-118 that the two module constants
+  bind "THE REPO ROOT, ONE LEVEL ABOVE WHAT THE ENV VAR MEANS". BUT
+  pm_tape_density's branch 2 RETURNS CODE_ROOT, line 116 IS LITERALLY
+  `REPO = DATA_ROOT`, and every path is built as DATA_ROOT / "data/pm_5min/...".
+  **PM_DATA_ROOT DENOTES THE REPO ROOT.** So the constants are CORRECT AND
+  CONSISTENT -- both consume it as `PM_DATA_ROOT / "data/pm_5min"`, the
+  resolver's own pattern. WHAT WAS WRONG WAS THE VALUE IN THE DISPATCH: exporting
+  .../ctaNew/**data** would have given RAW = .../ctaNew/data/**data**/pm_5min/raw,
+  which I computed. DE measured it; the coordinator corrected in band.
+  (2) THE DEFECT IS REAL AND IS A DIFFERENT DEFECT: **A VARIABLE NAMED
+  ..._DATA_ROOT THAT DENOTES THE REPO ROOT** -- a name/semantics mismatch, the
+  R-507 shape, WHICH HAS ALREADY CAUSED ONE WRONG DISPATCH. And the honest note
+  about my method: I read the three BINDING SITES and never read the
+  CONSUMPTION. Two constants and an env var can only be compared through what is
+  APPENDED to them. THE INPUT I FAILED TO TAKE FROM THE ARTIFACT WAS A **USAGE**
+  -- the round-116 family one level up.
+  (3) MY ANSWER TO THE ROUTING QUESTION, IN ONE LINE: **BE importing the same
+  resolver RESOLVES the collision for BE's helpers -- one definition, semantics
+  from the code rather than from the name -- and TWO THINGS STILL NEED ROUTING:
+  the SIX absolute ledger paths that no resolver touches (re-measured today:
+  still four be_*, two de_*), and the NAME ITSELF, which has already produced one
+  wrong export and will again for the next person who reads it as "the data
+  root".**
+  (4) DE 74 LANDED ONE IMPORTED RESOLVER FOR THE DE SURFACE, with refusals both
+  ways and **THE BRANCH TAKEN RECORDED IN EVERY RECEIPT** -- which turns "which
+  root did you read", the question every filing has had to answer since R-553,
+  FROM A RECONSTRUCTION INTO A FIELD. DE's symlink is out and checkout works
+  again.
+  (5) AND THE OTHER COORDINATOR ERROR IS THE OTHER HALF OF WHAT I SAW AT ROUND
+  118: A COMMIT WITHOUT A PATHSPEC SWEPT DE'S STAGED FILE. I found that file
+  staged, left it alone, and recorded that it landed one commit later -- **IT
+  LANDED BECAUSE THE COMMIT TOOK IT, NOT BECAUSE ANYONE DECIDED TO.** What
+  protected me was not vigilance: A PATHSPEC COMMIT CANNOT SWEEP A FILE IT DOES
+  NOT NAME.
+  (6) THE RUNNER IS APPROVED FOR THE 09-03 SMOKE once BE's book exists -- AND
+  BOTH SELFTESTS **REFUSED CORRECTLY** BEFORE THE REVIEWER RESTORED ITS SYMLINK.
+  The root refusal built to close the reviewer's own item 4 FIRED ON THE
+  REVIEWER, IN ITS OWN WORKTREE, DURING THE REVIEW OF THE THING THAT ADDED IT.
+  (7) THE RACE-READ DECLARATION IS APPROVED TO OPEN WITH TWO v2 ITEMS (BE 48,
+  BEFORE ANY OPENING). The floor must be COMPUTED AT BOTH READINGS with the
+  CONSERVATIVE ONE IN THE FIELD -- 0.0625 at G = 5 against **0.25 with three
+  fresh days at m = 2**, FOUR TIMES LARGER. And the clause I would not have
+  thought of: **ASSERT NO GATE-1 ARTIFACT ON THE READ'S PATH** -- 09-03/04/05 sit
+  in BOTH the ruled Gate-1 set and the race's five, so what I recorded at round
+  115 as "kept apart by declaration" becomes KEPT APART BY AN ASSERTION.
+  (8) DE 75's before-picture is read from the real ledger and committed BEFORE
+  the run, and **DE STANDS BY UNTIL BE'S BOOK EXISTS -- NO MAKE-WORK.** A seat
+  with a working instrument and nothing to point it at is exactly the situation
+  that produces invented tasks, and this one declined.
+  (9) THE WAITER KILLS WERE THE HARNESS, NOT THE USER, AND IT IS RE-ARMED. The
+  conservative reading cost one round of prompting and risked nothing: **a
+  conservative reading later shown unnecessary is not a mistake.** But the
+  harness has killed it TWICE, and a wake mechanism its own harness terminates
+  will be found off at the moment it was needed.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:39:15Z (MEM ROUND 118 -- R-560, R-561 AND THE REVIEWER'S E2.0
+  FILING SWEPT. STATE ONLY.
+  (1) THE PM_DATA_ROOT COLLISION IS PINNED TO file:line AND IT IS STILL IN TIME.
+  THREE BINDING SITES: pm_tape_density.py:99 (the environment read),
+  phase2_arms.py:41 AND build_state_tape_v2.py:206 -- BOTH BINDING
+  Path("/home/yuqing/ctaNew"), **THE REPO ROOT, ONE LEVEL ABOVE WHAT THE ENV VAR
+  MEANS**. ZERO de_* AND ZERO be_* FILES HONOUR IT YET, so NEITHER BATCH HAS
+  LANDED and this is filable before the change.
+  (2) AND THE SAME GREPS FOUND SOMETHING THAT MATTERS MORE FOR THE WORK: "the
+  same for BE's helpers" IS NOT THE SAME JOB. BE reaches the ledger as ROOT /
+  "data/pm_5min/derived", and three sampled be_* modules bind _ROOT to THE
+  MODULE'S OWN DIRECTORY. **SIX FILES HOLD AN ABSOLUTE LEDGER PATH NO ENV VAR
+  WILL REDIRECT** -- four be_*, two de_* -- e.g. be_forward_preflight.py:24. AN
+  ENV-VAR HELPER THAT LEAVES THOSE IN PLACE GIVES A PARTIALLY PORTABLE SEAT,
+  WHICH IS THE PARTIAL-SHELL FAILURE MODE MOVED FROM THE FILESYSTEM INTO THE
+  CODE. Limit stated: I grepped one literal over be_*/de_*, so SIX IS A FLOOR.
+  (3) THE RACE READ AND THE BUILDER ARE DECLARED AND OPEN AND BUILD NOTHING.
+  multiplicity READ FROM THE FREEZE not typed; 09-01/09-02 NAMED AS RE-READS;
+  what the read opens listed FROM seal(), THE WRITER. The builder refuses the
+  other five coins AT SELECTION, and THE DRAW POOL IS EMPTY ON THIS BOOK because
+  both heads score the same 29,813 -- MEASURED -- so set-equality is asserted PER
+  DAY and the day refuses otherwise. C-1's supersessions carry
+  every_other_byte_identical COMPUTED BY CANONICAL RE-SERIALISATION.
+  (4) MY 20-HOUR BLOCKER IS GONE: the R7 assertion is now RELATIVE TO THE RULED
+  SET WITH THE COUNT AN OUTPUT, SO THE 09-07T00:06Z FIRE IS BACK TO THREE STAKES,
+  NOT FOUR. And the fixture run is PROVEN data-free BY INSTRUMENTING open /
+  read_bytes / read_text -- 9 paths, none under data/ -- **WITH A NON-VACUITY
+  CHECK THAT THE PROBE OBSERVED THE PARAMS FILE**, which is exactly what my own
+  round-116 zero-length loop lacked.
+  (5) THE COIN SET IS RULED btc-ONLY FOR ALL SIX DAYS, and it is ruled, priced
+  and refused in code: R3 priced eth as A DIFFERENT FROZEN OBJECT taking m from 2
+  to 4 and the clearing G from 6 to 7 -- with G bound at 6, ADDING A COIN WOULD
+  HAVE MADE THE RUN UNABLE TO CLEAR.
+  (6) E2.0 IS APPROVED FOR THE ADA SMOKE with three v2 items, none blocking. The
+  one to keep is (2): SETTLED_ALIVE IS LABELLED AT THE **DEATH** BAR 1.8 WHILE
+  THE GATE IS 2.3, SO A CELL AT 2.0 WOULD READ ALIVE WHILE FAILING GATE 1 -- the
+  round-107 user_admission shape in another programme, FOUND BEFORE ANY CELL
+  EXISTED TO BE MISLABELLED.
+  (7) THE REVIEWER'S PUSH-BACK ON RULE 5 IS ACCEPTED: the hf_ws_v2 boundary IS
+  NOT AN ADMISSIBILITY FLOOR FOR A DESIGN READING EXCHANGE transact_time, and a
+  floor would have CUT G FROM 16 TO 11 FOR NOTHING. **RULE 5 BINDS SUB-SECOND
+  recv_ns FEATURES, NOT EXCHANGE-CLOCK READS.** Third time in eight rounds that
+  boundary has been reached for where it does not apply.
+  (8) BOTH WAITERS WERE KILLED AT ~04:37Z BY SOMETHING OTHER THAN THE
+  COORDINATOR, AND ARE NOT RE-ARMED -- because IF THAT WAS THE USER'S STOP,
+  RE-ARMING WOULD OVERRIDE IT. So the loop is user-prompted again, and the
+  ten-hour stall of R-541(A) becomes possible the moment prompting stops.
+  (9) A SHARED-TREE OBSERVATION I ACTED ON BY NOT ACTING: I found another seat's
+  artifact STAGED IN THE MAIN TREE'S INDEX mid-round
+  (de_section81_arms__20260904T133034Z.json, 113,804 B). I left it alone -- my
+  commits are by explicit pathspec -- and it landed one commit later at 4a806c0.
+  The R-557 prohibition seen from the other side: THE CORRECT HANDLING OF
+  ANOTHER SEAT'S IN-FLIGHT STATE IS TO REPORT IT AND TOUCH NOTHING.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:30:05Z (MEM ROUND 117 -- R-558, R-559 AND THE REVIEWER'S DA-57
+  FILING SWEPT. STATE ONLY.
+  (1) THE RUNNER IS **NOT YET APPROVED** FOR THE 09-03 SMOKE -- three changes,
+  and ONE IS ON A 20-HOUR CLOCK: the design module's R7 selftest ASSERTS TODAY'S
+  DAY COUNTS AS CONSTANTS and the runner calls it on every fixture run, SO AT
+  09-07T00:06Z, WHEN 09-06 IS RE-VERDICTED, **BOTH BREAK**. THAT IS A FOURTH
+  THING RIDING ON THAT FIRE -- and unlike the other three it does not get tested
+  there, IT BREAKS THERE. Also: the digest citing BE's cascade NEVER TOUCHES THE
+  DRAWS (the runner verifies the module, then receives null_draws as an
+  argument), which is the FOURTH TIME IN SIX ROUNDS a digest has not bound what
+  it appeared to; and --fixture-run READS THE LEDGER despite FIXTURE_RUN_NO_DATA.
+  (2) THE WORKTREE DATA ANSWER IS NOT A SYMLINK, AND MY ROUND-116 RULE IS
+  SUPERSEDED. Both routes were tested in scratch worktrees and both fail in
+  opposite ways -- sparse-checkout keeps the symlink across checkouts but leaves
+  159 lines of phantom deletions; skip-worktree cleans status but the symlink is
+  replaced at the next checkout that lands data paths. NEITHER IS A STANDING
+  ANSWER BECAUSE BOTH FIGHT GIT OVER PATHS IT TRACKS.
+  (3) THE ROOT BELONGS IN THE CODE AND THE VARIABLE ALREADY EXISTS -- CHECKED BY
+  ME at pm_tape_density.py:97-115, where _resolve_data_root() reads PM_DATA_ROOT
+  as branch 1. AND THE GAP IS EXACTLY AS FILED: **ZERO de_* AND ZERO be_* FILES
+  HONOUR IT.**
+  (4) BUT PM_DATA_ROOT NAMES TWO DIFFERENT THINGS IN THIS PROGRAMME'S OWN CODE,
+  AND A DISPATCH IS ABOUT TO USE THE NAME. Of eight files mentioning it, ONE
+  reads the environment (pm_tape_density) and TWO BIND IT AS A MODULE CONSTANT --
+  and phase2_arms.py:41 binds `Path("/home/yuqing/ctaNew")`, **THE REPO ROOT, ONE
+  LEVEL ABOVE WHAT THE ENV VAR MEANS**. A value swapped between them would
+  resolve and read the wrong tree. SECOND INSTANCE OF THE ROUND-110 SHAPE
+  (ERA_BOUNDARY_NS): ONE NAME, TWO REFERENTS, AND THE GREP A SEAT WILL RUN
+  RETURNS BOTH.
+  (5) AND THE SHELL TRAP WAS ALREADY SOLVED IN A CODE COMMENT.
+  pm_tape_density.py:103-107: "THE TEST IS FOR THE TAPE, NOT FOR A DIRECTORY ...
+  Testing the parent directory picked the worktree and then failed on the ledger;
+  testing for the tape itself is the property." THAT IS R-553/R-554's FINDING,
+  DIAGNOSED AND FIXED, BEFORE IT COST THREE SEATS A ROUND. THIRD TIME IN FIVE
+  ROUNDS THAT WHAT WOULD HAVE PREVENTED A FINDING WAS ALREADY IN THE REPOSITORY
+  -- after my round-101 census and DA's limits[2] -- and each time the missing
+  step is the same: NOBODY ASKED WHETHER THE QUESTION HAD ALREADY BEEN ANSWERED.
+  (6) DESIGN v4 VERIFIED, 47 = 47, runner now 33 checks. R2's floor is CALIBRATED
+  AT THE CEILING OF ITS OWN STATISTIC **WITH ITS LIMIT IN THE FIELD** -- one hour
+  of one coin, and two heads agreeing perfectly there does not establish they
+  agree elsewhere. A calibration that ships its own insufficiency is the honest
+  form.
+  (7) A SECOND PROGRAMME IS MOVING: P-2026-002's E2.0 is DECLARED BEFORE ANY TAPE
+  IS OPENED, with **delta_rs > +1.0 bps VOIDING E1's ADA PASS declared as leg
+  (i)**. Its STATUS/HANDOFF are DA's to update under the single-seat rule -- I
+  WRITE NOTHING THERE -- and they were LAST TOUCHED 2026-08-20, sixteen days ago.
+  (8) THE DEPLOY RECORD IS SOUND AND ITS SCOPE STOPS AT THE INTERPRETER BINARY --
+  CHECKED BY ME: /interpreter pins path, realpath and a sha256 OF THE BINARY, and
+  NOT ONE of the 33 pinned paths is under /usr/lib/python or site-packages. The
+  defect is the UNSTATED SCOPE, not the missing coverage. Record, not fix; DA 59.
+  (9) AND B-1 IS CLOSED AT THE MECHANISM: the stale-pycache known-bad REFUSES,
+  and **v3's predicate would have called it good**. Four rounds, three seats,
+  each step moving the proof one layer closer to what actually executes -- from
+  my round-109 reproduction that the env var does nothing, through the receipt
+  field that digested the disk, to a harness that proves what the INTERPRETER
+  ran.
+  (10) MY OWN ROUND-116 EXPOSURE -- STATUS.yml HELD DIRTY FOR THE LENGTH OF EVERY
+  BATCH -- IS NOW A FACT IN THE RUNBOOK'S PROHIBITION.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:22:04Z (MEM ROUND 116 -- R-556 AND R-557 SWEPT. STATE ONLY.
+  (1) THE MIDNIGHT UNIT IS DEPLOYED UNDER A TRACKED RECORD WITH A DRIFT REFUSAL,
+  AND I CHECKED THE RECORD TWO WAYS: the seven REFUSE-tier digests recompute
+  7 MATCH / 0 DRIFT / 0 MISSING with an assertion that the loop covered every
+  entry, and `sha256sum -c` on the manifest returns OK for all seven
+  independently. Drift -> rc 7 AND NOTHING RUNS. THE COMMIT IS PROVENANCE, NOT A
+  GATE -- pinning HEAD would refuse nearly every night while catching nothing --
+  and DA made the git anchor non-fatal after its own positive control caught that
+  a fatal anchor would refuse the unit BETWEEN A DEPLOY AND ITS LANDING COMMIT.
+  THIS CLOSES R-549(E) ITEM 4, the coupling I carried for three rounds as the
+  only green-while-wrong path with no owner and no check.
+  (2) SO THE 09-07T00:06Z FIRE NOW CARRIES **THREE** STAKES, not the two I
+  recorded last round: 09-06's re-verdict for a BOUND G = 6, the first production
+  test of rc-2/rc-4, AND the first production test of the deploy gate. A THIRD
+  STAKE DOES NOT SPREAD THE RISK -- IT ADDS ANOTHER THING THAT MUST WORK FOR US
+  TO LEARN WHETHER THE FIRST ONE DID.
+  (3) THE RUNNER EXISTS ON FIXTURES: 26 = 26 and 42 = 42 computed, BE's machinery
+  CITED BY DIGEST NOT COPIED, and THE R5 SEAL CAUGHT DE'S OWN EMITTER ON ITS
+  FIRST RUN. Its sharpest clause: A REFUSED ARM-DAY DOES NOT SHRINK G -- "an arm
+  present on four of five days is UNTESTABLE, NOT TESTED AT G = 4."
+  (4) DESIGN v3 IS APPROVED with FOUR ITEMS BEFORE ANY REAL DAY, and each is a
+  gap between a REQUIREMENT and a CODE PATH: the 0.90 overlap floor is THE ONLY
+  BAR WITH NO CALIBRATION; R5 became code only in the runner; R6 IS HALF A CODE
+  PATH (theta/model digests have no verifier); and THE ROOT DERIVATION DOES NOT
+  REFUSE -- a non-ledger root RETURNS AN EMPTY DAY SET SILENTLY. That last is THE
+  SHELL TRAP WEARING A THIRD FACE. The reviewer's R7 derivation independently
+  returned EXACTLY the six ruled days.
+  (5) THE SYMLINK FIX DOES NOT SURVIVE A WORKTREE CHECKOUT -- so what I swept at
+  round 114 as the rule FIXES A MOMENT, NOT THE STATE, and it decays with every
+  artifact landed under data/. Interim answer: re-sweep on every refresh as ONE
+  command. A sparse-checkout attempt SET 0 OF 153 BITS and is NOT ADOPTED --
+  recorded as a measured failure rather than dropped.
+  (6) A COORDINATOR `git reset --hard` IN THE SHARED TREE, AND MY DIRTY
+  STATUS.yml SURVIVED BY SIX SECONDS. I VERIFIED THE OUTCOME MYSELF: 1031bd5 is
+  an ancestor of HEAD, all three round-115 flags are in HEAD's file, and THE
+  REFLOG READS EXACTLY AS DESCRIBED -- 1031bd5 -> probe -> "reset: moving to
+  HEAD~1" -> 1031bd5. BY TIMING, NOT BY CARE. AND THE EXPOSURE IS STRUCTURAL TO
+  HOW I WORK: I hold STATUS.yml dirty for the length of every batch and had never
+  counted that. Rule now: never reset --hard / checkout -- / clean / stash in the
+  shared tree; probes in scratch worktrees; a wrong commit is REVERTED.
+  (7) AND THE FINDING AGAINST MYSELF IS THE ROUND'S MOST USEFUL: **THREE FALSE
+  SIGNALS FROM MY OWN PROBES, ONE ROOT.** I built a filename from prose and
+  reported a file missing; I compared a record against a manifest of other files
+  and reported a digest mismatch; and I iterated `.items()` over A LIST so THE
+  LOOP NEVER RAN AND PRINTED A REASSURING ZERO -- rule 15's exact shape, one
+  round after I wrote up rule 10 in a shell echo. IN EVERY CASE THE PROBE'S INPUT
+  WAS AUTHORED BY ME RATHER THAN READ FROM THE ARTIFACT. With round 113's
+  constructed boundary and round 114's else-branch that is FIVE INSTANCES, FOUR
+  ROUNDS, ONE CAUSE. None shipped, and (3) LOOKED RIGHT -- I caught it only
+  because 33 files with zero of everything is arithmetically impossible.
+  ADOPTED NOW: assert that a loop covered what it claims, and take paths and
+  types FROM THE ARTIFACT, never from the prose describing it.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:16:41Z (MEM ROUND 115 -- R-555 AND THE TWO VERDICT LANDINGS
+  SWEPT. STATE ONLY. DA 57 AND DE 72 ARE NOT SWEPT: the coordinator verifies them
+  next round and I do not carry unverified filings into the state files.
+  (1) USER RULING: THE DAY SET IS THE UNTOUCHED SET. Days opened for a read of
+  the frozen candidate -- 08-29, 09-01, 09-02 -- DO NOT COUNT. The Gate-1 run is
+  2026-09-03, 09-04, 09-05, 09-06, 09-07, 09-08. **G = 6, BOUND BEFORE ANY RUN.**
+  CHECKED BY ME: the set has six members, ITS INTERSECTION WITH THE
+  PREVIOUSLY-OPENED SET IS EMPTY, and 2^-6 = 0.015625 <= 0.025 TRUE against 2^-5
+  = 0.03125 FALSE -- so a unanimous six IS significance-bearing where five could
+  never have been.
+  (2) DAY-QUALITY IS EVALUATED ON COMPLETE DAYS ONLY -- the reviewer's refinement
+  ADOPTED INTO THE RULING -- which is what makes 09-06's
+  six-minutes-into-the-day False a non-event rather than a disqualification.
+  (3) AND THE CLAUSE THAT MATTERS MOST IS ABOUT FAILURE: IF A FUTURE DAY FAILS
+  ITS VERDICT THE SET IS **NOT EXTENDED BY CHOOSING ANOTHER DAY** -- it WAITS for
+  the next qualifying closed day IN CALENDAR ORDER and G STAYS 6. THAT REMOVES
+  THE LAST PLACE A CHOICE COULD HAVE BEEN MADE AFTER SEEING; without it a failed
+  day would have handed someone a menu. The runner carries the set as a COMMITTED
+  PARAMETER with a falsifier REFUSING a five-day set or a previously-opened day
+  -- the ruling made mechanically unbreakable rather than written down and
+  trusted.
+  (4) MY TRACKING FINDING IS CLOSED, CHECKED BY ME AT 0852871: twelve tracked,
+  twelve on disk, THE SET DIFFERENCE EMPTY -- and 08-31, THE ERA-BOUNDARY DAY I
+  NAMED, IS TRACKED. Both halves are shut: the worktree swaps fixed VISIBILITY
+  and this commit fixes DISTRIBUTION. I recorded it twice without routing a fix,
+  because what to track under data/ is a standing ruling and not mine, and the
+  seat that owns the ruling fixed it two rounds after it was named.
+  (5) THE SMOKE IS 09-03, ECONOMICS SEALED UNTIL ALL SIX COMPLETE, and it runs
+  only once THREE THINGS EXIST: the reviewer's approval of design v3, BE's book
+  declaration with asm AND its first book with a digest, and the reviewed runner.
+  The set completes at the 2026-09-09T00:06Z verdict.
+  (6) TWO THINGS NOW RIDE ON THE 09-07T00:06Z FIRE and they arrived from
+  different directions: 09-06's RE-VERDICT, on which a BOUND G = 6 depends, and
+  THE FIRST PRODUCTION TEST of the rc-2/rc-4 classification on a path that has
+  been GREEN WHILE WRONG IN THREE DISTINCT WAYS. THE COUPLING IS THE
+  UNCOMFORTABLE PART: THE THING THAT WOULD TELL US THE RE-VERDICT FAILED IS THE
+  THING BEING TESTED.
+  (7) ONE THING THE RULING DOES NOT TOUCH: the race read of the frozen candidate
+  is a SEPARATE ACT on 09-01..09-05 and does not touch these books. Two reads of
+  two objects on overlapping days, kept apart by declaration.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:09:46Z (MEM ROUND 114 -- R-553 AND R-554 SWEPT. STATE ONLY.
+  (1) THE SHELL TRAP IS STRUCTURAL AND I MEASURED IT PER SEAT RATHER THAN
+  RELAYING THE SHAPE -- AND THE SHAPE IS NOT TRUE OF EVERY SEAT. R-553 describes
+  the ledger symlink as nested at data/data inside the shell. MEASURED: DA yes,
+  BE **data/data DOES NOT EXIST -- shell, NO ROUTE TO THE LEDGER AT ALL**, DE and
+  REV swapped (04:07Z, 04:02Z). SO THE DOCUMENTED WORKAROUND WORKS FOR DA AND NOT
+  FOR BE. And BE is worst placed on every axis at once: no route, THREE
+  UNCOMMITTED FILES in its shell (all located by me under
+  ~/ctaNew-wt-be/data/pm_5min/derived/), and BE 46 AND BE 47 IN FLIGHT. The one
+  mercy: an absent data/data FAILS LOUDLY where a partial shell answers
+  plausibly.
+  (2) THE CLASS, FLAGGED FOR EVERY SEAT AS ROUTED TO ME: A SEAT VERIFYING "AT THE
+  ARTIFACT" IN ITS WORKTREE AGAINST AN UNCOMMITTED ARTIFACT VERIFIED AGAINST
+  ABSENCE. The check silently changes its own question from "is this artifact as
+  claimed" to "is this artifact in git". Two seats paid it in one round IN
+  OPPOSITE DIRECTIONS. And it generalises past worktrees: AN ABSENT ARTIFACT AND
+  AN UNCOMMITTED ONE ARE INDISTINGUISHABLE TO A CHECKER THAT ONLY ASKS WHETHER A
+  PATH RESOLVES -- WHICH IS THE PREDICATE MY OWN INSTRUMENT USES, and the gap I
+  named at round 100.
+  (3) AND I COMMITTED THE DEFECT I HAVE BEEN NAMING FOR THREE ROUNDS, INSIDE THIS
+  ROUND'S OWN MEASUREMENT: my probe was `test -L "$p" && echo yes || echo "NO --
+  it is a real directory"`, and when the path DID NOT EXIST MY OWN ELSE-BRANCH
+  ASSERTED A STATE THE TEST NEVER ESTABLISHED. I reported it before re-testing.
+  RULE 10 IN A SHELL ECHO -- the exact thing I swept at round 107 and wrote up as
+  a lesson at 109. The re-test prints only what it found, with no branch carrying
+  a conclusion. The surviving finding is STRONGER than the wrong one.
+  (4) A SYMLINKED data/ MAKES git status REPORT THE TRACKED FILES AS DELETED --
+  git does not traverse it -- so a careless `git add -A` WOULD DELETE THEM FROM
+  THE BRANCH. Rule now: skip-worktree once per worktree, never stage those paths,
+  LAND ARTIFACTS FROM THE MAIN TREE BY PATHSPEC. Which is what R-397 said all
+  along, and THE SHELLS HAD LET SEATS SKIP IT WITHOUT NOTICING -- a workaround
+  that silently makes a rule unnecessary is how the rule stops being followed. My
+  own practice is unchanged and I say so rather than assume it.
+  (5) DESIGN v3 VERIFIED, 42 = 42 computed, AND THE WITHDRAWN SENTENCE IS NOW A
+  PER-DAY FIELD THE DERIVATION READS -- so what was a false sentence in v1 and a
+  stale quotation in v2 CANNOT GO STALE WITHOUT THE DERIVATION CHANGING. The root
+  it read is A FIELD, which is the general fix and DE got there first. "sealed and
+  unread" still occurs four times, ALL AS QUOTATIONS, none as a live claim -- a
+  grep count is not a finding, the context is.
+  (6) THE REVIEWER WITHDREW A.3 AT THE LEDGER: twelve verdicts where its shell
+  showed seven. AND THE THREE I FOUND UNTRACKED AT ROUND 113 -- 08-26, 08-27,
+  08-31 -- ARE THREE OF THE SEVEN THAT WERE INVISIBLE. Same fact from two sides:
+  the swap fixes VISIBILITY for the seats and NOT DISTRIBUTION, and 08-31, the
+  era-boundary day, IS STILL NOT IN GIT.
+  (7) SET B's 09-06 IS A TIMING ARTIFACT -- day_quality_pass False because the
+  verdict was written six minutes into the day, re-verdicted at 09-07 00:06Z.
+  EITHER BRANCH IS SIX DAYS, PROVIDED THE UNIT RE-VERDICTS. AND THAT SAME 00:06Z
+  FIRE IS THE FIRST PRODUCTION TEST OF THE rc-2/rc-4 CLASSIFICATION: TWO THINGS
+  NOW RIDE ON ONE SCHEDULED FIRE.
+  PRIOR CHECKPOINT:
+  2026-09-06T04:03:05Z (MEM ROUND 113 -- R-552 AND THE 398cc94 LANDING SWEPT.
+  STATE ONLY.
+  (1) "THE LEDGER STOPS AT 09-02" WAS A TRACKING GAP, NOT A DATA GAP -- and MY
+  OWN ROUND-101 FLAG ALREADY SAID SO. It reads "a FILENAME CENSUS ONLY (18
+  da_dayverdict_* files, current verdicts for 08-26..09-05)", taken with `find`
+  on 2026-09-05 and carried in this file ever since. THE FACT THAT WOULD HAVE
+  PREVENTED A BLOCKING DOCUMENT FINDING WAS IN THE STATE FILE THE WHOLE TIME.
+  Two seats measured the same population on DIFFERENT SURFACES -- disk and git --
+  BOTH WERE RIGHT ABOUT THEIR OWN, and NO INSTRUMENT ANYWHERE COMPARES THEM.
+  That is the CORROBORATION axis I have named three times and not built, and it
+  has now cost a round. AND MY SHARE IS THIS: I wrote "filename census only" as a
+  LIMIT and never saw that the limit WAS A FINDING.
+  (2) AND THE LANDING NARROWS THE GAP WITHOUT CLOSING IT -- CHECKED BY ME. Nine
+  verdicts are tracked; TWELVE are on disk. THREE REMAIN UNTRACKED: 08-26, 08-27
+  AND **08-31** -- AND 08-31 IS THE ERA-BOUNDARY DAY, the verdict R-547(C) cites
+  for the 22:00:02.274534Z boundary the whole admissibility argument turns on. A
+  cold reader cloning this repo does not receive it. Not routing a fix: what to
+  track under data/ is a standing ruling and not mine.
+  (3) DESIGN v2 VERIFIED, 36 = 36 COMPUTED, and the EXPECTED_CHECKS - 1 line I
+  read at :544 last round IS GONE. Both undeclared choices are now PREDICATES:
+  the shared pool refuses below 0.90 overlap, and btc-only is priced in
+  MULTIPLICITY (eth would take m from 2 to 4 and the clearing G from 6 to 7)
+  rather than asserted. R4's floors are CALIBRATED AGAINST THE CONSUMED HOUR SO
+  THEY CANNOT BE READ AS CHOSEN TO EXCLUDE SOMETHING SEEN. R5 seals the smoke and
+  runs all G days regardless.
+  (4) R7 SHARPENS WHAT I WROTE LAST ROUND AND CORRECTS IT: SET A is G = 6 TODAY
+  and CLEARS HOLM; SET B is G = 3 TODAY and CLEARS NOTHING until 09-06..09-08
+  accrue. My "both answers give six days" was right about the endpoint and WRONG
+  ABOUT TODAY. Resources recomputed by me: 2.252 h/day, 11.26 CPU-h at G = 5,
+  13.51-13.52 at G = 6 depending on the rounding point -- NOT a discrepancy.
+  (5) THE REVIEWER'S 89e81d5 IS ADJUDICATED AND ROUTED. The classifier
+  CLASSIFIES PROVENANCE BY LEAF NAME REGARDLESS OF PARENT, so THE INSTRUMENT
+  BUILT TO COMPUTE THE MOVED-SET WOULD HAVE CLASSIFIED AWAY THE DEFECT THAT
+  CAUSED IT TO BE BUILT -- and the reviewer RAN IT on that defect. DE 71 fixes it
+  with that defect as the known-bad. BE's population digest is A SECOND READ, not
+  the bytes the null loaded -- THE THIRD TIME IN FOUR ROUNDS A DIGEST HAS NOT
+  BOUND WHAT IT APPEARED TO BIND. A digest answers "these bytes", never "these
+  are the bytes that were used".
+  (6) THE DATA-SHELL TRAP: the seat worktrees' data/ are DIRECTORIES, partial
+  shells, not the R-397 symlinks, and DE and the reviewer BOTH READ ONE this
+  round IN OPPOSITE DIRECTIONS. A PARTIAL SHELL IS THE WORST SHAPE A MISSING
+  DATASET CAN TAKE -- nothing errors, nothing is empty, the count is just
+  smaller. MY READS ARE MAIN-TREE AND I CHECKED RATHER THAN ASSUMED.
+  (7) THE BETWEEN-TURN STALL HAS A WORKING REMEDY -- three wakes this hour, each
+  acted on within a minute. I wrote at round 109 that A DISCIPLINE CANNOT FIX A
+  WAKE-UP PROBLEM; it did not, A MECHANISM DID.
+  PRIOR CHECKPOINT:
+  2026-09-06T03:54:55Z (MEM ROUND 112 -- R-550, R-551 AND THE RULE-20 REPAIR
+  SWEPT. STATE ONLY.
+  (1) THE DESIGN IS GOOD AND BLOCKED, AND I READ THE BLOCKER AT THE CODE:
+  be_cancel_axis_null.py:188 is `ref, asm = c["fr"]["reference"], c["asm"]`, so
+  THE DECISION POPULATION IS BUILT FROM c["asm"] AND DE'S REQUIREMENT LIST TO BE
+  OMITS IT -- a book without asm RAISES AND THERE IS NO NULL. The same two lines
+  carry both undeclared choices: :189 draws BOTH ARMS from CONDVALUE'S HEAD, and
+  :138 hardcodes COIN = "btc" while the design names no coin set. FILING ON A
+  DESIGN BEFORE TOUCHING DATA COST A ROUND INSTEAD OF A RUN.
+  (2) THE DAY SET RESTED ON A BAR THE USER RULED OUT -- the same R-497(F)(1)
+  shape as round 111's 08-24 hour, one round later, on the DAY SET. 08-30 is
+  correctly excluded FOR THE WRONG REASON; 08-29 is excluded on a bar the USER
+  never set. The reviewer does NOT claim it admissible -- R-500/R-502 are the
+  real question -- and the consequence is not cosmetic: AN UNAUTHORISED BAR IS
+  CURRENTLY DOING THE WORK OF KEEPING THE RUN DIRECTIONAL.
+  (3) SEVEN PLACES A CHOICE CAN STILL BE MADE AFTER SEEING, all routed before
+  data. THE ONE THAT WOULD HAVE BITTEN: THE DAY-1 SMOKE EXPOSES DAY 1's Z BEFORE
+  DAYS 2-5 RUN -- the USER's own smoke recommendation turned into a leak.
+  R-551's sequence answers it: THE SMOKE DAY'S ECONOMIC FIELDS ARE SEALED AND
+  ONLY THE RESOURCE OBSERVATION IS PUBLISHED, and ALL DAYS RUN REGARDLESS.
+  (4) THE DESIGN RECEIPT SAYS 19 CHECKS AND TWENTY RUN -- CHECKED BY ME AT BOTH
+  ENDS. The source declares EXPECTED_CHECKS = 20 at :31 and ASSERTS n+1 == 20 at
+  :518 (so the assertion PASSES), then :544 WRITES "n_checks": EXPECTED_CHECKS -
+  1 INTO THE RECEIPT. The battery is fine; THE EMISSION LIES BY A HARDCODED
+  MINUS ONE -- the producer/emission class DE closed twice in another file,
+  appearing in a third.
+  (5) THE RESOURCE ARITHMETIC WAS MISLABELLED AND I CARRIED IT DOUBLED. The
+  field is named be_null_500_draws_one_hour_TWO_ARMS.wall_s = 290.9, so MY OWN
+  COMPUTATION gives 1.9393 h PER DAY FOR BOTH ARMS, five days = 9.70 h null +
+  1.6 h replay = 11.30 SEQUENTIAL CPU-HOURS. I wrote "~2 hours per ARM-day" at
+  round 111, which implies 20 h -- MORE THAN TWICE THE TRUTH, in front of a
+  decision that is partly about cost. THE FIELD NAME SAID two_arms AND THE PROSE
+  SAID per-arm; I RELAYED THE PROSE.
+  (6) NEW STANDING RULE 20, BINDING ON ME FROM THIS ROUND: one heavy run at a
+  time under flock, -p CPUQuota=100% per scope, the lock REFUSES rather than
+  waits, caps never raised; "heavy" is over 60 s or 1 GiB. Verified at the slice:
+  CPUQuotaPerSecUSec = 2s, i.e. 200% (was 800%). MY STEPS ARE LIGHT SO I TAKE NO
+  LOCK, and I say so rather than leaving it to be asked. The repair commit is
+  part of the rule's story: AN UNQUOTED HEREDOC ATE THE BACKTICKED WRAPPER LINE,
+  so the rule briefly shipped without the command it mandates.
+  (7) THE USER READ THE DESIGN AS YELLOW, NOT GREEN. Three things are missing in
+  order -- reviewer approval, BE's book declaration with asm, the runner -- and
+  NOTHING RUNS BEFORE ALL THREE EXIST. The USER's "six unanimous days for Holm"
+  is the 2^-G floor from a third independent direction.
+  (8) THE DAY-SET QUESTION IS NOW ONE PARAMETER AND BOTH ANSWERS GIVE SIX DAYS,
+  so my round-111 "three days buys significance" framing is SUPERSEDED: the
+  choice is between WAITING THREE DAYS and READING A TEST ON DAYS OPENED FOR A
+  DIFFERENT OBJECT.
+  (9) BE 45 IS VERIFIED AT BOTH COPIES, closing the line I left open at round
+  111 -- and BE RESTORED be_ceiling_null_v1.json to 832faffd, the digest I
+  checked at round 108, so the rule-13 breach I settled at git is REVERSED AT
+  THE ARTIFACT. Three stale headline documents amended; STATUS.yml and
+  HANDOFF.md were current, which is a fact about CADENCE and not about care.
+  PRIOR CHECKPOINT:
+  2026-09-06T03:47:19Z (MEM ROUND 111 -- R-549 SWEPT. STATE ONLY, AND IT LEADS
+  WITH A CORRECTION TO A PREMISE I BUILT ON LAST ROUND.
+  (1) "EVERY SCORE IS SEALED AND UNREAD" WAS FALSE FOR 09-01 AND 09-02.
+  CHECKED BY ME AT THE ARTIFACT: RESULTS.md line 681 reads "09-01 and 09-02 were
+  scored and read under the interim declaration" and 682 "They are now consumed
+  and cannot be reused as untouched forward validation." THE PROGRAMME'S OWN
+  RESULTS DOC SAID SO ALL ALONG. BE 44's "not opened" was TRUE OF THAT SESSION'S
+  RUN and was generalised into a property of the data. I CARRIED IT AT ROUND 110
+  AND BUILT ON IT -- "the unseal hold now protects Gate 1's design" -- AN
+  ARGUMENT THAT WAS SOUND ON A PREMISE THAT WAS FALSE FOR TWO DAYS.
+  WHAT SURVIVES: the arms' thetas were fixed on the 08-24 hour and NOTHING ABOUT
+  THEM WAS CHOSEN on 09-01/02; what was read there was the FROZEN CANDIDATE. But
+  the record marks those days consumed and WHETHER THAT COUNTS AGAINST A GATE-1
+  TEST IS NOT A CALL TO MAKE AFTER SEEING.
+  (2) TWO OPTIONS ARE WITH THE USER: (i) 09-01..09-05 with the prior opening
+  disclosed in every receipt; (ii) THE UNTOUCHED SIX -- 09-03..09-05 plus
+  09-06..09-08 as they accrue, complete at the 2026-09-09T00:06Z verdict.
+  RECOMMENDED (ii), AND NOT ONLY FOR CLEANLINESS.
+  (3) BECAUSE I COMPUTED THE ARITHMETIC MYSELF: the smallest attainable
+  one-sided sign-test p at G days is 2^-G. AT G = 5 THAT IS 0.031250 AGAINST
+  HOLM'S FIRST BAR OF 0.025 AT m = 2 -- NO ARM CAN CLEAR EVEN IF EVERY DAY GOES
+  ITS WAY. AT G = 6 IT IS 0.015625 AND IT CLEARS. SO OPTION (ii) CONVERTS A
+  DIRECTIONAL RESULT INTO A POTENTIALLY SIGNIFICANCE-BEARING ONE FOR THE PRICE
+  OF THREE DAYS. DE computed this INSIDE THE DECLARATION BEFORE ANY DATA WAS
+  TOUCHED -- the difference between a design and an excuse.
+  (4) MY ROUND-110 "THE 08-24 HOUR PREDATES clob_v4_1, A LIMIT ON EVERY ECONOMIC
+  NUMBER" IS WITHDRAWN. The hour IS clob_v3_1, established at TWO SOURCES
+  including collector_version on ALL 36,566 ROWS -- but ERA_AUTHORITY carries the
+  USER's R-497(F)(1), "COLLECTOR VERSION IS NOT A BAR, QUALITY IS", so THE HOUR
+  IS NOT INADMISSIBLE BY ERA AND THE "LIMIT" IMPORTED A BAR THE USER NEVER SET.
+  What binds it: CONSUMED, G = 0 / n = 1, and rule 5 belongs to another
+  collector. An admissibility question got answered with a version comparison
+  twice -- in the draft and again by me relaying it.
+  (5) MY OWN ROUND-110 FINDING IS NOW ROUTABLE: NINE .py FILES under
+  live/pm_research/ carry the Binance literal (14 occurrences), and the two name
+  collisions are harmful_candidate_manifest.py:38 ERA_BOUNDARY_NS -- ASSERTED AT
+  :201 WITH THE STRING "the era boundary is a pinned literal", so the collision
+  is IN A CHECK -- and da_topup_receipt.py:71 ERA_FLOOR_RECV_NS, asserted at
+  :437. Worth a seat's eye and NOT a defect I assert:
+  da_era_status_0824_hour.py, the module that established the hour is clob_v3_1,
+  ALSO carries the literal.
+  (6) THE REVIEWER'S A-2 QUALIFIES WHAT I SWEPT AT ROUND 109: DE's CORRECTED
+  moved-set was ITSELF WRONG -- 14 leaves, and BOTH identity_residual leaves
+  MOVED, against DE's "no residual moved" which I carried. A correction wrong on
+  the very axis it corrected. AND A-1 QUALIFIES WHAT I PRAISED: adoption "BY
+  CITATION" is 21 HARDCODED LITERALS under a file digest -- THE DIGEST GUARDS THE
+  FILE, NOT THE TRANSCRIPTION. B-1: the receipt field meant to prove which bytes
+  ran DIGESTS THE DISK, NOT THE INTERPRETER -- my round-109 finding one level
+  deeper.
+  (7) ALL FIVE RACE DAYS NOW CARRY SEALED SCORES (09-03 9aec99cf, 09-04
+  8f08b089, both from BE's run logs and NOT yet verified at both copies). THE
+  HOLD DOES NOT SIMPLY LIFT: A DECLARED READ MUST BE FILED AND REVIEWED FIRST.
+  Two gates on the opening, not one.
+  (8) DA HARVESTED AND RESET. The item to carry is (4) of five: THE
+  MAIN-TREE/ExecStart COUPLING IS UNRULED, NO SEAT OWNS IT, NO INSTRUMENT CHECKS
+  IT -- the third distinct way this nightly path can be GREEN WHILE WRONG, and
+  the only one with no owner.
+  PRIOR CHECKPOINT:
+  2026-09-06T03:12:12Z (MEM ROUND 110 -- R-547 AND R-548 SWEPT. STATE ONLY.
+  (1) USER RULING, VERBATIM IN R-547(A): V2 GATE 1'S CONTROL IS THE REPLAY NULL
+  -- random decisions, same count and side split, drawn from THE ARM'S OWN
+  decision population at ITS OWN theta, replayed through the SAME cascade. THE
+  EXACT-FIBER SAMPLER IS WITHDRAWN, not failed-and-retried. >=500 draws per arm
+  per day DECLARED BEFORE THE FIRST DRAW; cluster unit UTC day; m = 2; metric
+  net value delta at E0. AND THE SECTION 7 STOPPING RULE IS EVALUATED ON THIS
+  RUN AND NOTHING ELSE: if either arm fails to beat the replay null at
+  day-cluster level, THE HARMFUL-FILL ROUTE STOPS. Design and null committed
+  BEFORE data; THE REVIEWER FILES ON THE DESIGN FIRST -- which is the whole
+  protection, and the only thing separating this from the three consumed
+  windows behind it.
+  (2) THE DAYS ARE NAMED AND THERE IS NO SLACK: 09-01..09-05 are THE ONLY FIVE
+  ADMISSIBLE COMPLETE DAYS IN EXISTENCE (08-29 entirely clob_v3_1; 08-30 and
+  08-31 STRADDLE era boundaries; 08-26..08-28 carry no era block). The bar and
+  the supply are the same five days. They are untouched for Gate 1 BECAUSE THE
+  RACE SCORED A DIFFERENT OBJECT ON THEM AND EVERY SCORE IS SEALED AND UNREAD --
+  so the unseal hold now protects Gate 1's design, not just the race.
+  CONSEQUENCE: GATES 2-6 NEED FIVE FURTHER DAYS, 09-06 ONWARD, EARLIEST
+  COMPLETE 09-10, READABLE 09-11.
+  (3) THE ADMISSIBILITY BOUNDARY IS THE ERA RULING, NOT THE BINANCE CLOCK -- and
+  I CHECKED THE RE-IMPORT RISK MYSELF AND FOUND IT IS NOT HYPOTHETICAL. CLAUDE.md
+  rule 5's 1787579334881534478 governs mm_hf tape. IT ALSO APPEARS 27 TIMES IN
+  live/pm_research/, AND TWO P-003 MODULES BIND IT TO A NAME THAT MEANS THE
+  OTHER THING -- harmful_candidate_manifest.py:38 ERA_BOUNDARY_NS and
+  da_topup_receipt.py:71 ERA_FLOOR_RECV_NS. I make NO claim those uses are wrong
+  (they appear to govern the Binance feed P-003 consumes, and one is even
+  labelled hf_ws_v2). THE CLAIM IS ABOUT VOCABULARY: "the era boundary" names
+  two different instants, and grepping ERA_BOUNDARY in THIS programme's code
+  finds the Binance one. That is how the drafting error happened and the source
+  makes it easy to repeat.
+  (4) MY cascade_spread INVARIANCE FLAG IS CORRECTED AND I DID THE ARITHMETIC
+  MYSELF: 1.9398838090426878 x 0.8055274 = 1.5626295610002527, matching the
+  reviewer's 1.5626296 and DE's emitted 1.562630032178208. THE INVARIANCE HELD
+  ONLY BECAUSE THE DENOMINATOR WAS SHARED -- (n_C/B)/(n_H/B) = n_C/n_H, B
+  CANCELS. Read at DE's artifact (sha 19479bc6064bc14a):
+  cascade_spread_is_invariant_to_the_baseline_choice FALSE,
+  ordering_is_invariant TRUE. SO THE ORDERING SURVIVES AND MUST BE RE-DERIVED
+  PER ARM-LOCAL NULL, NOT INHERITED. AND THE LESSON IS MINE: A CORRECTLY
+  COMPUTED NUMBER CAN STILL BE A TAUTOLOGY -- rule 10 protects against printed
+  conclusions, not vacuous ones, and I recorded "computed, not asserted" as
+  though that settled it.
+  (5) A SIGKILL STILL DEFERS -- the third variant of one defect, and IT SURVIVED
+  THE FIX MEANT TO CLOSE THE CLASS. "Killed" is written by the PARENT SHELL to
+  its own stderr and never reaches the log, so the marker is DEAD CODE that has
+  never matched. Fix at a signal the log cannot forge: DEFERRED requires the
+  builder's OWN exit code _mrc == 1. DA 56.
+  (6) MY ROUND-106 INSTALL FLAG IS RESOLVED: the C-1-fixed unit is live,
+  identical to repo, confirmed at the daemon and by behaviour. Q-DA-266's "4
+  behind and dirty" was TRUE AT 02:49Z AND OVERTAKEN BY PULLS AT 02:51Z -- a
+  claim with an as-of resolving cleanly where one without would have festered.
+  (7) THE 1,309 IS EXPLAINED AS A FILTER STAGE, SO MY "one published population
+  block is wrong" IS WITHDRAWN AS STATED -- two counts can both be right if they
+  count at different stages. Marked EXPLAINED, NOT RESOLVED: the reviewer's
+  check and BE's confirmation are both outstanding.
+  (8) DA IS AT ~75% CONTEXT, light batch, reset at 80, and it holds the 08-24
+  era audit and the recompute declaration. I am at ~14%.
+  PRIOR CHECKPOINT:
+  2026-09-06T02:51:45Z (MEM ROUND 109 -- R-546 SWEPT. STATE ONLY, AND THE
+  CENTRAL ITEM IS A REMEDY OF MINE THAT DOES NOT WORK.
+  (1) PYTHONDONTWRITEBYTECODE=1 DOES NOT CLOSE THE STALE-PYCACHE HAZARD, AND I
+  REPRODUCED IT MYSELF: m.py returning 0.5, imported so a .pyc exists; rewritten
+  to 0.0 AT THE SAME BYTE LENGTH (24 = 24) with mtime restored; then
+  PYTHONDONTWRITEBYTECODE=1 python3 -c "import m; print(m.v())" PRINTS 0.5 while
+  the source reads 0.0. rm -rf __pycache__ gives 0.0. THE VARIABLE SUPPRESSES
+  WRITING AND DOES NOTHING ABOUT READING. My round-107 flag prescribed it as THE
+  remedy: THE HAZARD WAS REAL, THE FIX WAS WRONG, and nobody had run it. Standing
+  fix: rmtree(__pycache__) PER MUTANT, or checked-hash pycs, and the receipt
+  records WHICH BYTES RAN. DA 55.
+  (2) AND IT QUALIFIES A VERIFICATION I RELAYED AS CLEAN: R-543(B)'s run was
+  sound because it used a FRESH DETACHED WORKTREE where no __pycache__ could
+  exist -- THE FRESH TREE, NOT THE VARIABLE. DA 54's re-run in a non-fresh
+  worktree is NOT protected by construction; its result stands only because a
+  stale cache sends a suite GREEN, never red. A right answer from a mechanism
+  that was not doing the work.
+  (3) THE DEFERRAL IS CLOSED AT THE TOKEN: the mixed log now FAILS, 21 drives +
+  15 checks pass, AND THE PRINTED SUMMARY I CARRIED AT ROUND 106 IS REPLACED BY A
+  COMPUTED ENUMERATION. But WHAT IS INSTALLED PREDATES THE FIX, so the failure
+  mode is STILL LIVE ON THE MACHINE until DA 55 reinstalls -- "installed" is not
+  "fixed".
+  (4) da_blackout_mask --selftest WAS RED AT HEAD ON THE NIGHTLY GOVERNED PATH,
+  from two fixtures that hardcoded 20260905 as a FUTURE day until the calendar
+  arrived. THE INSTRUMENT ROTTED BY TIME PASSING -- the CURRENCY axis landing on
+  a selftest instead of on a flag, the first time it has been seen outside my
+  files -- and NO CHECK FOUND IT: DA found it while patching something else.
+  Fixed at the root (the future day DERIVED FROM THE CLOCK, not written down),
+  58 checks, rc 0.
+  (5) THE CASCADE BASELINE IS RULED: adopt BE's PER-ARM REPLAYED rates
+  (0.4970 / 0.4003) BY CITATION, never recomputed in DE's module, count-based
+  rates retained as REFUTED_AS_A_BASELINE, with a cross-check that REFUSES ON
+  MISMATCH -- and the reason to believe it is that DE computed the same thing
+  independently and got 8.7013, EXACTLY BE'S PUBLISHED HEADLINE.
+  (6) DE 66b's TABLE CHECKED BY ME (sha 48effdb5bd81e714): zero of five
+  candidates land, the one BE actually draws from is furthest, and
+  cascade_spread is 1.9398838090426878 under BOTH baselines in the file. AND ONE
+  THING I FOUND BY READING: the predicate's field name is
+  lands_in_BE_range_0p40_0p50, PINNING A RANGE THAT IS NOT BE'S -- BE's measured
+  range is [0.3098, 0.8182]. I COMPUTED THE VERDICT AGAINST THE CORRECT RANGE
+  RATHER THAN ASSUMING IT SURVIVED: still zero of five. THE VERDICT SURVIVES THE
+  CORRECTION AND THE FIELD NAME DOES NOT.
+  (7) TWO CACHES, TWO COUNTS -- 29,813 (BE) against 31,122 (DE) -- both emitted,
+  neither preferred, routed to BE 46. 1,309 generations is not a rounding
+  difference and one published population block is wrong.
+  (8) B-4 CHECKED AT THE CODE: da_rebate_ceiling.py:240-243 RECONSTRUCTS fe_t by
+  inverting the delta identity while the receipt carries it directly one key
+  away. No number is wrong; a derived value stands where a measured one was
+  available, so an identity error would cancel itself out of view. DA 55 asserts
+  agreement.
+  (9) THE REVIEWER RE-RAN MY ROUND-106 MOVE AND ITS TWO APPARENT FINDINGS
+  DISSOLVED INTO ITS OWN CRUDER SPLIT: 11/11 (or 10/10 colon-anchored), 69-71
+  archived, 107/107 blocks terminal -- "MEM's account exactly right". Recorded
+  as CORROBORATION, the axis I cannot measure, resolving by a second seat
+  running a DIFFERENT SPLIT.
+  PRIOR CHECKPOINT:
+  2026-09-06T02:44:55Z (MEM ROUND 108 -- R-544 AND R-545 SWEPT. STATE ONLY.
+  (1) 09-05 IS SCORED AND SEALED, AND I VERIFIED THE PROVENANCE MYSELF. The
+  receipt hashes to d65cadbcf4af6818 AT BOTH COPIES (derived and the run dir),
+  the receipt pins sealed_file.sha256 1370598870c5fa75... for a 42,663,031-byte
+  file, and THAT FILE ON DISK HASHES TO THE SAME DIGEST. Twelve gates, the
+  distinct status set is PASS and nothing else. 2,016 windows with rows, 0
+  masked. A DIGEST IS NOT A READ: I hashed the sealed file and did not open it,
+  and the receipt's own field says "no metric, rho, net value or sign appears
+  outside this file". NOBODY HAS READ IT -- not BE, not the coordinator, not me.
+  (2) THE UNSEAL IS HELD UNTIL ALL FIVE DAYS CARRY A SEALED SCORE, THEN OPENED
+  IN ONE ACT. Five accrued days, THREE sealed scores (09-01, 09-02, 09-05);
+  09-03 and 09-04 WERE NEVER SCORED and BE 45 is scoring them. THE REASON IS
+  RULE 11 ARRIVING THROUGH THE ORDER OF OPENING: reading 09-05 alone and then
+  deciding whether to read the rest is selection on the seen. The USER may open
+  earlier by saying so; nobody else may. And what the read will be is already
+  fixed -- A DIRECTION, NOT A SIGNIFICANCE (0.0625 at G=5, m=2; and the prior
+  race cannot validate the changed pipeline). FIVE SEALED SCORES CHANGE NEITHER
+  LIMIT.
+  (3) TWO CAVEATS RIDE OUT OF THE RECEIPT WITH EVERY NUMBER, both read by me at
+  the artifact. THE DECISION METRIC HAS NEVER BEEN RECONCILED AGAINST ANY
+  PUBLISHED NUMBER "AND CANNOT BE FROM EXISTING ARTIFACTS" -- increment() is
+  BY_THRESHOLD, iteration 011's cells are BY_COUNT, and the 36/36 validated the
+  BRIDGE arm, not the primary estimand. AND COIN COVERAGE: only btc and eth
+  carry a frozen fit; 1,440 of the 2,016 scored windows -- 71% -- ARE SUPPLIED
+  WITHOUT A FIT.
+  (4) BE EDITED A LANDED ARTIFACT IN PLACE, CHECKED BY ME AT GIT IN TWO
+  COMMANDS: be_ceiling_null_v1.json goes 832faffd42192a40 -> d22852cc133964b8
+  across cb9bf8a. THE COMMIT MESSAGE SAYS "nothing in round 42 is edited"; AT
+  THE ARTIFACT IT IS -- and that gap between message and blob is the finding,
+  because a reader trusting the message would never look. Rewriting as_of is
+  the worst field to move, since an as_of is what a reader uses to decide
+  whether a claim is current. THE CONTENT IS RIGHT AND THE PLACE IS WRONG. The
+  old digest is pinned NOWHERE: my own grep over the repo for *.md/*.json/*.py/
+  *.yml/*.sh returns EXACTLY ONE FILE, the register entry reporting the change.
+  Routed to BE 45 to restore v1 and emit v2.
+  (5) DE 66's vN+1 VERIFIED AT THE BLOB: sha256 8bfa0edef587a86a matches, and
+  MY OWN KEY WALK returns ZERO keys named gate1_exit at any depth -- the trap a
+  vN+1 is exactly the place to reintroduce by accident. All six reviewer points
+  are fields; the battery is recorded BY RUNNING IT; and
+  fee_endpoint_summary_is_bit_identical_to_v1 IS A REFUSAL IN THE EMITTER, NOT A
+  CLAIM. THE GAP I RECORDED AT ROUND 106 -- the receipt not saying its own
+  battery ran -- IS CLOSED.
+  (6) ONE RESIDUAL, AND IT IS A SHAPE QUESTION RATHER THAN A NUMBER: because
+  the summary is bit-identical by design, resolving
+  fee_endpoint_summary.endpoints.E_MINUS_R.meaning inside v2 STILL RETURNS THE
+  WITHDRAWN WORDING. Bit-identity and per-field correction pull against each
+  other and you cannot have both in one block. Reviewer's call.
+  PRIOR CHECKPOINT:
+  2026-09-06T02:37:28Z (MEM ROUND 107 -- R-543 SWEPT, INCLUDING TWO IN-BAND
+  CORRECTIONS TO ENTRIES MY OWN FLAGS CARRIED. STATE ONLY.
+  (1) MY ROUND-105 STOP-THE-LINE IS CORRECTED AND CLOSED. "DE's certification
+  rests entirely on DA's suite; 0 of 4 on DE's census" measured DE'S SELFTEST,
+  not its production census: at c476d0f the selftest NEVER ASSERTED ON
+  PA.compare's OUTPUT, so the 0/4 WAS STRUCTURALLY GUARANTEED BEFORE ANY MUTANT
+  EXISTED, and the predicate NAME over-attributed it. AND DA HAD DISCLOSED IT --
+  CHECKED BY ME AT DA'S ARTIFACT THIS ROUND: limits is three elements and
+  limits[2] reads "the consumer is run at its own selftest, which is not the
+  same as the production census it performs on real data". THE QUALIFICATION WAS
+  ONE FIELD AWAY IN A FILE I NEVER OPENED. I marked the flag RELAYED and RELAYED
+  DID NOT SAVE IT. THE GAP WAS REAL -- there was no consumer-side falsifier, DE
+  agreed and BUILT one -- AND IT IS CLOSED AT e67252d: 4 of 4 caught everywhere,
+  0 surviving, target restored byte-exact, verified by the coordinator's own
+  execution in an isolated worktree. STOP-THE-LINE LIFTED.
+  (2) R-542(E) IS CORRECTED IN BAND AND THE COORDINATOR NAMES THE CAUSE: "my
+  ruling relayed Q-MEM-90's round-102 description of the file WITHOUT READING
+  THE FILE." The operative part I executed, 11 of 11; the other two parts were
+  VOID FOR WANT OF A REFERENT, as I reported. AND Q-MEM-90 WAS MINE: my
+  round-102 row measured the field honestly and then said its boundaries "are
+  not clean", WHICH WAS A JUDGEMENT INSIDE A MEASUREMENT AND I DID NOT SEPARATE
+  THEM. A description filed for ROUTING became a PREMISE when somebody ruled on
+  it. Both halves were needed; either would have prevented it.
+  (3) THE WORST FINDING IS C-1 AND I CARRIED IT TOO: classify_mask_failure keys
+  the deferral ON A PROSE MATCH, and driven with a log carrying a traceback, a
+  disk-full OSError AND the liveness token it returns DEFERRED -- A GENUINE
+  INSTRUMENT FAILURE MAPPED TO rc 2, WHICH THE UNIT NOW DECLARES A SUCCESS. The
+  falsifier's ten cases never drive that log, and its summary line is A PRINTED
+  CONCLUSION BESIDE A PASSING TEST SET -- RULE 10 IN A SHELL echo. The
+  coordinator quoted it as verification at R-542(A); I SWEPT R-542(A) AT ROUND
+  106 AND CARRIED THE SAME LINE. A printed conclusion travelled from an echo,
+  through a register entry, into my state file, and every hop looked like a
+  citation. DA 54.
+  (4) THE REBATE CEILING DOES NOT BIND: 53.84x (baseline) and 76.42x
+  (treatment) above the identity value; PARTIAL_LOWER_BOUND_ON_THE_CEILING with
+  completeness NOT established, and conclusion_robust_to_incompleteness TRUE AS
+  A COMPUTED DIRECTION -- a partial pool understates the pool, which only raises
+  the ceiling. So THE 3.6184x MATERIAL HEADROOM IS NOT PROTECTED BY A CEILING.
+  (5) THE CASCADE BASELINE IS CONTESTED WITH THREE POPULATIONS AND NO VERDICT IS
+  READ FROM THE LEVEL -- DE accepted BE's finding at the code, corrected, AND
+  ITS OWN NEW PREDICATE CAUGHT THE CORRECTION OVERSHOOTING (neither 1.1176 nor
+  0.1386 lands in BE's [0.40, 0.50]). SETTLED REGARDLESS: cascade_spread =
+  1.9398838090426878 under BOTH baselines, computed inside the emission.
+  (6) TWO FINDINGS I CHECKED MYSELF AT THE ARTIFACTS. C-2: the ruled module pins
+  the v1 seam by name and digest and grep for seam_v2 returns NOTHING, while
+  line 70 still reads PROTOCOL = "P003_V2_FEE_ENDPOINT_SENSITIVITY_V1" -- a
+  legitimate citation with a missing pointer. A-1: 6eaa538a IS a real commit,
+  is on NO BRANCH, and is NOT an ancestor of 4c17646 while 8b930b4 IS -- so the
+  proof of "declared before the draw" runs through a pointer nobody can follow.
+  (7) TWO HAZARDS FOR EVERY SEAT: same-length mutants can serve a STALE
+  __pycache__ (use PYTHONDONTWRITEBYTECODE=1) -- which FAILS SILENT AND GREEN --
+  and mutation audits must never run in the shared tree. 36 worktrees
+  registered, 22 under /tmp/ by my own listing; housekeeping QUEUED and I DID
+  NOT PRUNE.
+  PRIOR CHECKPOINT:
+  2026-09-06T02:26:37Z (MEM ROUND 106 -- R-542 SWEPT AND ITS RULING (E) EXECUTED.
+  STATE ONLY.
+  (1) THE `updated:` ROLLING WINDOW IS BACK TO THREE, BY MOVING AND NEVER BY
+  INTERPRETING. Eleven generations -- MEM rounds 103, 102, 101 and the eight
+  USER-session/V2 checkpoints beneath them -- moved VERBATIM to
+  workspace/STATUS_UPDATED_ARCHIVE.md batch 107, boundaries taken exactly as
+  the existing PRIOR CHECKPOINT / PRIOR DECLARATION / PRIOR RESULT /
+  DECLARATION CHECKPOINT / RECEIPT-CURRENT-IDENTITY markers stand. NOT ONE
+  CHARACTER WAS EDITED, SPLIT OR COMPLETED. The GOVERNING PROSPECTIVE PLAN
+  pointer is NOT a generation marker and STAYS in the field, because it is a
+  current pointer a cold reader needs; that is the one boundary judgement in
+  the move and it is named rather than silent. GUARD: alnum-normalised
+  containment, every moved generation present in the pre-commit file, present
+  in the archive, ABSENT from the post-commit file -- run, not asserted.
+  (2) TWO PARTS OF THE RULING HAD NO REFERENT AND I DID NOT INVENT ONE.
+  ROUNDS 69 AND 70 ARE ALREADY IN THE ARCHIVE -- so is 71 -- verified by
+  alnum-normalised containment of each generation as it stands at
+  `51c4464^` against the archive; restoring them would have DUPLICATED, not
+  repaired. AND NO PARAGRAPH IN THE FIELD ENDS MID-SENTENCE: all fourteen
+  generations end on terminal punctuation, and no fenced block in the archive
+  ends non-terminally either. Both reported to the coordinator with their
+  surfaces rather than executed blind.
+  (3) A CORRECTION AGAINST MY OWN FIRST ANSWER, WHICH IS THE PART WORTH
+  KEEPING: MY FIRST CONTAINMENT RUN SAID ROUND 69 WAS *NOT* IN THE ARCHIVE.
+  It was my boundary logic that was wrong, not the archive. Had I trusted my
+  own first run I would have written a duplicate into an append-only file
+  under a ruling whose whole point is that nothing is lost. The check that
+  saved it was re-running with a boundary I had verified.
+  (4) SWEPT FROM R-542: DA 52 VERIFIED BY THE COORDINATOR (falsifier 10/10,
+  the seam v2 straddle list EMPTY, baseline 288.4177679999994 identical to
+  DE's E0 in both files) -- WHICH CLOSES THE "pending DA's independent
+  recompute" CAVEAT I WROTE AT ROUND 105; the midnight unit INSTALLED at
+  02:24Z, installed == repo byte-for-byte, SuccessExitStatus=2, BIN pinned,
+  next run Mon 2026-09-07 00:06Z; the reviewer's filing verified across 208
+  key paths with ONE REAL GAP -- THE RECEIPT DOES NOT RECORD THAT ITS OWN
+  26-CHECK BATTERY RAN, so the instrument proved it can fire and the artifact
+  does not say so, rule 15 AT THE RECEIPT -- routed to DE 66 as an in-band
+  vN+1 with NO RE-RUN AND NO NUMBER MOVING; and RESULTS.md's stale G
+  statements corrected by the coordinator.
+  PRIOR CHECKPOINT:
+  2026-09-06T02:14:36Z (MEM ROUND 105 -- R-541 SWEPT. STATE ONLY.
+  (1) G = 5. THE BAR IS REACHED: 09-05 accrued at the scheduled unit's
+  00:06:01Z write, four conjuncts true, content_liveness CONTENT_LIVE, mask
+  WRITTEN, counts_toward_race True, "exit=0 for 20260905" in the unit's log.
+  RELAYED from R-541(B) -- I did not open the day verdict. AND NOTHING ABOUT
+  WHAT THE RACE CAN ESTABLISH HAS CHANGED: still DIRECTIONAL, never
+  significance-bearing (best attainable adjusted p 0.0625 at G=5 with
+  multiplicity 2; smallest clearing G is 6), and still unable to validate the
+  changed V2 pipeline. THE BAR BEING MET IS NOT THE RACE BECOMING A TEST.
+  (2) AND 09-05 IS UNSCORED, BECAUSE THE SCORER WAS NEVER WIRED TO A UNIT --
+  CHECKED BY ME ON THREE SURFACES, full output, not truncated: four repo files
+  mention be_score_forward_day and NONE is a unit; ZERO hits in
+  ~/.config/systemd/user/; ZERO in every *.service and *.timer in the repo. THE
+  VERDICT PIPELINE IS AUTOMATED AND THE THING THAT TURNS AN ACCRUED DAY INTO A
+  RESULT IS NOT, so the programme reached its bar with no day scored and no
+  instrument reported the gap. BE 44 scores it by hand.
+  (3) THE RULED GATE-1e RUN IS DONE, AND I READ EVERY FIGURE AT THE RECEIPT
+  MYSELF: D(E0) -4215.882156999999, D(E-R) -4332.3939021058395, p 0.9402985 AT
+  BOTH ENDPOINTS (188 of 200 controls >= treatment), materiality 0.0276364
+  against threshold 0.1, INVARIANT True, MATERIAL False, snapshot 9b37088,
+  sha256 f4974039c1fc99c0, status
+  FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT. Both delta identities compute
+  True in the file. THE TREATMENT IS WORSE THAN 94% OF ITS OWN CONTROLS AT BOTH
+  ENDPOINTS AND THE FEE MOVES NOTHING -- the fee question is answered and was
+  never what stood in the way. AND I TESTED THE TRAP THE RIGHT WAY: walking
+  KEYS gives ZERO named gate1_exit at any depth, while a SUBSTRING search gives
+  FOUR -- which is exactly why the coordinator's first test misfired, R-507's
+  error reproduced as a measurement. STILL PENDING: DA's independent E-R
+  recompute and the reviewer's clause-by-clause. MY CHECK IS A SECOND READING
+  OF THE SAME ARTIFACT, NOT AN INDEPENDENT RECOMPUTE.
+  (4) THE CASCADE IS SELECTION: random through the SAME stateful policy
+  cascades at 0.497 fills/cancel, CONDVALUE at 4.324 -- 8.70x, entirely outside
+  the null. The lever finding STANDS.
+  (5) BUT BE WITHDREW ITS OWN ROUND-42 COST CLAIM ON ITS OWN NULL: 2.8646
+  c/cancel sits INSIDE a null of mean 2.108, sd 3.808, p 0.6228 -- a sixth of
+  the sd. SO R-535(D)'s "the two axes disagree" IS CORRECTED TO "the fill axis
+  showed a direction; THE CANCEL AXIS IS UNINFORMATIVE AT THIS SAMPLE."
+  (6) THE 701% HAS ITS COMPANION ON ITS OWN SURFACE: 516.11%, overstating
+  26.41% AND GROWING WITH BUDGET. DA passed a reproduction gate first and
+  killed its own false monotonicity assertion, which had passed only because a
+  toy's two values were EQUAL -- a comparison that never discriminated.
+  (7) DE'S NOTHING_EXCLUDED CERTIFICATION HAS NO CHECK BEHIND IT: four mutants
+  in da_population_audit, DA's suite 4 of 4 caught, DE's de_section81_mid_census
+  0 OF 4 -- GREEN even with NOTHING_EXCLUDED emitted unconditionally, the exact
+  string DE's artifact cites. Stop-the-line to DE 65.
+  (8) THE STRADDLE IS CONFIRMED AN ARTIFACT, by execution at DA's artifact: it
+  collapses to +288.4178c = E0 and the bracket list should be EMPTY -- taking
+  the reviewer's own "reuse, not rework" with it. MY ROUND-104
+  PENDING-ADJUDICATION MARKING WAS RIGHT, AND WOULD HAVE BEEN WRONG AS CHECKED
+  even though the guess would have landed: I had verified line 79, not the
+  straddle.
+  (9) E-R IS THREE VALUES, NOT ONE -- correcting my own round-104 "the share
+  cancels, so E-R is a point". The bound survives one-sided by a route needing
+  none of the four parts, so the verdict is untouched and only the
+  JUSTIFICATION changed.
+  (10) THE COORDINATOR'S TEN-HOUR STALL IS STRUCTURAL: THE MONITOR'S
+  NOTIFICATIONS REACH IT ONLY INSIDE A RUNNING TURN, AND BETWEEN TURNS NOTHING
+  WAKES IT. Recorded as a fact about the seat. My round-102 line understated it
+  -- the monitor cannot be read when there is no turn to read it in, and a
+  discipline cannot fix a wake-up problem.
+  (11) THE MIDNIGHT UNIT IS RED EVERY NIGHT BY DESIGN COLLISION and its exit
+  status is not a health signal: the open day's mask refuses CORRECTLY for want
+  of windows and the script calls it INSTRUMENT FAILURE rc=4, identically the
+  night before. Fix at the classification, never the refusal. DA 52.
+  PRIOR CHECKPOINT:
+  2026-09-05T16:10:57Z (MEM ROUND 104 -- R-539 AND R-540 SWEPT. STATE ONLY.
+  (1) NO SEAT STANDS BY. The USER's "make all modules work" WITHDRAWS the
+  recorded-standby reading of R-381 while the loop runs. BE 43 (the CANCEL-axis
+  null replayed THROUGH THE STATEFUL POLICY so the cascade is REALISED -- and
+  the question it answers: IF RANDOM CANCELS ALSO CASCADE AT ~4x, THE CASCADE IS
+  THE MACHINERY'S PROPERTY, NOT CONDVALUE'S), DA 51 (the attainable companion on
+  the 4,315-FILL surface; the 22 over-charged taker legs; a MUTATION AUDIT of
+  da_population_audit, imported unchanged by DE and NEVER VERIFIED BY ANYONE BUT
+  DA), DE 64 (the ruled run, RUNNING) and REV are in flight; NONE IS DONE.
+  (2) THE MAKER-FEE SETTING, READ BY ME AT THE CODE: THREE VALUES IN THREE
+  PLACES. V2's Gate-1e is NULL AND DELIBERATELY SO -- de_v2_lifecycle_economics.py
+  :55 takes maker_fees: dict | None and :56 branches on None, and the declared
+  rule was "never substitute public taker/trade fee OR ZERO", so THE DECISION
+  METRIC WAS WITHHELD, NOT COMPUTED AT ZERO. Section 8.1 is ZERO BY OMISSION --
+  maker_pnl_from_fills at :1307 has NO fee term and the string "fee" occurs ZERO
+  times in it, so the +8,598.76c IS GROSS. The venue is ZERO CHARGE, NEGATIVE
+  NET. NONE OF THE THREE IS THE VENUE'S, and the R-537 ruling moves only V2's.
+  (3) THE DECLARED BAR (R-540(A)) IS TWO ENDPOINTS, NOT THREE. The charge
+  endpoint COLLAPSES INTO ZERO BY CONSTRUCTION -- the fee is what an order SIGNS
+  and ours signs zero, so the 1000/5000-bps residual is a SIGNING DEFECT and
+  becomes a BUILD-TIME GUARD, not an endpoint. AND THE REBATE'S PER-MARKET SHARE
+  CANCELS IN THE DELTA, so E-R IS A POINT -- which supersedes the "[0, 20%]
+  carried as an interval" I recorded at round 103.
+  (4) THE TRAP, CHECKED BY ME AT THE CODE: de_v2_lifecycle_economics.py:333 is
+  gate1_green = every_gross_identity and every_fee_complete, and every gross
+  identity is already green -- SO SUPPLYING ANY COMPLETE LEDGER, EVEN A LEDGER
+  OF ZEROS SUPPLIED ONLY TO MEASURE SENSITIVITY, FLIPS gate1_exit.cleared TRUE
+  AND EMPTIES reasons_not_cleared, DELETING THE CAUSALITY CAVEAT AS A SIDE
+  EFFECT OF A MEASUREMENT. The run is a SIDE-CAR, status
+  FEE_ENDPOINT_SENSITIVITY_NOT_A_GATE_RESULT, and EMITS NO gate1_exit.
+  (5) A LINE NOBODY HAD CITED, AND I READ IT MYSELF: FLOW_MODEL_STATE.md:79 --
+  "TAKER LEG ONLY ... BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A
+  MAKER NET." It sits IMMEDIATELY BELOW the fee row that R-536, R-538 and
+  Q-DA-252 all quote. DE found it and the reviewer's 1.5.1 caught the same
+  straddle independently. DA'S STRADDLE [-3,074.3, +288.4] IS MARKED
+  PENDING-ADJUDICATION, NOT CHECKED; the reviewer adjudicates, DA takes it next
+  round. I verified only that line 79 says what it says.
+  (6) DE 63 VERIFIED: 226 on THREE launchers then 230, artifact 155744Z with
+  carrying_commit 641cfb6 ON THE BRANCH, seven strings moved and NO NUMBER, and
+  the producer/emission contract class CLOSED AS A CLASS at its third instance.
+  DE's seam answer -- the tranche record carries NO fee field -- was reached
+  INDEPENDENTLY of Q-DA-252, which makes it a SECOND OBSERVATION.
+  (7) MY OWN ROUND-102 INTERVAL STAYS WITHDRAWN, citable form [-rebate, 0].
+  ARCHIVED: the eleven generations older than these three moved VERBATIM to
+  workspace/STATUS_UPDATED_ARCHIVE.md batch 107 at 2026-09-06T02:26:37Z under R-542(E).
+  GOVERNING PROSPECTIVE
+  PLAN:
+  live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md.
+```

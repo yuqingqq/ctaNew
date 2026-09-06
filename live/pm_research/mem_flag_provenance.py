@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -126,10 +127,54 @@ def artifact_exists(entry: dict, repo: Path) -> bool | None:
     return False
 
 
+RULED_WINDOW = 3
+# Anchored at line start against the RAW FILE TEXT, never against the parsed
+# value: `updated:` is a `>-` folded scalar, so by the time PyYAML returns it
+# the newlines are spaces and every line-start anchor is gone.
+_GEN_RE = re.compile(r"^  20\d\d-\d\d-\d\dT[\d:]+Z \(MEM ROUND", re.M)
+_TOPKEY_RE = re.compile(r"^[a-z_]+:", re.M)
+
+
+def window_generations(text: str) -> int:
+    """Count generation headers in `updated:`, reading the RAW file text.
+
+    WHY THIS EXISTS. R-542(E) ruled the `updated:` field a rolling window of
+    THREE, trimmed by MOVING older generations verbatim into
+    STATUS_UPDATED_ARCHIVE.md. It was restored once and then drifted to
+    TWENTY-THREE over eighteen consecutive rounds, because every round prepends
+    a generation and moves none -- and nothing noticed. This instrument audits
+    the FLAGS in that file; nothing audited the SHAPE of the file. A ruled
+    property with no check behind it drifts without either the ruling or the
+    file noticing (SEAT_PROTOCOL 15), so the check lives in the one instrument
+    MEM runs before every sentence.
+
+    AND WHY IT TAKES TEXT RATHER THAN THE PARSED DOC, which is the whole point
+    of this docstring. The first version of this function took the parsed
+    `doc["updated"]` and matched `^  <date> (MEM ROUND` under re.M. Its
+    selftest passed. Run against the real STATUS.yml it returned **0** -- on a
+    file holding twenty-three generations -- because a `>-` scalar is FOLDED:
+    PyYAML hands back one long line with the newlines turned into spaces, so
+    nothing is ever at a line start. The selftest passed because MEM AUTHORED
+    its input with explicit newlines and two-space indents, which is the
+    recurring probe failure this seat has recorded five times: the probe's
+    input was written by the seat instead of read from the artifact. The zero
+    was silent and would have read as compliance forever. Hence: raw text, and
+    a selftest control that requires a NONZERO count on the real file.
+    """
+    m = _TOPKEY_RE.search(text)
+    while m and not text.startswith("updated:", m.start()):
+        m = _TOPKEY_RE.search(text, m.end())
+    if not m:
+        return 0
+    nxt = _TOPKEY_RE.search(text, m.end())
+    return len(_GEN_RE.findall(text[m.end():nxt.start() if nxt else len(text)]))
+
+
 def audit(status_path: Path = STATUS) -> dict:
     """Census every flag against the provenance map. Reconciles BOTH ways."""
     try:
-        doc = yaml.safe_load(status_path.read_text(encoding="utf-8"))
+        _raw = status_path.read_text(encoding="utf-8")
+        doc = yaml.safe_load(_raw)
     except FileNotFoundError:
         raise SystemExit(f"REFUSED: no such status file: {status_path}")
     except yaml.YAMLError as e:
@@ -165,11 +210,16 @@ def audit(status_path: Path = STATUS) -> dict:
 
     n = len(flags)
     checked = by_class.get(AUTHORITATIVE, [])
+    gens = window_generations(_raw)
+    window_over = max(0, gens - RULED_WINDOW)
     findings = (len(by_class.get("MALFORMED", [])) + len(orphans)
-                + len(missing_artifact))
+                + len(missing_artifact) + (1 if window_over else 0))
     return {
         "status_file": str(status_path),
         "n_flags": n,
+        "window_generations": gens,
+        "window_ruled": RULED_WINDOW,
+        "window_over_by": window_over,
         "counts": {k: len(v) for k, v in sorted(by_class.items())},
         "orphan_entries": sorted(orphans),
         "checked_artifact_missing": sorted(missing_artifact),
@@ -201,6 +251,13 @@ def render(rep: dict) -> None:
             print(f"  MALFORMED {name}: {rep['reasons'][name]}")
     for name in rep["orphan_entries"]:
         print(f"  ORPHAN    {name}: provenance for a flag that does not exist")
+    print(f"updated: window {rep['window_generations']} generations "
+          f"(ruled {rep['window_ruled']})")
+    if rep["window_over_by"]:
+        print(f"  FINDING   the `updated:` rolling window is over its ruled "
+              f"size by {rep['window_over_by']} -- move the older generations "
+              f"VERBATIM to STATUS_UPDATED_ARCHIVE.md (R-542(E): trim by "
+              f"moving, never by interpreting)")
     print(f"findings: {rep['findings']}")
 
 
@@ -285,6 +342,37 @@ def selftest() -> int:
         f"{PROV_KEY}:\n  a:\n    prov: CHECKED\n    artifact: data/vanished.json\n"
         "    said: it read 333 of 1154\n")
     r = audit(d / "gone.yml")
+    # --- the `updated:` window guard, BOTH directions (R-542(E), MEM 126)
+    # The fixtures are RAW FILE TEXT, because the field is a folded scalar and
+    # the first version of this check counted 0 on a 23-generation file while
+    # its authored-input selftest passed.
+    _hdr = "program: p\nupdated: >-\n"
+    _g = lambda k: f"  2026-09-06T05:0{k}:00Z (MEM ROUND 12{k} -- x)\n  prose\n"
+    ok(window_generations(_hdr + _g(6) + _g(5) + _g(4) + "flags:\n  a: b\n") == 3,
+       "ADMITS a window at exactly its ruled size, counting GENERATIONS not "
+       "lines -- prose between headers must not inflate the count")
+    ok(window_generations(_hdr + "".join(_g(k) for k in range(5))
+                          + "flags:\n  a: b\n") == 5,
+       "KNOWN-BAD: five generations count as five -- the drift it exists to "
+       "catch (23 against a ruled 3 went eighteen rounds unseen)")
+    ok(window_generations("program: p\nflags:\n  a: b\n") == 0
+       and window_generations("") == 0,
+       "REFUSES to invent a count when there is no `updated:` field, rather "
+       "than crashing or guessing")
+    ok(window_generations(_hdr + _g(6) + "flags:\n"
+                          + "  a: 2026-09-06T05:00:00Z (MEM ROUND 120 -- x)\n")
+       == 1,
+       "counts only INSIDE `updated:` -- a generation-shaped string in a flag "
+       "body is not a generation")
+    # THE CONTROL THAT THE FIRST VERSION WOULD HAVE FAILED: it must fire on the
+    # REAL artifact, not only on text this seat wrote. A zero from an
+    # instrument that never proved it can count the live file is not a pass.
+    if STATUS.exists():
+        ok(window_generations(STATUS.read_text(encoding="utf-8")) > 0,
+           "POSITIVE CONTROL ON THE REAL FILE: it counts a nonzero number of "
+           "generations in the live STATUS.yml -- the check the folded-scalar "
+           "version silently failed while its authored fixtures passed")
+
     ok(r["checked_artifact_missing"] == ["a"] and r["findings"] == 1,
        "a CHECKED flag whose artifact is GONE is a finding -- three arms "
        "artifacts vanished on 2026-09-04 and a flag citing one still read as "
