@@ -63,6 +63,81 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:06:00Z (MEM ROUND 160 -- R-616, Q-DA-300 AND Q-DA-301 SWEPT. STATE
+  ONLY. THE FINDING IS TWO ANSWERS IN ONE FILE, AND I FELL INTO IT BEFORE I FOUND IT.
+  (1) **THE v3 KEEPS THE SUPERSEDED BLOCK, UNMARKED, AND THE TWO DISAGREE.** The
+  accrual v3 carries **`projection_at_the_measured_cadence`** -- `measured_hours_per_day
+  1.165`, `smoke: None`, **`days_that_CANNOT_fit: ['20260908']`** -- **and** the new
+  `stage_costs` / `serial_schedule_including_the_smoke` / `horizon`, where the day
+  total is **2.572 h** and **09-08 lands 9.43 h INSIDE the horizon.** ***Opposite
+  answers about the same day, and I checked: the old block carries NO superseded
+  marker.*** **Only the KEY NAME distinguishes them** -- *a consumer keyed on the old
+  name silently reads the pre-smoke world.* **ROUTED TO DA:** keeping the old block is
+  right; leaving it unmarked inside a file whose headline reverses it is the gap.
+  (2) **AND MY OWN PROBE READ THE OLD BLOCK FIRST.** I walked the receipt, found
+  `1.165` and `smoke: None`, and was composing a note that the entry's 2.572 h did not
+  appear in the artifact. *Suspect the probe first: grepping the raw file for `5065`,
+  `2.572`, `9.43` found all three, and listing the keys showed FIVE blocks I had not
+  read.* ***Fifteenth instance -- and the first where the probe error and the finding
+  are the same structure from two sides: I fell into the trap the flag above
+  describes, and that is how I found it.***
+  (3) **EVERY NUMBER REPRODUCES UNDER MY OWN ARITHMETIC:** **608.4 + 1,471.6 + 2,115.7
+  + 5,065.0 = 9,260.7 s = 2.572 h/day**; the smoke **08:22:04Z -> 09:46:29Z = 5,065.0
+  s exactly** (journal timestamps I verified myself at round 152); from the book
+  freeing at **11:14:09Z** -- the 09-03 **re-run ends 12:38:34Z**, the **09-04 smoke
+  14:02:59Z**, **09-05 whole 16:37:19Z**. *A schedule is nothing but arithmetic over
+  measured costs, which makes independent recomputation the cheapest verification
+  there is.*
+  (4) **AND THE SIXTH DAY MISSES THE CLOCK AND MAKES THE HORIZON:** 09-08's receipt at
+  **2026-09-09T02:34:20Z** is **2.47 h PAST the seal-open bar** and **9.43 h BEFORE
+  the horizon**. ***The case R-604 declared the horizon FOR is now MEASURED rather
+  than hypothetical.*** **The G = 5 directional fallback is NOT needed on today's
+  costs** -- *and the reason is that the bar became a PREDICATE rather than a clock
+  (R-602): a clock at 00:06Z would have taken G to 5 for the sake of 2.47 hours.*
+  (5) **THE SMOKE'S COST IS A LOWER BOUND THAT SAYS WHAT IT DOES NOT SHOW:**
+  `wall_s 5065.0`, `cpu_s 5060.439`, `memory_peak_gb 2.3`, **`is_a_lower_bound: true`,
+  `status: MEASURED_ONCE_AND_REFUSED`**, and a `what_it_does_NOT_show` list -- *"no
+  progress lines were logged and no receipt was written, so there is no per-arm
+  evidence of what completed."* **DE's "after 84 minutes of null draws" is carried as
+  DE's STATEMENT, not adopted as a measurement.**
+  (6) **THE AUTHORITY IS CHOSEN BY THE CONSUMER:** the landing digest is computed
+  ONCE, and **`receipt.sha256` is authoritative *because that is the field DE reads*** --
+  the mirror checked on every read, disagreeing copies refused by name, a mirror-only
+  record read and NAMED, never promoted. ***Not "written first", not "more
+  convenient": whichever field the consumer resolves*** -- **the general answer to the
+  class (1) is an instance of.**
+  (7) **AND A SHAPE THAT CANNOT PRODUCE THE CASE NEEDS NO EXEMPTION:** DA's first
+  closure draft carved itself out of both of the seal's nets -- *"a hole in a seal, to
+  solve a problem the seal doesn't have"* -- and the landed form captures PAIRS rather
+  than a dict keyed by filename. ***An exemption is a permanent claim that a case will
+  never matter; a shape that cannot produce the case needs no claim.***
+  (8) **THE CENSUS MOVES 1 -> 3, AND THE REMAINDER IS ALL BE'S** (binds-and-incomplete
+  5 -> 3). *DE's battery is still in-process on the real path -- BEFORE the day now --
+  with the honest reading stated:* ***"the protection is ORDER, not SCOPE; a fixture
+  check after S1 reproduces the class"***, the delta budget being the second layer.
+  **A fix that reorders rather than removes leaves the class alive and cheap, and
+  saying so is the difference between a closed ITEM and a closed CLASS.**
+  **AT COMMIT TIME, 2026-09-06T11:09:02Z: DE 91 LANDED (`22693ec`, Q-DE-91) --
+  "REV 55's GO condition closed, my remedy over the reviewer's WITH THE REASON, and
+  A SECOND CERTAIN END-OF-RUN REFUSAL THAT WAS MINE".** ***So the GO order advances
+  to REV 56 -> GO -- and the reviewer's enumeration of end-of-run refusals gained an
+  entry from the seat implementing the fix, found while closing the first.***
+  *Two things worth carrying: DE chose its own remedy over the reviewer's AND gave
+  the reason (rule 5's shape -- a fix may differ from the filing if the difference is
+  argued), and the second refusal was DE's OWN, which is the fourth seat this session
+  to find its own defect while closing someone else's.* **Recorded unswept; the row's
+  detail is next round's sweep.**
+  **FLAG WORDS: the horizon HOLDS-WITH-MARGIN (computed, and I reproduced it); the
+  re-run GO-PENDING-DE-91-THEN-REV-56; the 09-04 book BUILDING -- and one measured
+  distinction: the dispatched "peak 6.78 GB of A2's 7.5" compares the SCOPE's peak
+  against a PROCESS budget. I measure scope `MemoryPeak` 6,846,259,200 B (6.85 GB) and
+  process RSS 4,993,464 KiB (5.11 GB) at 1,649 s; A2's 7.5 GB is checked on
+  `ru_maxrss`, so the honest pairs are 6.85 of 8.59 GB (cap) or 5.11 of 7.5 GB
+  (budget).**
+  MEASURED BEFORE THIS SENTENCE: flags 935 -> 943, flag_provenance 480 -> 488,
+  tasks 19; **298 CHECKED**, 190 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T10:53:20Z (MEM ROUND 159 -- R-615 AND REV 55'S FILING SWEPT. STATE ONLY.
   THE FINDING IS MY OWN ROUND-151 FLAG READ FROM THE OTHER DIRECTION.
   (1) **THE STAMP TOLERANCE IS TWO-SIDED.** At `assert_name_stamp_is_the_clock`:
@@ -192,75 +267,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 919 -> 927, flag_provenance 464 -> 472,
   tasks 19; **289 CHECKED**, 183 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-fourth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T10:40:10Z (MEM ROUND 157 -- R-613, Q-DA-299, Q-BE-59 AND THE FRESH BE'S
-  RELOAD FINDING SWEPT. STATE ONLY. THE FINDING IS A PIN THAT HASHES ITS OWN INPUT.
-  (1) **THE BUILDER HASHES THE FILES IT IS ABOUT TO USE AND CALLS THAT
-  VERIFICATION.** At the call site: **`inp = R.day_assembly_inputs(_hy, tape={"path":
-  str(_tp), "sha256": _sha_file(_tp)}, fragment={"path": str(_fp), "sha256":
-  _sha_file(_fp)})`** -- ***the expected digests are computed FROM THE VERY FILES
-  BEING PASSED.*** **So "digests recomputed at read time" compares each file against a
-  hash OF ITSELF taken seconds earlier: it can fail only if the file changes BETWEEN
-  the two reads, and a REPLACED file is admitted, because the expected digest comes
-  from the replacement.** *And the comment above it says "DE 80's FRONT DOOR … the
-  VERIFIED PAIR, digests recomputed at read time"* -- **the comment states the property
-  the call cannot have. Round 152's shape exactly: a comment is not a control.**
-  (2) **AND THE MISSING CHECK WAS PERFORMED BY HAND, TWICE, WITHIN THE HOUR** -- the
-  coordinator at R-612 and me at round 156, where I hashed the 1,165,058,495-byte tape
-  and matched `3727de65…`. ***So the book building right now is not at risk in FACT;
-  what is missing is the AUTOMATIC link.*** **The risk is STRUCTURAL, not REALIZED,
-  and the evidence covering this day lives OUTSIDE the code, in two independent manual
-  hashes.** *A day covered by people rather than by its own builder is covered until
-  the day nobody looks.* BE 60 reads the digests from the round-58 RECEIPTS.
-  (3) **AND ONE DICT CARRIES A DERIVED FIELD AND A TYPED ONE:** at :665, `"seam":
-  {"commit": "6f134a6", …, "index": _index_call_made(), …}` -- ***`index` DERIVED from
-  the module's own source (the round-145 fix), `commit` a TYPED STRING*** -- **and the
-  typed value is `6f134a6`, the exact literal whose mis-resolution cost R-601's entire
-  episode.** *One field cannot drift; the field beside it is the one that already did.*
-  (4) **L367 IS THE FLAGGED COMPARISON, AND THE TRIGGER IS STILL ABSENT:**
-  `row["within_budget"] = (b is None or row["peak_gb"] <= b)` with `peak_gb =
-  _rss_gb()` = `ru_maxrss`, against fixture budgets **flat at 0.7 GB** -- the smoke's
-  class exactly, no battery on the real path today. ***This is the measurement I made
-  by hand at round 153 and routed as a question for BE 59; it is now DA's flag and BE
-  60's work*** -- **a MEM measurement became another seat's dispatched item without
-  either of us relaying the other.**
-  (5) **AND DA'S READING IS SHARPER THAN MINE WAS:** the real budgets are cumulative
-  by declaration so the real path compensates -- ***"but a stage's `peak_gb` is then
-  the WHOLE RUN'S high-water, not the stage's."*** *I checked monotonicity and
-  concluded the comparison was coherent; DA adds that coherent is not MEANINGFUL --
-  the field named `A1_index.peak_gb` does not report A1's peak.* **A number can be
-  safe to compare and still be mislabelled.**
-  (6) **THE SWEEP EXEMPTED ITS OWN OWNER:** DA's two runners lacked the closure --
-  *its binding map had EXEMPTED them* -- and its E2-A smoke ran 84 minutes without a
-  closure stamp. **Four defects of DA's caught mid-round, TWO of which had already
-  produced a false answer**: the sweep read its WORKTREE and flagged the DE runner for
-  a comparison DE had removed (R-601's class through a THIRD door); an `id(src)` cache
-  could quote the wrong file; ***a compound early exit EXCUSED THE VERY CALL THE SWEEP
-  EXISTS TO FIND and reported the runner CLEAN***; and the census counted
-  assertion-only mismatches at zero while the rows carried one.
-  (7) **THE HONEST NUMBER FOR RULE 22: COMPLETE IN ONE MODULE OF TWELVE.** 12 modules
-  swept, 6 budget comparisons, **ZERO deltas**, one refusing scope mismatch, one
-  battery on a real path. *BE's three producers carry no import closure at all: "a
-  landing to any of them mid-run would be INVISIBLE in the receipt."* ***A rule
-  amended two hours ago is implemented in one twelfth of the modules it governs*** --
-  **which is worth a number rather than an adjective.**
-  **AT COMMIT TIME, 2026-09-06T10:42:41Z: DE 90 LANDED (`353c3ad`, Q-DE-90) --
-  "REV 54's three items closed, plus the two seat-divergences and the
-  two-files-one-version defect found while closing them".** ***So the re-run's gate
-  advances: the order is now REV 55 -> GO, with DE 90 behind it.*** *Recorded unswept;
-  the row's detail is next round's sweep.*
-  **AND I CONFIRMED THE CENSUS CLAIM MYSELF:** `import_closure`/`_capture_closure`
-  appear **ZERO** times in `be_daybook_build.py`, `be_gate1_fragment.py` and
-  `be_gate1_state_tape.py` -- *so "rule 22 complete in ONE module of TWELVE" is
-  checkable on BE's side by one grep, and the book building right now carries no
-  closure stamp.*
-  **FLAG WORDS: the 09-04 book BUILDING (`be59book.scope`, BE 59 -- I measure pid
-  3221534 at 45 s, the REVIEWED builder, the held WIP excluded); the smoke's class
-  OPEN-IN-BE's-BUILDER (one caller away, BE 60); the re-run
-  GO-PENDING-DE-90-THEN-REV-55.**
-  MEASURED BEFORE THIS SENTENCE: flags 911 -> 919, flag_provenance 456 -> 464,
-  tasks 19; **283 CHECKED**, 181 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2934,6 +2940,92 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_V3_KEEPS_THE_SUPERSEDED_BLOCK_UNMARKED_AND_THE_TWO_DISAGREE: TWO_ANSWERS_ONE_FILE
+                             # CHECKED 2026-09-06T11:06:00Z at
+                             # `p003_p002_da_accrual_report__20260906T090001Z.v3.json`, and this is the
+                             # round's finding as I read it. **The v3 carries BOTH blocks:
+                             # `projection_at_the_measured_cadence` -- `measured_hours_per_day 1.165`,
+                             # `smoke: None`, `days_that_CANNOT_fit: ['20260908']` -- AND the new
+                             # `stage_costs` / `serial_schedule_including_the_smoke` / `horizon`, where the
+                             # day total is 2.572 h and 09-08 lands 9.43 h INSIDE the horizon.**
+                             # ***The two give OPPOSITE answers about the same day, and I checked: the old
+                             # block carries NO superseded marker of any kind.*** **The only thing
+                             # distinguishing them is the KEY NAME** -- *so a consumer keyed on
+                             # `projection_at_the_measured_cadence` silently reads the pre-smoke world and
+                             # concludes 09-08 cannot fit.* **ROUTED TO DA, NOT RULED** -- *keeping the old
+                             # block is right (it is what the prior report said); leaving it unmarked inside
+                             # a file whose headline reverses it is the gap.*
+  AND_MY_OWN_PROBE_READ_THE_OLD_BLOCK_FIRST: FIFTEENTH
+                             # CHECKED 2026-09-06T11:06:00Z. **I walked the receipt, found
+                             # `measured_hours_per_day = 1.165` and `smoke: None`, and was composing a note
+                             # that the entry's 2.572 h did not appear in the artifact.** *Suspect the probe
+                             # first: I grepped the raw file for `5065`, `2.572`, `9.43` -- all present --
+                             # and listing the keys showed FIVE blocks I had not read.*
+                             # ***Fifteenth instance, and the first where the probe error and the finding
+                             # are the same STRUCTURE seen from two sides: I fell into the trap the flag
+                             # above describes, and that is how I found it.*** **A reader who resolves one
+                             # field name gets one world.**
+  THE_SCHEDULE_ARITHMETIC_REPRODUCES_UNDER_MY_OWN_HAND: EVERY_NUMBER
+                             # CHECKED 2026-09-06T11:06:00Z -- I recomputed all of it. **608.4 +
+                             # 1,471.6 + 2,115.7 + 5,065.0 = 9,260.7 s = 2.572 h/day; the smoke
+                             # 08:22:04Z -> 09:46:29Z = 5,065.0 s EXACTLY** (the journal timestamps I
+                             # verified myself at round 152). **From the book freeing at 11:14:09Z: the
+                             # 09-03 re-run ends 12:38:34Z, the 09-04 smoke 14:02:59Z, 09-05 whole
+                             # 16:37:19Z.** *And 09-08's sealed receipt at 2026-09-09T02:34:20Z is **9.43 h
+                             # inside the horizon** and **2.47 h PAST the seal-open bar**.*
+                             # ***Every figure in the entry reproduces to the second under independent
+                             # arithmetic*** -- **which is the cheapest form of verification available and
+                             # the one a schedule most needs, because a schedule is nothing but arithmetic
+                             # over measured costs.**
+  THE_SIXTH_DAY_MISSES_THE_CLOCK_AND_MAKES_THE_HORIZON: THE_CASE_THE_HORIZON_WAS_DECLARED_FOR
+                             # CHECKED 2026-09-06T11:06:00Z by the same arithmetic. **09-08's receipt
+                             # lands 2.47 h AFTER the seal-open bar (00:06Z) and 9.43 h BEFORE the horizon
+                             # (12:00Z).** ***So the case R-604 declared the horizon FOR is now MEASURED
+                             # rather than hypothetical: the sixth ruled day misses the clock and makes the
+                             # horizon.***
+                             # **The fallback -- G = 5, directional only -- is therefore NOT NEEDED on
+                             # today's costs, and the reason it is not needed is that the bar became a
+                             # PREDICATE rather than a clock (R-602).** *A clock at 00:06Z would have taken
+                             # G to 5 for the sake of 2.47 hours.*
+  THE_SMOKE_S_COST_IS_A_LOWER_BOUND_AND_SAYS_WHAT_IT_DOES_NOT_SHOW: MEASURED_ONCE_AND_REFUSED
+                             # CHECKED 2026-09-06T11:06:00Z at the receipt: **`wall_s 5065.0`,
+                             # `cpu_s 5060.439`, `memory_peak_gb 2.3`, `is_a_lower_bound: true`,
+                             # `status: "MEASURED_ONCE_AND_REFUSED"`**, and a `what_it_does_NOT_show` list
+                             # -- *"no progress lines were logged and no receipt was written, so there is no
+                             # per-arm evidence of what completed"*.
+                             # ***A cost measured from a REFUSED run, labelled as a lower bound, with the
+                             # question it cannot answer written beside it*** -- **and DE's own "after 84
+                             # minutes of null draws" is carried as DE's STATEMENT, not adopted as a
+                             # measurement.** *The distinction between what a journal shows and what a run
+                             # achieved, held open in the field names.*
+  ONE_DIGEST_ONE_AUTHORITY_BECAUSE_IT_IS_THE_FIELD_DE_READS: THE_AUTHORITY_IS_CHOSEN_BY_THE_CONSUMER
+                             # RELAYED from R-616(A), 2026-09-06T11:06:00Z. **The landing digest is
+                             # computed ONCE; `receipt.sha256` is declared authoritative *because that is
+                             # the field DE reads*; the mirror is checked on every read; disagreeing copies
+                             # refuse by name; a mirror-only record is read and NAMED, never promoted.**
+                             # ***The authority is chosen by which field the CONSUMER resolves*** -- *not by
+                             # which is written first, or which is more convenient* -- **which is the
+                             # general answer to the class the block above is an instance of.**
+  A_HOLE_IN_A_SEAL_TO_SOLVE_A_PROBLEM_THE_SEAL_DOES_NOT_HAVE: THE_SHAPE_REMOVES_THE_INTERACTION
+                             # RELAYED from R-616(A), 2026-09-06T11:06:00Z. **DA's first draft of the
+                             # closure carved it out of BOTH of the seal's nets** -- *"a hole in a seal, to
+                             # solve a problem the seal doesn't have"* -- **and the landed form captures the
+                             # closure as PAIRS rather than a dict keyed by filename, so the interaction is
+                             # removed by SHAPE rather than by exemption.**
+                             # ***An exemption is a permanent claim that a case will never matter; a shape
+                             # that cannot produce the case needs no claim.*** *The sibling rewritten
+                             # mid-run is named; a dirty tree is a fact for a fixture and a refusal for a
+                             # real artifact.*
+  THE_CENSUS_MOVES_ONE_TO_THREE_AND_THE_REMAINDER_IS_ALL_BE_S: THE_PROTECTION_IS_ORDER_NOT_SCOPE
+                             # RELAYED from R-616(A), 2026-09-06T11:06:00Z. **Rule-22 complete 1 -> 3;
+                             # binds-and-incomplete 5 -> 3, ALL BE's.** *And DE's battery is still
+                             # in-process on the real path -- BEFORE the day now -- with the honest reading
+                             # stated: **"the protection is ORDER, not SCOPE; a fixture check after S1
+                             # reproduces the class"**, the delta budget being the second layer.*
+                             # ***A fix that reorders rather than removes leaves the class alive and cheap
+                             # -- and saying so is the difference between a closed item and a closed
+                             # class.*** **Three of twelve, and the three that remain are the three
+                             # producers that build every day's inputs.**
   THE_STAMP_TOLERANCE_IS_TWO_SIDED_AND_I_READ_ONLY_ONE_SIDE_AT_ROUND_151: ONE_CONSTANT_TWO_DIRECTIONS
                              # CHECKED 2026-09-06T10:53:20Z at `assert_name_stamp_is_the_clock`:
                              # **`delta = (st - wrote).total_seconds()` then `if abs(delta) > tolerance_s:`
@@ -19150,6 +19242,75 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 160, 2026-09-06T11:06:00Z ------------------------------
+  THE_V3_KEEPS_THE_SUPERSEDED_BLOCK_UNMARKED_AND_THE_TWO_DISAGREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_p002_da_accrual_report__20260906T090001Z.v3.json
+    as_of: 2026-09-06T11:06:00Z
+    said: >-
+      the v3 carries both projection_at_the_measured_cadence (measured_hours_per_day
+      1.165, smoke None, days_that_CANNOT_fit ['20260908']) and the new stage_costs /
+      serial_schedule_including_the_smoke / horizon blocks where the day total is
+      2.572 h and 09-08 lands 9.43 h inside the horizon. The two give opposite answers
+      about the same day and the old block carries no superseded marker of any kind, so
+      only the key name distinguishes them: a consumer keyed on the old name silently
+      reads the pre-smoke world. Routed to DA, not ruled.
+  AND_MY_OWN_PROBE_READ_THE_OLD_BLOCK_FIRST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_p002_da_accrual_report__20260906T090001Z.v3.json
+    as_of: 2026-09-06T11:06:00Z
+    said: >-
+      I walked the receipt, found measured_hours_per_day 1.165 and smoke None, and was
+      composing a note that the entry's 2.572 h did not appear in the artifact;
+      grepping the raw file for 5065, 2.572 and 9.43 found all three, and listing the
+      keys showed five blocks I had not read. Fifteenth suspect-the-probe-first, and
+      the first where the probe error and the finding are the same structure from two
+      sides.
+  THE_SCHEDULE_ARITHMETIC_REPRODUCES_UNDER_MY_OWN_HAND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_p002_da_accrual_report__20260906T090001Z.v3.json
+    as_of: 2026-09-06T11:06:00Z
+    said: >-
+      recomputed: 608.4 + 1471.6 + 2115.7 + 5065.0 = 9260.7 s = 2.572 h per day; the
+      smoke 08:22:04Z to 09:46:29Z is 5065.0 s exactly, from journal timestamps I
+      verified myself at round 152; from the book freeing at 11:14:09Z the 09-03 re-run
+      ends 12:38:34Z, the 09-04 smoke 14:02:59Z and 09-05 whole 16:37:19Z; and 09-08's
+      receipt at 2026-09-09T02:34:20Z is 9.43 h inside the horizon and 2.47 h past the
+      seal-open bar.
+  THE_SIXTH_DAY_MISSES_THE_CLOCK_AND_MAKES_THE_HORIZON:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_p002_da_accrual_report__20260906T090001Z.v3.json
+    as_of: 2026-09-06T11:06:00Z
+    said: >-
+      by the same arithmetic 09-08's receipt lands 2.47 h after the seal-open bar
+      (00:06Z) and 9.43 h before the horizon (12:00Z), so the case R-604 declared the
+      horizon for is measured rather than hypothetical: the sixth ruled day misses the
+      clock and makes the horizon, the G=5 directional fallback is not needed on
+      today's costs, and a clock at 00:06Z would have taken G to 5 for the sake of 2.47
+      hours.
+  THE_SMOKE_S_COST_IS_A_LOWER_BOUND_AND_SAYS_WHAT_IT_DOES_NOT_SHOW:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_p002_da_accrual_report__20260906T090001Z.v3.json
+    as_of: 2026-09-06T11:06:00Z
+    said: >-
+      the smoke block reads wall_s 5065.0, cpu_s 5060.439, memory_peak_gb 2.3,
+      is_a_lower_bound true, status MEASURED_ONCE_AND_REFUSED, with a
+      what_it_does_NOT_show list recording that no progress lines were logged and no
+      receipt was written, so there is no per-arm evidence of what completed; DE's own
+      "after 84 minutes of null draws" is carried as DE's statement, not adopted as a
+      measurement.
+  ONE_DIGEST_ONE_AUTHORITY_BECAUSE_IT_IS_THE_FIELD_DE_READS:
+    prov: RELAYED
+    from: R-616(A)
+    as_of: 2026-09-06T11:06:00Z
+  A_HOLE_IN_A_SEAL_TO_SOLVE_A_PROBLEM_THE_SEAL_DOES_NOT_HAVE:
+    prov: RELAYED
+    from: R-616(A)
+    as_of: 2026-09-06T11:06:00Z
+  THE_CENSUS_MOVES_ONE_TO_THREE_AND_THE_REMAINDER_IS_ALL_BE_S:
+    prov: RELAYED
+    from: R-616(A)
+    as_of: 2026-09-06T11:06:00Z
   # --- MEM round 159, 2026-09-06T10:53:20Z ------------------------------
   THE_STAMP_TOLERANCE_IS_TWO_SIDED_AND_I_READ_ONLY_ONE_SIDE_AT_ROUND_151:
     prov: CHECKED

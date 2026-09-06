@@ -11962,3 +11962,82 @@ directions.
   thirty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 142 — archived 2026-09-06T11:06:00Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 160 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T10:40:10Z (MEM ROUND 157 -- R-613, Q-DA-299, Q-BE-59 AND THE FRESH BE'S
+  RELOAD FINDING SWEPT. STATE ONLY. THE FINDING IS A PIN THAT HASHES ITS OWN INPUT.
+  (1) **THE BUILDER HASHES THE FILES IT IS ABOUT TO USE AND CALLS THAT
+  VERIFICATION.** At the call site: **`inp = R.day_assembly_inputs(_hy, tape={"path":
+  str(_tp), "sha256": _sha_file(_tp)}, fragment={"path": str(_fp), "sha256":
+  _sha_file(_fp)})`** -- ***the expected digests are computed FROM THE VERY FILES
+  BEING PASSED.*** **So "digests recomputed at read time" compares each file against a
+  hash OF ITSELF taken seconds earlier: it can fail only if the file changes BETWEEN
+  the two reads, and a REPLACED file is admitted, because the expected digest comes
+  from the replacement.** *And the comment above it says "DE 80's FRONT DOOR … the
+  VERIFIED PAIR, digests recomputed at read time"* -- **the comment states the property
+  the call cannot have. Round 152's shape exactly: a comment is not a control.**
+  (2) **AND THE MISSING CHECK WAS PERFORMED BY HAND, TWICE, WITHIN THE HOUR** -- the
+  coordinator at R-612 and me at round 156, where I hashed the 1,165,058,495-byte tape
+  and matched `3727de65…`. ***So the book building right now is not at risk in FACT;
+  what is missing is the AUTOMATIC link.*** **The risk is STRUCTURAL, not REALIZED,
+  and the evidence covering this day lives OUTSIDE the code, in two independent manual
+  hashes.** *A day covered by people rather than by its own builder is covered until
+  the day nobody looks.* BE 60 reads the digests from the round-58 RECEIPTS.
+  (3) **AND ONE DICT CARRIES A DERIVED FIELD AND A TYPED ONE:** at :665, `"seam":
+  {"commit": "6f134a6", …, "index": _index_call_made(), …}` -- ***`index` DERIVED from
+  the module's own source (the round-145 fix), `commit` a TYPED STRING*** -- **and the
+  typed value is `6f134a6`, the exact literal whose mis-resolution cost R-601's entire
+  episode.** *One field cannot drift; the field beside it is the one that already did.*
+  (4) **L367 IS THE FLAGGED COMPARISON, AND THE TRIGGER IS STILL ABSENT:**
+  `row["within_budget"] = (b is None or row["peak_gb"] <= b)` with `peak_gb =
+  _rss_gb()` = `ru_maxrss`, against fixture budgets **flat at 0.7 GB** -- the smoke's
+  class exactly, no battery on the real path today. ***This is the measurement I made
+  by hand at round 153 and routed as a question for BE 59; it is now DA's flag and BE
+  60's work*** -- **a MEM measurement became another seat's dispatched item without
+  either of us relaying the other.**
+  (5) **AND DA'S READING IS SHARPER THAN MINE WAS:** the real budgets are cumulative
+  by declaration so the real path compensates -- ***"but a stage's `peak_gb` is then
+  the WHOLE RUN'S high-water, not the stage's."*** *I checked monotonicity and
+  concluded the comparison was coherent; DA adds that coherent is not MEANINGFUL --
+  the field named `A1_index.peak_gb` does not report A1's peak.* **A number can be
+  safe to compare and still be mislabelled.**
+  (6) **THE SWEEP EXEMPTED ITS OWN OWNER:** DA's two runners lacked the closure --
+  *its binding map had EXEMPTED them* -- and its E2-A smoke ran 84 minutes without a
+  closure stamp. **Four defects of DA's caught mid-round, TWO of which had already
+  produced a false answer**: the sweep read its WORKTREE and flagged the DE runner for
+  a comparison DE had removed (R-601's class through a THIRD door); an `id(src)` cache
+  could quote the wrong file; ***a compound early exit EXCUSED THE VERY CALL THE SWEEP
+  EXISTS TO FIND and reported the runner CLEAN***; and the census counted
+  assertion-only mismatches at zero while the rows carried one.
+  (7) **THE HONEST NUMBER FOR RULE 22: COMPLETE IN ONE MODULE OF TWELVE.** 12 modules
+  swept, 6 budget comparisons, **ZERO deltas**, one refusing scope mismatch, one
+  battery on a real path. *BE's three producers carry no import closure at all: "a
+  landing to any of them mid-run would be INVISIBLE in the receipt."* ***A rule
+  amended two hours ago is implemented in one twelfth of the modules it governs*** --
+  **which is worth a number rather than an adjective.**
+  **AT COMMIT TIME, 2026-09-06T10:42:41Z: DE 90 LANDED (`353c3ad`, Q-DE-90) --
+  "REV 54's three items closed, plus the two seat-divergences and the
+  two-files-one-version defect found while closing them".** ***So the re-run's gate
+  advances: the order is now REV 55 -> GO, with DE 90 behind it.*** *Recorded unswept;
+  the row's detail is next round's sweep.*
+  **AND I CONFIRMED THE CENSUS CLAIM MYSELF:** `import_closure`/`_capture_closure`
+  appear **ZERO** times in `be_daybook_build.py`, `be_gate1_fragment.py` and
+  `be_gate1_state_tape.py` -- *so "rule 22 complete in ONE module of TWELVE" is
+  checkable on BE's side by one grep, and the book building right now carries no
+  closure stamp.*
+  **FLAG WORDS: the 09-04 book BUILDING (`be59book.scope`, BE 59 -- I measure pid
+  3221534 at 45 s, the REVIEWED builder, the held WIP excluded); the smoke's class
+  OPEN-IN-BE's-BUILDER (one caller away, BE 60); the re-run
+  GO-PENDING-DE-90-THEN-REV-55.**
+  MEASURED BEFORE THIS SENTENCE: flags 911 -> 919, flag_provenance 456 -> 464,
+  tasks 19; **283 CHECKED**, 181 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
