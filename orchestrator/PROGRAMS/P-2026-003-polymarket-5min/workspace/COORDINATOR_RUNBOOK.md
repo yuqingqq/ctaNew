@@ -395,8 +395,10 @@ loop stalls at the coordinator whenever the USER is not prompting** — 40 min o
 coordinator session must be prompted, or the standing duty is a fiction.
 
 **Race: G = 5 REACHED** (09-05 accrued at 00:06:01Z, four conjuncts, CONTENT_LIVE,
-mask WRITTEN). DIRECTIONAL by USER ruling. **09-05 is UNSCORED** — the scorer was
-never wired to a unit; BE runs it by hand (BE 44).
+mask WRITTEN). DIRECTIONAL by USER ruling. **Sealed scores: 09-01, 09-02, 09-05
+(BE 44, R-544); 09-03 and 09-04 scoring in BE 45.** The scorer is manual. **UNSEAL
+HELD until all five are sealed, then opened in one act** (coordinator's or USER's
+act; R-544(B)).
 
 **The midnight unit is RED EVERY NIGHT by design collision**: the open day's mask
 refuses (correctly) for want of windows and the script classifies that as
@@ -408,7 +410,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-543: **R-544**.
+- **Tip:** see `git log`. Next register entry after R-544: **R-545**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
