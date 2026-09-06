@@ -63,6 +63,88 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T12:03:40Z (MEM ROUND 169 -- R-626 AND REV 60'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS A SENTENCE THAT DENIES THE BOOLEAN TWO KEYS AWAY.
+  (1) **THE PROSE ASSERTS WHAT ITS OWN BOOLEAN DENIES.** At the 09-03 book tier:
+  **`NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: False`,
+  `n_field_names_matching_an_economic_marker: 3`, `matching_field_names:
+  ['TRANCHE_NO_MARKOUT', 'markout_cents_per_share', 'preventable_value_cents']` -- and
+  beside them `what_this_establishes: "… and that NONE OF THEM NAMES AN ECONOMIC
+  QUANTITY …"`.** ***The sentence contradicts the boolean and lists the three
+  counterexamples in between.*** **Rule 10's exact shape INSIDE the instrument whose
+  job is to census names.** *The three are the REFERENCE's valuation fields, carried by
+  construction -- so the boolean is right, the alarm is not, and the defect is the
+  PROSE.*
+  (2) **AND AT THAT BUDGET IT CANNOT ESTABLISH THE CLAIM AT ALL:** `nodes_visited:
+  400000` **equals** `budget: 400000`, `truncated: True`. *The walk STOPPED rather than
+  finished.* ***A truncated search proves PRESENCE and never ABSENCE*** -- **so the
+  census can refute "nothing economic is named" and can never establish it.**
+  (3) **AND THE SAME BLOCK HOLDS AN HONEST LIMIT BESIDE THE OVERCLAIM:**
+  `what_it_cannot_establish: "that a float under an innocent name is not secretly a
+  price. Names and shapes are checkable; INTENT IS NOT."` ***One field states the
+  instrument's boundary exactly; the field next to it ignores a boundary of its own.***
+  *A conceptual limit is remembered while writing; a MEASURED one has to be read back
+  out of the run.*
+  (4) **THREE PROBE ERRORS IN ONE ROUND, AND ONE WAS AN IDIOM I SWEPT MYSELF.**
+  *(a)* I read the **FIXTURE** census first, having picked the file by NAME rather than
+  content. *(b)* An **unscoped glob** over `derived/*.json` swept the 1.16 GB tape and
+  the 711 MB fragment and had to be backgrounded -- **the same trap as round 138.**
+  *(c)* **`pkill -f 'NOTHING_ECONOMIC_IS_NAMED'` MATCHED ITS OWN COMMAND LINE and
+  killed the shell (exit 144)** -- ***the fourth idiom in BE's harvest, which I swept
+  into this file at round 156.*** **Recording a hazard does not install it** -- *and the
+  harvest still paid: I knew what had bitten me before the exit code finished
+  printing.*
+  (5) **AND DA'S VERIFIER RECORDED MY OWN DIRTY TREE:** the fixture census carries
+  `worktree_was_dirty_at_import: True`, `dirty_paths: ['…/STATUS.yml']`, at
+  **11:39:51Z**. ***The dirty path is MEM's file, mid-round.*** **Every seat that starts
+  a run between my first write and my commit records it** -- *nothing is wrong, and
+  "the tree was dirty" now has a routine, benign, NAMED cause: me.*
+  (6) **THE SWEEP'S CLASSIFIER KEYS ON THE PATTERN, NOT ON WHOSE BYTES:** any
+  `hashlib.sha256(<path>.read_bytes())` on an emit path is called a producing-code
+  digest, **so all three BE producers read `rule22_binds_and_incomplete`** -- and the
+  four cited sites are *the BOOK's read-back, the v1 RECEIPT's read-back, the FRAGMENT
+  (an INPUT), and **BE's own battery control for the very property the sweep
+  denies***. **`_R22.stamp()` returns the import-time digest with `why_not_at_emit`
+  right there.** ***The budget half of that census was corrected properly; the closure
+  half keyed on shape rather than subject.***
+  (7) **AND THE REVIEWER SEPARATED THE FALSE POSITIVES FROM THE POSSIBLE TRUE ONE:**
+  `be_gate1_state_tape`'s `head_sha: AT_EMIT` cites a real `git rev-parse HEAD` inside
+  `build` and **may be genuinely incomplete** -> BE 63. ***The headline wrong and one of
+  its members possibly right, said in the same paragraph*** -- **the hardest correction
+  to write, because it neither vindicates nor discards.**
+  (8) **AND THE REVIEW EVALUATED A VERSION ALREADY REPLACED** -- REV 60 SS1 assessed
+  the SPARSE refresh, superseded by R-625 *before the filing landed*. **Three of its
+  four concerns are closed by the deterministic script** (status `?? data` alone,
+  driven on wt-be and wt-rev) **and rule 21's precondition now admits that line**
+  (`a6a1d51`); *the fourth -- artifacts TRACKED under `data/` -- is the programme-level
+  change not proposed today.* ***A review overtaken mid-flight whose findings outlived
+  the mechanism they were written about, because they named PROPERTIES.***
+  **AT COMMIT TIME, 2026-09-06T12:08:14Z: THE RE-RUN IS DEAD -- KILLED AT 35 MINUTES,
+  AND MY FLAG WORD "RUNNING, RECEIPT ~12:55Z" IS OVERTAKEN.** *Measured: the journal
+  reads 11:28:44Z -> 12:03:43Z, **34 min 52.780 s CPU, 2.3 G peak**; `de93smoke.scope`
+  inactive; **no SEALED artifact** and a new record on disk --
+  `p003_de_gate1_day_run_20260903_KILLED__20260906T120555Z.json`.*
+  ***AND THE MECHANISM IS DRIVEN BOTH WAYS IN THE RECORD ITSELF:*** **`TERM to the
+  PROCESS GROUP` -> the scope DIED (probe: ActiveState inactive, no child); `TERM to
+  the launching shell ALONE` -> the scope SURVIVED (probe: the child sleep kept
+  running); so: "`systemd-run --scope` registers processes THE CALLER FORKS, so the
+  run sits in the launching shell's process group".** *And what it is NOT: **not a
+  refusal by the runner, not a coordinator stop, not an OOM kill** -- the cgroup peak
+  was far under.* **`NOTHING_WAS_WRITTEN`: `find_sealed_day_receipt_status: MISSING`,
+  `n_matches: 0`, `the_day_is_not_consumed: True`, `book_digest_unchanged: True`.**
+  ***Rule 20 is amended (`016a625`): a heavy run is NEVER a child of a tool shell --
+  launch as a TRANSIENT SERVICE with `flock` INSIDE the unit.*** *Third attempt lost,
+  35 minutes, nothing consumed -- and the cause was the LAUNCH MECHANISM, not the
+  code, the day, or the budget.* **BE has already taken the lock for the 09-05
+  fragment (pid 3341391).**
+  **FLAG WORDS: DA's census PROSE-CONTRADICTS-BOOLEAN (DA 82 queued); BE's producers
+  rule-22 COMPLETE (the sweep's headline wrong, the substance right); the re-run
+  RUNNING -- I measure pid 3282335 at 2,011 s (~34 min), RSS 788,920 KiB, receipt
+  expected ≈12:55Z.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,007 -> 1,015, flag_provenance 552 -> 560,
+  tasks 19; **340 CHECKED**, 220 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-fifth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T11:57:50Z (MEM ROUND 168 -- R-624, R-625, Q-BE-62, Q-DA-303 AND REV 59'S
   FILING SWEPT. STATE ONLY. THE FIRST ITEM IS A CORRECTION AGAINST MYSELF.
   (1) **I RESOLVED MY OWN AMBIGUITY ON EVIDENCE THAT COULD NOT DISCRIMINATE.** At
@@ -197,76 +279,6 @@ updated: >-
   tasks 19; **330 CHECKED**, 214 RELAYED, **455 UNMARKED -- unchanged for the
   forty-third round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:47:40Z (MEM ROUND 166 -- R-622, Q-BE-60 AND Q-DA-302 SWEPT. STATE
-  ONLY. THE FINDING IS DEAD CODE THAT PRODUCED THE RIGHT ANSWER FOR A YEAR OF READS.
-  (1) **THE `try` RAISES ON EVERY CALL -- I DROVE IT.** `de_data_root.resolve()` is
-  declared **`-> dict`** and returns one; **`Path(resolve())` raises `TypeError`.** *So
-  in `_derived_dir()`'s `try: … Path(BDR.resolve()) / …`, the body raises EVERY TIME,
-  the bare `except` swallows it, and the tree-relative fallback runs every call:* ***the
-  "one resolver" line was NEVER EXECUTED.*** **And from the SHARED TREE the fallback
-  gives the RIGHT answer** -- *which is exactly why it was invisible: the defect shows
-  only from a worktree, and every seat verifying from the shared tree saw a correct
-  result produced by dead code.*
-  (2) **AND MY OWN ROUND-165 READING STOPPED ONE LEVEL SHORT.** I read the SHAPE and
-  wrote "DA DOES import DE's resolver; the intended path IS the canonical one" --
-  ***true of the source, false of the behaviour.*** **I did not CALL the function.**
-  *The reviewer's standing advice to DE -- "the productive attack is always RUN THE
-  THING, never READ THE DESIGN" -- applied to me, and it cost one round.* **The flag
-  stands as what the SOURCE said, with its as_of; this is what the CALL does.**
-  (3) **THE WORKTREE DRIFT REGENERATES WITHIN SECONDS OF A RESTORE.** Measured:
-  **`wt-be/data` IS a symlink now (mtime 11:46:59Z), restored as stated -- and
-  `wt-rev/data` is STILL A DIRECTORY, mtime 11:47:15Z, TWO SECONDS before my read,
-  with 262 tracked files against the 257 I counted at round 165.** *Either the restore
-  has not reached wt-rev, or a refresh re-materialised it inside the same minute.*
-  ***Either way the measurement says the same thing: restoring is not the whole
-  repair, because the next refresh recreates it.*** ROUTED.
-  (4) **FOUR ROOT RULES FOR ONE ROOT** -- and DA 80's addendum 2 collapses them to
-  ONE, with the four tests and the bare `except` named. ***A defect found in one module
-  turning out to be a COUNT across four is the difference between a fix and a
-  closure*** -- **the second time in two rounds the reviewer's contribution was to turn
-  an instance into an enumeration** (the ambient-lock census was the first).
-  (5) **THE CODE AND THE DESIGN NAME DIFFERENT AUTHORITATIVE FIELDS -- AND DA CHECKS
-  NEITHER.** DE's **code** and DE's **design** name different authoritative
-  landing-digest fields, *and DA's check compares THE DESIGN against DA's OWN
-  CONSTANT, not DE's code.* ***Three parties, three answers, and the check compares
-  the two that are not the one that runs.*** **R-608 gave the landing digest ONE
-  authority "because it is the field DE reads"; this says it was DECLARED in one place
-  and IMPLEMENTED in another.** DE 94, after the run.
-  (6) **AND THE SWEEP IMPLEMENTED INSTANCES, NOT THE CLASS:** three instances of "a
-  verdict from ambient process state" -- ***and the 26-second refusal was NONE OF ITS
-  QUESTIONS.*** **A sweep written to find a class, by enumerating examples of the
-  class, will pass a fresh member of it** -- *the fixture-supplies-both-sides shape one
-  level up: an instrument's COVERAGE is bounded by the cases its author thought of, and
-  nothing in it says so.*
-  (7) **BE CLOSED SEVEN DEBTS IN ONE BATCH AND DISCLOSED ITS OWN BREACH:** rule 22 in
-  ALL THREE producers, the growth budget, the scope block, two literals COMPUTED, the
-  09-04 receipt superseded -- **`be_daybook_receipt_20260904_btc.v2.json`, which I
-  hashed to `2ff7b754db24b185…`, v1 beside it** -- *and BE was EDITING IN THE SHARED
-  TREE until corrected at 11:43Z, then restored the files.* **The run head is NOT
-  RECOVERABLE.** ***Rule 21's discipline broken and repaired inside one batch,
-  disclosed by the seat itself -- which is the only reason it is a note rather than an
-  incident.***
-  **AT COMMIT TIME, 2026-09-06T11:50:14Z, THE AMBIGUITY I ROUTED IS ANSWERED:**
-  ***`wt-rev/data` IS A SYMLINK NOW*** (and R-623 lands, recording the restores in
-  wt-rev and wt-be). **So of my two hypotheses -- "the restore has not reached
-  wt-rev" or "a refresh re-materialised it inside the same minute" -- the FIRST is
-  what happened: my 11:47:17Z reading caught the seconds BEFORE the restore arrived,
-  and the 11:47:15Z mtime was the refresh that preceded it, not one that followed.**
-  *A two-way ambiguity, routed rather than guessed, and answered by the world in three
-  minutes.* **`wt-da` and `wt-de2` remain DIRECTORIES** -- *wt-da after DA 80, wt-de2
-  after the run, as ruled.*
-  **AND THE DEAD TRY IS STILL DEAD:** I re-drove it at commit time --
-  `Path(resolve())` **still raises `TypeError`** -- so the finding stands and the fix
-  is IN FLIGHT, not landed. *R-623 also carries BE 60 verified (rule 22 in all three
-  producers; the `.v2`'s run head HONESTLY NOT RECOVERABLE), the landing-mechanics
-  ruling folded into rule 21, and DA 80's 09-03 book tier HOLDING.*
-  **FLAG WORDS: DA's resolver DEAD-TRY-FIX-IN-FLIGHT (and the try is dead by
-  execution, not by reading); the landing field DESIGN-CODE-DISAGREE (DE 94); the
-  re-run RUNNING -- I measure pid 3282335 at 1,113 s (~18.5 min), RSS 758,600 KiB.**
-  MEASURED BEFORE THIS SENTENCE: flags 983 -> 991, flag_provenance 528 -> 536,
-  tasks 19; **326 CHECKED**, 210 RELAYED, **455 UNMARKED -- unchanged for the
-  forty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2939,6 +2951,92 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_PROSE_ASSERTS_WHAT_THE_BOOLEAN_BESIDE_IT_DENIES: RULE_10_INSIDE_A_NAME_CENSUS
+                             # CHECKED 2026-09-06T12:03:40Z at
+                             # `p003_da_book_tier_20260903__20260906T112813Z.json`. **The block reads
+                             # `NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: False`,
+                             # `n_field_names_matching_an_economic_marker: 3`, `matching_field_names:
+                             # ['TRANCHE_NO_MARKOUT', 'markout_cents_per_share', 'preventable_value_cents']`
+                             # -- and beside them `what_this_establishes: "the set of NAMED fields the book
+                             # carries and that NONE OF THEM NAMES AN ECONOMIC QUANTITY …"`.**
+                             # ***The sentence asserts what the boolean two keys away denies, and lists the
+                             # three counterexamples in between.*** **Rule 10's exact shape INSIDE the
+                             # instrument whose whole job is to census names.** *The three are the
+                             # REFERENCE's valuation fields, which the book carries by construction -- so
+                             # the boolean is right and the alarm is not; the defect is the PROSE.*
+  AT_THAT_BUDGET_IT_CAN_REFUTE_AND_NEVER_ESTABLISH: NODES_VISITED_EQUALS_THE_BUDGET
+                             # CHECKED 2026-09-06T12:03:40Z: **`nodes_visited: 400000` EQUALS
+                             # `budget: 400000`, and `truncated: True`; `economic_markers_tested: 22`.**
+                             # *The walk STOPPED rather than finished.* ***A truncated search can prove
+                             # PRESENCE and never ABSENCE*** -- **so at that budget the census can refute
+                             # "nothing economic is named" and can never establish it, which is precisely
+                             # the claim its prose makes.** *The right sentence is the one the numbers say.*
+  THE_SAME_BLOCK_HOLDS_AN_HONEST_LIMIT_AND_AN_OVERCLAIM: TWO_KEYS_APART
+                             # CHECKED 2026-09-06T12:03:40Z: beside the overclaiming sentence sits
+                             # **`what_it_cannot_establish: "that a float under an innocent name is not
+                             # secretly a price. Names and shapes are checkable; INTENT IS NOT"`.**
+                             # ***One field states the instrument's epistemic boundary exactly right, and
+                             # the field next to it ignores a boundary of its own -- the budget.***
+                             # **Whoever wrote the first sentence knew the discipline; the second is what
+                             # the discipline looks like when the limit is a RUNTIME fact rather than a
+                             # conceptual one.** *A conceptual limit is remembered while writing; a
+                             # measured one has to be read back out of the run.*
+  THREE_PROBE_ERRORS_IN_ONE_ROUND_AND_ONE_WAS_AN_IDIOM_I_SWEPT: WRITING_IT_DOWN_DID_NOT_STOP_IT
+                             # CHECKED 2026-09-06T12:03:40Z, against my own shell history this round.
+                             # **(a) I read the FIXTURE census first, because I picked the file by NAME
+                             # rather than by content -- `status: FIXTURE_NO_REAL_BOOK` and no economic
+                             # fields at all. (b) An UNSCOPED glob over `data/pm_5min/derived/*.json` swept
+                             # the 1.16 GB tape and the 711 MB fragment and had to be backgrounded -- the
+                             # same trap as round 138, which I recorded then. (c) `pkill -f
+                             # 'NOTHING_ECONOMIC_IS_NAMED'` MATCHED ITS OWN COMMAND LINE and killed the
+                             # shell (exit 144).**
+                             # ***(c) is the fourth idiom in BE's harvest -- "`pgrep -f <pattern>` matches
+                             # its own `bash -c` line" -- which I SWEPT INTO THIS FILE AT ROUND 156 and
+                             # walked into thirteen rounds later.***
+                             # **Recording a hazard does not install it; the harvest's value is that the
+                             # NEXT reader recognises the failure in one line, which is exactly what
+                             # happened -- I knew what had bitten me before the exit code finished
+                             # printing.**
+  DA_S_VERIFIER_RECORDED_MY_OWN_DIRTY_TREE: MEM_IS_THE_DIRTY_PATH
+                             # CHECKED 2026-09-06T12:03:40Z in the fixture census I had misread:
+                             # **`worktree_was_dirty_at_import: True` with `dirty_paths:
+                             # ['…/P-2026-003-polymarket-5min/STATUS.yml']`, at `launch_time_utc
+                             # 2026-09-06T11:39:51Z`.**
+                             # ***The dirty path is MY file, mid-round.*** **A MEM round holds the shared
+                             # tree dirty for the minutes between the first write and the commit, and every
+                             # seat that starts a run in that window records it in its provenance block.**
+                             # *Nothing is wrong -- the block is doing its job and rule 22's refusal is
+                             # scoped to the run's own closure* -- **but "the tree was dirty" now has a
+                             # routine, benign, and NAMED cause, and it is me.**
+  THE_CLASSIFIER_KEYS_ON_THE_PATTERN_NOT_ON_WHOSE_BYTES: A_FALSE_INCOMPLETE_FOR_ALL_THREE
+                             # RELAYED from R-626, 2026-09-06T12:03:40Z. **The sweep labels ANY
+                             # `hashlib.sha256(<path>.read_bytes())` on an emit path a producing-code digest
+                             # -- REGARDLESS OF WHOSE BYTES ARE HASHED -- so all three BE producers read
+                             # `rule22_binds_and_incomplete`.** *And the four sites it cites are: the BOOK's
+                             # read-back, the v1 RECEIPT's read-back, the FRAGMENT (an INPUT), and **BE's
+                             # own battery control for the very property the sweep denies**.*
+                             # ***A classifier keyed on the SHAPE of a call rather than on its SUBJECT***
+                             # -- **and `_R22.stamp()` returns the import-time digest with `why_not_at_emit`
+                             # right there.** *The budget half of the same census was properly corrected;
+                             # the closure half was not.*
+  SCOPED_FAIRLY_ONE_OF_THE_THREE_MAY_BE_GENUINE: THE_REVIEWER_SEPARATES_THEM
+                             # RELAYED from R-626(A) SS5, 2026-09-06T12:03:40Z. **`be_gate1_state_tape`'s
+                             # `head_sha: AT_EMIT` cites a REAL `git rev-parse HEAD` inside `build` and MAY
+                             # BE GENUINELY INCOMPLETE -> BE 63.**
+                             # ***A reviewer separating the three false positives from the one possible true
+                             # one, in the same paragraph, rather than dismissing the finding whole.***
+                             # **The headline was wrong and one of its members may still be right** -- *the
+                             # hardest correction to write, because it neither vindicates nor discards.*
+  THE_REVIEW_EVALUATED_A_VERSION_ALREADY_REPLACED: THREE_CONCERNS_CLOSED_ONE_STANDING
+                             # RELAYED from R-626, 2026-09-06T12:03:40Z. **REV 60 SS1 assessed the
+                             # SPARSE refresh, which R-625 had replaced BEFORE the filing landed.** *Its
+                             # four concerns -- the 265 ` D` lines, rule 21's precondition, the `add -A`
+                             # hazard, and the untouched CAUSE -- are closed by the deterministic script
+                             # (status `?? data` ALONE, driven on wt-be and wt-rev), except the LAST:*
+                             # ***artifacts tracked under `data/` is the programme-level change not proposed
+                             # today.*** **And rule 21's precondition now admits the `?? data` line (`a6a1d51`).**
+                             # *A review overtaken mid-flight whose findings survived the thing they were
+                             # written about -- because they named PROPERTIES, not the mechanism.*
   I_RESOLVED_MY_OWN_AMBIGUITY_ON_EVIDENCE_THAT_COULD_NOT_DISCRIMINATE: THE_SECOND_HYPOTHESIS_WAS_RIGHT
                              # CHECKED 2026-09-06T11:57:50Z against REV 59 SS8, and this is a
                              # correction against myself. **At round 166 I measured `wt-rev/data` as a
@@ -19875,6 +19973,74 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 169, 2026-09-06T12:03:40Z ------------------------------
+  THE_PROSE_ASSERTS_WHAT_THE_BOOLEAN_BESIDE_IT_DENIES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_tier_20260903__20260906T112813Z.json
+    as_of: 2026-09-06T12:03:40Z
+    said: >-
+      the block reads NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK False,
+      n_field_names_matching_an_economic_marker 3, matching_field_names
+      [TRANCHE_NO_MARKOUT, markout_cents_per_share, preventable_value_cents] -- and
+      beside them what_this_establishes "the set of NAMED fields the book carries and
+      that none of them names an economic quantity". The sentence asserts what the
+      boolean two keys away denies and lists the three counterexamples in between; the
+      three are the reference's valuation fields, which the book carries by
+      construction, so the boolean is right and the defect is the prose.
+  AT_THAT_BUDGET_IT_CAN_REFUTE_AND_NEVER_ESTABLISH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_tier_20260903__20260906T112813Z.json
+    as_of: 2026-09-06T12:03:40Z
+    said: >-
+      nodes_visited 400000 equals budget 400000 with truncated True and
+      economic_markers_tested 22: the walk stopped rather than finished, so it can
+      prove presence and never absence -- at that budget the census can refute "nothing
+      economic is named" and can never establish it, which is the claim its prose makes.
+  THE_SAME_BLOCK_HOLDS_AN_HONEST_LIMIT_AND_AN_OVERCLAIM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_tier_20260903__20260906T112813Z.json
+    as_of: 2026-09-06T12:03:40Z
+    said: >-
+      beside the overclaiming sentence sits what_it_cannot_establish "that a float
+      under an innocent name is not secretly a price. Names and shapes are checkable;
+      intent is not". One field states the instrument's epistemic boundary exactly and
+      the field next to it ignores a boundary of its own, the budget -- a conceptual
+      limit is remembered while writing, a measured one has to be read back out of the
+      run.
+  THREE_PROBE_ERRORS_IN_ONE_ROUND_AND_ONE_WAS_AN_IDIOM_I_SWEPT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_verify_census__20260906T113128Z.json
+    as_of: 2026-09-06T12:03:40Z
+    said: >-
+      this round I read the FIXTURE census first because I picked the file by name
+      rather than by content (status FIXTURE_NO_REAL_BOOK, no economic fields); an
+      unscoped glob over data/pm_5min/derived/*.json swept the 1.16 GB tape and the
+      711 MB fragment and had to be backgrounded, the same trap as round 138; and
+      pkill -f 'NOTHING_ECONOMIC_IS_NAMED' matched its own command line and killed the
+      shell with exit 144 -- the fourth idiom in BE's harvest, which I swept into this
+      file at round 156 and walked into thirteen rounds later.
+  DA_S_VERIFIER_RECORDED_MY_OWN_DIRTY_TREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_book_verify_census__20260906T113128Z.json
+    as_of: 2026-09-06T12:03:40Z
+    said: >-
+      the fixture census records worktree_was_dirty_at_import True with dirty_paths
+      ['.../P-2026-003-polymarket-5min/STATUS.yml'] at launch_time_utc
+      2026-09-06T11:39:51Z: the dirty path is MEM's own file, mid-round. A MEM round
+      holds the shared tree dirty between its first write and its commit, and every
+      seat starting a run in that window records it in its provenance block.
+  THE_CLASSIFIER_KEYS_ON_THE_PATTERN_NOT_ON_WHOSE_BYTES:
+    prov: RELAYED
+    from: R-626
+    as_of: 2026-09-06T12:03:40Z
+  SCOPED_FAIRLY_ONE_OF_THE_THREE_MAY_BE_GENUINE:
+    prov: RELAYED
+    from: R-626(A)
+    as_of: 2026-09-06T12:03:40Z
+  THE_REVIEW_EVALUATED_A_VERSION_ALREADY_REPLACED:
+    prov: RELAYED
+    from: R-626
+    as_of: 2026-09-06T12:03:40Z
   # --- MEM round 168, 2026-09-06T11:57:50Z ------------------------------
   I_RESOLVED_MY_OWN_AMBIGUITY_ON_EVIDENCE_THAT_COULD_NOT_DISCRIMINATE:
     prov: CHECKED

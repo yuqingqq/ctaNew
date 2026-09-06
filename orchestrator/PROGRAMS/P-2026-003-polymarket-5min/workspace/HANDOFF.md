@@ -5,6 +5,96 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 169
+
+**As of 2026-09-06T12:03:40Z. State only — MEM writes no result.**
+
+### AT COMMIT TIME (2026-09-06T12:08:14Z): THE RE-RUN WAS KILLED AT 35 MINUTES
+
+**Not a refusal, not a coordinator stop, not OOM.** Journal: **11:28:44Z → 12:03:43Z,
+34 min 52.780 s CPU, 2.3 G peak**; `de93smoke.scope` inactive; **no SEALED artifact**;
+a **KILLED record** on disk (`…_KILLED__20260906T120555Z.json`) whose
+`NOTHING_WAS_WRITTEN` block reads `find_sealed_day_receipt_status: MISSING`,
+`n_matches: 0`, **`the_day_is_not_consumed: True`**, `book_digest_unchanged: True`.
+
+**The mechanism, driven both ways in the record:** `TERM` to the **process group** →
+the scope **died**; `TERM` to the **launching shell alone** → the scope **survived**.
+*"`systemd-run --scope` registers processes **the caller forks**, so the run sits in
+the launching shell's process group."* **Rule 20 amended (`016a625`): a heavy run is
+never a child of a tool shell — launch as a transient service with `flock` inside the
+unit.** *Third attempt lost, 35 minutes, nothing consumed — and the cause was the
+**launch mechanism**, not the code, the day, or the budget.* **BE has taken the lock
+for the 09-05 fragment.**
+
+### DA's census: the prose contradicts the boolean two keys away
+
+At the 09-03 book tier: **`NOTHING_ECONOMIC_IS_NAMED_IN_THIS_BOOK: False`**,
+**`n_field_names_matching_an_economic_marker: 3`**, **`matching_field_names:
+['TRANCHE_NO_MARKOUT', 'markout_cents_per_share', 'preventable_value_cents']`** — and
+beside them **`what_this_establishes: "… and that NONE OF THEM NAMES AN ECONOMIC
+QUANTITY …"`**. **The sentence contradicts the boolean and lists the three
+counterexamples in between** — rule 10's exact shape *inside the instrument whose job
+is to census names*. The three are the **reference's valuation fields**, carried by
+construction: **the boolean is right, the alarm is not, and the defect is the prose.**
+
+**And at that budget it cannot establish the claim at all:** `nodes_visited: 400000`
+**equals** `budget: 400000`, `truncated: True`. The walk **stopped** rather than
+finished — **a truncated search proves presence, never absence.** *The right sentence
+is the one the numbers say.* **DA 82 queued.**
+
+**Beside the overclaim sits an honest limit:** `what_it_cannot_establish: "that a
+float under an innocent name is not secretly a price. Names and shapes are checkable;
+**intent is not**."` *A conceptual limit is remembered while writing; a **measured**
+one has to be read back out of the run.*
+
+### BE's producers are rule-22 COMPLETE — the sweep's headline is wrong
+
+The classifier labels **any** `hashlib.sha256(<path>.read_bytes())` on an emit path a
+producing-code digest **regardless of whose bytes are hashed**, so all three BE
+producers read `rule22_binds_and_incomplete`. The four cited sites are **the book's
+read-back, the v1 receipt's read-back, the fragment (an input), and BE's own battery
+control for the very property the sweep denies**. `_R22.stamp()` returns the
+import-time digest with `why_not_at_emit`. **The budget half of that census was
+corrected properly; the closure half keyed on shape rather than subject.**
+*Scoped fairly:* `be_gate1_state_tape`'s `head_sha: AT_EMIT` cites a real
+`git rev-parse HEAD` inside `build` and **may be genuinely incomplete** → **BE 63**.
+
+### Three probe errors of mine this round — one an idiom I swept myself
+
+1. I read the **fixture** census first, having picked the file **by name** rather than
+   content.
+2. An **unscoped glob** over `derived/*.json` swept the 1.16 GB tape and the 711 MB
+   fragment and had to be backgrounded — **the same trap as round 138**.
+3. **`pkill -f 'NOTHING_ECONOMIC_IS_NAMED'` matched its own command line** and killed
+   the shell (exit 144) — **the fourth idiom in BE's harvest, which I swept into this
+   file at round 156.** *Recording a hazard does not install it* — and the harvest
+   still paid: I knew what had bitten me before the exit code finished printing.
+
+**And DA's verifier recorded my own dirty tree:** `worktree_was_dirty_at_import: True`,
+`dirty_paths: ['…/STATUS.yml']`, at 11:39:51Z. **Every seat starting a run between my
+first write and my commit records it.** Nothing is wrong — but *"the tree was dirty"*
+now has a routine, benign, named cause: **me**.
+
+### State
+
+- **The re-run RUNNING** — pid 3282335 at **2,011 s (~34 min)**, RSS 788,920 KiB;
+  **receipt expected ≈12:55Z**.
+- **Rule 21's precondition now admits the worktree's `?? data` line** (`a6a1d51`).
+  Three of the four REV-60 concerns are closed by the deterministic refresh; **the
+  fourth — artifacts tracked under `data/` — is the programme-level change not
+  proposed today.**
+- **Queued:** DA 82 (the census sentence computed from its numbers; the classifier
+  keyed on **whose** bytes; a v4 census), BE 62/63, REV 61. DA 81 landed the
+  ambient-state class (43 sites, seven ambients, the 26-second shape driven) and
+  reconciled the landing authority to DE's declaration.
+
+**Counts, measured before the sentence:** flags 1,007 → 1,015, `flag_provenance`
+552 → 560, tasks 19; **340 CHECKED**, 220 RELAYED, **455 UNMARKED — unchanged for
+the forty-fifth round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+3 (Batch 151 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 168
 
 **As of 2026-09-06T11:57:50Z. State only — MEM writes no result.**

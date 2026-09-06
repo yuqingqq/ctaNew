@@ -12704,3 +12704,83 @@ directions.
   forty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 151 — archived 2026-09-06T12:03:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 169 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:47:40Z (MEM ROUND 166 -- R-622, Q-BE-60 AND Q-DA-302 SWEPT. STATE
+  ONLY. THE FINDING IS DEAD CODE THAT PRODUCED THE RIGHT ANSWER FOR A YEAR OF READS.
+  (1) **THE `try` RAISES ON EVERY CALL -- I DROVE IT.** `de_data_root.resolve()` is
+  declared **`-> dict`** and returns one; **`Path(resolve())` raises `TypeError`.** *So
+  in `_derived_dir()`'s `try: … Path(BDR.resolve()) / …`, the body raises EVERY TIME,
+  the bare `except` swallows it, and the tree-relative fallback runs every call:* ***the
+  "one resolver" line was NEVER EXECUTED.*** **And from the SHARED TREE the fallback
+  gives the RIGHT answer** -- *which is exactly why it was invisible: the defect shows
+  only from a worktree, and every seat verifying from the shared tree saw a correct
+  result produced by dead code.*
+  (2) **AND MY OWN ROUND-165 READING STOPPED ONE LEVEL SHORT.** I read the SHAPE and
+  wrote "DA DOES import DE's resolver; the intended path IS the canonical one" --
+  ***true of the source, false of the behaviour.*** **I did not CALL the function.**
+  *The reviewer's standing advice to DE -- "the productive attack is always RUN THE
+  THING, never READ THE DESIGN" -- applied to me, and it cost one round.* **The flag
+  stands as what the SOURCE said, with its as_of; this is what the CALL does.**
+  (3) **THE WORKTREE DRIFT REGENERATES WITHIN SECONDS OF A RESTORE.** Measured:
+  **`wt-be/data` IS a symlink now (mtime 11:46:59Z), restored as stated -- and
+  `wt-rev/data` is STILL A DIRECTORY, mtime 11:47:15Z, TWO SECONDS before my read,
+  with 262 tracked files against the 257 I counted at round 165.** *Either the restore
+  has not reached wt-rev, or a refresh re-materialised it inside the same minute.*
+  ***Either way the measurement says the same thing: restoring is not the whole
+  repair, because the next refresh recreates it.*** ROUTED.
+  (4) **FOUR ROOT RULES FOR ONE ROOT** -- and DA 80's addendum 2 collapses them to
+  ONE, with the four tests and the bare `except` named. ***A defect found in one module
+  turning out to be a COUNT across four is the difference between a fix and a
+  closure*** -- **the second time in two rounds the reviewer's contribution was to turn
+  an instance into an enumeration** (the ambient-lock census was the first).
+  (5) **THE CODE AND THE DESIGN NAME DIFFERENT AUTHORITATIVE FIELDS -- AND DA CHECKS
+  NEITHER.** DE's **code** and DE's **design** name different authoritative
+  landing-digest fields, *and DA's check compares THE DESIGN against DA's OWN
+  CONSTANT, not DE's code.* ***Three parties, three answers, and the check compares
+  the two that are not the one that runs.*** **R-608 gave the landing digest ONE
+  authority "because it is the field DE reads"; this says it was DECLARED in one place
+  and IMPLEMENTED in another.** DE 94, after the run.
+  (6) **AND THE SWEEP IMPLEMENTED INSTANCES, NOT THE CLASS:** three instances of "a
+  verdict from ambient process state" -- ***and the 26-second refusal was NONE OF ITS
+  QUESTIONS.*** **A sweep written to find a class, by enumerating examples of the
+  class, will pass a fresh member of it** -- *the fixture-supplies-both-sides shape one
+  level up: an instrument's COVERAGE is bounded by the cases its author thought of, and
+  nothing in it says so.*
+  (7) **BE CLOSED SEVEN DEBTS IN ONE BATCH AND DISCLOSED ITS OWN BREACH:** rule 22 in
+  ALL THREE producers, the growth budget, the scope block, two literals COMPUTED, the
+  09-04 receipt superseded -- **`be_daybook_receipt_20260904_btc.v2.json`, which I
+  hashed to `2ff7b754db24b185…`, v1 beside it** -- *and BE was EDITING IN THE SHARED
+  TREE until corrected at 11:43Z, then restored the files.* **The run head is NOT
+  RECOVERABLE.** ***Rule 21's discipline broken and repaired inside one batch,
+  disclosed by the seat itself -- which is the only reason it is a note rather than an
+  incident.***
+  **AT COMMIT TIME, 2026-09-06T11:50:14Z, THE AMBIGUITY I ROUTED IS ANSWERED:**
+  ***`wt-rev/data` IS A SYMLINK NOW*** (and R-623 lands, recording the restores in
+  wt-rev and wt-be). **So of my two hypotheses -- "the restore has not reached
+  wt-rev" or "a refresh re-materialised it inside the same minute" -- the FIRST is
+  what happened: my 11:47:17Z reading caught the seconds BEFORE the restore arrived,
+  and the 11:47:15Z mtime was the refresh that preceded it, not one that followed.**
+  *A two-way ambiguity, routed rather than guessed, and answered by the world in three
+  minutes.* **`wt-da` and `wt-de2` remain DIRECTORIES** -- *wt-da after DA 80, wt-de2
+  after the run, as ruled.*
+  **AND THE DEAD TRY IS STILL DEAD:** I re-drove it at commit time --
+  `Path(resolve())` **still raises `TypeError`** -- so the finding stands and the fix
+  is IN FLIGHT, not landed. *R-623 also carries BE 60 verified (rule 22 in all three
+  producers; the `.v2`'s run head HONESTLY NOT RECOVERABLE), the landing-mechanics
+  ruling folded into rule 21, and DA 80's 09-03 book tier HOLDING.*
+  **FLAG WORDS: DA's resolver DEAD-TRY-FIX-IN-FLIGHT (and the try is dead by
+  execution, not by reading); the landing field DESIGN-CODE-DISAGREE (DE 94); the
+  re-run RUNNING -- I measure pid 3282335 at 1,113 s (~18.5 min), RSS 758,600 KiB.**
+  MEASURED BEFORE THIS SENTENCE: flags 983 -> 991, flag_provenance 528 -> 536,
+  tasks 19; **326 CHECKED**, 210 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-second round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
