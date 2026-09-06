@@ -153,6 +153,26 @@ def capture_closure(where: str = "module import") -> int:
     return len(LAUNCH_CLOSURE)
 
 
+def _is_the_ledger_symlink(root: str, rel: str) -> bool:
+    """Is `<root>/<rel>` R-553's symlink to the canonical data root?
+
+    Three facts, all about the object: it is a SYMLINK, and it RESOLVES to
+    the canonical data root, which is read from DE's module rather than
+    typed here (R-235). The caller has already established that git calls
+    it untracked."""
+    try:
+        p = Path(root) / rel.rstrip("/")
+        if not p.is_symlink():
+            return False
+        import da_root as _R                                   # noqa: PLC0415
+        canon = (_R.canonical_from_DEs_source() or {}).get("data")
+        if not canon:
+            return False
+        return str(p.resolve()) == str(Path(canon).resolve())
+    except OSError:
+        return False
+
+
 def _head_state() -> dict:
     """The worktree's HEAD and whether it was dirty, AT IMPORT."""
     root = str(Path(__file__).resolve().parents[2])
@@ -166,9 +186,32 @@ def _head_state() -> dict:
         return r.stdout.strip() if r.returncode == 0 else None
 
     st = _g("status", "--porcelain")
+    if st is None:
+        return {"worktree": root, "head": _g("rev-parse", "HEAD"),
+                "dirty": None, "dirty_paths": []}
+    #: THE LEDGER SYMLINK IS NOT DIRT, AND IT IS EXEMPTED AS A PROPERTY
+    #: (DE 94). A seat worktree's `data/` is R-553's symlink to the ledger:
+    #: it shows as `?? data`, and a name-matched exemption would let any
+    #: file called `data` through. The predicate is UNTRACKED **and** a
+    #: SYMLINK **and** resolving to the canonical data root -- three facts
+    #: about the object, none about its name.
+    exempt, dirt = [], []
+    for line in (x for x in st.split("\n") if x):
+        #: THE PATH IS EVERYTHING AFTER THE 2-CHAR CODE, stripped -- not
+        #: `line[3:]`, which ate a character whenever the separator was
+        #: not exactly one space and reported `ive/...` for a real file.
+        code, rel = line[:2].strip(), line[2:].strip().strip('"')
+        if code == "??" and _is_the_ledger_symlink(root, rel):
+            exempt.append(rel)
+        else:
+            dirt.append(rel)
     return {"worktree": root, "head": _g("rev-parse", "HEAD"),
-            "dirty": bool(st) if st is not None else None,
-            "dirty_paths": [x[3:] for x in (st or "").split("\n") if x][:20]}
+            "dirty": bool(dirt),
+            "dirty_paths": dirt[:20],
+            "exempt_ledger_symlinks": exempt,
+            "why_exempt": (
+                "untracked AND a symlink AND resolving to the canonical "
+                "data root -- a property of the object, never its name")}
 
 
 def closure_drift(closure: dict | None = None) -> list:
