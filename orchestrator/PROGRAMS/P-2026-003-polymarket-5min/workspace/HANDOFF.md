@@ -1,5 +1,107 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
+Updated: 2026-09-06T04:16:41Z — **USER RULING: the day set is the UNTOUCHED set.
+Gate 1 runs 09-03…09-08, G = 6, bound before any run — and a unanimous six
+clears Holm where five never could.** Gate 1 is 1 of 7. Economics:
+`RESULTS.md` §0.
+
+## READ FIRST — round 115
+
+### 1. The ruling, and what I checked myself
+
+*"Do days already opened for a read of the frozen candidate (08-29, 09-01,
+09-02) count as untouched for the Gate-1 test of the arms?"* → **"NO, untouched
+only."**
+
+**The set: 2026-09-03, 09-04, 09-05, 09-06, 09-07, 09-08. G = 6, bound now.**
+
+**Checked by me:** the set has **six** members; its **intersection with the
+previously-opened set is EMPTY**; and the Holm arithmetic — **2⁻⁶ = 0.015625
+≤ 0.025 TRUE**, against **2⁻⁵ = 0.03125 FALSE**. *A unanimous six is
+significance-bearing where five could never have been.* Anything less than
+unanimous is directional at best; **a FAIL needs no power.**
+
+**Day-quality is evaluated on COMPLETE days only** — the reviewer's R-554
+refinement **adopted into the ruling** — which is what makes 09-06's
+six-minutes-into-the-day `False` a non-event rather than a disqualification.
+
+> **And the clause that matters most is about failure: if a future day fails its
+> verdict the set is NOT extended by choosing another day — it WAITS for the next
+> qualifying closed day in calendar order, and G stays 6.** That removes the last
+> place a choice could have been made after seeing. **Without it, a failed day
+> would have handed someone a menu.**
+
+**The runner carries the set as a committed parameter with a falsifier refusing a
+five-day set or a previously-opened day** — *the ruling made mechanically
+unbreakable rather than written down and trusted.*
+
+### 2. My tracking finding is closed — checked at the artifact
+
+**Twelve tracked, twelve on disk, set difference EMPTY.** And **08-31 — the
+era-boundary day I named, carrying the 22:00:02.274534Z transition the whole
+admissibility argument turns on — is tracked**, landed at `0852871` with 08-26
+and 08-27.
+
+**Both halves are now shut:** the worktree swaps fixed **visibility**; this commit
+fixes **distribution**. *A cold reader cloning this repo now receives the verdict
+every admissibility claim resolves to.*
+
+*Worth one line on how it closed: I recorded it twice as an open measurement
+**without routing a fix**, because what to track under `data/` is a standing
+ruling and not mine — and the seat that owns the ruling fixed it two rounds
+after it was named. **Routing a defect in someone else's surface is not deferring
+it.***
+
+### 3. Two things now ride on the 09-07T00:06Z fire
+
+1. **09-06's re-verdict**, on which a **bound G = 6** depends. If the unit does
+   not re-verdict, the set does not complete on schedule — and under R-555's own
+   clause it **waits** rather than substitutes.
+2. **The first production test of the rc-2/rc-4 classification**, under the
+   deploy record — on a path that has been **green while wrong in three distinct
+   ways** (the prose match, the mixed log, the SIGKILL), each fixed after the
+   fact, **none yet exercised in production.**
+
+> **The coupling is the uncomfortable part: the thing that would tell us the
+> re-verdict failed is the thing being tested.** A wrong classification does not
+> merely mis-report itself — **it mis-reports the day the run depends on.**
+
+*Not a routing and not a recommendation — whether anything should be watched
+before that fire is the coordinator's call. Recorded so that if it goes wrong,
+nobody has to reconstruct that both stakes were known in advance.*
+
+### 4. What the smoke waits on
+
+**09-03, economics SEALED until all six complete.** It runs only once **three
+things exist**: the reviewer's approval of design v3, **BE's book declaration
+with `asm` and its first book with a digest**, and the reviewed runner. The set
+completes at the **2026-09-09T00:06Z** verdict.
+
+**One thing the ruling does not touch:** the race read of the frozen candidate is
+a **separate act** on 09-01…09-05 and does not touch these books. *Two reads of
+two objects on overlapping days, kept apart by declaration.*
+
+### 5. Not swept
+
+**DA 57 and DE 72 are NOT in these files.** The coordinator verifies them next
+round, and **I do not carry unverified filings into the state files.**
+
+### 6. Measured before the sentence
+
+**603 flags, 62 CHECKED, 86 RELAYED, 455 UNMARKED, 0 findings;
+`flag_provenance` 148; tasks 19.** *(**Two** ORPHANs this round — two renames,
+both caught before shipping. Sixth and seventh instances of the cause diagnosed
+at round 113.)*
+
+### Still open, still mine
+
+**CURRENCY**, **RELAY FIDELITY**, **CORROBORATION** — **455 of 603 flags never
+audited.** I am at ~14%.
+
+---
+
+PRIOR HEADER, retained:
+
 Updated: 2026-09-06T04:09:46Z — **The shell trap is structural, and measured per seat
 it is not the same everywhere: BE has NO route to the ledger at all.** Gate 1 is
 1 of 7. Economics: `RESULTS.md` §0.

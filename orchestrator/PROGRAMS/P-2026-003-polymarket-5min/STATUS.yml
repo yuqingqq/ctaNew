@@ -63,6 +63,47 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T04:16:41Z (MEM ROUND 115 -- R-555 AND THE TWO VERDICT LANDINGS
+  SWEPT. STATE ONLY. DA 57 AND DE 72 ARE NOT SWEPT: the coordinator verifies them
+  next round and I do not carry unverified filings into the state files.
+  (1) USER RULING: THE DAY SET IS THE UNTOUCHED SET. Days opened for a read of
+  the frozen candidate -- 08-29, 09-01, 09-02 -- DO NOT COUNT. The Gate-1 run is
+  2026-09-03, 09-04, 09-05, 09-06, 09-07, 09-08. **G = 6, BOUND BEFORE ANY RUN.**
+  CHECKED BY ME: the set has six members, ITS INTERSECTION WITH THE
+  PREVIOUSLY-OPENED SET IS EMPTY, and 2^-6 = 0.015625 <= 0.025 TRUE against 2^-5
+  = 0.03125 FALSE -- so a unanimous six IS significance-bearing where five could
+  never have been.
+  (2) DAY-QUALITY IS EVALUATED ON COMPLETE DAYS ONLY -- the reviewer's refinement
+  ADOPTED INTO THE RULING -- which is what makes 09-06's
+  six-minutes-into-the-day False a non-event rather than a disqualification.
+  (3) AND THE CLAUSE THAT MATTERS MOST IS ABOUT FAILURE: IF A FUTURE DAY FAILS
+  ITS VERDICT THE SET IS **NOT EXTENDED BY CHOOSING ANOTHER DAY** -- it WAITS for
+  the next qualifying closed day IN CALENDAR ORDER and G STAYS 6. THAT REMOVES
+  THE LAST PLACE A CHOICE COULD HAVE BEEN MADE AFTER SEEING; without it a failed
+  day would have handed someone a menu. The runner carries the set as a COMMITTED
+  PARAMETER with a falsifier REFUSING a five-day set or a previously-opened day
+  -- the ruling made mechanically unbreakable rather than written down and
+  trusted.
+  (4) MY TRACKING FINDING IS CLOSED, CHECKED BY ME AT 0852871: twelve tracked,
+  twelve on disk, THE SET DIFFERENCE EMPTY -- and 08-31, THE ERA-BOUNDARY DAY I
+  NAMED, IS TRACKED. Both halves are shut: the worktree swaps fixed VISIBILITY
+  and this commit fixes DISTRIBUTION. I recorded it twice without routing a fix,
+  because what to track under data/ is a standing ruling and not mine, and the
+  seat that owns the ruling fixed it two rounds after it was named.
+  (5) THE SMOKE IS 09-03, ECONOMICS SEALED UNTIL ALL SIX COMPLETE, and it runs
+  only once THREE THINGS EXIST: the reviewer's approval of design v3, BE's book
+  declaration with asm AND its first book with a digest, and the reviewed runner.
+  The set completes at the 2026-09-09T00:06Z verdict.
+  (6) TWO THINGS NOW RIDE ON THE 09-07T00:06Z FIRE and they arrived from
+  different directions: 09-06's RE-VERDICT, on which a BOUND G = 6 depends, and
+  THE FIRST PRODUCTION TEST of the rc-2/rc-4 classification on a path that has
+  been GREEN WHILE WRONG IN THREE DISTINCT WAYS. THE COUPLING IS THE
+  UNCOMFORTABLE PART: THE THING THAT WOULD TELL US THE RE-VERDICT FAILED IS THE
+  THING BEING TESTED.
+  (7) ONE THING THE RULING DOES NOT TOUCH: the race read of the frozen candidate
+  is a SEPARATE ACT on 09-01..09-05 and does not touch these books. Two reads of
+  two objects on overlapping days, kept apart by declaration.
+  PRIOR CHECKPOINT:
   2026-09-06T04:09:46Z (MEM ROUND 114 -- R-553 AND R-554 SWEPT. STATE ONLY.
   (1) THE SHELL TRAP IS STRUCTURAL AND I MEASURED IT PER SEAT RATHER THAN
   RELAYING THE SHAPE -- AND THE SHAPE IS NOT TRUE OF EVERY SEAT. R-553 describes
@@ -1998,6 +2039,41 @@ flags:
                              # finding that survives -- BE has NO route to the
                              # ledger -- is STRONGER than the one I first wrote,
                              # and it is established by the corrected probe.
+  TWO_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE: 09-06s-REVERDICT-AND-THE-FIRST-rc-TEST
+                             # RELAYED and recorded as its own flag at
+                             # 2026-09-06T04:16:41Z because it is the single
+                             # scheduled event this programme is most exposed to,
+                             # and the two exposures arrived from different
+                             # directions and have never been counted together.
+                             # (1) 09-06's RE-VERDICT. Its current verdict was
+                             # written SIX MINUTES INTO THE DAY and reads
+                             # day_quality_pass FALSE for that reason alone. The
+                             # ruled Gate-1 set INCLUDES 09-06, and G = 6 is
+                             # BOUND. If the unit does not re-verdict 09-06 at
+                             # 09-07 00:06Z as it does every closed day, the set
+                             # does not complete on schedule -- and under R-555's
+                             # own clause it WAITS rather than substitutes.
+                             # (2) THE FIRST PRODUCTION TEST OF THE rc-2/rc-4
+                             # CLASSIFICATION, under the deploy record. This is
+                             # the path that has been GREEN WHILE WRONG in three
+                             # distinct ways -- the prose match, the mixed log,
+                             # and the SIGKILL -- each fixed after the fact, none
+                             # yet exercised in production. DA's harvest named
+                             # this fire as that test before the day set was
+                             # ruled.
+                             # SO ONE 00:06Z FIRE NOW CARRIES BOTH A GATE-1
+                             # SCHEDULE DEPENDENCY AND THE FIRST LIVE PROOF OF
+                             # THE INSTRUMENT THAT REPORTS WHETHER IT WORKED.
+                             # THE UNCOMFORTABLE PART IS THE COUPLING: THE THING
+                             # THAT WOULD TELL US THE RE-VERDICT FAILED IS THE
+                             # THING BEING TESTED. A wrong classification does
+                             # not merely mis-report itself -- it mis-reports the
+                             # day the run depends on.
+                             # NOT A ROUTING AND NOT A RECOMMENDATION: whether
+                             # anything should be watched or pre-checked before
+                             # that fire is the coordinator's call. Recorded so
+                             # that if it goes wrong, nobody has to reconstruct
+                             # that both stakes were known in advance.
   the_coordinator_wake_mechanism_WORKS: THREE-WAKES-THIS-HOUR-EACH-ACTED-ON
                              # RELAYED from R-552(C). The between-turn stall I
                              # recorded at round 109 as STRUCTURAL -- "the monitor
@@ -2660,7 +2736,57 @@ flags:
                              # deliberately; I HAVE NOT READ ITS CALL SITES AND
                              # CLAIM NOTHING. It is simply the one file where
                              # both vocabularies provably meet.
-  two_options_for_the_gate1_day_set_are_with_the_user: RESTATED-AS-ONE-PARAMETER-BOTH-SETS-ARE-SIX
+  USER_RULING_the_day_set_is_the_UNTOUCHED_set: G-IS-6-FIXED-09-03-TO-09-08
+                             # RELAYED from R-555(A)/(B), the USER's ruling at
+                             # 2026-09-06T04:13Z, and the arithmetic and the set
+                             # composition CHECKED BY ME.
+                             # THE QUESTION AND THE ANSWER: "Do days already
+                             # opened for a read of the frozen candidate (08-29,
+                             # 09-01, 09-02) count as untouched for the Gate-1
+                             # test of the arms?" -- **"NO, untouched only."**
+                             # The coordinator's recommendation, with the
+                             # three-day saving of the alternative stated. This
+                             # fills R-550(D)'s one parameter and closes R-547
+                             # item 2 as amended by R-549(A)/R-550(D).
+                             # THE SET: 2026-09-03, 09-04, 09-05, 09-06, 09-07,
+                             # 09-08. **G = 6, BOUND NOW, BEFORE ANY RUN.**
+                             # CHECKED BY ME: the set has SIX members and its
+                             # INTERSECTION WITH THE PREVIOUSLY-OPENED SET
+                             # {08-29, 09-01, 09-02} IS EMPTY. And the Holm
+                             # arithmetic recomputed: 2^-6 = 0.015625 <= 0.025
+                             # TRUE -- SIGNIFICANCE-BEARING -- against 2^-5 =
+                             # 0.03125 which is not. Anything less than unanimous
+                             # is directional at best; A FAIL NEEDS NO POWER.
+                             # DAY-QUALITY IS EVALUATED ON COMPLETE DAYS ONLY --
+                             # the reviewer's R-554 refinement ADOPTED INTO THE
+                             # RULING -- so the current day's in-progress verdict
+                             # IS NOT AN INPUT. That is what makes 09-06's
+                             # six-minutes-into-the-day False a non-event rather
+                             # than a disqualification.
+                             # AND THE CLAUSE THAT MATTERS MOST IS THE ONE ABOUT
+                             # FAILURE: IF A FUTURE DAY FAILS ITS VERDICT THE SET
+                             # IS **NOT EXTENDED BY CHOOSING ANOTHER DAY** -- it
+                             # WAITS for the next closed day that qualifies, IN
+                             # CALENDAR ORDER, AND G STAYS 6. That removes the
+                             # last place a choice could have been made after
+                             # seeing: without it, a failed day would have handed
+                             # someone a menu.
+                             # SEALED: the smoke day is 09-03, ECONOMICS SEALED
+                             # UNTIL ALL SIX COMPLETE. The set completes at the
+                             # 2026-09-09T00:06Z verdict.
+                             # THE PLAN'S GATE 1 "SAMPLE" LINE IS SUPERSEDED IN
+                             # BAND, and DE 72's runner CARRIES THE SET AS A
+                             # COMMITTED PARAMETER WITH A FALSIFIER THAT REFUSES
+                             # A FIVE-DAY SET OR A PREVIOUSLY-OPENED DAY -- the
+                             # ruling made mechanically unbreakable rather than
+                             # written down and trusted.
+                             # AND ONE THING THIS DOES NOT TOUCH: the race read
+                             # of the frozen candidate (BE 46's declaration) is a
+                             # SEPARATE ACT on 09-01..09-05 and does not touch
+                             # these books. Two reads of two objects on
+                             # overlapping days, kept apart by declaration.
+                             # EARLIER VALUE (rule 13):
+                             # RESTATED-AS-ONE-PARAMETER-BOTH-SETS-ARE-SIX
                              # UPDATED 2026-09-06T03:54:55Z from R-550(D). The
                              # question is now ONE PARAMETER, and both answers
                              # give SIX DAYS -- which changes the trade-off I
@@ -2939,7 +3065,35 @@ flags:
                              # prescribed path, and I have never staged a data/
                              # file from a worktree because I have never worked
                              # in one.
-  the_day_verdict_tracking_gap_is_NARROWED_NOT_CLOSED: 08-31-THE-ERA-BOUNDARY-DAY-IS-STILL-UNTRACKED
+  the_day_verdict_tracking_gap_is_CLOSED_AT_0852871: TWELVE-TRACKED-TWELVE-ON-DISK-NOTHING-LEFT
+                             # CLOSED 2026-09-06T04:16:41Z, CHECKED BY ME, and it
+                             # is the finding I opened at round 113 and carried
+                             # at 114.
+                             # git ls-files over
+                             # data/pm_5min/derived/da_dayverdict_*.json
+                             # excluding superseded copies returns TWELVE; find
+                             # over the same pattern returns TWELVE; the set
+                             # difference is EMPTY. And 08-31 -- THE
+                             # ERA-BOUNDARY DAY I NAMED, the verdict carrying the
+                             # clob_v4 -> clob_v4_1 transition at
+                             # 22:00:02.274534Z that the whole admissibility
+                             # argument turns on -- IS TRACKED, landed at
+                             # 0852871 with 08-26 and 08-27.
+                             # SO BOTH HALVES ARE NOW SHUT: the swap fixed
+                             # VISIBILITY for the seats and this commit fixes
+                             # DISTRIBUTION. A cold reader cloning this repo now
+                             # receives the verdict every admissibility claim
+                             # resolves to.
+                             # WORTH ONE LINE ON HOW IT CLOSED: I recorded it
+                             # twice as an open measurement WITHOUT ROUTING A
+                             # FIX, because what to track under data/ is a
+                             # standing ruling and not mine. It was fixed by the
+                             # seat that owns the ruling, two rounds after being
+                             # named. Routing a defect in someone else's surface
+                             # is not deferring it -- the same shape as
+                             # RESULTS.md's G at round 106.
+                             # EARLIER VALUE (rule 13):
+                             # 08-31-THE-ERA-BOUNDARY-DAY-IS-STILL-UNTRACKED
                              # CHECKED 2026-09-06T04:03:05Z, and the finding is
                              # mine: the landing commit fixed the gap the
                              # reviewer hit and DID NOT CLOSE IT.
@@ -10744,6 +10898,29 @@ flags:
     by its single writer.
 
 focus: >
+  AS-OF 2026-09-06T04:16:41Z, THE DAY SET IS RULED AND G IS BOUND: the USER
+  answered "NO, untouched only", so the Gate-1 run is 09-03..09-08, **G = 6,
+  FIXED BEFORE ANY RUN** -- checked by me: six members, EMPTY intersection with
+  the previously-opened days, and 2^-6 = 0.015625 clears Holm at m = 2 where
+  2^-5 could not. Day-quality is evaluated ON COMPLETE DAYS ONLY, and IF A
+  FUTURE DAY FAILS THE SET WAITS RATHER THAN SUBSTITUTES, G STAYING 6 -- which
+  removes the last place a choice could have been made after seeing. The runner
+  carries the set as a committed parameter with a falsifier refusing a five-day
+  set or a previously-opened day.
+  THE SMOKE IS 09-03 WITH ECONOMICS SEALED UNTIL ALL SIX COMPLETE, and it waits
+  on three things: the reviewer's approval of design v3, BE's book declaration
+  with asm and its first book, and the reviewed runner. The set completes at the
+  2026-09-09T00:06Z verdict.
+  MY TRACKING FINDING IS CLOSED at 0852871 -- twelve tracked, twelve on disk,
+  and 08-31, the era-boundary day, is in git. Visibility and distribution are
+  both shut.
+  TWO THINGS RIDE ON THE 09-07T00:06Z FIRE: 09-06's re-verdict, on which a bound
+  G = 6 depends, and the FIRST PRODUCTION TEST of the rc-2/rc-4 classification on
+  a path that has been green while wrong three distinct ways. THE THING THAT
+  WOULD TELL US THE RE-VERDICT FAILED IS THE THING BEING TESTED.
+  DA 57 and DE 72 are NOT swept -- the coordinator verifies them next round.
+  Gate 1 is 1 of 7. Economics: workspace/RESULTS.md section 0.
+  PRIOR FOCUS, 2026-09-06T04:09:46Z, RETAINED BELOW --
   AS-OF 2026-09-06T04:09:46Z, THE SHELL TRAP IS THE ROUND'S STRUCTURAL FACT AND
   I MEASURED IT PER SEAT: DE and REV are swapped, DA reaches the ledger through
   data/data, and BE HAS NO ROUTE AT ALL -- while holding three uncommitted files
@@ -11657,6 +11834,35 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 115, 2026-09-06T04:16:41Z ------------------------------
+  the_day_verdict_tracking_gap_is_CLOSED_AT_0852871:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260831.json
+    as_of: 2026-09-06T04:16:41Z
+    said: >-
+      git ls-files over data/pm_5min/derived/da_dayverdict_*.json excluding
+      superseded copies returns TWELVE and find over the same pattern returns
+      TWELVE, with an empty set difference; `git ls-files --error-unmatch` on
+      this file succeeds, and `git log -1` on it names 0852871, "Land the 08-26,
+      08-27 and 08-31 day-verdict artifacts". The finding I opened at round 113
+      and carried at 114 is closed. I read filenames and tracking state only; I
+      did not open any verdict.
+  USER_RULING_the_day_set_is_the_UNTOUCHED_set:
+    prov: RELAYED
+    from: >-
+      R-555(A)/(B), the USER's ruling at 2026-09-06T04:13Z. Two things in it I
+      checked myself rather than relayed: the set 09-03..09-08 has six members
+      and its intersection with {08-29, 09-01, 09-02} is EMPTY; and the Holm
+      arithmetic, 2^-6 = 0.015625 <= 0.025 TRUE against 2^-5 = 0.03125 FALSE. The
+      per-day quality values are the coordinator's read at the ledger at 03:59Z
+      and I did not open the verdicts.
+  TWO_THINGS_RIDE_ON_THE_09-07T00:06Z_FIRE:
+    prov: RELAYED
+    from: >-
+      R-555(B) for 09-06's re-verdict and DA's harvest (R-549(E) item 5) for the
+      first production test of the rc-2/rc-4 classification. The observation that
+      both now ride on one fire, and that the instrument being tested is the one
+      that would report the other's failure, is mine.
   # --- MEM round 114, 2026-09-06T04:09:46Z ------------------------------
   # renamed from the_data_shell_trap_seat_worktrees_carry_DIRECTORIES_not_symlinks;
   # the ORPHAN check caught the stale key for the FIFTH consecutive round, same
@@ -11705,18 +11911,6 @@ flag_provenance:
       verdicts I measured as still untracked (08-26, 08-27, 08-31) are three of
       the seven that were invisible to the reviewer's shell.
   # --- MEM round 113, 2026-09-06T04:03:05Z ------------------------------
-  the_day_verdict_tracking_gap_is_NARROWED_NOT_CLOSED:
-    prov: CHECKED
-    artifact: data/pm_5min/derived/da_dayverdict_20260831.json
-    as_of: 2026-09-06T04:03:05Z
-    said: >-
-      git ls-files over data/pm_5min/derived/da_dayverdict_*.json excluding
-      superseded copies returns NINE tracked files (20260828, 20260829, 20260830,
-      20260901..20260906); find over the same pattern returns TWELVE on disk. The
-      three untracked are 20260826, 20260827 and this file, 20260831 -- the
-      era-boundary day R-547(C) cites for the clob_v4 -> clob_v4_1 transition at
-      22:00:02.274534Z. I read filenames and tracking state only; I did not open
-      any verdict.
   my_round_101_census_ALREADY_CONTRADICTED_the_ledger_stops_claim:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
@@ -11854,9 +12048,6 @@ flag_provenance:
       literal") -- the collision is asserted inside a check, not only carried in
       a variable name; da_topup_receipt.py:71 is ERA_FLOOR_RECV_NS with the same
       value asserted at :437. I claim nothing about whether any use is wrong.
-  two_options_for_the_gate1_day_set_are_with_the_user:
-    prov: RELAYED
-    from: R-549(A) -- open, awaiting the USER; the coordinator recommends option (ii)
   the_0824_hour_is_clob_v3_1_and_VERSION_IS_NOT_THE_BAR:
     prov: RELAYED
     from: >-
