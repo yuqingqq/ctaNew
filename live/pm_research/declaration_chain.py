@@ -46,6 +46,12 @@ def _version_of(p: Path) -> int:
 def resolve_head(directory, family: str) -> dict:
     """The chain's head, its pairs, and any ORPHAN BRANCHES.
 
+    A MERGE VERSION carries `also_supersedes`: a list of {path, sha256}
+    naming other tips it supersedes. Those tips become REACHABLE and stop
+    being orphans -- a fork that has been merged is history, not an open
+    branch. Each merge pair is verified against the file on disk
+    (`MERGE_PAIR_MISMATCH`, `MERGE_TARGET_ABSENT`).
+
     REV 81 §5: a fork is REPORTED, not refused. A version that nobody
     supersedes and that is not the head is an orphan branch -- the chain
     still resolves, and whether a fork is a defect under rule 13 is a
@@ -106,10 +112,50 @@ def resolve_head(directory, family: str) -> dict:
             return None, None, "bare-string"
         return None, None, "unknown"
 
+    merges = {}
     for name, e in loaded.items():
+        # A MERGE VERSION closes a fork. Besides its own `supersedes` -- the
+        # single predecessor on its own path -- it may carry
+        # `also_supersedes`: a list of {path, sha256} naming OTHER TIPS it
+        # supersedes. A tip named there is REACHABLE from the head and stops
+        # being an orphan; no content is taken from it. A resolver that does
+        # not read the field reports the merged tips as orphans forever, so
+        # its after-the-merge answer is vacuous -- which is what this one
+        # did to DE's v25 (Q-BE-322).
+        also = (e["doc"] or {}).get("also_supersedes") or []
+        if isinstance(also, list) and also:
+            named = []
+            for item in also:
+                if not isinstance(item, dict) or not item.get("path"):
+                    broken.append({"version": name, "shape": "merge-malformed",
+                                   "supersedes": str(item)[:120],
+                                   "why": "an `also_supersedes` entry is not "
+                                          "a {path, sha256} pair"})
+                    continue
+                tname = Path(str(item["path"])).name
+                if tname not in loaded:
+                    broken.append({"version": name, "shape": "merge-absent",
+                                   "names": tname,
+                                   "why": "MERGE_TARGET_ABSENT: the merge "
+                                          "names a version that is not in "
+                                          "this family on disk"})
+                    continue
+                if loaded[tname]["sha256"] != item.get("sha256"):
+                    broken.append({"version": name, "shape": "merge-mismatch",
+                                   "names": tname,
+                                   "pair_sha256": item.get("sha256"),
+                                   "on_disk_sha256": loaded[tname]["sha256"],
+                                   "why": "MERGE_PAIR_MISMATCH: the merge "
+                                          "names a tip whose digest differs "
+                                          "from the file on disk"})
+                    continue
+                superseded.setdefault(tname, []).append(name)
+                named.append(tname)
+            if named:
+                merges[name] = named
         sup = (e["doc"] or {}).get("supersedes")
         prev, want, shape = _predecessor(sup)
-        shapes[name] = shape
+        shapes[name] = ("merge+" + shape) if name in merges else shape
         if shape in ("bare-string", "chain-malformed", "unknown") and sup:
             broken.append({"version": name, "shape": shape,
                            "supersedes": str(sup)[:120],
@@ -126,6 +172,22 @@ def resolve_head(directory, family: str) -> dict:
                            "pair_sha256": want,
                            "on_disk_sha256": loaded[prev]["sha256"]})
         superseded.setdefault(prev, []).append(name)
+    m_absent = [b for b in broken if b.get("shape") == "merge-absent"]
+    if m_absent:
+        raise ChainRefused(
+            f"MERGE_TARGET_ABSENT: "
+            f"{[(b['version'], b['names']) for b in m_absent]}. A merge that "
+            f"names a version not present in this family cannot make it "
+            f"reachable, and a tip that does not exist is not a tip that "
+            f"was closed.")
+    m_bad = [b for b in broken if b.get("shape") in ("merge-mismatch",
+                                                     "merge-malformed")]
+    if m_bad:
+        raise ChainRefused(
+            f"MERGE_PAIR_MISMATCH: "
+            f"{[(b['version'], b.get('names'), b.get('why', '')[:40]) for b in m_bad]}. "
+            f"A merge link is a {{path, sha256}} pair like any other: naming "
+            f"a tip whose bytes have moved closes nothing.")
     unsupported = [b for b in broken if b.get("shape") in
                    ("bare-string", "chain-malformed", "unknown")]
     if unsupported:
@@ -146,13 +208,34 @@ def resolve_head(directory, family: str) -> dict:
                 "supersedes": (loaded[n]["doc"] or {}).get("supersedes")}
                for n in tips[:-1]]
     forks = {prev: names for prev, names in superseded.items() if len(names) > 1}
+    merged_tips = {t for ts in merges.values() for t in ts}
+
+    def _fork_status(branches):
+        """A fork is MERGED when none of its BRANCHES is still an open tip.
+
+        The first form of this asked whether the fork's PREDECESSOR was in
+        `merged_tips` -- the wrong end of the link entirely, and it reported
+        OPEN for a fork whose every branch had just been merged. A branch is
+        open if nothing supersedes it and no merge names it.
+        """
+        open_branches = [b for b in branches
+                         if b not in superseded and b not in merged_tips]
+        return ("MERGED" if not open_branches else "OPEN"), open_branches
     return {"family": family, "dir": str(d),
             "name": head["path"].name, "path": str(head["path"]),
             "sha256": head["sha256"], "doc": head["doc"],
             "version": head["version"], "n_versions": len(loaded),
             "orphan_branches": orphans,
             "link_shapes": shapes,
+            "merges": merges,
+            "n_merge_links": sum(len(v) for v in merges.values()),
             "forks_two_versions_superseding_one": forks,
+            "fork_status": {p: _fork_status(bs)[0]
+                            for p, bs in forks.items()},
+            "fork_open_branches": {p: _fork_status(bs)[1]
+                                   for p, bs in forks.items()
+                                   if _fork_status(bs)[1]},
+            "merged_tips": sorted(merged_tips),
             "head_rule": "the highest version number among the versions "
                          "nobody supersedes",
             "pair": {"path": str(head["path"]), "sha256": head["sha256"]}}
@@ -306,6 +389,69 @@ def _falsify() -> int:
        f"-- an unread link reported as an orphan is a MISSING link claimed "
        f"where an UNREAD one exists (Q-MEM-211), and the stamped name parses "
        f"as version {he['version']}, not 0")
+    # THE MERGE CELLS (Q-BE-322). A fork that has been merged is HISTORY,
+    # not an open branch: a resolver that does not read `also_supersedes`
+    # reports the merged tips as orphans forever, and its after-the-merge
+    # answer is vacuous.
+    dm = Path(tempfile.mkdtemp(prefix="dc_merge_"))
+    (dm / f"{FAM}_v1.json").write_text(json.dumps(pl(None, "base"), indent=1,
+                                                  sort_keys=True) + "\n")
+    b1 = {"path": str(dm / f"{FAM}_v1.json"), "sha256": _sha(dm / f"{FAM}_v1.json")}
+    for n in (2, 3):
+        (dm / f"{FAM}_v{n}.json").write_text(
+            json.dumps(pl(b1, f"branch {n}"), indent=1, sort_keys=True) + "\n")
+    pre = resolve_head(dm, FAM)
+    v4 = pl({"path": str(dm / f"{FAM}_v3.json"),
+             "sha256": _sha(dm / f"{FAM}_v3.json")}, "the merge")
+    v4["also_supersedes"] = [
+        {"path": str(dm / f"{FAM}_v2.json"),
+         "sha256": _sha(dm / f"{FAM}_v2.json"),
+         "what_this_link_is": "a MERGE link: the tip becomes reachable"}]
+    (dm / f"{FAM}_v4.json").write_text(json.dumps(v4, indent=1, sort_keys=True) + "\n")
+    hm = resolve_head(dm, FAM)
+    ok([o["version"] for o in pre["orphan_branches"]] == [f"{FAM}_v2.json"]
+       and hm["name"] == f"{FAM}_v4.json"
+       and hm["orphan_branches"] == []
+       and hm["n_merge_links"] == 1
+       and list(hm["fork_status"].values()) == ["MERGED"],
+       f"CELL 8 A MERGE CLOSES A FORK: before, orphans "
+       f"{[o['version'] for o in pre['orphan_branches']]}; after v4 merges "
+       f"v2, head {hm['name']}, orphans {hm['orphan_branches']}, "
+       f"fork_status {list(hm['fork_status'].values())} -- a fork that was "
+       f"merged is history, not an orphan")
+    dmm = Path(tempfile.mkdtemp(prefix="dc_mergebad_"))
+    for n, sup in ((1, None), (2, None)):
+        (dmm / f"{FAM}_v{n}.json").write_text(
+            json.dumps(pl(sup, f"v{n}"), indent=1, sort_keys=True) + "\n")
+    bad = pl({"path": str(dmm / f"{FAM}_v2.json"),
+              "sha256": _sha(dmm / f"{FAM}_v2.json")}, "bad merge")
+    bad["also_supersedes"] = [{"path": str(dmm / f"{FAM}_v1.json"),
+                               "sha256": "e" * 64}]
+    (dmm / f"{FAM}_v3.json").write_text(json.dumps(bad, indent=1, sort_keys=True) + "\n")
+    try:
+        resolve_head(dmm, FAM); mm = "NOT REFUSED"
+    except ChainRefused as e:
+        mm = str(e).split(":")[0]
+    ok(mm == "MERGE_PAIR_MISMATCH",
+       f"CELL 9 a merge naming a tip whose digest has MOVED is REFUSED by "
+       f"name ({mm}) -- a merge link is a pair like any other and naming "
+       f"moved bytes closes nothing")
+    dma = Path(tempfile.mkdtemp(prefix="dc_mergeabs_"))
+    (dma / f"{FAM}_v1.json").write_text(json.dumps(pl(None), indent=1,
+                                                   sort_keys=True) + "\n")
+    ab = pl({"path": str(dma / f"{FAM}_v1.json"),
+             "sha256": _sha(dma / f"{FAM}_v1.json")}, "absent merge")
+    ab["also_supersedes"] = [{"path": str(dma / f"{FAM}_v99.json"),
+                              "sha256": "f" * 64}]
+    (dma / f"{FAM}_v2.json").write_text(json.dumps(ab, indent=1, sort_keys=True) + "\n")
+    try:
+        resolve_head(dma, FAM); ma = "NOT REFUSED"
+    except ChainRefused as e:
+        ma = str(e).split(":")[0]
+    ok(ma == "MERGE_TARGET_ABSENT",
+       f"CELL 10 a merge naming a version NOT PRESENT is REFUSED by name "
+       f"({ma}) -- a tip that does not exist is not a tip that was closed")
+
     du = Path(tempfile.mkdtemp(prefix="dc_unsup_"))
     (du / f"{FAM}_v1.json").write_text(json.dumps(pl(None), indent=1,
                                                   sort_keys=True) + "\n")
