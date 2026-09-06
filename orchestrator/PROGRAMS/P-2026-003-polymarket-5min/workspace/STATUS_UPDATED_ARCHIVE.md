@@ -14401,3 +14401,83 @@ directions.
   sixty-first round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 171 — archived 2026-09-06T14:48:16Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 189 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T14:28:34Z (MEM ROUND 186 -- R-656 SWEPT, tip `7e4e0bb`; DA 91 landed DURING the
+  round and is swept with it. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ,
+  QUOTED OR INFERRED.**
+  (1) **`producing_code_locatable` VERIFIED AT THE COMMIT, BY ME:** `git cat-file blob
+  b741352:…/de_multiday_gate1_runner.py | sha256sum` → **`f6071f1245ca07425c…`**, the digest
+  R-656 names. *The bytes that ran are in the object store at the commit the receipt names;
+  I read them there rather than from a worktree.*
+  (2) ***THE "299" WAS NEVER A CENSUS OF THE RECEIPT.*** DA 91's superseding pre-read
+  carries **`n_receipt_leaves_walked = 545` beside `n_leaves_emitted = 315`** -- *and the
+  second was 299 at 14:08.* **So that number counts DA'S OWN RECORD and MOVES WITH IT.**
+  ***My round-185 wording ("DA counted a narrower population than the reviewer's 545") IS
+  SUPERSEDED IN BAND by the artifact's own two named counts*** -- *each census now says
+  what it counts in its own field name, so no reader infers a denominator from a number.*
+  (3) **INCOMPLETE IS NOT FLAGGED, AND `None` IS NOT 0.** `status: INCOMPLETE` (was FLAGGED)
+  with *"FLAGGED is reserved for a flag IN THE DAY"*; `n_arms_agreeing: None` with *"no
+  population was recomputed, so no arm was compared. **0 would read as two arms
+  DISAGREEING**"*, beside `n_arms_declared 2` and `n_arms_with_a_recomputed_population 0`.
+  ***Two vocabularies separated in one edit: "I could not" versus "I found something" -- the
+  day's fourth three-valued repair and the first on a STATUS rather than a count.***
+  (4) **THE LITERAL PIN IS GONE FROM THE RUNNER:** no `heavy_run_form_v<N>` literal remains;
+  the call site is `form = heavy_run_form()` with the chain-head machinery beside it. *The
+  finding it closes: the runner pinned v2 BY LITERAL **34 seconds after v3 existed** -- the
+  third instance of a literal that must track something that moves.* ***A declaration that
+  supersedes by pair is only as good as the readers that resolve the CHAIN HEAD.***
+  (5) **THE NON-HEAD CENSUS NAMES WHAT IT FINDS** (21,636 B, `aa4ef4f97b17…`): **20
+  literals, 2 naming a non-head; 20 families, 4 without exactly one head; 5 checks, 0
+  failed**, under *"each literal belongs to the seat that wrote it; this census names
+  them"*. *A directory-wide instrument that NAMES rather than rules -- the only form that
+  crosses seat boundaries without becoming an entitlement.*
+  (6) ***AND I READ A FILE WHILE IT WAS BEING WRITTEN.*** *My `ls` at 14:27:50 showed the
+  superseding pre-read at **23,763 B**; my `stat` at 14:28:34 shows **24,704 B, mtime
+  14:28:03**, `65048af3fda7…`.* **The same NAME was written twice inside ~13 seconds, so a
+  size quoted from the first read would have described bytes that no longer exist.**
+  ***And a second slip in the same census: a pre-read stamped `142709Z` existed when I
+  listed at 14:27:13 and is gone, while the NON-HEAD CENSUS stamped `142709Z` remains -- so
+  my substring check for "142709Z" answered 1 without telling me WHICH artifact it
+  found.*** *Two artifacts sharing a name-stamp; the digest and the full name are the only
+  identity.*
+  (7) **`output_format` IS RULED AND IN NO COPY YET:** `grep -c` returns **0** in both
+  landed journal copies. *The emitter/artifact distinction for the FOURTH time today, and
+  the honest sentence is the same each time: true of what will be written, not of what a
+  reader resolves now.*
+  (8) **R-620 INTERPRETED: DE 101's GO NAMES THE CONDITION** ("launch once when `be64book`
+  has finished") **and that is ONE LAUNCH, not a standing licence** -- *the condition
+  replaces the coordinator's watch, not the count.* **State: the book `loaded / active /
+  running`, `MemoryCurrent` 4,854,235,136 B, `MemoryPeak` 4,933,337,088 B, payload at 25:03,
+  RSS 3,574,592 KiB; DE 100 still READY-AND-BLOCKED, its rehearsal `862252360579b779…`
+  unused.**
+  ***AT COMMIT TIME, 2026-09-06T14:31:33Z: THE 09-05 BOOK FINISHED AND THE CONDITIONAL GO
+  FIRED BY ITSELF.*** **The book is `be_daybook_20260905_btc.pkl`, 260,449,687 B
+  (`499f85967367…`), with its receipt at 30,004 B (`394c292cd92d…`), written 14:30:35-37Z;
+  the unit's own lines read `assembly_s 1114.7`, `peak_gb 3.551`, and `Consumed 28min
+  8.235s CPU time, 4.8G memory peak`.** **`be64book` was COLLECTED on success --
+  `not-found / inactive / dead / 0` -- and `MemoryPeak` now reads `[not set]`: the defaults
+  after collection are NOT uniformly zeros.** *BE's launcher carries no
+  `RemainAfterExit=yes`; that is DE's v3 form.*
+  ***AND DE 101 LAUNCHED WITHIN THE MINUTE: `de101smoke.service` started 14:31:18Z --
+  `loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`,
+  `RemainAfterExit=yes`, MainPID 3521828 = `flock` with `PPid 1004`, payload 3521829 --
+  running the 09-04 day behind `flock -n -E 75`.*** **One launch, on a named condition, with
+  no seat deciding it in the moment; the first heavy run to carry the FULL ruled form.**
+  *DE 101(a) also landed design v22 (the seal's SCOPE written down before day 2) and the
+  09-04 re-rehearsal.*
+  **FLAG WORDS: the 09-05 book PAST-FOUR-POINT-NINE-GIGABYTES; the pre-read
+  INCOMPLETE-NOT-FLAGGED (n_arms_agreeing None); the literal pin GONE-FROM-THE-RUNNER; the
+  GO ONE-LAUNCH-ON-A-NAMED-CONDITION.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,144 -> 1,152, flag_provenance 689 -> 697,
+  tasks 19; **451 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

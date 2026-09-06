@@ -63,6 +63,74 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T14:48:16Z (MEM ROUND 189 -- R-661 AND R-662 SWEPT AS ONE BATCH, tip `477d367`.
+  STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
+  (1) ***THE SEAL SCOPE IS VERSIONED, AND I DROVE THE LADDER:*** **v21 → 8 names, v22 → 8,
+  v23 → 11, `None` → 11; `DESIGN_VERSION_IN_FORCE = 23`; `SEALED_FROM_DESIGN_VERSION` maps
+  exactly the three outcome counts to 23.** *The docstring is the ruling in one line: "A
+  receipt from before a name was sealed is judged WITHOUT it -- it did not disobey a rule
+  that did not exist."* **And `design_version_of_receipt()` judges a receipt carrying neither
+  field -- the 09-03, produced under v21 -- "under the version in force when the SEAL SCOPE
+  WAS LAST UNCHANGED: v22".** *REV 72 drove the counterfactual: a RETROACTIVE list reads the
+  landed 09-03 receipt as a SIX-FIELD LEAK; the correction reached DE at 14:45Z, before v23
+  landed.*
+  (2) **THE GATE'S EXCLUSION OF TERMINATION RECORDS IS DECIDABLE BY CODE:** the `_SEALED__`
+  glob matches **1 of the 09-03 day's 3 artifacts** (the others `REFUSED__`, `KILLED__`) and
+  **0 of the 09-04 day's 1** (the `STOPPED__` record). ***"A termination record is not a
+  sealed day" is not a convention a reader must remember -- it is a glob that cannot match
+  one.*** **AND MY FIRST PROBE GOT IT WRONG** -- an extra `_*` in my pattern measured 0
+  SEALED for BOTH days, *which would have read as the gate finding nothing at all.*
+  **Twenty-first "suspect the probe first".**
+  (3) ***THE COORDINATOR'S OWN SWEEP CARRIED MY ROW UNDER A MESSAGE THAT IS NOT IN IT.***
+  **`f0cee29` announces "R-662: REV 72 verified…" and contains ONE insertion: my `Q-MEM-176`
+  row, with NO `### R-662` heading. `67b4946` is R-662 proper.** *The runbook's own account:
+  "at 14:46Z the insertion REFUSED CORRECTLY and the shell went on to add and commit
+  anyway."* **The hold worked; the SHELL did not chain on it.** ***Rule 21's third form
+  reached my row a SECOND time -- and this time the commit's MESSAGE describes work that is
+  not in the commit, which is the more dangerous half.***
+  (4) **AND THE RULE NOW SAYS SO:** *"BEFORE every register insertion, `git status --short
+  -- $R` must be EMPTY (R-661, MEM 187's landing note)… THE HOLD IS ONLY A HOLD IF THE
+  COMMIT IS CHAINED ON THE INSERTION'S EXIT."* ***With the loss named exactly: "nothing is
+  lost but ATTRIBUTION IS WRONG and a half-written row could be committed."*** *My landing
+  note is the citation in a runbook rule two rounds later -- and the rule needed a second
+  failure to find its own gap: a refusal nothing consumes is advice.*
+  (5) **DA 92's MARKER IS A LABEL; DA 93's DATAFLOW GATE IS THE GUARD -- COMPOSED:** 246
+  literals → **69 pins** → **0 naming a non-head**, the two remaining guards reading
+  `MARKED_AND_NOT_A_PIN`. ***A marker alone lets a seat excuse anything by labelling it; a
+  dataflow gate alone flags strings that never open a file. Together the census refuses on a
+  PROPERTY and forgives on a DECLARED intent.*** *And the allowlist itself has NO CHAIN HEAD
+  → DA 94: the instrument that decides which literals are admissible is a literal nobody has
+  linked.*
+  (6) **BE CLOSED THE CONSUMER, NOT THE TYPE.** *My round-188 measurement stands --
+  `scope.peak_bytes` str, `peak_censoring.peak_bytes` int, one receipt.* ***R-662's
+  distinction is the one that matters: the reader was fixed and the FIELD was not, so the
+  next reader of that artifact meets the same mismatch.*** **BE 66 decides the INTERFACE.**
+  *A consumer-side fix is invisible to every other consumer.*
+  (7) **THE STOP'S PRINCIPLE, BESIDE R-603:** ***"A provenance error is CORRECTABLE IN BAND;
+  a DISCLOSURE is not."*** *A receipt naming the wrong commit can be superseded; a number
+  that has been READ cannot be un-read.* **The 09-03 counts were seen by THREE SEATS, so the
+  seal there is PROSPECTIVE and the disclosure goes into design v23** -- *and the 09-04 run
+  was stopped four minutes in so that day would not join them.*
+  (8) **THE QUEUE AT THE RELAUNCH:** DE 102(2) landed -- *"the seal scope corrected and
+  SCOPED, the parent identified by its EXECUTABLE"* (REV 71's `argv[0]`-spoofable item
+  closed by `/proc/<pid>/exe`) -- **the lock is free, `de102smoke` is the relaunch under v23
+  with rehearsal v4, DA 94 and REV 73 open.** ***The 09-04 day will be produced under a seal
+  scope written down BEFORE the day was run -- the first time in this chain that is true.***
+  **AT COMMIT TIME, 2026-09-06T14:51:24Z: R-663 LANDED** -- DE 102(2) verified, **design v23
+  carrying the SCOPED seal AND THE DISCLOSURE**, the resolver refusing its attack set, with
+  the artifacts at `92220be`. *The lock is free and `de102smoke` has not launched.*
+  ***AND I APPLIED THE NEW RUNBOOK PRECONDITION TO MY OWN LANDING:*** **I read `git status
+  --short -- COORDINATION.md` BEFORE writing my Q row (EMPTY, so the insertion is
+  admissible), and I CHAINED the write to the commit in ONE command with `&&`** -- *which is
+  exactly the gap `f0cee29` fell through at 14:46Z.* **A rule written two commits ago,
+  obeyed by the seat whose landing note produced it.**
+  **FLAG WORDS: the seal scope VERSIONED-NOT-RETROACTIVE (8 at v22, 11 at v23); the
+  termination records EXCLUDED-BY-A-GLOB; my row CARRIED-AGAIN (rule 21's third form, twice);
+  BE 66 DECIDES-THE-INTERFACE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,169 -> 1,177, flag_provenance 714 -> 722,
+  tasks 19; **472 CHECKED**, 250 RELAYED, **455 UNMARKED -- unchanged for the
+  sixty-fifth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
   2026-09-06T14:42:11Z (MEM ROUND 188 -- R-659 AND R-660 SWEPT AS ONE BATCH, tip `25752fa`.
   STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ, QUOTED OR INFERRED.**
   (1) ***THE SAME NUMBER APPEARS TWICE IN ONE RECEIPT WITH TWO TYPES.*** **`scope.peak_bytes`
@@ -205,76 +273,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 1,152 -> 1,160, flag_provenance 697 -> 705,
   tasks 19; **459 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
   sixty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T14:28:34Z (MEM ROUND 186 -- R-656 SWEPT, tip `7e4e0bb`; DA 91 landed DURING the
-  round and is swept with it. STATE ONLY. MEM ASSERTS NO RESULT. **NO SEALED VALUE READ,
-  QUOTED OR INFERRED.**
-  (1) **`producing_code_locatable` VERIFIED AT THE COMMIT, BY ME:** `git cat-file blob
-  b741352:…/de_multiday_gate1_runner.py | sha256sum` → **`f6071f1245ca07425c…`**, the digest
-  R-656 names. *The bytes that ran are in the object store at the commit the receipt names;
-  I read them there rather than from a worktree.*
-  (2) ***THE "299" WAS NEVER A CENSUS OF THE RECEIPT.*** DA 91's superseding pre-read
-  carries **`n_receipt_leaves_walked = 545` beside `n_leaves_emitted = 315`** -- *and the
-  second was 299 at 14:08.* **So that number counts DA'S OWN RECORD and MOVES WITH IT.**
-  ***My round-185 wording ("DA counted a narrower population than the reviewer's 545") IS
-  SUPERSEDED IN BAND by the artifact's own two named counts*** -- *each census now says
-  what it counts in its own field name, so no reader infers a denominator from a number.*
-  (3) **INCOMPLETE IS NOT FLAGGED, AND `None` IS NOT 0.** `status: INCOMPLETE` (was FLAGGED)
-  with *"FLAGGED is reserved for a flag IN THE DAY"*; `n_arms_agreeing: None` with *"no
-  population was recomputed, so no arm was compared. **0 would read as two arms
-  DISAGREEING**"*, beside `n_arms_declared 2` and `n_arms_with_a_recomputed_population 0`.
-  ***Two vocabularies separated in one edit: "I could not" versus "I found something" -- the
-  day's fourth three-valued repair and the first on a STATUS rather than a count.***
-  (4) **THE LITERAL PIN IS GONE FROM THE RUNNER:** no `heavy_run_form_v<N>` literal remains;
-  the call site is `form = heavy_run_form()` with the chain-head machinery beside it. *The
-  finding it closes: the runner pinned v2 BY LITERAL **34 seconds after v3 existed** -- the
-  third instance of a literal that must track something that moves.* ***A declaration that
-  supersedes by pair is only as good as the readers that resolve the CHAIN HEAD.***
-  (5) **THE NON-HEAD CENSUS NAMES WHAT IT FINDS** (21,636 B, `aa4ef4f97b17…`): **20
-  literals, 2 naming a non-head; 20 families, 4 without exactly one head; 5 checks, 0
-  failed**, under *"each literal belongs to the seat that wrote it; this census names
-  them"*. *A directory-wide instrument that NAMES rather than rules -- the only form that
-  crosses seat boundaries without becoming an entitlement.*
-  (6) ***AND I READ A FILE WHILE IT WAS BEING WRITTEN.*** *My `ls` at 14:27:50 showed the
-  superseding pre-read at **23,763 B**; my `stat` at 14:28:34 shows **24,704 B, mtime
-  14:28:03**, `65048af3fda7…`.* **The same NAME was written twice inside ~13 seconds, so a
-  size quoted from the first read would have described bytes that no longer exist.**
-  ***And a second slip in the same census: a pre-read stamped `142709Z` existed when I
-  listed at 14:27:13 and is gone, while the NON-HEAD CENSUS stamped `142709Z` remains -- so
-  my substring check for "142709Z" answered 1 without telling me WHICH artifact it
-  found.*** *Two artifacts sharing a name-stamp; the digest and the full name are the only
-  identity.*
-  (7) **`output_format` IS RULED AND IN NO COPY YET:** `grep -c` returns **0** in both
-  landed journal copies. *The emitter/artifact distinction for the FOURTH time today, and
-  the honest sentence is the same each time: true of what will be written, not of what a
-  reader resolves now.*
-  (8) **R-620 INTERPRETED: DE 101's GO NAMES THE CONDITION** ("launch once when `be64book`
-  has finished") **and that is ONE LAUNCH, not a standing licence** -- *the condition
-  replaces the coordinator's watch, not the count.* **State: the book `loaded / active /
-  running`, `MemoryCurrent` 4,854,235,136 B, `MemoryPeak` 4,933,337,088 B, payload at 25:03,
-  RSS 3,574,592 KiB; DE 100 still READY-AND-BLOCKED, its rehearsal `862252360579b779…`
-  unused.**
-  ***AT COMMIT TIME, 2026-09-06T14:31:33Z: THE 09-05 BOOK FINISHED AND THE CONDITIONAL GO
-  FIRED BY ITSELF.*** **The book is `be_daybook_20260905_btc.pkl`, 260,449,687 B
-  (`499f85967367…`), with its receipt at 30,004 B (`394c292cd92d…`), written 14:30:35-37Z;
-  the unit's own lines read `assembly_s 1114.7`, `peak_gb 3.551`, and `Consumed 28min
-  8.235s CPU time, 4.8G memory peak`.** **`be64book` was COLLECTED on success --
-  `not-found / inactive / dead / 0` -- and `MemoryPeak` now reads `[not set]`: the defaults
-  after collection are NOT uniformly zeros.** *BE's launcher carries no
-  `RemainAfterExit=yes`; that is DE's v3 form.*
-  ***AND DE 101 LAUNCHED WITHIN THE MINUTE: `de101smoke.service` started 14:31:18Z --
-  `loaded / active / running / 0 / success`, `InvocationID 499d6470b7844459…`,
-  `RemainAfterExit=yes`, MainPID 3521828 = `flock` with `PPid 1004`, payload 3521829 --
-  running the 09-04 day behind `flock -n -E 75`.*** **One launch, on a named condition, with
-  no seat deciding it in the moment; the first heavy run to carry the FULL ruled form.**
-  *DE 101(a) also landed design v22 (the seal's SCOPE written down before day 2) and the
-  09-04 re-rehearsal.*
-  **FLAG WORDS: the 09-05 book PAST-FOUR-POINT-NINE-GIGABYTES; the pre-read
-  INCOMPLETE-NOT-FLAGGED (n_arms_agreeing None); the literal pin GONE-FROM-THE-RUNNER; the
-  GO ONE-LAUNCH-ON-A-NAMED-CONDITION.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,144 -> 1,152, flag_provenance 689 -> 697,
-  tasks 19; **451 CHECKED**, 246 RELAYED, **455 UNMARKED -- unchanged for the
-  sixty-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
@@ -2949,6 +2947,117 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_SEAL_SCOPE_IS_VERSIONED_AND_I_DROVE_THE_LADDER: EIGHT_AT_V22_ELEVEN_AT_V23
+                             # CHECKED 2026-09-06T14:48:16Z by driving
+                             # `economic_fields_in_force()`. **v21 → 8 names; v22 → 8; v23 → 11;
+                             # `None` (this run) → 11; `DESIGN_VERSION_IN_FORCE = 23`; and
+                             # `SEALED_FROM_DESIGN_VERSION` maps exactly the three outcome counts to
+                             # 23.**
+                             # ***The docstring is the ruling in one line: "A receipt from before a
+                             # name was sealed is judged WITHOUT it -- it did not disobey a rule
+                             # that did not exist."*** **And `design_version_of_receipt()` reads the
+                             # version from `provenance.design.path`, judging a receipt that carries
+                             # neither -- the 09-03, produced under v21 -- "under the version in
+                             # force when the SEAL SCOPE WAS LAST UNCHANGED: v22, the last version
+                             # whose scope was the original eight".**
+                             # *REV 72 drove the counterfactual: a RETROACTIVE list reads the landed
+                             # 09-03 receipt as a SIX-FIELD LEAK. The correction reached DE at
+                             # 14:45Z, before v23 landed.*
+  THE_GATES_EXCLUSION_OF_TERMINATION_RECORDS_IS_DECIDABLE_BY_CODE: ONE_OF_THREE_AND_NONE_OF_ONE
+                             # CHECKED 2026-09-06T14:48:16Z, driven on the real directory.
+                             # **`p003_de_gate1_day_run_20260903_SEALED__*.json` matches 1 of the
+                             # day's 3 artifacts (the other two are `REFUSED__` and `KILLED__`);
+                             # `…20260904_SEALED__*` matches 0 of 1 (the `STOPPED__` record).**
+                             # *The constant is in the code: `SEALED_DAY_RECEIPT_MIDFIX =
+                             # "_SEALED__"`, used to build the glob.*
+                             # ***So "a termination record is not a sealed day" is not a convention
+                             # a reader must remember -- it is a glob that cannot match one.***
+                             # **AND MY FIRST PROBE GOT IT WRONG: I wrote `…_${day}_*_SEALED__*` --
+                             # an extra `_*` -- and measured 0 SEALED for BOTH days, which would
+                             # have read as the gate finding nothing at all.** *Twenty-first
+                             # "suspect the probe first"; the day is followed DIRECTLY by the
+                             # midfix.*
+  THE_COORDINATORS_OWN_SWEEP_CARRIED_MY_ROW_UNDER_A_MESSAGE_THAT_IS_NOT_IN_IT: F0CEE29
+                             # CHECKED 2026-09-06T14:48:16Z at both commits. **`f0cee29` announces
+                             # "R-662: REV 72 verified…" in its MESSAGE and contains ONE INSERTION:
+                             # my `Q-MEM-176` row. It adds NO `### R-662` heading. `67b4946` is
+                             # R-662 proper -- 10 insertions in the register plus the runbook
+                             # line.**
+                             # ***The mechanism, in the runbook's own words: "at 14:46Z the
+                             # insertion REFUSED CORRECTLY and the shell went on to add and commit
+                             # anyway".*** **The hold worked; the SHELL did not chain on it.**
+                             # *So rule 21's third form happened a SECOND time to my row -- and this
+                             # time the commit's message describes work that is not in the commit,
+                             # which is the more dangerous half: a reader resolving R-662 by
+                             # `git log --grep` finds a commit whose diff is somebody else's line.*
+  THE_HOLD_IS_ONLY_A_HOLD_IF_THE_COMMIT_IS_CHAINED_ON_ITS_EXIT: AND_ATTRIBUTION_IS_THE_LOSS
+                             # CHECKED 2026-09-06T14:48:16Z at `COORDINATOR_RUNBOOK.md`
+                             # (`477d367`). **"BEFORE every register insertion, `git status --short
+                             # -- $R` must be EMPTY (R-661, MEM 187's landing note)… A dirty
+                             # register HOLDS the entry in the scratchpad until the seat's commit
+                             # lands; never `git add` a file another seat has open. THE HOLD IS ONLY
+                             # A HOLD IF THE COMMIT IS CHAINED ON THE INSERTION'S EXIT (`python3 …
+                             # && git add … && git commit …`)."**
+                             # ***And the loss is named exactly: "nothing is lost but ATTRIBUTION IS
+                             # WRONG and a half-written row could be committed."*** *My landing note
+                             # from round 187 is the citation in a runbook rule two rounds later,
+                             # and the rule needed a second failure to find its own gap: a refusal
+                             # nothing consumes is advice.*
+                             # **EXTENDED IN BAND 2026-09-06T14:51:24Z: R-663 LANDED (DE 102(2)
+                             # verified -- design v23 with the SCOPED seal AND THE DISCLOSURE, the
+                             # resolver refusing …) with the artifacts at `92220be`.**
+                             # ***And I applied the new runbook precondition to my OWN landing: I
+                             # read `git status --short -- COORDINATION.md` BEFORE writing my row
+                             # (empty -- the insertion is admissible), and I CHAINED the write to
+                             # the commit in one command with `&&`, which is precisely the gap
+                             # `f0cee29` fell through.*** *A rule written two commits ago, obeyed by
+                             # the seat whose landing note produced it.*
+  DA_92S_MARKER_IS_A_LABEL_AND_DA_93S_GATE_IS_THE_GUARD: COMPOSED_NOT_STACKED
+                             # RELAYED from R-662, with both censuses measured by me (rounds 188 and
+                             # 188's commit-time). **"DA 92's marker is a LABEL, not a guard" --
+                             # composed with DA 93's DATAFLOW gate: 246 literals → 69 PINS → 0
+                             # naming a non-head, and the two remaining guards read
+                             # `MARKED_AND_NOT_A_PIN`.**
+                             # ***That composition is the point: a marker alone would let a seat
+                             # excuse anything by labelling it; a dataflow gate alone would flag
+                             # strings that never open a file. Together the census refuses on a
+                             # PROPERTY and forgives on a DECLARED intent.***
+                             # *And the allowlist itself has NO CHAIN HEAD → DA 94: the instrument
+                             # that decides which literals are admissible is a literal nobody has
+                             # linked.*
+  BE_CLOSED_THE_CONSUMER_NOT_THE_TYPE: BE_66_DECIDES_THE_INTERFACE
+                             # RELAYED from R-662, on the finding I measured at round 188.
+                             # **My measurement stands: `scope.peak_bytes` is a STRING and
+                             # `peak_censoring.peak_bytes` an INT in one receipt.** ***R-662's
+                             # distinction is the one that matters: BE closed the CONSUMER (the
+                             # reader that compares them) and NOT THE TYPE (the field the receipt
+                             # publishes), so the next reader of that artifact meets the same
+                             # mismatch.***
+                             # **BE 66 decides the INTERFACE -- whether the receipt publishes bytes
+                             # as integers or as strings -- rather than patching each reader.**
+                             # *A consumer-side fix is invisible to every other consumer; that is
+                             # why the interface is the decision.*
+  A_PROVENANCE_ERROR_IS_CORRECTABLE_IN_BAND_A_DISCLOSURE_IS_NOT: THE_STOPS_PRINCIPLE
+                             # RELAYED from R-662, written beside R-603. ***"A provenance error is
+                             # CORRECTABLE IN BAND; a DISCLOSURE is not."*** *That is the principle
+                             # under the 09-04 stop: a receipt that names the wrong commit can be
+                             # superseded, but a number that has been READ cannot be un-read.*
+                             # **The 09-03 counts were seen by THREE SEATS -- so the seal there is
+                             # PROSPECTIVE and the disclosure goes into design v23** *rather than
+                             # into a correction that would pretend the reading did not happen.*
+                             # *The 09-04 run was stopped four minutes in precisely so that day
+                             # would not join them.*
+  THE_QUEUE_AT_THE_RELAUNCH: DE_102_HAS_THE_SCOPE_AND_THE_PARENT_BY_EXECUTABLE
+                             # CHECKED 2026-09-06T14:48:16Z. **DE 102(2) landed (`ac9f590`): "the
+                             # seal scope corrected and SCOPED, the parent identified by its
+                             # EXECUTABLE, and the inputs digest…" -- the `argv[0]`-spoofable
+                             # finding closed by `/proc/<pid>/exe`.** *REV 71's item, fixed in the
+                             # same batch that scoped the seal.*
+                             # **The lock is free; `de102smoke` is the relaunch under v23 with
+                             # rehearsal v4; DA 94 and REV 73 are the open dispatches.**
+                             # *The 09-04 day will be produced under a seal scope that was written
+                             # down BEFORE the day was run -- which is the first time in this chain
+                             # that has been true.*
   THE_SAME_NUMBER_TWICE_IN_ONE_RECEIPT_WITH_TWO_TYPES: STR_HERE_INT_THERE
                              # CHECKED 2026-09-06T14:42:11Z at BE's 09-05 receipt, and this is
                              # R-612's thread -- the one I re-measured at round 174 -- persisting
@@ -22384,6 +22493,93 @@ flag_provenance:
       commit and the index collision, and the only silent one: it looks like success, and
       the way to see it is to notice the staged count and ask git which commit holds the
       line.
+  # --- MEM round 189, 2026-09-06T14:48:16Z ------------------------------
+  THE_SEAL_SCOPE_IS_VERSIONED_AND_I_DROVE_THE_LADDER:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      driving economic_fields_in_force: v21 gives 8 names, v22 gives 8, v23 gives 11 and
+      None gives 11, with DESIGN_VERSION_IN_FORCE 23 and SEALED_FROM_DESIGN_VERSION mapping
+      exactly the three outcome counts to 23. The docstring rules that a receipt from before
+      a name was sealed is judged without it because it did not disobey a rule that did not
+      exist, and design_version_of_receipt judges a receipt carrying neither field under v22,
+      the last version whose scope was the original eight. REV 72 drove the counterfactual: a
+      retroactive list reads the landed 09-03 receipt as a six-field leak.
+  THE_GATES_EXCLUSION_OF_TERMINATION_RECORDS_IS_DECIDABLE_BY_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      the SEALED glob matches one of the 09-03 day's three artifacts, the other two being
+      REFUSED and KILLED, and none of the 09-04 day's one, which is the STOPPED record; the
+      constant SEALED_DAY_RECEIPT_MIDFIX is in the code and builds the glob. My first probe
+      used an extra wildcard and measured zero SEALED for both days, which would have read as
+      the gate finding nothing at all.
+  THE_COORDINATORS_OWN_SWEEP_CARRIED_MY_ROW_UNDER_A_MESSAGE_THAT_IS_NOT_IN_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      f0cee29 announces R-662 in its message and contains one insertion, my Q-MEM-176 row,
+      adding no R-662 heading, while 67b4946 is R-662 proper with ten register insertions and
+      the runbook line. The runbook records the mechanism: at 14:46Z the insertion refused
+      correctly and the shell went on to add and commit anyway. Rule 21's third form reached
+      my row a second time, and this time the commit's message describes work that is not in
+      the commit.
+  THE_HOLD_IS_ONLY_A_HOLD_IF_THE_COMMIT_IS_CHAINED_ON_ITS_EXIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      the runbook requires git status --short on the register to be empty before every
+      insertion, citing R-661 and MEM 187's landing note, holds the entry in the scratchpad
+      while the register is dirty, forbids git add on a file another seat has open, and states
+      that the hold is only a hold if the commit is chained on the insertion's exit. The loss
+      is named: nothing is lost but attribution is wrong and a half-written row could be
+      committed.
+  DA_92S_MARKER_IS_A_LABEL_AND_DA_93S_GATE_IS_THE_GUARD:
+    prov: RELAYED
+    from: R-662, with both censuses measured by me at round 188
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      DA 92's marker is a label rather than a guard, composed with DA 93's dataflow gate: 246
+      literals to 69 pins to 0 naming a non-head, with the two remaining guards reading
+      MARKED_AND_NOT_A_PIN. A marker alone would let a seat excuse anything by labelling it and
+      a dataflow gate alone would flag strings that never open a file; together the census
+      refuses on a property and forgives on a declared intent. The allowlist itself has no
+      chain head, routed to DA 94.
+  BE_CLOSED_THE_CONSUMER_NOT_THE_TYPE:
+    prov: RELAYED
+    from: R-662, on the finding I measured at round 188
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      my measurement stands that scope.peak_bytes is a string while peak_censoring.peak_bytes
+      is an int in one receipt, and R-662's distinction is that BE closed the consumer, the
+      reader that compares them, and not the type the receipt publishes, so the next reader of
+      that artifact meets the same mismatch. BE 66 decides the interface rather than patching
+      each reader, because a consumer-side fix is invisible to every other consumer.
+  A_PROVENANCE_ERROR_IS_CORRECTABLE_IN_BAND_A_DISCLOSURE_IS_NOT:
+    prov: RELAYED
+    from: R-662, written beside R-603
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      the stop's principle is that a provenance error is correctable in band while a
+      disclosure is not: a receipt naming the wrong commit can be superseded, but a number
+      that has been read cannot be un-read. The 09-03 counts were seen by three seats, so the
+      seal there is prospective and the disclosure goes into design v23 rather than into a
+      correction pretending the reading did not happen; the 09-04 run was stopped four minutes
+      in so that day would not join them.
+  THE_QUEUE_AT_THE_RELAUNCH:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T14:48:16Z
+    said: >-
+      DE 102(2) landed with the seal scope corrected and scoped, the parent identified by its
+      executable rather than argv[0], and the inputs digested -- REV 71's spoofable-argv item
+      closed in the same batch that scoped the seal. The lock is free, de102smoke is the
+      relaunch under v23 with rehearsal v4, and DA 94 and REV 73 are the open dispatches, so
+      the 09-04 day will be produced under a seal scope written down before the day was run.
   # --- MEM round 188, 2026-09-06T14:42:11Z ------------------------------
   THE_SAME_NUMBER_TWICE_IN_ONE_RECEIPT_WITH_TWO_TYPES:
     prov: CHECKED

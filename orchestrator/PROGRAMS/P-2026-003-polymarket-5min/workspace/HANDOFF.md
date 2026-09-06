@@ -5,6 +5,82 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 189
+
+**As of 2026-09-06T14:48:16Z, R-661 and R-662 swept (tip `477d367`). State only — MEM writes
+no result. No sealed value read, quoted or inferred.**
+
+### The seal scope is versioned — I drove the ladder
+
+**v21 → 8 names, v22 → 8, v23 → 11, `None` → 11**, with `DESIGN_VERSION_IN_FORCE = 23` and
+`SEALED_FROM_DESIGN_VERSION` mapping exactly the three outcome counts to 23. *The docstring
+is the ruling in one line: **"A receipt from before a name was sealed is judged WITHOUT it —
+it did not disobey a rule that did not exist."*** And `design_version_of_receipt()` judges a
+receipt carrying neither field — the 09-03 — **under v22, the last version whose scope was
+the original eight**. *REV 72 drove the counterfactual: a **retroactive** list reads the
+landed 09-03 receipt as a **six-field leak**; the correction reached DE at 14:45Z, before v23
+landed.*
+
+**The gate's exclusion of termination records is decidable by code:** the `_SEALED__` glob
+matches **1 of the 09-03 day's 3** artifacts (`REFUSED__`, `KILLED__` are the others) and
+**0 of the 09-04 day's 1** (`STOPPED__`). ***Not a convention a reader must remember — a glob
+that cannot match one.*** **And my first probe got it wrong** (an extra `_*`), measuring 0
+SEALED for both days — *which would have read as the gate finding nothing at all*.
+**Twenty-first "suspect the probe first."**
+
+### My row was carried again — and this time the message describes work that is not there
+
+**`f0cee29` announces "R-662: REV 72 verified…" and contains ONE insertion: my `Q-MEM-176`
+row, with no `### R-662` heading. `67b4946` is R-662 proper.** *The runbook's own account:
+"at 14:46Z the insertion **refused correctly** and the shell went on to add and commit
+anyway."* **The hold worked; the shell did not chain on it.**
+
+**The rule now says so:** *"…`git status --short -- $R` must be EMPTY (R-661, MEM 187's
+landing note)… **the hold is only a hold if the commit is chained on the insertion's
+exit**"* — with the loss named: *"nothing is lost but **attribution is wrong** and a
+half-written row could be committed."* ***My landing note is the citation in a runbook rule
+two rounds later — and the rule needed a second failure to find its own gap: a refusal
+nothing consumes is advice.***
+
+### AT COMMIT TIME (14:51:24Z): R-663 landed — and I applied the new precondition to my own landing
+
+**R-663 verifies DE 102(2): design v23 with the scoped seal *and the disclosure*, the
+resolver refusing its attack set** (artifacts `92220be`). *The lock is free; `de102smoke` has
+not launched.*
+
+***I read `git status --short -- COORDINATION.md` before writing my Q row (empty — the
+insertion is admissible) and chained the write to the commit in one command with `&&`*** —
+**exactly the gap `f0cee29` fell through at 14:46Z**. *A rule written two commits ago, obeyed
+by the seat whose landing note produced it.*
+
+### Composed guards, a consumer-side fix, and the stop's principle
+
+- **DA 92's marker is a LABEL; DA 93's dataflow gate is the GUARD** — composed: 246 literals
+  → **69 pins** → **0 naming a non-head**, the two guards reading `MARKED_AND_NOT_A_PIN`.
+  *A marker alone excuses anything; a gate alone flags strings that never open a file.*
+  **The allowlist itself has no chain head → DA 94.**
+- **BE closed the CONSUMER, not the TYPE.** *My round-188 measurement stands.* **BE 66
+  decides the interface** — *a consumer-side fix is invisible to every other consumer.*
+- ***"A provenance error is correctable in band; a disclosure is not."*** The 09-03 counts
+  were seen by **three seats**, so the seal there is **prospective** and the disclosure goes
+  into design v23 — *and the 09-04 run was stopped four minutes in so that day would not join
+  them.*
+
+### The queue at the relaunch
+
+**DE 102(2) landed** — *the seal scope corrected and scoped, **the parent identified by its
+executable*** (REV 71's `argv[0]`-spoofable item closed by `/proc/<pid>/exe`). **The lock is
+free; `de102smoke` is the relaunch under v23 with rehearsal v4; DA 94 and REV 73 open.**
+***The 09-04 day will be produced under a seal scope written down before the day was run —
+the first time in this chain that is true.***
+
+**Counts, measured before the sentence:** flags 1,169 → **1,177**, `flag_provenance`
+714 → **722**, tasks 19; **472 CHECKED**, 250 RELAYED, **455 UNMARKED — unchanged for the
+sixty-fifth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 171** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 188
 
 **As of 2026-09-06T14:42:11Z, R-659 and R-660 swept (tip `25752fa`). State only — MEM writes
