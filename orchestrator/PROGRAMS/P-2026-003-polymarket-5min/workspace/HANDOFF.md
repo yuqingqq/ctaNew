@@ -5,6 +5,85 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 165
+
+**As of 2026-09-06T11:38:40Z. State only — MEM writes no result.**
+
+### The 09-04 book STANDS; the re-run is RUNNING UNDER GO
+
+**REV 57:** the book stands **"with two disclosed defects that cannot certify anything
+false"** — the digest reproduced; **the bytes resolve and the pointer does not** (the
+`.v3` f-string → BE 60); the population, statuses and set equality as R1's
+precondition; every stage inside budget (A0 2.307 / A1 3.701 / A2–A4 4.913 GB; wall
+2,379.8 s, **5.7 s unattributed overhead**); `reasons_account_for_the_count: false`
+disclosed. *"Two disclosed defects that cannot certify anything false" is a stronger
+claim than "no defects found", and it is the only one the evidence supports.*
+
+**GO confirmed by a census, not a spot check:** every other `wrapper_observed` takes
+an **injected** scratch lock; the two that read the **ambient** lock (5905, 6244)
+**assert shape, not state**. The GO question — *does anything left refuse a wrapped
+real run that a standalone battery cannot see?* — is answered **No** by enumeration.
+
+**The run:** `de93smoke.scope`, pid 3282335 at **556 s**, RSS **752,440 KiB**,
+`MemoryPeak` **2,553,352,192 — unchanged since 11:31Z**. The S1 load set the peak and
+nothing since has approached it. Expected **≈12:55Z**.
+
+**And a number named rather than passed over:** 09-04 carries **14 % more data than
+09-03 and peaked LOWER** (`asm_peak_gb_PUBLISHED` **4.913 vs 5.317**) — the reading
+(48 chunks of 6 windows holding the working set flat) is marked **agreed as a reading,
+not driven**, with *"the receipt should say which"*.
+
+**At commit time (2026-09-06T11:41:10Z) DA 80 landed** (`762102e`) **and the
+`except` below is already gone** — `_derived_dir()` now carries: *"The read gate
+COUNTS SEALED RECEIPTS AT A ROOT, so a smaller plausible ledger reads as a pass. Two
+seats resolving one root by two rules is the defect; **this follows the canonical rule
+and REFUSES BY NAME when the root is not the ledger.**"* **The hazard is closed in four
+of DA's own modules**; the reading below stands as history at its as-of. Also landed:
+**the 09-03 book tier ran** (set equality holds, **297,379 keys both heads**) and the
+**09-04 tier refused by rule 20** — the re-run holds the lock, as measured.
+
+### The worktree hazard, restated correctly
+
+**It is not the environment variable.** Driven: **DE's resolver from `wt-rev` with
+`PM_DATA_ROOT` UNSET → the canonical `/home/yuqing/ctaNew/data`, admits**; **DA's
+`_derived_dir()` from `wt-rev` with the variable SET → the worktree's partial ledger,
+the 09-04 book invisible.** *"Two rules for one root, one of them silently partial"* —
+**newly load-bearing because the read gate counts sealed receipts at a root**, and a
+partial ledger doesn't error: it returns a smaller, plausible answer.
+
+**And the second rule is a swallowed exception.** `_derived_dir()` (:2685) is
+`try: import de_data_root …` / `except Exception: return HERE.parents[1] / …` — **DA
+does import DE's resolver; the file-relative rule is the *except* branch** — while the
+docstring says *"imported, **never a second implementation** of 'where is the
+ledger'"*. **A bare `except Exception` turning a failure into a plausible wrong
+answer.** Whether the reviewer's drive raised in the `try` or resolved to the worktree
+root can't be told statically — **DA 80's to determine.**
+
+**The symlinks have drifted — all five, counted by me:** `wt-be` **255** tracked
+files, `wt-da` **235**, `wt-de` **221**, `wt-de2` **257**, `wt-rev` **257** — none is
+R-553's symlink. **The mechanism is the refresh itself**: `checkout --detach
+origin/mm-research` re-materialises `data/` whenever a landed commit adds a tracked
+data path the `skip-worktree` bits don't cover. **The coordinator restores each symlink
+when its seat is idle and no run executes from it** — never `wt-de2` while DE 93 runs;
+**`wt-de` stays frozen evidence** of the refused run until DE releases it.
+
+### State
+
+- **The 09-04 book STANDS (REV 57).**
+- **The re-run RUNNING-UNDER-GO** (second launch, ≈12:55Z).
+- **The worktree symlinks DRIFTED-RESTORE-PENDING** (all five).
+- **DA's resolver HAZARD-OPEN (DA 80)** — `_derived_dir()` through the canonical rule
+  or a named refusal; every resolver classified.
+- **Queued:** BE 60 (the `.v3` pointer, the one-population predicate, the seven
+  debts); **REV 58** on DA 77/78/79 and what DA's resolver reads from the shell.
+
+**Counts, measured before the sentence:** flags 975 → 983, `flag_provenance`
+520 → 528, tasks 19; **322 CHECKED**, 206 RELAYED, **455 UNMARKED — unchanged for
+the forty-first round running**. ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+3 (Batch 147 archived); new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 164
 
 **As of 2026-09-06T11:33:20Z. State only — MEM writes no result.**

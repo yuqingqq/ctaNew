@@ -12363,3 +12363,91 @@ directions.
   thirty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 147 — archived 2026-09-06T11:38:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 165 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T11:16:50Z (MEM ROUND 162 -- R-618 AND REV 56'S FILING SWEPT. STATE ONLY.
+  GO IS ISSUED; THE RE-RUN IS WAITING ON THE LOCK.
+  (1) **THE PATH IS VERIFIED AT ONE SIXTEEN-HUNDREDTH OF THE SCALE.** I computed what
+  the review states in words: **the end-to-end drive is a 24-slug synthetic at 3.11 s;
+  the real day measured 5,065 s -- ~1,629 : 1 in WALL**, with the memory gap of the
+  same order. ***Every branch has been executed; nothing has been executed at size.***
+  *If the real day's growth exceeds 4,000 MB the per-stage check refuses EARLY -- which
+  is the correct outcome and the reason the unknown is affordable.* **`assert_peak_stage`
+  has still never been driven on real stage deltas.**
+  (2) **AND THE REFUSAL CANNOT TELL A LANDING FROM A DRIFT -- AND SAYS SO.**
+  `assert_source_unchanged`: ***"REFUSE THE EMIT if ANY of the code that ran changed
+  under it. NOT THE RUN -- the run is fine, Python holds the modules in memory. What is
+  not fine is a receipt that names bytes which did not produce it."*** **A benign
+  landing and a harmful drift are the SAME EVENT to it**, which is exactly why REV 56's
+  residual is a **DISCIPLINE** -- freeze the worktree for the run's life -- rather than
+  a code fix. *And the docstring states the half that matters: the RUN survives; the
+  RECEIPT is what breaks.*
+  (3) **GO WAS ISSUED AT 11:14Z AND THE RE-RUN IS QUEUED, NOT RUNNING:**
+  `be59book.scope` active at **2,244-2,265 s**; **no `be_daybook_20260904` file, and no
+  file over 1 MB written in that directory in four minutes.** ***A GO that cannot start
+  is still a GO: the decision and the slot are separate things, and rule 20 is what
+  keeps them separate.*** *The dispatch bounds the wait -- a declared poll of ≤ 30 min
+  if the lock is held.*
+  (4) **THE BOOK'S RSS HAS FALLEN ACROSS FIVE READINGS** -- **5,128,372 -> 4,807,808 ->
+  4,760,584 -> 4,750,344 -> 4,748,296 KiB** with `MemoryPeak` flat. *A monotone fall
+  after a flat peak is consistent with being past the index release and inside the
+  final stages* -- **and I say plainly that I cannot pin the stage from outside: the
+  builder logs no progress and five samples are five samples.** ***What they do
+  establish is that the run is SHRINKING rather than growing, which is the opposite of
+  the failure a budget exists to catch.***
+  (5) **THE REVIEWER MEASURED ITS OWN RECOMMENDATION FAILING:** DE's remedy beat the
+  reviewer's on all three counts, **one of them MEASURED** -- the 300 s tolerance
+  racing the operator's own pre-flight. ***A reviewer that drives its own
+  recommendation to failure has done what rule 15 asks of a checker, applied to
+  ADVICE*** -- *the second time in two rounds that the strongest evidence in a filing
+  was against the filer's own position.* **And the emitted name resolves to ONE HEAD at
+  BOTH seats' resolvers, driven.**
+  (6) **THE SECOND REFUSAL IS CLOSED BY AN ARTIFACT CARRYING THE DEFECT'S OWN
+  CONDITION** -- *"reproduced by the artifact IT EMITTED and closed"*. ***A defect whose
+  reproduction is the tool's own output needs no fixture: the condition travels in the
+  artifact, so the known-bad is free and cannot drift from the code that produces
+  it.*** **The cleanest falsifier shape I have swept -- not a constructed case, but the
+  case the instrument makes.**
+  (7) **THE RESIDUAL IS ONE DISCIPLINE AND ONE RULING:** the frozen worktree, and the
+  peak stage (R-598). **Nothing CERTAIN can refuse at the end any more.** *Plus SS4 as
+  a NOTE for DE 93, not a blocker: the battery at 850 MB / 23.6 s as a standalone
+  command; `assert_output_is_a_directory` refusing an existing DOTTED directory.*
+  ***The list that began as "what else could refuse at the end" is now two items, and
+  both are things a PERSON does rather than things the CODE does.***
+  (8) **AND THE GO DISPATCH IS A CHECKLIST, NOT AN INSTRUCTION:** refresh `wt-de2`,
+  `status --short` EMPTY, **the tip sha in the report**, nothing touched or landed
+  until the receipt lands; rehearse FROM THAT TIP -> READY; `flock -n` first with the
+  declared poll; the ONE substitution and `--output` the DIRECTORY; the book digest
+  confirmed BEFORE Enter; a declared poll BY PID; ≈85 min; ***a growth-budget refusal
+  would BE the result***; **the OPEN FIELDS ONLY** -- never `D_E0`, `D_E_MINUS_R`, `Z`,
+  `p_location`, the null moments, `sd_over_abs_mean`, or any refusal REASON TEXT;
+  landed by rule 21.
+  **AT COMMIT TIME, 2026-09-06T11:19:11Z, THE STATE TURNED OVER COMPLETELY -- AND I
+  MEASURED ALL OF IT:** ***the 09-04 BOOK LANDED*** (`be_daybook_20260904_btc.pkl`,
+  **340,969,199 bytes**, mtime 11:18; `be59book.scope` `inactive / dead`,
+  `Result=success`); ***the lock passed***; and ***THE 09-03 RE-RUN IS RUNNING*** --
+  **`de92smoke.scope` `active / running`, pid 3269169, RSS 157,256 KiB at 15 s**, its
+  argv exactly `--day 2026-09-03 --book …/be_daybook_20260903_btc.pkl --output
+  /home/yuqing/ctaNew/data/pm_5min/derived` -- ***the DIRECTORY form, no typed
+  name***, with `flock` holding the heavy lock (pids 3269168/3269169).
+  **So the flag word "STARTING-WHEN-THE-LOCK-FREES" was true when dispatched and is
+  spent: it started.** *Between my sentence at 11:16:50Z and this commit, the book
+  finished, the lock changed hands with no seat deciding it, and the run the last ten
+  rounds have been preparing began.* **Expect ~85 min; a growth-budget refusal would
+  BE the result; the receipt names itself at the emit.**
+  **FLAG WORDS: the 09-03 re-run GO-ISSUED, STARTING-WHEN-THE-LOCK-FREES
+  (`be59book.scope` still holds it -- I measure 2,265 s and no book file); the 09-04
+  book IN-ITS-LAST-STAGES (evidenced by a falling RSS across five samples and a flat
+  scope peak, not by an adjective).**
+  MEASURED BEFORE THIS SENTENCE: flags 951 -> 959, flag_provenance 496 -> 504,
+  tasks 19; **306 CHECKED**, 198 RELAYED, **455 UNMARKED -- unchanged for the
+  thirty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

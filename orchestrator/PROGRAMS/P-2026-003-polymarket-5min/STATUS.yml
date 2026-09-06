@@ -63,6 +63,83 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T11:38:40Z (MEM ROUND 165 -- R-621 AND REV 57'S FILING SWEPT. STATE ONLY.
+  THE FINDING IS A SWALLOWED EXCEPTION THREE LINES BELOW THE SENTENCE DENYING IT.
+  (1) **DA'S SECOND RULE IS AN `except`, NOT A SECOND IMPLEMENTATION.** At
+  `_derived_dir()` (:2685): **`try: import de_data_root as BDR; return
+  Path(BDR.resolve()) / …` -- `except Exception: return HERE.parents[1] / …`.** *So DA
+  DOES import DE's resolver; the intended path IS canonical, and the file-relative
+  rule is the EXCEPT BRANCH.* ***And the docstring reads "through the programme's ONE
+  data-root resolver -- imported, NEVER A SECOND IMPLEMENTATION of 'where is the
+  ledger'" -- while the `except` three lines below IS one.*** **The engine is a bare
+  `except Exception` turning a failure into a PLAUSIBLE WRONG ANSWER.** *Whether the
+  reviewer's drive raised in the try or resolved to the worktree root cannot be told
+  statically -- DA 80's to determine.* ROUTED.
+  (2) **AND THE RISK IS NOT THE ENVIRONMENT VARIABLE.** Driven by the reviewer: **DE's
+  resolver from `wt-rev` with `PM_DATA_ROOT` UNSET -> the canonical
+  `/home/yuqing/ctaNew/data`, ADMITS; DA's `_derived_dir()` from `wt-rev` with the
+  variable SET -> the worktree's partial ledger, the 09-04 book INVISIBLE.** ***"Two
+  rules for one root, one of them silently PARTIAL"*** -- **newly load-bearing because
+  the read gate COUNTS SEALED RECEIPTS AT A ROOT**, and a partial ledger does not
+  error: it returns a smaller, plausible answer the gate's arithmetic then runs on.
+  *(My round-163 flag carried BE's "one unset env" mechanism as RELAYED; this is its
+  correction, and the provenance mark is why the correction lands on the claim rather
+  than on the record.)*
+  (3) **ALL FIVE WORKTREES' `data/` ARE DIRECTORIES -- I COUNTED THEM:** **wt-be 255
+  tracked files, wt-da 235, wt-de 221, wt-de2 257, wt-rev 257**, *my counts matching
+  the coordinator's to the file.* **A rule that says "MUST be a top-level symlink" is
+  violated in all five places it applies** -- *and invisibly, because a materialised
+  `data/` looks exactly like the real one until you ask what is MISSING.* **The
+  mechanism is the refresh itself: `checkout --detach origin/mm-research`
+  re-materialises `data/` whenever a landed commit adds a tracked data path the
+  `skip-worktree` bits do not cover.** *The repair is sequenced against running work --
+  never `wt-de2` while DE 93 runs; `wt-de` stays FROZEN EVIDENCE.*
+  (4) **THE BIGGER DAY PEAKED LOWER, AND THE REVIEWER NAMED IT:**
+  `asm_peak_gb_PUBLISHED` **5.317 for 09-03, 4.913 for 09-04** -- with 09-04 carrying
+  **14 % more data**. ***A day that grew and peaked lower is exactly the kind of number
+  that gets passed over as good news.*** *The reading -- the chunking (48 chunks of 6
+  windows) holding the working set flat while the day grew -- is marked **AGREED AS A
+  READING, NOT DRIVEN**, with "the receipt should say which".* **The discipline is not
+  suspicion; it is refusing to let a favourable number pass unexamined.**
+  (5) **THE GO IS CONFIRMED BY A CENSUS, NOT A SPOT CHECK:** every other
+  `wrapper_observed` takes an INJECTED scratch lock, and the two that read the AMBIENT
+  lock (5905, 6244) **assert SHAPE, NOT STATE** -- so "does anything left refuse a
+  wrapped real run that a standalone battery cannot see?" is answered **No** by
+  enumeration over the whole battery. ***The difference between "we fixed the
+  instance" and "we counted the class".***
+  (6) **THE BOOK STANDS, AND THE REASON IT STANDS IS CHECKABLE:** the digest
+  reproduced; **the BYTES resolve and the POINTER does not** (the `.v3` f-string ->
+  BE 60); the population, statuses and set equality as R1's precondition; every stage
+  inside budget (A0 2.307 / A1 3.701 / A2-A4 4.913 GB; wall 2,379.8 s with **5.7 s
+  unattributed overhead**); `reasons_account_for_the_count: false`. ***"Two disclosed
+  defects that cannot certify anything false" is a stronger claim than "no defects
+  found", and it is the only one the evidence supports.***
+  (7) **AND THE RUN IS AT NINE MINUTES WITH ITS PEAK UNMOVED:** `de93smoke.scope`
+  active, pid 3282335 at **556 s**, RSS **752,440 KiB**, `MemoryPeak` **2,553,352,192
+  -- unchanged since 11:31Z**. *The S1 book load set the peak and nothing since has
+  approached it* -- **the first real day on which the growth-budget's per-stage delta
+  series exists at all.**
+  **AT COMMIT TIME, 2026-09-06T11:41:10Z: DA 80 LANDED (`762102e`) AND THE `except`
+  I FLAGGED IS ALREADY GONE.** *I re-read the same lines: `_derived_dir()` now carries
+  a comment block ending* ***"The read gate COUNTS SEALED RECEIPTS AT A ROOT, so a
+  smaller plausible ledger reads as a pass. Two seats resolving one root by two rules
+  is the defect; this follows the canonical rule and REFUSES BY NAME when the root is
+  not the ledger."*** **So (1) stands as HISTORY at its as-of, and the flag word "DA's
+  resolver HAZARD-OPEN" is true as dispatched and closed -- in FOUR of DA's own
+  modules -- by the time it commits.**
+  ***And the fix's comment states the CONSEQUENCE the code could not have known:***
+  *that the gate counts receipts at a root, so the wrong root reads as a pass* --
+  **the finding travelling from the reviewer to the code as a SENTENCE, not just as a
+  patch.** *Also landed: the 09-03 BOOK TIER ran (set equality holds, 297,379 keys
+  both heads), and the 09-04 tier REFUSED BY RULE 20 -- the re-run holds the lock,
+  exactly as I measured.*
+  **FLAG WORDS: the 09-04 book STANDS (REV 57); the re-run RUNNING-UNDER-GO (second
+  launch, ≈12:55Z); the worktree symlinks DRIFTED-RESTORE-PENDING (all five, counted);
+  DA's resolver HAZARD-OPEN (DA 80).**
+  MEASURED BEFORE THIS SENTENCE: flags 975 -> 983, flag_provenance 520 -> 528,
+  tasks 19; **322 CHECKED**, 206 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-first round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T11:33:20Z (MEM ROUND 164 -- R-620 AND Q-DE-92 SWEPT. STATE ONLY.
   THE 26-SECOND EXIT WAS CAUSED BY THE FIX THAT MADE IT CHEAP.
   (1) **THE BATTERY'S MOVE IS WHAT MADE THIS CHECK REFUSE.** The guard's own
@@ -208,84 +285,6 @@ updated: >-
   MEASURED BEFORE THIS SENTENCE: flags 959 -> 967, flag_provenance 504 -> 512,
   tasks 19; **312 CHECKED**, 200 RELAYED, **455 UNMARKED -- unchanged for the
   thirty-ninth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T11:16:50Z (MEM ROUND 162 -- R-618 AND REV 56'S FILING SWEPT. STATE ONLY.
-  GO IS ISSUED; THE RE-RUN IS WAITING ON THE LOCK.
-  (1) **THE PATH IS VERIFIED AT ONE SIXTEEN-HUNDREDTH OF THE SCALE.** I computed what
-  the review states in words: **the end-to-end drive is a 24-slug synthetic at 3.11 s;
-  the real day measured 5,065 s -- ~1,629 : 1 in WALL**, with the memory gap of the
-  same order. ***Every branch has been executed; nothing has been executed at size.***
-  *If the real day's growth exceeds 4,000 MB the per-stage check refuses EARLY -- which
-  is the correct outcome and the reason the unknown is affordable.* **`assert_peak_stage`
-  has still never been driven on real stage deltas.**
-  (2) **AND THE REFUSAL CANNOT TELL A LANDING FROM A DRIFT -- AND SAYS SO.**
-  `assert_source_unchanged`: ***"REFUSE THE EMIT if ANY of the code that ran changed
-  under it. NOT THE RUN -- the run is fine, Python holds the modules in memory. What is
-  not fine is a receipt that names bytes which did not produce it."*** **A benign
-  landing and a harmful drift are the SAME EVENT to it**, which is exactly why REV 56's
-  residual is a **DISCIPLINE** -- freeze the worktree for the run's life -- rather than
-  a code fix. *And the docstring states the half that matters: the RUN survives; the
-  RECEIPT is what breaks.*
-  (3) **GO WAS ISSUED AT 11:14Z AND THE RE-RUN IS QUEUED, NOT RUNNING:**
-  `be59book.scope` active at **2,244-2,265 s**; **no `be_daybook_20260904` file, and no
-  file over 1 MB written in that directory in four minutes.** ***A GO that cannot start
-  is still a GO: the decision and the slot are separate things, and rule 20 is what
-  keeps them separate.*** *The dispatch bounds the wait -- a declared poll of ≤ 30 min
-  if the lock is held.*
-  (4) **THE BOOK'S RSS HAS FALLEN ACROSS FIVE READINGS** -- **5,128,372 -> 4,807,808 ->
-  4,760,584 -> 4,750,344 -> 4,748,296 KiB** with `MemoryPeak` flat. *A monotone fall
-  after a flat peak is consistent with being past the index release and inside the
-  final stages* -- **and I say plainly that I cannot pin the stage from outside: the
-  builder logs no progress and five samples are five samples.** ***What they do
-  establish is that the run is SHRINKING rather than growing, which is the opposite of
-  the failure a budget exists to catch.***
-  (5) **THE REVIEWER MEASURED ITS OWN RECOMMENDATION FAILING:** DE's remedy beat the
-  reviewer's on all three counts, **one of them MEASURED** -- the 300 s tolerance
-  racing the operator's own pre-flight. ***A reviewer that drives its own
-  recommendation to failure has done what rule 15 asks of a checker, applied to
-  ADVICE*** -- *the second time in two rounds that the strongest evidence in a filing
-  was against the filer's own position.* **And the emitted name resolves to ONE HEAD at
-  BOTH seats' resolvers, driven.**
-  (6) **THE SECOND REFUSAL IS CLOSED BY AN ARTIFACT CARRYING THE DEFECT'S OWN
-  CONDITION** -- *"reproduced by the artifact IT EMITTED and closed"*. ***A defect whose
-  reproduction is the tool's own output needs no fixture: the condition travels in the
-  artifact, so the known-bad is free and cannot drift from the code that produces
-  it.*** **The cleanest falsifier shape I have swept -- not a constructed case, but the
-  case the instrument makes.**
-  (7) **THE RESIDUAL IS ONE DISCIPLINE AND ONE RULING:** the frozen worktree, and the
-  peak stage (R-598). **Nothing CERTAIN can refuse at the end any more.** *Plus SS4 as
-  a NOTE for DE 93, not a blocker: the battery at 850 MB / 23.6 s as a standalone
-  command; `assert_output_is_a_directory` refusing an existing DOTTED directory.*
-  ***The list that began as "what else could refuse at the end" is now two items, and
-  both are things a PERSON does rather than things the CODE does.***
-  (8) **AND THE GO DISPATCH IS A CHECKLIST, NOT AN INSTRUCTION:** refresh `wt-de2`,
-  `status --short` EMPTY, **the tip sha in the report**, nothing touched or landed
-  until the receipt lands; rehearse FROM THAT TIP -> READY; `flock -n` first with the
-  declared poll; the ONE substitution and `--output` the DIRECTORY; the book digest
-  confirmed BEFORE Enter; a declared poll BY PID; ≈85 min; ***a growth-budget refusal
-  would BE the result***; **the OPEN FIELDS ONLY** -- never `D_E0`, `D_E_MINUS_R`, `Z`,
-  `p_location`, the null moments, `sd_over_abs_mean`, or any refusal REASON TEXT;
-  landed by rule 21.
-  **AT COMMIT TIME, 2026-09-06T11:19:11Z, THE STATE TURNED OVER COMPLETELY -- AND I
-  MEASURED ALL OF IT:** ***the 09-04 BOOK LANDED*** (`be_daybook_20260904_btc.pkl`,
-  **340,969,199 bytes**, mtime 11:18; `be59book.scope` `inactive / dead`,
-  `Result=success`); ***the lock passed***; and ***THE 09-03 RE-RUN IS RUNNING*** --
-  **`de92smoke.scope` `active / running`, pid 3269169, RSS 157,256 KiB at 15 s**, its
-  argv exactly `--day 2026-09-03 --book …/be_daybook_20260903_btc.pkl --output
-  /home/yuqing/ctaNew/data/pm_5min/derived` -- ***the DIRECTORY form, no typed
-  name***, with `flock` holding the heavy lock (pids 3269168/3269169).
-  **So the flag word "STARTING-WHEN-THE-LOCK-FREES" was true when dispatched and is
-  spent: it started.** *Between my sentence at 11:16:50Z and this commit, the book
-  finished, the lock changed hands with no seat deciding it, and the run the last ten
-  rounds have been preparing began.* **Expect ~85 min; a growth-budget refusal would
-  BE the result; the receipt names itself at the emit.**
-  **FLAG WORDS: the 09-03 re-run GO-ISSUED, STARTING-WHEN-THE-LOCK-FREES
-  (`be59book.scope` still holds it -- I measure 2,265 s and no book file); the 09-04
-  book IN-ITS-LAST-STAGES (evidenced by a falling RSS across five samples and a flat
-  scope peak, not by an adjective).**
-  MEASURED BEFORE THIS SENTENCE: flags 951 -> 959, flag_provenance 496 -> 504,
-  tasks 19; **306 CHECKED**, 198 RELAYED, **455 UNMARKED -- unchanged for the
-  thirty-eighth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2959,6 +2958,89 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  THE_SECOND_RULE_IS_A_SWALLOWED_EXCEPTION_NOT_A_SECOND_IMPLEMENTATION: THREE_LINES_BELOW_THE_SENTENCE_DENYING_IT
+                             # CHECKED 2026-09-06T11:38:40Z at `da_gate1_day_verdict._derived_dir()`
+                             # (:2685), and this is the round's finding as I read it. **The function is
+                             # `try: import de_data_root as BDR; return Path(BDR.resolve()) / "data" /
+                             # "pm_5min" / "derived"` -- `except Exception: return HERE.parents[1] / …`.**
+                             # *So DA DOES import DE's resolver: the intended path IS the canonical one, and
+                             # the file-relative rule is the EXCEPT BRANCH.*
+                             # ***And the docstring above it reads "through the programme's ONE data-root
+                             # resolver -- imported, NEVER A SECOND IMPLEMENTATION of 'where is the ledger'
+                             # (R-562/R-564)" -- while the `except` three lines below IS one.***
+                             # **The mechanism is a bare `except Exception` converting an import or
+                             # resolution failure into a PLAUSIBLE WRONG ANSWER** -- *rule 11's absence
+                             # reading as a pass, with the swallow as its engine.* **Whether the reviewer's
+                             # drive raised in the try or resolved to the worktree root I cannot tell
+                             # statically; that is DA 80's to determine.** ROUTED, NOT RULED.
+  ALL_FIVE_WORKTREES_DATA_ARE_DIRECTORIES: I_COUNTED_THEM
+                             # CHECKED 2026-09-06T11:38:40Z, each one: **`wt-be` DIRECTORY (255 tracked
+                             # files), `wt-da` (235), `wt-de` (221), `wt-de2` (257), `wt-rev` (257)** --
+                             # ***none is R-553's symlink, and my counts match the coordinator's to the
+                             # file.***
+                             # **A rule that says "MUST be a top-level symlink to `/home/yuqing/ctaNew/data`"
+                             # is violated in all five places it applies** -- *and the violation is
+                             # invisible from inside any of them, because a materialised `data/` looks
+                             # exactly like the real one until you ask what is missing.*
+  THE_BIGGER_DAY_PEAKED_LOWER: A_NUMBER_NAMED_RATHER_THAN_PASSED_OVER
+                             # CHECKED 2026-09-06T11:38:40Z at both receipts:
+                             # **`asm_peak_gb_PUBLISHED` = 5.317 for 09-03 and 4.913 for 09-04** -- *while
+                             # 09-04 carries **14 % MORE DATA**.*
+                             # ***A day that grew and peaked LOWER is the kind of number that gets passed
+                             # over as good news;*** **the reviewer named it and gave the reading --
+                             # consistent with the chunking (48 chunks of 6 windows) holding the assembly's
+                             # working set FLAT while the day grew -- and marked it AGREED AS A READING, NOT
+                             # DRIVEN, with "the receipt should say which".** *The discipline is not
+                             # suspicion; it is refusing to let a favourable number pass unexamined.*
+  THE_RISK_IS_NOT_THE_ENV_IT_IS_TWO_RULES_FOR_ONE_ROOT: ONE_OF_THEM_SILENTLY_PARTIAL
+                             # RELAYED from R-621, 2026-09-06T11:38:40Z, with the code shape checked
+                             # by me above. **Driven by the reviewer: DE's resolver from `wt-rev` with
+                             # `PM_DATA_ROOT` UNSET -> `/home/yuqing/ctaNew/data`, canonical, ADMITS; DA's
+                             # `_derived_dir()` from `wt-rev` with the variable SET ->
+                             # `/home/yuqing/ctaNew-wt-rev/data/pm_5min/derived`, and the 09-04 book
+                             # INVISIBLE.**
+                             # ***"Correctness rests on `PM_DATA_ROOT`" is not the right statement of the
+                             # risk; the right one is TWO RULES FOR ONE ROOT, one of them silently
+                             # PARTIAL.*** **Newly load-bearing because the read gate COUNTS SEALED RECEIPTS
+                             # AT A ROOT** -- *a partial ledger does not error, it returns a smaller,
+                             # plausible answer, and the gate's arithmetic runs on it.*
+  THE_GO_IS_CONFIRMED_BY_A_CENSUS_NOT_A_SPOT_CHECK: SHAPE_NOT_STATE
+                             # RELAYED from R-621(A) SSB.3, 2026-09-06T11:38:40Z. **Every other
+                             # `wrapper_observed` in the battery takes an INJECTED scratch lock, and the two
+                             # that read the AMBIENT lock (lines 5905, 6244) assert SHAPE, NOT STATE.**
+                             # *So the GO question -- "does anything left refuse a wrapped real run that a
+                             # standalone battery cannot see?" -- is answered **No**, by enumeration over
+                             # the whole battery rather than by inspecting the one check that failed.*
+                             # ***The difference between "we fixed the instance" and "we counted the
+                             # class".***
+  THE_DRIFT_S_MECHANISM_IS_THE_REFRESH_AND_THE_REPAIR_WAITS_ON_IDLENESS: NEVER_WHILE_A_RUN_EXECUTES
+                             # RELAYED from R-621(B), 2026-09-06T11:38:40Z. **The mechanism: `checkout
+                             # --detach origin/mm-research` RE-MATERIALISES `data/` whenever a landed commit
+                             # adds a tracked data path the `skip-worktree` bits do not cover** -- *so the
+                             # drift is produced by the refresh discipline itself, every time it is
+                             # followed.*
+                             # **And the repair is sequenced against the running work: the coordinator
+                             # restores each symlink AT A MOMENT THE SEAT IS IDLE AND NO RUN EXECUTES FROM
+                             # THAT WORKTREE -- never `wt-de2` while DE 93 runs, and `wt-de` stays FROZEN
+                             # EVIDENCE of the refused run until DE releases it.** *Rule 22 governing a
+                             # repair to the thing rule 22 depends on.*
+  THE_BOOK_STANDS_AND_THE_REASON_IT_STANDS_IS_CHECKABLE: TWO_DISCLOSED_DEFECTS
+                             # RELAYED from R-621(A), 2026-09-06T11:38:40Z. **SSA.1 the digest
+                             # reproduced; SSA.2 the BYTES resolve and the POINTER does not (the `.v3`
+                             # f-string -> BE 60); SSA.3 the population, statuses and set equality as R1's
+                             # precondition; SSA.4 every stage inside its budget (A0 2.307 / A1 3.701 / A2-A4
+                             # 4.913 GB; wall 2,379.8 s with 5.7 s unattributed overhead); SSA.5
+                             # `reasons_account_for_the_count: false` -- and *"the book STANDS and the reason
+                             # it stands is CHECKABLE"*.**
+                             # ***Two disclosed defects that "cannot certify anything false" is a stronger
+                             # claim than "no defects found", and it is the only one the evidence
+                             # supports.***
+  THE_RUN_AT_NINE_MINUTES: PEAK_UNMOVED_SINCE_S1
+                             # CHECKED 2026-09-06T11:38:40Z: **`de93smoke.scope` active, pid 3282335 at
+                             # 556 s, RSS 752,440 KiB, `MemoryPeak` 2,553,352,192 -- UNCHANGED since the
+                             # 11:31Z reading.** *The S1 book load set the peak and nothing since has
+                             # approached it* -- **which is what the growth-budget's per-stage deltas are
+                             # measuring against, and the first real day where that series exists.**
   THE_BATTERY_S_MOVE_IS_WHAT_MADE_THIS_CHECK_REFUSE: TWO_CORRECT_CHANGES_COMPOSING
                              # CHECKED 2026-09-06T11:33:20Z at `assert_real_day_has_the_lock`'s own
                              # docstring: ***"It was an inline `if` inside `run_day`, and the battery drove
@@ -19577,6 +19659,66 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 165, 2026-09-06T11:38:40Z ------------------------------
+  THE_SECOND_RULE_IS_A_SWALLOWED_EXCEPTION_NOT_A_SECOND_IMPLEMENTATION:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T11:38:40Z
+    said: >-
+      _derived_dir() at :2685 is try: import de_data_root as BDR; return
+      Path(BDR.resolve()) / "data" / "pm_5min" / "derived" -- except Exception: return
+      HERE.parents[1] / ... So DA does import DE's resolver and the file-relative rule
+      is the except branch, while the docstring above reads "through the programme's
+      ONE data-root resolver -- imported, never a second implementation of where is the
+      ledger (R-562/R-564)" and the except three lines below is one. The mechanism is a
+      bare except Exception converting a failure into a plausible wrong answer; whether
+      the reviewer's drive raised in the try or resolved to the worktree root cannot be
+      told statically, which is DA 80's to determine. Routed, not ruled.
+  ALL_FIVE_WORKTREES_DATA_ARE_DIRECTORIES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-06T11:38:40Z
+    said: >-
+      I checked each: wt-be is a DIRECTORY with 255 tracked files, wt-da 235, wt-de
+      221, wt-de2 257, wt-rev 257 -- none is R-553's symlink, and my counts match the
+      coordinator's to the file. The rule requires a top-level symlink to
+      /home/yuqing/ctaNew/data and is violated in all five places it applies; the
+      violation is invisible from inside any of them because a materialised data/ looks
+      like the real one until you ask what is missing.
+  THE_BIGGER_DAY_PEAKED_LOWER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc.json
+    as_of: 2026-09-06T11:38:40Z
+    said: >-
+      asm_peak_gb_PUBLISHED is 5.317 for 09-03 and 4.913 for 09-04 while 09-04 carries
+      14 percent more data. The reviewer named the number rather than passing over it
+      and gave the reading -- consistent with the chunking (48 chunks of 6 windows)
+      holding the assembly's working set flat while the day grew -- marked AGREED AS A
+      READING, NOT DRIVEN, with "the receipt should say which".
+  THE_RUN_AT_NINE_MINUTES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-06T11:38:40Z
+    said: >-
+      de93smoke.scope active with pid 3282335 at 556 s, RSS 752,440 KiB and MemoryPeak
+      2,553,352,192 unchanged since the 11:31Z reading: the S1 book load set the peak
+      and nothing since has approached it.
+  THE_RISK_IS_NOT_THE_ENV_IT_IS_TWO_RULES_FOR_ONE_ROOT:
+    prov: RELAYED
+    from: R-621
+    as_of: 2026-09-06T11:38:40Z
+  THE_GO_IS_CONFIRMED_BY_A_CENSUS_NOT_A_SPOT_CHECK:
+    prov: RELAYED
+    from: R-621(A)
+    as_of: 2026-09-06T11:38:40Z
+  THE_DRIFT_S_MECHANISM_IS_THE_REFRESH_AND_THE_REPAIR_WAITS_ON_IDLENESS:
+    prov: RELAYED
+    from: R-621(B)
+    as_of: 2026-09-06T11:38:40Z
+  THE_BOOK_STANDS_AND_THE_REASON_IT_STANDS_IS_CHECKABLE:
+    prov: RELAYED
+    from: R-621(A)
+    as_of: 2026-09-06T11:38:40Z
   # --- MEM round 164, 2026-09-06T11:33:20Z ------------------------------
   THE_BATTERY_S_MOVE_IS_WHAT_MADE_THIS_CHECK_REFUSE:
     prov: CHECKED
