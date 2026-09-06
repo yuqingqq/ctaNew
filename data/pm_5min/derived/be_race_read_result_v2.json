@@ -1,0 +1,363 @@
+{
+ "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY AND NEVER A HOLM-CLEARING VERDICT (R-529(A)).",
+ "as_of_utc": "2026-09-06T17:57:34Z",
+ "byte_identity": {
+  "after": {
+   "20260903": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+   "20260904": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+   "20260905": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+  },
+  "all_unchanged": true,
+  "computed_not_asserted": "the coverage claim is a predicate over the parsed stream's own hash, not a literal",
+  "digest_covers_every_byte_parsed": {
+   "20260903": {
+    "digest_covers_every_byte_parsed": true,
+    "file_bytes": 283925031,
+    "file_sha256_after": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+    "parsed_bytes": 283925031,
+    "parsed_stream_sha256": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641"
+   },
+   "20260904": {
+    "digest_covers_every_byte_parsed": true,
+    "file_bytes": 297461852,
+    "file_sha256_after": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+    "parsed_bytes": 297461852,
+    "parsed_stream_sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949"
+   },
+   "20260905": {
+    "digest_covers_every_byte_parsed": true,
+    "file_bytes": 206084218,
+    "file_sha256_after": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491",
+    "parsed_bytes": 206084218,
+    "parsed_stream_sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+   }
+  },
+  "on_mismatch": "the read is VOID -- enforced",
+  "pinned_before": {
+   "20260903": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+   "20260904": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+   "20260905": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+  },
+  "pins": {
+   "20260903": {
+    "bytes": 283925031,
+    "checked_before_parsing": true,
+    "day": "20260903",
+    "n_hex_compared": 64,
+    "pinned_sha256": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641"
+   },
+   "20260904": {
+    "bytes": 297461852,
+    "checked_before_parsing": true,
+    "day": "20260904",
+    "n_hex_compared": 64,
+    "pinned_sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949"
+   },
+   "20260905": {
+    "bytes": 206084218,
+    "checked_before_parsing": true,
+    "day": "20260905",
+    "n_hex_compared": 64,
+    "pinned_sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+   }
+  }
+ },
+ "consumption": {
+  "decl_declaration": "be_race_read_declaration_v4.json",
+  "decl_declaration_sha256": "a741b4d6b5ac7f59e1d3606ee1668fc4cb6cb28bdae58b0628ff094dc80688bf",
+  "decl_is_the_chain_head": true,
+  "decl_source": "resolve_days() against the declaration chain head, supplied by the caller and RE-VERIFIED here against a fresh resolution (same declaration, same digest)",
+  "decl_supplied_by_the_caller": true,
+  "marker_dir": {
+   "data_root": "/home/yuqing/ctaNew/data",
+   "dir": "/home/yuqing/ctaNew/data/pm_5min/derived",
+   "equals_the_ledger_derived_dir": true,
+   "fixture": false,
+   "is_the_ledger": true,
+   "ledger_check": "PASS",
+   "readlink_f": "/home/yuqing/ctaNew/data/pm_5min/derived",
+   "realpath": "/home/yuqing/ctaNew/data/pm_5min/derived",
+   "why_guarded": "REV 76 \u00a75(a): resolved through require_ledger(), because a marker directory in a partial shell finds no markers and reopens spent days"
+  },
+  "markers_written_before_reading": [
+   "/home/yuqing/ctaNew/data/pm_5min/derived/be_race_read_OPENED_20260903.json",
+   "/home/yuqing/ctaNew/data/pm_5min/derived/be_race_read_OPENED_20260904.json",
+   "/home/yuqing/ctaNew/data/pm_5min/derived/be_race_read_OPENED_20260905.json"
+  ],
+  "runbook": "\u00a76 -- a three-path call to the race reader CONSUMES the race days",
+  "the_read_consumes": true,
+  "what_a_marker_IS": "an UNTRACKED file under the ledger's derived directory. It is the ONLY record that a day was spent, and it is exactly as durable as that directory -- not in git, not in any receipt chain (REV 76 \u00a75(c))",
+  "why_this_field_replaced_decl_was_injected": "REV 77 \u00a72.1: `decl_was_injected` would have read TRUE on the real path -- the CLI passes the output of resolve_days() -- beside prose claiming nothing is injected. The record of this test cannot be re-run and has no .v2, so the field says what happened and the supplied declaration is re-verified against a fresh resolution rather than trusted"
+ },
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day_set": {
+  "G_agrees_with_the_declaration": true,
+  "G_computed_from_the_set": 3,
+  "G_declared": 3,
+  "READABLE": [
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "declaration_sha256": "a741b4d6b5ac7f59e1d3606ee1668fc4cb6cb28bdae58b0628ff094dc80688bf",
+  "from": "be_race_read_declaration_v4.json",
+  "the_cli_cannot_widen_or_narrow_it": true
+ },
+ "day_signs": {
+  "20260903": -1,
+  "20260904": 1,
+  "20260905": -1
+ },
+ "days": [
+  "20260903",
+  "20260904",
+  "20260905"
+ ],
+ "decides_nothing": "REPORTED (rule 14).",
+ "gate1_separation": {
+  "checked_patterns": [
+   "be_daybook_",
+   "de_multiday_",
+   "de_section81_",
+   "be_cancel_axis_null",
+   "phase2_fits",
+   "de_daybook",
+   "gate1"
+  ],
+  "haystack": "the paths THIS RUN opened, not a module constant",
+  "matches": [],
+  "n_paths_checked": 3,
+  "no_gate1_artifact_on_the_read_path": true
+ },
+ "n_negative": 2,
+ "n_positive": 1,
+ "n_zero": 0,
+ "opened": {
+  "files": [
+   "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_feed_20260903.jsonl",
+   "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_feed_20260904.jsonl",
+   "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_feed_20260905.jsonl"
+  ],
+  "what_stays_sealed": "be_forward_day_SEALED_scores_<DAY>.json -- the estimand does not need them and opening more than it needs is consumption without purpose (rule 11)"
+ },
+ "per_day": {
+  "20260903": {
+   "computed_by": "be_read_cells.matched_volume -- the interim's own code, not a second copy",
+   "day_increment_cents": -1015.4403794999967,
+   "day_sign": -1,
+   "latency_ms": 50,
+   "n_feed_rows": 1140081,
+   "n_rows_without_an_incumbent_score": 0,
+   "parsed_stream_bytes": 283925031,
+   "parsed_stream_sha256": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+   "per_coin": {
+    "btc": {
+     "MATCHED_VOLUME_increment_cents": -914.9676669999972,
+     "candidate_net_cents": 17481.724087000002,
+     "counts_matched": true,
+     "incumbent_net_cents_matched": 18396.691754,
+     "n_actions": 313106
+    },
+    "eth": {
+     "MATCHED_VOLUME_increment_cents": -100.47271249999949,
+     "candidate_net_cents": 2347.1874375,
+     "counts_matched": true,
+     "incumbent_net_cents_matched": 2447.6601499999997,
+     "n_actions": 547029
+    }
+   },
+   "statistic": "MATCHED_VOLUME (R-588; the interim's PRIMARY)",
+   "status": "OK"
+  },
+  "20260904": {
+   "computed_by": "be_read_cells.matched_volume -- the interim's own code, not a second copy",
+   "day_increment_cents": 549.1126610000008,
+   "day_sign": 1,
+   "latency_ms": 50,
+   "n_feed_rows": 1194791,
+   "n_rows_without_an_incumbent_score": 0,
+   "parsed_stream_bytes": 297461852,
+   "parsed_stream_sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+   "per_coin": {
+    "btc": {
+     "MATCHED_VOLUME_increment_cents": 1047.8654485000006,
+     "candidate_net_cents": 8618.4186685,
+     "counts_matched": true,
+     "incumbent_net_cents_matched": 7570.55322,
+     "n_actions": 358094
+    },
+    "eth": {
+     "MATCHED_VOLUME_increment_cents": -498.7527874999998,
+     "candidate_net_cents": -417.06017550000024,
+     "counts_matched": true,
+     "incumbent_net_cents_matched": 81.69261199999953,
+     "n_actions": 501594
+    }
+   },
+   "statistic": "MATCHED_VOLUME (R-588; the interim's PRIMARY)",
+   "status": "OK"
+  },
+  "20260905": {
+   "computed_by": "be_read_cells.matched_volume -- the interim's own code, not a second copy",
+   "day_increment_cents": -2014.9902139999992,
+   "day_sign": -1,
+   "latency_ms": 50,
+   "n_feed_rows": 827727,
+   "n_rows_without_an_incumbent_score": 0,
+   "parsed_stream_bytes": 206084218,
+   "parsed_stream_sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491",
+   "per_coin": {
+    "btc": {
+     "MATCHED_VOLUME_increment_cents": -2109.303976999999,
+     "candidate_net_cents": -4839.471387499998,
+     "counts_matched": true,
+     "incumbent_net_cents_matched": -2730.167410499999,
+     "n_actions": 266584
+    },
+    "eth": {
+     "MATCHED_VOLUME_increment_cents": 94.31376299999988,
+     "candidate_net_cents": 976.247964,
+     "counts_matched": true,
+     "incumbent_net_cents_matched": 881.9342010000001,
+     "n_actions": 301764
+    }
+   },
+   "statistic": "MATCHED_VOLUME (R-588; the interim's PRIMARY)",
+   "status": "OK"
+  }
+ },
+ "permutation_floors": {
+  "WHICH_ONE_IS_RESOLVED": "the CONSERVATIVE one",
+  "neither_clears_0_05": true,
+  "optimistic": {
+   "G": 3,
+   "best_possible_adjusted_p": 0.25
+  },
+  "pessimistic": {
+   "G": 3,
+   "best_possible_adjusted_p": 0.25
+  },
+  "resolved_best_possible_adjusted_p": 0.25
+ },
+ "pre_state": {
+  "all_feeds_on_disk_at_their_pins": true,
+  "all_pins_present_and_true": true,
+  "as_of": "2026-09-06T17:56:53Z",
+  "days": [
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "declaration": "be_race_read_declaration_v4.json",
+  "declaration_sha256": "a741b4d6b5ac7f59e1d3606ee1668fc4cb6cb28bdae58b0628ff094dc80688bf",
+  "declared_result_absent_before_the_act": true,
+  "declared_result_name": "be_race_read_result_v1.json",
+  "existing_OPENED_markers": [],
+  "marker_dir": "/home/yuqing/ctaNew/data/pm_5min/derived",
+  "marker_dir_realpath": "/home/yuqing/ctaNew/data/pm_5min/derived",
+  "n_existing_OPENED_markers": 0,
+  "per_day": {
+   "20260903": {
+    "feed": "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_feed_20260903.jsonl",
+    "feed_matches_its_pin": true,
+    "feed_on_disk": true,
+    "feed_sha256_now": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+    "pin_exists_true": true,
+    "pin_present": true,
+    "pinned_sha256": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641"
+   },
+   "20260904": {
+    "feed": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_feed_20260904.jsonl",
+    "feed_matches_its_pin": true,
+    "feed_on_disk": true,
+    "feed_sha256_now": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+    "pin_exists_true": true,
+    "pin_present": true,
+    "pinned_sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949"
+   },
+   "20260905": {
+    "feed": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_feed_20260905.jsonl",
+    "feed_matches_its_pin": true,
+    "feed_on_disk": true,
+    "feed_sha256_now": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491",
+    "pin_exists_true": true,
+    "pin_present": true,
+    "pinned_sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+   }
+  },
+  "why": "REV 76 \u00a76 condition 3: recorded as the FIRST step of the act, before any marker is written, so the artifact carries the state the act began from",
+  "zero_markers_before_the_act": true
+ },
+ "protocol": "BE_RACE_READ_RESULT_V1",
+ "ruling": "R-588: OPTION A, NO RE-SEAL. The read opens the FEED; the statistic is MATCHED_VOLUME, the interim's PRIMARY, because that is what 09-01 and 09-02 were read with and changing it after seeing two days would be a choice after seeing. BY_THRESHOLD is reported, never primary (rule 7).",
+ "writes": {
+  "and_nothing_else": true,
+  "artifact": "be_race_read_result_v1.json"
+ },
+ "pinned_days_not_in_READABLE": {
+  "days": [
+   "20260901",
+   "20260902"
+  ],
+  "status": {
+   "20260901": "READ_BUT_UNRECOVERABLE",
+   "20260902": "READ_BUT_UNRECOVERABLE"
+  },
+  "copied_from": "be_race_read_feed_pins_v1.json",
+  "pin_exists_flag": {
+   "20260901": false,
+   "20260902": false
+  },
+  "THEY_ARE_NOT_IN_READABLE": true,
+  "G_REMAINS": 3,
+  "why_they_are_named": "declaration v4 \u00a73.3: every PINNED day must be said. The pins name five days and v1 mentioned three, so a reader could not tell a declared three-day read from a five-day read that silently lost two -- which is the exact failure the by-name refusal exists to prevent.",
+  "no_reader_may_infer_G_5": "these two days were READ under the interim and are unrecoverable; they are NOT part of this read's population and add nothing to G, which remains 3.",
+  "nothing_else_is_carried": "only the status above, copied from the pin file. No score, no sign, no quantity: this artifact does not know anything else about them and does not pretend to."
+ },
+ "producing_code": {
+  "status": "RECONSTRUCTED_NOT_A_STAMP",
+  "builder_commit_RECONSTRUCTED": "c4c0d0de65a735e4b28860c5d855ce6e7091c16b",
+  "reader_sha256_RECONSTRUCTED": "32c0e4b94da8d4b051d74fc3522a9e98a1445a408a4f694a917bda7c08a0c0fa",
+  "why_the_keys_are_not_the_plain_names": "an automated reader keying `builder_commit` or `reader_sha256` must find NOTHING here: these were NOT captured at run time. The reader carried no source identity when it ran, so this is read back from the record afterwards and must not be indistinguishable from a stamp.",
+  "NOT_CAPTURED_AT_RUN_TIME": true,
+  "source": "BE 70's report and Q-BE-313 (the seat read the tip and hashed the reader at 17:56:53Z, in the pre-flight that launched the run), corroborated by the git objects: the commit exists and its blob hashes to the reader digest named here",
+  "what_this_can_and_cannot_establish": "the git objects show these bytes existed at that commit; they cannot show that THIS run executed them, because nothing in the run recorded it. From the producers' rule-22 stamp onward that is captured at import; this reader is not yet stamped."
+ },
+ "supersedes": {
+  "artifact": "be_race_read_result_v1.json",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_race_read_result_v1.json",
+  "sha256": "1fa4b93f02b369aff41a53580447beea1cbce2d385bbe0b0dfbabc064e868ba3",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} PAIR; v1 is NOT edited and stays as provenance",
+  "what_changed": "TWO ADDED KEYS AND NOTHING ELSE. No number from the read moves; nothing is recomputed; the feeds were not reopened and cannot be."
+ },
+ "correction_census": {
+  "keys_changed_vs_v1": [
+   "pinned_days_not_in_READABLE",
+   "producing_code",
+   "supersedes"
+  ],
+  "declared_additions": [
+   "correction_census",
+   "pinned_days_not_in_READABLE",
+   "producing_code",
+   "supersedes"
+  ],
+  "difference_is_exactly_the_additions": true,
+  "frozen_blocks_byte_identical": {
+   "day_signs": true,
+   "permutation_floors": true,
+   "byte_identity": true
+  },
+  "nothing_recomputed": "no field in this file is derived from the feeds; they are consumed and the read cannot be re-run"
+ }
+}

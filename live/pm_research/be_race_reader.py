@@ -337,6 +337,170 @@ def resolve_marker_dir(outdir=None, *, fixture: bool = False,
                            "finds no markers and reopens spent days"}
 
 
+#: The three blocks a correction may NEVER touch: they are the read itself.
+FROZEN_BLOCKS = ("day_signs", "permutation_floors", "byte_identity")
+
+#: Fields whose PLAIN names must never carry a reconstruction, because an
+#: automated reader keying them would get a value that looks stamped.
+PLAIN_STAMP_FIELDS = ("builder_commit", "reader_sha256", "producing_code_sha256")
+
+
+def correction_census(v1: dict, v2: dict,
+                      added=("pinned_days_not_in_READABLE",
+                             "producing_code", "supersedes",
+                             "correction_census")) -> dict:
+    """PROVE a correction added only what it declared, and touched nothing.
+
+    Extracted so the falsifier can drive THE PREDICATE rather than trying to
+    make the emitter misbehave: the first form of that known-bad patched
+    `json.dumps` and tested nothing."""
+    added = set(added)
+    changed = sorted(k for k in set(v1) | set(v2)
+                     if json.dumps(v1.get(k), sort_keys=True, default=str)
+                     != json.dumps(v2.get(k), sort_keys=True, default=str))
+    # THE FROZEN BLOCKS ARE CHECKED FIRST. They are also "outside the
+    # declared additions", so the generic refusal fired first and hid the
+    # specific one -- the third time this ordering has bitten (the generic
+    # `sealed feed(s) absent` in REV 48 §1.6, the result-name guard in BE
+    # 68). The more specific claim goes first.
+    frozen_ok = {b: (json.dumps(v1.get(b), sort_keys=True, default=str)
+                     == json.dumps(v2.get(b), sort_keys=True, default=str))
+                 for b in FROZEN_BLOCKS}
+    if not all(frozen_ok.values()):
+        raise ReadRefused(
+            f"REFUSED: a FROZEN block changed -- "
+            f"{[b for b, okv in frozen_ok.items() if not okv]}. "
+            f"{list(FROZEN_BLOCKS)} are the read itself, and a correction "
+            f"that touches them is not a correction.")
+    outside = sorted(set(changed) - added)
+    if outside:
+        raise ReadRefused(
+            f"REFUSED: the .v2 differs from v1 in {outside}, which is "
+            f"outside the declared additions {sorted(added)}.")
+    pc = v2.get("producing_code") or {}
+    for f in PLAIN_STAMP_FIELDS:
+        if f in pc:
+            raise ReadRefused(
+                f"REFUSED: the reconstruction sits under the PLAIN field "
+                f"{f!r}. A reader keying it would get a value that looks "
+                f"stamped; the status must ride in the KEY.")
+    if pc and list(pc)[0] != "status":
+        raise ReadRefused(
+            "REFUSED: `producing_code.status` is not the block's first "
+            "field.")
+    return {"keys_changed_vs_v1": changed,
+            "declared_additions": sorted(added),
+            "difference_is_exactly_the_additions":
+                sorted(changed) == sorted(k for k in added if k in v2),
+            "frozen_blocks_byte_identical": frozen_ok}
+
+
+def supersede_result(*, outdir: Path | None = None,
+                     builder_commit: str, reader_sha256: str,
+                     source: str, fixture: bool = False,
+                     why: str | None = None) -> dict:
+    """THE `.v2` OF THE READ ARTIFACT (R-707, REV 78 §3). NO RECOMPUTE.
+
+    DA 101 found two things v1 does not SAY: the pins name FIVE days while
+    the artifact mentions three -- declaration v4 §3.3 requires every pinned
+    day to be said, precisely so a silently smaller G cannot pass as the
+    declared one -- and no source identity in the one artifact that cannot
+    be re-run.
+
+    THE NAME. `be_race_read_result_v2.json`, not `…v1.json.v2`: the chain
+    resolver reads a `<family>_v<N>.json` glob and follows the {path,
+    sha256} pair, so a version under that convention resolves to one head.
+    The daybook receipts' `.vN.json` suffix is a different family's
+    convention and this resolver would not chain it.
+
+    WHAT THIS MAY NOT DO: recompute or restate anything. Nothing here is
+    derived from the feeds -- they are consumed and the read cannot be
+    re-run. The census below proves it by diffing v1 against v2 and refusing
+    if the difference is anything other than the declared additions."""
+    import copy
+    md = resolve_marker_dir(outdir, fixture=fixture, why=why)
+    d = md["dir"]
+    v1p = d / OUT_NAME
+    if not v1p.exists():
+        raise ReadRefused(f"REFUSED: no v1 at {v1p} to supersede.")
+    raw = v1p.read_bytes()
+    v1 = json.loads(raw)
+    v1_sha = hashlib.sha256(raw).hexdigest()
+    v2 = copy.deepcopy(v1)
+
+    pd = pins()
+    decl = declared_read()
+    unrec = [x for x in sorted(pd) if x not in decl["READABLE"]]
+    v2["pinned_days_not_in_READABLE"] = {
+        "days": unrec,
+        "status": {x: "READ_BUT_UNRECOVERABLE" for x in unrec},
+        "copied_from": str(PINS.name),
+        "pin_exists_flag": {x: (pd[x] or {}).get("exists") for x in unrec},
+        "THEY_ARE_NOT_IN_READABLE": True,
+        "G_REMAINS": decl["G_declared"],
+        "why_they_are_named": "declaration v4 §3.3: every PINNED day must be "
+                              "said. The pins name five days and v1 mentioned "
+                              "three, so a reader could not tell a declared "
+                              "three-day read from a five-day read that "
+                              "silently lost two -- which is the exact "
+                              "failure the by-name refusal exists to prevent.",
+        "no_reader_may_infer_G_5": "these two days were READ under the "
+                                   "interim and are unrecoverable; they are "
+                                   "NOT part of this read's population and "
+                                   "add nothing to G, which remains "
+                                   f"{decl['G_declared']}.",
+        "nothing_else_is_carried": "only the status above, copied from the "
+                                   "pin file. No score, no sign, no "
+                                   "quantity: this artifact does not know "
+                                   "anything else about them and does not "
+                                   "pretend to.",
+    }
+    v2["producing_code"] = {
+        "status": "RECONSTRUCTED_NOT_A_STAMP",
+        "builder_commit_RECONSTRUCTED": builder_commit,
+        "reader_sha256_RECONSTRUCTED": reader_sha256,
+        "why_the_keys_are_not_the_plain_names":
+            "an automated reader keying `builder_commit` or `reader_sha256` "
+            "must find NOTHING here: these were NOT captured at run time. "
+            "The reader carried no source identity when it ran, so this is "
+            "read back from the record afterwards and must not be "
+            "indistinguishable from a stamp.",
+        "NOT_CAPTURED_AT_RUN_TIME": True,
+        "source": source,
+        "what_this_can_and_cannot_establish":
+            "the git objects show these bytes existed at that commit; they "
+            "cannot show that THIS run executed them, because nothing in "
+            "the run recorded it. From the producers' rule-22 stamp onward "
+            "that is captured at import; this reader is not yet stamped.",
+    }
+    v2["supersedes"] = {
+        "artifact": v1p.name, "path": str(v1p), "sha256": v1_sha,
+        "rule": "13 / R-608 -- vN+1 by the {path, sha256} PAIR; v1 is NOT "
+                "edited and stays as provenance",
+        "what_changed": "TWO ADDED KEYS AND NOTHING ELSE. No number from the "
+                        "read moves; nothing is recomputed; the feeds were "
+                        "not reopened and cannot be.",
+    }
+
+    census = correction_census(v1, v2)
+    v2["correction_census"] = dict(census, **{
+        "nothing_recomputed": "no field in this file is derived from the "
+                              "feeds; they are consumed and the read cannot "
+                              "be re-run",
+    })
+    dst = d / "be_race_read_result_v2.json"
+    dst.write_text(json.dumps(v2, indent=1, sort_keys=False, default=str))
+    after = hashlib.sha256(v1p.read_bytes()).hexdigest()
+    if after != v1_sha:
+        raise ReadRefused(
+            f"REFUSED: v1 changed while its .v2 was being written "
+            f"({v1_sha[:16]} -> {after[:16]}).")
+    return {"v2": str(dst), "v2_sha256": hashlib.sha256(
+                dst.read_bytes()).hexdigest(),
+            "v1": str(v1p), "v1_sha256": v1_sha, "v1_untouched": True,
+            "census": v2["correction_census"]}
+
+
 def pre_state(days, marker_dir: Path, feeds: dict, pd: dict,
               decl: dict) -> dict:
     """THE STATE BEFORE THE ACT, recorded as `--open`'s FIRST step.
@@ -693,7 +857,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 36
+EXPECTED_CHECKS = 44
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -1016,6 +1180,109 @@ def selftest() -> int:
            "REFUSES on the real path -- a day set nobody re-checked is "
            "exactly what R-600 found, so the field is not merely honest, it "
            "is verified")
+
+    # ---- R-707 / REV 78 §3: the .v2 of the read artifact ----------------
+    import tempfile as _tfV, copy as _cpV
+    _dV = Path(_tfV.mkdtemp(prefix="be73_v2_"))
+    _v1 = {"day_signs": {"20990101": 1}, "permutation_floors": {"x": 0.25},
+           "byte_identity": {"all_unchanged": True}, "days": ["20990101"]}
+    (_dV / OUT_NAME).write_text(json.dumps(_v1, indent=1, sort_keys=True))
+    _res = supersede_result(outdir=_dV, builder_commit="deadbee",
+                            reader_sha256="f" * 64,
+                            source="battery fixture",
+                            fixture=True,
+                            why="battery: a scratch v1 under a scratch "
+                                "marker directory; the ledger is untouched")
+    _v2 = json.loads(Path(_res["v2"]).read_text())
+    ok(Path(_res["v2"]).name == "be_race_read_result_v2.json"
+       and _res["v1_untouched"]
+       and _v2["supersedes"]["sha256"] == _res["v1_sha256"]
+       and _v2["supersedes"]["path"].endswith(OUT_NAME),
+       f"R-707: the .v2 is {Path(_res['v2']).name} -- the "
+       f"`<family>_v<N>.json` convention this chain resolver reads -- and it "
+       f"supersedes v1 by the {{path, sha256}} PAIR, v1 untouched")
+    ok(_res["census"]["difference_is_exactly_the_additions"]
+       and all(_res["census"]["frozen_blocks_byte_identical"].values())
+       and sorted(_res["census"]["keys_changed_vs_v1"]) ==
+           ["pinned_days_not_in_READABLE", "producing_code", "supersedes"],
+       f"THE CENSUS PROVES NOTHING WAS RECOMPUTED: the only keys that differ "
+       f"from v1 are {_res['census']['keys_changed_vs_v1']}, and "
+       f"day_signs / permutation_floors / byte_identity are byte-identical")
+    ok(list(_v2["producing_code"])[0] == "status"
+       and _v2["producing_code"]["status"] == "RECONSTRUCTED_NOT_A_STAMP"
+       and "builder_commit_RECONSTRUCTED" in _v2["producing_code"]
+       and "builder_commit" not in _v2["producing_code"]
+       and "reader_sha256" not in _v2["producing_code"],
+       "THE RECONSTRUCTION RIDES IN THE KEY: `status` is the block's FIRST "
+       "field and the values are under *_RECONSTRUCTED names -- a reader "
+       "keying `builder_commit` finds NOTHING, so it cannot get a value "
+       "that looks stamped")
+    _pn = _v2["pinned_days_not_in_READABLE"]
+    ok(_pn["THEY_ARE_NOT_IN_READABLE"] is True
+       and _pn["G_REMAINS"] == 3
+       and set(_pn["status"].values()) == {"READ_BUT_UNRECOVERABLE"}
+       and "no_reader_may_infer_G_5" in _pn,
+       f"THE TWO PINNED DAYS ARE SAID, AND ONLY SAID: {sorted(_pn['days'])} "
+       f"carry READ_BUT_UNRECOVERABLE copied from the pin file and nothing "
+       f"else -- no score, no sign, no quantity -- with G_REMAINS "
+       f"{_pn['G_REMAINS']} stated so no reader infers G = 5 from their "
+       f"appearance (declaration v4 §3.3)")
+    # FALSIFIER 1: the census REFUSES a correction that touches the read
+    _base = {"day_signs": {"20990101": 1}, "permutation_floors": {"x": 0.25},
+             "byte_identity": {"all_unchanged": True}}
+    _touch = dict(_base, day_signs={"20990101": -1},
+                  producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP"},
+                  supersedes={}, pinned_days_not_in_READABLE={})
+    try:
+        correction_census(_base, _touch)
+        _touched_refused = False
+    except ReadRefused as _eV:
+        _touched_refused = ("FROZEN block changed" in str(_eV)
+                            and "day_signs" in str(_eV))
+    ok(_touched_refused,
+       "KNOWN-BAD: a correction that changes a FROZEN block (day_signs / "
+       "permutation_floors / byte_identity) is REFUSED by the census, "
+       "naming the block -- a correction that touches the read is not a "
+       "correction. Driven on the PREDICATE: the first form of this "
+       "known-bad patched `json.dumps` and tested nothing")
+    _extra = dict(_base, days=["20990101", "20990102"],
+                  producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP"},
+                  supersedes={}, pinned_days_not_in_READABLE={})
+    try:
+        correction_census(_base, _extra)
+        _extra_refused = False
+    except ReadRefused as _eW:
+        _extra_refused = "outside the declared additions" in str(_eW)
+    ok(_extra_refused,
+       "KNOWN-BAD: a correction that changes ANY key outside the declared "
+       "additions is REFUSED, naming the key")
+    # FALSIFIER 2: a reconstruction under a PLAIN field name is REFUSED
+    _plain = dict(_base,
+                  producing_code={"status": "RECONSTRUCTED_NOT_A_STAMP",
+                                  "builder_commit": "c4c0d0d"},
+                  supersedes={}, pinned_days_not_in_READABLE={})
+    try:
+        correction_census(_base, _plain)
+        _plain_refused = False
+    except ReadRefused as _eX:
+        _plain_refused = ("sits under the PLAIN field" in str(_eX)
+                          and "builder_commit" in str(_eX))
+    ok(_plain_refused,
+       "KNOWN-BAD: a reconstruction under the PLAIN name `builder_commit` "
+       "is REFUSED -- a reader keying it would get a value that looks "
+       "stamped, in the one artifact that cannot be re-run")
+    _notfirst = dict(_base,
+                     producing_code={"builder_commit_RECONSTRUCTED": "x",
+                                     "status": "RECONSTRUCTED_NOT_A_STAMP"},
+                     supersedes={}, pinned_days_not_in_READABLE={})
+    try:
+        correction_census(_base, _notfirst)
+        _first_refused = False
+    except ReadRefused as _eY:
+        _first_refused = "not the block's first field" in str(_eY)
+    ok(_first_refused,
+       "AND `status` MUST BE THE BLOCK'S FIRST FIELD: a block that carries "
+       "it second is refused")
 
     # ---- REV 77 §2.2: ANYTHING at the marker path means CONSUMED --------
     import tempfile as _tfA
