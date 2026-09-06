@@ -472,18 +472,34 @@ def assert_tape_for_day(day: str | None, path=None, *,
     out = {"tape_path": str(p), "day": day,
            "is_the_default": p.resolve() == Path(TAPE_PATH).resolve()}
     if expect_sha256:
+        # REV 45. THIS COMPARED `got.startswith(expect[:16])`, so
+        # `expect_sha256="9"` ADMITTED with `digest_verified_at_load: True`
+        # -- driven, all three stubs passed. A prefix comparison against a
+        # truncated expectation verifies nothing: the shorter the stub, the
+        # easier it is to satisfy. The expectation must be a FULL digest and
+        # the comparison must be over all 64 characters.
+        import hmac
+        e = str(expect_sha256).strip()
+        if len(e) != 64 or any(c not in "0123456789abcdef" for c in e):
+            raise TapePathRefused(
+                f"REFUSED: expected digest {e[:20]!r} is not 64 lowercase "
+                f"hex characters ({len(e)} given). A truncated or "
+                f"upper-cased expectation cannot be verified -- the old "
+                f"prefix compare admitted a ONE-CHARACTER stub.")
         h = hashlib.sha256()
         with p.open("rb") as fh:
             for chunk in iter(lambda: fh.read(1 << 20), b""):
                 h.update(chunk)
         got = h.hexdigest()
-        if not got.startswith(expect_sha256.lower()[:16]):
+        if not hmac.compare_digest(got, e):
             raise TapePathRefused(
                 f"REFUSED: {p.name} digests {got[:16]}…, not the expected "
-                f"{expect_sha256[:16]}…. A tape that is not the bytes the "
-                f"builder receipt names is not that day's tape.")
+                f"{e[:16]}…. A tape that is not the bytes the builder "
+                f"receipt names is not that day's tape.")
         out["sha256"] = got
         out["digest_verified_at_load"] = True
+        out["n_hex_compared"] = len(e)
+        out["compared_with"] = "hmac.compare_digest over all 64 characters"
     return out
 
 

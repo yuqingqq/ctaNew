@@ -218,7 +218,89 @@ def build() -> dict:
     }
 
 
-EXPECTED_CHECKS = 8
+def build_v4() -> dict:
+    """v4: the population is the five NAMED days, and only three are readable.
+
+    R-549 / REV 44 B / DA 65: 09-01 and 09-02 were opened under the interim
+    and their surviving receipts are SEAL-RELOCATION receipts, which carry no
+    economics. No interim OUTPUT artifact exists. So those two days are
+    READ-BUT-UNRECOVERABLE: consumed under rule 11 and unavailable as
+    numbers. The read is therefore stated at G = 3 -- which is v2's own
+    PESSIMISTIC branch, not a new choice -- with the floor 0.25.
+
+    NO RECEIPT IS CITED FOR A NUMBER IT DOES NOT CARRY."""
+    import hashlib
+    v3p = HERE / "declarations" / "be_race_read_declaration_v3.json"
+    pins = json.loads((HERE / "declarations"
+                       / "be_race_read_feed_pins_v1.json").read_text())
+    per = pins["per_day"]
+    readable = sorted(d for d, v in per.items() if v.get("exists"))
+    unrec = sorted(d for d, v in per.items() if not v.get("exists"))
+    m = 2
+    floor_g3 = m / 2 ** len(readable)
+    ie = interim_evidence()
+    return {
+        "protocol": "BE_RACE_READ_DECLARATION_V4",
+        "as_of_utc": dt.datetime.now(dt.timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"),
+        "supersedes": {
+            "artifact": "be_race_read_declaration_v3.json",
+            "sha256": hashlib.sha256(v3p.read_bytes()).hexdigest()
+                      if v3p.exists() else None,
+            "rule": "13 -- vN+1; v3 is NOT edited",
+            "what_changes": "the POPULATION and G. The estimand, the "
+                            "statistic and the no-re-seal ruling are "
+                            "unchanged.",
+        },
+        "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY "
+                            "AND NEVER A HOLM-CLEARING VERDICT (R-529(A)).",
+        "population": {
+            "the_five_named_days": sorted(per),
+            "READABLE": readable,
+            "READ_BUT_UNRECOVERABLE": unrec,
+            "why_unrecoverable": (
+                "09-01 and 09-02 were OPENED under the interim (R-549), so "
+                "they are consumed under rule 11 -- but their surviving "
+                "receipts are SEAL-RELOCATION receipts, which carry no "
+                "economics, and NO interim OUTPUT artifact exists. Verified "
+                "independently by REV 44 §B and DA 65. Consumed and "
+                "unavailable are different facts and both hold."),
+            "the_pins_say_so_too": "be_race_read_feed_pins_v1.json marks "
+                                   "both `exists: false` with no digest; the "
+                                   "reader REFUSES such a day BY NAME rather "
+                                   "than skipping it",
+        },
+        "G": len(readable),
+        "why_G_is_3": "it is v2's OWN `PESSIMISTIC_only_the_three_first_"
+                      "openings_are_fresh` branch, now the only branch the "
+                      "artifacts support -- not a choice made after seeing "
+                      "anything",
+        "permutation_floor": {
+            "G": len(readable), "multiplicity": m,
+            "best_possible_adjusted_p": floor_g3,
+            "clears_0_05": floor_g3 <= 0.05,
+            "computed_here_not_quoted": True,
+        },
+        "statistic": {
+            "primary": ie["primary_statistic_name"],
+            "definition": ie["primary_statistic_definition"],
+            "latency_ms": ie["latency_ms"],
+            "BY_THRESHOLD": "REPORTED, never primary (rule 7, as the interim "
+                            "states it)",
+            "unchanged_from_v3": True,
+        },
+        "re_seal": {"recommended": False,
+                    "why": "every field the estimand names is already in the "
+                           "feed by design (v3); and a re-seal could not "
+                           "recover 09-01/02's economics, because the "
+                           "interim's OUTPUT was never written"},
+        "cites_no_receipt_for_a_number_it_does_not_carry": True,
+        "opens_nothing": True,
+        "decides_nothing": "REPORTED (rule 14).",
+    }
+
+
+EXPECTED_CHECKS = 12
 
 
 def selftest() -> int:
@@ -272,6 +354,28 @@ def selftest() -> int:
        "and producing this declaration OPENED NOTHING -- the evidence is the "
        "interim's declaration and two source files")
 
+    v4 = build_v4()
+    ok(v4["G"] == 3 and v4["population"]["READ_BUT_UNRECOVERABLE"]
+       == ["20260901", "20260902"],
+       f"v4: G = {v4['G']} and the two READ-BUT-UNRECOVERABLE days are "
+       f"{v4['population']['READ_BUT_UNRECOVERABLE']} -- taken from the "
+       f"PINS' own `exists: false`, not typed")
+    ok(v4["permutation_floor"]["best_possible_adjusted_p"] == 0.25
+       and not v4["permutation_floor"]["clears_0_05"],
+       f"and the floor is COMPUTED at "
+       f"{v4['permutation_floor']['best_possible_adjusted_p']} -- v2's own "
+       f"PESSIMISTIC branch, which is now the only branch the artifacts "
+       f"support")
+    ok(v4["statistic"]["primary"] == "MATCHED_VOLUME"
+       and "never primary" in v4["statistic"]["BY_THRESHOLD"]
+       and v4["re_seal"]["recommended"] is False,
+       "MATCHED_VOLUME stays primary, BY_THRESHOLD reported never primary, "
+       "and no re-seal -- unchanged from v3")
+    ok(v4["supersedes"]["sha256"] is not None
+       and v4["cites_no_receipt_for_a_number_it_does_not_carry"],
+       f"v4 supersedes v3 BY SHA256 ({str(v4['supersedes']['sha256'])[:16]}…) "
+       f"and cites no receipt for a number it does not carry")
+
     print()
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
@@ -287,6 +391,16 @@ def main(argv=None) -> int:
     argv = list(sys.argv) if argv is None else list(argv)
     if "--selftest" in argv:
         return selftest()
+    if "--declare-v4" in argv:
+        out = build_v4()
+        dst = HERE / "declarations" / "be_race_read_declaration_v4.json"
+        dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
+        print(json.dumps({"written": str(dst), "G": out["G"],
+                          "floor": out["permutation_floor"][
+                              "best_possible_adjusted_p"],
+                          "unrecoverable": out["population"][
+                              "READ_BUT_UNRECOVERABLE"]}))
+        return 0
     if "--declare" in argv:
         out = build()
         dst = HERE / "declarations" / "be_race_read_declaration_v3.json"

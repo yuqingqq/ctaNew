@@ -90,15 +90,23 @@ def day_tape_sha(day: str, coin: str = COIN) -> str | None:
     Read from the receipt rather than recomputed here, so the assembly is
     bound to the bytes the tape builder published -- not merely to whatever
     is at the path today."""
-    import be_gate1_state_tape as TM
-    for name in (f"be_gate1_state_tape_receipt_{day}_{coin}.v2.json",
-                 f"be_gate1_state_tape_receipt_{day}_{coin}.json"):
-        r = OUT_DERIVED / name
-        if r.exists():
-            d = json.loads(r.read_text())
-            if d.get("WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY", {}) \
-                    .get("split") == "score":
-                return d["tape"]["sha256"]
+    # REV 43: this hardcoded (.v2, .json) and would MISS a .v3 the moment
+    # the builder auto-versioned past it -- which it did the same round.
+    # The search now GLOBS and takes the HIGHEST version, so it follows the
+    # builder instead of restating a snapshot of it.
+    import re
+    stem = f"be_gate1_state_tape_receipt_{day}_{coin}"
+
+    def _ver(q: Path) -> int:
+        m = re.search(r"\.v(\d+)\.json$", q.name)
+        return int(m.group(1)) if m else 1
+
+    cands = sorted(OUT_DERIVED.glob(f"{stem}*.json"), key=_ver, reverse=True)
+    for r in cands:
+        d = json.loads(r.read_text())
+        if d.get("WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY", {}) \
+                .get("split") == "score":
+            return d["tape"]["sha256"]
     return None
 
 
@@ -403,7 +411,10 @@ def build(day: str, *, coin: str = COIN,
     # ITEM 1 IS IN: the index is built from THE DAY'S OWN TAPE, with its
     # digest verified at load. Before this, `build_tape_index` had no path
     # and would have indexed the consumed hour's tape for a September day.
-    tape = R.build_tape_index(splits, tape_path=inp["tape"]["path"])
+    # R16: the ONE-OBJECT form, so the ruled-day and load-side
+    # checks inside the seam fire. The `tape_path=` form the
+    # 09-03 book was built under passes only a path and skips them.
+    tape = R.build_tape_index(splits, inputs=inp)
     stages.done("A1_index", t)
     obs["tape_index_s"] = round(time.time() - t, 1)
     obs["tape_rows"] = tape.get("n_tape_rows")
@@ -545,7 +556,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 22
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -630,21 +641,21 @@ def selftest() -> int:
     import be_forward_day as _FD
     if not reachable:
         skip("the upstream ForwardDayRefused case", why_not)
-        raise SystemExit(_finish(checks, fails, skipped))
-    try:
-        day_slugs("19700101")
-        ok(False, "a day with no ledger entry must refuse")
-    except BookRefused as e:
-        ok(False, f"expected the UPSTREAM refusal, got BookRefused: {e}")
-    except Exception as e:                               # noqa: BLE001
-        ok(type(e).__name__ == "ForwardDayRefused"
-           and "ledger holds no window" in str(e),
-           f"KNOWN-BAD, THE OTHER PATH, NAMED BY TYPE: a day with no ledger "
-           f"entry raises {type(e).__name__} from be_forward_day -- a "
-           f"different refusal from a different module, and the battery now "
-           f"says which is which")
+    else:
+      try:
+          day_slugs("19700101")
+          ok(False, "a day with no ledger entry must refuse")
+      except BookRefused as e:
+          ok(False, f"expected the UPSTREAM refusal, got BookRefused: {e}")
+      except Exception as e:                               # noqa: BLE001
+          ok(type(e).__name__ == "ForwardDayRefused"
+             and "ledger holds no window" in str(e),
+             f"KNOWN-BAD, THE OTHER PATH, NAMED BY TYPE: a day with no ledger "
+             f"entry raises {type(e).__name__} from be_forward_day -- a "
+             f"different refusal from a different module, and the battery now "
+             f"says which is which")
 
-    # ---- THE TWO GUARDS, DRIVEN BOTH WAYS ---------------------------------
+    # ---- THE TWO GUARDS, DRIVEN BOTH WAYS (tree-independent) --------------
     ok(assert_pool_equality({1, 2, 3}, {3, 2, 1}) is True,
        "POSITIVE CONTROL: identical scored sets PASS the shared-pool guard")
     try:
@@ -669,25 +680,28 @@ def selftest() -> int:
     # ROUND 51's BLOCKER IS CLEARED BY ROUND 52's ITEM 1, so this check
     # asserts the NEW truth: the day tape ADMITS, bound to the digest its
     # SCORE-split receipt names.
-    _adt = assert_day_tape("20260903")
-    ok(_adt["is_the_days_tape"]
-       and _adt["sha256_from_receipt"].startswith("9de88da950598e86")
-       and _adt["default_constant_no_longer_blocks"],
-       f"POSITIVE CONTROL: the assembly now binds to THE DAY'S tape, at the "
-       f"digest its SCORE-split receipt names "
-       f"({_adt['sha256_from_receipt'][:16]}…) -- round 51's module-constant "
-       f"blocker is cleared by this round's path parameter")
-    try:
-        assert_day_tape("19700101")
-        ok(False, "a day with no tape must refuse")
-    except BookRefused as e:
-        ok("does not exist" in str(e),
-           "KNOWN-BAD: a day with no tape REFUSES -- the assembly never "
-           "silently falls back to the consumed hour's tape")
+    if not reachable:
+        for _lbl in ("the day-tape positive control",
+                     "the no-tape known-bad"):
+            skip(_lbl, why_not)
+    else:
+        _adt = assert_day_tape("20260903")
+        ok(_adt["is_the_days_tape"]
+           and _adt["sha256_from_receipt"].startswith("9de88da950598e86")
+           and _adt["default_constant_no_longer_blocks"],
+           f"POSITIVE CONTROL: the assembly binds to THE DAY'S tape at the "
+           f"digest its SCORE-split receipt names "
+           f"({_adt['sha256_from_receipt'][:16]}…)")
+        try:
+            assert_day_tape("19700101")
+            ok(False, "a day with no tape must refuse")
+        except BookRefused as e:
+            ok("does not exist" in str(e),
+               "KNOWN-BAD: a day with no tape REFUSES -- the assembly never "
+               "silently falls back to the consumed hour's tape")
 
     # ---- ITEM 1: the tape PATH parameter, driven three ways --------------
     import phase2_arms as _PA
-    import be_gate1_state_tape as _TM
     try:
         _PA.assert_tape_for_day("20260903")          # default path
         ok(False, "the default tape on a ruled day must refuse")
@@ -696,22 +710,25 @@ def selftest() -> int:
            "KNOWN-BAD: a RULED DAY asked for with the DEFAULT tape REFUSES, "
            "naming the consequence -- indexing the consumed hour's tape for "
            "a September day yields an empty asm")
+    import be_gate1_state_tape as _TM
     _dt = _TM.out_path("20260903")
     if _dt.exists():
         try:
             _PA.assert_tape_for_day("20260903", _dt,
-                                    expect_sha256="0" * 16)
+                                    expect_sha256="0" * 64)
             ok(False, "a wrong digest must refuse")
         except _PA.TapePathRefused as e:
             ok("is not that day's tape" in str(e),
                "KNOWN-BAD: the day's tape with a WRONG expected digest "
                "REFUSES -- bytes that are not the ones the builder receipt "
                "names are not that day's tape")
-        _r = _PA.assert_tape_for_day("20260903", _dt,
-                                     expect_sha256="9de88da950598e86")
-        ok(_r["digest_verified_at_load"] and not _r["is_the_default"],
-           f"POSITIVE CONTROL: the day's own tape ADMITS with its digest "
-           f"VERIFIED AT LOAD ({_r['sha256'][:16]}…) and is not the default")
+        _full = _sha_file(_dt)
+        _r = _PA.assert_tape_for_day("20260903", _dt, expect_sha256=_full)
+        ok(_r["digest_verified_at_load"] and not _r["is_the_default"]
+           and _r["n_hex_compared"] == 64,
+           f"POSITIVE CONTROL: the day's own tape ADMITS with its FULL "
+           f"64-hex digest compared ({_r['sha256'][:16]}…, "
+           f"n_hex_compared={_r['n_hex_compared']}) and is not the default")
     else:
         skip("the day-tape digest checks", f"{_dt.name} absent")
         skip("the day-tape positive control", f"{_dt.name} absent")
@@ -756,6 +773,27 @@ def selftest() -> int:
             ok("does not exist" in str(e),
                "KNOWN-BAD, on the fixture path too: an absent tape REFUSES, "
                "so the injection does not weaken the guard it makes drivable")
+
+    # ---- REV 45: A TRUNCATED EXPECTATION VERIFIES NOTHING -----------------
+    import be_gate1_state_tape as _TM2
+    _dt = _TM2.out_path("20260903", COIN) if reachable else Path("/nope")
+    if _dt.exists():
+        for _lbl, _stub in (("one character", "9"),
+                            ("16 hex", "9de88da950598e86"),
+                            ("right 16, wrong 48", "9de88da950598e86" + "0"*48),
+                            ("UPPERCASE full", _sha_file(_dt).upper())):
+            try:
+                _PA.assert_tape_for_day("20260903", _dt, expect_sha256=_stub)
+                ok(False, f"a {_lbl} expectation must refuse")
+            except _PA.TapePathRefused:
+                ok(True, f"KNOWN-BAD: a {_lbl!r} expectation REFUSES. Before "
+                         f"REV 45 the compare was `got.startswith(expect[:16])` "
+                         f"and ALL of these ADMITTED with "
+                         f"digest_verified_at_load TRUE")
+    else:
+        for _lbl in ("one character", "16 hex", "right 16, wrong 48",
+                     "UPPERCASE full"):
+            skip(f"REV-45 known-bad: {_lbl}", why_not)
 
     return _finish(checks, fails, skipped)
 

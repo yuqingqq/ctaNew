@@ -161,7 +161,16 @@ def build(day: str, *, coin: str = COIN, progress: bool = True) -> dict:
         "inputs": {"score_split": {"path": str(frag), "sha256": frag_sha,
                                    "THE_DAY'S_ROWS": True},
                    "train_split": {"path": str(empty),
-                                   "EMPTY_BY_CONSTRUCTION": True}},
+                                   "sha256": hashlib.sha256(
+                                       empty.read_bytes()).hexdigest(),
+                                   "bytes": empty.stat().st_size,
+                                   "EMPTY_BY_CONSTRUCTION": True,
+                                   "why_it_still_carries_a_digest": (
+                                       "REV 43: 'empty by construction' is a "
+                                       "claim about the file, and a claim "
+                                       "about a file that carries no digest "
+                                       "cannot be checked. An empty file is "
+                                       "still bytes.")}},
         "WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY": {
             "split": "score",
             "why": "a RULED FORWARD DAY is not trained on. Every row is a "
