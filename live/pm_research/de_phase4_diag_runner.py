@@ -1944,7 +1944,39 @@ def cancel_mechanics(baseline: list, arms: dict, n_gens_with_fills: int,
             "filling_rate_is_outside_that_range":
                 not (0.40 <= fpg_filling <= 0.50),
             "random_decision_rate_is_inside_that_range":
-                (0.40 <= fpg_random <= 0.50) if fpg_random else None},
+                (0.40 <= fpg_random <= 0.50) if fpg_random else None,
+            # THE COMPARISON IS COMPUTED AND IT DOES NOT AGREE, WHICH IS
+            # THE POINT OF COMPUTING IT (round 65). BE's replayed null is
+            # 0.497; the filling rate is 1.1176 (too high, it conditions
+            # on filling) and this module's cancellable rate is ~0.139
+            # (too low). THREE NUMBERS, THREE POPULATIONS:
+            #   filling generations      -- conditions on the outcome
+            #   ALL reference generations -- broader than the ACTION SPACE
+            #   the policy's DECISION population -- what BE replays
+            # A cancel can only be issued where the policy could act, and
+            # that set is smaller than every generation in the reference
+            # and richer in filling ones. THIS MODULE DOES NOT COUNT IT.
+            # So the correction moves the baseline the right WAY and
+            # overshoots, and the honest status is CONTESTED rather than a
+            # third number asserted as the answer.
+            "baseline_status":
+                "CONTESTED_PENDING_A_DECISION_POPULATION_COUNT",
+            "why_contested": (
+                "BE's 0.497 is measured by REPLAY over the population a "
+                "cancel decision is actually drawn from; the two rates "
+                "this module can compute are over the FILLING generations "
+                "(conditions on the outcome, 1.1176) and over EVERY "
+                "generation in the reference (broader than the action "
+                "space, ~0.139). Neither is the replayed population, and "
+                "the replayed one is the only one with evidence behind "
+                "it. The cascade LEVEL is therefore not settled here"),
+            "what_is_settled": (
+                "the FILLING rate is refuted as the random-cancel "
+                "baseline (it conditions on the very outcome the null is "
+                "supposed to be ignorant of), and `separation`'s ordering "
+                "is INVARIANT to the choice -- computed, not argued"),
+            "no_verdict_is_read_from_the_cascade_LEVEL_in_this_state":
+                True},
         "book_mean_pnl_per_fill_cents": mean_b,
         "random_cancel_cost_cents": rnd,
         "random_cancel_definition":
