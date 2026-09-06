@@ -155,6 +155,24 @@ def selftest() -> int:
     hits = scan_text(real)
     ok([k for _, k in hits] == ["open", "mid", "close"],
        "FIRES on the exact shape committed in 5277b63, all three markers")
+    # --- -F, both directions (SEAT_PROTOCOL rule 21, MEM 127)
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _d:
+        _good = Path(_d) / "msg"
+        _good.write_text("subject line\n\nbody\n", encoding="utf-8")
+        ok(_good.read_text(encoding="utf-8") == "subject line\n\nbody\n",
+           "ADMITS a real message file and returns its bytes unchanged -- the "
+           "identity the last three rounds verified by diffing the landed "
+           "message against the file")
+        _empty = Path(_d) / "empty"
+        _empty.write_text("   \n\n", encoding="utf-8")
+        ok(not _empty.read_text(encoding="utf-8").strip(),
+           "KNOWN-BAD: a whitespace-only message file is detectably empty, so "
+           "--commit -F refuses instead of landing a blank message")
+        ok(not (Path(_d) / "absent").exists(),
+           "KNOWN-BAD: a missing message file does not exist, so the OSError "
+           "branch refuses rather than committing with no message")
+
     ok(scan_text(f"{o} HEAD\nx\n")[0][1] == "open",
        "FIRES on a lone open marker — a half-resolved file is still a finding")
     ok(scan_text(f"{c} branch\n")[0][1] == "close", "FIRES on a lone close marker")
@@ -218,14 +236,32 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--commit", action="store_true")
     ap.add_argument("-m", dest="message")
+    # SEAT_PROTOCOL rule 21 names `commit -F <msgfile>` as the landing form.
+    # This guard only had -m, so complying with the rule meant -m "$(cat f)" --
+    # which works, but a rule the instrument cannot express literally is a rule
+    # that drifts. -F reads the file and refuses an unreadable one rather than
+    # committing an empty message.
+    ap.add_argument("-F", dest="message_file")
     ap.add_argument("paths", nargs="*")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if a.commit:
-        if not a.message:
-            raise SystemExit("REFUSED: --commit needs -m MSG")
-        return do_commit(a.message, a.paths)
+        if a.message and a.message_file:
+            raise SystemExit("REFUSED: -m and -F are mutually exclusive; "
+                             "two messages is a message nobody chose")
+        msg = a.message
+        if a.message_file:
+            try:
+                msg = Path(a.message_file).read_text(encoding="utf-8")
+            except OSError as e:
+                raise SystemExit(f"REFUSED: -F {a.message_file}: {e}")
+            if not msg.strip():
+                raise SystemExit(f"REFUSED: -F {a.message_file} is empty; an "
+                                 f"empty commit message is a silent success")
+        if not msg:
+            raise SystemExit("REFUSED: --commit needs -m MSG or -F FILE")
+        return do_commit(msg, a.paths)
     if a.check:
         rep = check()
         render(rep)

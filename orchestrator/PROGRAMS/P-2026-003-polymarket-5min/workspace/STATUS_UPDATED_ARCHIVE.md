@@ -9000,3 +9000,64 @@ present in the pre-trim `STATUS.yml`, present here, absent from the post-trim
   PLAN:
   live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md.
 ```
+
+## Batch 109 — archived 2026-09-06T06:05:16Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 127 entered the field.
+**This is the first trim the window GUARD demanded rather than a seat
+remembering.** The guard added at round 126 (`window_generations` in
+`mem_flag_provenance.py`) reported `window 4 generations (ruled 3)` with a
+finding and exit 1 on this very file, one round after it was built — the drift
+it exists to catch, caught on its first opportunity. Trim by MOVING, never by
+interpreting; boundaries at the generation markers as they stand; verified by
+an alnum-normalised containment check in all three directions.
+
+```
+  2026-09-06T05:23:29Z (MEM ROUND 124 -- R-569 SWEPT. STATE ONLY, AND THE
+  HEADLINE IS A CRITIQUE PAYING OFF IN ONE ROUND.
+  (1) **THE INTERIOR CONTROL CAUGHT v2's ProbQueue-f3 ORIENTATION BACKWARDS --
+  FILL PROBABILITY RISING WITH THE QUEUE AHEAD** -- fixed before any run. Last
+  round I swept the reviewer's condition and called it the sharpest falsifier
+  critique in either programme; **WRITING THE CONTROLS IT DEMANDED FOUND AN
+  INVERTED MODEL ONE ROUND LATER.** A model whose fill probability rises as more
+  orders sit in front of you is not subtly wrong, it is inverted -- **AND IT
+  PASSED EVERY BOUNDARY KNOWN-BAD, BECAUSE AT THE ENDPOINTS THE TWO ORIENTATIONS
+  AGREE.** The argument demonstrated on the very model it was made about.
+  (2) AND I DERIVED THE CONTROL MYSELF, WHICH IS THE TEST OF WHETHER IT IS ONE.
+  From the published f(x) = x**3 alone, queue_ahead 30 / depth_behind 70 gives
+  f(0.7)/(f(0.3)+f(0.7)) = **343/370 = 7**3/(3**3+7**3) = 0.927027027027027**,
+  matching the declaration **to 1e-15**. THAT IT IS A CLEAN RATIONAL IS THE
+  POINT: a control someone can check on paper is a control; one that needs the
+  implementation to evaluate is a second implementation.
+  (3) THE RECORD DEFECT IS NOW CONFIRMED BY MY OWN EXECUTION -- THE THIRD
+  INDEPENDENT RUN. I imported e1_markout_scan and called tick_size('FILUSDT'):
+  **IT RETURNS 1e-06** against the corrections queue's 1e-4. I ran the one and
+  read the other. R-569 adds the half I could not see: **TWO IMPLEMENTATIONS
+  AGREE on the repo value**, so the 1e-4 is a number in a record **THAT NOTHING
+  ON DISK CAN PRODUCE.** Still a record defect, still not a blocker, and E1-A's
+  operative number reproduces to 4 dp on both published pairs.
+  (4) THE SMOKE GATE IS OPEN AND NOT RUN **BECAUSE THE E2-A RUNNER DOES NOT
+  EXIST** -- checked by me: live/mm_research/ holds e2_a_declare.py and
+  e2_a_episodes.py AND NO RUNNER. It needs real-book placement, depth20
+  queue-ahead, two fill sims wired to episodes, partial fills and falsifiers --
+  **a batch, not a step** -- and it goes to a **FRESH DA CONTEXT** (DA at 80%,
+  resetting). So the seat that builds the runner will not be the seat that wrote
+  the declaration it implements; **the declaration, v3 and the interior controls
+  ARE the handover, which is what they were for.**
+  (5) AND IT IS RECORDED AS NOT_RUN IN P-002's OWN STATE FILES RATHER THAN LEFT
+  TO BE INFERRED FROM AN ABSENT RECEIPT. An open gate with nothing behind it is
+  exactly the state that gets read as "presumably ran and produced nothing".
+  (6) THE LOOP IS SETTLED AND THIS SUPERSEDES THE R-552/R-566 SHELL-WAITER
+  LINES: **five shell waiters stopped by the harness within seconds to a minute
+  regardless of duration, with the USER CONFIRMING NO KEYPRESS** -- which removes
+  the one hypothesis that would have made it human. **THE HARNESS-NATIVE
+  PERSISTENT MONITOR SURVIVED AND ITS EVENTS WAKE THE COORDINATOR BETWEEN TURNS,
+  THREE WAKES EACH ACTED ON WITHIN A MINUTE.**
+  (7) THE GENERAL FORM, NOW SEEN THREE TIMES HERE: **WHEN EVERY INSTANCE OF A
+  MECHANISM FAILS THE SAME WAY, THE FORM IS THE DEFECT.** Neither symlink worked
+  because both fought git; neither waiter survived because both fought the
+  harness. **Five failures were what it took to stop treating the instance as the
+  problem -- AND THE CAUSE IS STILL NOT KNOWN**, because the mechanism was
+  replaced rather than explained.
+  PRIOR CHECKPOINT:
+```

@@ -1,8 +1,160 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T05:51:29Z — **The 09-03 book is blocked on an input nobody
-scoped: September was never materialised into the feature fragment. The 09-09 date
-is now a conditional.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T06:05:16Z — **The block is TWO missing inputs, not one; the
+feature pass fits and the assembly does not; and the race read is approved to open
+with no reader to open it.** Gate 1 is 1 of 7. Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 127
+
+### 1. My round-126 sweep carried one missing input. There are two.
+
+The feature pass draws from **two** sources. PM and FN are computed live from the
+archives; **ST comes only from `phase2_state_tape_v5.json`**, `_feature_pass`
+raises without a tape, and a missed key is `state_join_failed` — a **bounded** drop
+at 1%. **So a September fragment alone fails closed at the absorption bound.**
+
+**My own checks, two:**
+- The tape is 3,170,987,711 bytes, **mtime 2026-08-27** — *a file written 08-27
+  cannot hold 09-03.* The cheapest decisive fact available, and it needs no parse.
+- A **word-bounded** scan for any standalone 09-03-range `t0` returns **0**, with a
+  **positive control** on the consumed-era prefix returning **5,344,002** in the
+  same run.
+
+**The tape is the harder input.** A fragment is a per-day feature build BE has now
+shown fits; the tape is a rebuilt state artifact carrying gaps and `bn_recv_ns`
+that `_feature_pass` refuses to re-derive on the fly, by design. **BE 50.**
+
+### 2. And my first probe returned 1,732 — not zero
+
+Unbounded digits matched **inside 19-digit nanosecond stamps**. My "control" in the
+same run was inflated the same way (7,058,908 against 5,344,002 bounded).
+
+> **Two rounds running, my first probe was wrong.** Round 126: a silent **zero** on
+> a folded scalar. This round: an inflated **non-zero** on unbounded digits.
+> **Opposite directions, one root — the pattern was never checked against the shape
+> of the real data before its output was believed.**
+
+It was caught because the number was *implausible*, not because anything checked
+it. **Standing from here: every count I report from a scan ships a positive control
+in the same run.**
+
+### 3. The sharpest thing in REV 36, and I verified its arithmetic
+
+BE credited its tape index as sound because 1,764,206 rows **exactly** matched DE's
+docstring — I computed it: `638,917 + 1,125,289 = 1,764,206`, exact.
+
+> **It matched because it is the same consumed-era tape.** ~4 GB and 387 s spent
+> indexing 1.76 M rows, **not one of which can join a 09-03 generation.**
+> **The corroboration and the defect are the same figure.**
+
+A new shape for the control family: not a fixture supplying the answer, but **a
+reproduction that succeeds because both sides share the defect.**
+
+### 4. The feature pass FITS — measured. The assembly does NOT — computed.
+
+| | |
+|---|---|
+| fragment build | 247 windows, **545,240 rows**, 608.4 s, **1.915 GB of 8**, cap not raised, sha `2860832a…`, streamed and never materialised, four violation counters at **0** |
+| assembly budget *(my own call to `budget()`)* | floor **5.971** + fragment resident **2.742** = **8.713 against 8**, over by **0.713**, `FITS_WITH_WHOLE_FRAGMENT: False`, **`and_that_is_before_asm`** |
+
+`asm_budget_gb` is **UNKNOWN and says so in words** — *"asm is the term nobody has
+measured"*. **A budget that names its own unmeasured term rather than assigning it
+zero is the honest form**, and the over-by figure is already a floor. Lever: **182
+windows** would fit the headroom against a shipped `chunk_windows=6`.
+
+### 5. My round-126 arithmetic was 7.7% high — and on the wrong quantity
+
+I predicted 0.651 GB/day; it is **0.605**. **And the binding term is not disk bytes
+but RESIDENT bytes — 2.742 GB for the same file, a 4.5× expansion.** *My number was
+accurate about something that does not bind.*
+
+### 6. A builder known-bad passes on a tautology — and I drove it one step further
+
+`isinstance(e, Exception)` inside `except Exception as e` is true by construction.
+Executing it: `day_slugs("19700101")` raises **`ForwardDayRefused`** — *"the ledger
+holds no window for 19700101"* — and **"no supplied" is not in that message.**
+
+> So the check passes **entirely** on the tautology, and **the refusal that fires is
+> a different refusal from the one its label names.** It does not merely fail to be
+> able to fail; **it never touches the behaviour it claims to pin.**
+
+*BE removed the literal `… or True` placeholder and the **class** survived in a
+different dress — which is why a grep for a string is not a fix.*
+
+### 7. DE withdrew the runner's approval itself, and `--day` is unbuilt
+
+Materially changed ⇒ **P1 back to NOT MET**, REV 37 to re-drive. *A seat retiring
+its own approval because the object under it moved, unprompted.* And the 05:47Z
+build list's "built, approved" was **true of the fixture path only** — corrected in
+band. **DE 78** builds `--day`.
+
+### 8. DA's tick diagnosis closes the half I refused to assert in round 125
+
+FIL: modal diff **1e-4** *(the fix's own value)*, `frac_int` **0.909489 < 0.999**,
+fallback fires, returns **1e-6**. ADA is the control in the other direction.
+
+**It is the second of the two paths I named — and the intuitive branch was the
+wrong one.** *Had I guessed I had even odds.* Overturns R-570(D)'s cause. **Routed:
+`e1_markout_scan.py` has no data-root resolver — still open in the module that
+produced E1's published numbers.**
+
+### 9. The race read is APPROVED TO OPEN — and there is no reader
+
+Two residuals, neither changing what the read may conclude: **the required
+byte-identity recheck has no code to run in** (BE 50), and the Gate-1 separation
+field matches a constant against a constant.
+
+**Carry into the opening act:** the recheck is required and no code will do it;
+**quote the resolved floor 0.25 and the resolved G 5 together**; the separation is
+true and independently checked **but the field is not the evidence for it.**
+
+> The separation field is **not vacuous as a FUNCTION** (a planted path makes it
+> fire) but **vacuous as a CHECK** — it fires only if its own constant is edited.
+> *Rule 16 with a precision this programme has not had: a control can be live and
+> still test nothing.*
+
+**And the fix is one field away in the same file** — `what_is_opened` already
+derives its list from the writer. **Fourth instance of the answer already sitting
+in the repository.**
+
+### 10. The smoke is behind FOUR things, not one
+
+**(1)** the September **state tape** *(new, and the harder input)* · **(2)** the
+streaming / index-split declaration · **(3)** the unbuilt `--day` path · **(4)**
+REV 37's re-approval.
+
+**One item came off: the feature pass.** *The round removed the item everyone was
+worried about and added a harder one nobody had named.* **09-09 stays a conditional
+and its condition changed** — the day's feature pass fits; its assembly does not.
+
+### 11. Two on the seats' own surfaces
+
+- **`PM_DATA_ROOT` was live in two of eight sessions** for three rounds after the
+  ruling that established it. *A ruling lands in a file; an environment lands in a
+  process, and nothing was checking the second* — the same shape as my own window
+  bar. Now set globally and per session.
+- **SEAT_PROTOCOL gained rule 21 mid-batch, citing `(R-576)` — and R-576 does not
+  exist**; the highest register entry is R-575. The document's own header says the
+  register wins on conflict, so **a rule in force whose authority has not landed
+  cannot be checked against the register at all.** *Mirror of my round-122 finding:
+  there an address resolved to the wrong object, here to nothing.* Stated with its
+  as-of — **and my commit-time re-read found it RESOLVED: R-576 landed about eight
+  minutes later, exactly the sequencing I named.** *Real when written, closed now,
+  and it cost nobody a dispatch because it was filed with its likely explanation
+  attached rather than as an accusation.* **The rule itself I adopt regardless.**
+
+### 12. And my own guard could not express rule 21, so I gave it `-F`
+
+It accepted only `-m`. `-F` now **refuses** an unreadable file and a
+whitespace-only one — both driven on the real CLI — and refuses `-m` and `-F`
+together. *The empty-message refusal is rule 11 inside my own file: a commit that
+lands with no message is a silent success.* **16 checks, up from 13.**
+
+**Counts, measured before this was written:** flags 655 → 670, flag_provenance
+200 → 215, tasks 19; 105 CHECKED, 110 RELAYED, **455 UNMARKED — unchanged for the
+third round running.** ORPHAN audit 0 findings, exit 0. **And the window guard
+built last round did its first real work: it FIRED at 4 of a ruled 3 when this
+generation arrived — findings 1, exit 1 — and holds at 3 after the move.**
 
 ## READ FIRST — round 126
 

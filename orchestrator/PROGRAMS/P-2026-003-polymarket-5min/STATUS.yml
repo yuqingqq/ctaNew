@@ -63,6 +63,110 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T06:05:16Z (MEM ROUND 127 -- R-574, BE 49 AND REV 36 SWEPT. STATE
+  ONLY. THE ROUND REMOVED THE ITEM EVERYONE WAS WORRIED ABOUT AND ADDED A HARDER
+  ONE NOBODY HAD NAMED.
+  (1) **MY ROUND-126 SWEEP CARRIED ONE MISSING INPUT. THERE ARE TWO, AND THE
+  SECOND IS THE HARDER ONE.** The feature pass draws from two sources; PM and FN
+  are computed live from the archives, **ST comes only from the state tape**, and
+  a missing key is a BOUNDED drop at 1% -- so a September fragment alone fails
+  closed. **My own checks: the tape is mtime 2026-08-27** (a file written 08-27
+  cannot hold 09-03 -- the cheapest decisive fact, no parse needed) **and a
+  word-bounded scan for any 09-03-range t0 returns 0 with a positive control
+  returning 5,344,002 in the same run.**
+  (2) **AND MY FIRST PROBE RETURNED 1,732 -- NOT ZERO.** Unbounded digits matched
+  inside 19-digit nanosecond stamps. ***Two rounds running my first probe was
+  wrong: round 126 a silent ZERO on a folded scalar, this one an inflated
+  NON-zero on unbounded digits. Opposite directions, one root -- the pattern was
+  never checked against the shape of the real data before its output was
+  believed.*** It was caught because the number was implausible, not because
+  anything checked it. **Standing now: every count I report from a scan ships a
+  positive control in the same run.**
+  (3) **THE SHARPEST THING IN THE FILING, AND I VERIFIED ITS ARITHMETIC:** BE
+  credited its index as sound because 1,764,206 matched DE's docstring
+  (638,917 + 1,125,289 -- exact). **It matched because it is the same
+  consumed-era tape**: ~4 GB and 387 s indexing 1.76 M rows, not one of which can
+  join a 09-03 generation. ***A number used as a positive control that is the
+  symptom of the blocker*** -- a new shape for the control family: not a fixture
+  supplying the answer, but **a reproduction that succeeds because both sides
+  share the defect.**
+  (4) **THE FEATURE PASS FITS -- MEASURED IN ONE ROUND.** 247 windows, 545,240
+  rows, 608.4 s, **1.915 GB of 8, cap not raised**, sha 2860832a..., streamed and
+  never materialised, four violation counters at zero. **AND THE ASSEMBLY DOES
+  NOT, COMPUTED BY MY OWN CALL:** floor 5.971 + fragment resident 2.742 =
+  **8.713 against 8, over by 0.713, FITS_WITH_WHOLE_FRAGMENT false --
+  `and_that_is_before_asm`, which the module reports as UNKNOWN in words rather
+  than assigning it zero.** Lever: 182 windows would fit the headroom against a
+  shipped chunk of 6.
+  (5) **MY ROUND-126 ARITHMETIC WAS 7.7% HIGH AND ON THE WRONG QUANTITY.** I
+  predicted 0.651 GB/day; it is 0.605. ***And the binding term is not disk bytes
+  but RESIDENT bytes -- 2.742 GB for the same file, a 4.5x expansion. My number
+  was accurate about something that does not bind.***
+  (6) **A BUILDER KNOWN-BAD PASSES ON A TAUTOLOGY, AND I DROVE IT ONE STEP
+  FURTHER THAN THE FILING.** `isinstance(e, Exception)` inside `except Exception
+  as e` is true by construction; executing it shows the named disjunct
+  **"no supplied" is NOT in the message** -- the actual raise is
+  `ForwardDayRefused` about the ledger. ***So the check does not merely fail to
+  be able to fail; it never touches the behaviour it claims to pin.*** BE removed
+  the literal placeholder and the CLASS survived in a different dress.
+  (7) **DE WITHDREW THE RUNNER'S APPROVAL ITSELF** (materially changed, P1 back to
+  NOT MET) and **the real-day `--day` path is UNBUILT** -- the 05:47Z build list
+  said "built, approved", true of the fixture path only, corrected in band.
+  (8) **DA's TICK DIAGNOSIS CLOSES THE HALF I REFUSED TO ASSERT IN ROUND 125.**
+  FIL: modal diff **1e-4** (the fix's value), frac_int **0.909489 < 0.999**,
+  fallback fires, returns 1e-6; ADA is the control in the other direction. **It
+  is the second of my two candidate paths -- and the intuitive branch was the
+  wrong one.** Overturns R-570(D)'s cause. **Routed: `e1_markout_scan.py` has no
+  data-root resolver, still open in the module that produced E1's published
+  numbers.**
+  (9) **THE RACE READ IS APPROVED TO OPEN -- AND THERE IS NO READER.** Two
+  residuals: the required byte-identity recheck has no code to run in, and the
+  Gate-1 separation field matches a constant against a constant. **Carry into the
+  opening: quote the resolved floor 0.25 and the resolved G 5 TOGETHER.** The
+  separation field is **not vacuous as a FUNCTION but vacuous as a CHECK** -- it
+  fires only if its own constant is edited. *Rule 16 stated with a precision this
+  programme has not had: a control can be live and still test nothing.* **Fourth
+  instance of the answer already sitting one field away in the same file.**
+  (10) **THE SMOKE IS BEHIND FOUR THINGS, NOT ONE:** the September STATE TAPE
+  (new, and the harder input), the streaming/index-split declaration, the
+  unbuilt `--day` path, and REV 37's re-approval. **One item came off -- the
+  feature pass.** So 09-09 stays a CONDITIONAL and **its condition changed**: the
+  day's feature pass fits and its assembly does not.
+  (11) **`PM_DATA_ROOT` WAS LIVE IN TWO OF EIGHT SESSIONS** for three rounds
+  after the ruling that established it. *A ruling lands in a file; an environment
+  lands in a process, and nothing was checking the second* -- the same shape as
+  my own window bar. Now set globally and per session.
+  (12) **AND SEAT_PROTOCOL GAINED RULE 21 MID-BATCH, CITING AN R-ENTRY THAT DOES
+  NOT EXIST.** "Landing in the shared tree is add, commit, push -- nothing else
+  **(R-576)**" -- **R-576 occurs zero times in the register and the highest entry
+  is R-575.** The document's own header says every rule cites its R-entry and the
+  register wins on conflict, ***so a rule in force whose authority has not landed
+  cannot be checked against the register at all.*** **Mirror of my round-122
+  finding in the other direction** -- there an address resolved to the WRONG
+  object, here to NOTHING. Most likely a sequencing artifact; stated with its
+  as-of; **and my commit-time re-read at 06:14:16Z found it RESOLVED -- R-576
+  landed about eight minutes later, exactly the sequencing I named.** *The finding
+  was real when written, is closed now, and cost nobody a dispatch because it was
+  filed with its likely explanation attached rather than as an accusation.*
+  ***THIRD ROUND RUNNING THE COMMIT-TIME RE-READ CAUGHT A CLAIM OF MINE GOING
+  FALSE*** -- it is not a formality at the end of my round, it is the step that
+  keeps a sweep of a fast-moving register from shipping stale. **The rule itself I
+  adopt regardless:** my round-opening `pull --ff-only` is not among the forbidden
+  verbs, and my landing has been add+commit+push throughout.
+  (13) **AND MY OWN GUARD COULD NOT EXPRESS RULE 21 LITERALLY, SO I GAVE IT
+  `-F`.** It accepted only `-m`; I had been complying via `-m "$(cat file)"` and
+  verifying byte-identity for three rounds -- **but an instrument that cannot say
+  the rule is one the rule drifts away from.** `-F` now **refuses** an unreadable
+  file and a whitespace-only one (both driven on the real CLI), and refuses `-m`
+  and `-F` together. *The empty-message refusal is rule 11 inside my own file: a
+  commit that lands with no message is a silent success.* 16 checks, up from 13.
+  MEASURED BEFORE THIS SENTENCE: flags 655 -> 670, flag_provenance 200 -> 215,
+  tasks 19; 105 CHECKED, 110 RELAYED, **455 UNMARKED -- unchanged for the third
+  round running**, because all fifteen new flags carried provenance when written.
+  ORPHAN audit 0 findings, exit 0. **And the window guard I built last round did
+  its first real work this round: it FIRED at 4 of a ruled 3 when this generation
+  arrived -- findings 1, exit 1 -- and holds at 3 after the move. The drift it
+  exists to catch, caught on its first opportunity.**)
   2026-09-06T05:51:29Z (MEM ROUND 126 -- R-573 SWEPT, AND THE ROLLING WINDOW
   TRIMMED TO ITS RULED SIZE AFTER EIGHTEEN ROUNDS OF DRIFT. STATE ONLY.
   (1) **THE 09-03 BOOK IS BLOCKED ON A MISSING INPUT, NOT A MEMORY FAILURE, AND
@@ -229,53 +333,6 @@ updated: >-
   E2.0 stands SETTLED, cited to **ed14c87** -- the commit that holds
   REVIEW_P002_E20_RESULT_2026-09-06.md, re-read from the log this round, not
   carried from the brief.)
-  2026-09-06T05:23:29Z (MEM ROUND 124 -- R-569 SWEPT. STATE ONLY, AND THE
-  HEADLINE IS A CRITIQUE PAYING OFF IN ONE ROUND.
-  (1) **THE INTERIOR CONTROL CAUGHT v2's ProbQueue-f3 ORIENTATION BACKWARDS --
-  FILL PROBABILITY RISING WITH THE QUEUE AHEAD** -- fixed before any run. Last
-  round I swept the reviewer's condition and called it the sharpest falsifier
-  critique in either programme; **WRITING THE CONTROLS IT DEMANDED FOUND AN
-  INVERTED MODEL ONE ROUND LATER.** A model whose fill probability rises as more
-  orders sit in front of you is not subtly wrong, it is inverted -- **AND IT
-  PASSED EVERY BOUNDARY KNOWN-BAD, BECAUSE AT THE ENDPOINTS THE TWO ORIENTATIONS
-  AGREE.** The argument demonstrated on the very model it was made about.
-  (2) AND I DERIVED THE CONTROL MYSELF, WHICH IS THE TEST OF WHETHER IT IS ONE.
-  From the published f(x) = x**3 alone, queue_ahead 30 / depth_behind 70 gives
-  f(0.7)/(f(0.3)+f(0.7)) = **343/370 = 7**3/(3**3+7**3) = 0.927027027027027**,
-  matching the declaration **to 1e-15**. THAT IT IS A CLEAN RATIONAL IS THE
-  POINT: a control someone can check on paper is a control; one that needs the
-  implementation to evaluate is a second implementation.
-  (3) THE RECORD DEFECT IS NOW CONFIRMED BY MY OWN EXECUTION -- THE THIRD
-  INDEPENDENT RUN. I imported e1_markout_scan and called tick_size('FILUSDT'):
-  **IT RETURNS 1e-06** against the corrections queue's 1e-4. I ran the one and
-  read the other. R-569 adds the half I could not see: **TWO IMPLEMENTATIONS
-  AGREE on the repo value**, so the 1e-4 is a number in a record **THAT NOTHING
-  ON DISK CAN PRODUCE.** Still a record defect, still not a blocker, and E1-A's
-  operative number reproduces to 4 dp on both published pairs.
-  (4) THE SMOKE GATE IS OPEN AND NOT RUN **BECAUSE THE E2-A RUNNER DOES NOT
-  EXIST** -- checked by me: live/mm_research/ holds e2_a_declare.py and
-  e2_a_episodes.py AND NO RUNNER. It needs real-book placement, depth20
-  queue-ahead, two fill sims wired to episodes, partial fills and falsifiers --
-  **a batch, not a step** -- and it goes to a **FRESH DA CONTEXT** (DA at 80%,
-  resetting). So the seat that builds the runner will not be the seat that wrote
-  the declaration it implements; **the declaration, v3 and the interior controls
-  ARE the handover, which is what they were for.**
-  (5) AND IT IS RECORDED AS NOT_RUN IN P-002's OWN STATE FILES RATHER THAN LEFT
-  TO BE INFERRED FROM AN ABSENT RECEIPT. An open gate with nothing behind it is
-  exactly the state that gets read as "presumably ran and produced nothing".
-  (6) THE LOOP IS SETTLED AND THIS SUPERSEDES THE R-552/R-566 SHELL-WAITER
-  LINES: **five shell waiters stopped by the harness within seconds to a minute
-  regardless of duration, with the USER CONFIRMING NO KEYPRESS** -- which removes
-  the one hypothesis that would have made it human. **THE HARNESS-NATIVE
-  PERSISTENT MONITOR SURVIVED AND ITS EVENTS WAKE THE COORDINATOR BETWEEN TURNS,
-  THREE WAKES EACH ACTED ON WITHIN A MINUTE.**
-  (7) THE GENERAL FORM, NOW SEEN THREE TIMES HERE: **WHEN EVERY INSTANCE OF A
-  MECHANISM FAILS THE SAME WAY, THE FORM IS THE DEFECT.** Neither symlink worked
-  because both fought git; neither waiter survived because both fought the
-  harness. **Five failures were what it took to stop treating the instance as the
-  problem -- AND THE CAUSE IS STILL NOT KNOWN**, because the mechanism was
-  replaced rather than explained.
-  PRIOR CHECKPOINT:
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2627,6 +2684,345 @@ flags:
                              # for a boundary case.**
                              # EARLIER VALUE (rule 13):
                              # PINNED-AT-THE-BOUNDARIES-NOT-IN-THE-INTERIOR
+  SEAT_PROTOCOL_RULE_21_CITES_R_576_AND_R_576_DOES_NOT_EXIST: RESOLVED-AT-MY-COMMIT-TIME-RE-READ-IT-WAS-THE-SEQUENCING
+                             # SUPERSEDED-IN-BAND 2026-09-06T06:14:16Z at my commit-time
+                             # re-read. **R-576 HAS LANDED** -- 2 occurrences, the highest
+                             # register header is now R-576, subject: "the E2-A runner
+                             # exists and executes with costs redacted; ... an orphaned
+                             # commit in the shared tree -- rule 21". **The cite
+                             # resolves.**
+                             # **AND THE HEDGE I ATTACHED IS THE POINT:** I wrote "most
+                             # likely a sequencing artifact -- the protocol committed
+                             # ahead of the entry -- so I state the as-of and claim
+                             # nothing beyond it." ***That is exactly what it was, and the
+                             # entry landed about eight minutes after my as-of.*** The
+                             # finding was real when written, is closed now, and **cost
+                             # nobody a dispatch because it was filed with its likely
+                             # explanation attached rather than as an accusation.**
+                             # **THIRD ROUND RUNNING THE COMMIT-TIME RE-READ CAUGHT A
+                             # CLAIM OF MINE GOING FALSE** (round 125: three; round 126:
+                             # the tip moving; now this). ***It is not a formality at the
+                             # end of my round -- it is the step that keeps a sweep of a
+                             # fast-moving register from shipping stale.***
+                             # EARLIER VALUE (rule 13): THE-HIGHEST-REGISTER-ENTRY-IS-R-575
+                             # CHECKED 2026-09-06T06:05:16Z at both files, and it landed
+                             # while I was mid-batch.
+                             # `SEAT_PROTOCOL.md` gained **rule 21 -- "Landing in the
+                             # shared tree is add, commit, push -- nothing else (R-576)"**
+                             # (commit d66d13b), after two detachments and one orphaned
+                             # commit today. **The cite does not resolve: `R-576` occurs
+                             # ZERO times in COORDINATION.md and the highest entry is
+                             # R-575.**
+                             # **AND THE DOCUMENT'S OWN HEADER IS WHAT MAKES THIS BITE:**
+                             # "every rule here cites its R-entry. On any conflict, the
+                             # register wins." ***A rule in force whose authority has not
+                             # landed cannot be checked against the register at all.***
+                             # **MIRROR OF MY ROUND-122 FINDING, IN THE OTHER DIRECTION:**
+                             # there an address travelled and resolved to the WRONG
+                             # object (867f647); here it resolves to NOTHING. *A dangling
+                             # cite is the more visible of the two and therefore the less
+                             # dangerous -- I record it mainly because the pair completes
+                             # the shape.*
+                             # **MOST LIKELY A SEQUENCING ARTIFACT** -- the protocol
+                             # committed ahead of the entry -- so I state the as-of and
+                             # claim nothing beyond it: **as of 2026-09-06T06:05:16Z it does
+                             # not resolve.** ROUTED, NOT FIXED: SEAT_PROTOCOL and the
+                             # register are the coordinator's surface.
+                             # **AND THE RULE ITSELF IS ADOPTED BY ME REGARDLESS**, its
+                             # cite pending: my round-opening `git pull --ff-only` is not
+                             # among the forbidden verbs (`pull --rebase` is), and my
+                             # landing has been add+commit+push throughout.
+  MY_COMMIT_GUARD_COULD_NOT_EXPRESS_RULE_21_LITERALLY_SO_I_GAVE_IT_MINUS_F: A-RULE-THE-INSTRUMENT-CANNOT-SAY-IS-A-RULE-THAT-DRIFTS
+                             # CHECKED 2026-09-06T06:05:16Z by driving both refusals on the
+                             # real CLI.
+                             # Rule 21 names the landing form as `git commit -F <msgfile>`.
+                             # **`mem_commit_guard.py` accepted only `-m`**, so I had been
+                             # complying with `-m "$(cat file)"` -- which works, and which
+                             # I verified byte-identical for three rounds -- **but an
+                             # instrument that cannot express the rule literally is an
+                             # instrument the rule drifts away from.**
+                             # `-F` now reads the file and **REFUSES** rather than
+                             # committing a blank: driven on the real CLI, a missing file
+                             # gives "REFUSED: -F /nonexistent: [Errno 2] ..." and a
+                             # whitespace-only file gives "REFUSED: ... is empty; an empty
+                             # commit message is a silent success". `-m` and `-F` together
+                             # refuse -- "two messages is a message nobody chose".
+                             # **Falsifiers both directions in the suite (admits a real
+                             # message unchanged; the empty and absent cases are
+                             # detectably bad); 16 checks pass, up from 13.**
+                             # *The empty-message refusal is rule 11 in its own file: a
+                             # commit that lands with no message is a silent success.*
+  R_575_IS_THE_REGISTER_ENTRY_FOR_THE_FRAGMENT_LANDING_I_SWEPT_FROM_ARTIFACTS: SAME-CONTENT-DIFFERENT-ROUTE
+                             # CHECKED 2026-09-06T06:05:16Z. I swept BE 49 and REV 36 from
+                             # THEIR ARTIFACTS this round -- the receipt, the budget
+                             # module driven by me, the filing -- **before R-575 existed
+                             # as a register entry**; it landed at 06:06Z, one minute
+                             # after my as-of.
+                             # **I cite it so the record shows the same facts reached by
+                             # two routes and does not read as two separate sweeps.**
+                             # *And the ordering is the healthy one: the artifacts came
+                             # first and the entry summarises them, which is the direction
+                             # rule 16 wants.*
+  THE_BLOCK_IS_TWO_MISSING_INPUTS_AND_THE_STATE_TAPE_IS_THE_HARDER_ONE: THE-TAPE-PREDATES-THE-DAY-BY-SEVEN
+                             # CHECKED 2026-09-06T06:05:16Z AT THE TAPE MYSELF, with a
+                             # positive control, after the reviewer found it.
+                             # **MY ROUND-126 SWEEP CARRIED ONE MISSING INPUT. THERE ARE
+                             # TWO**, and REV 36 measured the second: the feature pass
+                             # takes features from TWO sources and only one is the
+                             # fragment. PM and FN are computed live from the archives;
+                             # **ST comes only from `phase2_state_tape_v5.json`**, and
+                             # `_feature_pass` RAISES without a tape, then drops every
+                             # row whose (slug, side, gen, t_start) key misses --
+                             # `state_join_failed` is a BOUNDED drop at 1%, so a
+                             # September fragment alone fails closed at the absorption
+                             # bound. **It fails safe and it does not unblock the book.**
+                             # **MY OWN CHECKS, TWO OF THEM:** (i) the tape is
+                             # 3,170,987,711 bytes with **mtime 2026-08-27** -- *a file
+                             # written on 08-27 cannot hold 09-03*, which is the cheapest
+                             # decisive fact available and needs no parse; (ii) a
+                             # word-bounded scan for any standalone 09-03-range t0
+                             # (1788300000-1788499999) returns **0**, **with a positive
+                             # control on the consumed-era prefix returning 5,344,002** --
+                             # so the probe is proven able to fire before its zero is
+                             # reported.
+                             # **AND THE SECOND BLOCKER IS THE HARDER ONE**: a fragment
+                             # is a per-day feature build that BE has now shown fits;
+                             # the tape is a rebuilt state artifact carrying gaps and
+                             # bn_recv_ns that `_feature_pass` refuses to re-derive on
+                             # the fly, by design. BE 50 builds it.
+  MY_FIRST_TAPE_PROBE_RETURNED_1732_BECAUSE_IT_HAD_NO_WORD_BOUNDARY: SECOND-ROUND-RUNNING-MY-FIRST-PROBE-WAS-WRONG
+                             # CHECKED 2026-09-06T06:05:16Z, and I record it because the
+                             # number I would have published was not zero.
+                             # My first scan for a September epoch used
+                             # `17883[0-9]{5}|17884[0-9]{5}` with **no word boundary**
+                             # and returned **1,732 hits** -- which reads as "September
+                             # IS present" and contradicts the reviewer. **The hits are
+                             # SUBSTRINGS INSIDE 19-DIGIT NANOSECOND STAMPS**
+                             # (`bn_recv_ns`), not t0 values. My "control" in the same
+                             # run returned 7,058,908 by the same inflation.
+                             # **IT WAS CAUGHT BECAUSE THE NUMBER WAS IMPLAUSIBLE, NOT
+                             # BECAUSE ANYTHING CHECKED IT.** Re-run word-bounded: 0,
+                             # with a firing positive control.
+                             # **AND THAT IS TWO ROUNDS RUNNING WHERE MY FIRST PROBE WAS
+                             # WRONG** -- round 126's window guard returned a silent ZERO
+                             # on a folded scalar; this one returned an inflated
+                             # NON-zero on unbounded digits. ***Opposite directions, same
+                             # root: the pattern was never checked against the shape of
+                             # the real data before its output was believed.*** The
+                             # discipline that caught both is the same and it is now
+                             # explicit: **every count I report from a scan ships a
+                             # positive control in the same run.**
+  THE_CORROBORATION_AND_THE_DEFECT_ARE_THE_SAME_FIGURE: 638917-PLUS-1125289-IS-EXACTLY-1764206
+                             # CHECKED 2026-09-06T06:05:16Z -- the arithmetic verified by
+                             # me, the reading is the reviewer's and it is the sharpest
+                             # sentence in the filing.
+                             # BE credited its tape index as sound because 1,764,206 rows
+                             # **exactly matches DE's docstring** (638,917 + 1,125,289 --
+                             # I computed it: exact). **It matches BECAUSE IT IS THE SAME
+                             # CONSUMED-ERA TAPE.** 387.4 s and ~4 GB were spent indexing
+                             # 1.76 M rows **of which not one can join a 09-03
+                             # generation.**
+                             # ***A NUMBER USED AS A POSITIVE CONTROL THAT IS THE SYMPTOM
+                             # OF THE BLOCKER.*** The agreement was real and it confirmed
+                             # the wrong proposition -- the instrument was reproducing a
+                             # prior run over the same inadmissible input, which is
+                             # exactly what a control must not be able to do.
+                             # **AND IT IS A NEW SHAPE FOR THIS PROGRAMME'S CONTROL
+                             # FAMILY** (SEAT_PROTOCOL 16, four named instances): not a
+                             # fixture supplying what the code should produce, not a
+                             # guard shown only to refuse, but **a reproduction that
+                             # succeeds because both sides share the defect.**
+  THE_09_03_FRAGMENT_IS_BUILT_AND_FITS_THE_ASSEMBLY_DOES_NOT: 8.713-GB-AGAINST-8-WITH-ZERO-FOR-asm
+                             # CHECKED 2026-09-06T06:05:16Z at the receipt AND by importing
+                             # the budget module and calling budget() myself.
+                             # **THE FEATURE PASS FITS -- MEASURED, NOT PREDICTED.**
+                             # be_gate1_fragment_receipt_20260903_btc.json: 247 windows,
+                             # **545,240 rows, 608.4 s, peak RSS 1.915 GB of the 8 GB
+                             # cap, cap_raised false**, sha256 2860832a66e820ca...,
+                             # 604,605,715 bytes, `streamed_never_materialised: true`,
+                             # 0 reconciliation failures / 0 boundary-time violations /
+                             # 0 consume-clock violations / 0 unhooked state changes.
+                             # **SO R-573's OPEN QUESTION "does a feature pass fit" IS
+                             # ANSWERED YES IN ONE ROUND.**
+                             # **AND THE ASSEMBLY ANSWERS NO, COMPUTED:** my own call to
+                             # be_assembly_budget.budget() returns floor **5.971**
+                             # (reference 2.008 + index 3.963), headroom **2.029**,
+                             # fragment resident **2.742**, total **8.713**,
+                             # `FITS_WITH_WHOLE_FRAGMENT: False`, `over_by_gb: 0.713`,
+                             # `and_that_is_before_asm: True`, `computed_not_asserted:
+                             # True`. **asm_budget_gb is UNKNOWN and the module says so
+                             # in words** -- "asm is the term nobody has measured".
+                             # *A budget that names its own unmeasured term rather than
+                             # assigning it zero is the honest form; the over-by figure
+                             # is already a floor before that term is added.*
+                             # Lever: **max_windows_resident_within_headroom = 182**
+                             # against a shipped `chunk_windows=6`, so the streaming path
+                             # has a large unused margin -- the index-split lever is
+                             # routed to DE.
+  MY_ROUND_126_ARITHMETIC_WAS_7_7_PERCENT_HIGH_AND_ON_THE_WRONG_QUANTITY: DISK-BYTES-WHERE-THE-BINDING-TERM-IS-RESIDENT
+                             # CHECKED 2026-09-06T06:05:16Z against the measurement that
+                             # has now landed, and both halves are against me.
+                             # I computed 0.651 GB per btc day from 1.24 GB / 471 x 247.
+                             # **The built fragment is 604,605,715 B = 0.605 GB. My
+                             # figure was 7.7% HIGH** -- close, and stated as a floor
+                             # with its equal-window assumption named, which is why the
+                             # error is readable rather than hidden.
+                             # **THE SECOND HALF MATTERS MORE: I MEASURED THE WRONG
+                             # QUANTITY.** The binding constraint is not disk bytes but
+                             # **RESIDENT** bytes -- the budget's term is **2.742 GB for
+                             # the same fragment**, a 4.5x expansion on deserialisation.
+                             # ***My number was accurate about something that does not
+                             # bind.*** Nothing downstream used it, so this costs
+                             # nothing but the correction; recorded because an
+                             # unchallenged near-miss is how a wrong quantity becomes a
+                             # quoted one.
+  A_BUILDER_KNOWN_BAD_PASSES_ON_A_TAUTOLOGY_AND_ITS_NAMED_DISJUNCT_IS_FALSE: I-DROVE-IT
+                             # CHECKED 2026-09-06T06:05:16Z by executing it, after REV 36
+                             # found it.
+                             # `be_daybook_build.py` asserts, inside `except Exception as
+                             # e`: `ok("no supplied" in str(e) or isinstance(e,
+                             # Exception), "KNOWN-BAD: a day with no supplied windows
+                             # REFUSES...")`. **`isinstance(e, Exception)` inside `except
+                             # Exception` is TRUE BY CONSTRUCTION.**
+                             # **AND I DROVE IT TO SEE WHICH DISJUNCT CARRIES IT:**
+                             # `day_slugs("19700101")` raises `ForwardDayRefused` with
+                             # "REFUSED: the ledger holds no window for 19700101 (read
+                             # 35513 rows)" -- **"no supplied" is NOT in that message.**
+                             # So the check passes ENTIRELY on the tautology.
+                             # **ONE STEP FURTHER THAN THE FILING GOES:** the refusal
+                             # that actually fires is a DIFFERENT refusal from the one
+                             # the label names -- a ledger-emptiness refusal, not a
+                             # "no supplied windows" path. ***So the check does not merely
+                             # fail to be able to fail; it never touches the behaviour it
+                             # claims to pin.*** SEAT_PROTOCOL 16, fifth named instance,
+                             # and the first where the label and the mechanism disagree.
+                             # *BE removed the literal `... or True` placeholder and the
+                             # CLASS survived in a different dress -- the reviewer's
+                             # point, and the reason a grep for a string is not a fix.*
+  THE_RUNNERS_APPROVAL_WAS_WITHDRAWN_BY_DE_ITSELF: MATERIALLY-CHANGED-SO-P1-IS-BACK-TO-NOT-MET
+                             # RELAYED from R-574(A) 2026-09-06T06:05:16Z.
+                             # The reviewer approved the runner at 42 checks; DE 77
+                             # changed it materially and **DE withdrew the approval
+                             # itself rather than carrying it over** -- P1 of the
+                             # playbook back to NOT MET, REV 37 to re-drive.
+                             # *A seat retiring its own approval because the object under
+                             # it moved is the rule-12 discipline applied to a review
+                             # rather than to a freeze, and it was not prompted.*
+                             # **AND THE REAL-DAY PATH `--day` IS UNBUILT** -- the
+                             # coordinator's 05:47Z build list to the USER said "built,
+                             # approved", true of the FIXTURE path only, corrected in
+                             # band at R-574(A). DE 78 builds it on a synthetic book
+                             # shaped like BE's declared book, with a per-stage memory
+                             # budget asserted in the fixture run.
+  DA_S_TICK_DIAGNOSIS_CLOSES_THE_HALF_I_REFUSED_TO_ASSERT: FRAC_INT-0.909489-FIRES-THE-FALLBACK
+                             # CHECKED 2026-09-06T06:05:16Z at
+                             # data/mm_hf/e1/p002_e2a_tick_diagnosis__20260906T054915Z
+                             # .json, field by field.
+                             # **MY ROUND-125 FINDING IS CONFIRMED AND ITS OPEN HALF IS
+                             # NOW MEASURED.** I established that the mode-of-diffs fix
+                             # IS in the committed body and refused to say WHY 1e-6 comes
+                             # out, naming two candidate paths and executing neither.
+                             # **DA's receipt: FIL -- 1,371 distinct prices, modal diff
+                             # (the FIX's value) 0.0001, frac_diffs_that_are_integer_
+                             # multiples_of_the_modal 0.9094890510948905 against a
+                             # fallback_threshold of 0.999, gcd_fallback_fired TRUE,
+                             # gcd_fallback_value 1e-06, tick_size_actually_returns
+                             # 1e-06.** ADA is the control in the other direction
+                             # (frac_int 1.000000, fallback does not fire, 1e-4), and the
+                             # receipt states the control requirement in a field.
+                             # **SO IT IS THE SECOND OF MY TWO PATHS, AND THE MODAL DIFF
+                             # IS 1e-4 -- NOT 1e-6.** *Had I guessed I had even odds and
+                             # the intuitive answer was the wrong one.* **The fallback
+                             # the same docstring says was "kept" supersedes the fix on
+                             # exactly the input the fix was written for.**
+                             # This OVERTURNS THE CAUSE recorded at R-570(D) and the
+                             # reviewer's proposed wording: "not landed" pointed a reader
+                             # at a missing edit that is present. E1_RESULTS is amended
+                             # with the executed intermediates; E1-A's operative number
+                             # untouched. **ROUTED, NOT FIXED: e1_markout_scan.py has no
+                             # data-root resolver** -- from a worktree day_files() returns
+                             # [] and tick_size raises on an empty argmax -- the E2.0
+                             # review's own gap, still open **in the module that produced
+                             # E1's published numbers.** DA 62.
+  THE_RACE_READ_IS_APPROVED_TO_OPEN_AND_THERE_IS_NO_READER: TWO-RESIDUALS-NEITHER-CHANGING-WHAT-IT-MAY-CONCLUDE
+                             # CHECKED 2026-09-06T06:05:16Z at REVIEW_BE48_2026-09-06.md
+                             # section C.5 and at the declaration.
+                             # **APPROVED TO OPEN.** All three prior items closed and the
+                             # five digests reproduce at the artifacts. **Two residuals:**
+                             # (i) **the byte-identity recheck is REQUIRED and no code
+                             # will do it -- there is no reader** (BE 50 builds one);
+                             # (ii) the Gate-1 separation field matches a constant
+                             # against a constant.
+                             # **CARRY INTO THE ACT THAT OPENS IT, verbatim from C.5:**
+                             # the byte-identity recheck is required and no code will do
+                             # it; **the resolved floor is 0.25 and the resolved G is 5 --
+                             # QUOTE THEM TOGETHER**; and the Gate-1 separation is true,
+                             # independently checked, **but the field is not the evidence
+                             # for it.**
+                             # **THE OPENING IS THE COORDINATOR'S OR THE USER'S ACT,
+                             # AFTER THE READER EXISTS.**
+  THE_GATE1_SEPARATION_FIELD_MATCHES_A_CONSTANT_AGAINST_A_CONSTANT: NOT-VACUOUS-AS-A-FUNCTION-VACUOUS-AS-A-CHECK
+                             # RELAYED from REV 36 section C.3 2026-09-06T06:05:16Z; the
+                             # reviewer drove the planted-path control, I did not re-drive
+                             # it.
+                             # Both needle (GATE1_ARTIFACT_PATTERNS) and haystack
+                             # (SEALED_SCORES path strings) are **authored in the same
+                             # file**, and the haystack is five FILENAMES, not what any
+                             # run opens. The field establishes that none of seven
+                             # substrings appears in five filenames -- **which no run
+                             # could make false.**
+                             # **THE DISTINCTION THE FILING DRAWS IS THE ONE WORTH
+                             # KEEPING:** it is **not vacuous as a FUNCTION** (planted
+                             # path -> hits ['be_daybook_'] -> assertion False) but
+                             # **vacuous as a CHECK** -- it fires only when its own
+                             # constant is edited, and the selftest asserts the EMPTY
+                             # outcome without ever showing the instrument can produce a
+                             # non-empty one. *That is rule 16 stated with a precision the
+                             # programme has not had before: a control can be live and
+                             # still test nothing.*
+                             # **AND THE FIX IS ALREADY IN THE SAME FILE ONE FIELD AWAY**
+                             # -- `what_is_opened` carries `source_of_this_field_list:
+                             # be_forward_day.seal(), read at the WRITER`. Derive `opened`
+                             # from the READER the same way and ship the planted case as
+                             # a positive control. **Fourth instance of the shape I have
+                             # been counting: the answer already in the repository.**
+  THE_09_03_SMOKE_IS_BEHIND_FOUR_THINGS_NOT_ONE: SCHEDULE-CONDITIONAL-AND-LENGTHENING
+                             # CHECKED 2026-09-06T06:05:16Z by composing this round's four
+                             # landings; each conjunct is cited in its own flag above.
+                             # Between R-573 and now the queue in front of the 09-03
+                             # smoke went from "a feature pass and an assembly design" to
+                             # **FOUR items**: (1) **the September STATE TAPE** (BE 50) --
+                             # new this round and the harder input; (2) **the index-split
+                             # / streaming assembly declaration**, because the whole-day
+                             # assembly computes to 8.713 GB against 8 with asm still
+                             # UNMEASURED; (3) **the runner's `--day` real-day path**,
+                             # unbuilt (DE 78); (4) **REV 37's re-approval**, because DE
+                             # withdrew the runner's approval itself.
+                             # **ONE ITEM CAME OFF: the feature pass, MEASURED to fit at
+                             # 1.915 GB.** *The round removed the item everyone was
+                             # worried about and added a harder one nobody had named.*
+                             # **SO 2026-09-09 REMAINS A CONDITIONAL AND ITS CONDITION
+                             # GREW.** I flagged it last round as conditional on one day
+                             # fitting the cap; **the day's FEATURE PASS fits and its
+                             # ASSEMBLY does not**, which is a different and unresolved
+                             # condition.
+  PM_DATA_ROOT_WAS_CARRIED_BY_ONLY_TWO_OF_EIGHT_SESSIONS: MEASURED-AT-RELOAD-NOW-SET-GLOBALLY
+                             # RELAYED from R-574(B) 2026-09-06T06:05:16Z; DE measured it,
+                             # I did not.
+                             # Only `pm-codex` and `pm-da` carried `PM_DATA_ROOT` at
+                             # reload; DE set its own at 05:36Z; now set globally
+                             # (`tmux set-environment -g`) and per session, with each seat
+                             # still exporting it in its shell.
+                             # *The variable that R-559/R-562 established as the answer to
+                             # the data-root problem was live in a quarter of the
+                             # sessions for three rounds after the ruling.* **A ruling
+                             # lands in a file; an environment lands in a process, and
+                             # nothing was checking the second.** Same shape as my own
+                             # `updated:` window: a ruled property with no instrument
+                             # behind it.
+                             # And the heavy lock behaved as written: HELD by BE 49's
+                             # feature pass at ~05:55Z while DE correctly ran light suites
+                             # (<=0.15 s, <=26 MB) in the slice without it.
   THE_WINDOW_GUARD_IS_BUILT_AND_ITS_FIRST_VERSION_RETURNED_A_SILENT_ZERO: CAUGHT-ONLY-BY-DRIVING-IT-ON-THE-REAL-FILE
                              # CHECKED 2026-09-06T05:51:29Z by driving it BOTH DIRECTIONS on
                              # the real artifact, not on fixtures.
@@ -14049,6 +14445,160 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 127, 2026-09-06T06:05:16Z ------------------------------
+  SEAT_PROTOCOL_RULE_21_CITES_R_576_AND_R_576_DOES_NOT_EXIST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      rule 21 reads "Landing in the shared tree is add, commit, push -- nothing
+      else (R-576)" and forbids checkout, switch, reset, rebase, stash and
+      pull --rebase in the shared tree after two detachments and one orphaned
+      commit; it landed at commit d66d13b. Counted in COORDINATION.md: R-576
+      occurs zero times and the highest register header is R-575, so the cite
+      does not resolve as of this as-of. The document's own header says every
+      rule cites its R-entry and the register wins on conflict.
+  MY_COMMIT_GUARD_COULD_NOT_EXPRESS_RULE_21_LITERALLY_SO_I_GAVE_IT_MINUS_F:
+    prov: CHECKED
+    artifact: live/pm_research/mem_commit_guard.py
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      the CLI accepted only -m; it now accepts -F, refusing an unreadable file
+      and a whitespace-only one, and refusing -m and -F together. Driven on the
+      real CLI: "REFUSED: -F /nonexistent: [Errno 2] No such file or directory"
+      and "REFUSED: ... is empty; an empty commit message is a silent success".
+      Falsifiers in both directions added to the suite; 16 checks pass, up
+      from 13.
+  R_575_IS_THE_REGISTER_ENTRY_FOR_THE_FRAGMENT_LANDING_I_SWEPT_FROM_ARTIFACTS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      R-575 is headed "The 09-03 FEATURE FRAGMENT IS BUILT and fits the cap; the
+      whole-day assembly does not (over by 0.713 GB with asm unmeasured)" and is
+      timestamped 06:06Z, one minute after this round's as-of; I had already
+      swept the same facts from the receipt, from be_assembly_budget driven by
+      me, and from the review filing.
+  THE_BLOCK_IS_TWO_MISSING_INPUTS_AND_THE_STATE_TAPE_IS_THE_HARDER_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/phase2_state_tape_v5.json
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      the tape is 3,170,987,711 bytes with mtime 2026-08-27, so it cannot hold
+      2026-09-03; and a word-bounded scan for any standalone t0 in the 09-03
+      range 1788300000-1788499999 returns 0, with a positive control on the
+      consumed-era prefix returning 5,344,002 in the same run, so the probe is
+      proven able to fire before its zero is reported. The mechanism is REV 36's:
+      phase2_arms._feature_pass raises without a TAPE and drops every row whose
+      (slug, side, gen, t_start) key misses into state_join_failed, a BOUNDED
+      drop at 1%, so a September fragment alone fails closed at the absorption
+      bound.
+  MY_FIRST_TAPE_PROBE_RETURNED_1732_BECAUSE_IT_HAD_NO_WORD_BOUNDARY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/phase2_state_tape_v5.json
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      the unbounded pattern 17883[0-9]{5}|17884[0-9]{5} returned 1,732 hits on
+      the same file where the word-bounded pattern returns 0, because it matches
+      substrings inside 19-digit bn_recv_ns nanosecond stamps; the same run's
+      control returned 7,058,908 by the same inflation against 5,344,002 bounded.
+      It was caught by the number being implausible, not by any check.
+  THE_CORROBORATION_AND_THE_DEFECT_ARE_THE_SAME_FIGURE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_BE48_2026-09-06.md
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      the filing's A.3 shows BE credited its tape index as sound because
+      1,764,206 rows matches DE's docstring; I computed 638,917 + 1,125,289 =
+      1,764,206 exactly. The match holds because it is the same consumed-era
+      tape, so 387.4 s and ~4 GB indexed 1.76 M rows none of which can join a
+      09-03 generation -- the agreement was real and confirmed the wrong
+      proposition.
+  THE_09_03_FRAGMENT_IS_BUILT_AND_FITS_THE_ASSEMBLY_DOES_NOT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_fragment_receipt_20260903_btc.json
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      247 windows, 545,240 rows, 608.4 s, peak_rss_gb 1.915 against cap_gb 8.0
+      with cap_raised false, sha256 2860832a66e820ca..., 604,605,715 bytes,
+      streamed_never_materialised true, and 0 for each of reconciliation_failures,
+      boundary_time_violations, consume_clock_violations and
+      unhooked_state_changes. Separately I imported be_assembly_budget and called
+      budget(): floor 5.971, headroom 2.029, fragment resident 2.742, total
+      8.713, FITS_WITH_WHOLE_FRAGMENT False, over_by_gb 0.713,
+      and_that_is_before_asm True, asm_budget_gb the string UNKNOWN, and
+      max_windows_resident_within_headroom 182 against a shipped chunk_windows
+      of 6.
+  MY_ROUND_126_ARITHMETIC_WAS_7_7_PERCENT_HIGH_AND_ON_THE_WRONG_QUANTITY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_fragment_receipt_20260903_btc.json
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      my round-126 figure was 0.651 GB per btc day from 1.24 GB / 471 x 247; the
+      built fragment is 604,605,715 bytes = 0.605 GB, so the estimate was 7.7%
+      high. And the budget's binding term is the RESIDENT size of the same
+      fragment, 2.742 GB -- a 4.5x expansion -- so the quantity I computed is not
+      the one that constrains the assembly.
+  A_BUILDER_KNOWN_BAD_PASSES_ON_A_TAUTOLOGY_AND_ITS_NAMED_DISJUNCT_IS_FALSE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      the check reads ok("no supplied" in str(e) or isinstance(e, Exception),
+      ...) inside except Exception as e, so the second disjunct is true by
+      construction. I executed day_slugs("19700101"): it raises ForwardDayRefused
+      with "REFUSED: the ledger holds no window for 19700101 (read 35513 rows)",
+      and "no supplied" is NOT in that message -- so the check passes entirely on
+      the tautology, and the refusal that fires is a different refusal from the
+      one its label names.
+  THE_RUNNERS_APPROVAL_WAS_WITHDRAWN_BY_DE_ITSELF:
+    prov: RELAYED
+    from: R-574
+    as_of: 2026-09-06T06:05:16Z
+  DA_S_TICK_DIAGNOSIS_CLOSES_THE_HALF_I_REFUSED_TO_ASSERT:
+    prov: CHECKED
+    artifact: data/mm_hf/e1/p002_e2a_tick_diagnosis__20260906T054915Z.json
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      FILUSDT: n_distinct_prices 1371, modal_diff_the_FIX_produces 0.0001,
+      frac_diffs_that_are_integer_multiples_of_the_modal 0.9094890510948905
+      against fallback_threshold 0.999, gcd_fallback_fired true,
+      gcd_fallback_value 1e-06, tick_size_actually_returns 1e-06; the receipt
+      carries a control_both_directions field and ADA as the non-firing case.
+      This is the second of the two paths I named in round 125 and declined to
+      choose between, and the modal diff is 1e-4 rather than 1e-6, so the
+      intuitive branch was the wrong one.
+  THE_RACE_READ_IS_APPROVED_TO_OPEN_AND_THERE_IS_NO_READER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_BE48_2026-09-06.md
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      section C.5 reads APPROVED TO OPEN with three prior items closed and the
+      five digests reproducing, and names what to carry into the opening act: the
+      byte-identity recheck is required and no code will do it; the resolved
+      floor is 0.25 and the resolved G is 5, to be quoted together; and the
+      Gate-1 separation is true and independently checked but the field is not
+      the evidence for it. The two residuals are the absent reader (BE 50) and
+      the constant-versus-constant separation field.
+  THE_GATE1_SEPARATION_FIELD_MATCHES_A_CONSTANT_AGAINST_A_CONSTANT:
+    prov: RELAYED
+    from: REV 36 section C.3
+    as_of: 2026-09-06T06:05:16Z
+  THE_09_03_SMOKE_IS_BEHIND_FOUR_THINGS_NOT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T06:05:16Z
+    said: >-
+      composed from this round's landings, each cited in its own flag: the
+      September state tape (REV 36 A.3, BE 50), the streaming/index-split
+      declaration (be_assembly_budget: 8.713 against 8, asm unmeasured), the
+      runner's unbuilt --day path (R-574(A), DE 78), and REV 37's re-approval
+      after DE withdrew the runner's approval. The feature pass came OFF the
+      list, measured to fit at 1.915 GB.
+  PM_DATA_ROOT_WAS_CARRIED_BY_ONLY_TWO_OF_EIGHT_SESSIONS:
+    prov: RELAYED
+    from: R-574
+    as_of: 2026-09-06T06:05:16Z
   # --- MEM round 126, 2026-09-06T05:51:29Z ------------------------------
   THE_WINDOW_GUARD_IS_BUILT_AND_ITS_FIRST_VERSION_RETURNED_A_SILENT_ZERO:
     prov: CHECKED
