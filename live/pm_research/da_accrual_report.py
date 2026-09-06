@@ -409,6 +409,44 @@ def smoke_cost(scopes: dict | None = None) -> dict:
     """
     sc = (scopes if scopes is not None else journal_scopes()).get(
         SMOKE_SCOPE)
+    #: THE JOURNAL ROTATES, AND THE COST DOES NOT. By 12:44Z the window
+    #: began at 08:45Z and the smoke's `Started` line (08:22:04Z) was gone,
+    #: leaving its `Consumed` line -- so the wall could no longer be
+    #: computed while the KERNEL'S CPU ACCOUNTING was still right there.
+    #: A report that answered `NO RECORD` would have lost a measured fact
+    #: to a retention policy. ***A check pinned to what a journal still
+    #: holds is a check pinned to an ambient (REV 58 1.2's own class).***
+    if sc and sc.get("wall_s") is None and sc.get("cpu_s") is not None:
+        return {
+            "status": "MEASURED_BUT_THE_STARTED_LINE_HAS_ROTATED_OUT",
+            "scope": SMOKE_SCOPE,
+            "ended_utc": sc.get("consumed_at_utc"),
+            "cpu_s": sc["cpu_s"],
+            "wall_s": sc["cpu_s"],
+            "wall_is_the_CPU_figure": True,
+            "why_the_substitution_is_stated": (
+                "the wall needs the Started line and the journal no longer "
+                "has it; the kernel's CPU accounting survives in the "
+                "Consumed line. For a single-threaded run they are within "
+                "seconds of each other -- 5,060.439 s CPU against 5,065.0 s "
+                "wall when both were readable -- and the figure is LABELLED "
+                "as CPU rather than presented as the wall"),
+            "memory_peak_bytes": sc.get("memory_peak_bytes"),
+            "memory_peak_gb": (None if not sc.get("memory_peak_bytes") else
+                               round(sc["memory_peak_bytes"] / 1024 ** 3, 2)),
+            "is_a_lower_bound": True,
+            "why_a_lower_bound": (
+                "the run REFUSED at the emit and wrote nothing, so this is "
+                "what the day cost UP TO the refusal"),
+            "what_the_record_shows": [
+                "the kernel's CPU and peak accounting, in the Consumed line",
+            ],
+            "what_it_does_NOT_show": [
+                "the wall: the Started line has rotated out of the journal",
+                "how much of the day's work the time bought -- no progress "
+                "lines, no receipt, no per-arm evidence",
+            ],
+        }
     if not sc or sc.get("wall_s") is None:
         return {"status": "NO_JOURNAL_RECORD_OF_THE_SMOKE",
                 "wall_s": None, "is_a_lower_bound": None,
@@ -1438,6 +1476,10 @@ def selftest() -> tuple:                                      # noqa: C901
        "misses the first and meets the second is LATE, not lost***",
        rs["stage_costs_s"]["smoke"] is not None
        and all(v is not None for v in rs["stage_costs_s"].values())
+       #: the smoke's cost must be MEASURED -- by a complete journal
+       #: record or by the surviving CPU line -- and the state is NAMED
+       and real["stage_costs"]["smoke"]["detail"]["status"].startswith(
+           "MEASURED")
        and d8.get("before_the_horizon") is True
        and d8.get("before_the_seal_open_bar") is False
        and rs["the_binding_day"] == "20260908"

@@ -43,6 +43,48 @@ HERE = Path(__file__).resolve().parent
 DE_MODULE = HERE / "de_data_root.py"
 
 
+#: REV 64. ONE PORCELAIN PARSER, AND IT CLOSES BOTH HALVES.
+#: `git status --porcelain` emits `XY<space>PATH`: two columns of status,
+#: one space, then the path from COLUMN 4. The defect has two halves and
+#: needs both:
+#:   the READ  -- `stdout.strip()` eats the LEADING SPACE of the FIRST line
+#:                (` M path` becomes `M path`), shifting that line and only
+#:                that line;
+#:   the SLICE -- `line[3:]` then cuts one character into the shifted path
+#:                and returns `ath` for `path`.
+#: Either half alone still misreads something: strip alone turns the XY
+#: code `_M` (unstaged) into `M_` (staged); a fixed slice alone is right on
+#: a raw line and wrong on a shifted one. No seat had both right -- DE and
+#: BE are safe by their READ, this seat was safe by its SLICE -- so the
+#: parser is written once, raw, and used everywhere.
+def parse_porcelain(stdout: str) -> dict:
+    """Rows of {xy, path, renamed_from, untracked}, and the malformed ones
+    NAMED rather than dropped (rule 11)."""
+    rows, malformed = [], []
+    for line in (stdout or "").split("\n"):
+        if not line:
+            continue
+        if len(line) < 4 or line[2] != " ":
+            #: NOT silently skipped: a line this parser cannot read is a
+            #: status, and a status is reported.
+            malformed.append(line)
+            continue
+        xy, path = line[:2], line[3:]
+        old = None
+        if " -> " in path:
+            old, path = path.split(" -> ", 1)
+        if len(path) > 1 and path[0] == '"' and path[-1] == '"':
+            path = path[1:-1]
+        rows.append({"xy": xy, "path": path, "renamed_from": old,
+                     "untracked": xy == "??"})
+    return {"rows": rows, "malformed": malformed,
+            "n_rows": len(rows), "n_malformed": len(malformed),
+            "read": "RAW -- the block is never stripped",
+            "path_from": "column 4, after the two-column code and one space",
+            "renames": "`R  old -> new` is split on ` -> `; the NEW path is "
+                       "the path and the old one is recorded"}
+
+
 class RootRefused(RuntimeError):
     """The resolved root is not the ledger this programme records into."""
 

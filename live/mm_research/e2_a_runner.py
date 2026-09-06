@@ -383,6 +383,15 @@ def capture_closure(where: str = "module import") -> int:
     return len(LAUNCH_CLOSURE)
 
 
+def _porcelain(stdout: str) -> dict:
+    """The programme's ONE porcelain parser (REV 64), imported."""
+    _pm = str(Path(__file__).resolve().parents[1] / "pm_research")
+    if _pm not in sys.path:
+        sys.path.insert(0, _pm)
+    import da_root as _R                                       # noqa: PLC0415
+    return _R.parse_porcelain(stdout)
+
+
 def _is_the_ledger_symlink(root: str, rel: str) -> bool:
     """Is `<root>/<rel>` R-553's symlink to the canonical data root?
 
@@ -421,7 +430,15 @@ def _head_state() -> dict:
             return None
         return r.stdout.strip() if r.returncode == 0 else None
 
-    st = _g("status", "--porcelain")
+    #: RAW, NEVER STRIPPED (REV 64). `_g` strips, and a stripped block
+    #: loses the LEADING SPACE of its FIRST line -- which is the read half
+    #: of the porcelain defect. The status call bypasses it.
+    try:
+        _r = subprocess.run(["git", "-C", root, "status", "--porcelain"],
+                            capture_output=True, text=True, timeout=60)
+        st = _r.stdout if _r.returncode == 0 else None
+    except Exception:                                         # noqa: BLE001
+        st = None
     if st is None:
         return {"worktree": root, "head": _g("rev-parse", "HEAD"),
                 "dirty": None, "dirty_paths": []}
@@ -431,16 +448,15 @@ def _head_state() -> dict:
     #: file called `data` through. The predicate is UNTRACKED **and** a
     #: SYMLINK **and** resolving to the canonical data root -- three facts
     #: about the object, none about its name.
+    parsed = _porcelain(st)
     exempt, dirt = [], []
-    for line in (x for x in st.split("\n") if x):
-        #: THE PATH IS EVERYTHING AFTER THE 2-CHAR CODE, stripped -- not
-        #: `line[3:]`, which ate a character whenever the separator was
-        #: not exactly one space and reported `ive/...` for a real file.
-        code, rel = line[:2].strip(), line[2:].strip().strip('"')
-        if code == "??" and _is_the_ledger_symlink(root, rel):
-            exempt.append(rel)
+    for row in parsed["rows"]:
+        if row["untracked"] and _is_the_ledger_symlink(root, row["path"]):
+            exempt.append(row["path"])
         else:
-            dirt.append(rel)
+            dirt.append(row["path"])
+    #: a line the parser could not read is DIRT, not silence.
+    dirt += parsed["malformed"]
     return {"worktree": root, "head": _g("rev-parse", "HEAD"),
             "dirty": bool(dirt),
             "dirty_paths": dirt[:20],
@@ -2726,6 +2742,59 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
        and _ok["closure_unchanged_during_the_run"] is True,
        f"nothing moved -> {len(_none)} drift; one rewritten -> "
        f"{[d['module'] for d in _one]} and the emit refuses naming it")
+
+    # -- REV 64: THE PORCELAIN DEFECT HAS TWO NECESSARY HALVES ----------
+    _pmp = str(Path(__file__).resolve().parents[1] / "pm_research")
+    if _pmp not in sys.path:
+        sys.path.insert(0, _pmp)
+    import da_root as _PR                                     # noqa: PLC0415
+    BLOCK = " M live/x.py\n?? data\nR  a -> b\n"
+    good = _PR.parse_porcelain(BLOCK)
+    #: HALF ONE, the READ: strip the block first, then parse it correctly.
+    strip_first = _PR.parse_porcelain(BLOCK.strip())
+    #: HALF TWO, the SLICE: parse the RAW block with the old rule.
+    old_slice_raw = [ln[3:] for ln in BLOCK.split("\n") if ln]
+    #: BOTH: strip AND the fixed slice -- the defect as it shipped.
+    both = [ln[3:] for ln in BLOCK.strip().split("\n") if ln]
+    ck("REV 64 -- THE PORCELAIN DEFECT IS ONE DEFECT WITH TWO NECESSARY "
+       "HALVES, and the parser closes both. RAW read, the XY code by FIXED "
+       "WIDTH, the path from COLUMN 4, and `R  old -> new` split on the "
+       "arrow: every path in the reviewer's block is recovered EXACTLY -- "
+       "`live/x.py` (leading space), `data`, and `b` from `a`. ***No seat "
+       "had both halves right: DE and BE are safe by their READ, this seat "
+       "was safe by its SLICE***",
+       [r["path"] for r in good["rows"]] == ["live/x.py", "data", "b"]
+       and good["rows"][0]["xy"] == " M"
+       and good["rows"][2]["renamed_from"] == "a"
+       and good["rows"][1]["untracked"] is True
+       and good["n_malformed"] == 0,
+       f"paths {[r['path'] for r in good['rows']]}; first XY "
+       f"{good['rows'][0]['xy']!r}; rename b<-a")
+    ck("AND EACH HALF IS DRIVEN RED FIRST, SEPARATELY: ***the READ half "
+       "alone*** shifts the FIRST line so a correct parser cannot read it "
+       "at all -- its path is LOST, not merely mistyped; "
+       "***the SLICE half alone*** is right on a raw line and wrong the "
+       "moment one is shifted; and ***the two together*** return "
+       "`ive/x.py` for `live/x.py`, which is the character this seat's "
+       "receipts actually lost",
+       strip_first["n_malformed"] == 1
+       and strip_first["malformed"] == ["M live/x.py"]
+       and [r["path"] for r in strip_first["rows"]] == ["data", "b"]
+       and old_slice_raw[0] == "live/x.py"
+       and both[0] == "ive/x.py"
+       and both[2] == "a -> b",
+       f"strip alone -> the first line is UNREADABLE and its path is LOST "
+       f"({strip_first['malformed']}), leaving "
+       f"{[r['path'] for r in strip_first['rows']]}; slice alone on a raw "
+       f"line -> {old_slice_raw[0]!r}; BOTH -> {both[0]!r}, and the rename "
+       f"unsplit as {both[2]!r}")
+    ck("AND A LINE THE PARSER CANNOT READ IS NAMED, NOT DROPPED: a "
+       "truncated status line lands in `malformed` and is counted as DIRT "
+       "by the caller -- an unreadable status is not a clean tree (rule 11)",
+       _PR.parse_porcelain("M\n?? ok\n")["n_malformed"] == 1
+       and _PR.parse_porcelain("M\n?? ok\n")["rows"][0]["path"] == "ok",
+       "a 1-character line is malformed and the good line beside it still "
+       "parses")
 
     # -- 17. the capture meets the SEAL, by SHAPE ------------------------
     _mods = _idy["import_closure"]["modules"]

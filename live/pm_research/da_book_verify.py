@@ -153,6 +153,12 @@ def capture_closure(where: str = "module import") -> int:
     return len(LAUNCH_CLOSURE)
 
 
+def _porcelain(stdout: str) -> dict:
+    """The programme's ONE porcelain parser (REV 64), imported."""
+    import da_root as _R                                       # noqa: PLC0415
+    return _R.parse_porcelain(stdout)
+
+
 def _is_the_ledger_symlink(root: str, rel: str) -> bool:
     """Is `<root>/<rel>` R-553's symlink to the canonical data root?
 
@@ -185,7 +191,15 @@ def _head_state() -> dict:
             return None
         return r.stdout.strip() if r.returncode == 0 else None
 
-    st = _g("status", "--porcelain")
+    #: RAW, NEVER STRIPPED (REV 64). `_g` strips, and a stripped block
+    #: loses the LEADING SPACE of its FIRST line -- which is the read half
+    #: of the porcelain defect. The status call bypasses it.
+    try:
+        _r = subprocess.run(["git", "-C", root, "status", "--porcelain"],
+                            capture_output=True, text=True, timeout=60)
+        st = _r.stdout if _r.returncode == 0 else None
+    except Exception:                                         # noqa: BLE001
+        st = None
     if st is None:
         return {"worktree": root, "head": _g("rev-parse", "HEAD"),
                 "dirty": None, "dirty_paths": []}
@@ -195,16 +209,15 @@ def _head_state() -> dict:
     #: file called `data` through. The predicate is UNTRACKED **and** a
     #: SYMLINK **and** resolving to the canonical data root -- three facts
     #: about the object, none about its name.
+    parsed = _porcelain(st)
     exempt, dirt = [], []
-    for line in (x for x in st.split("\n") if x):
-        #: THE PATH IS EVERYTHING AFTER THE 2-CHAR CODE, stripped -- not
-        #: `line[3:]`, which ate a character whenever the separator was
-        #: not exactly one space and reported `ive/...` for a real file.
-        code, rel = line[:2].strip(), line[2:].strip().strip('"')
-        if code == "??" and _is_the_ledger_symlink(root, rel):
-            exempt.append(rel)
+    for row in parsed["rows"]:
+        if row["untracked"] and _is_the_ledger_symlink(root, row["path"]):
+            exempt.append(row["path"])
         else:
-            dirt.append(rel)
+            dirt.append(row["path"])
+    #: a line the parser could not read is DIRT, not silence.
+    dirt += parsed["malformed"]
     return {"worktree": root, "head": _g("rev-parse", "HEAD"),
             "dirty": bool(dirt),
             "dirty_paths": dirt[:20],
@@ -772,8 +785,12 @@ def economic_census(book, budget: int = CENSUS_VISIT_BUDGET) -> dict:
         #: REFUTE, NEVER ESTABLISH. A truncated walk can PROVE a sealed
         #: name is present and can NEVER prove none is: the flag is only
         #: assertable when the walk COMPLETED (REV 60 section 4.1).
+        #: THE ASYMMETRY, IN THE FLAG ITSELF: a sealed name the walk DID
+        #: reach makes this FALSE whether or not the walk finished -- a
+        #: refutation is a fact. Only the ABSENCE needs a complete walk;
+        #: without one the answer is None, never True.
         "NO_SEALED_DAY_STATISTIC_IS_NAMED_IN_THIS_BOOK": (
-            (not sealed_hits) if not truncated[0] else None),
+            False if sealed_hits else (True if not truncated[0] else None)),
         "sealed_statistic_check": (
             "REFUTED" if sealed_hits else
             "ESTABLISHED_OVER_A_COMPLETE_WALK" if not truncated[0] else
@@ -1573,10 +1590,6 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{BOOK_LOAD_EXPECTED_PEAK_GB} GB, cap {BOOK_LOAD_CAP_GB} GB, "
        f"rule-20 wrapper required for the real book")
 
-    n_fail = sum(1 for c in checks if not c["passed"])
-    for c in checks:
-        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
-        print("       " + c["detail"])
     # -- THE ECONOMIC CENSUS OF A BOOK, BOTH DIRECTIONS ------------------
     clean_c = economic_census(book)
     sealed_c = economic_census({**book, "leak": {"null_mean": 3.21,
@@ -1607,14 +1620,19 @@ def selftest() -> tuple:                                      # noqa: C901
        f"value inputs -> "
        f"{value_c['field_names_naming_a_VALUE_INPUT']} (reported, not "
        f"flagged)")
+    #: the nested values contribute their OWN keys -- `x` and `y` are
+    #: field names too. The property under test is that the two IDENTITY
+    #: keys are counted apart from the field names, not that a dict has
+    #: exactly one field.
     ident_c = economic_census({"btc-updown-5m-1788393600": {"x": 1},
                                "12345": {"y": 2}, "real_field": 3})
     ck("AND AN IDENTITY KEY IS NOT A FIELD NAME: a slug or a bare number "
        "keying a mapping is counted separately, so a 297,379-key book does "
        "not drown its own field list. ***The first run listed 200 names "
        "and 160 of them were slugs***",
-       ident_c["n_identity_keys"] == 2 and ident_c["n_field_names"] == 2
-       and "real_field" in ident_c["field_names"],
+       ident_c["n_identity_keys"] == 2
+       and set(ident_c["field_names"]) == {"real_field", "x", "y"}
+       and not any(_IDENTITY_KEY.match(n) for n in ident_c["field_names"]),
        f"{ident_c['n_identity_keys']} identity key(s), "
        f"{ident_c['n_field_names']} field name(s): "
        f"{ident_c['field_names']}")
@@ -1623,7 +1641,12 @@ def selftest() -> tuple:                                      # noqa: C901
     # -- WALK REFUTES BUT NEVER ESTABLISHES ------------------------------
     tiny = economic_census(book, budget=3)
     full = economic_census(book)
-    leaky = economic_census({**book, "leak": {"null_mean": 1.0}}, budget=3)
+    #: THE LEAK MUST BE REACHED FOR THE REFUTATION TO BE A REFUTATION.
+    #: Planted LAST behind a 3-node budget it was never visited, and the
+    #: census said NOT_ESTABLISHED -- correctly. It goes FIRST here, so the
+    #: walk reaches it and then truncates: refuted AND truncated, which is
+    #: the state the asymmetry is about.
+    leaky = economic_census({"leak": {"null_mean": 1.0}, **book}, budget=6)
     ck("REV 60 section 4.1 -- THE VERDICT SENTENCE IS COMPUTED FROM THE "
        "NUMBERS, and a TRUNCATED walk is stated as a LIMIT. ***The receipt "
        "said `NONE OF THEM NAMES AN ECONOMIC QUANTITY` beside a census that "
@@ -1653,6 +1676,56 @@ def selftest() -> tuple:                                      # noqa: C901
        and "REFUTED" in leaky["summary"],
        f"truncated AND leaking -> {leaky['sealed_statistic_check']} naming "
        f"{leaky['field_names_naming_a_SEALED_DAY_STATISTIC']}")
+
+    # -- REV 64: THE PORCELAIN DEFECT HAS TWO NECESSARY HALVES ----------
+    import da_root as _PR                                     # noqa: PLC0415
+    BLOCK = " M live/x.py\n?? data\nR  a -> b\n"
+    good = _PR.parse_porcelain(BLOCK)
+    #: HALF ONE, the READ: strip the block first, then parse it correctly.
+    strip_first = _PR.parse_porcelain(BLOCK.strip())
+    #: HALF TWO, the SLICE: parse the RAW block with the old rule.
+    old_slice_raw = [ln[3:] for ln in BLOCK.split("\n") if ln]
+    #: BOTH: strip AND the fixed slice -- the defect as it shipped.
+    both = [ln[3:] for ln in BLOCK.strip().split("\n") if ln]
+    ck("REV 64 -- THE PORCELAIN DEFECT IS ONE DEFECT WITH TWO NECESSARY "
+       "HALVES, and the parser closes both. RAW read, the XY code by FIXED "
+       "WIDTH, the path from COLUMN 4, and `R  old -> new` split on the "
+       "arrow: every path in the reviewer's block is recovered EXACTLY -- "
+       "`live/x.py` (leading space), `data`, and `b` from `a`. ***No seat "
+       "had both halves right: DE and BE are safe by their READ, this seat "
+       "was safe by its SLICE***",
+       [r["path"] for r in good["rows"]] == ["live/x.py", "data", "b"]
+       and good["rows"][0]["xy"] == " M"
+       and good["rows"][2]["renamed_from"] == "a"
+       and good["rows"][1]["untracked"] is True
+       and good["n_malformed"] == 0,
+       f"paths {[r['path'] for r in good['rows']]}; first XY "
+       f"{good['rows'][0]['xy']!r}; rename b<-a")
+    ck("AND EACH HALF IS DRIVEN RED FIRST, SEPARATELY: ***the READ half "
+       "alone*** shifts the FIRST line so a correct parser cannot read it "
+       "at all -- its path is LOST, not merely mistyped; "
+       "***the SLICE half alone*** is right on a raw line and wrong the "
+       "moment one is shifted; and ***the two together*** return "
+       "`ive/x.py` for `live/x.py`, which is the character this seat's "
+       "receipts actually lost",
+       strip_first["n_malformed"] == 1
+       and strip_first["malformed"] == ["M live/x.py"]
+       and [r["path"] for r in strip_first["rows"]] == ["data", "b"]
+       and old_slice_raw[0] == "live/x.py"
+       and both[0] == "ive/x.py"
+       and both[2] == "a -> b",
+       f"strip alone -> the first line is UNREADABLE and its path is LOST "
+       f"({strip_first['malformed']}), leaving "
+       f"{[r['path'] for r in strip_first['rows']]}; slice alone on a raw "
+       f"line -> {old_slice_raw[0]!r}; BOTH -> {both[0]!r}, and the rename "
+       f"unsplit as {both[2]!r}")
+    ck("AND A LINE THE PARSER CANNOT READ IS NAMED, NOT DROPPED: a "
+       "truncated status line lands in `malformed` and is counted as DIRT "
+       "by the caller -- an unreadable status is not a clean tree (rule 11)",
+       _PR.parse_porcelain("M\n?? ok\n")["n_malformed"] == 1
+       and _PR.parse_porcelain("M\n?? ok\n")["rows"][0]["path"] == "ok",
+       "a 1-character line is malformed and the good line beside it still "
+       "parses")
 
     # -- RULE 22 / R-605: THE LAUNCH CAPTURE, BOTH DIRECTIONS ------------
     idy = source_identity_at_launch()
@@ -1738,6 +1811,22 @@ def selftest() -> tuple:                                      # noqa: C901
        f"dirty at import = {idy['worktree_was_dirty_at_import']} -> real "
        f"emit {'REFUSES' if dirty_msg else 'admits'}")
 
+    #: THE COUNT AND THE PRINT RUN AFTER THE LAST CHECK. They used to sit
+    #: in the MIDDLE of this function, so every check appended below them
+    #: -- the census pair, the launch capture, the porcelain parser -- was
+    #: NEITHER PRINTED NOR COUNTED, and the summary reported
+    #: "29 checks, 0 failure(s)" while one of them was FAILING.
+    #: ***A battery whose summary cannot see its own last checks is a
+    #: battery that cannot fail*** (rule 15), and it is the instrument this
+    #: seat uses to hold other seats to their receipts.
+    n_fail = sum(1 for c in checks if not c["passed"])
+    for c in checks:
+        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
+        print("       " + c["detail"])
+    recount = sum(1 for c in checks if not c.get("passed"))
+    assert recount == n_fail and len(checks) == len(
+        [c for c in checks if "check" in c]), (
+        "the summary disagrees with the list it summarises")
     print(f"\n{'SELFTEST OK' if not n_fail else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {n_fail} failure(s)")
     return checks, n_fail
