@@ -10456,3 +10456,84 @@ directions.
   fourteenth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 124 — archived 2026-09-06T08:27:02Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 142 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T08:06:40Z (MEM ROUND 139 -- R-593, Q-DA-287 AND Q-DE-82 SWEPT. STATE
+  ONLY. FLAG WORDS UNCHANGED.
+  (1) **A KNOWN-BAD FAILED AND WAS RIGHT TO -- THE FALSIFIER WAS THE WRONG ONE.**
+  Moving a row the statistic **correctly ignores** (below theta, outside the matched
+  top-K) **by 1e-9, or by A MILLION CENTS, leaves the day at −250.0.** ***So the
+  falsifier was wrong, not the statistic:*** a known-bad that perturbs an input the
+  estimand is DEFINED to ignore tests nothing, and its failure is the instrument
+  reporting its own mis-specification. **AND THE DISPOSITION IS BETTER THAN A
+  REPLACEMENT** -- the falsifier now moves a row the candidate ACTS ON, and ***the
+  original case is KEPT as the control for what it shows.*** *Twice this session a
+  control has been RE-ROLED rather than discarded (08-29/30 was the first), and both
+  times the re-roling preserved evidence deletion would have lost.* **The magnitude
+  is the tell: 1e-9 and a million cents give the same answer, so the perturbation
+  was not small -- it was IRRELEVANT.**
+  (2) **TWO INDEPENDENT IMPLEMENTATIONS AGREE EXACTLY -- AND THE CHECK STATES ITS
+  OWN EPISTEMICS.** 13 fields `==` (13 checks, 0 failures **under my own run**), day
+  −250.0 both sides, **hand-known: btc 60 − 270 = −210, eth 15 − 55 = −40**, and the
+  assertion text ends *"equal, not within a tolerance"* and ***"agreement is only
+  evidence because neither imported the other's statistic."*** *A check that says
+  why its own passing means something is the answer to the class this programme
+  keeps finding -- green results whose significance nobody wrote down.* **A no-fill
+  row contributes 0.0 and is STILL AN ACTION; the pinned paths are NOT OPENED.**
+  (3) **AND MY GREP SAID THE OPPOSITE, BECAUSE THE MODULE IS CAREFUL.** R-593 says
+  "no import of" three BE modules; **I found 3, 3 and 4 mentions.** They are the
+  module's own docstring naming what it did NOT import -- *"Those were read as
+  DOCUMENTS"* -- **and the single real import sits INSIDE the comparison test**,
+  where BE's reader is loaded only to obtain `theirs` after `mine` is already
+  computed. ***A module careful enough to name what it did not import is
+  indistinguishable, to a grep, from one that imported it: the care produces the
+  hits.*** **Eighth suspect-the-probe instance, and the first where the false signal
+  was CAUSED BY the discipline it was checking.**
+  (4) **FORM (3) NOW RESTS ON TWO INDEPENDENT VERIFICATIONS.** DA's audit,
+  independent of REV 44: **zero of EIGHT value names across all four receipts**, no
+  aggregation, no latency, **the interim's output NONE** -- two raw matches, both
+  excluded with reasons, *one of them DA's own fixture from the same round.* **My
+  own check of the new fact: 09-02's canonical receipt IS A REFUSAL** (*"not closed
+  by calendar"*, `wall_seconds 0.0`) **and the SCORED run lives elsewhere** -- *a
+  reader resolving 09-02 by name gets the day that did not run.* **And a correction
+  inside DA's own audit: its "1 statistic field" was `rows.n_actions` -- A COUNT.**
+  *The distinction I drew at round 136 between a census and a claim, in another
+  form.*
+  (5) **THE REHEARSAL RESOLVED BE'S CONVENTIONS RATHER THAN ASSUMING THEM** -- the
+  receipt's NAME, **the COMPACT vs DASHED day**, the digest at `book.sha256`;
+  ***each would have refused a correct book AT GO with the receipt sitting beside
+  it.*** **And the resource block's own falsifier caught DE's first version
+  reporting the login shell's AMBIENT scope: a 15.5 GiB peak against an 8 MB run**
+  -- *three orders of magnitude, and it would have read as a plausible number on any
+  other day.* `THE_ONE_COMMAND` is a VALUE in the receipt; the lock is
+  INFORMATIONAL, held by BE 55, **the correct state.**
+  (6) **AND MY ROUND-137 AUDIT RAN AHEAD OF A CORRECTION FOR THE FIRST TIME.**
+  Q-DA-286's "G ≥ 14" for Gate-1 is corrected in band to **G = 6**; *I audited my
+  own file for exactly that conflation at round 137 and found it clean, before the
+  correction landed anywhere* -- **a currency check run because the slip was
+  AVAILABLE to me, not because I had made it.**
+  (7) **FLAG WORDS -- AND ONE CHANGED AT MY COMMIT-TIME RE-READ.** ***THE 09-03
+  BOOK IS ASSEMBLED.*** `be_daybook_20260903_btc.pkl`, 290,758,834 B, and the
+  builder receipt carries **`book.sha256: aad816d6…`** -- **the sha I named as the
+  condition at rounds 136, 137 and 138 and refused to call it assembled without.**
+  `peak_gb 5.317` of 8, **297,379 scored generations, both heads, SETS EQUAL, every
+  stage inside budget.** ***And the two preconditions the smoke was NOT_READY on
+  now both have their artifacts*** -- **I do NOT claim the smoke is READY: that
+  status is a computed field and re-evaluating the rehearsal is DE's.** *This is
+  the blocker that ran through fifteen of my rounds -- the fragment, the state
+  tape, the split, `TAPE_PATH` on two surfaces, the assembly budget -- and every
+  one was closed by a named owner rather than worked around.* **The race read stays
+  NOT READ (RULED form 3; reader APPROVED-PENDING-TWO-FIXES); the smoke stays
+  REHEARSED, NOT RUN.**
+  MEASURED BEFORE THIS SENTENCE: flags 765 -> 772, flag_provenance 310 -> 317,
+  tasks 19; 183 CHECKED, 133 RELAYED, **455 UNMARKED -- unchanged for the fifteenth
+  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags
+  vs HEAD 0 without provenance.)
+```

@@ -63,6 +63,74 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T08:27:02Z (MEM ROUND 142 -- R-597 AND THE BE/DA/DE ROWS SWEPT. STATE
+  ONLY. THE SEALED SMOKE IS RUNNING.
+  (1) **THE FIX REFUSED ITS OWN BATTERY.** The compare is now
+  `hmac.compare_digest(got, e)` over all 64 characters -- **driven by me: the real
+  digest ADMITS; the one-character, 16-hex and right-16-wrong-48 stubs all REFUSE**,
+  the exact four cases I filed at round 140, inverted. ***And the sentence to keep
+  is the cost: "BE's own battery had been passing a 16-hex stub, so THE FIX REFUSED
+  BE."*** **The battery was green for as long as the defect existed and went red the
+  moment it was closed** -- *the strongest available evidence that the defect was
+  real and the test was written against the behaviour rather than the requirement.*
+  (2) **DA'S OWN FALSIFIER CAUGHT A SILENT PASS IN DA'S OWN CODE: an arm DECLARED in
+  params and ABSENT from the receipt got a status, the branch continued WITHOUT a
+  verdict, and the conjunction read VERIFIED WITH AN ARM MISSING.** Two sibling
+  branches had the same hole. ***Absence-as-a-pass at its most dangerous: not a
+  missing check, but a conjunction whose DOMAIN silently shrank*** -- "all declared
+  arms" quietly becoming "the arms that happened to be present", reporting the same
+  word for a weaker claim. **The fix is an INVARIANT on the verdict COUNT**, which
+  is what makes it cover the siblings and the holes nobody has written yet.
+  (3) **THE CLI SURFACE IS MEASURED BY AST TO PROVE AN ABSENCE** -- no flag matching
+  now/clock/force/override/skip/unsafe/go. ***The right instrument for "there is no
+  override": a grep over source would hit the words in comments and refusal
+  messages*** -- *exactly the false positive I hit at round 139* -- **an AST reads
+  the surface a CALLER can reach.** Residual, inherent: a future `--proceed` sits
+  outside a named blocklist.
+  (4) **AND THE BAR OPENING DOES NOT OPEN A SEAL** -- driven: `gate.open = true`
+  beside 2 of 2 arms SEALED is still not a verification. *Two independent conditions
+  falling on one date, and satisfying one does not satisfy the other* -- **the same
+  shape as the two gates I audited at round 137: a calendar coincidence between
+  independent conditions is what makes them easy to conflate.**
+  (5) **THE SEAM LITERAL IS NOW COMPUTED, NOT CORRECTED.** A THIRD place described
+  this one seam wrongly; BE 57 replaced the string with **`_index_call_made()`** --
+  ***a value DERIVED from the call rather than a description maintained beside
+  it.*** *A source comment (round 140, mine) was corrected; a receipt field was
+  COMPUTED.* **A corrected literal drifts again on the next change; a computed one
+  cannot.**
+  (6) **AND BE 57 PUT THE FIELDS IN THE BUILDER AND LEFT THE LANDED RECEIPT
+  UNTOUCHED** -- `state_join_failed`, `n_chunks`, the reason class under
+  `UNCOVERED_GENERATIONS`, the release ASSERTED (11 sites); **the 09-03 receipt
+  checked by me: `state_join_failed` still absent, `book.sha256` unchanged.**
+  *Rule 13 exactly right, and the honest consequence: the 09-03 receipt stays
+  accurate and under-specified forever -- better than one quietly improved after the
+  book it describes was ruled to stand.*
+  (7) **v4 COMPUTES G = 3 AND THE FLOOR 0.25 FROM THE PINS' OWN `exists: false`, NOT
+  TYPED** -- *"v2's pessimistic branch, now the only branch the artifacts support"*
+  -- and refuses a re-seal with its reason: **"a re-seal couldn't recover 09-01/02
+  anyway, because the interim's output was never written."**
+  (8) **TWO PROBE FAILURES OF MINE, BOTH CAUGHT BEFORE THE SENTENCE.** A lowercase
+  grep missed `UNCOVERED_GENERATIONS` -- ***a case-sensitivity miss, the shallowest
+  cause yet, and it would have produced the same false finding as the folded scalar,
+  the unbounded digits, the dirty tree, the careful docstring and the stale line
+  range. Tenth instance; the causes keep differing and the discipline is the only
+  constant.*** **And I RENAMED a flag's KEY instead of superseding its VALUE, which
+  my own ORPHAN check caught** -- *the key is restored pointing forward.* **That
+  check has now fired twice on me -- a duplicate key at 134, a rename here -- and
+  both times `count == 1` passed and only the parsed-result check could see it.**
+  *And my re-indent of the restored key broke the YAML, which the post-write parse
+  caught: the same indent hazard I recorded at round 132 from DE's defect, in my own
+  hands.*
+  (9) **FLAG WORDS: THE 09-03 SEALED SMOKE IS RUNNING** since 08:21:55Z
+  (`de84smoke.scope`, venv interpreter, `heavy=True locked=True`, one scope in the
+  slice) -- ***NOT COMPLETE until DE reports the sealed receipt's sha.*** *I measure
+  current RSS 744,840 KiB; the 2.36 GiB in the dispatch is a PEAK, a different
+  quantity.* **Economics SEALED, NOT READ; the race read NOT READ, v4 DECLARED,
+  reader FIXED-PENDING-REVIEW.**
+  MEASURED BEFORE THIS SENTENCE: flags 786 -> 794, flag_provenance 331 -> 339,
+  tasks 19; 196 CHECKED, 143 RELAYED, **455 UNMARKED -- unchanged for the eighteenth
+  round running.** ORPHAN audit 0 findings, exit 0 **after it caught my rename**;
+  window 3 of a ruled 3; new flags vs HEAD 0 without provenance.)
   2026-09-06T08:20:37Z (MEM ROUND 141 -- R-595, R-596, REV 46 AND Q-DE-83 SWEPT.
   STATE ONLY. GO -- AND A FINDING AGAINST MY OWN HEADLINE.
   (1) **GO, AND THE BOOK STANDS -- BUT NOT ON PRINCIPLE.** REV 46 **MEASURED THE
@@ -209,77 +277,6 @@ updated: >-
   tasks 19; 189 CHECKED, 136 RELAYED, **455 UNMARKED -- unchanged for the sixteenth
   round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new
   flags vs HEAD 0 without provenance.)
-  2026-09-06T08:06:40Z (MEM ROUND 139 -- R-593, Q-DA-287 AND Q-DE-82 SWEPT. STATE
-  ONLY. FLAG WORDS UNCHANGED.
-  (1) **A KNOWN-BAD FAILED AND WAS RIGHT TO -- THE FALSIFIER WAS THE WRONG ONE.**
-  Moving a row the statistic **correctly ignores** (below theta, outside the matched
-  top-K) **by 1e-9, or by A MILLION CENTS, leaves the day at −250.0.** ***So the
-  falsifier was wrong, not the statistic:*** a known-bad that perturbs an input the
-  estimand is DEFINED to ignore tests nothing, and its failure is the instrument
-  reporting its own mis-specification. **AND THE DISPOSITION IS BETTER THAN A
-  REPLACEMENT** -- the falsifier now moves a row the candidate ACTS ON, and ***the
-  original case is KEPT as the control for what it shows.*** *Twice this session a
-  control has been RE-ROLED rather than discarded (08-29/30 was the first), and both
-  times the re-roling preserved evidence deletion would have lost.* **The magnitude
-  is the tell: 1e-9 and a million cents give the same answer, so the perturbation
-  was not small -- it was IRRELEVANT.**
-  (2) **TWO INDEPENDENT IMPLEMENTATIONS AGREE EXACTLY -- AND THE CHECK STATES ITS
-  OWN EPISTEMICS.** 13 fields `==` (13 checks, 0 failures **under my own run**), day
-  −250.0 both sides, **hand-known: btc 60 − 270 = −210, eth 15 − 55 = −40**, and the
-  assertion text ends *"equal, not within a tolerance"* and ***"agreement is only
-  evidence because neither imported the other's statistic."*** *A check that says
-  why its own passing means something is the answer to the class this programme
-  keeps finding -- green results whose significance nobody wrote down.* **A no-fill
-  row contributes 0.0 and is STILL AN ACTION; the pinned paths are NOT OPENED.**
-  (3) **AND MY GREP SAID THE OPPOSITE, BECAUSE THE MODULE IS CAREFUL.** R-593 says
-  "no import of" three BE modules; **I found 3, 3 and 4 mentions.** They are the
-  module's own docstring naming what it did NOT import -- *"Those were read as
-  DOCUMENTS"* -- **and the single real import sits INSIDE the comparison test**,
-  where BE's reader is loaded only to obtain `theirs` after `mine` is already
-  computed. ***A module careful enough to name what it did not import is
-  indistinguishable, to a grep, from one that imported it: the care produces the
-  hits.*** **Eighth suspect-the-probe instance, and the first where the false signal
-  was CAUSED BY the discipline it was checking.**
-  (4) **FORM (3) NOW RESTS ON TWO INDEPENDENT VERIFICATIONS.** DA's audit,
-  independent of REV 44: **zero of EIGHT value names across all four receipts**, no
-  aggregation, no latency, **the interim's output NONE** -- two raw matches, both
-  excluded with reasons, *one of them DA's own fixture from the same round.* **My
-  own check of the new fact: 09-02's canonical receipt IS A REFUSAL** (*"not closed
-  by calendar"*, `wall_seconds 0.0`) **and the SCORED run lives elsewhere** -- *a
-  reader resolving 09-02 by name gets the day that did not run.* **And a correction
-  inside DA's own audit: its "1 statistic field" was `rows.n_actions` -- A COUNT.**
-  *The distinction I drew at round 136 between a census and a claim, in another
-  form.*
-  (5) **THE REHEARSAL RESOLVED BE'S CONVENTIONS RATHER THAN ASSUMING THEM** -- the
-  receipt's NAME, **the COMPACT vs DASHED day**, the digest at `book.sha256`;
-  ***each would have refused a correct book AT GO with the receipt sitting beside
-  it.*** **And the resource block's own falsifier caught DE's first version
-  reporting the login shell's AMBIENT scope: a 15.5 GiB peak against an 8 MB run**
-  -- *three orders of magnitude, and it would have read as a plausible number on any
-  other day.* `THE_ONE_COMMAND` is a VALUE in the receipt; the lock is
-  INFORMATIONAL, held by BE 55, **the correct state.**
-  (6) **AND MY ROUND-137 AUDIT RAN AHEAD OF A CORRECTION FOR THE FIRST TIME.**
-  Q-DA-286's "G ≥ 14" for Gate-1 is corrected in band to **G = 6**; *I audited my
-  own file for exactly that conflation at round 137 and found it clean, before the
-  correction landed anywhere* -- **a currency check run because the slip was
-  AVAILABLE to me, not because I had made it.**
-  (7) **FLAG WORDS -- AND ONE CHANGED AT MY COMMIT-TIME RE-READ.** ***THE 09-03
-  BOOK IS ASSEMBLED.*** `be_daybook_20260903_btc.pkl`, 290,758,834 B, and the
-  builder receipt carries **`book.sha256: aad816d6…`** -- **the sha I named as the
-  condition at rounds 136, 137 and 138 and refused to call it assembled without.**
-  `peak_gb 5.317` of 8, **297,379 scored generations, both heads, SETS EQUAL, every
-  stage inside budget.** ***And the two preconditions the smoke was NOT_READY on
-  now both have their artifacts*** -- **I do NOT claim the smoke is READY: that
-  status is a computed field and re-evaluating the rehearsal is DE's.** *This is
-  the blocker that ran through fifteen of my rounds -- the fragment, the state
-  tape, the split, `TAPE_PATH` on two surfaces, the assembly budget -- and every
-  one was closed by a named owner rather than worked around.* **The race read stays
-  NOT READ (RULED form 3; reader APPROVED-PENDING-TWO-FIXES); the smoke stays
-  REHEARSED, NOT RUN.**
-  MEASURED BEFORE THIS SENTENCE: flags 765 -> 772, flag_provenance 310 -> 317,
-  tasks 19; 183 CHECKED, 133 RELAYED, **455 UNMARKED -- unchanged for the fifteenth
-  round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3; new flags
-  vs HEAD 0 without provenance.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2933,7 +2930,152 @@ flags:
                              # The reviewer's own resources stated rather than implied:
                              # 18.45 s / 66 MB and 22.92 s / 22 MB, **the lock never
                              # taken, no sealed file opened.**
-  THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS: CLOSED-AT-BE-56-FULL-LENGTH-EQUALITY
+  THE_DIGEST_CHECK_IS_A_PREFIX_COMPARE_AND_A_ONE_CHARACTER_DIGEST_ADMITS: CLOSED-SEE-THE_FIX_REFUSED_ITS_OWN_BATTERY
+                             # KEY RESTORED 2026-09-06T08:29Z, and the restoration is the
+                             # finding. **I RENAMED this flag's KEY this round instead of
+                             # superseding its VALUE** -- and **my own ORPHAN check caught
+                             # it before the sentence**: the round-140 provenance entry
+                             # was left pointing at a flag that no longer existed.
+                             # ***RENAMING A KEY BREAKS EVERY SEARCH FOR THE OLD NAME.***
+                             # *I have superseded values in band roughly thirty times this
+                             # session and renamed exactly once; the once is the one the
+                             # instrument caught.*
+                             # **The key is restored here pointing forward**; the finding
+                             # itself -- the prefix compare, my four driven cases, and
+                             # BE's battery having passed a 16-hex stub -- lives at
+                             # `THE_FIX_REFUSED_ITS_OWN_BATTERY`, **with both provenance
+                             # entries now resolving to a flag that exists.**
+                             # *The ORPHAN check has now fired twice on me: once on a
+                             # duplicate key (round 134), once on a rename. Both times the
+                             # `count == 1` assertion passed and only the parsed-result
+                             # check could see it.*
+  THE_FIX_REFUSED_ITS_OWN_BATTERY: BEs-TESTS-HAD-BEEN-PASSING-A-16-HEX-STUB
+                             # CHECKED 2026-09-06T08:27:02Z at `phase2_arms.py:494` and
+                             # driven by me on all four inputs.
+                             # The compare is now **`hmac.compare_digest(got, e)`** with
+                             # `n_hex_compared` and **"hmac.compare_digest over all 64
+                             # characters"** recorded, anything not 64 lowercase hex
+                             # refusing. **Driven: the real digest ADMITS; the
+                             # one-character, the 16-hex and the right-16-wrong-48 stubs
+                             # all REFUSE** -- the exact four cases I filed at round 140,
+                             # now inverted.
+                             # ***AND THE SENTENCE TO KEEP IS THE COST: "BE's own battery
+                             # had been passing a 16-hex stub, so THE FIX REFUSED BE."***
+                             # *A red-first fix whose first casualty is the suite that was
+                             # meant to protect the thing it fixed.* **The battery was
+                             # green for as long as the defect existed, and went red the
+                             # moment it was closed** -- which is the strongest evidence
+                             # available that the defect was real and that the test was
+                             # written against the behaviour rather than the requirement.
+                             # *A fixture that supplies a stub the code should reject is
+                             # rule 16's first named instance, in a new place.*
+                             # EARLIER VALUE (rule 13): CLOSED-AT-BE-56-FULL-LENGTH-EQUALITY
+  DAs_OWN_FALSIFIER_CAUGHT_A_SILENT_PASS_IN_DAs_OWN_CODE: AN-ABSENT-DECLARED-ARM-READ-VERIFIED
+                             # RELAYED from R-597(B) 2026-09-06T08:27:02Z; the verifier's 15
+                             # checks I did not re-drive this round.
+                             # **An arm DECLARED in params and ABSENT from the receipt got
+                             # a status, and the branch continued WITHOUT a verdict -- so
+                             # the conjunction ran over a SHORTER LIST and read
+                             # VERIFIED WITH AN ARM MISSING.** **Two sibling branches had
+                             # the same hole.**
+                             # ***THIS IS THE ABSENCE-AS-A-PASS FAMILY AT ITS MOST
+                             # DANGEROUS: not a missing check, but a conjunction whose
+                             # DOMAIN silently shrank.*** *A verification over "all
+                             # declared arms" that quietly becomes a verification over
+                             # "the arms that happened to be present" reports the same
+                             # word for a weaker claim.*
+                             # **All three now record False, and an INVARIANT refuses if
+                             # the verdict count is ever not the declared-arm count** --
+                             # *the fix is on the CARDINALITY rather than on each branch,
+                             # which is what makes it cover the sibling holes and the ones
+                             # nobody has written yet.*
+  THE_CLI_SURFACE_IS_MEASURED_BY_AST_TO_PROVE_AN_ABSENCE: NO-FLAG-MATCHING-force-override-skip-unsafe-go
+                             # RELAYED from R-597(B) 2026-09-06T08:27:02Z.
+                             # The verifier's CLI surface is **measured by AST** as
+                             # `--book --day --output --receipt --selftest`, **with no
+                             # flag matching now / clock / force / override / skip /
+                             # unsafe / go** (the clock is a test parameter).
+                             # ***PROVING AN ABSENCE BY PARSING THE ARGUMENT SURFACE IS
+                             # THE RIGHT INSTRUMENT FOR "THERE IS NO OVERRIDE."*** *A
+                             # grep over source would hit the words in comments and
+                             # refusal messages -- exactly the false positive I hit at
+                             # round 139 on the import claim. An AST reads the surface a
+                             # CALLER can reach.*
+                             # **And the negative claim carries its own vocabulary list**,
+                             # so a future flag named `--proceed` would not be silently
+                             # outside the net -- *which is the residual, and it is
+                             # inherent to naming a blocklist.*
+  THE_BAR_OPENING_DOES_NOT_OPEN_A_SEAL: DRIVEN-gate-open-TRUE-BESIDE-TWO-OF-TWO-SEALED
+                             # RELAYED from R-597(B) 2026-09-06T08:27:02Z.
+                             # Driven: **`gate.open = true` beside 2 of 2 arms SEALED is
+                             # still NOT a verification.**
+                             # *Two independent conditions that both fall on 09-09 --
+                             # the read bar opening, and the economics becoming
+                             # comparable -- and a date that satisfies one does not
+                             # satisfy the other.* **The same shape as the two gates I
+                             # audited at round 137 (G = 6 and G >= 14 on one coincident
+                             # date): a calendar coincidence between independent
+                             # conditions is exactly what makes them easy to conflate.**
+  THE_SEAM_LITERAL_IS_NOW_COMPUTED_NOT_CORRECTED: _index_call_made
+                             # CHECKED 2026-09-06T08:27:02Z at the code.
+                             # The coordinator found a THIRD place describing the seam
+                             # wrongly: `be_daybook_build.py:543` recorded **`"index":
+                             # "build_tape_index(splits, tape_path=…)"`** -- a string
+                             # contradicting the call at :417.
+                             # **BE 57 did not correct the string. It replaced it with
+                             # `"index": _index_call_made()`** -- ***a value DERIVED from
+                             # the call rather than a description maintained beside it.***
+                             # *Three places have now described this one seam: a source
+                             # comment (round 140, which I found), a receipt field (this),
+                             # and the design declaration. The first was corrected; the
+                             # second was COMPUTED.* **Rule 10 satisfied properly rather
+                             # than satisfied once** -- a corrected literal drifts again
+                             # on the next change; a computed one cannot.
+  BE_57_PUT_THE_FIELDS_IN_THE_BUILDER_AND_LEFT_THE_LANDED_RECEIPT_UNTOUCHED: RULE-13-EXACTLY-RIGHT
+                             # CHECKED 2026-09-06T08:27:02Z at both.
+                             # The four gaps are now fields **in the builder**:
+                             # `state_join_failed` and `n_chunks` present; the uncovered
+                             # REASON CLASS beside the count under
+                             # `UNCOVERED_GENERATIONS`; the release **ASSERTED** rather
+                             # than merely measured (11 assertion sites); the seam literal
+                             # computed. **30/30.**
+                             # ***AND THE 09-03 RECEIPT IS UNTOUCHED*** -- I checked:
+                             # `state_join_failed` still absent, `book.sha256` still
+                             # `aad816d6…`. **The fields go into the builder for 09-04
+                             # onward and the landed artifact is not edited.**
+                             # *Rule 13 exactly right, and the honest consequence: the
+                             # 09-03 receipt stays accurate and under-specified forever,
+                             # which is better than a receipt that was quietly improved
+                             # after the book it describes was ruled to stand.*
+  v4_COMPUTES_G_EQUALS_3_FROM_THE_PINS_OWN_EXISTS_FALSE: NOT-TYPED
+                             # RELAYED from R-597(A)(D) 2026-09-06T08:27:02Z.
+                             # Declaration v4 (12/12, supersedes v3 by sha256
+                             # `603c6847…`): population the five named days; **READABLE
+                             # 09-03/04/05; READ-BUT-UNRECOVERABLE 09-01/02 taken from the
+                             # pins' `exists: false`, NOT TYPED; G = 3 and the floor 0.25
+                             # COMPUTED.**
+                             # ***"v2's pessimistic branch, now the only branch the
+                             # artifacts support"*** -- *the number I verified at round 136
+                             # as declared-in-advance is now the number the artifacts
+                             # force, and the declaration derives it rather than
+                             # restating it.* **No re-seal, with the reason stated: "a
+                             # re-seal couldn't recover 09-01/02 anyway, because the
+                             # interim's output was never written."**
+  MY_LOWERCASE_PROBE_MISSED_AN_UPPERCASE_FIELD: TENTH-SUSPECT-THE-PROBE-INSTANCE
+                             # CHECKED 2026-09-06T08:27:02Z, filed because the non-finding
+                             # is now a recurring shape with ten instances.
+                             # Verifying BE 57's four gaps I grepped `uncovered_reason`
+                             # and got **0** -- against a dispatch saying the reason class
+                             # was added. **Suspected the probe: the field is
+                             # `UNCOVERED_GENERATIONS`, uppercase, with the reason class
+                             # beside the count exactly as described.**
+                             # ***A case-sensitivity miss, which is the shallowest cause
+                             # yet*** -- and it would have produced the same false finding
+                             # as the folded scalar, the unbounded digits, the dirty tree,
+                             # the careful docstring and the stale line range. **Tenth
+                             # instance; the causes keep differing and the discipline is
+                             # the only constant.**
+
                              # SUPERSEDED-IN-BAND 2026-09-06T08:24:03Z at my commit-time
                              # re-read. **BE 56 CLOSED IT: the prefix compare is GONE**
                              # (0 occurrences of `startswith(expect_sha256.lower()[:16])`)
@@ -17319,6 +17461,64 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 142, 2026-09-06T08:27:02Z ------------------------------
+  THE_FIX_REFUSED_ITS_OWN_BATTERY:
+    prov: CHECKED
+    artifact: live/pm_research/phase2_arms.py
+    as_of: 2026-09-06T08:27:02Z
+    said: >-
+      the compare at line 494 is hmac.compare_digest(got, e) with n_hex_compared
+      and "hmac.compare_digest over all 64 characters" recorded; driven by me, the
+      real digest admits while the one-character, 16-hex and right-16-wrong-48
+      stubs all refuse -- the four cases I filed at round 140, inverted. R-597(A)
+      records that BE's own battery had been passing a 16-hex stub, so the fix
+      refused BE.
+  DAs_OWN_FALSIFIER_CAUGHT_A_SILENT_PASS_IN_DAs_OWN_CODE:
+    prov: RELAYED
+    from: R-597(B)
+    as_of: 2026-09-06T08:27:02Z
+  THE_CLI_SURFACE_IS_MEASURED_BY_AST_TO_PROVE_AN_ABSENCE:
+    prov: RELAYED
+    from: R-597(B)
+    as_of: 2026-09-06T08:27:02Z
+  THE_BAR_OPENING_DOES_NOT_OPEN_A_SEAL:
+    prov: RELAYED
+    from: R-597(B)
+    as_of: 2026-09-06T08:27:02Z
+  THE_SEAM_LITERAL_IS_NOW_COMPUTED_NOT_CORRECTED:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:27:02Z
+    said: >-
+      the receipt field now reads "index": _index_call_made() -- a value derived
+      from the call -- where R-597(A) records it having been the literal string
+      "build_tape_index(splits, tape_path=...)" contradicting the call at line 417.
+      _index_call_made occurs three times in the module.
+  BE_57_PUT_THE_FIELDS_IN_THE_BUILDER_AND_LEFT_THE_LANDED_RECEIPT_UNTOUCHED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc.json
+    as_of: 2026-09-06T08:27:02Z
+    said: >-
+      the builder now carries state_join_failed and n_chunks as fields, the
+      uncovered reason class beside the count under UNCOVERED_GENERATIONS, eleven
+      release-assertion sites, and the computed seam literal; while the landed
+      09-03 receipt still has state_join_failed absent and book.sha256 unchanged at
+      aad816d6..., so the fields go into the builder for 09-04 onward and the
+      landed artifact is not edited.
+  v4_COMPUTES_G_EQUALS_3_FROM_THE_PINS_OWN_EXISTS_FALSE:
+    prov: RELAYED
+    from: R-597(A)(D)
+    as_of: 2026-09-06T08:27:02Z
+  MY_LOWERCASE_PROBE_MISSED_AN_UPPERCASE_FIELD:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T08:27:02Z
+    said: >-
+      grepping uncovered_reason returned 0 against a dispatch saying the reason
+      class was added; the field is UNCOVERED_GENERATIONS, uppercase, with the
+      reason class beside the count as described in the module docstring at line
+      106. A case-sensitivity miss, the tenth instance of a probe contradicting a
+      seat's claim and being the thing at fault.
   # --- MEM round 141, 2026-09-06T08:20:37Z ------------------------------
   SET_EQUALITY_IS_R1s_PRECONDITION_AND_NOTHING_DOWNSTREAM_WOULD_SHOW_ITS_ABSENCE:
     prov: CHECKED

@@ -1,9 +1,115 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-06T08:20:37Z — **GO. The book stands — and the reviewer measured the
-window shut rather than ruling on principle. And a finding against my own headline:
-one item I listed as "verified at the artifact" is not in the receipt.** Gate 1 is 1
-of 7. Economics: `RESULTS.md` §0.
+Updated: 2026-09-06T08:27:02Z — **The 09-03 sealed smoke is RUNNING. The digest fix
+refused BE's own battery — which had been passing a 16-hex stub. And my own ORPHAN
+check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
+Economics: `RESULTS.md` §0.
+
+## READ FIRST — round 142
+
+### 1. The fix refused its own battery
+
+The compare is now `hmac.compare_digest(got, e)` over all 64 characters. **Driven by
+me** — the four cases I filed at round 140, inverted:
+
+| supplied "expected" | admits? |
+|---|---|
+| the real digest | ✅ |
+| one character | **❌ refuses** |
+| 16-hex stub | **❌ refuses** |
+| right-16, wrong-48 | **❌ refuses** |
+
+> ***"BE's own battery had been passing a 16-hex stub, so the fix refused BE."***
+
+**The battery was green for as long as the defect existed, and went red the moment it
+was closed** — *the strongest available evidence that the defect was real and the test
+was written against the behaviour rather than the requirement.*
+
+### 2. DA's own falsifier caught a silent pass in DA's own code
+
+An arm **declared in params and absent from the receipt** got a status, the branch
+continued **without a verdict**, and the conjunction **read VERIFIED with an arm
+missing.** Two sibling branches had the same hole.
+
+> ***Absence-as-a-pass at its most dangerous: not a missing check, but a conjunction
+> whose **domain** silently shrank*** — "all declared arms" quietly becoming "the arms
+> that happened to be present", reporting the same word for a weaker claim.
+
+**The fix is an invariant on the verdict *count*** — which is what makes it cover the
+siblings and the holes nobody has written yet.
+
+### 3. The CLI surface is measured by AST — to prove an absence
+
+No flag matching now / clock / force / override / skip / unsafe / go.
+
+> ***The right instrument for "there is no override."*** A grep over source would hit
+> the words in comments and refusal messages — *exactly the false positive I hit at
+> round 139* — **an AST reads the surface a caller can reach.**
+
+Residual, inherent: a future `--proceed` sits outside a named blocklist.
+
+### 4. And the bar opening does not open a seal
+
+Driven: `gate.open = true` beside 2 of 2 arms **sealed** is still not a verification.
+*Two independent conditions falling on one date* — **the same shape as the two gates I
+audited at round 137: a calendar coincidence between independent conditions is what
+makes them easy to conflate.**
+
+### 5. The seam literal is now computed, not corrected
+
+A **third** place described this one seam wrongly. BE 57 replaced the string with
+**`_index_call_made()`** — ***a value derived from the call rather than a description
+maintained beside it.***
+
+*A source comment (round 140, mine) was **corrected**; a receipt field was
+**computed**.* **A corrected literal drifts again on the next change; a computed one
+cannot.**
+
+### 6. And BE 57 left the landed receipt untouched
+
+`state_join_failed`, `n_chunks`, the reason class under `UNCOVERED_GENERATIONS`, the
+release **asserted** (11 sites) — all in the **builder**. **The 09-03 receipt, checked
+by me: `state_join_failed` still absent, `book.sha256` unchanged.**
+
+*Rule 13 exactly right, and the honest consequence: the 09-03 receipt stays accurate
+and under-specified forever — better than one quietly improved after the book it
+describes was ruled to stand.*
+
+### 7. v4 computes G = 3 from the pins' own `exists: false`
+
+Not typed. *"v2's pessimistic branch, now the only branch the artifacts support"* — and
+the re-seal is refused with its reason: **"a re-seal couldn't recover 09-01/02 anyway,
+because the interim's output was never written."**
+
+### 8. Two probe failures of mine, both caught before the sentence
+
+- A **lowercase** grep missed `UNCOVERED_GENERATIONS`. ***A case-sensitivity miss — the
+  shallowest cause yet, and it would have produced the same false finding as the folded
+  scalar, the unbounded digits, the dirty tree, the careful docstring and the stale line
+  range. Tenth instance; the causes keep differing and the discipline is the only
+  constant.***
+- **I renamed a flag's key instead of superseding its value** — and **my own ORPHAN
+  check caught it.** The key is restored, pointing forward. *That check has now fired
+  twice on me — a duplicate key at 134, a rename here — and both times `count == 1`
+  passed and only the parsed-result check could see it.* **And my re-indent of the
+  restored key broke the YAML, which the post-write parse caught: the same indent
+  hazard I recorded at round 132 from DE's defect, in my own hands.**
+
+### 9. Flag words
+
+| test | state |
+|---|---|
+| **09-03 sealed smoke** | **RUNNING** since 08:21:55Z — `de84smoke.scope`, venv interpreter, `heavy=True locked=True` — ***NOT COMPLETE until DE reports the sealed receipt's sha*** |
+| **economics** | **SEALED, NOT READ** |
+| **race read** | **NOT READ** — v4 **DECLARED**, reader **FIXED-PENDING-REVIEW** |
+
+*I measure current RSS 744,840 KiB; the 2.36 GiB in the dispatch is a **peak** — a
+different quantity.*
+
+**Counts, measured before this was written:** flags 786 → 794, flag_provenance
+331 → 339, tasks 19; 196 CHECKED, 143 RELAYED, **455 UNMARKED — unchanged for the
+eighteenth round running.** ORPHAN audit 0 findings, exit 0 **after it caught my
+rename**; window 3 of a ruled 3; new flags vs HEAD 0 without provenance.
 
 ## READ FIRST — round 141
 
