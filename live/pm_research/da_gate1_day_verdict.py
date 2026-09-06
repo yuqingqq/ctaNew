@@ -1692,11 +1692,22 @@ def landing_digest_of(record: dict) -> dict:
             "mirror": mirror}
 
 
-def landing_record_for(day: str, derived: Path | None = None) -> dict:
+def landing_record_for(day: str, derived: Path | None = None,
+                       receipt_sha256: str | None = None) -> dict:
     """ONE day's landing record, resolved through the SAME pair rule.
 
     no record -> NO_LANDING_RECORD; one -> that record; a chained pair ->
-    the v2; two unchained -> AMBIGUOUS."""
+    the v2; two unchained -> AMBIGUOUS.
+
+    DA 105: ***A LANDING RECORD IS ABOUT ONE RECEIPT, NOT ABOUT A DAY.***
+    When DE supersedes a day's receipt, the new head is a DIFFERENT
+    artifact and its pre-read is FIRST OF FAMILY -- the older record stays
+    true of the receipt it read. Resolving every record for a day into one
+    chain made those two read as AMBIGUOUS, which is the resolver
+    describing its own grouping rather than the ledger. Records are
+    grouped by THE RECEIPT DIGEST THEY CARRY; `receipt_sha256` selects a
+    group, and with none given the group of the day's CURRENT receipt head
+    is chosen -- named, never silently."""
     der = Path(derived) if derived else _landing_record_dir()
     d = str(day).replace("-", "")
     mine, refused = [], []
@@ -1718,12 +1729,92 @@ def landing_record_for(day: str, derived: Path | None = None) -> dict:
             continue
         if str(fd).replace("-", "") == d:
             mine.append(f)
+    #: GROUP BY THE RECEIPT EACH RECORD READ -- ***BUT A SUPERSESSION LINK
+    #: OUTRANKS THE GROUPING***: a correction may change the very field
+    #: this grouping reads, and a chain broken by its own repair would be
+    #: the resolver describing its rule instead of the ledger. Records
+    #: joined by a pair are ONE family whatever digests they carry.
+    docs, sha_of = {}, {}
+    for f in mine:
+        try:
+            docs[f.name] = json.loads(f.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        sha_of[f.name] = (
+            (docs[f.name].get("landing_record") or {}).get("receipt_sha256")
+            or (docs[f.name].get("receipt") or {}).get("sha256")
+            or "UNSTATED")
+    parent = {n: n for n in docs}
+
+    def _find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def _union(x, y):
+        rx, ry = _find(x), _find(y)
+        if rx != ry:
+            parent[ry] = rx
+
+    by_sha: dict = {}
+    for n in docs:
+        by_sha.setdefault(sha_of[n], []).append(n)
+    for names in by_sha.values():
+        for n in names[1:]:
+            _union(names[0], n)
+    for n, doc in docs.items():
+        blk = doc.get("supersedes") or {}
+        tgt = Path(str(blk.get("path") or "")).name
+        if tgt in parent:
+            _union(n, tgt)
+        for entry in (blk.get("chain") or []):
+            t2 = Path(str(entry[0] if isinstance(entry, (list, tuple))
+                          else entry)).name
+            if t2 in parent:
+                _union(n, t2)
+    fam: dict = {}
+    for n in docs:
+        fam.setdefault(_find(n), []).append(n)
+    name_to_path = {f.name: f for f in mine}
+    groups = {sha_of[members[0]]: [name_to_path[m] for m in members]
+              for members in fam.values()}
+    chosen_sha, why_group = receipt_sha256, "the caller named it"
+    if chosen_sha is None:
+        cur = None
+        try:
+            cur = _current_receipt_digest_for(d, der)
+        except Exception:                                     # noqa: BLE001
+            cur = None
+        if cur and cur in groups:
+            chosen_sha, why_group = cur, (
+                "the group of the day's CURRENT receipt head")
+        elif len(groups) == 1:
+            chosen_sha, why_group = next(iter(groups)), "the only group"
+        elif groups:
+            #: MORE THAN ONE RECEIPT AND NONE IS THE CURRENT HEAD: say so
+            #: rather than picking. This is not ambiguity WITHIN a family;
+            #: it is a question about WHICH receipt is being asked about.
+            return {"status": "MORE_THAN_ONE_RECEIPT_HAS_A_RECORD",
+                    "day": d, "head": None, "receipt_sha256": None,
+                    "n_matches": len(mine),
+                    "groups": {k[:16]: [x.name for x in v]
+                               for k, v in groups.items()},
+                    "why": ("a landing record is about ONE receipt; this "
+                            "day has records for more than one and none is "
+                            "the current head, so the question needs a "
+                            "receipt digest"),
+                    "refused_records": refused}
+    mine = groups.get(chosen_sha, mine)
     res = resolve_chain(mine, "landing record")
+    res["group"] = {"receipt_sha256": chosen_sha, "chosen_because": why_group,
+                    "n_receipt_groups_for_this_day": len(groups)}
     if res["status"] == "NO_ARTIFACT":
         return {"status": "NO_LANDING_RECORD", "day": d, "head": None,
                 "receipt_sha256": None, "recorded_by": None,
                 "n_matches": 0, "refused_records": refused}
     out = {"status": res["status"], "day": d, "n_matches": res["n_matches"],
+           "group": res.get("group"),
            "head": (res["head"].name if res.get("head") else None),
            "chain": res.get("chain"), "candidates": res.get("candidates"),
            "refusals": res.get("refusals"), "refused_records": refused,
@@ -1747,6 +1838,28 @@ def landing_record_for(day: str, derived: Path | None = None) -> dict:
             re.match(r"^p003_da_gate1_pre_read_\d{8}__.+\.json$",
                      res["head"].name))
     return out
+
+
+def _current_receipt_digest_for(day: str, derived: Path) -> str | None:
+    """The digest of the day's CURRENT sealed-receipt chain head."""
+    files = sorted(Path(derived).glob(
+        f"p003_de_gate1_day_run_{day}_SEALED__*.json"))
+    if not files:
+        return None
+    superseded = set()
+    by_name = {f.name: f for f in files}
+    for f in files:
+        try:
+            o = json.loads(f.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        blk = o.get("supersedes")
+        if isinstance(blk, dict) and blk.get("path"):
+            superseded.add(Path(str(blk["path"])).name)
+    heads = [f for n, f in by_name.items() if n not in superseded]
+    if len(heads) != 1:
+        return None
+    return hashlib.sha256(heads[0].read_bytes()).hexdigest()
 
 
 def _landing_record_dir() -> Path:
@@ -5749,8 +5862,13 @@ def selftest_pre_read() -> list:                              # noqa: C901
     b = _lr("p003_da_gate1_pre_read_20260903__20260906T130000Z.v2.json",
             "2" * 64, sup=a)
     lr_chain = landing_record_for("2026-09-03", lrd)
-    _lr("p003_da_gate1_pre_read_20260903__20260906T140000Z.json", "3" * 64)
+    #: DA 105: TWO UNCHAINED RECORDS **OF THE SAME RECEIPT** are the
+    #: ambiguity this cell is about; two records of DIFFERENT receipts are
+    #: a different fact and get a different name.
+    _lr("p003_da_gate1_pre_read_20260903__20260906T140000Z.json", "2" * 64)
     lr_amb = landing_record_for("2026-09-03", lrd)
+    _lr("p003_da_gate1_pre_read_20260903__20260906T150000Z.json", "9" * 64)
+    lr_two_receipts = landing_record_for("2026-09-03", lrd)
     ck("AND THE RECORD'S OWN CHAIN RESOLVES BY THE SAME PAIR RULE: none -> "
        "NO_LANDING_RECORD; one -> that record; a .v2 CHAINED BY THE PAIR -> "
        "the v2's digest; two UNCHAINED -> AMBIGUOUS. ***The record the read "
@@ -5763,11 +5881,14 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and lr_chain["head"] == b.name
        and lr_chain["receipt_sha256"] == "2" * 64
        and lr_amb["status"] == "AMBIGUOUS"
-       and lr_amb["receipt_sha256"] is None,
+       and lr_amb["receipt_sha256"] is None
+       #: and a record of ANOTHER receipt is not ambiguity at all
+       and lr_two_receipts["status"] == "MORE_THAN_ONE_RECEIPT_HAS_A_RECORD",
        f"none -> {lr_none['status']}; one -> {lr_one['status']} at "
        f"{lr_one['receipt_sha256'][:8]}; chained -> {lr_chain['status']} at "
        f"{lr_chain['head']} ({lr_chain['receipt_sha256'][:8]}); unchained "
-       f"pair -> {lr_amb['status']}")
+       f"pair -> {lr_amb['status']}; a record of ANOTHER receipt -> "
+       f"{lr_two_receipts['status']}")
 
     # -- R-654: THE --open-book PATH DA 91 WILL RUN, driven both ways -----
     import pickle as _pk                                      # noqa: PLC0415
@@ -6309,8 +6430,13 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "heads exactly this way*** -- by emissions that were easier to "
        "write without the link than with it, so the same rule now binds "
        "the artifact that matters most",
-       _fh.get("status") in ("CHAIN_HEAD", "ONE_RECORD",
-                             "NO_LANDING_RECORD"),
+       #: THE PROPERTY: it RESOLVES, or it says by name why it cannot.
+       #: This listed three spellings and broke when a fourth -- `ONE` --
+       #: became the honest answer, after a pre-read of a NEW receipt head
+       #: landed as first-of-family beside the old record.
+       (_fh.get("head") is not None
+        or _fh.get("status") in ("NO_LANDING_RECORD",
+                                 "MORE_THAN_ONE_RECEIPT_HAS_A_RECORD")),
        f"2026-09-03 resolves to {_fh.get('status')}"
        + (f" at {_fh.get('head')}" if _fh.get("head") else ""))
 
