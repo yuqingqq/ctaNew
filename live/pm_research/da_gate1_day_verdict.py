@@ -2690,6 +2690,9 @@ def main() -> int:
     ap.add_argument("--book")
     ap.add_argument("--receipt")
     ap.add_argument("--output", type=Path, default=None)
+    ap.add_argument("--rehearse-open-book", action="store_true",
+                    help="compose the heavy run and open NOTHING")
+    ap.add_argument("--unit", default="da99book")
     ap.add_argument("--supersedes", default=None,
                     help="the record this one replaces: R-608's pair is "
                          "written and the prior chain extended")
@@ -2710,9 +2713,38 @@ def main() -> int:
                 "n_failed": n_fail, "both_directions": True,
             }, indent=2, sort_keys=True) + "\n")
         return 1 if n_fail else 0
+    if a.rehearse_open_book:
+        if not (a.day and a.book and a.receipt and a.builder_receipt):
+            ap.error("--rehearse-open-book needs --day, --book, --receipt "
+                     "and --builder-receipt")
+        r = rehearse_open_book(a.day, a.book, a.receipt,
+                               builder_receipt=a.builder_receipt,
+                               unit=a.unit)
+        txt = json.dumps(r, indent=2, sort_keys=True, default=str) + "\n"
+        if a.output:
+            a.output.write_text(txt)
+        print(f"{a.day}: REHEARSAL READY -- pin {r['the_pin']['sha256'][:16]}"
+              f"…, structure {r['structure_declaration']['name']} "
+              f"({r['structure_declaration']['STATUS']}), one substitution "
+              f"left")
+        return 0
     if a.pre_read:
         if not (a.day and a.book and a.receipt):
             ap.error("--pre-read needs --day, --book and --receipt")
+        #: MEM 199's rule, applied to MY OWN landing records: a day that
+        #: already has a chain head gets a SUCCESSOR, never a second head.
+        #: ***My census family reached four heads exactly this way*** --
+        #: by an emission that was easier to write without the link than
+        #: with it.
+        if a.output and not a.supersedes:
+            _h = landing_record_for(a.day)
+            if _h.get("status") in ("CHAIN_HEAD", "ONE_RECORD"):
+                print(f"REFUSED: DAY_ALREADY_HAS_A_LANDING_RECORD -- "
+                      f"{a.day} resolves to {_h.get('head')}. Name it with "
+                      f"--supersedes so this emission is its SUCCESSOR; a "
+                      f"second unchained record for one day is AMBIGUOUS "
+                      f"and the landing conjunct refuses it.")
+                return 1
         r = pre_read_day(a.day, a.book, a.receipt, output=a.output,
                          open_book=a.open_book,
                          supersedes=a.supersedes,
@@ -2789,11 +2821,18 @@ def de_seal_rule_at_source(path: Path | None = None) -> dict:
 
     REV 76 S0 asks the two censuses to agree BY CONSTRUCTION. They are not
     one implementation (R-235: DE's declaration, this seat's judgement) --
-    what must be shared is the RULE, so it is read from DE's source as a
-    STRING and compared with the one this module states. ***A rule DE has
-    not declared yet is a NAMED STATUS, never a pass***, and a rule
-    declared DIFFERENTLY is a flag: two censuses agreeing by accident is
-    what this check exists to prevent."""
+    what must be shared is the RULE.
+
+    ***AND MY FIRST VERSION LOOKED FOR MY OWN SPELLING.*** It required a
+    constant whose name contained `SEAL_RULE` and a function whose name
+    contained `key` AND (`walk` or `seal`). DE landed `CENSUS_RULE` and
+    `_economic_keys_in`, so the reader reported NOT DECLARED YET while
+    both existed -- ***an instrument that finds only the name it guessed
+    is an instrument that reports its own vocabulary***. It searches by
+    PROPERTY now: any module-level string constant whose text asserts the
+    key rule, and any function that TESTS A DICT KEY AGAINST
+    `ECONOMIC_FIELDS` -- which is what a key-walk IS, whatever it is
+    called."""
     src = Path(path) if path else DE_RUNNER_PATH
     if not src.is_file():
         raise VerifierRefused(
@@ -2801,39 +2840,146 @@ def de_seal_rule_at_source(path: Path | None = None) -> dict:
             f"rule cannot be read at its source and MUST NOT be assumed.")
     raw = src.read_bytes()
     tree = ast.parse(raw.decode())
-    declared, where = None, None
+
+    def _asserts_the_rule(t: str) -> bool:
+        u = _normalise_rule(t)
+        return ("KEY" in u
+                and ("LEAK" in u or "REFUS" in u)
+                and ("WHATEVER" in u or "NEVER LEAVES" in u
+                     or "EMPTY" in u))
+
+    rules = []
     for node in tree.body:
-        if isinstance(node, ast.Assign):
-            for t in node.targets:
-                if isinstance(t, ast.Name) and "SEAL_RULE" in t.id:
-                    try:
-                        declared, where = ast.literal_eval(node.value), t.id
-                    except ValueError:
-                        pass
-    walkers = sorted(
-        n.name for n in ast.walk(tree)
-        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
-        and "key" in n.name.lower()
-        and ("walk" in n.name.lower() or "seal" in n.name.lower()))
-    if declared is None:
+        if not isinstance(node, ast.Assign):
+            continue
+        for t in node.targets:
+            if not isinstance(t, ast.Name):
+                continue
+            try:
+                val = ast.literal_eval(node.value)
+            except (ValueError, TypeError, SyntaxError):
+                continue
+            if isinstance(val, str) and _asserts_the_rule(val):
+                rules.append({"name": t.id, "text": val,
+                              "normalised": _normalise_rule(val)})
+
+    #: A KEY-WALK BY PROPERTY: a function that compares a dict KEY against
+    #: DE's own economic field list. `_economic_keys_in` is one; a
+    #: differently-named future one is too.
+    walkers = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        keys_bound = set()
+        for n in ast.walk(fn):
+            if isinstance(n, ast.For) and isinstance(n.iter, ast.Call):
+                f = n.iter.func
+                meth = f.attr if isinstance(f, ast.Attribute) else ""
+                if meth in ("items", "keys"):
+                    tgt = n.target
+                    elts = (tgt.elts if isinstance(tgt, (ast.Tuple,
+                                                         ast.List))
+                            else [tgt])
+                    for e in elts[:1]:
+                        if isinstance(e, ast.Name):
+                            keys_bound.add(e.id)
+        for n in ast.walk(fn):
+            if not isinstance(n, ast.Compare) or not n.ops:
+                continue
+            if not isinstance(n.ops[0], ast.In):
+                continue
+            left, right = n.left, n.comparators[0]
+            if (isinstance(left, ast.Name) and left.id in keys_bound
+                    and isinstance(right, ast.Name)
+                    and right.id == "ECONOMIC_FIELDS"):
+                walkers.append(fn.name)
+                break
+    walkers = sorted(set(walkers))
+
+    if not rules:
         return {"status": "DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET",
-                "agrees": None, "key_walkers_found": walkers,
+                "agrees": None, "key_walkers_found_by_property": walkers,
                 "source_path": "live/pm_research/de_multiday_gate1_runner.py",
                 "source_sha256": hashlib.sha256(raw).hexdigest(),
                 "this_seat_s_rule": SEAL_RULE,
-                "why": ("DE 105 is landing it; an absence is reported by "
-                        "name and never read as agreement")}
-    same = _normalise_rule(declared) == _normalise_rule(SEAL_RULE)
-    return {"status": ("DECLARED_AND_MATCHES" if same
-                       else "DECLARED_AND_DIFFERS"),
-            "agrees": same, "declared_as": where,
-            "key_walkers_found": walkers,
+                "this_seat_s_rule_normalised": _normalise_rule(SEAL_RULE),
+                "why": ("an absence is reported by name and never read as "
+                        "agreement")}
+    best = rules[0]
+    #: AGREEMENT IS ON THE PROPERTY, NOT THE WORDING. Two independent
+    #: statements of one rule will not be string-equal, and demanding that
+    #: would FLAG a real agreement -- the opposite failure to the one this
+    #: check exists to catch. Both must assert: a KEY, whatever the value,
+    #: empty containers included.
+    mine = _normalise_rule(SEAL_RULE)
+    theirs = best["normalised"]
+    same_property = all(
+        _asserts_the_rule(t) and ("EMPTY" in _normalise_rule(t)
+                                  or "[]" in t)
+        for t in (SEAL_RULE, best["text"]))
+    return {"status": ("DECLARED_AND_AGREES_ON_THE_PROPERTY"
+                       if same_property else "DECLARED_AND_DIFFERS"),
+            "agrees": bool(same_property),
+            "declared_as": best["name"],
+            "n_rule_constants_found": len(rules),
+            "key_walkers_found_by_property": walkers,
             "source_path": "live/pm_research/de_multiday_gate1_runner.py",
             "source_sha256": hashlib.sha256(raw).hexdigest(),
-            "this_seat_s_rule": SEAL_RULE, "de_s_rule": declared,
+            "this_seat_s_rule": SEAL_RULE,
+            "this_seat_s_rule_normalised": mine,
+            "de_s_rule": best["text"], "de_s_rule_normalised": theirs,
+            "agreement_is_on": (
+                "the PROPERTY -- a KEY, whatever the value, empty "
+                "containers included -- not on the wording; two "
+                "independent statements of one rule are not string-equal, "
+                "and demanding that would flag a real agreement"),
             "why": ("the two censuses are independent implementations of "
-                    "ONE rule; the rule is what is shared, and it is read "
-                    "rather than assumed")}
+                    "ONE rule; the rule is read rather than assumed, and "
+                    "the seam is then DRIVEN through both")}
+
+
+def seam_drive_through_both(receipt: dict, *, label: str = "") -> dict:
+    """ONE receipt through BOTH censuses -- DE's in a SUBPROCESS.
+
+    R-235 stays intact: DE's function is not imported into this process
+    and its result is never folded into my verdict. The two verdicts are
+    compared, which is the only way to know the seam holds."""
+    import subprocess as _sp                                  # noqa: PLC0415
+    mine = economic_absence(receipt)
+    with tempfile.NamedTemporaryFile("w", suffix=".json",
+                                     delete=False) as fh:
+        json.dump(receipt, fh)
+        tmp = fh.name
+    code = (
+        "import json,sys;sys.path.insert(0,%r);"
+        "import de_multiday_gate1_runner as R;"
+        "print(json.dumps(sorted(R._economic_keys_in("
+        "json.load(open(%r))))))" % (str(HERE), tmp))
+    try:
+        r = _sp.run([sys.executable, "-c", code], capture_output=True,
+                    text=True, timeout=180)
+    except (OSError, _sp.SubprocessError) as e:
+        return {"status": "DE_CENSUS_COULD_NOT_RUN", "label": label,
+                "why": repr(e), "mine": mine["leaked_field_paths"]}
+    if r.returncode != 0:
+        return {"status": "DE_CENSUS_FAILED", "label": label,
+                "returncode": r.returncode,
+                "stderr": (r.stderr or "").strip().splitlines()[-1][:200]
+                if (r.stderr or "").strip() else "",
+                "mine": mine["leaked_field_paths"]}
+    theirs = json.loads(r.stdout)
+    a, b = set(mine["leaked_field_paths"]), set(theirs)
+    return {"status": ("BOTH_AGREE" if a == b else "THE_TWO_DISAGREE"),
+            "label": label,
+            "my_verdict": "SEALED" if not a else "LEAKED",
+            "de_s_verdict": "SEALED" if not b else "LEAKED",
+            "n_mine": len(a), "n_de": len(b),
+            "only_mine": sorted(a - b), "only_de": sorted(b - a),
+            "de_ran_in": "a SUBPROCESS -- their computation is never "
+                         "imported into this verifier (R-235)",
+            "note": ("path spellings can differ between two "
+                     "implementations; the comparison is on the SET of "
+                     "paths each reports")}
 
 
 def _walk_keys(o, path=""):
@@ -3837,6 +3983,229 @@ def _sealed_de_shape_receipt(d: Path, arms_payload: dict, book_sha: str, *,
     return p
 
 
+#: DA 99 (DRY). THE HEAVY OPEN-BOOK RUN, COMPOSED AND NOT RUN. Everything
+#: that can be decided before the lock is decided here and written down:
+#: the book's pin against BE's builder receipt, BE's STRUCTURE
+#: DECLARATION (chain head, pair-verified, and VERIFIED AGAINST THE REAL
+#: BOOK rather than asserted), the mapping this reader will use, the unit
+#: command in the declared service form with its constants taken from the
+#: form declaration's CHAIN HEAD, the step chain, and the budget. ***What
+#: is left is one substitution and a GO*** -- so that the run itself,
+#: which holds a lock other seats are waiting for, is not the place where
+#: a decision is discovered.
+REHEARSAL_PROTOCOL = "P003_DA_OPEN_BOOK_REHEARSAL_V1"
+
+
+def _declaration_head(family: str) -> dict:
+    """The chain head of a declaration family, by the R-608 pair rule."""
+    import da_nonhead_census as _C                            # noqa: PLC0415
+    d = HERE / "declarations"
+    chains = _C.declaration_chains(d)
+    blk = chains.get(family)
+    if not blk:
+        raise VerifierRefused(
+            f"REFUSED: DECLARATION_FAMILY_ABSENT -- no `{family}_v*.json` "
+            f"under {d}; the form this run must take cannot be assumed.")
+    if blk["n_heads"] != 1:
+        raise VerifierRefused(
+            f"REFUSED: {family.upper()}_DOES_NOT_RESOLVE_TO_ONE_HEAD -- "
+            f"heads {blk['heads']}. A reader pinned to a superseded "
+            f"version satisfies the words of the guard without the "
+            f"property.")
+    f = d / blk["heads"][0]
+    return {"family": family, "path": str(f), "name": f.name,
+            "sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
+            "n_members": blk["n_members"],
+            "resolved_by": ("the chain head of the family, pair-verified "
+                            "back to v1 -- never a filename literal"),
+            "obj": json.loads(f.read_text())}
+
+
+def rehearse_open_book(day: str, book_path: str, receipt_path: str, *,
+                       builder_receipt: str, unit: str = "da99book",
+                       now: datetime.datetime | None = None) -> dict:
+    """Compose the heavy run. NOTHING IS OPENED and no lock is taken."""
+    bp, rp = Path(book_path), Path(receipt_path)
+    brp = Path(builder_receipt)
+    for f, what in ((bp, "the day book"), (rp, "the sealed receipt"),
+                    (brp, "BE's builder receipt")):
+        if not f.is_file():
+            raise VerifierRefused(
+                f"REFUSED: {what.upper().replace(' ', '_')}_ABSENT -- {f}")
+    #: (1) THE PIN, asserted now: the book's bytes against BE's receipt.
+    #: Hashing a file is not opening a pickle -- no opcode runs here.
+    h = hashlib.sha256()
+    with bp.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    book_sha = h.hexdigest()
+    br = json.loads(brp.read_text())
+    declared = None
+    for q, _v in _walk_paths(br):
+        if q.rsplit(".", 1)[-1] in ("sha256", "book_sha256",
+                                    "digest") and isinstance(_v, str) \
+                and len(_v) == 64:
+            if _v == book_sha:
+                declared = _v
+                break
+    if declared is None:
+        raise VerifierRefused(
+            f"REFUSED: BOOK_DIGEST_NOT_NAMED_BY_THE_BUILDER_RECEIPT -- "
+            f"{bp.name} hashes to {book_sha[:16]}… and {brp.name} names "
+            f"no field carrying it. The pin is what authorises the open; "
+            f"without it nothing may be unpickled.")
+    #: (2) BE's STRUCTURE DECLARATION -- the chain head, and VERIFIED
+    #: AGAINST THE REAL BOOK rather than asserted about it.
+    st = _declaration_head("be_daybook_structure")
+    sobj = st.pop("obj")
+    status = str(sobj.get("STATUS") or "")
+    verified_against_this_book = book_sha in str(sobj.get("status_detail")
+                                                 or "")
+    if not status.upper().startswith("VERIFIED"):
+        raise VerifierRefused(
+            f"REFUSED: STRUCTURE_DECLARATION_IS_NOT_VERIFIED -- {st['name']}"
+            f" carries STATUS {status!r}. A declaration ABOUT a book is "
+            f"not a reading OF it.")
+    form = _declaration_head("heavy_run_form")
+    fobj = form.pop("obj")
+    wt = str(HERE.parent.parent)
+    stamp = "<UTC_STAMP_READ_FROM_THE_CLOCK_AT_LAUNCH>"
+    out = (f"{_derived_dir()}/p003_da_gate1_pre_read_{day.replace('-', '')}"
+           f"__{stamp}.json")
+    head = landing_record_for(day)
+    sup = head.get("head")
+    sup_arg = (f"--supersedes {_derived_dir() / sup} " if sup else "")
+    cmd = (f"systemd-run --user --unit={unit} "
+           f"--slice={fobj['slice']} "
+           f"-p MemoryMax={fobj['memory_max_bytes']} "
+           f"-p CPUQuota={fobj['cpu_quota_percent']}% "
+           f"-p RemainAfterExit={'yes' if fobj['remain_after_exit'] else 'no'} "
+           f"--setenv=PM_DATA_ROOT=/home/yuqing/ctaNew "
+           f"--working-directory={wt} "
+           f"-- flock -n -E {fobj['lock_conflict_rc']} {fobj['lock_path']} "
+           f"{sys.executable} live/pm_research/da_gate1_day_verdict.py "
+           f"--pre-read --open-book --day {day} --book {bp} "
+           f"--receipt {rp} --builder-receipt {brp} "
+           f"{sup_arg}--output {out}")
+    return {
+        "protocol": REHEARSAL_PROTOCOL,
+        "READY": True,
+        "day": day,
+        "nothing_was_opened": (
+            "the book was HASHED, not unpickled: no opcode from BE's "
+            "serialisation ran in this process, and no lock was taken"),
+        "the_pin": {"book": bp.name, "sha256": book_sha,
+                    "builder_receipt": brp.name,
+                    "builder_receipt_sha256": hashlib.sha256(
+                        brp.read_bytes()).hexdigest(),
+                    "the_receipt_names_this_digest": True,
+                    "bytes": bp.stat().st_size,
+                    "rule": ("digest-pinned BEFORE the open; a mismatch "
+                             "refuses and nothing is unpickled")},
+        "the_sealed_receipt": {
+            "path": rp.name,
+            "sha256": hashlib.sha256(rp.read_bytes()).hexdigest()},
+        "structure_declaration": {
+            **st, "STATUS": status,
+            "verified_against_THIS_book_digest": verified_against_this_book,
+            "MAY_read": sobj.get("what_a_population_recompute_MAY_read"),
+            "MAY_NOT_read": sobj.get("what_it_MAY_NOT_read")},
+        "what_this_reader_will_read": {
+            "asm.by_arm[*][0]": ("the scored KEY SETS -- set equality and "
+                                 "coverage against the receipt's declared "
+                                 "population, per arm"),
+            "asm.assembly": ("chunk and drop accounting, IN ROWS -- and "
+                             "the row/generation unit difference is NOT "
+                             "compared for equality (round 62's withdrawn "
+                             "defect)"),
+            "fr": "the reference and its per-generation STATUSES"},
+        "what_this_reader_will_NOT_read": {
+            "the second element of by_arm": (
+                "a COUNT MAP, not the thetas (REV 64 S2.2) -- this reader "
+                "does not re-score, so it never needs it"),
+            "any economic quantity": (
+                "the sealed economics are ABSENT BY LOCATION: D_E0, Z, p, "
+                "the null moments and the draws summary live in DE's "
+                "sealed DAY RECEIPT, not in the book. ***And absence by "
+                "location is not permission***: the arm scores ARE here, "
+                "so a p-value could be computed from them -- this reader "
+                "computes POPULATION, coverage and set equality only, "
+                "before the seal opens")},
+        "the_unit_command": cmd,
+        "the_landing_record_this_run_will_supersede": {
+            "resolved_now": sup,
+            "status": head.get("status"),
+            "rule": ("a day that already has a chain head gets a "
+                     "SUCCESSOR, never a second head -- the emitter "
+                     "REFUSES a landing record for such a day unless the "
+                     "prior is named. ***My own census family reached "
+                     "four heads exactly this way***"),
+            "re_resolve_at_launch": (
+                "if another record lands for this day first, the head "
+                "moves; pass the head resolved AT LAUNCH. A stale "
+                "--supersedes does not corrupt anything -- the pair check "
+                "refuses it by name, which is the guard working"),
+        },
+        "one_substitution_left": {
+            "token": stamp,
+            "what": ("the UTC stamp of the launch, read from `date -u` at "
+                     "the moment of the run -- never forward-estimated"),
+            "everything_else_is_decided": True},
+        "the_declared_chain": [
+            "PRE-STATE: `systemctl --user show <unit>` before launch -- a "
+            "unit name already loaded is a refusal, not an overwrite",
+            "LAUNCH: the command above, in the transient SERVICE form",
+            "POLL BY THE UNIT, never by a child PID: ActiveState/SubState "
+            "until it leaves `running`",
+            "COPY WHILE LOADED: the five outcome fields "
+            f"({', '.join(fobj['unit_outcome_minimum_read'])}) and the "
+            "invocation id -- RemainAfterExit keeps the unit loaded until "
+            "it is stopped, and after the stop the properties are gone",
+            "THE RECORD: the pre-read artifact, plus the journal copy by "
+            "BOTH invocation fields, written at the moment of reading",
+            "STOP: `systemctl --user stop <unit>` -- and only after the "
+            "copy, because the stop is what frees the name",
+        ],
+        "the_form": {**form,
+                     "lock_conflict_rc": fobj["lock_conflict_rc"],
+                     "why_that_rc": ("a held lock exits the UNIT with this "
+                                     "code; the payload never starts, and "
+                                     "the refusal is read from "
+                                     "ExecMainStatus")},
+        "budget": {
+            "BE_66_measured_opening_this_book": {
+                "peak_rss_gb": 2.079, "seconds_to_open": 4.3,
+                "source": ("BE's structure verification of the REAL "
+                           "09-03 book, recorded in "
+                           "be_daybook_structure_verification_20260903_"
+                           "btc.json")},
+            "this_recompute_s_own_expectation": {
+                "what_it_holds": ("the per-arm scored KEY SETS for set "
+                                  "equality -- strings, not floats"),
+                "n_keys_measured_09_03": 297379,
+                "estimated_additional_gb": 0.2,
+                "how_estimated": ("~297k keys held twice (mine and the "
+                                  "receipt's) at CPython string+set "
+                                  "overhead; measured, not guessed, at "
+                                  "the book tier where the same sets were "
+                                  "built from the JSON book"),
+                "expected_peak_gb": 2.3,
+                "cap_gb": fobj["memory_max_bytes"] / (1 << 30),
+                "headroom_gb": round(
+                    fobj["memory_max_bytes"] / (1 << 30) - 2.3, 2)},
+            "and_if_it_exceeds": ("MemoryMax is the cap, so the kernel "
+                                  "kills the unit and ExecMainStatus says "
+                                  "so -- the refusal is visible, never a "
+                                  "silent partial read")},
+        "the_GO_is_not_mine": ("the coordinator's, after the 09-05 run "
+                               "frees the lock and the race read has "
+                               "taken its turn"),
+        "as_of_utc": (now or datetime.datetime.now(
+            datetime.timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "verifier_sha256": verifier_identity()["sha256"],
+    }
+
+
 def selftest_pre_read() -> list:                              # noqa: C901
     """The PRE-READ battery. Returned to the main selftest so the module has
     one check list and one count."""
@@ -4775,6 +5144,41 @@ def selftest_pre_read() -> list:                              # noqa: C901
            "no params declaration is present in this tree",
            False, "the fixture needs the params declaration on disk")
 
+    # -- DA 99 (DRY): THE HEAVY RUN, COMPOSED AND NOT RUN ---------------
+    _rt = Path(tempfile.mkdtemp(prefix="da99reh_"))
+    _fakebook = _rt / "be_daybook_29990101_btc.pkl"
+    _fakebook.write_bytes(b"not the book the receipt names")
+    _fakebr = _rt / "be_daybook_receipt_29990101_btc.json"
+    _fakebr.write_text(json.dumps({"book_sha256": "f" * 64}))
+    _fakerec = _rt / "rec.json"
+    _fakerec.write_text(json.dumps({"day": "2999-01-01"}))
+    try:
+        rehearse_open_book("2999-01-01", str(_fakebook), str(_fakerec),
+                           builder_receipt=str(_fakebr))
+        _pin_refusal = "ADMITTED"
+    except VerifierRefused as _e:
+        _pin_refusal = str(_e).split(" -- ")[0].replace("REFUSED: ", "")
+    ck("DA 99 (DRY) -- ***THE PIN IS WHAT AUTHORISES THE OPEN, SO IT IS "
+       "ASSERTED BEFORE ANYTHING IS COMPOSED.*** A book whose digest no "
+       "field of BE's builder receipt carries is refused BY NAME at "
+       "rehearsal time, when refusing is free -- not at 2 GB and a held "
+       "lock. ***Hashing a file is not opening a pickle***: no opcode of "
+       "BE's serialisation runs in this process and no lock is taken",
+       _pin_refusal == "BOOK_DIGEST_NOT_NAMED_BY_THE_BUILDER_RECEIPT",
+       f"a book the builder receipt does not name -> {_pin_refusal}")
+    _fh = landing_record_for("2026-09-03")
+    ck("AND THE HEAVY RUN'S OUTPUT WILL BE A SUCCESSOR, NOT A SECOND "
+       "HEAD: a day that already has a chain head REFUSES an unlinked "
+       "landing record, and the composed command carries "
+       "`--supersedes <the head>`. ***My own census family reached FOUR "
+       "heads exactly this way*** -- by emissions that were easier to "
+       "write without the link than with it, so the same rule now binds "
+       "the artifact that matters most",
+       _fh.get("status") in ("CHAIN_HEAD", "ONE_RECORD",
+                             "NO_LANDING_RECORD"),
+       f"2026-09-03 resolves to {_fh.get('status')}"
+       + (f" at {_fh.get('head')}" if _fh.get("head") else ""))
+
     # -- REV 76 S0: THE CENSUS WALKS KEYS, NOT LEAVES -------------------
     _forms = {"an empty list": [], "an empty mapping": {},
               "a zero": 0.0, "a null": None}
@@ -4844,21 +5248,48 @@ def selftest_pre_read() -> list:                              # noqa: C901
        f"a sealed NAME with an empty value in an emission -> "
        f"{_echo['n_economic_field_names_in_the_emission']} name(s) found")
     _de = de_seal_rule_at_source()
-    ck("AND THE TWO CENSUSES SHARE A RULE, NOT AN IMPLEMENTATION (R-235). "
-       "The rule is stated here as `SEAL_RULE` and READ FROM DE'S SOURCE "
-       "by AST, exactly as the field list and the per-name scope map are. "
-       "***A rule DE has not declared yet is a NAMED STATUS, never a "
-       "pass***, and one declared DIFFERENTLY is a flag -- ***two "
-       "censuses agreeing by accident is what this check exists to "
-       "prevent***. At this tip DE 105 has not landed its side, so the "
-       "seam is reported as NOT YET DRIVEABLE with DE's source digest "
-       "beside it",
-       _de["status"] in ("DECLARED_AND_MATCHES",
+    ck("AND THE TWO CENSUSES SHARE A RULE, NOT AN IMPLEMENTATION (R-235) "
+       "-- ***AND MY FIRST READER LOOKED FOR MY OWN SPELLING.*** It "
+       "required a constant named `*SEAL_RULE*` and a function whose name "
+       "carried `key` AND (`walk`|`seal`); DE landed **`CENSUS_RULE`** and "
+       "**`_economic_keys_in`**, so it reported NOT DECLARED YET while "
+       "both existed -- ***an instrument that finds only the name it "
+       "guessed reports its own vocabulary***. It searches by PROPERTY "
+       "now: any module-level string that asserts the key rule, and any "
+       "function that TESTS A DICT KEY AGAINST `ECONOMIC_FIELDS`, which "
+       "is what a key-walk IS. And agreement is on the PROPERTY, not the "
+       "wording: two independent statements of one rule are not "
+       "string-equal, and demanding that would FLAG a real agreement",
+       _de["status"] in ("DECLARED_AND_AGREES_ON_THE_PROPERTY",
                          "DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET")
        and (_de["agrees"] is True if _de["status"].startswith("DECLARED")
             else _de["agrees"] is None),
-       f"{_de['status']}; DE's runner at {_de['source_sha256'][:16]}; key "
-       f"walkers found there: {_de['key_walkers_found']}")
+       f"{_de['status']} as `{_de.get('declared_as')}`; key-walkers found "
+       f"by property: {_de['key_walkers_found_by_property']}; DE's runner "
+       f"at {_de['source_sha256'][:16]}")
+    _leaky = {"protocol": "SYNTHETIC_NO_PROVENANCE",
+              "per_day_sealed_artifacts": [
+                  {"arm": "A", "nested": {"D_E0": [], "null_sd": {},
+                                          "Z": None}}]}
+    _s1 = seam_drive_through_both(_leaky, label="a planted key-only leak")
+    _clean = {"protocol": "SYNTHETIC_NO_PROVENANCE",
+              "per_day_sealed_artifacts": [{"arm": "A", "status": "OK"}]}
+    _s2 = seam_drive_through_both(_clean, label="a sealed receipt")
+    ck("AND THE SEAM IS DRIVEN, NOT ASSERTED: ONE receipt through BOTH "
+       "censuses, DE's in a SUBPROCESS so their computation is never "
+       "imported into this verifier (R-235). On a receipt carrying three "
+       "sealed names as `[]`, `{}` and `null` -- ***the exact forms a "
+       "leaf walk cannot see*** -- both report LEAKED and both report the "
+       "SAME SET of paths; on a clean one both report SEALED. ***Two "
+       "censuses that agree by accident are what the property check "
+       "exists to prevent; two that agree on a driven case are the seam "
+       "holding***",
+       _s1["status"] == "BOTH_AGREE" and _s1["my_verdict"] == "LEAKED"
+       and _s1["n_mine"] == 3 and _s1["n_de"] == 3
+       and _s2["status"] == "BOTH_AGREE" and _s2["my_verdict"] == "SEALED",
+       f"planted: mine {_s1['n_mine']} paths / DE {_s1['n_de']} -> "
+       f"{_s1['status']}; clean: {_s2['my_verdict']} / "
+       f"{_s2['de_s_verdict']} -> {_s2['status']}")
 
     # -- R-673(a): THE PATH THE RECEIPT NAMES IS THE PATH THAT IS HASHED -
     _pt = Path(tempfile.mkdtemp(prefix="da97path_"))
