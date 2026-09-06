@@ -43,12 +43,13 @@ from pathlib import Path
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import da_root as DAROOT  # noqa: E402
 import de_data_root as DR  # noqa: E402
 import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 245
+EXPECTED_CHECKS = 253
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: `read_not_before_utc` + `day_runs_allowed_for_closed_qualifying_days`,
 #: and BE's cascade digest re-pointed at `ab75b41`. v1 is UNTOUCHED and
@@ -131,8 +132,7 @@ def _capture_closure() -> None:
         _digest_module(m)
 
 
-def _is_the_shared_data_link(root: str, porcelain_line: str,
-                             path: str) -> bool:
+def _is_the_shared_data_link(root: str, xy: str, path: str) -> bool:
     """Is this porcelain entry the shared-tree DATA SYMLINK, by property?
 
     Three conditions, all required: the entry is UNTRACKED (`??`), the
@@ -140,7 +140,7 @@ def _is_the_shared_data_link(root: str, porcelain_line: str,
     Anything else -- a real edit, a directory, a link somewhere else --
     is dirt and refuses."""
     import os as _os
-    if not porcelain_line.startswith("??"):
+    if xy.strip() != "??":
         return False
     full = _os.path.join(root, path.rstrip("/"))
     if not _os.path.islink(full):
@@ -176,8 +176,22 @@ def _head_state() -> dict:
     # classifying the entries, because a classifier has to read the status
     # characters that the strip was removing.
     st = _g("status", "--porcelain", raw=True)
-    lines = [x for x in (st or "").split("\n") if x]
-    paths = [x[3:] for x in lines]
+    # THE SLICE HALF (R-637 / REV 66 S1.1). The raw read fixed the FIRST
+    # line; `line[3:]` was still wrong on a RENAME: `R  a -> b` returns
+    # `a -> b` where the path is `b`, so `islink(root/"a -> b")` is False,
+    # a rename reads as real dirt, and a real day refuses with a message
+    # sending its reader to look for a file called `a -> b`. Fail-safe in
+    # direction, wrong in cause.
+    #
+    # THE PARSER IS DA'S (R-641): a porcelain parser is INFRASTRUCTURE, not
+    # a statistic, so R-235 does not ask for two of them -- two corroborate
+    # nothing and drift apart, which they did three times (the strip, the
+    # slice, the rename). This seat is the third reader to get the format
+    # wrong in a different place.
+    _pp = DAROOT.parse_porcelain(st or "")
+    rows = _pp["rows"]
+    lines = [f"{r['xy']} {r['path']}" for r in rows]
+    paths = [r["path"] for r in rows]
     # THE SHARED-TREE DATA LINK IS NOT A DIRTY WORKTREE -- AND IT IS
     # CHECKED, NOT NAMED. `scripts/wt_refresh.sh` replaces this worktree's
     # `data/` with a SYMLINK to the canonical data root so every seat reads
@@ -194,16 +208,23 @@ def _head_state() -> dict:
     # be UNTRACKED, must actually be a symlink, and must resolve to the
     # canonical data root. A name-matched exemption is how a binding map
     # comes to excuse the very thing it exists to catch (R-613).
-    import os as _os
     exempt, remaining = [], []
-    for ln, path in zip(lines, paths):
-        if _is_the_shared_data_link(root, ln, path):
-            exempt.append(path)
+    for row in rows:
+        if _is_the_shared_data_link(root, row["xy"], row["path"]):
+            exempt.append(row["path"])
         else:
-            remaining.append(path)
+            remaining.append(row["path"])
     return {"worktree": root, "head": _g("rev-parse", "HEAD"),
             "dirty": bool(lines) if st is not None else None,
             "dirty_paths": paths[:20],
+            "porcelain": {"parser": "da_root.parse_porcelain -- the "
+                                    "programme's ONE porcelain reader "
+                                    "(R-641)",
+                          "n_rows": _pp["n_rows"],
+                          "n_malformed": _pp["n_malformed"],
+                          "malformed": _pp["malformed"][:5],
+                          "renames": [r["path"] for r in rows
+                                      if r["renamed_from"]]},
             "dirty_beyond_the_shared_data_link": bool(remaining),
             "dirty_paths_beyond_the_shared_data_link": remaining[:20],
             "shared_data_link_exempted": exempt,
@@ -2031,6 +2052,50 @@ def assert_name_stamp_is_the_clock(output: Path, as_of: str, *,
             "stamp_is_the_clock": True}
 
 
+#: Fixture day names that MAY run under a scope. Declared BY NAME and
+#: only for fixtures: a fixture emits nothing a read can resolve, and the
+#: falsifier below has to run under a real `.scope` unit to prove the
+#: refusal fires at all.
+SCOPE_EXEMPT_FIXTURE_DAYS = ("FIXTURE-DAY-1", "FIXTURE-DAY-91",
+                             "FIXTURE-DAY-ORDER", "FIXTURE-DAY-SCOPE")
+
+
+def assert_launch_form_at_runtime(day: str, *, fixture: bool,
+                                  observed: dict | None = None) -> dict:
+    """THE LAUNCH FORM REFUSES AT RUN TIME, from the cgroup leaf.
+
+    REV 65 S1.2 / REV 62 S3: `is_the_declared_launch_form` REPORTED and
+    GATED NOTHING. A real day launched under `--scope` would run all 85
+    minutes and say so only in its receipt -- and the lint on the command
+    string cannot see a `--scope` behind a shell variable, an alias or a
+    wrapper script. A form that must not be used is one the RUN refuses,
+    not one a string check disapproves of.
+
+    So the verdict comes from what this process is actually IN: the cgroup
+    leaf's kind. `.scope` means the caller forked it and it is in the
+    caller's process group -- which is how the 09-03 re-run lost 35
+    minutes. It refuses BEFORE ANY STAGE; the lint stays a lint."""
+    obs = observed if observed is not None else unit_identity()
+    kind, leaf = obs.get("kind"), obs.get("cgroup_leaf")
+    exempt = fixture and str(day) in SCOPE_EXEMPT_FIXTURE_DAYS
+    if not fixture and kind == "scope":
+        raise RunnerRefused(
+            f"REFUSED DAY {day} BEFORE ANY STAGE: this process is in a "
+            f"`.scope` ({leaf}). A scope registers the processes the "
+            f"CALLER forks, so the run is in the launching shell's process "
+            f"group and dies with it -- that is how the 09-03 re-run lost "
+            f"35 minutes with nothing written (R-628). A real day runs as "
+            f"a transient SERVICE the manager forks. Nothing was read.")
+    return {"day": day, "fixture": fixture, "cgroup_leaf": leaf,
+            "kind": kind, "refused": False,
+            "checked": not fixture,
+            "fixture_exemption_by_name": exempt,
+            "why_runtime_and_not_the_lint": (
+                "the lint reads the command STRING and cannot see a "
+                "`--scope` behind a variable or a wrapper; this reads what "
+                "the process is IN. The lint stays as a lint")}
+
+
 def rehearse_smoke(day: str, *, coin: str = "btc") -> dict:
     """THE SMOKE INVOCATION, REHEARSED -- so GO is one verified command.
 
@@ -3303,6 +3368,88 @@ HEAVY_WALL_S = 60.0
 HEAVY_RSS_GB = 1.0
 
 
+def journal_read(unit: str, *, n: int = 200) -> dict:
+    """THE JOURNAL IS NOT THE RECORD (rule 20 as amended, R-641).
+
+    journald rotates within hours: the reviewer's own evidence for DE 84's
+    death -- the `Started` line -- was GONE four hours after it was quoted,
+    while the `Consumed` line survived. So a number read here is COPIED
+    into the artifact at the moment of reading, and the state of the source
+    is named beside it:
+
+      * `oldest_entry_utc` -- read from the OLDEST ENTRY'S OWN CLOCK, never
+        typed and never inferred from a policy setting;
+      * `n_lines_available` -- what the journal still holds for this unit;
+      * `window_fully_covered` -- COMPUTED: whether the oldest entry the
+        journal still holds is the unit's own start. If it is not, this
+        read has already lost the beginning.
+
+    A unit with nothing retained is ABSENT, never a 0 quoted as a count: a
+    zero from a rotating store is indistinguishable from a zero that never
+    happened, which is what makes a control that greps the journal a
+    control whose verdict depends on retention."""
+    import subprocess as _sp
+    read_at = datetime.datetime.now(datetime.timezone.utc)
+    try:
+        r = _sp.run(["journalctl", "--user", "-u", unit, "--no-pager",
+                     "-o", "short-iso-precise", "-n", str(n)],
+                    capture_output=True, text=True, timeout=60)
+        raw = r.stdout if r.returncode == 0 else ""
+        err = None if r.returncode == 0 else (r.stderr or "").strip()[:200]
+    except Exception as exc:                              # noqa: BLE001
+        raw, err = "", f"{type(exc).__name__}: {exc}"
+    lines = [x for x in raw.split("\n") if x.strip()
+             and not x.startswith("-- ")]
+    out = {
+        "unit": unit,
+        "read_at_utc": read_at.isoformat(),
+        "copied_into_this_artifact_at_the_moment_of_reading": True,
+        "journalctl_error": err,
+        "n_lines_available": len(lines),
+        "n_requested": n,
+        "lines": lines,
+    }
+    if not lines:
+        # ABSENT, not zero. A count of 0 read from a rotating store says
+        # nothing about whether anything ever happened.
+        out.update({
+            "status": "ABSENT",
+            "oldest_entry_utc": None,
+            "window_fully_covered": None,
+            "why_absent_not_zero": (
+                "journald retains nothing for this unit right now. That is "
+                "not the same fact as 'the unit produced no output', and a "
+                "control that reported 0 here would have a verdict that "
+                "depends on retention"),
+        })
+        return out
+    # THE OLDEST ENTRY'S OWN CLOCK. `short-iso-precise` puts it first on
+    # the line; if it cannot be parsed that is reported, never guessed.
+    first = lines[0].split(" ", 1)[0]
+    oldest = None
+    try:
+        oldest = datetime.datetime.fromisoformat(first).astimezone(
+            datetime.timezone.utc).isoformat()
+    except ValueError:
+        oldest = None
+    started = any(" Started " in x for x in lines)
+    out.update({
+        "status": "PRESENT",
+        "oldest_entry_utc": oldest,
+        "oldest_entry_raw": first,
+        "oldest_entry_from": "the entry's OWN clock, as journald printed "
+                             "it -- never typed, never derived from a "
+                             "retention setting",
+        "window_fully_covered": started,
+        "how_that_is_computed": (
+            "the unit's own `Started ...` line is still present, so this "
+            "read reaches the beginning of the unit's life. False means "
+            "the beginning has already rotated away -- which happened to "
+            "DE 84's Started line within four hours"),
+    })
+    return out
+
+
 #: R-628. THE LAUNCH FORM, DECLARED -- a heavy run is NEVER a child of a
 #: tool shell. `systemd-run --scope` registers processes the CALLER forks,
 #: so the run sits in the launching shell's process group; when the harness
@@ -3798,6 +3945,9 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # with the smoke day from a synthetic book. Disclosed, but exactly the
     # collision the lock was built to forbid.
     day_lock = assert_fixture_day_lock(day, fixture, what="day run")
+    # BEFORE ANY STAGE (REV 65 S1.2): the wrapper this process is actually
+    # in, not the wrapper that was published.
+    launch_runtime = assert_launch_form_at_runtime(day, fixture=fixture)
     _mark("S_start")
     obs = wrapper_observed()
     assert_real_day_has_the_lock(day, obs, fixture=fixture)
@@ -4021,6 +4171,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "per_day_sealed_artifacts": sealed,
         "seal_layout_symmetry_checked_on_the_emitted_results": seal_symmetry,
         "fixture_day_lock": day_lock,
+        "launch_form_at_runtime": launch_runtime,
         "n_days_complete": n_days_complete, "G": params["G"],
         "memory_plan": {
             "stages": [{"stage": k, "holds": v} for k, v in DAY_STAGES],
@@ -4976,6 +5127,94 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         "and ONE MINUTE BEFORE THE HORIZON five days do NOT open it -- the "
         "horizon is a declared instant, not a mood",
         "2_all_six_ruled_days")
+    # ---- R-637 / REV 66 S1.1: THE PORCELAIN SLICE, and the rename ----
+    # The raw read fixed the FIRST line; `line[3:]` was still wrong on a
+    # RENAME -- `R  a -> b` returns `a -> b` where the path is `b`, so a
+    # rename read as real dirt and a real day would refuse with a message
+    # sending its reader to look for a file called `a -> b`. Fail-safe in
+    # direction, wrong in cause. The parser is DA's, because a porcelain
+    # parser is INFRASTRUCTURE and two of them corroborate nothing (this
+    # seat is the third reader to get the format wrong in a new place).
+    _pp96 = DAROOT.parse_porcelain(" M live/x.py\n?? data\nR  a -> b\n")
+    _by96 = {r["path"]: r for r in _pp96["rows"]}
+    ok(_pp96["n_rows"] == 3 and _pp96["n_malformed"] == 0
+       and _by96["live/x.py"]["xy"] == " M"
+       and _by96["data"]["untracked"] is True
+       and "b" in _by96 and _by96["b"]["renamed_from"] == "a"
+       and "a -> b" not in _by96,
+       f"R-637 THE THREE-LINE FALSIFIER, THIRD LINE AND ALL: "
+       f"{[r['path'] for r in _pp96['rows']]} -- the RENAME yields `b`, "
+       f"not `a -> b`. `[3:]` passed the first two lines and failed this "
+       f"one, and it is the line the falsifier has three lines for")
+    _root96 = Path(_tfr.mkdtemp(prefix="de96porc_"))
+    ok(_is_the_shared_data_link(str(_root96), "R ", "b") is False
+       and _is_the_shared_data_link(str(_root96), " M", "live/x.py") is False,
+       "and neither a renamed path nor a modified file is mistaken for the "
+       "shared data link -- the classifier takes the XY CODE and the PATH "
+       "from the parser, never a reconstructed line it slices again")
+    _hs96 = _head_state()
+    ok(_hs96["porcelain"]["parser"].startswith("da_root.parse_porcelain")
+       and isinstance(_hs96["porcelain"]["n_malformed"], int),
+       f"and the runner's own worktree read goes through that ONE parser "
+       f"({_hs96['porcelain']['n_rows']} rows, "
+       f"{_hs96['porcelain']['n_malformed']} malformed) -- a line the "
+       f"parser cannot read is a NAMED status, never a silent drop")
+
+    # ---- rule 20 as amended (R-641): THE JOURNAL IS NOT THE RECORD ----
+    # journald rotates within hours: DE 84's `Started` line was GONE four
+    # hours after it was quoted as evidence, while the `Consumed` line
+    # survived. A number read from it is COPIED at the moment of reading
+    # with the source's retention state named.
+    _jabs96 = journal_read("de96-a-unit-that-cannot-exist.service")
+    ok(_jabs96["status"] == "ABSENT"
+       and _jabs96["n_lines_available"] == 0
+       and _jabs96["oldest_entry_utc"] is None
+       and _jabs96["window_fully_covered"] is None
+       and "not the same fact" in _jabs96["why_absent_not_zero"],
+       "R-641 KNOWN-BAD: a unit the journal holds nothing for is ABSENT, "
+       "never a 0 quoted as a count. A zero from a rotating store is "
+       "indistinguishable from a zero that never happened -- which is what "
+       "makes a control that greps the journal a control whose verdict "
+       "depends on retention")
+    ok(set(_jabs96) >= {"read_at_utc", "n_lines_available",
+                        "oldest_entry_utc", "window_fully_covered",
+                        "copied_into_this_artifact_at_the_moment_of_"
+                        "reading"}
+       and _jabs96["copied_into_this_artifact_at_the_moment_of_reading"]
+       is True,
+       "and every read carries the same four fields -- when it was read, "
+       "how many lines the journal still holds, the OLDEST ENTRY'S OWN "
+       "clock, and whether the window still reaches the unit's start -- so "
+       "a reader is never handed a number without the state of its source")
+
+    # ---- REV 65 S1.2 / REV 62 S3: the launch form REFUSES at run time --
+    # It REPORTED and gated nothing: a real day under `--scope` would run
+    # all 85 minutes and say so only in its receipt, and the lint on the
+    # command string cannot see a `--scope` behind a variable or a wrapper.
+    _scope96 = {"cgroup_leaf": "x.scope", "kind": "scope"}
+    _svc96 = {"cgroup_leaf": "x.service", "kind": "transient service"}
+    refuses(lambda: assert_launch_form_at_runtime(
+                "2026-09-03", fixture=False, observed=_scope96),
+            "REV 65 S1.2: a REAL DAY in a `.scope` REFUSES BEFORE ANY "
+            "STAGE. It used to run to completion and merely record the "
+            "fact -- and that is how the 09-03 re-run lost 35 minutes",
+            "BEFORE ANY STAGE")
+    ok(assert_launch_form_at_runtime(
+           "2026-09-03", fixture=False, observed=_svc96)["checked"] is True
+       and assert_launch_form_at_runtime(
+           "FIXTURE-DAY-1", fixture=True,
+           observed=_scope96)["fixture_exemption_by_name"] is True,
+       "POSITIVE CONTROL, BOTH CELLS: a real day in a transient SERVICE "
+       "admits, and a FIXTURE may declare an exemption BY NAME -- the "
+       "falsifier has to be able to run under a real `.scope` to prove the "
+       "refusal fires at all")
+    ok(assert_launch_form_at_runtime(
+           "FIXTURE-DAY-NOT-DECLARED", fixture=True,
+           observed=_scope96)["fixture_exemption_by_name"] is False,
+       f"and the fixture exemption is a DECLARED LIST "
+       f"({len(SCOPE_EXEMPT_FIXTURE_DAYS)} names), not 'any fixture': an "
+       f"undeclared fixture name reports no exemption, so the list cannot "
+       f"quietly become a blanket")
     # ---- R-628: THE LAUNCH FORM IS A TRANSIENT SERVICE ----------------
     # The scope form was published in THE_ONE_COMMAND for four rounds and
     # cost a real day 35 minutes: `systemd-run --scope` registers the
@@ -5041,9 +5280,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     (_fake94 / "notalink").write_text("x")
     (_fake94 / "elsewhere").mkdir()
     ok(_is_the_shared_data_link(
-           str(_fake94), "?? notalink", "notalink") is False
+           str(_fake94), "??", "notalink") is False
        and _is_the_shared_data_link(
-           str(_fake94), " M data", "data") is False,
+           str(_fake94), " M", "data") is False,
        "KNOWN-BAD, BOTH DOORS: a plain untracked FILE named like the link "
        "is NOT exempted, and a TRACKED MODIFICATION at the exempt path is "
        "NOT exempted either -- the exemption is a PROPERTY (untracked AND "
@@ -5052,13 +5291,13 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        "thing it exists to catch (R-613)")
     import os as _os94
     _os94.symlink(DR.resolve()["data_root"], _fake94 / "data")
-    ok(_is_the_shared_data_link(str(_fake94), "?? data", "data") is True,
+    ok(_is_the_shared_data_link(str(_fake94), "??", "data") is True,
        "POSITIVE CONTROL, AND IT ADMITS: an untracked symlink resolving to "
        "the canonical data root IS exempted -- so the known-bads above "
        "fire on the property and not on everything")
     _os94.symlink("/tmp", _fake94 / "otherlink")
     ok(_is_the_shared_data_link(
-           str(_fake94), "?? otherlink", "otherlink") is False,
+           str(_fake94), "??", "otherlink") is False,
        "and a symlink pointing SOMEWHERE ELSE is refused, which is the "
        "half a name match would have missed entirely")
     # ---- REV 55 S1.2 / S2.4: two numbers that must say what they are --
@@ -7393,10 +7632,21 @@ def _main_day(a) -> int:
         day, fixture=fixture, stamp=emission_stamp(_emitted_at))
     # R-628: WHICH WRAPPER ACTUALLY RAN THIS, measured from the cgroup --
     # not the form that was published, the form that executed.
+    _uid = unit_identity()
     payload["launch_form"] = {
         "declared": LAUNCH_FORM,
         "requirements": LAUNCH_FORM_REQUIREMENTS,
-        "observed": unit_identity(),
+        "observed": _uid,
+        # THE RECEIPT CARRIES ITS OWN UNIT'S JOURNAL LINES, COPIED AT THE
+        # EMIT (rule 20 as amended, R-641). The journal rotates within
+        # hours; a receipt that points at it instead of copying it names
+        # evidence that may already be gone -- which happened to DE 84's
+        # `Started` line four hours after it was quoted.
+        "journal_at_emit": (journal_read(_uid["unit"])
+                            if _uid.get("unit") else
+                            {"status": "ABSENT",
+                             "why": "this process is in no unit, so there "
+                                    "is no unit journal to copy"}),
         "why_it_is_in_the_receipt": (
             "the 09-03 re-run died at 35 minutes because it ran in a "
             "`.scope` -- the caller's process group. A receipt that does "

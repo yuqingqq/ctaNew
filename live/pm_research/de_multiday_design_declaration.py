@@ -1946,9 +1946,32 @@ def declaration() -> dict:
                 "de_multiday_gate1_runner.py",
                 "de_multiday_design_declaration.py",
                 "de_data_root.py",
+                "da_root.py (R-641: the programme's ONE porcelain parser, "
+                "imported rather than reimplemented)",
                 "pm_tape_density.py (imported by the root resolver)",
                 "be_cancel_axis_null.py (lazily, on the day path)",
             ],
+            # THE CONSEQUENCE OF R-641, STATED WHERE A READER WILL MEET IT.
+            # Importing another seat's module puts it in THIS seat's
+            # import closure, and rule 22 refuses the emit if any module
+            # of the closure moves during the run. So a landing to
+            # `da_root.py` during an 85-minute day REFUSES that day's
+            # receipt. That is the price of one parser instead of three,
+            # and it is worth paying -- but it is a real coupling and it
+            # is not this seat's to rule on: shared infrastructure is
+            # frozen for the life of any seat's heavy run, or the closure
+            # has to distinguish infrastructure from the seat's own code.
+            "shared_infrastructure_in_the_closure": {
+                "module": "da_root.py",
+                "why_it_is_there": "R-641 ruled ONE porcelain parser; "
+                                   "importing it is what makes that true",
+                "the_cost": "a landing to it during a heavy run refuses "
+                            "that run's receipt (rule 22)",
+                "not_ruled_here": "whether shared infrastructure should be "
+                                  "frozen during any seat's heavy run, or "
+                                  "held to a different standard in the "
+                                  "closure, is the coordinator's",
+            },
             "refused_at_every_emit": [
                 "any module of the closure whose bytes moved -> REFUSES "
                 "NAMING THE MODULE",

@@ -43,6 +43,45 @@ SLICE = "research.slice"
 SETTLE_S = 2.0
 
 
+def _journal_read(unit: str, n: int = 50) -> dict:
+    """The unit's journal, COPIED, with its retention state named.
+
+    Rule 20 as amended (R-641): journald rotates within hours, so a number
+    read from it is copied into the artifact at the moment of reading and
+    the state of the source travels with it. A unit with nothing retained
+    is ABSENT, never a 0 quoted as a count."""
+    read_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    try:
+        r = subprocess.run(
+            ["journalctl", "--user", "-u", unit, "--no-pager",
+             "-o", "short-iso-precise", "-n", str(n)],
+            capture_output=True, text=True, timeout=30)
+        raw = r.stdout if r.returncode == 0 else ""
+    except Exception:                                     # noqa: BLE001
+        raw = ""
+    lines = [x for x in raw.split("\n") if x.strip()
+             and not x.startswith("-- ")]
+    if not lines:
+        return {"unit": unit, "status": "ABSENT", "read_at_utc": read_at,
+                "n_lines_available": 0, "oldest_entry_utc": None,
+                "window_fully_covered": None,
+                "why_absent_not_zero": (
+                    "journald retains nothing for this unit right now; "
+                    "that is not the same fact as 'it produced no output'")}
+    first = lines[0].split(" ", 1)[0]
+    try:
+        oldest = datetime.datetime.fromisoformat(first).astimezone(
+            datetime.timezone.utc).isoformat()
+    except ValueError:
+        oldest = None
+    return {"unit": unit, "status": "PRESENT", "read_at_utc": read_at,
+            "n_lines_available": len(lines), "lines": lines[-6:],
+            "oldest_entry_utc": oldest, "oldest_entry_raw": first,
+            "oldest_entry_from": "the entry's own clock",
+            "window_fully_covered": any(" Started " in x for x in lines),
+            "copied_at_the_moment_of_reading": True}
+
+
 def _sc(*a) -> str:
     r = subprocess.run(["systemctl", "--user", *a],
                        capture_output=True, text=True, timeout=30)
@@ -170,9 +209,11 @@ def leg_held_lock(lock_path: str) -> dict:
         status = _prop(unit, "ExecMainStatus")
         result = _prop(unit, "Result")
         payload_ran = ran.exists()
-        jr = subprocess.run(
-            ["journalctl", "--user", "-u", unit, "--no-pager", "-n", "20"],
-            capture_output=True, text=True, timeout=30).stdout
+        # THE JOURNAL IS NOT THE RECORD (rule 20 as amended, R-641): the
+        # lines are COPIED here with the source's retention state named.
+        # This probe used to keep a bare `journal_tail`, which is a
+        # pointer into a store that rotates within hours.
+        jr = _journal_read(unit)
         _cleanup(unit)
         holder.terminate()
         holder.wait(timeout=10)
@@ -189,15 +230,89 @@ def leg_held_lock(lock_path: str) -> dict:
                 "journal for a marker string reported the opposite: "
                 "systemd's own `Started <unit> - <command>.` line carries "
                 "the command, marker included"),
-            "journal_tail": jr.strip().splitlines()[-3:],
+            "journal_at_the_moment_of_reading": jr,
             "why": ("`flock -n` is the unit's OWN ExecStart, so a held "
                     "lock is the unit's exit status -- read it, never "
                     "assume the run started")}
 
 
+def leg_runtime_refusal() -> dict:
+    """LEG 4 (REV 65 S1.2): the RUN refuses under a scope, not the lint.
+
+    `is_the_declared_launch_form` reported and gated nothing -- a real day
+    under `--scope` would run all 85 minutes and say so only in its
+    receipt, and a lint on the command STRING cannot see a `--scope`
+    behind a variable or a wrapper. Driven under REAL units, with a
+    SCRATCH lock and no real day."""
+    src = HERE / "de_multiday_gate1_runner.py"
+    prog = (
+        "import sys, json;"
+        f"sys.path.insert(0, {str(HERE)!r});"
+        "import de_multiday_gate1_runner as R;"
+        "o = R.unit_identity();"
+        "d = {'leaf': o['cgroup_leaf'], 'kind': o['kind']};"
+        "\ntry:\n"
+        "    R.assert_launch_form_at_runtime('2026-09-03', fixture=False);"
+        " d['real_day'] = 'ADMITTED'\n"
+        "except R.RunnerRefused:\n"
+        "    d['real_day'] = 'REFUSED'\n"
+        "try:\n"
+        "    R.assert_launch_form_at_runtime('FIXTURE-DAY-SCOPE',"
+        " fixture=True); d['fixture'] = 'ADMITTED'\n"
+        "except R.RunnerRefused:\n"
+        "    d['fixture'] = 'REFUSED'\n"
+        "print('LEAF ' + json.dumps(d))")
+    out = {}
+    with tempfile.TemporaryDirectory() as td:
+        scratch_lock = str(Path(td) / "scratch.lock")
+        Path(scratch_lock).write_text("")
+        for kind, unit, extra in (
+                ("scope", "de96leg4scope.scope", ["--scope"]),
+                ("service", "de96leg4svc.service", [])):
+            _cleanup(unit)
+            argv = (["systemd-run", "--user", *extra, f"--unit={unit}",
+                     f"--slice={SLICE}",
+                     f"--setenv=PM_DATA_ROOT={os.environ.get('PM_DATA_ROOT', '')}",
+                     f"--setenv=HEAVY_RUN_LOCK_SCRATCH={scratch_lock}"]
+                    + ([] if extra else [f"--working-directory={td}", "--"])
+                    + [sys.executable, "-c", prog])
+            r = subprocess.run(argv, capture_output=True, text=True,
+                               timeout=120)
+            time.sleep(SETTLE_S)
+            text = r.stdout
+            if "LEAF " not in text:
+                text = subprocess.run(
+                    ["journalctl", "--user", "-u", unit, "--no-pager",
+                     "-n", "10"], capture_output=True, text=True,
+                    timeout=30).stdout
+            line = [x for x in text.split("\n") if "LEAF " in x]
+            out[kind] = (json.loads(line[-1].split("LEAF ", 1)[1])
+                         if line else {"error": "no LEAF line"})
+            _cleanup(unit)
+    return {
+        "under_a_real_scope": out.get("scope"),
+        "under_a_real_service": out.get("service"),
+        "the_refusal_fires_only_under_a_scope": (
+            (out.get("scope") or {}).get("real_day") == "REFUSED"
+            and (out.get("service") or {}).get("real_day") == "ADMITTED"),
+        "a_fixture_may_be_exempt_by_name": (
+            (out.get("scope") or {}).get("fixture") == "ADMITTED"),
+        "runner_sha256": _sha_of(src),
+        "why": ("the verdict comes from the cgroup leaf this process is "
+                "actually IN, so it cannot be evaded by a wrapper the "
+                "lint never sees"),
+    }
+
+
+def _sha_of(p: Path) -> str:
+    import hashlib
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
 def probe(lock_path: str) -> dict:
     scope, service = leg_scope(), leg_service()
     lock = leg_held_lock(lock_path)
+    runtime = leg_runtime_refusal()
     return {
         "protocol": PROTOCOL,
         "as_of": datetime.datetime.now(
@@ -206,11 +321,13 @@ def probe(lock_path: str) -> dict:
         "leg_1_the_failure_reproduced": scope,
         "leg_2_the_fix_driven": service,
         "leg_3_a_held_lock_inside_the_unit": lock,
+        "leg_4_the_run_refuses_under_a_scope": runtime,
         "the_ruling_holds": bool(
             scope["died_with_its_launcher"]
             and service["survived_the_group_TERM"]
             and service["systemctl_stop_ends_it"]
-            and lock["exited_nonzero"] and lock["the_payload_never_ran"]),
+            and lock["exited_nonzero"] and lock["the_payload_never_ran"]
+            and runtime["the_refusal_fires_only_under_a_scope"]),
         "what_this_is_not": {
             "a_day_result": False,
             "heavy": "three sleeps and an echo; it takes no heavy lock and "
@@ -254,6 +371,17 @@ def selftest() -> int:
        f"NEVER RAN. The lock is the unit's own ExecStart, so `read "
        f"ExecMainStatus, never assume the run started` is a fact a caller "
        f"can check rather than advice")
+    s4 = d["leg_4_the_run_refuses_under_a_scope"]
+    ok(s4["the_refusal_fires_only_under_a_scope"] is True,
+       f"LEG 4 (REV 65 S1.2): under a REAL `.scope` unit a real day is "
+       f"{s4['under_a_real_scope']['real_day']}, and under a REAL "
+       f"`.service` it is {s4['under_a_real_service']['real_day']}. The "
+       f"launch form REPORTED and gated nothing -- a real day under a "
+       f"scope would have run all 85 minutes and said so only in its "
+       f"receipt. Scratch lock, no real day")
+    ok(s4["a_fixture_may_be_exempt_by_name"] is True,
+       "and a FIXTURE may be exempt BY NAME even under a scope -- which "
+       "is what lets this falsifier run under a real scope at all")
     ok(d["the_ruling_holds"] is True,
        "R-628 HOLDS on all three legs, driven against a real session "
        "manager rather than reasoned about")
