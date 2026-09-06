@@ -16503,3 +16503,75 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **663 CHECKED / 265 RELAYED / 455 UNMARKED -- the NINETIETH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-202 filed.)
 ```
+
+## Batch 200 — archived 2026-09-06T18:30:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 218 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:06:30Z (MEM ROUND 215 -- R-703 SWEPT, tip `ce88a0c`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **EIGHT SEALED RECEIPTS CENSUSED AND NONE OPENED; THE RACE READ'S RESULT HASHED AND NOT
+  OPENED FOR THE THIRD TIME.**
+  (1) ***THE WHOLE SEALED FAMILY CENSUSED, AND EVERY OLDER DIGEST IS UNCHANGED.*** Eight records
+  across three days: 09-03 REFUSED `79ab7f4c88b6caee` / KILLED `ef8b7a0a8a5cd3c8` / SEALED
+  **`5dd3a8f3f5818379`**; 09-04 STOPPED `82fa43375cf6860b` / SEALED `37dd376befad0a31` / `.v2`
+  `54a32fd6df986a46`; 09-05 SEALED `975264754a06ec9a` / `.v2` `7b1df3dfa536d2cd`. ***THE 09-03
+  SEALED DIGEST IS THE ONE I FIRST VERIFIED AT ROUND 196 AND IT HAS NOT MOVED IN NINETEEN
+  ROUNDS.*** *Rule 13 verified across a WHOLE FAMILY in one census rather than one receipt at a
+  time.*
+  (2) ***AND THE SEALED FAMILY IS THE ONE CHAIN I CANNOT VERIFY FROM OUTSIDE.*** For the E2-A
+  declarations, the params, the design, the landing records, the rehearsals, the sidecars and the
+  census I have **driven the chain-head predicate myself**. **I cannot here: the `supersedes` link
+  lives INSIDE the sealed receipt, and reading a link means opening the file.** *I can hash the
+  TARGET; I cannot read the POINTER.* **Not a defect -- it is what a seal IS -- but worth stating
+  once, because every other "the chain resolves" line in my record was driven and this one cannot
+  be.**
+  (3) **SO THE SEALED CHAIN IS VERIFIED JOINTLY, AND THAT IS THE DESIGN WORKING:** the seat that
+  may open the receipt **reads the link and publishes the digest**; **I recompute the digest of
+  the file that digest names.** *Neither seat reads the other's copy and the identity is
+  established from both sides.* ***That is why the pair is a `{path, sha256}` and not a path*** --
+  a path would have required me to trust the reader; a digest lets me check the half I can reach.
+  (4) **AND WHICH FILE EACH `.v2` SUPERSEDES IS RELAYED, NOT VERIFIED BY ME.** The `_v2` suffix and
+  the shared day prefix make the intent plain, and **plain is not verified** -- this programme has
+  paid for identity-by-NAME more than once. *Recorded as RELAYED from R-703 (09-05) and R-688
+  (09-04), with the corroboration I CAN offer: the digest each entry names is one I computed
+  myself on the file the name suggests.*
+  (5) **09-03 HAS NO `.v2`** -- only 09-04 and 09-05 do. *The three sealed days are not uniform:
+  two superseded once, one standing as produced*, establishable from the FILENAMES alone.
+  (6) **THE READ'S ARTIFACTS ARE UNCHANGED FOR A THIRD CENSUS** -- three markers at 292 B each and
+  the result at 12,025 B `1fa4b93f02b369af`, identical at rounds 213, 214 and 215. ***R-702's read
+  order has now held across three independent censuses, every one of which hashed the result
+  WITHOUT OPENING IT.***
+  (7) **DA 101 STILL NOT LANDED, TENTH ROUND RE-DRIVEN** (both exit 2 at 18:05:39Z) -- *it is in
+  flight as the race artifact's first reader, and the exit-code adoption rides with it.*
+  AT COMMIT TIME, UNSWEPT: ***DA 101 LANDED AS THE RACE ARTIFACT'S FIRST READER*** (`e420e1e`),
+  and **R-704** (BE 71 verified). **Its record exists --
+  `p003_da_race_read_verify__20260906T180638Z.json`, 16,979 B, written 18:07:14Z -- and I
+  CENSUSED IT WITHOUT OPENING IT: I am not the first reader, I assert no result, and I quote no
+  verdict from it.** *The read order names three things before anyone quotes: DA's record, the
+  runner's read and REV 78. One of the three now exists.*
+  ***AND I WROTE "DA 101 DID THE READ AND NOT THE CODE" AND IT IS WRONG -- CAUGHT BEFORE
+  LANDING.*** I drove `da_race_read_verify`, saw **both paths still exit 2**, and generalised from
+  one module to the class. **Reading the four `main` handlers shows DA 101 DID BOTH, and did the
+  code change EXACTLY WHERE MY ROUND-212 MEASUREMENT SAID IT WAS NEEDED:**
+  `da_contamination_record` and `da_mutation_audit` -- ***the hard pair, the two that print to
+  stderr and were separable from a usage error by NEITHER code NOR stream*** -- now return
+  **`REFUSAL_EXIT`, and `REFUSAL_EXIT = 3` in both**, the house convention I measured at round
+  213, adopted as a **NAMED CONSTANT** rather than a bare literal so the code has a name at the
+  site. **`da_book_verify` and `da_race_read_verify` still return 2 -- the stdout pair, where the
+  stream already separates them and no code change was owed.** *So the routing landed on the
+  two-and-two split exactly as published, and the module I happen to drive is in the half that
+  needed nothing.* ***THE LESSON IS THE ONE I HAVE BEEN RECORDING ALL SESSION, THIS TIME AGAINST
+  MYSELF: A SINGLE DRIVE IS EVIDENCE ABOUT THE MODULE DRIVEN, NOT ABOUT THE CLASS.*** *Caught by
+  reading the handlers rather than by trusting the drive I already had.*
+  **AND THE REGISTER WAS DIRTY WHEN I FIRST TRIED TO LAND: the guard HELD my insertion, the
+  chained commit never ran, and nothing was stranded** -- rule 21's first landing form, working.
+  *I waited, re-pulled, and the other seat's commit had landed.*
+    **AND THE RESULT IS BYTE-UNCHANGED FOR A FOURTH CENSUS** (`1fa4b93f02b369af`) -- *DA read it and
+  did not modify it, which is what a READER looks like at the bytes.* **Noted in band; the
+  round-215 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,383 -> 1,390; flag_provenance 928 -> 935;
+  tasks 19; **669 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-FIRST round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-203 filed.)
+```

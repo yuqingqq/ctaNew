@@ -63,6 +63,43 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T18:30:30Z (MEM ROUND 218 -- R-708 SWEPT, tip `b217ae0`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **NEITHER READ ARTIFACT OPENED -- v1 FOR THE SEVENTH CENSUS, THE NEW `.v2` HASHED ON
+  ARRIVAL.**
+  (1) ***THE 09-03 PRE_READ CHAIN IS FIVE DEEP, UNBROKEN, AND DRIVEN.*** Each record names its
+  predecessor by the `{path, sha256}` pair; **exactly one head** (`…182045Z`, `e75afb0fd32b2249`,
+  status `PROVENANCE_INCOMPLETE`). ***AND IT GREW BY TWO THIS ROUND WHILE THE THREE OLDER RECORDS
+  STAYED BYTE-IDENTICAL*** to what I verified at rounds 191 and 196. **The longest chain I have
+  DRIVEN here, every link recomputed rather than read.**
+  (2) **THE READ ARTIFACT'S `.v2` LANDED** -- 15,208 B `dac883eb247acf89`, *which round 217
+  recorded as ruled-but-not-landed* -- **and v1 is 12,025 B `1fa4b93f02b369af` for the SEVENTH
+  census**, the markers likewise. *Rule 13 on the read artifact: superseded, not edited* -- **and I
+  have still never opened either.**
+  (3) ***THE VOID CELL HAS NOW BEEN READ THREE TIMES AND HAS NEVER YET BEEN WRONG.*** `da99book`
+  reads `not-found / inactive / dead` with `Result=success`, `ExecMainStatus=0`, empty
+  InvocationID, MemoryPeak `[not set]` -- **and its true last outcome WAS a success**, as at round
+  200 (de102smoke) and round 213 (de104smoke). ***THREE UNFOUNDED ANSWERS, ZERO WRONG ONES -- WHICH
+  IS PRECISELY WHY THE TRAP SURVIVES: NOTHING HAS PUNISHED IT YET.*** *A reading that is
+  accidentally right is the most dangerous kind, because only the discipline distinguishes it from
+  evidence.*
+  (4) **BE 74's RECORD GIVES THE FIVE FIELDS A HOME IN THE ARTIFACT.** R-704's finding was that
+  the read unit's five fields **lived only in BE's report** -- the launcher's record had launch and
+  exit only. `be_heavy_run_record_be74struct04.jsonl` now carries **`launch`, `exit`, `outcome`,
+  `stopped`, `journal_copy`** against BE 66's `launch / poll / exit`. ***The fix is visible in the
+  record's own event vocabulary***, not only in a report about it. Completed 18:29:47Z; lock free.
+  (5) **THE STRUCTURE DECLARATION NAMES 09-03 ONLY, AND I TESTED ALL THREE DAYS:**
+  `be_daybook_structure_v2.json`, 5,159 B `0fa3c6db8750857f` -- *the head digest I verified at
+  round 205, unchanged* -- contains `20260903` and **NOT** `20260904` or `20260905`. **A positive
+  and two negatives**, which is what separates *"it names 09-03"* from *"it names ONLY 09-03"*.
+  (6) **DA 99's EXIT 3 IS THE CONVENTION I MEASURED, CARRYING A VERDICT.** Its status is
+  `PROVENANCE_INCOMPLETE` -- *a verdict about the 09-03 receipt's missing provenance* -- at **exit
+  3, DA's declared code**. ***So the house REFUSAL code I measured at round 213 is now carrying a
+  VERDICT***, and R-708 rules a producer-declared code **a THIRD KIND, UNMAPPED until declared**,
+  routed to REV 79. *Status verified at both new records; the ruling relayed.* **A code space with
+  three meanings needs the declaration more than one with two.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,401 -> 1,407; flag_provenance 946 -> 952;
+  tasks 19; **685 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-FOURTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-206 filed.)
   2026-09-06T18:18:30Z (MEM ROUND 217 -- R-706 AND R-707 SWEPT, tip `adc1682`. STATE ONLY. MEM
   ASSERTS NO RESULT. **THE RESULT HASHED AND NOT OPENED FOR THE SIXTH TIME; THE TWO PERMITTED
   FIELDS RELAYED, NOT VERIFIED BY ME.**
@@ -152,70 +189,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,390 -> 1,396; flag_provenance 935 -> 941;
   tasks 19; **675 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-SECOND round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-204 filed.)
-  2026-09-06T18:06:30Z (MEM ROUND 215 -- R-703 SWEPT, tip `ce88a0c`. STATE ONLY. MEM ASSERTS NO
-  RESULT. **EIGHT SEALED RECEIPTS CENSUSED AND NONE OPENED; THE RACE READ'S RESULT HASHED AND NOT
-  OPENED FOR THE THIRD TIME.**
-  (1) ***THE WHOLE SEALED FAMILY CENSUSED, AND EVERY OLDER DIGEST IS UNCHANGED.*** Eight records
-  across three days: 09-03 REFUSED `79ab7f4c88b6caee` / KILLED `ef8b7a0a8a5cd3c8` / SEALED
-  **`5dd3a8f3f5818379`**; 09-04 STOPPED `82fa43375cf6860b` / SEALED `37dd376befad0a31` / `.v2`
-  `54a32fd6df986a46`; 09-05 SEALED `975264754a06ec9a` / `.v2` `7b1df3dfa536d2cd`. ***THE 09-03
-  SEALED DIGEST IS THE ONE I FIRST VERIFIED AT ROUND 196 AND IT HAS NOT MOVED IN NINETEEN
-  ROUNDS.*** *Rule 13 verified across a WHOLE FAMILY in one census rather than one receipt at a
-  time.*
-  (2) ***AND THE SEALED FAMILY IS THE ONE CHAIN I CANNOT VERIFY FROM OUTSIDE.*** For the E2-A
-  declarations, the params, the design, the landing records, the rehearsals, the sidecars and the
-  census I have **driven the chain-head predicate myself**. **I cannot here: the `supersedes` link
-  lives INSIDE the sealed receipt, and reading a link means opening the file.** *I can hash the
-  TARGET; I cannot read the POINTER.* **Not a defect -- it is what a seal IS -- but worth stating
-  once, because every other "the chain resolves" line in my record was driven and this one cannot
-  be.**
-  (3) **SO THE SEALED CHAIN IS VERIFIED JOINTLY, AND THAT IS THE DESIGN WORKING:** the seat that
-  may open the receipt **reads the link and publishes the digest**; **I recompute the digest of
-  the file that digest names.** *Neither seat reads the other's copy and the identity is
-  established from both sides.* ***That is why the pair is a `{path, sha256}` and not a path*** --
-  a path would have required me to trust the reader; a digest lets me check the half I can reach.
-  (4) **AND WHICH FILE EACH `.v2` SUPERSEDES IS RELAYED, NOT VERIFIED BY ME.** The `_v2` suffix and
-  the shared day prefix make the intent plain, and **plain is not verified** -- this programme has
-  paid for identity-by-NAME more than once. *Recorded as RELAYED from R-703 (09-05) and R-688
-  (09-04), with the corroboration I CAN offer: the digest each entry names is one I computed
-  myself on the file the name suggests.*
-  (5) **09-03 HAS NO `.v2`** -- only 09-04 and 09-05 do. *The three sealed days are not uniform:
-  two superseded once, one standing as produced*, establishable from the FILENAMES alone.
-  (6) **THE READ'S ARTIFACTS ARE UNCHANGED FOR A THIRD CENSUS** -- three markers at 292 B each and
-  the result at 12,025 B `1fa4b93f02b369af`, identical at rounds 213, 214 and 215. ***R-702's read
-  order has now held across three independent censuses, every one of which hashed the result
-  WITHOUT OPENING IT.***
-  (7) **DA 101 STILL NOT LANDED, TENTH ROUND RE-DRIVEN** (both exit 2 at 18:05:39Z) -- *it is in
-  flight as the race artifact's first reader, and the exit-code adoption rides with it.*
-  AT COMMIT TIME, UNSWEPT: ***DA 101 LANDED AS THE RACE ARTIFACT'S FIRST READER*** (`e420e1e`),
-  and **R-704** (BE 71 verified). **Its record exists --
-  `p003_da_race_read_verify__20260906T180638Z.json`, 16,979 B, written 18:07:14Z -- and I
-  CENSUSED IT WITHOUT OPENING IT: I am not the first reader, I assert no result, and I quote no
-  verdict from it.** *The read order names three things before anyone quotes: DA's record, the
-  runner's read and REV 78. One of the three now exists.*
-  ***AND I WROTE "DA 101 DID THE READ AND NOT THE CODE" AND IT IS WRONG -- CAUGHT BEFORE
-  LANDING.*** I drove `da_race_read_verify`, saw **both paths still exit 2**, and generalised from
-  one module to the class. **Reading the four `main` handlers shows DA 101 DID BOTH, and did the
-  code change EXACTLY WHERE MY ROUND-212 MEASUREMENT SAID IT WAS NEEDED:**
-  `da_contamination_record` and `da_mutation_audit` -- ***the hard pair, the two that print to
-  stderr and were separable from a usage error by NEITHER code NOR stream*** -- now return
-  **`REFUSAL_EXIT`, and `REFUSAL_EXIT = 3` in both**, the house convention I measured at round
-  213, adopted as a **NAMED CONSTANT** rather than a bare literal so the code has a name at the
-  site. **`da_book_verify` and `da_race_read_verify` still return 2 -- the stdout pair, where the
-  stream already separates them and no code change was owed.** *So the routing landed on the
-  two-and-two split exactly as published, and the module I happen to drive is in the half that
-  needed nothing.* ***THE LESSON IS THE ONE I HAVE BEEN RECORDING ALL SESSION, THIS TIME AGAINST
-  MYSELF: A SINGLE DRIVE IS EVIDENCE ABOUT THE MODULE DRIVEN, NOT ABOUT THE CLASS.*** *Caught by
-  reading the handlers rather than by trusting the drive I already had.*
-  **AND THE REGISTER WAS DIRTY WHEN I FIRST TRIED TO LAND: the guard HELD my insertion, the
-  chained commit never ran, and nothing was stranded** -- rule 21's first landing form, working.
-  *I waited, re-pulled, and the other seat's commit had landed.*
-    **AND THE RESULT IS BYTE-UNCHANGED FOR A FOURTH CENSUS** (`1fa4b93f02b369af`) -- *DA read it and
-  did not modify it, which is what a READER looks like at the bytes.* **Noted in band; the
-  round-215 flags are not edited.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,383 -> 1,390; flag_provenance 928 -> 935;
-  tasks 19; **669 CHECKED / 266 RELAYED / 455 UNMARKED -- the NINETY-FIRST round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-203 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2298,6 +2271,69 @@ flags:
                              # YES under four constraints (BE 73) has NOT landed.**
                              # *Ruled is not landed -- the same distinction I drew for
                              # the 09-04 `.v2` at round 203, and it held there too.*
+  the_09_03_pre_read_chain_is_FIVE_DEEP_UNBROKEN_and_DRIVEN: THE-LONGEST-I-HAVE-DRIVEN
+                             # Five records, each naming its predecessor by the
+                             # `{path, sha256}` pair, **exactly one head**
+                             # (`…182045Z`, `e75afb0fd32b2249`, status
+                             # `PROVENANCE_INCOMPLETE`). ***AND IT GREW BY TWO THIS
+                             # ROUND WHILE THE THREE OLDER RECORDS STAYED
+                             # BYTE-IDENTICAL*** to what I verified at rounds 191 and
+                             # 196 -- `24f2191009177b4a`, `65048af3fda79195`,
+                             # `6e418d119ce27beb`. **The longest chain I have DRIVEN in
+                             # this programme, and every link recomputed rather than
+                             # read.**
+  the_read_artifacts_v2_LANDED_and_v1_is_unchanged_for_a_SEVENTH_census: RULE-13-ON-THE-READ
+                             # `be_race_read_result_v2.json`, **15,208 B
+                             # `dac883eb247acf89`** -- the `.v2` R-707 ruled YES and
+                             # round 217 recorded as *not landed*, now landed. **And
+                             # `be_race_read_result_v1.json` is 12,025 B
+                             # `1fa4b93f02b369af` FOR THE SEVENTH CENSUS**, the three
+                             # markers likewise. *Rule 13 on the read artifact:
+                             # superseded, not edited* -- **and I have still never
+                             # opened either.**
+  the_VOID_cell_has_now_been_read_THREE_times_and_has_never_yet_been_WRONG: WHY-IT-SURVIVES
+                             # `da99book` now reads `not-found / inactive / dead` with
+                             # **`Result=success`, `ExecMainStatus=0`**, empty
+                             # InvocationID, MemoryPeak `[not set]` -- ***and its true
+                             # last outcome WAS a success*** (the third launch, exit
+                             # 0). **The same was true of de102smoke at round 200 and
+                             # de104smoke at round 213.** ***SO THE TRAP HAS PRODUCED
+                             # AN UNFOUNDED ANSWER THREE TIMES AND A WRONG ONE ZERO
+                             # TIMES -- WHICH IS PRECISELY WHY IT SURVIVES: NOTHING HAS
+                             # PUNISHED IT YET.*** *A reading that is accidentally
+                             # right is the most dangerous kind, because only the
+                             # discipline distinguishes it from evidence.*
+  BE_74s_record_gives_the_FIVE_FIELDS_A_HOME_in_the_artifact: LAUNCH-EXIT-OUTCOME-STOPPED-JOURNAL
+                             # R-704's finding was that **the read unit's five fields
+                             # lived only in BE's report -- the launcher's record had
+                             # launch and exit only.** `be_heavy_run_record_be74struct04
+                             # .jsonl` now carries **five event kinds: `launch`,
+                             # `exit`, `outcome`, `stopped`, `journal_copy`**, against
+                             # BE 66's `launch / poll / exit`. ***THE FIX IS VISIBLE IN
+                             # THE RECORD'S OWN EVENT VOCABULARY***, not only in a
+                             # report about it. Completed 18:29:47Z; the lock free
+                             # after.
+  the_structure_declaration_names_09_03_ONLY_and_I_tested_all_THREE_days: ONE-POSITIVE-TWO-NEGATIVES
+                             # `be_daybook_structure_v2.json`, **5,159 B
+                             # `0fa3c6db8750857f`** -- *the head digest I verified at
+                             # round 205, unchanged* -- contains **`20260903`** and
+                             # **NOT `20260904` and NOT `20260905`**. **R-708's limit
+                             # verified at the artifact by a positive and two
+                             # negatives**, which is what separates *"it names 09-03"*
+                             # from *"it names only 09-03"*. **BE 74 is on the 09-04
+                             # book now.**
+  DA_99s_exit_3_is_the_convention_I_MEASURED_carrying_a_VERDICT: A-THIRD-KIND
+                             # R-708: DA 99's status is `PROVENANCE_INCOMPLETE` -- *a
+                             # verdict about the 09-03 receipt's missing provenance* --
+                             # **at exit 3, DA's declared code.** ***SO THE HOUSE
+                             # REFUSAL CODE I MEASURED AT ROUND 213 IS NOW CARRYING A
+                             # VERDICT RATHER THAN A REFUSAL***, and R-708 rules that
+                             # **a producer-declared exit code is a THIRD KIND,
+                             # UNMAPPED until declared**, routed to REV 79. *I verified
+                             # the status string at the artifact -- both new pre_read
+                             # records carry `PROVENANCE_INCOMPLETE` -- and relay the
+                             # ruling.* **A code space with three meanings needs the
+                             # declaration more than one with two.**
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25080,6 +25116,51 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 218, 2026-09-06T18:30:00Z ---
+  the_09_03_pre_read_chain_is_FIVE_DEEP_UNBROKEN_and_DRIVEN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T182045Z.json
+    as_of: 2026-09-06T18:29:24Z
+    said: >-
+      hashed all five records, read each one's supersedes block and applied the chain-head predicate,
+      then compared the three older digests against what I recorded at rounds 191 and 196. One head,
+      no fork, nothing edited.
+  the_read_artifacts_v2_LANDED_and_v1_is_unchanged_for_a_SEVENTH_census:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_race_read_result_v2.json
+    as_of: 2026-09-06T18:29:24Z
+    said: >-
+      hashed the new .v2 and re-hashed v1 and the three markers, comparing against six earlier
+      censuses. Neither result file was opened in any of them.
+  the_VOID_cell_has_now_been_read_THREE_times_and_has_never_yet_been_WRONG:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04.jsonl
+    as_of: 2026-09-06T18:29:24Z
+    said: >-
+      copied da99book's five fields and set them beside my round-200 and round-213 readings of the
+      same shape; in all three the run had in fact succeeded. The artifact named is the record whose
+      event vocabulary now makes such a reading unnecessary.
+  BE_74s_record_gives_the_FIVE_FIELDS_A_HOME_in_the_artifact:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be74struct04.jsonl
+    as_of: 2026-09-06T18:29:24Z
+    said: >-
+      parsed the jsonl and counted its event kinds, comparing against be66struct's launch/poll/exit.
+  the_structure_declaration_names_09_03_ONLY_and_I_tested_all_THREE_days:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_daybook_structure_v2.json
+    as_of: 2026-09-06T18:29:24Z
+    said: >-
+      hashed the declaration and searched its serialised text for each of the three day strings; one
+      present, two absent.
+  DA_99s_exit_3_is_the_convention_I_MEASURED_carrying_a_VERDICT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T182045Z.json
+    as_of: 2026-09-06T18:29:24Z
+    said: >-
+      read the status field of both new pre_read records -- PROVENANCE_INCOMPLETE in each -- and
+      relay from R-708 that the exit code was 3 and that a producer-declared code is ruled a third
+      kind.
   # --- MEM round 217, 2026-09-06T18:18:00Z ---
   the_FIVE_FIELDS_now_distinguish_FIVE_STATES_and_I_have_measured_EVERY_ONE:
     prov: CHECKED

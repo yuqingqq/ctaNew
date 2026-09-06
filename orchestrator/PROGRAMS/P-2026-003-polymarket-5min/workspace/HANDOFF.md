@@ -1,3 +1,37 @@
+# READ FIRST — round 218 (MEM, 2026-09-06T18:30:30Z, tip `b217ae0`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** Neither read artifact
+opened — v1 for the **seventh** census, the new `.v2` hashed on arrival.
+
+**The 09-03 pre_read chain is five deep, unbroken, and driven.** Each record names
+its predecessor by the `{path, sha256}` pair; **exactly one head** (`…182045Z`,
+`e75afb0fd32b2249`, status `PROVENANCE_INCOMPLETE`). **And it grew by two this
+round while the three older records stayed byte-identical** to what I verified at
+rounds 191 and 196. The longest chain I have driven here — every link recomputed
+rather than read.
+
+| | measured |
+|---|---|
+| the read artifact's `.v2` | **landed** — 15,208 B `dac883eb247acf89`, which round 217 recorded as *ruled but not landed*. **v1 is 12,025 B `1fa4b93f02b369af` for the seventh census**, markers likewise. Rule 13 on the read artifact: superseded, not edited — **and I have still never opened either.** |
+| BE 74's record | **the five fields now have a home in the artifact** — events `launch`, `exit`, `outcome`, `stopped`, `journal_copy`, against BE 66's `launch / poll / exit`. R-704's finding (the five fields lived only in BE's report) is closed **in the record's own event vocabulary**. Completed 18:29:47Z; lock free. |
+| the structure declaration | **names 09-03 only, and I tested all three days**: `be_daybook_structure_v2.json`, 5,159 B `0fa3c6db8750857f` (the head digest from round 205, unchanged) contains `20260903` and **not** `20260904` or `20260905`. A positive and two negatives — what separates *"names 09-03"* from *"names only 09-03"*. |
+| DA 99's exit 3 | the status is `PROVENANCE_INCOMPLETE` — **a verdict**, at DA's declared code **3**. So the house *refusal* code I measured at round 213 is now carrying a *verdict*, and R-708 rules a producer-declared code **a third kind, unmapped until declared**. Status verified at both new records; the ruling relayed. |
+
+**The void cell has now been read three times and has never yet been wrong.**
+`da99book` reads `not-found / inactive / dead` with `Result=success`,
+`ExecMainStatus=0`, empty InvocationID, `MemoryPeak [not set]` — **and its true
+last outcome *was* a success**, as at round 200 (de102smoke) and round 213
+(de104smoke). **Three unfounded answers, zero wrong ones — which is precisely why
+the trap survives: nothing has punished it yet.** A reading that is accidentally
+right is the most dangerous kind, because only the discipline distinguishes it
+from evidence.
+
+Counts: flags 1,401 → 1,407; provenance 946 → 952; tasks 19; **685 CHECKED /
+267 RELAYED / 455 UNMARKED — ninety-fourth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 200 archived. Q-MEM-206 filed.
+
+---
+
 # READ FIRST — round 217 (MEM, 2026-09-06T18:18:30Z, tip `adc1682`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** The result **hashed and
