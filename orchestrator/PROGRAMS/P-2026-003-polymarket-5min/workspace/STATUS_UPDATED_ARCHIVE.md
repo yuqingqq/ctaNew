@@ -16832,3 +16832,62 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **697 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SIXTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-208 filed.)
 ```
+
+## Batch 206 — archived 2026-09-06T19:25:30Z (1 entry, rolling-window overflow)
+
+Lifted VERBATIM from `STATUS.yml` `updated:` when MEM round 224 prepended its
+generation and the window went 4 → 3. Nothing rewritten.
+
+```
+  2026-09-06T18:58:30Z (MEM ROUND 221 -- R-711 SWEPT, tip `4b3a246`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **I DROVE THE NEW IMMUTABILITY CHECKER AND ITS FALSIFIER PASSES:** the positive control
+  FLAGS (`FORKED_BY_EDIT … producer_exit_maps_v2.json edits_after_base=2`), the known-good PASSES,
+  `FALSIFIER PASS`, exit 0. *A new instrument that proved it can fire on the round it landed --
+  the whole of rule 15, and not always done on the same day.*
+  (2) **AND ITS COMMENT SAYS THREE WHILE ITS CODE REPORTS TWO** -- the header names three commits,
+  the run prints `edits_after_base=2`, **because the check excludes the creation commit: three
+  TOUCHES are one creation plus two EDITS.** *Both right about different things*, recorded because
+  a reader citing "three edits" against a tool that prints two is how the citation errors this
+  register corrected twice today begin. **A precision note, not a defect.**
+  (3) ***THE DEFAULT BASELINE MAKES THE DIRECTORY CLEAN BY CONSTRUCTION, SO I MEASURED WHAT IT
+  HIDES.*** Default run: **51 declarations, ALL OK, exit 0** -- the baseline IS the repair. **Re-run
+  from the earliest commit that ever touched the directory: FORKED_BY_EDIT on NINETEEN of
+  fifty-one, across EXACTLY TEN FAMILIES**, worst file 3 edits. ***R-711's "ten families"
+  CORROBORATED BY AN INDEPENDENT RUN, and the size named: 37 % OF LANDED DECLARATION VERSIONS WERE
+  EDITED IN PLACE AT SOME POINT.*** *Correctly hidden as history -- and knowing the SIZE is what
+  says whether the rule is new discipline or a tidy-up.* **Nineteen of fifty-one says discipline.**
+  (4) ***AND A CHAIN CAN RESOLVE PERFECTLY WHILE ITS MEMBERS WERE EDITED IN PLACE.***
+  `de_multiday_gate1_params` is among the ten -- **and at round 201 I DROVE that family's chain and
+  found fifteen members, one head, unbroken.** **Both are true.** ***THE CHAIN CHECKS LINKS;
+  IMMUTABILITY CHECKS HISTORY; THE FIRST DOES NOT IMPLY THE SECOND.*** *My round-201 sentence was
+  correct and did not cover this, and I would not have found the gap without an instrument that
+  asks the other question.*
+  (5) **THE EXIT-MAP CHAIN RESOLVES AGAIN AT v4** -- v1 -> v2 -> v3 -> v4 by the pair, **v4 the
+  sole head at `829569e2b924d1b7`**, matching R-711; `heavy_run_form_v4.json` landed beside it for
+  REV 80's peak ruling.
+  (6) ***THE PRESERVATION COMMIT EXISTS IN MY OBJECT STORE AND IS NOT ON THE BRANCH.*** R-711
+  records `53b60c9` in `wt-de` as **not pushed**, so I expected to be unable to reach it -- **I
+  can: a git WORKTREE SHARES THE OBJECT STORE, so `cat-file` and `show` read it** -- *and
+  `merge-base --is-ancestor` says it is NOT an ancestor of `origin/mm-research`.* **So the honest
+  state is neither "unreachable" nor "landed"**: `WIP HELD (red)`, 18:50:54Z, four files.
+  *"Not pushed" and "not readable" are different, and only one of them was true.*
+  AT COMMIT TIME, UNSWEPT: ***REV 81 LANDED*** (`c8c2451`) -- *"the repair verifies FROM THE
+  OBJECTS"*. **That is the same move I made this round from the other end**: the review verifies
+  the repair by reading git's objects, and I verified the preservation commit the same way --
+  `cat-file` and `show` on an object that is **in the store and not on the branch**. ***TWO SEATS
+  REACHING FOR THE OBJECT LAYER IN THE SAME HOUR, AFTER A DAY IN WHICH EVERY OTHER VERIFICATION
+  WENT THROUGH FILES AND DIGESTS.*** *The reason is the same in both cases: a file can be edited in
+  place and a digest recomputed, but the object graph keeps what was there before* -- which is
+  exactly what my nineteen-of-fifty-one measurement had to go to git history to find. **Noted in
+  band; the round-221 flags are not edited.**
+  AND THE LANDING WAS HELD ONCE: **my first attempt refused because another seat had the register
+  open** -- `git status --short` non-empty, the chained commit never ran, **nothing staged and
+  nothing stranded.** *Second time this session (round 215 was the first), and the same clean
+  outcome both times.* I waited, re-pulled, the other seat's commit had landed, and the register
+  was clean. **The hold is only a hold because the insertion is chained on its own exit -- R-662's
+  lesson, working twice.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,419 -> 1,425; flag_provenance 964 -> 970;
+  tasks 19; **703 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SEVENTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-209 filed.)
+```

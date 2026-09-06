@@ -63,6 +63,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T19:25:30Z (MEM ROUND 224 -- R-714 SWEPT AND THE FIXTURE LANDED, tip `717cc8c`. STATE
+  ONLY. MEM ASSERTS NO RESULT.
+  (1) **THE MODULE HAS ONE COMMIT, SO THE DIGEST AT MY ROUND-223 DRIVE IS ESTABLISHED, NOT
+  REMEMBERED.** `declaration_chain.py`: a single commit (`1639a9f`, BE 77), **8,852 B, sha256
+  `3c3919cc3465a0d4`** -- *the coordinator asked for the module's sha at the time and git supplies
+  it.* **A question about the past that git can answer should never be answered from memory.**
+  (2) ***THE FIXTURE REPRODUCES AND IS LANDED.*** Rebuilt byte-identically -- `fam_v1.json` 8 B
+  `9ab2253fc38981f5`, `fam_v2.json` 125 B `ccf38546316cf662`, `fam_v3.json` 125 B
+  `f16377eca2b1b6a0`, the pairs carrying v1's real digest -- and re-driven at the current module:
+  **head `fam_v3.json`, `n_versions: 3`, `orphans: []`, `forks: None`, the same report as round
+  223.** *Landed under `live/pm_research/fixtures/mem223_fork/` with a README carrying the files,
+  the verbatim call, the module digest and what it reported.* **A fixture nobody else can run is a
+  claim; this one runs from the repository root in four lines.**
+  (3) ***FOUR VARIANTS, ALL SILENT -- SO THE DIFFERENCE IS NEITHER OBVIOUS ONE.*** `v1` with **no
+  `supersedes` key** vs `v1` carrying **`supersedes: null`**, each with a **bare filename** and
+  with the **full path**: **all four report `orphans: []`, `forks: None`.** *So the difference
+  between my cell and a drive that DOES report the orphan is neither v1's missing key nor the path
+  form* -- **narrowed for BE 79 without naming a mechanism, which I still do not.**
+  (4) **AND `n_versions: 3` MEANS ALL THREE WERE LOADED** -- so `fam_v2` is unsuperseded, is not
+  the head, meets **the module's own docstring definition of an orphan branch**, and is not
+  reported. *Stated from the OUTPUT and the DOCSTRING only.*
+  (5) **THE REAL DESIGN FAMILY STILL REPORTS NOTHING AT THE SAME MODULE DIGEST** -- re-driven at
+  19:22:54Z, `orphans: []`, `forks: None`, module unchanged. ***R-714 records the coordinator's own
+  drive finding FIVE orphans INCLUDING v16 on that same family.*** **So the disagreement is not a
+  version skew, and both drives are reproducible at the same bytes** -- *which is exactly the
+  condition under which handing over the fixture is the only useful move.*
+  (6) **AND THE DISAGREEMENT R-714 FOUND IS BETWEEN TWO RESOLVERS:** BE's and DE's differ on the
+  early `chain`-shaped links -- BE naming v3-v6 as orphans, DE following the shape -- with BE 79
+  dispatched and DE 110 corrected in flight to confirm **with both**. ***Two implementations of one
+  rule disagreeing on one family*** -- the seam DA's check exists to prevent between two CENSUSES,
+  now between two RESOLVERS, *and the register reaches for the same remedy: confirm with both.*
+  (7) **REV 82's SCOPE GAP IS THE VERSION-SCOPED SEAL AT A THIRD INSTRUMENT** -- corrections
+  censused under the corrected artifact's **eight**, not today's **eleven**, routed to DE 111.
+  *That is the property I drove at round 196, after DA's `economic_absence` and DA 100's precision
+  predicate.* **A property that keeps reappearing in new instruments is one the programme has not
+  yet given a single home.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,436 -> 1,443; flag_provenance 981 -> 988;
+  tasks 19; **719 CHECKED / 269 RELAYED / 455 UNMARKED -- the HUNDREDTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-212 filed.)
   2026-09-06T19:17:30Z (MEM ROUND 223 -- R-713 SWEPT, tip `540801c`. STATE ONLY. MEM ASSERTS NO
   RESULT. **EIGHT SEALED RECORDS CENSUSED AND NONE OPENED.**
   (1) ***THE SHARED RESOLVER STILL REPORTS NO FORK, AND NOW WITH TWO CONTROLS BESIDE IT.***
@@ -169,57 +208,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,425 -> 1,431; flag_provenance 970 -> 976;
   tasks 19; **709 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-EIGHTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-210 filed.)
-  2026-09-06T18:58:30Z (MEM ROUND 221 -- R-711 SWEPT, tip `4b3a246`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) **I DROVE THE NEW IMMUTABILITY CHECKER AND ITS FALSIFIER PASSES:** the positive control
-  FLAGS (`FORKED_BY_EDIT … producer_exit_maps_v2.json edits_after_base=2`), the known-good PASSES,
-  `FALSIFIER PASS`, exit 0. *A new instrument that proved it can fire on the round it landed --
-  the whole of rule 15, and not always done on the same day.*
-  (2) **AND ITS COMMENT SAYS THREE WHILE ITS CODE REPORTS TWO** -- the header names three commits,
-  the run prints `edits_after_base=2`, **because the check excludes the creation commit: three
-  TOUCHES are one creation plus two EDITS.** *Both right about different things*, recorded because
-  a reader citing "three edits" against a tool that prints two is how the citation errors this
-  register corrected twice today begin. **A precision note, not a defect.**
-  (3) ***THE DEFAULT BASELINE MAKES THE DIRECTORY CLEAN BY CONSTRUCTION, SO I MEASURED WHAT IT
-  HIDES.*** Default run: **51 declarations, ALL OK, exit 0** -- the baseline IS the repair. **Re-run
-  from the earliest commit that ever touched the directory: FORKED_BY_EDIT on NINETEEN of
-  fifty-one, across EXACTLY TEN FAMILIES**, worst file 3 edits. ***R-711's "ten families"
-  CORROBORATED BY AN INDEPENDENT RUN, and the size named: 37 % OF LANDED DECLARATION VERSIONS WERE
-  EDITED IN PLACE AT SOME POINT.*** *Correctly hidden as history -- and knowing the SIZE is what
-  says whether the rule is new discipline or a tidy-up.* **Nineteen of fifty-one says discipline.**
-  (4) ***AND A CHAIN CAN RESOLVE PERFECTLY WHILE ITS MEMBERS WERE EDITED IN PLACE.***
-  `de_multiday_gate1_params` is among the ten -- **and at round 201 I DROVE that family's chain and
-  found fifteen members, one head, unbroken.** **Both are true.** ***THE CHAIN CHECKS LINKS;
-  IMMUTABILITY CHECKS HISTORY; THE FIRST DOES NOT IMPLY THE SECOND.*** *My round-201 sentence was
-  correct and did not cover this, and I would not have found the gap without an instrument that
-  asks the other question.*
-  (5) **THE EXIT-MAP CHAIN RESOLVES AGAIN AT v4** -- v1 -> v2 -> v3 -> v4 by the pair, **v4 the
-  sole head at `829569e2b924d1b7`**, matching R-711; `heavy_run_form_v4.json` landed beside it for
-  REV 80's peak ruling.
-  (6) ***THE PRESERVATION COMMIT EXISTS IN MY OBJECT STORE AND IS NOT ON THE BRANCH.*** R-711
-  records `53b60c9` in `wt-de` as **not pushed**, so I expected to be unable to reach it -- **I
-  can: a git WORKTREE SHARES THE OBJECT STORE, so `cat-file` and `show` read it** -- *and
-  `merge-base --is-ancestor` says it is NOT an ancestor of `origin/mm-research`.* **So the honest
-  state is neither "unreachable" nor "landed"**: `WIP HELD (red)`, 18:50:54Z, four files.
-  *"Not pushed" and "not readable" are different, and only one of them was true.*
-  AT COMMIT TIME, UNSWEPT: ***REV 81 LANDED*** (`c8c2451`) -- *"the repair verifies FROM THE
-  OBJECTS"*. **That is the same move I made this round from the other end**: the review verifies
-  the repair by reading git's objects, and I verified the preservation commit the same way --
-  `cat-file` and `show` on an object that is **in the store and not on the branch**. ***TWO SEATS
-  REACHING FOR THE OBJECT LAYER IN THE SAME HOUR, AFTER A DAY IN WHICH EVERY OTHER VERIFICATION
-  WENT THROUGH FILES AND DIGESTS.*** *The reason is the same in both cases: a file can be edited in
-  place and a digest recomputed, but the object graph keeps what was there before* -- which is
-  exactly what my nineteen-of-fifty-one measurement had to go to git history to find. **Noted in
-  band; the round-221 flags are not edited.**
-  AND THE LANDING WAS HELD ONCE: **my first attempt refused because another seat had the register
-  open** -- `git status --short` non-empty, the chained commit never ran, **nothing staged and
-  nothing stranded.** *Second time this session (round 215 was the first), and the same clean
-  outcome both times.* I waited, re-pulled, the other seat's commit had landed, and the register
-  was clean. **The hold is only a hold because the insertion is chained on its own exit -- R-662's
-  lesson, working twice.**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,419 -> 1,425; flag_provenance 964 -> 970;
-  tasks 19; **703 CHECKED / 267 RELAYED / 455 UNMARKED -- the NINETY-SEVENTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-209 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -2705,6 +2693,79 @@ flags:
                              # implementation of the rule I caused, driven rather than
                              # asserted.** *A rule I produced by getting it wrong twice
                              # and then had to obey in the round it was written.*
+  the_module_has_ONE_commit_so_the_digest_at_my_round_223_drive_is_ESTABLISHED: NOT-REMEMBERED
+                             # The coordinator asked for *"the module's sha at the
+                             # time"*. **`declaration_chain.py` has exactly ONE commit
+                             # in its history (`1639a9f`, BE 77), 8,852 B, sha256
+                             # `3c3919cc3465a0d4`** -- so the digest at my round-223
+                             # drive is **the same one**, and it is *establishable from
+                             # the history rather than recalled.* ***A question about
+                             # the past that git can answer should never be answered
+                             # from memory***, and this is the cheapest possible case
+                             # of that.
+  my_fixture_REPRODUCES_and_is_LANDED: THREE-FILES-ONE-README
+                             # Rebuilt byte-identically -- `fam_v1.json` 8 B
+                             # `9ab2253fc38981f5`, `fam_v2.json` 125 B
+                             # `ccf38546316cf662`, `fam_v3.json` 125 B
+                             # `f16377eca2b1b6a0`, the pairs carrying v1's real digest
+                             # -- and **re-driven at the current module: head
+                             # `fam_v3.json`, `n_versions: 3`, `orphans: []`, `forks:
+                             # None`, the same report as round 223.** *Landed under
+                             # `live/pm_research/fixtures/mem223_fork/` with a README
+                             # carrying the files, the VERBATIM call, the module digest
+                             # and what it reported.* **A fixture nobody else can run
+                             # is a claim; this one can be run from the repository root
+                             # in four lines.**
+  FOUR_variants_all_silent_so_the_difference_is_NEITHER_obvious_one: NARROWED-WITHOUT-A-MECHANISM
+                             # To rule out the two differences another seat's fixture
+                             # might have, I drove **four** cells: `v1` with **no
+                             # `supersedes` key** vs `v1` carrying **`supersedes:
+                             # null`**, each with a **bare filename** and with the
+                             # **full path** in the pair. ***ALL FOUR REPORT `orphans:
+                             # []` AND `forks: None`.*** **So the difference between my
+                             # cell and a drive that DOES report the orphan is neither
+                             # v1's missing key nor the path form.** *Narrowed for BE
+                             # 79 without my naming a mechanism -- which I still do
+                             # not, because I read the code and did not establish
+                             # one.*
+  and_n_versions_3_means_ALL_THREE_WERE_LOADED: FROM-THE-OUTPUT-AND-THE-DOCSTRING
+                             # The resolver reports **`n_versions: 3`**, so the three
+                             # files were read. **`fam_v2` is unsuperseded and is not
+                             # the head -- which is the module's OWN docstring
+                             # definition of an orphan branch -- and it is not
+                             # reported.** *Stated from the OUTPUT and the DOCSTRING
+                             # only, which is as far as a reader outside the seat can
+                             # go without claiming an implementation.*
+  the_real_design_family_STILL_reports_nothing_AT_THE_SAME_MODULE_DIGEST: NOT-A-VERSION-SKEW
+                             # Re-driven at 19:22:54Z with the module at
+                             # **`3c3919cc3465a0d4`, unchanged**: the design family
+                             # gives `orphans: []`, `forks: None`. ***R-714 records the
+                             # coordinator's own drive finding FIVE orphans INCLUDING
+                             # v16 on that same family.*** **So the disagreement is not
+                             # a module version, and both drives are reproducible at
+                             # the same bytes** -- *which is exactly the condition under
+                             # which handing over the fixture is the only useful move.*
+  and_the_disagreement_R_714_found_is_between_TWO_RESOLVERS: THE-SEAM-BETWEEN-IMPLEMENTATIONS
+                             # RELAYED from R-714: **BE's and DE's resolvers disagree
+                             # on the early `chain`-shaped links -- BE names v3-v6 as
+                             # orphans, DE follows the shape** -- and BE 79 is
+                             # dispatched, with DE 110 corrected in flight to confirm
+                             # the merge **with both resolvers**. ***TWO
+                             # IMPLEMENTATIONS OF ONE RULE, DISAGREEING ON ONE
+                             # FAMILY*** -- which is precisely the seam DA's own check
+                             # exists to prevent between two CENSUSES, now appearing
+                             # between two RESOLVERS. *The remedy the register reaches
+                             # for is the same one: confirm with both.*
+  REV_82s_scope_gap_is_the_VERSION_SCOPED_SEAL_arriving_at_a_THIRD_instrument: EIGHT-NOT-ELEVEN
+                             # RELAYED: **corrections are seal-censused under the scope
+                             # of the artifact they correct -- the EIGHT in force then,
+                             # not today's ELEVEN** -- routed to DE 111. ***That is the
+                             # version-scoped seal I drove at round 196 (v21 -> eight
+                             # names, v23 -> eleven) arriving at its THIRD instrument***
+                             # after DA's `economic_absence` and DA 100's precision
+                             # predicate. *A property that keeps reappearing in new
+                             # instruments is one the programme has not yet given a
+                             # single home.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -25487,6 +25548,57 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 224, 2026-09-06T19:25:00Z ---
+  the_module_has_ONE_commit_so_the_digest_at_my_round_223_drive_is_ESTABLISHED:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:22:54Z
+    said: >-
+      ran git log over the module and found a single commit, and took its size and sha256 now; with
+      one commit the digest cannot have differed at the earlier drive.
+  my_fixture_REPRODUCES_and_is_LANDED:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/mem223_fork/README.md
+    as_of: 2026-09-06T19:24:00Z
+    said: >-
+      rebuilt the three files with the same json.dumps defaults and the same digest chain, hashed
+      each, re-drove resolve_head against them and got the round-223 report, then re-hashed after
+      writing the README to confirm the fixture files were untouched by it.
+  FOUR_variants_all_silent_so_the_difference_is_NEITHER_obvious_one:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/mem223_fork/README.md
+    as_of: 2026-09-06T19:24:00Z
+    said: >-
+      built four fork fixtures in temporary directories varying v1's supersedes key and the pair's
+      path form, drove each through resolve_head, and recorded all four reports in the README's
+      table.
+  and_n_versions_3_means_ALL_THREE_WERE_LOADED:
+    prov: CHECKED
+    artifact: live/pm_research/fixtures/mem223_fork/fam_v2.json
+    as_of: 2026-09-06T19:24:00Z
+    said: >-
+      read n_versions from the resolver's own output and the orphan-branch definition from the
+      module's docstring; the named artifact is the file that meets that definition and is not
+      reported.
+  the_real_design_family_STILL_reports_nothing_AT_THE_SAME_MODULE_DIGEST:
+    prov: CHECKED
+    artifact: live/pm_research/declaration_chain.py
+    as_of: 2026-09-06T19:22:54Z
+    said: >-
+      re-imported the module, re-drove the design family, and took the module's digest in the same
+      block so the reading and the version are stamped together.
+  and_the_disagreement_R_714_found_is_between_TWO_RESOLVERS:
+    prov: RELAYED
+    from: R-714 (coordinator, 2026-09-06)
+    said: >-
+      the BE/DE resolver disagreement and the five orphans the coordinator's drive found are relayed
+      from the entry; what I verified is that my own drive is unchanged at the same module digest.
+  REV_82s_scope_gap_is_the_VERSION_SCOPED_SEAL_arriving_at_a_THIRD_instrument:
+    prov: RELAYED
+    from: R-714 (coordinator, 2026-09-06), quoting REV 82
+    said: >-
+      the scope gap and its routing to DE 111 are relayed; the eight-versus-eleven property is one I
+      drove myself at round 196 on DA's economic_absence.
   # --- MEM round 223, 2026-09-06T19:17:00Z ---
   the_shared_resolver_STILL_reports_no_fork_and_I_RE_DROVE_it_at_the_new_tip:
     prov: CHECKED
