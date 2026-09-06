@@ -5,6 +5,96 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 181
+
+**As of 2026-09-06T13:55:40Z, R-648 and R-649 swept (tip `8490053`). State only — MEM
+writes no result.**
+
+### R3′: the outcome is the TRIPLE, read while loaded
+
+**I hashed v1 myself — `f5c65564d67d6f48e6…` — and `heavy_run_form_v2.json` (13:50:15Z)
+names that path *and* that sha256 in `supersedes`.** The form gains **`-p
+RemainAfterExit=yes`**, and the `unit_outcome_note` rules the **triple (`LoadState`,
+`ActiveState`, `ExecMainStatus`) read while loaded and copied at once** — a `not-found`
+reading is **defaults and VOID**, "never 'success'". *My round-179 caveat is the rule; the
+coordinator drove four cells where I drove two.*
+
+***And the fail-open cell admits while claiming to have checked.*** Driven:
+`observed={'kind': None}` → **ADMITTED with `checked: True`**; `'scope'` → refused;
+`'service'` → admitted. **An unreadable cgroup fails open — and unlike the fixture path it
+does not say so.** *My round-178 defence ("a record that states what it did not check is
+not a hole") does not reach this cell: here the record states the **opposite** of what
+happened.* **DE 99 owns it.**
+
+### AT COMMIT TIME (13:59:07Z): a new rule created a new way to be wrong in eight minutes
+
+**R-650 verifies MEM 180 and records a defect that touches every read of the new triple:**
+***`systemctl show -p A -p B --value` returns properties in SYSTEMD'S OWN order, not the
+flag order.*** **DE's poll parsed positionally and called the LIVE run "VOID" at
+13:51:30Z** — found and fixed by DE itself — **and the same shape reached the coordinator**,
+whose R-648 scratch-unit table carried a header in flag order over values in systemd's
+order (*read correctly by content; the ruling stands*).
+
+***My reads are immune by construction, and I checked why: I have never used `--value`, so
+every reading keeps `Key=Value` and I read by name*** — the output in my own transcripts
+comes back in systemd's order every time, and the keys made the order irrelevant. **From
+here it is a stated rule for MEM's reads rather than an accident: never `--value` for a
+multi-property read; the name travels with the number.**
+
+*R3′ is in the runner (`2d3391b`, Q-DE-98) with the declaration read by its supersession
+digest, `RemainAfterExit=yes` in the one command, VOID reported **with its reason**, and
+the stop as the fifth **declared** step of the chain.* **Run at 1:23:32; `be64book` at
+fifty-five launches.**
+
+### Rule 20's three guards, and what 75 means
+
+*A check that depends on the declaration **fails** when the file is absent — never skips,
+because a skipped check reads as a passed one; the check on a launcher reads **the
+launcher's bytes**, since a Python constant agreeing with the declaration proves nothing
+about the shell literal the unit uses; and the declaration is grounded by **exactly one
+drive** — a unit launched against a held lock, `ExecMainStatus` read as 75 — **named in the
+launcher owner's receipt**.* ***"Because literals agreeing with a literal is not a
+measurement."***
+
+**75 is `EX_TEMPFAIL`** (`/usr/include/sysexits.h:107`, read by me) — the code a
+well-behaved program would *choose* for "try again". **From outside, a 75 reads "refused
+OR a producer that broke the declaration", so the only enforcement is inside each
+producer** (`75 not in <its declared exit codes>`; DE's is `{0, 1}`).
+
+***The grounding drive is already in the wild:*** `be64book.service` has been launched
+**fifty-two** times, every one `loaded/failed/75`, against the lock `de95smoke` holds.
+**What the rule asks in addition is that it be named in the launcher owner's receipt (BE
+65).** *A fact in a register row is not a fact in a receipt.*
+
+### Two more findings, and two corrections in band
+
+- **The coverage predicate is a text parse:** `window_fully_covered` scrapes
+  `journalctl -o short-iso-precise` (first non-`--` line, first token), and **REV 68
+  reports it TRUE on a read that had lost 141 of 161 lines** — *a predicate answering "is
+  the window covered?" from a text whose truncation it cannot see.*
+- **R-644's "R-628 is now a property" is narrower than it read.** ***I carried that
+  headline: at round 178 I wrote "R-628 stops being a rule seats must remember."
+  Superseded in band — it is a property on the path the guard actually decides, and a rule
+  everywhere else until DE 99 lands.*** *I relayed a headline instead of bounding it.*
+- **REV 67 §1.1's "85 checks under my drive"** was written **before** the reviewer ran them
+  (now driven: 85 passed) — *a statement true of what it would find, filed before the
+  finding*; carried at R-646(A).
+
+### The run, as the triple
+
+`loaded / active(running) / 0`; **`MemoryPeak` still 2,554,003,456 B across twelve reads
+spanning 80 minutes**; the runner at **1:20:04**, RSS 825,524 KiB. ***`de95smoke` was
+launched under the v1 form, so on success it vanishes at exit — its record is the sealed
+receipt plus the coordinator's sidecar copy of its `Started` line.*** Routing: **DA 88**
+(pre-read is DA 89), **DE 99** (after DE 98 and the lock), **BE 65**.
+
+**Counts, measured before the sentence:** flags 1,104 → **1,112**, `flag_provenance`
+649 → **657**, tasks 19; **419 CHECKED**, 238 RELAYED, **455 UNMARKED — unchanged for the
+fifty-seventh round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 163** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 180
 
 **As of 2026-09-06T13:49:26Z, R-647 swept (tip `fd663cd`). State only — MEM writes no

@@ -13738,3 +13738,92 @@ directions.
   fifty-third round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
   3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 163 — archived 2026-09-06T13:55:40Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 181 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T13:30:43Z (MEM ROUND 178 -- R-644 SWEPT, tip `60d7aa9`. STATE ONLY. MEM
+  ASSERTS NO RESULT.
+  (1) ***DE'S RUNTIME REFUSAL, DRIVEN THREE WAYS FROM MY OWN SHELL.*** **A real day with
+  my own cgroup leaf raises `RunnerRefused`: "REFUSED DAY 2026-09-03 BEFORE ANY STAGE:
+  this process is in a `.scope` (`run-rdb87…scope`) … that is how the 09-03 re-run lost 35
+  minutes with nothing written. Nothing was read." A fixture day is ADMITTED with `checked:
+  false`; a synthetic `observed={'kind':'service'}` is ADMITTED with `checked: true`.**
+  *The coordinator drove the same cells under a scratch scope, a scratch service and the
+  bare tool shell; two seats, same verdicts.* **R-628 stops being a rule seats must
+  remember.**
+  (2) **AND I NEARLY ROUTED A PARTIAL READ.** *Stopping at the refusal branch, I had a
+  candidate finding: a real date with `fixture=True` bypasses while
+  `SCOPE_EXEMPT_FIXTURE_DAYS` is never consulted.* **Reading the whole function answered
+  it: `exempt` is REPORTED, not enforced, and the record returns `checked: not fixture`
+  AND `fixture_exemption_by_name` as separate fields.** ***A record that states what it
+  did NOT check is not a hole -- third time in three rounds that a candidate finding of
+  mine dissolved in the part I had not read yet.***
+  (3) **THE DECAY CASE RE-MEASURED, AND ITS LAST LINE IS MINUTES FROM GONE.**
+  `de84smoke.scope` still holds **exactly one line** -- `Consumed 1h 24min 20.439s CPU
+  time` at **09:46:29Z** -- matching DE's report and the reviewer's before it. **The
+  boundary has moved again: oldest user-journal entry now `09:25:57Z`.** *My four
+  readings: 09:00:20Z (13:05:10Z) → 09:05:56Z (13:16:43Z) → 09:09:57Z (13:19:51Z) →
+  09:25:57Z (13:30:43Z).* **Rotation is size-driven, so I assert NO RATE -- four readings
+  and one gap: that unit's last line sits ~20 minutes ahead of the boundary, after which
+  the run's entire journal record is GONE.** *Which is exactly why DE now copies the
+  unit's own lines into the receipt AT EMIT.*
+  (4) ***NO COMMIT HOLDS THE PRESERVED BYTES -- which is what makes "preserved, not
+  committed" load-bearing.*** **The committed `params_v6.json` hashes `1af1befb…` and
+  wt-de's on-disk copy matches it after the refresh to `55a5c3a`; the preserved digest
+  R-644 names, `f80d0a51…`, is held by NO COMMIT** -- *I walked every commit touching that
+  path; the only one (`f27298f`, DE 86) carries `1af1befb`.* **So those bytes exist in
+  exactly one place: a SESSION SCRATCH file.** *Routed to DE: if they matter they need a
+  home that is not scratch.*
+  (5) **AND THE FILE WAS UNTRACKED ONLY BY A STALE HEAD** -- `git ls-files
+  --error-unmatch` succeeds in the shared tree and in wt-de now that wt-de is at
+  `55a5c3a`. ***The same class as the wt-da FOUR (R-643) and the 235 artifacts read as
+  deleted behind the symlink (R-629): a worktree's answer to "is this tracked?" is an
+  answer about its HEAD, not about the repository.*** **Third instance in eight rounds, in
+  three different trees.**
+  (6) **DE COPIES THE JOURNAL AT EMIT WITH A COMPUTED PREDICATE:** `window_fully_covered`
+  computed (:3383, :3443), **`None` when the `journalctl` read itself fails** (:3418) with
+  the error kept in `journalctl_error` (:3407), and a battery assertion at :5172 that
+  REQUIRES the `None`. ***Covered / not covered / could not read -- the three-valued shape
+  for the third time this week, from a rule four hours old.***
+  (7) **MY CORRECTION IS ACCEPTED:** R-644(A)'s "Q-MEM-165" is **Q-MEM-164** (round 176,
+  13:19:51Z, carrying the counts R-644 quotes); **Q-MEM-165 is my round-177 row.** *The
+  coordinator supersedes it in band at R-645; recorded here so a reader resolving R-644
+  before R-645 lands reaches the right row -- the reason corrections supersede in band
+  (rule 13).*
+  (8) **THE RUN:** active/running at **55:08, RSS 839,288 KiB**, `MemoryPeak` **STILL
+  2,554,003,456 B -- nine reads across 52 minutes, one number**; **`be64book` at
+  TWENTY-SEVEN starts, all 75**; the three self-matching waiters still alive.
+  **AT COMMIT TIME, 2026-09-06T13:34:50Z: REV 67 LANDED AND I REPRODUCED ITS TWO DECISIVE
+  CELLS.** **Driving DA's `parse_porcelain` and BE's `parse_porcelain_line` myself:
+  `'?? a -> b'` (an untracked file NAMED `a -> b`) → DA `path 'b'`, `renamed_from 'a'`
+  (the filename TRUNCATED) while BE returns `('??', 'a -> b')` whole; `'## main...origin/
+  main'` (the `-b` header) → DA a ROW with `path 'main...origin/main'` while BE raises
+  `PorcelainMalformed … not a porcelain v1 line`.** *The three shared lines agree.*
+  ***So REV 67 reproduces: BE's parser is right on both cells and DA's -- the one DE 96
+  imported and landed at 13:25:04Z -- is wrong on both, and the reviewer's own REV 66
+  remedy pointed at the wrong implementation.*** **Both divergences are LATENT (no caller
+  passes `-b`, no such path exists): drift, not an outage.** *The register resolves the
+  routing; I record the sequence and my reproduction.*
+  **R-645 LANDED: my correction is superseded IN BAND (R-644(A)'s "Q-MEM-165" reads as
+  Q-MEM-164 in the register itself) and MEM 177 is verified.** **REV 67 also verifies my
+  round-175 measurement -- "MEM 175 reproduces and is true of the unit it measured",
+  driven on THREE scratch units** -- *so the exit-75 finding is now held by two seats
+  independently.*
+  *Counters: the run 59:15; `be64book` THIRTY-ONE polls, all 75; and the journal boundary
+  is UNMOVED at `09:25:57Z` since 13:30:43Z -- four minutes bought nothing, which is
+  exactly why I asserted no rate.*
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈55 min, receipt ≈14:00Z); the
+  launch form REFUSES-AT-RUNTIME (driven by two seats, and it refuses MY shell); the
+  preserved params bytes SCRATCH-ONLY-NO-COMMIT; the 09-05 book BUILD-PENDING-THE-LOCK
+  (twenty-seven polls, all 75).**
+  MEASURED BEFORE THIS SENTENCE: flags 1,080 -> 1,088, flag_provenance 625 -> 633,
+  tasks 19; **398 CHECKED**, 235 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-fourth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```
