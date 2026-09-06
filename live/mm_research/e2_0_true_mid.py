@@ -945,6 +945,12 @@ def selftest() -> int:                                        # noqa: C901
        "known-bads -- the refusal discriminates rather than always firing")
 
     # --- THE LEDGER ROOT: resolved, recorded, and a rootless tree REFUSES ---
+    ok(DECL_PATH.is_relative_to(CODE_ROOT)
+       and not str(DECL_PATH).startswith(str(RAW)),
+       "ROOT DISCIPLINE: the declaration is resolved against the CODE root "
+       "and the tape against the LEDGER root. They were the same directory "
+       "until PM_DATA_ROOT split them, and the first `relative_to` that did "
+       "not say which root it meant raised ValueError on the first split run")
     ok(DATA_ROOT_BRANCH in ("1_env_PM_DATA_ROOT",
                             "2_code_tree_carries_the_tape",
                             "3_unresolved_no_tape"),
@@ -1081,7 +1087,11 @@ def run(symbols, decl, out_path: Path | None):
                       "worktree's own data/ carries only the git-tracked "
                       "receipts, not the tape; running there silently would "
                       "measure a different population.")},
-              "declaration": {"path": str(DECL_PATH.relative_to(ROOT)),
+              # THE DECLARATION IS A CODE-TREE PATH, NOT A LEDGER PATH.
+              # Once PM_DATA_ROOT can point the ledger somewhere else, every
+              # `relative_to` has to name WHICH root it means -- this one
+              # raised ValueError the first time the two differed.
+              "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
                               "sha256": DECL_SHA,
                               "carrying_commit": decl["carrying_commit"]},
               "symbols": {}}
