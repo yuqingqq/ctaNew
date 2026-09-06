@@ -1,0 +1,110 @@
+{
+ "LARGE_ARTIFACTS_PINNED_BY_DIGEST_NOT_COMMITTED": {
+  "files": [
+   {
+    "bytes": 42663031,
+    "location": "/home/yuqing/ctaNew_forward_runs/20260905_be44",
+    "name": "be_forward_day_SEALED_scores_20260905.json",
+    "sha256": "1370598870c5fa754f21c79203a98ea306c340d687d912d27655e5b002863705"
+   },
+   {
+    "bytes": 206084218,
+    "location": "/home/yuqing/ctaNew_forward_runs/20260905_be44",
+    "name": "be_forward_day_SEALED_feed_20260905.jsonl",
+    "sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+   }
+  ],
+  "rule": "result-bearing artifacts under ~1 MB commit with their code; larger ones are pinned by sha256"
+ },
+ "THE_RACE_FRAMING_THIS_DAY_MUST_BE_READ_UNDER": {
+  "AND_IT_CANNOT_VALIDATE_THE_CHANGED_PIPELINE": "V2's own HANDOFF: the prior race cannot validate the V2 pipeline, because the pipeline the race scores is not the pipeline V2 changed. This limit is INDEPENDENT of the directional limit above and both stand together.",
+  "G": 5,
+  "THE_RACE_IS_DIRECTIONAL_NOT_SIGNIFICANCE_BEARING": "USER ruling, R-529(A). At G = 5 with recorded multiplicity m = 2 the BEST ACHIEVABLE adjusted p is 0.0625 > 0.05 -- the ceiling of a clustered permutation test is its floor 1/2^G. Reaching G = 5 therefore CANNOT make this race significance-bearing, and no result from it may be stated as significant.",
+  "accrual_of_09_05": "all four conjuncts TRUE at the 00:06:01Z scheduled unit; content_liveness CONTENT_LIVE; mask WRITTEN; exit=0 for 20260905 in the unit's own log. RELAYED from the coordinator's dispatch -- this seat verified the preflight's own six checks and the mask's existence, not the scheduled unit's log.",
+  "days": [
+   "2026-09-01",
+   "2026-09-02",
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05"
+  ],
+  "this_is_the_FIFTH_accrued_day": true,
+  "what_this_receipt_therefore_is": "a scored, sealed, gate-complete FIFTH day. It is evidence of ACCRUAL and of PIPELINE HEALTH. It is not evidence for or against any candidate, and this seat asserts no read."
+ },
+ "THE_READ_IS_NOT_MINE_AND_I_DID_NOT_TAKE_IT": {
+  "and_did_not_open_the_earlier_days": "09-01..09-04 sealed reads were NOT read and NOT compared against. The read across days is the coordinator's to declare.",
+  "sealed": true,
+  "sealing_note": "per-action scores and every value metric are written to the sealed file only; this receipt carries counts, identities and hashes and NO metric (rule 11). Unsealing is the coordinator's or the USER's act.",
+  "this_seat_did_not_open": [
+   "be_forward_day_SEALED_scores_20260905.json",
+   "be_forward_day_SEALED_feed_20260905.jsonl"
+  ]
+ },
+ "a_finding_about_the_scorer_not_the_day": {
+  "be_score_forward_day.sh_is_wired_into_no_unit_or_timer": "RELAYED from the coordinator, who checked every user service and the midnight script. Consequence: scoring has always been a MANUAL step, which is why 09-05 sat unscored for 26 hours after it accrued. Recorded here because a receipt that does not say why it is late invites the reading that the day was late."
+ },
+ "as_of": "2026-09-06T02:38Z",
+ "decides_nothing": "REPORTED (rule 14).",
+ "gates": {
+  "all_pass": true,
+  "n": 12,
+  "names": [
+   "user_admission",
+   "day_closed_and_attributed",
+   "frozen_contract",
+   "population_supply_and_bridge",
+   "materialise_frozen_bytes",
+   "import_closure_disclosure",
+   "import_anchors_from_run_dir",
+   "selection_from_specs",
+   "rows_and_scores_streamed",
+   "reconciliation",
+   "bridged_windows_equal_row_windows",
+   "mask_seam_and_complement_report"
+  ]
+ },
+ "population": {
+  "coins": [
+   "bnb",
+   "btc",
+   "doge",
+   "eth",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "governed": true,
+  "total_masked": 0,
+  "total_windows": 2016,
+  "windows_per_coin": 288
+ },
+ "producing_code": {
+  "day_runner": "live/pm_research/be_forward_day.py",
+  "note": "the scorer was run exactly as built; no flag, env var or default was altered for this run.",
+  "preflight": "live/pm_research/be_forward_preflight.py",
+  "scorer": "live/pm_research/be_score_forward_day.sh",
+  "unchanged_this_round": true
+ },
+ "protocol": "BE_FORWARD_DAY_RACE_CONTEXT_V1",
+ "receipt": {
+  "bytes": 26894,
+  "path": "data/pm_5min/derived/be_forward_day_receipt_20260905.json",
+  "prefix_matches": true,
+  "scorer_reported_sha256_prefix": "d65cadbcf4af6818",
+  "sha256": "d65cadbcf4af6818ff186395537b3e412f8c5f0c0a1766b55a1669a070f3e5cb"
+ },
+ "run": {
+  "command": "live/pm_research/be_score_forward_day.sh 20260905 /home/yuqing/ctaNew_forward_runs/20260905_be44",
+  "expected_wall_from_preflight": "~1,600-1,700 s on the three days scored so far",
+  "finished_utc": "2026-09-06T02:35:26Z",
+  "memory_max": "8G, the scorer's own default; cap NOT raised (R-174)",
+  "outdir_was_new_and_empty": true,
+  "preflight": "GO at 02:12:06Z, 6/6 checks, blockers []",
+  "run_exactly_as_built": true,
+  "scoring_rc": 0,
+  "started_utc": "2026-09-06T02:12:06Z",
+  "wall_s": 1400
+ },
+ "what_this_is": "a COMPANION to the 09-05 receipt, not a correction of it and not a sidecar annotation on a claim. It resolves BY DIGEST to exactly one receipt and supplies the race framing the generated receipt does not carry.",
+ "why_it_is_separate": "the receipt is machine-generated by be_forward_day.py and is SEALED. Adding a field would mean editing a sealed artifact (forbidden, rule 13) or re-running and re-sealing the day for a prose field (23 minutes, and a second seal of an accrued day is a worse risk than a companion). Rule 13's objection to sidecars is that automated readers resolve receipt FIELDS -- so this file pins the receipt by sha256 rather than sitting beside it by filename."
+}

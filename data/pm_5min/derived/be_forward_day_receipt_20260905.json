@@ -1,0 +1,845 @@
+{
+ "as_of_utc": "2026-09-06T02:12:06Z",
+ "blackout_accounting": {
+  "accounting": "ACCOUNTED LOSS (R-409): blackout windows are excluded from the score and COUNTED here, never silently dropped. The day accrues on its non-blackout complement.",
+  "day_governed": true,
+  "effective_from_day": "20260902",
+  "liveness": {
+   "is_resolved": true,
+   "is_thin": false,
+   "read_from": "content_liveness_rule",
+   "status": "CONTENT_LIVE"
+  },
+  "liveness_resolved": true,
+  "mask_artifact": "da_blackout_mask_v1",
+  "mask_as_of_utc": "2026-09-06T00:06:27Z",
+  "mask_day_closed_calendar": true,
+  "mask_detector": {
+   "authority": "USER ruling 2026-09-01, R-386",
+   "definition": "below thin_frac x the SAME-DAY (day, coin) median AND not overlapped by a gap-ledger interval",
+   "module": "da_content_liveness_rule",
+   "module_sha256_prefix": "7196676840304f30",
+   "thin_frac": 0.05,
+   "version": "v1_FROZEN"
+  },
+  "mask_path": "/home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_20260905.json",
+  "mask_present": true,
+  "mask_requirement_basis": "a mask is PRESENT and is CONSUMED for any day (R-411: presence consumes, governance requires); this day is GOVERNED against EFFECTIVE_FROM_DAY '20260902'",
+  "mask_total_masked_windows": 0,
+  "masked_fraction": {
+   "btc": 0.0,
+   "eth": 0.0
+  },
+  "masked_fraction_total": 0.0,
+  "n_actions_masked_total": 0,
+  "n_masked": {
+   "btc": 0,
+   "eth": 0
+  },
+  "n_windows_scored": {
+   "btc": 492515,
+   "eth": 335212
+  },
+  "ruling": "R-409 (USER, 2026-09-02)"
+ },
+ "cluster_disclosure": {
+  "G_complete_days_in_THIS_run": 1,
+  "authority": "CLAUDE.md rule 8 -- below G=5 complete days: point estimate, no interval, and say so",
+  "bar_for_an_interval": 5,
+  "intervals_claimable_from_this_run_alone": false,
+  "n_windows_with_rows": 2016,
+  "pooling_note": "G counts COMPLETE UTC DAYS across the runs a claim rests on, not windows within one; this field describes THIS run and a pooled claim must recompute it over its own days",
+  "ruled_cluster_unit": "UTC day",
+  "unit_available_below_the_ruled_unit": "window",
+  "weaker_than_ruled": true,
+  "what_this_run_supports": "A POINT ESTIMATE AND NO INTERVAL",
+  "why_a_window_level_p_is_OPTIMISTIC": "a window-level null treats windows as exchangeable draws. Windows inside one UTC day share coin, regime and book state, so the null variance is understated and any p computed on them is SMALLER than a day-clustered p would be. One day cannot be permuted at the ruled unit at all."
+ },
+ "coin_coverage": {
+  "coins_supplied": [
+   "bnb",
+   "btc",
+   "doge",
+   "eth",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "coins_supplied_without_a_fit": [
+   "bnb",
+   "doge",
+   "hype",
+   "sol",
+   "xrp"
+  ],
+  "coins_with_a_frozen_fit": [
+   "btc",
+   "eth"
+  ],
+  "n_windows_supplied_without_a_fit": 1440,
+  "why": "the frozen candidate carries fits for ['btc', 'eth'] only. Windows of the other coins are supplied, replayed and counted, and produce NO score. The day is not scored whole and this says so."
+ },
+ "day": "20260905",
+ "day_verdict": {
+  "attribution": "SCHEDULED UNIT",
+  "day_closed_calendar": true,
+  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=f9e57c412d1a42ed9cf3e94046fcf428)",
+  "write_reason_prefix_source": "da_governed_verdict_preflight.SCHEDULED_PREFIX"
+ },
+ "decision_field_check": {
+  "allowlist": {
+   "gates[].gate": "the NAME of a gate this run ran (a string identifier), not a right to anything. Any non-string here refuses, and the same word at any other path refuses."
+  },
+  "checked_keys": 273,
+  "excused_paths": [
+   "gates[].gate"
+  ],
+  "vocabulary_size": 17,
+  "vocabulary_source": "de_admissible_windows.DECISION_VOCAB, by value, plus named local additions"
+ },
+ "feed": {
+  "bytes": 206084218,
+  "contents": "one action-keyed record per scored row: the action key, the times, the score and the latency-resolved preventable value",
+  "fields": [
+   "slug",
+   "side",
+   "gen",
+   "t0",
+   "t_start",
+   "score",
+   "score_incumbent",
+   "any_fill_ahead",
+   "value_cents",
+   "preventable_shares",
+   "level"
+  ],
+  "latency_ms_resolved": 50,
+  "n_rows": 827727,
+  "n_windows": 576,
+  "not_in_receipt": "no value from the feed appears outside it; this block is paths, counts and hashes only (rule 11)",
+  "path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_feed_20260905.jsonl",
+  "protocol": "BE_FORWARD_METRIC_FEED_V1",
+  "sealed": true,
+  "sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491"
+ },
+ "frozen": {
+  "anchors": {
+   "data/mm_hf/collector_runs.jsonl": {
+    "compared": false,
+    "source": "state_at_build",
+    "why": "pin_semantics marks this state_at_build; it MUST NOT be compared for equality when validating a reproduction"
+   },
+   "data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json": {
+    "compared": true,
+    "materialised_to": null,
+    "sha256": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
+    "source": "disk (not tracked at the freeze commit; data/ is gitignored, so the manifest's sha is the only binding and it is checked here)",
+    "why_not_materialised": "a DATA anchor is verified by content where it lives; copying it into the run dir would shadow the data-root symlink the frozen code needs"
+   },
+   "live/pm_research/flow_fill_development.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/flow_fill_development.py",
+    "sha256": "d5f381cccdc4b7b6e12fa80d0c05947c8338bb0683cd7a0e58f74ac53074dce4",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/flow_intensity.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/flow_intensity.py",
+    "sha256": "e65c812fd42fc8d76c368ebbd6312c8cfbc86f06f2ed0ca726f38e69f783b367",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_action_eval.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_action_eval.py",
+    "sha256": "55ea57b995afdd4c46ae5909b40a9e64cc1b5092a358399dd36d8c7e03225a06",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_exposure_rows.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_exposure_rows.py",
+    "sha256": "8fb34b0319b0d5966938b6a9a9eddfc96d00a28a1aeaaef624e68aad12f9b9bf",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_hazard_model.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_hazard_model.py",
+    "sha256": "0091fe75c38af79ec8b6bf23c084916d2c9a139aa247847676f4fd6f2cbbfeca",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/harmful_rows_loader.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_rows_loader.py",
+    "sha256": "8b90c48cfe331e7184fdafdaea17ae9168e65eba0f0d4e3f802b250c92df2308",
+    "source": "git:1b53929"
+   },
+   "live/pm_research/policy_bounds_v1.py": {
+    "compared": true,
+    "materialised_to": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/policy_bounds_v1.py",
+    "sha256": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374",
+    "source": "git:1b53929"
+   }
+  },
+  "closure": {
+   "closure": [
+    "live/pm_research/adverse_feature_rows.py",
+    "live/pm_research/adverse_feature_rows_fast.py",
+    "live/pm_research/adverse_move_fast.py",
+    "live/pm_research/adverse_move_harmful.py",
+    "live/pm_research/adverse_move_hurdle.py",
+    "live/pm_research/adverse_move_nonlinear.py",
+    "live/pm_research/de_constraints.py",
+    "live/pm_research/edge_layer1.py",
+    "live/pm_research/flow_fill_development.py",
+    "live/pm_research/flow_intensity.py",
+    "live/pm_research/harmful_action_eval.py",
+    "live/pm_research/harmful_candidate_manifest.py",
+    "live/pm_research/harmful_exposure_rows.py",
+    "live/pm_research/harmful_hazard_model.py",
+    "live/pm_research/harmful_rows_loader.py",
+    "live/pm_research/inventory_walk.py",
+    "live/pm_research/layer2_v1.py",
+    "live/pm_research/placement_skew.py",
+    "live/pm_research/policy_bounds_v1.py",
+    "live/pm_research/policy_optimizer.py",
+    "live/pm_research/policy_optimizer_cancel_hold_skew.py",
+    "live/pm_research/policy_optimizer_cancel_skew.py",
+    "live/pm_research/policy_optimizer_queue_realistic.py",
+    "live/pm_research/skew_bound.py",
+    "live/pm_research/tier1_pipeline.py",
+    "live/pm_research/warning_window.py"
+   ],
+   "closure_method": "STATIC import walk (ast Import/ImportFrom, transitive) over the anchors' source. It is what the anchors can REACH, not what this run observed executing: a module reached only on a branch not taken is still listed, and a dynamic import (importlib, __import__) is NOT seen at all.",
+   "n_in_closure": 26,
+   "n_not_frozen": 2,
+   "not_frozen_in_closure": [
+    {
+     "path": "live/pm_research/tier1_pipeline.py",
+     "sha256_at_HEAD": "dd19c259a82b1ac1",
+     "sha256_at_freeze": "f918b9ecbb6b173f"
+    },
+    {
+     "path": "live/pm_research/warning_window.py",
+     "sha256_at_HEAD": "72abb33062bb647a",
+     "sha256_at_freeze": "d117923a7ca1700a"
+    }
+   ],
+   "why": "anchors are imported from the run dir at 1b53929; every module STATICALLY REACHABLE from them that is NOT an anchor resolves at HEAD. Those whose bytes differ between HEAD and the freeze are named here \u2014 this run is not claiming they were frozen."
+  },
+  "data_root": {
+   "path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/data",
+   "symlink_to": "/home/yuqing/ctaNew/data",
+   "why": "the frozen code derives its data root from __file__; the DATA is not frozen (it is the day being scored), so the run dir mirrors the repo's. Code from the freeze, data from today, and the receipt says which is which"
+  },
+  "frozen_commit": "1b53929",
+  "imports": {
+   "data_root_probe": {
+    "frozen_flow_intensity_PM": "/home/yuqing/ctaNew/data/pm_5min",
+    "n_archive_slugs": 35149,
+    "resolves_to_repo_data": true
+   },
+   "imported_from": {
+    "flow_fill_development": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/flow_fill_development.py",
+    "flow_intensity": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/flow_intensity.py",
+    "harmful_action_eval": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_action_eval.py",
+    "harmful_exposure_rows": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_exposure_rows.py",
+    "harmful_hazard_model": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_hazard_model.py",
+    "harmful_rows_loader": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/harmful_rows_loader.py",
+    "policy_bounds_v1": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research/policy_bounds_v1.py"
+   },
+   "n_imported": 7,
+   "sys_path_head": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen/live/pm_research"
+  },
+  "manifest": "harmful_candidate_manifest_v1.json",
+  "manifest_sha256_bound": "eb8733da2c8e2126d79e290c398d2ea65b8680721c29198a8219dd80098e04e4",
+  "n_compared": 8,
+  "root": "/home/yuqing/ctaNew_forward_runs/20260905_be44/frozen"
+ },
+ "frozen_contract": {
+  "all_anchors_match_at_freeze_commit": true,
+  "anchors_verified_at_freeze_commit": 7,
+  "contract": "HOLDS",
+  "contract_conjuncts": {
+   "all_anchors_match_at_freeze_commit": true,
+   "at_least_one_anchor_verified": true,
+   "drift_is_survivable": true
+  },
+  "contract_is_derived_not_asserted": true,
+  "disclosed_not_waived": true,
+  "load_bearing_keys": {
+   "derived_from": "an AST walk of the functions REACHABLE FROM `run_forward_day` that parse the manifest -- not from a list, not from every function in the file, and counting a function passed BY REFERENCE as an edge (BE21-R2)",
+   "load_bearing_keys": [
+    "hashes",
+    "pin_semantics"
+   ],
+   "n_functions_reachable_from_run_forward_day": 51,
+   "read_by": {
+    "hashes": [
+     "frozen_contract_gate",
+     "materialise_frozen"
+    ],
+    "pin_semantics": [
+     "frozen_contract_gate",
+     "materialise_frozen"
+    ]
+   },
+   "why": "a manifest key the run path never reads cannot change what the run does; a key it reads can. That is the only defensible line between drift that must refuse and drift that may be disclosed."
+  },
+  "manifest": "harmful_candidate_manifest_v1.json",
+  "manifest_drift": {
+   "bound_sha256": "eb8733da2c8e2126d79e290c398d2ea65b8680721c29198a8219dd80098e04e4",
+   "disclosure": "this manifest has drifted from the sha the frozen candidate binds. The keys above are the whole of the difference, and the load-bearing set is DERIVED from the code that reads the manifest.",
+   "disk_sha256": "037627531cbe746d0750f8976589bd31a53f0ee1a59381177c1c1d8799f76a91",
+   "drift_touches_the_run_path": false,
+   "drifted": true,
+   "keys_that_differ": [
+    "as_of_utc",
+    "git_commit",
+    "git_dirty"
+   ],
+   "load_bearing_keys": [
+    "hashes",
+    "pin_semantics"
+   ],
+   "load_bearing_keys_that_drifted": [],
+   "manifest": "harmful_candidate_manifest_v1.json"
+  },
+  "materialise_frozen_sources_from_the_freeze_commit": true,
+  "n_working_tree_drift": 5,
+  "working_tree_drift": [
+   {
+    "anchor": "live/pm_research/flow_intensity.py",
+    "bound": "e65c812fd42fc8d7",
+    "in_tree": "e0b0c5787770ba3d"
+   },
+   {
+    "anchor": "live/pm_research/harmful_action_eval.py",
+    "bound": "55ea57b995afdd4c",
+    "in_tree": "2c4e21936e3fc1d2"
+   },
+   {
+    "anchor": "live/pm_research/harmful_exposure_rows.py",
+    "bound": "8fb34b0319b0d596",
+    "in_tree": "1bbd8e7525fc27ac"
+   },
+   {
+    "anchor": "live/pm_research/harmful_hazard_model.py",
+    "bound": "0091fe75c38af79e",
+    "in_tree": "58b8a2c08eea3cc9"
+   },
+   {
+    "anchor": "live/pm_research/harmful_rows_loader.py",
+    "bound": "8b90c48cfe331e71",
+    "in_tree": "c53c64223474d29c"
+   }
+  ],
+  "working_tree_drift_is_not_fatal_because": "`materialise_frozen` sources every CODE anchor from `_git_blob(FROZEN_COMMIT, k)` and refuses a mismatch there, so the bytes the run executes are the freeze's whatever the tree holds. Asserted from that function's own source, not stated: if it ever stops doing so, this gate refuses instead of disclosing."
+ },
+ "gates": [
+  {
+   "gate": "user_admission",
+   "result": "PASS"
+  },
+  {
+   "gate": "day_closed_and_attributed",
+   "result": "PASS"
+  },
+  {
+   "gate": "frozen_contract",
+   "result": "PASS"
+  },
+  {
+   "gate": "population_supply_and_bridge",
+   "result": "PASS"
+  },
+  {
+   "gate": "materialise_frozen_bytes",
+   "result": "PASS"
+  },
+  {
+   "gate": "import_closure_disclosure",
+   "result": "PASS"
+  },
+  {
+   "gate": "import_anchors_from_run_dir",
+   "result": "PASS"
+  },
+  {
+   "gate": "selection_from_specs",
+   "result": "PASS"
+  },
+  {
+   "gate": "rows_and_scores_streamed",
+   "result": "PASS"
+  },
+  {
+   "gate": "reconciliation",
+   "result": "PASS"
+  },
+  {
+   "gate": "bridged_windows_equal_row_windows",
+   "result": "PASS"
+  },
+  {
+   "gate": "mask_seam_and_complement_report",
+   "result": "PASS"
+  }
+ ],
+ "masking": {
+  "applied_at": "supply (de_admissible_windows), before rows",
+  "n_masked_at_scoring": {
+   "btc": 0,
+   "eth": 0
+  },
+  "n_masked_at_supply": {
+   "bnb": 0,
+   "btc": 0,
+   "doge": 0,
+   "eth": 0,
+   "hype": 0,
+   "sol": 0,
+   "xrp": 0
+  },
+  "n_masked_total_at_supply": 0,
+  "why": "R-418 supplies PRESENT minus MASKED, so the blackout is already excluded when rows are built. A reader seeing 0 at the scoring seam must not conclude the day had no blackout."
+ },
+ "n_actions_scored": {
+  "btc": 492515,
+  "eth": 335212
+ },
+ "outcome": "SCORED",
+ "population": {
+  "counts_per_coin": {
+   "bnb": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "btc": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "doge": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "eth": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "hype": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "sol": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   },
+   "xrp": {
+    "n_masked": 0,
+    "n_present": 288,
+    "n_supplied": 288
+   }
+  },
+  "governed": true,
+  "ledger_vs_archive": {
+   "agree": true,
+   "archive_index_source": "flow_intensity (tree copy; the frozen anchors are imported later in the sequence)",
+   "coins": [
+    "bnb",
+    "btc",
+    "doge",
+    "eth",
+    "hype",
+    "sol",
+    "xrp"
+   ],
+   "per_coin": {
+    "bnb": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    },
+    "btc": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    },
+    "doge": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    },
+    "eth": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    },
+    "hype": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    },
+    "sol": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    },
+    "xrp": {
+     "n_archive": 288,
+     "n_archive_not_ledger": 0,
+     "n_ledger": 288,
+     "n_ledger_not_archive": 0
+    }
+   }
+  },
+  "mask_consumed": true,
+  "mask_identity_hash": "98e36f6c3024e3a9b5ce237b568e83396d55fd562ea92a01e7e94641ea3d132b",
+  "n_bridged_specs": 2016,
+  "n_supplied_total": 2016,
+  "present_source": "/home/yuqing/ctaNew/data/pm_5min/markets.jsonl",
+  "ratification": {
+   "pair_asserted": {
+    "asserted": true,
+    "ref_seen": "R-419",
+    "unverifiable_seen": [],
+    "verified_seen": true
+   },
+   "ratification_ref": "R-419",
+   "require_verified": {
+    "checker": "de_ratification_check.require_verified",
+    "checks_seen": 7,
+    "provenance_absent": true,
+    "race_admissible_reported_by_the_checker": true,
+    "ratification_kind": "RACE",
+    "ratification_ref_used": "R-419",
+    "scope_days_reported_by_the_checker": "FORWARD_RACE_DAYS",
+    "unverifiable": [],
+    "verified": true,
+    "why_this_gate": "no development ratification covers this day"
+   },
+   "unverifiable": [],
+   "verified": true
+  }
+ },
+ "producing_code": {
+  "carrying_commit": "4c1764644dba0535e59b2c22590fbb13d948e7e7",
+  "carrying_commit_resolved": true,
+  "driver": "be_forward_day.py",
+  "driver_sha256_prefix": "8ddcd41e9f5a148e",
+  "provenance_root": "/home/yuqing/ctaNew-wt-be",
+  "roots": {
+   "code_and_anchors": "/home/yuqing/ctaNew-wt-be",
+   "data": "/home/yuqing/ctaNew/data",
+   "data_is_absolute_because": "a bare worktree carries no data/; the tape and the market ledger are the repo's, not the checkout's, and this receipt says so rather than implying one root",
+   "exec_tree_is_repo": false,
+   "exec_tree_is_repo_means": "true when this run's EXECUTING tree IS the repo root, so the code/anchor root and the data root coincide by COINCIDENCE; false from a worktree, where they differ by RULE and only `data/` stays absolute",
+   "git_objects": "shared object store \u2014 `git show <ref>:<path>` resolves the freeze blobs from any worktree, so `_git_blob` needs no per-tree root"
+  },
+  "working_tree_dirty": false
+ },
+ "protocol": "BE_FORWARD_DAY_SEALED_V1",
+ "r411_inputs": {
+  "for": {
+   "R-411(i)": "the G floor is >=144/288 unmasked windows; the numerator and denominator are above",
+   "R-411(ii)": "P1 is per UNMASKED hour; the hours carrying any unmasked window are above"
+  },
+  "per_coin": {
+   "bnb": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   },
+   "btc": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   },
+   "doge": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   },
+   "eth": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   },
+   "hype": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   },
+   "sol": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   },
+   "xrp": {
+    "calendar_windows_per_day": 288,
+    "calendar_windows_per_day_source": "da_blackout_mask.WINDOWS_PER_DAY",
+    "n_hours_with_any_unmasked_window": 24,
+    "n_masked_windows": 0,
+    "n_present_windows": 288,
+    "n_unmasked_windows": 288,
+    "unmasked_windows_per_utc_hour": {
+     "00": 12,
+     "01": 12,
+     "02": 12,
+     "03": 12,
+     "04": 12,
+     "05": 12,
+     "06": 12,
+     "07": 12,
+     "08": 12,
+     "09": 12,
+     "10": 12,
+     "11": 12,
+     "12": 12,
+     "13": 12,
+     "14": 12,
+     "15": 12,
+     "16": 12,
+     "17": 12,
+     "18": 12,
+     "19": 12,
+     "20": 12,
+     "21": 12,
+     "22": 12,
+     "23": 12
+    }
+   }
+  },
+  "these_are_ESTIMATES": "inputs only. No field here says whether the day counts, is eligible or is admissible \u2014 that is the policy layer's act (rule 14), and a post-condition refuses any decision-shaped key."
+ },
+ "ratification_ref": "R-419",
+ "reconciliation_caveat": {
+  "claim": "the decision metric has NEVER been reconciled against any published number, and cannot be from existing artifacts",
+  "for_the_reader": "do not carry the reconciliation's authority onto any number derived from this run",
+  "what_the_36_of_36_did_validate": "the BRIDGE arm and everything downstream of `increment_by_window`, not the primary estimand",
+  "why_not": "`increment()` computes a BY_THRESHOLD estimand and iteration 011's published cells are BY_COUNT -- different estimands, so there is no published number to reconcile against"
+ },
+ "rows": {
+  "boundary_time_violations": 0,
+  "consume_clock_violations": 0,
+  "n_actions": 2058320,
+  "n_rows": 2393690,
+  "n_windows": 2016,
+  "n_windows_with_rows": 2016,
+  "reconciliation_failed_windows": [],
+  "reconciliation_failures": 0,
+  "rows_without_features": 18,
+  "schema": "harmful_exposure_v3_4_fill_scoped_markout",
+  "unhooked_state_changes": 0,
+  "wrong_generation_assignments": 0
+ },
+ "sealed": true,
+ "sealed_file": {
+  "bytes": 42663031,
+  "contents": "per-action scores and the full complement report",
+  "not_in_receipt": "no metric, rho, net value or sign appears outside this file",
+  "path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_scores_20260905.json",
+  "sha256": "1370598870c5fa754f21c79203a98ea306c340d687d912d27655e5b002863705"
+ },
+ "sealing_note": "per-action scores and every value metric are written to the sealed file only; this receipt carries counts, identities and hashes and NO metric (rule 11). Unsealing is the coordinator's or the USER's act.",
+ "selection": {
+  "n_selected": 2016,
+  "n_specs": 2016
+ },
+ "user_admission": {
+  "no_admission_covers_this_day": true,
+  "note": "the ordinary gate applies, unchanged"
+ },
+ "wall_seconds": 1399.0,
+ "window_agreement": {
+  "bridged_without_rows": 0,
+  "bridged_without_rows_examples": [],
+  "n_bridged": 2016,
+  "n_with_rows": 2016,
+  "note": "a bridged window with no rows is a window that produced no cancellable generation; it is COUNTED here, never dropped from the denominator"
+ }
+}
