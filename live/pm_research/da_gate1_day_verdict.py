@@ -1044,13 +1044,33 @@ def load_day_book(path: str, *, open_book: bool = False,
                 f"mapping from BE's structure onto rows and per-arm scores "
                 f"is BE's to DECLARE (R-654); this verifier will not infer "
                 f"it from a pickle's shape.")
-        raise VerifierRefused(
-            f"REFUSED: BOOK_MAPPING_AWAITS_BES_DECLARATION -- {p.name} has "
-            f"the declared top level {list(PICKLE_BOOK_TOP_LEVEL)}, and the "
-            f"recompute still needs BE 65's declaration of how "
-            f"`asm.by_arm` and `fr` become rows and per-arm scores. The "
-            f"pickle was OPENED and the shape CHECKED; nothing is "
-            f"inferred (R-654).")
+        #: DA 99: BE 66's structure declaration EXISTS and is VERIFIED
+        #: against this very book, so the mapping is no longer inferred --
+        #: it is READ. The declaration must be the CHAIN HEAD, must say
+        #: VERIFIED, and must name THIS book's digest; anything less and
+        #: the open refuses BY NAME rather than mapping on a claim.
+        st = _declaration_head("be_daybook_structure")
+        sobj = st.pop("obj")
+        if not str(sobj.get("STATUS") or "").upper().startswith("VERIFIED"):
+            raise VerifierRefused(
+                f"REFUSED: STRUCTURE_DECLARATION_IS_NOT_VERIFIED -- "
+                f"{st['name']} carries STATUS "
+                f"{sobj.get('STATUS')!r}. A declaration ABOUT a book is "
+                f"not a reading OF it, and this recompute will not map on "
+                f"a claim.")
+        if actual not in str(sobj.get("status_detail") or ""):
+            raise VerifierRefused(
+                f"REFUSED: STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK -- "
+                f"{st['name']} was verified against a book whose digest is "
+                f"not {actual[:16]}…. A structure verified elsewhere says "
+                f"nothing about these bytes.")
+        return {"kind": "PICKLE", "rows": [], "pickle": obj,
+                "structure_declaration": {
+                    **st, "STATUS": sobj.get("STATUS"),
+                    "MAY_read": sobj.get(
+                        "what_a_population_recompute_MAY_read"),
+                    "MAY_NOT_read": sobj.get("what_it_MAY_NOT_read")},
+                "opened_under": PICKLE_EXECUTION_NOTE}
     if p.suffix == ".pkl":
         #: THE REAL BOOK IS A PICKLE, AND THIS READER WAS BUILT ON THE
         #: FIXTURE'S JSON. Found at the FIRST REAL GO -- a fixture/real seam
@@ -3378,11 +3398,13 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: STATUS, never a silent pass (rule 11). Everything else the
     #: pre-read does -- the two book bindings, the provenance, the seal
     #: census and the landing record -- needs no book CONTENTS at all.
-    book_refusal = None
+    book_refusal, pop_out = None, None
     try:
         bk = load_day_book(book_path, open_book=open_book,
                            expected_sha256=r_sha)
         rows = bk["rows"]
+        if bk.get("kind") == "PICKLE":
+            pop_out = recompute_population_from_book(bk["pickle"], receipt)
     except VerifierRefused as e:
         if open_book:
             raise
@@ -3566,6 +3588,9 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             "alone emit it"),
         "book": book_meta,
         "population_recomputed_from_the_book": (book_refusal is None),
+        **({"population_from_the_book": pop_out,
+            "the_structure_it_was_mapped_through":
+                bk.get("structure_declaration")} if pop_out else {}),
         "the_open_book_contract": {
             "order": PICKLE_ORDER,
             "what_opening_a_book_is": PICKLE_EXECUTION_NOTE,
@@ -4216,6 +4241,144 @@ def rehearse_open_book(day: str, book_path: str, receipt_path: str, *,
         "as_of_utc": (now or datetime.datetime.now(
             datetime.timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "verifier_sha256": verifier_identity()["sha256"],
+    }
+
+
+#: DA 99 (HEAVY). THE POPULATION RECOMPUTE, MAPPED THROUGH BE'S DECLARED
+#: STRUCTURE AND NOTHING ELSE. What may be read is what
+#: `be_daybook_structure_v2.json` says a population recompute MAY read --
+#: `fr` (the reference and its statuses), `asm.by_arm[*][0]` (the scored
+#: key sets) and `asm.assembly` (chunk/drop accounting, in ROWS). The
+#: sealed economics are ABSENT BY LOCATION and that is NOT permission:
+#: this recompute derives population, coverage and set equality only.
+#:
+#: ***WHERE THE STRUCTURE DOES NOT LICENSE A HALF, THAT HALF IS REFUSED BY
+#: NAME.*** A scored key set that is a bare collection cannot answer "how
+#: many are above theta"; a key that does not carry its side cannot answer
+#: "how many per side". Guessing either would be inventing a population.
+POPULATION_MAY_READ = ("fr", "asm.by_arm[*][0]", "asm.assembly")
+SIDE_TOKENS = ("BUY_UP", "SELL_UP")
+
+
+def _side_of(key) -> str | None:
+    """The side a scored key carries, or None -- never inferred."""
+    parts = key if isinstance(key, (tuple, list)) else (key,)
+    for x in parts:
+        t = str(x)
+        for tok in SIDE_TOKENS:
+            if t == tok or f"|{tok}" in t or f"_{tok}" in t or f":{tok}" in t:
+                return tok
+    return None
+
+
+def recompute_population_from_book(obj: dict, receipt: dict) -> dict:
+    """Population, per-side counts and set sizes -- from the book, through
+    BE's declaration, compared to the receipt's OPEN counts."""
+    asm = obj.get("asm") or {}
+    by_arm = asm.get("by_arm") or {}
+    pops = receipt.get("decision_populations") or {}
+    out, flags = {}, []
+    for arm, blk in sorted(pops.items()):
+        head = blk.get("head")
+        theta = blk.get("theta")
+        entries = [(k, v) for k, v in by_arm.items()
+                   if head and head in str(k)]
+        row = {"arm": arm, "head": head,
+               "n_by_arm_entries_matching_the_head": len(entries)}
+        if len(entries) != 1:
+            row["status"] = ("BY_ARM_ENTRY_FOR_THE_HEAD_IS_NOT_UNIQUE"
+                             if entries else "NO_BY_ARM_ENTRY_FOR_THE_HEAD")
+            row["keys_seen"] = sorted(str(k) for k in list(by_arm)[:8])
+            out[arm] = row
+            flags.append(f"{arm}.by_arm_entry")
+            continue
+        key, val = entries[0]
+        row["by_arm_key"] = str(key)
+        first = val[0] if isinstance(val, (list, tuple)) and val else None
+        row["element0_kind"] = type(first).__name__
+        if first is None:
+            row["status"] = "BY_ARM_VALUE_IS_NOT_A_SEQUENCE_WITH_A_FIRST"
+            out[arm] = row
+            flags.append(f"{arm}.element0")
+            continue
+        try:
+            n_keys = len(first)
+        except TypeError:
+            row["status"] = "ELEMENT0_HAS_NO_LENGTH"
+            out[arm] = row
+            flags.append(f"{arm}.element0_len")
+            continue
+        row["n_scored_rows_recomputed"] = n_keys
+        row["n_scored_rows_in_the_receipt"] = blk.get("n_scored_rows")
+        row["n_scored_rows_agrees"] = (n_keys == blk.get("n_scored_rows"))
+        if not row["n_scored_rows_agrees"]:
+            flags.append(f"{arm}.n_scored_rows")
+        #: THE AT-THETA SELECTION, only where the structure licenses it.
+        scores = None
+        if isinstance(first, dict):
+            vals = list(first.values())[:64]
+            if vals and all(isinstance(v, (int, float))
+                            and not isinstance(v, bool) for v in vals):
+                scores = first
+        if scores is None or theta is None:
+            row["decisions_recomputed"] = None
+            row["decisions_status"] = (
+                "REFUSED_BY_NAME: THE_SCORED_KEY_SET_DOES_NOT_CARRY_SCORES "
+                f"(element0 is {type(first).__name__}); the at-theta "
+                f"selection cannot be derived from it, and a count guessed "
+                f"from a key set would be an invented population")
+        else:
+            chosen = [k for k, v in scores.items() if float(v) >= float(theta)]
+            row["decisions_recomputed"] = len(chosen)
+            row["decisions_in_the_receipt"] = blk.get("decisions")
+            row["decisions_agrees"] = (
+                len(chosen) == blk.get("decisions"))
+            if not row["decisions_agrees"]:
+                flags.append(f"{arm}.decisions")
+            sides = [_side_of(k) for k in chosen]
+            if any(x is None for x in sides):
+                row["by_side_recomputed"] = None
+                row["by_side_status"] = (
+                    "REFUSED_BY_NAME: THE_KEYS_DO_NOT_CARRY_A_SIDE -- a "
+                    "per-side split cannot be read from them")
+            else:
+                cnt = {t: sum(1 for x in sides if x == t)
+                       for t in SIDE_TOKENS}
+                row["by_side_recomputed"] = cnt
+                row["by_side_in_the_receipt"] = blk.get("by_side")
+                row["by_side_agrees"] = (cnt == blk.get("by_side"))
+                if not row["by_side_agrees"]:
+                    flags.append(f"{arm}.by_side")
+        row["status"] = "RECOMPUTED"
+        out[arm] = row
+    #: THE SEED, re-derived from DE's rule and the book digest.
+    seeds = {}
+    bsha = ((receipt.get("reference_book") or {}).get("receipt_digest")
+            or (receipt.get("reference_book") or {}).get("sha256"))
+    for a in (receipt.get("per_day_sealed_artifacts") or []):
+        arm = a.get("arm")
+        theirs = a.get("seed") or (a.get("draw_provenance") or {}).get("seed")
+        bd = (a.get("draw_provenance") or {}).get("book_digest") or bsha
+        mine = da_seed_for(bd, arm) if bd else None
+        seeds[arm] = {"re_derived": mine is not None,
+                      "agrees": (mine == theirs) if mine is not None else None,
+                      "book_digest_used": (bd or "")[:16]}
+        if mine is not None and mine != theirs:
+            flags.append(f"{arm}.seed")
+    return {
+        "what_was_read": list(POPULATION_MAY_READ),
+        "what_was_not_read": (
+            "the second element of `by_arm` (a COUNT MAP, not thetas), and "
+            "NOTHING economic -- absent by location, which is not "
+            "permission: this derives population, coverage and set "
+            "equality only"),
+        "per_arm": out, "seeds": seeds,
+        "n_flags": len(flags), "flags": flags,
+        "assembly_present": bool(asm.get("assembly")),
+        "fr_present": bool(obj.get("fr")),
+        "IS_A_POPULATION_VERIFICATION": bool(
+            out and not flags
+            and all(r.get("status") == "RECOMPUTED" for r in out.values())),
     }
 
 
@@ -5079,21 +5242,83 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "DA 91 has something to run on the lock. A JSON fixture book ADMITS; "
        "a pickle whose top level is NOT the declared shape is REFUSED BY "
        "NAME; one that is not a mapping at all is refused by name; and one "
-       "WITH the declared top level is still refused, because ***the "
-       "mapping from `asm.by_arm` and `fr` onto rows and per-arm scores is "
-       "BE's to DECLARE (R-654) and this verifier will not infer it from a "
-       "pickle's shape***. The light path refuses any pickle before opening "
-       "it, because opening one is HEAVY under rule 20",
+       "WITH the declared top level is STILL refused -- now because "
+       "***BE's structure declaration was VERIFIED against a particular "
+       "book, and a structure verified elsewhere says nothing about "
+       "these bytes*** (`STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK`). The "
+       "mapping is READ from that declaration, never inferred from a "
+       "pickle's shape (R-654). The light path refuses any pickle before "
+       "opening it, because opening one is HEAVY under rule 20",
        len(_json_ok["rows"]) == 1
        and "TOP_LEVEL_NOT_THE_DECLARED_SHAPE" in _msgs["wrong_top_level"]
        and "NOT_A_MAPPING" in _msgs["not_a_mapping"]
-       and "AWAITS_BES_DECLARATION" in _msgs["declared_shape"]
+       and "STRUCTURE_DECLARATION_NAMES_ANOTHER_BOOK" in _msgs[
+           "declared_shape"]
        and "NOT_THIS_READER'S_JSON" in _msgs["light_path_on_a_pickle"]
        #: REV 71 2.3: and the PIN is checked BEFORE any of it.
        and _pin_msgs["wrong_pin"] == "BOOK_DIGEST_DOES_NOT_MATCH_ITS_RECEIPT"
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+    # -- DA 99: THE POPULATION RECOMPUTE, DRIVEN ON THE DECLARED SHAPE --
+    _rcpt = {"decision_populations": {
+        "ARM_A": {"head": "h_a", "theta": 0.5, "decisions": 2,
+                  "by_side": {"BUY_UP": 1, "SELL_UP": 1},
+                  "n_scored_rows": 4}},
+        "per_day_sealed_artifacts": [
+            {"arm": "ARM_A", "seed": da_seed_for("d" * 64, "ARM_A"),
+             "draw_provenance": {"book_digest": "d" * 64}}]}
+    _scored = {("btc", "BUY_UP", 1): 0.9, ("btc", "SELL_UP", 2): 0.7,
+               ("btc", "BUY_UP", 3): 0.1, ("btc", "SELL_UP", 4): 0.2}
+    _book_ok = {"fr": {"reference": {}},
+                "asm": {"assembly": {"n_chunks": 1},
+                        "by_arm": {("btc", "h_a"): [_scored, {"n": 4}]}}}
+    _pop = recompute_population_from_book(_book_ok, _rcpt)
+    _a = _pop["per_arm"]["ARM_A"]
+    _book_bare = {"fr": {}, "asm": {"assembly": {},
+                                    "by_arm": {("btc", "h_a"):
+                                               [set(_scored), {"n": 4}]}}}
+    _bare = recompute_population_from_book(_book_bare, _rcpt)["per_arm"][
+        "ARM_A"]
+    _noside = {"asm": {"assembly": {}, "by_arm": {("btc", "h_a"): [
+        {"k1": 0.9, "k2": 0.7, "k3": 0.1, "k4": 0.2}, {}]}}, "fr": {}}
+    _ns = recompute_population_from_book(_noside, _rcpt)["per_arm"]["ARM_A"]
+    ck("DA 99 -- THE POPULATION RECOMPUTE IS MAPPED THROUGH BE'S DECLARED "
+       "STRUCTURE, AND ***WHERE THE STRUCTURE DOES NOT LICENSE A HALF, "
+       "THAT HALF IS REFUSED BY NAME.*** On the declared shape "
+       "(`asm.by_arm[(coin, head)][0]` carrying the scored keys) the "
+       "scored-row count, the at-theta selection and the per-side split "
+       "are all recomputed and compared to the receipt's OPEN counts. On "
+       "a BARE key set the at-theta selection is refused -- ***a count "
+       "guessed from a key set would be an invented population***. On "
+       "keys that do not carry a side, the per-side split is refused. The "
+       "seed is re-derived from DE's rule and the book digest",
+       _a["status"] == "RECOMPUTED" and _a["n_scored_rows_agrees"] is True
+       and _a["decisions_agrees"] is True and _a["by_side_agrees"] is True
+       and _pop["IS_A_POPULATION_VERIFICATION"] is True
+       and _pop["seeds"]["ARM_A"]["agrees"] is True
+       and _bare["decisions_recomputed"] is None
+       and "THE_SCORED_KEY_SET_DOES_NOT_CARRY_SCORES"
+       in _bare["decisions_status"]
+       and _ns["by_side_recomputed"] is None
+       and "THE_KEYS_DO_NOT_CARRY_A_SIDE" in _ns["by_side_status"],
+       f"declared shape -> {_a['status']}, scored rows / decisions / side "
+       f"all agree, seed re-derived; a bare key set -> decisions refused "
+       f"by name; sideless keys -> by_side refused by name")
+    _wrongn = recompute_population_from_book(
+        _book_ok, {**_rcpt, "decision_populations": {
+            "ARM_A": {**_rcpt["decision_populations"]["ARM_A"],
+                      "n_scored_rows": 5}}})
+    ck("KNOWN-BAD: A SCORED-ROW COUNT THAT DISAGREES IS FLAGGED BY NAME -- "
+       "the recompute is a COMPARISON, not a transcription, so a receipt "
+       "whose population does not match the book it names cannot pass "
+       "through it",
+       _wrongn["per_arm"]["ARM_A"]["n_scored_rows_agrees"] is False
+       and "ARM_A.n_scored_rows" in _wrongn["flags"]
+       and _wrongn["IS_A_POPULATION_VERIFICATION"] is False,
+       f"a receipt claiming one more scored row -> flags "
+       f"{_wrongn['flags']}")
+
     # -- DA 97: THE RECEIPT NAMES ITS PINS WHERE DE WRITES THEM ---------
     #: THE NEWEST PRESENT, never a version typed here: this fixture
     #: pinned `_v14` and DE landed `_v15` within the hour, so my own
