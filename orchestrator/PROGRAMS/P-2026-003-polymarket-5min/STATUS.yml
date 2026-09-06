@@ -63,6 +63,62 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T20:38:44Z (MEM ROUND 232 -- R-727 AND R-728 SWEPT, tip `5d8dc1b`. STATE ONLY. MEM
+  ASSERTS NO RESULT. **I OPENED NO RESULT** -- the v5 artifact is a PRE-REGISTRATION, and the result
+  family it names does not exist.
+  (1) **THE v5 DECLARATION VERIFIED AT THE ARTIFACT.** v5 hashes to `b1aa349ed276bc41` and v4 to
+  `a741b4d6b5ac7f59`, both matching R-728. Drove the shared resolver with **key membership
+  ASSERTED, not merely printed** (round 231's remedy): head `..._v5.json`, 5 versions,
+  `orphan_branches []`, `forks {}`. ***AND EVERY LINK IN THAT CHAIN IS A VERIFIED PAIR NOW*** --
+  worth saying why that reads differently than it would have three rounds ago: at round 228 I
+  reproduced a cell where `link_shapes` said `'pair'` for a link with NO digest, and BE 82 closed
+  it. **The field now means what it says.**
+  (2) ***RULE 11 RECOMPUTED BY ME, NOT READ FROM THE ARTIFACT.*** The artifact CLAIMS
+  `declared_before_any_of_its_days_closed`; I computed the ordering instead: `as_of_utc`
+  **2026-09-06T20:27:58Z** against the first declared day's close **2026-09-07T00:00:00Z** -> True,
+  **margin 3 h 32 m 02 s**. READABLE is 09-06..09-09, G = 4, every declared day open. And the
+  RESULT family is **absent** -- `result.artifact` names `be_race_read2_result_v1.json` and no such
+  file exists, which is what a pre-registration is.
+  (3) ***DA's RACE-READ VERIFIER IS RED RIGHT NOW, AND I RAN IT RATHER THAN REASONING FROM THE
+  SOURCE.*** `da_race_read_verify --selftest` -> **rc 1, uncaught `KeyError: '20260906'`** at line
+  1956 in `selftest_real()`, which `selftest()` calls UNCONDITIONALLY. The mechanism, measured: the
+  loop is `for _d in _real_head['READABLE']`, the head is now v5 whose READABLE is 09-06..09-09,
+  and `be_race_read_feed_pins_v1`'s `per_day` keys are **09-01..09-05** -- **no intersection**, so
+  it raises on the first day. **It is a BARE EXCEPTION where this programme rules a NAMED REFUSAL
+  belongs** (R-705's class, which DA itself fixed for `da_mutation_audit`).
+  (4) ***AND IT DIES BEFORE THE v4 ASSERTION CELL IS REACHED.*** That cell (line 1910) asserts FOUR
+  things -- name v4, sha `a741b4d6`, `G_declared == 3`, READABLE 09-03..05 -- **all four now false**;
+  but the `KeyError` at 1956 fires first, so **the cell that would say WHY is not the cell that
+  fails**, and a reader of the traceback alone would not learn that the head moved.
+  (5) **STATED FOR FAIRNESS, because a reader could take that for a gap in BE's work and it is
+  not one:** R-728 **reports** the consequence for DA in its own words and routes it to **DA 112**,
+  in the same entry. Its re-run list names `be_race_reader` 61->70, `da_nonhead_census` 18/0,
+  `da_gate1_day_verdict` 90 and `de_multiday_gate1_runner` 342 -- and not `da_race_read_verify`,
+  the one BE separately reported and dispatched. **What I add is only the measured state and its
+  shape.** ***AND IT IS CLOSED WITHIN THIS ROUND***: DA 112 landed (`7a648d0`) while I wrote, and
+  I re-ran the battery at **20:40:16Z** -- **rc 0, `SELFTEST OK -- 37 checks, 0 failure(s)`**, with
+  the literal `be_race_read_declaration_v4.json` now **gone from the file** (0 grep hits): a read is
+  verified against the declaration **it names**, never against today's head. Both measurements stand
+  with their as-of -- red at 20:38:00Z, green at 20:40:16Z.
+  (6) **THE PINS LANDMINE IS DEFUSED IN THE READ PATH, AND TODAY ONLY THE CODE CAN SHOW IT.** The
+  pins family has exactly ONE version, so the literal and the chain head are the same file and **no
+  behaviour can distinguish fixed from unfixed**; the evidence available now is the code path, and
+  it is there -- `pins(family=...)` resolves the family and refuses by name if it does not resolve.
+  The behavioural proof arrives with v2 at the 09-06 close. **Recording that the control cannot fire
+  yet is the honest status, not a defect.** One small hazard for BE, not ruled: the old constant
+  survives at `str(PINS.name)` in a `copied_from` LABEL, which will keep printing `_v1.json` after
+  v2 lands -- a literal tracking a moving thing in a provenance field.
+  (7) **DE 114's CORRECTION IS NOW THE REGISTER'S OWN**, and more fully than I had it: the runner
+  emits no supersession on a fixture day run, so the GO asked for a pair that could not exist and
+  the seat said so rather than manufacturing one. My check was the key's absence; R-727 gives the
+  reason for it.
+  UNSWEPT, FOR MEM 233: **R-729** (`37cc0e5`) -- REV 86: v5 a valid pre-registration, **whether a
+  second read happens at all is the USER's** and must be put before the horizon, pooling foreclosed,
+  and a rule stated once: *readers of history resolve by the pair the act recorded, never the head*
+  (`c0dc836`); **BE 85** dispatched; and **DA 112** (`7a648d0`), whose landed code I re-ran above.
+  Counts: flags 1,497 -> 1,507; provenance 1,042 -> 1,052; tasks 19; **779 CHECKED / 273 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-EIGHTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 214 archived. Q-MEM-220 filed through the script.)
   2026-09-06T20:31:51Z (MEM ROUND 231 -- R-724, R-725 AND R-726 SWEPT, tip `8d4aebb`. STATE ONLY.
   MEM ASSERTS NO RESULT.
   (1) ***MY ROUND-230 FINDING IS CLOSED AT THE DIGEST.*** The receipt I could not locate is now at
@@ -172,62 +228,6 @@ updated: >-
   Counts: flags 1,477 -> 1,487; provenance 1,022 -> 1,032; tasks 19; **759 CHECKED / 273 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-SIXTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 212 archived. Q-MEM-218 filed through the script.)
-  2026-09-06T20:11:07Z (MEM ROUND 229 -- R-719 AND R-720 SWEPT, tip `d12ed24`. STATE ONLY. MEM
-  ASSERTS NO RESULT. First round after the reset; the round-225 correction re-read first, and every
-  resolver drive below printed `sorted(r.keys())` before reading a value.
-  (1) **THE TRAILER MAKES COVERAGE A QUERY, AND THE ANSWER SPLITS BY SEAT.** Every commit touching
-  the register since `land_register_row.sh` landed (`b2f238d`, 19:46:51Z): **6 of 6 seat rows carry
-  `Landed-By`** (Q-DA-333, Q-MEM-215, Q-MEM-216, Q-BE-323, Q-DE-111, Q-DA-334); **0 of 4 coordinator
-  entries do** (R-717..R-720, all landed after the script existed). ***NOT STRUCTURAL*** -- the
-  script's own usage line names `'R-717'` as a valid ids-regex, and I drove its accept path on an
-  R-entry shape: `ADDED_IDS [R-721]`, would land. ROUTED, NOT RULED.
-  (2) ***AND THE POST-CONDITION IS BLIND TO THE SHAPE THE COORDINATOR WRITES.*** Both foreign-row
-  expressions driven verbatim, a control on either side: a foreign `| Q-` row is caught by the
-  step-1 pre-check AND the step-3 post-condition (`PFOR 1`); ***a foreign `### R-` entry alone is
-  caught by the pre-check and the post-condition returns `PFOR 0` -- it passes***, because its test
-  is `grep -E '^\+\| Q-'` only. R-717 calls the post-condition THE CLOSURE precisely because the
-  hold has a race and can be forgotten -- **so the race-free half is the narrower one.**
-  (3) **BE 81 CLOSED AT THE EXACT REGRESSION, FROM OUTSIDE, FOUR CELLS.** A v1 with ZERO overlap
-  with the old `FROZEN_BLOCKS` constant derives its OWN frozen set `['arms','design_scope','n_days']`
-  and moving `n_days` refuses BY NAME -- the case the module constant compared vacuously. Empty
-  derived set refuses naming the family and says it refuses **the CENSUS, not the .v2**; the
-  positive control ADMITS; an inherited key moved refuses naming `day_signs`.
-  (4) **DE 111 DRIVEN ON BOTH HALVES.** Scope: `design_version 25` = the WIDER of
-  `module_constant 23` and `chain_head_version 25`, `chain_head_read` "design_chain() head, resolved
-  at this emit", 11 sealed names -- and I recomputed the `max()` from the returned fields rather
-  than trusting `design_version`. Known-bads: FIRED / **DISARMED (`is_a_pass False`)** / ADMITTED,
-  plus a refusal on a quantity nobody measured.
-  (5) **DA 108's COUNTS MATCH AT THE ARTIFACT** (`a469e623180a4ea8`): 25 families, 328 literals,
-  69 pins, 0 refused, 1 marked, as-of 19:56:24Z; pins recomputed from the rows and
-  `n_pins + n_not_pins = 328`. **TWO PRECISION POINTS, NEITHER A DOUBT ABOUT THE HEAD.**
-  ***`n_naming_a_non_head` is 1 while `naming_a_non_head` is `[]`*** -- at the producer's source the
-  count is `len(refused) + len(marked non-heads)` and the list is `refused`, so **the list's own
-  count is `n_refused`, not the identically-worded field**; five other `n_`/list pairs in that block
-  agree. The one is a MARKED non-head in P-2026-002's `e2_a_episodes.py:562` selftest,
-  `flows_into_an_open false`. ***AND THE DESIGN FAMILY IS NOT IN THAT RECORD'S POPULATION***: its
-  `chains` block holds 25 families, none of them design; the design family's 24 files live in
-  `data/pm_5min/derived`, neither of the two `declarations_dirs_scanned`; **all 22 design-naming
-  literals read `head: null`**, and **`v25` occurs EXACTLY ONCE in 474,775 bytes -- in the
-  `what_changes` PROSE of `supersedes`.** DA's row states the drive plainly ("through the shared
-  resolver and then my rule"), so the measurement is DA's and is IN THE ROW; R-720 cites it to the
-  record. **The fact is corroborated independently** -- DE's `design_chain()` resolved head 25 in my
-  own drive this round, and v25's digest `b95ac59cf46d941d` matches my round-226 census.
-  (6) **AND THE CENSUS'S VERDICT RANGES WIDER THAN ITS PREDICATE.** The verdict IS computed, so
-  rule 10 holds in form; but **of 69 pins, 24 carry a resolved head and 45 (65%) read `head: null`**,
-  and a literal with no resolvable head can never enter `refused`. DA's `no_null_is_silent` satisfies
-  rule 11 exactly -- verified, 254 of 254 nulls carry their reason. The gap is one level up: the
-  words "EVERY LITERAL" over a predicate reachable on 24 of 69. ROUTED TO DA, NOT RULED.
-  (7) ***AND THE SAME CLASS ARRIVES IN MY OWN FILE.*** My published series is the PARSER's and is
-  SOUND -- a parse of this file returns exactly round 228's numbers. But a duplicate-detecting
-  composer finds **15 duplicated keys and 22 SHADOWED occurrences** that no YAML reader ever
-  reaches; `the_act_STILL_has_not_happened` appears NINE times (8 shadowed, 4 in flags and 4 in
-  provenance). **Rule 13 says corrections supersede in band BECAUSE automated readers resolve
-  fields -- a duplicate key is that rule failing SILENTLY, by collision instead of by edit.** Not
-  previously flagged. MEM's own block: recorded this round, NOT repaired in it, and none of my 10
-  new keys is among them.
-  Counts: flags 1,467 -> 1,477; provenance 1,012 -> 1,022; tasks 19; **749 CHECKED / 273 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-FIFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 211 archived. Q-MEM-217 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -422,6 +422,17 @@ flags:
   # =====================================================================
   # --- MEM round 229, R-719 + R-720 swept ---
   # --- MEM round 231, R-724 + R-725 + R-726 swept ---
+  # --- MEM round 232, R-727 + R-728 swept ---
+  the_v5_declaration_verified_and_the_chain_resolves_to_it: B1AA349E-HEAD-5-VERSIONS-NO-ORPHANS
+  RULE_11_RECOMPUTED_BY_ME_NOT_READ_FROM_THE_ARTIFACT: MARGIN-3H32M02S-BEFORE-THE-FIRST-CLOSE
+  the_RESULT_family_does_not_exist_yet_which_is_the_point: BE-RACE-READ2-RESULT-V1-ABSENT
+  every_link_in_that_chain_is_a_VERIFIED_pair_now: THE-FIELD-MEANS-WHAT-IT-SAYS-SINCE-BE82
+  DA_RACE_READ_VERIFY_IS_RED_RIGHT_NOW_AND_I_RAN_IT: RC-1-BARE-KEYERROR-20260906
+  and_it_dies_BEFORE_the_v4_assertion_cell_is_reached: LINE-1956-NOT-1910
+  the_pins_landmine_is_defused_in_the_READ_PATH_only_provably_by_code: ONE-VERSION-MEANS-LITERAL-EQUALS-HEAD
+  the_old_PINS_literal_survives_as_a_provenance_LABEL: COPIED-FROM-WILL-GO-STALE-AT-V2
+  DE114_correction_is_now_the_registers_own: NO-SUPERSEDES-KEY-TWO-INDEPENDENT-LAUNCHES
+  BE_REPORTED_THE_DA_CONSEQUENCE_ITSELF_I_ADD_ONLY_THE_MEASURED_STATE: ROUTED-TO-DA-112-NOT-A-MISS
   MY_ROUND_230_FINDING_IS_CLOSED_AT_THE_DIGEST: SAME-ARTIFACT-B5C62099-NOW-LOCATABLE
   and_REV_FILED_FIRST_I_CLAIM_NO_PRIORITY: REV85-2024-03Z-MY-ROW-2026-47Z
   DA110_census_verified_and_the_literal_FALL_is_explained: C5A1E67F-25-324-69-0-DA-EXPLAINS-THE-4
@@ -25858,6 +25869,110 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 232, 2026-09-06T20:38:44Z ---
+  the_v5_declaration_verified_and_the_chain_resolves_to_it:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v5.json
+    as_of: 2026-09-06T20:37:00Z
+    said: >-
+      v5 hashes to b1aa349ed276bc41 and v4 to a741b4d6b5ac7f59, both matching R-728. Drove the
+      shared resolver on the family with key membership ASSERTED, not merely printed: head
+      be_race_read_declaration_v5.json, version 5, n_versions 5, orphan_branches [], forks {}.
+      Opened no result.
+  RULE_11_RECOMPUTED_BY_ME_NOT_READ_FROM_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: the v5 declaration's as_of_utc against the first declared day's close
+    as_of: 2026-09-06T20:37:00Z
+    said: >-
+      the artifact CLAIMS declared_before_any_of_its_days_closed; I computed the ordering instead of
+      reading the claim. as_of_utc 2026-09-06T20:27:58Z against the first declared day's close
+      2026-09-07T00:00:00Z -> True, margin 3h32m02s. population.READABLE is
+      [20260906, 20260907, 20260908, 20260909] and G is 4, so every declared day is open.
+  the_RESULT_family_does_not_exist_yet_which_is_the_point:
+    prov: CHECKED
+    artifact: a find over the repo for be_race_read2_result_v*.json
+    as_of: 2026-09-06T20:37:00Z
+    said: >-
+      zero paths. result.artifact in the declaration names be_race_read2_result_v1.json and the file
+      does not exist -- the pre-registration names its result before the result can exist, which is
+      what a pre-registration is. I opened no result and read nothing numeric from one.
+  every_link_in_that_chain_is_a_VERIFIED_pair_now:
+    prov: CHECKED
+    artifact: declaration_chain.resolve_head link_shapes on the declaration family
+    as_of: 2026-09-06T20:37:00Z
+    said: >-
+      link_shapes reports root for v1 and pair for v2..v5. Worth recording WHY that reads
+      differently than it would have three rounds ago: at round 228 I reproduced a cell where
+      link_shapes said 'pair' for a link with NO digest, and BE 82 closed it -- so since then a
+      'pair' is a link whose digest was checked. The field now means what it says.
+  DA_RACE_READ_VERIFY_IS_RED_RIGHT_NOW_AND_I_RAN_IT:
+    prov: CHECKED
+    artifact: live/pm_research/da_race_read_verify.py --selftest
+    as_of: 2026-09-06T20:38:00Z
+    said: >-
+      ran it rather than reasoning from the source. rc 1, uncaught KeyError '20260906' at line 1956
+      in selftest_real(), which is called UNCONDITIONALLY from selftest(). The mechanism, measured:
+      the loop is `for _d in _real_head['READABLE']` and the head is now v5, whose READABLE is
+      20260906..20260909, while be_race_read_feed_pins_v1's per_day keys are
+      20260901..20260905 -- no intersection, so it raises on the first day. It is a BARE EXCEPTION
+      where this programme rules a NAMED REFUSAL belongs (R-705's class, which DA itself fixed for
+      da_mutation_audit's FileNotFoundError). Squarely inside DA 112's dispatched scope.
+  and_it_dies_BEFORE_the_v4_assertion_cell_is_reached:
+    prov: CHECKED
+    artifact: da_race_read_verify.py lines 1910 and 1956
+    as_of: 2026-09-06T20:38:00Z
+    said: >-
+      the v4 assertion at line 1910 asserts FOUR things -- name == be_race_read_declaration_v4.json,
+      sha starts a741b4d6b5ac7f59, G_declared == 3, READABLE == [20260903, 20260904, 20260905] --
+      all four now false at the v5 head. But the run never reaches it: the KeyError at 1956 fires
+      first. So the cell that would say WHY is not the cell that fails, and a reader of the traceback
+      alone would not learn that the head moved.
+  the_pins_landmine_is_defused_in_the_READ_PATH_only_provably_by_code:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py pins()
+    as_of: 2026-09-06T20:37:00Z
+    said: >-
+      be_race_read_feed_pins has exactly ONE version on disk, so today the literal and the chain head
+      are the same file and no behaviour can distinguish fixed from unfixed -- the evidence available
+      NOW is the code path, and it is there: pins(family='be_race_read_feed_pins') resolves the
+      family and refuses by name if it does not resolve to a head. The behavioural proof arrives with
+      v2 at the 09-06 close. Recording that the control cannot fire yet is the honest status, not a
+      defect.
+  the_old_PINS_literal_survives_as_a_provenance_LABEL:
+    prov: CHECKED
+    artifact: be_race_reader.py lines 72 and 714
+    as_of: 2026-09-06T20:37:00Z
+    said: >-
+      the module constant PINS = declarations/be_race_read_feed_pins_v1.json still exists, and I
+      checked whether anything still OPENS it: the only other reference is str(PINS.name) at line 714
+      under a copied_from label. So the read path is clean and the literal is now a NAME in a record.
+      The small hazard, stated and not ruled: that label will keep printing _v1.json after v2 lands,
+      which is a literal tracking a moving thing in a provenance field. For BE.
+  DE114_correction_is_now_the_registers_own:
+    prov: CHECKED
+    artifact: R-727, and the two fixture receipts
+    as_of: 2026-09-06T20:36:00Z
+    said: >-
+      the correction I made to my own draft last round is now stated in the register more fully than
+      I had it: the runner emits no supersession on a fixture day run, so the GO's 'superseded
+      predecessor by the pair' asked for a pair that could not exist, and the seat said so rather
+      than manufacturing one. My check was the key's absence; R-727 gives the reason for it.
+  BE_REPORTED_THE_DA_CONSEQUENCE_ITSELF_I_ADD_ONLY_THE_MEASURED_STATE:
+    prov: CHECKED
+    artifact: R-728's own text and its re-run list
+    as_of: 2026-09-06T20:38:00Z
+    said: >-
+      stated for fairness, because a reader could take my red battery for a gap in BE's work and it
+      is not one: R-728 REPORTS the consequence for DA in its own words and routes it to DA 112, in
+      the same entry. Its re-run list names be_race_reader 61->70, da_nonhead_census 18/0,
+      da_gate1_day_verdict 90 and de_multiday_gate1_runner 342 -- three importers plus BE's own -- and
+      not da_race_read_verify, which is the one BE separately reported and dispatched. What I add is
+      only the MEASURED state and its SHAPE: red at 20:38:00Z, a bare KeyError, the explaining cell
+      unreached. CLOSED WITHIN THIS ROUND: DA 112 landed at 7a648d0 while I wrote and I re-ran it at
+      20:40:16Z -- rc 0, 'SELFTEST OK -- 37 checks, 0 failure(s)', and the literal
+      be_race_read_declaration_v4.json is now GONE from the file (0 grep hits): a read is verified
+      against the declaration IT NAMES, never against today's head. Both measurements stand with
+      their as-of.
   # --- MEM round 231, 2026-09-06T20:31:51Z ---
   MY_ROUND_230_FINDING_IS_CLOSED_AT_THE_DIGEST:
     prov: CHECKED

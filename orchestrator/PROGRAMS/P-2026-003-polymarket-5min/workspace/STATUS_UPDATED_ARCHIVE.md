@@ -17249,3 +17249,64 @@ generation and the window went 4 → 3. Nothing rewritten.
   tasks 19; **739 CHECKED / 273 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FOURTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Q-MEM-216 filed through the script.)
 ```
+
+## Batch 214 — archived 2026-09-06T20:38:44Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T20:11:07Z (MEM ROUND 229 -- R-719 AND R-720 SWEPT, tip `d12ed24`. STATE ONLY. MEM
+  ASSERTS NO RESULT. First round after the reset; the round-225 correction re-read first, and every
+  resolver drive below printed `sorted(r.keys())` before reading a value.
+  (1) **THE TRAILER MAKES COVERAGE A QUERY, AND THE ANSWER SPLITS BY SEAT.** Every commit touching
+  the register since `land_register_row.sh` landed (`b2f238d`, 19:46:51Z): **6 of 6 seat rows carry
+  `Landed-By`** (Q-DA-333, Q-MEM-215, Q-MEM-216, Q-BE-323, Q-DE-111, Q-DA-334); **0 of 4 coordinator
+  entries do** (R-717..R-720, all landed after the script existed). ***NOT STRUCTURAL*** -- the
+  script's own usage line names `'R-717'` as a valid ids-regex, and I drove its accept path on an
+  R-entry shape: `ADDED_IDS [R-721]`, would land. ROUTED, NOT RULED.
+  (2) ***AND THE POST-CONDITION IS BLIND TO THE SHAPE THE COORDINATOR WRITES.*** Both foreign-row
+  expressions driven verbatim, a control on either side: a foreign `| Q-` row is caught by the
+  step-1 pre-check AND the step-3 post-condition (`PFOR 1`); ***a foreign `### R-` entry alone is
+  caught by the pre-check and the post-condition returns `PFOR 0` -- it passes***, because its test
+  is `grep -E '^\+\| Q-'` only. R-717 calls the post-condition THE CLOSURE precisely because the
+  hold has a race and can be forgotten -- **so the race-free half is the narrower one.**
+  (3) **BE 81 CLOSED AT THE EXACT REGRESSION, FROM OUTSIDE, FOUR CELLS.** A v1 with ZERO overlap
+  with the old `FROZEN_BLOCKS` constant derives its OWN frozen set `['arms','design_scope','n_days']`
+  and moving `n_days` refuses BY NAME -- the case the module constant compared vacuously. Empty
+  derived set refuses naming the family and says it refuses **the CENSUS, not the .v2**; the
+  positive control ADMITS; an inherited key moved refuses naming `day_signs`.
+  (4) **DE 111 DRIVEN ON BOTH HALVES.** Scope: `design_version 25` = the WIDER of
+  `module_constant 23` and `chain_head_version 25`, `chain_head_read` "design_chain() head, resolved
+  at this emit", 11 sealed names -- and I recomputed the `max()` from the returned fields rather
+  than trusting `design_version`. Known-bads: FIRED / **DISARMED (`is_a_pass False`)** / ADMITTED,
+  plus a refusal on a quantity nobody measured.
+  (5) **DA 108's COUNTS MATCH AT THE ARTIFACT** (`a469e623180a4ea8`): 25 families, 328 literals,
+  69 pins, 0 refused, 1 marked, as-of 19:56:24Z; pins recomputed from the rows and
+  `n_pins + n_not_pins = 328`. **TWO PRECISION POINTS, NEITHER A DOUBT ABOUT THE HEAD.**
+  ***`n_naming_a_non_head` is 1 while `naming_a_non_head` is `[]`*** -- at the producer's source the
+  count is `len(refused) + len(marked non-heads)` and the list is `refused`, so **the list's own
+  count is `n_refused`, not the identically-worded field**; five other `n_`/list pairs in that block
+  agree. The one is a MARKED non-head in P-2026-002's `e2_a_episodes.py:562` selftest,
+  `flows_into_an_open false`. ***AND THE DESIGN FAMILY IS NOT IN THAT RECORD'S POPULATION***: its
+  `chains` block holds 25 families, none of them design; the design family's 24 files live in
+  `data/pm_5min/derived`, neither of the two `declarations_dirs_scanned`; **all 22 design-naming
+  literals read `head: null`**, and **`v25` occurs EXACTLY ONCE in 474,775 bytes -- in the
+  `what_changes` PROSE of `supersedes`.** DA's row states the drive plainly ("through the shared
+  resolver and then my rule"), so the measurement is DA's and is IN THE ROW; R-720 cites it to the
+  record. **The fact is corroborated independently** -- DE's `design_chain()` resolved head 25 in my
+  own drive this round, and v25's digest `b95ac59cf46d941d` matches my round-226 census.
+  (6) **AND THE CENSUS'S VERDICT RANGES WIDER THAN ITS PREDICATE.** The verdict IS computed, so
+  rule 10 holds in form; but **of 69 pins, 24 carry a resolved head and 45 (65%) read `head: null`**,
+  and a literal with no resolvable head can never enter `refused`. DA's `no_null_is_silent` satisfies
+  rule 11 exactly -- verified, 254 of 254 nulls carry their reason. The gap is one level up: the
+  words "EVERY LITERAL" over a predicate reachable on 24 of 69. ROUTED TO DA, NOT RULED.
+  (7) ***AND THE SAME CLASS ARRIVES IN MY OWN FILE.*** My published series is the PARSER's and is
+  SOUND -- a parse of this file returns exactly round 228's numbers. But a duplicate-detecting
+  composer finds **15 duplicated keys and 22 SHADOWED occurrences** that no YAML reader ever
+  reaches; `the_act_STILL_has_not_happened` appears NINE times (8 shadowed, 4 in flags and 4 in
+  provenance). **Rule 13 says corrections supersede in band BECAUSE automated readers resolve
+  fields -- a duplicate key is that rule failing SILENTLY, by collision instead of by edit.** Not
+  previously flagged. MEM's own block: recorded this round, NOT repaired in it, and none of my 10
+  new keys is among them.
+  Counts: flags 1,467 -> 1,477; provenance 1,012 -> 1,022; tasks 19; **749 CHECKED / 273 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-FIFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 211 archived. Q-MEM-217 filed through the script.)
+```
