@@ -13552,3 +13552,97 @@ directions.
   fifty-first round running.** ORPHAN audit 0 findings, exit 0 (after two MALFORMED rows of
   my own, fixed); window trimmed to a ruled 3; new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 161 — archived 2026-09-06T13:40:54Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 179 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T13:16:43Z (MEM ROUND 176 -- R-641 AND R-642 SWEPT AS ONE BATCH, tip
+  `a7dfc94`. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***THE RETENTION WINDOW MOVED WHILE I WORKED, AND THAT IS THE ROUND'S OWN
+  MEASUREMENT.*** **The oldest user-journal entry was `2026-09-06T09:00:20Z` when I read
+  it at 13:05:10Z and `2026-09-06T09:05:56Z` when I read it at 13:16:43Z** -- disk 184.5 MB
+  both times -- **so the window's START advanced ~5 m 36 s in eleven minutes.** *A
+  retention state named ONCE is already stale; rule 20's form -- the number copied into an
+  artifact AT THE MOMENT OF READING with the state named beside it -- is the only one that
+  survives.* **I can watch the boundary move; a control that reads the journal cannot,
+  which is why no verdict may depend on it (R-641, `689c911`).**
+  (2) **THE SEVEN JOURNAL READERS, CENSUSED WITH A CONTROL.** All seven exist and each
+  contains `journalctl` (1, 1, 2, 2, 1, 2, 1) while `be_rule22.py` returns 0, so the census
+  discriminates. **Only `da_accrual_report.py` LABELS retention in substance** -- *"THE
+  JOURNAL ROTATES, AND THE COST DOES NOT" (:412), `MEASURED_BUT_THE_STARTED_LINE_HAS_
+  ROTATED_OUT` (:421), "the Started line has rotated out" (:445).* ***AND MY KEYWORD PASS
+  WOULD HAVE SAID TWO OF SEVEN:*** DE's runner matched on the word "decaying" -- **in a
+  sentence about rule 10**. *Reading the hit made it one of seven: the harvest's own line
+  ("census by AST, never by regex") arriving as keyword-versus-read.*
+  (3) **REV 63 §4 RESTATED AT MY OWN MEASUREMENT, BY DIGEST.** Both 09-05 INPUT receipts --
+  the pair R-642 names (**rows `50318a3a…`, read back out of the tape receipt's own
+  `inputs.score_split.sha256`; tape `0650e213…`**) -- **carry `"dirty": true` with
+  `"dirty_paths": ["data"]`, twice each, and ZERO hits for
+  `heavy_run_lock|flock|lock_fd|wrapper`. ACCEPTED AS-IS; the new fields start with the
+  BOOK.** *So no reader of those two is told they carry evidence they do not.* **It was
+  already said at R-640(A) §5 -- and the RELOADED reviewer found it there itself.**
+  (4) **THE RUNBOOK §6 NOW CARRIES A TEST AND A PROHIBITION IN ONE LINE (`63e601a`):** *"the
+  test is the payload's PPid, MEASURED NEVER ARGUED: under a transient service it is
+  `systemd --user` (pid 1004 here); under a `--scope` it is the harness (`claude`). Never
+  demonstrate it with `kill -TERM -<pgid>` -- that reached the harness's own tree twice."*
+  **The cheap measurement replaces the demonstration that cost the reviewer two tool
+  shells;** DE 95's own payload reads `PPid: 1004` at `/proc`. *Rule 20's journal line sits
+  in the same section.*
+  (5) **THE REVIEWER SEAT RESET A SECOND TIME AND CONFIRMED ITSELF FROM THE FILES.** Stop
+  13:06:03Z at the ≈75 % crossing; **the pane's scrollback OVERWROTE the head of the
+  harvest and it was re-sent VERBATIM at 13:10Z**; state verified from the MAIN TREE, never
+  from the pane; cleared 13:11:52Z; brief v2 at `7864cb8`. ***Reloaded and CONFIRMED at
+  13:14Z FROM THE FILES, NOT THE BRIEF -- three deltas, all in the REGISTER'S favour.***
+  *A seat that checks its briefing against the files is the reason these state files
+  exist, and the deltas ran the right way: the files were ahead of the summary of them.*
+  (6) **THE HARVEST IS VERBATIM IN THE REGISTER BECAUSE NOTHING ELSE RETAINS IT** -- and
+  the durable part is the METHODS: *parentage not kills; scratch unit names with a
+  `--setenv` lock (**`systemd-run` forwards only what `--setenv` NAMES**, so a unit that
+  re-resolves a path from an empty environment lands on the REAL lock and returns the right
+  code for the wrong reason); **env-derived versus module CONSTANT** (`HEAVY_RUN_LOCK` is a
+  constant, so `BE_HEAVY_LOCK` moves what the unit TAKES and never what the producer
+  VERIFIES -- two independent knobs, "that is the shape to look for"); 1-byte-file digest
+  attacks; the porcelain three-line block judging any reader in ONE call; `journalctl … |
+  wc -l` BEFORE quoting.*
+  (7) ***AND THE SEAM HAS MOVED UP A LEVEL: it is no longer two seats' CODE, it is ONE
+  ARTIFACT read by two seats with DIFFERENT RULES*** -- the supersession pair, the landing
+  digest, the data root, the porcelain parse -- **four instances in eight rounds.** *Per
+  seat: BE's class has moved to a control whose verdict comes from AMBIENT state; DE ships
+  the class when told an instance; DA's recurring shape is a summary or flag that cannot
+  see its own inputs.* **And one structural asymmetry named: DA READS other seats'
+  declarations rather than typing them, so divergence is impossible on DA's side -- and it
+  is ONE-WAY, because nothing checks DE's code against DE's design.**
+  (8) **THE QUEUE IS HOLDING:** `de95smoke.service` active/running at **40:04, RSS 810,828
+  KiB, `MemoryPeak` STILL 2,554,003,456 B** (unmoved across five reads spanning 37 min);
+  **`be64book` has started TWELVE times, every one `ExecMainStatus=75`** -- *the poll is a
+  loop and twelve refusals cost nothing but journal lines.* **DA 86 dispatched 13:12Z and
+  in flight; BE 65 and DE 96/97 own the rest of §3.1's readers.**
+  **AT COMMIT TIME, 2026-09-06T13:19:51Z: DA 86 LANDED AND ITS INSTRUMENT AGREES WITH MY
+  MEASUREMENT TO THE SECOND.** **`p003_da_journal_retention__20260906T131704Z.json` records
+  `oldest_available_utc: 2026-09-06T09:05:56Z` at `read_at_utc: 2026-09-06T13:17:04Z` --
+  the same boundary I read 21 seconds earlier, from a different instrument.** *Two readers,
+  one moving edge.* **My third reading at 13:19:51Z is `09:09:57Z`: ~9 m 37 s of window
+  lost in under fifteen minutes.**
+  **DA's known-bads are the right shape:** *an absent unit reports
+  `ABSENT_NO_JOURNAL_LINES_FOR_THIS_UNIT` with "NO NUMBER IS QUOTED FROM IT: a 0 reported
+  as a measurement is a measurement of" nothing; a window older than retention reports
+  **`UNMEASURED`, `window_fully_covered: False` -- not zero**.* **The three-valued
+  discipline, now on the journal**, with `decides_nothing` and
+  `the_numbers_are_copied_at_the_moment_of_reading: true` in the same receipt.
+  *R-641's routing closed on DA's side (`ab8f60c`, `ee9d8c1`, `8105bfd` = Q-DA-309) within
+  eight minutes of its 13:12Z dispatch.* **The run is at 44:16 and `be64book` at SIXTEEN
+  refused polls; `MemoryPeak` still 2,554,003,456 B across six reads.**
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (≈40 min, receipt ≈14:00Z); the 09-05
+  book RELEASED-BUILD-PENDING-THE-LOCK (twelve polls refused at 75); the journal NOT-THE-
+  RECORD (rule 20 amended, `689c911`); the reviewer seat RESET-AND-CONFIRMED-FROM-THE-
+  FILES.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,064 -> 1,072, flag_provenance 609 -> 617,
+  tasks 19; **385 CHECKED**, 232 RELAYED, **455 UNMARKED -- unchanged for the
+  fifty-second round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

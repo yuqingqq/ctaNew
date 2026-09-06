@@ -5,6 +5,91 @@ refused BE's own battery — which had been passing a 16-hex stub. And my own OR
 check caught me renaming a key instead of superseding it.** Gate 1 is 1 of 7.
 Economics: `RESULTS.md` §0.
 
+## READ FIRST — round 179
+
+**As of 2026-09-06T13:40:54Z, R-645 and R-646 swept (tip `fcd6b53`). State only — MEM
+writes no result.**
+
+### A unit's outcome is the PAIR — and the pair is itself perishable
+
+**R3 corrects my round-175 sentence.** *I wrote "the only discriminator is
+`ExecMainStatus`."* Measured now: `de95smoke.service` **running** reads `active/running`
+with **`ExecMainStatus=0`**; `be64book` reads `failed`/**75**; the reviewer's three scratch
+units sit in the journal at 13:24:04Z as **`1/FAILURE`, `1/FAILURE`, `75/TEMPFAIL`**.
+***Without `-E 75` a lock refusal and a payload crash are the same number, and a running
+unit reports 0.*** **My measurement was true of BE's units — which carry `-E 75` — and I
+generalised it one step too far.** R2 rules the form; R3 rules the reading.
+
+***And a caveat of my own, on R3 rather than against it.*** Re-measuring those three
+scratch units gave **`inactive / 0 / success`** — the numbers the review says were 1, 1
+and 75. **The discriminator was `LoadState: not-found`: `systemctl show` on a unit whose
+object is gone returns DEFAULTS.** So a seat reading the pair after the transient unit is
+collected sees **`success/0` for a unit that exited 75**. The journal still holds the
+truth — **and the journal rotates.** *Two perishable records stacked: read **and copy**
+the pair while the unit exists; `LoadState` says whether the reading means anything.*
+
+### AT COMMIT TIME (13:45:22Z): DA 87 and DE 97 landed — I drove the lifted parser
+
+***`da_root.parse_porcelain` now returns the whole name for `?? a -> b` (`renamed_from
+None`) and REFUSES `## main...origin/main` as `n_malformed: 1`, while keeping the rename
+right for `R  a -> b` — all four cells agreeing with BE, at the shared name DE 96 already
+imports.*** **The two divergences I measured at round 178 are gone, and no caller
+changed.** *DA 87's receipt hashes `83a6fd1d60da5385…` (5,055 B) with the twelve-line
+table and four journal copies as driven output; DE 97 reads the lock-conflict code from
+the declaration and the outcome as a pair.*
+
+**The live unit reads `LoadState=loaded`** — the field the perishability caveat turns on,
+measured on a unit that still exists. **Run 1:09:46; `be64book` at forty-two polls.**
+
+### The invocation-field measurement reproduces — including the false absence
+
+`de95smoke.service`'s single line carries **`USER_INVOCATION_ID`**. By
+`_SYSTEMD_INVOCATION_ID` alone: **0 lines**. By `USER_INVOCATION_ID`: **1**. By `-u`:
+**1**. *The payload's lines carry the first field; the user manager's lines about the unit
+carry the second; `INVOCATION_ID` is the system manager's.* **R4: a copy returning 0 lines
+where `-u` has lines is a REFUSAL of the copy, never a record** — the coordinator deleted
+two such copies of its own. *The fourth false absence today.*
+
+**The sidecar exists because the sealed receipt cannot carry its own launch record:**
+`de95smoke.service` holds exactly one line — its `Started` line — and the run's producing
+code **predates DE 96**. `p003_co_journal_copy_de95smoke__20260906T133932Z.json` hashes
+**`cc9c2904a63b9491…`** (1,705 B); its shape is rule 20 written out.
+
+### The constants are declared once, and one parser wins on merit
+
+**`heavy_run_form_v1.json`** (2,732 B, 13:36:55Z): lock path, **`lock_conflict_rc 75`**
+with its reason, the form string, the caps, the slice, the note that a **running unit
+reports 0**, the three journal-identity fields with their measurement, and
+**`decidable_launch_form_property` = the cgroup leaf suffix**. ***"Every literal in code
+that names these values reads it or asserts equality in its selftest."***
+
+**One parser, and it is BE's algorithm** — lifted into the shared name
+`da_root.parse_porcelain` that DE 96 already imports, keeping DA's row structure so **no
+caller changes** (DA 87, 13:39Z). *The facts under it are ones I drove: DA truncates
+`?? a -> b` and accepts a branch header; BE returns the whole name and refuses.* **Four
+divergences, none live today — drift, not an outage.**
+
+### The runbook test names MainPID, and two corrections land in band
+
+*Under a service **`MainPID` is `flock`** with parent `systemd --user` (pid 1004 — flagged
+as a literal a restart would change), and the **payload is a grandchild** whose PPid is
+`flock`, so the test applied to the python process reads **wrong**.* **My reads agree:
+MainPID 3384217 is `flock` with `PPid: 1004`; the runner 3384218's PPid is 3384217.**
+***The decidable property needs no parent at all: the cgroup leaf.***
+
+- **R-641's headline** ("BE fails the rename") was true at the reviewer's tip `d4c190b`
+  and **false at R-641's own moment** — **BE 64a landed 13:03:36Z, verified at git.** *"The
+  body said so, the headline did not."*
+- **R-642's "13:14Z"** is the confirmation's **arrival**; the reviewer's clock read was
+  **13:12:33Z**.
+
+**Counts, measured before the sentence:** flags 1,088 → **1,096**, `flag_provenance`
+633 → **641**, tasks 19; **405 CHECKED**, 236 RELAYED, **455 UNMARKED — unchanged for the
+fifty-fifth round running**. ORPHAN audit 0 findings, exit 0; window trimmed 4 → 3 with
+**Batch 161** archived; new flags vs HEAD 0 without provenance.
+
+---
+
 ## READ FIRST — round 178
 
 **As of 2026-09-06T13:30:43Z, R-644 swept (tip `60d7aa9`). State only — MEM writes no
