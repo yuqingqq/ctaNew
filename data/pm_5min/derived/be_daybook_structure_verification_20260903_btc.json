@@ -1,0 +1,75 @@
+{
+ "all_hold": true,
+ "as_of": "2026-09-06T16:35:09Z",
+ "book": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+ "bytes": 290758834,
+ "checks": [
+  {
+   "claim": "the top level is a dict",
+   "holds": true
+  },
+  {
+   "claim": "the top-level keys are ['fr', 'asm'], found ['asm', 'fr']",
+   "holds": true
+  },
+  {
+   "claim": "asm carries by_arm and assembly",
+   "holds": true
+  },
+  {
+   "claim": "asm.by_arm is keyed by (coin, head) TUPLES",
+   "holds": true
+  },
+  {
+   "claim": "each by_arm value is indexable and its [0] carries the scored keys",
+   "holds": true
+  },
+  {
+   "claim": "fr carries the reference",
+   "holds": true
+  },
+  {
+   "claim": "asm.assembly carries the chunk and drop accounting",
+   "holds": true
+  }
+ ],
+ "declaration": "be_daybook_structure_v1.json",
+ "digest_pin": {
+  "digest_checked_before_open": true,
+  "receipt": "be_daybook_receipt_20260903_btc.json",
+  "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+  "what_this_does_not_make_safe": "pickle.load executes the payload's opcodes; pinning the digest says WHICH bytes are executed, not that executing them is harmless. This runs under the heavy lock and the declared cap, on another seat's serialisation."
+ },
+ "journal": {
+  "query": "journalctl --user _SYSTEMD_INVOCATION_ID=10cc3fcd177f4fc99689dd2916876f7d",
+  "retention_as_of": "2026-09-06T16:35:09Z",
+  "retention_oldest_entry": "2026-09-06T12:23:42+00:00",
+  "the_journal_is_not_the_record": "this output is COPIED here at the moment of reading (R-641); the record is this artifact."
+ },
+ "n_checks": 7,
+ "peak_rss_gb": 2.079,
+ "poll": {
+  "attempts_to_take": 77,
+  "each_refusal_did_no_work": true,
+  "each_refusal_exited": 75,
+  "ids_distinct": true,
+  "note": "the poll classified the SUCCESSFUL completion as UNEXPECTED -- it had no branch for a run that finishes inside the settle window. The run itself is unaffected; the gap is in the poll's classification and is fixed in this batch.",
+  "refusals": 76
+ },
+ "protocol": "BE_DAYBOOK_STRUCTURE_VERIFICATION_V1",
+ "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+ "this_is_the_step_that_makes_the_declaration_a_measurement": "before this ran, the declaration was derived from the producing code and said so (R-654)",
+ "unit": "be66struct.service",
+ "unit_outcome_read_while_loaded": {
+  "ActiveState": "active",
+  "ExecMainStatus": "0",
+  "InvocationID": "10cc3fcd177f4fc99689dd2916876f7d",
+  "LoadState": "loaded",
+  "MemoryPeak": "[not set]",
+  "Result": "success",
+  "SubState": "exited"
+ },
+ "verdict": "THE DECLARATION HOLDS AGAINST THE REAL BOOK",
+ "wall_s": 4.3,
+ "why_while_loaded": "R-653: LoadState not-found is VOID, never a verdict -- a collected unit and one that never ran are indistinguishable. These were read before the unit was stopped."
+}

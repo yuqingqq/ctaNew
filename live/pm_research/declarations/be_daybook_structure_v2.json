@@ -1,0 +1,62 @@
+{
+ "STATUS": "VERIFIED AGAINST THE REAL 09-03 BOOK",
+ "artifact": {
+  "digest_to_bind_to": "the receipt's `book.sha256`, which the builder takes from the buffer it wrote and states again as an independent `readback_sha256`",
+  "format": "python pickle, protocol HIGHEST_PROTOCOL, written as ONE buffer",
+  "not_json": "this is the fact DA's reader refused on; the receipt beside it IS json",
+  "path_pattern": "data/pm_5min/derived/be_daybook_<YYYYMMDD>_<coin>.pkl",
+  "receipt_pattern": "data/pm_5min/derived/be_daybook_receipt_<YYYYMMDD>_<coin>.json"
+ },
+ "declaration": "BE_DAYBOOK_STRUCTURE",
+ "how_to_verify_this_declaration": "python3 live/pm_research/be_daybook_build.py --verify-structure <book.pkl>: opens ONE real book and asserts every claim above against it, refusing by name on the first mismatch. HEAVY -- it must run in the service form on the lock as its own unit.",
+ "status_detail": "asserted against be_daybook_20260903_btc.pkl (sha256 aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323, 290,758,834 B) on 2026-09-06 under unit be66struct.service: 7 of 7 claims hold, 4.3 s, 2.079 GB peak RSS, the digest pinned to BE's receipt BEFORE the pickle was opened. The record is data/pm_5min/derived/be_daybook_structure_verification_20260903_btc.json. This is no longer a claim about the producing code: it is a measurement of an artifact. What it still does NOT establish: that every future book has this shape -- only that this one does, and that the builder that wrote it is the builder declared here.",
+ "supersedes": {
+  "path": "live/pm_research/declarations/be_daybook_structure_v1.json",
+  "rule": "13 -- vN+1 by the {path, sha256} pair; v1 is NOT edited",
+  "sha256": "ea1e88595844e800de328d505872d63129a1c7eb34f73fe3224cd0c263e7823b",
+  "what_changed": "the STATUS only. v1 said of itself that it was derived from the producing code and NOT yet asserted against a real book; it has now been asserted, so that sentence is false and the file says so in band rather than being edited."
+ },
+ "supersedes_note": "the oldest version of this family: it names no predecessor. A null here is a STATEMENT, not an absence.",
+ "top_level": {
+  "asm": {
+   "assembly": {
+    "may_a_population_recompute_read_it": true,
+    "shape": "dict with n_chunks, chunk_windows, kept_by_coin, drops_by_coin, n_tape_rows, splits, split_set",
+    "units_warning": "drops_by_coin and kept_by_coin count FRAGMENT ROWS; the receipt's uncovered count is in REFERENCE GENERATIONS. Comparing them for equality is the defect round 62 withdrew."
+   },
+   "by_arm": {
+    "caveat_measured_by_the_reviewer": "the second element is a COUNT MAP, not the thetas (REV 64 \u00a72.2) -- a reader wanting thetas must take them from the receipt's `asm.coverage_by_head[*].theta`, not from the pickle",
+    "may_a_population_recompute_read_it": true,
+    "shape": "dict keyed by the TUPLE (coin, head); each value is a sequence whose FIRST element carries the scored keys",
+    "source": "be_daybook_build: `asm[\"by_arm\"][k][0]`, and be_cancel_axis_null.py:217 builds the decision population for BOTH arms from the CONDVALUE head's key set alone"
+   },
+   "keys_named_by_the_builder": [
+    "by_arm",
+    "assembly"
+   ],
+   "what": "the assembly, from build_tape_index/measure_assembly over the day's tape"
+  },
+  "fr": {
+   "holds": "the reference generations and their statuses; `fr[\"reference\"]` is the per-slug/side structure the receipt's `reference.generations` counts",
+   "may_a_population_recompute_read_it": true,
+   "what": "the day's REFERENCE, from de_phase4_diag_runner.build_reference(coin, selector=sel)",
+   "why": "it is the decision-time population itself: rows, arm membership and the seeds a recompute needs"
+  },
+  "keys": [
+   "fr",
+   "asm"
+  ],
+  "source": "be_daybook_build.build(): `book = {\"fr\": fr, \"asm\": asm}`"
+ },
+ "version": 2,
+ "what_a_population_recompute_MAY_read": [
+  "fr (the reference and its statuses)",
+  "asm.by_arm[*][0] (the scored key sets, for set equality and coverage)",
+  "asm.assembly (chunk and drop accounting, in ROWS)"
+ ],
+ "what_it_MAY_NOT_read": {
+  "sealed_economics": "NOTHING in this pickle carries the sealed economics -- D_E0, Z, p, null mean/sd and the draws summary live in DE's sealed DAY RECEIPT, not in the book. A reader must not infer that the book is safe to open BECAUSE it holds no economics; it must still not derive an economic quantity from `fr`/`asm` before the seal opens (the arm scores are here, and a p-value can be computed from them).",
+  "the_rule": "the book is a POPULATION artifact. Population, coverage, set equality and accounting may be recomputed from it; any economic statistic may not be computed from it before the ruled read."
+ },
+ "why_this_exists": "R-654 / DA 89's seam. DA's pre-read population half REFUSED the real 09-03 book by name -- BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON -- because every fixture it had been driven on was JSON and the real book is a Python pickle. A reader that has never seen the artifact it must read will refuse it or, worse, guess at it. This declares the shape so DA 91 maps the book THROUGH a declaration instead of guessing."
+}

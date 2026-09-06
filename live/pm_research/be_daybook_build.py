@@ -1958,11 +1958,12 @@ def selftest() -> int:
        "scopes and every receipt said so in `scope.unit`; no seat read it")
     _sd = _R22.declaration_head("be_daybook_structure")
     ok(_sd["name"].startswith("be_daybook_structure_v")
-       and "NOT YET VERIFIED" in _sd["doc"]["STATUS"],
+       and _sd['doc']['STATUS'] == 'VERIFIED AGAINST THE REAL 09-03 BOOK',
        f"R-654: the book's structure is DECLARED ({_sd['name']}) so DA maps "
        f"the pickle through it instead of guessing -- and it says of itself "
-       f"that it is derived from the producing code and NOT yet asserted "
-       f"against a real book, because that is heavy and needs the lock")
+       f"it has now been ASSERTED against the real 09-03 book (7 of 7 "
+       f"claims, 4.3 s, 2.079 GB, the digest pinned before the open), so "
+       f"v1's 'not yet verified' is superseded in band by v2")
     import pickle as _pk
     def _fixture_book(where, payload):
         """a fixture book AND the receipt that pins it -- the verifier now

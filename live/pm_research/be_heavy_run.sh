@@ -228,6 +228,14 @@ if [ "${1:-}" = "--poll" ]; then
       # record showed the payload had exited 75 in the same second.
       echo "LOCK TAKEN $(date -u +%Y-%m-%dT%H:%M:%SZ) attempt $N after $((N-1)) refusals; InvocationID $ID"
       exit 0
+    elif [ "$SETTLE" = "1" ] && [ "$MS" = "0" ] && [ "$RS" = "success" ]; then
+      # A RUN THAT FINISHES INSIDE THE SETTLE WINDOW. Measured at 16:34:29Z:
+      # the structure verification took the lock and completed in 4.3 s, and
+      # this poll called it UNEXPECTED because it had no branch for success
+      # -- only for refusal and for still-running. The run was unaffected;
+      # the classification was wrong, which is its own defect.
+      echo "TOOK THE LOCK AND FINISHED $(date -u +%Y-%m-%dT%H:%M:%SZ) attempt $N after $((N-1)) refusals; Result=$RS ExecMainStatus=$MS InvocationID=$ID"
+      exit 0
     else
       echo "UNEXPECTED attempt $N: LoadState=$LS ActiveState=$AS SubState=$SS Result=$RS ExecMainStatus=$MS id=$ID"
       exit 2
