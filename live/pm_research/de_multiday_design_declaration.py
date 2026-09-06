@@ -28,7 +28,7 @@ from pathlib import Path
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V4"
-EXPECTED_CHECKS = 47
+EXPECTED_CHECKS = 53
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1b"
@@ -62,6 +62,12 @@ SD_FLOOR_FRACTION = 0.25          # refuse when sd < f * |mean| of the null
 #: (4) THE DECLARED LEDGER ROOT. The derivation resolves through the R-397
 #: symlink and compares; a different root REFUSES with the root named.
 DECLARED_LEDGER_ROOT = "/home/yuqing/ctaNew/data"
+
+#: R-555's ruled set. Named here so the R7 assertion can compare the
+#: LEDGER AS READ against the RULE, instead of against a count that was
+#: true on the day it was typed.
+RULED_DAY_SET = ("2026-09-03", "2026-09-04", "2026-09-05",
+                 "2026-09-06", "2026-09-07", "2026-09-08")
 
 #: (7) the two candidate day sets, DERIVED from the ledger, not listed.
 LEDGER_CONJUNCTS = ("day_closed_calendar", "post_freeze_pass",
@@ -1209,21 +1215,79 @@ def selftest(*, quiet: bool = False) -> int:
        "mismatch refuses THE RUN -- a moved model means the object under "
        "test is not the frozen one")
     r7 = d["R7_the_day_set"]
-    ok(len(r7["qualifying_on_quality"]) == 6
-       and r7["SET_A_reads_count_as_untouched"]["holm"]["G"] == 6
-       and r7["SET_A_reads_count_as_untouched"]["holm"][
-           "clears_holm_at_m2"] is True
-       and r7["SET_B_reads_consume_the_day"]["holm"]["G"] == 3
-       and r7["SET_B_reads_consume_the_day"]["holm"][
-           "clears_holm_at_m2"] is False
-       and r7["SET_B_reads_consume_the_day"]["holm"][
-           "clears_holm_at_m1"] is False,
-       f"R7 DERIVED FROM THE LEDGER, NOT LISTED: six days qualify on "
-       f"QUALITY -- {r7['qualifying_on_quality']}. SET A (reads do not "
-       f"consume) is G = 6 and CLEARS Holm at m = 2; SET B (reads consume) "
-       f"is G = 3 and clears at NEITHER m = 2 nor m = 1. One USER "
-       f"parameter, and it decides whether this run can produce a p-value "
-       f"at all")
+    # THE BLOCKER (reviewer efba2b6 §9): this asserted len == 6, G == 6 and
+    # G == 3 against a ledger THAT GROWS BY CONSTRUCTION. At 00:06Z on
+    # 09-07, when 09-06 is verdicted, all three would have failed -- the
+    # date-dependent fixture rot DA fixed in round 54, reintroduced against
+    # an input whose growth is SCHEDULED. Every count below is now an
+    # OUTPUT and every assertion is a RELATION that holds whatever the
+    # ledger says.
+    qual = set(r7["qualifying_on_quality"])
+    a_days = set(r7["SET_A_reads_count_as_untouched"]["days"])
+    b_days = set(r7["SET_B_reads_consume_the_day"]["days"])
+    ok(a_days == qual and b_days <= a_days
+       and all(r7["day_read_state"][x]["previously_opened_for"]
+               == OPENED_NONE for x in b_days)
+       and all(r7["day_read_state"][x]["previously_opened_for"]
+               != OPENED_NONE for x in a_days - b_days),
+       f"R7 IS A RELATION, NOT A COUNT: SET A is exactly the qualifying "
+       f"set, SET B is a SUBSET of it, every day in B reads "
+       f"`previously_opened_for == none` and every day in A-but-not-B does "
+       f"not. Counts are OUTPUTS -- today {len(qual)} qualify -- and this "
+       f"assertion survives the ledger growing at 00:06Z tomorrow")
+    for lbl, blk in (("SET_A", r7["SET_A_reads_count_as_untouched"]),
+                     ("SET_B", r7["SET_B_reads_consume_the_day"])):
+        h = blk["holm"]
+        ok(h["G"] == len(blk["days"])
+           and h["clears_holm_at_m2"] == (2.0 ** -h["G"] <= ALPHA / 2)
+           and h["clears_holm_at_m1"] == (2.0 ** -h["G"] <= ALPHA),
+           f"and {lbl}'s Holm outcome is COMPUTED FROM ITS OWN G "
+           f"({h['G']}), not asserted: clears at m=2 iff 2^-G <= "
+           f"{ALPHA / 2}. The arithmetic is checked; the value of G is "
+           f"whatever the ledger yields")
+    ruled_closed = [x for x in RULED_DAY_SET
+                    if r7["ledger_rows_as_read"].get(x, {}).get(
+                        "day_closed_calendar") is True]
+    missing = [x for x in ruled_closed if x not in qual]
+    # FALSIFIER A: PLANT AN EXTRA QUALIFYING DAY -- the ledger growing at
+    # 00:06Z tomorrow is exactly this, and it MUST STILL PASS.
+    grown = json.loads(json.dumps(r7))
+    grown["qualifying_on_quality"] = r7["qualifying_on_quality"] + ["2026-09-06"]
+    grown["SET_A_reads_count_as_untouched"]["days"] = list(
+        grown["qualifying_on_quality"])
+    grown["SET_B_reads_consume_the_day"]["days"] = (
+        r7["SET_B_reads_consume_the_day"]["days"] + ["2026-09-06"])
+    gq = set(grown["qualifying_on_quality"])
+    ga = set(grown["SET_A_reads_count_as_untouched"]["days"])
+    gb = set(grown["SET_B_reads_consume_the_day"]["days"])
+    ok(ga == gq and gb <= ga
+       and all(DAY_READ_STATE[x]["previously_opened_for"] == OPENED_NONE
+               for x in gb),
+       f"FALSIFIER A -- THE LEDGER GROWS AND THE ASSERTION STILL PASSES: "
+       f"planting 2026-09-06 as a seventh qualifying day (which is what "
+       f"00:06Z on 09-07 will do) leaves every relation true. The old "
+       f"assertion asserted 6, 6 and 3 and would have gone RED on "
+       f"schedule")
+    # FALSIFIER B: REMOVE A RULED DAY FROM THE QUALIFYING SET -- must refuse.
+    shrunk = [x for x in r7["qualifying_on_quality"] if x != "2026-09-03"]
+    ok("2026-09-03" in RULED_DAY_SET
+       and r7["ledger_rows_as_read"]["2026-09-03"]["day_closed_calendar"]
+       and "2026-09-03" not in shrunk,
+       "FALSIFIER B -- A RULED, CLOSED DAY MISSING FROM THE QUALIFYING SET "
+       "is exactly the condition the next assertion refuses on: 09-03 is "
+       "ruled, closed, and would be absent")
+    ok(bool([x for x in RULED_DAY_SET
+             if r7["ledger_rows_as_read"].get(x, {}).get(
+                 "day_closed_calendar") is True and x not in shrunk]),
+       "and the refusal condition FIRES on that shrunken set -- the check "
+       "is not one that can only ever pass")
+
+    ok(not missing,
+       f"AND EVERY RULED DAY THAT IS CLOSED QUALIFIES: "
+       f"{len(ruled_closed)} of the ruled set are closed and all of them "
+       f"pass the four conjuncts and day-quality. A ruled day that closed "
+       f"and did NOT qualify is the condition R-555 says waits for the "
+       f"next qualifying closed day, and it must be visible here")
     ok("QUALITY is the bar" in r7["version_is_NOT_a_bar"]
        and "2026-08-29" in r7["qualifying_on_quality"],
        "and v1's imported bar is WITHDRAWN: R-497(F)(1) says version is "

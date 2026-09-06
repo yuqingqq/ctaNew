@@ -46,7 +46,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V1"
-EXPECTED_CHECKS = 33
+EXPECTED_CHECKS = 42
 PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v1.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
@@ -238,9 +238,52 @@ def seed_for(day_book_sha: str, arm: str) -> int:
     return int(h[:8], 16)
 
 
+def verify_draw_provenance(prov: dict, *, arm: str, book_digest: str,
+                           verified_module_sha: str) -> dict:
+    """BIND THE VERIFIED MODULE TO THE NUMBERS (reviewer efba2b6 item 2).
+
+    Verifying BE's module and then accepting `null_draws` as a bare list
+    binds nothing: the digest says which cascade EXISTS, not which one
+    produced these draws. Every draw set now arrives with a provenance
+    block and the runner RECOMPUTES it -- the module digest must be the
+    one just verified, the seed must be the one this book and arm imply,
+    and the book digest must be this day's."""
+    if not isinstance(prov, dict):
+        raise RunnerRefused(
+            "REFUSED: draws arrived with no provenance block. A verified "
+            "module that never touches the numbers verifies nothing.")
+    want_seed = seed_for(book_digest, arm)
+    bad = []
+    if prov.get("module_sha256") != verified_module_sha:
+        bad.append({"field": "module_sha256",
+                    "declared": prov.get("module_sha256"),
+                    "verified": verified_module_sha})
+    if prov.get("book_digest") != book_digest:
+        bad.append({"field": "book_digest", "declared": prov.get(
+            "book_digest"), "expected": book_digest})
+    if prov.get("seed") != want_seed:
+        bad.append({"field": "seed", "declared": prov.get("seed"),
+                    "recomputed": want_seed})
+    if prov.get("arm") != arm:
+        bad.append({"field": "arm", "declared": prov.get("arm"),
+                    "expected": arm})
+    if bad:
+        raise RunnerRefused(
+            f"REFUSED: draw provenance does not bind to the verified "
+            f"cascade for {arm} on this book: {bad}. Draws produced by a "
+            f"different module, a different seed or a different book are "
+            f"not this arm's null.")
+    return {"module_sha256": prov["module_sha256"], "seed": want_seed,
+            "book_digest": book_digest, "arm": arm,
+            "recomputed_by_the_runner": True,
+            "binds_the_verified_module_to_the_numbers": True}
+
+
 def arm_day(day: str, arm: str, observed: float, null_draws: list,
             n_decisions: int, params: dict, *,
-            elapsed_s: float = 0.0) -> dict:
+            elapsed_s: float = 0.0, draw_provenance: dict | None = None,
+            book_digest: str | None = None,
+            verified_module_sha: str | None = None) -> dict:
     """One arm on one day: R8 deadline, R4 degeneracy, then the statistics.
 
     The economic fields are computed here and WITHHELD by the emitter until
@@ -256,16 +299,27 @@ def arm_day(day: str, arm: str, observed: float, null_draws: list,
         raise RunnerRefused(
             f"REFUSED DAY {day} / {arm}: {len(null_draws)} draws is below "
             f"the declared minimum {params['min_draws_per_arm_day']}.")
+    prov_out = None
+    if verified_module_sha is not None:
+        if book_digest is None:
+            raise RunnerRefused(
+                "REFUSED: a book digest is required to bind draw "
+                "provenance; without it the seed cannot be recomputed.")
+        prov_out = verify_draw_provenance(
+            draw_provenance, arm=arm, book_digest=book_digest,
+            verified_module_sha=verified_module_sha)
     adm = DESIGN.arm_day_admissible(n_decisions, null_draws)
     if not adm["admissible"]:
         return {"day": day, "arm": arm, "status": adm["status"],
-                "admissibility": adm, "economic": None,
+                "admissibility": adm, "draw_provenance": prov_out,
+                "economic": None,
                 "why_no_economic": "a refused arm-day carries no economic "
                                    "field; it is a STATUS and does not "
                                    "shrink G silently"}
     loc = DESIGN.per_day_location(observed, null_draws)
     z = DESIGN.per_day_standardised_excess(observed, null_draws)
     return {"day": day, "arm": arm, "status": "OK", "admissibility": adm,
+            "draw_provenance": prov_out,
             "economic": {"D_E0": observed, "Z": z,
                          "p_location": loc["p_one_sided"],
                          "null_mean": statistics.fmean(null_draws),
@@ -389,9 +443,19 @@ def aggregate(day_results: list, params: dict) -> dict:
 
 # ------------------------------------------------------------- fixture run
 
+FIXTURE_MODULE_SHA = "f" * 64          # the fixture's stand-in cascade
+
+
 def fixture_run() -> dict:
-    """An end-to-end run on FIXTURES so the reviewer can drive the runner
-    before a day book exists. NO DATA IS READ."""
+    """An end-to-end run on FIXTURES. **NOTHING UNDER `data/` IS OPENED.**
+
+    Reviewer efba2b6 item 3: the previous version called the design
+    module's selftest, which reads the ledger, and verified the pinned
+    models by reading `data/`. So `FIXTURE_RUN_NO_DATA` was true of the
+    day books and false of everything else, and the run could not be
+    driven from a shell worktree at all. Every input is now a fixture; a
+    ledger read lives behind `--dry-run-ledger`, which says so in its
+    status."""
     started = time.time()
     root = Path(__file__).resolve().parents[2]
     params = json.loads((root / PARAMS_REL).read_text())
@@ -399,8 +463,17 @@ def fixture_run() -> dict:
     params["days"] = ["FIXTURE-1", "FIXTURE-2", "FIXTURE-3"]
     params["G"] = len(params["days"])
     params["G_derived_from_len_days"] = True
-    inputs = verify_run_inputs(params)
-    be = inputs["be_module"]
+    # FIXTURE INPUTS. No `data/` path is opened -- not the ledger, not the
+    # model files, not BE's artifact. The digests below are the FIXTURE's,
+    # and the receipt says so.
+    be = {"path": params["be_module"]["path"],
+          "sha256": FIXTURE_MODULE_SHA,
+          "cited_not_copied": True, "verified_at_run_time": False,
+          "FIXTURE": "a stand-in digest; the real citation is verified "
+                     "only on a real run"}
+    inputs = {"be_module": be,
+              "models": {"FIXTURE": "no model file was read", },
+              "thetas": {"FIXTURE": "no theta source was read"}}
 
     rng = random.Random(20260906)
     results, sealed_artifacts = [], []
@@ -408,12 +481,18 @@ def fixture_run() -> dict:
         book_sha = hashlib.sha256(day.encode()).hexdigest()
         verify_day_inputs(
             day, book_sha, book_sha, params,
-            {a: s["theta"] for a, s in params["arms"].items()},
-            {a: dict(s["model_digests"]) for a, s in params["arms"].items()})
+            {a: sp["theta"] for a, sp in params["arms"].items()},
+            {a: dict(sp["model_digests"])
+             for a, sp in params["arms"].items()})
         for arm in sorted(params["arms"]):
             draws = [rng.gauss(0.0, 1.0) for _ in range(600)]
             observed = 2.5 if arm == "CONDVALUE_X_SKEW" else -0.2
-            r = arm_day(day, arm, observed, draws, 200, params)
+            prov = {"module_sha256": FIXTURE_MODULE_SHA,
+                    "seed": seed_for(book_sha, arm),
+                    "book_digest": book_sha, "arm": arm}
+            r = arm_day(day, arm, observed, draws, 200, params,
+                        draw_provenance=prov, book_digest=book_sha,
+                        verified_module_sha=FIXTURE_MODULE_SHA)
             r["seed"] = seed_for(book_sha, arm)
             results.append(r)
             sealed_artifacts.append(seal(r, i, params["G"]))
@@ -421,11 +500,12 @@ def fixture_run() -> dict:
         assert_no_economic_leak(a, 1, params["G"])
     agg = aggregate(results, params)
 
-    DESIGN.LAST_BATTERY.clear()
-    DESIGN.selftest(quiet=True)
-    design_battery = dict(DESIGN.LAST_BATTERY)
+    design_battery = {"NOT_RUN_IN_FIXTURE_MODE": (
+        "the design module's selftest READS THE LEDGER, so running it "
+        "here would make FIXTURE_RUN_NO_DATA false. It is run separately "
+        "and its result is cited, not embedded")}
     LAST_BATTERY.clear()
-    selftest(quiet=True)
+    selftest(quiet=True, offline=True)
     battery = dict(LAST_BATTERY)
 
     import resource as _res
@@ -435,6 +515,8 @@ def fixture_run() -> dict:
         "status": "FIXTURE_RUN_NO_DATA",
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "no_day_book_was_read": True,
+        "no_path_under_data_was_opened": True,
+        "runnable_from_a_shell_worktree": True,
         "the_committed_day_set_is_empty": True,
         "why_fixtures": "the reviewer has not filed on design v3 and BE's "
                         "book declaration is in flight; nothing may touch "
@@ -446,6 +528,11 @@ def fixture_run() -> dict:
             "per_day_deadline_s", "G", "G_derived_from_len_days")},
         "be_module_citation": be,
         "run_input_verification_R6": {
+            "FIXTURE_MODE": "verify_pinned_models() and "
+                            "verify_pinned_thetas() are NOT called here -- "
+                            "they read `data/`. They are driven in the "
+                            "battery, both directions, and run for real on "
+                            "a real day",
             "models": inputs["models"], "thetas": inputs["thetas"],
             "closed_the_reviewers_half_a_code_path": (
                 "the book digest was already a verifier; the THETA and "
@@ -477,8 +564,21 @@ def fixture_run() -> dict:
 LAST_BATTERY: dict = {}
 
 
-def selftest(*, quiet: bool = False) -> int:
+def selftest(*, quiet: bool = False, offline: bool = False) -> int:
+    """`offline=True` skips the checks that READ `data/` and RECORDS them.
+
+    The fixture run must open no path under `data/` (reviewer efba2b6
+    item 3) and must still carry a battery that ran in its own process.
+    Both are possible only if the battery can say which checks it did not
+    run and why -- a skipped check that is silent is a check that has
+    stopped existing."""
     n = [0]
+    skipped: list = []
+
+    def offline_skip(label):
+        skipped.append(label)
+        if not quiet:
+            print(f"  SKIP  (offline) {label}")
 
     def ok(cond, label):
         if not cond:
@@ -563,46 +663,54 @@ def selftest(*, quiet: bool = False) -> int:
             "cascade module digest differs")
 
     # ---- R6: THE MODEL AND THETA HALVES ARE NOW CODE PATHS -------------
-    vr = verify_run_inputs(live)
-    ok(vr["models"]["n_models_read"] == 3
-       and vr["models"]["bytes_were_read_not_recorded"] is True
-       and all(v["matches"] for a in vr["models"]["per_arm"].values()
-               for v in a.values())
-       and all(v["matches"] for v in vr["thetas"]["per_arm"].values()),
-       f"R6 POSITIVE CONTROL, AND IT ADMITS: {vr['models']['n_models_read']}"
-       f" pinned model files are READ AND HASHED at run time and match, "
-       f"and both thetas are read from the artifact they are pinned in. "
-       f"Until now these were recorded and never compared -- the "
-       f"reviewer's 'provenance theatre'")
-    import shutil as _sh
-    with _tf.TemporaryDirectory() as tdm:
-        # A PLANTED MODEL BYTE. The whole model dir is copied so the
-        # pristine tree is never touched.
-        src = Path(__file__).resolve().parents[2] / MODEL_DIR
-        dst = Path(tdm) / MODEL_DIR
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        _sh.copytree(src, dst)
-        tgt = dst / "linear_d_btc.json"
-        tgt.write_bytes(tgt.read_bytes() + b" ")
-        refuses(lambda: verify_pinned_models(live, Path(tdm)),
-                "R6 KNOWN-BAD, A PLANTED MODEL BYTE: one trailing space in "
-                "linear_d_btc.json changes its digest and REFUSES THE RUN "
-                "-- not the day, because a moved model makes every day's "
-                "object different", "do not match their declared digest")
-        (dst / "lgbm_haz_btc.txt").unlink()
-        refuses(lambda: verify_pinned_models(live, Path(tdm)),
-                "and an ABSENT pinned model refuses too, rather than "
-                "verifying the ones that happen to be there",
-                "do not match their declared digest")
-    with _tf.TemporaryDirectory() as tdt:
-        bad = dict(live)
-        bad["arms"] = {a: dict(v) for a, v in live["arms"].items()}
-        bad["arms"]["CONDVALUE_X_SKEW"]["theta"] = 0.5
-        refuses(lambda: verify_pinned_thetas(bad),
-                "R6 KNOWN-BAD, A THETA THAT DISAGREES WITH ITS PIN SOURCE: "
-                "refuses the RUN. The theta is read from BE's artifact at "
-                "its declared JSON path, not from this module's copy",
-                "theta mismatch against the pin source")
+    # These READ `data/`. In offline mode they are skipped and NAMED.
+    if offline:
+        for _lbl in ("R6 positive control (reads the pinned model files)",
+                     "R6 known-bad: a planted model byte",
+                     "R6 known-bad: an absent pinned model",
+                     "R6 known-bad: a theta disagreeing with its pin"):
+            offline_skip(_lbl)
+    else:
+        vr = verify_run_inputs(live)
+        ok(vr["models"]["n_models_read"] == 3
+           and vr["models"]["bytes_were_read_not_recorded"] is True
+           and all(v["matches"] for a in vr["models"]["per_arm"].values()
+                   for v in a.values())
+           and all(v["matches"] for v in vr["thetas"]["per_arm"].values()),
+           f"R6 POSITIVE CONTROL, AND IT ADMITS: {vr['models']['n_models_read']}"
+           f" pinned model files are READ AND HASHED at run time and match, "
+           f"and both thetas are read from the artifact they are pinned in. "
+           f"Until now these were recorded and never compared -- the "
+           f"reviewer's 'provenance theatre'")
+        import shutil as _sh
+        with _tf.TemporaryDirectory() as tdm:
+            # A PLANTED MODEL BYTE. The whole model dir is copied so the
+            # pristine tree is never touched.
+            src = Path(__file__).resolve().parents[2] / MODEL_DIR
+            dst = Path(tdm) / MODEL_DIR
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            _sh.copytree(src, dst)
+            tgt = dst / "linear_d_btc.json"
+            tgt.write_bytes(tgt.read_bytes() + b" ")
+            refuses(lambda: verify_pinned_models(live, Path(tdm)),
+                    "R6 KNOWN-BAD, A PLANTED MODEL BYTE: one trailing space in "
+                    "linear_d_btc.json changes its digest and REFUSES THE RUN "
+                    "-- not the day, because a moved model makes every day's "
+                    "object different", "do not match their declared digest")
+            (dst / "lgbm_haz_btc.txt").unlink()
+            refuses(lambda: verify_pinned_models(live, Path(tdm)),
+                    "and an ABSENT pinned model refuses too, rather than "
+                    "verifying the ones that happen to be there",
+                    "do not match their declared digest")
+        with _tf.TemporaryDirectory() as tdt:
+            bad = dict(live)
+            bad["arms"] = {a: dict(v) for a, v in live["arms"].items()}
+            bad["arms"]["CONDVALUE_X_SKEW"]["theta"] = 0.5
+            refuses(lambda: verify_pinned_thetas(bad),
+                    "R6 KNOWN-BAD, A THETA THAT DISAGREES WITH ITS PIN SOURCE: "
+                    "refuses the RUN. The theta is read from BE's artifact at "
+                    "its declared JSON path, not from this module's copy",
+                    "theta mismatch against the pin source")
 
     # ---- R6, all three, both directions --------------------------------
     th = {a: s["theta"] for a, s in P["arms"].items()}
@@ -644,6 +752,43 @@ def selftest(*, quiet: bool = False) -> int:
             "R8 KNOWN-BAD, AN OVERRUN: the DAY refuses. The draw count is "
             "never lowered and the cap is never raised",
             "exceeds the declared deadline")
+
+    # ---- (2) THE DRAWS ARE BOUND TO THE VERIFIED MODULE ---------------
+    bk = "c" * 64
+    good_prov = {"module_sha256": "m" * 64, "seed": seed_for(bk, "A"),
+                 "book_digest": bk, "arm": "A"}
+    ok(verify_draw_provenance(good_prov, arm="A", book_digest=bk,
+                              verified_module_sha="m" * 64)[
+           "binds_the_verified_module_to_the_numbers"] is True,
+       "POSITIVE CONTROL, AND IT ADMITS: draws whose provenance names the "
+       "verified module, this book and the seed this book and arm imply "
+       "are accepted")
+    for mutate, why, needle in (
+            ({"module_sha256": "z" * 64},
+             "DRAWS CARRYING A DIFFERENT MODULE DIGEST refuse -- the "
+             "digest used to say which cascade EXISTS, never which one "
+             "produced these numbers", "module_sha256"),
+            ({"seed": 1},
+             "a seed the runner cannot RECOMPUTE from this book and arm "
+             "refuses", "seed"),
+            ({"book_digest": "d" * 64},
+             "draws produced against a DIFFERENT BOOK refuse",
+             "book_digest"),
+            ({"arm": "B"}, "draws produced for the OTHER ARM refuse",
+             "arm")):
+        bad = dict(good_prov); bad.update(mutate)
+        refuses(lambda b=bad: verify_draw_provenance(
+            b, arm="A", book_digest=bk, verified_module_sha="m" * 64),
+            f"KNOWN-BAD: {why}", needle)
+    refuses(lambda: verify_draw_provenance(
+        None, arm="A", book_digest=bk, verified_module_sha="m" * 64),
+        "KNOWN-BAD: draws with NO provenance block refuse -- a verified "
+        "module that never touches the numbers verifies nothing",
+        "no provenance block")
+    ok(arm_day("D", "A", 2.0, draws, 200, P)["status"] == "OK",
+       "and a call that supplies no verified-module digest still works, "
+       "so the binding is opt-in at the seam and MANDATORY on the real "
+       "path where the runner has verified a module")
 
     # ---- R5, the sealed guard, both directions -------------------------
     sealed = seal(good, 1, 5)
@@ -711,17 +856,65 @@ def selftest(*, quiet: bool = False) -> int:
        "KNOWN-BAD: an arm present on four of five days is UNTESTABLE, not "
        "tested at G = 4 -- a refused arm-day does not shrink G")
 
+    # ---- (3) THE FIXTURE RUN OPENS NO PATH UNDER data/ -- DRIVEN ------
+    # Not asserted in prose: `open`, `Path.read_bytes` and `Path.read_text`
+    # are instrumented and the fixture run is executed under them.
+    if not offline:
+        import builtins as _b
+        import pathlib as _pl
+        _seen: list = []
+        _o, _rb, _rt = _b.open, _pl.Path.read_bytes, _pl.Path.read_text
+        try:
+            _b.open = lambda f, *a, **k: (_seen.append(str(f)),
+                                          _o(f, *a, **k))[1]
+            _pl.Path.read_bytes = lambda self: (_seen.append(str(self)),
+                                                _rb(self))[1]
+            _pl.Path.read_text = lambda self, *a, **k: (
+                _seen.append(str(self)), _rt(self, *a, **k))[1]
+            fixture_run()
+        finally:
+            _b.open, _pl.Path.read_bytes, _pl.Path.read_text = _o, _rb, _rt
+        _data_hits = [x for x in _seen if "/data/" in x]
+        ok(not _data_hits,
+           f"(3) FIXTURE_RUN_NO_DATA IS DRIVEN, NOT DECLARED: `open`, "
+           f"`read_bytes` and `read_text` are instrumented and a full "
+           f"fixture run opens {len(_seen)} paths, ZERO of them under "
+           f"`data/`. It reads only its own module source and the "
+           f"committed parameter file, so it runs from a shell worktree")
+        ok(any(x.endswith("de_multiday_gate1_params_v1.json")
+               for x in _seen),
+           "and the instrument is not vacuous -- it DID observe the "
+           "parameter file being read, so a zero above is a measurement "
+           "rather than a silent no-op")
+    else:
+        # TWO labels, because the online path runs TWO checks here. A
+        # skip list that undercounts makes the two modes disagree on the
+        # total, which is exactly what the count assertion exists to catch
+        # -- and it caught it.
+        offline_skip("(3) the instrumented fixture-run data-freeness probe "
+                     "(it calls fixture_run, which would recurse)")
+        offline_skip("(3) the non-vacuity check on that probe")
+
     ok(seed_for("a" * 64, "X") != seed_for("b" * 64, "X")
        and seed_for("a" * 64, "X") == seed_for("a" * 64, "X"),
        "the seed PINS THE DATA: it changes with the book digest and is "
        "reproducible from the artifact alone")
 
-    ok(n[0] + 1 == EXPECTED_CHECKS,
-       f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
+    ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
+       f"check count asserted at run time: {n[0] + 1} run + "
+       f"{len(skipped)} skipped == {EXPECTED_CHECKS}")
     LAST_BATTERY.update({
         "outcome": "PASS", "n_checks_run": n[0],
+        "n_checks_skipped_offline": len(skipped),
+        "skipped_offline": list(skipped),
         "expected_checks_in_the_source": EXPECTED_CHECKS,
-        "run_count_equals_source_expected": n[0] == EXPECTED_CHECKS,
+        "run_plus_skipped_equals_source_expected":
+            n[0] + len(skipped) == EXPECTED_CHECKS,
+        "offline": offline,
+        "why_skipped": ("these checks READ `data/`; a fixture run must "
+                        "open no path under it, and a skipped check that "
+                        "is silent is a check that has stopped existing"
+                        if skipped else None),
         "ran_in_the_emitting_process": True})
     if not quiet:
         print(f"[de_multiday_gate1_runner] PASS -- {n[0]} checks")
@@ -732,10 +925,24 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--fixture-run", action="store_true", dest="fixture")
+    ap.add_argument("--dry-run-ledger", action="store_true", dest="ledger",
+                    help="read the ledger and report the day set; this is "
+                         "NOT a fixture run and says so in its status")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.ledger:
+        r7 = DESIGN.day_sets_from_the_ledger()
+        print(json.dumps({
+            "status": "DRY_RUN_LEDGER_READ_NOT_A_FIXTURE_RUN",
+            "ledger_root_resolved": r7["ledger_root_resolved"],
+            "n_verdict_files_read": r7["n_verdict_files_read"],
+            "qualifying_on_quality": r7["qualifying_on_quality"],
+            "SET_A_G": r7["SET_A_reads_count_as_untouched"]["holm"]["G"],
+            "SET_B_G": r7["SET_B_reads_consume_the_day"]["holm"]["G"]},
+            indent=1))
+        return 0
     if not a.fixture or a.output is None:
         ap.error("choose --selftest or --fixture-run --output PATH")
     payload = fixture_run()
