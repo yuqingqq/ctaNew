@@ -1,0 +1,59 @@
+{
+ "THE_SPLIT_QUESTION_IS_NOT_MINE": {
+  "consequence_if_DE_rules_otherwise": "the tape is rebuilt; it is one day and it is cheap relative to the fragment",
+  "mechanism": "build_state_tape_v2 maps its two inputs onto the two splits: (('train', FRAG), ('score', TOP))",
+  "status": "PROVISIONAL \u2014 routed to DE under R-574, which puts the split declaration with DE. Which split a day's rows belong to is a modelling question, not plumbing, and this seat does not decide it.",
+  "what_this_build_did": "day fragment -> TRAIN; an explicitly EMPTY file -> SCORE",
+  "why_it_bites_here": "those are two POPULATIONS (eraB, top-up), not two feature sets. A one-day Gate-1 tape has ONE population, so one split has no input."
+ },
+ "build_ref": "af37cb78c9605a30b7c8096eafe7d071c517f950",
+ "coin": "btc",
+ "data_root": {
+  "branch": "1_env_PM_DATA_ROOT",
+  "data_root": "/home/yuqing/ctaNew/data",
+  "data_root_exists": true,
+  "env_value": "/home/yuqing/ctaNew",
+  "env_var": "PM_DATA_ROOT",
+  "is_ledger": true,
+  "ledger_check": "PASS",
+  "repo_root": "/home/yuqing/ctaNew",
+  "tape_present": true
+ },
+ "day": "20260903",
+ "decides_nothing": "REPORTED (rule 14).",
+ "guard": {
+  "refuses_any_existing_path": true,
+  "refuses_existing_state_tapes": [
+   "phase2_state_tape_v2.json",
+   "phase2_state_tape_v5.QUARANTINED_ZERO_ROW.json",
+   "phase2_state_tape_v5.QUARANTINED_tape6d_286.json",
+   "phase2_state_tape_v5.json"
+  ],
+  "required_stem": "phase2_state_tape_gate1_"
+ },
+ "inputs": {
+  "score_split": {
+   "EMPTY_BY_CONSTRUCTION": true,
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.EMPTY_SCORE.json"
+  },
+  "train_split": {
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260903_btc.json",
+   "sha256": "2860832a66e820cad0b2ee039740692d4d17f3fec11ee4874ef6ef9b244f0764"
+  }
+ },
+ "no_assembly_run": true,
+ "no_book_built": true,
+ "protocol": "BE_GATE1_STATE_TAPE_V1",
+ "resources": {
+  "cap_gb": 8.0,
+  "cap_raised": false,
+  "peak_rss_gb": 4.74,
+  "wall_s": 1475.8
+ },
+ "tape": {
+  "bytes": 991078272,
+  "n_rows": 544286,
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_gate1_20260903_btc.json",
+  "sha256": "7206101d9378b1911841d1c3a2b8779c7760f9841adec62db5cb5ee9c66204f1"
+ }
+}
