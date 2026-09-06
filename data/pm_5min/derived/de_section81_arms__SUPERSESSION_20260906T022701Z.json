@@ -1,0 +1,29 @@
+{
+ "record": "SUPERSESSION",
+ "as_of": "2026-09-06T02:30Z",
+ "superseding": "de_section81_arms__20260906T022701Z.json",
+ "superseding_sha256": "d77e97b176c80fdf890597542899994891bfa26428ab10357a93b704603e2f1a",
+ "superseding_carrying_commit": "0e5f3d3",
+ "superseding_carrying_commit_is_published": "yes -- pushed before the emission, so no later rebase can rewrite it",
+ "superseding_code_identity_differences_at_that_commit": "0 of 7",
+ "numbers_moved": true,
+ "which_numbers_moved_and_why": "EIGHT numeric leaves, all of them the cascade baseline and what divides by it: cascade_factor, cascade_x_selectivity and ratio_vs_random_cancel on both acting arms, fills_per_generation, and random_cancel_cost_cents. Leaf-wise against 20260905T155744Z: 4,097 shared leaves compared, 9 moved (8 numeric + the random_cancel_definition prose), 24 added, 0 removed. NO OTHER NUMBER MOVED -- spread capture, adverse selection, maker P&L, the inventory leg, rho, cents_per_cancel, cents_per_lost_fill, fills_lost_per_cancel, the value ceilings and the tail decomposition are all bit-identical.",
+ "why": "BE's measurement at 4c17646: the cascade baseline was fills per FILLING generation (4,315/3,861 = 1.1176), which conditions on the very outcome a random-cancel null must be ignorant of. The null this module NAMES is 'a generation drawn without regard to its fills', so the denominator is the cancellable population. generations_all() added, the arms call site supplies it, and BOTH readings now travel per arm with cascade_factor_baseline naming which is primary.",
+ "and_the_correction_does_not_settle_the_level": "The receipt's own computed predicate says so. Three populations, three numbers: filling generations 1.1176 (OUT of BE's replayed range), all reference generations 0.1386 (also OUT), BE's replayed decision population 0.497 (mean, sd 0.072, n=500). A cancel can only be issued where the policy could act, and that set is smaller than every generation in the reference and richer in filling ones -- this module does not count it. baseline_status is CONTESTED_PENDING_A_DECISION_POPULATION_COUNT and no verdict may be read from the cascade LEVEL in this state.",
+ "what_is_settled": "the FILLING rate is REFUTED as the random-cancel baseline, and generations_with_fills's docstring claim to be 'the denominator a RANDOM cancel is priced against' is withdrawn in place. AND separation's ordering is INVARIANT to the choice -- cascade_spread is 1.9398838090426878 under BOTH baselines, computed and compared in the emission -- so 'CHEAP FILLS FIRST, FEW FILLS SECOND' stands whatever the level turns out to be.",
+ "superseded": [
+  {"artifact": "de_section81_arms__20260905T155744Z.json",
+   "sha256": "8bd8481c318d4f8584833a419f230ba353da77605db3306f395cae8748ea14a8",
+   "committed": true,
+   "reason": "its cascade_factor, cascade_x_selectivity, ratio_vs_random_cancel, fills_per_generation and random_cancel_cost_cents are computed against the REFUTED filling-generation baseline. Every other number in it stands unchanged. Retained in place as provenance (rule 13)."},
+  {"artifact": "de_section81_arms__20260906T022353Z.json",
+   "committed": false,
+   "reason": "an intermediate emission taken before baseline_status was added, so it carried the corrected rate WITHOUT the field saying the level is contested -- exactly the reading the correction must not invite. Moved aside to superseded_20260906T023000Z/, never committed."}
+ ],
+ "still_open_on_this_surface": [
+  "the DECISION-population count a random cancel is actually drawn from is not computed by this module; until it is, the cascade LEVEL is contested and only its ORDERING is citable",
+  "the declined fills' keys are still not emitted (R-519(F) item 4, DA's offer)",
+  "attempt_bound/required_attempts remain UNWIRED; RANDOM_MATCHED is still REFUSED at 60 attempts, all 60 rejected at P4",
+  "fields() is a closure inside run_arms, so the emission-level guards are AST source pins rather than driven checks"
+ ]
+}
