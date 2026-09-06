@@ -414,7 +414,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-553: **R-554**.
+- **Tip:** see `git log`. Next register entry after R-554: **R-555**.
 - **V2 line** (`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`):
   USER-authorised 2026-09-04T15:27:56Z, landed by the coordinator at `9b37088`
   + `120a9b3`, **TERMINALLY STOPPED AT 1/7 GATES** on a data-acquisition
@@ -441,6 +441,8 @@ its controls at both endpoints; Gate 1's three sampler refusals stand.
 
 A seat worktree's `data/` MUST be a top-level symlink to `/home/yuqing/ctaNew/data`:
 after `git worktree add`, `rm -rf <wt>/data && ln -s /home/yuqing/ctaNew/data <wt>/data`;
-check `readlink -f <wt>/data`. A materialised `data/` directory (git tracks ~135 files
+then `git -C <wt> ls-files data | xargs git -C <wt> update-index --skip-worktree` so git stops
+reporting the tracked data files as deleted (R-554); artifacts under data/ are landed from
+the MAIN tree by pathspec. Check `readlink -f <wt>/data`. A materialised `data/` directory (git tracks ~135 files
 under it) is a partial SHELL — every uncommitted artifact is absent from it, and two
 seats reported shell facts as ledger facts on 2026-09-06.
