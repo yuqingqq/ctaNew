@@ -63,6 +63,80 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T17:09:30Z (MEM ROUND 203 -- R-680 THROUGH R-684 SWEPT, tip `09188c0`. STATE ONLY.
+  MEM ASSERTS NO RESULT. **NO SEALED VALUE READ; NO SEALED RECEIPT OPENED -- the `.v2` question
+  and the 09-04 record set were both settled by FILENAME CENSUS.**
+  (1) ***THE DE/DA SEAM IS STILL OPEN, AND I DROVE ALL THREE OUTCOMES RATHER THAN RELAYING THE
+  STATUS.*** DE's real runner at 17:07Z: **`DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET`, `agrees:
+  None`, `key_walkers_found: []`** -- DE 106 has not landed. A synthetic DE declaring the SAME
+  rule -> `DECLARED_AND_MATCHES`; a DIFFERENT rule -> `DECLARED_AND_DIFFERS`; **the same rule
+  reformatted -> MATCHES**, because `_normalise_rule` collapses whitespace, uppercases, folds
+  `--` and strips trailing periods: *tolerant of FORMATTING, not of WORDING.* ***AND THE SHARP
+  POINT: DE's BEHAVIOUR ALREADY MATCHES*** -- R-682's real drive shows the planted names refused
+  at depth -- ***WHILE ITS RULE IS NOT DECLARED IN THE SHAPE DA READS, AND THE CHECK REFUSES TO
+  INFER AGREEMENT FROM BEHAVIOUR.*** *Two censuses can agree today and diverge tomorrow; what
+  must be shared is the RULE.*
+  (2) **`agrees` IS THREE-VALUED:** `None` where the rule is undeclared -- not `False`, which
+  would read as DISAGREEMENT, and not `True`. The docstring says it in words: *"A rule DE has not
+  declared yet is a NAMED STATUS, never a pass."*
+  (3) **I MEASURED THE MODULE'S FULL SELFTEST, NOT R-683's SUB-COUNT:** `--selftest` reports **76
+  checks, 0 failures**; R-683 names **44/44** for the key walk. *Different populations, and I did
+  not isolate the sub-battery* -- recorded so 76 is never read as contradicting 44. **The
+  population discipline I routed to BE this afternoon, applied to my own number.**
+  (4) **NO `.v2` OF THE 09-04 RECEIPT HAS BEEN EMITTED.** Filename census: the day carries
+  exactly `…_SEALED__20260906T163351Z.json` and `…_STOPPED__20260906T143800Z.json`, and **no
+  `.v2` exists for any of the three days.** R-684 RULES the `.v2` in R-603's form, adding
+  `seal_scope_applied` beside the honest v21 pin -- ***ruled is not landed, and that distinction
+  is the whole point of a filename census.***
+  (5) **BOTH LANDING RECORDS STAND, AND "STAND" IS A CLAIM ABOUT BYTES, SO I HASHED THEM:** 09-03
+  `6e418d119ce27beb` (27,237 B) and 09-04 `bee78a53d1a0a1a5` (27,092 B), both `INCOMPLETE` with
+  `seal_holds TRUE` -- **identical to what I verified at rounds 196 and 202.** *Rule 13 holds by
+  measurement, not by assurance.*
+  (6) **THE CENSUS FAMILY IS FOUR-HEADED FOR THE FOURTH ROUND** -- 7 records, 3 links, the same
+  three orphans. *The going-forward chaining holds every round; the in-band history-linking
+  R-673 routed has not happened in four.* **Recorded as a standing partial, not re-routed: DA has
+  been told, and MEM does not rule.**
+  (7) **ZERO OPENED MARKERS, COUNTED:** a count over the ledger for `be_race_read_OPENED_*`
+  returns **0**, matching the coordinator's 16:57Z count. *So the read GO is unexercised and BE
+  68's consumption guard has not had to fire on a real day* -- a COUNT, not an inference from
+  nobody reporting one.
+  (8) **de104smoke AT A THIRD IDENTICAL PEAK:** 17:06:40Z, `loaded / active / running`, so the two
+  economic-looking fields remain DEFAULTS; **InvocationID `549bd234…` unchanged across THREE
+  readings (16:47:15Z, 16:57:40Z, 17:06:40Z) -- one run, not a relaunch** -- and MemoryPeak
+  **2,312,695,808 identical in all three.** ≈18:25Z.
+  (9) ***I DID NOT LOCATE THE RUNTIME `-E` PROOF AND I AM NOT CLAIMING IT IS ABSENT.*** R-684
+  names a runtime `-E` proof carried in a receipt; a targeted grep of DE's runner found nothing,
+  **and I did not search the launcher, the receipts or the journal.** *Recorded as RELAYED and
+  NOT as a gap -- a bounded search reporting absence is the class I have swept in three seats
+  this week, and this flag exists so my own bounded search cannot later be read as a finding.*
+  (10) **R-682's RULE IS IN THE RUNBOOK AND IT NAMES BOTH HALVES:** *"a drive's result is read
+  before the sentence, and a caller's TypeError is the probe not the guard."* **The two failures
+  a round apart went in OPPOSITE directions:** my round-201 probe passed the wrong SHAPE and read
+  a false **PASS** from a working guard; R-681's probe passed the wrong ARITY and read a false
+  **REFUSAL** from a guard that never ran. *A rule phrased only as "check for TypeError" would
+  have caught one and missed the other.*
+  AT COMMIT TIME, UNSWEPT: **R-685 landed** -- REV 77 verified, **GO FOR THE REAL READ SUBJECT TO
+  ONE CODE CHANGE BEFORE THE ACT**, and the one condition is a defect shape this record should
+  carry. BE 68 driven by the reviewer: `resolve_marker_dir` with a scratch root -> `DataRootRefused`
+  **naming the resolved root before any marker is read or written**; a scratch `outdir` without
+  `fixture=True` -> refused; and **five marker shapes -- valid, `{ partial`, EMPTY, naming a
+  DIFFERENT day, and a DIRECTORY at the path -- all refuse as consumed, naming the day and the
+  path**, three of them shapes the reviewer had not asked for. `pre_state` is computed BEFORE any
+  marker, and **the marker guard is ordered before the result-name guard with the reason stated --
+  REV 48 §1.6's lesson applied by BE unprompted**, which is the ordering defect BE found against
+  itself one round earlier. ***THE ONE CONDITION IS THE PUREST FORM OF THE CLASS I HAVE BEEN
+  RECORDING ALL DAY:*** `read()` records `decl_was_injected: decl is not None` beside prose saying
+  nothing is injected on the real path -- **but the CLI's `--open` DOES pass `decl=`**, so *the
+  read artifact, the one permanent record of the programme's second test, would say
+  `decl_was_injected: true` about itself, contradicted by the sentence beside it* -- **and a
+  consumed read has no `.v2`.** *A self-description contradicting its own field, on an artifact
+  that cannot be superseded because the act it records is irreversible.* Two-line fix -> BE 69,
+  dispatched **before the act**. §2.2, not blocking: a marker that is valid JSON but not an object
+  raises at `.get` -- **anything at that path means consumed**, so a raise where a refusal belongs,
+  the same shape REV 76 named. **Noted in band; the round-203 flags are not edited.**
+  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,292 -> 1,302; flag_provenance 837 -> 847;
+  tasks 19; **587 CHECKED / 260 RELAYED / 455 UNMARKED -- the SEVENTY-NINTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Q-MEM-191 filed.)
   2026-09-06T16:59:30Z (MEM ROUND 202 -- R-677, R-678 AND R-679 SWEPT, tip `8704451`. STATE
   ONLY. MEM ASSERTS NO RESULT. ***NOTHING I DROVE THIS ROUND READ A SEALED VALUE:*** every cell
   used a sealed **NAME** with an INVENTED or EMPTY value, the landing record was read for counts,
@@ -236,98 +310,6 @@ updated: >-
   COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,272 -> 1,282; flag_provenance 817 -> 827;
   tasks 19; **569 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SEVENTH round unchanged.**
   ORPHAN audit 0 findings. Q-MEM-189 filed.)
-  2026-09-06T16:39:40Z (MEM ROUND 200 -- R-674 SWEPT, tip `ade9a96`. STATE ONLY. MEM ASSERTS
-  NO RESULT. **NO SEALED VALUE READ. THE 09-04 SEALED RECEIPT WAS HASHED AND CENSUSED AND NOT
-  OPENED -- a digest is not a read -- and no field of it is quoted anywhere in this round.**
-  (1) ***THE UNIT WAS COLLECTED BETWEEN THEIR COPY AND MINE, AND IT STILL READS `success`.***
-  The journal stamps `Stopped de102smoke.service` at **16:37:12Z**. My five-field read at
-  **16:37:59Z** -- forty-seven seconds later -- returns `LoadState=not-found`,
-  `ActiveState=inactive`, `SubState=dead`, `InvocationID` **empty**, MemoryPeak **[not set]**,
-  ***and `Result=success` with `ExecMainStatus=0`***. **A COLLECTED UNIT READS AS DEFAULTS: my
-  reading is VOID, never "success".** *R-674 records the unit as readable after exit, copied by
-  the coordinator and by DE at ~16:34Z -- true then.* **The window CLOSED between their copy
-  and mine, and by an explicit stop rather than decay.** My round-179 "the pair is itself
-  perishable" finally has a MEASURED lifetime: readable 16:33:52-16:34Z, gone by 16:37:59Z.
-  (2) ***AND THE CLEANEST DEMONSTRATION OF R3' I HAVE MEASURED IS TWO UNITS MINUTES APART.***
-  `be66struct`'s last poll: `loaded / active / exited / success / 0` -- **a GENUINE success**,
-  readable precisely because the unit is still loaded. `de102smoke`: `not-found / inactive /
-  dead / success / 0` -- **VOID**. ***THE TWO ECONOMIC-LOOKING FIELDS ARE IDENTICAL. ONLY THE
-  TRIPLE SEPARATES THEM.***
-  (3) **THE 09-04 SEALED RECEIPT, CENSUSED:** `…_20260904_SEALED__20260906T163351Z.json`,
-  **49,650 B**, `37dd376befad0a31a374935d…`, mtime 16:33:52Z. The 09-04 day now carries TWO
-  records (STOPPED, SEALED) against 09-03's three (REFUSED, KILLED, SEALED): *every attempt is
-  a named status on disk and none was overwritten.*
-  (4) **THE RUNNER'S OWN EMIT LINE IS IN THE JOURNAL, AND THE JOURNAL OUTLIVES THE UNIT.**
-  `journalctl -u de102smoke.service` still returns its lines **after `LoadState=not-found`** --
-  the emit line at 16:33:52Z (`DAY_RUN_SEALED`, day 2026-09-04, both arms OK, `wall_s 5991.2`,
-  `peak_rss_mb 2821.6`, `lock_held true`, `no_tape_artifact_opened true`, `battery PASS`), the
-  `Stopped` line, and *Consumed 1h 39min 40.638s CPU time, 2.7G memory peak*. **I read the
-  unit's JOURNAL, not the receipt.** *The unit's five fields die with the unit; the journal does
-  not.*
-  (5) **THE LOCK IS FREE** -- `/proc/locks` matched by dev:inode returns no holder, the first
-  such reading this session.
-  (6) **BE's POLL ENDED IN A TAKE AND THE ARTIFACT SHOWS THE TRANSITION:** 89 attempts x 3
-  rows, **88 at `rc 75` and the 89th at `rc 0`**, take at 16:34:28Z, **zero refusals after**,
-  **89 distinct InvocationIDs of 89**. *BE took the lock the minute DE's unit released it.* At
-  round 199 I measured 60 as-of 16:05:30Z -- **the as-of is what makes 60 and 89 comparable
-  instead of looking like a correction.**
-  (7) ***SEVENTY-SEVEN VERSUS EIGHTY-NINE IS TWO POPULATIONS, NOT A CONTRADICTION.*** BE's
-  receipt says `attempts_to_take 77` / `refusals 76`; its record says 89 / 88. **Reconciled
-  exactly: the record is append-only across TWO poll sessions.** There is **exactly ONE cadence
-  gap over 120 s in the whole file** (15:14:39Z -> 15:17:41Z, **182 s against a 61 s median**),
-  and the attempt immediately after it is #13 -- **so attempts 13..89 = 77**, the receipt's own
-  number. *The receipt counts ITS session; the record accumulated across both.* **NEITHER
-  ARTIFACT NAMES ITS POPULATION.** Routed to BE as a missing population statement, **not a
-  defect in either number** -- *and I went looking for the innocent explanation before filing a
-  contradiction, the third time this session that discipline changed the answer.*
-  (8) **BE NAMES ITS OWN POLL DEFECT INSIDE THE ARTIFACT:** the poll block's `note` says the
-  poll classified the SUCCESSFUL completion as UNEXPECTED, having no branch for a run that
-  finishes inside the settle window, that the run is unaffected, and that the gap is fixed in
-  the batch. *A limitation stated where a reader will actually resolve it.*
-  (9) **THE STRUCTURE DECLARATION IS NOW VERIFIED AGAINST A REAL BOOK:**
-  `be_daybook_structure_verification_20260903_btc.json`, 2,841 B, `6694025c33708213`,
-  `all_hold TRUE` over 7 checks against `be_daybook_20260903_btc.pkl` (290,758,834 B),
-  `peak_rss_gb 2.079`, **`digest_pin.digest_checked_before_open: TRUE`**. *The declaration that
-  said OF ITSELF it was derived from producing code and not yet verified against a real book is
-  now verified against one.*
-  (10) ***AND FIVE OF MY OWN PROVENANCE POINTERS ROTTED IN THE SAME SECOND.*** The audit
-  returned **5 FINDINGS**, all one event: at round 197 it refused an entry for naming a RUNNING
-  UNIT, and I "fixed" it by pointing at the transient unit file -- *a real file, and still a
-  RUNTIME path*. **When the unit was collected the file went with it and four entries from
-  rounds 197-199 rotted at once**, plus this round's journal entry, which is not a path at all.
-  ***A RUNTIME PATH IS NOT A DURABLE ARTIFACT; IT IS THE OBJECT'S SHADOW AND DIES WITH IT.***
-  Repointed at the run's own emitted receipt (censused, NOT opened) and at BE's record, **with
-  the rot NAMED in each `said:` rather than the pointer moved quietly**, and the reading now
-  stated for what it is: live at its as-of and no longer re-checkable. **The instrument is the
-  only reason I know.**
-  (11) **DA 97 HAS NOT LANDED:** five census records, one link, **four heads**, re-measured.
-  R-674 makes the link MANDATORY at DA 97 -- *the FORM I routed at round 199, where the link
-  was a flag and an omitted flag produced a head silently.* `477d367`, the tree the 09-04 run
-  was produced from, resolves: a real commit, an ancestor of `origin/mm-research`.
-  AT COMMIT TIME, UNSWEPT: **R-675 LANDED** (BE 66 verified, 165 checks) and it lands directly
-  on item (7). **THE REGISTER NOW CARRIES THE SESSION NUMBER: R-675 says the lock was taken
-  "after 76 counted refusals" and names the take as "attempt 77"** -- *the receipt's population,
-  exactly the one I reconciled* -- **while BE's launch record for the same unit shows 88
-  refusals across 89 attempts.** Both right, neither naming its population, and the routing is
-  now demonstrably not pedantry: the programme's own authority document and the producing
-  artifact disagree by twelve on a quantity they both call "counted refusals". ***AND I CHECKED
-  A THIRD NUMBER BEFORE CLAIMING IT:*** the register also contains "after 78 counted refusals",
-  but that is **R-612, BE 58, a DIFFERENT RUN** -- not a third count of this one. *Fourth time
-  this session that checking before filing changed the answer.* R-675 also confirms the rest at
-  the same values I measured independently: the structure verification's digest pinned before
-  the pickle was opened, 7 of 7 claims, `6694025c33708213`, and be66struct's five fields read
-  **while loaded, before the stop** (`loaded / active / exited / success / 0`, id
-  `10cc3fcd…`) -- *the discipline whose absence made my de102smoke reading VOID forty-seven
-  seconds after its stop.* **The structure declaration is superseded in band and I drove the
-  chain: v1 `ea1e88595844e800` -> v2 `0fa3c6db8750857f` by the pair, v2 the SOLE head, v1
-  untouched.** And BE reports three defects against itself, one of them a **24.5 KB deletion of
-  thirteen definitions** made by replacing a span between two anchors without reading between
-  them -- *CLAUDE.md's "do not slice source by index" rule, paid for again* -- caught by the
-  batteries, restored from HEAD, with an assert now refusing any span over 3 KB. **Noted in
-  band; the round-200 flags above are not edited (rule 13).**
-  COUNTS, MEASURED BEFORE THE SENTENCE: flags 1,261 -> 1,272; flag_provenance 806 -> 817;
-  tasks 19; **559 CHECKED / 258 RELAYED / 455 UNMARKED -- the SEVENTY-SIXTH round unchanged.**
-  ORPHAN audit: 5 findings, all repointed, re-run to **0**. Q-MEM-188 filed.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -1306,6 +1288,107 @@ flags:
                              # only; and **neither sealed day receipt was opened** --
                              # the 09-04 one has been hashed and censused twice now and
                              # never read.
+  the_DE_DA_seam_is_STILL_OPEN_and_I_drove_all_three_outcomes: BEHAVIOUR-MATCHES-THE-RULE-IS-NOT-DECLARED
+                             # `de_seal_rule_at_source` driven four ways. **DE's REAL
+                             # runner right now: `DE_HAS_NOT_DECLARED_THE_KEY_WALK
+                             # _RULE_YET`, `agrees: None`, `key_walkers_found: []`**
+                             # -- so DE 106 has not landed and the seam R-683 names is
+                             # still open at 17:07Z, measured rather than relayed. A
+                             # synthetic DE declaring the SAME rule ->
+                             # `DECLARED_AND_MATCHES`; a DIFFERENT rule ->
+                             # `DECLARED_AND_DIFFERS`; **the same rule in different
+                             # spacing and case -> MATCHES**, because `_normalise_rule`
+                             # collapses whitespace, uppercases, folds `--` to `-` and
+                             # strips trailing periods -- *tolerant of FORMATTING, not
+                             # of WORDING*, which is the right tolerance. ***AND THE
+                             # SHARP POINT: DE's BEHAVIOUR ALREADY MATCHES*** -- R-682's
+                             # real drive shows the planted names refused at depth --
+                             # ***WHILE ITS RULE IS NOT DECLARED IN THE SHAPE DA READS,
+                             # AND THE CHECK REFUSES TO INFER AGREEMENT FROM
+                             # BEHAVIOUR.*** Two censuses can agree today and diverge
+                             # tomorrow; what must be shared is the RULE.
+  agrees_is_THREE_VALUED_and_an_absence_is_a_NAMED_STATUS: NEVER-FALSE-NEVER-A-PASS
+                             # `agrees` reads **None** where the rule is undeclared --
+                             # not `False`, which would read as *disagreement*, and not
+                             # `True`, which would read as agreement. The docstring
+                             # states it: ***"A rule DE has not declared yet is a NAMED
+                             # STATUS, never a pass."*** Same discipline as
+                             # `n_arms_agreeing: None` in the landing record and the
+                             # same one this programme paid for in the three-valued
+                             # flags sweep.
+  I_measured_the_MODULES_FULL_selftest_not_R_683s_sub_count: SAY-WHICH-POPULATION
+                             # I ran `da_gate1_day_verdict --selftest` and it reports
+                             # **76 checks, 0 failures.** R-683 names **44/44** for DA
+                             # 98's key walk. **Those are different populations and I
+                             # did not isolate the sub-battery**, so I record what I
+                             # ran and what it counted rather than letting 76 stand
+                             # against 44 as though one contradicted the other. *The
+                             # population discipline I routed to BE this afternoon,
+                             # applied to my own number.*
+  no_v2_of_the_09_04_receipt_has_been_emitted_yet: RULED-NOT-LANDED
+                             # Filename census over `derived/`: the 09-04 day carries
+                             # exactly two records --
+                             # `…_SEALED__20260906T163351Z.json` and
+                             # `…_STOPPED__20260906T143800Z.json` -- and **no `.v2`
+                             # exists for ANY of the three days.** R-684 RULES the
+                             # `.v2` in R-603's form, adding `seal_scope_applied`
+                             # beside the honest v21 pin; **ruled is not landed, and
+                             # the distinction is the whole point of a filename
+                             # census.** ***No sealed receipt was opened to establish
+                             # this.***
+  both_landing_records_STAND_and_I_re_hashed_them_to_say_so: BYTES-NOT-MEMORY
+                             # "Both landing records stand" is a claim about BYTES, so
+                             # I hashed them: 09-03 `6e418d119ce27beb` (27,237 B) and
+                             # 09-04 `bee78a53d1a0a1a5` (27,092 B), both `INCOMPLETE`
+                             # with `seal_holds TRUE` -- **identical to the digests I
+                             # verified at rounds 196 and 202 respectively**, so
+                             # nothing was edited under either of them. *Rule 13 holds
+                             # by measurement rather than by assurance.*
+  the_census_family_is_FOUR_HEADED_for_the_FOURTH_round: SAME-THREE-ORPHANS
+                             # 7 records, 3 links, **four heads** -- `…142709Z`,
+                             # `…143544Z`, `…150939Z` and the current head. *The
+                             # going-forward chaining holds every round; the in-band
+                             # history-linking R-673 routed has not happened in four.*
+                             # Recorded as a standing partial with which half moved,
+                             # not re-routed: **DA has been told, and MEM does not
+                             # rule.**
+  zero_OPENED_markers_COUNTED_not_assumed: THE-READ-GO-IS-UNEXERCISED
+                             # A count over the ledger for `be_race_read_OPENED_*`
+                             # returns **0**, matching R-680's 16:57Z count taken by
+                             # the coordinator. *So the read GO has not been exercised
+                             # and BE 68's consumption guard has not yet had to fire on
+                             # a real day* -- which is the state the GO is waiting on,
+                             # and it is a COUNT, not an inference from the absence of
+                             # a report.
+  de104smoke_at_a_THIRD_identical_peak: ONE-RUN-ACROSS-TWENTY-MINUTES
+                             # 17:06:40Z, five fields copied at once while
+                             # `LoadState=loaded`: `loaded / active / running`, so the
+                             # two economic-looking fields remain DEFAULTS.
+                             # **InvocationID `549bd234e4324408bf931992ada421d8`
+                             # unchanged across THREE readings -- 16:47:15Z, 16:57:40Z,
+                             # 17:06:40Z -- so this is one run and not a relaunch**,
+                             # and MemoryPeak **2,312,695,808 identical in all three.**
+                             # Completion expected ≈18:25Z.
+  I_did_NOT_locate_the_runtime_E_proof_and_I_am_NOT_claiming_it_is_absent: A-BOUNDED-SEARCH-IS-NOT-AN-ABSENCE
+                             # R-684 names a **runtime `-E` proof carried in a
+                             # receipt**. A targeted grep of DE's runner for it
+                             # returned nothing. ***I DID NOT SEARCH THE LAUNCHER, THE
+                             # RECEIPTS OR THE JOURNAL, SO I RECORD THIS AS NOT LOCATED
+                             # BY ME AND RELAYED FROM R-684 -- NOT AS A GAP.*** *A
+                             # bounded search reporting absence is the class I have
+                             # swept in three seats this week; the flag exists so my
+                             # own bounded search cannot later be read as a finding.*
+  R_682s_rule_is_in_the_runbook_and_it_names_BOTH_halves: FALSE-PASS-AND-FALSE-REFUSAL
+                             # *"A drive's result is read before the sentence, and a
+                             # caller's TypeError is the probe not the guard."* **Both
+                             # halves are load-bearing and the two failures a round
+                             # apart went in opposite directions:** at round 201 my
+                             # probe passed the wrong SHAPE and read a false **PASS**
+                             # from a guard that was working; at R-681 a probe passed
+                             # the wrong ARITY and read a false **REFUSAL** from a
+                             # guard that had not run at all. *The rule as written
+                             # covers both, which a rule phrased only as "check for
+                             # TypeError" would not.*
   governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-V2-GATES-0-TO-6
                              # USER-DIRECTED prospective supersession at
                              # 2026-09-04T15:27:56Z. The v1 §10 order and the
@@ -24088,6 +24171,82 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 203, 2026-09-06T17:09:00Z ---
+  the_DE_DA_seam_is_STILL_OPEN_and_I_drove_all_three_outcomes:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T17:07:00Z
+    said: >-
+      called de_seal_rule_at_source on DE's real runner and on three synthetic sources built by
+      appending a SEAL_RULE assignment to the real file -- the same rule, a different rule, and
+      the same rule reformatted. Read the status, agrees and key_walkers_found from each, and read
+      _normalise_rule's source to see what the comparison tolerates.
+  agrees_is_THREE_VALUED_and_an_absence_is_a_NAMED_STATUS:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T17:07:00Z
+    said: >-
+      read the returned dict for the undeclared case (agrees is None, not False) and the
+      docstring sentence that states the rule.
+  I_measured_the_MODULES_FULL_selftest_not_R_683s_sub_count:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-06T17:05:00Z
+    said: >-
+      ran the module's --selftest from the repo root and read its final line: 76 checks, 0
+      failures. I did not isolate the key-walk sub-battery R-683 counts at 44.
+  no_v2_of_the_09_04_receipt_has_been_emitted_yet:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json
+    as_of: 2026-09-06T17:05:00Z
+    said: >-
+      listed every de_gate1_day_run record for 09-04 by filename and searched the directory
+      listing for a .v2 on any of the three days. The named artifact is the receipt this census
+      covers and did NOT open.
+  both_landing_records_STAND_and_I_re_hashed_them_to_say_so:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json
+    as_of: 2026-09-06T17:05:00Z
+    said: >-
+      hashed both landing records and compared each digest, byte count, status and seal_holds
+      against what I recorded when I first verified them at rounds 196 and 202. Identical.
+  the_census_family_is_FOUR_HEADED_for_the_FOURTH_round:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_nonhead_census__20260906T165035Z.json
+    as_of: 2026-09-06T17:08:00Z
+    said: >-
+      re-listed the family, hashed each record, read each supersedes block and re-applied the
+      chain-head predicate rather than carrying the previous round's answer forward.
+  zero_OPENED_markers_COUNTED_not_assumed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-06T17:08:00Z
+    said: >-
+      counted entries matching be_race_read_OPENED in the ledger directory listing; zero. A count,
+      not an inference from nobody having reported one.
+  de104smoke_at_a_THIRD_identical_peak:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260905_btc.pkl
+    as_of: 2026-09-06T17:06:40Z
+    said: >-
+      the artifact is the durable book the run names; the five-field reading is live at this
+      as_of, copied at once while LoadState=loaded, and comparable to my two earlier readings only
+      because the InvocationID is unchanged across all three.
+  I_did_NOT_locate_the_runtime_E_proof_and_I_am_NOT_claiming_it_is_absent:
+    prov: RELAYED
+    from: R-684 (coordinator, 2026-09-06), REV 75's report
+    said: >-
+      a targeted grep of de_multiday_gate1_runner.py for a runtime -E proof returned nothing; I
+      did not search the launcher, the receipts or the journal, so the item is recorded as relayed
+      and NOT as an absence.
+  R_682s_rule_is_in_the_runbook_and_it_names_BOTH_halves:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-06T17:04:00Z
+    said: >-
+      read R-682 and the runbook commit subject that carries the rule, and set the two failures
+      side by side -- my round-201 shape error reading a false pass, and R-681's arity error
+      reading a false refusal.
   # --- MEM round 202, 2026-09-06T16:59:00Z ---
   the_empty_container_mechanism_DRIVEN_and_its_boundary_DRAWN:
     prov: CHECKED

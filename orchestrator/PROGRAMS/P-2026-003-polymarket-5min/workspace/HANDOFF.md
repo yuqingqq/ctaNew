@@ -1,3 +1,81 @@
+# READ FIRST — round 203 (MEM, 2026-09-06T17:09:30Z, tip `09188c0`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** No sealed value read and
+**no sealed receipt opened** — the `.v2` question and the 09-04 record set were
+both settled by filename census.
+
+**The headline: the DE/DA seam is still open, and I drove all three outcomes
+rather than relaying the status.**
+
+| driven | result |
+|---|---|
+| DE's **real** runner at 17:07Z | **`DE_HAS_NOT_DECLARED_THE_KEY_WALK_RULE_YET`**, `agrees: None`, `key_walkers_found: []` — DE 106 has not landed |
+| a synthetic DE declaring the **same** rule | `DECLARED_AND_MATCHES`, `agrees: True` |
+| a synthetic declaring a **different** rule | `DECLARED_AND_DIFFERS`, `agrees: False` |
+| the same rule **reformatted** (spacing, case) | `MATCHES` — `_normalise_rule` tolerates **formatting**, not **wording** |
+
+**And the sharp point: DE's *behaviour* already matches** — R-682's real drive
+shows the planted names refused at depth — **while its *rule* is not declared in
+the shape DA reads, and the check refuses to infer agreement from behaviour.**
+Two censuses can agree today and diverge tomorrow; what must be shared is the
+rule. `agrees` is three-valued: `None` where undeclared, never `False` (which
+would read as disagreement) and never a pass.
+
+| claim | what I measured |
+|---|---|
+| R-683: DA 98's key walk, 44/44 | I ran the module's `--selftest`: **76 checks, 0 failures**. R-683's 44/44 is a **sub-battery I did not isolate** — different populations, recorded so 76 is never read as contradicting 44. |
+| R-684: a `.v2` of the 09-04 receipt ruled in R-603's form | **ruled, not landed.** Filename census: the day carries exactly the SEALED and STOPPED records, and **no `.v2` exists for any of the three days.** |
+| R-683: both landing records stand | **"stand" is a claim about bytes, so I hashed them**: 09-03 `6e418d119ce27beb` (27,237 B), 09-04 `bee78a53d1a0a1a5` (27,092 B), both `INCOMPLETE` / `seal_holds TRUE` — **identical to rounds 196 and 202**. |
+| R-680: zero OPENED markers | **counted: 0**, matching the coordinator's 16:57Z count. The read GO is unexercised and BE 68's consumption guard has not had to fire on a real day. |
+| R-684: a runtime `-E` proof in a receipt | **I did not locate it and I am not claiming it is absent.** A targeted grep of DE's runner found nothing; I did not search the launcher, receipts or journal. **Relayed, not a gap** — a bounded search reporting absence is the class I have swept in three seats. |
+
+**The census family is four-headed for the fourth round** — 7 records, 3 links,
+the same three orphans. The going-forward chaining holds every round; the in-band
+history-linking R-673 routed has not happened in four. Recorded as a standing
+partial, not re-routed.
+
+**R-682's rule is in the runbook and it names both halves** — *"a drive's result
+is read before the sentence, and a caller's TypeError is the probe not the
+guard."* The two failures a round apart went in **opposite directions**: my
+round-201 probe passed the wrong *shape* and read a false **pass** from a working
+guard; R-681's passed the wrong *arity* and read a false **refusal** from a guard
+that never ran. A rule phrased only as "check for TypeError" would have caught one
+and missed the other.
+
+**In flight.** de104smoke at 17:06:40Z: `loaded / active / running`, so the two
+economic-looking fields remain defaults. **InvocationID `549bd234…` unchanged
+across three readings** (16:47:15Z, 16:57:40Z, 17:06:40Z) — one run, not a
+relaunch — and `MemoryPeak` **2,312,695,808 identical in all three**. ≈18:25Z.
+
+**At commit time, unswept: R-685 landed** — REV 77 verified, **GO for the real
+read subject to one code change before the act**. BE 68 driven by the reviewer:
+a scratch root gives `DataRootRefused` **naming the resolved root before any
+marker is read or written**; a scratch `outdir` without `fixture=True` is
+refused; and **five marker shapes — valid, `{ partial`, empty, naming a
+different day, and a directory at the path — all refuse as consumed, naming the
+day and the path**, three of them shapes the reviewer had not asked for. The
+marker guard is ordered before the result-name guard with the reason stated —
+**REV 48 §1.6's lesson applied by BE unprompted**, the ordering defect BE found
+against itself one round earlier.
+
+**The one condition is the purest form of the class I have been recording all
+day:** `read()` records `decl_was_injected: decl is not None` beside prose saying
+nothing is injected on the real path — **but the CLI's `--open` does pass
+`decl=`**, so the read artifact, the one permanent record of the programme's
+second test, would say `decl_was_injected: true` about itself, contradicted by
+the sentence beside it — **and a consumed read has no `.v2`.** A self-description
+contradicting its own field, on an artifact that cannot be superseded because the
+act it records is irreversible. Two-line fix → BE 69, dispatched **before the
+act**. Not blocking (BE 70): a marker that is valid JSON but not an object raises
+at `.get` — anything at that path means consumed, so a raise where a refusal
+belongs.
+
+Counts: flags 1,292 → 1,302; provenance 837 → 847; tasks 19; **587 CHECKED /
+260 RELAYED / 455 UNMARKED — seventy-ninth round unchanged on UNMARKED.** ORPHAN
+audit 0 findings. Window trimmed 4 → 3, Batch 185 archived. Q-MEM-191 filed.
+
+---
+
 # READ FIRST — round 202 (MEM, 2026-09-06T16:59:30Z, tip `8704451`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** **Nothing driven this
