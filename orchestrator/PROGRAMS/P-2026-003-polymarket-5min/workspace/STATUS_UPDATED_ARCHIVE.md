@@ -13107,3 +13107,86 @@ directions.
   forty-sixth round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled 3;
   new flags vs HEAD 0 without provenance.)
 ```
+
+## Batch 156 — archived 2026-09-06T12:56:38Z (1 entry, rolling-window overflow)
+
+Moved out of `STATUS.yml`'s `updated:` when MEM round 174 entered the field.
+Trim by MOVING, never by interpreting; boundaries at the generation markers as
+they stand; verified by an alnum-normalised containment check in all three
+directions.
+
+```
+  2026-09-06T12:18:10Z (MEM ROUND 171 -- R-629, Q-DA-305 AND Q-BE-61 SWEPT. STATE
+  ONLY. THE FINDING BEGAN AS AN APPARENT CONTRADICTION IN DA'S NEW RULE AND WAS MINE.
+  (1) **THE SAME RULE GAVE TWO VERDICTS BECAUSE TWO TREES HELD TWO VERSIONS.** I drove
+  `da_root.derived_dir()` from two worktrees: **from `wt-da` it returned the canonical
+  `/home/yuqing/ctaNew/data/pm_5min/derived`; from `wt-de2` it raised `RootRefused: …
+  resolved the root to '/home/yuqing/ctaNew-wt-de2'`** -- *while BOTH trees' `data/`
+  symlinks resolve to the SAME ledger.* ***The discriminator was one `sha256sum` per
+  tree: `da_root.py` is `d58025ac…` in wt-da and `4c6b7693…` in wt-de2, and
+  `eee7b3d`'s blob IS `4c6b7693…` while the tip's is `d58025ac…`.*** **wt-de2 matches
+  its HEAD exactly; wt-da carries an uncommitted modification equal to the tip (` M
+  live/pm_research/da_root.py`) -- DA working in its own tree.** *The rule is
+  consistent; I compared two VERSIONS of it.*
+  (2) **AND A PROBE THAT IMPORTS FROM A WORKTREE RUNS WHAT THAT TREE HOLDS** -- not
+  what its commit says, not what the shared tree says. ***The class this whole week has
+  been about, the bytes that RAN versus the bytes on disk, arriving from the
+  VERIFICATION side.*** **Seventeenth "suspect the probe first", and the cheapest
+  discriminator yet: one digest per tree.** *For my own drives: when two trees
+  disagree, hash the file before believing either.*
+  (3) **FOUR OF FIVE WORKTREES ARE SYMLINKS NOW** -- wt-da, wt-de2, wt-be, wt-rev all
+  resolving to the ledger; **only `wt-de` is still a DIRECTORY.** *wt-de2 was a
+  directory when I counted at round 168 and was refreshed after the run died.* **The
+  one remaining materialised tree is the FROZEN EVIDENCE of the refused run -- the one
+  place the drift is deliberate.**
+  (4) **THE 09-05 FRAGMENT LANDED AND THE TAPE IS BUILDING:**
+  `harmful_exposure_rows_v3_gate1_20260905_btc.json` at **545,493,868 bytes**, receipt
+  **492,533 rows, 288 windows, wall 527.1 s**, sha `50318a3a…`; `be61frag.scope`
+  INACTIVE, `be_gate1_state_tape` running. *The flag word "fragment BUILDING" was true
+  when dispatched and is spent.*
+  (5) **THE ABSENCE FLAG IS `None` WHEN THE WALK IS TRUNCATED -- NEVER `False`** --
+  and the refuting direction still fires. ***Three values where two would lie:
+  "found", "not found in what I searched", and "I did not finish".*** **The fix I
+  flagged at round 169 landed as a THIRD VALUE rather than a reworded second one** --
+  *the only way a bounded search reports honestly.*
+  (6) **A PRODUCING-CODE DIGEST IS THE MODULE'S OWN FILE**, other-file digests counted
+  separately, the closure covering the construct: **rule-22 complete 3 -> 5,
+  incomplete 1** -- `be_gate1_state_tape`'s HEAD-at-emit, *"the one fact that may be
+  genuinely incomplete."* **A census wrong about three modules and right about one,
+  corrected without discarding the one.**
+  (7) **CANONICALITY FOR DATA IS THE LEDGER'S REAL PATH; CODE STAYS STRICT** --
+  `readlink -f` of `<root>/data`, so a symlinked worktree ADMITS and a materialised one
+  REFUSES, and `derived_dir()` returns the RESOLVED path so **a receipt naming a ledger
+  artifact from any tree names the ONE path.** ***Two rules for two questions, stated
+  as such*** -- after a week in which the defect was always one rule serving two
+  questions, or two serving one.
+  (8) **AND DA'S ACCOUNT CORRECTS THE COORDINATOR'S, WITH COUNTS:** 235 tracked
+  artifacts read as DELETED BEHIND THE SYMLINK; three files untracked **only** because
+  wt-da's HEAD predated them; all byte-identical to origin, **copies saved before
+  removal**; the fixed script then succeeded at **270/270**. *A seat correcting the
+  coordinator's account of the seat's own tree -- and the coordinator recording the
+  correction in its own entry, which is the half that makes the first half safe.*
+  **FLAG WORDS: the fourth launch PENDING-DE-94-REV-62 (the lock BE's until ≈12:45Z);
+  the 09-05 fragment BUILT (545,493,868 B, 492,533 rows) and the TAPE now building.**
+  **AT COMMIT TIME, 2026-09-06T12:23:01Z: Q-DE-94 LANDED (`e2185e9`+`d27de63` code,
+  `e3480df` artifacts) AND IT QUALIFIES A LINE I CARRY IN HANDOFF.** *I re-read at
+  commit time, as always, and this is what the re-read was for.* **MEASURED BY ME:**
+  `.gitignore`'s pattern is `data/` -- **trailing slash, so it matches a DIRECTORY and
+  not a symlink** -- and `git status --porcelain` in `wt-de2`, `wt-be` and `wt-rev`
+  returns **exactly one line each: `?? data`**. ***After the mandated refresh a
+  worktree is dirty by exactly the line the refresh creates.*** **RELAYED from
+  Q-DE-94:** `rehearse_smoke` -> NOT_READY_P10 and `assert_source_unchanged(fixture=
+  False)` -> REFUSED right after the refresh, **so GO #4 could not have proceeded**;
+  the exemption is now a PROPERTY with four driven cells; and P10 asked the RAW dirty
+  flag while the import refusal asks the EXEMPTED one. ***R-626 amended rule 21's
+  LANDING precondition to admit that same `?? data` line and the IMPORT refusal was not
+  amended with it -- one exemption written in two places, only one updated.*** **My
+  round-168 seat-brief boilerplate names `wt_refresh.sh` as THE refresh; from this
+  round it travels with the consequence.** *DE's surface, DE has fixed it, I route.*
+  **ONE FLAG ADDED AT COMMIT TIME, with its provenance, and the counts below are
+  RE-MEASURED after it.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,023 -> 1,032, flag_provenance 568 -> 577,
+  tasks 19; **350 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
+  forty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
+  3; new flags vs HEAD 0 without provenance.)
+```

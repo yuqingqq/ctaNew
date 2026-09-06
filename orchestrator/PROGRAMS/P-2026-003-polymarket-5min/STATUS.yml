@@ -63,6 +63,84 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-06T12:56:38Z (MEM ROUND 174 -- R-637 SWEPT, WITH Q-BE-63 AND Q-DA-307. STATE
+  ONLY. MEM ASSERTS NO RESULT.
+  (1) **DA 84 CLOSES BOTH HALVES IN ONE PARSER (`512be70`, 12:54:26Z).**
+  `da_root.parse_porcelain`: **raw read, `XY` by fixed width, path from column 4,
+  `R old -> new` split on the arrow -- and a line the parser cannot read is NAMED in
+  `malformed` rather than dropped (rule 11).** *Each half red first, separately: the strip
+  ALONE shifts the first line so a correct parser cannot read it at all; the fixed slice
+  ALONE is right on a raw line;* ***the two TOGETHER return `ive/x.py`, the character the
+  receipts actually lost.***
+  (2) ***AND CLOSING IT EXPOSED WORSE, IN DA'S OWN INSTRUMENT -- WHICH I MEASURED AT THE
+  PRE-FIX BLOB RATHER THAN ACCEPTING THE ACCOUNT.*** **`292a1cc:live/pm_research/
+  da_book_verify.py`: the count-and-print block sat at line 1576 with SEVEN `ck(` calls
+  BELOW it out of 26 -- so the summary printed and counted 19 OF 26**, and every check
+  appended since round 82 (the census pair, the launch capture, this round's porcelain
+  checks) was invisible to it. **A battery whose summary cannot see its own last checks is
+  a battery that cannot fail (rule 15) -- and it is the instrument DA uses to hold OTHER
+  seats to their receipts.** *Fixed at the tip: count and print after the LAST check, with
+  an assertion that "the summary agrees with the list it summarises". My own run: `SELFTEST
+  OK -- 29 checks, 0 failure(s)`, exit 0, on a file whose sha256 `ac98459…` EQUALS the blob
+  at `512be70` -- hashed before believing.*
+  (3) **AND THREE NUMBERS IN DA'S ACCOUNT DO NOT AGREE -- ROUTED, NOT RULED.** The commit
+  message says the summary reported "29 checks" with **TWO** failing; the code comment
+  beside the fix says **one**; the pre-fix blob would have printed **19**. *Three witnesses
+  to one event -- a commit message, a comment, and the blob -- and only the blob is the
+  artifact.* **The gap is LARGER than either failure count: seven checks, not two.** *DA
+  owns the reconciliation; the finding itself is DA's and is the hard half.*
+  (4) **THE PORCELAIN HALVES, MEASURED PER CALL SITE:** BE's read is safe and its slice is
+  still `line[3:]` (BE 64, with the book); DE's PARSING site reads `raw=True` and still
+  slices `[x[3:]]` (DE 96, after the run); **DE's SECOND porcelain site strips but is only
+  read as `bool(status)` -- no path parsed, so the strip is harmless THERE**; DA has both.
+  ***Safe-by-the-read is a property of a CALL SITE, not of a file.***
+  (5) **BE 63 LANDS THE SERVICE-FORM LAUNCHER FOR ALL THREE PRODUCERS** (`be_heavy_run.sh`,
+  `0312e34`): the lock is the unit's OWN main process; **`flock -E 75` makes a held lock a
+  REFUSAL that cannot be misread as a build failure**; the journal is the log; the unit is
+  polled BY NAME, "never by a child PID -- there is no child of this shell to poll"; and
+  `BE_HEAVY_LOCK` lets the launcher's falsifiers use a scratch lock **without weakening a
+  real build, because the producers verify the REAL lock BY INODE**.
+  (6) **THE LOCK MODE IS READ FROM `/proc/locks`, AND ONLY `WRITE` IS EVIDENCE.**
+  `_flock_mode` is driven both ways (`LOCK_EX -> WRITE`, `LOCK_SH -> READ`) with the
+  finding stated: ***two `flock -s` holders BOTH certify -- holding the fd is not evidence
+  of exclusion.*** *R-636 §4's gap answered at the instrument rather than in a row.*
+  (7) **THE CENSORED PEAK IS IN THE CODE AND IN NO RECEIPT YET.**
+  `scope.peak_is_censored` is the named field with REV 63 §3's sentence written out and an
+  UNCENSORED cell driven -- **and no landed BE receipt carries it** (the string occurs
+  twice in the code, so my scan matches where the thing exists). ***Rule 17: green battery,
+  pipeline not yet wired -- the next BE heavy run emits the first receipt that carries
+  it.*** *BE's battery 73 -> 78, run by me at exit 0.*
+  (8) **THE RUN:** `de95smoke.service` active/running, the runner at **21:02 elapsed, RSS
+  762,824 KiB**, `MemoryPeak` unchanged at 2,554,003,456 B since 12:39Z. *RSS rose and fell
+  across three reads while the cgroup peak did not move -- the peak is a HIGH-WATER mark
+  and the current figure is not.*
+  **AT COMMIT TIME, 2026-09-06T12:59:05Z: R-638 AND R-639 LANDED.** **R-638 (BE 63
+  verified; batteries 78 / 19 / 16): the held-lock cell was driven AGAINST THE REAL LOCK
+  WHILE DE 95 HELD IT -- `ExecMainStatus 75`, the unit failed, the journal REFUSED, no work
+  done, DE's run undisturbed** -- *a falsifier proved in the only place it could be* -- and
+  **three defects of BE's own found BY DRIVING** (the launch-form checker refusing BE's own
+  launcher twice on its own text, the third round of the forbidden-string class;
+  `systemd-run` forwarding only `--setenv` NAMES so the unit hit the REAL lock, exit 75 for
+  the WRONG reason; a tape battery case now declaring itself a fixture). **REV 65 releases
+  the 09-05 book (BE 64).**
+  ***AND ONE MEASUREMENT AGAINST BOTH ENTRIES' WORDING, ROUTED NOT RULED:*** R-638 reads
+  "the lock is evidence now -- `wrapper_measured` in the fragment and tape receipts", **and
+  no BE receipt on disk carries `wrapper_measured` or `peak_is_censored`; none has been
+  re-emitted since 12:28:57Z** -- true of the EMITTER (2 sites in each producer), not yet
+  of the artifacts a reader resolves. **R-639 repeats "29 checks, 0 failures while two were
+  failing"; the committed pre-fix blob would have printed 19 of 26.** *The fair alternative
+  is a run made against an uncommitted working-tree version -- the bytes that RAN not being
+  the bytes committed, my own round-171 class -- so it is filed as an OPEN RECONCILIATION,
+  not an error, and DA can settle it from one reflog.*
+  **FLAG WORDS: the 09-03 smoke RUNNING-AS-A-SERVICE (fourth launch, ≈21 min); the
+  porcelain defect THREE-SEATS-EACH-HALF-FIXED and ONE-SEAT-BOTH **LANDED** (DA 84,
+  12:54:26Z) -- BE 64 and DE 96 carry the remaining slice halves; BE's producers
+  SERVICE-FORM-LANDED-NOT-YET-EXERCISED; the 09-05 inputs BUILT; both book tiers
+  VERIFIED-AT-THE-PICKLE.**
+  MEASURED BEFORE THIS SENTENCE: flags 1,048 -> 1,056, flag_provenance 593 -> 601,
+  tasks 19; **374 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
+  fiftieth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a ruled 3;
+  new flags vs HEAD 0 without provenance.)
   2026-09-06T12:47:16Z (MEM ROUND 173 -- R-632, R-633, R-634, R-635 AND R-636 SWEPT, WITH
   Q-BE-62, Q-DA-306 AND Q-DE-95; STATE ONLY. MEM ASSERTS NO RESULT.
   **THE HEADLINE, MEASURED AT THE PROCESS TABLE RATHER THAN RELAYED: THE FOURTH LAUNCH OF
@@ -229,79 +307,6 @@ updated: >-
   tasks 19; **358 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
   forty-eighth round running.** ORPHAN audit 0 findings, exit 0; window trimmed to a
   ruled 3; new flags vs HEAD 0 without provenance.)
-  2026-09-06T12:18:10Z (MEM ROUND 171 -- R-629, Q-DA-305 AND Q-BE-61 SWEPT. STATE
-  ONLY. THE FINDING BEGAN AS AN APPARENT CONTRADICTION IN DA'S NEW RULE AND WAS MINE.
-  (1) **THE SAME RULE GAVE TWO VERDICTS BECAUSE TWO TREES HELD TWO VERSIONS.** I drove
-  `da_root.derived_dir()` from two worktrees: **from `wt-da` it returned the canonical
-  `/home/yuqing/ctaNew/data/pm_5min/derived`; from `wt-de2` it raised `RootRefused: …
-  resolved the root to '/home/yuqing/ctaNew-wt-de2'`** -- *while BOTH trees' `data/`
-  symlinks resolve to the SAME ledger.* ***The discriminator was one `sha256sum` per
-  tree: `da_root.py` is `d58025ac…` in wt-da and `4c6b7693…` in wt-de2, and
-  `eee7b3d`'s blob IS `4c6b7693…` while the tip's is `d58025ac…`.*** **wt-de2 matches
-  its HEAD exactly; wt-da carries an uncommitted modification equal to the tip (` M
-  live/pm_research/da_root.py`) -- DA working in its own tree.** *The rule is
-  consistent; I compared two VERSIONS of it.*
-  (2) **AND A PROBE THAT IMPORTS FROM A WORKTREE RUNS WHAT THAT TREE HOLDS** -- not
-  what its commit says, not what the shared tree says. ***The class this whole week has
-  been about, the bytes that RAN versus the bytes on disk, arriving from the
-  VERIFICATION side.*** **Seventeenth "suspect the probe first", and the cheapest
-  discriminator yet: one digest per tree.** *For my own drives: when two trees
-  disagree, hash the file before believing either.*
-  (3) **FOUR OF FIVE WORKTREES ARE SYMLINKS NOW** -- wt-da, wt-de2, wt-be, wt-rev all
-  resolving to the ledger; **only `wt-de` is still a DIRECTORY.** *wt-de2 was a
-  directory when I counted at round 168 and was refreshed after the run died.* **The
-  one remaining materialised tree is the FROZEN EVIDENCE of the refused run -- the one
-  place the drift is deliberate.**
-  (4) **THE 09-05 FRAGMENT LANDED AND THE TAPE IS BUILDING:**
-  `harmful_exposure_rows_v3_gate1_20260905_btc.json` at **545,493,868 bytes**, receipt
-  **492,533 rows, 288 windows, wall 527.1 s**, sha `50318a3a…`; `be61frag.scope`
-  INACTIVE, `be_gate1_state_tape` running. *The flag word "fragment BUILDING" was true
-  when dispatched and is spent.*
-  (5) **THE ABSENCE FLAG IS `None` WHEN THE WALK IS TRUNCATED -- NEVER `False`** --
-  and the refuting direction still fires. ***Three values where two would lie:
-  "found", "not found in what I searched", and "I did not finish".*** **The fix I
-  flagged at round 169 landed as a THIRD VALUE rather than a reworded second one** --
-  *the only way a bounded search reports honestly.*
-  (6) **A PRODUCING-CODE DIGEST IS THE MODULE'S OWN FILE**, other-file digests counted
-  separately, the closure covering the construct: **rule-22 complete 3 -> 5,
-  incomplete 1** -- `be_gate1_state_tape`'s HEAD-at-emit, *"the one fact that may be
-  genuinely incomplete."* **A census wrong about three modules and right about one,
-  corrected without discarding the one.**
-  (7) **CANONICALITY FOR DATA IS THE LEDGER'S REAL PATH; CODE STAYS STRICT** --
-  `readlink -f` of `<root>/data`, so a symlinked worktree ADMITS and a materialised one
-  REFUSES, and `derived_dir()` returns the RESOLVED path so **a receipt naming a ledger
-  artifact from any tree names the ONE path.** ***Two rules for two questions, stated
-  as such*** -- after a week in which the defect was always one rule serving two
-  questions, or two serving one.
-  (8) **AND DA'S ACCOUNT CORRECTS THE COORDINATOR'S, WITH COUNTS:** 235 tracked
-  artifacts read as DELETED BEHIND THE SYMLINK; three files untracked **only** because
-  wt-da's HEAD predated them; all byte-identical to origin, **copies saved before
-  removal**; the fixed script then succeeded at **270/270**. *A seat correcting the
-  coordinator's account of the seat's own tree -- and the coordinator recording the
-  correction in its own entry, which is the half that makes the first half safe.*
-  **FLAG WORDS: the fourth launch PENDING-DE-94-REV-62 (the lock BE's until ≈12:45Z);
-  the 09-05 fragment BUILT (545,493,868 B, 492,533 rows) and the TAPE now building.**
-  **AT COMMIT TIME, 2026-09-06T12:23:01Z: Q-DE-94 LANDED (`e2185e9`+`d27de63` code,
-  `e3480df` artifacts) AND IT QUALIFIES A LINE I CARRY IN HANDOFF.** *I re-read at
-  commit time, as always, and this is what the re-read was for.* **MEASURED BY ME:**
-  `.gitignore`'s pattern is `data/` -- **trailing slash, so it matches a DIRECTORY and
-  not a symlink** -- and `git status --porcelain` in `wt-de2`, `wt-be` and `wt-rev`
-  returns **exactly one line each: `?? data`**. ***After the mandated refresh a
-  worktree is dirty by exactly the line the refresh creates.*** **RELAYED from
-  Q-DE-94:** `rehearse_smoke` -> NOT_READY_P10 and `assert_source_unchanged(fixture=
-  False)` -> REFUSED right after the refresh, **so GO #4 could not have proceeded**;
-  the exemption is now a PROPERTY with four driven cells; and P10 asked the RAW dirty
-  flag while the import refusal asks the EXEMPTED one. ***R-626 amended rule 21's
-  LANDING precondition to admit that same `?? data` line and the IMPORT refusal was not
-  amended with it -- one exemption written in two places, only one updated.*** **My
-  round-168 seat-brief boilerplate names `wt_refresh.sh` as THE refresh; from this
-  round it travels with the consequence.** *DE's surface, DE has fixed it, I route.*
-  **ONE FLAG ADDED AT COMMIT TIME, with its provenance, and the counts below are
-  RE-MEASURED after it.**
-  MEASURED BEFORE THIS SENTENCE: flags 1,023 -> 1,032, flag_provenance 568 -> 577,
-  tasks 19; **350 CHECKED**, 227 RELAYED, **455 UNMARKED -- unchanged for the
-  forty-seventh round running.** ORPHAN audit 0 findings, exit 0; window 3 of a ruled
-  3; new flags vs HEAD 0 without provenance.)
 
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
@@ -2975,6 +2980,151 @@ flags:
                              # duplicate key (round 134), once on a rename. Both times the
                              # `count == 1` assertion passed and only the parsed-result
                              # check could see it.*
+  DA_84_CLOSES_BOTH_HALVES_IN_ONE_PARSER: AND_THE_MALFORMED_LINE_IS_NAMED
+                             # CHECKED 2026-09-06T12:56:38Z at `da_root.parse_porcelain` (`512be70`,
+                             # Q-DA-307 landed). **ONE parser, both halves: raw read, `XY` by fixed
+                             # width, path from column 4, `R old -> new` split on the arrow -- and a
+                             # line the parser CANNOT read is NAMED in `malformed` rather than
+                             # dropped (rule 11).**
+                             # **Each half driven RED FIRST, SEPARATELY:** *the strip ALONE shifts
+                             # the first line so a correct parser cannot read it and its path is
+                             # LOST; the fixed slice ALONE is right on a raw line;* ***the two
+                             # TOGETHER return `ive/x.py` -- the character DA's receipts actually
+                             # lost.*** **The reviewer's three-line block is the falsifier
+                             # (` M live/x.py`, `?? data`, `R  a -> b` -> `live/x.py`, `data`, `b`
+                             # from `a`).**
+  THE_BATTERY_THAT_COULD_NOT_SEE_ITS_OWN_LAST_CHECKS: NINETEEN_OF_TWENTY_SIX
+                             # CHECKED 2026-09-06T12:56:38Z, **and I measured it at the PRE-FIX BLOB
+                             # rather than accepting the number in the account.** `git cat-file blob
+                             # 292a1cc:live/pm_research/da_book_verify.py`: the count-and-print block
+                             # sat at line 1576 with **SEVEN `ck(` calls BELOW it out of 26** -- so
+                             # the summary printed and counted **19 of 26**, and everything appended
+                             # after round 82 (the census pair, the launch capture, this round's
+                             # porcelain checks) was invisible to it.
+                             # ***A battery whose summary cannot see its own last checks is a
+                             # battery that cannot fail (rule 15) -- and this is the instrument DA
+                             # uses to hold OTHER seats to their receipts.***
+                             # **Fixed at the tip: the count and print run after the LAST check with
+                             # `assert recount == n_fail and len(checks) == …` ("the summary
+                             # disagrees with the list it summarises"). My own run: `SELFTEST OK --
+                             # 29 checks, 0 failure(s)`, exit 0 -- on a file whose sha256
+                             # (`ac98459…`) EQUALS the blob at `512be70`, hashed before believing
+                             # (round 171's lesson).**
+  DAS_ACCOUNT_OF_ITS_OWN_DEFECT_DOES_NOT_AGREE_WITH_ITSELF: ROUTED_TO_DA
+                             # CHECKED 2026-09-06T12:56:38Z, **routed, not ruled.** *The defect is
+                             # real and DA found it in its own instrument, which is the hard part.*
+                             # **But three numbers in the account do not line up:** the commit
+                             # message says the summary reported "29 checks, 0 failure(s)" while
+                             # **TWO** of them were failing; the code comment left in place says the
+                             # same summary ran **"while one of them was FAILING"**; and the pre-fix
+                             # blob I read would have printed **19**, not 29, because 7 of its 26
+                             # checks sat below the print.
+                             # *Three witnesses to one event: a commit message, a comment beside the
+                             # fix, and the blob. Only the blob is the artifact.* **DA owns the
+                             # reconciliation; the SIZE of the gap (7 invisible checks) is larger
+                             # than either failure count suggests.**
+                             # **AND THE FAIR ALTERNATIVE, ADDED AT COMMIT TIME AFTER R-639
+                             # REPEATED THE SAME NUMBER: the failing run may have been made against
+                             # an UNCOMMITTED working-tree version carrying more checks above the
+                             # print** -- *the bytes that RAN not being the bytes committed, which
+                             # is exactly the class I hit myself at round 171 (two trees, two
+                             # versions, one rule).* **Then "29 with two failing" and "19 of 26 in
+                             # the blob" are both true, of different files.** *I cannot discriminate
+                             # from here; DA can, from one reflog. Filed as an OPEN RECONCILIATION,
+                             # not as an error.*
+  THE_PORCELAIN_HALVES_NOW_STAND_ONE_SEAT_BOTH_TWO_SEATS_ONE: MEASURED_PER_CALL_SITE
+                             # CHECKED 2026-09-06T12:56:38Z (dispatched flag words, updated by
+                             # measurement: **the porcelain defect THREE-SEATS-EACH-HALF-FIXED,
+                             # ONE-SEAT-BOTH -- and ONE-SEAT-BOTH is no longer pending: DA 84 landed
+                             # at 12:54:26Z**).
+                             # **BE `be_rule22.py`: READ safe (`_git(..., raw=True)` ->
+                             # `r.stdout.rstrip("\n")`), SLICE still `line[:2], line[2:3],
+                             # line[3:]` -- routed to BE 64 with the 09-05 book.**
+                             # **DE `de_multiday_gate1_runner.py`: READ safe at the PARSING site
+                             # (`_g("status","--porcelain", raw=True)` -> `r.stdout if raw`), SLICE
+                             # still `[x[3:] for x in lines]` -- routed to DE 96 after the run.**
+                             # *I checked DE's SECOND porcelain site too (`_git("status",
+                             # "--porcelain")` without `raw`): it strips, but its value is only ever
+                             # read as `bool(status)` for `tree_dirty` -- no path is parsed, so the
+                             # strip is harmless THERE.* **Safe-by-the-read is a property of a CALL
+                             # SITE, not of a file.**
+                             # **DA: both halves closed in `da_root.parse_porcelain`.**
+  BE_63_LANDS_THE_SERVICE_FORM_LAUNCHER_FOR_ALL_THREE_PRODUCERS: A_HELD_LOCK_IS_A_REFUSAL
+                             # CHECKED 2026-09-06T12:56:38Z at `live/pm_research/be_heavy_run.sh`
+                             # (`0312e34`). **The lock is the unit's OWN main process** -- the
+                             # script's rationale names all six prior runs (`be55book`, `be58frag`,
+                             # `be58tape`, `be59book`, `be61frag`, `be61tape`) and states why
+                             # `flock -n <lock> systemd-run --scope` put the lock in the launching
+                             # shell, where it died with it.
+                             # **`flock -E 75` makes the conflict exit code DISTINCT from anything
+                             # the command itself can return, so "another run holds the lock" can
+                             # never be misread as "the build failed"** -- *a refusal that cannot be
+                             # confused with a failure, which is the distinction three lost runs
+                             # were argued over.*
+                             # **The journal is the log; the unit is polled BY NAME (`systemctl
+                             # --user show <unit> -p ActiveState -p ExecMainStatus`), never by a
+                             # child PID -- "there is no child of this shell to poll".**
+                             # *`BE_HEAVY_LOCK` lets the launcher's own falsifiers drive a SCRATCH
+                             # lock and cannot weaken a real build: the producers verify the REAL
+                             # lock BY INODE through DE's `wrapper_observed`.*
+  THE_LOCK_MODE_IS_READ_FROM_PROC_LOCKS_AND_ONLY_WRITE_IS_EVIDENCE: TWO_SHARED_HOLDERS_BOTH_CERTIFY
+                             # CHECKED 2026-09-06T12:56:38Z at `be_daybook_build.py::_flock_mode`
+                             # and its driven cell. **The mode is read from `/proc/locks`, and the
+                             # battery drives BOTH: `LOCK_EX -> "WRITE"`, `LOCK_SH -> "READ"`.**
+                             # ***The finding underneath, in the check's own words: TWO `flock -s`
+                             # holders both certify -- holding the fd is not evidence of exclusion,
+                             # and only WRITE is.*** **A real run now refuses when the lock is held
+                             # non-exclusively and when it is not held at all** (`if not fixture and
+                             # w.get("heavy_run_lock_held") and not w["exclusive"]` / `if not
+                             # fixture and not w.get("heavy_run_lock_held")`).
+                             # *This is R-636 §4's gap closed at the instrument: BE's receipts could
+                             # not evidence the lock, and the answer is not a claim in a row but a
+                             # mode read from the kernel.*
+  THE_CENSORED_PEAK_IS_IN_CODE_AND_IN_NO_RECEIPT_YET: AND_SO_IS_WRAPPER_MEASURED
+                             # CHECKED 2026-09-06T12:56:38Z. **`scope.peak_is_censored` is now the
+                             # named field (`"the_field_that_says_so"`), with the two-day sentence
+                             # written as REV 63 §3 asked -- "the builder's own footprint did not
+                             # move … the whole cgroup difference sits in page cache, which ROSE on
+                             # the smaller day as anon FELL … Stronger than a correlation, weaker
+                             # than a mechanism, and asserted as neither" -- and a cell driving the
+                             # UNCENSORED case (`peak_is_censored is False` when the peak is below
+                             # the cap and was never throttled).**
+                             # ***AND NO LANDED BE RECEIPT CARRIES THE FIELD:*** *my scan of BE's
+                             # small receipts returns none, while the string occurs twice in the
+                             # code -- so the grep matches where the thing exists.* **Rule 17: the
+                             # battery is green and the pipeline is not yet wired; the first receipt
+                             # to carry it will be the next BE heavy run.** *BE's battery is 73 ->
+                             # 78 checks, run by me at exit 0.*
+                             # **EXTENDED IN BAND 2026-09-06T12:59:05Z, at my commit-time
+                             # re-read, after R-638 landed.** R-638 reads "*the lock is evidence
+                             # now -- `wrapper_measured` in the fragment and tape receipts*".
+                             # ***MEASURED: no BE receipt on disk carries `wrapper_measured` OR
+                             # `peak_is_censored`, and none has been re-emitted since 12:28:57Z***
+                             # -- while the string IS in the producers (`be_gate1_fragment.py` 2
+                             # sites, `be_gate1_state_tape.py` 2, `be_daybook_build.py` 1). *True of
+                             # the EMITTER, not yet of the artifacts a reader resolves; the next BE
+                             # heavy run is the first receipt to carry either field.* **Recorded
+                             # with its as-of, routed, not ruled -- the distinction rule 17 exists
+                             # for.**
+                             # **R-638'S OWN VERIFIED CONTENT, SWEPT HERE:** *the held-lock cell was
+                             # driven AGAINST THE REAL LOCK WHILE DE 95 HELD IT -- `ExecMainStatus
+                             # 75`, the unit failed, the journal REFUSED, no work done, DE's run
+                             # UNDISTURBED* -- **a falsifier proved in the only place it could be.**
+                             # **Three defects of BE's own found BY DRIVING: the launch-form checker
+                             # refused BE's OWN launcher twice on its own text (the third round of
+                             # the forbidden-string class -- "the search space is the invocation
+                             # now"); `systemd-run` forwards only `--setenv` NAMES, so the unit hit
+                             # the REAL lock -- exit 75 for the WRONG reason; and a tape battery
+                             # case that now declares itself a fixture.** *Batteries 78 / 19 / 16;
+                             # REV 65 dispatched, and its filing releases the 09-05 book (BE 64).*
+  THE_FOURTH_LAUNCH_AT_TWENTY_ONE_MINUTES: STILL_THE_LOAD
+                             # CHECKED 2026-09-06T12:56:38Z: `de95smoke.service` active/running,
+                             # the runner (pid 3384218) at **21:02 elapsed, RSS 762,824 KiB**,
+                             # `MemoryPeak` unchanged at 2,554,003,456 B since my first read at
+                             # 12:39Z. *RSS has risen and fallen (760,056 -> 851,572 -> 762,824
+                             # KiB) while the cgroup peak has not moved: the peak is a HIGH-WATER
+                             # mark and the current figure is not.* **Receipt ≈14:00Z; nothing else
+                             # takes the lock before it.**
   RULE_22_VERIFIED_END_TO_END_BY_ME_AT_THE_COMMIT: FOUR_OF_FOUR_IN_THE_CLOSURE
                              # CHECKED 2026-09-06T12:47:16Z (R-636(A) §1; REV 63). **I ran the
                              # check myself rather than reading the reviewer's:** both 09-05
@@ -20478,6 +20628,89 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 174, 2026-09-06T12:56:38Z ------------------------------
+  DA_84_CLOSES_BOTH_HALVES_IN_ONE_PARSER:
+    prov: CHECKED
+    artifact: live/pm_research/da_root.py
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      parse_porcelain does a raw read, takes XY by fixed width and the path from column
+      4, splits R old -> new on the arrow, and names an unreadable line in malformed
+      rather than dropping it. Each half is driven red first and separately; together
+      they return ive/x.py, the character DA's receipts lost. Landed 512be70 with
+      Q-DA-307.
+  THE_BATTERY_THAT_COULD_NOT_SEE_ITS_OWN_LAST_CHECKS:
+    prov: CHECKED
+    artifact: live/pm_research/da_book_verify.py
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      measured at the pre-fix blob 292a1cc: the count-and-print block sat at line 1576
+      with seven ck( calls below it out of 26, so the summary printed and counted 19 of
+      26 and everything appended after round 82 was invisible. Fixed at the tip: count
+      and print after the last check with an assertion that the summary agrees with the
+      list it summarises. My own run of the fixed battery: SELFTEST OK, 29 checks, 0
+      failures, exit 0, on a file whose sha256 ac98459... equals the blob at 512be70.
+  DAS_ACCOUNT_OF_ITS_OWN_DEFECT_DOES_NOT_AGREE_WITH_ITSELF:
+    prov: CHECKED
+    artifact: live/pm_research/da_book_verify.py
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      DA's commit message says the summary reported 29 checks with TWO failing; the code
+      comment beside the fix says one was failing; and the pre-fix blob would have
+      printed 19 because 7 of its 26 checks sat below the print. The defect is real and
+      DA found it in its own instrument; the numbers in the account do not agree with
+      each other or with the blob, and the gap (7 invisible checks) is larger than either
+      failure count. Routed to DA; MEM rules nothing.
+  THE_PORCELAIN_HALVES_NOW_STAND_ONE_SEAT_BOTH_TWO_SEATS_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/be_rule22.py
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      BE's read is safe (raw=True returning rstrip) and its slice is still line[3:];
+      DE's parsing site reads raw and still slices [x[3:] for x in lines], while DE's
+      second porcelain site strips but is only read as bool(status) for tree_dirty, so
+      no path is parsed there; DA has closed both halves. Safe-by-the-read is a property
+      of a call site, not of a file. BE 64 and DE 96 carry the remaining slice halves.
+  BE_63_LANDS_THE_SERVICE_FORM_LAUNCHER_FOR_ALL_THREE_PRODUCERS:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      the launcher makes flock the unit's own main process, names all six prior .scope
+      runs and why the old form put the lock in the launching shell, uses flock -E 75 so
+      a held lock cannot be misread as a build failure, treats the journal as the log
+      and polls the unit by name rather than a child pid, and exposes BE_HEAVY_LOCK for
+      its own falsifiers while the producers verify the real lock by inode through DE's
+      wrapper_observed.
+  THE_LOCK_MODE_IS_READ_FROM_PROC_LOCKS_AND_ONLY_WRITE_IS_EVIDENCE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      _flock_mode reads the mode from /proc/locks and the battery drives both cells,
+      LOCK_EX to WRITE and LOCK_SH to READ, recording that two flock -s holders both
+      certify so holding the fd is not evidence of exclusion and only WRITE is; a real
+      run refuses when the lock is held non-exclusively and when it is not held at all.
+  THE_CENSORED_PEAK_IS_IN_CODE_AND_IN_NO_RECEIPT_YET:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      scope.peak_is_censored is the named field with the two-day sentence written as REV
+      63 asked and a cell driving the uncensored case, while no landed BE receipt carries
+      the field -- the string occurs twice in the code, so the scan matches where the
+      thing exists. Rule 17: green battery, pipeline not yet wired; the next BE heavy run
+      emits the first receipt carrying it. BE's battery is 73 -> 78 checks, run by me at
+      exit 0.
+  THE_FOURTH_LAUNCH_AT_TWENTY_ONE_MINUTES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_smoke_rehearsal_09_03_v8__20260906T123516Z.json
+    as_of: 2026-09-06T12:56:38Z
+    said: >-
+      de95smoke.service is active and running with the runner at pid 3384218, 21:02
+      elapsed and RSS 762,824 KiB, while MemoryPeak has not moved from 2,554,003,456
+      since 12:39Z; RSS rose and fell across my three reads, so the peak is a high-water
+      mark and the current figure is not. Receipt about 14:00Z.
   # --- MEM round 173, 2026-09-06T12:47:16Z ------------------------------
   RULE_22_VERIFIED_END_TO_END_BY_ME_AT_THE_COMMIT:
     prov: CHECKED
