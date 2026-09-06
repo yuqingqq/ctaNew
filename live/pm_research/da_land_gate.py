@@ -38,6 +38,8 @@ HERE = Path(__file__).resolve().parent
 PROTOCOL = "P003_DA_LANDING_GATE_V1"
 
 #: The instruments this seat maintains and runs every round.
+REFUSAL_EXIT = 3
+
 ACTIVE = ("da_root", "da_nonhead_census", "da_gate1_day_verdict",
           "da_cross_venue_forensics", "da_book_verify", "da_accrual_report",
           "da_process_budget_audit", "da_resolver_probe",
@@ -115,6 +117,92 @@ def land_command(*after_the_gate: str) -> str:
     return " && ".join(
         [f"python3 live/pm_research/da_land_gate.py --gate"]
         + [c.strip() for c in after_the_gate if c.strip()])
+
+
+#: R-661 / DA 106. ***THE HOLD LIVED IN THE COORDINATOR'S SCRIPT AND IN NO
+#: SEAT'S CHAIN.*** DE 110's pathspec commit of COORDINATION.md carried my
+#: own uncommitted Q-DA-331 row -- verbatim and disclosed, rule 21's third
+#: form -- and nothing in MY landing path would have stopped me doing the
+#: same to another seat. A register commit is refused unless the working
+#: file's difference from HEAD is EXACTLY this seat's own new rows:
+#:   * an ADDED line whose row id is not mine  -> FOREIGN_ROW_IN_REGISTER
+#:   * any existing line CHANGED or REMOVED    -> REGISTER_EDITED
+#: and the same predicate runs again AFTER the commit as a post-condition.
+REGISTER_REL = ("orchestrator/PROGRAMS/P-2026-003-polymarket-5min/"
+                "workspace/COORDINATION.md")
+MY_ROW_PREFIX = "| Q-DA-"
+
+
+def _register_lines(tree: Path, ref: str | None = None) -> list:
+    if ref is None:
+        return (tree / REGISTER_REL).read_text().split("\n")
+    r = subprocess.run(["git", "-C", str(tree), "show",
+                        f"{ref}:{REGISTER_REL}"],
+                       capture_output=True, text=True, timeout=60)
+    if r.returncode != 0:
+        raise RuntimeError(f"REGISTER_UNREADABLE_AT_{ref}: "
+                           f"{(r.stderr or '').strip()[:120]}")
+    return r.stdout.split("\n")
+
+
+def _row_id(line: str) -> str | None:
+    if not line.startswith("| Q-"):
+        return None
+    return line.split("|")[1].strip()
+
+
+def register_hold(tree: Path = Path("/home/yuqing/ctaNew"),
+                  *, mine_prefix: str = MY_ROW_PREFIX,
+                  ref: str = "HEAD") -> dict:
+    """May this seat commit the register right now?
+
+    THE DIFFERENCE MUST BE EXACTLY THIS SEAT'S OWN NEW ROWS."""
+    now = _register_lines(Path(tree))
+    was = _register_lines(Path(tree), ref)
+    import difflib
+    added, removed, changed = [], [], []
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(
+            None, was, now, autojunk=False).get_opcodes():
+        if tag == "insert":
+            added += now[j1:j2]
+        elif tag == "delete":
+            removed += was[i1:i2]
+        elif tag == "replace":
+            changed += [(was[i1:i2], now[j1:j2])]
+    foreign = sorted({_row_id(l) for l in added
+                      if l.startswith("| Q-")
+                      and not l.startswith(mine_prefix)} - {None})
+    mine = sorted({_row_id(l) for l in added
+                   if l.startswith(mine_prefix)} - {None})
+    other_added = [l for l in added
+                   if l.strip() and not l.startswith("| Q-")]
+    out = {"register": REGISTER_REL, "compared_against": ref,
+           "n_added_lines": len(added), "n_removed_lines": len(removed),
+           "n_changed_hunks": len(changed),
+           "my_new_rows": mine, "foreign_new_rows": foreign,
+           "added_lines_that_are_not_rows": other_added[:5],
+           "may_commit": False, "refusal": None,
+           "the_rule": ("a register commit may carry EXACTLY this seat's "
+                        "own new rows: no foreign row, no edit or removal "
+                        "of a landed line, and nothing that is not a row")}
+    if foreign:
+        out["refusal"] = (
+            f"FOREIGN_ROW_IN_REGISTER: the working file adds {foreign}, "
+            f"which is not this seat's. Committing it would land another "
+            f"seat's row under this seat's commit -- rule 21's third form, "
+            f"the shape that carried my own row into DE 110.")
+    elif removed or changed:
+        out["refusal"] = (
+            f"REGISTER_EDITED: {len(removed)} line(s) removed and "
+            f"{len(changed)} hunk(s) changed against {ref}. A register "
+            f"commit adds rows; it never edits or removes a landed one.")
+    elif other_added:
+        out["refusal"] = (
+            f"REGISTER_NON_ROW_LINES_ADDED: {other_added[:3]}. A row "
+            f"landing carries rows.")
+    else:
+        out["may_commit"] = True
+    return out
 
 
 def run_module(mod: str, *, timeout_s: int = 180) -> dict:
@@ -273,6 +361,66 @@ def selftest() -> tuple:
        f"a path outside the gate's own directory -> {_out['status']} as "
        f"`{_out['module']}`")
 
+    # -- R-661 / DA 106: THE REGISTER HOLD, DRIVEN ON A FIXTURE TREE ----
+    import subprocess as _sp
+    reg = Path(tempfile.mkdtemp(prefix="da106reg_"))
+    (reg / Path(REGISTER_REL).parent).mkdir(parents=True, exist_ok=True)
+    rp = reg / REGISTER_REL
+    base = ["| id | seat | note |", "|---|---|---|",
+            "| Q-DA-330 | DA | mine, landed |",
+            "| Q-BE-286 | BE | theirs, landed |"]
+    rp.write_text("\n".join(base) + "\n")
+    for c in (["init", "-q"], ["add", "-A"],
+              ["-c", "user.email=t@t", "-c", "user.name=t",
+               "commit", "-qm", "base"]):
+        _sp.run(["git", "-C", str(reg)] + c, capture_output=True, text=True)
+
+    def _write(extra_lines, edit=None):
+        lines = list(base)
+        if edit is not None:
+            lines[edit[0]] = edit[1]
+        rp.write_text("\n".join(lines + list(extra_lines)) + "\n")
+
+    _write(["| Q-DA-331 | DA | mine, new |"])
+    _ok = register_hold(reg)
+    _write(["| Q-DE-110 | DE | THEIRS, uncommitted |"])
+    _foreign = register_hold(reg)
+    _write(["| Q-DA-331 | DA | mine, new |",
+            "| Q-BE-300 | BE | theirs too |"])
+    _both = register_hold(reg)
+    _write([], edit=(3, "| Q-BE-286 | BE | theirs, EDITED |"))
+    _edited = register_hold(reg)
+    _write(["not a row at all"])
+    _nonrow = register_hold(reg)
+    ck("R-661 / DA 106 -- ***THE HOLD LIVED IN THE COORDINATOR'S SCRIPT "
+       "AND IN NO SEAT'S CHAIN.*** DE 110's pathspec commit of the "
+       "register carried MY OWN uncommitted row -- verbatim and disclosed, "
+       "rule 21's third form -- and nothing in MY landing path would have "
+       "stopped me doing the same to another seat. A register commit is "
+       "refused unless the working file's difference from HEAD is EXACTLY "
+       "this seat's own new rows: a foreign ADDED row is "
+       "`FOREIGN_ROW_IN_REGISTER` **naming the row id**, and any landed "
+       "line CHANGED or REMOVED is `REGISTER_EDITED` -- ***a row landing "
+       "adds rows; it never edits one***",
+       _ok["may_commit"] is True and _ok["my_new_rows"] == ["Q-DA-331"]
+       and _foreign["may_commit"] is False
+       and _foreign["foreign_new_rows"] == ["Q-DE-110"]
+       and "FOREIGN_ROW_IN_REGISTER" in _foreign["refusal"]
+       and "Q-DE-110" in _foreign["refusal"]
+       and _both["may_commit"] is False
+       and _both["foreign_new_rows"] == ["Q-BE-300"]
+       and _edited["may_commit"] is False
+       and "REGISTER_EDITED" in _edited["refusal"]
+       and _nonrow["may_commit"] is False,
+       f"my row only -> may_commit {_ok['may_commit']} ({_ok['my_new_rows']}"
+       f"); another seat's row -> "
+       f"{_foreign['refusal'].split(':')[0]} naming "
+       f"{_foreign['foreign_new_rows']}; mine BESIDE theirs -> "
+       f"{_both['refusal'].split(':')[0]} naming "
+       f"{_both['foreign_new_rows']}; an edited landed row -> "
+       f"{_edited['refusal'].split(':')[0]}; a non-row line -> "
+       f"{_nonrow['refusal'].split(':')[0]}")
+
     good = land_command("git -C /repo commit -F - -- a.py",
                         "git -C /repo push -q origin HEAD")
     semi = good.replace(" && git -C /repo commit", " ; git -C /repo commit")
@@ -312,6 +460,13 @@ def main() -> int:
                     help="every da_*.py -- runs past 60 s, which is rule "
                          "20's heavy threshold: for a round holding the "
                          "lock, not for a light batch")
+    ap.add_argument("--register", action="store_true",
+                    help="check the register hold: may this seat commit "
+                         "COORDINATION.md right now?")
+    ap.add_argument("--register-post", action="store_true",
+                    help="the POST-CONDITION: after the commit, the "
+                         "register must differ from its parent by this "
+                         "seat's rows only")
     ap.add_argument("--also", action="append", default=[],
                     help="an extra module or path to gate on -- the "
                          "modules THIS round touches, wherever they live")
@@ -324,6 +479,15 @@ def main() -> int:
                 {"protocol": PROTOCOL, "checks": checks,
                  "n_failed": n_fail}, indent=2) + "\n")
         return 1 if n_fail else 0
+    if a.register or a.register_post:
+        h = register_hold(ref="HEAD~1" if a.register_post else "HEAD")
+        print(json.dumps(h, indent=2, sort_keys=True))
+        if h["may_commit"]:
+            print("REGISTER HOLD: PASS -- "
+                  f"{h['my_new_rows'] or 'no new row'}, 0 foreign")
+            return 0
+        print(f"REGISTER HOLD REFUSED: {h['refusal']}")
+        return REFUSAL_EXIT
     if a.gate or a.all:
         mods = (tuple(sorted(p.stem for p in HERE.glob("da_*.py")))
                 if a.all else ACTIVE) + tuple(a.also)

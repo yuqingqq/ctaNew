@@ -115,6 +115,43 @@ def declaration_chains(decl_dir: Path) -> dict:
                         "a census that answered anyway would be inventing "
                         "the chain the seat did not write")}
             continue
+        #: DA 106, FOUND BY MY OWN CELL AFTER BE 79/80. ***THE SHARED
+        #: RESOLVER NOW FOLLOWS A HALF-WRITTEN LINK.*** Its `_predecessor`
+        #: returns the path with `sha256 = None` for a `{path}`-only
+        #: `supersedes`, and the digest comparison is guarded by `and
+        #: want`, so the link is followed unverified: `y_v2` superseding
+        #: `y_v1` with NO digest resolves to ONE_HEAD. R-608 is that the
+        #: link IS THE PAIR -- a half-written one refuses BY NAME, never
+        #: as "no link" and never as a followed one. The head still comes
+        #: from the shared resolver; ***this refusal is this census's own
+        #: ruling on top of it***, exactly as the fork refusal is.
+        half = []
+        for nm in names:
+            try:
+                sup = (json.loads((d / nm).read_text()) or {}).get(
+                    "supersedes")
+            except (OSError, ValueError):
+                continue
+            if isinstance(sup, dict) and sup.get("path") \
+                    and not sup.get("sha256") and not sup.get("chain"):
+                half.append({"file": nm,
+                             "status": "SUPERSESSION_LINK_INCOMPLETE",
+                             "names": Path(str(sup["path"])).name,
+                             "has": ["path"]})
+        if half:
+            out[fam] = {
+                "members": names, "n_members": len(members),
+                "heads": [], "n_heads": 0, "links": [],
+                "unlinked_or_broken": half,
+                "status": "HALF_WRITTEN_LINK",
+                "resolved_by": ("declaration_chain.resolve_head (BE 77) "
+                                "for the head; this refusal is this "
+                                "census's own ruling"),
+                "why": ("R-608: the link IS the pair. A `supersedes` "
+                        "carrying only a path is not a link, and the "
+                        "shared resolver follows it unverified since BE "
+                        "79/80 -- reported to the reviewer, refused here")}
+            continue
         orphans = [x["version"] for x in r["orphan_branches"]]
         heads = orphans + [r["name"]]
         links = [{"from": v, "to": Path(str(
@@ -1357,19 +1394,19 @@ def selftest() -> tuple:
     half.write_text(json.dumps({"v": 2, "supersedes": {"path":
                                                        "y_declaration_v1.json"}}))
     ch3 = declaration_chains(d)
-    ck("AND A HALF-WRITTEN LINK IS NOT A LINK (R-608) -- ***now by the "
-       "SHARED resolver's rule, which is STRICTER than the one this "
-       "census had.*** A `supersedes` carrying only a path used to leave "
-       "BOTH versions as heads here; `declaration_chain.resolve_head` "
-       "REFUSES THE WHOLE FAMILY by name (`DECLARATION_LINK_CORRUPTED`), "
-       "because every version is present and readable and it is the LINK "
-       "that is wrong -- so the repair is the link, not a head anyone "
-       "picks. The property this cell exists for is unchanged: ***a "
-       "half-written link is never silently followed***",
-       ch3["y_declaration"]["status"]
-       == "CHAIN_REFUSED_BY_THE_SHARED_RESOLVER"
+    ck("AND A HALF-WRITTEN LINK IS NOT A LINK (R-608) -- ***AND SINCE BE "
+       "79/80 THE SHARED RESOLVER FOLLOWS ONE.*** Its `_predecessor` "
+       "returns the path with `sha256 = None` for a `{path}`-only "
+       "`supersedes` and the digest comparison is guarded by `and want`, "
+       "so `y_v2` superseding `y_v1` with NO digest resolves to ONE_HEAD "
+       "-- an unverified link followed as if it were a pair. The head "
+       "still comes from the shared resolver; ***this refusal is this "
+       "census's own ruling on top of it***, as the fork refusal is, and "
+       "the finding is reported rather than patched into someone else's "
+       "module: `HALF_WRITTEN_LINK`, naming the file and what it has",
+       ch3["y_declaration"]["status"] == "HALF_WRITTEN_LINK"
        and ch3["y_declaration"]["n_heads"] == 0
-       and any(b["status"] == "DECLARATION_LINK_CORRUPTED"
+       and any(b["status"] == "SUPERSESSION_LINK_INCOMPLETE"
                for b in ch3["y_declaration"]["unlinked_or_broken"]),
        f"y_declaration -> {ch3['y_declaration']['status']}, "
        f"{[b['status'] for b in ch3['y_declaration']['unlinked_or_broken']]}")
