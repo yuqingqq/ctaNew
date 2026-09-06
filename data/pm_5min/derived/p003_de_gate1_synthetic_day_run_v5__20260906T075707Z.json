@@ -1,0 +1,610 @@
+{
+  "G": 6,
+  "as_of": "2026-09-06T07:57:20.706272+00:00",
+  "battery": {
+    "expected_checks_in_the_source": 149,
+    "n_checks_run": 65,
+    "n_checks_skipped_offline": 84,
+    "offline": true,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "run_plus_skipped_equals_source_expected": true,
+    "skipped_offline": [
+      "R6 positive control (reads the pinned model files)",
+      "R6 known-bad: a planted model byte",
+      "R6 known-bad: an absent pinned model",
+      "R6 known-bad: a theta disagreeing with its pin",
+      "(3) the instrumented fixture-run data-freeness probe (it calls fixture_run, which would recurse)",
+      "(3) the non-vacuity check on that probe",
+      "(3) the fixture-claim-carries-its-proof check (it calls fixture_run_proven, which would recurse)",
+      "(3) the laundering known-bad on require_canonical",
+      "(3) the literal sweep over the emitted receipt (it calls fixture_run_proven, which would recurse)",
+      "(3) the committed-day-set computation check",
+      "(3) the derived runnable-from-a-shell-worktree check",
+      "DE 78 day-path check 1/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 2/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 3/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 4/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 5/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 6/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 7/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 8/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 9/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 10/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 11/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 12/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 13/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 14/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 15/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 16/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 17/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 18/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 19/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 20/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 21/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 22/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 23/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 24/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 25/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 26/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 27/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 28/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 29/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 30/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 31/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 32/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 33/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 34/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 35/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 36/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 37/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 38/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 39/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 40/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 41/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 42/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 43/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 44/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 45/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 46/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 47/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 48/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 49/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 50/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 51/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 52/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 53/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 54/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 55/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 56/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 57/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 58/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 59/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 60/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 61/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 62/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 63/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 64/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 65/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 66/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 67/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 68/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 69/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 70/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 71/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check 72/72 -- drives BE's draw_null, which reads BE's committed null receipt under data/",
+      "DE 78 day-path check count agreement (online only)"
+    ],
+    "why_skipped": "these checks READ `data/`; a fixture run must open no path under it, and a skipped check that is silent is a check that has stopped existing"
+  },
+  "battery_scope": {
+    "day_path_checks_declared": 72,
+    "offline": true,
+    "why": "a FIXTURE run skips the checks that read `data/`, because that is what makes it a fixture"
+  },
+  "be_module_citation": {
+    "cited_not_copied": true,
+    "digest_is_of_the_file_the_import_loaded": true,
+    "loaded_from": "/home/yuqing/ctaNew-wt-de/live/pm_research/be_cancel_axis_null.py",
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+    "verified_at_run_time": true
+  },
+  "committed_bytes_policy": {
+    "fixture": "producing_code_is_the_committed_bytes MAY be false and is RECORDED, never refused -- a hard refusal would block every pre-commit fixture emission and push someone to commit blind (RULED, DE 78)",
+    "producing_code_is_the_committed_bytes": true,
+    "real_day": "a REAL day REFUSES on false: a result-bearing day artifact naming a commit that does not hold the code that ran is provenance theatre",
+    "this_run_is_a_fixture": true
+  },
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the fixture day run",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day": "FIXTURE-DAY-1",
+  "decision_populations": {
+    "CONDVALUE_X_SKEW": {
+      "arm": "CONDVALUE_X_SKEW",
+      "by_side": {
+        "BUY_UP": 24,
+        "SELL_UP": 24
+      },
+      "decisions": 48,
+      "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+      "head": "q1_arrival_composed_lgbm",
+      "n_scored_rows": 96,
+      "theta": 0.32450609461933483,
+      "theta_was_not_refitted_here": true
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "by_side": {
+        "BUY_UP": 24,
+        "SELL_UP": 24
+      },
+      "decisions": 48,
+      "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+      "head": "incumbent_linear_d",
+      "n_scored_rows": 96,
+      "theta": 0.43525926488298716,
+      "theta_was_not_refitted_here": true
+    }
+  },
+  "draw_pool_set_equality_checked": true,
+  "fixture": true,
+  "fixture_day_lock": {
+    "day": "FIXTURE-DAY-1",
+    "decided_on_the_day_not_the_callers_flag": true,
+    "fixture": true,
+    "in_ruled_day_set": false,
+    "ruled_day_set_read_from": "live/pm_research/declarations/de_multiday_gate1_params_v5.json"
+  },
+  "memory_plan": {
+    "budget_mb": 700.0,
+    "index_splits": {
+      "answer": "NONE, at any stage",
+      "consequence_for_BEs_assembly": "the index is needed only to PRODUCE `asm`. It does not have to be resident alongside the reference and `asm` at all, because the consumer of those two is a different process. If BE releases the index before assembling and writing the book, the whole-day peak is max(index stage, assembly stage) rather than their sum",
+      "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming that head; a run with no tape artifact reachable at all still completes",
+      "measured_by": "day_split_residency_proof() -- the day path run under instrumentation, asserting no tape/index/fragment artifact was opened",
+      "per_stage": {
+        "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the scored set; the scorer is a dict lookup that REFUSES on a miss rather than computing a feature",
+        "S3_baseline_and_S4_null": "no split. Each replay values its fills from the fill record and the reference; per WINDOW and streamable, with nothing accumulated across draws",
+        "economics_valuation": "no split, and NOT per-window-resident either -- one fill list at a time"
+      },
+      "question": "which tape-index splits must be resident during `--day`, and at which stage",
+      "what_DE_cannot_rule": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling, not DE's. What is declared here is only what the CONSUMER needs, which is the half BE was waiting on",
+      "why": "the decision population is read from `asm` -- BE's already assembled per-generation scores, keyed (slug, side, t0) -- and the economics valuation reads only the replay's own fill records and the reference's levels and markouts (`de_phase4_diag_runner.fill_value_cents`). Neither touches a tape row"
+    },
+    "observed": {
+      "S0_verify": {
+        "elapsed_s": 0.212,
+        "peak_rss_mb_highwater": 39.9609375,
+        "rss_mb_current": 40.30078125
+      },
+      "S1_load": {
+        "elapsed_s": 0.217,
+        "peak_rss_mb_highwater": 41.3359375,
+        "rss_mb_current": 41.42578125
+      },
+      "S2_population": {
+        "elapsed_s": 0.217,
+        "peak_rss_mb_highwater": 41.3359375,
+        "rss_mb_current": 41.45703125
+      },
+      "S3_baseline": {
+        "elapsed_s": 0.218,
+        "peak_rss_mb_highwater": 41.3359375,
+        "rss_mb_current": 41.6015625
+      },
+      "S4_null": {
+        "elapsed_s": 1.982,
+        "peak_rss_mb_highwater": 44.25390625,
+        "rss_mb_current": 44.80078125
+      },
+      "S5_seal": {
+        "elapsed_s": 1.982,
+        "peak_rss_mb_highwater": 44.25390625,
+        "rss_mb_current": 44.80078125
+      }
+    },
+    "peak_rss_mb": 44.25390625,
+    "peak_stage": {
+      "binds_on_a_real_day_only": "on a real day the book dominates (BE: 2.008 GB reference) and S1 being the peak is what the 8 GiB ceiling rests on, so a disagreement REFUSES the day. On a fixture the book is a few hundred KB and the draw loop's fixed cost is larger, so the measured peak is S4_null -- recorded, not refused, and design v9 stated the claim flatly where it should have stated the condition",
+      "computable": true,
+      "current_rss_mb_by_stage": {
+        "S0_verify": 40.30078125,
+        "S1_load": 41.42578125,
+        "S2_population": 41.45703125,
+        "S3_baseline": 41.6015625,
+        "S4_null": 44.80078125,
+        "S5_seal": 44.80078125
+      },
+      "declared_peak_stage": "S1_load",
+      "declared_stage_is_the_measured_peak": false,
+      "highwater_by_stage": {
+        "S0_verify": 39.9609375,
+        "S1_load": 41.3359375,
+        "S2_population": 41.3359375,
+        "S3_baseline": 41.3359375,
+        "S4_null": 44.25390625,
+        "S5_seal": 44.25390625
+      },
+      "highwater_is_non_decreasing_BY_CONSTRUCTION": true,
+      "measured_peak_stage": "S4_null",
+      "why_two_instruments": "the highwater bounds the process and can never fall; the current-RSS series can, so it is the only one that can locate a peak"
+    },
+    "peak_stage_assertion": {
+      "agrees": false,
+      "asserted": false,
+      "recorded_not_refused_because_fixture": true
+    },
+    "stages": [
+      {
+        "holds": "digests only: BE's builder receipt, the book's bytes, the pinned models and thetas, BE's cascade module. The book is READ ONCE here as bytes for its digest and the buffer is handed to S1, never read twice (BE's B-1)",
+        "stage": "S0_verify"
+      },
+      {
+        "holds": "reference + asm + rows. THE PEAK OF THE DAY PATH WHEN THE BOOK DOMINATES -- which is the real-day regime (BE measured a day's reference at 2.008 GB) and is NOT true on a small fixture: on the synthetic book, measured, the peak is S4_null, because the draw loop's fixed cost is larger than a few hundred KB of book. The claim is CONDITIONAL, the condition is stated, and it is ASSERTED on a real day -- where the 8 GiB ceiling rests on it",
+        "stage": "S1_load"
+      },
+      {
+        "holds": "adds one score float per generation per arm, twice. asm's gen_scores are ALREADY resident from S1; the arm stream is a view over `rows`",
+        "stage": "S2_population"
+      },
+      {
+        "holds": "adds the no-cancel replay's fills -- the neutral reference path (CLAUDE.md reliability rule 1)",
+        "stage": "S3_baseline"
+      },
+      {
+        "holds": "one draw's flags and one replayed fill list AT A TIME. The draws are REDUCED to a value each as they are made; no draw's fills survive the next. O(1) in n_draws",
+        "stage": "S4_null"
+      },
+      {
+        "holds": "counts and statuses only. The economic fields are computed and withheld, never carried into the artifact",
+        "stage": "S5_seal"
+      }
+    ],
+    "within_budget": true
+  },
+  "n_days_complete": 1,
+  "per_day_sealed_artifacts": [
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 48,
+        "reasons": [],
+        "sd_over_abs_mean": 28.89765265753268,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "FIXTURE-DAY-1",
+      "decision_population": {
+        "arm": "CONDVALUE_X_SKEW",
+        "by_side": {
+          "BUY_UP": 24,
+          "SELL_UP": 24
+        },
+        "decisions": 48,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "q1_arrival_composed_lgbm",
+        "n_scored_rows": 96,
+        "theta": 0.32450609461933483,
+        "theta_was_not_refitted_here": true
+      },
+      "draw_provenance": {
+        "arm": "CONDVALUE_X_SKEW",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "25eed2c1ba5b3bb61dfd796a3a8300f7dc64bd3725350afc56a94793e2e6761b",
+        "draw_source": "GENERATED_IN_PROCESS",
+        "generated_in_process": true,
+        "module_sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+        "n_draws": 500,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": {
+          "field": "cancels_issued",
+          "identical": true,
+          "n_compared": 8,
+          "seed": 245630727,
+          "why": "the cascade is BE's; only the METRIC is DE's"
+        },
+        "seed": 245630727
+      },
+      "n_cancels_issued": 24,
+      "n_fills_arm": 48,
+      "n_fills_baseline": 96,
+      "seal_status": "SEALED -- 1 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 245630727,
+      "status": "OK"
+    },
+    {
+      "admissibility": {
+        "admissible": true,
+        "n_decisions": 48,
+        "reasons": [],
+        "sd_over_abs_mean": 165.4611927416345,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "FIXTURE-DAY-1",
+      "decision_population": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "by_side": {
+          "BUY_UP": 24,
+          "SELL_UP": 24
+        },
+        "decisions": 48,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "incumbent_linear_d",
+        "n_scored_rows": 96,
+        "theta": 0.43525926488298716,
+        "theta_was_not_refitted_here": true
+      },
+      "draw_provenance": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "25eed2c1ba5b3bb61dfd796a3a8300f7dc64bd3725350afc56a94793e2e6761b",
+        "draw_source": "GENERATED_IN_PROCESS",
+        "generated_in_process": true,
+        "module_sha256": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+        "n_draws": 500,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": {
+          "field": "cancels_issued",
+          "identical": true,
+          "n_compared": 8,
+          "seed": 1684176562,
+          "why": "the cascade is BE's; only the METRIC is DE's"
+        },
+        "seed": 1684176562
+      },
+      "n_cancels_issued": 24,
+      "n_fills_arm": 48,
+      "n_fills_baseline": 96,
+      "seal_status": "SEALED -- 1 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+      "sealed": true,
+      "sealed_at_every_depth": true,
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ],
+      "seed": 1684176562,
+      "status": "OK"
+    }
+  ],
+  "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+  "reference_book": {
+    "builder_receipt": "/tmp/de_synth_day_g1i7igq7/be_daybook_FIXTUREDAY1_SYNTHETIC.json",
+    "day": "FIXTURE-DAY-1",
+    "day_forms_matched": [
+      "FIXTURE-DAY-1"
+    ],
+    "digest_read_from_field": "sha256",
+    "digest_recomputed_at_read_time": true,
+    "digest_source": "BE's builder receipt, not a DE constant",
+    "path": "/tmp/de_synth_day_g1i7igq7/be_daybook_FIXTUREDAY1_SYNTHETIC.pkl",
+    "receipt_day": "FIXTURE-DAY-1",
+    "sha256": "25eed2c1ba5b3bb61dfd796a3a8300f7dc64bd3725350afc56a94793e2e6761b"
+  },
+  "resources": {
+    "peak_rss_mb": 44.25390625,
+    "per_arm": {
+      "CONDVALUE_X_SKEW": {
+        "null_elapsed_s": 0.8840615749359131,
+        "null_peak_rss_mb": 44.25390625,
+        "status": "OK"
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "null_elapsed_s": 0.8702878952026367,
+        "null_peak_rss_mb": 44.25390625,
+        "status": "OK"
+      }
+    },
+    "scope_memory": {
+      "anon_bytes": 26824704,
+      "anon_gb": 0.024982452392578125,
+      "cap_was_hit": false,
+      "cgroup": "/user.slice/user-1001.slice/user@1001.service/research.slice/run-u70642.scope",
+      "events": {
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0
+      },
+      "expected_slice": "research.slice",
+      "file_bytes": 28672,
+      "file_gb": 2.6702880859375e-05,
+      "in_research_slice": true,
+      "kernel_bytes": 802816,
+      "memory_peak_bytes": 30961664,
+      "memory_peak_gb": 0.028835296630859375,
+      "path": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/run-u70642.scope",
+      "status": "MEASURED",
+      "the_arbiter_is_memory_events": "`max` counts times the limit was hit and `oom` times it killed. A high peak with max 0 is headroom the kernel simply had no reason to reclaim",
+      "why_anon_and_file_apart": "rule 20's 8 GiB cap counts page cache. DA 63 measured 7.79 GiB peak with 1.13 GiB anon and 5.17 GiB reclaimable file, events max 0 -- a peak near the cap that the cap never enforced. One number cannot tell those apart"
+    },
+    "wall_seconds": 1.9819879531860352
+  },
+  "seal_layout_symmetry_checked_on_the_emitted_results": [
+    {
+      "conditional_key": "economic",
+      "keys_present_in_both": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_reads": {
+        "economic_present": false,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+        "sealed": true,
+        "sealed_at_every_depth": true,
+        "sealed_field_names": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary"
+        ]
+      },
+      "symmetric": true,
+      "unsealed_reads": {
+        "economic_present": true,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "UNSEALED_ALL_DAYS_COMPLETE",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": []
+      }
+    },
+    {
+      "conditional_key": "economic",
+      "keys_present_in_both": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_reads": {
+        "economic_present": false,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+        "sealed": true,
+        "sealed_at_every_depth": true,
+        "sealed_field_names": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary"
+        ]
+      },
+      "symmetric": true,
+      "unsealed_reads": {
+        "economic_present": true,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "UNSEALED_ALL_DAYS_COMPLETE",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": []
+      }
+    }
+  ],
+  "source_identity": {
+    "carrying_commit": "e255e72194f976397d0bd6a9097af968994153ac",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "4b3e7c4d9063fe419265dde1342156c74365e873ffddd17dacff0cae990489af",
+    "tree_dirty": false,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran"
+  },
+  "split_residency_proof": {
+    "instrument_observed_the_book_read": true,
+    "markers_tested": [
+      "pm_5min/raw",
+      "harmful_exposure_rows",
+      "tape_index",
+      "_fragment",
+      "fragment_",
+      "state_tape",
+      "/tape"
+    ],
+    "n_distinct_paths": 17,
+    "n_paths_opened": 24,
+    "no_tape_index_or_fragment_artifact_was_opened": true,
+    "non_vacuous": true,
+    "py_sources_excluded_on_purpose": "`pm_tape_density.py` is a MODULE whose name contains 'tape'; matching it would make the proof fire on its own imports",
+    "tape_artifacts_opened": []
+  },
+  "status": "FIXTURE_DAY_RUN_NO_REAL_DATA",
+  "what_this_is_not": {
+    "D_E_MINUS_R_is_UNBOUND": "the robustness endpoint needs the rebate's identity value, which is NOT on DE's surface. D(E0) -- the DECLARED PRIMARY -- is computed here from `de_phase4_diag_runner.fill_value_cents`, which is level-to-markout with NO fee term and therefore IS the E0 endpoint. D(E-R) is not computed and is not approximated",
+    "a_result": false,
+    "the_economics_are_SEALED": true
+  },
+  "wrapper": {
+    "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+    "ancestor_pids": [
+      1,
+      3735,
+      1889080,
+      1889420,
+      3023483,
+      3023555
+    ],
+    "cgroup_leaf": "run-u70642.scope",
+    "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+    "flock_holder_pids": [
+      2996707
+    ],
+    "flock_modes_on_the_inode": [
+      "WRITE"
+    ],
+    "fresh_probe": {
+      "holder_is_exclusive": true,
+      "probed": true,
+      "probes": [
+        "LOCK_EX|LOCK_NB",
+        "LOCK_SH|LOCK_NB"
+      ],
+      "someone_holds_it": true,
+      "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+    },
+    "heavy_run_lock_held": false,
+    "held_by_self_or_ancestor": false,
+    "holder_is_exclusive": true,
+    "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+    "in_a_transient_scope": true,
+    "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+    "lock_fds": [],
+    "lock_is_held_by_someone": true,
+    "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "n_flock_holders": 1,
+    "rule20": {
+      "bar": {
+        "rss_gb": 1.0,
+        "wall_s": 60.0
+      },
+      "heavy_by_measurement": false,
+      "lock_held": false,
+      "peak_rss_gb": 0.043216705322265625,
+      "rule": "R-575(C) -- heavy implies the lock, checked here rather than promised in a wrapper string",
+      "wall_s": 1.9819879531860352
+    },
+    "self_or_ancestor_holds_EXCLUSIVE": false
+  }
+}

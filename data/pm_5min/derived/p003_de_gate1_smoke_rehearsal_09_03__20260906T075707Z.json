@@ -1,0 +1,165 @@
+{
+  "THE_ONE_COMMAND": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100% --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output <receipt path>",
+  "as_of": "2026-09-06T07:57:18.371871+00:00",
+  "blocking": [
+    "P2_book_exists",
+    "P2_builder_receipt_exists"
+  ],
+  "book": {
+    "REFUSES_NOW_BY_NAME": "the book be_daybook_20260903_btc.pkl does not exist yet; BE 55's assembly writes it. `--day` refuses at builder_receipt_for() naming every path it tried, which is the intended order: the refusal is the guard, not the reminder",
+    "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260903_btc.json",
+    "builder_receipt_exists": false,
+    "exists": false,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl"
+  },
+  "coin": "btc",
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the smoke rehearsal",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day": "2026-09-03",
+  "day_compact": "20260903",
+  "declarations": {
+    "design": {
+      "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json",
+      "sha256": "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef5e73923ff5"
+    },
+    "params": {
+      "path": "live/pm_research/declarations/de_multiday_gate1_params_v5.json",
+      "sha256": "306bfdb0491afdaded181b0b6777fe4c4a88030e79817881eca076a8452cdc1f"
+    }
+  },
+  "informational_and_false_now": [
+    "P5_lock_free_now"
+  ],
+  "preconditions_evaluated_now": [
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+      "holds": false,
+      "precondition": "P2_book_exists"
+    },
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260903_btc.json",
+      "holds": false,
+      "precondition": "P2_builder_receipt_exists"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v5.json",
+        "sha256": "306bfdb0491afdaded181b0b6777fe4c4a88030e79817881eca076a8452cdc1f"
+      },
+      "holds": true,
+      "precondition": "P3_params"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "declared": "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef5e73923ff5",
+        "on_disk": "c32c72455b26ac3ea5dfa1b3c27bcea2585b72f36f6774d38a05ef5e73923ff5",
+        "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json"
+      },
+      "holds": true,
+      "precondition": "P3_design"
+    },
+    {
+      "blocks_go": true,
+      "detail": "/home/yuqing/ctaNew/data",
+      "holds": true,
+      "precondition": "P4_data_root_is_the_ledger"
+    },
+    {
+      "blocks_go": false,
+      "detail": "INFORMATIONAL: the lock is TAKEN by the wrapper at GO, so its state now does not gate GO. Held right now by BE 55's assembly, which is the correct state while a book is being built",
+      "holds": false,
+      "precondition": "P5_lock_free_now"
+    },
+    {
+      "blocks_go": true,
+      "detail": {
+        "declared": "93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef",
+        "path": "live/pm_research/be_cancel_axis_null.py"
+      },
+      "holds": true,
+      "precondition": "P7_cascade_digest"
+    },
+    {
+      "blocks_go": true,
+      "detail": [
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07",
+        "2026-09-08"
+      ],
+      "holds": true,
+      "precondition": "day_is_in_the_ruled_set"
+    }
+  ],
+  "protocol": "P003_DE_GATE1_SMOKE_REHEARSAL_V1",
+  "resource_observation": {
+    "wall_seconds": 0.011380434036254883
+  },
+  "source_identity": {
+    "carrying_commit": "e255e72194f976397d0bd6a9097af968994153ac",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "4b3e7c4d9063fe419265dde1342156c74365e873ffddd17dacff0cae990489af",
+    "tree_dirty": false,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran"
+  },
+  "status": "NOT_READY_P2_book_exists_P2_builder_receipt_exists",
+  "the_null": {
+    "draws_per_arm": 500,
+    "generated": "IN PROCESS, through be_cancel_axis_null at the verified digest (R-572(B)(1))",
+    "metric": "D(E0) per draw = value(draw's fills) - value(baseline fills), from fill_value_cents",
+    "seed_is_derived_from": "the day book's own sha256 and the arm name -- so it cannot be computed until the book exists",
+    "seed_rule": "int(sha256(f'{day_book_sha256}|{arm}|P003_GATE1_MULTIDAY'.encode()).hexdigest()[:8], 16)"
+  },
+  "what_the_run_writes": {
+    "run_receipt": "battery equality, the resolved data root, the BE citation, the wrapper AS MEASURED, and the scope's anon/file/peak/events",
+    "seal_layout": {
+      "conditional_key": "economic",
+      "keys_in_both_states": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_field_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary"
+      ]
+    },
+    "sealed_per_day_artifact": "economic fields ABSENT at every depth; counts, statuses, admissibility and draw provenance published"
+  },
+  "what_this_is_not": {
+    "a_run": false,
+    "it_opens_no_book": true,
+    "it_scores_no_arm": true
+  },
+  "what_this_rehearsal_found": [
+    "BE's builder receipt is `be_daybook_receipt_<DAY>_<COIN>.json`, not the book path with a `.json` suffix -- the old derivation would have refused a correct book AT GO for a naming reason",
+    "BE stamps the day COMPACT (`20260903`) and DE names it dashed (`2026-09-03`); the receipt's day check now compares day FORMS",
+    "BE's receipt carries the digest at `book.sha256`, not at a top-level `sha256`"
+  ]
+}
