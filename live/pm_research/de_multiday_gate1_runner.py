@@ -5911,6 +5911,24 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     knowable before the book is loaded, so it is checked before the book is
     loaded. It is run under its OWN residency instrument so the day path's
     "no tape artifact was opened" claim stays a claim about the day path."""
+    # DE 133 / R-610's PRINCIPLE: A REAL DAY WITH NO LEDGER ANCHOR
+    # REFUSES BEFORE THE WORK, not after it. DE 132 put this check at the
+    # ledger write -- after ~90 minutes of draws -- which is the exact
+    # shape R-610 exists to forbid: "a check that can refuse refuses
+    # before the work it would waste". It is also why the check could not
+    # be driven cheaply, and an undrivable check is one nobody watches
+    # fire.
+    if (bool(params.get("user_ruled_unsealed_emission"))
+            and not fixture
+            and (ledger_anchor if ledger_anchor is not None
+                 else receipt_path) is None):
+        raise RunnerRefused(
+            "REFUSED DECISION_LEDGER_HAS_NO_ANCHOR: the params carry the "
+            "R-765 ruling and this is a REAL day, but no path was given "
+            "to write the ledger beside. The ruling is that the numbers "
+            "are KEPT; emitting the receipt with `decision_ledger: null` "
+            "is the silent form of promising one that is not there. "
+            "Refused BEFORE the day's work, not after it.")
     t_start = time.time()
     stages: dict = {}
     # THE DAY'S OWN DRAWS, separated from anything the `before_work` hook
@@ -6239,13 +6257,21 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     _ledger_block = None
     if _ruling765 and _ledger765:
         if _anchor is None:
-            raise RunnerRefused(
-                "REFUSED DECISION_LEDGER_HAS_NO_ANCHOR: the params carry "
-                "the R-765 ruling and this run computed per-arm rows, but "
-                "no path was given to write the ledger beside. The ruling "
-                "is that the numbers are KEPT; emitting the receipt with "
-                "`decision_ledger: null` is the silent form of promising "
-                "one that is not there.")
+            # A FIXTURE OWES NO LEDGER, and saying so is not the null that
+            # hid the defect: a fixture's numbers are synthetic, there is
+            # nothing to avoid re-running, and the runner's own battery
+            # drives `run_day` on fixture days with no anchor. DE 132's
+            # refusal did not make that distinction, so it fired on this
+            # module's own cells the moment the cascade pin was fresh
+            # enough for them to run -- which is where E3's composition
+            # found it.
+            _ledger_block = {
+                "status": "NO_LEDGER_FOR_A_FIXTURE_DAY",
+                "why": "a fixture's rows are synthetic; R-765 keeps the "
+                       "numbers of REAL runs so they need not be re-run",
+                "a_real_day_without_an_anchor":
+                    "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR"}
+    if _ruling765 and _ledger765 and _anchor is not None:
         import de_decision_ledger as _LED
         _lp = Path(_anchor).parent / _LED.ledger_name(
             day, emission_stamp())

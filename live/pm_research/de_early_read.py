@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 25
 
 
 class EarlyReadRefused(RuntimeError):
@@ -956,15 +956,33 @@ def _selftest_body(quiet: bool = False) -> int:
        f"rows, schema v{_b132['schema_version']}, sha256 "
        f"{_b132['sha256'][:16]}… -- and the block in `day_run` carries "
        f"path + sha256 + rows + schema. E1 and E2 carried `null` here")
+    # DE 133: THE REFUSAL IS FOR A REAL DAY, and the distinction is the
+    # correction. DE 132 refused ANY anchorless run, so it fired on the
+    # RUNNER's own fixture cells -- which drive `run_day` with no anchor
+    # and owe no ledger -- and E3's composition found it the moment the
+    # cascade pin was fresh enough for those cells to run at all.
+    _fx132 = RUN.run_day("FIXTURE-DAY-1", _made["book_path"], params=_P132,
+                         fixture=True, n_days_complete=1)     # no anchor
+    _fb132 = _fx132.get("decision_ledger") or {}
+    ok(_fb132.get("status") == "NO_LEDGER_FOR_A_FIXTURE_DAY"
+       and "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR"
+       in _fb132.get("a_real_day_without_an_anchor", ""),
+       f"DE 133: a FIXTURE day with no anchor does NOT refuse -- it "
+       f"records `{_fb132.get('status')}` and names what a REAL day would "
+       f"do. A fixture's rows are synthetic; R-765 keeps the numbers of "
+       f"real runs so they need not be re-run. DE 132's refusal did not "
+       f"make that distinction and fired on this runner's own cells")
     _code132 = None
     try:
-        RUN.run_day("FIXTURE-DAY-1", _made["book_path"], params=_P132,
-                    fixture=True, n_days_complete=1)          # no anchor
+        RUN.run_day("2026-09-05", _made["book_path"], params=_P132,
+                    fixture=False, n_days_complete=1)         # REAL, no anchor
     except RUN.RunnerRefused as _e:
         _code132 = str(_e).split(":")[0].replace("REFUSED ", "")
     ok(_code132 == "DECISION_LEDGER_HAS_NO_ANCHOR",
-       f"DE 132 RED: with NO anchor the run REFUSES BY NAME -- "
-       f"`{_code132}` -- instead of emitting `decision_ledger: null`. A "
+       f"DE 132/133 RED: a REAL day with no anchor REFUSES BY ITS OWN "
+       f"NAME -- `{_code132}` -- BEFORE the day's work, not after ~90 "
+       f"minutes of it (R-610's principle; DE 132 put the check at the "
+       f"ledger write, where it could not be driven cheaply). A "
        f"null block is the SILENT form of promising a ledger that is not "
        f"there, which is why two heavy runs passed every review without "
        f"one")
