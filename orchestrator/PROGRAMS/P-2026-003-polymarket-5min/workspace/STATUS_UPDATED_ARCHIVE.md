@@ -20299,3 +20299,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2166 -> 2183, provenance 1711 -> 1728 (seventeen written, seventeen
   counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 259 archived.)
 ```
+
+## Batch 263 — archived 2026-09-07T15:50:00Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:26:54Z (MEM ROUND 278 -- R-802 AND R-803 SWEPT, with every landing between the tip I read at round 277
+  (`1e43c4f`) and `e0b6a55`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***CORRECTION IN BAND TO MY OWN ROUND-277 ENTRY: MY BASELINE FIGURES WERE DOUBLE-COUNTED.*** I published
+  the 09-06 BASELINE trades cash flow as -497,475.77 and its net as +1,598.77; **BE 99 reports -248,738, and my
+  figures are exactly DOUBLE.** The cause is the fact I established myself at round 273 and then failed to apply:
+  **the 0-cancel baseline is recorded ONCE PER ARM LABEL**, and my pass keyed on `book == "BASELINE"` summed both
+  copies. **Corrected: trades -248,737.89, net +799.39.** ***THE IDENTITY CONCLUSION STANDS*** -- doubling every
+  term leaves an identity an identity -- **but a check invariant to the error in its inputs cannot detect that
+  error**, which is why reconciling against BE's independent number is what found it. My ARM figures were never
+  doubled (that book appears once) and match BE to the cent.
+  (2) **RECONCILED CLEANLY ON BOTH LEDGERS** with a fixed keep-label: 09-05 -225,644.56 / -9,195.85 /
+  -197,242.71 and 09-06 -248,737.89 / +36,443.72 / -217,065.35 -- **all six to the cent against BE 99** -- and
+  the fill counts match both artifacts exactly (49,668 / 30,492 / 47,639 and 49,568 / 31,206 / 47,405), which is
+  what proves the dedup kept one baseline copy and dropped none of the arm's.
+  (3) ***THE CODE'S `inventory_leg` IS EXACTLY THE NEGATIVE OF THE TRADES LEG*** -- `|inventory_leg + trades| <
+  1e-6` on **all six path-days**, because `(after - before)` IS the signed size and `inventory_mark_cents ==
+  px_cents`. ***SO A SECOND CORRECTION TO MY OWN RECORD***: at round 273 I called that field "the cash flow of
+  the fills" and carried it through four rounds -- **it is MINUS the cash flow.** And the round-277 warning gets
+  its sharpest form: **the field named for the INVENTORY leg holds the exact negation of the TRADES leg** -- the
+  other leg of the same decomposition. Mistake it for the trades leg and the sign is backwards; mistake it for
+  the residual and you are out by ~20x. Both misreadings are plausible and neither is visible in the name.
+  (4) BE 99's ruled totals reconcile to BE 98's column (a); arm - baseline under the ruled endpoint is 09-05
+  **-51,193 / +7,646** and 09-06 **+2,244 / +10,408**. **The residual leg is 3.8x and 6.3x the baseline's own
+  total**, and the two legs are of opposite sign and similar magnitude -- **the total is a difference of large
+  numbers**, so small errors in either leg move it a lot. Which is why the winner convention matters as much as
+  it does: **`S60(T)` vs `S60(t0)` reproduces the venue 288/288 on both days**, the other three grid conventions
+  disagree on 10-44 slugs and move day totals by up to +-42,000 c -- **42k against a baseline total of 46,562.**
+  The declaration must PIN it with a per-slug refusal.
+  (5) **STILL NO NULL** under the ruled endpoint -- my round-276 structural finding, now hit by a third seat from
+  a third direction -- so every ruled figure is a point estimate, two days, DESIGN data under rule 11.
+  **BE 100's premise verified at the constants**: cancels pay `latency_ms: 250` (`:115`, `:469`) while placement
+  reads **`latency_ms=0` at `:500`** -- **the reference places instantly and cancels slowly**, and an asymmetry
+  that flatters the reference flatters the baseline every arm is measured against.
+  (6) The user asked **"is this result reliable"** and the answer separates two things a single word would merge:
+  **the arithmetic is reliable** (I have now reconciled six figures to the cent and the identities hold at 1e-6)
+  **and the inference is not** -- no null, two days, chosen after seeing, zero placement latency, no self-impact,
+  no fees, no cap, capacity unmeasured. Recorded as the shape of the answer; MEM asserts no result.
+  GO #8 unchanged (`5020f96`, `?? data`, FOURTH consecutive round); freeze holds an EIGHTEENTH round.
+  COUNTS (by YAML parse): flags 2183 -> 2198, provenance 1728 -> 1743 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 260 archived.)
+```

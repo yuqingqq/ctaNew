@@ -67,6 +67,43 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:50:00Z (MEM ROUND 281 -- R-807 SWEPT, with every landing between the tip I read at round 280 (`d1b9e62`) and
+  `cd4b38f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) **A USER INSTRUCTION, VERBATIM: "Focus on getting the correct results"** -- **Track C DEFERRED**, and the
+  critical path narrows to one thing: re-run the four design days under the SETTLEMENT ESTIMATOR so each yields
+  trades + residual per slug, the Chainlink-verified winner and Z/p from the inline-valued null **in one pass**,
+  labelled `DESIGN_DATA`. **And the entry DEFINES "correct" rather than leaving it to taste** -- six conjuncts:
+  the ruled quantity, a verified winner, reconciled two ways, a matched null valued the same way, the
+  `DESIGN_DATA` label, and NO INTERVAL BELOW FIVE DAYS. A checklist, not an adjective.
+  (2) ***THE FIFTH COMPOSITION NEEDS TWO INGREDIENTS THAT DO NOT EXIST YET.*** Specified as `5020f96` +
+  `1f171e8` + DE 137 + DE 138 Part A: `1f171e8` is confirmed NOT an ancestor of `5020f96` (a real addition), but
+  **DE 137 has not landed** -- the only "DE 137" commit is R-805's dispatch line -- and **DE 138 Part A is queued
+  behind it**. Corroborated at the code: `placement_latency_ms` **0 occurrences**, `inventory_leg` still **22**.
+  **And `/home/yuqing/ctaNew-wt-rr` does not exist at my read** -- the correct state, not a gap.
+  (3) ***DA 130's RESOLVER DRIVEN, NOT READ***: I imported the module and called
+  `resolve_early_read_head` -- **all four days resolve to their single artifacts, no refusal.** ***BUT NO
+  ARTIFACT CARRIES `supersedes`***, so each family has exactly ONE file and today's resolution is a TRIVIAL
+  success: no chain was followed because there is no chain. **The reader half has landed and the writer half is
+  queued** -- the programme can currently READ a chain it cannot yet WRITE.
+  (4) ***AND THE FIRST KNOWN-BAD MAKES THE ORDERING FORCED, NOT CHOSEN.*** The four refuse by name --
+  `EARLY_READ_HEAD_AMBIGUOUS`, `SUPERSESSION_PAIR_MISMATCH`, the same carrying "not 64" for a sixteen-hex prefix
+  ("R-754's v17 lesson in this family"), and `EARLY_READ_HEAD_ABSENT` -- and the first says "**TWO UNCHAINED
+  ARTIFACTS ARE AMBIGUOUS AND THIS READER WILL NOT PICK BY STAMP**". **So if GO R1..R4 ran before DE 138 Part A,
+  every re-run day would end with two unchained artifacts -- exactly the state the reader refuses.** The sequence
+  is forced by the instrument; "queued behind DE 137" reads as scheduling convenience and is not.
+  (5) **THE RE-RUNS KEEP `placement_latency_ms` AT ZERO BY DESIGN** -- the current behaviour, so every other
+  input is held fixed and the new numbers stay comparable to the ones already read. **The consequence said
+  plainly: they correct the ESTIMAND and NOT the largest assumption.** BE 100's 48-56 % of fills inside 250 ms,
+  carrying 98 % / 55 % of the baseline's settlement P&L -- which I reproduced myself at round 279 -- is untouched
+  by them. Two separate pieces of work, and only the first is on tonight's critical path.
+  (6) `wt-de` stays frozen at **`5020f96`** for **GO #8 at 00:10Z** (status `?? data`, SEVENTH consecutive
+  round), which is why the fifth composition needs a NEW worktree rather than a refresh -- refreshing would break
+  the freeze REV 103's five digests were verified against. **None of GO R1..R4 straddles 00:00Z**; the schedule
+  is R1 -> R2 -> (GO #8) -> R3 -> R4, or all four before the close if the clock allows, and E1-E4's evidence puts
+  each run at roughly 85-105 minutes. Freeze holds a TWENTY-FIRST round; DE 137's two items are still absent, so
+  the field that holds the negation of the trades leg is still misnamed.
+  COUNTS (by YAML parse): flags 2228 -> 2243, provenance 1773 -> 1788 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 263 archived.)
   2026-09-07T15:44:21Z (MEM ROUND 280 -- R-806 SWEPT, with every landing between the tip I read at round 279 (`06d3010`) and
   `d1b9e62`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***`de_early_read.py` IS BYTE-IDENTICAL AT BOTH COMPOSITION HEADS*** -- `5aa544ef8d594efd807624fa` at
@@ -147,46 +184,6 @@ updated: >-
   same from its own read); freeze holds a NINETEENTH round.
   COUNTS (by YAML parse): flags 2198 -> 2213, provenance 1743 -> 1758 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 261 archived.)
-  2026-09-07T15:26:54Z (MEM ROUND 278 -- R-802 AND R-803 SWEPT, with every landing between the tip I read at round 277
-  (`1e43c4f`) and `e0b6a55`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***CORRECTION IN BAND TO MY OWN ROUND-277 ENTRY: MY BASELINE FIGURES WERE DOUBLE-COUNTED.*** I published
-  the 09-06 BASELINE trades cash flow as -497,475.77 and its net as +1,598.77; **BE 99 reports -248,738, and my
-  figures are exactly DOUBLE.** The cause is the fact I established myself at round 273 and then failed to apply:
-  **the 0-cancel baseline is recorded ONCE PER ARM LABEL**, and my pass keyed on `book == "BASELINE"` summed both
-  copies. **Corrected: trades -248,737.89, net +799.39.** ***THE IDENTITY CONCLUSION STANDS*** -- doubling every
-  term leaves an identity an identity -- **but a check invariant to the error in its inputs cannot detect that
-  error**, which is why reconciling against BE's independent number is what found it. My ARM figures were never
-  doubled (that book appears once) and match BE to the cent.
-  (2) **RECONCILED CLEANLY ON BOTH LEDGERS** with a fixed keep-label: 09-05 -225,644.56 / -9,195.85 /
-  -197,242.71 and 09-06 -248,737.89 / +36,443.72 / -217,065.35 -- **all six to the cent against BE 99** -- and
-  the fill counts match both artifacts exactly (49,668 / 30,492 / 47,639 and 49,568 / 31,206 / 47,405), which is
-  what proves the dedup kept one baseline copy and dropped none of the arm's.
-  (3) ***THE CODE'S `inventory_leg` IS EXACTLY THE NEGATIVE OF THE TRADES LEG*** -- `|inventory_leg + trades| <
-  1e-6` on **all six path-days**, because `(after - before)` IS the signed size and `inventory_mark_cents ==
-  px_cents`. ***SO A SECOND CORRECTION TO MY OWN RECORD***: at round 273 I called that field "the cash flow of
-  the fills" and carried it through four rounds -- **it is MINUS the cash flow.** And the round-277 warning gets
-  its sharpest form: **the field named for the INVENTORY leg holds the exact negation of the TRADES leg** -- the
-  other leg of the same decomposition. Mistake it for the trades leg and the sign is backwards; mistake it for
-  the residual and you are out by ~20x. Both misreadings are plausible and neither is visible in the name.
-  (4) BE 99's ruled totals reconcile to BE 98's column (a); arm - baseline under the ruled endpoint is 09-05
-  **-51,193 / +7,646** and 09-06 **+2,244 / +10,408**. **The residual leg is 3.8x and 6.3x the baseline's own
-  total**, and the two legs are of opposite sign and similar magnitude -- **the total is a difference of large
-  numbers**, so small errors in either leg move it a lot. Which is why the winner convention matters as much as
-  it does: **`S60(T)` vs `S60(t0)` reproduces the venue 288/288 on both days**, the other three grid conventions
-  disagree on 10-44 slugs and move day totals by up to +-42,000 c -- **42k against a baseline total of 46,562.**
-  The declaration must PIN it with a per-slug refusal.
-  (5) **STILL NO NULL** under the ruled endpoint -- my round-276 structural finding, now hit by a third seat from
-  a third direction -- so every ruled figure is a point estimate, two days, DESIGN data under rule 11.
-  **BE 100's premise verified at the constants**: cancels pay `latency_ms: 250` (`:115`, `:469`) while placement
-  reads **`latency_ms=0` at `:500`** -- **the reference places instantly and cancels slowly**, and an asymmetry
-  that flatters the reference flatters the baseline every arm is measured against.
-  (6) The user asked **"is this result reliable"** and the answer separates two things a single word would merge:
-  **the arithmetic is reliable** (I have now reconciled six figures to the cent and the identities hold at 1e-6)
-  **and the inference is not** -- no null, two days, chosen after seeing, zero placement latency, no self-impact,
-  no fees, no cap, capacity unmeasured. Recorded as the shape of the answer; MEM asserts no result.
-  GO #8 unchanged (`5020f96`, `?? data`, FOURTH consecutive round); freeze holds an EIGHTEENTH round.
-  COUNTS (by YAML parse): flags 2183 -> 2198, provenance 1728 -> 1743 (fifteen written, fifteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 260 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -358,6 +355,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 281, R-807 swept (d1b9e62 -> cd4b38f) ---
+  USER_INSTRUCTION_FOCUS_ON_GETTING_THE_CORRECT_RESULTS: TRACK-C-DEFERRED
+  THE_FIFTH_COMPOSITION_NEEDS_TWO_INGREDIENTS_THAT_DO_NOT_EXIST_YET: DE-137-AND-DE-138-PART-A
+  AND_THE_NEW_WORKTREE_DOES_NOT_EXIST_EITHER: wt-rr-ABSENT-AT-MY-READ
+  DA_130s_RESOLVER_DRIVEN_NOT_READ_AND_ALL_FOUR_DAYS_RESOLVE: I-IMPORTED-IT-AND-CALLED-IT
+  BUT_NO_ARTIFACT_CARRIES_supersedes_SO_TODAYS_RESOLUTION_IS_TRIVIAL: ONE-FILE-PER-DAY
+  THE_READER_HALF_LANDED_AND_THE_WRITER_HALF_IS_QUEUED: DA-130-DONE-DE-138A-PENDING
+  THE_FOUR_KNOWN_BADS_EACH_REFUSE_BY_NAME: AMBIGUOUS-MISMATCH-NOT64-ABSENT
+  AND_THE_FIRST_ONE_MAKES_THE_ORDERING_FORCED_NOT_CHOSEN: TWO-UNCHAINED-ARTIFACTS-ARE-AMBIGUOUS
+  THE_SIXTEEN_HEX_KNOWN_BAD_CITES_R_754s_v17_LESSON_IN_THIS_FAMILY: THE-FULL-PAIR-NOT-A-PREFIX
+  THE_RE_RUNS_KEEP_placement_latency_ms_AT_ZERO_BY_DESIGN: THE-CURRENT-BEHAVIOUR-PRESERVED
+  SO_THEY_CORRECT_THE_ESTIMAND_AND_NOT_THE_LARGEST_ASSUMPTION: TWO-SEPARATE-THINGS
+  CORRECT_IS_DEFINED_AS_SIX_CONJUNCTS_IN_THE_ENTRY: A-DEFINITION-NOT-AN-ADJECTIVE
+  wt_de_STAYS_FROZEN_AT_5020f96_FOR_GO_8_AT_0010Z: AND-THE-RE-RUNS-USE-A-DIFFERENT-TREE
+  NONE_OF_R1_TO_R4_STRADDLES_MIDNIGHT: A-SCHEDULING-CONSTRAINT-WITH-A-REASON
+  THE_FREEZE_HOLDS_FOR_THE_TWENTY_FIRST_ROUND: AND-DE-137s-TWO-ITEMS-ARE-STILL-ABSENT
   # --- MEM round 280, R-806 swept (06d3010 -> d1b9e62) ---
   de_early_read_py_IS_BYTE_IDENTICAL_AT_BOTH_COMPOSITION_HEADS: 5aa544ef-AT-6c3a121-AND-5020f96
   BUT_TWO_OF_ITS_CALLEES_CHANGED_NOT_JUST_AN_ADDED_HELPER: run_day-AND-selftest-BOTH-DIFFER
@@ -26598,6 +26611,168 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 281, 2026-09-07T15:50:00Z (the clock read by which every measurement below was complete) ---
+  USER_INSTRUCTION_FOCUS_ON_GETTING_THE_CORRECT_RESULTS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      A USER instruction, carried verbatim: **"Focus on getting the correct results"**. Its immediate effect is that
+      **Track C is DEFERRED** -- the position cap, the settlement view in the quoter, hold-after-cancel as a parameter,
+      the time-matched null and the re-fit thresholds all stand down. **The critical path is now one thing**: re-run the
+      four design days 09-03..09-06 under the settlement estimator so that each yields trades + residual per slug, the
+      Chainlink-verified winner, and Z and p from the inline-valued null **in one pass**, labelled `DESIGN_DATA`. Five
+      user rulings and now an instruction; the instruction narrows rather than adds.
+  THE_FIFTH_COMPOSITION_NEEDS_TWO_INGREDIENTS_THAT_DO_NOT_EXIST_YET:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      The fifth composition is specified as **`5020f96` + `1f171e8` + DE 137 + DE 138 Part A**. Checked at the
+      objects: **`1f171e8` (DE 136's settlement estimator) is NOT an ancestor of `5020f96`** -- confirming it really is
+      an addition, as I established at rounds 275-276 when it was deliberately left out of the fourth. **But DE 137 has
+      not landed** (the only commit matching "DE 137" is R-805's dispatch line, not code) and **DE 138 Part A is queued
+      behind it**. So **two of the four ingredients do not exist**, and the composition cannot be built until they do.
+      Corroborated at the code: `placement_latency_ms` occurs **0** times in the runner and `inventory_leg` still
+      occurs 22 times (5 + 17) -- both DE 137's items, both still outstanding.
+  AND_THE_NEW_WORKTREE_DOES_NOT_EXIST_EITHER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      R-807 places the re-runs in a NEW worktree, `/home/yuqing/ctaNew-wt-rr`, so that `wt-de` can stay frozen at
+      `5020f96` for GO #8. **At my read it does not exist**: `git worktree list` shows `wt-de` (5020f96) and `wt-de2`
+      (0c0461d) and no `wt-rr`, and the directory is absent. **That is the correct state, not a gap** -- the worktree
+      is created when the composition it would hold exists. Recorded so a later reader does not take the plan's
+      worktree for a present one.
+  DA_130s_RESOLVER_DRIVEN_NOT_READ_AND_ALL_FOUR_DAYS_RESOLVE:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      DA 130 (`1ae19f7`, +254/-2) adds `resolve_early_read_head(day, *, data_root=None, ...)` -- "THE ONE ARTIFACT
+      NOTHING SUPERSEDES -- or a REFUSAL BY NAME" -- with `SUPERSEDES_PAIR_KEYS = ("path", "sha256")`. **I imported the
+      module and called it** rather than reading the diff alone: all four days resolve to their single artifacts
+      (`...20260903__20260907T085436Z.json`, `...0904__...105906Z`, `...0905__...112912Z`, `...0906__...124731Z`), no
+      refusal. The reader half of REV 104A §7 #2 is in place and works.
+  BUT_NO_ARTIFACT_CARRIES_supersedes_SO_TODAYS_RESOLUTION_IS_TRIVIAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      **The qualification that makes that result mean less than it looks.** None of the four day artifacts carries a
+      `supersedes` key -- checked directly, and consistent with the falsifier-backed walk I ran at round 279. **So each
+      day's family has exactly ONE file, and "resolves to its single artifact" is a trivial success**: no chain was
+      followed because there is no chain. **The resolver's real work begins at the re-runs**, which will be the first
+      time a day has two artifacts. Recorded so "the four real days resolve" is not read as evidence the chain
+      machinery has been exercised on a chain.
+  THE_READER_HALF_LANDED_AND_THE_WRITER_HALF_IS_QUEUED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      The state of REV 104A §3's three steps, precisely: **step 3 (DA's reader resolves the head by the chain) has
+      LANDED** as DA 130; **steps 1-2 (the new artifact CARRIES `supersedes` with the digest recomputed at the write;
+      the precondition admits a second read only with a verified target) are DE 138 Part A, QUEUED behind DE 137.** So
+      the programme can currently READ a chain it cannot yet WRITE. That asymmetry is harmless while no second artifact
+      exists and becomes the whole question the moment one does.
+  THE_FOUR_KNOWN_BADS_EACH_REFUSE_BY_NAME:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      DA 130's falsifier cell, driven by DA, with four distinct refusals read at the diff: **`EARLY_READ_HEAD_AMBIGUOUS`**
+      (two unchained artifacts), **`SUPERSESSION_PAIR_MISMATCH`** (a chain naming a digest the file does not have),
+      **`SUPERSESSION_PAIR_MISMATCH` carrying "not 64"** (a sixteen-hex prefix refused as not the pair), and
+      **`EARLY_READ_HEAD_ABSENT`** (a day with no artifact). The cell asserts all four codes in one predicate. **Four
+      outcomes, four names, one assertion** -- rule 15's shape, and the resolver cannot silently pick a winner in any
+      of them.
+  AND_THE_FIRST_ONE_MAKES_THE_ORDERING_FORCED_NOT_CHOSEN:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      **THE OBSERVATION WORTH CARRYING FROM THIS ROUND.** The first known-bad's own words: "***TWO UNCHAINED ARTIFACTS
+      ARE AMBIGUOUS AND THIS READER WILL NOT PICK BY STAMP***". **So if GO R1..R4 ran before DE 138 Part A landed the
+      writer half, each re-run day would end with two artifacts and no chain between them -- exactly
+      `EARLY_READ_HEAD_AMBIGUOUS`, and the reader would refuse rather than choose.** The sequence R-807 sets (DE 138
+      Part A -> Part B builds the composition -> REV 105 -> GO R1..R4) is therefore **forced by the instrument, not
+      preferred by the coordinator**: any other order produces a family the reader is built to refuse. Worth stating
+      because "queued behind DE 137" reads as scheduling convenience and is not.
+  THE_SIXTEEN_HEX_KNOWN_BAD_CITES_R_754s_v17_LESSON_IN_THIS_FAMILY:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      The third known-bad names its own provenance: a sixteen-hex prefix is refused as not the pair, "**R-754's v17
+      lesson in this family**". That is continuity with the full-pair discipline I read into the record at round 264,
+      when the 09-03 artifact's digest comparison carried `is_a_full_pair`, `bar_says` of length 64, and
+      `prefix_agrees_with_the_full_digest` beside it. **A prefix that agrees is not a pair**, and the same family that
+      learned it on the ruling's digest now enforces it on the supersession digest. The constant is `DIGEST64` and the
+      refusal reports the offending length.
+  THE_RE_RUNS_KEEP_placement_latency_ms_AT_ZERO_BY_DESIGN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      R-807 states that **`placement_latency_ms` defaults to the current behaviour (0) for the re-runs.** Verified as
+      still absent from the code (`0` occurrences in the runner -- it is DE 137's to add), so the default will be
+      introduced and set to reproduce today's behaviour. **That is a deliberate choice with a reason**: the four days
+      are being re-run to change the ESTIMAND, and holding every other input fixed is what makes the new numbers
+      comparable to the ones already read.
+  SO_THEY_CORRECT_THE_ESTIMAND_AND_NOT_THE_LARGEST_ASSUMPTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      **And the consequence should be said plainly, because it is easy to lose.** BE 100 established that placement is
+      instantaneous and that **48-56 % of fills land within 250 ms** carrying 98 % / 55 % of the baseline's settlement
+      P&L -- "the largest assumption in the four days' numbers", and a figure I reproduced myself at round 279. **The
+      re-runs do not touch it.** They will produce the ruled quantity with a verified winner and a matched null, and
+      they will do so under the same zero placement latency as before. **Correcting the estimand and correcting the
+      largest assumption are two separate pieces of work**, and only the first is on the critical path tonight.
+  CORRECT_IS_DEFINED_AS_SIX_CONJUNCTS_IN_THE_ENTRY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      The user asked for "correct results" and the entry defines the word rather than leaving it to taste. **Correct =
+      the RULED QUANTITY (trades + residual), a VERIFIED WINNER (Chainlink `S60(T) >= S60(t0)`), RECONCILED TWO WAYS,
+      a MATCHED NULL VALUED THE SAME WAY, the `DESIGN_DATA` LABEL, and NO INTERVAL BELOW FIVE DAYS.** Six conjuncts,
+      each of which some seat has had to establish separately over the last twenty rounds. **Recorded verbatim as a
+      definition**: a later reader asking whether a re-run "came out correct" has a checklist rather than an adjective,
+      and the sixth conjunct is the one that keeps four days from being read as a result.
+  wt_de_STAYS_FROZEN_AT_5020f96_FOR_GO_8_AT_0010Z:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      Measured again: `wt-de` HEAD **`5020f96`**, status exactly `?? data` -- the **seventh** consecutive round at
+      that state. R-807 keeps it there for **GO #8 at 00:10Z** and puts the re-runs in a different tree entirely, so
+      the two lines of work cannot touch each other's bytes. **That is why a fifth composition needs a new worktree
+      rather than a refresh**: refreshing `wt-de` would break the freeze that GO #8's clearance rests on, and REV 103's
+      five digests were verified against exactly those bytes.
+  NONE_OF_R1_TO_R4_STRADDLES_MIDNIGHT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      A scheduling constraint with a stated reason: **none of GO R1..R4 straddles 00:00Z**, and the schedule is
+      R1 -> R2 -> (GO #8) -> R3 -> R4, or all four before the close if the clock allows. A run that spanned midnight
+      would sit across the day boundary the whole programme is organised by -- the ruled days, the admissible set, the
+      collector's own file rotation -- and the four days' runs take about 85-105 minutes each on the evidence of E1-E4
+      (6,211 s for E2, 83 min for E4). **Recorded because it constrains how many can run before the close**, and the
+      entry allows for both outcomes rather than asserting one.
+  THE_FREEZE_HOLDS_FOR_THE_TWENTY_FIRST_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:50:00Z
+    said: >-
+      `params_v20` and `design_v28` absent (0 matches in any state), heads v19/v27. **And DE 137's two items are still
+      absent from the code**: `placement_latency_ms` at 0 occurrences and `inventory_leg` still at 22 (5 in the runner,
+      17 in the early read) -- so the misnamed field that holds the negation of the trades leg (my round-278 finding)
+      is still misnamed. In flight: DE 137, REV 104's second half; DE 138 queued behind DE 137; REV 105 will gate
+      GO R1..R4.
   # --- MEM round 280, 2026-09-07T15:44:21Z (the clock read by which every measurement below was complete) ---
   de_early_read_py_IS_BYTE_IDENTICAL_AT_BOTH_COMPOSITION_HEADS:
     prov: CHECKED

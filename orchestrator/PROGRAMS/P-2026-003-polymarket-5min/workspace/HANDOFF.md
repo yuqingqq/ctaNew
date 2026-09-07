@@ -1,3 +1,84 @@
+# READ FIRST — round 281 (MEM, 2026-09-07T15:50:00Z, tip `cd4b38f`)
+
+**R-807 swept, with every landing between the tip I read at round 280 (`d1b9e62`) and `cd4b38f`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. The instruction, and what "correct" is defined to mean
+
+Verbatim: **"Focus on getting the correct results"**. **Track C is deferred**; the critical path narrows to
+re-running the four design days under the settlement estimator so each yields trades + residual per slug, the
+Chainlink-verified winner, and Z/p from the inline-valued null **in one pass**, labelled `DESIGN_DATA`.
+
+**And the entry defines the word rather than leaving it to taste** — six conjuncts: the **ruled quantity**, a
+**verified winner**, **reconciled two ways**, a **matched null valued the same way**, the **`DESIGN_DATA` label**,
+and **no interval below five days**. A checklist, not an adjective — and the sixth is what keeps four days from
+being read as a result.
+
+## 2. The fifth composition needs two ingredients that do not exist yet
+
+Specified as `5020f96` + `1f171e8` + DE 137 + DE 138 Part A.
+
+- **`1f171e8` is confirmed not an ancestor of `5020f96`** — a real addition, as it was deliberately left out of
+  the fourth composition.
+- **DE 137 has not landed.** The only commit matching "DE 137" is R-805's dispatch line. Corroborated at the
+  code: **`placement_latency_ms` 0 occurrences**, **`inventory_leg` still 22** (5 runner + 17 early read).
+- **DE 138 Part A is queued behind it.**
+- **`/home/yuqing/ctaNew-wt-rr` does not exist** at my read — the correct state, not a gap; the worktree is
+  created when the composition it would hold exists.
+
+## 3. DA 130 — driven, and what its success does not yet prove
+
+I imported the module and **called** `resolve_early_read_head`: **all four days resolve to their single
+artifacts, no refusal.** `SUPERSEDES_PAIR_KEYS = ("path", "sha256")`, the digest required as full 64 lowercase
+hex.
+
+**But no artifact carries `supersedes`** — so each family has exactly one file and today's resolution is a
+**trivial success**: no chain was followed because there is no chain. **The reader half has landed; the writer
+half (DE 138 Part A) is queued** — the programme can currently *read* a chain it cannot yet *write*.
+
+**The four known-bads each refuse by name:** `EARLY_READ_HEAD_AMBIGUOUS`, `SUPERSESSION_PAIR_MISMATCH`, the same
+carrying **"not 64"** for a sixteen-hex prefix (*"R-754's v17 lesson in this family"* — continuity with the
+full-pair discipline I read at round 264), and `EARLY_READ_HEAD_ABSENT`.
+
+**And the first one makes the ordering forced, not chosen.** Its own words: *"**two unchained artifacts are
+ambiguous and this reader will not pick by stamp**"*. **So if GO R1..R4 ran before DE 138 Part A landed the
+writer half, every re-run day would end with two unchained artifacts — exactly the state the reader refuses.**
+The sequence (DE 138 Part A → Part B builds the composition → REV 105 → GO R1..R4) is forced by the instrument.
+*"Queued behind DE 137" reads as scheduling convenience and is not.*
+
+## 4. What the re-runs will and will not fix
+
+**`placement_latency_ms` defaults to the current behaviour (0) for the re-runs** — deliberate, so every other
+input is held fixed and the new numbers stay comparable to the ones already read.
+
+**The consequence, said plainly: they correct the estimand and not the largest assumption.** BE 100's finding —
+**48–56 % of fills land within 250 ms**, carrying 98 % / 55 % of the baseline's settlement P&L, which I
+reproduced myself at round 279 — is untouched by them. **Two separate pieces of work; only the first is on
+tonight's critical path.**
+
+## 5. Standing
+
+- **`wt-de` stays frozen at `5020f96`** for **GO #8 at 00:10Z** — status exactly `?? data`, **seventh**
+  consecutive round. That is why the fifth composition needs a **new worktree rather than a refresh**: refreshing
+  would break the freeze REV 103's five digests were verified against.
+- **None of GO R1..R4 straddles 00:00Z.** Schedule: R1 → R2 → (GO #8) → R3 → R4, or all four before the close if
+  the clock allows — and E1–E4's evidence puts each run at roughly 85–105 minutes.
+- **Freeze holds a twenty-first round.** DE 137's two items are still absent, so the field that holds the
+  negation of the trades leg is still misnamed.
+- In flight: **DE 137**, **REV 104's second half**; **DE 138** queued; **REV 105** will gate GO R1..R4.
+
+## 6. Counts
+
+flags 2228 → **2243**, provenance 1773 → **1788** (fifteen written, fifteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,498 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 157th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my fifteen added none. Window trimmed 4 → 3,
+**Batch 263** archived.
+
+**NEXT:** DE 137 → DE 138 → REV 105 → GO R1..R4, with GO #8 at 00:10Z from the frozen tree. MEM sweeps R-808
+onward.
+
+---
+
 # READ FIRST — round 280 (MEM, 2026-09-07T15:44:21Z, tip `d1b9e62`)
 
 **R-806 swept, with every landing between the tip I read at round 279 (`06d3010`) and `d1b9e62`.** STATE ONLY.
