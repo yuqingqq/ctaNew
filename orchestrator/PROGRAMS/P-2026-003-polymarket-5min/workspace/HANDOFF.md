@@ -1,3 +1,100 @@
+# READ FIRST — round 261 (MEM, 2026-09-07T09:19:21Z, tip `53811a4`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-775 swept, with every landing
+between my own `47157d8` bound and the tip.
+
+## 0. State
+
+| | |
+|---|---|
+| **E2 (09-04)** | **RUNNING** — `775e46b5…`, started **09:15:47Z**, expected exit ≈ 10:55Z. **The first day with a decision ledger** |
+| **wt-de** | at **`fe76d83`**, frozen — unrefreshed through E3, E4 **and tonight's GO #8** |
+| **The freeze** | no new params or design versions until **GO #8's receipt lands** |
+| **Cleared** | GO E2 and GO #8, both, at the tip's five digests — **no holds** |
+| **Before E4** | DE 127 must fix REV's §A5 (the next-unread cell goes red after E4) |
+
+## 1. E2 is the first run in which the user's ruling actually executes
+
+E1 ran under the old code and produced no ledger — R-765's disclosed consequence. E2 runs
+at `fe76d83`, which carries `de_decision_ledger.py` at **schema v2** with BE 96's five
+inventory fields.
+
+**And its peak is already 1.149× E1's**: **2.905 GiB** against E1's **2.529 GiB**
+high-water mark — which E1 reached in its first three minutes and never exceeded across
+85. **36 % of the 8 GiB cap**, so nothing is at risk; recorded because the same-stage
+comparison is the meaningful one and three runs queue behind. **I do not claim the ledger
+as the cause** — DE sizes it at ~2 MB gzipped per day, which is not 400 MB of RSS.
+
+## 2. The five cleared digests match — and the fifth is not in the worktree at all
+
+| | |
+|---|---|
+| runner | `ccc4108d` |
+| early read | `ba6daba4` |
+| ledger | `d78c3701` |
+| params v19 | `dd8db7de` |
+| **design v27** | `3bcdf3c2` — **on the shared ledger, not in wt-de's git** |
+
+Verified by reading wt-de's **HEAD ref** and resolving every blob from the **main tree's
+object store** — the worktree itself untouched, because it must not move again until
+tonight's receipt lands.
+
+## 3. Which is the whole reason the freeze exists
+
+`wt-de/data` is a **symlink** to `/home/yuqing/ctaNew/data`. So **the worktree freeze
+covers `live/` and not `data/`**: params are git-tracked and frozen with the code, while
+**the design family lives on the shared disk and is not**. A design version landing during
+E2–E4 or GO #8 would be visible to the frozen run's resolver **immediately** — R-775 says
+it plainly: *"the frozen wt-de resolves the design head from the shared ledger."*
+
+**So the params freeze is belt-and-braces, and the design freeze is the only thing
+standing between a new ledger version and a running resolver** — and it is the family
+four seats have been bumping all morning. A reader who thinks *"the worktree is frozen, so
+nothing can change under the run"* would be wrong about exactly one family.
+
+Both frozen heads are **unmoved** at my read, and the freeze is carried **with its release
+condition** (GO #8's receipt), not as an open-ended prohibition.
+
+## 4. Four more commits landed inside my last window — and it is structural
+
+REV 95's two commits, R-775 and the runbook line all landed between my round-260 fetch
+(09:11:56Z) and my row (09:17:12Z). The row is exactly true because it names `47157d8`.
+**Third round running** — one commit, four, four.
+
+***The pattern is not luck and not lateness: the coordinator writes the next entry while
+MEM writes the last one***, and both cycles take about five minutes, so **an entry landing
+inside my window is the normal case and an empty one is the exception.**
+
+**The consequence, stated so no reader mistakes it for lag: MEM's state files are current
+to a *named commit* and one entry behind the register's tail, by construction.** That is
+why every row names its bound and its next target, and why a reader wanting the last five
+minutes reads the register rather than `STATUS.yml`.
+
+## 5. Both GOs cleared, and one forward-dated finding with a trigger
+
+REV 95: GO E2 **and** GO #8 may proceed at the tip's five digests, **no holds**, no
+phase-2 change touching a verdict path — so round 259's third stale-clearance instance is
+closed by re-gating, and the same review that blocked both unblocked both.
+
+**REV §A5**: the next-unread cell **goes red after E4**, because once every ruled day is
+read there is no next unread day to rehearse — **the same shape as the E2 NO-GO, caught
+before it fires rather than after**. Routed to DE 127, required before E4. **I record the
+trigger, not just the item**: a forward-dated finding with a trigger is the only kind that
+survives a context clear.
+
+**And the unit's start is 09:15:47Z where the entry says 09:16:13Z** — 26 s, both true,
+the GO issued at 09:15:09Z. Fifth instance this week; the rule holds without exception so
+far. **E2's artifact does not exist yet**, so nothing about 09-04 is knowable from these
+files and they say so.
+
+Counts: flags 1,892 → **1,907**; provenance 1,437 → **1,452**; tasks 19; **1,164 CHECKED
+/ 283 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-seventh round
+unchanged on UNMARKED. ORPHAN census **0**; audit exit **1** on **171** — 168 at round
+start plus three of mine, all readings of the running unit. Window trimmed 4 → 3, **Batch
+243** archived. Q-MEM-249 filed through the script.
+
+---
+
 # READ FIRST — round 260 (MEM, 2026-09-07T09:13:47Z, tip `47157d8`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-774 swept, with every landing

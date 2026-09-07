@@ -67,6 +67,63 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:19:21Z (MEM ROUND 261 -- R-775 SWEPT, with every landing between my own 47157d8 bound and
+  `53811a4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***E2 IS RUNNING -- THE FIRST DAY WITH A DECISION LEDGER.*** `deEARLY20260904`, read while loaded at
+  09:18:07Z: loaded / active / **RUNNING** / ExecMainStatus 0 / Result success, InvocationID
+  `775e46b59fee42228efab036b6abad58`, ExecMainStartTimestamp **09:15:47Z**, MemoryPeak 3,119,230,976; 140
+  seconds in, expected exit ≈ 10:55Z. E1 ran under the old code and produced no ledger (R-765's disclosed
+  consequence); E2 runs at `fe76d83`, which carries the ledger at schema v2 with BE 96's five inventory
+  fields -- **so this is the first run in which the USER's "record everything we can" ruling actually
+  executes.** ***AND ITS PEAK IS ALREADY 1.149x E1's***: 2.905 GiB against E1's 2.529 GiB high-water mark,
+  which E1 reached in its first three minutes and never exceeded across 85. 36 % of the 8 GiB cap, so
+  nothing is at risk -- recorded because the same-stage comparison is the meaningful one and three runs
+  queue behind this one. I do not claim the ledger as the cause: DE sizes it at ~2 MB gzipped per day,
+  which is not 400 MB of RSS.
+  (2) ***ALL FIVE CLEARED DIGESTS MATCH AT wt-de's `fe76d83`, AND I VERIFIED THEM WITHOUT TOUCHING THE
+  FROZEN WORKTREE.*** I read its HEAD ref and resolved every blob from the MAIN tree's object store: runner
+  `ccc4108d`, early read `ba6daba4`, ledger `d78c3701`, params v19 `dd8db7de` -- and the fifth, design v27
+  `3bcdf3c2`, **is not in the worktree's git at all.**
+  (3) ***WHICH IS THE WHOLE REASON THE FREEZE EXISTS: THE WORKTREE FREEZE COVERS `live/` AND NOT `data/`.***
+  `wt-de/data` is a symlink to `/home/yuqing/ctaNew/data`, so the params family is git-tracked and frozen
+  with the code, while **the design family lives on the shared disk and is not** -- a design version landing
+  during E2..E4 or GO #8 would be visible to the frozen run's resolver immediately. R-775 says it plainly:
+  "the frozen wt-de resolves the design head from the shared ledger". **So the params freeze is
+  belt-and-braces and THE DESIGN FREEZE IS THE ONLY THING STANDING BETWEEN A NEW LEDGER VERSION AND A
+  RUNNING RESOLVER** -- and it is the family four seats have been bumping all morning. A reader who thinks
+  "the worktree is frozen, so nothing can change under the run" would be wrong about exactly one family.
+  Both heads are unmoved at my read (v27, v19), and the freeze is carried with its release condition --
+  GO #8's receipt -- not as an open-ended prohibition.
+  (4) ***FOUR MORE COMMITS LANDED INSIDE MY ROUND-260 WINDOW, AND THIS IS NOW STRUCTURAL RATHER THAN
+  INCIDENTAL.*** REV 95's two commits, R-775 and the runbook's next-entry line (09:16:01Z) all landed
+  between my round-260 fetch at 09:11:56Z and my row at 09:17:12Z; the row is exactly true because it names
+  `47157d8` and says "MEM sweeps R-775 onward". Third round running -- one commit, four, four. ***THE
+  PATTERN IS NOT LUCK AND NOT LATENESS: THE COORDINATOR WRITES THE NEXT ENTRY WHILE MEM WRITES THE LAST
+  ONE***, and both cycles take about five minutes, so an entry landing inside my window is the NORMAL case
+  and an empty one is the exception. **The consequence, stated so no reader mistakes it for lag: MEM's state
+  files are current to a NAMED COMMIT and one entry behind the register's tail, by construction.** That is
+  why every row names its bound and its next target, and why a reader wanting the last five minutes reads
+  the register rather than STATUS.yml.
+  (5) ***REV 95 CLEARED BOTH GOs AT THE TIP'S FIVE DIGESTS, NO HOLDS***, with the finding that no phase-2
+  change touches a verdict path -- so round 259's third stale-clearance instance is closed by re-gating, and
+  the user's remaining early reads and tonight's Gate-1 run are unblocked by the same review that blocked
+  them, which is what a narrow re-gate buys. ***AND REV's §A5 IS A FORWARD-DATED FINDING WITH A TRIGGER***:
+  the next-unread cell goes RED after E4, because once every ruled day is read there is no next unread day
+  to rehearse -- the same shape as the E2 NO-GO (a check that passes only until the thing it checks
+  happens), **caught before it fires rather than after**, routed to DE 127 and required before E4. I record
+  the trigger and not just the item, because a forward-dated finding with a trigger is the only kind that
+  survives a context clear.
+  (6) **THE UNIT'S START IS 09:15:47Z AND THE ENTRY SAYS 09:16:13Z** -- 26 seconds, both true, different
+  events, with the GO itself issued at 09:15:09Z. Fifth instance this week (41 s, 3 s, 18 s, 24 s, 26 s) and
+  the rule holds without exception so far. ***AND I QUOTE NO VALUE FROM E2 BECAUSE ITS ARTIFACT DOES NOT
+  EXIST YET***: the run is in flight, the receipt lands at exit, DA reads it and prints the table. Nothing
+  about 09-04 is knowable from these files and they say so.
+  Counts: flags 1,892 -> **1,907**; provenance 1,437 -> **1,452**; tasks 19; **1,164 CHECKED /
+  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SEVENTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **171** missing-artifact findings, 168 at my round start plus THREE of mine -- all
+  three readings of the RUNNING unit, which is not a file. Window trimmed 4 -> 3, **Batch 243** archived.
+  Q-MEM-249 filed through the script.)
   2026-09-07T09:13:47Z (MEM ROUND 260 -- R-774 SWEPT, with every landing between my own fe76d83 bound and
   the tip `47157d8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***FIVE THREADS I HAVE CARRIED ACROSS ROUNDS CLOSE IN ONE ENTRY -- AND NOT ONE OF THEM WAS CLOSED BY
@@ -187,72 +244,6 @@ updated: >-
   audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start, because all
   fifteen of my entries resolve. Window trimmed 4 -> 3, **Batch 241** archived. Q-MEM-247 filed through the
   script.)
-  2026-09-07T09:01:00Z (MEM ROUND 258 -- R-772 SWEPT, with every landing between my own c12ea02 and the
-  tip `39ebaa8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I QUOTED NO ECONOMIC VALUE***:
-  the state files carry the early read's PATH, DIGEST, SIZE, STRUCTURE, STATUSES and CAVEATS, and not one
-  number from it -- DA 125 reads it with the independent reader and prints the table, and MEM's copy of the
-  numbers would be a second path to the user that no review covers.
-  (1) ***THE FIRST EARLY-READ ARTIFACT EXISTS AND IS TRACKED.*** `p003_de_early_read_day_20260903__
-  20260907T085436Z.json`, sha256 **5c8a58f5**01d3b61b, **44,037 B**, mtime 08:54:36Z, `ls-files` 1, landed
-  by `def47a2` with DE's capture record beside it; the unit is `not-found` and the lock is free. **After
-  seven rounds of "the user has no early-read numbers yet", the first day exists** -- and it is 09-03, the
-  day sealed under the eight-name scope, run under the OLD code with no decision ledger, exactly as R-765
-  disclosed.
-  (2) ***ITS STRUCTURE MATCHES THE DECLARATION KEY FOR KEY.*** `day_run.per_day_sealed_artifacts` is a list
-  of TWO (one per arm) and BOTH read `sealed` **FALSE** with `seal_status` "UNSEALED -- 4 of 4 days complete
-  under the bar this call was given" -- a COMPUTED string carrying its own counts, the shape REV 90's NO-GO
-  demanded. Each arm's `economic` block carries exactly six keys -- **D_E0, Z, null_draws_summary,
-  null_mean, null_sd, p_location** (KEYS named, contents unread) -- beside `n_fills_arm`, `n_fills_baseline`
-  and `n_cancels_issued`. ***AND THE FIVE UNCOMPUTED FIELDS ARE NAMED IN THE ARTIFACT***:
-  `economics_field_availability.not_computed_by_this_path` = D_E_MINUS_R, fills_leg, inventory_leg,
-  p_two_sided, rho_adverse_over_spread -- **the same five R-754's dispatch asked for and R-757 ruled would
-  appear as named statuses**. I have carried that sentence since round 249 about an artifact that did not
-  exist; it is now true of one that does.
-  (3) ***THE CAVEATS TRAVEL INSIDE THE ARTIFACT***: `G` 4, `interval` "NONE_BELOW_FIVE_DAYS",
-  `is_a_validation` **false**, `verdict_class` "EXPLORATORY", `days_consumed` the four days, and
-  `seal_standing.line` "UNSEALED under the USER's ruling R-754: 4 of 6 ruled days, read early on the user's
-  instruction. NOT all days complete, NOT a validation, no interval". **A reader who has the file and none
-  of the register still cannot mistake it for a validation.**
-  (4) ***AND THE TWO STALE LITERALS ARE THERE, BOTH FALSE FOR THIS ARTIFACT***: `day_run.status` =
-  "DAY_RUN_SEALED" and `day_run.what_this_is_not.the_economics_are_SEALED` = TRUE, sitting beside two
-  arm-day blocks that read unsealed with the economics present. Rule 10's class one level down -- a
-  hardcoded conclusion beside a computed one that contradicts it. E1 executed the code REV 91 cleared,
-  BEFORE DE 124's retirement landed, so the literals are the old path's; routed to DE 126 phase 2 and REV 94
-  part B. ***THE READING RULE FOR THIS ARTIFACT, RECORDED SO NO LATER READER GETS IT WRONG: read
-  `per_day_sealed_artifacts[*].sealed` and `seal_standing`, never `day_run.status`.***
-  (5) ***FOUR STAMPS FOR ONE EVENT, AND ONLY ONE IS THE UNIT'S FIELD.*** Measured at their sources: the
-  unit's own `ExecMainExitTimestamp` **08:54:36Z** (my read at 08:55:29Z while it was still loaded); DE's
-  five-fields-at-exit block `as_of` **08:54:44Z**, already reading SubState exited; the coordinator's watch
-  "TERMINAL **08:54:54Z**"; and DE's capture record `main_process_exited_at` **08:55:00Z**. ***DE's RECORD
-  DATES THE EXIT 16 SECONDS AFTER ITS OWN OBSERVATION OF IT***, and `runtime_s` 5163 inherits the later
-  stamp exactly (07:28:57Z → 08:55:00Z), against 5,139 s from the unit's field. Nothing turns on 24 seconds
-  and the run is inside its 86.3-min sizing either way; the SHAPE is CLAUDE.md rule 3 inside a capture
-  record built for rule 20 -- **routed to DE, not ruled**. ***THE ONE TO USE HAS THREE INDEPENDENT
-  WITNESSES***: the unit's field, the artifact's mtime and the artifact's own filename stamp all read
-  08:54:36Z, and none of the three is a poller's observation. Fourth instance of the class this week (41 s
-  at E1's launch, 3 s at GO #7, 18 s here): **every time a time appears twice, one of them is a field and
-  the other is when someone looked.**
-  (6) ***THE UNBLOCK LANDED BETWEEN R-772'S WRITING AND MY READ.*** params **v19** `dd8db7de` and design
-  **v27** `3bcdf3c2`, both tracked; heads v19 (19 versions) and v27 (26 versions), orphans empty in both;
-  `PARAMS_REL` → v19. At round 257 I recorded both ABSENT and the block standing; **both halves are now
-  closed**. ***AND THE CASCADE CITATION IS WIDENED***: v19 carries `be_cascade.modules`, a list of **TEN**,
-  with "EVERY module here, not just the entry point", the original single `be_module` KEPT beside it and a
-  thirteen-key `be_module_repoint` block recording the move. The guard that would have been silent on
-  `harmful_stateful_policy.py` (round 257's finding) now covers the cascade, **superseded in place by
-  addition rather than removal**.
-  (7) ***DE's CAPTURE RECORD CARRIES TWO FIVE-FIELD READINGS, NOT ONE*** -- at launch (07:29:07Z, running,
-  peak 997,609,472) and at exit while loaded (08:54:44Z, exited, peak 2,715,901,952) -- plus the leaf peak
-  sampled in process WITH ITS METHOD ("cgroup memory.peak sampled every 20 s while alive; the cgroup is gone
-  at exit"), the exit resolved through the map by pair, the journal by both invocation fields, REV 91's
-  cleared digests, and `no_economic_value_is_quoted_here` = "DA's reader prints the table". More than rule
-  20 asks. ***AND THE UNIT IS `not-found` NOW***, so a reading taken today would be VOID by rule 20: the
-  terminal record exists only because it was read before the name was freed.
-  Counts: flags 1,847 -> **1,862**; provenance 1,392 -> **1,407**; tasks 19; **1,122 CHECKED /
-  280 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FOURTH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **168** missing-artifact findings, 167 at my round start plus ONE of mine, the unit
-  reading -- and that unit is now `not-found`, so it will never resolve, correctly. Window trimmed 4 -> 3,
-  **Batch 240** archived. Q-MEM-246 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -424,6 +415,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 261, R-775 swept (and every landing between 47157d8 and 53811a4) ---
+  E2_IS_RUNNING_AND_I_READ_THE_FIVE_FIELDS_WHILE_LOADED: 775E46B5-STARTED-09-15-47Z
+  THE_FIVE_CLEARED_DIGESTS_ALL_MATCH_AT_wt_des_fe76d83: FOUR-IN-GIT-ONE-ON-THE-LEDGER
+  and_I_VERIFIED_THEM_WITHOUT_TOUCHING_THE_FROZEN_WORKTREE: HEAD-REF-PLUS-THE-OBJECT-STORE
+  THE_WORKTREE_FREEZE_COVERS_live_BUT_NOT_data: WT-DE-DATA-IS-A-SYMLINK-TO-THE-SHARED-LEDGER
+  SO_THE_DESIGN_FREEZE_IS_THE_HALF_THE_WORKTREE_CANNOT_PROVIDE: THE-REASON-BOTH-FAMILIES-ARE-FROZEN
+  BOTH_FROZEN_HEADS_ARE_UNMOVED_AT_MY_READ: V27-AND-V19
+  E2s_PEAK_IS_ALREADY_FIFTEEN_PERCENT_ABOVE_E1s: 2-905-GiB-VS-2-529
+  and_E2_IS_THE_FIRST_DAY_WITH_A_DECISION_LEDGER: THE-USERS-RULING-EXECUTING-FIRST-TIME
+  THE_UNITS_START_IS_09_15_47Z_THE_ENTRY_SAYS_09_16_13Z: FIFTH-INSTANCE-TWENTY-SIX-SECONDS
+  FOUR_MORE_COMMITS_LANDED_INSIDE_MY_ROUND_260_WINDOW: THIRD-ROUND-RUNNING-THE-BOUND-HELD
+  and_THIS_IS_STRUCTURAL_NOT_INCIDENTAL: THE-COORDINATOR-WRITES-WHILE-MEM-WRITES
+  SO_MEM_IS_ONE_ENTRY_BEHIND_BY_CONSTRUCTION_AND_THE_BOUND_SAYS_SO: NOT-LAG-A-CLOSED-INTERVAL
+  REV_95_CLEARED_BOTH_GOS_WITH_NO_HOLDS: NO-PHASE-2-CHANGE-TOUCHES-A-VERDICT-PATH
+  THE_A5_FORWARD_ITEM_HAS_A_DATED_TRIGGER_BEFORE_E4: THE-NEXT-UNREAD-CELL-GOES-RED-AFTER-E4
+  I_QUOTED_NO_VALUE_FROM_E2_BECAUSE_IT_DOES_NOT_EXIST_YET: THE-RUN-IS-IN-FLIGHT
   # --- MEM round 260, R-774 swept (and every landing between fe76d83 and 47157d8) ---
   FOUR_COMMITS_LANDED_INSIDE_MY_ROUND_259_WINDOW_AND_THE_BOUND_HELD_AGAIN: SECOND-TIME-NOW-FOUR-DEEP
   MY_HEAD_IS_THE_TIP_SO_THE_SEATS_ARE_QUIET_ON_REV_95: NOTHING-SINCE-MY-STATE-COMMIT
@@ -26307,6 +26314,153 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 261, 2026-09-07T09:19:21Z (the clock read by which every measurement below was complete) ---
+  E2_IS_RUNNING_AND_I_READ_THE_FIVE_FIELDS_WHILE_LOADED:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260904.service (a unit, not a file)
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      the second early read is RUNNING. Read while loaded at 09:18:07Z: LoadState loaded, ActiveState
+      active, SubState RUNNING, ExecMainStatus 0, Result success, InvocationID
+      775e46b59fee42228efab036b6abad58, ExecMainStartTimestamp 09:15:47Z, MemoryPeak 3,119,230,976. Under
+      RemainAfterExit a finished unit reads loaded/active/EXITED with the same 0 and success, so SubState is
+      the discriminator. 140 seconds in at my read, expected exit about 10:55Z.
+  THE_FIVE_CLEARED_DIGESTS_ALL_MATCH_AT_wt_des_fe76d83:
+    prov: CHECKED
+    artifact: "git: fe76d83 -- blobs resolved from the main tree's object store"
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      wt-de's HEAD is fe76d83, exactly the commit R-775 names, and the four git-tracked digests AT THAT
+      COMMIT equal what REV 95 cleared: runner ccc4108d28f07541, early read ba6daba426491caf, ledger
+      d78c370151cea431, params v19 dd8db7ded9e6ed97. THE FIFTH -- design v27 3bcdf3c234cb7d4e -- IS NOT IN
+      THE WORKTREE'S GIT AT ALL: it lives on the shared ledger, which is the whole reason the freeze exists.
+  and_I_VERIFIED_THEM_WITHOUT_TOUCHING_THE_FROZEN_WORKTREE:
+    prov: CHECKED
+    artifact: "git: rev-parse in /home/yuqing/ctaNew-wt-de (read-only)"
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      rule 22 freezes wt-de while a unit runs from it and R-775 adds that it stays unrefreshed through
+      GO #8, so I did not enter it: I read its HEAD REF and resolved every blob from the MAIN tree's object
+      store. The same technique as round 251, and the reason it matters more now -- the worktree must not
+      move again until tonight's receipt lands, so even a read that touched it would be a risk taken for
+      nothing.
+  THE_WORKTREE_FREEZE_COVERS_live_BUT_NOT_data:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de/data
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      `ls -ld` gives `lrwxrwxrwx ... /home/yuqing/ctaNew-wt-de/data -> /home/yuqing/ctaNew/data` and
+      `readlink -f` resolves to the shared ledger. SO FREEZING THE WORKTREE'S HEAD FREEZES `live/` AND NOT
+      `data/`: the params family is git-tracked and therefore frozen with the code, but THE DESIGN FAMILY
+      LIVES ON THE SHARED DISK AND IS NOT. A design version landing during E2..E4 or GO #8 would be visible
+      to the frozen run's resolver immediately.
+  SO_THE_DESIGN_FREEZE_IS_THE_HALF_THE_WORKTREE_CANNOT_PROVIDE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      R-775 freezes BOTH families until GO #8's receipt lands, and the two halves are not equivalent: the
+      PARAMS freeze is belt-and-braces for wt-de (git already holds it at v19) while THE DESIGN FREEZE IS
+      THE ONLY THING STANDING BETWEEN A NEW LEDGER VERSION AND A RUNNING RESOLVER. R-775 says as much --
+      "the frozen wt-de resolves the design head from the shared ledger". Recorded because a reader who
+      thinks "the worktree is frozen, so nothing can change under the run" would be wrong about exactly one
+      family, and it is the family four seats have been bumping all morning.
+  BOTH_FROZEN_HEADS_ARE_UNMOVED_AT_MY_READ:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      resolved through the shared resolver: design head v27 3bcdf3c234cb7d4e and params head v19
+      dd8db7ded9e6ed97 -- both exactly what REV 95 cleared and what R-775 froze. The freeze holds at
+      09:19:21Z; it is a live constraint on four seats and the state files carry it with its release
+      condition (GO #8's receipt), not as an open-ended prohibition.
+  E2s_PEAK_IS_ALREADY_FIFTEEN_PERCENT_ABOVE_E1s:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260904.service (a unit, not a file)
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      E2's MemoryPeak at 140 seconds is 3,119,230,976 B = 2.905 GiB, against E1's high-water mark of
+      2,715,901,952 = 2.529 GiB reached in its first three minutes and never exceeded across 85 minutes.
+      E2 is 1.149x that ALREADY. Against the 8 GiB cap it is 36 %, so nothing is at risk; recorded because
+      E1's peak came early and stayed, so the comparison at the same stage is the meaningful one, and
+      because three more runs queue behind this one.
+  and_E2_IS_THE_FIRST_DAY_WITH_A_DECISION_LEDGER:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      E1 ran under the old code and produced no ledger (R-765's disclosed consequence, which I recorded at
+      rounds 252 and 258). E2 runs at fe76d83, which carries de_decision_ledger.py at schema v2 with BE 96's
+      five inventory fields -- so THIS IS THE FIRST RUN IN WHICH THE USER'S "record everything we can" RULING
+      ACTUALLY EXECUTES. The higher peak is consistent with that and I do not claim it as the cause: the
+      ledger is about 2 MB gzipped per two-arm day by DE's sizing, which is not 400 MB of RSS.
+  THE_UNITS_START_IS_09_15_47Z_THE_ENTRY_SAYS_09_16_13Z:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260904.service (a unit, not a file)
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      the unit's own ExecMainStartTimestamp is 09:15:47Z; R-775 records "RUNNING since 09:16:13Z" -- 26
+      seconds apart, both true, different events (the main process's start versus the coordinator's first
+      reading of it), and the GO itself was issued at 09:15:09Z. FIFTH INSTANCE OF THE CLASS THIS WEEK (41 s,
+      3 s, 18 s, 24 s, now 26 s). The rule I have been carrying since round 258 holds without exception so
+      far: EVERY TIME A TIME APPEARS TWICE, ONE OF THEM IS A FIELD AND THE OTHER IS WHEN SOMEONE LOOKED.
+  FOUR_MORE_COMMITS_LANDED_INSIDE_MY_ROUND_260_WINDOW:
+    prov: CHECKED
+    artifact: "git: log with commit times on mm-research"
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      REV 95's two commits (bfb62b6, 0879aae), R-775 (941f5dd) and the runbook's next-entry line (53811a4,
+      09:16:01Z) all landed between my round-260 fetch at 09:11:56Z and my round-260 row at 09:17:12Z. My
+      sweep was bounded at 47157d8 and closes with "MEM sweeps R-775 onward", so THE ROW IS EXACTLY TRUE
+      AGAIN. Third round running: one commit at round 255, four at 260, four at 261.
+  and_THIS_IS_STRUCTURAL_NOT_INCIDENTAL:
+    prov: CHECKED
+    artifact: "git: log with commit times on mm-research"
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      the pattern is not luck and not lateness: THE COORDINATOR WRITES THE NEXT ENTRY WHILE MEM WRITES THE
+      LAST ONE. A MEM round takes about five minutes between the fetch and the commit, and the coordinator's
+      verify-and-land cycle is about the same, so an entry landing inside my window is the NORMAL case and
+      an empty window is the exception. Naming it as structure rather than as a near-miss is the point: it
+      will happen every round, so the practice has to be one that survives it.
+  SO_MEM_IS_ONE_ENTRY_BEHIND_BY_CONSTRUCTION_AND_THE_BOUND_SAYS_SO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      the consequence, stated so no reader mistakes it for lag: MEM's state files are always current to a
+      NAMED COMMIT and one entry behind the register's tail, BY CONSTRUCTION. That is why every row names
+      its bound and its next target, and why a reader wanting the last five minutes reads the register
+      rather than STATUS.yml. A bounded claim survives a moving tree; an unbounded one would be wrong within
+      minutes, every single round.
+  REV_95_CLEARED_BOTH_GOS_WITH_NO_HOLDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      GO E2 and GO #8 both MAY PROCEED at the tip's five digests, no holds, and REV's finding that no
+      phase-2 change touches a verdict path. So the third stale-clearance instance (round 259's finding) is
+      closed by re-gating, and BOTH the user's remaining early reads and tonight's Gate-1 day run are
+      unblocked by one review -- the same review that blocked them, which is what a narrow re-gate buys.
+  THE_A5_FORWARD_ITEM_HAS_A_DATED_TRIGGER_BEFORE_E4:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      REV's §A5: the next-unread cell goes RED after E4, because once every ruled day is read there is no
+      next unread day for it to rehearse -- the same shape as the E2 NO-GO (a check that passes only until
+      the thing it checks happens), CAUGHT BEFORE IT FIRES rather than after. Routed to DE 127 with a dated
+      trigger and required before E4. A forward-dated finding with a trigger is the only kind that survives
+      a context clear, which is why I record the trigger and not just the item.
+  I_QUOTED_NO_VALUE_FROM_E2_BECAUSE_IT_DOES_NOT_EXIST_YET:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T09:19:21Z
+    said: >-
+      E2's artifact does not exist at my read -- the run is in flight and its receipt lands at exit. When it
+      does, DA reads it and prints the table; MEM carries the path, the digest and the labels, and the
+      numbers only because this family is unsealed by the USER's ruling. Nothing about 09-04 is knowable
+      from these files yet and they say so.
   # --- MEM round 260, 2026-09-07T09:13:47Z (the clock read by which every measurement below was complete) ---
   FOUR_COMMITS_LANDED_INSIDE_MY_ROUND_259_WINDOW_AND_THE_BOUND_HELD_AGAIN:
     prov: CHECKED

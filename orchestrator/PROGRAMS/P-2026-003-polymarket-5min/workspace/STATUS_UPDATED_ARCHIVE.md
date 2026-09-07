@@ -19272,3 +19272,74 @@ generation and the window went 4 → 3. Nothing rewritten.
   running unit. Fifteen written, fifteen counted, the duplicate-name gate run before writing. Window
   trimmed 4 -> 3, **Batch 239** archived. Q-MEM-245 filed through the script.)
 ```
+
+## Batch 243 — archived 2026-09-07T09:19:21Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:01:00Z (MEM ROUND 258 -- R-772 SWEPT, with every landing between my own c12ea02 and the
+  tip `39ebaa8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I QUOTED NO ECONOMIC VALUE***:
+  the state files carry the early read's PATH, DIGEST, SIZE, STRUCTURE, STATUSES and CAVEATS, and not one
+  number from it -- DA 125 reads it with the independent reader and prints the table, and MEM's copy of the
+  numbers would be a second path to the user that no review covers.
+  (1) ***THE FIRST EARLY-READ ARTIFACT EXISTS AND IS TRACKED.*** `p003_de_early_read_day_20260903__
+  20260907T085436Z.json`, sha256 **5c8a58f5**01d3b61b, **44,037 B**, mtime 08:54:36Z, `ls-files` 1, landed
+  by `def47a2` with DE's capture record beside it; the unit is `not-found` and the lock is free. **After
+  seven rounds of "the user has no early-read numbers yet", the first day exists** -- and it is 09-03, the
+  day sealed under the eight-name scope, run under the OLD code with no decision ledger, exactly as R-765
+  disclosed.
+  (2) ***ITS STRUCTURE MATCHES THE DECLARATION KEY FOR KEY.*** `day_run.per_day_sealed_artifacts` is a list
+  of TWO (one per arm) and BOTH read `sealed` **FALSE** with `seal_status` "UNSEALED -- 4 of 4 days complete
+  under the bar this call was given" -- a COMPUTED string carrying its own counts, the shape REV 90's NO-GO
+  demanded. Each arm's `economic` block carries exactly six keys -- **D_E0, Z, null_draws_summary,
+  null_mean, null_sd, p_location** (KEYS named, contents unread) -- beside `n_fills_arm`, `n_fills_baseline`
+  and `n_cancels_issued`. ***AND THE FIVE UNCOMPUTED FIELDS ARE NAMED IN THE ARTIFACT***:
+  `economics_field_availability.not_computed_by_this_path` = D_E_MINUS_R, fills_leg, inventory_leg,
+  p_two_sided, rho_adverse_over_spread -- **the same five R-754's dispatch asked for and R-757 ruled would
+  appear as named statuses**. I have carried that sentence since round 249 about an artifact that did not
+  exist; it is now true of one that does.
+  (3) ***THE CAVEATS TRAVEL INSIDE THE ARTIFACT***: `G` 4, `interval` "NONE_BELOW_FIVE_DAYS",
+  `is_a_validation` **false**, `verdict_class` "EXPLORATORY", `days_consumed` the four days, and
+  `seal_standing.line` "UNSEALED under the USER's ruling R-754: 4 of 6 ruled days, read early on the user's
+  instruction. NOT all days complete, NOT a validation, no interval". **A reader who has the file and none
+  of the register still cannot mistake it for a validation.**
+  (4) ***AND THE TWO STALE LITERALS ARE THERE, BOTH FALSE FOR THIS ARTIFACT***: `day_run.status` =
+  "DAY_RUN_SEALED" and `day_run.what_this_is_not.the_economics_are_SEALED` = TRUE, sitting beside two
+  arm-day blocks that read unsealed with the economics present. Rule 10's class one level down -- a
+  hardcoded conclusion beside a computed one that contradicts it. E1 executed the code REV 91 cleared,
+  BEFORE DE 124's retirement landed, so the literals are the old path's; routed to DE 126 phase 2 and REV 94
+  part B. ***THE READING RULE FOR THIS ARTIFACT, RECORDED SO NO LATER READER GETS IT WRONG: read
+  `per_day_sealed_artifacts[*].sealed` and `seal_standing`, never `day_run.status`.***
+  (5) ***FOUR STAMPS FOR ONE EVENT, AND ONLY ONE IS THE UNIT'S FIELD.*** Measured at their sources: the
+  unit's own `ExecMainExitTimestamp` **08:54:36Z** (my read at 08:55:29Z while it was still loaded); DE's
+  five-fields-at-exit block `as_of` **08:54:44Z**, already reading SubState exited; the coordinator's watch
+  "TERMINAL **08:54:54Z**"; and DE's capture record `main_process_exited_at` **08:55:00Z**. ***DE's RECORD
+  DATES THE EXIT 16 SECONDS AFTER ITS OWN OBSERVATION OF IT***, and `runtime_s` 5163 inherits the later
+  stamp exactly (07:28:57Z → 08:55:00Z), against 5,139 s from the unit's field. Nothing turns on 24 seconds
+  and the run is inside its 86.3-min sizing either way; the SHAPE is CLAUDE.md rule 3 inside a capture
+  record built for rule 20 -- **routed to DE, not ruled**. ***THE ONE TO USE HAS THREE INDEPENDENT
+  WITNESSES***: the unit's field, the artifact's mtime and the artifact's own filename stamp all read
+  08:54:36Z, and none of the three is a poller's observation. Fourth instance of the class this week (41 s
+  at E1's launch, 3 s at GO #7, 18 s here): **every time a time appears twice, one of them is a field and
+  the other is when someone looked.**
+  (6) ***THE UNBLOCK LANDED BETWEEN R-772'S WRITING AND MY READ.*** params **v19** `dd8db7de` and design
+  **v27** `3bcdf3c2`, both tracked; heads v19 (19 versions) and v27 (26 versions), orphans empty in both;
+  `PARAMS_REL` → v19. At round 257 I recorded both ABSENT and the block standing; **both halves are now
+  closed**. ***AND THE CASCADE CITATION IS WIDENED***: v19 carries `be_cascade.modules`, a list of **TEN**,
+  with "EVERY module here, not just the entry point", the original single `be_module` KEPT beside it and a
+  thirteen-key `be_module_repoint` block recording the move. The guard that would have been silent on
+  `harmful_stateful_policy.py` (round 257's finding) now covers the cascade, **superseded in place by
+  addition rather than removal**.
+  (7) ***DE's CAPTURE RECORD CARRIES TWO FIVE-FIELD READINGS, NOT ONE*** -- at launch (07:29:07Z, running,
+  peak 997,609,472) and at exit while loaded (08:54:44Z, exited, peak 2,715,901,952) -- plus the leaf peak
+  sampled in process WITH ITS METHOD ("cgroup memory.peak sampled every 20 s while alive; the cgroup is gone
+  at exit"), the exit resolved through the map by pair, the journal by both invocation fields, REV 91's
+  cleared digests, and `no_economic_value_is_quoted_here` = "DA's reader prints the table". More than rule
+  20 asks. ***AND THE UNIT IS `not-found` NOW***, so a reading taken today would be VOID by rule 20: the
+  terminal record exists only because it was read before the name was freed.
+  Counts: flags 1,847 -> **1,862**; provenance 1,392 -> **1,407**; tasks 19; **1,122 CHECKED /
+  280 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FOURTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **168** missing-artifact findings, 167 at my round start plus ONE of mine, the unit
+  reading -- and that unit is now `not-found`, so it will never resolve, correctly. Window trimmed 4 -> 3,
+  **Batch 240** archived. Q-MEM-246 filed through the script.)
+```
