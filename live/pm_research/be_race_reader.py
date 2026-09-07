@@ -2285,18 +2285,37 @@ def selftest() -> int:
        f"POSITIVE CONTROL: a horizon already passed ADMITS "
        f"({_past['seconds_past_the_horizon']} s past it) -- the gate is "
        f"about the clock, not about refusing")
+    # WHICH DAYS ARE PINNED IS A MOVING THING, so the cell COMPUTES it
+    # rather than asserting the snapshot it was written on. It asserted all
+    # four were unpinned; BE 88 pinned 09-06 at its close and the cell went
+    # red for the pipeline working. The property under test is not "four
+    # days are unpinned" -- it is "every day the pins do not carry is NAMED
+    # in the refusal, and the whole read refuses for any of them".
+    _pd_now = pins()
+    _unpinned_days = [d for d in _v5["READABLE"]
+                      if not (_pd_now.get(d) or {}).get("exists")]
+    _probe = dict(_v5["READABLE"] and {}, **_pd_now)
+    if not _unpinned_days:
+        # every declared day is pinned (the horizon case): the predicate is
+        # driven on a FIXTURE with one pin withdrawn, so the cell still
+        # fires rather than quietly having nothing to test.
+        _probe = {k: v for k, v in _pd_now.items() if k != _v5["READABLE"][0]}
+        _unpinned_days = [_v5["READABLE"][0]]
     try:
-        assert_every_declared_day_is_pinned(_v5["READABLE"], pins())
+        assert_every_declared_day_is_pinned(_v5["READABLE"], _probe)
         _unpinned = "NOT REFUSED"
     except ReadRefused as _e5c:
         _unpinned = str(_e5c)
+    _pinned_days = [d for d in _v5["READABLE"] if d not in _unpinned_days]
     ok("not fully pinned" in _unpinned
-       and all(d in _unpinned for d in _v5["READABLE"])
+       and all(d in _unpinned for d in _unpinned_days)
        and "No marker is written and no day is consumed" in _unpinned,
        f"FALSIFIER 3 -- AN ABSENT PIN REFUSES THE WHOLE READ, naming every "
-       f"unpinned day, BEFORE any marker is written. The four days are not "
-       f"pinned yet -- they have not closed -- so this refuses today and "
-       f"goes on refusing until the pins chain head carries all four: "
+       f"unpinned day, BEFORE any marker is written. {len(_pinned_days)} of "
+       f"{len(_v5['READABLE'])} declared days are pinned "
+       f"({_pinned_days or 'none'}); the read refuses for the "
+       f"{len(_unpinned_days)} that are not ({_unpinned_days}), and goes on "
+       f"refusing until the pins chain head carries every one: "
        f"{_unpinned[:200]!r}")
     _fullpins = {d: {"exists": True, "sha256": "a" * 64, "bytes": 1}
                  for d in _v5["READABLE"]}

@@ -1,0 +1,95 @@
+{
+ "all_five_present": false,
+ "as_of_utc": "2026-09-07T02:28:14Z",
+ "method": "sha256 over the file bytes and the byte size; no line, row or field was read or counted; the paths derive from v2 SEALED_SCORES_PINNED_BEFORE_THE_READ by replacing SEALED_scores_<DAY>.json with SEALED_feed_<DAY>.jsonl, the same derivation be_race_reader uses",
+ "per_day": {
+  "20260901": {
+   "exists": false,
+   "path": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_feed_20260901.jsonl",
+   "v2_scores_path": "/home/yuqing/.local/state/pm-co/race_record_20260901_fwd5/be_forward_day_SEALED_scores_20260901.json",
+   "v2_scores_sha256": "aca22317ab06adbf37f8176433c147139da6e4dddb511c0349ae111a7fd4e627"
+  },
+  "20260902": {
+   "exists": false,
+   "path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_feed_20260902.jsonl",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260902_be13/be_forward_day_SEALED_scores_20260902.json",
+   "v2_scores_sha256": "7522786db5423574aff39ac1f902b58bdf4e2b3d7248d84591d701f3619b589e"
+  },
+  "20260903": {
+   "bytes": 283925031,
+   "exists": true,
+   "mtime_utc": "2026-09-06T03:09:06Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_feed_20260903.jsonl",
+   "sha256": "19d03c5d442670ade5ec0cf374bbfa0be4b05f57af98ef27173cff3e3975f641",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260903_be45/be_forward_day_SEALED_scores_20260903.json",
+   "v2_scores_sha256": "c466a3fe590f2d590b7c71ac478373f880205348952111c305ab4ffd3b1f31ad"
+  },
+  "20260904": {
+   "bytes": 297461852,
+   "exists": true,
+   "mtime_utc": "2026-09-06T03:42:21Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_feed_20260904.jsonl",
+   "sha256": "f38841ccbbc3e0ef38a58c49f4f4666539ec92f1a0eaff42199b3fb267c75949",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260904_be45/be_forward_day_SEALED_scores_20260904.json",
+   "v2_scores_sha256": "a610b64ab7e204766c5a7c08bc8c05f2556af0a0e9291b76021c34f5a05a7a05"
+  },
+  "20260905": {
+   "bytes": 206084218,
+   "exists": true,
+   "mtime_utc": "2026-09-06T02:35:14Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_feed_20260905.jsonl",
+   "sha256": "9a7d6b016f157f0862aadf32095646bd2638f9040a72bf852dc3ea7a72e92491",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260905_be44/be_forward_day_SEALED_scores_20260905.json",
+   "v2_scores_sha256": "1370598870c5fa754f21c79203a98ea306c340d687d912d27655e5b002863705"
+  },
+  "20260906": {
+   "bytes": 236128877,
+   "exists": true,
+   "mtime_utc": "2026-09-07T02:26:51Z",
+   "path": "/home/yuqing/ctaNew_forward_runs/20260906_be88/be_forward_day_SEALED_feed_20260906.jsonl",
+   "sha256": "0dfa62f3be90694da050f2f352ebe10980d5d117d7f4919a64e8fcb7c0961d8e",
+   "v2_scores_path": "/home/yuqing/ctaNew_forward_runs/20260906_be88/be_forward_day_SEALED_scores_20260906.json",
+   "v2_scores_sha256": "427af4798af2e051aa5a3078d8185b4814e4f838e7c6c264dbcc984066fa3f23"
+  }
+ },
+ "pinned_before": "any read of the feed; declaration v3 opens the FEED and pinned no feed digest (0 sixty-four-hex strings in v3, checked)",
+ "pinned_by": "BE (pm-be), at the close of the day and from the run that produced the feed -- be88fwd06, the `be_forward_day` service unit for 20260906",
+ "produced_by": {
+  "payload": "live/pm_research/be_forward_day.py",
+  "receipt": "/home/yuqing/ctaNew_forward_runs/20260906_be88/be_forward_day_receipt_20260906.json",
+  "receipt_sha256": "4dd68e366925fb88f5230a1cc1fee38d74967279c0369b378cf4746f9b177bdd",
+  "unit": "be88fwd06.service",
+  "why_it_is_named": "v6 rules that the pinned feed's producer is `be_forward_day`; this pin names the run that wrote these bytes so the claim is checkable rather than asserted."
+ },
+ "protocol": "BE_RACE_READ_FEED_PINS_V2",
+ "scores_untouched": "the five SEALED_scores stay sealed; their v2 digests are not re-verified here",
+ "supersedes": {
+  "path": "live/pm_research/declarations/be_race_read_feed_pins_v1.json",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} PAIR; v1 is NOT edited",
+  "sha256": "2cca55c64ffca8e78937533da617a52501a5af1f7418f4b4be8e538a683f9b04",
+  "what_changes": "ONE added day in `per_day` (20260906), plus `protocol`, `as_of_utc`, `pinned_by` and two blocks that say which read each day belongs to. Every one of v1's five pins is byte-identical.",
+  "written_through": "declaration_chain.write_next_version -- the CAS"
+ },
+ "the_first_reads_days": "20260901..20260905 are inherited from v1 BYTE-IDENTICAL and belong to the FIRST read, which is opened and closed. `all_five_present` below is v1's own field about those five days and is not a statement about the second read's four.",
+ "the_read_voids_on_mismatch": true,
+ "the_second_reads_days": {
+  "READABLE": [
+   "20260906",
+   "20260907",
+   "20260908",
+   "20260909"
+  ],
+  "declared_by": "be_race_read_declaration_v6.json",
+  "n_pinned_of_n_declared": "1 of 4",
+  "pinned_here": [
+   "20260906"
+  ],
+  "still_unpinned": [
+   "20260907",
+   "20260908",
+   "20260909"
+  ],
+  "the_remaining_three": "20260907, 20260908 and 20260909 are pinned at their own closes, each by the next version of this family through the same compare-and-swap -- v3, v4, v5. A landed version is immutable, so `written day by day` is vN+1 three more times, never an edit.",
+  "what_this_does_NOT_mean": "the whole-set precondition is one quarter met and nothing more. The read refuses until EVERY declared day carries a pin with a digest in this family's chain head; a partial set is not a partial read, and no day is opened by this file."
+ }
+}
