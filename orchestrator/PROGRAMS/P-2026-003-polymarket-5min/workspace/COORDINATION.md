@@ -22433,6 +22433,43 @@ rc=0
 **SEATS:** DE 121 in flight (v16 + read path + sizing + rehearsal); BE 92, DA 120 in flight; MEM 248 in flight; REV idle on recorded standby for REV 90 (DE 121 + DE 122).
 
 **ROUTING.** DE 121 → DE 122 (H1 + REV items 1–5) → REV 90 (v16, the read path, H1's closure, DE 122; gates the first early-read launch and GO #8's capture) → GO E1..E4 (one per day) → DA's read of the unsealed artifact → the table to the user with its labels → MEM 249. Tonight's close unchanged (BE 92 then BE 93 as the chain; GO #8 after the book).
+
+### R-756 — 2026-09-07T06:29Z — coordinator — **COORDINATOR INCIDENT, REPAIRED: a scratch known-bad drive for the row-landing script ran in the SHARED TREE because its scratch-path variable was unset in a fresh shell — it replaced `COORDINATION.md` at the tip with a seven-line fixture, committed it as `d7555ff` (author "f <f@x>", sweeping in three uncommitted script patches) and PUSHED it. Reverted at `0539a36` (never reset), identity restored, the script patches re-landed by pathspec at `49f3b52`, rule 21 amended. The register at the tip was the stub for about ninety seconds; MEM and DE (the seats that read the register mid-round) were told to re-read.**
+
+**What happened, from the shell's own output.** At R-755's landing the coordinator ran, in a SECOND Bash call, an inline chain meant to reproduce REV 89 §5.1's loose-regex drive in a scratch repository: `T=$(mktemp -d $S/loose.XXXX); git init … $T/c; cd $T/c; git config user.email f@x; …; printf '…' > …/COORDINATION.md; git add -A; git commit -qm b; git remote add origin …; git push -q -u origin mm-research; …`. `$S` (the scratchpad path) was set in the FIRST call only; in the second it was empty, so `mktemp -d /loose.XXXX` failed ("Permission denied"), `cd /c` failed — and every following command executed in `/home/yuqing/ctaNew`: the identity became `f <f@x>`, the `printf` overwrote the register with the fixture, `git add -A` staged it together with the three script patches sitting uncommitted, `git commit` made `d7555ff` ("b"), `git remote add` refused ("already exists"), and `git push -u origin mm-research` pushed the commit. The drive under test then ran with `LAND_ROOT=/c` and correctly returned `REFUSED IDS_REGEX_TOO_LOOSE` (rc 16) BEFORE any repository action — the one thing in the chain that behaved. The second call's output, verbatim:
+
+```
+mktemp: failed to create directory via template '/loose.XXXX': Permission denied
+fatal: cannot mkdir /o.git: Permission denied
+fatal: cannot mkdir /c: Permission denied
+/bin/bash: line 89: cd: /c: No such file or directory
+error: remote origin already exists.
+/bin/bash: line 89: /rows: Permission denied
+/bin/bash: line 89: /msg: Permission denied
+REFUSED IDS_REGEX_TOO_LOOSE: an ids-regex containing .* or .+ disarms the foreign-row guard (REV 89 §5.1); name the ids
+rc=16 (expect 16 REFUSED IDS_REGEX_TOO_LOOSE)
+```
+
+and the post-check at 06:25:59Z:
+
+```
+HEAD=d7555ff origin=d7555ff
+d7555ff f <f@x> b
+019c07a yqq <yuqing002@ntu.edu.sg> runbook: next register entry R-756
+--- register size/lines at HEAD and working tree ---
+7 orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+--- git config identity now ---
+f
+f@x
+```
+
+Detected at 06:25:59Z by the coordinator's own post-check (`git log` showing `f <f@x> b`; the register at 7 lines). **No untracked file was added** (the commit's name-status is four `M`, no `A`), so the revert deleted nothing from disk. **No seat landed on top of the stub** (`git log d7555ff..origin` empty at the check).
+
+**Repair, in order, each read back:** `git config user.name yqq` / `user.email yuqing002@ntu.edu.sg` (the identity on every earlier coordinator commit) → `git revert --no-edit d7555ff` amended with the incident message → the register back to 22,536 lines with `### R-755` present (1) → pushed as `0539a36` → the three script patches restored as plain file writes from `git show d7555ff:<path>` (no `checkout` in the shared tree), `bash -n` ×3, the row falsifier re-run (`FALSIFIER PASS`) → committed by pathspec and pushed as `49f3b52` (`land_register_row.sh`: `IDS_REGEX_TOO_LOOSE` exit 16, `ID_SHAPE` exit 17, the rebase only when no other path is dirty else `STRANDED (report it)`; `land_register_entry.sh`: the STRANDED wording; `declaration_immutability.sh --falsify`: the denominator sub-check on both real directories — its falsifier run is in flight at this writing). A one-line NOTICE (not a dispatch) went to MEM and DE at 06:27:40Z naming the window and the revert.
+
+**The rule this adds (landed in SEAT_PROTOCOL rule 21 with this entry, beside the sanctioned-rebase declaration and the copy-land pre-check REV 89 asked for):** a scratch drive is a SCRIPT with `set -u` and `cd <scratch> || exit`, never an inline chain in a fresh shell. The two falsifier scripts already have that shape (`cd "$T/clone" || exit 2`); the coordinator's inline test did not, and the coordinator's own §6 rule ("never `checkout`, `reset`, `stash` in the shared tree") did not cover a `printf` and an `add -A` that never intended the shared tree. The pattern file's coordinator class gains an instance: **an environment assumption carried across tool calls** (the same family as R-747's refresh under a running unit — a fact true in one context assumed in the next).
+
+**State after the repair (read at the artifacts):** tip `49f3b52` + this entry; the register's line count and R-755 as above; identity `yqq`; the working tree dirty only with MEM's two state files (MEM 248 mid-round); DE 121, BE 92, DA 120, MEM 248 in flight; REV idle. The 90-second window's only possible consumers were MEM's sweep and DE's quotation of R-754; both told.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
