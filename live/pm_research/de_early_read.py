@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 20
+EXPECTED_CHECKS = 21
 
 
 class EarlyReadRefused(RuntimeError):
@@ -271,6 +271,29 @@ def early_read_preconditions(day: str, root, ruling: dict) -> dict:
     }
 
 
+def bar_day_states(*, repo_root=None, root=None) -> dict:
+    """WHICH RULED DAYS ARE READ, AND WHICH IS NEXT -- from the LEDGER.
+
+    DE 126's addendum. A cell that names a day as a LITERAL measures the
+    day it was written on: `rehearse("2026-09-03")` expected READY, GO E1
+    read 09-03, and the cell aborted the battery with a KeyError -- five
+    checks after it never ran. The state a cell asserts about must be
+    derived from the ledger, so the cell moves as the days are read."""
+    ruling = the_ruling(repo_root)
+    r = Path(root) if root else Path(RUN.DR.resolve()["data_root"])
+    der = r / "pm_5min/derived"
+    read, unread = [], []
+    for d in ruling["days"]:
+        got = sorted(der.glob(f"{DAY_FAMILY}_{d.replace('-', '')}__*.json"))
+        (read if got else unread).append(d)
+    return {"ruled_days": ruling["days"], "read": read, "unread": unread,
+            "next_unread": unread[0] if unread else None,
+            "most_recently_read": read[-1] if read else None,
+            "derived_from": str(der),
+            "why_not_a_literal": "a date typed into a cell measures the "
+                                 "day the cell was written on"}
+
+
 def rehearse(day: str, *, repo_root=None, root=None) -> dict:
     """READY, or the blocker BY NAME. Touches no book and takes no lock."""
     out = {"day": day, "entry": "de_early_read --early-read-day",
@@ -426,6 +449,28 @@ def resolve_exit(code: int, *, repo_root=None) -> dict:
 # ------------------------------------------------------- the battery
 
 def selftest(quiet: bool = False) -> int:
+    """NO CELL MAY RAISE PAST THIS BATTERY (DE 126's addendum).
+
+    A `KeyError` out of cell 4d ended the suite with 13 of 18 run and five
+    never reached, and the run READ as an abort rather than as a failure --
+    the difference between "this check failed" and "the checks after it
+    have no verdict". An unexpected exception is caught here and reported
+    as a NAMED battery failure, so a gap is never mistaken for a shorter
+    suite."""
+    try:
+        return _selftest_body(quiet)
+    except SystemExit:
+        raise
+    except BaseException as _e:
+        import traceback as _tb
+        raise SystemExit(
+            f"[de_early_read] FAIL: "
+            f"BATTERY_ABORTED_BY_AN_UNCAUGHT_{type(_e).__name__}: {_e}. A "
+            f"cell raised past the battery, so every check after it has NO "
+            f"VERDICT. {_tb.format_exc().strip().splitlines()[-1]}")
+
+
+def _selftest_body(quiet: bool = False) -> int:
     """RED FIRST, on fixtures. Three drives, each with its own baseline."""
     import copy
     import shutil
@@ -664,19 +709,28 @@ def selftest(quiet: bool = False) -> int:
     # read, and it asserts BOTH: that 09-03 now refuses BY THAT NAME, and
     # that an unread day is READY. A cell pinned to a day that has been
     # consumed measures the past.
-    _done = rehearse("2026-09-03")
+    # BOTH DAYS ARE DERIVED FROM THE LEDGER, never typed.
+    _st = bar_day_states()
+    ok(_st["read"] and _st["next_unread"],
+       f"DE 126: the bar's state is DERIVED -- read {_st['read']}, unread "
+       f"{_st['unread']}, next {_st['next_unread']}. No date is typed "
+       f"into these cells: a literal measures the day it was written on, "
+       f"which is how E1's SUCCESS aborted this battery")
+    _done = rehearse(_st["most_recently_read"])
     ok(_done["status"] == "NOT_READY"
        and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"],
-       f"DE 126: 2026-09-03 has been READ (GO E1), so its rehearsal now "
-       f"refuses by name -- {_done['blocking']}. The day is consumed and "
-       f"the entry says so rather than offering to run it again")
-    reh = rehearse("2026-09-04")
+       f"DE 126: {_st['most_recently_read']} has been READ, so its "
+       f"rehearsal refuses by name -- {_done['blocking']} -- rather than "
+       f"offering to run it again. This is the POSITIVE CONTROL that the "
+       f"abort was: the cell used to expect READY here")
+    reh = rehearse(_st["next_unread"])
     dc = reh["preconditions"]["digest_comparison"]
     ok(reh["status"] == "READY" and reh["blocking"] == []
        and dc["is_a_full_pair"] is True
        and len(dc["bar_says"]) == 64 and dc["bar_says"] == dc["artifact_is"]
        and dc["prefix_agrees_with_the_full_digest"] is True,
-       f"DRIVE 4d (GREEN, THE REAL DAY): 2026-09-04 rehearses "
+       f"DRIVE 4d (GREEN, THE NEXT UNREAD DAY {_st['next_unread']}): it "
+       f"rehearses "
        f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
        f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
        f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 hex "
