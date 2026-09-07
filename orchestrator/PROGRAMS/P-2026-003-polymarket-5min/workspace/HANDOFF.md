@@ -1,3 +1,110 @@
+# READ FIRST — round 250 (MEM, 2026-09-07T07:14:19Z, tip `2726085`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-758, R-759, R-760 and
+R-761 swept, with every landing between my own `beb6d26` and the tip. **I opened no
+sealed receipt**: declarations, Python sources, shell scripts, git objects, unit and
+directory listings.
+
+## 0. State
+
+| | |
+|---|---|
+| **The early read** | **HAS NOT LAUNCHED** — zero artifacts, lock free, no unit. The user has no early-read numbers yet |
+| **Its gate** | **REV 91 after DE 125** — R-761 part A is a **NO-GO** for GO E1. REV 91 also re-clears **GO #8**, whose REV 89 clearance named runner bytes that have since moved |
+| **Exit maps** | head **v8 `bbc8bacf`**, 8 versions, 0 orphans, **pair verifies at the bytes**; ten producers, both colliding blocks present |
+| **Params** | head **v17 `81b2c291`** (full digests, R-758's ruling) — and `PARAMS_REL` still names **v15** (§3) |
+| **Pins** | had **no emitter** until BE 92 — v1/v2 scratch-written (rule 12's class). Standing ruled **not void** by REV; turns on v3–v5, BE 93 on `--verify` |
+| **Table content** | `{D_E0, Z, one-sided p, null mean/sd/n}` + per-arm fill and cancel counts. **No fills/inventory decomposition**; five fields as named statuses; 09-03's counts open since 2026-09-06T14:01Z |
+
+## 1. The chain resolves and the pair verifies — the only sense in which the incident is closed
+
+After a collision, a repair, a revert that broke the repair, and a revert of that
+revert: head **v8 `bbc8bacfddef8585`**, 8 versions, `orphan_branches` empty; v8's
+`supersedes.sha256` is `abbc077dcfcdc4f6` and **v7 on disk hashes to
+`abbc077dcfcdc4f6`** — I hashed the file rather than read the field twice. **v8 carries
+both colliding blocks**: ten producers, `de_early_read.py` (DE's, which overwrote) and
+`da_early_read_verify.py` (DA's, which was overwritten), plus a `chain_repair` block
+documenting the repair *in the artifact*.
+
+## 2. But v7's history now holds four commits, and two are the coordinator's undo
+
+The checker's own predicate — from v8's `chain_repair`, *"a version file with more than
+one commit in its history is FORKED_BY_EDIT"* — applied directly:
+
+| file | commits |
+|---|---|
+| `producer_exit_maps_v7.json` | **4** — `5f5c92b` (DA's v7), `4e91739` (DE's overwrite), `31c5208` (the revert), `0e2a0c6` (the revert of the revert) |
+| `producer_exit_maps_v6.json` | 1 |
+| `producer_exit_maps_v8.json` | 1 |
+
+**So v7's `edits_after_base` is now 3, while R-760 quotes the checker reporting 1.**
+Both are right at their moment — the 1 was read when DA detected the fork, before the
+coordinator's two commits landed on the same path. ***A later reader running the checker
+will see 3 and find no 3 in the entry***, which is why the number is here with its
+as-of. The current bytes are fine; the arithmetic consequence is that the file the rules
+say is never edited carries four commits, **two from the act meant to undo an edit**.
+
+## 3. The params gap doubled in one round
+
+Round 249: head v16, `PARAMS_REL` v15. Today: head **v17** `81b2c291` (17 versions, 0
+orphans) and `PARAMS_REL` unchanged at `de_multiday_gate1_runner.py:66` **and**
+`de_multiday_design_declaration.py:627`. Still deliberate — the sealed six-day path must
+stay byte-identical — and still the shape REV 89 routed as a stale literal. **I
+re-measure it each round because the distance is what will eventually make it wrong, and
+the distance doubled.**
+
+## 4. REV 90's NO-GO literal, read at the line — and the half I did not reproduce
+
+`de_multiday_gate1_runner.py:1329`: `out["seal_status"] = "UNSEALED_ALL_DAYS_COMPLETE"`
+— a hardcoded string asserting a completeness the branch does not evaluate, CLAUDE.md
+rule 10's shape exactly. **The second half of the finding — one artifact carrying G 6
+beside G 4 — I did not reproduce**: it needs the unsealed branch actually run, and
+`de_early_read.py`'s own G is `len(days)` with a cell asserting 4. One half checked at
+the line, the other relayed to REV, and I say which is which.
+
+## 5. Three instances of one class in one day — all with mechanical remedies
+
+| entry | what | remedy landed |
+|---|---|---|
+| **R-747** | a worktree refreshed under a running unit (80 min lost) | never move a running unit's working directory |
+| **R-756** | a scratch drive with an unset path variable ran in the shared tree | `c975113` — a scratch drive is a **script** with `set -u` and `cd <scratch> \|\| exit` |
+| **R-760** | a revert issued on a tip read three minutes earlier, breaking a pair another seat had just repaired | `f8fb730`, runbook line 241 — *"BEFORE ANY REVERT, RE-LAND OR PUSH … RE-READ THE TIP. A state read once is not a state."* |
+
+**One class: a fact true in one context assumed in the next.** Each closed with a
+mechanical remedy rather than a resolution to be careful — the only kind that survives a
+context clear.
+
+## 6. The checker no longer finishes inside a caller's budget
+
+My run over `live/pm_research/declarations` was **killed at the harness's 120-second
+foreground budget**, having reached the **eighth** file alphabetically, all OK so far;
+it walks git history per file and the directory holds 60 versioned files. (R-750's
+1m3s was `--falsify`, a different scope; I extrapolate from neither.)
+
+**A checker that cannot finish inside a caller's budget gets skipped, and a skipped
+check reads as a passed one** — R-649's rule one level up. Routed to the coordinator,
+whose script it is. Then I applied its predicate directly to the three files that
+mattered (§2): **an instrument that will not finish is not a reason to leave a property
+unmeasured — it is a reason to measure it another way and say which way it was.**
+
+## 7. My fifth probe-shape slip, caught the same way as the other four
+
+Checking that R-760's remedy had landed, my grep for *"re-read the tip before any
+revert"* returned **zero** — the rule is at runbook line 241, in **capitals**. A
+case-sensitive pattern against a capitalised heading. Five in six rounds — a `pgrep`
+prefix, a `grep -c` of a pattern, a `cut` window, a key at the wrong level, now case —
+every one caught because the check was one command away, and every one a false report if
+it had landed. **Never report an absence from one pattern.**
+
+Counts: flags 1,727 → **1,742**; provenance 1,272 → **1,287**; tasks 19; **1,007 CHECKED
+/ 275 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-twenty-sixth round
+unchanged on UNMARKED, and CHECKED passes a thousand. ORPHAN census **0**; audit exit
+**1** on **155** — unchanged, all fifteen entries resolving, the third round running
+adding none. Window trimmed 4 → 3, **Batch 232** archived. Q-MEM-238 filed through the
+script.
+
+---
+
 # READ FIRST — round 249 (MEM, 2026-09-07T06:35:17Z, tip `50b82d7`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-755, R-756 and R-757

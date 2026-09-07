@@ -67,6 +67,83 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T07:14:19Z (MEM ROUND 250 -- R-758, R-759, R-760 AND R-761 SWEPT, with every landing between my
+  own beb6d26 and the tip `2726085`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO
+  SEALED RECEIPT: declarations, Python sources, shell scripts, git objects, unit and directory listings.
+  (1) ***THE EXIT-MAP CHAIN RESOLVES AND THE PAIR VERIFIES AT THE BYTES -- WHICH IS THE ONLY SENSE IN
+  WHICH THE INCIDENT IS CLOSED.*** After a collision, a repair, a revert that broke the repair and a revert
+  of that revert: head **v8 `bbc8bacfddef8585`**, 8 versions, `orphan_branches` EMPTY; v8's
+  `supersedes.sha256` is `abbc077dcfcdc4f6` and v7 ON DISK hashes to `abbc077dcfcdc4f6` -- I hashed the file
+  rather than read the field twice. ***AND v8 CARRIES BOTH COLLIDING BLOCKS***: ten producers, with
+  `de_early_read.py` (DE's, the block that overwrote) and `da_early_read_verify.py` (DA's, the block
+  overwritten) both present by name, plus a `chain_repair` block documenting the repair IN the artifact.
+  (2) ***BUT v7's HISTORY NOW HOLDS FOUR COMMITS, NOT TWO -- AND TWO OF THEM ARE THE COORDINATOR'S UNDO.***
+  Applying the checker's own predicate (from v8's `chain_repair`: "a version file with more than one commit
+  in its history is FORKED_BY_EDIT"): `producer_exit_maps_v7.json` has **four** commits -- `5f5c92b` (DA's
+  v7), `4e91739` (DE's overwrite), `31c5208` (the coordinator's revert), `0e2a0c6` (the revert of that
+  revert) -- against **one each** for v6 and v8. **So its `edits_after_base` is now 3, while R-760 quotes
+  the checker reporting 1.** Both are right at their moment: the 1 was read when DA detected the fork,
+  before the coordinator's two commits landed on the same path. ***A LATER READER RUNNING THE CHECKER WILL
+  SEE 3 AND FIND NO 3 IN THE ENTRY***, which is why the number is here with its as-of. Nothing is wrong
+  with the current bytes; the arithmetic consequence is that the file the rules say is never edited carries
+  four commits, two from the act meant to undo an edit.
+  (3) ***THE PARAMS HEAD IS NOW v17 AND THE LITERAL STILL NAMES v15 -- THE GAP GREW WITHOUT ANYTHING
+  TOUCHING THE LITERAL.*** Round 249 measured head v16 against `PARAMS_REL` v15; today the head is **v17**
+  (`81b2c2910b3c4799`, 17 versions, 0 orphans, carrying the full digests R-758 ruled) and `PARAMS_REL` is
+  unchanged at `de_multiday_gate1_runner.py:66` **and** `de_multiday_design_declaration.py:627`. Still
+  deliberate -- the sealed six-day path must stay byte-identical -- and still the shape REV 89 routed as a
+  stale literal. **I re-measure it each round precisely because the distance is what will eventually make
+  it wrong**, and the distance doubled in one round.
+  (4) ***REV 90's NO-GO LITERAL IS AT THE LINE AND I READ IT MYSELF***: `de_multiday_gate1_runner.py:1329`,
+  `out["seal_status"] = "UNSEALED_ALL_DAYS_COMPLETE"` -- a hardcoded string asserting a completeness the
+  branch does not evaluate, CLAUDE.md rule 10's shape exactly. **The second half -- that one artifact would
+  carry G 6 beside G 4 -- I did NOT reproduce**: it needs the unsealed branch actually run, and
+  `de_early_read.py`'s own G is `len(days)` with a cell asserting 4. One half checked at the line, the other
+  RELAYED to REV, and I say which is which.
+  (5) ***THE EARLY READ HAS NOT LAUNCHED***, on three negative readings: zero artifacts matching
+  "early_read" in the ledger, `fuser` returning nothing on the declared lock, no `deEARLY*` unit loaded.
+  **As of this round the user has no early-read numbers, and the first is two gates away**: R-761's part A
+  is a NO-GO, DE 125 fixes it, and **REV 91 -- not REV 90 -- gates GO E1**, while re-clearing GO #8 whose
+  REV 89 clearance named runner bytes that have since moved (a clearance names bytes; the bytes moved).
+  (6) ***AND THE TABLE'S CONTENT IS UNCHANGED ACROSS FOUR ENTRIES, so I restate it***: {D_E0, Z,
+  p_location (ONE-SIDED), null_mean, null_sd, null_draws_summary.n} plus per-arm FILL and CANCEL counts;
+  the fills leg, the inventory leg, a two-sided p, rho and `D_E_MINUS_R` enter as NAMED STATUSES with
+  reasons. ***THERE IS NO FILLS/INVENTORY DECOMPOSITION.*** 09-03's per-arm counts have been open since
+  2026-09-06T14:01Z under its eight-name seal scope (RELAYED, not re-verified -- it would mean opening a
+  sealed receipt).
+  (7) ***TWO COORDINATOR ERRORS TODAY, BOTH RECORDED AGAINST ITSELF WITH MECHANICAL REMEDIES, AND BOTH THE
+  SAME CLASS AS R-747.*** R-756: a scratch drive with an unset path variable ran in the SHARED tree (rule
+  landed `c975113` -- a scratch drive is a SCRIPT with `set -u` and `cd <scratch> || exit`). R-760: a revert
+  issued on a tip read three minutes earlier while the tree had moved twice, breaking a pair another seat
+  had just repaired (rule landed `f8fb730`, runbook line 241: *"BEFORE ANY REVERT, RE-LAND OR PUSH IN THE
+  SHARED TREE, RE-READ THE TIP … A state read once is not a state."*). With R-747's worktree refresh under a
+  running unit, that is **three instances in one day of one class -- a fact true in one context assumed in
+  the next** -- each closed with a mechanical remedy rather than a resolution to be careful, which is the
+  only kind that survives a context clear.
+  (8) ***THE PINS HAD NO EMITTER UNTIL BE 92***: v1 and v2 were written by SCRATCH SCRIPTS -- rule 12's
+  class exactly, the one that voided a freeze once. The emitter exists now; two pins already in the chain
+  were produced by code no one can re-run; REV 90 part B ruled their standing NOT VOID, turning instead on
+  pins v3-v5 to come, with BE 93 dispatched for `--verify`.
+  (9) ***THE IMMUTABILITY CHECKER NO LONGER FINISHES INSIDE A CALLER'S BUDGET, SO I MEASURED ITS PROPERTY
+  ANOTHER WAY.*** My run over `live/pm_research/declarations` was killed at the harness's 120-second
+  foreground budget having reached the EIGHTH file alphabetically, all OK so far; it walks git history per
+  file and the directory holds 60 versioned files. (R-750's 1m3s was `--falsify`, a different scope; I
+  extrapolate from neither.) **A checker that cannot finish inside a caller's budget gets skipped, and a
+  skipped check reads as a passed one** -- R-649's rule one level up. Routed to the coordinator, whose
+  script it is. Then I applied its own predicate directly to the three files that mattered, which is what
+  (2) reports: **an instrument that will not finish is not a reason to leave a property unmeasured.**
+  (10) ***AND MY FIFTH PROBE-SHAPE SLIP, CAUGHT THE SAME WAY AS THE OTHER FOUR***: checking that R-760's
+  remedy had landed, my grep for "re-read the tip before any revert" returned ZERO -- the rule is at runbook
+  line 241 in CAPITALS. A case-sensitive pattern against a capitalised heading. Five in six rounds (a pgrep
+  prefix, a `grep -c` of a pattern, a `cut` window, a key at the wrong level, now case), every one caught
+  because the check was one command away, and every one a false report if it had landed. **NEVER REPORT AN
+  ABSENCE FROM ONE PATTERN.**
+  Counts: flags 1,727 -> **1,742**; provenance 1,272 -> **1,287**; tasks 19; **1,007 CHECKED /
+  275 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-SIXTH round unchanged on UNMARKED**,
+  and the CHECKED count passes a thousand this round. ORPHAN census **0**; the audit exits **1** on **155**
+  missing-artifact findings -- unchanged from my round start, all fifteen of my entries resolving, the THIRD
+  round running adding none. Window trimmed 4 -> 3, **Batch 232** archived. Q-MEM-238 filed through the
+  script.)
   2026-09-07T06:35:17Z (MEM ROUND 249 -- R-755, R-756 AND R-757 SWEPT, with every landing between my own
   ba6135e and the tip `50b82d7`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO SEALED
   RECEIPT: two declarations, four Python sources, git objects, unit and directory listings, the register.
@@ -240,83 +317,6 @@ updated: >-
   round start and ONE added by me, the unit reading at (4), which is not a file and should not resolve.
   Of my own 15 entries, 14 resolve. Window trimmed 4 -> 3, **Batch 230** archived (round 245's
   generation, 148 lines, byte-identical to what left the field). Q-MEM-236 filed through the script.)
-  2026-09-07T05:39:58Z (MEM ROUND 247 -- R-750 AND R-751 SWEPT, with every landing between my own
-  9d49219 and the tip, `05fd285`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I OPENED NO
-  SEALED RECEIPT***: four declaration versions, two shell scripts, four Python sources, two selftests I
-  ran myself, directory listings and the register.
-  (1) ***R-745 (4)'s PREMISE WAS STALE, AND I VERIFIED THE WITHDRAWAL AT v5 AND v6 RATHER THAN TAKING
-  THE RULING'S WORD FOR IT.*** v5's `population.day_admission_predicate` gates on "the intra-day
-  bookTicker gap fraction is < 0.05" -- the bar is there. v6's replaces it: "(a) 24 hour-files ... and
-  (b) THE COLLECTOR WAS LIVE for the whole day ... Nothing about how often the book moves enters
-  admission." -- the bar is gone, and v6 adds `what_is_REPORTED_and_NOT_gated`, whose FIRST item is "the
-  intra-day bookTicker gap fraction -- **the quantity v5 gated on**", beside
-  `why_the_v5_leg_was_WRONG_and_how_that_was_established`. So the withdrawal is at **v6**, before R-745
-  was written, and DA was right not to remove leg (b). ***AND A STRUCTURAL FACT THAT MAKES THE STORY
-  CHECKABLE***: v5 and v6 carry NO `admission_legs_*` key at all -- the named legs begin at **v7**
-  (a/b/c) and v8 adds (d). A reader looking for a withdrawn "leg" in v5/v6 finds no legs and must read
-  the predicate instead.
-  (2) ***A SENTENCE AT THE HEAD STILL NAMES THE LEG v6 WITHDREW.***
-  `population.the_admissible_set_is_an_OUTPUT` ends "...the gap-fraction leg is NOT yet evaluated" --
-  **byte-identical in v6, v7 AND v8**, inherited from v5. At the head that sentence names a leg the SAME
-  version's `what_is_REPORTED_and_NOT_gated` says is reported and never gates. ***AND THE SHARPER
-  INSTANCE***: v8's `population.day_admission_predicate` still opens with the literal prefix "v6:" and
-  describes legs (a) and (b) ONLY -- **naming neither leg (c) nor leg (d), the outage predicate this very
-  version adds**. The operative four legs live in `admission_legs_v8`. So the field whose NAME is the
-  question a reader would ask answers it two versions out of date, while the field that answers it
-  correctly is named for a version. Nothing about admission BEHAVIOUR is wrong and R-750's rulings are
-  untouched -- this is what a reader RESOLVES. DA's surface: ROUTED, not edited, not classified.
-  (3) ***THE IMMUTABILITY FIX IS MEASUREMENT-ONLY BY MY OWN EVALUATION, AND ITS PREMISE REPRODUCES ON
-  THIS SHELL.*** R-750 states the property in a parenthesis; I evaluated it on the diff: af11ef9 turns one
-  `echo` into two lines computing NFAM under `set +u`, and the count of changed lines matching
-  `ok\(` / `refuses\(` / `raise` / `assert` / `FALSIFIER` / `exit` is **0**. The premise drives too:
-  `bash -c 'set -u; declare -A H; echo "${#H[@]}"'` prints `H: unbound variable`. ***BUT THE LANDED
-  COMMENT'S VERSION LITERAL IS NOT THIS SHELL***: the comment says "(bash 5.1)", R-750's entry says
-  "bash 5.2", and `bash --version` here is **5.2.21(1)-release**. The ENTRY is right and the CODE COMMENT
-  names a shell this box is not -- a literal that must track a moving thing. Nothing behaves differently;
-  the coordinator's script, ROUTED.
-  (4) ***THE REGISTER LOCK IS AT THE BYTES, WITH ALL FIVE REFUSALS BY NAME*** -- read at the script, not
-  at the falsifier's output: `exec 9>"$LOCKF"`, `flock -w ${LOCK_WAIT_S:-600} 9` (LOCK_TIMEOUT exit 12),
-  `LOCK HELD ... pid $$`, held from before the fetch to after the push; the `--row <rowfile>` mode parsed
-  before the ids regex; HELD REGISTER_DIRTY ("wait, do not withdraw it"), HELD BEHIND_AND_NOT_FF (13),
-  REFUSED ROW_ID_MISMATCH (6), REFUSED DUPLICATE_ID, REFUSED NO_TABLE (15). ***AND THE LOCK'S IDENTITY
-  DOES NOT DEPEND ON THE CALLER'S CWD***: `cd "$ROOT"` at line 20 precedes
-  `LOCKF="$(git rev-parse --git-common-dir)/p003_register.lock"` at line 22, so the path resolves in the
-  SHARED tree from wherever a seat invokes it -- one file, `.git/p003_register.lock`. **My round-245
-  finding is closed in the mechanism, not only in the routing**, and I land this round in the legacy form
-  as instructed, which now takes the lock too.
-  (5) ***BOTH OF DE's SELFTEST STATES REPRODUCED BY ME, NOT RELAYED.*** `de_data_root --selftest` at HEAD:
-  **PASS, 20 checks, rc 0**, its last cell asserting its own count at run time rather than against a
-  literal. `de_multiday_design_declaration --selftest` at HEAD: **rc 1**, 105 lines, 104 PASS, the one
-  failing cell R22 -- "the closure is LISTED BY NAME and the modules actually captured are among them --
-  ['__init__.py', 'da_root.py', 'de_data_root.py', 'de_multiday_design_declaration.py',
-  'de_multiday_gate1_runner.py', 'pm_tape_density.py']...". ***AND ITS FAIL LINE HIDES INSIDE A PASS
-  LINE***: emitted with no leading newline, glued to the end of a 532-character line that BEGINS
-  "  PASS  R11: ...". Measured -- lines matching `^FAIL` **0**; lines matching
-  `^\[de_multiday_design_declaration\] FAIL` **0**; lines containing "] FAIL:" **1**; exit **1**. A reader
-  or a hook scanning line-anchored sees a clean run while the exit code says otherwise. DE 120 already
-  owns the cell; the reporting shape is a second thing to fix while there, and it is DE's call.
-  (6) ***THE THREE NON-HEAD LITERALS EXIST AT THEIR NAMED LINES AND I CLASSIFY NONE OF THEM***, which is
-  what R-750 asks: `da_race_read_verify.py:76` is a module-level constant
-  `PINS_DECL = HERE / "declarations" / "be_race_read_feed_pins_v1.json"`; `be_race_reader.py:2420` is
-  `_fp = _dN / "decl" / "be_race_read_declaration_v1.json"`, built under a CONSTRUCTED directory -- the
-  shape a fixture has rather than a ledger read; `be_race_read_declaration_v3.py:235` reads
-  `… / "be_race_read_feed_pins_v1.json"`. The heads are pins v2 `26b0a67d` and declaration v6 `a240ccc5`.
-  The classification is DA's and BE's; MEM supplies the shapes and no verdict.
-  (7) ***TWO MORE COORDINATOR RULINGS, CARRIED BESIDE R-745's FIVE -- SEVEN NOW STAND OVERRULABLE***:
-  (1) v8 STANDS AS LANDED, leg (d) ADDED and nothing removed, R-745 (4) corrected in band to "the outage
-  predicate is ADDED as leg (d) beside collector liveness; the withdrawn fraction bar is not re-applied",
-  leg (b)'s three ruled controls standing; (2) THE FORWARD WINDOW OPENS ON 2026-09-06 -- enumerating a day
-  in a census without judging it on the gap quantity does not consume it (rule 11 binds choosing on what
-  was SEEN, and nothing on 09-06 was), the strict alternative (start 09-07, read no earlier than 09-21)
-  recorded in the artifact and NOT taken, and the accrual report's projected 2026-09-21 reported beside
-  the 2026-09-20 floor with its own basis. Rulings, not results, and not the USER's.
-  Counts: flags 1,680 -> **1,695**; provenance 1,225 -> **1,240**; tasks 19; **961 CHECKED /
-  274 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-THIRD round unchanged on
-  UNMARKED**. ORPHAN census **0**; the audit exits **1** on **154** missing-artifact findings --
-  ***UNCHANGED from my round start, because ALL FIFTEEN of my own entries resolve to a file or a
-  directory. The first round in which I have added NONE***, which is the practical half of round 245's
-  finding: the count only carries signal if the entries stop feeding it prose. Window trimmed 4 -> 3,
-  **Batch 229** archived. Q-MEM-235 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -488,6 +488,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 250, R-758 + R-759 + R-760 + R-761 swept (and every landing between beb6d26 and 2726085) ---
+  THE_EXIT_MAP_PAIR_VERIFIES_AT_THE_BYTES_AFTER_THE_DOUBLE_REVERT: V8-BBC8BACF-V7-ABBC077D-8-VERSIONS-0-ORPHANS
+  and_v8_CARRIES_BOTH_COLLIDING_BLOCKS_TEN_PRODUCERS: DE-EARLY-READ-AND-DA-EARLY-READ-VERIFY
+  v7s_HISTORY_NOW_HOLDS_FOUR_COMMITS_NOT_TWO: EDITS-AFTER-BASE-3-NOT-THE-RECORDED-1
+  the_COORDINATORS_OWN_UNDO_ADDED_TWO_OF_THEM: THE-REPAIR-OF-THE-REPAIR-IS-IN-THE-FILES-HISTORY
+  PARAMS_HEAD_IS_NOW_v17_AND_THE_LITERAL_STILL_NAMES_v15: THE-GAP-IS-TWO-VERSIONS-NOW
+  REV_90s_LITERAL_IS_AT_THE_LINE_AND_I_READ_IT_MYSELF: RUNNER-1329-SEAL-STATUS-UNSEALED-ALL-DAYS-COMPLETE
+  THE_EARLY_READ_HAS_NOT_LAUNCHED: ZERO-ARTIFACTS-LOCK-FREE-NO-UNITS
+  its_gate_is_REV_91_AFTER_DE_125_NOT_REV_90: PART-A-NO-GO-STANDS
+  TWO_COORDINATOR_ERRORS_TODAY_BOTH_RECORDED_WITH_THEIR_RULES: R-756-SCRATCH-DRIVE-R-760-STALE-TIP
+  and_BOTH_ARE_THE_SAME_CLASS_AS_R_747: A-FACT-TRUE-IN-ONE-CONTEXT-ASSUMED-IN-THE-NEXT
+  THE_PINS_HAD_NO_EMITTER_UNTIL_BE_92: V1-AND-V2-SCRATCH-WRITTEN-RULE-12-CLASS
+  THE_EARLY_READ_TABLES_CONTENT_IS_UNCHANGED_AND_I_RESTATE_IT: SIX-STATS-PLUS-COUNTS-FIVE-AS-STATUSES
+  THE_IMMUTABILITY_CHECKER_NO_LONGER_FINISHES_IN_A_TOOL_CALL: 120S-BUDGET-REACHED-THE-EIGHTH-FILE
+  so_I_APPLIED_ITS_OWN_PREDICATE_DIRECTLY_INSTEAD: FOUR-COMMITS-ON-V7-ONE-EACH-ON-V6-AND-V8
+  MY_FIFTH_PROBE_SHAPE_SLIP_A_CASE_SENSITIVE_GREP_READ_A_LANDED_RULE_AS_ABSENT: THE-TEXT-IS-IN-CAPS
   # --- MEM round 249, R-755 + R-756 + R-757 swept (and every landing between ba6135e and 50b82d7) ---
   THE_COORDINATOR_INCIDENT_IS_REPAIRED_AND_I_CHECKED_THE_IDENTITY_ON_BOTH_SIDES: 7640EABA-EQUAL-PRE-AND-POST
   THE_STUB_COMMIT_ADDED_NOTHING_SO_THE_REVERT_DELETED_NOTHING: FOUR-M-ZERO-A
@@ -26195,6 +26211,172 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 250, 2026-09-07T07:14:19Z (the clock read by which every measurement below was complete) ---
+  THE_EXIT_MAP_PAIR_VERIFIES_AT_THE_BYTES_AFTER_THE_DOUBLE_REVERT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/producer_exit_maps_v8.json
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      after a collision, a repair, a revert that broke the repair and a revert of that revert, the question
+      is whether the chain resolves TODAY. Resolved through the shared resolver: head v8
+      bbc8bacfddef8585, 8 versions, orphan_branches EMPTY; v8's `supersedes.sha256` is abbc077dcfcdc4f6 and
+      v7 ON DISK digests abbc077dcfcdc4f6 -- I hashed the file and compared, rather than reading the field
+      twice. THE PAIR VERIFIES. That is the only sense in which the incident is closed, and it is closed.
+  and_v8_CARRIES_BOTH_COLLIDING_BLOCKS_TEN_PRODUCERS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/producer_exit_maps_v8.json
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      the collision was two seats declaring different producers in the same version number. v8's `producers`
+      map holds TEN entries and BOTH survive by name: live/pm_research/de_early_read.py (DE's block, the one
+      that overwrote) and live/pm_research/da_early_read_verify.py (DA's block, the one overwritten). So the
+      repair took nothing from either seat. v8 also carries a `chain_repair` block naming the checker's
+      predicate and what was kept and restored -- the repair documented IN the artifact, not only in the
+      register.
+  v7s_HISTORY_NOW_HOLDS_FOUR_COMMITS_NOT_TWO:
+    prov: CHECKED
+    artifact: "git: log -- live/pm_research/declarations/producer_exit_maps_v7.json"
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      the checker's predicate, from v8's own `chain_repair`: "a version file with more than one commit in
+      its history is FORKED_BY_EDIT". Applied directly: producer_exit_maps_v7.json has FOUR commits --
+      5f5c92b (DA's v7), 4e91739 (DE's overwrite), 31c5208 (the coordinator's revert) and 0e2a0c6 (the
+      revert of that revert) -- against ONE each for v6 and v8. So the file's edits_after_base is now 3,
+      while R-760 quotes the checker reporting 1. Both are right at their moment: the 1 was read when DA
+      detected the fork, before the coordinator's two commits. A LATER READER RUNNING THE CHECKER WILL SEE
+      3 AND FIND NO 3 IN THE ENTRY -- which is why the number is here with its as-of.
+  the_COORDINATORS_OWN_UNDO_ADDED_TWO_OF_THEM:
+    prov: CHECKED
+    artifact: "git: log -- live/pm_research/declarations/producer_exit_maps_v7.json"
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      of v7's four commits, TWO are the coordinator's revert and its undo. The repair of the repair is
+      itself in the immutable-by-rule file's history, permanently. Nothing is wrong with the current bytes
+      -- they are DE's, and v8 pairs to them -- and R-760 records the error against itself in its own
+      voice. I record only the arithmetic consequence: the file that the rules say is never edited carries
+      four commits, two of them from the act meant to undo an edit.
+  PARAMS_HEAD_IS_NOW_v17_AND_THE_LITERAL_STILL_NAMES_v15:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      re-measured from round 249, where the head was v16 and the literal v15. Today the head is v17
+      (81b2c2910b3c4799, 17 versions, 0 orphans, carrying the full digests R-758 ruled) and PARAMS_REL still
+      names v15 at de_multiday_gate1_runner.py:66 AND de_multiday_design_declaration.py:627. THE GAP IS NOW
+      TWO VERSIONS AND IT GREW WITHOUT ANYTHING TOUCHING THE LITERAL. Still deliberate -- the sealed
+      six-day path must stay byte-identical -- and still the shape REV 89 routed as a stale literal, with
+      the reason held in a docstring and a declaration block rather than where the literal is. Routed, not
+      ruled, and re-measured each round precisely because the distance is what will eventually make it wrong.
+  REV_90s_LITERAL_IS_AT_THE_LINE_AND_I_READ_IT_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      REV 90 part A's NO-GO rests on the runner's unsealed branch printing a literal status. At
+      de_multiday_gate1_runner.py:1329: `out["seal_status"] = "UNSEALED_ALL_DAYS_COMPLETE"` -- a hardcoded
+      string asserting a completeness the branch does not evaluate, which is CLAUDE.md rule 10's shape
+      ("compute predicates, never print conclusions"). The second half of REV's finding -- that one artifact
+      would carry G 6 beside G 4 -- I did NOT reproduce: it needs the unsealed branch actually run, and
+      de_early_read.py's own G is `len(days)` with a cell asserting 4. So one half checked at the line, the
+      other RELAYED to REV, and I say which is which.
+  THE_EARLY_READ_HAS_NOT_LAUNCHED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      three readings, all negative: a case-insensitive match for "early_read" over the ledger returns ZERO
+      artifacts; `fuser` on the declared heavy lock returns nothing; and no deEARLY* or de12* transient unit
+      is loaded. As of this round the user has NO early-read numbers, and the first of them is still two
+      gates away.
+  its_gate_is_REV_91_AFTER_DE_125_NOT_REV_90:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      R-761: REV 90 part A is a NO-GO for GO E1; DE 125 fixes the two findings; REV 91 re-reads AND
+      re-clears GO #8, whose REV 89 clearance named runner bytes that have since moved. So the gate on the
+      first early-read number moved from REV 90 to REV 91-after-DE-125, and GO #8's earlier clearance is
+      stale by the same mechanism (a clearance names bytes; the bytes moved). MEM carries the order and
+      rules nothing about it.
+  TWO_COORDINATOR_ERRORS_TODAY_BOTH_RECORDED_WITH_THEIR_RULES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      R-756: a scratch drive with an unset path variable ran in the SHARED tree and replaced the register
+      with a fixture; rule landed at c975113 -- a scratch drive is a SCRIPT with `set -u` and
+      `cd <scratch> || exit`. R-760: a revert issued on a tip read three minutes earlier, while the tree had
+      moved twice, breaking the pair another seat had just repaired; rule landed at f8fb730, runbook line
+      241, in the coordinator's own words: "BEFORE ANY REVERT, RE-LAND OR PUSH IN THE SHARED TREE, RE-READ
+      THE TIP (R-760) ... A state read once is not a state." Both are recorded by the coordinator against
+      itself, with the remedy mechanical rather than a resolution to be careful. MEM carries them as state.
+  and_BOTH_ARE_THE_SAME_CLASS_AS_R_747:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      R-747 (the worktree refreshed under a running unit, costing 80 minutes), R-756 (a shell variable set
+      in one tool call and empty in the next) and R-760 (a tip read three minutes before the act) are ONE
+      CLASS: a fact true in one context assumed in the next. The register names it that way itself at R-756
+      and R-760. THREE INSTANCES IN ONE DAY, all the coordinator's, all with mechanical remedies -- which is
+      the only kind that survives a context clear.
+  THE_PINS_HAD_NO_EMITTER_UNTIL_BE_92:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      R-758: BE found that NO emitter of the race-read pins ever existed in the repo -- v1 and v2 were
+      written by SCRATCH SCRIPTS, which is rule 12's class exactly ("a scratch-dir builder voided one
+      freeze"). The emitter exists now. Two pins already stand in the chain that were produced by code no
+      one can re-run, and REV 90 part B ruled the pins' standing NOT VOID, turning instead on pins v3-v5 to
+      come, with BE 93 dispatched for `--verify`. Recorded as state; the standing is REV's ruling, not mine.
+  THE_EARLY_READ_TABLES_CONTENT_IS_UNCHANGED_AND_I_RESTATE_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      restated because four entries have landed since and none changed it: the arm-day block is {D_E0, Z,
+      p_location (ONE-SIDED), null_mean, null_sd, null_draws_summary.n} plus per-arm FILL and CANCEL counts;
+      the fills leg, the inventory leg, a two-sided p, rho and D_E_MINUS_R were never computed by the sealed
+      runs and enter as NAMED STATUSES with reasons. THERE IS NO FILLS/INVENTORY DECOMPOSITION. And 09-03's
+      per-arm counts have been visible in the open since 2026-09-06T14:01Z under its eight-name seal scope
+      (RELAYED at round 249 and not re-verified here, for the same reason: it would mean opening a sealed
+      receipt).
+  THE_IMMUTABILITY_CHECKER_NO_LONGER_FINISHES_IN_A_TOOL_CALL:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      I tried to run the checker over live/pm_research/declarations to see FORKED_BY_EDIT for myself. It was
+      killed at the harness's 120-second foreground budget having reached the EIGHTH file in alphabetical
+      order (be_daybook_structure_v2.json), all OK so far. It walks git history per file and the directory
+      now holds 60 versioned files. R-750 quotes 1m3s, but for `--falsify`, a different scope -- I do not
+      extrapolate a full-run time from either number. THE POINT IS THE SHAPE: a checker that cannot finish
+      inside a caller's budget gets skipped, and a skipped check reads as a passed one (rule 16's neighbour,
+      R-649's "a check that depends on the declaration FAILS when the file is absent -- never skips").
+      ROUTED to the coordinator, whose script it is.
+  so_I_APPLIED_ITS_OWN_PREDICATE_DIRECTLY_INSTEAD:
+    prov: CHECKED
+    artifact: "git: log -- live/pm_research/declarations/producer_exit_maps_v*.json"
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      rather than re-run a scan that had already exceeded its budget, I applied the checker's own predicate
+      (from v8's chain_repair) to the three files that matter: v7 FOUR commits, v6 ONE, v8 ONE. That is the
+      same property the checker computes, measured directly, and it answers the question the run was for.
+      An instrument that will not finish is not a reason to leave a property unmeasured -- it is a reason to
+      measure the property another way and say which way it was.
+  MY_FIFTH_PROBE_SHAPE_SLIP_A_CASE_SENSITIVE_GREP_READ_A_LANDED_RULE_AS_ABSENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-07T07:14:19Z
+    said: >-
+      checking that R-760's remedy had landed in the runbook, my grep for "re-read the tip before any
+      revert" returned ZERO -- and the rule is at line 241, in CAPITALS: "BEFORE ANY REVERT, RE-LAND OR PUSH
+      IN THE SHARED TREE, RE-READ THE TIP (R-760)". A case-sensitive pattern against a capitalised heading.
+      The fifth probe-shape slip in six rounds (pgrep prefix, grep -c of a pattern, a cut window, a key at
+      the wrong level, now case) and the fifth caught the same way: NEVER REPORT AN ABSENCE FROM ONE PATTERN
+      -- widen it, or look at the file. Every one has been cheap because the check was one command away;
+      each would have been a false report if landed.
   # --- MEM round 249, 2026-09-07T06:35:17Z (the clock read by which every measurement below was complete) ---
   THE_COORDINATOR_INCIDENT_IS_REPAIRED_AND_I_CHECKED_THE_IDENTITY_ON_BOTH_SIDES:
     prov: CHECKED

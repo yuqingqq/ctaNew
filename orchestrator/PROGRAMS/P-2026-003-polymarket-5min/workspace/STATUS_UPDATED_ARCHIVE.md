@@ -18432,3 +18432,85 @@ generation and the window went 4 → 3. Nothing rewritten.
   no file / 2 are negative existence claims, none a vanished artifact). Of my own 15 entries **14
   resolve**. Window trimmed 4 -> 3, **Batch 228** archived. Q-MEM-234 filed through the script.)
 ```
+
+## Batch 232 — archived 2026-09-07T07:14:19Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T05:39:58Z (MEM ROUND 247 -- R-750 AND R-751 SWEPT, with every landing between my own
+  9d49219 and the tip, `05fd285`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I OPENED NO
+  SEALED RECEIPT***: four declaration versions, two shell scripts, four Python sources, two selftests I
+  ran myself, directory listings and the register.
+  (1) ***R-745 (4)'s PREMISE WAS STALE, AND I VERIFIED THE WITHDRAWAL AT v5 AND v6 RATHER THAN TAKING
+  THE RULING'S WORD FOR IT.*** v5's `population.day_admission_predicate` gates on "the intra-day
+  bookTicker gap fraction is < 0.05" -- the bar is there. v6's replaces it: "(a) 24 hour-files ... and
+  (b) THE COLLECTOR WAS LIVE for the whole day ... Nothing about how often the book moves enters
+  admission." -- the bar is gone, and v6 adds `what_is_REPORTED_and_NOT_gated`, whose FIRST item is "the
+  intra-day bookTicker gap fraction -- **the quantity v5 gated on**", beside
+  `why_the_v5_leg_was_WRONG_and_how_that_was_established`. So the withdrawal is at **v6**, before R-745
+  was written, and DA was right not to remove leg (b). ***AND A STRUCTURAL FACT THAT MAKES THE STORY
+  CHECKABLE***: v5 and v6 carry NO `admission_legs_*` key at all -- the named legs begin at **v7**
+  (a/b/c) and v8 adds (d). A reader looking for a withdrawn "leg" in v5/v6 finds no legs and must read
+  the predicate instead.
+  (2) ***A SENTENCE AT THE HEAD STILL NAMES THE LEG v6 WITHDREW.***
+  `population.the_admissible_set_is_an_OUTPUT` ends "...the gap-fraction leg is NOT yet evaluated" --
+  **byte-identical in v6, v7 AND v8**, inherited from v5. At the head that sentence names a leg the SAME
+  version's `what_is_REPORTED_and_NOT_gated` says is reported and never gates. ***AND THE SHARPER
+  INSTANCE***: v8's `population.day_admission_predicate` still opens with the literal prefix "v6:" and
+  describes legs (a) and (b) ONLY -- **naming neither leg (c) nor leg (d), the outage predicate this very
+  version adds**. The operative four legs live in `admission_legs_v8`. So the field whose NAME is the
+  question a reader would ask answers it two versions out of date, while the field that answers it
+  correctly is named for a version. Nothing about admission BEHAVIOUR is wrong and R-750's rulings are
+  untouched -- this is what a reader RESOLVES. DA's surface: ROUTED, not edited, not classified.
+  (3) ***THE IMMUTABILITY FIX IS MEASUREMENT-ONLY BY MY OWN EVALUATION, AND ITS PREMISE REPRODUCES ON
+  THIS SHELL.*** R-750 states the property in a parenthesis; I evaluated it on the diff: af11ef9 turns one
+  `echo` into two lines computing NFAM under `set +u`, and the count of changed lines matching
+  `ok\(` / `refuses\(` / `raise` / `assert` / `FALSIFIER` / `exit` is **0**. The premise drives too:
+  `bash -c 'set -u; declare -A H; echo "${#H[@]}"'` prints `H: unbound variable`. ***BUT THE LANDED
+  COMMENT'S VERSION LITERAL IS NOT THIS SHELL***: the comment says "(bash 5.1)", R-750's entry says
+  "bash 5.2", and `bash --version` here is **5.2.21(1)-release**. The ENTRY is right and the CODE COMMENT
+  names a shell this box is not -- a literal that must track a moving thing. Nothing behaves differently;
+  the coordinator's script, ROUTED.
+  (4) ***THE REGISTER LOCK IS AT THE BYTES, WITH ALL FIVE REFUSALS BY NAME*** -- read at the script, not
+  at the falsifier's output: `exec 9>"$LOCKF"`, `flock -w ${LOCK_WAIT_S:-600} 9` (LOCK_TIMEOUT exit 12),
+  `LOCK HELD ... pid $$`, held from before the fetch to after the push; the `--row <rowfile>` mode parsed
+  before the ids regex; HELD REGISTER_DIRTY ("wait, do not withdraw it"), HELD BEHIND_AND_NOT_FF (13),
+  REFUSED ROW_ID_MISMATCH (6), REFUSED DUPLICATE_ID, REFUSED NO_TABLE (15). ***AND THE LOCK'S IDENTITY
+  DOES NOT DEPEND ON THE CALLER'S CWD***: `cd "$ROOT"` at line 20 precedes
+  `LOCKF="$(git rev-parse --git-common-dir)/p003_register.lock"` at line 22, so the path resolves in the
+  SHARED tree from wherever a seat invokes it -- one file, `.git/p003_register.lock`. **My round-245
+  finding is closed in the mechanism, not only in the routing**, and I land this round in the legacy form
+  as instructed, which now takes the lock too.
+  (5) ***BOTH OF DE's SELFTEST STATES REPRODUCED BY ME, NOT RELAYED.*** `de_data_root --selftest` at HEAD:
+  **PASS, 20 checks, rc 0**, its last cell asserting its own count at run time rather than against a
+  literal. `de_multiday_design_declaration --selftest` at HEAD: **rc 1**, 105 lines, 104 PASS, the one
+  failing cell R22 -- "the closure is LISTED BY NAME and the modules actually captured are among them --
+  ['__init__.py', 'da_root.py', 'de_data_root.py', 'de_multiday_design_declaration.py',
+  'de_multiday_gate1_runner.py', 'pm_tape_density.py']...". ***AND ITS FAIL LINE HIDES INSIDE A PASS
+  LINE***: emitted with no leading newline, glued to the end of a 532-character line that BEGINS
+  "  PASS  R11: ...". Measured -- lines matching `^FAIL` **0**; lines matching
+  `^\[de_multiday_design_declaration\] FAIL` **0**; lines containing "] FAIL:" **1**; exit **1**. A reader
+  or a hook scanning line-anchored sees a clean run while the exit code says otherwise. DE 120 already
+  owns the cell; the reporting shape is a second thing to fix while there, and it is DE's call.
+  (6) ***THE THREE NON-HEAD LITERALS EXIST AT THEIR NAMED LINES AND I CLASSIFY NONE OF THEM***, which is
+  what R-750 asks: `da_race_read_verify.py:76` is a module-level constant
+  `PINS_DECL = HERE / "declarations" / "be_race_read_feed_pins_v1.json"`; `be_race_reader.py:2420` is
+  `_fp = _dN / "decl" / "be_race_read_declaration_v1.json"`, built under a CONSTRUCTED directory -- the
+  shape a fixture has rather than a ledger read; `be_race_read_declaration_v3.py:235` reads
+  `… / "be_race_read_feed_pins_v1.json"`. The heads are pins v2 `26b0a67d` and declaration v6 `a240ccc5`.
+  The classification is DA's and BE's; MEM supplies the shapes and no verdict.
+  (7) ***TWO MORE COORDINATOR RULINGS, CARRIED BESIDE R-745's FIVE -- SEVEN NOW STAND OVERRULABLE***:
+  (1) v8 STANDS AS LANDED, leg (d) ADDED and nothing removed, R-745 (4) corrected in band to "the outage
+  predicate is ADDED as leg (d) beside collector liveness; the withdrawn fraction bar is not re-applied",
+  leg (b)'s three ruled controls standing; (2) THE FORWARD WINDOW OPENS ON 2026-09-06 -- enumerating a day
+  in a census without judging it on the gap quantity does not consume it (rule 11 binds choosing on what
+  was SEEN, and nothing on 09-06 was), the strict alternative (start 09-07, read no earlier than 09-21)
+  recorded in the artifact and NOT taken, and the accrual report's projected 2026-09-21 reported beside
+  the 2026-09-20 floor with its own basis. Rulings, not results, and not the USER's.
+  Counts: flags 1,680 -> **1,695**; provenance 1,225 -> **1,240**; tasks 19; **961 CHECKED /
+  274 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-THIRD round unchanged on
+  UNMARKED**. ORPHAN census **0**; the audit exits **1** on **154** missing-artifact findings --
+  ***UNCHANGED from my round start, because ALL FIFTEEN of my own entries resolve to a file or a
+  directory. The first round in which I have added NONE***, which is the practical half of round 245's
+  finding: the count only carries signal if the entries stop feeding it prose. Window trimmed 4 -> 3,
+  **Batch 229** archived. Q-MEM-235 filed through the script.)
+```
