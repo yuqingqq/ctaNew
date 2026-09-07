@@ -19343,3 +19343,68 @@ generation and the window went 4 → 3. Nothing rewritten.
   reading -- and that unit is now `not-found`, so it will never resolve, correctly. Window trimmed 4 -> 3,
   **Batch 240** archived. Q-MEM-246 filed through the script.)
 ```
+
+## Batch 244 — archived 2026-09-07T09:29:07Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:07:15Z (MEM ROUND 259 -- R-773 SWEPT, with every landing between my own 34cd7e6 and the
+  tip `fe76d83`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE FIRST EARLY-READ TABLE, CARRIED WITH ITS LABELS AND NOT AS A VERDICT. 2026-09-03,
+  EXPLORATORY, G 4, NO INTERVAL, ONE DAY OF FOUR.***
+  **CONDVALUE_X_SKEW** -- D_E0 **-16,592.33**, Z **-2.30**, one-sided p_location **0.994**, null mean
+  -7,777.90, null sd 3,830.06, 500 draws; fills **30,171** against the 0-cancel baseline's **46,439**;
+  **5,146** cancels issued. **HAZARD_OVER_SKEWED_REF** -- D_E0 **-4,822.26**, Z **-5.30**, p_location
+  **1.000**, null mean -478.24, null sd 819.52, 500 draws; fills **44,895** against 46,439; **700** cancels.
+  ***THE PLAIN READING FOR THIS ONE DAY: both arms below the 0-cancel baseline and below the matched
+  random-cancel null.*** NOT A VERDICT -- one day of four, exploratory, no interval.
+  (2) ***I CARRY THESE NUMBERS BECAUSE THE FAMILY IS UNSEALED BY THE USER'S RULING, NOT BECAUSE MY RULE
+  CHANGED.*** For eight rounds these files carried paths, digests and structure and never a value, because
+  the receipts were SEALED. This family is not: R-765 retired the seal and R-754 made the read exist. The
+  rule was always "never quote a sealed field", and these fields are not sealed.
+  (3) ***EVERY NUMBER REPRODUCES AT DE's ARTIFACT, AND Z RECOMPUTES FROM THE NULL IT REPORTS.*** The
+  register's table came from DA's print and was cross-checked by the coordinator; I read the artifact myself
+  key by key and every figure matches to the precision the entry rounds to. ***AND Z IS DERIVED, SO I
+  DERIVED IT***: (D_E0 - null_mean) / null_sd gives **-2.301384** and **-5.300718**, matching the reported Z
+  to six decimals in both arms -- the artifact's summary agreeing with its own parts, which is the only
+  internal check available to a reader who did not run the computation. **Three independent routes to the
+  same numbers: DA's reader, the coordinator's cross-check, mine.**
+  (4) ***THE ARM THAT CANCELS SEVEN TIMES MORE LOSES TEN TIMES THE FILLS*** -- arithmetic on the carried
+  counts, both against the same 46,439 baseline: CONDVALUE_X_SKEW issues 5,146 cancels and ends **16,268
+  fills short** (3.16 per cancel); HAZARD_OVER_SKEWED_REF issues 700 and ends **1,544 short** (2.21 per
+  cancel); cancel ratio 7.35x, lost-fill ratio 10.5x. **I computed these rather than estimating** -- my
+  first mental figure was wrong by 2,456 fills and the subtraction corrected it. Structure, not a verdict.
+  (5) ***THE TWO LABELS TRAVEL WITH ANY QUOTATION OF THIS DAY***: the read is COMPUTED UNDER params v15
+  while 09-03's sealed run is RECONSTRUCTED under v14 (R-764's ruling, whose "no estimand, no bar, no pin"
+  I tested as a predicate at round 252 and found zero matching leaves); and 09-03's three per-arm counts
+  HAVE BEEN OPEN SINCE 2026-09-06T14:01Z under its eight-name seal scope. Neither changes a number; both
+  change what a number can be used for. ***AND THE CEILING WAS FIXED BEFORE THE FIRST DAY RAN***: the
+  declaration's own sentence -- "2^-4 = 0.0625 is the smallest two-sided p a four-day sign test can produce,
+  so no arm can clear 0.05 on day signs at G = 4 whatever it shows" -- was written into v16 before any of
+  these numbers existed, which is the whole point of a pre-declaration and the reason a strong-looking day
+  cannot be promoted later.
+  (6) ***REV 94 SPLIT ITS VERDICT BY GO***: GO #8 MAY PROCEED at runner `c8be65b2…` / params v19 / design
+  v27; GO E2 NO-GO. I hashed all ten cascade pins myself -- **10 equal, 0 mismatched** -- so the widening
+  that closed round 257's finding is not merely present but currently true of every module it names.
+  ***BUT THE RUNNER HAS ALREADY MOVED OFF THE CLEARED DIGEST***: it hashes **`ccc4108d28f07541`** at my
+  read, moved by `edb9dee` (DE 126 phase 2), so **GO #8's clearance names bytes that are no longer there,
+  hours before tonight's close.** No one's defect -- phase 2 was dispatched and did its work; the clearance
+  was issued against a moving file. **The state files must not say GO #8 is cleared without saying at which
+  digest.** ***AND THIS IS THE THIRD TIME***: REV 89 cleared at `ad15ddf1…` (moved twice, re-cleared by
+  REV 91 at `f1f59472…`), REV 94 at `c8be65b2…` (moved now). One mechanism, three instances -- a standing
+  property of a serial lock with parallel seats, not an incident. ***DE FLAGGED IT ITSELF***, in the same
+  row that fixed E2, before anyone asked.
+  (7) ***THE E2 NO-GO WAS A CHECK THAT PASSED ONLY UNTIL THE THING IT CHECKS ACTUALLY HAPPENED***:
+  `de_early_read`'s battery aborted **because E1 succeeded** -- it carried a hardcoded 09-03 rehearsal whose
+  precondition E1's own artifact consumed. Rule 16's family from the other end: not a control that cannot
+  fail, but one that cannot RUN twice. Fixed by deriving the days rather than naming one. **And DA caught
+  its own locator** (the economics are nested under `day_run`, its reader looked flat) **before printing,
+  not after** -- I met the same nesting from the other side at round 258 and also found it one level down,
+  because both of us printed the key set before trusting a path.
+  Counts: flags 1,862 -> **1,877**; provenance 1,407 -> **1,422**; tasks 19; **1,135 CHECKED /
+  282 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FIFTH round unchanged on UNMARKED**;
+  RELAYED moves by two (E2's aborted battery and DA's locator catch, both other seats' acts to establish).
+  Fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start, because all
+  fifteen of my entries resolve. Window trimmed 4 -> 3, **Batch 241** archived. Q-MEM-247 filed through the
+  script.)
+```

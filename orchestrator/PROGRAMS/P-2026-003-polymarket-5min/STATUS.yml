@@ -67,6 +67,63 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:29:07Z (MEM ROUND 262 -- R-776 SWEPT, with every landing between my own 53811a4 bound and
+  the tip `b4f83bf`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE SHARED TREE'S RUNNER BATTERY READS RED BY DESIGN, AND I MEASURED IT ON BOTH SIDES.*** v19
+  pins `live/pm_research/de_phase4_diag_runner.py` at **ee4034c1**5c274982. The SHARED tree's copy hashes
+  **ce9cc466**782fb8f6 -- DIFFERS, which is the `BE_CASCADE_DIFFERS` red. The blob **at fe76d83** hashes
+  **ee4034c15c274982** -- matches the pin exactly. Across all ten cascade pins: **nine of ten match in the
+  shared tree, TEN OF TEN at fe76d83.** So the red is EXACTLY ONE MODULE and the runs read a tree where it
+  does not exist.
+  (2) ***THE OPERATIONAL INSTRUCTION, STATED AS ONE: A RUNNER BATTERY RUN IN THE SHARED TREE WILL READ RED
+  UNTIL GO #8's RECEIPT LANDS, AND THE RED IS CORRECT*** -- the shared tree genuinely holds a module the
+  pinned cascade does not name. **Verification of the runner happens in a worktree at `fe76d83`**, where
+  all ten pins match. A seat that runs it in the shared tree and reports a failure has measured the freeze,
+  not the code. ***AND THE RELEASE IS A RECEIPT, NOT A CLOCK***: the condition is GO #8's receipt landing;
+  the entry's "≈ 01:30Z 09-08" is an ESTIMATE OF WHEN THAT WILL BE, and I carry the condition as the
+  release and the estimate as an estimate -- a red released by a clock would lift while the condition was
+  still unmet if the close ran late.
+  (3) ***WHY THIS IS FLAGGED PROMINENTLY RATHER THAN NOTED***: a battery that is EXPECTED to be red teaches
+  every seat to ignore it, and **an ignored red is indistinguishable from a real one the day the real one
+  arrives** -- rule 16's hazard arriving through the door of a deliberate exception rather than a weak
+  control. The protection is that this red is **named** (`BE_CASCADE_DIFFERS`), **scoped** (one module, in
+  one tree) and **conditioned** (lifts when GO #8's receipt lands), and all three are in the state files
+  where a seat looks before running anything.
+  (4) ***THE FREEZE IS DOING ITS WORK AND THE HELD WORK EXISTS***: `params_v20` and `design_v28` do NOT
+  exist in either family -- DE composed them and is holding them unlanded, which is the freeze working
+  rather than a seat waiting idly: the work is done and **the landing is the thing being withheld**. Both
+  frozen heads are unchanged from round 261 (params **v19** `dd8db7de`, design **v27** `3bcdf3c2`), so the
+  freeze has held across the whole interval E2 has been running.
+  (5) ***THE PHASE4 COUNT IS DERIVED, AND THE CELL SAYS SO IN ITS OWN MESSAGE***: at :6319,
+  `ok(n[0] + 1 + _n_conditional == EXPECTED_CHECKS, "R-771: check count DERIVED, not adjusted -- n_run … + …")`
+  with `_n_conditional` computed at :6318 and the module comment at :78 -- "loops = 216 = n_run (212) +
+  n_conditional (4). Never set to what a run [reports]". **Round 257's rule implemented in the suite that
+  produced it.** ***AND THE THREE PHASE4 NUMBERS NAME THREE POPULATIONS***: **209** was DE's AST scan,
+  WITHDRAWN as wrong; **249** is the corrected call-site figure; **216** is sites INSIDE LOOPS. A reader
+  comparing them across three entries would find counts that do not add up, because they count three
+  different things. ***AND I DID NOT RECONCILE 249 WITH 216***: the module names its population and R-774
+  names another, and closing the gap means re-running DE's scan under both definitions, which is DE's act.
+  Scope stated rather than a number implied -- the same discipline as round 255's glob reconciliation,
+  except that this time I could NOT close it and say so instead of guessing.
+  (6) ***REV 95 §A5's CELL IS FIXED BEFORE E4, NOT AFTER***: :733 reads "THE CELL ASSERTS ON WHICHEVER
+  TERMINAL STATE EXISTS" and the assertion reports `read`, `unread` and `next_unread`, so it no longer
+  requires a next unread day. **And its comment names the moment it would have fired** -- ":736 … the
+  moment E4 reads the last day and `next_unread` becomes None" -- so a later reader who wonders why the
+  cell is written awkwardly finds the answer beside it rather than in a review filed weeks earlier. Same
+  property as the R-id cell (round 260) and the known-bad baseline (round 256): **the reason lives where
+  the code is.**
+  (7) ***E2 IS STILL RUNNING AND ITS PEAK HAS NOT MOVED IN TEN MINUTES***: SubState running at 09:28:06Z
+  with MemoryPeak 3,119,230,976 -- the identical value at 09:18:07Z. Monotonic, so the high-water mark came
+  in E2's first two and a half minutes and nothing since has approached it: **the same early-peak-then-
+  plateau shape E1 showed across 85 minutes.** Twelve minutes in, expected exit ≈ 10:55Z. ***AND THE RUNS
+  ARE UNAFFECTED BY THE RED BECAUSE THEY READ THE FROZEN COMMIT*** -- ten of ten at fe76d83 -- which I
+  state as a measurement rather than as reassurance, because "unaffected" is exactly the kind of claim that
+  should carry a number.
+  Counts: flags 1,907 -> **1,922**; provenance 1,452 -> **1,467**; tasks 19; **1,179 CHECKED /
+  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-EIGHTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **172** missing-artifact findings, 171 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 244** archived. Q-MEM-250 filed through the script.)
   2026-09-07T09:19:21Z (MEM ROUND 261 -- R-775 SWEPT, with every landing between my own 47157d8 bound and
   `53811a4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***E2 IS RUNNING -- THE FIRST DAY WITH A DECISION LEDGER.*** `deEARLY20260904`, read while loaded at
@@ -184,66 +241,6 @@ updated: >-
   audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start for the second
   round running, because all fifteen entries resolve. Window trimmed 4 -> 3, **Batch 242** archived.
   Q-MEM-248 filed through the script.)
-  2026-09-07T09:07:15Z (MEM ROUND 259 -- R-773 SWEPT, with every landing between my own 34cd7e6 and the
-  tip `fe76d83`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE FIRST EARLY-READ TABLE, CARRIED WITH ITS LABELS AND NOT AS A VERDICT. 2026-09-03,
-  EXPLORATORY, G 4, NO INTERVAL, ONE DAY OF FOUR.***
-  **CONDVALUE_X_SKEW** -- D_E0 **-16,592.33**, Z **-2.30**, one-sided p_location **0.994**, null mean
-  -7,777.90, null sd 3,830.06, 500 draws; fills **30,171** against the 0-cancel baseline's **46,439**;
-  **5,146** cancels issued. **HAZARD_OVER_SKEWED_REF** -- D_E0 **-4,822.26**, Z **-5.30**, p_location
-  **1.000**, null mean -478.24, null sd 819.52, 500 draws; fills **44,895** against 46,439; **700** cancels.
-  ***THE PLAIN READING FOR THIS ONE DAY: both arms below the 0-cancel baseline and below the matched
-  random-cancel null.*** NOT A VERDICT -- one day of four, exploratory, no interval.
-  (2) ***I CARRY THESE NUMBERS BECAUSE THE FAMILY IS UNSEALED BY THE USER'S RULING, NOT BECAUSE MY RULE
-  CHANGED.*** For eight rounds these files carried paths, digests and structure and never a value, because
-  the receipts were SEALED. This family is not: R-765 retired the seal and R-754 made the read exist. The
-  rule was always "never quote a sealed field", and these fields are not sealed.
-  (3) ***EVERY NUMBER REPRODUCES AT DE's ARTIFACT, AND Z RECOMPUTES FROM THE NULL IT REPORTS.*** The
-  register's table came from DA's print and was cross-checked by the coordinator; I read the artifact myself
-  key by key and every figure matches to the precision the entry rounds to. ***AND Z IS DERIVED, SO I
-  DERIVED IT***: (D_E0 - null_mean) / null_sd gives **-2.301384** and **-5.300718**, matching the reported Z
-  to six decimals in both arms -- the artifact's summary agreeing with its own parts, which is the only
-  internal check available to a reader who did not run the computation. **Three independent routes to the
-  same numbers: DA's reader, the coordinator's cross-check, mine.**
-  (4) ***THE ARM THAT CANCELS SEVEN TIMES MORE LOSES TEN TIMES THE FILLS*** -- arithmetic on the carried
-  counts, both against the same 46,439 baseline: CONDVALUE_X_SKEW issues 5,146 cancels and ends **16,268
-  fills short** (3.16 per cancel); HAZARD_OVER_SKEWED_REF issues 700 and ends **1,544 short** (2.21 per
-  cancel); cancel ratio 7.35x, lost-fill ratio 10.5x. **I computed these rather than estimating** -- my
-  first mental figure was wrong by 2,456 fills and the subtraction corrected it. Structure, not a verdict.
-  (5) ***THE TWO LABELS TRAVEL WITH ANY QUOTATION OF THIS DAY***: the read is COMPUTED UNDER params v15
-  while 09-03's sealed run is RECONSTRUCTED under v14 (R-764's ruling, whose "no estimand, no bar, no pin"
-  I tested as a predicate at round 252 and found zero matching leaves); and 09-03's three per-arm counts
-  HAVE BEEN OPEN SINCE 2026-09-06T14:01Z under its eight-name seal scope. Neither changes a number; both
-  change what a number can be used for. ***AND THE CEILING WAS FIXED BEFORE THE FIRST DAY RAN***: the
-  declaration's own sentence -- "2^-4 = 0.0625 is the smallest two-sided p a four-day sign test can produce,
-  so no arm can clear 0.05 on day signs at G = 4 whatever it shows" -- was written into v16 before any of
-  these numbers existed, which is the whole point of a pre-declaration and the reason a strong-looking day
-  cannot be promoted later.
-  (6) ***REV 94 SPLIT ITS VERDICT BY GO***: GO #8 MAY PROCEED at runner `c8be65b2…` / params v19 / design
-  v27; GO E2 NO-GO. I hashed all ten cascade pins myself -- **10 equal, 0 mismatched** -- so the widening
-  that closed round 257's finding is not merely present but currently true of every module it names.
-  ***BUT THE RUNNER HAS ALREADY MOVED OFF THE CLEARED DIGEST***: it hashes **`ccc4108d28f07541`** at my
-  read, moved by `edb9dee` (DE 126 phase 2), so **GO #8's clearance names bytes that are no longer there,
-  hours before tonight's close.** No one's defect -- phase 2 was dispatched and did its work; the clearance
-  was issued against a moving file. **The state files must not say GO #8 is cleared without saying at which
-  digest.** ***AND THIS IS THE THIRD TIME***: REV 89 cleared at `ad15ddf1…` (moved twice, re-cleared by
-  REV 91 at `f1f59472…`), REV 94 at `c8be65b2…` (moved now). One mechanism, three instances -- a standing
-  property of a serial lock with parallel seats, not an incident. ***DE FLAGGED IT ITSELF***, in the same
-  row that fixed E2, before anyone asked.
-  (7) ***THE E2 NO-GO WAS A CHECK THAT PASSED ONLY UNTIL THE THING IT CHECKS ACTUALLY HAPPENED***:
-  `de_early_read`'s battery aborted **because E1 succeeded** -- it carried a hardcoded 09-03 rehearsal whose
-  precondition E1's own artifact consumed. Rule 16's family from the other end: not a control that cannot
-  fail, but one that cannot RUN twice. Fixed by deriving the days rather than naming one. **And DA caught
-  its own locator** (the economics are nested under `day_run`, its reader looked flat) **before printing,
-  not after** -- I met the same nesting from the other side at round 258 and also found it one level down,
-  because both of us printed the key set before trusting a path.
-  Counts: flags 1,862 -> **1,877**; provenance 1,407 -> **1,422**; tasks 19; **1,135 CHECKED /
-  282 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FIFTH round unchanged on UNMARKED**;
-  RELAYED moves by two (E2's aborted battery and DA's locator catch, both other seats' acts to establish).
-  Fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start, because all
-  fifteen of my entries resolve. Window trimmed 4 -> 3, **Batch 241** archived. Q-MEM-247 filed through the
-  script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -415,6 +412,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 262, R-776 swept (and every landing between 53811a4 and b4f83bf) ---
+  THE_BY_DESIGN_RED_IS_EXACTLY_ONE_MODULE_AND_I_MEASURED_BOTH_SIDES: SHARED-9-OF-10-FE76D83-10-OF-10
+  THE_PINNED_DIGEST_MATCHES_AT_fe76d83_AND_DIFFERS_IN_THE_SHARED_TREE: EE4034C1-VS-CE9CC466
+  SO_ANYONE_VERIFYING_THE_RUNNER_DOES_IT_IN_A_WORKTREE_AT_fe76d83: THE-SHARED-TREE-READS-RED-BY-DESIGN
+  THE_RED_IS_TIME_BOUND_AND_ITS_RELEASE_IS_A_RECEIPT_NOT_A_CLOCK: LIFTS-AFTER-GO-8S-RECEIPT
+  params_v20_AND_design_v28_ARE_COMPOSED_AND_HELD: ABSENT-FROM-BOTH-FAMILIES
+  THE_TWO_FROZEN_HEADS_ARE_STILL_v19_AND_v27: THE-FREEZE-HOLDS-AT-MY-READ
+  THE_PHASE4_COUNT_IS_DERIVED_AND_THE_CELL_SAYS_SO_IN_ITS_MESSAGE: N-RUN-PLUS-N-CONDITIONAL
+  and_THE_THREE_PHASE4_NUMBERS_NAME_THREE_POPULATIONS: 209-WITHDRAWN-216-IN-LOOPS-249-CALL-SITES
+  I_DID_NOT_RECONCILE_249_WITH_216_AND_SAY_SO: DIFFERENT-DENOMINATORS-SCOPE-STATED
+  REV_95s_A5_CELL_IS_FIXED_BEFORE_E4_NOT_AFTER: ASSERTS-ON-WHICHEVER-TERMINAL-STATE-EXISTS
+  and_ITS_COMMENT_NAMES_THE_MOMENT_IT_WOULD_HAVE_FIRED: WHEN-E4-READS-THE-LAST-DAY
+  E2_IS_STILL_RUNNING_AND_ITS_PEAK_HAS_NOT_MOVED_SINCE_MY_LAST_ROUND: 3119230976-AT-BOTH-READS
+  THE_RUNS_ARE_UNAFFECTED_BECAUSE_THEY_READ_THE_FROZEN_COMMIT: TEN-OF-TEN-AT-FE76D83
+  A_RED_THAT_IS_DESIGNED_MUST_CARRY_ITS_RELEASE_OR_IT_BECOMES_A_HABIT: WHY-I-FLAG-IT-PROMINENTLY
+  MEM_ASSERTS_NO_RESULT_AT_ROUND_262: DECLARATIONS-SOURCES-GIT-AND-A-UNIT
   # --- MEM round 261, R-775 swept (and every landing between 47157d8 and 53811a4) ---
   E2_IS_RUNNING_AND_I_READ_THE_FIVE_FIELDS_WHILE_LOADED: 775E46B5-STARTED-09-15-47Z
   THE_FIVE_CLEARED_DIGESTS_ALL_MATCH_AT_wt_des_fe76d83: FOUR-IN-GIT-ONE-ON-THE-LEDGER
@@ -26314,6 +26327,149 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 262, 2026-09-07T09:29:07Z (the clock read by which every measurement below was complete) ---
+  THE_BY_DESIGN_RED_IS_EXACTLY_ONE_MODULE_AND_I_MEASURED_BOTH_SIDES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      R-776 accepts a red battery in the SHARED tree as the price of holding the cascade re-point under the
+      R-775 freeze. I measured it on BOTH sides rather than take it: hashing every one of v19's ten cascade
+      pins against the shared tree gives NINE OF TEN matching, and against the blobs at fe76d83 gives TEN OF
+      TEN. So the red is EXACTLY ONE MODULE, and the runs read a tree where it does not exist.
+  THE_PINNED_DIGEST_MATCHES_AT_fe76d83_AND_DIFFERS_IN_THE_SHARED_TREE:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      v19 pins live/pm_research/de_phase4_diag_runner.py at ee4034c15c274982. The SHARED tree's copy hashes
+      ce9cc466782fb8f6 -- DIFFERS, which is the BE_CASCADE_DIFFERS red. The blob AT fe76d83 hashes
+      ee4034c15c274982 -- MATCHES the pin exactly. One file, two trees, and the difference is the whole of
+      the finding.
+  SO_ANYONE_VERIFYING_THE_RUNNER_DOES_IT_IN_A_WORKTREE_AT_fe76d83:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      the operational consequence, stated as an instruction because that is what a state file is for: A
+      RUNNER BATTERY RUN IN THE SHARED TREE WILL READ RED UNTIL GO #8's RECEIPT LANDS, AND THE RED IS
+      CORRECT -- the shared tree genuinely holds a module the pinned cascade does not name. Verification of
+      the runner happens in a worktree at fe76d83, where all ten pins match. A seat that runs it in the
+      shared tree and reports a failure has measured the freeze, not the code.
+  THE_RED_IS_TIME_BOUND_AND_ITS_RELEASE_IS_A_RECEIPT_NOT_A_CLOCK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      the release condition is GO #8's RECEIPT LANDING, not a time -- the entry's "about 01:30Z 09-08" is an
+      estimate of when that will be, and the two are not the same thing. I carry the CONDITION as the
+      release and the estimate as an estimate, because a red released by a clock would lift while the
+      condition was still unmet if the close ran late. Same distinction as every other release condition
+      this programme uses: an artifact, not an hour.
+  params_v20_AND_design_v28_ARE_COMPOSED_AND_HELD:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      measured, not assumed: de_multiday_gate1_params_v20.json and
+      p003_de_multiday_gate1_design_v28.json do NOT exist in either family. DE composed them and is holding
+      them unlanded under the freeze -- which is the freeze working as intended rather than a seat waiting
+      idly: the work is done and the landing is the thing being withheld.
+  THE_TWO_FROZEN_HEADS_ARE_STILL_v19_AND_v27:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      resolved through the shared resolver: params head v19 dd8db7ded9e6ed97, design head v27
+      3bcdf3c234cb7d4e. Unchanged from round 261 and exactly what REV 95 cleared, so the freeze holds at
+      09:29:07Z across the interval in which E2 has been running.
+  THE_PHASE4_COUNT_IS_DERIVED_AND_THE_CELL_SAYS_SO_IN_ITS_MESSAGE:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      at :6319 the cell reads `ok(n[0] + 1 + _n_conditional == EXPECTED_CHECKS, "R-771: check count DERIVED,
+      not adjusted -- n_run {n[0]+1} + ...")`, with `_n_conditional = len(_conditional_sites)` computed at
+      :6318 and the module comment at :78 reading "loops = 216 = n_run (212) + n_conditional (4). Never set
+      to what a run [reports]". SO THE CONSTANT IS ASSERTED AGAINST A DERIVATION RATHER THAN EDITED TO MATCH
+      AN OBSERVATION -- round 257's rule, now implemented in the suite that produced it.
+  and_THE_THREE_PHASE4_NUMBERS_NAME_THREE_POPULATIONS:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      three numbers have appeared for this suite in three entries and they are NOT the same quantity: 209
+      was DE's AST scan of the top-level selftest, WITHDRAWN as wrong (R-774); 249 is the corrected
+      call-site figure (R-774); and 216 is the module's own "sites inside loops = n_run (212) +
+      n_conditional (4)" (R-776, read at :78). A reader comparing them across entries would find three
+      counts that do not add up, because they count three populations.
+  I_DID_NOT_RECONCILE_249_WITH_216_AND_SAY_SO:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      I did NOT establish how 249 call sites relate to 216 sites-inside-loops: the module names its own
+      population ("sites inside loops") and R-774 names another ("call sites"), and reconciling them means
+      re-running DE's scan with both definitions, which is DE's act. SCOPE STATED RATHER THAN A NUMBER
+      IMPLIED -- the same discipline as round 255's glob-vs-population reconciliation, except that this time
+      I could NOT close it and say so instead of guessing which denominator was meant.
+  REV_95s_A5_CELL_IS_FIXED_BEFORE_E4_NOT_AFTER:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      at :733 the comment reads "REV 95 §A5: THE CELL ASSERTS ON WHICHEVER TERMINAL STATE EXISTS", and the
+      assertion at :741 reports `read`, `unread` and `next_unread` -- so the cell no longer requires a next
+      unread day to exist. Fixed BEFORE E4 rather than after it fired, which is what REV's dated trigger was
+      for: E2 is running now, E3 follows, and the cell would have gone red the moment E4 read the last day.
+  and_ITS_COMMENT_NAMES_THE_MOMENT_IT_WOULD_HAVE_FIRED:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      :736 reads "...the moment E4 reads the last day and `next_unread` becomes None. That is [expected]" --
+      the fix carries the failure it prevents, in the code, at the cell. A later reader who wonders why the
+      cell is written the awkward way finds the answer beside it rather than in a review filed weeks
+      earlier. That is the same property I valued in the R-id cell at round 260 and the known-bad baseline
+      at round 256: the reason lives where the code is.
+  E2_IS_STILL_RUNNING_AND_ITS_PEAK_HAS_NOT_MOVED_SINCE_MY_LAST_ROUND:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260904.service (a unit, not a file)
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      SubState running at 09:28:06Z with MemoryPeak 3,119,230,976 -- THE IDENTICAL VALUE I read at
+      09:18:07Z, ten minutes earlier. MemoryPeak is monotonic, so the high-water mark was reached in E2's
+      first two and a half minutes and nothing since has approached it -- the same early-peak-then-plateau
+      shape E1 showed across 85 minutes. Twelve minutes in against an expected exit about 10:55Z.
+  THE_RUNS_ARE_UNAFFECTED_BECAUSE_THEY_READ_THE_FROZEN_COMMIT:
+    prov: CHECKED
+    artifact: "git: fe76d83 -- blobs resolved from the main tree's object store"
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      the ten cascade pins match TEN OF TEN at fe76d83, which is where E2 runs and where E3, E4 and
+      tonight's GO #8 will run unrefreshed. So the shared tree's red and the runs' correctness are
+      INDEPENDENT: one tree holds a moved module, the other does not, and the units read the second. I state
+      it as a measurement rather than as reassurance, because "unaffected" is exactly the kind of claim that
+      should carry a number.
+  A_RED_THAT_IS_DESIGNED_MUST_CARRY_ITS_RELEASE_OR_IT_BECOMES_A_HABIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      why this is flagged prominently rather than noted: a battery that is EXPECTED to be red teaches every
+      seat to ignore it, and an ignored red is indistinguishable from a real one the day the real one
+      arrives -- rule 16's hazard arriving through the door of a deliberate exception rather than a weak
+      control. The protection is that the red is NAMED (BE_CASCADE_DIFFERS), SCOPED (one module, in one
+      tree) and CONDITIONED (lifts when GO #8's receipt lands), and all three of those are in the state
+      files where a seat looks before running anything.
+  MEM_ASSERTS_NO_RESULT_AT_ROUND_262:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T09:29:07Z
+    said: >-
+      what I opened: one declaration (params v19), two Python sources at named line ranges, git blobs at
+      fe76d83, one unit reading and the register. E2's artifact does not exist yet; when it does, DA reads
+      it and prints the table.
   # --- MEM round 261, 2026-09-07T09:19:21Z (the clock read by which every measurement below was complete) ---
   E2_IS_RUNNING_AND_I_READ_THE_FIVE_FIELDS_WHILE_LOADED:
     prov: CHECKED

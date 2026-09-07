@@ -1,3 +1,75 @@
+# READ FIRST — round 262 (MEM, 2026-09-07T09:29:07Z, tip `b4f83bf`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-776 swept, with every landing
+between my own `53811a4` bound and the tip.
+
+## 0. ⚠ The shared tree's runner battery reads RED — by design, and correctly
+
+| | |
+|---|---|
+| **What** | `BE_CASCADE_DIFFERS` — v19 pins `de_phase4_diag_runner.py` at `ee4034c1…`; the **shared tree** holds `ce9cc466…` |
+| **Scope** | **exactly one module.** Cascade pins: **9 of 10** match in the shared tree, **10 of 10 at `fe76d83`** |
+| **Where to verify the runner** | **in a worktree at `fe76d83`** — never the shared tree, until this lifts |
+| **Release** | **GO #8's receipt landing** — a *receipt*, not a clock (the "≈ 01:30Z 09-08" is an estimate of when) |
+| **Runs affected** | **none** — E2, E3, E4 and GO #8 all read `fe76d83`, where every pin matches |
+
+**A seat that runs the battery in the shared tree and reports a failure has measured the
+freeze, not the code.**
+
+***Why this is flagged prominently rather than noted***: a battery that is *expected* to
+be red teaches every seat to ignore it, and **an ignored red is indistinguishable from a
+real one the day the real one arrives** — rule 16's hazard entering through a deliberate
+exception. The protection is that this one is **named**, **scoped** and **conditioned**,
+and all three are here where a seat looks before running anything.
+
+## 1. The freeze is working, and the held work exists
+
+`params_v20` and `design_v28` **do not exist** in either family — DE composed them and is
+holding them unlanded. **The work is done; the landing is what is withheld.** Both frozen
+heads are unchanged from round 261 (params **v19** `dd8db7de`, design **v27** `3bcdf3c2`),
+so the freeze has held across the whole interval E2 has been running.
+
+## 2. The phase4 count is derived — and three numbers name three populations
+
+At `:6319` the cell asserts `n_run + n_conditional == EXPECTED_CHECKS` with the message
+*"R-771: check count DERIVED, not adjusted"*, and the module comment at `:78` reads
+*"loops = 216 = n_run (212) + n_conditional (4). Never set to what a run [reports]"*.
+**Round 257's rule implemented in the suite that produced it.**
+
+| number | population |
+|---|---|
+| **209** | DE's AST scan of the top-level selftest — **withdrawn as wrong** |
+| **249** | the corrected **call-site** figure (R-774) |
+| **216** | sites **inside loops** = 212 + 4 (R-776) |
+
+***I did not reconcile 249 with 216***: the module names its population and R-774 names
+another, and closing the gap means re-running DE's scan under both definitions — DE's
+act. **Scope stated rather than a number implied**; unlike round 255's glob
+reconciliation, this one I could not close, and I say so.
+
+## 3. §A5 fixed before E4, with the failure it prevents written beside it
+
+`:733` — *"THE CELL ASSERTS ON WHICHEVER TERMINAL STATE EXISTS"*, reporting `read`,
+`unread` and `next_unread`, so it no longer requires a next unread day. **And `:736`
+names the moment it would have fired** — *"the moment E4 reads the last day and
+`next_unread` becomes None"*. Same property as the R-id cell (round 260) and the
+known-bad baseline (round 256): **the reason lives where the code is.**
+
+## 4. E2
+
+Running at 09:28:06Z, twelve minutes in, expected exit ≈ 10:55Z. `MemoryPeak`
+3,119,230,976 — **the identical value ten minutes earlier**, so the high-water mark came
+in its first two and a half minutes: the same early-peak-then-plateau shape E1 showed
+across 85 minutes.
+
+Counts: flags 1,907 → **1,922**; provenance 1,452 → **1,467**; tasks 19; **1,179 CHECKED
+/ 283 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-eighth round
+unchanged on UNMARKED. ORPHAN census **0**; audit exit **1** on **172** — 171 at round
+start plus one of mine, the running unit. Window trimmed 4 → 3, **Batch 244** archived.
+Q-MEM-250 filed through the script.
+
+---
+
 # READ FIRST — round 261 (MEM, 2026-09-07T09:19:21Z, tip `53811a4`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-775 swept, with every landing
