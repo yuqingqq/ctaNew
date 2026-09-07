@@ -229,6 +229,14 @@ def read_ledger(path, *, expect_sha256: str | None = None) -> dict:
                 continue
             if k in ("SETTLEMENT_SCALARS", "SETTLEMENT_SLUG"):
                 out.setdefault("settlement_rows", []).append(r)
+                sb = out.setdefault("settlement_by_arm", {}).setdefault(
+                    r["arm"], {"scalars": None,
+                               "per_slug": {"ARM": {}, "BASELINE": {}}})
+                if k == "SETTLEMENT_SCALARS":
+                    sb["scalars"] = r
+                else:
+                    sb["per_slug"].setdefault(r["book"], {})[
+                        r.get("slug")] = r
                 continue
             a = out["arms"].setdefault(r["arm"], {
                 "scalars": None, "null_values": [], "null_cancels": [],
@@ -333,12 +341,34 @@ def recompute(led: dict, arm: str) -> dict:
         inv["trades_cash_flow_cents"] += -(float(a_) - float(b)) * float(mk)
     rho = (legs["adverse_cents"] / legs["spread_captured_cents"]
            if legs["spread_captured_cents"] else None)
-    return {
+    settlement = (led.get("settlement_by_arm") or {}).get(arm)
+    settlement_scalars = (settlement or {}).get("scalars")
+    if led.get("settlement_rows_status") == "SETTLEMENT_ROWS_PRESENT" \
+            and settlement_scalars is None:
+        raise LedgerRefused(
+            f"DECISION_LEDGER_SETTLEMENT_SCALARS_ABSENT_FOR_ARM: the ledger "
+            f"has SETTLEMENT rows, but arm {arm!r} has no "
+            f"SETTLEMENT_SCALARS row. A reader cannot infer the ruled "
+            f"endpoint from another arm or from the 5-second D_E0.")
+    primary_name = "D_E_settle" if settlement_scalars else "D_E0"
+    primary_value = (settlement_scalars.get("D_E_settle")
+                     if settlement_scalars else obs)
+    if settlement_scalars and primary_value is None:
+        raise LedgerRefused(
+            f"DECISION_LEDGER_SETTLEMENT_VALUE_ABSENT_FOR_ARM: arm {arm!r}'s "
+            f"SETTLEMENT_SCALARS row has no D_E_settle. A v3 ledger must not "
+            f"fall back to the diagnostic D_E0 as the day's ruled result.")
+    out = {
         "absolute": a.get("absolute"),
         "D_E0": obs, "n_null_draws": n,
+        "D_E0_role": ("DIAGNOSTIC_ONLY_SETTLEMENT_ROWS_PRESENT"
+                      if settlement_scalars else "PRIMARY_WHEN_NO_SETTLEMENT"),
         "null_mean": mean, "null_sd": sd,
         "Z": ((obs - mean) / sd) if sd else math.inf,
         "p_one_sided": p_one, "p_two_sided": p_two,
+        "primary_result_field": primary_name,
+        "primary_result_cents": primary_value,
+        "settlement_rows_status": led.get("settlement_rows_status"),
         "rho_adverse_over_spread": rho, **legs, **inv,
         "trades_cash_flow_cents": inv["trades_cash_flow_cents"],
         "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means "
@@ -351,6 +381,18 @@ def recompute(led: dict, arm: str) -> dict:
                                  "measured it equal to the R-801 trades "
                                  "leg on all four path-days",
     }
+    if settlement_scalars:
+        out.update({
+            "D_E_settle": primary_value,
+            "settlement_arm_total_cents":
+                settlement_scalars.get("arm_total_cents"),
+            "settlement_baseline_total_cents":
+                settlement_scalars.get("baseline_total_cents"),
+            "settlement_winner_source":
+                settlement_scalars.get("winner_source"),
+            "settlement_per_slug": settlement.get("per_slug"),
+        })
+    return out
 
 
 # ------------------------------------------------------- the battery
@@ -392,7 +434,18 @@ def selftest(quiet: bool = False) -> int:
                      "null_values": vals, "null_cancels": None,
                      "arm_fills": fills, "baseline_fills": fills[:20],
                      "decisions": [{"t": 1.0, "slug": "s0", "side": "B",
-                                    "gen": 0, "score": 0.9}]}}
+                                    "gen": 0, "score": 0.9}],
+                     "settlement": {
+                         "ruling": "R-801", "unit": "cents",
+                         "D_E_settle": 1234.0,
+                         "arm_total_cents": 1500.0,
+                         "baseline_total_cents": 266.0,
+                         "winner_source": {"status": "fixture"},
+                         "arm_per_slug": {"s0": {"slug": "s0",
+                                                  "total_cents": 1500.0}},
+                         "baseline_per_slug": {"s0": {"slug": "s0",
+                                                       "total_cents": 266.0}},
+                     }}}
     d = Path(tempfile.mkdtemp(prefix="ledger_"))
     lp = d / ledger_name("2026-09-07", "20260907T000000Z")
     w = write_ledger(lp, "2026-09-07", per_arm, buy_side="B")
@@ -408,11 +461,17 @@ def selftest(quiet: bool = False) -> int:
     _z = (obs - _mean) / _sd
     ok(abs(rc["D_E0"] - obs) < 1e-9 and abs(rc["Z"] - _z) < 1e-9
        and abs(rc["null_mean"] - _mean) < 1e-9
-       and abs(rc["null_sd"] - _sd) < 1e-9 and rc["n_null_draws"] == 600,
+       and abs(rc["null_sd"] - _sd) < 1e-9 and rc["n_null_draws"] == 600
+       and rc["D_E_settle"] == 1234.0
+       and rc["primary_result_field"] == "D_E_settle"
+       and rc["primary_result_cents"] == 1234.0
+       and rc["D_E0_role"] == "DIAGNOSTIC_ONLY_SETTLEMENT_ROWS_PRESENT",
        f"R-765 (1): D_E0 and Z RECOMPUTED FROM THE LEDGER match the "
        f"receipt's own computation to 1e-9 -- D_E0 {rc['D_E0']:.6f}, Z "
        f"{rc['Z']:.9f} against {_z:.9f}, over {rc['n_null_draws']} stored "
-       f"draws. The summary alone could not have produced either")
+       f"draws. The summary alone could not have produced either; when "
+       f"SETTLEMENT rows are present the primary result is "
+       f"{rc['primary_result_field']} = {rc['primary_result_cents']}")
     ok(0.0 < rc["p_one_sided"] <= 1.0 and 0.0 < rc["p_two_sided"] <= 1.0
        and rc["p_two_sided"] >= rc["p_one_sided"]
        and rc["rho_adverse_over_spread"] is not None
@@ -588,7 +647,7 @@ def selftest(quiet: bool = False) -> int:
 
     # ---- THE SIZE, MEASURED ------------------------------------------
     _per_row = w["bytes"] / w["n_rows"]
-    ok(w["n_rows"] == 1 + 1 + 600 + 60 + 1 and w["bytes"] > 0
+    ok(w["n_rows"] == 1 + 1 + 600 + 60 + 1 + 1 + 2 and w["bytes"] > 0
        and w["schema_version"] == SCHEMA_VERSION,
        f"R-765: the fixture ledger is {w['bytes']:,} bytes over "
        f"{w['n_rows']:,} rows ({_per_row:.0f} B/row gzipped), schema "
