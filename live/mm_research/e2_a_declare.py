@@ -55,24 +55,50 @@ from __future__ import annotations
 
 import argparse
 import ast
+import datetime
 import hashlib
 import json
 import math
 import subprocess
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-DECL_VERSION = 7
+#: THE ONE CHAIN IMPLEMENTATION (R-711, REV 81 section 1.4). v8 is the first
+#: version of this family written through it: the compare-and-swap that
+#: refuses an in-place edit AND a head that moved under the caller lives
+#: THERE, imported, never re-typed here. It opens nothing outside a
+#: `declarations/` directory, so importing it leaves this module's
+#: cannot-read-the-tape property intact -- and that property is CHECKED from
+#: the AST in the selftest below, not asserted in this comment.
+_PM_RESEARCH = HERE.parent / "pm_research"
+if str(_PM_RESEARCH) not in sys.path:
+    sys.path.insert(0, str(_PM_RESEARCH))
+import declaration_chain as CHAIN                             # noqa: E402
+
+DECL_VERSION = 8
 SUPERSEDES = {
-    "path": "live/mm_research/declarations/p002_e2_a_declaration_v6.json",
-    "sha256": "127e0a56ddee775ecb478453e77ee08614b58023aa45f22fe1642492d8c0f4fb",
-    "carrying_commit": "e29f984",
+    "path": "live/mm_research/declarations/p002_e2_a_declaration_v7.json",
+    "sha256": "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0",
+    "carrying_commit": "7a1e582dace24fec608481d5ea81bb3536ec0c83",
     "chain": ["v1 405ddb7ab10486c2 (367b800)",
               "v2 6567a25f04d7fb89 (0cbaba6)",
               "v3 6383d781c7bbeaa6 (39f3eca)",
               "v4 756ca9a31b89cd74 (0718fea)",
               "v5 90a9a99f6cb2a2cc (8e6b753)",
-              "v6 127e0a56ddee775e (e29f984)"],
+              "v6 127e0a56ddee775e (e29f984)",
+              "v7 57c92c9e899eb691 (7a1e582)"],
+    "why_v8_and_not_v7_amended": (
+        "CLAUDE.md rule 13 and SEAT_PROTOCOL rule 20's immutability clause. "
+        "v7 is committed AND CITED BY THE PAIR from a landed receipt -- "
+        "data/mm_hf/e1/p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json "
+        "carries `declaration: {path: ..._v7.json, sha256: 57c92c9e...}` -- "
+        "so editing v7 would rewrite the declaration a landed run says it "
+        "ran under. v8 supersedes in band through the shared "
+        "compare-and-swap; v7 stays as provenance and that receipt keeps "
+        "resolving. THE VERSION NUMBER WAS VERIFIED AT THE CHAIN, not taken "
+        "from a dispatch: the DA 116 dispatch said 'v6 superseding v5' and "
+        "the head was already v7."),
     "why_v7_and_not_v6_amended": (
         "R-580(C)(3). v6 is committed AND CITED BY A LANDED RECEIPT "
         "(p002_e2a_v6_admission__20260906T062536Z.json, sha "
@@ -399,7 +425,8 @@ INTERIOR_CONTROLS = {
                         "and nothing else",
     },
 }
-OUT = HERE / "declarations" / f"p002_e2_a_declaration_v{DECL_VERSION}.json"
+FAMILY = "p002_e2_a_declaration"
+OUT = HERE / "declarations" / f"{FAMILY}_v{DECL_VERSION}.json"
 PROTOCOL = f"P002_E2_A_OVERLAY_QUEUE_BRACKET_DECLARATION_V{DECL_VERSION}"
 
 # ---- constants, each carried from a named source ---------------------------
@@ -408,7 +435,12 @@ FEE_MAKER_VIP0 = 1.8              # EXPERIMENT_PLAN section 0
 FEE_TAKER_VIP0 = 4.5              # e1_markout_scan.FEE_TAKER_VIP0
 TP_PRIMARY_S = 600                # the ONLY gate row; no patience shopping
 TP_GRID_S = (60, 600, 3600)
-GAP_FRACTION_MAX = 0.05
+#: v8 RETIRES `GAP_FRACTION_MAX` FROM THIS MODULE. It was a dead constant
+#: here -- nothing in this declaration read it after v6 withdrew the
+#: fraction bar from admission -- and a loose 0.05 beside an admission leg
+#: invites its re-use as one. The day-level gap fraction survives as a
+#: REPORTED status in the runner (`GAP_REPORTING_REFERENCE`), gating
+#: nothing. E2.0's own bar is untouched and still lives in e2_0_declare.
 MIN_COMPLETE_DAYS = 14
 DAY_GRID_PER_DAY = 24             # decision times: every hour on the hour
 DIRECTIONS = ("buy", "sell")
@@ -456,6 +488,225 @@ STALENESS_BAR_MS = 1000.0
 #: distinct quantities is not an estimate of a step, it is an echo of the
 #: sample. Below this the step is UNDERDETERMINED and the day says so.
 MIN_DISTINCT_QUANTITIES = 3
+
+
+# --------------------------------------------------------------------------
+# v8 -- THE OUTAGE PREDICATE, THE WINDOW IT MAY BE APPLIED IN, AND THE DAYS
+# IT MAY NEVER BE APPLIED TO.
+#
+# R-745(4), a COORDINATOR ruling on the USER's instruction, disclosed for
+# overrule by one line. What the ruling says, in its own words: "a day is
+# inadmissible only if any bookTicker gap run >= 60 s on the symbol",
+# "PRE-DECLARED ... for days from 2026-09-06 onward and NEVER re-applied to
+# the consumed window", "the depth20 and 24-hour-file legs stay as they
+# are", and decision-time quote age "REPORTED per day beside every result,
+# never an admission criterion".
+# --------------------------------------------------------------------------
+#: A gap RUN is a maximal block of contiguous whole seconds in which no valid
+#: bookTicker quote arrives -- the same run-length `e2_a_runner.gap_profile`
+#: counts, on the same clock (`read_book`'s T) and behind the same
+#: valid-quote filter. The leg is therefore read with the very instrument
+#: whose published reading motivated the ruling, not with a second one that
+#: would have to be reconciled to it.
+OUTAGE_RUN_S = 60
+
+#: WHY A RUN AND NOT A FRACTION, stated where the number lives. A day-level
+#: gap FRACTION cannot separate a collector outage from a book that did not
+#: move, and measured over eight symbols it excluded on ACTIVITY: ICP, 16
+#: structurally complete days with zero of its missing seconds in runs of a
+#: minute or more, was cut to one. A run of a minute is missing DATA; a
+#: scatter of one-second holes is present data about a still book.
+WHY_A_RUN_NOT_A_FRACTION = (
+    "an outage is a few LONG contiguous runs; quietness is many one-second "
+    "holes. The fraction sums them and cannot tell them apart, so it selects "
+    "on how often the best quote changes -- which is what a thin-name cell "
+    "exists to measure, not a reason to exclude the day.")
+
+#: THE CONSUMED WINDOW, NAMED FROM ITS SOURCES rather than from a date range
+#: in prose (CLAUDE.md rule 11; SEAT_PROTOCOL "a cited artifact is
+#: locatable"). Every day listed here was SEEN on the quantity the ruled
+#: predicate reads, or was simulated under a previous version, BEFORE the
+#: predicate was chosen. The lists are transcribed from the artifacts at the
+#: digests below -- this module reads no data path, so a reader re-derives
+#: them from the named files rather than trusting the transcription.
+CONSUMED_SOURCES = (
+    {
+        "path": "data/mm_hf/e1/p002_e2a_census8__20260906T055936Z.json",
+        "sha256": ("9fa3e218a929ab8afc407cbe24c78b617f3f65955"
+                   "43e0128f01c9025dea50e69"),
+        "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_CENSUS",
+        "declaration_it_cited": {
+            "path": "live/mm_research/declarations/"
+                    "p002_e2_a_declaration_v5.json",
+            "sha256": ("90a9a99f6cb2a2cc4c8f45f211177695355859e15"
+                       "7643e854a34ef77ccc7b593")},
+        "what_it_consumed": (
+            "THE GAP-RUN READING ITSELF. This census published `gap_profile` "
+            "per symbol-day -- `n_runs_ge_60s`, `max_gap_run_s`, "
+            "`share_of_missing_seconds_in_runs_ge_60s` -- and the ruled "
+            "predicate was chosen having seen it. Rule 11: those symbol-days "
+            "are spent, and the predicate is never re-applied to them, not "
+            "even to ADMIT one."),
+        "symbols": ("AAVEUSDT", "ADAUSDT", "AVAXUSDT", "BNBUSDT", "DOGEUSDT",
+                    "FILUSDT", "ICPUSDT", "LTCUSDT"),
+        "days": ("20260820", "20260821", "20260822", "20260823", "20260824",
+                 "20260825", "20260827", "20260828", "20260829", "20260830",
+                 "20260831", "20260901", "20260902", "20260903", "20260904",
+                 "20260905"),
+        "the_days_this_census_SAW_but_never_JUDGED": {
+            "days": ("20260819", "20260826", "20260906"),
+            "measured": (
+                "each carries `gap_fraction: null` and `gap_profile: null` "
+                "for all eight symbols -- the census computes a profile only "
+                "where bookTicker has its 24 hour-files, and these had 12, 0 "
+                "and 6-7. 2026-09-06 was an INCOMPLETE day at 05:59Z when "
+                "the census ran, six hours after it started."),
+            "why_it_matters": (
+                "the forward window opens ON 2026-09-06, and it can only do "
+                "so honestly if nothing about that day's gap structure had "
+                "been read when the predicate was chosen. That is a "
+                "measurement at the artifact, not a convenience: the day was "
+                "seen as a FILE COUNT and never as a gap reading."),
+        },
+    },
+    {
+        "path": "data/mm_hf/e1/p002_e2a_census__20260906T055752Z.json",
+        "sha256": ("cb57b45c50fd83b8818b00e63a1db657dbbfd86d6"
+                   "0afe75f7ef338f44db443cf"),
+        "note": (
+            "the two-symbol run that preceded the eight-symbol census; its "
+            "judged set is a SUBSET and adds nothing to the union. Carried "
+            "because it exists and a consumed window named from one artifact "
+            "while another consumed the same days would be a window named "
+            "from a convenience."),
+        "symbols": ("ADAUSDT", "ICPUSDT"),
+        "days": ("20260820", "20260821", "20260822", "20260823", "20260824",
+                 "20260825", "20260827", "20260828", "20260829", "20260830",
+                 "20260831", "20260901", "20260902", "20260903", "20260904",
+                 "20260905"),
+    },
+    {
+        "path": ("data/mm_hf/e1/"
+                 "p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json"),
+        "sha256": ("ec50c88809bdaa3f54a0d0e3f6e275801a0c258172"
+                   "fc646c5b8d2b7df5627bd0"),
+        "superseded_in_band_by": {
+            "path": ("data/mm_hf/e1/p002_e2a_sealed_smoke_BTCUSDT__"
+                     "20260906T071809Z.v2.json"),
+            "sha256": ("7fa7540fa97e31ad033bda669e3ddcae43899e2a5"
+                       "054c523274171c607168a05"),
+            "nothing_was_re_run": True},
+        "what_it_consumed": (
+            "THE EPISODES THEMSELVES. The sealed smoke SIMULATED these BTC "
+            "days under v7. BTCUSDT is not in the census above, so without "
+            "this source the gate symbol would have had an EMPTY consumed "
+            "set -- which is how a window opens on days that were already "
+            "run."),
+        "symbols": ("BTCUSDT",),
+        "days": ("20260825", "20260827", "20260828", "20260829", "20260830",
+                 "20260831", "20260901", "20260902", "20260903", "20260904",
+                 "20260905"),
+    },
+)
+
+
+def consumed_symbol_days() -> dict:
+    """{symbol: (day, ...)} -- the union over every consumed source.
+
+    PER SYMBOL-DAY, never per date range: the census consumed eight symbols
+    and the sealed smoke consumed BTC, and a day consumed for one symbol
+    says nothing about another.
+    """
+    out: dict = {}
+    for s in CONSUMED_SOURCES:
+        for sym in s["symbols"]:
+            out.setdefault(sym, set()).update(s["days"])
+    return {k: tuple(sorted(v)) for k, v in out.items()}
+
+
+def _day_plus(day: str, n: int) -> str:
+    """`20260905` + 1 -> `20260906`. Calendar arithmetic, never string math."""
+    d = datetime.date(int(day[:4]), int(day[4:6]), int(day[6:8]))
+    return (d + datetime.timedelta(days=n)).strftime("%Y%m%d")
+
+
+#: COMPUTED, NEVER TYPED. The window opens the day after the LATEST day any
+#: source consumed. It lands on 2026-09-06 because the last consumed day is
+#: 2026-09-05 -- and if a later day is ever consumed, this MOVES with it
+#: instead of contradicting a literal that nobody re-derives. The ruling's
+#: own date is thereby corroborated by the artifacts rather than restated.
+LATEST_CONSUMED_DAY = max(d for s in CONSUMED_SOURCES for d in s["days"])
+FORWARD_WINDOW_START_DAY = _day_plus(LATEST_CONSUMED_DAY, 1)
+
+#: The earliest DATE on which the gate could be read, as a floor and never a
+#: prediction: the window's 14th day is FORWARD_WINDOW_START_DAY + 13 and it
+#: closes at the following midnight, so no read is possible before then. It
+#: happens only if all 14 are ADMISSIBLE, which no artifact can say yet.
+EARLIEST_READ_DAY = _day_plus(FORWARD_WINDOW_START_DAY, MIN_COMPLETE_DAYS)
+EARLIEST_READ_DATE = (f"{EARLIEST_READ_DAY[:4]}-{EARLIEST_READ_DAY[4:6]}-"
+                      f"{EARLIEST_READ_DAY[6:8]}")
+
+#: Every state leg (d) can produce, enumerated so the emitted table and the
+#: code cannot disagree -- the discipline `gate_predicate` already carries.
+OUTAGE_LEG_STATES = (
+    "ADMITTED_NO_OUTAGE_RUN",
+    "REFUSED_OUTAGE_RUN",
+    "REFUSED_CONSUMED_NEVER_REJUDGED",
+    "REFUSED_BEFORE_THE_FORWARD_WINDOW",
+    "REFUSED_OUTAGE_LEG_NOT_EVALUATED",
+)
+
+
+def outage_leg(symbol: str, day: str,
+               max_gap_run_s: float | None = None) -> dict:
+    """Leg (d) on ONE symbol-day. THE ORDER OF THE CHECKS IS THE RULE.
+
+    1. CONSUMED first, so a spent symbol-day is refused BY NAME as consumed
+       even when the measurement would admit it. A day that is refused for
+       the right reason and admitted for the wrong one is the rule-11
+       failure this leg exists to make impossible.
+    2. Then the window: forward-only. Days before it are refused as OUTSIDE,
+       which is a different fact from CONSUMED and is said differently -- a
+       symbol nobody ever measured still has no admissible history here.
+    3. Then absence: an unmeasured leg REFUSES with its own status. Absence
+       must never read as a pass (rule 11 / protocol rule 11), and the era
+       leg above refuses the same way for the same reason.
+    4. Only then the predicate itself, at OUTAGE_RUN_S with `>=`.
+    """
+    consumed = day in consumed_symbol_days().get(symbol, ())
+    base = {"leg": "d", "symbol": symbol, "day": day,
+            "outage_run_s": OUTAGE_RUN_S,
+            "max_gap_run_s": max_gap_run_s,
+            "forward_window_start_day": FORWARD_WINDOW_START_DAY}
+    if consumed:
+        return dict(base, admissible=False,
+                    state="REFUSED_CONSUMED_NEVER_REJUDGED",
+                    why=(f"{symbol} {day} is in the CONSUMED window: it was "
+                         f"seen on the gap quantity, or simulated, before "
+                         f"this predicate was chosen (R-745(4), CLAUDE.md "
+                         f"rule 11). It is not re-judged -- not even to "
+                         f"admit it."))
+    if day < FORWARD_WINDOW_START_DAY:
+        return dict(base, admissible=False,
+                    state="REFUSED_BEFORE_THE_FORWARD_WINDOW",
+                    why=(f"{day} falls before {FORWARD_WINDOW_START_DAY}, the "
+                         f"day after the latest consumed day "
+                         f"({LATEST_CONSUMED_DAY}). This leg is declared "
+                         f"FORWARD-ONLY and has no reading to give for "
+                         f"earlier days."))
+    if max_gap_run_s is None:
+        return dict(base, admissible=False,
+                    state="REFUSED_OUTAGE_LEG_NOT_EVALUATED",
+                    why=(f"the longest bookTicker gap run was not measured "
+                         f"for {symbol} {day}, so this leg cannot admit it. "
+                         f"An unevaluated leg is not a passed one."))
+    return dict(
+        base, admissible=bool(float(max_gap_run_s) < OUTAGE_RUN_S),
+        state=("REFUSED_OUTAGE_RUN" if float(max_gap_run_s) >= OUTAGE_RUN_S
+               else "ADMITTED_NO_OUTAGE_RUN"),
+        why=(f"longest bookTicker gap run {float(max_gap_run_s):g} s "
+             f"{'>=' if float(max_gap_run_s) >= OUTAGE_RUN_S else '<'} "
+             f"{OUTAGE_RUN_S} s"))
 
 
 def expected_filled_probqueue(probs, order_qty: float) -> float:
@@ -1372,6 +1623,11 @@ def declaration() -> dict:
                 "pricing must be able to produce an interior number",
                 "a synthetic tape whose quantities are all multiples of 0.25 "
                 "must return a quantity step of 0.25",
+                "v8 leg (d) MUST BE ABLE NOT TO FIRE: a day inside the "
+                "forward window whose missing seconds are scattered "
+                "one-second holes, with no run of a minute, is ADMITTED -- "
+                "otherwise the leg is the activity filter v6 removed wearing "
+                "a new name",
             ],
             "known_bads": [
                 "a resting order behind depth larger than all subsequent "
@@ -1416,6 +1672,18 @@ def declaration() -> dict:
                 "single episode must REFUTE -- that ordering is arithmetic, "
                 "unlike the per-episode COST ordering, which the winner's "
                 "curse can invert with no defect present",
+                f"v8 leg (d): a day inside the forward window carrying one "
+                f"{OUTAGE_RUN_S} s bookTicker gap run must be REFUSED, and "
+                f"the boundary is `>=` -- a longest run of "
+                f"{OUTAGE_RUN_S - 1} s must ADMIT and one of "
+                f"{OUTAGE_RUN_S} s must not",
+                "v8 leg (d): a CONSUMED symbol-day must be refused BY NAME "
+                "as consumed even when its measurement would admit it -- a "
+                "day refused for the right reason and admitted for the wrong "
+                "one is the rule-11 failure this leg exists to prevent",
+                "v8 leg (d): a symbol-day whose longest gap run was NOT "
+                "measured must be refused as NOT EVALUATED, never admitted "
+                "quietly",
             ],
         },
 
@@ -1589,7 +1857,56 @@ def declaration() -> dict:
             "regimes_with_hand_derivations": ORDERING_REGIMES,
         },
 
-        "admission_legs_v7": {
+        "admission_legs_v8": {
+            "WHAT_v8_CHANGES": (
+                "leg (d) is ADDED. Legs (a), (b) and (c) are carried "
+                "UNCHANGED and the selftest asserts they are byte-identical "
+                "to v7's, read from v7 on disk at the pair this version "
+                "supersedes -- not re-typed and compared by eye."),
+            "leg_d_outage_v8": {
+                "ruling": (
+                    "R-745(4), coordinator, on the USER's instruction, "
+                    "DISCLOSED FOR OVERRULE BY ONE LINE."),
+                "predicate": (
+                    "a symbol-day is inadmissible on this leg iff the "
+                    f"bookTicker tape carries a gap RUN of at least "
+                    f"{OUTAGE_RUN_S} s -- a maximal block of contiguous "
+                    "whole seconds with no valid bookTicker quote, counted "
+                    "by `e2_a_runner.gap_profile` on `read_book`'s T behind "
+                    "the same valid-quote filter. The comparison is `>=`."),
+                "why_a_run_and_not_a_fraction": WHY_A_RUN_NOT_A_FRACTION,
+                "states": list(OUTAGE_LEG_STATES),
+                "the_order_of_the_checks_IS_the_rule": (
+                    "consumed, then the window, then absence, then the "
+                    "measurement. A consumed symbol-day is refused BY NAME "
+                    "as consumed even when the measurement would admit it; "
+                    "an unmeasured leg refuses with its own status, because "
+                    "absence must never read as a pass."),
+                "FORWARD_ONLY": (
+                    f"applies to days from {FORWARD_WINDOW_START_DAY} "
+                    f"onward and to no earlier day. The start is COMPUTED as "
+                    f"the day after {LATEST_CONSUMED_DAY}, the latest day any "
+                    f"consumed source names -- not typed from the ruling."),
+                "what_it_does_NOT_change": (
+                    "legs (a), (b) and (c). The 24-hour-file and depth20 "
+                    "requirements stay exactly as they are (R-745(4)'s own "
+                    "words), the collector-liveness leg keeps its ruled "
+                    "controls, and rule 5's era leg is untouched."),
+                "reference_implementation": (
+                    "e2_a_declare.outage_leg(symbol, day, max_gap_run_s) -- "
+                    "in this declaring module, so the semantics are pinned "
+                    "EXECUTABLY and the runner's wiring is checked against "
+                    "them rather than against prose."),
+                "positive_control_RULED": (
+                    "a day of scattered one-second holes and no run of a "
+                    "minute MUST ADMIT -- the leg has to be able NOT to "
+                    "fire, or it is the activity filter v6 removed wearing a "
+                    "new name."),
+                "known_bad_RULED": (
+                    "a day carrying one 60 s run MUST REFUSE, and a "
+                    "CONSUMED day MUST REFUSE AS CONSUMED even with a clean "
+                    "measurement."),
+            },
             "leg_a_streams": (
                 "24 hour-files on ALL THREE streams -- bookTicker, trade, "
                 "depth20. Unchanged since v4."),
@@ -1667,6 +1984,102 @@ def declaration() -> dict:
                     "reversible_by": "the USER; recorded as USER-visible",
                 },
             },
+        },
+
+        "the_forward_window_v8": {
+            "start_day": FORWARD_WINDOW_START_DAY,
+            "start_is_COMPUTED_not_typed": (
+                f"the day after {LATEST_CONSUMED_DAY}, the latest day any "
+                f"consumed source names. If a later day is ever consumed the "
+                f"start MOVES with it; a literal date would have gone on "
+                f"disagreeing with the artifacts silently."),
+            "min_complete_days": MIN_COMPLETE_DAYS,
+            "NO_THRESHOLD_CHANGE_AFTER_SEEING": (
+                "CLAUDE.md rule 11. The minimum stays 14. What v8 changes is "
+                "WHICH DAYS may be read, never how many are required."),
+            "earliest_read_date": EARLIEST_READ_DATE,
+            "earliest_read_date_is_a_FLOOR": (
+                f"the window's 14th day is {FORWARD_WINDOW_START_DAY} + 13 "
+                f"and it closes at the following midnight, so no read is "
+                f"possible before {EARLIEST_READ_DATE}. It happens then only "
+                f"if all 14 are ADMISSIBLE, which no artifact can say yet -- "
+                f"this is a floor on the date, never a prediction."),
+            "the_14_day_minimum_RESTARTS_here": (
+                "the count begins at the window's start. No day before it "
+                "counts toward the minimum, whatever its quality."),
+        },
+
+        "the_consumed_window_v8": {
+            "rule": (
+                "CLAUDE.md rule 11: days seen while the predicate was being "
+                "chosen are SPENT. The predicate is never re-applied to "
+                "them -- not even to admit one."),
+            "sources": [dict(s) for s in CONSUMED_SOURCES],
+            "symbol_days": {k: list(v)
+                            for k, v in consumed_symbol_days().items()},
+            "named_from_its_sources_not_from_a_date_range": (
+                "R-745(4) quotes the window as '08-20..09-05'. The artifacts "
+                "carry more than that sentence: the eight-symbol census "
+                "ENUMERATES 2026-08-19..09-06 and JUDGES 16 of those days on "
+                "the gap quantity, and the BTC sealed smoke -- a symbol the "
+                "census does not cover at all -- simulated 11 days. This "
+                "block carries the symbol-days themselves, so a reader "
+                "resolves membership instead of parsing a range."),
+            "the_two_kinds_of_consumption": (
+                "SEEN ON THE QUANTITY (the censuses published each day's "
+                "gap-run profile before the predicate was chosen) and RUN "
+                "(the sealed smoke simulated the episodes). Both spend a "
+                "symbol-day; they are listed per source rather than merged "
+                "into one undifferentiated set."),
+            "2026-09-06_IS_NOT_CONSUMED_and_this_is_MEASURED": (
+                "the eight-symbol census enumerates 20260906 and carries "
+                "`gap_fraction: null` and `gap_profile: null` for all eight "
+                "symbols: it ran at 05:59Z with 6-7 of 24 hour-files "
+                "present, so the day was seen as a FILE COUNT and never as a "
+                "gap reading. The window can therefore open on it. THE "
+                "STRICTEST ALTERNATIVE IS STATED, NOT HIDDEN: a reader who "
+                "holds that enumerating a day spends it would start the "
+                "window at 20260907 and read no earlier than 2026-09-21. "
+                "That reading costs exactly one day and the USER or the "
+                "coordinator may take it by one line; this declaration "
+                "implements the ruling as written."),
+        },
+
+        "what_the_ruling_replaces_read_at_the_HEAD_v8": {
+            "status": "DISCLOSED_NOT_ABSORBED",
+            "what_R745_4_says": (
+                "'the inherited bookTicker gap-fraction leg' is REPLACED by "
+                "the outage predicate."),
+            "what_the_head_ALREADY_said": (
+                "v6 had already withdrawn the gap-fraction bar from "
+                "admission (R-580(C)(1)) and replaced it with leg (b), "
+                "COLLECTOR LIVENESS -- a property of the collector's own "
+                "heartbeat ledger, not of the tape. At v7 there was no "
+                "gap-fraction bar left to replace: the runner carries the "
+                "fraction as `GAP_REPORTING_REFERENCE`, gating nothing, and "
+                "`GAP_FRACTION_MAX` in this module was dead."),
+            "what_v8_therefore_DOES": (
+                "it ADDS the ruled predicate as leg (d) rather than removing "
+                "a leg. The ruling's own words are a rule about when a day "
+                "is inadmissible, and they are implemented exactly; what is "
+                "NOT done is deleting leg (b), which carries three RULED "
+                "controls (08-24 and 08-26 must refuse, 08-29/30 must "
+                "admit). Adding a leg can only exclude more days, never "
+                "admit one the head would have refused."),
+            "what_a_reader_should_do_with_this": (
+                "treat it as an overrulable reading. If the ruling intended "
+                "leg (b) to be REPLACED by leg (d) -- both guard against "
+                "outage, one from the collector's ledger and one from the "
+                "tape -- that is one line from the coordinator or the USER, "
+                "and it is a REMOVAL of a control, which is why this seat "
+                "did not make it silently."),
+            "the_quote_age_clause_was_already_in_force": (
+                "R-745(4) also rules decision-time quote age a REPORTED "
+                "field and never a criterion. v7's "
+                "`decision_time_quote_age_v7` block already said exactly "
+                "that, and the runner already reports p50/p90/max over the "
+                "24 decision times per symbol-day. v8 changes nothing there "
+                "and says so rather than re-announcing it as new."),
         },
 
         "decision_time_quote_age_v7": {
@@ -1894,8 +2307,13 @@ def selftest() -> int:                                        # noqa: C901
         elif isinstance(n, ast.ImportFrom):
             if n.level == 0 and n.module:
                 imported.add(n.module.split(".")[0])
-    SAFE = {"__future__", "argparse", "ast", "hashlib", "json", "math",
-            "subprocess", "pathlib"}
+    SAFE = {"__future__", "argparse", "ast", "datetime", "hashlib", "json",
+            "math", "subprocess", "sys", "pathlib",
+            #: v8: the ONE chain implementation (R-711). It is stdlib-only
+            #: and touches nothing outside a `declarations/` directory, so
+            #: it cannot reach the tape either -- and the cell below proves
+            #: the stronger property directly rather than by import list.
+            "declaration_chain"}
     ok(imported <= SAFE,
        f"NO READER IMPORTED: imports are {sorted(imported)}, a subset of the "
        f"safe set -- this module CANNOT open the tape whatever its prose says")
@@ -1907,9 +2325,54 @@ def selftest() -> int:                                        # noqa: C901
     } | {n.func.id for n in ast.walk(tree)
          if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
          and n.func.id == "open"})
-    ok(io_calls == ["read_bytes", "read_text", "write_text"],
-       f"NO TAPE ACCESS: every file operation is enumerated from the AST and "
-       f"is one of {io_calls}")
+    ok(io_calls == ["read_bytes", "read_text"],
+       f"NO TAPE ACCESS, AND v8 NO LONGER WRITES: every file operation is "
+       f"enumerated from the AST and is one of {io_calls} -- the emit goes "
+       f"through declaration_chain.write_next_version, so the "
+       f"compare-and-swap cannot be bypassed by this module writing its own "
+       f"file beside it")
+
+    # --- v8: a data-path literal must never reach a call ------------------
+    def _data_literal_reaching_a_call(t) -> list:
+        """Every `data/...` string constant that is an argument of a call.
+
+        The import list says what this module COULD reach; this says what it
+        DOES with the one data path it names. The consumed-source citations
+        are data paths ON PURPOSE -- a cited artifact is locatable -- and
+        the property that matters is that none of them is ever opened.
+        """
+        #: OPENERS ONLY. An earlier draft counted EVERY call and flagged
+        #: this checker's own `startswith("data/")` and the list its
+        #: known-bad compares against -- a check that fires on its own text
+        #: is not measuring the module.
+        openers = {"open", "read_text", "read_bytes", "read_csv",
+                   "read_parquet", "glob", "iterdir", "Path"}
+        hits = []
+        for c in ast.walk(t):
+            if not isinstance(c, ast.Call):
+                continue
+            fn = getattr(c.func, "id", None) or getattr(c.func, "attr", None)
+            if fn not in openers:
+                continue
+            for a in list(c.args) + [k.value for k in c.keywords]:
+                for sn in ast.walk(a):
+                    if isinstance(sn, ast.Constant) \
+                            and isinstance(sn.value, str) \
+                            and sn.value.startswith("data/"):
+                        hits.append(sn.value)
+        return hits
+
+    ok(_data_literal_reaching_a_call(tree) == [],
+       "NO DATA PATH IS OPENED: the consumed-source citations name files "
+       "under data/ so a reader can locate them, and not one of those "
+       "literals is an argument to any call in this module")
+    _bad_tree = ast.parse('from pathlib import Path\n'
+                          'x = Path("data/mm_hf/e1/tape.json").read_text()\n')
+    ok(_data_literal_reaching_a_call(_bad_tree)
+       == ["data/mm_hf/e1/tape.json"],
+       "KNOWN-BAD, DRIVEN: the same check FIRES on a module that opens a "
+       "data path -- a checker that has never been shown to fire is not "
+       "what is passing above")
 
     d = declaration()
     states = set(d["what_settles_and_what_fails"]) - {
@@ -1936,6 +2399,93 @@ def selftest() -> int:                                        # noqa: C901
        "THE MISSING INPUT IS ESCALATED: the XS rebalance notional does not "
        "exist in this programme, and its absence REFUSES the size-aware arm "
        "rather than defaulting to min-size and calling it E2-A")
+    # ---- v8: leg (d), the window, and the consumed set ----------------
+    _pw = FORWARD_WINDOW_START_DAY
+    _clean = outage_leg("BTCUSDT", _pw, 0.0)
+    _hole = outage_leg("BTCUSDT", _pw, float(OUTAGE_RUN_S - 1))
+    _run = outage_leg("BTCUSDT", _pw, float(OUTAGE_RUN_S))
+    _long = outage_leg("BTCUSDT", _pw, 4656.0)
+    ok(_clean["admissible"] and _clean["state"] == "ADMITTED_NO_OUTAGE_RUN"
+       and _hole["admissible"]
+       and not _run["admissible"] and _run["state"] == "REFUSED_OUTAGE_RUN"
+       and not _long["admissible"],
+       f"LEG (d) BOTH DIRECTIONS AT THE BOUNDARY: a day of scattered holes "
+       f"whose longest run is {OUTAGE_RUN_S - 1} s ADMITS and one of "
+       f"{OUTAGE_RUN_S} s REFUSES -- `>=`, and the leg can NOT fire, which "
+       f"is what separates it from the activity filter v6 removed")
+
+    _consumed_day = consumed_symbol_days()["BTCUSDT"][-1]
+    _c = outage_leg("BTCUSDT", _consumed_day, 0.0)
+    ok(not _c["admissible"]
+       and _c["state"] == "REFUSED_CONSUMED_NEVER_REJUDGED"
+       and _consumed_day in str(_c["why"]),
+       f"KNOWN-BAD, DRIVEN: {_consumed_day} is CONSUMED for BTCUSDT and is "
+       f"refused BY NAME as consumed on a measurement (0 s) that would "
+       f"otherwise admit it -- the same input admits at {_pw} above, so the "
+       f"refusal is the consumed set and not the number")
+
+    _never = outage_leg("ETHUSDT", _consumed_day, 0.0)
+    ok(not _never["admissible"]
+       and _never["state"] == "REFUSED_BEFORE_THE_FORWARD_WINDOW",
+       f"AND THE TWO REFUSALS ARE DIFFERENT FACTS: ETHUSDT was never "
+       f"measured on the gap quantity, so {_consumed_day} is not CONSUMED "
+       f"for it -- it is refused as OUTSIDE THE WINDOW, which is what "
+       f"forward-only means for a symbol with no consumed history")
+
+    _unmeasured = outage_leg("BTCUSDT", _pw, None)
+    ok(not _unmeasured["admissible"]
+       and _unmeasured["state"] == "REFUSED_OUTAGE_LEG_NOT_EVALUATED",
+       "ABSENCE IS NOT A PASS: a symbol-day whose longest gap run was not "
+       "measured is refused with its own status, exactly as the era leg "
+       "refuses ERA_LEG_NOT_EVALUATED (rule 11)")
+
+    _states = {outage_leg(*a)["state"] for a in (
+        ("BTCUSDT", _pw, 0.0), ("BTCUSDT", _pw, 60.0),
+        ("BTCUSDT", _consumed_day, 0.0), ("ETHUSDT", "20260901", 0.0),
+        ("BTCUSDT", _pw, None))}
+    ok(_states == set(OUTAGE_LEG_STATES)
+       and set(d["admission_legs_v8"]["leg_d_outage_v8"]["states"])
+       == _states,
+       f"THE EMITTED STATES AND THE CODE CANNOT DISAGREE: the five declared "
+       f"states are exactly the five the predicate produces "
+       f"({sorted(_states)})")
+
+    ok(all(day < FORWARD_WINDOW_START_DAY
+           for s in CONSUMED_SOURCES for day in s["days"])
+       and FORWARD_WINDOW_START_DAY == _day_plus(LATEST_CONSUMED_DAY, 1)
+       and _day_plus(FORWARD_WINDOW_START_DAY, MIN_COMPLETE_DAYS - 1)
+       == _day_plus(EARLIEST_READ_DAY, -1),
+       f"THE WINDOW IS COMPUTED FROM THE ARTIFACTS, NOT TYPED: no consumed "
+       f"day falls on or after {FORWARD_WINDOW_START_DAY}, the start is the "
+       f"day after {LATEST_CONSUMED_DAY}, and the {MIN_COMPLETE_DAYS}th day "
+       f"of the window closes the midnight before {EARLIEST_READ_DATE}")
+
+    _bad_start = _day_plus(LATEST_CONSUMED_DAY, 0)
+    ok(any(day >= _bad_start
+           for s in CONSUMED_SOURCES for day in s["days"]),
+       f"KNOWN-BAD, DRIVEN: a window starting one day earlier "
+       f"({_bad_start}) WOULD contain a consumed day, so the cell above is "
+       f"not a tautology about any start date")
+
+    # ---- v8: legs (a), (b), (c) are carried, proven at v7's own bytes ----
+    _v7 = json.loads((HERE.parent.parent / SUPERSEDES["path"]).read_text())
+    _v7_sha = hashlib.sha256(
+        (HERE.parent.parent / SUPERSEDES["path"]).read_bytes()).hexdigest()
+    _carried = ("leg_a_streams", "leg_b_collector_liveness",
+                "leg_c_rule5_era_purity")
+    ok(_v7_sha == SUPERSEDES["sha256"]
+       and all(d["admission_legs_v8"][k] == _v7["admission_legs_v7"][k]
+               for k in _carried),
+       f"LEGS (a), (b), (c) ARE CARRIED UNCHANGED, CHECKED AT v7's OWN "
+       f"BYTES: v7 resolves at the pair this version supersedes "
+       f"({_v7_sha[:16]}) and all three legs compare EQUAL -- v8 ADDS leg "
+       f"(d) and removes no control")
+    ok(_v7["admission_legs_v7"]["leg_b_collector_liveness"]
+       != dict(d["admission_legs_v8"]["leg_d_outage_v8"]),
+       "AND THE COMPARISON CAN FAIL: leg (d) is not equal to leg (b), so "
+       "the cell above is comparing content and not an identity that holds "
+       "for any two keys")
+
     ok(len(d["falsifiers"]["known_bads"]) >= 6
        and len(d["falsifiers"]["positive_controls"]) >= 4,
        f"FALSIFIERS BOTH DIRECTIONS: "
@@ -2098,7 +2648,7 @@ def selftest() -> int:                                        # noqa: C901
        "allowed to silence a gate")
 
     # ---- v7: rule 5's era leg ---------------------------------------------
-    era = declaration()["admission_legs_v7"]["leg_c_rule5_era_purity"]
+    era = declaration()["admission_legs_v8"]["leg_c_rule5_era_purity"]
     ok(ERA_BOUNDARY_RECV_NS == 1787579334881534478
        and ERA_BOUNDARY_UTC == "2026-08-24T13:48:54Z"
        and str(ERA_BOUNDARY_RECV_NS) in era["predicate"]
@@ -2124,7 +2674,7 @@ def selftest() -> int:                                        # noqa: C901
        "covers would be a seal over whatever was convenient")
 
     # ---- v7: the liveness controls, and the WITHDRAWN one ------------------
-    live = declaration()["admission_legs_v7"]["leg_b_collector_liveness"]
+    live = declaration()["admission_legs_v8"]["leg_b_collector_liveness"]
     pos = " ".join(live["positive_controls_RULED"])
     ok("2026-08-24" in pos and "2026-08-26" in pos
        and "4,656" in pos and "158 s" in pos,
@@ -2251,10 +2801,31 @@ def main() -> int:
     if a.selftest:
         return selftest()
     if a.emit:
-        OUT.parent.mkdir(parents=True, exist_ok=True)
-        OUT.write_text(json.dumps(declaration(), indent=2, sort_keys=True)
-                       + "\n")
-        print(f"{OUT}  sha256 {sha256_file(OUT)}")
+        #: R-711 / SEAT_PROTOCOL rule 20: the closure is AT THE MOMENT OF THE
+        #: WRITE. The head is resolved HERE, the payload composed from it,
+        #: and the shared implementation refuses VERSION_PATH_EXISTS (a
+        #: landed version is immutable), HEAD_MOVED (another writer landed
+        #: between the read and the write) or PAIR_MISMATCH (the payload
+        #: claims a chain that does not exist). No branch of this emitter
+        #: writes a declaration any other way.
+        head = CHAIN.resolve_head(OUT.parent, FAMILY)
+        if head["sha256"] != SUPERSEDES["sha256"]:
+            print(f"REFUSED: the chain head is {head['name']} at "
+                  f"{head['sha256'][:16]} but this module supersedes "
+                  f"{Path(SUPERSEDES['path']).name} at "
+                  f"{SUPERSEDES['sha256'][:16]}. Re-read the head and "
+                  f"recompose -- a version number is never taken from a "
+                  f"dispatch.")
+            return 3
+        res = CHAIN.write_next_version(OUT.parent, FAMILY, declaration(),
+                                       head["pair"])
+        if Path(res["path"]) != OUT:
+            print(f"REFUSED: the chain wrote {res['path']} while this "
+                  f"module's DECL_VERSION names {OUT}")
+            return 4
+        print(f"{res['path']}  sha256 {res['sha256']}  supersedes "
+              f"{Path(res['superseded']['path']).name} "
+              f"{res['superseded']['sha256'][:16]}")
         return 0
     ap.error("choose --selftest or --emit")
     return 2
