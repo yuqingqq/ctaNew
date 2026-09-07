@@ -19211,3 +19211,64 @@ generation and the window went 4 → 3. Nothing rewritten.
   audit exits **1** on **166** missing-artifact findings, 165 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 238** archived. Q-MEM-244 filed through the script.)
 ```
+
+## Batch 242 — archived 2026-09-07T09:13:47Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T08:51:45Z (MEM ROUND 257 -- R-771 SWEPT, with every landing between my own 3918ae5 and the
+  tip `7245f33`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
+  (1) ***THE NO-GO VERIFIES AT BOTH ENDS, AND I MEASURED BOTH RATHER THAN EITHER.*** params v18 carries
+  exactly ONE `be_module` block -- `path` `live/pm_research/be_cancel_axis_null.py`, `sha256`
+  **93332a45**faf714… -- and the file on disk today hashes **5607bfbf**e1b4ef89. **The params version in
+  force pins a digest the file no longer has**, and the runner refuses at PREFLIGHT rather than running a
+  null control whose code moved under it. That is a named refusal that writes nothing, costing a dispatch
+  rather than a run -- the same shape as this week's other good refusals.
+  (2) ***AND THE SHARPER HALF CHECKS OUT: ONE COMMIT CHANGED BOTH MODULES, AND THE PIN COVERS ONE.*** The
+  last commit touching `be_cancel_axis_null.py` is **c707eb8** (BE 96) -- and the last commit touching
+  `harmful_stateful_policy.py` is **the same c707eb8**. `be_module` is a SINGLE {path, sha256}, so **a BE
+  change confined to the cascade module REV names as carrying the behaviour would have produced NO MISMATCH
+  AT ALL and the run would have proceeded.** Today it happened to be the pinned file that moved. **A guard
+  that fires on the file it pins tells you nothing about the files it does not** -- REV routed widening
+  `be_module` to the cascade by pair; MEM records the shape and rules nothing.
+  (3) ***THE UNBLOCK HAS NOT LANDED AND THE BLOCK STANDS AS I WRITE.*** `params_v19` and `design_v27` do
+  NOT exist; the resolver returns params head **v18** and design head **v26**; `PARAMS_REL` still names
+  v18. DE 126 phase 1 was dispatched 08:49:55Z. ***AND ONE DIGEST MISMATCH BLOCKS BOTH GO E2 AND GO #8***
+  -- the next early read (09-04) and tonight's Gate-1 day run share the params version and the runner
+  refuses for both. So the user's remaining three early-read days and the six-day Gate-1 population wait on
+  the same three-line re-point, with the close a fixed event at 2026-09-08T00:00Z that it must clear before.
+  (4) ***REV's ONE RESIDUAL, WITH BOTH HALVES MEASURED: THE VALUE IS RIGHT AND THE CHECK IS A SHAPE
+  CHECK.*** v26's `user_ruled_unsealed_emission` carries `landed_at` "R-765", `ruled_by` "THE USER",
+  `recorded_at_utc` 07:47:01Z and the verbatim ruling -- and `### R-765` appears exactly once in the
+  register, so the citation is correct. But the predicate tests PRESENCE AND SHAPE, so **a block naming a
+  register entry that was never written would pass**. **A citation that is correct today because the writer
+  was careful is not a checked citation** -- R-601's class ("a cited artifact is locatable") one level up,
+  from paths to register ids.
+  (5) **RELAYED, MARKED SO** -- four readings that are other seats' acts to establish: REV measured BE 96's
+  change under **DE's own re-point method**, found it battery-only, and **handed the measurement over
+  rather than pre-approving the re-point**, leaving the declaration's decision with its seat; DE 125
+  stopped on **five pre-existing defects behind one phase4 FAIL**, of which the number a state file should
+  carry is **212 of 252 declared checks reachable** -- a green suite reporting on four fifths of what it
+  declares; one of the five is **a NameError that ended the suite early for everyone**, rule 17's shape
+  with a third variant (a suite that STOPS is neither green nor red for the checks after the stop, and
+  nothing in the count said so); and REV's accounting of DE 124 -- everything else PASSES, the six walls
+  "none loosened, two tightenings", one residual.
+  (6) ***AND DE 126 PHASE 2's RULING IS THE ONE I KEEP SEEING FROM NEW DIRECTIONS***: "the constant is
+  never adjusted to the observation", with `n_run` beside `n_conditional`. The programme has now stated
+  that rule from four independent places -- never loosen a check to make it pass (R-767), a known-bad
+  asserts a delta from its own baseline (REV 83 §5), a derived block changes only to what its measurement
+  re-derives (R-769), and now a declared check count is never edited down to what ran. **Four independent
+  arrivals at one rule is the strongest evidence a programme produces that the rule is real.**
+  (7) ***E1 IS STILL RUNNING AT EIGHTY-TWO MINUTES***: RUNNING with `ExecMainExitTimestamp` EMPTY at
+  08:50:40Z, MemoryPeak still 2,715,901,952 -- the same value at seven readings since 07:31:38Z -- against
+  an expected 86 minutes and an exit about 08:55Z. **Still inside its estimate**, and this is the first run
+  to test an estimate that came from the sealed receipts' own resource blocks. **DA 125 is drafted**: when
+  the receipt lands, DA's reader prints the table under `--print-under-ruling` with R-757's labels. DE's
+  report does not print it, and neither does MEM.
+  Counts: flags 1,832 -> **1,847**; provenance 1,377 -> **1,392**; tasks 19; **1,107 CHECKED /
+  280 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-THIRD round unchanged on UNMARKED**;
+  RELAYED moves by FOUR, this round's four other-seat readings at (5) -- the largest RELAYED step I have
+  taken, and deliberate: establishing any of them means running another seat's suite. ORPHAN census **0**;
+  the audit exits **1** on **167** missing-artifact findings, 166 at my round start plus ONE of mine, the
+  running unit. Fifteen written, fifteen counted, the duplicate-name gate run before writing. Window
+  trimmed 4 -> 3, **Batch 239** archived. Q-MEM-245 filed through the script.)
+```

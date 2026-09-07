@@ -1,3 +1,99 @@
+# READ FIRST — round 260 (MEM, 2026-09-07T09:13:47Z, tip `47157d8`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-774 swept, with every landing
+between my own `fe76d83` bound and the tip.
+
+## 0. State — everything waits on one review
+
+| | |
+|---|---|
+| **E2, E3, E4 and tonight's GO #8** | all wait on **REV 95 part A**, re-gating at the tip's digests |
+| **Tonight** | GO #8 runs from wt-de at the commit REV 95 clears, **frozen from E2 onward** — no refresh between |
+| **DE 127** (phase4) | held until REV 95 clears |
+| **Digests** | runner **`ccc4108d`** (moved); params **v19** `dd8db7de` and design **v27** `3bcdf3c2` **unmoved** |
+| **The tip** | **my HEAD is the tip** — nothing landed since my round-259 state commit |
+
+## 1. Five threads I have carried close in one entry — and MEM closed none of them
+
+| thread | first carried | closed by |
+|---|---|---|
+| the two `day_run` literals | round 258 | DE 126 phase 2 |
+| the R-id **existence** check | round 257 (REV's residual) | DE 126 phase 2 |
+| the shared-falsifier cell in `de_early_read` | round 255 | DE 126 phase 2 |
+| the ledger's inventory leg, **both halves** | round 255 | BE 96 + DE 126 phase 2 |
+| the runner off REV 94's cleared digest | round 259 | confirmed, re-gated to REV 95 |
+
+**They were closed by DE and BE doing the work** — which is the point of carrying them
+where the doers read them.
+
+## 2. The literals are computed, and the comment names the case
+
+At `:6201` the status is a conditional over `_all_sealed` (third branch
+`DAY_RUN_SEALED_NO_ADMISSIBLE_ARM`); at `:6356` `"the_economics_are_SEALED": _all_sealed`
+— a variable, not a literal — and the comment at `:6188-6194` names it exactly:
+*"`DAY_RUN_SEALED` while BOTH arm-days read `sealed False`"*.
+
+***And the emit now records where the value came from***:
+`the_economics_are_SEALED_read_from` at `:6357`. **A reader of a future artifact can tell
+a computed field from a carried one without reading the code** — precisely what I could
+not do at round 258 and had to establish by grep.
+
+## 3. The R-id check, both directions, in its own words
+
+- **RED** — `R-99999`, correct *shape*, no such entry → refuses `USER_RULING_ENTRY_NOT_IN_THE_REGISTER`.
+- **GREEN** — `R-765`, an entry that exists → **permitted**, *"so the check reads the register rather than refusing every id"*. **The positive control admits** (rule 16).
+
+The RED cell's message: *"an id that merely looks like one is **rule 14's authority with
+nothing behind it**"* — against my round-257 wording, *"a citation that is correct today
+because the writer was careful is not a checked citation"*. Same defect, same conclusion,
+reached independently.
+
+## 4. The last falsifier cell, and the inventory leg on both halves
+
+`--falsify` appears twice in `de_early_read.py` — round 255's *"n_missing_the_cell 3 → 1,
+the one left DE's"* is in, three rounds after REV 91 §C1 routed it.
+
+`SCHEMA_VERSION = 2` with all five of BE 96's fields and
+`DECISION_LEDGER_NO_INVENTORY_FIELDS` **refusing rather than reading zero**. At round 255
+I recorded the split — producer landed, consumer unlanded — and **declined to call the
+item closed on half of it**. Both halves are now landed. ***And the closure is asserted,
+not claimed***: of four surviving `ABSENT_UNTIL_BE_96` strings in the ledger, one at
+`:353` is an **assertion** — *"ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION}
+says so"*. (Two more live in BE's modules; not classified — scope stated.)
+
+## 5. Four commits landed inside my last window, and the bound held again
+
+R-774, the next-entry line, §7d (09:09:34Z) and the checker's scope line (09:10:00Z) all
+landed before my round-259 row at 09:10:51Z, against a sweep bounded at `fe76d83` fetched
+09:05:52Z. **The row is exactly true because it names that bound**, and closes with "MEM
+sweeps R-774 onward". **Second time** — round 255 was one commit deep, this is four.
+**Report a sweep as a closed interval, never as "everything up to now".**
+
+**And my HEAD is the tip**: after a morning in which the tip moved during almost every
+round, the programme is **idle on one review**. A quiet tip is itself state — nothing is
+being built that a later sweep must reconcile.
+
+## 6. The re-gate is narrow because the declarations held
+
+Params v19 and design v27 are **unmoved** across phase 2 while the runner moved, so **two
+of the four things REV 94 cleared are still exactly what it cleared**. DE's warning — GO
+#8 *"must either run at REV 94's cleared commit or be re-cleared at ccc4108d…; it cannot
+silently do both"* — was taken.
+
+**The phase4 suite is held and visibly so** (clean, last commit `c707eb8`). **And DE
+corrected its own count before anyone checked it** — an AST scan said 209 call sites, the
+real figure is 249, and *"landing the constant at 212 on that wrong count would have been
+exactly the move R-771 forbids"*: **round 257's rule, applied by the seat to its own
+arithmetic.**
+
+Counts: flags 1,877 → **1,892**; provenance 1,422 → **1,437**; tasks 19; **1,149 CHECKED
+/ 283 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-sixth round
+unchanged on UNMARKED. ORPHAN census **0**; audit exit **1** on **168** — unchanged for
+the second round running, all fifteen entries resolving. Window trimmed 4 → 3, **Batch
+242** archived. Q-MEM-248 filed through the script.
+
+---
+
 # READ FIRST — round 259 (MEM, 2026-09-07T09:07:15Z, tip `fe76d83`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-773 swept, with every landing

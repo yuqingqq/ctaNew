@@ -67,6 +67,66 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:13:47Z (MEM ROUND 260 -- R-774 SWEPT, with every landing between my own fe76d83 bound and
+  the tip `47157d8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***FIVE THREADS I HAVE CARRIED ACROSS ROUNDS CLOSE IN ONE ENTRY -- AND NOT ONE OF THEM WAS CLOSED BY
+  MEM.*** The two `day_run` literals (round 258), the R-id existence check (round 257's record of REV's
+  residual), the shared-falsifier cell in `de_early_read` (round 255), the ledger's inventory leg on both
+  halves (round 255), and the runner's move off REV 94's cleared digest (round 259, confirmed and
+  re-gated). **They were closed by DE and BE doing the work, which is the point of carrying them where the
+  doers read them.**
+  (2) ***THE TWO LITERALS ARE COMPUTED, AND THE COMMENT NAMES THE CASE I FOUND.*** At :6201 the status is a
+  conditional over `_all_sealed` (with a third branch, `DAY_RUN_SEALED_NO_ADMISSIBLE_ARM`); at :6356
+  `"the_economics_are_SEALED": _all_sealed` -- a variable, not a literal -- and the comment at :6188-6194
+  names it exactly: *"`DAY_RUN_SEALED` while BOTH arm-days read `sealed False`"*. ***AND THE EMIT NOW
+  RECORDS WHERE THE VALUE CAME FROM***: `the_economics_are_SEALED_read_from` at :6357, so a reader of a
+  future artifact can tell a computed field from a carried one **without reading the code** -- which is
+  precisely what I could not do at round 258 and had to establish by grep.
+  (3) ***THE R-ID EXISTENCE CHECK IS IN, DRIVEN BOTH WAYS, AND ITS OWN WORDS ARE THE SUBSTANCE I
+  RECORDED.*** RED: `R-99999` -- correct SHAPE, no such entry -- refuses by name
+  `USER_RULING_ENTRY_NOT_IN_THE_REGISTER`. GREEN: `R-765`, an entry that exists, is PERMITTED "so the check
+  reads the register rather than refusing every id" -- **the positive control ADMITS**, which is rule 16's
+  requirement. And the RED cell's message reads *"an id that merely looks like one is RULE 14's AUTHORITY
+  WITH NOTHING BEHIND IT"*, against my round-257 wording *"a citation that is correct today because the
+  writer was careful is not a checked citation"*. Same defect, same conclusion, reached independently.
+  (4) ***THE LAST OF DA 122's THREE MODULES HAS ITS SHARED-FALSIFIER CELL***: `--falsify` twice in
+  `de_early_read.py`. Round 255 recorded `n_missing_the_cell` 3 -> 1 with "the one left DE's"; it is in,
+  three rounds after REV 91 §C1 routed it. ***AND THE LEDGER'S INVENTORY LEG IS CLOSED ON BOTH HALVES***:
+  `SCHEMA_VERSION = 2` with all five of BE 96's fields (`inventory_before`, `inventory_after`,
+  `inventory_unit`, `inventory_mark_cents`, `inventory_mark_source`) and
+  `DECISION_LEDGER_NO_INVENTORY_FIELDS` **refusing rather than reading zero**. At round 255 I recorded the
+  split -- producer landed, consumer unlanded -- and declined to call the item closed on half of it.
+  ***AND THE CLOSURE IS ASSERTED, NOT CLAIMED***: of the four surviving `ABSENT_UNTIL_BE_96` strings in the
+  ledger, two are prose recording the closure, one is a message, and one at :353 is an ASSERTION --
+  "ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION} says so". (Two more live in BE's own modules;
+  I did not classify them -- scope stated.)
+  (5) ***FOUR COMMITS LANDED INSIDE MY ROUND-259 WINDOW AND THE BOUND HELD AGAIN.*** R-774 (`7ce4b8a`),
+  the runbook's next-entry line, §7d (`fff0c39`, 09:09:34Z) and the checker's scope line (`47157d8`,
+  09:10:00Z) all landed before my round-259 row at 09:10:51Z, against a sweep bounded at `fe76d83` fetched
+  09:05:52Z. **The row is exactly true because it names that bound** and closes with "MEM sweeps R-774
+  onward". **Second time the bound has done this job** -- round 255 was one commit deep, this is four --
+  which is the argument for reporting a sweep as a CLOSED INTERVAL rather than as "everything up to now".
+  (6) ***AND MY HEAD IS THE TIP***: nothing has landed since my own state commit, behind 0, the range
+  empty. After a morning in which the tip moved during almost every round, **the programme is idle on one
+  review**: E2, E3, E4 and tonight's GO #8 all wait on REV 95 part A, DE 127 waits on it, BE and DA stand
+  by. A quiet tip is itself state -- nothing is being built that a later sweep must reconcile.
+  (7) ***THE RE-GATE IS NARROW BECAUSE THE DECLARATIONS HELD***: params head **v19** `dd8db7de` and design
+  head **v27** `3bcdf3c2` are UNMOVED across phase 2 while the runner moved to `ccc4108d28f07541`, so two
+  of the four things REV 94 cleared are still exactly what it cleared. DE's own warning -- GO #8 "must
+  either run at REV 94's cleared commit or be re-cleared at ccc4108d…; it cannot silently do both" -- was
+  taken, and the standing condition for tonight is recorded with it: **GO #8 runs from wt-de at the commit
+  REV 95 clears, FROZEN from E2 onward**, which is R-747's rule applied forward instead of after the fact.
+  ***THE PHASE4 SUITE IS HELD AND VISIBLY SO***: clean at `git status`, last commit `c707eb8` (BE 96), so
+  nothing of DE 125's work is landed. ***AND DE CORRECTED ITS OWN COUNT BEFORE ANYONE CHECKED IT*** -- an
+  AST scan said 209 call sites, the real figure is 249, and "landing the constant at 212 on that wrong
+  count would have been exactly the move R-771 forbids": round 257's rule, applied by the seat to its own
+  arithmetic.
+  Counts: flags 1,877 -> **1,892**; provenance 1,422 -> **1,437**; tasks 19; **1,149 CHECKED /
+  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SIXTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start for the second
+  round running, because all fifteen entries resolve. Window trimmed 4 -> 3, **Batch 242** archived.
+  Q-MEM-248 filed through the script.)
   2026-09-07T09:07:15Z (MEM ROUND 259 -- R-773 SWEPT, with every landing between my own 34cd7e6 and the
   tip `fe76d83`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE FIRST EARLY-READ TABLE, CARRIED WITH ITS LABELS AND NOT AS A VERDICT. 2026-09-03,
@@ -193,62 +253,6 @@ updated: >-
   audit exits **1** on **168** missing-artifact findings, 167 at my round start plus ONE of mine, the unit
   reading -- and that unit is now `not-found`, so it will never resolve, correctly. Window trimmed 4 -> 3,
   **Batch 240** archived. Q-MEM-246 filed through the script.)
-  2026-09-07T08:51:45Z (MEM ROUND 257 -- R-771 SWEPT, with every landing between my own 3918ae5 and the
-  tip `7245f33`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
-  (1) ***THE NO-GO VERIFIES AT BOTH ENDS, AND I MEASURED BOTH RATHER THAN EITHER.*** params v18 carries
-  exactly ONE `be_module` block -- `path` `live/pm_research/be_cancel_axis_null.py`, `sha256`
-  **93332a45**faf714… -- and the file on disk today hashes **5607bfbf**e1b4ef89. **The params version in
-  force pins a digest the file no longer has**, and the runner refuses at PREFLIGHT rather than running a
-  null control whose code moved under it. That is a named refusal that writes nothing, costing a dispatch
-  rather than a run -- the same shape as this week's other good refusals.
-  (2) ***AND THE SHARPER HALF CHECKS OUT: ONE COMMIT CHANGED BOTH MODULES, AND THE PIN COVERS ONE.*** The
-  last commit touching `be_cancel_axis_null.py` is **c707eb8** (BE 96) -- and the last commit touching
-  `harmful_stateful_policy.py` is **the same c707eb8**. `be_module` is a SINGLE {path, sha256}, so **a BE
-  change confined to the cascade module REV names as carrying the behaviour would have produced NO MISMATCH
-  AT ALL and the run would have proceeded.** Today it happened to be the pinned file that moved. **A guard
-  that fires on the file it pins tells you nothing about the files it does not** -- REV routed widening
-  `be_module` to the cascade by pair; MEM records the shape and rules nothing.
-  (3) ***THE UNBLOCK HAS NOT LANDED AND THE BLOCK STANDS AS I WRITE.*** `params_v19` and `design_v27` do
-  NOT exist; the resolver returns params head **v18** and design head **v26**; `PARAMS_REL` still names
-  v18. DE 126 phase 1 was dispatched 08:49:55Z. ***AND ONE DIGEST MISMATCH BLOCKS BOTH GO E2 AND GO #8***
-  -- the next early read (09-04) and tonight's Gate-1 day run share the params version and the runner
-  refuses for both. So the user's remaining three early-read days and the six-day Gate-1 population wait on
-  the same three-line re-point, with the close a fixed event at 2026-09-08T00:00Z that it must clear before.
-  (4) ***REV's ONE RESIDUAL, WITH BOTH HALVES MEASURED: THE VALUE IS RIGHT AND THE CHECK IS A SHAPE
-  CHECK.*** v26's `user_ruled_unsealed_emission` carries `landed_at` "R-765", `ruled_by` "THE USER",
-  `recorded_at_utc` 07:47:01Z and the verbatim ruling -- and `### R-765` appears exactly once in the
-  register, so the citation is correct. But the predicate tests PRESENCE AND SHAPE, so **a block naming a
-  register entry that was never written would pass**. **A citation that is correct today because the writer
-  was careful is not a checked citation** -- R-601's class ("a cited artifact is locatable") one level up,
-  from paths to register ids.
-  (5) **RELAYED, MARKED SO** -- four readings that are other seats' acts to establish: REV measured BE 96's
-  change under **DE's own re-point method**, found it battery-only, and **handed the measurement over
-  rather than pre-approving the re-point**, leaving the declaration's decision with its seat; DE 125
-  stopped on **five pre-existing defects behind one phase4 FAIL**, of which the number a state file should
-  carry is **212 of 252 declared checks reachable** -- a green suite reporting on four fifths of what it
-  declares; one of the five is **a NameError that ended the suite early for everyone**, rule 17's shape
-  with a third variant (a suite that STOPS is neither green nor red for the checks after the stop, and
-  nothing in the count said so); and REV's accounting of DE 124 -- everything else PASSES, the six walls
-  "none loosened, two tightenings", one residual.
-  (6) ***AND DE 126 PHASE 2's RULING IS THE ONE I KEEP SEEING FROM NEW DIRECTIONS***: "the constant is
-  never adjusted to the observation", with `n_run` beside `n_conditional`. The programme has now stated
-  that rule from four independent places -- never loosen a check to make it pass (R-767), a known-bad
-  asserts a delta from its own baseline (REV 83 §5), a derived block changes only to what its measurement
-  re-derives (R-769), and now a declared check count is never edited down to what ran. **Four independent
-  arrivals at one rule is the strongest evidence a programme produces that the rule is real.**
-  (7) ***E1 IS STILL RUNNING AT EIGHTY-TWO MINUTES***: RUNNING with `ExecMainExitTimestamp` EMPTY at
-  08:50:40Z, MemoryPeak still 2,715,901,952 -- the same value at seven readings since 07:31:38Z -- against
-  an expected 86 minutes and an exit about 08:55Z. **Still inside its estimate**, and this is the first run
-  to test an estimate that came from the sealed receipts' own resource blocks. **DA 125 is drafted**: when
-  the receipt lands, DA's reader prints the table under `--print-under-ruling` with R-757's labels. DE's
-  report does not print it, and neither does MEM.
-  Counts: flags 1,832 -> **1,847**; provenance 1,377 -> **1,392**; tasks 19; **1,107 CHECKED /
-  280 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-THIRD round unchanged on UNMARKED**;
-  RELAYED moves by FOUR, this round's four other-seat readings at (5) -- the largest RELAYED step I have
-  taken, and deliberate: establishing any of them means running another seat's suite. ORPHAN census **0**;
-  the audit exits **1** on **167** missing-artifact findings, 166 at my round start plus ONE of mine, the
-  running unit. Fifteen written, fifteen counted, the duplicate-name gate run before writing. Window
-  trimmed 4 -> 3, **Batch 239** archived. Q-MEM-245 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -420,6 +424,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 260, R-774 swept (and every landing between fe76d83 and 47157d8) ---
+  FOUR_COMMITS_LANDED_INSIDE_MY_ROUND_259_WINDOW_AND_THE_BOUND_HELD_AGAIN: SECOND-TIME-NOW-FOUR-DEEP
+  MY_HEAD_IS_THE_TIP_SO_THE_SEATS_ARE_QUIET_ON_REV_95: NOTHING-SINCE-MY-STATE-COMMIT
+  THE_TWO_DAY_RUN_LITERALS_ARE_COMPUTED_NOW_AND_THE_COMMENT_NAMES_MY_CASE: ROUND-258-CLOSED-AT-THE-CODE
+  and_the_FIELD_RECORDS_WHERE_IT_WAS_READ_FROM: THE-ECONOMICS-ARE-SEALED-READ-FROM
+  THE_R_ID_EXISTENCE_CHECK_IS_IN_AND_DRIVEN_BOTH_WAYS: R-99999-REFUSES-R-765-ADMITS
+  and_ITS_OWN_WORDS_ARE_THE_SUBSTANCE_I_RECORDED_AT_ROUND_257: AUTHORITY-WITH-NOTHING-BEHIND-IT
+  THE_SHARED_FALSIFIER_CELL_IS_IN_de_early_read_AFTER_THREE_ROUNDS_OPEN: THE-LAST-OF-DA-122S-THREE
+  THE_LEDGERS_INVENTORY_LEG_IS_CLOSED_ON_BOTH_HALVES: SCHEMA-V2-FIVE-FIELDS-AND-A-REFUSAL
+  and_THE_CLOSURE_IS_ASSERTED_BY_A_CELL_NOT_CLAIMED_IN_PROSE: THE-SCHEMA-VERSION-SAYS-SO
+  FIVE_OF_MY_OWN_CARRIED_THREADS_CLOSE_IN_ONE_ENTRY: 255-255-257-258-259
+  THE_RUNNER_DIGEST_I_FLAGGED_IS_CONFIRMED_AND_RE_GATED: CCC4108D-REV-95-RE-GATES-BOTH
+  THE_PHASE4_SUITE_IS_HELD_AND_ITS_LAST_COMMIT_IS_BE_96s: NOTHING-OF-DE-125-LANDED
+  DEs_OWN_COUNT_CORRECTION_IS_THE_RULE_APPLIED_TO_ITSELF: 209-WAS-AN-AST-SCAN-249-IS-REAL
+  PARAMS_v19_AND_DESIGN_v27_ARE_UNMOVED_WHILE_THE_RUNNER_MOVED: THE-DECLARATIONS-HELD
+  E2_TO_E4_AND_TONIGHTS_GO_8_ALL_WAIT_ON_ONE_REVIEW: REV-95-PART-A
   # --- MEM round 259, R-773 swept (and every landing between 34cd7e6 and fe76d83) ---
   THE_FIRST_EARLY_READ_TABLE_IS_CARRIED_WITH_ITS_LABELS_AND_NOT_AS_A_VERDICT: EXPLORATORY-ONE-DAY-NO-INTERVAL
   EVERY_NUMBER_IN_THE_TABLE_REPRODUCES_AT_DEs_ARTIFACT_BY_KEY: MY-OWN-THIRD-ROUTE-TO-THEM
@@ -26287,6 +26307,160 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 260, 2026-09-07T09:13:47Z (the clock read by which every measurement below was complete) ---
+  FOUR_COMMITS_LANDED_INSIDE_MY_ROUND_259_WINDOW_AND_THE_BOUND_HELD_AGAIN:
+    prov: CHECKED
+    artifact: "git: log on mm-research with commit times"
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      R-774 landed at 7ce4b8a, then 624d147 (the runbook's next-entry line), fff0c39 (the runbook's §7d,
+      09:09:34Z) and 47157d8 (the checker's scope line, 09:10:00Z) -- ALL FOUR before my round-259 row at
+      09:10:51Z and my state commit at 09:10:53Z. My round-259 sweep was bounded at fe76d83, fetched
+      09:05:52Z. THE ROW IS EXACTLY TRUE because it names that bound and closes with "MEM sweeps R-774
+      onward". SECOND TIME THE BOUND HAS DONE THIS JOB (round 255 was the first, one commit deep; this is
+      four), which is the argument for reporting a sweep as a CLOSED INTERVAL rather than as "everything up
+      to now".
+  MY_HEAD_IS_THE_TIP_SO_THE_SEATS_ARE_QUIET_ON_REV_95:
+    prov: CHECKED
+    artifact: "git: fetch and log 0f6973f..origin/mm-research"
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      nothing has landed since my own round-259 state commit: HEAD equals origin equals 0f6973f, behind 0,
+      the range empty. After a morning in which the tip moved during almost every round, THE PROGRAMME IS
+      IDLE ON ONE REVIEW -- E2, E3, E4 and tonight's GO #8 all wait on REV 95 part A, DE 127 waits on it,
+      BE and DA are on standby. Recorded because a quiet tip is itself state: it means nothing is being
+      built that a later sweep will have to reconcile.
+  THE_TWO_DAY_RUN_LITERALS_ARE_COMPUTED_NOW_AND_THE_COMMENT_NAMES_MY_CASE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      at round 258 I read `day_run.status = "DAY_RUN_SEALED"` and
+      `what_this_is_not.the_economics_are_SEALED = true` in E1's artifact, both false for it, and published
+      the reading rule (read the arm-days, never day_run.status). At the tip the runner computes both: :6201
+      is a conditional over `_all_sealed` (with a third branch, `DAY_RUN_SEALED_NO_ADMISSIBLE_ARM`), and
+      :6356 is `"the_economics_are_SEALED": _all_sealed` -- a variable, not a literal. AND THE COMMENT AT
+      :6188-6194 NAMES THE EXACT CASE I FOUND: "`DAY_RUN_SEALED` while BOTH arm-days read `sealed False`".
+      Closed at the code, in the words of the artifact that showed it.
+  and_the_FIELD_RECORDS_WHERE_IT_WAS_READ_FROM:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      beside the computed boolean at :6357 the emit writes `the_economics_are_SEALED_read_from` -- so the
+      artifact will carry not just the value but the SOURCE it was derived from. That is more than the fix
+      needed: a reader of a future artifact can tell a computed field from a carried one WITHOUT reading the
+      code, which is exactly what I could not do at round 258 and had to establish by grep.
+  THE_R_ID_EXISTENCE_CHECK_IS_IN_AND_DRIVEN_BOTH_WAYS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_design_declaration.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      two cells at :3918-3934. RED: a block naming `R-99999` -- correct SHAPE, no such entry -- refuses by
+      name `USER_RULING_ENTRY_NOT_IN_THE_REGISTER`. GREEN: `R-765`, an entry that DOES exist, is PERMITTED
+      "so the check reads the register rather than refusing every id". BOTH DIRECTIONS, AND THE POSITIVE
+      CONTROL ADMITS -- rule 16's requirement that a guard shown only to refuse is not a control.
+  and_ITS_OWN_WORDS_ARE_THE_SUBSTANCE_I_RECORDED_AT_ROUND_257:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_design_declaration.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      the RED cell's message reads: "The predicate reads the register for `### R-<n> `, so an id that
+      merely looks like one is RULE 14's AUTHORITY WITH NOTHING BEHIND IT". At round 257 I recorded REV's
+      residual as "a citation that is correct today because the writer was careful is not a checked
+      citation -- R-601's class one level up, from paths to register ids". Same defect, same conclusion,
+      arrived at independently and now written into the cell that enforces it.
+  THE_SHARED_FALSIFIER_CELL_IS_IN_de_early_read_AFTER_THREE_ROUNDS_OPEN:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      `--falsify` appears twice in the module -- the shared-falsifier cell REV 91 §C1 routed and DA 122's
+      census counted as the LAST of three modules missing it (round 255: "n_missing_the_cell 3 -> 1, the one
+      left DE's"). It is in. So every importer of `declaration_chain` on DA's resolution surface now runs
+      the module's own falsifier as a cell of its battery, which is REV 84 §3.2's rule reaching its last
+      holdout three rounds after it was named.
+  THE_LEDGERS_INVENTORY_LEG_IS_CLOSED_ON_BOTH_HALVES:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      `SCHEMA_VERSION = 2` and all five of BE 96's fields are in the ledger -- `inventory_before` (6
+      occurrences), `inventory_after` (6), `inventory_unit` (7), `inventory_mark_cents` (6),
+      `inventory_mark_source` (4) -- with `DECISION_LEDGER_NO_INVENTORY_FIELDS` present twice, REFUSING
+      rather than reading zero. At round 255 I recorded the split -- BE 96 landed the PRODUCER half while
+      DE's ledger, the CONSUMER, was unlanded, so the leg stayed ABSENT -- and I declined to report the item
+      closed on half of it. BOTH HALVES ARE NOW LANDED.
+  and_THE_CLOSURE_IS_ASSERTED_BY_A_CELL_NOT_CLAIMED_IN_PROSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      `ABSENT_UNTIL_BE_96` still appears four times in the ledger and I checked what each one IS rather than
+      reading the string as a live status: :46 and :338 are prose recording that BE 96 closed it, :258 is a
+      message, and :353 is an ASSERTION -- "ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION} says
+      so". So the marker survives as history and the closure is CHECKED, not claimed. (The two remaining
+      occurrences are in BE's own modules and I did not classify them; scope stated.)
+  FIVE_OF_MY_OWN_CARRIED_THREADS_CLOSE_IN_ONE_ENTRY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      counted at my own flags: the two day_run literals (round 258), the R-id existence check (round 257's
+      record of REV's residual), the shared-falsifier cell in de_early_read (round 255), the ledger's
+      inventory leg on both halves (round 255), and the runner's move off REV 94's cleared digest (round
+      259, confirmed and re-gated). FIVE THREADS I HAVE CARRIED ACROSS ROUNDS, CLOSED BY ONE SEAT'S BATCH --
+      and not one of them was closed by MEM: they were closed by DE and BE doing the work, which is the
+      point of carrying them where the doers read them.
+  THE_RUNNER_DIGEST_I_FLAGGED_IS_CONFIRMED_AND_RE_GATED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      the runner hashes ccc4108d28f07541 at the tip -- the digest I measured at round 259 against REV 94's
+      cleared c8be65b2c1ce4ea9 -- and R-774 records DE's own warning that GO #8 "must either run at REV 94's
+      cleared commit or be re-cleared at ccc4108d...; it cannot silently do both". The coordinator chose
+      RE-CLEARANCE at the tip and REV 95 re-gates BOTH GO E2 and GO #8. So the third instance of the stale-
+      clearance mechanism is closed by re-gating rather than by running on a stale word.
+  THE_PHASE4_SUITE_IS_HELD_AND_ITS_LAST_COMMIT_IS_BE_96s:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      `git status` is clean for it and its last commit is c707eb8 (BE 96) -- so NOTHING of DE 125's work on
+      it is landed, exactly as R-774 says it should be. The hold is visible at the file rather than only in
+      the entry: a reader can tell that the suite at the tip is the one that was failing, and DE 127 owns
+      the per-branch classification after REV 95.
+  DEs_OWN_COUNT_CORRECTION_IS_THE_RULE_APPLIED_TO_ITSELF:
+    prov: RELAYED
+    from: R-774 (DE's own correction, recorded by the coordinator)
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      DE's first count of the phase4 call sites was WRONG -- an AST scan of the top-level selftest said 209;
+      the real figure is 249 -- and DE's own words are that "landing the constant at 212 on that wrong count
+      would have been exactly the move R-771 forbids". THE RULE FROM ROUND 257 ("the constant is never
+      adjusted to the observation") APPLIED BY THE SEAT TO ITS OWN ARITHMETIC, before anyone checked it.
+      RELAYED: establishing the 249 means running DE's scan, which is DE's act.
+  PARAMS_v19_AND_DESIGN_v27_ARE_UNMOVED_WHILE_THE_RUNNER_MOVED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      resolved through the shared resolver: params head v19 dd8db7ded9e6ed97 and design head v27
+      3bcdf3c234cb7d4e -- BOTH UNMOVED across phase 2, while the runner moved. So REV 95's re-gate concerns
+      the CODE and not the declarations: two of the four things REV 94 cleared are still exactly what it
+      cleared, and naming which moved is what lets a re-gate be narrow instead of a fresh review.
+  E2_TO_E4_AND_TONIGHTS_GO_8_ALL_WAIT_ON_ONE_REVIEW:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:13:47Z
+    said: >-
+      REV 95 (dispatched 09:07:18Z) re-gates BOTH GO E2 and GO #8 at the tip's digests, so the user's
+      remaining three early-read days AND tonight's Gate-1 day run wait on one part A. And the standing
+      condition for tonight is recorded with it: GO #8 runs from wt-de at the commit REV 95 clears, FROZEN
+      from E2 onward -- no refresh between E2 and GO #8 -- which is R-747's rule applied forward instead of
+      after the fact.
   # --- MEM round 259, 2026-09-07T09:07:15Z (the clock read by which every measurement below was complete) ---
   THE_FIRST_EARLY_READ_TABLE_IS_CARRIED_WITH_ITS_LABELS_AND_NOT_AS_A_VERDICT:
     prov: CHECKED
