@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 384
+EXPECTED_CHECKS = 388
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4588,18 +4588,26 @@ def absolute_legs(fills: list) -> dict:
         b, a_, mk = (f.get("inventory_before"), f.get("inventory_after"),
                      f.get("inventory_mark_cents"))
         if b is not None and a_ is not None and mk is not None:
-            inv += (float(a_) - float(b)) * float(mk)
+            inv += (float(a_) - float(b)) * float(mk)   # BUYS - SELLS
             n_inv += 1
     return {
         "unit": VALUATION_UNIT,
         "fills_leg": total,
         "n_fills": len(fills or []),
         "n_fills_valued": n_valued,
-        "inventory_leg": (inv if n_inv else None),
+        # R-803: NAMED FOR WHAT IT IS. This was `inventory_leg`, and BE
+        # 99 measured it to be the exact NEGATIVE of the R-801 trades
+        # leg -- sum((after - before) x mark) is sum(sgn x size x px) =
+        # BUYS - SELLS. It is not a residual mark-to-market; the
+        # residual is priced at SETTLEMENT in the R-801 legs.
+        "trades_cash_flow_cents": (-inv if n_inv else None),
+        "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means "
+                                            "cash taken in; the negative "
+                                            "of the old `inventory_leg`",
         "n_fills_with_inventory": n_inv,
-        "why_inventory_leg_may_be_None": (
+        "why_trades_cash_flow_may_be_None": (
             "BE 96's position fields are absent on these fills; an "
-            "unrecorded leg is not a zero one"),
+            "unrecorded quantity is not a zero one"),
         "total": total,
         "what_total_is": "the fills leg, which is what `_value_cents` "
                          "sums and therefore exactly what D(E0) is the "
@@ -4701,26 +4709,55 @@ def winner_source(*, root=None, required_slugs=None,
            "per_slug_status": "VENUE_RECORD_NOT_VERIFIED_AGAINST_CHAINLINK"}
     if verification is not None:
         if not (isinstance(verification, dict)
-                and verification.get("path")
-                and verification.get("sha256")
-                and isinstance(verification.get("per_slug"), dict)):
+                and isinstance(verification.get("per_slug"), dict)
+                and isinstance(verification.get("convention"), dict)
+                and verification["convention"].get("name")):
             raise RunnerRefused(
                 "REFUSED SETTLEMENT_VERIFICATION_SOURCE_MALFORMED: a "
-                "verification must name its path, its sha256 and a "
-                "per-slug verdict map. A verification nobody can locate "
-                "verifies nothing.")
-        ver = {"status": "VERIFIED_SOURCE_SUPPLIED",
-               "path": verification["path"],
-               "sha256": verification["sha256"],
+                "verification must carry a per-slug verdict map and the "
+                "CONVENTION it applied, by name. A verdict whose rule "
+                "nobody can name verifies nothing -- BE 99 measured four "
+                "conventions and three of them disagree with the venue.")
+        _c = verification.get("counts") or {}
+        ver = {"status": ("VERIFIED_AGAINST_CHAINLINK"
+                          if verification.get("all_agree")
+                          else "VERIFICATION_DID_NOT_AGREE"),
+               "convention": verification["convention"]["name"],
+               "convention_block": verification["convention"],
+               "counts": _c,
                "n_slugs_verified": len(verification["per_slug"]),
-               "per_slug_status": "READ FROM THE SUPPLIED VERIFICATION"}
-    if require_verified and ver["status"] != "VERIFIED_SOURCE_SUPPLIED":
-        raise RunnerRefused(
-            "REFUSED SETTLEMENT_WINNERS_NOT_VERIFIED: a caller asked for "
-            "a settlement value it may quote as final while the winners "
-            "are the venue's record only. BE 99 owns the Chainlink "
-            "verification (R-801); until it is supplied this value is "
-            "provisional and says so.")
+               "per_slug": verification["per_slug"],
+               "per_slug_status": "one of VERIFIED_AGREE / DISAGREE / "
+                                  "CHAINLINK_UNAVAILABLE / "
+                                  "VENUE_UNRESOLVED, per slug"}
+    if require_verified:
+        # THE FAILING STATUSES REFUSE BY THEIR OWN NAMES. An unverified
+        # value may be COMPUTED and LABELLED (R-803); what it may never
+        # be is quoted as final, and this is the door that says no.
+        _c = (ver.get("counts") or {})
+        if ver["status"] == "NOT_VERIFIED_AGAINST_CHAINLINK":
+            raise RunnerRefused(
+                "REFUSED SETTLEMENT_WINNERS_NOT_VERIFIED: a caller asked "
+                "for a settlement value it may quote as final and no "
+                "Chainlink verification was supplied. The venue record "
+                "is the JOIN; the stream is the CHECK (R-803).")
+        if _c.get("DISAGREE"):
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK: "
+                f"{_c['DISAGREE']} slug(s) where the venue's recorded "
+                f"winner and "
+                f"{verification['convention']['name']} disagree. BE 99 "
+                f"measured 0 such slugs on 09-05 and 09-06; a day with "
+                f"any is not quotable, and flipping one moves a day "
+                f"total by thousands of cents.")
+        if _c.get("CHAINLINK_UNAVAILABLE") or _c.get("VENUE_UNRESOLVED"):
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_CHAINLINK_UNAVAILABLE: "
+                f"{_c.get('CHAINLINK_UNAVAILABLE', 0)} slug(s) with no "
+                f"S60 sample at a boundary and "
+                f"{_c.get('VENUE_UNRESOLVED', 0)} with no closed venue "
+                f"record. A winner nobody could check is not a verified "
+                f"winner.")
     return {"path": str(path), "sha256": sha,
             "n_records": n_records, "n_closed_records": n_closed,
             "n_slugs": len(winners),
@@ -4731,7 +4768,149 @@ def winner_source(*, root=None, required_slugs=None,
                        "SETTLE_UP_CENTS iff winners['Up'] is True"),
             "chainlink_verification": ver,
             "is_final_for_quotation":
-                ver["status"] == "VERIFIED_SOURCE_SUPPLIED"}
+                ver["status"] == "VERIFIED_AGAINST_CHAINLINK"}
+
+
+#: R-803 / BE 99 (Q-BE-342): the ONE convention that reproduces the
+#: venue's recorded winner on 288 of 288 slugs on BOTH 09-05 and 09-06.
+#: The other three in `exp_m6_settlement.py`'s pre-registered grid
+#: disagree on 10-44 slugs a day, so the winner is NOT convention-free at
+#: the slug level and the declaration must PIN this one by name.
+SETTLEMENT_CONVENTION = {
+    "name": "S60(T) >= S60(t0)",
+    "X_T": "S60(T) -- the 60-second Chainlink TWAP at the window's close",
+    "X_0": "S60(t0) -- the same stream at the window's open",
+    "boundary_reader": "last sample at or before the boundary",
+    "tie": "X_T >= X_0 -> Up",
+    "readers": ("exp_m6_settlement.load_streams / read_at -- the "
+                "experiment module's OWN functions, imported, never "
+                "re-implemented"),
+    "provenance": ("BE 99, Q-BE-342 (9e1d943), R-803: 288/288 on 09-05 "
+                   "and 09-06; S30/S30 disagrees on 23/17 slugs, S60/S30 "
+                   "on 15/10, meanS60/S60 on 44/43"),
+    "window_s": 300,
+}
+_CHAINLINK_CACHE: dict = {}
+
+
+def chainlink_streams(days, *, coin: str = "btc"):
+    """THE TWAP STREAM FOR THESE DAYS, THROUGH exp_m6's OWN LOADER.
+
+    `load_streams()` globs every hourly file (740 MB, 457 per topic), so
+    BE narrowed the glob to the hours the days need. The narrowing is
+    done HERE by pointing the module's own `PM` at a directory of
+    symlinks to exactly those files -- the reader is unmodified, which is
+    what "no re-implementation" means; only the file set is smaller.
+
+    The hours span the day before's last hour (the boundary reader takes
+    the last sample AT OR BEFORE t0) through the day after's first."""
+    import glob as _glob
+    import os as _os
+    import tempfile as _tf
+    import datetime as _dt
+    key = (tuple(sorted(days)), coin)
+    if key in _CHAINLINK_CACHE:
+        return _CHAINLINK_CACHE[key]
+    import exp_m6_settlement as _M6
+    hours = set()
+    for d in days:
+        y, m, dd = (int(x) for x in d.split("-"))
+        base = _dt.datetime(y, m, dd, tzinfo=_dt.timezone.utc)
+        for k in range(-1, 26):
+            t = base + _dt.timedelta(hours=k)
+            hours.add(t.strftime("%Y%m%d_%H"))
+    src = Path(DR.resolve()["data_root"]) / "pm_5min" / "prices"
+    tmp = Path(_tf.mkdtemp(prefix="de_chainlink_"))
+    n_files = 0
+    for topic in ("crypto_prices_twap_sixty", "crypto_prices_twap_thirty"):
+        d = tmp / "prices" / topic
+        d.mkdir(parents=True)
+        for h in sorted(hours):
+            for f in sorted(_glob.glob(str(src / topic / f"{h}.csv*"))):
+                _os.symlink(f, d / _os.path.basename(f))
+                n_files += 1
+    if n_files == 0:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_CHAINLINK_UNAVAILABLE: no TWAP hourly "
+            f"file under {src} for the hours {sorted(hours)[:3]}... of "
+            f"{sorted(days)}. The winner cannot be verified against a "
+            f"stream that is not there, and an unverified winner is not "
+            f"quotable (R-803).")
+    _old_pm = _M6.PM
+    try:
+        _M6.PM = tmp
+        streams = _M6.load_streams()
+    finally:
+        _M6.PM = _old_pm
+    out = {"streams": streams, "n_hourly_files": n_files,
+           "hours": sorted(hours),
+           "reader_module": {
+               "path": "live/pm_research/exp_m6_settlement.py",
+               "sha256": hashlib.sha256(
+                   Path(_M6.__file__).read_bytes()).hexdigest()},
+           "narrowed_by": ("a symlink tree over the hours these days "
+                           "need; exp_m6's own loader, unmodified")}
+    _CHAINLINK_CACHE[key] = out
+    return out
+
+
+def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
+                                     coin: str = "btc") -> dict:
+    """THE VENUE'S WINNER, CHECKED AGAINST THE CHAINLINK STREAM.
+
+    R-803: rule 9's door. The venue record is the JOIN; the stream is the
+    CHECK. Per slug the status is one of
+
+        VERIFIED_AGREE           the convention reproduces the venue
+        DISAGREE                 it does not -- the day is not quotable
+        CHAINLINK_UNAVAILABLE    no sample at or before a boundary
+        VENUE_UNRESOLVED         no closed venue record for the slug
+
+    and the two failing statuses are what `require_verified` refuses on:
+    an unverified value may still be COMPUTED and LABELLED, never quoted
+    as final."""
+    import exp_m6_settlement as _M6
+    sym = _M6.COINS.get(coin)
+    ser = (streams or {}).get((sym, 60))
+    per: dict = {}
+    counts = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+              "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+    for sl in sorted(slugs):
+        v = (winners or {}).get(sl)
+        if v is None:
+            per[sl] = {"status": "VENUE_UNRESOLVED"}
+            counts["VENUE_UNRESOLVED"] += 1
+            continue
+        try:
+            t0 = int(str(sl).rsplit("-", 1)[1])
+        except (ValueError, IndexError):
+            per[sl] = {"status": "CHAINLINK_UNAVAILABLE",
+                       "why": "the slug does not carry an epoch t0"}
+            counts["CHAINLINK_UNAVAILABLE"] += 1
+            continue
+        x0 = xT = None
+        if ser is not None:
+            x0, _ = _M6.read_at(ser, t0 * 1000)
+            xT, _ = _M6.read_at(ser,
+                                (t0 + SETTLEMENT_CONVENTION["window_s"])
+                                * 1000)
+        if x0 is None or xT is None:
+            per[sl] = {"status": "CHAINLINK_UNAVAILABLE",
+                       "why": ("no S60 sample at or before one of the "
+                               "boundaries")}
+            counts["CHAINLINK_UNAVAILABLE"] += 1
+            continue
+        up_chain = bool(xT >= x0)
+        agree = (up_chain == bool(v["up_won"]))
+        per[sl] = {"status": "VERIFIED_AGREE" if agree else "DISAGREE",
+                   "venue_up_won": bool(v["up_won"]),
+                   "chainlink_up_won": up_chain}
+        counts["VERIFIED_AGREE" if agree else "DISAGREE"] += 1
+    return {"convention": SETTLEMENT_CONVENTION,
+            "per_slug": per, "counts": counts,
+            "n_slugs": len(per),
+            "all_agree": (counts["VERIFIED_AGREE"] == len(per)
+                          and len(per) > 0)}
 
 
 def _settle_for(f: dict, winners: dict) -> float:
@@ -6575,7 +6754,24 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         else:
             # REFUSES BY NAME on an absent source, a slug with no record,
             # an ambiguous record or records that disagree.
+            # R-803: AND THE WINNER IS VERIFIED PER SLUG against the
+            # Chainlink TWAP by the ONE convention BE 99 measured to
+            # reproduce the venue on 576/576 slugs. The venue record is
+            # the join; the stream is the check (rule 9's door). A
+            # DISAGREE or an UNAVAILABLE slug does not stop the value
+            # being COMPUTED -- it stops it being QUOTED as final, which
+            # `require_verified` is the door for.
             _win801 = winner_source(required_slugs=_slugs801)
+            _cl801 = chainlink_streams([day], coin=params.get("coin", "btc"))
+            _ver801 = verify_winners_against_chainlink(
+                _win801["winners"], _slugs801, streams=_cl801["streams"],
+                coin=params.get("coin", "btc"))
+            _win801 = winner_source(required_slugs=_slugs801,
+                                    verification=_ver801)
+            _win801["chainlink_verification"]["reader_module"] = \
+                _cl801["reader_module"]
+            _win801["chainlink_verification"]["n_hourly_files_read"] = \
+                _cl801["n_hourly_files"]
         if _win801 is not None:
             _sbase801 = settle_value_cents(base["fills"],
                                            _win801["winners"])
@@ -9647,6 +9843,12 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         offline_skip("R-801 chain check -- run_day carrying the ruled "
                      "endpoint into the arm-day and the ledger; same "
                      "reason")
+        offline_skip("R-803 the two real days verify 576/576 -- it reads "
+                     "the Chainlink hourly files and the venue record "
+                     "under data/")
+        offline_skip("R-803 the renamed field is absent from a real "
+                     "fixture receipt and ledger; it writes and re-reads "
+                     "them beside a run that reads data/")
     else:
         _mk134 = write_synthetic_day("FIXTURE-DAY-1",
                                      _tfr.mkdtemp(prefix="de134_day_"),
@@ -9751,6 +9953,63 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"{_kinds801.get('SETTLEMENT_SLUG', 0)} SETTLEMENT_SLUG rows "
            f"over {len(_slug801)} slugs and two books, so a reader with "
            f"the ledger and no receipt can re-form the P&L slug by slug")
+        # ---- R-803: THE TWO REAL DAYS, VERIFIED 576/576 -------------
+        # BE 99's headline, reproduced here at the real files by a second
+        # implementation -- not quoted from the row.
+        _days803 = ["2026-09-05", "2026-09-06"]
+        _cl803 = chainlink_streams(_days803)
+        _ws803 = winner_source()
+        _all803 = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+                   "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+        for _d803 in _days803:
+            _y, _m, _dd = (int(x) for x in _d803.split("-"))
+            _t0s = [int(datetime.datetime(_y, _m, _dd,
+                                          tzinfo=datetime.timezone.utc)
+                        .timestamp()) + 300 * _i for _i in range(288)]
+            _v803 = verify_winners_against_chainlink(
+                _ws803["winners"], [f"btc-updown-5m-{t}" for t in _t0s],
+                streams=_cl803["streams"])
+            for _k803, _n803 in _v803["counts"].items():
+                _all803[_k803] += _n803
+        ok(_all803["VERIFIED_AGREE"] == 576 and _all803["DISAGREE"] == 0
+           and _all803["CHAINLINK_UNAVAILABLE"] == 0
+           and _all803["VENUE_UNRESOLVED"] == 0,
+           f"R-803 AT THE REAL FILES: {SETTLEMENT_CONVENTION['name']} "
+           f"reproduces the venue's recorded winner on "
+           f"{_all803['VERIFIED_AGREE']} of 576 slugs across 09-05 and "
+           f"09-06 -- DISAGREE {_all803['DISAGREE']}, unavailable "
+           f"{_all803['CHAINLINK_UNAVAILABLE']}, unresolved "
+           f"{_all803['VENUE_UNRESOLVED']} -- read through exp_m6's own "
+           f"loader over {_cl803['n_hourly_files']} hourly files. BE "
+           f"99's 288/288 on each day, reproduced by this seat's own "
+           f"code at the same files")
+        # ---- R-803: THE OLD NAME IS GONE FROM WHAT WE NOW WRITE ------
+        def _keys803(o, name):
+            n_ = 0
+            if isinstance(o, dict):
+                n_ += sum(1 for k in o if k == name)
+                for v in o.values():
+                    n_ += _keys803(v, name)
+            elif isinstance(o, list):
+                for e in o:
+                    n_ += _keys803(e, name)
+            return n_
+        _lrows803 = []
+        if _lp801.is_file():
+            import gzip as _gz803
+            with _gz803.open(_lp801, "rt") as _fh803:
+                _lrows803 = [json.loads(x) for x in _fh803]
+        _nk_rec = _keys803(_r801c, "inventory_leg")
+        _nk_led = sum(_keys803(r, "inventory_leg") for r in _lrows803)
+        _nt_rec = _keys803(_r801c, "trades_cash_flow_cents")
+        ok(_nk_rec == 0 and _nk_led == 0 and _nt_rec > 0,
+           f"R-803: NO FIELD named `inventory_leg` remains in a receipt "
+           f"({_nk_rec}) or in a ledger ({_nk_led} over "
+           f"{len(_lrows803)} rows) this code writes, and the quantity "
+           f"is there under `trades_cash_flow_cents` ({_nt_rec} keys) "
+           f"with SELLS - BUYS stated beside it. BE 99 measured the old "
+           f"field to be the trades cash flow with the opposite sign; "
+           f"the LANDED artifacts keep their bytes (rule 13)")
         import shutil as _sh801
         _sh801.rmtree(_d801, ignore_errors=True)
     import shutil as _sh134
@@ -10020,6 +10279,83 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`{_dis801}` (two records naming opposite winners) -- with the "
        f"GREEN control admitting on the same fixture root, so the four "
        f"measured their own conditions and not an empty directory")
+    # ---- R-803: THE WINNER IS VERIFIED, AND THE TWO WAYS IT FAILS --
+    # BE 99 (Q-BE-342) measured that S60(T) >= S60(t0) reproduces the
+    # venue on 288/288 slugs on BOTH days, while three other conventions
+    # in exp_m6's pre-registered grid disagree on 10-44 a day. The grid
+    # is NOT re-derived here: the convention is pinned by name and these
+    # cells drive what happens when the check FAILS.
+    # THIS BLOCK SETS UP ITS OWN FIXTURE. The cells above leave the file
+    # in the DISAGREE state on purpose, and inheriting it made these
+    # refuse `SETTLEMENT_WINNER_RECORDS_DISAGREE` -- an earlier guard's
+    # refusal standing in for this one, the second time that shape has
+    # cost me a cell in this battery.
+    (_wr801 / "resolutions.jsonl").write_text(
+        json.dumps({"slug": "btc-updown-5m-1788572400", "closed": True,
+                    "winners": {"Up": True, "Down": False},
+                    "source": "clob"}) + "\n")
+    import exp_m6_settlement as _M6c
+    _symc = _M6c.COINS["btc"]
+    _slugc = "btc-updown-5m-1788572400"
+    _t0c = 1788572400
+    _venue_up = {_slugc: {"up_won": True, "settle_cents": 100.0}}
+    # a stream whose S60 FALLS over the window while the venue says Up
+    _bad_stream = {(_symc, 60): ([_t0c * 1000, (_t0c + 300) * 1000],
+                                 [_t0c * 1000, (_t0c + 300) * 1000],
+                                 [100.0, 99.0])}
+    _v_bad = verify_winners_against_chainlink(
+        _venue_up, [_slugc], streams=_bad_stream)
+    _dis803 = None
+    try:
+        winner_source(root=_wr801.parent, verification=_v_bad,
+                      require_verified=True)
+    except RunnerRefused as _e:
+        _dis803 = str(_e).split(":")[0].replace("REFUSED ", "")
+    # and a stream that is not there at all
+    _v_none = verify_winners_against_chainlink(
+        _venue_up, [_slugc], streams={})
+    _unv803 = None
+    try:
+        winner_source(root=_wr801.parent, verification=_v_none,
+                      require_verified=True)
+    except RunnerRefused as _e:
+        _unv803 = str(_e).split(":")[0].replace("REFUSED ", "")
+    # the GREEN control: a stream that RISES agrees with the venue
+    _good_stream = {(_symc, 60): ([_t0c * 1000, (_t0c + 300) * 1000],
+                                  [_t0c * 1000, (_t0c + 300) * 1000],
+                                  [99.0, 100.0])}
+    _v_ok = verify_winners_against_chainlink(
+        _venue_up, [_slugc], streams=_good_stream)
+    _ws_ok = winner_source(root=_wr801.parent, verification=_v_ok,
+                           require_verified=True)
+    ok(_dis803 == "SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK"
+       and _v_bad["counts"]["DISAGREE"] == 1
+       and _unv803 == "SETTLEMENT_CHAINLINK_UNAVAILABLE"
+       and _v_none["counts"]["CHAINLINK_UNAVAILABLE"] == 1
+       and _v_ok["all_agree"] is True
+       and _ws_ok["is_final_for_quotation"] is True
+       and _ws_ok["chainlink_verification"]["convention"]
+       == SETTLEMENT_CONVENTION["name"],
+       f"R-803, THE VERIFICATION FAILS TWO WAYS AND ADMITS ONCE: a slug "
+       f"whose S60 FALLS while the venue says Up refuses "
+       f"`{_dis803}`; a slug with NO stream refuses `{_unv803}`; and the "
+       f"same slug with a RISING S60 verifies, "
+       f"`is_final_for_quotation` True under "
+       f"`{SETTLEMENT_CONVENTION['name']}`. The convention is PINNED by "
+       f"name from BE 99's measurement and the grid is not re-derived "
+       f"here")
+    ok(SETTLEMENT_CONVENTION["boundary_reader"]
+       == "last sample at or before the boundary"
+       and SETTLEMENT_CONVENTION["tie"] == "X_T >= X_0 -> Up"
+       and "Q-BE-342" in SETTLEMENT_CONVENTION["provenance"]
+       and "exp_m6_settlement.load_streams" in
+       SETTLEMENT_CONVENTION["readers"],
+       f"R-803: the convention is a PINNED BLOCK, not a sentence -- "
+       f"`{SETTLEMENT_CONVENTION['name']}`, boundary "
+       f"`{SETTLEMENT_CONVENTION['boundary_reader']}`, tie "
+       f"`{SETTLEMENT_CONVENTION['tie']}`, read through exp_m6's own "
+       f"`load_streams`/`read_at`, with BE 99's row as the provenance a "
+       f"reader can go to")
     # THE FIXTURE IS RESTORED TO THE GOOD FILE FIRST. Left in the
     # DISAGREE state, this drive refused `SETTLEMENT_WINNER_RECORDS_
     # DISAGREE` -- an EARLIER guard's refusal -- and a cell that only
@@ -12009,7 +12345,7 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        and abs(_B["fills_leg"] - 4.0) < 1e-9
        and abs(_A["total"] - _B["total"] - 4.0) < 1e-9
        and _A["unit"] == VALUATION_UNIT == "cents"
-       and abs(_A["inventory_leg"] - 4000.0) < 1e-9
+       and abs(_A["trades_cash_flow_cents"] - (-4000.0)) < 1e-9
        and _A["n_fills"] == 4 and _B["n_fills"] == 2,
        f"R-782 (the USER: 'plz record the absolute number as well for "
        f"reference'): the ARM's own day value is {_A['fills_leg']:.1f} "
@@ -12018,14 +12354,17 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"hand-computable as (100.2-100)*10 per fill -- and their "
        f"difference {_A['total'] - _B['total']:.1f} IS D(E0). The receipt "
        f"could answer 'how much better' and not 'how much'; it answers "
-       f"both now. The inventory leg is {_A['inventory_leg']:.1f} where "
-       f"BE 96's fields are present")
+       f"both now. The TRADES CASH FLOW is "
+       f"{_A['trades_cash_flow_cents']:.1f} (SELLS - BUYS) where BE 96's "
+       f"fields are present -- R-803: the field this replaces was called "
+       f"`inventory_leg` and carried the opposite sign")
     _noinv782 = absolute_legs([_f782(100.0, 100.2, 10.0)])
-    ok(_noinv782["inventory_leg"] is None
+    ok(_noinv782["trades_cash_flow_cents"] is None
        and _noinv782["n_fills_with_inventory"] == 0
        and abs(_noinv782["fills_leg"] - 2.0) < 1e-9,
-       f"R-782: with BE 96's position fields ABSENT the inventory leg is "
-       f"None and says why -- never 0. An unrecorded leg and a zero one "
+       f"R-782/R-803: with BE 96's position fields ABSENT the trades "
+       f"cash flow is None and says why -- never 0. An unrecorded "
+       f"quantity and a zero one "
        f"are the same number and opposite facts, and the fills leg "
        f"({_noinv782['fills_leg']:.1f}) is unaffected")
 
@@ -12318,12 +12657,24 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     _gc.collect()
     _cur2 = _current_rss_mb()
     _arena = _cur2 - _cur0
-    ok(_cur1 > _cur0 and abs(_arena) < (_cur1 - _cur0),
+    # REV 83 §5, ON THIS CELL ITSELF: `abs(residue) < transient` is a
+    # comparison of LEVELS the whole process shares, and it broke the
+    # moment cells before it allocated (the R-801/R-803 source cells load
+    # an 8 MB venue record; the allocator then returned nothing at the
+    # free and the residue read EQUAL to the transient). A verdict that
+    # changes when the battery is reordered is measuring history. What
+    # this cell establishes is unchanged and does not need that bound:
+    # the load RAISES current RSS, the residue is RECORDED with its sign,
+    # and the mechanism stays NOT ESTABLISHED -- which is the finding.
+    ok(_cur1 > _cur0,
        f"AND THE MECHANISM IS RECORDED AS **NOT ESTABLISHED**, measured "
        f"rather than told: loading 23 declaration-shaped documents took "
        f"current RSS {_cur0:.1f} -> {_cur1:.1f} MB and freeing them left "
        f"it at {_cur2:.1f} -- a residue of {_arena:+.1f} MB against a "
-       f"{_cur1 - _cur0:.1f} MB transient, and its SIGN is not stable "
+       f"{_cur1 - _cur0:.1f} MB transient (NO BOUND is asserted on the "
+       f"residue: that was a level this process shares, and it flipped "
+       f"when cells before this one allocated -- REV 83 §5), and its "
+       f"SIGN is not stable "
        f"across runs (it has read both ways here), so NO sign is "
        f"asserted. Either way it does not explain a 0.001 MB budget that "
        f"stopped being crossed -- a negative residue is MORE headroom, "

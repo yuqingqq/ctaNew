@@ -65,10 +65,78 @@ slug by slug without re-running the day.
   `chainlink_verification.status = NOT_VERIFIED_AGAINST_CHAINLINK` and
   `is_final_for_quotation = false`, and a caller that asks for a quotable value is
   REFUSED (`SETTLEMENT_WINNERS_NOT_VERIFIED`).
-- **v20 must therefore carry** the verification source by pair once BE 99 lands it,
-  or state in the declaration that the endpoint is provisional on the venue record.
-  CLAUDE.md rule 9's parenthetical (settlement = Chainlink) is asserted by the
-  market text, not by this file, and this declaration must not restate it as fact.
+- **BE 99 HAS LANDED (R-803) and the verification is wired** — see §3a. The
+  endpoint is no longer provisional on the venue record alone: it is the venue's
+  winner CHECKED per slug against the Chainlink stream, and a day that fails the
+  check is not quotable.
+  CLAUDE.md rule 9's parenthetical is now NARROWER, not resolved: on 09-05 and
+  09-06 one form reproduces every recorded winner (576/576, reproduced twice —
+  BE 99 and DE 137). Whether it does so on every day is a PER-DAY CHECK, which
+  is why the check runs per day and refuses rather than being asserted once.
+
+## 3a. The winner is VERIFIED, and the convention is pinned (R-803, BE 99)
+
+**Updated by DE 137.** BE 99 (Q-BE-342 `9e1d943`) measured the pre-registered
+grid in `exp_m6_settlement.py` against the venue's recorded winner:
+
+| convention | slugs disagreeing, 09-05 / 09-06 |
+|---|---|
+| **S60(T) ≥ S60(t0)** | **0 / 0 — 288 of 288 on both days** |
+| S30(T) vs S30(t0) | 23 / 17 |
+| S60(T) vs S30(t0) | 15 / 10 |
+| mean S60[t0,T] vs S60(t0) | 44 / 43 |
+
+Flipping a convention's disagreeing slugs moves a day total by as much as
+−42,454 c. **So the winner is NOT convention-free at the slug level**, and v20
+pins exactly one:
+
+```
+name             S60(T) >= S60(t0)
+X_T              the 60-second Chainlink TWAP at the window's close
+X_0              the same stream at the window's open
+boundary reader  last sample at or before the boundary
+tie              X_T >= X_0 -> Up
+readers          exp_m6_settlement.load_streams / read_at, imported, not re-implemented
+provenance       BE 99, Q-BE-342, R-803
+```
+
+The venue record is the **join**; the stream is the **check** (rule 9's door).
+Per slug the receipt carries `VERIFIED_AGREE` / `DISAGREE` /
+`CHAINLINK_UNAVAILABLE` / `VENUE_UNRESOLVED`. A day with any DISAGREE or
+UNAVAILABLE slug may still be COMPUTED and LABELLED, and it is REFUSED BY NAME
+on the quotable path (`SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK`,
+`SETTLEMENT_CHAINLINK_UNAVAILABLE`). `is_final_for_quotation` is true only when
+every slug agrees. **v20 records the convention block verbatim** so a later
+reader resolves the rule and not a sentence.
+
+## 3b. Placement latency — a DECLARED parameter of the reference (R-803, BE 100)
+
+**BE 100 (Q-BE-343 `a8d0ad4`) established that the reference has no placement
+latency at all.** `_qr_spec(QR_SKEW, latency_ms=0, cancel=False)` binds
+`latency_ms` to `cancel_latency_ms` with cancelling disabled; `grep -niE latency
+policy_optimizer_queue_realistic.py` returns only `cancel_latency_ms`. **Quotes
+were placed instantaneously BY OMISSION, not by a declared choice.** And it is
+not a small omission: 48–56 % of every path's fills land within 250 ms of their
+generation's start, carrying **98 %** of the baseline's settlement P&L on 09-05
+(79,264 of 81,238 c) and **55 %** on 09-06 (25,812 of 46,562).
+
+`build_reference` now takes `placement_latency_ms`, with the semantics of the
+cancel latency mirrored: *a generation's quote is not resting until t0 + L_place;
+a fill before that is not ours* — dropped and COUNTED under
+`TRANCHE_BEFORE_PLACEMENT_LATENCY`, never silently either way.
+
+**PROPOSED for v20: `placement_latency_ms = 250`** — the arms' own cancel
+latency. **The code's default is 0.0 and stays there until v20 lands**, because
+changing the reference's fills under the freeze would move every future day
+silently, which is the choosing-after-seeing the declaration exists to prevent.
+The parameter and the value it ran with are recorded in every reference's own
+output.
+
+Two consequences v20 must state: the four consumed days may be RE-VALUED under a
+non-zero L_place as **DESIGN data** by a later GO (the landed artifacts are never
+edited, rule 13); and the predicate is `>= L` on floats — a fill at t0 + 100 ms
+measures 99.99999999999964 ms, so **no declared L may sit on a value a fill lands
+exactly on**.
 
 ## 4. The admissible days — rule 11, in the declaration
 

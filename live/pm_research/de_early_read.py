@@ -228,7 +228,7 @@ def inventory_at_the_ledger(ledger_path, *, arm_days=None) -> dict:
 
     header, kinds, n_rows = None, {}, 0
     rows_with_leg, fill_rows, fill_rows_all_five = 0, 0, 0
-    five, where = None, {}
+    five, where, where_tcf = None, {}, {}
     with gzip.open(lp, "rt") as fh:
         for line in fh:
             r = json.loads(line)
@@ -244,6 +244,14 @@ def inventory_at_the_ledger(ledger_path, *, arm_days=None) -> dict:
                 for _h in _hits:
                     _pth = f"{k}.{_h}"
                     where[_pth] = where.get(_pth, 0) + 1
+            # R-803: the field was RENAMED to what BE 99 measured it to
+            # be. Both names are tracked, because a reader meets either
+            # depending on which code wrote the file, and a block that
+            # reported only the old one would go quiet exactly when the
+            # rename landed.
+            for _h2 in _paths_to(r, "trades_cash_flow_cents"):
+                _p2 = f"{k}.{_h2}"
+                where_tcf[_p2] = where_tcf.get(_p2, 0) + 1
             if k == "FILL":
                 fill_rows += 1
                 if five and all(f in r for f in five):
@@ -271,6 +279,18 @@ def inventory_at_the_ledger(ledger_path, *, arm_days=None) -> dict:
     return {
         "status": status,
         "where_the_name_occurs": where,
+        "R_803_the_renamed_field": {
+            "name": "trades_cash_flow_cents",
+            "where_it_occurs": where_tcf,
+            "sign_convention": "SELLS - BUYS; the NEGATIVE of the "
+                               "quantity the old name carried",
+            "why_renamed": ("BE 99 (R-803) measured sum((after - before) "
+                            "x mark) to be the exact negative of the "
+                            "R-801 trades leg on all four path-days -- "
+                            "the trades cash flow, never a residual "
+                            "mark-to-market"),
+            "the_residual_is_priced": "at SETTLEMENT, in the R-801 legs "
+                                      "(SETTLEMENT_SLUG rows)"},
         "what_that_name_IS_where_it_occurs": (
             "a component of DE 131's `absolute` block, computed by "
             "`absolute_legs` as sum((after - before) x mark). BE 97 "
@@ -327,7 +347,12 @@ NOT_COMPUTED_BY_THIS_PATH = {
                  "against the 0-cancel baseline. There is no fills/"
                  "inventory decomposition anywhere in the runner, so a "
                  "leg split cannot be reported without defining one.",
-    "inventory_leg": "as above -- the same single quantity is not two.",
+    "trades_cash_flow_cents": "as above -- the same single quantity is "
+                              "not two. (R-803: this entry was called "
+                              "`inventory_leg`; BE 99 measured that "
+                              "quantity to be the trades cash flow with "
+                              "the opposite sign, and the residual is "
+                              "priced at SETTLEMENT in the R-801 legs.)",
     "p_two_sided": "`p_location` is `p_one_sided` from "
                    "`DESIGN.per_day_location`. Doubling it is a "
                    "DECISION about the test, not a re-read of it.",
@@ -358,8 +383,12 @@ def economics_available_per_arm_day(ledger_path=None,
                                "admissibility", "seed", "draw_provenance"],
         "not_computed_by_this_path_the_ARM_DAY_BLOCK":
             NOT_COMPUTED_BY_THIS_PATH,
+        # R-803: the ENTRY IS RENAMED WITH THE FIELD. There is no
+        # inventory leg: the quantity that name carried is the trades
+        # cash flow (BE 99), and the residual is priced at settlement in
+        # the R-801 legs. The entry keeps the measurement.
         "where_the_five_live_now": {**WHERE_THE_FIVE_LIVE_NOW,
-                                    "inventory_leg": _inv},
+                                    "trades_cash_flow_cents": _inv},
         "read_this_first": (
             # COMPUTED FROM THE ENTRIES BESIDE IT, never a typed tally:
             # this sentence said "four of the five ARE computed, in the
@@ -1182,7 +1211,7 @@ def _selftest_body(quiet: bool = False) -> int:
     _inv795 = inventory_at_the_ledger(_b132["path"],
                                       arm_days=_r132.get(
                                           "per_day_sealed_artifacts"))
-    ok(_inv795["status"] == "PRESENT_ONLY_INSIDE_THE_ABSOLUTES"
+    ok(_inv795["status"] == "NOT_A_FIELD_OF_THE_LEDGER"
        and _inv795["no_fill_row_carries_a_leg"] is True
        and all(w.startswith("ARM_SCALARS.absolute.")
                for w in _inv795["where_the_name_occurs"])
@@ -1316,10 +1345,11 @@ def _selftest_body(quiet: bool = False) -> int:
     # R-795: `inventory_leg` IS NO LONGER A SENTENCE. It is the block
     # `inventory_at_the_ledger()` measured at the file this run wrote,
     # so this cell reads a dict there and a string for the other four --
-    # and it asserts that the inventory entry is a MEASUREMENT (it
-    # carries a status, and either what it measured or why it did not).
+    # and it asserts that the entry is a MEASUREMENT (it carries a
+    # status, and either what it measured or why it did not). R-803
+    # renamed it: there is no inventory leg to report on.
     _strs = {k: v for k, v in _where.items() if isinstance(v, str)}
-    _inv = _where.get("inventory_leg")
+    _inv = _where.get("trades_cash_flow_cents")
     ok(len(_absent) == 5
        and all(isinstance(v, str) and len(v) > 40 for v in _absent.values())
        and set(_where) == set(_absent)
@@ -1330,12 +1360,13 @@ def _selftest_body(quiet: bool = False) -> int:
        f"DE 129 / R-795: the five are named with their reasons and with "
        f"WHERE THEY LIVE NOW -- three "
        f"({sorted(k for k, v in _strs.items() if v.startswith('COMPUTED'))}) "
-       f"are computed in the DECISION LEDGER since R-765 and BE 96; "
-       f"`inventory_leg` is now a MEASUREMENT at the ledger this run "
-       f"wrote (status `{_inv.get('status')}`), because the sentence it "
-       f"replaced -- 'COMPUTED since BE 96, in the decision ledger' -- "
-       f"was false of the 09-05 file (BE 97); and only `D_E_MINUS_R` is "
-       f"computed nowhere"
+       f"are computed in the DECISION LEDGER since R-765 and BE 96; the "
+       f"entry once called `inventory_leg` is now "
+       f"`trades_cash_flow_cents` (R-803, BE 99: that quantity is the "
+       f"trades cash flow with the opposite sign, and the residual is "
+       f"priced at SETTLEMENT in the R-801 legs) and is a MEASUREMENT at "
+       f"the ledger this run wrote, status `{_inv.get('status')}`; and "
+       f"only `D_E_MINUS_R` is computed nowhere"
        )
 
     shutil.rmtree(tmp, ignore_errors=True)

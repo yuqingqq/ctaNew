@@ -273,7 +273,13 @@ def recompute(led: dict, arm: str) -> dict:
             f"every fill; a ledger without them cannot answer an inventory "
             f"question, and answering it with 0 would be a fact nobody "
             f"measured.")
-    inv = {"inventory_leg_cents": 0.0, "n_fills_with_inventory": 0,
+    # R-803 / BE 99: THE NAME WAS WRONG AND THE MEASUREMENT SETTLED IT.
+    # This accumulated sum((after - before) x mark), which BE showed is
+    # sum(sgn x size x px) = BUYS - SELLS -- the exact NEGATIVE of the
+    # trades cash flow, and not a residual mark-to-market at all (the
+    # residual is priced at SETTLEMENT, in the R-801 legs). It is named
+    # for what it is and SIGNED as the cash flow: SELLS - BUYS.
+    inv = {"trades_cash_flow_cents": 0.0, "n_fills_with_inventory": 0,
            "inventory_unit": None, "mark_sources": {}}
     for f in fills:
         b, a_, mk = (f.get("inventory_before"), f.get("inventory_after"),
@@ -284,8 +290,10 @@ def recompute(led: dict, arm: str) -> dict:
         inv["inventory_unit"] = f.get("inventory_unit") or inv["inventory_unit"]
         _src = f.get("inventory_mark_source")
         inv["mark_sources"][_src] = inv["mark_sources"].get(_src, 0) + 1
-        # the leg is the position CHANGE valued at the fill's own mark
-        inv["inventory_leg_cents"] += (float(a_) - float(b)) * float(mk)
+        # SELLS - BUYS: a BUY raises the position and pays cash out, so
+        # the cash flow is the NEGATIVE of the position change valued at
+        # the fill's own mark.
+        inv["trades_cash_flow_cents"] += -(float(a_) - float(b)) * float(mk)
     rho = (legs["adverse_cents"] / legs["spread_captured_cents"]
            if legs["spread_captured_cents"] else None)
     return {
@@ -295,16 +303,22 @@ def recompute(led: dict, arm: str) -> dict:
         "Z": ((obs - mean) / sd) if sd else math.inf,
         "p_one_sided": p_one, "p_two_sided": p_two,
         "rho_adverse_over_spread": rho, **legs, **inv,
-        "inventory_leg": inv["inventory_leg_cents"],
-        "inventory_leg_from": "BE 96's per-fill position, valued at each "
-                              "fill's own mark; ABSENT_UNTIL_BE_96 is "
-                              "closed",
+        "trades_cash_flow_cents": inv["trades_cash_flow_cents"],
+        "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means "
+                                            "cash taken in. It is the "
+                                            "NEGATIVE of the quantity this "
+                                            "field was called "
+                                            "`inventory_leg` until R-803",
+        "trades_cash_flow_from": "BE 96's per-fill position change, valued "
+                                 "at each fill's own mark, negated. BE 99 "
+                                 "measured it equal to the R-801 trades "
+                                 "leg on all four path-days",
     }
 
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 8
+EXPECTED_CHECKS = 9
 
 
 def selftest(quiet: bool = False) -> int:
@@ -366,33 +380,63 @@ def selftest(quiet: bool = False) -> int:
        and rc["p_two_sided"] >= rc["p_one_sided"]
        and rc["rho_adverse_over_spread"] is not None
        and rc["n_fills_valued"] == len(fills)
-       and rc["inventory_leg"] is not None,
+       and rc["trades_cash_flow_cents"] is not None,
        f"R-765 (1): and the statistics the SEALED receipts could not "
        f"carry -- p one-sided {rc['p_one_sided']:.4f}, p TWO-sided "
        f"{rc['p_two_sided']:.4f}, rho = adverse/spread "
        f"{rc['rho_adverse_over_spread']:.4f}, the fills leg over "
        f"{rc['n_fills_valued']} fills -- all come out of the stored rows. "
-       f"And since BE 96 the inventory leg is among them "
-       f"({rc['inventory_leg']:.1f} cents), so nothing the ruling asked "
-       f"for is missing from this file")
+       f"And since BE 96 the TRADES CASH FLOW is among them "
+       f"({rc['trades_cash_flow_cents']:.1f} cents, SELLS - BUYS), so "
+       f"nothing the ruling asked for is missing from this file")
 
-    # ---- (1c) THE INVENTORY LEG, RECOMPUTED FROM THE LEDGER ALONE -----
-    # BE 96 closed ABSENT_UNTIL_BE_96. The leg is the position CHANGE at
-    # each fill valued at that fill's own mark, and the cell matches it
-    # against the same sum formed independently here -- to 1e-9, from the
-    # stored rows, with no book.
-    _want_inv = sum((f["inventory_after"] - f["inventory_before"])
-                    * f["inventory_mark_cents"] for f in fills)
-    ok(abs(rc["inventory_leg"] - _want_inv) < 1e-9
+    # ---- (1c) THE TRADES CASH FLOW, RECOMPUTED FROM THE LEDGER ALONE --
+    # R-803: this cell asserted a quantity called the INVENTORY LEG. BE 99
+    # measured what it is -- sum((after - before) x mark) = BUYS - SELLS,
+    # the exact NEGATIVE of the R-801 trades leg -- so the cell now
+    # asserts the SIGNED CASH FLOW and the KNOWN-BAD below is the old
+    # sign, which is what a reader of the landed ledgers must invert.
+    _want_inv = -sum((f["inventory_after"] - f["inventory_before"])
+                     * f["inventory_mark_cents"] for f in fills)
+    ok(abs(rc["trades_cash_flow_cents"] - _want_inv) < 1e-9
+       and abs(rc["trades_cash_flow_cents"]
+               + sum((f["inventory_after"] - f["inventory_before"])
+                     * f["inventory_mark_cents"] for f in fills)) < 1e-9
        and rc["n_fills_with_inventory"] == len(fills)
        and rc["inventory_unit"] == "shares"
        and rc["mark_sources"] == {"mid_at_fill": len(fills)},
-       f"DE 126 / BE 96: the INVENTORY LEG recomputes from the ledger "
-       f"alone to {rc['inventory_leg']:.6f} cents against "
-       f"{_want_inv:.6f} formed independently -- equal to 1e-9 over "
+       f"R-803 / BE 99: the TRADES CASH FLOW recomputes from the ledger "
+       f"alone to {rc['trades_cash_flow_cents']:.6f} cents (SELLS - "
+       f"BUYS) against {_want_inv:.6f} formed independently -- and it is "
+       f"the exact NEGATIVE of the quantity this field was called "
+       f"`inventory_leg`, which is what BE measured it to be. "
        f"{rc['n_fills_with_inventory']} fills, unit "
-       f"{rc['inventory_unit']!r}, marks {rc['mark_sources']}. "
-       f"ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION} says so")
+       f"{rc['inventory_unit']!r}, marks {rc['mark_sources']}; schema "
+       f"v{SCHEMA_VERSION}")
+    def _keys_named(o, name):
+        """Every KEY by that name, at any depth. Keys, not substrings:
+        the FIELD must be gone, while the prose beside it deliberately
+        names the old one so a reader of the LANDED ledgers knows to
+        invert the sign (rule 13 -- those bytes are not edited)."""
+        n = 0
+        if isinstance(o, dict):
+            n += sum(1 for k in o if k == name)
+            for v in o.values():
+                n += _keys_named(v, name)
+        elif isinstance(o, list):
+            for e in o:
+                n += _keys_named(e, name)
+        return n
+    ok(_keys_named(rc, "inventory_leg") == 0
+       and _keys_named(rc, "trades_cash_flow_cents") == 1
+       and "inventory_leg" in json.dumps(rc),
+       f"R-803: NO FIELD is named `inventory_leg` in what `recompute` "
+       f"returns ({_keys_named(rc, 'inventory_leg')} keys) and exactly "
+       f"one is named `trades_cash_flow_cents` -- while the STRING "
+       f"survives in the prose ON PURPOSE, telling a reader of the "
+       f"landed ledgers that the old field carried the opposite sign. "
+       f"The first draft of this cell tested the substring and failed on "
+       f"its own sentence")
     # RED: a ledger whose fills lack the fields REFUSES -- never zero.
     _no_inv = {"A": {**per_arm["A"],
                      "arm_fills": [{k: v for k, v in f.items()

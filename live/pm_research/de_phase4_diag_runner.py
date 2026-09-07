@@ -84,7 +84,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 217
+EXPECTED_CHECKS = 218
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -483,9 +483,49 @@ def cell_params(cell: dict, *, theta_cancel: float, protection_mode: str,
     }
 
 
+#: R-803 / BE 100 (Q-BE-343): THE REFERENCE HAD NO PLACEMENT LATENCY AT
+#: ALL. `_qr_spec(QR_SKEW, latency_ms=0, cancel=False)` binds `latency_ms`
+#: to `cancel_latency_ms` with cancelling DISABLED -- so the 0 there is
+#: the cancel latency, and placement was instantaneous BY OMISSION, not
+#: by a declared choice. BE measured what that is worth: 48-56 % of every
+#: path's fills land within 250 ms of their generation's start, carrying
+#: 98 % of the baseline's settlement P&L on 09-05 (79,264 of 81,238 c)
+#: and 55 % on 09-06 (25,812 of 46,562).
+#:
+#: THE DEFAULT IS 0.0 AND THAT IS DELIBERATE. 250 ms -- the arms' own
+#: cancel latency -- is PROPOSED in the v20/v28 draft, and a proposal is
+#: not a declaration: switching the replay's fills under a freeze would
+#: change every future day silently and would be exactly the "choosing
+#: after seeing" the declaration exists to prevent. The parameter is
+#: DECLARED here so a landed v20 can set it; until then the reference
+#: behaves as it always has and says so in its own output.
+PLACEMENT_LATENCY_MS_DEFAULT = 0.0
+
+
+def apply_placement_latency(tranches: list, t0: float,
+                            placement_latency_ms: float) -> tuple:
+    """A GENERATION'S QUOTE IS NOT RESTING UNTIL t0 + L_place.
+
+    Mirrors the CANCEL latency's own semantics (`harmful_stateful_policy`
+    at `:227`: a cancel is effective at t + L and fills after that are
+    prevented): a fill before the quote could be resting is not ours, so
+    it is DROPPED and COUNTED -- never silently kept, never silently
+    dropped (rule 4).
+
+    Returns `(kept, n_dropped)`. At L_place = 0 it is the identity, which
+    is what the reference did before this parameter existed."""
+    L = float(placement_latency_ms or 0.0)
+    if L <= 0.0:
+        return list(tranches), 0
+    keep = [t for t in tranches
+            if (float(t["t"]) - float(t0)) * 1000.0 >= L]
+    return keep, len(tranches) - len(keep)
+
+
 def build_reference(coin: str, *, population: str = POPULATION_NAME,
                     limit: int | None = None,
                     retain_unvalued_tranches: bool = False,
+                    placement_latency_ms: float | None = None,
                     selector=None) -> dict:
     """The §3 population's generations, in the shape `replay_policy` takes.
 
@@ -498,6 +538,13 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
     import harmful_exposure_rows as HER
     qr = HER.qr
     spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
+    # R-803 / BE 100: the `latency_ms=0` above is the CANCEL latency and
+    # cancelling is off; the spec has no placement-latency field at all
+    # (`grep -niE latency policy_optimizer_queue_realistic.py` returns
+    # only `cancel_latency_ms`). The placement latency is therefore a
+    # parameter of THIS function, declared and recorded.
+    _Lp = (PLACEMENT_LATENCY_MS_DEFAULT if placement_latency_ms is None
+           else float(placement_latency_ms))
     # Keep the historical/default call explicit: the parent runner's static
     # reached-function pin must continue to see `select_v2_era`.  The v2 smoke
     # injection is an opt-in branch, not a dynamic alias that makes the
@@ -514,6 +561,7 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
     rows: list = []
     terminal: dict = {}
     statuses = {"ADMITTED": 0, "NO_REPLAY": 0, "RECONCILIATION_FAILED": 0,
+                "TRANCHE_BEFORE_PLACEMENT_LATENCY": 0,
                 "BINANCE_GAP_EXCLUDED": n_bn_gap,
                 "TRANCHE_NO_MARKOUT": 0, "TRANCHE_KEPT": 0,
                 "TERMINAL_MARK_OK": 0, "TERMINAL_MARK_MISSING": 0,
@@ -591,6 +639,11 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
             seg = first.get((side, gen))
             if seg is None:
                 continue
+            _tr_all = AEL.emit_reference_tranches(
+                g["tranches"], mid_at=wf.mid_at,
+                retain_unvalued=retain_unvalued_tranches)
+            _tr, _n_drop = apply_placement_latency(_tr_all, g["t0"], _Lp)
+            statuses["TRANCHE_BEFORE_PLACEMENT_LATENCY"] += _n_drop
             sides[side].append({
                 "gen": gen, "t0": g["t0"], "t1": g["t1"],
                 "level": seg["level"], "displayed": seg["resting"],
@@ -602,9 +655,7 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
                 # carrying it is what removes my constant from rho's
                 # denominator. `mid_at` returning None is a STATUS
                 # downstream (NO_MID_AT_FILL), never a synthesised number.
-                "tranches": AEL.emit_reference_tranches(
-                    g["tranches"], mid_at=wf.mid_at,
-                    retain_unvalued=retain_unvalued_tranches),
+                "tranches": _tr,
             })
         # DE33-C9: a tranche with no markout was dropped in silence; it
         # is COUNTED under its own name (rule 4).
@@ -621,6 +672,29 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
             ref[slug] = sides
     out = {"reference": ref, "rows": rows, "statuses": statuses,
            "terminal_marks": terminal,
+           # R-803: THE PARAMETER IS DECLARED IN THE OUTPUT, so a reader
+           # of any reference knows which placement latency produced it
+           # instead of inferring it from a spec that never had one.
+           "placement_latency": {
+               "placement_latency_ms": _Lp,
+               "source": ("the caller" if placement_latency_ms is not None
+                          else "PLACEMENT_LATENCY_MS_DEFAULT"),
+               "default_is": PLACEMENT_LATENCY_MS_DEFAULT,
+               "proposed_in_the_draft_ms": 250.0,
+               "why_the_default_is_not_the_proposal": (
+                   "250 ms is the arms' own cancel latency and is "
+                   "PROPOSED in the v20/v28 draft; changing the "
+                   "reference's fills before that declaration lands "
+                   "would move every future day silently"),
+               "semantics": ("a generation's quote is not resting until "
+                             "t0 + L_place; a fill before that is not "
+                             "ours and is DROPPED AND COUNTED under "
+                             "TRANCHE_BEFORE_PLACEMENT_LATENCY"),
+               "the_cancel_latency_is_a_different_parameter": (
+                   "`cancel_latency_ms` in `_qr_spec`, 0 here with "
+                   "cancelling disabled -- BE 100, Q-BE-343"),
+               "n_tranches_dropped":
+                   statuses["TRANCHE_BEFORE_PLACEMENT_LATENCY"]},
            "n_slugs": len(ref), "population": population}
     if retain_unvalued_tranches:
         out["reference_includes_unvalued_tranches"] = True
@@ -6415,6 +6489,40 @@ def selftest() -> int:
             _n_iter = _lp.iter.args[0].value
         if _n_iter:
             _loopmul771 += len(_inner) * (_n_iter - 1)
+    # ---- R-803 / BE 100: THE PLACEMENT LATENCY, DRIVEN BOTH WAYS ----
+    # A generation whose ONLY fill lands 100 ms after t0: at L_place 250
+    # that fill is not ours and the generation keeps none; at L_place 0 --
+    # the default, and what the reference has always done -- it keeps it.
+    # The two calls differ ONLY in the parameter, so the cell measures the
+    # parameter and not the fixture.
+    _tr803 = [{"t": 10.100, "shares": 5.0, "level": 40.0,
+               "markout_cents_per_share": 1.0}]
+    _keep250, _drop250 = apply_placement_latency(_tr803, 10.0, 250.0)
+    _keep0, _drop0 = apply_placement_latency(_tr803, 10.0, 0.0)
+    _keep99, _drop99 = apply_placement_latency(_tr803, 10.0, 99.0)
+    # THE EXACT BOUNDARY IS NOT A CLAIM THIS ARITHMETIC CAN MAKE, and
+    # saying so is the point: `10.100 - 10.0` is 0.09999999999999964, so
+    # the fill measures 99.99999999999964 ms and a threshold of exactly
+    # 100.0 DROPS it. The predicate is `>= L` on floats, and whoever sets
+    # L in the declaration should choose a value no fill sits exactly on.
+    _atL, _dropL = apply_placement_latency(_tr803, 10.0, 100.0)
+    _measured_ms = (10.100 - 10.0) * 1000.0
+    ok(_keep250 == [] and _drop250 == 1
+       and _keep0 == _tr803 and _drop0 == 0
+       and _keep99 == _tr803 and _drop99 == 0
+       and _measured_ms < 100.0 and _atL == [],
+       f"R-803 / BE 100: a generation whose only fill is at t0 + 100 ms "
+       f"keeps NO fill at placement latency 250 ms (dropped "
+       f"{_drop250}, COUNTED under TRANCHE_BEFORE_PLACEMENT_LATENCY) and "
+       f"KEEPS it at 0 ms -- the default, which is what the reference "
+       f"has always done -- and at 99 ms. AND THE EXACT BOUNDARY IS "
+       f"MEASURED, NOT ASSERTED: this fill's offset is "
+       f"{_measured_ms!r} ms in binary floating point, so a threshold of "
+       f"exactly 100.0 drops it; the predicate is `>= L` and no "
+       f"declaration should put L on a value a fill sits exactly on. The "
+       f"reference had no placement latency at all: `_qr_spec`'s "
+       f"`latency_ms=0` binds to `cancel_latency_ms` with cancelling "
+       f"disabled, so placement was instantaneous BY OMISSION")
     _derived_total771 = len(_sites771) + _loopmul771
     ok(_derived_total771 == n[0] + 1 + _n_cond771
        and EXPECTED_CHECKS == _derived_total771,
