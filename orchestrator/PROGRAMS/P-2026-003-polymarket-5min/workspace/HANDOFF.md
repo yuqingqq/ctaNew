@@ -1,3 +1,100 @@
+# READ FIRST — round 275 (MEM, 2026-09-07T14:29:48Z, tip `71349a3`)
+
+**R-799 swept, with every landing between the tip I read at round 274 (`5c9c0d4`) and `71349a3`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. All five digests recompute equal at wt-de — and the fifth is not like the other four
+
+Hashed by me at the worktree's own working files, not read from the coordinator's verification:
+
+```
+de_multiday_gate1_runner.py           883b5f3a811e9576d0c97055   OK
+de_early_read.py                      5aa544ef8d594efd807624fa   OK
+de_decision_ledger.py                 d78c370151cea431127bbb77   OK
+de_multiday_gate1_params_v19.json     dd8db7ded9e6ed9723173a3a   OK
+p003_de_multiday_gate1_design_v27.json 3bcdf3c234cb7d4e4be116c2  OK
+```
+
+Both blocking conditions hold at 14:26:01Z: **P10** — `git status --short` in `wt-de` returns exactly `?? data`
+— and **pins 10 of 10**. HEAD `5020f96`, frozen for GO #8.
+
+**But `readlink -f` and `stat` show `wt-de`'s design-declaration path and the main tree's are the same file —
+inode 6043309** — reached through the `data` symlink. The other four are ordinary files inside `wt-de`'s checkout
+of `5020f96` (all four present in that tree). **So four conditions are checked against bytes the HEAD pins, and
+one against the shared tree's working file.** The commit *does* pin a version of the design declaration; the path
+the code opens does not resolve to that blob. Equal at my read — **the freeze covers four of the five.**
+
+**An oddity I observed and did not explain:** `wt-de`'s index tracks **345 files under `data/`**, sparse-checkout
+is false, and `git status` still reports only `?? data` — no deletions, no modification. I checked four things and
+none of them explains it, **so I offer no mechanism.** It matters in one direction only: P10 is read from that
+same output.
+
+## 2. Tonight's bytes carry neither of the day's two fixes
+
+`merge-base --is-ancestor` on both: **`a71b714` NO, `17cbf1b` NO.** So GO #8 runs `6c3a121` + DE 134's runner and
+nothing else — no ABSOLUTES cells, no inventory measurement, and the artifact it emits tonight will carry the old
+inventory wording. **That is the composition discipline working**, not an oversight: a NO-GO would name a specific
+delta, and a clearance clears a known set of bytes.
+
+## 3. DE 135 Part B — a typed claim replaced by a computed status
+
+`17cbf1b` (+304/−20) adds **`inventory_at_the_ledger(ledger_path, *, arm_days=None)`**, which opens the ledger,
+walks it with `_paths_to(o, key, prefix)`, and returns a status derived from **where the key actually is**:
+
+| status | occurrences |
+|---|---|
+| `NOT_A_FIELD_OF_THE_LEDGER` | 2 |
+| `PRESENT_ONLY_INSIDE_THE_ABSOLUTES` | 2 |
+| `PRESENT_OUTSIDE_THE_ABSOLUTES` | 2 |
+| `NOT_MEASURED_NO_LEDGER_ON_THIS_PATH` | 2 |
+
+**Each appears exactly twice — once produced, once asserted — so the red-first pairing is visible in the counts
+alone.** `EXPECTED_CHECKS` 25 → 30; my raw `ok(` line count 32 → 37, **the same delta of five from a different
+base** (the constant counts declared checks, my regex counts call lines — named so nobody reads 25 vs 32 as a
+discrepancy).
+
+**This is rule 10 applied to exactly the claim that was typed and false.** The old text asserted "COMPUTED … in
+the decision ledger"; the new field is what a walk of the file returns. The old claim was not merely wrong — it
+was **unfalsifiable from inside the artifact**, because nothing in the emitting module ever looked. The new one
+can be wrong, and a cell fails if it is. And the status set distinguishes three truths that "COMPUTED" could not
+tell apart: absent everywhere, present only inside `absolutes`, present outside it.
+
+## 4. Third reading, and stronger than mine
+
+R-799 calls DE's measurement a second implementation of BE 97. **It is the third reading of that ledger:** BE 97
+measured it, **I measured it at round 273** (four row types, `inventory_leg` in none, `inventory_after` non-None
+on all 177,467 fill rows, BE's residuals 5,100 / 10,188 / 9,184 reproduced exactly), and DE has now measured it
+from inside the module that makes the claim.
+
+**And DE's is stronger than mine.** I showed one field complete on 177,467 rows; **DE shows all five on 177,467
+of 177,467** — which is what the ledger header's "recomputable from this file" actually requires. A measurement
+that covers the claim exactly beats one that covers a necessary part of it, and mine was the latter.
+
+## 5. Standing
+
+- **GO #8 waits only on the close:** DA's 00:06Z mask + verdict → BE fragment → tape → book + builder receipt
+  (the two P2s) → GO #8 from `5020f96` → **the receipt read at `day_run.decision_ledger` first** (R-791's misread
+  turned into a procedure) → the freeze lifts → v20/v28 **by re-measurement** → GO #9 → the 09-03/09-04 replays.
+  **Nothing technical blocks it** — the worktree is frozen at the cleared commit with all five digests and both
+  conditions verified. It waits on calendar time.
+- **The user's inventory ruling (R-795) stays OPEN** — the only open one of four. **Part B measures *where* the
+  quantity is; it does not decide *whether* it belongs in the estimand.** Easy to conflate now a status field
+  exists: the field answers "is it in the ledger", the ruling answers "should it be in `D_E0`".
+- **The four-day table is untouched** — CONDVALUE 0 of 4, HAZARD 1 of 4, fills leg only, floor 0.0625.
+- **Freeze holds a fifteenth round.** Seat rounds this cycle: BE 97, DA 128, DE 135, REV 103.
+
+## 6. Counts
+
+flags 2134 → **2150**, provenance 1679 → **1695** (sixteen written, sixteen counted, by `yaml.safe_load`).
+**The duplicate-name gate refused one of my names before any write** — I had reused
+`THE_USERS_INVENTORY_RULING_IS_STILL_OPEN` from round 273; renamed and re-run. **1,405 CHECKED / 285 RELAYED +
+5 MALFORMED / 455 UNMARKED** — 151st round unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my sixteen
+added none. Window trimmed 4 → 3, **Batch 257** archived.
+
+**NEXT:** the close → GO #8 from `5020f96`. MEM sweeps R-800 onward.
+
+---
+
 # READ FIRST — round 274 (MEM, 2026-09-07T14:22:37Z, tip `5c9c0d4`)
 
 **R-796, R-797, R-798 and the two RESULTS §0b commits swept, with every landing between the tip I read at round

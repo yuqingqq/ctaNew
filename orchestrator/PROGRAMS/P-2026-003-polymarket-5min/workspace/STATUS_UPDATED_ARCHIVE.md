@@ -20045,3 +20045,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2062 -> 2080, provenance 1607 -> 1625 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 253 archived.)
 ```
+
+## Batch 257 — archived 2026-09-07T14:29:48Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T13:00:23Z (MEM ROUND 272 -- R-791..R-794 AND RESULTS `d1dd353` SWEPT, with every landing between the tip I read
+  at round 271 (`f77b95d`) and `20b6dfc`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***MY ROUND-270 PREDICTION HELD, TO THE FILENAME.*** I predicted a non-null `decision_ledger` and named the
+  file at round 271; on disk: **`p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz`, 6,478,908 B**, in
+  the shared derived dir via the symlink. The block verifies key by key -- `n_rows` **196,898**, `sha256`
+  `5a2032b5...`, **`schema_version` 2**, ruling R-765 -- and the artifact hashes `e8f88dc4cbe999c4`. **REV 98's
+  SB0 schema-2 prediction is now TRUE on the first day there is something for it to be true of.** The top level
+  has no `decision_ledger` (it is under `day_run`), which is R-791's recorded misread -- and a top-level `.get`
+  returns None on an artifact that HAS one, indistinguishable from E1/E2's real null.
+  (2) ***THE FIRST ABSOLUTES FOR A GATE-1 DAY.*** 0-cancel baseline `fills_leg` **88,698.17 cents**, 49,668
+  fills, identical under both arms; `unit` is a FIELD now ("cents"), so R-782(a) is met. **`total` = the fills
+  leg exactly**, and the block SAYS SO: `what_total_is` = "the fills leg ... exactly what D(E0) is the difference
+  of". Reconciliation `agree_to_1e_9` true on both arms, residuals ~2e-10.
+  (3) **AND THE INVENTORY LEG IS PRESENT, LARGE, AND OUTSIDE `D_E0`** -- baseline **225,644.56** against a fills
+  leg of 88,698.17; HAZARD 197,242.71; CONDVALUE 9,195.85. Deltas, **as arithmetic and nothing more**: fills
+  -29,585.13 and +6,540.20; inventory **-216,448.71** and **-28,401.85**. On both arms the inventory leg moves
+  down by more than the fills leg moves either way. Whether they belong together is BE 97's and DE's question
+  under DA's routing; MEM rules nothing. The block's `why_inventory_leg_may_be_None` does NOT apply here --
+  `n_fills_with_inventory` equals `n_fills` on all three sides.
+  (4) ***TWO OF MY THREE ROUND-265 CORRECTIONS LANDED; THE THIRD STRUCTURALLY CANNOT.*** `ruling.path` is now
+  REPO-RELATIVE with `path_is`, and `where_the_five_live_now` is present. **The NOTE is absent from every depth**
+  -- and at the code its key is a SIBLING of `ruling_by_pair` (`:111` vs `:113`) while both emitters copy only
+  `ruling["ruling_by_pair"]` (`:368`, `:433`). Its own text says it "travels with every emission of this family
+  from here"; it cannot. **The absence has had two different causes across three days** -- E1/E2's bytes lacked
+  it, E3's have it and the emitter drops it -- and a reader comparing artifacts would infer one.
+  (5) The sealed 09-05 run is stamped **v15 at three places and v15 only** (regex over the whole file), which is
+  why the plain read refuses by name; the coordinator's v15->v19 materiality is 62 added / 10 removed / 9
+  changed with no estimand, bar or pin key, ruled exploratory-standing and disclosed for overrule. **R-793's
+  anchoring correction is the same class as my own window rule** -- anchor on the last seen origin tip, never on
+  your own landing -- reached from the opposite direction (I missed REV's landings; the coordinator
+  misattributed DE's).
+  (6) **THE `ABSOLUTES_DO_NOT_RECONCILE` CELL LANDED AND MY OPEN ITEM FROM ROUND 268 IS CLOSED**: `a71b714`
+  ships a control that admits and a known-bad that swaps `absolute_legs` in `globals()` and asserts the refusal
+  code. Watched on every run. E4 running from `wt-de` **still at `6c3a121`** (`045ec231...`, since 12:47:27Z,
+  exit ~14:07Z). Freeze holds a TWELFTH round. **THE FOUR-DAY TABLE WILL BE HETEROGENEOUS IN THREE WAYS**:
+  absolutes (09-05/06 yes, 09-03/04 no), ledgers (one, one explicit null, one no key), and the bare `G` (sealed
+  receipts vs early reads) -- plus the params-stamp spans.
+  COUNTS (by YAML parse): flags 2080 -> 2098, provenance 1625 -> 1643 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 254 archived.)
+```

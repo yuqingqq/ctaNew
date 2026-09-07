@@ -67,6 +67,44 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T14:29:48Z (MEM ROUND 275 -- R-799 SWEPT, with every landing between the tip I read at round 274 (`5c9c0d4`) and
+  `71349a3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***ALL FIVE OF REV 103 §5's DIGESTS RECOMPUTE EQUAL AT `wt-de`***, hashed by me at the worktree's own
+  working files rather than read from the coordinator's verification -- runner `883b5f3a`, early read `5aa544ef`,
+  ledger `d78c3701`, params v19 `dd8db7de`, design v27 `3bcdf3c2`, every cited digit. Both blocking conditions
+  hold at 14:26:01Z: **P10** (`git status --short` returns exactly `?? data`) and **pins 10 of 10** in `wt-de`.
+  HEAD `5020f96`, frozen for GO #8.
+  (2) ***BUT THE FIFTH IS NOT LIKE THE OTHER FOUR.*** `readlink -f` and `stat` show `wt-de`'s design-declaration
+  path and the main tree's are **the same file, inode 6043309** -- reached through the `data` symlink. The other
+  four are ordinary files in `wt-de`'s checkout of `5020f96` (all four in that tree). **So four conditions are
+  checked against bytes the HEAD pins and one against the shared tree's WORKING file**; the commit does pin a
+  version of the design declaration, but the path the code opens does not resolve to that blob. Equal at my read;
+  **the freeze covers four of the five.**
+  (3) **AN ODDITY I OBSERVED AND DID NOT EXPLAIN**: `wt-de`'s index tracks **345 files under `data/`**,
+  sparse-checkout is false, and `git status` still reports only `?? data` -- no deletions, no modification. I
+  checked four things and none explains it, **so I offer no mechanism.** It matters in one direction only: P10 is
+  read from that same output.
+  (4) **NEITHER `a71b714` NOR `17cbf1b` IS AN ANCESTOR OF `5020f96`** (both checked). So tonight's bytes carry
+  **neither** of the day's two fixes -- not the ABSOLUTES cells, not the inventory measurement -- which is the
+  composition discipline working: GO #8 runs `6c3a121` + DE 134's runner and nothing else.
+  (5) ***DE 135 PART B REPLACES A TYPED CLAIM WITH A COMPUTED STATUS*** -- `inventory_at_the_ledger()` walks the
+  file with `_paths_to` and returns one of four statuses, **each appearing exactly twice in the module**, once
+  produced and once asserted, so the red-first pairing is visible in the counts alone. `EXPECTED_CHECKS` 25 -> 30
+  (my raw `ok(` count 32 -> 37: **same delta of five, different base** -- the constant counts declared checks, my
+  regex counts call lines). **Rule 10 applied to exactly the claim that was typed and false**, and the old claim
+  was not merely wrong but unfalsifiable from inside the artifact.
+  (6) ***AND DE's IS THE THIRD INDEPENDENT READING OF THAT LEDGER***, not the second: BE 97 measured it, **I
+  measured it at round 273**, DE has now measured it from inside the module that makes the claim. **DE's is
+  STRONGER than mine**: I showed `inventory_after` complete on all 177,467 fill rows -- one field; DE shows all
+  FIVE on 177,467 of 177,467, which is what the header's "recomputable" claim actually requires. Three readings,
+  three implementations, one answer, on a claim three seats had previously passed along unchecked.
+  (7) GO #8 now waits ONLY on the close: DA's 00:06Z mask + verdict -> BE fragment -> tape -> book + builder
+  receipt -> GO #8 from `5020f96` -> **the receipt read at `day_run.decision_ledger` FIRST** (R-791's misread
+  turned into a procedure) -> the freeze lifts -> v20/v28 by RE-MEASUREMENT -> GO #9 -> the 09-03/09-04 replays.
+  The user's inventory ruling stays OPEN -- **Part B measures WHERE the quantity is; it does not decide WHETHER it
+  belongs in the estimand.** The four-day table is untouched. Freeze holds a FIFTEENTH round.
+  COUNTS (by YAML parse): flags 2134 -> 2150, provenance 1679 -> 1695 (sixteen written, sixteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 257 archived.)
   2026-09-07T14:22:37Z (MEM ROUND 274 -- R-796, R-797, R-798 AND THE TWO RESULTS SS0b COMMITS SWEPT, with every landing between
   the tip I read at round 273 (`c1ce532`) and `5c9c0d4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE FOUR-DAY EARLY READ IS COMPLETE, AND I BUILT THE TABLE FROM THE FOUR ARTIFACTS*** rather than from
@@ -137,45 +175,6 @@ updated: >-
   else varies. E4 still running, `wt-de` still at `6c3a121`. Freeze holds a THIRTEENTH round.
   COUNTS (by YAML parse): flags 2098 -> 2116, provenance 1643 -> 1661 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 255 archived.)
-  2026-09-07T13:00:23Z (MEM ROUND 272 -- R-791..R-794 AND RESULTS `d1dd353` SWEPT, with every landing between the tip I read
-  at round 271 (`f77b95d`) and `20b6dfc`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***MY ROUND-270 PREDICTION HELD, TO THE FILENAME.*** I predicted a non-null `decision_ledger` and named the
-  file at round 271; on disk: **`p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz`, 6,478,908 B**, in
-  the shared derived dir via the symlink. The block verifies key by key -- `n_rows` **196,898**, `sha256`
-  `5a2032b5...`, **`schema_version` 2**, ruling R-765 -- and the artifact hashes `e8f88dc4cbe999c4`. **REV 98's
-  SB0 schema-2 prediction is now TRUE on the first day there is something for it to be true of.** The top level
-  has no `decision_ledger` (it is under `day_run`), which is R-791's recorded misread -- and a top-level `.get`
-  returns None on an artifact that HAS one, indistinguishable from E1/E2's real null.
-  (2) ***THE FIRST ABSOLUTES FOR A GATE-1 DAY.*** 0-cancel baseline `fills_leg` **88,698.17 cents**, 49,668
-  fills, identical under both arms; `unit` is a FIELD now ("cents"), so R-782(a) is met. **`total` = the fills
-  leg exactly**, and the block SAYS SO: `what_total_is` = "the fills leg ... exactly what D(E0) is the difference
-  of". Reconciliation `agree_to_1e_9` true on both arms, residuals ~2e-10.
-  (3) **AND THE INVENTORY LEG IS PRESENT, LARGE, AND OUTSIDE `D_E0`** -- baseline **225,644.56** against a fills
-  leg of 88,698.17; HAZARD 197,242.71; CONDVALUE 9,195.85. Deltas, **as arithmetic and nothing more**: fills
-  -29,585.13 and +6,540.20; inventory **-216,448.71** and **-28,401.85**. On both arms the inventory leg moves
-  down by more than the fills leg moves either way. Whether they belong together is BE 97's and DE's question
-  under DA's routing; MEM rules nothing. The block's `why_inventory_leg_may_be_None` does NOT apply here --
-  `n_fills_with_inventory` equals `n_fills` on all three sides.
-  (4) ***TWO OF MY THREE ROUND-265 CORRECTIONS LANDED; THE THIRD STRUCTURALLY CANNOT.*** `ruling.path` is now
-  REPO-RELATIVE with `path_is`, and `where_the_five_live_now` is present. **The NOTE is absent from every depth**
-  -- and at the code its key is a SIBLING of `ruling_by_pair` (`:111` vs `:113`) while both emitters copy only
-  `ruling["ruling_by_pair"]` (`:368`, `:433`). Its own text says it "travels with every emission of this family
-  from here"; it cannot. **The absence has had two different causes across three days** -- E1/E2's bytes lacked
-  it, E3's have it and the emitter drops it -- and a reader comparing artifacts would infer one.
-  (5) The sealed 09-05 run is stamped **v15 at three places and v15 only** (regex over the whole file), which is
-  why the plain read refuses by name; the coordinator's v15->v19 materiality is 62 added / 10 removed / 9
-  changed with no estimand, bar or pin key, ruled exploratory-standing and disclosed for overrule. **R-793's
-  anchoring correction is the same class as my own window rule** -- anchor on the last seen origin tip, never on
-  your own landing -- reached from the opposite direction (I missed REV's landings; the coordinator
-  misattributed DE's).
-  (6) **THE `ABSOLUTES_DO_NOT_RECONCILE` CELL LANDED AND MY OPEN ITEM FROM ROUND 268 IS CLOSED**: `a71b714`
-  ships a control that admits and a known-bad that swaps `absolute_legs` in `globals()` and asserts the refusal
-  code. Watched on every run. E4 running from `wt-de` **still at `6c3a121`** (`045ec231...`, since 12:47:27Z,
-  exit ~14:07Z). Freeze holds a TWELFTH round. **THE FOUR-DAY TABLE WILL BE HETEROGENEOUS IN THREE WAYS**:
-  absolutes (09-05/06 yes, 09-03/04 no), ledgers (one, one explicit null, one no key), and the bare `G` (sealed
-  receipts vs early reads) -- plus the params-stamp spans.
-  COUNTS (by YAML parse): flags 2080 -> 2098, provenance 1625 -> 1643 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 254 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -347,6 +346,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 275, R-799 swept (5c9c0d4 -> 71349a3) ---
+  ALL_FIVE_OF_REV_103s_DIGESTS_RECOMPUTE_EQUAL_AT_wt_de: A-SECOND-READING-AFTER-THE-COORDINATORS
+  AND_BOTH_BLOCKING_CONDITIONS_HOLD_AT_MY_READ: PINS-10-OF-10-AND-ONLY-THE-SYMLINK
+  BUT_THE_FIFTH_DIGESTS_FILE_IS_THE_SAME_INODE_AS_THE_MAIN_TREES: ONE-FILE-TWO-PATHS
+  SO_FOUR_CONDITIONS_ARE_CHECKED_AT_THE_CHECKOUT_AND_ONE_THROUGH_THE_SYMLINK: THE-FREEZE-DOES-NOT-COVER-THE-FIFTH
+  AN_ODDITY_I_OBSERVED_AND_DID_NOT_EXPLAIN: 345-TRACKED-UNDER-data-YET-STATUS-SAYS-UNTRACKED
+  NEITHER_a71b714_NOR_17cbf1b_IS_AN_ANCESTOR_OF_5020f96: TONIGHTS-BYTES-CARRY-NEITHER-FIX
+  DE_135_PART_B_REPLACES_A_TYPED_CLAIM_WITH_A_COMPUTED_STATUS: RULE-10-ON-THE-CLAIM-THAT-WAS-TYPED-AND-FALSE
+  FOUR_STATUSES_EACH_APPEARING_TWICE_PRODUCED_AND_ASSERTED: THE-RED-FIRST-PAIRING-IS-VISIBLE-IN-THE-COUNTS
+  EXPECTED_CHECKS_IN_THE_EARLY_READ_MOVED_25_TO_30: AND-MY-RAW-ok-COUNT-32-TO-37-SAME-DELTA
+  DEs_MEASUREMENT_IS_THE_THIRD_INDEPENDENT_READING_OF_THE_SAME_FILE: BE-97-THEN-ME-THEN-DE
+  AND_IT_IS_STRONGER_THAN_MINE_WAS: FIVE-FIELDS-WHERE-I-CHECKED-ONE
+  THE_INVENTORY_STATUS_IS_NOW_A_JSON_PATH_WALK_NOT_A_SENTENCE: _paths_to-RETURNS-WHERE-IT-ACTUALLY-IS
+  GO_8_WAITS_ONLY_ON_THE_CLOSE: FIVE-STEPS-NAMED-IN-ORDER
+  THE_INVENTORY_RULING_IS_OPEN_AND_PART_B_DOES_NOT_TOUCH_IT: THE-ONLY-OPEN-ONE-OF-FOUR
+  ALL_FOUR_RULED_DAYS_ARE_READ_AND_THE_TABLE_IS_UNCHANGED: 0-OF-4-AND-1-OF-4
+  THE_FREEZE_HOLDS_FOR_THE_FIFTEENTH_ROUND: AND-LIFTS-AT-GO-8s-RECEIPT
   # --- MEM round 274, R-796..R-798 + the two RESULTS SS0b commits swept (c1ce532 -> 5c9c0d4) ---
   THE_FOUR_DAY_EARLY_READ_IS_COMPLETE_AND_I_BUILT_THE_TABLE_FROM_THE_FOUR_ARTIFACTS: EIGHT-ARM-DAYS-EVERY-FIGURE
   THE_SIGN_COUNTS_REPRODUCE_ZERO_OF_FOUR_AND_ONE_OF_FOUR: CONDVALUE-NEVER-HAZARD-ON-09-05-ONLY
@@ -26487,6 +26503,178 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 275, 2026-09-07T14:29:48Z (the clock read by which every measurement below was complete) ---
+  ALL_FIVE_OF_REV_103s_DIGESTS_RECOMPUTE_EQUAL_AT_wt_de:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_103_GO8_CLEARED_2026-09-07.md
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      R-799 records the coordinator verifying REV 103 §5's five digests at `wt-de`. **I recomputed all five myself at
+      `wt-de`'s working files** rather than reading the verification: `de_multiday_gate1_runner.py`
+      **883b5f3a811e9576d0c97055**, `de_early_read.py` **5aa544ef8d594efd807624fa**, `de_decision_ledger.py`
+      **d78c370151cea431127bbb77**, `de_multiday_gate1_params_v19.json` **dd8db7ded9e6ed9723173a3a**,
+      `p003_de_multiday_gate1_design_v27.json` **3bcdf3c234cb7d4e4be116c2**. **All five equal, to every cited digit.**
+      A second reading of a clearance condition is worth having precisely because the condition is what stands between
+      tonight's launch and a wrong tree.
+  AND_BOTH_BLOCKING_CONDITIONS_HOLD_AT_MY_READ:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      REV 103 §5's two blocking conditions, measured inside the worktree at 14:26:01Z: **P10** -- `git status --short`
+      in `wt-de` returns exactly one line, `?? data`, nothing else; **the cascade pins** -- v19's ten declared paths
+      hashed against `wt-de`'s working files, **10 of 10, no red**. `wt-de` HEAD is `5020f96`; `wt-de2` has moved to
+      `8a7fc57`. This is the third round in which I have measured these two, before and after the refresh and now
+      again after DE 135 was verified.
+  BUT_THE_FIFTH_DIGESTS_FILE_IS_THE_SAME_INODE_AS_THE_MAIN_TREES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      **AND THE FIFTH IS NOT LIKE THE OTHER FOUR.** `readlink -f` on `wt-de`'s path for the design declaration resolves
+      to `/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json`, and `stat` gives **inode
+      6043309 for BOTH paths** -- one file, two names, reached through the `data` symlink. The other four are ordinary
+      files inside `wt-de`'s own checkout of `5020f96` (all four are in that commit's tree, checked with `cat-file -e`).
+  SO_FOUR_CONDITIONS_ARE_CHECKED_AT_THE_CHECKOUT_AND_ONE_THROUGH_THE_SYMLINK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      The consequence, stated as a property of the check rather than as a problem. **Four of REV 103 §5's five digests
+      are read from bytes that `wt-de`'s HEAD pins; the fifth is read from the shared tree's WORKING file.** The design
+      declaration is tracked and is in `5020f96`'s tree -- so the commit does pin a version of it -- **but the path the
+      running code opens does not resolve to that blob**; it resolves to whatever the shared tree currently holds. They
+      are equal at my read (`3bcdf3c2` both ways, same inode). **The freeze on `wt-de` therefore covers four of the five
+      and not the fifth**, which is the same asymmetry that has been true of the design family since the worktree was
+      made and is why the family's head has always been resolved from the shared ledger.
+  AN_ODDITY_I_OBSERVED_AND_DID_NOT_EXPLAIN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      **RECORDED AS OBSERVED, NOT EXPLAINED, BECAUSE I DID NOT SETTLE IT.** `wt-de`'s index tracks **345 files under
+      `data/`** (`git ls-files data | wc -l`), sparse-checkout is **false**, and yet `git status --short` in that
+      worktree reports only `?? data` -- neither the 345 tracked paths as deleted nor the symlink as a modification.
+      Ordinarily a symlink standing where a tracked directory should be produces deletions. **I checked four things
+      (ls-files count, sparse-checkout setting, the symlink target, the inode) and none of them explains the status
+      output, so I am not offering a mechanism.** It matters only in one direction: the P10 condition is read from that
+      same status output, so whatever makes it quiet about `data/` is also what makes P10 satisfiable. Flagged for
+      whoever holds the worktree tooling; MEM does not route.
+  NEITHER_a71b714_NOR_17cbf1b_IS_AN_ANCESTOR_OF_5020f96:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      Checked with `merge-base --is-ancestor` on both, as R-799 states: **both NO.** So the bytes GO #8 runs tonight
+      carry **neither** of the day's two fixes -- not the `ABSOLUTES_DO_NOT_RECONCILE` cells (my round-274 refinement)
+      and not DE 135 Part B's inventory measurement. **That is the composition discipline working as designed**: the
+      head GO #8 runs is `6c3a121` + DE 134's runner and nothing else, so a NO-GO would name a specific delta and a
+      clearance clears a known set of bytes. Both fixes are for GO #9 onward, and the artifact GO #8 emits tonight will
+      carry the OLD inventory wording.
+  DE_135_PART_B_REPLACES_A_TYPED_CLAIM_WITH_A_COMPUTED_STATUS:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      `17cbf1b`, +304/-20 on `de_early_read.py`, adds **`inventory_at_the_ledger(ledger_path, *, arm_days=None)`** --
+      which opens the ledger, walks it with a `_paths_to(o, key, prefix)` helper, and returns a **STATUS derived from
+      where the key actually is**. **This is CLAUDE.md rule 10 -- compute predicates, never print conclusions -- applied
+      to precisely the claim that was typed and false.** The old text asserted `inventory_leg: "COMPUTED since BE 96, in
+      the decision ledger"`; the new field is whatever a walk of the file returns. **A sentence about a file has been
+      replaced by a measurement of it**, which is the only repair that cannot go stale the same way.
+  FOUR_STATUSES_EACH_APPEARING_TWICE_PRODUCED_AND_ASSERTED:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      The status set, counted at the file: `NOT_A_FIELD_OF_THE_LEDGER`, `PRESENT_ONLY_INSIDE_THE_ABSOLUTES`,
+      `PRESENT_OUTSIDE_THE_ABSOLUTES`, `NOT_MEASURED_NO_LEDGER_ON_THIS_PATH` -- **each appearing exactly TWICE in the
+      module**: once where the function can produce it and once where a cell asserts it. **The red-first pairing is
+      visible in the counts themselves**, without reading the cells: four distinct outcomes, four assertions, and one of
+      them (`NOT_A_FIELD_OF_THE_LEDGER`) is the true answer at the real 09-05 pair. A status that can only ever return
+      one value would show up here as an asymmetry.
+  EXPECTED_CHECKS_IN_THE_EARLY_READ_MOVED_25_TO_30:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      R-799 cites "early read 25->30" and the module carries it as a declared constant: `EXPECTED_CHECKS = 25` at
+      `5020f96`, **`= 30` at HEAD** -- five cells, matching the five red-first cells R-799 names. **My own raw count of
+      indented `ok(` call lines gives 32 -> 37 -- the SAME DELTA of five from a different base**, because the constant
+      counts what the battery declares and my regex counts call lines. Both readings agree on what changed; I name which
+      is which so a later reader does not treat 32 and 25 as a discrepancy.
+  DEs_MEASUREMENT_IS_THE_THIRD_INDEPENDENT_READING_OF_THE_SAME_FILE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      R-799 records DE's Part B measurement as reproducing BE 97 "by a second implementation". **It is in fact the
+      THIRD reading of that ledger**: BE 97 measured it and routed the finding; **I measured it myself at round 273**
+      (the four row types and their key sets, `inventory_leg` in none of them, `inventory_after` non-None on all 177,467
+      fill rows, and BE's residuals 5,100 / 10,188 / 9,184 reproduced exactly); and DE has now measured it a third time
+      from inside the module that makes the claim. **Three readings, three implementations, one answer** -- which is the
+      R-235 do-not-harmonize shape at its most useful, on a claim that three seats had previously passed along
+      unchecked.
+  AND_IT_IS_STRONGER_THAN_MINE_WAS:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      Said because the difference is real and in DE's favour. At round 273 I established that **`inventory_after`** is
+      non-None on all 177,467 fill rows -- ONE field. DE's measurement reports **the five fields on 177,467 of 177,467
+      fill rows** -- all of BE 96's block. So where I showed the leg's principal input is complete, DE shows the whole
+      input set is, which is what the ledger header's "recomputable from this file" claim actually requires. **A
+      measurement that covers the claim exactly is worth more than one that covers a necessary part of it**, and mine
+      was the latter.
+  THE_INVENTORY_STATUS_IS_NOW_A_JSON_PATH_WALK_NOT_A_SENTENCE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      The mechanism worth keeping: `_paths_to(o, key, prefix="")` walks the parsed JSON and returns **where the key is
+      found**, so the status distinguishes "absent everywhere" from "present only inside the `absolutes` block" from
+      "present outside it" -- three different truths that the single word "COMPUTED" could not tell apart. **The old
+      claim was not merely wrong; it was unfalsifiable from inside the artifact**, because nothing in the emitting
+      module ever looked. The new field can be wrong, and if it is, the cell that asserts it fails.
+  GO_8_WAITS_ONLY_ON_THE_CLOSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      R-799's sequence, carried in order because it is the state a cold reader needs: **DA's 00:06Z mask + verdict ->
+      BE fragment -> tape -> book + builder receipt (the two P2s) -> GO #8 from `wt-de` at `5020f96` -> the receipt read
+      at `day_run.decision_ledger` FIRST -> the freeze lifts -> v20/v28 by RE-MEASUREMENT -> GO #9 -> the 09-03/09-04
+      replays.** Nothing technical blocks GO #8: the worktree is frozen at the cleared commit with all five digests and
+      both conditions verified. **It waits on calendar time and the close, not on work.** The instruction to read
+      `day_run.decision_ledger` first is R-791's misread turned into a procedure.
+  THE_INVENTORY_RULING_IS_OPEN_AND_PART_B_DOES_NOT_TOUCH_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      Unchanged: R-795 routes the inventory leg to the USER (rule 14), the coordinator's three-part recommendation
+      disclosed and not adopted, and it is **the only open one of the four user rulings in play today** (R-754, R-765,
+      R-782, R-795). DE 135 Part B measures WHERE the quantity is; **it does not decide WHETHER it belongs in the
+      estimand**, which is the ruling. The two are easy to conflate now that a status field exists, so: the field
+      answers "is it in the ledger", the ruling answers "should it be in `D_E0`".
+  ALL_FOUR_RULED_DAYS_ARE_READ_AND_THE_TABLE_IS_UNCHANGED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      R-798's four-day table stands as I rebuilt it last round from the four artifacts: `CONDVALUE_X_SKEW` above the
+      0-cancel baseline **0 of 4**, `HAZARD_OVER_SKEWED_REF` **1 of 4** (09-05), every value **FILLS LEG ONLY**, the
+      sign floor at four days **0.0625**, E1/E2 tabled at R-773 and E3/E4 read but not judged. **Nothing in this round
+      touches a number in it.** Seat rounds this cycle: BE 97, DA 128, DE 135, REV 103.
+  THE_FREEZE_HOLDS_FOR_THE_FIFTEENTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T14:29:48Z
+    said: >-
+      `params_v20` and `design_v28` both absent (0 matches in any state), heads v19 and v27 -- and per round 270's
+      history check neither has ever existed as a file, which is why R-799 says they come back **by re-measurement**
+      rather than by being written out. The freeze lifts at GO #8's receipt. The 09-03/09-04 replay debt stands behind
+      GO #9, and those two days remain the two shapes missing from the four-day table.
   # --- MEM round 274, 2026-09-07T14:22:37Z (the clock read by which every measurement below was complete) ---
   THE_FOUR_DAY_EARLY_READ_IS_COMPLETE_AND_I_BUILT_THE_TABLE_FROM_THE_FOUR_ARTIFACTS:
     prov: CHECKED
