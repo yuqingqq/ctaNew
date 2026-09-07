@@ -75,6 +75,12 @@ first under a `# --- MEM round N ... ---` comment), `focus:`, `flag_provenance:`
   ` + backtick-sha + `)`.
 - **Escape literal braces in f-string generation text** (`{{path, sha256}}`) — this raised
   at round 280 before any write.
+- **Escape literal `%` in `%`-formatted generation text** (`97.5694 %%`) — raised at round 287, but only AFTER
+  `STATUS.yml` and the archive had been written, because the `HANDOFF.md` block was built last: the round's STATUS
+  write had already landed and re-running the script would have double-applied it. Two rules from one failure —
+  **order the blocks so a later failure cannot orphan an earlier write**, and prefer a placeholder +
+  `.replace()` template over `%`/f-string formatting for any text carrying numbers with units. A body full of
+  `%`, `{` and `}` is DATA, not a format string.
 
 ## Landing
 
