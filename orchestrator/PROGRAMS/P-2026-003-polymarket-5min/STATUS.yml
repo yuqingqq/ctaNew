@@ -67,6 +67,43 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T16:11:24Z (MEM ROUND 284 -- R-810 SWEPT, with every landing between the tip I read at round 283 (`67e0f7d`) and
+  `d7e51fe`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) **A USER REVIEW, three findings carried verbatim.** DE 139 landed `a4965b9` at 16:07:15Z -- **five seconds
+  before the entry** -- fixing REV 104B §6's four items, **and its §6(2) fix WORKS**: `all_agree` is recomputed
+  inside the function and `len(per_slug) > 0` is required, so a forged flag is ignored.
+  (2) ***BUT I DROVE THE USER'S EXACT CASE AT THE POST-FIX CODE AND IT DID NOT REFUSE.*** Calling
+  `winner_source(verification={all_agree: True, per_slug: {}, counts: {}, convention: <pinned>},
+  require_verified=True)` against the real `resolutions.jsonl`: **the call RETURNED** -- status
+  `VERIFICATION_DID_NOT_AGREE`, `n_slugs_verified` **0**, counts all zero. **THE GATE ENUMERATES FAILURES
+  INSTEAD OF REQUIRING SUCCESS**: it refuses `NOT_VERIFIED_AGAINST_CHAINLINK`, any `DISAGREE`, and any
+  `UNAVAILABLE`/`UNRESOLVED` -- **an empty verification is none of the three.** A door that names the ways in
+  cannot know about one it was not told about. **BOUND ON IT**: `is_final_for_quotation` is correctly **False**,
+  so nothing quotable escaped -- **the label held and the door did not**, and the residual risk is a caller that
+  infers verification from the absence of a refusal. **So R-810's routing is still live at the current code**:
+  the user's reproduction as a falsifier would fail today.
+  (3) ***THE SECOND HIGH VERIFIED IN ITS STRONGEST FORM***: `build_reference` accepts `placement_latency_ms`, and
+  of the **fourteen** modules that call it -- 22 call sites in phase4 alone -- **ZERO pass the keyword**.
+  ***THREE PROGRESSIVELY STRONGER READINGS OF ONE FACT***: round 281 (mine, from the default), round 283 (REV
+  §7, the day path never calls it), round 284 (the user, no caller anywhere passes it). Each subsumes the last,
+  and only the third explains why **BE 101 must start at the BUILDER**: a parameter no caller supplies is not a
+  switch that is off, it is a switch that is not wired. BE 101 rebuilds **one day (09-05) at L = 250 into a NEW
+  artifact path** and prices it against the landed **88,698 / 81,238 c** -- a new path, so the comparison is
+  between two artifacts rather than an artifact and a memory. **Tonight's four re-runs stay at L = 0 unless the
+  user rules otherwise, each receipt stating its L from the book's builder receipt** -- the assumption becomes a
+  FIELD rather than something to remember.
+  (4) **DA 131 MEASURED THE HARM MY ROUND-283 FLAG WATCHED FOR.** I recorded the two new row kinds under an
+  unchanged `schema_version` as "watched, not objected to"; DA has landed (+258) and its subject reads "**a
+  pre-DE-136 reader was measured skipping them silently**". The rule-4 shape -- a silent skip rather than a named
+  status -- measured rather than argued, with `SETTLEMENT_SCALARS_DISAGREE` and a named `why` for a ledger
+  carrying neither kind. The user's own checks (`git diff --check`, `py_compile`) passed with **no files
+  modified**.
+  (5) ***THE SIXTH COMPOSITION IS NOT BUILT***: `wt-rr` is still at `a54dcc2`, the FIFTH head, so **the tree the
+  re-runs will use does not yet contain the fix that gates them**, and REV 105 waits on a head that does not
+  exist. "DE 139 landed" and "the sixth composition exists" are different facts and only the first is true.
+  GO #8 unchanged (`5020f96`, `?? data`, TENTH consecutive round); freeze holds a TWENTY-FOURTH round.
+  COUNTS (by YAML parse): flags 2274 -> 2289, provenance 1819 -> 1834 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 266 archived.)
   2026-09-07T16:05:47Z (MEM ROUND 283 -- R-809 SWEPT, with every landing between the tip I read at round 282 (`51cf79e`) and
   `67e0f7d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***MY ROUND-282 CONSTRAINT WAS IMPLEMENTED EXACTLY, AND BY THE CLEANEST MEANS.*** I wrote that the fifth
@@ -146,43 +183,6 @@ updated: >-
   forbidding a re-pin is what forces the older phase4 bytes into a new tree.
   COUNTS (by YAML parse): flags 2243 -> 2259, provenance 1788 -> 1804 (sixteen written, sixteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 264 archived.)
-  2026-09-07T15:50:00Z (MEM ROUND 281 -- R-807 SWEPT, with every landing between the tip I read at round 280 (`d1b9e62`) and
-  `cd4b38f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) **A USER INSTRUCTION, VERBATIM: "Focus on getting the correct results"** -- **Track C DEFERRED**, and the
-  critical path narrows to one thing: re-run the four design days under the SETTLEMENT ESTIMATOR so each yields
-  trades + residual per slug, the Chainlink-verified winner and Z/p from the inline-valued null **in one pass**,
-  labelled `DESIGN_DATA`. **And the entry DEFINES "correct" rather than leaving it to taste** -- six conjuncts:
-  the ruled quantity, a verified winner, reconciled two ways, a matched null valued the same way, the
-  `DESIGN_DATA` label, and NO INTERVAL BELOW FIVE DAYS. A checklist, not an adjective.
-  (2) ***THE FIFTH COMPOSITION NEEDS TWO INGREDIENTS THAT DO NOT EXIST YET.*** Specified as `5020f96` +
-  `1f171e8` + DE 137 + DE 138 Part A: `1f171e8` is confirmed NOT an ancestor of `5020f96` (a real addition), but
-  **DE 137 has not landed** -- the only "DE 137" commit is R-805's dispatch line -- and **DE 138 Part A is queued
-  behind it**. Corroborated at the code: `placement_latency_ms` **0 occurrences**, `inventory_leg` still **22**.
-  **And `/home/yuqing/ctaNew-wt-rr` does not exist at my read** -- the correct state, not a gap.
-  (3) ***DA 130's RESOLVER DRIVEN, NOT READ***: I imported the module and called
-  `resolve_early_read_head` -- **all four days resolve to their single artifacts, no refusal.** ***BUT NO
-  ARTIFACT CARRIES `supersedes`***, so each family has exactly ONE file and today's resolution is a TRIVIAL
-  success: no chain was followed because there is no chain. **The reader half has landed and the writer half is
-  queued** -- the programme can currently READ a chain it cannot yet WRITE.
-  (4) ***AND THE FIRST KNOWN-BAD MAKES THE ORDERING FORCED, NOT CHOSEN.*** The four refuse by name --
-  `EARLY_READ_HEAD_AMBIGUOUS`, `SUPERSESSION_PAIR_MISMATCH`, the same carrying "not 64" for a sixteen-hex prefix
-  ("R-754's v17 lesson in this family"), and `EARLY_READ_HEAD_ABSENT` -- and the first says "**TWO UNCHAINED
-  ARTIFACTS ARE AMBIGUOUS AND THIS READER WILL NOT PICK BY STAMP**". **So if GO R1..R4 ran before DE 138 Part A,
-  every re-run day would end with two unchained artifacts -- exactly the state the reader refuses.** The sequence
-  is forced by the instrument; "queued behind DE 137" reads as scheduling convenience and is not.
-  (5) **THE RE-RUNS KEEP `placement_latency_ms` AT ZERO BY DESIGN** -- the current behaviour, so every other
-  input is held fixed and the new numbers stay comparable to the ones already read. **The consequence said
-  plainly: they correct the ESTIMAND and NOT the largest assumption.** BE 100's 48-56 % of fills inside 250 ms,
-  carrying 98 % / 55 % of the baseline's settlement P&L -- which I reproduced myself at round 279 -- is untouched
-  by them. Two separate pieces of work, and only the first is on tonight's critical path.
-  (6) `wt-de` stays frozen at **`5020f96`** for **GO #8 at 00:10Z** (status `?? data`, SEVENTH consecutive
-  round), which is why the fifth composition needs a NEW worktree rather than a refresh -- refreshing would break
-  the freeze REV 103's five digests were verified against. **None of GO R1..R4 straddles 00:00Z**; the schedule
-  is R1 -> R2 -> (GO #8) -> R3 -> R4, or all four before the close if the clock allows, and E1-E4's evidence puts
-  each run at roughly 85-105 minutes. Freeze holds a TWENTY-FIRST round; DE 137's two items are still absent, so
-  the field that holds the negation of the trades leg is still misnamed.
-  COUNTS (by YAML parse): flags 2228 -> 2243, provenance 1773 -> 1788 (fifteen written, fifteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 263 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -354,6 +354,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 284, R-810 swept (67e0f7d -> d7e51fe) ---
+  A_USER_REVIEW_WITH_THREE_FINDINGS_CARRIED_VERBATIM: TWO-HIGH-ONE-MEDIUM
+  DE_139_LANDED_FIVE_MINUTES_BEFORE_THE_ENTRY_AND_THE_S6_2_FIX_WORKS: THE-FORGED-all_agree-IS-IGNORED
+  BUT_I_DROVE_THE_USERS_EXACT_CASE_AT_THE_POST_FIX_CODE_AND_IT_DID_NOT_REFUSE: require_verified-TRUE-RETURNED
+  THE_GATE_ENUMERATES_FAILURES_INSTEAD_OF_REQUIRING_SUCCESS: THREE-REFUSALS-AND-A-FOURTH-STATE
+  is_final_for_quotation_IS_CORRECTLY_FALSE_SO_NOTHING_QUOTABLE_ESCAPED: THE-FLAG-HELD-THE-REFUSAL-DID-NOT
+  SO_THE_ROUTING_IS_STILL_NEEDED_AT_THE_CURRENT_CODE: THE-USERS-REPRODUCTION-AS-A-FALSIFIER
+  THE_SECOND_HIGH_VERIFIED_IN_ITS_STRONGEST_FORM: ZERO-OF-FOURTEEN-CALLERS-PASS-IT
+  THREE_PROGRESSIVELY_STRONGER_READINGS_OF_ONE_FACT: DEFAULT-THEN-DAY-PATH-THEN-EVERY-CALLER
+  SO_THE_LATENCY_IS_INERT_EVERYWHERE_NOT_ONLY_ON_THE_DAY_PATH: AND-BE-101-IS-DISPATCHED-AT-THE-BUILDER
+  BE_101_PRICES_THE_ASSUMPTION_ON_ONE_REBUILT_DAY: AGAINST-THE-LANDED-88698-AND-81238
+  TONIGHTS_FOUR_RE_RUNS_STAY_AT_L_ZERO_UNLESS_THE_USER_RULES: EACH-RECEIPT-STATING-ITS-L
+  DA_131_MEASURED_THE_HARM_MY_ROUND_283_FLAG_WATCHED_FOR: A-PRE-DE-136-READER-SKIPS-THEM-SILENTLY
+  THE_USERS_OWN_CHECKS_PASSED_AND_NO_FILE_WAS_MODIFIED: git-diff-check-AND-py_compile
+  THE_SIXTH_COMPOSITION_IS_NOT_BUILT_AND_REV_105_STILL_WAITS: wt-rr-STILL-AT-a54dcc2
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_TWENTY_FOURTH_ROUND: 5020f96-TENTH-CONSECUTIVE-ROUND
   # --- MEM round 283, R-809 swept (51cf79e -> 67e0f7d) ---
   MY_ROUND_282_CONSTRAINT_WAS_IMPLEMENTED_EXACTLY_AS_STATED: PHASE4-KEPT-BY-EXCLUSION
   THE_FIFTH_COMPOSITION_IS_ONE_PARENT_FOUR_FILES_AND_PHASE4_AT_THE_PIN: a54dcc2-VERIFIED-AT-THE-OBJECT
@@ -26643,6 +26659,174 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 284, 2026-09-07T16:11:24Z (the clock read by which every measurement below was complete) ---
+  A_USER_REVIEW_WITH_THREE_FINDINGS_CARRIED_VERBATIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      R-810 is a **USER REVIEW**, carried verbatim in the entry, with three findings: **HIGH** --
+      `winner_source(require_verified=True)` accepts a forged or incomplete verification as final, reproduced by the
+      user with `all_agree=True`, empty `per_slug`, empty `counts` (`:4710`/`:4770`); **HIGH** -- the placement latency
+      is declared but not active (`PLACEMENT_LATENCY_MS_DEFAULT` 0.0, no `build_reference` caller passes it,
+      `:502`/`:546`/`:6776`); **MEDIUM** -- Chainlink finalization must validate evidence **IDENTITY, not shape**
+      (exact slug set, recomputed counts, all `VERIFIED_AGREE`, pinned convention equality, positive hourly file
+      count, reader provenance; `:4721`). The user's recommendation: **fix the `require_verified` gate first.**
+  DE_139_LANDED_FIVE_MINUTES_BEFORE_THE_ENTRY_AND_THE_S6_2_FIX_WORKS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      A timing fact that changes how the review should be read: **DE 139 landed at 16:07:15Z (`a4965b9`, +228/-15) --
+      five seconds before R-810 was written at 16:07:20Z** -- fixing REV 104B §6's four items including (2). **And the
+      fix works**: the code now carries "NOTHING HERE IS READ FROM THE DICT IT WAS HANDED. `counts` is recomputed from
+      `per_slug` and `all_agree` from `counts`, INSIDE this function", and
+      `_all_agree = (_c["VERIFIED_AGREE"] == len(per_slug) and len(per_slug) > 0)` -- **so an empty map cannot produce
+      agreement and a caller-supplied `all_agree` is ignored entirely.**
+  BUT_I_DROVE_THE_USERS_EXACT_CASE_AT_THE_POST_FIX_CODE_AND_IT_DID_NOT_REFUSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      **AND I DROVE IT RATHER THAN READING IT.** Importing the runner and calling
+      `winner_source(verification={"all_agree": True, "per_slug": {}, "counts": {}, "convention": {"name": <the pinned
+      name>}}, require_verified=True)` against the real `resolutions.jsonl`: **THE CALL RETURNED. IT DID NOT REFUSE.**
+      `status` = **`VERIFICATION_DID_NOT_AGREE`**, `n_slugs_verified` = **0**, counts all zero,
+      `is_final_for_quotation` = **False**. So the forged flag is correctly ignored -- §6(2) holds -- **and the
+      user's exact reproduction still passes `require_verified=True` at the post-fix code**, for a different reason
+      than the one REV found.
+  THE_GATE_ENUMERATES_FAILURES_INSTEAD_OF_REQUIRING_SUCCESS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      The mechanism, which is the transferable part. The `require_verified` block refuses exactly three states:
+      `status == "NOT_VERIFIED_AGAINST_CHAINLINK"`, any `DISAGREE`, and any `CHAINLINK_UNAVAILABLE` or
+      `VENUE_UNRESOLVED`. **An empty verification is none of the three** -- its status is `VERIFICATION_DID_NOT_AGREE`
+      and all four counters are zero -- **so it falls through every refusal.** The gate is written as a LIST OF KNOWN
+      FAILURES rather than as an affirmative requirement that `status == "VERIFIED_AGAINST_CHAINLINK"`. **A door that
+      names the ways in cannot know about a way it was not told about**, and the empty case is exactly the state that
+      has no named failure in it. This is the user's MEDIUM item -- identity, not shape -- arriving through the HIGH
+      one's door.
+  is_final_for_quotation_IS_CORRECTLY_FALSE_SO_NOTHING_QUOTABLE_ESCAPED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      **The bound on the finding, stated so it is not read as worse than it is.** The returned block carries
+      `is_final_for_quotation: False`, which is correct: nothing in that result is marked quotable. **So a caller that
+      READS THE FLAG is safe, and a caller that treats "no exception" as verification is not.** The code's own comment
+      says the gate exists because "an unverified value may be COMPUTED and LABELLED (R-803); what it may never be is
+      quoted as final, and **this is the door that says no**" -- **the label held and the door did not.** Both halves
+      belong in the record: the residual risk is precisely a caller that infers verification from the absence of a
+      refusal.
+  SO_THE_ROUTING_IS_STILL_NEEDED_AT_THE_CURRENT_CODE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      Which is why R-810's routing is not redundant with the fix that landed five seconds before it. The entry routes
+      **the gate fix FIRST in DE 139, with the user's exact reproduction as a FALSIFIER and the identity checks folded
+      in** (addendum 3, 16:07:18Z). **My drive confirms that instruction is still live**: at the post-fix code the
+      reproduction returns rather than refusing, so a falsifier built from it would fail today and the identity checks
+      (exact slug set, recomputed counts, all `VERIFIED_AGREE`, positive hourly file count, reader provenance) are what
+      close it. **Recorded as verification of a routing, not as a new finding** -- REV found the door, the user found
+      it still ajar, and I measured that it is.
+  THE_SECOND_HIGH_VERIFIED_IN_ITS_STRONGEST_FORM:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      The user's second HIGH, checked by AST across every caller rather than by grep: **`build_reference` DOES accept
+      `placement_latency_ms: float | None = None`**, and of the **fourteen modules that call it** --
+      `be_daybook_build`, `harmful_exposure_rows`, `da_tranche_field_probe`, the four section-81 scripts, the six v2
+      gate smokes and phase4 itself, 22 call sites in phase4 alone -- **ZERO calls pass the keyword.** The parameter is
+      declared, accepted, and supplied by nobody.
+  THREE_PROGRESSIVELY_STRONGER_READINGS_OF_ONE_FACT:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      The same fact has now been established three times, each reading stronger than the last, and it is worth laying
+      them side by side. **Round 281 (mine)**: the re-runs keep L at zero because `PLACEMENT_LATENCY_MS_DEFAULT = 0.0`
+      -- true, but it left open that someone could set the parameter. **Round 283 (REV §7, verified by me)**: the day
+      path never calls `build_reference`, so setting it would not reach a day run without a rebuilt book. **Round 284
+      (the user, verified by me)**: **no caller anywhere passes it**, so it is inert even in the modules that DO call
+      `build_reference`. **Each subsumes the last, and only the third explains why BE 101's dispatch has to start at
+      the BUILDER** rather than at a flag.
+  SO_THE_LATENCY_IS_INERT_EVERYWHERE_NOT_ONLY_ON_THE_DAY_PATH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      The consequence for the plan: **the largest named assumption in the four days' numbers is not merely defaulted
+      off, it is unreachable from any existing call site.** `be_daybook_build.py` is one of the fourteen callers and
+      passes nothing today -- which is exactly why **BE 101 (dispatched 16:07:19Z) is to make the builder PASS
+      `placement_latency_ms`, record it in the builder receipt and the book header**, before anything can be run at a
+      non-zero L. **A parameter that no caller supplies is not a switch that is off; it is a switch that is not
+      wired.**
+  BE_101_PRICES_THE_ASSUMPTION_ON_ONE_REBUILT_DAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      BE 101's shape, recorded because it is the first work that will actually price BE 100's finding: rebuild **ONE
+      day (09-05) at L = 250** into a **new artifact path**, and price the assumption -- the fills leg and the ruled
+      P&L against **the landed 88,698 and 81,238 cents** (the baseline figures I verified at rounds 272 and 278) --
+      plus the cost of rebuilding four days and of building future days at 250. **A new artifact path rather than a
+      rebuild in place** is the right shape: the landed books stay exactly as the four read days used them, and the
+      comparison is between two artifacts rather than between an artifact and a memory.
+  TONIGHTS_FOUR_RE_RUNS_STAY_AT_L_ZERO_UNLESS_THE_USER_RULES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      The decision recorded as a decision: **tonight's four re-runs stay at L = 0 unless the user rules otherwise**,
+      and **each receipt states its L from the book's builder receipt** rather than from a default or a memory. That
+      last clause is the one that matters for the record -- it makes the assumption a FIELD in every artifact instead
+      of a fact someone has to remember, which is the same repair DE 137 made for the winner's convention and DE 136
+      for the ledger's schema.
+  DA_131_MEASURED_THE_HARM_MY_ROUND_283_FLAG_WATCHED_FOR:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      At round 283 I flagged DA 131's two new row kinds under an unchanged `schema_version` as "watched, not objected
+      to, since DA's reader branches on the kind". **DA 131 has now landed (+258 lines) and measured the harm
+      directly**: its own subject line is "the settlement rows are read and recomputed, **and a pre-DE-136 reader was
+      measured skipping them silently**". So the concrete consequence of not bumping the version is that an older
+      reader does not error -- it ignores the new rows and reports on what it did read. **That is the rule-4 shape (a
+      silent skip rather than a named status), measured rather than argued**, and DA also ships
+      `SETTLEMENT_SCALARS_DISAGREE` and a named `why` for a ledger carrying neither kind. **My "watched" was the right
+      posture and the watching produced a measurement.**
+  THE_USERS_OWN_CHECKS_PASSED_AND_NO_FILE_WAS_MODIFIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      Recorded because a review that touches a repository has to say what it touched: the user's checks were
+      `git diff --check` and `py_compile`, **both passed, and no files were modified.** So the review is a read of the
+      landed bytes, and the reproduction was driven without leaving anything behind -- the same standard REV states at
+      the head of each of its own reviews ("read-only: no heavy unit, no lock, nothing written under `data/`").
+  THE_SIXTH_COMPOSITION_IS_NOT_BUILT_AND_REV_105_STILL_WAITS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      State, measured: `wt-rr` is still at **`a54dcc2`** -- the FIFTH head -- and the sixth (`a54dcc2` + DE 139) has
+      not been composed, even though DE 139's code landed at `a4965b9` on the mainline. **So the tree the re-runs will
+      use does not yet contain the fix that gates them**, and REV 105 still waits on a head that does not exist.
+      Recorded plainly because "DE 139 landed" and "the sixth composition exists" are different facts and only the
+      first is true.
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_TWENTY_FOURTH_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:11:24Z
+    said: >-
+      `wt-de` at **`5020f96`**, status exactly `?? data` -- the **tenth** consecutive round at that state; GO #8 at
+      00:10Z from those bytes. `params_v20` and `design_v28` absent; heads v19/v27; **twenty-fourth round of the
+      freeze.** In flight: DE 139 (the gate fix with the user's reproduction as a falsifier), DA 131 (landed), BE 101
+      (the builder and the priced rebuild); REV 105 gates GO R1..R4 on the sixth head.
   # --- MEM round 283, 2026-09-07T16:05:47Z (the clock read by which every measurement below was complete) ---
   MY_ROUND_282_CONSTRAINT_WAS_IMPLEMENTED_EXACTLY_AS_STATED:
     prov: CHECKED

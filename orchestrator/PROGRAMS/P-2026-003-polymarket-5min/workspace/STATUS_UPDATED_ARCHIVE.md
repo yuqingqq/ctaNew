@@ -20434,3 +20434,45 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2213 -> 2228, provenance 1758 -> 1773 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 262 archived.)
 ```
+
+## Batch 266 — archived 2026-09-07T16:11:24Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:50:00Z (MEM ROUND 281 -- R-807 SWEPT, with every landing between the tip I read at round 280 (`d1b9e62`) and
+  `cd4b38f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) **A USER INSTRUCTION, VERBATIM: "Focus on getting the correct results"** -- **Track C DEFERRED**, and the
+  critical path narrows to one thing: re-run the four design days under the SETTLEMENT ESTIMATOR so each yields
+  trades + residual per slug, the Chainlink-verified winner and Z/p from the inline-valued null **in one pass**,
+  labelled `DESIGN_DATA`. **And the entry DEFINES "correct" rather than leaving it to taste** -- six conjuncts:
+  the ruled quantity, a verified winner, reconciled two ways, a matched null valued the same way, the
+  `DESIGN_DATA` label, and NO INTERVAL BELOW FIVE DAYS. A checklist, not an adjective.
+  (2) ***THE FIFTH COMPOSITION NEEDS TWO INGREDIENTS THAT DO NOT EXIST YET.*** Specified as `5020f96` +
+  `1f171e8` + DE 137 + DE 138 Part A: `1f171e8` is confirmed NOT an ancestor of `5020f96` (a real addition), but
+  **DE 137 has not landed** -- the only "DE 137" commit is R-805's dispatch line -- and **DE 138 Part A is queued
+  behind it**. Corroborated at the code: `placement_latency_ms` **0 occurrences**, `inventory_leg` still **22**.
+  **And `/home/yuqing/ctaNew-wt-rr` does not exist at my read** -- the correct state, not a gap.
+  (3) ***DA 130's RESOLVER DRIVEN, NOT READ***: I imported the module and called
+  `resolve_early_read_head` -- **all four days resolve to their single artifacts, no refusal.** ***BUT NO
+  ARTIFACT CARRIES `supersedes`***, so each family has exactly ONE file and today's resolution is a TRIVIAL
+  success: no chain was followed because there is no chain. **The reader half has landed and the writer half is
+  queued** -- the programme can currently READ a chain it cannot yet WRITE.
+  (4) ***AND THE FIRST KNOWN-BAD MAKES THE ORDERING FORCED, NOT CHOSEN.*** The four refuse by name --
+  `EARLY_READ_HEAD_AMBIGUOUS`, `SUPERSESSION_PAIR_MISMATCH`, the same carrying "not 64" for a sixteen-hex prefix
+  ("R-754's v17 lesson in this family"), and `EARLY_READ_HEAD_ABSENT` -- and the first says "**TWO UNCHAINED
+  ARTIFACTS ARE AMBIGUOUS AND THIS READER WILL NOT PICK BY STAMP**". **So if GO R1..R4 ran before DE 138 Part A,
+  every re-run day would end with two unchained artifacts -- exactly the state the reader refuses.** The sequence
+  is forced by the instrument; "queued behind DE 137" reads as scheduling convenience and is not.
+  (5) **THE RE-RUNS KEEP `placement_latency_ms` AT ZERO BY DESIGN** -- the current behaviour, so every other
+  input is held fixed and the new numbers stay comparable to the ones already read. **The consequence said
+  plainly: they correct the ESTIMAND and NOT the largest assumption.** BE 100's 48-56 % of fills inside 250 ms,
+  carrying 98 % / 55 % of the baseline's settlement P&L -- which I reproduced myself at round 279 -- is untouched
+  by them. Two separate pieces of work, and only the first is on tonight's critical path.
+  (6) `wt-de` stays frozen at **`5020f96`** for **GO #8 at 00:10Z** (status `?? data`, SEVENTH consecutive
+  round), which is why the fifth composition needs a NEW worktree rather than a refresh -- refreshing would break
+  the freeze REV 103's five digests were verified against. **None of GO R1..R4 straddles 00:00Z**; the schedule
+  is R1 -> R2 -> (GO #8) -> R3 -> R4, or all four before the close if the clock allows, and E1-E4's evidence puts
+  each run at roughly 85-105 minutes. Freeze holds a TWENTY-FIRST round; DE 137's two items are still absent, so
+  the field that holds the negation of the trades leg is still misnamed.
+  COUNTS (by YAML parse): flags 2228 -> 2243, provenance 1773 -> 1788 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 263 archived.)
+```

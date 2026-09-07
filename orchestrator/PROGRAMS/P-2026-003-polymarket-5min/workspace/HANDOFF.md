@@ -1,3 +1,81 @@
+# READ FIRST — round 284 (MEM, 2026-09-07T16:11:24Z, tip `d7e51fe`)
+
+**R-810 swept, with every landing between the tip I read at round 283 (`67e0f7d`) and `d7e51fe`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. The user's HIGH #1 — driven at the post-fix code, and it still does not refuse
+
+**DE 139 landed `a4965b9` at 16:07:15Z — five seconds before the entry** — fixing REV 104B §6's four items. **Its
+§6(2) fix works**: `counts` are recomputed from `per_slug` inside the function and
+`_all_agree` requires `len(per_slug) > 0`, so a caller-supplied `all_agree` is ignored.
+
+**But I drove the user's exact case at that post-fix code:**
+
+```
+winner_source(verification={"all_agree": True, "per_slug": {}, "counts": {},
+                            "convention": {"name": "S60(T) >= S60(t0)"}},
+              require_verified=True)
+→ RETURNED.  status VERIFICATION_DID_NOT_AGREE | n_slugs_verified 0 | counts all zero
+             is_final_for_quotation False
+```
+
+**The gate enumerates failures instead of requiring success.** It refuses
+`NOT_VERIFIED_AGAINST_CHAINLINK`, any `DISAGREE`, and any `CHAINLINK_UNAVAILABLE`/`VENUE_UNRESOLVED` — **an empty
+verification is none of the three.** A door that names the ways in cannot know about one it was not told about.
+
+**The bound on it:** `is_final_for_quotation` is correctly **False**, so nothing quotable escaped — **the label
+held and the door did not.** The residual risk is a caller that infers verification from the absence of a
+refusal. **So R-810's routing is still live**: the user's reproduction, used as a falsifier, would fail today.
+
+## 2. HIGH #2, verified in its strongest form — and three readings of one fact
+
+`build_reference` **accepts** `placement_latency_ms`, and of the **fourteen** modules that call it (22 call sites
+in phase4 alone) **zero pass the keyword** — checked by AST across every caller.
+
+| round | reading | strength |
+|---|---|---|
+| 281 (mine) | the default is 0.0 | leaves open that someone sets it |
+| 283 (REV §7, verified by me) | the day path never calls `build_reference` | setting it needs a rebuilt book |
+| **284 (the user, verified by me)** | **no caller anywhere passes it** | **inert even in callers** |
+
+Each subsumes the last, **and only the third explains why BE 101 must start at the builder**: a parameter no
+caller supplies is not a switch that is off, it is a switch that is not wired.
+
+**BE 101** rebuilds **one day (09-05) at L = 250 into a new artifact path** and prices it against the landed
+**88,698 / 81,238 c** — a new path, so the comparison is between two artifacts rather than an artifact and a
+memory. **Tonight's four re-runs stay at L = 0 unless the user rules otherwise, each receipt stating its L from
+the book's builder receipt** — the assumption becomes a *field* rather than something to remember.
+
+## 3. DA 131 measured the harm my round-283 flag watched for
+
+I recorded the two new row kinds under an unchanged `schema_version` as *"watched, not objected to"*. DA 131 has
+landed (+258) and its subject reads: **"a pre-DE-136 reader was measured skipping them silently."** The rule-4
+shape — a silent skip rather than a named status — **measured rather than argued**, with
+`SETTLEMENT_SCALARS_DISAGREE` and a named `why` for a ledger carrying neither kind.
+
+The user's own checks (`git diff --check`, `py_compile`) passed with **no files modified**.
+
+## 4. Standing
+
+- **The sixth composition is not built.** `wt-rr` is still at **`a54dcc2`**, the fifth head — **so the tree the
+  re-runs will use does not yet contain the fix that gates them**, and REV 105 waits on a head that does not
+  exist. *"DE 139 landed" and "the sixth composition exists" are different facts and only the first is true.*
+- **GO #8 unchanged** — `wt-de` `5020f96`, `?? data`, **tenth** consecutive round; 00:10Z.
+- **Freeze holds a twenty-fourth round.**
+- In flight: **DE 139** (the gate fix with the user's reproduction as a falsifier, addendum 3 at 16:07:18Z),
+  **BE 101** (16:07:19Z), **DA 131** landed; **REV 105** gates GO R1..R4 on the sixth head.
+
+## 5. Counts
+
+flags 2274 → **2289**, provenance 1819 → **1834** (fifteen written, fifteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,544 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 160th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my fifteen added none. Window trimmed 4 → 3,
+**Batch 266** archived.
+
+**NEXT:** DE 139's gate fix → the sixth head → REV 105 → GO R1. MEM sweeps R-811 onward.
+
+---
+
 # READ FIRST — round 283 (MEM, 2026-09-07T16:05:47Z, tip `67e0f7d`)
 
 **R-809 swept, with every landing between the tip I read at round 282 (`51cf79e`) and `67e0f7d`.** STATE ONLY.
