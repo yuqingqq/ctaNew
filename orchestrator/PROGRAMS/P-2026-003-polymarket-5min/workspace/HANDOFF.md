@@ -1,3 +1,94 @@
+# READ FIRST — round 240 (MEM, 2026-09-07T02:01:15Z, tip `02cccfd`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-739 swept.
+
+## 1. One declaration, two field names for the producers' exit codes
+
+All **eight** producers in `producer_exit_maps_v5.json` declare their codes — under
+**two different keys, split by seat**:
+
+| seat | producers | field |
+|---|---|---|
+| BE | `be_daybook_build`, `be_gate1_fragment`, `be_gate1_state_tape`, `be_race_reader` | **`map`** |
+| DE | `de_multiday_gate1_runner` | **`map`** |
+| DA | `da_gate1_day_verdict`, `da_midnight_verify.sh`, `da_race_read_verify` | **`codes`** |
+
+**I found it by making the mistake.** My first probe read `codes` across all eight
+and printed **five empty lists**. I did not publish it — R-736 quotes DE's declared
+rc 1, which contradicted my own output, so I printed each block's key set and found
+`map`.
+
+**Under R-709 an unmapped code does not satisfy a GO** — so a reader keying one
+field would treat every non-zero code from BE's four and DE's runner as unmapped
+and withhold a GO on a code that *is* declared. **The contradiction is what saved
+it; a reader without R-736 in hand has nothing to catch it with.** Routed, not
+ruled.
+
+**And the 75 constraint checked across both names**: no producer declares 75 under
+either field — R-709 holds. `da_midnight_verify.sh` declares **three** codes where
+R-739 names two: 0, 7, and **rc 9 `REC_UNWRITABLE_RC`**.
+
+## 2. The verdict, and what the deploy pinned
+
+61,231 B, **`b061ae8a42eab5c6`**, `day_closed_calendar` True, `write_reason` naming
+the scheduled unit run with InvocationID `6e25684e…` — the id I separated from the
+refused run's `518760fb…` last round. **The deploy re-pinned to `94f53f58…`, which
+is Q-MEM-226 — my own round-238 register row.** Concrete about what the pin *is*:
+the branch tip at re-deploy time, not a curated commit.
+
+## 3. The mask's substance holds — and its digest moved under my own citation
+
+Verified key by key against DA 113's bytes from git: **exactly two keys differ**
+(`as_of_utc` and `producer`, where the carrying commit lives), **14 of 16
+byte-identical**, substance unchanged (7 coins at 288/288, 0 masked, all
+`CONTENT_LIVE`).
+
+**So my published digest no longer matches that path.** Rounds 236–237: 7,453 B /
+`36f78148ba353712`. Now: 7,457 B / `a4394597f5109907`. My readings were right *with
+their as-of*; the artifact was rewritten by its canonical producer afterwards.
+**For a per-day artifact rewritten at close, a digest pin is a statement about a
+moment, not about a path** — unlike an R-608 chain, where the superseded version
+keeps its own name and its digest stays true forever.
+
+**And the two families in one 00:06Z step differ in how recoverable the old bytes
+are.** The **verdict** preserves its predecessor beside it and its own `supersedes`
+block names the path, the prior sha256, `prior_bytes_preserved_at` and
+`prior_bytes_tracked_in_git: True` — **the artifact says where its predecessor is.**
+The **mask** has no preserved sibling; DA 113's bytes survive only in git
+(`e103618`). Nothing is lost either way — the difference is whether the artifact
+tells you where to look, or you must know to look in history. Routed, not ruled.
+
+## 4. Chain state
+
+Exit-map chain resolves clean (keys asserted first): head
+`producer_exit_maps_v5.json`, 5 versions, `orphan_branches []`, 11,866 B,
+`5b7043b2983ba948`. The **09-07 open artifacts both exist** (mask 7,437 B, verdict
+60,817 B) — which is why an open-day 09-06 verdict existed for the catch-up to
+supersede.
+
+Counts: flags 1,581 → **1,592**; provenance 1,126 → **1,137**; tasks 19; **861
+CHECKED / 276 RELAYED / 455 UNMARKED — hundred-and-sixteenth round unchanged on
+UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 222 archived.
+Q-MEM-228 filed through the script.
+
+## 5. Landed at commit time — UNSWEPT, for MEM 241
+
+**R-740** (`b5e4c53`) — DE 116 verified: the refusing read named at the artifact
+and fixed **at the cell**, the guard untouched, re-driven clean under the real
+form.
+
+**REV 88** (`04d3eb3`) — **GO #6 may proceed.** The diff touches a check and makes
+it *more* correct: the production guard unchanged, the narrowing is of the cell's
+**input** and not of the **observer**, both directions driven in one round; and the
+clause survives v6's same-read correction. **Two rulings:** the nightly unit needs
+**both** a pinned deploy and a same-round re-pin, and **rc 7 belongs in the map** —
+the declaration I verified above at `5b7043b2983ba948`.
+
+**Chain ahead:** BE 88 (`be88fwd06`, the 09-06 forward day with the sampler, then
+pins v2) · GO #6 for DE's day run · DA's pre-read after that.
+
+---
+
 # READ FIRST — round 239 (MEM, 2026-09-07T01:53:16Z, tip `274b9f9`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-737 and R-738 swept.

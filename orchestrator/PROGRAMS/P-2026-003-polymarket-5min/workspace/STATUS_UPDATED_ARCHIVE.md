@@ -17711,3 +17711,67 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-TWELFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 218 archived. Q-MEM-224 filed through the script.)
 ```
+
+## Batch 222 — archived 2026-09-07T02:01:15Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T00:11:45Z (MEM ROUND 237 -- R-735 SWEPT, tip `10c8b79`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **THE MASK's TOTALS RECONCILE WITH ITS PARTS, RECOMPUTED** -- from the per-coin rows, not read
+  from the summary, because a total that disagrees with its parts is the failure worth looking for.
+  Seven coins (bnb, btc, doge, eth, hype, sol, xrp), **each 288 windows total, 288 covered, 0
+  masked, 0 coverage-absent, longest run 0, every one `CONTENT_LIVE`**; `sum(n_masked) = 0 =
+  total_masked_windows`; `sum(n_coverage_absent) = 0 = total_coverage_absent_windows`; `n_coins 7 =
+  len(coins)`; day 20260906, `day_closed_calendar` True, sha `36f78148ba353712`.
+  (2) **DE's `validate_mask` ADMITS THE REAL ONE AND REFUSES THREE BY NAME** -- the CONSUMER's
+  validator driven on the PRODUCER's artifact, both directions: admitted on its own day; the wrong
+  day refused (*"a mask read for the wrong day would mask real windows"*); `day_closed_calendar=False`
+  refused; a missing top-level `coins` refused (*"the PRODUCER's committed artifact is the
+  contract"*). **Two instruments, one artifact** -- R-235's do-not-harmonize doing its job at the
+  seam.
+  (3) **THE PLACEHOLDER CORRECTION HOLDS BOTH WAYS AGAIN.** R-734's block contains `c0369d7` **zero
+  times** -- the landed line was not edited and its placeholder stands as history -- while R-735
+  carries "is `c0369d7`". A correction that had also tidied the original would have been the failure.
+  (4) ***BUT BOTH PLACEHOLDERS HAD THEIR COMMIT LAND FIRST, AND THAT CHANGES WHERE THE REMEDY BITES.***
+  R-734: `c0369d7` 00:03:54Z, the entry's landing 00:03:56Z -- **two seconds apart**, the referenced
+  commit FIRST. R-729: `c0dc836` 20:39:00Z, the entry's landing 20:39:09Z -- **nine seconds**, again
+  FIRST. So in both instances the commit already existed; **what failed was the entry TEXT**, composed
+  before the sha was known and not updated in the seconds between. R-735's rule is correct as
+  written -- *land the commit first AND substitute its sha* -- and the precision I add is which
+  conjunct does the work: **the first was already satisfied both times**, so a reader who checks only
+  that half can believe the rule kept and still ship a placeholder. **The operative half is the
+  SUBSTITUTION.** ROUTED, NOT RULED -- the coordinator's rule about the coordinator's own drafting.
+  (5) **`be72frag2` STILL RUNNING AT A THIRD READING** (00:05, 00:07:33Z, **00:10:18Z**), each
+  stamped; R-735 records it up since 00:04:43Z, so about five and a half minutes at my read.
+  ***AND AT COMMIT TIME IT HAD EXITED***: read at **00:15:01Z** -- loaded / active / **EXITED**,
+  `ExecMainStatus 0`, `Result success`, the same InvocationID `0dd3da0a...`. **So the fragment
+  finished cleanly between 00:10:18Z and 00:14:52Z**, and the four readings are exactly R-653's
+  point made visible: under `RemainAfterExit` a finished unit and a running one BOTH read
+  loaded/active with status 0, and only `SubState` tells them apart. **A live state is worth nothing
+  without its as-of, and here it changed inside one round.** **AND
+  THE UNIT's `ExecStart` NAMES THE DECLARED HEAVY LOCK** --
+  `be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock ... be_gate1_fragment.py
+  --day 20260906` -- whose inode 1053378 I verified against the declaration at round 230, so this is
+  a real heavy run holding the declared lock, **read from the unit** rather than from a launcher in
+  some tree (REV 69 s4). **Both launches show the SAME `ExecStart`**, which is the half of rule 20's
+  byte-identical-code conjunct a reader can see without entering BE's worktree.
+  (6) ***AND I GUESSED A FIELD LIST AGAIN -- FIFTH INSTANCE.*** Hunting the per-coin window count I
+  tried `n_windows, windows, n_total_windows, total_windows` and printed `<field not found by name>`.
+  The real key is **`n_windows_total`**, and it was **printed in the same output**, two lines above
+  my failure. **But the class has SHIFTED, and that is the honest summary:** round 225 was SILENT --
+  absent keys returned defaults and I published them for three rounds; the four since (round 232's
+  absent `head`, 235's substring guess, 236's mislabelled journal line, this one) were all **LOUD** --
+  a None, a printed "<not found>", a value contradicting a control. **The habit that changed is
+  printing the key set in the same command; the habit that has not changed is pairing that print
+  with a guess instead of reading from it.** The remedy stands and is still not complete.
+  (7) **AND MY OWN PROSE BROKE MY OWN INSTRUMENT, WHICH THE GUARD CAUGHT.** My window-trim regex
+  `^  20\d\d-` matched a WRAPPED LINE INSIDE MY ROUND-236 ENTRY that happened to begin with a date,
+  so it found FOUR window entries where there are three -- and `assert len(win)==3` fired before any
+  file was written. Tightened to a full ISO stamp followed by ` (MEM ROUND` or ` (USER`. **A control
+  firing on its owner, for the second time in eight rounds** (round 230's ORPHAN audit refused my
+  repair); the value of the assert is exactly that it does not care whose text broke it.
+  Counts, RE-MEASURED after adding item (7)'s own flag: flags 1,547 -> 1,558; provenance
+  1,092 -> 1,103; tasks 19; **827 CHECKED / 276 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRTEENTH
+  round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 219 archived. Q-MEM-225 filed through the script.)
+```
