@@ -18089,3 +18089,65 @@ generation and the window went 4 → 3. Nothing rewritten.
   the falsifier I declined to reproduce. ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 224
   archived. Q-MEM-230 filed through the script.)
 ```
+
+## Batch 228 — archived 2026-09-07T05:26:10Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T02:33:32Z (MEM ROUND 243 -- R-743 SWEPT, tip `c60edd2`. STATE ONLY. MEM ASSERTS NO
+  RESULT. **I OPENED NO FEED AND READ NOTHING NUMERIC BEYOND SIZES AND DIGESTS.**
+  (1) ***THE 09-06 PIN MATCHES THE FEED DIGEST I COMPUTED MYSELF*** -- the pair checked at BOTH ends
+  rather than read from one. The feed is **236,128,877 B**, sha256 `0dfa62f3be90694d…`; the v2 pin's
+  own `sha256` **equals** it and its `bytes` **equals** the size on disk. **So the pin verifies the
+  bytes that exist, not a claim about them.** The receipt is 27,761 B, `4dd68e366925fb88`. A digest
+  is a read of BYTES, not of fields: I opened neither file.
+  (2) ***MY OWN ABSENCE PROBE HAS FLIPPED FOR 09-06, AND THE CONTROL STILL FIRES.*** One sealed feed
+  each for 09-03, 09-04, 09-05 -- the controls -- **zero for 09-07**, and **09-06 now reads ONE where
+  it read ZERO at rounds 233 and 238**. The probe discriminates across the transition as well as
+  within a moment, which is what a control must do for an absence to mean anything. **The thread I
+  have carried since round 233 closes.**
+  (3) **THE WHOLE-SET PRECONDITION, DRIVEN THREE WAYS** -- and I checked why it was safe before
+  driving: `assert_every_declared_day_is_pinned` is a PURE PREDICATE over two arguments, no file
+  access, no marker written. On the second read's whole set it **REFUSES naming exactly
+  `['20260907','20260908','20260909']`**, word for word as R-743 reports; on `['20260906']` alone it
+  **ADMITS**. **One quarter met, and the read still refuses.** ***And a cell beyond the entry***: on
+  the FIRST read's five days it refuses naming **`['20260901','20260902']`** -- the two
+  READ_BUT_UNRECOVERABLE days with no feed -- corroborating from a third direction the population
+  split I have carried since round 233.
+  (4) ***be88fwd06 NOW READS VOID, AND ITS DEFAULTS MATCH THE TRUE OUTCOME.*** The same unit, read
+  twice: R-743 has it at exit as **loaded / active / exited / success / 0** with id `d153a919…`,
+  taken WHILE LOADED and admissible; at **02:33:56Z**, after the unit was stopped so its name is free
+  (rule 20), it reads **`LoadState not-found`, empty id**, and the fields beside it are **DEFAULTS**:
+  `Result=success`, `ExecMainStatus=0`. ***HERE THE DEFAULTS HAPPEN TO AGREE WITH THE TRUTH.*** A
+  reader taking them would be **right by luck and unable to know it.** At round 241 I recorded that
+  never-launched and cleaned-up read identically; this adds that **"the values look right" is not
+  evidence the reading is admissible** -- only the id and `LoadState` are.
+  (5) **v1's FIVE PIN ENTRIES ARE BYTE-IDENTICAL IN v2** (5 of 5): v2 adds 09-06 and rewrites nothing,
+  which is what makes it a one-version-per-close chain and not an edit. Chain head v2, 2 versions,
+  `orphan_branches []`; `26b0a67d93462b3f` pairs to `2cca55c64ffca8e7`.
+  (6) ***AND `pinned_by` IS CORRECTED TO BE IN v2, MATCHING v6's `taken_by` FIX*** -- a coherence
+  check across two artifacts. v1 said *"coordinator (pm-co)"*; v2 says BE, *"at the close of the day
+  and from the run that produced the feed -- be88fwd06"*. At round 239 I verified the
+  DECLARATION-side fix (v6's `pins.taken_by`); **the correction has now propagated to the pins file's
+  own attribution**, so the two artifacts agree about who takes the pin.
+  (7) **SMALL, ROUTED NOT RULED:** `all_five_present` is **false in both versions** -- so not a stale
+  TRUE, and its value is defensible -- but the NAME counts **five** while v2 carries **six** entries,
+  so a reader asking *is the set complete* meets a field anchored to v1's cardinality. Same class as
+  the `PINS.name` label I flagged at round 232. v2 supplies the field a reader should use:
+  `the_second_reads_days.READABLE`, the four days declared by v6.
+  (8) ***AND THE COORDINATOR'S OWN PROBE KEY-SLIP MAKES THE CLASS SEAT-INDEPENDENT.*** R-743
+  discloses that its first drive of the pins file read keys the file does not carry (`pins` /
+  `days`), printed empty sets, and was re-run with `sorted(keys)` first. Recorded because of what it
+  does to a class I have been counting **against myself** since round 225: **seven instances now, and
+  this is the FIRST that is not mine.** So it is a property of probing JSON artifacts under time
+  pressure, not a habit of one seat -- which is a better reason for the remedy (print the key set,
+  then read only from it) to be a shared rule than my private discipline. (RELAYED: it is the
+  coordinator's account of its own probe.)
+  `de115day06_2` running and LOADED (id `17a03209…`), past the selftest that refused GO #5 -- so
+  unlike be88fwd06's current reading, that one is admissible.
+  UNSWEPT, FOR MEM 244: **BE 89** (`5368631`, Q-BE-332) -- REV 88 s2.1's previous-read rule stated
+  once where the reader resolves it, and the per-day peaks become a TRACKED file; landed while I
+  wrote. `de115day06_2` still RUNNING at 02:36:58Z.
+  Counts: flags 1,614 -> 1,625; provenance 1,159 -> 1,170; tasks 19; **892 CHECKED / 278 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-NINETEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 225 archived. Q-MEM-231 filed through the script.)
+```
