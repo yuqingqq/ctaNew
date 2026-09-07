@@ -1157,6 +1157,17 @@ def marked_families(derived: Path | None = None,
                 "in its own status")}
 
 
+def _deploy_pin_state(root: Path) -> dict:
+    """The nightly unit's deploy pin, checked against the files on disk."""
+    try:
+        import da_deploy_pin as _P                            # noqa: PLC0415
+        return _P.stale_pins(root)
+    except Exception as e:                                    # noqa: BLE001
+        #: A CENSUS THAT CANNOT ASK IS NOT A CENSUS THAT PASSED.
+        return {"status": "DEPLOY_PIN_NOT_CHECKABLE",
+                "why": f"{type(e).__name__}: {e}"[:200], "n_stale": None}
+
+
 def build_report(root: Path | None = None,
                  prior: Path | None = None,
                  chain_over=(), what_changed=None) -> dict:
@@ -1187,6 +1198,10 @@ def build_report(root: Path | None = None,
         "chains": chains,
         "literal_census": lits,
         "marked_pre_R608_families": marked_families(),
+        #: R-741: the OTHER half of the deploy rule. A landing that moves a
+        #: file the nightly unit is pinned at is drift the unit will refuse
+        #: at 00:06Z; here it is a MARK, in daylight, naming the file.
+        "deploy_pin": _deploy_pin_state(r),
         "this_census_s_own_family": own,
         "composed_declaration_names": composed,
         "n_composed_declaration_names": len(composed),

@@ -123,6 +123,14 @@ echo "  tree:            $TREE"
 echo "  commit:          $HEAD"
 echo "  guard selftest:  $_ngreen checks green"
 echo "  record:          $REC"
+# R-741: THE PIN IS A DECLARATION, WRITTEN BY THE DEPLOY ACT, NEVER EDITED.
+# The record above is what this act did; the PIN is the artifact everyone
+# else resolves -- the unit's guard at 00:06Z and the non-head census in
+# daylight both read the chain HEAD, so a deploy that did not write one
+# would leave them reading a pin that is no longer true.
+_PIN=$("$PY" "$TREE/live/pm_research/da_deploy_pin.py" --write 2>&1) \
+  || { echo "REFUSED: the pin was not written: $_PIN" >&2; exit 8; }
+echo "  pin:             $(echo "$_PIN" | "$PY" -c 'import json,sys; d=json.load(sys.stdin); print(d["name"], d["sha256"][:16])')"
 echo "  manifest:        $MAN"
 if [ "$INSTALL" -eq 1 ]; then
   systemctl --user list-timers --all 2>/dev/null \
