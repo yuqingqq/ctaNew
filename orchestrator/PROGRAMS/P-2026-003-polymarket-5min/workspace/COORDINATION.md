@@ -22261,6 +22261,24 @@ Against the 8 GiB cap: 0.737 / 0.724 / 0.740. Three data points, one day; the tr
 **PHASE 4, landed (`6d31e04`):** RESULTS §0a (every number read at the artifact at 03:41Z: the first read's two fields; the three sealed heads; GO #6 live; the chain heads; the five rulings; the enumeration drift); HANDOFF's top block and a STATUS.yml comment block — **written by the coordinator for the halted MEM seat; the writer exception is logged here and ends here: MEM resumes as sole writer at its next round and sweeps R-745..R-746**; the runbook §7c cold-start handoff (what dies / survives, the read order, the live unit and DE's helper, the next dispatches in order with DA's v8 correction, the fixed events, the coordinator's error classes); the DA 117 dispatch tracked at `workspace/coordinator_next_dispatch_DA117.txt`.
 
 **ROUTING after reload:** GO #6's receipt → DA 117 → REV 89 → DE 118 → DA 118 (E2-A v8) → BE (mode 0600; pins v3 at the 09-07 close) → MEM. The coordinator's own context is cleared after Phase 6; the next coordinator starts at the runbook §7c.
+
+### R-747 — 2026-09-07T03:49Z — coordinator — **GO #6 WAS REFUSED AT ITS OWN EMIT, and the cause is this reset's brief: DE was told to refresh its worktree while `de115day06_2` ran with that worktree as its working directory; the runner's `assert_source_unchanged` guard refused the emit — "THE WORKTREE'S HEAD MOVED UNDER THIS RUN — 04d3eb3 → 2503162" — 80 minutes of the 09-06 day run lost, no receipt written, nothing false recorded. GO #7 (`de115day06_3`) dispatched to DE 118 with the no-move rule.**
+
+**The refusal, at the journal by id (`de115day06_2`, InvocationID `17a0320936bd40929474a21e85f0b87c`, 03:48:11Z, rc 1, 1 h 20 min CPU, 2.4G peak):**
+
+```
+File "/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py", line 10630, in _main_day
+    **assert_source_unchanged("the day-run emit",
+File "…/de_multiday_gate1_runner.py", line 605, in assert_source_unchanged
+RunnerRefused: REFUSED at the day-run emit: THE WORKTREE'S HEAD MOVED UNDER THIS RUN -- 04d3eb3c44a0 -> 25031620bb2e. A receipt's carrying_commit would name a commit that was not the one this run executed from.
+de115day06_2.service: Main process exited, code=exited, status=1/FAILURE
+```
+
+**The cause is the coordinator's.** The Phase 6 reload brief to DE said "refresh with `scripts/wt_refresh.sh`" while the unit launched at 02:27:53Z was still running from `--working-directory /home/yuqing/ctaNew-wt-de`; DE ran the refresh at ≈ 03:46Z and assessed it harmless ("the runner imports nothing further from the tree"); the runner's guard knew better — a receipt's `carrying_commit` must name the commit the run executed from (rule 12), and the tree no longer did. The guard refused rather than emit a receipt that would have been false; nothing was written (0 `…20260906_SEALED__*` files). The rule, now in the runbook §7c and the pattern file: NEVER refresh, check out, edit or land from a worktree named as a running unit's working directory until the unit has exited — and a seat reset WAITS for a running unit's receipt before it briefs that seat to refresh. This reset did not wait; the cost was one day-run.
+
+**Recovery, dispatched 03:49Z (DE 118, GO #7):** DE first lands GO #6's capture from its helper's `wait117.out` into the ledger; then relaunches as `de115day06_3` from wt-de AT ITS CURRENT TIP 2503162 (the runner byte-identical to 0f0d301's, verified by digest; the four conjuncts hold — the refused launch wrote nothing, the lock frees when the failed unit is stopped, a unique name, the code unchanged), with the explicit rule that nothing moves wt-de while it runs. DA 117 (the pre-read) still waits on the receipt; REV 89 after it. The runbook's §7c live block is corrected (`f58e1f4`).
+
+**Everything else from R-746 stands:** the five seats reloaded and confirmed from the files (tips 2503162 after refresh — BE, DA, REV, MEM; DE at 2503162 by the same refresh that cost the run), the consolidation landed, MEM resumes as sole writer at MEM 245 (sweep R-745..R-747).
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
