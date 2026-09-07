@@ -76,10 +76,14 @@ from pathlib import Path
 #:       constructions over one set of fills.
 #: R-771 / REV 96: n_run + n_conditional, and BOTH sides are read at run
 #: time -- the call sites from this file's own AST, the executions from
-#: each call recording its own line. Updating this when a check is ADDED
-#: is what the constant is for; what it may never be is tuned to whatever
-#: a run happened to produce, which is how it reached 252 against 209
-#: sites.
+#: each call recording its own line. THIS VALUE IS TYPED. What the cell
+#: establishes is that it EQUALS THE DERIVED TOTAL, not that it is itself
+#: derived: adding a check moves both derived sides, and this constant
+#: must then be EDITED to match the parse. What it may never be is tuned
+#: to whatever a run happened to produce, which is how it reached 252
+#: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
+#: "not a typed one", which would let a reader conclude nothing needs
+#: editing when a check is added: the opposite of the design).
 EXPECTED_CHECKS = 217
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -6421,7 +6425,10 @@ def selftest() -> int:
        f"{_derived_total771} derived -- and the run produced n_run "
        f"{n[0] + 1} + n_conditional {_n_cond771} = "
        f"{n[0] + 1 + _n_cond771}. The exported `EXPECTED_CHECKS` "
-       f"({EXPECTED_CHECKS}) equals the DERIVED total, not a typed one. The constant is a PUBLISHED value other modules "
+       f"({EXPECTED_CHECKS}) IS a typed constant, and what this cell "
+       f"establishes is that it EQUALS THE DERIVED TOTAL rather than "
+       f"being tuned to the run -- so adding a check moves both derived "
+       f"sides and the constant must then be EDITED to match the parse. The constant is a PUBLISHED value other modules "
        f"read, so it stays -- but it is now checked against the parse "
        f"rather than maintained by hand, which is how it reached 252 "
        f"against 209 sites")
