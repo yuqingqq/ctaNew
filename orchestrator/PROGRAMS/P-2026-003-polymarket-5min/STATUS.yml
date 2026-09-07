@@ -63,6 +63,56 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T00:06:14Z (MEM ROUND 236 -- R-734 SWEPT, tip `442c6ed`. STATE ONLY. MEM ASSERTS NO
+  RESULT. The 09-06 UTC day closed at 00:00:00Z and the chain began.
+  (1) ***MY ROUND-229 TRAILER FINDING IS CLOSED AT THE DIGEST.*** The coordinator's entry-landing
+  script is now TRACKED -- `scripts/land_register_entry.sh`, 3,903 B, `22016996f6ad8a66` -- and the
+  trailer on the newest R-entry reads `land_entry.sh 22016996f6ad8a66...`, so **the digest resolves
+  to a file a reader can open.** That is the substantive half of what I flagged for three rounds.
+  ***BUT THE TRAILER STILL NAMES A FILENAME THAT DOES NOT EXIST***: it says `land_entry.sh` while
+  the tracked file is `land_register_entry.sh`, and no `land_entry.sh` is in the repo. **The digest
+  resolves; the name does not.** A residual, ROUTED NOT RULED -- it is the coordinator's own
+  instrument and the substantive fix has landed.
+  (2) **BOTH UNITS READ WHILE `LoadState=loaded`, so neither reading is VOID** (rule 20).
+  **`be72frag`**: loaded / failed / failed / `ExecMainStatus 1` / `Result exit-code`, InvocationID
+  `2c23ac2571a44999...` -- **matching R-734 exactly**, and a failed unit staying loaded until
+  `reset-failed` is precisely what rule 20 describes. **`be72frag2`**: loaded / active / **RUNNING**
+  / `ExecMainStatus 0` / `Result success`, id `0dd3da0a...`. ***A LIVE STATE, STAMPED BECAUSE IT WILL
+  CHANGE***: SubState is the discriminator R-653 names, and here it discriminates in the useful
+  direction -- **BE 72's fragment was still executing when I read it.** A later reader must re-read
+  the unit, never carry the word forward -- **and I did that myself at commit time**: re-read at
+  **00:07:33Z**, still `SubState running`. Two readings ~2.5 min apart, each with its own as-of.
+  (3) **THE JOURNAL COPY RECONCILES: 18 + 4 = 22.** `_SYSTEMD_INVOCATION_ID` 18 lines (the
+  payload's), `USER_INVOCATION_ID` 4 (the manager's), `-u be72frag.service` 22 -- exact, so the copy
+  is complete rather than a partial that reads clean. The refusal message matches R-734 verbatim,
+  including the path it expected the mask at. **RETENTION MEASURED, NOT ASSUMED** (R-641): at
+  00:05:31Z the oldest entry is **2026-09-06T19:51:24Z**, the newest 00:05:35Z -- a window about
+  **4 h 14 min** deep. The 00:02:01Z refusal is inside it AT THIS READING; a later reader must not
+  assume so.
+  (4) ***THE REFUSAL's EXPECTED PATH IS NOW FILLED, END TO END.*** The refusal named
+  `…/ctaNew-wt-be/data/pm_5min/derived/da_blackout_mask_20260906.json`; `readlink` shows
+  `wt-be/data -> /home/yuqing/ctaNew/data`; the file is there at 7,453 B, `36f78148ba353712`, and
+  `cmp` says **byte-identical** to the main tree's copy. **DA 113's mask satisfies the exact
+  precondition the refused unit named**, which is why `be72frag2` could start. Read-only throughout:
+  no git command and no write inside BE's worktree while BE is running (R-627).
+  (5) **THE MASK CADENCE MEASURED FROM THE MTIMES, not asserted:** six masks, 09-01..09-06, one per
+  day -- the 09-04 at Sep 5 00:06, the **09-05 at Sep 6 00:06 (matching R-734's "the last landed
+  2026-09-06T00:06Z")**, the 09-06 at Sep 7 00:03, three minutes after the close. The artifact
+  R-734 calls the day's FIRST step is produced at the close, and DA 113 kept the cadence.
+  (6) ***AND I MISLABELLED MY OWN RETENTION LINE.*** My first probe printed
+  `journalctl -n1 --reverse | tail -1` under the label "oldest entry the journal holds" -- that
+  combination returns the **NEWEST** entry, and it printed 00:04:35Z where the true oldest is
+  19:51:24Z. Caught before any sentence by reading both ends explicitly. **It is the same family as
+  this session's three key-guesses: a LABEL attached to a value without checking what the command
+  actually returns.** Four instances now, all one shape; the only one that ever reached a published
+  sentence remains round 225's.
+  UNSWEPT, FOR MEM 237: **R-735** (`2404765`) -- DA 113 verified (the 09-06 blackout mask, 0 masked,
+  the consumer's own validator admits it), BE 72's fragment relaunched, and **R-734's placeholder
+  corrected** -- with `978793d` (Q-DA-339) and `e103618`. Landed while I was writing; the mask I
+  verified above at the file is the artifact it verifies.
+  Counts: flags 1,537 -> 1,547; provenance 1,082 -> 1,092; tasks 19; **816 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-TWELFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 218 archived. Q-MEM-224 filed through the script.)
   2026-09-06T20:54:45Z (MEM ROUND 235 -- R-732 AND R-733 SWEPT, tip `39135da`. STATE ONLY. MEM
   ASSERTS NO RESULT. Opened no result; every drive below is on a synthetic fixture.
   (1) ***MY ROUND-234 ESCAPE CELL IS CLOSED, AND I RE-DROVE IT.*** The cell I drove last round as a
@@ -166,54 +216,6 @@ updated: >-
   Counts: flags 1,517 -> 1,527; provenance 1,062 -> 1,072; tasks 19; **797 CHECKED / 275 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-TENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 216 archived. Q-MEM-222 filed through the script.)
-  2026-09-06T20:44:26Z (MEM ROUND 233 -- R-729 AND R-730 SWEPT, tip `d6ad970`. STATE ONLY. MEM
-  ASSERTS NO RESULT. ***I OPENED NO RESULT THIS ROUND AND QUOTED NO SEALED FIELD*** -- everything I
-  opened is a DECLARATION, a source file, a git object or a directory listing.
-  (1) ***THE FOUR OPEN USER ITEMS, CARRIED HERE WITH THE HORIZON*** (the coordinator's ask):
-  **(a)** the overnight cadence; **(b)** the V2 line's ruling; **(c)** the XS rebalance notional's
-  source; **(d) NEW -- WHETHER A SECOND FOUR-DAY RACE READ HAPPENS AT ALL**, which rests on R-531
-  being read as authorising it and which **no field in v5 claims to supply**. Item (d) is
-  TIME-BOUND: `read_horizon.not_before_utc` = **2026-09-10T01:00:00Z**, which I computed as
-  **3 days 4 h 17 m** from my round-start clock 20:42:41Z. Until it is ruled, **v5 stands (it opens
-  nothing), the pins are taken at each close, and NO read is dispatched.** MEM carries the item; the
-  decision is the USER's and MEM asserts nothing about it.
-  (2) **REV's SUBSTANCE CLAIM CONFIRMED INDEPENDENTLY, WITH A CONTROL THAT FIRES:**
-  `be_forward_day_SEALED_feed_<day>.jsonl` is present exactly **once** for each of 09-03, 09-04 and
-  09-05 and **zero** times for 09-06 and 09-07. The day is unopened, so the pre-registration is one
-  **in substance**, not only in wording.
-  (3) ***AND MY FIRST PROBE COULD NOT DISCRIMINATE, SO IT PROVED NOTHING.*** It searched
-  `~/.local/state/pm-co` and `ctaNew/data/pm_5min`, returned 0 for 09-06 -- and its control, a
-  CONSUMED day, **also returned 0**, because the feeds live in `~/ctaNew_forward_runs/` which I had
-  not searched. **A probe whose positive control does not fire reports nothing, whatever its answer
-  looks like.** I read the pins declaration for the real paths and re-ran it; only then did the
-  answer mean anything. One step earlier it caught a looser error too: my first grep matched
-  P-2026-002 artifacts merely STAMPED 20260906, which are not race feeds at all.
-  (4) **POOLING IS FORECLOSED BY v5's OWN SENTENCE**, read at the artifact and not relayed: it
-  "needs its own declaration, written BEFORE either read is opened -- which for the first read is
-  already impossible." **Permanent, and the artifact's own words.**
-  (5) **DA 112 VERIFIED AT THE SOURCE:** `declaration_of_the_read(art)` resolves by the artifact's
-  own pair; a digest no version carries refuses `READ_ARTIFACT_DECLARATION_NOT_IN_THE_CHAIN`; the
-  head is consulted **only to SAY** (`is_the_current_head` / `the_current_head`), never to judge --
-  the rule `c0dc836` states, implemented. Battery re-run at this tip: **rc 0, 37 checks, 0
-  failures** -- the same battery I measured RED at round 232, still green across the round boundary.
-  (6) **THE IN-BAND CORRECTION, CHECKED IN BOTH DIRECTIONS:** `c0dc836` (20:39:00Z) adds 4 lines to
-  SEAT_PROTOCOL.md carrying the rule; R-730 corrects R-729's placeholder; and **R-729's own line
-  still reads `` `c…` `` -- it was NOT edited.** Rule 13 working both ways at once, and the check is
-  cheap: **a correction that also tidied the original would be the failure.**
-  (7) ***THE FIRST READ's DAY-SET CLOSURE IS RELAYED, NOT CHECKED BY ME.*** R-730 records that the
-  corrected artifact now says both unrecoverable days and that the first read's verdict is VERIFIED.
-  **I did not verify it: doing so would mean opening the first read's RESULT, which my line
-  forbids.** Marked RELAYED deliberately -- the distinction is the whole value of that field, and it
-  is why RELAYED moves this round for the first time in many. What I COULD check without opening
-  anything is consistent with it: the pins declare `exists false` for 09-01 and 09-02 and true for
-  09-03..05, and all five declared paths agree with the filesystem now -- **the two days the first
-  read could not recover are the two with no feed, said in the pins rather than inferred.**
-  UNSWEPT, FOR MEM 234: **BE 85** (`9ef0e47`, Q-BE-327) -- REV 86 s5 closed: the second read's
-  artifact carries the two-reads clause, GENERATED from the declaration and refusing by name when it
-  cannot be, never typed.
-  Counts: flags 1,507 -> 1,517; provenance 1,052 -> 1,062; tasks 19; **788 CHECKED / 274 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-NINTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 215 archived. Q-MEM-221 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -412,6 +414,17 @@ flags:
   # --- MEM round 233, R-729 + R-730 swept ---
   # --- MEM round 234, R-731 swept ---
   # --- MEM round 235, R-732 + R-733 swept ---
+  # --- MEM round 236, R-734 swept ---
+  MY_ROUND_229_TRAILER_FINDING_IS_CLOSED_AT_THE_DIGEST: SCRIPTS-LAND-REGISTER-ENTRY-SH-NOW-TRACKED
+  but_the_TRAILER_STILL_NAMES_A_FILENAME_THAT_DOES_NOT_EXIST: DIGEST-RESOLVES-NAME-DOES-NOT
+  BOTH_be72_units_READ_WHILE_LOADED_so_neither_reading_is_VOID: FAILED-AND-RUNNING-FIVE-FIELDS-EACH
+  the_refused_launchs_InvocationID_matches_R_734_exactly: 2C23AC2571A44999
+  and_be72frag2_was_RUNNING_AT_MY_READ_TIME_substate_discriminates: LOADED-ACTIVE-RUNNING-STATUS-0
+  the_journal_copy_RECONCILES_18_plus_4_equals_22: BOTH-FIELDS-AGAINST-THE-UNIT-COUNT
+  journal_RETENTION_measured_not_assumed: OLDEST-2026-09-06T19-51-24Z-AT-00-05-31Z
+  the_refusals_expected_path_IS_NOW_FILLED_end_to_end: MASK-BYTE-IDENTICAL-THROUGH-THE-SYMLINK
+  the_mask_cadence_is_ONE_PER_DAY_AT_THE_CLOSE_measured_from_mtimes: 09-01-THROUGH-09-06-SIX-MASKS
+  I_MISLABELLED_MY_OWN_RETENTION_LINE_AND_CAUGHT_IT: NEWEST-PRINTED-UNDER-AN-OLDEST-LABEL
   MY_ROUND_234_ESCAPE_CELL_IS_CLOSED_AND_I_RE_DROVE_IT: CONSUMED-SET-ABSENT-BUT-A-PREDECESSOR-IS-NAMED
   the_test_is_BROADER_than_the_resolver_a_BARE_STRING_still_refuses: THE-NARROWER-TEST-WOULD-BE-THE-ESCAPE
   a_STATED_empty_set_and_a_GENUINE_first_read_are_DISTINGUISHABLE: THREE-FIELDS-DIFFER-INCLUDING-why
@@ -25888,6 +25901,111 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 236, 2026-09-07T00:06:14Z ---
+  MY_ROUND_229_TRAILER_FINDING_IS_CLOSED_AT_THE_DIGEST:
+    prov: CHECKED
+    artifact: scripts/land_register_entry.sh and the trailer on 4e42f13
+    as_of: 2026-09-07T00:04:00Z
+    said: >-
+      the coordinator's entry-landing script is now TRACKED -- scripts/land_register_entry.sh,
+      3,903 B, sha256 22016996f6ad8a66 -- and the trailer on the newest R-entry reads
+      'land_entry.sh 22016996f6ad8a6613ec9b...', so the DIGEST resolves to a file a reader can open.
+      That is the substantive half of what I flagged for three rounds (229, 230, 231): a digest
+      without a resolvable location is a pin to nothing, in the coordinator's own later words.
+  but_the_TRAILER_STILL_NAMES_A_FILENAME_THAT_DOES_NOT_EXIST:
+    prov: CHECKED
+    artifact: git ls-files, and the trailer text
+    as_of: 2026-09-07T00:04:00Z
+    said: >-
+      the other half, stated precisely and small: the trailer names 'land_entry.sh' while the tracked
+      file is 'land_register_entry.sh', and no file named land_entry.sh exists in the repo. The
+      DIGEST resolves, which is what makes the version question answerable; the NAME does not, so a
+      reader following the name still finds nothing. Recorded as a residual, ROUTED NOT RULED -- it
+      is the coordinator's own instrument and the substantive fix has landed.
+  BOTH_be72_units_READ_WHILE_LOADED_so_neither_reading_is_VOID:
+    prov: CHECKED
+    artifact: systemctl --user show be72frag.service / be72frag2.service
+    as_of: 2026-09-07T00:05:00Z
+    said: >-
+      rule 20 requires the five fields read WHILE LoadState=loaded, with a non-empty InvocationID,
+      or the reading is VOID. Both are loaded, so both readings are admissible. be72frag:
+      loaded / failed / failed / ExecMainStatus 1 / Result exit-code, InvocationID
+      2c23ac2571a44999bed46c7b8b48aaf3 -- a failed unit stays loaded until reset-failed, exactly as
+      rule 20 says. be72frag2: loaded / active / RUNNING / ExecMainStatus 0 / Result success,
+      InvocationID 0dd3da0a2dd344c7a9b512fec5e13ce7.
+  the_refused_launchs_InvocationID_matches_R_734_exactly:
+    prov: CHECKED
+    artifact: the unit's InvocationID against R-734's text
+    as_of: 2026-09-07T00:05:00Z
+    said: >-
+      2c23ac2571a44999... equals the 2c23ac25... R-734 names, so the entry and the unit are the same
+      run and not two readings that happen to agree in prose.
+  and_be72frag2_was_RUNNING_AT_MY_READ_TIME_substate_discriminates:
+    prov: CHECKED
+    artifact: systemctl --user show be72frag2.service
+    as_of: 2026-09-07T00:05:00Z
+    said: >-
+      a LIVE state, stamped because it will change: SubState is RUNNING. Under RemainAfterExit a
+      finished unit reads loaded/active/EXITED and a running one loaded/active/RUNNING, both with
+      ExecMainStatus 0 -- R-653's point that SubState is the discriminator, and here it discriminates
+      in the useful direction: BE 72's fragment was still executing when I read it. Any later reader
+      of this line must re-read the unit rather than carry the word 'running' forward -- AND I DID
+      THAT MYSELF AT COMMIT TIME: re-read at 00:07:33Z, still SubState running, ExecMainStatus 0.
+      Two readings about 2.5 minutes apart, each with its own as-of, which is the only honest way to
+      carry a live state.
+  the_journal_copy_RECONCILES_18_plus_4_equals_22:
+    prov: CHECKED
+    artifact: journalctl --user, both invocation fields and the unit
+    as_of: 2026-09-07T00:05:00Z
+    said: >-
+      R-641 requires a journal copy filtered on BOTH fields and cross-checked against -u's count:
+      _SYSTEMD_INVOCATION_ID gives 18 lines (the payload's), USER_INVOCATION_ID 4 (the manager's
+      Started/Consumed), and -u be72frag.service gives 22 -- 18 + 4 = 22 exactly. A copy returning 0
+      where -u has lines would be a refusal of the copy; this one is complete. The refusal message
+      matches R-734 verbatim, including the path it expected the mask at.
+  journal_RETENTION_measured_not_assumed:
+    prov: CHECKED
+    artifact: journalctl --user, oldest and newest entries
+    as_of: 2026-09-07T00:05:31Z
+    said: >-
+      R-641: the retention state is a MEASUREMENT with its own as-of, because the window moves. At
+      00:05:31Z the journal's oldest entry is 2026-09-06T19:51:24Z and its newest 00:05:35Z -- a
+      window about 4 h 14 min deep. The refusal at 00:02:01Z is comfortably inside it AT THIS
+      READING, which is why the lines could be copied at all; a later reader must not assume they
+      are still there.
+  the_refusals_expected_path_IS_NOW_FILLED_end_to_end:
+    prov: CHECKED
+    artifact: the path the refusal named, read read-only
+    as_of: 2026-09-07T00:06:00Z
+    said: >-
+      the whole causal chain closed at the files: the refusal named
+      /home/yuqing/ctaNew-wt-be/data/pm_5min/derived/da_blackout_mask_20260906.json; readlink shows
+      wt-be/data -> /home/yuqing/ctaNew/data; the file now exists there at 7,453 B,
+      36f78148ba353712, and cmp says it is byte-identical to the main tree's copy. So DA 113's mask
+      satisfies the exact precondition the refused unit named, which is why be72frag2 could start.
+      Read-only: no git command and no write inside BE's worktree while BE is running (R-627).
+  the_mask_cadence_is_ONE_PER_DAY_AT_THE_CLOSE_measured_from_mtimes:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_blackout_mask_*.json
+    as_of: 2026-09-07T00:04:00Z
+    said: >-
+      six masks, 20260901 through 20260906, one per day. Their mtimes show the cadence rather than
+      assert it: the 09-04 mask at Sep 5 00:06, the 09-05 at Sep 6 00:06 -- matching R-734's 'the
+      last landed 2026-09-06T00:06Z' -- and the 09-06 at Sep 7 00:03, three minutes after the close.
+      So the artifact R-734 calls the day's FIRST step is produced at the close, and DA 113 kept the
+      cadence.
+  I_MISLABELLED_MY_OWN_RETENTION_LINE_AND_CAUGHT_IT:
+    prov: CHECKED
+    artifact: my own probe output
+    as_of: 2026-09-07T00:05:00Z
+    said: >-
+      recorded against myself. My first retention probe printed
+      `journalctl -n1 -o short-iso --reverse | tail -1` under the label 'oldest entry the journal
+      holds' -- that combination returns the NEWEST entry, and it printed 00:04:35Z where the true
+      oldest is 19:51:24Z. Caught before any sentence by reading the two ends explicitly. It is the
+      same family as this session's three key-guesses: a LABEL attached to a value without checking
+      what the command actually returns. Four instances now, all of one shape, and the only one that
+      reached a published sentence remains round 225's.
   # --- MEM round 235, 2026-09-06T20:54:45Z ---
   MY_ROUND_234_ESCAPE_CELL_IS_CLOSED_AND_I_RE_DROVE_IT:
     prov: CHECKED

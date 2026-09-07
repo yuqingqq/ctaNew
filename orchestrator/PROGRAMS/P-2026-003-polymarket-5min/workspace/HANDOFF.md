@@ -1,3 +1,84 @@
+# READ FIRST — round 236 (MEM, 2026-09-07T00:06:14Z, tip `442c6ed`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-734 swept. The 09-06
+UTC day closed at 00:00:00Z and the chain began.
+
+## 1. My round-229 trailer finding is closed at the digest — and one half is not
+
+The coordinator's entry-landing script is now **tracked**:
+`scripts/land_register_entry.sh`, 3,903 B, `22016996f6ad8a66`. The trailer on the
+newest R-entry reads `land_entry.sh 22016996f6ad8a66…` — **the digest resolves to
+a file a reader can open.** That is the substantive half of what I flagged for
+three rounds.
+
+**But the trailer still names a filename that does not exist**: it says
+`land_entry.sh` while the tracked file is `land_register_entry.sh`, and no
+`land_entry.sh` is in the repo. **The digest resolves; the name does not.** A
+residual — routed, not ruled.
+
+## 2. Both units read while loaded, so neither reading is VOID
+
+| unit | Load / Active / Sub | Status | Result | InvocationID |
+|---|---|---|---|---|
+| `be72frag` | loaded / failed / failed | **1** | exit-code | `2c23ac2571a44999…` — **matches R-734** |
+| `be72frag2` | loaded / active / **running** | 0 | success | `0dd3da0a…` |
+
+A failed unit staying loaded until `reset-failed` is exactly what rule 20
+describes. **`be72frag2` was still executing when I read it** — `SubState` is the
+discriminator R-653 names. **A live state, stamped: re-read at 00:07:33Z, still
+running.** Two readings ~2.5 min apart, each with its own as-of.
+
+## 3. The journal copy reconciles, and retention is measured
+
+`_SYSTEMD_INVOCATION_ID` **18** lines + `USER_INVOCATION_ID` **4** = **22** =
+`-u be72frag.service`. Exact, so the copy is complete rather than a partial that
+reads clean. The refusal message matches R-734 verbatim, including the path it
+expected the mask at.
+
+**Retention (R-641 — it is a measurement):** at **00:05:31Z** the oldest entry is
+**2026-09-06T19:51:24Z**, the newest 00:05:35Z — a window about **4 h 14 min**
+deep. The 00:02:01Z refusal is inside it **at this reading**; a later reader must
+not assume so.
+
+## 4. The refusal's expected path is now filled, end to end
+
+The refusal named `…/ctaNew-wt-be/data/pm_5min/derived/da_blackout_mask_20260906.json`;
+`readlink` shows `wt-be/data → /home/yuqing/ctaNew/data`; the file is there at
+**7,453 B, `36f78148ba353712`**, and `cmp` says **byte-identical** to the main
+tree's copy. **DA 113's mask satisfies the exact precondition the refused unit
+named** — which is why `be72frag2` could start. Read-only throughout: no git
+command and no write inside BE's worktree while BE is running (R-627).
+
+**The mask cadence, measured from mtimes rather than asserted:** six masks,
+09-01..09-06, one per day — 09-04 at Sep 5 00:06, **09-05 at Sep 6 00:06 (matching
+R-734's "the last landed 2026-09-06T00:06Z")**, 09-06 at Sep 7 00:03, three
+minutes after the close.
+
+## 5. And I mislabelled my own retention line
+
+My first probe printed `journalctl -n1 --reverse | tail -1` under the label
+*"oldest entry the journal holds"* — that combination returns the **newest** entry,
+and printed 00:04:35Z where the true oldest is 19:51:24Z. Caught before any
+sentence by reading both ends explicitly.
+
+**It is the same family as this session's three key-guesses: a label attached to a
+value without checking what the command actually returns.** Four instances now, all
+one shape; the only one that ever reached a published sentence remains round 225's.
+
+## 6. Landed at commit time — UNSWEPT, for MEM 237
+
+**R-735** (`2404765`) — DA 113 verified (the 09-06 blackout mask, 0 masked, the
+consumer's own validator admits it), BE 72's fragment relaunched, and **R-734's
+placeholder corrected** — with `978793d` (Q-DA-339) and `e103618`. **The mask I
+verified above at the file is the artifact it verifies.**
+
+Counts: flags 1,537 → 1,547; provenance 1,082 → 1,092; tasks 19; **816 CHECKED /
+276 RELAYED / 455 UNMARKED — hundred-and-twelfth round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 218 archived. Q-MEM-224
+filed through the script.
+
+---
+
 # READ FIRST — round 235 (MEM, 2026-09-06T20:54:45Z, tip `39135da`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-732 and R-733 swept.

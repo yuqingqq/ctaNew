@@ -17490,3 +17490,56 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-EIGHTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 214 archived. Q-MEM-220 filed through the script.)
 ```
+
+## Batch 218 — archived 2026-09-07T00:06:14Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T20:44:26Z (MEM ROUND 233 -- R-729 AND R-730 SWEPT, tip `d6ad970`. STATE ONLY. MEM
+  ASSERTS NO RESULT. ***I OPENED NO RESULT THIS ROUND AND QUOTED NO SEALED FIELD*** -- everything I
+  opened is a DECLARATION, a source file, a git object or a directory listing.
+  (1) ***THE FOUR OPEN USER ITEMS, CARRIED HERE WITH THE HORIZON*** (the coordinator's ask):
+  **(a)** the overnight cadence; **(b)** the V2 line's ruling; **(c)** the XS rebalance notional's
+  source; **(d) NEW -- WHETHER A SECOND FOUR-DAY RACE READ HAPPENS AT ALL**, which rests on R-531
+  being read as authorising it and which **no field in v5 claims to supply**. Item (d) is
+  TIME-BOUND: `read_horizon.not_before_utc` = **2026-09-10T01:00:00Z**, which I computed as
+  **3 days 4 h 17 m** from my round-start clock 20:42:41Z. Until it is ruled, **v5 stands (it opens
+  nothing), the pins are taken at each close, and NO read is dispatched.** MEM carries the item; the
+  decision is the USER's and MEM asserts nothing about it.
+  (2) **REV's SUBSTANCE CLAIM CONFIRMED INDEPENDENTLY, WITH A CONTROL THAT FIRES:**
+  `be_forward_day_SEALED_feed_<day>.jsonl` is present exactly **once** for each of 09-03, 09-04 and
+  09-05 and **zero** times for 09-06 and 09-07. The day is unopened, so the pre-registration is one
+  **in substance**, not only in wording.
+  (3) ***AND MY FIRST PROBE COULD NOT DISCRIMINATE, SO IT PROVED NOTHING.*** It searched
+  `~/.local/state/pm-co` and `ctaNew/data/pm_5min`, returned 0 for 09-06 -- and its control, a
+  CONSUMED day, **also returned 0**, because the feeds live in `~/ctaNew_forward_runs/` which I had
+  not searched. **A probe whose positive control does not fire reports nothing, whatever its answer
+  looks like.** I read the pins declaration for the real paths and re-ran it; only then did the
+  answer mean anything. One step earlier it caught a looser error too: my first grep matched
+  P-2026-002 artifacts merely STAMPED 20260906, which are not race feeds at all.
+  (4) **POOLING IS FORECLOSED BY v5's OWN SENTENCE**, read at the artifact and not relayed: it
+  "needs its own declaration, written BEFORE either read is opened -- which for the first read is
+  already impossible." **Permanent, and the artifact's own words.**
+  (5) **DA 112 VERIFIED AT THE SOURCE:** `declaration_of_the_read(art)` resolves by the artifact's
+  own pair; a digest no version carries refuses `READ_ARTIFACT_DECLARATION_NOT_IN_THE_CHAIN`; the
+  head is consulted **only to SAY** (`is_the_current_head` / `the_current_head`), never to judge --
+  the rule `c0dc836` states, implemented. Battery re-run at this tip: **rc 0, 37 checks, 0
+  failures** -- the same battery I measured RED at round 232, still green across the round boundary.
+  (6) **THE IN-BAND CORRECTION, CHECKED IN BOTH DIRECTIONS:** `c0dc836` (20:39:00Z) adds 4 lines to
+  SEAT_PROTOCOL.md carrying the rule; R-730 corrects R-729's placeholder; and **R-729's own line
+  still reads `` `c…` `` -- it was NOT edited.** Rule 13 working both ways at once, and the check is
+  cheap: **a correction that also tidied the original would be the failure.**
+  (7) ***THE FIRST READ's DAY-SET CLOSURE IS RELAYED, NOT CHECKED BY ME.*** R-730 records that the
+  corrected artifact now says both unrecoverable days and that the first read's verdict is VERIFIED.
+  **I did not verify it: doing so would mean opening the first read's RESULT, which my line
+  forbids.** Marked RELAYED deliberately -- the distinction is the whole value of that field, and it
+  is why RELAYED moves this round for the first time in many. What I COULD check without opening
+  anything is consistent with it: the pins declare `exists false` for 09-01 and 09-02 and true for
+  09-03..05, and all five declared paths agree with the filesystem now -- **the two days the first
+  read could not recover are the two with no feed, said in the pins rather than inferred.**
+  UNSWEPT, FOR MEM 234: **BE 85** (`9ef0e47`, Q-BE-327) -- REV 86 s5 closed: the second read's
+  artifact carries the two-reads clause, GENERATED from the declaration and refusing by name when it
+  cannot be, never typed.
+  Counts: flags 1,507 -> 1,517; provenance 1,052 -> 1,062; tasks 19; **788 CHECKED / 274 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-NINTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 215 archived. Q-MEM-221 filed through the script.)
+```
