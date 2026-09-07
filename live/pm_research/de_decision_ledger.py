@@ -89,6 +89,14 @@ def write_ledger(path, day: str, per_arm: dict,
             "inventory_fields_from_BE_96": [
                 "inventory_before", "inventory_after", "inventory_unit",
                 "inventory_mark_cents", "inventory_mark_source"],
+            # R-801: whether THIS file carries the ruled endpoint's rows,
+            # computed from what is about to be written -- never a
+            # promise. A reader that finds `false` here knows the day was
+            # not valued under the endpoint and does not go looking.
+            "settlement_rows_present": sorted(
+                arm for arm in per_arm if per_arm[arm].get("settlement")),
+            "settlement_row_kinds": ["SETTLEMENT_SCALARS",
+                                     "SETTLEMENT_SLUG"],
             # THE SIGN CONVENTION TRAVELS WITH THE FILE. `fill_value_cents`
             # signs by `HSP.SIDES[0]`; a reader that guessed "B" would
             # value every fill backwards the day that constant changed,
@@ -134,6 +142,34 @@ def write_ledger(path, day: str, per_arm: dict,
                     {"row": "DECISION", "arm": arm, **d},
                     sort_keys=True) + "\n")
                 n += 1
+            # R-801, THE USER: "the pnls are from trades and remaining
+            # position's settlement p&l". The per-slug decomposition of
+            # the RULED quantity, for the arm and the 0-cancel baseline,
+            # so a reader holding this file and no receipt can re-form it
+            # slug by slug. One SETTLEMENT_SCALARS row per arm and one
+            # SETTLEMENT_SLUG row per slug per book; absent (not null,
+            # not zero) when the day was not valued under the endpoint.
+            _st = a.get("settlement")
+            if _st:
+                fh.write(json.dumps({
+                    "row": "SETTLEMENT_SCALARS", "arm": arm,
+                    "ruling": _st.get("ruling"),
+                    "unit": _st.get("unit"),
+                    "D_E_settle": _st.get("D_E_settle"),
+                    "arm_total_cents": _st.get("arm_total_cents"),
+                    "baseline_total_cents": _st.get("baseline_total_cents"),
+                    "winner_source": _st.get("winner_source"),
+                }, sort_keys=True) + "\n")
+                n += 1
+                for which, per in (("ARM", _st.get("arm_per_slug") or {}),
+                                   ("BASELINE",
+                                    _st.get("baseline_per_slug") or {})):
+                    for slug in sorted(per):
+                        fh.write(json.dumps(
+                            {"row": "SETTLEMENT_SLUG", "arm": arm,
+                             "book": which, **per[slug]},
+                            sort_keys=True) + "\n")
+                        n += 1
     return {"path": str(path), "sha256": _sha(path), "n_rows": n,
             "schema_version": SCHEMA_VERSION,
             "bytes": path.stat().st_size,
