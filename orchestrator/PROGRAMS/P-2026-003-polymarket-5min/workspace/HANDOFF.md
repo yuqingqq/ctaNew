@@ -1,3 +1,108 @@
+# READ FIRST — round 270 (MEM, 2026-09-07T11:34:05Z, tip `3d1dc7f`)
+
+**R-787 and R-788 swept, with every landing between the tip I read at round 269 (`afd74c3`) and `3d1dc7f`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. The v20/v28 re-point never existed as files — settled in history, not on disk
+
+```
+git log --all -- '*de_multiday_gate1_params_v20.json'   →  0 commits
+git log --all -- '*gate1_design_v28*'                   →  0 commits
+falsifier: same command for v19 → 1,  for v27 → 1
+```
+
+So they were never committed and then removed either. **What I measured for nine rounds was right** — absent,
+heads v19/v27. **What I repeated was not mine:** R-780's phrase *"composed and unwritten"*, carried forward
+three times without asking what "composed" pointed at. It pointed at **measurements** in Q-DE-131/133. A
+file-existence count cannot tell *never written* from *written then removed*; the history check can. **A word
+inherited from an entry is not a measurement, even when the number beside it is.**
+
+The harvest's other warning, checked: `ls | sort -V | tail` and `resolve_head` **agree today** on both families
+(v27, v19). The warning is about a *shape* the chain can take, not a present divergence. My own usage is clean
+for a nameable reason: `ls` counts tested the **absence** of v20/v28 (a file question); `resolve_head` named
+every **head** from round 267 (the chain question).
+
+## 2. E3 is running, from the composition
+
+`deEARLY20260905.service`, read while loaded (rule 20) at 11:30:55Z: **loaded / active / running / 0 /
+success**, InvocationID `ab140ff1fcce421fa2f650e7319bbccf`, `MemoryPeak` 2,410,196,992,
+**`WorkingDirectory=/home/yuqing/ctaNew-wt-de`** — which `git worktree list` puts at **`6c3a121`**, the cleared
+composition. The refresh REV 102 required happened. Still running at 11:34:20Z.
+
+**Round 268's rule, applied the first time it matters.** E3's run journal does not exist yet (it is written at
+exit), so there is no durable artifact for a *live* reading. This flag's `artifact:` is the **register**, where
+the GO is recorded; the systemd reading lives in the prose with its clock. When E3's journal lands it becomes
+the citation for how E3 ended, as E2's did.
+
+## 3. REV 102's traced chain, verified at `6c3a121` — the bytes E3 runs
+
+```
+_main_day :11677              → day_split_residency_proof(day, book, params=, fixture=,
+                                    n_days_complete=, before_work=)   ← no anchor, no receipt_path
+day_split_residency_proof     → def (day, book_path, *, params, **kw)  :6700
+                                → run_day(day, book_path, params=params, **kw)  :6710
+run_day :6020                 → assert_ledger_anchor(params, fixture=fixture, anchor=…)
+        :6280                   _anchor = ledger_anchor if not None else receipt_path
+```
+
+**A pass-through does not supply a default it was never given** — an argument omitted at the outermost call is
+omitted at the innermost, and the only place that can notice is the guard at the end. Same shape as the
+`receipt_path` finding at `fe76d83`, one hop further out. And `receipt_path=` is passed **into `run_day`
+nowhere** — the same zero I established across 1,682 files. *(REV's "the only occurrence of that name is the
+default at `:5931`" is slightly loose — the name occurs at eleven lines, in a different function and as dict
+keys — but its point holds exactly.)*
+
+**The contrast is one keyword.** `de_early_read.py` passes **`ledger_anchor=out`** (call opens `:414`, keyword
+at `:418` — REV cites the call's first line, I read the keyword's; I name the anchor because a bare line number
+is ambiguous between them). That single keyword is the whole difference between E3/E4 clearing and GO #8 being
+refused.
+
+**Why it never bit before:** GO #7 ran under params v15, which carries no R-765 ruling. **v19 carries
+`user_ruled_unsealed_emission` (verified)** — so GO #8 is the first real day to meet the guard. **This is the
+guard working, not failing:** the cost is a refused launch, not ninety minutes — R-610's principle paying out
+in the same week it was argued. The fix is named and small (`_main_day` already computes an output directory
+and simply does not pass it), routed to the **next** DE seat with the trace, because the reset means nobody
+holds it in context.
+
+## 4. A prediction, recorded before the artifact exists
+
+Because the early-read path passes the anchor, **E3's 09-05 artifact should carry a non-null
+`decision_ledger`, with a `p003_de_decision_ledger_*` file beside it — the first of this family that would.**
+RESULTS §0b writes the same expectation forward. **If it lands null, the anchor did not survive the path and
+the fix is not what it appears to be.** Neither existed at 11:30:55Z.
+
+## 5. RESULTS §0b, and the standing measurements
+
+§0b (`0b6be33`, 19 lines) tables both days under *"every number here was read from DA's independent print …
+the coordinator computed nothing"*, with EXPLORATORY / G=4 / no interval / four days consumed — and it carries
+the distinction I measured at the sealed runs last round in the same terms: *"09-03's three counts were visible
+in the open since 2026-09-06T14:01Z (eight-name seal scope), 09-04's were not."* It states the absolutes gap in
+band.
+
+- **Cascade on three refs:** `fe76d83` 10/10, **`6c3a121` 10/10**, shared 9/10 (`de_phase4_diag_runner.py`
+  `309b98c7` vs the pin `ee4034c1`). **And I now say what that red does:** `BE_CASCADE_DIFFERS` is *raised*, so
+  in the shared tree the battery stops at check 7 and nothing after it is observed — round 269's correction, in
+  practice. The composition's 10/10 is the difference between a battery that runs to the end and one that stops
+  seven checks in.
+- **The DE reset is complete**, its four answers verified at the files rather than from the seat's own account —
+  the right shape, since the seat about to lose its context is the least able to attest to what it holds.
+  `wt-de` is at `6c3a121`, `wt-de2` at `0fb127f`.
+- **The replay debt stands** for 09-03 and 09-04, the two absences still differing in shape.
+- **Freeze holds a tenth round** — and per §1 it is now a statement about files that never existed. GO #8 waits
+  on the fourth composition (DE 134's day-path anchor), REV 103, and a `wt-de` refresh after E4 and before
+  00:00Z.
+
+## 6. Counts
+
+flags 2044 → **2062**, provenance 1589 → **1607** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,317 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 146th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my eighteen added none. Window trimmed 4 → 3,
+**Batch 252** archived.
+
+**NEXT:** E3 exits → DA → GO E4. MEM sweeps R-789 onward.
+
+---
+
 # READ FIRST — round 269 (MEM, 2026-09-07T11:24:27Z, tip `afd74c3`)
 
 **R-785 and R-786 swept, with every landing between the tip I read at round 268 (`c8ff91e`) and `afd74c3`.**

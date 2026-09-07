@@ -19811,3 +19811,60 @@ generation and the window went 4 → 3. Nothing rewritten.
   cases. Fixed with `from: REV 98 part A SA1 (Q-REV-98 f12e254)` and the classes returned to 5 and 285. A
   checker that fires on the seat that wrote it is the only kind whose zero means anything.)
 ```
+
+## Batch 252 — archived 2026-09-07T11:34:05Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T10:49:16Z (MEM ROUND 267 -- R-782 SWEPT, with every landing between the tip I read at round 266 (`6b509a4`)
+  and `4e93675`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE USER'S THIRD RULING OF THE DAY, VERBATIM*** at 2026-09-07T10:42:24Z: "plz record the absolute
+  number as well for reference", asked after "what's the result of 0-cancel". A USER ruling, not a
+  coordinator one. The three of the day are **R-754, R-765 and R-782**.
+  (2) **R-782's claim about the artifacts VERIFIED AT THE ARTIFACT**: the 09-03 arm-day `economic` mapping is
+  EXACTLY six keys -- `D_E0`, `Z`, `null_draws_summary`, `null_mean`, `null_sd`, `p_location` -- and none is
+  an absolute for either side; the block's other fields are COUNTS. MEM's routed task (d), discharged for
+  what exists: `CONDVALUE_X_SKEW` `D_E0` **-16,592.33 cents (-$165.92)**, Z -2.3014, 30,171 arm fills against
+  46,439 baseline; `HAZARD_OVER_SKEWED_REF` **-4,822.26 cents (-$48.22)**, Z -5.3007, 44,895 against the same
+  46,439. **These are EXCESSES, not absolutes.** Labels from the artifact: G 4, `interval`
+  `NONE_BELOW_FIVE_DAYS`, `verdict_class` `EXPLORATORY`, both arm-days `sealed: false`, authority R-754. The
+  unit is CENTS -- maker P&L at level-to-markout with NO FEE TERM, read at `_value_cents` -- and it is named
+  in no artifact today.
+  (3) ***BUT BOTH ABSOLUTES ARE ALREADY COMPUTED ON THE REAL PATH.*** `base_value = _value_cents(base
+  ["fills"])` at `:5991`; `observed = _value_cents(arm_replay["fills"]) - base_value` at `:6016`; and at
+  `:6045` `_ledger765[arm]` stores them under **the exact names R-782(b) wants** -- `"base_value"` and
+  `"arm_value"` -- so the reconciliation R-782(a) asks DE to assert to 1e-9 holds by CONSTRUCTION here.
+  (4) ***AND THE LEDGER WRITE IS UNREACHABLE AT `fe76d83`.*** Searched all **1,682** Python files at that
+  commit with the known-positive required to appear: the only production `write_ledger` is `:6139`, behind
+  `receipt_path is not None`, and **no caller anywhere passes `receipt_path`** -- sixteen `run_day` call
+  sites, none of them; and the `*` in the signature makes it KEYWORD-ONLY, so it cannot arrive positionally
+  either. **My round-266 limit ("E2 only -- I did not check their entry points") therefore extends to E2, E3,
+  E4 AND GO #8.** R-782(b)'s route has no ledger to read for any of the four, while the two numbers sit in
+  `_ledger765` and are dropped at exit. **THE GAP IS PERSISTENCE, NOT COMPUTATION** -- smaller than "never
+  emitted" suggests. **CORRECTED BEFORE SHIPPING: DE 131 (`286335f`, 10:46:02Z, OUTSIDE my swept window,
+  queued for round 268) closes the FORWARD half** -- it does not touch `receipt_path` or the guard; it emits
+  `r["absolute"]` INTO THE ARM-DAY BLOCK with `unit: VALUATION_UNIT` (= `"cents"`, confirming the unit I read
+  off `_value_cents`) and a reconciliation that refuses by name above 1e-9. That is one of the three routes my
+  flag listed. **E2, E3, E4 and GO #8 are unchanged: `fe76d83` predates DE 131 by ~100 minutes**, so no
+  `absolute` block and no ledger for any of them.
+  (5) DE 130 landed and closes REV 98's wording at the file (`:6427` now says the constant "IS a typed
+  constant ... and must then be EDITED to match the parse"); the OTHER half of my round-266 flag stands --
+  importers get `217` whether or not the battery ever ran. DE 130 landed inside my round-266 read-to-write
+  gap, the SECOND consecutive round that has happened; both were swept the round after, because each state
+  file declares its window by commit.
+  (6) Cascade both sides: SHARED `309b98c7` -- a FOURTH digest today -- `fe76d83` `ee4034c1`; 9/10 and 10/10.
+  Freeze holds a SEVENTH round. E2 at 87m15s, `MemoryPeak` identical at all SEVEN reads, artifact still
+  absent, so all three round-266 predictions stay open.
+  ***SETTLEMENT, 2026-09-07T11:04:30Z, WHILE MY REGISTER ROW WAS QUEUED BEHIND A FOREIGN ROW: E2 EXITED AND ITS ARTIFACT SETTLES
+  ALL THREE RECORDED PREDICTIONS.*** `p003_de_early_read_day_20260904__20260907T105906Z.json`, 10:59:06Z, 44,741 B,
+  sha `b196bf32fe54c918`. **(1) MINE, round 265 -- CONFIRMED**: `ruling.path` is ABSOLUTE into
+  `/home/yuqing/ctaNew-wt-de`, key set exactly `path`+`sha256`, no `path_is`. **(2) REV's B0 -- REFUTED**: NO `schema`
+  key anywhere, and the only `inventory` key is `not_computed_by_this_path.inventory_leg`, the pre-DE-129 block. Its
+  facts about the commit were all true; the step from "the code can" to "the run does" was not. **(3) MINE, rounds
+  266/267 -- CONFIRMED IN THE STRONGEST FORM**: `day_run.decision_ledger` is present and **explicitly `None`** -- what
+  `_ledger_block = None` yields when the `receipt_path` guard is false. THE GUARD NOT FIRING IS RECORDED IN THE ARTIFACT.
+  **RULE-20 NOTE ON MY OWN READING**: at 11:02:37Z the unit reads `LoadState=not-found` with an EMPTY `InvocationID`, so
+  MY terminal reading is VOID and I quote no exit fields from it; the GO E2 capture is the authority.
+  COUNTS (by YAML parse): flags 1986 -> 2004, provenance 1531 -> 1549 (eighteen written, eighteen
+  counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 249
+  archived.)
+```
