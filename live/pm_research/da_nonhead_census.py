@@ -313,6 +313,140 @@ def hashed_against_a_recorded_digest(tree, assigned_to: str | None) -> dict:
     return out
 
 
+# --------------------------------------------------------------------------
+# THE CHAIN-RESOLUTION SURFACE (REV 90 S B5, routed to this census).
+#
+# Rule 20's clause says EVERY IMPORTER of the shared module runs its
+# `--falsify` as a cell. It re-drifted THREE TIMES INSIDE ONE ROUND, because
+# nothing computed the set: it was checked by a reviewer noticing, and
+# R-605's sentence is that a practice which depends on noticing is not a
+# control. So the set is DERIVED FROM THE CODE here.
+#
+# BOUND TO THE RESOLUTION SURFACE, NOT TO THE IMPORT (REV 90's refinement).
+# A module that imports only `plain_create_mode` -- a mode helper -- is NOT
+# resolving a chain, and requiring a chain falsifier there would be a cell
+# nobody can justify. The surface is: imports `declaration_chain` AND
+# references one of the RESOLUTION symbols.
+#
+# AND THE DRIVE MUST BE IN A BATTERY, not merely present in the file. The
+# module that DEFINES the shared helper contains the subprocess call in the
+# helper's own body; that is the helper, not a cell that runs when its
+# battery runs. The enclosing function is computed, and a drive outside a
+# battery does not satisfy the clause.
+RESOLUTION_SYMBOLS = ("resolve_head", "write_next_version",
+                      "next_version_path", "also_supersedes")
+BATTERY_FN_PREFIXES = ("selftest", "fixture", "_falsify", "battery")
+
+
+def _dc_import_and_symbols(tree) -> tuple:
+    """(imports declaration_chain, resolution symbols referenced)."""
+    imports_dc, imported = False, set()
+    for nd in ast.walk(tree):
+        if isinstance(nd, ast.Import):
+            if any(a.name.split(".")[-1] == "declaration_chain"
+                   for a in nd.names):
+                imports_dc = True
+        elif isinstance(nd, ast.ImportFrom):
+            if nd.module and nd.module.split(".")[-1] == "declaration_chain":
+                imports_dc = True
+                imported |= {a.asname or a.name for a in nd.names}
+    used = {nd.attr for nd in ast.walk(tree)
+            if isinstance(nd, ast.Attribute) and nd.attr in RESOLUTION_SYMBOLS}
+    used |= {nd.id for nd in ast.walk(tree)
+             if isinstance(nd, ast.Name) and nd.id in RESOLUTION_SYMBOLS}
+    used |= (imported & set(RESOLUTION_SYMBOLS))
+    return imports_dc, sorted(used), sorted(imported)
+
+
+def _falsifier_drives(tree) -> list:
+    """Every call that DRIVES the shared falsifier, with its enclosing fns.
+
+    A call carrying the literal `--falsify`, or a call to the shared
+    `shared_falsifier` helper. The literal must be an ARGUMENT of a call --
+    a docstring that mentions the flag is prose, not a drive.
+    """
+    enclosing = {}
+    for fn in ast.walk(tree):
+        if isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            for nd in ast.walk(fn):
+                if isinstance(nd, ast.Call):
+                    enclosing.setdefault(nd.lineno, set()).add(fn.name)
+    out = []
+    for c in ast.walk(tree):
+        if not isinstance(c, ast.Call):
+            continue
+        hit = any(isinstance(sn, ast.Constant) and sn.value == "--falsify"
+                  for a in list(c.args) + [k.value for k in c.keywords]
+                  for sn in ast.walk(a))
+        fname = getattr(c.func, "id", None) or getattr(c.func, "attr", None)
+        if hit or fname == "shared_falsifier":
+            fns = sorted(enclosing.get(c.lineno, set()))
+            out.append({"line": c.lineno, "in_functions": fns,
+                        "in_a_battery": any(
+                            f.startswith(BATTERY_FN_PREFIXES) for f in fns)})
+    return out
+
+
+def chain_resolution_surface(root: Path) -> dict:
+    """Who resolves the chain, and does each one run its falsifier?"""
+    r = Path(root)
+    surface, outside, missing = [], [], []
+    for py in sorted((r / "live").rglob("*.py")):
+        try:
+            with warnings.catch_warnings(record=True):
+                warnings.simplefilter("always")
+                tree = ast.parse(py.read_text())
+        except (OSError, SyntaxError, ValueError):
+            continue
+        imports_dc, used, imported = _dc_import_and_symbols(tree)
+        if not imports_dc:
+            continue
+        rel = str(py.relative_to(r))
+        if not used:
+            outside.append({"file": rel, "imports": imported,
+                            "why_not_in_the_surface": (
+                                "imports the module but references no "
+                                "resolution symbol -- a helper import is not "
+                                "a chain resolution (REV 90 S B5)")})
+            continue
+        drives = _falsifier_drives(tree)
+        in_batt = [d for d in drives if d["in_a_battery"]]
+        row = {"file": rel, "resolution_symbols": used,
+               "falsifier_drives": drives,
+               "runs_it_in_a_battery": bool(in_batt),
+               "status": ("OK" if in_batt else
+                          "IMPORTS_THE_RESOLVER_AND_SHIPS_NO_FALSIFIER_CELL")}
+        surface.append(row)
+        if not in_batt:
+            missing.append(row)
+    return {
+        "n_in_the_surface": len(surface),
+        "n_missing_the_cell": len(missing),
+        "missing_the_cell": missing,
+        "in_the_surface": surface,
+        "n_outside_the_surface": len(outside),
+        "outside_the_surface": outside,
+        "resolution_symbols": list(RESOLUTION_SYMBOLS),
+        "the_rule": ("SEAT_PROTOCOL rule 20's clause (REV 84 S3.2 / REV 85 "
+                     "S3, R-726): every importer of the shared chain module "
+                     "RUNS its `--falsify` as one cell of its own battery, "
+                     "so a regression in the one implementation fails every "
+                     "importer at once"),
+        "why_a_cell_and_not_a_reviewer": (
+            "REV 90 S B5: the rule re-drifted three times inside one round "
+            "and was caught each time by a reviewer noticing. R-605: a "
+            "practice that depends on noticing is not a control"),
+        "the_drive_must_be_in_a_battery": (
+            "the module that DEFINES the shared helper carries the "
+            "subprocess call in the helper's own body. That is the helper, "
+            "not a cell that runs when its battery runs -- so the enclosing "
+            "function is computed and a drive outside a battery does not "
+            "satisfy the clause"),
+        "verdict": ("CLEAN" if not missing else
+                    "REFUSED_A_RESOLVER_SHIPS_NO_FALSIFIER_CELL"),
+    }
+
+
 def _identifier_marks(name: str) -> str | None:
     if not name:
         return None
@@ -946,6 +1080,31 @@ def literal_census(root: Path, chains: dict,
                 "directly or through ONE assignment. A supersession chain "
                 "entry and a `refuses(...)` fixture are excluded BY "
                 "CONSTRUCTION. The marker rule (R-657) is the SECOND gate"),
+            #: REV 90 S B5(b). ***THE SUMMARY SAID 3 WHILE THE RAW SCAN
+            #: HELD 50.*** Both numbers are right and they answer different
+            #: questions: 50 names of non-head versions appear in `live/`,
+            #: and 3 of them are JUDGED (a pin that reaches an open, or a
+            #: marked one). A reader of the summary alone would conclude
+            #: the tree holds three, so the scan is reported beside the
+            #: judgement WITH THE CLASSES that separate them.
+            "n_scanned_naming_a_non_head": len(
+                [r for r in rows if r["is_head"] is False]),
+            "n_judged": len(refused) + len(
+                [r for r in marked if r["is_head"] is False]),
+            "the_scanned_set_by_class": {
+                k: sum(1 for r in rows
+                       if r["is_head"] is False and r["status"] == k)
+                for k in sorted({r["status"] for r in rows
+                                 if r["is_head"] is False})},
+            "why_scanned_and_judged_differ": (
+                "a NAME is not a PIN. The classes are: "
+                "NOT_A_PIN__NO_OPEN -- the name appears in prose, a "
+                "docstring, a chain list or a comparison and never reaches "
+                "a file open; NOT_A_PIN__IN_A_SUPERSESSION_FIELD -- the "
+                "name is a LINK BEING WRITTEN, which is the chain working; "
+                "ADMITTED_HASHED_AGAINST_A_RECORDED_DIGEST -- a reader of "
+                "history, admitted by the ruled predicate; "
+                "MARKED_AND_NOT_A_PIN and REFUSED_* -- the judged set"),
             "n_admitted_by_the_digest_predicate": len(admitted_by_digest),
             "admitted_by_the_digest_predicate": admitted_by_digest,
             "the_digest_predicate": {
@@ -1324,6 +1483,7 @@ def build_report(root: Path | None = None,
         #: file the nightly unit is pinned at is drift the unit will refuse
         #: at 00:06Z; here it is a MARK, in daylight, naming the file.
         "deploy_pin": _deploy_pin_state(r),
+        "chain_resolution_surface": chain_resolution_surface(r),
         "this_census_s_own_family": own,
         "composed_declaration_names": composed,
         "n_composed_declaration_names": len(composed),
@@ -1958,6 +2118,87 @@ def selftest() -> tuple:
            f"{_scoped['pin']['name']} {_scoped['status']}")
 
 
+    # ---- REV 90 S B5: THE RULE IS A CELL, BOUND TO THE RESOLUTION SURFACE
+    #: Four synthetic modules under a scratch root, one per case. No real
+    #: file is judged here; the real tree's answer is in the census report.
+    with tempfile.TemporaryDirectory() as _st:
+        _sr = Path(_st)
+        (_sr / "live" / "pm_research").mkdir(parents=True)
+
+        def _mod(name, body):
+            (_sr / "live" / "pm_research" / name).write_text(body)
+
+        _mod("resolver_with_a_cell.py", """
+import declaration_chain as DC
+def go(d):
+    return DC.resolve_head(d, "fam")
+def selftest():
+    import subprocess, sys
+    r = subprocess.run([sys.executable, "declaration_chain.py", "--falsify"],
+                       capture_output=True, text=True)
+    return r.returncode
+""")
+        _mod("resolver_without_a_cell.py", """
+import declaration_chain as DC
+def go(d):
+    return DC.resolve_head(d, "fam")
+""")
+        _mod("helper_only.py", """
+from declaration_chain import plain_create_mode
+def go():
+    return plain_create_mode()
+""")
+        _mod("drive_outside_a_battery.py", """
+import declaration_chain as DC
+def go(d):
+    return DC.write_next_version(d, "fam", {}, {})
+def a_helper(prog):
+    import subprocess, sys
+    return subprocess.run([sys.executable, str(prog), "--falsify"])
+""")
+        _surf = chain_resolution_surface(_sr)
+        _by = {Path(r["file"]).name: r for r in _surf["in_the_surface"]}
+        _out = {Path(r["file"]).name for r in _surf["outside_the_surface"]}
+    ck("REV 90 S B5 -- THE SURFACE IS DERIVED FROM THE CODE AND THE RULE IS "
+       "A CELL: a module that imports the shared module AND references a "
+       "RESOLUTION symbol is in the surface; one that runs "
+       "`declaration_chain --falsify` in its battery is OK",
+       _by["resolver_with_a_cell.py"]["status"] == "OK"
+       and _by["resolver_with_a_cell.py"]["resolution_symbols"]
+       == ["resolve_head"],
+       f"with a cell -> {_by['resolver_with_a_cell.py']['status']}")
+    ck("KNOWN-BAD, DRIVEN -- ***A MODULE THAT IMPORTS THE RESOLVER AND SHIPS "
+       "NO --falsify CELL IS FLAGGED BY NAME***: "
+       "IMPORTS_THE_RESOLVER_AND_SHIPS_NO_FALSIFIER_CELL. The rule "
+       "re-drifted three times in one round while it was checked by a "
+       "reviewer noticing; R-605 -- a practice that depends on noticing is "
+       "not a control",
+       _by["resolver_without_a_cell.py"]["status"]
+       == "IMPORTS_THE_RESOLVER_AND_SHIPS_NO_FALSIFIER_CELL"
+       and _surf["verdict"] == "REFUSED_A_RESOLVER_SHIPS_NO_FALSIFIER_CELL",
+       f"without a cell -> {_by['resolver_without_a_cell.py']['status']}; "
+       f"verdict {_surf['verdict']}")
+    ck("AND THE BINDING IS TO THE RESOLUTION SURFACE, NOT TO THE IMPORT "
+       "(REV 90's refinement): a module importing only `plain_create_mode` "
+       "-- a mode helper -- is OUTSIDE the surface and is NOT asked for a "
+       "chain falsifier. ***A cell nobody can justify is how a rule stops "
+       "being obeyed***",
+       "helper_only.py" in _out
+       and "helper_only.py" not in _by,
+       f"outside the surface: {sorted(_out)}")
+    ck("AND THE DRIVE MUST BE IN A BATTERY: a module whose only "
+       "`--falsify` call sits in a HELPER's body -- the shape the module "
+       "that DEFINES the shared helper actually has -- is flagged, because "
+       "that call is the helper, not a cell that runs when its battery runs",
+       _by["drive_outside_a_battery.py"]["status"]
+       == "IMPORTS_THE_RESOLVER_AND_SHIPS_NO_FALSIFIER_CELL"
+       and _by["drive_outside_a_battery.py"]["falsifier_drives"]
+       and not _by["drive_outside_a_battery.py"][
+           "falsifier_drives"][0]["in_a_battery"],
+       f"a drive in a helper -> "
+       f"{_by['drive_outside_a_battery.py']['status']} "
+       f"({_by['drive_outside_a_battery.py']['falsifier_drives']})")
+
     # ---- R-753 (2) / REV 89 S6.3a: THE DIGEST PREDICATE ---------------
     #: Four synthetic modules, one per conjunct, so each half of the rule
     #: is shown able to fail. No real file is read here.
@@ -2134,8 +2375,25 @@ def main() -> int:
             "families_without_exactly_one_head":
                 rep["n_families_without_exactly_one_head"],
             "n_literals": rep["literal_census"]["n_literals"],
+            #: REV 90 S B5(b): BOTH numbers, so a reader of the summary
+            #: alone is not misled -- 50 names of non-head versions are
+            #: SCANNED and 3 are JUDGED, and the classes that separate
+            #: them are in `the_scanned_set_by_class`.
+            "n_scanned_naming_a_non_head":
+                rep["literal_census"]["n_scanned_naming_a_non_head"],
             "naming_a_non_head":
                 rep["literal_census"]["n_naming_a_non_head"],
+            "the_scanned_set_by_class":
+                rep["literal_census"]["the_scanned_set_by_class"],
+            "chain_resolution_surface": {
+                "n_in_the_surface":
+                    rep["chain_resolution_surface"]["n_in_the_surface"],
+                "n_missing_the_cell":
+                    rep["chain_resolution_surface"]["n_missing_the_cell"],
+                "missing": [m["file"] for m in
+                            rep["chain_resolution_surface"][
+                                "missing_the_cell"]],
+                "verdict": rep["chain_resolution_surface"]["verdict"]},
             "verdict": rep["literal_census"]["verdict"]}, indent=1))
         return 0
     ap.error("--selftest or --census [--output <path>]")

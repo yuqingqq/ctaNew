@@ -106,6 +106,28 @@ LABEL_LINE = ("EXPLORATORY, G 4, point estimates, NO INTERVAL, days consumed")
 
 DIGEST64 = re.compile(r"^[0-9a-f]{64}$")
 
+#: WHERE THE THREE COUNTS CAME FROM, PER DAY (REV 90 S A2, recorded in the
+#: ruling's own `blindness_notes`). 2026-09-03 was sealed under an
+#: EIGHT-name scope, so `n_fills_arm`, `n_fills_baseline` and
+#: `n_cancels_issued` have been READABLE IN THE OPEN since its receipt
+#: landed; 09-04, 09-05 and 09-06 were sealed under the ELEVEN-name scope
+#: that includes them, so for those days this read is what unseals them.
+#: ***The table says which, per day***: a reader comparing four days'
+#: counts is comparing three that this read opened with three that anyone
+#: could have seen while the later days were being run, and that is a fact
+#: about BLINDNESS, not about the numbers.
+COUNTS_PROVENANCE = {
+    "2026-09-03": ("VISIBLE IN THE OPEN since 2026-09-06T14:01Z -- 09-03 "
+                   "was sealed under the EIGHT-name scope, which does not "
+                   "include the three counts"),
+    "_default": ("unsealed BY THIS READ -- sealed under the ELEVEN-name "
+                 "scope, which includes the three counts"),
+}
+
+
+def counts_provenance(day: str) -> str:
+    return COUNTS_PROVENANCE.get(str(day), COUNTS_PROVENANCE["_default"])
+
 
 class EarlyReadVerifyRefused(RuntimeError):
     """A named refusal. Every message begins with its own reason code."""
@@ -439,6 +461,15 @@ def verify(path, *, repo_root=None, data_root=None) -> dict:
         "labels": labels, "not_computed_statuses": statuses,
         "census": census,
         "label_line": LABEL_LINE,
+        "counts_provenance": {
+            "day": day, "says": counts_provenance(day),
+            "why_it_is_said": (
+                "REV 90 S A2 and the ruling's own blindness_notes: 09-03's "
+                "three counts were readable in the open while the later "
+                "days were being run, and the other three days' counts are "
+                "unsealed by this read. A table that showed four days' "
+                "counts without saying which is which would invite a "
+                "comparison across two different blindness states")},
         "this_reader_computed_nothing": (
             "every number below is DE's, read from the artifact and checked "
             "for presence and shape. This reader re-derives no economic "
@@ -465,6 +496,8 @@ def print_table(res: dict) -> str:
             f"{str(v['n_fills_arm']):>11} {str(v['n_fills_baseline']):>11} "
             f"{str(v['n_cancels_issued']):>9}")
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
+    lines.append(f"  the three COUNTS on this day: "
+                 f"{counts_provenance(res['day'])}")
     lines.append("  NOT COMPUTED for these days, as named statuses: "
                  + ", ".join(NOT_COMPUTED_KEYS))
     return "\n".join(lines)
@@ -686,6 +719,36 @@ def selftest() -> tuple:                                      # noqa: C901
            r_recv == "EARLY_READ_RECEIPT_NOT_THE_BAR"
            and r_rname == "EARLY_READ_RECEIPT_NOT_THE_BAR",
            f"wrong digest -> {r_recv}; another day's receipt -> {r_rname}")
+
+    #: REV 90 S A2 -- THE COUNTS' PROVENANCE IS SAID PER DAY.
+    with tempfile.TemporaryDirectory() as td3:
+        t3 = Path(td3)
+        a03 = _fixture_artifact(t3, v17.name, sha17, row17, day="2026-09-03")
+        p03 = t3 / f"{EARLY_FAMILY}_20260903__20260101T000010Z.json"
+        p03.write_text(json.dumps(a03))
+        r03 = verify(p03, repo_root=root)
+        t03 = print_table(r03)
+        row06 = next(r for r in b17["this_reads_bar"]["receipts"]
+                     if r["day"] == "2026-09-06")
+        a06 = _fixture_artifact(t3, v17.name, sha17, row06, day="2026-09-06")
+        a06["day_run"]["day"] = "2026-09-06"
+        p06 = t3 / f"{EARLY_FAMILY}_20260906__20260101T000011Z.json"
+        p06.write_text(json.dumps(a06))
+        r06 = verify(p06, repo_root=root)
+        t06 = print_table(r06)
+    ck("REV 90 S A2 -- ***THE THREE COUNTS CARRY THEIR PROVENANCE, PER DAY, "
+       "IN THE PRINTED TABLE***: 09-03's were VISIBLE IN THE OPEN since "
+       "2026-09-06T14:01Z under the EIGHT-name seal scope, and the other "
+       "three days' are unsealed BY THIS READ under the ELEVEN-name scope. "
+       "A table showing four days' counts without saying which is which "
+       "would invite a comparison across two different blindness states",
+       "VISIBLE IN THE OPEN" in t03 and "2026-09-06T14:01Z" in t03
+       and "unsealed BY THIS READ" in t06
+       and "VISIBLE IN THE OPEN" not in t06
+       and r03["counts_provenance"]["says"]
+       != r06["counts_provenance"]["says"],
+       f"09-03 -> {r03['counts_provenance']['says'][:52]}…; 09-06 -> "
+       f"{r06['counts_provenance']['says'][:52]}…")
 
     # ---- rule 20's clause (REV 84 S3.2 / REV 85 S3, R-726) -------------
     #: THE SHARED MODULE'S OWN FALSIFIER, AS ONE CELL OF THIS BATTERY. This

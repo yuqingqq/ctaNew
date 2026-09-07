@@ -559,10 +559,46 @@ def selftest() -> int:
        f"SILENTLY -- it proves the file has not moved, never that a later "
        f"version has not replaced it, and this one named _v2 while the "
        f"head was _v7")
-    _stale_known_bad = declaration_is_the_chain_head(
-        DECL_PATH.parent / "p002_e2_a_declaration_v2.json")
+    #: CLASSIFIED (DA 122, on REV 90 S B5's routing). These two names are
+    #: NEITHER a stale head consumer NOR a scratch fixture: they are a
+    #: KNOWN-BAD DRIVE that reads the REAL superseded versions on purpose,
+    #: to prove the chain-head check FIRES. Under the ruled predicate
+    #: (R-753 (2) / REV 89 S6.3a) that makes them a READER OF HISTORY, and
+    #: a reader of history cites BY THE PAIR: the digests are recorded
+    #: here and ASSERTED before the drive, so this known-bad proves it
+    #: drove the exact bytes it names rather than whatever sits at those
+    #: paths today. Neither file may legitimately move (rule 20).
+    KNOWN_BAD_SUPERSEDED = {
+        "path": "p002_e2_a_declaration_v2.json",
+        "sha256": ("6567a25f04d7fb892d001da3dee7d7db00f3df342"
+                   "197d7ab9663e8a2f8e03ed1"),
+        "successor_path": "p002_e2_a_declaration_v3.json",
+        "successor_sha256": ("6383d781c7bbeaa65ecccf4c5af469539c2fac3ba"
+                             "060d7d3fbc87d557e960ea7"),
+        "recorded_by": ("NOT by any act of these versions -- pinned HERE at "
+                        "DA 122 against the landed files, which rule 20 "
+                        "makes immutable. The act that wrote v2 recorded no "
+                        "digest of itself, and this says so rather than "
+                        "implying the pair came from it"),
+        "why_a_non_head_is_named_on_purpose": (
+            "the drive exists to show the chain-head check refuses a "
+            "SUPERSEDED version. Naming the head would test nothing"),
+    }
+    import hashlib as _kbh                                    # noqa: PLC0415
+    _kb_p = DECL_PATH.parent / KNOWN_BAD_SUPERSEDED["path"]
+    _kb_s = DECL_PATH.parent / KNOWN_BAD_SUPERSEDED["successor_path"]
+    _kb_got = _kbh.sha256(_kb_p.read_bytes()).hexdigest()
+    _kb_sgot = _kbh.sha256(_kb_s.read_bytes()).hexdigest()
+    ok(_kb_got == KNOWN_BAD_SUPERSEDED["sha256"]
+       and _kb_sgot == KNOWN_BAD_SUPERSEDED["successor_sha256"],
+       f"THE KNOWN-BAD IS CITED BY THE PAIR AND THE PAIR IS ASSERTED BEFORE "
+       f"THE DRIVE: v2 {_kb_got[:16]}… and its successor v3 "
+       f"{_kb_sgot[:16]}… are the bytes this drive names. A known-bad that "
+       f"named a path and took whatever was there would prove nothing about "
+       f"the case it claims to drive")
+    _stale_known_bad = declaration_is_the_chain_head(_kb_p)
     ok(_stale_known_bad["is_the_chain_head"] is False
-       and "p002_e2_a_declaration_v3.json"
+       and KNOWN_BAD_SUPERSEDED["successor_path"]
        in _stale_known_bad["successors_naming_it_by_the_PAIR"],
        f"KNOWN-BAD, DRIVEN: the version this module used to pin is refused "
        f"by the same check -- v2 is named by "
