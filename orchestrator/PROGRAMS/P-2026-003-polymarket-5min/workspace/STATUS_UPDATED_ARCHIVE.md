@@ -17602,3 +17602,57 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-TENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 216 archived. Q-MEM-222 filed through the script.)
 ```
+
+## Batch 220 — archived 2026-09-07T01:43:26Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-06T20:54:45Z (MEM ROUND 235 -- R-732 AND R-733 SWEPT, tip `39135da`. STATE ONLY. MEM
+  ASSERTS NO RESULT. Opened no result; every drive below is on a synthetic fixture.
+  (1) ***MY ROUND-234 ESCAPE CELL IS CLOSED, AND I RE-DROVE IT.*** The cell I drove last round as a
+  positive control -- a second read naming a predecessor but NOT naming its consumed set -- rendered
+  no clause then and **REFUSES now**: `CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED`, quoting the
+  declaration its `supersedes` names. Re-driven on a fresh fixture, not relayed.
+  (2) ***AND THE TEST IS BROADER THAN THE RESOLVER, WHICH IS WHAT DECIDES WHETHER THE FIX IS REAL***:
+  a `supersedes` given as a **BARE STRING** -- a shape the chain resolver refuses to follow -- still
+  counts as naming a predecessor and still refuses by the same name. **A test narrow enough to
+  require a well-formed pair would itself have been the next escape.**
+  (3) **A STATED EMPTY SET AND A GENUINE FIRST READ ARE DISTINGUISHABLE.** R-733 says a stated empty
+  set renders no clause AND SAYS WHY, so I checked that a reader can tell it from silence: both
+  return `applies False` with no sentence, and **three fields differ** -- `consumed_set_is_STATED`
+  True/False, `named_predecessor` True/False, and **`why`** ("this declaration STATES an empty
+  consumed set..." against "names NO predecessor... it is a first read"). Rule 4's shape -- a status,
+  never a silent drop -- in this instrument. **And the first-read control STILL ADMITS**: a fix that
+  closed the escape by refusing everything would have been the failure.
+  (4) **BE 86 WROTE NO DECLARATION VERSION AND v5 STILL STANDS:** `80c05a5` (20:51:47Z) touches
+  **exactly one file**; all five digests unmoved (v5 `b1aa349ed276bc41`), no v6. **Two rounds running**
+  that a clause fix touched only the generator and left the pre-registration alone -- the property
+  rule 11 needs while the days are open.
+  (5) **THE COORDINATOR'S DURATION SLIP, RECOMPUTED -- AND SO IS THE CORRECTION.** The dispatch said
+  "2 h 10 min" to the boundary; from R-732's 20:49Z stamp the interval is **3 h 11 min**, so the
+  disclosure is accurate and the figure was an hour out; the ANCHOR (00:00Z) was correct, which is
+  why nothing acted on it. **I checked the corrected figure too**, because a correction taken on
+  trust is the same failure one step later: R-733's "3 h 07 min by the clock at 20:52Z" is right for
+  any stamp inside that minute. This is the times-from-the-clock class, and it is now checked in
+  both directions rather than accepted on its word.
+  (6) ***AND I GUESSED A KEY BY SUBSTRING AGAIN.*** My first pass hunted the reason field with
+  `'why' in k or 'not_' in k` over the key names and printed **None** -- the very shape my round-232
+  remedy forbids, which is to ASSERT membership rather than guess. I printed `sorted(r.keys())` and
+  the key is plainly `why`. **THIRD instance of the key-reading class this session** (round 225
+  published defaults for three rounds; round 232 read an absent `head`; this one returned None). The
+  trend is real -- the last two were caught before any sentence, this one inside one command
+  sequence -- **but the class has not gone away, and a probe that guesses a name is a probe that can
+  report an absence as a finding.**
+  (7) **BE's CHECK COUNT 76 -> 79 IS RELAYED, third round running and for the same stated reason:**
+  the clause cell calls `not_pooled_clause()` with no arguments, resolving the REAL head and
+  rendering against the first read's `day_signs`, so running the battery would have BE's code open
+  that result inside my process. **Every property above I drove on a fixture; the COUNT alone is
+  relayed.**
+  (8) **NEXT STATE: A QUIET HOLD.** The 00:00Z chain is BE 72 (fragment, tape, book, structure v4,
+  pins v2), then DE's launch as one GO, then DA's 09-06 pre-read, then REV 88 with BE 86 included;
+  the wake is armed. **The USER's four open items stand**, item (d) time-bound to
+  **2026-09-10T01:00:00Z**. MEM has nothing to sweep until **R-734** exists, and **a quiet hold is a
+  valid state rather than a gap.**
+  Counts: flags 1,527 -> 1,537; provenance 1,072 -> 1,082; tasks 19; **806 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-ELEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 217 archived. Q-MEM-223 filed through the script.)
+```

@@ -1,3 +1,120 @@
+# READ FIRST — round 238 (MEM, 2026-09-07T01:43:26Z, tip `cb294c8`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-736 swept — the 09-06
+day is built.
+
+## 1. The book's bytes hash to the receipt's digest — I hashed the file
+
+Resolved the book **through the receipt that names it** rather than guessing a
+path, then hashed it: **275,035,656 B on disk**, sha256 `ac2ac95204864c7e…` — equal
+to the receipt's `sha256`, its `readback_sha256`, and R-736's. **The difference
+between "the receipt says" and "the bytes are" is the whole of rule 16.**
+
+**Structure v4 pairs to v3 and names four books**: 7,940 B, `1913a59937158fc8` →
+`f6d3e8315259bd88`; `verified_books` exactly 09-03, 09-04, 09-05, 09-06, each
+"7 of 7". The 09-06 record reads `n_checks 7`, `all_hold True`, unit
+`be72struct.service`.
+
+## 2. The pins gap — confirmed with a control that fires
+
+| day | sealed feed files |
+|---|---|
+| 20260903 / 04 / 05 | **1 each** |
+| **20260906** | **0** |
+
+**The positive controls fire, so the absence means something** — R-736's upstream
+gap is independently measured, not relayed. (This is the discriminating probe I
+built at round 233 after my first one couldn't tell a consumed day from an
+unopened one.)
+
+**And v5's `pins.taken_by` misnames the producer in its own words** — *"BE 72's
+successors — the day's fragment/tape/book run at each close takes the pin as its
+last step"* — but that chain does not produce the sealed feed; `be_forward_day`
+does. The misnaming is legible at the artifact, which makes BE's disclosure
+checkable and **v6 necessary rather than cosmetic**.
+
+## 3. DE 115's unit reading is VOID — and its defaults would read "success"
+
+`de115day06.service`: **`LoadState=not-found`, InvocationID empty** → under R-653
+the reading is **void**. The fields systemd returns beside it are **defaults**:
+`Result=success`, `ExecMainStatus=0`. **Taken at face value they would say a run
+that refused had succeeded.** This is the hazard rule 20 exists for, on tonight's
+chain.
+
+**The journal by unit name still carries the refusal** — 37 lines,
+`selftest(quiet=True, offline=fixture)` and `raise DataRootRefused(` at
+`de_multiday_gate1_runner.py:6546`. Recoverable from the journal, never from the
+void unit reading (R-659).
+
+**The contrast, in one command:** all five BE 72 units are still **loaded** (four
+exited, `be72frag` failed) — those five readings *are* admissible, and the one void
+reading tonight is the one whose unit is gone.
+
+**Every launch's `ExecStart` names the declared lock, one at a time** — fragment
+(×2), state-tape, daybook-build, `--verify-structure` — on
+`/home/yuqing/ctaNew/data/.heavy_run.lock`, whose inode 1053378 I verified at
+round 230.
+
+## 4. Two numbers recomputed
+
+**Headroom** against the 8 GiB cap (8,589,934,592 B): tape's peak of record
+**73.7 %**; book's **lower bound** 72.4 %; systemd's property for the book (*not*
+the peak) 73.6 %. R-736's "~74 %" is right for the tape and the property.
+
+**The journal window, measured twice:**
+
+| round | oldest | read at | depth |
+|---|---|---|---|
+| 236 | 2026-09-06T19:51:24Z | 00:05:31Z | 4:14:07 |
+| 238 | 21:28:28Z | 01:44:39Z | 4:16:11 |
+
+The start advanced **1:37:04** while the clock advanced **1:39:08** — ratio
+**0.979** — and the depth held to within two minutes: a **fixed-size ~4 h 15 min
+window sliding at roughly wall-clock rate**. **Two points are two points and I
+claim no rate law**; the substantive part is the near-constant depth, over a
+1 h 39 m baseline against R-641's 18-minute one.
+
+## 5. And R-736 uses a placeholder again — but discloses where it resolves
+
+One round after R-735's *"never a placeholder"*, R-736's last line reads *"the
+runbook's chain gains the forward-day step (`…`, this round — sha in R-737)"*.
+**Third instance, and qualitatively different from the first two, which were
+silent**: this one names where the sha will appear. Recorded as a fact about the
+record, not a breach — whether a disclosed forward reference satisfies the rule is
+the coordinator's to say. It fits round 237's finding: **the operative half is the
+substitution**, deferred openly here rather than forgotten.
+
+Counts: flags 1,558 → 1,569; provenance 1,103 → 1,114; tasks 19; **838 CHECKED /
+276 RELAYED / 455 UNMARKED — hundred-and-fourteenth round unchanged on UNMARKED.**
+ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 220 archived. Q-MEM-226 filed
+through the script.
+
+## 6. Landed at commit time — UNSWEPT, for MEM 239
+
+**R-737** (`bc3f287`) — DE 115 refused at its own selftest, nothing written; DE 116
+diagnoses and fixes, REV 88 reads the diff before GO #6. And `53f1dab` — the
+runbook step R-736 deferred.
+
+**The deferral did not close.** R-737 landed and, bounded over its **whole block**,
+carries `53f1dab` **zero times** — with the control that the sha appears **zero
+times anywhere in the register**, while the commit exists. **The entry that
+promised the resolution is landed and immutable, and the promise is not yet kept.**
+R-738 is not written yet, so it can still carry it; as of **01:48:02Z, not
+substituted.** The sharpest form of round 237's point: **a disclosed forward
+reference is still a placeholder that needs substituting.**
+
+**Also in the tree, uncommitted and not mine to land:**
+`live/pm_research/declarations/be_race_read_declaration_v6.json`, 12,456 B,
+`a240ccc5fb171641`, **untracked** — BE 87's v6 correction, written but not landed.
+My commits name their three paths explicitly, so it is not swept in
+(R-387/R-623); recorded so a later reader knows it was here at 01:48Z.
+
+**Chain ahead:** DE 116 (diagnose, fix, falsify, land, stop; REV 88 reads the diff
+before GO #6) → BE 87 (three launcher findings, v6, the forward-day run, then pins
+v2) → DA 114 → REV 88.
+
+---
+
 # READ FIRST — round 237 (MEM, 2026-09-07T00:11:45Z, tip `10c8b79`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-735 swept.

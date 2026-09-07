@@ -63,6 +63,75 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T01:43:26Z (MEM ROUND 238 -- R-736 SWEPT, tip `cb294c8`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **THE BOOK'S BYTES HASH TO THE RECEIPT'S DIGEST -- I HASHED THE FILE.** Resolved the book
+  THROUGH the receipt that names it rather than guessing a path, then hashed it: **275,035,656 B on
+  disk** against the receipt's 275,035,656, and sha256 `ac2ac95204864c7e...` equal to the receipt's
+  `sha256`, its `readback_sha256`, and R-736's. **The difference between "the receipt says" and "the
+  bytes are" is the whole of rule 16**, and here they agree.
+  (2) **STRUCTURE v4 PAIRS TO v3 AND NAMES FOUR BOOKS**: 7,940 B, `1913a59937158fc8`, supersedes ->
+  `be_daybook_structure_v3.json` at `f6d3e8315259bd88`, `verified_books` exactly 20260903, 20260904,
+  20260905, 20260906, each "7 of 7 declared claims hold"; the 09-06 record itself reads `n_checks 7`,
+  `all_hold True`, unit `be72struct.service`.
+  (3) ***THE PINS GAP CONFIRMED WITH A CONTROL THAT FIRES.*** Re-ran the discriminating probe I built
+  at round 233: `be_forward_day_SEALED_feed_<day>.jsonl` is present **exactly once** for 09-03, 09-04
+  and 09-05 and **zero** times for 09-06. **The positive controls fire, so the absence means
+  something** -- R-736's upstream gap is independently measured, not relayed. ***AND v5's
+  `pins.taken_by` MISNAMES THE PRODUCER IN ITS OWN WORDS***: it says *"BE 72's successors -- the
+  day's fragment/tape/book run at each close takes the pin as its last step"*, and that chain does
+  not produce the sealed feed -- `be_forward_day` does. The misnaming is legible at the artifact,
+  which is what makes BE's disclosure checkable and v6 necessary rather than cosmetic.
+  (4) ***DE 115's UNIT READING IS VOID, AND ITS DEFAULTS WOULD READ "SUCCESS".*** The unit reads
+  `LoadState=not-found` with an **EMPTY InvocationID**, so under R-653 the reading is VOID -- and the
+  fields systemd returns beside it are DEFAULTS: **`Result=success`, `ExecMainStatus=0`**. Taken at
+  face value **they would say a run that REFUSED had succeeded.** This is the hazard rule 20 exists
+  for, appearing on tonight's chain. **But the JOURNAL BY UNIT NAME still carries the refusal** -- 37
+  lines, `selftest(quiet=True, offline=fixture)` and `raise DataRootRefused(` at
+  `de_multiday_gate1_runner.py:6546` -- so the outcome is recoverable from the journal, never from
+  the void unit reading (R-659). **The contrast, measured in one command:** all five BE 72 units are
+  still **loaded** (four exited, `be72frag` failed), so those five readings ARE admissible, and the
+  one void reading tonight is the one whose unit is gone.
+  (5) **EVERY LAUNCH's `ExecStart` NAMES THE DECLARED LOCK, ONE AT A TIME**, read from the units:
+  `be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock <python> <payload>` with
+  payloads fragment (twice), state-tape, daybook-build, and `--verify-structure` on the book. That
+  lock path's inode 1053378 I verified at round 230, so "one heavy run at a time on the declared
+  lock" is visible from outside.
+  (6) **HEADROOM RECOMPUTED** against the 8 GiB cap (8,589,934,592 B): the tape's PEAK OF RECORD
+  6,334,619,648 B is **73.7 %**; the book's LOWER BOUND 6,217,269,248 B is **72.4 %**; systemd's
+  property for the book -- which R-736 is careful to say is NOT the peak -- is **73.6 %**. R-736's
+  "~74 %" is right for the tape and the property; the book's own bound sits a little under, which
+  the entry already flags.
+  (7) **THE JOURNAL WINDOW, MEASURED TWICE.** Round 236: oldest 2026-09-06T19:51:24Z read at
+  00:05:31Z, depth **4:14:07**. Round 238: oldest 21:28:28Z read at 01:44:39Z, depth **4:16:11**. The
+  window START advanced **1:37:04** while the clock advanced **1:39:08** -- ratio **0.979** -- and
+  the DEPTH held to within two minutes. It behaves as a **fixed-size ~4 h 15 min window sliding at
+  roughly wall-clock rate**. **Two points are two points and I claim no rate law**; the substantive
+  part is the near-constant depth, over a 1 h 39 m baseline against R-641's own 18-minute one.
+  (8) **AND R-736 USES A PLACEHOLDER AGAIN -- BUT DISCLOSES WHERE IT RESOLVES.** One round after
+  R-735 stated *"never a placeholder"*, R-736's last line reads *"the runbook's chain gains the
+  forward-day step (`...`, this round -- sha in R-737)"*. **Third instance of the shape, and
+  qualitatively different from the first two, which were silent**: this one NAMES where the sha will
+  appear. Recorded as a fact about the record, not as a breach -- whether a disclosed forward
+  reference satisfies "never a placeholder" is the coordinator's to say. ROUTED, NOT RULED. It also
+  fits round 237's finding: **the operative half is the SUBSTITUTION**, and here it is deferred
+  openly rather than forgotten. ***AND AT COMMIT TIME THE DEFERRAL DID NOT CLOSE***: R-737 landed
+  and, bounded over its WHOLE block, carries `53f1dab` **zero times** -- with the control that the
+  sha appears **zero times anywhere in the register**, while the commit exists. **The entry that
+  promised the resolution is landed and immutable, and the promise is not yet kept.** R-738 is not
+  written yet, so it can still carry it; as of **01:48:02Z, not yet substituted.** The sharpest form
+  of round 237's point: **a disclosed forward reference is still a placeholder that needs
+  substituting.**
+  UNSWEPT, FOR MEM 239: **R-737** (`bc3f287`) -- DE 115 refused at its own selftest, nothing written,
+  DE 116 to diagnose and fix with REV 88 reading the diff before GO #6; and `53f1dab`, the runbook
+  step R-736 deferred. **ALSO IN THE TREE, UNCOMMITTED AND NOT MINE TO LAND:**
+  `live/pm_research/declarations/be_race_read_declaration_v6.json`, 12,456 B, `a240ccc5fb171641`,
+  UNTRACKED -- BE 87's v6 correction written but not yet landed. My commits name their three paths
+  explicitly, so it is not swept in (R-387/R-623); recorded so a later reader knows it was here at
+  01:48Z.
+  Counts: flags 1,558 -> 1,569; provenance 1,103 -> 1,114; tasks 19; **838 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-FOURTEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 220 archived. Q-MEM-226 filed through the script.)
   2026-09-07T00:11:45Z (MEM ROUND 237 -- R-735 SWEPT, tip `10c8b79`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) **THE MASK's TOTALS RECONCILE WITH ITS PARTS, RECOMPUTED** -- from the per-coin rows, not read
@@ -172,55 +241,6 @@ updated: >-
   Counts: flags 1,537 -> 1,547; provenance 1,082 -> 1,092; tasks 19; **816 CHECKED / 276 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-TWELFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 218 archived. Q-MEM-224 filed through the script.)
-  2026-09-06T20:54:45Z (MEM ROUND 235 -- R-732 AND R-733 SWEPT, tip `39135da`. STATE ONLY. MEM
-  ASSERTS NO RESULT. Opened no result; every drive below is on a synthetic fixture.
-  (1) ***MY ROUND-234 ESCAPE CELL IS CLOSED, AND I RE-DROVE IT.*** The cell I drove last round as a
-  positive control -- a second read naming a predecessor but NOT naming its consumed set -- rendered
-  no clause then and **REFUSES now**: `CONSUMED_SET_ABSENT_BUT_A_PREDECESSOR_IS_NAMED`, quoting the
-  declaration its `supersedes` names. Re-driven on a fresh fixture, not relayed.
-  (2) ***AND THE TEST IS BROADER THAN THE RESOLVER, WHICH IS WHAT DECIDES WHETHER THE FIX IS REAL***:
-  a `supersedes` given as a **BARE STRING** -- a shape the chain resolver refuses to follow -- still
-  counts as naming a predecessor and still refuses by the same name. **A test narrow enough to
-  require a well-formed pair would itself have been the next escape.**
-  (3) **A STATED EMPTY SET AND A GENUINE FIRST READ ARE DISTINGUISHABLE.** R-733 says a stated empty
-  set renders no clause AND SAYS WHY, so I checked that a reader can tell it from silence: both
-  return `applies False` with no sentence, and **three fields differ** -- `consumed_set_is_STATED`
-  True/False, `named_predecessor` True/False, and **`why`** ("this declaration STATES an empty
-  consumed set..." against "names NO predecessor... it is a first read"). Rule 4's shape -- a status,
-  never a silent drop -- in this instrument. **And the first-read control STILL ADMITS**: a fix that
-  closed the escape by refusing everything would have been the failure.
-  (4) **BE 86 WROTE NO DECLARATION VERSION AND v5 STILL STANDS:** `80c05a5` (20:51:47Z) touches
-  **exactly one file**; all five digests unmoved (v5 `b1aa349ed276bc41`), no v6. **Two rounds running**
-  that a clause fix touched only the generator and left the pre-registration alone -- the property
-  rule 11 needs while the days are open.
-  (5) **THE COORDINATOR'S DURATION SLIP, RECOMPUTED -- AND SO IS THE CORRECTION.** The dispatch said
-  "2 h 10 min" to the boundary; from R-732's 20:49Z stamp the interval is **3 h 11 min**, so the
-  disclosure is accurate and the figure was an hour out; the ANCHOR (00:00Z) was correct, which is
-  why nothing acted on it. **I checked the corrected figure too**, because a correction taken on
-  trust is the same failure one step later: R-733's "3 h 07 min by the clock at 20:52Z" is right for
-  any stamp inside that minute. This is the times-from-the-clock class, and it is now checked in
-  both directions rather than accepted on its word.
-  (6) ***AND I GUESSED A KEY BY SUBSTRING AGAIN.*** My first pass hunted the reason field with
-  `'why' in k or 'not_' in k` over the key names and printed **None** -- the very shape my round-232
-  remedy forbids, which is to ASSERT membership rather than guess. I printed `sorted(r.keys())` and
-  the key is plainly `why`. **THIRD instance of the key-reading class this session** (round 225
-  published defaults for three rounds; round 232 read an absent `head`; this one returned None). The
-  trend is real -- the last two were caught before any sentence, this one inside one command
-  sequence -- **but the class has not gone away, and a probe that guesses a name is a probe that can
-  report an absence as a finding.**
-  (7) **BE's CHECK COUNT 76 -> 79 IS RELAYED, third round running and for the same stated reason:**
-  the clause cell calls `not_pooled_clause()` with no arguments, resolving the REAL head and
-  rendering against the first read's `day_signs`, so running the battery would have BE's code open
-  that result inside my process. **Every property above I drove on a fixture; the COUNT alone is
-  relayed.**
-  (8) **NEXT STATE: A QUIET HOLD.** The 00:00Z chain is BE 72 (fragment, tape, book, structure v4,
-  pins v2), then DE's launch as one GO, then DA's 09-06 pre-read, then REV 88 with BE 86 included;
-  the wake is armed. **The USER's four open items stand**, item (d) time-bound to
-  **2026-09-10T01:00:00Z**. MEM has nothing to sweep until **R-734** exists, and **a quiet hold is a
-  valid state rather than a gap.**
-  Counts: flags 1,527 -> 1,537; provenance 1,072 -> 1,082; tasks 19; **806 CHECKED / 276 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-ELEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 217 archived. Q-MEM-223 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -392,6 +412,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 238, R-736 swept ---
+  the_BOOKS_BYTES_HASH_TO_THE_RECEIPTS_DIGEST_I_hashed_the_file: AC2AC952-275035656-B-EXACT
+  structure_v4_pairs_to_v3_and_names_FOUR_books: 1913A599-TO-F6D3E831-09-03-THROUGH-09-06
+  the_PINS_GAP_confirmed_with_a_control_that_FIRES: 09-03-04-05-ONE-FEED-EACH-09-06-ZERO
+  v5s_pins_taken_by_MISNAMES_THE_PRODUCER_visible_in_its_own_words: FRAGMENT-TAPE-BOOK-NOT-BE-FORWARD-DAY
+  DE115s_UNIT_READING_IS_VOID_and_defaults_would_read_SUCCESS: NOT-FOUND-EMPTY-INVOCATIONID
+  but_the_JOURNAL_BY_UNIT_NAME_still_carries_the_refusal: 37-LINES-DATAROOTREFUSED-AT-6546
+  all_FIVE_BE72_units_still_loaded_so_those_readings_ARE_admissible: FOUR-EXITED-ONE-FAILED
+  every_launch_ExecStart_names_the_DECLARED_lock_one_at_a_time: FRAG-FRAG2-TAPE-BOOK-STRUCT
+  the_headroom_RECOMPUTED_against_the_8_GiB_cap: 73-7-PERCENT-TAPE-72-4-PERCENT-BOOK-LOWER-BOUND
+  the_journal_window_MEASURED_TWICE_slides_at_0_98x_wall_clock: DEPTH-HELD-AT-4H15M-OVER-1H39M
+  R_736_USES_A_PLACEHOLDER_AGAIN_but_DISCLOSES_where_it_resolves: SHA-IN-R-737-SAID-IN-THE-ENTRY
   MY_OWN_PROSE_BROKE_MY_OWN_WINDOW_REGEX_AND_THE_ASSERT_CAUGHT_IT: FOUR-MATCHES-WHERE-THERE-ARE-THREE
   # =====================================================================
   # STANDING RULE FOR THIS BLOCK, ADOPTED 2026-09-06T04:54:04Z FROM REV 32's
@@ -25918,6 +25950,129 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 238, 2026-09-07T01:43:26Z ---
+  the_BOOKS_BYTES_HASH_TO_THE_RECEIPTS_DIGEST_I_hashed_the_file:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260906_btc.pkl
+    as_of: 2026-09-07T01:44:00Z
+    said: >-
+      resolved the book through the receipt that names it rather than guessing a path, then hashed
+      the FILE: 275,035,656 B on disk against the receipt's 275,035,656, and sha256
+      ac2ac95204864c7e7fd7f89e0f424f75f39617d83958d126adeb0c76ea24a4c7 equal to both the receipt's
+      sha256 and its readback_sha256, and to R-736's ac2ac952. The difference between 'the receipt
+      says' and 'the bytes are' is the whole of rule 16, and here they agree.
+  structure_v4_pairs_to_v3_and_names_FOUR_books:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_daybook_structure_v4.json
+    as_of: 2026-09-07T01:44:00Z
+    said: >-
+      7,940 B, sha256 1913a59937158fc8 -- matching R-736. Its supersedes pairs to
+      be_daybook_structure_v3.json at f6d3e8315259bd88, and verified_books carries exactly four
+      days: 20260903, 20260904, 20260905, 20260906, each '7 of 7 declared claims hold'. The 09-06
+      structure record itself reads n_checks 7, all_hold True, unit be72struct.service.
+  the_PINS_GAP_confirmed_with_a_control_that_FIRES:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew_forward_runs/
+    as_of: 2026-09-07T01:44:00Z
+    said: >-
+      re-ran the discriminating probe I built at round 233 after my first one could not tell a
+      consumed day from an unopened one: be_forward_day_SEALED_feed_<day>.jsonl is present exactly
+      ONCE for 20260903, 20260904 and 20260905 and ZERO times for 20260906. The positive controls
+      fire, so the absence means something -- R-736's upstream gap is real and independently
+      measured, not relayed.
+  v5s_pins_taken_by_MISNAMES_THE_PRODUCER_visible_in_its_own_words:
+    prov: CHECKED
+    artifact: be_race_read_declaration_v5.json, pins.taken_by
+    as_of: 2026-09-07T01:44:00Z
+    said: >-
+      read the field rather than take the disclosure: taken_by says "BE 72's successors -- the day's
+      fragment/tape/book run at each close takes the pin as its last step". That chain does not
+      produce the sealed feed; be_forward_day does. So the misnaming is legible in the artifact's own
+      words, which is what makes BE's disclosure checkable and the v6 correction necessary rather
+      than cosmetic. v5 is immutable; v6 corrects by the pair before the 09-10 horizon.
+  DE115s_UNIT_READING_IS_VOID_and_defaults_would_read_SUCCESS:
+    prov: CHECKED
+    artifact: systemctl --user show de115day06.service
+    as_of: 2026-09-07T01:44:35Z
+    said: >-
+      THE HAZARD RULE 20 EXISTS FOR, ON TONIGHT'S CHAIN. The unit reads LoadState=not-found with an
+      EMPTY InvocationID -- so under R-653 the reading is VOID -- and the fields systemd returns
+      beside it are DEFAULTS: Result=success, ExecMainStatus=0. Taken at face value they would say a
+      run that REFUSED had succeeded. I record the reading as void and take the outcome from
+      elsewhere; a seat quoting those two fields would have reported the opposite of what happened.
+  but_the_JOURNAL_BY_UNIT_NAME_still_carries_the_refusal:
+    prov: CHECKED
+    artifact: journalctl --user -u de115day06.service
+    as_of: 2026-09-07T01:44:35Z
+    said: >-
+      37 lines, carrying the refusal itself: `selftest(quiet=True, offline=fixture)` and
+      `raise DataRootRefused(` at de_multiday_gate1_runner.py:6546 in DE's worktree. So the outcome
+      IS recoverable -- from the journal, not from the void unit reading -- which is R-659's point
+      that a GO condition is satisfied by the artifact and the journal, never by a unit reading that
+      may be void. Consistent with R-736: refused at its own selftest, nothing written.
+  all_FIVE_BE72_units_still_loaded_so_those_readings_ARE_admissible:
+    prov: CHECKED
+    artifact: systemctl --user list-units --all
+    as_of: 2026-09-07T01:44:35Z
+    said: >-
+      the contrast with DE 115, measured in the same command: be72frag loaded/failed/failed, and
+      be72frag2, be72tape, be72book, be72struct all loaded/active/exited. Five units, all LOADED, so
+      all five readings are admissible under rule 20 -- and the one void reading tonight is the one
+      whose unit is gone.
+  every_launch_ExecStart_names_the_DECLARED_lock_one_at_a_time:
+    prov: CHECKED
+    artifact: the unit listing's ExecStart lines
+    as_of: 2026-09-07T01:44:35Z
+    said: >-
+      read from the units, not from a launcher in some tree (REV 69 s4): all five ExecStarts are
+      be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock <python> <payload>,
+      with payloads be_gate1_fragment.py --day 20260906 (twice), be_gate1_state_tape.py --day
+      20260906, be_daybook_build.py --day 20260906, and be_daybook_build.py --verify-structure on
+      the book. The DECLARED lock path is the one whose inode 1053378 I verified at round 230, so
+      'one heavy run at a time on the declared lock' is visible from outside.
+  the_headroom_RECOMPUTED_against_the_8_GiB_cap:
+    prov: CHECKED
+    artifact: R-736's peaks against the declared cap
+    as_of: 2026-09-07T01:44:00Z
+    said: >-
+      recomputed rather than accepted: the 8 GiB cap is 8,589,934,592 B. The tape's PEAK OF RECORD
+      6,334,619,648 B is 73.7 %; the book's LOWER BOUND 6,217,269,248 B is 72.4 %; systemd's
+      property for the book, which R-736 is careful to say is NOT the peak, is 6,324,723,712 B or
+      73.6 %. R-736's "~74 %" is right for the tape and for the property, and the book's own bound
+      sits a little under it -- which the entry already flags as a lower bound.
+  the_journal_window_MEASURED_TWICE_slides_at_0_98x_wall_clock:
+    prov: CHECKED
+    artifact: journalctl --user, oldest and newest, at two round times
+    as_of: 2026-09-07T01:44:39Z
+    said: >-
+      R-641 says the retention state is a measurement, so I now have two. Round 236: oldest
+      2026-09-06T19:51:24Z read at 00:05:31Z, depth 4:14:07. Round 238: oldest 21:28:28Z read at
+      01:44:39Z, depth 4:16:11. The window START advanced 1:37:04 while the clock advanced 1:39:08 --
+      a ratio of 0.979 -- and the DEPTH held to within 2 minutes. So it behaves as a fixed-size
+      window of about 4 h 15 min sliding at roughly wall-clock rate. TWO POINTS ARE TWO POINTS and I
+      claim no rate law; the substantive part is the near-constant depth, over a 1 h 39 m baseline
+      against R-641's own 18-minute one.
+  R_736_USES_A_PLACEHOLDER_AGAIN_but_DISCLOSES_where_it_resolves:
+    prov: CHECKED
+    artifact: R-736's closing routing line
+    as_of: 2026-09-07T01:43:00Z
+    said: >-
+      one round after R-735 stated 'never a placeholder', R-736's last line reads "The runbook's
+      chain gains the forward-day step (`...`, this round -- sha in R-737)". Third instance of the
+      shape -- AND QUALITATIVELY DIFFERENT from the first two, which were silent: this one NAMES
+      where the sha will appear, so a reader is not left resolving nothing. Recorded as a fact about
+      the record, not as a breach: whether a disclosed forward reference satisfies 'never a
+      placeholder' is the coordinator's to say. ROUTED, NOT RULED. It also fits my round-237 finding
+      -- the operative half is the SUBSTITUTION, and here the substitution is deferred openly rather
+      than forgotten. AND AT COMMIT TIME THE DEFERRAL DID NOT CLOSE: R-737 landed and, bounded over
+      its WHOLE block (lines 22117..22133), contains '53f1dab' ZERO times and does not mention the
+      runbook at all -- with the control that '53f1dab' appears ZERO times ANYWHERE in the register,
+      while the commit itself exists with the subject 'runbook s7b: the day's sealed feed
+      (be_forward_day) is a chain step of its own; the pins are of that feed (R-736)'. So the entry
+      that PROMISED the resolution is landed and immutable and the promise is not yet kept; R-738 is
+      not written yet (the runbook pointer names it) so it can still carry the substitution. As of
+      2026-09-07T01:48:02Z: NOT YET SUBSTITUTED. The sharpest form of round 237's point -- a
+      DISCLOSED forward reference is still a placeholder that needs substituting.
   MY_OWN_PROSE_BROKE_MY_OWN_WINDOW_REGEX_AND_THE_ASSERT_CAUGHT_IT:
     prov: CHECKED
     artifact: my window-trim step, and the four matched lines
