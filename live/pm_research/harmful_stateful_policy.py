@@ -408,12 +408,30 @@ def validate_scores(scores: Sequence[dict[str, Any]]) -> None:
 # trajectory event schema (closed) and emit helpers
 # ---------------------------------------------------------------------------
 
+#: THE UNIT THE INVENTORY LEG IS VALUED IN, named once and carried on every
+#: FILL_CHARGED record so a reader holding ONE row knows what its numbers
+#: are. `_charge_fill`'s own arithmetic is
+#: `net1 = net0 + (shares if side == "BUY_UP" else -shares)`, so the sign
+#: convention below is READ from the code that produces it, not asserted
+#: beside it.
+INVENTORY_UNIT = "signed shares; + is BUY_UP, - is SELL_UP; per slug, reset " \
+                 "to flat at each slug (R-184 step (vii): the v1 wiring's " \
+                 "ONE shared inventory dict across slugs was the defect)"
+
 EVENT_KEYS: dict[str, frozenset] = {
     "PLACE": frozenset({"kind", "t", "slug", "side", "ref_gen", "policy_gen",
                         "level", "displayed", "source"}),
     "FILL_CHARGED": frozenset({"kind", "t", "slug", "side", "ref_gen",
                                "policy_gen", "shares", "stale",
-                               "markout_cents_per_share"}),
+                               "markout_cents_per_share",
+                               # BE 96, on the USER's ruling R-765 ("record
+                               # everything we can to avoid rerun"). DE 124's
+                               # decision ledger could not record the position
+                               # at a fill and stored ABSENT_UNTIL_BE_96,
+                               # because this record -- the only place the
+                               # position is KNOWN -- did not carry it.
+                               "inventory_before", "inventory_after",
+                               "inventory_unit"}),
     "FILL_PREVENTED": frozenset({"kind", "t", "slug", "side", "ref_gen",
                                  "policy_gen", "shares",
                                  "markout_cents_per_share",
@@ -461,10 +479,20 @@ def _ev_place(slug: str, side: str, g: dict, policy_gen: str, t: float,
 
 def _ev_fill_charged(slug: str, side: str, g: dict, policy_gen: str,
                      t: float, shares: float, stale: bool,
-                     markout: Any) -> dict:
+                     markout: Any, inv_before: float,
+                     inv_after: float) -> dict:
+    """One charged fill. `inv_before`/`inv_after` are REQUIRED, positional.
+
+    They are not optional and carry no default: a default would let a caller
+    that does not know the position emit a record claiming flat, which is
+    the zero this field exists to avoid (rule 4 -- an absence is a status,
+    and a wrong number is not an absence).
+    """
     return {"kind": "FILL_CHARGED", "t": t, "slug": slug, "side": side,
             "ref_gen": g["gen"], "policy_gen": policy_gen, "shares": shares,
-            "stale": stale, "markout_cents_per_share": markout}
+            "stale": stale, "markout_cents_per_share": markout,
+            "inventory_before": inv_before, "inventory_after": inv_after,
+            "inventory_unit": INVENTORY_UNIT}
 
 
 def _ev_gen_end(slug: str, side: str, g: dict, policy_gen: str, t: float,
@@ -610,8 +638,14 @@ class _SlugReplay:
             self.inv["received_reducing_shares"] += shares
         else:
             self.inv["received_increasing_shares"] += shares
+        # BE 96: `net0` and `net1` are ALREADY the position before and after
+        # this fill, computed eleven lines up for the reducing/increasing
+        # split. They are passed, never recomputed and never reconstructed
+        # downstream -- this is the only point in the programme where the
+        # position at a fill is known.
         self.traj.append(_ev_fill_charged(
-            self.slug, side, g, rec["policy_gen"], t, shares, stale, markout))
+            self.slug, side, g, rec["policy_gen"], t, shares, stale, markout,
+            net0, net1))
 
     # -- lazy effectiveness -------------------------------------------------
 
@@ -1231,6 +1265,15 @@ def build_passthrough_trajectory(reference: dict[str, Any]) -> list[dict]:
     validate_reference(reference)
     events: list[dict] = []
     for slug, sides in reference.items():
+        # BE 96: the 0-CANCEL BASELINE carries the position too, and it is
+        # tracked HERE rather than reconstructed from the events afterwards.
+        # The docstring above says this loop does no arithmetic, and that is
+        # now true of shares/levels/markouts only -- the inventory path is
+        # arithmetic, deliberately, and it is the SAME arithmetic
+        # `_charge_fill` does. That makes the existing bit-parity tests cover
+        # the inventory path as well: the plain loop and the state machine
+        # must agree on it, and neither wrote the other.
+        net = 0.0                     # fresh per slug, exactly as _SlugReplay
         for t, _rank, _sidx, _seq, kind, side, payload in _merged_events(
                 sides, []):
             if kind == "start":
@@ -1238,9 +1281,12 @@ def build_passthrough_trajectory(reference: dict[str, Any]) -> list[dict]:
                                         str(payload["gen"]), t, "TRACKING"))
             elif kind == "fill":
                 g, tr = payload
+                net0 = net
+                net = net0 + (tr["shares"] if side == "BUY_UP"
+                              else -tr["shares"])
                 events.append(_ev_fill_charged(
                     slug, side, g, str(g["gen"]), t, tr["shares"], False,
-                    tr["markout_cents_per_share"]))
+                    tr["markout_cents_per_share"], net0, net))
             elif kind == "end":
                 events.append(_ev_gen_end(slug, side, payload,
                                           str(payload["gen"]), t,
@@ -1402,10 +1448,17 @@ def _fk_eff(t: float, g: str = "1") -> dict:
             "side": "BUY_UP", "ref_gen": 1, "policy_gen": g}
 
 
-def _fk_fill(t: float, stale: bool, g: str = "1") -> dict:
+def _fk_fill(t: float, stale: bool, g: str = "1",
+             inv_before: float = 0.0) -> dict:
+    """A FIXTURE record, not a producer. The default start is the fixture's
+    own flat book; a producer never gets a default (see `_ev_fill_charged`).
+    """
     return {"kind": "FILL_CHARGED", "t": t, "slug": "w", "side": "BUY_UP",
             "ref_gen": 1, "policy_gen": g, "shares": 1.0, "stale": stale,
-            "markout_cents_per_share": -1.0}
+            "markout_cents_per_share": -1.0,
+            "inventory_before": inv_before,
+            "inventory_after": inv_before + 1.0,
+            "inventory_unit": INVENTORY_UNIT}
 
 
 def _fake_result(evs: list, stale_sh: float = 0.0,
@@ -1551,12 +1604,22 @@ def selftest() -> int:
     expected_hold = [
         _ev_place("w1", "BUY_UP", gb1, "1", 0.0, "TRACKING"),
         _ev_place("w1", "SELL_UP", gs1, "1", 0.0, "TRACKING"),
-        _ev_fill_charged("w1", "BUY_UP", gb1, "1", 2.0, 2.0, False, -10.0),
-        _ev_fill_charged("w1", "SELL_UP", gs1, "1", 5.0, 1.0, False, 3.0),
+        # BE 96 -- THE INVENTORY PATH, BY HAND, ON THIS SLUG (fresh at flat):
+        #   BUY_UP  2.0  ->  0.0 -> +2.0
+        #   SELL_UP 1.0  -> +2.0 -> +1.0
+        #   BUY_UP  1.0  -> +1.0 -> +2.0
+        # These are typed here and the STATE MACHINE must reproduce them
+        # bit-for-bit, which is what group C already demands of every other
+        # field of these records.
+        _ev_fill_charged("w1", "BUY_UP", gb1, "1", 2.0, 2.0, False, -10.0,
+                         0.0, 2.0),
+        _ev_fill_charged("w1", "SELL_UP", gs1, "1", 5.0, 1.0, False, 3.0,
+                         2.0, 1.0),
         {"kind": "CANCEL_ISSUED", "t": 6.0, "slug": "w1", "side": "BUY_UP",
          "ref_gen": 1, "policy_gen": "1", "t_effective": 7.0,
          "reducing_at_request": False},
-        _ev_fill_charged("w1", "BUY_UP", gb1, "1", 6.5, 1.0, True, -4.0),
+        _ev_fill_charged("w1", "BUY_UP", gb1, "1", 6.5, 1.0, True, -4.0,
+                         1.0, 2.0),
         {"kind": "CANCEL_EFFECTIVE", "t": 7.0, "slug": "w1",
          "side": "BUY_UP", "ref_gen": 1, "policy_gen": "1"},
         _ev_gen_end("w1", "BUY_UP", gb1, "1", 7.0, "CANCELLED"),

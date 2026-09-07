@@ -701,7 +701,7 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
     return out
 
 
-EXPECTED_CHECKS = 19
+EXPECTED_CHECKS = 23      # BE 96: +4, the position at every fill
 
 
 def selftest() -> int:
@@ -855,6 +855,74 @@ def selftest() -> int:
        "bytes, not a constant")
 
     print()
+    # ---- BE 96 (USER ruling R-765): THE POSITION AT EVERY FILL ---------
+    # DE 124's decision ledger stored `ABSENT_UNTIL_BE_96` because the fill
+    # record carried no position. It does now, computed where the position
+    # is KNOWN -- `harmful_stateful_policy._charge_fill` already had `net0`
+    # and `net1` in hand for the reducing/increasing split -- and carried
+    # through `de_phase4_diag_runner.received_fills`, never reconstructed
+    # from a fill LIST (two fills can share an instant; a reconstruction
+    # would be a different number).
+    import harmful_stateful_policy as _HSP
+    import de_phase4_diag_runner as _R
+    _ref, _scores = _HSP._ref1(), _HSP._scores1()
+    _dt = _R._decision_times(_scores)
+    _arm = _R.received_fills(
+        _HSP.replay_policy(_ref, _scores, _HSP._params(theta_repost=0.0)),
+        _ref, _dt)
+    _base = _R.received_fills(
+        {"trajectory": _HSP.build_passthrough_trajectory(_ref)}, _ref, _dt)
+
+    def _path(fs):
+        return [(f["inventory_before"], f["inventory_after"]) for f in fs]
+
+    # THE HAND-KNOWN PATH on this fixture's single slug, fresh at flat:
+    #   BUY_UP 2.0 -> 0 -> +2 ; SELL_UP 1.0 -> +2 -> +1 ; BUY_UP 1.0 -> +1 -> +2
+    _want = [(0.0, 2.0), (2.0, 1.0), (1.0, 2.0)]
+    ok(_path(_arm) == _want and _path(_base)[:3] == _want
+       and all(f["inventory_unit"] == _HSP.INVENTORY_UNIT
+               for f in _arm + _base),
+       f"THE INVENTORY PATH IS REPRODUCED EXACTLY, BY BOTH PRODUCERS: the "
+       f"arm's state machine gives {_path(_arm)} and the 0-CANCEL BASELINE's "
+       f"plain passthrough loop gives {_path(_base)} -- the first three of "
+       f"each are the hand-computed {_want} (BUY 2 -> +2; SELL 1 -> +1; "
+       f"BUY 1 -> +2). Two independent producers, neither written from the "
+       f"other, and the unit rides on every record")
+    _bp = _path(_base)
+    ok(all(f["inventory_after"] == f["inventory_before"]
+           + (f["size"] if f["side"] == _HSP.SIDES[0] else -f["size"])
+           for f in _arm + _base)
+       and all(_bp[i][1] == _bp[i + 1][0] for i in range(len(_bp) - 1)),
+       "AND THE PATH IS COHERENT, COMPUTED not eyeballed: every record's "
+       "`inventory_after` equals its own `inventory_before` plus its signed "
+       "size, and each fill's `after` is the next fill's `before`")
+    _bad = dict(_HSP.build_passthrough_trajectory(_ref)[2])
+    for _k in _R.INVENTORY_FIELDS:
+        _bad.pop(_k, None)
+    try:
+        _R.received_fills({"trajectory": [_bad]}, _ref, _dt)
+        _refused = "NOT REFUSED"
+    except ValueError as _e:
+        _refused = str(_e).split(":")[0]
+    ok(_refused == "FILL_RECORD_HAS_NO_POSITION_STATE",
+       f"KNOWN-BAD -- A RECORD WITHOUT THE POSITION IS REFUSED BY NAME "
+       f"({_refused}), never defaulted to flat. Reading a missing position "
+       f"as zero would invent the one number the USER's ruling asked to have "
+       f"recorded, and it would be indistinguishable from a genuinely flat "
+       f"book (rule 4)")
+    ok(sorted(_R.INVENTORY_FIELDS) == ["inventory_after", "inventory_before",
+                                       "inventory_unit"]
+       and all({"inventory_mark_cents", "inventory_mark_source"} <= set(f)
+               for f in _arm + _base)
+       and all(f["inventory_mark_cents"] == f["px_cents"] for f in _arm),
+       f"THE FIELD NAMES DE'S LEDGER READS, asserted here rather than agreed "
+       f"in prose: {sorted(_R.INVENTORY_FIELDS)} plus `inventory_mark_cents` "
+       f"and `inventory_mark_source`. The mark IS the fill's own level "
+       f"(equal to `px_cents`, asserted) -- one number, not a second that "
+       f"could disagree with it -- and the SOURCE records which level "
+       f"answered, the tranche's or the generation's, which the estimator "
+       f"computed and dropped")
+
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
         return 1

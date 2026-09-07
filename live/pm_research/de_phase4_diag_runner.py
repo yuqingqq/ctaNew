@@ -2772,6 +2772,33 @@ def _gen_index(reference: dict) -> dict:
     return idx
 
 
+#: BE 96 (USER ruling R-765): the field names DE's decision ledger reads.
+#: They are CARRIED from the producer's FILL_CHARGED record, never computed
+#: here -- `harmful_stateful_policy` is the only place the position at a fill
+#: is known, and a number reconstructed downstream from a fill LIST is a
+#: different number the moment two fills share an instant.
+INVENTORY_FIELDS = ("inventory_before", "inventory_after", "inventory_unit")
+
+
+def _carry_inventory(rec: dict) -> dict:
+    """The producer's position fields, or a REFUSAL naming the producer.
+
+    Never a default and never a zero: a record without them is a producer
+    that did not emit them, and reading that as `flat` would invent the one
+    number the USER asked to have recorded.
+    """
+    missing = [k for k in INVENTORY_FIELDS if k not in rec]
+    if missing:
+        raise ValueError(
+            f"FILL_RECORD_HAS_NO_POSITION_STATE: the FILL_CHARGED record at "
+            f"t={rec.get('t')!r} slug={rec.get('slug')!r} carries no "
+            f"{missing}. These come from `harmful_stateful_policy."
+            f"_ev_fill_charged`, which requires them positionally. A fill "
+            f"record without the position is REFUSED here rather than "
+            f"defaulted to flat (BE 96, USER ruling R-765).")
+    return {k: rec[k] for k in INVENTORY_FIELDS}
+
+
 def received_fills(res: dict, reference: dict,
                    decision_t: dict | None = None) -> list:
     """The fills an arm RECEIVED, in the shape `de_rho_estimator` values.
@@ -2804,7 +2831,16 @@ def received_fills(res: dict, reference: dict,
                         "slug": rec.get("slug"),
                         "ref_gen": rec.get("ref_gen"),
                         "mid_cents_at_fill": None,
-                        "mid_cents_at_markout": None})
+                        "mid_cents_at_markout": None,
+                        # BE 96: the position is known even where the value
+                        # is not. The two absences are different and the
+                        # record keeps them apart.
+                        **_carry_inventory(rec),
+                        "inventory_mark_cents": None,
+                        "inventory_mark_source":
+                            "ABSENT -- this fill has no markout or no "
+                            "generation, so it has no level to mark at; the "
+                            "POSITION is still recorded"})
             continue
         tr = tix.get((rec.get("slug"), rec.get("side"), rec.get("ref_gen"),
                       round(float(rec["t"]), 9)))
@@ -2842,6 +2878,19 @@ def received_fills(res: dict, reference: dict,
             "mid_cents_at_fill": (float(_mid) * 100.0
                                   if _mid is not None else None),
             "mid_cents_at_markout": lvl + sign * float(mo),
+            # BE 96: the position at this fill, CARRIED from the producer.
+            **_carry_inventory(rec),
+            # AND THE MARK THE INVENTORY LEG IS VALUED AT -- which is this
+            # fill's own level, the same `lvl` as `px_cents` and not a second
+            # number that could disagree with it. What was NOT recorded
+            # before is WHICH level answered: the tranche's own, or the
+            # generation's as a fallback. The estimator computed that choice
+            # and dropped it.
+            "inventory_mark_cents": lvl,
+            "inventory_mark_source": (
+                "the TRANCHE's own level" if (tr and tr.get("level")
+                                              is not None)
+                else "the GENERATION's level (this tranche carries none)"),
         })
     return out
 
