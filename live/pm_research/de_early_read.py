@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 25
 
 
 class EarlyReadRefused(RuntimeError):
@@ -96,8 +96,44 @@ def the_ruling(repo_root=None) -> dict:
                 f"`{field}`. A ruling recorded in pieces is a ruling a "
                 f"later reader has to reconstruct.")
     days = list(block["this_reads_bar"]["days"])
+    # REV 95 minor: THE PATH IS REPO-RELATIVE. `resolve_head` returns an
+    # ABSOLUTE path, so the landed 09-03 artifact names
+    # `/home/yuqing/ctaNew-wt-de/live/...` -- a worktree that is frozen
+    # today and gone tomorrow, recorded inside an artifact meant to
+    # outlive it. The landed one is NOT edited (rule 13); the note below
+    # travels in every emission from here.
+    _rp = str(head["path"])
+    try:
+        _rp = str(Path(_rp).resolve().relative_to(root.resolve()))
+    except (ValueError, OSError):
+        pass
     return {
-        "ruling_by_pair": {"path": head["path"], "sha256": head["sha256"]},
+        "ruling_by_pair": {"path": _rp, "sha256": head["sha256"],
+                           "path_is": "REPO-RELATIVE"},
+        "NOTE_on_the_landed_09_03_artifact": {
+            "artifact": "p003_de_early_read_day_20260903__"
+                        "20260907T085436Z.json",
+            "it_is_LANDED_and_is_never_edited": "rule 13. This note is the "
+                "correction, in band, and it travels with every emission "
+                "of this family from here.",
+            "one__the_absolute_ruling_path": (
+                "it names its ruling at an ABSOLUTE path into "
+                "/home/yuqing/ctaNew-wt-de, the worktree that produced it "
+                "-- frozen today and gone tomorrow, recorded inside an "
+                "artifact meant to outlive it. Every emission from here "
+                "writes the path REPO-RELATIVE (REV 95)."),
+            "two__two_FALSE_seal_fields_in_its_day_run_block": (
+                "`day_run.status` reads `DAY_RUN_SEALED` and "
+                "`day_run.what_this_is_not.the_economics_are_SEALED` reads "
+                "`true`, while BOTH arm-days in that same artifact read "
+                "`sealed: false` with their `economic` block PRESENT. The "
+                "status was a literal and the flag was "
+                "`n_days_complete < G`, which is TRUE at 4 of 6 -- exactly "
+                "the early read. Both are computed from the arm-days' own "
+                "seal state from DE 126 on (CLAUDE.md rule 10). A reader "
+                "of the 09-03 artifact must take its arm-days, not these "
+                "two fields, as the account of what was sealed."),
+        },
         "params_version": doc.get("version"),
         "days": days,
         "G": len(days),
@@ -116,6 +152,24 @@ def the_ruling(repo_root=None) -> dict:
 #: Named as STATUSES, never dropped in silence (reliability rule 4). Each
 #: one would be a NEW statistic, and a read whose remit is "show what
 #: those runs computed and stripped" may not invent one.
+#: DE 129: THREE OF THESE FIVE ARE NOW COMPUTED, and this block said
+#: otherwise in every artifact it was emitted into. The DECISION LEDGER
+#: (R-765) recomputes `p_two_sided`, `rho = adverse/spread` and -- since
+#: BE 96 -- the `inventory_leg`, from stored rows with the book absent.
+#: What this block describes is the ARM-DAY ECONOMIC BLOCK in the receipt,
+#: which still carries none of them; a reader has to be told WHERE to
+#: look rather than that the number does not exist.
+WHERE_THE_FIVE_LIVE_NOW = {
+    "p_two_sided": "COMPUTED, in the decision ledger "
+                   "(de_decision_ledger.recompute)",
+    "rho_adverse_over_spread": "COMPUTED, in the decision ledger",
+    "inventory_leg": "COMPUTED since BE 96, in the decision ledger",
+    "fills_leg": "COMPUTED, in the decision ledger",
+    "D_E_MINUS_R": "STILL NOT COMPUTED ANYWHERE -- the robustness "
+                   "endpoint needs the rebate's identity value, which is "
+                   "not on DE's surface",
+}
+
 NOT_COMPUTED_BY_THIS_PATH = {
     "fills_leg": "the arm-day economic block is a SINGLE excess `D_E0` "
                  "against the 0-cancel baseline. There is no fills/"
@@ -143,7 +197,14 @@ def economics_available_per_arm_day() -> dict:
         "from_the_arm_level": ["n_fills_arm", "n_fills_baseline",
                                "n_cancels_issued", "status",
                                "admissibility", "seed", "draw_provenance"],
-        "not_computed_by_this_path": NOT_COMPUTED_BY_THIS_PATH,
+        "not_computed_by_this_path_the_ARM_DAY_BLOCK":
+            NOT_COMPUTED_BY_THIS_PATH,
+        "where_the_five_live_now": WHERE_THE_FIVE_LIVE_NOW,
+        "read_this_first": "four of the five ARE computed, in the DECISION "
+                           "LEDGER beside the receipt; only D_E_MINUS_R is "
+                           "computed nowhere. This block used to say all "
+                           "five were absent, which stopped being true at "
+                           "R-765 and BE 96.",
     }
 
 
@@ -343,11 +404,27 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
     pre = early_read_preconditions(
         day, Path(RUN.DR.resolve()["data_root"]), ruling)
     params = RUN.load_params()
+    # DE 132: THE LEDGER IS ANCHORED ON THIS ARTIFACT'S OWN PATH. The
+    # early read has no `receipt_path` -- its artifact is its own family --
+    # and `run_day` used that as the condition for writing R-765's ledger,
+    # so E1 and E2 emitted `decision_ledger: null` and wrote none. The name
+    # is composed BEFORE the run so the ledger lands beside the artifact
+    # that names it.
+    out = Path(outdir) / day_artifact_name(day)
     result = RUN.run_day(day, book, params=params, fixture=False,
                          n_days_complete=ruling["G"],
                          early_read={"G": ruling["G"],
                                      "days": ruling["days"]},
+                         ledger_anchor=out,
                          before_work=before_work)
+    _led = (result or {}).get("decision_ledger")
+    if not (isinstance(_led, dict) and _led.get("sha256")):
+        raise EarlyReadRefused(
+            f"EARLY_READ_WROTE_NO_DECISION_LEDGER: the run returned "
+            f"`decision_ledger` {_led!r}. R-765 orders the numbers kept, "
+            f"and an artifact carrying a null block is the SILENT form of "
+            f"promising a ledger that is not there -- which is how GO E1 "
+            f"and GO E2 both went unnoticed.")
     payload = {
         "protocol": "P003_DE_EARLY_READ_DAY_V1",
         "what_this_is": "the USER-ruled early read of one sealed day "
@@ -394,7 +471,6 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
         "as_of": datetime.datetime.now(
             datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
-    out = Path(outdir) / day_artifact_name(day)
     out.write_text(json.dumps(payload, indent=2, sort_keys=True,
                               default=str) + "\n")
     return {"path": str(out), "sha256": _sha(out), "day": day}
@@ -711,31 +787,90 @@ def _selftest_body(quiet: bool = False) -> int:
     # consumed measures the past.
     # BOTH DAYS ARE DERIVED FROM THE LEDGER, never typed.
     _st = bar_day_states()
-    ok(_st["read"] and _st["next_unread"],
-       f"DE 126: the bar's state is DERIVED -- read {_st['read']}, unread "
-       f"{_st['unread']}, next {_st['next_unread']}. No date is typed "
-       f"into these cells: a literal measures the day it was written on, "
-       f"which is how E1's SUCCESS aborted this battery")
-    _done = rehearse(_st["most_recently_read"])
-    ok(_done["status"] == "NOT_READY"
-       and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"],
-       f"DE 126: {_st['most_recently_read']} has been READ, so its "
-       f"rehearsal refuses by name -- {_done['blocking']} -- rather than "
-       f"offering to run it again. This is the POSITIVE CONTROL that the "
-       f"abort was: the cell used to expect READY here")
-    reh = rehearse(_st["next_unread"])
-    dc = reh["preconditions"]["digest_comparison"]
-    ok(reh["status"] == "READY" and reh["blocking"] == []
-       and dc["is_a_full_pair"] is True
-       and len(dc["bar_says"]) == 64 and dc["bar_says"] == dc["artifact_is"]
-       and dc["prefix_agrees_with_the_full_digest"] is True,
-       f"DRIVE 4d (GREEN, THE NEXT UNREAD DAY {_st['next_unread']}): it "
-       f"rehearses "
-       f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
-       f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
-       f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 hex "
-       f"compared and equal, with v16's prefix kept beside it and "
-       f"agreeing")
+    # REV 95 §A5: THE CELL ASSERTS ON WHICHEVER TERMINAL STATE EXISTS.
+    # Requiring BOTH a read day and an unread one is a third literal --
+    # about the bar's PROGRESS rather than a date -- and it goes red the
+    # moment E4 reads the last day and `next_unread` becomes None. That is
+    # the same defect as the hardcoded 09-03, one level up: a cell that
+    # assumes the middle of the sweep.
+    ok(bool(_st["read"]) or bool(_st["unread"]),
+       f"REV 95 §A5: the bar's state is DERIVED and the cell asserts on "
+       f"whichever terminal state EXISTS -- read {_st['read']}, unread "
+       f"{_st['unread']}, next {_st['next_unread']}. Requiring both a read "
+       f"and an unread day would go red when E4 finishes the sweep, which "
+       f"is the hardcoded-date defect one level up")
+    # ---- REV 96 §1: THE POST-E4 WORLD, DRIVEN IN A SCRATCH ROOT -------
+    # The battery must read GREEN when EVERY day is read. Building that
+    # state for real means waiting for E4; it is built here instead, in a
+    # scratch ledger carrying an early-read artifact for all four bar days
+    # plus the sealed receipts they need, and the same code path is run
+    # against it. This is the state the unconditional `["preconditions"]`
+    # would have raised in.
+    _e4 = Path(tempfile.mkdtemp(prefix="post_e4_"))
+    _e4d = _e4 / "pm_5min/derived"
+    _e4d.mkdir(parents=True)
+    _real_der = Path(RUN.DR.resolve()["data_root"]) / "pm_5min/derived"
+    _rl = the_ruling()
+    for _r in _rl["receipts"]:
+        shutil.copy(_real_der / Path(_r["path"]).name,
+                    _e4d / Path(_r["path"]).name)
+        _c = _r["day"].replace("-", "")
+        (_e4d / f"{DAY_FAMILY}_{_c}__20260907T000000Z.json").write_text("{}")
+    _st_e4 = bar_day_states(root=_e4)
+    _post = [rehearse(d, root=_e4) for d in _st_e4["read"]]
+    ok(_st_e4["next_unread"] is None
+       and len(_st_e4["read"]) == len(_rl["days"])
+       and all(r["status"] == "NOT_READY"
+               and r["blocking"] == ["EARLY_READ_ALREADY_EMITTED"]
+               for r in _post)
+       and all("preconditions" not in r for r in _post),
+       f"REV 96 §1: IN THE POST-E4 WORLD -- all {len(_st_e4['read'])} bar "
+       f"days read, `next_unread` None -- every day rehearses NOT_READY / "
+       f"EARLY_READ_ALREADY_EMITTED and NONE carries `preconditions`. The "
+       f"READY drive is inside the `else`, so the battery reads GREEN "
+       f"here instead of raising the KeyError that was REV 94's NO-GO")
+    shutil.rmtree(_e4, ignore_errors=True)
+
+    if _st["read"]:
+        _done = rehearse(_st["most_recently_read"])
+        ok(_done["status"] == "NOT_READY"
+           and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"],
+           f"DE 126: {_st['most_recently_read']} has been READ, so its "
+           f"rehearsal refuses by name -- {_done['blocking']} -- rather "
+           f"than offering to run it again. This is the POSITIVE CONTROL "
+           f"that the abort was: the cell used to expect READY here")
+    if _st["next_unread"] is None:
+        # THE SWEEP IS DONE: every day is read, so every day must refuse.
+        _all_done = [rehearse(d) for d in _st["read"]]
+        ok(all(r["status"] == "NOT_READY"
+               and r["blocking"] == ["EARLY_READ_ALREADY_EMITTED"]
+               for r in _all_done),
+           f"REV 95 §A5: with NOTHING unread, all {len(_all_done)} read "
+           f"days rehearse NOT_READY / EARLY_READ_ALREADY_EMITTED. The "
+           f"sweep is complete and the entry offers to run none of it "
+           f"again")
+    else:
+        # REV 97 §A1: THE WHOLE DRIVE IS IN HERE -- the rehearse call,
+        # every read of its result, AND the `ok()` that asserts on it. REV
+        # 96 moved ONE STATEMENT: `reh` and `dc` were assigned inside this
+        # branch and read OUTSIDE it, so the post-E4 world traded a
+        # `KeyError` for an `UnboundLocalError` and the cell still could
+        # not run in the world it exists to describe. A guard around one
+        # statement is not a guard around the block.
+        reh = rehearse(_st["next_unread"])
+        dc = reh["preconditions"]["digest_comparison"]
+        ok(reh["status"] == "READY" and reh["blocking"] == []
+           and dc["is_a_full_pair"] is True
+           and len(dc["bar_says"]) == 64
+           and dc["bar_says"] == dc["artifact_is"]
+           and dc["prefix_agrees_with_the_full_digest"] is True,
+           f"DRIVE 4d (GREEN, THE NEXT UNREAD DAY {_st['next_unread']}): it "
+           f"rehearses "
+           f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
+           f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
+           f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 "
+           f"hex compared and equal, with v16's prefix kept beside it and "
+           f"agreeing")
 
     # ---- REV 91 §C1 / REV 93 #4: THE SHARED FALSIFIER, AS ONE CELL ---
     # The gap REV named is DETECTION COVERAGE, not correctness: the shared
@@ -792,6 +927,77 @@ def _selftest_body(quiet: bool = False) -> int:
     _shutil_cr = shutil
     _shutil_cr.rmtree(_cr, ignore_errors=True)
 
+    # ---- DE 132: THE LEDGER IS WRITTEN, OR THE RUN REFUSES -----------
+    # RED FIRST, on a FIXTURE day run -- the same `run_day` the early read
+    # calls, with and without an anchor. GO E1 and GO E2 each spent ~90
+    # minutes and emitted `decision_ledger: null`, because the condition
+    # for writing R-765's ledger was `receipt_path is not None` and the
+    # early read has no receipt path.
+    _lt = Path(tempfile.mkdtemp(prefix="ledger_anchor_"))
+    _made = RUN.write_synthetic_day("FIXTURE-DAY-1", str(_lt),
+                                    params=RUN.load_params())
+    _P132 = dict(RUN.load_params())
+    # the name must be one the runner DECLARES as a fixture -- a guard
+    # that exists because `fixture=True` alone once admitted a real day
+    # name (REV 68 §1.2). My first draft invented one and was refused.
+    _P132["days"] = ["FIXTURE-DAY-1"]
+    _P132["G"] = 1
+    _anchor132 = _lt / "the_artifact.json"
+    _r132 = RUN.run_day("FIXTURE-DAY-1", _made["book_path"], params=_P132,
+                        fixture=True, n_days_complete=1,
+                        ledger_anchor=_anchor132)
+    _b132 = _r132.get("decision_ledger")
+    ok(isinstance(_b132, dict) and _b132.get("sha256")
+       and _b132.get("n_rows", 0) > 0 and _b132.get("schema_version")
+       and Path(_b132["path"]).is_file()
+       and Path(_b132["path"]).parent == _anchor132.parent,
+       f"DE 132 GREEN: given an ANCHOR the run writes its ledger BESIDE "
+       f"the artifact -- {Path(_b132['path']).name}, {_b132['n_rows']} "
+       f"rows, schema v{_b132['schema_version']}, sha256 "
+       f"{_b132['sha256'][:16]}… -- and the block in `day_run` carries "
+       f"path + sha256 + rows + schema. E1 and E2 carried `null` here")
+    # DE 133: THE REFUSAL IS FOR A REAL DAY, and the distinction is the
+    # correction. DE 132 refused ANY anchorless run, so it fired on the
+    # RUNNER's own fixture cells -- which drive `run_day` with no anchor
+    # and owe no ledger -- and E3's composition found it the moment the
+    # cascade pin was fresh enough for those cells to run at all.
+    _fx132 = RUN.run_day("FIXTURE-DAY-1", _made["book_path"], params=_P132,
+                         fixture=True, n_days_complete=1)     # no anchor
+    _fb132 = _fx132.get("decision_ledger") or {}
+    ok(_fb132.get("status") == "NO_LEDGER_FOR_A_FIXTURE_DAY"
+       and "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR"
+       in _fb132.get("a_real_day_without_an_anchor", ""),
+       f"DE 133: a FIXTURE day with no anchor does NOT refuse -- it "
+       f"records `{_fb132.get('status')}` and names what a REAL day would "
+       f"do. A fixture's rows are synthetic; R-765 keeps the numbers of "
+       f"real runs so they need not be re-run. DE 132's refusal did not "
+       f"make that distinction and fired on this runner's own cells")
+    # DRIVEN AT THE FUNCTION, because `run_day` cannot be driven this far
+    # without the heavy lock -- the day-membership and lock guards refuse
+    # first, correctly, and my first two versions of this cell accepted
+    # THEIR refusal as if it were this one. The check is a named function
+    # so it can be watched firing.
+    _code132 = None
+    try:
+        RUN.assert_ledger_anchor(_P132, fixture=False, anchor=None)
+    except RUN.RunnerRefused as _e:
+        _code132 = str(_e).split(":")[0].replace("REFUSED ", "")
+    _fxa132 = RUN.assert_ledger_anchor(_P132, fixture=True, anchor=None)
+    _rok132 = RUN.assert_ledger_anchor(_P132, fixture=False,
+                                       anchor="/tmp/x.json")
+    ok(_code132 == "DECISION_LEDGER_HAS_NO_ANCHOR"
+       and _fxa132["owes_a_ledger"] is False
+       and _fxa132["status"] == "NO_LEDGER_FOR_A_FIXTURE_DAY"
+       and _rok132["owes_a_ledger"] is True,
+       f"DE 132/133 RED: a REAL day with no anchor REFUSES BY ITS OWN "
+       f"NAME -- `{_code132}` -- BEFORE the day's work, not after ~90 "
+       f"minutes of it (R-610's principle; DE 132 put the check at the "
+       f"ledger write, where it could not be driven cheaply). A "
+       f"null block is the SILENT form of promising a ledger that is not "
+       f"there, which is why two heavy runs passed every review without "
+       f"one")
+    shutil.rmtree(_lt, ignore_errors=True)
+
     # ---- REV 89 item 1: THE CAPTURE RECORD'S THREE DECLARED FIELDS ---
     _r0 = resolve_exit(0)
     _r1 = resolve_exit(1)
@@ -833,13 +1039,20 @@ def _selftest_body(quiet: bool = False) -> int:
 
     # ---- the absent fields are STATUSES, never silent drops -----------
     av = economics_available_per_arm_day()
-    ok(len(av["not_computed_by_this_path"]) == 5
-       and all(isinstance(v, str) and len(v) > 40
-               for v in av["not_computed_by_this_path"].values()),
-       f"the {len(av['not_computed_by_this_path'])} fields the dispatch "
-       f"asked for that this path does not compute are named with their "
-       f"reasons -- {sorted(av['not_computed_by_this_path'])} -- not "
-       f"dropped in silence (reliability rule 4)")
+    _absent = av["not_computed_by_this_path_the_ARM_DAY_BLOCK"]
+    _where = av["where_the_five_live_now"]
+    ok(len(_absent) == 5
+       and all(isinstance(v, str) and len(v) > 40 for v in _absent.values())
+       and set(_where) == set(_absent)
+       and sum(1 for v in _where.values() if v.startswith("COMPUTED")) == 4
+       and _where["D_E_MINUS_R"].startswith("STILL NOT COMPUTED"),
+       f"DE 129: the five the dispatch asked for are named with their "
+       f"reasons AND with WHERE THEY LIVE NOW -- four of them "
+       f"({sorted(k for k, v in _where.items() if v.startswith('COMPUTED'))}) "
+       f"are computed in the DECISION LEDGER since R-765 and BE 96, and "
+       f"only `D_E_MINUS_R` is computed nowhere. This block said all five "
+       f"were absent in every artifact it was emitted into, which stopped "
+       f"being true two rounds ago")
 
     shutil.rmtree(tmp, ignore_errors=True)
     _sum = RUN.battery_summary("de_early_read", n_run=n[0],

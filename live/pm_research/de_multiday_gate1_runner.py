@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 362
+EXPECTED_CHECKS = 364
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -807,6 +807,10 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
     # the numbers. BE 96 changed the entry point and the guard caught it;
     # a change in any of the other nine would not have moved a digest.
     # Every module is checked, each by its own pair.
+    # REV 95 minor: THE RETURN NAMES WHAT WAS CHECKED. It reported the
+    # same shape -- one path, one digest -- whether it had verified ONE
+    # module or TEN, so a reader could not tell a cascade check from an
+    # entry-point check, which is exactly the difference this round added.
     _casc = (params.get("be_cascade") or {}).get("modules") or []
     if _casc and actual_sha is None:
         _repo = Path(__file__).resolve().parents[2]
@@ -828,6 +832,8 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
                 f"a control; the citation must be re-pointed DELIBERATELY, "
                 f"with the draw-path and constant axes measured (see "
                 f"`be_module_repoint`).")
+    _checked = ([m["path"] for m in _casc] if (_casc and actual_sha is None)
+                else [params["be_module"]["path"]])
     declared = params["be_module"]["sha256"]
     if actual_sha is None:
         src = Path(__file__).resolve().parents[2] / params["be_module"]["path"]
@@ -841,7 +847,15 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
             f"a DIFFERENT cascade is not a control for this arm, and the "
             f"citation must be re-pointed deliberately.")
     return {"path": params["be_module"]["path"], "sha256": actual_sha,
-            "cited_not_copied": True, "verified_at_run_time": True}
+            "cited_not_copied": True, "verified_at_run_time": True,
+            # REV 95 minor: NAME WHAT WAS CHECKED, so one module and ten
+            # do not report the same shape.
+            "n_modules_checked": len(_checked),
+            "modules_checked": _checked,
+            "scope": ("THE CASCADE -- every module a null run executes"
+                      if len(_checked) > 1 else
+                      "THE ENTRY POINT ONLY -- no `be_cascade` in the "
+                      "params, or a digest was supplied by the caller")}
 
 
 MODEL_DIR = "data/pm_5min/derived/phase2_fits"
@@ -4533,6 +4547,66 @@ def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
             "theta_was_not_refitted_here": True}
 
 
+VALUATION_UNIT = "cents"
+
+
+def HSP_BUY_SIDE():
+    """The buy side, from the policy module -- never the literal 'B'."""
+    import harmful_stateful_policy as _H
+    return _H.SIDES[0]
+
+
+def absolute_legs(fills: list) -> dict:
+    """ONE BOOK'S OWN VALUE -- R-782, the USER's third ruling of the day.
+
+        "plz record the absolute number as well for reference"
+                                    -- THE USER, 2026-09-07T10:42:24Z
+
+    D(E0) is a DIFFERENCE, and a difference answers "how much better"
+    without ever answering "how much". The question that preceded the
+    ruling was *what's the result of 0-cancel* -- which the receipt could
+    not answer at all, because only the excess was ever written down.
+
+    These are read from THE SAME REPLAY that computes D(E0): the fills are
+    already in memory and the excess is their difference, so nothing here
+    is a second pass over the day and nothing can disagree with the
+    number it is the absolute of.
+
+    The INVENTORY leg is present only where BE 96's position fields are
+    (`inventory_before`/`_after`/`_mark_cents`); where they are not it is
+    None with a reason, never 0 -- an unrecorded leg and a zero one are
+    the same number and opposite facts."""
+    import de_phase4_diag_runner as _R
+    total = 0.0
+    n_valued = 0
+    inv, n_inv = 0.0, 0
+    for f in fills or []:
+        v = _R.fill_value_cents(f)
+        if v is not None:
+            total += v
+            n_valued += 1
+        b, a_, mk = (f.get("inventory_before"), f.get("inventory_after"),
+                     f.get("inventory_mark_cents"))
+        if b is not None and a_ is not None and mk is not None:
+            inv += (float(a_) - float(b)) * float(mk)
+            n_inv += 1
+    return {
+        "unit": VALUATION_UNIT,
+        "fills_leg": total,
+        "n_fills": len(fills or []),
+        "n_fills_valued": n_valued,
+        "inventory_leg": (inv if n_inv else None),
+        "n_fills_with_inventory": n_inv,
+        "why_inventory_leg_may_be_None": (
+            "BE 96's position fields are absent on these fills; an "
+            "unrecorded leg is not a zero one"),
+        "total": total,
+        "what_total_is": "the fills leg, which is what `_value_cents` "
+                         "sums and therefore exactly what D(E0) is the "
+                         "difference of",
+    }
+
+
 def _value_cents(fills: list) -> float:
     """D(E0)'s valuation: the DECLARED estimator, not a new one.
 
@@ -5814,11 +5888,51 @@ def assert_real_day_has_the_lock(day: str, observed: dict, *,
                 "pass where it did not matter")}
 
 
+def assert_ledger_anchor(params: dict, *, fixture: bool, anchor) -> dict:
+    """A REAL DAY UNDER R-765 MUST HAVE SOMEWHERE TO WRITE ITS LEDGER.
+
+    DE 133, and it is a FUNCTION so the battery can DRIVE it. Inside
+    `run_day` the call sits after the day-membership and lock guards and
+    before the day's work: refusing there costs nothing, where DE 132 put
+    it at the ledger write -- after ~90 minutes of draws -- which is the
+    shape R-610 exists to forbid. But `run_day` cannot be driven that far
+    in a battery without the heavy lock: the earlier guards refuse first,
+    correctly, and two versions of my own cell accepted THEIR refusal as
+    if it were this one. A check nobody can watch fire is not a check.
+
+    'Before the work' is not 'before every other guard': placed at the
+    top it PRE-EMPTED the day-membership refusal and a cell testing that
+    got this one instead.
+
+    A FIXTURE owes no ledger -- its rows are synthetic and there is
+    nothing to avoid re-running -- and that is a NAMED STATUS, never the
+    `null` that hid the original defect."""
+    if not params.get("user_ruled_unsealed_emission"):
+        return {"owes_a_ledger": False,
+                "why": "the params carry no R-765 ruling"}
+    if fixture:
+        return {"owes_a_ledger": False,
+                "status": "NO_LEDGER_FOR_A_FIXTURE_DAY",
+                "why": "a FIXTURE day's rows are synthetic; R-765 keeps "
+                       "the numbers of REAL runs so they need not be "
+                       "re-run"}
+    if anchor is None:
+        raise RunnerRefused(
+            "REFUSED DECISION_LEDGER_HAS_NO_ANCHOR: the params carry the "
+            "R-765 ruling and this is a REAL day, but no path was given "
+            "to write the ledger beside. The ruling is that the numbers "
+            "are KEPT; emitting the receipt with `decision_ledger: null` "
+            "is the silent form of promising one that is not there. "
+            "Refused BEFORE the day's work, not after it.")
+    return {"owes_a_ledger": True, "anchor": str(anchor)}
+
+
 def run_day(day: str, book_path, *, params: dict, module=None,
             fixture: bool = False, receipt_path=None,
             n_days_complete: int = 1,
             peak_rss_mb_budget: float | None = None,
             early_read: dict | None = None,
+            ledger_anchor=None,
             before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
@@ -5903,6 +6017,9 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     _mark("S_start")
     obs = wrapper_observed()
     assert_real_day_has_the_lock(day, obs, fixture=fixture)
+    assert_ledger_anchor(params, fixture=fixture,
+                         anchor=(ledger_anchor if ledger_anchor is not None
+                                 else receipt_path))
 
     # ---- S0: verify. Digests only. -------------------------------------
     book_path = Path(book_path)
@@ -6042,7 +6159,36 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # copied, not re-typed into a schema of mine, because a re-typed
         # copy is a second definition that drifts from the one the receipt
         # was computed from.
+        # R-782: THE ABSOLUTES, from the same replay, beside the excess.
+        _abs_base = absolute_legs(base["fills"])
+        _abs_arm = absolute_legs(arm_replay["fills"])
+        _recon = _abs_arm["total"] - _abs_base["total"]
+        if abs(_recon - observed) > 1e-9:
+            raise RunnerRefused(
+                f"REFUSED ABSOLUTES_DO_NOT_RECONCILE: arm_total "
+                f"{_abs_arm['total']!r} - baseline_total "
+                f"{_abs_base['total']!r} = {_recon!r}, and D(E0) is "
+                f"{observed!r} -- a difference of {_recon - observed!r}. "
+                f"The absolutes are read from the SAME replay the excess "
+                f"is computed from, so a mismatch means they are not the "
+                f"same numbers and neither can be published.")
+        r["absolute"] = {
+            "ruling": "R-782, the USER: 'plz record the absolute number "
+                      "as well for reference'",
+            "unit": VALUATION_UNIT,
+            "zero_cancel_baseline": _abs_base,
+            "arm": _abs_arm,
+            "reconciliation": {
+                "arm_total_minus_baseline_total": _recon,
+                "D_E0": observed,
+                "agree_to_1e_9": abs(_recon - observed) <= 1e-9,
+                "refuses_by_name_otherwise":
+                    "ABSOLUTES_DO_NOT_RECONCILE"},
+            "read_from": "the same replay that computes D(E0) -- never a "
+                         "second pass",
+        }
         _ledger765[arm] = {
+            "absolute": r["absolute"],
             "observed": observed,
             "arm_value": _value_cents(arm_replay["fills"]),
             "base_value": base_value,
@@ -6122,10 +6268,36 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # name it by digest. A day whose ledger cannot be written REFUSES --
     # the ruling is that the numbers are kept, and a receipt promising a
     # ledger that is not there would be worse than no promise.
+    # DE 132: THE ANCHOR IS A PARAMETER, and a missing ledger REFUSES.
+    # At fe76d83 this read `receipt_path is not None`, and the EARLY-READ
+    # wrapper calls `run_day` without one -- its artifact is its own
+    # family -- so the condition was false and R-765's ledger was SILENTLY
+    # SKIPPED. GO E1 and GO E2 both emitted `decision_ledger: null`. My
+    # own comment two lines below says "a receipt promising a ledger that
+    # is not there would be worse than no promise"; a null block is the
+    # silent version of exactly that, and it is why nobody noticed for two
+    # heavy runs.
+    _anchor = ledger_anchor if ledger_anchor is not None else receipt_path
     _ledger_block = None
-    if _ruling765 and _ledger765 and receipt_path is not None:
+    if _ruling765 and _ledger765:
+        if _anchor is None:
+            # A FIXTURE OWES NO LEDGER, and saying so is not the null that
+            # hid the defect: a fixture's numbers are synthetic, there is
+            # nothing to avoid re-running, and the runner's own battery
+            # drives `run_day` on fixture days with no anchor. DE 132's
+            # refusal did not make that distinction, so it fired on this
+            # module's own cells the moment the cascade pin was fresh
+            # enough for them to run -- which is where E3's composition
+            # found it.
+            _ledger_block = {
+                "status": "NO_LEDGER_FOR_A_FIXTURE_DAY",
+                "why": "a fixture's rows are synthetic; R-765 keeps the "
+                       "numbers of REAL runs so they need not be re-run",
+                "a_real_day_without_an_anchor":
+                    "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR"}
+    if _ruling765 and _ledger765 and _anchor is not None:
         import de_decision_ledger as _LED
-        _lp = Path(receipt_path).parent / _LED.ledger_name(
+        _lp = Path(_anchor).parent / _LED.ledger_name(
             day, emission_stamp())
         try:
             import harmful_stateful_policy as _HSP
@@ -10740,6 +10912,47 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"conjunct 3 while DA passed them, and neither seat ran the "
            f"other. Two implementations stay (R-235); what was missing "
            f"was anybody comparing them")
+
+    # ===== DE 131 (R-782): THE ABSOLUTES, ON HAND-COMPUTED LEGS ========
+    # RED FIRST, on fills whose legs are arithmetic a reader can do:
+    # four buys of 10 shares, level 100c, markout 100.2c -> each fill is
+    # (100.2 - 100) * 10 = 2c, so a book of four is 8c. The baseline is
+    # two such fills, 4c. The excess is therefore 4c, and the cell asserts
+    # the absolutes AND that they reconcile to it.
+    def _f782(level, markout, size, inv_b=None, inv_a=None, mark=None):
+        d = {"side": HSP_BUY_SIDE(), "px_cents": level, "size": size,
+             "mid_cents_at_markout": markout, "mid_cents_at_fill": level,
+             "slug": "s", "ref_gen": 0, "fill_ns": 1.0, "gen_start_ns": 1.0}
+        if inv_b is not None:
+            d.update({"inventory_before": inv_b, "inventory_after": inv_a,
+                      "inventory_mark_cents": mark, "inventory_unit": "sh"})
+        return d
+    _arm782 = [_f782(100.0, 100.2, 10.0, 0.0, 10.0, 100.0) for _ in range(4)]
+    _base782 = [_f782(100.0, 100.2, 10.0, 0.0, 10.0, 100.0) for _ in range(2)]
+    _A, _B = absolute_legs(_arm782), absolute_legs(_base782)
+    ok(abs(_A["fills_leg"] - 8.0) < 1e-9
+       and abs(_B["fills_leg"] - 4.0) < 1e-9
+       and abs(_A["total"] - _B["total"] - 4.0) < 1e-9
+       and _A["unit"] == VALUATION_UNIT == "cents"
+       and abs(_A["inventory_leg"] - 4000.0) < 1e-9
+       and _A["n_fills"] == 4 and _B["n_fills"] == 2,
+       f"R-782 (the USER: 'plz record the absolute number as well for "
+       f"reference'): the ARM's own day value is {_A['fills_leg']:.1f} "
+       f"{_A['unit']} over {_A['n_fills']} fills and the 0-CANCEL "
+       f"BASELINE's is {_B['fills_leg']:.1f} over {_B['n_fills']} -- both "
+       f"hand-computable as (100.2-100)*10 per fill -- and their "
+       f"difference {_A['total'] - _B['total']:.1f} IS D(E0). The receipt "
+       f"could answer 'how much better' and not 'how much'; it answers "
+       f"both now. The inventory leg is {_A['inventory_leg']:.1f} where "
+       f"BE 96's fields are present")
+    _noinv782 = absolute_legs([_f782(100.0, 100.2, 10.0)])
+    ok(_noinv782["inventory_leg"] is None
+       and _noinv782["n_fills_with_inventory"] == 0
+       and abs(_noinv782["fills_leg"] - 2.0) < 1e-9,
+       f"R-782: with BE 96's position fields ABSENT the inventory leg is "
+       f"None and says why -- never 0. An unrecorded leg and a zero one "
+       f"are the same number and opposite facts, and the fills leg "
+       f"({_noinv782['fills_leg']:.1f}) is unaffected")
 
     # ===== DE 126: THE DAY'S OWN WORDS, COMPUTED FROM ITS ARM-DAYS =====
     # RED FIRST, against the artifact that carried the defect. The landed
