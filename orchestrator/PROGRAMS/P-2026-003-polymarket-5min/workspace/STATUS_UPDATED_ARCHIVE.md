@@ -19408,3 +19408,68 @@ generation and the window went 4 → 3. Nothing rewritten.
   fifteen of my entries resolve. Window trimmed 4 -> 3, **Batch 241** archived. Q-MEM-247 filed through the
   script.)
 ```
+
+## Batch 245 — archived 2026-09-07T09:44:42Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:13:47Z (MEM ROUND 260 -- R-774 SWEPT, with every landing between my own fe76d83 bound and
+  the tip `47157d8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***FIVE THREADS I HAVE CARRIED ACROSS ROUNDS CLOSE IN ONE ENTRY -- AND NOT ONE OF THEM WAS CLOSED BY
+  MEM.*** The two `day_run` literals (round 258), the R-id existence check (round 257's record of REV's
+  residual), the shared-falsifier cell in `de_early_read` (round 255), the ledger's inventory leg on both
+  halves (round 255), and the runner's move off REV 94's cleared digest (round 259, confirmed and
+  re-gated). **They were closed by DE and BE doing the work, which is the point of carrying them where the
+  doers read them.**
+  (2) ***THE TWO LITERALS ARE COMPUTED, AND THE COMMENT NAMES THE CASE I FOUND.*** At :6201 the status is a
+  conditional over `_all_sealed` (with a third branch, `DAY_RUN_SEALED_NO_ADMISSIBLE_ARM`); at :6356
+  `"the_economics_are_SEALED": _all_sealed` -- a variable, not a literal -- and the comment at :6188-6194
+  names it exactly: *"`DAY_RUN_SEALED` while BOTH arm-days read `sealed False`"*. ***AND THE EMIT NOW
+  RECORDS WHERE THE VALUE CAME FROM***: `the_economics_are_SEALED_read_from` at :6357, so a reader of a
+  future artifact can tell a computed field from a carried one **without reading the code** -- which is
+  precisely what I could not do at round 258 and had to establish by grep.
+  (3) ***THE R-ID EXISTENCE CHECK IS IN, DRIVEN BOTH WAYS, AND ITS OWN WORDS ARE THE SUBSTANCE I
+  RECORDED.*** RED: `R-99999` -- correct SHAPE, no such entry -- refuses by name
+  `USER_RULING_ENTRY_NOT_IN_THE_REGISTER`. GREEN: `R-765`, an entry that exists, is PERMITTED "so the check
+  reads the register rather than refusing every id" -- **the positive control ADMITS**, which is rule 16's
+  requirement. And the RED cell's message reads *"an id that merely looks like one is RULE 14's AUTHORITY
+  WITH NOTHING BEHIND IT"*, against my round-257 wording *"a citation that is correct today because the
+  writer was careful is not a checked citation"*. Same defect, same conclusion, reached independently.
+  (4) ***THE LAST OF DA 122's THREE MODULES HAS ITS SHARED-FALSIFIER CELL***: `--falsify` twice in
+  `de_early_read.py`. Round 255 recorded `n_missing_the_cell` 3 -> 1 with "the one left DE's"; it is in,
+  three rounds after REV 91 §C1 routed it. ***AND THE LEDGER'S INVENTORY LEG IS CLOSED ON BOTH HALVES***:
+  `SCHEMA_VERSION = 2` with all five of BE 96's fields (`inventory_before`, `inventory_after`,
+  `inventory_unit`, `inventory_mark_cents`, `inventory_mark_source`) and
+  `DECISION_LEDGER_NO_INVENTORY_FIELDS` **refusing rather than reading zero**. At round 255 I recorded the
+  split -- producer landed, consumer unlanded -- and declined to call the item closed on half of it.
+  ***AND THE CLOSURE IS ASSERTED, NOT CLAIMED***: of the four surviving `ABSENT_UNTIL_BE_96` strings in the
+  ledger, two are prose recording the closure, one is a message, and one at :353 is an ASSERTION --
+  "ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION} says so". (Two more live in BE's own modules;
+  I did not classify them -- scope stated.)
+  (5) ***FOUR COMMITS LANDED INSIDE MY ROUND-259 WINDOW AND THE BOUND HELD AGAIN.*** R-774 (`7ce4b8a`),
+  the runbook's next-entry line, §7d (`fff0c39`, 09:09:34Z) and the checker's scope line (`47157d8`,
+  09:10:00Z) all landed before my round-259 row at 09:10:51Z, against a sweep bounded at `fe76d83` fetched
+  09:05:52Z. **The row is exactly true because it names that bound** and closes with "MEM sweeps R-774
+  onward". **Second time the bound has done this job** -- round 255 was one commit deep, this is four --
+  which is the argument for reporting a sweep as a CLOSED INTERVAL rather than as "everything up to now".
+  (6) ***AND MY HEAD IS THE TIP***: nothing has landed since my own state commit, behind 0, the range
+  empty. After a morning in which the tip moved during almost every round, **the programme is idle on one
+  review**: E2, E3, E4 and tonight's GO #8 all wait on REV 95 part A, DE 127 waits on it, BE and DA stand
+  by. A quiet tip is itself state -- nothing is being built that a later sweep must reconcile.
+  (7) ***THE RE-GATE IS NARROW BECAUSE THE DECLARATIONS HELD***: params head **v19** `dd8db7de` and design
+  head **v27** `3bcdf3c2` are UNMOVED across phase 2 while the runner moved to `ccc4108d28f07541`, so two
+  of the four things REV 94 cleared are still exactly what it cleared. DE's own warning -- GO #8 "must
+  either run at REV 94's cleared commit or be re-cleared at ccc4108d…; it cannot silently do both" -- was
+  taken, and the standing condition for tonight is recorded with it: **GO #8 runs from wt-de at the commit
+  REV 95 clears, FROZEN from E2 onward**, which is R-747's rule applied forward instead of after the fact.
+  ***THE PHASE4 SUITE IS HELD AND VISIBLY SO***: clean at `git status`, last commit `c707eb8` (BE 96), so
+  nothing of DE 125's work is landed. ***AND DE CORRECTED ITS OWN COUNT BEFORE ANYONE CHECKED IT*** -- an
+  AST scan said 209 call sites, the real figure is 249, and "landing the constant at 212 on that wrong
+  count would have been exactly the move R-771 forbids": round 257's rule, applied by the seat to its own
+  arithmetic.
+  Counts: flags 1,877 -> **1,892**; provenance 1,422 -> **1,437**; tasks 19; **1,149 CHECKED /
+  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SIXTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start for the second
+  round running, because all fifteen entries resolve. Window trimmed 4 -> 3, **Batch 242** archived.
+  Q-MEM-248 filed through the script.)
+```

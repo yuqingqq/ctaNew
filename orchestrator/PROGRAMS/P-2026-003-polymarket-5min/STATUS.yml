@@ -67,6 +67,62 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:44:42Z (MEM ROUND 263 -- R-777 SWEPT, with every landing between my own b4f83bf bound and
+  the tip `52eded1`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***TWO OF MY OWN ROUND-262 READINGS ARE SUPERSEDED HERE, AND BOTH ARE THE SAME CLASS: I READ WHAT THE
+  CODE SAYS ABOUT ITSELF AND REPORTED IT AS THE PROPERTY.***
+  ***§A5 -- the cell is fixed, the FILE is not.*** I read the assertion at :739 and its comment at :733,
+  and both ARE fixed: the cell asserts `bool(_st["read"]) or bool(_st["unread"])`, whichever terminal state
+  exists. REV 96 read on and DROVE it; I confirmed the geometry at the file: the guard `if
+  _st["next_unread"] is None:` opens at **:745**, handles the terminal case with its own assertion, and
+  **closes at :757** -- then `reh = rehearse(_st["next_unread"])` runs at **:766, outside it**, and **:767**
+  indexes `reh["preconditions"]["digest_comparison"]`. After E4 that is a **KeyError that ends the
+  battery**, not a red cell -- the shape DE 125 already met once (round 257's NameError) and rule 17's
+  "a suite that STOPS is neither green nor red for what follows". **The guard and the hazard are in the same
+  function, twenty lines apart, and the guard does not reach it.**
+  ***AND THE LESSON AGAINST MYSELF***: that cell's comment NAMES the failure it prevents, and at round 262
+  I quoted the comment as evidence the failure was prevented -- I even praised the property, "the reason
+  lives where the code is". **The comment told me the story and I took the story for the property.** A cell
+  that explains itself is easier to trust and no more likely to be complete.
+  (2) ***THE PHASE4 COUNT -- I called it "asserted against a DERIVATION"; it is asserted against the
+  OBSERVATION.*** At :6319 the assertion is `n[0] + 1 + _n_conditional == EXPECTED_CHECKS`, and **`n[0]` is
+  the count of checks that RAN**. What that establishes is real and worth keeping: the run reached every
+  declared check, so a cell that stops being reachable is caught, and the four conditional sites are named
+  individually rather than as a bare number. **What it does not establish is the constant itself** -- add a
+  check, bump `EXPECTED_CHECKS` by one, and it still passes, **which is exactly the move R-771 forbids**.
+  The guard against that is the AST derivation (REV's 176 + 33 = 209 call sites) and **it is a comment**:
+  the module's AST machinery at :634-:759 serves the declared-fit digests, not the call-site count. So 216
+  has two decompositions, one typed and one executed, and only the second runs.
+  (3) ***REV DROVE BOTH AND I HAD ONLY READ THEM.*** REV 96's filing says "and I drove it". I do not
+  conclude that MEM should run other seats' batteries -- that separation is deliberate -- but I do conclude
+  that **MEM's readings of code are evidence about TEXT, not about BEHAVIOUR**, and my flags should say
+  which they are. **From here a flag about code says READ AT THE FILE unless something ran.**
+  (4) ***CLEARED IS NOT ISSUED.*** REV 96: GO E4 MAY PROCEED on the terminal-state cell, no holds -- and
+  the coordinator's flag is that **DE 128 lands the fuller fix before E4 is issued**. A review's verdict
+  says the thing may happen; a GO says it does; between them sits a dispatch that can wait for more. Both
+  are carried so no reader takes "E4 cleared" for "E4 imminent". ***AND THE DEFECT'S KIND IS NAMED***: it
+  fires only AFTER E4 finishes, so the run completes and its artifact is written -- what is lost is the
+  battery's tail, not the day's work. A defect that fires after the value is produced is a different risk
+  from one that fires before, and naming which prevents both over- and under-reaction.
+  (5) ***UNCHANGED, MEASURED RATHER THAN ASSUMED***: params head **v19** `dd8db7de` and design head **v27**
+  `3bcdf3c2` for the third round; `params_v20` and `design_v28` still absent; the shared tree still holds
+  `de_phase4_diag_runner.py` at a digest v19's cascade does not name (**nine of ten**) while `fe76d83`
+  matches **ten of ten**. The freeze, the held work and the by-design red are all exactly where round 262
+  left them.
+  (6) **RELAYED, MARKED SO**: REV 96 §5 records a **freeze-lift checklist while the freeze still holds** --
+  the order in which v20, v28 and the re-point land once GO #8's receipt exists. Carried because **a
+  checklist written before the moment it governs is the only kind not written under pressure**: the lift
+  will happen around 01:30Z with a day run just finished, which is exactly when an unwritten order gets
+  improvised.
+  (7) **E2 is still running at 09:43:12Z**, twenty-seven minutes in, expected exit ≈ 10:55Z, `MemoryPeak`
+  3,119,230,976 -- **the identical value at all three of my reads** (09:18:07Z, 09:28:06Z, 09:43:12Z). The
+  high-water mark was set in the first two and a half minutes and twenty-five minutes have not approached it.
+  Counts: flags 1,922 -> **1,937**; provenance 1,467 -> **1,482**; tasks 19; **1,193 CHECKED /
+  284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-NINTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing; TWO round-262 flags
+  superseded in band, nothing removed. ORPHAN census **0**; the audit exits **1** on **173**
+  missing-artifact findings, 172 at my round start plus ONE of mine, the running unit. Window trimmed
+  4 -> 3, **Batch 245** archived. Q-MEM-251 filed through the script.)
   2026-09-07T09:29:07Z (MEM ROUND 262 -- R-776 SWEPT, with every landing between my own 53811a4 bound and
   the tip `b4f83bf`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE SHARED TREE'S RUNNER BATTERY READS RED BY DESIGN, AND I MEASURED IT ON BOTH SIDES.*** v19
@@ -181,66 +237,6 @@ updated: >-
   audit exits **1** on **171** missing-artifact findings, 168 at my round start plus THREE of mine -- all
   three readings of the RUNNING unit, which is not a file. Window trimmed 4 -> 3, **Batch 243** archived.
   Q-MEM-249 filed through the script.)
-  2026-09-07T09:13:47Z (MEM ROUND 260 -- R-774 SWEPT, with every landing between my own fe76d83 bound and
-  the tip `47157d8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***FIVE THREADS I HAVE CARRIED ACROSS ROUNDS CLOSE IN ONE ENTRY -- AND NOT ONE OF THEM WAS CLOSED BY
-  MEM.*** The two `day_run` literals (round 258), the R-id existence check (round 257's record of REV's
-  residual), the shared-falsifier cell in `de_early_read` (round 255), the ledger's inventory leg on both
-  halves (round 255), and the runner's move off REV 94's cleared digest (round 259, confirmed and
-  re-gated). **They were closed by DE and BE doing the work, which is the point of carrying them where the
-  doers read them.**
-  (2) ***THE TWO LITERALS ARE COMPUTED, AND THE COMMENT NAMES THE CASE I FOUND.*** At :6201 the status is a
-  conditional over `_all_sealed` (with a third branch, `DAY_RUN_SEALED_NO_ADMISSIBLE_ARM`); at :6356
-  `"the_economics_are_SEALED": _all_sealed` -- a variable, not a literal -- and the comment at :6188-6194
-  names it exactly: *"`DAY_RUN_SEALED` while BOTH arm-days read `sealed False`"*. ***AND THE EMIT NOW
-  RECORDS WHERE THE VALUE CAME FROM***: `the_economics_are_SEALED_read_from` at :6357, so a reader of a
-  future artifact can tell a computed field from a carried one **without reading the code** -- which is
-  precisely what I could not do at round 258 and had to establish by grep.
-  (3) ***THE R-ID EXISTENCE CHECK IS IN, DRIVEN BOTH WAYS, AND ITS OWN WORDS ARE THE SUBSTANCE I
-  RECORDED.*** RED: `R-99999` -- correct SHAPE, no such entry -- refuses by name
-  `USER_RULING_ENTRY_NOT_IN_THE_REGISTER`. GREEN: `R-765`, an entry that exists, is PERMITTED "so the check
-  reads the register rather than refusing every id" -- **the positive control ADMITS**, which is rule 16's
-  requirement. And the RED cell's message reads *"an id that merely looks like one is RULE 14's AUTHORITY
-  WITH NOTHING BEHIND IT"*, against my round-257 wording *"a citation that is correct today because the
-  writer was careful is not a checked citation"*. Same defect, same conclusion, reached independently.
-  (4) ***THE LAST OF DA 122's THREE MODULES HAS ITS SHARED-FALSIFIER CELL***: `--falsify` twice in
-  `de_early_read.py`. Round 255 recorded `n_missing_the_cell` 3 -> 1 with "the one left DE's"; it is in,
-  three rounds after REV 91 §C1 routed it. ***AND THE LEDGER'S INVENTORY LEG IS CLOSED ON BOTH HALVES***:
-  `SCHEMA_VERSION = 2` with all five of BE 96's fields (`inventory_before`, `inventory_after`,
-  `inventory_unit`, `inventory_mark_cents`, `inventory_mark_source`) and
-  `DECISION_LEDGER_NO_INVENTORY_FIELDS` **refusing rather than reading zero**. At round 255 I recorded the
-  split -- producer landed, consumer unlanded -- and declined to call the item closed on half of it.
-  ***AND THE CLOSURE IS ASSERTED, NOT CLAIMED***: of the four surviving `ABSENT_UNTIL_BE_96` strings in the
-  ledger, two are prose recording the closure, one is a message, and one at :353 is an ASSERTION --
-  "ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION} says so". (Two more live in BE's own modules;
-  I did not classify them -- scope stated.)
-  (5) ***FOUR COMMITS LANDED INSIDE MY ROUND-259 WINDOW AND THE BOUND HELD AGAIN.*** R-774 (`7ce4b8a`),
-  the runbook's next-entry line, §7d (`fff0c39`, 09:09:34Z) and the checker's scope line (`47157d8`,
-  09:10:00Z) all landed before my round-259 row at 09:10:51Z, against a sweep bounded at `fe76d83` fetched
-  09:05:52Z. **The row is exactly true because it names that bound** and closes with "MEM sweeps R-774
-  onward". **Second time the bound has done this job** -- round 255 was one commit deep, this is four --
-  which is the argument for reporting a sweep as a CLOSED INTERVAL rather than as "everything up to now".
-  (6) ***AND MY HEAD IS THE TIP***: nothing has landed since my own state commit, behind 0, the range
-  empty. After a morning in which the tip moved during almost every round, **the programme is idle on one
-  review**: E2, E3, E4 and tonight's GO #8 all wait on REV 95 part A, DE 127 waits on it, BE and DA stand
-  by. A quiet tip is itself state -- nothing is being built that a later sweep must reconcile.
-  (7) ***THE RE-GATE IS NARROW BECAUSE THE DECLARATIONS HELD***: params head **v19** `dd8db7de` and design
-  head **v27** `3bcdf3c2` are UNMOVED across phase 2 while the runner moved to `ccc4108d28f07541`, so two
-  of the four things REV 94 cleared are still exactly what it cleared. DE's own warning -- GO #8 "must
-  either run at REV 94's cleared commit or be re-cleared at ccc4108d…; it cannot silently do both" -- was
-  taken, and the standing condition for tonight is recorded with it: **GO #8 runs from wt-de at the commit
-  REV 95 clears, FROZEN from E2 onward**, which is R-747's rule applied forward instead of after the fact.
-  ***THE PHASE4 SUITE IS HELD AND VISIBLY SO***: clean at `git status`, last commit `c707eb8` (BE 96), so
-  nothing of DE 125's work is landed. ***AND DE CORRECTED ITS OWN COUNT BEFORE ANYONE CHECKED IT*** -- an
-  AST scan said 209 call sites, the real figure is 249, and "landing the constant at 212 on that wrong
-  count would have been exactly the move R-771 forbids": round 257's rule, applied by the seat to its own
-  arithmetic.
-  Counts: flags 1,877 -> **1,892**; provenance 1,422 -> **1,437**; tasks 19; **1,149 CHECKED /
-  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SIXTH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start for the second
-  round running, because all fifteen entries resolve. Window trimmed 4 -> 3, **Batch 242** archived.
-  Q-MEM-248 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -412,6 +408,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 263, R-777 swept (and every landing between b4f83bf and 52eded1) ---
+  MY_ROUND_262_A5_READING_IS_SUPERSEDED_THE_CELL_IS_FIXED_THE_FILE_IS_NOT: REV-DROVE-WHAT-I-ONLY-READ
+  THE_UNCONDITIONAL_REHEARSE_IS_TWENTY_LINES_PAST_THE_GUARD: 766-OUTSIDE-THE-IF-AT-745
+  and_the_NEXT_LINE_INDEXES_THE_RESULT_SO_IT_IS_A_KEYERROR_NOT_A_RED_CELL: PRECONDITIONS-DIGEST-COMPARISON
+  A_CELL_THAT_EXPLAINS_ITSELF_IS_NOT_THEREBY_CORRECT: THE-COMMENT-TOLD-ME-THE-STORY
+  MY_ROUND_262_PHASE4_READING_IS_SUPERSEDED_TOO: ASSERTED-AGAINST-THE-OBSERVATION
+  THE_RUN_TIME_CHECK_COMPARES_THE_CONSTANT_TO_WHAT_RAN: N-RUN-PLUS-FOUR-EQUALS-216
+  SO_ADDING_A_CHECK_AND_BUMPING_THE_CONSTANT_TOGETHER_PASSES: THE-MOVE-R-771-FORBIDS
+  THE_209_EQUALS_176_PLUS_33_DERIVATION_IS_TYPED_NOT_ASSERTED: THE-AST-MACHINERY-SERVES-ANOTHER-PURPOSE
+  TWO_OF_MY_OWN_READINGS_CORRECTED_IN_ONE_ENTRY_AND_BOTH_THE_SAME_CLASS: I-READ-WHAT-THE-CODE-SAYS-OF-ITSELF
+  REV_DROVE_BOTH_AND_I_HAD_ONLY_READ_THEM: THE-DIFFERENCE-BETWEEN-A-READ-AND-A-DRIVE
+  GO_E4_IS_CLEARED_ON_THE_CELL_BUT_DE_128_LANDS_FIRST: CLEARED-IS-NOT-ISSUED
+  THE_A5_DEFECT_IS_NOT_A_LAUNCH_BLOCKER_AND_REV_SAYS_WHY: THE-BATTERY-ABORTS-AFTER-E4-FINISHES
+  THE_FREEZE_AND_THE_BY_DESIGN_RED_ARE_UNCHANGED: V19-V27-NINE-OF-TEN
+  REVs_FREEZE_LIFT_CHECKLIST_IS_RECORDED_BEFORE_THE_LIFT: WRITTEN-WHILE-THE-FREEZE-HOLDS
+  E2_IS_STILL_RUNNING_AT_TWENTY_SEVEN_MINUTES: PEAK-UNMOVED-ACROSS-THREE-READS
   # --- MEM round 262, R-776 swept (and every landing between 53811a4 and b4f83bf) ---
   THE_BY_DESIGN_RED_IS_EXACTLY_ONE_MODULE_AND_I_MEASURED_BOTH_SIDES: SHARED-9-OF-10-FE76D83-10-OF-10
   THE_PINNED_DIGEST_MATCHES_AT_fe76d83_AND_DIFFERS_IN_THE_SHARED_TREE: EE4034C1-VS-CE9CC466
@@ -419,10 +431,10 @@ flags:
   THE_RED_IS_TIME_BOUND_AND_ITS_RELEASE_IS_A_RECEIPT_NOT_A_CLOCK: LIFTS-AFTER-GO-8S-RECEIPT
   params_v20_AND_design_v28_ARE_COMPOSED_AND_HELD: ABSENT-FROM-BOTH-FAMILIES
   THE_TWO_FROZEN_HEADS_ARE_STILL_v19_AND_v27: THE-FREEZE-HOLDS-AT-MY-READ
-  THE_PHASE4_COUNT_IS_DERIVED_AND_THE_CELL_SAYS_SO_IN_ITS_MESSAGE: N-RUN-PLUS-N-CONDITIONAL
+  THE_PHASE4_COUNT_IS_DERIVED_AND_THE_CELL_SAYS_SO_IN_ITS_MESSAGE: SUPERSEDED-ASSERTED-AGAINST-THE-OBSERVATION-R-777
   and_THE_THREE_PHASE4_NUMBERS_NAME_THREE_POPULATIONS: 209-WITHDRAWN-216-IN-LOOPS-249-CALL-SITES
   I_DID_NOT_RECONCILE_249_WITH_216_AND_SAY_SO: DIFFERENT-DENOMINATORS-SCOPE-STATED
-  REV_95s_A5_CELL_IS_FIXED_BEFORE_E4_NOT_AFTER: ASSERTS-ON-WHICHEVER-TERMINAL-STATE-EXISTS
+  REV_95s_A5_CELL_IS_FIXED_BEFORE_E4_NOT_AFTER: SUPERSEDED-THE-CELL-IS-THE-FILE-IS-NOT-R-777
   and_ITS_COMMENT_NAMES_THE_MOMENT_IT_WOULD_HAVE_FIRED: WHEN-E4-READS-THE-LAST-DAY
   E2_IS_STILL_RUNNING_AND_ITS_PEAK_HAS_NOT_MOVED_SINCE_MY_LAST_ROUND: 3119230976-AT-BOTH-READS
   THE_RUNS_ARE_UNAFFECTED_BECAUSE_THEY_READ_THE_FROZEN_COMMIT: TEN-OF-TEN-AT-FE76D83
@@ -26327,6 +26339,156 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 263, 2026-09-07T09:44:42Z (the clock read by which every measurement below was complete) ---
+  MY_ROUND_262_A5_READING_IS_SUPERSEDED_THE_CELL_IS_FIXED_THE_FILE_IS_NOT:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      at round 262 I wrote "REV 95 §A5's cell is fixed before E4, not after" after reading the assertion at
+      :739 and its comment at :733. BOTH ARE FIXED and that reading stands for what it examined: the cell
+      asserts `bool(_st["read"]) or bool(_st["unread"])` -- whichever terminal state exists. BUT REV 96
+      read on and found the FILE is not fixed, and I confirmed it: the `if _st["next_unread"] is None:`
+      block ends at :757 and `reh = rehearse(_st["next_unread"])` runs at :766 OUTSIDE IT. After E4,
+      `next_unread` is None, that call runs anyway, and :767 indexes `reh["preconditions"]
+      ["digest_comparison"]`. MY FLAG IS SUPERSEDED: the cell is fixed, the terminal path is not.
+  THE_UNCONDITIONAL_REHEARSE_IS_TWENTY_LINES_PAST_THE_GUARD:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      the geometry, read at the file: the guard opens at :745 (`if _st["next_unread"] is None:`), handles
+      the terminal case with its own assertion (every read day must rehearse NOT_READY /
+      EARLY_READ_ALREADY_EMITTED), sets `_st_conditional_note` and CLOSES at :757 with the `else`. Nine
+      lines later, at :766, the next-unread rehearsal runs unconditionally. THE GUARD AND THE HAZARD ARE IN
+      THE SAME FUNCTION, TWENTY LINES APART, AND THE GUARD DOES NOT REACH IT.
+  and_the_NEXT_LINE_INDEXES_THE_RESULT_SO_IT_IS_A_KEYERROR_NOT_A_RED_CELL:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      :767 is `dc = reh["preconditions"]["digest_comparison"]`, so the failure after E4 is not a cell
+      reporting red -- it is a KeyError that ENDS THE BATTERY, and every cell after :767 goes unrun. That is
+      the shape DE 125 already met once (a NameError that "ended the suite early for everyone", round 257)
+      and the shape rule 17 names: a suite that STOPS is neither green nor red for what follows. REV rates
+      it not a launch blocker because it fires only after E4 has finished its work; the artifact is written
+      before the battery reaches this line.
+  A_CELL_THAT_EXPLAINS_ITSELF_IS_NOT_THEREBY_CORRECT:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      the lesson I take, stated against myself: the cell's comment NAMES the failure it prevents ("the
+      moment E4 reads the last day and `next_unread` becomes None"), and at round 262 I quoted that comment
+      as evidence the failure was prevented -- I even praised the property, "the reason lives where the code
+      is". THE COMMENT TOLD ME THE STORY AND I TOOK THE STORY FOR THE PROPERTY. A cell that explains itself
+      is easier to trust and no more likely to be complete; the explanation is a claim like any other.
+  MY_ROUND_262_PHASE4_READING_IS_SUPERSEDED_TOO:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      at round 262 I wrote "the constant is asserted against a DERIVATION rather than edited to match an
+      observation". Read again at :6319, the assertion is `n[0] + 1 + _n_conditional == EXPECTED_CHECKS` --
+      `n[0]` IS THE COUNT OF CHECKS THAT RAN. So the constant is compared to THE OBSERVATION plus a named
+      set of four, which is drift detection, not derivation. My characterisation was too generous and is
+      superseded here.
+  THE_RUN_TIME_CHECK_COMPARES_THE_CONSTANT_TO_WHAT_RAN:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      what the assertion DOES establish, stated fairly: that the run reached every declared check, so a
+      cell that stops being reachable is caught. `EXPECTED_CHECKS = 216` and `_n_conditional = 4` are both
+      in the file; the four conditional sites are named individually at the assertion, which is better than
+      a bare number. What it does NOT establish is the constant itself.
+  SO_ADDING_A_CHECK_AND_BUMPING_THE_CONSTANT_TOGETHER_PASSES:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      the consequence, which is why REV routed it: add a check, bump `EXPECTED_CHECKS` by one, and the
+      assertion still passes -- THE CONSTANT HAS BEEN ADJUSTED TO THE OBSERVATION, which is precisely the
+      move R-771 forbids and the reason the item exists at all. The guard against that is the AST
+      derivation, and it is a comment.
+  THE_209_EQUALS_176_PLUS_33_DERIVATION_IS_TYPED_NOT_ASSERTED:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      the comment at :77-79 reads "R-771: DERIVED -- 209 call sites + 7 executions from sites inside loops =
+      216 = n_run (212) + n_conditional (4)". The 209 half is REV's AST property (176 + 33) and NOTHING
+      ASSERTS IT AT RUN TIME: the module does contain AST machinery (`_ast_sha`, `_fn_asts` at :634-:759)
+      but it serves the declared-fit digests, not the call-site count. So 216 has TWO decompositions -- one
+      typed in a comment, one asserted against the run -- and only the second executes.
+  TWO_OF_MY_OWN_READINGS_CORRECTED_IN_ONE_ENTRY_AND_BOTH_THE_SAME_CLASS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      both round-262 flags corrected here have one shape: I READ WHAT THE CODE SAYS ABOUT ITSELF -- a
+      comment naming a prevented failure, a message containing the word DERIVED -- AND REPORTED IT AS THE
+      PROPERTY. Neither reading was careless about its own scope (each names the line it examined) and
+      neither was sufficient. The class is worth more than the two instances: THE MORE ARTICULATE A CELL IS
+      ABOUT ITS OWN PURPOSE, THE MORE READILY ITS PURPOSE IS MISTAKEN FOR ITS BEHAVIOUR.
+  REV_DROVE_BOTH_AND_I_HAD_ONLY_READ_THEM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      REV 96's filing says of §A5 "and I drove it". That is the whole difference between the two readings:
+      MEM read the file and REV executed the terminal state. I do not conclude that MEM should drive
+      batteries -- running another seat's suite is not MEM's act and the separation is deliberate -- but I
+      do conclude that MEM'S READINGS OF CODE ARE EVIDENCE ABOUT TEXT AND NOT ABOUT BEHAVIOUR, and my flags
+      should say which they are. From here a flag about code says READ AT THE FILE unless something ran.
+  GO_E4_IS_CLEARED_ON_THE_CELL_BUT_DE_128_LANDS_FIRST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      REV 96: GO E4 MAY PROCEED on the terminal-state cell, no holds -- AND the coordinator's flag is that
+      DE 128 lands the fuller fix BEFORE E4 IS ISSUED. CLEARED IS NOT ISSUED: a review's verdict says the
+      thing may happen, a GO says it does, and between them sits a dispatch that can wait for more. The
+      state files carry both so a reader does not read "E4 cleared" as "E4 imminent".
+  THE_A5_DEFECT_IS_NOT_A_LAUNCH_BLOCKER_AND_REV_SAYS_WHY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      REV's reasoning, recorded because the distinction is the useful part: the battery aborts AFTER E4
+      FINISHES, so the run completes and its artifact is written; what is lost is the battery's own tail,
+      not the day's work. A defect that fires after the value is produced is a different risk from one that
+      fires before, and naming which kind it is prevents both over- and under-reaction.
+  THE_FREEZE_AND_THE_BY_DESIGN_RED_ARE_UNCHANGED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      params head v19 dd8db7ded9e6ed97 and design head v27 3bcdf3c234cb7d4e -- unchanged for the third
+      round; params_v20 and design_v28 still absent; the shared tree still holds
+      de_phase4_diag_runner.py at a digest v19's cascade does not name (nine of ten), while fe76d83 matches
+      ten of ten. THE FREEZE, THE HELD WORK AND THE BY-DESIGN RED ARE ALL EXACTLY WHERE ROUND 262 LEFT
+      THEM, which is what "unchanged" should mean when a state file says it.
+  REVs_FREEZE_LIFT_CHECKLIST_IS_RECORDED_BEFORE_THE_LIFT:
+    prov: RELAYED
+    from: R-777 / REV 96 §5
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      REV 96 §5 records a FREEZE-LIFT CHECKLIST while the freeze still holds -- the order in which v20, v28
+      and the re-point land once GO #8's receipt exists. RELAYED (it is REV's filing and its content is
+      REV's to state), and carried because A CHECKLIST WRITTEN BEFORE THE MOMENT IT GOVERNS IS THE ONLY
+      KIND THAT IS NOT WRITTEN UNDER PRESSURE: the lift will happen around 01:30Z with a day run just
+      finished, which is exactly when an unwritten order gets improvised.
+  E2_IS_STILL_RUNNING_AT_TWENTY_SEVEN_MINUTES:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260904.service (a unit, not a file)
+    as_of: 2026-09-07T09:44:42Z
+    said: >-
+      SubState running at 09:43:12Z with MemoryPeak 3,119,230,976 -- THE IDENTICAL VALUE AT ALL THREE OF MY
+      READS (09:18:07Z, 09:28:06Z, 09:43:12Z). Twenty-seven minutes in against an expected exit about
+      10:55Z. The high-water mark was set in the first two and a half minutes and twenty-five minutes have
+      not approached it.
   # --- MEM round 262, 2026-09-07T09:29:07Z (the clock read by which every measurement below was complete) ---
   THE_BY_DESIGN_RED_IS_EXACTLY_ONE_MODULE_AND_I_MEASURED_BOTH_SIDES:
     prov: CHECKED
@@ -26393,6 +26555,11 @@ flag_provenance:
       :6318 and the module comment at :78 reading "loops = 216 = n_run (212) + n_conditional (4). Never set
       to what a run [reports]". SO THE CONSTANT IS ASSERTED AGAINST A DERIVATION RATHER THAN EDITED TO MATCH
       AN OBSERVATION -- round 257's rule, now implemented in the suite that produced it.
+      SUPERSEDED 2026-09-07T09:44:42Z (MEM 263): the assertion at :6319 is `n[0] + 1 + _n_conditional ==
+      EXPECTED_CHECKS` and `n[0]` IS THE COUNT OF CHECKS THAT RAN, so the constant is compared to the
+      OBSERVATION plus a named four -- drift detection, not derivation. Adding a check and bumping the
+      constant together still passes, which is the move R-771 forbids; the AST derivation (176 + 33 = 209)
+      remains a comment. What I read is what the message says; what it does is the line above.
   and_THE_THREE_PHASE4_NUMBERS_NAME_THREE_POPULATIONS:
     prov: CHECKED
     artifact: live/pm_research/de_phase4_diag_runner.py
@@ -26422,6 +26589,11 @@ flag_provenance:
       assertion at :741 reports `read`, `unread` and `next_unread` -- so the cell no longer requires a next
       unread day to exist. Fixed BEFORE E4 rather than after it fired, which is what REV's dated trigger was
       for: E2 is running now, E3 follows, and the cell would have gone red the moment E4 read the last day.
+      SUPERSEDED 2026-09-07T09:44:42Z (MEM 263), nothing above withdrawn: the CELL is fixed exactly as read,
+      but the FILE is not. REV 96 drove the terminal state and found `rehearse(_st["next_unread"])` at :766
+      OUTSIDE the `if _st["next_unread"] is None:` guard that closes at :757, with :767 indexing the result --
+      a KeyError that ends the battery after E4, not a red cell. I confirmed the geometry at the file. My
+      reading was of the assertion and its comment; the property needed the twenty lines after it.
   and_ITS_COMMENT_NAMES_THE_MOMENT_IT_WOULD_HAVE_FIRED:
     prov: CHECKED
     artifact: live/pm_research/de_early_read.py

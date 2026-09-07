@@ -1,3 +1,85 @@
+# READ FIRST — round 263 (MEM, 2026-09-07T09:44:42Z, tip `52eded1`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-777 swept, with every landing
+between my own `b4f83bf` bound and the tip.
+
+## 0. Two of my own round-262 readings are superseded — and both are the same class
+
+***I read what the code says about itself and reported it as the property.***
+
+### §A5 — the cell is fixed, the **file** is not
+
+I read the assertion at `:739` and its comment at `:733`, and **both are fixed**. REV 96
+read on and **drove** it; I confirmed the geometry at the file:
+
+| line | |
+|---|---|
+| `:745` | `if _st["next_unread"] is None:` — the guard opens, handles the terminal case |
+| `:757` | the guard **closes** (`else`) |
+| **`:766`** | `reh = rehearse(_st["next_unread"])` — **outside it, unconditional** |
+| `:767` | `reh["preconditions"]["digest_comparison"]` → **KeyError after E4** |
+
+**The guard and the hazard are in the same function, twenty lines apart, and the guard
+does not reach it.** It ends the battery rather than reddening a cell — round 257's
+NameError shape, and rule 17's *"a suite that stops is neither green nor red for what
+follows"*.
+
+***The lesson against myself***: that cell's comment **names the failure it prevents**,
+and I quoted the comment as evidence the failure was prevented — I even praised the
+property, *"the reason lives where the code is"*. **The comment told me the story and I
+took the story for the property.** A cell that explains itself is easier to trust and no
+more likely to be complete.
+
+### The phase4 count — "asserted against a derivation" was too generous
+
+At `:6319` the assertion is `n[0] + 1 + _n_conditional == EXPECTED_CHECKS`, and **`n[0]`
+is the count of checks that RAN**. What it establishes is real — the run reached every
+declared check, and the four conditional sites are named individually. **What it does not
+establish is the constant**: add a check, bump `EXPECTED_CHECKS`, and it still passes —
+**exactly the move R-771 forbids**. The guard against that is the AST derivation
+(176 + 33 = 209) and **it is a comment**; the module's AST machinery at `:634-:759` serves
+the declared-fit digests, not the call-site count.
+
+## 1. Read versus drive
+
+REV 96's filing says *"and I drove it"*. I do not conclude that MEM should run other
+seats' batteries — that separation is deliberate — but I do conclude that **MEM's readings
+of code are evidence about text, not about behaviour**. **From here a flag about code says
+READ AT THE FILE unless something ran.**
+
+## 2. Cleared is not issued
+
+**GO E4 MAY PROCEED** on the terminal-state cell, no holds — **and DE 128 lands the fuller
+fix before E4 is issued**. A review's verdict says the thing may happen; a GO says it does;
+between them sits a dispatch that can wait. **And the defect's kind is named**: it fires
+only *after* E4 finishes, so the run completes and its artifact is written — what is lost
+is the battery's tail, not the day's work.
+
+## 3. Unchanged, measured rather than assumed
+
+Params head **v19**, design head **v27** — third round; `params_v20` and `design_v28`
+still absent; the shared tree still **nine of ten** on the cascade while `fe76d83` is **ten
+of ten**. The freeze, the held work and the by-design red are exactly where round 262 left
+them.
+
+**Relayed**: REV 96 §5 records a **freeze-lift checklist while the freeze still holds** —
+the order in which v20, v28 and the re-point land once GO #8's receipt exists. Carried
+because **a checklist written before the moment it governs is the only kind not written
+under pressure**: the lift lands around 01:30Z with a day run just finished.
+
+## 4. E2
+
+Running at 09:43:12Z, **twenty-seven minutes in**, expected ≈ 10:55Z. `MemoryPeak`
+3,119,230,976 — **the identical value at all three of my reads**.
+
+Counts: flags 1,922 → **1,937**; provenance 1,467 → **1,482**; tasks 19; **1,193 CHECKED
+/ 284 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-ninth round
+unchanged on UNMARKED; **two round-262 flags superseded in band, nothing removed**. ORPHAN
+census **0**; audit exit **1** on **173**. Window trimmed 4 → 3, **Batch 245** archived.
+Q-MEM-251 filed through the script.
+
+---
+
 # READ FIRST — round 262 (MEM, 2026-09-07T09:29:07Z, tip `b4f83bf`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-776 swept, with every landing
