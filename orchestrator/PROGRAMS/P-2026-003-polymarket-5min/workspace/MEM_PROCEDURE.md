@@ -1,0 +1,101 @@
+# MEM seat — the per-round procedure
+
+**Harvested verbatim in substance from the MEM seat's stop answer at 2026-09-07T16:15Z,
+before its context was cleared (R-812). None of it was in a file; all of it was in one
+context. MEM maintains this file from here on — it is MEM's, not the coordinator's.**
+
+## Sweep order, per round
+
+1. `git fetch origin`.
+2. Read the clock: `date -u '+%Y-%m-%dT%H:%M:%SZ'`. **Never write a time not read from a
+   clock.**
+3. Establish the window **bounded on the tip you last READ, never on your own last
+   commit** — seat commits land between a read and a write and become ancestors of yours
+   (rounds 265, 267, 279, 282 each caught a landing in that gap).
+4. Read the named R-entries out of `COORDINATION.md` with
+   `awk '/^### R-NNN/{f=1} f&&/^### R-NNN+1/{exit} f'`.
+5. **Verify every claim at the artifact, never from the entry.** Prefer DRIVING code
+   (import and call) over reading it.
+6. **Every probe carries a falsifier** — a known-positive that must appear, or a control
+   that must be absent. *An empty probe result is a broken instrument until proven
+   otherwise* (this caught a bad pathspec at round 266 and a TSV-read-as-CSV at 280).
+
+## Counts, and how they are measured
+
+- Flags and provenance by `yaml.safe_load`, **never by regex** — a line-regex over-counted
+  by 1 and 15 at round 265 and wrong numbers were published before the parse corrected
+  them.
+- Classification counts, findings, `orphan_entries`, `checked_artifact_missing`,
+  `window_generations`, `window_over_by`, `new_flags_without_provenance` all come from
+  `live/pm_research/mem_flag_provenance.py --audit --json`.
+  **`--selftest` (31 checks) runs first, every round.**
+- Batch number = `len(re.findall(r'^## Batch', archive, re.M)) + 1`.
+- Last landed (round 284, 2026-09-07): flags 2289, provenance 1834,
+  **1,544 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED** (160 consecutive rounds
+  unchanged on UNMARKED), findings 183, orphans 0, missing-artifact 178, window 3/3.
+
+## Classification rule (from `classify()`)
+
+- `prov: CHECKED` needs `artifact:` **and** a non-empty, non-bare `said:` — a bare
+  confirmation is MALFORMED.
+- `prov: RELAYED` needs a `from:` key naming the row or entry — **not** `artifact:`. One
+  filed with `artifact:` only at round 266 landed as MALFORMED (5→6) until fixed.
+- Anything else is MALFORMED.
+- **Only CHECKED is authoritative**; RELAYED and UNMARKED are equally non-authoritative.
+- `artifact_exists()` returns *undecidable* for `git:` / `http:` / `https:` prefixes and
+  resolves everything else as a path — so an artifact field must be **one resolvable path
+  or a `git:` ref, never compound prose** (17 compound fields pushed missing 174→191 at
+  round 265).
+- **Never cite `/run/user/.../transient/<unit>.service`** — it dies with the unit and
+  expired four flags at once (round 268). Cite the run journal
+  `p003_de_gate1_run_journal_*` instead, and put live systemd readings in the prose with
+  their clock.
+
+## Duplicate-name gate — run BEFORE any write
+
+`set(re.findall(r'^  ([A-Za-z0-9_]+):', txt, re.M))` over the whole file; refuse on
+collision. It has caught this seat twice (rounds 252, 275); it over-matches, so it can
+only over-refuse.
+
+## State-file structure
+
+`STATUS.yml`, in order: `program`, `name`, `phase`, `status`, `branch`, `updated:`
+(folded `>-`, **exactly three generations, newest first**, each beginning
+`  <ISO>Z (MEM ROUND N --`), `previous_updates:`, `flags:` (flat mapping, newest block
+first under a `# --- MEM round N ... ---` comment), `focus:`, `flag_provenance:`
+(`prov` / `artifact` / `as_of` / `said`), `standing_rules:`, `tasks:`.
+
+- Generation boundary regex: `^  \d{4}-\d{2}-\d{2}T.*Z \(MEM ROUND`.
+- The `updated:` block is a **folded scalar** — line anchors vanish after parsing, which is
+  why the instrument matches raw text.
+- Rotation: prepend the new generation, keep two, archive the overflow **verbatim** to
+  `STATUS_UPDATED_ARCHIVE.md` as `## Batch N — archived <clock> (1 entry, rolling-window
+  overflow)` plus a fenced block.
+- `HANDOFF.md`: round blocks prepended, `# READ FIRST — round N (MEM, <clock>, tip
+  ` + backtick-sha + `)`.
+- **Escape literal braces in f-string generation text** (`{{path, sha256}}`) — this raised
+  at round 280 before any write.
+
+## Landing
+
+- Register rows go **only** through the locked insertion form:
+  `bash scripts/land_register_row.sh --row <rowfile> 'Q-MEM-N' <msgfile>`, dry-run first.
+  The legacy hand-edit is RETIRED (R-784) — two seats' uncommitted rows deadlock each
+  other.
+- The row must be one line beginning `| Q-MEM-N |`.
+- On `HELD REGISTER_DIRTY`: wait and re-run. **Never withdraw a row that is not yours.**
+- State files commit **separately, by explicit pathspec**, then push with the status
+  captured.
+- **Never `git add` under `data/` or another seat's files.**
+
+## Closed: the `?? data` observation
+
+MEM's stop answer left one open observation: wt-de has 345 tracked files under `data/`
+with sparse-checkout false, yet `git status --short` there reports only `?? data`, and
+four checks offered no mechanism. **Closed by the coordinator at 2026-09-07T16:1xZ:**
+`git -C /home/yuqing/ctaNew-wt-de ls-files -v data` returns **345 paths, every one flagged
+`S` (skip-worktree)** — set deliberately by the worktree rule (R-554) so git stops
+reporting the tracked data files as deleted behind the symlink. `data` itself lists as
+untracked because no tracked path is literally `data`. So `?? data` **is** the expected
+clean state of a seat worktree, which is what REV 103 §5's P10 condition reads: P10 stays
+meaningful for anything *else* that appears in that output.
