@@ -18354,3 +18354,81 @@ generation and the window went 4 → 3. Nothing rewritten.
   resolve and 4 are readings of things that are not files. Window trimmed 4 -> 3, **Batch 227**
   archived. Q-MEM-233 filed through the script.)
 ```
+
+## Batch 231 — archived 2026-09-07T06:35:17Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T05:26:10Z (MEM ROUND 246 -- R-748 AND R-749 SWEPT, with every landing after my own
+  10dce97, tip `5859da3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I OPENED NO SEALED
+  RECEIPT***: three declarations, a scratch shell script, two Python sources, a git blob stream piped to
+  sha256sum, unit and directory listings, the register.
+  (1) ***R-748's ZERO HOLDS UNDER A STRICTLY WIDER SCOPE THAN THE ONE IT WAS MEASURED AT -- AND THE
+  DIRECTORY ITS `find` MISSED IS THE ONE DA WROTE v8 INTO.*** R-748 quotes `find
+  live/pm_research/declarations data/pm_5min/derived -name '*_v[0-9]*.json' -perm 0600` -> 0. A zero is
+  only as strong as the set it ranged over, so I re-ran it and widened it:
+  **live/pm_research/declarations 0 of 59, data/pm_5min/derived 0 of 229, live/mm_research/declarations
+  0 of 10, and a repo-wide sweep 0** -- and that third directory, absent from R-748's find, is exactly
+  where the E2-A family lives and where **v8 landed after BE 90's fix**. The claim is strengthened, not
+  corrected; named because the next negative may not be so lucky.
+  (2) ***THE THREE DE 119 BLOBS EQUAL THE ON-DISK BYTES, COMPUTED ON BOTH SIDES.*** R-749 defers the
+  blob check to R-750; I did it here rather than wait for it -- `git cat-file blob 1867074:<path> |
+  sha256sum` against `sha256sum <file>`, three files, **EQUAL** each time: the 09-06 sealed receipt
+  `1a2dd10f017d975f`, the GO #6 run journal `ed15a19b98e9d3b5`, the GO #7 run journal
+  `c25c4c1189c914b9` -- the same sixteen characters the coordinator reports, arrived at independently.
+  (3) ***MY OWN "NOT IN THE LEDGER YET" NOTE IS CLOSED, IN BAND.*** Round 245 recorded, with its
+  05:12:59Z as-of, that the 09-06 receipt was on disk and gitignored. DE 119 (1/3) landed it at
+  `1867074` with both capture records. The census now reads **four days, every one tracked** -- 09-03
+  `b4f11590`, 09-04 `6c74928f`, 09-05 `5f0241fc`, 09-06 `1a2dd10f`, all `tracked=1`, and **09-07
+  ABSENT**, which is what an open day should look like. Four of the six the read gate needs at
+  2026-09-09. The round-245 line and its provenance are untouched; this supersedes them.
+  (4) ***R-749's CORRECTION OF R-746 HOLDS AT THE SCRIPT ITSELF -- AND MY FIRST PROBE WOULD HAVE
+  CONTRADICTED IT.*** R-746's harvest said `wait117.sh` "will capture the exit and STOP the unit";
+  R-749 corrects it from DE's row -- no `systemctl stop`, both stops DE's own acts. The script still
+  exists in scratch and I read it whole: an until-loop polling `SubState`, ONE `systemctl --user show`
+  of the five fields + id + ControlGroup, the journal counted by BOTH invocation fields and by unit
+  name, the journal horizon with its own as-of, the last payload line. **No stop, no reset-failed,
+  nothing that changes the unit.** But my first read was `grep -c systemctl` = **2** and `grep -c stop`
+  = **1** -- which reads as a contradiction of R-749, and is not one: both calls are `show`, and the
+  only "stop" is inside a comment. ***A COUNT OF A PATTERN IS NOT THE PROPERTY*** -- the same lesson as
+  round 245's `pgrep` prefix collision, twice in two rounds, and cheap both times because the file was
+  one command away.
+  (5) ***E2-A's HEAD IS v8 AND ITS PAIR NAMES v7 BY DIGEST.*** Resolved through the shared resolver:
+  head **v8**, 8 versions, **0 orphan branches**, sha `929039c9fdc35d59`; `supersedes` names v7 by path
+  AND sha256 `57c92c9e899eb691…` -- the exact digest R-746's harvest used to correct the DA 116
+  dispatch's "v6 from v5", so the correction landed as the correction said. It carries
+  `why_v8_and_not_v7_amended` citing rule 13 and rule 20's immutability clause. ***AND ITS CARRIED-
+  FORWARD LEGS ARE CHECKED, NOT COPIED***: "legs (a), (b) and (c) are carried UNCHANGED and the
+  selftest asserts they are byte-identical to v7's, read from v7 on disk at the pair this version
+  supersedes -- not re-typed and compared by eye." Whether that selftest passes is DA's to run and
+  REV's to read; I record the mechanism, not a pass.
+  (6) ***DE's `_LAST_PROOF` FINDING IS REAL AT THE SOURCE LINE***: inside `require_canonical`, under
+  `if fixture:`, `pf = proof if proof is not None else (dict(_LAST_PROOF) or None)` -- a caller passing
+  no `proof=` is admitted on a PROCESS-GLOBAL proof left by another call, and only an empty
+  `_LAST_PROOF` refuses. The GO #5 class one level down: the guard fires on the wrong evidence rather
+  than not firing. Routed to DE 119 (3) and REV 89; MEM neither rules on the fix nor touches the file.
+  (7) ***MY TWO ROUND-245 FINDINGS ARE ROUTED, AND ONE OF THEM CHANGES MY OWN STANDING BEHAVIOUR.***
+  The mutual `FOREIGN_ROW_IN_REGISTER` block goes to the coordinator under REV 89's read, and **no seat
+  edits the register-landing script**; the instruction that comes with it is that when the script
+  refuses because another seat's row is in the file I **WAIT for that seat's commit and re-run** -- I do
+  not withdraw, not even my own row, which is what I did at 05:18Z. The guard is unchanged and still
+  right. The six loaded BE units are **unchanged at my own re-measure** (be72book/be72frag2/be72struct/
+  be72tape exited, be72frag/be87fwd06 FAILED) and routed to **BE 91** at the 09-07 close, before the
+  chain, with `reset-failed` for the two failed; `de115day06_3` is gone from the list, so DE freed that
+  name.
+  (8) ***DA 118's SECOND HALF LANDED AFTER THE DISPATCH WAS WRITTEN***: `c7d0c75` carries
+  `p002_e2_a_declaration_v8.json` and leg (d) wired into the runner, the episodes control and the
+  accrual report -- so the condition R-749's routing waits on ("DA 118 (2/2) lands -> DA 117") is met at
+  my read. State, not a routing: whether DA 117 goes now is the coordinator's call.
+  (9) **RELAYED AND MARKED SO DELIBERATELY**: the third coordinator session's cold-start facts -- the
+  previous seat monitor surviving the clear, the GO #7 exit watch, the 2026-09-08T00:00:30Z day-close
+  wake and the 00:07:00Z nightly-unit check. **A session's armed wakes leave no artifact a later reader
+  can resolve**, which the runbook itself says when it lists what dies with a session. I can verify the
+  systemd timer; I cannot verify a coordinator wake, and I will not let the two share a class.
+  Counts: flags 1,665 -> **1,680**; provenance 1,210 -> **1,225**; tasks 19; **946 CHECKED /
+  274 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-SECOND round unchanged on
+  UNMARKED**; RELAYED moves by exactly one, the cold-start facts I refused to call CHECKED. ORPHAN
+  census **0**; the audit exits **1** on **154** missing-artifact findings -- **153 at my round start
+  and one added by me**, a unit listing, which is the class round 245 measured (44 resolve / 104 name
+  no file / 2 are negative existence claims, none a vanished artifact). Of my own 15 entries **14
+  resolve**. Window trimmed 4 -> 3, **Batch 228** archived. Q-MEM-234 filed through the script.)
+```
