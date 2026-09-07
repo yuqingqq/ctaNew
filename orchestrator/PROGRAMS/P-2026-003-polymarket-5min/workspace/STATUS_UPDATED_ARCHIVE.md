@@ -19535,3 +19535,65 @@ generation and the window went 4 → 3. Nothing rewritten.
   three readings of the RUNNING unit, which is not a file. Window trimmed 4 -> 3, **Batch 243** archived.
   Q-MEM-249 filed through the script.)
 ```
+
+## Batch 247 — archived 2026-09-07T10:16:49Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:29:07Z (MEM ROUND 262 -- R-776 SWEPT, with every landing between my own 53811a4 bound and
+  the tip `b4f83bf`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE SHARED TREE'S RUNNER BATTERY READS RED BY DESIGN, AND I MEASURED IT ON BOTH SIDES.*** v19
+  pins `live/pm_research/de_phase4_diag_runner.py` at **ee4034c1**5c274982. The SHARED tree's copy hashes
+  **ce9cc466**782fb8f6 -- DIFFERS, which is the `BE_CASCADE_DIFFERS` red. The blob **at fe76d83** hashes
+  **ee4034c15c274982** -- matches the pin exactly. Across all ten cascade pins: **nine of ten match in the
+  shared tree, TEN OF TEN at fe76d83.** So the red is EXACTLY ONE MODULE and the runs read a tree where it
+  does not exist.
+  (2) ***THE OPERATIONAL INSTRUCTION, STATED AS ONE: A RUNNER BATTERY RUN IN THE SHARED TREE WILL READ RED
+  UNTIL GO #8's RECEIPT LANDS, AND THE RED IS CORRECT*** -- the shared tree genuinely holds a module the
+  pinned cascade does not name. **Verification of the runner happens in a worktree at `fe76d83`**, where
+  all ten pins match. A seat that runs it in the shared tree and reports a failure has measured the freeze,
+  not the code. ***AND THE RELEASE IS A RECEIPT, NOT A CLOCK***: the condition is GO #8's receipt landing;
+  the entry's "≈ 01:30Z 09-08" is an ESTIMATE OF WHEN THAT WILL BE, and I carry the condition as the
+  release and the estimate as an estimate -- a red released by a clock would lift while the condition was
+  still unmet if the close ran late.
+  (3) ***WHY THIS IS FLAGGED PROMINENTLY RATHER THAN NOTED***: a battery that is EXPECTED to be red teaches
+  every seat to ignore it, and **an ignored red is indistinguishable from a real one the day the real one
+  arrives** -- rule 16's hazard arriving through the door of a deliberate exception rather than a weak
+  control. The protection is that this red is **named** (`BE_CASCADE_DIFFERS`), **scoped** (one module, in
+  one tree) and **conditioned** (lifts when GO #8's receipt lands), and all three are in the state files
+  where a seat looks before running anything.
+  (4) ***THE FREEZE IS DOING ITS WORK AND THE HELD WORK EXISTS***: `params_v20` and `design_v28` do NOT
+  exist in either family -- DE composed them and is holding them unlanded, which is the freeze working
+  rather than a seat waiting idly: the work is done and **the landing is the thing being withheld**. Both
+  frozen heads are unchanged from round 261 (params **v19** `dd8db7de`, design **v27** `3bcdf3c2`), so the
+  freeze has held across the whole interval E2 has been running.
+  (5) ***THE PHASE4 COUNT IS DERIVED, AND THE CELL SAYS SO IN ITS OWN MESSAGE***: at :6319,
+  `ok(n[0] + 1 + _n_conditional == EXPECTED_CHECKS, "R-771: check count DERIVED, not adjusted -- n_run … + …")`
+  with `_n_conditional` computed at :6318 and the module comment at :78 -- "loops = 216 = n_run (212) +
+  n_conditional (4). Never set to what a run [reports]". **Round 257's rule implemented in the suite that
+  produced it.** ***AND THE THREE PHASE4 NUMBERS NAME THREE POPULATIONS***: **209** was DE's AST scan,
+  WITHDRAWN as wrong; **249** is the corrected call-site figure; **216** is sites INSIDE LOOPS. A reader
+  comparing them across three entries would find counts that do not add up, because they count three
+  different things. ***AND I DID NOT RECONCILE 249 WITH 216***: the module names its population and R-774
+  names another, and closing the gap means re-running DE's scan under both definitions, which is DE's act.
+  Scope stated rather than a number implied -- the same discipline as round 255's glob reconciliation,
+  except that this time I could NOT close it and say so instead of guessing.
+  (6) ***REV 95 §A5's CELL IS FIXED BEFORE E4, NOT AFTER***: :733 reads "THE CELL ASSERTS ON WHICHEVER
+  TERMINAL STATE EXISTS" and the assertion reports `read`, `unread` and `next_unread`, so it no longer
+  requires a next unread day. **And its comment names the moment it would have fired** -- ":736 … the
+  moment E4 reads the last day and `next_unread` becomes None" -- so a later reader who wonders why the
+  cell is written awkwardly finds the answer beside it rather than in a review filed weeks earlier. Same
+  property as the R-id cell (round 260) and the known-bad baseline (round 256): **the reason lives where
+  the code is.**
+  (7) ***E2 IS STILL RUNNING AND ITS PEAK HAS NOT MOVED IN TEN MINUTES***: SubState running at 09:28:06Z
+  with MemoryPeak 3,119,230,976 -- the identical value at 09:18:07Z. Monotonic, so the high-water mark came
+  in E2's first two and a half minutes and nothing since has approached it: **the same early-peak-then-
+  plateau shape E1 showed across 85 minutes.** Twelve minutes in, expected exit ≈ 10:55Z. ***AND THE RUNS
+  ARE UNAFFECTED BY THE RED BECAUSE THEY READ THE FROZEN COMMIT*** -- ten of ten at fe76d83 -- which I
+  state as a measurement rather than as reassurance, because "unaffected" is exactly the kind of claim that
+  should carry a number.
+  Counts: flags 1,907 -> **1,922**; provenance 1,452 -> **1,467**; tasks 19; **1,179 CHECKED /
+  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-EIGHTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **172** missing-artifact findings, 171 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 244** archived. Q-MEM-250 filed through the script.)
+```

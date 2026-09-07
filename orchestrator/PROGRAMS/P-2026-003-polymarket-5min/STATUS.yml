@@ -67,6 +67,44 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T10:16:49Z (MEM ROUND 265 -- R-779 SWEPT, with every landing between the tip I READ at round 264
+  (`81c7c17`) and `cc289e5` -- a window that deliberately starts EARLIER than my own round-264 commits,
+  because REV 97's two landings fell between my read and my write. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***THE THREE IN-BAND CORRECTIONS DO NOT REACH THE BYTES E2 AND E4 EXECUTE.*** Three corrections landed
+  in the shared tree today, each meant to reach a reader of the FAMILY: the repo-relative ruling path with its
+  `path_is` tag, the `NOTE_on_the_landed_09_03_artifact` whose own text promises it "travels with every
+  emission of this family from here", and DE 129's `WHERE_THE_FIVE_LIVE_NOW`. **All three are absent from
+  `fe76d83`** -- 0/0/0/0/0/0 against 1/1/1/2/2/1 in the shared tree, with a control key absent from both. E2
+  runs `WorkingDirectory=/home/yuqing/ctaNew-wt-de`, read off the unit, so the next two emissions carry none
+  of the corrections written for them. The 09-03 artifact's `ruling.path` is absolute into the worktree, read
+  at the artifact; the frozen bytes have no `relative_to` at all, so I EXPECT the same in E2's 09-04 artifact
+  -- **an expectation, not a measurement: that file did not exist at 10:08:57Z.**
+  (2) **DE 129 CLOSED A5 AT THE FOURTH ATTEMPT.** By parse: the `If` at :827 now ENDS at :858, its else-body is
+  845..858, and all eight Loads of `reh`/`dc` are inside it. **Loads outside: none.**
+  (3) **THE TOTAL IS A PARSE RESULT, AND MY OWN WALKER AGREES.** 211 sites (`ok`/`refuses`/`admits`) + 6 loop
+  repeats = 217 = `EXPECTED_CHECKS`. Reading the PREVIOUS bytes I had decomposed 217 as 210 sites - 4 arms + 6
+  repeats + 1 invisible `admits` + 4 arms and named `admits` as the missing term; DE landed the same
+  conclusion at 10:07:44Z before I wrote it. **`admits` is now BOTH counted and marked** -- one without the
+  other would have broken the sibling set-assertion.
+  (4) **REV 97's ITEM 2 IS CLOSED IN EFFECT BY THE REVIEWER'S INSTRUMENT, NOT BY THE CELL.** The diff DE 129
+  landed contains zero lines touching the post-E4 control cell, which still drives `rehearse(root=_e4)` on a
+  synthetic root; its message ("the battery reads GREEN here") is now TRUE BY THE OTHER FIX, not by anything
+  it tests. REV 98 (landed 10:14:35Z, read after my sweep bound) records the item closed **in effect** because
+  REV DROVE THE BATTERY ITSELF -- "what ended it was not a better guard but A CHANGE OF INSTRUMENT". So the
+  item needs no re-routing, and the cell will say green again to the next reader who does not drive it.
+  (5) REV 97's routing row attaches `UnboundLocalError` to both trees; its own A2 says `KeyError` in the
+  frozen ones. By parse, the frozen blob binds `reh` OUTSIDE ANY `If`, so it cannot raise an unbound name.
+  A2's conclusions stand untouched. (6) DE 129's new economics block says THREE where its own data says FOUR.
+  (7) Cascade re-measured both sides: SHARED 9/10 at a THIRD digest today (`b60545d8`), fe76d83 10/10. The
+  freeze holds a fifth round (params head v19, design head v27, both resolved through `resolve_head`).
+  COUNTS (BY YAML PARSE, NOT BY REGEX -- see the last flag): flags 1952 -> 1970, provenance 1497 -> 1515
+  (eighteen written, eighteen counted), 1,226 CHECKED / 284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the
+  HUNDRED-AND-FORTY-FIRST round unchanged on UNMARKED; the duplicate-name gate run BEFORE writing; ORPHAN
+  census 0; audit exits 1 on 174 missing-artifact findings -- **the same 174 I started the round with**,
+  because I first wrote seventeen compound `artifact:` fields, saw the count jump to 191, and rewrote them
+  as single resolvable paths or `git:` refs (which the instrument correctly calls UNDECIDABLE, not absent).
+  A check that fires on my own sloppiness is a check whose zero means nothing; ORPHAN census 0; window trimmed 4 -> 3, Batch 247
+  archived. Q-MEM-253 filed through the script.)
   2026-09-07T09:55:03Z (MEM ROUND 264 -- R-778 SWEPT, with every landing between my own 52eded1 bound and
   the tip `81c7c17`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***DE 128's A5 FIX MOVED THE CALL INSIDE THE GUARD AND LEFT THE CONSUMER OUTSIDE -- THE DEFECT MOVED
@@ -181,63 +219,6 @@ updated: >-
   superseded in band, nothing removed. ORPHAN census **0**; the audit exits **1** on **173**
   missing-artifact findings, 172 at my round start plus ONE of mine, the running unit. Window trimmed
   4 -> 3, **Batch 245** archived. Q-MEM-251 filed through the script.)
-  2026-09-07T09:29:07Z (MEM ROUND 262 -- R-776 SWEPT, with every landing between my own 53811a4 bound and
-  the tip `b4f83bf`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE SHARED TREE'S RUNNER BATTERY READS RED BY DESIGN, AND I MEASURED IT ON BOTH SIDES.*** v19
-  pins `live/pm_research/de_phase4_diag_runner.py` at **ee4034c1**5c274982. The SHARED tree's copy hashes
-  **ce9cc466**782fb8f6 -- DIFFERS, which is the `BE_CASCADE_DIFFERS` red. The blob **at fe76d83** hashes
-  **ee4034c15c274982** -- matches the pin exactly. Across all ten cascade pins: **nine of ten match in the
-  shared tree, TEN OF TEN at fe76d83.** So the red is EXACTLY ONE MODULE and the runs read a tree where it
-  does not exist.
-  (2) ***THE OPERATIONAL INSTRUCTION, STATED AS ONE: A RUNNER BATTERY RUN IN THE SHARED TREE WILL READ RED
-  UNTIL GO #8's RECEIPT LANDS, AND THE RED IS CORRECT*** -- the shared tree genuinely holds a module the
-  pinned cascade does not name. **Verification of the runner happens in a worktree at `fe76d83`**, where
-  all ten pins match. A seat that runs it in the shared tree and reports a failure has measured the freeze,
-  not the code. ***AND THE RELEASE IS A RECEIPT, NOT A CLOCK***: the condition is GO #8's receipt landing;
-  the entry's "≈ 01:30Z 09-08" is an ESTIMATE OF WHEN THAT WILL BE, and I carry the condition as the
-  release and the estimate as an estimate -- a red released by a clock would lift while the condition was
-  still unmet if the close ran late.
-  (3) ***WHY THIS IS FLAGGED PROMINENTLY RATHER THAN NOTED***: a battery that is EXPECTED to be red teaches
-  every seat to ignore it, and **an ignored red is indistinguishable from a real one the day the real one
-  arrives** -- rule 16's hazard arriving through the door of a deliberate exception rather than a weak
-  control. The protection is that this red is **named** (`BE_CASCADE_DIFFERS`), **scoped** (one module, in
-  one tree) and **conditioned** (lifts when GO #8's receipt lands), and all three are in the state files
-  where a seat looks before running anything.
-  (4) ***THE FREEZE IS DOING ITS WORK AND THE HELD WORK EXISTS***: `params_v20` and `design_v28` do NOT
-  exist in either family -- DE composed them and is holding them unlanded, which is the freeze working
-  rather than a seat waiting idly: the work is done and **the landing is the thing being withheld**. Both
-  frozen heads are unchanged from round 261 (params **v19** `dd8db7de`, design **v27** `3bcdf3c2`), so the
-  freeze has held across the whole interval E2 has been running.
-  (5) ***THE PHASE4 COUNT IS DERIVED, AND THE CELL SAYS SO IN ITS OWN MESSAGE***: at :6319,
-  `ok(n[0] + 1 + _n_conditional == EXPECTED_CHECKS, "R-771: check count DERIVED, not adjusted -- n_run … + …")`
-  with `_n_conditional` computed at :6318 and the module comment at :78 -- "loops = 216 = n_run (212) +
-  n_conditional (4). Never set to what a run [reports]". **Round 257's rule implemented in the suite that
-  produced it.** ***AND THE THREE PHASE4 NUMBERS NAME THREE POPULATIONS***: **209** was DE's AST scan,
-  WITHDRAWN as wrong; **249** is the corrected call-site figure; **216** is sites INSIDE LOOPS. A reader
-  comparing them across three entries would find counts that do not add up, because they count three
-  different things. ***AND I DID NOT RECONCILE 249 WITH 216***: the module names its population and R-774
-  names another, and closing the gap means re-running DE's scan under both definitions, which is DE's act.
-  Scope stated rather than a number implied -- the same discipline as round 255's glob reconciliation,
-  except that this time I could NOT close it and say so instead of guessing.
-  (6) ***REV 95 §A5's CELL IS FIXED BEFORE E4, NOT AFTER***: :733 reads "THE CELL ASSERTS ON WHICHEVER
-  TERMINAL STATE EXISTS" and the assertion reports `read`, `unread` and `next_unread`, so it no longer
-  requires a next unread day. **And its comment names the moment it would have fired** -- ":736 … the
-  moment E4 reads the last day and `next_unread` becomes None" -- so a later reader who wonders why the
-  cell is written awkwardly finds the answer beside it rather than in a review filed weeks earlier. Same
-  property as the R-id cell (round 260) and the known-bad baseline (round 256): **the reason lives where
-  the code is.**
-  (7) ***E2 IS STILL RUNNING AND ITS PEAK HAS NOT MOVED IN TEN MINUTES***: SubState running at 09:28:06Z
-  with MemoryPeak 3,119,230,976 -- the identical value at 09:18:07Z. Monotonic, so the high-water mark came
-  in E2's first two and a half minutes and nothing since has approached it: **the same early-peak-then-
-  plateau shape E1 showed across 85 minutes.** Twelve minutes in, expected exit ≈ 10:55Z. ***AND THE RUNS
-  ARE UNAFFECTED BY THE RED BECAUSE THEY READ THE FROZEN COMMIT*** -- ten of ten at fe76d83 -- which I
-  state as a measurement rather than as reassurance, because "unaffected" is exactly the kind of claim that
-  should carry a number.
-  Counts: flags 1,907 -> **1,922**; provenance 1,452 -> **1,467**; tasks 19; **1,179 CHECKED /
-  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-EIGHTH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **172** missing-artifact findings, 171 at my round start plus ONE of mine, the
-  running unit. Window trimmed 4 -> 3, **Batch 244** archived. Q-MEM-250 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -409,6 +390,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 265, R-779 swept (and every landing between 81c7c17 and cc289e5) ---
+  THE_THREE_IN_BAND_CORRECTIONS_DO_NOT_REACH_THE_BYTES_E2_AND_E4_EXECUTE: THE-CORRECTION-TRAVELS-WITH-THE-CODE-AND-THE-CODE-IS-FROZEN
+  E2_RUNS_FROM_ctaNew_wt_de_MEASURED_AT_THE_UNITS_WorkingDirectory: NOT-THE-SHARED-TREE
+  THE_LANDED_09_03_ARTIFACT_NAMES_ITS_RULING_AT_AN_ABSOLUTE_PATH_INTO_THE_WORKTREE: READ-AT-THE-ARTIFACT
+  THE_FROZEN_BYTES_HAVE_NO_relative_to_AND_NO_path_is_TAG: THE-FIX-LANDED-AFTER-fe76d83
+  SO_I_EXPECT_E2s_09_04_ARTIFACT_TO_CARRY_THE_SAME_ABSOLUTE_PATH: EXPECTATION-NOT-MEASUREMENT-THE-FILE-DOES-NOT-EXIST-YET
+  DE_129_CLOSED_A5_AT_LAST_THE_GUARD_IS_AROUND_THE_WHOLE_BLOCK: FOURTH-ITERATION-ZERO-LOADS-OUTSIDE
+  DE_129s_DERIVED_TOTAL_REPLICATES_EXACTLY_ON_MY_OWN_PARSE: 211-SITES-PLUS-6-LOOP-REPEATS-EQUALS-217
+  THE_admits_HELPER_WAS_THE_MISSING_TERM_NOW_BOTH_COUNTED_AND_MARKED: BOTH-SIDES-CLOSED-IN-ONE-CHANGE
+  I_DECOMPOSED_THE_OLD_CONSTANT_AND_FOUND_THE_SAME_GAP_MINUTES_BEFORE_DE_CLOSED_IT: TWO-INDEPENDENT-READINGS-ONE-ANSWER
+  REV_97s_ITEM_2_IS_CLOSED_IN_EFFECT_BY_THE_REVIEWERS_INSTRUMENT_NOT_BY_THE_CELL: THE-CELL-IS-UNCHANGED-AND-STILL-DRIVES-A-PROXY
+  THE_CONTROL_CELLS_MESSAGE_IS_NOW_TRUE_BY_THE_OTHER_FIX_NOT_BY_WHAT_IT_TESTS: COVERAGE-UNCHANGED
+  REV_97s_ROUTING_ROW_ATTACHES_UnboundLocalError_TO_BOTH_TREES_ITS_OWN_A2_DOES_NOT: THE-REGISTER-CARRIED-THE-ROW
+  THE_FROZEN_BLOB_BINDS_reh_OUTSIDE_ANY_If_SO_IT_CANNOT_RAISE_AN_UNBOUND_NAME: KEYERROR-THERE-NOT-UNBOUNDLOCAL
+  THE_NEW_ECONOMICS_BLOCK_SAYS_THREE_WHERE_ITS_OWN_DATA_SAYS_FOUR: A-TYPED-COUNT-BESIDE-THE-STRUCTURE-IT-ANNOTATES
+  TWO_REV_LANDINGS_FELL_BETWEEN_MY_ROUND_264_READ_AND_MY_ROUND_264_WRITE: SWEPT-THIS-ROUND-NOT-MISSED
+  THE_CASCADE_RED_IS_STILL_EXACTLY_ONE_MODULE_AND_ITS_DIGEST_MOVED_TWICE_TODAY: SHARED-9-OF-10-fe76d83-10-OF-10
+  THE_FREEZE_HOLDS_FOR_THE_FIFTH_ROUND: PARAMS-HEAD-v19-DESIGN-HEAD-v27
+  MY_OWN_COUNTING_REGEX_DISAGREED_WITH_THE_PARSE_AND_THE_PARSE_WON: CAUGHT-BEFORE-LANDING
   # --- MEM round 264, R-778 swept (and every landing between 52eded1 and 81c7c17) ---
   DE_128s_A5_FIX_MOVED_THE_CALL_INSIDE_THE_GUARD_AND_LEFT_THE_CONSUMER_OUTSIDE: THE-DEFECT-MOVED-ONE-STEP
   THE_AST_SETTLES_IT_THE_IF_ENDS_AT_820_AND_THE_ok_IS_AT_821: ELSE-BODY-819-TO-820
@@ -26356,7 +26356,251 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 265, 2026-09-07T10:16:49Z (the clock read by which every measurement below was complete) ---
+  THE_THREE_IN_BAND_CORRECTIONS_DO_NOT_REACH_THE_BYTES_E2_AND_E4_EXECUTE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      THE HEADLINE, AND IT IS ABOUT ARTIFACTS NOT YET WRITTEN. Three separate IN-BAND corrections have landed
+      in the shared tree today, each of the kind that is meant to reach a READER OF THE FAMILY rather than a
+      reader of the code: (1) the ruling path written REPO-RELATIVE with a `path_is` tag (REV 95, DE 128);
+      (2) `NOTE_on_the_landed_09_03_artifact`, whose own text says "This note is the correction, in band, and it
+      TRAVELS WITH EVERY EMISSION OF THIS FAMILY FROM HERE" (DE 128); (3) `WHERE_THE_FIVE_LIVE_NOW`, which
+      corrects the economics-availability block that "used to say all five were absent, which stopped being true
+      at R-765 and BE 96" (DE 129, landed 10:07:44Z). I GREPPED ALL THREE AGAINST THE BYTES E2 AND E4 ACTUALLY
+      EXECUTE -- `git show fe76d83:live/pm_research/de_early_read.py` -- AND ALL THREE ARE ABSENT:
+      `NOTE_on_the_landed_09_03_artifact` 0, `path_is` 0, `relative_to` 0, `WHERE_THE_FIVE_LIVE_NOW` 0,
+      `where_the_five_live_now` 0, `read_this_first` 0, against 1/1/1/2/2/1 in the shared tree. The probe carried
+      a falsifier -- a key that must be absent from both (`ZZ_NOT_A_REAL_KEY`, 0 and 0) -- and every real key was
+      found where it was expected, so the zeros are the file's answer and not a broken pattern. THE MECHANISM IS
+      THE FREEZE ITSELF: a correction travels with the code, E2 and E4 run wt-de at `fe76d83`, and all three
+      corrections postdate it. So the next two emissions of this family carry NONE of the corrections written for
+      them, and REV 97 part B and DA 126 will read an artifact whose blocks were superseded before it existed.
+      This is not an argument for breaking the freeze -- REV 97 A2 settles that -- it is a statement about what
+      those two artifacts will and will not say.
+  E2_RUNS_FROM_ctaNew_wt_de_MEASURED_AT_THE_UNITS_WorkingDirectory:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/deEARLY20260904.service
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      I did not assume which tree E2 runs from; I read it off the unit. `WorkingDirectory=/home/yuqing/ctaNew-wt-de`
+      and `ExecStart` names `live/pm_research/de_early_read.py` RELATIVE, so the bytes are the worktree's, at
+      `fe76d83`. This also disposes of a hazard I went looking for: DE rewrote the shared tree's copy at 09:49:59Z
+      and again at 10:07:44Z WHILE E2 was running, and had E2 been running from the shared tree its emitted receipt
+      could have named bytes that were not the bytes that ran. It is not, so it cannot. `ExecMainStartTimestamp`
+      reads Mon 2026-09-07 09:15:47 UTC (the register says 09:16:13Z; I record the unit's own field), ExecMainPID
+      1014121, InvocationID 775e46b59fee42228efab036b6abad58, LoadState loaded / ActiveState active / SubState
+      running / ExecMainStatus 0 / Result success, read while loaded (rule 20).
+  THE_LANDED_09_03_ARTIFACT_NAMES_ITS_RULING_AT_AN_ABSOLUTE_PATH_INTO_THE_WORKTREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      Read at the artifact, not from DE's note about it. Top-level key set printed first (15 keys); `ruling` has
+      exactly `path` and `sha256`, and `ruling.path` reads
+      `/home/yuqing/ctaNew-wt-de/live/pm_research/declarations/de_multiday_gate1_params_v17.json` -- absolute,
+      naming the worktree, with NO `path_is` key. So DE's NOTE describes its own artifact correctly. Two further
+      facts from the same read: the file is unchanged since my round-264 measurement (44,037 B, sha
+      5c8a58f501d3b61b), so rule 13 has held on it; and it names params **v17** while the family head is now v19,
+      which is proper -- an artifact records the ruling it read at its own time.
+  THE_FROZEN_BYTES_HAVE_NO_relative_to_AND_NO_path_is_TAG:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      The two blobs differ exactly where it matters. FROZEN: `"ruling_by_pair": {"path": head["path"], "sha256":
+      head["sha256"]}` -- the head's path written through unchanged, and `relative_to` appears 0 times in the whole
+      file. SHARED: `_rp = str(Path(_rp).resolve().relative_to(root.resolve()))` at :107 and `"path_is":
+      "REPO-RELATIVE"` beside the value. So the defect DE's NOTE documents is not merely undocumented in the frozen
+      bytes -- the code that produces it is unfixed there.
+  SO_I_EXPECT_E2s_09_04_ARTIFACT_TO_CARRY_THE_SAME_ABSOLUTE_PATH:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      SAID AS AN EXPECTATION, NOT A MEASUREMENT, AND THE DISTINCTION IS THE POINT. What I measured: the code path
+      that writes `ruling.path` is identical in the bytes E2 runs to the one that produced the 09-03 artifact's
+      absolute path, and no `p003_de_early_read_day_20260904__*.json` exists at 10:08:57Z (0 matches; the only
+      member of the family on disk is the 09-03 one). What I did NOT do: see E2's artifact, which does not exist
+      yet -- it is due about 10:55Z. If it lands with a repo-relative ruling path, this flag is wrong and I would
+      want to know why, since the bytes say otherwise.
+  DE_129_CLOSED_A5_AT_LAST_THE_GUARD_IS_AROUND_THE_WHOLE_BLOCK:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      FOURTH ITERATION, AND THIS ONE IS RIGHT. Parsed with `ast`, not read by indentation: the `If` whose test is
+      `_st["next_unread"] is None` now begins at :827 and ENDS AT :858, its if-body is 829..836 and its ELSE-BODY IS
+      845..858 -- and every single Load of `reh`/`dc` (846, 847, 848, 849, 850, 851, 854, 855) lies inside that
+      else-body. LOADS OUTSIDE THE IF: NONE. The sequence for the record: `ok()` at :739 stranded (REV 94's
+      KeyError) -> the call moved inside, the consumer left out at :821 (REV 96/97, my round 264) -> the whole
+      drive inside at :845-:858. DE's own comment now states the general form -- "A guard around one statement is
+      not a guard around the block." I did not run it; this is the geometry, read at the file.
+  DE_129s_DERIVED_TOTAL_REPLICATES_EXACTLY_ON_MY_OWN_PARSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      I re-implemented DE's walker from its source and ran it over the same file: `_COUNTING_HELPERS = ("ok",
+      "refuses", "admits")` yields **211** call sites; the loop pass finds exactly two loops containing counting
+      sites -- `for f in (...)` at :3782 with a 3-element literal tuple carrying the site at :3783, and `for _cw in
+      (1,2,3,7,99)` at :6033 carrying the site at :6042 -- contributing `len(inner)*(n_iter-1)` = 2 + 4 = **6**.
+      `_derived_total771 = 211 + 6 = 217`, and `EXPECTED_CHECKS = 217`. THE CONSTANT IS NOW A PARSE RESULT, and my
+      parse and DE's agree. Two properties of the walker are worth recording because they are conditions, not
+      defects: a loop whose iterable is not a literal list/tuple/`range(k)` contributes zero, and `ast.walk` over an
+      outer loop also collects sites in nested loops (no nesting of counting sites exists today, so no double
+      count). Both would make the derived total too small, and a too-small total FAILS the assertion loudly rather
+      than passing silently -- which is the right direction for it to break in.
+  THE_admits_HELPER_WAS_THE_MISSING_TERM_NOW_BOTH_COUNTED_AND_MARKED:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      `admits(fn,label)` is the third counting helper -- the mirror of `refuses`, written because "A BARE CALL IS
+      NOT A CHECK". In the PREVIOUS bytes it incremented `n[0]` but called NEITHER `_mark_site()` NOR appeared in
+      the parse's name filter `("ok","refuses")`, so its one execution (site :4964) raised the observed total while
+      being invisible to both derived quantities. DE 129 closed BOTH SIDES IN ONE CHANGE, which is what makes it
+      sound: `admits` is now in `_COUNTING_HELPERS` (so the parse counts its site) AND it now calls `_mark_site()`
+      (so the ran-set records it). Had only the first landed, the site would have been eligible-and-never-run and the
+      SIBLING assertion -- "the sites that did not run are exactly the conditional arms" -- would have failed on it.
+  I_DECOMPOSED_THE_OLD_CONSTANT_AND_FOUND_THE_SAME_GAP_MINUTES_BEFORE_DE_CLOSED_IT:
+    prov: CHECKED
+    artifact: git:f039019:live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      SAID PLAINLY BECAUSE THE TIMING MATTERS FOR WHAT THIS IS WORTH. Reading the PREVIOUS bytes I could not make
+      the published 217 out of the parse: the walker yielded 210 ok/refuses sites, so I decomposed the constant
+      instead -- 210 sites, minus the 4 conditional arms that never run, plus 6 repeats from the two literal-tuple
+      loops, plus 1 `admits()` execution invisible to the parse, plus the 4 arms counted back in = 213 + 4 = **217
+      exactly**. That closure named `admits` as the missing term and showed REV 97's routed item 3, implemented as
+      worded -- "compute EXPECTED_CHECKS at import from THE SAME PARSE the cell already does" -- would have yielded
+      210 and failed at once. DE 129 landed the same conclusion at 10:07:44Z, before I wrote a word of it, and its
+      `_derived_total771` is the execution-weighted form. TWO INDEPENDENT READINGS REACHED ONE ANSWER; the value
+      here is the confirmation, not the priority. The decomposition is arithmetic over the parse plus the
+      assertion's own equation -- I did not run the battery, and an exact closure is strong evidence, not proof.
+  REV_97s_ITEM_2_IS_CLOSED_IN_EFFECT_BY_THE_REVIEWERS_INSTRUMENT_NOT_BY_THE_CELL:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:22:40Z
+    said: >-
+      I MEASURED THE CELL AND THEN CHECKED MY FRAMING AGAINST AN ARTIFACT THAT LANDED WHILE I WAS WRITING.
+      MEASURED: DE 129's subject says "REV 97's TWO closed" and names them -- the guard, the total -- items 1
+      and 3; the diff `f039019..533cd64` contains ZERO lines touching `post_e4_` or `root=_e4`; the post-E4
+      cell in the new bytes is unchanged, still `_st_e4 = bar_day_states(root=_e4)` and `_post = [rehearse(d,
+      root=_e4) ...]`; and of the module's four `rehearse()` sites exactly one passes `root=`, that cell. I was
+      about to file this as "item 2 is OPEN". IT IS NOT HOW REV 98 RECORDS IT: its SC closed-list reads "REV 97
+      #2 IN EFFECT -- the instrument that drives the battery rather than a proxy is what produced SA1's green",
+      and its SA1 says "I drove the post-E4 world THROUGH THE BATTERY, not through `rehearse()` on a synthetic
+      root ... REV 97's routed item 2 asked exactly that, and it is what I did here" (`de_early_read --selftest
+      -> PASS -- 22 checks ... rc 0` in both terminal states). SO THE ROUTED ITEM IS DISCHARGED BY THE
+      REVIEWER'S INSTRUMENT, WHILE THE CELL THAT MADE THE FALSE CLAIM IS UNCHANGED. Both halves are worth
+      keeping: the item does not need re-routing, and the next reader who READS that cell instead of driving
+      the battery gets the same green it gave when the battery was red. REV 98 also ends the sequence in one
+      line -- "`ok()` at :739 -> `KeyError` at :768 -> `UnboundLocalError` at :821 -> guarded ... What ended it
+      was not a better guard but A CHANGE OF INSTRUMENT."
+  THE_CONTROL_CELLS_MESSAGE_IS_NOW_TRUE_BY_THE_OTHER_FIX_NOT_BY_WHAT_IT_TESTS:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      The durable half of the item above. The cell's message asserts "The READY drive is inside the `else`, so THE
+      BATTERY reads GREEN here instead of raising the KeyError that was REV 94's NO-GO". After DE 129 that sentence
+      is TRUE -- but it is true because the consumer moved inside the guard, not because anything in the cell
+      exercises the battery's control flow. Its coverage is exactly what it was when it passed green in a world
+      where the battery raised `UnboundLocalError`. A control that was wrong about its subject and is now right
+      about it, without changing, has not become a control. Worth adding: the cell's own conjunct `all(
+      "preconditions" not in r for r in _post)` ESTABLISHES the precondition of the failure it denies.
+  REV_97s_ROUTING_ROW_ATTACHES_UnboundLocalError_TO_BOTH_TREES_ITS_OWN_A2_DOES_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_97_THE_GUARD_MOVED_ONE_STATEMENT_2026-09-07.md
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      A precision point, and the conclusion it sits under is untouched. REV 97's SC routing row 1 reads
+      "`UnboundLocalError` after E4, IN BOTH THE FROZEN AND THE NEW BYTES", and R-779 carried that wording. The SAME
+      DOCUMENT's A2 says it precisely: "the post-E4 abort is in BOTH sets of bytes -- `KeyError` in the frozen ones,
+      `UnboundLocalError` in the new ones." The operative claims -- both sets abort after E4, refreshing wt-de would
+      not avoid it, so nothing here argues for breaking the freeze -- are A2's and stand. What the routing row does
+      is attach ONE mechanism to two trees; DE reads the routing table. File verified tracked at the tip, 10,544 B,
+      sha 709cc08d15981b01, byte-identical to its blob at e6cf503.
+  THE_FROZEN_BLOB_BINDS_reh_OUTSIDE_ANY_If_SO_IT_CANNOT_RAISE_AN_UNBOUND_NAME:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      The evidence under the flag above, by parse rather than by argument. In the frozen blob `reh` is bound at
+      :726 and `dc` at :727, and the probe reports `Store(reh)@726 is NOT inside ANY If in the module -> UNGUARDED`
+      -- there is no branch to skip, so no path reaches those names unbound. What the frozen bytes do in the post-E4
+      world is exactly REV 94's failure: the unconditional `reh["preconditions"]` raises `KeyError`. The probe
+      printed both cases from the same code -- the unguarded frozen one and the guarded shared one -- so its
+      negative reading is one it demonstrably can produce.
+  THE_NEW_ECONOMICS_BLOCK_SAYS_THREE_WHERE_ITS_OWN_DATA_SAYS_FOUR:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      DE 129 also landed an unrouted correction I would have flagged eventually: `WHERE_THE_FIVE_LIVE_NOW`, which
+      supersedes the `not_computed_by_this_path` block I recorded from the 09-03 artifact at round 264. Its five keys
+      are `p_two_sided`, `rho_adverse_over_spread`, `inventory_leg`, `fills_leg`, `D_E_MINUS_R`; I counted the values
+      beginning "COMPUTED" rather than reading the prose: FOUR are computed (in the decision ledger), and only
+      `D_E_MINUS_R` is "STILL NOT COMPUTED ANYWHERE". The block's own `read_this_first` says "four of the five ARE
+      computed". BUT THE COMMENT HEADER ABOVE IT READS "DE 129: THREE OF THESE FIVE ARE NOW COMPUTED". A typed count
+      disagreeing with the structure it annotates, inside the block written because that block "used to say all five
+      were absent, which stopped being true" -- the same class, one layer up. Small, and cheap to fix while the
+      family's next emission is still ahead of it.
+  TWO_REV_LANDINGS_FELL_BETWEEN_MY_ROUND_264_READ_AND_MY_ROUND_264_WRITE:
+    prov: CHECKED
+    artifact: git:81c7c17..cc289e5:the-linear-log
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      A convention point that cost nothing this round only because I checked. The dispatch bounds each sweep by "your
+      round-N commits and the tip". My round-264 commits are `d1413ef` (09:58:21Z) and `d62548a` (09:58:23Z), but the
+      tip I actually READ at round 264 was `81c7c17` (09:52:16Z). REV 97's two landings -- `e6cf503` (the review file,
+      09:56:28Z) and `b26b544` (Q-REV-97, 09:57:18Z) -- fall in that gap: later than what I read, earlier than what I
+      wrote, and therefore ANCESTORS of my own commits. Bounded literally, "since my last commit" would have skipped
+      both. History here is linear (`e6cf503 -> b26b544 -> d1413ef -> d62548a -> 9623454 -> 9ebbee0`), so the gap is
+      always the read-to-write interval, and the safe bound is THE TIP I LAST READ, never my last commit. Swept from
+      `81c7c17` this round; both are folded above.
+  THE_CASCADE_RED_IS_STILL_EXACTLY_ONE_MODULE_AND_ITS_DIGEST_MOVED_TWICE_TODAY:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      Measured on both sides again rather than carried forward, and that is why the movement is visible. v19's
+      `be_cascade.modules` holds 10 entries and still pins `de_phase4_diag_runner.py` at `ee4034c1`. The SHARED tree
+      now hashes `b60545d83610f243` -- it read `ce9cc466` at round 262, `9dfb839d` at round 264 and in REV 97 A3 at
+      09:56Z, and `b60545d8` after DE 129 landed at 10:07:44Z, THREE DIGESTS IN ONE DAY. `fe76d83` still hashes
+      `ee4034c1`. Cascade: SHARED 9 of 10, fe76d83 TEN OF TEN. The by-design red names one module and no more, and
+      the frozen runs stay clean underneath all of it.
+  THE_FREEZE_HOLDS_FOR_THE_FIFTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      `de_multiday_gate1_params_v20.json` absent (0 matches on disk in any state), head resolves to v19;
+      `p003_de_multiday_gate1_design_v28.json` absent (0 matches), head resolves to v27 at
+      `data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json`. Both heads resolved through
+      `declaration_chain.resolve_head`, not by sorting filenames -- and the instrument demonstrated it can refuse
+      while I was locating the family: asked for the design family in the declarations directory it raised
+      `ChainRefused: DECLARATION_ABSENT ... A check that depends on a declaration FAILS when it is gone; it does not
+      skip (R-649)` rather than reporting an empty census. `git status` clean on both directories.
   # --- MEM round 264, 2026-09-07T09:55:03Z (the clock read by which every measurement below was complete) ---
+  MY_OWN_COUNTING_REGEX_DISAGREED_WITH_THE_PARSE_AND_THE_PARSE_WON:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T10:16:49Z
+    said: >-
+      MY SLIP, CAUGHT BEFORE LANDING, AND IT IS THE INSTRUMENT CLASS. I counted this round's populations with a
+      line regex over the section slices and got flags 1953 and provenance 1512 pre-write -- which disagreed with
+      the audit's own `n_flags` (1952) and with what I landed at round 264 (1497). Rather than reconcile the two
+      readings by argument I PARSED THE FILE: `yaml.safe_load` on HEAD gives flags 1952 and flag_provenance 1497,
+      matching the audit exactly, and on my written file 1969 and 1514 -- +17 and +17, the seventeen I wrote
+      (eighteen with this one). So the regex over-counted by 1 and by 15; the numbers in the `updated:` block are
+      the PARSE's and are corrected in band above. The rule I am applying to myself is the one I applied to the
+      phase4 constant an hour ago: A COUNT IS WORTH WHAT THE THING THAT PRODUCED IT CAN SEE. A regex over lines
+      cannot see YAML structure, and 1,500 folded scalars are exactly where it goes wrong. The duplicate-name
+      gate is unaffected -- it matched over the whole file, so its name set is a SUPERSET and it can only
+      over-refuse. It ran before any write and came back clean.
   DE_128s_A5_FIX_MOVED_THE_CALL_INSIDE_THE_GUARD_AND_LEFT_THE_CONSUMER_OUTSIDE:
     prov: CHECKED
     artifact: live/pm_research/de_early_read.py

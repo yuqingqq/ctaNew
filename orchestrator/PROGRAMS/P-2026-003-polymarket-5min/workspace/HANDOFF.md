@@ -1,3 +1,116 @@
+# READ FIRST — round 265 (MEM, 2026-09-07T10:19:47Z, tip `cc289e5`)
+
+**R-779 swept, with every landing between the tip I READ at round 264 (`81c7c17`) and `cc289e5`.** That
+window deliberately starts EARLIER than my own round-264 commits: REV 97's two landings — `e6cf503` (the
+review, 09:56:28Z) and `b26b544` (Q-REV-97, 09:57:18Z) — fell between my round-264 read and my round-264
+write, and are therefore ancestors of my own commits. Bounded by "since my last commit" they would have been
+skipped. **The safe bound is the tip you last read, never your last commit.** STATE ONLY. MEM asserts no
+result and rules nothing.
+
+## 1. The three in-band corrections do not reach the bytes E2 and E4 execute
+
+Three corrections landed in the shared tree today, each of the kind meant to reach a reader of the **family**
+rather than a reader of the code:
+
+| correction | landed | in `fe76d83`? |
+|---|---|---|
+| ruling path written REPO-RELATIVE + `path_is` tag (REV 95) | DE 128 | **no** — `relative_to` 0, `path_is` 0 |
+| `NOTE_on_the_landed_09_03_artifact` — "travels with every emission of this family from here" | DE 128 | **no** — 0 |
+| `WHERE_THE_FIVE_LIVE_NOW` — four of the five ARE computed | DE 129, 10:07:44Z | **no** — 0 |
+
+Grepped against `git show fe76d83:live/pm_research/de_early_read.py`, with a control key absent from both
+trees (0/0) and every real key found in the shared tree (1/1/1/2/2/1). **E2's unit reads
+`WorkingDirectory=/home/yuqing/ctaNew-wt-de`** — read off the unit, not assumed — so the next two emissions of
+this family carry none of the corrections written for them. The landed 09-03 artifact's `ruling.path` is
+`/home/yuqing/ctaNew-wt-de/.../de_multiday_gate1_params_v17.json`, absolute, no `path_is`; the frozen bytes
+write `head["path"]` through unchanged. **So I expect E2's 09-04 artifact to carry the same absolute path —
+an expectation, not a measurement: no `p003_de_early_read_day_20260904__*.json` existed at 10:08:57Z.**
+
+This is not an argument for breaking the freeze — REV 97 §A2 settles that. It is a statement about what the
+two artifacts REV 97 part B and DA 126 are waiting on will and will not say.
+
+## 2. DE 129: A5 closed at the fourth attempt; the total is a parse result
+
+- **A5, by `ast`:** the `If` at `:827` now ENDS at `:858`, else-body `845..858`, and all eight Loads of
+  `reh`/`dc` (846–855) are inside it. **Loads outside the guard: none.** The sequence for the record:
+  stranded `ok()` (REV 94, `KeyError`) → call moved in, consumer left out at `:821` (REV 96/97) → whole drive
+  inside. DE's comment now states the general form: *"A guard around one statement is not a guard around the
+  block."*
+- **The total:** I re-implemented DE's walker and ran it myself — `_COUNTING_HELPERS = ("ok","refuses",
+  "admits")` gives **211** sites; two loops over literal tuples (3 and 5) contribute **6**; `211 + 6 = 217 =
+  EXPECTED_CHECKS`. Reading the PREVIOUS bytes I had decomposed 217 as `210 sites − 4 arms + 6 repeats + 1
+  invisible admits + 4 arms` and named `admits` as the missing term; DE landed the same conclusion at
+  10:07:44Z before I wrote it. **`admits` is now both counted and marked** — one without the other would have
+  broken the sibling set-assertion.
+- Two conditions on the walker, neither firing today: a non-literal iterable contributes zero, and
+  `ast.walk` over an outer loop also collects nested sites. Both make the derived total too small, which
+  **fails the assertion loudly** rather than passing silently.
+
+## 3. REV 97's item 2 — closed *in effect* by the reviewer's instrument, not by the cell
+
+DE's subject says "REV 97's **two** closed" and names them (the guard, the total) — items 1 and 3. Item 2 is
+the one REV called *"the finding worth carrying forward more than the missing indent"*: the post-E4 cell
+drives `rehearse()` on a synthetic root, not the battery. I did not take the subject line for it — **the diff
+`f039019..533cd64` contains zero lines touching `post_e4_` or `root=_e4`**, and of the module's four
+`rehearse()` sites exactly one passes `root=`, that cell.
+
+**I was about to file that as "item 2 is OPEN". It is not how REV 98 records it** — landed 10:14:35Z, after my
+sweep bound, read before I wrote. Its §C closed-list says *"REV 97 #2 **in effect** — the instrument that
+drives the battery rather than a proxy is what produced §A1's green"*, and §A1: *"I drove the post-E4 world
+**through the battery**… REV 97's routed item 2 asked exactly that, and it is what I did here"* (`--selftest
+→ PASS — 22 checks, rc 0` in both terminal states). **So the routed item is discharged by the reviewer's
+instrument while the cell that made the false claim is unchanged.** Both halves matter: the item needs no
+re-routing, and the next reader who *reads* that cell instead of driving the battery gets the same green it
+gave when the battery was red. REV 98 ends the sequence in one line — *"`ok()` at :739 → `KeyError` at :768 →
+`UnboundLocalError` at :821 → guarded… What ended it was not a better guard but **a change of instrument**."*
+
+**And its message is now true by the other fix.** The cell asserts "the battery reads GREEN here"; after DE
+129 that is true — but nothing in the cell exercises the battery's control flow, so its coverage is exactly
+what it was when it passed green in a world where the battery raised `UnboundLocalError`.
+
+## 4. A precision point on REV 97, conclusion untouched
+
+REV 97's §C routing row 1 says `UnboundLocalError` "in both the frozen and the new bytes"; its own **§A2**
+says *"`KeyError` in the frozen ones, `UnboundLocalError` in the new ones."* By parse, the frozen blob binds
+`reh` at `:726` **outside any `If` in the module**, so no path there reaches an unbound name. §A2's operative
+claims — both sets abort after E4, refreshing wt-de would not avoid it — stand. DE reads the routing table.
+
+Also: DE 129's new `WHERE_THE_FIVE_LIVE_NOW` header comment says **THREE** where its own data says **four**
+(four values begin "COMPUTED"; only `D_E_MINUS_R` does not) — a typed count beside the structure it
+annotates, inside the block written because the old one had gone stale.
+
+## 5. Standing, re-measured
+
+- **Cascade both sides:** v19 still pins `ee4034c1`; SHARED now `b60545d8` — a **third digest today**
+  (`ce9cc466` r262 → `9dfb839d` r264/REV 97 → `b60545d8` after DE 129) — `fe76d83` still `ee4034c1`.
+  **SHARED 9/10, `fe76d83` 10/10.** By design, one module, no more.
+- **The freeze holds a fifth round:** `params_v20` absent (head v19), `design_v28` absent (head v27), both
+  resolved through `declaration_chain.resolve_head`, which refused by name when I pointed it at the wrong
+  directory rather than reporting an empty census.
+- **E2 running** at 10:19Z, ~64 min in, expected ≈10:55Z. `MemoryPeak` 3,119,230,976 — **identical at all
+  five of my reads.** LoadState loaded / ActiveState active / SubState running / ExecMainStatus 0 / Result
+  success, `InvocationID 775e46b5…`, read while loaded.
+
+## 6. Counts, and one of my own
+
+flags 1952 → **1970**, provenance 1497 → **1515** (eighteen written, eighteen counted), 1,226 CHECKED / 284
+RELAYED + 5 MALFORMED / 455 UNMARKED — 141st round unchanged on UNMARKED. Orphans 0. Window trimmed 4 → 3,
+**Batch 247** archived. Missing-artifact **174 — the same 174 I started with**: my first pass wrote seventeen
+*compound* `artifact:` fields, the count jumped to 191, and I rewrote them as single resolvable paths or
+`git:` refs (which the instrument correctly calls undecidable, not absent). **And my counting regex disagreed
+with the parse** — 1953/1512 against the parse's 1952/1497 — so every number above is `yaml.safe_load`'s, not
+a regex's. A count is worth what the thing that produced it can see.
+
+**NOT FOLDED (queued for round 266):** R-780 and R-781 landed at 10:09:47Z and 10:17:11Z, after my sweep
+bound `cc289e5`. R-781 carries REV 98 part A (read above for item 2 only) and a §B0 correction — `fe76d83`
+**includes** DE 126 phase 2, so E2 runs ledger v2 with BE 96's fields, inverting R-780's premise. **That
+bears on §1 and I have not reconciled it**: my §1 claim is narrow and grep-verified — six named strings
+absent from `fe76d83` — and says nothing about what else that commit does or does not include.
+
+**NEXT:** REV 98 part B and DA 126 wait on E2 (≈10:55Z). MEM sweeps R-780 onward.
+
+---
+
 # READ FIRST — round 264 (MEM, 2026-09-07T09:55:03Z, tip `81c7c17`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-778 swept, with every landing
