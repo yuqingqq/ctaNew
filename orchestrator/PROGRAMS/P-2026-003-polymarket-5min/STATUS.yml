@@ -67,6 +67,62 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T08:51:45Z (MEM ROUND 257 -- R-771 SWEPT, with every landing between my own 3918ae5 and the
+  tip `7245f33`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
+  (1) ***THE NO-GO VERIFIES AT BOTH ENDS, AND I MEASURED BOTH RATHER THAN EITHER.*** params v18 carries
+  exactly ONE `be_module` block -- `path` `live/pm_research/be_cancel_axis_null.py`, `sha256`
+  **93332a45**faf714… -- and the file on disk today hashes **5607bfbf**e1b4ef89. **The params version in
+  force pins a digest the file no longer has**, and the runner refuses at PREFLIGHT rather than running a
+  null control whose code moved under it. That is a named refusal that writes nothing, costing a dispatch
+  rather than a run -- the same shape as this week's other good refusals.
+  (2) ***AND THE SHARPER HALF CHECKS OUT: ONE COMMIT CHANGED BOTH MODULES, AND THE PIN COVERS ONE.*** The
+  last commit touching `be_cancel_axis_null.py` is **c707eb8** (BE 96) -- and the last commit touching
+  `harmful_stateful_policy.py` is **the same c707eb8**. `be_module` is a SINGLE {path, sha256}, so **a BE
+  change confined to the cascade module REV names as carrying the behaviour would have produced NO MISMATCH
+  AT ALL and the run would have proceeded.** Today it happened to be the pinned file that moved. **A guard
+  that fires on the file it pins tells you nothing about the files it does not** -- REV routed widening
+  `be_module` to the cascade by pair; MEM records the shape and rules nothing.
+  (3) ***THE UNBLOCK HAS NOT LANDED AND THE BLOCK STANDS AS I WRITE.*** `params_v19` and `design_v27` do
+  NOT exist; the resolver returns params head **v18** and design head **v26**; `PARAMS_REL` still names
+  v18. DE 126 phase 1 was dispatched 08:49:55Z. ***AND ONE DIGEST MISMATCH BLOCKS BOTH GO E2 AND GO #8***
+  -- the next early read (09-04) and tonight's Gate-1 day run share the params version and the runner
+  refuses for both. So the user's remaining three early-read days and the six-day Gate-1 population wait on
+  the same three-line re-point, with the close a fixed event at 2026-09-08T00:00Z that it must clear before.
+  (4) ***REV's ONE RESIDUAL, WITH BOTH HALVES MEASURED: THE VALUE IS RIGHT AND THE CHECK IS A SHAPE
+  CHECK.*** v26's `user_ruled_unsealed_emission` carries `landed_at` "R-765", `ruled_by` "THE USER",
+  `recorded_at_utc` 07:47:01Z and the verbatim ruling -- and `### R-765` appears exactly once in the
+  register, so the citation is correct. But the predicate tests PRESENCE AND SHAPE, so **a block naming a
+  register entry that was never written would pass**. **A citation that is correct today because the writer
+  was careful is not a checked citation** -- R-601's class ("a cited artifact is locatable") one level up,
+  from paths to register ids.
+  (5) **RELAYED, MARKED SO** -- four readings that are other seats' acts to establish: REV measured BE 96's
+  change under **DE's own re-point method**, found it battery-only, and **handed the measurement over
+  rather than pre-approving the re-point**, leaving the declaration's decision with its seat; DE 125
+  stopped on **five pre-existing defects behind one phase4 FAIL**, of which the number a state file should
+  carry is **212 of 252 declared checks reachable** -- a green suite reporting on four fifths of what it
+  declares; one of the five is **a NameError that ended the suite early for everyone**, rule 17's shape
+  with a third variant (a suite that STOPS is neither green nor red for the checks after the stop, and
+  nothing in the count said so); and REV's accounting of DE 124 -- everything else PASSES, the six walls
+  "none loosened, two tightenings", one residual.
+  (6) ***AND DE 126 PHASE 2's RULING IS THE ONE I KEEP SEEING FROM NEW DIRECTIONS***: "the constant is
+  never adjusted to the observation", with `n_run` beside `n_conditional`. The programme has now stated
+  that rule from four independent places -- never loosen a check to make it pass (R-767), a known-bad
+  asserts a delta from its own baseline (REV 83 §5), a derived block changes only to what its measurement
+  re-derives (R-769), and now a declared check count is never edited down to what ran. **Four independent
+  arrivals at one rule is the strongest evidence a programme produces that the rule is real.**
+  (7) ***E1 IS STILL RUNNING AT EIGHTY-TWO MINUTES***: RUNNING with `ExecMainExitTimestamp` EMPTY at
+  08:50:40Z, MemoryPeak still 2,715,901,952 -- the same value at seven readings since 07:31:38Z -- against
+  an expected 86 minutes and an exit about 08:55Z. **Still inside its estimate**, and this is the first run
+  to test an estimate that came from the sealed receipts' own resource blocks. **DA 125 is drafted**: when
+  the receipt lands, DA's reader prints the table under `--print-under-ruling` with R-757's labels. DE's
+  report does not print it, and neither does MEM.
+  Counts: flags 1,832 -> **1,847**; provenance 1,377 -> **1,392**; tasks 19; **1,107 CHECKED /
+  280 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-THIRD round unchanged on UNMARKED**;
+  RELAYED moves by FOUR, this round's four other-seat readings at (5) -- the largest RELAYED step I have
+  taken, and deliberate: establishing any of them means running another seat's suite. ORPHAN census **0**;
+  the audit exits **1** on **167** missing-artifact findings, 166 at my round start plus ONE of mine, the
+  running unit. Fifteen written, fifteen counted, the duplicate-name gate run before writing. Window
+  trimmed 4 -> 3, **Batch 239** archived. Q-MEM-245 filed through the script.)
   2026-09-07T08:40:28Z (MEM ROUND 256 -- R-770 SWEPT, with every landing between my own 4f8ed4c and the
   tip, which moved to `4700030` while I read. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED
   NO RECEIPT OF ANY KIND.
@@ -192,78 +248,6 @@ updated: >-
   fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
   audit exits **1** on **165** missing-artifact findings, 164 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 237** archived. Q-MEM-243 filed through the script.)
-  2026-09-07T08:15:46Z (MEM ROUND 254 -- R-767 SWEPT, with every landing between my own ad99d53 and the
-  tip `356ffc9`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
-  (1) ***IN-BAND CORRECTION OF MY OWN ROUND 253: DESIGN v26-v30 WERE NEVER LANDED AND ARE WITHDRAWN. THE
-  FAMILY HEAD IS v25.*** Round 253 recorded them as existing versions and reported the head as v30. What it
-  recorded, it measured -- the files existed (mtimes 07:50-08:03Z, which R-767 itself quotes), the resolver
-  returned v30, v30 carried the `REDECLARED_MERGES` block, and every one of them was **untracked and
-  gitignored, which round 253 recorded as the load-bearing fact and which is precisely what made the
-  withdrawal possible**. What changed is their STATUS, not the reading. At my read, 08:14:41Z: v24 and v25
-  PRESENT and tracked; **v26, v27, v28, v29, v30 ALL ABSENT** -- DE completed the withdrawal between the
-  08:13:54Z ruling and my read. **Five round-253 flags touch them** (three name a withdrawn version in the
-  key itself, which is the count R-767 made); each value now points forward and each `said` carries a
-  superseding sentence. **Nothing is removed, the landed row is untouched, and round 253's generation
-  stands as written with this one above it.**
-  (2) ***THE HEAD IS v25 AT THE SAME DIGEST IT HAD BEFORE THE BATCH BEGAN***: b95ac59cf46d941d, 24 versions,
-  orphans EMPTY -- the digest RESULTS 0a recorded at the second seat reset. So the family is byte-for-byte
-  where it was, not merely at a version numbered 25, which is what makes this a withdrawal rather than a
-  repair. ***AND THE RED PROXY CELL IS TRUE AGAIN WITHOUT ANYTHING BEING FIXED***: round 253 measured
-  `n_merge_links` 20 against `merged_tips` 5; now 5 and 5. The four versions that re-declared v25's merges
-  are gone. A reader seeing the cell green tomorrow would have no way to know it was ever red, or why.
-  (3) ***THE MISSING-ARTIFACT CHECK FIRED FOR THE FIRST TIME ON A REAL VANISHING -- AND IT CAUGHT MY OWN
-  FLAGS.*** The audit's count went **161 -> 163** between my round-253 write and this read, and both new
-  entries are MINE, both citing `…design_v30.json`, the file withdrawn an hour after I cited it. That is the
-  failure the check exists for, in the instrument's own words: *"a CHECKED flag whose artifact is GONE is a
-  finding -- three arms artifacts vanished on 2026-09-04 and a flag citing one still read as established."*
-  ***AND IT IS EXACTLY WHAT I SAID IT HAD NEVER DONE***: at round 245 I classified all 150 findings and
-  wrote "NOT ONE OF THE 150 IS AN ARTIFACT THAT ACTUALLY VANISHED", restating it every round since. That was
-  true for its population; the population has changed. ***THIS IS THE ARGUMENT FOR MY ROUTED REMEDY, NOT
-  AGAINST THE CHECK***: my proposal was never "delete it" but "give non-path references a third answer so
-  the count carries signal" -- and had the 150 undecidable references been outside the count, these two
-  would have stood alone and been unmissable instead of arriving as a delta I only examined because I
-  compute it every round. **Keep the check, fix the codomain**, and the fix is worth more today than when I
-  proposed it.
-  (4) ***THE WITHDRAWAL PRECEDENT IS BOUNDED, AND I CARRY THE FENCE VERBATIM***: R-711's immutability binds
-  LANDED versions and the CAS forbids overwriting, not withdrawing an uncommitted file its own writer
-  produced in a batch that stopped. Five conjuncts -- **never committed, same seat, same unfinished batch,
-  deleted before that batch lands, each named with its digest in the register** -- and "nothing else is ever
-  deleted". A precedent stated once and cited later is exactly where a bounded rule becomes an unbounded
-  one, so the fence travels with it.
-  (5) ***DE STOPPED A SECOND TIME ON A CONTRADICTION ITS OWN FIXES MADE, AND NEITHER RULE WAS LOOSENED.***
-  BE's frozen-block rule ("a correction adds, it does not edit what is recorded") refuses v29's REMOVAL of
-  the inherited `also_supersedes`; ruling (3)'s guard refuses RESTORING it; no version satisfies both. DE
-  drove both directions, proposed the narrowing and did not act unilaterally -- its own words: *"I've
-  already made this worse five times by fixing forward."* The ruling narrows the GUARD to the case it was
-  written for (only a NEWLY INTRODUCED re-declaration; inheritance unchanged permitted and REPORTED),
-  falsified both ways, with the alternatives recorded and not taken -- because the other routes required
-  either leaving a rule-13 violation in history or bending BE's rule, and **"never loosen a check to make it
-  pass"**.
-  (6) ***AND THE PIN-VS-MENTION THREAD IS CLOSED END TO END ACROSS FOUR ROUNDS.*** The checker's JSON-path
-  field landed at `773f857` (clean in `git status`), its comment stating the purpose in the vocabulary this
-  thread settled on -- *"each hit carries the JSON PATH of the field holding the digest, so a MENTION (an
-  incident …"*. The real v7 now reads `producer_exit_maps_v8.json:supersedes.the_incident.das_v7`, **the
-  exact path I published at round 251 from walking the JSON**, and the historical v2 reads
-  `producer_exit_maps_v4.json:chain_repair.restored`. Round 251 measured the hit; round 253 read the field's
-  header and found it matched CONTENT, adopting REV's sharper vocabulary; round 254 reads the landed field
-  printing the path. **The field now says what the property is instead of what a grep found.** Its falsifier
-  PASSED in 2m39s after two runs were killed at their caps -- the same budget wall I hit at rounds 250 and
-  251, now fenced by skipping the pin census in the denominator sub-runs.
-  (7) ***E1 IS STILL RUNNING AT FORTY-SIX MINUTES***: loaded / active / RUNNING at 08:14:41Z, MemoryPeak
-  2,715,901,952 -- the same value at 07:31:38Z, 07:48:37Z, 08:04:57Z and now -- against an expected exit
-  about 08:55Z. The 09-03 numbers do not exist yet; when the receipt lands it is DA's reader that prints the
-  table. DE 124 continues; **REV 92 part B / REV 93 gate GO E2 and GO #8**.
-  (8) ***THE TWO VANISHED-ARTIFACT FINDINGS STAY IN THE COUNT, DELIBERATELY.*** I superseded the flags;
-  I did NOT re-point their `artifact:` at a file that still exists. The citation is to a version that was
-  withdrawn, and that is the true state -- re-pointing would erase the only evidence in the state file that
-  those two readings were taken against something now gone. **A finding I caused stays visible until the
-  reason for it is gone**, which for these two is never.
-  Counts: flags 1,787 -> **1,802**; provenance 1,332 -> **1,347**; tasks 19; **1,066 CHECKED /
-  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTIETH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **164** missing-artifact findings -- 163 at my round start (161 at round 253's write
-  plus the TWO the withdrawal created) plus ONE of mine, the running unit. Window trimmed 4 -> 3, **Batch
-  236** archived. Q-MEM-242 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -435,6 +419,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 257, R-771 swept (and every landing between 3918ae5 and 7245f33) ---
+  THE_NO_GO_VERIFIES_AT_BOTH_ENDS_93332A45_AGAINST_5607BFBF: A-PIN-TO-A-DIGEST-THE-FILE-NO-LONGER-HAS
+  and_BOTH_MODULES_WERE_CHANGED_BY_ONE_COMMIT_c707eb8: THE-PINNED-ONE-AND-THE-UNPINNED-ONE
+  SO_THE_GUARD_WOULD_HAVE_BEEN_SILENT_ON_THE_OTHER_FILE: BE-MODULE-IS-ONE-PATH-NOT-THE-CASCADE
+  THE_GUARD_FIRED_AT_PREFLIGHT_WHICH_IS_THE_GUARD_WORKING: A-NO-GO-BEFORE-A-RUN-NOT-AFTER
+  THE_UNBLOCK_HAS_NOT_LANDED_v19_AND_v27_ARE_ABSENT: HEADS-STILL-V18-AND-V26
+  GO_E2_AND_GO_8_ARE_BOTH_BLOCKED_ON_ONE_ARTIFACT: TONIGHTS-CLOSE-TOO
+  THE_RESIDUALS_VALUE_IS_RIGHT_AND_ITS_CHECK_IS_A_SHAPE_CHECK: R-765-EXISTS-BUT-IS-NOT-TESTED
+  REV_MEASURED_BEs_CHANGE_UNDER_DEs_OWN_METHOD_AND_DID_NOT_PRE_APPROVE: HANDED-OVER-NOT-RULED
+  FIVE_PRE_EXISTING_DEFECTS_SAT_BEHIND_ONE_PHASE4_FAIL: 212-OF-252-DECLARED-CHECKS-REACHABLE
+  A_NAME_ERROR_ENDED_THE_SUITE_EARLY_FOR_EVERYONE: NOT-ONE-SEATS-PROBLEM
+  THE_RULING_FOR_PHASE_2_IS_THE_ONE_I_KEEP_SEEING: THE-CONSTANT-IS-NEVER-ADJUSTED-TO-THE-OBSERVATION
+  SIX_WALLS_NONE_LOOSENED_TWO_TIGHTENINGS_AND_ONE_RESIDUAL: REVS-OWN-ACCOUNTING-OF-DE-124
+  E1_IS_STILL_RUNNING_AT_EIGHTY_TWO_MINUTES: PEAK-UNMOVED-SINCE-07-31
+  DA_125_IS_DRAFTED_AND_THE_TABLE_STILL_COMES_FROM_DAs_READER: NOT-FROM-DES-REPORT
+  I_OPENED_NO_SEALED_RECEIPT_AT_ROUND_257_EITHER: TWO-DECLARATIONS-TWO-SOURCES-GIT-A-UNIT
   # --- MEM round 256, R-770 swept (and every landing between 4f8ed4c and 4700030) ---
   DESIGN_v26_IS_TRACKED_AT_MY_READ_AND_I_SAY_WHEN: 4700030-LANDED-AFTER-THE-ENTRYS-TIP
   THE_SEAL_IS_RETIRED_IN_CODE_AND_THE_STATUS_IS_COMPUTED_NOT_PRINTED: N-OF-G-IN-AN-F-STRING
@@ -26254,6 +26254,163 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 257, 2026-09-07T08:51:45Z (the clock read by which every measurement below was complete) ---
+  THE_NO_GO_VERIFIES_AT_BOTH_ENDS_93332A45_AGAINST_5607BFBF:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v18.json
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      REV 93's NO-GO rests on one artifact and I measured BOTH ends rather than either. v18 carries exactly
+      ONE `be_module` block: `path` live/pm_research/be_cancel_axis_null.py, `sha256`
+      93332a45faf714feea90eeff53120d0379f82b030770ca9fadd35c79856c59ef. The file on disk today hashes
+      5607bfbfe1b4ef89... So the params version in force PINS A DIGEST THE FILE NO LONGER HAS, and the
+      runner refuses at preflight rather than running against a null control whose code moved under it.
+  and_BOTH_MODULES_WERE_CHANGED_BY_ONE_COMMIT_c707eb8:
+    prov: CHECKED
+    artifact: "git: log -1 -- be_cancel_axis_null.py and harmful_stateful_policy.py"
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      the last commit touching `be_cancel_axis_null.py` is c707eb8 (BE 96) -- AND the last commit touching
+      `harmful_stateful_policy.py` is THE SAME c707eb8. One commit changed both: the module the citation
+      pins and the module REV says carried the behavioural change. The mismatch that fired and the change
+      that matters arrived together, which is why the guard's silence on the second is the finding rather
+      than an oversight of BE's.
+  SO_THE_GUARD_WOULD_HAVE_BEEN_SILENT_ON_THE_OTHER_FILE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v18.json
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      `be_module` is a SINGLE {path, sha256} naming one file. So a BE change confined to
+      harmful_stateful_policy.py -- the cascade module REV names as carrying the behaviour -- would have
+      produced NO MISMATCH AT ALL and the run would have proceeded. THE PIN COVERS ONE FILE OF A CASCADE,
+      and today it happened to be the one that changed. REV routed widening `be_module` to the cascade by
+      pair; MEM records the shape and rules nothing: a guard that fires on the file it pins tells you
+      nothing about the files it does not.
+  THE_GUARD_FIRED_AT_PREFLIGHT_WHICH_IS_THE_GUARD_WORKING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      the refusal is at PREFLIGHT -- before any run -- so nothing was computed against a moved control and
+      nothing has to be discarded. R-771 records it as the guard working, and the shape matches the
+      programme's other good refusals this week (the mask, the closed-day verdict, the forward-day feed,
+      assert_source_unchanged): a named refusal that writes nothing, costing a dispatch rather than a run.
+  THE_UNBLOCK_HAS_NOT_LANDED_v19_AND_v27_ARE_ABSENT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      measured, not assumed: `de_multiday_gate1_params_v19.json` and
+      `p003_de_multiday_gate1_design_v27.json` do NOT exist; the resolver returns params head v18
+      cfc2b06fe2c9e792 and design head v26 7de8906e607a66d4; `PARAMS_REL` still names v18. DE 126 phase 1
+      was dispatched at 08:49:55Z and has not landed at my read, so THE BLOCK STANDS AS I WRITE THIS.
+  GO_E2_AND_GO_8_ARE_BOTH_BLOCKED_ON_ONE_ARTIFACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      one digest mismatch blocks BOTH the next early read (GO E2, 09-04) AND tonight's Gate-1 day run
+      (GO #8, the 09-07 close) -- they share the params version and the runner refuses for both. So the
+      user's remaining three early-read days and the six-day Gate-1 population wait on the same
+      three-line re-point. Recorded because a reader asking "what is blocked" should see BOTH, and because
+      the close is a fixed event at 2026-09-08T00:00Z that this must clear before.
+  THE_RESIDUALS_VALUE_IS_RIGHT_AND_ITS_CHECK_IS_A_SHAPE_CHECK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      REV's one residual on DE 124: the user-ruling predicate checks the R-id's SHAPE, not that the entry
+      EXISTS. Both halves measured. The value is right -- v26's `user_ruled_unsealed_emission` carries
+      `landed_at` "R-765", `ruled_by` "THE USER", `recorded_at_utc` 2026-09-07T07:47:01Z and
+      `the_ruling_verbatim`, and `### R-765` appears exactly once in the register. The check is not: it
+      tests presence and shape, so a block naming a register entry that was never written would pass. A
+      CITATION THAT IS CORRECT TODAY BECAUSE THE WRITER WAS CAREFUL IS NOT A CHECKED CITATION -- the same
+      class as R-601's "a cited artifact is locatable", one level up from paths to register ids.
+  REV_MEASURED_BEs_CHANGE_UNDER_DEs_OWN_METHOD_AND_DID_NOT_PRE_APPROVE:
+    prov: RELAYED
+    from: R-771 / REV 93 (REV ran DE's own re-point method over BE's change)
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      REV measured BE 96's change under DE's OWN re-point method, found it battery-only, and HANDED THE
+      MEASUREMENT OVER RATHER THAN PRE-APPROVING THE RE-POINT -- the decision stays with the seat whose
+      declaration it is. RELAYED and marked so: verifying it means running DE's method over BE's diff,
+      which is REV's act and not MEM's. The shape is worth carrying: a reviewer who measures and hands over
+      is doing something different from a reviewer who approves, and only the first leaves the seat's
+      judgement intact.
+  FIVE_PRE_EXISTING_DEFECTS_SAT_BEHIND_ONE_PHASE4_FAIL:
+    prov: RELAYED
+    from: R-771 (DE 125's stop; DE's reading of the phase4 suite)
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      DE 125 stopped on FIVE pre-existing defects behind one FAIL: BE 52's three undeclared changes against
+      R-499's admission, four cells asserting a verdict that is not the runner's property, a NameError that
+      ended the suite early, R-499's grant inert, and 212 of 252 declared checks reachable. RELAYED --
+      establishing them means running the phase4 suite and reading its cells, which is DE's act. The number
+      MEM carries is the one a state file is for: 212 OF 252 DECLARED CHECKS ARE REACHABLE, so a green
+      suite has been reporting on four fifths of what it declares.
+  A_NAME_ERROR_ENDED_THE_SUITE_EARLY_FOR_EVERYONE:
+    prov: RELAYED
+    from: R-771 (DE 125's stop)
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      one of the five is a NameError that ended the suite early FOR EVERYONE -- not one seat's problem and
+      not one seat's suite. It is rule 17's shape again (suite-green is not pipeline-wired) with a third
+      variant: a suite that STOPS is neither green nor red for the checks after the stop, and nothing in
+      the count said so until someone counted the reachable cells. Carried as state; DE 126 phase 2 owns it.
+  THE_RULING_FOR_PHASE_2_IS_THE_ONE_I_KEEP_SEEING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      DE 126 phase 2 runs under "THE CONSTANT IS NEVER ADJUSTED TO THE OBSERVATION" with `n_run` beside
+      `n_conditional`. That is the same rule the programme has now stated from four directions: never
+      loosen a check to make it pass (R-767), a known-bad asserts a delta from its own baseline (REV 83
+      section 5), a derived block changes only to what its measurement re-derives (R-769), and now a
+      declared check count is never edited down to what ran. MEM records the convergence because four
+      independent arrivals at one rule is the strongest evidence a programme produces that the rule is real.
+  SIX_WALLS_NONE_LOOSENED_TWO_TIGHTENINGS_AND_ONE_RESIDUAL:
+    prov: RELAYED
+    from: R-771 / REV 93's accounting of DE 124
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      REV's own accounting: everything else in DE 124 PASSES, the six walls were "none loosened, two
+      tightenings", and there is ONE residual (the R-id's existence). RELAYED as REV's verdict on another
+      seat's batch, which is REV's to give. What MEM adds is the arithmetic across rounds: four stops became
+      six walls, none loosened, two of them tightened beyond what was asked, and the batch landed with one
+      residual routed rather than waived.
+  E1_IS_STILL_RUNNING_AT_EIGHTY_TWO_MINUTES:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260903.service (a unit, not a file)
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      loaded / active / RUNNING with `ExecMainExitTimestamp` EMPTY at 08:50:40Z, id
+      e40782fa6dc44de699347def3d733061, MemoryPeak still 2,715,901,952 -- the same value at 07:31:38Z,
+      07:48:37Z, 08:04:57Z, 08:14:41Z, 08:25:13Z, 08:39:03Z and now. Started 07:28:57Z, so EIGHTY-TWO
+      MINUTES against an expected 86 and an expected exit about 08:55Z. Still inside its estimate; recorded
+      because the estimate came from the sealed receipts' own resource blocks and this is the first run to
+      test it.
+  DA_125_IS_DRAFTED_AND_THE_TABLE_STILL_COMES_FROM_DAs_READER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      DA 125 -- the independent read of E1's artifact -- is DRAFTED and goes as its own GO when the receipt
+      lands. The standing shape holds and is worth restating at the moment the first numbers arrive: DE's
+      report does not print the table, DA's reader does, under DA 124's `--print-under-ruling` mode with
+      the labels R-757 fixed (computed under v15, the sealed run RECONSTRUCTED under v14 for 09-03, counts
+      visible since 2026-09-06T14:01Z). MEM prints nothing either.
+  I_OPENED_NO_SEALED_RECEIPT_AT_ROUND_257_EITHER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T08:51:45Z
+    said: >-
+      what I opened: two declarations (params v18, design v26), two Python sources by digest only, git
+      plumbing, one unit reading and the register. No receipt of any kind -- E1's still does not exist at
+      my read, eighty-two minutes into its run.
   # --- MEM round 256, 2026-09-07T08:40:28Z (the clock read by which every measurement below was complete) ---
   DESIGN_v26_IS_TRACKED_AT_MY_READ_AND_I_SAY_WHEN:
     prov: CHECKED

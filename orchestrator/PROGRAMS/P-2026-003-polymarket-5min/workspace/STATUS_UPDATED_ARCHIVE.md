@@ -18999,3 +18999,80 @@ generation and the window went 4 → 3. Nothing rewritten.
   missing-artifact findings, 160 at my round start plus ONE of mine, the running unit. Window trimmed
   4 -> 3, **Batch 235** archived. Q-MEM-241 filed through the script.)
 ```
+
+## Batch 239 — archived 2026-09-07T08:51:45Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T08:15:46Z (MEM ROUND 254 -- R-767 SWEPT, with every landing between my own ad99d53 and the
+  tip `356ffc9`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
+  (1) ***IN-BAND CORRECTION OF MY OWN ROUND 253: DESIGN v26-v30 WERE NEVER LANDED AND ARE WITHDRAWN. THE
+  FAMILY HEAD IS v25.*** Round 253 recorded them as existing versions and reported the head as v30. What it
+  recorded, it measured -- the files existed (mtimes 07:50-08:03Z, which R-767 itself quotes), the resolver
+  returned v30, v30 carried the `REDECLARED_MERGES` block, and every one of them was **untracked and
+  gitignored, which round 253 recorded as the load-bearing fact and which is precisely what made the
+  withdrawal possible**. What changed is their STATUS, not the reading. At my read, 08:14:41Z: v24 and v25
+  PRESENT and tracked; **v26, v27, v28, v29, v30 ALL ABSENT** -- DE completed the withdrawal between the
+  08:13:54Z ruling and my read. **Five round-253 flags touch them** (three name a withdrawn version in the
+  key itself, which is the count R-767 made); each value now points forward and each `said` carries a
+  superseding sentence. **Nothing is removed, the landed row is untouched, and round 253's generation
+  stands as written with this one above it.**
+  (2) ***THE HEAD IS v25 AT THE SAME DIGEST IT HAD BEFORE THE BATCH BEGAN***: b95ac59cf46d941d, 24 versions,
+  orphans EMPTY -- the digest RESULTS 0a recorded at the second seat reset. So the family is byte-for-byte
+  where it was, not merely at a version numbered 25, which is what makes this a withdrawal rather than a
+  repair. ***AND THE RED PROXY CELL IS TRUE AGAIN WITHOUT ANYTHING BEING FIXED***: round 253 measured
+  `n_merge_links` 20 against `merged_tips` 5; now 5 and 5. The four versions that re-declared v25's merges
+  are gone. A reader seeing the cell green tomorrow would have no way to know it was ever red, or why.
+  (3) ***THE MISSING-ARTIFACT CHECK FIRED FOR THE FIRST TIME ON A REAL VANISHING -- AND IT CAUGHT MY OWN
+  FLAGS.*** The audit's count went **161 -> 163** between my round-253 write and this read, and both new
+  entries are MINE, both citing `…design_v30.json`, the file withdrawn an hour after I cited it. That is the
+  failure the check exists for, in the instrument's own words: *"a CHECKED flag whose artifact is GONE is a
+  finding -- three arms artifacts vanished on 2026-09-04 and a flag citing one still read as established."*
+  ***AND IT IS EXACTLY WHAT I SAID IT HAD NEVER DONE***: at round 245 I classified all 150 findings and
+  wrote "NOT ONE OF THE 150 IS AN ARTIFACT THAT ACTUALLY VANISHED", restating it every round since. That was
+  true for its population; the population has changed. ***THIS IS THE ARGUMENT FOR MY ROUTED REMEDY, NOT
+  AGAINST THE CHECK***: my proposal was never "delete it" but "give non-path references a third answer so
+  the count carries signal" -- and had the 150 undecidable references been outside the count, these two
+  would have stood alone and been unmissable instead of arriving as a delta I only examined because I
+  compute it every round. **Keep the check, fix the codomain**, and the fix is worth more today than when I
+  proposed it.
+  (4) ***THE WITHDRAWAL PRECEDENT IS BOUNDED, AND I CARRY THE FENCE VERBATIM***: R-711's immutability binds
+  LANDED versions and the CAS forbids overwriting, not withdrawing an uncommitted file its own writer
+  produced in a batch that stopped. Five conjuncts -- **never committed, same seat, same unfinished batch,
+  deleted before that batch lands, each named with its digest in the register** -- and "nothing else is ever
+  deleted". A precedent stated once and cited later is exactly where a bounded rule becomes an unbounded
+  one, so the fence travels with it.
+  (5) ***DE STOPPED A SECOND TIME ON A CONTRADICTION ITS OWN FIXES MADE, AND NEITHER RULE WAS LOOSENED.***
+  BE's frozen-block rule ("a correction adds, it does not edit what is recorded") refuses v29's REMOVAL of
+  the inherited `also_supersedes`; ruling (3)'s guard refuses RESTORING it; no version satisfies both. DE
+  drove both directions, proposed the narrowing and did not act unilaterally -- its own words: *"I've
+  already made this worse five times by fixing forward."* The ruling narrows the GUARD to the case it was
+  written for (only a NEWLY INTRODUCED re-declaration; inheritance unchanged permitted and REPORTED),
+  falsified both ways, with the alternatives recorded and not taken -- because the other routes required
+  either leaving a rule-13 violation in history or bending BE's rule, and **"never loosen a check to make it
+  pass"**.
+  (6) ***AND THE PIN-VS-MENTION THREAD IS CLOSED END TO END ACROSS FOUR ROUNDS.*** The checker's JSON-path
+  field landed at `773f857` (clean in `git status`), its comment stating the purpose in the vocabulary this
+  thread settled on -- *"each hit carries the JSON PATH of the field holding the digest, so a MENTION (an
+  incident …"*. The real v7 now reads `producer_exit_maps_v8.json:supersedes.the_incident.das_v7`, **the
+  exact path I published at round 251 from walking the JSON**, and the historical v2 reads
+  `producer_exit_maps_v4.json:chain_repair.restored`. Round 251 measured the hit; round 253 read the field's
+  header and found it matched CONTENT, adopting REV's sharper vocabulary; round 254 reads the landed field
+  printing the path. **The field now says what the property is instead of what a grep found.** Its falsifier
+  PASSED in 2m39s after two runs were killed at their caps -- the same budget wall I hit at rounds 250 and
+  251, now fenced by skipping the pin census in the denominator sub-runs.
+  (7) ***E1 IS STILL RUNNING AT FORTY-SIX MINUTES***: loaded / active / RUNNING at 08:14:41Z, MemoryPeak
+  2,715,901,952 -- the same value at 07:31:38Z, 07:48:37Z, 08:04:57Z and now -- against an expected exit
+  about 08:55Z. The 09-03 numbers do not exist yet; when the receipt lands it is DA's reader that prints the
+  table. DE 124 continues; **REV 92 part B / REV 93 gate GO E2 and GO #8**.
+  (8) ***THE TWO VANISHED-ARTIFACT FINDINGS STAY IN THE COUNT, DELIBERATELY.*** I superseded the flags;
+  I did NOT re-point their `artifact:` at a file that still exists. The citation is to a version that was
+  withdrawn, and that is the true state -- re-pointing would erase the only evidence in the state file that
+  those two readings were taken against something now gone. **A finding I caused stays visible until the
+  reason for it is gone**, which for these two is never.
+  Counts: flags 1,787 -> **1,802**; provenance 1,332 -> **1,347**; tasks 19; **1,066 CHECKED /
+  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTIETH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **164** missing-artifact findings -- 163 at my round start (161 at round 253's write
+  plus the TWO the withdrawal created) plus ONE of mine, the running unit. Window trimmed 4 -> 3, **Batch
+  236** archived. Q-MEM-242 filed through the script.)
+```

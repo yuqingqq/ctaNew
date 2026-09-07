@@ -1,3 +1,86 @@
+# READ FIRST — round 257 (MEM, 2026-09-07T08:51:45Z, tip `7245f33`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-771 swept, with every landing
+between my own `3918ae5` and the tip. **I opened no receipt of any kind.**
+
+## 0. State — both GOs blocked on one artifact
+
+| | |
+|---|---|
+| **GO E2 (09-04) and GO #8 (tonight's close)** | **BLOCKED** — one digest mismatch refuses both at preflight |
+| **The unblock** | DE 126 phase 1 (params **v19** re-point widened to the cascade + design **v27** + `PARAMS_REL` → v19), dispatched 08:49:55Z, **not landed at my read** |
+| **Then** | **REV 94 part A** gates GO E2 and GO #8 |
+| **Heads** | params **v18**, design **v26** — unchanged |
+| **E1** | still **running**, 82 min in, expected exit ≈ 08:55Z; **DA 125 drafted** for the read of its artifact |
+
+## 1. The NO-GO verifies at both ends
+
+params v18 carries exactly **one** `be_module` block —
+`path` `live/pm_research/be_cancel_axis_null.py`, `sha256` **93332a45**faf714… — and the
+file on disk hashes **5607bfbf**e1b4ef89. **The params version in force pins a digest the
+file no longer has**, and the runner refuses at **preflight** rather than running a null
+control whose code moved under it: a named refusal that writes nothing, costing a
+dispatch rather than a run.
+
+## 2. And the sharper half checks out — one commit, two modules, one pin
+
+| module | last commit |
+|---|---|
+| `be_cancel_axis_null.py` *(pinned)* | **c707eb8** (BE 96) |
+| `harmful_stateful_policy.py` *(not pinned)* | **c707eb8** — the same commit |
+
+`be_module` is a **single** `{path, sha256}`. So **a BE change confined to the cascade
+module REV names as carrying the behaviour would have produced no mismatch at all, and
+the run would have proceeded.** Today it happened to be the pinned file that moved.
+**A guard that fires on the file it pins tells you nothing about the files it does not.**
+REV routed widening `be_module` to the cascade by pair; MEM records the shape.
+
+## 3. One mismatch blocks two gates
+
+The next early read and tonight's Gate-1 day run **share the params version**, so the
+user's remaining three early-read days *and* the six-day Gate-1 population wait on the
+same three-line re-point — with the close a **fixed event at 2026-09-08T00:00Z** that it
+must clear before. Measured at my read: `params_v19` and `design_v27` absent, heads still
+v18/v26, `PARAMS_REL` still v18. **The block stands as I write.**
+
+## 4. REV's one residual — the value is right, the check is a shape check
+
+v26's `user_ruled_unsealed_emission` carries `landed_at` **"R-765"**, `ruled_by` "THE
+USER", `recorded_at_utc` 07:47:01Z and the verbatim ruling — and `### R-765` appears
+exactly once in the register, **so the citation is correct**. But the predicate tests
+**presence and shape**, so a block naming a register entry that was never written would
+pass. **A citation that is correct today because the writer was careful is not a checked
+citation** — R-601's class one level up, from paths to register ids.
+
+## 5. Relayed, marked so — four other-seat readings
+
+- REV measured BE 96's change **under DE's own re-point method**, found it battery-only, and **handed the measurement over rather than pre-approving** — leaving the declaration's decision with its seat.
+- DE 125 stopped on **five pre-existing defects behind one FAIL**; the number a state file should carry is **212 of 252 declared checks reachable** — a green suite reporting on four fifths of what it declares.
+- One of the five is **a NameError that ended the suite early for everyone** — rule 17 with a third variant: **a suite that stops is neither green nor red for the checks after the stop**, and nothing in the count said so.
+- REV's accounting of DE 124: everything else **passes**, six walls **"none loosened, two tightenings"**, one residual.
+
+**Establishing any of these means running another seat's suite** — REV's act and DE's,
+not MEM's, which is why RELAYED moves by four this round, the largest step I have taken.
+
+## 6. The rule arriving from a fourth direction
+
+DE 126 phase 2 runs under **"the constant is never adjusted to the observation"**, with
+`n_run` beside `n_conditional`. The programme has now stated that rule from four
+independent places — never loosen a check to make it pass (R-767); a known-bad asserts a
+delta from its own baseline (REV 83 §5); a derived block changes only to what its
+measurement re-derives (R-769); and now a declared check count is never edited down to
+what ran. **Four independent arrivals at one rule is the strongest evidence a programme
+produces that the rule is real.**
+
+Counts: flags 1,832 → **1,847**; provenance 1,377 → **1,392**; tasks 19; **1,107 CHECKED
+/ 280 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-third round
+unchanged on UNMARKED, RELAYED moving by four (§5). ORPHAN census **0**; audit exit **1**
+on **167** — 166 at round start plus one of mine, the running unit. Fifteen written,
+fifteen counted. Window trimmed 4 → 3, **Batch 239** archived. Q-MEM-245 filed through the
+script.
+
+---
+
 # READ FIRST — round 256 (MEM, 2026-09-07T08:40:28Z, tip `4700030`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-770 swept, with every landing
