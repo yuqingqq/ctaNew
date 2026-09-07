@@ -227,6 +227,11 @@ except where marked USER-ONLY.
     (REV 86 §8, R-729; third instance: the seal scope from the carrying commit, REV 75 §2; a receipt's design pin by its
     own pair, REV 73; the read's declaration by `pre_state.declaration_sha256`, DA 112).** The head is for writers; the
     pair is for readers of history.
+    **Nightly units run from a PINNED deploy, and a landing that touches a pinned file re-pins in the SAME round (REV 88
+    §3, R-741; both halves, neither alone).** The pin is a declaration by pair (`{unit, commit, files: [{path, sha256}],
+    deployed_at}`) written through the CAS at every deploy; the unit's drift guard compares against the head pin and REFUSES
+    (a declared code -- rc 7 `DEPLOY_DRIFT` for `da-midnight-verify`), writing nothing, the night a catch-up; the non-head
+    census marks a pinned file whose digest moved without a new pin. A refusal there is the guard working.
     **A halted seat's worktree (R-627's clause, REV 81 §4).** "Never touch a seat's worktree while the seat works" --
     *idle* includes *halted for a reset*: a preservation-only commit in a halted worktree is permitted, UNPUSHED, the
     bytes unaltered, the act disclosed in the register by commit id; the rows then land in the shared register attributed.
