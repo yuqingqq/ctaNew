@@ -63,6 +63,51 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T02:16:02Z (MEM ROUND 242 -- R-742 SWEPT, tip `adf2f76`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***THE PIN STATUS DRIVEN READ-ONLY AT THE REAL PIN***: keys printed and asserted, then
+  **status CLEAN, `n_stale` 0, `n_missing` 0**, both lists empty -- so all 33 pinned files' on-disk
+  digests match the pin AT THIS READING. A live state: the drift this check exists for is exactly a
+  landing moving one of those files, and DA lands often, so it carries its as-of. ***AND I DID NOT
+  RUN DA's CENSUS, BECAUSE IT WRITES***: `da_nonhead_census` emits a record into DA's family, so
+  running it would have made me a producer of another seat's artifact; `stale_pins()` is a pure read,
+  so I called that. **The falsifier R-742 quotes (edit -> STALE -> restore -> CLEAN) I did NOT
+  reproduce** -- it edits a real pinned file. Taken as RELAYED, and said so.
+  (2) ***THE UNIT's `ExecStart` IS THE SCRIPT THE EXIT MAP DECLARES.*** The unit runs
+  `/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh`; the exit map's producer key is
+  `live/pm_research/da_midnight_verify.sh` -- **the same script**. So rc 7's declaration is attached
+  to the code the unit actually runs, not to a namesake, which is what makes *"rc 7 = DEPLOY_DRIFT,
+  nothing ran, a catch-up day"* resolvable by a reader holding only the unit's exit status.
+  (3) **v1's `unit` FIELD WAS A LIST AND v2's IS A STRING** -- the defect DA caught by reading its own
+  artifact after writing it, visible at the files: v1's `unit` is an array of unit-file objects, so a
+  reader asking *which unit is this pin for* got a list of paths; v2's is
+  `"da-midnight-verify.service"`. ***AND THE CORRECTION RENAMES RATHER THAN DROPS***: v2 ADDS
+  `installed_unit_files`, so the list v1 mis-filed is still carried, under a name that says what it
+  is. **That is what keeps a v2 a correction and not a loss.** v1 is not edited.
+  (4) **33 FILES COUNTED FROM THE ARRAY, NOT READ FROM `n_files`** -- 33, equal to the field, the
+  total agreeing with its parts; tier split **REPORT 26 / REFUSE 7 = 33**, matching the entry; commit
+  `9abba110a9a9b269…`, `deployed_at` 02:11:49Z. **And every one of the 33 entries carries a 64-hex
+  digest** -- R-608's *"the link IS the pair"* applied to a DEPLOY PIN rather than a declaration
+  chain, which is what lets `stale_pins()` answer at all. The chain resolves to v2 (2 versions,
+  `orphan_branches []`; v1 `38287c4fe32351cc`, v2 `e454ff3d53236dc9`).
+  (5) **EXIT 8 VERIFIED AT THE LINE, NOT BY PATTERN.** My first grep guessed the shapes
+  (`exit(8)`, `SystemExit(8)`, `rc 8`, `EXIT_8`) and found **nothing** -- which I did **not** report
+  as an absence. I listed every `exit` in the script instead and found it at line 132:
+  `|| { echo "REFUSED: the pin was not written: $_PIN" >&2; exit 8; }`. **Sixth time this session a
+  guessed pattern returned an empty answer, and the sixth time listing the real thing was one command
+  away.**
+  (6) **THE ROLL-UP PRECEDENCE IS STALE-BEATS-MISSING**, read at the source:
+  `status = "DEPLOY_PIN_STALE" if stale else "PINNED_FILE_ABSENT" if missing else "CLEAN"`. If a file
+  is stale AND another missing, the single word says STALE -- but both lists come back with their own
+  counts, so **nothing is lost, only summarised**. Recorded so neither is mistaken for the other.
+  **`PINNED_FILE_ABSENT` exists** because, in DA's words, *"an absent file has no digest, and reading
+  that as clean is how a deleted guard would deploy itself"* -- rule 16's shape at the deploy layer,
+  absence given its own name instead of falling through to the good case. (That reason is RELAYED;
+  what I measured is that the status is in the code and the real pin reports 0 missing.)
+  Counts: flags 1,603 -> 1,614; provenance 1,148 -> 1,159; tasks 19; **882 CHECKED / 277 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-EIGHTEENTH round unchanged on UNMARKED**; RELAYED moves by one, for
+  the falsifier I declined to reproduce. ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 224
+  archived. Q-MEM-230 filed through the script.)
   2026-09-07T02:08:03Z (MEM ROUND 241 -- R-740 AND R-741 SWEPT, tip `5115905`. STATE ONLY. MEM
   ASSERTS NO RESULT.
   (1) ***THE LOCK IS HELD ON THE DECLARED INODE BY BE 88's OWN CGROUP -- VERIFIED WITHOUT TAKING
@@ -174,67 +219,6 @@ updated: >-
   Counts: flags 1,581 -> 1,592; provenance 1,126 -> 1,137; tasks 19; **861 CHECKED / 276 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-SIXTEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 222 archived. Q-MEM-228 filed through the script.)
-  2026-09-07T01:53:16Z (MEM ROUND 239 -- R-737 AND R-738 SWEPT, tip `274b9f9`. STATE ONLY. MEM
-  ASSERTS NO RESULT.
-  (1) **v6 VERIFIED, AND ITS BYTES DID NOT MOVE**: 12,456 B, `a240ccc5fb171641` -- identical to what
-  I censused at round 238 while the file was still UNTRACKED. **`pins.taken_by` now reads
-  "be_forward_day -- THE PRODUCER OF THE DAY'S SEALED FEED"**, correcting exactly the field whose
-  misnaming I read in v5's own words last round, and v5 is not edited -- the pair carries it.
-  (2) ***A KEY DIFF FINDS FIVE WHERE `declared_changes` NAMES FOUR.*** Recomputed: v5 has 19 keys,
-  v6 has 20, the ADDED one being `correction_census`; **15 byte-identical** (matching R-738);
-  `declared_changes` exactly `[pins, protocol, as_of_utc, supersedes]`. **The fifth difference is
-  the block doing the declaring** -- not a defect, since BE 81 made it a declared exemption because
-  the emitter writes it AFTER the census runs. **AND THIS IS THE SECOND FAMILY WITH THAT PROPERTY**:
-  at round 226 I diffed the design v24 -> v25 and found nine against a declared eight, reconciled on
-  the same key. **A reader diffing versions from outside will always find exactly one more
-  difference than the census names, and it will always be `correction_census`.**
-  (3) **THE MULTI-HOP WALK VERIFIED ON A FIXTURE.** Built v1 (a first read over 09-03..05), v2 (the
-  second read -> v1) and v3 (a CORRECTION of v2 within the same read -> v2) -- the exact shape v6
-  created. A one-hop follow from v3 lands on v2, whose READABLE is the second read's days; it renders
-  correctly, `generated_from` carrying **`every_hop_verified: 2`** with each hop's pair, and the
-  sentence naming **"A first read over 20260903..20260905 (3 days)"**.
-  (4) ***BUT MY FIXTURE ISOLATED THE DECLARATIONS AND NOT THE DERIVED TREE.*** `not_pooled_clause`
-  takes `decl_dir` AND `derived_dir`; I passed the first and left the second at its DEFAULT, which
-  resolves to the real ledger -- **so BE's code read the real first read's result inside my process,
-  three times**, to compute the consistency word. At rounds 234 and 235 I DECLINED to run BE's
-  battery for exactly that reason and relayed its check count instead; **isolating the declarations
-  while leaving the derived tree at default reached the same read by a side door. The parameter
-  existed and I did not pass it.** On exposure, precisely: `day_signs` is one of the two PERMITTED
-  fields (R-707) and its consistency verdict was published in R-707 itself, so nothing unpermitted
-  was read or is quoted -- **what lapsed is the discipline, not the read order.** **And the remedy
-  is measured, not promised**: with `derived_dir` on an empty directory the generator REFUSES by
-  name, `FIRST_READ_RESULT_UNRESOLVED`. From here a MEM drive passes it explicitly; a drive that
-  cannot say which derived tree it read is not isolated.
-  (5) **`be87fwd06`'s id MATCHES R-738 AND ITS UNIT IS LOADED**: `51113c22b8b14c4d...`, status 1,
-  Result exit-code -- admissible, unlike `de115day06`, which still reads `not-found` with an empty id
-  and whose `Result=success` is still a DEFAULT (unchanged from round 238).
-  (6) ***THE FOURTH GAP CLOSED AT MY READ TIME.*** R-738 records the only 09-06 verdict as the one
-  written at the 09-05 close with `day_closed_calendar False`. **At my reading there is one with
-  TRUE** -- 61,231 B, `as_of_utc 2026-09-07T01:54:05Z` -- DA 114's catch-up verdict, landed between
-  R-738 (01:52Z) and my read (01:55Z). `be87fwd06`'s refusal precondition no longer holds.
-  (7) ***TWO INVOCATION IDS UNDER ONE UNIT NAME, AND THE SUCCESS IS THE CATCH-UP.*** The unit
-  `da-midnight-verify` NOW reads loaded / inactive / dead, `ExecMainStatus 0`, **`Result=success`** --
-  but the journal under that NAME carries TWO ids: `518760fb20e2437596b82953429c270d` (8 lines,
-  carrying the `DEPLOY_DRIFT rc 7` refusal R-738 quotes) and `6e25684e52614fe98523c979f9e8e067`
-  (3 lines, the catch-up). **A reader taking those five fields as "the 00:06Z run" would read SUCCESS
-  where a refusal happened.** Only the id separates them -- and the verdict artifact stamps that id
-  into its own `write_reason`, so the artifact says which run wrote it. **That is why rule 20 requires
-  the id beside the fields.**
-  (8) **MY ROUND-OPENING PULL REFUSED, CAPTURED NOT MASKED**: exit **128**, "cannot pull with rebase:
-  You have unstaged changes", because DA 114's re-deploy had `da_deploy_record.json` and `.sha256`
-  MODIFIED in the shared tree. Neither is one of MEM's three paths, so neither is mine to stage,
-  land or revert; HEAD already equalled origin so the refused pull cost nothing.
-  (9) ***AND I BROKE THIS FILE'S YAML WITH A MARKDOWN KEY.*** I wrote a flag key wrapped in
-  emphasis, and YAML reads a leading `*` as an ALIAS token -- the whole document stopped parsing
-  ("while scanning an alias ... but found '*'", line 424). Renamed to a bare identifier in both
-  blocks and re-parsed clean. **A new shape for my recurring class -- a FORMATTING character in a
-  STRUCTURAL position rather than a guessed name -- and the loudest failure yet: the parser refused
-  the entire document rather than returning something plausible.** The emphasis belongs in this
-  prose, never in a key.
-  Counts, final after two late flags: flags 1,569 -> 1,581; provenance 1,114 -> 1,126; tasks 19;
-  **850 CHECKED / 276 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIFTEENTH round unchanged on
-  UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 221 archived. Q-MEM-227 filed
-  through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -406,6 +390,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 242, R-742 swept ---
+  the_pin_status_DRIVEN_READ_ONLY_at_the_real_pin: CLEAN-0-STALE-0-MISSING
+  and_I_did_NOT_run_DAs_census_because_it_WRITES: CALLED-THE-PURE-FUNCTION-INSTEAD
+  the_units_ExecStart_IS_the_script_the_exit_map_declares: RC-7-ATTACHED-TO-THE-CODE-THAT-RUNS
+  v1s_unit_field_was_a_LIST_v2s_is_a_STRING: AND-THE-LIST-SURVIVES-AS-installed_unit_files
+  so_the_correction_RENAMES_rather_than_DROPS: NOTHING-LOST-BY-THE-FIX
+  33_files_counted_from_the_array_not_read_from_n_files: REPORT-26-PLUS-REFUSE-7-EQUALS-33
+  every_pinned_entry_carries_a_64_HEX_digest: R-608s-PAIR-DISCIPLINE-ON-A-DEPLOY-PIN
+  exit_8_verified_AT_THE_LINE_not_by_pattern: DA-DEPLOY-MIDNIGHT-SH-132
+  the_rollup_precedence_is_STALE_BEATS_MISSING: BOTH-LISTS-CARRIED-SEPARATELY
+  PINNED_FILE_ABSENT_exists_because_absence_must_not_read_as_clean: A-DELETED-GUARD-WOULD-DEPLOY-ITSELF
+  the_pin_chain_resolves_to_v2_clean: E454FF3D-TWO-VERSIONS-NO-ORPHANS
   # --- MEM round 241, R-740 + R-741 swept ---
   the_LOCK_IS_HELD_ON_THE_DECLARED_INODE_BY_BE88s_OWN_CGROUP: PROC-LOCKS-READ-ONLY-NEVER-TAKEN
   and_the_PROCESS_SHAPE_IS_ONE_LEVEL_DEEPER_than_rule_20s_clause: MAINPID-IS-THE-LAUNCHER-NOT-flock
@@ -25981,6 +25977,114 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 242, 2026-09-07T02:16:02Z ---
+  the_pin_status_DRIVEN_READ_ONLY_at_the_real_pin:
+    prov: CHECKED
+    artifact: live/pm_research/da_deploy_pin.py stale_pins(), called directly
+    as_of: 2026-09-07T02:17:00Z
+    said: >-
+      the guard's own question, asked myself at the real pin and not relayed: keys printed and
+      asserted, then status CLEAN, n_stale 0, n_missing 0, with the `stale` and `missing` lists both
+      empty. So all 33 pinned files' on-disk digests match the pin AT THIS READING. A live state --
+      the drift this check exists for is exactly a landing moving one of those files, and DA lands
+      often -- so it carries its as-of and a later reader re-runs it.
+  and_I_did_NOT_run_DAs_census_because_it_WRITES:
+    prov: CHECKED
+    artifact: my own choice of entry point
+    as_of: 2026-09-07T02:17:00Z
+    said: >-
+      recorded because the distinction is the whole reason the reading is admissible for my seat:
+      da_nonhead_census emits a record into DA's family in the ledger, so running it would have made
+      me a producer of another seat's artifact. stale_pins() is a pure read -- it hashes the pinned
+      files and returns -- so I called that. The falsifier R-742 quotes (edit -> STALE -> restore ->
+      CLEAN) I did NOT reproduce: it edits a real pinned file, and DA did it and reverted it. I take
+      that half as RELAYED and say so.
+  the_units_ExecStart_IS_the_script_the_exit_map_declares:
+    prov: CHECKED
+    artifact: systemctl --user cat da-midnight-verify.service, against producer_exit_maps_v5.json
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      the identity rc 7's readability rests on, closed at both ends: the unit's ExecStart is
+      /home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh and the exit map's producer key is
+      live/pm_research/da_midnight_verify.sh -- THE SAME SCRIPT. So the declaration is attached to
+      the code the unit actually runs, not to a namesake, which is what makes "rc 7 = DEPLOY_DRIFT,
+      nothing ran, a catch-up day" resolvable by a reader who has only the unit's exit status.
+  v1s_unit_field_was_a_LIST_v2s_is_a_STRING:
+    prov: CHECKED
+    artifact: both pin versions, read side by side
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      the defect DA caught by reading its own artifact after writing it, visible at the files: v1's
+      `unit` is a LIST of unit-file objects (path, sha256, exists), so a reader asking "which unit is
+      this pin for" got an array of paths; v2's `unit` is the STRING
+      "da-midnight-verify.service". v1 is not edited; v2 corrects by the pair.
+  so_the_correction_RENAMES_rather_than_DROPS:
+    prov: CHECKED
+    artifact: v2's key set against v1's
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      the part worth naming as good form: v2 ADDS `installed_unit_files`, so the list v1 mis-filed
+      under `unit` is still carried -- under a name that says what it is. The correction moved the
+      content to the right key rather than deleting it, which is what keeps a v2 a correction and not
+      a loss. v1 also carries first_of_family / why_first_of_family and v2 carries supersedes,
+      matching the entry's account of the family's start.
+  33_files_counted_from_the_array_not_read_from_n_files:
+    prov: CHECKED
+    artifact: da_midnight_deploy_pin_v2.json
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      counted the `files` array myself rather than reading the summary: 33, equal to the n_files
+      field -- the total agreeing with its parts. The tier split from the entries is REPORT 26 and
+      REFUSE 7, summing to 33, matching R-742's "7 REFUSE-tier / 26 REPORT-tier". commit
+      9abba110a9a9b269..., deployed_at 2026-09-07T02:11:49Z.
+  every_pinned_entry_carries_a_64_HEX_digest:
+    prov: CHECKED
+    artifact: the same files array
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      checked as a predicate over all 33: every entry's sha256 is a string of exactly 64 characters.
+      So the pin is a real {path, sha256} set -- R-608's "the link IS the pair" applied to a DEPLOY
+      PIN rather than to a declaration chain, and it is what lets stale_pins() answer at all.
+  exit_8_verified_AT_THE_LINE_not_by_pattern:
+    prov: CHECKED
+    artifact: live/pm_research/da_deploy_midnight.sh line 132
+    as_of: 2026-09-07T02:17:00Z
+    said: >-
+      recorded with its small process note: my first grep guessed the shapes (exit(8), SystemExit(8),
+      rc 8, EXIT_8) and found NOTHING, which I did not report as an absence -- I listed every `exit`
+      in the script instead and found it at line 132:
+      `|| { echo "REFUSED: the pin was not written: $_PIN" >&2; exit 8; }`. The deploy act refuses
+      rather than deploying unpinned. Sixth time this session that a guessed pattern returned an
+      empty answer, and the sixth time listing the real thing was one command away.
+  the_rollup_precedence_is_STALE_BEATS_MISSING:
+    prov: CHECKED
+    artifact: da_deploy_pin.py, the status expression
+    as_of: 2026-09-07T02:17:00Z
+    said: >-
+      read at the source: `status = "DEPLOY_PIN_STALE" if stale else "PINNED_FILE_ABSENT" if missing
+      else "CLEAN"`. So if a file is stale AND another is missing, the ROLL-UP says STALE -- but both
+      `stale` and `missing` are returned as their own lists with their own counts, so nothing is
+      lost, only summarised. A reader taking the single status word gets the more urgent of the two;
+      a reader wanting the whole picture reads the lists. Recorded so neither is mistaken for the
+      other.
+  PINNED_FILE_ABSENT_exists_because_absence_must_not_read_as_clean:
+    prov: RELAYED
+    artifact: R-742's stated reason
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      DA's reason, in the entry's words: "an absent file has no digest, and reading that as clean is
+      how a deleted guard would deploy itself". Marked RELAYED because it is a rationale, not
+      something I measured -- what I measured is that the status exists in the code and that the real
+      pin currently reports 0 missing. It is rule 16's shape at the deploy layer: absence given its
+      own name rather than falling through to the good case.
+  the_pin_chain_resolves_to_v2_clean:
+    prov: CHECKED
+    artifact: declaration_chain.resolve_head on da_midnight_deploy_pin
+    as_of: 2026-09-07T02:16:00Z
+    said: >-
+      keys asserted before reading: head da_midnight_deploy_pin_v2.json, version 2, n_versions 2,
+      orphan_branches []. Digests v1 38287c4fe32351cc (7,418 B) and v2 e454ff3d53236dc9 (7,120 B),
+      both matching R-742.
   # --- MEM round 241, 2026-09-07T02:08:03Z ---
   the_LOCK_IS_HELD_ON_THE_DECLARED_INODE_BY_BE88s_OWN_CGROUP:
     prov: CHECKED

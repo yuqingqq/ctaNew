@@ -1,3 +1,80 @@
+# READ FIRST — round 242 (MEM, 2026-09-07T02:16:02Z, tip `adf2f76`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-742 swept.
+
+## 1. The pin status, driven read-only at the real pin
+
+Keys printed and asserted, then **`status: CLEAN`, `n_stale` 0, `n_missing` 0** —
+all 33 pinned files' on-disk digests match the pin **at this reading**. A live
+state: the drift this check exists for is a landing moving one of those files, and
+DA lands often.
+
+**And I did not run DA's census, because it writes.** `da_nonhead_census` emits a
+record into DA's family — running it would have made me a producer of another
+seat's artifact. `stale_pins()` is a pure read, so I called that. **The falsifier
+R-742 quotes (edit → STALE → restore → CLEAN) I did not reproduce** — it edits a
+real pinned file. Taken as **RELAYED**, and that is why RELAYED moves by one this
+round.
+
+## 2. The unit's ExecStart is the script the exit map declares
+
+| | |
+|---|---|
+| unit `ExecStart` | `/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh` |
+| exit-map producer key | `live/pm_research/da_midnight_verify.sh` |
+
+**The same script** — so rc 7's declaration is attached to the code the unit
+actually runs, not a namesake. That is what makes *"rc 7 = DEPLOY_DRIFT, nothing
+ran, a catch-up day"* resolvable by a reader holding only the exit status.
+
+## 3. The v1 → v2 correction renames rather than drops
+
+v1's `unit` was a **list** of unit-file objects — a reader asking *which unit is
+this pin for* got an array of paths. v2's is the string
+`"da-midnight-verify.service"`. **And v2 adds `installed_unit_files`**, so the list
+v1 mis-filed is still carried, under a name that says what it is. **That is what
+keeps a v2 a correction and not a loss.** v1 is not edited.
+
+**33 files counted from the array**, equal to `n_files` — the total agreeing with
+its parts; tier split **REPORT 26 / REFUSE 7 = 33**; commit `9abba110a9a9b269…`,
+deployed 02:11:49Z. **Every one of the 33 carries a 64-hex digest** — R-608's *"the
+link is the pair"* applied to a deploy pin, which is what lets `stale_pins()`
+answer at all. Chain: head v2, 2 versions, `orphan_branches []`.
+
+## 4. Two source readings
+
+**Exit 8 verified at the line, not by pattern.** My first grep guessed the shapes
+(`exit(8)`, `SystemExit(8)`, `rc 8`, `EXIT_8`) and found **nothing** — which I did
+**not** report as an absence. I listed every `exit` in the script and found line
+132: `|| { echo "REFUSED: the pin was not written: $_PIN" >&2; exit 8; }`. **Sixth
+time this session a guessed pattern returned an empty answer, and the sixth time
+listing the real thing was one command away.**
+
+**The roll-up precedence is stale-beats-missing**:
+`status = "DEPLOY_PIN_STALE" if stale else "PINNED_FILE_ABSENT" if missing else
+"CLEAN"`. If a file is stale *and* another missing, the single word says STALE —
+but both lists come back with their own counts, so **nothing is lost, only
+summarised**. `PINNED_FILE_ABSENT` exists because *"an absent file has no digest,
+and reading that as clean is how a deleted guard would deploy itself"* — rule 16's
+shape at the deploy layer. *(That reason is relayed; what I measured is that the
+status is in the code and the real pin reports 0 missing.)*
+
+Counts: flags 1,603 → **1,614**; provenance 1,148 → **1,159**; tasks 19; **882
+CHECKED / 277 RELAYED / 455 UNMARKED — hundred-and-eighteenth round unchanged on
+UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 224 archived.
+Q-MEM-230 filed through the script.
+
+## 5. In flight at my landing
+
+`be88fwd06` **still running** (02:19:02Z); `de115day06_2` **not-found** — GO #6
+issued, DE still polling the lock's inode. Nothing landed at my commit time.
+
+**Chain ahead:** BE 88 → pins v2 → BE 89 · DE 117 (GO #6) once the lock frees →
+DA 116's pre-read → REV 89. **The USER's four items stand**, item (d) time-bound to
+2026-09-10T01:00:00Z.
+
+---
+
 # READ FIRST — round 241 (MEM, 2026-09-07T02:08:03Z, tip `5115905`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-740 and R-741 swept.
