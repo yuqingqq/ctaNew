@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 342
+EXPECTED_CHECKS = 346
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -661,15 +661,23 @@ def record_input_digest(name: str, rel: str) -> dict:
     return INPUT_DIGESTS[name]
 
 
-def verify_input_digests(where: str) -> dict:
+def verify_input_digests(where: str, *, digests: dict | None = None) -> dict:
     """RE-DIGEST EVERY DECLARED INPUT AT THE EMIT and refuse on a change.
 
     Both digests travel: the one taken where the file was READ and the one
     taken here. A receipt that carries only the second names bytes that
-    may not be the bytes the run used."""
+    may not be the bytes the run used.
+
+    `digests` IS EXPLICIT SO A PROBE CAN BRING ITS OWN (DE 116). Driven
+    against the process's real map, this function RE-READS every recorded
+    input -- and on a REAL day that map holds the design pin recorded at
+    S0, a LEDGER path. A battery cell doing that inside the fixture
+    probe's data-freeness window is what refused GO #5: the read is the
+    real run's, legitimate, and the window attributed it to a fixture."""
     root = Path(__file__).resolve().parents[2]
+    src = INPUT_DIGESTS if digests is None else digests
     out, moved, null_half = {}, [], []
-    for name, rec in sorted(INPUT_DIGESTS.items()):
+    for name, rec in sorted(src.items()):
         f = root / rec["path"]
         now = (hashlib.sha256(f.read_bytes()).hexdigest()
                if f.is_file() else None)
@@ -6922,18 +6930,139 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"the emit, where its two digests were one read twice. It cannot "
        f"go in `load_params`: a FIXTURE run must open no path under "
        f"`data/`, and the guard refused it there")
-    _saved106 = dict(INPUT_DIGESTS.get("params") or {})
+    # THE PROBE BRINGS ITS OWN MAP (DE 116). It used to mutate the
+    # process's `INPUT_DIGESTS` and drive `verify_input_digests` against
+    # it -- which RE-READS every recorded input. On a REAL day that map
+    # holds the design pin recorded at S0, so the probe read
+    # `data/pm_5min/derived/…design_v23.json` from inside the fixture
+    # probe's data-freeness window and GO #5 refused, naming that one
+    # path. Named at the artifact by DE 116's diagnosis (unit
+    # `de116diag_2`, id 7af79e7e…): the read is this cell, at
+    # `verify_input_digests` line 674. The known-bad's verdict rests on a
+    # CONSTRUCTED input now, which is what a known-bad should rest on, and
+    # it reads no ledger path on any run.
+    def _de116_drive(digests):
+        """Run `verify_input_digests` under the instrument and return the
+        window's proof. The refusal is expected on both maps (a null half);
+        what is measured is WHICH PATHS the window saw."""
+        def _go():
+            try:
+                verify_input_digests("a probe", digests=digests)
+            except RunnerRefused:
+                pass
+        return DR.instrumented(_go)[1]
+
+    _probe106 = Path(_tfr.mkdtemp(prefix="de116probe_")) / "probe.json"
+    _probe106.write_text("{}\n")
+    _map106 = {"a_probe_input": {
+        "path": str(_probe106),
+        "sha256_at_load": None,
+        "read_at_utc": "n/a", "existed_at_load": True}}
+    refuses(lambda: verify_input_digests("a probe", digests=_map106),
+            "REV 75 S1.1 KNOWN-BAD: a digest pair with a NULL HALF "
+            "REFUSES. `{path, sha256: null}` is not a pair (R-608): "
+            "one half absent cannot be compared, and `agrees: null` "
+            "beside it lets a reader take an unmade comparison for a "
+            "made one", "NULL HALF")
+    # ---- DE 116, BOTH DIRECTIONS ON THE DATA-FREENESS GUARD ----------
+    # (a) A FIXTURE THAT OPENS A LEDGER PATH STILL REFUSES BY NAME. The
+    # fix must not have blunted the instrument -- it moved ONE cell off
+    # the ledger, it did not teach the guard to forgive one.
+    import os as _os116
+    _dirty116 = {"pid": _os116.getpid(), "non_vacuous": True,
+                 "no_path_under_data_was_opened": False,
+                 "data_paths_opened": [
+                     "/home/yuqing/ctaNew/data/pm_5min/derived/x.json"]}
+    # `refuses()` catches this seat's own RunnerRefused; the data-root
+    # guard raises ITS OWN type, so the known-bad is driven directly and
+    # the refusal's own words are the assertion.
     try:
-        INPUT_DIGESTS["params"] = {**_saved106, "sha256_at_load": None}
-        refuses(lambda: verify_input_digests("a probe"),
-                "REV 75 S1.1 KNOWN-BAD: a digest pair with a NULL HALF "
-                "REFUSES. `{path, sha256: null}` is not a pair (R-608): "
-                "one half absent cannot be compared, and `agrees: null` "
-                "beside it lets a reader take an unmade comparison for a "
-                "made one", "NULL HALF")
-    finally:
-        if _saved106:
-            INPUT_DIGESTS["params"] = _saved106
+        DR.require_canonical("a probe", fixture=True, proof=_dirty116)
+        _dirty_admitted = True
+    except DR.DataRootRefused as _e116:
+        _dirty_admitted = False
+        _msg116 = str(_e116)
+    _clean116 = DR.require_canonical(
+        "a probe", fixture=True,
+        proof={"pid": _os116.getpid(), "non_vacuous": True,
+               "no_path_under_data_was_opened": True,
+               "data_paths_opened": []})
+    ok(_dirty_admitted is False
+       and "is not a fixture run" in _msg116
+       and "data/pm_5min/derived/x.json" in _msg116
+       and _clean116["refusal"] == "NOT_APPLICABLE_FIXTURE_RUN",
+       "DE 116 KNOWN-BAD: a fixture claim whose proof shows a LEDGER "
+       "path is still REFUSED BY NAME, naming the path -- and the same "
+       "guard ADMITS a clean proof. The fix took one battery cell off "
+       "the ledger; it did not soften the guard")
+    # (b) AND THE REAL RUN'S OWN SETUP READ IS THE ONE THAT MOVED. On a
+    # real day `run_day` records the design pin at S0 -- a LEDGER path --
+    # into `INPUT_DIGESTS`, twelve lines before the battery's window opens
+    # at 5646. The two drives below are the before and after of GO #5's
+    # refusal, measured on the SAME map in one process.
+    # SKIPPED OFFLINE AND NAMED, WITH THE CELL (my own DE 112 rule, and
+    # the reason is this cell's own subject): its second drive READS the
+    # ledger on purpose. The battery also runs NESTED with `offline=True`
+    # from inside `fixture_run`'s data-freeness window -- so an unguarded
+    # version of this cell put the design path in that window and the
+    # battery refused with GO #5's own message. Written unguarded, it
+    # reproduced the very defect it exists to close, which is recorded
+    # here rather than quietly fixed.
+    if offline:
+        offline_skip("DE 116: both directions on the read that refused "
+                     "GO #5 (its second drive reads data/ on purpose)")
+        offline_skip("DE 116: and the map + `_LAST_PROOF` restore beside "
+                     "it (it belongs to the same cell)")
+    else:
+        _sv116 = dict(INPUT_DIGESTS)
+        try:
+            INPUT_DIGESTS["design"] = {
+                "path": "data/pm_5min/derived/"
+                        "p003_de_multiday_gate1_design_v23.json",
+                "sha256_at_load": "0" * 64, "read_at_utc": "n/a",
+                "existed_at_load": True}
+            _pf_own = _de116_drive(_map106)
+            _pf_real = _de116_drive(None)
+            ok(_pf_own["no_path_under_data_was_opened"] is True
+               and _pf_own["non_vacuous"] is True
+               and _pf_real["no_path_under_data_was_opened"] is False
+               and any("design_v23" in x
+                       for x in _pf_real["data_paths_opened"]),
+               f"DE 116, BOTH DIRECTIONS ON THE READ THAT REFUSED GO #5, "
+               f"with the REAL DAY'S design pin present in "
+               f"`INPUT_DIGESTS`: driven against the probe's OWN map the "
+               f"window sees {len(_pf_own['data_paths_opened'])} ledger "
+               f"path(s) and is non-vacuous; driven against the PROCESS'S "
+               f"map it sees {len(_pf_real['data_paths_opened'])} -- "
+               f"{[x.split('/')[-1] for x in _pf_real['data_paths_opened']]}"
+               f". That second read is the real run's own, legitimate at "
+               f"S0, and it is what the probe cell above used to do from "
+               f"inside the fixture probe's data-freeness window")
+        finally:
+            INPUT_DIGESTS.clear()
+            INPUT_DIGESTS.update(_sv116)
+            # AND THE INSTRUMENT'S OWN AMBIENT STATE. `DR.instrumented`
+            # writes `_LAST_PROOF`, and `require_canonical(fixture=True)`
+            # falls back to it when a caller passes none -- so two drives
+            # left a proof carrying a ledger path where a later fixture
+            # claim would pick it up. A probe that instruments anything
+            # clears what it left: the same ambient-state class the fix
+            # above is about, one level down.
+            DR.clear_proof()
+        ok(dict(INPUT_DIGESTS) == _sv116 and not DR._LAST_PROOF,
+           "and the process's map AND the instrument's `_LAST_PROOF` are "
+           "both restored, so the control leaves no ambient state behind "
+           "for the cells after it (DE 111's own-baseline rule, applied "
+           "to a map and to a proof instead of to a measurement)")
+
+    ok(dict(INPUT_DIGESTS) == _id106
+       and not any("/data/" in str(v.get("path"))
+                   for v in _map106.values()),
+       f"AND THE PROBE TOUCHED NEITHER THE PROCESS'S MAP NOR THE LEDGER: "
+       f"`INPUT_DIGESTS` is unchanged ({sorted(_id106)}) and the probe's "
+       f"own map names no path under `data/`. Driving this cell against "
+       f"the real map re-read the design pin a REAL day records at S0 -- "
+       f"inside the fixture probe's window, which is what refused GO #5")
     # S1.2 `n_days_complete` was a DEFAULT PARAMETER nobody passed.
     # IT READS `data/` (it resolves the sealed receipts through the gate's
     # own glob), so a FIXTURE run must not run it -- the fifth time the
