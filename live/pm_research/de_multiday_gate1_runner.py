@@ -66,7 +66,7 @@ EXPECTED_CHECKS = 360
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v18.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -800,6 +800,34 @@ def load_params(path: Path | None = None) -> dict:
 
 def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
     """CITE BE's cascade, never copy it -- and refuse a different one."""
+    # REV 93 routed #1: THE CITATION IS THE CASCADE, NOT ONE FILE. A null
+    # run executes ten modules -- `replay` reaches `harmful_stateful_policy`
+    # and `de_phase4_diag_runner`, and those reach the rest -- so a digest
+    # on the entry point alone covered a tenth of the code that produces
+    # the numbers. BE 96 changed the entry point and the guard caught it;
+    # a change in any of the other nine would not have moved a digest.
+    # Every module is checked, each by its own pair.
+    _casc = (params.get("be_cascade") or {}).get("modules") or []
+    if _casc and actual_sha is None:
+        _repo = Path(__file__).resolve().parents[2]
+        _bad = []
+        for _m in _casc:
+            _f = _repo / _m["path"]
+            if not _f.is_file():
+                _bad.append({"path": _m["path"], "status": "ABSENT"})
+                continue
+            _got = hashlib.sha256(_f.read_bytes()).hexdigest()
+            if _got != _m["sha256"]:
+                _bad.append({"path": _m["path"], "declared": _m["sha256"],
+                             "actual": _got, "status": "DIGEST_DIFFERS"})
+        if _bad:
+            raise RunnerRefused(
+                f"REFUSED BE_CASCADE_DIFFERS: {len(_bad)} of {len(_casc)} "
+                f"cited cascade modules do not match their declared pair -- "
+                f"{_bad[:3]}. A null run through a DIFFERENT cascade is not "
+                f"a control; the citation must be re-pointed DELIBERATELY, "
+                f"with the draw-path and constant axes measured (see "
+                f"`be_module_repoint`).")
     declared = params["be_module"]["sha256"]
     if actual_sha is None:
         src = Path(__file__).resolve().parents[2] / params["be_module"]["path"]

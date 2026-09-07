@@ -45,10 +45,11 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-#: DE 124: 26. The design chain's head is v25 and this emits v26.
-#: Five hand-composed versions were withdrawn before landing; the record
-#: of them is in v26's `withdrawn_before_landing` block.
-VERSION = 26
+#: DE 126: 27. v19 re-points the cascade citation after BE 96, so the
+#: two-way pin follows it -- R31's paired bump, and this caller's own
+#: predicate (i) permits the move only because v19 supersedes v18 by a
+#: verifying pair.
+VERSION = 27
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
 EXPECTED_CHECKS = 132
 
@@ -157,6 +158,10 @@ V25_DECLARATION = ("p003_de_multiday_gate1_design_v25.json",
                    "b95ac59cf46d941d62e16ebae2f9eebf0dd4253b5905"
                    "55c83af332aa44ca24ce")
 
+V26_DECLARATION = ("p003_de_multiday_gate1_design_v26.json",
+                   "7de8906e607a66d48d163ead98d898f1cc0fca73f4aa3bc21d5a"
+                   "bbdb505616ca")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -166,7 +171,7 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V19_DECLARATION, V20_DECLARATION,
                     V21_DECLARATION, V22_DECLARATION,
                     V23_DECLARATION, V24_DECLARATION,
-                    V25_DECLARATION)
+                    V25_DECLARATION, V26_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -639,7 +644,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 #: USER's ruling retiring R5. The move is permitted by this caller's own
 #: predicate (i) only because v18 supersedes v15 by a verifying pair --
 #: through v16 and v17 -- and the digest verifies (DE 124).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v18.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
 
 
 def _params_path() -> Path:
