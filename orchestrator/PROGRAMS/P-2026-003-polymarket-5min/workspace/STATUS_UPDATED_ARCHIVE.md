@@ -18514,3 +18514,104 @@ generation and the window went 4 → 3. Nothing rewritten.
   finding: the count only carries signal if the entries stop feeding it prose. Window trimmed 4 -> 3,
   **Batch 229** archived. Q-MEM-235 filed through the script.)
 ```
+
+## Batch 233 — archived 2026-09-07T07:34:29Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T06:24:01Z (MEM ROUND 248 -- R-752, R-753 AND R-754 SWEPT, with every landing between my own
+  5d67043 and the tip `d45ec22`, REV 89's filing included. STATE ONLY. MEM ASSERTS NO RESULT AND RULES
+  NOTHING.
+  (1) ***THE USER RULED AN EARLY READ OF THE FOUR SEALED GATE-1 DAYS. THIS IS A USER RULING, NOT A
+  COORDINATOR ONE***, and I keep the distinction in these files: seven items stand
+  RULED-BY-COORDINATOR-OVERRULABLE (R-745's five, R-750's two) and this is not among them -- the
+  coordinator's objection is recorded in R-754 BESIDE the ruling, as an objection and not as a refusal
+  (rule 14: the user decides). Verbatim, at **2026-09-07T06:18:16Z**: *"it does not make sense to seal the
+  results, show me 4 days results first, we need to check and review the results."*
+  (2) ***WHAT THE RULING CHANGES, WRITTEN SO NO READER MISTAKES THE READ FOR A VALIDATION***: the four
+  days 2026-09-03..09-06 become **SEEN** and are consumed for any later validation of rankers, thresholds
+  or horizons (rule 11); the six-day confirmatory population 09-03..09-08 (R-555) is **NO LONGER
+  CONFIRMATORY**, four of its six being seen, and the next confirmatory population is a later USER ruling
+  on later untouched days, NOT chosen here; the read is **EXPLORATORY -- G = 4, point estimates, NO
+  interval** (rule 8, below five days), directional at best because 2^-4 = 0.0625 cannot clear Holm at
+  m = 2; the sealed receipts are unchanged and stay as landed, the read emitting a NEW family in the
+  unsealed layout under params **v16**. ***AND THE SECOND RACE READ'S 09-06 IS NO LONGER BLIND***: it is
+  one of the four, declaration v6 stands as declared, and whether that read still happens at
+  2026-09-10T01:00Z is the USER's call, flagged in R-754 and carried here. **The 09-07 close still runs
+  tonight; the day builds are unaffected.**
+  (3) ***R-754's "(06:0xZ)" IS NOT A CLOCK READING, AND THE CORRECTION IS PENDING, NOT LANDED.*** The
+  entry's narrative timestamps the user's first message that way; the coordinator names it as a slip to be
+  corrected in band at R-755. Measured at 06:24:01Z: the register carried **no R-755** -- so I recorded the
+  pending state rather than treating the promise as the correction. ***AMENDED 06:28:03Z: R-755 LANDED
+  DURING MY ROUND AND CORRECTS IT IN BAND***, naming the class as the coordinator's own ("a time not read
+  from the clock") and confirming the placeholder check flagged it (`xZ` -> 1). **Both halves checked at the
+  current tip: the correction exists, AND R-754's text is UNEDITED -- "(06:0xZ)" still appears twice.**
+  The only clock-read time in that exchange is the ruling's own 06:18:16Z.
+  (4) ***THE SIX BE UNITS ARE FREED AND MY STANDING FINDING IS CLOSED*** -- carried since round 245 and
+  re-measured every round since: be72book, be72frag, be72frag2, be72struct, be72tape, be87fwd06 all read
+  `LoadState=not-found`, and so do de115day06_3 and da117book06. **Every transient unit name is free**, and
+  BE landed the outcome records FIRST -- its own finding at the GO's premise being that five of the six had
+  no outcome record at all, three carrying a poll taken while `SubState=running`. The names were freed WITH
+  their five fields rather than instead of them.
+  (5) ***ZERO OWNER-ONLY FILES UNDER A WIDER DENOMINATOR THAN THE ENTRY'S***: I counted every file, not
+  only the versioned ones -- **0 of 60** in live/pm_research/declarations, **0 of 10** in
+  live/mm_research/declarations, **0 of 597** in data/pm_5min/derived, and da_dayverdict_*.json **0 of 22**.
+  The same widening that mattered at R-748. ***AND THE CONTROL FOR DA's RE-MODE IS MY OWN Q-MEM-1 DIGEST***:
+  both ends checked -- the register's Q-MEM-1 row contains `c087d507` (as do Q-DA-207 and Q-DA-344), and
+  `da_dayverdict_20260901.json` still digests **c087d507fe433210**. A six-day-old MEM record served as
+  another seat's invariance control, which is the argument for digests-in-rows arriving from the other
+  direction. The deploy pin resolves to **v3 be30c9c6**, 3 versions, 0 orphans, superseding v2 by the pair.
+  (6) ***DE 120's PASS 117 REPRODUCED BY ME UNDER BOTH LAUNCHERS*** -- I measured rc 1 under `-m` myself
+  last round, so I re-ran both rather than reading the entry: `PASS -- 117 checks, n_disarmed 0,
+  n_skipped 0`, rc 0, under `python3 -m …` AND the script path. A before/after pair from one instrument,
+  both halves measured by me.
+  (7) ***AND MY OWN ROUND-247 MECHANISM FOR THE GLUED FAIL LINE IS WITHDRAWN.*** The OBSERVABLE stands and
+  I re-measured it in the saved output: 21,194 B, 105 lines; line 82 is 532 chars, begins "  PASS  R11:",
+  and carries the FAIL text at byte offset **16,595** with no newline and no carriage return between them;
+  `^FAIL` matches **0** lines; rc 1. **The mechanism I named -- "emitted without a leading newline" -- is
+  wrong.** At the source the emit is `raise SystemExit(f"[…] FAIL: {label}")` (:2722), whose message the
+  interpreter writes to **stderr**, while the PASS lines are `print()` to **stdout**: the gluing is a
+  two-stream interleave under `> file 2>&1`. ***AND I DID NOT ESTABLISH WHY IT INTERLEAVED THERE***: a
+  direct probe (200 buffered prints then SystemExit) did NOT reproduce it, and the offset is near but not
+  on a multiple of `io.DEFAULT_BUFFER_SIZE` (8,192). Named as unestablished rather than replaced by a
+  second guess. The practical half is STRONGER than what I first claimed -- the position of a failure
+  message is unreliable, so a reader cannot rely on the last line either -- and it is DE's to fix, if it is
+  a fix at all; the cell is green now, and **a green run cannot demonstrate that a reporting shape was
+  fixed**.
+  (8) ***DA 117's PRE-READ VERIFIED BY KEY-WALK*** (statuses, booleans, counts and pairs only; no economic
+  value read): `status` PRE_READ_VERIFIED, `seal_holds` true, `IS_A_VERIFICATION_OF_THE_ECONOMICS` false,
+  `provenance_all_matched` true; the gate `open` false with `read_not_before_utc` 2026-09-09T00:06:00Z.
+  R-752's "8 declared, 8 evaluated, 2 holding" is EXACT but lives one level down, under
+  `gate_state_recorded_not_enforced.predicate`, with `conjuncts_not_evaluable` empty and
+  `failing_conjuncts_by_name` naming the clock conjunct and
+  `every_ruled_day_has_exactly_one_sealed_receipt`. ***MY FIRST PROBE ASKED FOR THOSE NAMES AT THE WRONG
+  LEVEL AND GOT `None`*** -- the fourth probe-shape slip in four rounds, and the fourth caught by printing
+  the key set first, which is why that rule exists.
+  (9) ***REV 89 HOLDS THE GATE-1 READ WHILE THE USER HAS RULED AN EARLY ONE, AND THE TWO TOUCH THE SAME
+  DAYS.*** REV 89 §1's HOLD (H1): DE's `landing_record_for` (:2054) and DA's (:1695) contradict each other
+  on the real ledger -- DA reports 09-03/04/05 MATCH with `landing_record_status` ONE and 09-06 CHAIN_HEAD,
+  while DE's `3_digest_matches_the_landing_record` lists 09-03, 09-04, 09-05, 09-07, 09-08 as FAILING; REV
+  re-ran both after DA 119 and BE 91, unchanged. The hold binds the READ and says so explicitly: *"This
+  holds nothing else: not GO #8, not any day run, not tonight's chain."* ***AND §0 READS "GO #8 MAY
+  PROCEED."*** At 06:24:01Z I recorded that the two meet and left the binding question open. ***AMENDED
+  06:28:03Z -- R-755 ANSWERS IT***: "H1 gates the USER-ruled early read too: DE's read path would refuse
+  09-03/04/05 at that conjunct, so DE 122 closes H1 before the first launch." The cause is named at the code
+  (DE's `landing_record_for` folds every record for a day into one chain and reads a corrected receipt's
+  first-of-family pre-read as a second root; DA 105's per-receipt grouping is right), and the closure is
+  DE's call -- adopt DA's grouping, or keep two implementations and CROSS-CHECK them naming the
+  disagreement. **The order is now DE 121 -> DE 122 (H1) -> REV 90 -> the four GOs.** My open question is
+  closed by an entry, not by me.
+  (10) ***AND THE REGISTER ITSELF WAS A 7-LINE STUB FOR ABOUT NINETY SECONDS WHILE I WROTE.*** The user's
+  notice: between ~06:25:3xZ and 06:27Z the register at the tip was a fixture stub (a coordinator scratch
+  test run in the shared tree, `d7555ff`), REVERTED at `0539a36`. Every register read of mine was taken
+  between 06:20:08Z and 06:24:01Z, BEFORE that window -- ***but a read taken before a corruption is not
+  thereby verified***, so I re-read at the tip rather than reason about the timing: **22,536 lines in my
+  tree and 22,536 at origin; R-752/753/754/755 each present exactly once and R-756 absent; the ruling's
+  verbatim sentence present; "(06:0xZ)" twice; `c087d507` five times.** Nothing I recorded rests on the
+  stub, and I established that by re-measuring rather than by checking a clock.
+  Counts: flags 1,695 -> **1,712**; provenance 1,240 -> **1,257**; tasks 19; **978 CHECKED /
+  274 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-FOURTH round unchanged on
+  UNMARKED**. ORPHAN census **0**; the audit exits **1** on **155** missing-artifact findings -- 154 at my
+  round start and ONE added by me, the unit reading at (4), which is not a file and should not resolve.
+  Of my own 15 entries, 14 resolve. Window trimmed 4 -> 3, **Batch 230** archived (round 245's
+  generation, 148 lines, byte-identical to what left the field). Q-MEM-236 filed through the script.)
+```

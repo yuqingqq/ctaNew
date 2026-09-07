@@ -1,3 +1,90 @@
+# READ FIRST — round 251 (MEM, 2026-09-07T07:34:29Z, tip `b0c01c0`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-762 and R-763 swept, with
+every landing between my own `3999f07` and the tip. **I opened no sealed receipt.**
+
+## 0. State — the early read is RUNNING
+
+| | |
+|---|---|
+| **E1** | `deEARLY20260903` **loaded / active / RUNNING**, id `e40782fa…`, started **07:28:57Z**, expected ≈ **08:54Z** (≈ 86 min). Lock held by it alone |
+| **The four cleared digests** | runner `f1f59472`, early-read `fbd01eb1`, params v17 `81b2c291`, exit maps v8 `bbc8bacf` — **all match at wt-de's `cb7933a`**, verified without touching the frozen worktree |
+| **Then** | E2, E3, E4 as separate GOs; **the table comes after DA's independent read**, never from DE's report |
+| **Queued behind** | tonight's 09-07 close and **GO #8** (one heavy run at a time). Four runs ≈ 5.7 h → ≈ 13:10Z, ≈ 11 h before the close |
+| **Open USER items** | the two speed-ups R-762 put and did **not** take: two reads at a time, or launching before REV's read |
+| **Holds** | none on GO E1 or GO #8; **H1 stands against the six-day read only** |
+
+## 1. The running unit executes the cleared bytes — proved without touching wt-de
+
+Rule 22 freezes wt-de while a unit runs from it, so I never entered it: I read its HEAD
+ref (`cb7933a`) and resolved the four blobs **at that commit** from the main tree's
+object store. All four equal what REV 91 cleared, and the same four files in the main
+tree hash identically. The main tree has since moved to `b0c01c0` while wt-de stays put
+— exactly right.
+
+**Two things recorded rather than smoothed:** the unit's own `ExecMainStartTimestamp` is
+**07:28:57Z** against the GO's 07:28:16Z — 41 s apart, both true, different events, so
+the 86 minutes counts from the unit's stamp. And **MemoryPeak was already 2.53 GiB at
+161 s in**, against the GO's ≈ 2.4 GB estimate — 31.6 % of the 8 GiB cap, monotonic so a
+high-water mark rather than a level. No problem; worth knowing before four runs queue
+behind it.
+
+## 2. R-763 was absent at my first read and landed 38 seconds later
+
+At **07:30:43Z** I fetched, read `behind=0`, and measured the register: R-762 present,
+**R-763 absent**. At **07:31:21Z**: R-763 present at `50b941b`. My first reading was
+**true of a tree 38 seconds stale** — R-760's own class, arriving in my round. A sweep
+that reported *"R-763 does not exist"* would have put a false absence into a state file.
+
+***And what caught it was not suspicion.*** The runbook's line 443 read *"Next register
+entry after R-763: R-764"* while the register I had just read ended at R-762. **Two
+files maintained by different acts disagreed, and the disagreement was the check** —
+worth keeping as a method: the next-entry line is an independent witness to the
+register's tail, and comparing them costs one grep.
+
+## 3. The checker's new statuses are built — and uncommitted
+
+The header documents **`FORKED_BY_EDIT`** (edited, no later version names the edited
+bytes → rc 1) beside **`FORKED_BY_EDIT_AND_SUPERSEDED`** (a later version's
+`supersedes.sha256` names the **edited** bytes, the chain resolves → rc 2), and
+`check()` prints both by name. **Its falsifier names the real case** — one cell requires
+the actual v7 to read `FORKED_BY_EDIT_AND_SUPERSEDED … superseded_by=[…v8.json…]`,
+today's own incident written into the control.
+
+**But the file is `M` in `git status`, last committed at `49f3b52`** — the statuses live
+in the shared tree's working copy only. Nothing is wrong; recorded because an entry's
+claim that an instrument exists is, at this moment, backed by an uncommitted file.
+
+## 4. Nothing pins v7's pre-edit bytes — and the one hit is the distinction itself
+
+Under a **stated** scope (declarations, register, `live/pm_research/*.py`), `6084d6e2`
+appears in **one** declaration file and six times in the register. Walking that file's
+JSON to the leaf: it is `supersedes.the_incident.das_v7` inside **v8 itself** — *"landed
+5f5c92b 06:48Z, overwritten"* — **narrative inside the repairing artifact, not a
+`{path, sha256}` link any resolver follows** (v8's pair names `abbc077d`, the edited
+bytes). **A digest mentioned in prose is not a pin**, and only walking to the leaf makes
+that visible.
+
+***I did not scan `data/`***, and my recursive attempt over `live/` was killed at the
+120-second budget — the **second instrument this week** to exceed a caller's budget. So
+this is a bounded confirmation and says so: **a scan that did not finish produces no
+absence, and the honest output of a truncated instrument is its scope, not its count.**
+
+## 5. A clearance names bytes, and bytes move
+
+REV 89's GO #8 clearance named `ad15ddf1…`, which has since moved twice; REV 91
+**re-issued** it against `f1f59472…`. A standing GO whose code has changed is not a
+standing GO, and re-clearing is the cheap half of that. R-747's condition restated
+unchanged: nothing refreshes, checks out or edits wt-de while a unit runs from it.
+
+Counts: flags 1,742 → **1,757**; provenance 1,287 → **1,302**; tasks 19; **1,022 CHECKED
+/ 275 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-twenty-seventh round
+unchanged on UNMARKED. ORPHAN census **0**; audit exit **1** on **158** — 155 at round
+start plus three of mine, all readings of the same running unit, which is not a file.
+Window trimmed 4 → 3, **Batch 233** archived. Q-MEM-239 filed through the script.
+
+---
+
 # READ FIRST — round 250 (MEM, 2026-09-07T07:14:19Z, tip `2726085`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-758, R-759, R-760 and
