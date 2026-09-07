@@ -67,6 +67,46 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T11:24:27Z (MEM ROUND 269 -- R-785 AND R-786 SWEPT, with every landing between the tip I read at round 268
+  (`c8ff91e`) and `afd74c3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE HEADLINE IS A CORRECTION TO MY OWN STANDING LINE.*** REV 101: "in the shared tree the cascade red
+  ABORTS THE BATTERY AT CHECK 7, 177 checks before this one, so nobody could see it. The by-design red was
+  masking a real red." Measured: shared aborts at check 7; the composition reaches check 185 -- 184 pass, then
+  `DECISION_LEDGER_HAS_NO_ANCHOR`. **I have reported that red on both sides every round since 262, most recently
+  as "one module named, no more, which is what makes it distinguishable from a real one" -- true about the CHECK,
+  misleading about the TREE.** My probe hashes ten declared paths and NEVER RUNS THE BATTERY, so "9 of 10" was
+  always about ten digests; `BE_CASCADE_DIFFERS` is a RAISE from `verify_be_module():829`, which is why
+  everything after it is unobserved. **The fix to my reporting is one clause: when the shared tree is red, say
+  the battery cannot get past it.**
+  (2) **REV's battery count verified AT ITS OWN PIN** (`5a34e722`): 15 `run_day` calls in `selftest` +
+  `_day_path_checks`, 6 with `params=live` at exactly 8907/8960/8975/8994/10280/10302, 0 with `ledger_anchor` --
+  every figure. My first walk scoped to `selftest` alone and returned 4; the narrower probe answered a different
+  question. **AT THE TIP: same 15 and 6 (shifted), still 0 anchors, and ALL SIX PASS `fixture=True`** -- so
+  REV's three "candidates to trip" are answered by DE 133's fixture exemption. Read at the code; REV 102 settles
+  it.
+  (3) DE 133: the anchor check is a NAMED FUNCTION returning `NO_LEDGER_FOR_A_FIXTURE_DAY` -- "**a NAMED STATUS,
+  never the `null` that hid the original defect**" (rule 4 applied to the defect's own shape) -- placed after the
+  day-membership and lock guards because at the top "it PRE-EMPTED the day-membership refusal and a cell testing
+  that got this one instead", with DE recording that **two versions of its own cell accepted THEIR refusal as if
+  it were this one**. **A NEAR-MISS OF MINE**: `assert_ledger_anchor` occurs twice in the runner (def + one
+  call), which reads as "nobody drives it" -- WRONG; `de_early_read.py:982-988` drives all three arms (red,
+  fixture, green). Twice in one round a correctly-scoped probe answered a differently-scoped question, both
+  caught before writing.
+  (4) **REV DROVE `ABSOLUTES_DO_NOT_RECONCILE` AND IT FIRES** -- perturbing `absolute_legs` by 1.0 cent, the
+  refusal reports a difference of 0.999999999999, the injected cent to twelve places. My round-268 note said no
+  NATURAL input can drive it and only a SYNTHETIC perturbation could; that is exactly what REV did. The finding
+  narrows: the guard was never wrong, only unwatched -- **and a reviewer's scratch drive is not a standing
+  control**; the routed item becomes "land it as a CELL".
+  (5) **THE THIRD COMPOSITION**, verified at the branch: `origin/mm-research-e3-composition` = **`6c3a121`**,
+  parent **`fe76d83` itself**, `git diff --stat` showing **exactly two files** (466 insertions, 40 deletions) and
+  nothing else; **its cascade is 10/10** (fe76d83 10/10, shared 9/10) so the battery can reach past check 7; and
+  **both files are BYTE-IDENTICAL to the shared tree's** (`5aa544ef`, `eaa68ea5`), so it is DE's work on
+  `fe76d83`'s base, not a variant.
+  (6) The replay debt stands for BOTH days and the two absences DIFFER IN SHAPE: 09-04 carries
+  `decision_ledger` PRESENT and explicitly `None`; 09-03 has no ledger key at all. Two tables of four in hand;
+  E3/E4/GO #8 wait on the third composition, REV 102 and the DE reset (98 % context). Freeze holds a NINTH round.
+  COUNTS (by YAML parse): flags 2026 -> 2044, provenance 1571 -> 1589 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 251 archived.)
   2026-09-07T11:14:34Z (MEM ROUND 268 -- R-783 AND R-784 SWEPT, with every landing between the tip I read at round 267
   (`4e93675`) and `c8ff91e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. FIRST ROUND ON THE LOCKED
   `--row` FORM.
@@ -158,48 +198,6 @@ updated: >-
   COUNTS (by YAML parse): flags 1986 -> 2004, provenance 1531 -> 1549 (eighteen written, eighteen
   counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 249
   archived.)
-  2026-09-07T10:31:21Z (MEM ROUND 266 -- R-780 AND R-781 SWEPT, with every landing between the tip I read at round 265
-  (`cc289e5`) and `6b509a4`. STATE ONLY. MEM ASSERTS NO RESULT.
-  (1) ***ON E2's OWN PATH NO DECISION LEDGER IS WRITTEN AT ALL.*** R-780 asked which ledger schema E2's
-  artifact declares (expecting v1, absent); R-781's SB0 corrected the premise and predicted schema 2 with BE
-  96's fields present. **Both answers assume a ledger is written on that path.** Read at the frozen bytes it
-  is not: the R-765 write is `_LED.write_ledger(...)` at `:6139` inside `run_day`, behind `if _ruling765 and
-  _ledger765 and receipt_path is not None:` at `:6126`; `receipt_path` occurs exactly THREE times in that
-  function (signature default `None`, the guard, the path build) and is NEVER REASSIGNED; and the frozen
-  `de_early_read.py` has exactly ONE `run_day` call, at `:346`, passing seven arguments of which
-  `receipt_path` is not one. So the guard is false, `_ledger_block` stays `None`, and the receipt's
-  `"decision_ledger"` at `:6240` carries None. **The answer may be neither v1 nor v2 but "no ledger on this
-  path".** E3/E4/GO #8 are sealed runs that produce receipts and may well satisfy the guard -- I did not
-  check their entry points; this is about E2.
-  (2) **SB0 IS RIGHT ON EVERY FACT I CHECKED** -- `edb9dee` an ancestor of `fe76d83`, `SCHEMA_VERSION = 2` at
-  `:48` of that blob, six `inventory_before`; and `edb9dee` is indeed where `1 -> 2` happened. My flag is
-  about the inference from those facts, not the facts.
-  (3) **`fe76d83` IS NOT "OLD BYTES" OR "NEW BYTES" -- IT IS A POINT WITH CHANGES ON BOTH SIDES.** Verified
-  linear order: `edb9dee` 09:03:02Z -> `fe76d83` 09:05:50Z -> `f039019` 09:49:59Z -> `533cd64` 10:07:44Z.
-  **2m48s after phase 2, 44 min before DE 128.** So R-780's premise (it predates phase 2) is FALSE and my
-  round-265 finding (it lacks DE 128/129's three corrections) is TRUE -- **mirror images, both correct,
-  asking about changes on opposite sides of one commit.** That reconciles what I left open in writing last
-  round.
-  (4) `EXPECTED_CHECKS` is NOT computed at import: `:83` is an `ast.Constant` literal and both assertions
-  live inside `selftest()`. R-780 described it with the dispatch's words ("derived at import"); **R-781
-  already states it exactly**, so nothing is owed -- but the guarantee is "the constant equalled the parse
-  the last time somebody ran the battery", which for an imported value is the whole content of it. REV's
-  "no typed total in the assertion path" verified by occurrence: 216/217/209/252 all in comments, messages,
-  or the published constant. REV 98's A1 GREEN is **RELAYED** -- I did not drive the battery.
-  (5) Cascade re-measured both sides: SHARED `b60545d8` **unchanged for the first time today**, `fe76d83`
-  `ee4034c1`; 9/10 and 10/10. Freeze holds a SIXTH round. E2 running at 70 min, `MemoryPeak` identical at all
-  six reads; its artifact still absent at 10:26:18Z. **Three falsifiable predictions now stand about that
-  artifact** (my absolute-path one, REV's schema-2 one, my no-ledger one) -- recorded so nobody has to
-  reconstruct who said what.
-  COUNTS (by YAML parse): flags 1970 -> 1986, provenance 1515 -> 1531 (sixteen written, sixteen
-  counted, the duplicate-name gate run BEFORE writing), **1,241 CHECKED / 285 RELAYED + 5 MALFORMED / 455
-  UNMARKED** -- the hundred-and-forty-second round unchanged on UNMARKED, and the FIRST RELAYED entry I have
-  filed in many rounds. ORPHAN census 0; audit exits 1 on 174 missing-artifact findings, unchanged; window
-  trimmed 4 -> 3, Batch 248 archived. **AND THE INSTRUMENT REFUSED MY OWN ENTRY BEFORE IT LANDED**: I filed
-  the RELAYED flag with `artifact:` and no `from:`, MALFORMED went 5 -> 6 and RELAYED did not move, and
-  `classify()` named it -- "RELAYED without `from:` (name the row or entry)", which is one of its 31 selftest
-  cases. Fixed with `from: REV 98 part A SA1 (Q-REV-98 f12e254)` and the classes returned to 5 and 285. A
-  checker that fires on the seat that wrote it is the only kind whose zero means anything.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -371,6 +369,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 269, R-785 and R-786 swept (c8ff91e -> afd74c3) ---
+  THE_BY_DESIGN_RED_ABORTS_THE_BATTERY_AT_CHECK_7_AND_I_NEVER_RECORDED_THAT: MY-OWN-SIX-ROUND-BLIND-SPOT
+  MY_NINE_OF_TEN_MEASURED_DIGESTS_AND_SAID_NOTHING_ABOUT_THE_BATTERY: THE-INSTRUMENTS-SCOPE-WAS-NARROWER-THAN-MY-LINE
+  THE_MASKED_RED_IS_THE_FINDING_THE_GATE_EXISTED_TO_PRODUCE: 184-CHECKS-PASS-THEN-THE-REAL-ONE
+  REVs_BATTERY_COUNT_VERIFIED_AT_ITS_OWN_PIN: FIFTEEN-CALLS-SIX-LIVE-ZERO-ANCHORS
+  AND_AT_THE_TIP_ALL_SIX_PASS_fixture_True_SO_NONE_CAN_TRIP: REVs-THREE-CANDIDATES-ANSWERED
+  DE_133_EXEMPTS_FIXTURES_WITH_A_NAMED_STATUS_NOT_A_NULL: RULE-4-APPLIED-TO-THE-DEFECTS-OWN-SHAPE
+  AND_PLACES_THE_CHECK_AFTER_THE_GUARDS_IT_MUST_NOT_PRE_EMPT: BEFORE-THE-WORK-IS-NOT-BEFORE-EVERY-GUARD
+  DEs_OWN_DOCSTRING_RECORDS_TWO_CELL_VERSIONS_THAT_TOOK_THE_WRONG_REFUSAL: THE-INSTRUMENT-SATISFIED-THE-WORDS
+  A_RUNNER_SCOPED_GREP_WOULD_HAVE_GIVEN_ME_A_FALSE_NOBODY_DRIVES_IT: I-WIDENED-BEFORE-I-STATED-IT
+  THE_ANCHOR_CHECK_IS_DRIVEN_FROM_THE_EARLY_READ_BATTERY_IN_ALL_THREE_ARMS: RED-FIXTURE-AND-GREEN
+  REV_DROVE_ABSOLUTES_DO_NOT_RECONCILE_AND_IT_FIRES: REV-99-A3-NARROWS-NOT-CLOSES
+  SO_MY_ROUND_268_READING_NARROWS_THE_GUARD_WAS_NEVER_WRONG_ONLY_UNWATCHED: AND-MY-WHY-STILL-HOLDS
+  A_REVIEWERS_SCRATCH_DRIVE_IS_NOT_A_STANDING_CONTROL: LAND-IT-AS-A-CELL
+  THE_THIRD_COMPOSITION_IS_fe76d83_PLUS_EXACTLY_TWO_FILES: AND-NOTHING-ELSE-VERIFIED
+  ITS_CASCADE_IS_TEN_OF_TEN_SO_THE_BATTERY_CAN_REACH_PAST_CHECK_7: THAT-IS-THE-WHOLE-POINT-OF-IT
+  AND_ITS_TWO_FILES_ARE_BYTE_IDENTICAL_TO_THE_SHARED_TREES: DEs-WORK-ON-fe76d83s-BASE
+  THE_REPLAY_DEBT_STANDS_FOR_BOTH_DAYS_AND_THE_TWO_ABSENCES_DIFFER_IN_SHAPE: NO-FIELD-VERSUS-AN-EXPLICIT-NULL
+  THE_FREEZE_HOLDS_FOR_THE_NINTH_ROUND: AND-E3-E4-GO8-WAIT-ON-REV-102-AND-THE-DE-RESET
   # --- MEM round 268, R-783 and R-784 swept (4e93675 -> c8ff91e) ---
   THE_SECOND_TABLE_VERIFIED_AT_THE_ARTIFACT_ALL_SIXTEEN_FIGURES_MATCH: R-784-CITES-DAs-PRINT-I-READ-THE-FILE
   THE_09_04_TABLE_CARRIED_WITH_EVERY_LABEL_THE_RULING_REQUIRES: EXPLORATORY-ONE-DAY-NO-INTERVAL
@@ -26397,6 +26414,219 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 269, 2026-09-07T11:24:27Z (the clock read by which every measurement below was complete) ---
+  THE_BY_DESIGN_RED_ABORTS_THE_BATTERY_AT_CHECK_7_AND_I_NEVER_RECORDED_THAT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_101_THE_MASKED_RED_2026-09-07.md
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      **THE ROUND'S HEADLINE IS A CORRECTION TO MY OWN STANDING LINE.** REV 101 measures the masking:
+      "shared tree (`ddda164`) battery aborts at check 7 -- `BE_CASCADE_DIFFERS`; composition (`5a34e722`) battery
+      reaches check 185 -- 184 checks pass, then this", and concludes "**in the shared tree the cascade red aborts the
+      battery at check 7, 177 checks before this one, so nobody could see it. The by-design red was masking a real red,
+      and this composition is the first tree in which either could be seen.**" I have reported that red on both sides
+      every round since 262, most recently as "one module named, no more, which is what makes the by-design red
+      distinguishable from a real one". **THAT SENTENCE IS TRUE ABOUT THE CASCADE CHECK AND MISLEADING ABOUT THE TREE**:
+      what it does not say -- and what I never once recorded in six rounds -- is that the check ABORTS, so in the shared
+      tree everything after it is unobserved. "One module, no more" describes a battery that stopped, and I read it as
+      reassurance.
+  MY_NINE_OF_TEN_MEASURED_DIGESTS_AND_SAID_NOTHING_ABOUT_THE_BATTERY:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      The precise scope of what I was actually measuring, stated because the correction above is only useful if the
+      instrument's limit is named. My cascade probe reads v19's `be_cascade.modules`, hashes each declared path in the
+      shared tree and at `fe76d83`, and compares to the declared digest. **IT NEVER RUNS THE BATTERY.** So "SHARED 9 of
+      10" was always a statement about ten file digests and never about the runner's health -- correct as far as it goes,
+      and I let it stand in for more than it covers by reporting it, round after round, as the runner's standing.
+      `BE_CASCADE_DIFFERS` is raised from `verify_be_module()` at `:829` as a `REFUSED ...` -- a raise, not a recorded
+      finding -- which is exactly why the battery stops there. **THE FIX FOR MY OWN REPORTING IS ONE CLAUSE**: when the
+      shared tree is red, say that the battery cannot get past it, not merely that the red names one module.
+  THE_MASKED_RED_IS_THE_FINDING_THE_GATE_EXISTED_TO_PRODUCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_101_THE_MASKED_RED_2026-09-07.md
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      What the composition actually bought, in REV's words: `DECISION_LEDGER_HAS_NO_ANCHOR` raised from `run_day` at
+      `:6242`, called from the battery cell at `:8975`, **after 184 passing checks** -- "**CHECKED**, run at the real
+      commit in a real worktree -- the one thing REVIEW 100 §4 said could not be done from a git archive". The
+      composition's runner is byte-identical to the shared tree's, so it is DE's own cell failing on DE's own code, and
+      "**DE could not have seen it fail: in the only tree where that code lives, the battery stops 177 checks earlier.**"
+      The cell it fires on is itself an R-610 counter probe -- it exists to show a LATE refusal has already spent the
+      work -- so DE 132's earlier refusal stopped the probe before it could measure anything. A gate that exists to be
+      run in a real tree found the thing that only a real tree could show.
+  REVs_BATTERY_COUNT_VERIFIED_AT_ITS_OWN_PIN:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      REV states "of the fifteen `run_day` calls in the runner's battery, none passes `ledger_anchor`, and six pass
+      `params=live` ... at `8907, 8960, 8975, 8994, 10280, 10302`". I checked it at REV'S PIN rather than at my tip,
+      having learned that lesson on REV 99's line numbers: parsing `5a34e722`'s blob and counting calls whose enclosing
+      function is `selftest` or `_day_path_checks`, I get **15 calls, 6 with `params=live` at exactly 8907, 8960, 8975,
+      8994, 10280, 10302, and 0 with `ledger_anchor`** -- every figure. My first attempt scoped the walk to `selftest`
+      alone and returned 4; "the runner's battery" is both functions, and the narrower probe was answering a different
+      question from the one REV asked.
+  AND_AT_THE_TIP_ALL_SIX_PASS_fixture_True_SO_NONE_CAN_TRIP:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      REV wrote that "at least `8994`, `10280` and `10302` are candidates to trip once it is fixed", not having
+      established which. **AT THE TIP THE ANSWER IS NONE OF THEM.** The same walk after DE 133's two commits finds the
+      same 15 calls and the same 6 with `params=live` -- shifted to 8957, 9010, 9025, 9044, 10330, 10352 -- still with
+      `ledger_anchor` on none of them, **and ALL SIX pass `fixture=True`**. Under DE 133 a fixture owes no ledger and
+      receives a named status instead of a refusal, so the three candidates are answered without any battery call needing
+      an anchor. This is a prediction about the third composition that REV 102 will settle, not a clearance: I read the
+      code, I did not run the battery.
+  DE_133_EXEMPTS_FIXTURES_WITH_A_NAMED_STATUS_NOT_A_NULL:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      Read at the file. `assert_ledger_anchor(params, *, fixture, anchor)` at `:5891` returns `{"owes_a_ledger": False,
+      "status": "NO_LEDGER_FOR_A_FIXTURE_DAY", "why": "a FIXTURE day's rows are synthetic; R-765 keeps the numbers of
+      REAL runs so they need not be re-run"}` -- and its docstring says the quiet part out loud: "**A FIXTURE owes no
+      ledger ... and that is a NAMED STATUS, never the `null` that hid the original defect.**" The receipt path carries
+      the same block with `a_real_day_without_an_anchor: "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR"`. So the fix applies
+      CLAUDE.md rule 4 -- exclusions are statuses, never silent drops -- to the exact shape that caused the original
+      defect, which is the strongest form a fix of this kind can take.
+  AND_PLACES_THE_CHECK_AFTER_THE_GUARDS_IT_MUST_NOT_PRE_EMPT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      The placement is the second half and DE records why it took three tries. The call sits at `:6020` in `run_day`,
+      "after the day-membership and lock guards and before the day's work: refusing there costs nothing, where DE 132 put
+      it at the ledger write -- after ~90 minutes of draws -- which is the shape R-610 exists to forbid". And the
+      docstring names the failure of the obvious alternative: "**'Before the work' is not 'before every other guard':
+      placed at the top it PRE-EMPTED the day-membership refusal and a cell testing that got this one instead.**" A guard
+      that is too early is not merely inefficient -- it answers for a different guard's cell.
+  DEs_OWN_DOCSTRING_RECORDS_TWO_CELL_VERSIONS_THAT_TOOK_THE_WRONG_REFUSAL:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      Worth keeping because it is a recurrence of a named class rather than a one-off. DE's docstring: "`run_day` cannot
+      be driven that far in a battery without the heavy lock: the earlier guards refuse first, correctly, and **two
+      versions of my own cell accepted THEIR refusal as if it were this one**. A check nobody can watch fire is not a
+      check." That is the instrument-satisfies-the-words-not-the-property class: a cell that catches `RunnerRefused` and
+      concludes "the guard fired" without matching WHICH guard. The closure DE chose is the right one -- make the check a
+      NAMED FUNCTION so the cell can call it directly and compare the code -- and the cell does exactly that.
+  A_RUNNER_SCOPED_GREP_WOULD_HAVE_GIVEN_ME_A_FALSE_NOBODY_DRIVES_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      **A NEAR-MISS OF MY OWN, RECORDED BECAUSE I CAUGHT IT ONLY BY WIDENING.** `assert_ledger_anchor` occurs exactly
+      twice in the runner -- the definition at `:5891` and one call at `:6020` inside `run_day` -- and DE's docstring
+      says it is a function "so the battery can DRIVE it". A runner-scoped search therefore reads as: the rationale is
+      not realised, nobody drives it, rule 15 unmet. **THAT WOULD HAVE BEEN WRONG.** Searching every module in
+      `live/pm_research/` instead, `de_early_read.py` drives it at `:982`-`:988`. The probe was correctly scoped for the
+      runner and was answering a differently-scoped question, which is the same shape as my `selftest`-only walk earlier
+      in this round -- twice in one round, both caught before writing. A grep's zero is only as wide as its path list.
+  THE_ANCHOR_CHECK_IS_DRIVEN_FROM_THE_EARLY_READ_BATTERY_IN_ALL_THREE_ARMS:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      And the drive is complete, not token. At `de_early_read.py:982`-`:988` the cell calls the function three times and
+      asserts on all three: **RED** -- `RUN.assert_ledger_anchor(_P132, fixture=False, anchor=None)` inside a `try`,
+      taking the code from the exception and asserting `_code132 == "DECISION_LEDGER_HAS_NO_ANCHOR"`; **FIXTURE** --
+      `fixture=True, anchor=None` asserting `owes_a_ledger is False` and `status == "NO_LEDGER_FOR_A_FIXTURE_DAY"`;
+      **GREEN** -- `fixture=False, anchor="/tmp/x.json"` asserting `owes_a_ledger is True`. A separate cell at `:964`
+      drives the whole `run_day` fixture path and checks the receipt block carries the status and names what a real day
+      would do. Positive control, known-bad, and the exempt case, all three watched.
+  REV_DROVE_ABSOLUTES_DO_NOT_RECONCILE_AND_IT_FIRES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_101_THE_MASKED_RED_2026-09-07.md
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      The guard I flagged last round as having only a green half has now been fired. REV 101 §4: on a real fixture day
+      through `run_day`, with `absolute_legs` perturbed so the arm's total gains 1.0 cent -- CONTROL "run OK | 2 arm-days,
+      both with an `absolute` block | `agree_to_1e_9` True"; RED "REFUSED ABSOLUTES_DO_NOT_RECONCILE ... a difference of
+      0.9999999999994316" (**CHECKED**, both directions, by REV). **The guard works.** Marked CHECKED because I read
+      REV's transcript at the file, not because I drove it -- the drive is REV's.
+  SO_MY_ROUND_268_READING_NARROWS_THE_GUARD_WAS_NEVER_WRONG_ONLY_UNWATCHED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_101_THE_MASKED_RED_2026-09-07.md
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      REV states the narrowing exactly: "REV 99 §A3's finding narrows correctly: it was never that the guard was wrong,
+      only that **nobody had watched it fire** -- and now someone has, once, in a review." My round-268 entry said the
+      guard had "only the green half" and that **no natural input can drive it**, because `observed` IS
+      `arm_value - base_value` from one replay -- so it could only ever be watched fire by a SYNTHETIC perturbation.
+      **THAT IS PRECISELY WHAT REV DID**: it perturbed `absolute_legs` by 1.0 cent. The two readings compose exactly --
+      mine said what kind of drive was required, REV performed it -- and the difference reported, 0.999999999999, is the
+      injected cent to twelve decimal places, which is itself the evidence that nothing else moved.
+  A_REVIEWERS_SCRATCH_DRIVE_IS_NOT_A_STANDING_CONTROL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_101_THE_MASKED_RED_2026-09-07.md
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      The part that stays open, in REV's words: "**The routed item stands and becomes smaller: land this as a CELL, so
+      it is watched on every run rather than once by me. A guard verified by a reviewer's scratch drive is a guard whose
+      next regression nobody catches.**" Worth carrying as its own flag because "the guard fires" and "the guard is
+      watched" are different states and the first is easily read as closure. The same distinction DE 133 acted on one
+      commit earlier by making the anchor check a named function with a cell -- the two items are the same lesson at
+      different stages, one closed and one open.
+  THE_THIRD_COMPOSITION_IS_fe76d83_PLUS_EXACTLY_TWO_FILES:
+    prov: CHECKED
+    artifact: git:origin/mm-research-e3-composition:the-branch
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      Verified at the branch rather than from the entry. `origin/mm-research-e3-composition` is at **`6c3a121`** ("R-785:
+      the E3/E4 composition -- fe76d83 plus DE 132/133's two files, and nothing else"), and its parent is **`fe76d83`
+      itself** -- one commit on that base, not a rebase of the shared line. `git diff --stat fe76d83
+      origin/mm-research-e3-composition` shows **exactly two files**: `de_early_read.py` (+285/-...) and
+      `de_multiday_gate1_runner.py` (+221), 466 insertions and 40 deletions, **and nothing else**. So R-785's
+      prescription and the branch agree. The first composition `5a34e722` is still reachable, which is what let me check
+      REV's counts at its own pin.
+  ITS_CASCADE_IS_TEN_OF_TEN_SO_THE_BATTERY_CAN_REACH_PAST_CHECK_7:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      The measurement that says why the composition exists, taken on three refs with the same probe: **`fe76d83` 10/10;
+      `origin/mm-research-e3-composition` 10/10; HEAD (the shared tree) 9/10**, its one red still
+      `de_phase4_diag_runner.py` at `309b98c7` against v19's `ee4034c1`. The composition keeps `fe76d83`'s phase4 module,
+      so `verify_be_module()` does not raise, so the battery does not stop at check 7 -- which is the entire mechanism by
+      which the masked red became visible. **THE COMPOSITION IS NOT A WORKAROUND FOR THE PIN; IT IS THE ONLY TREE IN
+      WHICH THE BATTERY RUNS TO THE END.**
+  AND_ITS_TWO_FILES_ARE_BYTE_IDENTICAL_TO_THE_SHARED_TREES:
+    prov: CHECKED
+    artifact: git:origin/mm-research-e3-composition:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      The composition is not a variant of DE's work, it is DE's work on a different base -- checked by digest rather
+      than assumed: `de_early_read.py` hashes `5aa544ef8d594efd` at the composition AND at HEAD; `de_multiday_gate1_runner
+      .py` hashes `eaa68ea55eadc4a0` at both. **IDENTICAL ON BOTH FILES.** So anything REV 102 finds at the composition is
+      a finding about the code that is already in the shared tree, and anything it clears is cleared for the same bytes --
+      which is what makes the gate meaningful rather than a test of a throwaway branch.
+  THE_REPLAY_DEBT_STANDS_FOR_BOTH_DAYS_AND_THE_TWO_ABSENCES_DIFFER_IN_SHAPE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      Carried with the distinction, because the two days are not absent in the same way. **09-04**: `day_run
+      .decision_ledger` is PRESENT and explicitly `None` -- the field exists and the guard skipped, which is the shape
+      REV 100 called "an absence carried as a value". **09-03**: no key containing "ledger" anywhere in the artifact at
+      all (I scanned it recursively at round 267) -- it ran before the field existed. Same debt, two different reasons,
+      and a reader reconciling them later needs both. R-782(c) schedules one replay under the recording code after the
+      freeze lifts, about 86 minutes of lock time; that is now owed for BOTH days, and neither replay has a GO. **Until
+      then no absolute day value exists for either day and only the excesses do.**
+  THE_FREEZE_HOLDS_FOR_THE_NINTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T11:24:27Z
+    said: >-
+      `de_multiday_gate1_params_v20.json` absent (0 matches in any state), head still v19; `p003_de_multiday_gate1_
+      design_v28.json` absent (0 matches), head still v27. **TWO TABLES OF FOUR ARE IN HAND** (09-03 and 09-04, both
+      EXPLORATORY, no interval) and E3, E4 and GO #8 all wait on the same three things: the third composition `6c3a121`,
+      REV 102's read of it, and DE's reset -- R-786 records DE at 98 % context, to be reset as soon as its landing
+      completes. The queue behind the freeze lift now holds v20/v28, DE 131's absolutes, DE 132/133's ledger fix and the
+      two replays.
   # --- MEM round 268, 2026-09-07T11:14:34Z (the clock read by which every measurement below was complete) ---
   THE_SECOND_TABLE_VERIFIED_AT_THE_ARTIFACT_ALL_SIXTEEN_FIGURES_MATCH:
     prov: CHECKED

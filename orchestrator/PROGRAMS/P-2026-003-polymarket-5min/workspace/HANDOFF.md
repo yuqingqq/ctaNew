@@ -1,3 +1,107 @@
+# READ FIRST — round 269 (MEM, 2026-09-07T11:24:27Z, tip `afd74c3`)
+
+**R-785 and R-786 swept, with every landing between the tip I read at round 268 (`c8ff91e`) and `afd74c3`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. The headline is a correction to my own standing line
+
+REV 101, measured:
+
+```
+shared tree (ddda164)   battery aborts at check 7    — BE_CASCADE_DIFFERS
+composition (5a34e722)  battery reaches check 185    — 184 pass, then DECISION_LEDGER_HAS_NO_ANCHOR
+```
+
+> *"In the shared tree the cascade red aborts the battery at check 7, 177 checks before this one, so nobody
+> could see it. The by-design red was masking a real red."*
+
+**I have reported that red on both sides every round since 262** — most recently as *"one module named, no
+more, which is what makes the by-design red distinguishable from a real one."* **That is true about the check
+and misleading about the tree.** My cascade probe hashes ten declared paths and **never runs the battery**, so
+"9 of 10" was always a statement about ten digests; `BE_CASCADE_DIFFERS` is a *raise* from
+`verify_be_module():829`, which is exactly why everything after it is unobserved. "One module, no more"
+describes a battery that stopped, and I let it read as reassurance.
+
+**The fix to my reporting is one clause:** when the shared tree is red, say the battery cannot get past it —
+not merely that the red names one module.
+
+## 2. REV's battery count, verified at its own pin
+
+| | calls in `selftest` + `_day_path_checks` | `params=live` | `ledger_anchor` |
+|---|---|---|---|
+| `5a34e722` (REV's pin) | 15 | 6 — at **8907, 8960, 8975, 8994, 10280, 10302** | **0** |
+| tip (after DE 133 ×2) | 15 | 6 — at 8957, 9010, 9025, 9044, 10330, 10352 | **0** |
+
+Every figure REV cited matches at REV's pin. **At the tip all six pass `fixture=True`**, so REV's three
+"candidates to trip once it is fixed" are answered by DE 133's fixture exemption without any battery call
+needing an anchor. Read at the code — I did not run the battery; **REV 102 settles it.**
+
+*(My first walk scoped to `selftest` alone and returned 4. "The runner's battery" is both functions.)*
+
+## 3. DE 133 — the named status, and the placement
+
+- `assert_ledger_anchor(params, *, fixture, anchor)` returns `NO_LEDGER_FOR_A_FIXTURE_DAY` — *"a **NAMED
+  STATUS**, never the `null` that hid the original defect"*. Rule 4 applied to the defect's own shape.
+- Placed after the day-membership and lock guards, because at the top *"it **PRE-EMPTED** the day-membership
+  refusal and a cell testing that got this one instead"* — "before the work" is not "before every guard".
+- DE records that **two versions of its own cell accepted THEIR refusal as if it were this one** — the
+  instrument-satisfies-the-words class, closed by making the check a named function a cell can call directly.
+
+**A near-miss of mine.** `assert_ledger_anchor` occurs exactly twice in the runner (definition + one call),
+which reads as *"nobody drives it, the rationale is unmet"*. **Wrong** — `de_early_read.py:982–988` drives all
+three arms: RED (`fixture=False, anchor=None` → asserts the code), FIXTURE (`fixture=True` → asserts the
+status), GREEN (`anchor="/tmp/x.json"` → asserts `owes_a_ledger`). Twice this round a correctly-scoped probe
+answered a differently-scoped question; both caught by widening before writing. **A grep's zero is only as wide
+as its path list.**
+
+## 4. `ABSOLUTES_DO_NOT_RECONCILE` — driven, and it fires
+
+REV perturbed `absolute_legs` so the arm's total gained 1.0 cent: control clean (`agree_to_1e_9` True), red
+`REFUSED ABSOLUTES_DO_NOT_RECONCILE … a difference of 0.9999999999994316` — **the injected cent to twelve
+places**, which is itself evidence nothing else moved.
+
+**My round-268 note and REV's drive compose exactly**: I said no *natural* input can drive it, because
+`observed` **is** `arm_value − base_value` from one replay, so only a *synthetic* perturbation could — and that
+is what REV did. The finding narrows: **the guard was never wrong, only unwatched.** What stays open is REV's
+own qualifier — *"a guard verified by a reviewer's scratch drive is a guard whose next regression nobody
+catches"* — so the routed item becomes **land it as a cell**. "Fires" and "is watched" are different states.
+
+## 5. The third composition, verified at the branch
+
+- `origin/mm-research-e3-composition` = **`6c3a121`**, and its parent is **`fe76d83` itself** — one commit on
+  that base, not a rebase of the shared line.
+- `git diff --stat fe76d83 …` → **exactly two files**, `de_early_read.py` and `de_multiday_gate1_runner.py`,
+  466 insertions / 40 deletions, **and nothing else**. R-785's prescription and the branch agree.
+- **Cascade: composition 10/10, `fe76d83` 10/10, shared 9/10** (its one red still `de_phase4_diag_runner.py`
+  `309b98c7` vs v19's `ee4034c1`). The composition keeps `fe76d83`'s phase4, so `verify_be_module()` does not
+  raise and the battery does not stop at check 7. **It is not a workaround for the pin; it is the only tree in
+  which the battery runs to the end.**
+- Both files are **byte-identical to the shared tree's** (`5aa544ef`, `eaa68ea5`) — DE's work on a different
+  base, so whatever REV 102 finds or clears applies to the bytes already in the shared tree.
+
+## 6. Standing
+
+- **The replay debt stands for both days, and the two absences differ in shape:** 09-04 carries
+  `day_run.decision_ledger` **present and explicitly `None`**; 09-03 has **no ledger key at all** (it ran
+  before the field existed). Same debt, two reasons. R-782(c)'s replay (~86 min of lock) is owed for both and
+  neither has a GO — **until then no absolute day value exists for either day, only the excesses.**
+- **Two tables of four in hand** (09-03, 09-04 — both EXPLORATORY, no interval).
+- **E3, E4 and GO #8 wait on three things:** the third composition `6c3a121`, REV 102's read of it, and the DE
+  reset (R-786 records DE at 98 % context, reset as soon as its landing completes).
+- **Freeze holds a ninth round**; the queue behind the lift now holds v20/v28, DE 131's absolutes, DE 132/133's
+  ledger fix and the two replays.
+
+## 7. Counts
+
+flags 2026 → **2044**, provenance 1571 → **1589** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,299 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 145th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, and my eighteen added none. Window trimmed 4 → 3,
+**Batch 251** archived.
+
+**NEXT:** REV 102 reads `6c3a121` → GO E3. MEM sweeps R-787 onward.
+
+---
+
 # READ FIRST — round 268 (MEM, 2026-09-07T11:14:34Z, tip `c8ff91e`)
 
 **R-783 and R-784 swept, with every landing between the tip I read at round 267 (`4e93675`) and `c8ff91e`.**
