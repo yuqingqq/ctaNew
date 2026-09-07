@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:58:59Z (MEM ROUND 282 -- R-808 SWEPT, with every landing between the tip I read at round 281 (`cd4b38f`) and
+  `51cf79e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE PIN CONSEQUENCE IS A JOIN THE ENTRY LEAVES IMPLICIT.*** R-808 reports separately that
+  `placement_latency_ms` is declared with default 0.0 and that phase4 moved off v19's pin. **They are the same
+  event**: `placement_latency_ms` occurs ONLY in `de_phase4_diag_runner.py` (7 sites) and ZERO times in the
+  runner, ledger, early read or queue policy -- **so the latency declaration IS the phase4 change**, and the pin
+  problem is DE 137's direct footprint rather than a side effect. Every figure verified: phase4 is
+  `be_cascade.modules[4]` pinned at `ee4034c1`, and by ref `5020f96` = **`ee4034c1`**, `1f171e8` = `309b98c7`,
+  `5ad16b5` = **`52e76689`**. **Only the BASE carries the pinned bytes**, so the composition must take that one
+  file from `5020f96` and everything else from the additions.
+  (2) ***AND MY OWN ROUND-269 RECORD SAYS WHY THAT IS WORSE THAN A FAILED CHECK***: `BE_CASCADE_DIFFERS` is
+  RAISED, so a cascade red **aborts the battery at check 7** -- the mechanism by which a real red hid behind a
+  by-design one. **A fifth composition with phase4 off-pin would stop its own battery seven checks in and hide
+  what the other 380-odd would have found.** Keeping the pin is a VISIBILITY requirement, not only compliance.
+  (3) The rename is clean **at the key level, tested by AST rather than grep**: `inventory_leg` as an emitted or
+  indexed key appears **0 times in the runner** (6 textual mentions) and **once in the early read** (15) -- and
+  that one site is `_r795["legs"] = {"inner": {"inventory_leg": 1.0}}`, **a falsifier's own fixture**: a
+  detector for the old key needs the old key to detect. `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` verified at `:502`;
+  250 ms proposed and deferred to the user. **The float-boundary rule lands on that deferred decision**: a fill
+  at t0+100 ms measures 99.99999999999964 ms, so "whoever sets L should choose a value no fill sits exactly on"
+  -- and 250 is exactly the kind of round number a fill can sit on.
+  (4) ***R-808's FOUR BATTERY COUNTS ARE ALL EXACT AT ITS SUBJECT***: 388 / 30 / 9 / 218 at `5ad16b5`. At HEAD I
+  read 388 / **32** / 9 / 218 -- **and chasing that two-check difference is what surfaced a landing I had not
+  seen**: `51cf79e`, 15:55:36Z, AFTER R-808 was written. **A number that does not match is worth chasing even
+  when the entry turns out to be right.** Second consecutive round in which a landing arrived between the
+  dispatch and my read of the tip -- which is why I bound sweeps on the tip I read.
+  (5) ***DE 138 PART A HAS LANDED, AND BOTH HALVES OF THE CHAIN NOW EXIST IN CODE.*** The emit takes
+  `supersedes=None` and raises `EARLY_READ_ALREADY_EMITTED` **only when it is None** -- a second read is ADMITTED
+  with a named, checked target -- writing a `supersedes_block` in DA 130's exact `{path, sha256}` shape, with
+  "the superseded artifact and its ledger are NEVER edited" (rule 13). **The gap I first recorded at round 279 --
+  no chain key in any day artifact while every other family had one -- is closed in code and not yet in data**:
+  no artifact carries the field until the first re-run emits a second one.
+  (6) **MY ROUND-281 "TWO INGREDIENTS THAT DO NOT EXIST" IS NOW ZERO** -- DE 137 landed 15:50:30Z (four minutes
+  before my round-281 clock) and DE 138 Part A 15:55:36Z. **All four ingredients exist; the composition does
+  not**, and `wt-rr` still does not exist. `wt-de` frozen at `5020f96`, `?? data`, EIGHTH consecutive round;
+  GO #8 at 00:10Z. Freeze holds a TWENTY-SECOND round -- **and it now constrains the composition itself**, since
+  forbidding a re-pin is what forces the older phase4 bytes into a new tree.
+  COUNTS (by YAML parse): flags 2243 -> 2259, provenance 1788 -> 1804 (sixteen written, sixteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 264 archived.)
   2026-09-07T15:50:00Z (MEM ROUND 281 -- R-807 SWEPT, with every landing between the tip I read at round 280 (`d1b9e62`) and
   `cd4b38f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) **A USER INSTRUCTION, VERBATIM: "Focus on getting the correct results"** -- **Track C DEFERRED**, and the
@@ -143,47 +182,6 @@ updated: >-
   freeze holds a TWENTIETH round.
   COUNTS (by YAML parse): flags 2213 -> 2228, provenance 1758 -> 1773 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 262 archived.)
-  2026-09-07T15:37:58Z (MEM ROUND 279 -- R-804 AND R-805 SWEPT, with every landing between the tip I read at round 278
-  (`e0b6a55`) and `06d3010`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***CORRECTION IN BAND TO MY OWN ROUND-278 ENTRY: MY LATENCY EVIDENCE WAS A MISREADING.*** I wrote that
-  "placement reads `latency_ms=0` at `:500`" and called it verified at the constants. **`_qr_spec(cell,
-  latency_ms, cancel)` maps that parameter to `cancel_latency_ms`, and the call passes `cancel=False`** -- it
-  sets the CANCEL latency to zero on a spec whose cancelling is disabled. The function's thirteen keys contain
-  **no placement-latency field at all** (`placement` is a STYLE, `"QUEUE_REALISTIC_SKEW"`). **The CONCLUSION
-  survives** -- placement is instantaneous, BY OMISSION, and the asymmetry BE 100 works from is real -- **the
-  EVIDENCE I GAVE does not.** I verified that a literal existed at a line and never checked what the parameter it
-  fed was named; rule 16's own words are match identity, and the identity is `cancel_latency_ms`.
-  (2) ***I REPRODUCED BE 100's 250 ms FRACTION EXACTLY*** from `fill_ns - gen_start_ns` on both ledgers, baseline
-  deduped, zero fills missing a timestamp: 09-05 **48.2 / 55.9 / 49.5 %**, 09-06 **47.9 / 56.0 / 49.2 %** --
-  every path-day inside BE's 48-56 %. **AND THE CANCELLING ARM IS THE MOST EXPOSED**: CONDVALUE is highest on
-  both days and the baseline lowest, so a 250 ms placement latency would remove the largest share of ITS fills.
-  BE's 98 % / 55 % of settlement P&L is BE's -- it needs the winner join and I did not recompute it.
-  (3) **Capacity is 2-8 % of tape volume, zero slugs above 25 %** (BE's), and **the venue's own `volumeNum` is
-  non-null on 6 of 38,303 rows** (mine) -- absent very nearly everywhere, which is why the tape's volume had to
-  be the denominator. **DE 136 LANDED**: three files, 858 insertions, `economic_settlement` beside `economic`,
-  `NOT_VERIFIED_AGAINST_CHAINLINK` with its quotation refusal, the draft at 6,784 B, **heads still v19/v27 -- the
-  freeze survived a 701-line change to the runner.** `placement_latency_ms` occurs **zero** times: it is DE 137's,
-  dispatched 15:32:50Z, **so the largest named assumption is not yet in the code.** `inventory_leg` remains --
-  my grep counts 22 lines against the entry's "8+5", a difference of predicates I did not reproduce.
-  (4) ***A STATE CHANGE INSIDE MY WINDOW***: my dispatch carries "E1r/E2r pending REV"; `06d3010` landed at
-  15:34:35Z with **NO-GO for both**. REV 104A: refused by `early_read_preconditions` with
-  **`EARLY_READ_ALREADY_EMITTED`**, driven. **Track A is blocked at its first step, not pending.** And the
-  diagnosis is one I could confirm from the artifacts: walking all four early-read day artifacts for any
-  supersession or chain key returns **NONE**, while the same walk over the params declaration returns
-  `/supersedes`, `/supersedes/chain` and `/read_gate_predicate/SUPERSEDED_BY` -- **the search finds chains where
-  chains exist.** ***THE GUARD IS RIGHT AND WHAT IS MISSING IS A CHAIN***: the refusal looks like an obstacle and
-  is actually the family's only protection against a re-run silently replacing a landed artifact with nothing
-  recording which came first.
-  (5) R-804 carries the user's instruction verbatim -- **"make these few days data correct ... Check above
-  issues, fix then review"** -- in three tracks: A (the replays, the rename, the ruled legs), B (the estimator,
-  the null, the declaration), C (cap, settlement view in the quoter, hold-after-cancel, time-matched null, re-fit
-  thresholds -- each a DECLARED design change validated from the first day after it lands). **A is blocked, B has
-  landed its code, C is design.** And a rule-8 note on my own number: `resolutions.jsonl` was **38,268** rows at
-  my round-276 read and is **38,303** now -- **the tape grew during measurement**, so that count was correct only
-  with its as-of attached. GO #8 unchanged (`5020f96`, `?? data`, FIFTH consecutive round, and REV reports the
-  same from its own read); freeze holds a NINETEENTH round.
-  COUNTS (by YAML parse): flags 2198 -> 2213, provenance 1743 -> 1758 (fifteen written, fifteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 261 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -355,6 +353,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 282, R-808 swept (cd4b38f -> 51cf79e) ---
+  THE_PIN_CONSEQUENCE_AND_THE_JOIN_THE_ENTRY_LEAVES_IMPLICIT: THE-LATENCY-DECLARATION-IS-THE-PHASE4-CHANGE
+  phase4_IS_be_cascade_modules_4_AND_EVERY_FIGURE_MATCHES: ee4034c1-PINNED-52e76689-NOW
+  5020f96_HOLDS_phase4_AT_THE_PIN_AND_BOTH_ADDITIONS_DO_NOT: THE-BASE-MUST-SUPPLY-IT
+  AND_ROUND_269_SAYS_WHY_THAT_MATTERS_MORE_THAN_A_DIGEST_CHECK: THE-BATTERY-ABORTS-AT-CHECK-7
+  THE_RENAME_IS_CLEAN_AT_THE_KEY_LEVEL: ZERO-EMITTED-KEYS-IN-THE-RUNNER
+  AND_THE_ONE_REMAINING_KEY_SITE_IS_A_FALSIFIER_FIXTURE: THE-DETECTOR-NEEDS-THE-OLD-KEY-TO-DETECT
+  PLACEMENT_LATENCY_MS_DEFAULT_IS_0_0_VERIFIED_AT_THE_CONSTANT: 250-PROPOSED-AND-DEFERRED
+  THE_FLOAT_BOUNDARY_RULE_BEARS_ON_THE_DEFERRED_250_DECISION: CHOOSE-AN-L-NO-FILL-SITS-ON
+  THREE_OF_R_808s_BATTERY_COUNTS_MATCH_AT_HEAD_AND_ALL_FOUR_AT_ITS_SUBJECT: 30-AT-5ad16b5-32-AT-HEAD
+  WHICH_IS_HOW_I_FOUND_DE_138_PART_A_HAD_LANDED: A-MISMATCH-WORTH-CHASING
+  DE_138_PART_A_LANDED_INSIDE_MY_WINDOW_AND_AFTER_R_808: 51cf79e-AT-155536Z
+  THE_WRITER_HALF_MAKES_EARLY_READ_ALREADY_EMITTED_CONDITIONAL: RAISED-ONLY-IF-supersedes-IS-NONE
+  SO_BOTH_HALVES_OF_THE_CHAIN_NOW_EXIST_IN_CODE: MY-ROUND-279-GAP-CLOSED
+  MY_ROUND_281_TWO_INGREDIENTS_IS_NOW_ZERO: BOTH-LANDED-WITHIN-FIVE-MINUTES
+  wt_rr_STILL_DOES_NOT_EXIST_AND_wt_de_IS_STILL_FROZEN: 5020f96-EIGHTH-CONSECUTIVE-ROUND
+  THE_FREEZE_HOLDS_FOR_THE_TWENTY_SECOND_ROUND: AND-NOW-CONSTRAINS-THE-COMPOSITION-ITSELF
   # --- MEM round 281, R-807 swept (d1b9e62 -> cd4b38f) ---
   USER_INSTRUCTION_FOCUS_ON_GETTING_THE_CORRECT_RESULTS: TRACK-C-DEFERRED
   THE_FIFTH_COMPOSITION_NEEDS_TWO_INGREDIENTS_THAT_DO_NOT_EXIST_YET: DE-137-AND-DE-138-PART-A
@@ -26611,6 +26626,184 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 282, 2026-09-07T15:58:59Z (the clock read by which every measurement below was complete) ---
+  THE_PIN_CONSEQUENCE_AND_THE_JOIN_THE_ENTRY_LEAVES_IMPLICIT:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      **THE ROUND'S FINDING IS A JOIN BETWEEN TWO FACTS THE ENTRY STATES SEPARATELY.** R-808 reports (a) that
+      `placement_latency_ms` is declared with default 0.0 and (b) that phase4 moved off v19's pin, so the fifth
+      composition must keep phase4 at the pinned bytes. **The two are the same event**: I searched for
+      `placement_latency_ms` across the modules DE 137 touched and it occurs **only in
+      `de_phase4_diag_runner.py`** (7 occurrences: the parameter at `:506`, `L = float(placement_latency_ms or 0.0)`
+      at `:517`, the signature at `:528`, the default resolution at `:546`, the receipt field at `:681`), and **zero
+      times in the runner, the ledger, the early read or the queue-realistic policy.** **So the latency declaration IS
+      the phase4 change** -- the module that had to move is the one the cascade pins, and the pin problem is not a side
+      effect of DE 137 but its direct footprint.
+  phase4_IS_be_cascade_modules_4_AND_EVERY_FIGURE_MATCHES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      Verified at v19 and at the objects: `be_cascade.modules[**4**]` is `live/pm_research/de_phase4_diag_runner.py`,
+      pinned at **`ee4034c15c274982`** (and `modules[8]` is a different phase4-named module,
+      `phase4_generation_tables.py` at `22ac4efe`, which I print to keep the index unambiguous). The module's digest by
+      ref: **`5020f96` = `ee4034c1`** (the pin), `1f171e8` = `309b98c7`, **`5ad16b5` = `52e766891fad238c`**, HEAD =
+      `52e76689`. **Every figure R-808 cites is exact.**
+  5020f96_HOLDS_phase4_AT_THE_PIN_AND_BOTH_ADDITIONS_DO_NOT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      The constraint stated as an arithmetic fact about the ingredients. The fifth composition is `5020f96` +
+      `1f171e8` + `5ad16b5` + DE 138 Part A. **Only the BASE carries phase4 at the pin**: `5020f96` has `ee4034c1`
+      while `1f171e8` has `309b98c7` and `5ad16b5` has `52e76689`. **So a naive merge that took the newest phase4 would
+      land the composition at 9 of 10** and `P7_cascade_digest` would block, with the freeze forbidding a re-pin before
+      GO #8's receipt. **The composition must take that one file from its base and everything else from the
+      additions** -- which is a specific instruction, not a general caution, and DE 138's pin addendum (15:53:40Z)
+      carries it.
+  AND_ROUND_269_SAYS_WHY_THAT_MATTERS_MORE_THAN_A_DIGEST_CHECK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      **AND FROM MY OWN RECORD, THE REASON THIS IS WORSE THAN A FAILED CHECK.** At round 269 I recorded REV 101's
+      measurement and my own correction to it: `BE_CASCADE_DIFFERS` is RAISED from `verify_be_module()`, so **a cascade
+      red ABORTS the battery at check 7** -- which is exactly how a real red hid behind a by-design one until the
+      composition was built with the cascade whole. **So a fifth composition carrying phase4 off-pin would not merely
+      fail a digest comparison; it would stop its own battery seven checks in and hide whatever the other 380-odd
+      checks would have found.** Keeping phase4 at the pin is a VISIBILITY requirement, not only a compliance one, and
+      that is the lesson from the round where I had to correct my own reporting of it.
+  THE_RENAME_IS_CLEAN_AT_THE_KEY_LEVEL:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      R-808 says the misnamed key was renamed and re-signed as the trades cash flow, with the PROSE naming the old
+      field kept deliberately "so readers of landed ledgers know to invert". **Tested by parsing rather than
+      grepping**: walking the AST for `inventory_leg` as a dict key or a subscript, the runner has **0** such sites
+      (against 6 textual mentions) and the early read **1** (against 15). Meanwhile `trades_cash_flow` appears 8 times
+      in the runner and 6 in the early read, and `trades_leg` 8 in the runner. **So the emitted key is gone from the
+      runner entirely and the remaining mentions are exactly the prose the entry says was kept on purpose.**
+  AND_THE_ONE_REMAINING_KEY_SITE_IS_A_FALSIFIER_FIXTURE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      The single remaining key usage, read at the line: `de_early_read.py:1415`,
+      **`_r795["legs"] = {"inner": {"inventory_leg": 1.0}}`** -- a synthetic structure built INSIDE a test, not an
+      emitted field. R-808 says "the falsifier tests keys", and this is that falsifier's input: **a detector for the
+      old key needs the old key to detect.** So the rename is complete in production and the one survivor is the thing
+      that proves the detector can fire -- which is the opposite of an oversight.
+  PLACEMENT_LATENCY_MS_DEFAULT_IS_0_0_VERIFIED_AT_THE_CONSTANT:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      **`PLACEMENT_LATENCY_MS_DEFAULT = 0.0`** at `:502`, resolved at `:546` as `_Lp = (PLACEMENT_LATENCY_MS_DEFAULT
+      if placement_latency_ms is None else float(placement_latency_ms))` and recorded in the receipt at `:681`. The
+      function it feeds is `apply_placement_latency(tranches, t0, placement_latency_ms)` -- "**A GENERATION'S QUOTE IS
+      NOT RESTING UNTIL t0 + L_place**". **So the default reproduces today's behaviour exactly**, 250 ms is PROPOSED in
+      the draft, and the choice is a USER decision deferred under R-807. The mechanism now exists and is switched
+      off.
+  THE_FLOAT_BOUNDARY_RULE_BEARS_ON_THE_DEFERRED_250_DECISION:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      The rule at `:6503`-`:6508`, and it is a genuinely careful piece of work: "`10.100 - 10.0` is
+      0.09999999999999964, so the fill measures **99.99999999999964 ms** and a threshold of exactly 100.0 **DROPS**
+      it. The predicate is `>= L` on floats, and **whoever sets L in the declaration should choose a value no fill sits
+      exactly on**." The cell drives L = 250 (all dropped), 0 and 99 (all kept) and 100 (the boundary case). **The cell
+      asserts what the arithmetic can and cannot claim** rather than asserting a boundary it cannot establish -- and
+      the standing instruction lands directly on the deferred 250 ms decision, since 250 is exactly the kind of round
+      number a fill can sit on.
+  THREE_OF_R_808s_BATTERY_COUNTS_MATCH_AT_HEAD_AND_ALL_FOUR_AT_ITS_SUBJECT:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      R-808 cites runner 388 / early read 30 / ledger 9 / phase4 218. At **HEAD** I read 388 / **32** / 9 / 218 -- one
+      apparent mismatch. **At `5ad16b5`, the commit R-808 is about, I read 388 / 30 / 9 / 218 -- all four exact.** So
+      the entry is correct at its subject and my read was of a later tree. (For completeness at `1f171e8`: 384 / 30 /
+      8 / 217, so DE 137 added 4 / 0 / 1 / 1.) **A number quoted at a commit is only quotable with the commit
+      attached**, which is the same discipline as the as-of on a population.
+  WHICH_IS_HOW_I_FOUND_DE_138_PART_A_HAD_LANDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      **AND CHASING THE TWO-CHECK DIFFERENCE IS WHAT SURFACED THE LANDING.** Rather than record 30-vs-32 as a
+      discrepancy, I asked which commit last touched `de_early_read.py` -- and it is **`51cf79e`, 15:55:36Z**, after
+      R-808 was written at 15:54:32Z. Those are DE 138 Part A's two checks. **A number that does not match is worth
+      chasing even when the entry turns out to be right**, because the mismatch was not an error at all: it was a
+      landing I had not yet seen.
+  DE_138_PART_A_LANDED_INSIDE_MY_WINDOW_AND_AFTER_R_808:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      **`51cf79e` -- "REVIEW 104A §3: a second early read is a SUPERSESSION, named by the pair DA 130 reads"** --
+      `de_early_read.py` +176/-14, landed **15:55:36Z**, after R-808 and inside my sweep window. **This is the second
+      consecutive round in which a landing arrived between the dispatch being written and my reading the tip** (round
+      279 was REV 104A's NO-GO), which is precisely why I bound every sweep on the tip I read rather than on my own
+      last commit.
+  THE_WRITER_HALF_MAKES_EARLY_READ_ALREADY_EMITTED_CONDITIONAL:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      Read at the diff. The emit function now takes **`supersedes=None`** (`:411`), and **`EARLY_READ_ALREADY_EMITTED`
+      is raised only `if supersedes is None`** -- so a second read is ADMITTED when a supersession target is named, and
+      still refused when it is not. The named target is resolved and checked (`_named = supersedes.get("path") ...`,
+      then a refusal naming the file "as the artifact it supersedes and that file ..."), a `supersedes_block` is
+      written into the artifact, and the code states the invariant: "**the superseded artifact and its ledger are NEVER
+      edited**" -- rule 13. The comment also names the counterpart: "DA 130 already reads exactly that shape
+      (`supersedes` = {path, sha256})".
+  SO_BOTH_HALVES_OF_THE_CHAIN_NOW_EXIST_IN_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      **THE GAP I FIRST RECORDED AT ROUND 279 IS CLOSED IN CODE.** Then, walking all four day artifacts with a
+      falsifier, I found **no supersession or chain key in any of them** while the params declaration carried
+      `/supersedes/chain` -- "the early-read day family is the one family emitting versions without any of it". **The
+      reader half landed as DA 130 (round 281, driven by me) and the writer half has now landed as DE 138 Part A**,
+      both built to the same `{path, sha256}` shape. **No artifact carries the field yet** -- none will until the first
+      re-run emits a second one -- so the chain exists in code and not yet in data. That is the honest state: the
+      machinery is there and has never been exercised on a real supersession.
+  MY_ROUND_281_TWO_INGREDIENTS_IS_NOW_ZERO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      At round 281 I recorded that the fifth composition needed **two ingredients that did not exist**: DE 137 and
+      DE 138 Part A. **Both have now landed** -- DE 137 as `5ad16b5` (15:50:30Z, four minutes before my round-281
+      clock of 15:50:00Z) and DE 138 Part A as `51cf79e` (15:55:36Z). **So all four ingredients exist**; what remains
+      is the composition commit itself and the worktree to hold it. Recorded because "two ingredients missing" was a
+      true statement with a five-minute half-life, and a state file that does not say when it stopped being true is
+      worse than one that never said it.
+  wt_rr_STILL_DOES_NOT_EXIST_AND_wt_de_IS_STILL_FROZEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      `/home/yuqing/ctaNew-wt-rr` **still does not exist** (checked on the filesystem and in `git worktree list`), and
+      `wt-de` HEAD is **`5020f96`** with status exactly `?? data` -- the **eighth** consecutive round at that state.
+      GO #8 remains at 00:10Z from those bytes. **So the composition's ingredients are all present and the composition
+      is not**, which is the state DE 138 Part B is dispatched to change.
+  THE_FREEZE_HOLDS_FOR_THE_TWENTY_SECOND_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T15:58:59Z
+    said: >-
+      `params_v20` and `design_v28` absent (0 matches in any state), heads v19/v27. **And the freeze now constrains
+      the composition itself, not just the declarations**: because it forbids a re-pin before GO #8's receipt, the
+      fifth composition cannot solve its phase4 problem by updating v19's `be_cascade` -- it must instead carry the
+      older bytes for that one module. **A freeze that started as "no new versions" is now shaping which bytes a new
+      tree may hold**, which is worth naming as the freeze's second-order effect rather than leaving it as a
+      constraint that appears from nowhere in a dispatch.
   # --- MEM round 281, 2026-09-07T15:50:00Z (the clock read by which every measurement below was complete) ---
   USER_INSTRUCTION_FOCUS_ON_GETTING_THE_CORRECT_RESULTS:
     prov: CHECKED

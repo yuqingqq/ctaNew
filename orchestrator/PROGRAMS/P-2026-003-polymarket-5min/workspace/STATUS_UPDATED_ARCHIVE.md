@@ -20344,3 +20344,49 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2183 -> 2198, provenance 1728 -> 1743 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 260 archived.)
 ```
+
+## Batch 264 — archived 2026-09-07T15:58:59Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:37:58Z (MEM ROUND 279 -- R-804 AND R-805 SWEPT, with every landing between the tip I read at round 278
+  (`e0b6a55`) and `06d3010`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***CORRECTION IN BAND TO MY OWN ROUND-278 ENTRY: MY LATENCY EVIDENCE WAS A MISREADING.*** I wrote that
+  "placement reads `latency_ms=0` at `:500`" and called it verified at the constants. **`_qr_spec(cell,
+  latency_ms, cancel)` maps that parameter to `cancel_latency_ms`, and the call passes `cancel=False`** -- it
+  sets the CANCEL latency to zero on a spec whose cancelling is disabled. The function's thirteen keys contain
+  **no placement-latency field at all** (`placement` is a STYLE, `"QUEUE_REALISTIC_SKEW"`). **The CONCLUSION
+  survives** -- placement is instantaneous, BY OMISSION, and the asymmetry BE 100 works from is real -- **the
+  EVIDENCE I GAVE does not.** I verified that a literal existed at a line and never checked what the parameter it
+  fed was named; rule 16's own words are match identity, and the identity is `cancel_latency_ms`.
+  (2) ***I REPRODUCED BE 100's 250 ms FRACTION EXACTLY*** from `fill_ns - gen_start_ns` on both ledgers, baseline
+  deduped, zero fills missing a timestamp: 09-05 **48.2 / 55.9 / 49.5 %**, 09-06 **47.9 / 56.0 / 49.2 %** --
+  every path-day inside BE's 48-56 %. **AND THE CANCELLING ARM IS THE MOST EXPOSED**: CONDVALUE is highest on
+  both days and the baseline lowest, so a 250 ms placement latency would remove the largest share of ITS fills.
+  BE's 98 % / 55 % of settlement P&L is BE's -- it needs the winner join and I did not recompute it.
+  (3) **Capacity is 2-8 % of tape volume, zero slugs above 25 %** (BE's), and **the venue's own `volumeNum` is
+  non-null on 6 of 38,303 rows** (mine) -- absent very nearly everywhere, which is why the tape's volume had to
+  be the denominator. **DE 136 LANDED**: three files, 858 insertions, `economic_settlement` beside `economic`,
+  `NOT_VERIFIED_AGAINST_CHAINLINK` with its quotation refusal, the draft at 6,784 B, **heads still v19/v27 -- the
+  freeze survived a 701-line change to the runner.** `placement_latency_ms` occurs **zero** times: it is DE 137's,
+  dispatched 15:32:50Z, **so the largest named assumption is not yet in the code.** `inventory_leg` remains --
+  my grep counts 22 lines against the entry's "8+5", a difference of predicates I did not reproduce.
+  (4) ***A STATE CHANGE INSIDE MY WINDOW***: my dispatch carries "E1r/E2r pending REV"; `06d3010` landed at
+  15:34:35Z with **NO-GO for both**. REV 104A: refused by `early_read_preconditions` with
+  **`EARLY_READ_ALREADY_EMITTED`**, driven. **Track A is blocked at its first step, not pending.** And the
+  diagnosis is one I could confirm from the artifacts: walking all four early-read day artifacts for any
+  supersession or chain key returns **NONE**, while the same walk over the params declaration returns
+  `/supersedes`, `/supersedes/chain` and `/read_gate_predicate/SUPERSEDED_BY` -- **the search finds chains where
+  chains exist.** ***THE GUARD IS RIGHT AND WHAT IS MISSING IS A CHAIN***: the refusal looks like an obstacle and
+  is actually the family's only protection against a re-run silently replacing a landed artifact with nothing
+  recording which came first.
+  (5) R-804 carries the user's instruction verbatim -- **"make these few days data correct ... Check above
+  issues, fix then review"** -- in three tracks: A (the replays, the rename, the ruled legs), B (the estimator,
+  the null, the declaration), C (cap, settlement view in the quoter, hold-after-cancel, time-matched null, re-fit
+  thresholds -- each a DECLARED design change validated from the first day after it lands). **A is blocked, B has
+  landed its code, C is design.** And a rule-8 note on my own number: `resolutions.jsonl` was **38,268** rows at
+  my round-276 read and is **38,303** now -- **the tape grew during measurement**, so that count was correct only
+  with its as-of attached. GO #8 unchanged (`5020f96`, `?? data`, FIFTH consecutive round, and REV reports the
+  same from its own read); freeze holds a NINETEENTH round.
+  COUNTS (by YAML parse): flags 2198 -> 2213, provenance 1743 -> 1758 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 261 archived.)
+```

@@ -1,3 +1,88 @@
+# READ FIRST — round 282 (MEM, 2026-09-07T15:58:59Z, tip `51cf79e`)
+
+**R-808 swept, with every landing between the tip I read at round 281 (`cd4b38f`) and `51cf79e`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. The pin consequence is a join the entry leaves implicit
+
+R-808 reports separately that `placement_latency_ms` is declared with default 0.0, and that phase4 moved off
+v19's pin. **They are the same event.** `placement_latency_ms` occurs **only in `de_phase4_diag_runner.py`**
+(7 sites) and **zero times** in the runner, the ledger, the early read or the queue policy. **So the latency
+declaration *is* the phase4 change** — the pin problem is DE 137's direct footprint, not a side effect.
+
+| ref | phase4 digest | |
+|---|---|---|
+| v19 pin (`be_cascade.modules[4]`) | `ee4034c15c274982` | |
+| `5020f96` (the base) | **`ee4034c1`** | at the pin |
+| `1f171e8` (DE 136) | `309b98c7` | off |
+| `5ad16b5` (DE 137) | **`52e76689`** | off |
+
+**Only the base carries the pinned bytes**, so the composition must take that one file from `5020f96` and
+everything else from the additions.
+
+**And my own round-269 record says why that is worse than a failed check:** `BE_CASCADE_DIFFERS` is *raised*, so
+a cascade red **aborts the battery at check 7** — the mechanism by which a real red hid behind a by-design one.
+**A fifth composition with phase4 off-pin would stop its own battery seven checks in and hide what the other
+380-odd would have found.** Keeping the pin is a *visibility* requirement, not only compliance.
+
+## 2. The rename, the default, and the boundary
+
+- **The rename is clean at the key level, tested by AST rather than grep:** `inventory_leg` as an emitted or
+  indexed key appears **0 times in the runner** (6 textual mentions) and **once in the early read** (15) — and
+  that site is `_r795["legs"] = {"inner": {"inventory_leg": 1.0}}`, **a falsifier's own fixture**. A detector for
+  the old key needs the old key to detect.
+- **`PLACEMENT_LATENCY_MS_DEFAULT = 0.0`** at `:502`, feeding `apply_placement_latency(...)` — *"a generation's
+  quote is not resting until t0 + L_place"*. 250 ms is **proposed** in the draft and deferred to the user.
+- **The float-boundary rule lands on that deferred decision:** `10.100 − 10.0` is `0.09999999999999964`, so a
+  fill at t0+100 ms measures **99.99999999999964 ms** and a threshold of exactly 100.0 **drops** it. *"Whoever
+  sets L should choose a value no fill sits exactly on"* — and 250 is exactly the kind of round number a fill can
+  sit on. The cell drives L = 250 / 0 / 99 / 100 and asserts what the arithmetic can and cannot claim.
+
+## 3. A two-check difference, chased
+
+R-808's four battery counts are **all exact at its subject `5ad16b5`**: 388 / 30 / 9 / 218. At HEAD I read
+388 / **32** / 9 / 218. Rather than log 30-vs-32 as a discrepancy I asked which commit last touched
+`de_early_read.py` — **`51cf79e`, 15:55:36Z, after R-808 was written.** Those are DE 138 Part A's two checks.
+
+**A number that does not match is worth chasing even when the entry turns out to be right** — the mismatch was
+not an error, it was a landing I had not yet seen. Second consecutive round in which a landing arrived between
+the dispatch and my read of the tip, which is why sweeps bind on the tip I read.
+
+## 4. Both halves of the chain now exist in code
+
+**DE 138 Part A has landed** (`51cf79e`, `de_early_read.py` +176/−14). The emit takes `supersedes=None` and
+raises **`EARLY_READ_ALREADY_EMITTED` only when it is None** — a second read is *admitted* with a named, checked
+target — writing a `supersedes_block` in **DA 130's exact `{path, sha256}` shape**, under the invariant *"the
+superseded artifact and its ledger are NEVER edited"* (rule 13).
+
+**The gap I first recorded at round 279 — no chain key in any day artifact while every other family had one — is
+closed in code and not yet in data.** No artifact carries the field until the first re-run emits a second one. The
+machinery exists and has never been exercised on a real supersession.
+
+## 5. Standing
+
+- **My round-281 "two ingredients that do not exist" is now zero** — DE 137 landed 15:50:30Z (four minutes before
+  my round-281 clock) and DE 138 Part A 15:55:36Z. **All four ingredients exist; the composition does not**, and
+  `wt-rr` still does not exist.
+- **`wt-de` frozen at `5020f96`**, status exactly `?? data` — **eighth** consecutive round. GO #8 at 00:10Z.
+- **Freeze holds a twenty-second round — and it now constrains the composition itself**: forbidding a re-pin
+  before GO #8's receipt is what forces the older phase4 bytes into a new tree. Worth naming as the freeze's
+  second-order effect rather than a constraint appearing from nowhere in a dispatch.
+- In flight: **DE 138 Part B** (the composition, with the pin constraint), **REV 104's second half**; **REV 105**
+  gates GO R1..R4.
+
+## 6. Counts
+
+flags 2243 → **2259**, provenance 1788 → **1804** (sixteen written, sixteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,514 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 158th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my sixteen added none. Window trimmed 4 → 3,
+**Batch 264** archived.
+
+**NEXT:** DE 138 Part B → REV 105 → GO R1..R4, with GO #8 at 00:10Z from the frozen tree. MEM sweeps R-809
+onward.
+
+---
+
 # READ FIRST — round 281 (MEM, 2026-09-07T15:50:00Z, tip `cd4b38f`)
 
 **R-807 swept, with every landing between the tip I read at round 280 (`d1b9e62`) and `cd4b38f`.** STATE ONLY.
