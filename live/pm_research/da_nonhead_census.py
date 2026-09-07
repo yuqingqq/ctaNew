@@ -985,6 +985,18 @@ def literal_census(root: Path, chains: dict,
                         else "NOT_A_PIN__NO_OPEN")
                     if row["status"] == "MARKED_AND_NOT_A_PIN":
                         marked.append(row)
+                    #: DA 122: A MARKED NON-HEAD IS ALSO JUDGED BY THE
+                    #: DIGEST PREDICATE, and the result is reported even
+                    #: though the marker branch decided the status. The
+                    #: marker is the FILE AUTHOR'S CLAIM; the predicate is
+                    #: this census's own measurement, and a reader should
+                    #: see whether a marked name is ALSO pinned by the
+                    #: pair -- e2_a_episodes' known-bad drive is, and
+                    #: saying only "marked" would hide that.
+                    if row["is_head"] is False:
+                        row["the_digest_predicate"] = \
+                            hashed_against_a_recorded_digest(
+                                tree, row.get("assigned_to"))
                     not_pins.append(row)
                 elif row["is_head"] is False and hashed_against_a_recorded_digest(
                         tree, row.get("assigned_to"))["admissible"]:
@@ -1091,6 +1103,16 @@ def literal_census(root: Path, chains: dict,
                 [r for r in rows if r["is_head"] is False]),
             "n_judged": len(refused) + len(
                 [r for r in marked if r["is_head"] is False]),
+            "n_marked_that_the_digest_predicate_ADMITS": len(
+                [r for r in marked
+                 if (r.get("the_digest_predicate") or {}).get("admissible")]),
+            "why_that_is_reported": (
+                "a marked non-head that is ALSO pinned by the pair is a "
+                "different thing from one that is only claimed: the marker "
+                "is the file author's word and the predicate is this "
+                "census's measurement. A literal that never reaches an open "
+                "is NOT A PIN whatever else is true of it, so the status "
+                "stays -- but the reader sees both"),
             "the_scanned_set_by_class": {
                 k: sum(1 for r in rows
                        if r["is_head"] is False and r["status"] == k)
