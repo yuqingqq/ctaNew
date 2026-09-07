@@ -670,7 +670,23 @@ def assert_coverage(cov: dict, n_gen: int, day: str) -> bool:
 def build(day: str, *, coin: str = COIN,
           chunk_windows: int = CHUNK_WINDOWS,
           scratch: Path | None = None, progress: bool = True,
-          fixture: bool = False) -> dict:
+          fixture: bool = False,
+          placement_latency_ms: float | None = None,
+          out_path: Path | None = None) -> dict:
+    """BE 101 adds `placement_latency_ms`, the ONLY path by which the
+    reference's placement latency reaches a day's P&L (REV 104B §7).
+
+    DEFAULT IS `None`, NOT 0.0, and the difference is deliberate: `None`
+    makes `build_reference` use `PLACEMENT_LATENCY_MS_DEFAULT` and report
+    its source as that default, so a build made without the argument is
+    byte-identical to one made before this parameter existed. Passing 0.0
+    explicitly would change the reference's own `source` field and make
+    "nothing changes by itself" false in the artifact.
+
+    `out_path` exists so an L-variant is written to ITS OWN path. The
+    landed books are never overwritten (rule 13), and the default keeps the
+    historical name exactly.
+    """
     import be_gate1_state_tape as TAPEMOD
     import de_phase4_diag_runner as R
     t0 = time.time()
@@ -687,7 +703,8 @@ def build(day: str, *, coin: str = COIN,
                           "era": sel.era}), flush=True)
 
     t = time.time()
-    fr = R.build_reference(coin, selector=sel)
+    fr = R.build_reference(coin, selector=sel,
+                           placement_latency_ms=placement_latency_ms)
     stages.done("A0_reference", t)
     ref = fr["reference"]
     obs["reference_s"] = round(time.time() - t, 1)
@@ -821,12 +838,23 @@ def build(day: str, *, coin: str = COIN,
     obs["rule22_checked_before_write"] = _R22.assert_unchanged(
         "be_daybook_build: before the book is written")
     t = time.time()
-    book = {"fr": fr, "asm": asm}
+    # BE 101: THE BOOK RECORDS ITS OWN L. A reader holding only the pickle
+    # can then answer "which placement latency produced these fills?"
+    # without loading the receipt or inferring it. The values are READ BACK
+    # from what `build_reference` reported -- never re-typed here, because a
+    # second copy of a number is a second number.
+    _pl = dict(fr.get("placement_latency") or {})
+    _pl["TRANCHE_BEFORE_PLACEMENT_LATENCY"] = (
+        (fr.get("statuses") or {}).get("TRANCHE_BEFORE_PLACEMENT_LATENCY"))
+    book = {"fr": fr, "asm": asm,
+            "header": {"protocol": "BE_DAYBOOK_HEADER_V1", "day": day,
+                       "coin": coin, "placement_latency": _pl}}
     buf = pickle.dumps(book, protocol=pickle.HIGHEST_PROTOCOL)
     digest = hashlib.sha256(buf).hexdigest()
     asm_digest = hashlib.sha256(
         pickle.dumps(asm, protocol=pickle.HIGHEST_PROTOCOL)).hexdigest()
-    dst = LEDGER_DERIVED / f"be_daybook_{day}_{coin}.pkl"
+    dst = (Path(out_path) if out_path
+           else LEDGER_DERIVED / f"be_daybook_{day}_{coin}.pkl")
     dst.write_bytes(buf)
     back = hashlib.sha256(dst.read_bytes()).hexdigest()
     stages.done("A4_write_book", t)
@@ -857,6 +885,9 @@ def build(day: str, *, coin: str = COIN,
                                                "2026-08-26T00:00, so no "
                                                "September day passes them",
                       "era": sel.era, "n_supplied_slugs": sel.n_wanted},
+        # BE 101: the value USED, its SOURCE and the dropped-tranche count,
+        # all three read back from the reference's own report.
+        "placement_latency": _pl,
         "reference": {"windows": len(ref), "generations": n_gen,
                       "statuses": fr.get("statuses"),
                       "n_slugs": fr.get("n_slugs"),
@@ -962,7 +993,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 126     # BE 91: +1, CELL (d2) the ledger-environment predicate
+EXPECTED_CHECKS = 128     # BE 91 +1 (CELL d2); BE 101 +2 (the placement-latency seam and reader)
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -2268,6 +2299,81 @@ def selftest() -> int:
        f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
 
 
+    # ---- BE 101: THE PLACEMENT LATENCY REACHES THE BOOK -----------------
+    # REV 104B §7: `PLACEMENT_LATENCY_MS_DEFAULT` was declared and no
+    # internal caller passed it, so the parameter could not change a day's
+    # P&L. This builder's `build_reference` call is the only path by which
+    # it can. DE's `apply_placement_latency` already has its own falsifier
+    # (de_phase4_diag_runner.py:6500-6516, the drop semantics on a fixture);
+    # this does NOT re-test that. It tests MY seam: that the argument is
+    # forwarded, and that a reader cannot get 0 by default.
+    import de_phase4_diag_runner as _Rp
+    _seen = []
+    _real_br = _Rp.build_reference
+
+    def _capture(coin, **kw):
+        _seen.append(kw.get("placement_latency_ms", "<NOT FORWARDED>"))
+        raise BookRefused("CAPTURED")   # stop before any real work
+
+    # `build` does its rule-20 and rule-22 setup before the call, and
+    # `day_selector` reads the real ledger, so BOTH boundaries are stubbed --
+    # the assertion is only about what `build` FORWARDS, and stubbing less
+    # would test the setup instead.
+    _real_ds = globals()["day_selector"]
+
+    class _Sel:
+        n_wanted, era = 0, "FIXTURE"
+
+    try:
+        _Rp.build_reference = _capture
+        globals()["day_selector"] = lambda *a, **k: _Sel()
+        for _L in (None, 0.0, 250.0):
+            try:
+                build("20990101", placement_latency_ms=_L, progress=False,
+                      fixture=True)
+            except BaseException:
+                pass
+    finally:
+        _Rp.build_reference = _real_br
+        globals()["day_selector"] = _real_ds
+    ok(_seen == [None, 0.0, 250.0],
+       f"THE SEAM: `build` FORWARDS `placement_latency_ms` to "
+       f"`build_reference` -- captured {_seen} for calls made with "
+       f"[None, 0.0, 250.0]. Before this round the call was "
+       f"`R.build_reference(coin, selector=sel)` and the argument reached "
+       f"nothing; a default of None (not 0.0) is what keeps a build made "
+       f"without the argument byte-identical to a pre-parameter one")
+
+    # THE READER, THREE NAMED OUTCOMES AND A REFUSAL -- driven on all three.
+    _hdr = {"header": {"placement_latency": {"placement_latency_ms": 250.0,
+                                             "source": "the caller"}},
+            "fr": {}, "asm": {}}
+    _refonly = {"fr": {"placement_latency": {"placement_latency_ms": 0.0,
+                                             "source": "PLACEMENT_LATENCY_"
+                                                       "MS_DEFAULT"}},
+                "asm": {}}
+    _pre = {"fr": {"statuses": {"TRANCHE_KEPT": 7}}, "asm": {}}
+    _a = placement_latency_of(_hdr)
+    _b = placement_latency_of(_refonly)
+    try:
+        placement_latency_of(_pre); _c = "NOT REFUSED"
+    except BookRefused as _e:
+        _c = str(_e).split(":")[0]
+    ok(_a["status"] == "RECORDED_IN_THE_HEADER"
+       and _a["placement_latency_ms"] == 250.0
+       and _b["status"] == "IN_THE_REFERENCE_ONLY"
+       and _b["placement_latency_ms"] == 0.0
+       and _c == "BOOK_RECORDS_NO_PLACEMENT_LATENCY",
+       f"AND A BOOK THAT DOES NOT RECORD ITS L IS REFUSED BY NAME ({_c}), "
+       f"never read as 0: header -> {_a['status']} at "
+       f"{_a['placement_latency_ms']}, reference-only -> {_b['status']} at "
+       f"{_b['placement_latency_ms']}, pre-parameter -> REFUSED. The landed "
+       f"09-03..09-06 books ARE pre-parameter -- their receipts carry no "
+       f"TRANCHE_BEFORE_PLACEMENT_LATENCY at all (measured) -- so this "
+       f"refusal fires on every one of them, which is the point: an "
+       f"unrecorded L and an L of zero are the same number and opposite "
+       f"facts")
+
     return _finish(checks, fails, skipped)
 
 
@@ -2561,6 +2667,44 @@ def _blob_sha_at(head, relpath) -> str | None:
         return None
 
 
+#: BE 101. THREE NAMED OUTCOMES, because "no L recorded" and "L = 0" are
+#: the same number and opposite facts, and the landed 09-03..09-06 books
+#: predate the parameter entirely (their `statuses` carry no
+#: TRANCHE_BEFORE_PLACEMENT_LATENCY at all -- measured, not assumed).
+PLACEMENT_LATENCY_READ = ("RECORDED_IN_THE_HEADER", "IN_THE_REFERENCE_ONLY",
+                          "PRE_PARAMETER")
+
+
+def placement_latency_of(book: dict) -> dict:
+    """WHICH placement latency produced this book, or a REFUSAL BY NAME.
+
+    A reader that needs L must not be able to get 0 by default: a book from
+    before the parameter existed cannot say what its L was, and answering
+    `0.0` for it would be a fact nobody measured. That book refuses under
+    `BOOK_RECORDS_NO_PLACEMENT_LATENCY`; a reader that does NOT need L is
+    free not to call this.
+    """
+    h = (book or {}).get("header") or {}
+    pl = h.get("placement_latency")
+    if isinstance(pl, dict) and pl.get("placement_latency_ms") is not None:
+        return {"status": "RECORDED_IN_THE_HEADER", **pl}
+    fr = (book or {}).get("fr") or {}
+    pl = fr.get("placement_latency")
+    if isinstance(pl, dict) and pl.get("placement_latency_ms") is not None:
+        return {"status": "IN_THE_REFERENCE_ONLY", **pl,
+                "note": "built after the parameter existed and before BE 101 "
+                        "put it in the header; the value is the reference's "
+                        "own and is as good"}
+    raise BookRefused(
+        "BOOK_RECORDS_NO_PLACEMENT_LATENCY: this book carries neither "
+        "`header.placement_latency` nor `fr.placement_latency`, so the "
+        "placement latency that produced its fills is UNKNOWN. It is not "
+        "0.0 by default -- an unrecorded L and an L of zero are the same "
+        "number and opposite facts (rule 4). Books built before the "
+        "parameter existed are PRE_PARAMETER and must be rebuilt to be "
+        "read on this axis.")
+
+
 def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
     """ASSERT be_daybook_structure_v1 AGAINST A REAL BOOK. HEAVY.
 
@@ -2719,8 +2863,16 @@ def main(argv=None) -> int:
         return 0
     if "--day" in argv:
         day = argv[argv.index("--day") + 1]
-        out = build(day)
-        dst = OUT_DERIVED / f"be_daybook_receipt_{day}_{COIN}.json"
+        # BE 101: an L-variant writes to ITS OWN path and its own receipt.
+        # Without `--placement-latency-ms` every path below is exactly what
+        # it was before this round.
+        _L = (float(argv[argv.index("--placement-latency-ms") + 1])
+              if "--placement-latency-ms" in argv else None)
+        _tag = "" if _L is None else f"__L{_L:g}ms"
+        _bp = (None if not _tag
+               else LEDGER_DERIVED / f"be_daybook_{day}_{COIN}{_tag}.pkl")
+        out = build(day, placement_latency_ms=_L, out_path=_bp)
+        dst = OUT_DERIVED / f"be_daybook_receipt_{day}_{COIN}{_tag}.json"
         dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
         print(json.dumps({"receipt": str(dst),
                           "book": out["book"]["path"],
@@ -2730,7 +2882,7 @@ def main(argv=None) -> int:
                           "peak_rss_gb": out["resources"]["peak_rss_gb"]}))
         return 0
     print("usage: be_daybook_build.py --selftest | --day <YYYYMMDD> "
-          "| --supersede-receipt <YYYYMMDD>")
+          "[--placement-latency-ms <L>] | --supersede-receipt <YYYYMMDD>")
     return 2
 
 
