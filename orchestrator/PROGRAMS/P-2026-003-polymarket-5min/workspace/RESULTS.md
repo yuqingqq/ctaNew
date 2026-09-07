@@ -222,6 +222,25 @@ restatement.
 
 ---
 
+## 0b. 2026-09-07T11:22Z — the USER-ruled early read of the four sealed Gate-1 days (R-754); the seal retired (R-765); absolutes recorded from GO #9 on (R-782)
+
+**Every number here was read from DA's independent print (`da_early_read_verify --print-under-ruling R-764`) and cross-checked by DA at DE's artifact by key; the coordinator computed nothing. EXPLORATORY: G = 4 by the user's ruling, point estimates, NO INTERVAL below five days, the four days CONSUMED for any later validation (rule 11). Direction only.**
+
+Two of four days read at this writing; 09-05 and 09-06 follow as GO E3/E4 from the composition commit `6c3a121` (fe76d83's frozen cascade + DE 132's two files), each with a DECISION LEDGER.
+
+| day | arm | D_E0 (arm − 0-cancel baseline) | Z vs matched random-cancel null | p (one-sided) | null mean | null sd | fills arm / baseline | cancels | artifact |
+|---|---|---:|---:|---:|---:|---:|---|---:|---|
+| 2026-09-03 | CONDVALUE_X_SKEW | −16,592.33 | −2.30 | 0.994 | −7,777.90 | 3,830.06 | 30,171 / 46,439 | 5,146 | `p003_de_early_read_day_20260903__20260907T085436Z.json` `5c8a58f5…` |
+| 2026-09-03 | HAZARD_OVER_SKEWED_REF | −4,822.26 | −5.30 | 1.000 | −478.24 | 819.52 | 44,895 / 46,439 | 700 | same |
+| 2026-09-04 | CONDVALUE_X_SKEW | −31,428.00 | −4.74 | 1.000 | −6,146.77 | 5,339.16 | 36,806 / 57,850 | 6,417 | `p003_de_early_read_day_20260904__20260907T105906Z.json` `b196bf32…` |
+| 2026-09-04 | HAZARD_OVER_SKEWED_REF | −2,364.97 | −1.48 | 0.936 | −623.13 | 1,179.18 | 55,952 / 57,850 | 858 | same |
+
+**What the fields are:** `D_E0` = the cancel arm's day value minus the 0-cancel baseline's, in the runner's valuation unit (negative: cancelling ended below never cancelling); the null = 500 random-cancel draws matched on cancel count, side and hour; `Z` = (`D_E0` − null mean) / null sd; `p_location` one-sided. **Read plainly for these two days:** both cancel arms ended below never cancelling, random cancellation of the same count also lost, and the models' chosen cancels lost MORE than random ones on both days (CONDVALUE worse than 99.4 % and 100 % of random draws; HAZARD worse than 100 % and 93.6 %). Two days, directional only.
+
+**Labels that ride with every row:** 09-03 and 09-04 were computed under params v15/v19 while their sealed runs were made under v14 — the delta is the design pointer only (seal scope and closure naming; no estimand, bar or pin; R-764, REV 92 §A4 "not refutable"); 09-03's three counts were visible in the open since 2026-09-06T14:01Z (eight-name seal scope), 09-04's were not. **The 0-cancel baseline's own day value is NOT in either artifact** — the sealed design emitted only the excess; the early-read path at fe76d83 never reached the ledger write (R-783). From GO #9 on every receipt carries the absolutes (R-782, DE 131); 09-05 and 09-06 get them from their ledgers; 09-03 and 09-04 each need one replay under the recording code. The only absolute baseline numbers in the programme remain the development hour's (§0).
+
+**What changed structurally on 2026-09-07 (three USER rulings):** R-754 the early read (this block); R-765 the seal RETIRED for every run from now on, ONE path ONE emission, a per-day decision ledger persisted beside each receipt; R-782 the absolutes recorded. Params v19 / design v27 are the heads; a FREEZE on new params/design versions holds until GO #8's receipt lands (the frozen worktree resolves the design head from the shared ledger).
+
 ## 0. 2026-09-04 — the first absolute economics, and what they say
 
 **This section supersedes §1 wherever they disagree.** Until today this
