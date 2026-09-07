@@ -201,6 +201,14 @@ except where marked USER-ONLY.
     write time differs from the head it read -- one shared implementation, imported, never re-typed. A landing whose
     diff shows M on an existing version (instead of A on a new one) is a refusal; the landing-time head re-read is a
     discipline and `scripts/declaration_immutability.sh` is the detection -- neither is the rule.
+    **A superseded fork is repaired FORWARD, never by reverting the fork (R-760, R-761; REV 90 §B6/§B7):** when a
+    landed version is found edited in place, the repair is the NEXT version superseding the EDITED bytes by the pair
+    (as DA 121 did with `producer_exit_maps_v8`); reverting the edit moves the bytes under any later version that
+    already names them and breaks its pair (the coordinator did exactly that at `31c5208` and had to undo it). The
+    fork stays in history as `FORKED_BY_EDIT`; the checker names whether a later version supersedes it. **And the
+    CAS is per-worktree:** two seats can each write the same `_v<N>` from the same head in separate worktrees, so every
+    version LANDING re-reads the head after the copy and before the commit (rule 21's pre-copy check) and re-versions
+    from the new head if it moved.
     **A field that changes what a chain resolves to is declared where both readers resolve it (REV 83 §1.2, R-717):**
     `supersedes` and `also_supersedes` (a merge version naming every tip it closes, each by pair) are the chain's link
     fields and live in `live/pm_research/declaration_chain.py`'s contract; no seat adds a link field its own resolver
