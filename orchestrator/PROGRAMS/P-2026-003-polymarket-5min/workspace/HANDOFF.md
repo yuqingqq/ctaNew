@@ -1,3 +1,86 @@
+# READ FIRST — round 252 (MEM, 2026-09-07T07:50:07Z, tip `7889d81`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-764 and R-765 swept, with
+every landing between my own `1eca591` and the tip. **I opened no sealed receipt.**
+
+## 0. State — the seal is retired by USER ruling
+
+| | |
+|---|---|
+| **THE USER RULED** (07:47:01Z, verbatim) | *"The sealing mechanism is stupid, make sure to store the numbers after each run, and record everything we can to avoid rerun."* |
+| **What it changes** | the seal is **RETIRED for every run from now on** — params **v18**, design **v26**, one path, one emission; seal-scope lists stay declared and marked RETIRED; the six-day gate and clock gate only an **aggregate read**, never an emission |
+| **"Record everything"** | a per-day **DECISION LEDGER** beside each receipt, with cells that recompute `D_E0` and `Z` **from the ledger alone** to 1e-9, read it with the book absent, and refuse a ledger whose digest is not the receipt's |
+| **E1 (09-03)** | **still running**, id `e40782fa…`, ≈ 08:54Z — finishes under the **old** code: economics yes, **decision ledger no**; 09-03's ledger only if the user asks |
+| **E2–E4** | **wait for DE 124 + REV 92 part B**, so 09-04/05/06 are recorded once and fully. GO #8 tonight also runs with the recording code |
+| **Rulings standing** | **two USER** (the early read; the seal) beside **nine coordinator** (overrulable) |
+
+## 1. R-764's materiality ruling holds — tested as a predicate, not read
+
+The ruling turns on the v14→v15 / design v21→v23 delta carrying *"NO estimand, NO bar,
+NO pin"*. Over every changed leaf between design v21 and v23, the count whose path
+matches `estimand|threshold|bar|alpha|p_?value|holm|min_|n_draws|criterion|decision_rule|pin`
+is **zero**, and the changes fall exactly where the ruling says:
+
+| group | leaves |
+|---|---|
+| seal scope (`R29_seal_scope` 26 + `R30_seal_scope_corrected` 19) | **45** |
+| import-closure naming (`R22…`) | 7 |
+| counts and stamps (`output_name_check` 4, `source_identity` 3, `battery` 2) | 9 |
+| chain bookkeeping (`supersedes`, `protocol`, `as_of`) | 9 |
+
+***But my leaf counts are 13 and 70, not 2 and 42.*** The first reconciles exactly —
+**2 substantive** (`.design_declaration.path` v21→v23 and the sentence naming it) plus
+**11 bookkeeping** — so "two leaves" is right about what it means, and a reader
+recomputing naively gets 13. **The second I cannot reconcile** without the counting
+rule: 70 against 42, same substance, different arithmetic. **Routed, not ruled** — the
+ruling does not turn on the count. And worth noting where the changes were: **two of the
+three biggest keys are the seal scope**, the mechanism the user retired an hour later.
+
+## 2. Closed this round
+
+- **My round-251 flag**: the checker's superseded-fork statuses landed at `ff8b0a9` with a size filter and a `pre_edit_digest_pinned_by` field; `git status` clean for that path.
+- **H1, both ways** — DA 105's per-receipt grouping adopted with a supersession link outranking it, **and** both seats' resolvers run and compared in the battery.
+- **The "six-day regression" was the probe**: the coordinator passed the **repo** root where the function takes the **data** root, so every day failed for want of `pm_5min/derived`. The real half is closed by a named refusal with a check behind it — `READ_GATE_ROOT_IS_NOT_THE_LEDGER` at `de_multiday_gate1_runner.py:2329`, asserted at :10409/:10416.
+
+**The coordinator's third probe error today**, named by itself with its rule: *a probe
+of a seat's function names the argument's meaning from the function's **docstring**, not
+from the coordinator's habit.* With R-756 and R-760, three instances of R-747's family
+in one day — a fact true in one context assumed in the next — each with a mechanical
+remedy.
+
+## 3. E1's peak plateaued
+
+`MemoryPeak` read 2,715,901,952 at 07:31:38Z and the **identical** value at 07:48:37Z.
+It is monotonic, so the high-water mark was reached in the first three minutes and the
+run has been below it since — the honest follow-up to round 251's flag that it had
+already passed the ≈2.4 GB estimate. It says nothing about a stall; `SubState` still
+reads running.
+
+## 4. Chains
+
+`producer_exit_maps` head **v9** `482527d4` (9 versions, 0 orphans — DA 124's block for
+its own reader); params head still **v17** `81b2c291`; `PARAMS_REL` still names **v15**.
+The gap I have carried since round 249 is now scheduled to **close** rather than widen:
+R-765 moves `PARAMS_REL` to v18 so the sealed-path / early-read split becomes one path.
+
+## 5. A slip of my own, caught by an arithmetic that did not add up
+
+I wrote fifteen flags and the audit reported **1,757 → 1,771 — fourteen**. I had reused
+a flag **name** from round 246, and **a duplicate YAML key does not error, it shadows**
+— the twenty-third occurrence of the shadowing my own flag
+`MY_OWN_STATUS_YML_SHADOWS_22_OCCURRENCES_BY_DUPLICATE_KEY` recorded. Renamed;
+round 246's line untouched. **What caught it was the count, not a check** — a
+round-over-round delta that must equal what I wrote, which is why the counts are stated
+as a delta and never as a total.
+
+Counts: flags 1,757 → **1,772**; provenance 1,302 → **1,317**; tasks 19; **1,037 CHECKED
+/ 275 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-twenty-eighth round
+unchanged on UNMARKED. ORPHAN census **0**; audit exit **1** on **160** — 158 at round
+start plus two of mine, both readings of the running unit. Window trimmed 4 → 3,
+**Batch 234** archived. Q-MEM-240 filed through the script.
+
+---
+
 # READ FIRST — round 251 (MEM, 2026-09-07T07:34:29Z, tip `b0c01c0`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-762 and R-763 swept, with

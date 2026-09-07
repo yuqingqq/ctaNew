@@ -18615,3 +18615,85 @@ generation and the window went 4 → 3. Nothing rewritten.
   Of my own 15 entries, 14 resolve. Window trimmed 4 -> 3, **Batch 230** archived (round 245's
   generation, 148 lines, byte-identical to what left the field). Q-MEM-236 filed through the script.)
 ```
+
+## Batch 234 — archived 2026-09-07T07:50:07Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T06:35:17Z (MEM ROUND 249 -- R-755, R-756 AND R-757 SWEPT, with every landing between my own
+  ba6135e and the tip `50b82d7`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO SEALED
+  RECEIPT: two declarations, four Python sources, git objects, unit and directory listings, the register.
+  (1) ***THE COORDINATOR INCIDENT IS REPAIRED, AND I CHECKED THE REPAIR THE WAY IT HAS TO BE CHECKED --
+  BY DIGEST ON BOTH SIDES, NOT BY LINE COUNT.*** A scratch drive with an unset path variable ran in the
+  SHARED tree, replaced the register with a seven-line fixture, committed it as `d7555ff` under the
+  identity "f <f@x>" and pushed. Measured: the register's blob at `019c07a` (before) and at `0539a36`
+  (the revert) are **byte-identical, `7640eabacfc26309` both**; the stub carried 7 lines; the three script
+  patches it swept in were re-landed by pathspec at `49f3b52`, which touches exactly those three paths and
+  not the register. ***AND TWO PROPERTIES THAT DECIDE WHETHER NINETY SECONDS WERE EXPENSIVE***: the stub
+  commit's name-status is **four `M`, zero `A`** -- nothing was added, so the revert deleted nothing from
+  disk (an `add -A` over untracked files would have made the revert a deletion); and **the only commit in
+  `d7555ff..0539a36` is the revert itself**, so no seat landed on top of the stub and had its work rebased
+  onto a seven-line register. The rule the incident bought is landed at `c975113` (rule 21): a scratch
+  drive is a SCRIPT with `set -u` and `cd <scratch> || exit`, never an inline chain in a fresh shell. The
+  class the coordinator names for the pattern file -- **an environment assumption carried across tool
+  calls** -- is the same family as R-747's refresh under a running unit.
+  (2) ***THE PARAMS HEAD IS v16 AND THE SEALED PATH'S LITERAL STILL NAMES v15 -- DELIBERATELY, AND A
+  READER MUST NOT CONFLATE THE TWO.*** Head v16 `139898d3f6c4b06e`, 16 versions, 0 orphans, superseding
+  v15 `92858fc7` by the pair; and `PARAMS_REL = "…de_multiday_gate1_params_v15.json"` at
+  `de_multiday_gate1_runner.py:66` **and** `de_multiday_design_declaration.py:627`. The reason is in
+  `de_early_read.py`'s docstring ("it does not move `PARAMS_REL`, which still names v15, so the sealed
+  six-day path is byte-identical for every day outside the ruling") and in v16's
+  `what_this_block_does_NOT_change`. ***AND THAT IS EXACTLY THE SHAPE REV 89 ROUTED AS A STALE LITERAL***
+  (`DESIGN_VERSION_IN_FORCE = 23` in the emitter) -- correct today, indistinguishable tomorrow from the
+  defect, because what makes it right is not carried where the literal is. Routed to DE and REV as an
+  observation; nothing is wrong today.
+  (3) ***THE EARLY-READ PATH IS BUILT AND UNRUN, AND H1 DOES NOT GATE IT -- BUT THAT REVERSES WHAT R-755
+  RULED, SO I CHECKED THE CODE.*** `de_early_read.py`, 352 lines, refusals by name
+  (`EARLY_READ_NOT_RULED`, `EARLY_READ_BLOCK_INCOMPLETE`, `EARLY_READ_DAY_NOT_IN_THE_BAR`); a match for
+  "early_read" over the ledger returns **zero artifacts** -- unrun, measured. `landing_record_for` **0**
+  occurrences, `may_read_aggregate` **0**, and `read_gate` **ONE** -- which reads as a contradiction until
+  you look: line 11 is the DOCSTRING saying *"It does not touch `read_gate`, which still requires all six
+  days and its own clock."* **R-755 (06:24Z) ruled that H1 gates this read and DE 122 must close it first;
+  R-757 (06:33Z) states the opposite.** Both entries stand; the later one is what the code supports, and I
+  checked the code rather than choose between two entries. **The practical difference: DE 122 is no longer
+  a precondition of GO E1 -- REV 90 is -- and H1's closure moves to DE 123 from wt-de2 during the runs.**
+  Recorded as a reversal, not smoothed over: a reader of R-755 alone would wait for DE 122.
+  (4) ***WHAT THE EARLY-READ TABLE WILL AND WILL NOT CONTAIN, so no reader expects a decomposition that
+  does not exist.*** The arm-day block is **{D_E0, Z, p_location (ONE-SIDED), null_mean, null_sd,
+  null_draws_summary.n}** plus **per-arm fill and cancel counts**. The five fields R-754's dispatch asked
+  for -- the fills leg, the inventory leg, a two-sided p, rho, `D_E_MINUS_R` -- were **never computed by
+  the sealed runs** and enter the artifact as **named statuses with reasons** (rule 4), not as numbers.
+  ***THERE IS NO FILLS/INVENTORY DECOMPOSITION IN THIS TABLE.*** DE stopped rather than invent them and
+  the coordinator ruled that stopping correct. And the read's own class, from v16: EXPLORATORY,
+  directional only, intervals NONE_BELOW_FIVE_DAYS, with *"2^-4 = 0.0625 is the smallest two-sided p a
+  four-day sign test can produce, so no arm can clear 0.05 on day signs at G = 4 whatever it shows"*
+  written into the declaration.
+  (5) ***THE SIZING RECOMPUTES, AND THE PEAK IS GiB.*** The four per-day wall times R-757 quotes from the
+  receipts' resource blocks (5,179.5 / 5,991.2 / 4,205.5 / 4,822.6 s) sum to **20,198.8 s = 5.61 h**,
+  matching its "5 h 36.6 min serial on the lock" -- an arithmetic check on the entry's own numbers, the
+  per-day values RELAYED from receipts I do not open. The peaks max at 2,821.6 MB = **2.755 GiB**, which is
+  the "2.76 GB" reported -- **GiB again**, as R-747's "2.4G" was.
+  (6) ***THE LOCK IS FREE AT MY READ, AND THE CLOSE HAS ABOUT SEVENTEEN HOURS OF HEADROOM.*** R-757 flags
+  that tonight's chain queues behind the early reads (one heavy run at a time), so the 09-07 build may
+  start late. At 06:35:17Z `fuser` on the declared lock returns **nothing** -- no early read has launched.
+  Beside the flag, the arithmetic: four serial runs ≈ **5.6 h**; the close is at 2026-09-08T00:00Z, ≈
+  **17.4 h** away; a start now would finish with ≈ 11.8 h to spare. **A prudent contingency, not a present
+  fact** -- it becomes a real collision only if GO E1 slips by many hours. I record the numbers and rule
+  nothing about the ordering.
+  (7) **RELAYED AND MARKED SO DELIBERATELY**: 09-03 was sealed under an EIGHT-name scope, so both its
+  receipts carry per-arm `n_fills_arm`, `n_fills_baseline` and `n_cancels_issued` in the open since
+  2026-09-06T14:01Z, while 09-04/05/06 were sealed under the ELEVEN-name scope. **Verifying it would mean
+  opening a sealed receipt and reading the very fields at issue**, which is the one thing I do not do. A
+  scope change between days is not a failed seal; the coordinator records it without ruling and so do I.
+  (8) ***NINE COORDINATOR RULINGS NOW STAND OVERRULABLE, BESIDE ONE USER RULING THAT IS NOT***: R-745's
+  five, R-750's two, and R-757's two -- (1) P9 does not bind the early-read entry (its precondition is the
+  OPPOSITE of `rehearse_smoke`'s, so it is replaced by "the day's sealed chain-head receipt EXISTS and its
+  digest EQUALS the one v16's bar names, and no early-read artifact exists yet", refusing by name on
+  either half, the sealed `--day` path's P9 byte-identical); (2) the read reports what the runs computed
+  and nothing new.
+  Counts: flags 1,712 -> **1,727**; provenance 1,257 -> **1,272**; tasks 19; **992 CHECKED /
+  275 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-FIFTH round unchanged on UNMARKED**;
+  RELAYED moves by exactly one, the 09-03 scope finding I will not verify by opening a sealed receipt.
+  ORPHAN census **0**; the audit exits **1** on **155** missing-artifact findings -- ***UNCHANGED from my
+  round start, because all fifteen of my entries resolve***, the second round running in which I have added
+  none. Window trimmed 4 -> 3, **Batch 231** archived. Q-MEM-237 filed through the script.)
+```
