@@ -173,6 +173,12 @@ RULINGS = {
         "the_delta": ("design pointer v21->v23: seal scope and closure "
                       "naming only; no estimand, bar or pin -- measured by "
                       "the coordinator at R-764"),
+        #: WHAT THE RULING ACTUALLY MEASURED, so its text cannot be read as
+        #: covering a pair nobody diffed. R-764 diffed params v14 -> v15.
+        #: A day whose sealed run stamped v14 against a read that loaded
+        #: v19 is a DIFFERENT span, and this reader says so on the line
+        #: rather than letting the ruling's sentence stretch over it.
+        "measured_span": {"from": "v14", "to": "v15"},
         "codes_it_rides_beside": list(RULED_CODES),
         "what_it_does_NOT_do": (
             "it does not soften a refusal. `verify()` refuses by name "
@@ -492,6 +498,57 @@ def check_computation_params(doc: dict, bar_row: dict, *, data_root) -> dict:
                 "field into a compared one")}
 
 
+def check_decision_ledger(doc: dict) -> dict:
+    """THE LEDGER: a REPORTED status, never a refusal and never a guess.
+
+    `day_run.decision_ledger` is where a reader would find the 0-cancel
+    baseline's own value for the day. On the early-read path no ledger was
+    written (a DE fix is in flight), so the block is NULL -- and the honest
+    handling is neither to refuse the day nor to reconstruct the baseline
+    from the arm blocks: it is to SAY SO BY NAME beside the table, quoting
+    the block as it stands. ***A number nobody computed must not appear
+    because a table has a column for it*** (rule 4: exclusions are
+    statuses).
+
+    Three states, told apart: the key is missing entirely, the key is
+    present and null, or a ledger is there.
+    """
+    dr = doc.get("day_run") or {}
+    present = "decision_ledger" in dr
+    val = dr.get("decision_ledger")
+    if not present:
+        status = "LEDGER_KEY_ABSENT"
+        says = ("the artifact carries no `day_run.decision_ledger` key at "
+                "all -- not even a null. That is a different fact from a "
+                "null block and is named separately")
+    elif val is None:
+        status = "LEDGER_ABSENT"
+        says = ("`day_run.decision_ledger` is present and NULL: no ledger "
+                "was written on the early-read path for this day")
+    else:
+        status = "LEDGER_PRESENT"
+        says = "a ledger block is present"
+    return {
+        "status": status, "says": says,
+        "the_block_as_it_stands": val,
+        "what_cannot_be_derived": (
+            "the 0-cancel BASELINE's own value for this day. The arm blocks "
+            "carry D(E0) -- a DIFFERENCE against that baseline -- and a "
+            "difference does not contain either of its terms"
+            if status != "LEDGER_PRESENT" else None),
+        "never_approximated": (
+            "this reader does not reconstruct the baseline from the arm "
+            "blocks, the fill counts or anything else. An approximation "
+            "printed in a table is read as a measurement"
+            if status != "LEDGER_PRESENT" else None),
+        "and_the_table_still_prints": True,
+        "why_not_a_refusal": (
+            "the day's arm-day results are what the USER ruled visible and "
+            "they are all here; the ledger's absence removes ONE derivable "
+            "quantity and is reported as removing it"),
+    }
+
+
 def check_labels(doc: dict, ruling: dict) -> dict:
     """The labels R-754 fixed. Missing and DIFFERENT are separate refusals."""
     out = {}
@@ -696,6 +753,7 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
     labels = check_labels(doc, ruling)
     statuses = check_not_computed(doc)
     census = census_arm_day(doc)
+    ledger = check_decision_ledger(doc)
     return {
         "protocol": PROTOCOL, "artifact": str(path),
         "artifact_sha256": _sha(Path(path)), "day": day,
@@ -710,7 +768,7 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
         "computation_params": params,
         "data_root_used": str(data_root),
         "labels": labels, "not_computed_statuses": statuses,
-        "census": census,
+        "census": census, "decision_ledger": ledger,
         "label_line": LABEL_LINE,
         "counts_provenance": {
             "day": day, "says": counts_provenance(day),
@@ -796,9 +854,26 @@ def verify_under_ruling(path, *, ruling_id="R-764", repo_root=None,
     sealed_sha = (m.get("declared_sha256") if code
                   == "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS"
                   else m.get("reconstructed_sha256"))
+    _span = ruling.get("measured_span") or {}
+    _obs = {"from": _version_of(sealed_path),
+            "to": _version_of((cp.get("the_artifact_loaded") or {}).get(
+                "path"))}
+    _within = (_obs["from"] == _span.get("from")
+               and _obs["to"] == _span.get("to"))
     return dict(res, under_ruling={
         "applies": True, "ruling_id": ruling["id"],
         "refusal_code": code,
+        "the_span_the_ruling_MEASURED": _span,
+        "the_span_IN_FRONT_OF_IT": _obs,
+        "observed_span_is_within_what_was_measured": _within,
+        "if_it_is_not": (
+            None if _within else
+            f"R-764 diffed {_span.get('from')} -> {_span.get('to')} leaf by "
+            f"leaf. THIS day's pair is {_obs['from']} -> {_obs['to']}, which "
+            f"that diff does not cover. The ruling's finding is carried "
+            f"here as the coordinator's, and the UNMEASURED part of the "
+            f"span is named rather than absorbed into it -- reported, not "
+            f"ruled"),
         "the_refusal_stands": (
             "this artifact IS refused by `verify()`, which is the entry the "
             "GOs use. This mode prints beside that refusal and names it"),
@@ -857,6 +932,12 @@ def print_table(res: dict) -> str:
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
     lines.append(f"  the three COUNTS on this day: "
                  f"{counts_provenance(res['day'])}")
+    _dl = res.get("decision_ledger") or {}
+    if _dl.get("status") and _dl["status"] != "LEDGER_PRESENT":
+        lines.append(
+            f"  {_dl['status']}: {_dl['says']} -- "
+            f"`day_run.decision_ledger` = {json.dumps(_dl['the_block_as_it_stands'])}. "
+            f"{_dl['what_cannot_be_derived']}. It is NOT approximated here.")
     ur = res.get("under_ruling") or {}
     if ur.get("applies"):
         lines.append(
@@ -869,6 +950,15 @@ def print_table(res: dict) -> str:
             f"{str(ur['the_reads_params']['sha256'])[:16]}… -- "
             f"{ur['the_measured_delta']}. The refusal STANDS; "
             f"{ur['ruling_id']} is {ur['ruled_by']} and is overrulable.")
+        if not ur.get("observed_span_is_within_what_was_measured"):
+            lines.append(
+                f"  AND THE SPAN IS NOT THE ONE THE RULING MEASURED: "
+                f"{ur['ruling_id']} diffed "
+                f"{ur['the_span_the_ruling_MEASURED'].get('from')} -> "
+                f"{ur['the_span_the_ruling_MEASURED'].get('to')}; this day's "
+                f"pair is {ur['the_span_IN_FRONT_OF_IT']['from']} -> "
+                f"{ur['the_span_IN_FRONT_OF_IT']['to']}. The remainder is "
+                f"NOT covered by that diff -- reported, not ruled.")
         lines.append(f"  this day: {params_label(res)}")
         return "\n".join(lines)
     lines.append(f"  this day: {params_label(res)}")
@@ -1233,6 +1323,35 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{_moved['the_receipts_own_two_readings_agree']}; a planted D_E0 "
        f"and null_mean reach none of {sorted(_leak_probe)}")
 
+    # -- DA 126: THE LEDGER IS A REPORTED STATUS, NEVER A GUESS --------
+    _lg_null = check_decision_ledger({"day_run": {"decision_ledger": None}})
+    _lg_gone = check_decision_ledger({"day_run": {}})
+    _lg_here = check_decision_ledger(
+        {"day_run": {"decision_ledger": {"rows": 3}}})
+    _lg_res = json.loads(json.dumps(res))
+    _lg_res["day_run_ledger_probe"] = None
+    _lg_res["decision_ledger"] = _lg_null
+    _lg_table = print_table(_lg_res)
+    ck("DA 126 -- ***THE LEDGER'S ABSENCE IS A NAMED STATUS AND THE TABLE "
+       "STILL PRINTS***: a NULL `day_run.decision_ledger` is LEDGER_ABSENT "
+       "with the block quoted as it stands, a MISSING KEY is a different "
+       "name, and a present one is LEDGER_PRESENT. ***The 0-cancel "
+       "baseline's own value is NOT derived from anything else***: D(E0) is "
+       "a DIFFERENCE against that baseline, and a difference does not "
+       "contain either of its terms",
+       _lg_null["status"] == "LEDGER_ABSENT"
+       and _lg_null["the_block_as_it_stands"] is None
+       and _lg_gone["status"] == "LEDGER_KEY_ABSENT"
+       and _lg_here["status"] == "LEDGER_PRESENT"
+       and _lg_here["what_cannot_be_derived"] is None
+       and "LEDGER_ABSENT" in _lg_table
+       and "`day_run.decision_ledger` = null" in _lg_table
+       and "NOT approximated" in _lg_table
+       and "CONDVALUE_X_SKEW" in _lg_table,
+       f"null -> {_lg_null['status']}; key missing -> {_lg_gone['status']}; "
+       f"present -> {_lg_here['status']}; the table carries the line AND "
+       f"the arm rows")
+
     # -- DA 125: BOTH SHAPES, because my fixture had reproduced my own
     # assumption and the first real artifact caught it -----------------
     _flat = json.loads(json.dumps(good))
@@ -1300,6 +1419,21 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{_ur03['under_ruling']['the_sealed_runs_params']['version']} "
        f"({_ur03['under_ruling']['the_sealed_runs_params']['state']}) vs "
        f"read {_ur03['under_ruling']['the_reads_params']['version']}")
+
+    ck("DA 126 -- ***THE RULING'S SENTENCE DOES NOT STRETCH OVER A SPAN IT "
+       "NEVER DIFFED***: R-764 measured v14 -> v15 leaf by leaf. Where the "
+       "pair in front of the reader is a DIFFERENT span, the table says so "
+       "on its own line and the record carries both spans; where it is the "
+       "same span, no such line appears",
+       _ur03["under_ruling"]["the_span_the_ruling_MEASURED"]
+       == {"from": "v14", "to": "v15"}
+       and _ur03["under_ruling"][
+           "observed_span_is_within_what_was_measured"] is True
+       and "AND THE SPAN IS NOT THE ONE" not in _t03,
+       f"09-03's pair {_ur03['under_ruling']['the_span_IN_FRONT_OF_IT']} vs "
+       f"measured {_ur03['under_ruling']['the_span_the_ruling_MEASURED']} -> "
+       f"within: "
+       f"{_ur03['under_ruling']['observed_span_is_within_what_was_measured']}")
 
     ck("AND THE PER-DAY LABEL SAYS WHICH STATE THE DAY IS IN, in the words "
        "the table carries: 09-03 'computed under v15; sealed run "
