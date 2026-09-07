@@ -1,3 +1,97 @@
+# READ FIRST — round 253 (MEM, 2026-09-07T08:06:12Z, tip `8d19686`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-766 swept, with every
+landing between my own `6a72b71` and the tip. **I opened no sealed receipt.**
+
+## 0. State
+
+| | |
+|---|---|
+| **E1 (09-03)** | **still running** at 08:04:57Z, id `e40782fa…`, 36 min in, expected ≈ 08:55Z; peak unmoved for 33 min |
+| **The seal** | RETIRED by USER ruling for all new runs, pending DE 124's landing |
+| **DE 124** | continuing after a ruling it stopped for; **REV 92 part B gates GO E2 and GO #8** |
+| **Design chain** | head **v30**, 29 versions, **orphan_branches 0**, 20 merge links absorbing 5 tips |
+| **v26–v30** | on the **ledger disk, untracked and gitignored** — every resolver sees them, git does not |
+| **H1** | **closed both ways** (relayed from REV, who re-ran both gates) |
+
+## 1. The property holds where the proxy broke — both halves measured
+
+`n_merge_links` **20**, `merged_tips` **5**, `orphan_branches` **empty**. So R-766's
+arithmetic is exact and every tip is absorbed with nothing open — while the cell
+asserting `len(merged_tips) == n_merge_links` is red. **A count equality was standing in
+for "every tip absorbed exactly once", and the proxy broke where the property did not.**
+
+The inheritance is visible at the files, not only in DE's account: `also_supersedes` is
+**5 entries in v25, v26, v27 and v28** (4 × 5 = the 20 links) and **absent in v29 and
+v30**.
+
+## 2. The ruled correction was already in v30 before I swept the entry that made it
+
+Ruling (2) asks that v26–v28 be neither deleted nor edited and that the **next** version
+name their re-declared merges as a deepcopy inheritance that performed no merge. **v30
+(written 08:03Z, after the 08:02:53Z ruling) carries a top-level
+`REDECLARED_MERGES_v26_v27_v28` block** whose `absorbed_by_the_earliest_version_naming_it`
+maps each tip — design v16 and the four timestamped v3/v4/v5 forks — to **v25**. That is
+ruling (1)'s property written into the artifact **as a field**, resolvable by a reader
+who never sees the register.
+
+**And five design versions exist where every resolver reads them and git does not:** v25
+tracked; **v26–v30 each `ls-files` 0 and `check-ignore` yes**, written 07:50 → 08:03Z.
+That is *why* they are neither deleted nor edited — the shared ledger is not revertible
+the way a commit is.
+
+## 3. My round-251 reading and REV's are one fact in two vocabularies
+
+At round 251 I measured the single hit for v7's pre-edit digest and walked its JSON to
+the leaf: `supersedes.the_incident.das_v7`, narrative inside the repairing artifact.
+REV 92 §A6 reports `pre_edit_digest_pinned_by=[producer_exit_maps_v8.json]` — *one file
+pins it* — and then says what I said: **no resolution pin names v7's pre-edit bytes;
+exactly one incident record does, deliberately; and the field cannot tell them apart.**
+
+I checked why at the script: its own header defines the field as *"every declaration or
+ledger JSON ≤ 5 MB that **names** the pre-edit digest, full or 16-hex"* — **names, not
+links**.
+
+**My "nothing pins" was the looser word** — the same looseness R-762's headline was
+corrected for. **From here: a *resolution pin* is a `supersedes`-shaped link a resolver
+follows; an *incident record* is a digest named in prose.** The round-251 flag stands
+unedited with this beside it. REV's routed item — that the field print
+`…v8.json:supersedes.the_incident.das_v7` — is the path I published from the leaf walk;
+not a claim of priority, but **the path is the answer and the filename is not**, and two
+seats reaching it by different routes is what makes it safe to build on.
+
+## 4. Relayed, marked so
+
+H1 closed both ways — DE reading 09-03/04/05 PRESENT n=1 and 09-06 PRESENT_CHAIN_HEAD
+n=2, DA MATCH on all four, the old grouping kept as a known-bad still reading
+AMBIGUOUS, and the battery cross-checking both resolvers every run ("disagreeing:
+none"). **Verifying it means running two seats' gates over the ledger — REV's act, not
+MEM's**, and I will not restate another seat's execution as my own reading.
+
+## 5. Two acts of another seat worth recording as state
+
+- **DE stopped for a ruling rather than adjust its own red cell to pass** — and the ruling then replaced the **proxy** with the **property** rather than deleting the check.
+- **Inventory before/after is absent with its reason, not invented.** The USER's "record everything we can" asked for it; DE found the fill record carries no position state in BE's replay and stored `ABSENT_UNTIL_BE_96`. Rule 4's shape applied to a field a **user** asked for — the case where inventing is most tempting.
+
+## 6. E1, and a gate that ran first this time
+
+E1: loaded / active / **running** at 08:04:57Z, `MemoryPeak` 2,715,901,952 — the
+identical value at 07:31:38Z, 07:48:37Z and now. The peak came early; `SubState` is what
+says the run is alive.
+
+**Round 252's lesson ran as a pre-write gate, not a post-hoc catch:** before writing I
+checked all fifteen flag names against the file — none already present. Last round a
+reused name shadowed silently and only the count delta caught it; this round the check
+ran first and cost one command. **Fifteen written, fifteen counted.**
+
+Counts: flags 1,772 → **1,787**; provenance 1,317 → **1,332**; tasks 19; **1,051 CHECKED
+/ 276 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-twenty-ninth round
+unchanged on UNMARKED, RELAYED moving by exactly one (§4). ORPHAN census **0**; audit
+exit **1** on **161** — 160 at round start plus one of mine, the running unit. Window
+trimmed 4 → 3, **Batch 235** archived. Q-MEM-241 filed through the script.
+
+---
+
 # READ FIRST — round 252 (MEM, 2026-09-07T07:50:07Z, tip `7889d81`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-764 and R-765 swept, with
