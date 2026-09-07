@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 16
+EXPECTED_CHECKS = 18
 
 
 class EarlyReadRefused(RuntimeError):
@@ -377,6 +377,52 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
     return {"path": str(out), "sha256": _sha(out), "day": day}
 
 
+def resolve_exit(code: int, *, repo_root=None) -> dict:
+    """AN EXIT CODE, RESOLVED THROUGH THE DECLARED MAP (R-709).
+
+    REV 89 §8 item 1: DE's two capture records carried no
+    `producer_module`, no `mapped_by` and no `resolved_kind` -- the three
+    fields their own declaration requires -- so a reader had a number and
+    nowhere to take it. UNMAPPED is a STATUS here, never a silent pass:
+    an outcome that cannot be resolved through the map does not satisfy a
+    GO.
+
+    The map is read from the chain HEAD by the pair, never a filename
+    literal, so a new version is picked up without editing this."""
+    root = Path(repo_root) if repo_root else Path(
+        __file__).resolve().parents[2]
+    head = DC.resolve_head(root / DECL_DIR, "producer_exit_maps")
+    doc = json.loads(Path(head["path"]).read_text())
+    me = "live/pm_research/de_early_read.py"
+    block = (doc.get("producers") or {}).get(me)
+    out = {"exit_code": int(code),
+           "producer_module": me,
+           "mapped_by": {"path": head["path"], "sha256": head["sha256"],
+                         "version": doc.get("version")},
+           "the_map_is_read_from": "the chain head by the pair, never a "
+                                   "filename literal"}
+    if not isinstance(block, dict):
+        out["resolved_kind"] = "UNMAPPED"
+        out["why"] = (f"the exit-map head declares no block for {me}. "
+                      f"UNMAPPED does not satisfy a GO (R-709).")
+        return out
+    m = block.get("map") or {}
+    if str(code) not in m:
+        out["resolved_kind"] = "UNMAPPED"
+        out["why"] = (f"exit {code} is not among this producer's declared "
+                      f"codes {sorted(m)}. A code nobody declared is a "
+                      f"code nobody can read.")
+        return out
+    out["resolved_kind"] = m[str(code)]
+    out["declared_codes"] = sorted(m)
+    out["75_is_never_used"] = block.get("75_is_never_used")
+    out["why_the_code_alone_is_not_the_kind"] = (
+        "every refusal in this module exits 1, so a non-zero code is "
+        "resolved to a KIND only with the EARLY_READ_* name from the "
+        "run's output beside it")
+    return out
+
+
 # ------------------------------------------------------- the battery
 
 def selftest(quiet: bool = False) -> int:
@@ -623,6 +669,56 @@ def selftest(quiet: bool = False) -> int:
        f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 hex "
        f"compared and equal, with v16's prefix kept beside it and "
        f"agreeing")
+
+    # ---- DA 122's CENSUS: AN IMPORTER OF declaration_chain SHIPS A ---
+    # ---- FALSIFIER FOR THE SEAM IT USES ------------------------------
+    # This module resolves TWO chains through the shared implementation
+    # (the params head for the ruling, the exit-map head for the code),
+    # and it shipped no cell proving either refusal can reach it. An
+    # importer that never watches the shared refusal fire is an importer
+    # that will read a refusal as an answer.
+    _cr = Path(tempfile.mkdtemp(prefix="early_read_chain_"))
+    (_cr / DECL_DIR).mkdir(parents=True)
+    _fam = f"{PARAMS_FAMILY}"
+    _v1 = _cr / DECL_DIR / f"{_fam}_v1.json"
+    _v1.write_text(json.dumps({"version": 1}, sort_keys=True) + "\n")
+    _v2 = _cr / DECL_DIR / f"{_fam}_v2.json"
+    _v2.write_text(json.dumps(
+        {"version": 2,
+         "supersedes": {"path": str(_v1), "sha256": "0" * 64}},
+        sort_keys=True) + "\n")
+    _seam = None
+    try:
+        the_ruling(_cr)
+    except DC.ChainRefused as _e:
+        _seam = str(_e).split(":")[0]
+    except EarlyReadRefused as _e:
+        _seam = "SWALLOWED_AS_EARLY_READ_REFUSED"
+    ok(_seam == "DECLARATION_LINK_CORRUPTED",
+       f"DA 122's census: the SHARED chain resolver's refusal reaches "
+       f"this importer BY ITS OWN NAME -- `{_seam}` -- when a version's "
+       f"`supersedes` names a digest the file on disk does not have. It "
+       f"is NOT caught and re-raised as this module's own refusal, which "
+       f"would hide which layer refused; and it is not read as an answer")
+    _shutil_cr = shutil
+    _shutil_cr.rmtree(_cr, ignore_errors=True)
+
+    # ---- REV 89 item 1: THE CAPTURE RECORD'S THREE DECLARED FIELDS ---
+    _r0 = resolve_exit(0)
+    _r1 = resolve_exit(1)
+    _r9 = resolve_exit(9)                      # never declared
+    ok(_r0["producer_module"] == "live/pm_research/de_early_read.py"
+       and _r0["mapped_by"]["sha256"] and _r0["mapped_by"]["version"]
+       and _r0["resolved_kind"] and _r1["resolved_kind"]
+       and _r9["resolved_kind"] == "UNMAPPED"
+       and _r0["75_is_never_used"] is True,
+       f"REV 89 item 1: an exit code resolves through the map's CHAIN "
+       f"HEAD (v{_r0['mapped_by']['version']}, "
+       f"{_r0['mapped_by']['sha256'][:16]}…) and yields all three fields "
+       f"the capture record's own declaration requires -- "
+       f"producer_module, mapped_by, resolved_kind. An undeclared code "
+       f"resolves to `{_r9['resolved_kind']}`, which does not satisfy a "
+       f"GO; it is a STATUS, not a silent pass")
 
     # ---- R-709: THE EXIT MAP -- THE STATIC HALF, HERE ----------------
     # WHAT THIS CELL DOES NOT DO, AND WHY. It does not spawn this module

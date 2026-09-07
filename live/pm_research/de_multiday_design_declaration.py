@@ -3642,38 +3642,58 @@ def selftest(*, quiet: bool = False) -> int:
     # may be named ONLY WHILE IT CARRIES NO CODE. The moment
     # `live/__init__.py` holds bytes it is a module that RAN and produced
     # numbers, and this refuses until the declaration says what it does.
-    _closure_map = _RUN.source_identity_at_launch()[
-        "import_closure"]["modules"]
+    _ic22 = _RUN.source_identity_at_launch()["import_closure"]
+    _closure_map = _ic22["modules"]
     _live_closure = set(_closure_map)
     _named = {x.split(" ")[0] for x in _r22["the_closure_by_name"]}
     _EMPTY_SHA = hashlib.sha256(b"").hexdigest()
-    # keyed by BASENAME, as the closure map is -- the subset test above is
-    # on names too, so the two agree about what "a module" means here.
-    _inits = {k: v for k, v in _closure_map.items()
-              if k == "__init__.py"}
+    # REV 89 §2.1: THE INITIALISER CHECK READS THE PATH-KEYED MAP.
+    # `modules` is keyed by BASENAME and two initialisers at different
+    # paths collapse to one key, the later winning -- REV drove this very
+    # conjunct GREEN on a NON-EMPTY `live/__init__.py` hidden behind an
+    # empty `live/pm_research/__init__.py`. `modules_by_path` cannot
+    # collide, so every initialiser in the closure is tested, and the
+    # collision predicate is asserted beside it rather than assumed.
+    _inits = {k: v for k, v in _ic22["modules_by_path"].items()
+              if Path(k).name == "__init__.py"}
     _inits_carry_no_code = all(v == _EMPTY_SHA for v in _inits.values())
+    _no_collision = (_ic22["n_modules"] == len(_ic22["modules_by_path"])
+                     and _ic22["basenames_collide"] is False)
     ok(_live_closure <= _named and len(_r22["refused_at_every_emit"]) == 3
        and "de_multiday_design_declaration.py" in _live_closure
-       and _inits_carry_no_code,
+       and _inits_carry_no_code and _no_collision,
        f"R22: the closure is LISTED BY NAME and the modules actually "
        f"captured are among them -- {sorted(_live_closure)}. The design "
        f"module is in it, which is the sibling the old one-file capture "
        f"could not see; and the {len(_inits)} package initialiser(s) in "
        f"it carry no code, which is the only condition under which the "
        f"list may name one")
-    # THE FALSIFIER FOR THE NEW CONJUNCT, driven both ways on the same
-    # predicate: an initialiser with bytes in it must flip it.
-    _init_bad = {"__init__.py": hashlib.sha256(b"x = 1\n").hexdigest()}
-    ok(_inits_carry_no_code is True
-       and all(v == _EMPTY_SHA for v in {}.values()) is True
-       and not all(v == _EMPTY_SHA for v in _init_bad.values()),
-       f"DE 120 FALSIFIER: the `carries no code` predicate is True on the "
-       f"live initialiser(s) ({len(_inits)} seen under this launcher), "
-       f"vacuously True when the launcher loads none -- which is the "
-       f"script path, and why this cell was green there for nothing -- "
-       f"and FALSE the moment an initialiser holds `x = 1`. A name "
-       f"admitted on a property nobody has watched fail is not a name "
-       f"under a check")
+    # THE FALSIFIER, REBUILT (REV 89 §2.1 item 5). It drove RE-TYPED
+    # LITERALS rather than the cell's own predicate, and its middle
+    # conjunct `all(... for v in {}.values()) is True` COULD NOT FAIL --
+    # `all()` over an empty dict is True by construction (rule 16). It is
+    # driven through a FUNCTION now, the same one the cell uses, over the
+    # live map with one entry perturbed -- so a change to the predicate
+    # changes both, and the vacuous case is asserted as VACUOUS rather
+    # than as evidence.
+    def _carries_no_code(m):
+        return all(v == _EMPTY_SHA for v in m.values())
+
+    _init_bad = {**_inits,
+                 "live/__init__.py": hashlib.sha256(b"x = 1\n").hexdigest()}
+    _empty_is_vacuous = _carries_no_code({})       # True BY CONSTRUCTION
+    ok(_carries_no_code(_inits) is True
+       and _empty_is_vacuous is True and len({}) == 0
+       and _carries_no_code(_init_bad) is False
+       and len(_init_bad) > len(_inits) - 1,
+       f"DE 120 FALSIFIER, REBUILT (REV 89 item 5): the SAME function the "
+       f"cell uses reads True over the live {len(_inits)} initialiser(s) "
+       f"by PATH, and FALSE over that same map with `live/__init__.py` "
+       f"holding `x = 1`. The empty case is True BY CONSTRUCTION and is "
+       f"named as VACUOUS, not counted as evidence -- it was a conjunct "
+       f"that could not fail. The perturbation is of the LIVE map, not a "
+       f"re-typed literal, so the predicate and its falsifier cannot "
+       f"drift apart")
     _r23 = d["R23_the_artifact_NAME_stamp_is_the_clock"]
     ok("HAD NOT YET OCCURRED" in _r23["the_defect_and_it_is_mine"]
        and len(_r23["the_fix"]) == 3,

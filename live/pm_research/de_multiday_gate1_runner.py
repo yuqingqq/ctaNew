@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 354
+EXPECTED_CHECKS = 359
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -551,8 +551,36 @@ def source_identity_at_launch() -> dict:
         # RULE 22 AS AMENDED: the CLOSURE, not one file.
         "import_closure": {
             "n_modules": len(LAUNCH_CLOSURE),
+            # REV 89 §2.1: `modules` IS KEYED BY BASENAME AND COLLIDES.
+            # Two modules sharing a basename -- `live/__init__.py` and a
+            # `live/pm_research/__init__.py` the day anyone makes that a
+            # package -- collapse to one key and the later one wins, so
+            # R-605's "name EVERY module" silently names fewer. REV drove
+            # DE 120's own initialiser conjunct GREEN on a NON-EMPTY
+            # `live/__init__.py` hidden behind an empty sibling that won
+            # the key. The drift guard was never affected (`closure_drift`
+            # iterates by PATH), so this is the RECEIPT's account of
+            # itself, not the refusal.
+            #
+            # The basename map stays, because readers and DA's census key
+            # on it; beside it now sits the map that cannot collide, and
+            # the predicate that catches a collision is EVALUATED here
+            # rather than left for someone to notice.
             "modules": {Path(k).name: v
                         for k, v in sorted(LAUNCH_CLOSURE.items())},
+            "modules_by_path": {
+                str(Path(k).relative_to(LIVE_DIR)): v
+                for k, v in sorted(LAUNCH_CLOSURE.items())},
+            "basenames_collide": (
+                len({Path(k).name for k in LAUNCH_CLOSURE})
+                != len(LAUNCH_CLOSURE)),
+            "colliding_basenames": sorted(
+                n for n in {Path(k).name for k in LAUNCH_CLOSURE}
+                if sum(1 for k in LAUNCH_CLOSURE
+                       if Path(k).name == n) > 1),
+            "n_modules_equals_len_modules": (
+                len(LAUNCH_CLOSURE)
+                == len({Path(k).name for k in LAUNCH_CLOSURE})),
             "root": LIVE_DIR,
             "digested": "from the bytes observed when each module first "
                         "entered THIS run -- never a second read, because "
@@ -2288,6 +2316,21 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
     The day set is UNCHANGED and nothing is chosen on data: this decides
     WHEN the read may open, never WHICH days are in it (R-555)."""
     root = Path(root) if root is not None else Path(DR.resolve()["data_root"])
+    # REV 89 H1's follow-up: THE GATE REFUSES A ROOT THAT IS NOT THE
+    # LEDGER, instead of reporting every day as failing. `root` is the
+    # DATA root; handed the REPO root -- one level up, an easy thing to
+    # pass -- `root / "pm_5min/derived"` does not exist and all six days
+    # failed conjunct 3 with a detail that said only `failing`, which
+    # reads exactly like a real six-day regression. The coordinator read
+    # it as one after the H1 landing (2026-09-07). A wrong argument must
+    # not be indistinguishable from a finding.
+    if not (root / "pm_5min/derived").is_dir():
+        raise RunnerRefused(
+            f"REFUSED READ_GATE_ROOT_IS_NOT_THE_LEDGER: {root} has no "
+            f"`pm_5min/derived`. `root` is the DATA root "
+            f"({DR.resolve()['data_root']}); the repo root is one level "
+            f"up and passing it makes every day fail for want of a "
+            f"directory, which is not a verdict about any day.")
     repo = Path(__file__).resolve().parents[2]
     days = params["days"]
     # (8) ONE FIELD, AND IT IS REQUIRED. R-604 item 8 was LIVE: params v7
@@ -2421,10 +2464,42 @@ def read_gate(params: dict, *, now_utc: datetime.datetime,
        {"missing": [d for d in days if not found[d]["present"]],
         "note": "the days come from the committed params; a receipt for "
                 "another day fills no hole"})
+    # REV 89 H1's follow-up: the detail carried ONLY `failing`. A reader
+    # meeting six failing days could not tell a regression from a wrong
+    # root from three days legitimately without receipts, and the seat
+    # that changed the resolver could not tell either. Every day now
+    # carries WHY, and the cross-check against DA's resolver travels with
+    # it -- the comparison REV 89 §1 said nobody was running.
+    _lr3 = {}
+    for d in days:
+        _l = per_day[d]["landing"]
+        _lr3[d] = {
+            "matches_landing": _l.get("matches_landing"),
+            "landing_record_status": _l.get("status"),
+            "receipt_sha256_at_landing": _l.get("receipt_sha256_at_landing"),
+            "receipt_head_present": found[d].get("present"),
+            "why_not": (
+                None if _l.get("matches_landing")
+                else ("no receipt for this day yet"
+                      if not found[d].get("present")
+                      else f"landing record status "
+                           f"{_l.get('status')!r}")),
+            "grouping": (_l.get("grouping") or {}).get("chosen_because"),
+        }
     _c("3_digest_matches_the_landing_record",
        all(per_day[d]["landing"].get("matches_landing") for d in days),
        {"failing": [d for d in days
-                    if not per_day[d]["landing"].get("matches_landing")]})
+                    if not per_day[d]["landing"].get("matches_landing")],
+        "ledger_root_read": str(root / "pm_5min/derived"),
+        "per_day": _lr3,
+        "grouping_rule": "DA 105, adopted at REV 89 H1 -- records grouped "
+                         "by the receipt digest each carries, a "
+                         "supersession link outranking the grouping",
+        "how_to_read_a_full_sweep": "every day failing at once is usually "
+                                    "the ROOT, not the days; the gate now "
+                                    "refuses a non-ledger root by name "
+                                    "rather than reporting it as six "
+                                    "failures"})
     _c("4_each_day_has_an_admissible_arm",
        all(per_day[d]["admissible_arms"]["holds"] for d in days),
        {"failing": [d for d in days
@@ -4182,7 +4257,17 @@ def peak_stage_predicate(stages: dict, *, declared: str) -> dict:
             "day's GROWTH BUDGET -- only the argmax excludes it"),
         "baseline_highwater_mb": prev if base is None else base,
         "measured_peak_stage_by_current_rss": arg_cur,
-        "the_two_readings_agree": arg == arg_cur,
+        # REV 89 §2.1: RENAMED. It was `the_two_readings_agree`, sitting
+        # three lines below prose reading "a disagreement REFUSES the
+        # day" -- and it does not refuse. It compares the HIGHWATER-DELTA
+        # argmax with the CURRENT-RSS argmax; the field that binds is
+        # `peak_stage_assertion.agrees`. Any reader censusing booleans
+        # met a `false` whose neighbour said it should have refused.
+        "highwater_delta_argmax_equals_current_rss_argmax": arg == arg_cur,
+        "this_boolean_does_NOT_refuse": (
+            "it compares two ways of naming the peak STAGE and is "
+            "diagnostic. The binding field is "
+            "`peak_stage_assertion.agrees`."),
         "why_the_DELTA_is_the_peak": (
             "a transient a stage allocates and frees before its mark is "
             "invisible to the current-RSS series and VISIBLE in the "
@@ -10099,7 +10184,8 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"{_ps['measured_peak_stage']} (growth caused, transients "
            f"included) and the current-RSS argmax is "
            f"{_ps['measured_peak_stage_by_current_rss']} (still resident at "
-           f"the mark). They agree here: {_ps['the_two_readings_agree']}")
+           f"the mark). They agree here: "
+           f"{_ps['highwater_delta_argmax_equals_current_rss_argmax']}")
 
         # ---- the three falsifiers REV 45 asks for, on synthetic series ---
         def _series(hw):
@@ -10298,6 +10384,98 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"passed' beside three disarmed cells would report the "
        f"measurement's failure as coverage -- the DE 110 defect one level "
        f"up")
+    # ===== DE 126: A WRONG ROOT IS NOT A SIX-DAY REGRESSION ============
+    # THE DRIVE THE COORDINATOR RAN, both ways, at the real ledger. With
+    # the REPO root the gate used to report all six days failing conjunct
+    # 3 with a detail saying only `failing` -- indistinguishable from the
+    # H1 grouping having regressed 09-06. It refuses by name now.
+    _now126 = datetime.datetime.now(datetime.timezone.utc)
+    _P126 = load_params()
+    if offline:
+        offline_skip("DE 126's wrong-root drive (it reads the real "
+                     "ledger's derived directory)")
+    else:
+        _repo126 = Path(DR.resolve()["data_root"]).parent
+        try:
+            read_gate(_P126, now_utc=_now126, root=_repo126)
+            _refused126 = None
+        except RunnerRefused as _e126:
+            _refused126 = str(_e126)
+        _ok126 = read_gate(_P126, now_utc=_now126,
+                           root=Path(DR.resolve()["data_root"]))
+        _c3126 = next(c for c in _ok126["conjuncts"]
+                      if c["conjunct"].startswith("3_"))
+        ok(_refused126 is not None
+           and "READ_GATE_ROOT_IS_NOT_THE_LEDGER" in _refused126
+           and _c3126["detail"]["failing"] == ["2026-09-07", "2026-09-08"]
+           and set(_c3126["detail"]["per_day"]) == set(_P126["days"])
+           and all(_c3126["detail"]["per_day"][d]["why_not"] is not None
+                   for d in ("2026-09-07", "2026-09-08"))
+           and _c3126["detail"]["per_day"]["2026-09-06"]["why_not"] is None,
+           f"DE 126: the REPO root now REFUSES BY NAME "
+           f"(`READ_GATE_ROOT_IS_NOT_THE_LEDGER`) "
+           f"instead of reporting six failing days, and with the LEDGER "
+           f"root conjunct 3's failing set is "
+           f"{_c3126['detail']['failing']} -- the two days with no "
+           f"receipt, each carrying its own `why_not`, and 09-06 carrying "
+           f"none. H1's grouping did NOT regress 09-06; the six-day "
+           f"reading was the repo root passed where the data root belongs")
+
+    # ===== DE 126 (REV 89 §2.1): THE EMITTER'S OWN MOVING LITERAL ======
+    # `DESIGN_VERSION_IN_FORCE` is a bare constant and nothing tied it to
+    # the scope map it governs. It holds TODAY only because
+    # max(SEALED_FROM_DESIGN_VERSION.values()) == it. A twelfth name
+    # declared at 26 without a bump would be EMITTED IN THE OPEN, with
+    # the receipt truthfully saying the older version, and
+    # `de_receipt_correction` -- which already resolves the wider of the
+    # constant and the chain head for its own use -- would flag it only
+    # after the number was published.
+    _mx126 = max(SEALED_FROM_DESIGN_VERSION.values())
+    ok(_mx126 <= DESIGN_VERSION_IN_FORCE,
+       f"REV 89 §2.1: the emitter's scope map tops out at v{_mx126} and "
+       f"DESIGN_VERSION_IN_FORCE is v{DESIGN_VERSION_IN_FORCE}, so every "
+       f"sealed name is inside the version the receipt will claim. A name "
+       f"declared ABOVE the constant would be sealed under a version that "
+       f"does not cover it and published before anything noticed")
+    # THE KNOWN-BAD RUNS THE SAME PREDICATE over a planted map, so the
+    # two cannot drift. My first version of this wrote
+    # `not any(...) is True`, which parses as `not (any(...) is True)` --
+    # a malformed conjunct that failed for its own reason. That is REV 89
+    # item 5's class exactly, in the cell written to close item 3.
+    _planted126 = {**SEALED_FROM_DESIGN_VERSION,
+                   "a planted twelfth name": DESIGN_VERSION_IN_FORCE + 3}
+    ok(max(_planted126.values()) > DESIGN_VERSION_IN_FORCE,
+       f"REV 89 §2.1 KNOWN-BAD: the SAME predicate over a map carrying a "
+       f"planted name at v{DESIGN_VERSION_IN_FORCE + 3} reads "
+       f"{max(_planted126.values())} > {DESIGN_VERSION_IN_FORCE}, so the "
+       f"cell above WOULD refuse it. A guard nobody has watched fire is a "
+       f"comment")
+
+    # ===== DE 126 (REV 89 §2.1): THE CLOSURE MAP MUST NOT COLLIDE ======
+    # REV drove DE 120's initialiser conjunct GREEN on a NON-EMPTY
+    # `live/__init__.py` by putting an empty `live/pm_research/__init__.py`
+    # beside it: both collapse to the key `__init__.py` and the later one
+    # wins. The receipt's own account of its closure was short by one.
+    _si126 = source_identity_at_launch()["import_closure"]
+    ok(_si126["n_modules"] == len(_si126["modules_by_path"])
+       and _si126["n_modules_equals_len_modules"] is True
+       and _si126["basenames_collide"] is False
+       and _si126["colliding_basenames"] == [],
+       f"REV 89 §2.1: the live closure names {_si126['n_modules']} "
+       f"modules by PATH and the basename map has "
+       f"{len(_si126['modules'])} keys -- equal, so nothing is hidden "
+       f"behind a shared basename. `modules_by_path` is the map that "
+       f"cannot collide and `basenames_collide` is EVALUATED, which is "
+       f"what was missing")
+    _fake126 = {"/a/live/__init__.py": "00ef3de7",
+                "/a/live/pm_research/__init__.py": "e3b0c442"}
+    ok(len({Path(k).name for k in _fake126}) != len(_fake126),
+       f"REV 89 §2.1 KNOWN-BAD, THE CASE REV BUILT: two initialisers at "
+       f"different paths collapse to {len({Path(k).name for k in _fake126})} "
+       f"basename key(s) from {len(_fake126)} paths -- the predicate is "
+       f"FALSE on it, so the cell above would refuse the closure REV drove "
+       f"green")
+
     # ===== DE 126 (REV 89 H1): THE GROUPING, AND BOTH SEATS COMPARED ===
     # RED FIRST, on a fixture: two UNLINKED records for one day, reading
     # two different receipts -- which is what a corrected receipt leaves
