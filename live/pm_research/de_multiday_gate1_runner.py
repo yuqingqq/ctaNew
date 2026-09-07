@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 364
+EXPECTED_CHECKS = 374
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -5927,6 +5927,103 @@ def assert_ledger_anchor(params: dict, *, fixture: bool, anchor) -> dict:
     return {"owes_a_ledger": True, "anchor": str(anchor)}
 
 
+def post_emit_census_status(params: dict, payload: dict,
+                           economic_keys: list) -> dict:
+    """WAS THE RECEIPT ALLOWED TO CARRY ITS ECONOMICS? -- COMPUTED.
+
+    DE 134, found by running `--synthetic-day` end to end. Two defects
+    sat in one line of `_main_day`:
+
+    (1) it read `payload["G"]`, a key DE 124 REMOVED from the receipt
+    (REV 90 S A0(3)). That change was made after a sweep for CONSUMERS
+    of a receipt's `G`, which found none -- because the only consumer is
+    the PRODUCER's own post-emit census, reading the payload in memory
+    before it is anybody's receipt. Every real day since would have died
+    here, AFTER writing its receipt, with `KeyError: 'G'`. None has run:
+    the four early reads enter through `de_early_read`, and the last
+    sealed day (09-06) predates DE 124.
+
+    (2) the predicate itself is stale under R-765. "Economic keys
+    present before G" is a LEAK only while the seal exists; the USER
+    retired the seal, so from params v18 every run emits its numbers and
+    the same condition is the RULED OUTCOME. With the bare `G` merely
+    restored, this check would have DELETED tonight's receipt after
+    writing it.
+
+    So the regime is read from the PARAMS and the bar from the receipt's
+    own `G_and_which_G_it_is`; the status is returned, never printed as
+    a conclusion, and the caller decides. A census that cannot find its
+    bar says so and is refused by the caller -- it does not pass."""
+    ruled = bool(params.get("user_ruled_unsealed_emission"))
+    bar = (payload.get("G_and_which_G_it_is") or {}).get(
+        "the_bar_this_run_sealed_against")
+    ndc = payload.get("n_days_complete")
+    if ruled:
+        status = "NOT_APPLICABLE_UNSEALED_BY_R765"
+    elif bar is None or ndc is None:
+        status = "POST_EMIT_CENSUS_HAS_NO_BAR"
+    elif economic_keys and ndc < bar:
+        status = "SEALED_REGIME_LEAK"
+    else:
+        status = "SEALED_REGIME_CLEAN"
+    return {"status": status,
+            "unsealed_by_user_ruling": ruled,
+            "the_bar_this_run_sealed_against": bar,
+            "n_days_complete": ndc,
+            "n_economic_keys_read_back": len(economic_keys),
+            "economic_keys_read_back": economic_keys[:6],
+            "rule": CENSUS_RULE,
+            "why_a_ruled_run_is_not_a_leak": (
+                "R-765 retired the seal: the numbers are KEPT after every "
+                "run. Under the ruling their presence is what was asked "
+                "for, not a leak, and this census records that it looked "
+                "rather than skipping in silence")}
+
+
+def day_run_ledger_anchor(output_dir, *, fixture: bool):
+    """WHERE THE DAY RUN'S LEDGER LANDS -- R-765, and REV 102's NO-GO.
+
+    The guard above was right and the day path had never been given an
+    anchor: `_main_day` -> `day_split_residency_proof` -> `run_day`
+    passed neither `ledger_anchor` nor `receipt_path`, so under params
+    carrying the R-765 ruling a REAL day refused
+    DECISION_LEDGER_HAS_NO_ANCHOR before its work. It had not bitten
+    because the four sealed days ran under v15, which carries no ruling;
+    the first real day under a ruling-carrying params would have met it.
+
+    IT IS THE OUTPUT DIRECTORY, AND NOT A PRE-COMPOSED RECEIPT NAME.
+    The receipt's filename is composed at the EMIT from one clock read,
+    so that its stamp and its `as_of` are the same instant (REV 55
+    S2.1) -- and the ledger is written BEFORE the receipt, so the
+    receipt can name it by digest. A name composed here would be a name
+    no file ever takes: a pin to nothing. The ledger therefore lands in
+    the directory the receipt lands in -- beside it, which is what
+    R-765 asks for -- and carries its own stamp.
+
+    A FIXTURE returns None: its rows are synthetic, there is nothing to
+    avoid re-running, and `run_day` records NO_LEDGER_FOR_A_FIXTURE_DAY
+    (DE 133). The decision lives HERE, in one function that can be
+    driven both ways, rather than in a conditional at the call site."""
+    if fixture:
+        return None
+    return Path(output_dir)
+
+
+def ledger_path_for(anchor, day: str, stamp: str) -> Path:
+    """THE LEDGER'S PATH FROM ITS ANCHOR -- a directory or a file.
+
+    Two callers, two shapes, one rule: the ledger lands IN an anchor
+    that is a directory, and BESIDE an anchor that is a file. The early
+    read passes its artifact's path (a file that does not exist yet, so
+    the parent is taken); the day path passes the receipt's output
+    DIRECTORY, because the receipt's own name is not composed until the
+    emit. Taking `.parent` of a directory would have put the day's
+    ledger one level ABOVE the ledger directory."""
+    import de_decision_ledger as _LED
+    a = Path(anchor)
+    return (a if a.is_dir() else a.parent) / _LED.ledger_name(day, stamp)
+
+
 def run_day(day: str, book_path, *, params: dict, module=None,
             fixture: bool = False, receipt_path=None,
             n_days_complete: int = 1,
@@ -6294,11 +6391,20 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "why": "a fixture's rows are synthetic; R-765 keeps the "
                        "numbers of REAL runs so they need not be re-run",
                 "a_real_day_without_an_anchor":
-                    "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR"}
+                    "REFUSES DECISION_LEDGER_HAS_NO_ANCHOR",
+                # DE 134, rule 10: the STATUS says "fixture", so the
+                # field that makes it true is recorded beside it rather
+                # than inferred by the reader from the guard above. A
+                # real day cannot reach here -- `assert_ledger_anchor`
+                # refuses it before the work -- and this says which
+                # value made the sentence true.
+                "fixture": fixture}
     if _ruling765 and _ledger765 and _anchor is not None:
         import de_decision_ledger as _LED
-        _lp = Path(_anchor).parent / _LED.ledger_name(
-            day, emission_stamp())
+        # DE 134: the anchor may be a FILE (the early read's artifact) or
+        # a DIRECTORY (the day path's output dir). One named function
+        # resolves both, and it is driven both ways.
+        _lp = ledger_path_for(_anchor, day, emission_stamp())
         try:
             import harmful_stateful_policy as _HSP
             _side765 = _HSP.SIDES[0]
@@ -8971,6 +9077,212 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"high-water is {_hw_after:.0f} MB against a growth of "
        f"{_mp['growth_rss_mb']:.1f} MB -- same fixture, same budget, "
        f"opposite verdicts")
+    # ====== DE 134 / REV 102: THE DAY PATH'S LEDGER ANCHOR ==========
+    # RED FIRST, AND THE RED IS THE ARGUMENT THE LANDED DAY PATH MADE.
+    # REV 102's NO-GO: `_main_day` passed neither `ledger_anchor` nor
+    # `receipt_path`, so tonight's first real day under ruling-carrying
+    # params would have met `assert_ledger_anchor` and refused before its
+    # work. The guard was right; the day path had never been given one.
+    _old134 = None
+    try:
+        # EXACTLY what the landed `_main_day` produced: no anchor.
+        assert_ledger_anchor(live, fixture=False, anchor=None)
+    except RunnerRefused as _e134:
+        _old134 = str(_e134).split(":")[0].replace("REFUSED ", "")
+    _d134 = Path(_tfr.mkdtemp(prefix="de134_dayanchor_"))
+    _a134 = day_run_ledger_anchor(_d134, fixture=False)
+    _adm134 = assert_ledger_anchor(live, fixture=False, anchor=_a134)
+    ok(_old134 == "DECISION_LEDGER_HAS_NO_ANCHOR"
+       and _adm134["owes_a_ledger"] is True
+       and Path(_adm134["anchor"]) == _d134,
+       f"DE 134 RED->GREEN, THE DELTA REV 102 MEASURED: the day path's "
+       f"OLD argument (no anchor) refuses by its own name -- `{_old134}` "
+       f"-- and the anchor `day_run_ledger_anchor` computes from "
+       f"`--output` ADMITS, owes_a_ledger True. Same guard, same params, "
+       f"opposite verdicts: the change is the ARGUMENT, not the check")
+    ok(day_run_ledger_anchor(_d134, fixture=True) is None,
+       "DE 134: and a FIXTURE gets None from the same function -- its "
+       "rows are synthetic, R-765 keeps the numbers of REAL runs, and "
+       "the fixture path is unchanged (DE 133). The decision is in ONE "
+       "drivable function, not a conditional at the call site")
+    # THE RESOLUTION, BOTH SHAPES, AND THE KNOWN-BAD IS THE LANDED LINE.
+    # The write used `Path(anchor).parent`, which is right for the early
+    # read's FILE anchor and puts a DIRECTORY anchor's ledger one level
+    # ABOVE the ledger directory.
+    _st134 = emission_stamp()
+    _pdir134 = ledger_path_for(_d134, "FIXTURE-DAY-1", _st134)
+    _pfile134 = ledger_path_for(_d134 / "the_artifact.json",
+                                "FIXTURE-DAY-1", _st134)
+    _oldres134 = Path(_d134).parent / _pdir134.name
+    ok(_pdir134.parent == _d134 and _pfile134.parent == _d134
+       and _pdir134 == _pfile134 and _oldres134.parent != _d134,
+       f"DE 134: `ledger_path_for` lands the ledger IN a DIRECTORY "
+       f"anchor and BESIDE a FILE anchor -- both resolve to "
+       f"{_d134.name}/ -- while the landed `Path(anchor).parent` on the "
+       f"day path's directory would have written to "
+       f"{_oldres134.parent.name}/, one level above the output "
+       f"directory. The early read's file anchor is unchanged")
+    # THE SEAM, DERIVED FROM THIS MODULE'S OWN AST -- never typed, and
+    # with the known-bad built by DELETING the keyword from this file's
+    # own source, so the cell measures a delta from the landed shape and
+    # not agreement with the words I just wrote.
+    import ast as _ast134
+
+    def _passes_anchor(src: str) -> bool:
+        tree = _ast134.parse(src)
+        for fn in _ast134.walk(tree):
+            if (isinstance(fn, _ast134.FunctionDef)
+                    and fn.name == "_main_day"):
+                for c in _ast134.walk(fn):
+                    if (isinstance(c, _ast134.Call)
+                            and isinstance(c.func, _ast134.Name)
+                            and c.func.id == "day_split_residency_proof"):
+                        for kw in c.keywords:
+                            if (kw.arg == "ledger_anchor"
+                                    and isinstance(kw.value, _ast134.Call)
+                                    and isinstance(kw.value.func,
+                                                   _ast134.Name)
+                                    and kw.value.func.id
+                                    == "day_run_ledger_anchor"):
+                                return True
+        return False
+
+    def _forwards_kwargs(src: str) -> bool:
+        tree = _ast134.parse(src)
+        for fn in _ast134.walk(tree):
+            if (isinstance(fn, _ast134.FunctionDef)
+                    and fn.name == "day_split_residency_proof"):
+                for c in _ast134.walk(fn):
+                    if (isinstance(c, _ast134.Call)
+                            and any(k.arg is None for k in c.keywords)):
+                        return True
+        return False
+
+    _src134 = Path(__file__).resolve().read_text()
+    _line134 = ("        ledger_anchor=day_run_ledger_anchor("
+                "a.output, fixture=fixture),\n")
+    _bad134 = _src134.replace(_line134, "", 1)
+    ok(_passes_anchor(_src134) and _forwards_kwargs(_src134)
+       and _line134 in _src134 and not _passes_anchor(_bad134),
+       "DE 134, THE SEAM, DERIVED FROM THIS FILE'S OWN AST: `_main_day` "
+       "passes `ledger_anchor=day_run_ledger_anchor(...)` into "
+       "`day_split_residency_proof`, which forwards its kwargs into "
+       "`run_day` -- and with that ONE keyword deleted from this same "
+       "source the predicate reads FALSE, which is the shape REV 102 "
+       "found landed. No line number and no digest is typed here")
+    # THE CHAIN BELOW `_main_day`, WATCHED FIRING END TO END -- ONLINE
+    # ONLY, and the reason is measured, not assumed: these two drive
+    # `run_day` far enough to perform REAL DRAWS, and BE's `draw_null`
+    # reads its committed null receipt under `data/`
+    # (`be_cancel_axis_null_v1.json`, via `load_cited_be_null`). A
+    # FIXTURE run must open no path under `data/`, and the fixture-run
+    # proof REFUSED these cells when they ran unguarded -- which is the
+    # guard working and is how this comment came to be accurate.
+    #
+    # `run_day` cannot be driven on a REAL day in a battery at all: the
+    # lock guard refuses first, correctly. So the day is a FIXTURE and
+    # the ANCHOR is the one the REAL path computes. What is established
+    # is the plumbing and the write; what is NOT is the real day's own
+    # frame under the lock -- REV 102 said the same of its own trace.
+    if offline:
+        offline_skip("DE 134 chain check 1/2 -- the day path's anchor "
+                     "through `day_split_residency_proof` into a ledger; "
+                     "it performs real draws, which read BE's committed "
+                     "null receipt under data/")
+        offline_skip("DE 134 chain check 2/2 -- the fixture half of the "
+                     "same chain; same reason")
+    else:
+        _mk134 = write_synthetic_day("FIXTURE-DAY-1",
+                                     _tfr.mkdtemp(prefix="de134_day_"),
+                                     params=live)
+        _rp134 = day_split_residency_proof(
+            "FIXTURE-DAY-1", _mk134["book_path"], params=live,
+            fixture=True, n_days_complete=1,
+            ledger_anchor=day_run_ledger_anchor(_d134, fixture=False))
+        _blk134 = ((_rp134.get("day_result") or {})
+                   .get("decision_ledger") or {})
+        ok(isinstance(_blk134.get("sha256"), str)
+           and _blk134.get("n_rows", 0) > 0
+           and Path(_blk134["path"]).is_file()
+           and Path(_blk134["path"]).parent == _d134,
+           f"DE 134 GREEN, THE WHOLE CHAIN BELOW `_main_day`: given the "
+           f"anchor the day path computes, `day_split_residency_proof` "
+           f"forwards it and `run_day` writes the ledger IN the output "
+           f"directory -- {Path(_blk134['path']).name}, "
+           f"{_blk134['n_rows']} rows, sha256 "
+           f"{_blk134['sha256'][:16]}... -- with path + sha256 + rows in "
+           f"the block. GO E1 and GO E2 carried `decision_ledger: null` "
+           f"here")
+        _fx134 = day_split_residency_proof(
+            "FIXTURE-DAY-1", _mk134["book_path"], params=live,
+            fixture=True, n_days_complete=1)                 # no anchor
+        _fb134 = ((_fx134.get("day_result") or {})
+                  .get("decision_ledger") or {})
+        ok(_fb134.get("status") == "NO_LEDGER_FOR_A_FIXTURE_DAY"
+           and _fb134.get("fixture") is True,
+           f"DE 134: and the FIXTURE path is UNCHANGED -- no anchor, no "
+           f"refusal, the named status `{_fb134.get('status')}` with the "
+           f"`fixture` field it is computed from recorded beside it "
+           f"(rule 10: the status says 'fixture', so the value that "
+           f"makes it true is in the artifact and not left to a reader "
+           f"to infer from the guard above)")
+    import shutil as _sh134
+    _sh134.rmtree(_d134, ignore_errors=True)
+
+    # ---- DE 134 (2): THE POST-EMIT CENSUS, FOUND BY RUNNING IT -------
+    # `--synthetic-day` end to end died AFTER writing its receipt with
+    # `KeyError: 'G'`, at the one line DE 124's sweep for consumers of a
+    # receipt's `G` could not see: the PRODUCER reading its own payload.
+    # Both halves are driven -- the key that is gone, and the predicate
+    # that outlived the seal.
+    _pay134 = {"n_days_complete": 5,
+               "G_and_which_G_it_is": {"design_G_from_params": 6,
+                                       "the_bar_this_run_sealed_against": 6}}
+    _keys134 = ["D_E0", "Z", "null_mean"]
+    _kerr134 = None
+    try:
+        _pay134["G"]                       # THE LANDED EXPRESSION
+    except KeyError as _e:
+        _kerr134 = "KeyError"
+    _ruled134 = post_emit_census_status(live, _pay134, _keys134)
+    ok(_kerr134 == "KeyError" and "G" not in _pay134
+       and _ruled134["status"] == "NOT_APPLICABLE_UNSEALED_BY_R765",
+       f"DE 134 KNOWN-BAD, THE LANDED LINE: a receipt payload of today's "
+       f"shape has NO bare `G` (DE 124 removed it), so the landed "
+       f"`payload['G']` raises {_kerr134} -- after the receipt is "
+       f"written. The census now reads the regime from the params and "
+       f"the bar from `G_and_which_G_it_is`: under R-765 the status is "
+       f"`{_ruled134['status']}`, and the run does not die at its own "
+       f"emit")
+    _sealed134 = {k: v for k, v in live.items()
+                  if k != "user_ruled_unsealed_emission"}
+    _leak134 = post_emit_census_status(_sealed134, _pay134, _keys134)
+    ok(_leak134["status"] == "SEALED_REGIME_LEAK"
+       and _leak134["unsealed_by_user_ruling"] is False,
+       f"DE 134 RED, AND THE OLD GUARD STILL FIRES WHERE IT SHOULD: the "
+       f"SAME payload and the SAME economic keys under params carrying "
+       f"no R-765 ruling census as `{_leak134['status']}` at "
+       f"{_leak134['n_days_complete']} of "
+       f"{_leak134['the_bar_this_run_sealed_against']} days -- the "
+       f"receipt is removed and the day refused. The ruling changed "
+       f"which regime is in force, not whether a sealed day may leak")
+    _clean134 = post_emit_census_status(
+        _sealed134, {**_pay134, "n_days_complete": 6}, _keys134)
+    _nokeys134 = post_emit_census_status(_sealed134, _pay134, [])
+    ok(_clean134["status"] == "SEALED_REGIME_CLEAN"
+       and _nokeys134["status"] == "SEALED_REGIME_CLEAN",
+       "DE 134: and the sealed regime ADMITS both ways it should -- at "
+       "the bar (6 of 6) with the economics present, and below the bar "
+       "with none read back. A guard shown only to refuse is not a guard")
+    _nobar134 = post_emit_census_status(
+        _sealed134, {"n_days_complete": 5}, _keys134)
+    ok(_nobar134["status"] == "POST_EMIT_CENSUS_HAS_NO_BAR",
+       f"DE 134: a sealed run whose receipt carries NO bar censuses as "
+       f"`{_nobar134['status']}` and the caller REFUSES on it -- a check "
+       f"that cannot evaluate refuses, it does not pass (R-649). That is "
+       f"the shape the `KeyError` had: the bar was unreadable and the "
+       f"run died instead of saying so")
+
     # These checks DRIVE REAL DRAWS, and `null_draws_valued`
     # cross-checks the first draws against BE's own `draw_null`, which
     # reads BE's committed null receipt under `data/`. A FIXTURE run must
@@ -11674,10 +11986,16 @@ def _main_day(a) -> int:
     # this day's own receipt exists, so it is the days complete when this
     # day started; the emitted prose is generated from it.
     _dc = days_complete_now(params)
+    # R-765 / REV 102's NO-GO: THE DAY PATH GETS ITS ANCHOR. It always
+    # had one to give -- `assert_output_is_a_directory` above has already
+    # refused unless `--output` names an existing directory -- and it
+    # simply did not pass it, so a real day under ruling-carrying params
+    # refused DECISION_LEDGER_HAS_NO_ANCHOR before its work.
     proof = day_split_residency_proof(
         day, book, params=params, fixture=fixture,
         n_days_complete=(a.n_days_complete if fixture
                          else _dc["n_days_complete"]),
+        ledger_anchor=day_run_ledger_anchor(a.output, fixture=fixture),
         before_work=_battery_first)
     payload = proof.pop("day_result")
     payload["split_residency_proof"] = proof
@@ -11885,16 +12203,36 @@ def _main_day(a) -> int:
     # artifact.
     _back = json.loads(out_path.read_text())
     _post = _economic_keys_in(_back)
-    if _post and payload["n_days_complete"] < payload["G"]:
+    # NOT WRITTEN INTO `payload`: the receipt is already on disk and the
+    # census is an act ON THOSE BYTES. Assigning it here looked like a
+    # record and was dead -- the emitted artifact carried no such key,
+    # which is how it was caught (read at the artifact, not at the code).
+    # The status is printed below and travels in the run's capture record.
+    _census = post_emit_census_status(params, payload, _post)
+    if _census["status"] == "SEALED_REGIME_LEAK":
         out_path.unlink(missing_ok=True)
         raise RunnerRefused(
             f"REFUSED after writing: the receipt READ BACK FROM DISK "
             f"carries sealed names as KEYS -- {_post[:6]}. The rule is "
             f"`{CENSUS_RULE}`. The file has been removed; a sealed day "
             f"that leaks is not a day.")
+    if _census["status"] == "POST_EMIT_CENSUS_HAS_NO_BAR":
+        out_path.unlink(missing_ok=True)
+        raise RunnerRefused(
+            f"REFUSED POST_EMIT_CENSUS_HAS_NO_BAR after writing: the "
+            f"seal is in force for this run and the receipt carries no "
+            f"bar to census against "
+            f"(`G_and_which_G_it_is.the_bar_this_run_sealed_against` "
+            f"{_census['the_bar_this_run_sealed_against']!r}, "
+            f"n_days_complete {_census['n_days_complete']!r}). A check "
+            f"that cannot evaluate REFUSES; it does not pass. The file "
+            f"has been removed.")
     print(json.dumps({
         "post_emit_census": {"read_back_from": str(out_path),
                              "sealed_keys_found": len(_post),
+                             "status": _census["status"],
+                             "unsealed_by_user_ruling":
+                                 _census["unsealed_by_user_ruling"],
                              "rule": CENSUS_RULE},
         "emitted": str(out_path), "status": payload["status"],
         "day": payload["day"],
