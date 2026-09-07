@@ -67,6 +67,46 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:26:54Z (MEM ROUND 278 -- R-802 AND R-803 SWEPT, with every landing between the tip I read at round 277
+  (`1e43c4f`) and `e0b6a55`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***CORRECTION IN BAND TO MY OWN ROUND-277 ENTRY: MY BASELINE FIGURES WERE DOUBLE-COUNTED.*** I published
+  the 09-06 BASELINE trades cash flow as -497,475.77 and its net as +1,598.77; **BE 99 reports -248,738, and my
+  figures are exactly DOUBLE.** The cause is the fact I established myself at round 273 and then failed to apply:
+  **the 0-cancel baseline is recorded ONCE PER ARM LABEL**, and my pass keyed on `book == "BASELINE"` summed both
+  copies. **Corrected: trades -248,737.89, net +799.39.** ***THE IDENTITY CONCLUSION STANDS*** -- doubling every
+  term leaves an identity an identity -- **but a check invariant to the error in its inputs cannot detect that
+  error**, which is why reconciling against BE's independent number is what found it. My ARM figures were never
+  doubled (that book appears once) and match BE to the cent.
+  (2) **RECONCILED CLEANLY ON BOTH LEDGERS** with a fixed keep-label: 09-05 -225,644.56 / -9,195.85 /
+  -197,242.71 and 09-06 -248,737.89 / +36,443.72 / -217,065.35 -- **all six to the cent against BE 99** -- and
+  the fill counts match both artifacts exactly (49,668 / 30,492 / 47,639 and 49,568 / 31,206 / 47,405), which is
+  what proves the dedup kept one baseline copy and dropped none of the arm's.
+  (3) ***THE CODE'S `inventory_leg` IS EXACTLY THE NEGATIVE OF THE TRADES LEG*** -- `|inventory_leg + trades| <
+  1e-6` on **all six path-days**, because `(after - before)` IS the signed size and `inventory_mark_cents ==
+  px_cents`. ***SO A SECOND CORRECTION TO MY OWN RECORD***: at round 273 I called that field "the cash flow of
+  the fills" and carried it through four rounds -- **it is MINUS the cash flow.** And the round-277 warning gets
+  its sharpest form: **the field named for the INVENTORY leg holds the exact negation of the TRADES leg** -- the
+  other leg of the same decomposition. Mistake it for the trades leg and the sign is backwards; mistake it for
+  the residual and you are out by ~20x. Both misreadings are plausible and neither is visible in the name.
+  (4) BE 99's ruled totals reconcile to BE 98's column (a); arm - baseline under the ruled endpoint is 09-05
+  **-51,193 / +7,646** and 09-06 **+2,244 / +10,408**. **The residual leg is 3.8x and 6.3x the baseline's own
+  total**, and the two legs are of opposite sign and similar magnitude -- **the total is a difference of large
+  numbers**, so small errors in either leg move it a lot. Which is why the winner convention matters as much as
+  it does: **`S60(T)` vs `S60(t0)` reproduces the venue 288/288 on both days**, the other three grid conventions
+  disagree on 10-44 slugs and move day totals by up to +-42,000 c -- **42k against a baseline total of 46,562.**
+  The declaration must PIN it with a per-slug refusal.
+  (5) **STILL NO NULL** under the ruled endpoint -- my round-276 structural finding, now hit by a third seat from
+  a third direction -- so every ruled figure is a point estimate, two days, DESIGN data under rule 11.
+  **BE 100's premise verified at the constants**: cancels pay `latency_ms: 250` (`:115`, `:469`) while placement
+  reads **`latency_ms=0` at `:500`** -- **the reference places instantly and cancels slowly**, and an asymmetry
+  that flatters the reference flatters the baseline every arm is measured against.
+  (6) The user asked **"is this result reliable"** and the answer separates two things a single word would merge:
+  **the arithmetic is reliable** (I have now reconciled six figures to the cent and the identities hold at 1e-6)
+  **and the inference is not** -- no null, two days, chosen after seeing, zero placement latency, no self-impact,
+  no fees, no cap, capacity unmeasured. Recorded as the shape of the answer; MEM asserts no result.
+  GO #8 unchanged (`5020f96`, `?? data`, FOURTH consecutive round); freeze holds an EIGHTEENTH round.
+  COUNTS (by YAML parse): flags 2183 -> 2198, provenance 1728 -> 1743 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 260 archived.)
   2026-09-07T15:19:44Z (MEM ROUND 277 -- R-801 AND R-802 SWEPT, with every landing between the tip I read at round 276
   (`8a12422`) and `1e43c4f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***A USER RULING, THE FIFTH AND THE LARGEST: THE ESTIMAND CHANGES.*** Verbatim -- **"the pnls are from
@@ -144,44 +184,6 @@ updated: >-
   re-valuation nor the position census can run on them at all.**
   COUNTS (by YAML parse): flags 2150 -> 2166, provenance 1695 -> 1711 (sixteen written, sixteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 258 archived.)
-  2026-09-07T14:29:48Z (MEM ROUND 275 -- R-799 SWEPT, with every landing between the tip I read at round 274 (`5c9c0d4`) and
-  `71349a3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***ALL FIVE OF REV 103 §5's DIGESTS RECOMPUTE EQUAL AT `wt-de`***, hashed by me at the worktree's own
-  working files rather than read from the coordinator's verification -- runner `883b5f3a`, early read `5aa544ef`,
-  ledger `d78c3701`, params v19 `dd8db7de`, design v27 `3bcdf3c2`, every cited digit. Both blocking conditions
-  hold at 14:26:01Z: **P10** (`git status --short` returns exactly `?? data`) and **pins 10 of 10** in `wt-de`.
-  HEAD `5020f96`, frozen for GO #8.
-  (2) ***BUT THE FIFTH IS NOT LIKE THE OTHER FOUR.*** `readlink -f` and `stat` show `wt-de`'s design-declaration
-  path and the main tree's are **the same file, inode 6043309** -- reached through the `data` symlink. The other
-  four are ordinary files in `wt-de`'s checkout of `5020f96` (all four in that tree). **So four conditions are
-  checked against bytes the HEAD pins and one against the shared tree's WORKING file**; the commit does pin a
-  version of the design declaration, but the path the code opens does not resolve to that blob. Equal at my read;
-  **the freeze covers four of the five.**
-  (3) **AN ODDITY I OBSERVED AND DID NOT EXPLAIN**: `wt-de`'s index tracks **345 files under `data/`**,
-  sparse-checkout is false, and `git status` still reports only `?? data` -- no deletions, no modification. I
-  checked four things and none explains it, **so I offer no mechanism.** It matters in one direction only: P10 is
-  read from that same output.
-  (4) **NEITHER `a71b714` NOR `17cbf1b` IS AN ANCESTOR OF `5020f96`** (both checked). So tonight's bytes carry
-  **neither** of the day's two fixes -- not the ABSOLUTES cells, not the inventory measurement -- which is the
-  composition discipline working: GO #8 runs `6c3a121` + DE 134's runner and nothing else.
-  (5) ***DE 135 PART B REPLACES A TYPED CLAIM WITH A COMPUTED STATUS*** -- `inventory_at_the_ledger()` walks the
-  file with `_paths_to` and returns one of four statuses, **each appearing exactly twice in the module**, once
-  produced and once asserted, so the red-first pairing is visible in the counts alone. `EXPECTED_CHECKS` 25 -> 30
-  (my raw `ok(` count 32 -> 37: **same delta of five, different base** -- the constant counts declared checks, my
-  regex counts call lines). **Rule 10 applied to exactly the claim that was typed and false**, and the old claim
-  was not merely wrong but unfalsifiable from inside the artifact.
-  (6) ***AND DE's IS THE THIRD INDEPENDENT READING OF THAT LEDGER***, not the second: BE 97 measured it, **I
-  measured it at round 273**, DE has now measured it from inside the module that makes the claim. **DE's is
-  STRONGER than mine**: I showed `inventory_after` complete on all 177,467 fill rows -- one field; DE shows all
-  FIVE on 177,467 of 177,467, which is what the header's "recomputable" claim actually requires. Three readings,
-  three implementations, one answer, on a claim three seats had previously passed along unchecked.
-  (7) GO #8 now waits ONLY on the close: DA's 00:06Z mask + verdict -> BE fragment -> tape -> book + builder
-  receipt -> GO #8 from `5020f96` -> **the receipt read at `day_run.decision_ledger` FIRST** (R-791's misread
-  turned into a procedure) -> the freeze lifts -> v20/v28 by RE-MEASUREMENT -> GO #9 -> the 09-03/09-04 replays.
-  The user's inventory ruling stays OPEN -- **Part B measures WHERE the quantity is; it does not decide WHETHER it
-  belongs in the estimand.** The four-day table is untouched. Freeze holds a FIFTEENTH round.
-  COUNTS (by YAML parse): flags 2134 -> 2150, provenance 1679 -> 1695 (sixteen written, sixteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 257 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -353,6 +355,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 278, R-802 and R-803 swept (1e43c4f -> e0b6a55) ---
+  CORRECTION_MY_ROUND_277_BASELINE_FIGURES_WERE_DOUBLE_COUNTED: THE-BASELINE-IS-RECORDED-ONCE-PER-ARM
+  THE_IDENTITY_CONCLUSION_STANDS_BECAUSE_DOUBLING_PRESERVES_IT: THE-TWO-PUBLISHED-FIGURES-DO-NOT
+  AND_MY_ARM_FIGURES_WERE_NEVER_DOUBLED_AND_MATCH_BE_99_TO_THE_CENT: THE-ARM-BOOK-APPEARS-ONCE
+  I_RECONCILED_ALL_SIX_PATH_DAYS_TO_BE_99_AFTER_DEDUPING: AND-THE-FILL-COUNTS-MATCH-BOTH-ARTIFACTS
+  THE_CODES_inventory_leg_IS_EXACTLY_THE_NEGATIVE_OF_THE_TRADES_LEG: VERIFIED-ON-ALL-SIX-PATH-DAYS
+  SO_MY_ROUND_273_CASH_FLOW_READING_WAS_RIGHT_IN_MAGNITUDE_AND_WRONG_IN_SIGN: MINUS-THE-CASH-FLOW
+  AND_THE_FIELD_NAMED_FOR_ONE_LEG_HOLDS_THE_NEGATIVE_OF_THE_OTHER: A-SHARPER-FORM-OF-MY-ROUND-277-WARNING
+  THE_RULED_TOTALS_RECONCILE_TO_BE_98s_COLUMN_A: TRADES-PLUS-RESIDUAL-EQUALS-TOTAL
+  THE_RESIDUAL_LEG_DWARFS_THE_TOTAL_IT_SITS_IN: 3-8x-AND-6-3x-OF-THE-BASELINES-TOTAL
+  THE_WINNER_CONVENTION_MUST_BE_PINNED_OR_THE_DAY_MOVES_BY_42K: S60-T-VERSUS-S60-t0-REPRODUCES-288-OF-288
+  STILL_NO_NULL_UNDER_THE_RULED_ENDPOINT: MY-ROUND-276-FINDING-RESTATED-BY-BE
+  THE_PLACEMENT_LATENCY_IS_ZERO_WHILE_CANCELS_PAY_250_MS: VERIFIED-AT-THE-TWO-CONSTANTS
+  THE_USER_ASKED_IS_THIS_RESULT_RELIABLE_AND_THE_ANSWER_SEPARATES_TWO_THINGS: ARITHMETIC-YES-INFERENCE-NO
+  R_802s_CLOCK_ANCHORING_AND_THE_DISPATCH_TIMES: 15-14-04Z-AND-15-14-05Z
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_EIGHTEENTH_ROUND: 5020f96-FOURTH-CONSECUTIVE-ROUND
   # --- MEM round 277, R-801 and R-802 swept (8a12422 -> 1e43c4f) ---
   USER_RULING_R_801_THE_ESTIMAND_CHANGES_CARRIED_VERBATIM: THE-FIFTH-USER-RULING
   I_VERIFIED_THE_DECOMPOSITION_ON_THE_LEDGER_NOT_ONLY_AS_ALGEBRA: BOTH-SETTLE-VALUES-ALL-THREE-PATHS
@@ -26545,6 +26563,173 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 278, 2026-09-07T15:26:54Z (the clock read by which every measurement below was complete) ---
+  CORRECTION_MY_ROUND_277_BASELINE_FIGURES_WERE_DOUBLE_COUNTED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      **AN IN-BAND CORRECTION OF MY OWN ROUND-277 ENTRY, FOUND BY COMPARING WITH BE 99.** I published the 09-06
+      BASELINE trades cash flow as **-497,475.77** and its net as **+1,598.77**. BE 99 reports the baseline trades leg
+      as **-248,738**. My figures are **exactly double**. The cause is the one I established myself at round 273 and
+      then did not apply: **the 0-cancel baseline is recorded ONCE PER ARM LABEL in the ledger** (BASELINE fills =
+      2 x 49,568 on 09-06), and my round-277 pass keyed on `book == "BASELINE"` and summed **both copies**. Deduped by
+      keeping only the copy under `hdr["arms"][0]`: **trades -248,737.89, net +799.39** -- half of each, and matching
+      BE to the cent. **The correct 09-06 baseline figures are -248,737.89 and +799.39.**
+  THE_IDENTITY_CONCLUSION_STANDS_BECAUSE_DOUBLING_PRESERVES_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      What survives the correction and what does not, stated separately. **The conclusion stands**: I checked
+      `total = trades + net x settle` for settle = 100 and settle = 0, and doubling every term on both sides leaves an
+      identity an identity -- so "the ruling's two legs are an exact decomposition" was and is correct, and it is
+      re-verified on the deduped figures. **The two PUBLISHED BASELINE NUMBERS do not stand** and are corrected above.
+      **A check that is invariant to the error in its inputs cannot detect that error** -- which is exactly why the
+      disagreement with BE's independently computed number is what found it, and why reconciling against another seat's
+      figure is worth doing even when your own arithmetic is internally consistent.
+  AND_MY_ARM_FIGURES_WERE_NEVER_DOUBLED_AND_MATCH_BE_99_TO_THE_CENT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      The error was confined to the baseline, and the reason is structural: **the ARM book appears once**, so no
+      deduplication was needed for it. My round-277 CONDVALUE figures (+36,443.72 cash, -223.48 net) and HAZARD
+      (-217,065.35, +22.24) are unchanged after deduping and **match BE 99's +36,444 and -217,065 exactly**. So of the
+      six numbers I published, four were right and two were double -- and the two that were wrong were the two whose
+      book is recorded twice.
+  I_RECONCILED_ALL_SIX_PATH_DAYS_TO_BE_99_AFTER_DEDUPING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      Redone cleanly on BOTH ledgers with a fixed keep-label rather than an order-dependent one (my first dedup
+      attempt kept "the first arm seen", which leaks rows as the seen-set grows). **09-05**: BASELINE trades
+      **-225,644.56** (BE -225,645), CONDVALUE **-9,195.85** (BE -9,196), HAZARD **-197,242.71** (BE -197,243).
+      **09-06**: BASELINE **-248,737.89** (BE -248,738), CONDVALUE **+36,443.72** (BE +36,444), HAZARD **-217,065.35**
+      (BE -217,065). **All six to the cent.** And the fill counts match the artifacts exactly on both days -- 09-05
+      49,668 / 30,492 / 47,639 and 09-06 49,568 / 31,206 / 47,405 -- which is the check that the dedup kept exactly one
+      baseline copy and dropped none of the arm's.
+  THE_CODES_inventory_leg_IS_EXACTLY_THE_NEGATIVE_OF_THE_TRADES_LEG:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      **BE 99's sharpest structural finding, and I verified it on all six path-days.** `abs(inventory_leg + trades) <
+      1e-6` is **True** for BASELINE, CONDVALUE and HAZARD on both 09-05 and 09-06. The reason is visible in the two
+      definitions: `inventory_leg = Σ (after - before) x inventory_mark_cents` and `(after - before)` **is** the fill's
+      signed size, while the trades leg is `-Σ sgn x px x size` -- so the two coincide up to sign exactly when
+      `inventory_mark_cents == px_cents` on every fill, which the equality to 1e-6 demonstrates it does.
+  SO_MY_ROUND_273_CASH_FLOW_READING_WAS_RIGHT_IN_MAGNITUDE_AND_WRONG_IN_SIGN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      **A SECOND CORRECTION TO MY OWN RECORD, SMALLER BUT WORTH THE SAME CARE.** At round 273 I read `absolute_legs`
+      and described `inventory_leg` as "**the cash flow of the fills** at each fill's own mark", and carried that
+      description through rounds 274-277. **It is MINUS the cash flow.** The magnitude and the interpretation were
+      right; the sign was not, and I had the definition in front of me (`Σ (after - before) x mark` against a cash flow
+      of `-Σ sgn x px x size`) without carrying the minus. A reader who took my description literally and added the
+      field to a cash-flow term would have got twice the number instead of zero.
+  AND_THE_FIELD_NAMED_FOR_ONE_LEG_HOLDS_THE_NEGATIVE_OF_THE_OTHER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      The sharpest form of the warning I gave at round 277, now that the quantity is identified. I said then that
+      `inventory_leg` was "a different quantity" from the ruled residual, ~19-24x apart. **It is more specific than
+      that: the field named for the INVENTORY leg holds the exact negation of the TRADES leg** -- the other leg of the
+      same decomposition. So the collision is not merely a name over an unrelated number; it is a name over the
+      **negative of its sibling**. **A reader mistaking it for the trades leg gets the sign backwards; one mistaking it
+      for the residual leg is out by a factor of about twenty.** Both are plausible misreadings of the same field and
+      neither is detectable from the field's name.
+  THE_RULED_TOTALS_RECONCILE_TO_BE_98s_COLUMN_A:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      BE 99's totals as trades + residual: **09-05** BASELINE -225,645 + 306,883 = **81,238 c**, CONDVALUE -9,196 +
+      39,241 = **30,045**, HAZARD -197,243 + 286,127 = **88,884**; **09-06** BASELINE -248,738 + 295,300 = **46,562**,
+      CONDVALUE +36,444 + 12,362 = **48,806**, HAZARD -217,065 + 274,036 = **56,970**. The baselines reconcile to
+      BE 98's column (a) exactly (81,238 and 46,562 were BE 98's settlement figures, which I carried at round 276 as
+      BE's). Arm minus baseline under the ruled total: **09-05 CONDVALUE -51,193 / HAZARD +7,646; 09-06 +2,244 /
+      +10,408** -- so HAZARD is above the baseline on BOTH days under the ruled endpoint where it was above on one
+      under the markout. **Carried as BE's arithmetic; I recomputed the trades legs, not the residuals.**
+  THE_RESIDUAL_LEG_DWARFS_THE_TOTAL_IT_SITS_IN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      Recorded because it is the number that makes the ruling consequential rather than tidy: **the residual leg is
+      3.8x and 6.3x the baseline's own total** on the two days (306,883 against 81,238; 295,300 against 46,562). The
+      quantity the old estimand omitted entirely is several times the size of the quantity it reported, and the two
+      legs are of opposite sign and similar magnitude, so the total is a difference of large numbers. **That is a
+      sensitivity worth carrying with the endpoint**: small errors in either leg move the total by a lot, which is
+      also why the winner convention below matters as much as it does.
+  THE_WINNER_CONVENTION_MUST_BE_PINNED_OR_THE_DAY_MOVES_BY_42K:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      BE 99's verification against the Chainlink TWAP, carried as BE's: **`S60(T)` vs `S60(t0)` reproduces the venue's
+      recorded winner on 288 of 288 slugs on BOTH days**, while **the other three grid conventions disagree on 10-44
+      slugs per day and move day totals by up to +-42,000 cents**. So the join is verified under one convention and
+      only one. **The consequence BE names is the right one: the declaration must PIN that convention and refuse
+      per-slug on disagreement** -- a convention that is right today and unpinned is a silent dependency, and 42k on a
+      day whose baseline total is 46,562 is the same order as the result.
+  STILL_NO_NULL_UNDER_THE_RULED_ENDPOINT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      BE 99 states there is no null under the ruled endpoint because `NULL_DRAW` rows carry no fills -- **which is the
+      finding I verified structurally at round 276** (five keys: `arm`, `cancels`, `i`, `row`, `value`) and which
+      R-801's reading (3) turned into DE 136's dispatch. Now a third seat has hit the same wall from a third direction.
+      **So every ruled figure above is a point estimate with no Z and no p**, on two days, under rule 11 as DESIGN
+      data. That is not a defect in BE 99's work; it is the state of the endpoint until DE 136 lands.
+  THE_PLACEMENT_LATENCY_IS_ZERO_WHILE_CANCELS_PAY_250_MS:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      BE 100's premise, verified at the two constants rather than accepted. `PRIMARY = {"coin": "btc", "latency_ms":
+      250, ...}` at `:115` and `cancel_effective_latency_ms` at `:469` set the cancel path's 250 ms; the placement path
+      reads **`spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)` at `:500`** -- **zero**. (R-803 cites `:490`;
+      the `latency_ms=0` line is at `:500` in the file I read, a ten-line difference of anchor within the same
+      function.) **So the reference places instantly and cancels slowly**, and BE 100 is dispatched to count the fills a
+      250 ms placement latency would have missed, valued at settlement. **An asymmetry that flatters the reference
+      flatters the baseline every arm is measured against.**
+  THE_USER_ASKED_IS_THIS_RESULT_RELIABLE_AND_THE_ANSWER_SEPARATES_TWO_THINGS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      The user asked "is this result reliable" and the answer on the record separates two questions that a single word
+      would have merged: **the ARITHMETIC is reliable** -- I have now reconciled six of BE 99's figures to the cent
+      myself, and the identities hold at 1e-6 -- **and the INFERENCE is not**, for seven named reasons: no null, two
+      days, chosen after seeing, zero placement latency, no self-impact, no fees, no position cap, capacity unmeasured.
+      **Recorded as the shape of the answer, not as a verdict**: MEM asserts no result. The seven are each a separate
+      piece of work and several are already dispatched (BE 100 for capacity and latency, DE 136 for the null).
+  R_802s_CLOCK_ANCHORING_AND_THE_DISPATCH_TIMES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      R-802's correction in band, folded with its numbers: R-801's headline had written the ruling as received
+      "~15:1xZ" -- a placeholder digit, not a clock reading -- and the register's own placeholder check flagged it. The
+      anchored fact: the user's message arrived **between 15:07:32Z and 15:09:15Z**, and the dispatches went at
+      **15:14:04Z (BE 99)** and **15:14:05Z (DE 136)**, with MEM 277 queued behind MEM 276. Swept at round 277 already;
+      recorded here with the dispatch times attached, which the earlier sweep did not carry.
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_EIGHTEENTH_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:26:54Z
+    said: >-
+      `wt-de` HEAD **`5020f96`**, status exactly `?? data` -- the **fourth** consecutive round at that state.
+      `params_v20` and `design_v28` absent, heads v19/v27. DE 136 is in flight from wt-de2 (code only) and BE 100 was
+      dispatched at 15:22:10Z. **Nothing in BE 99 or BE 100 touches the bytes GO #8 runs**: both are measurements over
+      landed ledgers and code reading, not changes to the frozen tree. GO #8 still waits only on the close, and its
+      ledger remains the first input to the ruled endpoint.
   # --- MEM round 277, 2026-09-07T15:19:44Z (the clock read by which every measurement below was complete) ---
   USER_RULING_R_801_THE_ESTIMAND_CHANGES_CARRIED_VERBATIM:
     prov: CHECKED

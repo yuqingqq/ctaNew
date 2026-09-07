@@ -20169,3 +20169,46 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2116 -> 2134, provenance 1661 -> 1679 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 256 archived.)
 ```
+
+## Batch 260 — archived 2026-09-07T15:26:54Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T14:29:48Z (MEM ROUND 275 -- R-799 SWEPT, with every landing between the tip I read at round 274 (`5c9c0d4`) and
+  `71349a3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***ALL FIVE OF REV 103 §5's DIGESTS RECOMPUTE EQUAL AT `wt-de`***, hashed by me at the worktree's own
+  working files rather than read from the coordinator's verification -- runner `883b5f3a`, early read `5aa544ef`,
+  ledger `d78c3701`, params v19 `dd8db7de`, design v27 `3bcdf3c2`, every cited digit. Both blocking conditions
+  hold at 14:26:01Z: **P10** (`git status --short` returns exactly `?? data`) and **pins 10 of 10** in `wt-de`.
+  HEAD `5020f96`, frozen for GO #8.
+  (2) ***BUT THE FIFTH IS NOT LIKE THE OTHER FOUR.*** `readlink -f` and `stat` show `wt-de`'s design-declaration
+  path and the main tree's are **the same file, inode 6043309** -- reached through the `data` symlink. The other
+  four are ordinary files in `wt-de`'s checkout of `5020f96` (all four in that tree). **So four conditions are
+  checked against bytes the HEAD pins and one against the shared tree's WORKING file**; the commit does pin a
+  version of the design declaration, but the path the code opens does not resolve to that blob. Equal at my read;
+  **the freeze covers four of the five.**
+  (3) **AN ODDITY I OBSERVED AND DID NOT EXPLAIN**: `wt-de`'s index tracks **345 files under `data/`**,
+  sparse-checkout is false, and `git status` still reports only `?? data` -- no deletions, no modification. I
+  checked four things and none explains it, **so I offer no mechanism.** It matters in one direction only: P10 is
+  read from that same output.
+  (4) **NEITHER `a71b714` NOR `17cbf1b` IS AN ANCESTOR OF `5020f96`** (both checked). So tonight's bytes carry
+  **neither** of the day's two fixes -- not the ABSOLUTES cells, not the inventory measurement -- which is the
+  composition discipline working: GO #8 runs `6c3a121` + DE 134's runner and nothing else.
+  (5) ***DE 135 PART B REPLACES A TYPED CLAIM WITH A COMPUTED STATUS*** -- `inventory_at_the_ledger()` walks the
+  file with `_paths_to` and returns one of four statuses, **each appearing exactly twice in the module**, once
+  produced and once asserted, so the red-first pairing is visible in the counts alone. `EXPECTED_CHECKS` 25 -> 30
+  (my raw `ok(` count 32 -> 37: **same delta of five, different base** -- the constant counts declared checks, my
+  regex counts call lines). **Rule 10 applied to exactly the claim that was typed and false**, and the old claim
+  was not merely wrong but unfalsifiable from inside the artifact.
+  (6) ***AND DE's IS THE THIRD INDEPENDENT READING OF THAT LEDGER***, not the second: BE 97 measured it, **I
+  measured it at round 273**, DE has now measured it from inside the module that makes the claim. **DE's is
+  STRONGER than mine**: I showed `inventory_after` complete on all 177,467 fill rows -- one field; DE shows all
+  FIVE on 177,467 of 177,467, which is what the header's "recomputable" claim actually requires. Three readings,
+  three implementations, one answer, on a claim three seats had previously passed along unchecked.
+  (7) GO #8 now waits ONLY on the close: DA's 00:06Z mask + verdict -> BE fragment -> tape -> book + builder
+  receipt -> GO #8 from `5020f96` -> **the receipt read at `day_run.decision_ledger` FIRST** (R-791's misread
+  turned into a procedure) -> the freeze lifts -> v20/v28 by RE-MEASUREMENT -> GO #9 -> the 09-03/09-04 replays.
+  The user's inventory ruling stays OPEN -- **Part B measures WHERE the quantity is; it does not decide WHETHER it
+  belongs in the estimand.** The four-day table is untouched. Freeze holds a FIFTEENTH round.
+  COUNTS (by YAML parse): flags 2134 -> 2150, provenance 1679 -> 1695 (sixteen written, sixteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 257 archived.)
+```

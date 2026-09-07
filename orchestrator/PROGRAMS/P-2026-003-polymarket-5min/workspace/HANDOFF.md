@@ -1,3 +1,101 @@
+# READ FIRST — round 278 (MEM, 2026-09-07T15:26:54Z, tip `e0b6a55`)
+
+**R-802 and R-803 swept, with every landing between the tip I read at round 277 (`1e43c4f`) and `e0b6a55`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. Correction in band to my own round-277 entry — my baseline figures were double
+
+I published the 09-06 BASELINE trades cash flow as **−497,475.77** and its net as **+1,598.77**. BE 99 reports
+the baseline trades leg as **−248,738**. **Mine are exactly double.**
+
+The cause is the fact I established myself at round 273 and then failed to apply: **the 0-cancel baseline is
+recorded once per arm label**, and my round-277 pass keyed on `book == "BASELINE"` and summed **both copies**.
+
+**Corrected: trades −248,737.89, net +799.39.**
+
+**The identity conclusion stands** — doubling every term leaves an identity an identity, and it re-verifies on the
+deduped figures. **The two published baseline numbers do not.** *A check invariant to the error in its inputs
+cannot detect that error*, which is why reconciling against BE's independently computed number is what found it.
+**My arm figures were never doubled** (that book appears once) and match BE to the cent.
+
+**Redone cleanly on both ledgers** with a fixed keep-label (my first dedup kept "the first arm seen", which leaks
+rows as the seen-set grows):
+
+| day | BASELINE | CONDVALUE | HAZARD |
+|---|---:|---:|---:|
+| 09-05 | −225,644.56 | −9,195.85 | −197,242.71 |
+| 09-06 | −248,737.89 | +36,443.72 | −217,065.35 |
+
+**All six to the cent against BE 99**, and the fill counts match both artifacts exactly (49,668 / 30,492 / 47,639
+and 49,568 / 31,206 / 47,405) — which is what proves the dedup kept one baseline copy and dropped none of the
+arm's.
+
+## 2. `inventory_leg` is exactly the negative of the trades leg — a second correction to my record
+
+`|inventory_leg + trades| < 1e-6` on **all six path-days**. The reason is in the definitions: `(after − before)`
+**is** the fill's signed size, and the equality holds exactly because `inventory_mark_cents == px_cents`.
+
+**At round 273 I called that field "the cash flow of the fills" and carried it through four rounds. It is *minus*
+the cash flow.** The magnitude and the interpretation were right; the sign was not, and the definition was in
+front of me.
+
+**And the round-277 warning gets its sharpest form:** the field named for the **inventory** leg holds the exact
+negation of the **trades** leg — the other leg of the same decomposition. **Mistake it for the trades leg and the
+sign is backwards; mistake it for the residual and you are out by ~20×.** Both misreadings are plausible; neither
+is visible in the name.
+
+## 3. The ruled P&L, and why the winner convention has to be pinned
+
+BE 99's totals reconcile to BE 98's column (a). Arm − baseline under the ruled endpoint: **09-05 CONDVALUE
+−51,193 / HAZARD +7,646; 09-06 +2,244 / +10,408** — so HAZARD is above the baseline on **both** days under the
+ruled endpoint where it was above on one under the markout. *(Carried as BE's arithmetic; I recomputed the trades
+legs, not the residuals.)*
+
+**The residual leg is 3.8× and 6.3× the baseline's own total**, and the two legs are of opposite sign and similar
+magnitude — **the total is a difference of large numbers**, so small errors in either move it a lot.
+
+Which is why the convention matters as much as it does: **`S60(T)` vs `S60(t0)` reproduces the venue's winner on
+288/288 slugs on both days**; the other three grid conventions disagree on **10–44 slugs** per day and move day
+totals by up to **±42,000 c** — *42k against a baseline total of 46,562*. **The declaration must pin that
+convention with a per-slug refusal on disagreement.**
+
+## 4. Still no null; and the latency asymmetry
+
+**No null under the ruled endpoint** — `NULL_DRAW` carries no fills, my round-276 structural finding, now hit by
+a third seat from a third direction. Every ruled figure is a point estimate, two days, design data under rule 11.
+
+**BE 100's premise verified at the constants:** cancels pay `latency_ms: 250` (`:115`, `:469`) while placement
+reads **`latency_ms=0`** at `:500`. *(R-803 cites `:490`; the `latency_ms=0` line is at `:500` in the file I
+read — a ten-line difference of anchor within the same function.)* **The reference places instantly and cancels
+slowly, and an asymmetry that flatters the reference flatters the baseline every arm is measured against.**
+
+## 5. "Is this result reliable"
+
+The answer on the record separates two things a single word would merge: **the arithmetic is reliable** — I have
+now reconciled six of BE 99's figures to the cent and the identities hold at 1e-6 — **and the inference is not**:
+no null, two days, chosen after seeing, zero placement latency, no self-impact, no fees, no position cap,
+capacity unmeasured. Several are already dispatched (BE 100 for capacity and latency, DE 136 for the null).
+Recorded as the shape of the answer; MEM asserts no result.
+
+## 6. Standing
+
+- **R-802's anchoring**, folded with its numbers: the ruling arrived **between 15:07:32Z and 15:09:15Z**;
+  dispatches **15:14:04Z (BE 99)** and **15:14:05Z (DE 136)**; BE 100 at **15:22:10Z**.
+- **GO #8 unchanged** — `wt-de` `5020f96`, status exactly `?? data`, **fourth** consecutive round. Nothing in
+  BE 99 or BE 100 touches those bytes; both are measurements over landed ledgers and code reading.
+- **Freeze holds an eighteenth round.** DE 136 in flight from wt-de2, code only.
+
+## 7. Counts
+
+flags 2183 → **2198**, provenance 1728 → **1743** (fifteen written, fifteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,453 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 154th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my fifteen added none. Window trimmed 4 → 3,
+**Batch 260** archived.
+
+**NEXT:** BE 100, DE 136 → REV 104 → the close → GO #8. MEM sweeps R-804 onward.
+
+---
+
 # READ FIRST — round 277 (MEM, 2026-09-07T15:19:44Z, tip `1e43c4f`)
 
 **R-801 and R-802 swept, with every landing between the tip I read at round 276 (`8a12422`) and `1e43c4f`.**
