@@ -71,8 +71,13 @@ def payload_from_record(record: Path | None = None) -> dict:
         raise PinRefused(
             "REFUSED: DEPLOY_RECORD_PINS_NO_FILES -- a pin over an empty "
             "file set would admit every drift there is.")
+    #: THE UNIT IS A NAME. v1 took `installed_units` -- which is the LIST
+    #: OF INSTALLED UNIT FILES, not the unit -- so the pin's own `unit`
+    #: field read as an array of paths. Caught by reading the artifact
+    #: after writing it. The installed files keep their own key.
     return {"protocol": PROTOCOL,
-            "unit": rec.get("installed_units") or UNIT,
+            "unit": UNIT,
+            "installed_unit_files": rec.get("installed_units"),
             "commit": rec.get("deployed_commit"),
             "deployed_at": rec.get("deployed_at_utc"),
             "deployed_by": rec.get("deployed_by"),

@@ -1,0 +1,196 @@
+{
+  "as_of_utc": "2026-09-07T02:10:16Z",
+  "commit": "8c66d27fc914dde093043023dbdacee3917cde3d",
+  "deployed_at": "2026-09-07T02:10:15Z",
+  "deployed_by": "DA seat (pm-da)",
+  "files": [
+    {
+      "path": "live/pm_research/adverse_feature_rows.py",
+      "sha256": "646ae21f3aa3a4955bc1634965d15d1b6bf4b95a0356ad8cf4874aad05225b8f",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/adverse_feature_rows_fast.py",
+      "sha256": "70ea5f511cc7676b701a0801fcbcee9c0de1c019e8746193b9ec69cdb568221e",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/adverse_move_fast.py",
+      "sha256": "893632bbc5ca24e96a06b2185777d53eed2a0433b94206c9f875fea4a6d49f84",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/adverse_move_harmful.py",
+      "sha256": "296839d9af6f493b0a5de51d5c4b1a39389d3007ef24cbbee06706504095960b",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/adverse_move_hurdle.py",
+      "sha256": "aea9678a7edcca1870b171421b12b3d0768962b031681c409b414f1f93e9d773",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/adverse_move_nonlinear.py",
+      "sha256": "8d3a9381998b3398057c577ff23251cfb903c9169f8836fed5011d10d75bab33",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/da_blackout_mask.py",
+      "sha256": "62dbcd769e47f96dd8dc1fa547a6cd9af6e4db926f5f4a17f2581338b88c3e27",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/da_content_liveness_rule.py",
+      "sha256": "7196676840304f30a5465714333183812d6ebedd30e451f182e60084f4174ad0",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/da_content_liveness_v2_check.py",
+      "sha256": "25d3d7fa79208730a1ac6d5f606d69c5b805021fb7d432c962aa4d3878752890",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/da_deploy_guard.py",
+      "sha256": "0eae7637705fba8f7e75643f1948eaa8f15e493e4c902e0761ef8e24affae15c",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/da_forward_day_verify.py",
+      "sha256": "eafbfd58eb1ab063ea054f4ffe231cb09e9d083c7025ff76f843d9711d852045",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/da_governed_verdict_preflight.py",
+      "sha256": "e111886987729cf4021e5a469b3b89fd8467b93f616e43808bddfc1e3ec07d22",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/da_hf_pm_alignment.py",
+      "sha256": "f92241b9c94e8f91fef4688246ea4aa4a77ce6ef3d78ddcb4a0378e9e431e438",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/da_midnight_verify.sh",
+      "sha256": "2e6d34c5a23e6aadd03654187f59674a1f440b285f9ff3569c48cdbd6c3f0788",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/da_race_withdrawals.py",
+      "sha256": "7b644e6525f0895eae676b68c7107a179da073f6465bcd6963e00c0035068845",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/de_admissible_windows.py",
+      "sha256": "4d8f622075b0447fb0b9f80c5a5b5201a243edd7a2afe882430358ce42cefc1d",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/de_constraints.py",
+      "sha256": "3834d236f0a6a2afad393c3476ac344d93fe1ac892fd8eaf996181397530d774",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/edge_layer1.py",
+      "sha256": "1f72e3856e73f23d802cc8367e9e29fb23445086f9ca6932456f13c39fe8e479",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/flow_fill_development.py",
+      "sha256": "d5f381cccdc4b7b6e12fa80d0c05947c8338bb0683cd7a0e58f74ac53074dce4",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/flow_intensity.py",
+      "sha256": "e0b0c5787770ba3d70afcfda560352ea8ae314fb281ec60d0cbc64442fff0fdd",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/harmful_forward_scorer.py",
+      "sha256": "37142b125ffbd842adefce8ebcb0a1158231664d25a348561d8032fbc9d30333",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/inventory_walk.py",
+      "sha256": "5486f275d9752f1054ca3a458316a42fb676e9c199293c5d76941cacb7863107",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/layer2_v1.py",
+      "sha256": "4552bed0122241db40382e2da5a2bb2123c2a5d0fa2fefd41031b05e06929570",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/placement_skew.py",
+      "sha256": "7bb0fb555d11a90a9573a04c8ac1defc75bf9d417e59066c8056af1dbf3979e3",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/pm_tape_density.py",
+      "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+      "tier": "REFUSE"
+    },
+    {
+      "path": "live/pm_research/policy_bounds_v1.py",
+      "sha256": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/policy_optimizer.py",
+      "sha256": "cdaf25e2ff4352822a7777a23ccee053d52e7d47d755176362ed10b7c23b5833",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/policy_optimizer_cancel_hold_skew.py",
+      "sha256": "aae4f8606de63e5f18fb41d79fd756fc2f8f4917ce07f4012b8a21f049a6e940",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/policy_optimizer_cancel_skew.py",
+      "sha256": "7ed7b72df65d809cfeef467e70849383a4708eb3dada176d81320f4533584c65",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/policy_optimizer_queue_realistic.py",
+      "sha256": "ae13af2931bc33b85b6a73a144261f0ca1d45b4767e985cf94e0cdda0e5c204c",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/skew_bound.py",
+      "sha256": "d7dde689908454a79704d4a85ffbdc5ff8836184767b2332d842c34344ea193e",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/tier1_pipeline.py",
+      "sha256": "dd19c259a82b1ac16365033d40016819b83320277989bd429d78a969abfaf906",
+      "tier": "REPORT"
+    },
+    {
+      "path": "live/pm_research/warning_window.py",
+      "sha256": "72abb33062bb647a02b0a69e6d41ff44e67e428183309c05634e7d8281234068",
+      "tier": "REPORT"
+    }
+  ],
+  "first_of_family": true,
+  "n_files": 33,
+  "protocol": "DA_MIDNIGHT_DEPLOY_PIN_V1",
+  "the_other_half_of_the_rule": "a landing that touches a pinned file RE-PINS in the same round; the non-head census marks a moved digest as DEPLOY_PIN_STALE so the drift is seen in daylight rather than at 00:06Z as a refusal",
+  "unit": [
+    {
+      "exists": true,
+      "path": "/home/yuqing/.config/systemd/user/da-midnight-verify.service",
+      "sha256": "4c804c6ec0abff7f6e846add10f56c93e39dae633ba77dae758021f6569dbeca",
+      "tier": "REFUSE",
+      "why": "the installed unit/timer is what systemd actually runs; an edit here repoints or reconfigures the night without touching the repo at all"
+    },
+    {
+      "exists": true,
+      "path": "/home/yuqing/.config/systemd/user/da-midnight-verify.timer",
+      "sha256": "d78cef4841861466c0a5726282a13f54f6ebc1b70cdc73a853de698f2d901f5c",
+      "tier": "REFUSE",
+      "why": "the installed unit/timer is what systemd actually runs; an edit here repoints or reconfigures the night without touching the repo at all"
+    }
+  ],
+  "version": 1,
+  "what_it_is": "what the unit was DEPLOYED at: the commit, and every file whose bytes its drift guard compares. Written by the deploy act, never edited -- a new deploy is a new version, by the pair",
+  "why_first_of_family": "no prior pin exists; the link is DECLARED rather than left out"
+}
