@@ -67,6 +67,83 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T05:39:58Z (MEM ROUND 247 -- R-750 AND R-751 SWEPT, with every landing between my own
+  9d49219 and the tip, `05fd285`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I OPENED NO
+  SEALED RECEIPT***: four declaration versions, two shell scripts, four Python sources, two selftests I
+  ran myself, directory listings and the register.
+  (1) ***R-745 (4)'s PREMISE WAS STALE, AND I VERIFIED THE WITHDRAWAL AT v5 AND v6 RATHER THAN TAKING
+  THE RULING'S WORD FOR IT.*** v5's `population.day_admission_predicate` gates on "the intra-day
+  bookTicker gap fraction is < 0.05" -- the bar is there. v6's replaces it: "(a) 24 hour-files ... and
+  (b) THE COLLECTOR WAS LIVE for the whole day ... Nothing about how often the book moves enters
+  admission." -- the bar is gone, and v6 adds `what_is_REPORTED_and_NOT_gated`, whose FIRST item is "the
+  intra-day bookTicker gap fraction -- **the quantity v5 gated on**", beside
+  `why_the_v5_leg_was_WRONG_and_how_that_was_established`. So the withdrawal is at **v6**, before R-745
+  was written, and DA was right not to remove leg (b). ***AND A STRUCTURAL FACT THAT MAKES THE STORY
+  CHECKABLE***: v5 and v6 carry NO `admission_legs_*` key at all -- the named legs begin at **v7**
+  (a/b/c) and v8 adds (d). A reader looking for a withdrawn "leg" in v5/v6 finds no legs and must read
+  the predicate instead.
+  (2) ***A SENTENCE AT THE HEAD STILL NAMES THE LEG v6 WITHDREW.***
+  `population.the_admissible_set_is_an_OUTPUT` ends "...the gap-fraction leg is NOT yet evaluated" --
+  **byte-identical in v6, v7 AND v8**, inherited from v5. At the head that sentence names a leg the SAME
+  version's `what_is_REPORTED_and_NOT_gated` says is reported and never gates. ***AND THE SHARPER
+  INSTANCE***: v8's `population.day_admission_predicate` still opens with the literal prefix "v6:" and
+  describes legs (a) and (b) ONLY -- **naming neither leg (c) nor leg (d), the outage predicate this very
+  version adds**. The operative four legs live in `admission_legs_v8`. So the field whose NAME is the
+  question a reader would ask answers it two versions out of date, while the field that answers it
+  correctly is named for a version. Nothing about admission BEHAVIOUR is wrong and R-750's rulings are
+  untouched -- this is what a reader RESOLVES. DA's surface: ROUTED, not edited, not classified.
+  (3) ***THE IMMUTABILITY FIX IS MEASUREMENT-ONLY BY MY OWN EVALUATION, AND ITS PREMISE REPRODUCES ON
+  THIS SHELL.*** R-750 states the property in a parenthesis; I evaluated it on the diff: af11ef9 turns one
+  `echo` into two lines computing NFAM under `set +u`, and the count of changed lines matching
+  `ok\(` / `refuses\(` / `raise` / `assert` / `FALSIFIER` / `exit` is **0**. The premise drives too:
+  `bash -c 'set -u; declare -A H; echo "${#H[@]}"'` prints `H: unbound variable`. ***BUT THE LANDED
+  COMMENT'S VERSION LITERAL IS NOT THIS SHELL***: the comment says "(bash 5.1)", R-750's entry says
+  "bash 5.2", and `bash --version` here is **5.2.21(1)-release**. The ENTRY is right and the CODE COMMENT
+  names a shell this box is not -- a literal that must track a moving thing. Nothing behaves differently;
+  the coordinator's script, ROUTED.
+  (4) ***THE REGISTER LOCK IS AT THE BYTES, WITH ALL FIVE REFUSALS BY NAME*** -- read at the script, not
+  at the falsifier's output: `exec 9>"$LOCKF"`, `flock -w ${LOCK_WAIT_S:-600} 9` (LOCK_TIMEOUT exit 12),
+  `LOCK HELD ... pid $$`, held from before the fetch to after the push; the `--row <rowfile>` mode parsed
+  before the ids regex; HELD REGISTER_DIRTY ("wait, do not withdraw it"), HELD BEHIND_AND_NOT_FF (13),
+  REFUSED ROW_ID_MISMATCH (6), REFUSED DUPLICATE_ID, REFUSED NO_TABLE (15). ***AND THE LOCK'S IDENTITY
+  DOES NOT DEPEND ON THE CALLER'S CWD***: `cd "$ROOT"` at line 20 precedes
+  `LOCKF="$(git rev-parse --git-common-dir)/p003_register.lock"` at line 22, so the path resolves in the
+  SHARED tree from wherever a seat invokes it -- one file, `.git/p003_register.lock`. **My round-245
+  finding is closed in the mechanism, not only in the routing**, and I land this round in the legacy form
+  as instructed, which now takes the lock too.
+  (5) ***BOTH OF DE's SELFTEST STATES REPRODUCED BY ME, NOT RELAYED.*** `de_data_root --selftest` at HEAD:
+  **PASS, 20 checks, rc 0**, its last cell asserting its own count at run time rather than against a
+  literal. `de_multiday_design_declaration --selftest` at HEAD: **rc 1**, 105 lines, 104 PASS, the one
+  failing cell R22 -- "the closure is LISTED BY NAME and the modules actually captured are among them --
+  ['__init__.py', 'da_root.py', 'de_data_root.py', 'de_multiday_design_declaration.py',
+  'de_multiday_gate1_runner.py', 'pm_tape_density.py']...". ***AND ITS FAIL LINE HIDES INSIDE A PASS
+  LINE***: emitted with no leading newline, glued to the end of a 532-character line that BEGINS
+  "  PASS  R11: ...". Measured -- lines matching `^FAIL` **0**; lines matching
+  `^\[de_multiday_design_declaration\] FAIL` **0**; lines containing "] FAIL:" **1**; exit **1**. A reader
+  or a hook scanning line-anchored sees a clean run while the exit code says otherwise. DE 120 already
+  owns the cell; the reporting shape is a second thing to fix while there, and it is DE's call.
+  (6) ***THE THREE NON-HEAD LITERALS EXIST AT THEIR NAMED LINES AND I CLASSIFY NONE OF THEM***, which is
+  what R-750 asks: `da_race_read_verify.py:76` is a module-level constant
+  `PINS_DECL = HERE / "declarations" / "be_race_read_feed_pins_v1.json"`; `be_race_reader.py:2420` is
+  `_fp = _dN / "decl" / "be_race_read_declaration_v1.json"`, built under a CONSTRUCTED directory -- the
+  shape a fixture has rather than a ledger read; `be_race_read_declaration_v3.py:235` reads
+  `… / "be_race_read_feed_pins_v1.json"`. The heads are pins v2 `26b0a67d` and declaration v6 `a240ccc5`.
+  The classification is DA's and BE's; MEM supplies the shapes and no verdict.
+  (7) ***TWO MORE COORDINATOR RULINGS, CARRIED BESIDE R-745's FIVE -- SEVEN NOW STAND OVERRULABLE***:
+  (1) v8 STANDS AS LANDED, leg (d) ADDED and nothing removed, R-745 (4) corrected in band to "the outage
+  predicate is ADDED as leg (d) beside collector liveness; the withdrawn fraction bar is not re-applied",
+  leg (b)'s three ruled controls standing; (2) THE FORWARD WINDOW OPENS ON 2026-09-06 -- enumerating a day
+  in a census without judging it on the gap quantity does not consume it (rule 11 binds choosing on what
+  was SEEN, and nothing on 09-06 was), the strict alternative (start 09-07, read no earlier than 09-21)
+  recorded in the artifact and NOT taken, and the accrual report's projected 2026-09-21 reported beside
+  the 2026-09-20 floor with its own basis. Rulings, not results, and not the USER's.
+  Counts: flags 1,680 -> **1,695**; provenance 1,225 -> **1,240**; tasks 19; **961 CHECKED /
+  274 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-THIRD round unchanged on
+  UNMARKED**. ORPHAN census **0**; the audit exits **1** on **154** missing-artifact findings --
+  ***UNCHANGED from my round start, because ALL FIFTEEN of my own entries resolve to a file or a
+  directory. The first round in which I have added NONE***, which is the practical half of round 245's
+  finding: the count only carries signal if the entries stop feeding it prose. Window trimmed 4 -> 3,
+  **Batch 229** archived. Q-MEM-235 filed through the script.)
   2026-09-07T05:26:10Z (MEM ROUND 246 -- R-748 AND R-749 SWEPT, with every landing after my own
   10dce97, tip `5859da3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I OPENED NO SEALED
   RECEIPT***: three declarations, a scratch shell script, two Python sources, a git blob stream piped to
@@ -288,51 +365,6 @@ updated: >-
   missing-artifact findings, every one of them classified at (1) above. Of my own 29 entries, 25
   resolve and 4 are readings of things that are not files. Window trimmed 4 -> 3, **Batch 227**
   archived. Q-MEM-233 filed through the script.)
-  2026-09-07T02:39:16Z (MEM ROUND 244 -- R-744 SWEPT, tip `a487e22`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) ***THE PEAKS FILE HOLDS SEVENTEEN NOT_RECORDED ROWS, NOT EIGHTEEN.*** R-744 reports 18;
-  measured at the file (`be03c843b3933742`): **21 lines = 1 header + 20 data rows**, and
-  `leaf_peak_status` is **NOT_RECORDED on 17, MEASURED on 3**, summing to 20. So **3 + 18 = 21 counts
-  the header** while **3 + 17 = 20 is the data rows** -- and the check that decides which is right is
-  the file's own header field: **`n_rows` 20, agreeing with the 20 I counted.** A one-off in the
-  entry; the substance is untouched. ROUTED, NOT RULED.
-  (2) **THE THREE RATIOS RECOMPUTE EXACTLY**, each asserted against `leaf_peak_bytes / cap_bytes` to
-  within 5e-4: book 6,217,269,248 -> **0.724**, forward_day 6,358,077,440 -> **0.740**, tape
-  6,334,619,648 -> **0.737**. ***THREE INDEPENDENT ARRIVALS AT THE SAME NUMBERS***: I computed the
-  tape and book fractions at round 238 from R-736's peaks, the forward day's at round 243 from
-  R-743's, and the file now carries all three -- against the same denominator, `cap_bytes`
-  **8,589,934,592**, which is what makes them comparable rather than merely similar.
-  (3) **THE BOOK's LOWER BOUND IS CARRIED AS A FIELD, NOT AS PROSE**: `leaf_peak_is_a_lower_bound` is
-  True for the book and False for the tape and forward day, with `leaf_peak_note` beside it. **A
-  reader comparing the three does not have to know the story to know which number is a bound.** The
-  file covers **four days** (09-03..09-06); every MEASURED row is 09-06 and every earlier day is
-  NOT_RECORDED because the sampler did not exist before BE 87 built it -- **the absences carried as a
-  STATUS rather than as missing rows**, which is what lets a reader tell "no sampler then" from
-  "nothing to report".
-  (4) **`PREVIOUS_READ_RULE` IS ASSIGNED EXACTLY ONCE** -- checked as a property of the source, not
-  taken from the entry: one assignment, at **line 741**, quoted into the rendered block at **571** as
-  `how_the_previous_read_was_identified`. So the sentence has one home and travels by reference.
-  ***BUT R-744's ":350" CITES THE DOCSTRING, NOT THE DEFINITION***: line 350 is inside
-  `not_pooled_clause`'s docstring (the function opens at 321) and says *"stated once at
-  PREVIOUS_READ_RULE **above**"* -- while the constant is at **741, below it**. So the citation points
-  at the mention rather than the statement, and the module's own "above" is inverted. Neither changes
-  behaviour: a module-level name resolves when the function runs, not where it is written. ROUTED,
-  NOT RULED.
-  (5) ***AND THE RULE's OWN TEXT CITES THE ESCAPE MY ROUND-234 CONTROL MISSED.*** Read at the
-  constant rather than in summary, it names both failures that taught it: *"the chain alone cannot
-  tell a correction of this read from the read before it (BE 87 measured that -- v6 corrects v5 and a
-  one-hop reader took v5 for the first read), and the match alone would let a declaration that names
-  no predecessor..."* **The second clause is the escape my own positive control missed at round 234**
-  -- I drove the no-consumed-days cell, read it as the control admitting, and did not ask what
-  happens when a second read simply omits the field; REV 87 asked it the same hour. **And because the
-  constant is quoted BY REFERENCE, the question I failed to ask now travels into every second-read
-  artifact mechanically** -- a miss of mine ended up in the contract rather than in a comment nobody
-  resolves.
-  `de115day06_2` still RUNNING and LOADED at 02:40:30Z -- GO #6 in flight, DE holding for its receipt.
-  Counts: flags 1,625 -> 1,636; provenance 1,170 -> 1,181; tasks 19; **903 CHECKED / 278 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-TWENTIETH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 226 archived. Q-MEM-232 filed through the script.
-  NEXT STATE: a QUIET HOLD until DE's 09-06 receipt lands, then R-745 and DA 116.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -504,6 +536,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 247, R-750 + R-751 swept (and every landing between 9d49219 and 05fd285) ---
+  R_745_4s_PREMISE_WAS_STALE_AND_I_VERIFIED_THE_WITHDRAWAL_AT_v5_AND_v6: V5-GATED-ON-IT-V6-REPORTS-IT
+  v8s_FORWARD_WINDOW_IS_AS_R_750_READS_IT: START-20260906-FLOOR-2026-09-20-MIN-14
+  the_LEG_STRUCTURE_ITSELF_BEGINS_AT_v7_NOT_EARLIER: V5-AND-V6-CARRY-NO-ADMISSION-LEGS-KEY
+  A_SENTENCE_AT_THE_HEAD_NAMES_A_LEG_v6_WITHDREW: GAP-FRACTION-LEG-IS-NOT-YET-EVALUATED-IN-V6-V7-V8
+  and_the_HEADs_day_admission_predicate_IS_TWO_VERSIONS_STALE: V6-PREFIXED-LEGS-A-B-ONLY
+  the_immutability_FIX_IS_MEASUREMENT_ONLY_BY_MY_OWN_EVALUATION: ZERO-CONTROL-LINES-TOUCHED
+  the_FIXs_PREMISE_REPRODUCES_ON_THIS_SHELL: SET-U-EMPTY-ASSOC-ARRAY-UNBOUND
+  but_the_COMMENTs_BASH_VERSION_LITERAL_IS_NOT_THIS_SHELL: COMMENT-5-1-ENTRY-5-2-ACTUAL-5-2-21
+  THE_REGISTER_LOCK_IS_AT_THE_BYTES_WITH_ALL_FIVE_REFUSAL_NAMES: FLOCK-9-600S-DIRTY-FF-MISMATCH-DUP-NOTABLE
+  and_the_LOCKs_IDENTITY_DOES_NOT_DEPEND_ON_THE_CALLERS_CWD: CD-ROOT-PRECEDES-GIT-COMMON-DIR
+  de_data_root_SELFTEST_REPRODUCED_BY_ME: PASS-20-CHECKS-RC-0
+  the_DESIGN_DECLARATION_FAILURE_REPRODUCED_BY_ME_AT_HEAD: RC-1-R22-CLOSURE-CELL-105-LINES
+  AND_ITS_FAIL_LINE_HIDES_INSIDE_A_PASS_LINE: ANCHORED-GREP-ZERO-WHILE-RC-IS-1
+  THE_THREE_NON_HEAD_LITERALS_EXIST_AT_THEIR_NAMED_LINES_AND_I_CLASSIFY_NONE: TWO-PINS-V1-ONE-DECL-V1
+  TWO_MORE_COORDINATOR_RULINGS_CARRIED_BESIDE_R_745s_FIVE: V8-STANDS-AND-THE-WINDOW-OPENS-09-06
   # --- MEM round 246, R-748 + R-749 swept (and every landing after 10dce97) ---
   R_748s_ZERO_0600_VERSIONS_HOLDS_UNDER_A_WIDER_SCOPE_THAN_IT_WAS_MEASURED_AT: THREE-DIRS-AND-REPO-WIDE-ALL-ZERO
   and_the_dir_the_coordinators_find_MISSED_is_where_DA_WROTE_v8: LIVE-MM-RESEARCH-DECLARATIONS-10-FILES-0
@@ -26161,6 +26209,175 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 247, 2026-09-07T05:39:58Z (the clock read by which every measurement below was complete) ---
+  R_745_4s_PREMISE_WAS_STALE_AND_I_VERIFIED_THE_WITHDRAWAL_AT_v5_AND_v6:
+    prov: CHECKED
+    artifact: live/mm_research/declarations
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      R-750 rules that R-745 (4)'s "the inherited bookTicker gap-fraction leg is REPLACED" had a stale
+      premise, because v6 had already withdrawn the fraction bar. I checked that at v5 and v6 rather than
+      taking it: v5's `population.day_admission_predicate` reads "a UTC day is ADMISSIBLE iff 24 hour-files
+      exist for ALL THREE streams ... and the intra-day bookTicker gap fraction is < 0.05" -- the bar is
+      there. v6's reads "(a) 24 hour-files ... and (b) THE COLLECTOR WAS LIVE for the whole day: no gap
+      between consecutive heartbeats exceeding 2x the collector's own MEASURED modal cadence, and no
+      collector restart inside the day. Nothing about how often the book moves enters admission." -- the bar
+      is gone. v6 also adds `what_is_REPORTED_and_NOT_gated`, whose FIRST item is "the intra-day bookTicker
+      gap fraction -- the quantity v5 gated on", and `why_the_v5_leg_was_WRONG_and_how_that_was_established`.
+      So the withdrawal is at v6, before R-745 was written, and DA was right not to remove leg (b).
+  v8s_FORWARD_WINDOW_IS_AS_R_750_READS_IT:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v8.json
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      `the_forward_window_v8` carries start_day 20260906, earliest_read_date 2026-09-20, min_complete_days
+      14, and three fields that say what kind of numbers those are: `earliest_read_date_is_a_FLOOR`,
+      `start_is_COMPUTED_not_typed`, `the_14_day_minimum_RESTARTS_here`, beside
+      `NO_THRESHOLD_CHANGE_AFTER_SEEING`. Every quantity R-750 quotes is at the file with the same value.
+  the_LEG_STRUCTURE_ITSELF_BEGINS_AT_v7_NOT_EARLIER:
+    prov: CHECKED
+    artifact: live/mm_research/declarations
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      a structural fact that makes the leg story checkable rather than a claim: v5 and v6 carry NO
+      `admission_legs_*` key at all (their key sets are identical to each other), v7 introduces
+      `admission_legs_v7` with leg_a_streams / leg_b_collector_liveness / leg_c_rule5_era_purity, and v8
+      adds leg_d_outage_v8 beside them plus WHAT_v8_CHANGES. So "leg (b) collector liveness" exists as a
+      PREDICATE from v6 and as a NAMED LEG from v7 -- which is why a reader looking for a withdrawn "leg"
+      in v5/v6 finds no legs at all and must read the predicate instead.
+  A_SENTENCE_AT_THE_HEAD_NAMES_A_LEG_v6_WITHDREW:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v8.json
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      `population.the_admissible_set_is_an_OUTPUT` ends "...the gap-fraction leg is NOT yet evaluated" --
+      byte-identical in v6, v7 AND v8, inherited from v5. At the head that sentence names a leg the SAME
+      VERSION's `what_is_REPORTED_and_NOT_gated` says is reported and never gates, and which v6 withdrew.
+      Nothing is wrong with the admission behaviour; what is wrong is that a reader resolving "is the
+      gap-fraction leg live?" at the head gets "not yet evaluated" from one field and "reported, not gated"
+      from another. DA's surface: ROUTED, not edited, and not a correction of R-750's ruling, which is about
+      what v8 DOES.
+  and_the_HEADs_day_admission_predicate_IS_TWO_VERSIONS_STALE:
+    prov: CHECKED
+    artifact: live/mm_research/declarations/p002_e2_a_declaration_v8.json
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      the sharper instance of the same class: v8's `population.day_admission_predicate` still opens with the
+      literal prefix "v6:" and describes legs (a) and (b) ONLY -- it names neither leg (c) era purity nor
+      leg (d), the outage predicate this very version ADDS. The operative four legs live in
+      `admission_legs_v8`. So the field whose NAME is the question a reader would ask answers it two versions
+      out of date, while the field that answers it correctly is named for a version. Whether the "v6:" prefix
+      is intended as a change-log layer is DA's to say; I record the shape, and MEM classifies nothing.
+  the_immutability_FIX_IS_MEASUREMENT_ONLY_BY_MY_OWN_EVALUATION:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      R-750 says the fix is "measurement-only (the diff touches no ok( / refuses( / raise / assert line --
+      evaluated)". I evaluated the same predicate on the same diff rather than accepting the parenthesis:
+      af11ef9 changes exactly one `echo` into two lines, computing NFAM under `set +u`; the count of changed
+      lines matching ok\( / refuses\( / raise / assert / FALSIFIER / exit is ZERO. The claim is a predicate
+      and it holds.
+  the_FIXs_PREMISE_REPRODUCES_ON_THIS_SHELL:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      the defect's premise is that an EMPTY associative array is "unbound" under `set -u`. Driven here:
+      `bash -c 'set -u; declare -A H; echo "${#H[@]}"'` prints `bash: line 1: H: unbound variable`. So the
+      failure mode is real on the shell this repo runs, not only in the report of it.
+  but_the_COMMENTs_BASH_VERSION_LITERAL_IS_NOT_THIS_SHELL:
+    prov: CHECKED
+    artifact: scripts/declaration_immutability.sh
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      the landed comment reads "(bash 5.1)"; R-750's entry says "bash 5.2"; `bash --version` on this box is
+      GNU bash 5.2.21(1)-release and $BASH_VERSION agrees. So the ENTRY names the shell correctly and the
+      LANDED CODE COMMENT names a different one -- a version literal that no longer describes what it was
+      measured on, the class the programme calls a literal that must track a moving thing. Nothing behaves
+      differently. The coordinator's script: ROUTED, not edited.
+  THE_REGISTER_LOCK_IS_AT_THE_BYTES_WITH_ALL_FIVE_REFUSAL_NAMES:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      read at the script, not at the falsifier's output: `exec 9>"$LOCKF"` then
+      `flock -w "${LOCK_WAIT_S:-600}" 9` with LOCK_TIMEOUT exit 12, `echo "LOCK HELD ... pid $$"`, held from
+      before the fetch to after the push; the `--row <rowfile>` mode is present and parsed before the ids
+      regex; and all five refusals exist by name -- HELD REGISTER_DIRTY ("wait, do not withdraw it"), HELD
+      BEHIND_AND_NOT_FF (exit 13), REFUSED ROW_ID_MISMATCH (exit 6), REFUSED DUPLICATE_ID, REFUSED NO_TABLE
+      (exit 15). My round 245's finding is closed in the mechanism, not only in the routing.
+  and_the_LOCKs_IDENTITY_DOES_NOT_DEPEND_ON_THE_CALLERS_CWD:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      the ordering is what makes the lock one lock: `cd "$ROOT" || exit 2` at line 20 precedes
+      `LOCKF="$(git rev-parse --git-common-dir)/p003_register.lock"` at line 22, so the path resolves in the
+      SHARED tree whatever directory a seat invokes the script from -- `.git/p003_register.lock`, one file.
+      (`--git-common-dir` would also resolve a worktree to the shared .git, so the two protections agree.)
+      The lock file did not exist at my read, which is only to say no landing has run since be0ef1d; the
+      `exec 9>` creates it. What the lock does NOT close is stated in R-751 and I do not restate it as mine:
+      a register commit pushed from a worktree without the script bypasses it.
+  de_data_root_SELFTEST_REPRODUCED_BY_ME:
+    prov: CHECKED
+    artifact: live/pm_research/de_data_root.py
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      ran it myself at HEAD through the -m launcher with PM_DATA_ROOT set, as R-751 did:
+      `[de_data_root] PASS -- 20 checks`, rc 0, and the last cell asserts its own count at run time ("check
+      count asserted at run time: 20 == 20") rather than against a literal in a report. R-751's "18 -> 20 as
+      stated" holds on the count. A selftest writes nothing, so running another seat's falsifier is a read.
+  the_DESIGN_DECLARATION_FAILURE_REPRODUCED_BY_ME_AT_HEAD:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_design_declaration.py
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      reproduced independently: `--selftest` at HEAD exits 1 with 105 output lines and 104 PASS lines; the
+      one failing cell is R22 and its text reads "FAIL: R22: the closure is LISTED BY NAME and the modules
+      actually captured are among them -- ['__init__.py', 'da_root.py', 'de_data_root.py',
+      'de_multiday_design_declaration.py', 'de_multiday_gate1_runner.py', 'pm_tape_density.py']. The design
+      module is in it, which is the sibling the old one-file capture could not see". Pre-existing per DE's
+      baseline and DE 120 is dispatched on it; I neither diagnose nor touch it.
+  AND_ITS_FAIL_LINE_HIDES_INSIDE_A_PASS_LINE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_design_declaration.py
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      the failure is emitted WITHOUT a leading newline, so it is glued to the end of line 82, a 532-character
+      line that BEGINS "  PASS  R11: ...". Measured: lines matching ^FAIL -> 0; lines matching
+      ^\[de_multiday_design_declaration\] FAIL -> 0; lines CONTAINING "] FAIL:" -> 1; and the process exits 1.
+      So a reader (or a hook) scanning line-anchored for a failure sees a clean run while the exit code says
+      otherwise -- the verdict is in the exit code and in a substring, not where a reader looks. Named for DE
+      120, which already owns the cell; the reporting shape is a second thing to fix while there, and it is
+      DE's call, not mine.
+  THE_THREE_NON_HEAD_LITERALS_EXIST_AT_THEIR_NAMED_LINES_AND_I_CLASSIFY_NONE:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      R-750 routes three literals to their owners to be classified as readers-of-history (legitimate) or head
+      consumers (stale), never by the filename alone. All three exist at the named lines and I record only
+      their SHAPE: da_race_read_verify.py:76 is a module-level constant
+      `PINS_DECL = HERE / "declarations" / "be_race_read_feed_pins_v1.json"`; be_race_reader.py:2420 is
+      `_fp = _dN / "decl" / "be_race_read_declaration_v1.json"` -- built under a constructed directory, which
+      is the shape a fixture has rather than a ledger read; be_race_read_declaration_v3.py:235 reads
+      `... / "be_race_read_feed_pins_v1.json"`. The head is pins v2 (26b0a67d) and declaration v6 (a240ccc5).
+      The classification is DA's and BE's; MEM supplies the shapes and no verdict.
+  TWO_MORE_COORDINATOR_RULINGS_CARRIED_BESIDE_R_745s_FIVE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T05:39:58Z
+    said: >-
+      R-750's two, each disclosed for overrule by one line and carried here as state, not as results:
+      (1) v8 STANDS AS LANDED -- leg (d) is ADDED and nothing removed, R-745 (4) corrected in band to "the
+      outage predicate is ADDED as leg (d) beside collector liveness; the withdrawn fraction bar is not
+      re-applied", leg (b)'s three ruled controls standing; (2) THE FORWARD WINDOW OPENS ON 2026-09-06 --
+      enumerating a day in a census without judging it on the gap quantity does not consume it (rule 11 binds
+      choosing on what was SEEN, and nothing on 09-06 was), with the strict alternative (start 09-07, read no
+      earlier than 09-21) recorded in the artifact and NOT taken, and the accrual report's projected
+      2026-09-21 reported beside the 2026-09-20 floor with its own basis. Seven coordinator rulings now stand
+      overrulable: R-745's five and these two.
   # --- MEM round 246, 2026-09-07T05:26:10Z (the clock read by which every measurement below was complete) ---
   R_748s_ZERO_0600_VERSIONS_HOLDS_UNDER_A_WIDER_SCOPE_THAN_IT_WAS_MEASURED_AT:
     prov: CHECKED

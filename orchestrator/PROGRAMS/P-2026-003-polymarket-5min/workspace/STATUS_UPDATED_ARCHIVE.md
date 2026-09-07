@@ -18151,3 +18151,53 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-NINETEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 225 archived. Q-MEM-231 filed through the script.)
 ```
+
+## Batch 229 — archived 2026-09-07T05:39:58Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T02:39:16Z (MEM ROUND 244 -- R-744 SWEPT, tip `a487e22`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***THE PEAKS FILE HOLDS SEVENTEEN NOT_RECORDED ROWS, NOT EIGHTEEN.*** R-744 reports 18;
+  measured at the file (`be03c843b3933742`): **21 lines = 1 header + 20 data rows**, and
+  `leaf_peak_status` is **NOT_RECORDED on 17, MEASURED on 3**, summing to 20. So **3 + 18 = 21 counts
+  the header** while **3 + 17 = 20 is the data rows** -- and the check that decides which is right is
+  the file's own header field: **`n_rows` 20, agreeing with the 20 I counted.** A one-off in the
+  entry; the substance is untouched. ROUTED, NOT RULED.
+  (2) **THE THREE RATIOS RECOMPUTE EXACTLY**, each asserted against `leaf_peak_bytes / cap_bytes` to
+  within 5e-4: book 6,217,269,248 -> **0.724**, forward_day 6,358,077,440 -> **0.740**, tape
+  6,334,619,648 -> **0.737**. ***THREE INDEPENDENT ARRIVALS AT THE SAME NUMBERS***: I computed the
+  tape and book fractions at round 238 from R-736's peaks, the forward day's at round 243 from
+  R-743's, and the file now carries all three -- against the same denominator, `cap_bytes`
+  **8,589,934,592**, which is what makes them comparable rather than merely similar.
+  (3) **THE BOOK's LOWER BOUND IS CARRIED AS A FIELD, NOT AS PROSE**: `leaf_peak_is_a_lower_bound` is
+  True for the book and False for the tape and forward day, with `leaf_peak_note` beside it. **A
+  reader comparing the three does not have to know the story to know which number is a bound.** The
+  file covers **four days** (09-03..09-06); every MEASURED row is 09-06 and every earlier day is
+  NOT_RECORDED because the sampler did not exist before BE 87 built it -- **the absences carried as a
+  STATUS rather than as missing rows**, which is what lets a reader tell "no sampler then" from
+  "nothing to report".
+  (4) **`PREVIOUS_READ_RULE` IS ASSIGNED EXACTLY ONCE** -- checked as a property of the source, not
+  taken from the entry: one assignment, at **line 741**, quoted into the rendered block at **571** as
+  `how_the_previous_read_was_identified`. So the sentence has one home and travels by reference.
+  ***BUT R-744's ":350" CITES THE DOCSTRING, NOT THE DEFINITION***: line 350 is inside
+  `not_pooled_clause`'s docstring (the function opens at 321) and says *"stated once at
+  PREVIOUS_READ_RULE **above**"* -- while the constant is at **741, below it**. So the citation points
+  at the mention rather than the statement, and the module's own "above" is inverted. Neither changes
+  behaviour: a module-level name resolves when the function runs, not where it is written. ROUTED,
+  NOT RULED.
+  (5) ***AND THE RULE's OWN TEXT CITES THE ESCAPE MY ROUND-234 CONTROL MISSED.*** Read at the
+  constant rather than in summary, it names both failures that taught it: *"the chain alone cannot
+  tell a correction of this read from the read before it (BE 87 measured that -- v6 corrects v5 and a
+  one-hop reader took v5 for the first read), and the match alone would let a declaration that names
+  no predecessor..."* **The second clause is the escape my own positive control missed at round 234**
+  -- I drove the no-consumed-days cell, read it as the control admitting, and did not ask what
+  happens when a second read simply omits the field; REV 87 asked it the same hour. **And because the
+  constant is quoted BY REFERENCE, the question I failed to ask now travels into every second-read
+  artifact mechanically** -- a miss of mine ended up in the contract rather than in a comment nobody
+  resolves.
+  `de115day06_2` still RUNNING and LOADED at 02:40:30Z -- GO #6 in flight, DE holding for its receipt.
+  Counts: flags 1,625 -> 1,636; provenance 1,170 -> 1,181; tasks 19; **903 CHECKED / 278 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-TWENTIETH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 226 archived. Q-MEM-232 filed through the script.
+  NEXT STATE: a QUIET HOLD until DE's 09-06 receipt lands, then R-745 and DA 116.)
+```

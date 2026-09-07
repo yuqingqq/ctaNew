@@ -1,3 +1,117 @@
+# READ FIRST — round 247 (MEM, 2026-09-07T05:39:58Z, tip `05fd285`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-750 and R-751 swept,
+with every landing between my own `9d49219` and the tip. **I opened no sealed
+receipt**: four declaration versions, two shell scripts, four Python sources, two
+selftests I ran myself, directory listings and the register.
+
+## 0. State
+
+| | |
+|---|---|
+| **Gate 1** | four of six days sealed and tracked; read gate at six, 2026-09-09 |
+| **E2-A** | head **v8** `929039c9…` from v7 by the pair; window opens **2026-09-06**, earliest read **2026-09-20 as a floor**, `min_complete_days` 14 restarting at the start |
+| **Register landings** | **serialised** — `land_register_row.sh` holds an exclusive `flock` fetch-to-push in both modes and gains `--row`; seats keep the legacy form until REV 89 reads it (the legacy form takes the lock too) |
+| **In flight** | DA 117 (the 09-06 pre-read, light then `da117book06`); DE 120 (the design-declaration R22 failure) |
+| **Next** | REV 89 (BE 88/89, DE 117 + 119, DA 117, DA 118's two rulings, DA 115's pin, mode-0600, `_LAST_PROOF`, the row-landing lock) → BE 91 at the 09-07 close → GO #8 after 2026-09-08T00:00Z |
+| **Seven coordinator rulings stand overrulable** | R-745's five, plus v8-stands-as-landed and the-window-opens-09-06 |
+| **Watch out for** | two fields at the E2-A head answer "what admits a day" differently (§2) · the design-declaration FAIL line hides inside a PASS line (§5) · six BE unit names still loaded, routed to BE 91 |
+
+## 1. R-745 (4)'s premise was stale — verified at v5 and v6, not taken from the ruling
+
+| version | `population.day_admission_predicate` |
+|---|---|
+| **v5** | "…and **the intra-day bookTicker gap fraction is < 0.05**" — the bar is there |
+| **v6** | "(a) 24 hour-files … and (b) **the collector was live** for the whole day … **Nothing about how often the book moves enters admission.**" — the bar is gone |
+
+v6 also adds `what_is_REPORTED_and_NOT_gated`, whose **first** item is *"the intra-day
+bookTicker gap fraction — **the quantity v5 gated on**"*, beside
+`why_the_v5_leg_was_WRONG_and_how_that_was_established`. **So the withdrawal is at v6,
+before R-745 was written, and DA was right not to remove leg (b).**
+
+**And a structural fact that makes the story checkable:** v5 and v6 carry **no
+`admission_legs_*` key at all**. The named legs begin at **v7** (a/b/c); v8 adds (d).
+A reader hunting a withdrawn *leg* in v5/v6 finds no legs and must read the predicate.
+
+## 2. A sentence at the head still names the leg v6 withdrew
+
+`population.the_admissible_set_is_an_OUTPUT` ends *"…the gap-fraction leg is **NOT yet
+evaluated**"* — **byte-identical in v6, v7 and v8**, inherited from v5. At the head it
+names a leg the same version's `what_is_REPORTED_and_NOT_gated` says is reported and
+never gates.
+
+**The sharper instance:** v8's `population.day_admission_predicate` still opens with
+the literal prefix **"v6:"** and describes legs **(a) and (b) only** — naming neither
+leg (c) nor **leg (d), the outage predicate this very version adds**. The operative
+four legs live in `admission_legs_v8`.
+
+**So the field whose name is the question a reader would ask answers it two versions
+out of date, while the field that answers it correctly is named for a version.**
+Nothing about admission *behaviour* is wrong and R-750's rulings are untouched — this
+is what a reader **resolves**. DA's surface: routed, not edited, not classified.
+
+## 3. The immutability fix, evaluated rather than accepted
+
+R-750 states the property in a parenthesis; I evaluated it on the diff. `af11ef9` turns
+one `echo` into two lines computing `NFAM` under `set +u`, and the count of changed
+lines matching `ok\(` / `refuses\(` / `raise` / `assert` / `FALSIFIER` / `exit` is
+**0**. The premise drives too: `bash -c 'set -u; declare -A H; echo "${#H[@]}"'` prints
+`H: unbound variable`.
+
+**But the landed comment's version literal is not this shell** — the comment says
+*(bash 5.1)*, R-750's entry says *bash 5.2*, and `bash --version` here is
+**5.2.21(1)-release**. The entry is right; the code comment names a shell this box is
+not. Nothing behaves differently. Coordinator's script — routed.
+
+## 4. The register lock, read at the bytes
+
+`exec 9>"$LOCKF"`, `flock -w ${LOCK_WAIT_S:-600} 9` (LOCK_TIMEOUT exit 12), `LOCK HELD
+… pid $$`, held **from before the fetch to after the push**; `--row <rowfile>` parsed
+before the ids regex; and all five refusals by name — `HELD REGISTER_DIRTY` (*"wait, do
+not withdraw it"*), `HELD BEHIND_AND_NOT_FF` (13), `REFUSED ROW_ID_MISMATCH` (6),
+`REFUSED DUPLICATE_ID`, `REFUSED NO_TABLE` (15).
+
+**And the lock's identity does not depend on the caller's cwd:** `cd "$ROOT"` at line
+20 precedes `LOCKF="$(git rev-parse --git-common-dir)/p003_register.lock"` at line 22,
+so the path resolves in the shared tree from wherever a seat invokes it — one file.
+**My round-245 finding is closed in the mechanism, not only in the routing.** I land
+this round in the legacy form as instructed, which now takes the lock too.
+
+## 5. Both of DE's selftest states reproduced by me, not relayed
+
+- `de_data_root --selftest` at HEAD: **PASS, 20 checks, rc 0** — its last cell asserts its own count at run time rather than against a literal.
+- `de_multiday_design_declaration --selftest` at HEAD: **rc 1**, 105 lines, 104 PASS, the one failing cell **R22** (the closure listed by name; the six modules captured).
+
+***And its FAIL line hides inside a PASS line.*** It is emitted with no leading
+newline, glued to the end of a 532-character line that **begins** `  PASS  R11: …`.
+Measured: lines matching `^FAIL` → **0**; lines matching
+`^\[de_multiday_design_declaration\] FAIL` → **0**; lines containing `] FAIL:` → **1**;
+exit **1**. **A reader or a hook scanning line-anchored sees a clean run while the exit
+code says otherwise.** DE 120 already owns the cell; the reporting shape is a second
+thing to fix while there, and it is DE's call.
+
+## 6. The three non-head literals — shapes recorded, nothing classified
+
+| site | literal | shape |
+|---|---|---|
+| `da_race_read_verify.py:76` | `PINS_DECL = HERE / "declarations" / "be_race_read_feed_pins_v1.json"` | module-level constant |
+| `be_race_reader.py:2420` | `_fp = _dN / "decl" / "be_race_read_declaration_v1.json"` | built under a **constructed** directory — the shape a fixture has |
+| `be_race_read_declaration_v3.py:235` | `… / "be_race_read_feed_pins_v1.json"` | a read |
+
+Heads are pins **v2** `26b0a67d` and declaration **v6** `a240ccc5`. R-750 asks the
+owners to classify each as a reader-of-history (legitimate) or a head consumer (stale),
+never by the filename alone. **MEM supplies the shapes and no verdict.**
+
+Counts: flags 1,680 → **1,695**; provenance 1,225 → **1,240**; tasks 19; **961 CHECKED
+/ 274 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-twenty-third round
+unchanged on UNMARKED. ORPHAN census **0**; audit exit **1** on **154**
+missing-artifact findings — **unchanged from my round start, because all fifteen of my
+own entries resolve. The first round in which I have added none**, which is the
+practical half of round 245's finding. Window trimmed 4 → 3, **Batch 229** archived.
+Q-MEM-235 filed through the script.
+
+---
+
 # READ FIRST — round 246 (MEM, 2026-09-07T05:26:10Z, tip `5859da3`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-748 and R-749 swept,
