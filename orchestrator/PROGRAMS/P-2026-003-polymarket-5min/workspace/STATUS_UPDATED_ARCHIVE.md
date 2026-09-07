@@ -19076,3 +19076,72 @@ generation and the window went 4 → 3. Nothing rewritten.
   plus the TWO the withdrawal created) plus ONE of mine, the running unit. Window trimmed 4 -> 3, **Batch
   236** archived. Q-MEM-242 filed through the script.)
 ```
+
+## Batch 240 — archived 2026-09-07T09:01:00Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T08:27:23Z (MEM ROUND 255 -- R-768 AND R-769 SWEPT, with every landing between my own 0cf7579
+  and the tip `452e115`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY
+  KIND.
+  (1) ***AN ENTRY LANDED INSIDE MY LAST ROUND'S WINDOW, AND THE BOUND IS WHAT KEPT THE ROW TRUE.*** R-768
+  landed at `527d454`, committed **08:19:30Z** -- sixteen seconds after my round-254 row's timestamp and
+  39 seconds before my state commit, and `merge-base --is-ancestor` confirms it precedes my own `0cf7579`.
+  My tip read for that round was 08:14:41Z and I did not re-read before committing. **The row is still
+  exactly true**, because it names its bound: *"every landing between my own ad99d53 and 356ffc9"*, closing
+  with *"MEM sweeps R-768 onward"*. At round 251 the same class bit and a cross-check caught it; **here
+  nothing caught it and nothing needed to** -- the sweep was reported as a CLOSED INTERVAL, not as
+  "everything up to now". **A bounded claim survives a moving tree; an unbounded one does not**, and that is
+  cheaper than re-reading.
+  (2) ***AFTER FOUR STOPS AND FOUR RULINGS, NONE OF DE 124 IS LANDED.*** Design head still **v25**
+  `b95ac59cf46d941d`, 24 versions, orphans empty; `de_multiday_gate1_params_v18.json` **does not exist** in
+  the ledger's declarations and the params head is still **v17**. Params v18 `cfc2b06f`, the retired seal,
+  the decision ledger, the narrowed guard and the four permissions are green in wt-de2 and **unlanded** --
+  the state files must not read as though any of it is in force.
+  (3) ***R-769's FINDING HOLDS AT THE ARTIFACT, AND R7 SAYS OF ITSELF THAT IT IS A MEASUREMENT.***
+  `R7_the_day_set` carries `declared_ledger_root`, `ledger_root_read`, `ledger_root_resolved`,
+  `root_verified_at_run_time` **true**, `ledger_rows_as_read` and `root_resolution` with its branch. **A
+  block that records which root it read and that it verified it at run time is a measurement by its own
+  text.** Its arithmetic is internally consistent: `n_verdict_files_read` **12** equals the **12** entries
+  of `ledger_rows_as_read` (2026-08-26..09-06), and `qualifying_on_quality` holds **6** days under four
+  named conjuncts plus quality. ***AND THE 12 -> 13 REPRODUCES ONCE THE POPULATION IS THE CLAIM'S***: the
+  glob `da_dayverdict_*.json` returns **22** files, of which only **13** are plain per-day files
+  (20260826..20260907) -- the other nine are the preserved `superseded_*` copies. **My first count was the
+  glob again**, the sixth instance of a count over a population the claim never named -- and the difference
+  this round is that **I reconciled it instead of routing it**.
+  (4) ***THE ROOT FACT THE COORDINATOR'S PROBE GOT WRONG IS A BOOLEAN IN THAT SAME BLOCK.***
+  `R7_the_day_set.root_resolution.PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir` = **TRUE**, beside
+  `why_the_root_is_recorded`, which explains that reading the committed shell instead of the R-397 symlink
+  "silently produced a 3-da[y]" answer. **The knowledge was already written, as a boolean, in an artifact
+  the probe's own subject pins.** Recorded as an observation about where knowledge lives -- the criticism
+  itself is already in band at R-765 -- because **a rule in a runbook is found by someone who reads
+  runbooks; a boolean in the declaration is found by the code.**
+  (5) ***FOUR STOPS IN ONE BATCH, EACH A CHECK REFUSING TO REDEFINE A RECORDED FACT, AND NO CHECK LOOSENED
+  TO PASS***: the deepcopy-inherited merge declarations (R-766), the frozen-block rule against the merge
+  guard (R-767), the permitted-additions list against the USER's ruling block and the params pin (R-768),
+  and the derived blocks against the byte census (R-769). ***AND TWO COORDINATOR RULINGS WERE INFEASIBLE
+  UNDER THE RULES AS THEY STOOD*** -- R-767's (C) and "carry every frozen block unchanged" -- both recorded
+  against the coordinator in its own voice. Carried because **a ruling that cannot be satisfied looks
+  exactly like a seat that will not comply until someone drives it**, and DE drove it four times rather than
+  complying or arguing.
+  (6) ***THE CENSUS HAD BEEN COMPARING MEASUREMENTS AS IF THEY WERE DECLARATIONS***, so the design family
+  was UNBUMPABLE from the moment 09-06's verdict landed at 02:00Z -- and nothing said so, because nothing
+  tried to bump it until the USER's ruling forced one. **A latent refusal is invisible until something needs
+  the path** -- rule 17's shape from the other side. The line is now set by RE-DERIVATION, not bytes: R7's
+  day set monotone and equal to the ledger's verdicts at the recorded as-of (`DERIVED_DAY_SET_SHRANK`,
+  `DERIVED_DAY_SET_NOT_IN_LEDGER`), R15's count equal to the battery's run (`DERIVED_BATTERY_COUNT_NOT_RUN`),
+  R22's closure equal to the captured one (`DERIVED_CLOSURE_NOT_CAPTURED`), every other block frozen.
+  **Three named refusals rather than one permission is what keeps it from being a hole.**
+  (7) ***BE 96 LANDED THE PRODUCER HALF AND THE CONSUMER HALF IS UNLANDED***: position state at the fill on
+  both the arm and the 0-cancel baseline (`c707eb8` / `83d62e6`, +192/-12 across three modules, with a
+  refusal named `FILL_RECORD_HAS_NO_POSITION_STATE`) -- **and `ABSENT_UNTIL_BE_96` still appears in two of
+  those modules at the tip**, while DE's decision ledger, the consumer that would carry `inventory_leg`, is
+  unlanded. I record the split rather than reporting BE 96 as closing the item.
+  (8) ***E1 IS STILL RUNNING AT FIFTY-SIX MINUTES***: loaded / active / RUNNING at 08:25:13Z with
+  `ExecMainExitTimestamp` **empty** -- a second reading that says running, beside `SubState` -- MemoryPeak
+  still 2,715,901,952, expected exit ≈ 08:55Z. **REV 93 gates GO E2 and GO #8** once DE 124 lands.
+  Counts: flags 1,802 -> **1,817**; provenance 1,347 -> **1,362**; tasks 19; **1,081 CHECKED /
+  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FIRST round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **165** missing-artifact findings, 164 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 237** archived. Q-MEM-243 filed through the script.)
+```

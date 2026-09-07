@@ -67,6 +67,72 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:01:00Z (MEM ROUND 258 -- R-772 SWEPT, with every landing between my own c12ea02 and the
+  tip `39ebaa8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I QUOTED NO ECONOMIC VALUE***:
+  the state files carry the early read's PATH, DIGEST, SIZE, STRUCTURE, STATUSES and CAVEATS, and not one
+  number from it -- DA 125 reads it with the independent reader and prints the table, and MEM's copy of the
+  numbers would be a second path to the user that no review covers.
+  (1) ***THE FIRST EARLY-READ ARTIFACT EXISTS AND IS TRACKED.*** `p003_de_early_read_day_20260903__
+  20260907T085436Z.json`, sha256 **5c8a58f5**01d3b61b, **44,037 B**, mtime 08:54:36Z, `ls-files` 1, landed
+  by `def47a2` with DE's capture record beside it; the unit is `not-found` and the lock is free. **After
+  seven rounds of "the user has no early-read numbers yet", the first day exists** -- and it is 09-03, the
+  day sealed under the eight-name scope, run under the OLD code with no decision ledger, exactly as R-765
+  disclosed.
+  (2) ***ITS STRUCTURE MATCHES THE DECLARATION KEY FOR KEY.*** `day_run.per_day_sealed_artifacts` is a list
+  of TWO (one per arm) and BOTH read `sealed` **FALSE** with `seal_status` "UNSEALED -- 4 of 4 days complete
+  under the bar this call was given" -- a COMPUTED string carrying its own counts, the shape REV 90's NO-GO
+  demanded. Each arm's `economic` block carries exactly six keys -- **D_E0, Z, null_draws_summary,
+  null_mean, null_sd, p_location** (KEYS named, contents unread) -- beside `n_fills_arm`, `n_fills_baseline`
+  and `n_cancels_issued`. ***AND THE FIVE UNCOMPUTED FIELDS ARE NAMED IN THE ARTIFACT***:
+  `economics_field_availability.not_computed_by_this_path` = D_E_MINUS_R, fills_leg, inventory_leg,
+  p_two_sided, rho_adverse_over_spread -- **the same five R-754's dispatch asked for and R-757 ruled would
+  appear as named statuses**. I have carried that sentence since round 249 about an artifact that did not
+  exist; it is now true of one that does.
+  (3) ***THE CAVEATS TRAVEL INSIDE THE ARTIFACT***: `G` 4, `interval` "NONE_BELOW_FIVE_DAYS",
+  `is_a_validation` **false**, `verdict_class` "EXPLORATORY", `days_consumed` the four days, and
+  `seal_standing.line` "UNSEALED under the USER's ruling R-754: 4 of 6 ruled days, read early on the user's
+  instruction. NOT all days complete, NOT a validation, no interval". **A reader who has the file and none
+  of the register still cannot mistake it for a validation.**
+  (4) ***AND THE TWO STALE LITERALS ARE THERE, BOTH FALSE FOR THIS ARTIFACT***: `day_run.status` =
+  "DAY_RUN_SEALED" and `day_run.what_this_is_not.the_economics_are_SEALED` = TRUE, sitting beside two
+  arm-day blocks that read unsealed with the economics present. Rule 10's class one level down -- a
+  hardcoded conclusion beside a computed one that contradicts it. E1 executed the code REV 91 cleared,
+  BEFORE DE 124's retirement landed, so the literals are the old path's; routed to DE 126 phase 2 and REV 94
+  part B. ***THE READING RULE FOR THIS ARTIFACT, RECORDED SO NO LATER READER GETS IT WRONG: read
+  `per_day_sealed_artifacts[*].sealed` and `seal_standing`, never `day_run.status`.***
+  (5) ***FOUR STAMPS FOR ONE EVENT, AND ONLY ONE IS THE UNIT'S FIELD.*** Measured at their sources: the
+  unit's own `ExecMainExitTimestamp` **08:54:36Z** (my read at 08:55:29Z while it was still loaded); DE's
+  five-fields-at-exit block `as_of` **08:54:44Z**, already reading SubState exited; the coordinator's watch
+  "TERMINAL **08:54:54Z**"; and DE's capture record `main_process_exited_at` **08:55:00Z**. ***DE's RECORD
+  DATES THE EXIT 16 SECONDS AFTER ITS OWN OBSERVATION OF IT***, and `runtime_s` 5163 inherits the later
+  stamp exactly (07:28:57Z → 08:55:00Z), against 5,139 s from the unit's field. Nothing turns on 24 seconds
+  and the run is inside its 86.3-min sizing either way; the SHAPE is CLAUDE.md rule 3 inside a capture
+  record built for rule 20 -- **routed to DE, not ruled**. ***THE ONE TO USE HAS THREE INDEPENDENT
+  WITNESSES***: the unit's field, the artifact's mtime and the artifact's own filename stamp all read
+  08:54:36Z, and none of the three is a poller's observation. Fourth instance of the class this week (41 s
+  at E1's launch, 3 s at GO #7, 18 s here): **every time a time appears twice, one of them is a field and
+  the other is when someone looked.**
+  (6) ***THE UNBLOCK LANDED BETWEEN R-772'S WRITING AND MY READ.*** params **v19** `dd8db7de` and design
+  **v27** `3bcdf3c2`, both tracked; heads v19 (19 versions) and v27 (26 versions), orphans empty in both;
+  `PARAMS_REL` → v19. At round 257 I recorded both ABSENT and the block standing; **both halves are now
+  closed**. ***AND THE CASCADE CITATION IS WIDENED***: v19 carries `be_cascade.modules`, a list of **TEN**,
+  with "EVERY module here, not just the entry point", the original single `be_module` KEPT beside it and a
+  thirteen-key `be_module_repoint` block recording the move. The guard that would have been silent on
+  `harmful_stateful_policy.py` (round 257's finding) now covers the cascade, **superseded in place by
+  addition rather than removal**.
+  (7) ***DE's CAPTURE RECORD CARRIES TWO FIVE-FIELD READINGS, NOT ONE*** -- at launch (07:29:07Z, running,
+  peak 997,609,472) and at exit while loaded (08:54:44Z, exited, peak 2,715,901,952) -- plus the leaf peak
+  sampled in process WITH ITS METHOD ("cgroup memory.peak sampled every 20 s while alive; the cgroup is gone
+  at exit"), the exit resolved through the map by pair, the journal by both invocation fields, REV 91's
+  cleared digests, and `no_economic_value_is_quoted_here` = "DA's reader prints the table". More than rule
+  20 asks. ***AND THE UNIT IS `not-found` NOW***, so a reading taken today would be VOID by rule 20: the
+  terminal record exists only because it was read before the name was freed.
+  Counts: flags 1,847 -> **1,862**; provenance 1,392 -> **1,407**; tasks 19; **1,122 CHECKED /
+  280 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FOURTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **168** missing-artifact findings, 167 at my round start plus ONE of mine, the unit
+  reading -- and that unit is now `not-found`, so it will never resolve, correctly. Window trimmed 4 -> 3,
+  **Batch 240** archived. Q-MEM-246 filed through the script.)
   2026-09-07T08:51:45Z (MEM ROUND 257 -- R-771 SWEPT, with every landing between my own 3918ae5 and the
   tip `7245f33`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
   (1) ***THE NO-GO VERIFIES AT BOTH ENDS, AND I MEASURED BOTH RATHER THAN EITHER.*** params v18 carries
@@ -184,70 +250,6 @@ updated: >-
   fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
   audit exits **1** on **166** missing-artifact findings, 165 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 238** archived. Q-MEM-244 filed through the script.)
-  2026-09-07T08:27:23Z (MEM ROUND 255 -- R-768 AND R-769 SWEPT, with every landing between my own 0cf7579
-  and the tip `452e115`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY
-  KIND.
-  (1) ***AN ENTRY LANDED INSIDE MY LAST ROUND'S WINDOW, AND THE BOUND IS WHAT KEPT THE ROW TRUE.*** R-768
-  landed at `527d454`, committed **08:19:30Z** -- sixteen seconds after my round-254 row's timestamp and
-  39 seconds before my state commit, and `merge-base --is-ancestor` confirms it precedes my own `0cf7579`.
-  My tip read for that round was 08:14:41Z and I did not re-read before committing. **The row is still
-  exactly true**, because it names its bound: *"every landing between my own ad99d53 and 356ffc9"*, closing
-  with *"MEM sweeps R-768 onward"*. At round 251 the same class bit and a cross-check caught it; **here
-  nothing caught it and nothing needed to** -- the sweep was reported as a CLOSED INTERVAL, not as
-  "everything up to now". **A bounded claim survives a moving tree; an unbounded one does not**, and that is
-  cheaper than re-reading.
-  (2) ***AFTER FOUR STOPS AND FOUR RULINGS, NONE OF DE 124 IS LANDED.*** Design head still **v25**
-  `b95ac59cf46d941d`, 24 versions, orphans empty; `de_multiday_gate1_params_v18.json` **does not exist** in
-  the ledger's declarations and the params head is still **v17**. Params v18 `cfc2b06f`, the retired seal,
-  the decision ledger, the narrowed guard and the four permissions are green in wt-de2 and **unlanded** --
-  the state files must not read as though any of it is in force.
-  (3) ***R-769's FINDING HOLDS AT THE ARTIFACT, AND R7 SAYS OF ITSELF THAT IT IS A MEASUREMENT.***
-  `R7_the_day_set` carries `declared_ledger_root`, `ledger_root_read`, `ledger_root_resolved`,
-  `root_verified_at_run_time` **true**, `ledger_rows_as_read` and `root_resolution` with its branch. **A
-  block that records which root it read and that it verified it at run time is a measurement by its own
-  text.** Its arithmetic is internally consistent: `n_verdict_files_read` **12** equals the **12** entries
-  of `ledger_rows_as_read` (2026-08-26..09-06), and `qualifying_on_quality` holds **6** days under four
-  named conjuncts plus quality. ***AND THE 12 -> 13 REPRODUCES ONCE THE POPULATION IS THE CLAIM'S***: the
-  glob `da_dayverdict_*.json` returns **22** files, of which only **13** are plain per-day files
-  (20260826..20260907) -- the other nine are the preserved `superseded_*` copies. **My first count was the
-  glob again**, the sixth instance of a count over a population the claim never named -- and the difference
-  this round is that **I reconciled it instead of routing it**.
-  (4) ***THE ROOT FACT THE COORDINATOR'S PROBE GOT WRONG IS A BOOLEAN IN THAT SAME BLOCK.***
-  `R7_the_day_set.root_resolution.PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir` = **TRUE**, beside
-  `why_the_root_is_recorded`, which explains that reading the committed shell instead of the R-397 symlink
-  "silently produced a 3-da[y]" answer. **The knowledge was already written, as a boolean, in an artifact
-  the probe's own subject pins.** Recorded as an observation about where knowledge lives -- the criticism
-  itself is already in band at R-765 -- because **a rule in a runbook is found by someone who reads
-  runbooks; a boolean in the declaration is found by the code.**
-  (5) ***FOUR STOPS IN ONE BATCH, EACH A CHECK REFUSING TO REDEFINE A RECORDED FACT, AND NO CHECK LOOSENED
-  TO PASS***: the deepcopy-inherited merge declarations (R-766), the frozen-block rule against the merge
-  guard (R-767), the permitted-additions list against the USER's ruling block and the params pin (R-768),
-  and the derived blocks against the byte census (R-769). ***AND TWO COORDINATOR RULINGS WERE INFEASIBLE
-  UNDER THE RULES AS THEY STOOD*** -- R-767's (C) and "carry every frozen block unchanged" -- both recorded
-  against the coordinator in its own voice. Carried because **a ruling that cannot be satisfied looks
-  exactly like a seat that will not comply until someone drives it**, and DE drove it four times rather than
-  complying or arguing.
-  (6) ***THE CENSUS HAD BEEN COMPARING MEASUREMENTS AS IF THEY WERE DECLARATIONS***, so the design family
-  was UNBUMPABLE from the moment 09-06's verdict landed at 02:00Z -- and nothing said so, because nothing
-  tried to bump it until the USER's ruling forced one. **A latent refusal is invisible until something needs
-  the path** -- rule 17's shape from the other side. The line is now set by RE-DERIVATION, not bytes: R7's
-  day set monotone and equal to the ledger's verdicts at the recorded as-of (`DERIVED_DAY_SET_SHRANK`,
-  `DERIVED_DAY_SET_NOT_IN_LEDGER`), R15's count equal to the battery's run (`DERIVED_BATTERY_COUNT_NOT_RUN`),
-  R22's closure equal to the captured one (`DERIVED_CLOSURE_NOT_CAPTURED`), every other block frozen.
-  **Three named refusals rather than one permission is what keeps it from being a hole.**
-  (7) ***BE 96 LANDED THE PRODUCER HALF AND THE CONSUMER HALF IS UNLANDED***: position state at the fill on
-  both the arm and the 0-cancel baseline (`c707eb8` / `83d62e6`, +192/-12 across three modules, with a
-  refusal named `FILL_RECORD_HAS_NO_POSITION_STATE`) -- **and `ABSENT_UNTIL_BE_96` still appears in two of
-  those modules at the tip**, while DE's decision ledger, the consumer that would carry `inventory_leg`, is
-  unlanded. I record the split rather than reporting BE 96 as closing the item.
-  (8) ***E1 IS STILL RUNNING AT FIFTY-SIX MINUTES***: loaded / active / RUNNING at 08:25:13Z with
-  `ExecMainExitTimestamp` **empty** -- a second reading that says running, beside `SubState` -- MemoryPeak
-  still 2,715,901,952, expected exit ≈ 08:55Z. **REV 93 gates GO E2 and GO #8** once DE 124 lands.
-  Counts: flags 1,802 -> **1,817**; provenance 1,347 -> **1,362**; tasks 19; **1,081 CHECKED /
-  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FIRST round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **165** missing-artifact findings, 164 at my round start plus ONE of mine, the
-  running unit. Window trimmed 4 -> 3, **Batch 237** archived. Q-MEM-243 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -419,6 +421,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 258, R-772 swept (and every landing between c12ea02 and 39ebaa8) ---
+  THE_FIRST_EARLY_READ_ARTIFACT_EXISTS_AND_IS_TRACKED: 5C8A58F5-44037-B-DEF47A2
+  I_READ_ITS_STRUCTURE_AND_NOT_ONE_VALUE: KEY-NAMES-BOOLEANS-LABELS-COUNTS
+  BOTH_ARMS_READ_SEALED_FALSE_WITH_THE_COMPUTED_STATUS: UNSEALED-4-OF-4-UNDER-THE-BAR
+  THE_SIX_ECONOMIC_KEYS_ARE_PRESENT_PER_ARM_AND_I_NAME_ONLY_THE_KEYS: D-E0-Z-NULLS-P-LOCATION
+  THE_FIVE_UNCOMPUTED_FIELDS_ARE_NAMED_IN_THE_ARTIFACT_AS_I_RECORDED_THEY_WOULD_BE: NOT-COMPUTED-BY-THIS-PATH
+  G_4_INTERVAL_NONE_BELOW_FIVE_DAYS_IS_A_VALIDATION_FALSE_EXPLORATORY: THE-USERS-RULING-IN-THE-ARTIFACT
+  THE_TWO_STALE_LITERALS_ARE_THERE_AND_BOTH_ARE_FALSE_FOR_THIS_ARTIFACT: DAY-RUN-SEALED-AND-ECONOMICS-SEALED
+  THREE_SOURCES_GIVE_THREE_EXIT_TIMES_AND_ONLY_ONE_IS_THE_UNITS_FIELD: 08-54-36-44-54-AND-55-00
+  DEs_RECORD_STAMPS_THE_EXIT_AFTER_ITS_OWN_OBSERVATION_OF_IT: SIXTEEN-SECONDS-RUNTIME-INHERITS-IT
+  THE_UNITS_FIELD_MATCHES_THE_ARTIFACTS_MTIME_TO_THE_SECOND: 08-54-36Z-BOTH
+  PARAMS_v19_AND_DESIGN_v27_ARE_LANDED_AND_PARAMS_REL_FOLLOWED: DD8DB7DE-3BCDF3C2-BOTH-TRACKED
+  THE_CASCADE_CITATION_IS_WIDENED_TO_TEN_MODULES_AND_THE_OLD_PIN_IS_KEPT_BESIDE_IT: EVERY-MODULE-NOT-THE-ENTRY
+  DEs_CAPTURE_RECORD_CARRIES_TWO_FIVE_FIELD_READINGS_NOT_ONE: LAUNCH-AND-EXIT-BOTH-WHILE-LOADED
+  THE_UNIT_IS_NOT_FOUND_NOW_SO_MY_08_55_29Z_READING_IS_THE_RECORD: RULE-20-VOIDS-A-NOT-FOUND-READING
+  I_QUOTED_NO_ECONOMIC_VALUE_AT_ROUND_258: DAS-READER-PRINTS-THE-TABLE
   # --- MEM round 257, R-771 swept (and every landing between 3918ae5 and 7245f33) ---
   THE_NO_GO_VERIFIES_AT_BOTH_ENDS_93332A45_AGAINST_5607BFBF: A-PIN-TO-A-DIGEST-THE-FILE-NO-LONGER-HAS
   and_BOTH_MODULES_WERE_CHANGED_BY_ONE_COMMIT_c707eb8: THE-PINNED-ONE-AND-THE-UNPINNED-ONE
@@ -26254,6 +26272,167 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 258, 2026-09-07T09:01:00Z (the clock read by which every measurement below was complete) ---
+  THE_FIRST_EARLY_READ_ARTIFACT_EXISTS_AND_IS_TRACKED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      the first artifact of the USER's ruled early read exists: sha256 5c8a58f501d3b61b (the entry's),
+      44,037 B, mtime 2026-09-07T08:54:36Z, `git ls-files` 1, landed by def47a2 with DE's capture record
+      beside it. The unit is `not-found` and the lock is free. AFTER SEVEN ROUNDS OF "THE USER HAS NO
+      EARLY-READ NUMBERS YET", THE FIRST DAY EXISTS -- and it is 09-03, the day sealed under the eight-name
+      scope, read under the old code with no decision ledger, exactly as R-765 disclosed.
+  I_READ_ITS_STRUCTURE_AND_NOT_ONE_VALUE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      the dispatch's instruction and my own standing practice agree: carry the path and the digest, quote no
+      economic value. What I read: top-level KEY NAMES, booleans, labels, list lengths and the presence of
+      keys. What I did not read: any number under any `economic` block, any fill or cancel count, any
+      D_E0 or Z or p. The distinction is not delicacy -- DA's independent reader prints the table under
+      DA 124's `--print-under-ruling`, and a value that reached the user through MEM's state file would have
+      arrived by a path nobody reviewed.
+  BOTH_ARMS_READ_SEALED_FALSE_WITH_THE_COMPUTED_STATUS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      `day_run.per_day_sealed_artifacts` is a list of TWO (one per arm) and BOTH read `sealed` FALSE with
+      `seal_status` "UNSEALED -- 4 of 4 days complete under the bar this call was given" -- a COMPUTED
+      string carrying its own counts, not a literal. That is the shape REV 90's NO-GO demanded and DE 124
+      landed, arriving now in a real artifact rather than in a battery.
+  THE_SIX_ECONOMIC_KEYS_ARE_PRESENT_PER_ARM_AND_I_NAME_ONLY_THE_KEYS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      each arm's `economic` block carries exactly six keys, and I name the KEYS and never their contents:
+      D_E0, Z, null_draws_summary, null_mean, null_sd, p_location. Beside them each arm carries
+      `n_fills_arm`, `n_fills_baseline` and `n_cancels_issued` -- present, unread. This is the content the
+      programme declared four entries ago and I have restated every round since; the artifact matches the
+      declaration key for key.
+  THE_FIVE_UNCOMPUTED_FIELDS_ARE_NAMED_IN_THE_ARTIFACT_AS_I_RECORDED_THEY_WOULD_BE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      `economics_field_availability.not_computed_by_this_path` names exactly FIVE: D_E_MINUS_R, fills_leg,
+      inventory_leg, p_two_sided, rho_adverse_over_spread -- THE SAME FIVE R-754's dispatch asked for and
+      R-757 ruled would appear as NAMED STATUSES rather than numbers. I have carried that sentence since
+      round 249 as a thing that would be true of an artifact that did not yet exist; it is now true of one
+      that does, and rule 4's "exclusions are statuses, never silent drops" is satisfied at the first
+      artifact the user will read.
+  G_4_INTERVAL_NONE_BELOW_FIVE_DAYS_IS_A_VALIDATION_FALSE_EXPLORATORY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      at the top level: `G` 4, `interval` "NONE_BELOW_FIVE_DAYS", `is_a_validation` FALSE, `verdict_class`
+      "EXPLORATORY", `days_consumed` the four days 09-03..09-06, and `seal_standing.line` "UNSEALED under
+      the USER's ruling R-754: 4 of 6 ruled days, read early on the user's instruction. NOT all days
+      complete, NOT a validation, no interval". THE CAVEATS TRAVEL INSIDE THE ARTIFACT, so a reader who has
+      the file and none of the register still cannot mistake it for a validation.
+  THE_TWO_STALE_LITERALS_ARE_THERE_AND_BOTH_ARE_FALSE_FOR_THIS_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      `day_run.status` = "DAY_RUN_SEALED" and `day_run.what_this_is_not.the_economics_are_SEALED` = TRUE --
+      both FALSE for this artifact, whose two arm-day blocks read `sealed` false with the economics present.
+      Rule 10's class one level down: a hardcoded conclusion sitting beside a computed one that contradicts
+      it. E1 executed the code REV 91 cleared, BEFORE DE 124's retirement landed, so the literals are the
+      old path's; routed to DE 126 phase 2 and REV 94 part B. THE READING RULE FOR THIS ARTIFACT, RECORDED
+      SO NO LATER READER GETS IT WRONG: read `per_day_sealed_artifacts[*].sealed` and `seal_standing`, never
+      `day_run.status`.
+  THREE_SOURCES_GIVE_THREE_EXIT_TIMES_AND_ONLY_ONE_IS_THE_UNITS_FIELD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260903__20260907T085559Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      four stamps for one event, measured at their sources: the UNIT'S OWN `ExecMainExitTimestamp`
+      08:54:36Z (my read at 08:55:29Z while it was still loaded); DE's five-fields-at-exit block `as_of`
+      08:54:44Z, already reading SubState exited; the coordinator's watch line "TERMINAL 08:54:54Z"; and
+      DE's capture record `main_process_exited_at` 08:55:00Z. ONLY THE FIRST IS THE UNIT'S FIELD; the others
+      are when someone looked. This is the fourth instance of the class in this programme's week (41 s at
+      E1's launch, 3 s at GO #7, 18 s here between the field and the watch): EVERY TIME A TIME APPEARS
+      TWICE, ONE OF THEM IS A FIELD AND THE OTHER IS WHEN SOMEONE LOOKED.
+  DEs_RECORD_STAMPS_THE_EXIT_AFTER_ITS_OWN_OBSERVATION_OF_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260903__20260907T085559Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      arithmetic, not impression: DE's `main_process_exited_at` is 08:55:00Z, which is 24 s after the unit's
+      own `ExecMainExitTimestamp` (08:54:36Z) AND 16 s after DE's OWN five-fields block observed SubState
+      exited at 08:54:44Z -- SO THE RECORD DATES THE EXIT AFTER IT HAD ALREADY SEEN IT HAPPEN. `runtime_s`
+      5163 inherits the later stamp exactly (07:28:57Z -> 08:55:00Z = 5,163 s), against 5,139 s from the
+      unit's field. Nothing downstream turns on 24 s and the run is inside its 86.3-min sizing either way;
+      what is worth routing is the SHAPE -- CLAUDE.md rule 3 (a timestamp comes from the event that carries
+      it) inside a capture record built for rule 20. ROUTED to DE, not ruled.
+  THE_UNITS_FIELD_MATCHES_THE_ARTIFACTS_MTIME_TO_THE_SECOND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      the artifact's mtime is 08:54:36Z and the unit's `ExecMainExitTimestamp` is 08:54:36Z -- the same
+      second, and the artifact's own name carries that stamp (`...__20260907T085436Z.json`). THREE
+      INDEPENDENT WITNESSES AGREE ON ONE TIME (the unit's field, the file's mtime, the file's name), which
+      is what makes it the one to use, and none of the three is an observation of the process by a poller.
+  PARAMS_v19_AND_DESIGN_v27_ARE_LANDED_AND_PARAMS_REL_FOLLOWED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      params v19 dd8db7ded9e6ed97 and design v27 3bcdf3c234cb7d4e, BOTH `ls-files` 1; the resolver returns
+      params head v19 (19 versions, orphans empty) and design head v27 (26 versions, orphans empty); and
+      `PARAMS_REL` names v19. The unblock landed between R-772's writing and my read -- at round 257 I
+      recorded v19 and v27 ABSENT and the block standing, and both halves of that are now closed.
+  THE_CASCADE_CITATION_IS_WIDENED_TO_TEN_MODULES_AND_THE_OLD_PIN_IS_KEPT_BESIDE_IT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      v19 carries `be_cascade.modules` -- a list of TEN -- with
+      `be_cascade.verify_be_module_checks` reading "EVERY module here, not just the entry point"; the
+      original single `be_module` block is KEPT beside it and a `be_module_repoint` block of thirteen keys
+      records the move. So the guard that was silent on `harmful_stateful_policy.py` (round 257's finding,
+      REV's routing) now covers the cascade, and the old pin is superseded IN PLACE BY ADDITION rather than
+      removed -- the correction shape this programme uses everywhere else, applied to a citation.
+  DEs_CAPTURE_RECORD_CARRIES_TWO_FIVE_FIELD_READINGS_NOT_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260903__20260907T085559Z.json
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      rule 20 asks for the five fields + InvocationID read while loaded. DE's record carries TWO such
+      readings -- `five_fields_and_id_at_launch` (as_of 07:29:07Z, SubState running, MemoryPeak 997,609,472)
+      and `five_fields_and_id_at_exit_while_loaded` (as_of 08:54:44Z, SubState exited, MemoryPeak
+      2,715,901,952) -- plus `leaf_peak_bytes_sampled_in_process` with its METHOD stated ("cgroup
+      memory.peak sampled every 20 s while alive; the cgroup is gone at exit"),
+      `exit_resolved_through_the_map` naming the producer module and the map by pair, the journal by both
+      invocation fields, `rev_91_cleared_digests`, and `no_economic_value_is_quoted_here` = "DA's reader
+      prints the table". More than the rule asks, and the one thing it gets wrong is the stamp above.
+  THE_UNIT_IS_NOT_FOUND_NOW_SO_MY_08_55_29Z_READING_IS_THE_RECORD:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260903.service (a unit, not a file)
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      at 08:58:38Z the unit reads LoadState `not-found`, ActiveState inactive, SubState dead, and
+      `ExecMainExitTimestamp` EMPTY -- DE stopped it after its capture, freeing the name. Rule 20: a reading
+      taken when `LoadState=not-found` is VOID, never "success", because `systemctl show` returns DEFAULTS.
+      So the terminal reading of record is the one taken WHILE LOADED -- DE's at 08:54:44Z in its capture,
+      and mine at 08:55:29Z at the end of my last round. THE FIELD I QUOTE EXISTS ONLY BECAUSE IT WAS READ
+      BEFORE THE NAME WAS FREED; four minutes later it was unreadable.
+  I_QUOTED_NO_ECONOMIC_VALUE_AT_ROUND_258:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T09:01:00Z
+    said: >-
+      the standing rule, restated at the round it first bites: the state files carry the early read's PATH,
+      DIGEST, SIZE, STRUCTURE, STATUSES and CAVEATS, and not one number from it. DA 125 reads the artifact
+      with the independent reader and prints the table; the coordinator quotes it to the user with its
+      labels. MEM's copy of the numbers would be a second path to the user that no review covers, which is
+      the whole reason the reader is independent.
   # --- MEM round 257, 2026-09-07T08:51:45Z (the clock read by which every measurement below was complete) ---
   THE_NO_GO_VERIFIES_AT_BOTH_ENDS_93332A45_AGAINST_5607BFBF:
     prov: CHECKED
