@@ -1458,7 +1458,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 82
+EXPECTED_CHECKS = 83      # BE 91: +1, the `:2420` literal classified at the code
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -2422,6 +2422,43 @@ def selftest() -> int:
     _fsha = hashlib.sha256(_fp.read_bytes()).hexdigest()
     (_dN / "der" / "be_race_read_result_v1.json").write_text(json.dumps(
         {"day_signs": {"20990101": 1, "20990102": -1}}))
+    # ---- BE 91: `:2420` CLASSIFIED AT THE CODE -------------------------
+    # A census that keys on the NAME reads `be_race_read_declaration_v1.json`
+    # here as a non-head literal. It is neither of the two things a non-head
+    # literal can be: not a reader of history (it reads nothing that exists)
+    # and not a head consumer (there is no chain to be behind). It is a
+    # FIXTURE the cell WRITES, under `mkdtemp`, with days 2099xxxx that no
+    # real chain carries -- and the separating property is not the name but
+    # WHERE THE PATH RESOLVES, computed here rather than asserted in a
+    # comment.
+    _decl_real = (Path(__file__).resolve().parent / "declarations").resolve()
+
+    def _is_scratch_fixture(q):
+        """True iff `q` resolves under the scratch root and not the ledger's
+        declarations directory. Evaluated on BOTH paths below, so the cell
+        ADMITS the fixture and FIRES on the real file -- a predicate shown
+        only to admit has not been shown to discriminate (rule 16)."""
+        r = str(Path(q).resolve())
+        return (r.startswith(str(_dN.resolve()) + "/")
+                and not r.startswith(str(_decl_real) + "/"))
+
+    _same_name_real = _decl_real / _fp.name
+    _verdict_fixture = _is_scratch_fixture(_fp)
+    _verdict_real = _is_scratch_fixture(_same_name_real)
+    ok(_verdict_fixture is True and _verdict_real is False
+       and _fp.read_text() != (_same_name_real.read_text()
+                               if _same_name_real.exists() else None),
+       f"CLASSIFICATION of the `be_race_read_declaration_v1.json` literal at "
+       f"this line: FIXTURE CONSTRUCTION IN SCRATCH, not a declaration read. "
+       f"It resolves under {_dN}/ (a mkdtemp), NOT under {_decl_real}/; the "
+       f"real file of that name exists ({_same_name_real.exists()}) and this "
+       f"cell's bytes differ from it, so the two are not confusable. THE "
+       f"PREDICATE IS DRIVEN BOTH WAYS: it answers {_verdict_fixture} for "
+       f"the fixture and {_verdict_real} for the real "
+       f"declarations/{_fp.name} (which exists: {_same_name_real.exists()}), "
+       f"so it discriminates rather than merely admitting. Nothing here "
+       f"resolves a chain and nothing here can go stale -- the days are "
+       f"2099xxxx by design")
 
     def _second(**over):
         d = {"protocol": "FIXTURE-SECOND",

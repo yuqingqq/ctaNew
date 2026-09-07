@@ -48,7 +48,7 @@ def _version_of(p: Path) -> int:
     return int(m.group(1)) if m else 0
 
 
-def _plain_create_mode() -> int:
+def plain_create_mode() -> int:
     """The mode a PLAIN create would produce here: `0o666 & ~umask`.
 
     Reading the umask means SETTING it -- POSIX offers no read-only call --
@@ -67,6 +67,11 @@ def _plain_create_mode() -> int:
     um = os.umask(0)
     os.umask(um)
     return 0o666 & ~um
+
+
+#: BE 91: kept so the name this landed under still resolves. One
+#: implementation, two names -- never two implementations.
+_plain_create_mode = plain_create_mode
 
 
 def resolve_head(directory, family: str) -> dict:
@@ -412,7 +417,7 @@ def write_next_version(directory, family: str, payload: dict,
         #
         # BEFORE the rename, not after: the destination then never exists at
         # the wrong mode, not even for the width of one syscall.
-        os.chmod(tmp, _plain_create_mode())
+        os.chmod(tmp, plain_create_mode())
         os.replace(tmp, dst)          # atomic within the directory
     except BaseException:
         Path(tmp).unlink(missing_ok=True)

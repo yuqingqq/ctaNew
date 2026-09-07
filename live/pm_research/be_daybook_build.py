@@ -962,7 +962,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 125
+EXPECTED_CHECKS = 126     # BE 91: +1, CELL (d2) the ledger-environment predicate
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -985,6 +985,43 @@ def real_data_reachable(day: str = "20260903") -> tuple:
                    f"looks for the mask in the worktree. Set PM_DATA_ROOT "
                    f"and run at the ledger tree, or drive the fixture "
                    f"checks alone.")
+
+
+def _ledger_env_status(pm_data_root, resolved_ledger) -> str:
+    """Is this environment one in which the ledger-symlink cell can be run?
+
+    THREE OUTCOMES, EACH NAMED (R-649: a skipped check reads as a passed
+    one, so none of these is a skip):
+
+      OK                                PM_DATA_ROOT is set and the
+                                        data-root resolver lands on the
+                                        ledger it names;
+      PM_DATA_ROOT_UNSET                nothing declares which tree is the
+                                        ledger, so the resolver's answer
+                                        cannot be checked AGAINST anything
+                                        -- the exemption's own three
+                                        conjuncts are still testable and the
+                                        status is reported beside them;
+      DATA_ROOT_IS_NOT_THE_LEDGER_TREE  PM_DATA_ROOT names one tree and the
+                                        resolver answers another. The cell
+                                        REFUSES under this name: it cannot
+                                        test the exemption here, and saying
+                                        so is not the same as saying the
+                                        exemption is wrong.
+
+    Paths are compared RESOLVED. `<worktree>/data` is a symlink to the
+    ledger (R-553), so two different strings are routinely one directory,
+    and a string comparison here is what sent BE 90 chasing a guard that
+    was working.
+    """
+    if not pm_data_root:
+        return "PM_DATA_ROOT_UNSET"
+    declared = (Path(pm_data_root).resolve() / "data")
+    try:
+        same = declared.resolve() == Path(resolved_ledger).resolve()
+    except OSError:
+        same = False
+    return "OK" if same else "DATA_ROOT_IS_NOT_THE_LEDGER_TREE"
 
 
 def selftest() -> int:
@@ -1801,12 +1838,72 @@ def selftest() -> int:
     _os2.unlink(str(Path(_gd) / "data"))
     _os2.symlink(_LEDGER, str(Path(_gd) / "data"))
     _d = _cells()["data"]
-    ok(_d["exempt"] is True and _d["is_untracked"] and _d["is_symlink"]
-       and _d["resolves_to_the_ledger"] and _d["ledger"] == _LEDGER,
-       f"CELL (d), THE POSITIVE CONTROL: the real ledger symlink IS exempt "
-       f"-- untracked AND a symlink AND resolving to {_d['ledger']}, all "
-       f"three computed. A guard shown only to refuse has not been shown to "
-       f"work (rule 16)")
+    # BE 91 -- THE ROOT CAUSE, NAMED. This cell asserted `_d["ledger"] ==
+    # _LEDGER` as a STRING comparison of ONE value read two ways: `_LEDGER`
+    # is `_BDR.data_root()` RAW, and `classify_dirt` computes
+    # `Path(_BDR.data_root()).resolve()`. Under a bare `python3 -m` with
+    # PM_DATA_ROOT unset the resolver answers `<worktree>/data`, which R-553
+    # makes a SYMLINK to the ledger -- so the strings differed
+    # (`/home/yuqing/ctaNew-wt-be/data` vs `/home/yuqing/ctaNew/data`) while
+    # `.resolve()` on both gives ONE directory. The cell went red as if the
+    # exemption were broken; it was not (exempt=True, all three conjuncts
+    # true), and it passed under the launcher's env, which is R-240's shape
+    # seen from the other side.
+    #
+    # Compare the paths AS PATHS -- and when the resolved root is genuinely
+    # not the ledger tree, REFUSE BY NAME, naming the environment. A check
+    # that fails for an environment reason must say which, or its next
+    # reader debugs the guard instead of their shell.
+    _pmdr = _os2.environ.get("PM_DATA_ROOT")
+    _resolved = Path(_LEDGER).resolve()
+    _declared = (Path(_pmdr).resolve() / "data") if _pmdr else None
+    _env = _ledger_env_status(_pmdr, _resolved)
+    if _env == "DATA_ROOT_IS_NOT_THE_LEDGER_TREE":
+        ok(False,
+           f"CELL (d) REFUSED {_env}: PM_DATA_ROOT={_pmdr!r} makes the "
+           f"ledger {_declared}, but the data-root resolver answers "
+           f"{_resolved}. THIS IS AN ENVIRONMENT REFUSAL, NOT A VERDICT ON "
+           f"THE EXEMPTION -- the guard was never exercised, and nothing "
+           f"here says it is wrong")
+    else:
+        ok(_d["exempt"] is True and _d["is_untracked"] and _d["is_symlink"]
+           and _d["resolves_to_the_ledger"]
+           and Path(_d["ledger"]).resolve() == _resolved,
+           f"CELL (d), THE POSITIVE CONTROL: the real ledger symlink IS "
+           f"exempt -- untracked AND a symlink AND resolving to "
+           f"{_d['ledger']}, all three computed. A guard shown only to "
+           f"refuse has not been shown to work (rule 16). Environment: "
+           f"{_env}; the resolver answers {_LEDGER} and both names resolve "
+           f"to {_resolved} -- compared as PATHS, because they are one "
+           f"directory reached two ways (R-553)")
+    # (d2) THE ENVIRONMENT PREDICATE ITSELF, DRIVEN THREE WAYS. CELL (d)
+    # now branches on `_ledger_env_status`, so that function is what decides
+    # whether a red means "the exemption is broken" or "your shell is". It
+    # is driven here on all three of its outcomes rather than trusted.
+    #
+    # STATED, NOT HIDDEN: the REFUSAL BRANCH of cell (d) is not reachable
+    # from inside this battery. Pointing PM_DATA_ROOT at a tree that is not
+    # the ledger makes an EARLIER cell refuse first -- measured:
+    # `be_forward_day.ForwardDayRefused: REFUSED: no market ledger at
+    # <that tree>/data/pm_5min/markets.jsonl` -- so the run never reaches
+    # (d). The function below is therefore where that branch is proven, and
+    # this sentence is why, rather than a cell quietly never running.
+    _env_drives = [
+        (_ledger_env_status(None, _resolved), "PM_DATA_ROOT_UNSET"),
+        (_ledger_env_status(str(Path(_LEDGER).resolve().parent), _resolved),
+         "OK"),
+        (_ledger_env_status("/nonexistent-tree-for-this-cell", _resolved),
+         "DATA_ROOT_IS_NOT_THE_LEDGER_TREE"),
+    ]
+    ok(all(got == want for got, want in _env_drives),
+       f"CELL (d2): the environment predicate answers all THREE of its "
+       f"outcomes and each is NAMED, never a skip (R-649): unset -> "
+       f"{_env_drives[0][0]}; the real repo root -> {_env_drives[1][0]}; a "
+       f"tree that is not the ledger -> {_env_drives[2][0]}. The second is "
+       f"the positive control -- a predicate shown only to refuse has not "
+       f"been shown to admit -- and it is computed from "
+       f"{Path(_LEDGER).resolve().parent}, not typed")
+
     # (e) the same link under a DIFFERENT name -- also exempt, deliberately
     _os2.symlink(_LEDGER, str(Path(_gd) / "ledger_alias"))
     _e = _cells()["ledger_alias"]

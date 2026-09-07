@@ -274,7 +274,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 23
+EXPECTED_CHECKS = 24      # BE 91: +1, the tape lands world-readable
 
 
 def selftest() -> int:
@@ -525,6 +525,45 @@ def selftest() -> int:
        "scopes and every receipt said so in `scope.unit`; no seat read it")
 
     print()
+    # ---- BE 91: THE TAPE LANDS WORLD-READABLE ---------------------------
+    # Five `phase2_state_tape_gate1_*.json` were 0600 on disk (4,967,187,165
+    # B), because `build_state_tape_v2` emits through `tempfile.mkstemp` --
+    # a SECRET-file constructor -- and `os.replace` carries 0600 to the
+    # landed artifact. The mode is now set from the ONE implementation
+    # (`declaration_chain.plain_create_mode`), imported, before the rename.
+    #
+    # THIS CELL DRIVES THE BUILDER'S OWN `_land`, not a re-implementation of
+    # chmod+replace, and it BASELINES ITSELF (REV 83 §5): the expected mode
+    # is measured from a file the cell creates the ordinary way in the SAME
+    # directory, so a wrong umask read fails the cell instead of agreeing
+    # with it.
+    import stat as _st, tempfile as _tfL
+    import build_state_tape_v2 as _BST
+    _ld = Path(_tfL.mkdtemp(prefix="be91_land_"))
+    _probe = _ld / "plain_create.probe"
+    _probe.write_text("a file made the ordinary way, in this directory\n")
+    _base = _st.S_IMODE(_probe.stat().st_mode)
+    _fd, _tmp = _tfL.mkstemp(dir=str(_ld), suffix=".tmp")
+    with os.fdopen(_fd, "w") as _fh:
+        _fh.write('{"rows": []}\n')
+    _pre = _st.S_IMODE(Path(_tmp).stat().st_mode)
+    _dst = _ld / "phase2_state_tape_gate1_20990101_btc.json"
+    _BST._land(_tmp, _dst)
+    _post = _st.S_IMODE(_dst.stat().st_mode)
+    _base_owner_only = _base & 0o077 == 0
+    _note = (" -- BASELINE_IS_OWNER_ONLY: this box's umask makes even a plain "
+             "create owner-only, so the equality is the whole assertion"
+             if _base_owner_only else "")
+    ok(_pre == 0o600 and _post == _base and _dst.read_text() == '{"rows": []}\n'
+       and not Path(_tmp).exists(),
+       f"THE TAPE LANDS AS READABLE AS ITS NEIGHBOURS: mkstemp made the temp "
+       f"0o{_pre:04o} (the defect's source, measured here rather than "
+       f"asserted) and `build_state_tape_v2._land` landed it 0o{_post:04o}, "
+       f"which is what a plain create in the same directory produced "
+       f"(0o{_base:04o}){_note}. The content survived the chmod and the temp "
+       f"is gone, so the rename still happened. The five real tapes were "
+       f"re-moded at BE 91 with each digest asserted against its receipt")
+
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
         return 1

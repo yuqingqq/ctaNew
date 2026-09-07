@@ -35,6 +35,27 @@ import phase2_state_schema_freeze as PIN
 import phase2_embargo as EMB
 
 
+def _land(tmp_path, dst) -> None:
+    """Move the finished temp into place, AS READABLE AS ITS NEIGHBOURS.
+
+    `tempfile.mkstemp` is a secret-file constructor -- 0600 by design --
+    and `os.replace` carries that mode to the landed artifact, so every
+    `phase2_state_tape_gate1_*.json` this builder wrote was owner-only
+    (five of them, 4,967,187,165 B, re-moded at BE 91). The mode comes
+    from the ONE implementation (`declaration_chain.plain_create_mode`),
+    imported and never re-typed, and is set BEFORE the rename so the
+    destination never exists at the wrong mode.
+
+    This is a function, with one call site, so the battery can drive the
+    code the builder actually runs -- a cell that re-implemented
+    chmod+replace would test itself.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from declaration_chain import plain_create_mode
+    os.chmod(tmp_path, plain_create_mode())
+    os.replace(tmp_path, dst)
+
+
 def gap_contains_at(T_abs: float, coin: str, coin_gaps_abs: dict):
     """THE ruled predicate, and the ONLY gap comparison in this builder.
 
@@ -612,7 +633,7 @@ def main(fragment_path: Path = None, topup_path: Path = None,
                 fh.write(line.rstrip("\n")); first = False
         fh.write("]}")
         fh.flush(); os.fsync(fh.fileno())
-    os.replace(tmp, DEST)
+    _land(tmp, DEST)          # BE 91: world-readable, then atomic
     Path(spool_path).unlink(missing_ok=True)
     print(f"\nWROTE {DEST.name}: {n_rows:,} rows, "
           f"statuses {status_counts}, embargo {emb_state[:44]}")

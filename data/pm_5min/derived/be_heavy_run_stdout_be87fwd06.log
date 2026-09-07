@@ -1,0 +1,6 @@
+REFUSED 20260906: receipt /home/yuqing/ctaNew_forward_runs/20260906_be87/be_forward_day_receipt_20260906.json
+  receipt_sha256 e594c8da5d308edd
+  REFUSED: 20260906 is not closed by calendar (day_closed_calendar=False). Scoring an OPEN day scores a population that is still growing.
+REFUSED 20260906: receipt /home/yuqing/ctaNew_forward_runs/20260906_be87/be_forward_day_receipt_20260906.1.json
+  receipt_sha256 e8625a1db890721b
+  REFUSED: 20260906 is not closed by calendar (day_closed_calendar=False). Scoring an OPEN day scores a population that is still growing.
