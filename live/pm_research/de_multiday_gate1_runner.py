@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 350
+EXPECTED_CHECKS = 354
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -2062,6 +2062,107 @@ def landing_record_copies(rec: dict) -> dict:
             "all_present_copies_agree": not disagree}
 
 
+def group_landing_records_by_receipt(files, day: str, root: Path) -> dict:
+    """DA 105's RULE, ADOPTED HERE (REV 89 H1).
+
+    A LANDING RECORD IS ABOUT ONE RECEIPT, NOT ABOUT A DAY. When a day's
+    receipt is superseded, the new head is a DIFFERENT artifact and its
+    pre-read is FIRST OF FAMILY -- the older record stays true of the
+    receipt it read. Resolving every record for a day into one chain made
+    those two read AMBIGUOUS, which is the resolver describing its own
+    grouping rather than the ledger, and it refused 09-03, 09-04 and
+    09-05 in this seat's gate while DA's passed them (REV 89 §1: three of
+    the four sealed days, on the conjunct whose job is to stop a
+    re-roll).
+
+    ***A SUPERSESSION LINK OUTRANKS THE GROUPING.*** A correction may
+    change the very field the grouping reads, so records joined by a pair
+    are ONE family whatever digests they carry -- otherwise a chain
+    broken by its own repair would, again, be the resolver describing its
+    rule instead of the ledger.
+
+    The group is CHOSEN by the day's current receipt head, and the choice
+    is NAMED in the return; it is never silent."""
+    files = [Path(f) for f in files]
+    docs, sha_of = {}, {}
+    for f in files:
+        try:
+            docs[f.name] = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        sha_of[f.name] = (landing_record_copies(docs[f.name])["fields"]
+                          ["receipt_sha256_at_landing"]["value"]
+                          or "UNSTATED")
+    parent = {n: n for n in docs}
+
+    def _find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def _union(x, y):
+        rx, ry = _find(x), _find(y)
+        if rx != ry:
+            parent[ry] = rx
+
+    for n, rec in docs.items():                      # links outrank groups
+        shape = supersedes_shape(rec)
+        if shape["kind"] == "PAIR":
+            tgt = Path(shape["path"]).name
+            if tgt in parent:
+                _union(n, tgt)
+    for a in docs:                                   # then group by digest
+        for b in docs:
+            if a < b and sha_of.get(a) == sha_of.get(b) != "UNSTATED":
+                _union(a, b)
+
+    groups: dict = {}
+    for n in docs:
+        groups.setdefault(_find(n), []).append(n)
+
+    head = find_sealed_day_receipt(day, root)
+    # THE DIGEST IS COMPUTED FROM THE HEAD'S PATH. `find_sealed_day_receipt`
+    # returns `path`, not `sha256` -- I first read a key it does not have,
+    # and the chooser silently found no match and fell back to the whole
+    # day, which is the exact behaviour this is replacing. The key set is
+    # ['chain','chain_head_is','day','expected_glob','links','n_matches',
+    # 'path','present','status','superseded'].
+    want = (sha256_streamed(Path(head["path"]))
+            if head.get("path") else None)
+    chosen_root, why = None, None
+    if want:
+        for r, names in groups.items():
+            if any(sha_of.get(n) == want for n in names):
+                chosen_root, why = r, (
+                    "the group whose records read the day's CURRENT "
+                    "receipt head")
+                break
+    if chosen_root is None and len(groups) == 1:
+        chosen_root = next(iter(groups))
+        why = ("the only group -- no receipt head digest was available to "
+               "choose by")
+    return {
+        "rule": "DA 105, adopted at REV 89 H1: grouped by the receipt "
+                "digest each record carries, with a supersession link "
+                "outranking the grouping",
+        "n_records": len(files), "n_groups": len(groups),
+        "groups": {str(r): sorted(v) for r, v in groups.items()},
+        "receipt_digest_of_each_group": {
+            str(r): sha_of.get(v[0]) for r, v in groups.items()},
+        "day_receipt_head": {
+            "name": (Path(head["path"]).name if head.get("path") else None),
+            "sha256": want, "status": head.get("status")},
+        "chosen_group": sorted(groups.get(chosen_root, [])),
+        "chosen_because": why or (
+            "NO GROUP MATCHES the day's receipt head, and there is more "
+            "than one -- named, not silently collapsed"),
+        "chose_one": chosen_root is not None,
+        "files": [f for f in files
+                  if f.name in set(groups.get(chosen_root, []))],
+    }
+
+
 def landing_record_for(day: str, root: Path) -> dict:
     """DA's PRE-READ artifact for a day -- the LANDING RECORD.
 
@@ -2108,8 +2209,12 @@ def landing_record_for(day: str, root: Path) -> dict:
             continue
         if day_forms(str(fd)) & day_forms(day):
             mine.append(p)
-    res = resolve_day_chain(mine, kind="landing record")
-    out = {"day": day, "present": False,
+    # DA 105's GROUPING (REV 89 H1) BEFORE the chain rule: `mine` is every
+    # record for the DAY, and the chain rule is about ONE RECEIPT.
+    grouping = group_landing_records_by_receipt(mine, day, root)
+    res = resolve_day_chain(grouping["files"] if grouping["chose_one"]
+                            else mine, kind="landing record")
+    out = {"day": day, "present": False, "grouping": grouping,
            "status": ("NO_LANDING_RECORD" if res["status"] == "MISSING"
                       else res["status"]),
            "n_matches": res["n_matches"], "refused_records": refused,
@@ -10193,6 +10298,115 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"passed' beside three disarmed cells would report the "
        f"measurement's failure as coverage -- the DE 110 defect one level "
        f"up")
+    # ===== DE 126 (REV 89 H1): THE GROUPING, AND BOTH SEATS COMPARED ===
+    # RED FIRST, on a fixture: two UNLINKED records for one day, reading
+    # two different receipts -- which is what a corrected receipt leaves
+    # behind. Under the old rule (every record for a DAY into one chain)
+    # this is AMBIGUOUS; under DA 105's it resolves to the group whose
+    # records read the day's CURRENT head.
+    import tempfile as _tf126
+    _r126 = Path(_tf126.mkdtemp(prefix="h1_"))
+    _d126 = _r126 / "pm_5min/derived"
+    _d126.mkdir(parents=True)
+    _rc126 = {"day": "2026-09-03", "per_day_sealed_artifacts": [],
+              "status": "DAY_RUN_SEALED"}
+    _old126 = _d126 / "p003_de_gate1_day_run_20260903_SEALED__A.json"
+    _old126.write_text(json.dumps(_rc126, sort_keys=True))
+    _new126 = _d126 / "p003_de_gate1_day_run_20260903_SEALED__A.v2.json"
+    _new126.write_text(json.dumps(
+        {**_rc126, "supersedes": {"path": str(_old126),
+                                  "sha256": sha256_streamed(_old126)}},
+        sort_keys=True))
+    for _stamp, _tgt in (("20260906T182045Z", _old126),
+                         ("20260906T192751Z", _new126)):
+        (_d126 / f"p003_da_gate1_pre_read_20260903__{_stamp}.json"
+         ).write_text(json.dumps({
+             "day": "2026-09-03", "is_the_declared_LANDING_RECORD": True,
+             # THE FIELD NAMES ARE `LANDING_RECORD_FIELD_COPIES`', read
+             # off the constant rather than typed from memory: my first
+             # fixture wrote `receipt_sha256_at_landing`, which is the
+             # RETURN's name and not the RECORD's, so every record read
+             # UNSTATED and the cell failed on my fixture rather than on
+             # the code. Both copies are written, as a real record does.
+             "landing_record": {"day": "2026-09-03",
+                                "receipt_sha256": sha256_streamed(_tgt),
+                                "receipt_path": _tgt.name},
+             "receipt": {"sha256": sha256_streamed(_tgt),
+                         "path": _tgt.name}}, sort_keys=True))
+    _lr126 = landing_record_for("2026-09-03", _r126)
+    _g126 = _lr126["grouping"]
+    ok(_g126["n_records"] == 2 and _g126["n_groups"] == 2
+       and _g126["chose_one"] is True
+       and _lr126["status"] == "PRESENT" and _lr126["n_matches"] == 1
+       and _lr126["receipt_sha256_at_landing"] == sha256_streamed(_new126),
+       f"REV 89 H1: two UNLINKED landing records for one day -- one per "
+       f"receipt, which is what a correction leaves -- resolve to the "
+       f"group reading the day's CURRENT head ({_lr126['status']}, "
+       f"n_matches {_lr126['n_matches']}), not to AMBIGUOUS. DA 105's "
+       f"rule: a landing record is about ONE RECEIPT, not about a day")
+    # THE KNOWN-BAD IS THE OLD RULE ITSELF, driven on the same fixture:
+    # handing BOTH records to the chain resolver -- which is what this
+    # function did -- must still read AMBIGUOUS. A cell that only shows
+    # the new answer proves nothing about what changed.
+    _both126 = sorted(_d126.glob("p003_da_gate1_pre_read_*.json"))
+    _amb126 = resolve_day_chain(_both126, kind="landing record")
+    ok(_amb126["status"] == "AMBIGUOUS" and len(_both126) == 2,
+       f"REV 89 H1 KNOWN-BAD: the OLD grouping -- every record for the "
+       f"DAY into one chain -- reads `{_amb126['status']}` on the same "
+       f"two files. That is the answer that refused 09-03, 09-04 and "
+       f"09-05 in this seat's gate while DA's passed them; the delta is "
+       f"the grouping, not the chain rule")
+    # A SUPERSESSION LINK OUTRANKS THE GROUPING: two records that read
+    # DIFFERENT receipts but are joined by a pair are ONE family.
+    _lk126 = _d126 / "p003_da_gate1_pre_read_20260903__20260906T192751Z.json"
+    _lk126.write_text(json.dumps({
+        **json.loads(_lk126.read_text()),
+        "supersedes": {
+            "path": str(_d126
+                        / "p003_da_gate1_pre_read_20260903__20260906T182045Z.json"),
+            "sha256": sha256_streamed(
+                _d126
+                / "p003_da_gate1_pre_read_20260903__20260906T182045Z.json")}},
+        sort_keys=True))
+    _lr2126 = landing_record_for("2026-09-03", _r126)
+    ok(_lr2126["grouping"]["n_groups"] == 1,
+       f"REV 89 H1: and a SUPERSESSION LINK OUTRANKS the grouping -- the "
+       f"same two records, now joined by a pair, are ONE group "
+       f"({_lr2126['grouping']['n_groups']}), because a correction may "
+       f"change the very field the grouping reads and a chain broken by "
+       f"its own repair would be the resolver describing its rule")
+    import shutil as _sh126
+    _sh126.rmtree(_r126, ignore_errors=True)
+
+    # THE CROSS-CHECK REV 89 SAID WAS THE MISSING PIECE: run BOTH seats'
+    # resolvers on the REAL ledger and compare. R-235's do-not-harmonize
+    # is what made the disagreement findable; nobody ran both.
+    if offline:
+        offline_skip("REV 89 H1's two-seat cross-check on the real ledger "
+                     "(it reads DA's landing records under data/)")
+    else:
+        import da_gate1_day_verdict as _DA126
+        _root126 = Path(DR.resolve()["data_root"])
+        _cmp126, _dis126 = {}, []
+        for _d in load_params()["days"]:
+            _de = landing_record_for(_d, _root126)
+            _da = _DA126.landing_record_for(
+                _d, _root126 / "pm_5min/derived")
+            _a = _de.get("receipt_sha256_at_landing")
+            _b = (_da.get("receipt_sha256_at_landing")
+                  or _da.get("receipt_sha256"))
+            _cmp126[_d] = {"DE": _a, "DA": _b, "agree": _a == _b}
+            if _a != _b:
+                _dis126.append(_d)
+        ok(not _dis126,
+           f"REV 89 H1 CROSS-CHECK, BOTH SEATS ON THE REAL LEDGER: the "
+           f"two independent resolvers name the SAME landing-record "
+           f"receipt digest for every ruled day -- disagreeing: "
+           f"{_dis126 or 'none'}. Before this, DE refused 09-03/04/05 on "
+           f"conjunct 3 while DA passed them, and neither seat ran the "
+           f"other. Two implementations stay (R-235); what was missing "
+           f"was anybody comparing them")
+
     # ===== DE 125 (REV 90 §A0): NO BRANCH OF seal() PRINTS A LITERAL ===
     # Driven on a 09-06-SHAPED arm-day -- the real landed shape, arm and
     # counts -- through BOTH branches of the one function, because the
