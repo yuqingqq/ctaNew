@@ -55,6 +55,60 @@ slug's winner is VERIFIED_AGREE" **on a day with one DISAGREE**. The fix counts
 verification lives in the RECEIPT, and prints the receipt's own counts. Rule 15 in its
 sharpest form.
 
+## What DA 133 (09-04) paid for — read this before the next day
+
+**The settlement null's MOMENTS are READ and cannot be re-derived by anyone.** The
+artifact summarises it as `{"n": 500}`; the ledger's 1,000 NULL_DRAW rows carry
+`['arm','cancels','i','row','value']` and their mean and sd reproduce the **5-SECOND
+MARKOUT** null to the last digit on both days read so far — they match the settlement
+null on neither. The settlement-valued draws reach no file. So: recompute `D_E_settle`
+from the FILL rows (a real second implementation), recompute `Z` from the published
+moments, and label the moments READ. **Measure which null the persisted draws carry;
+never assume it** — the reader does this now and prints it per arm.
+
+**Four shapes this seat's own instrument wore, all found by one day (fixed `70bd9f8`).
+Every one is a literal or a guard that had to track something moving:**
+
+1. **The PRIMARY endpoint had no test beside it.** The settlement block printed
+   `D_E_settle` and its legs and nothing else while the DIAGNOSTIC's Z and p printed
+   in full three lines above. R-819's 09-03 statistics were lifted from the artifact
+   BY HAND and labelled "the artifact's own statistics" — the instrument never had
+   them, and nobody noticed for a whole day's read. **When the estimand changes, audit
+   what the PRINT carries, not only what the recompute covers.**
+2. **The denominator line reported half its denominator.** `n_slug_rows` counts ONE
+   arm's two books; the file holds that per arm. It said 576 of a 1,152-row file, and
+   492 of 09-03's 984 — which is what Q-DA-357 carries. This is the line built at DA
+   132 *to report a denominator*. The standard bites its own instrument first.
+3. **A typed literal in a printed clause.** "not over a 288-window day", written on
+   09-03 at 246, printed verbatim on a 288-window day beside the two numbers that
+   contradicted it. Derive it (`WINDOW_SECONDS`, checked against the `window_s` the
+   artifacts pin) and name the shortfall.
+4. **A battery cell asserting a CENSUS instead of a property.** The four-days cell
+   named 09-03 as the only chain and went red the moment 09-04's re-run landed — it
+   was measuring the tree's history. Assert the property (one head per day,
+   `n_artifacts == links + 1`, `sole` agreeing with its own count); the known-bad (two
+   artifacts, no `supersedes` → `EARLY_READ_HEAD_AMBIGUOUS`) is what keeps it able to
+   fire. **R3/R4 will make 09-05 and 09-06 chains too — a census would have gone red
+   twice more.**
+
+Also from that round: `settlement_statistics` crashed where no ledger exists
+(`recompute` is a status STRING there) and, once guarded, would have reported
+`matches_the_5s_markout_null: False` for a null it never measured — **absence gets its
+own name** (`NO_LEDGER_DRAWS_TO_MEASURE`), never a False that reads as a mismatch. And
+a bare `except: pass` in a new cell swallowed an `AttributeError` and handed back an
+empty set that read as "the artifacts pin nothing".
+
+**Finality on 09-04, and the sentence to keep saying.** 09-04 is the first day whose
+`is_final_for_quotation` reads **True** (288/288 VERIFIED_AGREE). `f_provenance` is
+still a **RECORDED BOOLEAN**: a bare `files` key appears **0 times** in the artifact —
+check the KEY, not the substring, because `stream_files_digest` contains the word. The
+check ran in the producer and its verdict is recorded; it cannot be re-run from the
+artifact. R-818 allows that for DESIGN data only, so **`is_final_for_quotation: True`
+is not R-818's "quotable as final"** until DE 142 lands.
+
+**Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
+(full).** Never one column.
+
 ## Two battery cells whose premise changed with the v3 ledger
 
 1. **The missing-status known-bad** must now expect `EARLY_READ_STATUS_UNACCOUNTED`, and
