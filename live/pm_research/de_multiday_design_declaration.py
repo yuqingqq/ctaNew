@@ -51,7 +51,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: verifying pair.
 VERSION = 27
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 132
+EXPECTED_CHECKS = 134
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -3914,6 +3914,24 @@ def selftest(*, quiet: bool = False) -> int:
        f"DE 124 (3)(ii) RED: the same block WITHOUT `landed_at` refuses by "
        f"name -- `{_c2}`. A block claiming rule 14's authority and naming "
        f"no register entry is this seat's opinion wearing it")
+    _c2b = None
+    try:
+        design_permitted_additions(
+            _v1x, {**_v1x, "user_ruled_x": {**_ruling, "landed_at": "R-99999"}},
+            decl_dir=_d124)
+    except DesignCensusRefused as _e:
+        _c2b = str(_e).split(":")[0]
+    ok(_c2b == "USER_RULING_ENTRY_NOT_IN_THE_REGISTER",
+       f"REV 93 #2 RED: a block naming **R-99999** -- correct SHAPE, no "
+       f"such entry -- refuses by name, `{_c2b}`. The predicate reads the "
+       f"register for `### R-<n> `, so an id that merely looks like one "
+       f"is rule 14's authority with nothing behind it")
+    ok("user_ruled_x" in design_permitted_additions(
+           _v1x, {**_v1x, "user_ruled_x": {**_ruling, "landed_at": "R-765"}},
+           decl_dir=_d124)["permitted"],
+       "REV 93 #2 GREEN: R-765 -- an entry that DOES exist in the register "
+       "-- is permitted, so the check reads the register rather than "
+       "refusing every id")
     _wd = {"files": [{"name": "x.json", "sha256": "0" * 64,
                       "why_withdrawn": "because"}]}
     ok("withdrawn_before_landing" in design_permitted_additions(
@@ -4317,9 +4335,30 @@ def design_permitted_additions(v1: dict, v2: dict, *, decl_dir=None) -> dict:
         blk = v2[k] if isinstance(v2[k], dict) else {}
         miss = [f for f in ("ruled_by", "the_ruling_verbatim",
                             "recorded_at_utc", "landed_at") if not blk.get(f)]
-        if (blk.get("ruled_by") != "THE USER"
-                or not _re.match(r"^R-\d+$", str(blk.get("landed_at") or ""))
-                or miss):
+        # REV 93 #2: THE R-ID MUST EXIST IN THE REGISTER, not merely look
+        # like one. `R-99999` matches the shape and names nothing; a block
+        # claiming rule 14's authority against an entry nobody can open is
+        # the authority without the record.
+        _rid = str(blk.get("landed_at") or "")
+        _shape_ok = bool(_re.match(r"^R-\d+$", _rid))
+        _exists = False
+        if _shape_ok:
+            _reg = (Path(__file__).resolve().parents[2]
+                    / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
+                    / "workspace/COORDINATION.md")
+            try:
+                _exists = any(l.startswith(f"### {_rid} ")
+                              for l in _reg.read_text().splitlines())
+            except OSError:
+                _exists = False
+        if _shape_ok and not _exists:
+            raise DesignCensusRefused(
+                f"USER_RULING_ENTRY_NOT_IN_THE_REGISTER: `{k}` names "
+                f"{_rid}, which has no `### {_rid} ` entry in "
+                f"COORDINATION.md. An R-id that matches the shape and "
+                f"names nothing is rule 14's authority with no record "
+                f"behind it.")
+        if (blk.get("ruled_by") != "THE USER" or not _shape_ok or miss):
             raise DesignCensusRefused(
                 f"USER_RULING_BLOCK_INCOMPLETE: `{k}` is missing {miss or []} "
                 f"or carries ruled_by={blk.get('ruled_by')!r} / "

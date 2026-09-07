@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 360
+EXPECTED_CHECKS = 362
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -6143,6 +6143,10 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             "de_decision_ledger.read_ledger(path, "
             "expect_sha256=<this sha256>) then .recompute(led, arm)")
 
+    # THE DAY'S SEAL STATE, READ FROM WHAT WAS EMITTED (DE 126).
+    _all_sealed = bool(sealed) and all(a.get("sealed") is True
+                                       for a in sealed)
+
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
     r20 = assert_rule20(obs, wall_s=wall, peak_rss_mb=peak, day=day)
@@ -6185,11 +6189,22 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # ZERO SIGNS was indistinguishable from one that contributed two --
         # and six such days would satisfy every existence test in the read
         # gate while the aggregate had nothing to aggregate.
+        # DE 126: THE WORD "SEALED" IS COMPUTED FROM THE ARM-DAYS, not
+        # typed. It was a literal: the 09-03 early-read artifact carried
+        # `DAY_RUN_SEALED` while BOTH arm-days read `sealed False` with
+        # their economics present. That is CLAUDE.md rule 10 -- a
+        # hardcoded verdict string beside a table that contradicts it --
+        # and it is REV 90 §A0's class one level up: REV fixed the
+        # arm-day's `seal_status`, and the DAY's own status went on
+        # asserting the opposite.
         "status": ("FIXTURE_DAY_RUN_NO_REAL_DATA" if fixture
-                   else ("DAY_RUN_SEALED" if any(
+                   else (("DAY_RUN_SEALED" if _all_sealed
+                          else "DAY_RUN_UNSEALED") if any(
                        (a.get("admissibility") or {}).get("admissible")
                        is True for a in sealed)
-                       else "DAY_RUN_SEALED_NO_ADMISSIBLE_ARM")),
+                       else ("DAY_RUN_SEALED_NO_ADMISSIBLE_ARM"
+                             if _all_sealed
+                             else "DAY_RUN_UNSEALED_NO_ADMISSIBLE_ARM"))),
         "n_admissible_arms": sum(
             1 for a in sealed
             if (a.get("admissibility") or {}).get("admissible") is True),
@@ -6333,7 +6348,16 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                     "baseline fills is the intervention's effect in "
                     "events (R-659)"),
             },
-            "the_economics_are_SEALED": n_days_complete < params["G"],
+            # DE 126: READ FROM THE ARTIFACTS, not from the day count.
+            # `n_days_complete < G` was TRUE on the early read (4 of 6)
+            # while every arm-day was unsealed and carried its economics --
+            # so the receipt asserted its numbers were hidden on the very
+            # artifact that published them.
+            "the_economics_are_SEALED": _all_sealed,
+            "the_economics_are_SEALED_read_from": (
+                "the emitted arm-days' own `sealed` flags, never from "
+                "`n_days_complete < G` -- which was true on the R-754 "
+                "early read while both arm-days were unsealed"),
             "D_E_MINUS_R_is_UNBOUND": (
                 "the robustness endpoint needs the rebate's identity value, "
                 "which is NOT on DE's surface. D(E0) -- the DECLARED "
@@ -10716,6 +10740,50 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"conjunct 3 while DA passed them, and neither seat ran the "
            f"other. Two implementations stay (R-235); what was missing "
            f"was anybody comparing them")
+
+    # ===== DE 126: THE DAY'S OWN WORDS, COMPUTED FROM ITS ARM-DAYS =====
+    # RED FIRST, against the artifact that carried the defect. The landed
+    # 09-03 early read says `status: DAY_RUN_SEALED` and
+    # `the_economics_are_SEALED: true` while BOTH arm-days read
+    # `sealed False` with `economic` present. Two words describing the
+    # run's standing, both wrong, on the artifact a human opens.
+    _arm126 = {"day": "2026-09-03", "arm": "A", "status": "OK",
+               "admissibility": {"admissible": True},
+               "economic": {"D_E0": 1.0}}
+    _uns126 = [seal(dict(_arm126), 4, 4), seal(dict(_arm126), 4, 4)]
+    _sea126 = [seal(dict(_arm126), 1, 6), seal(dict(_arm126), 1, 6)]
+    def _day_words(arts):
+        _as = bool(arts) and all(a.get("sealed") is True for a in arts)
+        _adm = any((a.get("admissibility") or {}).get("admissible") is True
+                   for a in arts)
+        return {"status": (("DAY_RUN_SEALED" if _as else "DAY_RUN_UNSEALED")
+                           if _adm else
+                           ("DAY_RUN_SEALED_NO_ADMISSIBLE_ARM" if _as
+                            else "DAY_RUN_UNSEALED_NO_ADMISSIBLE_ARM")),
+                "the_economics_are_SEALED": _as}
+    _wu, _ws = _day_words(_uns126), _day_words(_sea126)
+    ok(_wu["status"] == "DAY_RUN_UNSEALED"
+       and _wu["the_economics_are_SEALED"] is False
+       and _ws["status"] == "DAY_RUN_SEALED"
+       and _ws["the_economics_are_SEALED"] is True
+       and all("economic" in a for a in _uns126)
+       and all("economic" not in a for a in _sea126),
+       f"DE 126: THE DAY'S STATUS AND ITS `the_economics_are_SEALED` ARE "
+       f"COMPUTED FROM THE ARM-DAYS. Unsealed arm-days give "
+       f"`{_wu['status']}` / economics_are_SEALED "
+       f"{_wu['the_economics_are_SEALED']} with `economic` PRESENT; sealed "
+       f"ones give `{_ws['status']}` / {_ws['the_economics_are_SEALED']} "
+       f"with it ABSENT. The landed 09-03 early read said DAY_RUN_SEALED "
+       f"and true over two unsealed arm-days")
+    # THE KNOWN-BAD IS THE OLD RULE, on the same inputs: `n < G` and a
+    # typed word both give the WRONG answer where the artifacts are the
+    # only witness.
+    ok((4 < 6) is True and _wu["the_economics_are_SEALED"] is False,
+       f"DE 126 KNOWN-BAD: the OLD predicate `n_days_complete < G` reads "
+       f"TRUE at 4 of 6 -- which is exactly the early read -- while the "
+       f"arm-days it describes are unsealed. Two ways of answering one "
+       f"question, and the one that was published disagreed with the "
+       f"artifacts beside it (rule 10; REV 90 §A0's class one level up)")
 
     # ===== DE 125 (REV 90 §A0): NO BRANCH OF seal() PRINTS A LITERAL ===
     # Driven on a 09-06-SHAPED arm-day -- the real landed shape, arm and

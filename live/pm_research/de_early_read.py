@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 20
 
 
 class EarlyReadRefused(RuntimeError):
@@ -656,19 +656,54 @@ def selftest(quiet: bool = False) -> int:
            f"the one cell here that the old check would have passed")
     shutil.rmtree(froot3, ignore_errors=True)
 
-    # 4d: THE REAL DAY, against the REAL ledger, under v17's bar
-    reh = rehearse("2026-09-03")
+    # 4d: THE REAL DAY, against the REAL ledger.
+    # 2026-09-03 WAS this cell's day until GO E1 read it: its early-read
+    # artifact now exists, so `rehearse` correctly returns NOT_READY on
+    # EARLY_READ_ALREADY_EMITTED -- the guard doing its job. The cell
+    # moves to the next ruled day that has a sealed receipt and no early
+    # read, and it asserts BOTH: that 09-03 now refuses BY THAT NAME, and
+    # that an unread day is READY. A cell pinned to a day that has been
+    # consumed measures the past.
+    _done = rehearse("2026-09-03")
+    ok(_done["status"] == "NOT_READY"
+       and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"],
+       f"DE 126: 2026-09-03 has been READ (GO E1), so its rehearsal now "
+       f"refuses by name -- {_done['blocking']}. The day is consumed and "
+       f"the entry says so rather than offering to run it again")
+    reh = rehearse("2026-09-04")
     dc = reh["preconditions"]["digest_comparison"]
     ok(reh["status"] == "READY" and reh["blocking"] == []
        and dc["is_a_full_pair"] is True
        and len(dc["bar_says"]) == 64 and dc["bar_says"] == dc["artifact_is"]
        and dc["prefix_agrees_with_the_full_digest"] is True,
-       f"DRIVE 4d (GREEN, THE REAL DAY): 2026-09-03 rehearses "
+       f"DRIVE 4d (GREEN, THE REAL DAY): 2026-09-04 rehearses "
        f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
        f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
        f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 hex "
        f"compared and equal, with v16's prefix kept beside it and "
        f"agreeing")
+
+    # ---- REV 91 §C1 / REV 93 #4: THE SHARED FALSIFIER, AS ONE CELL ---
+    # The gap REV named is DETECTION COVERAGE, not correctness: the shared
+    # module's own falsifier passes and ten other importers drive it, so a
+    # regression there would be caught -- just not by THIS module's
+    # battery, which resolves two chains through it (the params head for
+    # the ruling, the exit-map head for the code). It is driven as a
+    # SUBPROCESS, the same way `de_multiday_design_declaration` drives it,
+    # and it runs no battery of ours so it cannot recurse.
+    import subprocess as _sp
+    _dcf = _sp.run([sys.executable,
+                    str(Path(__file__).resolve().parent
+                        / "declaration_chain.py"), "--falsify"],
+                   capture_output=True, text=True, timeout=180)
+    _last = (_dcf.stdout.strip().splitlines() or [""])[-1]
+    ok(_dcf.returncode == 0 and "0 failures" in _last,
+       f"REV 91 §C1 / REV 93 #4: `declaration_chain.py --falsify` runs as "
+       f"ONE CELL of this battery -- rc {_dcf.returncode}, `{_last}`. This "
+       f"module resolves TWO chains through that implementation and shipped "
+       f"no drive of it for three rounds; the shared module's internal link "
+       f"algebra is NOT re-tested here, only that its own falsifier still "
+       f"fires")
 
     # ---- DA 122's CENSUS: AN IMPORTER OF declaration_chain SHIPS A ---
     # ---- FALSIFIER FOR THE SEAM IT USES ------------------------------

@@ -41,7 +41,11 @@ import math
 import statistics
 from pathlib import Path
 
-SCHEMA_VERSION = 1
+#: v2 (DE 126): BE 96 (c707eb8) made the fill record carry the position at
+#: the fill on the arm AND the 0-cancel baseline, so the inventory leg
+#: stopped being ABSENT_UNTIL_BE_96 and became a number this file can
+#: carry. v1 ledgers have no inventory fields and say so; v2 ledgers do.
+SCHEMA_VERSION = 2
 LEDGER_PREFIX = "p003_de_decision_ledger"
 
 
@@ -73,18 +77,18 @@ def write_ledger(path, day: str, per_arm: dict,
             "row": "HEADER", "schema_version": SCHEMA_VERSION, "day": day,
             "ruling": "R-765, the USER's: store the numbers after each run",
             "what_cannot_be_recomputed_from_this": {
-                "inventory_leg": "ABSENT_UNTIL_BE_96",
-                "inventory_before_after": "ABSENT_UNTIL_BE_96",
-                "why": "no inventory state exists in the runner at the "
-                       "point the day is computed; the fill record BE's "
-                       "replay returns carries no position. Not stored "
-                       "rather than invented.",
-                "ABSENT_UNTIL_BE_96": "routed to BE as BE 96 (DE 124's "
-                       "ruling (4)). A reader meeting this knows the field "
-                       "is COMING, not that it was forgotten -- and that a "
-                       "ledger written before BE 96 lands cannot answer an "
-                       "inventory question however it is asked.",
+                "nothing_the_ruling_asked_for": "BE 96 (c707eb8) closed the "
+                    "one gap. `inventory_before`, `inventory_after`, "
+                    "`inventory_unit`, `inventory_mark_cents` and "
+                    "`inventory_mark_source` are on every fill record here, "
+                    "for the arm AND the 0-cancel baseline, so the "
+                    "INVENTORY LEG is recomputable from this file. Schema "
+                    "v1 ledgers carry none of it and are not comparable on "
+                    "that leg.",
             },
+            "inventory_fields_from_BE_96": [
+                "inventory_before", "inventory_after", "inventory_unit",
+                "inventory_mark_cents", "inventory_mark_source"],
             # THE SIGN CONVENTION TRAVELS WITH THE FILE. `fill_value_cents`
             # signs by `HSP.SIDES[0]`; a reader that guessed "B" would
             # value every fill backwards the day that constant changed,
@@ -212,6 +216,35 @@ def recompute(led: dict, arm: str) -> dict:
             continue
         legs["spread_captured_cents"] += sgn * (float(lvl) - float(mid)) * float(sz)
         legs["adverse_cents"] += sgn * (float(mkt) - float(mid)) * float(sz)
+    # ---- THE INVENTORY LEG (BE 96, DE 126) ---------------------------
+    # The position at the fill, marked at the fill's own mark. A ledger
+    # whose fill records lack the fields REFUSES BY NAME -- it is never
+    # read as zero, because a zero inventory leg and an unrecorded one are
+    # the same number and opposite facts.
+    _inv_missing = [f for f in ("inventory_before", "inventory_after",
+                                "inventory_mark_cents")
+                    if fills and f not in fills[0]]
+    if fills and _inv_missing:
+        raise LedgerRefused(
+            f"DECISION_LEDGER_NO_INVENTORY_FIELDS: the fill records lack "
+            f"{_inv_missing} (schema v"
+            f"{led['header'].get('schema_version')}). BE 96 put them on "
+            f"every fill; a ledger without them cannot answer an inventory "
+            f"question, and answering it with 0 would be a fact nobody "
+            f"measured.")
+    inv = {"inventory_leg_cents": 0.0, "n_fills_with_inventory": 0,
+           "inventory_unit": None, "mark_sources": {}}
+    for f in fills:
+        b, a_, mk = (f.get("inventory_before"), f.get("inventory_after"),
+                     f.get("inventory_mark_cents"))
+        if b is None or a_ is None or mk is None:
+            continue
+        inv["n_fills_with_inventory"] += 1
+        inv["inventory_unit"] = f.get("inventory_unit") or inv["inventory_unit"]
+        _src = f.get("inventory_mark_source")
+        inv["mark_sources"][_src] = inv["mark_sources"].get(_src, 0) + 1
+        # the leg is the position CHANGE valued at the fill's own mark
+        inv["inventory_leg_cents"] += (float(a_) - float(b)) * float(mk)
     rho = (legs["adverse_cents"] / legs["spread_captured_cents"]
            if legs["spread_captured_cents"] else None)
     return {
@@ -219,18 +252,17 @@ def recompute(led: dict, arm: str) -> dict:
         "null_mean": mean, "null_sd": sd,
         "Z": ((obs - mean) / sd) if sd else math.inf,
         "p_one_sided": p_one, "p_two_sided": p_two,
-        "rho_adverse_over_spread": rho, **legs,
-        "inventory_leg": None,
-        "why_inventory_leg_is_None": "ABSENT_UNTIL_BE_96 -- no inventory "
-                                     "state is recorded; BE's replay "
-                                     "returns no position. Absent, not "
-                                     "zero, and coming.",
+        "rho_adverse_over_spread": rho, **legs, **inv,
+        "inventory_leg": inv["inventory_leg_cents"],
+        "inventory_leg_from": "BE 96's per-fill position, valued at each "
+                              "fill's own mark; ABSENT_UNTIL_BE_96 is "
+                              "closed",
     }
 
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 6
+EXPECTED_CHECKS = 8
 
 
 def selftest(quiet: bool = False) -> int:
@@ -254,7 +286,12 @@ def selftest(quiet: bool = False) -> int:
               "px_cents": 100.0 + i * 0.01, "size": 10.0,
               "slug": f"s{i}", "ref_gen": i,
               "mid_cents_at_fill": 99.5 + i * 0.01,
-              "mid_cents_at_markout": 100.2 + i * 0.01} for i in range(40)]
+              "mid_cents_at_markout": 100.2 + i * 0.01,
+              # BE 96 (c707eb8), on every fill for both books
+              "inventory_before": float(i), "inventory_after": float(i) + 10.0,
+              "inventory_unit": "shares",
+              "inventory_mark_cents": 100.0 + i * 0.01,
+              "inventory_mark_source": "mid_at_fill"} for i in range(40)]
     per_arm = {"A": {"observed": obs, "arm_value": 12.5, "base_value": 10.0,
                      "head": "h", "theta": 0.5, "seed": 7,
                      "n_decisions": 200, "n_cancels_issued": 11,
@@ -287,14 +324,51 @@ def selftest(quiet: bool = False) -> int:
        and rc["p_two_sided"] >= rc["p_one_sided"]
        and rc["rho_adverse_over_spread"] is not None
        and rc["n_fills_valued"] == len(fills)
-       and rc["inventory_leg"] is None,
+       and rc["inventory_leg"] is not None,
        f"R-765 (1): and the statistics the SEALED receipts could not "
        f"carry -- p one-sided {rc['p_one_sided']:.4f}, p TWO-sided "
        f"{rc['p_two_sided']:.4f}, rho = adverse/spread "
        f"{rc['rho_adverse_over_spread']:.4f}, the fills leg over "
        f"{rc['n_fills_valued']} fills -- all come out of the stored rows. "
-       f"`inventory_leg` is None and says why: it was never computed, so "
-       f"it is ABSENT, not zero")
+       f"And since BE 96 the inventory leg is among them "
+       f"({rc['inventory_leg']:.1f} cents), so nothing the ruling asked "
+       f"for is missing from this file")
+
+    # ---- (1c) THE INVENTORY LEG, RECOMPUTED FROM THE LEDGER ALONE -----
+    # BE 96 closed ABSENT_UNTIL_BE_96. The leg is the position CHANGE at
+    # each fill valued at that fill's own mark, and the cell matches it
+    # against the same sum formed independently here -- to 1e-9, from the
+    # stored rows, with no book.
+    _want_inv = sum((f["inventory_after"] - f["inventory_before"])
+                    * f["inventory_mark_cents"] for f in fills)
+    ok(abs(rc["inventory_leg"] - _want_inv) < 1e-9
+       and rc["n_fills_with_inventory"] == len(fills)
+       and rc["inventory_unit"] == "shares"
+       and rc["mark_sources"] == {"mid_at_fill": len(fills)},
+       f"DE 126 / BE 96: the INVENTORY LEG recomputes from the ledger "
+       f"alone to {rc['inventory_leg']:.6f} cents against "
+       f"{_want_inv:.6f} formed independently -- equal to 1e-9 over "
+       f"{rc['n_fills_with_inventory']} fills, unit "
+       f"{rc['inventory_unit']!r}, marks {rc['mark_sources']}. "
+       f"ABSENT_UNTIL_BE_96 is closed and schema v{SCHEMA_VERSION} says so")
+    # RED: a ledger whose fills lack the fields REFUSES -- never zero.
+    _no_inv = {"A": {**per_arm["A"],
+                     "arm_fills": [{k: v for k, v in f.items()
+                                    if not k.startswith("inventory_")}
+                                   for f in fills],
+                     "baseline_fills": []}}
+    _lp2 = d / ledger_name("2026-09-08", "20260908T000000Z")
+    write_ledger(_lp2, "2026-09-08", _no_inv, buy_side="B")
+    _code_inv = None
+    try:
+        recompute(read_ledger(_lp2), "A")
+    except LedgerRefused as e:
+        _code_inv = str(e).split(":")[0]
+    ok(_code_inv == "DECISION_LEDGER_NO_INVENTORY_FIELDS",
+       f"DE 126 RED: a ledger whose fill records lack BE 96's fields "
+       f"REFUSES by name -- `{_code_inv}` -- and is NEVER read as an "
+       f"inventory leg of zero. A zero leg and an unrecorded one are the "
+       f"same number and opposite facts")
 
     # ---- (2) THE BOOK IS ABSENT ---------------------------------------
     # Nothing in the read path can reach a book: the reader takes a PATH
