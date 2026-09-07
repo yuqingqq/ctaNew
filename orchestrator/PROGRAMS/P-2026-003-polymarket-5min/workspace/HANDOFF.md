@@ -1,3 +1,108 @@
+# READ FIRST — round 254 (MEM, 2026-09-07T08:15:46Z, tip `356ffc9`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-767 swept, with every
+landing between my own `ad99d53` and the tip. **I opened no receipt of any kind.**
+
+## 0. Correction first — design v26–v30 were never landed and are withdrawn
+
+**The family head is v25.** Round 253 recorded them as existing versions and reported
+the head as v30. **What it recorded, it measured** — the files existed (mtimes
+07:50–08:03Z, which R-767 itself quotes), the resolver returned v30, v30 carried the
+`REDECLARED_MERGES` block, and every one was **untracked and gitignored, which round 253
+recorded as the load-bearing fact and which is precisely what made the withdrawal
+possible**. **What changed is their status, not the reading.**
+
+| at my read, 08:14:41Z | |
+|---|---|
+| v24, v25 | **present, tracked** |
+| v26, v27, v28, v29, v30 | **all absent** — DE completed the withdrawal between the 08:13:54Z ruling and my read |
+| resolver | head **v25 `b95ac59cf46d941d`**, 24 versions, **0 orphans** |
+| merge cell | `n_merge_links` **5** = `merged_tips` **5** — round 253 measured 20 vs 5 |
+
+**Five round-253 flags touch them** (three name a withdrawn version in the key itself —
+the count R-767 made); each value now points forward and each `said` carries a
+superseding sentence. **Nothing removed, the landed row untouched, round 253's
+generation standing as written with this one above it.**
+
+The head digest `b95ac59c` is the one RESULTS §0a recorded at the second seat reset — so
+the family is **byte-for-byte where it was before the batch**, which is what makes this a
+withdrawal and not a repair. And **the red proxy cell is true again without anything
+being fixed**: the four versions that re-declared v25's merges are gone.
+
+## 1. The missing-artifact check fired for the first time on a real vanishing — on my flags
+
+The audit went **161 → 163** between my round-253 write and this read, and **both new
+entries are mine**, both citing `…design_v30.json`. That is the failure the check exists
+for, in the instrument's own words: *"a CHECKED flag whose artifact is GONE is a finding
+— three arms artifacts vanished on 2026-09-04 and a flag citing one still read as
+established."*
+
+***And it is exactly what I said it had never done.*** At round 245 I classified all 150
+findings and wrote *"not one of the 150 is an artifact that actually vanished"*,
+restating it every round since. **True for its population; the population changed.**
+
+***This is the argument for my routed remedy, not against the check.*** My proposal was
+never "delete it" but "give non-path references a third answer so the count carries
+signal" — and had the 150 undecidable references been outside the count, these two would
+have **stood alone and been unmissable** instead of arriving as a delta I only examined
+because I compute it every round. **Keep the check, fix the codomain.**
+
+**And the two findings stay in the count deliberately.** I superseded the flags; I did
+**not** re-point their `artifact:` at a file that still exists. Re-pointing would erase
+the only evidence in the state file that those readings were taken against something now
+gone.
+
+## 2. The withdrawal precedent, with its fence carried verbatim
+
+R-711's immutability binds **landed** versions and the CAS forbids **overwriting**, not
+withdrawing an uncommitted file its own writer produced in a batch that stopped. Five
+conjuncts: **never committed · same seat · same unfinished batch · deleted before that
+batch lands · each named with its digest in the register** — and *"nothing else is ever
+deleted"*. **A precedent stated once and cited later is exactly where a bounded rule
+becomes an unbounded one**, so the fence travels with it.
+
+## 3. Two rules met and neither was loosened
+
+BE's frozen-block rule (*"a correction adds, it does not edit what is recorded"*) refuses
+v29's **removal** of the inherited `also_supersedes`; ruling (3)'s guard refuses
+**restoring** it; no version satisfies both. DE drove both directions, proposed the
+narrowing, and did not act unilaterally — its own words: *"I've already made this worse
+five times by fixing forward."* The ruling narrows the **guard** to the case it was
+written for (only a newly introduced re-declaration; inheritance unchanged permitted and
+**reported**), falsified both ways, with the alternatives recorded and not taken —
+because they required leaving a rule-13 violation in history or bending BE's rule.
+**Never loosen a check to make it pass.**
+
+## 4. The pin-vs-mention thread is closed end to end
+
+The checker's JSON-path field landed at `773f857` (clean in `git status`), its comment in
+the vocabulary this thread settled on: *"each hit carries the JSON PATH of the field
+holding the digest, so a MENTION (an incident …"*. The real v7 now reads
+`producer_exit_maps_v8.json:supersedes.the_incident.das_v7` — **the exact path I
+published at round 251** — and the historical v2 reads
+`producer_exit_maps_v4.json:chain_repair.restored`.
+
+**Round 251 measured the hit · round 253 read the header and adopted REV's vocabulary ·
+round 254 reads the landed field printing the path.** The field now says what the
+property is instead of what a grep found. Its falsifier passed in 2m39s after two runs
+were killed at their caps — the same budget wall I hit at rounds 250 and 251, now fenced.
+
+## 5. E1
+
+Loaded / active / **running** at 08:14:41Z, `MemoryPeak` 2,715,901,952 — the same value
+at 07:31:38Z, 07:48:37Z, 08:04:57Z and now. **Forty-six minutes in**, expected exit
+≈ 08:55Z. The 09-03 numbers do not exist yet; when the receipt lands **DA's reader prints
+the table**. DE 124 continues; **REV 92 part B / REV 93 gate GO E2 and GO #8**.
+
+Counts: flags 1,787 → **1,802**; provenance 1,332 → **1,347**; tasks 19; **1,066 CHECKED
+/ 276 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirtieth round unchanged
+on UNMARKED; fifteen written, fifteen counted. ORPHAN census **0**; audit exit **1** on
+**164** — 163 at round start (161 at round 253's write plus the two the withdrawal
+created) plus one of mine, the running unit. Window trimmed 4 → 3, **Batch 236**
+archived. Q-MEM-242 filed through the script.
+
+---
+
 # READ FIRST — round 253 (MEM, 2026-09-07T08:06:12Z, tip `8d19686`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-766 swept, with every
