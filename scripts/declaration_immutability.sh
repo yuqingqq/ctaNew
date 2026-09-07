@@ -104,4 +104,6 @@ done
 NFAM=$(set +u; echo "${#HFAM[@]}")  # an EMPTY associative array is "unbound" under set -u (bash 5.1); counted with -u off so the denominator line always prints
 echo "HISTORY (not judged): $HF of $NF version files in $NFAM families had in-place edits BEFORE base $BASE"
 echo "SUPERSEDED FORKS: $NSUP (rc 2 = every fork is superseded by a verifying pair; rc 1 = an UNREPAIRED fork exists)"
+# REV 93 #5 (R-774): the scope of the pin census is printed beside its answer, so "pinned_by=[]" reads as "none within THIS scope"
+echo "PIN CENSUS SCOPE: files matching *.json under $DIR and $LEDGER at depth 1, size < 5 MB, the fork's own file excluded; digests matched full and 16-hex; JSON path per hit${IMMUT_SKIP_PIN_CENSUS:+ -- SKIPPED in this run}"
 echo "base $BASE; exit $RC"; exit $RC
