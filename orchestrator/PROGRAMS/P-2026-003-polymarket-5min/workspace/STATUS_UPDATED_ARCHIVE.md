@@ -19473,3 +19473,65 @@ generation and the window went 4 → 3. Nothing rewritten.
   round running, because all fifteen entries resolve. Window trimmed 4 -> 3, **Batch 242** archived.
   Q-MEM-248 filed through the script.)
 ```
+
+## Batch 246 — archived 2026-09-07T09:55:03Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:19:21Z (MEM ROUND 261 -- R-775 SWEPT, with every landing between my own 47157d8 bound and
+  `53811a4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***E2 IS RUNNING -- THE FIRST DAY WITH A DECISION LEDGER.*** `deEARLY20260904`, read while loaded at
+  09:18:07Z: loaded / active / **RUNNING** / ExecMainStatus 0 / Result success, InvocationID
+  `775e46b59fee42228efab036b6abad58`, ExecMainStartTimestamp **09:15:47Z**, MemoryPeak 3,119,230,976; 140
+  seconds in, expected exit ≈ 10:55Z. E1 ran under the old code and produced no ledger (R-765's disclosed
+  consequence); E2 runs at `fe76d83`, which carries the ledger at schema v2 with BE 96's five inventory
+  fields -- **so this is the first run in which the USER's "record everything we can" ruling actually
+  executes.** ***AND ITS PEAK IS ALREADY 1.149x E1's***: 2.905 GiB against E1's 2.529 GiB high-water mark,
+  which E1 reached in its first three minutes and never exceeded across 85. 36 % of the 8 GiB cap, so
+  nothing is at risk -- recorded because the same-stage comparison is the meaningful one and three runs
+  queue behind this one. I do not claim the ledger as the cause: DE sizes it at ~2 MB gzipped per day,
+  which is not 400 MB of RSS.
+  (2) ***ALL FIVE CLEARED DIGESTS MATCH AT wt-de's `fe76d83`, AND I VERIFIED THEM WITHOUT TOUCHING THE
+  FROZEN WORKTREE.*** I read its HEAD ref and resolved every blob from the MAIN tree's object store: runner
+  `ccc4108d`, early read `ba6daba4`, ledger `d78c3701`, params v19 `dd8db7de` -- and the fifth, design v27
+  `3bcdf3c2`, **is not in the worktree's git at all.**
+  (3) ***WHICH IS THE WHOLE REASON THE FREEZE EXISTS: THE WORKTREE FREEZE COVERS `live/` AND NOT `data/`.***
+  `wt-de/data` is a symlink to `/home/yuqing/ctaNew/data`, so the params family is git-tracked and frozen
+  with the code, while **the design family lives on the shared disk and is not** -- a design version landing
+  during E2..E4 or GO #8 would be visible to the frozen run's resolver immediately. R-775 says it plainly:
+  "the frozen wt-de resolves the design head from the shared ledger". **So the params freeze is
+  belt-and-braces and THE DESIGN FREEZE IS THE ONLY THING STANDING BETWEEN A NEW LEDGER VERSION AND A
+  RUNNING RESOLVER** -- and it is the family four seats have been bumping all morning. A reader who thinks
+  "the worktree is frozen, so nothing can change under the run" would be wrong about exactly one family.
+  Both heads are unmoved at my read (v27, v19), and the freeze is carried with its release condition --
+  GO #8's receipt -- not as an open-ended prohibition.
+  (4) ***FOUR MORE COMMITS LANDED INSIDE MY ROUND-260 WINDOW, AND THIS IS NOW STRUCTURAL RATHER THAN
+  INCIDENTAL.*** REV 95's two commits, R-775 and the runbook's next-entry line (09:16:01Z) all landed
+  between my round-260 fetch at 09:11:56Z and my row at 09:17:12Z; the row is exactly true because it names
+  `47157d8` and says "MEM sweeps R-775 onward". Third round running -- one commit, four, four. ***THE
+  PATTERN IS NOT LUCK AND NOT LATENESS: THE COORDINATOR WRITES THE NEXT ENTRY WHILE MEM WRITES THE LAST
+  ONE***, and both cycles take about five minutes, so an entry landing inside my window is the NORMAL case
+  and an empty one is the exception. **The consequence, stated so no reader mistakes it for lag: MEM's state
+  files are current to a NAMED COMMIT and one entry behind the register's tail, by construction.** That is
+  why every row names its bound and its next target, and why a reader wanting the last five minutes reads
+  the register rather than STATUS.yml.
+  (5) ***REV 95 CLEARED BOTH GOs AT THE TIP'S FIVE DIGESTS, NO HOLDS***, with the finding that no phase-2
+  change touches a verdict path -- so round 259's third stale-clearance instance is closed by re-gating, and
+  the user's remaining early reads and tonight's Gate-1 run are unblocked by the same review that blocked
+  them, which is what a narrow re-gate buys. ***AND REV's §A5 IS A FORWARD-DATED FINDING WITH A TRIGGER***:
+  the next-unread cell goes RED after E4, because once every ruled day is read there is no next unread day
+  to rehearse -- the same shape as the E2 NO-GO (a check that passes only until the thing it checks
+  happens), **caught before it fires rather than after**, routed to DE 127 and required before E4. I record
+  the trigger and not just the item, because a forward-dated finding with a trigger is the only kind that
+  survives a context clear.
+  (6) **THE UNIT'S START IS 09:15:47Z AND THE ENTRY SAYS 09:16:13Z** -- 26 seconds, both true, different
+  events, with the GO itself issued at 09:15:09Z. Fifth instance this week (41 s, 3 s, 18 s, 24 s, 26 s) and
+  the rule holds without exception so far. ***AND I QUOTE NO VALUE FROM E2 BECAUSE ITS ARTIFACT DOES NOT
+  EXIST YET***: the run is in flight, the receipt lands at exit, DA reads it and prints the table. Nothing
+  about 09-04 is knowable from these files and they say so.
+  Counts: flags 1,892 -> **1,907**; provenance 1,437 -> **1,452**; tasks 19; **1,164 CHECKED /
+  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SEVENTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **171** missing-artifact findings, 168 at my round start plus THREE of mine -- all
+  three readings of the RUNNING unit, which is not a file. Window trimmed 4 -> 3, **Batch 243** archived.
+  Q-MEM-249 filed through the script.)
+```

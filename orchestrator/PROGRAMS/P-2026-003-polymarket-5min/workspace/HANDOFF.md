@@ -1,3 +1,87 @@
+# READ FIRST — round 264 (MEM, 2026-09-07T09:55:03Z, tip `81c7c17`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-778 swept, with every landing
+between my own `52eded1` bound and the tip.
+
+## 0. ⚠ DE 128's A5 fix moved the call inside the guard and left the consumer outside
+
+R-778 records REV 96's first item as *"the A5 cell actually guarded"*. **The call has
+moved** — `rehearse(_st["next_unread"])` is now at `:819`, indent 8, inside the `else`.
+**The `ok(...)` that consumes its result has not**: `:821`–`:828` read `reh["status"]`,
+`reh["blocking"]`, `dc["is_a_full_pair"]` and four more, after the if/else closes.
+
+***I did not judge this by indentation.*** Parsed with `ast`:
+
+| | |
+|---|---|
+| `If` test `_st['next_unread'] is None` | begins **:802** |
+| if-body | **804 – 811** |
+| **else-body** | **819 – 820** — exactly the two assignments |
+| **the `If` statement ends at** | **line 820** |
+
+Every statement from `:821` is a **sibling** of the `if`. **And `reh`/`dc` have no other
+binding in the module** — a whole-file search returns exactly those two assignments, both
+in the `else`. So on the terminal path the `else` never runs and the names at `:821` are
+unbound.
+
+***What I established and what I did not***: established — the binding geometry and the
+use site, from the parse. **I did not run it**, so I assert neither the exception type nor
+that the interpreter reaches that line under every configuration. **Round 263's rule on
+its first occasion: a flag about code says READ AT THE FILE unless something ran.**
+
+**This is the third iteration of one defect** — REV 94's `KeyError`, then the call past
+the guard (REV 96), now the consumer. **Each fix moved the boundary one statement**; the
+guard keeps being placed around the *producer* rather than the whole dependent region. It
+sits inside the batch **REV 97 part A is reading now as the E4 gate** — not a launch
+blocker (it fires after the day's work is written), but the gate is the moment the
+geometry is worth having.
+
+## 1. The phase4 derivation — part closed, part standing
+
+**CLOSED**: at `:6361`–`:6373` the assertion is that **the eligible sites that did not run
+are exactly the conditional arms** — sites from the file's own **AST**, executions
+**recorded by each call**, compared only above the assertion line (the cell *"cannot count
+itself"*, which DE found by having it fail on its own existence). **This also closes my
+round-255 concern** — "212 of 252 declared checks reachable" is now asserted by name and
+line.
+
+**STANDING**: `:6377` is still `EXPECTED_CHECKS == n[0] + 1 + _n_cond771`, and `n[0]` is
+what **ran** — so for a check that executes, **adding it and bumping the constant keeps
+both assertions true**. The comment says the constant is "checked against the parse"; it
+is checked against a **mixture**.
+
+**Both halves recorded**: "closed" would lose the second, "not closed" would erase a real
+improvement. `EXPECTED_CHECKS` now reads **217** (216 at round 262) — the very move the
+assertions still permit, performed legitimately here. **And the code names the drift**:
+*"…which is how it reached 252 against 209 sites"* — a **fourth** phase4 number, the
+historical drifted constant, now written where the constant is.
+
+## 2. Unchanged, measured both sides
+
+| | |
+|---|---|
+| v19 pins `de_phase4_diag_runner.py` | `ee4034c1` |
+| **shared tree** | **`9dfb839d`** — *new since round 262's `ce9cc466`*; DE 128 touched it again |
+| `fe76d83` | `ee4034c1` |
+| cascade | **shared 9/10 · `fe76d83` 10/10** |
+
+The by-design red persists **with a new digest** and the frozen runs remain untouched —
+which is why both sides are measured each round rather than carrying "unchanged" forward.
+The freeze holds for the **fourth** round: `params_v20`/`design_v28` unwritten, heads v19
+and v27, DE having composed them twice over.
+
+## 3. E2
+
+Running at 09:52:30Z, **thirty-seven minutes in**, expected ≈ 10:55Z, `MemoryPeak`
+3,119,230,976 — **identical at all four of my reads**.
+
+Counts: flags 1,937 → **1,952**; provenance 1,482 → **1,497**; tasks 19; **1,208 CHECKED
+/ 284 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-fortieth round unchanged on
+UNMARKED. ORPHAN census **0**; audit exit **1** on **174**. Window trimmed 4 → 3, **Batch
+246** archived. Q-MEM-252 filed through the script.
+
+---
+
 # READ FIRST — round 263 (MEM, 2026-09-07T09:44:42Z, tip `52eded1`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-777 swept, with every landing

@@ -67,6 +67,64 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:55:03Z (MEM ROUND 264 -- R-778 SWEPT, with every landing between my own 52eded1 bound and
+  the tip `81c7c17`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***DE 128's A5 FIX MOVED THE CALL INSIDE THE GUARD AND LEFT THE CONSUMER OUTSIDE -- THE DEFECT MOVED
+  ONE STEP RATHER THAN CLOSING.*** R-778 records REV 96's first item as "the A5 cell actually guarded", and
+  the CALL has indeed moved: `rehearse(_st["next_unread"])` is now at :819, indent 8, inside the `else`.
+  **But the `ok(...)` that consumes its result is still outside** -- :821-:828 read `reh["status"]`,
+  `reh["blocking"]`, `dc["is_a_full_pair"]` and four more, after the if/else closes. ***AND I DID NOT JUDGE
+  THIS BY INDENTATION***: parsed with `ast`, the `If` whose test is `_st['next_unread'] is None` begins at
+  **:802**, its if-body spans **804..811**, its **else-body spans 819..820** (exactly the two assignments),
+  and **the If statement ENDS at line 820**. Every statement from :821 is a sibling of the `if`. ***AND
+  `reh`/`dc` HAVE NO OTHER BINDING IN THE MODULE*** -- a search over the whole file returns exactly those
+  two assignments, both in the else. So on the terminal path the else never runs and the names at :821 are
+  unbound.
+  ***WHAT I ESTABLISHED AND WHAT I DID NOT***: established -- the binding geometry and the use site, both
+  from the parse. Not done -- **I DID NOT RUN IT**, so I assert neither the exception type nor that the
+  interpreter reaches that line under every configuration; a drive settles both and driving DE's battery is
+  DE's act and REV's. **This is round 263's rule on its first occasion: a flag about code says READ AT THE
+  FILE unless something ran, and this one was read.**
+  (2) ***THIS IS THE THIRD ITERATION OF ONE DEFECT***: REV 94's NO-GO was a `KeyError: 'preconditions'`
+  after E1's success consumed a hardcoded rehearsal; DE fixed the cell and REV 96 found the CALL past the
+  guard; DE 128 moved the call and the CONSUMER is now past the guard. **Each fix moved the boundary one
+  statement.** DE's own row title reads "my A5 fix had stepped past its own guard", so the seat sees the
+  pattern; what the third iteration shows is that **the guard keeps being placed around the producer rather
+  than around the whole dependent region.** And it sits inside the batch **REV 97 part A is reading now as
+  the E4 gate** -- not a launch blocker (REV 96 established it fires after the day's work is written), but a
+  gate reading the fix is the moment the geometry is worth having.
+  (3) ***THE PHASE4 DERIVATION IS NOW GENUINELY TWO-SIDED, AND MY ROUND-263 FINDING IS PART CLOSED AND PART
+  STANDING.*** CLOSED: at :6361-:6373 the assertion is that **the eligible sites that did not run are
+  exactly the conditional arms** -- `_sites771` parsed from the file's own AST, `_ran771` recorded by each
+  call as it executes, compared only over sites strictly above the assertion (the cell "cannot count
+  itself", which DE found by having it fail on its own existence). Its message says it: *"the sites come
+  from the AST, the executions from each call recording its own line."* **That closes my round-255 concern
+  too** -- "212 of 252 declared checks reachable" is now a property asserted by name and line. STANDING: the
+  second assertion at :6377 is still `EXPECTED_CHECKS == n[0] + 1 + _n_cond771`, and `n[0]` is what RAN --
+  so **for a check that executes, adding it and bumping the constant keeps both assertions true**. The
+  comment claims the constant "is now checked against the parse"; it is checked against a **mixture**. I
+  record both halves because "closed" would lose the second and "not closed" would erase a real improvement.
+  (4) **`EXPECTED_CHECKS` reads 217** at :83, up from 216 at round 262 -- bumped with DE 128's own new cell,
+  which is exactly the move the paragraph above says the assertions still permit, performed legitimately
+  here. ***AND THE CODE NOW NAMES THE DRIFT ITSELF***: :6380 reads "...checked against the parse rather than
+  maintained by hand, **which is how it reached 252 against 209 sites**". At round 262 I listed three phase4
+  numbers and could not reconcile them; **252 is a fourth -- the historical drifted constant** -- and the
+  size of the drift is now written where the constant is. My population question stays open; the drift that
+  made it matter does not.
+  (5) ***THE CASCADE PIN MOVED AGAIN AND THE FROZEN RUNS ARE STILL CLEAN***: v19 still pins
+  `de_phase4_diag_runner.py` at `ee4034c1`; the SHARED tree now hashes **`9dfb839d`** (it was `ce9cc466` at
+  round 262 -- DE 128 touched the file again) and `fe76d83` still hashes `ee4034c1`. **SHARED 9 of 10,
+  fe76d83 TEN OF TEN.** The by-design red persists with a NEW digest and the runs remain untouched -- which
+  is why both sides are measured every round instead of carrying "unchanged" forward. The freeze holds for
+  the fourth round: `params_v20` and `design_v28` still unwritten, heads still v19 and v27, and DE has now
+  composed them twice over.
+  (6) **E2 is still running at 09:52:30Z**, thirty-seven minutes in, expected ≈ 10:55Z, `MemoryPeak`
+  3,119,230,976 -- **the identical value at all four of my reads**.
+  Counts: flags 1,937 -> **1,952**; provenance 1,482 -> **1,497**; tasks 19; **1,208 CHECKED /
+  284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-FORTIETH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **174** missing-artifact findings, 173 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 246** archived. Q-MEM-252 filed through the script.)
   2026-09-07T09:44:42Z (MEM ROUND 263 -- R-777 SWEPT, with every landing between my own b4f83bf bound and
   the tip `52eded1`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***TWO OF MY OWN ROUND-262 READINGS ARE SUPERSEDED HERE, AND BOTH ARE THE SAME CLASS: I READ WHAT THE
@@ -180,63 +238,6 @@ updated: >-
   fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
   audit exits **1** on **172** missing-artifact findings, 171 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 244** archived. Q-MEM-250 filed through the script.)
-  2026-09-07T09:19:21Z (MEM ROUND 261 -- R-775 SWEPT, with every landing between my own 47157d8 bound and
-  `53811a4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***E2 IS RUNNING -- THE FIRST DAY WITH A DECISION LEDGER.*** `deEARLY20260904`, read while loaded at
-  09:18:07Z: loaded / active / **RUNNING** / ExecMainStatus 0 / Result success, InvocationID
-  `775e46b59fee42228efab036b6abad58`, ExecMainStartTimestamp **09:15:47Z**, MemoryPeak 3,119,230,976; 140
-  seconds in, expected exit ≈ 10:55Z. E1 ran under the old code and produced no ledger (R-765's disclosed
-  consequence); E2 runs at `fe76d83`, which carries the ledger at schema v2 with BE 96's five inventory
-  fields -- **so this is the first run in which the USER's "record everything we can" ruling actually
-  executes.** ***AND ITS PEAK IS ALREADY 1.149x E1's***: 2.905 GiB against E1's 2.529 GiB high-water mark,
-  which E1 reached in its first three minutes and never exceeded across 85. 36 % of the 8 GiB cap, so
-  nothing is at risk -- recorded because the same-stage comparison is the meaningful one and three runs
-  queue behind this one. I do not claim the ledger as the cause: DE sizes it at ~2 MB gzipped per day,
-  which is not 400 MB of RSS.
-  (2) ***ALL FIVE CLEARED DIGESTS MATCH AT wt-de's `fe76d83`, AND I VERIFIED THEM WITHOUT TOUCHING THE
-  FROZEN WORKTREE.*** I read its HEAD ref and resolved every blob from the MAIN tree's object store: runner
-  `ccc4108d`, early read `ba6daba4`, ledger `d78c3701`, params v19 `dd8db7de` -- and the fifth, design v27
-  `3bcdf3c2`, **is not in the worktree's git at all.**
-  (3) ***WHICH IS THE WHOLE REASON THE FREEZE EXISTS: THE WORKTREE FREEZE COVERS `live/` AND NOT `data/`.***
-  `wt-de/data` is a symlink to `/home/yuqing/ctaNew/data`, so the params family is git-tracked and frozen
-  with the code, while **the design family lives on the shared disk and is not** -- a design version landing
-  during E2..E4 or GO #8 would be visible to the frozen run's resolver immediately. R-775 says it plainly:
-  "the frozen wt-de resolves the design head from the shared ledger". **So the params freeze is
-  belt-and-braces and THE DESIGN FREEZE IS THE ONLY THING STANDING BETWEEN A NEW LEDGER VERSION AND A
-  RUNNING RESOLVER** -- and it is the family four seats have been bumping all morning. A reader who thinks
-  "the worktree is frozen, so nothing can change under the run" would be wrong about exactly one family.
-  Both heads are unmoved at my read (v27, v19), and the freeze is carried with its release condition --
-  GO #8's receipt -- not as an open-ended prohibition.
-  (4) ***FOUR MORE COMMITS LANDED INSIDE MY ROUND-260 WINDOW, AND THIS IS NOW STRUCTURAL RATHER THAN
-  INCIDENTAL.*** REV 95's two commits, R-775 and the runbook's next-entry line (09:16:01Z) all landed
-  between my round-260 fetch at 09:11:56Z and my row at 09:17:12Z; the row is exactly true because it names
-  `47157d8` and says "MEM sweeps R-775 onward". Third round running -- one commit, four, four. ***THE
-  PATTERN IS NOT LUCK AND NOT LATENESS: THE COORDINATOR WRITES THE NEXT ENTRY WHILE MEM WRITES THE LAST
-  ONE***, and both cycles take about five minutes, so an entry landing inside my window is the NORMAL case
-  and an empty one is the exception. **The consequence, stated so no reader mistakes it for lag: MEM's state
-  files are current to a NAMED COMMIT and one entry behind the register's tail, by construction.** That is
-  why every row names its bound and its next target, and why a reader wanting the last five minutes reads
-  the register rather than STATUS.yml.
-  (5) ***REV 95 CLEARED BOTH GOs AT THE TIP'S FIVE DIGESTS, NO HOLDS***, with the finding that no phase-2
-  change touches a verdict path -- so round 259's third stale-clearance instance is closed by re-gating, and
-  the user's remaining early reads and tonight's Gate-1 run are unblocked by the same review that blocked
-  them, which is what a narrow re-gate buys. ***AND REV's §A5 IS A FORWARD-DATED FINDING WITH A TRIGGER***:
-  the next-unread cell goes RED after E4, because once every ruled day is read there is no next unread day
-  to rehearse -- the same shape as the E2 NO-GO (a check that passes only until the thing it checks
-  happens), **caught before it fires rather than after**, routed to DE 127 and required before E4. I record
-  the trigger and not just the item, because a forward-dated finding with a trigger is the only kind that
-  survives a context clear.
-  (6) **THE UNIT'S START IS 09:15:47Z AND THE ENTRY SAYS 09:16:13Z** -- 26 seconds, both true, different
-  events, with the GO itself issued at 09:15:09Z. Fifth instance this week (41 s, 3 s, 18 s, 24 s, 26 s) and
-  the rule holds without exception so far. ***AND I QUOTE NO VALUE FROM E2 BECAUSE ITS ARTIFACT DOES NOT
-  EXIST YET***: the run is in flight, the receipt lands at exit, DA reads it and prints the table. Nothing
-  about 09-04 is knowable from these files and they say so.
-  Counts: flags 1,892 -> **1,907**; provenance 1,437 -> **1,452**; tasks 19; **1,164 CHECKED /
-  283 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SEVENTH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **171** missing-artifact findings, 168 at my round start plus THREE of mine -- all
-  three readings of the RUNNING unit, which is not a file. Window trimmed 4 -> 3, **Batch 243** archived.
-  Q-MEM-249 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -408,6 +409,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 264, R-778 swept (and every landing between 52eded1 and 81c7c17) ---
+  DE_128s_A5_FIX_MOVED_THE_CALL_INSIDE_THE_GUARD_AND_LEFT_THE_CONSUMER_OUTSIDE: THE-DEFECT-MOVED-ONE-STEP
+  THE_AST_SETTLES_IT_THE_IF_ENDS_AT_820_AND_THE_ok_IS_AT_821: ELSE-BODY-819-TO-820
+  reh_AND_dc_HAVE_NO_OTHER_BINDING_IN_THE_MODULE: TWO-ASSIGNMENTS-BOTH-INSIDE-THE-ELSE
+  SO_THE_TERMINAL_PATH_REACHES_AN_UNBOUND_NAME_AND_I_DID_NOT_RUN_IT: READ-AT-THE-FILE-BY-AST
+  THIS_IS_THE_THIRD_ITERATION_OF_ONE_DEFECT: KEYERROR-THEN-THE-CALL-NOW-THE-CONSUMER
+  AND_IT_IS_UNDER_REV_97_PART_A_WHICH_GATES_E4: THE-GATE-IS-READING-THE-FIX
+  THE_PHASE4_DERIVATION_IS_NOW_GENUINELY_TWO_SIDED: SITES-FROM-THE-AST-EXECUTIONS-FROM-THE-CALLS
+  and_THE_UNRUN_SET_ASSERTION_CATCHES_THE_UNREACHABLE_SITE_CLASS: MY-ROUND-255-CONCERN-CLOSED
+  BUT_THE_CONSTANT_IS_STILL_TIED_TO_WHAT_RAN_FOR_AN_EXECUTING_CHECK: ADD-AND-BUMP-STILL-PASSES
+  SO_MY_ROUND_263_FINDING_IS_PART_CLOSED_AND_PART_STANDING: THE-HONEST-SPLIT
+  THE_CODE_NAMES_THE_252_AGAINST_209_DRIFT_ITSELF: THE-NUMBER-I-COULD-NOT-PLACE-AT-ROUND-262
+  EXPECTED_CHECKS_IS_NOW_217: BUMPED-WITH-DE-128S-NEW-CELL
+  THE_CASCADE_PIN_MOVED_AGAIN_AND_THE_FROZEN_RUNS_ARE_STILL_CLEAN: SHARED-9DFB839D-FE76D83-TEN-OF-TEN
+  THE_FREEZE_HOLDS_AND_v20_v28_ARE_STILL_UNWRITTEN: FOURTH-ROUND
+  E2_IS_STILL_RUNNING_AT_THIRTY_SEVEN_MINUTES: PEAK-UNMOVED-ACROSS-FOUR-READS
   # --- MEM round 263, R-777 swept (and every landing between b4f83bf and 52eded1) ---
   MY_ROUND_262_A5_READING_IS_SUPERSEDED_THE_CELL_IS_FIXED_THE_FILE_IS_NOT: REV-DROVE-WHAT-I-ONLY-READ
   THE_UNCONDITIONAL_REHEARSE_IS_TWENTY_LINES_PAST_THE_GUARD: 766-OUTSIDE-THE-IF-AT-745
@@ -26339,6 +26356,157 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 264, 2026-09-07T09:55:03Z (the clock read by which every measurement below was complete) ---
+  DE_128s_A5_FIX_MOVED_THE_CALL_INSIDE_THE_GUARD_AND_LEFT_THE_CONSUMER_OUTSIDE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      R-778 records REV 96's four items closed, the first being "the A5 cell actually guarded". READ AT THE
+      FILE: `rehearse(_st["next_unread"])` HAS moved inside the guard -- it is now at :819, indent 8, in the
+      `else` branch, exactly as DE describes. BUT THE `ok(...)` THAT CONSUMES ITS RESULT IS STILL OUTSIDE:
+      :821-:828 read `reh["status"]`, `reh["blocking"]`, `dc["is_a_full_pair"]` and four more at indent 4/7,
+      after the if/else closes. On the terminal path the else never runs and those names are never bound.
+      THE FIX MOVED THE CALL AND LEFT THE CONSUMER; the defect moved one step rather than closing.
+  THE_AST_SETTLES_IT_THE_IF_ENDS_AT_820_AND_THE_ok_IS_AT_821:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      I did not judge this by indentation. Parsed with `ast`: the `If` whose test is
+      `_st['next_unread'] is None` begins at :802, its if-body spans 804..811, ITS ELSE-BODY SPANS 819..820
+      (exactly the two assignments), and THE IF STATEMENT ENDS AT LINE 820. Every statement from :821 is a
+      sibling of the `if`, not part of either branch. That is the whole finding and it is a structural fact
+      about the parse, not a reading of whitespace -- last round I trusted a comment, so this round I
+      trusted the tree.
+  reh_AND_dc_HAVE_NO_OTHER_BINDING_IN_THE_MODULE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      the other half of the claim, because a name used outside its branch is harmless if it is bound
+      elsewhere: a search for every assignment of `reh` or `dc` in the WHOLE module returns exactly two --
+      :819 and :820, both inside the else. No default, no earlier initialisation, no enclosing-scope
+      binding. So on the terminal path the names at :821 are unbound.
+  SO_THE_TERMINAL_PATH_REACHES_AN_UNBOUND_NAME_AND_I_DID_NOT_RUN_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      what I ESTABLISHED: the binding geometry (two assignments, both in the else) and the use site (:821,
+      outside the if/else), both from the parse. WHAT I DID NOT DO: RUN IT. So I do not assert the exception
+      type or that the interpreter reaches that line under every configuration -- a drive would settle both,
+      and driving DE's battery is DE's act and REV's. This is my round-263 rule applied on its first
+      occasion: A FLAG ABOUT CODE SAYS READ AT THE FILE UNLESS SOMETHING RAN, and this one was read.
+  THIS_IS_THE_THIRD_ITERATION_OF_ONE_DEFECT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      the sequence, from the register and the file: REV 94's NO-GO was a `KeyError: 'preconditions'` after
+      E1's success consumed a hardcoded rehearsal; DE fixed the cell and REV 96 found the CALL sitting past
+      the guard; DE 128 moved the call inside and the CONSUMER now sits past the guard. THREE ITERATIONS,
+      ONE DEFECT, EACH FIX MOVING THE BOUNDARY ONE STATEMENT. DE's own row title for this batch reads "my
+      A5 fix had stepped past its own guard", so the seat sees the pattern too; what the third iteration
+      shows is that the guard keeps being placed around the producer rather than around the whole
+      dependent region.
+  AND_IT_IS_UNDER_REV_97_PART_A_WHICH_GATES_E4:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      R-778 dispatches REV 97 in two parts, part A being DE 128 read NOW as the E4 gate. So the finding
+      above sits inside the very batch a review is reading to decide whether E4 may be issued, which is the
+      right place for it and the reason I record it as state rather than routing it anywhere myself. E4 is
+      not blocked by this in the launch sense -- as REV 96 established, the failure fires after the day's
+      work is written -- but a gate reading the fix is the moment the geometry is worth having.
+  THE_PHASE4_DERIVATION_IS_NOW_GENUINELY_TWO_SIDED:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      at :6361-:6373 the assertion is that THE ELIGIBLE SITES THAT DID NOT RUN ARE EXACTLY THE CONDITIONAL
+      ARMS -- with `_sites771` parsed from the file's own AST, `_ran771` recorded by each call as it
+      executes, and the comparison made only over sites STRICTLY ABOVE the assertion (the cell "cannot count
+      itself", which DE found by having it fail on its own existence). Its message says it: "the sites come
+      from the AST, the executions from each call recording its own line". THAT IS A REAL TWO-SIDED
+      DERIVATION and it is what round 263 found missing.
+  and_THE_UNRUN_SET_ASSERTION_CATCHES_THE_UNREACHABLE_SITE_CLASS:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      the property it establishes is the one I flagged at round 255 as unmeasured -- "212 of 252 declared
+      checks reachable", a green suite reporting on four fifths of what it declares. A site that exists and
+      never runs is now caught by name, with its line number printed, unless it is a declared conditional
+      arm. That concern is CLOSED by this assertion.
+  BUT_THE_CONSTANT_IS_STILL_TIED_TO_WHAT_RAN_FOR_AN_EXECUTING_CHECK:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      the second assertion at :6377 is still `EXPECTED_CHECKS == n[0] + 1 + _n_cond771`, where `n[0]` is the
+      count that RAN. So for a check that EXECUTES, adding it and bumping the constant by one keeps both
+      assertions true: the new site ran (so the unrun set is unchanged) and the arithmetic still balances.
+      The comment claims the constant "is now checked against the parse"; it is checked against a MIXTURE --
+      an execution count plus a parse-derived conditional set. Stated precisely rather than as a verdict:
+      the coupling that R-771 forbids survives for the executing case.
+  SO_MY_ROUND_263_FINDING_IS_PART_CLOSED_AND_PART_STANDING:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      the honest split, since neither "closed" nor "still broken" is true: CLOSED -- the derivation is now
+      executed rather than typed, and the unrun-set property is asserted from the AST. STANDING -- the
+      exported constant is still validated against what ran, so add-and-bump passes. I record both halves
+      because a state file that said "closed" would let the second half disappear, and one that said "not
+      closed" would erase a real improvement.
+  THE_CODE_NAMES_THE_252_AGAINST_209_DRIFT_ITSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      :6380-:6382 reads "...it is now checked against the parse rather than maintained by hand, WHICH IS HOW
+      IT REACHED 252 AGAINST 209 SITES". At round 262 I listed three phase4 numbers (209 withdrawn, 249 call
+      sites, 216 in loops) and said I could not reconcile them; 252 is a FOURTH -- the historical drifted
+      constant -- and the code now names the drift and its size in the message. The population question I
+      left open is not answered by this, but the DRIFT that made it matter is written where the constant is.
+  EXPECTED_CHECKS_IS_NOW_217:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      the constant read 216 at round 262 and reads 217 at :83 now -- bumped by one with DE 128's own new
+      cell. Recorded plainly because it is the exact move the paragraph above says the assertions still
+      permit, performed legitimately here (a check was genuinely added), and a reader comparing my two
+      rounds should see the number move rather than wonder.
+  THE_CASCADE_PIN_MOVED_AGAIN_AND_THE_FROZEN_RUNS_ARE_STILL_CLEAN:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      v19 still pins de_phase4_diag_runner.py at ee4034c15c274982; the SHARED tree's copy now hashes
+      9dfb839dfb5ca4b9 (it was ce9cc466 at round 262 -- DE 128 touched the file again), and the blob at
+      fe76d83 still hashes ee4034c1. Cascade totals: SHARED 9 of 10, fe76d83 TEN OF TEN. The by-design red
+      persists with a NEW digest and the frozen runs remain untouched -- which is the point of measuring
+      both sides each round rather than carrying "unchanged" forward.
+  THE_FREEZE_HOLDS_AND_v20_v28_ARE_STILL_UNWRITTEN:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      params_v20 and design_v28 do not exist, for the fourth round running; the heads remain params v19 and
+      design v27. DE has now composed them twice over (R-776 and R-778 both record them composed and
+      unwritten) and the freeze has held through every one of those compositions.
+  E2_IS_STILL_RUNNING_AT_THIRTY_SEVEN_MINUTES:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260904.service (a unit, not a file)
+    as_of: 2026-09-07T09:55:03Z
+    said: >-
+      SubState running at 09:52:30Z with MemoryPeak 3,119,230,976 -- THE IDENTICAL VALUE AT ALL FOUR OF MY
+      READS (09:18:07Z, 09:28:06Z, 09:43:12Z, 09:52:30Z). Thirty-seven minutes in against an expected exit
+      about 10:55Z, so roughly a third of the way. The high-water mark has stood since its first two and a
+      half minutes.
   # --- MEM round 263, 2026-09-07T09:44:42Z (the clock read by which every measurement below was complete) ---
   MY_ROUND_262_A5_READING_IS_SUPERSEDED_THE_CELL_IS_FIXED_THE_FILE_IS_NOT:
     prov: CHECKED
