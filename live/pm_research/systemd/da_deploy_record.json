@@ -4,9 +4,9 @@
   "commits_behind_origin_at_deploy": 0,
   "deploy_host": "ip-172-31-78-41",
   "deploy_tree": "/home/yuqing/ctaNew",
-  "deployed_at_utc": "2026-09-07T02:10:15Z",
+  "deployed_at_utc": "2026-09-07T02:11:49Z",
   "deployed_by": "DA seat (pm-da)",
-  "deployed_commit": "8c66d27fc914dde093043023dbdacee3917cde3d",
+  "deployed_commit": "9abba110a9a9b269677e735e28e61e456d3df8fc",
   "deployed_commit_can_be_orphaned": "PROVENANCE, NOT A GATE, AND THE LIMITATION IS NAMED: a later history rewrite (rebase, amend, force-push) can leave `deployed_commit` pointing at a commit no longer reachable from any branch -- the same dangling-pointer class as any recorded commit ref. NOTHING AT RUN TIME DEPENDS ON IT: the 00:06Z gate compares DIGESTS, and an orphaned commit id degrades what a reader can look up, never what the unit will do. Recorded because an unstated limitation is indistinguishable from an unnoticed one (reviewer 118af18).",
   "drift_exit_code": 7,
   "files": [
@@ -283,7 +283,7 @@
   "module_dir_dirty_at_deploy": false,
   "n_refuse": 7,
   "n_report": 26,
-  "origin_mm_research_at_deploy": "8c66d27fc914dde093043023dbdacee3917cde3d",
+  "origin_mm_research_at_deploy": "9abba110a9a9b269677e735e28e61e456d3df8fc",
   "protocol": "P003_DA_DEPLOY_RECORD_V1",
   "record_schema": 1,
   "unit_exit_codes": {
