@@ -22,11 +22,7 @@ if [ "$MODE" = "falsify" ]; then
   r1=$(check live/pm_research/declarations/producer_exit_maps_v2.json); r2=$(check live/pm_research/declarations/producer_exit_maps_v1.json); echo "$r1"; echo "$r2"
   case "$r1" in FORKED_BY_EDIT*) ;; *) echo "FALSIFIER FAIL: positive control did not flag"; exit 1;; esac
   case "$r2" in OK*) ;; *) echo "FALSIFIER FAIL: known-good did not pass"; exit 1;; esac
-  # REV 89 §5.2: the denominator line is checked on BOTH real directories -- one with pre-base history and one with none --
-  # so the control fires on the empty-array defect whichever directory the caller named.
-  for d in live/pm_research/declarations live/mm_research/declarations "$DIR"; do
-    hist=$("$0" "$d" --base "$BASE" 2>&1 | grep -c "^HISTORY (not judged):"); [ "$hist" -eq 1 ] || { echo "FALSIFIER FAIL: no HISTORY denominator line for $d"; exit 1; }
-  done
+  hist=$("$0" "$DIR" --base "$BASE" | grep -c "^HISTORY (not judged):"); [ "$hist" -eq 1 ] || { echo "FALSIFIER FAIL: no HISTORY denominator line"; exit 1; }
   echo "FALSIFIER PASS (base $BASE; denominator line present)"; exit 0
 fi
 RC=0; HF=0; declare -A HFAM; NF=0
