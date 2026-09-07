@@ -792,6 +792,54 @@ def selftest() -> tuple:                                      # noqa: C901
     for c in checks:
         print(("ok   " if c["passed"] else "FAIL ") + c["check"])
         print("       " + c["detail"])
+
+    # ---- rule 20's clause (REV 84 S3.2 / REV 85 S3, R-726): THE SHARED
+    # MODULE'S OWN FALSIFIER RUNS AS ONE CELL OF THIS BATTERY -----------
+    #: This module IMPORTS `declaration_chain`, so a regression in the one
+    #: implementation is this battery's problem too. It is SPAWNED AS A
+    #: PROCESS, not called: a broken `__main__`, a syntax error under an
+    #: edit or a falsifier that no longer runs at all is then a failure
+    #: HERE rather than something an in-process call routes around.
+    #: What stays independent is only what THIS module's own verdicts rest
+    #: on at the seam -- never a re-test of the module's invariant.
+    def _dc_falsify(_prog):
+        import subprocess as _sp                              # noqa: PLC0415
+        import sys as _sy                                     # noqa: PLC0415
+        _r = _sp.run([_sy.executable, str(_prog), "--falsify"],
+                     capture_output=True, text=True, timeout=300)
+        _ls = [x for x in (_r.stdout or "").strip().splitlines() if x.strip()]
+        return (_r.returncode, _ls[-1] if _ls else "",
+                [x for x in _ls if x.startswith("FAIL")])
+
+    _DC_PATH = HERE / "declaration_chain.py"
+    _dc_rc, _dc_sum, _dc_bad = _dc_falsify(_DC_PATH)
+    ck("REV 84 S3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery "
+       "RUNS `declaration_chain.py --falsify` AS A SUBPROCESS, so a "
+       "regression in the shared chain module fails every importer at "
+       "once and no importer re-implements its logic",
+       _dc_rc == 0 and _dc_sum.endswith("0 failures") and not _dc_bad,
+       f"rc {_dc_rc}: {_dc_sum!r} {_dc_bad or ''}")
+    #: RED FIRST. A cell that only ever runs the GOOD module has never been
+    #: shown to fire. One falsifier is DISARMED in a COPY -- the
+    #: VERSION_PATH_EXISTS guard, which is the refusal that keeps a landed
+    #: version immutable -- and this cell must FAIL on it.
+    import tempfile as _tf120                                 # noqa: PLC0415
+    with _tf120.TemporaryDirectory() as _dc_td:
+        _dc_copy = Path(_dc_td) / "declaration_chain.py"
+        _dc_src = Path(_DC_PATH).read_text()
+        _dc_disarmed = _dc_src.replace("    if dst.exists():",
+                                       "    if False and dst.exists():")
+        _dc_copy.write_text(_dc_disarmed)
+        _bad_rc, _bad_sum, _bad_fails = _dc_falsify(_dc_copy)
+    ck("KNOWN-BAD, DRIVEN: the SAME cell against a COPY of the shared "
+       "module with ONE falsifier disarmed (VERSION_PATH_EXISTS, the "
+       "refusal that makes a landed version immutable) FAILS -- so the "
+       "green above is a measurement and not a cell that cannot fire",
+       _dc_disarmed != _dc_src and _bad_rc != 0
+       and "1 failures" in _bad_sum and _bad_fails,
+       f"disarmed copy -> rc {_bad_rc}: {_bad_sum!r}; "
+       f"{(_bad_fails or [''])[0][:80]}")
+
     print(f"\n{'SELFTEST OK' if not n_fail else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {n_fail} failure(s)")
     return checks, n_fail

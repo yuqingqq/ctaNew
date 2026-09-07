@@ -237,6 +237,82 @@ MARKER_WORDS = ("superseded", "known_bad", "previous", "prior",
 FUNCTION_MARKER_RE = re.compile(r"known[_-]?bad|falsif", re.I)
 
 
+#: R-753 (2) as ACCEPTED by REV 89 S6.3a, with its added clause.
+#: A non-head literal is ADMISSIBLE when the code HASHES the file it names
+#: against a digest RECORDED IN THE CODE and ASSERTED AT THE READ, and --
+#: where the act itself recorded no digest -- the literal SAYS SO.
+#: REFUSED otherwise. DA 94's separating property: hashed -> not a pin in
+#: the sense that matters; INTERPRETED WITHOUT A DIGEST -> refused.
+DIGEST64_RE = re.compile(r"^[0-9a-f]{64}$")
+#: THE VOCABULARY IS DECLARED, not hidden in a regex: the provenance field
+#: must name WHO recorded the digest -- the act, or a later seat saying so.
+#: A key carrying one of these words is the disclosure REV 89 asked for.
+PROVENANCE_WORDS = ("record", "act")
+
+
+def hashed_against_a_recorded_digest(tree, assigned_to: str | None) -> dict:
+    """Is this literal's container HASHED against a digest in the code?
+
+    FOUR CONJUNCTS, each computed from the AST and none from a filename:
+      1. the literal is assigned into a container (a dict, today);
+      2. that container carries a 64-hex DIGEST -- recorded in the code;
+      3. the module COMPUTES a digest (`.hexdigest()`) and COMPARES it
+         against that container -- asserted at the read, not merely
+         written down;
+      4. the container names WHO recorded the digest, so a pin the act
+         made is never conflated with one reconstructed afterwards
+         (REV 89 S6.3a's added clause).
+    """
+    out = {"assigned_to": assigned_to, "digest_in_the_code": None,
+           "n_digests": 0, "provenance_fields": [], "computes_a_digest": False,
+           "compared_at_lines": [], "admissible": False,
+           "why": None}
+    if not assigned_to:
+        out["why"] = "the literal is not assigned to a name"
+        return out
+    val = None
+    for nd in ast.walk(tree):
+        if isinstance(nd, ast.Assign) and any(
+                isinstance(t, ast.Name) and t.id == assigned_to
+                for t in nd.targets):
+            val = nd.value
+    if val is None:
+        out["why"] = f"no assignment to `{assigned_to}` in this module"
+        return out
+    digests = [c.value for c in ast.walk(val)
+               if isinstance(c, ast.Constant) and isinstance(c.value, str)
+               and DIGEST64_RE.match(c.value)]
+    out["n_digests"] = len(digests)
+    out["digest_in_the_code"] = digests[0][:16] + "…" if digests else None
+    if isinstance(val, ast.Dict):
+        out["provenance_fields"] = [
+            k.value for k in val.keys
+            if isinstance(k, ast.Constant) and isinstance(k.value, str)
+            and any(w in k.value.lower() for w in PROVENANCE_WORDS)]
+    out["computes_a_digest"] = any(
+        isinstance(nd, ast.Call) and isinstance(nd.func, ast.Attribute)
+        and nd.func.attr == "hexdigest" for nd in ast.walk(tree))
+    for nd in ast.walk(tree):
+        if isinstance(nd, ast.Compare) and any(
+                isinstance(x, ast.Name) and x.id == assigned_to
+                for x in ast.walk(nd)):
+            out["compared_at_lines"].append(nd.lineno)
+    out["admissible"] = bool(digests and out["provenance_fields"]
+                             and out["computes_a_digest"]
+                             and out["compared_at_lines"])
+    if not out["admissible"]:
+        out["why"] = "; ".join(filter(None, [
+            None if digests else "no 64-hex digest in the container",
+            None if out["provenance_fields"] else
+            f"no field naming who recorded it ({'/'.join(PROVENANCE_WORDS)})",
+            None if out["computes_a_digest"] else
+            "the module computes no digest",
+            None if out["compared_at_lines"] else
+            "the recorded digest is never compared -- written down is not "
+            "asserted at the read"]))
+    return out
+
+
 def _identifier_marks(name: str) -> str | None:
     if not name:
         return None
@@ -686,6 +762,7 @@ def literal_census(root: Path, chains: dict,
             head_of[fam] = blk["heads"][0]
     allow, allow_refusals = _allowlist(root, chains)
     rows, refused, marked, not_pins, warned = [], [], [], [], []
+    admitted_by_digest = []
     for py in sorted((root / "live").rglob("*.py")):
         try:
             src = py.read_text()
@@ -775,6 +852,18 @@ def literal_census(root: Path, chains: dict,
                     if row["status"] == "MARKED_AND_NOT_A_PIN":
                         marked.append(row)
                     not_pins.append(row)
+                elif row["is_head"] is False and hashed_against_a_recorded_digest(
+                        tree, row.get("assigned_to"))["admissible"]:
+                    #: R-753 (2) / REV 89 S6.3a. A READER OF HISTORY, not a
+                    #: stale pin: the code hashes the file it names against
+                    #: a digest recorded in the code, asserts it at the
+                    #: read, and says who recorded it. The head is for
+                    #: writers; the pair is for readers of history (R-729).
+                    row["status"] = "ADMITTED_HASHED_AGAINST_A_RECORDED_DIGEST"
+                    row["the_digest_predicate"] = \
+                        hashed_against_a_recorded_digest(
+                            tree, row.get("assigned_to"))
+                    admitted_by_digest.append(row)
                 elif row["is_head"] is False:
                     #: REV 72 2.1: A MARKER CANNOT EXCUSE AN OPEN. A literal
                     #: that IS a pin -- it reaches a file open -- and names
@@ -857,6 +946,26 @@ def literal_census(root: Path, chains: dict,
                 "directly or through ONE assignment. A supersession chain "
                 "entry and a `refuses(...)` fixture are excluded BY "
                 "CONSTRUCTION. The marker rule (R-657) is the SECOND gate"),
+            "n_admitted_by_the_digest_predicate": len(admitted_by_digest),
+            "admitted_by_the_digest_predicate": admitted_by_digest,
+            "the_digest_predicate": {
+                "ruling": "R-753 (2), as accepted by REV 89 S6.3a",
+                "rule": ("a non-head literal is ADMISSIBLE when the code "
+                         "HASHES the file it names against a digest "
+                         "RECORDED IN THE CODE and ASSERTED AT THE READ, "
+                         "and where the act itself recorded no digest the "
+                         "literal SAYS SO. REFUSED otherwise"),
+                "conjuncts": ["a digest in the container",
+                              "the module computes a digest",
+                              "and COMPARES it against that container",
+                              "a field naming WHO recorded the digest"],
+                "provenance_words": list(PROVENANCE_WORDS),
+                "why_the_added_clause": (
+                    "REV 89 S6.3a: 'against a recorded digest' does not say "
+                    "recorded BY WHOM. A pin the act made and a pin a later "
+                    "seat reconstructed rest on different guarantees -- the "
+                    "second only on rule 20's immutability -- and the "
+                    "distinction is the one R-729 exists to hold")},
             "n_naming_a_non_head": len(refused) + len(
                 [r for r in marked if r["is_head"] is False]),
             "n_refused": len(refused), "naming_a_non_head": refused,
@@ -1847,6 +1956,121 @@ def selftest() -> tuple:
            f"defaulted -> {_defaulted['pin']['name']} "
            f"{_defaulted['status']} vs scoped -> "
            f"{_scoped['pin']['name']} {_scoped['status']}")
+
+
+    # ---- R-753 (2) / REV 89 S6.3a: THE DIGEST PREDICATE ---------------
+    #: Four synthetic modules, one per conjunct, so each half of the rule
+    #: is shown able to fail. No real file is read here.
+    _GOOD = ("""
+P = {"path": "fam_v1.json",
+     "sha256": "%s",
+     "the_act": "recorded by the act that used it"}
+def read(d):
+    import hashlib
+    q = d / P["path"]
+    got = hashlib.sha256(q.read_bytes()).hexdigest()
+    if got != P["sha256"]:
+        raise RuntimeError("moved")
+    return q.read_text()
+""" % ("a" * 64))
+    _NO_DIGEST = """
+P = {"path": "fam_v1.json", "the_act": "named by the act"}
+def read(d):
+    return (d / P["path"]).read_text()
+"""
+    _NEVER_COMPARED = ("""
+P = {"path": "fam_v1.json",
+     "sha256": "%s",
+     "the_act": "recorded by the act"}
+def read(d):
+    import hashlib
+    hashlib.sha256(b"x").hexdigest()
+    return (d / P["path"]).read_text()
+""" % ("b" * 64))
+    _NO_PROVENANCE = ("""
+P = {"path": "fam_v1.json", "sha256": "%s"}
+def read(d):
+    import hashlib
+    got = hashlib.sha256((d / P["path"]).read_bytes()).hexdigest()
+    if got != P["sha256"]:
+        raise RuntimeError("moved")
+    return (d / P["path"]).read_text()
+""" % ("c" * 64))
+    _g = hashed_against_a_recorded_digest(ast.parse(_GOOD), "P")
+    _nd = hashed_against_a_recorded_digest(ast.parse(_NO_DIGEST), "P")
+    _nc = hashed_against_a_recorded_digest(ast.parse(_NEVER_COMPARED), "P")
+    _np = hashed_against_a_recorded_digest(ast.parse(_NO_PROVENANCE), "P")
+    ck("THE DIGEST PREDICATE ADMITS A READER OF HISTORY: a container "
+       "carrying the file's digest, a module that COMPUTES a digest and "
+       "COMPARES it against that container, and a field naming who "
+       "recorded it -- R-753 (2) as REV 89 S6.3a accepted it",
+       _g["admissible"] and _g["provenance_fields"] == ["the_act"]
+       and _g["compared_at_lines"],
+       f"good -> admissible {_g['admissible']}, digest "
+       f"{_g['digest_in_the_code']}, compared at {_g['compared_at_lines']}")
+    ck("KNOWN-BAD, DRIVEN -- ***NAMES A NON-HEAD AND INTERPRETS IT WITHOUT "
+       "A DIGEST: REFUSED***. That is the case the predicate exists to "
+       "keep refusing, and it is the shape a stale pin actually has",
+       not _nd["admissible"]
+       and "no 64-hex digest in the container" in (_nd["why"] or ""),
+       f"no digest -> {_nd['why']}")
+    ck("AND EACH HALF FAILS ON ITS OWN: a digest WRITTEN DOWN but never "
+       "compared is refused (written down is not asserted at the read), "
+       "and a digest asserted with NO field naming who recorded it is "
+       "refused (REV 89's added clause) -- so the green above rests on "
+       "four conjuncts, not on one that carries the rest",
+       (not _nc["admissible"]) and "never compared" in (_nc["why"] or "")
+       and (not _np["admissible"])
+       and "no field naming who recorded it" in (_np["why"] or ""),
+       f"never compared -> {(_nc['why'] or '')[:60]}…; no provenance -> "
+       f"{(_np['why'] or '')[:60]}…")
+
+    # ---- rule 20's clause (REV 84 S3.2 / REV 85 S3, R-726): THE SHARED
+    # MODULE'S OWN FALSIFIER RUNS AS ONE CELL OF THIS BATTERY -----------
+    #: This module IMPORTS `declaration_chain`, so a regression in the one
+    #: implementation is this battery's problem too. It is SPAWNED AS A
+    #: PROCESS, not called: a broken `__main__`, a syntax error under an
+    #: edit or a falsifier that no longer runs at all is then a failure
+    #: HERE rather than something an in-process call routes around.
+    #: What stays independent is only what THIS module's own verdicts rest
+    #: on at the seam -- never a re-test of the module's invariant.
+    def _dc_falsify(_prog):
+        import subprocess as _sp                              # noqa: PLC0415
+        import sys as _sy                                     # noqa: PLC0415
+        _r = _sp.run([_sy.executable, str(_prog), "--falsify"],
+                     capture_output=True, text=True, timeout=300)
+        _ls = [x for x in (_r.stdout or "").strip().splitlines() if x.strip()]
+        return (_r.returncode, _ls[-1] if _ls else "",
+                [x for x in _ls if x.startswith("FAIL")])
+
+    _DC_PATH = HERE / "declaration_chain.py"
+    _dc_rc, _dc_sum, _dc_bad = _dc_falsify(_DC_PATH)
+    ck("REV 84 S3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery "
+       "RUNS `declaration_chain.py --falsify` AS A SUBPROCESS, so a "
+       "regression in the shared chain module fails every importer at "
+       "once and no importer re-implements its logic",
+       _dc_rc == 0 and _dc_sum.endswith("0 failures") and not _dc_bad,
+       f"rc {_dc_rc}: {_dc_sum!r} {_dc_bad or ''}")
+    #: RED FIRST. A cell that only ever runs the GOOD module has never been
+    #: shown to fire. One falsifier is DISARMED in a COPY -- the
+    #: VERSION_PATH_EXISTS guard, which is the refusal that keeps a landed
+    #: version immutable -- and this cell must FAIL on it.
+    import tempfile as _tf120                                 # noqa: PLC0415
+    with _tf120.TemporaryDirectory() as _dc_td:
+        _dc_copy = Path(_dc_td) / "declaration_chain.py"
+        _dc_src = Path(_DC_PATH).read_text()
+        _dc_disarmed = _dc_src.replace("    if dst.exists():",
+                                       "    if False and dst.exists():")
+        _dc_copy.write_text(_dc_disarmed)
+        _bad_rc, _bad_sum, _bad_fails = _dc_falsify(_dc_copy)
+    ck("KNOWN-BAD, DRIVEN: the SAME cell against a COPY of the shared "
+       "module with ONE falsifier disarmed (VERSION_PATH_EXISTS, the "
+       "refusal that makes a landed version immutable) FAILS -- so the "
+       "green above is a measurement and not a cell that cannot fire",
+       _dc_disarmed != _dc_src and _bad_rc != 0
+       and "1 failures" in _bad_sum and _bad_fails,
+       f"disarmed copy -> rc {_bad_rc}: {_bad_sum!r}; "
+       f"{(_bad_fails or [''])[0][:80]}")
 
     print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {fails} failure(s)")

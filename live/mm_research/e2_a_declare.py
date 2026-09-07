@@ -2309,6 +2309,11 @@ def selftest() -> int:                                        # noqa: C901
                 imported.add(n.module.split(".")[0])
     SAFE = {"__future__", "argparse", "ast", "datetime", "hashlib", "json",
             "math", "subprocess", "sys", "pathlib",
+            #: DA 120: `tempfile`, imported INSIDE the battery to build the
+            #: disarmed COPY the shared falsifier's known-bad runs against.
+            #: It reaches no tape, and the cell below pins every write in
+            #: this module to the battery.
+            "tempfile",
             #: v8: the ONE chain implementation (R-711). It is stdlib-only
             #: and touches nothing outside a `declarations/` directory, so
             #: it cannot reach the tape either -- and the cell below proves
@@ -2325,12 +2330,34 @@ def selftest() -> int:                                        # noqa: C901
     } | {n.func.id for n in ast.walk(tree)
          if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
          and n.func.id == "open"})
-    ok(io_calls == ["read_bytes", "read_text"],
-       f"NO TAPE ACCESS, AND v8 NO LONGER WRITES: every file operation is "
-       f"enumerated from the AST and is one of {io_calls} -- the emit goes "
-       f"through declaration_chain.write_next_version, so the "
-       f"compare-and-swap cannot be bypassed by this module writing its own "
-       f"file beside it")
+    ok(io_calls == ["read_bytes", "read_text", "write_text"],
+       f"NO TAPE ACCESS: every file operation is enumerated from the AST "
+       f"and is one of {io_calls}")
+
+    #: AND THE PROPERTY THAT ACTUALLY MATTERS, STATED DIRECTLY (DA 120).
+    #: "This module never writes" was v8's form of it, and it broke the
+    #: moment the battery had to write a DISARMED COPY of the shared module
+    #: into a temp dir for the falsifier cell below. The guarantee is not
+    #: "no write" -- it is that THE EMIT goes through the compare-and-swap:
+    #: every `write_text` here is inside the SELFTEST, and `main`, the only
+    #: path that emits a declaration, holds none.
+    _fn_ranges = {f.name: (f.lineno, getattr(f, "end_lineno", f.lineno))
+                  for f in ast.walk(tree)
+                  if isinstance(f, ast.FunctionDef)}
+    _writes = [w.lineno for w in ast.walk(tree)
+               if isinstance(w, ast.Call)
+               and isinstance(w.func, ast.Attribute)
+               and w.func.attr == "write_text"]
+    _st_lo, _st_hi = _fn_ranges.get("selftest", (0, 0))
+    _mn_lo, _mn_hi = _fn_ranges.get("main", (0, 0))
+    ok(bool(_writes)
+       and all(_st_lo <= ln <= _st_hi for ln in _writes)
+       and not [ln for ln in _writes if _mn_lo <= ln <= _mn_hi],
+       f"THE EMIT CANNOT BYPASS THE COMPARE-AND-SWAP: every `write_text` in "
+       f"this module is inside the SELFTEST (line(s) {_writes}, selftest "
+       f"{_st_lo}-{_st_hi}), and `main` ({_mn_lo}-{_mn_hi}) -- the only path "
+       f"that emits a declaration -- holds none. The v8 emit goes through "
+       f"declaration_chain.write_next_version or it does not happen")
 
     # --- v8: a data-path literal must never reach a call ------------------
     def _data_literal_reaching_a_call(t) -> list:
@@ -2787,6 +2814,48 @@ def selftest() -> int:                                        # noqa: C901
        "landing REBASED that commit to a new id with byte-identical content "
        "-- a declaration carrying only a commit id had an address that was "
        "rewritten out from under it. The digest cannot be rewritten")
+
+    # ---- rule 20's clause (REV 84 S3.2 / REV 85 S3, R-726) -------------
+    #: THE SHARED MODULE'S OWN FALSIFIER RUNS AS ONE CELL OF THIS BATTERY.
+    #: This emitter imports `declaration_chain` for the compare-and-swap,
+    #: so a regression in the one implementation is this battery's problem
+    #: too. SPAWNED AS A PROCESS, not called: a broken `__main__`, a syntax
+    #: error under an edit, or a falsifier that no longer runs at all is
+    #: then a failure HERE rather than something an in-process call routes
+    #: around. It replaces nothing this module's own verdicts rest on.
+    def _dc_falsify(_prog):
+        _r = subprocess.run([sys.executable, str(_prog), "--falsify"],
+                            capture_output=True, text=True, timeout=300)
+        _ls = [x for x in (_r.stdout or "").strip().splitlines() if x.strip()]
+        return (_r.returncode, _ls[-1] if _ls else "",
+                [x for x in _ls if x.startswith("FAIL")])
+
+    _DC_PATH = _PM_RESEARCH / "declaration_chain.py"
+    _dc_rc, _dc_sum, _dc_bad = _dc_falsify(_DC_PATH)
+    ok(_dc_rc == 0 and _dc_sum.endswith("0 failures") and not _dc_bad,
+       f"REV 84 S3.2 -- ONE IMPLEMENTATION, N DETECTORS: this battery RUNS "
+       f"`declaration_chain.py --falsify` AS A SUBPROCESS -> rc {_dc_rc}: "
+       f"{_dc_sum!r}. A regression in the shared chain module fails every "
+       f"importer at once, and no importer re-implements its logic")
+
+    #: RED FIRST. A cell that only ever runs the GOOD module has never been
+    #: shown to fire, so the same cell is driven against a COPY with ONE
+    #: falsifier disarmed -- VERSION_PATH_EXISTS, the refusal that makes a
+    #: landed version immutable, which is the guarantee THIS emitter rests
+    #: on when it writes v8 through the compare-and-swap.
+    import tempfile                                           # noqa: PLC0415
+    with tempfile.TemporaryDirectory() as _dc_td:
+        _dc_copy = Path(_dc_td) / "declaration_chain.py"
+        _dc_src = _DC_PATH.read_text()
+        _dc_dis = _dc_src.replace("    if dst.exists():",
+                                  "    if False and dst.exists():")
+        _dc_copy.write_text(_dc_dis)
+        _bad_rc, _bad_sum, _bad_fails = _dc_falsify(_dc_copy)
+    ok(_dc_dis != _dc_src and _bad_rc != 0 and "1 failures" in _bad_sum
+       and _bad_fails,
+       f"KNOWN-BAD, DRIVEN: the SAME cell against a COPY with one falsifier "
+       f"disarmed FAILS -> rc {_bad_rc}: {_bad_sum!r}; "
+       f"{(_bad_fails or [''])[0][:70]}")
 
     print(f"\n{'selftest OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(fails)} failure(s)")

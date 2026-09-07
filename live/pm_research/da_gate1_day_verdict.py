@@ -2907,7 +2907,9 @@ def main() -> int:
               f"(verification of the economics="
               f"{r['IS_A_VERIFICATION_OF_THE_ECONOMICS']})")
         return {"PRE_READ_VERIFIED": 0, "INCOMPLETE": 3,
-                "PROVENANCE_INCOMPLETE": 3}.get(r["status"], 1)
+                "PROVENANCE_INCOMPLETE": 3,
+                "LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE": 4,
+                }.get(r["status"], 1)
     if a.day and a.book and a.receipt:
         r = verify_real_day(a.day, a.book, a.receipt, output=a.output)
         print(f"{a.day}: {r['status']} -- verification="
@@ -3948,7 +3950,18 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     #: status with no reason, and wrong on the facts***. Each half now
     #: states itself, the status is a function of those states, and an
     #: emit whose status is not affirmative and carries no reason REFUSES.
+    #: DA 120 / REV 89 S2.4. ***"THIS MODE DOES NOT ATTEMPT IT" IS NOT
+    #: "AN INPUT WAS MISSING".*** `BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON`
+    #: is a CONSTANT OF THE PIPELINE -- every book since
+    #: be_daybook_structure_v1 is a pickle -- so a light run refusing on it
+    #: measured nothing about the day. It collapsed into rc 3 beside a
+    #: genuinely absent input, separated only by a STRING. The two states
+    #: are named apart here and carry different exit codes.
+    _mode_cannot = bool(
+        book_refusal and not open_book
+        and "BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON" in book_refusal)
     _pop_state = (
+        "NOT_ATTEMPTED_BY_THIS_MODE" if _mode_cannot else
         "REFUSED_NOT_ATTEMPTED" if book_refusal else
         "FLAGGED" if (_day_flag or (pop_out and pop_out.get("flags")))
         else "DONE_AND_AGREES" if (
@@ -3984,6 +3997,13 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
             _prov_state == "INCOMPLETE"
             and _pop_state in ("DONE_AND_AGREES", "NOT_EVALUATED")
             and not book_refusal)
+        #: DA 120: the light phase never attempts the population, and
+        #: says so with its own name and its own code -- never rc 3, which
+        #: means an input this mode DOES attempt was missing.
+        else "LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE" if (
+            _pop_state == "NOT_ATTEMPTED_BY_THIS_MODE"
+            and _seal_state == "HOLDS"
+            and _prov_state in ("MATCHED", "INCOMPLETE"))
         #: nothing disagreed; something was not evaluated.
         else "INCOMPLETE")
     if _pop_state == "NOT_EVALUATED" and not _incomplete_because:
@@ -4003,7 +4023,36 @@ def pre_read_day(day: str, book_path: str, receipt_path: str, *,
     out["exit_code_meaning"] = {
         "PRE_READ_VERIFIED": 0, "PROVENANCE_INCOMPLETE": 3,
         "INCOMPLETE": 3, "FLAGGED": 1,
-        "why": "the four-state scheme this seat already uses (DA 71)"}
+        "LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE": 4,
+        "why": ("the four-state scheme this seat already uses (DA 71), "
+                "plus DA 120's fifth: 4 says THIS MODE does not attempt "
+                "the population, which 3 -- an input was missing -- had "
+                "been carrying with only a string to tell them apart "
+                "(REV 89 S2.4)")}
+    out["one_act_one_record"] = {
+        "ruling": "REV 89 S2.4, routed at R-754's row 9",
+        "the_shape": (
+            "the ORDERING is kept -- the two book bindings, the "
+            "provenance, the seal census and the landing record all "
+            "happen BEFORE the heavy lock is taken and before anything is "
+            "unpickled -- and the RECORD is one: `--pre-read --open-book` "
+            "runs both phases in one act and emits at the end, carrying "
+            "both phases' states in "
+            "`the_halves_this_status_is_computed_from`"),
+        "why_not_two_records": (
+            "a separately-rooted light record puts a second root in the "
+            "day's family 66 seconds before it is superseded, and every "
+            "later reader of history must resolve a pair to learn that "
+            "its code was never a finding about the day. REV 89 measured "
+            "that cost on 09-04 and 09-05"),
+        "when_a_light_only_record_is_still_right": (
+            "when the heavy half genuinely cannot run. It then carries "
+            "LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE and exit 4, "
+            "never 3"),
+        "this_record_is": ("the SINGLE record of a two-phase act"
+                           if open_book else
+                           "a LIGHT-ONLY record: the heavy half did not "
+                           "run in this act")}
     #: DA 105: THREE STATES, NOT TWO. Where a half is RECONSTRUCTED, this
     #: is neither matched nor mismatched -- it is None, with the reason
     #: named beside it, because a silent true would certify a digest
@@ -5971,6 +6020,72 @@ def selftest_pre_read() -> list:                              # noqa: C901
        and _pin_msgs["no_pin_at_all"] == "NO_PIN_NO_OPEN",
        "; ".join(f"{k} -> {v.split(' -- ')[0].replace('REFUSED: ', '')}"
                  for k, v in list(_msgs.items()) + list(_pin_msgs.items())))
+
+    # -- DA 120 / REV 89 S2.4: "THIS MODE DOES NOT ATTEMPT IT" HAS ITS OWN
+    # CODE, AND IT IS NOT 3 -------------------------------------------
+    #: rc 3's declared words are *an input a conjunct needs is missing*.
+    #: A light run on a PICKLE is not that: every book since
+    #: be_daybook_structure_v1 is a pickle, so the refusal was a constant
+    #: of the pipeline wearing a verdict's code, separated from a real
+    #: missing input by a STRING in `incomplete_because`.
+    _pk_sha = hashlib.sha256(_shaped.read_bytes()).hexdigest()
+    #: ITS OWN NAME. The helper writes `sealed_de.json` by default, and the
+    #: first draft of this cell OVERWROTE the fixture receipt every later
+    #: cell reads -- a battery that fails four hundred lines away from the
+    #: line that broke it.
+    _pk_receipt = _sealed_de_shape_receipt(td, payload, _pk_sha,
+                                           name="sealed_de_pickle.json",
+                                           design=design,
+                                           params_block=pblock)
+    _pk_light = pre_read_day("2026-09-03", str(_shaped), str(_pk_receipt),
+                             params=P, now=BAR_BEFORE)
+    _pk_code = _pk_light["exit_code_meaning"].get(_pk_light["status"])
+    _missing_code = pre["exit_code_meaning"]["INCOMPLETE"]
+    #: THE OTHER DIRECTION, BUILT HERE rather than borrowed from a nearby
+    #: variable: a receipt that NAMES NO PARAMS is the shape rc 3 is for --
+    #: an input a conjunct needs is missing.
+    _np_receipt = _sealed_de_shape_receipt(td, payload, bsha,
+                                           name="sealed_de_noparams.json",
+                                           design=design, params_block=None)
+    _np_light = pre_read_day("2026-09-03", str(bpath), str(_np_receipt),
+                             params=P, now=BAR_BEFORE)
+    ck("DA 120 -- THE LIGHT PHASE HAS ITS OWN CODE: a light run on a "
+       "PICKLE reads LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE at "
+       "exit 4, with the population half named NOT_ATTEMPTED_BY_THIS_MODE "
+       "-- never rc 3, whose declared words are that an input was missing. "
+       "***A predicate whose value was fixed when the code was written is "
+       "not a measurement***, and it must not spend a verdict code as if "
+       "it were one",
+       _pk_light["status"]
+       == "LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE"
+       and _pk_code == 4 and _missing_code == 3 and _pk_code != _missing_code
+       and _pk_light["the_halves_this_status_is_computed_from"][
+           "population"]["state"] == "NOT_ATTEMPTED_BY_THIS_MODE"
+       and _pk_light["seal_holds"] is True,
+       f"{_pk_light['status']} -> {_pk_code}; INCOMPLETE -> "
+       f"{_missing_code}; population "
+       f"{_pk_light['the_halves_this_status_is_computed_from']['population']['state']}")
+    ck("AND 3 STILL MEANS WHAT IT MEANT, DRIVEN ON THE SAME BATTERY: the "
+       "receipt whose params pin cannot be resolved is still "
+       "PROVENANCE_INCOMPLETE at 3, so the new code took nothing away from "
+       "the old one -- two states, two codes, and a reader can tell them "
+       "apart without reading a sentence",
+       _np_light["status"] == "PROVENANCE_INCOMPLETE"
+       and _np_light["exit_code_meaning"][_np_light["status"]] == 3
+       and _pk_light["status"] != _np_light["status"],
+       f"a receipt naming no params -> {_np_light['status']} at "
+       f"{_np_light['exit_code_meaning'][_np_light['status']]}; "
+       f"light-on-pickle -> {_pk_light['status']} at {_pk_code}")
+
+    #: ONE ACT, ONE RECORD -- the field a reader resolves, not a habit.
+    ck("ONE ACT, ONE RECORD: the record SAYS which it is -- a LIGHT-ONLY "
+       "record when the heavy half did not run in that act, and the single "
+       "record of a two-phase act when it did. REV 89 S2.4 measured what "
+       "the separate light record costs: a second root in the day's family "
+       "66 seconds before it is superseded",
+       "LIGHT-ONLY" in _pk_light["one_act_one_record"]["this_record_is"]
+       and _pk_light["one_act_one_record"]["ruling"].startswith("REV 89"),
+       f"{_pk_light['one_act_one_record']['this_record_is'][:70]}")
     # -- REV 81 S2: THE CAPTURE STATES ITS MAPPING AND HOLDS BOTH READS -
     _cargs = dict(unit="u.service", invocation_id="i" * 32,
                   producer=THIS_PRODUCER, producing_commit="deadbee",
@@ -6197,7 +6312,12 @@ def selftest_pre_read() -> list:                              # noqa: C901
        "producer claiming it would make a lock conflict read as one of its "
        "own verdicts",
        _em["i_am_declared"] is True
-       and sorted(_em["my_codes"]) == ["0", "1", "2", "3"]
+       #: DA 120: FIVE codes now -- 4 is LIGHT_ONLY_..., declared in v6.
+       #: The list is asserted, not counted: a code that appeared in the
+       #: map without appearing here would be a producer declaring a
+       #: verdict this source cannot emit.
+       and sorted(_em["my_codes"]) == ["0", "1", "2", "3", "4"]
+       and "LIGHT_ONLY" in _em["my_codes"]["4"]
        and "75" not in _em["my_codes"]
        and _bad75 == "A_PRODUCER_DECLARES_75",
        f"head {_em['head']} ({_em['sha256'][:16]}) declares "
