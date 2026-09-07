@@ -261,6 +261,21 @@ except where marked USER-ONLY.
     directly (`git -C <wt> push origin HEAD:mm-research`) when origin has not
     moved; a refused push is stranded and reported as above.
 
+    **The ONE sanctioned `rebase` in the shared tree (R-755, R-756; REV 89 §5.1):** the two
+    coordinator landing scripts (`scripts/land_register_entry.sh`, `scripts/land_register_row.sh`)
+    may rebase THE COMMIT THEY HAVE JUST MADE onto origin when origin moved during the landing --
+    under the register lock, only when no OTHER path is dirty, aborting on failure; otherwise the
+    exit says STRANDED and the commit is reported, never rebased over another seat's files. No
+    other rebase in the shared tree exists. **Before a copy-land, the guard runs INSIDE the act
+    (BE 91's disclosure, REV 89 §5.1 (3)):** the copier verifies that none of the paths it is
+    about to overwrite has moved in the shared tree since the worktree read them
+    (`git -C /home/yuqing/ctaNew diff --name-only <base>..HEAD -- <paths>` EMPTY) and refuses by
+    name otherwise; an afterwards-diff is how you learn you were lucky. **A scratch drive is a
+    SCRIPT with `set -u` and `cd <scratch> || exit`, never an inline chain in a fresh shell
+    (R-756):** an unset scratch variable sent a coordinator's known-bad drive -- `git config`, a
+    `printf` over the register, `git add -A`, `commit`, `push` -- into the shared tree; reverted
+    at 0539a36, ninety seconds of a seven-line register at the tip.
+
 22. **A heavy run's code is frozen until its receipt lands** (R-603, REV 49 §0):
     a run executes from a worktree whose HEAD is not moved and whose files are
     not edited until the run's receipt has landed — the Gate-1 runner stamped
