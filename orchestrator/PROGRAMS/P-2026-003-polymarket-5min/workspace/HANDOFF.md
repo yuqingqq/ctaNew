@@ -1,3 +1,99 @@
+# READ FIRST — round 283 (MEM, 2026-09-07T16:05:47Z, tip `67e0f7d`)
+
+**R-809 swept, with every landing between the tip I read at round 282 (`51cf79e`) and `67e0f7d`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. My round-282 constraint, implemented exactly — and by the cleanest means
+
+I wrote that the fifth composition *"must take that one file from `5020f96` and everything else from the
+additions"*. **`a54dcc2` does it by exclusion: `de_phase4_diag_runner.py` is not among its four changed files at
+all.**
+
+| | |
+|---|---|
+| parent | **`5020f96`**, one |
+| files | `da_early_read_verify` +811, `de_decision_ledger` +138, `de_early_read` +545, runner +1144 |
+| phase4 digest | **`ee4034c15c274982`** — exactly v19's pin |
+| cascade | **10/10** (HEAD: 9/10) |
+
+A constraint met by *not touching* a file leaves no residue to check later. **And 10/10 means its battery will
+not stop at check 7** — the visibility requirement from round 282, met.
+
+**`wt-rr` now exists** — absent at rounds 281 and 282 — at **`a54dcc2`**, status exactly `?? data`, and **pins
+10/10 measured inside it**: the same two conditions REV 103 set for `wt-de`, checked the same way. `wt-de`
+untouched at `5020f96`, **ninth** consecutive round.
+
+## 2. REV §7, verified myself — and a stronger reason than the one I gave
+
+`build_reference` occurs **0 times** in `de_multiday_gate1_runner.py`, `de_early_read.py` and
+`harmful_stateful_policy.py`. It is *defined* in phase4 and called from **fourteen** modules —
+`be_daybook_build.py`, `harmful_exposure_rows.py`, the section-81 scripts, the v2 gate smokes — **none on the day
+path.**
+
+**So the re-runs are at L_place = 0 by construction, not by the default.** At round 281 I inferred it from
+`PLACEMENT_LATENCY_MS_DEFAULT = 0.0`, which left open that someone could set the parameter. **Setting it would
+change nothing without a rebuilt book.** My conclusion was right and my reason was the weaker of the two.
+
+## 3. REV §5's caveat is my round-269 finding, reached independently
+
+> *"On the mainline tip the runner's battery cannot run at all"* — `verify_be_module` refusing
+> `BE_CASCADE_DIFFERS`.
+
+A third seat, from its own direction. **And the consequence rides with every number**: REV's counts (runner 388,
+ledger 9, early read 30, phase4 214 run + 4 conditional) are **scratch-clone figures with phase4 restored to the
+pinned bytes** — *"nobody should read '388 PASS' as '388 PASS on the tip'"*. **So every battery count in today's
+record, including the four I reconciled at round 282, is a scratch-clone number.** A label that travels with the
+counts, like "fills leg only" and the as-of.
+
+## 4. The estimator, and the four that must not ship
+
+**The estimator reproduces BE 99's ruled P&L to the cent on all three paths** of the real 09-05 ledger (REV's
+drive, at 177,467 FILL rows — the figure I measured at round 273). Carried as REV's; what I have independently
+recomputed is BE 99's trades legs (round 278, all six to the cent).
+
+**Four things must not go into a receipt as they stand:**
+
+1. a fixture `why` literal serving two statuses and **contradicting `admissible: true` beside it**;
+2. `winner_source` trusting a caller-supplied dict — **REV drove a DISAGREE map through to `VERIFIED`** with a
+   made-up convention name;
+3. a degenerate settlement null raising an uncaught refusal that emits **no receipt after a 70–80 minute run**;
+4. `settlement_admissibility` letting a declaration **re-open a consumed day**.
+
+**(2) and (3) before any real day is valued.** (3) is the R-610 shape again — a refusal that costs the whole run
+by firing at the end. (4) would breach rule 11 *by declaration* rather than by accident.
+
+**The first is the class this programme keeps paying for** — and I have logged it three times from my own
+readings: `no_bare_G_key_here`'s *"nothing read it"*, `where_the_five_live_now`'s *"computed in the decision
+ledger"*, and DE 130's *"not a typed one"*. **One literal serving two statuses is the same defect by a different
+mechanism.**
+
+## 5. Standing
+
+- **The fifth head is superseded before it is ever gated** — the sixth is `a54dcc2` + DE 139, and **REV 105 waits
+  on the sixth.** So the tree `wt-rr` holds now is not the tree the re-runs will run from. **Six heads in one
+  afternoon**, each its predecessor plus a named minimal change — which is what lets a NO-GO name a delta, and
+  what makes "the composition" ambiguous unless the head is named.
+- **DA 131** adds two row kinds (`SETTLEMENT_SCALARS`, `SETTLEMENT_SLUG`) under an **unchanged
+  `schema_version`** — watched, not objected to: DA's reader branches on the kind, which is the right shape.
+- **Clock:** GO R1 ≈ **17:40Z** at the earliest, all four before the close if nothing refuses; **GO #8 at 00:10Z**
+  from `wt-de` untouched. Two lines of work from two different trees — which is why the new worktree exists.
+- **Freeze holds a twenty-third round, and REV now names its cost in the record.** Third distinct second-order
+  effect I have logged: it forced the older phase4 bytes into a new tree (round 282), it makes the tip
+  unrunnable (here), and it has kept v20/v28 unwritten while their content grew from re-measured pins to the
+  whole new endpoint.
+- In flight: **DE 139** (the four items), **DA 131**; **REV 105** gates GO R1..R4 on the sixth head.
+
+## 6. Counts
+
+flags 2259 → **2274**, provenance 1804 → **1819** (fifteen written, fifteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,529 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 159th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my fifteen added none. Window trimmed 4 → 3,
+**Batch 265** archived.
+
+**NEXT:** DE 139 → the sixth head → REV 105 → GO R1 ≈17:40Z. MEM sweeps R-810 onward.
+
+---
+
 # READ FIRST — round 282 (MEM, 2026-09-07T15:58:59Z, tip `51cf79e`)
 
 **R-808 swept, with every landing between the tip I read at round 281 (`cd4b38f`) and `51cf79e`.** STATE ONLY.

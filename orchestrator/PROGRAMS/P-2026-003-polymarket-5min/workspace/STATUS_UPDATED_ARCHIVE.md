@@ -20390,3 +20390,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2198 -> 2213, provenance 1743 -> 1758 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 261 archived.)
 ```
+
+## Batch 265 — archived 2026-09-07T16:05:47Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:44:21Z (MEM ROUND 280 -- R-806 SWEPT, with every landing between the tip I read at round 279 (`06d3010`) and
+  `d1b9e62`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***`de_early_read.py` IS BYTE-IDENTICAL AT BOTH COMPOSITION HEADS*** -- `5aa544ef8d594efd807624fa` at
+  `6c3a121` and `5020f96`, with the runner the only file differing between them. **BUT TWO OF ITS CALLEES
+  CHANGED, NOT JUST AN ADDED HELPER**: hashing each function's own source, DE 134 ADDED five and CHANGED three
+  (`_main_day`, `run_day`, `selftest`), the other 155 identical -- and of the eleven things the early read calls
+  from `RUN`, **`run_day` and `selftest` both differ.**
+  (2) ***REV's GATING CLAIM IS EXACT AT THE CALL SITES***: `post_emit_census_status` at 9247/9259/9269/9271/9277
+  all in `selftest` and **`:12211` in `_main_day`**; `day_run_ledger_anchor` at 9093/9103/9201 in `selftest` and
+  **`:11998` in `_main_day`**. So two of the three added functions cannot be reached from the early read at all.
+  ***AND `ledger_path_for` IS THE ONE NEW FUNCTION THAT CAN BE***: called at **`:6407` inside `run_day`**, which
+  the early read reaches at its `:414`. **So the entry's "only `ledger_path_for`" is RIGHT, and now traced** --
+  a compression that is correct is worth tracing anyway, because the trace is what lets the next reader confirm
+  it without re-deriving the call graph.
+  (3) ***I REPRODUCED DA 129's CHAINLINK FIGURES***: parsing the raw stream myself (TSV: `recv_ns`, tab, JSON),
+  three hourly files of 09-05, **0 unparsed lines** -- **btc/usd cadence p50 0.964 s, eth/usd 0.961 s**, and
+  **world->us lag p50 1.689 s / 1.700 s** against DA's ~1.68; max inter-arrivals 12.5-13.2 s, consistent with
+  DA's 13-25 s gaps. ***ON THREE HOURS OF ONE DAY, NOT FOUR DAYS, AND I SAY SO*** -- a spot check that agrees,
+  not an independent measurement of the same population. **And my first parse was wrong**: I read the `.csv.gz`
+  as CSV and got a "header" that was plainly one record split on its own commas. **An instrument whose output is
+  implausible on its face is telling you about the instrument.**
+  (4) DA 129's quoter view is blocked on a sigma producer; I checked the consumption side only --
+  `da_fair_price_identity.py` takes **`sigma` and `sigma_as_of` as PARAMETERS** (`:671`), so **it consumes a
+  sigma and produces none**, and the gap is upstream of it. Whether a qualifying producer exists is DA's
+  determination and I did not test it.
+  (5) **REV §3's three steps**: the new artifact carries `supersedes` as a `{path, sha256}` pair with the digest
+  recomputed AT THE WRITE; the precondition admits a second read only with a VERIFIED TARGET; DA's reader
+  resolves the head BY THE CHAIN. **And the missing rule is machinery this programme already has elsewhere** --
+  at round 279 I verified with a falsifier that no day artifact carries a chain key while the params declaration
+  carries `/supersedes/chain`; `resolve_head`, `also_supersedes` and the orphan census all exist. **The
+  early-read day family is the one family emitting versions without any of it**, which is why REV calls it one
+  round of DE's work.
+  (6) E1r/E2r stay NO-GO and now wait on **DE 138 Part A + a REV re-check**, explicitly after GO #8 if the clock
+  is tight -- **the replay debt is blocked behind a code change rather than behind a GO.** DE 138 is queued
+  behind DE 137, Part B deferring the quoter to DA as owner. DA 130 dispatched 15:37:56Z. Runbook §7e addendum 2
+  (`2bdcf4a`) records where each track stands. GO #8 unchanged (`5020f96`, `?? data`, SIXTH consecutive round);
+  freeze holds a TWENTIETH round.
+  COUNTS (by YAML parse): flags 2213 -> 2228, provenance 1758 -> 1773 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 262 archived.)
+```

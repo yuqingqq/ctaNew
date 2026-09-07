@@ -67,6 +67,46 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T16:05:47Z (MEM ROUND 283 -- R-809 SWEPT, with every landing between the tip I read at round 282 (`51cf79e`) and
+  `67e0f7d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***MY ROUND-282 CONSTRAINT WAS IMPLEMENTED EXACTLY, AND BY THE CLEANEST MEANS.*** I wrote that the fifth
+  composition "must take THAT ONE FILE from `5020f96` and everything else from the additions". **`a54dcc2` does
+  it by EXCLUSION: `de_phase4_diag_runner.py` is not among its four changed files at all** -- one parent
+  `5020f96`, four files (`da_early_read_verify` +811, `de_decision_ledger` +138, `de_early_read` +545, the runner
+  +1144), and phase4 hashing **`ee4034c15c274982`, exactly v19's pin**. A constraint met by not touching a file
+  leaves no residue to check later. ***AND ITS CASCADE IS 10/10*** (against HEAD's 9/10), so **its battery will
+  not stop at check 7** -- the visibility requirement from round 282, met.
+  (2) **`wt-rr` NOW EXISTS** -- absent at rounds 281 and 282 -- at **`a54dcc2`**, `?? data` only, and **pins
+  10/10 measured inside it**: the same two conditions REV 103 set for `wt-de`, checked the same way. `wt-de`
+  untouched at `5020f96`, NINTH consecutive round.
+  (3) ***REV §7 VERIFIED MYSELF***: `build_reference` occurs **0 times** in the runner, the early read and the
+  policy; it is defined in phase4 and called from fourteen modules, **none on the day path**. ***SO THE RE-RUNS
+  ARE AT L_place = 0 BY CONSTRUCTION, NOT BY THE DEFAULT*** -- which is **a stronger reason than the one I gave
+  at round 281**, where I inferred it from `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` and left open that someone could
+  set the parameter. Setting it would change nothing without a rebuilt book. My conclusion was right and my
+  reason was the weaker of the two available.
+  (4) ***REV §5's CAVEAT IS MY ROUND-269 FINDING, REACHED INDEPENDENTLY***: "on the mainline tip the runner's
+  battery cannot run at all", `verify_be_module` refusing `BE_CASCADE_DIFFERS`. A third seat, its own direction.
+  **And the consequence rides with every number**: REV's counts (runner 388, ledger 9, early read 30, phase4
+  214+4) are **scratch-clone figures with phase4 restored** -- "nobody should read '388 PASS' as '388 PASS on the
+  tip'". **So every battery count in today's record, including the four I reconciled at round 282, is a
+  scratch-clone number.**
+  (5) The estimator **reproduces BE 99's ruled P&L to the cent on all three paths** of the real 09-05 ledger
+  (REV's drive, at 177,467 FILL rows -- the figure I measured at round 273). **FOUR things must not ship**: a
+  `why` literal serving two statuses and contradicting `admissible: true` beside it; `winner_source` trusting a
+  caller-supplied dict (REV drove a DISAGREE map to `VERIFIED`); a degenerate null raising an uncaught refusal
+  that emits **no receipt after 70-80 minutes**; and `settlement_admissibility` letting a declaration re-open a
+  CONSUMED day. (2) and (3) before any real day is valued. **The first is the class this programme keeps paying
+  for** -- and I have logged it three times from my own readings (`no_bare_G_key_here`, `where_the_five_live_now`,
+  DE 130's wording); one literal serving two statuses is the same defect by a different mechanism.
+  (6) **THE FIFTH HEAD IS SUPERSEDED BEFORE IT IS EVER GATED** -- the sixth is `a54dcc2` + DE 139, and REV 105
+  waits on the sixth. Six heads in one afternoon, each its predecessor plus a named minimal change: what lets a
+  NO-GO name a delta, and what makes "the composition" ambiguous unless the head is named. DA 131 adds two row
+  kinds under an UNCHANGED `schema_version` -- watched, not objected to, since DA's reader branches on the kind.
+  Clock: **GO R1 ≈ 17:40Z earliest**, four before the close if nothing refuses, **GO #8 at 00:10Z** -- two lines
+  of work from two different trees. Freeze holds a TWENTY-THIRD round, and REV now names its cost in the record.
+  COUNTS (by YAML parse): flags 2259 -> 2274, provenance 1804 -> 1819 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 265 archived.)
   2026-09-07T15:58:59Z (MEM ROUND 282 -- R-808 SWEPT, with every landing between the tip I read at round 281 (`cd4b38f`) and
   `51cf79e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE PIN CONSEQUENCE IS A JOIN THE ENTRY LEAVES IMPLICIT.*** R-808 reports separately that
@@ -143,45 +183,6 @@ updated: >-
   the field that holds the negation of the trades leg is still misnamed.
   COUNTS (by YAML parse): flags 2228 -> 2243, provenance 1773 -> 1788 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 263 archived.)
-  2026-09-07T15:44:21Z (MEM ROUND 280 -- R-806 SWEPT, with every landing between the tip I read at round 279 (`06d3010`) and
-  `d1b9e62`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***`de_early_read.py` IS BYTE-IDENTICAL AT BOTH COMPOSITION HEADS*** -- `5aa544ef8d594efd807624fa` at
-  `6c3a121` and `5020f96`, with the runner the only file differing between them. **BUT TWO OF ITS CALLEES
-  CHANGED, NOT JUST AN ADDED HELPER**: hashing each function's own source, DE 134 ADDED five and CHANGED three
-  (`_main_day`, `run_day`, `selftest`), the other 155 identical -- and of the eleven things the early read calls
-  from `RUN`, **`run_day` and `selftest` both differ.**
-  (2) ***REV's GATING CLAIM IS EXACT AT THE CALL SITES***: `post_emit_census_status` at 9247/9259/9269/9271/9277
-  all in `selftest` and **`:12211` in `_main_day`**; `day_run_ledger_anchor` at 9093/9103/9201 in `selftest` and
-  **`:11998` in `_main_day`**. So two of the three added functions cannot be reached from the early read at all.
-  ***AND `ledger_path_for` IS THE ONE NEW FUNCTION THAT CAN BE***: called at **`:6407` inside `run_day`**, which
-  the early read reaches at its `:414`. **So the entry's "only `ledger_path_for`" is RIGHT, and now traced** --
-  a compression that is correct is worth tracing anyway, because the trace is what lets the next reader confirm
-  it without re-deriving the call graph.
-  (3) ***I REPRODUCED DA 129's CHAINLINK FIGURES***: parsing the raw stream myself (TSV: `recv_ns`, tab, JSON),
-  three hourly files of 09-05, **0 unparsed lines** -- **btc/usd cadence p50 0.964 s, eth/usd 0.961 s**, and
-  **world->us lag p50 1.689 s / 1.700 s** against DA's ~1.68; max inter-arrivals 12.5-13.2 s, consistent with
-  DA's 13-25 s gaps. ***ON THREE HOURS OF ONE DAY, NOT FOUR DAYS, AND I SAY SO*** -- a spot check that agrees,
-  not an independent measurement of the same population. **And my first parse was wrong**: I read the `.csv.gz`
-  as CSV and got a "header" that was plainly one record split on its own commas. **An instrument whose output is
-  implausible on its face is telling you about the instrument.**
-  (4) DA 129's quoter view is blocked on a sigma producer; I checked the consumption side only --
-  `da_fair_price_identity.py` takes **`sigma` and `sigma_as_of` as PARAMETERS** (`:671`), so **it consumes a
-  sigma and produces none**, and the gap is upstream of it. Whether a qualifying producer exists is DA's
-  determination and I did not test it.
-  (5) **REV §3's three steps**: the new artifact carries `supersedes` as a `{path, sha256}` pair with the digest
-  recomputed AT THE WRITE; the precondition admits a second read only with a VERIFIED TARGET; DA's reader
-  resolves the head BY THE CHAIN. **And the missing rule is machinery this programme already has elsewhere** --
-  at round 279 I verified with a falsifier that no day artifact carries a chain key while the params declaration
-  carries `/supersedes/chain`; `resolve_head`, `also_supersedes` and the orphan census all exist. **The
-  early-read day family is the one family emitting versions without any of it**, which is why REV calls it one
-  round of DE's work.
-  (6) E1r/E2r stay NO-GO and now wait on **DE 138 Part A + a REV re-check**, explicitly after GO #8 if the clock
-  is tight -- **the replay debt is blocked behind a code change rather than behind a GO.** DE 138 is queued
-  behind DE 137, Part B deferring the quoter to DA as owner. DA 130 dispatched 15:37:56Z. Runbook §7e addendum 2
-  (`2bdcf4a`) records where each track stands. GO #8 unchanged (`5020f96`, `?? data`, SIXTH consecutive round);
-  freeze holds a TWENTIETH round.
-  COUNTS (by YAML parse): flags 2213 -> 2228, provenance 1758 -> 1773 (fifteen written, fifteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 262 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -353,6 +354,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 283, R-809 swept (51cf79e -> 67e0f7d) ---
+  MY_ROUND_282_CONSTRAINT_WAS_IMPLEMENTED_EXACTLY_AS_STATED: PHASE4-KEPT-BY-EXCLUSION
+  THE_FIFTH_COMPOSITION_IS_ONE_PARENT_FOUR_FILES_AND_PHASE4_AT_THE_PIN: a54dcc2-VERIFIED-AT-THE-OBJECT
+  AND_ITS_CASCADE_IS_TEN_OF_TEN_SO_ITS_BATTERY_CAN_RUN_TO_THE_END: THE-VISIBILITY-REQUIREMENT-MET
+  wt_rr_EXISTS_AT_a54dcc2_WITH_PINS_TEN_OF_TEN: AND-ONLY-THE-SYMLINK-UNTRACKED
+  REV_S7_VERIFIED_MYSELF_THE_DAY_PATH_NEVER_CALLS_build_reference: ZERO-IN-THREE-DAY-PATH-MODULES
+  SO_THE_RE_RUNS_ARE_AT_L_PLACE_ZERO_BY_CONSTRUCTION_NOT_BY_DEFAULT: STRONGER-THAN-MY-ROUND-281-REASON
+  REVs_S5_CAVEAT_IS_MY_ROUND_269_FINDING_REACHED_INDEPENDENTLY: THE-BATTERY-CANNOT-RUN-ON-THE-TIP
+  SO_EVERY_BATTERY_COUNT_QUOTED_TODAY_IS_FROM_A_SCRATCH_CLONE: NOT-388-PASS-ON-THE-TIP
+  THE_ESTIMATOR_REPRODUCES_BE_99s_RULED_PANDL_TO_THE_CENT: REV-RAN-IT-AT-THE-REAL-LEDGER
+  FOUR_THINGS_MUST_NOT_GO_INTO_A_RECEIPT_AS_THEY_STAND: TWO-BEFORE-ANY-REAL-DAY-IS-VALUED
+  AND_THE_FIRST_IS_THE_CLASS_THIS_PROGRAMME_KEEPS_PAYING_FOR: A-PRINTED-REASON-AGAINST-A-COMPUTED-VERDICT
+  THE_FIFTH_HEAD_IS_SUPERSEDED_BEFORE_IT_IS_EVER_GATED: THE-SIXTH-IS-a54dcc2-PLUS-DE-139
+  DA_131_ADDS_TWO_ROW_KINDS_UNDER_AN_UNCHANGED_SCHEMA_VERSION: WORTH-WATCHING-AT-THE-READER
+  THE_CLOCK_GO_R1_AT_1740Z_EARLIEST_AND_GO_8_AT_0010Z: FROM-TWO-DIFFERENT-TREES
+  THE_FREEZE_HOLDS_FOR_THE_TWENTY_THIRD_ROUND: AND-REV-NAMES-ITS-COST
   # --- MEM round 282, R-808 swept (cd4b38f -> 51cf79e) ---
   THE_PIN_CONSEQUENCE_AND_THE_JOIN_THE_ENTRY_LEAVES_IMPLICIT: THE-LATENCY-DECLARATION-IS-THE-PHASE4-CHANGE
   phase4_IS_be_cascade_modules_4_AND_EVERY_FIGURE_MATCHES: ee4034c1-PINNED-52e76689-NOW
@@ -26626,6 +26643,171 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 283, 2026-09-07T16:05:47Z (the clock read by which every measurement below was complete) ---
+  MY_ROUND_282_CONSTRAINT_WAS_IMPLEMENTED_EXACTLY_AS_STATED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      At round 282 I wrote that the fifth composition "must take THAT ONE FILE from `5020f96` and everything else from
+      the additions", because only the base carried phase4 at v19's pin. **`a54dcc2` does exactly that, and by the
+      cleanest available means: `de_phase4_diag_runner.py` is NOT among the four files it changes at all.** The pin is
+      held by EXCLUSION rather than by reverting -- the composition simply declines DE 137's phase4 edit while taking
+      its other three files. **A constraint met by not touching a file leaves no residue to check later**, which is
+      better than one met by restoring bytes.
+  THE_FIFTH_COMPOSITION_IS_ONE_PARENT_FOUR_FILES_AND_PHASE4_AT_THE_PIN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      Verified at the object rather than from the entry. **`a54dcc2`**: subject "E3/E4/GO #8 composition, FIFTH head:
+      5020f96 + the settlement endpoint + the verified winner + the supersession rule -- phase4 HELD at v19's pinned
+      bytes"; **one parent, `5020f96`**; `git diff --stat` gives **four files** --
+      `da_early_read_verify.py` (+811), `de_decision_ledger.py` (+138), `de_early_read.py` (+545),
+      `de_multiday_gate1_runner.py` (+1144), 2,553 insertions and 85 deletions; and
+      **`de_phase4_diag_runner.py` at `a54dcc2` hashes `ee4034c15c274982` -- exactly v19's pin.**
+  AND_ITS_CASCADE_IS_TEN_OF_TEN_SO_ITS_BATTERY_CAN_RUN_TO_THE_END:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      The decisive measurement, run on three refs with one probe: **`5020f96` 10/10, `a54dcc2` 10/10, HEAD 9/10**
+      (the shared tree's one red, `de_phase4_diag_runner.py`). **So the fifth composition's battery will not stop at
+      check 7** -- which is the point I made at round 282 from my own round-269 record: an off-pin composition would
+      abort seven checks in and hide whatever the other 380-odd would have found. **The visibility requirement is
+      met**, not merely the compliance one.
+  wt_rr_EXISTS_AT_a54dcc2_WITH_PINS_TEN_OF_TEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      `/home/yuqing/ctaNew-wt-rr` **now exists** -- at round 281 and 282 I recorded it absent -- and
+      `git worktree list` puts it at **`a54dcc2`** with `git status --short` returning exactly `?? data`, the launch
+      symlink. **Pins measured INSIDE that worktree against v19's ten declared paths: 10 of 10, no red.** So the tree
+      the re-runs will use satisfies the same two conditions REV 103 set for `wt-de`, checked in the same way. `wt-de`
+      is untouched at `5020f96`, `?? data`, the NINTH consecutive round.
+  REV_S7_VERIFIED_MYSELF_THE_DAY_PATH_NEVER_CALLS_build_reference:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      REV §7 states that `placement_latency_ms` cannot reach a day's P&L through the runner because the runner never
+      calls `build_reference`. **Checked myself**: `build_reference` occurs **0 times** in
+      `de_multiday_gate1_runner.py`, **0** in `de_early_read.py` and **0** in `harmful_stateful_policy.py`. It is
+      DEFINED in `de_phase4_diag_runner.py` and called from **fourteen** modules -- `be_daybook_build.py`,
+      `harmful_exposure_rows.py`, the section-81 scripts and the v2 gate smokes -- **none of which is on the day
+      path.**
+  SO_THE_RE_RUNS_ARE_AT_L_PLACE_ZERO_BY_CONSTRUCTION_NOT_BY_DEFAULT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      **AND THAT IS A STRONGER REASON THAN THE ONE I GAVE AT ROUND 281.** I wrote then that the re-runs "keep
+      `placement_latency_ms` at zero by design" and inferred it from `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` -- true, but
+      it left open that someone could set the parameter. **REV establishes that setting it would change nothing**: the
+      latency reaches a day only through `be_daybook_build`'s call to `build_reference` AND a REBUILT BOOK, and the
+      re-runs use the existing books. **So the four design-day re-runs are at L_place = 0 BY CONSTRUCTION, with the
+      same maker, and answer no latency question at all.** My conclusion was right and my reason was the weaker of the
+      two available.
+  REVs_S5_CAVEAT_IS_MY_ROUND_269_FINDING_REACHED_INDEPENDENTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      REV §5: "**THE CAVEAT: on the mainline tip the runner's battery cannot run at all.** `verify_be_module` refuses
+      `BE_CASCADE_DIFFERS` because `de_phase4_diag_runner.py` moved at DE 127-130 (and again at DE 137) while v19's
+      cascade pin still names `5020f96`'s bytes." **That is the finding I recorded at round 269** -- after correcting
+      my own six rounds of reporting the red without saying what it does -- and applied at round 282. **A third seat
+      has now reached it from its own direction**, and REV adds the consequence in the coordinator's terms: "it is the
+      freeze's cost, and it clears when v20 re-measures the pins".
+  SO_EVERY_BATTERY_COUNT_QUOTED_TODAY_IS_FROM_A_SCRATCH_CLONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      The part of that caveat that must ride with the numbers: REV re-ran the batteries **in scratch clones with
+      phase4 restored to the pinned bytes** -- runner **388** at `5ad16b5` (384 at `1f171e8`), ledger **9**, early read
+      **30**, phase4 **214 run + 4 conditional = 218** -- and says explicitly "**nobody should read '388 PASS' as '388
+      PASS on the tip'**". **So every battery count in today's record, including the four I reconciled at round 282, is
+      a scratch-clone number**, and the tip's runner battery has been unrunnable since DE 127. Recorded as a label that
+      travels with the counts, in the same family as "fills leg only" and the as-of.
+  THE_ESTIMATOR_REPRODUCES_BE_99s_RULED_PANDL_TO_THE_CENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      REV's central verified claim, carried as REV's: it ran DE 136's own functions over the **real 09-05 decision
+      ledger** -- which REV counts at **177,467 FILL rows** and 288 slugs, the same figures I measured at round 273 --
+      and **the estimator reproduces BE 99's ruled P&L to the cent on all three paths.** So the estimand's
+      implementation agrees with the independent measurement that motivated it. **Read at the review, not recomputed by
+      me**; what I have recomputed independently is BE 99's trades legs (round 278, all six to the cent).
+  FOUR_THINGS_MUST_NOT_GO_INTO_A_RECEIPT_AS_THEY_STAND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      The four, carried because they gate the re-runs: **(1)** a fixture-receipt `why` literal serving two statuses and
+      contradicting `admissible: true` beside it; **(2)** `winner_source` trusting a caller-supplied `all_agree`/counts
+      dict -- REV drove a DISAGREE map through to `VERIFIED` with a made-up convention name; **(3)** a degenerate
+      settlement null raising an uncaught `DesignRefused` that emits **NO receipt after a 70-80 minute run**; **(4)**
+      `settlement_admissibility` letting a declaration re-open a CONSUMED day. **Routed as DE 139, with (2) and (3)
+      required BEFORE any real day is valued.** (3) is the R-610 shape again -- a refusal that costs the whole run
+      because it fires at the end -- and (4) would breach rule 11 by declaration rather than by accident.
+  AND_THE_FIRST_IS_THE_CLASS_THIS_PROGRAMME_KEEPS_PAYING_FOR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      REV names item (1) as "the shape this programme keeps paying for (a printed reason that contradicts the computed
+      verdict beside it)" -- CLAUDE.md rule 10. The specific contradiction: `"admissibility": {"admissible": true,
+      "class": "FIXTURE"}` printed beside `"why": "rule 11: this day is not in the admissible set..."`. **The day IS in
+      the admissible set; the key above says so.** I have logged this class three times in three weeks from my own
+      readings -- `no_bare_G_key_here`'s "nothing read it", `where_the_five_live_now`'s "computed in the decision
+      ledger", and DE 130's "not a typed one" -- and each time the prose was written once and the computed value moved
+      underneath it. **One literal serving two statuses is the same defect with a different mechanism.**
+  THE_FIFTH_HEAD_IS_SUPERSEDED_BEFORE_IT_IS_EVER_GATED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      A state fact worth stating plainly so nobody gates the wrong commit: **`a54dcc2` is superseded before gating** --
+      the SIXTH composition is `a54dcc2` + DE 139, and **REV 105 waits on the sixth head, not the fifth.** So the tree
+      `wt-rr` currently holds is not the tree the re-runs will run from; it will be moved once DE 139 lands. **The
+      composition discipline has now produced six heads in one afternoon**, each its predecessor plus a named minimal
+      change -- which is what lets a NO-GO name a delta, and also what makes "the composition" ambiguous unless the
+      head is named.
+  DA_131_ADDS_TWO_ROW_KINDS_UNDER_AN_UNCHANGED_SCHEMA_VERSION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      DA 131 is dispatched to read **two new ledger row kinds, `SETTLEMENT_SCALARS` and `SETTLEMENT_SLUG`, under an
+      UNCHANGED `schema_version`.** Recorded as a thing to watch rather than an objection: the ledger's four row types
+      (HEADER, ARM_SCALARS, NULL_DRAW, FILL) are the ones I censused at rounds 273 and 276, and a reader keyed on
+      `schema_version` alone cannot distinguish a v2 ledger with the new kinds from a v2 ledger without them.
+      **Whether that matters depends on whether any consumer branches on the version rather than on the row kind** --
+      DA's reader is being built to branch on the kind, which is the right shape. Not routed; MEM does not route.
+  THE_CLOCK_GO_R1_AT_1740Z_EARLIEST_AND_GO_8_AT_0010Z:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      The schedule as R-809 records it: **GO R1 at about 17:40Z at the earliest**, all four re-runs before the close if
+      nothing refuses, and **GO #8 at 00:10Z from `wt-de` untouched**. Two lines of work from **two different trees** --
+      `wt-rr` at the sixth head for the re-runs, `wt-de` frozen at `5020f96` for GO #8 -- which is exactly why the new
+      worktree was created rather than refreshing the old one. On E1-E4's evidence each re-run is 85-105 minutes, so
+      four before 00:00Z is tight and the entry says so rather than assuming it.
+  THE_FREEZE_HOLDS_FOR_THE_TWENTY_THIRD_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T16:05:47Z
+    said: >-
+      `params_v20` and `design_v28` absent (0 matches in any state), heads v19/v27. **And REV now names the freeze's
+      cost in the record**: the tip's runner battery cannot run, every quoted count is a scratch-clone number, and both
+      clear when v20 re-measures the pins. **That is the third distinct second-order effect of this freeze I have
+      recorded** -- it forced the older phase4 bytes into a new tree (round 282), it makes the tip unrunnable (here),
+      and it has kept v20/v28 unwritten for twenty-three rounds while their content grew from re-measured pins to the
+      whole new endpoint.
   # --- MEM round 282, 2026-09-07T15:58:59Z (the clock read by which every measurement below was complete) ---
   THE_PIN_CONSEQUENCE_AND_THE_JOIN_THE_ENTRY_LEAVES_IMPLICIT:
     prov: CHECKED
