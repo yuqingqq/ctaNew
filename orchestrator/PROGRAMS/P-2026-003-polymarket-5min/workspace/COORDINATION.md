@@ -22181,6 +22181,21 @@ The timer fired on time (next 2026-09-08 00:06Z); the unit refused by its own de
 **LANDED (`b8cad5c`):** SEAT_PROTOCOL rule 20's neighbours gain the pinned-deploy + same-round re-pin rule; the runbook's §7b gains the chain as a predicate with the branching tail. Routed: DA 115 (dispatched 02:07Z: the deploy pin as a declaration by pair; the census marking `DEPLOY_PIN_STALE`; the rc-7 block confirmed as the unit's producer); BE 89 after BE 88 (§2.1's wording); DE 118 after GO #6 (`n_skipped` beside `n_disarmed`).
 
 **ROUTING.** DE 117 in flight (GO #6; the lock held by `be88fwd06` since 02:00:58Z — DE waits on the inode). BE 88 in flight. DA 115 in flight. MEM 240 in flight → MEM 241 on R-740 and this entry. REV 89 on tonight's artifacts once both branches report. The USER's four items stand.
+
+### R-742 — 2026-09-07T02:15Z — coordinator — **DA 115 VERIFIED: the nightly unit's deploy pin is a declaration by pair through the CAS, the census sees a moved pinned file IN DAYLIGHT (`DEPLOY_PIN_STALE`, naming the file) instead of at 00:06Z by a refusal, the deploy act refuses (exit 8) if it cannot write the pin, and rc 7 is confirmed under the block the unit's `ExecStart` names. REV 88 §3's both halves are implemented.**
+
+**DA 115 VERIFIED (`8c66d27`, `9abba11`, `f612a4c`; Q-DA-341).** Coordinator's read at the artifacts:
+
+```
+v2 sha e454ff3d53236dc9 | pair -> 38287c4fe32351cc (v1 38287c4fe32351cc)
+v2 unit: da-midnight-verify.service | commit: 9abba110a9a9 | n_files: 33 | deployed_at: 2026-09-07T02:11:49Z
+v1 unit (the corrected field): [{'exists': True, 'path': '/home/yuqing/.config/systemd/user/da-midnight-verify.service', …
+ExecStart names: True   (da_midnight_verify.sh)
+```
+
+`da_deploy_pin.py` writes `{unit, commit, files: [{path, sha256}], deployed_at}` from the deploy act's own record — v1 first-of-family and declared as such, every later version through `declaration_chain.write_next_version`, never an edit; the head pins commit `9abba110…` over 33 files (7 REFUSE-tier / 26 REPORT-tier); the deploy act REFUSES (exit 8) if it cannot write the pin. The other half: the non-head census asks the guard's own question whenever it runs — a pinned file whose digest moved without a new pin is `DEPLOY_PIN_STALE` naming the file; a pinned file that is gone is `PINNED_FILE_ABSENT` (an absent file has no digest, and reading that as clean is how a deleted guard would deploy itself); a census that cannot ask says `DEPLOY_PIN_NOT_CHECKABLE`. Falsifier driven at the REAL pin (the edit reverted at once): `before: CLEAN, n_stale 0` → `after an edit: DEPLOY_PIN_STALE | naming: ['live/pm_research/da_midnight_verify.sh'] | 2e6d34c5… -> 2cea6bc8…` → `restored: CLEAN`; the module's battery adds the re-pin cell (clean → edited → RE-PINNED → clean), the deleted-file status, and `DEPLOY_RECORD_ABSENT` (a pin without a deploy record is a claim about a deploy that never happened). Caught by reading the artifact after writing it: v1's `unit` field carried the record's `installed_units` — a LIST of unit/timer files — so a reader asking "which unit is this pin for" got an array of paths; v1 not edited, v2 the correction by the pair. rc 7 sits under `da_midnight_verify.sh`'s block, which is what the unit's `ExecStart` runs.
+
+**ROUTING.** BE 88 in flight (`be88fwd06` running, 3.6 GB at 02:15Z) → the pins v2 → BE 89 (drafted: REV 88 §2.1's rule in its wording; the per-day peaks file). DE 117 holding for the lock → GO #6 → DA 116 (the pre-read) → REV 89 on tonight's artifacts. MEM 242 on this entry. The USER's four items stand.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
