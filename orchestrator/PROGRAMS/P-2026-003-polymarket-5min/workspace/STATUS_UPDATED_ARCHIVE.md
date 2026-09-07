@@ -20476,3 +20476,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2228 -> 2243, provenance 1773 -> 1788 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 263 archived.)
 ```
+
+## Batch 267 — archived 2026-09-07T16:34:23Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:58:59Z (MEM ROUND 282 -- R-808 SWEPT, with every landing between the tip I read at round 281 (`cd4b38f`) and
+  `51cf79e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE PIN CONSEQUENCE IS A JOIN THE ENTRY LEAVES IMPLICIT.*** R-808 reports separately that
+  `placement_latency_ms` is declared with default 0.0 and that phase4 moved off v19's pin. **They are the same
+  event**: `placement_latency_ms` occurs ONLY in `de_phase4_diag_runner.py` (7 sites) and ZERO times in the
+  runner, ledger, early read or queue policy -- **so the latency declaration IS the phase4 change**, and the pin
+  problem is DE 137's direct footprint rather than a side effect. Every figure verified: phase4 is
+  `be_cascade.modules[4]` pinned at `ee4034c1`, and by ref `5020f96` = **`ee4034c1`**, `1f171e8` = `309b98c7`,
+  `5ad16b5` = **`52e76689`**. **Only the BASE carries the pinned bytes**, so the composition must take that one
+  file from `5020f96` and everything else from the additions.
+  (2) ***AND MY OWN ROUND-269 RECORD SAYS WHY THAT IS WORSE THAN A FAILED CHECK***: `BE_CASCADE_DIFFERS` is
+  RAISED, so a cascade red **aborts the battery at check 7** -- the mechanism by which a real red hid behind a
+  by-design one. **A fifth composition with phase4 off-pin would stop its own battery seven checks in and hide
+  what the other 380-odd would have found.** Keeping the pin is a VISIBILITY requirement, not only compliance.
+  (3) The rename is clean **at the key level, tested by AST rather than grep**: `inventory_leg` as an emitted or
+  indexed key appears **0 times in the runner** (6 textual mentions) and **once in the early read** (15) -- and
+  that one site is `_r795["legs"] = {"inner": {"inventory_leg": 1.0}}`, **a falsifier's own fixture**: a
+  detector for the old key needs the old key to detect. `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` verified at `:502`;
+  250 ms proposed and deferred to the user. **The float-boundary rule lands on that deferred decision**: a fill
+  at t0+100 ms measures 99.99999999999964 ms, so "whoever sets L should choose a value no fill sits exactly on"
+  -- and 250 is exactly the kind of round number a fill can sit on.
+  (4) ***R-808's FOUR BATTERY COUNTS ARE ALL EXACT AT ITS SUBJECT***: 388 / 30 / 9 / 218 at `5ad16b5`. At HEAD I
+  read 388 / **32** / 9 / 218 -- **and chasing that two-check difference is what surfaced a landing I had not
+  seen**: `51cf79e`, 15:55:36Z, AFTER R-808 was written. **A number that does not match is worth chasing even
+  when the entry turns out to be right.** Second consecutive round in which a landing arrived between the
+  dispatch and my read of the tip -- which is why I bound sweeps on the tip I read.
+  (5) ***DE 138 PART A HAS LANDED, AND BOTH HALVES OF THE CHAIN NOW EXIST IN CODE.*** The emit takes
+  `supersedes=None` and raises `EARLY_READ_ALREADY_EMITTED` **only when it is None** -- a second read is ADMITTED
+  with a named, checked target -- writing a `supersedes_block` in DA 130's exact `{path, sha256}` shape, with
+  "the superseded artifact and its ledger are NEVER edited" (rule 13). **The gap I first recorded at round 279 --
+  no chain key in any day artifact while every other family had one -- is closed in code and not yet in data**:
+  no artifact carries the field until the first re-run emits a second one.
+  (6) **MY ROUND-281 "TWO INGREDIENTS THAT DO NOT EXIST" IS NOW ZERO** -- DE 137 landed 15:50:30Z (four minutes
+  before my round-281 clock) and DE 138 Part A 15:55:36Z. **All four ingredients exist; the composition does
+  not**, and `wt-rr` still does not exist. `wt-de` frozen at `5020f96`, `?? data`, EIGHTH consecutive round;
+  GO #8 at 00:10Z. Freeze holds a TWENTY-SECOND round -- **and it now constrains the composition itself**, since
+  forbidding a re-pin is what forces the older phase4 bytes into a new tree.
+  COUNTS (by YAML parse): flags 2243 -> 2259, provenance 1788 -> 1804 (sixteen written, sixteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 264 archived.)
+```

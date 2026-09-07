@@ -1,3 +1,69 @@
+# READ FIRST — round 285 (MEM, 2026-09-07T16:34:23Z, tip `ef27921`)
+
+**R-811, R-812 and R-813 swept, with every landing between the tip I read at round 284 (`d7e51fe`) and `ef27921` — five
+of them arriving after this round's own fetch, R-813 while I was composing.** STATE ONLY.
+
+**THE SIXTH COMPOSITION EXISTS AND `wt-rr` IS ON IT.** `850c166`, 16:24:00Z, parent `e0d262d`; three files
+byte-identical to mm-research `6372626`; phase4 `ee4034c15c274982` = v19's pin; **pins 10/10 measured inside
+`wt-rr`**. I recorded it absent at rounds 281, 282 and 284.
+
+**THE USER'S HIGH #1 IS SHUT.** Driven at the tip's bytes: the exact forged dict now **REFUSES
+`SETTLEMENT_VERIFICATION_EMPTY`**, where at 16:11:25Z it returned. Falsifiers both ways — no verification →
+`SETTLEMENT_WINNERS_NOT_VERIFIED`; a made-up convention → `SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE`;
+`require_verified=False` **admits**. My round-284 statement is superseded in band.
+
+**TONIGHT'S L IS A CONSTANT, NOT A READING — and it is a SEAM, not a defect in either seat.** R-811 ruled the L be
+read from the book's builder receipt and never typed. Driving `placement_latency_from_the_book` on all four **real
+landed builder receipts** returns the function's own literal `0.0` with `source "THE BOOK'S BUILDER RECEIPT
+DECLARES NONE"`; the four receipts carry **zero** occurrences of `placement_latency`. BE's `placement_latency_of`
+**raises** on the same books ("an unrecorded L and an L of zero are the same number and opposite facts"). DE's
+refusal exists but is armed only by `settlement_endpoint.require_book_declares_L` — a key in `params_v20`, which
+the freeze forbids.
+
+**A THIRD ROUTE SITS IN THE RECEIPTS AND NEITHER READER USES IT — and it reaches only two of the four days.**
+`producing_code.builder_commit` on 09-05/09-06 (`5f5f76c8`, `01636c1d`) — and 09-04's `b827ca2e` — resolves to
+**phase4** bytes with **zero** occurrences of the parameter and no `apply_placement_latency` at all, so *no latency
+was applied* and that is derivable from the receipt. (Corrected within the round: my first probe read
+`be_daybook_build.py`, the caller, not phase4 where the machinery lives.) 09-03 has **no `producing_code` at all**;
+09-04's commit survives only in the **superseded** `.v2`, and the head `.v3` renamed the key
+`builder_commit_RECONSTRUCTED` so "a resolver keying on `builder_commit` must find NOTHING here". BE's own v3 also
+states the limit: matching the blob "cannot prove the run used that commit" — and BE 101 drew the sharper line the
+same hour (R-813): absence of the machinery is not equivalence of the fills, since phase4 moved by 402/620 lines
+between those commits. **That second claim is what the L = 0 rebuild buys.**
+
+**THE CHEAPEST REPAIR IS ALREADY BUILT.** `apply_placement_latency` is the identity at L ≤ 0 and BE 101's CLI
+writes an L-variant to its own path with its own receipt — so an **L = 0 rebuild** gives the same fills **with the
+L recorded**, retiring the seam without a declaration or a ruling. It is already the curve's first leg for 09-05.
+Observation for the coordinator, not a recommendation (rule 14).
+
+**MY ROUND-282 WORRY, MEASURED AND REFUTED.** Four of R-811's six grid values (25/50/100/250 ms) drop a fill placed
+exactly at t0 + L on the ns path; **zero of 20,000** real `fill_ns − gen_start_ns` deltas are a whole number of ms
+(19,981/20,000 timestamps are ns-granular). Real in the arithmetic, absent in the data.
+
+**A CORRECTION I OWE ON MY OWN INSTRUMENT.** Round 284's "fourteen callers … checked by AST" was a **mention**
+count. The call-site census: `build_reference` is defined once with **8 call sites in 5 modules** (phase4 has 4, not
+22); 16 modules mention it across 52 textual occurrences, **26 inside string literals**. The conclusion held; the
+denominator did not, and I labelled it with an instrument it was not measured by.
+
+**AND THE NUMERATOR MOVED 0 → 1.** `be_daybook_build.py:706` now passes the keyword (BE 101 (1/2), `2ad6a82`,
+16:11:25Z — **one second after my round-284 row**, the sixth landing in the read-write gap). No pin moved:
+`be_daybook_build.py` is not one of v19's ten cascade modules, HEAD stays **9/10**.
+
+**Standing.** BE 102's six books **do not exist** (zero `__L…ms` paths on disk). `params_v20`/`design_v28` absent,
+heads v19/v27 — the freeze's **twenty-fifth** round. `wt-de` at `5020f96`, status exactly `?? data`, the
+**eleventh** consecutive round; GO #8 unchanged. DA 131 landed: ledger `SCHEMA_VERSION = 3` with
+`SETTLEMENT_SCALARS` / `SETTLEMENT_SLUG` and a reader that refuses an unknown version. In flight: BE 101 (2/2) and
+BE 102's curve; REV 105 gates GO R1..R4 on `850c166`. **R-813 ruled the lock at 16:27:03Z while I composed**: correct
+results outrank the curve, BE runs exactly two builds (L = 250, then L = 0 as the equivalence measurement against the
+landed 88,698.17341109998) and releases; L ∈ {25, 50, 100, 500} run after GO #8. The coordinator reached the L = 0
+leg independently and for the reason I measured.
+
+Counts: flags 2289 → 2304, provenance 1834 → 1849 (fifteen written, fifteen counted, duplicate-name gate run
+BEFORE writing); 1,559 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; missing-artifact 178; window
+trimmed 4 → 3, Batch 267 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 284 (MEM, 2026-09-07T16:11:24Z, tip `d7e51fe`)
 
 **R-810 swept, with every landing between the tip I read at round 283 (`67e0f7d`) and `d7e51fe`.** STATE ONLY.

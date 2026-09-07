@@ -67,6 +67,34 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T16:34:23Z (MEM ROUND 285 -- R-811, R-812 AND R-813 SWEPT, with every landing between the tip I
+  read at round 284 (`d7e51fe`) and `ef27921` -- and FIVE of them arrived after this round's own
+  fetch, R-813 while I was composing. STATE ONLY. ***THE SIXTH COMPOSITION EXISTS AND `wt-rr` IS ON IT***: `850c166` at 16:24:00Z, its three
+  files byte-identical to mm-research `6372626`, phase4 at v19's pin `ee4034c1`, and pins 10/10 measured INSIDE
+  `wt-rr` -- absent when I recorded it at rounds 281, 282 and 284. ***THE USER'S HIGH #1 IS SHUT***: I drove his
+  exact forged dict at the tip's bytes and it REFUSES `SETTLEMENT_VERIFICATION_EMPTY`, where at 16:11:25Z it
+  returned -- my round-284 "that falsifier would fail today" is superseded in band, and the guard ADMITS at
+  `require_verified=False`, so it is a gate and not a wall. ***BUT TONIGHT'S L IS A CONSTANT, NOT A READING***:
+  R-811 ruled the L be READ FROM THE BOOK'S BUILDER RECEIPT AND NEVER TYPED, and driving
+  `placement_latency_from_the_book` on all four REAL landed receipts returns the function's own literal 0.0 with
+  `source "THE BOOK'S BUILDER RECEIPT DECLARES NONE"` -- the four receipts contain zero occurrences of
+  `placement_latency`. ***AND TWO LANDED READERS GIVE OPPOSITE ANSWERS ON THOSE SAME BOOKS***: BE's
+  `placement_latency_of` RAISES ("an unrecorded L and an L of zero are the same number and opposite facts") while
+  DE's returns 0.0, its refusal armed only by a declaration key in `params_v20`, which the freeze forbids. ***A
+  THIRD ROUTE SITS IN THE RECEIPTS AND NEITHER READER USES IT***: `producing_code.builder_commit` on 09-05/09-06
+  resolves to builder bytes with ZERO occurrences of the parameter, so L = 0 is DERIVABLE as provenance -- but
+  09-03 has no `producing_code` at all and 09-04's commit survives only in a SUPERSEDED v2, whose head deliberately
+  renamed the key so "a resolver keying on `builder_commit` must find NOTHING here". ***THE CHEAPEST REPAIR IS
+  ALREADY BUILT***: `apply_placement_latency` is the IDENTITY at L <= 0 and BE 101's CLI writes an L-variant to its
+  own path with its own receipt, so an L = 0 rebuild yields the same fills WITH the L recorded -- the curve's own
+  first leg. ***I MEASURED MY ROUND-282 WORRY AND IT DOES NOT BITE***: four of R-811's six grid values drop a fill
+  placed exactly at t0 + L, yet ZERO of 20,000 real fill-minus-generation deltas are a whole number of ms. ***AND I
+  OWE A CORRECTION ON MY OWN INSTRUMENT***: round 284's "fourteen callers, checked by AST" was a MENTION count --
+  the call-site census is 8 sites in 5 modules, of which 1 now passes the keyword (`be_daybook_build.py:706`, BE
+  101, landed ONE SECOND after my round-284 row and touching no pin, HEAD still 9/10). Flags 2289 -> 2304, prov
+  1834 -> 1849; window trimmed 4 -> 3, Batch 267 archived. BE 102's six books do not exist; the freeze holds a
+  TWENTY-FIFTH round; `wt-de` `5020f96` / `?? data`, the ELEVENTH consecutive round; GO #8 unchanged.
+  MEM asserts no result.)
   2026-09-07T16:11:24Z (MEM ROUND 284 -- R-810 SWEPT, with every landing between the tip I read at round 283 (`67e0f7d`) and
   `d7e51fe`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) **A USER REVIEW, three findings carried verbatim.** DE 139 landed `a4965b9` at 16:07:15Z -- **five seconds
@@ -144,45 +172,6 @@ updated: >-
   of work from two different trees. Freeze holds a TWENTY-THIRD round, and REV now names its cost in the record.
   COUNTS (by YAML parse): flags 2259 -> 2274, provenance 1804 -> 1819 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 265 archived.)
-  2026-09-07T15:58:59Z (MEM ROUND 282 -- R-808 SWEPT, with every landing between the tip I read at round 281 (`cd4b38f`) and
-  `51cf79e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE PIN CONSEQUENCE IS A JOIN THE ENTRY LEAVES IMPLICIT.*** R-808 reports separately that
-  `placement_latency_ms` is declared with default 0.0 and that phase4 moved off v19's pin. **They are the same
-  event**: `placement_latency_ms` occurs ONLY in `de_phase4_diag_runner.py` (7 sites) and ZERO times in the
-  runner, ledger, early read or queue policy -- **so the latency declaration IS the phase4 change**, and the pin
-  problem is DE 137's direct footprint rather than a side effect. Every figure verified: phase4 is
-  `be_cascade.modules[4]` pinned at `ee4034c1`, and by ref `5020f96` = **`ee4034c1`**, `1f171e8` = `309b98c7`,
-  `5ad16b5` = **`52e76689`**. **Only the BASE carries the pinned bytes**, so the composition must take that one
-  file from `5020f96` and everything else from the additions.
-  (2) ***AND MY OWN ROUND-269 RECORD SAYS WHY THAT IS WORSE THAN A FAILED CHECK***: `BE_CASCADE_DIFFERS` is
-  RAISED, so a cascade red **aborts the battery at check 7** -- the mechanism by which a real red hid behind a
-  by-design one. **A fifth composition with phase4 off-pin would stop its own battery seven checks in and hide
-  what the other 380-odd would have found.** Keeping the pin is a VISIBILITY requirement, not only compliance.
-  (3) The rename is clean **at the key level, tested by AST rather than grep**: `inventory_leg` as an emitted or
-  indexed key appears **0 times in the runner** (6 textual mentions) and **once in the early read** (15) -- and
-  that one site is `_r795["legs"] = {"inner": {"inventory_leg": 1.0}}`, **a falsifier's own fixture**: a
-  detector for the old key needs the old key to detect. `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` verified at `:502`;
-  250 ms proposed and deferred to the user. **The float-boundary rule lands on that deferred decision**: a fill
-  at t0+100 ms measures 99.99999999999964 ms, so "whoever sets L should choose a value no fill sits exactly on"
-  -- and 250 is exactly the kind of round number a fill can sit on.
-  (4) ***R-808's FOUR BATTERY COUNTS ARE ALL EXACT AT ITS SUBJECT***: 388 / 30 / 9 / 218 at `5ad16b5`. At HEAD I
-  read 388 / **32** / 9 / 218 -- **and chasing that two-check difference is what surfaced a landing I had not
-  seen**: `51cf79e`, 15:55:36Z, AFTER R-808 was written. **A number that does not match is worth chasing even
-  when the entry turns out to be right.** Second consecutive round in which a landing arrived between the
-  dispatch and my read of the tip -- which is why I bound sweeps on the tip I read.
-  (5) ***DE 138 PART A HAS LANDED, AND BOTH HALVES OF THE CHAIN NOW EXIST IN CODE.*** The emit takes
-  `supersedes=None` and raises `EARLY_READ_ALREADY_EMITTED` **only when it is None** -- a second read is ADMITTED
-  with a named, checked target -- writing a `supersedes_block` in DA 130's exact `{path, sha256}` shape, with
-  "the superseded artifact and its ledger are NEVER edited" (rule 13). **The gap I first recorded at round 279 --
-  no chain key in any day artifact while every other family had one -- is closed in code and not yet in data**:
-  no artifact carries the field until the first re-run emits a second one.
-  (6) **MY ROUND-281 "TWO INGREDIENTS THAT DO NOT EXIST" IS NOW ZERO** -- DE 137 landed 15:50:30Z (four minutes
-  before my round-281 clock) and DE 138 Part A 15:55:36Z. **All four ingredients exist; the composition does
-  not**, and `wt-rr` still does not exist. `wt-de` frozen at `5020f96`, `?? data`, EIGHTH consecutive round;
-  GO #8 at 00:10Z. Freeze holds a TWENTY-SECOND round -- **and it now constrains the composition itself**, since
-  forbidding a re-pin is what forces the older phase4 bytes into a new tree.
-  COUNTS (by YAML parse): flags 2243 -> 2259, provenance 1788 -> 1804 (sixteen written, sixteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 264 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -354,6 +343,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 285, R-811, R-812 and R-813 swept (d7e51fe -> ef27921) ---
+  THE_SIXTH_COMPOSITION_EXISTS_AND_wt_rr_IS_ON_IT: 850c166-PINS-10-OF-10
+  THE_USERS_HIGH_1_IS_SHUT_AND_HIS_EXACT_DICT_NOW_REFUSES: SETTLEMENT_VERIFICATION_EMPTY
+  THE_GUARD_ADMITS_AS_WELL_AS_REFUSES_SO_IT_IS_A_GATE_NOT_A_WALL: THREE-REFUSALS-AND-ONE-ADMISSION
+  TONIGHTS_L_IS_A_CONSTANT_RETURNED_NOT_A_VALUE_READ: ALL-FOUR-RECEIPTS-DECLARE-NONE
+  BE_AND_DE_LANDED_OPPOSITE_ANSWERS_TO_ONE_QUESTION_ON_THE_SAME_BOOKS: A-REFUSAL-AND-A-ZERO
+  THE_ARMING_KEY_LIVES_IN_A_DECLARATION_THE_FREEZE_FORBIDS: require_book_declares_L-UNREACHABLE
+  A_THIRD_ROUTE_TO_L_SITS_IN_THE_RECEIPTS_AND_NEITHER_READER_USES_IT: builder_commit-BYTES-CARRY-NO-LATENCY
+  AND_THAT_ROUTE_REACHES_ONLY_TWO_OF_THE_FOUR_DAYS: 09-03-HAS-NO-producing_code
+  BE_ALREADY_WROTE_THE_SENTENCE_THAT_BOUNDS_THAT_ROUTE: BYTES-EXISTED-NOT-BYTES-USED
+  THE_CHEAPEST_REPAIR_IS_ALREADY_BUILT_AND_IS_THE_CURVES_OWN_L_ZERO_LEG: IDENTITY-AT-L-ZERO-WITH-THE-L-RECORDED
+  THE_FLOAT_BOUNDARY_IS_ARITHMETIC_AND_INERT_ON_THIS_TAPE: FOUR-OF-SIX-DROP-YET-ZERO-OF-20000-SIT-THERE
+  MY_ROUND_284_DENOMINATOR_WAS_GREP_SHAPED_AND_I_HAD_CALLED_IT_AST: EIGHT-CALL-SITES-IN-FIVE-MODULES
+  AND_THE_NUMERATOR_MOVED_FROM_ZERO_TO_ONE_AT_THE_BUILDER: be_daybook_build-706
+  BE_101_LANDED_ONE_SECOND_AFTER_MY_ROW_AND_TOUCHED_NO_PIN: SIXTH-LANDING-IN-THE-GAP
+  BE_102s_SIX_BOOKS_DO_NOT_EXIST_AND_THE_FREEZE_HOLDS_A_TWENTY_FIFTH_ROUND: ZERO-L-VARIANTS-ON-DISK
   # --- MEM round 284, R-810 swept (67e0f7d -> d7e51fe) ---
   A_USER_REVIEW_WITH_THREE_FINDINGS_CARRIED_VERBATIM: TWO-HIGH-ONE-MEDIUM
   DE_139_LANDED_FIVE_MINUTES_BEFORE_THE_ENTRY_AND_THE_S6_2_FIX_WORKS: THE-FORGED-all_agree-IS-IGNORED
@@ -26659,6 +26664,206 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 285, 2026-09-07T16:34:23Z (the clock read by which every measurement below was complete) ---
+  THE_SIXTH_COMPOSITION_EXISTS_AND_wt_rr_IS_ON_IT:
+    prov: CHECKED
+    artifact: git:850c1668846f8281f0a8cb888547bc80a809b2bc
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      **I recorded it ABSENT at rounds 281, 282 and 284; it exists now.** `850c166` ("SIXTH head (final)"),
+      committed **16:24:00Z -- three minutes AFTER my own fetch at 16:21:15Z**, parent `e0d262d` (a first sixth-head
+      attempt carrying only REV 104B S6's four), with `a54dcc2` an ancestor. Verified at the objects, not from the
+      message: its three changed files are **byte-identical to mm-research at `6372626`** (runner `3b828a6866e2389c`,
+      ledger `0a5e4f200539e141`, early read `1f4f0b781ce71437`), `de_phase4_diag_runner.py` hashes
+      `ee4034c15c274982` = **v19's pin exactly**, and **inside `wt-rr` the cascade measures 10/10** against v19's ten
+      declared paths. So its battery will not abort at check 7 -- the visibility requirement I named at round 282 from
+      my own round-269 record, met at the sixth head as it was at the fifth. `wt-rr` HEAD `850c166`, status exactly
+      `?? data`.
+  THE_USERS_HIGH_1_IS_SHUT_AND_HIS_EXACT_DICT_NOW_REFUSES:
+    prov: CHECKED
+    artifact: git:6372626
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      ***THE THING I REPORTED LIVE LAST ROUND IS CLOSED, AND I DROVE IT RATHER THAN READ IT.*** At round 284 I ran the
+      USER's exact case against the post-DE-139 code and it RETURNED (status `VERIFICATION_DID_NOT_AGREE`), so I
+      recorded "that falsifier would fail today". Driven again at the tip's bytes -- the real module imported, not a
+      re-implementation -- `winner_source(verification={'all_agree': True, 'per_slug': {}, 'counts': {}, 'convention':
+      {'name': 'S60(T) >= S60(t0)'}, require_verified=True)` now **REFUSES `SETTLEMENT_VERIFICATION_EMPTY`**: "the
+      verification carries NO per-slug verdicts. Zero slugs verified is not verification -- the USER's own
+      reproduction (R-810)". **The gate no longer enumerates ways in; it requires success.** True at 16:11:25Z,
+      false at 16:21:50Z (`6372626`); my round-284 statement is superseded in band by this one.
+  THE_GUARD_ADMITS_AS_WELL_AS_REFUSES_SO_IT_IS_A_GATE_NOT_A_WALL:
+    prov: CHECKED
+    artifact: git:6372626
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      Rule 16 both directions, driven: **no verification at all -> REFUSED `SETTLEMENT_WINNERS_NOT_VERIFIED`**; **one
+      `VERIFIED_AGREE` under a made-up convention name -> REFUSED `SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE`** ("the
+      verification claims the convention 'MADE-UP' and the pinned one is 'S60(T) >= S60(t0)'", REV 104B S6(2)'s own
+      case); and **`require_verified=False` RETURNS, `is_final_for_quotation` False** -- it admits. A guard shown only
+      refusing proves nothing (R-249); this one is shown doing both.
+  TONIGHTS_L_IS_A_CONSTANT_RETURNED_NOT_A_VALUE_READ:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc.json
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      R-811 ruled that DE 139 record every receipt's `placement_latency_ms` **READ FROM THE BOOK's builder receipt,
+      never a constant**. ***I DROVE `placement_latency_from_the_book` ON ALL FOUR REAL LANDED BUILDER RECEIPTS -- the
+      exact artifacts GO R1..R4 will read -- AND ALL FOUR RETURN THE FUNCTION'S OWN LITERAL***: `L_place_ms 0.0`,
+      `source "THE BOOK'S BUILDER RECEIPT DECLARES NONE"`, `found_at {}`. The four receipts contain **zero textual
+      occurrences of `placement_latency`** (09-03 16 top keys, 09-04 19, 09-05 22, 09-06 25). Falsifier both ways: a
+      receipt carrying 250.0 returns **250.0** from `THE BOOK'S BUILDER RECEIPT`, and two different values return
+      `L_place_ms None, ambiguous True`. **The label holds and the number is the constant** -- the same shape as last
+      round's "the label held and the door did not", one layer down: `source` lets a machine tell them apart, which is
+      why this is a naming fact and not an escape.
+  BE_AND_DE_LANDED_OPPOSITE_ANSWERS_TO_ONE_QUESTION_ON_THE_SAME_BOOKS:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      ***TWO LANDED READERS, ONE QUESTION, OPPOSITE ANSWERS, AT THE SAME TIP.*** BE 101's
+      `placement_latency_of(book)` **RAISES `BOOK_RECORDS_NO_PLACEMENT_LATENCY`** for a pre-parameter book and says
+      why in its own words: "It is not 0.0 by default -- an unrecorded L and an L of zero are the same number and
+      opposite facts (rule 4). Books built before the parameter existed are PRE_PARAMETER and must be rebuilt to be
+      read on this axis." DE 139's `placement_latency_from_the_book(receipt)` **RETURNS 0.0** for the same books.
+      Neither is wrong alone: BE answers "what does this book say" and DE answers "what did this day run at", and
+      DE's code names the reason -- "arming it in code would refuse the four re-runs the USER asked for". **It is a
+      SEAM fact, not a defect in either seat**, and it is the seam a reader crosses when a day number is quoted with
+      its L beside it.
+  THE_ARMING_KEY_LIVES_IN_A_DECLARATION_THE_FREEZE_FORBIDS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      DE 139's refusal is real but **OFF**: `require_declared=False` by default, and the comment says the guard is
+      "ARMED BY THE DECLARATION (`settlement_endpoint.require_book_declares_L`), never by a constant here". Driven
+      with `require_declared=True` all four days **REFUSE `SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY`** -- so the
+      mechanism works and only the arming is missing. ***AND THE DECLARATION THAT WOULD ARM IT CANNOT BE WRITTEN
+      TONIGHT***: `de_multiday_gate1_params_v20.json` and `..._design_v28.json` are ABSENT (heads still v19/v27) under
+      the R-775 freeze, which holds a **TWENTY-FIFTH round**. A second-order effect of the freeze, the fourth I have
+      logged.
+  A_THIRD_ROUTE_TO_L_SITS_IN_THE_RECEIPTS_AND_NEITHER_READER_USES_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc.json
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      Neither reader looks where the answer actually is. The 09-05 and 09-06 receipts carry
+      **`producing_code.builder_commit`** (`5f5f76c8f3aa...`, `01636c1d99f8...`, rule 22's import-time stamp), and at
+      **both** commits -- and at 09-04's `b827ca2e377f` -- **`de_phase4_diag_runner.py` contains ZERO occurrences of
+      `placement_latency` and no `apply_placement_latency` definition at all**. ***CORRECTED WITHIN THIS ROUND***: my
+      first probe read `be_daybook_build.py`, which is only the CALLER; the machinery lives in phase4's
+      `build_reference`, and that is the file the claim needed. Falsified both ways (HEAD: 14 in phase4, 26 in the
+      builder; `2ad6a82^`: 0). So **NO PLACEMENT LATENCY WAS APPLIED to any landed book, and that IS derivable from
+      the receipt** -- DE's reader walks only for keys containing `placement_latency` and never reaches it, BE's
+      refuses before it could.
+  AND_THAT_ROUTE_REACHES_ONLY_TWO_OF_THE_FOUR_DAYS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc.json
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      ***AND THE TWO DAYS IT MISSES ARE THE TWO GO R1 AND R2 RE-RUN.*** **09-03's receipt has no `producing_code` key
+      at all** (16 top keys; the only commit-shaped key anywhere is under `asm`). **09-04 has three receipts** -- base
+      (no `producing_code`), `.v2` (`builder_commit b827ca2e377f`, also **0** occurrences of the parameter), `.v3`
+      (the head by a `{path, sha256}` supersedes chain) -- and **the head deliberately renamed the key**
+      `builder_commit_RECONSTRUCTED`, `status RECONSTRUCTED_NOT_A_STAMP`, because "a resolver keying on
+      `builder_commit` must find NOTHING here, because this is not one ... the two must not be indistinguishable to a
+      machine". So the strongest evidence for 09-04's L lives in a **SUPERSEDED** receipt, and for 09-03 it does not
+      exist. A four-day table would carry **two shapes of L**, exactly as DA 128's four day-shapes did.
+  BE_ALREADY_WROTE_THE_SENTENCE_THAT_BOUNDS_THAT_ROUTE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc.v3.json
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      Carried so the provenance route is not oversold by me: the same v3 receipt states its own limit --
+      **"matching the blob at the named commit CONFIRMS those bytes existed there; it cannot prove the run used that
+      commit, because a file identical at two commits matches both."** ***AND BE 101 DREW THE SHARPER LINE THE SAME
+      HOUR (R-813)***: the landed book "is PRE-PARAMETER, not 'L = 0 by construction' in any recorded sense", and
+      `build_reference`'s body differs between `5f5f76c` and now -- "that is an argument, not a measurement". **Both
+      are right and they are different claims**: absence of the machinery establishes that NO LATENCY WAS APPLIED
+      (measured above, three commits); it does NOT establish that today's builder REPRODUCES the landed fills, since
+      phase4 moved by 402 insertions / 620 deletions between those commits. **The second claim is what the L = 0
+      rebuild buys**, which is why the coordinator ruled it worth its 28 minutes.
+  THE_CHEAPEST_REPAIR_IS_ALREADY_BUILT_AND_IS_THE_CURVES_OWN_L_ZERO_LEG:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      ***THE FIX FOR ALL OF THE ABOVE IS ONE BUILD PER DAY AND BE 102 IS ALREADY RUNNING IT FOR ONE OF THEM.***
+      `apply_placement_latency` is **the IDENTITY at L <= 0** (`if L <= 0.0: return list(tranches), 0`), and BE 101's
+      CLI writes an L-variant to **its own path** (`be_daybook_{day}_{coin}__L{L:g}ms.pkl`) with **its own
+      receipt**. So a rebuild at **L = 0** produces *the same fills as the landed book* and **records the L** -- it
+      turns DE's returned constant into a read value, retires the BE/DE seam above, and needs no declaration and no
+      ruling. It is already the first leg of R-811's grid for 09-05; the same leg on 09-03, 09-04 and 09-06 would
+      make all four re-runs quotable on the L axis. Recorded as an observation for the coordinator, not a
+      recommendation I am entitled to make (rule 14).
+  THE_FLOAT_BOUNDARY_IS_ARITHMETIC_AND_INERT_ON_THIS_TAPE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      ***I MEASURED MY OWN ROUND-282 WORRY AND IT DOES NOT BITE.*** I wrote then that "250 is exactly the kind of
+      round number a fill can sit on". The arithmetic half is confirmed and is WORSE than DE 137 stated: against the
+      kept-test `(t - t0) * 1000.0 >= L`, on the ns path a real tranche carries (`t = ns/1e9`, epoch ~1.7887e9),
+      **FOUR of R-811's six grid values -- 25, 50, 100 and 250 ms -- DROP a fill placed exactly at t0 + L** (deltas
+      -1.4e-4, -4.8e-5, -9.5e-5, -2.4e-4 ms); only L = 0 (short-circuited) and L = 500 keep it. **The empirical half
+      refutes the worry**: in the real 09-05 ledger **19,981 of 20,000 `fill_ns` are ns-granular** (19 microsecond-
+      round, none coarser) and ***ZERO of 20,000 `fill_ns - gen_start_ns` deltas are a whole number of milliseconds***
+      -- no fill sits on any round-ms boundary, and the exposure is a ~100 ns window per fill. **A hazard that is real
+      in the arithmetic and absent in the data, stated as both.**
+  MY_ROUND_284_DENOMINATOR_WAS_GREP_SHAPED_AND_I_HAD_CALLED_IT_AST:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      ***A CORRECTION I OWE IN BAND, AND IT IS ABOUT MY OWN INSTRUMENT.*** Round 284 published "ZERO of
+      `build_reference`'s **fourteen callers** (22 sites in phase4 alone) pass `placement_latency_ms`, checked by AST
+      across every caller rather than by grep". Re-measured with a call-site walker: `build_reference` is **defined
+      once** and has **8 CALL SITES IN 5 MODULES** -- `be_daybook_build` (1), `da_tranche_field_probe` (1),
+      `de_phase4_diag_runner` (4, not 22), `de_section81_arms` (1), `de_section81_cache_upgrade` (1). The "fourteen"
+      and the "22" were **MENTION counts**: 16 modules mention the name across 52 textual occurrences, of which
+      **26 are inside string literals** (16 of them in phase4) and 13 are attribute references. **The conclusion held
+      and the denominator did not**, and I had labelled it with the instrument it was not measured by -- which is the
+      defect, not the number.
+  AND_THE_NUMERATOR_MOVED_FROM_ZERO_TO_ONE_AT_THE_BUILDER:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      The census re-run also moves the fact it was measuring: **1 of the 8 call sites now passes the keyword** --
+      `be_daybook_build.py:706`, `R.build_reference(coin, selector=sel, placement_latency_ms=placement_latency_ms)`,
+      landed by BE 101 (1/2). The parameter reaches the book, the book header records it (`:846`, `:890`), and
+      `placement_latency_of` refuses a book that carries neither key. The switch the USER's HIGH #2 called unwired
+      **is wired at exactly the one call site that matters**, and the other seven are off the day path as REV S7
+      established. **What remains unwired is not the parameter but the ARTIFACTS**: no book on disk was built through
+      it.
+  BE_101_LANDED_ONE_SECOND_AFTER_MY_ROW_AND_TOUCHED_NO_PIN:
+    prov: CHECKED
+    artifact: git:2ad6a82d7cb710fab57e10e5c7d953dffcada08b
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      `2ad6a82` landed at **16:11:25Z**, ***one second after my round-284 row's clock of 16:11:24Z*** --
+      `be_daybook_build.py` +160/-8, the only file. **The SIXTH landing to arrive between a read and a write** (265,
+      267, 279, 282, 284's own, and this), which is why the window is bounded on the tip READ; this round it also
+      caught `6372626` and `f5c44c2` arriving after my fetch. **And it cost no pin**: `be_daybook_build.py` is NOT one
+      of v19's ten cascade modules, so HEAD stays **9/10** (phase4 alone, unchanged since DE 137) and BE could land
+      under the freeze without a re-pin.
+  BE_102s_SIX_BOOKS_DO_NOT_EXIST_AND_THE_FREEZE_HOLDS_A_TWENTY_FIFTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T16:34:23Z
+    said: >-
+      Standing, measured this round: **zero L-variant books on disk** -- no path matching the builder's own
+      `__L{L:g}ms` tag exists, so R-811's curve is dispatched and unbuilt and no number on the L axis exists yet.
+      `params_v20` / `design_v28` **ABSENT** (heads v19/v27) -- the freeze's **twenty-fifth** round. `wt-de` at
+      `5020f96`, `git status --short` exactly `?? data`, the **ELEVENTH** consecutive round I have measured it; GO #8
+      unchanged. ***AND R-813 RULED THE LOCK WHILE I COMPOSED*** (16:27:03Z): R-807's "correct results" outranks
+      R-811's curve for tonight's exclusive lock, so **BE runs EXACTLY TWO builds** -- the L = 250 in flight since
+      ~16:12Z and then **L = 0 as the equivalence measurement against the landed 88,698.17341109998** -- then releases;
+      L in {25, 50, 100, 500} run after GO #8. Sweep cost stated: Stage 1 ~2.8 h of lock time (six builds x ~28 min),
+      Stage 2 ~10-11 h, and the ARMS' curve a full runner day per (day, L). **The coordinator reached the L = 0 leg
+      independently and for the same reason I measured**, which is the honest way to record it. DA 131 landed: `de_decision_ledger.py` `SCHEMA_VERSION = 3` with `SETTLEMENT_SCALARS` and
+      `SETTLEMENT_SLUG` declared in the header and the reader refusing an unknown version -- the bump my round-283
+      flag watched for, now made explicit rather than silent.
   # --- MEM round 284, 2026-09-07T16:11:24Z (the clock read by which every measurement below was complete) ---
   A_USER_REVIEW_WITH_THREE_FINDINGS_CARRIED_VERBATIM:
     prov: CHECKED
