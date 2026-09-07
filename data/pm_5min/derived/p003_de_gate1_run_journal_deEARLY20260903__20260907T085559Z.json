@@ -1,0 +1,85 @@
+{
+  "kind": "de_heavy_run_capture_record",
+  "go": "GO E1",
+  "unit": "deEARLY20260903.service",
+  "invocation_id": "e40782fa6dc44de699347def3d733061",
+  "day": "2026-09-03",
+  "launched_at": "2026-09-07T07:28:57Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-de",
+  "head_for_the_whole_run": "cb7933adedaffbea0aaebd60da9e7e3aa8b31608",
+  "rev_91_cleared_digests": {
+    "runner": "f1f5947254e94b64220c77bd316860c8415787a001d2f37c72986e1fcaa03fc3",
+    "early_read": "fbd01eb1765c9f4b510287fa733bff215a43d96e021d7d001cd071a5b1c14c6a",
+    "params_v17": "81b2c2910b3c4799e2ae12d1b63d15a4c9f140b47d84f71c12b98012cef4f0b6",
+    "exit_maps_v8": "bbc8bacfddef8585e46946485024cbd3788c291b135a51082562142334ca09c2",
+    "asserted_at_wt_de_before_the_launch": true
+  },
+  "five_fields_and_id_at_launch": {
+    "as_of": "2026-09-07T07:29:07Z",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "SubState": "running",
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "InvocationID": "e40782fa6dc44de699347def3d733061",
+    "MemoryPeak": 997609472
+  },
+  "five_fields_and_id_at_exit_while_loaded": {
+    "as_of": "2026-09-07T08:54:44Z",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "SubState": "exited",
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "InvocationID": "e40782fa6dc44de699347def3d733061",
+    "MemoryPeak": 2715901952,
+    "ControlGroup": ""
+  },
+  "leaf_peak_bytes_sampled_in_process": 2715901952,
+  "leaf_peak_method": "cgroup memory.peak sampled every 20 s while alive; the cgroup is gone at exit",
+  "main_process_exited_at": "2026-09-07T08:55:00Z",
+  "runtime_s": 5163,
+  "exit_resolved_through_the_map": {
+    "exit_code": 0,
+    "producer_module": "live/pm_research/de_early_read.py",
+    "mapped_by": {
+      "path": "/home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/producer_exit_maps_v9.json",
+      "sha256": "482527d4810b0f746df9b13aaeaf8cc1dc566020f4ade3acdcd62f11bd11825b",
+      "version": 9
+    },
+    "the_map_is_read_from": "the chain head by the pair, never a filename literal",
+    "resolved_kind": "the early-read day completed and its artifact was written, or --selftest passed",
+    "declared_codes": [
+      "0",
+      "1"
+    ],
+    "75_is_never_used": true,
+    "why_the_code_alone_is_not_the_kind": "every refusal in this module exits 1, so a non-zero code is resolved to a KIND only with the EARLY_READ_* name from the run's output beside it"
+  },
+  "journal_by_both_invocation_fields": {
+    "before_the_stop": {
+      "as_of": "2026-09-07T08:54:45Z",
+      "payload_lines": 5,
+      "manager_lines": 1
+    },
+    "after_the_stop": {
+      "text": "=== POST-STOP journal (chain step 7), 2026-09-07T08:55:57Z ===\npayload (_SYSTEMD_INVOCATION_ID): 5\nmanager (USER_INVOCATION_ID):     3\n2026-09-07T07:28:57+00:00 ip-172-31-78-41 systemd[1004]: Started deEARLY20260903.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T08:55:57+00:00 ip-172-31-78-41 systemd[1004]: Stopped deEARLY20260903.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-03 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T08:55:57+00:00 ip-172-31-78-41 systemd[1004]: deEARLY20260903.service: Consumed 1h 25min 30.804s CPU time, 2.5G memory peak, 0B memory swap peak.\n",
+      "sha256": "9d4b4b6a03177ccd518fc9a8b7be00a2518255d928e1e141a5f937a107d0a315"
+    },
+    "retention_oldest_at_capture": "2026-09-07T04:21:46+00:00"
+  },
+  "emitted_artifact": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json",
+    "sha256": "5c8a58f501d3b61bb3698579427b68fd5745ba991922e4f2dcc601e9a1639e7c",
+    "bytes": 44037
+  },
+  "exit_capture": {
+    "path": "/tmp/claude-1001/-home-yuqing-ctaNew/1e067041-7b8c-4c6b-a903-4af18ce1a4b1/scratchpad/wait_e1.out",
+    "sha256": "bf95eb2496edefa9c256b5c4478871dd14bd4e59fc11a375c28f1968de43c882",
+    "attributed_to": "wait_e1.sh (detached), launched by the DE seat at the GO",
+    "as_of": "2026-09-07T08:54:44Z",
+    "text": "=== EXIT at 2026-09-07T08:54:44Z ===\nleaf_peak_bytes_sampled_in_process: 2715901952\n--- five fields + id + MemoryPeak + ControlGroup, WHILE LOADED ---\nResult=success\nExecMainStatus=0\nControlGroup=\nMemoryPeak=2715901952\nLoadState=loaded\nActiveState=active\nSubState=exited\nInvocationID=e40782fa6dc44de699347def3d733061\n--- journal by BOTH invocation fields, BEFORE the stop ---\npayload (_SYSTEMD_INVOCATION_ID): 5\nmanager (USER_INVOCATION_ID):     1\n--- retention, MEASURED with its own as-of ---\noldest: 2026-09-07T04:21:46+00:00  read_at: 2026-09-07T08:54:45Z\n--- last payload line ---\n}\n"
+  },
+  "no_economic_value_is_quoted_here": "DA's reader prints the table",
+  "written_at": "2026-09-07T08:55:59Z"
+}
