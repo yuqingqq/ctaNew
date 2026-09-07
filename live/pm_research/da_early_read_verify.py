@@ -731,12 +731,14 @@ def recompute_settlement_from_the_ledger(rows_by_kind: dict,
         #: THE WINNER PER SLUG, AND ITS STATUS. A slug whose winner is not
         #: VERIFIED_AGREE is refused: the settlement value of every fill in
         #: it rests on a winner the venue and Chainlink do not agree on.
-        winners, bad_status = {}, []
+        winners, bad_status, n_with_status = {}, [], 0
         for book, per in books.items():
             for slug, row in per.items():
                 st = row.get("status") or row.get("winner_status")
-                if st is not None and st != WINNER_STATUS_REQUIRED:
-                    bad_status.append(f"{arm}.{book}.{slug}={st}")
+                if st is not None:
+                    n_with_status += 1
+                    if st != WINNER_STATUS_REQUIRED:
+                        bad_status.append(f"{arm}.{book}.{slug}={st}")
                 if "up_won" in row:
                     winners[slug] = bool(row["up_won"])
         if bad_status:
@@ -798,6 +800,15 @@ def recompute_settlement_from_the_ledger(rows_by_kind: dict,
             if not v["agrees"]:
                 flags.append(f"{arm}.{k}")
         out[arm] = {"legs": legs, "compared": cmp_,
+                    #: DA 132: HOW MANY SLUG ROWS CARRY A STATUS AT ALL.
+                    #: The real v3 rows carry NONE -- the per-slug
+                    #: verification lives in the RECEIPT -- so a reader that
+                    #: printed "every slug agrees" off this check would be
+                    #: reporting an absent field as a pass. It says the
+                    #: count instead, and the receipt's counts are printed
+                    #: beside it.
+                    "n_slug_rows_carrying_a_status": n_with_status,
+                    "n_slug_rows": sum(len(v) for v in books.values()),
                     "ruling": sc.get("ruling"), "unit": sc.get("unit"),
                     "n_slugs_ARM": len(books.get("ARM", {})),
                     "n_slugs_BASELINE": len(books.get("BASELINE", {})),
@@ -1111,13 +1122,35 @@ def check_not_computed(doc: dict) -> dict:
             "`economics_field_availability.not_computed_by_this_path`. The "
             "five fields R-754 asked for were never computed for these days; "
             "their ABSENCE is a status this artifact owes (rule 4).")
-    out = {}
+    #: R-754's FIVE MUST BE ACCOUNTED FOR -- present in the block, or NAMED
+    #: in `where_the_five_live_now`, including under a rename. DA 132: the
+    #: 09-03 re-run dropped `inventory_leg` from the block because R-803
+    #: RENAMED it `trades_cash_flow_cents` (the exact negative of the R-801
+    #: trades leg), and the artifact says so in the availability block. A
+    #: reader that demanded the old name would refuse a correct artifact;
+    #: one that dropped the requirement would let a field go quiet. The
+    #: middle is the one this reader takes: ***every one of the five is
+    #: either a status here or is NAMED somewhere in this block***, and
+    #: which route accounted for it is reported.
+    _where_txt = json.dumps(where or {})
+    accounted = {}
     for k in NOT_COMPUTED_KEYS:
-        if k not in blk:
+        if k in blk:
+            accounted[k] = "a named status in the block"
+        elif isinstance(where, dict) and k in where:
+            accounted[k] = "named in where_the_five_live_now"
+        elif k in _where_txt:
+            accounted[k] = ("named inside where_the_five_live_now -- a "
+                            "RENAME the artifact explains")
+        else:
             raise EarlyReadVerifyRefused(
-                f"EARLY_READ_STATUS_MISSING: `{k}` is not among the named "
-                f"statuses ({sorted(blk)}). A field that is neither computed "
-                f"nor named has simply gone quiet.")
+                f"EARLY_READ_STATUS_UNACCOUNTED: `{k}` is neither a named "
+                f"status ({sorted(blk)}) nor named anywhere in "
+                f"`economics_field_availability`. R-754 asked for these "
+                f"five; a field that is neither computed, nor named, nor "
+                f"explained as renamed has simply gone quiet.")
+    out = {"_accounted_for": accounted}
+    for k in sorted(blk):
         v = blk[k]
         if _is_number(v) or (isinstance(v, dict) and any(
                 _is_number(x) for x in v.values())):
@@ -1281,7 +1314,34 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
     statuses = check_not_computed(doc)
     census = census_arm_day(doc)
     ledger = verify_decision_ledger(doc, census, data_root=data_root)
+    #: THE RECEIPT'S OWN WINNER VERIFICATION, DESIGN LABEL AND PLACEMENT
+    #: LATENCY -- read, never re-derived. DA 132.
+    _blocks = (doc.get("day_run") or {}).get("per_day_sealed_artifacts") or []
+    _es = (_blocks[0].get("economic_settlement") or {}) if _blocks else {}
+    _ws = _es.get("winner_source") or {}
+    _cv = _ws.get("chainlink_verification") or {}
+    _per = _cv.get("per_slug") or {}
+    winner_verification = {
+        "counts": _cv.get("counts"),
+        "n_per_slug": len(_per) or None,
+        "not_agreeing": sorted(
+            k for k, v in _per.items()
+            if isinstance(v, dict) and v.get("status") != "VERIFIED_AGREE"),
+        "is_final_for_quotation": _ws.get("is_final_for_quotation"),
+        "status": _cv.get("status"),
+        "finality": _cv.get("finality"),
+        "winner_source": {"path": _ws.get("path"),
+                          "sha256": _ws.get("sha256"),
+                          "n_slugs": _ws.get("n_slugs"),
+                          "method": _ws.get("method")},
+        "read_not_re_derived": (
+            "the per-slug verification and its finality conditions are the "
+            "RECEIPT's; this reader reports them and re-derives none"),
+    }
     return {
+        "winner_verification": winner_verification,
+        "placement_latency": (doc.get("day_run") or {}).get(
+            "placement_latency"),
         "protocol": PROTOCOL, "artifact": str(path),
         "artifact_sha256": _sha(Path(path)), "day": day,
         "IS_A_VERIFICATION": params_err is None,
@@ -1466,6 +1526,41 @@ def print_table(res: dict) -> str:
             c.ljust(_w[i]) if i == 0 else c.rjust(_w[i])
             for i, c in enumerate(r)))
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
+    #: DA 132: the population, the finality conditions, the design label
+    #: and the placement latency -- each READ from the artifact and printed
+    #: where the numbers are, because a settlement total over 246 slugs and
+    #: one over 288 are not the same day's answer.
+    _wv = res.get("winner_verification") or {}
+    _fin = _wv.get("finality") or {}
+    #: `recompute` is a STRING ("NOT_ATTEMPTED_NO_LEDGER") when there is no
+    #: ledger -- the shape says which case it is, and a reader that assumed
+    #: a dict crashed on the fixture that has none.
+    _rc2 = (res.get("decision_ledger") or {}).get("recompute")
+    _se2 = (_rc2.get("settlement") or {}) if isinstance(_rc2, dict) else {}
+    if _wv.get("n_per_slug"):
+        _arm0 = next(iter(_se2.get("per_arm", {}).values()), {})
+        lines.append(
+            f"  POPULATION: the verification covers {_wv['n_per_slug']} "
+            f"slugs; the ledger's SETTLEMENT_SLUG rows cover "
+            f"{_arm0.get('n_slugs_ARM')} (ARM) / "
+            f"{_arm0.get('n_slugs_BASELINE')} (BASELINE) -- ***this day's "
+            f"totals are over THAT population, not over a 288-window day***")
+    if _fin:
+        _hold = sorted(k for k, v in _fin.items()
+                       if isinstance(v, bool) and v)
+        _fail = sorted(k for k, v in _fin.items()
+                       if isinstance(v, bool) and not v)
+        lines.append(
+            f"  FINALITY: is_final_for_quotation "
+            f"{_wv.get('is_final_for_quotation')}, status "
+            f"{_wv.get('status')}; conditions holding {_hold}; NOT holding "
+            f"{_fail}; hourly files read {_fin.get('e_n_hourly_files_read')}")
+    _pl = res.get("placement_latency") or {}
+    if _pl:
+        lines.append(
+            f"  PLACEMENT LATENCY: L_place_ms {_pl.get('L_place_ms')!r}; "
+            f"book {Path(str((_pl.get('book') or {}).get('path'))).name} "
+            f"{str((_pl.get('book') or {}).get('sha256'))[:16]}…")
     lines.append(f"  the three COUNTS on this day: "
                  f"{(res.get('counts_provenance') or {}).get('says')}")
     _dl = res.get("decision_ledger") or {}
@@ -1508,10 +1603,33 @@ def print_table(res: dict) -> str:
                     f"D_settle {_c['D_E_settle']['recomputed']!r} (the row "
                     f"says {_c['D_E_settle']['in_the_row']!r}; agrees: "
                     f"{_c['D_E_settle']['agrees']})")
+            _any = next(iter(_se["per_arm"].values()))
+            _ns, _nr = (_any.get("n_slug_rows_carrying_a_status"),
+                        _any.get("n_slug_rows"))
+            if _ns:
+                lines.append(
+                    f"    every slug row that carries a status is "
+                    f"{_se['winner_status_required']} ({_ns} of {_nr} rows "
+                    f"carry one)")
+            else:
+                lines.append(
+                    f"    ***NO SETTLEMENT_SLUG ROW CARRIES A STATUS FIELD*** "
+                    f"({_nr} rows): the per-slug winner verification lives in "
+                    f"the RECEIPT, not in the ledger, so this reader's "
+                    f"row-level status check had nothing to fire on and "
+                    f"claims nothing from its silence")
+            _wv = res.get("winner_verification") or {}
+            if _wv.get("counts") is not None:
+                lines.append(
+                    f"    the receipt's own verification: {_wv['counts']} "
+                    f"over {_wv.get('n_per_slug')} slugs"
+                    + (f"; NOT VERIFIED_AGREE: {_wv.get('not_agreeing')}"
+                       if _wv.get("not_agreeing") else "")
+                    + f"; is_final_for_quotation "
+                      f"{_wv.get('is_final_for_quotation')}")
             lines.append(
-                f"    every slug's winner is {_se['winner_status_required']}; "
-                f"the legs are asserted equal to the per-fill form within "
-                f"{_se['tolerance']}")
+                f"    the legs are asserted equal to the per-fill form "
+                f"within {_se['tolerance']}")
         else:
             lines.append(
                 f"  SETTLEMENT (R-801, PRIMARY): {_se.get('status')} -- "
@@ -1870,8 +1988,9 @@ def selftest() -> tuple:                                      # noqa: C901
            "***A number there would be an invention wearing a status's "
            "name***",
            r_num == "EARLY_READ_STATUS_CARRIES_A_NUMBER"
-           and r_gone == "EARLY_READ_STATUS_MISSING",
-           f"rho = 0.42 -> {r_num}; fills_leg removed -> {r_gone}")
+           and r_gone == "EARLY_READ_STATUS_UNACCOUNTED",
+           f"rho = 0.42 -> {r_num}; fills_leg removed with nothing naming "
+           f"it -> {r_gone}")
 
         r_extra = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"]
                           [0]["economic"].update({"D_E_MINUS_R": -12.0}),
@@ -2207,15 +2326,20 @@ def selftest() -> tuple:                                      # noqa: C901
             _real[_d] = resolve_early_read_head(_d, data_root=root / "data")
         except EarlyReadVerifyRefused as e:
             _real[_d] = {"REFUSED": str(e).split(":")[0]}
-    ck("AND THE FOUR REAL DAYS RESOLVE TODAY -- each has exactly ONE "
-       "artifact, no `supersedes` field anywhere yet, and the sole artifact "
-       "IS the head. ***That is the state DE 138's rule has to preserve***: "
-       "the moment a second is written without the field, this day becomes "
-       "AMBIGUOUS by the cell above",
-       all(isinstance(v, dict) and v.get("n_artifacts") == 1
-           and v.get("the_sole_artifact_is_the_head") and not v.get("links")
-           for v in _real.values()),
+    ck("AND THE FOUR REAL DAYS EACH RESOLVE TO ONE HEAD -- ***and 09-03 now "
+       "does it THROUGH A CHAIN***: DE 138's writer landed and the "
+       "settlement re-run SUPERSEDES the 08:54 artifact by the pair, so the "
+       "day has two artifacts and exactly one head. The other three still "
+       "resolve as sole artifacts. ***This is the cell that would have "
+       "caught a second artifact written WITHOUT the field***",
+       all(isinstance(v, dict) and v.get("head") for v in _real.values())
+       and _real["2026-09-03"]["n_artifacts"] == 2
+       and len(_real["2026-09-03"]["links"]) == 1
+       and not _real["2026-09-03"]["the_sole_artifact_is_the_head"]
+       and all(_real[d]["the_sole_artifact_is_the_head"]
+               for d in ("2026-09-04", "2026-09-05", "2026-09-06")),
        "; ".join(f"{d}: {v.get('head', v.get('REFUSED'))}"
+                 f"{' (superseded ' + str(v['superseded']) + ')' if v.get('superseded') else ''}"
                  for d, v in sorted(_real.items())))
 
     # -- DA 126: THE LEDGER IS A REPORTED STATUS, NEVER A GUESS --------
