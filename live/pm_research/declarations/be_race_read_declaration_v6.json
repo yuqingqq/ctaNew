@@ -1,0 +1,185 @@
+{
+ "G": 4,
+ "R_529_A_UP_FRONT": "THIS READ ESTABLISHES DIRECTION AND CONSISTENCY AND NEVER A HOLM-CLEARING VERDICT (R-529(A)). Nothing numeric is quotable from it beyond `day_signs` and `permutation_floors.neither_clears_0_05`.",
+ "as_of_utc": "2026-09-07T01:44:17Z",
+ "cites_no_receipt_for_a_number_it_does_not_carry": true,
+ "consumption": {
+  "a_second_call_refuses": "ANY content at a marker path means CONSUMED: a second call naming the same days is refused by name, and a half-written, empty or non-object marker refuses too rather than raising out of the guard",
+  "markers_before_the_first_byte": "an OPENED marker is written for every declared day BEFORE the feed is read, so a read that dies mid-way still leaves the days marked -- the safe direction",
+  "the_read_is_one_shot": "there is no second attempt at a consumed day, which is why the horizon and the pins are checked on the whole set before the act",
+  "unchanged_from_v4": true
+ },
+ "correction_census": {
+  "census": {
+   "compared_against": "the declared additions THEMSELVES, not the subset v2 happens to carry (REV 79 \u00a71.3)",
+   "declared_additions": [
+    "as_of_utc",
+    "pins",
+    "protocol",
+    "supersedes"
+   ],
+   "difference_is_exactly_the_additions": true,
+   "frozen_blocks_byte_identical": {
+    "G": true,
+    "R_529_A_UP_FRONT": true,
+    "cites_no_receipt_for_a_number_it_does_not_carry": true,
+    "consumption": true,
+    "decides_nothing": true,
+    "declared_before_any_of_its_days_closed": true,
+    "falsifiers_at_this_declaration": true,
+    "opens_nothing": true,
+    "permutation_floor": true,
+    "population": true,
+    "read_horizon": true,
+    "result": true,
+    "statistic": true,
+    "what_a_reader_may_NOT_infer": true,
+    "why_G_is_4": true
+   },
+   "frozen_set": {
+    "family": "be_race_read_declaration",
+    "frozen_keys": [
+     "G",
+     "R_529_A_UP_FRONT",
+     "cites_no_receipt_for_a_number_it_does_not_carry",
+     "consumption",
+     "decides_nothing",
+     "declared_before_any_of_its_days_closed",
+     "falsifiers_at_this_declaration",
+     "opens_nothing",
+     "permutation_floor",
+     "population",
+     "read_horizon",
+     "result",
+     "statistic",
+     "what_a_reader_may_NOT_infer",
+     "why_G_is_4"
+    ],
+    "n_frozen": 15,
+    "named_blocks_ABSENT_from_v1": [],
+    "named_blocks_present_and_frozen": {},
+    "read_from": "the v1's own keys MINUS the declared additions and exemptions -- DERIVED from the artifact, never a list this module maintains (REV 83 \u00a71.3, REV 82 \u00a72.2)",
+    "the_named_list_is_the_caller_s": "a belt over the derivation's braces; the names belong to the family, never to this module. An ABSENT named block checked nothing and is listed rather than inferred."
+   },
+   "keys_changed_vs_v1": [
+    "as_of_utc",
+    "pins",
+    "protocol",
+    "supersedes"
+   ],
+   "missing_declared_additions": [],
+   "permitted_but_not_required": [
+    "correction_census"
+   ]
+  },
+  "census_by": "be_race_reader.correction_census -- IMPORTED, one predicate for every seat (REV 79 \u00a73(1))",
+  "declared_changes": [
+   "pins",
+   "protocol",
+   "as_of_utc",
+   "supersedes"
+  ],
+  "what_it_proves": "the difference between this version and the one it supersedes is EXACTLY the declared set; every one of the 15 inherited keys is byte-identical, and the frozen set is DERIVED from v5's own keys, never a list this module maintains (REV 83 \u00a71.3)."
+ },
+ "decides_nothing": "REPORTED (rule 14).",
+ "declared_before_any_of_its_days_closed": {
+  "first_declared_day_closes_utc": "2026-09-07T00:00:00Z",
+  "why_this_matters": "rule 11: choosing after seeing voids the test. Every day this declaration names is still OPEN at the moment it is written, so the day set, G, the floor, the statistic and the horizon cannot have been picked on anything anyone has seen. Nobody has opened any of them and this declaration opens nothing.",
+  "written_at_utc": "2026-09-06T20:27:58Z"
+ },
+ "falsifiers_at_this_declaration": {
+  "a_day_outside_READABLE": "`--days` that widens or narrows the declared set is REFUSED BY NAME, naming what was added and what was dropped; the day set is the declaration's, never the invocation's (R-600)",
+  "a_pin_absent": "a declared day with no pin, or a pin with no digest, REFUSES the whole read before any marker is written",
+  "before_the_horizon": "a read before `read_horizon.not_before_utc` is REFUSED BY NAME, with the seconds remaining",
+  "driven_not_described": "all three are cells of be_race_reader's battery, driven on scratch declarations and scratch pins; the ledger is never touched"
+ },
+ "opens_nothing": true,
+ "permutation_floor": {
+  "G": 4,
+  "best_possible_adjusted_p": 0.125,
+  "clears_0_05": false,
+  "computed_here_not_quoted": true,
+  "formula": "2^-G x m",
+  "multiplicity": 2,
+  "what_it_means": "with G = 4 days and m = 2 candidates in the forward race, the most extreme attainable sign-permutation p, Holm-adjusted, is 0.125. It does not clear 0.05, and it could not clear it for any outcome -- which is why R-529(A) binds this read to direction and consistency BEFORE it is opened rather than after it disappoints."
+ },
+ "pins": {
+  "enforced_by": "be_race_reader.assert_every_declared_day_is_pinned -- the WHOLE set, before the first marker is written, because the act consumes day by day and a day spent cannot be given back when a later day proves unpinned",
+  "family": "be_race_read_feed_pins",
+  "head_when_declared": {
+   "covers": "the FIRST read's five named days",
+   "name": "be_race_read_feed_pins_v1.json"
+  },
+  "next_version": "be_race_read_feed_pins_v2.json",
+  "per_day_pin_form": {
+   "bytes": "<size>",
+   "exists": "true only when the file is there",
+   "path": "<the SEALED feed for that day>",
+   "sha256": "<sha256 over its bytes at close>"
+  },
+  "taken_by": "be_forward_day -- THE PRODUCER OF THE DAY'S SEALED FEED. It is that run, and only that run, that writes `be_forward_day_SEALED_feed_<DAY>.jsonl`; the pin is a {path, sha256} over the bytes of that file once the day has closed and it is sealed.",
+  "the_pin_is_the_pair": "R-608: a pin carrying a path and no digest verifies nothing. The read refuses such a pin BY NAME rather than treating it as present.",
+  "v5_said_something_else_and_it_was_WRONG": "v5 said the pin is taken by \"BE 72's successors -- the day's fragment/tape/book run at each close\". Those three producers do not write the sealed feed and never have: the fragment builds the exposure rows, the tape the state, the book the daybook. The error is the author's (BE, at BE 84) and it was found the first time the plan was executed -- BE 72 built all three for 09-06 and there was still no feed to pin, because `be_forward_day` had not run for the day. A declaration that names the wrong producer sends the next reader to wait on a run that was never going to write the artifact.",
+  "what_this_changes_about_the_read": "NOTHING. The gate is unchanged -- the read refuses until all four declared days carry a pin with a digest in the pins chain head -- and so is every other field of this declaration. What changes is WHO the plan names as the producer, which is a fact about the pipeline, not about the estimand.",
+  "written_day_by_day": "one version per close, never an edit: v2 at the 09-06 close carrying 09-06; v3 at the 09-07 close carrying 09-06..07; v4 at the 09-08 close; v5 at the 09-09 close carrying all four. Rule 20 makes a landed version immutable, so `written day by day` is vN+1 four times, each superseding the previous by the {path, sha256} pair through declaration_chain.write_next_version (the CAS)."
+ },
+ "population": {
+  "CONSUMED_BY_THE_FIRST_READ": [
+   "20260903",
+   "20260904",
+   "20260905"
+  ],
+  "READABLE": [
+   "20260906",
+   "20260907",
+   "20260908",
+   "20260909"
+  ],
+  "READ_BUT_UNRECOVERABLE": [
+   "20260901",
+   "20260902"
+  ],
+  "nothing_from_the_consumed_days_enters_this_read": "09-03..05 were opened and consumed by the first read (its OPENED markers are in the ledger). No score, sign, statistic or count from them is an input to this read, and this read's G is 4 -- the four days above -- not 7.",
+  "the_two_reads_are_not_pooled_by_this_declaration": "pooling the first read with this one would be a THIRD question with its own multiplicity, and it is not declared here. If it is ever wanted it needs its own declaration, written BEFORE either read is opened -- which for the first read is already impossible. A reader may not combine the two results on the strength of this file."
+ },
+ "protocol": "BE_RACE_READ_DECLARATION_V6",
+ "read_horizon": {
+  "close_lag_is": "A DECLARED BOUND, NOT A MEASUREMENT. No close lag has been measured for this pipeline and none is asserted here; 60 minutes is a bound chosen to sit outside any plausible flush-and-seal, and it is stated as a bound so that no reader takes it for an observation.",
+  "close_lag_minutes": 60,
+  "enforced_by": "be_race_reader.assert_read_horizon (refuses by name)",
+  "last_declared_day_closes_utc": "2026-09-10T00:00:00Z",
+  "not_before_utc": "2026-09-10T01:00:00Z",
+  "the_operative_gate_is_the_pins": "the horizon is the coarse clock gate. The gate that actually decides whether the last day is complete is the PIN: the read refuses until all four days carry a pin with a digest in the pins chain head. A complete set of pins earlier does not release the horizon, and a crossed horizon does not excuse a missing pin."
+ },
+ "result": {
+  "artifact": "be_race_read2_result_v1.json",
+  "family": "be_race_read2_result",
+  "named_by_the_declaration": "the reader takes the artifact name from this field, not from a constant in its own source",
+  "why_a_NEW_family": "the first read's result family is `be_race_read_result`, and v1 (the read) and v2 (its R-707 correction) are both used. A second read writing v3 into that family would put TWO DIFFERENT QUESTIONS on ONE chain, where a resolver -- and any reader following the chain -- would take the second read's answer as a correction of the first. The second read gets its own family so the two chains can never be confused, and so the first read's head stays v2 forever."
+ },
+ "statistic": {
+  "BY_THRESHOLD": "REPORTED, never primary (rule 7, as the interim states it)",
+  "definition": "net cents (candidate at its frozen theta) MINUS net cents (incumbent at the theta that makes the incumbent cancel the SAME NUMBER of actions the candidate actually cancelled)",
+  "latency_ms": 50,
+  "primary": "MATCHED_VOLUME",
+  "unchanged_from_v3": true,
+  "unchanged_from_v4": true
+ },
+ "supersedes": {
+  "path": "live/pm_research/declarations/be_race_read_declaration_v5.json",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} PAIR; v5 is NOT edited",
+  "sha256": "b1aa349ed276bc4189ef10d941f57a86e9d4fca9d25ccf673ec67e8fbbbb1329",
+  "what_changes": "ONE field: `pins.taken_by`, plus the two keys any version carries anew (`protocol`, `as_of_utc`). The census below is computed over v5 and this payload and names every key that differs.",
+  "what_is_unchanged": "the population, G, the floor, the statistic, R-529(A), the read horizon, the result family, the consumption rule and everything a reader may not infer -- byte-identical, and the census proves it rather than saying it.",
+  "written_through": "declaration_chain.write_next_version -- the CAS"
+ },
+ "what_a_reader_may_NOT_infer": [
+  "NOTHING about 09-03..05 enters this read: they are consumed, their result stands on its own artifact, and no number from them is an input here.",
+  "The two reads are NOT pooled by this declaration. Pooling would be a third question with its own multiplicity and needs its own declaration written before either read is opened.",
+  "G = 4 is the USER's ruling (R-531), not a count of everything read to date; a reader may not add the first read's days to it.",
+  "The floor 0.125 is the BEST ATTAINABLE adjusted p, not a result. It is computed here and quoted from nowhere.",
+  "Nothing numeric is quotable from the read beyond `day_signs` and `permutation_floors.neither_clears_0_05` (R-529(A)).",
+  "This declaration decides nothing (rule 14) and opens nothing."
+ ],
+ "why_G_is_4": "THE USER'S RULING R-531: the race is G = 4 and DIRECTIONAL. G is not chosen here and is not derived from what any artifact shows; it is the ruling, and the day set is the four consecutive UTC days that follow the first read's last consumed day. G is also COMPUTED from the READABLE set at read time and refused if the two disagree (rule 10)."
+}

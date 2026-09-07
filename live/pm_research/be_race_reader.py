@@ -431,27 +431,60 @@ def not_pooled_clause(doc=None, *, decl_dir: Path | None = None,
             f"first read's declaration has {fault}. R-608: the link IS the "
             f"pair -- a path with no usable digest verifies nothing, so the "
             f"artifact this clause would speak for is unidentified.")
-    fp = ddir / Path(str(sup["path"])).name
-    if not fp.exists():
+    # THE PREVIOUS READ IS NOT THE PREVIOUS VERSION (BE 87). This followed
+    # `supersedes` ONE hop and took whatever it found for the first read's
+    # declaration. That holds only while a new read's declaration is the
+    # first version written for it: v5 superseded v4, which WAS the first
+    # read. The moment a correction lands within the SAME read -- v6 of v5,
+    # written this round -- one hop lands on this read's own previous
+    # version, and the clause compared v6's consumed set against v5's
+    # READABLE and refused. The refusal was right and the assumption was
+    # wrong. The chain is now WALKED BACK, every hop verified by its pair,
+    # until a version whose READABLE IS the consumed set: that version is
+    # the previous READ, however many corrections sit between.
+    walked, cur, fp, first = [], doc, None, None
+    for _hop in range(1, 65):
+        _s = cur.get("supersedes")
+        if not isinstance(_s, dict) or not _s.get("path"):
+            raise ReadRefused(
+                f"FIRST_READ_DECLARATION_NOT_IN_THE_CHAIN: walking back from "
+                f"this declaration through {walked} the chain ENDS without a "
+                f"version whose READABLE is the consumed set {consumed}. The "
+                f"clause would have to invent which read consumed those "
+                f"days.")
+        _d2 = _s.get("sha256")
+        if _d2 is None or not (isinstance(_d2, str) and _DCH.DIGEST_RE.match(_d2)):
+            raise ReadRefused(
+                f"FIRST_READ_PAIR_HALF_WRITTEN: the `supersedes` at hop "
+                f"{_hop} ({walked or 'this declaration'}) has "
+                f"{'no `sha256` at all' if _d2 is None else 'a digest that is not 64 lowercase hex'}. "
+                f"R-608: the link IS the pair, so the walk stops rather than "
+                f"following a link that verifies nothing.")
+        _fp = ddir / Path(str(_s["path"])).name
+        if not _fp.exists():
+            raise ReadRefused(
+                f"FIRST_READ_DECLARATION_ABSENT: {_fp.name} is named by the "
+                f"pair at hop {_hop} but is not in {ddir}. The clause would "
+                f"describe a read whose declaration this reader cannot open.")
+        _got = hashlib.sha256(_fp.read_bytes()).hexdigest()
+        if _got != _d2:
+            raise ReadRefused(
+                f"FIRST_READ_PAIR_MISMATCH: {_fp.name} on disk is "
+                f"{_got[:16]}… and the pair at hop {_hop} names "
+                f"{str(_d2)[:16]}…. The bytes moved, so the declaration this "
+                f"clause would read is not the one the pair identifies.")
+        _doc2 = json.loads(_fp.read_text())
+        walked.append(_fp.name)
+        _days = sorted((_doc2.get("population") or {}).get("READABLE") or [])
+        if _days == consumed:
+            fp, first, first_days = _fp, _doc2, _days
+            break
+        cur = _doc2
+    if first is None:
         raise ReadRefused(
-            f"FIRST_READ_DECLARATION_ABSENT: {fp.name} is named by the pair "
-            f"but is not in {ddir}. The clause would describe a read whose "
-            f"declaration this reader cannot open.")
-    got = hashlib.sha256(fp.read_bytes()).hexdigest()
-    if got != _dg:
-        raise ReadRefused(
-            f"FIRST_READ_PAIR_MISMATCH: {fp.name} on disk is {got[:16]}… "
-            f"and the pair names {str(_dg)[:16]}…. The bytes moved, so the "
-            f"declaration this clause would read is not the one the pair "
-            f"identifies.")
-    first = json.loads(fp.read_text())
-    first_days = sorted((first.get("population") or {}).get("READABLE") or [])
-    if first_days != consumed:
-        raise ReadRefused(
-            f"FIRST_READ_DAYS_DISAGREE: this declaration says the previous "
-            f"read consumed {consumed}, and {fp.name} declares READABLE "
-            f"{first_days}. One of the two is aimed at the wrong read, and "
-            f"the clause would state a day set no artifact supports.")
+            f"FIRST_READ_DECLARATION_NOT_IN_THE_CHAIN: 64 hops back from "
+            f"this declaration through {walked[:4]}… found no version whose "
+            f"READABLE is the consumed set {consumed}.")
     m_here = ((doc.get("permutation_floor") or {}).get("multiplicity"))
     m_first = ((first.get("permutation_floor") or {}).get("multiplicity"))
     if m_here != m_first:
@@ -509,9 +542,17 @@ def not_pooled_clause(doc=None, *, decl_dir: Path | None = None,
         "generated_from": {
             "this_declaration_names_the_first_read_BY_PAIR": {
                 "path": str(sup["path"]), "sha256": _dg},
-            "verified_against_the_file": {"name": fp.name, "sha256": got,
-                                          "matches": True},
+            "verified_against_the_file": {
+                "name": fp.name,
+                "sha256": hashlib.sha256(fp.read_bytes()).hexdigest(),
+                "matches": True,
+                "every_hop_verified": len(walked)},
             "first_read_days_read_from": f"{fp.name} population.READABLE",
+            "chain_walked_back": {
+                "versions": walked, "hops": len(walked),
+                "why": "the previous READ is not the previous VERSION -- a "
+                       "correction within this read sits between them, and "
+                       "every hop is verified by its own pair (BE 87)"},
             "consistency_read_from": {"family": fam, "head": rh["name"],
                                       "block": "day_signs",
                                       "n_days": len(signs)},
@@ -1392,7 +1433,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 79
+EXPECTED_CHECKS = 80
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -2194,13 +2235,22 @@ def selftest() -> int:
     # nothing has been seen. Each of the three refusals the declaration
     # names is driven here, with a positive control beside it.
     _v5 = declared_read()
-    ok(_v5["declaration"] == "be_race_read_declaration_v5.json"
+    # THE INVARIANTS, NOT THE VERSION NUMBER. This asserted the head was
+    # `..._v5.json` by name; BE 87's v6 corrected one field of v5 and the
+    # cell went red for a correction that changed nothing it tests. A check
+    # pinned to a literal that names a MOVING thing measures the literal
+    # (my own error pattern, and the third time). What the act is bound to
+    # is the CONTENT: the day set, G, the result family, the horizon, the
+    # pins family -- every one of which a correction must leave alone.
+    _v5v = int(_v5["declaration"].split("_v")[-1].split(".")[0])
+    ok(_v5v >= 6
        and _v5["READABLE"] == ["20260906", "20260907", "20260908", "20260909"]
        and _v5["G_declared"] == 4
        and _v5["result_name"] == "be_race_read2_result_v1.json"
        and _v5["horizon_utc"] == "2026-09-10T01:00:00Z"
        and _v5["pins_family"] == "be_race_read_feed_pins",
-       f"THE HEAD IS v5 AND THE ACT IS BOUND TO IT: READABLE "
+       f"THE HEAD IS {_v5['declaration']} (version {_v5v} >= 6) AND THE ACT "
+       f"IS BOUND TO ITS CONTENT: READABLE "
        f"{_v5['READABLE']}, G {_v5['G_declared']}, result "
        f"{_v5['result_name']} (a NEW family -- the first read's "
        f"`be_race_read_result` chain keeps v1/v2 and is never confused with "
@@ -2377,14 +2427,31 @@ def selftest() -> int:
         "G": 2, "multiplicity": 3, "best_possible_adjusted_p": 0.75}))[0]
     _dis["floor"] = _clause(_second(permutation_floor={
         "G": 2, "multiplicity": 2, "best_possible_adjusted_p": 0.99}))[0]
-    ok(_dis == {"days": "FIRST_READ_DAYS_DISAGREE",
+    ok(_dis == {"days": "FIRST_READ_DECLARATION_NOT_IN_THE_CHAIN",
                 "m": "MULTIPLICITY_DISAGREES",
                 "floor": "FLOOR_IS_NOT_ARMS_ONLY"},
        f"AND THE THREE CLAIMS THE SENTENCE MAKES ARE PREDICATES, EACH "
        f"REFUSING BY NAME WHEN IT DOES NOT HOLD: {_dis}. `counts arms, not "
        f"reads` is CHECKED against 2^-G x m recomputed from each "
        f"declaration's own fields -- a sentence that asserted it without "
-       f"checking would be a hardcoded verdict beside a table (rule 10)")
+       f"checking would be a hardcoded verdict beside a table (rule 10). "
+       f"The day mismatch is now reported as the chain running out rather "
+       f"than as a disagreement at one hop, because the walk tries every "
+       f"ancestor before it gives up")
+    # THE PREVIOUS READ IS NOT THE PREVIOUS VERSION (BE 87). The real chain
+    # is the control: v6 corrects v5, so the first read's declaration is
+    # TWO hops back, and a one-hop reader refuses on the real head.
+    _hops = _npc5["generated_from"]["chain_walked_back"]
+    ok(_hops["hops"] >= 2
+       and _hops["versions"][-1].endswith("_v4.json")
+       and _npc5["generated_from"]["verified_against_the_file"]
+               ["every_hop_verified"] == _hops["hops"],
+       f"AND THE WALK FINDS THE PREVIOUS READ THROUGH A CORRECTION: on the "
+       f"real chain it walks {_hops['hops']} hops -- {_hops['versions']} -- "
+       f"because v6 corrects v5 and only v4 declares the days v6 names as "
+       f"consumed. Every hop is verified by its own pair; a one-hop reader "
+       f"refused this head by name (FIRST_READ_DAYS_DISAGREE), which is how "
+       f"the assumption was found")
     # REV 87 §1.3: THE ESCAPE THAT REMAINED -- omit the consumed set and the
     # clause disapplies itself. "Has a previous read" is now read from the
     # SUPERSEDES CHAIN as well, so the omission refuses instead.

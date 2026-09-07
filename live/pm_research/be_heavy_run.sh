@@ -165,8 +165,104 @@ PYEOF
     echo "FAIL cell 2: ExecMainStatus=$RC2 (declared $LOCK_CONFLICT_RC) refusal_file_lines=$F journal_lines=$J"; RC=1
   fi
   kill "$HOLDER" 2>/dev/null; wait "$HOLDER" 2>/dev/null
-  systemctl --user reset-failed $u2 >/dev/null 2>&1; rm -rf "$D"
+  systemctl --user reset-failed $u2 >/dev/null 2>&1
+
+  # CELL 3 (BE 87 (a)): THE PEAK OF RECORD IS SAMPLED WHILE THE RUN IS
+  # ALIVE, and the capture of a FINISHED run names the released leaf
+  # instead of refusing. A fixture that holds 1 GiB is the control: a
+  # sampler that reported a number smaller than what the payload provably
+  # allocated would be measuring nothing.
+  u3=be_hr_falsify_peak_$$
+  cat > "$D/holder.py" <<'PYPEAK'
+import time
+x = bytearray(1024 * 1024 * 1024)      # 1 GiB, zero-filled = pages touched
+print("holding 1 GiB", flush=True)
+time.sleep(20)
+print("done", flush=True)
+PYPEAK
+  BE_HEAVY_LOCK="$D/lock3" "$ME" "$u3" "$D/holder.py" >/dev/null 2>&1
+  sleep 3
+  BE_SAMPLE_CEILING=60 "$ME" --sample "$u3" 2 >/dev/null 2>&1
+  R3="$REPO/data/pm_5min/derived/be_heavy_run_record_${u3}.jsonl"
+  P3=$(grep '"event":"leaf_peak"' "$R3" 2>/dev/null | tail -1 | sed -n 's/.*"peak_of_record_bytes":\([0-9]*\).*/\1/p')
+  N3=$(grep '"event":"leaf_peak"' "$R3" 2>/dev/null | tail -1 | sed -n 's/.*"n_samples":\([0-9]*\).*/\1/p')
+  CAP3=$("$ME" --capture "$u3" 2>&1); CRC3=$?
+  if [ "${P3:-0}" -ge 1073741824 ] && [ "${N3:-0}" -ge 1 ] \
+     && [ "$CRC3" = "0" ] && printf '%s' "$CAP3" | grep -q "LEAF_RELEASED" \
+     && printf '%s' "$CAP3" | grep -q "peak_of_record=$P3"; then
+    echo "PASS cell 3: a unit that held 1 GiB was SAMPLED WHILE ALIVE -- peak of record $P3 bytes over $N3 sample(s), which is >= the 1073741824 the payload provably allocated; and the capture AFTER it exited returned 0, named the released leaf (LEAF_RELEASED) and carried that same peak forward instead of refusing the whole capture (BE 72 finding 1)."
+  else
+    echo "FAIL cell 3: peak=$P3 samples=$N3 capture_rc=$CRC3 capture=$CAP3"; RC=1
+  fi
+  systemctl --user reset-failed $u3 >/dev/null 2>&1
+  systemctl --user stop $u3 >/dev/null 2>&1
+
+  # CELLS 4 AND 5 (BE 87 (b) and (c)): a run that finishes BEFORE the poll
+  # reads it is a SUCCESS, not an anomaly; and its stdout is in a FILE.
+  u4=be_hr_falsify_done_$$
+  cat > "$D/quick.py" <<'PYQUICK'
+print("QUICK_PAYLOAD_RECORD_LINE", flush=True)
+PYQUICK
+  BE_HEAVY_LOCK="$D/lock4" "$ME" "$u4" "$D/quick.py" >/dev/null 2>&1
+  sleep 4
+  POUT=$(BE_HEAVY_LOCK="$D/lock4" "$ME" --poll "$u4" "$D/quick.py" 2>&1); PRC=$?
+  if [ "$PRC" = "0" ] && printf '%s' "$POUT" | grep -q "ALREADY FINISHED" \
+     && ! printf '%s' "$POUT" | grep -q "UNEXPECTED"; then
+    echo "PASS cell 4: a unit that had already exited SUCCESSFULLY (active/exited, success, 0) is polled as a SUCCESS and exits 0 -- $(printf '%s' "$POUT" | head -1). It used to fall through to UNEXPECTED and exit 2, because every branch wanted a settle and a finished unit cannot produce one (measured on be72struct at 01:30:18Z)."
+  else
+    echo "FAIL cell 4: rc=$PRC out=$POUT"; RC=1
+  fi
+  OUT4="$REPO/data/pm_5min/derived/be_heavy_run_stdout_${u4}.log"
+  if [ -r "$OUT4" ] && grep -q "QUICK_PAYLOAD_RECORD_LINE" "$OUT4"; then
+    echo "PASS cell 5: the payload's stdout is in the FILE $OUT4 ($(wc -l < "$OUT4") line(s)) and the assertion above reads THE FILE, never the journal -- the record no longer lives only in something that rotates (rule 20, BE 72 finding 3)."
+  else
+    echo "FAIL cell 5: $OUT4 absent or does not carry the payload's line"; RC=1
+  fi
+  systemctl --user reset-failed $u4 >/dev/null 2>&1
+  systemctl --user stop $u4 >/dev/null 2>&1
+  rm -rf "$D"
   exit $RC
+fi
+
+if [ "${1:-}" = "--sample" ]; then
+  # (a) THE PEAK OF RECORD IS SAMPLED WHILE THE RUN IS ALIVE (BE 72 finding
+  # 1). `--capture` could never read it for a run that had finished: when
+  # the payload exits systemd releases the cgroup leaf, `ControlGroup=`
+  # goes empty, and the leaf's memory.peak -- the peak OF RECORD -- is
+  # gone. Refusing was right (systemd's property is not that number, BE
+  # 74); refusing FOREVER was the defect, because every completed run has
+  # already exited by the time anyone captures it.
+  #
+  # memory.peak is MONOTONIC, so the sampler needs no state: the largest
+  # value it ever reads IS the high-water mark up to its last read, and the
+  # time of that read is recorded so nobody mistakes a bound for the peak.
+  shift
+  SUNIT="${1:?usage: --sample <unit> [interval_s]}"; shift
+  IVL="${1:-5}"; SCEIL="${BE_SAMPLE_CEILING:-8640}"
+  SREC="$REPO/data/pm_5min/derived/be_heavy_run_record_${SUNIT}.jsonl"
+  BEST=0; BEST_T=""; NS=0; SS=""; LSS=""
+  printf '{"event":"leaf_sampler_started","utc":"%s","unit":"%s","interval_s":%s}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$SUNIT" "$IVL" >> "$SREC"
+  for _ in $(seq 1 "$SCEIL"); do
+    LSS=$(systemctl --user show "$SUNIT.service" -p LoadState --value)
+    SS=$(systemctl --user show "$SUNIT.service" -p SubState --value)
+    SCG=$(systemctl --user show "$SUNIT.service" -p ControlGroup --value)
+    if [ -n "$SCG" ] && [ -r "/sys/fs/cgroup$SCG/memory.peak" ]; then
+      SP=$(cat "/sys/fs/cgroup$SCG/memory.peak" 2>/dev/null || echo 0)
+      NS=$((NS+1))
+      if [ "${SP:-0}" -gt "$BEST" ] 2>/dev/null; then
+        BEST=$SP; BEST_T=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+      fi
+    fi
+    [ "$LSS" = "not-found" ] && break
+    case "$SS" in exited|failed) break;; esac
+    sleep "$IVL"
+  done
+  printf '{"event":"leaf_peak","utc":"%s","unit":"%s","peak_of_record_bytes":%s,"last_increase_utc":"%s","n_samples":%s,"interval_s":%s,"final_substate":"%s","sampled":"WHILE ALIVE -- the leaf is released at exit and cannot be read afterwards","if_n_samples_is_0":"the run finished before the first read; the peak is ABSENT, never zero"}\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$SUNIT" "$BEST" "$BEST_T" "$NS" "$IVL" \
+    "$SS" >> "$SREC"
+  echo "sampled $SUNIT: peak_of_record=$BEST bytes at $BEST_T over $NS sample(s) every ${IVL}s; final SubState=$SS"
+  exit 0
 fi
 
 if [ "${1:-}" = "--capture" ]; then
@@ -203,25 +299,49 @@ if [ "${1:-}" = "--capture" ]; then
   # record now carries BOTH, each labelled with its source, and the peak OF
   # RECORD is the leaf's file. No check changes; this is a measurement.
   CG=$(systemctl --user show "$CUNIT.service" -p ControlGroup --value)
+  # A RUN THAT FINISHED NORMALLY MUST NOT LOSE ITS CAPTURE. The leaf is
+  # released at exit, so for EVERY completed run this exited 77 and wrote
+  # NOTHING -- no five fields, no stop, no journal copy. The state is now
+  # NAMED (`LEAF_RELEASED`) and the capture proceeds; the peak of record
+  # comes from the `--sample` row taken while the run was alive, and
+  # systemd's property rides beside it, never in its place (BE 74).
+  CGB=""; LEAFPEAK=""; LEAFCUR=""; LEAF_STATUS="READ_FROM_THE_LEAF"
   if [ -z "$CG" ]; then
-    echo "REFUSED: cannot resolve $CUNIT's cgroup leaf (ControlGroup= is" \
-         "empty while the unit is loaded), so the peak OF RECORD cannot be" \
-         "read from the leaf's own file. systemd's MemoryPeak property is" \
-         "not that number (BE 74)." >&2
-    exit 77
+    LEAF_STATUS="LEAF_RELEASED"
+  else
+    CGB="/sys/fs/cgroup${CG}"
+    LEAFPEAK=$(cat "$CGB/memory.peak" 2>/dev/null || echo "")
+    LEAFCUR=$(cat "$CGB/memory.current" 2>/dev/null || echo "")
+    [ -z "$LEAFPEAK" ] && LEAF_STATUS="LEAF_PRESENT_BUT_UNREADABLE"
   fi
-  CGB="/sys/fs/cgroup${CG}"
-  LEAFPEAK=$(cat "$CGB/memory.peak" 2>/dev/null || echo "")
-  LEAFCUR=$(cat "$CGB/memory.current" 2>/dev/null || echo "")
-  if [ -z "$LEAFPEAK" ]; then
-    echo "REFUSED: $CUNIT's leaf $CGB carries no readable memory.peak," \
-         "so the peak OF RECORD is unavailable. Not substituting the" \
-         "systemd property for it (BE 74)." >&2
-    exit 77
+  # THE PEAK OF RECORD: the live leaf if it is still there, else the
+  # sampler's row, else ABSENT -- and WHICH ONE IT IS is said, never
+  # inferred from a bare number.
+  SLINE=$(grep '"event":"leaf_peak"' "$CREC" 2>/dev/null | tail -1)
+  SPEAK=$(printf '%s' "$SLINE" | sed -n 's/.*"peak_of_record_bytes":\([0-9]*\).*/\1/p')
+  STIME=$(printf '%s' "$SLINE" | sed -n 's/.*"last_increase_utc":"\([^"]*\)".*/\1/p')
+  SN=$(printf '%s' "$SLINE" | sed -n 's/.*"n_samples":\([0-9]*\).*/\1/p')
+  [ "${SPEAK:-0}" = "0" ] && SPEAK=""
+  if [ -n "$LEAFPEAK" ]; then
+    POR="$LEAFPEAK"
+    POR_SRC="the leaf's own memory.peak, read live at capture"
+  elif [ -n "$SPEAK" ]; then
+    POR="$SPEAK"
+    POR_SRC="the --sample row: the leaf's memory.peak read WHILE THE RUN WAS ALIVE, last increase $STIME over $SN sample(s)"
+  else
+    POR=""
+    POR_SRC="ABSENT -- the leaf was released before any read and this run was not sampled. NOT zero, and NOT systemd's property (BE 74)"
   fi
-  printf '{"event":"outcome","utc":"%s","read_while":"LOADED","LoadState":"%s","ActiveState":"%s","SubState":"%s","Result":"%s","ExecMainStatus":"%s","InvocationID":"%s","peak_of_record_bytes":"%s","peak_of_record_source":"the unit'"'"'s own cgroup leaf memory.peak, read at capture","cgroup_leaf":"%s","leaf_memory_peak":"%s","leaf_memory_current":"%s","systemd_MemoryPeak_property":"%s","systemd_property_source":"systemctl show -p MemoryPeak, recorded verbatim; NOT the peak of record (BE 74: it read 847671296 where the leaf read 2578067456)"}\n' \
+  OUTF="$REPO/data/pm_5min/derived/be_heavy_run_stdout_${CUNIT}.log"
+  if [ -r "$OUTF" ]; then
+    OUTSHA=$(sha256sum "$OUTF" | cut -d" " -f1); OUTL=$(wc -l < "$OUTF")
+  else
+    OUTSHA="ABSENT"; OUTL=0
+  fi
+  printf '{"event":"outcome","utc":"%s","read_while":"LOADED","LoadState":"%s","ActiveState":"%s","SubState":"%s","Result":"%s","ExecMainStatus":"%s","InvocationID":"%s","peak_of_record_bytes":"%s","peak_of_record_source":"%s","leaf_status":"%s","cgroup_leaf":"%s","leaf_memory_peak":"%s","leaf_memory_current":"%s","systemd_MemoryPeak_property":"%s","systemd_property_source":"systemctl show -p MemoryPeak, recorded verbatim; NOT the peak of record (BE 74: it read 847671296 where the leaf read 2578067456)","stdout_file":"%s","stdout_file_sha256":"%s","stdout_file_lines":%s}\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$LS" "$AS" "$SS" "$RS" "$MS" "$ID" \
-    "$LEAFPEAK" "$CG" "$LEAFPEAK" "$LEAFCUR" "$MP" >> "$CREC"
+    "$POR" "$POR_SRC" "$LEAF_STATUS" "$CG" "$LEAFPEAK" "$LEAFCUR" "$MP" \
+    "$OUTF" "$OUTSHA" "$OUTL" >> "$CREC"
   systemctl --user stop "$CUNIT.service" >/dev/null 2>&1
   printf '{"event":"stopped","utc":"%s","unit":"%s","InvocationID":"%s"}\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$CUNIT" "$ID" >> "$CREC"
@@ -233,7 +353,7 @@ if [ "${1:-}" = "--capture" ]; then
   NS=$(journalctl --user USER_INVOCATION_ID="$ID" --no-pager -o cat 2>/dev/null | grep -c -e Stopped -e Consumed)
   printf '{"event":"journal_copy","utc":"%s","taken":"AFTER the stop","InvocationID":"%s","n_payload_lines":%s,"n_manager_lines":%s,"n_stopped_or_consumed_lines":%s,"retention_oldest_entry":"%s","why_after":"the Stopped/Consumed lines are written BY the stop; a copy taken before it cannot contain them (DE 106)"}\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ID" "$NP" "$NM" "$NS" "$OLDEST" >> "$CREC"
-  echo "captured $CUNIT: $LS/$AS/$SS/$RS/$MS id=$ID; peak_of_record=$LEAFPEAK (leaf $CG); systemd property=$MP; stopped; journal by id payload=$NP manager=$NM stopped_or_consumed=$NS"
+  echo "captured $CUNIT: $LS/$AS/$SS/$RS/$MS id=$ID; peak_of_record=${POR:-ABSENT} ($POR_SRC); leaf_status=$LEAF_STATUS; systemd property=$MP; stdout $OUTF sha=$OUTSHA lines=$OUTL; stopped; journal by id payload=$NP manager=$NM stopped_or_consumed=$NS"
   exit 0
 fi
 
@@ -294,7 +414,13 @@ if [ "${1:-}" = "--poll" ]; then
       # that has ALREADY EXITED stays `active` -- measured at 14:42:23Z,
       # where a poll read `active` and called it LOCK TAKEN while the
       # record showed the payload had exited 75 in the same second.
-      echo "LOCK TAKEN $(date -u +%Y-%m-%dT%H:%M:%SZ) attempt $N after $((N-1)) refusals; InvocationID $ID"
+      # THE SAMPLER GOES UP WITH THE RUN (BE 87 (a)). It is detached with
+      # setsid so it outlives this poll: the peak of record can only be
+      # read while the payload is alive, and a sampler tied to the caller
+      # would die with the shell -- the same defect the scope form had.
+      setsid "$SELFP" --sample "$PUNIT" "${BE_SAMPLE_INTERVAL:-5}" \
+        </dev/null >/dev/null 2>&1 &
+      echo "LOCK TAKEN $(date -u +%Y-%m-%dT%H:%M:%SZ) attempt $N after $((N-1)) refusals; InvocationID $ID; leaf sampler started (every ${BE_SAMPLE_INTERVAL:-5}s)"
       exit 0
     elif [ "$SETTLE" = "1" ] && [ "$MS" = "0" ] && [ "$RS" = "success" ]; then
       # A RUN THAT FINISHES INSIDE THE SETTLE WINDOW. Measured at 16:34:29Z:
@@ -303,6 +429,19 @@ if [ "${1:-}" = "--poll" ]; then
       # -- only for refusal and for still-running. The run was unaffected;
       # the classification was wrong, which is its own defect.
       echo "TOOK THE LOCK AND FINISHED $(date -u +%Y-%m-%dT%H:%M:%SZ) attempt $N after $((N-1)) refusals; Result=$RS ExecMainStatus=$MS InvocationID=$ID"
+      exit 0
+    elif [ "$SS" = "exited" ] && [ "$RS" = "success" ] && [ "$MS" = "0" ]; then
+      # (b) A RUN THAT HAD ALREADY FINISHED BEFORE THIS POLL RAN. Measured
+      # at 01:30:18Z on be72struct: the verification took the lock and was
+      # done in 3.1 s, so by the first poll the unit sat `active/exited,
+      # success, 0` -- and because the relaunch inside the attempt cannot
+      # start a unit name that is already loaded, no NEW exit row appeared
+      # and SETTLE stayed 0. Every branch above wants SETTLE, so the poll
+      # fell through to UNEXPECTED and exited 2: a SUCCESS reported as an
+      # anomaly. Under RemainAfterExit a finished run IS `active/exited`,
+      # and the five fields already say it succeeded -- that is the whole
+      # verdict, with or without a settle.
+      echo "ALREADY FINISHED $(date -u +%Y-%m-%dT%H:%M:%SZ) attempt $N: the unit had exited before this poll ran; Result=$RS ExecMainStatus=$MS SubState=$SS InvocationID=$ID"
       exit 0
     else
       echo "UNEXPECTED attempt $N: LoadState=$LS ActiveState=$AS SubState=$SS Result=$RS ExecMainStatus=$MS id=$ID"
@@ -322,12 +461,24 @@ case "$MOD" in /*) TARGET="$MOD";; *) TARGET="live/pm_research/$MOD";; esac
 
 REC="$REPO/data/pm_5min/derived/be_heavy_run_record_${UNIT}.jsonl"
 TIP=$(git -C "$WT" rev-parse HEAD 2>/dev/null || echo UNRESOLVED)
-printf '{"event":"launch","utc":"%s","unit":"%s","payload":"%s","args":"%s","tip":"%s","worktree":"%s","lock":"%s","conflict_rc":%s,"declaration":"%s"}\n' \
+printf '{"event":"launch","utc":"%s","unit":"%s","payload":"%s","args":"%s","tip":"%s","worktree":"%s","lock":"%s","conflict_rc":%s,"declaration":"%s","stdout_file":"%s","stdout_note":"the payload'"'"'s stdout is appended to this file AS IT RUNS; the journal keeps stderr and the manager lines. A record that lives only in a rotating journal is not a record (rule 20)."}\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$UNIT" "$TARGET" "$*" "$TIP" "$WT" "$LOCK" \
-  "$LOCK_CONFLICT_RC" "$DECL" >> "$REC"
+  "$LOCK_CONFLICT_RC" "$DECL" \
+  "$REPO/data/pm_5min/derived/be_heavy_run_stdout_${UNIT}.log" >> "$REC"
 
+# (c) THE PAYLOAD'S OWN RECORD GOES TO A FILE, AT RUN TIME (BE 72 finding
+# 3). `--verify-structure` prints its verification record to stdout and the
+# launcher redirected nothing, so the only copy lived in the journal -- and
+# the journal is not the record (rule 20, R-641): it rotates, and BE had to
+# read the record back out of it by invocation id and write the file by
+# hand. `StandardOutput=append:` puts every stdout byte in a file the
+# moment it is written. (`tee:` is not a valid systemd value here --
+# measured on systemd 255: "Invalid StandardOutput setting" -- so stderr
+# and the manager lines remain the journal's and stdout is the file's.)
+OUTF="$REPO/data/pm_5min/derived/be_heavy_run_stdout_${UNIT}.log"
 exec systemd-run --user --unit="$UNIT" --slice=research.slice \
   -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes \
+  -p StandardOutput=append:"$OUTF" \
   --setenv=BE_RECORD="$REC" \
   --setenv=BE_REFUSAL_FILE="${BE_REFUSAL_FILE:-$REPO/data/pm_5min/derived/be_heavy_run_refusal_${UNIT}.txt}" \
   --setenv=PM_DATA_ROOT="$REPO" \
