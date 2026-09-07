@@ -22608,6 +22608,42 @@ So the question REV could not answer by grep is answered: nothing under the ledg
 **STILL RUNNING (coordinator):** the immutability checker's falsifier with the new statuses (in flight since 07:15Z; the checker now scans the ledger for pinned pre-edit digests, ≈ 4 min per directory × 3). Landed after it passes; REV 92 reads it.
 
 **ROUTING.** E1 (≈ 08:55Z) → DA's read of the 09-03 artifact (GO) → GO E2 (09-04) → E3 → E4 — or two at a time on the user's word (offered at R-762, not taken) → the table → MEM. Tonight's close after the early reads free the lock; GO #8 cleared at the current runner bytes.
+
+### R-764 — 2026-09-07T07:40Z — coordinator — **DA 123 VERIFIED and its finding RULED: the sealed runs for 09-03 and 09-04 were computed under params v14 (09-03 RECONSTRUCTED, no pin stamped; 09-04 stamped), 09-05 and 09-06 under v15, and the early read loads v15 for all four — so DA's new predicate refuses two of the four days by name, one of them the day GO E1 is producing now. Measured at the declarations: v14→v15 changed TWO leaves, both the design pointer v21→v23; design v21→v23 changed 42 leaves, all seal scope, closure naming, battery counts and provenance stamps, and the declaration says "NO estimand, NO bar, NO pin". RULED: the computation is the sealed runs' — the refusals stand as labels and the table prints those two days under this ruling. BE 95 VERIFIED. The checker's superseded-fork statuses LANDED (falsifier PASS on the real v7). A regression flagged to DE on its H1 landing.**
+
+**DA 123 (Q-DA-349 `d7bf342`; code `781be6b`) VERIFIED.** `da_early_read_verify --selftest` at the tip: 17 checks, run here. REV 91 §C2's assertion taken after the fact (the runner's bytes are frozen under GO E1): `check_computation_params` compares the params digest the artifact says the run LOADED against the digest THE DAY'S SEALED RECEIPT declares — three refusals by name (`COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS`, `_NOT_DECLARED`, `_NOT_CHECKABLE_SEALED_RECEIPT_ABSENT`), and a third STATE found at the artifact: 09-03's receipt says of itself "RECONSTRUCTED, not stamped … no digest here was taken at load or at emit", so it refuses `COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED` rather than resolving as a match. The sealed receipt is now opened by DA for ONE purpose under a constant read scope (five provenance paths), its identity established before any field is read; a planted economic field reaches none of them (driven). **The measurement, on the bar's four receipts: 09-03 RECONSTRUCTED → v14 `2da40f4e…`; 09-04 STAMPED v14 `2da40f4e…` (load = emit); 09-05 STAMPED v15 `92858fc7…`; 09-06 STAMPED v15 `92858fc7…`.** The early read (`RUN.load_params()`, `PARAMS_REL` → v15) loads v15 for all four, so the claim "the computation is the sealed runs'" does not hold AS WRITTEN for 09-03 and 09-04, and DA's reader refuses those two by name — driven: `09-03 → COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED; 09-04 → COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS`. DA reported the state of each day and left materiality to the coordinator.
+
+**MATERIALITY, measured by the coordinator at the declarations (not from DA's summary):**
+
+```
+changed leaves v14->v15 (excluding supersedes/version/protocol): 2
+   design_declaration.path : ".../p003_de_multiday_gate1_design_v21.json" -> ".../p003_de_multiday_gate1_design_v23.json"
+   design_declaration.the_design_pins_THIS_file : "design v21, field parameters.sha256" -> "design v23, field parameters.sha256"
+design v21 -> v23: changed leaves (excl. link/version/stamps): 42
+   R22_the_launch_capture_is_the_IMPORT_CLOSURE.* (5 leaves: da_root.py named in the closure)
+   R29_seal_scope.* and R30_seal_scope_corrected.* (28 leaves: n_fills_arm / n_fills_baseline / n_cancels_issued moved from OPEN sizes to SEALED outcomes; "changes_nothing_else: NO estimand, NO bar, NO pin. params v14 unchanged")
+   battery.expected_checks_in_the_source 105 -> 110; output_name_check.* 21 -> 23; source_identity.* (carrying commit, producing code digest)
+```
+
+**RULED (routine, disclosed for overrule):** the early read's computation under v15 IS the sealed runs' computation for all four days — the only parameter delta is the design pointer, and the design delta names which counts are stripped and which modules are in the closure, never how anything is computed. No re-run under v14 (it would reproduce the same numbers and cost 3 hours of lock time). DA's two refusal codes are NOT softened — they are the honest reading of the pins — and the table prints 09-03 and 09-04 UNDER THIS RULING with a materiality line beside each (the refusal code, the sealed run's params, the read's params, the measured delta, R-764), 09-05 and 09-06 as "params match". **Dispatched as DA 124 at 07:40:29Z** (a `--print-under-ruling R-764` mode that admits ONLY those two codes; every other refusal still refuses under it; red-first). The labels REV 91 §A2 asked for ride on the same lines (09-03's counts visible since 2026-09-06T14:01Z).
+
+**BE 95 (Q-BE-338 `f3072e5`; code `3372080`) VERIFIED as filed:** the scratch fixture's name pinned to its bytes in `_FIXTURE_FIRST_READ = {name, sha256, recorded_by, the_act_it_records}` and asserted before use; the census's `n_refused` 2 → 1, the one remaining DE's `de_multiday_gate1_runner.py:66` (`PARAMS_REL`, deliberate — REV 91 §C2's second entry). REV was right to withdraw its REV 90 call, and BE right to be corrected — BE's own words.
+
+**THE CHECKER LANDED (`ff8b0a9`).** REV 90 §B7 adopted: `FORKED_BY_EDIT` (rc 1, unrepaired) vs `FORKED_BY_EDIT_AND_SUPERSEDED` (rc 2); `created_by` / `edited_by` / `repaired_by`; `pre_edit_digest` and `pre_edit_digest_pinned_by` over the declarations and the ledger's JSONs under 5 MB — the size filter BEFORE the grep, because the first version grepped gigabyte tapes and the falsifier was killed at its 15-minute cap (07:15–07:30Z). The falsifier, verbatim:
+
+```
+FORKED_BY_EDIT_AND_SUPERSEDED live/pm_research/declarations/producer_exit_maps_v2.json edits_after_base=2 created_by=a81484c edited_by=ba635de repaired_by=[40c8903] superseded_by=[producer_exit_maps_v3.json] …
+FORKED_BY_EDIT_AND_SUPERSEDED live/pm_research/declarations/producer_exit_maps_v7.json edits_after_base=3 created_by=5f5c92b edited_by=4e91739 repaired_by=[31c5208 0e2a0c6] superseded_by=[producer_exit_maps_v8.json] …
+FALSIFIER PASS (base 56d3894; denominator line present; superseded-fork status reads on the real v7)
+```
+
+(the historical v2 fork of 2026-09-06 reads the same way — repaired forward by v3, which is what R-711's repair was). REV 92 reads it.
+
+**FLAGGED TO DE (notice at 07:37:35Z, on its landed `a3954ed` — H1's closure):** the coordinator's drive of DE's `read_gate()` at the tip reads conjunct `3_digest_matches_the_landing_record` `holds false` with `failing` = ALL SIX ruled days, 09-06 included, where REV 89 measured five (09-06 passed) before the change; DA's predicate at the same tip reads 09-03 `landing_record_status ONE` recorded by the LIGHT pre-read. Either the adopted grouping regressed 09-06 or the detail lost the cross-check that would explain it. DE is establishing which at the artifact inside its open phase 2 (DE 123's row pending).
+
+**GO E1 at this writing:** `deEARLY20260903` `SubState=running`, MemoryPeak 2,715,901,952 (systemd's property, not the peak of record), 10 minutes in; expected exit ≈ 08:55Z.
+
+**ROUTING.** E1 exits → DA's read of the 09-03 artifact under DA 124's print mode (GO) → the first day's table to the user with its labels → GO E2 (09-04) → E3 → E4 → MEM. DE 123 phase 2 (H1's regression resolved, REV 89's five items, the shared-falsifier cell) → REV 92 (DE 123, DA 123/124, BE 95, the checker). MEM 251 in flight. BE on standby for the close.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
