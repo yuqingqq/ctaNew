@@ -68,7 +68,7 @@ PARAMS_V5 = None                      # resolved per call, not at import
 #: E2-A's own bars, read from the declaration this seat wrote -- never
 #: retyped here.
 E2A_DECL = (HERE.parent / "mm_research" / "declarations"
-            / "p002_e2_a_declaration_v7.json")
+            / "p002_e2_a_declaration_v8.json")
 #: The landed smoke, whose ERA leg was measured ROW-WISE over 15 days. Days
 #: after its as-of are UNMEASURED on that leg and are reported as such.
 E2A_SMOKE = "p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json"
@@ -938,8 +938,16 @@ def e2a_accrual(now: datetime.datetime | None = None,
         health = R.collector_health(day, beats, restarts)
         streams_ok = all(n == R.HOURS_PER_DAY_FILES for n in counts.values())
         era = era_by_day.get(day)
+        #: v8 leg (d), ITS LIGHT HALF. The gap-run MEASUREMENT streams the
+        #: day's bookTicker and is not light, so it is not taken here -- but
+        #: the leg refuses a CONSUMED or pre-window symbol-day with no
+        #: measurement at all, and that half decides most days. A report
+        #: that named v8 and counted days v8's window excludes would
+        #: overstate the accrual by every day before the window.
+        legd = R.D.outage_leg(symbol, day)
+        in_window = legd["state"] == "REFUSED_OUTAGE_LEG_NOT_EVALUATED"
         adm = bool(cal["complete"] and streams_ok and health.get("live")
-                   and era and era["post_boundary"])
+                   and era and era["post_boundary"] and in_window)
         per_day[day] = {
             "calendar_complete": cal["complete"],
             "streams_complete": streams_ok,
@@ -954,6 +962,14 @@ def e2a_accrual(now: datetime.datetime | None = None,
                                    "is not light; it is carried from the "
                                    "smoke and this day is after its as-of")}),
             "admissible_post_boundary": adm,
+            "outage_leg_d": {
+                "state_without_a_measurement": legd["state"],
+                "inside_the_forward_window_and_not_consumed": in_window,
+                "measured_here": False,
+                "why": ("leg (d)'s window half is applied here because it "
+                        "needs no tape; its MEASUREMENT (the longest "
+                        "bookTicker gap run) is not light and is taken by "
+                        "the runner on the days that reach it")},
         }
         if adm:
             admissible.append(day)
@@ -992,7 +1008,20 @@ def e2a_accrual(now: datetime.datetime | None = None,
                             E2A_DECL.read_bytes()).hexdigest()[:16]
                             if E2A_DECL.is_file() else None)},
         "legs_re_run_today": ["streams (24 hour-files on all three)",
-                              "collector liveness (heartbeat + restarts)"],
+                              "collector liveness (heartbeat + restarts)",
+                              "v8 leg (d), WINDOW HALF ONLY (consumed and "
+                              "pre-window days refused with no measurement)"],
+        "leg_not_re_run_today": {
+            "outage_run_measurement": (
+                "v8 leg (d) refuses a day carrying a bookTicker gap run of "
+                f"{R.D.OUTAGE_RUN_S} s or more. That reading streams the "
+                "day's bookTicker and is not light, so no day is counted "
+                "admissible here on the strength of a measurement this "
+                "report did not take -- the days it counts are those the "
+                "window admits, and the runner still applies the "
+                "measurement."),
+            "forward_window_start_day": R.D.FORWARD_WINDOW_START_DAY,
+            "earliest_read_date": R.D.EARLIEST_READ_DATE},
         "leg_carried": {"era_rule5": "row-wise on recv_ns; carried from the "
                                      "landed smoke",
                         "smoke_as_of": smoke_asof,
@@ -1375,7 +1404,8 @@ def selftest() -> tuple:                                      # noqa: C901
        "leg is row-wise on recv_ns and is CARRIED from the smoke that "
        "measured it, with its as-of. Days after that as-of are UNMEASURED "
        "and say so",
-       len(e2["legs_re_run_today"]) == 2
+       len(e2["legs_re_run_today"]) == 3
+       and e2["leg_not_re_run_today"]["outage_run_measurement"]
        and e2["leg_carried"]["smoke_as_of"] is not None
        and e2["leg_carried"]["n_days_it_measured"] > 0
        and e2["declared_minimum_days"] == 14,

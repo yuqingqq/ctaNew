@@ -1,0 +1,785 @@
+{
+ "admission_legs_v8": {
+  "WHAT_v8_CHANGES": "leg (d) is ADDED. Legs (a), (b) and (c) are carried UNCHANGED and the selftest asserts they are byte-identical to v7's, read from v7 on disk at the pair this version supersedes -- not re-typed and compared by eye.",
+  "leg_a_streams": "24 hour-files on ALL THREE streams -- bookTicker, trade, depth20. Unchanged since v4.",
+  "leg_b_collector_liveness": {
+   "both_directions": "the leg is not accepted on a refusal alone: a real outage must REFUSE and a quiet-but-live day must ADMIT, and both are driven.",
+   "negative_control_RULED": "2026-08-29 and 2026-08-30 MUST ADMIT: 1,439 of 1,440 heartbeats, max gap 61 s (one cadence), zero restarts, zero WebSocket drops. A quiet weekend with a live collector.",
+   "positive_controls_RULED": [
+    "2026-08-24 -- the hf_ws_v2 era-boundary deploy: max heartbeat gap 158 s against a 120 s bar, 2 restarts. MUST REFUSE.",
+    "2026-08-26 -- the reboot: max heartbeat gap 4,656 s, 2 restarts. MUST REFUSE."
+   ],
+   "predicate": "no gap between consecutive heartbeats exceeding 2x the collector's own MEASURED modal cadence, and no collector restart inside the day. A property of the COLLECTOR, never of how often a quiet book moves.",
+   "the_withdrawn_control": "REVIEW_DA61_E2A B.2 posed 08-29/30 as the POSITIVE control -- a common-mode event the leg must flag. R-580(C)(1) WITHDREW it on the collector's own ledger: the event-driven streams fell about 40% while the FIXED-CADENCE depth20 held at 92-93%. An outage suppresses every stream; a quiet market suppresses only the event-driven ones. Flagging it would have rebuilt the activity-selecting defect v6 removed -- through the control instead of the predicate."
+  },
+  "leg_c_rule5_era_purity": {
+   "NO_THRESHOLD_CHANGE_AFTER_SEEING": "CLAUDE.md rule 11. The minimum stays 14. What changes is what may be READ, not what is required.",
+   "legacy_share_reported_beside_every_table": true,
+   "predicate": "a symbol-day is era-admissible iff EVERY bookTicker row in the day carries recv_ns >= 1787579334881534478 (2026-08-24T13:48:54Z). MEASURED row-wise, never inferred from the date.",
+   "ruling": "R-580(C)(2); REVIEW_DA61_E2A B.3",
+   "the_population_collapse_STATED": "post-boundary complete days are 2026-08-25..09-05 = 12, of which 08-26 is out on the collector reboot: AT MOST 11 admissible post-boundary days per symbol against the declared minimum of 14. E2-A refuses on the entire population under the declared bar.",
+   "the_sealed_smoke_regime": {
+    "reversible_by": "the USER; recorded as USER-visible",
+    "what_is_SEALED": "every economic quantity: eff_RT under either model and either pricing, the per-episode costs, the fill rates, the bootstrap intervals and the overlay verdict. Written once, digested, and NOT READ.",
+    "what_is_published": "resources, populations, every status count, the legacy share, the ordering regimes, the quote-age distributions -- and the sha256 of the sealed payload",
+    "what_runs": "the mechanism, on the post-boundary days",
+    "when_the_gate_may_be_read": "at G >= 14 admissible post-boundary complete days, approximately 2026-09-09"
+   },
+   "why_it_binds_here_and_not_in_E2_0": "E2.0 reads the exchange stamp T. E2-A's estimand IS sub-second arrival order on recv_ns, so a legacy-stamped row carries up to ~0.6 s of parse-backlog error into the queue simulation, concentrated in bursts -- exactly when queue position matters."
+  },
+  "leg_d_outage_v8": {
+   "FORWARD_ONLY": "applies to days from 20260906 onward and to no earlier day. The start is COMPUTED as the day after 20260905, the latest day any consumed source names -- not typed from the ruling.",
+   "known_bad_RULED": "a day carrying one 60 s run MUST REFUSE, and a CONSUMED day MUST REFUSE AS CONSUMED even with a clean measurement.",
+   "positive_control_RULED": "a day of scattered one-second holes and no run of a minute MUST ADMIT -- the leg has to be able NOT to fire, or it is the activity filter v6 removed wearing a new name.",
+   "predicate": "a symbol-day is inadmissible on this leg iff the bookTicker tape carries a gap RUN of at least 60 s -- a maximal block of contiguous whole seconds with no valid bookTicker quote, counted by `e2_a_runner.gap_profile` on `read_book`'s T behind the same valid-quote filter. The comparison is `>=`.",
+   "reference_implementation": "e2_a_declare.outage_leg(symbol, day, max_gap_run_s) -- in this declaring module, so the semantics are pinned EXECUTABLY and the runner's wiring is checked against them rather than against prose.",
+   "ruling": "R-745(4), coordinator, on the USER's instruction, DISCLOSED FOR OVERRULE BY ONE LINE.",
+   "states": [
+    "ADMITTED_NO_OUTAGE_RUN",
+    "REFUSED_OUTAGE_RUN",
+    "REFUSED_CONSUMED_NEVER_REJUDGED",
+    "REFUSED_BEFORE_THE_FORWARD_WINDOW",
+    "REFUSED_OUTAGE_LEG_NOT_EVALUATED"
+   ],
+   "the_order_of_the_checks_IS_the_rule": "consumed, then the window, then absence, then the measurement. A consumed symbol-day is refused BY NAME as consumed even when the measurement would admit it; an unmeasured leg refuses with its own status, because absence must never read as a pass.",
+   "what_it_does_NOT_change": "legs (a), (b) and (c). The 24-hour-file and depth20 requirements stay exactly as they are (R-745(4)'s own words), the collector-liveness leg keeps its ruled controls, and rule 5's era leg is untouched.",
+   "why_a_run_and_not_a_fraction": "an outage is a few LONG contiguous runs; quietness is many one-second holes. The fraction sums them and cannot tell them apart, so it selects on how often the best quote changes -- which is what a thin-name cell exists to measure, not a reason to exclude the day."
+  }
+ },
+ "carrying_commit": "53cc4be9212e4b97268b895d2a9dfa53e443386d",
+ "decision_time_quote_age_v7": {
+  "a_straddle_is_a_stated_sensitivity": "if A and B fall on opposite sides of the 8.0 bps threshold the cell is reported STRADDLES_THE_STALENESS_BAR and the two readings stand side by side. Never averaged -- the same rule the queue bracket carries.",
+  "declared_staleness_bar_ms": 1000.0,
+  "status_not_gate": "reported per symbol-day (p50/p90/max over the 24 decision times) AND per episode (the age of the quote the order was placed from). Filtering on it would select on activity, which is the defect v6 removed from admission.",
+  "the_gate_is_read_BOTH_WAYS": "reading A over ALL resolved episodes; reading B over the subset whose decision-time quote age <= the bar. Both are published with their n.",
+  "where_the_bar_COMES_FROM": "CLAUDE.md rule 5's own dividing line -- pre-boundary tape is 'usable for >= 1 s bars only'. It is the granularity at which this programme already says a stamp is trustworthy. It is NOT ICP's measured 517 ms median, which would be a threshold chosen after seeing."
+ },
+ "declared_by": "DA seat (pm-da), single-seat program",
+ "emitter_identity": {
+  "emitter_commit_best_effort": "53cc4be9212e4b97268b895d2a9dfa53e443386d",
+  "emitter_commit_caveat": "the last commit touching the emitter AT EMIT TIME. A later rebase can rewrite it; the digest cannot be rewritten. Resolve the digest first and treat a missing commit id as a rewritten history, not as a missing declaration.",
+  "emitter_path": "live/mm_research/e2_a_declare.py",
+  "emitter_sha256": "2f55baf73703d77f7039ce8f096cfcfdff1c3c0503d2b29edcfed76a555fccd1",
+  "emitter_sha256_is_the_durable_citation": "a rebase rewrites commit ids and leaves the bytes alone. The digest identifies the code that produced this declaration whatever happens to the history above it.",
+  "tree_head_at_emit": "53cc4be9212e4b97268b895d2a9dfa53e443386d"
+ },
+ "falsifiers": {
+  "both_directions_required": true,
+  "known_bads": [
+   "a resting order behind depth larger than all subsequent volume must NOT fill under RiskAverse -- if it does, the queue is not being counted",
+   "ProbQueue-f3 returning a HIGHER cost than RiskAverse on the same episodes must REFUTE the run, not be averaged away",
+   "a day missing depth20 alone must be EXCLUDED even though bookTicker and trade are complete -- the third stream is a real requirement, not decoration",
+   "a symbol above the skip bar must be UNRESOLVED and excluded from the aggregate, and the aggregate reported both ways",
+   "an absent rebalance notional must REFUSE the size-aware arm rather than defaulting to min-size and calling it E2-A",
+   "the runner must REFUSE if this declaration's sha256 differs",
+   "the runner must REFUSE a result-bearing emission off the canonical ledger root (de_data_root.require_canonical, adopted from P-003 and imported, not copied)",
+   "a day whose COLLECTOR heartbeat shows a gap beyond twice its measured cadence, or a restart inside the day, must be EXCLUDED even with 24 hour-files on all three streams",
+   "a partial episode's two pricings straddling the threshold must return FAIL_PARTIAL_FILL_PRICING_STRADDLES rather than their mean -- driven on an episode that is ACTUALLY partial, because at partial_share = 0.000 the rule cannot fire at all",
+   "the runner must REFUSE if the E1-A reproduction control misses the published numbers by more than 0.05 bpsan episode whose level L is ABSENT from the depth20 snapshot must carry QUEUE_AHEAD_UNDEFINED and appear in NEITHER model's population -- a queue-ahead of zero there would read as the most favourable queue position there is",
+   "an opposite-side trade at EXACTLY L must FILL under RiskAverse when it carries enough volume; the strict-through reading is the known-bad and must not",
+   "the two partial-fill pricings straddling the threshold must return FAIL_PARTIAL_FILL_PRICING_STRADDLES, never their mean",
+   "a symbol outside the twelve in scope must be REFUSED by name rather than measured",
+   "filled_qty(ProbQueue) < filled_qty(RiskAverse) on ANY single episode must REFUTE -- that ordering is arithmetic, unlike the per-episode COST ordering, which the winner's curse can invert with no defect present",
+   "v8 leg (d): a day inside the forward window carrying one 60 s bookTicker gap run must be REFUSED, and the boundary is `>=` -- a longest run of 59 s must ADMIT and one of 60 s must not",
+   "v8 leg (d): a CONSUMED symbol-day must be refused BY NAME as consumed even when its measurement would admit it -- a day refused for the right reason and admitted for the wrong one is the rule-11 failure this leg exists to prevent",
+   "v8 leg (d): a symbol-day whose longest gap run was NOT measured must be refused as NOT EVALUATED, never admitted quietly"
+  ],
+  "positive_controls": [
+   "a synthetic book where the resting order is ALONE at the level fills on the first opposite-side trade under BOTH queue models -- with no queue ahead the two models must agree exactly",
+   "a synthetic episode that fills at the touch with zero adverse drift must return cost = fee_maker - half_spread, the closed form, to floating tolerance",
+   "an unfilled episode must return the chase cost with the TAKER fee and the realised drift over T_p, so the winner's curse is charged in full",
+   "the E1-A reproduction control passing on E1-A's own data",
+   "a day with all three streams complete and a LIVE collector is ADMITTED -- including a book so quiet that 99% of its seconds carry no message, which is the whole point of v6 and the case v5 excluded",
+   "the partial-fill bracket must be able to produce two DIFFERENT numbers: an episode filled 4 of 10 prices at eff_RT 6.0 residual-chased against 10.0 whole-leg-charged",
+   "an episode whose L IS inside the depth20 snapshot's twenty levels is ADMITTED to both models -- the undefined status must be able NOT to fire, or it is a filter wearing a status's name",
+   "an episode filled to phi = 0.5 must price STRICTLY between c_fill and c_chase under the gate-bearing rule -- partial pricing must be able to produce an interior number",
+   "a synthetic tape whose quantities are all multiples of 0.25 must return a quantity step of 0.25",
+   "v8 leg (d) MUST BE ABLE NOT TO FIRE: a day inside the forward window whose missing seconds are scattered one-second holes, with no run of a minute, is ADMITTED -- otherwise the leg is the activity filter v6 removed wearing a new name"
+  ]
+ },
+ "hftbacktest_is_absent": {
+  "checked": "import hftbacktest raises ModuleNotFoundError on this interpreter, as-of 2026-09-06T05:01Z",
+  "consequence": "the plan names hftbacktest for the bracket. Installing a dependency is an environment change and is not the seat's to make, so both models are declared in closed form above and implemented in the runner.",
+  "ruling_requested": "this is a DEVIATION from a pre-registered plan and is flagged for the reviewer and the coordinator BEFORE any run -- either the direct implementation is accepted, or the dependency is authorised, or E2-A waits. It is not absorbed.",
+  "what_that_costs": "the models' CORRECTNESS becomes mine rather than a library's. Each therefore ships a falsifier that fires on a known-bad queue state, and the ordering property (optimistic <= pessimistic) is a COMPUTED predicate whose violation refutes the instrument rather than the symbol."
+ },
+ "interior_controls": {
+  "ProbQueue_f3": {
+   "case": "queue_ahead 30, depth_behind 70",
+   "expected_prob": 0.927027027027027,
+   "hand_derivation": "f(70)/(f(30)+f(70)) = 343000/370000",
+   "why_interior": "not 0 and not 1 -- a strictly interior probability whose value follows from the published f(x) = x**3 and nothing else"
+  },
+  "RiskAverse": {
+   "case": "queue_ahead 1000, order_qty 10, volume_through 1005",
+   "expected_filled_qty": 5.0,
+   "hand_derivation": "clip(1005 - 1000, 0, 10) = 5",
+   "why_interior": "not 0 (no volume) and not 10 (fully through) -- the order is HALF filled, which only a model that counts the queue can produce"
+  },
+  "tolerance": 1e-09
+ },
+ "population": {
+  "cluster_unit": "UTC day (CLAUDE.md rule 8)",
+  "day_admission_is_PER_SYMBOL_over_the_twelve_IN_SCOPE": "R-570(C)(3): depth20 completeness is required for the TWELVE symbols in scope, not for all sixteen the collector carries. A day is admissible FOR A SYMBOL and there is no cross-symbol day filter -- otherwise a stream outage on APT, ARB, ATOM or GMX, none of which E2-A measures, would delete days from a symbol it does.",
+  "day_admission_predicate": "v6: a UTC day is ADMISSIBLE FOR A SYMBOL iff (a) 24 hour-files exist for ALL THREE streams -- bookTicker, trade AND depth20 -- and (b) THE COLLECTOR WAS LIVE for the whole day: no gap between consecutive heartbeats exceeding 2x the collector's own MEASURED modal cadence, and no collector restart inside the day. Nothing about how often the book moves enters admission.",
+  "episode_unit": "symbol x admissible day x decision time on a fixed grid (24/day, every hour on the hour) x direction in ['buy', 'sell'] -- E1-A's grid exactly, unchanged, so the two are comparable",
+  "min_complete_days": 14,
+  "refuses_below_min": true,
+  "symbol_list": [
+   "AAVEUSDT",
+   "ADAUSDT",
+   "AVAXUSDT",
+   "BNBUSDT",
+   "BTCUSDT",
+   "DOGEUSDT",
+   "ETHUSDT",
+   "FILUSDT",
+   "ICPUSDT",
+   "LTCUSDT",
+   "SOLUSDT",
+   "XRPUSDT"
+  ],
+  "symbols": "the XS-overlap set E1-A used, NAMED and inherited rather than recomputed: AAVE, ADA, AVAX, BNB, BTC, DOGE, ETH, FIL, ICP, LTC, SOL, XRP. Recomputing the top-40 ADV universe as-of a new date would change the population and the number together, and then E2-A would not supersede E1-A -- it would measure something else.",
+  "the_admissible_set_is_an_OUTPUT": "declared as an output so no expectation about which days qualify can become a filter. Structural file-count as-of 2026-09-06T05:01Z: 16 complete days per stream per symbol (08-20..08-25, 08-27..09-05); the gap-fraction leg is NOT yet evaluated.",
+  "the_gate_symbol_under_R584": "BTCUSDT",
+  "the_twelve_are_CONTEXT_under_R584": "the XS-overlap set remains the declared population of the EXPERIMENT; R-584 narrows what is READ to BTC. The census over the twelve stays as context and is not re-run.",
+  "what_is_REPORTED_and_NOT_gated": [
+   "the intra-day bookTicker gap fraction -- the quantity v5 gated on",
+   "decision-time quote age per symbol-day (p50/p90/max at the 24 decision times), which is the staleness a thin name actually carries into placement and which a reader must see",
+   "the gap run-length profile, which is what shows a quiet book and an outage apart"
+  ],
+  "why_the_v5_leg_was_WRONG_and_how_that_was_established": "it was inherited from E2.0 as an OUTAGE guard and, measured over eight symbols, turned out to select on ACTIVITY: admissible days 16/16/16/14/14/13/11/1 against median decision-time ages 68..517 ms, monotone. ICP's missing seconds are 2,853-11,997 one-second holes a day with 0.0000 of them in runs of 60 s or more -- a quiet book, not missing data -- and the leg cut it from 16 days to 1. The control that made this readable is ADA at 16 of 16 under the same code and the same bar, reproducing E2.0's own admissible set.",
+  "window_is_not_E1A_s": "E1-A ran 2026-07-18..08-17 on Vision aggTrades; the L2 collector started 08-19 and the windows DO NOT INTERSECT. E2-A's number supersedes E1-A's as the operative number WITHOUT re-measuring E1-A's window. A reader must not difference the two and call it a queue-model effect."
+ },
+ "program": "P-2026-002-hf-market-making",
+ "protocol": "P002_E2_A_OVERLAY_QUEUE_BRACKET_DECLARATION_V8",
+ "reporting_corrections_v7": {
+  "no_repro_receipt_field": {
+   "finding": "REVIEW_DA61_E2A A.2: --no-repro turned the gating control off and the receipt went SILENT -- the key was absent, not false. The P-003 asymmetry class, in P-002.",
+   "the_rule": "the field is ALWAYS present. With --no-repro it reads {reproduced: null, gates_the_run: false, why_skipped: <the reason>} -- null is not false: the control did not run, so it neither passed nor failed."
+  },
+  "qty_step_underdetermined": {
+   "finding": "REVIEW_DA61_E2A A.4.1",
+   "the_rule": "below 3 distinct trade quantities in the day the modal positive diff is an echo of the sample rather than an estimate of a step. The day carries the status QTY_STEP_UNDERDETERMINED, produces no episodes, and is counted -- never a step guessed from one or two values."
+  }
+ },
+ "reproduction_control_inherited": {
+  "ci_sweep": [
+   5.7561,
+   6.7539
+  ],
+  "ci_touch": [
+   3.1095,
+   3.7927
+  ],
+  "eff_rt_sweep_bps": 6.2645,
+  "eff_rt_touch_bps": 3.4485,
+  "n_symbols": 12,
+  "source": "data/mm_hf/e1/e1a_gate_summary.csv, row tp_s=600",
+  "symbols": [
+   "AAVEUSDT",
+   "ADAUSDT",
+   "AVAXUSDT",
+   "BNBUSDT",
+   "BTCUSDT",
+   "DOGEUSDT",
+   "ETHUSDT",
+   "FILUSDT",
+   "ICPUSDT",
+   "LTCUSDT",
+   "SOLUSDT",
+   "XRPUSDT"
+  ],
+  "tolerance_bps": 0.05,
+  "tp_s": 600,
+  "why_required": "E2-A supersedes E1-A's number. A superseding number produced by a DIFFERENT implementation of the same episode design would be measuring the implementation, not the book. E2.0 established this discipline and reproduced E1-B's ADA numbers to 0.0002 bps; E2-A inherits it on the E1-A side.",
+  "window": "2026-07-18..2026-08-17 (31 d Vision tick aggTrades)"
+ },
+ "resources": {
+  "cap": "one CPU, MemoryMax=8G, under the rule-20 wrapper (flock + systemd-run). NEVER RAISED: a symbol that exceeds the cap REFUSES.",
+  "data_root_discipline": {
+   "already_in_force": "landed for E2.0 before this declaration was written, so E2-A inherits it rather than promising it",
+   "recorded_in_every_receipt": [
+    "repo_root",
+    "data_root",
+    "data_root_resolved",
+    "branch",
+    "PM_DATA_ROOT_env",
+    "tape_present",
+    "is_canonical",
+    "refusal"
+   ],
+   "refusal": "a result-bearing emission whose resolved data root is not the canonical ledger REFUSES. Not a warning: a worktree shell resolves, reads and holds a DIFFERENT ledger.",
+   "the_falsifier_is_the_reviewer_s_exact_case": "a PARTIAL root -- a real mm_hf tape holding 2 days of 19, every directory present, every file readable -- must REFUSE before any day is read, and must NOT be reported as a 2-day census. Driven through the runner's own entry point, not through the resolver alone: the child prints the census it WOULD have produced (2) and then the refusal.",
+   "the_rule": "every result-bearing P-002 run resolves through the SAME imported resolver P-003 uses -- de_data_root.require_canonical, which itself delegates to pm_tape_density._resolve_data_root. IMPORTED, NOT COPIED: a second implementation of 'where is the ledger' is exactly the thing that drifts apart.",
+   "why_this_field_exists": "the E2.0 RESULT review, section 6: `e2_0_true_mid.py:46` was `ROOT = HERE.parents[1]` and there was NO data-root resolver anywhere on the P-002 surface. On a partial root the existing check fires only for a WHOLLY missing directory, so a shell would have produced a silently SMALLER population rather than a refusal."
+  },
+  "estimate_is_labelled_an_estimate": "adding a third stream and a queue simulation to E2.0's measured 67 s is not linear and no wall-clock figure is offered before the smoke measures one.",
+  "measured_input_sizes_as_of_2026-09-06T05:01Z": {
+   "E2_0_measured_cost": "67 s wall / 657 MiB RSS for one symbol x 16 days on two streams",
+   "depth20 per day (gz)": {
+    "ADAUSDT": "30 MB",
+    "BTCUSDT": "40 MB",
+    "ICPUSDT": "14 MB"
+   },
+   "note": "depth20 is 100 ms snapshots and is far more even across symbols than bookTicker, where BTC is 480 MB a day against ADA's 41. The heavy stream for E2-A is still bookTicker."
+  },
+  "smoke": "ONE symbol first with its resource observation, before any fan-out -- and it will be ICP, because ICP is the cell E2-A owes an answer on and the one most likely to refuse."
+ },
+ "runner_boundaries": {
+  "day_admission_scope": {
+   "rule": "depth20 completeness is required for the TWELVE SYMBOLS IN SCOPE -- the population E2-A supersedes E1-A on -- and not for all sixteen the collector happens to carry. A day is admissible FOR A SYMBOL; there is no cross-symbol day filter.",
+   "ruling": "R-570(C)(3)",
+   "the_control": "a symbol outside the twelve must be REFUSED by name rather than measured; and a day complete on all three streams for a symbol in scope must be ADMITTED while the same day missing depth20 alone is EXCLUDED",
+   "why": "the four extra collected symbols (APT, ARB, ATOM, GMX) are not in E1-A's XS-overlap set. Requiring their depth20 would let a stream outage on a symbol E2-A does not measure delete days from one it does, which is a population change with no measurement behind it."
+  },
+  "partial_fill_pricing": {
+   "gate_bearing": "RESIDUAL_CHASED_AT_TP -- an episode filled to fraction phi costs phi*c_fill + (1-phi)*c_chase, because the unfilled part is still a working order and is chased at T_p exactly as a wholly unfilled episode is. Reduces to E1-A's formula exactly when phi is 0 or 1, which is why the two remain comparable.",
+   "pessimistic_bracket": "WHOLE_LEG_CHARGED -- an episode that is not FULLY filled costs c_chase entire. Reported BESIDE the gate-bearing number, never instead of it.",
+   "ruling": "R-570(C)(2)",
+   "straddle_is_a_FAIL": "if the two pricings fall on OPPOSITE sides of the 8.0 bps threshold the verdict is FAIL_PARTIAL_FILL_PRICING_STRADDLES. Never averaged -- the same rule the queue bracket carries (R-567), applied to the second bracket the partial fills open.",
+   "the_control": "a fabricated episode at phi = 0.5 must price strictly between c_fill and c_chase under the gate-bearing rule and exactly at c_chase under the pessimistic one; and a straddling pair must return the straddle verdict rather than a mean"
+  },
+  "queue_ahead_undefined": {
+   "never": "a queue-ahead of ZERO. An absent level is not an empty level: zero would make the order fill on the first trade and would read as the most favourable queue position there is, which is the opposite of what absence licenses.",
+   "rule": "the episode carries the counted status QUEUE_AHEAD_UNDEFINED, is EXCLUDED from BOTH fill simulations, and its count is reported with every table (CLAUDE.md rule 4)",
+   "ruling": "R-570(C)(1)",
+   "the_control": "an episode whose L is outside the snapshot's twenty levels must carry the status and appear in NEITHER model's population; the mirror control is an episode whose L IS in the book, which must be admitted -- a status that only ever fires is a filter, not a status",
+   "when": "the level L taken from bookTicker at t0- is ABSENT from the relevant side of the last depth20 snapshot at or before t0 (the twenty levels do not reach it), or there is no depth20 snapshot at or before t0 at all"
+  },
+  "ragged_depth20_rows": {
+   "never": "padded with zeros. A zero-size level is a queue position, and inventing one is the same defect class as reading an ABSENT level as an EMPTY one -- which boundary 1 refuses.",
+   "rule": "the row is EXCLUDED and COUNTED, in both directions (over-long rows the CSV reader rejects, and SHORT rows it silently NaN-pads), with the counts reported per day",
+   "the_control": "a two-row fixture, one complete and one truncated, must yield exactly one snapshot and one counted ragged row",
+   "when": "a depth20 line does not carry exactly twenty levels a side"
+  },
+  "the_chase_crosses_the_REAL_touch": {
+   "rule": "an unfilled or partly filled episode is chased at T_p by crossing to the actual best ask (buy) or best bid (sell) from bookTicker at T_p, plus the taker fee.",
+   "the_cost_is_still_E1A_s": "shortfall against the DECISION mid plus the taker fee -- realised drift over T_p and the spread actually crossed, so the winner's curse is charged in full.",
+   "why_this_is_not_a_change_of_estimand": "E1-A priced the chase at m(T_p) + sign*ES_day/2 because it had no book. E2-A removes ES_day from PLACEMENT as a sanctioned same-day look-ahead; leaving it in the CHASE would keep the look-ahead in half the episodes. ES_day is gone from E2-A entirely."
+  },
+  "the_min_size_arm_needs_a_q_and_it_is_MEASURED_not_chosen": {
+   "q": "the venue's quantity STEP for the symbol: the MODAL positive diff over the day's distinct trade quantities, with NO GCD fallback, in the runner's own `qty_step_mode`.",
+   "the_control": "a synthetic tape whose quantities are all multiples of 0.25 must return 0.25; a tape with a single off-grid quantity must NOT be dragged to that quantity by one print",
+   "what_it_does_NOT_claim": "the step is the smallest ORDERABLE increment, which is a lower bound on the exchange minimum order size, not necessarily equal to it. The arm is labelled MIN_SIZE_NOT_THE_E2A_GATE either way, so the distinction changes no verdict; it is stated so the number is not read as an exchange filter.",
+   "why_it_is_NOT_E1A_s_tick_function_although_v4_said_it_was": "v4 declared it as the same function E1-A uses for the price tick. Driven in the fixture, that is wrong: tick_size / tick_mode keep a GCD fallback that fires when fewer than 99.9% of diffs are integer multiples of the modal one, and the GCD of a set containing ONE off-grid value collapses to the representation floor -- measured, 0.25 multiples plus a single 3.14159 returns 1e-5. The PRICE tick is NOT changed: it is pinned by the E1-A reproduction control and must not move. The quantity step is a new quantity and takes the robust form. Both directions are driven: the robust estimator returns 0.25 and the fallback version is shown returning 1e-5.",
+   "why_not_a_round_number": "a size chosen in this seat would make the gate a function of that choice, which is rule 11's shape and is exactly what the notional escalation refused to do. The quantity step is a property of the venue read off the venue's own prints.",
+   "why_this_field_exists": "the size-aware arm REFUSES for want of a declared rebalance notional (R-567(C)(b)), so the arm that RUNS is min-size -- and a queue model needs an order SIZE, which E1-A never had because its fills were binary."
+  }
+ },
+ "scope_R584_BTC_ONLY": {
+  "ruling": "R-584, USER, 2026-09-06 -- 'SCOPE IS BTC FOR NOW'",
+  "the_ICP_cell_is_DEFERRED_not_answered": "E1-A left ICP unresolved and v7 declares HOW it would be reported when it is taken up -- the label, its mechanism and both gate readings. Under R-584 that cell is not run and E2-A must not be read as having resolved it. A deferral stated is not a result withheld: the declared handling stands and travels with the cell.",
+  "the_gate_symbol": "BTCUSDT",
+  "what_a_reader_must_not_do": "read a BTC number as an answer for the thin names. BTC is the most active symbol in the set and its decision-time quote age is the shortest; the placement-quality problem the ICP label names is at its WEAKEST there.",
+  "what_it_means_here": [
+   "the SEALED SMOKE runs on BTCUSDT, not on ADA or DOGE",
+   "the E2-A GATE, once 14 post-boundary complete days exist, is read on BTC",
+   "the twelve-symbol census (DA 61's census8 and the v6 admission over the twelve) stays as CONTEXT and is not re-run as a population",
+   "the thin-name / ICP cell is DEFERRED, NOT RESOLVED"
+  ],
+  "why_a_narrower_scope_does_not_weaken_the_gate": "the gate was always a per-symbol read at T_p = 600 s over that symbol's admissible days -- not a cross-symbol average. Narrowing the SCOPE changes which cells are read, never what a cell means."
+ },
+ "sources": {
+  "bracket_rule": "live/mm_research/STRATEGY_SKETCH.md -- 'sign-flip between RiskAverse and ProbQueue = failure, never averaged'",
+  "e1a_numbers": "data/mm_hf/e1/e1a_gate_summary.csv",
+  "icp_cell": "live/mm_research/E1_CODE_REVIEW.md and E1_RESULTS.md -- ICP fragile, 72% episode skips, UNRESOLVED",
+  "prereg_e2a": "live/mm_research/EXPERIMENT_PLAN.md section 2, E2-A",
+  "prereg_episode_design": "live/mm_research/EXPERIMENT_PLAN.md section 1.5, Gate E1-A",
+  "sibling_step": "live/mm_research/declarations/p002_e2_0_declaration_v2.json"
+ },
+ "status": "DECLARATION_NO_DATA_TOUCHED",
+ "step": "E2-A -- overlay bracket resolution on real books under the queue-model bracket",
+ "supersedes": {
+  "carrying_commit": "7a1e582dace24fec608481d5ea81bb3536ec0c83",
+  "chain": [
+   "v1 405ddb7ab10486c2 (367b800)",
+   "v2 6567a25f04d7fb89 (0cbaba6)",
+   "v3 6383d781c7bbeaa6 (39f3eca)",
+   "v4 756ca9a31b89cd74 (0718fea)",
+   "v5 90a9a99f6cb2a2cc (8e6b753)",
+   "v6 127e0a56ddee775e (e29f984)",
+   "v7 57c92c9e899eb691 (7a1e582)"
+  ],
+  "correction_is_in_band": "rule 13: v1 is NOT edited and stands as provenance. v2 adds the data-root discipline the E2.0 RESULT review (section 6) requires of the P-002 surface. No tape was touched under either version.",
+  "path": "live/mm_research/declarations/p002_e2_a_declaration_v7.json",
+  "sha256": "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0",
+  "what_changed": [
+   "v3, REVIEWER CONDITION (4e73cdd): the two queue models were pinned only at the BOUNDARIES. Each now carries an INTERIOR control -- a case inside the queue-position range whose outcome is derivable by hand from the model's own published definition -- with a declared tolerance and a refusal if it misses. The reference implementations live in this declaring module, so the declaration pins the semantics EXECUTABLY rather than in prose.",
+   "AND THE INTERIOR CONTROL IMMEDIATELY CAUGHT A DEFECT IN v2's OWN FORMULA. v2 declared ProbQueue-f3's fill probability as f(front)/(f(front)+f(back)) with front = queue ahead. That makes the fill probability RISE as the queue ahead GROWS, which is backwards: hand-computed at front=30/back=70 it gives 0.072973 when the order is nearly at the head, and 0.927027 when it is nearly at the back. v3 states it as f(back)/(f(front)+f(back)) and the interior control pins 0.927027 at front=30/back=70, with the DIRECTION itself as a second control. No run had happened, so nothing is retracted -- but a boundary-only battery would have carried this into the first smoke.",
+   "carried from v2: the data_root_discipline block.",
+   "v4, THE RUNNER'S BOUNDARIES, DECLARED BEFORE THE RUNNER READS A TAPE. v3 declared the models; it did not declare what the runner does at the edges where a model has no answer. Three were ruled by the coordinator (R-570(C)) and one was left open by the reviewer (REVIEW_DA60 section 2): the queue-ahead-undefined status, the partial-fill pricing pair with its straddle rule, day admission over the twelve IN SCOPE, and the at-or-through-L direction. Each is now a field with a control, because a boundary settled in the runner's code and nowhere else is a boundary a reader cannot check.",
+   "v4, THE OWED ATTRIBUTION (REVIEW_P002_E2A_DESIGN section A.2). v3 asserted RiskAverse's rule as hftbacktest's. The library is ABSENT and cannot be consulted, so which half is the published model and which is my tightening is now stated as fields rather than left for a reader to assume. The same treatment is given to every other place where the closed form needed a choice the library would otherwise have made: the observable definition of `back`, the fill quantity on a successful draw, and the at-L direction.",
+   "v4, AND THE ORDERING PROPERTY IS SPLIT, BECAUSE ONE HALF OF IT WAS NOT TRUE AS WRITTEN. R-570(B) owes a falsifier reading `ProbQueue <= RiskAverse per EPISODE`. On COST that is false as finance, not as arithmetic: an episode whose mid runs AWAY over T_p is cheaper chased than filled, so filling more can cost more and a per-episode cost inversion is the winner's curse rather than a defect. What IS arithmetic per episode is the FILLED QUANTITY. v4 declares both: quantity ordering per episode (a violation is an implementation defect and REFUTES), cost ordering at the AGGREGATE gate row (a violation raises REFUTES_THE_BRACKET). Flagged rather than silently narrowed.",
+   "v5, TWO CORRECTIONS THE RUNNER'S OWN FIXTURE FORCED, BOTH BEFORE ANY TAPE WAS OPENED. (i) v4 declared the min-size arm's q as 'the same estimator, and the same function, E1-A already uses for the price tick'. Driven, that is WRONG: tick_size/tick_mode keep a GCD fallback that fires when fewer than 99.9% of the diffs are integer multiples, and the GCD of a set containing ONE off-grid value collapses to the representation floor -- measured, a tape of 0.25 multiples plus a single 3.14159 returns 1e-5. q is therefore the MODAL positive diff with NO fallback, in the runner's own `qty_step_mode`, and the PRICE tick is left untouched because it is pinned by the E1-A reproduction control. (ii) a depth20 row with FEWER than twenty levels a side is NaN-PADDED by the CSV reader rather than rejected, and would have entered the simulation as a book with zero-size levels -- an invented queue position, the same defect class as reading an absent level as an empty one. Ragged rows are now detected, EXCLUDED and COUNTED in both directions.",
+   "v5, AND THE SAME MECHANISM SHARPENS R-570(D)'s RECORD DEFECT. The modal-diff fix E1_RESULTS calls 'FIXED post-audit' IS present in the committed tick_size; what returns 1e-6 for FIL is the GCD FALLBACK the same docstring says was 'kept', firing on exactly the input the fix was written for. 'Designed and not landed' is not the whole account: it was landed, and it is overridden.",
+   "v6, THE ADMISSION LEG IS RE-DECLARED AS AN OUTAGE DETECTOR (coordinator addendum to DA 62, on DA 61's census8 finding). v1-v5 gated a day on the intra-day bookTicker GAP FRACTION, inherited from E2.0 where it guarded against collector outage. MEASURED OVER EIGHT SYMBOLS, that leg selects on HOW OFTEN THE BEST QUOTE CHANGES: admissible days ran 16/16/16/14/14/13/11/1 against median decision-time quote ages of 68/102/116/169/194/222/261/517 ms -- monotone in activity -- and ICP, with 16 structurally complete days and ZERO of its missing seconds in runs of a minute or more, was cut to ONE. E2-A was dropping precisely the thin cell it exists to resolve. ADMISSIBILITY IS NOW A PROPERTY OF THE COLLECTOR BEING LIVE, never of how often a quiet book moves.",
+   "v6, AND THE NEW LEG HAS NO THRESHOLD CHOSEN ON THIS DATA. The collector emits a heartbeat line carrying per-stream counters; its cadence is MEASURED as the modal inter-heartbeat interval (60 s) and the bar is 2x that. Measured separation on the real ledger: every clean day's largest heartbeat gap is 61 s -- one cadence -- while 2026-08-24 (the hf_ws_v2 era-boundary restart) is 158 s and 2026-08-26 (the reboot) is 4,656 s. The bar sits between them by construction rather than by tuning, and the separation is a factor of 2.6 at its tightest.",
+   "v6, AND WHAT MEASURING IT HAS CONSUMED, STATED RATHER THAN GLOSSED. The DECISION to replace the leg was informed by seeing which days v5 excluded, so eight symbols over 2026-08-20..09-05 are CONSUMED for any further re-choice of an admission predicate (rule 11). What is NOT tuned on them is the new leg itself: it reads a different quantity (the collector's heartbeat, not the book) and its bar comes from the collector's own cadence. A THIRD predicate proposed on this evidence would need days not yet examined.",
+   "v6, AND THE PARTIAL-FILL BRACKET IS SHOWN TO FIRE. DA 61 reported that at partial_share = 0.000 the two R-570(C)(2) pricings COINCIDE and the straddle rule cannot fire -- rule 16's shape in my own work. The falsifiers now carry an episode built to be partial (queue 100, order 10, 104 units through -> filled 4 of 10), on which the two pricings give eff_RT 6.0 and 10.0 and the straddle rule FIRES, their mean 8.0 being exactly the pass the rule exists to refuse. And the R-570(B) ordering falsifier is split in the battery as it already was in prose: QUANTITY per episode, COST at the aggregate gate row.",
+   "v7, THE ORDERING PROPERTY AGAIN -- AND THE HALF v4 KEPT WAS ALSO FALSE. REVIEW_DA61_E2A section A.5 constructed the case v4's reasoning missed: RiskAverse fills clip(total - queue_ahead, 0, q), which is positive as soon as the CUMULATIVE volume passes the queue, while ProbQueue fills WITH CERTAINTY only once some trade arrives with front = 0. Between those two conditions is a MARGINAL REGIME where RiskAverse fills a sliver and ProbQueue is still a coin flip. Driven at queue_ahead 100, order 10, one trade of 105, depth 200: RiskAverse 5.0, ProbQueue 0.0 at max probability 0.5, 993 of 2,000 seeds (49.6%) violating the per-episode quantity ordering. And the runner's response to a violation was to declare its own instrument REFUTED and read no gate -- so a CORRECT model disagreement would have suppressed the gate. v7 restates the property as E[filled_ProbQueue] >= filled_RiskAverse, makes per-episode testability the computable predicate `some trade has front = 0`, carries the marginal episodes as a COUNTED STATUS, and narrows REFUTES_THE_BRACKET to the regime where the ordering really is arithmetic.",
+   "v7, AND MEASURING THE REVIEWER'S OWN PROPOSED RESTATEMENT SHOWS IT IS NOT SUFFICIENT ON ITS OWN -- THE front = 0 PREDICATE IS DOING ALL THE WORK. A.5 proposes the expectation as the fix. Constructed and driven: queue_ahead 100, order 10, ONE trade of 110, depth at L 1000 -- RiskAverse fills 10 (the whole order), while front = 100 and back = 900 give p = 0.998630137 and hence E[filled_ProbQueue] = 9.986301370 < 10. THE EXPECTATION ORDERING IS VIOLATED TOO, in the same marginal regime, with no defect anywhere. So the expectation is not a weaker-but-true version of the property; it is true exactly where the realisation ordering is true, which is the testable set. This is why v7 makes the predicate -- not the moment -- the thing that decides testability, and it is a strengthening of A.5 rather than an implementation of it.",
+   "v7, THE LIVENESS LEG'S CONTROLS ARE THE RULED ONES (R-580(C)(1)). REVIEW_DA61_E2A section B.2 named 2026-08-29/30 as the positive control the leg must FLAG -- a common-mode event across all eight symbols. The collector's own ledger refutes that on every channel it has: zero restarts (all four are on 08-24 and 08-26), 1,439 of 1,440 heartbeats each day with a maximum gap of 61 s (one cadence) against 158 s on 08-24 and 4,656 s on 08-26, zero WebSocket drops (08-28 has three, 08-31 has one), and -- decisively -- the throughput COMPOSITION: the event-driven streams fell about 40% while the FIXED-CADENCE depth20 stream held at 92-93%. An outage suppresses every stream; a quiet market suppresses only the event-driven ones. 08-29/30 is a quiet weekend. Requiring the leg to flag it would rebuild, through the CONTROL, exactly the activity-selecting defect v6 removed from the PREDICATE. RULED: the positive controls are the 08-24 and 08-26 collector events; 08-29/30 is the NEGATIVE control and must ADMIT.",
+   "v7, THE RULE-5 ERA PREDICATE BECOMES AN ADMISSION LEG OF ITS OWN (A.5's companion, REVIEW_DA61_E2A section B.3). E2-A's estimand is a queue simulation on sub-second arrival order. CLAUDE.md rule 5 fixes sub-second-reliable Binance data at recv_ns >= 1787579334881534478 (2026-08-24 13:48:54 UTC, the hf_ws_v2 stamp boundary); before it, rows were stamped POST-PARSE and p99 carries up to ~0.6 s of parse-backlog error concentrated in bursts -- exactly when queue position matters. The reviewer measured 36 of 101 admissible symbol-days as legacy-stamped with NO RECEIPT SAYING SO. v7 makes era purity a per-symbol-day admission leg, measured row-wise on recv_ns rather than assumed from the date, with the legacy share reported beside every table.",
+   "v7, AND THE ERA LEG COLLAPSES THE POPULATION BELOW THE DECLARED MINIMUM -- STATED, NOT SOLVED BY MOVING THE BAR (R-580(C)(2)). Post-boundary complete days are 2026-08-25..09-05 = 12, of which 08-26 is out on the collector reboot, leaving AT MOST 11 admissible post-boundary days per symbol against the declared minimum of 14. E2-A would refuse on the ENTIRE population. NO THRESHOLD IS CHANGED AFTER SEEING (CLAUDE.md rule 11): the mechanism runs on the post-boundary days as a SEALED SMOKE -- economics sealed and never read, resources and statuses published -- and the GATE IS READ ONLY AT G >= 14 post-boundary complete days, approximately 2026-09-09. Reversible by the USER; recorded as USER-visible.",
+   "v7, DECISION-TIME QUOTE AGE IS A STATUS AT TWO LEVELS AND THE GATE IS READ BOTH WAYS (section B.4.2). Age is reported per symbol-day AND per episode, never gated -- filtering on it would select on activity, which is the defect v6 removed. The gate is read twice: over ALL resolved episodes, and over the subset whose decision-time quote is no older than a DECLARED staleness bar of 1,000 ms. The bar is NOT tuned on ICP: it is CLAUDE.md rule 5's own dividing line -- 'pre-boundary mm_hf tape is usable for >= 1 s bars only' -- the granularity at which this programme already says a stamp is trustworthy. A straddle of the 8 bps threshold between the two readings is a STATED SENSITIVITY, never averaged.",
+   "v7, THE ICP CELL IS LABELLED RATHER THAN LEFT UNRESOLVED. E1-A left ICP unresolved at 72% episode skips; UNRESOLVED_TOO_FEW_EPISODES is not the honest end here because about 736 gate-row episodes exist over sixteen days. The honest end is a STATED one: run it, and label the cell NOT_COMPARABLE_ON_PLACEMENT_QUALITY with the mechanism written down -- on a quiet book the resting order sits at a STALE touch and later prints sweep through it, which inflates both the fill rate and the apparent capture. It is the E1-proxy-mid failure family in a new place. On ICP the bracket is already near-degenerate (fill rates 0.935 / 0.978), which is what a stale-touch placement looks like from the inside.",
+   "v7, AND R-584 (USER RULING, MID-BATCH): SCOPE IS BTC FOR NOW. The sealed smoke runs on BTCUSDT; the gate, once 14 post-boundary days exist, is read on BTC; the twelve-symbol census stays as CONTEXT and the thin-name (ICP) cell is DEFERRED, NOT RESOLVED -- its declared handling stands and travels with the cell, but E2-A under this scope does not answer it. A reader must not take a BTC number as an answer for the thin names: BTC is the most active symbol in the set, so the placement-quality problem the ICP label names is at its WEAKEST there.",
+   "v7, AND R-584's RESOURCE BOUNDARY, WHICH IS A MEASUREMENT DECISION AND NOT AN OPTIMISATION. BTC's bookTicker is 621 MB gzipped and about 60 M rows on a single day. The day read now STREAMS hour-file by hour-file and keeps only the EPISODE GRID -- the 24 decision-time quotes and their T_p ends -- because holding the other 60 million rows buys nothing and is the entire memory problem. A day whose residency exceeds the declared cap REFUSES: the cap is never raised and the population is never made smaller to fit it, since both would turn a resource limit into a silent change of what was measured. The cap is 75% of the rule-20 wrapper's own 8 GiB MemoryMax, because a cgroup kill is silent and leaves nothing written -- the guard must fire while there is still room to write the refusal.",
+   "v7, THREE REPORTING CORRECTIONS THAT RIDE THE SAME EDIT (sections A.6, A.2, A.4.1). (i) partial_share = 0.000 is STRUCTURAL, not rare: in the min-size arm a partial needs the cumulative volume to land inside a ONE-QUANTITY-STEP window, so the two R-570(C)(2) pricings bracket NOTHING there; they become live only in the size-aware arm, which refuses for want of a declared notional. (ii) --no-repro turns the gating control off and the receipt went SILENT -- key absent, not false, the P-003 asymmetry class in P-002. It now writes {reproduced: null, gates_the_run: false, why_skipped}. (iii) the quantity step is UNDERDETERMINED below three distinct quantities and now carries the status QTY_STEP_UNDERDETERMINED rather than a modal diff computed from one or two values."
+  ],
+  "why_v7_and_not_v6_amended": "R-580(C)(3). v6 is committed AND CITED BY A LANDED RECEIPT (p002_e2a_v6_admission__20260906T062536Z.json, sha 11f12371e88c9d7d), so CLAUDE.md rule 13 forbids editing it. v7 supersedes in band; v6 stays as provenance and its receipt keeps resolving.",
+  "why_v8_and_not_v7_amended": "CLAUDE.md rule 13 and SEAT_PROTOCOL rule 20's immutability clause. v7 is committed AND CITED BY THE PAIR from a landed receipt -- data/mm_hf/e1/p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json carries `declaration: {path: ..._v7.json, sha256: 57c92c9e...}` -- so editing v7 would rewrite the declaration a landed run says it ran under. v8 supersedes in band through the shared compare-and-swap; v7 stays as provenance and that receipt keeps resolving. THE VERSION NUMBER WAS VERIFIED AT THE CHAIN, not taken from a dispatch: the DA 116 dispatch said 'v6 superseding v5' and the head was already v7."
+ },
+ "the_ICP_cell": {
+  "rule": "a symbol whose episode-skip rate exceeds the bar is reported UNRESOLVED_TOO_FEW_EPISODES and EXCLUDED from the aggregate, with both the rate and the exclusion reported. A verdict on a population that is mostly absent is not a verdict.",
+  "skip_rate_bar": 0.5,
+  "the_aggregate_is_reported_BOTH_WAYS": "with and without any excluded symbol, as E1-A did when it reported 6.15 excluding ICP beside 6.26 including it -- so the exclusion's effect is visible and not just its result.",
+  "the_bar_is_declared_now_and_applies_to_every_symbol": "0.50 is set before any E2-A episode census exists. It is not an ICP-shaped hole: it applies to all twelve, and if ICP clears it, ICP is read on the same footing as the rest.",
+  "why_it_is_named": "E1-A's results audit recorded ICP as UNRESOLVED, not passed: 72% episode skips, stale-sweep 11.0, ADV rank exactly 40 on stale data, per-symbol eff_RT 7.53 -- the highest of the twelve and inside 0.5 bps of the threshold. E2-A owes it an answer."
+ },
+ "the_ICP_cell_label_v7": {
+  "label": "NOT_COMPARABLE_ON_PLACEMENT_QUALITY",
+  "not_this": "UNRESOLVED_TOO_FEW_EPISODES is not the honest end: roughly 736 gate-row episodes exist over sixteen days. The cell has a population; what it does not have is a comparable one.",
+  "status_under_R584": "DEFERRED_NOT_RESOLVED",
+  "the_mechanism": "on a quiet book the resting order sits at a STALE touch -- ICP's decision-time quote is 206-902 ms old at the median and up to 7.2 s at the maximum, 3-10x ADA -- and later prints sweep through a level the book has already left. That inflates BOTH the fill rate and the apparent capture. It is the E1 proxy-mid failure family in a new place: a price that stands in for the market rather than being it.",
+  "the_symptom_already_measured": "on ICP's one v5-admissible day the bracket is near degenerate -- fill rates 0.935 RiskAverse against 0.978 ProbQueue-f3 -- which is what stale-touch placement looks like from the inside: nearly everything fills under both models, so the queue bracket stops discriminating.",
+  "what_deferred_means": "R-584 puts the scope on BTC, so the ICP cell is NOT RUN under this declaration. What follows is the DECLARED HANDLING for when it is taken up -- written before the data, so the label cannot be chosen after seeing the number. E2-A must not be read as having resolved ICP.",
+  "what_is_still_reported": "the cell RUNS and publishes its statuses, its quote-age distribution and both gate readings; the label travels with the number so no reader can compare it to ADA's without seeing why they are not comparable."
+ },
+ "the_consumed_window_v8": {
+  "2026-09-06_IS_NOT_CONSUMED_and_this_is_MEASURED": "the eight-symbol census enumerates 20260906 and carries `gap_fraction: null` and `gap_profile: null` for all eight symbols: it ran at 05:59Z with 6-7 of 24 hour-files present, so the day was seen as a FILE COUNT and never as a gap reading. The window can therefore open on it. THE STRICTEST ALTERNATIVE IS STATED, NOT HIDDEN: a reader who holds that enumerating a day spends it would start the window at 20260907 and read no earlier than 2026-09-21. That reading costs exactly one day and the USER or the coordinator may take it by one line; this declaration implements the ruling as written.",
+  "named_from_its_sources_not_from_a_date_range": "R-745(4) quotes the window as '08-20..09-05'. The artifacts carry more than that sentence: the eight-symbol census ENUMERATES 2026-08-19..09-06 and JUDGES 16 of those days on the gap quantity, and the BTC sealed smoke -- a symbol the census does not cover at all -- simulated 11 days. This block carries the symbol-days themselves, so a reader resolves membership instead of parsing a range.",
+  "rule": "CLAUDE.md rule 11: days seen while the predicate was being chosen are SPENT. The predicate is never re-applied to them -- not even to admit one.",
+  "sources": [
+   {
+    "days": [
+     "20260820",
+     "20260821",
+     "20260822",
+     "20260823",
+     "20260824",
+     "20260825",
+     "20260827",
+     "20260828",
+     "20260829",
+     "20260830",
+     "20260831",
+     "20260901",
+     "20260902",
+     "20260903",
+     "20260904",
+     "20260905"
+    ],
+    "declaration_it_cited": {
+     "path": "live/mm_research/declarations/p002_e2_a_declaration_v5.json",
+     "sha256": "90a9a99f6cb2a2cc4c8f45f211177695355859e157643e854a34ef77ccc7b593"
+    },
+    "path": "data/mm_hf/e1/p002_e2a_census8__20260906T055936Z.json",
+    "protocol": "P002_E2_A_OVERLAY_RUNNER_V1_CENSUS",
+    "sha256": "9fa3e218a929ab8afc407cbe24c78b617f3f6595543e0128f01c9025dea50e69",
+    "symbols": [
+     "AAVEUSDT",
+     "ADAUSDT",
+     "AVAXUSDT",
+     "BNBUSDT",
+     "DOGEUSDT",
+     "FILUSDT",
+     "ICPUSDT",
+     "LTCUSDT"
+    ],
+    "the_days_this_census_SAW_but_never_JUDGED": {
+     "days": [
+      "20260819",
+      "20260826",
+      "20260906"
+     ],
+     "measured": "each carries `gap_fraction: null` and `gap_profile: null` for all eight symbols -- the census computes a profile only where bookTicker has its 24 hour-files, and these had 12, 0 and 6-7. 2026-09-06 was an INCOMPLETE day at 05:59Z when the census ran, six hours after it started.",
+     "why_it_matters": "the forward window opens ON 2026-09-06, and it can only do so honestly if nothing about that day's gap structure had been read when the predicate was chosen. That is a measurement at the artifact, not a convenience: the day was seen as a FILE COUNT and never as a gap reading."
+    },
+    "what_it_consumed": "THE GAP-RUN READING ITSELF. This census published `gap_profile` per symbol-day -- `n_runs_ge_60s`, `max_gap_run_s`, `share_of_missing_seconds_in_runs_ge_60s` -- and the ruled predicate was chosen having seen it. Rule 11: those symbol-days are spent, and the predicate is never re-applied to them, not even to ADMIT one."
+   },
+   {
+    "days": [
+     "20260820",
+     "20260821",
+     "20260822",
+     "20260823",
+     "20260824",
+     "20260825",
+     "20260827",
+     "20260828",
+     "20260829",
+     "20260830",
+     "20260831",
+     "20260901",
+     "20260902",
+     "20260903",
+     "20260904",
+     "20260905"
+    ],
+    "note": "the two-symbol run that preceded the eight-symbol census; its judged set is a SUBSET and adds nothing to the union. Carried because it exists and a consumed window named from one artifact while another consumed the same days would be a window named from a convenience.",
+    "path": "data/mm_hf/e1/p002_e2a_census__20260906T055752Z.json",
+    "sha256": "cb57b45c50fd83b8818b00e63a1db657dbbfd86d60afe75f7ef338f44db443cf",
+    "symbols": [
+     "ADAUSDT",
+     "ICPUSDT"
+    ]
+   },
+   {
+    "days": [
+     "20260825",
+     "20260827",
+     "20260828",
+     "20260829",
+     "20260830",
+     "20260831",
+     "20260901",
+     "20260902",
+     "20260903",
+     "20260904",
+     "20260905"
+    ],
+    "path": "data/mm_hf/e1/p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.json",
+    "sha256": "ec50c88809bdaa3f54a0d0e3f6e275801a0c258172fc646c5b8d2b7df5627bd0",
+    "superseded_in_band_by": {
+     "nothing_was_re_run": true,
+     "path": "data/mm_hf/e1/p002_e2a_sealed_smoke_BTCUSDT__20260906T071809Z.v2.json",
+     "sha256": "7fa7540fa97e31ad033bda669e3ddcae43899e2a5054c523274171c607168a05"
+    },
+    "symbols": [
+     "BTCUSDT"
+    ],
+    "what_it_consumed": "THE EPISODES THEMSELVES. The sealed smoke SIMULATED these BTC days under v7. BTCUSDT is not in the census above, so without this source the gate symbol would have had an EMPTY consumed set -- which is how a window opens on days that were already run."
+   }
+  ],
+  "symbol_days": {
+   "AAVEUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "ADAUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "AVAXUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "BNBUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "BTCUSDT": [
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "DOGEUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "FILUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "ICPUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ],
+   "LTCUSDT": [
+    "20260820",
+    "20260821",
+    "20260822",
+    "20260823",
+    "20260824",
+    "20260825",
+    "20260827",
+    "20260828",
+    "20260829",
+    "20260830",
+    "20260831",
+    "20260901",
+    "20260902",
+    "20260903",
+    "20260904",
+    "20260905"
+   ]
+  },
+  "the_two_kinds_of_consumption": "SEEN ON THE QUANTITY (the censuses published each day's gap-run profile before the predicate was chosen) and RUN (the sealed smoke simulated the episodes). Both spend a symbol-day; they are listed per source rather than merged into one undifferentiated set."
+ },
+ "the_forward_window_v8": {
+  "NO_THRESHOLD_CHANGE_AFTER_SEEING": "CLAUDE.md rule 11. The minimum stays 14. What v8 changes is WHICH DAYS may be read, never how many are required.",
+  "earliest_read_date": "2026-09-20",
+  "earliest_read_date_is_a_FLOOR": "the window's 14th day is 20260906 + 13 and it closes at the following midnight, so no read is possible before 2026-09-20. It happens then only if all 14 are ADMISSIBLE, which no artifact can say yet -- this is a floor on the date, never a prediction.",
+  "min_complete_days": 14,
+  "start_day": "20260906",
+  "start_is_COMPUTED_not_typed": "the day after 20260905, the latest day any consumed source names. If a later day is ever consumed the start MOVES with it; a literal date would have gone on disagreeing with the artifacts silently.",
+  "the_14_day_minimum_RESTARTS_here": "the count begins at the window's start. No day before it counts toward the minimum, whatever its quality."
+ },
+ "the_gate_quantity": {
+  "also_reported": [
+   "the full T_p ladder [60, 600, 3600] (reported, never gated -- no patience shopping)",
+   "ProbQueue-f3 as the optimistic bracket end",
+   "per-symbol eff_RT, so no single name can carry the aggregate",
+   "fill rate, partial-fill share and episode-skip rate per symbol",
+   "the min-size arm beside the notional-aware arm, so the size effect is visible rather than assumed"
+  ],
+  "fees": {
+   "maker_bps": 1.8,
+   "taker_bps": 4.5,
+   "tier": "VIP0 + BNB"
+  },
+  "formula": "eff_leg = fill_rate*E[cost|fill] + (1-fill_rate)*E[cost|chase]; eff_RT = 2*eff_leg (entry and exit legs symmetric by convention) -- EXPERIMENT_PLAN section 1.5, unchanged",
+  "primary": "eff_RT under RiskAverse at T_p = 600 s, day-clustered mean, bps of the decision mid",
+  "threshold_bps": 8.0
+ },
+ "the_ordering_property_v7": {
+  "marginal_regime": "no trade reaches front = 0: RiskAverse can fill a sliver off the CUMULATIVE volume while ProbQueue is still a draw. Carried as the counted status ORDERING_NOT_TESTABLE_MARGINAL, reported with every table (rule 4), and NEVER a refutation.",
+  "population_reading": "the mean E[filled_ProbQueue] against the mean filled_RiskAverse over all resolved episodes is REPORTED beside the marginal share; an inversion there is a stated fact about the population, never a refutation.",
+  "property": "E[filled_ProbQueue_f3] >= filled_RiskAverse",
+  "refutation_trigger_NARROWED": "REFUTES_THE_BRACKET is raised by a violation IN THE TESTABLE REGIME ONLY. A marginal-regime violation does not silence the gate.",
+  "regimes_with_hand_derivations": {
+   "MARGINAL_expectation_counterexample_DA63": {
+    "case": "queue_ahead 100, order_qty 10, one trade of 110, depth 1000",
+    "expectation_ordering_holds": false,
+    "expected_E_filled_ProbQueue": 9.986301369863014,
+    "expected_filled_RiskAverse": 10.0,
+    "front_reaches_zero": false,
+    "hand_derivation": "v_before = [0]; front = 100, back = 900, so p = 900^3/(100^3 + 900^3) = 729000000/730000000 = 0.998630136986... RiskAverse fills clip(110 - 100, 0, 10) = 10, the WHOLE order. E[filled_ProbQueue] = 10 * 0.998630136986 = 9.98630136986 < 10.",
+    "may_refute": false,
+    "why_this_case_exists": "REVIEW_DA61_E2A A.5 proposes the EXPECTATION as the corrected property. Driven, the expectation is violated too, in the same marginal regime, with no defect anywhere. So the expectation is not a weaker-but-always-true restatement: it is true exactly where the realisation ordering is true, i.e. on the testable set. The front = 0 predicate is doing all the work, and this control is what keeps that from being taken on trust."
+   },
+   "MARGINAL_reviewer_A5": {
+    "case": "queue_ahead 100, order_qty 10, one trade of 105, depth 200",
+    "expected_E_filled_ProbQueue": 5.0,
+    "expected_filled_RiskAverse": 5.0,
+    "front_reaches_zero": false,
+    "hand_derivation": "v_before = [0]; front = 100, back = 100, so p = 100^3/(100^3 + 100^3) = 0.5 exactly. RiskAverse fills clip(105 - 100, 0, 10) = 5. ProbQueue fills 10 or 0 on a coin flip.",
+    "may_refute": false,
+    "measured_by_the_reviewer": "993 / 2000 seeds = 0.4965",
+    "realisation_violations_expected_share": 0.5,
+    "why_not": "the models genuinely disagree here and neither is wrong. Refuting on this would let a correct disagreement suppress the gate."
+   },
+   "TESTABLE_full_overshoot": {
+    "case": "queue_ahead 50, order_qty 10, two trades of 60, depth 500",
+    "expected_E_filled_ProbQueue": 10.0,
+    "expected_filled_RiskAverse": 10.0,
+    "front_reaches_zero": true,
+    "hand_derivation": "v_before = [0, 60]; front = [50, 0]. At the second trade front = 0 so p = 1 and ProbQueue fills all 10. RiskAverse fills clip(120 - 50, 0, 10) = 10.",
+    "may_refute": true,
+    "realisation_violations_expected": 0
+   }
+  },
+  "supersedes": "the v4 split. v4 kept 'filled_qty(ProbQueue) >= filled_qty(RiskAverse) on EVERY episode' as arithmetic. REVIEW_DA61_E2A A.5 constructed the case where it is not, and the runner's response to a violation was to declare itself refuted -- so a correct model disagreement would have suppressed the gate.",
+  "testability_predicate": "PER EPISODE, testable iff SOME opposite-side trade arrives with front = 0, i.e. the cumulative volume BEFORE that trade already reaches queue_ahead. There p = 1 by f(0) = 0, ProbQueue fills the whole order at that trade at the latest, and both the realisation and the expectation orderings follow arithmetically.",
+  "the_expectation_alone_is_NOT_the_fix": "measured: at queue_ahead 100, order 10, one trade of 110 and depth 1000, RiskAverse fills the whole order while E[filled_ProbQueue] = 9.98630136986 < 10. The expectation ordering is violated in the marginal regime with no defect present, so it is true exactly on the testable set and the predicate -- not the moment -- is what decides."
+ },
+ "the_partial_fill_bracket_is_STRUCTURAL_in_the_min_size_arm": "REVIEW_DA61_E2A A.6. partial_share = 0.000 is not rarity, it is structure: with q = one quantity step against a queue of hundreds, a partial requires the cumulative volume to land inside a ONE-STEP window, so phi is 0 or 1 almost surely and the two R-570(C)(2) pricings coincide. In the min-size arm the pricings bracket NOTHING. They become live only in the size-aware arm, which REFUSES for want of a declared rebalance notional -- so the machinery is controlled in the fixture (an episode built partial: queue 100, order 10, 104 through, filled 4 of 10, eff_RT 6.0 against 10.0, straddle FIRES) and reported as inert on the arm that runs.",
+ "the_queue_bracket": {
+  "ProbQueue_f3": {
+   "determinism": "the fill draw is seeded per (symbol, day, hour, direction) from sha256 of those fields plus the declaration digest, so the optimistic end is REPRODUCIBLE and the seed pins the data.",
+   "front_is_observable_back_is_CONSTRUCTED": {
+    "back": "max(depth at L in the latest depth20 snapshot at or before the trade - front, 0). This is MY construction, not the library's: hftbacktest tracks `back` from the order feed, which this programme does not have and which no public tape carries. The observable analogue is 'what is standing at the level now, less what is still ahead of me' -- so `back` grows when other orders join at L, which is exactly the quantity the model wants.",
+    "fill_quantity_on_a_successful_draw": "the WHOLE remaining order fills. MY choice, and its direction is the model's role: ProbQueue-f3 is the OPTIMISTIC end, so on the event that the order is reached the optimistic reading is that the reaching sweep takes all of it. Filling only min(q, trade volume) instead would let a partial ProbQueue fill sit BELOW a full RiskAverse fill on the same episode, i.e. it would break the bracket arithmetically rather than empirically.",
+    "front": "queue ahead REMAINING = max(queue_ahead_at_placement - cumulative volume at-or-through L since t0, 0). Purely observable from the two tapes.",
+    "the_degenerate_case_is_DECLARED_not_left_to_a_zero_divide": "front = 0 and back = 0 makes f(front)+f(back) = 0 and the ratio undefined. Declared: front = 0 fills with probability 1 -- the queue ahead is exhausted, so there is nothing left to wait for. That branch is taken FIRST, so the ratio is only ever evaluated with a positive denominator. It agrees with the ratio by continuity wherever the ratio is defined (front = 0, back > 0 gives f(back)/f(back) = 1)."
+   },
+   "role": "OPTIMISTIC bracket end -- reported, never the gate",
+   "rule": "ProbQueueModel with PowerProbQueueFunc3, n = 3: at each opposite-side trade the resting order fills with probability f(back)/(f(front)+f(back)) where f(x) = x**3, front = queue ahead remaining, back = depth behind -- so the probability RISES as the queue ahead shrinks. v2 had this inverted and the interior control caught it before any run. Implemented here in closed form because the library is not installed; the n = 3 exponent is the plan's, not chosen here.",
+   "the_ordering_property_is_SPLIT_and_one_half_of_R570B_was_not_true": {
+    "aggregate_COST": "eff_RT(ProbQueue) <= eff_RT(RiskAverse) at the gate row is the bracket ordering the gate reads, and a violation there raises REFUTES_THE_BRACKET as v3 declared. It is an aggregate property because the maker's edge is an average over episodes, not a per-episode identity.",
+    "per_episode_ARITHMETIC": "filled_qty(ProbQueue) >= filled_qty(RiskAverse) on EVERY episode. This holds by the models' own logic and not by a clamp: RiskAverse fills only once front reaches 0, and at front = 0 ProbQueue's probability is 1, so ProbQueue fills at that trade at the latest and possibly earlier. A violation cannot be finance; it is an implementation defect and REFUTES.",
+    "per_episode_COST_is_NOT_an_ordering_property": "R-570(B) owes 'ProbQueue <= RiskAverse per EPISODE'. On COST that is FALSE, and not because of a defect: an episode whose mid runs AWAY from the maker over T_p is CHEAPER chased than filled (the chase captures the favourable drift), so filling more can cost more. A per-episode cost inversion is the winner's curse in the sign that favours the maker. Narrowing this silently would have made a real check into a spurious refusal, so it is flagged."
+   }
+  },
+  "RiskAverse": {
+   "ATTRIBUTION_the_library_is_absent_so_this_is_stated_not_assumed": {
+    "MY_tightening": "the '+q' term -- requiring the cumulative volume to exceed the queue ahead PLUS the order's own size for a FULL fill, rather than filling the whole order the moment the queue ahead is exhausted. Whether the library carries that term I cannot verify with the library absent.",
+    "its_direction_is_unambiguous_even_though_its_provenance_is_not": "including '+q' makes fills rarer and eff_RT HIGHER, so it is CONSERVATIVE for a PASS gate: a PASS under this form is a PASS under a library that omits the term. A FAIL might not be, and that asymmetry is why the tightening is acceptable in a gate that only binds on PASS.",
+    "the_published_model_s_half": "everything ahead of the order must trade before the order trades, and the queue ahead is taken as the FULL depth observed at the level at placement. That is the RiskAverse idea and it is not mine.",
+    "what_would_settle_it": "installing hftbacktest and comparing on the same episodes. That is an environment change and is not the seat's to make; it is named here so the open question is visible rather than resolved by silence.",
+    "why_this_field_exists": "REVIEW_P002_E2A_DESIGN section A.2: v3 asserted 'this is hftbacktest's RiskAverse'. hftbacktest is NOT installed, so that claim cannot be checked here and must not be made flatly. Which half is the published model and which is my tightening is stated instead."
+   },
+   "at_or_through_L_direction": {
+    "the_control": "a single opposite-side trade at EXACTLY L, with volume greater than the queue ahead, must FILL under RiskAverse; the strict-through reading (k_price < k_L) is the known-bad and must NOT fill. Both directions are driven in the runner's battery, which is what makes this a choice with a check rather than a choice in a comment.",
+    "the_direction": "a trade AT L COUNTS. For a resting BUY at L an aggressive sell printing at exactly L executes against resting bids AT L, which is the queue this order is standing in; a print strictly below L means the book was swept past L and everything at L traded too. So the admissible set is k_price <= k_L for a buy and k_price >= k_L for a sell, with the comparison on INTEGER TICK INDICES.",
+    "why_integer_tick_indices": "E1's D-i defect exists because on floats the touch (<=) and sweep-through (<) rules are indistinguishable. The same hazard reappears at every level comparison inside the queue simulation, so every one of them is done on integers.",
+    "why_this_field_exists": "REVIEW_DA60 section 2, the one residual the reviewer could not close: 'whether an opposite-side trade exactly AT L counts is a directional choice that changes the fill count, and no control pins it'. The interior control uses `volume_through`, which presupposes the answer."
+   },
+   "filled_quantity": "clip(volume_at_or_through_L_since_t0 - queue_ahead, 0, q) -- a QUANTITY, not a boolean; full fill is the case where that clip saturates at q, i.e. volume > queue_ahead + q",
+   "queue_ahead_at_placement": "the depth20 snapshot's size at L at the last snapshot at or before t0",
+   "role": "PESSIMISTIC -- the binding model, and the one the gate reads",
+   "rule": "a resting order of size q at level L is filled only when the cumulative opposite-side volume traded AT OR THROUGH L since the order was placed exceeds the depth that was resting at L when it was placed, PLUS q. That is: everything ahead must trade first, and the queue ahead is taken as the FULL depth observed at L at placement time -- never a fraction of it.",
+   "why_this_is_the_gate": "EXPERIMENT_PLAN section 2: 'Gate: eff_RT <= 8 bps under RiskAverse.' A pass under the pessimistic model passes everywhere; a pass only under the optimistic one is not a pass."
+  }
+ },
+ "the_required_input_that_does_not_exist_yet": {
+  "escalated": true,
+  "if_it_cannot_be_sourced": "the runner REFUSES the size-aware arm and reports the min-size arm ONLY, labelled as NOT the E2-A gate -- because a min-size answer is exactly the E1-A answer with a better fill model, and calling it E2-A would quietly drop the third of the three things section 2 asks for. It is a refusal with a named status, never a default.",
+  "what": "a per-symbol rebalance NOTIONAL for the XS book",
+  "where_it_must_come_from": "the P-2026-001 capstone book's own construction, not from this tape and not from a round number chosen here",
+  "why_it_matters": "'depth-aware sizes at the XS book's actual rebalance notionals' is the whole of the size change. E1-A's episodes were explicitly min-size and notional-free, so this programme has never pinned the number."
+ },
+ "the_resource_boundary_R584": {
+  "on_a_breach": "the day REFUSES with its measured residency named. THE CAP IS NEVER RAISED AND THE POPULATION IS NEVER MADE SMALLER TO FIT IT -- both would turn a resource limit into a silent change of what was measured.",
+  "published_either_way": "per-day resident and peak memory at each stage, per-stage wall clock, the number of hour-files streamed and the peak residency of a single hour-file -- a resource observation, reported whether or not the guard fires.",
+  "the_cap": 6.0,
+  "the_cap_units": "GiB resident",
+  "the_falsifier_runs_both_ways": "a cap set below the measured residency must REFUSE the day with nothing emitted, and the real cap must ADMIT the same day -- otherwise the guard is a wall rather than a bound.",
+  "the_rule": "the bookTicker day is STREAMED hour-file by hour-file and only the EPISODE GRID is kept -- 24 decision-time quotes and their T_p-end quotes. Everything else in a 60 M row day is read, used to answer those, and released.",
+  "where_the_cap_comes_from": "the rule-20 wrapper's own MemoryMax of 8 GiB. A cgroup kill is SILENT and leaves nothing written, so the guard must fire while there is still room to write the refusal: the bar is 75% of the wrapper's cap. It is NOT tuned on BTC.",
+  "why_it_is_declared": "BTC's bookTicker is 8.6 GB, 621 MB gzipped on a single day and about 60 M rows -- measured, and the reason DA 61's census queued BTC, ETH, SOL and XRP by input size. A whole-day read of it does not fit beside the trade and depth20 tapes under the rule-20 wrapper."
+ },
+ "what_changes_from_E1A_and_what_does_not": {
+  "CHANGED_BECAUSE_A_REAL_BOOK_EXISTS": [
+   "PLACEMENT: the touch is the ACTUAL best bid/ask from bookTicker at t0-, not `m0 - sign*ES_day/2` from a same-day median flip-bounce. E1-A's own review logged that proxy as a sanctioned same-day look-ahead; it is gone.",
+   "FILLS: the touch/sweep-through bracket is replaced by the QUEUE bracket (RiskAverse / ProbQueue-f3) against real depth. E1-A's bracket expressed 'we cannot see the queue'; this one expresses 'we can see the depth but not our place in it', which is a strictly narrower uncertainty.",
+   "SIZE: episodes carry the XS book's rebalance notional instead of being min-size and notional-free.",
+   "PARTIAL FILLS: admitted and reported, since depth makes them expressible; E1-A could not."
+  ],
+  "UNCHANGED": [
+   "the episode grid, the patience ladder, the primary T_p = 600 s and the rule that the gate reads ONLY that row (no patience shopping)",
+   "the shortfall accounting against the decision mid, and the chase branch at the taker fee",
+   "the 8.0 bps capstone threshold",
+   "equal weighting across symbols, day-clustered mean, block bootstrap interval"
+  ]
+ },
+ "what_settles_and_what_fails": {
+  "FAIL": "eff_RT(RiskAverse) > 8.0 bps",
+  "FAIL_BRACKET_DISAGREES": "the two queue models straddle the threshold -- never averaged",
+  "FAIL_PARTIAL_FILL_PRICING_STRADDLES": "the residual-chased and whole-leg-charged pricings fall on opposite sides of the threshold -- R-570(C)(2), never averaged",
+  "INCONCLUSIVE_INTERVAL_DOES_NOT_CLEAR": "point clears, CI upper bound does not",
+  "INCONCLUSIVE_NO_INTERVAL": "point clears, G < 5, no interval",
+  "PASS": "eff_RT(RiskAverse) <= 8.0 bps AND its 95% CI upper bound <= 8.0",
+  "REFUTES_THE_BRACKET": "ProbQueue-f3 > RiskAverse: the optimistic model cannot cost more than the pessimistic one, so the INSTRUMENT is refuted and no overlay verdict is read",
+  "the_order_the_states_are_checked_in": [
+   "1. REFUTES_THE_BRACKET -- the instrument, before any verdict",
+   "2. FAIL_PARTIAL_FILL_PRICING_STRADDLES -- the second bracket, before the gate reads either pricing",
+   "3. the gate, on the GATE-BEARING pricing (residual chased at T_p) under RiskAverse"
+  ],
+  "what_this_supersedes": "E1-A's eff_RT_sweep 6.2645 [5.7561, 6.7539] as the operative overlay number -- per EXPERIMENT_PLAN section 2, 'Supersedes the E1-A number'. E1-A stays as provenance and is not edited.",
+  "why_the_interval_binds_only_on_PASS": "a PASS is the claim that carries weight -- it is what would let the overlay proceed -- and a claim that needs power gets an interval. A FAIL is 'did not clear', which needs none. This is E2.0's reviewer finding 3 applied before it had to be filed twice."
+ },
+ "what_the_ruling_replaces_read_at_the_HEAD_v8": {
+  "status": "DISCLOSED_NOT_ABSORBED",
+  "the_quote_age_clause_was_already_in_force": "R-745(4) also rules decision-time quote age a REPORTED field and never a criterion. v7's `decision_time_quote_age_v7` block already said exactly that, and the runner already reports p50/p90/max over the 24 decision times per symbol-day. v8 changes nothing there and says so rather than re-announcing it as new.",
+  "what_R745_4_says": "'the inherited bookTicker gap-fraction leg' is REPLACED by the outage predicate.",
+  "what_a_reader_should_do_with_this": "treat it as an overrulable reading. If the ruling intended leg (b) to be REPLACED by leg (d) -- both guard against outage, one from the collector's ledger and one from the tape -- that is one line from the coordinator or the USER, and it is a REMOVAL of a control, which is why this seat did not make it silently.",
+  "what_the_head_ALREADY_said": "v6 had already withdrawn the gap-fraction bar from admission (R-580(C)(1)) and replaced it with leg (b), COLLECTOR LIVENESS -- a property of the collector's own heartbeat ledger, not of the tape. At v7 there was no gap-fraction bar left to replace: the runner carries the fraction as `GAP_REPORTING_REFERENCE`, gating nothing, and `GAP_FRACTION_MAX` in this module was dead.",
+  "what_v8_therefore_DOES": "it ADDS the ruled predicate as leg (d) rather than removing a leg. The ruling's own words are a rule about when a day is inadmissible, and they are implemented exactly; what is NOT done is deleting leg (b), which carries three RULED controls (08-24 and 08-26 must refuse, 08-29/30 must admit). Adding a leg can only exclude more days, never admit one the head would have refused."
+ },
+ "what_would_refute_this_DESIGN_rather_than_a_symbol": [
+  "the E1-A reproduction control failing -- then E2-A is not superseding E1-A, it is measuring a different estimator",
+  "ProbQueue-f3 costing more than RiskAverse -- the bracket's ordering is arithmetic, so a violation is an implementation defect and no verdict may be read",
+  "depth20 snapshots being too sparse at the touch to establish a queue-ahead at placement -- then 'depth-aware' is a name and not a property, and the honest report is that the bracket could not be narrowed",
+  "a systematically empty admissible-day set once all three streams are required -- that refutes the population predicate",
+  "the rebalance notional proving unsourceable -- then E2-A can resolve the queue question but NOT the size question, and must say which half it answered"
+ ]
+}

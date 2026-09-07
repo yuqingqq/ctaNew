@@ -58,14 +58,15 @@ PROTOCOL = "P002_E2_A_E1A_REPRODUCTION_V1"
 #: 0de161a999246f011dc16c648ec76535), so nothing computed under the old
 #: pin differs -- ***the defect was that nothing enforced that***, and the
 #: receipt below cited a superseded declaration as the thing it ran under.
-#: v2 sha 6567a25f04d7fb89… -> v7 sha 57c92c9e899eb691….
-#: WHAT v7 ADDS IS NOT IMPORTED BY THIS CONTROL: v7 carries R-584's
-#: BTC-ONLY scope for the FORWARD line, and this module reproduces E1-A's
+#: v2 sha 6567a25f04d7fb89… -> v8 sha 929039c9fdc35d59….
+#: WHAT v7 AND v8 ADD IS NOT IMPORTED BY THIS CONTROL: v7 carries R-584's
+#: BTC-ONLY scope and v8 adds leg (d)'s forward-only outage window, both for
+#: the FORWARD line, while this module reproduces E1-A's
 #: PUBLISHED twelve-symbol control (`e1a_gate_summary.csv`, row tp_s=600).
 #: Reproducing a published number is not running the forward line, and the
 #: inherited symbol list is E1-A's, not a scope choice made here.
-DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v7.json"
-DECL_SHA = "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0"
+DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v8.json"
+DECL_SHA = "929039c9fdc35d5946de2ed0b535eebc3a08307e74780651f0a6d5dbb02d3a36"
 
 
 def declaration_is_the_chain_head(path: Path = None) -> dict:

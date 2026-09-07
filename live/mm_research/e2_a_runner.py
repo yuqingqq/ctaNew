@@ -14,7 +14,7 @@ Everything else -- the episode grid, the patience ladder, the shortfall
 accounting against the decision mid, the 8.0 bps threshold, the day-clustered
 mean and the block bootstrap -- is E1-A's, unchanged, so the two are
 comparable. The declaration is
-`declarations/p002_e2_a_declaration_v7.json` and this module REFUSES if its
+`declarations/p002_e2_a_declaration_v8.json` and this module REFUSES if its
 sha256 has moved.
 
 EVERY LEVEL COMPARISON IS ON INTEGER TICK INDICES. E1's D-i defect exists
@@ -55,8 +55,8 @@ CODE_ROOT = E20.CODE_ROOT
 ROOT = E20.ROOT
 RAW = E20.RAW
 PROTOCOL = "P002_E2_A_OVERLAY_RUNNER_V1"
-DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v7.json"
-DECL_SHA = "57c92c9e899eb6912c659de3bb84f31994b8143bc79ba3f4fd7131d82d5bcfa0"
+DECL_PATH = HERE / "declarations" / "p002_e2_a_declaration_v8.json"
+DECL_SHA = "929039c9fdc35d5946de2ed0b535eebc3a08307e74780651f0a6d5dbb02d3a36"
 
 EPS = 1e-12
 TP_GRID_S = D.TP_GRID_S
@@ -652,6 +652,45 @@ def wrapper_block() -> dict:
                      "FIRST and REFUSES if it is held.")}
 
 
+
+def verify_consumed_sources(sources=None, root=None) -> dict:
+    """v8: every artifact the declaration's CONSUMED window names, resolved.
+
+    THE SEAM THIS CLOSES. `e2_a_declare` cannot read a data path -- its own
+    AST cell proves it -- so the consumed symbol-days are TRANSCRIBED into
+    it from the censuses and the sealed smoke. A transcription is exactly
+    where a digit turns over, and the declaration would go on naming an
+    artifact that no longer says what it claims. This locates each source in
+    the ledger and digests it. A source that is ABSENT fails; it never
+    skips.
+    """
+    srcs = list(D.CONSUMED_SOURCES if sources is None else sources)
+    base = ROOT if root is None else Path(root)
+    rows, absent, mismatched = [], 0, 0
+    for src in srcs:
+        p = base / src["path"]
+        if not p.is_file():
+            absent += 1
+            rows.append({"path": src["path"], "status": "ABSENT",
+                         "why": "a digest without a resolvable location is "
+                                "a pin to nothing"})
+            continue
+        got = hashlib.sha256(p.read_bytes()).hexdigest()
+        if got != src["sha256"]:
+            mismatched += 1
+        rows.append({"path": src["path"],
+                     "status": "OK" if got == src["sha256"]
+                               else "DIGEST_MOVED",
+                     "sha256": got, "declared_sha256": src["sha256"],
+                     "n_symbols": len(src["symbols"]),
+                     "n_days": len(src["days"])})
+    return {"ok": absent == 0 and mismatched == 0,
+            "n_sources": len(srcs), "n_absent": absent,
+            "n_mismatched": mismatched, "sources": rows,
+            "consumed_symbol_days_n": {k: len(v) for k, v in
+                                       D.consumed_symbol_days().items()}}
+
+
 def load_declaration() -> dict:
     if not DECL_PATH.is_file():
         raise E2ARefused(f"REFUSED: no declaration at {DECL_PATH}")
@@ -943,9 +982,12 @@ def day_admission(sym: str, day: str, counts: dict,
                   gap: float | None = None,
                   age: dict | None = None,
                   era: dict | None = None,
-                  require_era: bool = True) -> dict:
-    """v6. A UTC day is ADMISSIBLE FOR A SYMBOL iff (a) all THREE streams
-    carry 24 hour-files and (b) THE COLLECTOR WAS LIVE.
+                  require_era: bool = True,
+                  outage: dict | None = None,
+                  require_outage: bool = True) -> dict:
+    """v8. A UTC day is ADMISSIBLE FOR A SYMBOL iff (a) all THREE streams
+    carry 24 hour-files, (b) THE COLLECTOR WAS LIVE, (c) every bookTicker
+    row is post-boundary, and (d) THE TAPE CARRIES NO OUTAGE RUN.
 
     v5 gated on the intra-day bookTicker gap fraction, inherited from E2.0
     where it guarded against collector OUTAGE. Measured over eight symbols,
@@ -983,10 +1025,31 @@ def day_admission(sym: str, day: str, counts: dict,
                 reasons.append(f"rule5_legacy_stamped: {era.get('why')}")
     else:
         era_ok = True
+    #: v8 leg (d). R-745(4): forward-only from the day after the last
+    #: consumed day, the consumed window never re-judged, and an
+    #: UNMEASURED leg refuses with its own status -- the predicate itself
+    #: lives in the declaring module so the runner cannot drift from what
+    #: was declared.
+    if require_outage:
+        d_leg = D.outage_leg(sym, day,
+                             None if outage is None
+                             else outage.get("max_gap_run_s"))
+        outage_ok = bool(d_leg["admissible"])
+        if not outage_ok:
+            reasons.append(f"{d_leg['state']}: {d_leg['why']}")
+    else:
+        outage_ok = True
+        d_leg = {"evaluated": False,
+                 "why": ("this caller did not evaluate leg (d); "
+                         "admissibility here is NOT the E2-A gate "
+                         "population")}
     return {"day": day,
-            "admissible": bool(all_complete and live and era_ok),
+            "admissible": bool(all_complete and live and era_ok and outage_ok),
             "stream_file_counts": counts, "streams_complete": complete,
             "collector_health": health,
+            "outage_leg_d": d_leg,
+            "outage_leg_enforced": bool(require_outage),
+            "outage_profile": outage,
             "era_rule5": era if era is not None else {
                 "evaluated": False,
                 "why": ("this caller did not measure the era leg; "
@@ -998,7 +1061,9 @@ def day_admission(sym: str, day: str, counts: dict,
                 "decision_time_quote_age_ms": age,
                 "why": ("these describe how ACTIVE the book is, not whether "
                         "the data is there. v5 gated on the first of them "
-                        "and cut ICP from 16 days to 1.")}}
+                        "and cut ICP from 16 days to 1. v8 gates on the "
+                        "gap RUN instead -- missing DATA -- and still "
+                        "reports these.")}}
 
 
 # --------------------------------------------------------------------------
@@ -1589,6 +1654,25 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
               "memory_cap_gib": DAY_RSS_CAP_GIB,
               "symbols": {}}
 
+    #: v8: THE CONSUMED WINDOW'S SOURCES ARE RESOLVED BEFORE ANY DAY IS
+    #: ADMITTED. Leg (d) refuses a symbol-day by consulting a list that was
+    #: TRANSCRIBED into the declaring module (which cannot read a data
+    #: path). If one of those artifacts is gone or its bytes moved, the
+    #: window the run is about to apply is a claim nobody can check -- so
+    #: the run REFUSES here rather than admitting days against it.
+    consumed = verify_consumed_sources()
+    result["consumed_window"] = consumed
+    if not consumed["ok"]:
+        result["REFUSED"] = (
+            f"the CONSUMED WINDOW's sources do not resolve: "
+            f"{consumed['n_absent']} absent, {consumed['n_mismatched']} at a "
+            f"digest other than the declared one. Leg (d) would be applied "
+            f"against a window that cannot be verified.")
+        if out_path:
+            out_path.write_text(
+                json.dumps(result, indent=2, sort_keys=True) + "\n")
+        raise E2ARefused(result["REFUSED"])
+
     #: v7 / REVIEW_DA61_E2A A.2: THE FIELD IS ALWAYS PRESENT. --no-repro
     #: turned the gating control off and the receipt went SILENT -- the key
     #: absent rather than false. `null` is not `false`: the control neither
@@ -1629,8 +1713,16 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
             pre = all(n == HOURS_PER_DAY_FILES for n in counts.values()) \
                 and bool(health.get("live"))
             era = era_leg(sym, day) if pre else None
+            #: v8 leg (d), read the same way: the leg refuses a CONSUMED or
+            #: pre-window day with no measurement at all, so the tape is
+            #: streamed only where the reading can change the answer.
+            needs = D.outage_leg(sym, day)["state"] \
+                == "REFUSED_OUTAGE_LEG_NOT_EVALUATED"
+            outage = outage_measure(sym, day) if (pre and needs) else None
             admissions.append(day_admission(sym, day, counts, health,
-                                            era=era, require_era=True))
+                                            era=era, require_era=True,
+                                            outage=outage,
+                                            require_outage=True))
         adm_days = [a["day"] for a in admissions if a["admissible"]]
         n_pre_era = sum(1 for a in admissions
                         if all(a["streams_complete"].values())
@@ -1859,10 +1951,10 @@ def run(symbols, out_path: Path | None, min_days: int | None = None,
         "n_keys_removed_from_the_open_receipt": len(dropped),
         "keys_removed": sorted(set(
             k.split(".")[-1] for k in dropped)),
-        "what_is_sealed": decl["admission_legs_v7"][
+        "what_is_sealed": decl["admission_legs_v8"][
             "leg_c_rule5_era_purity"]["the_sealed_smoke_regime"][
                 "what_is_SEALED"],
-        "when_the_gate_may_be_read": decl["admission_legs_v7"][
+        "when_the_gate_may_be_read": decl["admission_legs_v8"][
             "leg_c_rule5_era_purity"]["the_sealed_smoke_regime"][
                 "when_the_gate_may_be_read"],
         "NOT_READ_BY_THIS_RUN": True,
@@ -2163,12 +2255,19 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
         POST = {"post_boundary": True, "legacy_share": 0.0, "n_rows": 10,
                 "n_legacy_stamped": 0, "measured_row_wise": True,
                 "why": "synthetic: every row post-boundary"}
+        #: v8: FIX_DAY (20260820) is a CONSUMED day, so leg (d) refuses it
+        #: whatever the tape says. These four cells are about legs (a)-(c)
+        #: and opt OUT of leg (d) EXPLICITLY -- and the cell below proves
+        #: the opt-out is not the default.
         a_quiet = day_admission("ICPUSDT", FIX_DAY, full, h_live,
-                                gap=0.99, age={"p50_ms": 5000.0}, era=POST)
+                                gap=0.99, age={"p50_ms": 5000.0}, era=POST,
+                                require_outage=False)
         a_d20 = day_admission("ICPUSDT", FIX_DAY, dict(full, depth20=23),
-                              h_live, era=POST)
-        a_out = day_admission("ICPUSDT", FIX_DAY, full, h_out, era=POST)
-        a_rs = day_admission("ICPUSDT", FIX_DAY, full, h_restart, era=POST)
+                              h_live, era=POST, require_outage=False)
+        a_out = day_admission("ICPUSDT", FIX_DAY, full, h_out, era=POST,
+                              require_outage=False)
+        a_rs = day_admission("ICPUSDT", FIX_DAY, full, h_restart, era=POST,
+                             require_outage=False)
         ck("v6 POSITIVE, THE WHOLE POINT: a book so quiet that 99% of its "
            "seconds carry no message is ADMITTED when the COLLECTOR is live",
            a_quiet["admissible"]
@@ -2333,9 +2432,12 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
         LEGACY = {"post_boundary": False, "legacy_share": 0.56, "n_rows": 100,
                   "n_legacy_stamped": 56, "measured_row_wise": True,
                   "why": "synthetic: 56 of 100 rows legacy-stamped"}
-        a_post = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=POSTB)
-        a_leg = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=LEGACY)
-        a_none = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=None)
+        a_post = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=POSTB,
+                               require_outage=False)
+        a_leg = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=LEGACY,
+                              require_outage=False)
+        a_none = day_admission("ICPUSDT", FIX_DAY, full, h_live, era=None,
+                               require_outage=False)
         ck("v7 ERA LEG POSITIVE CONTROL: a post-boundary day with a live "
            "collector ADMITS -- the leg is not a guard shown only refusing",
            a_post["admissible"] and a_post["era_leg_enforced"],
@@ -2354,6 +2456,121 @@ def fixture(out_path: Path | None = None) -> dict:              # noqa: C901
                    for r in a_none["reasons_excluded"]),
            "era=None with require_era=True -> ERA_LEG_NOT_EVALUATED. "
            "Rule 11: absence must never read as a pass")
+
+        # -- v8 LEG (d): THE OUTAGE PREDICATE, WIRED --------------------
+        #: A declaration nobody applies is rule 17's defect: the predicate
+        #: is proven in `e2_a_declare`'s own battery, and these cells prove
+        #: THE RUNNER'S ADMISSION PATH consumes it -- the seam, not the
+        #: module's invariant a second time.
+        FWD = D.FORWARD_WINDOW_START_DAY
+        d_clean = day_admission("ICPUSDT", FWD, full, h_live, era=POSTB,
+                                outage={"max_gap_run_s": 3})
+        d_run = day_admission("ICPUSDT", FWD, full, h_live, era=POSTB,
+                              outage={"max_gap_run_s": D.OUTAGE_RUN_S})
+        d_none = day_admission("ICPUSDT", FWD, full, h_live, era=POSTB)
+        d_consumed = day_admission("ICPUSDT", FIX_DAY, full, h_live,
+                                   era=POSTB, outage={"max_gap_run_s": 0})
+        ck("v8 LEG (d) POSITIVE CONTROL, IN THE RUNNER'S OWN ADMISSION "
+           "PATH: a day inside the forward window whose missing seconds are "
+           "scattered holes ADMITS -- the leg must be able NOT to fire",
+           d_clean["admissible"] and d_clean["outage_leg_enforced"]
+           and d_clean["outage_leg_d"]["state"] == "ADMITTED_NO_OUTAGE_RUN",
+           f"{FWD}, longest run 3 s -> admissible "
+           f"{d_clean['admissible']}")
+        ck("v8 LEG (d) KNOWN-BAD: the same day with ONE run of "
+           f"{D.OUTAGE_RUN_S} s REFUSES, and the refusal is named in "
+           "`reasons_excluded` where the receipt carries it",
+           (not d_run["admissible"])
+           and d_run["outage_leg_d"]["state"] == "REFUSED_OUTAGE_RUN"
+           and any("REFUSED_OUTAGE_RUN" in r
+                   for r in d_run["reasons_excluded"]),
+           f"{D.OUTAGE_RUN_S} s -> {d_run['reasons_excluded'][-1][:80]}")
+        ck("v8 LEG (d), ABSENCE IS NOT A PASS: a day whose gap run was not "
+           "measured REFUSES with its own status, exactly as the era leg "
+           "does",
+           (not d_none["admissible"])
+           and any("REFUSED_OUTAGE_LEG_NOT_EVALUATED" in r
+                   for r in d_none["reasons_excluded"]),
+           "outage=None with require_outage=True -> "
+           "REFUSED_OUTAGE_LEG_NOT_EVALUATED")
+        ck("v8 THE CONSUMED WINDOW IS NEVER RE-JUDGED, AND THE DEFAULT IS "
+           "ON: FIX_DAY is consumed, so the same clean measurement that "
+           f"admits at {FWD} REFUSES here BY NAME as consumed -- which is "
+           "also what makes the four legacy cells' explicit "
+           "`require_outage=False` visible rather than assumed",
+           (not d_consumed["admissible"])
+           and d_consumed["outage_leg_d"]["state"]
+           == "REFUSED_CONSUMED_NEVER_REJUDGED"
+           and a_post["admissible"] and not a_post["outage_leg_enforced"],
+           f"{FIX_DAY} with max_gap_run_s 0 -> "
+           f"{d_consumed['outage_leg_d']['state']}")
+
+        # -- v8: ONE run-length implementation, two callers ---------------
+        _pres = np.ones(86_400, bool)
+        _pres[1000:1000 + D.OUTAGE_RUN_S] = False          # one 60 s run
+        _prof_run = gap_runs(_pres, 86_400 - D.OUTAGE_RUN_S)
+        _scatter = np.ones(86_400, bool)
+        _scatter[::3] = False                              # 1 s holes only
+        _prof_scatter = gap_runs(_scatter, 57_600)
+        _t = (np.flatnonzero(_pres).astype(np.int64) * 1000
+              + int(pd.Timestamp(FIX_DAY, tz="UTC").timestamp()) * 1000)
+        ck("v8 THE RUN LENGTH HAS ONE IMPLEMENTATION: `gap_profile` (over an "
+           "in-memory day) and `gap_runs` (what the streamed measurement "
+           "calls) return the SAME max_gap_run_s on the same seconds, and "
+           "the two shapes the leg must separate come out different",
+           gap_profile(_t, FIX_DAY)["max_gap_run_s"]
+           == _prof_run["max_gap_run_s"] == D.OUTAGE_RUN_S
+           and _prof_scatter["max_gap_run_s"] == 1
+           and _prof_scatter["n_runs_ge_60s"] == 0,
+           f"one {D.OUTAGE_RUN_S} s run -> max "
+           f"{_prof_run['max_gap_run_s']} s; 28,800 one-second holes -> max "
+           f"{_prof_scatter['max_gap_run_s']} s, "
+           f"{_prof_scatter['n_runs_ge_60s']} runs >= "
+           f"{D.OUTAGE_RUN_S} s")
+
+        # -- v8: the consumed-source seam, driven on a SYNTHETIC root -----
+        #: ON A TEMP ROOT ON PURPOSE. The real check runs in `run()`'s
+        #: preflight, where a moved consumed source must stop a gate run;
+        #: driving it here against the ledger would open three paths under
+        #: data/mm_hf and cost this fixture the data-free property it
+        #: exists to prove. The BEHAVIOUR is what is proven here, on files
+        #: this cell writes itself.
+        with tempfile.TemporaryDirectory() as _td:
+            _tr = Path(_td)
+            #: NOT under a `data/mm_hf/` path, deliberately: this fixture's
+            #: data-free proof matches that substring, and a synthetic file
+            #: shaped like a ledger path would spend the very property the
+            #: proof exists to show. The check resolves a path and a digest;
+            #: the path's SHAPE is nothing to it.
+            (_tr / "fixture_artifacts").mkdir(parents=True)
+            _art = _tr / "fixture_artifacts" / "consumed.json"
+            _art.write_text('{"a": 1}\n')
+            _real = hashlib.sha256(_art.read_bytes()).hexdigest()
+            _tmpl = {"path": "fixture_artifacts/consumed.json",
+                     "symbols": ("BTCUSDT",), "days": ("20260901",)}
+            _cs = verify_consumed_sources(
+                sources=[dict(_tmpl, sha256=_real)], root=_tr)
+            _bad_cs = verify_consumed_sources(
+                sources=[dict(_tmpl, sha256="0" * 64)], root=_tr)
+            _absent_cs = verify_consumed_sources(
+                sources=[dict(_tmpl, sha256=_real,
+                              path="fixture_artifacts/no_such.json")],
+                root=_tr)
+        ck("v8 THE CONSUMED-SOURCE SEAM ADMITS: a source that is present at "
+           "the digest the declaration names RESOLVES -- the transcription "
+           "in a module that cannot read data is checked where the ledger "
+           "can be read",
+           _cs["ok"] and _cs["n_sources"] == 1 and _cs["n_mismatched"] == 0
+           and _cs["n_absent"] == 0,
+           f"present at its digest -> ok {_cs['ok']}")
+        ck("KNOWN-BAD, DRIVEN, BOTH WAYS: a MOVED digest is refused and an "
+           "ABSENT artifact is refused -- the check FAILS when the file is "
+           "gone rather than skipping, which is how a skipped check reads "
+           "as a passed one (R-649)",
+           (not _bad_cs["ok"]) and _bad_cs["n_mismatched"] == 1
+           and (not _absent_cs["ok"]) and _absent_cs["n_absent"] == 1,
+           f"perturbed digest -> mismatched {_bad_cs['n_mismatched']}; "
+           f"absent path -> absent {_absent_cs['n_absent']}")
 
         # -- 17-19. THE ORDERING PROPERTY, END TO END IN THE RUNNER ---------
         #: Driven through evaluate_day, not through the model functions:
@@ -2882,6 +3099,20 @@ def gap_profile(bt_t: np.ndarray, day: str) -> dict:
         return {"n_quotes_in_day": 0, "gap_fraction": 1.0}
     present = np.zeros(86_400, bool)
     present[((inday - day0) // 1000).astype(np.int64)] = True
+    return gap_runs(present, int(len(inday)))
+
+
+def gap_runs(present: np.ndarray, n_quotes_in_day: int) -> dict:
+    """The run-length profile of a day's MISSING seconds. ONE implementation.
+
+    v8 leg (d) reads `max_gap_run_s` off this, and so does the census's
+    reported profile. Two implementations of a run length -- one streaming
+    the hour-files, one over an in-memory day -- would be two definitions of
+    the quantity the ruled admission predicate compares against, and nothing
+    would notice when they drifted. `outage_measure` builds the same
+    presence array from the same clock and the same valid-quote filter and
+    calls THIS function.
+    """
     missing = ~present
     idx = np.flatnonzero(missing)
     if idx.size == 0:
@@ -2892,9 +3123,9 @@ def gap_profile(bt_t: np.ndarray, day: str) -> dict:
         ends = np.concatenate((brk, [idx.size - 1]))
         runs = (idx[ends] - idx[starts] + 1).astype(np.int64)
     n_missing = int(missing.sum())
-    long_runs = runs[runs >= 60]
+    long_runs = runs[runs >= D.OUTAGE_RUN_S]
     return {
-        "n_quotes_in_day": int(len(inday)),
+        "n_quotes_in_day": int(n_quotes_in_day),
         "gap_fraction": float(n_missing / 86_400),
         "n_missing_seconds": n_missing,
         "n_gap_runs": int(runs.size),
@@ -2903,6 +3134,7 @@ def gap_profile(bt_t: np.ndarray, day: str) -> dict:
         "share_of_missing_seconds_in_runs_ge_60s":
             float(long_runs.sum() / n_missing) if n_missing else 0.0,
         "n_runs_ge_60s": int(long_runs.size),
+        "outage_run_s": int(D.OUTAGE_RUN_S),
         "reading": ("OUTAGE-SHAPED: most missing seconds sit in runs of a "
                     "minute or more"
                     if n_missing and long_runs.sum() / n_missing > 0.5
@@ -2910,6 +3142,38 @@ def gap_profile(bt_t: np.ndarray, day: str) -> dict:
                          "scattered short holes, i.e. seconds in which the "
                          "best quote did not change"),
     }
+
+
+def outage_measure(sym: str, day: str) -> dict:
+    """v8 leg (d)'s input: the day's gap-run profile, STREAMED hour by hour.
+
+    Admission must be cheap. `read_book` concatenates a whole day -- 60 M
+    rows on BTC -- and the gate run reads the book again for episodes, so
+    measuring the leg that way would read the heaviest day twice inside one
+    capped unit. This accumulates only an 86,400-slot presence array, one
+    hour-file at a time, off the SAME column (`T`) behind the SAME
+    valid-quote filter `read_book` applies, and hands it to `gap_runs`.
+    """
+    day0 = int(pd.Timestamp(day, tz="UTC").timestamp()) * 1000
+    present = np.zeros(86_400, bool)
+    n_quotes = 0
+    for f in E20._hour_files("bookTicker", sym, day):
+        df, _ = E20._read_csv([f], [2, 4, 6], ["T", "bid", "ask"],
+                              {2: "int64", 4: "float64", 6: "float64"})
+        if df is None or len(df) == 0:
+            continue
+        t = df["T"].to_numpy()
+        bid, ask = df["bid"].to_numpy(), df["ask"].to_numpy()
+        t = t[(bid > 0) & (ask > 0) & (ask >= bid)]
+        s = (t - day0) // 1000
+        s = s[(s >= 0) & (s < 86_400)]
+        if s.size:
+            present[s.astype(np.int64)] = True
+        n_quotes += int(s.size)
+    if n_quotes == 0:
+        return {"n_quotes_in_day": 0, "gap_fraction": 1.0,
+                "max_gap_run_s": 86_400, "streamed": True}
+    return dict(gap_runs(present, n_quotes), streamed=True)
 
 
 def decision_time_quote_age(bt_t: np.ndarray, day: str) -> dict:
@@ -2951,7 +3215,17 @@ def census(symbols, out_path: Path | None = None,
            "data_root_check": root,
            "declaration": {"path": str(DECL_PATH.relative_to(CODE_ROOT)),
                            "sha256": DECL_SHA},
-           "admission_leg": "v6 -- COLLECTOR LIVENESS, not book activity",
+           "admission_leg": ("v8 -- COLLECTOR LIVENESS (leg b) and the "
+                             "TAPE OUTAGE RUN (leg d), neither of them book "
+                             "activity"),
+           "outage_leg_d": {
+               "outage_run_s": D.OUTAGE_RUN_S,
+               "forward_window_start_day": D.FORWARD_WINDOW_START_DAY,
+               "evaluated_here": not bool(light),
+               "why_not_when_light": (
+                   "a light census opens no tape, so it has no gap-run "
+                   "measurement; the rows say the leg was not evaluated "
+                   "rather than admitting without it")},
            "light": bool(light),
            "light_means": ("no tape is opened: admission needs only the "
                            "hour-file census and the collector's heartbeat "
@@ -2982,8 +3256,12 @@ def census(symbols, out_path: Path | None = None,
             #: the era leg reads recv_ns off every row and is measured only
             #: in `run()`. `require_era=False` makes that explicit in every
             #: row (era_leg_enforced: false) rather than silent.
+            #: v8: the census evaluates leg (d) from the SAME profile it
+            #: reports, and a LIGHT census -- which opens no tape -- says
+            #: the leg was not evaluated instead of admitting without it.
             adm = day_admission(sym, day, counts, health, gap, age,
-                                require_era=False)
+                                require_era=False,
+                                outage=prof, require_outage=not light)
             adm["gap_profile"] = prof
             rows.append(adm)
         n_adm = sum(1 for r in rows if r["admissible"])
@@ -3135,9 +3413,14 @@ def mechanism_check(sym: str, out_path: Path | None = None) -> dict:
     beats, restarts = collector_heartbeats(), collector_restarts()
     for day in days_all:
         counts = stream_file_counts(sym, day)
+        #: the mechanism check exercises the CODE PATH on a real book and
+        #: reads no gate, so it runs on the legs that do not need a tape
+        #: read; its receipt already says the era leg was not enforced and
+        #: now says the same of leg (d).
         if day_admission(sym, day, counts,
                          collector_health(day, beats, restarts),
-                         require_era=False)["admissible"]:
+                         require_era=False,
+                         require_outage=False)["admissible"]:
             adm_days.append(day)
     if not adm_days:
         raise E2ARefused(
