@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T11:14:34Z (MEM ROUND 268 -- R-783 AND R-784 SWEPT, with every landing between the tip I read at round 267
+  (`4e93675`) and `c8ff91e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. FIRST ROUND ON THE LOCKED
+  `--row` FORM.
+  (1) **THE SECOND TABLE VERIFIED AT THE ARTIFACT: ALL SIXTEEN CITED FIGURES MATCH.** R-784 quotes DA's print;
+  I read the file. 09-04, EXPLORATORY, one day, no interval, `sealed: false`, 500 draws, four days consumed:
+  **`CONDVALUE_X_SKEW`** `D_E0` **-31,428.00c (-$314.28)**, Z -4.74, p 1.000, null mean -6,146.77, sd 5,339.16,
+  36,806 vs 57,850 fills, 6,417 cancels; **`HAZARD_OVER_SKEWED_REF`** **-2,364.97c (-$23.65)**, Z -1.48,
+  p 0.936, null mean -623.13, sd 1,179.18, 55,952 vs 57,850, 858 cancels. Both arms' `D_E0` and `Z` negative on
+  both days -- **stated as arithmetic; the reading is not MEM's** -- and the per-arm ORDERING SWAPS between the
+  days.
+  (2) **THE COUNTS LABEL, VERIFIED AT THE SEALED RUNS.** 09-03's sealed day run lists **EIGHT** sealed names
+  and CARRIES the count values (5,146 / 30,171 / 46,439 and 700 / 44,895 / 46,439 -- exactly what its early read
+  later reported); 09-04's lists **ELEVEN**, the three counts among them, and carries no count fields at all.
+  The v23 boundary in production. **So the 09-03 read revealed no new counts and the 09-04 read revealed all
+  six.** A first probe grepped the pre-reads for the NAMES and seemed to find them for both days; counting KEYS
+  gives zero -- the string matched prose.
+  (3) ***THE MISSING-ARTIFACT CHECK FIRED ON A REAL VANISHING***: 174 -> 178, and all four newly-missing flags
+  cite `/run/user/1001/systemd/transient/deEARLY20260904.service`, gone when E2 unloaded. **A TRANSIENT UNIT FILE
+  HAS THE SAME LIFETIME AS THE RUN IT DESCRIBES**, so citing it guarantees the entry expires exactly when someone
+  would check it. The remedy already exists and is TRACKED: GO E2 landed a **run journal** carrying the five
+  fields at launch AND `five_fields_and_id_at_exit_while_loaded`. From here MEM cites the journal, never the
+  transient path; the four expired flags stand as written (rule 13).
+  (4) **THE CAPTURE GIVES THE EXIT MY ROUND-267 READING REFUSED TO**: at 10:59:12Z, loaded/active/**exited**/0/
+  success, same InvocationID; launched 09:15:47Z, exited 10:59:18Z, `runtime_s` **6,211**, worktree
+  `/home/yuqing/ctaNew-wt-de`, head `fe76d83` -- confirming my round-265 `WorkingDirectory` reading from the other
+  side. **AND IT CLOSES MY OWN OPEN QUESTION**: MemoryPeak at launch was **1,016,365,xxx** against 3,119,230,976 at
+  exit, so the property WAS updating and my seven identical reads were a real plateau, not a stuck field.
+  (5) The journal names the cause in the same terms I read at the code -- "`run_day` writes the ledger only when
+  `receipt_path is not None`, and the early-read entry never passes one" -- and attributes it "DE's, landed at
+  DE 124 and unnoticed through four reviews" (the coordinator's attribution, not mine). **REV 100 §2 reaches my
+  round-267 asymmetry independently and states it better: "the guard is an `if`, not a refusal."** DE 132 fixes
+  both ends AND ships a green cell and a red one in one landing (rule 15); **DE 131's reconciliation guard still
+  has only the green half** (REV 99 §A3), and my round-267 note explains why no natural input can ever drive it.
+  (6) REV 99's line numbers are exact at ITS pinned tip (`717f634`: 6125/6143) and one off at mine, because DE 132
+  added 23 lines. Cascade: SHARED `309b98c7` unchanged, `fe76d83` `ee4034c1`, 9/10 and 10/10 -- and REV 100 §6
+  turns that by-design red into the **NO-GO for GO E3 at the tip**. Six rounds measured, now load-bearing. Freeze
+  holds an EIGHTH round.
+  COUNTS (by YAML parse): flags 2008 -> 2026, provenance 1553 -> 1571 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 250 archived.)
   2026-09-07T10:49:16Z (MEM ROUND 267 -- R-782 SWEPT, with every landing between the tip I read at round 266 (`6b509a4`)
   and `4e93675`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE USER'S THIRD RULING OF THE DAY, VERBATIM*** at 2026-09-07T10:42:24Z: "plz record the absolute
@@ -161,44 +200,6 @@ updated: >-
   `classify()` named it -- "RELAYED without `from:` (name the row or entry)", which is one of its 31 selftest
   cases. Fixed with `from: REV 98 part A SA1 (Q-REV-98 f12e254)` and the classes returned to 5 and 285. A
   checker that fires on the seat that wrote it is the only kind whose zero means anything.)
-  2026-09-07T10:16:49Z (MEM ROUND 265 -- R-779 SWEPT, with every landing between the tip I READ at round 264
-  (`81c7c17`) and `cc289e5` -- a window that deliberately starts EARLIER than my own round-264 commits,
-  because REV 97's two landings fell between my read and my write. STATE ONLY. MEM ASSERTS NO RESULT.
-  (1) ***THE THREE IN-BAND CORRECTIONS DO NOT REACH THE BYTES E2 AND E4 EXECUTE.*** Three corrections landed
-  in the shared tree today, each meant to reach a reader of the FAMILY: the repo-relative ruling path with its
-  `path_is` tag, the `NOTE_on_the_landed_09_03_artifact` whose own text promises it "travels with every
-  emission of this family from here", and DE 129's `WHERE_THE_FIVE_LIVE_NOW`. **All three are absent from
-  `fe76d83`** -- 0/0/0/0/0/0 against 1/1/1/2/2/1 in the shared tree, with a control key absent from both. E2
-  runs `WorkingDirectory=/home/yuqing/ctaNew-wt-de`, read off the unit, so the next two emissions carry none
-  of the corrections written for them. The 09-03 artifact's `ruling.path` is absolute into the worktree, read
-  at the artifact; the frozen bytes have no `relative_to` at all, so I EXPECT the same in E2's 09-04 artifact
-  -- **an expectation, not a measurement: that file did not exist at 10:08:57Z.**
-  (2) **DE 129 CLOSED A5 AT THE FOURTH ATTEMPT.** By parse: the `If` at :827 now ENDS at :858, its else-body is
-  845..858, and all eight Loads of `reh`/`dc` are inside it. **Loads outside: none.**
-  (3) **THE TOTAL IS A PARSE RESULT, AND MY OWN WALKER AGREES.** 211 sites (`ok`/`refuses`/`admits`) + 6 loop
-  repeats = 217 = `EXPECTED_CHECKS`. Reading the PREVIOUS bytes I had decomposed 217 as 210 sites - 4 arms + 6
-  repeats + 1 invisible `admits` + 4 arms and named `admits` as the missing term; DE landed the same
-  conclusion at 10:07:44Z before I wrote it. **`admits` is now BOTH counted and marked** -- one without the
-  other would have broken the sibling set-assertion.
-  (4) **REV 97's ITEM 2 IS CLOSED IN EFFECT BY THE REVIEWER'S INSTRUMENT, NOT BY THE CELL.** The diff DE 129
-  landed contains zero lines touching the post-E4 control cell, which still drives `rehearse(root=_e4)` on a
-  synthetic root; its message ("the battery reads GREEN here") is now TRUE BY THE OTHER FIX, not by anything
-  it tests. REV 98 (landed 10:14:35Z, read after my sweep bound) records the item closed **in effect** because
-  REV DROVE THE BATTERY ITSELF -- "what ended it was not a better guard but A CHANGE OF INSTRUMENT". So the
-  item needs no re-routing, and the cell will say green again to the next reader who does not drive it.
-  (5) REV 97's routing row attaches `UnboundLocalError` to both trees; its own A2 says `KeyError` in the
-  frozen ones. By parse, the frozen blob binds `reh` OUTSIDE ANY `If`, so it cannot raise an unbound name.
-  A2's conclusions stand untouched. (6) DE 129's new economics block says THREE where its own data says FOUR.
-  (7) Cascade re-measured both sides: SHARED 9/10 at a THIRD digest today (`b60545d8`), fe76d83 10/10. The
-  freeze holds a fifth round (params head v19, design head v27, both resolved through `resolve_head`).
-  COUNTS (BY YAML PARSE, NOT BY REGEX -- see the last flag): flags 1952 -> 1970, provenance 1497 -> 1515
-  (eighteen written, eighteen counted), 1,226 CHECKED / 284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the
-  HUNDRED-AND-FORTY-FIRST round unchanged on UNMARKED; the duplicate-name gate run BEFORE writing; ORPHAN
-  census 0; audit exits 1 on 174 missing-artifact findings -- **the same 174 I started the round with**,
-  because I first wrote seventeen compound `artifact:` fields, saw the count jump to 191, and rewrote them
-  as single resolvable paths or `git:` refs (which the instrument correctly calls UNDECIDABLE, not absent).
-  A check that fires on my own sloppiness is a check whose zero means nothing; ORPHAN census 0; window trimmed 4 -> 3, Batch 247
-  archived. Q-MEM-253 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -370,6 +371,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 268, R-783 and R-784 swept (4e93675 -> c8ff91e) ---
+  THE_SECOND_TABLE_VERIFIED_AT_THE_ARTIFACT_ALL_SIXTEEN_FIGURES_MATCH: R-784-CITES-DAs-PRINT-I-READ-THE-FILE
+  THE_09_04_TABLE_CARRIED_WITH_EVERY_LABEL_THE_RULING_REQUIRES: EXPLORATORY-ONE-DAY-NO-INTERVAL
+  BOTH_ARMS_D_E0_AND_Z_ARE_NEGATIVE_ON_09_04_AS_ON_09_03: THE-SIGNS-ARE-ARITHMETIC-THE-READING-IS-NOT-MINE
+  THE_TWO_ARTIFACTS_DIFFER_IN_WHICH_RULING_THEIR_seal_status_NAMES: R-754s-BAR-VERSUS-R-765-BY-NAME
+  09_03s_COUNTS_WERE_VISIBLE_BEFORE_ITS_READ_AND_09_04s_WERE_NOT: EIGHT-SEALED-NAMES-VERSUS-ELEVEN
+  THE_MISSING_ARTIFACT_CHECK_FIRED_ON_A_REAL_VANISHING: FOUR-FLAGS-ONE-CAUSE
+  A_TRANSIENT_UNIT_FILE_EXISTS_ONLY_WHILE_THE_UNIT_IS_LOADED: THE-WRONG-THING-TO-CITE
+  THE_DURABLE_RECORD_IS_THE_RUN_JOURNAL_AND_IT_IS_TRACKED: CITE-THIS-FROM-NOW-ON
+  THE_CAPTURE_GIVES_THE_EXIT_MY_OWN_TERMINAL_READING_COULD_NOT: FIVE-FIELDS-AT-EXIT-WHILE-LOADED
+  AND_IT_CLOSES_MY_OWN_MemoryPeak_QUESTION_THE_PLATEAU_WAS_REAL: ONE-BILLION-AT-LAUNCH-THREE-AT-EXIT
+  THE_CAPTURE_RECORD_NAMES_THE_CAUSE_IN_THE_SAME_TERMS_I_READ_AT_THE_CODE: receipt_path-IS-NEVER-PASSED
+  AND_ATTRIBUTES_IT_TO_DE_124_UNNOTICED_THROUGH_FOUR_REVIEWS: THE-COORDINATORS-WORDS-NOT-MINE
+  REV_100_REACHED_MY_ROUND_267_ASYMMETRY_INDEPENDENTLY: THE-GUARD-IS-AN-IF-NOT-A-REFUSAL
+  DE_132_SHIPS_BOTH_HALVES_A_GREEN_CELL_AND_A_RED_ONE: RULE-15-SATISFIED-IN-ONE-LANDING
+  WHILE_DE_131s_RECONCILIATION_GUARD_STILL_HAS_ONLY_THE_GREEN_HALF: AND-MY-ROUND-267-NOTE-EXPLAINS-WHY
+  REV_99s_LINE_NUMBERS_WERE_EXACT_AT_ITS_PINNED_TIP_AND_ARE_ONE_OFF_AT_MINE: A-TIP-DIFFERENCE-NOT-AN-ERROR
+  THE_BY_DESIGN_CASCADE_RED_IS_NOW_THE_OPERATIVE_NO_GO_FOR_E3: SIX-ROUNDS-MEASURED-NOW-LOAD-BEARING
+  THE_FREEZE_HOLDS_FOR_THE_EIGHTH_ROUND: PARAMS-HEAD-v19-DESIGN-HEAD-v27
   # --- MEM round 267 SETTLEMENT, 2026-09-07T11:04:30Z: E2 exited and its artifact settles all three recorded predictions ---
   PREDICTION_1_CONFIRMED_E2s_ARTIFACT_NAMES_ITS_RULING_AT_AN_ABSOLUTE_WORKTREE_PATH: MINE-ROUND-265
   PREDICTION_2_REVs_B0_REFUTED_THERE_IS_NO_SCHEMA_KEY_IN_THE_ARTIFACT_AT_ALL: THE-FACTS-HELD-THE-INFERENCE-DID-NOT
@@ -26377,6 +26397,231 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 268, 2026-09-07T11:14:34Z (the clock read by which every measurement below was complete) ---
+  THE_SECOND_TABLE_VERIFIED_AT_THE_ARTIFACT_ALL_SIXTEEN_FIGURES_MATCH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      R-784 carries the second early-read table verbatim from DA's print, which is the quotable source under R-764. I ALSO
+      READ THE ARTIFACT and compared every cited figure at the precision it was cited to: **all sixteen match** --
+      `D_E0`, `Z`, `p_location`, `null_mean`, `null_sd`, `n_fills_arm`, `n_fills_baseline`, `n_cancels_issued`, for both
+      arms. The artifact's fuller precision behind the citations: `D_E0` -31428.0048 and -2364.9651; `Z` -4.7351 and
+      -1.4772; `p_location` 1.0 and 0.9361; `null_mean` -6146.7688 and -623.1250; `null_sd` 5339.1612 and 1179.1831; and
+      `null_draws_summary` `{'n': 500}` on both. So DA's print and the artifact agree, and the register's table is what the
+      file says.
+  THE_09_04_TABLE_CARRIED_WITH_EVERY_LABEL_THE_RULING_REQUIRES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The second table, carried under the user's unsealing and MEM 259's relaxation, with the labels attached rather than
+      implied. **`CONDVALUE_X_SKEW`**: `D_E0` -31,428.00 cents (-$314.28), `Z` -4.74, `p_location` 1.000, null mean
+      -6,146.77, null sd 5,339.16, 36,806 arm fills against 57,850 baseline fills, 6,417 cancels issued.
+      **`HAZARD_OVER_SKEWED_REF`**: `D_E0` -2,364.97 cents (-$23.65), `Z` -1.48, `p_location` 0.936, null mean -623.13,
+      null sd 1,179.18, 55,952 arm fills against the same 57,850, 858 cancels. LABELS, read from the artifact: G = 4;
+      `interval` = `NONE_BELOW_FIVE_DAYS`; `verdict_class` = **EXPLORATORY**; both arm-days `sealed: false` and
+      `sealed_at_every_depth: false`; `days_consumed` = 09-03, 09-04, 09-05, 09-06 -- **four days consumed, not one**;
+      500 null draws per arm. ONE DAY, NO INTERVAL, EXPLORATORY, AND NOT A VERDICT. The unit is cents on the same
+      `fill_value_cents` valuation established at round 267, and it is still named in no artifact.
+  BOTH_ARMS_D_E0_AND_Z_ARE_NEGATIVE_ON_09_04_AS_ON_09_03:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      Stated as arithmetic and not as a reading, because the reading is not MEM's to make. On 09-04 both arms' `D_E0`
+      and both arms' `Z` are negative, as they were on 09-03; R-784 records that as "both arms below the 0-cancel baseline
+      and below the matched random-cancel null ... same direction as 09-03". What I add is only what the two files hold
+      together: 09-03 `D_E0` -16,592.33 / -4,822.26 with `Z` -2.3014 / -5.3007, 09-04 -31,428.00 / -2,364.97 with `Z`
+      -4.7351 / -1.4772. **THE PER-ARM ORDERING SWAPS BETWEEN THE DAYS** -- `CONDVALUE_X_SKEW` has the shallower `Z` on
+      09-03 and the deeper one on 09-04 -- which is a fact about the two artifacts and not an argument about anything. Two
+      EXPLORATORY days, no interval, and MEM asserts no result.
+  THE_TWO_ARTIFACTS_DIFFER_IN_WHICH_RULING_THEIR_seal_status_NAMES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      A difference between the two early reads that a reader comparing the tables should have. Both carry the same
+      `seal_standing` block -- authority "R-754, recorded 2026-09-07T06:18:16Z", `ruled_days_in_the_population` 6,
+      `ruled_days_read` 4, and the same explanatory line -- but the arm-block `seal_status` differs: 09-03 reads
+      **"UNSEALED -- 4 of 4 days complete under the bar this call was given"**, and 09-04 reads
+      **"UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete"**. So the later run names R-765 by name and reports 4 of 6
+      where the earlier reports 4 of 4 against the bar it was given. Both have `sealed_field_names: []` and
+      `sealed_at_every_depth: false`. Nothing is inconsistent -- the `seal_standing` block exists precisely to explain the
+      4-of-4 -- but the two artifacts do not say it the same way.
+  09_03s_COUNTS_WERE_VISIBLE_BEFORE_ITS_READ_AND_09_04s_WERE_NOT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The label R-782/R-784 asks MEM to carry, VERIFIED AT THE SEALED DAY RUNS rather than accepted. **09-03's**
+      `p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json` lists **EIGHT** `sealed_field_names` (`D_E0`,
+      `D_E_MINUS_R`, `Z`, `p_location`, `null_mean`, `null_sd`, `null_draws_summary`, `sd_over_abs_mean`) -- the outcome
+      counts are NOT among them, and the count VALUES are present in that artifact: 5,146 / 30,171 / 46,439 and 700 /
+      44,895 / 46,439, **exactly the counts its early read later reported**. **09-04's**
+      `..._20260904_SEALED__20260906T171144Z.v3.json` lists **ELEVEN** -- the same eight PLUS `n_fills_arm`,
+      `n_fills_baseline`, `n_cancels_issued` -- and carries NO count fields at all (zero occurrences). That is the v23
+      boundary in production (R-659 reversing R-656 sealed the outcome counts from design v23). **SO THE 09-03 EARLY READ
+      REVEALED NO NEW COUNTS AND THE 09-04 ONE REVEALED ALL SIX**, which is a real difference in what each read consumed.
+      A first probe of this grepped the pre-read artifacts for the field NAMES and appeared to find them for both days; on
+      counting KEYS the pre-reads carry zero -- the string matched prose. The value check is the one that settled it.
+  THE_MISSING_ARTIFACT_CHECK_FIRED_ON_A_REAL_VANISHING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      **MY MISSING-ARTIFACT COUNT ROSE 174 -> 178 AND ALL FOUR ARE ONE CAUSE.** I diffed this round's audit against round
+      267's rather than guessing: the four newly-missing flags are
+      `E2_RUNS_FROM_ctaNew_wt_de_MEASURED_AT_THE_UNITS_WorkingDirectory` (as_of 10:16:49Z),
+      `E2_STILL_RUNNING_AT_SEVENTY_MINUTES...` (10:31:21Z), `E2_AT_NINETY_MINUTES...` (10:49:16Z) and
+      `MY_TERMINAL_READING_OF_E2s_UNIT_IS_VOID...` (11:04:30Z) -- **every one of them citing
+      `/run/user/1001/systemd/transient/deEARLY20260904.service`, which no longer exists** because the unit unloaded when
+      E2 finished. Nothing was mis-stated when those flags were written; the evidence simply stopped existing. THIS IS THE
+      CHECK DOING THE ONE THING IT IS FOR, and it is the second time it has fired on a real vanishing rather than on my own
+      sloppiness (the first was round 254's withdrawn design v30).
+  A_TRANSIENT_UNIT_FILE_EXISTS_ONLY_WHILE_THE_UNIT_IS_LOADED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The lesson under the flag above, which is structural rather than an accident. A transient systemd unit under
+      `/run/user/.../transient/` is created at launch and removed when the unit unloads, so **it is an artifact with the
+      same lifetime as the run it describes** -- and rule 20's five fields must be read while loaded for exactly the same
+      reason. Citing it in a provenance entry therefore guarantees that entry becomes unverifiable the moment the run ends,
+      which is precisely when someone would want to check it. My four flags cited it across rounds 265, 266, 267 and the
+      settlement, and all four expired together.
+  THE_DURABLE_RECORD_IS_THE_RUN_JOURNAL_AND_IT_IS_TRACKED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The remedy, and it already exists. GO E2 (`0fb127f`) landed TWO files: the artifact and
+      `p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json` -- **tracked, in the repository, and carrying
+      exactly what the transient unit carried**: `unit`, `go`, `launched_at`, `main_process_exited_at`, `runtime_s`,
+      `launched_from_worktree`, `head_for_the_whole_run`, `invocation_id`, `leaf_peak_bytes_sampled_in_process`,
+      `five_fields_and_id_at_launch`, `five_fields_and_id_at_exit_while_loaded`, `exit_resolved_through_the_map`, and a
+      `DECISION_LEDGER_WAS_NOT_WRITTEN` block. **FROM HERE MEM CITES THE RUN JOURNAL FOR E-RUN UNIT FACTS, NEVER THE
+      TRANSIENT PATH.** SUPERSEDING IN BAND (rule 13): the four expired flags stay exactly as written -- they were true at
+      their `as_of` and a landed reading is not edited -- and this entry is where a reader goes instead.
+  THE_CAPTURE_GIVES_THE_EXIT_MY_OWN_TERMINAL_READING_COULD_NOT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      At round 267 I refused to quote E2's exit because my reading showed `LoadState=not-found` with an empty
+      `InvocationID`, and said the GO E2 capture would be the authority. It is, and here is what it holds:
+      `five_fields_and_id_at_exit_while_loaded`, as_of **10:59:12Z** -- LoadState **loaded**, ActiveState **active**,
+      SubState **exited**, ExecMainStatus **0**, Result **success**, InvocationID `775e46b59fee42228efab036b6abad58`,
+      MemoryPeak 3,119,230,976. Launched 09:15:47Z, main process exited **10:59:18Z**, `runtime_s` **6,211** (103m31s),
+      `launched_from_worktree` `/home/yuqing/ctaNew-wt-de`, `head_for_the_whole_run` `fe76d83`. **THE WORKTREE AND HEAD
+      CONFIRM MY ROUND-265 READING OF `WorkingDirectory` FROM THE OTHER SIDE**, and the InvocationID matches the one I
+      recorded at every read.
+  AND_IT_CLOSES_MY_OWN_MemoryPeak_QUESTION_THE_PLATEAU_WAS_REAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      I recorded `MemoryPeak` 3,119,230,976 identical at seven reads and wrote each time that a peak which never moves is
+      "either a genuinely flat run or a property that stopped updating, and only the sequence distinguishes them". **THE
+      CAPTURE SETTLES IT**: `five_fields_and_id_at_launch` (as_of 09:15:57Z) carries MemoryPeak **1,016,365,xxx**, and the
+      exit capture carries 3,119,230,976. So the property WAS updating -- it roughly tripled between launch and my first
+      read at 09:52Z -- and every reading of mine from then on was a real plateau, not a stuck field. My own open question,
+      closed at an artifact I did not have when I raised it. `leaf_peak_bytes_sampled_in_process` agrees with the exit
+      figure exactly.
+  THE_CAPTURE_RECORD_NAMES_THE_CAUSE_IN_THE_SAME_TERMS_I_READ_AT_THE_CODE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The journal's `DECISION_LEDGER_WAS_NOT_WRITTEN` block states, as the coordinator wrote it: observed -- "the artifact
+      carries `decision_ledger: null` and no `p003_de_decision_ledger_*` file exists for this day"; cause -- **"`run_day`
+      writes the ledger only when `receipt_path is not None`, and the early-read entry never passes one. R-765's recording
+      therefore did not happen on an early-read day."** That is the same cause I read at the frozen bytes across rounds 266
+      and 267 (the guard at `:6126`, `receipt_path` keyword-only and passed by no caller in any of the 1,682 files), now
+      written into a tracked artifact by the coordinator, and independently established at both ends by REV 100 §2. Three
+      readings, one cause.
+  AND_ATTRIBUTES_IT_TO_DE_124_UNNOTICED_THROUGH_FOUR_REVIEWS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The same block's `whose` field reads **"DE's, landed at DE 124 and unnoticed through four reviews"**. Carried as the
+      coordinator's attribution, not as mine -- I did not bisect to DE 124 and I do not assign the fault. What I did
+      establish is the shape that let it survive: the write sits behind an `if`, not a refusal, so on the early-read path
+      the absence was emitted as `decision_ledger: null` **with no status beside it**, and nothing was ever going to say
+      so. That is CLAUDE.md rule 4 -- exclusions are statuses, never silent drops -- failing on a path where the exclusion
+      was never even named.
+  REV_100_REACHED_MY_ROUND_267_ASYMMETRY_INDEPENDENTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_100_E2_HAD_NO_LEDGER_AND_GO_E3_2026-09-07.md
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      At round 267 I wrote of the ledger guard: "a day whose ledger CANNOT be written refuses loudly, but a day that never
+      enters the branch writes nothing and says nothing -- ABSENCE BY FAILURE IS LOUD, ABSENCE BY GUARD IS SILENT."
+      REV 100 §2 reaches the same point from its own reading and states it better: **"The guard is an `if`, not a
+      refusal"** -- quoting the code's own comment two lines above ("A day whose ledger cannot be written REFUSES ... a
+      receipt promising a ledger that is not there would be worse than no promise") and concluding that "the module's own
+      stated intent and its behaviour on this path had parted company, which is why two runs (E1 and E2) went by
+      unnoticed". §2 also records that "MEM 267's independent reading and the coordinator's notice both hold, and I have
+      now established it myself at both ends". Recorded because two seats converging from different directions is worth
+      more than either reading alone.
+  DE_132_SHIPS_BOTH_HALVES_A_GREEN_CELL_AND_A_RED_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/de_early_read.py
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      DE 132 (`ddda164`) fixes it at both ends, read at the diff. The early read now composes the ledger name BEFORE the
+      run and passes `ledger_anchor=out` so "the ledger lands beside the artifact"; and after the run it checks
+      `(result or {}).get("decision_ledger")` and REFUSES by name when it is null -- "R-765 orders the numbers kept ...
+      promising a ledger that is not there -- which is how GO E1 [and E2] ...". **AND IT SHIPS BOTH CONTROLS IN THE SAME
+      LANDING**: a green cell ("DE 132 GREEN: given an ANCHOR the run writes its ledger BESIDE ...") and a red one that
+      drives the anchorless path and asserts the refusal code "instead of emitting `decision_ledger: null`". That is
+      CLAUDE.md rule 15 satisfied in one landing -- a positive control it must pass and a known-bad it must refuse.
+  WHILE_DE_131s_RECONCILIATION_GUARD_STILL_HAS_ONLY_THE_GREEN_HALF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_99_THE_ABSOLUTES_AND_A_GUARD_NOT_YET_WATCHED_2026-09-07.md
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The contrast, and it composes with something I wrote first. REV 99 §A3 finds `ABSOLUTES_DO_NOT_RECONCILE` appears
+      **exactly twice** -- the `raise` and its own name in the reconciliation block -- with two R-782 battery cells both
+      GREEN and **nothing perturbing `_abs_arm`/`_abs_base`/`observed` to make the identity fail**; it quotes DE's own
+      phrase back, "a guard nobody has watched fire is a comment". I VERIFIED THE COUNT at the tip: two occurrences,
+      `:6126` and `:6144`. **AND MY ROUND-267 NOTE EXPLAINS WHY NO NATURAL INPUT CAN DRIVE IT**: `observed` is DEFINED as
+      `arm_value - base_value` from the same replay, so the identity cannot fail by construction -- which is exactly why
+      the refusal can only ever be watched fire by a SYNTHETIC perturbation, which is what REV's one-cell closure asks for.
+      The two findings are halves of one thing. Since DE 131, `absolute_legs` is a second implementation over the same
+      `fill_value_cents` primitive, so a real divergence needs the two loops to drift -- still nothing that fires today.
+  REV_99s_LINE_NUMBERS_WERE_EXACT_AT_ITS_PINNED_TIP_AND_ARE_ONE_OFF_AT_MINE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      Recorded so nobody reads a drift where there is none. REV 99 cites the guard at `:6125` and `:6143`; at the tip I
+      read they are `:6126` and `:6144`. I checked REV's pin rather than assuming: at `717f634`, the tip REV states it read
+      at, `git show` puts them at **exactly 6125 and 6143**. DE 132 then added 23 lines to the runner and moved everything
+      below by one. **REV's citations are exact at the tip it named, and a citation is only ever exact at a named tip** --
+      which is why the review states its pin in its first paragraph.
+  THE_BY_DESIGN_CASCADE_RED_IS_NOW_THE_OPERATIVE_NO_GO_FOR_E3:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_100_E2_HAD_NO_LEDGER_AND_GO_E3_2026-09-07.md
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      The red I have measured on both sides every round since 262 has become load-bearing. Re-measured now: v19 pins
+      `de_phase4_diag_runner.py` at `ee4034c1`, the SHARED tree hashes `309b98c7` (unchanged since round 267 -- DE 132
+      touched the runner, not phase4), `fe76d83` hashes `ee4034c1`; **SHARED 9 of 10, `fe76d83` TEN OF TEN**. REV 100 §6
+      turns that into a **NO-GO**: "GO E3 blocked at the tip as a refresh target. Clear instead a commit carrying
+      `fe76d83`'s cascade + DE 132's two files, and run the runner's battery there first", routing to the coordinator that
+      "DE 132 is not the blocker, DE 129/130's phase4 edits are". **BY DESIGN AND BLOCKING ARE NOT IN TENSION** -- the pin
+      is stale on purpose under the freeze, and that is exactly what makes the tip unusable as a refresh target.
+  THE_FREEZE_HOLDS_FOR_THE_EIGHTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T11:14:34Z
+    said: >-
+      `de_multiday_gate1_params_v20.json` absent (0 matches in any state), head still v19;
+      `p003_de_multiday_gate1_design_v28.json` absent (0 matches), head still v27. The queue behind the lift now holds
+      v20/v28, DE 131's absolutes and DE 132's ledger fix, and REV 100's NO-GO says the composition E3 needs is a commit
+      that does not yet exist -- so the unwritten set is still growing.
   # --- MEM round 267 SETTLEMENT, 2026-09-07T11:04:30Z ---
   PREDICTION_1_CONFIRMED_E2s_ARTIFACT_NAMES_ITS_RULING_AT_AN_ABSOLUTE_WORKTREE_PATH:
     prov: CHECKED

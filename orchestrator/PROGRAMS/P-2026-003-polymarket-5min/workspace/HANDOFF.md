@@ -1,3 +1,109 @@
+# READ FIRST — round 268 (MEM, 2026-09-07T11:14:34Z, tip `c8ff91e`)
+
+**R-783 and R-784 swept, with every landing between the tip I read at round 267 (`4e93675`) and `c8ff91e`.**
+STATE ONLY. MEM asserts no result and rules nothing. **First round on the locked `--row` form.**
+
+## 1. The second table — verified at the artifact, all sixteen figures
+
+R-784 quotes DA's print (the quotable source under R-764); I read the file and compared every cited figure at
+its cited precision. **All sixteen match.**
+
+| arm (09-04) | `D_E0` | Z | p | null mean | null sd | arm fills | baseline | cancels |
+|---|---|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−31,428.00c** (−$314.28) | −4.74 | 1.000 | −6,146.77 | 5,339.16 | 36,806 | 57,850 | 6,417 |
+| `HAZARD_OVER_SKEWED_REF` | **−2,364.97c** (−$23.65) | −1.48 | 0.936 | −623.13 | 1,179.18 | 55,952 | 57,850 | 858 |
+
+**Labels:** G 4; `interval` `NONE_BELOW_FIVE_DAYS`; `verdict_class` **EXPLORATORY**; both arm-days
+`sealed: false`; 500 null draws each; `days_consumed` = 09-03…09-06 — **four days consumed, not one**. Unit:
+cents, the same `fill_value_cents` valuation, still named in no artifact.
+
+Both arms' `D_E0` and `Z` are negative on both days — **stated as arithmetic; the reading is not MEM's.** One
+fact worth having beside the two tables: **the per-arm ordering swaps** — `CONDVALUE_X_SKEW` has the shallower
+`Z` on 09-03 (−2.30 vs −5.30) and the deeper one on 09-04 (−4.74 vs −1.48).
+
+The two artifacts also differ in which ruling their `seal_status` names: 09-03 *"UNSEALED — 4 of 4 days
+complete under the bar this call was given"*; 09-04 *"UNSEALED_BY_USER_RULING R-765 — 4 of 6 days complete"*.
+
+## 2. The counts label, verified at the sealed day-runs
+
+| | `sealed_field_names` | count values present? |
+|---|---|---|
+| 09-03 sealed run (09-06T14:01:55Z) | **8** — counts NOT among them | **yes** — 5,146 / 30,171 / 46,439 and 700 / 44,895 / 46,439 |
+| 09-04 sealed run v3 (09-06T17:11:44Z) | **11** — the three counts included | **no** — zero count fields |
+
+The v23 boundary in production (R-659 reversing R-656). **So the 09-03 early read revealed no new counts — its
+figures were already visible — and the 09-04 read revealed all six.** A first probe grepped the pre-reads for
+the field *names* and appeared to find them for both days; counting *keys* gives zero — the string matched
+prose. The value check settled it.
+
+## 3. The missing-artifact check fired on a real vanishing
+
+174 → **178**, and I diffed the lists rather than guessing: **all four newly-missing flags cite
+`/run/user/1001/systemd/transient/deEARLY20260904.service`**, which stopped existing when E2 unloaded. Nothing
+was mis-stated when they were written; the evidence expired. Second time this check has fired on a real
+vanishing rather than my own sloppiness.
+
+**The lesson is structural:** a transient systemd unit file has *the same lifetime as the run it describes* —
+which is why rule 20 says read the five fields while loaded. Citing it guarantees the entry becomes
+unverifiable exactly when someone would check it.
+
+**The remedy already exists and is tracked.** GO E2 landed a **run journal**
+(`p003_de_gate1_run_journal_deEARLY20260904__20260907T110014Z.json`) carrying `five_fields_and_id_at_launch`,
+`five_fields_and_id_at_exit_while_loaded`, `runtime_s`, `launched_from_worktree`, `head_for_the_whole_run` and
+a `DECISION_LEDGER_WAS_NOT_WRITTEN` block. **From here MEM cites the run journal for E-run unit facts, never the
+transient path.** Superseding in band (rule 13): the four expired flags stand exactly as written.
+
+## 4. The capture gives the exit my round-267 reading refused to
+
+At round 267 I refused to quote E2's exit (`LoadState=not-found`, empty `InvocationID`) and said the capture
+would be the authority. It is: **10:59:12Z — loaded / active / exited / 0 / success**, same InvocationID;
+launched 09:15:47Z, main process exited **10:59:18Z**, `runtime_s` **6,211** (103m31s), worktree
+`/home/yuqing/ctaNew-wt-de`, head `fe76d83` — **confirming my round-265 `WorkingDirectory` reading from the
+other side.**
+
+**And it closes my own open question.** I recorded `MemoryPeak` identical at seven reads and each time noted a
+flat peak is "either a genuinely flat run or a property that stopped updating". The launch capture reads
+**1,016,365,xxx** against 3,119,230,976 at exit — so the property *was* updating, it roughly tripled before my
+first read, and every reading of mine was a real plateau. `leaf_peak_bytes_sampled_in_process` agrees exactly.
+
+## 5. Three readings, one cause — and the two guards
+
+The journal's cause field: *"`run_day` writes the ledger only when `receipt_path is not None`, and the
+early-read entry never passes one."* Same cause I read at the frozen bytes across rounds 266–267, now in a
+tracked artifact, and independently established at both ends by **REV 100 §2** — which records that *"MEM 267's
+independent reading and the coordinator's notice both hold"* and states my round-267 asymmetry better than I
+did: **"The guard is an `if`, not a refusal."** Attribution (the coordinator's, not mine): *"DE's, landed at
+DE 124 and unnoticed through four reviews."*
+
+- **DE 132 ships both halves in one landing** — `ledger_anchor` passed, a refusal when `decision_ledger` is
+  null, *and* a green cell plus a red one that drives the anchorless path. Rule 15 satisfied.
+- **DE 131's reconciliation guard still has only the green half** (REV 99 §A3: `ABSOLUTES_DO_NOT_RECONCILE`
+  appears exactly twice — I verified the count — with nothing perturbing the inputs). **My round-267 note
+  explains why no natural input can drive it**: `observed` *is* `arm_value − base_value` from one replay, so it
+  can only ever be watched fire by a synthetic perturbation — which is exactly REV's one-cell closure.
+
+## 6. Standing
+
+- **REV 99's line numbers are exact at its pinned tip** (`717f634`: 6125/6143) and one off at mine, because
+  DE 132 added 23 lines. A citation is only ever exact at a named tip; the review names its pin.
+- **Cascade:** SHARED `309b98c7` (unchanged — DE 132 touched the runner, not phase4), `fe76d83` `ee4034c1`;
+  **9/10 and 10/10**. **REV 100 §6 turns that by-design red into the NO-GO for GO E3 at the tip** — "DE 132 is
+  not the blocker, DE 129/130's phase4 edits are". Six rounds measured; now load-bearing. By design and
+  blocking are not in tension.
+- **Freeze holds an eighth round**; the queue behind the lift now holds v20/v28, DE 131's absolutes and
+  DE 132's fix, and REV 100 says the composition E3 needs is a commit that does not yet exist.
+
+## 7. Counts
+
+flags 2008 → **2026**, provenance 1553 → **1571** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,281 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 144th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, and my eighteen added none. Window trimmed 4 → 3,
+**Batch 250** archived.
+
+**NEXT:** the E3 composition (REV 100 §6) → GO E3. MEM sweeps R-785 onward.
+
+---
+
 # READ FIRST — round 267 (MEM, 2026-09-07T10:49:16Z, tip `4e93675`)
 
 **R-782 swept, with every landing between the tip I read at round 266 (`6b509a4`) and `4e93675`.** STATE

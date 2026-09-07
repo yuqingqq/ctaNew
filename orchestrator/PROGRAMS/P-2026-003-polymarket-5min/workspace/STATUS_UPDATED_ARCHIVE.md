@@ -19721,3 +19721,46 @@ generation and the window went 4 → 3. Nothing rewritten.
   audit exits **1** on **174** missing-artifact findings, 173 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 246** archived. Q-MEM-252 filed through the script.)
 ```
+
+## Batch 250 — archived 2026-09-07T11:14:34Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T10:16:49Z (MEM ROUND 265 -- R-779 SWEPT, with every landing between the tip I READ at round 264
+  (`81c7c17`) and `cc289e5` -- a window that deliberately starts EARLIER than my own round-264 commits,
+  because REV 97's two landings fell between my read and my write. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***THE THREE IN-BAND CORRECTIONS DO NOT REACH THE BYTES E2 AND E4 EXECUTE.*** Three corrections landed
+  in the shared tree today, each meant to reach a reader of the FAMILY: the repo-relative ruling path with its
+  `path_is` tag, the `NOTE_on_the_landed_09_03_artifact` whose own text promises it "travels with every
+  emission of this family from here", and DE 129's `WHERE_THE_FIVE_LIVE_NOW`. **All three are absent from
+  `fe76d83`** -- 0/0/0/0/0/0 against 1/1/1/2/2/1 in the shared tree, with a control key absent from both. E2
+  runs `WorkingDirectory=/home/yuqing/ctaNew-wt-de`, read off the unit, so the next two emissions carry none
+  of the corrections written for them. The 09-03 artifact's `ruling.path` is absolute into the worktree, read
+  at the artifact; the frozen bytes have no `relative_to` at all, so I EXPECT the same in E2's 09-04 artifact
+  -- **an expectation, not a measurement: that file did not exist at 10:08:57Z.**
+  (2) **DE 129 CLOSED A5 AT THE FOURTH ATTEMPT.** By parse: the `If` at :827 now ENDS at :858, its else-body is
+  845..858, and all eight Loads of `reh`/`dc` are inside it. **Loads outside: none.**
+  (3) **THE TOTAL IS A PARSE RESULT, AND MY OWN WALKER AGREES.** 211 sites (`ok`/`refuses`/`admits`) + 6 loop
+  repeats = 217 = `EXPECTED_CHECKS`. Reading the PREVIOUS bytes I had decomposed 217 as 210 sites - 4 arms + 6
+  repeats + 1 invisible `admits` + 4 arms and named `admits` as the missing term; DE landed the same
+  conclusion at 10:07:44Z before I wrote it. **`admits` is now BOTH counted and marked** -- one without the
+  other would have broken the sibling set-assertion.
+  (4) **REV 97's ITEM 2 IS CLOSED IN EFFECT BY THE REVIEWER'S INSTRUMENT, NOT BY THE CELL.** The diff DE 129
+  landed contains zero lines touching the post-E4 control cell, which still drives `rehearse(root=_e4)` on a
+  synthetic root; its message ("the battery reads GREEN here") is now TRUE BY THE OTHER FIX, not by anything
+  it tests. REV 98 (landed 10:14:35Z, read after my sweep bound) records the item closed **in effect** because
+  REV DROVE THE BATTERY ITSELF -- "what ended it was not a better guard but A CHANGE OF INSTRUMENT". So the
+  item needs no re-routing, and the cell will say green again to the next reader who does not drive it.
+  (5) REV 97's routing row attaches `UnboundLocalError` to both trees; its own A2 says `KeyError` in the
+  frozen ones. By parse, the frozen blob binds `reh` OUTSIDE ANY `If`, so it cannot raise an unbound name.
+  A2's conclusions stand untouched. (6) DE 129's new economics block says THREE where its own data says FOUR.
+  (7) Cascade re-measured both sides: SHARED 9/10 at a THIRD digest today (`b60545d8`), fe76d83 10/10. The
+  freeze holds a fifth round (params head v19, design head v27, both resolved through `resolve_head`).
+  COUNTS (BY YAML PARSE, NOT BY REGEX -- see the last flag): flags 1952 -> 1970, provenance 1497 -> 1515
+  (eighteen written, eighteen counted), 1,226 CHECKED / 284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the
+  HUNDRED-AND-FORTY-FIRST round unchanged on UNMARKED; the duplicate-name gate run BEFORE writing; ORPHAN
+  census 0; audit exits 1 on 174 missing-artifact findings -- **the same 174 I started the round with**,
+  because I first wrote seventeen compound `artifact:` fields, saw the count jump to 191, and rewrote them
+  as single resolvable paths or `git:` refs (which the instrument correctly calls UNDECIDABLE, not absent).
+  A check that fires on my own sloppiness is a check whose zero means nothing; ORPHAN census 0; window trimmed 4 -> 3, Batch 247
+  archived. Q-MEM-253 filed through the script.)
+```
