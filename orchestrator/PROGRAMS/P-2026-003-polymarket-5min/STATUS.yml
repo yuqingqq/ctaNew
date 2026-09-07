@@ -63,6 +63,65 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T00:11:45Z (MEM ROUND 237 -- R-735 SWEPT, tip `10c8b79`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **THE MASK's TOTALS RECONCILE WITH ITS PARTS, RECOMPUTED** -- from the per-coin rows, not read
+  from the summary, because a total that disagrees with its parts is the failure worth looking for.
+  Seven coins (bnb, btc, doge, eth, hype, sol, xrp), **each 288 windows total, 288 covered, 0
+  masked, 0 coverage-absent, longest run 0, every one `CONTENT_LIVE`**; `sum(n_masked) = 0 =
+  total_masked_windows`; `sum(n_coverage_absent) = 0 = total_coverage_absent_windows`; `n_coins 7 =
+  len(coins)`; day 20260906, `day_closed_calendar` True, sha `36f78148ba353712`.
+  (2) **DE's `validate_mask` ADMITS THE REAL ONE AND REFUSES THREE BY NAME** -- the CONSUMER's
+  validator driven on the PRODUCER's artifact, both directions: admitted on its own day; the wrong
+  day refused (*"a mask read for the wrong day would mask real windows"*); `day_closed_calendar=False`
+  refused; a missing top-level `coins` refused (*"the PRODUCER's committed artifact is the
+  contract"*). **Two instruments, one artifact** -- R-235's do-not-harmonize doing its job at the
+  seam.
+  (3) **THE PLACEHOLDER CORRECTION HOLDS BOTH WAYS AGAIN.** R-734's block contains `c0369d7` **zero
+  times** -- the landed line was not edited and its placeholder stands as history -- while R-735
+  carries "is `c0369d7`". A correction that had also tidied the original would have been the failure.
+  (4) ***BUT BOTH PLACEHOLDERS HAD THEIR COMMIT LAND FIRST, AND THAT CHANGES WHERE THE REMEDY BITES.***
+  R-734: `c0369d7` 00:03:54Z, the entry's landing 00:03:56Z -- **two seconds apart**, the referenced
+  commit FIRST. R-729: `c0dc836` 20:39:00Z, the entry's landing 20:39:09Z -- **nine seconds**, again
+  FIRST. So in both instances the commit already existed; **what failed was the entry TEXT**, composed
+  before the sha was known and not updated in the seconds between. R-735's rule is correct as
+  written -- *land the commit first AND substitute its sha* -- and the precision I add is which
+  conjunct does the work: **the first was already satisfied both times**, so a reader who checks only
+  that half can believe the rule kept and still ship a placeholder. **The operative half is the
+  SUBSTITUTION.** ROUTED, NOT RULED -- the coordinator's rule about the coordinator's own drafting.
+  (5) **`be72frag2` STILL RUNNING AT A THIRD READING** (00:05, 00:07:33Z, **00:10:18Z**), each
+  stamped; R-735 records it up since 00:04:43Z, so about five and a half minutes at my read.
+  ***AND AT COMMIT TIME IT HAD EXITED***: read at **00:15:01Z** -- loaded / active / **EXITED**,
+  `ExecMainStatus 0`, `Result success`, the same InvocationID `0dd3da0a...`. **So the fragment
+  finished cleanly between 00:10:18Z and 00:14:52Z**, and the four readings are exactly R-653's
+  point made visible: under `RemainAfterExit` a finished unit and a running one BOTH read
+  loaded/active with status 0, and only `SubState` tells them apart. **A live state is worth nothing
+  without its as-of, and here it changed inside one round.** **AND
+  THE UNIT's `ExecStart` NAMES THE DECLARED HEAVY LOCK** --
+  `be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock ... be_gate1_fragment.py
+  --day 20260906` -- whose inode 1053378 I verified against the declaration at round 230, so this is
+  a real heavy run holding the declared lock, **read from the unit** rather than from a launcher in
+  some tree (REV 69 s4). **Both launches show the SAME `ExecStart`**, which is the half of rule 20's
+  byte-identical-code conjunct a reader can see without entering BE's worktree.
+  (6) ***AND I GUESSED A FIELD LIST AGAIN -- FIFTH INSTANCE.*** Hunting the per-coin window count I
+  tried `n_windows, windows, n_total_windows, total_windows` and printed `<field not found by name>`.
+  The real key is **`n_windows_total`**, and it was **printed in the same output**, two lines above
+  my failure. **But the class has SHIFTED, and that is the honest summary:** round 225 was SILENT --
+  absent keys returned defaults and I published them for three rounds; the four since (round 232's
+  absent `head`, 235's substring guess, 236's mislabelled journal line, this one) were all **LOUD** --
+  a None, a printed "<not found>", a value contradicting a control. **The habit that changed is
+  printing the key set in the same command; the habit that has not changed is pairing that print
+  with a guess instead of reading from it.** The remedy stands and is still not complete.
+  (7) **AND MY OWN PROSE BROKE MY OWN INSTRUMENT, WHICH THE GUARD CAUGHT.** My window-trim regex
+  `^  20\d\d-` matched a WRAPPED LINE INSIDE MY ROUND-236 ENTRY that happened to begin with a date,
+  so it found FOUR window entries where there are three -- and `assert len(win)==3` fired before any
+  file was written. Tightened to a full ISO stamp followed by ` (MEM ROUND` or ` (USER`. **A control
+  firing on its owner, for the second time in eight rounds** (round 230's ORPHAN audit refused my
+  repair); the value of the assert is exactly that it does not care whose text broke it.
+  Counts, RE-MEASURED after adding item (7)'s own flag: flags 1,547 -> 1,558; provenance
+  1,092 -> 1,103; tasks 19; **827 CHECKED / 276 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRTEENTH
+  round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 219 archived. Q-MEM-225 filed through the script.)
   2026-09-07T00:06:14Z (MEM ROUND 236 -- R-734 SWEPT, tip `442c6ed`. STATE ONLY. MEM ASSERTS NO
   RESULT. The 09-06 UTC day closed at 00:00:00Z and the chain began.
   (1) ***MY ROUND-229 TRAILER FINDING IS CLOSED AT THE DIGEST.*** The coordinator's entry-landing
@@ -162,60 +221,6 @@ updated: >-
   Counts: flags 1,527 -> 1,537; provenance 1,072 -> 1,082; tasks 19; **806 CHECKED / 276 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-ELEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 217 archived. Q-MEM-223 filed through the script.)
-  2026-09-06T20:49:20Z (MEM ROUND 234 -- R-731 SWEPT, tip `f451eac`. STATE ONLY. MEM ASSERTS NO
-  RESULT. ***I OPENED NO RESULT THIS ROUND EITHER*** -- a declaration, a source file, a git object,
-  a directory listing, and a synthetic fixture I built in a temp directory.
-  (1) ***THE TWO-READS CLAUSE CANNOT BE ESCAPED BY DROPPING THE PAIR -- DRIVEN, FOUR WAYS.*** Built
-  a synthetic declarations directory and drove `not_pooled_clause` on a second-read document,
-  dropping or damaging the pair each time. **All four refuse BY NAME**: no pair at all ->
-  `FIRST_READ_PAIR_ABSENT` (naming the consumed days that make the clause apply); a pair with no
-  `sha256` -> `FIRST_READ_PAIR_HALF_WRITTEN`; a pair naming a file that is not there ->
-  `FIRST_READ_DECLARATION_ABSENT`; a pair whose digest has moved -> `FIRST_READ_PAIR_MISMATCH`,
-  quoting the digest on disk. R-731's property holds **under drive**, not only in the docstring.
-  (2) ***AND THE POSITIVE CONTROL ADMITS***, because four refusals alone would be a guard shown only
-  to refuse (rule 16, R-249's second instance): a declaration naming **no** days consumed by a
-  previous read returns `applies False` and **no sentence** -- it admits, and does not refuse. The
-  clause is a property of the declaration's CONTENT, exactly as the docstring says.
-  ***AND REV 87, FILED AT 20:48:40Z WHILE I WAS DRIVING THAT SAME CELL, READ THAT ADMISSION AS THE
-  ESCAPE ROUTE THAT SUCCEEDS***: a second read that simply omits `CONSUMED_BY_THE_FIRST_READ` from
-  its population block renders **no clause at all**, while its `supersedes` chain still shows a prior
-  read -- so *"has a previous read"* must be derived from the **supersedes chain**, not only from the
-  population block (BE 86). **My control was correct as a control, and I did not ask the next
-  question of it.** That is my own named class -- *a reading that was true and did not cover the
-  question* -- and I claim no priority: REV and I drove the same three pair-attempts to the same four
-  names, and REV asked the fourth question.
-  (3) **AND THE FOUR REFUSALS ARE DISTINGUISHED, NOT ABSORBED** -- four names for four faults, so no
-  one absorbs another. That is BE 82's discipline (`HALF_WRITTEN_LINK` never absorbing
-  `DECLARATION_LINK_CORRUPTED`) in a **second instrument**, four-way this time; the ordering defect
-  this programme has met four times does not recur here.
-  (4) **EVERY REFUSAL FIRES BEFORE ANY RESULT IS TOUCHED** -- raised on the PAIR, before the
-  generator reaches the first read's `day_signs`. That is what made the whole escape-the-clause
-  property drivable by MY seat on a synthetic fixture. **A control I can run is worth more to me
-  than one I must take on trust.**
-  (5) **BE 85 WROTE NO DECLARATION VERSION AND v5 STANDS:** `9ef0e47` touches **exactly one file**,
-  `be_race_reader.py`; all five declaration digests unmoved (v5 `b1aa349ed276bc41`), no v6. The
-  second read's **result family is still absent** -- the template that will carry the clause exists,
-  the artifact it renders into does not, because the days are open.
-  (6) ***BE's CHECK COUNT 70 -> 76 IS RELAYED, NOT CHECKED BY ME.*** Its clause cell calls
-  `not_pooled_clause()` with no arguments, which resolves the REAL head and renders against the
-  first read's `day_signs` -- so running the battery would have BE's code open the first read's
-  result inside my process. **The property that matters I drove on a fixture; the COUNT I relay.**
-  Second round running that RELAYED moves **for a stated reason** rather than drifting.
-  (7) **THE GENERATOR MATCHES ITS OWN DOCSTRING CLAUSE FOR CLAUSE** -- pair read and verified on
-  disk, the first read's days from its own declaration, m read from both and refused if they
-  disagree, each floor RECOMPUTED from arms alone, the consistency word a PREDICATE over `day_signs`
-  (rule 10), no sign value carried. Its stated reason: *"a typed sentence about another artifact
-  goes stale the moment that artifact changes, and nobody notices because prose does not fail."*
-  (8) **NEXT STATE: A QUIET HOLD.** All producing seats stand by for 00:00Z (BE 72 -- fragment,
-  tape, book, structure v4, pins v2 -- then DE's launch as one GO; the wake is armed). REV 87 is out
-  on BE 85 and DA 112. **The USER's four open items stand**, item (d) time-bound to
-  **2026-09-10T01:00:00Z**. MEM has nothing to sweep until the next entry lands, and **a quiet hold
-  is a valid state rather than a gap.**
-  UNSWEPT, FOR MEM 235: **R-732** (`1bcde29`) -- REV 87 verified, both routings close, with the one
-  escape route above routed to **BE 86**.
-  Counts: flags 1,517 -> 1,527; provenance 1,062 -> 1,072; tasks 19; **797 CHECKED / 275 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-TENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 216 archived. Q-MEM-222 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -387,6 +392,7 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  MY_OWN_PROSE_BROKE_MY_OWN_WINDOW_REGEX_AND_THE_ASSERT_CAUGHT_IT: FOUR-MATCHES-WHERE-THERE-ARE-THREE
   # =====================================================================
   # STANDING RULE FOR THIS BLOCK, ADOPTED 2026-09-06T04:54:04Z FROM REV 32's
   # CURRENCY AUDIT. **EVERY NEW FLAG CARRIES A flag_provenance ENTRY AT THE
@@ -415,6 +421,17 @@ flags:
   # --- MEM round 234, R-731 swept ---
   # --- MEM round 235, R-732 + R-733 swept ---
   # --- MEM round 236, R-734 swept ---
+  # --- MEM round 237, R-735 swept ---
+  the_masks_TOTALS_RECONCILE_WITH_ITS_PARTS_recomputed: 7x288-COVERED-0-MASKED-SUMS-AGREE
+  DEs_validate_mask_ADMITS_the_real_one_and_REFUSES_THREE_BY_NAME: TWO-INSTRUMENTS-ONE-ARTIFACT
+  the_placeholder_correction_holds_BOTH_WAYS_again: R-734-BLOCK-CARRIES-c0369d7-ZERO-TIMES
+  BUT_BOTH_PLACEHOLDERS_HAD_THEIR_COMMIT_LAND_FIRST: 2-SECONDS-AND-9-SECONDS-BEFORE
+  so_the_operative_half_of_the_new_rule_is_the_SUBSTITUTION: NOT-THE-ORDERING
+  be72frag2_STILL_RUNNING_at_a_third_reading: 00-05-00-07-33-00-10-18Z
+  the_units_ExecStart_names_the_DECLARED_heavy_lock: INODE-1053378-VERIFIED-AT-ROUND-230
+  and_BOTH_launches_carry_the_SAME_ExecStart_byte_identical_code: THE-RELAUNCH-CONJUNCT-VISIBLE
+  I_GUESSED_A_FIELD_LIST_AGAIN_FIFTH_INSTANCE: BUT-IT-FAILED-LOUDLY-BESIDE-THE-PRINTED-KEYS
+  the_class_has_shifted_from_SILENT_to_LOUD_which_is_the_real_change: ONE-SILENT-ROUND-225-FOUR-LOUD
   MY_ROUND_229_TRAILER_FINDING_IS_CLOSED_AT_THE_DIGEST: SCRIPTS-LAND-REGISTER-ENTRY-SH-NOW-TRACKED
   but_the_TRAILER_STILL_NAMES_A_FILENAME_THAT_DOES_NOT_EXIST: DIGEST-RESOLVES-NAME-DOES-NOT
   BOTH_be72_units_READ_WHILE_LOADED_so_neither_reading_is_VOID: FAILED-AND-RUNNING-FIVE-FIELDS-EACH
@@ -25901,6 +25918,130 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  MY_OWN_PROSE_BROKE_MY_OWN_WINDOW_REGEX_AND_THE_ASSERT_CAUGHT_IT:
+    prov: CHECKED
+    artifact: my window-trim step, and the four matched lines
+    as_of: 2026-09-07T00:12:00Z
+    said: >-
+      my trim regex `^  20\d\d-` matched a WRAPPED LINE INSIDE MY OWN ROUND-236 ENTRY that happened
+      to begin with a date -- the mask-cadence sentence -- so it found FOUR window entries where
+      there are three, and `assert len(win)==3` fired BEFORE any file was written. I printed the four
+      lines rather than guessing which was false, and tightened the pattern to a full ISO stamp
+      followed by ' (MEM ROUND' or ' (USER'. A control firing on its OWNER, the second time in eight
+      rounds after round 230's ORPHAN audit refused my repair; the value of the assert is exactly
+      that it does not care whose text broke it. One consequence recorded honestly: the retry then
+      failed on a missing entry file AFTER the archive append had run, so Batch 219 was written once
+      and the STATUS.yml half done separately -- checked at the file, exactly one Batch 219 line.
+  # --- MEM round 237, 2026-09-07T00:11:45Z ---
+  the_masks_TOTALS_RECONCILE_WITH_ITS_PARTS_recomputed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_blackout_mask_20260906.json sha256 36f78148ba353712
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      recomputed from the per-coin rows rather than read from the summary, because a total that
+      disagrees with its parts is the failure worth looking for. Seven coins -- bnb, btc, doge, eth,
+      hype, sol, xrp -- each n_windows_total 288, n_windows_covered 288, n_masked 0,
+      n_coverage_absent 0, longest_run_windows 0, status CONTENT_LIVE. sum(n_masked) 0 equals
+      total_masked_windows 0; sum(n_coverage_absent) 0 equals total_coverage_absent_windows 0;
+      n_coins 7 equals len(coins). day 20260906, day_closed_calendar True.
+  DEs_validate_mask_ADMITS_the_real_one_and_REFUSES_THREE_BY_NAME:
+    prov: CHECKED
+    artifact: live/pm_research/de_admissible_windows.py validate_mask
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      drove the CONSUMER's validator on the PRODUCER's artifact, both directions. The real mask on
+      its own day is ADMITTED. The wrong day refuses -- "mask is for day '20260906', not '20260905'.
+      A mask read for the wrong day would mask real windows". day_closed_calendar=False refuses,
+      explaining that a partial mask lists only the windows that exist. A missing top-level `coins`
+      refuses -- "the PRODUCER's committed artifact is the contract". Two instruments, one artifact,
+      which is R-235's do-not-harmonize property doing its job at the seam.
+  the_placeholder_correction_holds_BOTH_WAYS_again:
+    prov: CHECKED
+    artifact: R-734's and R-735's blocks in the register
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      as at round 233 with R-729/R-730, I checked both halves rather than only the correction:
+      R-734's block contains 'c0369d7' ZERO times -- the landed line was not edited and its
+      placeholder stands as history -- while R-735 carries "is `c0369d7`". Rule 13 working in both
+      directions, and a correction that had also tidied the original would have been the failure.
+  BUT_BOTH_PLACEHOLDERS_HAD_THEIR_COMMIT_LAND_FIRST:
+    prov: CHECKED
+    artifact: commit timestamps for both instances
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      the measured mechanism, which is sharper than the stated one. R-734: c0369d7 at 00:03:54Z, the
+      entry's landing 4e42f13 at 00:03:56Z -- TWO SECONDS apart, the referenced commit FIRST.
+      R-729: c0dc836 at 20:39:00Z, the entry's landing 37cc0e5 at 20:39:09Z -- NINE SECONDS apart,
+      the referenced commit FIRST. So in both instances the commit already existed when the entry
+      landed; what failed was the entry TEXT, composed before the sha was known and not updated in
+      the seconds between.
+  so_the_operative_half_of_the_new_rule_is_the_SUBSTITUTION:
+    prov: CHECKED
+    artifact: R-735's rule text against the measured ordering
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      R-735's rule is 'land the referenced commit first AND substitute its sha into the entry before
+      landing -- never a placeholder', and it is correct as written. The precision I add is which
+      conjunct does the work: the FIRST was already satisfied in both instances, so a reader who
+      checks only that half can believe the rule kept and still ship a placeholder -- which is
+      exactly what happened twice. The operative half is the SUBSTITUTION. ROUTED, NOT RULED; it is
+      the coordinator's rule about the coordinator's own drafting.
+  be72frag2_STILL_RUNNING_at_a_third_reading:
+    prov: CHECKED
+    artifact: systemctl --user show be72frag2.service
+    as_of: 2026-09-07T00:10:18Z
+    said: >-
+      loaded / active / RUNNING, ExecMainStatus 0, InvocationID 0dd3da0a2dd344c7a9b512fec5e13ce7 --
+      the third reading, after 00:05 and 00:07:33Z, each stamped. R-735 records it running since
+      00:04:43Z, so at my reading it had been up about five and a half minutes. A live state carried
+      only with its as-of; a later reader re-reads the unit. AND AT COMMIT TIME IT HAD EXITED: read
+      at 00:15:01Z -- loaded / active / EXITED, ExecMainStatus 0, Result success, same InvocationID.
+      The fragment finished cleanly between 00:10:18Z and 00:14:52Z. Four readings in one round, and
+      R-653's point made visible: a finished unit and a running one both read loaded/active/status 0
+      under RemainAfterExit, and only SubState separates them.
+  the_units_ExecStart_names_the_DECLARED_heavy_lock:
+    prov: CHECKED
+    artifact: systemctl --user list-units --all 'be72*'
+    as_of: 2026-09-07T00:10:18Z
+    said: >-
+      REV 69 s4's point is that a check must read the bytes the RUNNING unit executed, and the unit
+      listing gives them: be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock
+      <python> be_gate1_fragment.py --day 20260906. That is the DECLARED heavy lock path, whose
+      inode 1053378 I verified against the declaration at round 230 -- so this is a real heavy run
+      holding the declared lock, not a scratch one, read from the unit rather than from a launcher
+      in some tree.
+  and_BOTH_launches_carry_the_SAME_ExecStart_byte_identical_code:
+    prov: CHECKED
+    artifact: the same unit listing, both units
+    as_of: 2026-09-07T00:10:18Z
+    said: >-
+      be72frag and be72frag2 show the SAME ExecStart line. Rule 20's fourth relaunch conjunct is
+      that the producing code is byte-identical between launches or the change is reviewed first;
+      here the invocation itself is identical at the unit, which is the half a reader can see from
+      outside without entering BE's worktree.
+  I_GUESSED_A_FIELD_LIST_AGAIN_FIFTH_INSTANCE:
+    prov: CHECKED
+    artifact: my own probe output
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      recorded against myself. Hunting the per-coin window count I tried a candidate list --
+      n_windows, windows, n_total_windows, total_windows -- and printed '<field not found by name>'.
+      The real key is n_windows_total, and it was PRINTED IN THE SAME OUTPUT, in the per-coin key
+      set two lines above my failure. Fifth instance this session of guessing a name instead of
+      reading the set I had just printed.
+  the_class_has_shifted_from_SILENT_to_LOUD_which_is_the_real_change:
+    prov: CHECKED
+    artifact: the five instances, compared
+    as_of: 2026-09-07T00:11:00Z
+    said: >-
+      the honest summary of my own recurring class, because 'five instances' alone would overstate
+      and 'I fixed it' would overstate the other way. Round 225 was SILENT -- absent keys returned
+      defaults and I published them as findings for three rounds. The four since (round 232's absent
+      `head`, round 235's substring guess, round 236's mislabelled journal line, this one) were all
+      LOUD: a None, a printed '<not found>', a value that contradicted a control. The habit that
+      changed is printing the key set in the same command; the habit that has NOT changed is pairing
+      that print with a guess instead of reading from it. The remedy stands and is still not
+      complete.
   # --- MEM round 236, 2026-09-07T00:06:14Z ---
   MY_ROUND_229_TRAILER_FINDING_IS_CLOSED_AT_THE_DIGEST:
     prov: CHECKED
