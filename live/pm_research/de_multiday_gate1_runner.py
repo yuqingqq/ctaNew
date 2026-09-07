@@ -807,6 +807,10 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
     # the numbers. BE 96 changed the entry point and the guard caught it;
     # a change in any of the other nine would not have moved a digest.
     # Every module is checked, each by its own pair.
+    # REV 95 minor: THE RETURN NAMES WHAT WAS CHECKED. It reported the
+    # same shape -- one path, one digest -- whether it had verified ONE
+    # module or TEN, so a reader could not tell a cascade check from an
+    # entry-point check, which is exactly the difference this round added.
     _casc = (params.get("be_cascade") or {}).get("modules") or []
     if _casc and actual_sha is None:
         _repo = Path(__file__).resolve().parents[2]
@@ -828,6 +832,8 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
                 f"a control; the citation must be re-pointed DELIBERATELY, "
                 f"with the draw-path and constant axes measured (see "
                 f"`be_module_repoint`).")
+    _checked = ([m["path"] for m in _casc] if (_casc and actual_sha is None)
+                else [params["be_module"]["path"]])
     declared = params["be_module"]["sha256"]
     if actual_sha is None:
         src = Path(__file__).resolve().parents[2] / params["be_module"]["path"]
@@ -841,7 +847,15 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
             f"a DIFFERENT cascade is not a control for this arm, and the "
             f"citation must be re-pointed deliberately.")
     return {"path": params["be_module"]["path"], "sha256": actual_sha,
-            "cited_not_copied": True, "verified_at_run_time": True}
+            "cited_not_copied": True, "verified_at_run_time": True,
+            # REV 95 minor: NAME WHAT WAS CHECKED, so one module and ten
+            # do not report the same shape.
+            "n_modules_checked": len(_checked),
+            "modules_checked": _checked,
+            "scope": ("THE CASCADE -- every module a null run executes"
+                      if len(_checked) > 1 else
+                      "THE ENTRY POINT ONLY -- no `be_cascade` in the "
+                      "params, or a digest was supplied by the caller")}
 
 
 MODEL_DIR = "data/pm_5min/derived/phase2_fits"

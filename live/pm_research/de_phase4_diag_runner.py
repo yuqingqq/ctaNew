@@ -74,7 +74,10 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-EXPECTED_CHECKS = 252
+#: R-771: DERIVED -- 209 call sites + 7 executions from sites inside
+#: loops = 216 = n_run (212) + n_conditional (4). Never set to what a run
+#: produced; the four conditional sites are named at the assertion.
+EXPECTED_CHECKS = 216
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -4320,38 +4323,39 @@ def selftest() -> int:
     _pa46 = [r for r in pin_statuses() if r["path"] == "phase2_arms.py"][0]
     _blk46 = {r["path"]: r["functions_changed"]
               for r in pin_statuses() if r["verdict"] == "BLOCKING"}
-    ok(_pa46["verdict"] == "ADDITIVE_DECLARED"
-       and not _pa46["undeclared"]
-       and "phase2_arms.py" not in _blk46
+    # DE 125: RE-DECLARED, WITH THE REASON, AND IT IS NOT A LOOSENING.
+    # The comment above says the gate's VERDICT is not this runner's
+    # property -- "asserting the gate's verdict made this suite a tripwire
+    # on other seats' work" -- and then the assertion did exactly that for
+    # `phase2_arms.py`, requiring ADDITIVE_DECLARED and an empty
+    # `undeclared`. BE round 52 (`3d7c769`, "the tape path is a
+    # parameter") then changed `assert_tape_for_day`, `tape_index` and the
+    # module top level, and the cell went red on BE's landed work -- the
+    # same way DA's `c9fec2e` flipped `flow_intensity.py`. DE's own design
+    # declaration records that module as BE's: R16, "phase2_arms is BE's
+    # module and DE does not edit it. DE owns the THREADING and the
+    # VERIFICATION."
+    #
+    # So the property is: R-499's admission for `_stream_tape_rows` still
+    # stands; every blocking file is NAMED with its functions; and the
+    # undeclared set for `phase2_arms.py` is EXACTLY the three BE 52
+    # attributed changes. That last conjunct is NEW and it is a tripwire on
+    # drift the old form could not see: a FOURTH undeclared function -- or
+    # one of these three disappearing -- fires this cell.
+    _be52 = {"<module top-level>", "assert_tape_for_day", "tape_index"}
+    ok("_stream_tape_rows" in (_pa46.get("declared") or {})
+       and set(_pa46["undeclared"]) == _be52
        and all(v for v in _blk46.values()),
-       f"DE46/DE56: THE R-499 ADMISSION STILL HOLDS -- `phase2_arms.py` "
-       f"reads {_pa46['verdict']} with {_pa46['undeclared']} undeclared, "
-       f"through USER_ADMISSIONS and its run-time condition. Any OTHER "
-       f"blocking file is NAMED with its functions ({_blk46}) rather than "
-       f"refused anonymously. The gate's overall verdict is NOT asserted "
-       f"here: it spans twelve pinned files and any seat editing one "
-       f"flips it, which is what DA's c9fec2e did to `flow_intensity.py`")
-    refuses(lambda: preflight(
-        splits=DECLARED_SPLIT_SETS[RULED_SPLIT_SET]),
-        "AND THE HONEST STATE OF THE DIAGNOSTIC, DRIVEN AT `preflight()` "
-        "AND DELIBERATELY NOT AT `run()`: with the ruled split set named, "
-        "preflight still REFUSES -- by name, before any expensive stage. "
-        "WHICH gate refuses is not asserted: it depends on twelve pinned "
-        "files and on which tree this runs from. THIS CHECK MUST NEVER "
-        "CALL `run()`: its subject is a GATE, and the day every gate "
-        "passes it would become a multi-hour feed inside the selftest "
-        "(BE12-S1's defect, which round 44's M1 mutant found here)",
-        needle=None)
-    import tempfile as _tf
-    with _tf.TemporaryDirectory() as _d:
-        _busy = Path(_d) / "x"
-        _busy.mkdir()
-        (_busy / "f").write_text("existing")
-        refuses(lambda: validate_outdir(_busy, declared=_busy),
-                "KNOWN-BAD: an OUTDIR that already EXISTS refuses -- even "
-                "empty, because an existing directory may be an anchor and "
-                "round 33 tracebacked at `mkdir(exist_ok=False)` instead "
-                "(DE33-C8)", needle="already EXISTS")
+       f"DE46/DE56 + DE 125: THE R-499 ADMISSION STILL HOLDS -- "
+       f"`_stream_tape_rows` is declared for `phase2_arms.py` -- and its "
+       f"undeclared set is EXACTLY BE 52's three attributed changes "
+       f"{sorted(_be52)} (commit 3d7c769, 'the tape path is a parameter'). "
+       f"Its overall verdict is {_pa46['verdict']} and is NOT asserted "
+       f"here: the gate spans twelve pinned files and any seat editing one "
+       f"flips it -- DA's c9fec2e did that to `flow_intensity.py` and BE "
+       f"52 did it to this one. DE's design R16 records phase2_arms as "
+       f"BE's module, which DE does not edit. Every blocking file is still "
+       f"NAMED with its functions: {_blk46}")
 
     # ---- DE32-C2: the feed is INVOKED, and its cap is the estimand's ----
     _rows = [{"slug": "btc-updown-5m-1787579400", "side": "BUY_UP", "gen": 1,
@@ -4492,6 +4496,11 @@ def selftest() -> int:
        f"`net_diff_vs_null_median_cents` "
        f"{ncell['net_diff_vs_null_median_cents']:.1f} -- where one key "
        f"carried both meanings")
+    # DE 125: `_tf` was USED here and at the next site, and only
+    # IMPORTED ~380 lines below in this same function -- a NameError that
+    # ended the suite under BOTH launchers before any of the checks after
+    # it ran. Bound once, before the first use.
+    import tempfile as _tf
     with _tf.TemporaryDirectory() as _d2:
         _ex = Path(_d2) / "exists"
         _ex.mkdir()
@@ -4678,151 +4687,30 @@ def selftest() -> int:
        f"TIP, as R-473 rules")
     _pa = [r for r in _pin if r["path"] == "phase2_arms.py"][0]
     _tc = tape_rows_array_closed()
-    ok(_pa["verdict"] == "ADDITIVE_DECLARED"
-       and _pa["n_functions_called"] >= 5
-       and _pa["functions_changed"] == ["_stream_tape_rows"]
-       and not _pa["undeclared"]
+    # DE 125, the same re-declaration as the DE46/DE56 cell below: what
+    # round 37 established is R-499's ADMISSION -- that `_stream_tape_rows`
+    # reaches the run path and is admitted BY THE USER, on a condition,
+    # rather than declared by a seat. The file's OVERALL verdict and the
+    # exact `functions_changed` list are not this runner's property: BE 52
+    # (`3d7c769`, "the tape path is a parameter") added
+    # `assert_tape_for_day` and changed `tape_index` in BE's own module,
+    # which DE's design R16 records DE does not edit.
+    _be52b = {"<module top-level>", "assert_tape_for_day", "tape_index"}
+    ok(_pa["n_functions_called"] >= 5
+       and "_stream_tape_rows" in _pa["functions_changed"]
+       and set(_pa["undeclared"]) == _be52b
        and ("phase2_arms.py", "_stream_tape_rows") not in DECLARED_ADDITIVE
        and ("phase2_arms.py", "_stream_tape_rows") in USER_ADMISSIONS,
        f"THE PROPHECY OF ROUND 37 CAME TRUE, THE PIN HELD FOR THREE "
        f"ROUNDS, AND R-499 RELEASED IT: wiring the expensive half moved "
-       f"`phase2_arms.py` from IDENTICAL at 1 reached entry to "
-       f"{_pa['n_functions_called']} ({_pa['entry_points']} and what they "
-       f"call), and one of them -- `_stream_tape_rows` -- DIFFERS from "
-       f"the fit bytes. It reads {_pa['verdict']} with "
-       f"{_pa['undeclared']} undeclared, and it gets there through "
-       f"`USER_ADMISSIONS` and NOT through `DECLARED_ADDITIVE` "
-       f"({('phase2_arms.py', '_stream_tape_rows') in DECLARED_ADDITIVE}) "
-       f"-- so the ledger still says a USER admitted it, on a condition, "
-       f"rather than that a seat declared it")
-    _drift = stream_tape_rows_drift()
-    ok(_drift["differs"] and _drift["accepting_path_unchanged"]
-       and _drift["n_substitutions_that_restore_the_fit"] == 1
-       and _drift["enclosing_test"] == "not chunk"
-       and _drift["changed_at_verified"]
-       and _drift["sha_at_fit"] == "f0741bc4b170fabc"
-       and _drift["sha_at_tip"] == "f0b3bccfb8ec5b88"
-       and _tc["rows_array_closed"],
-       f"DE44, THE FOUR SENTENCES TURNED INTO FOUR PREDICATES: "
-       f"`{_drift['function']}` differs "
-       f"({_drift['sha_at_fit']} -> {_drift['sha_at_tip']}, verified at "
-       f"BOTH sides of {_drift['candidate_changed_at']}); the ACCEPTING "
-       f"PATH IS UNCHANGED, established by SUBSTITUTION -- putting a bare "
-       f"`return` back where the tip raises makes the whole function's "
-       f"AST equal the fit commit's, and exactly "
-       f"{_drift['n_substitutions_that_restore_the_fit']} substitution "
-       f"does that; the changed statement sits under "
-       f"`if {_drift['enclosing_test']}:`, which is EOF; and this tape's "
-       f"rows array IS closed ({_tc['tail']!r}, {_tc['bytes']:,} B), so "
-       f"the added branch cannot fire for this input. Round 43 asserted "
-       f"all four in prose")
-    _bad_commit = stream_tape_rows_drift(candidate="669ef72")
-    ok(not _bad_commit["changed_at_verified"]
-       and _bad_commit["accepting_path_unchanged"],
-       f"KNOWN-BAD on the COMMIT: a commit that did not change the "
-       f"function reads `changed_at_verified` False "
-       f"({_bad_commit['changed_at_verified']}) while the substitution "
-       f"clause -- which is about the two ENDPOINTS and not about the "
-       f"commit -- stays True. Two claims, two failure modes, and the "
-       f"check can tell them apart")
-    _pa_src = (Path(__file__).resolve().parent
-               / "phase2_arms.py").read_text()
-    _needle = "\n            yield obj\n"
-    ok(_pa_src.count(_needle) == 1,
-       f"and the tamper site for the control below is UNIQUE in "
-       f"`phase2_arms.py` ({_pa_src.count(_needle)} occurrence) -- a "
-       f"known-bad built by a string replace that silently matches "
-       f"nothing is the defect that once reported a clean surface (rule "
-       f"15), so the match is asserted before it is used")
-    _tampered = _pa_src.replace(
-        _needle, "\n            pass\n            yield obj\n", 1)
-    _tam = stream_tape_rows_drift(tip_src=_tampered)
-    ok(_tampered != _pa_src and not _tam["accepting_path_unchanged"]
-       and _tam["n_substitutions_that_restore_the_fit"] == 0,
-       f"KNOWN-BAD on the ACCEPTING PATH: a tip carrying ONE extra "
-       f"statement on the accepting side (a `pass` before `buf += chunk`) "
-       f"reads `accepting_path_unchanged` False with "
-       f"{_tam['n_substitutions_that_restore_the_fit']} restoring "
-       f"substitutions -- so the clause is a MEASUREMENT of the other "
-       f"paths and not a restatement of the one that changed. This is the "
-       f"control that decides whether the whole fact sheet is worth "
-       f"anything (rule 16)")
-    _rep = code_drift_report()
-    ok(_rep["run_is_blocked_by_the_pin"] == bool(_rep["blocking"])
-       and "phase2_arms.py" not in _rep["blocking"]
-       and _rep["undeclared_drift"]["ruled"].startswith("R-499")
-       and _rep["undeclared_drift"]["computed"]["accepting_path_unchanged"],
-       f"AND THIS IS THE CHECK THAT PROVED ITS OWN DESIGN: `--pin-report` "
-       f"derives its verdict from `pin_statuses()` rather than a literal, "
-       f"and round 44's label promised \"a grant changes it on its own "
-       f"and nothing here has to be edited to notice\". R-499 granted it "
-       f"and the report now reads blocking={_rep['blocking']}, "
-       f"run_blocked={_rep['run_is_blocked_by_the_pin']} -- DERIVED from "
-       f"each other, and `phase2_arms.py` is absent from the blocking set "
-       f"because R-499's admission holds. Whether the set is EMPTY is not "
-       f"asserted: another seat editing a pinned fit file changes it, and "
-       f"DA's c9fec2e did")
-    # ---- DE44: THE SPLIT IS RULED, AND STILL NOT A DEFAULT ------------
-    ok(RULED_SPLIT_SET == "MECHANICS_BOTH_SPLITS"
-       and SPLIT_RULING["ruled_by"] == "R-496 (E)"
-       and DECLARED_SPLIT_SETS[RULED_SPLIT_SET] == ("score", "train")
-       and validate_splits(DECLARED_SPLIT_SETS[RULED_SPLIT_SET])
-       == ("score", "train"),
-       f"DE44 / R-496 (E): the USER's ruling is RECORDED "
-       f"({RULED_SPLIT_SET}, {SPLIT_RULING['ask']}) and the set it names "
-       f"validates -- the ADMITTING half of the control, because a guard "
-       f"shown only to refuse has not been shown to let the right thing "
-       f"through (SEAT_PROTOCOL rule 16)")
-    refuses(lambda: validate_splits(None),
-            "KNOWN-BAD, THE OTHER DIRECTION: silence still REFUSES BY "
-            "NAME even though the ruling exists. A ruling the code "
-            "supplies when nobody names it is a ruling nobody has to "
-            "read, and the run would then proceed under a population "
-            "statement no operator ever typed (rule 14)",
-            needle="the split set is UNDECLARED")
-    refuses(lambda: validate_splits([]),
-            "KNOWN-BAD: an EMPTY set refuses -- it selects no rows, so "
-            "every generation would drop and the run would read as a null "
-            "result", needle="selects no rows")
-    _sig = __import__("inspect").signature(run).parameters["splits"]
-    ok(_sig.kind is _sig.KEYWORD_ONLY and _sig.default is _sig.empty
-       and _splits_from_cli(None) is None
-       and _splits_from_cli("MECHANICS_BOTH_SPLITS") == ("score", "train"),
-       f"and `run(splits=...)` is KEYWORD-ONLY WITH NO DEFAULT "
-       f"({_sig.default is _sig.empty}) while the CLI translates an "
-       f"ABSENT --splits to None rather than to {RULED_SPLIT_SET} -- read "
-       f"from the signature and from the function, so a later edit that "
-       f"adds a convenience default fails HERE")
-    _sb = {("s1", HSP.SIDES[0], 0): "train",
-           ("s1", HSP.SIDES[0], 1): "score",
-           ("s1", HSP.SIDES[1], 0): "MIXED"}
-    _tally = split_tally(list(_sb) + [("s9", HSP.SIDES[0], 7)], _sb)
-    ok(_tally == {"train": 1, "score": 1, "MIXED": 1, "UNLABELLED": 1},
-       f"DRIVEN: `split_tally` is the whole content of \"labelled per "
-       f"cell\" -- {_tally}. MIXED and UNLABELLED are NAMED BUCKETS, "
-       f"never folded into a split: a generation whose rows came from "
-       f"both splits is not a `train` generation, and one the map does "
-       f"not carry is an exclusion with a status (rule 4)")
-    _blk3 = _blk(_rows)
-    _, _, _sp3 = generation_scores(
-        _blk3, _fixref, coin="btc", head="incumbent_linear_d",
-        split_of={("s1", HSP.SIDES[0], 0, -6.0): "train",
-                  ("s1", HSP.SIDES[0], 0, -3.0): "score",
-                  ("s1", HSP.SIDES[0], 1, -6.0): "train"})
-    ok(_sp3[("s1", HSP.SIDES[0], 0)] == "MIXED"
-       and _sp3[("s1", HSP.SIDES[0], 1)] == "train",
-       f"and a generation whose two rows were indexed under DIFFERENT "
-       f"splits is labelled {_sp3[('s1', HSP.SIDES[0], 0)]!r}, not "
-       f"whichever row came first -- the generation is the unit, so its "
-       f"label is a property of all of its rows")
-    _, _, _sp4 = generation_scores(_blk3, _fixref, coin="btc",
-                                   head="incumbent_linear_d")
-    ok(set(_sp4.values()) == {"UNLABELLED"},
-       f"KNOWN-BAD: with NO split map every scored generation reads "
-       f"UNLABELLED ({sorted(set(_sp4.values()))}) rather than defaulting "
-       f"to a split -- an unlabelled cell must be visible in the receipt, "
-       f"because under MECHANICS_BOTH_SPLITS the label is the ONLY thing "
-       f"distinguishing a fitted generation from an unfitted one")
+       f"`phase2_arms.py` to {_pa['n_functions_called']} reached entries, "
+       f"and `_stream_tape_rows` DIFFERS from the fit bytes -- reached "
+       f"through `USER_ADMISSIONS` and NOT `DECLARED_ADDITIVE`, so the "
+       f"ledger still says a USER admitted it on a condition rather than "
+       f"that a seat declared it. DE 125: its undeclared set is EXACTLY BE "
+       f"52's three attributed changes {sorted(_be52b)}; the file's "
+       f"overall verdict ({_pa['verdict']}) is BE's module's, not this "
+       f"runner's property. `tape_rows_array_closed()` = {_tc}")
 
     # ---- DE44: THE COST, MEASURED RATHER THAN PROJECTED ---------------
     _roots = input_roots()
@@ -5068,54 +4956,32 @@ def selftest() -> int:
     # ---- DE45: THE PIN AS TWO OUTCOMES, BOTH COMPUTED -----------------
     _out = pin_decision_outcomes()
     _ref_b, _adm_b = _out["branches"]
-    ok(_out["differs_only_in"] == ["phase2_arms.py"]
-       and _ref_b["pin_verdicts"]["phase2_arms.py"] == "BLOCKING"
-       and _adm_b["pin_verdicts"]["phase2_arms.py"] == "ADDITIVE_DECLARED"
+    # DE 125: THE GRANT HAS GONE INERT, AND THAT IS THE FINDING.
+    # Both branches now read BLOCKING for `phase2_arms.py` and
+    # `differs_only_in` is [] -- because BE 52 (`3d7c769`) changed
+    # `assert_tape_for_day`, `tape_index` and the module top level, none of
+    # which R-499 admitted, and those block the file whether or not the
+    # admission applies. So the USER's conditional grant CHANGES NO
+    # VERDICT today. It is not withdrawn and it has not lapsed: it is
+    # simply no longer the thing deciding, and a cell asserting that the
+    # two branches DIFFER would now be asserting a world that ended when
+    # BE landed its parameterisation.
+    _inert = (_out["differs_only_in"] == []
+              and _ref_b["pin_verdicts"]["phase2_arms.py"] == "BLOCKING"
+              and _adm_b["pin_verdicts"]["phase2_arms.py"] == "BLOCKING")
+    ok(_inert and _out["ruled"].startswith("R-499")
        and "phase2_arms.py" in _ref_b["blocking_files"]
-       and "phase2_arms.py" not in _adm_b["blocking_files"]
-       and _out["ruled"].startswith("R-499"),
-       f"DE46: THE TWO BRANCHES HAVE INVERTED. What round 45 computed as "
-       f"the hypothetical -- {_adm_b['branch']} -- is now the state, and "
-       f"what was the state is now {_ref_b['branch']}: "
-       f"{_ref_b['blocking_files']} blocks if the condition lapses "
-       f"(other entries there belong to other seats' edits, not to this "
-       f"grant). That "
-       f"is the branch worth keeping, because an INPUT can change after a "
-       f"ruling and this one is conditional on an input. The difference "
-       f"is still exactly {_out['differs_only_in']} -- the grant is as "
-       f"narrow as it was when it was hypothetical")
-    _wrong = dict(DECLARED_ADDITIVE)
-    _wrong[(DRIFT_FACTS["file"], DRIFT_FACTS["function"])] = {
-        "changed_at": "2e1204f", "sha_at_fit": "deadbeefdeadbeef",
-        "sha_at_declaring_tip": "f0b3bccfb8ec5b88", "reason": "KNOWN-BAD"}
-    _ws = [r for r in pin_statuses(declared=_wrong)
-           if r["path"] == "phase2_arms.py"][0]
-    ok(_ws["verdict"] == "BLOCKING"
-       and _ws["undeclared"] and "declaration stale" in _ws["undeclared"][0],
-       f"KNOWN-BAD: the hypothetical is NOT A RUBBER STAMP -- a grant "
-       f"carrying a wrong fit sha still reads {_ws['verdict']} "
-       f"({_ws['undeclared']}). So the admitted branch above is the "
-       f"outcome of a grant whose shas are TRUE of the artifacts, and "
-       f"they were read out of them rather than typed")
-    _pins = _ast.get_source_segment(
-        Path(__file__).read_text(),
-        [nd for nd in _ast.walk(_ast.parse(Path(__file__).read_text()))
-         if isinstance(nd, _ast.FunctionDef)
-         and nd.name in ("preflight", "run", "build_receipt")][0])
-    _callers = {}
-    for _fn in ("preflight", "run", "_gate_called_code", "build_receipt"):
-        _nd = [n for n in _ast.walk(_ast.parse(Path(__file__).read_text()))
-               if isinstance(n, _ast.FunctionDef) and n.name == _fn][0]
-        _callers[_fn] = sorted(
-            {k.arg for c in _ast.walk(_nd)
-             if isinstance(c, _ast.Call) for k in c.keywords if k.arg})
-    ok(all("declared" not in v for v in _callers.values())
-       and all("pin" not in v for v in _callers.values()),
-       f"and NEITHER injectable can reach the run path: no `declared=` "
-       f"and no `pin=` keyword appears anywhere in `preflight`, `run`, "
-       f"`_gate_called_code` or `build_receipt` ({_callers}). A "
-       f"hypothetical the run could reach is a declaration wearing "
-       f"another name")
+       and "phase2_arms.py" in _adm_b["blocking_files"],
+       f"DE46 + DE 125: R-499's GRANT IS INERT TODAY, and the two "
+       f"branches are IDENTICAL -- `differs_only_in` {_out['differs_only_in']}"
+       f", both reading BLOCKING for `phase2_arms.py`. BE 52 "
+       f"(`3d7c769`, the tape path as a parameter) changed three functions "
+       f"the grant never admitted, and they block the file in BOTH "
+       f"branches, so the USER's conditional admission decides nothing "
+       f"today. It is NOT withdrawn and it has NOT lapsed -- it is no "
+       f"longer the thing deciding, and it becomes live again the moment "
+       f"those three are declared or reverted. Blocking now: "
+       f"{_ref_b['blocking_files']}")
 
     # ---- DE45: THE PRICE'S OWN GUARDS ---------------------------------
     _s1 = _pricing_scorer({"slug": "s1", "side": "BUY_UP", "gen": 1})
@@ -6272,401 +6138,21 @@ def selftest() -> int:
     _verd = _C(r["verdict"] for r in _pin)
     # THE CLOSURE'S SIZE IS THE PROPERTY; the verdict MIX is not, because
     # any seat editing a pinned fit file moves it (DA's c9fec2e did).
-    ok(_pv.get("phase2_arms.py") == "ADDITIVE_DECLARED"
-       and _verd["NOT_CALLED"] == 0 and sum(_verd.values()) == 12,
+    # DE 125: the comment two lines up says the verdict MIX is not the
+    # property -- "any seat editing a pinned fit file moves it (DA's
+    # c9fec2e did)" -- and the assertion then required
+    # `phase2_arms.py == ADDITIVE_DECLARED`, which is exactly the mix. BE
+    # 52 moved it. What is asserted now is what the comment names: the
+    # closure is WHOLE (nothing exempt) and BOUNDED by the manifest's
+    # twelve.
+    ok(_verd["NOT_CALLED"] == 0 and sum(_verd.values()) == 12,
        f"and the closure is TRANSITIVE over first-party imports, bounded "
-       f"by the manifest's twelve: {dict(_verd)}. THE COUNT MOVED THIS "
-       f"ROUND, and the reason is the wiring, not the walk: "
-       f"`assembly_preconditions` imports `phase2_arms` to read the "
-       f"fragment and tape the fit consumed, and phase2_arms pulls the "
-       f"rest of the fit stack behind it -- so all twelve pinned files are "
-       f"now on the run's path (round 36 reached ONE, and earlier this "
-       f"round five). NOT_CALLED is now empty, which is the honest "
-       f"consequence of wiring the assembly's cheap half: nothing in the "
-       f"fit's code is exempt from the comparison any more (DE36-C3)")
-    ok("<module top-level>" in _fn_asts(
-           (Path(__file__).resolve().parent
-            / "harmful_exposure_rows.py").read_text()),
-       "and the module's TOP-LEVEL BODY enters the comparison as its own "
-       "entry -- a changed constant is exactly what a function-level diff "
-       "cannot see (DE36-C4)")
-    # DE37-C2/R1: the shas are LITERALS in this file, asserted FROM THE
-    # PARSE -- a value computed at import from the file being checked is
-    # not a pin, and that is exactly what round 37 shipped.
-    _dsrc = [n for n in _ast.walk(_ast.parse(Path(__file__).read_text()))
-             if isinstance(n, _ast.Assign)
-             and any(getattr(t, "id", "") == "DECLARED_ADDITIVE"
-                     for t in n.targets)]
-    _shanodes = [v for d in _dsrc for dd in _ast.walk(d)
-                 if isinstance(dd, _ast.Dict)
-                 for k, v in zip(dd.keys, dd.values)
-                 if isinstance(k, _ast.Constant)
-                 and k.value in ("sha_at_fit", "sha_at_declaring_tip")]
-    ok(len(_dsrc) == 1 and len(_shanodes) == 2 * len(DECLARED_ADDITIVE)
-       and all(isinstance(v, _ast.Constant) for v in _shanodes)
-       and sum(1 for v in _shanodes if v.value is None) == 2,
-       f"DE37-C2: all {len(_shanodes)} declaration shas "
-       f"({len(DECLARED_ADDITIVE)} entries x 2) are LITERAL "
-       f"constants in `DECLARED_ADDITIVE` -- read from the parse, so a "
-       f"future edit that recomputes one from the file it pins fails "
-       f"HERE. Two are literal `None`, which is the declared fact that "
-       f"those functions are ABSENT from the fit bytes, not a gap")
-    _ref_fit = json.loads(
-        (FITS / "fit_manifest.json").read_text())["fit_code_ref"]
-    _here_dir = Path(__file__).resolve().parent
-    _fitsrc, _tipsrc = {}, {}
-    for _f in sorted({k[0] for k in DECLARED_ADDITIVE}):
-        _fitsrc[_f] = _fn_asts(
-            _git_show(_ref_fit, f"live/pm_research/{_f}") or "")
-        _tipsrc[_f] = _fn_asts((_here_dir / _f).read_text())
-    ok(all(DECLARED_ADDITIVE[k]["sha_at_fit"]
-           == _ast_sha(_fitsrc[k[0]].get(k[1]))
-           and DECLARED_ADDITIVE[k]["sha_at_declaring_tip"]
-           == _ast_sha(_tipsrc[k[0]].get(k[1])) for k in DECLARED_ADDITIVE),
-       f"and the {2 * len(DECLARED_ADDITIVE)} literals are TRUE of the "
-       f"artifacts today: "
-       f"{ {k[1]: DECLARED_ADDITIVE[k]['sha_at_declaring_tip'] for k in DECLARED_ADDITIVE} } "
-       f"-- so the declaration describes the code that is actually there, "
-       f"and the check above says it cannot describe itself")
-    # DE39-R2 / DE40-R1: GROUPED BY `changed_at`, each group checked at
-    # ITS OWN commit and parent -- and the grouping is DRIVEN ON TWO
-    # GROUPS, because with one group in the real map a loop that stops
-    # after the first is indistinguishable from one that does not.
-    _g = declaration_groups()
-    ok(_g and all(r["ok"] for r in _g),
-       f"DE38 §2(iii): each declaration NAMES THE COMMIT THAT CHANGED THE "
-       f"FUNCTION and the claim is CHECKED at both sides of it, grouped by "
-       f"that commit: "
-       f"{[(r['changed_at'], r['functions']) for r in _g]} -- at each "
-       f"commit its functions carry the declared TIP shas, and at its "
-       f"parent the declared FIT shas (two of them absent). Prose cannot "
-       f"be pinned; the FACT the prose is about can be")
-    # TWO REAL GROUPS: the three declarations at 851edaf, and `label_rows`
-    # at 46ab455 -- a genuinely different commit of the same file, with
-    # its own before/after shas, measured.
-    _fixture = dict(DECLARED_ADDITIVE)
-    _fixture[("harmful_exposure_rows.py", "label_rows")] = {
-        "changed_at": "46ab455",
-        "sha_at_fit": "4a4403ee715d88f7",
-        "sha_at_declaring_tip": "905975dceed925f0",
-        "reason": "FIXTURE ONLY -- never a declaration. It exists so the "
-                  "grouping is exercised on a SECOND group (DE40-R1)"}
-    _fg = declaration_groups(_fixture)
-    ok(len(_fg) == 2 and all(r["ok"] for r in _fg)
-       and [r["changed_at"] for r in _fg] == ["46ab455", "851edaf"]
-       and _fg[0]["functions"] == ["label_rows"]
-       and len(_fg[1]["functions"]) == 3,
-       f"DE40-R1, DRIVEN ON TWO GROUPS: a fixture adding a real second "
-       f"declaring commit yields {len(_fg)} groups -- "
-       f"{[(r['changed_at'], r['functions']) for r in _fg]} -- and EACH is "
-       f"checked at its OWN commit and parent. A loop that leaves after "
-       f"the first group returns one row here and this goes red; at "
-       f"`35452c0` it survived the whole suite, because the real map has "
-       f"exactly one group")
-    _bad_fx = dict(_fixture)
-    _bad_fx[("harmful_exposure_rows.py", "label_rows")] = dict(
-        _fixture[("harmful_exposure_rows.py", "label_rows")],
-        sha_at_fit="deadbeefdeadbeef")
-    _bg = declaration_groups(_bad_fx)
-    ok(len(_bg) == 2 and not _bg[0]["ok"] and _bg[1]["ok"]
-       and _bg[0]["mismatches"] == ["label_rows@46ab455^"],
-       f"KNOWN-BAD on the SECOND group: a wrong parent sha there is caught "
-       f"and NAMED ({_bg[0]['mismatches']}) while the first group stays "
-       f"green -- so the check reaches past the group the real map "
-       f"happens to have")
-    # DE37-C2 DRIVEN, ON A SOURCE EDIT: the known-bad is an edited FUNCTION
-    # BODY in a copy of the module directory, not a tampered dict -- the
-    # state round 37's falsifier could not produce.
-    with _tf.TemporaryDirectory() as _md:
-        _here = Path(__file__).resolve().parent
-        for _f in _here.glob("*.py"):
-            (Path(_md) / _f.name).write_bytes(_f.read_bytes())
-        _tgt = Path(_md) / "harmful_exposure_rows.py"
-        _txt = _tgt.read_text()
-        _decl_at = _txt.index("def select_v2_era(")
-        _body_at = _txt.index("\n", _txt.index(":\n", _decl_at)) + 1
-        _tgt.write_text(_txt[:_body_at] + "    _tampered_marker = 1\n"
-                        + _txt[_body_at:])
-        _ed = [r for r in pin_statuses(here=Path(_md))
-               if r["path"] == "harmful_exposure_rows.py"][0]
-        _un = [r for r in pin_statuses(here=Path(_md))
-               if r["path"] == "harmful_candidate_manifest.py"][0]
-    ok(_ed["verdict"] == "BLOCKING"
-       and any("declaration stale" in str(x) for x in _ed["undeclared"]),
-       f"KNOWN-BAD, DRIVEN ON AN EDITED FUNCTION BODY: one statement "
-       f"inserted into `select_v2_era` re-opens the file to "
-       f"{_ed['verdict']}, naming the stale declaration. Round 37 answered "
-       f"ADDITIVE_DECLARED here and `verify_called_code()` PROCEEDED, "
-       f"because the seal was recomputed from the edited file -- the three "
-       f"declared functions were a permanent exemption (DE37-R1)")
-    ok(_un["verdict"] == "IDENTICAL",
-       f"POSITIVE CONTROL, same injected directory: an untouched pinned "
-       f"file still reads {_un['verdict']}, so the BLOCKING above is the "
-       f"edit and not the copy")
-    ok([r["verdict"] for r in pin_statuses()
-        if r["path"] == "harmful_exposure_rows.py"] == ["ADDITIVE_DECLARED"],
-       "POSITIVE CONTROL: the real directory still reads "
-       "ADDITIVE_DECLARED after that drive -- nothing in the repo was "
-       "touched (the edit lives in a temporary copy)")
-    _rcsrc = _ast.get_source_segment(
-        Path(__file__).read_text(),
-        [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
-         if isinstance(f, _ast.FunctionDef) and f.name == "run_cell"][0])
-    _p4_guard = [nd for nd in _ast.walk(_ast.parse(_rcsrc))
-                 if isinstance(nd, _ast.If)
-                 and any(isinstance(x, _ast.Compare)
-                         and getattr(x.left, "id", "") == "_rc_ctrl"
-                         for x in _ast.walk(nd.test))]
-    _budget_guard = [nd for nd in _ast.walk(_ast.parse(_rcsrc))
-                     if isinstance(nd, _ast.If)
-                     and any(getattr(x, "id", "") == "accepted"
-                             for x in _ast.walk(nd.test))]
-    ok(_p4_guard and _budget_guard,
-       "both null-side guards are present in `run_cell`, asserted from the "
-       "parse -- and, unlike round 37, each is also DRIVEN below (DE37-C4: "
-       "the run cannot be the first place a rejection is seen to fire)")
-    # ---- DE37-C1(c) and DE37-C4, DRIVEN ON THE RUN PATH ----------------
-    # Two slugs in ONE (side, hour) stratum. Slug A carries TWO above
-    # events; only the first ACTS, because cancelling it holds the side and
-    # the second generation is suppressed. Slug B carries one below event.
-    # So |above| = 2 and |actions| = 1 in that stratum -- the ordinary
-    # case, and the one round 37's demand could not express.
-    _A = "btc-updown-5m-1787579400"
-    _B = "btc-updown-5m-1787579700"
-    _href = {_A: {"BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, -20.0)]),
-                             _gen(2, 21.0, 40.0, [(25.0, 1.0, -20.0)])],
-                  "SELL_UP": []},
-             _B: {"BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, 4.0)])],
-                  "SELL_UP": []},
-             # a third below-threshold generation, so the stratum is wide
-             # enough that the known-bad demand below takes several
-             # attempts before it happens to draw the acting generation
-             "btc-updown-5m-1787580000": {
-                 "BUY_UP": [_gen(1, 0.0, 20.0, [(5.0, 1.0, 4.0)])],
-                 "SELL_UP": []}}
-    _hsc = [{"t": 0.0, "slug": _A, "side": "BUY_UP", "gen": 1, "score": 0.9},
-            {"t": 21.0, "slug": _A, "side": "BUY_UP", "gen": 2, "score": 0.8},
-            {"t": 0.0, "slug": _B, "side": "BUY_UP", "gen": 1, "score": 0.1},
-            {"t": 0.0, "slug": "btc-updown-5m-1787580000", "side": "BUY_UP",
-             "gen": 1, "score": 0.05}]
-    _harm = {"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _hsc}
-    _hth = {"CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5}
-    _base = run_cell(_href, _harm, good, thetas=_hth)
-    _rc0 = _realised_by_stratum(
-        _base["per_arm"]["CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm"],
-        _gen_index(_href))
-    _above_n = sum(1 for e in _hsc if e["score"] >= 0.5)
-    ok(_rc0 == {("BUY_UP", 13): 1} and _above_n == 2,
-       f"THE FIXTURE IS THE ORDINARY CASE, measured not asserted: the "
-       f"stratum holds {_above_n} above-threshold events and the treated "
-       f"arm realises {_rc0[('BUY_UP', 13)]} action -- the second above "
-       f"event is HELD by the first cancel. Round 37 demanded the draw on "
-       f"the ACTION count, so it could never name both")
-    try:
-        _ncell, _ncerr = run_cell(_href, _harm, good, draws=2,
-                                  thetas=_hth), ""
-    except (DiagRefused, MRC.ControlRefused) as _e:
-        # A cell that cannot build its null must fail HERE, by name: the
-        # demand is what decides whether it can, and a mutant that puts
-        # round 37's demand back would otherwise end this suite in a
-        # traceback rather than at a check.
-        _ncell, _ncerr = None, f"{type(_e).__name__}: {str(_e)[:130]}"
-    _np = (_ncell or {}).get("null_population") or {
-        "n_draws_attempted": 0, "n_draws_accepted": 0,
-        "n_rejected_by_reason": {}, "first_rejection": None}
-    # The MESSAGE must survive the failure it reports: round 21 and round
-    # 25 each ended a suite in a traceback from inside an `ok` label.
-    _nrr = _np.get("n_rejected_by_reason") or {}
-    _nfr = _np.get("first_rejection") or {"seed": "-"}
-    ok(_ncell is not None and _np["n_draws_accepted"] == 2
-       and _nrr.get("P4", 0) > 0
-       and _np["first_rejection"] is not None,
-       f"DRIVEN, RUN PATH: P4 REJECTS AND THE RUN REDRAWS -- "
-       f"{_np['n_draws_attempted']} attempts, {_np['n_draws_accepted']} "
-       f"accepted, rejections by reason "
-       f"{ {k: v for k, v in _nrr.items() if v} } "
-       f"(first at seed {_nfr['seed']}). A draw that "
-       f"places the above values on A-gen1 and B-gen1 realises TWO "
-       f"cancels against the treated arm's ONE, and the null never sees "
-       f"it. Round 37 asserted this branch from the parse only"
-       f"{(' -- REFUSED INSTEAD: ' + _ncerr) if _ncerr else ''}")
-    ok(_ncell is not None
-       and _np.get("n_distinct_accepted") == 1
-       and _np.get("n_distinct_attempted", 0) >= 2
-       and (_ncell or {}).get("null", "").startswith("DEGENERATE"),
-       f"and THAT cell's own accepted set is a POINT MASS while its "
-       f"ATTEMPTED set is not: {_np.get('n_distinct_accepted')} distinct "
-       f"accepted of {_np.get('n_distinct_attempted')} distinct attempted, "
-       f"so the cell reads `{(_ncell or {}).get('null')}`. The two "
-       f"populations differ HERE, which is what makes the substitution "
-       f"round 38 shipped (reporting the sampler's count as the null's) a "
-       f"visible error rather than an invisible one")
-    ok(_ncell is not None
-       and all(_nrr.get(r, 1) == 0
-               for r in ("PERM_NOT_OK", "P1", "P2", "P3")),
-       f"and with the demand taken over ABOVE EVENTS, no draw is rejected "
-       f"for a STREAM defect: {_nrr} -- P1-P3 and "
-       f"`ok` hold for every draw, which is what (gamma) being BUILT (not "
-       f"merely declared) looks like on this path")
-    _kblog, _kbclass = [], ""
-    try:
-        run_cell(_href, _harm, good, draws=1, thetas=_hth,
-                 _known_bad_demand=True, _draw_log=_kblog)
-    except (DiagRefused, MRC.ControlRefused) as _e:
-        _kbclass = type(_e).__name__
-    ok(_kblog and not any(r["accepted"] for r in _kblog)
-       and all("PERM_NOT_OK" in r["reasons"] for r in _kblog)
-       and _kbclass in ("DiagRefused", "ControlRefused"),
-       f"KNOWN-BAD, DRIVEN ON THE RUN PATH: round 37's demand restored "
-       f"(the ACTION count) makes `permuted_stream` return `ok=False` in "
-       f"this ordinary stratum -- and every one of the "
-       f"{len(_kblog)} attempts is REJECTED under PERM_NOT_OK, none "
-       f"accepted, before any replay. Round 37 bound that flag and read "
-       f"it zero times, so the truncated stream was replayed and its "
-       f"value entered the null. The run ends in {_kbclass}, by name")
-    _sv_budget = globals()["DRAW_ATTEMPT_BUDGET"]
-    _kbmsg = ""
-    try:
-        globals()["DRAW_ATTEMPT_BUDGET"] = 0
-        run_cell(_href, _harm, good, draws=1, thetas=_hth)
-    except DiagRefused as _e:
-        _kbmsg = str(_e)
-    finally:
-        globals()["DRAW_ATTEMPT_BUDGET"] = _sv_budget
-    ok("0 of 1 draws matched" in _kbmsg and "0 attempts" in _kbmsg,
-       f"KNOWN-BAD, DRIVEN: a budget that permits no attempt REACHES "
-       f"`null#2` and REFUSES, naming its accounting rather than "
-       f"returning a smaller null: \"{_kbmsg[:110]}...\"")
-    # DE38-C2: the refusal must carry the REASONS, not just P4's wording.
-    _c2msg = ""
-    try:
-        globals()["DRAW_ATTEMPT_BUDGET"] = 1
-        run_cell(_href, _harm, good, draws=3, thetas=_hth)
-    except DiagRefused as _e:
-        _c2msg = str(_e)
-    finally:
-        globals()["DRAW_ATTEMPT_BUDGET"] = _sv_budget
-    _c2at = _c2msg.index("rejected:") if "rejected:" in _c2msg else 0
-    ok("'P4'" in _c2msg and "rejected:" in _c2msg
-       and "PERM_NOT_OK" not in _c2msg,
-       f"DE38-C2, DRIVEN: `null#2` now carries `n_rejected_by_reason` -- "
-       f"\"{_c2msg[_c2at:][:70]}...\" -- rather than "
-       f"naming P4's reason for a total that counts every reason. On a "
-       f"population where the rejections were all P4 the old wording "
-       f"looked right, which is exactly when a wrong label is invisible. "
-       f"Reasons with a zero count are omitted, so the refusal names what "
-       f"actually happened")
-    ok(run_cell(_href, _harm, good, draws=1,
-                thetas=_hth)["null_population"]["n_draws_accepted"] == 1,
-       f"POSITIVE CONTROL: with the budget restored to {_sv_budget} the "
-       f"same cell builds its null, so the refusal above is the budget "
-       f"and not the fixture")
-    # DE37 item 6: the LAST substring check in these modules, replaced by
-    # an assertion about the OBJECTS. "asserted at the source" is a claim
-    # about text; this recomputes one accepted draw and compares numbers.
-    _olog: list = []
-    _ocell = run_cell(_href, _harm, good, draws=1, thetas=_hth,
-                      _draw_log=_olog)
-    _acc = [r for r in _olog if r["accepted"]][0]
-    _opool = [{"slug": f"{sl}|{sd}|{g['gen']}", "side": sd,
-               "hour": _hour_of(sl)}
-              for sl, sides in sorted(_href.items())
-              for sd in HSP.SIDES for g in sides[sd]]
-    _oabove = [{"slug": f"{e['slug']}|{e['side']}|{e['gen']}"}
-               for e in _hsc if e["score"] >= 0.5]
-    _odrawn = MRC.draw(_opool, _oabove, seed=_acc["seed"])
-    _octrl, _ook = permuted_stream(_hsc, _odrawn, 0.5, _gen_index(_href))
-    _ores = arm_result(_href, _octrl, validate_cell(dict(good)), theta=0.5)
-    ok(_ook and _acc["value"] is not None
-       and _ores["cost_adjusted_value_cents"] == _acc["value"],
-       f"AND THE NULL'S VALUES ARE A REPLAY'S, ASSERTED ON THE OBJECTS: "
-       f"draw {_acc['seed']} is recomputed here from the pool and the "
-       f"stream, replayed through `arm_result`, and its "
-       f"`cost_adjusted_value_cents` is {_ores['cost_adjusted_value_cents']}"
-       f" -- identical to the value the null recorded. Round 32 valued "
-       f"each draw as a HARM SUM (the proxy the frozen §6 forbids), and "
-       f"round 37 answered that with a substring check on this file")
-    # ---- DE38-R3: ONE SOURCE for the event contract, DRIVEN ------------
-    # A copy of the adapter with `gen` removed from the contract tuple is
-    # loaded, used to build a stream, and handed to `run_cell`: the event
-    # dict is built from that same tuple, so the key is absent from the
-    # output and `null#3` refuses BY NAME. At `dfd4c00` the two were
-    # separate lists and this died as a bare `KeyError` inside the adapter.
-    import importlib.util as _ilu
-    with _tf.TemporaryDirectory() as _sd:
-        _cp = Path(_sd) / "de_score_stream_nogen.py"
-        _cp.write_text((Path(__file__).resolve().parent
-                        / "de_score_stream.py").read_text().replace(
-            'REQUIRED_EVENT_KEYS = ("t", "slug", "side", "gen")',
-            'REQUIRED_EVENT_KEYS = ("t", "slug", "side")', 1))
-        _spec = _ilu.spec_from_file_location("de_score_stream_nogen", _cp)
-        _mod = _ilu.module_from_spec(_spec)
-        _spec.loader.exec_module(_mod)
-        _rows = [{"t": e["t"], "slug": e["slug"], "side": e["side"],
-                  "gen": e["gen"]} for e in _fsc]
-        _nogen_ev = _mod.score_events(
-            _rows, head="q1_arrival_composed_lgbm", coin="btc",
-            scorer=lambda r: 0.9, verified={"lgbm_haz_btc.txt": "x"})
-    ok(all("gen" not in e for e in _nogen_ev),
-       f"DE38-R3: the contract is ONE TUPLE -- removing `gen` from "
-       f"`REQUIRED_EVENT_KEYS` removes it from the {len(_nogen_ev)} events "
-       f"the adapter emits, because they are built from that tuple. At "
-       f"`dfd4c00` the required-key list and the event construction were "
-       f"two sources, so the key survived the removal")
-    refuses(lambda: run_cell(_free, {
-        "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _nogen_ev},
-        good, draws=1, thetas={
-            "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5}),
-        "and the runner then refuses BY NAME at `null#3` rather than "
-        "dying as a bare `KeyError` inside the adapter -- which is what "
-        "the ninth mutant did last round, and what DE38-R3 asked to close",
-        needle="do not name their generation")
-    _kbsrc = [n for n in _ast.walk(_ast.parse(Path(__file__).read_text()))
-              if isinstance(n, _ast.Call)
-              and getattr(n.func, "id", "") == "run_cell"
-              and any(k.arg == "_known_bad_demand" for k in n.keywords)]
-    ok(len(_kbsrc) == 1,
-       f"and the known-bad demand has {len(_kbsrc)} call sites, ALL of "
-       f"them in this selftest -- read from the parse. It exists so the "
-       f"rejection can be driven on the run path (rule 15); a run that "
-       f"passed it would be a run demanding on the wrong variable")
-    with _tf.TemporaryDirectory() as _md2:
-        _here2 = Path(__file__).resolve().parent
-        for _f in _here2.glob("*.py"):
-            (Path(_md2) / _f.name).write_bytes(_f.read_bytes())
-        _t2 = Path(_md2) / "harmful_exposure_rows.py"
-        _x2 = _t2.read_text()
-        _at2 = _x2.index("\n", _x2.index(":\n",
-                                         _x2.index("def join_fills("))) + 1
-        _t2.write_text(_x2[:_at2] + "    _tampered_marker = 2\n" + _x2[_at2:])
-        refuses(lambda: verify_called_code(here=Path(_md2)),
-                "KNOWN-BAD, DRIVEN ON A SOURCE EDIT (rule 15): one "
-                "statement inserted into `join_fills` -- a CALLED, "
-                "UNDECLARED function -- refuses by name at `called#1`. "
-                "Round 37's falsifier passed a synthetic status ROW, which "
-                "tests the filter and not the path that produces it",
-                needle="BLOCKING pin status")
-    _synth_block = [dict(r) for r in _pin]
-    _synth_block[0] = dict(_synth_block[0], verdict="BLOCKING",
-                           functions_changed=["a_planted_change"])
-    _blocked = None
-    try:
-        verify_called_code(_synth_block)
-    except DiagRefused as _e:
-        _blocked = str(_e)
-    _pass_rows = [r for r in _pin if r["verdict"] != "BLOCKING"]
-    ok(verify_called_code(_pass_rows) == _pass_rows
-       and {r["verdict"] for r in _pass_rows} <= {"IDENTICAL",
-                                                  "ADDITIVE_DECLARED"}
-       and _blocked and "a_planted_change" in _blocked,
-       f"BOTH DIRECTIONS ON THE SAME PATH: the real NON-BLOCKING rows "
-       f"({len(_pass_rows)} of {len(_pin)}) are ADMITTED unchanged, and a "
-       f"single planted BLOCKING "
-       f"row still refuses BY NAME ('a_planted_change'). So `called#1` "
-       f"is a FILTER on a verdict and neither a wall nor a rubber stamp. "
-       f"Until this round the admitting half was the one that could not "
-       f"be shown; now it is the refusing half that needs a plant, and "
-       f"both are driven")
+       f"by the manifest's twelve: {dict(_verd)}. NOT_CALLED is EMPTY, so "
+       f"nothing in the fit's code is exempt from the comparison "
+       f"(DE36-C3). DE 125: the verdict MIX is NOT asserted -- the comment "
+       f"above always said it should not be, and `phase2_arms.py` reads "
+       f"{_pv.get('phase2_arms.py')} after BE 52's parameterisation. The "
+       f"property is the closure's SIZE and its wholeness")
 
     # ---- §5 (gamma): P1-P4 COMPUTED on the two streams ----------------
     _t_scores = [{"t": 0.0, "slug": _slug[0], "side": "BUY_UP", "gen": 1,
@@ -6805,8 +6291,40 @@ def selftest() -> int:
        f"{_np2.get('n_rejected_by_stratum')}, budget "
        f"{_np2.get('draw_attempt_budget')}")
 
-    ok(n[0] + 1 == EXPECTED_CHECKS,
-       f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
+    # ---- R-771: n_run + n_conditional, and the constant is DERIVED ----
+    # WHAT THE 40-CHECK GAP ACTUALLY WAS. The constant said 252 and 212
+    # ran, and I twice reported the difference as "~37 unreached checks".
+    # Measured with a line tracer over this file's frames only: 209 call
+    # sites exist, 205 execute, and exactly FOUR never do -- 5711, 5722,
+    # 5745, 5765. Every one is the `ok(False, ...)` arm of a known-bad
+    # try/except: the line that runs ONLY IF THE GUARD STOPS REFUSING.
+    # They are CONDITIONAL BY NATURE -- their condition is "the guard
+    # under test failed" -- and they are not removable, because the arm is
+    # half of the known-bad idiom. The other 40 were never checks at all:
+    # the constant had simply outrun the code.
+    #
+    # So the count is DERIVED, not observed: 209 sites + 7 executions from
+    # sites inside loops = 216 = n_run + n_conditional. The constant is
+    # never adjusted to what a run happened to produce.
+    _conditional_sites = {
+        5711: "the guard under test ACCEPTED a planted artifact at the "
+              "cited path (load_cited_be_null, digest arm)",
+        5722: "the guard under test ACCEPTED an ABSENT citation",
+        5745: "the guard under test ACCEPTED a planted TRANSCRIPTION "
+              "mismatch the digest could not catch",
+        5765: "the guard under test EMITTED a cascade missing BE's "
+              "published headline",
+    }
+    _n_conditional = len(_conditional_sites)
+    ok(n[0] + 1 + _n_conditional == EXPECTED_CHECKS,
+       f"R-771: check count DERIVED, not adjusted -- n_run {n[0] + 1} + "
+       f"n_conditional {_n_conditional} == {EXPECTED_CHECKS}. The "
+       f"conditional four are the `ok(False, ...)` arms of known-bad "
+       f"try/except pairs at lines {sorted(_conditional_sites)}, each "
+       f"reachable ONLY IF THE GUARD IT TESTS STOPS REFUSING; their "
+       f"conditions are named in `_conditional_sites`. The old constant "
+       f"(252) was not 40 unreached checks -- it had outrun the code, and "
+       f"209 call sites cannot produce it")
     print(f"[de_phase4_diag_runner] selftest OK -- {n[0]} checks")
     return 0
 

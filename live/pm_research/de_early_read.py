@@ -96,8 +96,27 @@ def the_ruling(repo_root=None) -> dict:
                 f"`{field}`. A ruling recorded in pieces is a ruling a "
                 f"later reader has to reconstruct.")
     days = list(block["this_reads_bar"]["days"])
+    # REV 95 minor: THE PATH IS REPO-RELATIVE. `resolve_head` returns an
+    # ABSOLUTE path, so the landed 09-03 artifact names
+    # `/home/yuqing/ctaNew-wt-de/live/...` -- a worktree that is frozen
+    # today and gone tomorrow, recorded inside an artifact meant to
+    # outlive it. The landed one is NOT edited (rule 13); the note below
+    # travels in every emission from here.
+    _rp = str(head["path"])
+    try:
+        _rp = str(Path(_rp).resolve().relative_to(root.resolve()))
+    except (ValueError, OSError):
+        pass
     return {
-        "ruling_by_pair": {"path": head["path"], "sha256": head["sha256"]},
+        "ruling_by_pair": {"path": _rp, "sha256": head["sha256"],
+                           "path_is": "REPO-RELATIVE"},
+        "NOTE_on_the_landed_09_03_artifact": (
+            "p003_de_early_read_day_20260903__20260907T085436Z.json names "
+            "its ruling at an ABSOLUTE path into "
+            "/home/yuqing/ctaNew-wt-de, the worktree that produced it. "
+            "That artifact is LANDED and is not edited (rule 13); this "
+            "note is the correction, in band, and every emission from "
+            "here writes the path repo-relative (REV 95)."),
         "params_version": doc.get("version"),
         "days": days,
         "G": len(days),
@@ -711,14 +730,35 @@ def _selftest_body(quiet: bool = False) -> int:
     # consumed measures the past.
     # BOTH DAYS ARE DERIVED FROM THE LEDGER, never typed.
     _st = bar_day_states()
-    ok(_st["read"] and _st["next_unread"],
-       f"DE 126: the bar's state is DERIVED -- read {_st['read']}, unread "
-       f"{_st['unread']}, next {_st['next_unread']}. No date is typed "
-       f"into these cells: a literal measures the day it was written on, "
-       f"which is how E1's SUCCESS aborted this battery")
-    _done = rehearse(_st["most_recently_read"])
-    ok(_done["status"] == "NOT_READY"
-       and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"],
+    # REV 95 §A5: THE CELL ASSERTS ON WHICHEVER TERMINAL STATE EXISTS.
+    # Requiring BOTH a read day and an unread one is a third literal --
+    # about the bar's PROGRESS rather than a date -- and it goes red the
+    # moment E4 reads the last day and `next_unread` becomes None. That is
+    # the same defect as the hardcoded 09-03, one level up: a cell that
+    # assumes the middle of the sweep.
+    ok(bool(_st["read"]) or bool(_st["unread"]),
+       f"REV 95 §A5: the bar's state is DERIVED and the cell asserts on "
+       f"whichever terminal state EXISTS -- read {_st['read']}, unread "
+       f"{_st['unread']}, next {_st['next_unread']}. Requiring both a read "
+       f"and an unread day would go red when E4 finishes the sweep, which "
+       f"is the hardcoded-date defect one level up")
+    if _st["next_unread"] is None:
+        # THE SWEEP IS DONE: every day is read, so every day must refuse.
+        _all_done = [rehearse(d) for d in _st["read"]]
+        ok(all(r["status"] == "NOT_READY"
+               and r["blocking"] == ["EARLY_READ_ALREADY_EMITTED"]
+               for r in _all_done),
+           f"REV 95 §A5: with NOTHING unread, all {len(_all_done)} read "
+           f"days rehearse NOT_READY / EARLY_READ_ALREADY_EMITTED. The "
+           f"sweep is complete and the entry offers to run none of it "
+           f"again")
+        _st_conditional_note = "the READY half is not reachable: no day is unread"
+    else:
+        _st_conditional_note = None
+    _done = rehearse(_st["most_recently_read"] or _st["read"][0]
+                     if _st["read"] else _st["unread"][0])
+    ok(not _st["read"] or (_done["status"] == "NOT_READY"
+       and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"]),
        f"DE 126: {_st['most_recently_read']} has been READ, so its "
        f"rehearsal refuses by name -- {_done['blocking']} -- rather than "
        f"offering to run it again. This is the POSITIVE CONTROL that the "
