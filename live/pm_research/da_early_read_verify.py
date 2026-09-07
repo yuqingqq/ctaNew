@@ -125,8 +125,55 @@ COUNTS_PROVENANCE = {
 }
 
 
-def counts_provenance(day: str) -> str:
+def counts_provenance(day: str, scope: dict | None = None) -> str:
+    """WHERE THIS DAY'S THREE COUNTS CAME FROM.
+
+    READ AT THE SEALED RECEIPT when one is supplied (DA 127): the receipt's
+    own `sealed_field_names` says which scope that run was sealed under,
+    and whether the three counts are IN it decides whether they were
+    visible before this read. The per-day constants below are kept only as
+    the fallback for a caller with no receipt, and they are no longer what
+    the table says when the receipt can answer -- ***the earlier days'
+    scope is not assumed for a later day***.
+    """
+    if isinstance(scope, dict) and scope.get("read_at_the_receipt"):
+        if scope.get("counts_are_sealed_names"):
+            return (f"unsealed BY THIS READ -- {scope['receipt']} sealed "
+                    f"them: all three are in that run's own "
+                    f"`sealed_field_names` ({scope['n_sealed_names']} names) "
+                    f"and none is present in its arm blocks")
+        return (f"VISIBLE IN THE OPEN since {scope['receipt']} landed -- "
+                f"that run's own `sealed_field_names` "
+                f"({scope['n_sealed_names']} names) does NOT include them "
+                f"and its arm blocks carry them")
     return COUNTS_PROVENANCE.get(str(day), COUNTS_PROVENANCE["_default"])
+
+
+def counts_scope_at_the_receipt(bar_row: dict, *, data_root) -> dict:
+    """The three counts' standing, read off THAT DAY'S sealed receipt."""
+    name = Path(str(bar_row["path"])).name
+    p = Path(data_root) / "pm_5min/derived" / name
+    if not p.is_file():
+        return {"read_at_the_receipt": False,
+                "why": f"{name} is not under this data root"}
+    rec = json.loads(p.read_bytes())
+    blocks = rec.get("per_day_sealed_artifacts") or []
+    if not blocks:
+        return {"read_at_the_receipt": False,
+                "why": f"{name} carries no arm blocks"}
+    names = list(blocks[0].get("sealed_field_names") or [])
+    in_scope = [c for c in COUNTS_REQUIRED if c in names]
+    present = [c for c in COUNTS_REQUIRED if c in blocks[0]]
+    return {"read_at_the_receipt": True, "receipt": name,
+            "sealed_field_names": names, "n_sealed_names": len(names),
+            "counts_are_sealed_names": len(in_scope) == len(COUNTS_REQUIRED),
+            "counts_in_the_seal_scope": in_scope,
+            "counts_present_in_the_receipts_arm_blocks": present,
+            "why_it_is_read_here": (
+                "the scope changed BETWEEN days -- 09-03 was sealed under "
+                "eight names and the later days under eleven -- so a "
+                "constant map would carry one day's scope onto another. "
+                "The receipt is the fact")}
 
 
 #: THE ONLY FIELDS THIS READER TAKES FROM A SEALED RECEIPT. The receipt is
@@ -498,6 +545,172 @@ def check_computation_params(doc: dict, bar_row: dict, *, data_root) -> dict:
                 "field into a compared one")}
 
 
+#: THE VALUATION, RE-IMPLEMENTED HERE FROM DE'S DECLARED RULE (R-235:
+#: read as a document, never imported). `de_phase4_diag_runner`'s
+#: `fill_value_cents` is the maker P&L at level-to-markout with NO fee
+#: term: sgn * (mid_cents_at_markout - px_cents) * size, sgn = +1 on the
+#: BUY side. The ledger's own header names the recompute entry point in
+#: DE's module; this reader does not call it -- two implementations that
+#: agree are evidence, one checking itself is not.
+LEDGER_BUY_SIDE = "BUY_UP"
+LEDGER_VALUATION = ("sgn * (mid_cents_at_markout - px_cents) * size, "
+                    "sgn = +1 on BUY_UP; math.fsum over the rows")
+
+
+def recompute_from_the_ledger(path) -> dict:
+    """PER ARM, FROM THE LEDGER'S ROWS ALONE. No artifact field is read."""
+    import gzip                                               # noqa: PLC0415
+    import math                                               # noqa: PLC0415
+    import statistics                                         # noqa: PLC0415
+    arms, draws, scal = {}, {}, {}
+    n_rows, kinds = 0, {}
+    with gzip.open(str(path), "rt") as f:
+        for line in f:
+            r = json.loads(line)
+            n_rows += 1
+            k = r.get("row")
+            kinds[k] = kinds.get(k, 0) + 1
+            if k == "ARM_SCALARS":
+                scal[r["arm"]] = r
+            elif k == "NULL_DRAW":
+                draws.setdefault(r["arm"], []).append(r["value"])
+            elif k == "FILL":
+                sgn = 1.0 if r.get("side") == LEDGER_BUY_SIDE else -1.0
+                v = sgn * (r["mid_cents_at_markout"] - r["px_cents"]) \
+                    * r["size"]
+                arms.setdefault(r["arm"], {}).setdefault(
+                    r.get("book"), []).append(v)
+    out = {}
+    for arm, sc in scal.items():
+        books = arms.get(arm, {})
+        arm_v = math.fsum(books.get("ARM", []))
+        base_v = math.fsum(books.get("BASELINE", []))
+        d = draws.get(arm, [])
+        mean = statistics.fmean(d) if d else None
+        sd = statistics.pstdev(d) if d else None
+        obs = arm_v - base_v
+        ge = sum(1 for x in d if x >= obs)
+        out[arm] = {
+            "arm_value_cents": arm_v, "baseline_value_cents": base_v,
+            "D_E0": obs,
+            "Z": ((obs - mean) / sd) if (sd not in (None, 0)) else None,
+            "p_location": ((1 + ge) / (1 + len(d))) if d else None,
+            "null_mean": mean, "null_sd": sd, "n_draws": len(d),
+            "n_fills_arm": len(books.get("ARM", [])),
+            "n_fills_baseline": len(books.get("BASELINE", [])),
+            "the_ledgers_own_scalars": {
+                "arm_value_cents": sc.get("arm_value_cents"),
+                "baseline_value_cents": sc.get("baseline_value_cents"),
+                "observed_D_E0": sc.get("observed_D_E0"),
+                "n_fills_arm": sc.get("n_fills_arm"),
+                "n_fills_baseline": sc.get("n_fills_baseline"),
+                "n_cancels_issued": sc.get("n_cancels_issued")},
+        }
+    return {"n_rows": n_rows, "row_kinds": kinds, "per_arm": out,
+            "valuation": LEDGER_VALUATION}
+
+
+def verify_decision_ledger(doc: dict, census: dict, *, data_root) -> dict:
+    """THE LEDGER THE ARTIFACT NAMES: identity, then an INDEPENDENT recompute.
+
+    Identity first -- a ledger whose bytes are not the ones the artifact
+    names is REFUSED, because everything below would then be a recompute of
+    a different file. Only then are the rows read, and what comes out is
+    compared to what the artifact printed.
+    """
+    ledger = check_decision_ledger(doc)
+    if ledger["status"] != "LEDGER_PRESENT":
+        return dict(ledger, recompute="NOT_ATTEMPTED_NO_LEDGER")
+    blk = (doc.get("day_run") or {}).get("decision_ledger") or {}
+    p = Path(str(blk.get("path")))
+    if not p.is_absolute():
+        p = Path(data_root) / "pm_5min/derived" / p.name
+    if not p.is_file():
+        raise EarlyReadVerifyRefused(
+            f"LEDGER_NAMED_BUT_ABSENT_ON_DISK: the artifact names {p.name} "
+            f"and it is not at {p}. A named artifact that is not there is a "
+            f"pin to nothing.")
+    got = _sha(p)
+    if got != blk.get("sha256"):
+        raise EarlyReadVerifyRefused(
+            f"LEDGER_DIGEST_MISMATCH: {p.name} digests {got[:16]}… and the "
+            f"artifact names {str(blk.get('sha256'))[:16]}…. Everything "
+            f"recomputed from it would be a recompute of a different file.")
+    rec = recompute_from_the_ledger(p)
+    if rec["n_rows"] != blk.get("n_rows"):
+        raise EarlyReadVerifyRefused(
+            f"LEDGER_ROW_COUNT_DIFFERS: the file holds {rec['n_rows']} rows "
+            f"and the artifact says {blk.get('n_rows')}.")
+    #: THE COMPARISON: what the ledger says against what the artifact
+    #: printed, field by field, EXACTLY -- both are finite sums of the same
+    #: float64 values selected by the same rule, so a tolerance would only
+    #: hide a selection difference.
+    per_arm, mismatches = {}, []
+    for arm, mine in rec["per_arm"].items():
+        theirs = (census.get("per_arm") or {}).get(arm) or {}
+        row = {}
+        for k in ("D_E0", "Z", "p_location", "null_mean", "null_sd",
+                  "n_draws", "n_fills_arm", "n_fills_baseline"):
+            a, b = mine.get(k), theirs.get(k)
+            row[k] = {"from_the_ledger": a, "in_the_artifact": b,
+                      "equal": a == b}
+            if a != b:
+                mismatches.append(f"{arm}.{k}")
+        row["baseline_value_cents"] = mine["baseline_value_cents"]
+        row["arm_value_cents"] = mine["arm_value_cents"]
+        row["the_ledgers_own_scalars_agree"] = (
+            mine["arm_value_cents"]
+            == mine["the_ledgers_own_scalars"]["arm_value_cents"]
+            and mine["baseline_value_cents"]
+            == mine["the_ledgers_own_scalars"]["baseline_value_cents"]
+            and mine["D_E0"]
+            == mine["the_ledgers_own_scalars"]["observed_D_E0"])
+        per_arm[arm] = row
+    return dict(
+        ledger,
+        recompute={
+            "path": str(p), "sha256": got, "n_rows": rec["n_rows"],
+            "row_kinds": rec["row_kinds"], "valuation": rec["valuation"],
+            "per_arm": per_arm,
+            "n_mismatches": len(mismatches), "mismatched": mismatches,
+            "verdict": "AGREES" if not mismatches else "FLAGGED",
+            "what_was_recomputed": (
+                "D_E0 as the difference of two fsum reductions over the "
+                "ARM and BASELINE fill rows; Z from the 500 NULL_DRAW "
+                "values as (observed - mean)/pstdev; p_location as "
+                "(1 + #{null >= observed}) / (1 + K), one-sided; and the "
+                "fill counts from the rows themselves"),
+            "this_reader_did_not_call_DEs_module": (
+                "the ledger's header names `de_decision_ledger.recompute`; "
+                "this is a SECOND implementation from the declared "
+                "valuation rule (R-235). Two implementations that agree are "
+                "evidence"),
+            "the_0_cancel_baseline": {
+                "value_cents": {a: v["baseline_value_cents"]
+                                for a, v in per_arm.items()},
+                "what_it_is": (
+                    "the value of the day's NO-CANCEL reference path, "
+                    "summed over its own fill rows under the declared "
+                    "valuation. It is the term D_E0 is an excess OVER, and "
+                    "no arm-day block carries it"),
+                "the_fills_leg_IS_the_total": (
+                    "the ledger's own `baseline_value_cents` equals this sum "
+                    "over the BASELINE fill rows exactly, so under the "
+                    "declared valuation the day's value is the FILLS LEG "
+                    "and carries no separate inventory term"),
+                "the_inventory_leg_is_NOT_computed_here": (
+                    "the five inventory fields (inventory_before, "
+                    "inventory_after, inventory_unit, inventory_mark_cents, "
+                    "inventory_mark_source) are on every fill row, so the "
+                    "INPUTS are there -- what is missing is a DECLARED "
+                    "AGGREGATION RULE: which residual position, marked at "
+                    "which price, per slug or per day. No such rule is in "
+                    "the ledger's header, the artifact or the design, and "
+                    "this reader will not choose one. That is the missing "
+                    "thing, and it is a rule rather than a field")},
+        })
+
+
 def check_decision_ledger(doc: dict) -> dict:
     """THE LEDGER: a REPORTED status, never a refusal and never a guess.
 
@@ -588,8 +801,17 @@ def check_labels(doc: dict, ruling: dict) -> dict:
 
 def check_not_computed(doc: dict) -> dict:
     """The five uncomputed fields: NAMED STATUSES with reasons, never numbers."""
-    blk = ((doc.get("economics_field_availability") or {})
-           .get("not_computed_by_this_path"))
+    #: TWO KEY NAMES, BOTH READ (DA 127). The block was
+    #: `not_computed_by_this_path` through 09-03 and 09-04; at R-765/BE 96
+    #: DE renamed it `not_computed_by_this_path_the_ARM_DAY_BLOCK` and
+    #: added `where_the_five_live_now`, because four of the five ARE now
+    #: computed -- in the DECISION LEDGER, not in the arm-day block. A
+    #: reader of history reads both names: the earlier artifacts carry the
+    #: earlier one and are not wrong for it.
+    avail = doc.get("economics_field_availability") or {}
+    blk = (avail.get("not_computed_by_this_path")
+           or avail.get("not_computed_by_this_path_the_ARM_DAY_BLOCK"))
+    where = avail.get("where_the_five_live_now")
     if not isinstance(blk, dict):
         raise EarlyReadVerifyRefused(
             "EARLY_READ_STATUS_MISSING: the artifact carries no "
@@ -615,6 +837,13 @@ def check_not_computed(doc: dict) -> dict:
                 f"EARLY_READ_STATUS_WITHOUT_A_REASON: `{k}` is {v!r}. A "
                 f"status without a reason is a shrug.")
         out[k] = v
+    if isinstance(where, dict):
+        #: NOT a refusal and NOT this reader's claim: DE's own statement of
+        #: where each of the five now lives, carried so the table does not
+        #: keep saying "not computed" about four quantities their own
+        #: artifact says are computed elsewhere. What THIS reader verified
+        #: independently is in the ledger block, not here.
+        out["_where_the_five_live_now_DEs_words"] = dict(where)
     return out
 
 
@@ -735,6 +964,7 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
     #: it is read. Reading provenance out of a receipt whose digest has not
     #: been checked would be trusting bytes nobody pinned.
     receipt = check_receipt_against_the_bar(doc, bar, data_root=data_root)
+    counts_scope = counts_scope_at_the_receipt(bar, data_root=data_root)
     #: CAUGHT, NOT SOFTENED: returned to the caller, which raises it unless a
     #: RULING covers the code. The other four checks below still raise.
     params, params_err = None, None
@@ -753,7 +983,7 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
     labels = check_labels(doc, ruling)
     statuses = check_not_computed(doc)
     census = census_arm_day(doc)
-    ledger = check_decision_ledger(doc)
+    ledger = verify_decision_ledger(doc, census, data_root=data_root)
     return {
         "protocol": PROTOCOL, "artifact": str(path),
         "artifact_sha256": _sha(Path(path)), "day": day,
@@ -771,7 +1001,8 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
         "census": census, "decision_ledger": ledger,
         "label_line": LABEL_LINE,
         "counts_provenance": {
-            "day": day, "says": counts_provenance(day),
+            "day": day, "says": counts_provenance(day, counts_scope),
+            "scope_read_at_the_receipt": counts_scope,
             "why_it_is_said": (
                 "REV 90 S A2 and the ruling's own blindness_notes: 09-03's "
                 "three counts were readable in the open while the later "
@@ -931,13 +1162,52 @@ def print_table(res: dict) -> str:
             for i, c in enumerate(r)))
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
     lines.append(f"  the three COUNTS on this day: "
-                 f"{counts_provenance(res['day'])}")
+                 f"{(res.get('counts_provenance') or {}).get('says')}")
     _dl = res.get("decision_ledger") or {}
+    _rc = _dl.get("recompute")
+    if isinstance(_rc, dict) and _rc.get("per_arm"):
+        _b = _rc["the_0_cancel_baseline"]["value_cents"]
+        _one = sorted(set(_b.values()))
+        lines.append(
+            f"  0-cancel baseline, from the ledger, EXPLORATORY: "
+            f"{_one[0]!r} cents"
+            + ("" if len(_one) == 1 else f" (per arm: {_b})")
+            + " -- the FILLS LEG is the whole of it; there is no separate "
+              "inventory term in this valuation, and an inventory LEG "
+              "would need an aggregation rule nobody has declared")
+        for _arm, _v in sorted(_rc["per_arm"].items()):
+            lines.append(
+                f"    {_arm}: arm {_v['arm_value_cents']!r} - baseline "
+                f"{_v['baseline_value_cents']!r} = "
+                f"{_v['D_E0']['from_the_ledger']!r}  (the artifact prints "
+                f"{_v['D_E0']['in_the_artifact']!r}; equal: "
+                f"{_v['D_E0']['equal']})")
+        lines.append(
+            f"  the ledger recompute: {_rc['verdict']} -- "
+            f"{_rc['n_rows']} rows, {_rc['n_mismatches']} mismatches across "
+            f"D_E0, Z, p, null mean/sd, n draws and both fill counts; "
+            f"Z and p re-derived from the {_rc['per_arm'][sorted(_rc['per_arm'])[0]]['n_draws']['from_the_ledger']} "
+            f"NULL_DRAW rows, not read from the artifact")
     if _dl.get("status") and _dl["status"] != "LEDGER_PRESENT":
         lines.append(
             f"  {_dl['status']}: {_dl['says']} -- "
             f"`day_run.decision_ledger` = {json.dumps(_dl['the_block_as_it_stands'])}. "
             f"{_dl['what_cannot_be_derived']}. It is NOT approximated here.")
+    _st = res.get("not_computed_statuses") or {}
+    _wh = _st.get("_where_the_five_live_now_DEs_words")
+    if isinstance(_wh, dict):
+        _still = sorted(k for k, v in _wh.items()
+                        if "NOT COMPUTED" in str(v).upper())
+        _elsewhere = sorted(k for k in _wh if k not in _still)
+        lines.append(
+            f"  NOT in the arm-day block, and the artifact says where they "
+            f"are: {', '.join(_elsewhere)} COMPUTED in the decision ledger "
+            f"(DE's words); {', '.join(_still)} not computed anywhere. This "
+            f"reader verified the ledger's own numbers independently; it "
+            f"did not re-derive these five from it.")
+    else:
+        lines.append("  NOT COMPUTED for these days, as named statuses: "
+                     + ", ".join(NOT_COMPUTED_KEYS))
     ur = res.get("under_ruling") or {}
     if ur.get("applies"):
         lines.append(
@@ -967,8 +1237,6 @@ def print_table(res: dict) -> str:
                  f"… equals the digest "
                  f"{res['computation_params']['the_sealed_receipt_declares']['receipt']}"
                  f" declares -- CHECKED, not recorded")
-    lines.append("  NOT COMPUTED for these days, as named statuses: "
-                 + ", ".join(NOT_COMPUTED_KEYS))
     return "\n".join(lines)
 
 
