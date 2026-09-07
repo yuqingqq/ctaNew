@@ -67,6 +67,44 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:19:44Z (MEM ROUND 277 -- R-801 AND R-802 SWEPT, with every landing between the tip I read at round 276
+  (`8a12422`) and `1e43c4f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***A USER RULING, THE FIFTH AND THE LARGEST: THE ESTIMAND CHANGES.*** Verbatim -- **"the pnls are from
+  trades and remaining position's settlement p&l, need to calculate this correctly"**, preceded by **"then the
+  simulation logic does not make sense at all"**. A path's P&L on a slug is the trades' cash flow PLUS the
+  settlement value of the position it still holds; the 5-second markout `D_E0` is DEMOTED TO A DIAGNOSTIC.
+  (2) ***I VERIFIED THE DECOMPOSITION AT THE 09-06 LEDGER, NOT ONLY AS ALGEBRA***: reading `buy_side` from the
+  header, `total = trades cash flow + net x settle` holds EXACTLY on all three paths **for settle = 100 AND
+  settle = 0** -- two values, so it is a check and not a tautology. ***AND MY NUMBERS ARE NOT SETTLEMENT P&Ls
+  AND I SAY SO***: settlement is PER SLUG, so a constant settle is a counterfactual that isolates the algebra
+  and values nothing. The real valuation needs the per-slug winner and is BE 99's.
+  (3) ***THE SUBSUMPTION IS OF R-795's QUESTION, NOT OF THE CODE'S FIELD.*** The ruling answers "does the
+  residual belong in the estimand" -- yes, at settlement. But the field named `inventory_leg` is, from my round
+  273 reading of `absolute_legs`, `Σ (after - before) x own mark` -- **the fills' CASH FLOW**, not a position
+  marked at settlement. The numbers make it unmissable: **225,644.56 and 248,737.89 against BE 98's residual
+  +12,011 and +10,390 -- nineteen and twenty-four times apart.** Two quantities, one name. **What must not happen
+  is the ruled residual landing in the field that already carries a different number under that name.**
+  (4) **MY ROUND-276 NULL FINDING IS NOW LOAD-BEARING**: `NULL_DRAW` is a scalar with no fills, so the draws
+  cannot be re-marked -- which the ruling's reading (3) turns into a dispatch line for DE 136. The Chainlink
+  verification source checks out on disk (`crypto_prices_twap_thirty` 366M, `_sixty` 368M,
+  `collect_pm_prices.py:40` "THE SETTLEMENT STREAM ... Chainlink RTDS TWAP relay", `exp_m6_settlement.py`
+  present). **The venue's record is the JOIN KEY and Chainlink is the VERIFIER** -- two jobs kept separate.
+  (5) **RULE 11 RECLASSIFIES THE FOUR READ DAYS AS DESIGN DATA** for the new endpoint -- consumed a SECOND time,
+  for a second question -- and **09-07 may not be valued before v20/v28 land**, a guard DE 136 must ship as a
+  refusal by name rather than a convention. The four-day table is not withdrawn: its numbers are unchanged and
+  what changes is what they are FOR.
+  (6) **MY ROUND-276 LABEL OBSERVATION IS OVERTAKEN, AND THE TIMES SAY I DID NOT ANTICIPATE IT**: I wrote it at
+  15:13:40Z; the ruling arrived between 15:07:32Z and 15:09:15Z. Two readings of the same evidence converged
+  within minutes and **the ruling goes far further than a label.** R-802 corrects R-801's "~15:1xZ" in band --
+  a placeholder digit caught by **the register's own placeholder check** -- which is R-466/R-467/R-755's
+  times-from-the-clock rule enforced by an instrument rather than by memory.
+  (7) **THE REPLAY ENGINE IS NOT WHAT THE RULING CHANGES; THE VALUATION IS** -- tape, queue, latency, matched
+  null, seed and per-fill ledger stand. Position caps and the quoter's placement remain OPEN with the user.
+  GO #8 tonight is UNCHANGED (`wt-de` `5020f96`, `?? data`, third round) and **its ledger is the input to an
+  endpoint that did not exist when its code was frozen** -- possible only because R-765 made the per-fill records
+  persist. Freeze holds a SEVENTEENTH round, and v20/v28 must now carry the new endpoint as well as the pins.
+  COUNTS (by YAML parse): flags 2166 -> 2183, provenance 1711 -> 1728 (seventeen written, seventeen
+  counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 259 archived.)
   2026-09-07T15:13:40Z (MEM ROUND 276 -- R-800 SWEPT, with every landing between the tip I read at round 275 (`71349a3`) and
   `8a12422`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***I REPRODUCED EVERY ONE OF BE 98's POSITION FIGURES FROM BOTH LEDGERS***, my own pass over
@@ -144,41 +182,6 @@ updated: >-
   belongs in the estimand.** The four-day table is untouched. Freeze holds a FIFTEENTH round.
   COUNTS (by YAML parse): flags 2134 -> 2150, provenance 1679 -> 1695 (sixteen written, sixteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 257 archived.)
-  2026-09-07T14:22:37Z (MEM ROUND 274 -- R-796, R-797, R-798 AND THE TWO RESULTS SS0b COMMITS SWEPT, with every landing between
-  the tip I read at round 273 (`c1ce532`) and `5c9c0d4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE FOUR-DAY EARLY READ IS COMPLETE, AND I BUILT THE TABLE FROM THE FOUR ARTIFACTS*** rather than from
-  DA's print or the register -- eight arm-days, every figure at the file, every 09-06 value matching R-798.
-  ***THE SIGN COUNTS REPRODUCE***: `CONDVALUE_X_SKEW` above the 0-cancel baseline **0 of 4**; `HAZARD_OVER_
-  SKEWED_REF` **1 of 4**, and that day is 09-05 -- the same day carrying the only positive `Z` (+4.33) and the
-  only `p_location` below 0.5 in the table.
-  (2) ***AND THE FLOOR IS 0.0625.*** With four days and a per-day sign the smallest attainable one-sided p is
-  **2^-4, above 0.05** -- so **the four-day read could not have produced a significance-bearing result no matter
-  which way every day fell.** That is why "nothing is a pass or a fail" is arithmetic and not a hedge, and why
-  R-754 ruled it EXPLORATORY with the days consumed.
-  (3) E4's artifact hashes **67bce38f9a0492ea** and carries the family's SECOND real ledger, **198,611 rows /
-  6,645,474 B**. The 09-06 absolutes reconcile **by subtraction at my own hand**: 58,021.27 - 90,153.40 =
-  -32,132.13; 88,041.52 - 90,153.40 = -2,111.88; baseline identical under both arms.
-  (4) ***EXACTLY TWO PARAMS SPANS, NOT FOUR***: measured at each sealed day-run by regex over the whole file --
-  09-03 v14, 09-04 v14, 09-05 v15, 09-06 v15. So 09-06 falls in 09-05's span, R-794's one measurement covers
-  both, and **the "fourth span if it differs" contingency did not fire.** ***MY FOUR-SHAPES NOTE IS NOW
-  MEASURED***, not predicted: no key / explicit null / real / real. **And the two days without absolutes are
-  exactly the two owing a replay** -- one cause (no ledger anchor when they ran), one remedy, no GO.
-  (5) ***DE 135 PART A IS DONE***: `wt-de` is at **`5020f96`**, and **both blocking conditions hold at my read
-  after it** -- pins **10/10** inside the worktree, and `git status` returning exactly one line, `?? data`, the
-  symlink. **I measured the same two conditions BEFORE the refresh at round 271, explicitly as a value and not a
-  clearance** -- two readings across the event distinguish "the refresh preserved it" from "it was always so".
-  (6) ***A REFINEMENT OF MY OWN ROUND-272 CLOSURE.*** The `ABSOLUTES_DO_NOT_RECONCILE` cell is two cells and
-  `EXPECTED_CHECKS` moved **374 -> 376** (verified at both objects; occurrences 2 -> 4). **But `a71b714` is NOT
-  an ancestor of `5020f96`** -- so **the bytes GO #8 runs tonight carry the guard and not the cells that watch
-  it.** My "watched on every run" is true at the tip and not for tonight's run: the same distinction I have drawn
-  about `fe76d83` for ten rounds, now applying to a closure of mine.
-  (7) ***AND THE PROPAGATION, ASSEMBLED***: DE wrote "computed in the decision ledger" into the artifact; **I
-  verified that block twice without opening the ledger**; DA repeated it in its row; BE 97 opened the file and
-  found no such field; DA has now corrected its own row IN BAND and DE 135 Part B corrects the artifact.
-  **Three seats checked, and every check was scoped to where the claim SAT rather than where it POINTED.** The
-  user's inventory ruling stays OPEN -- the only open one of today's four. Freeze holds a FOURTEENTH round.
-  COUNTS (by YAML parse): flags 2116 -> 2134, provenance 1661 -> 1679 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 256 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -350,6 +353,24 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 277, R-801 and R-802 swept (8a12422 -> 1e43c4f) ---
+  USER_RULING_R_801_THE_ESTIMAND_CHANGES_CARRIED_VERBATIM: THE-FIFTH-USER-RULING
+  I_VERIFIED_THE_DECOMPOSITION_ON_THE_LEDGER_NOT_ONLY_AS_ALGEBRA: BOTH-SETTLE-VALUES-ALL-THREE-PATHS
+  AND_MY_CHECK_IS_NOT_A_SETTLEMENT_PANDL_AND_I_SAY_SO: A-CONSTANT-SETTLE-IS-A-COUNTERFACTUAL
+  THE_SUBSUMPTION_IS_OF_R_795s_QUESTION_NOT_OF_THE_CODES_FIELD: THE-NAMES-COLLIDE-THE-QUANTITIES-DO-NOT
+  THE_TWO_QUANTITIES_ARE_ABOUT_TWENTY_TIMES_APART: 225644-AND-248737-AGAINST-12011-AND-10390
+  SO_A_LATER_READER_MUST_NOT_TAKE_inventory_leg_AS_THE_RESIDUAL_LEG: ONE-IS-CASH-FLOW-THE-OTHER-IS-A-POSITION-MARK
+  MY_ROUND_276_NULL_FINDING_IS_NOW_LOAD_BEARING: NULL_DRAW-HAS-NO-FILLS-SO-THE-NULL-NEEDS-CODE
+  THE_CHAINLINK_TWAP_STREAM_EXISTS_AND_IS_NAMED_AT_THE_COLLECTOR: 366M-AND-368M-ON-DISK
+  THE_WINNER_SOURCE_AND_THE_VERIFICATION_SOURCE_ARE_TWO_THINGS_BY_DESIGN: THE-VENUES-RECORD-JOINED-CHAINLINK-VERIFIES
+  RULE_11_RECLASSIFIES_THE_FOUR_READ_DAYS_AS_DESIGN_DATA: CONSUMED-TWICE-OVER-AND-FOR-TWO-ENDPOINTS
+  AND_09_07_MAY_NOT_BE_VALUED_BEFORE_THE_DECLARATION_LANDS: A-GUARD-DE-136-MUST-SHIP-AS-A-REFUSAL
+  THE_5_SECOND_MARKOUT_BECOMES_A_DIAGNOSTIC_NOT_THE_RESULT: D_E0-SURVIVES-DEMOTED
+  MY_ROUND_276_LABEL_OBSERVATION_IS_OVERTAKEN_BY_THE_RULING: AND-THE-RULING-GOES-FURTHER-THAN-A-LABEL
+  R_802_APPLIES_THE_TIMES_FROM_THE_CLOCK_RULE_AND_AN_INSTRUMENT_CAUGHT_IT: ONE-PLACEHOLDER-HIT
+  THE_REPLAY_ENGINE_IS_NOT_WHAT_THE_RULING_CHANGES: THE-VALUATION-IS
+  GO_8_TONIGHT_IS_UNCHANGED_AND_ITS_LEDGER_IS_THE_INPUT: 5020f96-THIRD-CONSECUTIVE-ROUND
+  THE_FREEZE_HOLDS_FOR_THE_SEVENTEENTH_ROUND: AND-v20-v28-NOW-CARRY-THE-NEW-ENDPOINT
   # --- MEM round 276, R-800 swept (71349a3 -> 8a12422) ---
   I_REPRODUCED_EVERY_ONE_OF_BE_98s_POSITION_FIGURES_FROM_BOTH_LEDGERS: 157-26-144-23-278-76-307-52-168-147
   AND_THE_DISTRIBUTION_SHOWS_SOMETHING_THE_MAXIMA_DO_NOT: CONDVALUE-SMALLER-TYPICAL-LARGER-WORST
@@ -26524,6 +26545,201 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 277, 2026-09-07T15:19:44Z (the clock read by which every measurement below was complete) ---
+  USER_RULING_R_801_THE_ESTIMAND_CHANGES_CARRIED_VERBATIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      **A USER RULING, THE FIFTH OF THIS PROGRAMME AND THE LARGEST**, carried verbatim as the user wrote it: **"the
+      pnls are from trades and remaining position's settlement p&l, need to calculate this correctly"**, preceded on
+      reviewing R-800's trace and BE 98's settlement table by **"then the simulation logic does not make sense at
+      all"**. **THE ESTIMAND CHANGES**: a path's P&L on a slug is the cash flow of its trades PLUS the settlement value
+      of the position it still holds at the window's close; the day is the sum over slugs; the arm's excess is that
+      minus the baseline's. The five now on the record are R-754, R-765, R-782, R-795 and R-801, and the coordinator's
+      reading of this one is DISCLOSED for correction under rule 14.
+  I_VERIFIED_THE_DECOMPOSITION_ON_THE_LEDGER_NOT_ONLY_AS_ALGEBRA:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      The coordinator's reading (1) says `total = trades + residual = Σ_fills sgn x (settle - px) x size`, so **BE 98's
+      column (a) IS the ruled quantity and the two legs are its decomposition**. I checked that at the 09-06 ledger
+      rather than on paper: reading `buy_side` from the header (`BUY_UP`), I accumulated per path the trades' cash flow
+      `-Σ sgn·px·size`, the net position `Σ sgn·size`, and `Σ sgn·(settle - px)·size` **for settle = 100 AND settle =
+      0**. **The identity holds exactly on all three paths at both values** -- BASELINE cash -497,475.77 with net
+      +1,598.77 giving -337,598.36 either way; CONDVALUE +36,443.72 / -223.48; HAZARD -217,065.35 / +22.24. Two
+      independent settle values make it a check rather than a tautology of one.
+  AND_MY_CHECK_IS_NOT_A_SETTLEMENT_PANDL_AND_I_SAY_SO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      **SAID EXPLICITLY SO NOBODY READS -337,598 AS A RESULT.** Settlement is **per slug** -- each of the 288 has its
+      own winner -- so a day's ruled P&L is Σ over slugs of `trades_s + net_s x settle_s`, and it is **NOT** the day's
+      aggregate net times one settle. My check deliberately used a CONSTANT settle across all slugs, which is the
+      degenerate case that isolates the algebra: it validates **the decomposition**, and it values nothing. The numbers
+      above are what each path would be worth if every slug settled the same way, which is a counterfactual and not the
+      day. **The real valuation needs the per-slug winner, which is BE 99's dispatch, not mine.**
+  THE_SUBSUMPTION_IS_OF_R_795s_QUESTION_NOT_OF_THE_CODES_FIELD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      **THE ONE PLACE THIS ENTRY COULD MISLEAD A LATER READER, AND IT IS A NAME COLLISION.** The dispatch flags that
+      R-795's inventory-leg question is SUBSUMED because "settlement of the residual IS the inventory leg". **That is
+      true of R-795's QUESTION and false of the code's FIELD.** R-795 asked whether the residual position belongs in the
+      estimand; R-801 answers yes, marked at settlement. But the field named `inventory_leg` in the artifacts is, as I
+      established at round 273 from `absolute_legs`, **`Σ (inventory_after - inventory_before) x inventory_mark_cents`
+      -- the fills' CASH FLOW at each fill's own mark** -- which is not a residual position marked at settlement and is
+      not what the ruling names. **The question is subsumed; the field is not the answer to it.**
+  THE_TWO_QUANTITIES_ARE_ABOUT_TWENTY_TIMES_APART:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      And the numbers make the distinction unmissable rather than semantic. The code's `inventory_leg` on the 0-cancel
+      baseline: **225,644.56 cents (09-05)** and **248,737.89 (09-06)**, read at the artifacts. BE 98's residual
+      settlement value on the same baseline: **+12,011 and +10,390**. **Roughly nineteen and twenty-four times apart.**
+      Two quantities, one name. If the ruling's residual leg is ever reported into a field called `inventory_leg`, or
+      if a reader takes the existing field as an early version of it, the error is a factor of twenty and it will not
+      look like a units mistake.
+  SO_A_LATER_READER_MUST_NOT_TAKE_inventory_leg_AS_THE_RESIDUAL_LEG:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      The concrete consequence for DE 136, recorded rather than routed. The runner's `absolute_legs` currently returns
+      `fills_leg`, `inventory_leg`, `total` -- where `total` is the fills leg and `inventory_leg` is a cash-flow sum.
+      **The ruled quantity needs a residual leg that is `net_shares x settle` per slug**, which no existing field
+      holds. Either the new estimator introduces distinct names or the old field is renamed to what it computes; **what
+      must not happen is the ruled residual landing in the field that already carries a different number under that
+      name.** DE 135 Part B has already had to correct one claim about `inventory_leg` this afternoon; this is the same
+      name causing the same trouble one layer up.
+  MY_ROUND_276_NULL_FINDING_IS_NOW_LOAD_BEARING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      At round 276 I verified structurally that **`NULL_DRAW` carries five keys -- `arm`, `cancels`, `i`, `row`,
+      `value` -- a scalar and NO fills**, so the draws cannot be re-marked, and concluded that a settlement view could
+      have a point estimate and never a Z or a p from that file. **R-801's reading (3) now makes that the reason a
+      piece of work exists**: "the draws' fills must be kept or valued inline (design v27 discards them), so Z and p
+      under the new endpoint need code", and DE 136 is dispatched to build exactly that. A structural observation about
+      a file's row shape has become a line item in a dispatch.
+  THE_CHAINLINK_TWAP_STREAM_EXISTS_AND_IS_NAMED_AT_THE_COLLECTOR:
+    prov: CHECKED
+    artifact: live/pm_research/collect_pm_prices.py
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      R-801's reading (4) names the verification source and I checked every part on disk.
+      `data/pm_5min/prices/crypto_prices_twap_thirty` **exists, 366M**; `..._sixty` **exists, 368M**;
+      `live/pm_research/collect_pm_prices.py:40` reads **"THE SETTLEMENT STREAM (review iter 1): Chainlink RTDS
+      TWAP relay,"** -- and I record the FULL path because my own probe used a `||` fallback across two candidate
+      directories, printed the line from the second, and I first wrote down the first: **the missing-artifact
+      check caught it before this landed.** `live/pm_research/exp_m6_settlement.py` **exists**. So the stream the ruling asks the winner to be verified
+      against is present and was collected as the settlement stream by design, not repurposed.
+  THE_WINNER_SOURCE_AND_THE_VERIFICATION_SOURCE_ARE_TWO_THINGS_BY_DESIGN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      The distinction R-801 draws, worth keeping because it is easy to collapse: **the venue's record
+      (`resolutions.jsonl`, `winners`, source "clob") is the JOIN KEY**, and **the Chainlink TWAP stream is the
+      VERIFIER** -- "the winner is VERIFIED against it, per slug, before any settlement P&L is quoted as final". At
+      round 276 I measured that Chainlink is named in **all 38,292** market rows and read by **none** of the four
+      day-path modules; the ruling now closes that gap deliberately rather than by adopting one source for both roles.
+      **A join key and a verification are different jobs and this keeps them separate**, which is the same shape as
+      R-235's do-not-harmonize rule.
+  RULE_11_RECLASSIFIES_THE_FOUR_READ_DAYS_AS_DESIGN_DATA:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      Reading (6) applies rule 11 to the new endpoint: **09-03..09-06 are DESIGN data for it; 09-07 and later are the
+      validation population.** Recorded with its full weight: those four days were already consumed for the harmful-fill
+      line under R-754, and they are now **consumed a second time, for a second endpoint** -- the same days, a different
+      question, and no longer available to validate either. **Four days cannot be spent twice and be validation for
+      anything**, which is precisely why the ruling names 09-07 forward as the validation set in the same breath.
+  AND_09_07_MAY_NOT_BE_VALUED_BEFORE_THE_DECLARATION_LANDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      The guard, in the ruling's own emphasis: **"NOBODY computes 09-07's settlement P&L before the declaration
+      (params v20 / design v28) lands"** -- and DE 136 is dispatched to ship it as executable rather than as a
+      convention: "a refusal by name when asked to value a day not in the declaration's admissible set (rule 11's
+      guard)". **That is the right form**: rule 11 has been enforced by discipline all afternoon, and this is the first
+      time it becomes a refusal a run can hit. Tonight's GO #8 produces 09-07's ledger and **must not be valued under
+      the new endpoint until v20/v28 land and REV reads them.**
+  THE_5_SECOND_MARKOUT_BECOMES_A_DIAGNOSTIC_NOT_THE_RESULT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      Reading (2): the 5-second markout `D_E0` "is no longer the primary metric" and "stays as a DIAGNOSTIC of
+      short-horizon adverse selection, never quoted as 'the result'". **The four-day table is not withdrawn and its
+      numbers are not wrong** -- they are measurements of a quantity that has been demoted. Every figure in it (0 of 4
+      and 1 of 4, the floor at 0.0625, fills leg only) remains exactly what it was; what changes is what it is FOR.
+      **A demoted metric with its provenance intact is more useful than a withdrawn one**, and this is the second time
+      today a number has survived a change in what it answers.
+  MY_ROUND_276_LABEL_OBSERVATION_IS_OVERTAKEN_BY_THE_RULING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      Recorded with the times straight, because the order matters and it is not the flattering one. At **15:13:40Z** I
+      wrote that R-795's "fills leg only" label needed a second half -- the horizon -- since BE 98's settlement view
+      flipped 09-06. **The user's ruling had already arrived, between 15:07:32Z and 15:09:15Z** (R-802's anchoring), and
+      reached the register at 15:14:00Z. **So I did not anticipate it**: two readings of the same evidence converged
+      within minutes, mine from R-800's contents and the user's from the same trace, and **the ruling goes much further
+      than a label** -- it changes which quantity is primary rather than labelling the old one better. My observation
+      is overtaken in the best available way and I record it as overtaken.
+  R_802_APPLIES_THE_TIMES_FROM_THE_CLOCK_RULE_AND_AN_INSTRUMENT_CAUGHT_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      R-802 corrects R-801 in band under rule 13: the headline had written the ruling as "received ~15:1xZ" -- **an
+      estimated time with a placeholder digit, not a clock reading** -- and **the register's own placeholder check
+      flagged it (1 hit)**. The clock-anchored fact is that the user's message arrived between the coordinator's
+      15:07:32Z read of BE 98 and the 15:09:15Z line printed by the MEM 276 dispatch's tool result; the dispatches went
+      at 15:14:04Z and 15:14:05Z. **This is R-466/R-467/R-755's rule -- never write a time that was not read from a
+      clock -- enforced by an instrument rather than by memory**, and it is the rule I have carried in my own standing
+      practice since those entries. The ruling text, reading and dispatches are unchanged.
+  THE_REPLAY_ENGINE_IS_NOT_WHAT_THE_RULING_CHANGES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      A boundary the entry draws explicitly and which the state files should carry, because "the simulation logic does
+      not make sense at all" could be read as condemning everything. **"The replay ENGINE (tape, queue, latency, matched
+      null, seed, per-fill ledger) is not what the ruling changes; the valuation is."** What the user's review named --
+      the 5 s horizon on an instrument that settles 0/100 within five minutes, no position limit, a quoter with no view
+      of settlement -- are valuation and policy questions. **Position caps and the quoter's placement remain OPEN with
+      the user** (R-800 (iii)) and this ruling does not touch them, so the open user set is now: the caps, the quoter,
+      and whatever correction the disclosed reading draws.
+  GO_8_TONIGHT_IS_UNCHANGED_AND_ITS_LEDGER_IS_THE_INPUT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      Measured again rather than carried: `wt-de` HEAD **`5020f96`**, `git status --short` exactly `?? data` -- the
+      third consecutive round at that state. The ruling changes no bytes GO #8 runs and says so: **"GO #8 runs unchanged
+      tonight, its ledger is the input the new estimator reads afterwards."** So tonight's run is now producing the
+      first input to an endpoint that did not exist when its code was frozen -- which is only possible because the
+      ledger keeps the per-fill records rather than only the summary, R-765's ruling paying off in a way nobody
+      anticipated when it was made.
+  THE_FREEZE_HOLDS_FOR_THE_SEVENTEENTH_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:19:44Z
+    said: >-
+      `params_v20` and `design_v28` absent (0 matches in any state), heads v19/v27, never having existed as files.
+      **But their content has just changed**: v20/v28 were to carry the re-measured cascade pins; they must now also
+      carry **the new PRIMARY endpoint, `D_E0` as diagnostic, the winner source and its verification, and the
+      admissible days from 09-07** -- DE 136 drafts that text, code only, wt-de untouched. The 09-03/09-04 replay debt
+      also grows a third reason: with ledgers those two days become inputs to the new valuation as well.
   # --- MEM round 276, 2026-09-07T15:13:40Z (the clock read by which every measurement below was complete) ---
   I_REPRODUCED_EVERY_ONE_OF_BE_98s_POSITION_FIGURES_FROM_BOTH_LEDGERS:
     prov: CHECKED

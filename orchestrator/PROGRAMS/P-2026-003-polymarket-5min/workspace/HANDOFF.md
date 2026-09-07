@@ -1,3 +1,104 @@
+# READ FIRST — round 277 (MEM, 2026-09-07T15:19:44Z, tip `1e43c4f`)
+
+**R-801 and R-802 swept, with every landing between the tip I read at round 276 (`8a12422`) and `1e43c4f`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. A user ruling — the estimand changes
+
+Verbatim: **"the pnls are from trades and remaining position's settlement p&l, need to calculate this
+correctly"**, preceded on reviewing R-800's trace and BE 98's settlement table by **"then the simulation logic
+does not make sense at all"**.
+
+A path's P&L on a slug = **the trades' cash flow + the settlement value of the position it still holds**; day =
+Σ slugs; excess = arm − baseline. **The 5-second markout `D_E0` is demoted to a diagnostic.** Fifth user ruling
+(R-754, R-765, R-782, R-795, R-801); the coordinator's reading is disclosed for correction under rule 14.
+
+## 2. The decomposition, verified at the ledger
+
+Reading `buy_side` from the 09-06 ledger header (`BUY_UP`), I accumulated per path the trades' cash flow
+`−Σ sgn·px·size`, the net position `Σ sgn·size`, and `Σ sgn·(settle − px)·size` **for settle = 100 and settle =
+0**:
+
+| path | trades cash | net shares | trades + 100·net | Σ sgn(100−px)·size | match |
+|---|---:|---:|---:|---:|:--:|
+| BASELINE | −497,475.77 | +1,598.77 | −337,598.36 | −337,598.36 | ✓ |
+| CONDVALUE | +36,443.72 | −223.48 | +14,095.22 | +14,095.22 | ✓ |
+| HAZARD | −217,065.35 | +22.24 | −214,841.32 | −214,841.32 | ✓ |
+
+Exact on all three paths at both settle values — two values make it a check, not a tautology. **So BE 98's column
+(a) is the ruled quantity and the two legs are its decomposition.**
+
+**These are not settlement P&Ls, and I say so.** Settlement is **per slug** — a day is `Σ_s (trades_s + net_s ×
+settle_s)`, not the day's aggregate net times one settle. My constant-settle check isolates the algebra and values
+nothing; the numbers above are counterfactuals. The real valuation needs the per-slug winner and is BE 99's.
+
+## 3. The subsumption is of R-795's *question*, not of the code's *field*
+
+The flag says the inventory-leg question is subsumed because "settlement of the residual IS the inventory leg".
+**True of the question; false of the field.**
+
+| | quantity | 09-05 baseline | 09-06 baseline |
+|---|---|---:|---:|
+| code's `inventory_leg` | `Σ (after − before) × own mark` — the fills' **cash flow** (round 273) | **225,644.56** | **248,737.89** |
+| the ruling's residual leg | `net_shares × settle` (BE 98) | **+12,011** | **+10,390** |
+
+**Nineteen and twenty-four times apart. Two quantities, one name.** The concrete risk for DE 136: no existing
+field holds `net_shares × settle`, and **the ruled residual must not land in the field that already carries a
+different number under that name.** DE 135 Part B had to correct one claim about `inventory_leg` this afternoon;
+this is the same name causing the same trouble one layer up.
+
+## 4. What else the ruling turns on
+
+- **My round-276 null finding is now load-bearing.** `NULL_DRAW` is a scalar with no fills, so the draws cannot
+  be re-marked — reading (3) turns that into a dispatch line: the null needs code before Z or p exist under the
+  new endpoint.
+- **The Chainlink verifier checks out on disk:** `crypto_prices_twap_thirty` (366M), `_sixty` (368M),
+  `live/pm_research/collect_pm_prices.py:40` — *"THE SETTLEMENT STREAM … Chainlink RTDS TWAP relay"* — and
+  `live/pm_research/exp_m6_settlement.py`. **The venue's record is the join key; Chainlink is the verifier** —
+  two jobs kept separate, the R-235 shape. *(I first recorded the collector at `live/collect_pm_prices.py`: my
+  probe used a `||` fallback across two directories, answered from the second, and I wrote down the first. The
+  missing-artifact check caught it before this landed — 178 → 179 → 178.)*
+- **Rule 11 reclassifies 09-03..09-06 as design data** for the new endpoint — **consumed a second time, for a
+  second question** — and **09-07 may not be valued before v20/v28 land**, a guard DE 136 must ship as a refusal
+  by name rather than a convention. **The four-day table is not withdrawn**: its numbers are unchanged; what
+  changes is what they are for.
+
+## 5. My round-276 observation, overtaken — with the times straight
+
+At **15:13:40Z** I wrote that R-795's "fills leg only" label needed a second half (the horizon). **The ruling had
+already arrived, between 15:07:32Z and 15:09:15Z**, reaching the register at 15:14:00Z. **So I did not anticipate
+it** — two readings of the same evidence converged within minutes, and the ruling goes far further than a label:
+it changes which quantity is primary.
+
+**R-802 corrects R-801 in band**: the headline wrote "~15:1xZ", a placeholder digit rather than a clock reading,
+and **the register's own placeholder check flagged it (1 hit)**. That is R-466/R-467/R-755's times-from-the-clock
+rule **enforced by an instrument rather than by memory**. Ruling text, reading and dispatches unchanged.
+
+## 6. Standing
+
+- **The replay engine is not what the ruling changes; the valuation is** — tape, queue, latency, matched null,
+  seed and per-fill ledger stand. **Position caps and the quoter's placement remain open with the user.**
+- **GO #8 tonight is unchanged** — `wt-de` `5020f96`, status exactly `?? data`, third consecutive round — and
+  **its ledger is the input to an endpoint that did not exist when its code was frozen.** That is only possible
+  because R-765 made the per-fill records persist.
+- **Freeze holds a seventeenth round**, and v20/v28 must now carry the new endpoint as well as the re-measured
+  pins. The 09-03/09-04 replay debt gains a third reason: with ledgers those days become inputs to the new
+  valuation too.
+- Dispatched: **BE 99** (the ruled P&L at both ledgers with per-slug Chainlink verification) and **DE 136** (the
+  estimator, the re-valued null, falsifiers, the rule-11 guard, the v20/v28 draft — code only).
+
+## 7. Counts
+
+flags 2166 → **2183**, provenance 1711 → **1728** (seventeen written, seventeen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,438 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 153rd round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178** — it rose to 179 on a wrong path of mine and returned when I fixed it, so my
+seventeen added none. Window trimmed 4 → 3,
+**Batch 259** archived.
+
+**NEXT:** BE 99 and DE 136 → REV 104 → the close → GO #8. MEM sweeps R-803 onward.
+
+---
+
 # READ FIRST — round 276 (MEM, 2026-09-07T15:13:40Z, tip `8a12422`)
 
 **R-800 swept, with every landing between the tip I read at round 275 (`71349a3`) and `8a12422`.** STATE ONLY.

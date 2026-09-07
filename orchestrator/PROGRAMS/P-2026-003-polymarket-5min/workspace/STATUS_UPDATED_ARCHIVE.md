@@ -20129,3 +20129,43 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2098 -> 2116, provenance 1643 -> 1661 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 255 archived.)
 ```
+
+## Batch 259 — archived 2026-09-07T15:19:44Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T14:22:37Z (MEM ROUND 274 -- R-796, R-797, R-798 AND THE TWO RESULTS SS0b COMMITS SWEPT, with every landing between
+  the tip I read at round 273 (`c1ce532`) and `5c9c0d4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE FOUR-DAY EARLY READ IS COMPLETE, AND I BUILT THE TABLE FROM THE FOUR ARTIFACTS*** rather than from
+  DA's print or the register -- eight arm-days, every figure at the file, every 09-06 value matching R-798.
+  ***THE SIGN COUNTS REPRODUCE***: `CONDVALUE_X_SKEW` above the 0-cancel baseline **0 of 4**; `HAZARD_OVER_
+  SKEWED_REF` **1 of 4**, and that day is 09-05 -- the same day carrying the only positive `Z` (+4.33) and the
+  only `p_location` below 0.5 in the table.
+  (2) ***AND THE FLOOR IS 0.0625.*** With four days and a per-day sign the smallest attainable one-sided p is
+  **2^-4, above 0.05** -- so **the four-day read could not have produced a significance-bearing result no matter
+  which way every day fell.** That is why "nothing is a pass or a fail" is arithmetic and not a hedge, and why
+  R-754 ruled it EXPLORATORY with the days consumed.
+  (3) E4's artifact hashes **67bce38f9a0492ea** and carries the family's SECOND real ledger, **198,611 rows /
+  6,645,474 B**. The 09-06 absolutes reconcile **by subtraction at my own hand**: 58,021.27 - 90,153.40 =
+  -32,132.13; 88,041.52 - 90,153.40 = -2,111.88; baseline identical under both arms.
+  (4) ***EXACTLY TWO PARAMS SPANS, NOT FOUR***: measured at each sealed day-run by regex over the whole file --
+  09-03 v14, 09-04 v14, 09-05 v15, 09-06 v15. So 09-06 falls in 09-05's span, R-794's one measurement covers
+  both, and **the "fourth span if it differs" contingency did not fire.** ***MY FOUR-SHAPES NOTE IS NOW
+  MEASURED***, not predicted: no key / explicit null / real / real. **And the two days without absolutes are
+  exactly the two owing a replay** -- one cause (no ledger anchor when they ran), one remedy, no GO.
+  (5) ***DE 135 PART A IS DONE***: `wt-de` is at **`5020f96`**, and **both blocking conditions hold at my read
+  after it** -- pins **10/10** inside the worktree, and `git status` returning exactly one line, `?? data`, the
+  symlink. **I measured the same two conditions BEFORE the refresh at round 271, explicitly as a value and not a
+  clearance** -- two readings across the event distinguish "the refresh preserved it" from "it was always so".
+  (6) ***A REFINEMENT OF MY OWN ROUND-272 CLOSURE.*** The `ABSOLUTES_DO_NOT_RECONCILE` cell is two cells and
+  `EXPECTED_CHECKS` moved **374 -> 376** (verified at both objects; occurrences 2 -> 4). **But `a71b714` is NOT
+  an ancestor of `5020f96`** -- so **the bytes GO #8 runs tonight carry the guard and not the cells that watch
+  it.** My "watched on every run" is true at the tip and not for tonight's run: the same distinction I have drawn
+  about `fe76d83` for ten rounds, now applying to a closure of mine.
+  (7) ***AND THE PROPAGATION, ASSEMBLED***: DE wrote "computed in the decision ledger" into the artifact; **I
+  verified that block twice without opening the ledger**; DA repeated it in its row; BE 97 opened the file and
+  found no such field; DA has now corrected its own row IN BAND and DE 135 Part B corrects the artifact.
+  **Three seats checked, and every check was scoped to where the claim SAT rather than where it POINTED.** The
+  user's inventory ruling stays OPEN -- the only open one of today's four. Freeze holds a FOURTEENTH round.
+  COUNTS (by YAML parse): flags 2116 -> 2134, provenance 1661 -> 1679 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 256 archived.)
+```
