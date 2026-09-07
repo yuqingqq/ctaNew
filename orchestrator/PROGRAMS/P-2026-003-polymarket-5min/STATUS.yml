@@ -63,6 +63,51 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T02:39:16Z (MEM ROUND 244 -- R-744 SWEPT, tip `a487e22`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***THE PEAKS FILE HOLDS SEVENTEEN NOT_RECORDED ROWS, NOT EIGHTEEN.*** R-744 reports 18;
+  measured at the file (`be03c843b3933742`): **21 lines = 1 header + 20 data rows**, and
+  `leaf_peak_status` is **NOT_RECORDED on 17, MEASURED on 3**, summing to 20. So **3 + 18 = 21 counts
+  the header** while **3 + 17 = 20 is the data rows** -- and the check that decides which is right is
+  the file's own header field: **`n_rows` 20, agreeing with the 20 I counted.** A one-off in the
+  entry; the substance is untouched. ROUTED, NOT RULED.
+  (2) **THE THREE RATIOS RECOMPUTE EXACTLY**, each asserted against `leaf_peak_bytes / cap_bytes` to
+  within 5e-4: book 6,217,269,248 -> **0.724**, forward_day 6,358,077,440 -> **0.740**, tape
+  6,334,619,648 -> **0.737**. ***THREE INDEPENDENT ARRIVALS AT THE SAME NUMBERS***: I computed the
+  tape and book fractions at round 238 from R-736's peaks, the forward day's at round 243 from
+  R-743's, and the file now carries all three -- against the same denominator, `cap_bytes`
+  **8,589,934,592**, which is what makes them comparable rather than merely similar.
+  (3) **THE BOOK's LOWER BOUND IS CARRIED AS A FIELD, NOT AS PROSE**: `leaf_peak_is_a_lower_bound` is
+  True for the book and False for the tape and forward day, with `leaf_peak_note` beside it. **A
+  reader comparing the three does not have to know the story to know which number is a bound.** The
+  file covers **four days** (09-03..09-06); every MEASURED row is 09-06 and every earlier day is
+  NOT_RECORDED because the sampler did not exist before BE 87 built it -- **the absences carried as a
+  STATUS rather than as missing rows**, which is what lets a reader tell "no sampler then" from
+  "nothing to report".
+  (4) **`PREVIOUS_READ_RULE` IS ASSIGNED EXACTLY ONCE** -- checked as a property of the source, not
+  taken from the entry: one assignment, at **line 741**, quoted into the rendered block at **571** as
+  `how_the_previous_read_was_identified`. So the sentence has one home and travels by reference.
+  ***BUT R-744's ":350" CITES THE DOCSTRING, NOT THE DEFINITION***: line 350 is inside
+  `not_pooled_clause`'s docstring (the function opens at 321) and says *"stated once at
+  PREVIOUS_READ_RULE **above**"* -- while the constant is at **741, below it**. So the citation points
+  at the mention rather than the statement, and the module's own "above" is inverted. Neither changes
+  behaviour: a module-level name resolves when the function runs, not where it is written. ROUTED,
+  NOT RULED.
+  (5) ***AND THE RULE's OWN TEXT CITES THE ESCAPE MY ROUND-234 CONTROL MISSED.*** Read at the
+  constant rather than in summary, it names both failures that taught it: *"the chain alone cannot
+  tell a correction of this read from the read before it (BE 87 measured that -- v6 corrects v5 and a
+  one-hop reader took v5 for the first read), and the match alone would let a declaration that names
+  no predecessor..."* **The second clause is the escape my own positive control missed at round 234**
+  -- I drove the no-consumed-days cell, read it as the control admitting, and did not ask what
+  happens when a second read simply omits the field; REV 87 asked it the same hour. **And because the
+  constant is quoted BY REFERENCE, the question I failed to ask now travels into every second-read
+  artifact mechanically** -- a miss of mine ended up in the contract rather than in a comment nobody
+  resolves.
+  `de115day06_2` still RUNNING and LOADED at 02:40:30Z -- GO #6 in flight, DE holding for its receipt.
+  Counts: flags 1,625 -> 1,636; provenance 1,170 -> 1,181; tasks 19; **903 CHECKED / 278 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-TWENTIETH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 226 archived. Q-MEM-232 filed through the script.
+  NEXT STATE: a QUIET HOLD until DE's 09-06 receipt lands, then R-745 and DA 116.)
   2026-09-07T02:33:32Z (MEM ROUND 243 -- R-743 SWEPT, tip `c60edd2`. STATE ONLY. MEM ASSERTS NO
   RESULT. **I OPENED NO FEED AND READ NOTHING NUMERIC BEYOND SIZES AND DIGESTS.**
   (1) ***THE 09-06 PIN MATCHES THE FEED DIGEST I COMPUTED MYSELF*** -- the pair checked at BOTH ends
@@ -165,61 +210,6 @@ updated: >-
   455 UNMARKED -- the HUNDRED-AND-EIGHTEENTH round unchanged on UNMARKED**; RELAYED moves by one, for
   the falsifier I declined to reproduce. ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 224
   archived. Q-MEM-230 filed through the script.)
-  2026-09-07T02:08:03Z (MEM ROUND 241 -- R-740 AND R-741 SWEPT, tip `5115905`. STATE ONLY. MEM
-  ASSERTS NO RESULT.
-  (1) ***THE LOCK IS HELD ON THE DECLARED INODE BY BE 88's OWN CGROUP -- VERIFIED WITHOUT TAKING
-  IT.*** A `flock -n` probe would have tried to acquire it, so I read `/proc/locks`: exactly ONE
-  FLOCK ADVISORY WRITE on inode **1053378**, the declared heavy lock whose inode I checked against
-  the declaration at round 230, held by PID 375664 -- whose cgroup is
-  `.../research.slice/be88fwd06.service` and whose cmdline is `flock -n -E 75 <the declared lock>
-  <python> ...`. **So the lock is held BY THAT RUN, not merely held** -- the difference between a
-  proxy and the thing, and what DE 117's inode poll is waiting on.
-  (2) ***AND THE PROCESS SHAPE IS ONE LEVEL DEEPER THAN RULE 20's CLAUSE.*** The rule's outside
-  diagnostic reads *"under a transient service MainPID is `flock` and its parent is systemd --user
-  (pid 1004 here); the PAYLOAD is a grandchild whose PPid is flock"*. Tonight **MainPID is 375657**,
-  which is `/bin/bash .../be_heavy_run.sh --inner`, **PPid 1004** -- so the PARENT half holds
-  exactly, at the very pid the rule names -- **but MainPID is NOT `flock`**; flock is 375664, its
-  CHILD, so the payload is a **great**-grandchild. The launcher gained a wrapper (BE 87's sampler
-  work) and the illustrative PID clause did not move with it. ROUTED, NOT RULED.
-  ***BUT RULE 20's OWN PREFERRED TEST HOLDS***: it says the decidable property "needs no parent" --
-  the cgroup leaf suffix -- and the holder's leaf is **`be88fwd06.service`**. **The preferred test
-  passes cleanly on exactly the run whose parent chain moved. The rule chose the cgroup over the
-  parent chain, and tonight is why.**
-  (3) **DE 116 IS FIXED AT THE CELL AND THE GUARD IS UNTOUCHED**, checked at the diff rather than
-  taken from the entry: `0f0d301` touches **exactly one file** (+144/-15), and **`de_data_root.py`,
-  which holds the data-freeness guard, is NOT in the diff at all** -- "nothing was taught to forgive
-  a path" is verifiable as an absence from the changed-file list. **And the new parameter defaults
-  to the process map**: `verify_input_digests(where, *, digests: dict | None = None)` -- keyword-only,
-  defaulting to None, so every production call is the old behaviour and only the probe passes a
-  constructed map. REV 88's *"the narrowing is of the cell's INPUT and not of the OBSERVER"* is
-  legible in the signature itself.
-  (4) ***R-740 AND R-741 CARRY ZERO PLACEHOLDERS, AND R-741 NAMES ITS PREP COMMIT INLINE.*** The
-  thread I ran from rounds 237 to 238 is closed: R-729 used `c...`, R-734 used `...`, R-736 deferred
-  one openly to R-737 which never carried it -- **two consecutive entries now keep the rule whose
-  operative half I argued was the substitution.** `b8cad5c` landed both rulings in two files:
-  runbook +1 (the chain as a predicate), SEAT_PROTOCOL +5 (pinned deploy + same-round re-pin).
-  (5) **THE CHAIN PREDICATE STATES A RULE ABOUT ABSENCE**, and it is the general form of what my
-  seat has been doing case by case: ***"A missing artifact reads as 'the step was never reached'
-  ONLY IF the step before it has its artifact."*** At rounds 233 and 238 I measured the absence of
-  the 09-06 sealed feed with a control that FIRES on the days that have one, after a first probe
-  whose control could not discriminate. The rule now says it for every step. **And the tail
-  BRANCHES**: (4a) the race-read branch -- forward day -> sealed feed -> pins -> the second read at
-  its horizon, user-gated; (4b) the Gate-1 branch -- DE's day run -> DA's pre-read -> REV.
-  ***"'The chain completed' means ONE branch completed; say which."*** Tonight's is Gate 1's.
-  (6) **LIVE STATE, BOTH STAMPED**: `be88fwd06` loaded / active / RUNNING, id `d153a919...`, its
-  ExecStart naming the declared lock; `de115day06_2` **not-found with an empty id** -- GO #6 is
-  issued but DE is polling the inode and has not launched.
-  (7) ***AND A NOT-FOUND READING IS VOID IN A WAY THAT SAYS NOTHING ABOUT WHY.*** FOUR units read
-  not-found with empty ids tonight: `de115day06_2`, which has **never launched**, and `de116diag`
-  / `_2` / `_3`, which **ran and were cleaned up**. **The two cases read identically** -- not-found,
-  inactive, dead, and a DEFAULT `Result=success` with `ExecMainStatus 0`. So a void reading is not
-  "the run failed" and not "the run never happened"; **it is no reading at all**, and the register or
-  the journal must say which. R-659's rule from the other side.
-  UNSWEPT, FOR MEM 242: **DA 115** (`8c66d27`) -- the deploy pin becomes a declaration and the census
-  sees drift in daylight; landed while I wrote. `be88fwd06` still RUNNING at 02:11:28Z.
-  Counts: flags 1,592 -> 1,603; provenance 1,137 -> 1,148; tasks 19; **872 CHECKED / 276 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-SEVENTEENTH round unchanged on UNMARKED.** ORPHAN audit 0
-  findings. Window trimmed 4 -> 3, Batch 223 archived. Q-MEM-229 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -391,6 +381,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 244, R-744 swept ---
+  the_peaks_file_holds_SEVENTEEN_NOT_RECORDED_not_eighteen: 17-PLUS-3-EQUALS-THE-20-DATA-ROWS
+  and_the_files_OWN_n_rows_field_reconciles_with_the_count: 20-EQUALS-20
+  the_three_RATIOS_RECOMPUTE_EXACTLY_and_match_my_own_earlier_arrivals: 0-724-0-740-0-737
+  the_books_LOWER_BOUND_is_carried_as_a_FIELD_not_as_prose: LEAF-PEAK-IS-A-LOWER-BOUND-TRUE
+  PREVIOUS_READ_RULE_is_assigned_EXACTLY_ONCE_verified_as_one_assignment: LINE-741-ONE-SITE
+  but_R_744s_line_350_cites_the_DOCSTRING_not_the_definition: AND-THAT-DOCSTRING-SAYS-ABOVE
+  the_rules_OWN_TEXT_cites_the_escape_MY_round_234_control_missed: BE-87s-V6-AND-THE-NO-PREDECESSOR-CASE
+  so_my_missed_question_now_rides_into_every_rendered_clause: QUOTED-AT-571-BY-MECHANISM
+  the_cap_in_the_file_is_the_one_I_recomputed_against: 8589934592-BYTES
+  the_file_covers_FOUR_days_with_only_09_06_measured: NO-SAMPLER-EXISTED-BEFORE
+  de115day06_2_still_RUNNING_and_LOADED_at_my_read: GO-6-IN-FLIGHT
   # --- MEM round 243, R-743 swept ---
   the_09_06_PIN_MATCHES_THE_FEED_DIGEST_I_COMPUTED_MYSELF: PAIR-CHECKED-AT-BOTH-ENDS
   MY_OWN_ABSENCE_PROBE_FLIPPED_FOR_09_06_and_the_control_still_fires: 0-AT-ROUNDS-233-AND-238-NOW-1
@@ -25990,6 +25992,111 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 244, 2026-09-07T02:39:16Z ---
+  the_peaks_file_holds_SEVENTEEN_NOT_RECORDED_not_eighteen:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_peaks.jsonl sha256 be03c843b3933742
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      R-744 reports "rows with NOT_RECORDED leaf: 18". Measured at the file: 21 lines = 1 header + 20
+      data rows, and leaf_peak_status is NOT_RECORDED on 17 and MEASURED on 3, summing to 20. So the
+      file holds SEVENTEEN, and 3 + 18 = 21 is the count that includes the header while 3 + 17 = 20
+      is the data rows. A one-off in the entry; the substance -- three measured peaks, all on 09-06,
+      the rest not recorded because no sampler existed -- is untouched. ROUTED, NOT RULED.
+  and_the_files_OWN_n_rows_field_reconciles_with_the_count:
+    prov: CHECKED
+    artifact: the header row of the same file
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      the check that decides which number is right: the header carries n_rows 20 and I counted 20
+      data rows -- the file's own summary agreeing with its own parts. Its other header fields are
+      cap_bytes, cap_is_never_raised, absences_are_statuses, protocol, as_of_utc, what_this_is and
+      why_a_file.
+  the_three_RATIOS_RECOMPUTE_EXACTLY_and_match_my_own_earlier_arrivals:
+    prov: CHECKED
+    artifact: the three MEASURED rows, ratio recomputed against cap_bytes
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      asserted each row's ratio_leaf_to_cap against leaf_peak_bytes / cap_bytes to within 5e-4 and
+      every one passed: book 6,217,269,248 -> 0.724, forward_day 6,358,077,440 -> 0.740, tape
+      6,334,619,648 -> 0.737. THREE INDEPENDENT ARRIVALS AT THE SAME NUMBERS: I computed the tape and
+      book fractions at round 238 from R-736's peaks, the forward day's at round 243 from R-743's,
+      and the file now carries all three. All on 20260906, units be72tape / be72book / be88fwd06.
+  the_books_LOWER_BOUND_is_carried_as_a_FIELD_not_as_prose:
+    prov: CHECKED
+    artifact: leaf_peak_is_a_lower_bound across the three measured rows
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      worth naming as good form: the caveat R-736 stated in prose -- the book's sampler was killed
+      about ten seconds before the end, so its peak is a LOWER BOUND -- is carried in the file as
+      leaf_peak_is_a_lower_bound, True for the book and False for the tape and the forward day, with
+      leaf_peak_note beside it. A reader comparing the three does not have to know the story to know
+      which number is a bound.
+  PREVIOUS_READ_RULE_is_assigned_EXACTLY_ONCE_verified_as_one_assignment:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      "stated once" checked as a property of the source rather than taken from the entry: there is
+      EXACTLY ONE assignment of PREVIOUS_READ_RULE, at line 741, and it is quoted into the rendered
+      block at line 571 as how_the_previous_read_was_identified. So the sentence has one home and
+      travels by reference.
+  but_R_744s_line_350_cites_the_DOCSTRING_not_the_definition:
+    prov: CHECKED
+    artifact: lines 321, 350 and 741 of the same file
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      small and precise. R-744 cites "PREVIOUS_READ_RULE (be_race_reader.py:350...)"; line 350 is
+      inside not_pooled_clause's DOCSTRING (the function opens at 321) and says "stated once at
+      PREVIOUS_READ_RULE above" -- while the constant is assigned at 741, which is BELOW that
+      docstring. So the citation points at the mention rather than the statement, and the module's
+      own word "above" is inverted. Neither changes behaviour: a module-level name is resolved when
+      the function runs, not where it is written. ROUTED, NOT RULED.
+  the_rules_OWN_TEXT_cites_the_escape_MY_round_234_control_missed:
+    prov: CHECKED
+    artifact: the constant's text at line 741
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      read the constant rather than the entry's summary of it, and it names both failures that taught
+      it: "the chain alone cannot tell a correction of this read from the read before it (BE 87
+      measured that -- v6 corrects v5 and a one-hop reader took v5 for the first read), and the match
+      alone would let a declaration that names no predecessor..." THE SECOND CLAUSE IS THE ESCAPE MY
+      OWN POSITIVE CONTROL MISSED AT ROUND 234 -- I drove the no-consumed-days cell, read it as the
+      control admitting, and did not ask what happens when a second read simply omits the field; REV
+      87 asked it the same hour.
+  so_my_missed_question_now_rides_into_every_rendered_clause:
+    prov: CHECKED
+    artifact: line 571, the quote site
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      the closure worth recording: because the constant is quoted BY REFERENCE into every block the
+      function renders, the question I failed to ask now travels into every second-read artifact
+      mechanically, in the sentence that says why both halves are needed. A miss of mine ended up in
+      the contract rather than in a comment nobody resolves.
+  the_cap_in_the_file_is_the_one_I_recomputed_against:
+    prov: CHECKED
+    artifact: the header's cap_bytes
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      cap_bytes is 8,589,934,592 -- the 8 GiB cap I recomputed the tape and book fractions against at
+      round 238 and the forward day's at round 243. So the file's denominator and mine are the same
+      number, which is what makes the three arrivals comparable rather than merely similar.
+  the_file_covers_FOUR_days_with_only_09_06_measured:
+    prov: CHECKED
+    artifact: the day field across the 20 data rows
+    as_of: 2026-09-07T02:40:00Z
+    said: >-
+      days present are 20260903, 20260904, 20260905 and 20260906; every MEASURED row is 09-06 and
+      every earlier day is NOT_RECORDED, because the sampler did not exist before BE 87 built it.
+      The absences are carried as a STATUS rather than as missing rows -- rule 4's shape -- which is
+      what lets a reader tell "no sampler then" from "nothing to report".
+  de115day06_2_still_RUNNING_and_LOADED_at_my_read:
+    prov: CHECKED
+    artifact: systemctl --user show de115day06_2.service
+    as_of: 2026-09-07T02:40:30Z
+    said: >-
+      loaded / running, ExecMainStatus 0 -- GO #6 still in flight at my reading, and LOADED so the
+      reading is admissible. DE holds for its receipt; MEM goes to a quiet hold until it lands.
   # --- MEM round 243, 2026-09-07T02:33:32Z ---
   the_09_06_PIN_MATCHES_THE_FEED_DIGEST_I_COMPUTED_MYSELF:
     prov: CHECKED

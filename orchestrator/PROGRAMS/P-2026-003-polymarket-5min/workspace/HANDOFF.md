@@ -1,3 +1,75 @@
+# READ FIRST — round 244 (MEM, 2026-09-07T02:39:16Z, tip `a487e22`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-744 swept.
+
+## 1. The peaks file holds seventeen NOT_RECORDED rows, not eighteen
+
+R-744 reports 18. Measured at the file (`be03c843b3933742`):
+
+| | |
+|---|---|
+| lines | **21** = 1 header + **20 data rows** |
+| `leaf_peak_status` | **NOT_RECORDED 17, MEASURED 3** — sum **20** |
+| header `n_rows` | **20**, agreeing with the count |
+
+**3 + 18 = 21 counts the header; 3 + 17 = 20 is the data rows** — and the file's
+own `n_rows` is what decides which is right. A one-off in the entry; the substance
+is untouched. Routed, not ruled.
+
+## 2. Three ratios, three independent arrivals
+
+Each asserted against `leaf_peak_bytes / cap_bytes` to within 5e-4:
+
+| stage | leaf peak | ratio |
+|---|---|---|
+| book | 6,217,269,248 | **0.724** *(lower bound)* |
+| forward day | 6,358,077,440 | **0.740** |
+| tape | 6,334,619,648 | **0.737** |
+
+I computed the tape and book fractions at **round 238** from R-736's peaks, the
+forward day's at **round 243** from R-743's, and the file now carries all three —
+against the same denominator, `cap_bytes` **8,589,934,592**, which is what makes
+them comparable rather than merely similar.
+
+**The book's lower bound is carried as a field, not as prose** —
+`leaf_peak_is_a_lower_bound` True only for the book. **A reader comparing the three
+does not have to know the story to know which number is a bound.** The file covers
+four days; every MEASURED row is 09-06 and every earlier day is NOT_RECORDED because
+the sampler did not exist before BE 87 built it — **absences as a status, not as
+missing rows.**
+
+## 3. The rule is stated once — and its text carries my own missed question
+
+**Exactly one assignment** of `PREVIOUS_READ_RULE`, at **line 741**, quoted into the
+rendered block at **571**. So the sentence has one home and travels by reference.
+
+**But R-744's ":350" cites the docstring, not the definition** — line 350 is inside
+`not_pooled_clause`'s docstring and says *"stated once at PREVIOUS_READ_RULE
+**above**"*, while the constant is at **741, below it**. Neither changes behaviour;
+routed, not ruled.
+
+***And the rule's own text names the escape my round-234 control missed***: *"…the
+match alone would let a declaration that names no predecessor…"*. I drove that cell,
+read it as the control admitting, and **did not ask what happens when a second read
+simply omits the field**; REV 87 asked it the same hour. **Because the constant is
+quoted by reference, the question I failed to ask now travels into every
+second-read artifact mechanically** — a miss of mine ended up in the contract rather
+than in a comment nobody resolves.
+
+Counts: flags 1,625 → **1,636**; provenance 1,170 → **1,181**; tasks 19; **903
+CHECKED / 278 RELAYED / 455 UNMARKED — hundred-and-twentieth round unchanged on
+UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 226 archived.
+Q-MEM-232 filed through the script.
+
+## 4. Next state: a quiet hold
+
+`de115day06_2` still **running and loaded** at 02:40:30Z — GO #6 in flight, DE
+holding for its receipt. **MEM holds until that receipt lands**, then R-745 and
+DA 116 follow. Nothing landed at my commit time. **The USER's four items stand**,
+item (d) time-bound to 2026-09-10T01:00:00Z.
+
+---
+
 # READ FIRST — round 243 (MEM, 2026-09-07T02:33:32Z, tip `c60edd2`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-743 swept. **I opened
