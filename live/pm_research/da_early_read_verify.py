@@ -563,13 +563,14 @@ def recompute_from_the_ledger(path) -> dict:
     import math                                               # noqa: PLC0415
     import statistics                                         # noqa: PLC0415
     arms, draws, scal = {}, {}, {}
-    n_rows, kinds = 0, {}
+    n_rows, kinds, fields = 0, {}, {}
     with gzip.open(str(path), "rt") as f:
         for line in f:
             r = json.loads(line)
             n_rows += 1
             k = r.get("row")
             kinds[k] = kinds.get(k, 0) + 1
+            fields.setdefault(k, set()).update(r.keys())
             if k == "ARM_SCALARS":
                 scal[r["arm"]] = r
             elif k == "NULL_DRAW":
@@ -606,8 +607,19 @@ def recompute_from_the_ledger(path) -> dict:
                 "n_fills_baseline": sc.get("n_fills_baseline"),
                 "n_cancels_issued": sc.get("n_cancels_issued")},
         }
+    #: R-795, MEASURED HERE RATHER THAN QUOTED: the day value IS the fills
+    #: leg by construction, and `inventory_leg` is not a field of this
+    #: ledger. The field names of every row kind are collected so that
+    #: statement is a measurement over the file, not a repetition of what
+    #: an artifact says about it.
+    allf = sorted({f for v in fields.values() for f in v})
     return {"n_rows": n_rows, "row_kinds": kinds, "per_arm": out,
-            "valuation": LEDGER_VALUATION}
+            "valuation": LEDGER_VALUATION,
+            "field_names_by_row_kind": {k: sorted(v)
+                                        for k, v in fields.items()},
+            "has_an_inventory_leg_field": "inventory_leg" in allf,
+            "inventory_inputs_present": sorted(
+                f for f in allf if f.startswith("inventory_"))}
 
 
 def verify_decision_ledger(doc: dict, census: dict, *, data_root) -> dict:
@@ -671,6 +683,11 @@ def verify_decision_ledger(doc: dict, census: dict, *, data_root) -> dict:
         recompute={
             "path": str(p), "sha256": got, "n_rows": rec["n_rows"],
             "row_kinds": rec["row_kinds"], "valuation": rec["valuation"],
+            #: R-795's two measured facts, carried to the printer rather
+            #: than recomputed there.
+            "has_an_inventory_leg_field": rec["has_an_inventory_leg_field"],
+            "inventory_inputs_present": rec["inventory_inputs_present"],
+            "field_names_by_row_kind": rec["field_names_by_row_kind"],
             "per_arm": per_arm,
             "n_mismatches": len(mismatches), "mismatched": mismatches,
             "verdict": "AGREES" if not mismatches else "FLAGGED",
@@ -1169,15 +1186,19 @@ def print_table(res: dict) -> str:
         _b = _rc["the_0_cancel_baseline"]["value_cents"]
         _one = sorted(set(_b.values()))
         lines.append(
-            f"  0-cancel baseline, from the ledger, EXPLORATORY: "
-            f"{_one[0]!r} cents"
+            f"  0-cancel baseline, from the ledger, EXPLORATORY, FILLS LEG "
+            f"ONLY: {_one[0]!r} cents"
             + ("" if len(_one) == 1 else f" (per arm: {_b})")
-            + " -- the FILLS LEG is the whole of it; there is no separate "
-              "inventory term in this valuation, and an inventory LEG "
-              "would need an aggregation rule nobody has declared")
+            + f" -- R-795: the day value IS the fills leg by construction. "
+              f"`inventory_leg` is NOT a field of this ledger (measured: "
+              f"{_rc['has_an_inventory_leg_field']}); its INPUTS are "
+              f"({', '.join(_rc['inventory_inputs_present'])}), and an "
+              f"inventory LEG would need an aggregation rule nobody has "
+              f"declared")
         for _arm, _v in sorted(_rc["per_arm"].items()):
             lines.append(
-                f"    {_arm}: arm {_v['arm_value_cents']!r} - baseline "
+                f"    {_arm} (fills leg only): arm "
+                f"{_v['arm_value_cents']!r} - baseline "
                 f"{_v['baseline_value_cents']!r} = "
                 f"{_v['D_E0']['from_the_ledger']!r}  (the artifact prints "
                 f"{_v['D_E0']['in_the_artifact']!r}; equal: "
@@ -1199,12 +1220,20 @@ def print_table(res: dict) -> str:
         _still = sorted(k for k, v in _wh.items()
                         if "NOT COMPUTED" in str(v).upper())
         _elsewhere = sorted(k for k in _wh if k not in _still)
+        _lrc = ((res.get("decision_ledger") or {}).get("recompute")
+                or {})
+        _inv = _lrc.get("has_an_inventory_leg_field")
         lines.append(
-            f"  NOT in the arm-day block, and the artifact says where they "
-            f"are: {', '.join(_elsewhere)} COMPUTED in the decision ledger "
-            f"(DE's words); {', '.join(_still)} not computed anywhere. This "
-            f"reader verified the ledger's own numbers independently; it "
-            f"did not re-derive these five from it.")
+            f"  NOT in the arm-day block. THE ARTIFACT SAYS "
+            f"{', '.join(_elsewhere)} are COMPUTED in the decision ledger "
+            f"and {', '.join(_still)} nowhere -- ***DE's words, carried, "
+            f"not this reader's finding***. WHAT THIS READER MEASURED IN "
+            f"THE LEDGER: the FILLS LEG is the day value itself (R-795, by "
+            f"construction), and `inventory_leg` is NOT a field of the file"
+            + (f" (measured over every row kind: "
+               f"has_an_inventory_leg_field={_inv})"
+               if _inv is not None else "")
+            + ". This reader did not re-derive p_two_sided or rho.")
     else:
         lines.append("  NOT COMPUTED for these days, as named statuses: "
                      + ", ".join(NOT_COMPUTED_KEYS))
@@ -1238,6 +1267,107 @@ def print_table(res: dict) -> str:
                  f"{res['computation_params']['the_sealed_receipt_declares']['receipt']}"
                  f" declares -- CHECKED, not recorded")
     return "\n".join(lines)
+
+
+def four_day_table(paths, *, repo_root=None, data_root=None) -> str:
+    """THE FOUR DAYS IN ONE BLOCK. Every number computed; no conclusion.
+
+    Each day is read through the SAME reader and the SAME ruling mode, so a
+    day that refuses for a reason the ruling does not cover appears as a
+    refusal here rather than as a gap. The per-arm sign count and the
+    smallest two-sided sign-test p reachable at this G are arithmetic over
+    what was read -- and the floor is printed whether or not any arm
+    reaches it, because ***a p that cannot go below 0.0625 is a fact about
+    the DESIGN, not about the days***.
+    """
+    days, refused = [], []
+    for p in paths:
+        try:
+            r = verify_under_ruling(p, repo_root=repo_root,
+                                    data_root=data_root)
+        except EarlyReadVerifyRefused as e:
+            refused.append({"path": str(p), "code": str(e).split(":")[0]})
+            continue
+        cp = r.get("computation_params") or {}
+        m = cp.get("measured") or {}
+        dl = r.get("decision_ledger") or {}
+        rc = dl.get("recompute")
+        sealed_v = _version_of(m.get("declared_path")
+                               or m.get("reconstructed_path"))
+        days.append({
+            "day": r["day"],
+            "read_v": _version_of((cp.get("the_artifact_loaded")
+                                   or {}).get("path")),
+            "sealed_v": sealed_v,
+            "sealed_state": ("RECONSTRUCTED" if cp.get("REFUSED")
+                             == "COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED"
+                             else "STAMPED" if cp.get("REFUSED")
+                             else "MATCHES"),
+            "ledger": dl.get("status"),
+            "absolutes": ("PRESENT (from the ledger)"
+                          if isinstance(rc, dict) and rc.get("per_arm")
+                          else "NOT AVAILABLE (no ledger to sum)"),
+            "per_arm": r["census"]["per_arm"],
+            "baseline": ({a: v["baseline_value_cents"]
+                          for a, v in rc["per_arm"].items()}
+                         if isinstance(rc, dict) and rc.get("per_arm")
+                         else None),
+        })
+    out = [f"FOUR-DAY EARLY READ -- {LABEL_LINE} -- G {len(days)} of the "
+           f"ruled four; every value FILLS LEG ONLY (R-795)"]
+    hdr = ["day", "arm", "D_E0", "Z", "p(1-sided)", "fills_arm",
+           "fills_base", "cancels"]
+    rows = []
+    for d in days:
+        for arm, v in sorted(d["per_arm"].items()):
+            rows.append([d["day"], arm, repr(v["D_E0"]), repr(v["Z"]),
+                         repr(v["p_location"]), str(v["n_fills_arm"]),
+                         str(v["n_fills_baseline"]),
+                         str(v["n_cancels_issued"])])
+    w = [max(len(hdr[i]), *(len(r[i]) for r in rows)) for i in range(len(hdr))]
+    out.append("  " + "  ".join(
+        h.ljust(w[i]) if i < 2 else h.rjust(w[i]) for i, h in enumerate(hdr)))
+    for r in rows:
+        out.append("  " + "  ".join(
+            c.ljust(w[i]) if i < 2 else c.rjust(w[i])
+            for i, c in enumerate(r)))
+    out.append("")
+    for d in days:
+        b = d["baseline"]
+        one = sorted(set(b.values())) if b else None
+        out.append(
+            f"  {d['day']}: computed under {d['read_v']}; sealed run "
+            f"{d['sealed_state']} {d['sealed_v']}; absolutes "
+            f"{d['absolutes']}; ledger {d['ledger']}"
+            + (f"; 0-cancel baseline {one[0]!r} cents (fills leg only)"
+               if one and len(one) == 1 else
+               f"; 0-cancel baseline {b}" if b else ""))
+    for r in refused:
+        out.append(f"  {Path(r['path']).name}: REFUSED {r['code']} -- not a "
+                   f"gap, a refusal")
+    out.append("")
+    arms = sorted({a for d in days for a in d["per_arm"]})
+    G = len(days)
+    for arm in arms:
+        vals = [(d["day"], d["per_arm"][arm]["D_E0"]) for d in days
+                if arm in d["per_arm"]]
+        pos = [dy for dy, v in vals if v > 0]
+        neg = [dy for dy, v in vals if v < 0]
+        zero = [dy for dy, v in vals if v == 0]
+        out.append(
+            f"  {arm}: days ABOVE the 0-cancel baseline (D_E0 > 0): "
+            f"{len(pos)} of {len(vals)} {pos or ''}; below: {len(neg)} "
+            f"{neg or ''}" + (f"; exactly zero: {len(zero)}" if zero else ""))
+    out.append(
+        f"  the smallest TWO-SIDED sign-test p reachable at G = {G}: "
+        f"2^-{G} = {2.0 ** -G!r} -- ***the floor of the design, reachable "
+        f"only by a unanimous sign, and it clears no 0.05 bar on its own***. "
+        f"No interval is computed here: below five complete UTC days this "
+        f"programme reports a point estimate and says so.")
+    out.append(f"  {LABEL_LINE}. The four days are CONSUMED (R-754). Every "
+               f"number above is computed from the artifacts and their "
+               f"ledgers; no conclusion is drawn here.")
+    return "\n".join(out)
 
 
 # --------------------------------------------------------------- the battery
@@ -1836,11 +1966,18 @@ def main() -> int:
                          "covers (R-764). The refusal still stands and is "
                          "named in the table; every other refusal still "
                          "refuses under this mode")
+    ap.add_argument("--four-day-table", nargs="*", metavar="ARTIFACT",
+                    default=None,
+                    help="print the four days in one block, each read "
+                         "through the same reader and the same ruling mode")
     ap.add_argument("--data-root", default=None)
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
     if a.selftest:
         return 1 if selftest()[1] else 0
+    if a.four_day_table:
+        print(four_day_table(a.four_day_table, data_root=a.data_root))
+        return 0
     if not a.verify:
         ap.error("--selftest, or --verify <artifact> [--print]")
     #: THREE OUTCOMES, THREE CODES. 2 is a REFUSAL -- the instrument declined
