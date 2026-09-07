@@ -238,6 +238,11 @@ Append-only. Entries are `### R-NNN — <UTC stamp> — coordinator — …`.
     sup=daw.supply("20260901", {c: list(daw._grid("20260901")) for c in mask["coins"]}, mask)
     C.check(sup,"R-419",s)["verified_for_new_run"]   # must be True
     ```
+- **BEFORE ANY REVERT, RE-LAND OR PUSH IN THE SHARED TREE, RE-READ THE TIP (R-760):** `git fetch` and
+  `git log --oneline <the sha you last read>..origin/mm-research`; if it is non-empty, read those commits'
+  titles before acting. The coordinator reverted a seat's commit three minutes after reading the tip while
+  the tree had moved twice — another seat had already repaired the same defect — and had to revert its own
+  revert (06:54–06:56Z 09-07). A state read once is not a state.
 - Shell gotchas that have each cost a retry: never chain `grep -c … &&`; no
   nested backticks inside a code span; `git rev-parse --short A B` fails with two
   args; `ugrep` refuses long alternations ("exceeds complexity limits") — use
