@@ -67,6 +67,66 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T09:07:15Z (MEM ROUND 259 -- R-773 SWEPT, with every landing between my own 34cd7e6 and the
+  tip `fe76d83`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE FIRST EARLY-READ TABLE, CARRIED WITH ITS LABELS AND NOT AS A VERDICT. 2026-09-03,
+  EXPLORATORY, G 4, NO INTERVAL, ONE DAY OF FOUR.***
+  **CONDVALUE_X_SKEW** -- D_E0 **-16,592.33**, Z **-2.30**, one-sided p_location **0.994**, null mean
+  -7,777.90, null sd 3,830.06, 500 draws; fills **30,171** against the 0-cancel baseline's **46,439**;
+  **5,146** cancels issued. **HAZARD_OVER_SKEWED_REF** -- D_E0 **-4,822.26**, Z **-5.30**, p_location
+  **1.000**, null mean -478.24, null sd 819.52, 500 draws; fills **44,895** against 46,439; **700** cancels.
+  ***THE PLAIN READING FOR THIS ONE DAY: both arms below the 0-cancel baseline and below the matched
+  random-cancel null.*** NOT A VERDICT -- one day of four, exploratory, no interval.
+  (2) ***I CARRY THESE NUMBERS BECAUSE THE FAMILY IS UNSEALED BY THE USER'S RULING, NOT BECAUSE MY RULE
+  CHANGED.*** For eight rounds these files carried paths, digests and structure and never a value, because
+  the receipts were SEALED. This family is not: R-765 retired the seal and R-754 made the read exist. The
+  rule was always "never quote a sealed field", and these fields are not sealed.
+  (3) ***EVERY NUMBER REPRODUCES AT DE's ARTIFACT, AND Z RECOMPUTES FROM THE NULL IT REPORTS.*** The
+  register's table came from DA's print and was cross-checked by the coordinator; I read the artifact myself
+  key by key and every figure matches to the precision the entry rounds to. ***AND Z IS DERIVED, SO I
+  DERIVED IT***: (D_E0 - null_mean) / null_sd gives **-2.301384** and **-5.300718**, matching the reported Z
+  to six decimals in both arms -- the artifact's summary agreeing with its own parts, which is the only
+  internal check available to a reader who did not run the computation. **Three independent routes to the
+  same numbers: DA's reader, the coordinator's cross-check, mine.**
+  (4) ***THE ARM THAT CANCELS SEVEN TIMES MORE LOSES TEN TIMES THE FILLS*** -- arithmetic on the carried
+  counts, both against the same 46,439 baseline: CONDVALUE_X_SKEW issues 5,146 cancels and ends **16,268
+  fills short** (3.16 per cancel); HAZARD_OVER_SKEWED_REF issues 700 and ends **1,544 short** (2.21 per
+  cancel); cancel ratio 7.35x, lost-fill ratio 10.5x. **I computed these rather than estimating** -- my
+  first mental figure was wrong by 2,456 fills and the subtraction corrected it. Structure, not a verdict.
+  (5) ***THE TWO LABELS TRAVEL WITH ANY QUOTATION OF THIS DAY***: the read is COMPUTED UNDER params v15
+  while 09-03's sealed run is RECONSTRUCTED under v14 (R-764's ruling, whose "no estimand, no bar, no pin"
+  I tested as a predicate at round 252 and found zero matching leaves); and 09-03's three per-arm counts
+  HAVE BEEN OPEN SINCE 2026-09-06T14:01Z under its eight-name seal scope. Neither changes a number; both
+  change what a number can be used for. ***AND THE CEILING WAS FIXED BEFORE THE FIRST DAY RAN***: the
+  declaration's own sentence -- "2^-4 = 0.0625 is the smallest two-sided p a four-day sign test can produce,
+  so no arm can clear 0.05 on day signs at G = 4 whatever it shows" -- was written into v16 before any of
+  these numbers existed, which is the whole point of a pre-declaration and the reason a strong-looking day
+  cannot be promoted later.
+  (6) ***REV 94 SPLIT ITS VERDICT BY GO***: GO #8 MAY PROCEED at runner `c8be65b2…` / params v19 / design
+  v27; GO E2 NO-GO. I hashed all ten cascade pins myself -- **10 equal, 0 mismatched** -- so the widening
+  that closed round 257's finding is not merely present but currently true of every module it names.
+  ***BUT THE RUNNER HAS ALREADY MOVED OFF THE CLEARED DIGEST***: it hashes **`ccc4108d28f07541`** at my
+  read, moved by `edb9dee` (DE 126 phase 2), so **GO #8's clearance names bytes that are no longer there,
+  hours before tonight's close.** No one's defect -- phase 2 was dispatched and did its work; the clearance
+  was issued against a moving file. **The state files must not say GO #8 is cleared without saying at which
+  digest.** ***AND THIS IS THE THIRD TIME***: REV 89 cleared at `ad15ddf1…` (moved twice, re-cleared by
+  REV 91 at `f1f59472…`), REV 94 at `c8be65b2…` (moved now). One mechanism, three instances -- a standing
+  property of a serial lock with parallel seats, not an incident. ***DE FLAGGED IT ITSELF***, in the same
+  row that fixed E2, before anyone asked.
+  (7) ***THE E2 NO-GO WAS A CHECK THAT PASSED ONLY UNTIL THE THING IT CHECKS ACTUALLY HAPPENED***:
+  `de_early_read`'s battery aborted **because E1 succeeded** -- it carried a hardcoded 09-03 rehearsal whose
+  precondition E1's own artifact consumed. Rule 16's family from the other end: not a control that cannot
+  fail, but one that cannot RUN twice. Fixed by deriving the days rather than naming one. **And DA caught
+  its own locator** (the economics are nested under `day_run`, its reader looked flat) **before printing,
+  not after** -- I met the same nesting from the other side at round 258 and also found it one level down,
+  because both of us printed the key set before trusting a path.
+  Counts: flags 1,862 -> **1,877**; provenance 1,407 -> **1,422**; tasks 19; **1,135 CHECKED /
+  282 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FIFTH round unchanged on UNMARKED**;
+  RELAYED moves by two (E2's aborted battery and DA's locator catch, both other seats' acts to establish).
+  Fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **168** missing-artifact findings -- UNCHANGED from my round start, because all
+  fifteen of my entries resolve. Window trimmed 4 -> 3, **Batch 241** archived. Q-MEM-247 filed through the
+  script.)
   2026-09-07T09:01:00Z (MEM ROUND 258 -- R-772 SWEPT, with every landing between my own c12ea02 and the
   tip `39ebaa8`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. ***I QUOTED NO ECONOMIC VALUE***:
   the state files carry the early read's PATH, DIGEST, SIZE, STRUCTURE, STATUSES and CAVEATS, and not one
@@ -189,67 +249,6 @@ updated: >-
   the audit exits **1** on **167** missing-artifact findings, 166 at my round start plus ONE of mine, the
   running unit. Fifteen written, fifteen counted, the duplicate-name gate run before writing. Window
   trimmed 4 -> 3, **Batch 239** archived. Q-MEM-245 filed through the script.)
-  2026-09-07T08:40:28Z (MEM ROUND 256 -- R-770 SWEPT, with every landing between my own 4f8ed4c and the
-  tip, which moved to `4700030` while I read. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED
-  NO RECEIPT OF ANY KIND.
-  (1) ***THE DISPATCH'S QUESTION, ANSWERED WITH ITS WHEN: DESIGN v26 IS TRACKED AT MY READ.*** `git
-  ls-files` returns it, `check-ignore` says no, sha256 `7de8906e607a66d4` -- and the commit that landed it
-  is **`4700030`**, *"DE 124 (landing omission): track design v26 -- the ledger disk is not landing"*, which
-  is AFTER the tip the dispatch named (`c90eb9e`). **So the omission R-770 flagged was closed between the
-  entry and my read at 08:39:03Z**: "tracked" was false when the entry was written and true when I looked,
-  and both halves are recorded.
-  (2) ***THE USER'S RULING IS IN THE LEDGER, NOT ONLY IN A WORKTREE.*** params v18 `cfc2b06fe2c9e792` and
-  design v26 `7de8906e607a66d4`, both `ls-files` 1, both the entry's digests; design head **v26** (25
-  versions, orphans empty) and params head **v18** (18 versions, orphans empty) -- **both families advanced
-  by exactly one version in the same landing and neither carries an open branch**, after a batch that
-  produced six withdrawn drafts, a fork repaired forward and a merge-count cell replaced by a property. Round
-  255 insisted on the difference between a ruling recorded and a ruling in force; **it is in force now.**
-  (3) ***THE SEAL IS RETIRED IN CODE AND THE STATUS IS COMPUTED, NOT PRINTED.*** At runner `:1363` the emit
-  sets `seal_status` to an F-STRING -- `f"UNSEALED_BY_USER_RULING R-765 -- {n_days_complete} of {g} days
-  complete"` -- beside `sealed` False, `sealed_field_names` [] and `sealed_at_every_depth` False. **CLAUDE.md
-  rule 10 satisfied at the exact line where it was violated.** ***AND MY ROUND-250 FINDING IS CLOSED IN THE
-  STRONGEST AVAILABLE FORM***: the literal I read at `:1329` for REV 90's NO-GO now survives at exactly two
-  sites, NEITHER the emit -- a comment at `:1379`, and `:10725` `_old125 = "UNSEALED_ALL_DAYS_COMPLETE"`
-  **inside a known-bad cell** whose own comment reads *"THE KNOWN-BAD, against the OLD behaviour as its
-  baseline: the literal this replaced carries no counts, so the predicate that passes above must FAIL on it
-  … The cell measures a delta from the behaviour that was landed, not agreement with the words I just
-  wrote."* **The literal that was the defect is now the control's baseline** -- REV 83 §5's rule applied to
-  the very string that caused the NO-GO.
-  (4) ***AND THE PARAMS GAP I HAVE CARRIED SINCE ROUND 249 IS CLOSED.*** Head v16 against `PARAMS_REL` v15,
-  then v17 against v15 (the gap doubling in one round), now **head v18 and `PARAMS_REL` v18 -- EQUAL**. The
-  reason it was deliberate expired with it: the USER's ruling made the sealed path and the early-read path
-  ONE path, which is what the pin was waiting for. **A literal I flagged as "correct today, indistinguishable
-  tomorrow from the defect" is now simply correct.**
-  (5) ***THE WITHDRAWAL RECORD NAMES SIX DRAFTS, NOT FIVE -- AND TWO OF THEM SHARE A NAME.***
-  `withdrawn_before_landing.files` holds six entries: v26 `5dcf6f0f`, v27 `f3db5112`, v28 `5b4bfd75`, v29
-  `a74e4263`, v30 `db995875`, and a SECOND v26 `22e26bf0` -- the recomposed draft. **My round-254 count of
-  five was right for what existed then**; the sixth was written and withdrawn after it. ***TWO ENTRIES BEAR
-  THE SAME NAME WITH DIFFERENT DIGESTS***, two files that occupied one path at different minutes -- **which
-  is exactly why the ruling required name AND digest per entry**: a name-only record would have collapsed
-  them and lost a draft. The requirement reads like bookkeeping until the case arrives, and it arrived inside
-  the batch that made the rule.
-  (6) ***AND THE FENCE I CARRIED VERBATIM FROM THE REGISTER IS NOW IN THE ARTIFACT.*** v26 carries
-  `user_ruled_unsealed_emission` (the USER's block under R-768's predicate) and `withdrawn_before_landing`
-  with `authority`, `the_precedent_is_BOUNDED` ("only versions never committed, written by the same seat in
-  the same unfinished batch…") and `the_rule_this_leaves` ("**COMPOSE FROM A SCHEMA, never from a deepcopy
-  of the parent**…"). **A resolver finds them without reading the register** -- the good-direction twin of
-  round 255's observation that the root fact the coordinator's probe missed was already a boolean in R7.
-  (7) ***THE SEAL IS RETIRED IN CODE AND NOTHING HAS RUN UNDER IT.*** REV 93 was dispatched 08:38:28Z and
-  its part A gates GO E2 **and** tonight's GO #8, so the first run under the unsealed path is still behind a
-  review. **E1 executes the OLD code**: SubState running with `ExecMainExitTimestamp` EMPTY at 08:39:03Z,
-  MemoryPeak still 2,715,901,952, seventy minutes in, expected ≈ 08:55Z -- its artifact will carry the
-  economics and **no decision ledger**, exactly as R-765 disclosed. The decision-ledger module
-  (`de_decision_ledger.py`) is on disk at the tip; its claims are DE's and REV 93's to verify, and I record
-  only that it exists and is landed.
-  (8) **SIX WALLS IN ONE BATCH, NONE LOOSENED**, with two further rulings recorded at the landing: the eight
-  permitted keys classified by MEASURED change cadence (only `as_of` changes on every version), and the
-  head-version cell naming PRE and POST emission. **The contract moved to accommodate the USER's ruling
-  rather than the checks bending to accommodate the work.**
-  Counts: flags 1,817 -> **1,832**; provenance 1,362 -> **1,377**; tasks 19; **1,096 CHECKED /
-  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SECOND round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **166** missing-artifact findings, 165 at my round start plus ONE of mine, the
-  running unit. Window trimmed 4 -> 3, **Batch 238** archived. Q-MEM-244 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -421,6 +420,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 259, R-773 swept (and every landing between 34cd7e6 and fe76d83) ---
+  THE_FIRST_EARLY_READ_TABLE_IS_CARRIED_WITH_ITS_LABELS_AND_NOT_AS_A_VERDICT: EXPLORATORY-ONE-DAY-NO-INTERVAL
+  EVERY_NUMBER_IN_THE_TABLE_REPRODUCES_AT_DEs_ARTIFACT_BY_KEY: MY-OWN-THIRD-ROUTE-TO-THEM
+  and_Z_RECOMPUTES_FROM_THE_NULL_IT_REPORTS_TO_SIX_DECIMALS: -2-301384-AND-MINUS-5-300718
+  BOTH_ARMS_D_E0_NEGATIVE_AND_BOTH_Z_NEGATIVE_ON_THIS_ONE_DAY: BELOW-BASELINE-AND-BELOW-THE-NULL
+  THE_ARM_THAT_CANCELS_SEVEN_TIMES_MORE_LOSES_TEN_TIMES_THE_FILLS: 16268-ON-5146-VS-1544-ON-700
+  THE_TWO_LABELS_TRAVEL_WITH_THE_NUMBERS: V15-COMPUTED-V14-RECONSTRUCTED-COUNTS-OPEN-SINCE-09-06
+  NO_ARM_CAN_CLEAR_0_05_AT_G_4_WHATEVER_IT_SHOWS: THE-DECLARATIONS-OWN-ARITHMETIC
+  REV_94_SPLIT_GO_8_MAY_PROCEED_AND_GO_E2_NO_GO: ONE-REVIEW-TWO-VERDICTS
+  THE_TEN_CASCADE_PINS_ALL_EQUAL_THEIR_BLOBS_AT_MY_READ: 10-EQUAL-0-MISMATCHED
+  BUT_THE_RUNNER_HAS_ALREADY_MOVED_OFF_REV_94s_CLEARED_DIGEST: C8BE65B2-CLEARED-CCC4108D-NOW
+  THAT_IS_THE_THIRD_TIME_A_CLEARANCE_HAS_GONE_STALE_THE_SAME_WAY: A-CLEARANCE-NAMES-BYTES
+  DE_FLAGGED_IT_ITSELF_IN_THE_SAME_FILING_THAT_FIXED_E2: A-WARNING-ON-GO-8-IN-ITS-OWN-ROW
+  THE_E2_NO_GO_WAS_A_BATTERY_THAT_ABORTED_BECAUSE_E1_SUCCEEDED: A-HARDCODED-09-03-REHEARSAL
+  DAs_OWN_LOCATOR_CATCH_CAME_BEFORE_THE_PRINT_NOT_AFTER: NESTED-VS-FLAT-ECONOMICS
+  I_CARRY_THE_NUMBERS_BECAUSE_THE_FAMILY_IS_UNSEALED_BY_THE_USERS_RULING: NOT-BECAUSE-THE-RULE-CHANGED
   # --- MEM round 258, R-772 swept (and every landing between c12ea02 and 39ebaa8) ---
   THE_FIRST_EARLY_READ_ARTIFACT_EXISTS_AND_IS_TRACKED: 5C8A58F5-44037-B-DEF47A2
   I_READ_ITS_STRUCTURE_AND_NOT_ONE_VALUE: KEY-NAMES-BOOLEANS-LABELS-COUNTS
@@ -26272,6 +26287,165 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 259, 2026-09-07T09:07:15Z (the clock read by which every measurement below was complete) ---
+  THE_FIRST_EARLY_READ_TABLE_IS_CARRIED_WITH_ITS_LABELS_AND_NOT_AS_A_VERDICT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      2026-09-03, EXPLORATORY, G 4, NO INTERVAL, ONE DAY OF FOUR. CONDVALUE_X_SKEW: D_E0 -16,592.33,
+      Z -2.30, one-sided p_location 0.994, null mean -7,777.90, null sd 3,830.06, 500 draws; fills 30,171
+      against the 0-cancel baseline's 46,439; 5,146 cancels issued. HAZARD_OVER_SKEWED_REF: D_E0 -4,822.26,
+      Z -5.30, p_location 1.000, null mean -478.24, null sd 819.52, 500 draws; fills 44,895 against 46,439;
+      700 cancels. THE PLAIN READING FOR THIS ONE DAY: both arms below the 0-cancel baseline and below the
+      matched random-cancel null. NOT A VERDICT: one day of four, exploratory, no interval, and the
+      declaration's own arithmetic says 2^-4 = 0.0625 is the smallest p a four-day sign test can produce.
+  EVERY_NUMBER_IN_THE_TABLE_REPRODUCES_AT_DEs_ARTIFACT_BY_KEY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      the register's table came from DA's print and was cross-checked by the coordinator at DE's artifact.
+      I READ THE ARTIFACT MYSELF, key by key, and every figure matches to the precision the entry rounds to:
+      D_E0 -16592.330724499996 and -4822.264981999993; Z -2.3013843743785007 and -5.300717668652456;
+      p_location 0.9940119760479041 and 1.0; null means -7777.900575562193 and -478.23761367269486; sds
+      3830.0556165539188 and 819.5168352423557; n 500 both. THREE INDEPENDENT ROUTES TO THE SAME NUMBERS --
+      DA's reader, the coordinator's cross-check, and mine -- which is what a number reaching a user should
+      have behind it.
+  and_Z_RECOMPUTES_FROM_THE_NULL_IT_REPORTS_TO_SIX_DECIMALS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      Z is not an independent claim in this artifact, it is derived -- so I derived it: (D_E0 - null_mean) /
+      null_sd gives -2.301384 for CONDVALUE_X_SKEW and -5.300718 for HAZARD_OVER_SKEWED_REF, matching the
+      reported Z to six decimals in both arms. THE ARTIFACT'S OWN SUMMARY AGREES WITH ITS OWN PARTS, which
+      is the only kind of internal check available to a reader who did not run the computation, and it is
+      rule 10's shape applied by the reader rather than the writer.
+  BOTH_ARMS_D_E0_NEGATIVE_AND_BOTH_Z_NEGATIVE_ON_THIS_ONE_DAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      D_E0 is the arm minus the 0-cancel baseline, so a negative D_E0 is an arm BELOW the baseline that
+      cancels nothing; Z is that difference in units of the matched random-cancel null's sd, so a negative Z
+      is an arm below what random cancelling would have produced. BOTH ARMS ARE NEGATIVE ON BOTH, on this
+      day, and the one-sided p_location values (0.994, 1.000) put each near the bottom of its own null.
+      MEM states the direction and the labels and stops there: what it means for the programme is the
+      user's and the coordinator's to say once four days exist.
+  THE_ARM_THAT_CANCELS_SEVEN_TIMES_MORE_LOSES_TEN_TIMES_THE_FILLS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      arithmetic on the carried counts, both arms against the SAME baseline of 46,439 fills:
+      CONDVALUE_X_SKEW issues 5,146 cancels and ends 16,268 fills short (3.16 fills per cancel issued);
+      HAZARD_OVER_SKEWED_REF issues 700 and ends 1,544 short (2.21 per cancel). The cancel ratio between
+      arms is 7.35x and the lost-fill ratio 10.5x. I computed these rather than estimating them -- my first
+      mental figure was wrong by 2,456 fills and the subtraction corrected it. Structure, not a verdict:
+      the per-cancel cost differs between arms and the day's D_E0 is negative for both.
+  THE_TWO_LABELS_TRAVEL_WITH_THE_NUMBERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      two labels attach to this day and must travel with any quotation of it: the read is COMPUTED UNDER
+      PARAMS v15 while the sealed run for 09-03 is RECONSTRUCTED under v14 (R-764's ruling that the delta is
+      the design pointer and carries no estimand, bar or pin -- which I tested as a predicate at round 252
+      and found zero matching leaves); and 09-03's three per-arm counts HAVE BEEN VISIBLE IN THE OPEN SINCE
+      2026-09-06T14:01Z under its eight-name seal scope, so they were not blind to whoever ran the later
+      days. Neither label changes a number; both change what a number can be used for.
+  NO_ARM_CAN_CLEAR_0_05_AT_G_4_WHATEVER_IT_SHOWS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v16.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      the sentence is in the declaration itself, written before any of these numbers existed: "2^-4 =
+      0.0625 is the smallest two-sided p a four-day sign test can produce, so no arm can clear 0.05 on day
+      signs at G = 4 whatever it shows. This read is ..." -- carried in v16's user_ruled_early_read block
+      and inherited forward. SO THE CEILING ON WHAT THIS READ CAN ESTABLISH WAS FIXED BEFORE THE FIRST DAY
+      RAN, which is the whole point of a pre-declaration and the reason a strong-looking day cannot be
+      promoted later.
+  REV_94_SPLIT_GO_8_MAY_PROCEED_AND_GO_E2_NO_GO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      one review, two verdicts, each named: GO #8 MAY PROCEED at runner c8be65b2..., params v19, design v27;
+      GO E2 NO-GO. A reviewer that returns a single word for a batch would have had to choose between them;
+      splitting the verdict by GO is what let tonight's close stay cleared while the next early read stopped.
+      Recorded as the shape, not as a judgement of it.
+  THE_TEN_CASCADE_PINS_ALL_EQUAL_THEIR_BLOBS_AT_MY_READ:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      REV 94 reports all ten cascade pins equal their blobs; I hashed all ten myself: 10 equal, 0
+      mismatched. So the widening that closed round 257's finding (a guard silent on the unpinned module) is
+      not merely present in the declaration -- every module it names currently matches the digest it names.
+  BUT_THE_RUNNER_HAS_ALREADY_MOVED_OFF_REV_94s_CLEARED_DIGEST:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      REV 94 cleared GO #8 at runner c8be65b2c1ce4ea9. The runner at my read hashes ccc4108d28f07541, moved
+      by edb9dee (DE 126 phase 2). SO GO #8's CLEARANCE NAMES BYTES THAT ARE NO LONGER THERE, hours before
+      tonight's close. Not a defect of anyone's: phase 2 was dispatched and did its work; the clearance was
+      issued against a moving file. The state files must not read as though GO #8 is cleared without saying
+      at which digest.
+  THAT_IS_THE_THIRD_TIME_A_CLEARANCE_HAS_GONE_STALE_THE_SAME_WAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      REV 89 cleared GO #8 at ad15ddf1..., which moved twice and was re-cleared by REV 91 at f1f59472...;
+      REV 94 cleared it at c8be65b2..., which has now moved to ccc4108d.... THREE CLEARANCES, THREE STALE
+      DIGESTS, ONE MECHANISM -- a clearance names bytes and the bytes move while the work that needed the
+      clearance is still queued. I recorded the mechanism at round 251 when REV 91 re-issued the first one;
+      it has now repeated twice more, which makes it a standing property of a serial lock with parallel
+      seats rather than an incident.
+  DE_FLAGGED_IT_ITSELF_IN_THE_SAME_FILING_THAT_FIXED_E2:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      Q-DE-130's own headline: "THE E2 NO-GO IS FIXED -- THE BATTERY DERIVES ITS DAYS AND CAN NO LONGER BE
+      ABORTED. AND A WARNING ON GO #8: PHASE 2 MOVED THE RUNNER OFF REV 94's CLEARED DIGEST." The seat that
+      moved the file is the seat that flagged the consequence, in the same row, before anyone asked --
+      which is why I found it by reading rather than by discovering a failed launch tonight.
+  THE_E2_NO_GO_WAS_A_BATTERY_THAT_ABORTED_BECAUSE_E1_SUCCEEDED:
+    prov: RELAYED
+    from: R-773 / REV 94's GO E2 verdict
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      de_early_read's battery aborted because E1 SUCCEEDED: it carried a hardcoded 09-03 rehearsal, and
+      E1's own artifact consumed the precondition that rehearsal needed. A CHECK THAT PASSES ONLY UNTIL THE
+      THING IT CHECKS ACTUALLY HAPPENS -- the same family as rule 16's control that cannot fail, seen from
+      the other end: this one could not run a second time. Fixed by deriving the days rather than naming
+      one. RELAYED: establishing it means running DE's battery, which is DE's act.
+  DAs_OWN_LOCATOR_CATCH_CAME_BEFORE_THE_PRINT_NOT_AFTER:
+    prov: RELAYED
+    from: R-773 (DA's own disclosure in Q-DA-351)
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      DA's reader looked for the economics FLAT and the artifact nests them under `day_run`; DA caught its
+      own locator and fixed it BEFORE printing, not after. I hit the same shape from the other side at round
+      258 -- my probe asked for `per_day_sealed_artifacts` at the top level and got NoneType, and found it
+      one level down -- so two seats independently met the same nesting and neither published a wrong
+      answer, because both printed the key set before trusting a path.
+  I_CARRY_THE_NUMBERS_BECAUSE_THE_FAMILY_IS_UNSEALED_BY_THE_USERS_RULING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T09:07:15Z
+    said: >-
+      for eight rounds these files carried paths, digests and structure and never a value, because the
+      receipts were SEALED. This family is not: the USER's R-765 ruling retired the seal and R-754's ruling
+      made this read exist, so the numbers are carriable and the coordinator's dispatch says so explicitly.
+      NOTHING ABOUT MY RULE CHANGED -- the rule was always "never quote a sealed field", and these fields
+      are not sealed. I record the reason beside the numbers so a later reader does not read the change as
+      MEM having relaxed something.
   # --- MEM round 258, 2026-09-07T09:01:00Z (the clock read by which every measurement below was complete) ---
   THE_FIRST_EARLY_READ_ARTIFACT_EXISTS_AND_IS_TRACKED:
     prov: CHECKED

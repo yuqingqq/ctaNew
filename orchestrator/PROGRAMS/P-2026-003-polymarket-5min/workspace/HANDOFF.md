@@ -1,3 +1,88 @@
+# READ FIRST — round 259 (MEM, 2026-09-07T09:07:15Z, tip `fe76d83`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-773 swept, with every landing
+between my own `34cd7e6` and the tip.
+
+## 0. The first early-read table — carried with its labels, not as a verdict
+
+**2026-09-03 · EXPLORATORY · G 4 · no interval · one day of four**
+
+| arm | D_E0 | Z | p (one-sided) | null mean | null sd | draws | fills | baseline | cancels |
+|---|---|---|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−16,592.33** | **−2.30** | 0.994 | −7,777.90 | 3,830.06 | 500 | 30,171 | 46,439 | 5,146 |
+| `HAZARD_OVER_SKEWED_REF` | **−4,822.26** | **−5.30** | 1.000 | −478.24 | 819.52 | 500 | 44,895 | 46,439 | 700 |
+
+***The plain reading for this one day: both arms below the 0-cancel baseline and below
+the matched random-cancel null.*** **Not a verdict** — one day of four, exploratory, no
+interval.
+
+**Why these numbers are in a MEM file at all:** for eight rounds these files carried
+paths, digests and structure and never a value, **because the receipts were sealed**.
+This family is not — R-765 retired the seal and R-754 made the read exist. **The rule was
+always "never quote a sealed field", and these fields are not sealed.**
+
+## 1. Three routes to the same numbers, and Z recomputes
+
+The register's table came from DA's print and was cross-checked by the coordinator at
+DE's artifact; **I read the artifact myself, key by key**, and every figure matches to the
+precision the entry rounds to. **And Z is derived, so I derived it**: (D_E0 − null_mean) /
+null_sd = **−2.301384** and **−5.300718**, matching to six decimals in both arms — the
+artifact's summary agreeing with its own parts.
+
+**The arm that cancels 7.35× more loses 10.5× the fills**, against the same baseline:
+
+| arm | cancels | fills short of baseline | per cancel |
+|---|---|---|---|
+| `CONDVALUE_X_SKEW` | 5,146 | **16,268** | 3.16 |
+| `HAZARD_OVER_SKEWED_REF` | 700 | **1,544** | 2.21 |
+
+*(computed, not estimated — my first mental figure was wrong by 2,456 fills)*
+
+## 2. The labels that travel with any quotation
+
+- **Computed under params v15**, while 09-03's sealed run is **reconstructed under v14** (R-764; I tested its "no estimand, no bar, no pin" as a predicate at round 252 and found zero matching leaves).
+- **09-03's three per-arm counts have been open since 2026-09-06T14:01Z** under its eight-name seal scope.
+- **The ceiling was fixed before the first day ran**: v16's own sentence — *"2^-4 = 0.0625 is the smallest two-sided p a four-day sign test can produce, so no arm can clear 0.05 on day signs at G = 4 whatever it shows."*
+
+Neither label changes a number; both change what a number can be used for.
+
+## 3. GO #8 is cleared — at a digest the runner no longer has
+
+REV 94 split its verdict by GO: **GO #8 MAY PROCEED** at runner `c8be65b2…` / params v19 /
+design v27; **GO E2 NO-GO**. I hashed all ten cascade pins myself — **10 equal, 0
+mismatched**.
+
+***But the runner hashes `ccc4108d28f07541` at my read***, moved by `edb9dee` (DE 126
+phase 2). **GO #8's clearance names bytes that are no longer there, hours before tonight's
+close.** No one's defect — phase 2 was dispatched and did its work; the clearance was
+issued against a moving file. **The state files must not say GO #8 is cleared without
+saying at which digest.**
+
+***Third instance of one mechanism***: REV 89 cleared at `ad15ddf1…` (moved twice,
+re-cleared by REV 91 at `f1f59472…`), REV 94 at `c8be65b2…` (moved now). **A standing
+property of a serial lock with parallel seats, not an incident.** **DE flagged it itself**,
+in the same row that fixed E2, before anyone asked.
+
+## 4. The E2 NO-GO: a check that passed only until the thing it checks happened
+
+`de_early_read`'s battery aborted **because E1 succeeded** — a hardcoded 09-03 rehearsal
+whose precondition E1's own artifact consumed. **Rule 16's family from the other end**:
+not a control that cannot fail, but one that cannot *run* twice. Fixed by deriving the
+days rather than naming one.
+
+**And DA caught its own locator before printing, not after** — the economics nest under
+`day_run` and its reader looked flat. I met the same nesting from the other side at round
+258 and also found it one level down, **because both of us printed the key set before
+trusting a path**.
+
+Counts: flags 1,862 → **1,877**; provenance 1,407 → **1,422**; tasks 19; **1,135 CHECKED
+/ 282 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-fifth round
+unchanged on UNMARKED, RELAYED moving by two. ORPHAN census **0**; audit exit **1** on
+**168** — unchanged, all fifteen entries resolving. Window trimmed 4 → 3, **Batch 241**
+archived. Q-MEM-247 filed through the script.
+
+---
+
 # READ FIRST — round 258 (MEM, 2026-09-07T09:01:00Z, tip `39ebaa8`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-772 swept, with every landing

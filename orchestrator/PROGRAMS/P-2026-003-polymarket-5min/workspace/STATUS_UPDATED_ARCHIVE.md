@@ -19145,3 +19145,69 @@ generation and the window went 4 → 3. Nothing rewritten.
   audit exits **1** on **165** missing-artifact findings, 164 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 237** archived. Q-MEM-243 filed through the script.)
 ```
+
+## Batch 241 — archived 2026-09-07T09:07:15Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T08:40:28Z (MEM ROUND 256 -- R-770 SWEPT, with every landing between my own 4f8ed4c and the
+  tip, which moved to `4700030` while I read. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED
+  NO RECEIPT OF ANY KIND.
+  (1) ***THE DISPATCH'S QUESTION, ANSWERED WITH ITS WHEN: DESIGN v26 IS TRACKED AT MY READ.*** `git
+  ls-files` returns it, `check-ignore` says no, sha256 `7de8906e607a66d4` -- and the commit that landed it
+  is **`4700030`**, *"DE 124 (landing omission): track design v26 -- the ledger disk is not landing"*, which
+  is AFTER the tip the dispatch named (`c90eb9e`). **So the omission R-770 flagged was closed between the
+  entry and my read at 08:39:03Z**: "tracked" was false when the entry was written and true when I looked,
+  and both halves are recorded.
+  (2) ***THE USER'S RULING IS IN THE LEDGER, NOT ONLY IN A WORKTREE.*** params v18 `cfc2b06fe2c9e792` and
+  design v26 `7de8906e607a66d4`, both `ls-files` 1, both the entry's digests; design head **v26** (25
+  versions, orphans empty) and params head **v18** (18 versions, orphans empty) -- **both families advanced
+  by exactly one version in the same landing and neither carries an open branch**, after a batch that
+  produced six withdrawn drafts, a fork repaired forward and a merge-count cell replaced by a property. Round
+  255 insisted on the difference between a ruling recorded and a ruling in force; **it is in force now.**
+  (3) ***THE SEAL IS RETIRED IN CODE AND THE STATUS IS COMPUTED, NOT PRINTED.*** At runner `:1363` the emit
+  sets `seal_status` to an F-STRING -- `f"UNSEALED_BY_USER_RULING R-765 -- {n_days_complete} of {g} days
+  complete"` -- beside `sealed` False, `sealed_field_names` [] and `sealed_at_every_depth` False. **CLAUDE.md
+  rule 10 satisfied at the exact line where it was violated.** ***AND MY ROUND-250 FINDING IS CLOSED IN THE
+  STRONGEST AVAILABLE FORM***: the literal I read at `:1329` for REV 90's NO-GO now survives at exactly two
+  sites, NEITHER the emit -- a comment at `:1379`, and `:10725` `_old125 = "UNSEALED_ALL_DAYS_COMPLETE"`
+  **inside a known-bad cell** whose own comment reads *"THE KNOWN-BAD, against the OLD behaviour as its
+  baseline: the literal this replaced carries no counts, so the predicate that passes above must FAIL on it
+  … The cell measures a delta from the behaviour that was landed, not agreement with the words I just
+  wrote."* **The literal that was the defect is now the control's baseline** -- REV 83 §5's rule applied to
+  the very string that caused the NO-GO.
+  (4) ***AND THE PARAMS GAP I HAVE CARRIED SINCE ROUND 249 IS CLOSED.*** Head v16 against `PARAMS_REL` v15,
+  then v17 against v15 (the gap doubling in one round), now **head v18 and `PARAMS_REL` v18 -- EQUAL**. The
+  reason it was deliberate expired with it: the USER's ruling made the sealed path and the early-read path
+  ONE path, which is what the pin was waiting for. **A literal I flagged as "correct today, indistinguishable
+  tomorrow from the defect" is now simply correct.**
+  (5) ***THE WITHDRAWAL RECORD NAMES SIX DRAFTS, NOT FIVE -- AND TWO OF THEM SHARE A NAME.***
+  `withdrawn_before_landing.files` holds six entries: v26 `5dcf6f0f`, v27 `f3db5112`, v28 `5b4bfd75`, v29
+  `a74e4263`, v30 `db995875`, and a SECOND v26 `22e26bf0` -- the recomposed draft. **My round-254 count of
+  five was right for what existed then**; the sixth was written and withdrawn after it. ***TWO ENTRIES BEAR
+  THE SAME NAME WITH DIFFERENT DIGESTS***, two files that occupied one path at different minutes -- **which
+  is exactly why the ruling required name AND digest per entry**: a name-only record would have collapsed
+  them and lost a draft. The requirement reads like bookkeeping until the case arrives, and it arrived inside
+  the batch that made the rule.
+  (6) ***AND THE FENCE I CARRIED VERBATIM FROM THE REGISTER IS NOW IN THE ARTIFACT.*** v26 carries
+  `user_ruled_unsealed_emission` (the USER's block under R-768's predicate) and `withdrawn_before_landing`
+  with `authority`, `the_precedent_is_BOUNDED` ("only versions never committed, written by the same seat in
+  the same unfinished batch…") and `the_rule_this_leaves` ("**COMPOSE FROM A SCHEMA, never from a deepcopy
+  of the parent**…"). **A resolver finds them without reading the register** -- the good-direction twin of
+  round 255's observation that the root fact the coordinator's probe missed was already a boolean in R7.
+  (7) ***THE SEAL IS RETIRED IN CODE AND NOTHING HAS RUN UNDER IT.*** REV 93 was dispatched 08:38:28Z and
+  its part A gates GO E2 **and** tonight's GO #8, so the first run under the unsealed path is still behind a
+  review. **E1 executes the OLD code**: SubState running with `ExecMainExitTimestamp` EMPTY at 08:39:03Z,
+  MemoryPeak still 2,715,901,952, seventy minutes in, expected ≈ 08:55Z -- its artifact will carry the
+  economics and **no decision ledger**, exactly as R-765 disclosed. The decision-ledger module
+  (`de_decision_ledger.py`) is on disk at the tip; its claims are DE's and REV 93's to verify, and I record
+  only that it exists and is landed.
+  (8) **SIX WALLS IN ONE BATCH, NONE LOOSENED**, with two further rulings recorded at the landing: the eight
+  permitted keys classified by MEASURED change cadence (only `as_of` changes on every version), and the
+  head-version cell naming PRE and POST emission. **The contract moved to accommodate the USER's ruling
+  rather than the checks bending to accommodate the work.**
+  Counts: flags 1,817 -> **1,832**; provenance 1,362 -> **1,377**; tasks 19; **1,096 CHECKED /
+  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SECOND round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **166** missing-artifact findings, 165 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 238** archived. Q-MEM-244 filed through the script.)
+```
