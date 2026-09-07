@@ -247,6 +247,142 @@ def _is_number(v) -> bool:
     return isinstance(v, (int, float)) and not isinstance(v, bool)
 
 
+# --------------------------------------------------- the family's HEAD
+#: THE FIELD SHAPE, AGREED WITH DE 138 THROUGH THE REGISTER (REV 104A S7 #2).
+#: A new artifact for a day carries `supersedes: {path, sha256}` naming the
+#: artifact it replaces. The digest is the FULL 64 lowercase hex -- never a
+#: 16-hex prefix, which is R-754's v17 lesson: a prefix bar let a check
+#: compare sixteen characters and call it a pair.
+SUPERSEDES_FIELD = "supersedes"
+SUPERSEDES_PAIR_KEYS = ("path", "sha256")
+
+
+def _early_read_files(day: str, derived: Path) -> list:
+    """The day's artifacts on disk, by the family's own naming rule."""
+    key = str(day).replace("-", "")
+    return sorted(derived.glob(f"{EARLY_FAMILY}_{key}__*.json"))
+
+
+def resolve_early_read_head(day: str, *, data_root=None,
+                            derived=None) -> dict:
+    """THE ONE ARTIFACT NOTHING SUPERSEDES -- or a REFUSAL BY NAME.
+
+    RESOLVED BY THE PAIR, never by filename or by stamp order. `supersedes`
+    names {path, sha256} and BOTH halves must land on a file that is
+    present: a digest that does not match the bytes is
+    SUPERSESSION_PAIR_MISMATCH, because a link that cannot verify is
+    half-written and picking the newer stamp would be this reader inventing
+    the chain (the same discipline `declaration_chain.resolve_head` applies
+    to the declaration families).
+
+    THREE OUTCOMES, EACH NAMED. One artifact, or a verified chain, resolves
+    to a head. TWO UNCHAINED artifacts for one day are AMBIGUOUS -- "the
+    09-03 early read" would name nothing, and this reader will not choose
+    by stamp. NONE is ABSENT.
+    """
+    der = Path(derived) if derived else (
+        Path(data_root) / "pm_5min/derived" if data_root
+        else HERE.parents[1] / "data/pm_5min/derived")
+    files = _early_read_files(day, der)
+    if not files:
+        raise EarlyReadVerifyRefused(
+            f"EARLY_READ_HEAD_ABSENT: no artifact of {EARLY_FAMILY} for "
+            f"{day} under {der}. The artifact's EXISTENCE is what says the "
+            f"read has happened.")
+    by_name = {f.name: {"path": f, "sha256": _sha(f)} for f in files}
+    superseded, links = {}, []
+    for f in files:
+        try:
+            doc = json.loads(f.read_bytes())
+        except json.JSONDecodeError as e:
+            raise EarlyReadVerifyRefused(
+                f"EARLY_READ_ARTIFACT_UNREADABLE: {f.name} is not readable "
+                f"JSON ({e.msg} at line {e.lineno}).")
+        sup = doc.get(SUPERSEDES_FIELD)
+        if sup is None:
+            continue
+        if not isinstance(sup, dict) or any(
+                k not in sup for k in SUPERSEDES_PAIR_KEYS):
+            raise EarlyReadVerifyRefused(
+                f"SUPERSESSION_PAIR_MISMATCH: {f.name}'s `{SUPERSEDES_FIELD}` "
+                f"is {sup!r}, which is not a {{{', '.join(SUPERSEDES_PAIR_KEYS)}}} "
+                f"pair. A link is a PAIR; a path alone verifies nothing.")
+        want_name = Path(str(sup["path"])).name
+        want_sha = str(sup["sha256"])
+        target = by_name.get(want_name)
+        if target is None:
+            raise EarlyReadVerifyRefused(
+                f"SUPERSESSION_PAIR_MISMATCH: {f.name} supersedes "
+                f"{want_name}, which is not present under {der}. A link to a "
+                f"file nobody has is not a link.")
+        if not DIGEST64.match(want_sha):
+            raise EarlyReadVerifyRefused(
+                f"SUPERSESSION_PAIR_MISMATCH: {f.name} names {want_name} at "
+                f"{want_sha!r} ({len(want_sha)} chars), which is not 64 "
+                f"lowercase hex. ***A SIXTEEN-HEX PREFIX IS NOT THE PAIR*** "
+                f"-- R-754's v17 lesson, in this family.")
+        if want_sha != target["sha256"]:
+            raise EarlyReadVerifyRefused(
+                f"SUPERSESSION_PAIR_MISMATCH: {f.name} names {want_name} at "
+                f"{want_sha[:16]}… and that file digests "
+                f"{target['sha256'][:16]}…. The bytes it claims to supersede "
+                f"are not the bytes on disk.")
+        superseded[want_name] = f.name
+        links.append({"newer": f.name, "supersedes": want_name,
+                      "sha256": want_sha})
+    heads = [f for f in files if f.name not in superseded]
+    if len(heads) > 1:
+        raise EarlyReadVerifyRefused(
+            f"EARLY_READ_HEAD_AMBIGUOUS: {day} has {len(heads)} artifacts "
+            f"that nothing supersedes ({[h.name for h in heads]}). "
+            f"***'the {day} early read' would name nothing***, and this "
+            f"reader will not pick by stamp: a later file is not a "
+            f"successor unless it SAYS so by the pair.")
+    head = heads[0]
+    return {"day": str(day), "head": head.name, "path": str(head),
+            "sha256": by_name[head.name]["sha256"],
+            "n_artifacts": len(files),
+            "artifacts": [f.name for f in files],
+            "superseded": sorted(superseded),
+            "links": links,
+            "resolved_by": ("the `supersedes` PAIR ({path, sha256}), both "
+                            "halves verified against the file on disk"),
+            "the_sole_artifact_is_the_head": len(files) == 1,
+            "why_not_by_stamp": (
+                "a filename orders by clock and says nothing about "
+                "succession. Two artifacts written a minute apart, neither "
+                "naming the other, are two answers to one question")}
+
+
+def head_standing(path, *, data_root=None, derived=None) -> dict:
+    """Is THIS artifact the day's head? A superseded one is readable as
+    PROVENANCE and is labelled -- never quoted as the day's read."""
+    p = Path(path)
+    day = None
+    try:
+        doc = json.loads(p.read_bytes())
+        day = (doc.get("day_run") or {}).get("day") or doc.get("day")
+    except (OSError, json.JSONDecodeError):
+        pass
+    if day is None:
+        return {"resolved": False,
+                "why": "the artifact names no day; standing not resolved"}
+    try:
+        h = resolve_early_read_head(day, data_root=data_root,
+                                    derived=derived or p.parent)
+    except EarlyReadVerifyRefused as e:
+        return {"resolved": False, "refusal": str(e).split(":")[0],
+                "detail": str(e)[:200]}
+    is_head = (p.name == h["head"])
+    return {"resolved": True, "is_the_head": is_head,
+            "label": "HEAD" if is_head else "SUPERSEDED",
+            "the_head_is": h["head"], "n_artifacts": h["n_artifacts"],
+            "what_a_superseded_artifact_is_for": (
+                None if is_head else
+                "PROVENANCE. It is readable, and it is never quoted as the "
+                "day's read -- the head is")}
+
+
 # ---------------------------------------------------------------- the reads
 def load_artifact(path, *, repo_root=None) -> dict:
     """The artifact, or a REFUSAL BY NAME. Never a sealed-family file."""
@@ -975,6 +1111,10 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
         data_root = root / "data"
     doc = load_artifact(path, repo_root=repo_root)
     day = doc.get("day_run", {}).get("day") or doc.get("day")
+    #: THE STANDING IS STATED ON EVERY READ (REV 104A S7 #2). A superseded
+    #: artifact is readable as PROVENANCE and says so; it is never quoted
+    #: as the day's read.
+    standing = head_standing(path, data_root=data_root)
     ruling = the_ruling_by_the_pair(doc, repo_root=repo_root)
     bar = the_bar_for_the_day(ruling, day)
     #: ORDER: the receipt's IDENTITY is established before a single field of
@@ -1011,6 +1151,7 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
                    "is_the_current_head": ruling["is_the_current_head"],
                    "the_current_head": ruling["the_current_head"],
                    "resolved_by": ruling["resolved_by"]},
+        "head_standing": standing,
         "bar": bar, "sealed_receipt_identity": receipt,
         "computation_params": params,
         "data_root_used": str(data_root),
@@ -1147,7 +1288,14 @@ def verify_under_ruling(path, *, ruling_id="R-764", repo_root=None,
 
 def print_table(res: dict) -> str:
     """The coordinator's table. THE LABEL LINE RIDES ON EVERY PRINT."""
-    lines = [f"EARLY READ -- day {res['day']} -- {LABEL_LINE}",
+    _hs = res.get("head_standing") or {}
+    _lbl = (f" -- ***{_hs.get('label')}***"
+            + (f" (the head is {_hs.get('the_head_is')}; this artifact is "
+               f"read as PROVENANCE and is not the day's read)"
+               if _hs.get("label") == "SUPERSEDED" else "")
+            if _hs.get("resolved") else
+            f" -- HEAD STANDING NOT RESOLVED ({_hs.get('refusal') or _hs.get('why')})")
+    lines = [f"EARLY READ -- day {res['day']}{_lbl} -- {LABEL_LINE}",
              f"  ruling {res['ruling']['name']} "
              f"{res['ruling']['sha256'][:16]}… "
              f"(head today: {res['ruling']['the_current_head'].get('name')})",
@@ -1721,6 +1869,97 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{_moved['the_receipts_own_two_readings_agree']}; a planted D_E0 "
        f"and null_mean reach none of {sorted(_leak_probe)}")
 
+    # -- DA 130 / REV 104A S7 #2: THE FAMILY'S HEAD, BY THE PAIR -------
+    with tempfile.TemporaryDirectory() as _hd:
+        _h = Path(_hd)
+
+        def _art(day, stamp, sup=None):
+            b = json.loads(json.dumps(good))
+            b["day_run"]["day"] = day
+            if sup is not None:
+                b[SUPERSEDES_FIELD] = sup
+            p = _h / f"{EARLY_FAMILY}_{day.replace('-', '')}__{stamp}.json"
+            p.write_text(json.dumps(b))
+            return p
+
+        _one = _art("2026-09-01", "20260101T000000Z")
+        _r1 = resolve_early_read_head("2026-09-01", derived=_h)
+        _two_a = _art("2026-09-02", "20260101T000000Z")
+        _two_b = _art("2026-09-02", "20260101T000100Z")
+        _amb = ""
+        try:
+            resolve_early_read_head("2026-09-02", derived=_h)
+        except EarlyReadVerifyRefused as e:
+            _amb = str(e).split(":")[0]
+        _ch_a = _art("2026-09-08", "20260101T000000Z")
+        _ch_b = _art("2026-09-08", "20260101T000100Z",
+                     sup={"path": _ch_a.name, "sha256": _sha(_ch_a)})
+        _r2 = resolve_early_read_head("2026-09-08", derived=_h)
+        _bad_a = _art("2026-09-09", "20260101T000000Z")
+        _bad_b = _art("2026-09-09", "20260101T000100Z",
+                      sup={"path": _bad_a.name, "sha256": "0" * 64})
+        _mm = ""
+        try:
+            resolve_early_read_head("2026-09-09", derived=_h)
+        except EarlyReadVerifyRefused as e:
+            _mm = str(e).split(":")[0]
+        _pfx_a = _art("2026-09-10", "20260101T000000Z")
+        _pfx_b = _art("2026-09-10", "20260101T000100Z",
+                      sup={"path": _pfx_a.name, "sha256": _sha(_pfx_a)[:16]})
+        _pfx = ""
+        try:
+            resolve_early_read_head("2026-09-10", derived=_h)
+        except EarlyReadVerifyRefused as e:
+            _pfx = str(e)
+        _absent = ""
+        try:
+            resolve_early_read_head("2099-01-01", derived=_h)
+        except EarlyReadVerifyRefused as e:
+            _absent = str(e).split(":")[0]
+        _stand_head = head_standing(_ch_b, derived=_h)
+        _stand_old = head_standing(_ch_a, derived=_h)
+    ck("DA 130 -- ***THE FAMILY HAS A HEAD, AND IT IS RESOLVED BY THE PAIR***: "
+       "one artifact IS the head; a verified chain of two resolves to the "
+       "LATER one; and the superseded one is readable as PROVENANCE, "
+       "labelled SUPERSEDED, never quoted as the day's read",
+       _r1["head"] == _one.name and _r1["the_sole_artifact_is_the_head"]
+       and _r2["head"] == _ch_b.name and _r2["superseded"] == [_ch_a.name]
+       and _stand_head["label"] == "HEAD"
+       and _stand_old["label"] == "SUPERSEDED"
+       and _stand_old["the_head_is"] == _ch_b.name,
+       f"one -> {_r1['head']}; a chain -> {_r2['head']} (superseded "
+       f"{_r2['superseded']}); the older one reads {_stand_old['label']}")
+    ck("KNOWN-BADS, DRIVEN, ALL FOUR -- ***TWO UNCHAINED ARTIFACTS ARE "
+       "AMBIGUOUS AND THIS READER WILL NOT PICK BY STAMP***; a chain naming "
+       "a digest the file does not have is SUPERSESSION_PAIR_MISMATCH; a "
+       "SIXTEEN-HEX PREFIX is refused as not the pair (R-754's v17 lesson "
+       "in this family); and a day with no artifact is ABSENT",
+       _amb == "EARLY_READ_HEAD_AMBIGUOUS"
+       and _mm == "SUPERSESSION_PAIR_MISMATCH"
+       and _pfx.startswith("SUPERSESSION_PAIR_MISMATCH")
+       and "not 64" in _pfx
+       and _absent == "EARLY_READ_HEAD_ABSENT",
+       f"two unchained -> {_amb}; wrong digest -> {_mm}; 16-hex prefix -> "
+       f"{_pfx.split(':')[0]} ('not 64 lowercase hex'); none -> {_absent}")
+
+    # -- and THE FOUR REAL DAYS, each a single head today ---------------
+    _real = {}
+    for _d in ("2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06"):
+        try:
+            _real[_d] = resolve_early_read_head(_d, data_root=root / "data")
+        except EarlyReadVerifyRefused as e:
+            _real[_d] = {"REFUSED": str(e).split(":")[0]}
+    ck("AND THE FOUR REAL DAYS RESOLVE TODAY -- each has exactly ONE "
+       "artifact, no `supersedes` field anywhere yet, and the sole artifact "
+       "IS the head. ***That is the state DE 138's rule has to preserve***: "
+       "the moment a second is written without the field, this day becomes "
+       "AMBIGUOUS by the cell above",
+       all(isinstance(v, dict) and v.get("n_artifacts") == 1
+           and v.get("the_sole_artifact_is_the_head") and not v.get("links")
+           for v in _real.values()),
+       "; ".join(f"{d}: {v.get('head', v.get('REFUSED'))}"
+                 for d, v in sorted(_real.items())))
+
     # -- DA 126: THE LEDGER IS A REPORTED STATUS, NEVER A GUESS --------
     _lg_null = check_decision_ledger({"day_run": {"decision_ledger": None}})
     _lg_gone = check_decision_ledger({"day_run": {}})
@@ -1958,6 +2197,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--verify", metavar="ARTIFACT")
+    ap.add_argument("--day", metavar="YYYY-MM-DD or YYYYMMDD",
+                    help="resolve the day's HEAD by the supersedes pair and "
+                         "read it, instead of naming a path")
     ap.add_argument("--print", dest="do_print", action="store_true",
                     help="print the coordinator's table (values)")
     ap.add_argument("--print-under-ruling", dest="under_ruling",
@@ -1978,8 +2220,18 @@ def main() -> int:
     if a.four_day_table:
         print(four_day_table(a.four_day_table, data_root=a.data_root))
         return 0
+    if a.day and not a.verify:
+        try:
+            h = resolve_early_read_head(a.day, data_root=a.data_root)
+        except EarlyReadVerifyRefused as e:
+            print(str(e))
+            return 2
+        print(f"HEAD for {a.day}: {h['head']} {h['sha256'][:16]}… "
+              f"({h['n_artifacts']} artifact(s); superseded "
+              f"{h['superseded'] or 'none'})")
+        a.verify = h["path"]
     if not a.verify:
-        ap.error("--selftest, or --verify <artifact> [--print]")
+        ap.error("--selftest, or --verify <artifact> [--print], or --day")
     #: THREE OUTCOMES, THREE CODES. 2 is a REFUSAL -- the instrument declined
     #: to run on what it was given; 1 would be a check that RAN and flagged;
     #: 0 is verified. A caller that could not tell them apart would read "you
