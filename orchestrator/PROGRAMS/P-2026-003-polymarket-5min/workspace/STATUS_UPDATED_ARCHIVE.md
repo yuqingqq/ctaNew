@@ -17775,3 +17775,80 @@ generation and the window went 4 → 3. Nothing rewritten.
   round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 219 archived. Q-MEM-225 filed through the script.)
 ```
+
+## Batch 223 — archived 2026-09-07T02:08:03Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T01:43:26Z (MEM ROUND 238 -- R-736 SWEPT, tip `cb294c8`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) **THE BOOK'S BYTES HASH TO THE RECEIPT'S DIGEST -- I HASHED THE FILE.** Resolved the book
+  THROUGH the receipt that names it rather than guessing a path, then hashed it: **275,035,656 B on
+  disk** against the receipt's 275,035,656, and sha256 `ac2ac95204864c7e...` equal to the receipt's
+  `sha256`, its `readback_sha256`, and R-736's. **The difference between "the receipt says" and "the
+  bytes are" is the whole of rule 16**, and here they agree.
+  (2) **STRUCTURE v4 PAIRS TO v3 AND NAMES FOUR BOOKS**: 7,940 B, `1913a59937158fc8`, supersedes ->
+  `be_daybook_structure_v3.json` at `f6d3e8315259bd88`, `verified_books` exactly 20260903, 20260904,
+  20260905, 20260906, each "7 of 7 declared claims hold"; the 09-06 record itself reads `n_checks 7`,
+  `all_hold True`, unit `be72struct.service`.
+  (3) ***THE PINS GAP CONFIRMED WITH A CONTROL THAT FIRES.*** Re-ran the discriminating probe I built
+  at round 233: `be_forward_day_SEALED_feed_<day>.jsonl` is present **exactly once** for 09-03, 09-04
+  and 09-05 and **zero** times for 09-06. **The positive controls fire, so the absence means
+  something** -- R-736's upstream gap is independently measured, not relayed. ***AND v5's
+  `pins.taken_by` MISNAMES THE PRODUCER IN ITS OWN WORDS***: it says *"BE 72's successors -- the
+  day's fragment/tape/book run at each close takes the pin as its last step"*, and that chain does
+  not produce the sealed feed -- `be_forward_day` does. The misnaming is legible at the artifact,
+  which is what makes BE's disclosure checkable and v6 necessary rather than cosmetic.
+  (4) ***DE 115's UNIT READING IS VOID, AND ITS DEFAULTS WOULD READ "SUCCESS".*** The unit reads
+  `LoadState=not-found` with an **EMPTY InvocationID**, so under R-653 the reading is VOID -- and the
+  fields systemd returns beside it are DEFAULTS: **`Result=success`, `ExecMainStatus=0`**. Taken at
+  face value **they would say a run that REFUSED had succeeded.** This is the hazard rule 20 exists
+  for, appearing on tonight's chain. **But the JOURNAL BY UNIT NAME still carries the refusal** -- 37
+  lines, `selftest(quiet=True, offline=fixture)` and `raise DataRootRefused(` at
+  `de_multiday_gate1_runner.py:6546` -- so the outcome is recoverable from the journal, never from
+  the void unit reading (R-659). **The contrast, measured in one command:** all five BE 72 units are
+  still **loaded** (four exited, `be72frag` failed), so those five readings ARE admissible, and the
+  one void reading tonight is the one whose unit is gone.
+  (5) **EVERY LAUNCH's `ExecStart` NAMES THE DECLARED LOCK, ONE AT A TIME**, read from the units:
+  `be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock <python> <payload>` with
+  payloads fragment (twice), state-tape, daybook-build, and `--verify-structure` on the book. That
+  lock path's inode 1053378 I verified at round 230, so "one heavy run at a time on the declared
+  lock" is visible from outside.
+  (6) **HEADROOM RECOMPUTED** against the 8 GiB cap (8,589,934,592 B): the tape's PEAK OF RECORD
+  6,334,619,648 B is **73.7 %**; the book's LOWER BOUND 6,217,269,248 B is **72.4 %**; systemd's
+  property for the book -- which R-736 is careful to say is NOT the peak -- is **73.6 %**. R-736's
+  "~74 %" is right for the tape and the property; the book's own bound sits a little under, which
+  the entry already flags.
+  (7) **THE JOURNAL WINDOW, MEASURED TWICE.** Round 236: oldest 2026-09-06T19:51:24Z read at
+  00:05:31Z, depth **4:14:07**. Round 238: oldest 21:28:28Z read at 01:44:39Z, depth **4:16:11**. The
+  window START advanced **1:37:04** while the clock advanced **1:39:08** -- ratio **0.979** -- and
+  the DEPTH held to within two minutes. It behaves as a **fixed-size ~4 h 15 min window sliding at
+  roughly wall-clock rate**. **Two points are two points and I claim no rate law**; the substantive
+  part is the near-constant depth, over a 1 h 39 m baseline against R-641's own 18-minute one.
+  (8) **AND R-736 USES A PLACEHOLDER AGAIN -- BUT DISCLOSES WHERE IT RESOLVES.** One round after
+  R-735 stated *"never a placeholder"*, R-736's last line reads *"the runbook's chain gains the
+  forward-day step (`...`, this round -- sha in R-737)"*. **Third instance of the shape, and
+  qualitatively different from the first two, which were silent**: this one NAMES where the sha will
+  appear. Recorded as a fact about the record, not as a breach -- whether a disclosed forward
+  reference satisfies "never a placeholder" is the coordinator's to say. ROUTED, NOT RULED. It also
+  fits round 237's finding: **the operative half is the SUBSTITUTION**, and here it is deferred
+  openly rather than forgotten. ***AND AT COMMIT TIME THE DEFERRAL DID NOT CLOSE***: R-737 landed
+  and, bounded over its WHOLE block, carries `53f1dab` **zero times** -- with the control that the
+  sha appears **zero times anywhere in the register**, while the commit exists. **The entry that
+  promised the resolution is landed and immutable, and the promise is not yet kept.** R-738 is not
+  written yet, so it can still carry it; as of **01:48:02Z, not yet substituted.** The sharpest form
+  of round 237's point: **a disclosed forward reference is still a placeholder that needs
+  substituting.**
+  UNSWEPT, FOR MEM 239: **R-737** (`bc3f287`) -- DE 115 refused at its own selftest, nothing written,
+  DE 116 to diagnose and fix with REV 88 reading the diff before GO #6; and `53f1dab`, the runbook
+  step R-736 deferred. **ALSO IN THE TREE, UNCOMMITTED AND NOT MINE TO LAND:**
+  `live/pm_research/declarations/be_race_read_declaration_v6.json`, 12,456 B, `a240ccc5fb171641`,
+  UNTRACKED -- BE 87's v6 correction written but not yet landed. My commits name their three paths
+  explicitly, so it is not swept in (R-387/R-623); recorded so a later reader knows it was here at
+  01:48Z. **CLOSED WITHIN THE ROUND:** BE 87 landed it itself at `ebd7c3b` (with `e126529`,
+  Q-BE-330) between that reading and my commit -- v6 is now TRACKED, my commit carries exactly its
+  three paths, and BE's row reports the forward-day run **STOPPED on a third upstream gap**, refusing
+  on DA's missing closed-day verdict. That, and R-737, are MEM 239's.
+  Counts: flags 1,558 -> 1,569; provenance 1,103 -> 1,114; tasks 19; **838 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-FOURTEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 220 archived. Q-MEM-226 filed through the script.)
+```

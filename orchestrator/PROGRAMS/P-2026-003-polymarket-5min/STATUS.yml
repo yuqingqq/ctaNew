@@ -63,6 +63,61 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T02:08:03Z (MEM ROUND 241 -- R-740 AND R-741 SWEPT, tip `5115905`. STATE ONLY. MEM
+  ASSERTS NO RESULT.
+  (1) ***THE LOCK IS HELD ON THE DECLARED INODE BY BE 88's OWN CGROUP -- VERIFIED WITHOUT TAKING
+  IT.*** A `flock -n` probe would have tried to acquire it, so I read `/proc/locks`: exactly ONE
+  FLOCK ADVISORY WRITE on inode **1053378**, the declared heavy lock whose inode I checked against
+  the declaration at round 230, held by PID 375664 -- whose cgroup is
+  `.../research.slice/be88fwd06.service` and whose cmdline is `flock -n -E 75 <the declared lock>
+  <python> ...`. **So the lock is held BY THAT RUN, not merely held** -- the difference between a
+  proxy and the thing, and what DE 117's inode poll is waiting on.
+  (2) ***AND THE PROCESS SHAPE IS ONE LEVEL DEEPER THAN RULE 20's CLAUSE.*** The rule's outside
+  diagnostic reads *"under a transient service MainPID is `flock` and its parent is systemd --user
+  (pid 1004 here); the PAYLOAD is a grandchild whose PPid is flock"*. Tonight **MainPID is 375657**,
+  which is `/bin/bash .../be_heavy_run.sh --inner`, **PPid 1004** -- so the PARENT half holds
+  exactly, at the very pid the rule names -- **but MainPID is NOT `flock`**; flock is 375664, its
+  CHILD, so the payload is a **great**-grandchild. The launcher gained a wrapper (BE 87's sampler
+  work) and the illustrative PID clause did not move with it. ROUTED, NOT RULED.
+  ***BUT RULE 20's OWN PREFERRED TEST HOLDS***: it says the decidable property "needs no parent" --
+  the cgroup leaf suffix -- and the holder's leaf is **`be88fwd06.service`**. **The preferred test
+  passes cleanly on exactly the run whose parent chain moved. The rule chose the cgroup over the
+  parent chain, and tonight is why.**
+  (3) **DE 116 IS FIXED AT THE CELL AND THE GUARD IS UNTOUCHED**, checked at the diff rather than
+  taken from the entry: `0f0d301` touches **exactly one file** (+144/-15), and **`de_data_root.py`,
+  which holds the data-freeness guard, is NOT in the diff at all** -- "nothing was taught to forgive
+  a path" is verifiable as an absence from the changed-file list. **And the new parameter defaults
+  to the process map**: `verify_input_digests(where, *, digests: dict | None = None)` -- keyword-only,
+  defaulting to None, so every production call is the old behaviour and only the probe passes a
+  constructed map. REV 88's *"the narrowing is of the cell's INPUT and not of the OBSERVER"* is
+  legible in the signature itself.
+  (4) ***R-740 AND R-741 CARRY ZERO PLACEHOLDERS, AND R-741 NAMES ITS PREP COMMIT INLINE.*** The
+  thread I ran from rounds 237 to 238 is closed: R-729 used `c...`, R-734 used `...`, R-736 deferred
+  one openly to R-737 which never carried it -- **two consecutive entries now keep the rule whose
+  operative half I argued was the substitution.** `b8cad5c` landed both rulings in two files:
+  runbook +1 (the chain as a predicate), SEAT_PROTOCOL +5 (pinned deploy + same-round re-pin).
+  (5) **THE CHAIN PREDICATE STATES A RULE ABOUT ABSENCE**, and it is the general form of what my
+  seat has been doing case by case: ***"A missing artifact reads as 'the step was never reached'
+  ONLY IF the step before it has its artifact."*** At rounds 233 and 238 I measured the absence of
+  the 09-06 sealed feed with a control that FIRES on the days that have one, after a first probe
+  whose control could not discriminate. The rule now says it for every step. **And the tail
+  BRANCHES**: (4a) the race-read branch -- forward day -> sealed feed -> pins -> the second read at
+  its horizon, user-gated; (4b) the Gate-1 branch -- DE's day run -> DA's pre-read -> REV.
+  ***"'The chain completed' means ONE branch completed; say which."*** Tonight's is Gate 1's.
+  (6) **LIVE STATE, BOTH STAMPED**: `be88fwd06` loaded / active / RUNNING, id `d153a919...`, its
+  ExecStart naming the declared lock; `de115day06_2` **not-found with an empty id** -- GO #6 is
+  issued but DE is polling the inode and has not launched.
+  (7) ***AND A NOT-FOUND READING IS VOID IN A WAY THAT SAYS NOTHING ABOUT WHY.*** FOUR units read
+  not-found with empty ids tonight: `de115day06_2`, which has **never launched**, and `de116diag`
+  / `_2` / `_3`, which **ran and were cleaned up**. **The two cases read identically** -- not-found,
+  inactive, dead, and a DEFAULT `Result=success` with `ExecMainStatus 0`. So a void reading is not
+  "the run failed" and not "the run never happened"; **it is no reading at all**, and the register or
+  the journal must say which. R-659's rule from the other side.
+  UNSWEPT, FOR MEM 242: **DA 115** (`8c66d27`) -- the deploy pin becomes a declaration and the census
+  sees drift in daylight; landed while I wrote. `be88fwd06` still RUNNING at 02:11:28Z.
+  Counts: flags 1,592 -> 1,603; provenance 1,137 -> 1,148; tasks 19; **872 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-SEVENTEENTH round unchanged on UNMARKED.** ORPHAN audit 0
+  findings. Window trimmed 4 -> 3, Batch 223 archived. Q-MEM-229 filed through the script.)
   2026-09-07T02:01:15Z (MEM ROUND 240 -- R-739 SWEPT, tip `02cccfd`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) ***ONE DECLARATION, TWO FIELD NAMES FOR THE PRODUCERS' EXIT CODES -- AND I FOUND IT BY MAKING
@@ -180,78 +235,6 @@ updated: >-
   **850 CHECKED / 276 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIFTEENTH round unchanged on
   UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 221 archived. Q-MEM-227 filed
   through the script.)
-  2026-09-07T01:43:26Z (MEM ROUND 238 -- R-736 SWEPT, tip `cb294c8`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) **THE BOOK'S BYTES HASH TO THE RECEIPT'S DIGEST -- I HASHED THE FILE.** Resolved the book
-  THROUGH the receipt that names it rather than guessing a path, then hashed it: **275,035,656 B on
-  disk** against the receipt's 275,035,656, and sha256 `ac2ac95204864c7e...` equal to the receipt's
-  `sha256`, its `readback_sha256`, and R-736's. **The difference between "the receipt says" and "the
-  bytes are" is the whole of rule 16**, and here they agree.
-  (2) **STRUCTURE v4 PAIRS TO v3 AND NAMES FOUR BOOKS**: 7,940 B, `1913a59937158fc8`, supersedes ->
-  `be_daybook_structure_v3.json` at `f6d3e8315259bd88`, `verified_books` exactly 20260903, 20260904,
-  20260905, 20260906, each "7 of 7 declared claims hold"; the 09-06 record itself reads `n_checks 7`,
-  `all_hold True`, unit `be72struct.service`.
-  (3) ***THE PINS GAP CONFIRMED WITH A CONTROL THAT FIRES.*** Re-ran the discriminating probe I built
-  at round 233: `be_forward_day_SEALED_feed_<day>.jsonl` is present **exactly once** for 09-03, 09-04
-  and 09-05 and **zero** times for 09-06. **The positive controls fire, so the absence means
-  something** -- R-736's upstream gap is independently measured, not relayed. ***AND v5's
-  `pins.taken_by` MISNAMES THE PRODUCER IN ITS OWN WORDS***: it says *"BE 72's successors -- the
-  day's fragment/tape/book run at each close takes the pin as its last step"*, and that chain does
-  not produce the sealed feed -- `be_forward_day` does. The misnaming is legible at the artifact,
-  which is what makes BE's disclosure checkable and v6 necessary rather than cosmetic.
-  (4) ***DE 115's UNIT READING IS VOID, AND ITS DEFAULTS WOULD READ "SUCCESS".*** The unit reads
-  `LoadState=not-found` with an **EMPTY InvocationID**, so under R-653 the reading is VOID -- and the
-  fields systemd returns beside it are DEFAULTS: **`Result=success`, `ExecMainStatus=0`**. Taken at
-  face value **they would say a run that REFUSED had succeeded.** This is the hazard rule 20 exists
-  for, appearing on tonight's chain. **But the JOURNAL BY UNIT NAME still carries the refusal** -- 37
-  lines, `selftest(quiet=True, offline=fixture)` and `raise DataRootRefused(` at
-  `de_multiday_gate1_runner.py:6546` -- so the outcome is recoverable from the journal, never from
-  the void unit reading (R-659). **The contrast, measured in one command:** all five BE 72 units are
-  still **loaded** (four exited, `be72frag` failed), so those five readings ARE admissible, and the
-  one void reading tonight is the one whose unit is gone.
-  (5) **EVERY LAUNCH's `ExecStart` NAMES THE DECLARED LOCK, ONE AT A TIME**, read from the units:
-  `be_heavy_run.sh --inner --lock /home/yuqing/ctaNew/data/.heavy_run.lock <python> <payload>` with
-  payloads fragment (twice), state-tape, daybook-build, and `--verify-structure` on the book. That
-  lock path's inode 1053378 I verified at round 230, so "one heavy run at a time on the declared
-  lock" is visible from outside.
-  (6) **HEADROOM RECOMPUTED** against the 8 GiB cap (8,589,934,592 B): the tape's PEAK OF RECORD
-  6,334,619,648 B is **73.7 %**; the book's LOWER BOUND 6,217,269,248 B is **72.4 %**; systemd's
-  property for the book -- which R-736 is careful to say is NOT the peak -- is **73.6 %**. R-736's
-  "~74 %" is right for the tape and the property; the book's own bound sits a little under, which
-  the entry already flags.
-  (7) **THE JOURNAL WINDOW, MEASURED TWICE.** Round 236: oldest 2026-09-06T19:51:24Z read at
-  00:05:31Z, depth **4:14:07**. Round 238: oldest 21:28:28Z read at 01:44:39Z, depth **4:16:11**. The
-  window START advanced **1:37:04** while the clock advanced **1:39:08** -- ratio **0.979** -- and
-  the DEPTH held to within two minutes. It behaves as a **fixed-size ~4 h 15 min window sliding at
-  roughly wall-clock rate**. **Two points are two points and I claim no rate law**; the substantive
-  part is the near-constant depth, over a 1 h 39 m baseline against R-641's own 18-minute one.
-  (8) **AND R-736 USES A PLACEHOLDER AGAIN -- BUT DISCLOSES WHERE IT RESOLVES.** One round after
-  R-735 stated *"never a placeholder"*, R-736's last line reads *"the runbook's chain gains the
-  forward-day step (`...`, this round -- sha in R-737)"*. **Third instance of the shape, and
-  qualitatively different from the first two, which were silent**: this one NAMES where the sha will
-  appear. Recorded as a fact about the record, not as a breach -- whether a disclosed forward
-  reference satisfies "never a placeholder" is the coordinator's to say. ROUTED, NOT RULED. It also
-  fits round 237's finding: **the operative half is the SUBSTITUTION**, and here it is deferred
-  openly rather than forgotten. ***AND AT COMMIT TIME THE DEFERRAL DID NOT CLOSE***: R-737 landed
-  and, bounded over its WHOLE block, carries `53f1dab` **zero times** -- with the control that the
-  sha appears **zero times anywhere in the register**, while the commit exists. **The entry that
-  promised the resolution is landed and immutable, and the promise is not yet kept.** R-738 is not
-  written yet, so it can still carry it; as of **01:48:02Z, not yet substituted.** The sharpest form
-  of round 237's point: **a disclosed forward reference is still a placeholder that needs
-  substituting.**
-  UNSWEPT, FOR MEM 239: **R-737** (`bc3f287`) -- DE 115 refused at its own selftest, nothing written,
-  DE 116 to diagnose and fix with REV 88 reading the diff before GO #6; and `53f1dab`, the runbook
-  step R-736 deferred. **ALSO IN THE TREE, UNCOMMITTED AND NOT MINE TO LAND:**
-  `live/pm_research/declarations/be_race_read_declaration_v6.json`, 12,456 B, `a240ccc5fb171641`,
-  UNTRACKED -- BE 87's v6 correction written but not yet landed. My commits name their three paths
-  explicitly, so it is not swept in (R-387/R-623); recorded so a later reader knows it was here at
-  01:48Z. **CLOSED WITHIN THE ROUND:** BE 87 landed it itself at `ebd7c3b` (with `e126529`,
-  Q-BE-330) between that reading and my commit -- v6 is now TRACKED, my commit carries exactly its
-  three paths, and BE's row reports the forward-day run **STOPPED on a third upstream gap**, refusing
-  on DA's missing closed-day verdict. That, and R-737, are MEM 239's.
-  Counts: flags 1,558 -> 1,569; provenance 1,103 -> 1,114; tasks 19; **838 CHECKED / 276 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-FOURTEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 220 archived. Q-MEM-226 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -423,6 +406,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 241, R-740 + R-741 swept ---
+  the_LOCK_IS_HELD_ON_THE_DECLARED_INODE_BY_BE88s_OWN_CGROUP: PROC-LOCKS-READ-ONLY-NEVER-TAKEN
+  and_the_PROCESS_SHAPE_IS_ONE_LEVEL_DEEPER_than_rule_20s_clause: MAINPID-IS-THE-LAUNCHER-NOT-flock
+  but_rule_20s_OWN_PREFERRED_TEST_the_cgroup_leaf_HOLDS: SUFFIX-be88fwd06-service
+  DE116_is_fixed_AT_THE_CELL_and_the_guard_is_untouched: ONE-FILE-de_data_root-NOT-IN-THE-DIFF
+  the_new_parameter_DEFAULTS_to_the_process_map: PRODUCTION-PATH-UNCHANGED-BY-CONSTRUCTION
+  R_740_AND_R_741_CARRY_ZERO_PLACEHOLDERS_and_name_the_prep_commit: MY-ROUNDS-237-238-THREAD-CLOSED
+  b8cad5c_landed_BOTH_rulings_in_two_files: RUNBOOK-PLUS-1-SEAT-PROTOCOL-PLUS-5
+  the_chain_predicate_states_a_rule_about_ABSENCE: NEVER-REACHED-ONLY-IF-THE-STEP-BEFORE-HAS-ITS-ARTIFACT
+  and_THE_CHAIN_COMPLETED_NAMES_ONE_BRANCH_say_which: RACE-READ-BRANCH-VS-GATE-1-BRANCH
+  be88fwd06_RUNNING_at_my_read_de115day06_2_NOT_YET_A_UNIT: LIVE-STATE-BOTH-STAMPED
+  a_NOT_FOUND_reading_is_VOID_and_says_nothing_about_WHICH_reason: NEVER-LAUNCHED-OR-COLLECTED-READ-ALIKE
   # --- MEM round 240, R-739 swept ---
   ONE_DECLARATION_TWO_FIELD_NAMES_for_the_producers_exit_codes: BE-AND-DE-WRITE-map-DA-WRITES-codes
   and_a_reader_keying_ONE_of_them_finds_FIVE_producers_UNDECLARED: WHICH-IS-WHAT-MY-OWN-PROBE-PRINTED
@@ -25986,6 +25981,120 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 241, 2026-09-07T02:08:03Z ---
+  the_LOCK_IS_HELD_ON_THE_DECLARED_INODE_BY_BE88s_OWN_CGROUP:
+    prov: CHECKED
+    artifact: /proc/locks and /proc/375664/cgroup, read-only
+    as_of: 2026-09-07T02:09:00Z
+    said: >-
+      verified WITHOUT taking the lock -- a `flock -n` probe would have tried to acquire it, so I
+      read /proc/locks instead: exactly ONE FLOCK ADVISORY WRITE on inode 1053378, the declared heavy
+      lock whose inode I verified against the declaration at round 230, held by PID 375664. That PID's
+      cgroup is /user.slice/.../research.slice/be88fwd06.service and its cmdline is
+      `flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock <python> live/pm_resea...`. So the
+      lock is held BY THAT RUN, not merely held -- which is the difference between a proxy and the
+      thing, and it is what DE 117's inode poll is waiting on.
+  and_the_PROCESS_SHAPE_IS_ONE_LEVEL_DEEPER_than_rule_20s_clause:
+    prov: CHECKED
+    artifact: /proc/375657/status, /proc/375664/status, systemctl show -p MainPID
+    as_of: 2026-09-07T02:09:00Z
+    said: >-
+      rule 20's outside diagnostic (R-642, corrected at R-646) reads "under a transient service
+      MainPID is `flock` and its parent is systemd --user (pid 1004 here); the PAYLOAD is a
+      grandchild whose PPid is flock". Tonight: MainPID is 375657, which is
+      /bin/bash .../be_heavy_run.sh --inner, PPid 1004 -- so the PARENT half holds exactly, at the
+      very pid the rule names -- but MainPID is NOT flock; flock is 375664, its CHILD, so the payload
+      is a GREAT-grandchild, ONE LEVEL DEEPER than the clause describes. The launcher gained a
+      wrapper (BE 87's sampler work) and the illustrative PID clause did not move with it. ROUTED,
+      NOT RULED -- a note about the runbook's wording, not about tonight's run.
+  but_rule_20s_OWN_PREFERRED_TEST_the_cgroup_leaf_HOLDS:
+    prov: CHECKED
+    artifact: the holder's cgroup leaf
+    as_of: 2026-09-07T02:09:00Z
+    said: >-
+      and this is the corroboration worth keeping: the rule says the DECIDABLE property "needs no
+      parent" -- the process's own cgroup leaf suffix, `.service` admitting a real day and `.scope`
+      refusing it. The holder's leaf is `be88fwd06.service`, so the preferred test passes cleanly on
+      exactly the run whose PARENT CHAIN moved. The rule chose the cgroup over the parent chain, and
+      tonight is why.
+  DE116_is_fixed_AT_THE_CELL_and_the_guard_is_untouched:
+    prov: CHECKED
+    artifact: commit 0f0d301
+    as_of: 2026-09-07T02:08:00Z
+    said: >-
+      checked at the diff rather than taken from the entry: 0f0d301 touches EXACTLY ONE file,
+      live/pm_research/de_multiday_gate1_runner.py, +144/-15 -- and de_data_root.py, which holds the
+      data-freeness guard, is NOT in the diff at all. "Nothing was taught to forgive a path" is
+      verifiable as an absence from the changed-file list.
+  the_new_parameter_DEFAULTS_to_the_process_map:
+    prov: CHECKED
+    artifact: de_multiday_gate1_runner.py line 664
+    as_of: 2026-09-07T02:08:00Z
+    said: >-
+      the signature is `def verify_input_digests(where: str, *, digests: dict | None = None)`. The
+      new parameter is keyword-only and defaults to None, so every production call is byte-for-byte
+      the old behaviour and only the probe passes a constructed map. REV 88's "the narrowing is of
+      the cell's INPUT and not of the OBSERVER" is legible in the signature itself.
+  R_740_AND_R_741_CARRY_ZERO_PLACEHOLDERS_and_name_the_prep_commit:
+    prov: CHECKED
+    artifact: both blocks in the register
+    as_of: 2026-09-07T02:08:00Z
+    said: >-
+      the thread I ran from rounds 237 to 238 is closed: R-729 used `c...`, R-734 used `...`, R-736
+      deferred one openly to R-737 which never carried it -- and R-740 and R-741 carry ZERO
+      placeholders, with R-741 naming `b8cad5c` inline. Two consecutive entries keeping the rule
+      whose OPERATIVE half I argued was the substitution.
+  b8cad5c_landed_BOTH_rulings_in_two_files:
+    prov: CHECKED
+    artifact: commit b8cad5c
+    as_of: 2026-09-07T02:08:00Z
+    said: >-
+      two files, six insertions: COORDINATOR_RUNBOOK.md +1 (the day-close chain as a predicate) and
+      SEAT_PROTOCOL.md +5 (nightly units run from a PINNED deploy, and a landing touching a pinned
+      file re-pins in the SAME round). Both rulings landed where the entry says.
+  the_chain_predicate_states_a_rule_about_ABSENCE:
+    prov: CHECKED
+    artifact: the runbook line at b8cad5c
+    as_of: 2026-09-07T02:08:00Z
+    said: >-
+      the sentence that matters most to my seat, quoted from the landed line: "A missing artifact
+      reads as 'the step was never reached' ONLY IF the step before it has its artifact." That is
+      the general form of what I have been doing case by case -- at rounds 233 and 238 I measured
+      the absence of the 09-06 sealed feed with a control that FIRES on the days that have one,
+      after a first probe whose control could not discriminate. The rule now says it for every step.
+  and_THE_CHAIN_COMPLETED_NAMES_ONE_BRANCH_say_which:
+    prov: CHECKED
+    artifact: the same line
+    as_of: 2026-09-07T02:08:00Z
+    said: >-
+      the tail BRANCHES and the runbook says so: (4a) the race-read branch -- be_forward_day -> the
+      sealed feed -> be_race_read_feed_pins_v<N+1> -> the second read at its horizon
+      (2026-09-10T01:00Z, user-gated); (4b) the Gate-1 branch -- DE's day run -> the sealed day-run
+      artifact -> DA's pre-read and open-book half -> REV. "'The chain completed' means ONE branch
+      completed; say which." Tonight's is Gate 1's, and the race-read branch is still behind the
+      user's item (d).
+  be88fwd06_RUNNING_at_my_read_de115day06_2_NOT_YET_A_UNIT:
+    prov: CHECKED
+    artifact: systemctl --user show, both units
+    as_of: 2026-09-07T02:08:26Z
+    said: >-
+      be88fwd06: loaded / active / RUNNING, ExecMainStatus 0, InvocationID
+      d153a919d8ea408585cd7667cd8b2617, its ExecStart naming the DECLARED heavy lock.
+      de115day06_2: LoadState not-found, InvocationID EMPTY -- GO #6 is issued but DE is polling the
+      lock's inode and has not launched, so there is no unit to read. Both stamped; a later reader
+      re-reads.
+  a_NOT_FOUND_reading_is_VOID_and_says_nothing_about_WHICH_reason:
+    prov: CHECKED
+    artifact: de115day06_2 and the three de116diag units
+    as_of: 2026-09-07T02:08:26Z
+    said: >-
+      the sharpening this round gives to my round-238 note. FOUR units read not-found with empty ids
+      tonight: de115day06_2, which has NEVER LAUNCHED, and de116diag / _2 / _3, which RAN and were
+      cleaned up. THE TWO CASES READ IDENTICALLY -- not-found, inactive, dead, and a DEFAULT
+      Result=success with ExecMainStatus 0. So a void reading is not "the run failed" and not "the
+      run never happened"; it is NO READING AT ALL, and the register or the journal must say which.
+      R-659's rule stated from the other side: a GO condition is satisfied by the artifact and the
+      journal, never by a unit reading that may be void.
   # --- MEM round 240, 2026-09-07T02:01:15Z ---
   ONE_DECLARATION_TWO_FIELD_NAMES_for_the_producers_exit_codes:
     prov: CHECKED

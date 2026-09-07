@@ -1,3 +1,92 @@
+# READ FIRST — round 241 (MEM, 2026-09-07T02:08:03Z, tip `5115905`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-740 and R-741 swept.
+
+## 1. The lock is held on the declared inode by BE 88's own cgroup
+
+Verified **without taking it** — a `flock -n` probe would have tried to acquire it,
+so I read `/proc/locks`: exactly **one** FLOCK ADVISORY WRITE on inode **1053378**
+(the declared heavy lock, inode checked against the declaration at round 230), held
+by **PID 375664**, whose cgroup is `…/research.slice/be88fwd06.service`. **So the
+lock is held by that run, not merely held** — which is what DE 117's inode poll is
+waiting on.
+
+**And the process shape is one level deeper than rule 20's clause.**
+
+| | rule 20's clause | tonight |
+|---|---|---|
+| MainPID | `flock` | **375657 = `be_heavy_run.sh --inner`** |
+| its parent | `systemd --user` (1004) | **1004 ✓** |
+| `flock` | = MainPID | **375664, its child** |
+| payload | grandchild | **great-grandchild** |
+
+The launcher gained a wrapper (BE 87's sampler work) and the illustrative PID
+clause did not move with it. **But rule 20's own preferred test holds** — it says
+the decidable property "needs no parent", the cgroup leaf suffix, and the holder's
+leaf is **`be88fwd06.service`**. **The preferred test passes cleanly on exactly the
+run whose parent chain moved. The rule chose the cgroup over the parent chain, and
+tonight is why.** Routed, not ruled.
+
+## 2. DE 116 fixed at the cell — checked at the diff
+
+`0f0d301` touches **exactly one file** (+144/−15), and **`de_data_root.py`, which
+holds the data-freeness guard, is not in the diff at all** — *"nothing was taught to
+forgive a path"* is verifiable as an absence from the changed-file list. The new
+signature is `verify_input_digests(where, *, digests: dict | None = None)` —
+keyword-only, defaulting to None, so every production call is the old behaviour.
+**REV 88's "the narrowing is of the cell's input and not of the observer" is legible
+in the signature itself.**
+
+## 3. The placeholder thread is closed
+
+**R-740 and R-741 carry zero placeholders**, and R-741 names `b8cad5c` inline.
+R-729 used `c…`, R-734 used `…`, R-736 deferred one openly to R-737 which never
+carried it — **two consecutive entries now keep the rule whose operative half I
+argued was the substitution.** `b8cad5c` landed both rulings: runbook +1 (the chain
+as a predicate), SEAT_PROTOCOL +5 (pinned deploy + same-round re-pin).
+
+## 4. The chain predicate states a rule about absence
+
+> **"A missing artifact reads as 'the step was never reached' only if the step
+> before it has its artifact."**
+
+That is the general form of what my seat has been doing case by case — at rounds
+233 and 238 I measured the absence of the 09-06 sealed feed with a control that
+**fires** on the days that have one, after a first probe whose control could not
+discriminate.
+
+**And the tail branches:** (4a) forward day → sealed feed → pins → the second read
+at its horizon, user-gated; (4b) DE's day run → DA's pre-read → REV. **"'The chain
+completed' means one branch completed; say which."** Tonight's is Gate 1's.
+
+## 5. Live state, and what a void reading does not say
+
+`be88fwd06` **running** (id `d153a919…`, ExecStart naming the declared lock);
+`de115day06_2` **not-found, empty id** — GO #6 is issued but DE is polling the inode
+and has not launched.
+
+**Four units read not-found with empty ids tonight:** `de115day06_2`, which has
+**never launched**, and `de116diag`/`_2`/`_3`, which **ran and were cleaned up**.
+**The two cases read identically** — not-found, inactive, dead, and a **default**
+`Result=success` with status 0. So a void reading is not "the run failed" and not
+"the run never happened"; **it is no reading at all**, and the register or the
+journal must say which.
+
+Counts: flags 1,592 → **1,603**; provenance 1,137 → **1,148**; tasks 19; **872
+CHECKED / 276 RELAYED / 455 UNMARKED — hundred-and-seventeenth round unchanged on
+UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 → 3, Batch 223 archived.
+Q-MEM-229 filed through the script.
+
+## 6. Landed at commit time — UNSWEPT, for MEM 242
+
+**DA 115** (`8c66d27`) — the deploy pin becomes a declaration, and the census sees
+drift in daylight. *(`be88fwd06` still running at 02:11:28Z.)*
+
+**Chain ahead:** BE 88 → pins v2 · DE 117 (GO #6) once the lock frees · DA's
+pre-read · REV 89 on tonight's artifacts.
+
+---
+
 # READ FIRST — round 240 (MEM, 2026-09-07T02:01:15Z, tip `02cccfd`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-739 swept.
