@@ -21,6 +21,7 @@ computed and stripped, not numbers it chose.
 from __future__ import annotations
 
 import datetime
+import gzip
 import hashlib
 import json
 import sys
@@ -57,7 +58,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 25
+EXPECTED_CHECKS = 30
 
 
 class EarlyReadRefused(RuntimeError):
@@ -163,12 +164,163 @@ WHERE_THE_FIVE_LIVE_NOW = {
     "p_two_sided": "COMPUTED, in the decision ledger "
                    "(de_decision_ledger.recompute)",
     "rho_adverse_over_spread": "COMPUTED, in the decision ledger",
-    "inventory_leg": "COMPUTED since BE 96, in the decision ledger",
+    # `inventory_leg` IS NOT TYPED HERE ANY MORE (R-795, BE 97). It read
+    # "COMPUTED since BE 96, in the decision ledger", and BE measured the
+    # 09-05 ledger (5a2032b5…): no row carries a key by that name, at any
+    # depth. The entry is now MEASURED at the ledger this run wrote --
+    # `inventory_at_the_ledger()` below -- and this dict carries only the
+    # claims that are about `recompute`, not about the file's rows.
     "fills_leg": "COMPUTED, in the decision ledger",
     "D_E_MINUS_R": "STILL NOT COMPUTED ANYWHERE -- the robustness "
                    "endpoint needs the rebate's identity value, which is "
                    "not on DE's surface",
 }
+
+def inventory_at_the_ledger(ledger_path, *, arm_days=None) -> dict:
+    """WHAT THE LEDGER CARRIES ABOUT INVENTORY -- MEASURED, NOT TYPED.
+
+    R-795 / BE 97 (Q-BE-340). This artifact said the inventory leg was
+    "COMPUTED since BE 96, in the decision ledger". It is not: BE walked
+    the 09-05 ledger and `inventory_leg` is not a top-level key of any
+    row and is not nested anywhere in the file. What the file carries is
+    the FIVE BE-96 FIELDS per fill record -- which are the inputs a leg
+    would be computed FROM, not the leg.
+
+    And the day value is the FILLS LEG BY CONSTRUCTION, not because
+    inventory happens to be zero: `_value_cents` sums a per-fill markout
+    term with no position term, and BE measured non-zero end-of-day
+    residual positions on 287-288 of 288 slugs on every path. Whether an
+    inventory LEG is added to the day value, and under which residual /
+    mark / grouping rule, is a USER RULING (R-795, rule 14): the two
+    illustrative rules BE computed differ by more than the day's whole
+    fills leg.
+
+    So every field below is read from the FILE (its own HEADER row and a
+    scan of its rows) or from the runner's own `what_total_is` on the
+    arm-days -- rule 10, because the sentence this replaces was a typed
+    claim the artifact itself contradicted."""
+    if not ledger_path:
+        return {"status": "NOT_MEASURED_NO_LEDGER_ON_THIS_PATH",
+                "why": "this path wrote no ledger, so nothing about a "
+                       "ledger's contents is asserted here"}
+    lp = Path(ledger_path)
+    if not lp.is_file():
+        return {"status": "NOT_MEASURED_LEDGER_ABSENT",
+                "path": str(lp),
+                "why": "the ledger named is not on disk; an unread file "
+                       "is not evidence either way"}
+
+    def _paths_to(o, key, prefix=""):
+        """Every JSON path at which `key` occurs -- WHERE, not only how
+        many. A count alone cannot tell a per-fill leg from a name that
+        happens to sit inside the absolutes."""
+        out = []
+        if isinstance(o, dict):
+            for k, v in o.items():
+                here = f"{prefix}.{k}" if prefix else str(k)
+                if k == key:
+                    out.append(here)
+                out.extend(_paths_to(v, key, here))
+        elif isinstance(o, list):
+            for i, e in enumerate(o):
+                out.extend(_paths_to(e, key, f"{prefix}[{i}]"))
+        return out
+
+    header, kinds, n_rows = None, {}, 0
+    rows_with_leg, fill_rows, fill_rows_all_five = 0, 0, 0
+    five, where = None, {}
+    with gzip.open(lp, "rt") as fh:
+        for line in fh:
+            r = json.loads(line)
+            n_rows += 1
+            k = r.get("row")
+            kinds[k] = kinds.get(k, 0) + 1
+            if k == "HEADER":
+                header = r
+                five = list(r.get("inventory_fields_from_BE_96") or [])
+            _hits = _paths_to(r, "inventory_leg")
+            if _hits:
+                rows_with_leg += 1
+                for _h in _hits:
+                    _pth = f"{k}.{_h}"
+                    where[_pth] = where.get(_pth, 0) + 1
+            if k == "FILL":
+                fill_rows += 1
+                if five and all(f in r for f in five):
+                    fill_rows_all_five += 1
+    # the runner's OWN words for what the day value is, taken off the
+    # arm-days it just emitted -- never a sentence typed here.
+    what_total_is = sorted({
+        (a.get("absolute") or {}).get("arm", {}).get("what_total_is")
+        for a in (arm_days or [])
+        if isinstance(a.get("absolute"), dict)} - {None})
+    # WHERE the name occurs decides what may be said about it, and the
+    # answer DEPENDS ON THE FILE -- which is why no sentence here is
+    # typed. The 09-05 and 09-06 ledgers were written by the ledger
+    # module at `6c3a121`, whose ARM_SCALARS row carries no `absolute`
+    # block: BE 97 measured 0 occurrences and was right about those
+    # files. A ledger written by the CURRENT module carries DE 131's
+    # absolutes in that row, and `absolute_legs` names one of its
+    # components `inventory_leg` -- so the same typed sentence would be
+    # wrong for one file or the other, whichever way it was written.
+    _abs_only = bool(where) and all(
+        w.startswith("ARM_SCALARS.absolute.") for w in where)
+    status = ("NOT_A_FIELD_OF_THE_LEDGER" if not where
+              else ("PRESENT_ONLY_INSIDE_THE_ABSOLUTES" if _abs_only
+                    else "PRESENT_OUTSIDE_THE_ABSOLUTES"))
+    return {
+        "status": status,
+        "where_the_name_occurs": where,
+        "what_that_name_IS_where_it_occurs": (
+            "a component of DE 131's `absolute` block, computed by "
+            "`absolute_legs` as sum((after - before) x mark). BE 97 "
+            "measured what that equals: since `after - before` is the "
+            "fill's own signed size, it is the day's FILLS CASH FLOW -- "
+            "a READER's quantity that enters neither the day value nor "
+            "D(E0). It is NOT a residual mark-to-market and it is not a "
+            "leg of the value." if where else
+            "the name does not occur in this file at any depth"),
+        "measured_at": {"path": str(lp), "sha256": _sha(lp),
+                        "rows_scanned": n_rows, "row_kinds": kinds},
+        "the_five_inventory_FIELDS_the_file_declares":
+            five if five is not None else "NO_HEADER_ROW_IN_THIS_FILE",
+        "the_five_are_read_from": "the ledger's own HEADER row "
+                                  "(`inventory_fields_from_BE_96`), not "
+                                  "from a list in this module",
+        "rows_carrying_an_inventory_leg_key_at_any_depth": rows_with_leg,
+        "no_fill_row_carries_a_leg": not any(
+            w.startswith("FILL.") for w in where),
+        "fill_rows": fill_rows,
+        "fill_rows_carrying_all_five_fields": fill_rows_all_five,
+        "the_day_value_is": (what_total_is or
+                             ["NOT_READ -- no arm-day carried an "
+                              "`absolute` block"]),
+        "the_day_value_is_read_from": "the runner's own `what_total_is` "
+                                      "on each arm-day's `absolute.arm` "
+                                      "block",
+        "why_it_is_the_fills_leg": (
+            "`_value_cents` sums a per-fill markout term "
+            "(sgn x (mid_at_markout - px_cents) x size) with NO position "
+            "term. The value is the fills leg BY CONSTRUCTION -- not "
+            "because inventory is zero: BE 97 measured non-zero "
+            "end-of-day residual positions on 287-288 of 288 slugs on "
+            "every path."),
+        "whether_an_inventory_LEG_exists_is_a_RULING": (
+            "R-795, routed to the USER under rule 14: which residual, "
+            "marked at which price, per slug or per day. The two "
+            "illustrative rules BE computed differ by MORE than the "
+            "day's whole fills leg, which is what makes it a ruling and "
+            "not a detail."),
+        "what_this_replaces": (
+            "the typed sentence `inventory_leg: COMPUTED since BE 96, in "
+            "the decision ledger` (rule 10). It was wrong twice over: no "
+            "row of the 09-05 ledger carries that name at all, and where "
+            "a current ledger does carry it, it is a component of the "
+            "absolutes and not a leg of the day value. A sentence typed "
+            "either way is wrong for one of those files, so this block "
+            "is measured at the file the run actually wrote."),
+    }
+
 
 NOT_COMPUTED_BY_THIS_PATH = {
     "fills_leg": "the arm-day economic block is a SINGLE excess `D_E0` "
@@ -188,8 +340,15 @@ NOT_COMPUTED_BY_THIS_PATH = {
 }
 
 
-def economics_available_per_arm_day() -> dict:
-    """WHAT AN UNSEALED ARM-DAY ACTUALLY CARRIES, read off the emitter."""
+def economics_available_per_arm_day(ledger_path=None,
+                                    arm_days=None) -> dict:
+    """WHAT AN UNSEALED ARM-DAY ACTUALLY CARRIES, read off the emitter.
+
+    `ledger_path` and `arm_days` are what the run just produced: the
+    inventory entry is MEASURED at that file rather than typed (R-795).
+    With neither, the entry says it did not measure -- it never falls
+    back to the sentence BE 97 refuted."""
+    _inv = inventory_at_the_ledger(ledger_path, arm_days=arm_days)
     return {
         "from_the_economic_block": ["D_E0", "Z", "p_location",
                                     "null_mean", "null_sd",
@@ -199,12 +358,23 @@ def economics_available_per_arm_day() -> dict:
                                "admissibility", "seed", "draw_provenance"],
         "not_computed_by_this_path_the_ARM_DAY_BLOCK":
             NOT_COMPUTED_BY_THIS_PATH,
-        "where_the_five_live_now": WHERE_THE_FIVE_LIVE_NOW,
-        "read_this_first": "four of the five ARE computed, in the DECISION "
-                           "LEDGER beside the receipt; only D_E_MINUS_R is "
-                           "computed nowhere. This block used to say all "
-                           "five were absent, which stopped being true at "
-                           "R-765 and BE 96.",
+        "where_the_five_live_now": {**WHERE_THE_FIVE_LIVE_NOW,
+                                    "inventory_leg": _inv},
+        "read_this_first": (
+            # COMPUTED FROM THE ENTRIES BESIDE IT, never a typed tally:
+            # this sentence said "four of the five ARE computed, in the
+            # DECISION LEDGER", and the inventory leg is not one of them
+            # (R-795). A count that is typed goes stale exactly when the
+            # entry under it changes, which is what happened here.
+            f"{len([k for k, v in WHERE_THE_FIVE_LIVE_NOW.items() if isinstance(v, str) and v.startswith('COMPUTED')])}"
+            f" of the five are computed in the DECISION LEDGER beside the "
+            f"receipt (p_two_sided, rho, fills_leg); the INVENTORY LEG is "
+            f"`{_inv.get('status')}` -- measured at the ledger this run "
+            f"wrote, not asserted (R-795, BE 97); and D_E_MINUS_R is "
+            f"computed nowhere. This block once said all five were "
+            f"absent, which stopped being true at R-765 and BE 96, and "
+            f"then said the inventory leg was computed, which the file "
+            f"never bore out."),
     }
 
 
@@ -465,7 +635,9 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
                            / RUN.PARAMS_REL),
             "why": "the COMPUTATION is the sealed runs' -- v15. Only the "
                    "seal bar comes from the ruling."},
-        "economics_field_availability": economics_available_per_arm_day(),
+        "economics_field_availability": economics_available_per_arm_day(
+            ledger_path=(_led or {}).get("path"),
+            arm_days=(result or {}).get("per_day_sealed_artifacts")),
         "preconditions": pre,
         "day_run": result,
         "as_of": datetime.datetime.now(
@@ -996,6 +1168,106 @@ def _selftest_body(quiet: bool = False) -> int:
        f"null block is the SILENT form of promising a ledger that is not "
        f"there, which is why two heavy runs passed every review without "
        f"one")
+    # ---- R-795 / BE 97: THE INVENTORY CLAIM IS MEASURED AT THE FILE --
+    # RED FIRST, and the red is the LANDED SENTENCE: this artifact said
+    # `inventory_leg: COMPUTED since BE 96, in the decision ledger`.
+    # THE TRUTH DEPENDS ON THE FILE, which is the whole reason it must be
+    # measured and not typed. BE 97 walked the 09-05 ledger -- written by
+    # the ledger module at `6c3a121`, whose ARM_SCALARS row carries no
+    # `absolute` block -- and found no such key at any depth. A ledger
+    # written by the CURRENT module carries DE 131's absolutes there, and
+    # `absolute_legs` names one of their components `inventory_leg`. Both
+    # files exist; a sentence typed either way is wrong for one of them.
+    import gzip as _gz795
+    _inv795 = inventory_at_the_ledger(_b132["path"],
+                                      arm_days=_r132.get(
+                                          "per_day_sealed_artifacts"))
+    ok(_inv795["status"] == "PRESENT_ONLY_INSIDE_THE_ABSOLUTES"
+       and _inv795["no_fill_row_carries_a_leg"] is True
+       and all(w.startswith("ARM_SCALARS.absolute.")
+               for w in _inv795["where_the_name_occurs"])
+       and _inv795["the_five_inventory_FIELDS_the_file_declares"] == [
+           "inventory_before", "inventory_after", "inventory_unit",
+           "inventory_mark_cents", "inventory_mark_source"]
+       and _inv795["measured_at"]["rows_scanned"] == _b132["n_rows"],
+       f"R-795, MEASURED AT A LEDGER THIS BATTERY JUST WROTE: the name "
+       f"`inventory_leg` occurs ONLY at "
+       f"{sorted(_inv795['where_the_name_occurs'])} -- inside DE 131's "
+       f"absolutes, never on a FILL row -- so it is a component of the "
+       f"absolutes and NOT a leg of the day value. What the fill rows "
+       f"carry is the FIVE BE-96 FIELDS, read from the file's own HEADER "
+       f"row: the inputs a leg would be computed FROM")
+    # THE 09-05 SHAPE, REPRODUCED: strip the absolutes (the ledger module
+    # at `6c3a121` wrote none) and the name is gone from the file --
+    # which is exactly what BE 97 measured, driven here rather than
+    # quoted from a review.
+    _noabs795 = Path(_lt) / "no_absolutes_ledger.jsonl.gz"
+    with _gz795.open(_b132["path"], "rt") as _src, \
+            _gz795.open(_noabs795, "wt") as _dst:
+        for _line795 in _src:
+            _r795 = json.loads(_line795)
+            _r795.pop("absolute", None)
+            _dst.write(json.dumps(_r795, sort_keys=True) + "\n")
+    _n795 = inventory_at_the_ledger(_noabs795, arm_days=[])
+    ok(_n795["status"] == "NOT_A_FIELD_OF_THE_LEDGER"
+       and _n795["rows_carrying_an_inventory_leg_key_at_any_depth"] == 0
+       and _n795["where_the_name_occurs"] == {},
+       f"R-795 RED, THE LANDED SENTENCE REFUTED: with the absolutes "
+       f"stripped -- the shape the 09-05 and 09-06 ledgers actually have "
+       f"-- the name occurs on 0 of "
+       f"{_n795['measured_at']['rows_scanned']} rows at any depth, so "
+       f"'COMPUTED since BE 96, in the decision ledger' is FALSE of "
+       f"those files. BE 97's measurement, reproduced here")
+    # THE INSTRUMENT MUST BE ABLE TO SAY 'OUTSIDE THE ABSOLUTES'. A
+    # classifier that can only return the two states it has seen is not
+    # a classifier.
+    _plant795 = Path(_lt) / "planted_ledger.jsonl.gz"
+    with _gz795.open(_b132["path"], "rt") as _src, \
+            _gz795.open(_plant795, "wt") as _dst:
+        for _i795, _line795 in enumerate(_src):
+            _r795 = json.loads(_line795)
+            if _r795.get("row") == "FILL" and _i795 % 50 == 0:
+                # NESTED and on a FILL row: a per-fill leg would look
+                # like this, and it must NOT read as the absolutes case
+                _r795["legs"] = {"inner": {"inventory_leg": 1.0}}
+            _dst.write(json.dumps(_r795, sort_keys=True) + "\n")
+    _p795 = inventory_at_the_ledger(_plant795, arm_days=[])
+    ok(_p795["status"] == "PRESENT_OUTSIDE_THE_ABSOLUTES"
+       and _p795["no_fill_row_carries_a_leg"] is False
+       and any(w.startswith("FILL.") for w in _p795["where_the_name_occurs"]),
+       f"R-795 POSITIVE CONTROL ON THE CLASSIFIER: with the name PLANTED "
+       f"NESTED ON FILL ROWS the status becomes `{_p795['status']}` and "
+       f"`no_fill_row_carries_a_leg` False -- so the two readings above "
+       f"are measurements and not the only answers this walk can give")
+    # AND THE FIVE NAMES COME FROM THE FILE, NOT FROM THIS MODULE.
+    _hdr795 = Path(_lt) / "reheadered_ledger.jsonl.gz"
+    with _gz795.open(_b132["path"], "rt") as _src, \
+            _gz795.open(_hdr795, "wt") as _dst:
+        for _line795 in _src:
+            _r795 = json.loads(_line795)
+            if _r795.get("row") == "HEADER":
+                _r795["inventory_fields_from_BE_96"] = ["ONLY_THIS_ONE"]
+            _dst.write(json.dumps(_r795, sort_keys=True) + "\n")
+    _h795 = inventory_at_the_ledger(_hdr795, arm_days=[])
+    ok(_h795["the_five_inventory_FIELDS_the_file_declares"]
+       == ["ONLY_THIS_ONE"]
+       and _h795["fill_rows_carrying_all_five_fields"] == 0,
+       f"R-795: THE NAMES FOLLOW THE FILE -- rewrite the HEADER's "
+       f"`inventory_fields_from_BE_96` to "
+       f"{_h795['the_five_inventory_FIELDS_the_file_declares']} and the "
+       f"block reports THAT, with 0 fill rows carrying it. The list is "
+       f"read from the ledger's own header, so it cannot drift from the "
+       f"file the way the sentence it replaces did")
+    _none795 = inventory_at_the_ledger(None)
+    _gone795 = inventory_at_the_ledger(Path(_lt) / "no_such_ledger.gz")
+    ok(_none795["status"] == "NOT_MEASURED_NO_LEDGER_ON_THIS_PATH"
+       and _gone795["status"] == "NOT_MEASURED_LEDGER_ABSENT"
+       and "COMPUTED" not in json.dumps(_none795)
+       and "COMPUTED" not in json.dumps(_gone795),
+       f"R-795: with no ledger, or one named and absent, the entry says "
+       f"`{_none795['status']}` / `{_gone795['status']}` and asserts "
+       f"NOTHING about a file it did not read -- it never falls back to "
+       f"the sentence BE 97 refuted")
     shutil.rmtree(_lt, ignore_errors=True)
 
     # ---- REV 89 item 1: THE CAPTURE RECORD'S THREE DECLARED FIELDS ---
@@ -1041,18 +1313,30 @@ def _selftest_body(quiet: bool = False) -> int:
     av = economics_available_per_arm_day()
     _absent = av["not_computed_by_this_path_the_ARM_DAY_BLOCK"]
     _where = av["where_the_five_live_now"]
+    # R-795: `inventory_leg` IS NO LONGER A SENTENCE. It is the block
+    # `inventory_at_the_ledger()` measured at the file this run wrote,
+    # so this cell reads a dict there and a string for the other four --
+    # and it asserts that the inventory entry is a MEASUREMENT (it
+    # carries a status, and either what it measured or why it did not).
+    _strs = {k: v for k, v in _where.items() if isinstance(v, str)}
+    _inv = _where.get("inventory_leg")
     ok(len(_absent) == 5
        and all(isinstance(v, str) and len(v) > 40 for v in _absent.values())
        and set(_where) == set(_absent)
-       and sum(1 for v in _where.values() if v.startswith("COMPUTED")) == 4
-       and _where["D_E_MINUS_R"].startswith("STILL NOT COMPUTED"),
-       f"DE 129: the five the dispatch asked for are named with their "
-       f"reasons AND with WHERE THEY LIVE NOW -- four of them "
-       f"({sorted(k for k, v in _where.items() if v.startswith('COMPUTED'))}) "
-       f"are computed in the DECISION LEDGER since R-765 and BE 96, and "
-       f"only `D_E_MINUS_R` is computed nowhere. This block said all five "
-       f"were absent in every artifact it was emitted into, which stopped "
-       f"being true two rounds ago")
+       and sum(1 for v in _strs.values() if v.startswith("COMPUTED")) == 3
+       and _strs["D_E_MINUS_R"].startswith("STILL NOT COMPUTED")
+       and isinstance(_inv, dict) and _inv.get("status")
+       and ("measured_at" in _inv or "why" in _inv),
+       f"DE 129 / R-795: the five are named with their reasons and with "
+       f"WHERE THEY LIVE NOW -- three "
+       f"({sorted(k for k, v in _strs.items() if v.startswith('COMPUTED'))}) "
+       f"are computed in the DECISION LEDGER since R-765 and BE 96; "
+       f"`inventory_leg` is now a MEASUREMENT at the ledger this run "
+       f"wrote (status `{_inv.get('status')}`), because the sentence it "
+       f"replaced -- 'COMPUTED since BE 96, in the decision ledger' -- "
+       f"was false of the 09-05 file (BE 97); and only `D_E_MINUS_R` is "
+       f"computed nowhere"
+       )
 
     shutil.rmtree(tmp, ignore_errors=True)
     _sum = RUN.battery_summary("de_early_read", n_run=n[0],
