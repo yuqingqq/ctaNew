@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 362
+EXPECTED_CHECKS = 364
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4547,6 +4547,66 @@ def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
             "theta_was_not_refitted_here": True}
 
 
+VALUATION_UNIT = "cents"
+
+
+def HSP_BUY_SIDE():
+    """The buy side, from the policy module -- never the literal 'B'."""
+    import harmful_stateful_policy as _H
+    return _H.SIDES[0]
+
+
+def absolute_legs(fills: list) -> dict:
+    """ONE BOOK'S OWN VALUE -- R-782, the USER's third ruling of the day.
+
+        "plz record the absolute number as well for reference"
+                                    -- THE USER, 2026-09-07T10:42:24Z
+
+    D(E0) is a DIFFERENCE, and a difference answers "how much better"
+    without ever answering "how much". The question that preceded the
+    ruling was *what's the result of 0-cancel* -- which the receipt could
+    not answer at all, because only the excess was ever written down.
+
+    These are read from THE SAME REPLAY that computes D(E0): the fills are
+    already in memory and the excess is their difference, so nothing here
+    is a second pass over the day and nothing can disagree with the
+    number it is the absolute of.
+
+    The INVENTORY leg is present only where BE 96's position fields are
+    (`inventory_before`/`_after`/`_mark_cents`); where they are not it is
+    None with a reason, never 0 -- an unrecorded leg and a zero one are
+    the same number and opposite facts."""
+    import de_phase4_diag_runner as _R
+    total = 0.0
+    n_valued = 0
+    inv, n_inv = 0.0, 0
+    for f in fills or []:
+        v = _R.fill_value_cents(f)
+        if v is not None:
+            total += v
+            n_valued += 1
+        b, a_, mk = (f.get("inventory_before"), f.get("inventory_after"),
+                     f.get("inventory_mark_cents"))
+        if b is not None and a_ is not None and mk is not None:
+            inv += (float(a_) - float(b)) * float(mk)
+            n_inv += 1
+    return {
+        "unit": VALUATION_UNIT,
+        "fills_leg": total,
+        "n_fills": len(fills or []),
+        "n_fills_valued": n_valued,
+        "inventory_leg": (inv if n_inv else None),
+        "n_fills_with_inventory": n_inv,
+        "why_inventory_leg_may_be_None": (
+            "BE 96's position fields are absent on these fills; an "
+            "unrecorded leg is not a zero one"),
+        "total": total,
+        "what_total_is": "the fills leg, which is what `_value_cents` "
+                         "sums and therefore exactly what D(E0) is the "
+                         "difference of",
+    }
+
+
 def _value_cents(fills: list) -> float:
     """D(E0)'s valuation: the DECLARED estimator, not a new one.
 
@@ -6056,7 +6116,36 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # copied, not re-typed into a schema of mine, because a re-typed
         # copy is a second definition that drifts from the one the receipt
         # was computed from.
+        # R-782: THE ABSOLUTES, from the same replay, beside the excess.
+        _abs_base = absolute_legs(base["fills"])
+        _abs_arm = absolute_legs(arm_replay["fills"])
+        _recon = _abs_arm["total"] - _abs_base["total"]
+        if abs(_recon - observed) > 1e-9:
+            raise RunnerRefused(
+                f"REFUSED ABSOLUTES_DO_NOT_RECONCILE: arm_total "
+                f"{_abs_arm['total']!r} - baseline_total "
+                f"{_abs_base['total']!r} = {_recon!r}, and D(E0) is "
+                f"{observed!r} -- a difference of {_recon - observed!r}. "
+                f"The absolutes are read from the SAME replay the excess "
+                f"is computed from, so a mismatch means they are not the "
+                f"same numbers and neither can be published.")
+        r["absolute"] = {
+            "ruling": "R-782, the USER: 'plz record the absolute number "
+                      "as well for reference'",
+            "unit": VALUATION_UNIT,
+            "zero_cancel_baseline": _abs_base,
+            "arm": _abs_arm,
+            "reconciliation": {
+                "arm_total_minus_baseline_total": _recon,
+                "D_E0": observed,
+                "agree_to_1e_9": abs(_recon - observed) <= 1e-9,
+                "refuses_by_name_otherwise":
+                    "ABSOLUTES_DO_NOT_RECONCILE"},
+            "read_from": "the same replay that computes D(E0) -- never a "
+                         "second pass",
+        }
         _ledger765[arm] = {
+            "absolute": r["absolute"],
             "observed": observed,
             "arm_value": _value_cents(arm_replay["fills"]),
             "base_value": base_value,
@@ -10754,6 +10843,47 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            f"conjunct 3 while DA passed them, and neither seat ran the "
            f"other. Two implementations stay (R-235); what was missing "
            f"was anybody comparing them")
+
+    # ===== DE 131 (R-782): THE ABSOLUTES, ON HAND-COMPUTED LEGS ========
+    # RED FIRST, on fills whose legs are arithmetic a reader can do:
+    # four buys of 10 shares, level 100c, markout 100.2c -> each fill is
+    # (100.2 - 100) * 10 = 2c, so a book of four is 8c. The baseline is
+    # two such fills, 4c. The excess is therefore 4c, and the cell asserts
+    # the absolutes AND that they reconcile to it.
+    def _f782(level, markout, size, inv_b=None, inv_a=None, mark=None):
+        d = {"side": HSP_BUY_SIDE(), "px_cents": level, "size": size,
+             "mid_cents_at_markout": markout, "mid_cents_at_fill": level,
+             "slug": "s", "ref_gen": 0, "fill_ns": 1.0, "gen_start_ns": 1.0}
+        if inv_b is not None:
+            d.update({"inventory_before": inv_b, "inventory_after": inv_a,
+                      "inventory_mark_cents": mark, "inventory_unit": "sh"})
+        return d
+    _arm782 = [_f782(100.0, 100.2, 10.0, 0.0, 10.0, 100.0) for _ in range(4)]
+    _base782 = [_f782(100.0, 100.2, 10.0, 0.0, 10.0, 100.0) for _ in range(2)]
+    _A, _B = absolute_legs(_arm782), absolute_legs(_base782)
+    ok(abs(_A["fills_leg"] - 8.0) < 1e-9
+       and abs(_B["fills_leg"] - 4.0) < 1e-9
+       and abs(_A["total"] - _B["total"] - 4.0) < 1e-9
+       and _A["unit"] == VALUATION_UNIT == "cents"
+       and abs(_A["inventory_leg"] - 4000.0) < 1e-9
+       and _A["n_fills"] == 4 and _B["n_fills"] == 2,
+       f"R-782 (the USER: 'plz record the absolute number as well for "
+       f"reference'): the ARM's own day value is {_A['fills_leg']:.1f} "
+       f"{_A['unit']} over {_A['n_fills']} fills and the 0-CANCEL "
+       f"BASELINE's is {_B['fills_leg']:.1f} over {_B['n_fills']} -- both "
+       f"hand-computable as (100.2-100)*10 per fill -- and their "
+       f"difference {_A['total'] - _B['total']:.1f} IS D(E0). The receipt "
+       f"could answer 'how much better' and not 'how much'; it answers "
+       f"both now. The inventory leg is {_A['inventory_leg']:.1f} where "
+       f"BE 96's fields are present")
+    _noinv782 = absolute_legs([_f782(100.0, 100.2, 10.0)])
+    ok(_noinv782["inventory_leg"] is None
+       and _noinv782["n_fills_with_inventory"] == 0
+       and abs(_noinv782["fills_leg"] - 2.0) < 1e-9,
+       f"R-782: with BE 96's position fields ABSENT the inventory leg is "
+       f"None and says why -- never 0. An unrecorded leg and a zero one "
+       f"are the same number and opposite facts, and the fills leg "
+       f"({_noinv782['fills_leg']:.1f}) is unaffected")
 
     # ===== DE 126: THE DAY'S OWN WORDS, COMPUTED FROM ITS ARM-DAYS =====
     # RED FIRST, against the artifact that carried the defect. The landed

@@ -100,6 +100,10 @@ def write_ledger(path, day: str, per_arm: dict,
             a = per_arm[arm]
             fh.write(json.dumps({
                 "row": "ARM_SCALARS", "arm": arm,
+                # R-782: THE ABSOLUTES travel in the per-day summary too,
+                # so a reader with the ledger and no receipt can answer
+                # "what did 0-cancel make" and not only "how much better".
+                "absolute": a.get("absolute"),
                 "observed_D_E0": a["observed"],
                 "arm_value_cents": a["arm_value"],
                 "baseline_value_cents": a["base_value"],
@@ -166,6 +170,7 @@ def read_ledger(path, *, expect_sha256: str | None = None) -> dict:
                 "fills": {"ARM": [], "BASELINE": []}, "decisions": []})
             if k == "ARM_SCALARS":
                 a["scalars"] = r
+                a["absolute"] = r.get("absolute")
             elif k == "NULL_DRAW":
                 a["null_values"].append(r["value"])
                 a["null_cancels"].append(r["cancels"])
@@ -248,6 +253,7 @@ def recompute(led: dict, arm: str) -> dict:
     rho = (legs["adverse_cents"] / legs["spread_captured_cents"]
            if legs["spread_captured_cents"] else None)
     return {
+        "absolute": a.get("absolute"),
         "D_E0": obs, "n_null_draws": n,
         "null_mean": mean, "null_sd": sd,
         "Z": ((obs - mean) / sd) if sd else math.inf,
