@@ -5893,6 +5893,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             n_days_complete: int = 1,
             peak_rss_mb_budget: float | None = None,
             early_read: dict | None = None,
+            ledger_anchor=None,
             before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
@@ -6225,10 +6226,28 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # name it by digest. A day whose ledger cannot be written REFUSES --
     # the ruling is that the numbers are kept, and a receipt promising a
     # ledger that is not there would be worse than no promise.
+    # DE 132: THE ANCHOR IS A PARAMETER, and a missing ledger REFUSES.
+    # At fe76d83 this read `receipt_path is not None`, and the EARLY-READ
+    # wrapper calls `run_day` without one -- its artifact is its own
+    # family -- so the condition was false and R-765's ledger was SILENTLY
+    # SKIPPED. GO E1 and GO E2 both emitted `decision_ledger: null`. My
+    # own comment two lines below says "a receipt promising a ledger that
+    # is not there would be worse than no promise"; a null block is the
+    # silent version of exactly that, and it is why nobody noticed for two
+    # heavy runs.
+    _anchor = ledger_anchor if ledger_anchor is not None else receipt_path
     _ledger_block = None
-    if _ruling765 and _ledger765 and receipt_path is not None:
+    if _ruling765 and _ledger765:
+        if _anchor is None:
+            raise RunnerRefused(
+                "REFUSED DECISION_LEDGER_HAS_NO_ANCHOR: the params carry "
+                "the R-765 ruling and this run computed per-arm rows, but "
+                "no path was given to write the ledger beside. The ruling "
+                "is that the numbers are KEPT; emitting the receipt with "
+                "`decision_ledger: null` is the silent form of promising "
+                "one that is not there.")
         import de_decision_ledger as _LED
-        _lp = Path(receipt_path).parent / _LED.ledger_name(
+        _lp = Path(_anchor).parent / _LED.ledger_name(
             day, emission_stamp())
         try:
             import harmful_stateful_policy as _HSP

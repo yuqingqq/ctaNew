@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 24
 
 
 class EarlyReadRefused(RuntimeError):
@@ -404,11 +404,27 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
     pre = early_read_preconditions(
         day, Path(RUN.DR.resolve()["data_root"]), ruling)
     params = RUN.load_params()
+    # DE 132: THE LEDGER IS ANCHORED ON THIS ARTIFACT'S OWN PATH. The
+    # early read has no `receipt_path` -- its artifact is its own family --
+    # and `run_day` used that as the condition for writing R-765's ledger,
+    # so E1 and E2 emitted `decision_ledger: null` and wrote none. The name
+    # is composed BEFORE the run so the ledger lands beside the artifact
+    # that names it.
+    out = Path(outdir) / day_artifact_name(day)
     result = RUN.run_day(day, book, params=params, fixture=False,
                          n_days_complete=ruling["G"],
                          early_read={"G": ruling["G"],
                                      "days": ruling["days"]},
+                         ledger_anchor=out,
                          before_work=before_work)
+    _led = (result or {}).get("decision_ledger")
+    if not (isinstance(_led, dict) and _led.get("sha256")):
+        raise EarlyReadRefused(
+            f"EARLY_READ_WROTE_NO_DECISION_LEDGER: the run returned "
+            f"`decision_ledger` {_led!r}. R-765 orders the numbers kept, "
+            f"and an artifact carrying a null block is the SILENT form of "
+            f"promising a ledger that is not there -- which is how GO E1 "
+            f"and GO E2 both went unnoticed.")
     payload = {
         "protocol": "P003_DE_EARLY_READ_DAY_V1",
         "what_this_is": "the USER-ruled early read of one sealed day "
@@ -455,7 +471,6 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
         "as_of": datetime.datetime.now(
             datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
-    out = Path(outdir) / day_artifact_name(day)
     out.write_text(json.dumps(payload, indent=2, sort_keys=True,
                               default=str) + "\n")
     return {"path": str(out), "sha256": _sha(out), "day": day}
@@ -911,6 +926,49 @@ def _selftest_body(quiet: bool = False) -> int:
        f"would hide which layer refused; and it is not read as an answer")
     _shutil_cr = shutil
     _shutil_cr.rmtree(_cr, ignore_errors=True)
+
+    # ---- DE 132: THE LEDGER IS WRITTEN, OR THE RUN REFUSES -----------
+    # RED FIRST, on a FIXTURE day run -- the same `run_day` the early read
+    # calls, with and without an anchor. GO E1 and GO E2 each spent ~90
+    # minutes and emitted `decision_ledger: null`, because the condition
+    # for writing R-765's ledger was `receipt_path is not None` and the
+    # early read has no receipt path.
+    _lt = Path(tempfile.mkdtemp(prefix="ledger_anchor_"))
+    _made = RUN.write_synthetic_day("FIXTURE-DAY-1", str(_lt),
+                                    params=RUN.load_params())
+    _P132 = dict(RUN.load_params())
+    # the name must be one the runner DECLARES as a fixture -- a guard
+    # that exists because `fixture=True` alone once admitted a real day
+    # name (REV 68 §1.2). My first draft invented one and was refused.
+    _P132["days"] = ["FIXTURE-DAY-1"]
+    _P132["G"] = 1
+    _anchor132 = _lt / "the_artifact.json"
+    _r132 = RUN.run_day("FIXTURE-DAY-1", _made["book_path"], params=_P132,
+                        fixture=True, n_days_complete=1,
+                        ledger_anchor=_anchor132)
+    _b132 = _r132.get("decision_ledger")
+    ok(isinstance(_b132, dict) and _b132.get("sha256")
+       and _b132.get("n_rows", 0) > 0 and _b132.get("schema_version")
+       and Path(_b132["path"]).is_file()
+       and Path(_b132["path"]).parent == _anchor132.parent,
+       f"DE 132 GREEN: given an ANCHOR the run writes its ledger BESIDE "
+       f"the artifact -- {Path(_b132['path']).name}, {_b132['n_rows']} "
+       f"rows, schema v{_b132['schema_version']}, sha256 "
+       f"{_b132['sha256'][:16]}… -- and the block in `day_run` carries "
+       f"path + sha256 + rows + schema. E1 and E2 carried `null` here")
+    _code132 = None
+    try:
+        RUN.run_day("FIXTURE-DAY-1", _made["book_path"], params=_P132,
+                    fixture=True, n_days_complete=1)          # no anchor
+    except RUN.RunnerRefused as _e:
+        _code132 = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_code132 == "DECISION_LEDGER_HAS_NO_ANCHOR",
+       f"DE 132 RED: with NO anchor the run REFUSES BY NAME -- "
+       f"`{_code132}` -- instead of emitting `decision_ledger: null`. A "
+       f"null block is the SILENT form of promising a ledger that is not "
+       f"there, which is why two heavy runs passed every review without "
+       f"one")
+    shutil.rmtree(_lt, ignore_errors=True)
 
     # ---- REV 89 item 1: THE CAPTURE RECORD'S THREE DECLARED FIELDS ---
     _r0 = resolve_exit(0)
