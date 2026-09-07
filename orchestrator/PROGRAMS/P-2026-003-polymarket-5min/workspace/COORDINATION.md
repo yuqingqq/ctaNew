@@ -22336,6 +22336,34 @@ HISTORY (not judged): 19 of 59 version files in 10 families had in-place edits B
 **TAKEN UP BY THE COORDINATOR (MEM 245 / Q-DE-117's process note):** two seats' rows mutually blocked in the shared register — the FOREIGN_ROW_IN_REGISTER guard refused each correctly, MEM withdrew its own row to unblock DE, then re-landed. The guard is right and the missing piece is serialisation: the row-landing script takes an exclusive lock from before the insertion to after the push, inserting the row itself from a file so no seat performs a whole-file read-modify-write on the register. Designed and falsified next (two concurrent landings in a scratch repo serialise, neither clobbered), then REV 89 reads it before seats are told to use it.
 
 **ROUTING.** DA 117 → REV 89 (BE 88/89, DE 117 + DE 119, DA 117, DA 118's two rulings, DA 115's pin, the mode-0600 finding, `_LAST_PROOF`, the row-landing lock) → BE 91 at the 09-07 close (stop the six loaded units first; the chain; the pins v3; its five 0600 tapes; its two race-read literals) → MEM sweeps.
+
+### R-751 — 2026-09-07T05:36Z — coordinator — **DE 119 VERIFIED at the artifacts (the receipt and both capture records tracked with blobs equal to the bytes on disk; `n_skipped` a named third battery outcome; the borrowed-proof door REMOVED, both directions falsified). Register landings are now SERIALISED: `land_register_row.sh` holds an exclusive lock from fetch to push and a `--row` mode inserts the caller's rows itself; its falsifier landed two concurrent rows without a collision and refused five known-bads by name. DE 120 dispatched on the pre-existing design-declaration selftest failure DE reported; MEM 246 landed.**
+
+**DE 119 (Q-DE-118 `1478129`; code `2c07ac1`; artifacts `1867074`) VERIFIED.** `de_data_root.py` and `de_multiday_gate1_runner.py` at `2c07ac1` digest `eaffa4f949c7adb8…` and `ad15ddf125be8dec…`, equal to DE's stated after-digests and to HEAD's bytes; `de_data_root --selftest` at HEAD (`-m` launcher, `PM_DATA_ROOT` set): `[de_data_root] PASS -- 20 checks`, rc 0 (18 → 20 as stated). The three blobs at `1867074` equal the on-disk bytes (R-750). The runner's 347-check battery is DE's count, not re-run here; REV 89 reads both changes before GO #8. **DE's Q-DE-118 (5) reproduced at HEAD:** `de_multiday_design_declaration --selftest` exits 1 with PASS lines to the end; the failing line reads `[de_multiday_design_declaration] FAIL: R22: the closure is LISTED BY NAME and the modules actually captured are among …` (line 82 of the output, mid-run). Pre-existing per DE's baseline at `1867074`; not touched by anyone yet.
+
+**THE REGISTER LOCK (`be0ef1d`, MEM 245 / Q-DE-117's process note taken up at R-750).** `scripts/land_register_row.sh` now takes an exclusive `flock` on `<root>/.git/p003_register.lock` from before the fetch to after the push in BOTH modes, and the new `--row <rowfile>` mode fetches, fast-forwards only if the register is clean, and inserts the caller's rows after the last `| Q-` row itself — refusing `REGISTER_DIRTY` (another seat's uncommitted edit: HELD, "wait, do not withdraw it"), `ROW_ID_MISMATCH`, `DUPLICATE_ID` and `NO_TABLE` — so no seat performs a whole-file read-modify-write on the register. `LAND_ROOT` / `LAND_REMOTE` / `LAND_BRANCH` exist for the falsifier only. `scripts/land_register_row_falsify.sh` runs in a scratch repository (never the shared tree); its run at 05:34:30Z, verbatim:
+
+```
+  B| LOCK HELD 05:34:30Z pid 690522
+  B| INSERTED 1 row(s) after line 5
+  B| POST-CONDITION OK: paths 1, removed 0, foreign 0, ids [Q-BB-2 ], trailer 3bcd21020c362b5923ce5291987ae63e4dbbe17e79919ce6b39c59e962180ccf
+  B| PUSHED b3d252b
+  C| LOCK HELD 05:34:30Z pid 690523
+  C| INSERTED 1 row(s) after line 6
+  C| POST-CONDITION OK: paths 1, removed 0, foreign 0, ids [Q-CC-3 ], trailer 3bcd21020c362b5923ce5291987ae63e4dbbe17e79919ce6b39c59e962180ccf
+  C| PUSHED 2118ba9
+CONCURRENT OK: both landed, serialised, each commit +1 row / -0 lines, origin at 3 commits
+KNOWN-BADS OK: dirty HELD, id mismatch REFUSED, duplicate REFUSED, foreign row REFUSED, dry run undone
+FALSIFIER PASS
+```
+
+Two processes started in the same second; the second inserted after line 6 because the first's row was already at line 6 when it acquired the lock — the property, not a timing accident. **Seats keep the legacy form until REV 89 has read the change** (the legacy form now takes the lock too); the `--row` form is announced to the seats only after that read. What the lock does NOT close: a seat pushing a register commit from a WORKTREE bypasses it — the script's `HELD BEHIND_AND_NOT_FF` names that case rather than merging over it.
+
+**MEM 246 LANDED** (`9d49219` state, Q-MEM-234 at 05:30:39Z) — R-748 and R-749 swept with every landing after `10dce97`; not yet verified here beyond the landing (MEM's sweeps are verified by sampling at the next reset's harvest, as before).
+
+**DISPATCHED: DE 120 at 05:35:45Z** — the design-declaration selftest failure: name the cell and paste its output; bisect over the module AND its inputs (the declarations directory included — a cell reading a chain head goes red when a version lands without a code change); run it with `PM_DATA_ROOT` set and unset, from wt-de and from the ledger tree; fix red-first at the cell if the code is wrong, re-declare the property if a landed version legitimately changed it, never loosen a check to pass; both launchers' counts; no runner change, no design version, no real day; legacy row form.
+
+**ROUTING.** DA 117 (running, the 09-06 pre-read) → REV 89 (BE 88/89, DE 117 + DE 119, DA 117, DA 118's two rulings at R-750, DA 115's pin, the mode-0600 finding, `_LAST_PROOF`, the register lock `be0ef1d`, the immutability fix `af11ef9`) → MEM 247 (R-750, R-751 and the landings between) → BE 91 at the 09-07 close → DE's GO #8 after REV 89.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
