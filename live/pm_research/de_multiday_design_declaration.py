@@ -47,7 +47,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: agree.
 VERSION = 25
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 116
+EXPECTED_CHECKS = 117
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -2184,6 +2184,11 @@ def declaration() -> dict:
                 "imported rather than reimplemented)",
                 "pm_tape_density.py (imported by the root resolver)",
                 "be_cancel_axis_null.py (lazily, on the day path)",
+                "__init__.py (live/__init__.py, the PACKAGE INITIALISER. "
+                "It joins the closure ONLY under the `-m` launcher, "
+                "which imports the `live` package; a script-path launch "
+                "never runs it. It is EMPTY, and the R22 cell admits it "
+                "only while it stays empty -- DE 120)",
             ],
             # THE CONSEQUENCE OF R-641, STATED WHERE A READER WILL MEET IT.
             # Importing another seat's module puts it in THIS seat's
@@ -3623,15 +3628,52 @@ def selftest(*, quiet: bool = False) -> int:
            "versions")
 
     _r22 = d["R22_the_launch_capture_is_the_IMPORT_CLOSURE"]
-    _live_closure = set(
-        _RUN.source_identity_at_launch()["import_closure"]["modules"])
+    # DE 120: THE PACKAGE INITIALISER IS A REAL MEMBER OF THE CLOSURE, and
+    # this cell had never seen it. `python -m live.pm_research.<mod>`
+    # imports the `live` PACKAGE and runs `live/__init__.py`; a
+    # script-path launch never does. So the capture was right and the
+    # NAMED LIST was short, and the cell was RED under `-m` and GREEN as a
+    # script from DE 88 (403aac7) onwards -- the launcher, not the code
+    # under it and not any landed declaration version, is the whole
+    # discriminator.
+    #
+    # NAMING IT IS NOT A LOOSENING. The subset test still refuses every
+    # unnamed module, and the conjunct beside it is NEW: an initialiser
+    # may be named ONLY WHILE IT CARRIES NO CODE. The moment
+    # `live/__init__.py` holds bytes it is a module that RAN and produced
+    # numbers, and this refuses until the declaration says what it does.
+    _closure_map = _RUN.source_identity_at_launch()[
+        "import_closure"]["modules"]
+    _live_closure = set(_closure_map)
     _named = {x.split(" ")[0] for x in _r22["the_closure_by_name"]}
+    _EMPTY_SHA = hashlib.sha256(b"").hexdigest()
+    # keyed by BASENAME, as the closure map is -- the subset test above is
+    # on names too, so the two agree about what "a module" means here.
+    _inits = {k: v for k, v in _closure_map.items()
+              if k == "__init__.py"}
+    _inits_carry_no_code = all(v == _EMPTY_SHA for v in _inits.values())
     ok(_live_closure <= _named and len(_r22["refused_at_every_emit"]) == 3
-       and "de_multiday_design_declaration.py" in _live_closure,
+       and "de_multiday_design_declaration.py" in _live_closure
+       and _inits_carry_no_code,
        f"R22: the closure is LISTED BY NAME and the modules actually "
        f"captured are among them -- {sorted(_live_closure)}. The design "
        f"module is in it, which is the sibling the old one-file capture "
-       f"could not see")
+       f"could not see; and the {len(_inits)} package initialiser(s) in "
+       f"it carry no code, which is the only condition under which the "
+       f"list may name one")
+    # THE FALSIFIER FOR THE NEW CONJUNCT, driven both ways on the same
+    # predicate: an initialiser with bytes in it must flip it.
+    _init_bad = {"__init__.py": hashlib.sha256(b"x = 1\n").hexdigest()}
+    ok(_inits_carry_no_code is True
+       and all(v == _EMPTY_SHA for v in {}.values()) is True
+       and not all(v == _EMPTY_SHA for v in _init_bad.values()),
+       f"DE 120 FALSIFIER: the `carries no code` predicate is True on the "
+       f"live initialiser(s) ({len(_inits)} seen under this launcher), "
+       f"vacuously True when the launcher loads none -- which is the "
+       f"script path, and why this cell was green there for nothing -- "
+       f"and FALSE the moment an initialiser holds `x = 1`. A name "
+       f"admitted on a property nobody has watched fail is not a name "
+       f"under a check")
     _r23 = d["R23_the_artifact_NAME_stamp_is_the_clock"]
     ok("HAD NOT YET OCCURRED" in _r23["the_defect_and_it_is_mine"]
        and len(_r23["the_fix"]) == 3,
