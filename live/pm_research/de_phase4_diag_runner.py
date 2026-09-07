@@ -74,10 +74,13 @@ from pathlib import Path
 #:       decomposition, its counted statuses, the per-arm
 #:       double-count known-bad, and the agreement of the two
 #:       constructions over one set of fills.
-#: R-771: DERIVED -- 209 call sites + 7 executions from sites inside
-#: loops = 216 = n_run (212) + n_conditional (4). Never set to what a run
-#: produced; the four conditional sites are named at the assertion.
-EXPECTED_CHECKS = 216
+#: R-771 / REV 96: n_run + n_conditional, and BOTH sides are read at run
+#: time -- the call sites from this file's own AST, the executions from
+#: each call recording its own line. Updating this when a check is ADDED
+#: is what the constant is for; what it may never be is tuned to whatever
+#: a run happened to produce, which is how it reached 252 against 209
+#: sites.
+EXPECTED_CHECKS = 217
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -3597,13 +3600,28 @@ def _treated_actions(arm: dict) -> list:
 def selftest() -> int:
     n = [0]
 
+    # REV 96 §2: EVERY CALL SITE THAT RUNS RECORDS ITS OWN LINE. The
+    # count then rests on what EXECUTED, not on a term back-computed from
+    # the count itself -- my first version defined the loop executions as
+    # `n_run - (sites - conditional)`, which makes the assertion an
+    # identity that cannot fail. That is the conjunct-that-cannot-fail
+    # class, in the cell written to close it.
+    _seen_lines = {}
+
+    def _mark_site():
+        import sys as _s
+        _ln = _s._getframe(2).f_lineno
+        _seen_lines[_ln] = _seen_lines.get(_ln, 0) + 1
+
     def ok(cond, label):
+        _mark_site()
         if not cond:
             raise SystemExit(f"[de_phase4_diag_runner] FAIL: {label}")
         n[0] += 1
         print(f"  PASS  {label}")
 
     def refuses(fn, label, needle=None):
+        _mark_site()
         try:
             fn()
         except DiagRefused as exc:
@@ -6291,40 +6309,77 @@ def selftest() -> int:
        f"{_np2.get('n_rejected_by_stratum')}, budget "
        f"{_np2.get('draw_attempt_budget')}")
 
-    # ---- R-771: n_run + n_conditional, and the constant is DERIVED ----
-    # WHAT THE 40-CHECK GAP ACTUALLY WAS. The constant said 252 and 212
-    # ran, and I twice reported the difference as "~37 unreached checks".
-    # Measured with a line tracer over this file's frames only: 209 call
-    # sites exist, 205 execute, and exactly FOUR never do -- 5711, 5722,
-    # 5745, 5765. Every one is the `ok(False, ...)` arm of a known-bad
-    # try/except: the line that runs ONLY IF THE GUARD STOPS REFUSING.
-    # They are CONDITIONAL BY NATURE -- their condition is "the guard
-    # under test failed" -- and they are not removable, because the arm is
-    # half of the known-bad idiom. The other 40 were never checks at all:
-    # the constant had simply outrun the code.
-    #
-    # So the count is DERIVED, not observed: 209 sites + 7 executions from
-    # sites inside loops = 216 = n_run + n_conditional. The constant is
-    # never adjusted to what a run happened to produce.
-    _conditional_sites = {
-        5711: "the guard under test ACCEPTED a planted artifact at the "
-              "cited path (load_cited_be_null, digest arm)",
-        5722: "the guard under test ACCEPTED an ABSENT citation",
-        5745: "the guard under test ACCEPTED a planted TRANSCRIPTION "
-              "mismatch the digest could not catch",
-        5765: "the guard under test EMITTED a cascade missing BE's "
-              "published headline",
-    }
-    _n_conditional = len(_conditional_sites)
-    ok(n[0] + 1 + _n_conditional == EXPECTED_CHECKS,
-       f"R-771: check count DERIVED, not adjusted -- n_run {n[0] + 1} + "
-       f"n_conditional {_n_conditional} == {EXPECTED_CHECKS}. The "
-       f"conditional four are the `ok(False, ...)` arms of known-bad "
-       f"try/except pairs at lines {sorted(_conditional_sites)}, each "
-       f"reachable ONLY IF THE GUARD IT TESTS STOPS REFUSING; their "
-       f"conditions are named in `_conditional_sites`. The old constant "
-       f"(252) was not 40 unreached checks -- it had outrun the code, and "
-       f"209 call sites cannot produce it")
+    # ---- R-771 / REV 96 §2,§3: THE COUNT AND THE SITES, FROM THE AST --
+    # BOTH SIDES WERE STILL TYPED. The constant said 216 and the cell
+    # asserted an identity between an observed total and a comment's
+    # arithmetic; and the four conditional line numbers were typed, which
+    # is how they came to point three lines early at EXECUTING lines. Both
+    # are read from this file's own parse now, so adding a check moves
+    # both sides of the assertion and a line number can never drift.
+    import ast as _ast771
+    _src771 = Path(__file__).resolve().read_text()
+    _tree771 = _ast771.parse(_src771)
+    _sites771 = {n.lineno for n in _ast771.walk(_tree771)
+                 if isinstance(n, _ast771.Call)
+                 and isinstance(n.func, _ast771.Name)
+                 and n.func.id in ("ok", "refuses")}
+    # THE CONDITIONAL ARMS, DERIVED: an `ok(False, ...)` inside the TRY of
+    # a try/except -- the line that runs only if the guard under test
+    # stops refusing. Nothing about them is typed.
+    _cond771 = {}
+    for _t in _ast771.walk(_tree771):
+        if not isinstance(_t, _ast771.Try):
+            continue
+        for _st771 in _ast771.walk(_t):
+            if (isinstance(_st771, _ast771.Call)
+                    and isinstance(_st771.func, _ast771.Name)
+                    and _st771.func.id == "ok"
+                    and _st771.args
+                    and isinstance(_st771.args[0], _ast771.Constant)
+                    and _st771.args[0].value is False):
+                _msg771 = (_st771.args[1].value
+                           if len(_st771.args) > 1
+                           and isinstance(_st771.args[1], _ast771.Constant)
+                           else "")
+                _cond771[_st771.lineno] = (
+                    "the guard under test did not refuse: "
+                    + str(_msg771)[:90])
+    _n_cond771 = len(_cond771)
+    # MEASURED, not back-computed: every site that ran recorded its own
+    # line, so the executions and the sites are two independent readings.
+    _ran771 = set(_seen_lines)
+    _loops771 = sum(v - 1 for v in _seen_lines.values())
+    # THE CELL CANNOT COUNT ITSELF. This assertion is built BEFORE it
+    # runs, so its own site -- and every site after it -- has not had its
+    # chance yet; my first version listed them as "never ran" and the cell
+    # failed on its own existence. Only sites STRICTLY ABOVE this line
+    # have been given the opportunity.
+    import sys as _sys771
+    _here771 = _sys771._getframe().f_lineno
+    _eligible771 = {ln for ln in _sites771 if ln < _here771}
+    _unrun771 = sorted(_eligible771 - _ran771)
+    ok(_unrun771 == sorted(ln for ln in _cond771 if ln < _here771)
+       and _n_cond771 > 0,
+       f"R-771 / REV 96: THE SITES THAT DID NOT RUN ARE EXACTLY THE "
+       f"CONDITIONAL ARMS. {len(_sites771)} `ok`/`refuses` call sites "
+       f"parse out of this file, {len(_eligible771)} of them above this "
+       f"line and so eligible to have run, {len(_ran771)} executed, and "
+       f"the {len(_unrun771)} eligible ones that did NOT -- {_unrun771} -- "
+       f"are precisely the "
+       f"`ok(False, ...)` arms inside a try/except, DERIVED from the parse "
+       f"and never typed. Both readings are independent: the sites come "
+       f"from the AST, the executions from each call recording its own "
+       f"line. {_loops771} of the executions are repeats from sites inside "
+       f"loops")
+    # AND THE EXPORTED CONSTANT IS TIED TO THE DERIVATION, so a reader
+    # importing `EXPECTED_CHECKS` gets the same number the parse produces
+    # and it cannot drift the way 252 did.
+    ok(EXPECTED_CHECKS == n[0] + 1 + _n_cond771,
+       f"R-771: the exported `EXPECTED_CHECKS` ({EXPECTED_CHECKS}) equals "
+       f"n_run ({n[0] + 1}) + n_conditional ({_n_cond771}). The constant is a PUBLISHED value other modules "
+       f"read, so it stays -- but it is now checked against the parse "
+       f"rather than maintained by hand, which is how it reached 252 "
+       f"against 209 sites")
     print(f"[de_phase4_diag_runner] selftest OK -- {n[0]} checks")
     return 0
 

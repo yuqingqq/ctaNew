@@ -57,7 +57,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 22
 
 
 class EarlyReadRefused(RuntimeError):
@@ -110,13 +110,30 @@ def the_ruling(repo_root=None) -> dict:
     return {
         "ruling_by_pair": {"path": _rp, "sha256": head["sha256"],
                            "path_is": "REPO-RELATIVE"},
-        "NOTE_on_the_landed_09_03_artifact": (
-            "p003_de_early_read_day_20260903__20260907T085436Z.json names "
-            "its ruling at an ABSOLUTE path into "
-            "/home/yuqing/ctaNew-wt-de, the worktree that produced it. "
-            "That artifact is LANDED and is not edited (rule 13); this "
-            "note is the correction, in band, and every emission from "
-            "here writes the path repo-relative (REV 95)."),
+        "NOTE_on_the_landed_09_03_artifact": {
+            "artifact": "p003_de_early_read_day_20260903__"
+                        "20260907T085436Z.json",
+            "it_is_LANDED_and_is_never_edited": "rule 13. This note is the "
+                "correction, in band, and it travels with every emission "
+                "of this family from here.",
+            "one__the_absolute_ruling_path": (
+                "it names its ruling at an ABSOLUTE path into "
+                "/home/yuqing/ctaNew-wt-de, the worktree that produced it "
+                "-- frozen today and gone tomorrow, recorded inside an "
+                "artifact meant to outlive it. Every emission from here "
+                "writes the path REPO-RELATIVE (REV 95)."),
+            "two__two_FALSE_seal_fields_in_its_day_run_block": (
+                "`day_run.status` reads `DAY_RUN_SEALED` and "
+                "`day_run.what_this_is_not.the_economics_are_SEALED` reads "
+                "`true`, while BOTH arm-days in that same artifact read "
+                "`sealed: false` with their `economic` block PRESENT. The "
+                "status was a literal and the flag was "
+                "`n_days_complete < G`, which is TRUE at 4 of 6 -- exactly "
+                "the early read. Both are computed from the arm-days' own "
+                "seal state from DE 126 on (CLAUDE.md rule 10). A reader "
+                "of the 09-03 artifact must take its arm-days, not these "
+                "two fields, as the account of what was sealed."),
+        },
         "params_version": doc.get("version"),
         "days": days,
         "G": len(days),
@@ -742,6 +759,46 @@ def _selftest_body(quiet: bool = False) -> int:
        f"{_st['unread']}, next {_st['next_unread']}. Requiring both a read "
        f"and an unread day would go red when E4 finishes the sweep, which "
        f"is the hardcoded-date defect one level up")
+    # ---- REV 96 §1: THE POST-E4 WORLD, DRIVEN IN A SCRATCH ROOT -------
+    # The battery must read GREEN when EVERY day is read. Building that
+    # state for real means waiting for E4; it is built here instead, in a
+    # scratch ledger carrying an early-read artifact for all four bar days
+    # plus the sealed receipts they need, and the same code path is run
+    # against it. This is the state the unconditional `["preconditions"]`
+    # would have raised in.
+    _e4 = Path(tempfile.mkdtemp(prefix="post_e4_"))
+    _e4d = _e4 / "pm_5min/derived"
+    _e4d.mkdir(parents=True)
+    _real_der = Path(RUN.DR.resolve()["data_root"]) / "pm_5min/derived"
+    _rl = the_ruling()
+    for _r in _rl["receipts"]:
+        shutil.copy(_real_der / Path(_r["path"]).name,
+                    _e4d / Path(_r["path"]).name)
+        _c = _r["day"].replace("-", "")
+        (_e4d / f"{DAY_FAMILY}_{_c}__20260907T000000Z.json").write_text("{}")
+    _st_e4 = bar_day_states(root=_e4)
+    _post = [rehearse(d, root=_e4) for d in _st_e4["read"]]
+    ok(_st_e4["next_unread"] is None
+       and len(_st_e4["read"]) == len(_rl["days"])
+       and all(r["status"] == "NOT_READY"
+               and r["blocking"] == ["EARLY_READ_ALREADY_EMITTED"]
+               for r in _post)
+       and all("preconditions" not in r for r in _post),
+       f"REV 96 §1: IN THE POST-E4 WORLD -- all {len(_st_e4['read'])} bar "
+       f"days read, `next_unread` None -- every day rehearses NOT_READY / "
+       f"EARLY_READ_ALREADY_EMITTED and NONE carries `preconditions`. The "
+       f"READY drive is inside the `else`, so the battery reads GREEN "
+       f"here instead of raising the KeyError that was REV 94's NO-GO")
+    shutil.rmtree(_e4, ignore_errors=True)
+
+    if _st["read"]:
+        _done = rehearse(_st["most_recently_read"])
+        ok(_done["status"] == "NOT_READY"
+           and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"],
+           f"DE 126: {_st['most_recently_read']} has been READ, so its "
+           f"rehearsal refuses by name -- {_done['blocking']} -- rather "
+           f"than offering to run it again. This is the POSITIVE CONTROL "
+           f"that the abort was: the cell used to expect READY here")
     if _st["next_unread"] is None:
         # THE SWEEP IS DONE: every day is read, so every day must refuse.
         _all_done = [rehearse(d) for d in _st["read"]]
@@ -752,19 +809,15 @@ def _selftest_body(quiet: bool = False) -> int:
            f"days rehearse NOT_READY / EARLY_READ_ALREADY_EMITTED. The "
            f"sweep is complete and the entry offers to run none of it "
            f"again")
-        _st_conditional_note = "the READY half is not reachable: no day is unread"
     else:
-        _st_conditional_note = None
-    _done = rehearse(_st["most_recently_read"] or _st["read"][0]
-                     if _st["read"] else _st["unread"][0])
-    ok(not _st["read"] or (_done["status"] == "NOT_READY"
-       and _done["blocking"] == ["EARLY_READ_ALREADY_EMITTED"]),
-       f"DE 126: {_st['most_recently_read']} has been READ, so its "
-       f"rehearsal refuses by name -- {_done['blocking']} -- rather than "
-       f"offering to run it again. This is the POSITIVE CONTROL that the "
-       f"abort was: the cell used to expect READY here")
-    reh = rehearse(_st["next_unread"])
-    dc = reh["preconditions"]["digest_comparison"]
+        # REV 96 §1: THE READY DRIVE LIVES HERE, inside the branch that
+        # knows a day is unread. It sat OUTSIDE and read
+        # `["preconditions"]` unconditionally, so after E4 -- no unread
+        # day -- it would raise the very `KeyError: 'preconditions'` that
+        # was REV 94's NO-GO. My §A5 fix guarded the state and then
+        # stepped straight past its own guard.
+        reh = rehearse(_st["next_unread"])
+        dc = reh["preconditions"]["digest_comparison"]
     ok(reh["status"] == "READY" and reh["blocking"] == []
        and dc["is_a_full_pair"] is True
        and len(dc["bar_says"]) == 64 and dc["bar_says"] == dc["artifact_is"]
