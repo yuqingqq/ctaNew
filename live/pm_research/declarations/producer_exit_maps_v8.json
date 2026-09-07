@@ -1,0 +1,221 @@
+{
+ "a_capture_record_must": "name the producer module it launched, resolve this chain's head, and carry the resolved kind beside the verbatim ExecMainStatus; a producer absent from the head is recorded UNMAPPED by name",
+ "chain_head_rule": "vN+1 by the {path, sha256} pair; readers resolve the chain head by the <family>_v<N>.json glob and follow the pair; ONE producer's block is added or changed per version, by that producer, with the pair from the head it read; v1 is never edited; IMMUTABLE ONCE LANDED: a landed version file is never modified -- a landing whose diff shows M on an existing version (instead of A on a new one) is a refusal, and a producer versioning the chain re-reads the head AFTER its rebase/copy and before its commit; if the head moved, it re-versions from the new head",
+ "chain_repair": {
+  "checker": "scripts/declaration_immutability.sh -- a version file with more than one commit in its history is FORKED_BY_EDIT",
+  "kept_from_v3": [
+   "live/pm_research/da_gate1_day_verdict.py",
+   "live/pm_research/da_race_read_verify.py"
+  ],
+  "restored": {
+   "live/pm_research/be_daybook_build.py": {
+    "block_sha256": "614a017eee54b4ed",
+    "from_commit": "a81484c (BE 75, its v2 e33fa5ed167028bc...)"
+   },
+   "live/pm_research/be_gate1_fragment.py": {
+    "block_sha256": "614a017eee54b4ed",
+    "from_commit": "a81484c (BE 75, its v2 e33fa5ed167028bc...)"
+   },
+   "live/pm_research/be_gate1_state_tape.py": {
+    "block_sha256": "614a017eee54b4ed",
+    "from_commit": "a81484c (BE 75, its v2 e33fa5ed167028bc...)"
+   },
+   "live/pm_research/be_race_reader.py": {
+    "block_sha256": "900e65371b791ea8",
+    "from_commit": "a81484c (BE 75, its v2 e33fa5ed167028bc...)"
+   },
+   "live/pm_research/de_multiday_gate1_runner.py": {
+    "block_sha256": "82a776bc502aff35",
+    "from_commit": "ba635de (DE 108, its v2 f3bfbbcc6fbda43b...)"
+   }
+  },
+  "v2_history": {
+   "40c8903": "43b99ea309f74ad6 (the file now)",
+   "a81484c": "e33fa5ed167028bc",
+   "ba635de": "f3bfbbcc6fbda43b"
+  },
+  "what_happened": "three producers versioned this chain from v1 within five minutes (BE 75 a81484c, DE 108 ba635de, DA 101 40c8903), each writing producer_exit_maps_v2.json from v1's pair; the shared-tree landings turned the second and third into MODIFICATIONS of v2 (git: M, not A), so the file at v2 is DA's and BE's and DE's blocks left the chain while their rows said DECLARED"
+ },
+ "declared_at_utc": "2026-09-07T06:52:03Z",
+ "declared_by": "DA (this producer's own block, by pair)",
+ "producers": {
+  "live/pm_research/be_daybook_build.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the artifact was written and its receipt emitted",
+    "1": "a refusal or an uncaught error (Python's default for an exception)",
+    "2": "usage: no --day and no --selftest"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/be_gate1_fragment.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the artifact was written and its receipt emitted",
+    "1": "a refusal or an uncaught error (Python's default for an exception)",
+    "2": "usage: no --day and no --selftest"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/be_gate1_state_tape.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the artifact was written and its receipt emitted",
+    "1": "a refusal or an uncaught error (Python's default for an exception)",
+    "2": "usage: no --day and no --selftest"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/be_race_reader.py": {
+   "75_is_never_used": true,
+   "declared_by": "BE, BE 75 (3)",
+   "map": {
+    "0": "the selftest passed, or --open completed and wrote the result",
+    "1": "the selftest failed, or a refusal/uncaught error reached the top (ReadRefused and ReadVoid both exit here: a refusal is not a distinct code, it is a named message on stderr)",
+    "2": "usage: neither --selftest nor --open"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the selftest asserts it.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/da_early_read_verify.py": {
+   "codes": {
+    "0": "VERIFIED -- the artifact resolves its ruling by the pair it records, names the sealed receipt the bar names, carries the four labels and the five named statuses, and the INVERTED census finds exactly the computed economic set. The table was printed if --print was given",
+    "1": "argparse's usage exit via ap.error (no --selftest and no --verify). Not a reading of any artifact",
+    "2": "A REFUSAL BY NAME -- the instrument declined to run on what it was given: SEALED_FAMILY_ARTIFACT_REFUSED, EARLY_READ_ARTIFACT_ABSENT / _UNREADABLE, NOT_AN_EARLY_READ_ARTIFACT, EARLY_READ_RULING_NOT_THE_PAIR, PREFIX_ONLY, EARLY_READ_DAY_NOT_IN_THE_BAR, EARLY_READ_RECEIPT_NOT_THE_BAR, EARLY_READ_LABEL_MISSING / _DIFFERS, EARLY_READ_STATUS_MISSING / _CARRIES_A_NUMBER / _WITHOUT_A_REASON, EARLY_READ_NO_ARM_BLOCKS, EARLY_READ_ECONOMIC_FIELD_MISSING, EARLY_READ_EXTRA_ECONOMIC_KEY. A refusal is NOT a failed verification and NOT a finding about the day"
+   },
+   "declared_after": "DA 121 built this reader BEFORE the first early-read artifact exists, and the four real reads are GOs (E1..E4). R-709: an UNMAPPED code does not satisfy a GO, so the codes are declared before the first one is conditioned on them -- not after a refusal has to be resolved in the register",
+   "declared_by": "DA",
+   "not_declared_here": {
+    "75": "NEVER: 75 is the WRAPPER's refusal on a held lock. This reader is LIGHT and takes no lock, and a producer declaring 75 would make a lock conflict read as one of its verdicts",
+    "any_other_non_zero": "an uncaught exception -- a CRASH, recorded verbatim as UNMAPPED. Every refusal this module can name raises EarlyReadVerifyRefused"
+   },
+   "status": "DECLARED",
+   "where_the_verdict_is_written": "stdout (the table under --print) and the record named by --output; the exit code is a summary of the verdict, never the record"
+  },
+  "live/pm_research/da_gate1_day_verdict.py": {
+   "codes": {
+    "0": "the run's own verdict is affirmative: PRE_READ_VERIFIED on the pre-read path, or IS_A_VERIFICATION_OF_THE_ECONOMICS on the full read",
+    "1": "FLAGGED -- a comparison RAN and disagreed: an arm, a digest a receipt declares, or a leaked sealed name. A VERDICT, not a crash",
+    "2": "the CLI was mis-invoked (argparse's own usage exit, via ap.error). Not a reading of any day",
+    "3": "INCOMPLETE or PROVENANCE_INCOMPLETE -- the seal HOLDS and AN INPUT A CONJUNCT NEEDS IS MISSING, or a half this mode DOES attempt was not evaluated. A VERDICT by name; the record's `incomplete_because` carries the reasons. It no longer covers 'this mode does not attempt the population' -- that is 4",
+    "4": "LIGHT_ONLY_POPULATION_NOT_ATTEMPTED_BY_THIS_MODE -- the light phase ran, the seal HOLDS and the provenance was read, and the population half was NOT ATTEMPTED BECAUSE THIS MODE DOES NOT ATTEMPT IT (the book is a pickle and opening one is heavy under rule 20). A VERDICT by name, and NOT 3: a predicate whose value was fixed when the code was written is not a measurement, and it must not spend the code that means an input was missing (REV 89 S2.4)"
+   },
+   "declared_after": "DA 99 and DA 100 ran this producer under the lock and its 3 was UNMAPPED in the register (R-709); DA 120 adds 4 on REV 89 S2.4's routing -- rc 3 was covering two states separated only by a string in `incomplete_because`",
+   "declared_by": "DA",
+   "not_declared_here": {
+    "75": "NEVER: 75 is the WRAPPER's refusal (a held lock exits the unit with it). A producer that declared it would make a lock conflict read as one of its own verdicts",
+    "any_other_non_zero": "an uncaught exception -- a CRASH, recorded verbatim as UNMAPPED. This producer raises VerifierRefused for every refusal it can name, and a traceback is not a verdict"
+   },
+   "status": "DECLARED",
+   "where_the_verdict_is_written": "the record named by --output; the exit code is a summary of `status`, never the record itself"
+  },
+  "live/pm_research/da_midnight_verify.sh": {
+   "codes": {
+    "0": "the night's verdicts were written -- every day in `days_needing_verdict` got one, and the run record carries them",
+    "7": "DEPLOY_DRIFT (REFUSE_TIER_DRIFT): the bytes this unit would execute are NOT the bytes the deploy record pins. NOTHING RAN, no verdict was written, and the night is recovered by `days_needing_verdict` as a catch-up day. A VERDICT about the unit's own integrity, not a failure of the verification",
+    "9": "the run record could not be written (REC_UNWRITABLE_RC): the only durable record of the run is unwritable, and a run nobody can read afterwards is not a run this seat will claim"
+   },
+   "declared_after": "DA 114: rc 7 fired for real at 2026-09-07T00:06:00Z and was UNMAPPED in the register",
+   "declared_by": "DA",
+   "not_declared_here": {
+    "75": "NEVER -- the wrapper's refusal; this unit does not take the heavy lock",
+    "any_other_non_zero": "an uncaught error in the shell, recorded verbatim as UNMAPPED"
+   },
+   "status": "DECLARED",
+   "where_the_verdict_is_written": "data/pm_5min/derived/da_dayverdict_<day>.json, per day, preserve-then-write"
+  },
+  "live/pm_research/da_race_read_verify.py": {
+   "a_note_on_2": "this producer shares argparse's code and is separated from it by stream and named string; the STDERR pair (da_contamination_record, da_mutation_audit) took 3 instead, at DA 101's R-697 batch",
+   "codes": {
+    "0": "the real-path verification holds: IS_A_VERIFICATION true",
+    "1": "FLAGGED -- the read artifact exists and something in it disagrees with this verifier's recomputation, or a day the pins name is not SAID. A VERDICT",
+    "2": "a REFUSAL this verifier names, printed to STDOUT where argparse never writes (READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED, PINS_DECLARATION_ABSENT, a pin that does not hold, and the rest). Separable from argparse's own usage exit 2 by STREAM and by STRING"
+   },
+   "declared_by": "DA",
+   "not_declared_here": {
+    "75": "NEVER -- the wrapper's refusal",
+    "any_other_non_zero": "an uncaught exception, recorded verbatim as UNMAPPED"
+   },
+   "status": "DECLARED"
+  },
+  "live/pm_research/de_early_read.py": {
+   "75_is_never_used": true,
+   "declared_by": "DE, DE 123 phase 1 (the coordinator's addendum)",
+   "map": {
+    "0": "the early-read day completed and its artifact was written, or --selftest passed",
+    "1": "an EARLY_READ_* refusal, a battery failure, or usage -- every non-zero path this module has, because EarlyReadRefused is an uncaught exception and SystemExit carries a message"
+   },
+   "not_observed": {
+    "0": "a completed early-read day is heavy -- it is a GO, not a probe",
+    "1 via an EARLY_READ_* refusal": "reachable by hand and covered by the battery's own drives; not spawned, for the reason above"
+   },
+   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the battery asserts it is absent. The map is only {0, 1}: every refusal in this module is an EARLY_READ_* exception or a SystemExit carrying a message, and Python exits 1 for both -- so `resolved_kind` for a non-zero early-read run is read from the REFUSAL NAME in the run's output, never from the code alone, which cannot distinguish them.",
+   "observed_by": "`de_early_read.py --observe-exit-codes`, which runs NO battery. The observation is deliberately outside the battery: every path of this module except bare usage runs the battery first (R-610), so a subprocess probe inside a battery cell re-enters it and multiplies. Two attempts did exactly that and were killed by pid; the battery now asserts only the static half.",
+   "read_from": "the module's own EXIT_CODES constant, not typed here",
+   "selftest_asserts_75_absent": true,
+   "status": "DECLARED"
+  },
+  "live/pm_research/de_multiday_gate1_runner.py": {
+   "75_is_never_this_producer_s": "75 is the launch layer's: `flock -n -E 75` means a HELD LOCK and the payload never started. If this producer ever exited 75 a refusal and a held lock would be indistinguishable in `ExecMainStatus`, which is the whole point of `-E` (R-646 R2)",
+   "declared_by": "DE, at DE 108, by the pair",
+   "map": {
+    "0": "the run completed and the artifact was written",
+    "1": "RunnerRefused, or a battery failure -- SystemExit with a message. Every refusal this producer raises exits 1"
+   },
+   "status": "DECLARED",
+   "the_map_is_the_module_s_own": "read from `RUNNER_EXIT_CODES` in the runner, which `assert_no_exit_code_collision()` already checks against the declared lock-conflict code at every emit",
+   "what_is_NOT_in_this_map": "the launch layer's codes (75 held lock, 76 the launcher's own protocol error). They belong to the wrapper, not to the producer, and a producer's map that claimed them would be claiming another layer's vocabulary"
+  }
+ },
+ "protocol": "PRODUCER_EXIT_MAPS_V5",
+ "reading_kinds": {
+  "75": "REFUSAL by the wrapper",
+  "declared code": "a VERDICT by name, resolved in the producer's block",
+  "undeclared non-zero": "UNMAPPED -- a number observed and nothing learned; NOT a refusal, NOT a failure, and it does NOT satisfy a GO conditioned on that run (the predicate is not evaluable; the GO waits, the producer declares the code by pair, the record is re-read)"
+ },
+ "runtime_default": {
+  "1": "the interpreter's uncaught exception. A producer's OWN block may declare 1 as a crash (or otherwise); a producer with NO block gets no default: rc 1 from it is UNMAPPED (REV 80 \u00a72.1 -- UNMAPPED wins over the default; a producer that has declared nothing has declared nothing)"
+ },
+ "sibling_of": {
+  "path": "live/pm_research/declarations/heavy_run_form_v3.json",
+  "sha256": "e6ddd378d259fa198056d9341d51a51b20a7d052d1d40ecebed1c135e7714158",
+  "why_a_sibling": "the form's constants are the WRAPPER's (lock path, conflict code, caps) and belong to every producer alike; an exit map is one producer's own and would make the shared form change whenever any producer added a code (REV 79 \u00a72.1)"
+ },
+ "supersedes": {
+  "path": "live/pm_research/declarations/producer_exit_maps_v7.json",
+  "rule": "13 -- vN+1 by the {path, sha256} PAIR; the prior version is NOT edited",
+  "sha256": "abbc077dcfcdc4f6466bdd6950ff6de5856640595b58d8579946bd3d28dfff87",
+  "the_incident": {
+   "das_v7": "6084d6e2602d6e6ae6756afa8f5cab92c7a5dd5213be1fe90da7598b17c2b269 -- landed 5f5c92b 06:48Z, overwritten",
+   "des_v7": "abbc077dcfcdc4f6466bdd6950ff6de5856640595b58d8579946bd3d28dfff87 -- landed 4e91739 06:49:30Z, the head this version supersedes",
+   "nothing_of_DEs_moved": "verified field-by-field before this write",
+   "what_the_CAS_could_not_stop": "each seat's write was in its OWN worktree, where the v7 path was free, so neither write saw the other. The collision happened at the GIT LANDING, outside the compare-and-swap's reach. The chain rule's answer is the landing-time re-read -- a producer re-reads the head AFTER its copy and BEFORE its commit -- and declaration_immutability.sh is the detection, which fired"
+  },
+  "what_changes": "ONE producer's block is ADDED BACK: `live/pm_research/da_early_read_verify.py`. DA and DE each read v6 and each composed a v7; DA's landed first (5f5c92b, 6084d6e2...) and DE's landing overwrote it in place (4e91739, abbc077d...), so DA's block was lost from the chain -- R-711's own incident, repeated. `declaration_immutability.sh` reports v7 FORKED_BY_EDIT edits_after_base=1. THIS VERSION IS THE IN-BAND REPAIR: v7 is NOT edited, DE's block stays exactly as DE wrote it, and DA's block is restored on top of it from the bytes DA landed (recovered at commit 5f5c92b, digest verified)."
+ },
+ "version": 8,
+ "what": "One block per producer that runs under the heavy-run lock: {exit code: meaning}. A capture record resolves a non-zero ExecMainStatus HERE, never in the producer's source. A code with no entry is recorded VERBATIM as UNMAPPED and is not a reading.",
+ "what_this_is_not": "not a list of the wrapper's five fields (heavy_run_form), not a permission (a declared code is a reading, decisions live in the policy layer, rule 14)",
+ "wrapper_reserved": {
+  "75": {
+   "meaning": "EX_TEMPFAIL -- the heavy-run lock is held; the unit did NO work and wrote nothing (rule 20)",
+   "no_producer_may_declare_it": true,
+   "owner": "the launch form (flock -n -E 75 inside the unit)",
+   "where_enforced": "a producer whose declared block contains 75 is refused at its own selftest (REV 68 \u00a73.2)"
+  }
+ }
+}
