@@ -8083,39 +8083,26 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     ok(verify_be_module(_tipP)["cited_not_copied"] is True,
        "POSITIVE CONTROL: BE's cascade module resolves at the declared "
        "digest and is CITED, not copied")
-    # ---- CONDITIONAL, BY THE COORDINATOR'S RULING (DE 140) ------------
-    # THE CELL BELOW IS THE USER'S (849bef2) AND ITS ASSERTION IS
-    # UNTOUCHED. It is a TRUE known-bad only where the cascade has MOVED
-    # off v19's declared pin -- at the composition the runs execute from,
-    # phase4 IS at the pin, `verify_be_module(P)` correctly does NOT
-    # refuse, and the control would read ADMITTED. The ruling: gate its
-    # APPLICABILITY, never its content; where it cannot fire, record it
-    # BY NAME as a declared conditional -- a skip is not a pass.
-    _p4_rel = "live/pm_research/de_phase4_diag_runner.py"
-    _p4_pin = next((m.get("sha256") for m in
-                    ((P.get("be_cascade") or {}).get("modules") or [])
-                    if m.get("path") == _p4_rel), None)
-    _p4_now = (hashlib.sha256((root / _p4_rel).read_bytes()).hexdigest()
-               if (root / _p4_rel).is_file() else None)
-    if _p4_pin is not None and _p4_now == _p4_pin:
-        offline_skip(
-            "CONDITIONAL -- BE_CASCADE_DIFFERS known-bad: the cascade is "
-            "AT its declared pin, so the control CANNOT FIRE here",
-            why=(f"`verify_be_module(P)` refuses only when a cited "
-                 f"cascade module DIFFERS from the digest the frozen "
-                 f"params declare. {_p4_rel} is at v19's pin "
-                 f"({_p4_pin[:16]}...), which is the state the day runs "
-                 f"require -- their preflight uses the same frozen "
-                 f"check. THIS IS NOT A PASS: the control is the USER's "
-                 f"(849bef2), its assertion is untouched, and it fires "
-                 f"in any tree where the cascade has moved. Made "
-                 f"conditional by the coordinator's ruling at DE 140, "
-                 f"overrulable in one line."))
-    else:
-        refuses(lambda: verify_be_module(P),
-                "KNOWN-BAD: the frozen params refuse on the moved phase4 cascade "
-                "module instead of letting the battery run through a different "
-                "null producer", "BE_CASCADE_DIFFERS")
+    # REVIEW 106 §4a: THE KNOWN-BAD IS BUILT, NOT BORROWED FROM THE TREE.
+    # The USER's assertion and message below are EXACTLY as written in
+    # 849bef2; only the INPUT it is handed is constructed -- the same
+    # shape the neighbouring `actual_sha="0"*64` cell already uses. Read
+    # from the tree's ambient state it was a true control only where the
+    # cascade had MOVED, and this composition holds phase4 AT v19's pin
+    # (the day runs' preflight uses the same frozen check), so it could
+    # not fire here. Handed params whose phase4 digest is mutated, it
+    # fires in EVERY tree and needs no conditional: REV drove it at the
+    # pin and with phase4 moved -- 395 / 0 disarmed / 0 skipped in both.
+    def _with_moved_cascade(params):
+        out = json.loads(json.dumps(params))
+        for _m in (out.get("be_cascade") or {}).get("modules") or []:
+            if _m["path"].endswith("de_phase4_diag_runner.py"):
+                _m["sha256"] = "0" * 64
+        return out
+    refuses(lambda: verify_be_module(_with_moved_cascade(P)),
+            "KNOWN-BAD: the frozen params refuse on the moved phase4 cascade "
+            "module instead of letting the battery run through a different "
+            "null producer", "BE_CASCADE_DIFFERS")
     refuses(lambda: verify_be_module(P, actual_sha="0" * 64),
             "KNOWN-BAD: a DIFFERENT cascade digest refuses -- a null run "
             "through another cascade is not a control for this arm",
