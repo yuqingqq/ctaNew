@@ -22546,6 +22546,48 @@ Detected at 06:25:59Z by the coordinator's own post-check (`git log` showing `f 
 **For the user, when the table comes (REV §A2, adopted):** 09-03's three per-arm counts are labelled as visible before the read; the other three days' counts as unsealed by it — or the four days look more uniform than they are.
 
 **ROUTING.** DE 125 → REV 91 (the seal fix; GO #8 re-cleared against the tip's runner bytes) → GO E1 naming the runner digest → DE 123 phase 2 from wt-de2 → E2 → E3 → E4, each read by DA's verifier → the table → MEM 250 (R-758..R-761). BE 93 before the close; DA 122 light; the coordinator's checker round (§B7's statuses) after GO E1 is out.
+
+### R-762 — 2026-09-07T07:20Z — coordinator — **DE 125 and BE 93 VERIFIED at the artifacts. REV 90's NO-GO is closed at the code: both branches of `seal()` now COMPUTE from the bar they were handed and the day-run receipt carries ONE `G` object that says which G it is; the runner passes 350 checks at the tip. BE's `--verify` re-derives pins v1 and v2 byte for byte from the producing receipts (never a feed). REV 91 dispatched — its part A gates GO E1 and re-clears GO #8 against the runner's current bytes. The coordinator's checker gained REV's superseded-fork statuses; its falsifier is running. Two wall-time rulings put to the user, not taken.**
+
+**DE 125 (Q-DE-124 `ff40ea0`; code `0f78253`) VERIFIED.** Runner `de_multiday_gate1_runner.py` at the tip `f1f5947254e94b64…`, `de_early_read.py` `fbd01eb1765c9f4b…`. The coordinator's drive of the exact early-read call and of the sealed call, and the runner's fixture battery, verbatim:
+
+```
+--- seal(arm,4,4) strings at the tip ---
+unsealed: False | UNSEALED -- 4 of 4 days complete under the bar this call was given
+sealed  : True | SEALED -- 3 of 6 days complete. Every economic field is ABSENT from this artifact, not pre | economic present: False
+--- runner selftest at the tip (fixture) ---
+[de_multiday_gate1_runner] PASS -- 350 checks, n_disarmed 0, n_skipped 0
+rc=0
+```
+
+The literal is gone from the unsealed branch, the sealed branch's string is unchanged, no early-read special case exists. The bare `"G": params["G"]` is removed from the day-run receipt; the number keeps its provenance in one object `G_and_which_G_it_is` (`design_G_from_params` 6, `params_file` = `PARAMS_REL`, `n_days_complete_at_this_emit`, `the_bar_this_run_sealed_against`) — DE kept the version out of the key's name because `PARAMS_REL` is the thing that moves (a literal tracking a moving thing is the class DE avoided; REV had suggested `…_v15`). Landed after the rule-21 pre-copy check, as DE states. 347 → 350 checks.
+
+**BE 93 (Q-BE-336 `df2158b`; code `9b7e53b`) VERIFIED.** `be_race_feed_pins.py --verify <version>` re-derives a landed pins version's `per_day` content from the PRODUCING RECEIPTS and compares field by field; the coordinator's own runs (receipts only, no feed opened):
+
+```
+v1: "CORROBORATED_ABSENT": 2, "VERIFIED_FROM_RECEIPT": 3   rc=0
+v2: "CORROBORATED_ABSENT": 2, "VERIFIED_FROM_RECEIPT": 4   rc=0
+```
+
+matching BE's row — 09-01/02 CORROBORATED_ABSENT (no feed, no receipt, the pin says absent), 09-03/04/05 (and 09-06 in v2) VERIFIED_FROM_RECEIPT with path, sha256 (`0dfa62f3…` for 09-06) and byte count (236,128,877) landed = rederived. No version written; the head is v2. (The coordinator's first invocation passed the declarations path and the tool refused `VERSION_ABSENT` — the argument is the basename; the coordinator's probe, not BE's defect.) Whether this converts v1/v2 from scratch-built to repo-verified as REV 90 §B4 intended is REV 91's part B.
+
+**MEM 250 LANDED** (`54c3e31` row, `3999f07` state): R-758..R-761 swept; MEM's headline — the exit-map pair verifies, and v7's history holds four commits — agrees with the checker's reading below.
+
+**DISPATCHED: REV 91 at 07:16:10Z.** Part A first: drive `seal(arm, 4, 4)` as in §A0; say GO E1 MAY PROCEED at runner `f1f59472…` / early-read `fbd01eb1…` / params v17 `81b2c291…` / exit maps v8 `bbc8bacf…`, or NO-GO by artifact; and re-issue or refuse GO #8's clearance against the runner's CURRENT bytes (REV 89's named `ad15ddf1…`, moved twice since). Part B: BE 93; DA 122 when landed. The checker change is REV 92's.
+
+**THE CHECKER (coordinator's instrument, REV 90 §B7 adopted; not yet landed — its falsifier is running):** `FORKED_BY_EDIT` (rc 1, unrepaired) is now distinguished from `FORKED_BY_EDIT_AND_SUPERSEDED` (rc 2: a later version's `supersedes.sha256` names the EDITED bytes), each fork carrying `created_by` / `edited_by` / `repaired_by` (commit ids, so a repair does not count as a breach), `pre_edit_digest` (the creating commit's bytes) and `pre_edit_digest_pinned_by` (every declaration or ledger JSON ≤ 5 MB naming the pre-edit digest, full or 16-hex). The real run over `live/pm_research/declarations` at the tip, verbatim:
+
+```
+FORKED_BY_EDIT_AND_SUPERSEDED live/pm_research/declarations/producer_exit_maps_v7.json edits_after_base=3 created_by=5f5c92b edited_by=4e91739 repaired_by=[31c5208 0e2a0c6] superseded_by=[producer_exit_maps_v8.json] pre_edit_digest=6084d6e2602d6e6a pre_edit_digest_pinned_by=[producer_exit_maps_v8.json]
+SUPERSEDED FORKS: 1 (rc 2 = every fork is superseded by a verifying pair; rc 1 = an UNREPAIRED fork exists)
+base a3de2ef; exit 2
+```
+
+So the question REV could not answer by grep is answered: nothing under the ledger pins v7's PRE-edit bytes except v8's own incident block — the fork is history, not a live break. Landed after the falsifier (which now uses the real v7 as its positive control for the new status) passes; REV 92 reads it.
+
+**PUT TO THE USER at 07:17Z, on "why is reading the data so slow" — not ruled here:** (1) relax rule 20's one-at-a-time clause for THIS read so two early-read days run concurrently (each peaks under 2.9 GB; the slice already permits two cores; 5.6 h → ≈ 3 h); (2) launch 09-03 before REV 91 completes, on the coordinator's own verification above. Both are the user's to say; the coordinator proceeds on REV 91 otherwise.
+
+**ROUTING.** REV 91 part A → GO E1 (naming the digests) → DE 123 phase 2 from wt-de2 → E2 → E3 → E4 (or two at a time on the user's word) → DA's reads → the table → MEM 251 (R-762 onward). BE on standby for the close; DA 122 in flight; the checker lands after its falsifier.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
