@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 346
+EXPECTED_CHECKS = 347
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -3690,23 +3690,52 @@ def record_ambient_verdict(sink: list, verdict: dict, *, ambient: str,
 
 def battery_summary(module: str, *, n_run: int, n_skipped: int = 0,
                     disarmed: list | None = None,
+                    skipped: list | None = None,
                     expected: int | None = None) -> dict:
-    """THE ONE SUMMARY LINE, AND `n_disarmed` IS PART OF IT (REV 84 §2).
+    """THE ONE SUMMARY LINE: `n_disarmed` AND `n_skipped` ARE BOTH IN IT.
 
     A non-zero `n_disarmed` is NOT a clean run: the cells ran, could not
     have fired, and the count beside them would otherwise read as
-    coverage. The line names them; the caller raises on `clean` False."""
+    coverage (REV 84 §2). The line names them; the caller raises on
+    `clean` False.
+
+    REV 88 §1.3: A SKIP IS A THIRD OUTCOME, not a shortfall in the run
+    count. It is counted, and it is NAMED BY CELL WITH ITS REASON --
+    `skipped` is a list of `{label, why}`. A skip carried as a BARE
+    COUNT is unnamed by construction, and unnamed skips are exactly the
+    case `clean` must refuse: `n_run` beside a silent `n_skipped` reads
+    as coverage the same way a silent `n_disarmed` did. Naming every
+    skip is what makes an offline battery clean again -- the fixture run
+    skips the checks that READ `data/` and stays PASS because it says
+    which ones and why."""
     dis = list(disarmed or [])
-    clean = not dis and (expected is None or n_run + n_skipped == expected)
+    skips = list(skipped or [])
+    # THE COUNT IS DERIVED FROM THE NAMED CELLS WHEN THERE ARE ANY, so the
+    # two can never disagree; a caller that passes only `n_skipped` is
+    # carrying a bare count and is treated as such.
+    n_sk = len(skips) if skips else int(n_skipped)
+    unnamed = [s for s in skips
+               if not (isinstance(s, dict) and s.get("label")
+                       and s.get("why"))]
+    if not skips and n_sk:
+        unnamed = [f"<{n_sk} skip(s) carried as a bare count, no cell "
+                   f"named>"]
+    clean = (not dis and not unnamed
+             and (expected is None or n_run + n_sk == expected))
     line = (f"[{module}] {'PASS' if clean else 'NOT CLEAN'} -- "
-            f"{n_run} checks, n_disarmed {len(dis)}"
-            + (f", {n_skipped} skipped" if n_skipped else ""))
+            f"{n_run} checks, n_disarmed {len(dis)}, n_skipped {n_sk}"
+            + (f", UNNAMED SKIPS {len(unnamed)}" if unnamed else ""))
     return {"line": line, "clean": clean, "n_run": n_run,
-            "n_skipped": n_skipped, "n_disarmed": len(dis),
-            "disarmed": dis, "expected": expected,
+            "n_skipped": n_sk, "n_disarmed": len(dis),
+            "disarmed": dis, "skipped": skips,
+            "skips_unnamed": unnamed, "expected": expected,
             "rule": "REV 84 §2 -- a non-zero n_disarmed is not a clean "
                     "run; the cells ran and could not have fired, and a "
-                    "count beside them would read as coverage"}
+                    "count beside them would read as coverage. REV 88 "
+                    "§1.3 -- a skip is a THIRD outcome, counted and named "
+                    "by cell with its reason; an UNNAMED skip is not "
+                    "clean, and a skip is never folded into the run "
+                    "count"}
 
 
 def cell_baseline(what: str, *, counts=None, dirs=None) -> dict:
@@ -6235,6 +6264,14 @@ def battery_resources(t0: float, hw0: float) -> dict:
 #: predicate nobody has seen fire in the run it protects.
 PLANT_ONE_DISARMED_CELL = False
 
+#: REV 88 §1.3's falsifier, END TO END, and it is the RED half: set by
+#: `--falsify-skipped`, the real battery runs and ONE skip is planted
+#: WITHOUT a reason, so the summary path -- not a hand-built dict -- has
+#: to print `n_skipped` including it, name it as unnamed, and exit
+#: non-clean. The GREEN half needs no flag: every real offline run skips
+#: named cells and stays PASS.
+PLANT_ONE_UNNAMED_SKIP = False
+
 
 def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     """`offline=True` skips the checks that READ `data/` and RECORDS them.
@@ -6250,8 +6287,16 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
 
     disarmed: list = []
 
-    def offline_skip(label):
-        skipped.append(label)
+    def offline_skip(label, why=None):
+        # REV 88 §1.3: THE SKIP IS RECORDED AS A CELL, not as a tally.
+        # `why` defaults to the offline reason because that is what all
+        # 26 current callers mean, but it is stored PER CELL -- a reason
+        # held once for the whole list cannot distinguish a check that
+        # reads `data/` from one that was quietly dropped.
+        skipped.append({
+            "label": label,
+            "why": why or ("offline: this check READS `data/`, and a "
+                           "fixture run must open no path under it")})
         if not quiet:
             print(f"  SKIP  (offline) {label}")
 
@@ -10076,6 +10121,35 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"passed' beside three disarmed cells would report the "
        f"measurement's failure as coverage -- the DE 110 defect one level "
        f"up")
+    # ===== DE 119 (REV 88 §1.3): A SKIP IS THE THIRD OUTCOME ===========
+    # Driven on the SUMMARY PATH, in all three shapes a caller can hand
+    # it, and the run count is held fixed at 42 in every one -- because
+    # the defect this is for is a skip being folded into `n_run` or into
+    # silence, not a skip being miscounted.
+    _sk_named = battery_summary(
+        "de_probe", n_run=42,
+        skipped=[{"label": "reads data/", "why": "offline fixture run"}])
+    _sk_bare = battery_summary("de_probe", n_run=42, skipped=[
+        {"label": "reads data/"}])          # a cell with no reason
+    _sk_count = battery_summary("de_probe", n_run=42, n_skipped=1)
+    _sk_none = battery_summary("de_probe", n_run=42)
+    ok(_sk_named["clean"] is True and "n_skipped 1" in _sk_named["line"]
+       and "UNNAMED" not in _sk_named["line"]
+       and _sk_bare["clean"] is False
+       and "UNNAMED SKIPS 1" in _sk_bare["line"]
+       and _sk_count["clean"] is False and _sk_count["n_skipped"] == 1
+       and "UNNAMED SKIPS 1" in _sk_count["line"]
+       and "n_skipped 0" in _sk_none["line"] and _sk_none["clean"] is True
+       and all(x["n_run"] == 42 for x in
+               (_sk_named, _sk_bare, _sk_count, _sk_none)),
+       f"REV 88 §1.3 FALSIFIER: one NAMED skip is `{_sk_named['line']}` "
+       f"and stays clean; the SAME skip with no reason is "
+       f"`{_sk_bare['line']}` and is NOT clean; a skip carried as a bare "
+       f"count is `{_sk_count['line']}` and is NOT clean, because a "
+       f"count nobody can resolve to cells is unnamed by construction; "
+       f"and n_skipped is in the line at zero too, so a reader never has "
+       f"to infer it from silence. `n_run` is 42 in all four -- a skip "
+       f"is never folded into the run count")
     refuses(lambda: record_ambient_verdict(
                 [], {"verdict": "DISARMED"}, ambient="a planted digest",
                 label="x"),
@@ -10447,6 +10521,12 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     # inside every fixture day run reaches this summary first, so a plain
     # module flag aborted the run 38 checks in -- at a NESTED summary, not
     # the one the falsifier is about. `quiet` is what distinguishes them.
+    if PLANT_ONE_UNNAMED_SKIP and not quiet:
+        # NO `why`, and appended DIRECTLY rather than through
+        # `offline_skip` -- the helper always supplies a reason, so a
+        # falsifier driven through it could never produce the state the
+        # summary is supposed to refuse.
+        skipped.append({"label": "PLANTED by --falsify-skipped"})
     if PLANT_ONE_DISARMED_CELL and not quiet:
         disarmed.append({
             "label": "PLANTED by --falsify-disarmed", "ambient": "memory",
@@ -10455,10 +10535,18 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
             "why": "planted: this cell did not run, it is the falsifier "
                    "for the summary's own n_disarmed line"})
     _sum = battery_summary("de_multiday_gate1_runner", n_run=n[0],
-                           n_skipped=len(skipped), disarmed=disarmed,
+                           skipped=skipped, disarmed=disarmed,
                            expected=EXPECTED_CHECKS)
+    # REV 88 §1.3: `n_skipped` AND THE NAMED CELLS TRAVEL INTO EVERY
+    # RECEIPT THAT EMBEDS THIS BATTERY, beside `n_disarmed`. The 09-06
+    # receipt carried `n_disarmed 0` and no `n_skipped` at all, so a
+    # reader could not tell a battery that ran everything from one that
+    # skipped a third of it.
     LAST_BATTERY.update({"n_disarmed": _sum["n_disarmed"],
                          "disarmed": _sum["disarmed"],
+                         "n_skipped": _sum["n_skipped"],
+                         "skipped": _sum["skipped"],
+                         "skips_unnamed": _sum["skips_unnamed"],
                          "summary_line": _sum["line"],
                          "clean": _sum["clean"]})
     if not quiet:
@@ -10467,8 +10555,11 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
         raise SystemExit(
             f"[de_multiday_gate1_runner] NOT CLEAN: n_disarmed "
             f"{_sum['n_disarmed']} -- "
-            f"{[d['label'] for d in _sum['disarmed']]}. A cell that ran "
-            f"and could not have fired is not coverage (REV 84 §2).")
+            f"{[d['label'] for d in _sum['disarmed']]}; n_skipped "
+            f"{_sum['n_skipped']}, unnamed {_sum['skips_unnamed']}. A "
+            f"cell that ran and could not have fired is not coverage "
+            f"(REV 84 §2), and a skip nobody named is not a skip anybody "
+            f"can audit (REV 88 §1.3).")
     return 0
 
 
@@ -10480,6 +10571,12 @@ def main() -> int:
                     help="run the real battery with ONE cell planted "
                          "DISARMED: the summary must print n_disarmed 1 "
                          "and exit non-clean (REV 84 §2)")
+    ap.add_argument("--falsify-skipped", action="store_true",
+                    dest="falsify_skipped",
+                    help="run the real battery with ONE skip planted "
+                         "WITHOUT a reason: the summary must count it in "
+                         "n_skipped, report it as an UNNAMED skip and "
+                         "exit non-clean (REV 88 §1.3)")
     ap.add_argument("--fixture-run", action="store_true", dest="fixture")
     ap.add_argument("--dry-run-ledger", action="store_true", dest="ledger",
                     help="read the ledger and report the day set; this is "
@@ -10504,6 +10601,9 @@ def main() -> int:
                          "opens only at G")
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
+    if a.falsify_skipped:
+        global PLANT_ONE_UNNAMED_SKIP
+        PLANT_ONE_UNNAMED_SKIP = True
     if a.falsify_disarmed:
         global PLANT_ONE_DISARMED_CELL
         PLANT_ONE_DISARMED_CELL = True

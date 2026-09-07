@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pm_tape_density as TD  # noqa: E402
 
 
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 20
 
 #: The only root a RESULT-BEARING emission may be produced against.
 CANONICAL_REPO_ROOT = "/home/yuqing/ctaNew"
@@ -176,14 +176,28 @@ def require_canonical(purpose: str, *, fixture: bool = False,
     r["purpose"] = purpose
     r["fixture"] = bool(fixture)
     if fixture:
-        pf = proof if proof is not None else (dict(_LAST_PROOF) or None)
+        # DE 119 / Q-DE-117(4): THE FALLBACK TO THE PROCESS-GLOBAL
+        # `_LAST_PROOF` IS REMOVED. It admitted a caller on a proof about
+        # a DIFFERENT call: any earlier `instrumented()` anywhere in the
+        # process left a non-vacuous, same-pid, no-data-path report
+        # behind, and a caller that then opened the ledger, was never
+        # instrumented, and passed no proof was certified by it. The
+        # three checks below (pid, non-vacuity, no ledger path) all held
+        # -- of the wrong call. A proof must now be PASSED, so the
+        # evidence and the claim are the same event; there is no guarded
+        # fallback, because the guard could only ever re-test the borrowed
+        # proof's properties, never its provenance.
+        pf = proof
         if not pf:
             raise DataRootRefused(
                 f"REFUSED: {purpose} claims fixture=True and carries NO "
                 f"DATA-FREE PROOF. A fixture claim used to be the one door "
                 f"a caller could walk through on its own word; it now "
                 f"requires a proof produced in the same process by "
-                f"instrumenting opens.")
+                f"instrumenting opens, and PASSED BY THIS CALLER -- the "
+                f"process-global fallback is gone (DE 119), because a "
+                f"proof left behind by another call is a proof about "
+                f"another call.")
         if pf.get("pid") != os.getpid():
             raise DataRootRefused(
                 f"REFUSED: {purpose} carries a proof from pid "
@@ -342,6 +356,59 @@ def selftest() -> int:
                    "KNOWN-BAD: a proof from ANOTHER PROCESS refuses -- a "
                    "proof produced elsewhere is a proof about elsewhere, "
                    "and 'in the same process' is the whole requirement")
+            # ===== DE 119 (Q-DE-117 item 4): THE BORROWED PROOF ========
+            # RED, and it is the EXACT drive from that row. A carrier
+            # call leaves a non-vacuous, same-pid, no-ledger-path report
+            # in the process global; a DIFFERENT caller then touches the
+            # ledger, is never instrumented, and claims fixture=True with
+            # no proof of its own. Every property the old fallback tested
+            # held -- of the carrier's call -- so it was ADMITTED.
+            _, pf_carrier = instrumented(
+                lambda: Path(__file__).read_text() and None)
+            _old_door_would_have_admitted = bool(
+                pf_carrier["non_vacuous"]
+                and pf_carrier["no_path_under_data_was_opened"]
+                and pf_carrier["pid"] == os.getpid())
+
+            def _no_proof_verdict():
+                try:
+                    require_canonical("the borrowed-proof caller",
+                                      fixture=True)
+                    return "ADMITTED"
+                except DataRootRefused as exc:
+                    return ("REFUSED" if "NO DATA-FREE PROOF" in str(exc)
+                            else f"REFUSED_FOR_ANOTHER_REASON: {exc}")
+
+            _with_a_global = _no_proof_verdict()
+            clear_proof()
+            _with_none = _no_proof_verdict()      # the global emptied
+            ok(_old_door_would_have_admitted
+               and _with_a_global == "REFUSED"
+               and _with_none == _with_a_global,
+               f"DE 119: THE BORROWED-PROOF DOOR IS SHUT. The carrier's "
+               f"report satisfies all three properties the fallback "
+               f"tested (non-vacuous, same pid, no path under `data/`), "
+               f"so the old door would have admitted -- and the call now "
+               f"reads {_with_a_global}. The verdict is {_with_none} with "
+               f"the global EMPTY too: identical alone and after another "
+               f"call ran, so it rests on the caller's own argument and "
+               f"not on process state")
+            # GREEN, in the same breath: removing the fallback must not
+            # shut the door on a caller that carries its own proof.
+            _, pf_own = instrumented(
+                lambda: Path(__file__).read_text() and None)
+            _fx_own = require_canonical("a fixture run", fixture=True,
+                                        proof=pf_own)
+            ok(_fx_own["refusal"] == "NOT_APPLICABLE_FIXTURE_RUN"
+               and _fx_own["fixture"] is True
+               and _fx_own["data_free_proof"]["non_vacuous"]
+               and _fx_own["data_free_proof"][
+                   "no_path_under_data_was_opened"],
+               f"POSITIVE CONTROL AFTER THE REMOVAL: a caller that PASSES "
+               f"its own non-vacuous proof still ADMITS "
+               f"({pf_own['n_paths_opened']} opens observed, 0 under "
+               f"`data/`). A guard that shut both directions would be a "
+               f"guard nobody could run a fixture through")
             clear_proof()
 
         del os.environ["PM_DATA_ROOT"]
