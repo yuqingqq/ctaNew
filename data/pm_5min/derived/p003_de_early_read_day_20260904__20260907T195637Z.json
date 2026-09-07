@@ -1,0 +1,4275 @@
+{
+  "G": 4,
+  "as_of": "2026-09-07T22:51:55Z",
+  "computation_params": {
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+    "sha256": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6",
+    "why": "the COMPUTATION is the sealed runs' -- v15. Only the seal bar comes from the ruling."
+  },
+  "day_run": {
+    "G_and_which_G_it_is": {
+      "design_G_from_params": 6,
+      "n_days_complete_at_this_emit": 4,
+      "no_bare_G_key_here": "removed at REV 90 \u00a7A0(3). Nothing read it: a sweep of live/pm_research found no consumer of a day-run receipt's top-level `G`. The four landed sealed receipts (09-03..09-06) still carry the old bare `G: 6`; from here on receipts carry this block instead, which is a schema change between days and is said so here rather than discovered later.",
+      "params_file": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+      "the_bar_this_run_sealed_against": 4,
+      "why_two_numbers_exist": "the design's G is the ruled six-day population; the bar a run seals against is the same six EXCEPT under the user-ruled early read (R-754), which seals against its own four. They are different questions and they are no longer both called G."
+    },
+    "as_of": "2026-09-07T22:51:52.992828+00:00",
+    "battery_stage_is_inside_the_budget": true,
+    "be_module_citation": {
+      "cited_not_copied": true,
+      "digest_is_of_the_file_the_import_loaded": true,
+      "loaded_from": "/home/yuqing/ctaNew-wt-rr/live/pm_research/be_cancel_axis_null.py",
+      "modules_checked": [
+        "live/pm_research/be_cancel_axis_null.py"
+      ],
+      "n_modules_checked": 1,
+      "path": "live/pm_research/be_cancel_axis_null.py",
+      "scope": "THE ENTRY POINT ONLY -- no `be_cascade` in the params, or a digest was supplied by the caller",
+      "sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+      "verified_at_run_time": true
+    },
+    "before_work": {
+      "ran": true,
+      "residency": {
+        "data_paths_opened": [
+          "/home/yuqing/ctaNew-wt-rr/data/pm_5min/derived/be_cancel_axis_null_v1.json",
+          "/home/yuqing/ctaNew-wt-rr/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+          "/home/yuqing/ctaNew-wt-rr/data/pm_5min/derived/phase2_fits/lgbm_haz_btc.txt",
+          "/home/yuqing/ctaNew-wt-rr/data/pm_5min/derived/phase2_fits/lgbm_thresholds_btc.json",
+          "/home/yuqing/ctaNew-wt-rr/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260826.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260827.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260828.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260829.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260830.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260831.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260901.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260902.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260903.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260904.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260905.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260906.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260907.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_pred_state_v1_schema.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T140810Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T152649Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T181831Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T182045Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T192751Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163619Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T184545Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T184545Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T192753Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T183508Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T184653Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T184653Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T192755Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260906__20260907T053253Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260906__20260907T053359Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_fixture__20260906T082803Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v3.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v10__20260906T064720Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v11__20260906T071214Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v13__20260906T083511Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v14__20260906T091319Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v15__20260906T094500Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v16.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v18.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v19.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v21.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v22.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v24.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v7__20260906T045059Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v9__20260906T062115Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260904_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260907_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260907_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260904_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260907_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260907_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/empty_coins.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/fit_manifest.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/fit_population_parity.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/fit_slugs.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/lgbm_haz_btc.txt",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/lgbm_haz_eth.txt",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/lgbm_thresholds_btc.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/lgbm_thresholds_eth.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/lgbm_val_btc.txt",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/lgbm_val_eth.txt",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/linear_btc.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/linear_eth.json",
+          "/tmp/tmpp5fnzl1d/data/pm_5min/derived/phase2_fits/val_models.json"
+        ],
+        "day_draws_when_the_hook_returned": 0,
+        "distinct_paths_truncated": true,
+        "draws_the_hook_itself_made": 13016,
+        "n_distinct_paths": 1515,
+        "n_paths_opened": 9966,
+        "n_paths_opened_uncapped": 1515,
+        "non_vacuous": true,
+        "tape_artifacts_opened": [],
+        "what_it_was": "the in-run battery, run BEFORE the day's work"
+      },
+      "when": "after the book digest was verified, before S1 -- NOT at the emit (R-610)"
+    },
+    "day": "2026-09-04",
+    "decision_ledger": {
+      "bytes": 7726457,
+      "n_rows": 231675,
+      "named_here_by_digest": "the receipt is tracked and names this file by sha256; the file is not",
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260904__20260907T225148Z.jsonl.gz",
+      "recompute_with": "de_decision_ledger.read_ledger(path, expect_sha256=<this sha256>) then .recompute(led, arm)",
+      "ruling": "R-765",
+      "schema_version": 3,
+      "sha256": "f861fd16e31459fffc9d592dea747f1c8d815369b5a975f222c71ba11570ba90",
+      "the_bytes_are_gitignored": true
+    },
+    "decision_populations": {
+      "CONDVALUE_X_SKEW": {
+        "arm": "CONDVALUE_X_SKEW",
+        "by_side": {
+          "BUY_UP": 9611,
+          "SELL_UP": 9676
+        },
+        "decisions": 19287,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "q1_arrival_composed_lgbm",
+        "n_scored_rows": 338444,
+        "theta": 0.32450609461933483,
+        "theta_was_not_refitted_here": true
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "by_side": {
+          "BUY_UP": 862,
+          "SELL_UP": 911
+        },
+        "decisions": 1773,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "incumbent_linear_d",
+        "n_scored_rows": 338444,
+        "theta": 0.43525926488298716,
+        "theta_was_not_refitted_here": true
+      }
+    },
+    "draw_pool_set_equality_checked": true,
+    "fixture": false,
+    "fixture_day_lock": {
+      "day": "2026-09-04",
+      "decided_on_the_day_not_the_callers_flag": true,
+      "fixture": false,
+      "in_ruled_day_set": true,
+      "ruled_day_set_read_from": "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
+    },
+    "interpreter": {
+      "is_a_symlink": true,
+      "realpath": "/usr/bin/python3.12",
+      "sys_executable": "/home/yuqing/pricer-sol/venv/bin/python3",
+      "version": "3.12.3"
+    },
+    "launch_form_at_runtime": {
+      "cgroup_leaf": "deRR20260904.service",
+      "checked": true,
+      "day": "2026-09-04",
+      "fixture": false,
+      "fixture_exemption_by_name": false,
+      "kind": "transient service",
+      "kind_is_known": true,
+      "refused": false,
+      "the_exemption_is_the_GATE": "not a report beside it: `fixture=True` alone used to admit a REAL DAY NAME (REV 68 S1.2)",
+      "the_real_day_predicate_is_POSITIVE": "refuse unless kind == 'transient service'. The negative test `kind == 'scope'` FAILED OPEN on kind None and on an empty observation (REV 68 S1.3)",
+      "why_checked_may_be_false": "an unknown kind is not a passed check. It used to admit a real day AND claim `checked` true"
+    },
+    "lock_form_at_runtime": {
+      "carries_dash_E_with_the_declared_rc": true,
+      "carries_the_declared_lock_path": true,
+      "checked": true,
+      "day": "2026-09-04",
+      "declared_lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+      "declared_rc": "75",
+      "fixture": false,
+      "identity_from": "/proc/<ppid>/exe -- the file the kernel mapped, never argv[0], which `exec -a` sets to anything",
+      "parent_argv": [
+        "/usr/bin/flock",
+        "-n",
+        "-E",
+        "75",
+        "/home/yuqing/ctaNew/data/.heavy_run.lock",
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "live/pm_research/de_early_read.py",
+        "--early-read-day",
+        "2026-09-04",
+        "--supersedes",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json",
+        "--book",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+        "--output",
+        "/home/yuqing/ctaNew/data/pm_5min/derived"
+      ],
+      "parent_exe": "/usr/bin/flock",
+      "parent_is_flock": true,
+      "ppid": 1819734,
+      "why_runtime_not_the_lint": "the lint reads the string a builder produced; this reads what actually ran. `-E` is what makes a held lock readable from a crash (REV 69 S1.2)"
+    },
+    "memory_plan": {
+      "baseline_rss_mb": 43.01171875,
+      "budget_is_on_GROWTH_not_the_process_peak": "ru_maxrss never falls, so a fixture day run inside a real day's process inherits that day's peak. It cost the 09-03 smoke 85 minutes: the day's work finished and the emit-time battery refused its own fixture on the real day's high-water",
+      "budget_mb": 4000.0,
+      "growth_is_process_history_dependent": "a warm process grows less than a cold one -- the allocator already holds what an earlier run took. The REAL day runs in a FRESH process, which is the regime the 4000 MB budget is derived against",
+      "growth_rss_mb": 1557.32421875,
+      "hook_stage_growth_mb": 582.4296875,
+      "index_splits": {
+        "answer": "NONE, at any stage",
+        "consequence_for_BEs_assembly": "the index is needed only to PRODUCE `asm`. It does not have to be resident alongside the reference and `asm` at all, because the consumer of those two is a different process. If BE releases the index before assembling and writing the book, the whole-day peak is max(index stage, assembly stage) rather than their sum",
+        "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming that head; a run with no tape artifact reachable at all still completes",
+        "measured_by": "day_split_residency_proof() -- the day path run under instrumentation, asserting no tape/index/fragment artifact was opened",
+        "per_stage": {
+          "S0b_battery": "no split. The battery reads BE's committed null receipt and the ledger -- declared reads, none of them a tape, index or fragment artifact -- and it runs under its OWN residency instrument, whose opens are SUBTRACTED from the day path's claim so that claim stays about the day path (R-610)",
+          "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the scored set; the scorer is a dict lookup that REFUSES on a miss rather than computing a feature",
+          "S3_baseline_and_S4_null": "no split. Each replay values its fills from the fill record and the reference; per WINDOW and streamable, with nothing accumulated across draws",
+          "economics_valuation": "no split, and NOT per-window-resident either -- one fill list at a time"
+        },
+        "question": "which tape-index splits must be resident during `--day`, and at which stage",
+        "what_DE_cannot_rule": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling, not DE's. What is declared here is only what the CONSUMER needs, which is the half BE was waiting on",
+        "why": "the decision population is read from `asm` -- BE's already assembled per-generation scores, keyed (slug, side, t0) -- and the economics valuation reads only the replay's own fill records and the reference's levels and markouts (`de_phase4_diag_runner.fill_value_cents`). Neither touches a tape row"
+      },
+      "observed": {
+        "S0_verify": {
+          "elapsed_s": 0.261,
+          "peak_rss_mb_highwater": 58.36328125,
+          "rss_mb_current": 43.15234375
+        },
+        "S0b_battery": {
+          "elapsed_s": 56.435,
+          "peak_rss_mb_highwater": 877.09375,
+          "rss_mb_current": 625.44140625
+        },
+        "S1_load": {
+          "elapsed_s": 63.32,
+          "peak_rss_mb_highwater": 3201.50390625,
+          "rss_mb_current": 847.7265625
+        },
+        "S2_population": {
+          "elapsed_s": 63.878,
+          "peak_rss_mb_highwater": 3201.50390625,
+          "rss_mb_current": 882.19921875
+        },
+        "S3_baseline": {
+          "elapsed_s": 76.682,
+          "peak_rss_mb_highwater": 3201.50390625,
+          "rss_mb_current": 1214.17578125
+        },
+        "S4_null": {
+          "elapsed_s": 10510.568,
+          "peak_rss_mb_highwater": 3201.50390625,
+          "rss_mb_current": 1600.3359375
+        },
+        "S5_seal": {
+          "elapsed_s": 10510.577,
+          "peak_rss_mb_highwater": 3201.50390625,
+          "rss_mb_current": 1600.3359375
+        },
+        "S_start": {
+          "elapsed_s": 0.008,
+          "peak_rss_mb_highwater": 42.61328125,
+          "rss_mb_current": 43.01171875
+        }
+      },
+      "peak_rss_mb": 3201.50390625,
+      "peak_stage": {
+        "argmax_taken_over": [
+          "S0_verify",
+          "S1_load",
+          "S2_population",
+          "S3_baseline",
+          "S4_null",
+          "S5_seal"
+        ],
+        "baseline_highwater_mb": 42.61328125,
+        "before_work_hook_highwater_delta_mb": 818.7305,
+        "binds_on_a_real_day_only": "on a real day the book dominates (BE: 2.008 GB reference) and S1 being the peak is what the 8 GiB ceiling rests on, so a disagreement REFUSES the day. On a fixture the book is a few hundred KB and the draw loop's fixed cost is larger, so the measured peak is S4_null -- recorded, not refused, and design v9 stated the claim flatly where it should have stated the condition",
+        "computable": true,
+        "current_rss_mb_by_stage": {
+          "S0_verify": 43.15234375,
+          "S0b_battery": 625.44140625,
+          "S1_load": 847.7265625,
+          "S2_population": 882.19921875,
+          "S3_baseline": 1214.17578125,
+          "S4_null": 1600.3359375,
+          "S5_seal": 1600.3359375,
+          "S_start": 43.01171875
+        },
+        "declared_peak_stage": "S1_load",
+        "declared_read_from": "DAY_STAGES marker '[DECLARED PEAK]'",
+        "declared_stage_is_the_measured_peak": true,
+        "highwater_by_stage": {
+          "S0_verify": 58.36328125,
+          "S0b_battery": 877.09375,
+          "S1_load": 3201.50390625,
+          "S2_population": 3201.50390625,
+          "S3_baseline": 3201.50390625,
+          "S4_null": 3201.50390625,
+          "S5_seal": 3201.50390625,
+          "S_start": 42.61328125
+        },
+        "highwater_delta_argmax_equals_current_rss_argmax": false,
+        "highwater_delta_mb_by_stage": {
+          "S0_verify": 15.75,
+          "S0b_battery": 818.7305,
+          "S1_load": 2324.4102,
+          "S2_population": 0.0,
+          "S3_baseline": 0.0,
+          "S4_null": 0.0,
+          "S5_seal": 0.0
+        },
+        "highwater_is_non_decreasing_BY_CONSTRUCTION": true,
+        "measured_peak_stage": "S1_load",
+        "measured_peak_stage_by_current_rss": "S4_null",
+        "this_boolean_does_NOT_refuse": "it compares two ways of naming the peak STAGE and is diagnostic. The binding field is `peak_stage_assertion.agrees`.",
+        "why_the_DELTA_is_the_peak": "a transient a stage allocates and frees before its mark is invisible to the current-RSS series and VISIBLE in the highwater delta, because the highwater recorded it and never came down. The delta is what attributes growth to a stage",
+        "why_the_hook_is_not_in_the_argmax": "the `before_work` hook is the BATTERY, not the day path. Its high-water is a transient it frees before returning (measured 838 MB peak, 26 MB retained); the 8 GiB ceiling rests on the DAY PATH's shape, and letting a freed transient win the argmax would refuse a day over a stage the ceiling does not rest on. Its delta is computed, reported, and counted in the day's GROWTH BUDGET -- only the argmax excludes it",
+        "why_two_instruments": "the highwater bounds the process and can never fall; the current-RSS series can, so it is the only one that can locate a peak"
+      },
+      "peak_stage_assertion": {
+        "agrees": true,
+        "asserted": true,
+        "recorded_not_refused_because_fixture": false
+      },
+      "stages": [
+        {
+          "holds": "digests only: BE's builder receipt, the book's bytes, the pinned models and thetas, BE's cascade module. The book is READ ONCE here as bytes for its digest and the buffer is handed to S1, never read twice (BE's B-1)",
+          "stage": "S0_verify"
+        },
+        {
+          "holds": "THE IN-RUN BATTERY, MOVED HERE FROM THE EMIT (R-610). It ran AFTER the day's work: ~15 s of fixture runs and a 13-module closure re-capture at the end of 85 minutes, and if it refused, the day was lost -- which is exactly what happened to the 09-03 smoke. Its memory is INSIDE the day's growth budget on purpose: a stage whose cost escapes the budget is a stage nobody bounded",
+          "stage": "S0b_battery"
+        },
+        {
+          "holds": "[DECLARED PEAK] reference + asm + rows. THE PEAK OF THE DAY PATH WHEN THE BOOK DOMINATES -- which is the real-day regime (BE measured a day's reference at 2.008 GB) and is NOT true on a small fixture: on the synthetic book, measured, the peak is S4_null, because the draw loop's fixed cost is larger than a few hundred KB of book. The claim is CONDITIONAL, the condition is stated, and it is ASSERTED on a real day -- where the 8 GiB ceiling rests on it",
+          "stage": "S1_load"
+        },
+        {
+          "holds": "adds one score float per generation per arm, twice. asm's gen_scores are ALREADY resident from S1; the arm stream is a view over `rows`",
+          "stage": "S2_population"
+        },
+        {
+          "holds": "adds the no-cancel replay's fills -- the neutral reference path (CLAUDE.md reliability rule 1)",
+          "stage": "S3_baseline"
+        },
+        {
+          "holds": "one draw's flags and one replayed fill list AT A TIME. The draws are REDUCED to a value each as they are made; no draw's fills survive the next. O(1) in n_draws",
+          "stage": "S4_null"
+        },
+        {
+          "holds": "counts and statuses only. The economic fields are computed and withheld, never carried into the artifact",
+          "stage": "S5_seal"
+        }
+      ],
+      "within_budget": true
+    },
+    "n_admissible_arms": 2,
+    "n_days_complete": 4,
+    "per_day_sealed_artifacts": [
+      {
+        "R5_retired_from": "params v18 / design v26",
+        "absolute": {
+          "arm": {
+            "fills_leg": 70959.84672479989,
+            "n_fills": 36806,
+            "n_fills_valued": 36806,
+            "n_fills_with_inventory": 36806,
+            "total": 70959.84672479989,
+            "trades_cash_flow_cents": 108371.20508209967,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          },
+          "read_from": "the same replay that computes D(E0) -- never a second pass",
+          "reconciliation": {
+            "D_E0": -31428.00479349999,
+            "agree_to_1e_9": true,
+            "arm_total_minus_baseline_total": -31428.004793499887,
+            "refuses_by_name_otherwise": "ABSOLUTES_DO_NOT_RECONCILE"
+          },
+          "ruling": "R-782, the USER: 'plz record the absolute number as well for reference'",
+          "unit": "cents",
+          "zero_cancel_baseline": {
+            "fills_leg": 102387.85151829978,
+            "n_fills": 57850,
+            "n_fills_valued": 57850,
+            "n_fills_with_inventory": 57850,
+            "total": 102387.85151829978,
+            "trades_cash_flow_cents": -124871.6216889001,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          }
+        },
+        "admissibility": {
+          "admissible": true,
+          "decisions_meet_bar": true,
+          "min_decisions_per_arm_day": 30,
+          "n_decisions": 19287,
+          "null_mean": -6146.768792169096,
+          "null_sd": 5339.1612146584675,
+          "reasons": [],
+          "sd_floor_fraction": 0.25,
+          "sd_meets_floor": true,
+          "sd_over_abs_mean": 0.8686126638536478,
+          "status": "OK"
+        },
+        "arm": "CONDVALUE_X_SKEW",
+        "day": "2026-09-04",
+        "decision_population": {
+          "arm": "CONDVALUE_X_SKEW",
+          "by_side": {
+            "BUY_UP": 9611,
+            "SELL_UP": 9676
+          },
+          "decisions": 19287,
+          "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+          "head": "q1_arrival_composed_lgbm",
+          "n_scored_rows": 338444,
+          "theta": 0.32450609461933483,
+          "theta_was_not_refitted_here": true
+        },
+        "draw_provenance": {
+          "arm": "CONDVALUE_X_SKEW",
+          "binds_the_verified_module_to_the_numbers": true,
+          "book_digest": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+          "draw_source": "GENERATED_IN_PROCESS",
+          "generated_in_process": true,
+          "module_sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+          "n_draws": 500,
+          "recomputed_by_the_runner": true,
+          "reproduces_BEs_draw_null": {
+            "field": "cancels_issued",
+            "identical": true,
+            "n_compared": 8,
+            "seed": 3339637239,
+            "why": "the cascade is BE's; only the METRIC is DE's"
+          },
+          "seed": 3339637239
+        },
+        "economic": {
+          "D_E0": -31428.00479349999,
+          "Z": -4.735057621396074,
+          "null_draws_summary": {
+            "n": 500
+          },
+          "null_mean": -6146.768792169096,
+          "null_sd": 5339.1612146584675,
+          "p_location": 1.0
+        },
+        "economic_settlement": {
+          "D_E_settle": -13819.137629000004,
+          "Z": -0.26699012504373665,
+          "admissibility": {
+            "admissible": true,
+            "class": "DESIGN_DATA",
+            "design_days": [
+              "2026-09-03",
+              "2026-09-04",
+              "2026-09-05",
+              "2026-09-06"
+            ],
+            "why": "one of the four days the USER ruled read early (R-754); consumed by that read, so a value here is DESIGN data and may not validate the endpoint (rule 11)"
+          },
+          "arm_legs": {
+            "n_slugs": 288,
+            "reconciles_with_the_per_fill_formula": true,
+            "residual_leg_cents": -19996.65409999999,
+            "ruling": "R-801",
+            "total_cents": 88374.5509821,
+            "trades_leg_cents": 108371.20508209999,
+            "unit": "cents",
+            "what_total_is": "R-801's ruled P&L: the cash flow of the trades plus the settlement value of the position still held at the window's close, summed over slugs"
+          },
+          "arm_total_cents": 88374.55098209984,
+          "endpoint": "R-801 SETTLEMENT P&L (trades + residual)",
+          "null_draws_summary": {
+            "n": 500
+          },
+          "null_mean": -9958.098752107046,
+          "null_sd": 14461.354614746397,
+          "p_location": 0.624750499001996,
+          "ruling": "R-801",
+          "statistics_are": "the design's own, unchanged -- the estimand changed, not the test",
+          "the_per_slug_legs_are_in": "the decision ledger, rows SETTLEMENT_SLUG",
+          "what_D_E0_is_now": "a DIAGNOSTIC of short-horizon adverse selection, not the result",
+          "winner_source": {
+            "chainlink_verification": {
+              "convention": "S60(T) >= S60(t0)",
+              "convention_block": {
+                "X_0": "S60(t0) -- the same stream at the window's open",
+                "X_T": "S60(T) -- the 60-second Chainlink TWAP at the window's close",
+                "boundary_reader": "last sample at or before the boundary",
+                "name": "S60(T) >= S60(t0)",
+                "provenance": "BE 99, Q-BE-342 (9e1d943), R-803: 288/288 on 09-05 and 09-06; S30/S30 disagrees on 23/17 slugs, S60/S30 on 15/10, meanS60/S60 on 44/43",
+                "readers": "exp_m6_settlement.load_streams / read_at -- the experiment module's OWN functions, imported, never re-implemented",
+                "tie": "X_T >= X_0 -> Up",
+                "window_s": 300
+              },
+              "counts": {
+                "CHAINLINK_UNAVAILABLE": 0,
+                "DISAGREE": 0,
+                "VENUE_UNRESOLVED": 0,
+                "VERIFIED_AGREE": 288
+              },
+              "counts_are": "RECOMPUTED here from `per_slug`, never read from the dict handed in (REV 104B \u00a76(2))",
+              "finality": {
+                "a_extra": [],
+                "a_missing": [],
+                "a_n_slugs_required": 288,
+                "a_n_slugs_verified": 288,
+                "a_slug_set_equals_the_days": true,
+                "b_counts_recomputed_here": true,
+                "c_every_status_is_VERIFIED_AGREE": true,
+                "d_convention_is_the_pinned_one": true,
+                "e_n_hourly_files_read": 54,
+                "f_provenance": {
+                  "reader_module": {
+                    "path": "live/pm_research/exp_m6_settlement.py",
+                    "sha256": "db64e308eb7789529d5bf932992711f14b497b44ecfad940063cd602e32624b2"
+                  },
+                  "stream_files_digest": "7846baf40a327acd58b210f5c73e0814d09613433ac4cdf303c92489ef329892",
+                  "venue_record": {
+                    "path": "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+                    "sha256": "b3ad29ec7c85e0e6c0c01cf96d029cf3398cc90d5ade9de7686280f0ddd2b736"
+                  }
+                },
+                "f_provenance_check": {
+                  "files_bad_paths": [],
+                  "files_count_matches": true,
+                  "files_digest_is_hex64": true,
+                  "files_digest_matches": true,
+                  "files_list_present": true,
+                  "files_missing": [],
+                  "n_hourly_files_positive": true,
+                  "ok": true,
+                  "reader_path_matches": true,
+                  "reader_sha_matches_current_file": true
+                },
+                "f_provenance_complete": true,
+                "is_final": true
+              },
+              "n_hourly_files_read": 54,
+              "n_slugs_verified": 288,
+              "per_slug": {
+                "btc-updown-5m-1788480000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788480300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788480600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788480900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788481200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788481500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788481800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788482100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788482400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788482700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788483000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788483300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788483600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788483900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788484200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788484500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788484800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788485100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788485400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788485700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788486000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788486300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788486600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788486900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788487200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788487500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788487800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788488100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788488400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788488700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788489000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788489300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788489600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788489900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788490200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788490500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788490800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788491100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788491400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788491700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788492000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788492300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788492600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788492900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788493200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788493500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788493800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788494100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788494400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788494700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788496200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788496500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788496800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788497100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788497400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788497700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788498000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788498300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788498600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788498900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788499200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788499500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788499800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788500100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788500400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788500700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788501000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788501300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788501600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788501900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788502200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788502500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788502800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788503100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788503400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788503700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788504000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788504300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788504600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788504900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788505200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788505500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788505800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788506100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788506400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788506700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788507000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788507300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788507600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788507900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788508200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788508500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788508800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788509100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788509400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788509700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788511200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788511500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788511800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788512100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788512400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788512700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788513000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788513300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788513600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788513900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788514200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788514500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788514800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788515100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788515400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788515700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788516000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788516300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788516600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788516900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788517200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788517500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788517800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788518100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788518400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788518700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788519000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788519300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788519600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788519900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788520200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788520500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788520800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788521100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788521400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788521700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788522000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788522300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788522600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788522900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788523200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788523500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788523800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788524100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788524400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788524700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788525000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788525300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788525600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788525900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788526200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788526500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788526800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788527100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788527400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788527700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788528000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788528300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788528600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788528900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788529200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788529500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788529800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788530100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788530400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788530700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788531000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788531300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788531600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788531900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788532200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788532500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788532800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788533100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788533400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788533700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788535200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788535500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788535800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788536100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788536400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788536700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788537000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788537300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788537600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788537900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788538200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788538500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788538800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788539100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788539400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788539700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788540000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788540300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788540600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788540900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788541200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788541500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788541800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788542100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788542400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788542700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788543000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788543300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788543600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788543900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788544200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788544500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788544800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788545100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788545400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788545700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788546000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788546300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788546600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788546900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788547200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788547500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788547800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788548100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788548400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788548700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788549000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788549300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788549600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788549900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788550200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788550500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788550800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788551100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788551400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788551700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788552000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788552300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788552600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788552900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788553200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788553500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788553800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788554100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788554400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788554700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788555000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788555300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788555600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788555900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788556200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788556500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788556800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788557100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788557400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788557700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788558000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788558300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788558600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788558900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788559200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788559500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788559800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788560100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788560400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788560700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788561000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788561300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788561600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788561900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788562200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788562500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788562800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788563100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788563400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788563700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788564000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788564300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788564600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788564900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788565200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788565500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788565800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788566100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                }
+              },
+              "per_slug_status": "one of VERIFIED_AGREE / DISAGREE / CHAINLINK_UNAVAILABLE / VENUE_UNRESOLVED, per slug",
+              "reader_module": {
+                "path": "live/pm_research/exp_m6_settlement.py",
+                "sha256": "db64e308eb7789529d5bf932992711f14b497b44ecfad940063cd602e32624b2"
+              },
+              "status": "VERIFIED_AGAINST_CHAINLINK"
+            },
+            "is_final_for_quotation": true,
+            "method": "BE 98 / Q-BE-341: the `winners` dict on records with `closed: true`; the UP share pays SETTLE_UP_CENTS iff winners['Up'] is True",
+            "n_slugs": 38663,
+            "path": "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+            "sha256": "b3ad29ec7c85e0e6c0c01cf96d029cf3398cc90d5ade9de7686280f0ddd2b736"
+          },
+          "zero_cancel_baseline_legs": {
+            "n_slugs": 288,
+            "reconciles_with_the_per_fill_formula": true,
+            "residual_leg_cents": 227065.3103,
+            "ruling": "R-801",
+            "total_cents": 102193.6886111,
+            "trades_leg_cents": -124871.62168889999,
+            "unit": "cents",
+            "what_total_is": "R-801's ruled P&L: the cash flow of the trades plus the settlement value of the position still held at the window's close, summed over slugs"
+          },
+          "zero_cancel_baseline_total_cents": 102193.68861109985
+        },
+        "n_cancels_issued": 6417,
+        "n_fills_arm": 36806,
+        "n_fills_baseline": 57850,
+        "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": [],
+        "seed": 3339637239,
+        "status": "OK"
+      },
+      {
+        "R5_retired_from": "params v18 / design v26",
+        "absolute": {
+          "arm": {
+            "fills_leg": 100022.88638829972,
+            "n_fills": 55952,
+            "n_fills_valued": 55952,
+            "n_fills_with_inventory": 55952,
+            "total": 100022.88638829972,
+            "trades_cash_flow_cents": -112383.19411690025,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          },
+          "read_from": "the same replay that computes D(E0) -- never a second pass",
+          "reconciliation": {
+            "D_E0": -2364.965129999997,
+            "agree_to_1e_9": true,
+            "arm_total_minus_baseline_total": -2364.965130000055,
+            "refuses_by_name_otherwise": "ABSOLUTES_DO_NOT_RECONCILE"
+          },
+          "ruling": "R-782, the USER: 'plz record the absolute number as well for reference'",
+          "unit": "cents",
+          "zero_cancel_baseline": {
+            "fills_leg": 102387.85151829978,
+            "n_fills": 57850,
+            "n_fills_valued": 57850,
+            "n_fills_with_inventory": 57850,
+            "total": 102387.85151829978,
+            "trades_cash_flow_cents": -124871.6216889001,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          }
+        },
+        "admissibility": {
+          "admissible": true,
+          "decisions_meet_bar": true,
+          "min_decisions_per_arm_day": 30,
+          "n_decisions": 1773,
+          "null_mean": -623.1250302779971,
+          "null_sd": 1179.1831378232423,
+          "reasons": [],
+          "sd_floor_fraction": 0.25,
+          "sd_meets_floor": true,
+          "sd_over_abs_mean": 1.8923700389585842,
+          "status": "OK"
+        },
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "day": "2026-09-04",
+        "decision_population": {
+          "arm": "HAZARD_OVER_SKEWED_REF",
+          "by_side": {
+            "BUY_UP": 862,
+            "SELL_UP": 911
+          },
+          "decisions": 1773,
+          "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+          "head": "incumbent_linear_d",
+          "n_scored_rows": 338444,
+          "theta": 0.43525926488298716,
+          "theta_was_not_refitted_here": true
+        },
+        "draw_provenance": {
+          "arm": "HAZARD_OVER_SKEWED_REF",
+          "binds_the_verified_module_to_the_numbers": true,
+          "book_digest": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+          "draw_source": "GENERATED_IN_PROCESS",
+          "generated_in_process": true,
+          "module_sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+          "n_draws": 500,
+          "recomputed_by_the_runner": true,
+          "reproduces_BEs_draw_null": {
+            "field": "cancels_issued",
+            "identical": true,
+            "n_compared": 8,
+            "seed": 1167213196,
+            "why": "the cascade is BE's; only the METRIC is DE's"
+          },
+          "seed": 1167213196
+        },
+        "economic": {
+          "D_E0": -2364.965129999997,
+          "Z": -1.477158249512807,
+          "null_draws_summary": {
+            "n": 500
+          },
+          "null_mean": -623.1250302779971,
+          "null_sd": 1179.1831378232423,
+          "p_location": 0.936127744510978
+        },
+        "economic_settlement": {
+          "D_E_settle": -16306.241527999722,
+          "Z": -3.072082689591877,
+          "admissibility": {
+            "admissible": true,
+            "class": "DESIGN_DATA",
+            "design_days": [
+              "2026-09-03",
+              "2026-09-04",
+              "2026-09-05",
+              "2026-09-06"
+            ],
+            "why": "one of the four days the USER ruled read early (R-754); consumed by that read, so a value here is DESIGN data and may not validate the endpoint (rule 11)"
+          },
+          "arm_legs": {
+            "n_slugs": 288,
+            "reconciles_with_the_per_fill_formula": true,
+            "residual_leg_cents": 198270.64119999998,
+            "ruling": "R-801",
+            "total_cents": 85887.4470831,
+            "trades_leg_cents": -112383.19411689999,
+            "unit": "cents",
+            "what_total_is": "R-801's ruled P&L: the cash flow of the trades plus the settlement value of the position still held at the window's close, summed over slugs"
+          },
+          "arm_total_cents": 85887.44708310012,
+          "endpoint": "R-801 SETTLEMENT P&L (trades + residual)",
+          "null_draws_summary": {
+            "n": 500
+          },
+          "null_mean": -405.99562357395666,
+          "null_sd": 5175.721981148266,
+          "p_location": 1.0,
+          "ruling": "R-801",
+          "statistics_are": "the design's own, unchanged -- the estimand changed, not the test",
+          "the_per_slug_legs_are_in": "the decision ledger, rows SETTLEMENT_SLUG",
+          "what_D_E0_is_now": "a DIAGNOSTIC of short-horizon adverse selection, not the result",
+          "winner_source": {
+            "chainlink_verification": {
+              "convention": "S60(T) >= S60(t0)",
+              "convention_block": {
+                "X_0": "S60(t0) -- the same stream at the window's open",
+                "X_T": "S60(T) -- the 60-second Chainlink TWAP at the window's close",
+                "boundary_reader": "last sample at or before the boundary",
+                "name": "S60(T) >= S60(t0)",
+                "provenance": "BE 99, Q-BE-342 (9e1d943), R-803: 288/288 on 09-05 and 09-06; S30/S30 disagrees on 23/17 slugs, S60/S30 on 15/10, meanS60/S60 on 44/43",
+                "readers": "exp_m6_settlement.load_streams / read_at -- the experiment module's OWN functions, imported, never re-implemented",
+                "tie": "X_T >= X_0 -> Up",
+                "window_s": 300
+              },
+              "counts": {
+                "CHAINLINK_UNAVAILABLE": 0,
+                "DISAGREE": 0,
+                "VENUE_UNRESOLVED": 0,
+                "VERIFIED_AGREE": 288
+              },
+              "counts_are": "RECOMPUTED here from `per_slug`, never read from the dict handed in (REV 104B \u00a76(2))",
+              "finality": {
+                "a_extra": [],
+                "a_missing": [],
+                "a_n_slugs_required": 288,
+                "a_n_slugs_verified": 288,
+                "a_slug_set_equals_the_days": true,
+                "b_counts_recomputed_here": true,
+                "c_every_status_is_VERIFIED_AGREE": true,
+                "d_convention_is_the_pinned_one": true,
+                "e_n_hourly_files_read": 54,
+                "f_provenance": {
+                  "reader_module": {
+                    "path": "live/pm_research/exp_m6_settlement.py",
+                    "sha256": "db64e308eb7789529d5bf932992711f14b497b44ecfad940063cd602e32624b2"
+                  },
+                  "stream_files_digest": "7846baf40a327acd58b210f5c73e0814d09613433ac4cdf303c92489ef329892",
+                  "venue_record": {
+                    "path": "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+                    "sha256": "b3ad29ec7c85e0e6c0c01cf96d029cf3398cc90d5ade9de7686280f0ddd2b736"
+                  }
+                },
+                "f_provenance_check": {
+                  "files_bad_paths": [],
+                  "files_count_matches": true,
+                  "files_digest_is_hex64": true,
+                  "files_digest_matches": true,
+                  "files_list_present": true,
+                  "files_missing": [],
+                  "n_hourly_files_positive": true,
+                  "ok": true,
+                  "reader_path_matches": true,
+                  "reader_sha_matches_current_file": true
+                },
+                "f_provenance_complete": true,
+                "is_final": true
+              },
+              "n_hourly_files_read": 54,
+              "n_slugs_verified": 288,
+              "per_slug": {
+                "btc-updown-5m-1788480000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788480300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788480600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788480900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788481200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788481500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788481800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788482100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788482400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788482700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788483000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788483300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788483600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788483900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788484200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788484500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788484800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788485100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788485400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788485700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788486000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788486300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788486600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788486900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788487200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788487500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788487800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788488100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788488400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788488700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788489000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788489300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788489600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788489900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788490200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788490500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788490800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788491100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788491400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788491700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788492000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788492300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788492600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788492900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788493200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788493500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788493800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788494100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788494400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788494700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788495900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788496200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788496500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788496800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788497100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788497400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788497700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788498000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788498300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788498600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788498900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788499200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788499500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788499800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788500100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788500400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788500700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788501000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788501300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788501600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788501900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788502200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788502500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788502800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788503100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788503400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788503700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788504000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788504300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788504600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788504900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788505200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788505500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788505800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788506100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788506400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788506700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788507000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788507300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788507600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788507900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788508200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788508500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788508800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788509100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788509400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788509700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788510900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788511200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788511500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788511800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788512100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788512400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788512700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788513000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788513300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788513600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788513900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788514200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788514500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788514800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788515100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788515400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788515700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788516000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788516300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788516600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788516900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788517200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788517500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788517800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788518100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788518400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788518700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788519000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788519300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788519600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788519900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788520200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788520500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788520800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788521100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788521400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788521700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788522000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788522300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788522600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788522900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788523200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788523500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788523800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788524100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788524400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788524700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788525000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788525300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788525600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788525900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788526200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788526500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788526800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788527100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788527400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788527700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788528000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788528300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788528600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788528900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788529200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788529500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788529800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788530100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788530400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788530700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788531000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788531300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788531600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788531900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788532200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788532500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788532800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788533100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788533400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788533700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788534900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788535200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788535500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788535800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788536100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788536400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788536700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788537000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788537300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788537600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788537900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788538200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788538500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788538800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788539100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788539400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788539700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788540000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788540300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788540600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788540900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788541200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788541500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788541800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788542100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788542400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788542700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788543000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788543300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788543600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788543900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788544200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788544500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788544800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788545100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788545400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788545700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788546000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788546300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788546600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788546900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788547200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788547500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788547800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788548100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788548400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788548700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788549000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788549300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788549600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788549900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788550200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788550500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788550800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788551100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788551400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788551700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788552000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788552300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788552600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788552900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788553200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788553500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788553800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788554100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788554400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788554700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788555000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788555300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788555600": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788555900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788556200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788556500": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788556800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788557100": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788557400": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788557700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788558000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788558300": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788558600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788558900": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788559200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788559500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788559800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788560100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788560400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788560700": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788561000": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788561300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788561600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788561900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788562200": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788562500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788562800": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788563100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788563400": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788563700": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788564000": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788564300": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                },
+                "btc-updown-5m-1788564600": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788564900": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788565200": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788565500": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788565800": {
+                  "chainlink_up_won": false,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": false
+                },
+                "btc-updown-5m-1788566100": {
+                  "chainlink_up_won": true,
+                  "status": "VERIFIED_AGREE",
+                  "venue_up_won": true
+                }
+              },
+              "per_slug_status": "one of VERIFIED_AGREE / DISAGREE / CHAINLINK_UNAVAILABLE / VENUE_UNRESOLVED, per slug",
+              "reader_module": {
+                "path": "live/pm_research/exp_m6_settlement.py",
+                "sha256": "db64e308eb7789529d5bf932992711f14b497b44ecfad940063cd602e32624b2"
+              },
+              "status": "VERIFIED_AGAINST_CHAINLINK"
+            },
+            "is_final_for_quotation": true,
+            "method": "BE 98 / Q-BE-341: the `winners` dict on records with `closed: true`; the UP share pays SETTLE_UP_CENTS iff winners['Up'] is True",
+            "n_slugs": 38663,
+            "path": "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+            "sha256": "b3ad29ec7c85e0e6c0c01cf96d029cf3398cc90d5ade9de7686280f0ddd2b736"
+          },
+          "zero_cancel_baseline_legs": {
+            "n_slugs": 288,
+            "reconciles_with_the_per_fill_formula": true,
+            "residual_leg_cents": 227065.3103,
+            "ruling": "R-801",
+            "total_cents": 102193.6886111,
+            "trades_leg_cents": -124871.62168889999,
+            "unit": "cents",
+            "what_total_is": "R-801's ruled P&L: the cash flow of the trades plus the settlement value of the position still held at the window's close, summed over slugs"
+          },
+          "zero_cancel_baseline_total_cents": 102193.68861109985
+        },
+        "n_cancels_issued": 858,
+        "n_fills_arm": 55952,
+        "n_fills_baseline": 57850,
+        "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": [],
+        "seed": 1167213196,
+        "status": "OK"
+      }
+    ],
+    "placement_latency": {
+      "L_place_ms": 0.0,
+      "book": {
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+        "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858"
+      },
+      "found_at": {},
+      "guard": {
+        "armed_by": "params `settlement_endpoint.require_book_declares_L`, unset today",
+        "require_book_declares_L": false,
+        "why_not_armed": "every landed book predates BE 101's builder change, so arming it would refuse the four re-runs; the L those books carry is 0 BY CONSTRUCTION -- the building code has no placement-latency field at all -- which is a measured fact, not an assumption"
+      },
+      "source": "THE BOOK'S BUILDER RECEIPT DECLARES NONE",
+      "why": "no key naming a placement latency appears anywhere in this book's builder receipt, so the book was built by code that has none and the day runs at L_place = 0 BY CONSTRUCTION. DE 137 declared the parameter on `build_reference`, which the runner never calls; the pass-through and the cost of rebuilding books at L = 250 are BE 101's (R-810). COMPUTED from the receipt's own keys, so a run on a rebuilt book says so here without anyone editing this sentence."
+    },
+    "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+    "reasons_carry_no_sealed_value": [
+      {
+        "checked_against": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ],
+        "n_reasons": 0,
+        "no_sealed_value_in_any_reason": true,
+        "present_since": "design v2 -- including the 09-03 receipt, where it is an empty list",
+        "what_the_reasons_may_carry": "OPEN numbers only: the decision count and the declared minimum, and the declared sd floor fraction. The sd reason is a VERDICT ONLY",
+        "why_a_check_and_not_a_promise": "the stripper removes keys; a value interpolated into a string survives it. Before this, nothing but the author's care stopped one",
+        "written_by": "de_multiday_design_declaration.arm_day_admissible()"
+      },
+      {
+        "checked_against": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ],
+        "n_reasons": 0,
+        "no_sealed_value_in_any_reason": true,
+        "present_since": "design v2 -- including the 09-03 receipt, where it is an empty list",
+        "what_the_reasons_may_carry": "OPEN numbers only: the decision count and the declared minimum, and the declared sd floor fraction. The sd reason is a VERDICT ONLY",
+        "why_a_check_and_not_a_promise": "the stripper removes keys; a value interpolated into a string survives it. Before this, nothing but the author's care stopped one",
+        "written_by": "de_multiday_design_declaration.arm_day_admissible()"
+      }
+    ],
+    "reference_book": {
+      "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260904_btc.json",
+      "day": "2026-09-04",
+      "day_forms_matched": [
+        "2026-09-04",
+        "20260904"
+      ],
+      "digest_read_from_field": "book.sha256",
+      "digest_recomputed_at_read_time": true,
+      "digest_source": "BE's builder receipt, not a DE constant",
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+      "receipt_day": "20260904",
+      "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858"
+    },
+    "resources": {
+      "peak_rss_mb": 3201.50390625,
+      "per_arm": {
+        "CONDVALUE_X_SKEW": {
+          "null_elapsed_s": 5178.085362672806,
+          "null_peak_rss_mb": 3201.50390625,
+          "status": "OK"
+        },
+        "HAZARD_OVER_SKEWED_REF": {
+          "null_elapsed_s": 5240.733786821365,
+          "null_peak_rss_mb": 3201.50390625,
+          "status": "OK"
+        }
+      },
+      "scope_memory": {
+        "anon_bytes": 1659654144,
+        "anon_gb": 1.5456733703613281,
+        "cap_was_hit": false,
+        "cgroup": "/user.slice/user-1001.slice/user@1001.service/research.slice/deRR20260904.service",
+        "events": {
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0
+        },
+        "expected_slice": "research.slice",
+        "file_bytes": 163659776,
+        "file_gb": 0.1524200439453125,
+        "in_research_slice": true,
+        "kernel_bytes": 11460608,
+        "leaf": "deRR20260904.service",
+        "leaf_is_the_ruled_launch_form": true,
+        "memory_peak_bytes": 3530072064,
+        "memory_peak_gb": 3.2876358032226562,
+        "path": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/deRR20260904.service",
+        "read_while_the_payload_lives": true,
+        "status": "MEASURED",
+        "the_arbiter_is_memory_events": "`max` counts times the limit was hit and `oom` times it killed. A high peak with max 0 is headroom the kernel simply had no reason to reclaim",
+        "the_post_exit_property": {
+          "status": "NOT_READ_FROM_INSIDE_THE_UNIT",
+          "why": "`systemctl show -p MemoryPeak` after the payload exits is the launcher's or the coordinator's read, recorded VERBATIM beside this one and never as a reading of the run's peak (form chain v4, memory_peak_reading)"
+        },
+        "this_is_the_peak_of_record": true,
+        "why_anon_and_file_apart": "rule 20's 8 GiB cap counts page cache. DA 63 measured 7.79 GiB peak with 1.13 GiB anon and 5.17 GiB reclaimable file, events max 0 -- a peak near the cap that the cap never enforced. One number cannot tell those apart",
+        "why_not_the_peak_of_record": null
+      },
+      "wall_seconds": 10515.122385263443
+    },
+    "seal_layout_symmetry_checked_on_the_emitted_results": [
+      {
+        "conditional_key": "economic",
+        "keys_present_in_both": [
+          "sealed",
+          "seal_status",
+          "sealed_at_every_depth",
+          "sealed_field_names"
+        ],
+        "sealed_reads": {
+          "economic_present": false,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+          "sealed": true,
+          "sealed_at_every_depth": true,
+          "sealed_field_names": [
+            "D_E0",
+            "D_E_MINUS_R",
+            "Z",
+            "p_location",
+            "null_mean",
+            "null_sd",
+            "null_draws_summary",
+            "sd_over_abs_mean",
+            "n_fills_arm",
+            "n_fills_baseline",
+            "n_cancels_issued"
+          ]
+        },
+        "symmetric": true,
+        "unsealed_reads": {
+          "economic_present": true,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "UNSEALED -- 6 of 6 days complete under the bar this call was given",
+          "sealed": false,
+          "sealed_at_every_depth": false,
+          "sealed_field_names": []
+        }
+      },
+      {
+        "conditional_key": "economic",
+        "keys_present_in_both": [
+          "sealed",
+          "seal_status",
+          "sealed_at_every_depth",
+          "sealed_field_names"
+        ],
+        "sealed_reads": {
+          "economic_present": false,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+          "sealed": true,
+          "sealed_at_every_depth": true,
+          "sealed_field_names": [
+            "D_E0",
+            "D_E_MINUS_R",
+            "Z",
+            "p_location",
+            "null_mean",
+            "null_sd",
+            "null_draws_summary",
+            "sd_over_abs_mean",
+            "n_fills_arm",
+            "n_fills_baseline",
+            "n_cancels_issued"
+          ]
+        },
+        "symmetric": true,
+        "unsealed_reads": {
+          "economic_present": true,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "UNSEALED -- 6 of 6 days complete under the bar this call was given",
+          "sealed": false,
+          "sealed_at_every_depth": false,
+          "sealed_field_names": []
+        }
+      }
+    ],
+    "status": "DAY_RUN_UNSEALED",
+    "what_this_is_not": {
+      "D_E_MINUS_R_is_UNBOUND": "the robustness endpoint needs the rebate's identity value, which is NOT on DE's surface. D(E0) -- the DECLARED PRIMARY -- is computed here from `de_phase4_diag_runner.fill_value_cents`, which is level-to-markout with NO fee term and therefore IS the E0 endpoint. D(E-R) is not computed and is not approximated",
+      "a_result": false,
+      "the_economics_are_SEALED": false,
+      "the_economics_are_SEALED_read_from": "the emitted arm-days' own `sealed` flags, never from `n_days_complete < G` -- which was true on the R-754 early read while both arm-days were unsealed",
+      "the_seal_scope_in_force_for_THIS_receipt": {
+        "design_version": 23,
+        "generated_from": "ECONOMIC_FIELDS and SEALED_FROM_DESIGN_VERSION -- the map the emitter actually applied, read at emit",
+        "n_sealed": 11,
+        "open_population_sizes": [
+          "n_decisions",
+          "n_scored_rows"
+        ],
+        "sealed_names": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ],
+        "the_open_sizes_are": "the action-side counts rule 8 requires and what R4's admissibility bar reads. `n_decisions` cannot be sealed without making the bar uncheckable",
+        "the_sealed_outcome_counts_are": "counts of what the policy DID: arm fills MINUS baseline fills is the intervention's effect in events (R-659)",
+        "why_generated": "a literal list here said four counts were open SIZES while the emitter sealed three of them (R-674). A receipt that describes its own seal from a constant somebody edited separately describes a different seal"
+      }
+    },
+    "work_counters": {
+      "draws_performed_by_the_before_work_hook": 13016,
+      "draws_performed_by_this_day": 1000,
+      "process_total_draws": 16016,
+      "why_deltas": "the battery runs FIXTURE days and those draw; a process-wide counter would credit the day with the battery's work"
+    },
+    "wrapper": {
+      "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+      "ancestor_pids": [
+        1,
+        1004,
+        1819734,
+        1819735
+      ],
+      "cgroup_leaf": "deRR20260904.service",
+      "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+      "flock_holder_pids": [
+        1819734
+      ],
+      "flock_modes_on_the_inode": [
+        "WRITE"
+      ],
+      "fresh_probe": {
+        "holder_is_exclusive": true,
+        "probed": true,
+        "probes": [
+          "LOCK_EX|LOCK_NB",
+          "LOCK_SH|LOCK_NB"
+        ],
+        "someone_holds_it": true,
+        "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+      },
+      "heavy_run_lock_held": true,
+      "held_by_self_or_ancestor": true,
+      "holder_is_exclusive": true,
+      "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+      "in_a_transient_scope": false,
+      "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+      "lock_fds": [
+        3
+      ],
+      "lock_is_held_by_someone": true,
+      "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+      "n_flock_holders": 1,
+      "rule20": {
+        "bar": {
+          "rss_gb": 1.0,
+          "wall_s": 60.0
+        },
+        "heavy_by_measurement": true,
+        "lock_held": true,
+        "peak_rss_gb": 3.1264686584472656,
+        "rule": "R-575(C) -- heavy implies the lock, checked here rather than promised in a wrapper string",
+        "wall_s": 10515.122385263443
+      },
+      "self_or_ancestor_holds_EXCLUSIVE": true
+    }
+  },
+  "days_consumed": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06"
+  ],
+  "economics_field_availability": {
+    "from_the_arm_level": [
+      "n_fills_arm",
+      "n_fills_baseline",
+      "n_cancels_issued",
+      "status",
+      "admissibility",
+      "seed",
+      "draw_provenance"
+    ],
+    "from_the_economic_block": [
+      "D_E0",
+      "Z",
+      "p_location",
+      "null_mean",
+      "null_sd",
+      "null_draws_summary.n"
+    ],
+    "not_computed_by_this_path_the_ARM_DAY_BLOCK": {
+      "D_E_MINUS_R": "a sealed NAME, but no arm-day economic block produces it; only `D_E0` is emitted.",
+      "fills_leg": "the arm-day economic block is a SINGLE excess `D_E0` against the 0-cancel baseline. There is no fills/inventory decomposition anywhere in the runner, so a leg split cannot be reported without defining one.",
+      "p_two_sided": "`p_location` is `p_one_sided` from `DESIGN.per_day_location`. Doubling it is a DECISION about the test, not a re-read of it.",
+      "rho_adverse_over_spread": "`rho`, `adverse` and `spread` appear nowhere in the runner (0 occurrences each). This quantity has never been computed for these days.",
+      "trades_cash_flow_cents": "as above -- the same single quantity is not two. (R-803: this entry was called `inventory_leg`; BE 99 measured that quantity to be the trades cash flow with the opposite sign, and the residual is priced at SETTLEMENT in the R-801 legs.)"
+    },
+    "read_this_first": "3 of the five are computed in the DECISION LEDGER beside the receipt (p_two_sided, rho, fills_leg); the INVENTORY LEG is `NOT_A_FIELD_OF_THE_LEDGER` -- measured at the ledger this run wrote, not asserted (R-795, BE 97); and D_E_MINUS_R is computed nowhere. This block once said all five were absent, which stopped being true at R-765 and BE 96, and then said the inventory leg was computed, which the file never bore out.",
+    "where_the_five_live_now": {
+      "D_E_MINUS_R": "STILL NOT COMPUTED ANYWHERE -- the robustness endpoint needs the rebate's identity value, which is not on DE's surface",
+      "fills_leg": "COMPUTED, in the decision ledger",
+      "p_two_sided": "COMPUTED, in the decision ledger (de_decision_ledger.recompute)",
+      "rho_adverse_over_spread": "COMPUTED, in the decision ledger",
+      "trades_cash_flow_cents": {
+        "R_803_the_renamed_field": {
+          "name": "trades_cash_flow_cents",
+          "sign_convention": "SELLS - BUYS; the NEGATIVE of the quantity the old name carried",
+          "the_residual_is_priced": "at SETTLEMENT, in the R-801 legs (SETTLEMENT_SLUG rows)",
+          "where_it_occurs": {
+            "ARM_SCALARS.absolute.arm.trades_cash_flow_cents": 2,
+            "ARM_SCALARS.absolute.zero_cancel_baseline.trades_cash_flow_cents": 2
+          },
+          "why_renamed": "BE 99 (R-803) measured sum((after - before) x mark) to be the exact negative of the R-801 trades leg on all four path-days -- the trades cash flow, never a residual mark-to-market"
+        },
+        "fill_rows": 208458,
+        "fill_rows_carrying_all_five_fields": 208458,
+        "measured_at": {
+          "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260904__20260907T225148Z.jsonl.gz",
+          "row_kinds": {
+            "ARM_SCALARS": 2,
+            "DECISION": 21060,
+            "FILL": 208458,
+            "HEADER": 1,
+            "NULL_DRAW": 1000,
+            "SETTLEMENT_SCALARS": 2,
+            "SETTLEMENT_SLUG": 1152
+          },
+          "rows_scanned": 231675,
+          "sha256": "f861fd16e31459fffc9d592dea747f1c8d815369b5a975f222c71ba11570ba90"
+        },
+        "no_fill_row_carries_a_leg": true,
+        "rows_carrying_an_inventory_leg_key_at_any_depth": 0,
+        "status": "NOT_A_FIELD_OF_THE_LEDGER",
+        "the_day_value_is": [
+          "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of"
+        ],
+        "the_day_value_is_read_from": "the runner's own `what_total_is` on each arm-day's `absolute.arm` block",
+        "the_five_are_read_from": "the ledger's own HEADER row (`inventory_fields_from_BE_96`), not from a list in this module",
+        "the_five_inventory_FIELDS_the_file_declares": [
+          "inventory_before",
+          "inventory_after",
+          "inventory_unit",
+          "inventory_mark_cents",
+          "inventory_mark_source"
+        ],
+        "what_that_name_IS_where_it_occurs": "the name does not occur in this file at any depth",
+        "what_this_replaces": "the typed sentence `inventory_leg: COMPUTED since BE 96, in the decision ledger` (rule 10). It was wrong twice over: no row of the 09-05 ledger carries that name at all, and where a current ledger does carry it, it is a component of the absolutes and not a leg of the day value. A sentence typed either way is wrong for one of those files, so this block is measured at the file the run actually wrote.",
+        "where_the_name_occurs": {},
+        "whether_an_inventory_LEG_exists_is_a_RULING": "R-795, routed to the USER under rule 14: which residual, marked at which price, per slug or per day. The two illustrative rules BE computed differ by MORE than the day's whole fills leg, which is what makes it a ruling and not a detail.",
+        "why_it_is_the_fills_leg": "`_value_cents` sums a per-fill markout term (sgn x (mid_at_markout - px_cents) x size) with NO position term. The value is the fills leg BY CONSTRUCTION -- not because inventory is zero: BE 97 measured non-zero end-of-day residual positions on 287-288 of 288 slugs on every path."
+      }
+    }
+  },
+  "interval": "NONE_BELOW_FIVE_DAYS",
+  "is_a_validation": false,
+  "preconditions": {
+    "digest_comparison": {
+      "a_prefix_only_bar": "REFUSES by name (EARLY_READ_BAR_CARRIES_ONLY_A_PREFIX); it is never silently compared on 16 hex",
+      "artifact_is": "6c74928fbc6c8a6bc50c754141be0265a10b7ecd1f4ba00d61fb72a753eeb91e",
+      "bar_says": "6c74928fbc6c8a6bc50c754141be0265a10b7ecd1f4ba00d61fb72a753eeb91e",
+      "compared": "basename exactly, and the FULL sha256",
+      "is_a_full_pair": true,
+      "prefix_agrees_with_the_full_digest": true,
+      "prefix_beside_it": "6c74928fbc6c8a6b"
+    },
+    "holds": true,
+    "no_early_read_artifact_yet": false,
+    "replaces": "P9_no_sealed_receipt_for_this_day_yet",
+    "sealed_day_path_unaffected": "the `--day` entry keeps P9 byte-identical; this function is not on that path",
+    "sealed_receipt": {
+      "name": "p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json",
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json",
+      "sha256": "6c74928fbc6c8a6bc50c754141be0265a10b7ecd1f4ba00d61fb72a753eeb91e"
+    },
+    "supersedes": {
+      "both_at_L_place_ms": 0.0,
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json",
+      "sha256": "b196bf32fe54c9184c98aa90a056cb525fd90af33291ada820fc4c2e3d4d8b61"
+    },
+    "supersession": {
+      "digest_is": "64 lowercase hex, never a prefix",
+      "pair_keys": [
+        "path",
+        "sha256"
+      ],
+      "target": {
+        "both_at_L_place_ms": 0.0,
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json",
+        "sha256": "b196bf32fe54c9184c98aa90a056cb525fd90af33291ada820fc4c2e3d4d8b61"
+      },
+      "the_superseded_artifact_is": "kept, unedited, as provenance (rule 13); DA's `head_standing` labels it",
+      "verified": "the target is present, its digest was RECOMPUTED from the bytes on disk, and DA 130's resolver confirms it is the day's HEAD"
+    },
+    "why_replaced": "P9's premise is that a day run twice has no newest result. This entry writes a DIFFERENT family and supersedes nothing, and it requires the sealed receipt to EXIST -- the opposite condition (coordinator ruling, DE 122)."
+  },
+  "protocol": "P003_DE_EARLY_READ_DAY_V1",
+  "ruling": {
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+    "path_is": "REPO-RELATIVE",
+    "sha256": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6"
+  },
+  "seal_standing": {
+    "authority": "R-754, recorded 2026-09-07T06:18:16Z",
+    "line": "UNSEALED under the USER's ruling R-754: 4 of 6 ruled days, read early on the user's instruction. NOT all days complete, NOT a validation, no interval.",
+    "ruled_days_in_the_population": 6,
+    "ruled_days_read": 4,
+    "why_seal_status_inside_day_run_says_4_of_4": "that field reports the bar THAT CALL was given, which is the ruling's four -- it is not a claim about the six. The six is here, and in `day_run.G_and_which_G_it_is`."
+  },
+  "supersedes": {
+    "both_at_L_place_ms": 0.0,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json",
+    "sha256": "b196bf32fe54c9184c98aa90a056cb525fd90af33291ada820fc4c2e3d4d8b61"
+  },
+  "the_ruling_verbatim": "it does not make sense to seal the results, show me 4 days results first, we need to check and review the results",
+  "verdict_class": "EXPLORATORY",
+  "what_this_is": "the USER-ruled early read of one sealed day (R-754). NOT a validation, NOT a verdict, and NOT a version of that day's sealed receipt."
+}
