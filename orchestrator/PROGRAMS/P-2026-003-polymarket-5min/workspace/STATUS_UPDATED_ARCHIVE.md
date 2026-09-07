@@ -20212,3 +20212,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2134 -> 2150, provenance 1679 -> 1695 (sixteen written, sixteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 257 archived.)
 ```
+
+## Batch 261 — archived 2026-09-07T15:37:58Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:13:40Z (MEM ROUND 276 -- R-800 SWEPT, with every landing between the tip I read at round 275 (`71349a3`) and
+  `8a12422`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***I REPRODUCED EVERY ONE OF BE 98's POSITION FIGURES FROM BOTH LEDGERS***, my own pass over
+  `|inventory_before|`/`|inventory_after|` per slug: 09-05 BASELINE max **157.26** (p50 56.68, **168** of 288
+  above 50), CONDVALUE max **278.76**; 09-06 BASELINE max **144.23** (p50 50.37, **147** above 50), CONDVALUE max
+  **307.52**. Every figure BE cites. **AND THE DISTRIBUTION SHOWS WHAT THE MAXIMA DO NOT**: CONDVALUE's p50 is
+  33 against the baseline's 57/50 and only 71/51 of its slugs exceed 50 against 168/147 -- **it carries less
+  inventory usually and far more occasionally**, and a maximum alone reads as the opposite of a median.
+  **NO POSITION-LIMIT TERM EXISTS ACROSS ALL 260 MODULES** (six terms searched, falsifier: 7 modules mention
+  `inventory_after`).
+  (2) ***SETTLEMENT IS NOT IN THE DAY PATH***, verified at the four day-path modules -- zero hits for
+  `resolutions.jsonl` / `winners` / `umaResolution` in each, falsifier 8 hits for `markout` in the runner. **And
+  the horizon is a constant**: `MARKOUT_HORIZON_S = 5.0`, used as `fill_t + MARKOUT_HORIZON_S`, with a NAMED
+  status `PM_GAP_OR_TICK_IN_MARKOUT_HORIZON` when the window is contaminated. ***AND NO SETTLEMENT-MARKED NULL
+  CAN EXIST FROM THE LEDGER***: `NULL_DRAW` carries five keys -- a scalar `value` and NO fills -- so the draws
+  cannot be re-marked. The settlement view can have a point estimate and **never a Z or a p from this file**.
+  (3) ***I DID NOT REIMPLEMENT THE SETTLEMENT VALUATION AND SAY SO.*** Reimplementing a convention I was not told
+  and then reporting a difference would manufacture a contradiction out of my own guess -- the trap I avoided at
+  round 273. **My `closed is True` count is 38,257 against BE's 38,248 -- nine apart -- and I report that as a
+  DIFFERENCE OF PREDICATES, not an error**, because I did not reproduce BE's population. The settlement numbers
+  are carried as BE's with the basis named: baseline **81,238 / 46,562** at settlement against **88,698 / 90,153**
+  at 5 s; **on 09-06 BOTH arms above the baseline (+2,244 / +10,408) against the landed -32,132 / -2,112**.
+  (4) ***SO THE RANKING DEPENDS ON THE VALUATION HORIZON*** -- same fills, same paths, same ledger, opposite sign.
+  Neither view is wrong; they answer different questions. **BUT R-795's STANDING LABEL IS HALF OF WHAT A READER
+  NEEDS**: "fills leg only" says WHICH LEG and not WHICH HORIZON, and the horizon is what flips 09-06. The
+  complete label is "fills leg only, marked at the 5-second book mid" -- **an observation for the coordinator;
+  MEM does not route and does not amend a standing label.**
+  (5) Chainlink is mentioned in **all 38,292** market rows -- the declared source universally -- and in **none**
+  of the four day-path modules; BE used **the venue's recorded winner**. The declared source and the used source
+  are two different things and the entry keeps them apart. **TWO USER DECISIONS ARE NOW OPEN, NOT ONE**: a
+  settlement-marked `D_E_settle` scoped FORWARD from 09-07 (so the four-day table is not reopened), and the
+  inventory leg. Five user rulings in play, two open. The coordinator's trace is published as an artifact and I
+  record the pointer without reading it.
+  (6) `wt-de` HEAD `5020f96`, status exactly `?? data` -- the third consecutive round. **Nothing in BE 98 touches
+  the bytes GO #8 runs**; it is a re-valuation of landed ledgers. Freeze holds a SIXTEENTH round, and the
+  09-03/09-04 replay debt gains a second reason: **those days have no ledger, so neither the settlement
+  re-valuation nor the position census can run on them at all.**
+  COUNTS (by YAML parse): flags 2150 -> 2166, provenance 1695 -> 1711 (sixteen written, sixteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 258 archived.)
+```

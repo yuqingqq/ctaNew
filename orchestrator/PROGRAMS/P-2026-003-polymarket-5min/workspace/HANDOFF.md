@@ -1,3 +1,101 @@
+# READ FIRST — round 279 (MEM, 2026-09-07T15:37:58Z, tip `06d3010`)
+
+**R-804 and R-805 swept, with every landing between the tip I read at round 278 (`e0b6a55`) and `06d3010`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. Correction in band to my own round-278 entry — my latency evidence was a misreading
+
+I wrote that *"cancels pay `latency_ms: 250` while placement reads `latency_ms=0` at `:500`"* and called it
+verified at the constants. **The `latency_ms=0` I read is not a placement latency.**
+
+```
+def _qr_spec(cell, latency_ms, cancel) -> dict:
+    return {..., "cancel": cancel, "cancel_latency_ms": latency_ms, ...}
+```
+
+The parameter maps to **`cancel_latency_ms`**, and the call at `:500` passes `cancel=False` — it sets the *cancel*
+latency to zero on a spec whose cancelling is **disabled**. The function's thirteen keys contain **no
+placement-latency field at all** (`placement` is a *style*, `"QUEUE_REALISTIC_SKEW"`).
+
+**The conclusion survives; the evidence does not.** Placement *is* instantaneous — **by omission** — and BE 100's
+line of work stands. But I verified that a literal existed at a line and never checked what the parameter it fed
+was named. Rule 16's own words are *match identity*, and the identity is `cancel_latency_ms`. The next person
+looking for "the placement latency parameter" would find that name and conclude the code says the opposite.
+
+## 2. BE 100's 250 ms fraction, reproduced exactly
+
+From `fill_ns − gen_start_ns` on both ledgers, baseline deduped, **zero fills missing a timestamp**:
+
+| day | BASELINE | CONDVALUE | HAZARD |
+|---|---:|---:|---:|
+| 09-05 | 48.2 % | **55.9 %** | 49.5 % |
+| 09-06 | 47.9 % | **56.0 %** | 49.2 % |
+
+Every path-day inside BE's 48–56 %. **And the cancelling arm is the most exposed:** CONDVALUE is highest on both
+days, the baseline lowest — a 250 ms placement latency would remove the largest share of *its* fills. *(BE's
+98 % / 55 % of settlement P&L is BE's; it needs the winner join and I did not recompute it.)*
+
+## 3. Capacity, and DE 136's landing
+
+- **Capacity 2–8 % of tape volume, zero slugs above 25 %** (BE's). **The venue's own `volumeNum` is non-null on
+  6 of 38,303 rows** (mine) — absent very nearly everywhere, which is why the tape's volume had to be the
+  denominator.
+- **DE 136 landed**: three files, 858 insertions; `economic_settlement` beside `economic`;
+  `NOT_VERIFIED_AGAINST_CHAINLINK` with its quotation refusal; the draft at 6,784 B; **heads still v19/v27 — the
+  freeze survived a 701-line change to the runner.**
+- **`placement_latency_ms` occurs zero times** — it is DE 137's (dispatched 15:32:50Z), **so the largest named
+  assumption in the four days' numbers is not yet in the code.**
+- `inventory_leg` remains: my grep counts **22 lines** against the entry's "8+5". A difference of predicates I did
+  not reproduce — the third time in four rounds; the discipline is to say which predicate produced which number.
+
+## 4. A state change inside my window — E1r/E2r are NO-GO, not pending
+
+My dispatch carries "E1r/E2r pending REV". **`06d3010` landed at 15:34:35Z with NO-GO for both**: refused by
+`de_early_read.py::early_read_preconditions` with **`EARLY_READ_ALREADY_EMITTED`**, driven, both days returning
+`NOT_READY`. **Track A is blocked at its first step.**
+
+And the diagnosis is one I could confirm from the artifacts. Walking all four early-read day artifacts for any of
+`supersedes` / `also_supersedes` / `chain` / `supersession` / `previous` / `prior` / `superseded_by` / `link`:
+**NONE in any of the four.** The same walk over the params declaration returns **`/supersedes`,
+`/supersedes/chain`, `/read_gate_predicate/SUPERSEDED_BY`** — the search finds chains where chains exist.
+
+**The guard is right; what is missing is a chain.** The refusal looks like an obstacle to track A and is actually
+the family's only protection against a re-run silently replacing a landed artifact with nothing recording which
+came first. Rule 13 says a landed artifact is never edited and corrections supersede in band — **this family can
+obey the second half and has no machinery for the first.**
+
+## 5. The user instruction, and a rule-8 note on my own number
+
+R-804 carries it verbatim — **"make these few days data correct … Check above issues, fix then review"** — in
+three tracks: **A** the replays, the rename, the ruled legs; **B** the estimator, the inline null, the rule-11
+guard, the v20/v28 draft; **C** position cap, a settlement view in the quoter, hold-after-cancel as a parameter,
+a time-matched null, thresholds re-fit — **each a declared design change, validated from the first day after it
+lands**. **A is blocked, B has landed its code, C is design.**
+
+**Rule 8, on a number I published:** `resolutions.jsonl` was **38,268** rows at my round-276 read and is
+**38,303** now. The tape grew during measurement, so that count was correct only with its as-of attached —
+recorded so nobody re-derives 38,257 later and calls it wrong.
+
+## 6. Standing
+
+- **GO #8 unchanged** — `wt-de` `5020f96`, status exactly `?? data`, **fifth** consecutive round, and REV 104A
+  reports the same from its own read.
+- **Freeze holds a nineteenth round.**
+- In flight: **DA 129** (what `da_fair_price_identity` can supply for a settlement view), **DE 137** (the
+  `S60(T) ≥ S60(t0)` wiring with per-slug refusal, the rename, a declared `placement_latency_ms` default 250),
+  **REV 104's second half**.
+
+## 7. Counts
+
+flags 2198 → **2213**, provenance 1743 → **1758** (fifteen written, fifteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,468 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 155th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my fifteen added none. Window trimmed 4 → 3,
+**Batch 261** archived.
+
+**NEXT:** DE 137, DA 129, REV 104 second half → the close → GO #8. MEM sweeps R-806 onward.
+
+---
+
 # READ FIRST — round 278 (MEM, 2026-09-07T15:26:54Z, tip `e0b6a55`)
 
 **R-802 and R-803 swept, with every landing between the tip I read at round 277 (`1e43c4f`) and `e0b6a55`.**

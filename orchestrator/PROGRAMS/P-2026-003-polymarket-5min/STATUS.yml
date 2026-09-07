@@ -67,6 +67,47 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:37:58Z (MEM ROUND 279 -- R-804 AND R-805 SWEPT, with every landing between the tip I read at round 278
+  (`e0b6a55`) and `06d3010`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***CORRECTION IN BAND TO MY OWN ROUND-278 ENTRY: MY LATENCY EVIDENCE WAS A MISREADING.*** I wrote that
+  "placement reads `latency_ms=0` at `:500`" and called it verified at the constants. **`_qr_spec(cell,
+  latency_ms, cancel)` maps that parameter to `cancel_latency_ms`, and the call passes `cancel=False`** -- it
+  sets the CANCEL latency to zero on a spec whose cancelling is disabled. The function's thirteen keys contain
+  **no placement-latency field at all** (`placement` is a STYLE, `"QUEUE_REALISTIC_SKEW"`). **The CONCLUSION
+  survives** -- placement is instantaneous, BY OMISSION, and the asymmetry BE 100 works from is real -- **the
+  EVIDENCE I GAVE does not.** I verified that a literal existed at a line and never checked what the parameter it
+  fed was named; rule 16's own words are match identity, and the identity is `cancel_latency_ms`.
+  (2) ***I REPRODUCED BE 100's 250 ms FRACTION EXACTLY*** from `fill_ns - gen_start_ns` on both ledgers, baseline
+  deduped, zero fills missing a timestamp: 09-05 **48.2 / 55.9 / 49.5 %**, 09-06 **47.9 / 56.0 / 49.2 %** --
+  every path-day inside BE's 48-56 %. **AND THE CANCELLING ARM IS THE MOST EXPOSED**: CONDVALUE is highest on
+  both days and the baseline lowest, so a 250 ms placement latency would remove the largest share of ITS fills.
+  BE's 98 % / 55 % of settlement P&L is BE's -- it needs the winner join and I did not recompute it.
+  (3) **Capacity is 2-8 % of tape volume, zero slugs above 25 %** (BE's), and **the venue's own `volumeNum` is
+  non-null on 6 of 38,303 rows** (mine) -- absent very nearly everywhere, which is why the tape's volume had to
+  be the denominator. **DE 136 LANDED**: three files, 858 insertions, `economic_settlement` beside `economic`,
+  `NOT_VERIFIED_AGAINST_CHAINLINK` with its quotation refusal, the draft at 6,784 B, **heads still v19/v27 -- the
+  freeze survived a 701-line change to the runner.** `placement_latency_ms` occurs **zero** times: it is DE 137's,
+  dispatched 15:32:50Z, **so the largest named assumption is not yet in the code.** `inventory_leg` remains --
+  my grep counts 22 lines against the entry's "8+5", a difference of predicates I did not reproduce.
+  (4) ***A STATE CHANGE INSIDE MY WINDOW***: my dispatch carries "E1r/E2r pending REV"; `06d3010` landed at
+  15:34:35Z with **NO-GO for both**. REV 104A: refused by `early_read_preconditions` with
+  **`EARLY_READ_ALREADY_EMITTED`**, driven. **Track A is blocked at its first step, not pending.** And the
+  diagnosis is one I could confirm from the artifacts: walking all four early-read day artifacts for any
+  supersession or chain key returns **NONE**, while the same walk over the params declaration returns
+  `/supersedes`, `/supersedes/chain` and `/read_gate_predicate/SUPERSEDED_BY` -- **the search finds chains where
+  chains exist.** ***THE GUARD IS RIGHT AND WHAT IS MISSING IS A CHAIN***: the refusal looks like an obstacle and
+  is actually the family's only protection against a re-run silently replacing a landed artifact with nothing
+  recording which came first.
+  (5) R-804 carries the user's instruction verbatim -- **"make these few days data correct ... Check above
+  issues, fix then review"** -- in three tracks: A (the replays, the rename, the ruled legs), B (the estimator,
+  the null, the declaration), C (cap, settlement view in the quoter, hold-after-cancel, time-matched null, re-fit
+  thresholds -- each a DECLARED design change validated from the first day after it lands). **A is blocked, B has
+  landed its code, C is design.** And a rule-8 note on my own number: `resolutions.jsonl` was **38,268** rows at
+  my round-276 read and is **38,303** now -- **the tape grew during measurement**, so that count was correct only
+  with its as-of attached. GO #8 unchanged (`5020f96`, `?? data`, FIFTH consecutive round, and REV reports the
+  same from its own read); freeze holds a NINETEENTH round.
+  COUNTS (by YAML parse): flags 2198 -> 2213, provenance 1743 -> 1758 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 261 archived.)
   2026-09-07T15:26:54Z (MEM ROUND 278 -- R-802 AND R-803 SWEPT, with every landing between the tip I read at round 277
   (`1e43c4f`) and `e0b6a55`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***CORRECTION IN BAND TO MY OWN ROUND-277 ENTRY: MY BASELINE FIGURES WERE DOUBLE-COUNTED.*** I published
@@ -145,45 +186,6 @@ updated: >-
   persist. Freeze holds a SEVENTEENTH round, and v20/v28 must now carry the new endpoint as well as the pins.
   COUNTS (by YAML parse): flags 2166 -> 2183, provenance 1711 -> 1728 (seventeen written, seventeen
   counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 259 archived.)
-  2026-09-07T15:13:40Z (MEM ROUND 276 -- R-800 SWEPT, with every landing between the tip I read at round 275 (`71349a3`) and
-  `8a12422`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***I REPRODUCED EVERY ONE OF BE 98's POSITION FIGURES FROM BOTH LEDGERS***, my own pass over
-  `|inventory_before|`/`|inventory_after|` per slug: 09-05 BASELINE max **157.26** (p50 56.68, **168** of 288
-  above 50), CONDVALUE max **278.76**; 09-06 BASELINE max **144.23** (p50 50.37, **147** above 50), CONDVALUE max
-  **307.52**. Every figure BE cites. **AND THE DISTRIBUTION SHOWS WHAT THE MAXIMA DO NOT**: CONDVALUE's p50 is
-  33 against the baseline's 57/50 and only 71/51 of its slugs exceed 50 against 168/147 -- **it carries less
-  inventory usually and far more occasionally**, and a maximum alone reads as the opposite of a median.
-  **NO POSITION-LIMIT TERM EXISTS ACROSS ALL 260 MODULES** (six terms searched, falsifier: 7 modules mention
-  `inventory_after`).
-  (2) ***SETTLEMENT IS NOT IN THE DAY PATH***, verified at the four day-path modules -- zero hits for
-  `resolutions.jsonl` / `winners` / `umaResolution` in each, falsifier 8 hits for `markout` in the runner. **And
-  the horizon is a constant**: `MARKOUT_HORIZON_S = 5.0`, used as `fill_t + MARKOUT_HORIZON_S`, with a NAMED
-  status `PM_GAP_OR_TICK_IN_MARKOUT_HORIZON` when the window is contaminated. ***AND NO SETTLEMENT-MARKED NULL
-  CAN EXIST FROM THE LEDGER***: `NULL_DRAW` carries five keys -- a scalar `value` and NO fills -- so the draws
-  cannot be re-marked. The settlement view can have a point estimate and **never a Z or a p from this file**.
-  (3) ***I DID NOT REIMPLEMENT THE SETTLEMENT VALUATION AND SAY SO.*** Reimplementing a convention I was not told
-  and then reporting a difference would manufacture a contradiction out of my own guess -- the trap I avoided at
-  round 273. **My `closed is True` count is 38,257 against BE's 38,248 -- nine apart -- and I report that as a
-  DIFFERENCE OF PREDICATES, not an error**, because I did not reproduce BE's population. The settlement numbers
-  are carried as BE's with the basis named: baseline **81,238 / 46,562** at settlement against **88,698 / 90,153**
-  at 5 s; **on 09-06 BOTH arms above the baseline (+2,244 / +10,408) against the landed -32,132 / -2,112**.
-  (4) ***SO THE RANKING DEPENDS ON THE VALUATION HORIZON*** -- same fills, same paths, same ledger, opposite sign.
-  Neither view is wrong; they answer different questions. **BUT R-795's STANDING LABEL IS HALF OF WHAT A READER
-  NEEDS**: "fills leg only" says WHICH LEG and not WHICH HORIZON, and the horizon is what flips 09-06. The
-  complete label is "fills leg only, marked at the 5-second book mid" -- **an observation for the coordinator;
-  MEM does not route and does not amend a standing label.**
-  (5) Chainlink is mentioned in **all 38,292** market rows -- the declared source universally -- and in **none**
-  of the four day-path modules; BE used **the venue's recorded winner**. The declared source and the used source
-  are two different things and the entry keeps them apart. **TWO USER DECISIONS ARE NOW OPEN, NOT ONE**: a
-  settlement-marked `D_E_settle` scoped FORWARD from 09-07 (so the four-day table is not reopened), and the
-  inventory leg. Five user rulings in play, two open. The coordinator's trace is published as an artifact and I
-  record the pointer without reading it.
-  (6) `wt-de` HEAD `5020f96`, status exactly `?? data` -- the third consecutive round. **Nothing in BE 98 touches
-  the bytes GO #8 runs**; it is a re-valuation of landed ledgers. Freeze holds a SIXTEENTH round, and the
-  09-03/09-04 replay debt gains a second reason: **those days have no ledger, so neither the settlement
-  re-valuation nor the position census can run on them at all.**
-  COUNTS (by YAML parse): flags 2150 -> 2166, provenance 1695 -> 1711 (sixteen written, sixteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 258 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -355,6 +357,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 279, R-804 and R-805 swept (e0b6a55 -> 06d3010) ---
+  CORRECTION_MY_ROUND_278_LATENCY_EVIDENCE_WAS_A_MISREADING: I-READ-A-LITERAL-NOT-A-PARAMETER-NAME
+  _qr_spec_HAS_NO_PLACEMENT_LATENCY_FIELD_AT_ALL: latency_ms-MAPS-TO-cancel_latency_ms
+  THE_CONCLUSION_SURVIVES_AND_THE_EVIDENCE_I_GAVE_DOES_NOT: INSTANTANEOUS-BY-OMISSION
+  I_REPRODUCED_BE_100s_250_MS_FRACTION_EXACTLY: 47-9-TO-56-0-ACROSS-SIX-PATH-DAYS
+  AND_THE_CANCELLING_ARM_IS_THE_MOST_EXPOSED_TO_A_PLACEMENT_LATENCY: CONDVALUE-HIGHEST-ON-BOTH-DAYS
+  CAPACITY_IS_NOT_THE_WEAKNESS_AND_THE_VENUE_VOLUME_IS_ALMOST_ENTIRELY_ABSENT: SIX-NON-NULL-IN-38303-ROWS
+  DE_136_LANDED_AND_I_VERIFIED_ITS_PARTS_AT_THE_FILES: THREE-FILES-858-INSERTIONS
+  placement_latency_ms_DOES_NOT_YET_EXIST_IT_IS_DE_137s: ZERO-OCCURRENCES-AS-EXPECTED
+  THE_MISNAMED_FIELD_IS_STILL_THERE_AND_MY_COUNT_DIFFERS_FROM_THE_ENTRYS: 22-BY-MY-GREP-AGAINST-13
+  REV_104A_LANDED_A_NO_GO_ON_E1r_AND_E2r_AFTER_MY_DISPATCH_WAS_WRITTEN: PENDING-BECAME-NO-GO
+  THE_DAY_FAMILY_HAS_NO_SUPERSESSION_KEY_AND_A_FALSIFIER_PROVES_THE_SEARCH: NONE-IN-FOUR-ARTIFACTS
+  SO_THE_GUARD_IS_RIGHT_AND_WHAT_IS_MISSING_IS_A_CHAIN: NOT-PERMISSION-BUT-A-RULE
+  THE_USER_INSTRUCTION_AND_ITS_THREE_TRACKS: MAKE-THESE-FEW-DAYS-DATA-CORRECT
+  THE_RESOLUTIONS_TAPE_GREW_DURING_MY_OWN_MEASUREMENT: 38268-AT-ROUND-276-38303-NOW
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_NINETEENTH_ROUND: 5020f96-FIFTH-CONSECUTIVE-ROUND
   # --- MEM round 278, R-802 and R-803 swept (1e43c4f -> e0b6a55) ---
   CORRECTION_MY_ROUND_277_BASELINE_FIGURES_WERE_DOUBLE_COUNTED: THE-BASELINE-IS-RECORDED-ONCE-PER-ARM
   THE_IDENTITY_CONCLUSION_STANDS_BECAUSE_DOUBLING_PRESERVES_IT: THE-TWO-PUBLISHED-FIGURES-DO-NOT
@@ -26563,6 +26581,180 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 279, 2026-09-07T15:37:58Z (the clock read by which every measurement below was complete) ---
+  CORRECTION_MY_ROUND_278_LATENCY_EVIDENCE_WAS_A_MISREADING:
+    prov: CHECKED
+    artifact: live/pm_research/policy_optimizer_queue_realistic.py
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      **AN IN-BAND CORRECTION OF MY OWN ROUND-278 ENTRY.** I wrote that "cancels pay `latency_ms: 250` while placement
+      reads `latency_ms=0` at `:500`" and called it "verified at the two constants". **The `latency_ms=0` I read is not
+      a placement latency.** `_qr_spec(cell, latency_ms, cancel)` maps that parameter to the key
+      **`cancel_latency_ms`**, and the call at `:500` passes `cancel=False` -- so it sets the CANCEL latency to zero on
+      a spec whose cancelling is DISABLED, which is a no-op for cancels and says nothing whatever about placement.
+      **I verified that a literal existed at a line and did not check what the parameter it fed was named.** R-805
+      records BE 100 correcting the coordinator's claim in kind; the same correction lands on mine, which repeated it.
+  _qr_spec_HAS_NO_PLACEMENT_LATENCY_FIELD_AT_ALL:
+    prov: CHECKED
+    artifact: live/pm_research/policy_optimizer_queue_realistic.py
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      Read at the function, whose whole return is thirteen keys: `cell`, `placement`, `skew`, `skew_band_shares`,
+      `front_on_repost`, `queue_realistic`, `cancel`, **`cancel_latency_ms`**, `cancel_join_only`, `cancel_hold`,
+      `protect_reducing_side`, `r_cut`, `size`. **There is no placement-latency key among them.** `placement` is
+      `"QUEUE_REALISTIC_SKEW"` -- a placement STYLE, not a delay. So the spec cannot express a placement latency, and
+      BE 100's wording is exact: **placement is instantaneous BY OMISSION**, not by a zero setting.
+  THE_CONCLUSION_SURVIVES_AND_THE_EVIDENCE_I_GAVE_DOES_NOT:
+    prov: CHECKED
+    artifact: live/pm_research/policy_optimizer_queue_realistic.py
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      Separated, because they are not the same thing. **SURVIVES**: the reference places instantly and cancels pay
+      250 ms, so the asymmetry is real and BE 100's line of work is well founded -- "an asymmetry that flatters the
+      reference flatters the baseline every arm is measured against" stands. **DOES NOT SURVIVE**: my stated evidence,
+      which named `latency_ms=0` at `:500` as the placement setting. **A true conclusion reached through a misread
+      identity is still a misread identity**, and the next person to look for "the placement latency parameter" would
+      find `cancel_latency_ms` and conclude the code says the opposite of what I wrote. Rule 16's own words -- match
+      identity (Type.field) -- and the field here is `cancel_latency_ms`.
+  I_REPRODUCED_BE_100s_250_MS_FRACTION_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      The number that carries the assumption, computed myself from `fill_ns - gen_start_ns` on both ledgers with the
+      baseline deduped: **09-05** BASELINE **48.2 %** (23,947 / 49,668), CONDVALUE **55.9 %**, HAZARD **49.5 %**;
+      **09-06** BASELINE **47.9 %**, CONDVALUE **56.0 %**, HAZARD **49.2 %**. **Zero fills missing either timestamp.**
+      BE 100 cites 48-56 %; my six path-days span **47.9 % to 56.0 %**, every one inside that range to the rounding.
+      So roughly half of all fills land within 250 ms of the generation that produced them -- and BE reports those
+      fills carry **98 % (09-05) and 55 % (09-06)** of the baseline's settlement P&L, which is BE's figure and not one
+      I recomputed (it needs the winner join).
+  AND_THE_CANCELLING_ARM_IS_THE_MOST_EXPOSED_TO_A_PLACEMENT_LATENCY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      A structure in my own numbers that the range alone hides. **`CONDVALUE_X_SKEW` is the HIGHEST on both days
+      (55.9 % and 56.0 %) and the baseline the LOWEST (48.2 % and 47.9 %)** -- so the cancelling arm's fills are the
+      most concentrated in the first 250 ms, and a placement latency of 250 ms would remove a larger share of ITS fills
+      than of the reference's. Recorded as arithmetic: it says which path a latency assumption is most load-bearing
+      for, not which way any comparison would move, since removing fills changes both legs of the ruled total and MEM
+      asserts no result.
+  CAPACITY_IS_NOT_THE_WEAKNESS_AND_THE_VENUE_VOLUME_IS_ALMOST_ENTIRELY_ABSENT:
+    prov: CHECKED
+    artifact: data/pm_5min/resolutions.jsonl
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      BE 100's capacity answer, carried with the one part I checked. **Capacity: 2-8 % of tape volume per slug, zero
+      slugs above 25 %** -- BE's measurement, not recomputed here. **The venue's own volume field: I counted
+      `volumeNum` non-null on 6 of 38,303 rows in `resolutions.jsonl`** -- so it is absent not merely for the 576
+      slugs BE names but very nearly everywhere, which is why the tape's traded volume had to serve as the
+      denominator. **A denominator taken from a second source because the first is empty is worth recording as such**,
+      and BE said so.
+  DE_136_LANDED_AND_I_VERIFIED_ITS_PARTS_AT_THE_FILES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      `1f171e8`, 15:28:00Z: **three files, 858 insertions** -- `de_decision_ledger.py` (+36),
+      `de_multiday_gate1_runner.py` (+701), and the draft (+124). Checked at the files: **`economic_settlement`**
+      present (3 occurrences) beside the existing `economic`; **`NOT_VERIFIED_AGAINST_CHAINLINK`** present (4) as the
+      winner's marking with its quotation refusal; the draft exists at
+      **`live/pm_research/drafts/R801_params_v20_design_v28_DRAFT.md`, 6,784 B**; and **heads are still v19 and v27**
+      -- no `params_v20`, no `design_v28` -- so the freeze held across the landing exactly as the dispatch required
+      (code only, no version).
+  placement_latency_ms_DOES_NOT_YET_EXIST_IT_IS_DE_137s:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      Checked because a reader could reasonably assume the latency work landed with the estimator: **`placement_latency_ms`
+      occurs ZERO times in the runner.** That is correct and expected -- R-805 dispatches it to **DE 137 at 15:32:50Z**
+      ("a declared `placement_latency_ms` default 250"), alongside wiring BE 99's `S60(T) >= S60(t0)` verification with
+      a per-slug refusal and the rename. **So the largest named assumption in the four days' numbers is dispatched and
+      not yet in the code**, and nothing that has run so far carries a placement latency.
+  THE_MISNAMED_FIELD_IS_STILL_THERE_AND_MY_COUNT_DIFFERS_FROM_THE_ENTRYS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      R-805 records `inventory_leg` as not yet renamed, at "8+5 sites". **My grep counts 5 in the runner and 17 in
+      `de_early_read.py` -- 22 lines containing the string, against the entry's 13.** I did not reproduce the entry's
+      predicate, which presumably counts distinct code sites rather than every line (docstrings, messages and the
+      settlement code's own references would inflate mine). **Reported as a difference of predicates, not an error** --
+      the third time in four rounds I have hit that shape, and the discipline is the same each time: say which
+      predicate produced which number. The rename is DE 137's, and until it lands the field named for the inventory leg
+      still holds the negation of the trades leg (my round-278 finding).
+  REV_104A_LANDED_A_NO_GO_ON_E1r_AND_E2r_AFTER_MY_DISPATCH_WAS_WRITTEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104A_E1R_E2R_NOGO_2026-09-07.md
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      **A STATE CHANGE INSIDE MY OWN WINDOW.** My dispatch carries "E1r/E2r pending REV"; `06d3010` landed at
+      **15:34:35Z** -- after the dispatch was written and before my sweep read the tip -- with **NO-GO for both**.
+      REV 104A: both re-runs are refused by `de_early_read.py::early_read_preconditions` with
+      **`EARLY_READ_ALREADY_EMITTED`**, driven, both days returning `NOT_READY` with that blocker. So **track A's first
+      step is blocked, not pending**, and the state files must say so. (The blocker's name occurs 9 times in that
+      module; it is the same guard family whose branch geometry I read by AST at rounds 264-269.)
+  THE_DAY_FAMILY_HAS_NO_SUPERSESSION_KEY_AND_A_FALSIFIER_PROVES_THE_SEARCH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      REV 104A's diagnosis is that the early-read day family lacks "the `{path, sha256}` pair discipline every other
+      family here already has". **I confirmed it from the artifacts with a positive control.** Walking all four
+      early-read day artifacts for any of `supersedes`, `also_supersedes`, `chain`, `supersession`, `previous`,
+      `prior`, `superseded_by`, `link`: **NONE in any of the four.** The same walk over
+      `de_multiday_gate1_params_v19.json` returns **`/supersedes`, `/supersedes/chain`, and
+      `/read_gate_predicate/SUPERSEDED_BY`** -- so the search finds chains where chains exist. **The day family emits
+      artifacts and records no lineage between them.**
+  SO_THE_GUARD_IS_RIGHT_AND_WHAT_IS_MISSING_IS_A_CHAIN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104A_E1R_E2R_NOGO_2026-09-07.md
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      The framing worth carrying, in REV's words: **"The guard is right. What is missing is not permission but a
+      supersession rule for this family"** -- one round of DE's work, not a design question. **That is the correct
+      reading and it inverts the obvious one**: the refusal looks like an obstacle to track A, and it is actually the
+      family's only protection against a re-run silently replacing a landed artifact with no record of which came
+      first. **Rule 13 says corrections supersede in band and a landed artifact is never edited**; this family can
+      obey the second half and has no machinery for the first. The four days I have been tracking would otherwise have
+      acquired second artifacts with nothing linking them.
+  THE_USER_INSTRUCTION_AND_ITS_THREE_TRACKS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      R-804 carries the user's instruction verbatim -- **"make these few days data correct ... Check above issues, fix
+      then review"** with five critical issues -- and splits it into three tracks: **A** 09-03/09-04 have no ledgers,
+      so re-run their early reads from `5020f96` after REV clears, rename the misnamed field, emit the ruled legs;
+      **B** DE 136's estimator + inline-valued null + rule-11 guard + the v20/v28 draft -> REV -> GO #8 unchanged ->
+      v20/v28 land -> the settlement null runs for 09-03..09-06 (design) and 09-07 (validation); **C** position cap, a
+      settlement view in the quoter, hold-after-cancel as a parameter, a time-matched null, thresholds re-fit on the
+      consumed days -- **each a declared design change, validated from the first day after it lands.** REV 104 and
+      DA 129 dispatched 15:31Z. **Track A is now blocked at its first step (above); B has landed its code; C is
+      design.**
+  THE_RESOLUTIONS_TAPE_GREW_DURING_MY_OWN_MEASUREMENT:
+    prov: CHECKED
+    artifact: data/pm_5min/resolutions.jsonl
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      A rule-8 observation on a number I published myself. At round 276 I counted `resolutions.jsonl` at **38,268
+      rows** and reported 38,257 closed against BE's 38,248. **It now holds 38,303 rows** -- 35 more, three rounds
+      later, because the collector is live. **So my round-276 count was correct only with its as-of attached**, which
+      is exactly what CLAUDE.md rule 8 requires ("every quoted population carries its n AND as-of"), and the nine-row
+      difference I reported against BE's population would have needed the same treatment even if the predicates had
+      matched. Recorded so nobody re-derives 38,257 later and finds it "wrong".
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_NINETEENTH_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:37:58Z
+    said: >-
+      `wt-de` HEAD **`5020f96`**, status exactly `?? data` -- the **fifth** consecutive round at that state, and REV
+      104A independently reports the same from its own read ("wt-de untouched -- queried read-only: HEAD `5020f96`,
+      working tree `?? data` only"). `params_v20` and `design_v28` absent; heads v19/v27. **DE 136 landed code with no
+      version, so the freeze survived a 701-line change to the runner.** In flight: DA 129 (what
+      `da_fair_price_identity` can supply for a settlement view), DE 137 (the verification wiring, the rename, the
+      declared placement latency), REV 104's second half.
   # --- MEM round 278, 2026-09-07T15:26:54Z (the clock read by which every measurement below was complete) ---
   CORRECTION_MY_ROUND_277_BASELINE_FIGURES_WERE_DOUBLE_COUNTED:
     prov: CHECKED
