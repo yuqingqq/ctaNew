@@ -1,0 +1,84 @@
+{
+  "kind": "de_heavy_run_capture_record",
+  "go": "GO E2",
+  "unit": "deEARLY20260904.service",
+  "invocation_id": "775e46b59fee42228efab036b6abad58",
+  "day": "2026-09-04",
+  "launched_at": "2026-09-07T09:15:47Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-de",
+  "head_for_the_whole_run": "fe76d83",
+  "rev_94_cleared": {
+    "runner": "ccc4108d28f0754192bc9fcedbd9c3d491aac7f553fa41ebe249853abd4406e2",
+    "early_read": "ba6daba426491cafa17d843e24aaca3bb132260a2cad2f72d62221b6efda282b",
+    "params_v19": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6",
+    "ledger": "d78c370151cea431",
+    "design_v27": "3bcdf3c234cb7d4e",
+    "all_five_asserted_before_the_launch": true
+  },
+  "five_fields_and_id_at_launch": {
+    "as_of": "2026-09-07T09:15:57Z",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "SubState": "running",
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "InvocationID": "775e46b59fee42228efab036b6abad58",
+    "MemoryPeak": 1016365056
+  },
+  "five_fields_and_id_at_exit_while_loaded": {
+    "as_of": "2026-09-07T10:59:12Z",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "SubState": "exited",
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "InvocationID": "775e46b59fee42228efab036b6abad58",
+    "MemoryPeak": 3119230976,
+    "ControlGroup": ""
+  },
+  "leaf_peak_bytes_sampled_in_process": 3119230976,
+  "main_process_exited_at": "2026-09-07T10:59:18Z",
+  "runtime_s": 6211,
+  "exit_resolved_through_the_map": {
+    "exit_code": 0,
+    "producer_module": "live/pm_research/de_early_read.py",
+    "mapped_by": {
+      "path": "/home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/producer_exit_maps_v9.json",
+      "sha256": "482527d4810b0f746df9b13aaeaf8cc1dc566020f4ade3acdcd62f11bd11825b",
+      "version": 9
+    },
+    "the_map_is_read_from": "the chain head by the pair, never a filename literal",
+    "resolved_kind": "the early-read day completed and its artifact was written, or --selftest passed",
+    "declared_codes": [
+      "0",
+      "1"
+    ],
+    "75_is_never_used": true,
+    "why_the_code_alone_is_not_the_kind": "every refusal in this module exits 1, so a non-zero code is resolved to a KIND only with the EARLY_READ_* name from the run's output beside it"
+  },
+  "journal_by_both_invocation_fields": {
+    "before_the_stop": {
+      "as_of": "2026-09-07T10:59:12Z",
+      "payload_lines": 5,
+      "manager_lines": 1
+    },
+    "after_the_stop": {
+      "text": "=== POST-STOP journal (chain step 7), 2026-09-07T11:00:14Z ===\npayload: 5\nmanager: 3\n2026-09-07T09:15:47+00:00 ip-172-31-78-41 systemd[1004]: Started deEARLY20260904.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-04 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T11:00:12+00:00 ip-172-31-78-41 systemd[1004]: Stopped deEARLY20260904.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-04 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T11:00:12+00:00 ip-172-31-78-41 systemd[1004]: deEARLY20260904.service: Consumed 1h 43min 10.425s CPU time, 2.9G memory peak, 0B memory swap peak.\n",
+      "sha256": "c6a127949c3878ad037e114df4f50838cf98adb31cf4beda4d3e734119e202b5"
+    },
+    "retention_oldest_at_capture": "2026-09-07T06:23:51+00:00"
+  },
+  "emitted_artifact": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json",
+    "sha256": "b196bf32fe54c9184c98aa90a056cb525fd90af33291ada820fc4c2e3d4d8b61",
+    "bytes": 44741
+  },
+  "DECISION_LEDGER_WAS_NOT_WRITTEN": {
+    "observed": "the artifact carries `decision_ledger: null` and no p003_de_decision_ledger_* file exists for this day",
+    "cause": "`run_day` writes the ledger only when `receipt_path is not None`, and the early-read entry never passes one. R-765's recording therefore did not happen on an early-read day.",
+    "whose": "DE's, landed at DE 124 and unnoticed through four reviews",
+    "consequence": "E1 and E2 have no ledger, so the absolutes and the ledger-derived statistics are not available for 09-03 or 09-04 from the artifacts alone"
+  },
+  "no_economic_value_is_quoted_here": "DA's reader prints the table",
+  "written_at": "2026-09-07T11:00:14Z"
+}
