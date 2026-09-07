@@ -2417,9 +2417,46 @@ def selftest() -> int:
               "population": {"READABLE": ["20990101", "20990102"]},
               "permutation_floor": {"G": 2, "multiplicity": 2,
                                     "best_possible_adjusted_p": 0.5}}
-    _fp = _dN / "decl" / "be_race_read_declaration_v1.json"
+    # ---- BE 95: THE FIXTURE'S NAME IS PINNED TO ITS BYTES --------------
+    # REV 91 §C2 withdrew REV 90's "nothing to do" here, and it was right
+    # to. My BE 91 cell classified this literal correctly -- a scratch
+    # fixture under `mkdtemp` -- but a CLASSIFICATION is a claim about the
+    # literal, and DA's census measured the thing that actually matters and
+    # disagreed: `flows_into_an_open: true`. The name IS read. A marker
+    # would not have changed that and R-753 (2) forbids clearing it by
+    # marking; the ruled door is a digest recorded in the code and ASSERTED
+    # BEFORE USE (REV 89 §6.3a).
+    #
+    # AND THE ASSERTION IS WORTH HAVING ON ITS OWN, which is the test of
+    # whether this is a control or a shape that satisfies the words: this
+    # fixture is what proves the two-reads clause generator. Edit `_first`
+    # -- change a READABLE day, a G, a floor -- and today every cell below
+    # still passes while testing a different declaration. With the pin, the
+    # battery goes RED and whoever edited it has to re-record the digest and
+    # look at what they changed.
+    _FIXTURE_FIRST_READ = {
+        "name": "be_race_read_declaration_v1.json",
+        "sha256": "ca6a2d358d333f66fe304d4bda8eb4a82d4082db55c9285cc8856a68"
+                  "478f75e1",
+        "recorded_by": "BE 95, from the bytes `_first` serialises to; NOT a "
+                       "landed artifact -- this file is written into a "
+                       "`mkdtemp` scratch tree and no declaration of this "
+                       "name is ever read from the ledger here",
+        "the_act_it_records": "the fixture's own construction, so a silent "
+                              "edit to `_first` fails the battery instead of "
+                              "quietly re-aiming every cell below it",
+    }
+    _fp = _dN / "decl" / _FIXTURE_FIRST_READ["name"]
     _fp.write_text(json.dumps(_first, indent=1, sort_keys=True))
     _fsha = hashlib.sha256(_fp.read_bytes()).hexdigest()
+    if _fsha != _FIXTURE_FIRST_READ["sha256"]:
+        raise AssertionError(
+            f"FIXTURE_BYTES_MOVED: the scratch first-read declaration hashes "
+            f"{_fsha[:16]}… but this module records "
+            f"{_FIXTURE_FIRST_READ['sha256'][:16]}…. `_first` was edited; "
+            f"every cell below tests a DIFFERENT declaration than the one "
+            f"recorded here. Re-record the digest deliberately, or put the "
+            f"fixture back.")
     (_dN / "der" / "be_race_read_result_v1.json").write_text(json.dumps(
         {"day_signs": {"20990101": 1, "20990102": -1}}))
     # ---- BE 91: `:2420` CLASSIFIED AT THE CODE -------------------------
