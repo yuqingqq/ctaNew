@@ -702,6 +702,10 @@ LEDGER_VALUATION = ("sgn * (mid_cents_at_markout - px_cents) * size, "
 #: and the identity `total == sum sgn*(settle - px)*size` holds by algebra,
 #: so this reader ASSERTS it rather than trusting either form -- two
 #: expressions of one quantity, computed separately and compared.
+#: The 5-minute window, from the programme's own instrument name
+#: (`btc-updown-5m-…`) and `exp_m6_settlement`'s pinned
+#: `window_s: 300`. The full-day window count is DERIVED from it.
+WINDOW_SECONDS = 300
 SETTLE_RECONCILE_TOL = 1e-9
 WINNER_STATUS_REQUIRED = "VERIFIED_AGREE"
 
@@ -1340,6 +1344,17 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
     }
     return {
         "winner_verification": winner_verification,
+        #: DA 133: THE PRIMARY ENDPOINT'S TEST STATISTICS. The settlement
+        #: block printed D_E_settle and its two legs and NOTHING ELSE --
+        #: no Z, no p, no null. A primary point estimate printed without
+        #: the test beside it is the diagnostic's own failure mode wearing
+        #: the primary's name, and it survived a whole day's read (R-819's
+        #: 09-03 figures were lifted from the artifact BY HAND and labelled
+        #: "the artifact's own statistics"; the instrument never had them).
+        #: The MOMENTS ARE READ, never re-derived -- see
+        #: `the_persisted_draws_are` below, which MEASURES what the
+        #: ledger's NULL_DRAW rows are valued at rather than asserting it.
+        "settlement_statistics": settlement_statistics(doc, ledger),
         "placement_latency": (doc.get("day_run") or {}).get(
             "placement_latency"),
         "protocol": PROTOCOL, "artifact": str(path),
@@ -1373,6 +1388,116 @@ def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
             "for presence and shape. This reader re-derives no economic "
             "quantity and opens no book"),
     }, params_err
+
+
+def settlement_statistics(doc: dict, ledger: dict) -> dict:
+    """THE SETTLEMENT ENDPOINT'S Z, p AND NULL -- read, with Z recomputed.
+
+    The settlement-valued draws are NOT PERSISTED. The ledger's NULL_DRAW
+    rows are the 5-second markout draws, and this function MEASURES that
+    (their mean and sd against both candidate moment pairs) instead of
+    saying it -- rule 10. So the null's MOMENTS can only be READ from the
+    artifact; what this reader can and does re-derive is the IDENTITY
+    Z == (D_E_settle - null_mean) / null_sd, which is the step where a
+    transcription error would land.
+    """
+    out, blocks = {}, (doc.get("day_run") or {}).get(
+        "per_day_sealed_artifacts") or []
+    for blk in blocks:
+        arm = blk.get("arm")
+        es = blk.get("economic_settlement")
+        if not arm:
+            continue
+        if not isinstance(es, dict) or not es:
+            out[arm] = {"status": "SETTLEMENT_STATISTICS_ABSENT_FOR_ARM"}
+            continue
+        d, mu = es.get("D_E_settle"), es.get("null_mean")
+        sd, z = es.get("null_sd"), es.get("Z")
+        nds = es.get("null_draws_summary")
+        n = nds.get("n") if isinstance(nds, dict) else None
+        row = {"status": "SETTLEMENT_STATISTICS_PRESENT",
+               "D_E_settle": d, "Z_in_the_artifact": z,
+               "p_location": es.get("p_location"),
+               "null_mean": mu, "null_sd": sd, "n_draws": n,
+               "moments_are": "READ from the artifact -- the settlement-"
+                              "valued draws are not persisted anywhere",
+               "Z_is": "RECOMPUTED here from D_E_settle, null_mean and "
+                       "null_sd; the moments it is built from are read"}
+        missing = [k for k, v in (("D_E_settle", d), ("null_mean", mu),
+                                  ("null_sd", sd), ("Z", z),
+                                  ("n_draws", n)) if v is None]
+        if missing:
+            #: NOT a silent skip. A guard keyed on an optional field is
+            #: silent, not green -- this seat's own standard, and the
+            #: reason this branch names its denominator instead of
+            #: returning nothing.
+            row["status"] = "SETTLEMENT_STATISTICS_INCOMPLETE"
+            row["absent_fields"] = missing
+            out[arm] = row
+            continue
+        rz = (float(d) - float(mu)) / float(sd) if float(sd) else None
+        row["Z_recomputed"] = rz
+        row["Z_agrees"] = (rz is not None
+                           and abs(rz - float(z)) <= SETTLE_RECONCILE_TOL)
+        out[arm] = row
+    #: WHAT THE PERSISTED DRAWS ARE VALUED AT -- MEASURED, not stated.
+    #: THE LEDGER MAY NOT BE THERE AT ALL (LEDGER_ABSENT / _KEY_ABSENT),
+    #: and then `recompute` is a STATUS STRING. Without this the reader
+    #: crashed on those days -- and worse, a None-vs-float comparison
+    #: would have reported `matches_the_5s_markout_null: False`, which
+    #: reads as "measured, and it differs" when nothing was measured.
+    #: Absence gets its own name.
+    _rc_raw = (ledger or {}).get("recompute")
+    drawn = ((_rc_raw.get("per_arm") or {}) if isinstance(_rc_raw, dict)
+             else {})
+    no_ledger = not isinstance(_rc_raw, dict)
+    persisted = {}
+    for arm, row in out.items():
+        m = drawn.get(arm) or {}
+        blk = next((b for b in blocks if b.get("arm") == arm), {}) or {}
+        econ = blk.get("economic") if isinstance(
+            blk.get("economic"), dict) else {}
+        d0_mu = econ.get("null_mean", blk.get("null_mean"))
+        d0_sd = econ.get("null_sd", blk.get("null_sd"))
+
+        def _same(a, b):
+            return (a is not None and b is not None
+                    and abs(float(a) - float(b)) <= 1e-9)
+        #: `verify_decision_ledger` wraps every recomputed value as
+        #: {from_the_ledger, in_the_artifact, equal}. THE LEDGER'S OWN
+        #: SIDE is the one that measures the persisted draws; taking the
+        #: wrapper whole would have compared a dict to a float, and taking
+        #: `in_the_artifact` would have compared the artifact to itself.
+        def _mine(k, _m=m):
+            v = _m.get(k)
+            return v.get("from_the_ledger") if isinstance(v, dict) else v
+
+        if no_ledger or not m:
+            persisted[arm] = {
+                "status": "NO_LEDGER_DRAWS_TO_MEASURE",
+                "why": ("the decision ledger is not readable here "
+                        f"({_rc_raw if no_ledger else 'no rows for this arm'}"
+                        "), so what the persisted draws are valued at was "
+                        "NOT measured -- this is an absence, not a mismatch"),
+                "matches_the_5s_markout_null": None,
+                "matches_the_settlement_null": None}
+            continue
+        persisted[arm] = {
+            "measured_mean": _mine("null_mean"), "measured_sd": _mine("null_sd"),
+            "n": _mine("n_draws"),
+            "matches_the_5s_markout_null": (_same(_mine("null_mean"), d0_mu)
+                                            and _same(_mine("null_sd"), d0_sd)),
+            "matches_the_settlement_null": (
+                _same(_mine("null_mean"), row.get("null_mean"))
+                and _same(_mine("null_sd"), row.get("null_sd"))),
+            "the_5s_moments": {"null_mean": d0_mu, "null_sd": d0_sd},
+        }
+    return {"per_arm": out, "the_persisted_draws_are": persisted,
+            "why_the_moments_are_read": (
+                "the settlement null is summarised in the artifact as n "
+                "alone; its 500 valued draws reach no file, so no second "
+                "implementation can re-derive its mean or sd today"),
+            "tolerance": SETTLE_RECONCILE_TOL}
 
 
 def _version_of(path_or_name) -> str:
@@ -1539,12 +1664,27 @@ def print_table(res: dict) -> str:
     _se2 = (_rc2.get("settlement") or {}) if isinstance(_rc2, dict) else {}
     if _wv.get("n_per_slug"):
         _arm0 = next(iter(_se2.get("per_arm", {}).values()), {})
+        #: DA 133 -- THE SHORTFALL IS COMPUTED, NOT TYPED. This clause
+        #: used to end "not over a 288-window day", written on 09-03 when
+        #: the population was 246. On a 288-slug day that sentence
+        #: CONTRADICTS the two numbers in front of it. The full-day
+        #: window count is derived from the window length, and the line
+        #: says whether this day is short and by how many -- rule 10:
+        #: compute the predicate, never print the conclusion.
+        _full = (24 * 3600) // WINDOW_SECONDS
+        _npop = _wv["n_per_slug"]
+        _short = (_full - _npop) if isinstance(_npop, int) else None
         lines.append(
-            f"  POPULATION: the verification covers {_wv['n_per_slug']} "
+            f"  POPULATION: the verification covers {_npop} "
             f"slugs; the ledger's SETTLEMENT_SLUG rows cover "
             f"{_arm0.get('n_slugs_ARM')} (ARM) / "
-            f"{_arm0.get('n_slugs_BASELINE')} (BASELINE) -- ***this day's "
-            f"totals are over THAT population, not over a 288-window day***")
+            f"{_arm0.get('n_slugs_BASELINE')} (BASELINE) -- "
+            + (f"***this is the FULL day: {_full} windows of "
+               f"{WINDOW_SECONDS} s***"
+               if _short == 0 else
+               f"***this day's totals are over THAT population: "
+               f"{_short} of the day's {_full} windows are NOT in it, "
+               f"so it is not one column with a full day***"))
     if _fin:
         _hold = sorted(k for k, v in _fin.items()
                        if isinstance(v, bool) and v)
@@ -1604,18 +1744,27 @@ def print_table(res: dict) -> str:
                     f"says {_c['D_E_settle']['in_the_row']!r}; agrees: "
                     f"{_c['D_E_settle']['agrees']})")
             _any = next(iter(_se["per_arm"].values()))
-            _ns, _nr = (_any.get("n_slug_rows_carrying_a_status"),
-                        _any.get("n_slug_rows"))
+            _ns = _any.get("n_slug_rows_carrying_a_status")
+            #: DA 133 -- THE DENOMINATOR IS THE FILE'S, NOT ONE ARM'S.
+            #: `n_slug_rows` counts ONE arm's two books; the file holds
+            #: that for EVERY arm. The line whose whole job is to report
+            #: a denominator was reporting half of one (576 of 1,152 on
+            #: 09-04; 492 of 984 on 09-03, which is what Q-DA-357 said).
+            #: Both numbers are printed now, each named.
+            _nr = _any.get("n_slug_rows")
+            _nfile = sum(v.get("n_slug_rows") or 0
+                         for v in _se["per_arm"].values())
+            _den = (f"{_nr} rows for this arm's two books, {_nfile} in the "
+                    f"file across {len(_se['per_arm'])} arms")
             if _ns:
                 lines.append(
                     f"    every slug row that carries a status is "
-                    f"{_se['winner_status_required']} ({_ns} of {_nr} rows "
-                    f"carry one)")
+                    f"{_se['winner_status_required']} ({_ns} of {_den})")
             else:
                 lines.append(
                     f"    ***NO SETTLEMENT_SLUG ROW CARRIES A STATUS FIELD*** "
-                    f"({_nr} rows): the per-slug winner verification lives in "
-                    f"the RECEIPT, not in the ledger, so this reader's "
+                    f"(0 of {_den}): the per-slug winner verification lives "
+                    f"in the RECEIPT, not in the ledger, so this reader's "
                     f"row-level status check had nothing to fire on and "
                     f"claims nothing from its silence")
             _wv = res.get("winner_verification") or {}
@@ -1630,6 +1779,37 @@ def print_table(res: dict) -> str:
             lines.append(
                 f"    the legs are asserted equal to the per-fill form "
                 f"within {_se['tolerance']}")
+            _ss = res.get("settlement_statistics") or {}
+            for _arm, _st in sorted((_ss.get("per_arm") or {}).items()):
+                if _st.get("status") != "SETTLEMENT_STATISTICS_PRESENT":
+                    lines.append(
+                        f"    {_arm}: {_st.get('status')}"
+                        + (f" -- absent {_st['absent_fields']}"
+                           if _st.get("absent_fields") else ""))
+                    continue
+                lines.append(
+                    f"    {_arm} STATISTICS: Z {_st['Z_in_the_artifact']!r}, "
+                    f"p(1-sided) {_st['p_location']!r}, null mean "
+                    f"{_st['null_mean']!r}, null sd {_st['null_sd']!r}, n "
+                    f"{_st['n_draws']!r} -- Z RECOMPUTED here as "
+                    f"{_st['Z_recomputed']!r} (agrees: {_st['Z_agrees']})")
+                _pd = (_ss.get("the_persisted_draws_are") or {}).get(_arm) or {}
+                if _pd.get("status") == "NO_LEDGER_DRAWS_TO_MEASURE":
+                    lines.append(
+                        f"      the null's MOMENTS are READ, not re-derived; "
+                        f"and WHAT THE PERSISTED DRAWS CARRY WAS NOT "
+                        f"MEASURED -- {_pd.get('why')}")
+                    continue
+                lines.append(
+                    f"      the null's MOMENTS are READ, not re-derived: the "
+                    f"ledger's {_pd.get('n')} persisted NULL_DRAW rows for "
+                    f"this arm measure mean {_pd.get('measured_mean')!r} sd "
+                    f"{_pd.get('measured_sd')!r} -- matches the 5-s markout "
+                    f"null: {_pd.get('matches_the_5s_markout_null')}; matches "
+                    f"the settlement null: "
+                    f"{_pd.get('matches_the_settlement_null')}. ***THE "
+                    f"SETTLEMENT-VALUED DRAWS ARE PERSISTED NOWHERE***, so "
+                    f"no second implementation can re-derive these moments")
         else:
             lines.append(
                 f"  SETTLEMENT (R-801, PRIMARY): {_se.get('status')} -- "
@@ -2326,21 +2506,159 @@ def selftest() -> tuple:                                      # noqa: C901
             _real[_d] = resolve_early_read_head(_d, data_root=root / "data")
         except EarlyReadVerifyRefused as e:
             _real[_d] = {"REFUSED": str(e).split(":")[0]}
-    ck("AND THE FOUR REAL DAYS EACH RESOLVE TO ONE HEAD -- ***and 09-03 now "
-       "does it THROUGH A CHAIN***: DE 138's writer landed and the "
-       "settlement re-run SUPERSEDES the 08:54 artifact by the pair, so the "
-       "day has two artifacts and exactly one head. The other three still "
-       "resolve as sole artifacts. ***This is the cell that would have "
-       "caught a second artifact written WITHOUT the field***",
+    _chains = sorted(d for d, v in _real.items()
+                     if isinstance(v, dict) and v.get("n_artifacts", 0) > 1)
+    ck("AND THE FOUR REAL DAYS EACH RESOLVE TO ONE HEAD -- ASSERTED AS THE "
+       "PROPERTY, NEVER AS A CENSUS OF WHICH DAYS ARE CHAINS. Every day "
+       "resolves to exactly one head; every chain is COMPLETE "
+       "(n_artifacts == links + 1, so no artifact dangles unnamed); and "
+       "`the_sole_artifact_is_the_head` agrees with the count it claims. "
+       "***This is the cell that would have caught a second artifact written "
+       "WITHOUT the field*** -- that day would carry two artifacts and zero "
+       "links and REFUSE ambiguous, so it would have no head here. "
+       "***The earlier form of this cell NAMED 09-03 as the only chain and "
+       "went red the moment 09-04's settlement re-run landed*** (DA 133, "
+       "2026-09-07): a literal that has to track a moving tree is a cell "
+       "that reports the tree's history, not the reader's property",
        all(isinstance(v, dict) and v.get("head") for v in _real.values())
-       and _real["2026-09-03"]["n_artifacts"] == 2
-       and len(_real["2026-09-03"]["links"]) == 1
-       and not _real["2026-09-03"]["the_sole_artifact_is_the_head"]
-       and all(_real[d]["the_sole_artifact_is_the_head"]
-               for d in ("2026-09-04", "2026-09-05", "2026-09-06")),
-       "; ".join(f"{d}: {v.get('head', v.get('REFUSED'))}"
-                 f"{' (superseded ' + str(v['superseded']) + ')' if v.get('superseded') else ''}"
-                 for d, v in sorted(_real.items())))
+       and all(v["n_artifacts"] == len(v["links"]) + 1
+               for v in _real.values())
+       and all(v["the_sole_artifact_is_the_head"]
+               == (v["n_artifacts"] == 1) for v in _real.values()),
+       "chains today: " + (", ".join(_chains) if _chains else "none") + " | "
+       + "; ".join(f"{d}: {v.get('head', v.get('REFUSED'))}"
+                   f"{' (superseded ' + str(v['superseded']) + ')' if v.get('superseded') else ''}"
+                   for d, v in sorted(_real.items())))
+
+    # -- DA 133: THE PRIMARY ENDPOINT'S STATISTICS, BOTH DIRECTIONS ----
+    #: The settlement block printed D_E_settle and its legs and NOTHING
+    #: else -- no Z, no p, no null -- so the PRIMARY endpoint was quoted
+    #: as a point estimate with the test missing, while the DIAGNOSTIC's
+    #: Z and p printed in full three lines above it. These cells drive the
+    #: new block on a whole artifact, and drive the three ways it can be
+    #: wrong: absent, incomplete, and a Z that does not match its moments.
+    def _stat_doc(es_by_arm):
+        return {"day_run": {"per_day_sealed_artifacts": [
+            {"arm": a, "economic": {"null_mean": -10.0, "null_sd": 2.0},
+             **({"economic_settlement": e} if e is not None else {})}
+            for a, e in es_by_arm.items()]}}
+
+    _led_stub = {"recompute": {"per_arm": {
+        "A": {"null_mean": {"from_the_ledger": -10.0},
+              "null_sd": {"from_the_ledger": 2.0},
+              "n_draws": {"from_the_ledger": 500}}}}}
+    _good = {"D_E_settle": -30.0, "Z": -2.0, "p_location": 0.9,
+             "null_mean": -10.0, "null_sd": 10.0,
+             "null_draws_summary": {"n": 500}}
+    _ok = settlement_statistics(_stat_doc({"A": _good}), _led_stub)
+    _absent = settlement_statistics(_stat_doc({"A": None}), _led_stub)
+    _incomp = settlement_statistics(
+        _stat_doc({"A": {k: v for k, v in _good.items()
+                         if k not in ("null_sd", "Z")}}), _led_stub)
+    _wrongz = settlement_statistics(
+        _stat_doc({"A": {**_good, "Z": -7.5}}), _led_stub)
+    ck("DA 133 -- ***THE PRIMARY ENDPOINT NOW PRINTS ITS TEST, AND THE Z IS "
+       "RECOMPUTED FROM THE MOMENTS IT CLAIMS***: (-30 - -10)/10 = -2.0 and "
+       "the artifact's Z is -2.0, so the identity holds. ***A settlement "
+       "D_E_settle printed WITHOUT its Z, p and null was this reader's shape "
+       "for two days*** -- the diagnostic's statistics printed in full while "
+       "the PRIMARY's were absent from the instrument entirely",
+       _ok["per_arm"]["A"]["status"] == "SETTLEMENT_STATISTICS_PRESENT"
+       and _ok["per_arm"]["A"]["Z_recomputed"] == -2.0
+       and _ok["per_arm"]["A"]["Z_agrees"] is True
+       and _ok["per_arm"]["A"]["n_draws"] == 500,
+       f"Z read {_ok['per_arm']['A']['Z_in_the_artifact']}, recomputed "
+       f"{_ok['per_arm']['A']['Z_recomputed']}, agrees "
+       f"{_ok['per_arm']['A']['Z_agrees']}")
+    ck("KNOWN-BADS, DRIVEN, ALL THREE -- ***AN ABSENT OR HALF-PRESENT "
+       "STATISTICS BLOCK IS A NAMED STATUS, NEVER A SKIPPED LINE***, and a Z "
+       "that disagrees with its own null moments is caught: a guard keyed on "
+       "an optional field is SILENT, not green, and must report its own "
+       "denominator -- this seat's own standard, applied to the block that "
+       "carries the endpoint the programme now decides on",
+       _absent["per_arm"]["A"]["status"]
+       == "SETTLEMENT_STATISTICS_ABSENT_FOR_ARM"
+       and _incomp["per_arm"]["A"]["status"]
+       == "SETTLEMENT_STATISTICS_INCOMPLETE"
+       and _incomp["per_arm"]["A"]["absent_fields"] == ["null_sd", "Z"]
+       and _wrongz["per_arm"]["A"]["Z_agrees"] is False,
+       f"absent -> {_absent['per_arm']['A']['status']}; incomplete -> "
+       f"{_incomp['per_arm']['A']['status']} "
+       f"{_incomp['per_arm']['A']['absent_fields']}; a wrong Z -> agrees "
+       f"{_wrongz['per_arm']['A']['Z_agrees']}")
+    ck("AND WHICH NULL THE PERSISTED DRAWS CARRY IS ***MEASURED, NOT "
+       "STATED***: the fixture's ledger draws have the 5-s moments "
+       "(-10, 2) and the settlement null claims (-10, 10), so the reader "
+       "reports matches-the-5s TRUE and matches-the-settlement FALSE. "
+       "***This is the line that says the settlement null cannot be "
+       "re-derived by a second implementation*** -- on the real days the "
+       "500 persisted NULL_DRAW rows reproduce the DIAGNOSTIC's moments to "
+       "the last digit and the settlement draws reach no file at all",
+       _ok["the_persisted_draws_are"]["A"]["matches_the_5s_markout_null"]
+       is True
+       and _ok["the_persisted_draws_are"]["A"]["matches_the_settlement_null"]
+       is False,
+       f"5-s {_ok['the_persisted_draws_are']['A']['matches_the_5s_markout_null']}"
+       f"; settlement "
+       f"{_ok['the_persisted_draws_are']['A']['matches_the_settlement_null']}"
+       f"; measured mean "
+       f"{_ok['the_persisted_draws_are']['A']['measured_mean']}")
+
+    # -- DA 133: THE POPULATION CLAUSE, BOTH DIRECTIONS, ON REAL DAYS --
+    #: The clause used to END with the literal "not over a 288-window day",
+    #: typed on 09-03 when the population was 246. On 09-04 -- a 288-slug
+    #: day -- that sentence contradicted the two numbers standing beside
+    #: it in the same line. Both real days are driven here, so the day
+    #: that is FULL and the day that is SHORT each produce their own
+    #: sentence, and the window length is checked against the convention
+    #: the artifact itself pins rather than trusted as a typed constant.
+    _pop = {}
+    for _d in ("2026-09-03", "2026-09-04"):
+        try:
+            _h = resolve_early_read_head(_d, data_root=root / "data")
+            _rr = verify_under_ruling(_h["path"], ruling_id="R-764",
+                                      data_root=str(root / "data"))
+            _pop[_d] = [ln for ln in print_table(_rr).splitlines()
+                        if "POPULATION:" in ln][0]
+        except Exception as _e:                              # noqa: BLE001
+            _pop[_d] = f"RAISED {type(_e).__name__}: {_e}"
+    #: NO BARE `except: pass` HERE. The first form of this swallowed an
+    #: AttributeError (`path` is a str, not a Path) and handed back an
+    #: EMPTY SET, which read as "the artifacts pin nothing" -- a silent
+    #: guard reporting an absence it manufactured itself. Failures are
+    #: collected and shown.
+    _pinned, _pin_err = set(), []
+    for _d in ("2026-09-03", "2026-09-04"):
+        try:
+            _doc = json.loads(Path(str(resolve_early_read_head(
+                _d, data_root=root / "data")["path"])).read_text())
+            for _b in (_doc.get("day_run") or {}).get(
+                    "per_day_sealed_artifacts") or []:
+                _w = (((_b.get("economic_settlement") or {})
+                       .get("winner_source") or {})
+                      .get("chainlink_verification") or {}
+                      ).get("convention_block") or {}
+                if _w.get("window_s") is not None:
+                    _pinned.add(_w["window_s"])
+        except Exception as _e:                              # noqa: BLE001
+            _pin_err.append(f"{_d}: {type(_e).__name__}: {_e}")
+    ck("DA 133 -- ***THE POPULATION CLAUSE IS COMPUTED AND SAYS A DIFFERENT "
+       "THING ON A SHORT DAY THAN ON A FULL ONE***: 09-03 covers 246 of the "
+       "day's 288 windows and its line names the 42 that are not in it; "
+       "09-04 covers 288 and its line says FULL. ***The clause it replaces "
+       "ended with the typed words 'not over a 288-window day' and printed "
+       "them on a 288-window day*** -- and `WINDOW_SECONDS` is checked "
+       "against the window the artifacts' own pinned convention declares, "
+       "so the derived 288 is not a second typed literal",
+       "42 of the day's 288 windows are NOT in it" in _pop["2026-09-03"]
+       and "246 slugs" in _pop["2026-09-03"]
+       and "this is the FULL day: 288 windows" in _pop["2026-09-04"]
+       and "288 slugs" in _pop["2026-09-04"]
+       and _pinned == {WINDOW_SECONDS},
+       f"09-03 -> …{_pop['2026-09-03'][-72:]}; 09-04 -> "
+       f"…{_pop['2026-09-04'][-52:]}; the artifacts pin window_s {_pinned} "
+       f"and WINDOW_SECONDS is {WINDOW_SECONDS}"
+       + (f"; READ ERRORS {_pin_err}" if _pin_err else ""))
 
     # -- DA 126: THE LEDGER IS A REPORTED STATUS, NEVER A GUESS --------
     _lg_null = check_decision_ledger({"day_run": {"decision_ledger": None}})
