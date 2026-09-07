@@ -1,6 +1,6 @@
 {
  "artifact": "da_blackout_mask_v1",
- "as_of_utc": "2026-09-07T00:03:45Z",
+ "as_of_utc": "2026-09-07T01:54:29Z",
  "coins": {
   "bnb": {
    "agrees_with_frozen_L1_numerator": true,
@@ -151,10 +151,10 @@
  "disposition_text": "USER R-409: a day with a blackout is not excluded; it accrues if the frozen bars pass on the non-blackout windows, and the blackout windows are masked as accounted loss. This artifact REPORTS the mask; it decides nothing (rule 14).",
  "n_coins": 7,
  "producer": {
-  "carrying_commit": "01636c1d99f8ccd6edc12e9a6de269b6c8e55afc",
-  "code_root": "/home/yuqing/ctaNew-wt-da",
+  "carrying_commit": "c459cc7b98a64c8cb12f9a6010906c1d73829f42",
+  "code_root": "/home/yuqing/ctaNew",
   "data_root": "/home/yuqing/ctaNew",
-  "data_root_branch": "1_env_PM_DATA_ROOT",
+  "data_root_branch": "2_code_tree_carries_the_tape",
   "module": "da_blackout_mask",
   "module_sha256_prefix": "62dbcd769e47f96d",
   "roots_note": "code_root is where the running file lives; data_root is where the tape and artifacts live. They differ under a worktree, and only the first answers 'which code ran'.",
