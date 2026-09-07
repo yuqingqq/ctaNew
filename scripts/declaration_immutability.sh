@@ -39,7 +39,32 @@ print(",".join(out))
 PY2
 )
   # size-filter BEFORE grepping: the ledger holds gigabyte tapes as .json, and grepping them first cost the falsifier its 15-min cap (R-764)
-  pinned=$(find "$DIR" "$LEDGER" -maxdepth 1 -type f -name '*.json' -size -5M ! -path "$f" -print0 2>/dev/null | xargs -0 -r grep -lF -e "$pre" -e "$pre16" 2>/dev/null | sed "s#$LEDGER/##; s#$DIR/##" | sort | tr '\n' ',' | sed 's/,$//')
+  # REV 92 §A6 (R-766/R-767): each hit carries the JSON PATH of the field holding the digest, so a MENTION (an incident
+  # record) and a LINK (a `supersedes.sha256`) read differently -- the distinction this field exists to make.
+  hits=$(mktemp); if [ "${IMMUT_SKIP_PIN_CENSUS:-0}" = "1" ]; then echo "SKIPPED_IN_THIS_RUN" > "$hits"; else find "$DIR" "$LEDGER" -maxdepth 1 -type f -name '*.json' -size -5M ! -path "$f" -print0 2>/dev/null | xargs -0 -r grep -lF -e "$pre" -e "$pre16" 2>/dev/null | sort > "$hits"; fi
+  # (`python3 -` reads its PROGRAM from stdin, so the hit list travels by file, not by pipe -- the first version lost it, R-767)
+  pinned=$(python3 - "$pre" "$pre16" "$DIR" "$LEDGER" "$hits" <<'PY3'
+import sys,json
+pre,pre16,d1,d2,hits=sys.argv[1:6]; out=[]
+def walk(o,path):
+    if isinstance(o,dict):
+        for k,v in o.items(): walk(v, f"{path}.{k}" if path else k)
+    elif isinstance(o,list):
+        for i,v in enumerate(o): walk(v, f"{path}[{i}]")
+    elif isinstance(o,str) and (pre in o or pre16 in o): out.append(path)
+for line in open(hits):
+    f=line.strip()
+    if not f: continue
+    if f=="SKIPPED_IN_THIS_RUN": print("SKIPPED_IN_THIS_RUN"); continue
+    short=f.replace(d2+"/","").replace(d1+"/","")
+    try: j=json.load(open(f))
+    except Exception: out_paths=["<unparseable>"]
+    else:
+        out=[]; walk(j,""); out_paths=out or ["<in-text-not-in-a-field>"]
+    for pth in out_paths: print(f"{short}:{pth}")
+PY3
+)
+  rm -f "$hits"; pinned=$(echo "$pinned" | tr '\n' ',' | sed 's/,$//')
   SUP=0; [ -n "$sup" ] && SUP=1
   printf ' created_by=%s edited_by=%s repaired_by=[%s] superseded_by=[%s] pre_edit_digest=%s pre_edit_digest_pinned_by=[%s]' "$created" "$edited" "${repaired% }" "$sup" "$pre16" "$pinned"
 }
@@ -59,7 +84,8 @@ if [ "$MODE" = "falsify" ]; then
   # REV 89 §5.2: the denominator line is checked on BOTH real directories -- one with pre-base history and one with none --
   # so the control fires on the empty-array defect whichever directory the caller named.
   for d in live/pm_research/declarations live/mm_research/declarations "$DIR"; do
-    hist=$("$0" "$d" --base "$BASE" 2>&1 | grep -c "^HISTORY (not judged):"); [ "$hist" -eq 1 ] || { echo "FALSIFIER FAIL: no HISTORY denominator line for $d"; exit 1; }
+    # the denominator sub-runs need only the HISTORY line; under this old base ~20 files read as forks and each would grep the ledger (R-767: two falsifier runs killed at their caps)
+    hist=$(IMMUT_SKIP_PIN_CENSUS=1 "$0" "$d" --base "$BASE" 2>&1 | grep -c "^HISTORY (not judged):"); [ "$hist" -eq 1 ] || { echo "FALSIFIER FAIL: no HISTORY denominator line for $d"; exit 1; }
   done
   # REV 90 §B7 (R-762): the REAL superseded fork is the positive control for the new status -- producer_exit_maps_v7 was edited
   # in place (4e91739) and v8 supersedes the edited bytes by a verifying pair (d61307a); its pre-edit digest is 6084d6e2602d6e6a.
