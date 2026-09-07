@@ -5888,6 +5888,45 @@ def assert_real_day_has_the_lock(day: str, observed: dict, *,
                 "pass where it did not matter")}
 
 
+def assert_ledger_anchor(params: dict, *, fixture: bool, anchor) -> dict:
+    """A REAL DAY UNDER R-765 MUST HAVE SOMEWHERE TO WRITE ITS LEDGER.
+
+    DE 133, and it is a FUNCTION so the battery can DRIVE it. Inside
+    `run_day` the call sits after the day-membership and lock guards and
+    before the day's work: refusing there costs nothing, where DE 132 put
+    it at the ledger write -- after ~90 minutes of draws -- which is the
+    shape R-610 exists to forbid. But `run_day` cannot be driven that far
+    in a battery without the heavy lock: the earlier guards refuse first,
+    correctly, and two versions of my own cell accepted THEIR refusal as
+    if it were this one. A check nobody can watch fire is not a check.
+
+    'Before the work' is not 'before every other guard': placed at the
+    top it PRE-EMPTED the day-membership refusal and a cell testing that
+    got this one instead.
+
+    A FIXTURE owes no ledger -- its rows are synthetic and there is
+    nothing to avoid re-running -- and that is a NAMED STATUS, never the
+    `null` that hid the original defect."""
+    if not params.get("user_ruled_unsealed_emission"):
+        return {"owes_a_ledger": False,
+                "why": "the params carry no R-765 ruling"}
+    if fixture:
+        return {"owes_a_ledger": False,
+                "status": "NO_LEDGER_FOR_A_FIXTURE_DAY",
+                "why": "a FIXTURE day's rows are synthetic; R-765 keeps "
+                       "the numbers of REAL runs so they need not be "
+                       "re-run"}
+    if anchor is None:
+        raise RunnerRefused(
+            "REFUSED DECISION_LEDGER_HAS_NO_ANCHOR: the params carry the "
+            "R-765 ruling and this is a REAL day, but no path was given "
+            "to write the ledger beside. The ruling is that the numbers "
+            "are KEPT; emitting the receipt with `decision_ledger: null` "
+            "is the silent form of promising one that is not there. "
+            "Refused BEFORE the day's work, not after it.")
+    return {"owes_a_ledger": True, "anchor": str(anchor)}
+
+
 def run_day(day: str, book_path, *, params: dict, module=None,
             fixture: bool = False, receipt_path=None,
             n_days_complete: int = 1,
@@ -5911,24 +5950,6 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     knowable before the book is loaded, so it is checked before the book is
     loaded. It is run under its OWN residency instrument so the day path's
     "no tape artifact was opened" claim stays a claim about the day path."""
-    # DE 133 / R-610's PRINCIPLE: A REAL DAY WITH NO LEDGER ANCHOR
-    # REFUSES BEFORE THE WORK, not after it. DE 132 put this check at the
-    # ledger write -- after ~90 minutes of draws -- which is the exact
-    # shape R-610 exists to forbid: "a check that can refuse refuses
-    # before the work it would waste". It is also why the check could not
-    # be driven cheaply, and an undrivable check is one nobody watches
-    # fire.
-    if (bool(params.get("user_ruled_unsealed_emission"))
-            and not fixture
-            and (ledger_anchor if ledger_anchor is not None
-                 else receipt_path) is None):
-        raise RunnerRefused(
-            "REFUSED DECISION_LEDGER_HAS_NO_ANCHOR: the params carry the "
-            "R-765 ruling and this is a REAL day, but no path was given "
-            "to write the ledger beside. The ruling is that the numbers "
-            "are KEPT; emitting the receipt with `decision_ledger: null` "
-            "is the silent form of promising one that is not there. "
-            "Refused BEFORE the day's work, not after it.")
     t_start = time.time()
     stages: dict = {}
     # THE DAY'S OWN DRAWS, separated from anything the `before_work` hook
@@ -5996,6 +6017,9 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     _mark("S_start")
     obs = wrapper_observed()
     assert_real_day_has_the_lock(day, obs, fixture=fixture)
+    assert_ledger_anchor(params, fixture=fixture,
+                         anchor=(ledger_anchor if ledger_anchor is not None
+                                 else receipt_path))
 
     # ---- S0: verify. Digests only. -------------------------------------
     book_path = Path(book_path)

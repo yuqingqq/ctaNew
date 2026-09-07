@@ -972,13 +972,23 @@ def _selftest_body(quiet: bool = False) -> int:
        f"do. A fixture's rows are synthetic; R-765 keeps the numbers of "
        f"real runs so they need not be re-run. DE 132's refusal did not "
        f"make that distinction and fired on this runner's own cells")
+    # DRIVEN AT THE FUNCTION, because `run_day` cannot be driven this far
+    # without the heavy lock -- the day-membership and lock guards refuse
+    # first, correctly, and my first two versions of this cell accepted
+    # THEIR refusal as if it were this one. The check is a named function
+    # so it can be watched firing.
     _code132 = None
     try:
-        RUN.run_day("2026-09-05", _made["book_path"], params=_P132,
-                    fixture=False, n_days_complete=1)         # REAL, no anchor
+        RUN.assert_ledger_anchor(_P132, fixture=False, anchor=None)
     except RUN.RunnerRefused as _e:
         _code132 = str(_e).split(":")[0].replace("REFUSED ", "")
-    ok(_code132 == "DECISION_LEDGER_HAS_NO_ANCHOR",
+    _fxa132 = RUN.assert_ledger_anchor(_P132, fixture=True, anchor=None)
+    _rok132 = RUN.assert_ledger_anchor(_P132, fixture=False,
+                                       anchor="/tmp/x.json")
+    ok(_code132 == "DECISION_LEDGER_HAS_NO_ANCHOR"
+       and _fxa132["owes_a_ledger"] is False
+       and _fxa132["status"] == "NO_LEDGER_FOR_A_FIXTURE_DAY"
+       and _rok132["owes_a_ledger"] is True,
        f"DE 132/133 RED: a REAL day with no anchor REFUSES BY ITS OWN "
        f"NAME -- `{_code132}` -- BEFORE the day's work, not after ~90 "
        f"minutes of it (R-610's principle; DE 132 put the check at the "
