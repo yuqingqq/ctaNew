@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 388
+EXPECTED_CHECKS = 392
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4718,10 +4718,40 @@ def winner_source(*, root=None, required_slugs=None,
                 "CONVENTION it applied, by name. A verdict whose rule "
                 "nobody can name verifies nothing -- BE 99 measured four "
                 "conventions and three of them disagree with the venue.")
-        _c = verification.get("counts") or {}
-        ver = {"status": ("VERIFIED_AGAINST_CHAINLINK"
-                          if verification.get("all_agree")
+        # REVIEW 104B §6 (2): NOTHING HERE IS READ FROM THE DICT IT WAS
+        # HANDED. `counts` is recomputed from `per_slug` and `all_agree`
+        # from `counts`, INSIDE this function -- REV drove a per-slug map
+        # of DISAGREE through to VERIFIED_AGAINST_CHAINLINK with
+        # `all_agree: True` supplied by the caller, and the quotable door
+        # opened on a boolean its caller wrote. No production caller can
+        # do that today; the door should not depend on that.
+        if verification["convention"]["name"] != SETTLEMENT_CONVENTION["name"]:
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE: the "
+                f"verification claims the convention "
+                f"{verification['convention']['name']!r} and the pinned "
+                f"one is {SETTLEMENT_CONVENTION['name']!r}. BE 99 "
+                f"measured that three other conventions in the grid "
+                f"disagree with the venue on 10-44 slugs a day, so a "
+                f"verdict under an unnamed rule verifies nothing.")
+        _c = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+              "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+        for _pv in verification["per_slug"].values():
+            _st = (_pv or {}).get("status")
+            if _st not in _c:
+                raise RunnerRefused(
+                    f"REFUSED SETTLEMENT_VERIFICATION_STATUS_UNKNOWN: a "
+                    f"per-slug verdict reads {_st!r}, which is none of "
+                    f"{sorted(_c)}. A status nobody declared cannot be "
+                    f"counted as agreement.")
+            _c[_st] += 1
+        _all_agree = (_c["VERIFIED_AGREE"] == len(verification["per_slug"])
+                      and len(verification["per_slug"]) > 0)
+        ver = {"status": ("VERIFIED_AGAINST_CHAINLINK" if _all_agree
                           else "VERIFICATION_DID_NOT_AGREE"),
+               "counts_are": ("RECOMPUTED here from `per_slug`, never "
+                              "read from the dict handed in (REV 104B "
+                              "§6(2))"),
                "convention": verification["convention"]["name"],
                "convention_block": verification["convention"],
                "counts": _c,
@@ -5025,6 +5055,23 @@ def settlement_admissibility(day: str, params: dict, *,
         return {"admissible": True, "class": "FIXTURE",
                 "why": "a fixture day values synthetic fills; rule 11 is "
                        "about days that could validate a claim"}
+    # REVIEW 104B §6 (4): THE OVERLAP IS REFUSED, NOT RESOLVED BY
+    # PRECEDENCE. `declared` was tested first, so a declaration naming a
+    # day the USER's early read CONSUMED brought it back as a VALIDATION
+    # day -- rule 11 undone by a list. v20 will not name a design day,
+    # but the guard must not depend on that.
+    if declared is not None and day in declared and day in design_days:
+        return {
+            "admissible": False,
+            "class": "DECLARATION_NAMES_A_CONSUMED_DAY",
+            "refusal_name": "SETTLEMENT_DECLARATION_NAMES_A_CONSUMED_DAY",
+            "design_days": design_days,
+            "declared_days": declared,
+            "why": (f"{day} is BOTH one of the four days the USER's early "
+                    f"read consumed (R-754) and named in the "
+                    f"declaration's admissible set. A consumed day cannot "
+                    f"be a validation day whatever a declaration says "
+                    f"(rule 11); the DECLARATION is what must change.")}
     if declared is not None and day in declared:
         return {"admissible": True, "class": "DECLARED_VALIDATION_DAY",
                 "declared_days": declared,
@@ -5067,6 +5114,34 @@ def assert_settlement_day_admissible(day: str, params: dict, *,
     return verdict
 
 
+def settlement_not_valued_reason(status: str, admissibility: dict) -> str:
+    """WHY THIS ARM-DAY CARRIES NO RULED VALUE -- PER STATUS (REV 104B).
+
+    One literal used to serve both statuses and was true of only one of
+    them: every fixture receipt said "this day is not in the admissible
+    set" beside `admissibility.admissible: true`. The reason is composed
+    from the status AND the verdict it sits next to, so the two cannot
+    disagree; an unknown status says so rather than borrowing a sentence
+    that fits neither."""
+    cls = (admissibility or {}).get("class")
+    if status == "NO_WINNER_SOURCE_ON_A_FIXTURE":
+        return (f"this day IS admissible (class {cls!r}) and no winner "
+                f"map was supplied to the run. A FIXTURE names synthetic "
+                f"slugs, which the venue has no record of, and reading "
+                f"the venue record here would break the fixture run's "
+                f"own data-free proof -- so a fixture brings its own "
+                f"winners or is not valued.")
+    if status == "NOT_VALUED_DAY_NOT_ADMISSIBLE":
+        return (f"rule 11: this day is NOT in the admissible set (class "
+                f"{cls!r}), so the ruled endpoint is not computed for "
+                f"it. The estimator REFUSES if asked directly "
+                f"(SETTLEMENT_DAY_NOT_ADMISSIBLE); this receipt records "
+                f"that it was not asked.")
+    return (f"no reason is declared for status {status!r}; the verdict "
+            f"beside it reads class {cls!r}. A sentence that fits "
+            f"neither status is worse than none.")
+
+
 def settlement_arm_day(observed_settle: float, null_settle: list,
                        params: dict) -> dict:
     """THE SAME DECLARED STATISTICS, THE NEW VALUATION.
@@ -5081,10 +5156,34 @@ def settlement_arm_day(observed_settle: float, null_settle: list,
             f"against the declared minimum "
             f"{params['min_draws_per_arm_day']}. The draw count is never "
             f"lowered for a second endpoint.")
-    loc = DESIGN.per_day_location(observed_settle, null_settle)
+    # REVIEW 104B §6 (3): A DEGENERATE NULL IS A STATUS, NEVER AN ABORT.
+    # `per_day_standardised_excess` raises `DesignRefused` on zero
+    # dispersion -- the design's own text says a degenerate null is a
+    # STATUS, never a large Z -- and `DesignRefused` is caught NOWHERE in
+    # this runner. REV drove it: an all-Up winner map kills the whole day
+    # and the receipt is never written, losing the D_E0 that was already
+    # computed and, on a real day, 70-80 minutes of work. Caught HERE,
+    # where the second endpoint is formed, so the day still emits.
+    try:
+        loc = DESIGN.per_day_location(observed_settle, null_settle)
+        _z = DESIGN.per_day_standardised_excess(observed_settle,
+                                                null_settle)
+    except DESIGN.DesignRefused as _e801d:
+        return {"status": "SETTLEMENT_NULL_DEGENERATE",
+                "D_E_settle": observed_settle,
+                "Z": None, "p_location": None,
+                "null_draws_summary": {"n": len(null_settle)},
+                "null_sd": statistics.pstdev(null_settle),
+                "null_mean": statistics.fmean(null_settle),
+                "refusal_text": str(_e801d),
+                "why": ("the settlement null has zero dispersion, so a "
+                        "standardised excess is undefined. The design's "
+                        "own words: a degenerate null is a STATUS, never "
+                        "a large Z. The DAY still emits -- D_E0 and this "
+                        "endpoint's own excess are computed and kept"),
+                "endpoint": "R-801 SETTLEMENT P&L (trades + residual)"}
     return {"D_E_settle": observed_settle,
-            "Z": DESIGN.per_day_standardised_excess(observed_settle,
-                                                    null_settle),
+            "Z": _z,
             "p_location": loc["p_one_sided"],
             "null_mean": statistics.fmean(null_settle),
             "null_sd": statistics.pstdev(null_settle),
@@ -6863,16 +6962,19 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                                      "adverse selection, not the result"),
             }
         elif r.get("status") == "OK":
+            _st801 = ("NO_WINNER_SOURCE_ON_A_FIXTURE"
+                      if (fixture and _adm801["admissible"])
+                      else "NOT_VALUED_DAY_NOT_ADMISSIBLE")
             r["economic_settlement"] = {
-                "status": ("NO_WINNER_SOURCE_ON_A_FIXTURE"
-                           if (fixture and _adm801["admissible"])
-                           else "NOT_VALUED_DAY_NOT_ADMISSIBLE"),
+                "status": _st801,
                 "admissibility": _adm801,
-                "why": ("rule 11: this day is not in the admissible set, "
-                        "so the ruled endpoint is not computed for it. "
-                        "The estimator REFUSES if asked directly "
-                        "(SETTLEMENT_DAY_NOT_ADMISSIBLE); this receipt "
-                        "records that it was not asked.")}
+                # REVIEW 104B §6 (1): THE REASON IS PER STATUS AND
+                # COMPUTED. One literal served both statuses and was true
+                # of only the second -- it said "this day is not in the
+                # admissible set" beside `admissible: true`, which is the
+                # printed conclusion contradicting the computed verdict
+                # next to it (rule 10).
+                "why": settlement_not_valued_reason(_st801, _adm801)}
         r["decision_population"] = pop
         r["seed"] = seed
         r["n_cancels_issued"] = int(arm_replay["cancels_issued"])
@@ -10344,6 +10446,117 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`{SETTLEMENT_CONVENTION['name']}`. The convention is PINNED by "
        f"name from BE 99's measurement and the grid is not re-derived "
        f"here")
+    # ===== REVIEW 104B §6: THE FOUR, EACH DRIVING REV's OWN CASE =====
+    # (2) THE VERIFICATION DOOR OPENED ON A BOOLEAN ITS CALLER SUPPLIED.
+    # REV's exact dict: a per-slug map of DISAGREE, a made-up convention
+    # name, empty counts and `all_agree: True` -> VERIFIED_AGAINST_
+    # CHAINLINK, is_final True, require_verified PASSES.
+    _revdict = {"per_slug": {"S1": {"status": "DISAGREE",
+                                    "venue_up_won": True,
+                                    "chainlink_up_won": False}},
+                "convention": {"name": "a rule I made up"},
+                "counts": {}, "all_agree": True}
+    _madeup104 = None
+    try:
+        winner_source(root=_wr801.parent, verification=_revdict,
+                      require_verified=True)
+    except RunnerRefused as _e:
+        _madeup104 = str(_e).split(":")[0].replace("REFUSED ", "")
+    _revdict2 = {**_revdict,
+                 "convention": dict(SETTLEMENT_CONVENTION)}
+    _lied104 = winner_source(root=_wr801.parent, verification=_revdict2)
+    _lied_req104 = None
+    try:
+        winner_source(root=_wr801.parent, verification=_revdict2,
+                      require_verified=True)
+    except RunnerRefused as _e:
+        _lied_req104 = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_madeup104 == "SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE"
+       and _lied104["chainlink_verification"]["status"]
+       == "VERIFICATION_DID_NOT_AGREE"
+       and _lied104["is_final_for_quotation"] is False
+       and _lied104["chainlink_verification"]["counts"]["DISAGREE"] == 1
+       and _lied_req104 == "SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK",
+       f"REV 104B §6(2), REV's OWN DICT DRIVEN: a verification carrying "
+       f"`all_agree: True`, empty counts and a per-slug map that says "
+       f"DISAGREE no longer opens the door. Under a made-up convention "
+       f"name it refuses `{_madeup104}`; under the PINNED name the "
+       f"counts are RECOMPUTED from `per_slug` (DISAGREE "
+       f"{_lied104['chainlink_verification']['counts']['DISAGREE']}), "
+       f"the status reads "
+       f"`{_lied104['chainlink_verification']['status']}`, "
+       f"`is_final_for_quotation` is False and the quotable path refuses "
+       f"`{_lied_req104}`. Nothing here is read from the dict handed in")
+    # (4) A DECLARATION MAY NOT RE-OPEN A CONSUMED DAY. REV's case:
+    # `admissible_days = ["2026-09-05"]`, a day the early read CONSUMED.
+    _consumed104 = (_dd801[0] if _dd801 else "2026-09-05")
+    _decl104 = {**live,
+                "settlement_endpoint": {"admissible_days": [_consumed104]}}
+    _ov104 = settlement_admissibility(_consumed104, _decl104)
+    _ovname104 = None
+    try:
+        assert_settlement_day_admissible(_consumed104, _decl104)
+    except RunnerRefused as _e:
+        _ovname104 = str(_e).split(":")[0].replace("REFUSED ", "")
+    _still104 = settlement_admissibility("2026-09-07", _declared801)
+    ok(_ov104["admissible"] is False
+       and _ovname104 == "SETTLEMENT_DECLARATION_NAMES_A_CONSUMED_DAY"
+       and _still104["class"] == "DECLARED_VALIDATION_DAY",
+       f"REV 104B §6(4), THE OVERLAP REFUSED BY NAME: a declaration "
+       f"naming {_consumed104} -- a day the USER's early read CONSUMED "
+       f"-- no longer brings it back as a validation day; it refuses "
+       f"`{_ovname104}`, because a consumed day cannot be a validation "
+       f"day whatever a declaration says (rule 11), and the DECLARATION "
+       f"is what must change. A declaration naming an UNCONSUMED day "
+       f"still admits as `{_still104['class']}`, so the guard did not "
+       f"just close")
+    # (3) A DEGENERATE SETTLEMENT NULL IS A STATUS, NOT A DAY-LEVEL ABORT.
+    _degen104 = settlement_arm_day(12.5, [3.0] * live[
+        "min_draws_per_arm_day"], live)
+    _live104 = settlement_arm_day(
+        12.5, [float(i % 7) for i in range(live["min_draws_per_arm_day"])],
+        live)
+    ok(_degen104.get("status") == "SETTLEMENT_NULL_DEGENERATE"
+       and _degen104["Z"] is None and _degen104["p_location"] is None
+       and _degen104["null_sd"] == 0.0
+       and _degen104["null_draws_summary"]["n"] == live[
+           "min_draws_per_arm_day"]
+       and _degen104["D_E_settle"] == 12.5
+       and _live104.get("status") is None
+       and isinstance(_live104["Z"], float),
+       f"REV 104B §6(3), THE ABORT IS A STATUS NOW: a settlement null "
+       f"with ZERO DISPERSION returns "
+       f"`{_degen104['status']}` -- Z None, p None, sd "
+       f"{_degen104['null_sd']}, n "
+       f"{_degen104['null_draws_summary']['n']}, the excess KEPT -- "
+       f"instead of raising `DesignRefused` past a runner that catches "
+       f"it NOWHERE, which killed the whole day and threw away the D_E0 "
+       f"already computed (70-80 minutes on a real day). A null with "
+       f"dispersion still returns a real Z ({_live104['Z']:.4f})")
+    # (1) THE REASON IS PER STATUS AND CANNOT CONTRADICT THE VERDICT.
+    _fixadm104 = settlement_admissibility("FIXTURE-DAY-1", live,
+                                          fixture=True)
+    _r_fix104 = settlement_not_valued_reason(
+        "NO_WINNER_SOURCE_ON_A_FIXTURE", _fixadm104)
+    _notadm104 = settlement_admissibility("2026-09-07", live)
+    _r_not104 = settlement_not_valued_reason(
+        "NOT_VALUED_DAY_NOT_ADMISSIBLE", _notadm104)
+    ok(_fixadm104["admissible"] is True
+       and "IS admissible" in _r_fix104
+       and "not in the admissible set" not in _r_fix104
+       and _notadm104["admissible"] is False
+       and "NOT in the admissible set" in _r_not104
+       and _r_fix104 != _r_not104
+       and "no reason is declared" in settlement_not_valued_reason(
+           "SOMETHING_ELSE", _fixadm104),
+       f"REV 104B §6(1), THE LITERAL THAT CONTRADICTED THE KEY BESIDE "
+       f"IT: the fixture status now reads `{_r_fix104[:60]}…` against "
+       f"`admissible: {_fixadm104['admissible']}`, and the "
+       f"not-admissible status keeps the rule-11 sentence -- two "
+       f"statuses, two reasons, each composed from the verdict it sits "
+       f"beside. One literal served both and was true of only the "
+       f"second. An unknown status SAYS it has no declared reason "
+       f"rather than borrowing one that fits neither")
     ok(SETTLEMENT_CONVENTION["boundary_reader"]
        == "last sample at or before the boundary"
        and SETTLEMENT_CONVENTION["tie"] == "X_T >= X_0 -> Up"
