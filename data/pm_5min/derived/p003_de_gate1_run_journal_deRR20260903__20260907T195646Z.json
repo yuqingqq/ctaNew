@@ -1,0 +1,154 @@
+{
+  "day": "2026-09-03",
+  "decision_ledger": {
+    "bytes": 6305661,
+    "digests_agree": true,
+    "exists": true,
+    "n_rows": 187266,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260903__20260907T195522Z.jsonl.gz",
+    "row_kinds": {
+      "ARM_SCALARS": 2,
+      "DECISION": 17333,
+      "FILL": 167944,
+      "HEADER": 1,
+      "NULL_DRAW": 1000,
+      "SETTLEMENT_SCALARS": 2,
+      "SETTLEMENT_SLUG": 984
+    },
+    "schema_version": 3,
+    "sha256_in_the_artifact": "7a017973d22db3b715387012956dba1a52cce54275bb879f9ce5a30b892f56f0",
+    "sha256_recomputed": "7a017973d22db3b715387012956dba1a52cce54275bb879f9ce5a30b892f56f0"
+  },
+  "emitted_artifact_census": {
+    "arm_statuses": {
+      "CONDVALUE_X_SKEW": "OK",
+      "HAZARD_OVER_SKEWED_REF": "OK"
+    },
+    "bytes": 174236,
+    "day_run_status": "DAY_RUN_UNSEALED",
+    "economic_settlement_per_arm": {
+      "CONDVALUE_X_SKEW": {
+        "admissibility_class": "DESIGN_DATA",
+        "has_D_E_settle": true,
+        "has_Z": true,
+        "has_arm_legs": true,
+        "has_arm_total": true,
+        "has_baseline_legs": true,
+        "has_baseline_total": true,
+        "has_p": true,
+        "null_n": 500
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "admissibility_class": "DESIGN_DATA",
+        "has_D_E_settle": true,
+        "has_Z": true,
+        "has_arm_legs": true,
+        "has_arm_total": true,
+        "has_baseline_legs": true,
+        "has_baseline_total": true,
+        "has_p": true,
+        "null_n": 500
+      }
+    },
+    "keys_named_inventory_leg": 0,
+    "keys_named_trades_cash_flow_cents": 6,
+    "n_arm_days": 2,
+    "n_days_complete": 4,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json",
+    "placement_latency": {
+      "L_place_ms": 0.0,
+      "book": {
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+        "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323"
+      },
+      "found_at": {},
+      "guard": {
+        "armed_by": "params `settlement_endpoint.require_book_declares_L`, unset today",
+        "require_book_declares_L": false,
+        "why_not_armed": "every landed book predates BE 101's builder change, so arming it would refuse the four re-runs; the L those books carry is 0 BY CONSTRUCTION -- the building code has no placement-latency field at all -- which is a measured fact, not an assumption"
+      },
+      "source": "THE BOOK'S BUILDER RECEIPT DECLARES NONE",
+      "why": "no key naming a placement latency appears anywhere in this book's builder receipt, so the book was built by code that has none and the day runs at L_place = 0 BY CONSTRUCTION. DE 137 declared the parameter on `build_reference`, which the runner never calls; the pass-through and the cost of rebuilding books at L = 250 are BE 101's (R-810). COMPUTED from the receipt's own keys, so a run on a rebuilt book says so here without anyone editing this sentence."
+    },
+    "sha256": "ff7ee9a805b7e46002a21d051957b067f7dce03c36ba6e63646c89f4e82477bb",
+    "supersedes": {
+      "both_at_L_place_ms": 0.0,
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json",
+      "sha256": "5c8a58f501d3b61bb3698579427b68fd5745ba991922e4f2dcc601e9a1639e7c"
+    },
+    "winner": {
+      "counts": {
+        "CHAINLINK_UNAVAILABLE": 0,
+        "DISAGREE": 1,
+        "VENUE_UNRESOLVED": 0,
+        "VERIFIED_AGREE": 245
+      },
+      "is_final_for_quotation": false,
+      "n_slugs": 38439,
+      "status": "VERIFICATION_DID_NOT_AGREE"
+    }
+  },
+  "exit_resolved_through_the_map": {
+    "declared_codes": [
+      "0",
+      "1"
+    ],
+    "exit_code": 0,
+    "mapped_by": {
+      "path": "/home/yuqing/ctaNew/live/pm_research/declarations/producer_exit_maps_v9.json",
+      "sha256": "482527d4810b0f746df9b13aaeaf8cc1dc566020f4ade3acdcd62f11bd11825b",
+      "version": 9
+    },
+    "producer_module": "live/pm_research/de_early_read.py",
+    "resolved_kind": "the early-read day completed and its artifact was written, or --selftest passed",
+    "the_map_is_read_from": "the chain head by the pair"
+  },
+  "five_fields_and_id_at_exit_while_loaded": {
+    "ActiveState": "active",
+    "ExecMainExitTimestamp": "Mon 2026-09-07 19:55:29 UTC",
+    "ExecMainStartTimestamp": "Mon 2026-09-07 17:16:15 UTC",
+    "ExecMainStatus": "0",
+    "InvocationID": "098a441ea4c44689822b033325fc3473",
+    "LoadState": "loaded",
+    "MemoryPeak": "3124985856",
+    "Result": "success",
+    "SubState": "exited",
+    "as_of": "2026-09-07T19:56:45Z"
+  },
+  "go": "GO R 2026-09-03",
+  "head_for_the_whole_run": "850c1668846f8281f0a8cb888547bc80a809b2bc",
+  "head_is": "the SIXTH composition, REV 105 cleared",
+  "invocation_id": "098a441ea4c44689822b033325fc3473",
+  "journal_by_both_invocation_fields": {
+    "after_the_stop": {
+      "as_of": "2026-09-07T19:57:36Z",
+      "manager_lines_USER_INVOCATION_ID": 3,
+      "manager_text": "2026-09-07T17:16:15+00:00 ip-172-31-78-41 systemd[1004]: Started deRR20260903.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-03 --supersedes /home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T19:57:34+00:00 ip-172-31-78-41 systemd[1004]: Stopped deRR20260903.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-03 --supersedes /home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T19:57:34+00:00 ip-172-31-78-41 systemd[1004]: deRR20260903.service: Consumed 2h 39min 3.885s CPU time, 2.9G memory peak, 0B memory swap peak.\n",
+      "retention_state_is_a_MEASUREMENT": {
+        "as_of": "2026-09-07T19:57:36Z",
+        "oldest_entry_the_journal_holds": "2026-09-07T15:34:15+00:00 ip-172",
+        "the_query_that_produced_it": "journalctl --user -o short-iso --no-pager | head -1"
+      },
+      "sha256_of_the_manager_text": "08fe897d76f1fb7c9122cf6fdee6ed766e5a10fc4aabbf6be034b3d68d9b9ef0",
+      "why_it_is_here": "the record was written WHILE the unit was loaded; the Stopped/Consumed lines exist only after the stop. Uncommitted and seconds old when added; nothing landed was edited (rule 13)"
+    },
+    "copied_at": "2026-09-07T19:56:46Z",
+    "manager_lines_USER_INVOCATION_ID": 1,
+    "manager_text": "2026-09-07T17:16:15+00:00 ip-172-31-78-41 systemd[1004]: Started deRR20260903.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-03 --supersedes /home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n",
+    "payload_lines__SYSTEMD_INVOCATION_ID": 5,
+    "retention_state_is_a_MEASUREMENT": {
+      "as_of": "2026-09-07T19:56:46Z",
+      "oldest_entry_the_journal_holds": "2026-09-07T15:34:15+00:00 ip-172",
+      "the_query_that_produced_it": "journalctl --user -o short-iso --no-pager | head -1"
+    },
+    "unit_query_lines_for_cross_check": 14
+  },
+  "kind": "de_heavy_run_capture_record",
+  "launched_at": "2026-09-07T17:16:15Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-rr",
+  "leaf_peak_bytes_sampled_in_process": 2958557184,
+  "leaf_peak_samples_taken_alive": 315,
+  "no_economic_value_is_quoted_here": "DA's reader prints the table",
+  "unit": "deRR20260903.service",
+  "written_at": "2026-09-07T19:56:46Z"
+}
