@@ -98,10 +98,14 @@ FIRST_READ_PINS = {
                "18f4b4be8e538a683f9b04"),
     "the_act": ("the FIRST race read -- be_race_read_result_v2.json, days "
                 "20260903, 20260904, 20260905, G = 3, CONSUMED"),
+    #: THE FILENAME IS NOT REPEATED HERE, deliberately: the non-head census
+    #: reads STRING CONSTANTS and follows them through one assignment, so a
+    #: name quoted in PROSE inside this dict is reported as a second pin.
+    #: One citation, one literal -- the `path` above.
     "how_the_act_names_it": (
-        "be_race_read_result_v2.json carries "
-        "`pinned_days_not_in_READABLE.copied_from` = "
-        "'be_race_read_feed_pins_v1.json'"),
+        "the first read's artifact carries "
+        "`pinned_days_not_in_READABLE.copied_from`, and its value is the "
+        "`path` above"),
     "why_not_the_head": (
         "the head is the SECOND read's pins: a different act, a different "
         "day set. A reader of history resolves by the pair the act "
