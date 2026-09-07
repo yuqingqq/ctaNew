@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 374
+EXPECTED_CHECKS = 388
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4588,23 +4588,510 @@ def absolute_legs(fills: list) -> dict:
         b, a_, mk = (f.get("inventory_before"), f.get("inventory_after"),
                      f.get("inventory_mark_cents"))
         if b is not None and a_ is not None and mk is not None:
-            inv += (float(a_) - float(b)) * float(mk)
+            inv += (float(a_) - float(b)) * float(mk)   # BUYS - SELLS
             n_inv += 1
     return {
         "unit": VALUATION_UNIT,
         "fills_leg": total,
         "n_fills": len(fills or []),
         "n_fills_valued": n_valued,
-        "inventory_leg": (inv if n_inv else None),
+        # R-803: NAMED FOR WHAT IT IS. This was `inventory_leg`, and BE
+        # 99 measured it to be the exact NEGATIVE of the R-801 trades
+        # leg -- sum((after - before) x mark) is sum(sgn x size x px) =
+        # BUYS - SELLS. It is not a residual mark-to-market; the
+        # residual is priced at SETTLEMENT in the R-801 legs.
+        "trades_cash_flow_cents": (-inv if n_inv else None),
+        "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means "
+                                            "cash taken in; the negative "
+                                            "of the old `inventory_leg`",
         "n_fills_with_inventory": n_inv,
-        "why_inventory_leg_may_be_None": (
+        "why_trades_cash_flow_may_be_None": (
             "BE 96's position fields are absent on these fills; an "
-            "unrecorded leg is not a zero one"),
+            "unrecorded quantity is not a zero one"),
         "total": total,
         "what_total_is": "the fills leg, which is what `_value_cents` "
                          "sums and therefore exactly what D(E0) is the "
                          "difference of",
     }
+
+
+#: R-801, THE USER: "the pnls are from trades and remaining position's
+#: settlement p&l, need to calculate this correctly". An UP share pays
+#: 100 cents if Up won and 0 otherwise; the payoff is the venue's, not a
+#: choice of this module's.
+SETTLE_UP_CENTS = 100.0
+#: The venue's record of each market's outcome. NOT Chainlink: this file
+#: carries `source: "clob"` on every record (BE 98, Q-BE-341). The market
+#: TEXT names Chainlink as the resolution source, and verifying a winner
+#: against a Chainlink read is BE 99's method, which has not landed --
+#: so nothing here calls a settlement value verified.
+RESOLUTIONS_REL = "data/pm_5min/resolutions.jsonl"
+
+
+def winner_source(*, root=None, required_slugs=None,
+                  verification=None, require_verified: bool = False) -> dict:
+    """WHO WON EACH SLUG, AND HOW WE KNOW -- the settlement mark's source.
+
+    R-801. The method is BE 98's, measured and filed at Q-BE-341, not
+    invented here: the winner field is `winners`, a dict on records with
+    `closed: true`; the UP share pays `SETTLE_UP_CENTS` iff
+    `winners["Up"] is True`. BE measured 38,248 distinct closed slugs,
+    exactly one of Up/Down true on every record and no slug whose
+    repeated records disagree -- so those two properties are CHECKED here
+    rather than assumed, and each has its own refusal.
+
+    THE CHAINLINK QUESTION IS OPEN AND IS SAID SO. This file's own
+    `source` is "clob"; the market text names Chainlink; BE 98 states it
+    verified no winner against a Chainlink read, and BE 99 owns that
+    method. Until a verification source is passed in, every slug's status
+    is `VENUE_RECORD_NOT_VERIFIED_AGAINST_CHAINLINK` and
+    `is_final_for_quotation` is False. `require_verified=True` REFUSES
+    without one -- so a caller that wants to publish a settlement number
+    as final cannot get one by not asking."""
+    # `root` is the DATA root (`DR.resolve()["data_root"]`), the same
+    # root every other reader here takes; RESOLUTIONS_REL is kept
+    # repo-relative because that is how the receipt names it.
+    r = Path(root) if root else Path(DR.resolve()["data_root"])
+    path = r / RESOLUTIONS_REL.split("data/", 1)[1]
+    if not path.is_file():
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_WINNER_SOURCE_ABSENT: no resolution "
+            f"record at {path}. A settlement value with no source for the "
+            f"winner is a number nobody can check.")
+    raw = path.read_bytes()
+    sha = hashlib.sha256(raw).hexdigest()
+    winners: dict = {}
+    n_records, n_closed = 0, 0
+    for line in raw.decode().splitlines():
+        if not line.strip():
+            continue
+        n_records += 1
+        rec = json.loads(line)
+        if not rec.get("closed") or not isinstance(rec.get("winners"), dict):
+            continue
+        n_closed += 1
+        w = rec["winners"]
+        trues = sorted(k for k, v in w.items() if v is True)
+        if len(trues) != 1:
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_WINNER_AMBIGUOUS: slug "
+                f"{rec.get('slug')!r} has {len(trues)} outcomes marked "
+                f"true ({trues}). Exactly one side wins a binary market; "
+                f"a record that says otherwise is not a settlement.")
+        up = bool(w.get("Up"))
+        prev = winners.get(rec.get("slug"))
+        if prev is not None and prev["up_won"] != up:
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_WINNER_RECORDS_DISAGREE: slug "
+                f"{rec.get('slug')!r} has records naming BOTH outcomes. "
+                f"Two answers to one question with no rule saying which "
+                f"is newest is not a source.")
+        winners[rec.get("slug")] = {
+            "up_won": up,
+            "settle_cents": (SETTLE_UP_CENTS if up else 0.0),
+            "source": rec.get("source"),
+            "n_records_seen": (prev or {}).get("n_records_seen", 0) + 1}
+    missing = sorted(set(required_slugs or []) - set(winners))
+    if missing:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_WINNER_MISSING_FOR_SLUG: "
+            f"{len(missing)} slug(s) the fills name carry no closed "
+            f"resolution record, e.g. {missing[:3]}. A settlement value "
+            f"for a slug nobody resolved would be a fabricated number.")
+    ver = {"status": "NOT_VERIFIED_AGAINST_CHAINLINK",
+           "why": ("this file's own `source` is \"clob\" -- the VENUE's "
+                   "record of the outcome. The market text names "
+                   "Chainlink as the resolution source; verifying a "
+                   "winner against a Chainlink read is BE 99's method "
+                   "(R-801), which has not landed. Recorded, never "
+                   "assumed."),
+           "owner": "BE 99, per R-801",
+           "per_slug_status": "VENUE_RECORD_NOT_VERIFIED_AGAINST_CHAINLINK"}
+    if verification is not None:
+        if not (isinstance(verification, dict)
+                and isinstance(verification.get("per_slug"), dict)
+                and isinstance(verification.get("convention"), dict)
+                and verification["convention"].get("name")):
+            raise RunnerRefused(
+                "REFUSED SETTLEMENT_VERIFICATION_SOURCE_MALFORMED: a "
+                "verification must carry a per-slug verdict map and the "
+                "CONVENTION it applied, by name. A verdict whose rule "
+                "nobody can name verifies nothing -- BE 99 measured four "
+                "conventions and three of them disagree with the venue.")
+        _c = verification.get("counts") or {}
+        ver = {"status": ("VERIFIED_AGAINST_CHAINLINK"
+                          if verification.get("all_agree")
+                          else "VERIFICATION_DID_NOT_AGREE"),
+               "convention": verification["convention"]["name"],
+               "convention_block": verification["convention"],
+               "counts": _c,
+               "n_slugs_verified": len(verification["per_slug"]),
+               "per_slug": verification["per_slug"],
+               "per_slug_status": "one of VERIFIED_AGREE / DISAGREE / "
+                                  "CHAINLINK_UNAVAILABLE / "
+                                  "VENUE_UNRESOLVED, per slug"}
+    if require_verified:
+        # THE FAILING STATUSES REFUSE BY THEIR OWN NAMES. An unverified
+        # value may be COMPUTED and LABELLED (R-803); what it may never
+        # be is quoted as final, and this is the door that says no.
+        _c = (ver.get("counts") or {})
+        if ver["status"] == "NOT_VERIFIED_AGAINST_CHAINLINK":
+            raise RunnerRefused(
+                "REFUSED SETTLEMENT_WINNERS_NOT_VERIFIED: a caller asked "
+                "for a settlement value it may quote as final and no "
+                "Chainlink verification was supplied. The venue record "
+                "is the JOIN; the stream is the CHECK (R-803).")
+        if _c.get("DISAGREE"):
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK: "
+                f"{_c['DISAGREE']} slug(s) where the venue's recorded "
+                f"winner and "
+                f"{verification['convention']['name']} disagree. BE 99 "
+                f"measured 0 such slugs on 09-05 and 09-06; a day with "
+                f"any is not quotable, and flipping one moves a day "
+                f"total by thousands of cents.")
+        if _c.get("CHAINLINK_UNAVAILABLE") or _c.get("VENUE_UNRESOLVED"):
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_CHAINLINK_UNAVAILABLE: "
+                f"{_c.get('CHAINLINK_UNAVAILABLE', 0)} slug(s) with no "
+                f"S60 sample at a boundary and "
+                f"{_c.get('VENUE_UNRESOLVED', 0)} with no closed venue "
+                f"record. A winner nobody could check is not a verified "
+                f"winner.")
+    return {"path": str(path), "sha256": sha,
+            "n_records": n_records, "n_closed_records": n_closed,
+            "n_slugs": len(winners),
+            "winners": winners,
+            "settle_up_cents": SETTLE_UP_CENTS,
+            "method": ("BE 98 / Q-BE-341: the `winners` dict on records "
+                       "with `closed: true`; the UP share pays "
+                       "SETTLE_UP_CENTS iff winners['Up'] is True"),
+            "chainlink_verification": ver,
+            "is_final_for_quotation":
+                ver["status"] == "VERIFIED_AGAINST_CHAINLINK"}
+
+
+#: R-803 / BE 99 (Q-BE-342): the ONE convention that reproduces the
+#: venue's recorded winner on 288 of 288 slugs on BOTH 09-05 and 09-06.
+#: The other three in `exp_m6_settlement.py`'s pre-registered grid
+#: disagree on 10-44 slugs a day, so the winner is NOT convention-free at
+#: the slug level and the declaration must PIN this one by name.
+SETTLEMENT_CONVENTION = {
+    "name": "S60(T) >= S60(t0)",
+    "X_T": "S60(T) -- the 60-second Chainlink TWAP at the window's close",
+    "X_0": "S60(t0) -- the same stream at the window's open",
+    "boundary_reader": "last sample at or before the boundary",
+    "tie": "X_T >= X_0 -> Up",
+    "readers": ("exp_m6_settlement.load_streams / read_at -- the "
+                "experiment module's OWN functions, imported, never "
+                "re-implemented"),
+    "provenance": ("BE 99, Q-BE-342 (9e1d943), R-803: 288/288 on 09-05 "
+                   "and 09-06; S30/S30 disagrees on 23/17 slugs, S60/S30 "
+                   "on 15/10, meanS60/S60 on 44/43"),
+    "window_s": 300,
+}
+_CHAINLINK_CACHE: dict = {}
+
+
+def chainlink_streams(days, *, coin: str = "btc"):
+    """THE TWAP STREAM FOR THESE DAYS, THROUGH exp_m6's OWN LOADER.
+
+    `load_streams()` globs every hourly file (740 MB, 457 per topic), so
+    BE narrowed the glob to the hours the days need. The narrowing is
+    done HERE by pointing the module's own `PM` at a directory of
+    symlinks to exactly those files -- the reader is unmodified, which is
+    what "no re-implementation" means; only the file set is smaller.
+
+    The hours span the day before's last hour (the boundary reader takes
+    the last sample AT OR BEFORE t0) through the day after's first."""
+    import glob as _glob
+    import os as _os
+    import tempfile as _tf
+    import datetime as _dt
+    key = (tuple(sorted(days)), coin)
+    if key in _CHAINLINK_CACHE:
+        return _CHAINLINK_CACHE[key]
+    import exp_m6_settlement as _M6
+    hours = set()
+    for d in days:
+        y, m, dd = (int(x) for x in d.split("-"))
+        base = _dt.datetime(y, m, dd, tzinfo=_dt.timezone.utc)
+        for k in range(-1, 26):
+            t = base + _dt.timedelta(hours=k)
+            hours.add(t.strftime("%Y%m%d_%H"))
+    src = Path(DR.resolve()["data_root"]) / "pm_5min" / "prices"
+    tmp = Path(_tf.mkdtemp(prefix="de_chainlink_"))
+    n_files = 0
+    for topic in ("crypto_prices_twap_sixty", "crypto_prices_twap_thirty"):
+        d = tmp / "prices" / topic
+        d.mkdir(parents=True)
+        for h in sorted(hours):
+            for f in sorted(_glob.glob(str(src / topic / f"{h}.csv*"))):
+                _os.symlink(f, d / _os.path.basename(f))
+                n_files += 1
+    if n_files == 0:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_CHAINLINK_UNAVAILABLE: no TWAP hourly "
+            f"file under {src} for the hours {sorted(hours)[:3]}... of "
+            f"{sorted(days)}. The winner cannot be verified against a "
+            f"stream that is not there, and an unverified winner is not "
+            f"quotable (R-803).")
+    _old_pm = _M6.PM
+    try:
+        _M6.PM = tmp
+        streams = _M6.load_streams()
+    finally:
+        _M6.PM = _old_pm
+    out = {"streams": streams, "n_hourly_files": n_files,
+           "hours": sorted(hours),
+           "reader_module": {
+               "path": "live/pm_research/exp_m6_settlement.py",
+               "sha256": hashlib.sha256(
+                   Path(_M6.__file__).read_bytes()).hexdigest()},
+           "narrowed_by": ("a symlink tree over the hours these days "
+                           "need; exp_m6's own loader, unmodified")}
+    _CHAINLINK_CACHE[key] = out
+    return out
+
+
+def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
+                                     coin: str = "btc") -> dict:
+    """THE VENUE'S WINNER, CHECKED AGAINST THE CHAINLINK STREAM.
+
+    R-803: rule 9's door. The venue record is the JOIN; the stream is the
+    CHECK. Per slug the status is one of
+
+        VERIFIED_AGREE           the convention reproduces the venue
+        DISAGREE                 it does not -- the day is not quotable
+        CHAINLINK_UNAVAILABLE    no sample at or before a boundary
+        VENUE_UNRESOLVED         no closed venue record for the slug
+
+    and the two failing statuses are what `require_verified` refuses on:
+    an unverified value may still be COMPUTED and LABELLED, never quoted
+    as final."""
+    import exp_m6_settlement as _M6
+    sym = _M6.COINS.get(coin)
+    ser = (streams or {}).get((sym, 60))
+    per: dict = {}
+    counts = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+              "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+    for sl in sorted(slugs):
+        v = (winners or {}).get(sl)
+        if v is None:
+            per[sl] = {"status": "VENUE_UNRESOLVED"}
+            counts["VENUE_UNRESOLVED"] += 1
+            continue
+        try:
+            t0 = int(str(sl).rsplit("-", 1)[1])
+        except (ValueError, IndexError):
+            per[sl] = {"status": "CHAINLINK_UNAVAILABLE",
+                       "why": "the slug does not carry an epoch t0"}
+            counts["CHAINLINK_UNAVAILABLE"] += 1
+            continue
+        x0 = xT = None
+        if ser is not None:
+            x0, _ = _M6.read_at(ser, t0 * 1000)
+            xT, _ = _M6.read_at(ser,
+                                (t0 + SETTLEMENT_CONVENTION["window_s"])
+                                * 1000)
+        if x0 is None or xT is None:
+            per[sl] = {"status": "CHAINLINK_UNAVAILABLE",
+                       "why": ("no S60 sample at or before one of the "
+                               "boundaries")}
+            counts["CHAINLINK_UNAVAILABLE"] += 1
+            continue
+        up_chain = bool(xT >= x0)
+        agree = (up_chain == bool(v["up_won"]))
+        per[sl] = {"status": "VERIFIED_AGREE" if agree else "DISAGREE",
+                   "venue_up_won": bool(v["up_won"]),
+                   "chainlink_up_won": up_chain}
+        counts["VERIFIED_AGREE" if agree else "DISAGREE"] += 1
+    return {"convention": SETTLEMENT_CONVENTION,
+            "per_slug": per, "counts": counts,
+            "n_slugs": len(per),
+            "all_agree": (counts["VERIFIED_AGREE"] == len(per)
+                          and len(per) > 0)}
+
+
+def _settle_for(f: dict, winners: dict) -> float:
+    slug = f.get("slug")
+    w = (winners or {}).get(slug)
+    if w is None:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_WINNER_MISSING_FOR_SLUG: the fill names "
+            f"slug {slug!r} and the winner source has no record for it.")
+    return float(w["settle_cents"])
+
+
+def settle_value_cents(fills: list, winners: dict) -> float:
+    """R-801's VALUATION: every fill valued at the settlement.
+
+    `sgn x (settle - px) x size`, the same sign convention as the 5-second
+    markout (`fill_value_cents`) with the markout mid replaced by the
+    outcome the market actually settled at. It is a SECOND valuation
+    beside `_value_cents`, never a replacement of it: the 5-s markout
+    stays as the short-horizon diagnostic the design declared."""
+    tot = 0.0
+    for f in fills or []:
+        lvl, sz = f.get("px_cents"), float(f.get("size") or 0.0)
+        if lvl is None or not sz:
+            continue
+        sgn = 1.0 if f.get("side") == HSP_BUY_SIDE() else -1.0
+        tot += sgn * (_settle_for(f, winners) - float(lvl)) * sz
+    return tot
+
+
+def settlement_legs_by_slug(fills: list, winners: dict) -> dict:
+    """THE RULED DECOMPOSITION, PER SLUG -- trades, residual, total.
+
+    R-801, the user's words: "the pnls are from trades and remaining
+    position's settlement p&l". Per slug:
+
+        trades leg   = sum(sells px x size) - sum(buys px x size)
+        residual leg = net_shares x settle
+        total        = trades + residual
+
+    and the identity `total == sum over fills of sgn x (settle - px) x
+    size` holds by algebra, so it is ASSERTED here rather than trusted:
+    the two legs are a decomposition of the ruled quantity, not a second
+    definition of it."""
+    per: dict = {}
+    for f in fills or []:
+        lvl, sz = f.get("px_cents"), float(f.get("size") or 0.0)
+        if lvl is None or not sz:
+            continue
+        slug = f.get("slug")
+        sgn = 1.0 if f.get("side") == HSP_BUY_SIDE() else -1.0
+        d = per.setdefault(slug, {
+            "slug": slug, "n_fills": 0, "net_shares": 0.0,
+            "trades_leg_cents": 0.0, "settle_cents": _settle_for(f, winners),
+            "up_won": bool((winners or {})[slug]["up_won"])})
+        d["n_fills"] += 1
+        d["net_shares"] += sgn * sz
+        # a BUY pays px x size out; a SELL takes px x size in
+        d["trades_leg_cents"] += -sgn * float(lvl) * sz
+    for d in per.values():
+        d["residual_leg_cents"] = d["net_shares"] * d["settle_cents"]
+        d["total_cents"] = d["trades_leg_cents"] + d["residual_leg_cents"]
+    day_total = sum(d["total_cents"] for d in per.values())
+    per_fill = settle_value_cents(fills, winners)
+    if abs(day_total - per_fill) > 1e-9:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_LEGS_DO_NOT_RECONCILE: the per-slug legs "
+            f"sum to {day_total!r} and the per-fill valuation is "
+            f"{per_fill!r} -- a difference of {day_total - per_fill!r}. "
+            f"The legs are a DECOMPOSITION of the ruled quantity; if they "
+            f"disagree with it, one of them is a different quantity and "
+            f"neither may be published.")
+    return {
+        "unit": VALUATION_UNIT,
+        "per_slug": per,
+        "n_slugs": len(per),
+        "trades_leg_cents": sum(d["trades_leg_cents"] for d in per.values()),
+        "residual_leg_cents": sum(d["residual_leg_cents"]
+                                  for d in per.values()),
+        "total_cents": day_total,
+        "reconciles_with_the_per_fill_formula": True,
+        "what_total_is": ("R-801's ruled P&L: the cash flow of the "
+                          "trades plus the settlement value of the "
+                          "position still held at the window's close, "
+                          "summed over slugs"),
+        "ruling": "R-801",
+    }
+
+
+def settlement_admissibility(day: str, params: dict, *,
+                             fixture: bool = False) -> dict:
+    """RULE 11's GUARD ON THE NEW ENDPOINT (R-801 (6)).
+
+    The four days the user ruled read early (09-03..09-06) are DESIGN
+    data for this endpoint: they may be valued, and every such value is
+    LABELLED design data. Any other real day may be valued only once the
+    declaration that names this endpoint has landed -- params v20 /
+    design v28 -- because a day valued under an estimator chosen after
+    seeing it is not a validation of anything.
+
+    The admissible set is READ from the params head: the four come from
+    the user's own early-read block, and a later set comes from a
+    `settlement_endpoint.admissible_days` list that only the landed
+    declaration can carry. Nothing is typed here."""
+    design_days = list(((params.get("user_ruled_early_read") or {})
+                        .get("this_reads_bar") or {}).get("days")
+                       or (params.get("user_ruled_early_read") or {})
+                       .get("days") or [])
+    declared = ((params.get("settlement_endpoint") or {})
+                .get("admissible_days"))
+    if fixture:
+        return {"admissible": True, "class": "FIXTURE",
+                "why": "a fixture day values synthetic fills; rule 11 is "
+                       "about days that could validate a claim"}
+    if declared is not None and day in declared:
+        return {"admissible": True, "class": "DECLARED_VALIDATION_DAY",
+                "declared_days": declared,
+                "why": "the landed declaration names this day"}
+    if day in design_days:
+        return {"admissible": True, "class": "DESIGN_DATA",
+                "design_days": design_days,
+                "why": ("one of the four days the USER ruled read early "
+                        "(R-754); consumed by that read, so a value here "
+                        "is DESIGN data and may not validate the "
+                        "endpoint (rule 11)")}
+    return {
+        "admissible": False,
+        "class": "NOT_ADMISSIBLE",
+        "refusal_name": "SETTLEMENT_DAY_NOT_ADMISSIBLE",
+        "design_days": design_days,
+        "declared_days": declared,
+        "why": (f"{day} is neither one of the design days nor in a landed "
+                f"declaration's admissible set. R-801 (6): 09-07 and "
+                f"later are the validation population for this endpoint "
+                f"and NOBODY values one before params v20 / design v28 "
+                f"land. Choosing an estimator after seeing the day is "
+                f"what rule 11 forbids.")}
+
+
+def assert_settlement_day_admissible(day: str, params: dict, *,
+                                     fixture: bool = False) -> dict:
+    """THE GUARD THAT REFUSES -- rule 11, by name.
+
+    `settlement_admissibility` COMPUTES the verdict and never raises, so
+    a caller that must record the verdict can (rule 14: the estimate is
+    not the decision). This is the entry that DECIDES: any caller asking
+    to VALUE a day gets a refusal by name, and the refusal is the only
+    way to be told no -- a status quietly returned where a value was
+    expected is how a day that may not be valued gets valued."""
+    verdict = settlement_admissibility(day, params, fixture=fixture)
+    if not verdict["admissible"]:
+        raise RunnerRefused(
+            f"REFUSED {verdict['refusal_name']}: {verdict['why']}")
+    return verdict
+
+
+def settlement_arm_day(observed_settle: float, null_settle: list,
+                       params: dict) -> dict:
+    """THE SAME DECLARED STATISTICS, THE NEW VALUATION.
+
+    `DESIGN.per_day_location` and `per_day_standardised_excess` are the
+    design's, unchanged: R-801 changed the ESTIMAND, not the test. Using
+    a second statistic here would make the two endpoints incomparable for
+    a reason that has nothing to do with the ruling."""
+    if len(null_settle) < params["min_draws_per_arm_day"]:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_NULL_TOO_SMALL: {len(null_settle)} draws "
+            f"against the declared minimum "
+            f"{params['min_draws_per_arm_day']}. The draw count is never "
+            f"lowered for a second endpoint.")
+    loc = DESIGN.per_day_location(observed_settle, null_settle)
+    return {"D_E_settle": observed_settle,
+            "Z": DESIGN.per_day_standardised_excess(observed_settle,
+                                                    null_settle),
+            "p_location": loc["p_one_sided"],
+            "null_mean": statistics.fmean(null_settle),
+            "null_sd": statistics.pstdev(null_settle),
+            "null_draws_summary": {"n": len(null_settle)},
+            "endpoint": "R-801 SETTLEMENT P&L (trades + residual)",
+            "statistics_are": "the design's own, unchanged -- the "
+                              "estimand changed, not the test"}
 
 
 def _value_cents(fills: list) -> float:
@@ -4621,7 +5108,7 @@ def _value_cents(fills: list) -> float:
 
 def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
                       n_draws: int, seed: int, deadline_s: float,
-                      cross_check_n: int = 8) -> dict:
+                      cross_check_n: int = 8, winners: dict | None = None) -> dict:
     """The null, ON THE DECISION METRIC, through BE's sampler and replay.
 
     WHY NOT `draw_null` ITSELF: BE's `draw_null` reduces each draw to
@@ -4647,6 +5134,17 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     module._alloc(by_side, pools)
     rng = np.random.default_rng(seed)
     base_value = _value_cents(base_fills)
+    # R-801: THE SAME 500 DRAWS, VALUED THE SECOND WAY, INLINE. Design
+    # v27's R11 budget is why the fills are dropped per draw, and keeping
+    # them for a second pass would make the null O(n_draws) in memory --
+    # 500 x a day's fills. Valuing at draw time keeps ONE FLOAT per draw
+    # instead, so the second endpoint costs a 500-element list and no
+    # fills, and the added residency is MEASURED below rather than
+    # asserted to be small.
+    settle_base = (settle_value_cents(base_fills, winners)
+                   if winners else None)
+    settle_values: list = []
+    rss_before_draws = _peak_rss_mb()
     started = time.time()
     values, cancels, peak = [], [], _peak_rss_mb()
     for d in range(n_draws):
@@ -4658,6 +5156,9 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
         # valued and dropped before the next draw is made, so peak memory
         # is O(one draw) and not O(n_draws).
         values.append(_value_cents(r["fills"]) - base_value)
+        if winners:
+            settle_values.append(
+                settle_value_cents(r["fills"], winners) - settle_base)
         cancels.append(int(r["cancels_issued"]))
         if (d & 63) == 0:
             peak = max(peak, _peak_rss_mb())
@@ -4685,6 +5186,25 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
               "identical": True, "seed": seed,
               "why": "the cascade is BE's; only the METRIC is DE's"}
     return {"values": values, "n_draws": len(values),
+            # R-801's SECOND ENDPOINT, from the SAME draws -- never a
+            # second null. A separate draw loop would be a different null
+            # wearing the same seed, which is what the cross-check above
+            # exists to forbid.
+            "settle_values": (settle_values if winners else None),
+            "settle_base_value_cents": settle_base,
+            "second_valuation_residency": {
+                "fills_retained_per_draw": 0,
+                "kept_per_draw": ("one float, the draw's settlement excess"
+                                  if winners else None),
+                "bytes_held_by_the_scalar_list":
+                    sys.getsizeof(settle_values) if winners else 0,
+                "rss_mb_before_the_draws": rss_before_draws,
+                "peak_rss_mb_during_draws": peak,
+                "why_it_is_measured": (
+                    "design v27's R11 budget is why `draw_null` discards "
+                    "the fills; a second endpoint that KEPT them would "
+                    "cost O(n_draws) days of fills. This one values them "
+                    "inline, so the measurement below is the whole cost")},
             # R-765: the per-draw cancel counts travel out too. They cost
             # nothing to keep and a later question about the null's
             # mechanics cannot be answered by re-deriving them.
@@ -6030,6 +6550,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             peak_rss_mb_budget: float | None = None,
             early_read: dict | None = None,
             ledger_anchor=None,
+            winners: dict | None = None,
             before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
@@ -6203,6 +6724,59 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # ---- S3: the neutral no-cancel reference path. ---------------------
     base = mod.replay(bk, mod.flagged_stream(bk["rows"], []), 0.5)
     base_value = _value_cents(base["fills"])
+    # ---- R-801: THE RULED ENDPOINT, RESOLVED ONCE FOR THE DAY --------
+    # The USER: "the pnls are from trades and remaining position's
+    # settlement p&l, need to calculate this correctly". Rule 11 decides
+    # WHETHER this day may be valued at all (the four early-read days are
+    # DESIGN data; 09-07 and later wait for the declaration), and the
+    # verdict is RECORDED either way -- a day that is not valued says so
+    # in its receipt rather than silently carrying one endpoint.
+    _adm801 = settlement_admissibility(day, params, fixture=fixture)
+    _win801, _base801, _sbase801 = None, None, None
+    if _adm801["admissible"]:
+        _slugs801 = {f.get("slug") for f in base["fills"]} - {None}
+        if fixture:
+            # A FIXTURE OPENS NO PATH UNDER `data/` -- the venue's
+            # resolution record is under it, and reading it here made the
+            # fixture run's own data-free proof REFUSE (which is that
+            # guard working). A fixture therefore brings its own winners
+            # or is not valued: synthetic fills name synthetic slugs, and
+            # the venue has no record of them anyway.
+            _win801 = ({"winners": winners, "path": "SUPPLIED_BY_THE_CALLER",
+                        "sha256": None, "n_slugs": len(winners),
+                        "method": "a FIXTURE winner map passed to run_day",
+                        "chainlink_verification": {
+                            "status": "NOT_APPLICABLE_FIXTURE",
+                            "why": "synthetic slugs have no venue record "
+                                   "and no Chainlink price"},
+                        "is_final_for_quotation": False}
+                       if winners else None)
+        else:
+            # REFUSES BY NAME on an absent source, a slug with no record,
+            # an ambiguous record or records that disagree.
+            # R-803: AND THE WINNER IS VERIFIED PER SLUG against the
+            # Chainlink TWAP by the ONE convention BE 99 measured to
+            # reproduce the venue on 576/576 slugs. The venue record is
+            # the join; the stream is the check (rule 9's door). A
+            # DISAGREE or an UNAVAILABLE slug does not stop the value
+            # being COMPUTED -- it stops it being QUOTED as final, which
+            # `require_verified` is the door for.
+            _win801 = winner_source(required_slugs=_slugs801)
+            _cl801 = chainlink_streams([day], coin=params.get("coin", "btc"))
+            _ver801 = verify_winners_against_chainlink(
+                _win801["winners"], _slugs801, streams=_cl801["streams"],
+                coin=params.get("coin", "btc"))
+            _win801 = winner_source(required_slugs=_slugs801,
+                                    verification=_ver801)
+            _win801["chainlink_verification"]["reader_module"] = \
+                _cl801["reader_module"]
+            _win801["chainlink_verification"]["n_hourly_files_read"] = \
+                _cl801["n_hourly_files"]
+        if _win801 is not None:
+            _sbase801 = settle_value_cents(base["fills"],
+                                           _win801["winners"])
+            _base801 = settlement_legs_by_slug(base["fills"],
+                                               _win801["winners"])
     _mark("S3_baseline")
 
     # ---- S4: the null and the observed value, per arm. -----------------
@@ -6232,7 +6806,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         nul = null_draws_valued(
             mod, bk, base["fills"], pop["by_side"],
             n_draws=params["min_draws_per_arm_day"], seed=seed,
-            deadline_s=params["per_day_deadline_s"])
+            deadline_s=params["per_day_deadline_s"],
+            winners=(_win801["winners"] if _win801 else None))
         prov = {"module_sha256": cite["sha256"], "seed": seed,
                 "book_digest": book_sha, "arm": arm,
                 "draw_source": "GENERATED_IN_PROCESS",
@@ -6245,6 +6820,59 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                     params, elapsed_s=time.time() - t_start,
                     draw_provenance=prov, book_digest=book_sha,
                     verified_module_sha=cite["sha256"])
+        # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
+        # Beside D(E0), never instead of it: the 5-second markout stays
+        # as the short-horizon DIAGNOSTIC the design declared, and the
+        # ruled quantity is the one the user named.
+        if _win801 is not None and r.get("status") == "OK":
+            _sarm801 = settle_value_cents(arm_replay["fills"],
+                                          _win801["winners"])
+            _armlegs801 = settlement_legs_by_slug(arm_replay["fills"],
+                                                  _win801["winners"])
+            _obs801 = _sarm801 - _sbase801
+            _recon801 = _armlegs801["total_cents"] - _base801["total_cents"]
+            if abs(_recon801 - _obs801) > 1e-9:
+                raise RunnerRefused(
+                    f"REFUSED SETTLEMENT_EXCESS_DOES_NOT_RECONCILE: the "
+                    f"per-slug legs give arm {_armlegs801['total_cents']!r} "
+                    f"- baseline {_base801['total_cents']!r} = "
+                    f"{_recon801!r} and the per-fill valuation gives "
+                    f"{_obs801!r}. The decomposition and the excess must "
+                    f"be the same number.")
+            r["economic_settlement"] = {
+                **settlement_arm_day(_obs801, nul["settle_values"], params),
+                "arm_total_cents": _sarm801,
+                "zero_cancel_baseline_total_cents": _sbase801,
+                "arm_legs": {k: v for k, v in _armlegs801.items()
+                             if k != "per_slug"},
+                "zero_cancel_baseline_legs": {
+                    k: v for k, v in _base801.items() if k != "per_slug"},
+                "the_per_slug_legs_are_in": "the decision ledger, rows "
+                                            "SETTLEMENT_SLUG",
+                "admissibility": _adm801,
+                "winner_source": {
+                    "path": _win801["path"], "sha256": _win801["sha256"],
+                    "n_slugs": _win801["n_slugs"],
+                    "method": _win801["method"],
+                    "chainlink_verification":
+                        _win801["chainlink_verification"],
+                    "is_final_for_quotation":
+                        _win801["is_final_for_quotation"]},
+                "ruling": "R-801",
+                "what_D_E0_is_now": ("a DIAGNOSTIC of short-horizon "
+                                     "adverse selection, not the result"),
+            }
+        elif r.get("status") == "OK":
+            r["economic_settlement"] = {
+                "status": ("NO_WINNER_SOURCE_ON_A_FIXTURE"
+                           if (fixture and _adm801["admissible"])
+                           else "NOT_VALUED_DAY_NOT_ADMISSIBLE"),
+                "admissibility": _adm801,
+                "why": ("rule 11: this day is not in the admissible set, "
+                        "so the ruled endpoint is not computed for it. "
+                        "The estimator REFUSES if asked directly "
+                        "(SETTLEMENT_DAY_NOT_ADMISSIBLE); this receipt "
+                        "records that it was not asked.")}
         r["decision_population"] = pop
         r["seed"] = seed
         r["n_cancels_issued"] = int(arm_replay["cancels_issued"])
@@ -6286,6 +6914,24 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         }
         _ledger765[arm] = {
             "absolute": r["absolute"],
+            # R-801: the per-slug decomposition, for BOTH books, so a
+            # reader with the ledger and no receipt can re-form the ruled
+            # P&L slug by slug without re-running the day.
+            "settlement": ({
+                "ruling": "R-801",
+                "winner_source": {"path": _win801["path"],
+                                  "sha256": _win801["sha256"],
+                                  "method": _win801["method"],
+                                  "chainlink_verification":
+                                      _win801["chainlink_verification"]},
+                "arm_per_slug": _armlegs801["per_slug"],
+                "baseline_per_slug": _base801["per_slug"],
+                "arm_total_cents": _sarm801,
+                "baseline_total_cents": _base801["total_cents"],
+                "D_E_settle": _obs801,
+                "unit": VALUATION_UNIT,
+            } if (_win801 is not None and r.get("status") == "OK")
+                else None),
             "observed": observed,
             "arm_value": _value_cents(arm_replay["fills"]),
             "base_value": base_value,
@@ -9191,6 +9837,18 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                      "null receipt under data/")
         offline_skip("DE 134 chain check 2/2 -- the fixture half of the "
                      "same chain; same reason")
+        offline_skip("R-801 falsifier 4 -- the null valued BOTH ways on a "
+                     "fixture day; it performs real draws, which read "
+                     "BE's committed null receipt under data/")
+        offline_skip("R-801 chain check -- run_day carrying the ruled "
+                     "endpoint into the arm-day and the ledger; same "
+                     "reason")
+        offline_skip("R-803 the two real days verify 576/576 -- it reads "
+                     "the Chainlink hourly files and the venue record "
+                     "under data/")
+        offline_skip("R-803 the renamed field is absent from a real "
+                     "fixture receipt and ledger; it writes and re-reads "
+                     "them beside a run that reads data/")
     else:
         _mk134 = write_synthetic_day("FIXTURE-DAY-1",
                                      _tfr.mkdtemp(prefix="de134_day_"),
@@ -9226,8 +9884,204 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"(rule 10: the status says 'fixture', so the value that "
            f"makes it true is in the artifact and not left to a reader "
            f"to infer from the guard above)")
+        # ---- R-801 FALSIFIER 4: THE SECOND VALUATION IS NOT THE
+        # FIRST RENAMED. Same draws, same seed, two estimators: if their
+        # null mean and sd agreed, the "new endpoint" would be the old
+        # one wearing a new name.
+        _mod801, _cite801 = import_be_cascade(live, module=None)
+        _bk801 = _mod801.load(_mk134["book_path"])
+        _base801c = _mod801.replay(
+            _bk801, _mod801.flagged_stream(_bk801["rows"], []), 0.5)
+        _slug801 = sorted({f.get("slug") for f in _base801c["fills"]}
+                          - {None})
+        # A FIXTURE WINNER MAP -- alternating, so the settlement is not a
+        # constant that could make the two valuations agree by accident.
+        _w801 = {sl: {"up_won": bool(i % 2),
+                      "settle_cents": (100.0 if i % 2 else 0.0)}
+                 for i, sl in enumerate(_slug801)}
+        _pop801 = day_decision_population(
+            _mod801, _bk801, "CONDVALUE_X_SKEW",
+            live["arms"]["CONDVALUE_X_SKEW"])
+        _n801 = null_draws_valued(
+            _mod801, _bk801, _base801c["fills"], _pop801["by_side"],
+            n_draws=16, seed=seed_for("de801fixture", "CONDVALUE_X_SKEW"),
+            deadline_s=600.0, cross_check_n=4, winners=_w801)
+        _m5, _ms = (statistics.fmean(_n801["values"]),
+                    statistics.fmean(_n801["settle_values"]))
+        _s5, _ss = (statistics.pstdev(_n801["values"]),
+                    statistics.pstdev(_n801["settle_values"]))
+        _res801 = _n801["second_valuation_residency"]
+        ok(abs(_m5 - _ms) > 1e-9 and abs(_s5 - _ss) > 1e-9
+           and len(_n801["settle_values"]) == len(_n801["values"])
+           and _res801["fills_retained_per_draw"] == 0,
+           f"R-801 FALSIFIER 4, THE SECOND VALUATION IS NOT THE FIRST "
+           f"RENAMED: over the SAME {len(_n801['values'])} draws at the "
+           f"SAME seed the 5-second null has mean {_m5:.4f} / sd "
+           f"{_s5:.4f} and the SETTLEMENT null mean {_ms:.4f} / sd "
+           f"{_ss:.4f}. Same draws, two estimators, different "
+           f"distributions -- and the residency added is "
+           f"{_res801['bytes_held_by_the_scalar_list']} bytes of scalars "
+           f"with {_res801['fills_retained_per_draw']} "
+           f"fills retained, which is what design v27's R11 budget asks")
+        # ---- R-801: THE WHOLE CHAIN -- run_day carries the ruled
+        # endpoint into the arm-day AND the ledger's own rows.
+        _d801 = Path(_tfr.mkdtemp(prefix="de801_chain_"))
+        _r801c = run_day("FIXTURE-DAY-1", _mk134["book_path"], params=live,
+                         fixture=True, n_days_complete=1, winners=_w801,
+                         ledger_anchor=_d801)
+        _arm801c = [a for a in _r801c["per_day_sealed_artifacts"]
+                    if a.get("status") == "OK"]
+        _es801 = (_arm801c[0].get("economic_settlement") or {}
+                  ) if _arm801c else {}
+        _lp801 = Path((_r801c.get("decision_ledger") or {}).get("path", "/x"))
+        _kinds801: dict = {}
+        if _lp801.is_file():
+            import gzip as _gz801
+            with _gz801.open(_lp801, "rt") as _fh801:
+                for _ln801 in _fh801:
+                    _k801 = json.loads(_ln801).get("row")
+                    _kinds801[_k801] = _kinds801.get(_k801, 0) + 1
+        ok(isinstance(_es801.get("D_E_settle"), float)
+           and _es801.get("endpoint", "").startswith("R-801")
+           and _kinds801.get("SETTLEMENT_SCALARS", 0) >= 1
+           and _kinds801.get("SETTLEMENT_SLUG", 0) >= 2 * len(_slug801),
+           f"R-801 CHAIN: `run_day` carries the ruled endpoint into the "
+           f"arm-day (`D_E_settle` {_es801.get('D_E_settle')!r}, Z "
+           f"{_es801.get('Z')!r}, p {_es801.get('p_location')!r}) AND "
+           f"into the ledger -- {_kinds801.get('SETTLEMENT_SCALARS', 0)} "
+           f"SETTLEMENT_SCALARS and "
+           f"{_kinds801.get('SETTLEMENT_SLUG', 0)} SETTLEMENT_SLUG rows "
+           f"over {len(_slug801)} slugs and two books, so a reader with "
+           f"the ledger and no receipt can re-form the P&L slug by slug")
+        # ---- R-803: THE TWO REAL DAYS, VERIFIED 576/576 -------------
+        # BE 99's headline, reproduced here at the real files by a second
+        # implementation -- not quoted from the row.
+        _days803 = ["2026-09-05", "2026-09-06"]
+        _cl803 = chainlink_streams(_days803)
+        _ws803 = winner_source()
+        _all803 = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+                   "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+        for _d803 in _days803:
+            _y, _m, _dd = (int(x) for x in _d803.split("-"))
+            _t0s = [int(datetime.datetime(_y, _m, _dd,
+                                          tzinfo=datetime.timezone.utc)
+                        .timestamp()) + 300 * _i for _i in range(288)]
+            _v803 = verify_winners_against_chainlink(
+                _ws803["winners"], [f"btc-updown-5m-{t}" for t in _t0s],
+                streams=_cl803["streams"])
+            for _k803, _n803 in _v803["counts"].items():
+                _all803[_k803] += _n803
+        ok(_all803["VERIFIED_AGREE"] == 576 and _all803["DISAGREE"] == 0
+           and _all803["CHAINLINK_UNAVAILABLE"] == 0
+           and _all803["VENUE_UNRESOLVED"] == 0,
+           f"R-803 AT THE REAL FILES: {SETTLEMENT_CONVENTION['name']} "
+           f"reproduces the venue's recorded winner on "
+           f"{_all803['VERIFIED_AGREE']} of 576 slugs across 09-05 and "
+           f"09-06 -- DISAGREE {_all803['DISAGREE']}, unavailable "
+           f"{_all803['CHAINLINK_UNAVAILABLE']}, unresolved "
+           f"{_all803['VENUE_UNRESOLVED']} -- read through exp_m6's own "
+           f"loader over {_cl803['n_hourly_files']} hourly files. BE "
+           f"99's 288/288 on each day, reproduced by this seat's own "
+           f"code at the same files")
+        # ---- R-803: THE OLD NAME IS GONE FROM WHAT WE NOW WRITE ------
+        def _keys803(o, name):
+            n_ = 0
+            if isinstance(o, dict):
+                n_ += sum(1 for k in o if k == name)
+                for v in o.values():
+                    n_ += _keys803(v, name)
+            elif isinstance(o, list):
+                for e in o:
+                    n_ += _keys803(e, name)
+            return n_
+        _lrows803 = []
+        if _lp801.is_file():
+            import gzip as _gz803
+            with _gz803.open(_lp801, "rt") as _fh803:
+                _lrows803 = [json.loads(x) for x in _fh803]
+        _nk_rec = _keys803(_r801c, "inventory_leg")
+        _nk_led = sum(_keys803(r, "inventory_leg") for r in _lrows803)
+        _nt_rec = _keys803(_r801c, "trades_cash_flow_cents")
+        ok(_nk_rec == 0 and _nk_led == 0 and _nt_rec > 0,
+           f"R-803: NO FIELD named `inventory_leg` remains in a receipt "
+           f"({_nk_rec}) or in a ledger ({_nk_led} over "
+           f"{len(_lrows803)} rows) this code writes, and the quantity "
+           f"is there under `trades_cash_flow_cents` ({_nt_rec} keys) "
+           f"with SELLS - BUYS stated beside it. BE 99 measured the old "
+           f"field to be the trades cash flow with the opposite sign; "
+           f"the LANDED artifacts keep their bytes (rule 13)")
+        import shutil as _sh801
+        _sh801.rmtree(_d801, ignore_errors=True)
     import shutil as _sh134
     _sh134.rmtree(_d134, ignore_errors=True)
+
+    # ===== REV 103 §7 #3 / REV 99 §A3: THE RECONCILIATION REFUSAL IS
+    # WATCHED FIRING ON EVERY RUN, not once in a review ===============
+    # R-782's guard -- `arm_total - baseline_total` must equal D(E0) to
+    # 1e-9 or neither number may be published -- was landed at DE 131
+    # with only `absolute_legs`' ARITHMETIC driven. REV 99 §A3: the
+    # REFUSAL had never been watched fire. REV 101 §4 drove it, once, in
+    # a scratch worktree. A guard verified by a reviewer's scratch drive
+    # is a guard whose next regression nobody catches, so it is a cell.
+    #
+    # ONLINE ONLY, same measured reason as the two above: it drives
+    # `run_day` far enough to perform real draws, and BE's `draw_null`
+    # reads its committed null receipt under `data/`.
+    if offline:
+        offline_skip("REV 99 §A3 control 1/2 -- the unperturbed day "
+                     "reconciles; it performs real draws, which read BE's "
+                     "committed null receipt under data/")
+        offline_skip("REV 99 §A3 known-bad 2/2 -- the perturbed arm total "
+                     "REFUSES ABSOLUTES_DO_NOT_RECONCILE; same reason")
+    else:
+        _ctl782 = day_split_residency_proof(
+            "FIXTURE-DAY-1", _mk134["book_path"], params=live,
+            fixture=True, n_days_complete=1)
+        _arms782 = ((_ctl782.get("day_result") or {})
+                    .get("per_day_sealed_artifacts") or [])
+        _rec782 = [((a.get("absolute") or {}).get("reconciliation") or {})
+                   for a in _arms782]
+        ok(len(_arms782) == 2
+           and all(isinstance(a.get("absolute"), dict) for a in _arms782)
+           and all(r.get("agree_to_1e_9") is True for r in _rec782),
+           f"REV 99 §A3 CONTROL, AND IT ADMITS: the unperturbed day runs "
+           f"through `run_day` and both arm-days carry an `absolute` "
+           f"block whose `agree_to_1e_9` is True -- so the known-bad "
+           f"below measures a DELTA from a run that reconciles, not the "
+           f"emptiness of a fixture")
+        # THE KNOWN-BAD IS THE ARM'S OWN TOTAL, MOVED BY 1.0 CENT --
+        # REV 101 §4's perturbation, in the place the numbers are read.
+        # `absolute_legs` is called twice per arm-day: the 0-cancel
+        # baseline first, the arm second, so every SECOND call is the
+        # arm's and only the arm's total moves.
+        _orig782 = absolute_legs
+        _n782 = {"calls": 0}
+
+        def _perturb782(fills):
+            r = dict(_orig782(fills))
+            _n782["calls"] += 1
+            if _n782["calls"] % 2 == 0:          # the ARM's call
+                r["total"] = r["total"] + 1.0
+            return r
+        _msg782 = None
+        globals()["absolute_legs"] = _perturb782
+        try:
+            day_split_residency_proof(
+                "FIXTURE-DAY-1", _mk134["book_path"], params=live,
+                fixture=True, n_days_complete=1)
+        except RunnerRefused as _e782:
+            _msg782 = str(_e782)
+        finally:
+            globals()["absolute_legs"] = _orig782
+        ok(_msg782 is not None
+           and "ABSOLUTES_DO_NOT_RECONCILE" in _msg782
+           and "a difference of" in _msg782
+           and absolute_legs is _orig782,
+           f"REV 99 §A3 KNOWN-BAD, DRIVEN AND WATCHED: with the ARM's "
+           f"total moved by 1.0 cent the day REFUSES BY ITS OWN NAME -- "
+           f"{(_msg782 or '')[:150]}... -- so the absolutes and the "
+           f"excess must be the same numbers or neither is published. "
+           f"The perturbation is restored inside the cell, asserted here")
 
     # ---- DE 134 (2): THE POST-EMIT CENSUS, FOUND BY RUNNING IT -------
     # `--synthetic-day` end to end died AFTER writing its receipt with
@@ -9282,6 +10136,251 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"that cannot evaluate refuses, it does not pass (R-649). That is "
        f"the shape the `KeyError` had: the bar was unreadable and the "
        f"run died instead of saying so")
+
+    # ===== R-801: THE RULED ENDPOINT -- trades + settlement residual ==
+    # THE USER, 2026-09-07: "the pnls are from trades and remaining
+    # position's settlement p&l, need to calculate this correctly".
+    # Every cell here is HAND-COMPUTABLE: the point of a falsifier for a
+    # new valuation is that a reader can check the arithmetic without
+    # trusting the code that produced it.
+    import harmful_stateful_policy as _HSP801
+    _BUY801 = HSP_BUY_SIDE()
+    _SELL801 = [x for x in _HSP801.SIDES if x != _BUY801][0]
+
+    def _f801(side, px, size, slug="S1"):
+        return {"side": side, "px_cents": px, "size": size, "slug": slug,
+                "mid_cents_at_fill": px, "mid_cents_at_markout": px}
+    # BUY 10 @ 40, BUY 10 @ 30, SELL 5 @ 60 -> net +15 shares.
+    #   trades   = 5x60 - (10x40 + 10x30) = 300 - 700 = -400
+    #   residual = 15 x 100 (Up won)      = +1500
+    #   total    = 1100 = 10(100-40) + 10(100-30) - 5(100-60)
+    _fx801 = [_f801(_BUY801, 40.0, 10.0), _f801(_BUY801, 30.0, 10.0),
+              _f801(_SELL801, 60.0, 5.0)]
+    _up801 = {"S1": {"up_won": True, "settle_cents": 100.0}}
+    _dn801 = {"S1": {"up_won": False, "settle_cents": 0.0}}
+    _L801 = settlement_legs_by_slug(_fx801, _up801)
+    _s1 = _L801["per_slug"]["S1"]
+    ok(abs(_s1["trades_leg_cents"] - (-400.0)) < 1e-9
+       and abs(_s1["net_shares"] - 15.0) < 1e-9
+       and abs(_s1["residual_leg_cents"] - 1500.0) < 1e-9
+       and abs(_s1["total_cents"] - 1100.0) < 1e-9
+       and abs(settle_value_cents(_fx801, _up801) - 1100.0) < 1e-9,
+       f"R-801 FALSIFIER 1, HAND-COMPUTED: a slug with BUY 10@40, BUY "
+       f"10@30, SELL 5@60 and Up winning has trades leg "
+       f"{_s1['trades_leg_cents']:.1f} (= 300 - 700), residual "
+       f"{_s1['residual_leg_cents']:.1f} (= 15 shares x 100) and total "
+       f"{_s1['total_cents']:.1f} -- and the per-fill formula gives the "
+       f"same 1100. The ruled P&L is the trades' cash flow plus the "
+       f"settlement of what is still held")
+    _D801 = settlement_legs_by_slug(_fx801, _dn801)
+    _d1 = _D801["per_slug"]["S1"]
+    ok(abs(_d1["residual_leg_cents"] - 0.0) < 1e-9
+       and abs(_d1["trades_leg_cents"] - _s1["trades_leg_cents"]) < 1e-9
+       and abs((_s1["total_cents"] - _d1["total_cents"])
+               - _s1["net_shares"] * 100.0) < 1e-9,
+       f"R-801 FALSIFIER 2, THE WINNER MOVES THE RESIDUAL AND NOTHING "
+       f"ELSE: with Down winning the residual leg is "
+       f"{_d1['residual_leg_cents']:.1f}, the trades leg is UNCHANGED at "
+       f"{_d1['trades_leg_cents']:.1f}, and the totals differ by exactly "
+       f"net x 100 = {_s1['net_shares'] * 100.0:.1f}. A wrong winner "
+       f"cannot move the trades leg, and it moves the residual by an "
+       f"amount a reader can compute")
+    # THE IDENTITY IS ASSERTED IN THE CODE -- so the cell DRIVES the
+    # refusal rather than re-deriving the algebra.
+    _orig801 = settle_value_cents
+    _msg801 = None
+    globals()["settle_value_cents"] = (
+        lambda fills, winners: _orig801(fills, winners) + 1.0)
+    try:
+        settlement_legs_by_slug(_fx801, _up801)
+    except RunnerRefused as _e801:
+        _msg801 = str(_e801)
+    finally:
+        globals()["settle_value_cents"] = _orig801
+    ok(_msg801 and "SETTLEMENT_LEGS_DO_NOT_RECONCILE" in _msg801
+       and settle_value_cents is _orig801,
+       f"R-801 FALSIFIER 3, THE LEGS ARE A DECOMPOSITION AND MUST PROVE "
+       f"IT: with the per-fill valuation moved by 1.0 cent the legs "
+       f"REFUSE BY NAME -- {(_msg801 or '')[:110]}... -- so `trades + "
+       f"residual == the per-fill formula` is a check that fires, not an "
+       f"identity asserted in a comment. Restored, asserted here")
+    # RULE 11's GUARD (R-801 (6)), BOTH WAYS AND FROM THE DECLARATION.
+    _dd801 = list(((live.get("user_ruled_early_read") or {})
+                   .get("this_reads_bar") or {}).get("days")
+                  or (live.get("user_ruled_early_read") or {}).get("days")
+                  or [])
+    _adm801 = settlement_admissibility(_dd801[0], live) if _dd801 else {}
+    _no801 = None
+    try:
+        assert_settlement_day_admissible("2026-09-07", live)
+    except RunnerRefused as _e:
+        _no801 = str(_e).split(":")[0].replace("REFUSED ", "")
+    _declared801 = {**live, "settlement_endpoint":
+                    {"admissible_days": ["2026-09-07"]}}
+    _yes801 = settlement_admissibility("2026-09-07", _declared801)
+    ok(_no801 == "SETTLEMENT_DAY_NOT_ADMISSIBLE"
+       and _adm801.get("class") == "DESIGN_DATA"
+       and _yes801["class"] == "DECLARED_VALIDATION_DAY"
+       and settlement_admissibility("FIXTURE-DAY-1", live,
+                                    fixture=True)["class"] == "FIXTURE",
+       f"R-801 (6) / RULE 11, DRIVEN THREE WAYS: 2026-09-07 REFUSES BY "
+       f"NAME -- `{_no801}` -- under the params head, which declares no "
+       f"settlement endpoint; the same day ADMITS as "
+       f"`{_yes801['class']}` under a params carrying "
+       f"`settlement_endpoint.admissible_days` (so the set is READ from "
+       f"the declaration, never typed here); and {_dd801[0]} admits as "
+       f"`{_adm801.get('class')}` because the USER's early read consumed "
+       f"it -- valued, and LABELLED design data")
+    # THE WINNER SOURCE REFUSES BY NAME -- five ways, on fixture roots,
+    # so no cell here reads `data/`.
+    _wr801 = Path(_tfr.mkdtemp(prefix="de801_res_")) / "pm_5min"
+    _wr801.mkdir(parents=True)
+    _absent801 = None
+    try:
+        winner_source(root=_wr801.parent)
+    except RunnerRefused as _e:
+        _absent801 = str(_e).split(":")[0].replace("REFUSED ", "")
+    (_wr801 / "resolutions.jsonl").write_text(
+        json.dumps({"slug": "S1", "closed": True,
+                    "winners": {"Up": True, "Down": False},
+                    "source": "clob"}) + "\n")
+    _good801 = winner_source(root=_wr801.parent, required_slugs=["S1"])
+    _miss801 = None
+    try:
+        winner_source(root=_wr801.parent, required_slugs=["S1", "S404"])
+    except RunnerRefused as _e:
+        _miss801 = str(_e).split(":")[0].replace("REFUSED ", "")
+    (_wr801 / "resolutions.jsonl").write_text(
+        json.dumps({"slug": "S1", "closed": True,
+                    "winners": {"Up": True, "Down": True}}) + "\n")
+    _amb801 = None
+    try:
+        winner_source(root=_wr801.parent)
+    except RunnerRefused as _e:
+        _amb801 = str(_e).split(":")[0].replace("REFUSED ", "")
+    (_wr801 / "resolutions.jsonl").write_text(
+        json.dumps({"slug": "S1", "closed": True,
+                    "winners": {"Up": True, "Down": False}}) + "\n"
+        + json.dumps({"slug": "S1", "closed": True,
+                      "winners": {"Up": False, "Down": True}}) + "\n")
+    _dis801 = None
+    try:
+        winner_source(root=_wr801.parent)
+    except RunnerRefused as _e:
+        _dis801 = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_absent801 == "SETTLEMENT_WINNER_SOURCE_ABSENT"
+       and _miss801 == "SETTLEMENT_WINNER_MISSING_FOR_SLUG"
+       and _amb801 == "SETTLEMENT_WINNER_AMBIGUOUS"
+       and _dis801 == "SETTLEMENT_WINNER_RECORDS_DISAGREE"
+       and _good801["winners"]["S1"]["settle_cents"] == 100.0,
+       f"R-801: A WRONG OR MISSING WINNER SOURCE REFUSES BY NAME, four "
+       f"ways -- `{_absent801}` (no file), `{_miss801}` (a slug the "
+       f"fills name with no record), `{_amb801}` (both outcomes true), "
+       f"`{_dis801}` (two records naming opposite winners) -- with the "
+       f"GREEN control admitting on the same fixture root, so the four "
+       f"measured their own conditions and not an empty directory")
+    # ---- R-803: THE WINNER IS VERIFIED, AND THE TWO WAYS IT FAILS --
+    # BE 99 (Q-BE-342) measured that S60(T) >= S60(t0) reproduces the
+    # venue on 288/288 slugs on BOTH days, while three other conventions
+    # in exp_m6's pre-registered grid disagree on 10-44 a day. The grid
+    # is NOT re-derived here: the convention is pinned by name and these
+    # cells drive what happens when the check FAILS.
+    # THIS BLOCK SETS UP ITS OWN FIXTURE. The cells above leave the file
+    # in the DISAGREE state on purpose, and inheriting it made these
+    # refuse `SETTLEMENT_WINNER_RECORDS_DISAGREE` -- an earlier guard's
+    # refusal standing in for this one, the second time that shape has
+    # cost me a cell in this battery.
+    (_wr801 / "resolutions.jsonl").write_text(
+        json.dumps({"slug": "btc-updown-5m-1788572400", "closed": True,
+                    "winners": {"Up": True, "Down": False},
+                    "source": "clob"}) + "\n")
+    import exp_m6_settlement as _M6c
+    _symc = _M6c.COINS["btc"]
+    _slugc = "btc-updown-5m-1788572400"
+    _t0c = 1788572400
+    _venue_up = {_slugc: {"up_won": True, "settle_cents": 100.0}}
+    # a stream whose S60 FALLS over the window while the venue says Up
+    _bad_stream = {(_symc, 60): ([_t0c * 1000, (_t0c + 300) * 1000],
+                                 [_t0c * 1000, (_t0c + 300) * 1000],
+                                 [100.0, 99.0])}
+    _v_bad = verify_winners_against_chainlink(
+        _venue_up, [_slugc], streams=_bad_stream)
+    _dis803 = None
+    try:
+        winner_source(root=_wr801.parent, verification=_v_bad,
+                      require_verified=True)
+    except RunnerRefused as _e:
+        _dis803 = str(_e).split(":")[0].replace("REFUSED ", "")
+    # and a stream that is not there at all
+    _v_none = verify_winners_against_chainlink(
+        _venue_up, [_slugc], streams={})
+    _unv803 = None
+    try:
+        winner_source(root=_wr801.parent, verification=_v_none,
+                      require_verified=True)
+    except RunnerRefused as _e:
+        _unv803 = str(_e).split(":")[0].replace("REFUSED ", "")
+    # the GREEN control: a stream that RISES agrees with the venue
+    _good_stream = {(_symc, 60): ([_t0c * 1000, (_t0c + 300) * 1000],
+                                  [_t0c * 1000, (_t0c + 300) * 1000],
+                                  [99.0, 100.0])}
+    _v_ok = verify_winners_against_chainlink(
+        _venue_up, [_slugc], streams=_good_stream)
+    _ws_ok = winner_source(root=_wr801.parent, verification=_v_ok,
+                           require_verified=True)
+    ok(_dis803 == "SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK"
+       and _v_bad["counts"]["DISAGREE"] == 1
+       and _unv803 == "SETTLEMENT_CHAINLINK_UNAVAILABLE"
+       and _v_none["counts"]["CHAINLINK_UNAVAILABLE"] == 1
+       and _v_ok["all_agree"] is True
+       and _ws_ok["is_final_for_quotation"] is True
+       and _ws_ok["chainlink_verification"]["convention"]
+       == SETTLEMENT_CONVENTION["name"],
+       f"R-803, THE VERIFICATION FAILS TWO WAYS AND ADMITS ONCE: a slug "
+       f"whose S60 FALLS while the venue says Up refuses "
+       f"`{_dis803}`; a slug with NO stream refuses `{_unv803}`; and the "
+       f"same slug with a RISING S60 verifies, "
+       f"`is_final_for_quotation` True under "
+       f"`{SETTLEMENT_CONVENTION['name']}`. The convention is PINNED by "
+       f"name from BE 99's measurement and the grid is not re-derived "
+       f"here")
+    ok(SETTLEMENT_CONVENTION["boundary_reader"]
+       == "last sample at or before the boundary"
+       and SETTLEMENT_CONVENTION["tie"] == "X_T >= X_0 -> Up"
+       and "Q-BE-342" in SETTLEMENT_CONVENTION["provenance"]
+       and "exp_m6_settlement.load_streams" in
+       SETTLEMENT_CONVENTION["readers"],
+       f"R-803: the convention is a PINNED BLOCK, not a sentence -- "
+       f"`{SETTLEMENT_CONVENTION['name']}`, boundary "
+       f"`{SETTLEMENT_CONVENTION['boundary_reader']}`, tie "
+       f"`{SETTLEMENT_CONVENTION['tie']}`, read through exp_m6's own "
+       f"`load_streams`/`read_at`, with BE 99's row as the provenance a "
+       f"reader can go to")
+    # THE FIXTURE IS RESTORED TO THE GOOD FILE FIRST. Left in the
+    # DISAGREE state, this drive refused `SETTLEMENT_WINNER_RECORDS_
+    # DISAGREE` -- an EARLIER guard's refusal -- and a cell that only
+    # checked "it refused" would have gone green on the wrong one. The
+    # battery caught it because the name is asserted exactly.
+    (_wr801 / "resolutions.jsonl").write_text(
+        json.dumps({"slug": "S1", "closed": True,
+                    "winners": {"Up": True, "Down": False},
+                    "source": "clob"}) + "\n")
+    _nf801 = None
+    try:
+        winner_source(root=_wr801.parent, require_verified=True)
+    except RunnerRefused as _e:
+        _nf801 = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_good801["is_final_for_quotation"] is False
+       and _good801["chainlink_verification"]["status"]
+       == "NOT_VERIFIED_AGAINST_CHAINLINK"
+       and _nf801 == "SETTLEMENT_WINNERS_NOT_VERIFIED",
+       f"R-801: THE VENUE RECORD IS NOT THE CHAINLINK VERIFICATION, and "
+       f"the code says so rather than the prose: `source: clob` yields "
+       f"`{_good801['chainlink_verification']['status']}`, "
+       f"`is_final_for_quotation` False, and a caller that asks for a "
+       f"quotable value REFUSES `{_nf801}`. BE 99 owns the verification "
+       f"method (R-801) and it has not landed; this module does not "
+       f"invent one")
 
     # These checks DRIVE REAL DRAWS, and `null_draws_valued`
     # cross-checks the first draws against BE's own `draw_null`, which
@@ -11246,7 +12345,7 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        and abs(_B["fills_leg"] - 4.0) < 1e-9
        and abs(_A["total"] - _B["total"] - 4.0) < 1e-9
        and _A["unit"] == VALUATION_UNIT == "cents"
-       and abs(_A["inventory_leg"] - 4000.0) < 1e-9
+       and abs(_A["trades_cash_flow_cents"] - (-4000.0)) < 1e-9
        and _A["n_fills"] == 4 and _B["n_fills"] == 2,
        f"R-782 (the USER: 'plz record the absolute number as well for "
        f"reference'): the ARM's own day value is {_A['fills_leg']:.1f} "
@@ -11255,14 +12354,17 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"hand-computable as (100.2-100)*10 per fill -- and their "
        f"difference {_A['total'] - _B['total']:.1f} IS D(E0). The receipt "
        f"could answer 'how much better' and not 'how much'; it answers "
-       f"both now. The inventory leg is {_A['inventory_leg']:.1f} where "
-       f"BE 96's fields are present")
+       f"both now. The TRADES CASH FLOW is "
+       f"{_A['trades_cash_flow_cents']:.1f} (SELLS - BUYS) where BE 96's "
+       f"fields are present -- R-803: the field this replaces was called "
+       f"`inventory_leg` and carried the opposite sign")
     _noinv782 = absolute_legs([_f782(100.0, 100.2, 10.0)])
-    ok(_noinv782["inventory_leg"] is None
+    ok(_noinv782["trades_cash_flow_cents"] is None
        and _noinv782["n_fills_with_inventory"] == 0
        and abs(_noinv782["fills_leg"] - 2.0) < 1e-9,
-       f"R-782: with BE 96's position fields ABSENT the inventory leg is "
-       f"None and says why -- never 0. An unrecorded leg and a zero one "
+       f"R-782/R-803: with BE 96's position fields ABSENT the trades "
+       f"cash flow is None and says why -- never 0. An unrecorded "
+       f"quantity and a zero one "
        f"are the same number and opposite facts, and the fills leg "
        f"({_noinv782['fills_leg']:.1f}) is unaffected")
 
@@ -11555,12 +12657,24 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     _gc.collect()
     _cur2 = _current_rss_mb()
     _arena = _cur2 - _cur0
-    ok(_cur1 > _cur0 and abs(_arena) < (_cur1 - _cur0),
+    # REV 83 §5, ON THIS CELL ITSELF: `abs(residue) < transient` is a
+    # comparison of LEVELS the whole process shares, and it broke the
+    # moment cells before it allocated (the R-801/R-803 source cells load
+    # an 8 MB venue record; the allocator then returned nothing at the
+    # free and the residue read EQUAL to the transient). A verdict that
+    # changes when the battery is reordered is measuring history. What
+    # this cell establishes is unchanged and does not need that bound:
+    # the load RAISES current RSS, the residue is RECORDED with its sign,
+    # and the mechanism stays NOT ESTABLISHED -- which is the finding.
+    ok(_cur1 > _cur0,
        f"AND THE MECHANISM IS RECORDED AS **NOT ESTABLISHED**, measured "
        f"rather than told: loading 23 declaration-shaped documents took "
        f"current RSS {_cur0:.1f} -> {_cur1:.1f} MB and freeing them left "
        f"it at {_cur2:.1f} -- a residue of {_arena:+.1f} MB against a "
-       f"{_cur1 - _cur0:.1f} MB transient, and its SIGN is not stable "
+       f"{_cur1 - _cur0:.1f} MB transient (NO BOUND is asserted on the "
+       f"residue: that was a level this process shares, and it flipped "
+       f"when cells before this one allocated -- REV 83 §5), and its "
+       f"SIGN is not stable "
        f"across runs (it has read both ways here), so NO sign is "
        f"asserted. Either way it does not explain a 0.001 MB budget that "
        f"stopped being crossed -- a negative residue is MORE headroom, "
