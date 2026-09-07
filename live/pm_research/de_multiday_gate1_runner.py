@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 374
+EXPECTED_CHECKS = 376
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -9228,6 +9228,74 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"to infer from the guard above)")
     import shutil as _sh134
     _sh134.rmtree(_d134, ignore_errors=True)
+
+    # ===== REV 103 §7 #3 / REV 99 §A3: THE RECONCILIATION REFUSAL IS
+    # WATCHED FIRING ON EVERY RUN, not once in a review ===============
+    # R-782's guard -- `arm_total - baseline_total` must equal D(E0) to
+    # 1e-9 or neither number may be published -- was landed at DE 131
+    # with only `absolute_legs`' ARITHMETIC driven. REV 99 §A3: the
+    # REFUSAL had never been watched fire. REV 101 §4 drove it, once, in
+    # a scratch worktree. A guard verified by a reviewer's scratch drive
+    # is a guard whose next regression nobody catches, so it is a cell.
+    #
+    # ONLINE ONLY, same measured reason as the two above: it drives
+    # `run_day` far enough to perform real draws, and BE's `draw_null`
+    # reads its committed null receipt under `data/`.
+    if offline:
+        offline_skip("REV 99 §A3 control 1/2 -- the unperturbed day "
+                     "reconciles; it performs real draws, which read BE's "
+                     "committed null receipt under data/")
+        offline_skip("REV 99 §A3 known-bad 2/2 -- the perturbed arm total "
+                     "REFUSES ABSOLUTES_DO_NOT_RECONCILE; same reason")
+    else:
+        _ctl782 = day_split_residency_proof(
+            "FIXTURE-DAY-1", _mk134["book_path"], params=live,
+            fixture=True, n_days_complete=1)
+        _arms782 = ((_ctl782.get("day_result") or {})
+                    .get("per_day_sealed_artifacts") or [])
+        _rec782 = [((a.get("absolute") or {}).get("reconciliation") or {})
+                   for a in _arms782]
+        ok(len(_arms782) == 2
+           and all(isinstance(a.get("absolute"), dict) for a in _arms782)
+           and all(r.get("agree_to_1e_9") is True for r in _rec782),
+           f"REV 99 §A3 CONTROL, AND IT ADMITS: the unperturbed day runs "
+           f"through `run_day` and both arm-days carry an `absolute` "
+           f"block whose `agree_to_1e_9` is True -- so the known-bad "
+           f"below measures a DELTA from a run that reconciles, not the "
+           f"emptiness of a fixture")
+        # THE KNOWN-BAD IS THE ARM'S OWN TOTAL, MOVED BY 1.0 CENT --
+        # REV 101 §4's perturbation, in the place the numbers are read.
+        # `absolute_legs` is called twice per arm-day: the 0-cancel
+        # baseline first, the arm second, so every SECOND call is the
+        # arm's and only the arm's total moves.
+        _orig782 = absolute_legs
+        _n782 = {"calls": 0}
+
+        def _perturb782(fills):
+            r = dict(_orig782(fills))
+            _n782["calls"] += 1
+            if _n782["calls"] % 2 == 0:          # the ARM's call
+                r["total"] = r["total"] + 1.0
+            return r
+        _msg782 = None
+        globals()["absolute_legs"] = _perturb782
+        try:
+            day_split_residency_proof(
+                "FIXTURE-DAY-1", _mk134["book_path"], params=live,
+                fixture=True, n_days_complete=1)
+        except RunnerRefused as _e782:
+            _msg782 = str(_e782)
+        finally:
+            globals()["absolute_legs"] = _orig782
+        ok(_msg782 is not None
+           and "ABSOLUTES_DO_NOT_RECONCILE" in _msg782
+           and "a difference of" in _msg782
+           and absolute_legs is _orig782,
+           f"REV 99 §A3 KNOWN-BAD, DRIVEN AND WATCHED: with the ARM's "
+           f"total moved by 1.0 cent the day REFUSES BY ITS OWN NAME -- "
+           f"{(_msg782 or '')[:150]}... -- so the absolutes and the "
+           f"excess must be the same numbers or neither is published. "
+           f"The perturbation is restored inside the cell, asserted here")
 
     # ---- DE 134 (2): THE POST-EMIT CENSUS, FOUND BY RUNNING IT -------
     # `--synthetic-day` end to end died AFTER writing its receipt with
