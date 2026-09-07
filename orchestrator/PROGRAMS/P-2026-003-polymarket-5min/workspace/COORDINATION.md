@@ -22113,6 +22113,24 @@ Coordinator's checks before routing: the unit's environment carried `PM_DATA_ROO
 **THE UPSTREAM GAP.** v5 requires the pin as `{path, sha256}` of the 09-06 SEALED feed at close; no such feed exists — the last forward-day run is 09-05 and `be_forward_day` (not the fragment/tape/book chain) produces it. v5's `pins.taken_by` names the wrong producer — BE's own wording, disclosed as wrong; v5 is immutable, so v6 corrects it by the pair before the horizon (09-10). The coordinator's chain omitted the forward-day run too: step 0 was the mask (R-734), and the sealed feed is a step of its own after the book. BE 87 (dispatched 01:37Z): the launcher's three findings — (a) `--capture` refuses (77) after the payload exits because systemd releases the cgroup leaf, so the peak of record must be SAMPLED WHILE ALIVE (BE did it by hand for the tape and the book; the launcher gains the sampler); (b) the poll printed `UNEXPECTED` for a success under `RemainAfterExit`; (c) `--verify-structure` wrote its record to stdout only, so BE wrote the file from the journal and said so in it — plus v6, then the forward-day run for 09-06 as one heavy launch phased on the lock's inode (DE 115 holds the lock now), then the pins v2.
 
 **ROUTING.** DE 115 in flight (`de115day06`; the receipt sealed under the eleven; `n_days_complete` expected 4 of 6). BE 87 (above). DA 114 after DE's receipt (the light pre-read, then the open-book half). REV 88 on the chain (BE 72's launches and findings, DE 115, v6). MEM 238 on this entry. The runbook's chain gains the forward-day step (`…`, this round — sha in R-737).
+
+### R-737 — 2026-09-07T01:43Z — coordinator — **DE 115's 09-06 day run REFUSED at its own selftest before any real work: the fixture's data-freeness window, asked of the AMBIENT instrumented window rather than its own probe, observed one ledger path (the design v23 pin) that belongs to the real run's setup — the first time the battery ran inside a real day's window since DE 110–113 added the design-family cells. Nothing written. DE 116 diagnoses, fixes the window's scope, falsifies both directions, lands and STOPS; the fix touches a check, so REV 88 reads it before GO #6.**
+
+**THE REFUSAL, at the journal by id (`de115day06`, InvocationID `0f750954fca1425e…`, 01:36:58Z, rc 1, 6.702 s CPU, 851.4 M peak):**
+
+```
+File "/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py", line 6546, in selftest
+    _pv = fixture_run_proven()
+File "…/de_multiday_gate1_runner.py", line 2499, in fixture_run_proven
+    payload["data_root"] = DR.require_canonical(
+File "…/de_data_root.py", line 198, in require_canonical
+de_data_root.DataRootRefused: REFUSED: the fixture run claims fixture=True but the instrument observed 1 path(s) under `data/`: ['/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json']. …
+de115day06.service: Main process exited, code=exited, status=1/FAILURE
+```
+
+Under DE's declared exit map rc 1 is a failed selftest or a top-level refusal — here the former, by name. DE's stop report (no code edit, no relaunch, no register claim about the day): nothing produced, no receipt, no `n_days_complete`; the only 09-06 files under `derived/` in the window are BE 72's own. Mechanism, established by DE read-only: `fixture_run_proven()` asks its question of the ambient instrumented window (`DR.instrumented(before_work)` → `_battery_first` → `selftest:6546`), not of its own probe; on a real day that window contains the real run's reads, and a standalone `selftest(offline=False)` passes because no ambient window exists — the real day's first design-v23 read is the REV 73 §1.1 pair cell (line 7111) or the resolver at 6341, and this is the first run of the battery inside a real day's window since the design-family cells landed. NOT established, and DE would not guess: which single read put the path in the window in THIS run — pinning it needs another launch. The instrument was right to fire (a fixture claiming data-freeness must prove it); the defect is the window's scope.
+
+**ROUTING.** DE 116 (dispatched 01:43Z): a diagnostic launch under the real form on a scratch lock (`de116diag`, the entry point through the selftest with reads logged by call site), the fix (the fixture window fences the fixture's own reads only, or the offline guard goes WITH the cell), falsifiers both ways, land by pathspec, STOP — no relaunch. REV 88 reads the diff (a check changed: REV 84 §2.2's predicate fails the fast path) and the chain so far, then GO #6 (`de115day06_2`) under the four conjuncts. BE 87 in flight (the launcher's three findings; v6; the forward-day run for 09-06 phased on the lock — the lock is FREE since DE's unit failed; then the pins v2). DA 114 waits for DE's receipt. MEM 238 in flight (R-736); MEM 239 on this entry. The USER's four items stand.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
