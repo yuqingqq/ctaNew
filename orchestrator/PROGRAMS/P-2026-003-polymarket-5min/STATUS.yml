@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T13:00:23Z (MEM ROUND 272 -- R-791..R-794 AND RESULTS `d1dd353` SWEPT, with every landing between the tip I read
+  at round 271 (`f77b95d`) and `20b6dfc`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***MY ROUND-270 PREDICTION HELD, TO THE FILENAME.*** I predicted a non-null `decision_ledger` and named the
+  file at round 271; on disk: **`p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz`, 6,478,908 B**, in
+  the shared derived dir via the symlink. The block verifies key by key -- `n_rows` **196,898**, `sha256`
+  `5a2032b5...`, **`schema_version` 2**, ruling R-765 -- and the artifact hashes `e8f88dc4cbe999c4`. **REV 98's
+  SB0 schema-2 prediction is now TRUE on the first day there is something for it to be true of.** The top level
+  has no `decision_ledger` (it is under `day_run`), which is R-791's recorded misread -- and a top-level `.get`
+  returns None on an artifact that HAS one, indistinguishable from E1/E2's real null.
+  (2) ***THE FIRST ABSOLUTES FOR A GATE-1 DAY.*** 0-cancel baseline `fills_leg` **88,698.17 cents**, 49,668
+  fills, identical under both arms; `unit` is a FIELD now ("cents"), so R-782(a) is met. **`total` = the fills
+  leg exactly**, and the block SAYS SO: `what_total_is` = "the fills leg ... exactly what D(E0) is the difference
+  of". Reconciliation `agree_to_1e_9` true on both arms, residuals ~2e-10.
+  (3) **AND THE INVENTORY LEG IS PRESENT, LARGE, AND OUTSIDE `D_E0`** -- baseline **225,644.56** against a fills
+  leg of 88,698.17; HAZARD 197,242.71; CONDVALUE 9,195.85. Deltas, **as arithmetic and nothing more**: fills
+  -29,585.13 and +6,540.20; inventory **-216,448.71** and **-28,401.85**. On both arms the inventory leg moves
+  down by more than the fills leg moves either way. Whether they belong together is BE 97's and DE's question
+  under DA's routing; MEM rules nothing. The block's `why_inventory_leg_may_be_None` does NOT apply here --
+  `n_fills_with_inventory` equals `n_fills` on all three sides.
+  (4) ***TWO OF MY THREE ROUND-265 CORRECTIONS LANDED; THE THIRD STRUCTURALLY CANNOT.*** `ruling.path` is now
+  REPO-RELATIVE with `path_is`, and `where_the_five_live_now` is present. **The NOTE is absent from every depth**
+  -- and at the code its key is a SIBLING of `ruling_by_pair` (`:111` vs `:113`) while both emitters copy only
+  `ruling["ruling_by_pair"]` (`:368`, `:433`). Its own text says it "travels with every emission of this family
+  from here"; it cannot. **The absence has had two different causes across three days** -- E1/E2's bytes lacked
+  it, E3's have it and the emitter drops it -- and a reader comparing artifacts would infer one.
+  (5) The sealed 09-05 run is stamped **v15 at three places and v15 only** (regex over the whole file), which is
+  why the plain read refuses by name; the coordinator's v15->v19 materiality is 62 added / 10 removed / 9
+  changed with no estimand, bar or pin key, ruled exploratory-standing and disclosed for overrule. **R-793's
+  anchoring correction is the same class as my own window rule** -- anchor on the last seen origin tip, never on
+  your own landing -- reached from the opposite direction (I missed REV's landings; the coordinator
+  misattributed DE's).
+  (6) **THE `ABSOLUTES_DO_NOT_RECONCILE` CELL LANDED AND MY OPEN ITEM FROM ROUND 268 IS CLOSED**: `a71b714`
+  ships a control that admits and a known-bad that swaps `absolute_legs` in `globals()` and asserts the refusal
+  code. Watched on every run. E4 running from `wt-de` **still at `6c3a121`** (`045ec231...`, since 12:47:27Z,
+  exit ~14:07Z). Freeze holds a TWELFTH round. **THE FOUR-DAY TABLE WILL BE HETEROGENEOUS IN THREE WAYS**:
+  absolutes (09-05/06 yes, 09-03/04 no), ledgers (one, one explicit null, one no key), and the bare `G` (sealed
+  receipts vs early reads) -- plus the params-stamp spans.
+  COUNTS (by YAML parse): flags 2080 -> 2098, provenance 1625 -> 1643 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 254 archived.)
   2026-09-07T12:08:38Z (MEM ROUND 271 -- R-789 AND R-790 SWEPT, with every landing between the tip I read at round 270
   (`3d1dc7f`) and `f77b95d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE POST-EMIT CENSUS READ A KEY THE ARTIFACT ITSELF SAYS NOTHING READ.*** The 09-04 receipt's
@@ -145,46 +184,6 @@ updated: >-
   files that never existed.
   COUNTS (by YAML parse): flags 2044 -> 2062, provenance 1589 -> 1607 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 252 archived.)
-  2026-09-07T11:24:27Z (MEM ROUND 269 -- R-785 AND R-786 SWEPT, with every landing between the tip I read at round 268
-  (`c8ff91e`) and `afd74c3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE HEADLINE IS A CORRECTION TO MY OWN STANDING LINE.*** REV 101: "in the shared tree the cascade red
-  ABORTS THE BATTERY AT CHECK 7, 177 checks before this one, so nobody could see it. The by-design red was
-  masking a real red." Measured: shared aborts at check 7; the composition reaches check 185 -- 184 pass, then
-  `DECISION_LEDGER_HAS_NO_ANCHOR`. **I have reported that red on both sides every round since 262, most recently
-  as "one module named, no more, which is what makes it distinguishable from a real one" -- true about the CHECK,
-  misleading about the TREE.** My probe hashes ten declared paths and NEVER RUNS THE BATTERY, so "9 of 10" was
-  always about ten digests; `BE_CASCADE_DIFFERS` is a RAISE from `verify_be_module():829`, which is why
-  everything after it is unobserved. **The fix to my reporting is one clause: when the shared tree is red, say
-  the battery cannot get past it.**
-  (2) **REV's battery count verified AT ITS OWN PIN** (`5a34e722`): 15 `run_day` calls in `selftest` +
-  `_day_path_checks`, 6 with `params=live` at exactly 8907/8960/8975/8994/10280/10302, 0 with `ledger_anchor` --
-  every figure. My first walk scoped to `selftest` alone and returned 4; the narrower probe answered a different
-  question. **AT THE TIP: same 15 and 6 (shifted), still 0 anchors, and ALL SIX PASS `fixture=True`** -- so
-  REV's three "candidates to trip" are answered by DE 133's fixture exemption. Read at the code; REV 102 settles
-  it.
-  (3) DE 133: the anchor check is a NAMED FUNCTION returning `NO_LEDGER_FOR_A_FIXTURE_DAY` -- "**a NAMED STATUS,
-  never the `null` that hid the original defect**" (rule 4 applied to the defect's own shape) -- placed after the
-  day-membership and lock guards because at the top "it PRE-EMPTED the day-membership refusal and a cell testing
-  that got this one instead", with DE recording that **two versions of its own cell accepted THEIR refusal as if
-  it were this one**. **A NEAR-MISS OF MINE**: `assert_ledger_anchor` occurs twice in the runner (def + one
-  call), which reads as "nobody drives it" -- WRONG; `de_early_read.py:982-988` drives all three arms (red,
-  fixture, green). Twice in one round a correctly-scoped probe answered a differently-scoped question, both
-  caught before writing.
-  (4) **REV DROVE `ABSOLUTES_DO_NOT_RECONCILE` AND IT FIRES** -- perturbing `absolute_legs` by 1.0 cent, the
-  refusal reports a difference of 0.999999999999, the injected cent to twelve places. My round-268 note said no
-  NATURAL input can drive it and only a SYNTHETIC perturbation could; that is exactly what REV did. The finding
-  narrows: the guard was never wrong, only unwatched -- **and a reviewer's scratch drive is not a standing
-  control**; the routed item becomes "land it as a CELL".
-  (5) **THE THIRD COMPOSITION**, verified at the branch: `origin/mm-research-e3-composition` = **`6c3a121`**,
-  parent **`fe76d83` itself**, `git diff --stat` showing **exactly two files** (466 insertions, 40 deletions) and
-  nothing else; **its cascade is 10/10** (fe76d83 10/10, shared 9/10) so the battery can reach past check 7; and
-  **both files are BYTE-IDENTICAL to the shared tree's** (`5aa544ef`, `eaa68ea5`), so it is DE's work on
-  `fe76d83`'s base, not a variant.
-  (6) The replay debt stands for BOTH days and the two absences DIFFER IN SHAPE: 09-04 carries
-  `decision_ledger` PRESENT and explicitly `None`; 09-03 has no ledger key at all. Two tables of four in hand;
-  E3/E4/GO #8 wait on the third composition, REV 102 and the DE reset (98 % context). Freeze holds a NINTH round.
-  COUNTS (by YAML parse): flags 2026 -> 2044, provenance 1571 -> 1589 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 251 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -356,6 +355,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 272, R-791..R-794 + RESULTS d1dd353 swept (f77b95d -> 20b6dfc) ---
+  MY_ROUND_270_PREDICTION_HELD_AND_THE_FILENAME_MATCHED_EXACTLY: THE-FAMILYS-FIRST-LEDGER
+  THE_LEDGER_BLOCK_VERIFIED_KEY_BY_KEY_AT_THE_ARTIFACT: NINE-KEYS-SCHEMA-2
+  THE_TOP_LEVEL_HAS_NO_decision_ledger_WHICH_IS_THE_MISREAD_R_791_RECORDS: IT-LIVES-UNDER-day_run
+  THE_FIRST_ABSOLUTES_IN_THE_PROGRAMME_FOR_A_GATE_1_DAY: 88698-17-CENTS-BASELINE-FILLS-LEG
+  total_IS_THE_FILLS_LEG_ONLY_AND_THE_FIELD_SAYS_SO_ITSELF: what_total_is-IS-A-FIELD-NOT-A-COMMENT
+  THE_INVENTORY_LEG_IS_PRESENT_LARGE_AND_OUTSIDE_D_E0: 225644-56-ON-THE-BASELINE
+  THE_INVENTORY_DELTAS_RECORDED_AS_ARITHMETIC_NOT_AS_A_READING: MINUS-216448-AND-MINUS-28401
+  AND_why_inventory_leg_may_be_None_DOES_NOT_APPLY_ON_THIS_DAY: EVERY-FILL-CARRIES-THE-FIELDS
+  THE_RECONCILIATION_AGREES_TO_1e_9_ON_BOTH_ARMS: THE-GUARD-THAT-NOW-HAS-A-CELL
+  TWO_OF_MY_THREE_ROUND_265_CORRECTIONS_LANDED_IN_E3s_ARTIFACT: REPO-RELATIVE-AND-THE-FIVE
+  BUT_THE_NOTE_STRUCTURALLY_CANNOT_TRAVEL_AND_E3_PROVES_IT: ABSENT-FROM-THE-FIRST-EMISSION-THAT-COULD-CARRY-IT
+  IT_IS_A_SIBLING_OF_THE_ONLY_KEY_BOTH_EMITTERS_COPY: 368-AND-433-TAKE-ruling_by_pair
+  THE_SEALED_09_05_RUN_IS_STAMPED_v15_AT_THREE_PLACES: AND-ONLY-v15-IN-THE-WHOLE-FILE
+  R_793s_ANCHORING_CORRECTION_IS_THE_SAME_CLASS_AS_MY_OWN_WINDOW_RULE: ANCHOR-ON-THE-TIP-YOU-READ
+  E4_IS_RUNNING_FROM_wt_de_STILL_AT_6c3a121: 045ec231-SINCE-124727Z
+  THE_ABSOLUTES_CELL_LANDED_AND_MY_OPEN_ITEM_FROM_ROUND_268_IS_CLOSED: A-RED-AND-A-GREEN-ON-EVERY-RUN
+  THE_FREEZE_HOLDS_FOR_THE_TWELFTH_ROUND: PARAMS-HEAD-v19-DESIGN-HEAD-v27
+  THE_FOUR_DAY_TABLE_WILL_BE_HETEROGENEOUS_IN_THREE_WAYS: ABSOLUTES-LEDGERS-AND-THE-BARE-G
   # --- MEM round 271, R-789 and R-790 swept (3d1dc7f -> f77b95d) ---
   THE_POST_EMIT_CENSUS_READ_A_KEY_THE_ARTIFACT_SAYS_NOTHING_READ: THE-FIELD-AND-THE-CODE-CONTRADICT
   AND_THE_SWEEP_THAT_JUSTIFIED_THE_REMOVAL_HAD_THE_WRONG_SCOPE: CONSUMERS-OF-A-RECEIPT-VERSUS-THE-PAYLOAD
@@ -26439,6 +26457,220 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 272, 2026-09-07T13:00:23Z (the clock read by which every measurement below was complete) ---
+  MY_ROUND_270_PREDICTION_HELD_AND_THE_FILENAME_MATCHED_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      **THE PREDICTION I RECORDED BEFORE THE ARTIFACT EXISTED HELD, TO THE FILENAME.** At round 270 I predicted E3's
+      09-05 artifact would carry a NON-NULL `decision_ledger` with a ledger file beside it, and at round 271 I named the
+      file exactly: `p003_de_decision_ledger_20260905__<STAMP>.jsonl.gz`, in `data/pm_5min/derived/` because `wt-de/data`
+      is a symlink to the shared root. **On disk: `p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz`,
+      6,478,908 B, mtime 12:41:08Z, in that directory.** The reasoning that produced it was structural, not lucky --
+      `de_early_read.py` passes `ledger_anchor=out` and `assert_ledger_anchor` refuses only when the anchor is None on a
+      real day -- and it is now the family's FIRST ledger, against a census I ran last round that found zero in the whole
+      data root.
+  THE_LEDGER_BLOCK_VERIFIED_KEY_BY_KEY_AT_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      `day_run.decision_ledger` is a mapping of NINE keys and every figure R-791 cites matches: `bytes` **6,478,908**,
+      `n_rows` **196,898**, `sha256` **5a2032b587788f72...** (R-791 cites `5a2032b5...`), `schema_version` **2**,
+      `ruling` "R-765", `path`, `recompute_with` ("de_decision_ledger.read_ledger(path, expect_sha256=<this sha256>) then
+      .recompute(led, arm)"), `named_here_by_digest`, and `the_bytes_are_gitignored: True`. The artifact itself hashes
+      **e8f88dc4cbe999c4**, matching R-791's citation, at 49,573 B. **AND REV 98's SB0 PREDICTION IS NOW TRUE ON THE
+      FIRST DAY THERE IS SOMETHING FOR IT TO BE TRUE OF**: schema 2. It was refuted for E2 because no ledger existed;
+      here one does, and it declares 2. One caveat I record without routing: `path` is written ABSOLUTE
+      (`/home/yuqing/ctaNew/data/...`), which is the same shape REV 95 had corrected for the RULING path.
+  THE_TOP_LEVEL_HAS_NO_decision_ledger_WHICH_IS_THE_MISREAD_R_791_RECORDS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      R-791 records "a coordinator top-level `.get` misread caught in-pane, recorded so readers look at
+      `day_run.decision_ledger`". Verified from both sides: the artifact's TOP-LEVEL key set is the same fifteen keys as
+      09-03 and 09-04 (`G`, `as_of`, `computation_params`, `day_run`, `days_consumed`, `economics_field_availability`,
+      `interval`, `is_a_validation`, `preconditions`, `protocol`, `ruling`, `seal_standing`, `the_ruling_verbatim`,
+      `verdict_class`, `what_this_is`) -- **`decision_ledger` is NOT among them** -- and the block is one level down under
+      `day_run`. So a top-level `.get("decision_ledger")` returns None on an artifact that has one, which reads exactly
+      like the null that E1 and E2 genuinely carried. **The two states are indistinguishable to a reader who looks in the
+      wrong place**, which is why recording the path is worth more than recording the value.
+  THE_FIRST_ABSOLUTES_IN_THE_PROGRAMME_FOR_A_GATE_1_DAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      **R-782's ruling delivers for the first time on a real Gate-1 day.** Each arm-day now carries an `absolute` block
+      of six keys (`ruling`, `unit`, `zero_cancel_baseline`, `arm`, `reconciliation`, `read_from`). **The 0-cancel
+      baseline, 09-05: `fills_leg` 88,698.17341110039 cents ($886.98), `n_fills` 49,668** -- identical under both arms,
+      the right signature for one shared baseline replay. The arms: `CONDVALUE_X_SKEW` fills_leg 59,113.05 on 30,492
+      fills; `HAZARD_OVER_SKEWED_REF` fills_leg 95,238.37 on 47,639. `unit` is the field `cents`, so R-782(a)'s "unit
+      NAMED in the field" is met -- at round 267 I had to read it off `_value_cents` because no artifact carried it.
+  total_IS_THE_FILLS_LEG_ONLY_AND_THE_FIELD_SAYS_SO_ITSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      The most important thing about the new block, and DE wrote it into the block rather than leaving it to be found.
+      `total` equals `fills_leg` exactly on all three sides (baseline 88,698.17341110039 = 88,698.17341110039; both arms
+      likewise), and the field `what_total_is` reads: "**the fills leg, which is what `_value_cents` sums and therefore
+      exactly what D(E0) is the difference of**". So the estimand is unchanged and the absolutes are absolutes OF THAT
+      ESTIMAND -- not a new, larger quantity. This is the honest shape: had `total` silently included the inventory leg,
+      `D_E0` and the absolutes would have disagreed and the reconciliation would have refused.
+  THE_INVENTORY_LEG_IS_PRESENT_LARGE_AND_OUTSIDE_D_E0:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      And the part that needs stating carefully. `inventory_leg` is **populated, not None, and larger than the fills
+      leg on two of the three sides**: baseline **225,644.56** cents against a fills leg of 88,698.17;
+      `HAZARD_OVER_SKEWED_REF` **197,242.71** against 95,238.37; `CONDVALUE_X_SKEW` **9,195.85** against 59,113.05. It
+      sits in the block and outside `total`, so it is recorded and not counted. **That is exactly the question DA routed
+      to BE 97 this round and DE next**, and it is a modelling question -- whether a residual position's mark belongs in
+      an estimand declared as the fills leg -- not a bookkeeping one. MEM asserts no result and rules nothing here.
+  THE_INVENTORY_DELTAS_RECORDED_AS_ARITHMETIC_NOT_AS_A_READING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      The arithmetic a later reader will want, computed from the block's own numbers and offered as arithmetic only.
+      Fills-leg deltas (= `D_E0`): CONDVALUE **-29,585.13**, HAZARD **+6,540.20**. Inventory-leg deltas over the same
+      pairs: CONDVALUE 9,195.85 - 225,644.56 = **-216,448.71**; HAZARD 197,242.71 - 225,644.56 = **-28,401.85**. **On
+      both arms the inventory leg moves down by more than the fills leg moves in either direction.** I record the four
+      numbers and stop: whether they belong together is BE's and DE's question under DA's routing, and this day is one
+      EXPLORATORY day with no interval. Recorded now because the four-day table is being assembled and these numbers are
+      in the artifact whether or not anyone has decided what they mean.
+  AND_why_inventory_leg_may_be_None_DOES_NOT_APPLY_ON_THIS_DAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      A caveat in the block that does not bite here, checked rather than assumed. Each side carries
+      `why_inventory_leg_may_be_None`: "BE 96's position fields are absent on these fills; an unrecorded leg is not a
+      zero one" -- the right principle (rule 4 again: an unrecorded leg and a zero one are the same number and opposite
+      facts). **On 09-05 it does not apply**: `n_fills_with_inventory` equals `n_fills` on every side (49,668 / 49,668;
+      30,492 / 30,492; 47,639 / 47,639), so every valued fill carries BE 96's fields and the leg is complete. The caveat
+      is live text for days where it is not.
+  THE_RECONCILIATION_AGREES_TO_1e_9_ON_BOTH_ARMS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      `reconciliation` carries `arm_total_minus_baseline_total`, `D_E0`, `agree_to_1e_9` and
+      `refuses_by_name_otherwise: "ABSOLUTES_DO_NOT_RECONCILE"`. CONDVALUE: -29,585.126172000186 against
+      -29,585.12617199999. HAZARD: 6,540.199709499968 against 6,540.1997095000115. **`agree_to_1e_9` true on both**, and
+      the residuals are ~2e-10 and ~4e-11 -- float noise, which is what a same-replay identity computed through two
+      different loops should look like. R-782(a)'s assertion is met on the first day it runs against real data.
+  TWO_OF_MY_THREE_ROUND_265_CORRECTIONS_LANDED_IN_E3s_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      At round 265 I found three in-band corrections absent from the bytes E1/E2 ran. **E3 runs `6c3a121`, which
+      contains all three, so this artifact is the test.** TWO LANDED: `ruling.path` is now
+      `live/pm_research/declarations/de_multiday_gate1_params_v19.json` -- **REPO-RELATIVE**, with `path_is:
+      "REPO-RELATIVE"` beside it, against 09-03's and 09-04's absolute path into the worktree; and
+      `economics_field_availability` now carries `where_the_five_live_now` and `read_this_first` alongside the renamed
+      `not_computed_by_this_path_the_ARM_DAY_BLOCK`. So DE 128's and DE 129's corrections reach a reader of the family
+      exactly as intended, on the first emission that could carry them.
+  BUT_THE_NOTE_STRUCTURALLY_CANNOT_TRAVEL_AND_E3_PROVES_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      **THE THIRD DID NOT, AND IT CANNOT.** `NOTE_on_the_landed_09_03_artifact` is **absent from E3's artifact** -- a
+      recursive search over every key at every depth returns nothing. Its own text reads: "This note is the correction,
+      in band, and **it travels with every emission of this family from here.**" E3 is the first emission from bytes that
+      contain it, and it did not travel. **So the NOTE's absence has had TWO DIFFERENT CAUSES across three days**: for
+      E1/E2 the bytes lacked it (my round-265 finding); for E3 the bytes have it and the emitter drops it. A reader
+      comparing the three artifacts would see one absence and infer one cause.
+  IT_IS_A_SIBLING_OF_THE_ONLY_KEY_BOTH_EMITTERS_COPY:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_early_read.py
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      The mechanism, read at the code E3 ran. The ruling function returns a mapping with **two sibling keys** --
+      `"ruling_by_pair": {"path": _rp, "sha256": ..., "path_is": "REPO-RELATIVE"}` at `:111` and
+      `"NOTE_on_the_landed_09_03_artifact": {...}` at `:113`. Both emission sites take **only the first**:
+      `:368  out["ruling"] = ruling["ruling_by_pair"]` and `:433  "ruling": ruling["ruling_by_pair"],`. **THE NOTE IS
+      BESIDE THE FIELD THAT IS EMITTED, NOT INSIDE IT**, so no emission of this family can carry it as written -- the
+      `path_is` tag travels because it is INSIDE `ruling_by_pair`, and the NOTE does not because it is next to it. One
+      level of nesting is the whole difference between a correction that reaches readers and one that reaches only
+      readers of the source.
+  THE_SEALED_09_05_RUN_IS_STAMPED_v15_AT_THREE_PLACES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v3.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      R-794 records that the sealed 09-05 run is stamped v15 while the early read ran under v19, which is why the plain
+      read refuses by name and why the coordinator measured the v15->v19 materiality key-by-key (62 added / 10 removed /
+      9 changed; design pointer v23 in both; no estimand, bar or pin key; ruled exploratory-standing and disclosed for
+      overrule). **I verified the stamp**: `de_multiday_gate1_params_v15.json` appears at
+      `/fixture_day_lock/ruled_day_set_read_from`, `/provenance/digests_at_load_and_at_emit/inputs/params/path` and
+      `/provenance/params/path`, and a regex over the whole file finds **v15 and no other params version**. The refusal
+      is the instrument working: a run whose params differ from the reading's params should not be quoted through
+      silently.
+  R_793s_ANCHORING_CORRECTION_IS_THE_SAME_CLASS_AS_MY_OWN_WINDOW_RULE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      R-793 corrects R-792 in band: E3's artifact, ledger and run journal landed in **`1bd6b63`** (12:43:10Z), not
+      `a29f9a5` (which is Q-DE-138's row), because "a new-commits range anchored on my own landing hides seat commits
+      rebased behind it -- anchor on the last seen origin tip". **THAT IS THE SAME CLASS AS THE RULE I RECORDED AT
+      ROUNDS 265 AND 267 AND HAVE FOLLOWED SINCE**: my sweeps bound on THE TIP I LAST READ, never on my own last commit,
+      because seat commits land in the gap between a read and a write and end up as ancestors of it. Two seats reaching
+      the same rule from opposite directions -- mine from missing REV's landings, the coordinator's from
+      misattributing DE's -- is worth recording as a convention rather than as two incidents.
+  E4_IS_RUNNING_FROM_wt_de_STILL_AT_6c3a121:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      Read while loaded (rule 20) at 12:57:50Z: `deEARLY20260906.service`, LoadState loaded, ActiveState active,
+      SubState **running**, ExecMainStatus 0, Result success, InvocationID **`045ec2314c1646c29381b8d87fe2a1d2`**
+      (R-792 cites `045ec231...`), `ExecMainStartTimestamp` Mon 2026-09-07 12:47:27 UTC, MemoryPeak 2,588,209,152 at
+      this read, WorkingDirectory `/home/yuqing/ctaNew-wt-de` -- and **`git worktree list` puts `wt-de` at `6c3a121`**,
+      so R-792's "from wt-de STILL at 6c3a121" holds: the refresh to `5020f96` correctly has NOT happened yet. Exit
+      expected about 14:07Z. Per round 268's rule the durable citation will be E4's run journal.
+  THE_ABSOLUTES_CELL_LANDED_AND_MY_OPEN_ITEM_FROM_ROUND_268_IS_CLOSED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      **CLOSED, AND I HAVE CARRIED IT OPEN SINCE ROUND 268.** REV 99 §A3 found `ABSOLUTES_DO_NOT_RECONCILE` never
+      watched fire; I noted at round 268 that no NATURAL input could drive it and only a synthetic perturbation would;
+      REV 101 drove it by hand; at round 269 I recorded REV's own qualifier that a reviewer's scratch drive is not a
+      standing control and the item was "land it as a CELL". `a71b714` lands exactly that: a CONTROL cell ("the
+      unperturbed day runs ... admits", asserting two arm-days) and a KNOWN-BAD cell that swaps `absolute_legs` in
+      `globals()` for a perturbing `_perturb782` and asserts `"ABSOLUTES_DO_NOT_RECONCILE" in _msg782`. Occurrences of
+      the code in the runner went 2 -> 4 with the cell. **Watched on every run, red and green, in the module that owns
+      it.**
+  THE_FREEZE_HOLDS_FOR_THE_TWELFTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      `params_v20` and `design_v28` both absent (0 matches in any state), heads v19 and v27 -- and per round 270's
+      history check they have never existed. The sequence ahead as R-794 sets it: E4 exits about 14:07Z -> DA 128 for
+      09-06, **with its sealed stamp read AT THAT RECEIPT** (a fourth span if it differs, measured before quoted) -> the
+      four-day table -> `wt-de` refreshed to `5020f96` under REV 103 §5's two conditions before 00:00Z -> the close ->
+      GO #8.
+  THE_FOUR_DAY_TABLE_WILL_BE_HETEROGENEOUS_IN_THREE_WAYS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:00:23Z
+    said: >-
+      Assembled for whoever builds it, because these are three separate splits across the same four days and each was
+      established at a different artifact. **(1) ABSOLUTES**: 09-05 (and presumably 09-06) carry the `absolute` block;
+      **09-03 and 09-04 do not**, and each needs one replay under the recording code (R-782(c)) which neither has a GO
+      for. **(2) LEDGERS**: 09-05 has one, 196,898 rows; 09-04's `decision_ledger` is present and explicitly `None`;
+      09-03 has no ledger key at all. **(3) THE BARE `G`**: the four landed SEALED receipts carry `G: 6` while the early
+      reads carry `G_and_which_G_it_is` -- a schema change between days, in DE's words "said so here rather than
+      discovered later". Plus the params-stamp spans (09-05 sealed under v15, read under v19). **Four days, four
+      different shapes of record.**
   # --- MEM round 271, 2026-09-07T12:08:38Z (the clock read by which every measurement below was complete) ---
   THE_POST_EMIT_CENSUS_READ_A_KEY_THE_ARTIFACT_SAYS_NOTHING_READ:
     prov: CHECKED

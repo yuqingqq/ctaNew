@@ -19912,3 +19912,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2008 -> 2026, provenance 1553 -> 1571 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 250 archived.)
 ```
+
+## Batch 254 — archived 2026-09-07T13:00:23Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T11:24:27Z (MEM ROUND 269 -- R-785 AND R-786 SWEPT, with every landing between the tip I read at round 268
+  (`c8ff91e`) and `afd74c3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE HEADLINE IS A CORRECTION TO MY OWN STANDING LINE.*** REV 101: "in the shared tree the cascade red
+  ABORTS THE BATTERY AT CHECK 7, 177 checks before this one, so nobody could see it. The by-design red was
+  masking a real red." Measured: shared aborts at check 7; the composition reaches check 185 -- 184 pass, then
+  `DECISION_LEDGER_HAS_NO_ANCHOR`. **I have reported that red on both sides every round since 262, most recently
+  as "one module named, no more, which is what makes it distinguishable from a real one" -- true about the CHECK,
+  misleading about the TREE.** My probe hashes ten declared paths and NEVER RUNS THE BATTERY, so "9 of 10" was
+  always about ten digests; `BE_CASCADE_DIFFERS` is a RAISE from `verify_be_module():829`, which is why
+  everything after it is unobserved. **The fix to my reporting is one clause: when the shared tree is red, say
+  the battery cannot get past it.**
+  (2) **REV's battery count verified AT ITS OWN PIN** (`5a34e722`): 15 `run_day` calls in `selftest` +
+  `_day_path_checks`, 6 with `params=live` at exactly 8907/8960/8975/8994/10280/10302, 0 with `ledger_anchor` --
+  every figure. My first walk scoped to `selftest` alone and returned 4; the narrower probe answered a different
+  question. **AT THE TIP: same 15 and 6 (shifted), still 0 anchors, and ALL SIX PASS `fixture=True`** -- so
+  REV's three "candidates to trip" are answered by DE 133's fixture exemption. Read at the code; REV 102 settles
+  it.
+  (3) DE 133: the anchor check is a NAMED FUNCTION returning `NO_LEDGER_FOR_A_FIXTURE_DAY` -- "**a NAMED STATUS,
+  never the `null` that hid the original defect**" (rule 4 applied to the defect's own shape) -- placed after the
+  day-membership and lock guards because at the top "it PRE-EMPTED the day-membership refusal and a cell testing
+  that got this one instead", with DE recording that **two versions of its own cell accepted THEIR refusal as if
+  it were this one**. **A NEAR-MISS OF MINE**: `assert_ledger_anchor` occurs twice in the runner (def + one
+  call), which reads as "nobody drives it" -- WRONG; `de_early_read.py:982-988` drives all three arms (red,
+  fixture, green). Twice in one round a correctly-scoped probe answered a differently-scoped question, both
+  caught before writing.
+  (4) **REV DROVE `ABSOLUTES_DO_NOT_RECONCILE` AND IT FIRES** -- perturbing `absolute_legs` by 1.0 cent, the
+  refusal reports a difference of 0.999999999999, the injected cent to twelve places. My round-268 note said no
+  NATURAL input can drive it and only a SYNTHETIC perturbation could; that is exactly what REV did. The finding
+  narrows: the guard was never wrong, only unwatched -- **and a reviewer's scratch drive is not a standing
+  control**; the routed item becomes "land it as a CELL".
+  (5) **THE THIRD COMPOSITION**, verified at the branch: `origin/mm-research-e3-composition` = **`6c3a121`**,
+  parent **`fe76d83` itself**, `git diff --stat` showing **exactly two files** (466 insertions, 40 deletions) and
+  nothing else; **its cascade is 10/10** (fe76d83 10/10, shared 9/10) so the battery can reach past check 7; and
+  **both files are BYTE-IDENTICAL to the shared tree's** (`5aa544ef`, `eaa68ea5`), so it is DE's work on
+  `fe76d83`'s base, not a variant.
+  (6) The replay debt stands for BOTH days and the two absences DIFFER IN SHAPE: 09-04 carries
+  `decision_ledger` PRESENT and explicitly `None`; 09-03 has no ledger key at all. Two tables of four in hand;
+  E3/E4/GO #8 wait on the third composition, REV 102 and the DE reset (98 % context). Freeze holds a NINTH round.
+  COUNTS (by YAML parse): flags 2026 -> 2044, provenance 1571 -> 1589 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 251 archived.)
+```
