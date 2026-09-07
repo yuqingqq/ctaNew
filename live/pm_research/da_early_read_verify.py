@@ -693,12 +693,141 @@ LEDGER_VALUATION = ("sgn * (mid_cents_at_markout - px_cents) * size, "
                     "sgn = +1 on BUY_UP; math.fsum over the rows")
 
 
+#: THE SETTLEMENT VALUATION, RE-IMPLEMENTED FROM DE'S DECLARED RULE
+#: (R-801; `settlement_legs_by_slug` / `settle_value_cents` read as
+#: DOCUMENTS, never imported). Per slug:
+#:     trades leg   = sum(-sgn * px * size)      a BUY pays out, a SELL takes in
+#:     residual leg = net_shares * settle
+#:     total        = trades + residual
+#: and the identity `total == sum sgn*(settle - px)*size` holds by algebra,
+#: so this reader ASSERTS it rather than trusting either form -- two
+#: expressions of one quantity, computed separately and compared.
+SETTLE_RECONCILE_TOL = 1e-9
+WINNER_STATUS_REQUIRED = "VERIFIED_AGREE"
+
+
+def recompute_settlement_from_the_ledger(rows_by_kind: dict,
+                                         fills_by_arm: dict) -> dict:
+    """Per arm: the settlement D and the two legs, from the FILL rows and
+    the winner each SETTLEMENT_SLUG row carries -- compared against the
+    SETTLEMENT_SCALARS row the file also carries."""
+    import math                                               # noqa: PLC0415
+    scal = {r["arm"]: r for r in rows_by_kind.get("SETTLEMENT_SCALARS", [])}
+    per_slug = {}
+    for r in rows_by_kind.get("SETTLEMENT_SLUG", []):
+        per_slug.setdefault(r.get("arm"), {}).setdefault(
+            r.get("book"), {})[r.get("slug")] = r
+    if not scal and not per_slug:
+        return {"status": "SETTLEMENT_ROWS_ABSENT",
+                "why": ("this ledger carries neither SETTLEMENT_SCALARS nor "
+                        "SETTLEMENT_SLUG rows. The day was NOT valued under "
+                        "R-801's endpoint -- ***absent, not zero***, and a "
+                        "reader that reported 0 would be inventing a "
+                        "settlement nobody computed"),
+                "per_arm": {}}
+    out, flags = {}, []
+    for arm, sc in sorted(scal.items()):
+        books = per_slug.get(arm, {})
+        #: THE WINNER PER SLUG, AND ITS STATUS. A slug whose winner is not
+        #: VERIFIED_AGREE is refused: the settlement value of every fill in
+        #: it rests on a winner the venue and Chainlink do not agree on.
+        winners, bad_status = {}, []
+        for book, per in books.items():
+            for slug, row in per.items():
+                st = row.get("status") or row.get("winner_status")
+                if st is not None and st != WINNER_STATUS_REQUIRED:
+                    bad_status.append(f"{arm}.{book}.{slug}={st}")
+                if "up_won" in row:
+                    winners[slug] = bool(row["up_won"])
+        if bad_status:
+            raise EarlyReadVerifyRefused(
+                f"SETTLEMENT_WINNER_NOT_VERIFIED: {bad_status}. A slug whose "
+                f"winner status is not {WINNER_STATUS_REQUIRED} carries a "
+                f"settlement value that rests on a winner the venue and the "
+                f"Chainlink convention do not agree on, and every fill in "
+                f"that slug is valued by it.")
+        legs = {}
+        for book in ("ARM", "BASELINE"):
+            fills = [f for f in fills_by_arm.get(arm, {}).get(book, [])]
+            per = books.get(book, {})
+            tr = res = 0.0
+            per_fill = 0.0
+            n_missing_winner = 0
+            for f in fills:
+                px, sz = f.get("px_cents"), float(f.get("size") or 0.0)
+                slug = f.get("slug")
+                if px is None or not sz:
+                    continue
+                if slug not in winners:
+                    n_missing_winner += 1
+                    continue
+                sgn = 1.0 if f.get("side") == LEDGER_BUY_SIDE else -1.0
+                settle = (per.get(slug) or {}).get("settle_cents")
+                if settle is None:
+                    settle = 100.0 if winners[slug] else 0.0
+                tr += -sgn * float(px) * sz
+                res += sgn * sz * float(settle)
+                per_fill += sgn * (float(settle) - float(px)) * sz
+            total = tr + res
+            if abs(total - per_fill) > SETTLE_RECONCILE_TOL:
+                raise EarlyReadVerifyRefused(
+                    f"SETTLEMENT_LEGS_DO_NOT_RECONCILE: {arm}.{book} legs sum "
+                    f"to {total!r} and the per-fill form gives {per_fill!r} "
+                    f"(difference {total - per_fill!r}). The legs are a "
+                    f"DECOMPOSITION of the ruled quantity; if they disagree "
+                    f"with it, one of them is a different quantity.")
+            legs[book] = {"trades_leg_cents": tr, "residual_leg_cents": res,
+                          "total_cents": total,
+                          "n_fills_valued": len(fills) - n_missing_winner,
+                          "n_fills_without_a_winner_row": n_missing_winner}
+        d_settle = legs["ARM"]["total_cents"] - legs["BASELINE"]["total_cents"]
+        cmp_ = {
+            "D_E_settle": {"recomputed": d_settle,
+                           "in_the_row": sc.get("D_E_settle")},
+            "arm_total_cents": {"recomputed": legs["ARM"]["total_cents"],
+                                "in_the_row": sc.get("arm_total_cents")},
+            "baseline_total_cents": {
+                "recomputed": legs["BASELINE"]["total_cents"],
+                "in_the_row": sc.get("baseline_total_cents")},
+        }
+        for k, v in cmp_.items():
+            a, b = v["recomputed"], v["in_the_row"]
+            v["agrees"] = (b is not None
+                           and abs(float(a) - float(b))
+                           <= SETTLE_RECONCILE_TOL)
+            if not v["agrees"]:
+                flags.append(f"{arm}.{k}")
+        out[arm] = {"legs": legs, "compared": cmp_,
+                    "ruling": sc.get("ruling"), "unit": sc.get("unit"),
+                    "n_slugs_ARM": len(books.get("ARM", {})),
+                    "n_slugs_BASELINE": len(books.get("BASELINE", {})),
+                    "winner_source": sc.get("winner_source")}
+    if flags:
+        raise EarlyReadVerifyRefused(
+            f"SETTLEMENT_SCALARS_DISAGREE: {flags} -- this reader recomputed "
+            f"the settlement D and the two totals from the FILL rows and the "
+            f"verified winners, and they differ from the SETTLEMENT_SCALARS "
+            f"row by more than {SETTLE_RECONCILE_TOL}. Two implementations "
+            f"of one quantity disagreeing is the finding, not a tolerance to "
+            f"widen.")
+    return {"status": "SETTLEMENT_ROWS_PRESENT", "per_arm": out,
+            "valuation": ("trades = sum(-sgn*px*size); residual = "
+                          "net_shares*settle; total = trades + residual; "
+                          "asserted equal to sum sgn*(settle-px)*size"),
+            "tolerance": SETTLE_RECONCILE_TOL,
+            "winner_status_required": WINNER_STATUS_REQUIRED,
+            "this_is_a_second_implementation": (
+                "R-801's rule read as a DOCUMENT from "
+                "`settlement_legs_by_slug`; DE's module is not imported")}
+
+
 def recompute_from_the_ledger(path) -> dict:
     """PER ARM, FROM THE LEDGER'S ROWS ALONE. No artifact field is read."""
     import gzip                                               # noqa: PLC0415
     import math                                               # noqa: PLC0415
     import statistics                                         # noqa: PLC0415
     arms, draws, scal = {}, {}, {}
+    raw_fills, settle_rows = {}, {}
     n_rows, kinds, fields = 0, {}, {}
     with gzip.open(str(path), "rt") as f:
         for line in f:
@@ -717,6 +846,14 @@ def recompute_from_the_ledger(path) -> dict:
                     * r["size"]
                 arms.setdefault(r["arm"], {}).setdefault(
                     r.get("book"), []).append(v)
+                raw_fills.setdefault(r["arm"], {}).setdefault(
+                    r.get("book"), []).append(r)
+            elif k in ("SETTLEMENT_SCALARS", "SETTLEMENT_SLUG"):
+                #: DE 136/137's two NEW kinds, under an UNCHANGED
+                #: schema_version 2. They are COLLECTED here rather than
+                #: skipped -- a reader that skips them silently reports the
+                #: 5-s number as the day's answer (measured, DA 131).
+                settle_rows.setdefault(k, []).append(r)
     out = {}
     for arm, sc in scal.items():
         books = arms.get(arm, {})
@@ -750,6 +887,8 @@ def recompute_from_the_ledger(path) -> dict:
     #: an artifact says about it.
     allf = sorted({f for v in fields.values() for f in v})
     return {"n_rows": n_rows, "row_kinds": kinds, "per_arm": out,
+            "settlement": recompute_settlement_from_the_ledger(settle_rows,
+                                                               raw_fills),
             "valuation": LEDGER_VALUATION,
             "field_names_by_row_kind": {k: sorted(v)
                                         for k, v in fields.items()},
@@ -821,6 +960,7 @@ def verify_decision_ledger(doc: dict, census: dict, *, data_root) -> dict:
             "row_kinds": rec["row_kinds"], "valuation": rec["valuation"],
             #: R-795's two measured facts, carried to the printer rather
             #: than recomputed there.
+            "settlement": rec["settlement"],
             "has_an_inventory_leg_field": rec["has_an_inventory_leg_field"],
             "inventory_inputs_present": rec["inventory_inputs_present"],
             "field_names_by_row_kind": rec["field_names_by_row_kind"],
@@ -1351,6 +1491,34 @@ def print_table(res: dict) -> str:
                 f"{_v['D_E0']['from_the_ledger']!r}  (the artifact prints "
                 f"{_v['D_E0']['in_the_artifact']!r}; equal: "
                 f"{_v['D_E0']['equal']})")
+        _se = _rc.get("settlement") or {}
+        if _se.get("status") == "SETTLEMENT_ROWS_PRESENT":
+            lines.append(
+                f"  SETTLEMENT (R-801, ***PRIMARY***), recomputed from the "
+                f"FILL rows and the verified winners, cents:")
+            for _arm, _v in sorted(_se["per_arm"].items()):
+                _c = _v["compared"]
+                _a, _b = _v["legs"]["ARM"], _v["legs"]["BASELINE"]
+                lines.append(
+                    f"    {_arm}: arm trades {_a['trades_leg_cents']!r} + "
+                    f"residual {_a['residual_leg_cents']!r} = "
+                    f"{_a['total_cents']!r}; 0-cancel baseline trades "
+                    f"{_b['trades_leg_cents']!r} + residual "
+                    f"{_b['residual_leg_cents']!r} = {_b['total_cents']!r}; "
+                    f"D_settle {_c['D_E_settle']['recomputed']!r} (the row "
+                    f"says {_c['D_E_settle']['in_the_row']!r}; agrees: "
+                    f"{_c['D_E_settle']['agrees']})")
+            lines.append(
+                f"    every slug's winner is {_se['winner_status_required']}; "
+                f"the legs are asserted equal to the per-fill form within "
+                f"{_se['tolerance']}")
+        else:
+            lines.append(
+                f"  SETTLEMENT (R-801, PRIMARY): {_se.get('status')} -- "
+                f"{_se.get('why')}")
+        lines.append(
+            f"  the 5-s markout D_E0 above is the ***DIAGNOSTIC*** under "
+            f"R-801, not the result.")
         lines.append(
             f"  the ledger recompute: {_rc['verdict']} -- "
             f"{_rc['n_rows']} rows, {_rc['n_mismatches']} mismatches across "
@@ -1868,6 +2036,96 @@ def selftest() -> tuple:                                      # noqa: C901
        f"load/emit disagreement is visible: "
        f"{_moved['the_receipts_own_two_readings_agree']}; a planted D_E0 "
        f"and null_mean reach none of {sorted(_leak_probe)}")
+
+    # -- DA 131 / REV 104B S11 #3: THE TWO NEW ROW KINDS ---------------
+    import gzip as _gz                                        # noqa: PLC0415
+
+    def _ledger(rows, where):
+        p = Path(where) / "led.jsonl.gz"
+        with _gz.open(p, "wt") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+        return p
+
+    _base_rows = [
+        {"row": "HEADER", "schema_version": 2, "arms": ["A"],
+         "buy_side": "BUY_UP"},
+        {"row": "ARM_SCALARS", "arm": "A", "arm_value_cents": 10.0,
+         "baseline_value_cents": 4.0, "observed_D_E0": 6.0,
+         "n_fills_arm": 1, "n_fills_baseline": 1, "n_cancels_issued": 0},
+        {"row": "NULL_DRAW", "arm": "A", "i": 0, "value": 1.0},
+        {"row": "FILL", "arm": "A", "book": "ARM", "slug": "s1",
+         "side": "BUY_UP", "px_cents": 40.0, "size": 1.0,
+         "mid_cents_at_markout": 50.0},
+        {"row": "FILL", "arm": "A", "book": "BASELINE", "slug": "s1",
+         "side": "BUY_UP", "px_cents": 46.0, "size": 1.0,
+         "mid_cents_at_markout": 50.0},
+    ]
+    #: the ruled decomposition, computed by hand for this fixture:
+    #: ARM   buys 1 @ 40, up wins -> trades -40, residual +100, total  60
+    #: BASE  buys 1 @ 46, up wins -> trades -46, residual +100, total  54
+    #: D_settle = 60 - 54 = 6
+    _sl = lambda book, px: {                                  # noqa: E731
+        "row": "SETTLEMENT_SLUG", "arm": "A", "book": book, "slug": "s1",
+        "n_fills": 1, "net_shares": 1.0, "trades_leg_cents": -px,
+        "settle_cents": 100.0, "up_won": True,
+        "residual_leg_cents": 100.0, "total_cents": 100.0 - px,
+        "status": "VERIFIED_AGREE"}
+    _good_rows = _base_rows + [
+        {"row": "SETTLEMENT_SCALARS", "arm": "A", "ruling": "R-801",
+         "unit": "cents", "D_E_settle": 6.0, "arm_total_cents": 60.0,
+         "baseline_total_cents": 54.0,
+         "winner_source": {"path": "w.json"}},
+        _sl("ARM", 40.0), _sl("BASELINE", 46.0)]
+    with tempfile.TemporaryDirectory() as _sd:
+        _r_ok = recompute_from_the_ledger(_ledger(_good_rows, _sd))
+        _se = _r_ok["settlement"]
+        _r_absent = recompute_from_the_ledger(_ledger(_base_rows, _sd))
+
+        def _settle_refuses(rows):
+            try:
+                recompute_from_the_ledger(_ledger(rows, _sd))
+                return "ADMITTED"
+            except EarlyReadVerifyRefused as e:
+                return str(e).split(":")[0]
+
+        _bad_scalar = _settle_refuses(
+            _base_rows + [dict(_good_rows[-3], D_E_settle=99.0),
+                          _sl("ARM", 40.0), _sl("BASELINE", 46.0)])
+        _bad_status = _settle_refuses(
+            _base_rows + [_good_rows[-3],
+                          dict(_sl("ARM", 40.0), status="DISAGREE"),
+                          _sl("BASELINE", 46.0)])
+    ck("DA 131 -- ***THE TWO NEW ROW KINDS ARE READ AND RECOMPUTED, NOT "
+       "SKIPPED***: per slug the trades leg, the residual leg and the total; "
+       "per arm the settlement D from the FILL rows and the verified "
+       "winners, compared against the SETTLEMENT_SCALARS row. The legs are "
+       "ASSERTED equal to the per-fill form -- two expressions of one "
+       "quantity, computed separately",
+       _se["status"] == "SETTLEMENT_ROWS_PRESENT"
+       and _se["per_arm"]["A"]["compared"]["D_E_settle"]["recomputed"] == 6.0
+       and _se["per_arm"]["A"]["compared"]["D_E_settle"]["agrees"]
+       and _se["per_arm"]["A"]["legs"]["ARM"]["trades_leg_cents"] == -40.0
+       and _se["per_arm"]["A"]["legs"]["ARM"]["residual_leg_cents"] == 100.0
+       and _se["per_arm"]["A"]["legs"]["BASELINE"]["total_cents"] == 54.0,
+       f"D_settle recomputed "
+       f"{_se['per_arm']['A']['compared']['D_E_settle']['recomputed']!r} "
+       f"against the row's "
+       f"{_se['per_arm']['A']['compared']['D_E_settle']['in_the_row']!r}; "
+       f"arm legs {_se['per_arm']['A']['legs']['ARM']}")
+    ck("KNOWN-BADS, DRIVEN, ALL THREE: a planted SETTLEMENT_SCALARS "
+       "mismatch is SETTLEMENT_SCALARS_DISAGREE; a planted DISAGREE winner "
+       "status is SETTLEMENT_WINNER_NOT_VERIFIED -- ***every fill in that "
+       "slug is valued by a winner the venue and Chainlink do not agree "
+       "on***; and a ledger without the rows reads SETTLEMENT_ROWS_ABSENT, "
+       "***never zero***",
+       _bad_scalar == "SETTLEMENT_SCALARS_DISAGREE"
+       and _bad_status == "SETTLEMENT_WINNER_NOT_VERIFIED"
+       and _r_absent["settlement"]["status"] == "SETTLEMENT_ROWS_ABSENT"
+       and not _r_absent["settlement"]["per_arm"],
+       f"planted D_E_settle=99 -> {_bad_scalar}; planted DISAGREE -> "
+       f"{_bad_status}; no rows -> "
+       f"{_r_absent['settlement']['status']}")
 
     # -- DA 130 / REV 104A S7 #2: THE FAMILY'S HEAD, BY THE PAIR -------
     with tempfile.TemporaryDirectory() as _hd:
