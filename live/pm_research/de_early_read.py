@@ -44,7 +44,7 @@ DECL_DIR = "live/pm_research/declarations"
 #: is a different question asked of the same days.
 DAY_FAMILY = "p003_de_early_read_day"
 
-EXPECTED_CHECKS = 12
+EXPECTED_CHECKS = 15
 
 
 class EarlyReadRefused(RuntimeError):
@@ -155,12 +155,14 @@ def early_read_preconditions(day: str, root, ruling: dict) -> dict:
                                        reasoning, applied where it does
                                        belong.
 
-    ON WHAT "THE PAIR" IS HERE. v16's bar carries `path` and `sha256_16`
-    -- a SIXTEEN-HEX PREFIX, not the full digest -- and v16 is landed and
-    immutable, so this compares the basename exactly and the prefix. That
-    is a prefix comparison and is reported as one in `digest_comparison`;
-    a params v17 carrying full digests would make it a full pair, and
-    until one exists this must not be described as verifying a digest.
+    ON WHAT "THE PAIR" IS. The FULL sha256 (DE 123's ruling). params v16's
+    bar carried `sha256_16` only, so this could compare sixteen hex and no
+    more; v17 supersedes it carrying the full digest of each of the four
+    chain-head receipts. A bar without full digests does not fall back to
+    the prefix -- it REFUSES by its own name
+    (`EARLY_READ_BAR_CARRIES_ONLY_A_PREFIX`), because a fallback makes the
+    strength of the check depend on which version happens to be the head
+    while the artifact says nothing about which check ran.
     """
     root = Path(root)
     der = root / "pm_5min/derived"
@@ -188,13 +190,38 @@ def early_read_preconditions(day: str, root, ruling: dict) -> dict:
             f"({[f.name for f in found]}) are not the one the ruling "
             f"authorised.")
     got = _sha(have)
-    want16 = str(entry["sha256_16"])
-    if not got.startswith(want16):
+    want16 = str(entry.get("sha256_16") or "")
+    want_full = entry.get("sha256")
+    # DE 123 RULING: THE PAIR IS THE FULL DIGEST. A bar that carries only
+    # a prefix REFUSES BY ITS OWN NAME rather than quietly falling back to
+    # comparing sixteen characters -- a fallback would mean the strength
+    # of the check depended on which params version happened to be the
+    # head, and nothing in the artifact would say which check ran.
+    if not want_full:
+        raise EarlyReadRefused(
+            f"EARLY_READ_BAR_CARRIES_ONLY_A_PREFIX: the bar names "
+            f"{want16 or '(nothing)'}… for {day} and carries no full "
+            f"`sha256`. params v16 was that shape. The pair is the FULL "
+            f"digest (DE 123), and a prefix comparison is not silently "
+            f"substituted for one -- land a params version whose bar "
+            f"carries full digests (v17 does).")
+    if not DC.DIGEST_RE.match(str(want_full)):
+        raise EarlyReadRefused(
+            f"EARLY_READ_BAR_DIGEST_MALFORMED: the bar's `sha256` for "
+            f"{day} is {str(want_full)[:24]!r}, which is not 64 lowercase "
+            f"hex. A digest that is not a digest cannot be a pair.")
+    if got != want_full:
         raise EarlyReadRefused(
             f"EARLY_READ_RECEIPT_NOT_THE_PAIR: {want_name} is present but "
-            f"its digest is {got[:16]}…, and v16's bar names {want16}… "
-            f"for {day}. The read opens the artifact the USER's ruling "
-            f"named, never whatever now sits at that path.")
+            f"its digest is {got}, and the bar names {want_full} for "
+            f"{day}. The read opens the artifact the USER's ruling named, "
+            f"never whatever now sits at that path.")
+    if want16 and not got.startswith(want16):
+        raise EarlyReadRefused(
+            f"EARLY_READ_BAR_PREFIX_DISAGREES_WITH_ITS_OWN_DIGEST: the "
+            f"bar's `sha256_16` for {day} is {want16}… but its full "
+            f"`sha256` begins {got[:16]}…. A version that disagrees with "
+            f"itself names no artifact.")
     already = sorted(der.glob(f"{DAY_FAMILY}_{compact}__*.json"))
     if already:
         raise EarlyReadRefused(
@@ -214,14 +241,15 @@ def early_read_preconditions(day: str, root, ruling: dict) -> dict:
         "sealed_receipt": {"path": str(have), "sha256": got,
                            "name": want_name},
         "digest_comparison": {
-            "compared": "basename exactly, and the first 16 hex of the "
-                        "digest",
-            "is_a_full_pair": False,
-            "why_not": "v16's bar carries `sha256_16`, a prefix, and a "
-                       "landed version is immutable. A params v17 "
-                       "carrying full digests would make this a full "
-                       "pair.",
-            "bar_says": want16, "artifact_is": got[:16]},
+            "compared": "basename exactly, and the FULL sha256",
+            "is_a_full_pair": True,
+            "bar_says": want_full, "artifact_is": got,
+            "prefix_beside_it": want16,
+            "prefix_agrees_with_the_full_digest": bool(
+                want16) and got.startswith(want16),
+            "a_prefix_only_bar": "REFUSES by name "
+                                 "(EARLY_READ_BAR_CARRIES_ONLY_A_PREFIX); "
+                                 "it is never silently compared on 16 hex"},
         "no_early_read_artifact_yet": True,
         "sealed_day_path_unaffected": "the `--day` entry keeps P9 "
                                       "byte-identical; this function is "
@@ -487,17 +515,79 @@ def selftest(quiet: bool = False) -> int:
            f"reasoning, in the place it belongs for this entry")
     shutil.rmtree(froot, ignore_errors=True)
 
-    # 4d: THE REAL DAY, against the REAL ledger
+    # 4e: A v16-SHAPED BAR -- prefix only -- REFUSES BY ITS OWN NAME.
+    # The known-bad is the SHAPE, not a wrong value: v16 is a landed
+    # version and this is exactly what it carried, so the cell drives the
+    # thing that really existed rather than a hand-made stub.
+    prefix_only = {**ruling_live,
+                   "receipts": [{k: v for k, v in r.items()
+                                 if k != "sha256"}
+                                for r in ruling_live["receipts"]]}
+    froot2 = Path(tempfile.mkdtemp(prefix="early_read_prefix_"))
+    (froot2 / "pm_5min/derived").mkdir(parents=True)
+    shutil.copy(real_der / Path(entry["path"]).name,
+                froot2 / "pm_5min/derived" / Path(entry["path"]).name)
+    try:
+        early_read_preconditions("2026-09-03", froot2, prefix_only)
+        ok(False, "KNOWN-BAD: a prefix-only bar was compared on 16 hex")
+    except EarlyReadRefused as e:
+        ok(str(e).startswith("EARLY_READ_BAR_CARRIES_ONLY_A_PREFIX"),
+           f"DRIVE 4e (RED): a v16-SHAPED bar -- `sha256_16` and no full "
+           f"digest, against the RULED artifact whose prefix MATCHES -- "
+           f"REFUSES by its own name, `{str(e).split(':')[0]}`. The "
+           f"artifact is the right one and it still refuses: the point is "
+           f"that a prefix is never silently substituted for a pair")
+    shutil.rmtree(froot2, ignore_errors=True)
+
+    # 4f: THE DRIVE THAT SEPARATES v17's CHECK FROM v16's. Every other
+    # known-bad here would have fired under the PREFIX comparison too, so
+    # none of them shows the ruling had any effect. This one is a bar
+    # whose `sha256_16` MATCHES the artifact and whose full `sha256`
+    # differs in its tail: v16's check ADMITS it, v17's REFUSES. The
+    # delta is the whole content of the ruling.
+    froot3 = Path(tempfile.mkdtemp(prefix="early_read_tail_"))
+    (froot3 / "pm_5min/derived").mkdir(parents=True)
+    shutil.copy(real_der / Path(entry["path"]).name,
+                froot3 / "pm_5min/derived" / Path(entry["path"]).name)
+    true_full = _sha(real_der / Path(entry["path"]).name)
+    tail_wrong = true_full[:32] + ("f" * 32 if true_full[32] != "f"
+                                   else "0" * 32)
+    assert tail_wrong != true_full and tail_wrong[:16] == true_full[:16]
+    tail_bar = {**ruling_live,
+                "receipts": [{**r, "sha256": tail_wrong}
+                             if r["day"] == "2026-09-03" else r
+                             for r in ruling_live["receipts"]]}
+    ok(tail_wrong.startswith(str(entry["sha256_16"])),
+       f"DRIVE 4f SETUP: the planted digest {tail_wrong[:16]}… shares the "
+       f"artifact's sixteen-hex prefix, so v16's check would have ADMITTED "
+       f"it -- the baseline this known-bad measures a delta from")
+    try:
+        early_read_preconditions("2026-09-03", froot3, tail_bar)
+        ok(False, "KNOWN-BAD: a bar agreeing on 16 hex and differing in "
+                  "the tail was admitted -- the full digest is not being "
+                  "compared")
+    except EarlyReadRefused as e:
+        ok(str(e).startswith("EARLY_READ_RECEIPT_NOT_THE_PAIR"),
+           f"DRIVE 4f (RED, THE DELTA): a bar whose prefix MATCHES and "
+           f"whose full digest differs only in its tail REFUSES -- "
+           f"`{str(e).split(':')[0]}`. Under v16's prefix comparison this "
+           f"same bar was admissible; under the ruling it is not. This is "
+           f"the one cell here that the old check would have passed")
+    shutil.rmtree(froot3, ignore_errors=True)
+
+    # 4d: THE REAL DAY, against the REAL ledger, under v17's bar
     reh = rehearse("2026-09-03")
+    dc = reh["preconditions"]["digest_comparison"]
     ok(reh["status"] == "READY" and reh["blocking"] == []
-       and reh["preconditions"]["digest_comparison"]["is_a_full_pair"]
-       is False,
+       and dc["is_a_full_pair"] is True
+       and len(dc["bar_says"]) == 64 and dc["bar_says"] == dc["artifact_is"]
+       and dc["prefix_agrees_with_the_full_digest"] is True,
        f"DRIVE 4d (GREEN, THE REAL DAY): 2026-09-03 rehearses "
        f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
        f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
-       f"receipt check reports itself as a PREFIX comparison "
-       f"(`is_a_full_pair` False), because v16's bar carries sha256_16 "
-       f"and a landed version is immutable")
+       f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 hex "
+       f"compared and equal, with v16's prefix kept beside it and "
+       f"agreeing")
 
     # ---- the absent fields are STATUSES, never silent drops -----------
     av = economics_available_per_arm_day()
