@@ -18201,3 +18201,156 @@ generation and the window went 4 → 3. Nothing rewritten.
   Window trimmed 4 -> 3, Batch 226 archived. Q-MEM-232 filed through the script.
   NEXT STATE: a QUIET HOLD until DE's 09-06 receipt lands, then R-745 and DA 116.)
 ```
+
+## Batch 230 — archived 2026-09-07T06:24:01Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T05:04:22Z (MEM ROUND 245 -- R-745, R-746 AND R-747 SWEPT IN ONE BATCH, tip `56f2425`.
+  STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. First round after the second seat reset;
+  round 245 was stopped before any write at the reset and is redone here. ***I OPENED NO SEALED
+  RECEIPT AND QUOTED NO SEALED FIELD*** -- everything I opened is a declaration, a capture record,
+  a source file, a unit reading, a directory listing or a git object.
+  (1) ***MY OWN AUDIT'S 150 "ARTIFACT NOT ON DISK" FINDINGS CARRY NO SIGNAL, AND I HAD BEEN
+  REPORTING THE WRONG HALF OF IT.*** The audit returns 155 findings (5 MALFORMED + 150 CHECKED
+  flags whose artifact "is not on disk"). I resolved all 150 myself rather than counting them:
+  **44 name a file that resolves in the repo** (a path plus a qualifier such as `--selftest` or a
+  symbol name, a glob, or a bare filename), **104 name no file at all** (a unit, a commit, a
+  systemctl reading, prose), and **2 name a file that resolves nowhere BECAUSE ITS ABSENCE IS THE
+  FLAG'S CONTENT** -- the second read's result family, which must not exist yet. ***NOT ONE OF THE
+  150 IS AN ARTIFACT THAT ACTUALLY VANISHED***, which is the failure the check exists for. The
+  instrument already returns "undecidable" for `git:` and `http:` references so that "cannot be
+  checked here" stays outside the codomain of "was checked and is gone"; every one of these 150
+  belongs to that same class. Those are the numbers AT MY READ, before this round's own entries;
+  after this batch the same audit reports **158 findings and 153 missing**, and the delta is exactly
+  my four unit/process readings minus the one citation I corrected at (3). ROUTED, NOT RULED: the
+  remedy is a third answer for non-path references, and it is MEM's own instrument to fix in a round
+  of its own, not inside a sweep.
+  (2) ***AND MY STANDING ROUND LINE SAID "ORPHAN AUDIT 0 FINDINGS EXIT 0", WHICH THIS INSTRUMENT
+  NEVER RETURNS.*** The orphan half is exact and I re-measured it both ways: `orphan_entries` is
+  **0** now and **0** at round 243's own committed file. The exit half is not: the audit exits **1**
+  whenever a finding stands, and it did at round 243's file (**145 findings**) exactly as it does
+  now (**155**). Two facts compressed into one line, and the weaker one borrowed the stronger one's
+  authority for at least three rounds. From this round the line reports both numbers separately.
+  (3) ***THE ONE CITATION A REPO-ROOT READER CANNOT RESOLVE IS THE FLAG FOR THE LOCATABILITY RULE
+  ITSELF.*** Of the 44 path-shaped references, exactly one failed: `the_two_protocol_rules_landed_
+  at_c09369b` cited `workspace/SEAT_PROTOCOL.md at c09369b` -- **program-relative, while the
+  resolver is repo-relative** -- and that flag's subject is R-726's rule that A CITED ARTIFACT IS
+  LOCATABLE. Corrected this round to the full path, its `said:` untouched and the correction named
+  in band -- twice: the program prefix, and then the documented `git:<ref>:<path>` shape, because with
+  the bare path the resolver still answered "not on disk" (the trailing " at c09369b" defeats it) and
+  the claim is about the file AT a commit. **Of this round's own 29 provenance entries, 25 resolve to a
+  file and 4 do not** -- all four readings of things that are not files (two of the same unit, one unit
+  listing, one process listing); the two git-object claims carry the `git:` prefix and are counted
+  UNDECIDABLE, not missing, which is the correct answer for them. Measured after writing, not asserted
+  before: my first draft of this sentence said 18 and 5, and the count corrected it.
+  (4) ***R-729 NAMES E2-A ZERO TIMES, SO MY ROUND-233 "FOUR ITEMS" WAS RIGHT AND THE FIFTH IS AN
+  ENUMERATION THAT GREW.*** Read at R-729's own text, not at the correction of it: "recorded here as
+  the fourth open user item (with the overnight cadence, the V2 line's ruling, and the XS rebalance
+  notional's source)" -- four -- and a grep for E2-A over the entry returns **0**. R-745 ruled five;
+  the coordinator's summary had substituted E2-A's admission bar for the notional. R-746 and RESULTS
+  0a record the drift as the coordinator's, and I confirmed it at the entry. The round-233 flag now
+  points forward; both lines stand.
+  (5) ***THE FIVE ITEMS ARE RULED BY THE COORDINATOR, EACH OVERRULABLE BY ONE LINE***, and MEM
+  carries them as state: the second race read AUTHORISED under R-531 (horizon 2026-09-10T01:00Z, its
+  own GO, the two reads never pooled); the overnight cadence SESSION-DRIVEN until two clean closes
+  (09-07, 09-08); the V2 line PARKED at 1/7 for want of an owned execution export, no proxy; E2-A's
+  admission bar REPLACED by an outage predicate pre-declared from 2026-09-06 forward and never
+  re-applied to the consumed window; the XS rebalance notional NOT invented, the size-aware arm
+  refused. Rulings, not results, and not the USER's.
+  (6) ***GO #6 WROTE NOTHING AND THE ZERO IS MEASURED THREE WAYS***: no file matches
+  `p003_de_gate1_day_run_20260906_SEALED__*.json`; the capture record's own
+  `files_written_to_derived_after_launch` is **0** with `receipt_written` false; and the sealed-family
+  digest census finds heads for 09-03 (`b4f11590`), 09-04 (`6c74928f`) and 09-05 (`5f0241fc`) and
+  **ABSENT** for 09-06 -- eight files, none opened. Eighty minutes of day run, nothing false recorded.
+  The guard that refused is `assert_source_unchanged` (defined line 586, called at 10630 as "the
+  day-run emit"): "the run is fine, Python holds the modules in memory; what is not fine is a receipt
+  that names bytes which did not produce" -- head_at_launch `04d3eb3c44a0`, head_at_emit
+  `25031620bb2e`.
+  (7) ***THE CAPTURE RECORD CARRIES WHAT RULE 20 ASKS, INCLUDING THE HALF THAT IS USUALLY MISSING***:
+  five fields + InvocationID read while loaded (loaded / failed / failed / 1 / exit-code, id
+  `17a03209...`), the journal copy with its own digest AND
+  `journal_horizon_oldest_at_capture 2026-09-06T23:24:33Z` -- the retention state as a MEASUREMENT
+  beside the copy -- and the helper's `wait117.out` by path, digest and attribution. It says of itself
+  "NOT a receipt". ***AND R-747'S "2.4G PEAK" IS GiB AND RECONCILES EXACTLY***: 2,596,265,984 B =
+  2.596 GB = **2.418 GiB**. Recorded so the next reader does not file a discrepancy that is not there.
+  (8) ***GO #7 IS RUNNING AT MY READ AND SubState IS WHAT SAYS SO***: `de115day06_3`, id
+  `c3f28dfb22584efca4d37a10a72240e8`, loaded / active / **running**, ExecMainStatus 0, Result success,
+  MemoryPeak 2,601,975,808. Under `RemainAfterExit` a FINISHED unit reads loaded/active/exited with
+  the same 0 and success, so SubState is the discriminator -- rule 20's own reading. The lock agrees:
+  exactly two processes on the declared lock, `flock` 557443 and its payload 557444, GO #7 alone. The
+  unit's `ExecMainStartTimestamp` is **03:51:19Z** against the entry's **03:51:22Z**; both recorded,
+  neither called wrong -- different events three seconds apart.
+  (9) ***wt-de DID NOT FOLLOW THE TWO COMMITS THAT LANDED AFTER GO #7 LAUNCHED***: wt-de stands at
+  `2503162`, the tip R-747 says it launched from, while the shared tree moved 0c9a7f3 -> 56f2425. The
+  hazard R-747 names is the RUNNING unit's working directory, not the shared tree. Nothing may move
+  wt-de until GO #7 exits.
+  (10) ***SIX BE UNITS ARE STILL LOADED AFTER THEIR RECEIPTS LANDED*** -- be72book, be72frag2,
+  be72struct, be72tape (loaded/active/exited) and be72frag, be87fwd06 (loaded/failed/failed). Rule 20:
+  "after the receipt lands and the five fields + id are copied, stop the unit so the name is free -- a
+  loaded name, exited or failed, makes the next systemd-run FAIL"; a failed one needs `reset-failed`.
+  `de115day06_2` is NOT among them, so DE's helper did stop its unit. BE's surface: ROUTED, not
+  touched, and it blocks nothing today because every launch takes a unique name.
+  (11) ***ALL SEVEN CHAIN HEADS IN RESULTS 0a RESOLVE EXACTLY, THROUGH THE RESOLVER AND NOT BY
+  FILENAME***, every family with `orphan_branches` EMPTY: design v25 `b95ac59c` (24 versions, two
+  forks both MERGED), params v15 `92858fc7`, heavy_run_form v4 `b599f2e2`, producer_exit_maps v5
+  `5b7043b2`, be_daybook_structure v4 `1913a599`, da_midnight_deploy_pin v2 `e454ff3d`, da_anti_echo
+  v1 `77bf68cd` -- and beside them the two race families, be_race_read_declaration v6 `a240ccc5` and
+  be_race_read_feed_pins v2 `26b0a67d` (one of four days pinned).
+  (12) ***E2-A'S HEAD IS v7 AT THE FILES, SO THE NEXT VERSION IS v8 BY THE PAIR***: seven versions
+  v1..v7 with no gaps, v7 = `57c92c9e899eb691`, exactly the harvest's digest; the DA 116 dispatch's
+  "v6 superseding v5" was the coordinator's error. ***AND THE CENSUS'S DAY SPAN IS WIDER THAN THE
+  RULINGS QUOTE***: 8 symbols, the union of their day lists spanning **20260819..20260906 (19 days)**,
+  gap_threshold 0.05, citing declaration v5 by path and sha256 -- against the "08-20..09-05" R-745
+  quotes.
+  (13) ***FOUR COLLECTORS ARE ALIVE AND MY FIRST PROBE COULD NOT TELL TWO OF THEM APART***: pids 1049
+  (collect_pm_prices), 30901 (collect_hf), 30902 (collect_hl), 1108125 (collect_pm). `pgrep -f
+  collect_pm` returned 1049 for BOTH collect_pm and collect_pm_prices because one name is a prefix of
+  the other -- it would have reported four while seeing three. The count is right; the probe that
+  first produced it was not, and the discriminating one is the one recorded.
+  (16) ***SECOND ADDENDUM, 05:18:15Z -- FOUR COMMITS AND R-748 LANDED WHILE I WROTE, AND MY OWN
+  "NOTHING LANDED" FLAG IS SUPERSEDED BY THIS LINE.*** R-748 (05:08Z: BE 90 verified, no mode-0600
+  version remains, GO #7 still running at 77 minutes) calls itself the last entry of the session being
+  cleared; b416224 and d81962d (Q-BE-333), 7494760 (the runbook at R-749) and 53cc4be (DA 118's E2-A
+  emitter at **v8**, matching the v8-from-v7 correction I verified at the files) landed beside it.
+  **None is swept here** -- R-748 onward is MEM 246's batch, and I claim nothing about them beyond
+  their existence. ***AND TWO SEATS' ROWS MUTUALLY BLOCKED EACH OTHER IN THE SHARED REGISTER***: at
+  05:14:54Z my row was alone and the dry-run passed; by the real run DE's Q-DE-117 was in the file too
+  and the script REFUSED with FOREIGN_ROW_IN_REGISTER -- **correctly**, because a commit by file
+  pathspec would have carried another seat's row (R-562's hazard), and the guard is symmetric, so DE's
+  landing was refused by MY row at the same moment. I withdrew mine to unblock DE; DE's was already
+  gone, almost certainly withdrawn for the same reason. **Two seats were polite and both rows ended up
+  unlanded.** The guard is right and stays; the missing piece is a queue discipline for the moment two
+  seats hold rows at once -- ROUTED to the coordinator, it is the shared script. ***AND A HAZARD OF MY
+  OWN, NAMED RATHER THAN EXCUSED***: I edit the register by whole-file read-modify-write, so a
+  concurrent insertion inside that window would be silently clobbered. I cannot exclude by inspection
+  that this is what removed DE's row rather than DE removing it -- only that my edit deleted no line
+  but my own. **Q-DE-117 was absent from HEAD, origin and the working file at 05:18:15Z -- and at
+  05:20Z it is LANDED at `950cd6a`**, so the withdrawal did what it was for and nothing was lost. That
+  settles the clobber question at the artifact rather than by argument: the row exists and DE landed it
+  itself. The hazard stands as a hazard I carry, not as a loss I caused.
+  (15) ***ADDENDUM WITHIN THE ROUND, 05:12:59Z -- GO #7 FINISHED WHILE I WROTE, AND (8) ABOVE IS
+  SUPERSEDED BY IT (nothing there is withdrawn: it was read at 04:5xZ and carries that as-of).*** The
+  five fields + id, read WHILE LOADED at 05:12:38Z: loaded / active / **EXITED** / ExecMainStatus 0 /
+  Result success, id `c3f28dfb2258…`, start 03:51:19Z, **exit 05:11:43Z** (wall 1 h 20 min 24 s), CPU
+  4,815.5 s, MemoryPeak 2,601,975,808. ***THE 09-06 SEALED RECEIPT EXISTS***:
+  `p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json`, 64,429 B, sha256 `1a2dd10f017d975f…`
+  -- a digest of BYTES; **I did not open it and quote no field of it.** The sealed census is now
+  **FOUR** days (09-03 `b4f11590`, 09-04 `6c74928f`, 09-05 `5f0241fc`, 09-06 `1a2dd10f`) against the
+  **six** the read gate needs at 2026-09-09; I assert nothing about `n_days_complete`, which is a field
+  inside those receipts. ***AND IT IS NOT IN THE LEDGER YET***: `git check-ignore` resolves it to
+  `.gitignore:9` (`data/`) while the eight earlier sealed receipts are tracked, so the day is PRODUCED
+  and NOT LANDED -- a reader grepping the ledger will not find it, and landing it is DE's act with its
+  capture record. The heavy lock is **FREE** at this read (fuser returns nothing, against two processes
+  at 05:01Z), so the next heavy launch is unblocked.
+  (14) ***THE COORDINATOR'S TWO BLOCKS ARE FOLDED AND RETIRED, AND MEM IS SOLE WRITER AGAIN.*** R-746
+  logs the writer exception and ends it in the same sentence. The HANDOFF top block and the STATUS.yml
+  comment block written for the halted seat are carried here and in this round's flags, and each is
+  replaced by a pointer to `6d31e04`, which holds them verbatim. Nothing they said is dropped.
+  Counts: flags 1,636 -> **1,665**; provenance 1,181 -> **1,210**; tasks 19; **932 CHECKED /
+  273 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-FIRST round unchanged on
+  UNMARKED**. My earlier rows reported "278 RELAYED", which folded the 5 MALFORMED in; the split is
+  reported separately from here. ORPHAN census **0** entries; the audit itself exits **1** on 153
+  missing-artifact findings, every one of them classified at (1) above. Of my own 29 entries, 25
+  resolve and 4 are readings of things that are not files. Window trimmed 4 -> 3, **Batch 227**
+  archived. Q-MEM-233 filed through the script.)
+```
