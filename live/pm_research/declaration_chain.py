@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import re
+import stat
 import tempfile
 from pathlib import Path
 
@@ -45,6 +46,27 @@ def _sha(p: Path) -> str:
 def _version_of(p: Path) -> int:
     m = VERSION_RE.search(Path(p).name)
     return int(m.group(1)) if m else 0
+
+
+def _plain_create_mode() -> int:
+    """The mode a PLAIN create would produce here: `0o666 & ~umask`.
+
+    Reading the umask means SETTING it -- POSIX offers no read-only call --
+    so it is set to 0 and restored on the next line. The window is two
+    syscalls wide and process-global; this module writes one declaration per
+    landing, from short-lived single-threaded producers. The alternative, a
+    hard-coded 0o644, is the literal that goes wrong on the first box whose
+    umask is not 0o022 -- and it is wrong on THIS one (umask 0o002, so a
+    plain create is 0o664).
+
+    The falsifier does not trust this function. CELL 16 compares a written
+    version's mode against a file the cell creates ITSELF, the ordinary way,
+    in the same directory -- so a wrong umask read fails the cell rather
+    than agreeing with it.
+    """
+    um = os.umask(0)
+    os.umask(um)
+    return 0o666 & ~um
 
 
 def resolve_head(directory, family: str) -> dict:
@@ -378,6 +400,19 @@ def write_next_version(directory, family: str, payload: dict,
     try:
         with os.fdopen(fd, "w") as fh:
             fh.write(json.dumps(payload, indent=1, sort_keys=True) + "\n")
+        # THE MODE (DE's finding at the 2026-09-07 reset, R-746). `mkstemp`
+        # is a SECRET-file constructor: it creates 0600 by design, and
+        # `os.replace` carries that mode to the landed version -- so every
+        # version this module has ever written was readable only by the seat
+        # that wrote it. A declaration is the opposite of a secret: five
+        # seats and the reviewer resolve these chains, and rule 20 makes
+        # them the shared contract. Set the mode a plain create in this
+        # directory would have produced, so a landed version is exactly as
+        # readable as its neighbours.
+        #
+        # BEFORE the rename, not after: the destination then never exists at
+        # the wrong mode, not even for the width of one syscall.
+        os.chmod(tmp, _plain_create_mode())
         os.replace(tmp, dst)          # atomic within the directory
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
@@ -621,6 +656,50 @@ def _falsify() -> int:
        f"`also_supersedes` entry with no digest refuses as HALF_WRITTEN_LINK "
        f"-- it used to be reported as MERGE_PAIR_MISMATCH, which says the "
        f"bytes moved when there was nothing to compare: {merge_half[:160]!r}")
+    # THE MODE CELL (CELL 16; BE 90, on DE's finding at the second reset).
+    # Every version this module wrote before today landed at 0600 -- the
+    # mode `mkstemp` creates and `os.replace` carries -- so the shared
+    # contract was owner-only on disk.
+    #
+    # THE CELL ESTABLISHES ITS OWN BASELINE INSIDE ITSELF (REV 83 §5): it
+    # creates a file the ordinary way, in the SAME directory, in the SAME
+    # process, and asserts the written version's mode EQUALS that. A literal
+    # (0o644) would be a literal agreeing with a literal, and would be wrong
+    # on this box, whose umask is 0o002.
+    #
+    # THIRD OUTCOME, NAMED, NEVER SKIPPED (R-649): on a box whose umask is
+    # itself owner-only, a CORRECT implementation also yields 0600. The
+    # equality is then the whole assertion and the cell SAYS SO
+    # (`BASELINE_IS_OWNER_ONLY`) instead of quietly passing on a readability
+    # property it did not demonstrate.
+    dmo = Path(tempfile.mkdtemp(prefix="dc_mode_"))
+    (dmo / f"{FAM}_v1.json").write_text(json.dumps(pl(None, "root"), indent=1,
+                                                   sort_keys=True) + "\n")
+    hmo = resolve_head(dmo, FAM)
+    probe = dmo / "plain_create.probe"
+    probe.write_text("a file made the ordinary way, in this directory\n")
+    base_mode = stat.S_IMODE(probe.stat().st_mode)
+    wmo = write_next_version(dmo, FAM, pl({"path": hmo["path"],
+                                           "sha256": hmo["sha256"]}, "second"),
+                             hmo["pair"])
+    got_mode = stat.S_IMODE(Path(wmo["path"]).stat().st_mode)
+    base_owner_only = base_mode & 0o077 == 0
+    note = (" -- BASELINE_IS_OWNER_ONLY: this box's umask makes even a plain "
+            "create owner-only, so the equality is the whole assertion and no "
+            "readability property is demonstrated here"
+            if base_owner_only else "")
+    ok(got_mode == base_mode and _sha(Path(wmo["path"])) == wmo["sha256"],
+       f"CELL 16 A LANDED VERSION IS AS READABLE AS ITS NEIGHBOURS: "
+       f"{wmo['name']} is 0o{got_mode:04o}; a file created the ordinary way "
+       f"in the same directory is 0o{base_mode:04o}; owner-only: version "
+       f"{got_mode & 0o077 == 0}, plain create {base_owner_only}{note}. "
+       f"PRE-FIX THIS CELL READ 0o0600 AGAINST A 0o0664 BASELINE and failed. "
+       f"The cell re-digests the file AFTER the chmod and compares it to "
+       f"what the write returned ({wmo['sha256'][:16]}...), so `a mode is "
+       f"not content` is measured here rather than assumed -- which is what "
+       f"the once-off re-mode of the 23 already-landed files leaned on for "
+       f"the 9 too large to re-digest under a light GO.")
+
     print()
     print(f"{ok_n} cells, {len(fails)} failures")
     return 1 if fails else 0
