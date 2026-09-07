@@ -936,3 +936,65 @@ def stamp(producing_file) -> dict:
 
 def assert_unchanged(where: str) -> dict:
     return CAPTURE.assert_unchanged(where)
+
+
+def selftest() -> int:
+    """THE MODULE THAT PROVIDES `shared_falsifier`, RUNNING IT ON ITSELF.
+
+    DA 122's census (Q-DA-348) named this module on the chain-resolution
+    surface with no falsifier cell, and the reason is the sharpest form of
+    the defect the rule exists for: this file's ONLY `--falsify` call sits
+    inside `shared_falsifier`'s own body, where it runs when a CALLER's
+    battery runs and never when this module is tested. A helper that every
+    other importer uses to prove the shared chain healthy had no way of
+    proving it for itself.
+
+    Two cells, both directions. Nothing else is added here: this is the cell
+    the census asks for and its own known-bad.
+    """
+    checks, fails = 0, []
+
+    def ok(cond, label):
+        nonlocal checks
+        checks += 1
+        print(("PASS: " if cond else "FAIL: ") + label)
+        if not cond:
+            fails.append(label)
+
+    sf = shared_falsifier()
+    ok(sf["ok"] and sf["rc"] == 0 and not sf["failed_cells"],
+       f"REV 84 §3.2 / REV 85 §3 -- THE PROVIDER RUNS ITS OWN HELPER: this "
+       f"battery spawns `declaration_chain.py --falsify` as a subprocess -> "
+       f"rc {sf['rc']}, {sf['summary']!r}, {sf['n_cells']} cells, "
+       f"{len(sf['failed_cells'])} failed. Before this cell the only drive "
+       f"in this file was inside `shared_falsifier` itself, which the census "
+       f"correctly reads as not-in-a-battery")
+
+    import tempfile as _tf2
+    kb = Path(_tf2.mkdtemp(prefix="be94_rule22_kb_")) / "declaration_chain.py"
+    src = (Path(__file__).resolve().parent / "declaration_chain.py").read_text()
+    line = "        os.chmod(tmp, plain_create_mode())\n"
+    assert src.count(line) == 1, "the known-bad's anchor moved; fix the cell"
+    kb.write_text(src.replace(line, ""))
+    bad = shared_falsifier(prog=kb)
+    ok(bad["ok"] is False and bad["rc"] != 0 and bad["failed_cells"],
+       f"KNOWN-BAD, DRIVEN THROUGH THE SAME HELPER (`prog` exists for this): "
+       f"a COPY of the shared module with one line of `write_next_version` "
+       f"removed is REFUSED -- rc {bad['rc']}, {bad['summary']!r}, first "
+       f"failure {bad['failed_cells'][0][:90]!r}. The helper is shown to "
+       f"detect an unhealthy module, not merely to agree with a healthy one")
+
+    print()
+    if fails:
+        print(f"{len(fails)} FAILURES of {checks} checks")
+        return 1
+    print(f"{checks} checks passed")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys as _sys
+    if "--selftest" in _sys.argv:
+        raise SystemExit(selftest())
+    print("usage: be_rule22.py --selftest")
+    raise SystemExit(2)

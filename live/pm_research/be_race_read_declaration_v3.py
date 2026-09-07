@@ -361,7 +361,7 @@ def build_v4(declarations=None) -> dict:
     }
 
 
-EXPECTED_CHECKS = 17      # BE 91: +5 for the `:235` history-pin classification (4 + the seam)
+EXPECTED_CHECKS = 19      # BE 91 +5 (the `:235` history pin); BE 94 +2 (the shared-falsifier cell and its known-bad)
 
 
 def selftest() -> int:
@@ -513,6 +513,39 @@ def selftest() -> int:
        f"`json.loads` on the bare filename -- the unreachable duplicate "
        f"REV 84 §3.1 names. Before this round `build_v4(_pd)` would have "
        f"read those bytes and rebuilt a LANDED declaration from them")
+
+    # ---- REV 84 §3.2 / REV 85 §3 -- THE SHARED FALSIFIER, AS A CELL -----
+    # DA 122's census (Q-DA-348) derives the chain-RESOLUTION surface from
+    # the code and named this module: it imports `declaration_chain` and
+    # references its resolution symbols, and shipped no cell running that
+    # module's own falsifier. A regression in the one shared implementation
+    # must fail every importer at once; without this cell it failed none of
+    # mine. It is SPAWNED AS A PROCESS, so a broken `__main__`, a syntax
+    # error under an edit, or a falsifier that no longer runs at all is
+    # itself a failure of this cell.
+    import be_rule22 as _R22
+    _sf = _R22.shared_falsifier()
+    ok(_sf["ok"] and _sf["rc"] == 0 and not _sf["failed_cells"],
+       f"REV 84 §3.2: this battery RUNS `declaration_chain.py --falsify` as a "
+       f"subprocess -> rc {_sf['rc']}, {_sf['summary']!r}, "
+       f"{_sf['n_cells']} cells, {len(_sf['failed_cells'])} failed")
+    # ITS OWN KNOWN-BAD, on a COPY of the shared module (`prog` exists for
+    # exactly this): the one `os.chmod` line removed from `write_next_version`
+    # -- BE 90's defect restored -- makes CELL 16 fail, and this cell must
+    # go red rather than report the module healthy.
+    import tempfile as _tfK
+    _kb = Path(_tfK.mkdtemp(prefix="be94_kb_")) / "declaration_chain.py"
+    _src = (HERE / "declaration_chain.py").read_text()
+    _line = "        os.chmod(tmp, plain_create_mode())\n"
+    assert _src.count(_line) == 1
+    _kb.write_text(_src.replace(_line, ""))
+    _bad = _R22.shared_falsifier(prog=_kb)
+    ok(_bad["ok"] is False and _bad["rc"] != 0 and _bad["failed_cells"],
+       f"KNOWN-BAD: against a COPY of the shared module with one line of "
+       f"`write_next_version` removed, the same cell REFUSES -- rc "
+       f"{_bad['rc']}, {_bad['summary']!r}, first failure "
+       f"{_bad['failed_cells'][0][:90]!r}. A cell that only ever sees a "
+       f"healthy module has not been shown to detect an unhealthy one")
 
     print()
     if fails:
