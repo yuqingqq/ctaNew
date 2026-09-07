@@ -345,6 +345,15 @@ def not_pooled_clause(doc=None, *, decl_dir: Path | None = None,
     declaration's content, not of whether a field happens to parse -- so a
     declaration that names consumed days and carries NO usable pair is
     REFUSED rather than rendered without it.
+
+    WHICH ANCESTOR IS THE PREVIOUS READ (REV 88 §2.1, the rule in its
+    wording, stated once at PREVIOUS_READ_RULE above and quoted into every
+    clause this function renders):
+
+        the previous read's declaration is the nearest ancestor whose
+        READABLE equals this declaration's consumed set -- never "the
+        parent". The SUPERSEDES CHAIN answers WHETHER there is a previous
+        read; the READABLE MATCH answers WHICH.
     """
     import declaration_chain as _DCH
     import be_rule22 as _R22
@@ -559,6 +568,7 @@ def not_pooled_clause(doc=None, *, decl_dir: Path | None = None,
             "never_typed": "every part above is read from an artifact this "
                            "function opened; the only literals in the "
                            "sentence are the words",
+            "how_the_previous_read_was_identified": PREVIOUS_READ_RULE,
         },
         "computed": {
             "m": m_here, "G_this_read": g_here, "G_first_read": g_first,
@@ -723,6 +733,21 @@ def resolve_marker_dir(outdir=None, *, fixture: bool = False,
                            "because a marker directory in a partial shell "
                            "finds no markers and reopens spent days"}
 
+
+#: THE RULE FOR RESOLVING A PREVIOUS READ (REV 88 §2.1, in its wording).
+#: Stated once, here, where the reader resolves it -- and carried into the
+#: declaration family's `chain_head_rule` AT THE NEXT VERSION THAT IS
+#: NEEDED FOR SOMETHING ELSE. No version is written for wording alone.
+PREVIOUS_READ_RULE = (
+    "the previous read's declaration is the nearest ancestor whose READABLE "
+    "equals this declaration's consumed set -- never 'the parent'. The "
+    "SUPERSEDES CHAIN answers WHETHER there is a previous read; the READABLE "
+    "MATCH answers WHICH. Both are needed: the chain alone cannot tell a "
+    "correction of this read from the read before it (BE 87 measured that -- "
+    "v6 corrects v5 and a one-hop reader took v5 for the first read), and "
+    "the match alone would let a declaration that names no predecessor "
+    "quietly render no clause at all (REV 87 §1.3)."
+)
 
 #: The three blocks a correction may NEVER touch IN THE RACE READ's family:
 #: they are the read itself. THE LIST IS THE FAMILY'S, NOT THE CENSUS'S
@@ -1433,7 +1458,7 @@ def read(paths: dict, *, outdir: Path = None, write: bool = True,
     return out
 
 
-EXPECTED_CHECKS = 80
+EXPECTED_CHECKS = 82
 
 
 def _feed(d: Path, day: str, rows, *, one_arm: bool = False) -> Path:
@@ -2512,6 +2537,68 @@ def selftest() -> int:
        f"clause and says why ({_eout['why'][:80]!r}) -- rule 4, a named "
        f"absence rather than a silent one. The refusal above is about the "
        f"MISSING KEY, not about the empty list")
+    # REV 88 §2.1: THE RULE, DRIVEN ON A CHAIN WITH TWO SAME-READ
+    # CORRECTIONS. The real chain has one (v6 corrects v5); a fixture with
+    # two proves the walk is not a special case of "grandparent".
+    _dR = Path(_tfN.mkdtemp(prefix="be89_rule_"))
+    (_dR / "decl").mkdir(); (_dR / "der").mkdir()
+    (_dR / "der" / "be_race_read_result_v1.json").write_text(json.dumps(
+        {"day_signs": {"20990101": 1, "20990102": -1}}))
+
+    def _wr(n, doc):
+        q = _dR / "decl" / f"be_race_read_declaration_v{n}.json"
+        q.write_text(json.dumps(doc, indent=1, sort_keys=True))
+        return q, hashlib.sha256(q.read_bytes()).hexdigest()
+
+    _q1, _s1 = _wr(1, {"protocol": "FIRST-READ", "supersedes": None,
+                       "population": {"READABLE": ["20990101", "20990102"]},
+                       "permutation_floor": {"G": 2, "multiplicity": 2,
+                                             "best_possible_adjusted_p": 0.5}})
+    _second_doc = {"protocol": "SECOND-READ", "supersedes":
+                   {"path": _q1.name, "sha256": _s1},
+                   "population": {"READABLE": ["20990201", "20990202"],
+                                  "CONSUMED_BY_THE_FIRST_READ":
+                                      ["20990101", "20990102"]},
+                   "permutation_floor": {"G": 2, "multiplicity": 2,
+                                         "best_possible_adjusted_p": 0.5}}
+    _q2, _s2 = _wr(2, _second_doc)
+    _c3 = dict(_second_doc, protocol="SECOND-READ-CORRECTION-1",
+               supersedes={"path": _q2.name, "sha256": _s2})
+    _q3, _s3 = _wr(3, _c3)
+    _c4 = dict(_c3, protocol="SECOND-READ-CORRECTION-2",
+               supersedes={"path": _q3.name, "sha256": _s3})
+    _q4, _s4 = _wr(4, _c4)
+    _r4 = not_pooled_clause(_c4, decl_dir=_dR / "decl",
+                            derived_dir=_dR / "der")
+    _w4 = _r4["generated_from"]["chain_walked_back"]
+    ok(_r4["applies"] is True and _w4["hops"] == 3
+       and _w4["versions"][-1] == _q1.name
+       and "20990101..20990102" in _r4["sentence"]
+       and "nearest ancestor" in _r4["generated_from"][
+           "how_the_previous_read_was_identified"],
+       f"REV 88 §2.1 -- TWO SAME-READ CORRECTIONS AND THE PREVIOUS READ IS "
+       f"STILL FOUND: from the second correction the walk goes {_w4['hops']} "
+       f"hops {_w4['versions']} and stops at {_q1.name}, the nearest "
+       f"ancestor whose READABLE IS the consumed set. `The parent` would "
+       f"have been a correction of THIS read both times. The rule rides in "
+       f"the rendered block, so a reader of the artifact has it too")
+    _c5 = dict(_c4, population={"READABLE": ["20990201"],
+                                "CONSUMED_BY_THE_FIRST_READ": ["20990909"]},
+               supersedes={"path": _q4.name, "sha256": _s4})
+    try:
+        not_pooled_clause(_c5, decl_dir=_dR / "decl",
+                          derived_dir=_dR / "der")
+        _nomatch = "NOT REFUSED"
+    except ReadRefused as _e89:
+        _nomatch = str(_e89)
+    ok(_nomatch.startswith("FIRST_READ_DECLARATION_NOT_IN_THE_CHAIN:")
+       and "20990909" in _nomatch
+       and "be_race_read_declaration_v1.json" in _nomatch,
+       f"AND A CONSUMED SET THAT MATCHES NO ANCESTOR IS REFUSED BY NAME, "
+       f"listing what it walked rather than settling for the last one it "
+       f"saw: {_nomatch[:200]!r}. The chain says a previous read EXISTS; "
+       f"nothing in it says WHICH, so the clause is not rendered")
+
     _na = not_pooled_clause({"protocol": "NO-PREVIOUS-READ",
                              "population": {"READABLE": ["20990301"]}},
                             decl_dir=_dN / "decl", derived_dir=_dN / "der")
