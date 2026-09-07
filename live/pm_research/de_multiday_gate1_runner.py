@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 359
+EXPECTED_CHECKS = 360
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -63,7 +63,10 @@ EXPECTED_CHECKS = 359
 #: the comment above it still described the v1 -> v2 bump long after v14.
 #: A dead constant beside a stale comment is two things a reader can
 #: believe.)
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v15.json"
+#: R-765: v18 carries the USER's ruling that retires R5. Moving the
+#: pointer here is what collapses the sealed path and the early-read
+#: path into ONE path with ONE emission.
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v18.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -332,7 +335,7 @@ def design_version_of_receipt(rec: dict) -> dict:
 #: offline skip list is generated from it and the online run asserts the
 #: two agree -- a check added without updating this REFUSES rather than
 #: silently shrinking the offline battery.
-DAY_PATH_CHECKS = 101
+DAY_PATH_CHECKS = 102
 #: R-610's battery-order checks. They perform real draws (see the guard at
 #: their site), so they are online-only and their count is DECLARED.
 BATTERY_ORDER_CHECKS = 7
@@ -1334,7 +1337,8 @@ def days_complete_now(params: dict, root: Path | None = None) -> dict:
                 "only over-seal")}
 
 
-def seal(day_result: dict, n_days_complete: int, g: int) -> dict:
+def seal(day_result: dict, n_days_complete: int, g: int,
+         *, unsealed_by_ruling: bool = False) -> dict:
     """R5 -- the economic fields are ABSENT until every day is complete.
 
     Absent, not present-and-ignored: a field a reader can see is a field a
@@ -1346,6 +1350,22 @@ def seal(day_result: dict, n_days_complete: int, g: int) -> dict:
     got `None` after the unseal and could not distinguish "this run is
     unsealed" from "I misspelled the field". Both keys are now present in
     both states with EXPLICIT values."""
+    # R-765, THE USER'S RULING: R5 IS RETIRED. `unsealed_by_ruling` is
+    # set from the params block, so a run under v18 or later emits its
+    # economics and a run reading an older params file behaves exactly as
+    # the four landed days did -- rule 13, those receipts are untouched
+    # and must stay reproducible from the code that wrote them.
+    if unsealed_by_ruling:
+        out = dict(day_result)
+        out.setdefault("economic", None)
+        out["sealed"] = False
+        out["seal_status"] = (
+            f"UNSEALED_BY_USER_RULING R-765 -- {n_days_complete} of {g} "
+            f"days complete")
+        out["sealed_field_names"] = []
+        out["sealed_at_every_depth"] = False
+        out["R5_retired_from"] = "params v18 / design v26"
+        return out
     if n_days_complete >= g:
         out = dict(day_result)
         # UNSEALED: `economic` is present -- explicitly None, with the
@@ -4563,6 +4583,10 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
               "identical": True, "seed": seed,
               "why": "the cascade is BE's; only the METRIC is DE's"}
     return {"values": values, "n_draws": len(values),
+            # R-765: the per-draw cancel counts travel out too. They cost
+            # nothing to keep and a later question about the null's
+            # mechanics cannot be answered by re-deriving them.
+            "cancels": cancels,
             "base_value_cents": base_value,
             "peak_rss_mb_during_draws": peak,
             "elapsed_s": time.time() - started,
@@ -5941,6 +5965,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     # ---- S4: the null and the observed value, per arm. -----------------
     results, per_arm_detail = [], {}
+    _ledger765: dict = {}          # R-765: what each arm-day held
     for arm, spec in sorted(params["arms"].items()):
         pop = pops[arm]
         adm = DESIGN.arm_day_admissible(pop["decisions"], [0.0] * 501)
@@ -5958,8 +5983,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                                    "shrink G silently"})
             per_arm_detail[arm] = {"status": "REFUSED_R4_DECISIONS"}
             continue
-        arm_replay = mod.replay(bk, mod.arm_stream(bk, spec["head"]),
-                                spec["theta"])
+        _stream765 = mod.arm_stream(bk, spec["head"])
+        arm_replay = mod.replay(bk, _stream765, spec["theta"])
         observed = _value_cents(arm_replay["fills"]) - base_value
         seed = seed_for(book_sha, arm)
         nul = null_draws_valued(
@@ -5984,6 +6009,26 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         r["n_fills_baseline"] = int(base["n_fills"])
         r["n_fills_arm"] = int(arm_replay["n_fills"])
         results.append(r)
+        # R-765: WHAT THIS ARM-DAY HELD, KEPT. Stored verbatim as the
+        # producing code shaped it -- BE's fill records and decision rows
+        # copied, not re-typed into a schema of mine, because a re-typed
+        # copy is a second definition that drifts from the one the receipt
+        # was computed from.
+        _ledger765[arm] = {
+            "observed": observed,
+            "arm_value": _value_cents(arm_replay["fills"]),
+            "base_value": base_value,
+            "head": spec["head"], "theta": spec["theta"], "seed": seed,
+            "n_decisions": pop["decisions"],
+            "n_cancels_issued": int(arm_replay["cancels_issued"]),
+            "n_fills_arm": int(arm_replay["n_fills"]),
+            "n_fills_baseline": int(base["n_fills"]),
+            "null_values": nul["values"], "null_cancels": nul.get("cancels"),
+            "arm_fills": arm_replay["fills"],
+            "baseline_fills": base["fills"],
+            "decisions": [dict(r) for r in _stream765
+                          if float(r["score"]) >= spec["theta"]],
+        }
         per_arm_detail[arm] = {"status": r["status"],
                                "null_elapsed_s": nul["elapsed_s"],
                                "null_peak_rss_mb":
@@ -6005,7 +6050,14 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # economics that this day just computed are carried instead of
     # stripped. Nothing about the COMPUTATION changes: the numbers are the
     # ones the sealed run produced and threw away.
-    if early_read is None:
+    _ruling765 = bool(params.get("user_ruled_unsealed_emission"))
+    if _ruling765:
+        # ONE PATH, ONE EMISSION. The early-read branch below stays for
+        # the four days ruled at R-754 and is no longer needed for a new
+        # day: under v18 every run emits its economics anyway.
+        sealed = [seal(r, n_days_complete, params["G"],
+                       unsealed_by_ruling=True) for r in results]
+    elif early_read is None:
         sealed = [seal(r, n_days_complete, params["G"]) for r in results]
         for a in sealed:
             assert_no_economic_leak(a, n_days_complete, params["G"])
@@ -6037,6 +6089,31 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                                      seal(r, params["G"], params["G"]))
         for r in results]
     _mark("S5_seal")
+
+    # R-765: THE LEDGER IS WRITTEN BEFORE THE RECEIPT, so the receipt can
+    # name it by digest. A day whose ledger cannot be written REFUSES --
+    # the ruling is that the numbers are kept, and a receipt promising a
+    # ledger that is not there would be worse than no promise.
+    _ledger_block = None
+    if _ruling765 and _ledger765 and receipt_path is not None:
+        import de_decision_ledger as _LED
+        _lp = Path(receipt_path).parent / _LED.ledger_name(
+            day, emission_stamp())
+        try:
+            import harmful_stateful_policy as _HSP
+            _side765 = _HSP.SIDES[0]
+        except Exception as _e765:
+            raise RunnerRefused(
+                f"REFUSED DECISION_LEDGER_NO_SIGN_CONVENTION: the buy "
+                f"side could not be read from the policy module "
+                f"({_e765}). Every fill's sign would be a guess, and a "
+                f"ledger valued backwards is worse than none.")
+        _ledger_block = _LED.write_ledger(_lp, day, _ledger765,
+                                          buy_side=_side765)
+        _ledger_block["ruling"] = "R-765"
+        _ledger_block["recompute_with"] = (
+            "de_decision_ledger.read_ledger(path, "
+            "expect_sha256=<this sha256>) then .recompute(led, arm)")
 
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
@@ -6117,6 +6194,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "fixture_day_lock": day_lock,
         "launch_form_at_runtime": launch_runtime,
         "lock_form_at_runtime": lock_runtime,
+        "decision_ledger": _ledger_block,
         "n_days_complete": n_days_complete,
         # REV 90 §A0(3): `G` USED TO SIT HERE AS A BARE NUMBER and it was
         # v15's SIX, beside `n_days_complete` 4 and the early-read
@@ -9218,19 +9296,45 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "discards them -- so the cascade is BE's and only the METRIC is "
            "DE's, checked rather than asserted")
 
-        # ---- SEALED is the default, and it is absent-not-null ---------------
+        # ---- R-765: THE DAY ARTIFACT EMITS ITS ECONOMICS --------------------
+        # THE RULING INVERTED THIS CELL. It used to assert that at 1 of G
+        # the artifact is SEALED with every economic field absent. The
+        # USER ruled that mechanism retired: a run under params v18 emits
+        # what it computed, and the status is COMPUTED from the counts.
         _sealed_run = run_day(_DAY, _made["book_path"], params=_DAYP,
                               fixture=True, n_days_complete=1)
         _sa = _sealed_run["per_day_sealed_artifacts"]
-        ok(all("economic" not in a for a in _sa)
-           and all(a["sealed"] is True and a["sealed_at_every_depth"] is True
-                   and a["sealed_field_names"] == list(ECONOMIC_FIELDS)
+        _ruled765 = bool(_DAYP.get("user_ruled_unsealed_emission"))
+        ok(_ruled765 is True
+           and all(a["sealed"] is False for a in _sa)
+           and all("economic" in a for a in _sa)
+           and all(a["seal_status"].startswith(
+               "UNSEALED_BY_USER_RULING R-765 -- ") for a in _sa)
+           and all(f"1 of {_DAYP['G']} days complete" in a["seal_status"]
                    for a in _sa)
+           and all(a["sealed_field_names"] == [] for a in _sa)
            and all(a["decision_population"]["decisions"] > 0 for a in _sa),
-           f"AT 1 OF {_DAYP['G']} DAYS THE DAY ARTIFACT IS SEALED: every "
-           f"economic field ABSENT, all four layout keys present, and the "
-           f"decision counts and statuses still published -- the smoke "
-           f"publishes what it may and withholds what it must")
+           f"R-765: AT 1 OF {_DAYP['G']} DAYS THE DAY ARTIFACT IS "
+           f"UNSEALED AND CARRIES ITS ECONOMICS -- `{_sa[0]['seal_status']}`"
+           f", COMPUTED from the counts, `sealed False`, "
+           f"`sealed_field_names []`, and the decision counts still "
+           f"published. The user ruled the seal retired; nothing here is "
+           f"withheld from the run that produced it")
+        # AND THE OLD PATH STAYS DRIVABLE, because the four landed sealed
+        # days must remain reproducible from the code that wrote them
+        # (rule 13): the same result, sealed the way they were.
+        _old765 = seal(dict(_sa[0]), 1, _DAYP["G"])
+        ok(_old765["sealed"] is True
+           and "economic" not in _old765
+           and _old765["sealed_field_names"] == list(ECONOMIC_FIELDS)
+           and _old765["seal_status"].startswith(
+               f"SEALED -- 1 of {_DAYP['G']} days complete."),
+           f"R-765: and the RETIRED path is still drivable -- the same "
+           f"arm-day through `seal()` without the ruling is "
+           f"`{_old765['seal_status'][:34]}…` with the economics absent "
+           f"and {len(_old765['sealed_field_names'])} sealed names. The "
+           f"four landed days stay reproducible from the code that wrote "
+           f"them; retiring a rule is not deleting its record")
         _leak = dict(_sa[0]); _leak["economic"] = {"D_E0": 1.0}
         refuses(lambda: assert_no_economic_leak(_leak, 1, _DAYP["G"]),
                 "KNOWN-BAD ON THE DAY ARTIFACT: an economic field present "
@@ -10760,15 +10864,40 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                      "(reads data/pm_5min/derived)")
     else:
         _mk = design_chain_orphans()["shared_resolver"]
-        ok(_mk.get("n_merge_links") is not None
-           and isinstance(_mk.get("merged_tips"), list)
-           and (len(_mk["merged_tips"]) == _mk["n_merge_links"]),
-           f"and the orphan block records HOW the fork was closed, not "
-           f"only that it is: {_mk['n_merge_links']} merge link(s) "
-           f"absorbing {len(_mk['merged_tips'])} tip(s). "
-           f"`orphan_branches: []` beside a `forks` block with two "
-           f"entries cannot tell 'closed by a merge version' from 'never "
-           f"forked' -- these two fields can")
+        # DE 124's RULING (1): THE PROPERTY, NOT THE PROXY. The old cell
+        # compared `len(merged_tips)` with `n_merge_links`, which held
+        # only while no version re-declared its ancestor's merges. I broke
+        # that by composing three designs as deepcopies of their parents
+        # -- 20 links for 5 tips -- and the proxy went red while the
+        # property never moved. The property is: every tip is ABSORBED
+        # EXACTLY ONCE, by the EARLIEST version naming it, and every
+        # declared link resolves into that set; a re-declaration is
+        # REPORTED as REDECLARED_MERGE with its ancestor and is not
+        # counted. This is a DIFFERENT check, not a looser one: it also
+        # requires every declared link to resolve, which the old one
+        # never asked.
+        import declaration_chain as _DC126
+        _mb = _DC126.merges_by_earliest(
+            Path(DR.resolve()["data_root"]) / "pm_5min/derived",
+            "p003_de_multiday_gate1_design")
+        _tips = set(_mb["absorbed"])
+        _all_links = _mb["n_merges_effective"] + _mb["n_redeclared"]
+        ok(len(_tips) == _mb["n_merges_effective"]
+           and set(_mk["merged_tips"]) == _tips
+           and all(r["tip"] in _tips for r in _mb["redeclared_merges"])
+           and all(r["status"] == "REDECLARED_MERGE"
+                   and r["absorbed_by"] and r["redeclared_in"]
+                   for r in _mb["redeclared_merges"])
+           and _all_links == _mk["n_merge_links"],
+           f"DE 124 (1): EVERY TIP IS ABSORBED EXACTLY ONCE -- "
+           f"{_mb['n_merges_effective']} tip(s), each by the EARLIEST "
+           f"version naming it -- and all {_all_links} declared links "
+           f"resolve into that set. {_mb['n_redeclared']} are "
+           f"REDECLARED_MERGE, reported with the ancestor that absorbed "
+           f"the tip and the version that repeated it, counted as merges "
+           f"by nothing. `orphan_branches` {_mk['orphan_branches']}. The "
+           f"old cell compared a COUNT with a SET SIZE, which my own "
+           f"deepcopy-composed versions falsified while the property held")
 
     # ===== DE 111: A KNOWN-BAD MEASURES AGAINST ITS OWN BASELINE ========
     # THE DISARMING CASE, DRIVEN -- with the real mechanism, not a story.

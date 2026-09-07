@@ -349,6 +349,120 @@ def next_version_path(directory, family: str, head: dict) -> Path:
     return Path(directory) / f"{family}_v{head['version'] + 1}.json"
 
 
+def merges_by_earliest(directory, family: str) -> dict:
+    """WHO ABSORBED EACH TIP, AND WHO ONLY SAID SO (DE 124's ruling).
+
+    A tip named in any version's `also_supersedes` is ABSORBED EXACTLY
+    ONCE -- by the EARLIEST version naming it. A later version naming the
+    same tip performed no merge: it inherited the field, and DE 124 is
+    the round that happened, four versions deep, by composing each new
+    design as a `deepcopy` of its parent. Such a link is REPORTED as
+    `REDECLARED_MERGE` with the ancestor that absorbed the tip and the
+    version that repeated it -- never counted as a merge, and never fatal
+    while every tip is still absorbed exactly once."""
+    d = Path(directory)
+    versions = sorted(
+        (v for v in d.glob(f"{family}_v*.json")),
+        key=lambda q: (_version_of(q), q.name))
+    absorbed: dict = {}
+    redeclared = []
+    for v in versions:
+        try:
+            doc = json.loads(v.read_text())
+        except (OSError, ValueError):
+            continue
+        for link in (doc.get("also_supersedes") or []):
+            name = (Path(link["path"]).name if isinstance(link, dict)
+                    and link.get("path")
+                    else (link[0] if isinstance(link, (list, tuple))
+                          and link else None))
+            if not name:
+                continue
+            if name in absorbed:
+                redeclared.append({
+                    "status": "REDECLARED_MERGE", "tip": name,
+                    "absorbed_by": absorbed[name],
+                    "redeclared_in": v.name,
+                    "why": "the earliest version naming a tip absorbed it; "
+                           "this one inherited the field and performed no "
+                           "merge"})
+            else:
+                absorbed[name] = v.name
+    return {
+        "rule": "a tip is absorbed EXACTLY ONCE, by the EARLIEST version "
+                "naming it; later namings are REDECLARED_MERGE, reported "
+                "and not counted (DE 124's ruling)",
+        "absorbed": dict(sorted(absorbed.items())),
+        "n_merges_effective": len(absorbed),
+        "redeclared_merges": redeclared,
+        "n_redeclared": len(redeclared),
+        "every_tip_absorbed_exactly_once": True,
+    }
+
+
+def _link_names(links) -> list:
+    out = []
+    for link in (links or []):
+        if isinstance(link, dict) and link.get("path"):
+            out.append(Path(link["path"]).name)
+        elif isinstance(link, (list, tuple)) and link:
+            out.append(link[0])
+    return out
+
+
+def _refuse_inherited_merges(directory, family: str, payload: dict,
+                             head_read: dict) -> None:
+    """THE DOOR DE 124's RULING CLOSES, NARROWED BY ITS SECOND RULING.
+
+    Compose from a SCHEMA, never from a deepcopy of the parent. But the
+    enforceable half cannot be "no version may name an absorbed tip",
+    because BE's FROZEN-BLOCK rule requires the opposite: a version may
+    only ADD keys, so it must carry its parent's `also_supersedes`
+    UNCHANGED. The first form of this guard and BE's rule contradicted
+    each other outright -- no version could satisfy both.
+
+    So the refusal is on what is NEWLY INTRODUCED: a payload whose
+    `also_supersedes` names an already-absorbed tip THAT ITS DIRECT
+    PARENT DID NOT NAME performed no merge and is refused. A field
+    carried from the parent unchanged is permitted, and the property cell
+    counts each tip once, at the earliest version that named it, and
+    REPORTS the rest as REDECLARED_MERGE."""
+    prior = merges_by_earliest(directory, family)["absorbed"]
+    parent_named = set()
+    try:
+        parent = json.loads(Path(str(head_read.get("path"))).read_text())
+        parent_named = set(_link_names(parent.get("also_supersedes")))
+    except (OSError, ValueError, TypeError):
+        parent_named = set()
+    mine = _link_names(payload.get("also_supersedes"))
+    if set(mine) == parent_named:
+        return                      # carried unchanged: BE's rule requires it
+    bad = [{"tip": n, "already_absorbed_by": prior[n]}
+           for n in mine if n in prior and n not in parent_named]
+    if bad:
+        raise ChainRefused(
+            f"INHERITED_MERGE_LINKS: this payload's `also_supersedes` names "
+            f"{[b['tip'] for b in bad]}, already absorbed by "
+            f"{[b['already_absorbed_by'] for b in bad]}. A version declares "
+            f"what IT did; re-declaring an ancestor's merges is what a "
+            f"`deepcopy` of the parent produces, and it made one family "
+            f"read 20 merge links for 5 tips. Carrying the DIRECT PARENT's "
+            f"field UNCHANGED is permitted -- BE's frozen-block rule "
+            f"requires it -- and is reported as REDECLARED_MERGE; what is "
+            f"refused is a tip this payload INTRODUCES that an ancestor "
+            f"already absorbed.")
+
+
+def strip_link_fields(parent: dict) -> dict:
+    """A PARENT, WITH ITS LINK FIELDS REMOVED, for a caller that copies.
+
+    The link fields belong to the version that performed the act. This is
+    the one-line form of DE 124's rule for callers that still start from
+    a parent document."""
+    return {k: v for k, v in dict(parent).items()
+            if k not in ("supersedes", "also_supersedes")}
+
+
 def write_next_version(directory, family: str, payload: dict,
                        head_read: dict) -> dict:
     """WRITE the next version, or REFUSE by name. The closure is HERE.
@@ -372,6 +486,7 @@ def write_next_version(directory, family: str, payload: dict,
     a reader never sees a half-written version.
     """
     d = Path(directory)
+    _refuse_inherited_merges(d, family, payload or {}, head_read or {})
     # THE TARGET IS THE CALLER'S INTENT: read+1, not (re-resolved head)+1.
     # Computing it from a fresh resolve made VERSION_PATH_EXISTS
     # unreachable -- the path would always be free by construction and

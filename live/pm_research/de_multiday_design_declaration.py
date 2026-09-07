@@ -45,9 +45,12 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-VERSION = 25
+#: DE 124: 26. The design chain's head is v25 and this emits v26.
+#: Five hand-composed versions were withdrawn before landing; the record
+#: of them is in v26's `withdrawn_before_landing` block.
+VERSION = 26
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
-EXPECTED_CHECKS = 117
+EXPECTED_CHECKS = 132
 
 V1_DECLARATION = ("p003_de_multiday_gate1_design__20260906T031853Z.json",
                   "89ac8b15b83c91971c2e2a5b472cd0d6f32a4ba4659b42233afdd1"
@@ -147,6 +150,13 @@ V24_DECLARATION = ("p003_de_multiday_gate1_design_v24.json",
                    "e208e83191d8d08057dff77c86ef350ea287b4a66a59e4f90d5f2"
                    "2b6e5ab04b6")
 
+#: DE 124: v25, and the chain ends here. Five versions I composed by
+#: hand (v26..v30) were WITHDRAWN before landing -- never committed,
+#: each named with its digest in the new v26 and in the register.
+V25_DECLARATION = ("p003_de_multiday_gate1_design_v25.json",
+                   "b95ac59cf46d941d62e16ebae2f9eebf0dd4253b5905"
+                   "55c83af332aa44ca24ce")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -155,7 +165,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V16_DECLARATION, V17_DECLARATION, V18_DECLARATION,
                     V19_DECLARATION, V20_DECLARATION,
                     V21_DECLARATION, V22_DECLARATION,
-                    V23_DECLARATION, V24_DECLARATION)
+                    V23_DECLARATION, V24_DECLARATION,
+                    V25_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -624,7 +635,11 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 
 #: The params file this design pins. ONE name, and everything in the pin
 #: block is derived from it.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v15.json"
+#: R-765: the pin FOLLOWS its target's chain to v18, which carries the
+#: USER's ruling retiring R5. The move is permitted by this caller's own
+#: predicate (i) only because v18 supersedes v15 by a verifying pair --
+#: through v16 and v17 -- and the digest verifies (DE 124).
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v18.json"
 
 
 def _params_path() -> Path:
@@ -1532,6 +1547,85 @@ def declaration() -> dict:
         },
         "R7_the_day_set": day_sets_from_the_ledger(),
         "parameters": params_pin_block(),
+        # R-765, THE USER'S RULING, carried in the design as well as the
+        # params so a reader of either meets it (rule 14).
+        "user_ruled_unsealed_emission": {
+            "the_ruling_verbatim": "The sealing mechanism is stupid, make "
+                "sure to store the numbers after each run, and record "
+                "everything we can to avoid rerun",
+            "ruled_by": "THE USER", "recorded_at_utc": "2026-09-07T07:47:01Z",
+            "landed_at": "R-765", "authority": "SEAT_PROTOCOL rule 14",
+            "R5_is_RETIRED_FROM": "design v26 / params v18",
+            "R5_as_it_stood": "the economic fields are ABSENT until every "
+                              "day is complete",
+            "every_run_emits": "sealed false; seal_status COMPUTED as "
+                "'UNSEALED_BY_USER_RULING R-765 -- <n> of <g> days "
+                "complete'; the economic block in the receipt; and a "
+                "per-day DECISION LEDGER named in the receipt by path + "
+                "sha256 + n_rows + schema_version",
+            "the_seal_scopes_are_KEPT_as_the_record": "the four landed "
+                "sealed days are read through them; deleting them would "
+                "make landed receipts unreadable (rule 13)",
+            "the_read_gate_gates_the_AGGREGATE_READ_ONLY": "never an "
+                "emission. G, alpha, Holm, the day set and the clock are "
+                "untouched.",
+            "landed_receipts_are_untouched": "rule 13",
+        },
+        "withdrawn_before_landing": {
+            "what": "SIX design versions this seat wrote to the ledger disk "
+                    "on 2026-09-07 between 07:50Z and 08:15Z in an "
+                    "unfinished batch, and WITHDREW before it landed. None "
+                    "was ever committed: git tracked only v25.",
+            "authority": "the coordinator's second DE 124 ruling. R-711 "
+                "binds LANDED versions; the CAS forbids OVERWRITING, not "
+                "withdrawing an uncommitted file its own writer produced in "
+                "a batch that stopped.",
+            "the_precedent_is_BOUNDED": "only versions never committed, "
+                "written by the same seat in the same unfinished batch, "
+                "deleted before that batch lands, each named with its "
+                "digest in the register. Nothing else is ever deleted.",
+            "files": [
+                {"name": "p003_de_multiday_gate1_design_v26.json",
+                 "sha256": "5dcf6f0f519df50b80ddfa0897f5b7ce77e9c32399d274"
+                           "43eb400315a84b6321",
+                 "why_withdrawn": "composed as a deepcopy of v25, so it "
+                     "re-declared v25's five merges; and it added a stray "
+                     "`params_pin` key nothing reads while the real pin, "
+                     "`parameters`, still named params v15"},
+                {"name": "p003_de_multiday_gate1_design_v27.json",
+                 "sha256": "f3db51120d2707d040625f2b50c99a5c6f8b6cdab2ab90"
+                           "038fc2d22326052256",
+                 "why_withdrawn": "corrected the pin but inherited the "
+                     "merges again, and dropped `supersedes.chain`, so DA's "
+                     "verifier refused the family as "
+                     "SUPERSESSION_DEFINITION_DRIFT"},
+                {"name": "p003_de_multiday_gate1_design_v28.json",
+                 "sha256": "5b4bfd75d328a89085d2dc6f1d97bdd633494ca013c0b8"
+                           "4fc27eb7acd2e9fb9a",
+                 "why_withdrawn": "restored the chain, inherited the merges "
+                     "a third time"},
+                {"name": "p003_de_multiday_gate1_design_v29.json",
+                 "sha256": "a74e4263c167f1e6faa3e48a5488645f8cd5761e76b055"
+                           "a5b6806515e9db1c6d",
+                 "why_withdrawn": "REMOVED the inherited `also_supersedes` "
+                     "-- BE's frozen-block violation: a correction ADDS, it "
+                     "does not remove what is recorded"},
+                {"name": "p003_de_multiday_gate1_design_v30.json",
+                 "sha256": "db9958753ec232237a88b2be2bc5d232c62f9805f75291"
+                           "8a734b881218357be9",
+                 "why_withdrawn": "carried v29's removal forward while "
+                     "adding the correction block"},
+                {"name": "p003_de_multiday_gate1_design_v26.json",
+                 "sha256": "22e26bf07306d1e7021a985a72a1d5c48b5b399844429"
+                           "115a3defe3a3a800687",
+                 "why_withdrawn": "the recomposed v26: it changed "
+                     "`parameters`, a frozen block, before this caller's "
+                     "predicated permissions existed"}],
+            "the_rule_this_leaves": "COMPOSE FROM A SCHEMA, never from a "
+                "deepcopy of the parent, and EMIT THROUGH THE FAMILY'S OWN "
+                "EMITTER. Every one of the six defects is what a deepcopy "
+                "or a hand-composed emission produced.",
+        },
         "R9_timing": TIMING_RULE,
         "R11_memory_and_index_residency": {
             "why": "R-573: BE's 09-03 build reached 6.4 GB of the 8 GB cap "
@@ -3762,9 +3856,161 @@ def selftest(*, quiet: bool = False) -> int:
             run_the_battery=False)
         _world = "the payload this module WOULD write against the head"
     _hd = {**_hd, "doc": _base}
-    _cen = _BE.correction_census(_base, _pl,
-                                 added=MERGE_DECLARED_CHANGES,
-                                 also_permitted=("correction_census",))
+    # ===== DE 124 (3): THE CALLER'S PREDICATED PERMISSIONS ==============
+    # Each predicate driven BOTH ways on fixtures, and the door that must
+    # stay shut driven too. BE's `correction_census` is untouched; what is
+    # amended is the list THIS caller hands it.
+    _d124 = Path(__file__).resolve().parents[2] / "live/pm_research/declarations"
+    _v1x = {"parameters": {"path": "live/pm_research/declarations/"
+                           "de_multiday_gate1_params_v15.json",
+                           "sha256": "92858fc7f9493f8e8fcc721d0390843bce86"
+                                     "bbab17d633a0bf3210d633fb6037"},
+            "arms": {"A": 1}}
+    _p18 = _d124 / "de_multiday_gate1_params_v18.json"
+    _v2ok = {**_v1x, "parameters": {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v18.json",
+        "sha256": _sha_file(_p18)}}
+    _perm = design_permitted_additions(_v1x, _v2ok, decl_dir=_d124)
+    ok("parameters" in _perm["permitted"]
+       and "FOLLOWS the params chain" in _perm["predicated"]["parameters"],
+       f"DE 124 (3)(i) GREEN: the pin moving v15 -> v18 is PERMITTED, "
+       f"because v18 supersedes v15 by a verifying pair through the params "
+       f"chain -- `{_perm['predicated']['parameters']}`. A two-way pin "
+       f"FOLLOWING its target's chain is R31's requirement, not an edit")
+    _v2bad = {**_v1x, "parameters": {
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v1.json",
+        "sha256": _sha_file(_d124 / "de_multiday_gate1_params_v1.json")}}
+    _c1 = None
+    try:
+        design_permitted_additions(_v1x, _v2bad, decl_dir=_d124)
+    except DesignCensusRefused as _e:
+        _c1 = str(_e).split(":")[0]
+    ok(_c1 == "PIN_MOVED_TO_A_NON_DESCENDANT",
+       f"DE 124 (3)(i) RED: moving the pin BACKWARDS (v15 -> v1) refuses "
+       f"by name -- `{_c1}`. Following a chain forward is a following; any "
+       f"other move is an edit of a recorded fact")
+    _ruling = {"ruled_by": "THE USER", "the_ruling_verbatim": "x",
+               "recorded_at_utc": "2026-09-07T07:47:01Z", "landed_at": "R-765"}
+    ok("user_ruled_x" in design_permitted_additions(
+           _v1x, {**_v1x, "user_ruled_x": _ruling},
+           decl_dir=_d124)["permitted"],
+       "DE 124 (3)(ii) GREEN: a `user_ruled_*` block carrying ruled_by THE "
+       "USER, the words, the time and an R-<n> entry is a PERMITTED "
+       "addition")
+    _c2 = None
+    try:
+        design_permitted_additions(
+            _v1x, {**_v1x, "user_ruled_x": {k: v for k, v in _ruling.items()
+                                            if k != "landed_at"}},
+            decl_dir=_d124)
+    except DesignCensusRefused as _e:
+        _c2 = str(_e).split(":")[0]
+    ok(_c2 == "USER_RULING_BLOCK_INCOMPLETE",
+       f"DE 124 (3)(ii) RED: the same block WITHOUT `landed_at` refuses by "
+       f"name -- `{_c2}`. A block claiming rule 14's authority and naming "
+       f"no register entry is this seat's opinion wearing it")
+    _wd = {"files": [{"name": "x.json", "sha256": "0" * 64,
+                      "why_withdrawn": "because"}]}
+    ok("withdrawn_before_landing" in design_permitted_additions(
+           _v1x, {**_v1x, "withdrawn_before_landing": _wd},
+           decl_dir=_d124)["permitted"],
+       "DE 124 (3)(iii) GREEN: a withdrawal record whose every entry "
+       "carries name, sha256 and a reason is PERMITTED")
+    _c3 = None
+    try:
+        design_permitted_additions(
+            _v1x, {**_v1x, "withdrawn_before_landing":
+                   {"files": [{"name": "x.json"}]}}, decl_dir=_d124)
+    except DesignCensusRefused as _e:
+        _c3 = str(_e).split(":")[0]
+    ok(_c3 == "WITHDRAWAL_RECORD_INCOMPLETE",
+       f"DE 124 (3)(iii) RED: an entry with no digest refuses by name -- "
+       f"`{_c3}`. A withdrawal nobody can identify by digest is not a "
+       f"record of it")
+    # ---- (iv) THE DERIVED BLOCKS, each refusal driven and the growth ---
+    _fresh124 = declaration()
+    _v1d = {**_fresh124,
+            "R7_the_day_set": {**_fresh124["R7_the_day_set"],
+                               "qualifying_on_quality": [
+                                   d for d in _fresh124["R7_the_day_set"][
+                                       "qualifying_on_quality"]
+                                   if d != "2026-09-06"]},
+            "R15_a_real_days_battery_is_the_FULL_battery": {
+                **_fresh124["R15_a_real_days_battery_is_the_FULL_battery"],
+                "day_path_checks_declared": 101},
+            "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
+                **_fresh124["R22_the_launch_capture_is_the_IMPORT_CLOSURE"],
+                "the_closure_by_name": [
+                    x for x in _fresh124[
+                        "R22_the_launch_capture_is_the_IMPORT_CLOSURE"][
+                        "the_closure_by_name"]
+                    if not x.startswith("__init__.py")]}}
+    _g124 = design_permitted_additions(_v1d, _fresh124, decl_dir=_d124)
+    ok(all(k in _g124["permitted"] for k in _derived_names())
+       and all("re-derived" in _g124["predicated"][k]
+               for k in _derived_names()),
+       f"DE 124 (iv) GREEN, THE LEGITIMATE GROWTH: 09-06 joining "
+       f"`qualifying_on_quality`, the day-path count 101 -> "
+       f"{_fresh124['R15_a_real_days_battery_is_the_FULL_battery']['day_path_checks_declared']}"
+       f", and the `__init__.py` entry entering the closure are all "
+       f"PERMITTED -- each equals what its own measurement re-derives. A "
+       f"byte census froze these three against their own inputs and made "
+       f"this family unbumpable from the first verdict that landed after "
+       f"v25")
+    for _lbl, _mut, _code in (
+            ("a day that qualified and stops",
+             lambda d: {**d, "R7_the_day_set": {
+                 **d["R7_the_day_set"], "qualifying_on_quality": [
+                     x for x in d["R7_the_day_set"]["qualifying_on_quality"]
+                     if x != "2026-09-05"]}}, "DERIVED_DAY_SET_SHRANK"),
+            ("a day the ledger's verdicts do not carry",
+             lambda d: {**d, "R7_the_day_set": {
+                 **d["R7_the_day_set"], "qualifying_on_quality": list(
+                     d["R7_the_day_set"]["qualifying_on_quality"])
+                 + ["2099-01-01"]}}, "DERIVED_DAY_SET_NOT_IN_LEDGER"),
+            ("a check count nobody ran",
+             lambda d: {**d, "R15_a_real_days_battery_is_the_FULL_battery": {
+                 **d["R15_a_real_days_battery_is_the_FULL_battery"],
+                 "day_path_checks_declared": 999}},
+             "DERIVED_BATTERY_COUNT_NOT_RUN"),
+            ("a closure entry nobody captured",
+             lambda d: {**d, "R22_the_launch_capture_is_the_IMPORT_CLOSURE": {
+                 **d["R22_the_launch_capture_is_the_IMPORT_CLOSURE"],
+                 "the_closure_by_name": list(
+                     d["R22_the_launch_capture_is_the_IMPORT_CLOSURE"][
+                         "the_closure_by_name"]) + ["invented.py"]}},
+             "DERIVED_CLOSURE_NOT_CAPTURED")):
+        _got = None
+        try:
+            design_permitted_additions(_v1d, _mut(_fresh124), decl_dir=_d124)
+        except DesignCensusRefused as _e:
+            _got = str(_e).split(":")[0]
+        ok(_got == _code,
+           f"DE 124 (iv) RED -- {_lbl}: refuses by name, `{_got}`. The "
+           f"census RE-DERIVES the block and compares that; it never "
+           f"compares bytes, and it never takes the version's word")
+
+    _arb = design_permitted_additions(
+        _v1x, {**_v1x, "an_arbitrary_new_key": 1}, decl_dir=_d124)
+    ok("an_arbitrary_new_key" not in _arb["permitted"]
+       and len(set(_arb["permitted"]) - set(MERGE_DECLARED_CHANGES)
+               - {"correction_census", "version"}) == 0,
+       f"DE 124 (3) THE DOOR STAYS SHUT: an arbitrary new key is NOT "
+       f"permitted -- the permitted set is still the eight plus "
+       f"`correction_census` and `version`, and the three predicated "
+       f"names appear only when their predicate holds. Widening a list is "
+       f"how a census stops censusing")
+
+    # THE PERMITTED SET IS COMPUTED BY THE PREDICATES (DE 124 (3) & (iv)),
+    # not typed. BE's `correction_census` is untouched; what it is handed
+    # is a set every member of which had to earn its place.
+    _perm124 = design_permitted_additions(_base, _pl, decl_dir=_d124)
+    _cad124 = change_cadence()
+    _cen = _BE.correction_census(
+        _base, _pl, added=tuple(_cad124["added"]),
+        also_permitted=tuple(sorted(
+            (set(_perm124["permitted"]) - set(_cad124["added"])
+             - set(_cad124["frozen_constants"])))))
     ok(_cen["difference_is_exactly_the_additions"] is True
        and _cen["missing_declared_additions"] == [],
        f"POSITIVE CONTROL FOR THE MERGE GATE ({_world}): it "
@@ -3810,20 +4056,45 @@ def selftest(*, quiet: bool = False) -> int:
        f"through its CAS, and that resolution is the verdict every merge "
        f"version rests on -- the cell below keeps it independently. The "
        f"module's internal link algebra is NOT re-tested here")
+    # ---- DE 124 (b): the four worlds, on a SCRATCH chain ---------------
+    ok(emission_state(25, 26) == "PRE" and emission_state(26, 26) == "POST",
+       f"DE 124 (b) GREEN, BOTH WORLDS: head+1 reads "
+       f"`{emission_state(25, 26)}` -- the successor about to be emitted, "
+       f"and the emit that follows makes it true -- and head reads "
+       f"`{emission_state(26, 26)}`, the merge landed. One cell, two "
+       f"worlds, each NAMED rather than one of them called a failure")
+    for _lbl, _h, _v, _code in (
+            ("two ahead: a version was never written", 25, 27,
+             "VERSION_SKIPS_THE_HEAD"),
+            ("behind: somebody emitted past this module", 26, 25,
+             "VERSION_BEHIND_THE_HEAD")):
+        _got = None
+        try:
+            emission_state(_h, _v)
+        except EmissionStateRefused as _e:
+            _got = str(_e).split(":")[0]
+        ok(_got == _code,
+           f"DE 124 (b) RED -- {_lbl} (head v{_h}, module V{_v}): refuses "
+           f"by name, `{_got}`. A gate that ran AFTER the write would not "
+           f"be a gate, so the two real defects keep their refusals")
+
     _hd113 = _DC.resolve_head(
         Path(RUNNER.DR.resolve()["data_root"]) / "pm_5min/derived",
         "p003_de_multiday_gate1_design")
-    ok(_hd113["version"] == VERSION and _hd113["orphan_branches"] == []
+    _st113 = emission_state(_hd113["version"], VERSION)
+    ok(_st113 in ("PRE", "POST") and _hd113["orphan_branches"] == []
        and _hd113["sha256"] == hashlib.sha256(
            Path(_hd113["path"]).read_bytes()).hexdigest(),
-       f"THE CELL THIS SEAT KEEPS: the head this module would supersede "
-       f"is {_hd113['name']} (v{_hd113['version']}) at "
-       f"{_hd113['sha256'][:12]}…, recomputed here, with "
-       f"orphan_branches {_hd113['orphan_branches']}. `emit_merge_version` "
-       f"gates on `head + 1 == V{VERSION}`, so it REFUSES now -- this "
-       f"module IS the head, v{_hd113['version']} == V{VERSION}, and the "
-       f"merge has landed. The resolution is a verdict either way and is "
-       f"tested here, not delegated")
+       f"THE CELL THIS SEAT KEEPS, AND IT NAMES THE WORLD IT IS IN "
+       f"(DE 124 (b)): the head is {_hd113['name']} (v{_hd113['version']}) "
+       f"at {_hd113['sha256'][:12]}…, recomputed here, orphan_branches "
+       f"{_hd113['orphan_branches']}; this module is V{VERSION}, so the "
+       f"emission state is {_st113} -- "
+       + ("the head's immediate successor, about to be emitted; the emit "
+          "that follows makes head == VERSION" if _st113 == "PRE" else
+          "this module IS the head and the merge has landed") +
+       f". A gate that ran AFTER the write would not be a gate; this one "
+       f"reads its world before it")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
@@ -3868,6 +4139,289 @@ def selftest(*, quiet: bool = False) -> int:
 #: Four of these are the emission's own provenance (a version whose
 #: `as_of` or `source_identity` were copied forward would be claiming
 #: another act's authorship) and two are the version identity itself.
+class DesignCensusRefused(RuntimeError):
+    """A named refusal from THIS caller's permission predicates."""
+
+
+def change_cadence(decl_dir=None, family="p003_de_multiday_gate1_design",
+                   keys=None) -> dict:
+    """HOW OFTEN EACH KEY CHANGES, MEASURED OVER THE LANDED VERSIONS.
+
+    DE 124's fifth ruling. BE's census reads `added` as REQUIRED to change
+    on every version -- which is right -- and my caller had all eight
+    names in it, including one (`also_supersedes`) that changes only when
+    a merge is performed and one (`also_supersedes_is`) that is the
+    field's constant definition text and never changes at all. So the
+    positive control failed on a key that had no business being required.
+
+    The classification is READ FROM THE FAMILY'S OWN HISTORY, never
+    typed: EVERY -> `added`; SOME -> `also_permitted`, its content still
+    governed by the narrowed merge guard; NEVER -> not permitted at all,
+    so it falls into the derived FROZEN set and is compared byte for
+    byte, which is what a constant deserves."""
+    d = Path(decl_dir) if decl_dir else (
+        Path(DR.resolve()["data_root"]) / "pm_5min/derived")
+    # THE ORDER IS THE CHAIN'S, NOT THE FILENAME'S. This family uses
+    # STAMPED names for most of its history (22 of 23 files), so a glob on
+    # `_v<N>.json` skips them and the "consecutive" pairs are not
+    # consecutive -- which reported `supersedes` as changing 8 of 9 times,
+    # a key that changes on every real emission.
+    import declaration_chain as _DC
+    head = _DC.resolve_head(d, family)
+    names = [Path(c[0] if isinstance(c, (list, tuple))
+                  else c.get("path", "")).name
+             for c in ((head.get("doc") or {}).get("supersedes") or {}
+                       ).get("chain", [])]
+    names.append(head["name"])
+    docs = []
+    for n in names:
+        try:
+            docs.append(json.loads((d / n).read_text()))
+        except (OSError, ValueError):
+            continue
+    keys = list(keys or MERGE_DECLARED_CHANGES)
+    n_pairs = max(len(docs) - 1, 0)
+    counts = {k: 0 for k in keys}
+    for a, b in zip(docs, docs[1:]):
+        for k in keys:
+            if json.dumps(a.get(k), sort_keys=True, default=str) != \
+                    json.dumps(b.get(k), sort_keys=True, default=str):
+                counts[k] += 1
+    cad = {}
+    for k in keys:
+        cad[k] = ("EVERY" if n_pairs and counts[k] == n_pairs
+                  else "NEVER" if counts[k] == 0 else "SOME")
+    return {"n_versions": len(docs), "n_pairs_compared": n_pairs,
+            "changes": counts, "cadence": cad,
+            "added": sorted(k for k in keys if cad[k] == "EVERY"),
+            "also_permitted": sorted(k for k in keys if cad[k] == "SOME"),
+            "frozen_constants": sorted(k for k in keys if cad[k] == "NEVER"),
+            "rule": "EVERY -> required (added); SOME -> permitted, content "
+                    "governed by the merge guard; NEVER -> frozen, compared "
+                    "byte for byte. Measured over the landed versions, "
+                    "never typed."}
+
+
+class EmissionStateRefused(RuntimeError):
+    """A named refusal about where this module stands in its own chain."""
+
+
+def emission_state(head_version: int, module_version: int) -> str:
+    """WHICH WORLD IS THIS -- before the emission, or after it?
+
+    DE 124 (b). The cell that keeps this family's head used to assert
+    `head == VERSION`, which is true only AFTER the version is written --
+    so with VERSION bumped and the emission still to come, it was red, and
+    the emit ran the battery first: the cell could only be satisfied by
+    the emission it blocked. The meaning it was reaching for is "this
+    module is the head OR the head's immediate successor about to be
+    emitted", and that is two worlds, not one, so it names which.
+
+    Anything else is a real defect and refuses by name: a module two or
+    more ahead has SKIPPED a version, and a module behind the head is
+    STALE."""
+    h, v = int(head_version), int(module_version)
+    if v == h:
+        return "POST"
+    if v == h + 1:
+        return "PRE"
+    if v >= h + 2:
+        raise EmissionStateRefused(
+            f"VERSION_SKIPS_THE_HEAD: this module is V{v} and the head is "
+            f"v{h}. A version between them was never written, so the chain "
+            f"this module would emit into has a hole.")
+    raise EmissionStateRefused(
+        f"VERSION_BEHIND_THE_HEAD: this module is V{v} and the head is "
+        f"v{h}. The module is STALE -- somebody else emitted past it, and "
+        f"emitting now would supersede a version this code has not read.")
+
+
+def _derived_names():
+    """The three blocks that are MEASUREMENTS, named once (DE 124 iv)."""
+    return ("R7_the_day_set",
+            "R15_a_real_days_battery_is_the_FULL_battery",
+            "R22_the_launch_capture_is_the_IMPORT_CLOSURE")
+
+
+def design_permitted_additions(v1: dict, v2: dict, *, decl_dir=None) -> dict:
+    """THIS CALLER'S PERMITTED SET, AND EVERY ADDITION IS PREDICATED.
+
+    DE 124's third ruling. `correction_census` derives the frozen set from
+    what v1 carries MINUS what the caller permits, and MY caller permitted
+    exactly eight names -- so a USER ruling could not be added to a design
+    version at all, and R31's own two-way pin could not follow its target's
+    chain. BE's helper is untouched; the list it is handed is the thing
+    that was wrong.
+
+    THE PERMISSIONS ARE PREDICATES, NEVER BARE NAMES. A bare name would
+    make `parameters` writable for any reason, which is the edit rule 13
+    forbids; a predicate says WHICH change is a following and which is an
+    edit.
+
+      (i)   `parameters` may change ONLY to a params version that
+            SUPERSEDES the previously pinned one by a VERIFYING PAIR
+            through `declaration_chain`. A two-way pin following its
+            target's chain is R31's requirement, not an edit of a
+            recorded fact. Anything else: PIN_MOVED_TO_A_NON_DESCENDANT.
+      (ii)  a `user_ruled_*` block is permitted ONLY carrying `ruled_by`
+            "THE USER", `the_ruling_verbatim`, `recorded_at_utc` and
+            `landed_at` "R-<n>". Missing any: USER_RULING_BLOCK_INCOMPLETE.
+      (iii) `withdrawn_before_landing` is permitted ONLY when every entry
+            carries `name`, `sha256` and `reason`. Otherwise:
+            WITHDRAWAL_RECORD_INCOMPLETE.
+
+    Everything else outside the eight stays refused."""
+    import re as _re
+    import declaration_chain as _DC
+    permitted = set(MERGE_DECLARED_CHANGES) | {"correction_census", "version"}
+    why = {}
+    d = Path(decl_dir) if decl_dir else (
+        Path(__file__).resolve().parents[2] / "live/pm_research/declarations")
+
+    # ---- (i) the pin may FOLLOW its target's chain, never leave it ----
+    if json.dumps(v1.get("parameters"), sort_keys=True) != \
+            json.dumps(v2.get("parameters"), sort_keys=True):
+        was = Path(str((v1.get("parameters") or {}).get("path") or "")).name
+        now = Path(str((v2.get("parameters") or {}).get("path") or "")).name
+        chain = _DC.resolve_head(d, "de_multiday_gate1_params")
+        names = [Path(c[0] if isinstance(c, (list, tuple))
+                      else c.get("path", "")).name
+                 for c in ((chain.get("doc") or {}).get("supersedes") or {}
+                           ).get("chain", [])]
+        names.append(chain["name"])
+        follows = (was in names and now in names
+                   and names.index(now) > names.index(was))
+        digest_ok = (_sha_file(d / now) ==
+                     (v2.get("parameters") or {}).get("sha256")
+                     if (d / now).is_file() else False)
+        if not (follows and digest_ok):
+            raise DesignCensusRefused(
+                f"PIN_MOVED_TO_A_NON_DESCENDANT: `parameters` moves the "
+                f"pin {was!r} -> {now!r}. A pin may FOLLOW its target's "
+                f"chain -- the new file must supersede the old one by a "
+                f"verifying pair -- and nothing else. follows_the_chain="
+                f"{follows}, digest_verifies={digest_ok}.")
+        permitted.add("parameters")
+        why["parameters"] = (f"the pin FOLLOWS the params chain "
+                             f"{was} -> {now}, digest verified")
+
+    # ---- (ii) a USER ruling block, complete or refused ----------------
+    for k in sorted(set(v2) - set(v1)):
+        if not k.startswith("user_ruled_"):
+            continue
+        blk = v2[k] if isinstance(v2[k], dict) else {}
+        miss = [f for f in ("ruled_by", "the_ruling_verbatim",
+                            "recorded_at_utc", "landed_at") if not blk.get(f)]
+        if (blk.get("ruled_by") != "THE USER"
+                or not _re.match(r"^R-\d+$", str(blk.get("landed_at") or ""))
+                or miss):
+            raise DesignCensusRefused(
+                f"USER_RULING_BLOCK_INCOMPLETE: `{k}` is missing {miss or []} "
+                f"or carries ruled_by={blk.get('ruled_by')!r} / "
+                f"landed_at={blk.get('landed_at')!r}. A block claiming a "
+                f"USER ruling must name the ruler, the words, the time and "
+                f"the register entry -- otherwise it is this seat's "
+                f"opinion wearing rule 14's authority.")
+        permitted.add(k)
+        why[k] = f"a complete USER ruling block ({blk['landed_at']})"
+
+    # ---- (iv) THE DERIVED BLOCKS: re-derived, never compared by bytes -
+    # DE 124's fourth ruling, and the line it sets: A DECLARED BLOCK NEVER
+    # CHANGES; A DERIVED BLOCK MAY CHANGE ONLY TO WHAT ITS OWN MEASUREMENT
+    # RE-DERIVES, AND THE CENSUS CHECKS IT BY RE-DERIVING.
+    #
+    # These three blocks are MEASUREMENTS taken at emit -- the ledger's
+    # verdicts, the battery's declared count, the captured closure -- so a
+    # byte census froze them against their own inputs and made this family
+    # unbumpable from the first verdict that landed after v25. That is a
+    # defect in how the census was APPLIED, not in any version, and it is
+    # older than this batch.
+    #
+    # Only these three are named. Anything else stays frozen.
+    _derived = _derived_names()
+    _changed_derived = [k for k in _derived
+                        if json.dumps(v1.get(k), sort_keys=True, default=str)
+                        != json.dumps(v2.get(k), sort_keys=True, default=str)]
+    if _changed_derived:
+        fresh = declaration()          # THE MEASUREMENT, TAKEN AGAIN
+
+        if "R7_the_day_set" in _changed_derived:
+            a1, a2 = v1.get("R7_the_day_set") or {}, v2["R7_the_day_set"]
+            af = fresh["R7_the_day_set"]
+            if json.dumps(a2.get("ruled"), sort_keys=True) != \
+                    json.dumps(a1.get("ruled"), sort_keys=True):
+                raise DesignCensusRefused(
+                    "DERIVED_DAY_SET_RULED_CHANGED: the RULED six days are "
+                    "DECLARED, not measured, and they never change here.")
+            q1 = set(a1.get("qualifying_on_quality") or [])
+            q2 = set(a2.get("qualifying_on_quality") or [])
+            qf = set(af.get("qualifying_on_quality") or [])
+            if not q1 <= q2:
+                raise DesignCensusRefused(
+                    f"DERIVED_DAY_SET_SHRANK: {sorted(q1 - q2)} qualified in "
+                    f"the version this supersedes and do not here. A "
+                    f"measurement may GROW as days land; a day that "
+                    f"qualified and stops is not a re-derivation.")
+            if q2 != qf:
+                raise DesignCensusRefused(
+                    f"DERIVED_DAY_SET_NOT_IN_LEDGER: this version claims "
+                    f"{sorted(q2 - qf)} which the ledger's verdicts do not "
+                    f"carry, and omits {sorted(qf - q2)} which they do. A "
+                    f"derived block must equal what its own measurement "
+                    f"re-derives.")
+
+        if "R15_a_real_days_battery_is_the_FULL_battery" in _changed_derived:
+            k = "R15_a_real_days_battery_is_the_FULL_battery"
+            got = (v2[k] or {}).get("day_path_checks_declared")
+            want = (fresh[k] or {}).get("day_path_checks_declared")
+            if got != want:
+                raise DesignCensusRefused(
+                    f"DERIVED_BATTERY_COUNT_NOT_RUN: this version declares "
+                    f"{got} day-path checks and the battery runs {want}. "
+                    f"The count is a MEASUREMENT of the battery, and a "
+                    f"number nobody ran is not one.")
+
+        if "R22_the_launch_capture_is_the_IMPORT_CLOSURE" in _changed_derived:
+            k = "R22_the_launch_capture_is_the_IMPORT_CLOSURE"
+            got = list((v2[k] or {}).get("the_closure_by_name") or [])
+            want = list((fresh[k] or {}).get("the_closure_by_name") or [])
+            if got != want:
+                raise DesignCensusRefused(
+                    f"DERIVED_CLOSURE_NOT_CAPTURED: this version names "
+                    f"{len(got)} modules and the capture at this emit holds "
+                    f"{len(want)}. The closure is CAPTURED, not typed.")
+
+        for k in _changed_derived:
+            permitted.add(k)
+            why[k] = "a DERIVED block, re-derived and equal to its own " \
+                     "measurement at this emit"
+
+    # ---- (iii) the withdrawal record, complete or refused -------------
+    if "withdrawn_before_landing" in set(v2) - set(v1):
+        ents = (v2["withdrawn_before_landing"] or {}).get("files") or []
+        bad = [e for e in ents
+               if not (isinstance(e, dict) and e.get("name")
+                       and e.get("sha256") and (e.get("why_withdrawn")
+                                                or e.get("reason")))]
+        if not ents or bad:
+            raise DesignCensusRefused(
+                f"WITHDRAWAL_RECORD_INCOMPLETE: {len(bad)} of {len(ents)} "
+                f"entries lack `name`, `sha256` or a reason. A withdrawal "
+                f"nobody can identify by digest is not a record of it.")
+        permitted.add("withdrawn_before_landing")
+        why["withdrawn_before_landing"] = f"{len(ents)} entries, each named"
+    return {"permitted": sorted(permitted), "predicated": why,
+            "the_eight": sorted(MERGE_DECLARED_CHANGES)}
+
+
+def _sha_file(p) -> str:
+    import hashlib as _h
+    try:
+        return _h.sha256(Path(p).read_bytes()).hexdigest()
+    except OSError:
+        return ""
+
+
 MERGE_DECLARED_CHANGES = ("supersedes", "also_supersedes",
                           "also_supersedes_is", "protocol",
                           "output_name_check", "as_of", "source_identity",
