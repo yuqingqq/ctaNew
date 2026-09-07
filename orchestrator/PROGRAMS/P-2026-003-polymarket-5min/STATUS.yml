@@ -67,6 +67,48 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T10:49:16Z (MEM ROUND 267 -- R-782 SWEPT, with every landing between the tip I read at round 266 (`6b509a4`)
+  and `4e93675`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE USER'S THIRD RULING OF THE DAY, VERBATIM*** at 2026-09-07T10:42:24Z: "plz record the absolute
+  number as well for reference", asked after "what's the result of 0-cancel". A USER ruling, not a
+  coordinator one. The three of the day are **R-754, R-765 and R-782**.
+  (2) **R-782's claim about the artifacts VERIFIED AT THE ARTIFACT**: the 09-03 arm-day `economic` mapping is
+  EXACTLY six keys -- `D_E0`, `Z`, `null_draws_summary`, `null_mean`, `null_sd`, `p_location` -- and none is
+  an absolute for either side; the block's other fields are COUNTS. MEM's routed task (d), discharged for
+  what exists: `CONDVALUE_X_SKEW` `D_E0` **-16,592.33 cents (-$165.92)**, Z -2.3014, 30,171 arm fills against
+  46,439 baseline; `HAZARD_OVER_SKEWED_REF` **-4,822.26 cents (-$48.22)**, Z -5.3007, 44,895 against the same
+  46,439. **These are EXCESSES, not absolutes.** Labels from the artifact: G 4, `interval`
+  `NONE_BELOW_FIVE_DAYS`, `verdict_class` `EXPLORATORY`, both arm-days `sealed: false`, authority R-754. The
+  unit is CENTS -- maker P&L at level-to-markout with NO FEE TERM, read at `_value_cents` -- and it is named
+  in no artifact today.
+  (3) ***BUT BOTH ABSOLUTES ARE ALREADY COMPUTED ON THE REAL PATH.*** `base_value = _value_cents(base
+  ["fills"])` at `:5991`; `observed = _value_cents(arm_replay["fills"]) - base_value` at `:6016`; and at
+  `:6045` `_ledger765[arm]` stores them under **the exact names R-782(b) wants** -- `"base_value"` and
+  `"arm_value"` -- so the reconciliation R-782(a) asks DE to assert to 1e-9 holds by CONSTRUCTION here.
+  (4) ***AND THE LEDGER WRITE IS UNREACHABLE AT `fe76d83`.*** Searched all **1,682** Python files at that
+  commit with the known-positive required to appear: the only production `write_ledger` is `:6139`, behind
+  `receipt_path is not None`, and **no caller anywhere passes `receipt_path`** -- sixteen `run_day` call
+  sites, none of them; and the `*` in the signature makes it KEYWORD-ONLY, so it cannot arrive positionally
+  either. **My round-266 limit ("E2 only -- I did not check their entry points") therefore extends to E2, E3,
+  E4 AND GO #8.** R-782(b)'s route has no ledger to read for any of the four, while the two numbers sit in
+  `_ledger765` and are dropped at exit. **THE GAP IS PERSISTENCE, NOT COMPUTATION** -- smaller than "never
+  emitted" suggests. **CORRECTED BEFORE SHIPPING: DE 131 (`286335f`, 10:46:02Z, OUTSIDE my swept window,
+  queued for round 268) closes the FORWARD half** -- it does not touch `receipt_path` or the guard; it emits
+  `r["absolute"]` INTO THE ARM-DAY BLOCK with `unit: VALUATION_UNIT` (= `"cents"`, confirming the unit I read
+  off `_value_cents`) and a reconciliation that refuses by name above 1e-9. That is one of the three routes my
+  flag listed. **E2, E3, E4 and GO #8 are unchanged: `fe76d83` predates DE 131 by ~100 minutes**, so no
+  `absolute` block and no ledger for any of them.
+  (5) DE 130 landed and closes REV 98's wording at the file (`:6427` now says the constant "IS a typed
+  constant ... and must then be EDITED to match the parse"); the OTHER half of my round-266 flag stands --
+  importers get `217` whether or not the battery ever ran. DE 130 landed inside my round-266 read-to-write
+  gap, the SECOND consecutive round that has happened; both were swept the round after, because each state
+  file declares its window by commit.
+  (6) Cascade both sides: SHARED `309b98c7` -- a FOURTH digest today -- `fe76d83` `ee4034c1`; 9/10 and 10/10.
+  Freeze holds a SEVENTH round. E2 at 87m15s, `MemoryPeak` identical at all SEVEN reads, artifact still
+  absent, so all three round-266 predictions stay open.
+  COUNTS (by YAML parse): flags 1986 -> 2004, provenance 1531 -> 1549 (eighteen written, eighteen
+  counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 249
+  archived.)
   2026-09-07T10:31:21Z (MEM ROUND 266 -- R-780 AND R-781 SWEPT, with every landing between the tip I read at round 265
   (`cc289e5`) and `6b509a4`. STATE ONLY. MEM ASSERTS NO RESULT.
   (1) ***ON E2's OWN PATH NO DECISION LEDGER IS WRITTEN AT ALL.*** R-780 asked which ledger schema E2's
@@ -147,64 +189,6 @@ updated: >-
   as single resolvable paths or `git:` refs (which the instrument correctly calls UNDECIDABLE, not absent).
   A check that fires on my own sloppiness is a check whose zero means nothing; ORPHAN census 0; window trimmed 4 -> 3, Batch 247
   archived. Q-MEM-253 filed through the script.)
-  2026-09-07T09:55:03Z (MEM ROUND 264 -- R-778 SWEPT, with every landing between my own 52eded1 bound and
-  the tip `81c7c17`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***DE 128's A5 FIX MOVED THE CALL INSIDE THE GUARD AND LEFT THE CONSUMER OUTSIDE -- THE DEFECT MOVED
-  ONE STEP RATHER THAN CLOSING.*** R-778 records REV 96's first item as "the A5 cell actually guarded", and
-  the CALL has indeed moved: `rehearse(_st["next_unread"])` is now at :819, indent 8, inside the `else`.
-  **But the `ok(...)` that consumes its result is still outside** -- :821-:828 read `reh["status"]`,
-  `reh["blocking"]`, `dc["is_a_full_pair"]` and four more, after the if/else closes. ***AND I DID NOT JUDGE
-  THIS BY INDENTATION***: parsed with `ast`, the `If` whose test is `_st['next_unread'] is None` begins at
-  **:802**, its if-body spans **804..811**, its **else-body spans 819..820** (exactly the two assignments),
-  and **the If statement ENDS at line 820**. Every statement from :821 is a sibling of the `if`. ***AND
-  `reh`/`dc` HAVE NO OTHER BINDING IN THE MODULE*** -- a search over the whole file returns exactly those
-  two assignments, both in the else. So on the terminal path the else never runs and the names at :821 are
-  unbound.
-  ***WHAT I ESTABLISHED AND WHAT I DID NOT***: established -- the binding geometry and the use site, both
-  from the parse. Not done -- **I DID NOT RUN IT**, so I assert neither the exception type nor that the
-  interpreter reaches that line under every configuration; a drive settles both and driving DE's battery is
-  DE's act and REV's. **This is round 263's rule on its first occasion: a flag about code says READ AT THE
-  FILE unless something ran, and this one was read.**
-  (2) ***THIS IS THE THIRD ITERATION OF ONE DEFECT***: REV 94's NO-GO was a `KeyError: 'preconditions'`
-  after E1's success consumed a hardcoded rehearsal; DE fixed the cell and REV 96 found the CALL past the
-  guard; DE 128 moved the call and the CONSUMER is now past the guard. **Each fix moved the boundary one
-  statement.** DE's own row title reads "my A5 fix had stepped past its own guard", so the seat sees the
-  pattern; what the third iteration shows is that **the guard keeps being placed around the producer rather
-  than around the whole dependent region.** And it sits inside the batch **REV 97 part A is reading now as
-  the E4 gate** -- not a launch blocker (REV 96 established it fires after the day's work is written), but a
-  gate reading the fix is the moment the geometry is worth having.
-  (3) ***THE PHASE4 DERIVATION IS NOW GENUINELY TWO-SIDED, AND MY ROUND-263 FINDING IS PART CLOSED AND PART
-  STANDING.*** CLOSED: at :6361-:6373 the assertion is that **the eligible sites that did not run are
-  exactly the conditional arms** -- `_sites771` parsed from the file's own AST, `_ran771` recorded by each
-  call as it executes, compared only over sites strictly above the assertion (the cell "cannot count
-  itself", which DE found by having it fail on its own existence). Its message says it: *"the sites come
-  from the AST, the executions from each call recording its own line."* **That closes my round-255 concern
-  too** -- "212 of 252 declared checks reachable" is now a property asserted by name and line. STANDING: the
-  second assertion at :6377 is still `EXPECTED_CHECKS == n[0] + 1 + _n_cond771`, and `n[0]` is what RAN --
-  so **for a check that executes, adding it and bumping the constant keeps both assertions true**. The
-  comment claims the constant "is now checked against the parse"; it is checked against a **mixture**. I
-  record both halves because "closed" would lose the second and "not closed" would erase a real improvement.
-  (4) **`EXPECTED_CHECKS` reads 217** at :83, up from 216 at round 262 -- bumped with DE 128's own new cell,
-  which is exactly the move the paragraph above says the assertions still permit, performed legitimately
-  here. ***AND THE CODE NOW NAMES THE DRIFT ITSELF***: :6380 reads "...checked against the parse rather than
-  maintained by hand, **which is how it reached 252 against 209 sites**". At round 262 I listed three phase4
-  numbers and could not reconcile them; **252 is a fourth -- the historical drifted constant** -- and the
-  size of the drift is now written where the constant is. My population question stays open; the drift that
-  made it matter does not.
-  (5) ***THE CASCADE PIN MOVED AGAIN AND THE FROZEN RUNS ARE STILL CLEAN***: v19 still pins
-  `de_phase4_diag_runner.py` at `ee4034c1`; the SHARED tree now hashes **`9dfb839d`** (it was `ce9cc466` at
-  round 262 -- DE 128 touched the file again) and `fe76d83` still hashes `ee4034c1`. **SHARED 9 of 10,
-  fe76d83 TEN OF TEN.** The by-design red persists with a NEW digest and the runs remain untouched -- which
-  is why both sides are measured every round instead of carrying "unchanged" forward. The freeze holds for
-  the fourth round: `params_v20` and `design_v28` still unwritten, heads still v19 and v27, and DE has now
-  composed them twice over.
-  (6) **E2 is still running at 09:52:30Z**, thirty-seven minutes in, expected ≈ 10:55Z, `MemoryPeak`
-  3,119,230,976 -- **the identical value at all four of my reads**.
-  Counts: flags 1,937 -> **1,952**; provenance 1,482 -> **1,497**; tasks 19; **1,208 CHECKED /
-  284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-FORTIETH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
-  audit exits **1** on **174** missing-artifact findings, 173 at my round start plus ONE of mine, the
-  running unit. Window trimmed 4 -> 3, **Batch 246** archived. Q-MEM-252 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -376,6 +360,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 267, R-782 swept (6b509a4 -> 4e93675) ---
+  USER_RULING_R_782_RECORD_THE_ABSOLUTE_NUMBER_AS_WELL_FOR_REFERENCE: THE-THIRD-USER-RULING-OF-THE-DAY
+  THE_THREE_USER_RULINGS_OF_THE_DAY_ARE_R_754_R_765_AND_R_782: USER-RULINGS-NOT-COORDINATOR-ONES
+  VERIFIED_AT_THE_ARTIFACT_THE_ECONOMIC_BLOCK_IS_SIX_KEYS_AND_NONE_IS_AN_ABSOLUTE: R-782s-CLAIM-HOLDS
+  THE_TWO_EXCESSES_WITH_THEIR_UNIT_AND_EVERY_LABEL_THE_RULING_REQUIRES: EXPLORATORY-ONE-DAY-NO-INTERVAL
+  THE_UNIT_IS_CENTS_MAKER_PANDL_AT_LEVEL_TO_MARKOUT_WITH_NO_FEE_TERM: READ-AT-THE-VALUATION-FUNCTION
+  BOTH_ABSOLUTES_ARE_ALREADY_COMPUTED_ON_THE_REAL_PATH_AT_5991_AND_6016: NOT-MISSING-UNEMITTED
+  AND_STAGED_INTO_ledger765_UNDER_THE_EXACT_NAMES_base_value_AND_arm_value: THE-FIELDS-R-782b-WANTS-EXIST
+  THE_RECONCILIATION_R_782a_ASKS_DE_TO_ASSERT_HOLDS_IDENTICALLY_AT_THESE_BYTES: observed-IS-arm_value-MINUS-base_value
+  THE_LEDGER_WRITE_IS_UNREACHABLE_AT_fe76d83_NO_CALLER_ANYWHERE_PASSES_receipt_path: SIXTEEN-CALL-SITES-NONE-PASSES-IT
+  receipt_path_IS_KEYWORD_ONLY_SO_IT_CANNOT_ARRIVE_POSITIONALLY_EITHER: THE-STAR-IN-THE-SIGNATURE
+  SO_MY_ROUND_266_SCOPE_LIMIT_EXTENDS_TO_ALL_FOUR_RUNS_NOT_ONLY_E2: I-SAID-I-HAD-NOT-CHECKED-NOW-I-HAVE
+  WHICH_LEAVES_R_782bs_ROUTE_WITH_NO_LEDGER_TO_READ_FOR_E2_TO_E4_AND_GO_8: THE-NUMBERS-ARE-COMPUTED-AND-DROPPED
+  DE_130_LANDED_AND_ITS_NEW_TEXT_NAMES_THE_EDITING_OBLIGATION: REV-98-A2-CLOSED-AT-THE-FILE
+  MY_ROUND_266_OTHER_HALF_STANDS_IMPORTERS_GET_THE_CONSTANT_WHETHER_OR_NOT_IT_RAN: THE-HALF-DE-130-DID-NOT-TOUCH
+  DE_130_LANDED_INSIDE_MY_ROUND_266_READ_TO_WRITE_GAP_TOO: SECOND-OCCURRENCE-OF-ONE-CONVENTION-POINT
+  THE_CASCADE_RED_IS_ONE_MODULE_AND_ITS_DIGEST_HAS_MOVED_FOUR_TIMES_TODAY: SHARED-9-OF-10-fe76d83-10-OF-10
+  THE_FREEZE_HOLDS_FOR_THE_SEVENTH_ROUND: PARAMS-HEAD-v19-DESIGN-HEAD-v27
+  E2_AT_NINETY_MINUTES_WITH_MemoryPeak_IDENTICAL_AT_SEVEN_READS: ARTIFACT-STILL-ABSENT
   # --- MEM round 266, R-780 and R-781 swept (cc289e5 -> 6b509a4) ---
   ON_E2s_OWN_PATH_NO_DECISION_LEDGER_IS_WRITTEN_AT_ALL: THE-GUARD-IS-receipt_path-AND-THE-EARLY-READ-PASSES-NONE
   THE_LEDGER_WRITE_IS_GUARDED_BY_receipt_path_IS_NOT_NONE_AT_6126: INSIDE-run_day
@@ -26359,6 +26362,234 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 267, 2026-09-07T10:49:16Z (the clock read by which every measurement below was complete) ---
+  USER_RULING_R_782_RECORD_THE_ABSOLUTE_NUMBER_AS_WELL_FOR_REFERENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      **A USER RULING, THE THIRD OF THE DAY, CARRIED VERBATIM AS THE USER WROTE IT** and not paraphrased: at
+      2026-09-07T10:42:24Z, "plz record the absolute number as well for reference", asked after "what's the result
+      of 0-cancel". R-782 records it as a USER ruling (not a coordinator one) and routes it four ways: (a) DE 131,
+      every receipt from GO #9 on carries the absolute day values per arm-day -- baseline and arm, by leg and
+      total, unit NAMED, `arm_total - baseline_total == D_E0` asserted to 1e-9 with a refusal by name otherwise;
+      (b) for E2..E4 and GO #8, DA's reader derives them from the decision ledger; (c) 09-03 needs ONE replay under
+      the recording code after the freeze lifts, about 86 minutes of lock time; (d) MEM carries the absolutes with
+      their labels -- the unit, EXPLORATORY, which run produced them. This entry is (d) discharged for what exists
+      today, and the flags below are what I found while discharging it.
+  THE_THREE_USER_RULINGS_OF_THE_DAY_ARE_R_754_R_765_AND_R_782:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      Kept together because they are a different KIND from everything else in the register and a reader must not
+      have to sort them out of the coordinator's rulings. **R-754** (06:18:16Z): read the four sealed Gate-1 days
+      now -- an EXPLORATORY early read, days consumed, no interval; it is the authority the 09-03 artifact's
+      `seal_standing` names by name. **R-765**: the seal is RETIRED for every new run, every run stores its
+      numbers, and a per-day DECISION LEDGER persists beside each receipt. **R-782** (10:42:24Z, above): record the
+      absolute number as well. All three are the user's, all three are in force, and R-782 is the one that shows
+      R-765's second and third clauses were not yet delivered -- the numbers are stored in memory and the ledger
+      does not persist (see the unreachability flag).
+  VERIFIED_AT_THE_ARTIFACT_THE_ECONOMIC_BLOCK_IS_SIX_KEYS_AND_NONE_IS_AN_ABSOLUTE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      R-782 states what the artifacts hold; I read it rather than accepting it. The 09-03 artifact's two arm-day
+      blocks each carry an `economic` mapping whose key set is EXACTLY six -- `D_E0`, `Z`, `null_draws_summary`,
+      `null_mean`, `null_sd`, `p_location` -- and not one of them is an absolute day value for either the baseline
+      or the arm. The surrounding block adds `n_fills_arm`, `n_fills_baseline`, `n_cancels_issued`: COUNTS, not
+      values. So the artifact can say how many fills the 0-cancel reference produced (46,439, identical under both
+      arms, which is the right consistency signature for a single shared baseline replay) and cannot say what it
+      was WORTH. R-782's characterisation is exact.
+  THE_TWO_EXCESSES_WITH_THEIR_UNIT_AND_EVERY_LABEL_THE_RULING_REQUIRES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      MEM's routed task (d), discharged for what exists today. **These are EXCESSES over the 0-cancel baseline,
+      not absolutes -- the absolutes are not in any artifact.** Arm `CONDVALUE_X_SKEW`: `D_E0` = -16,592.33 cents
+      (= -$165.92), Z -2.3014, p_location 0.99401, 30,171 arm fills against 46,439 baseline fills, 5,146 cancels
+      issued. Arm `HAZARD_OVER_SKEWED_REF`: `D_E0` = -4,822.26 cents (= -$48.22), Z -5.3007, p_location 1.0, 44,895
+      arm fills against the same 46,439, 700 cancels issued. LABELS, all read from the artifact itself: G = 4;
+      `interval` = `NONE_BELOW_FIVE_DAYS`; `verdict_class` = `EXPLORATORY`; both arm-days `sealed: false`;
+      `seal_standing.authority` = "R-754, recorded 2026-09-07T06:18:16Z". ONE DAY, NO INTERVAL, EXPLORATORY, AND
+      NOT A VERDICT -- MEM asserts no result and these numbers are carried for reference exactly as the user
+      asked.
+  THE_UNIT_IS_CENTS_MAKER_PANDL_AT_LEVEL_TO_MARKOUT_WITH_NO_FEE_TERM:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      R-782(a) requires the unit to be NAMED in the field, and it is not named in any artifact today, so I read it
+      off the valuation. `_value_cents(fills)` at `:4536` documents itself as "D(E0)'s valuation: the DECLARED
+      estimator, not a new one -- `de_phase4_diag_runner.fill_value_cents` is the maker P&L at level-to-markout
+      WITH NO FEE TERM, which is exactly the E0 endpoint the design's metric names", and the dry-run path labels
+      its output "cents, maker fee zero" (`:4623`). RESULTS SS0's development-hour figures use the same suffix
+      (+8,598.76c fills leg, +8,587.54c inventory leg), so the two are comparable. AN ABSOLUTE NUMBER WITHOUT A
+      UNIT IS NOT AN ANSWER TO THE USER'S QUESTION, which is why this is its own flag.
+  BOTH_ABSOLUTES_ARE_ALREADY_COMPUTED_ON_THE_REAL_PATH_AT_5991_AND_6016:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      **THE NUMBERS THE USER ASKED FOR ARE NOT MISSING -- THEY ARE COMPUTED AND NOT EMITTED.** In the frozen bytes
+      `run_day` computes the 0-cancel reference's own value at `:5991` -- `base_value = _value_cents(base["fills"])`,
+      immediately after the S3 comment "the neutral no-cancel reference path" -- and each arm's own value at `:6016`
+      inside the arm loop, `observed = _value_cents(arm_replay["fills"]) - base_value`. So the baseline's absolute
+      exists as a live float on every day run, and the arm's absolute exists as the left operand of the subtraction
+      that produces `D_E0`. R-782 says "the reference it was taken against was never EMITTED", which is exactly
+      right about the artifact; at the code the reference is computed, used, and dropped.
+  AND_STAGED_INTO_ledger765_UNDER_THE_EXACT_NAMES_base_value_AND_arm_value:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      And they are not merely transient. At `:6045` the frozen runner builds `_ledger765[arm] = {...}` under the
+      comment "R-765: WHAT THIS ARM-DAY HELD, KEPT", and its keys include `"observed"`, **`"arm_value":
+      _value_cents(arm_replay["fills"])`** and **`"base_value": base_value`** -- alongside head, theta, seed,
+      `n_decisions`, the three counts, `null_values`, `arm_fills`, `baseline_fills` and the decision rows. **THE
+      TWO FIELDS R-782(b) ASKS DA'S READER TO DERIVE ALREADY EXIST, UNDER THOSE NAMES, POPULATED.** R-782(b) is
+      therefore right in principle and precise in its wording; what it cannot know from the register is whether the
+      structure holding them is ever written to disk.
+  THE_RECONCILIATION_R_782a_ASKS_DE_TO_ASSERT_HOLDS_IDENTICALLY_AT_THESE_BYTES:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      R-782(a) asks DE 131 to assert `arm_total - baseline_total == D_E0` to 1e-9 with a refusal by name
+      otherwise. At `fe76d83` that identity is not an approximation to be checked but the DEFINITION: `:6016` reads
+      `observed = _value_cents(arm_replay["fills"]) - base_value`, and `_ledger765[arm]` stores `arm_value` and
+      `base_value` as those same two terms. So for these bytes the reconciliation is exact by construction, to the
+      last bit, and a 1e-9 tolerance is generous. That is worth knowing before DE writes the assertion: on THIS
+      path it can never fail, so it is a check that will only earn its keep once the two sides are computed by
+      different code -- which is exactly what "by leg and total" in R-782(a) introduces.
+  THE_LEDGER_WRITE_IS_UNREACHABLE_AT_fe76d83_NO_CALLER_ANYWHERE_PASSES_receipt_path:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      **THE HEADLINE, AND IT EXTENDS MY OWN ROUND-266 FINDING FROM ONE RUN TO FOUR.** The R-765 ledger write is
+      `_LED.write_ledger(...)` at `:6139`, guarded by `if _ruling765 and _ledger765 and receipt_path is not None:`
+      at `:6126`. I searched every one of the **1,682** Python files at `fe76d83` for `receipt_path` and for
+      `write_ledger`, with the known-positive (`de_multiday_gate1_runner.py`) required to appear -- it did, so the
+      probe fires. RESULT: the ONLY `write_ledger` call outside `de_decision_ledger.py`'s own definition and its two
+      selftests is that one line; and **no caller anywhere passes `receipt_path` to `run_day`.** Sixteen call sites
+      in total -- fifteen inside the runner (`selftest`, `_day_path_checks`) and one in `de_early_read.py:346` --
+      and not one of them passes it. Other modules' `receipt_path` hits are different functions in different
+      scopes. So at these bytes the guard can never be true and the ledger write is DEAD CODE. My first probe of
+      this returned empty output from a broken pathspec, which I treated as a broken instrument rather than a
+      clean result, and re-ran with the known-positive requirement -- the zero above is the file's answer.
+  receipt_path_IS_KEYWORD_ONLY_SO_IT_CANNOT_ARRIVE_POSITIONALLY_EITHER:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      The obvious escape from the flag above is a positional argument, which a name search would miss. It is closed
+      by the signature: `def run_day(day: str, book_path, *, params: dict, module=None, fixture: bool = False,
+      receipt_path=None, ...)` -- **the `*` makes every parameter after `book_path` KEYWORD-ONLY**, so
+      `receipt_path` cannot be supplied positionally by any caller, and the name search is therefore exhaustive.
+      Together with "never reassigned inside the function" (round 266, three occurrences: signature, guard, path
+      build) that closes every route by which the guard could become true at this commit.
+  SO_MY_ROUND_266_SCOPE_LIMIT_EXTENDS_TO_ALL_FOUR_RUNS_NOT_ONLY_E2:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      At round 266 I wrote "E3, E4 and GO #8 are sealed day runs that produce receipts and may well satisfy the
+      guard -- I DID NOT CHECK THEIR ENTRY POINTS, and this flag is about E2 only." I have now checked them. They
+      run the same `run_day` at the same commit, and no entry point in the repository passes `receipt_path`. **So
+      the finding is not about the early read's calling convention; it is about the commit.** E2, E3, E4 and GO #8
+      all write no decision ledger. Recorded as an EXTENSION of my own stated limit rather than as a new finding,
+      because the limit was mine and naming where it moved is the point of having stated it.
+  WHICH_LEAVES_R_782bs_ROUTE_WITH_NO_LEDGER_TO_READ_FOR_E2_TO_E4_AND_GO_8:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      The consequence for the user's ruling, stated without deciding anything. R-782(b) routes the absolutes for
+      E2, E3, E4 and GO #8 through "the ledger's baseline-path and arm-path rows", read by DA. At `fe76d83` no
+      ledger is written for any of those four, so that route has no input -- while the two numbers it wants sit in
+      `_ledger765` as `base_value` and `arm_value` on every one of those runs and are discarded when the process
+      exits. **THE GAP IS PERSISTENCE, NOT COMPUTATION**, which is a much smaller gap than "the reference was never
+      emitted" suggests, and it is one the register has not named. Whether that is closed by passing a
+      `receipt_path`, by emitting the two values into the arm-day block, or by leaving E2..E4 to the 09-03-style
+      replay is a decision for the coordinator and DE; MEM asserts no result and rules nothing. R-782(c) already
+      allows for a replay when the recording code is available, so the shape of the answer exists.
+      **CORRECTED BEFORE THIS LANDED: DE 131 (`286335f`, 10:46:02Z) closes the FORWARD half by the route this
+      flag listed second** -- it emits `r["absolute"]` into the ARM-DAY BLOCK (not the ledger), with `unit:
+      VALUATION_UNIT` = `"cents"` and a reconciliation refusing by name above 1e-9, and it touches neither
+      `receipt_path` nor the guard. It is OUTSIDE my swept window and is queued for round 268. E2, E3, E4 and
+      GO #8 are unchanged -- `fe76d83` predates it by about 100 minutes.
+  DE_130_LANDED_AND_ITS_NEW_TEXT_NAMES_THE_EDITING_OBLIGATION:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      Verified at the file, not from the row. The message REV 98 routed as "one word" is gone: `:6427` now reads
+      "The exported `EXPECTED_CHECKS` ({EXPECTED_CHECKS}) **IS a typed constant**, and what this cell establishes
+      is that it EQUALS THE DERIVED TOTAL rather than being tuned to the run -- so adding a check moves both
+      derived sides and the constant must then be EDITED to match the parse." The module comment carries the same
+      correction and names the risk in the old wording: it "would let a reader conclude nothing needs editing when
+      a check is added: the opposite of the design". That closes REV 98's SC item 1 and the half of my own
+      round-266 flag that was about the word.
+  MY_ROUND_266_OTHER_HALF_STANDS_IMPORTERS_GET_THE_CONSTANT_WHETHER_OR_NOT_IT_RAN:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      Said so that "closed" does not swallow the part that is not. My round-266 flag had two halves: the constant is
+      TYPED (DE 130 now says so), and the guarantee is conditional -- three modules import `EXPECTED_CHECKS` at
+      `:4264` and receive `217` whatever the file currently parses to, because the comparison lives inside
+      `selftest()` and fires only when the battery runs. DE 130's new text adds the maintenance obligation ("must
+      then be EDITED to match the parse") but says nothing about when the check fires, so an importer still has no
+      way to know whether the number it just read was ever checked against these bytes. Not routed by me -- MEM
+      does not route -- and small; recorded so the second half is not lost inside the first half's closure.
+  DE_130_LANDED_INSIDE_MY_ROUND_266_READ_TO_WRITE_GAP_TOO:
+    prov: CHECKED
+    artifact: git:6b509a4..4e93675:the-linear-log
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      SECOND OCCURRENCE OF THE CONVENTION POINT I RECORDED AT ROUND 265, which is what makes it a pattern rather
+      than an incident. DE 130 landed at 10:26:52Z and Q-DE-134 at 10:27:12Z -- after my round-266 fetch (10:24:36Z)
+      and before my round-266 commits (10:34:04Z). I even SAW `ac965fb` in the tip line of my own dry-run at
+      10:33:50Z and did not sweep it, because I had declared my window as ending at the tip I read. That was the
+      right call and the entry says so, but it means the read-to-write gap has now caught a landing in two
+      consecutive rounds. Both were swept in the following round, this one included, so nothing has been lost --
+      and the reason nothing was lost is that each round's state file DECLARES ITS WINDOW by commit rather than
+      implying it.
+  THE_CASCADE_RED_IS_ONE_MODULE_AND_ITS_DIGEST_HAS_MOVED_FOUR_TIMES_TODAY:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      Re-measured on both sides. v19 pins `de_phase4_diag_runner.py` at `ee4034c1`; the SHARED tree now hashes
+      `309b98c7a1045d1d` after DE 130 touched it at 10:26:52Z, and `fe76d83` still hashes `ee4034c1`. **SHARED 9 of
+      10, `fe76d83` TEN OF TEN.** The shared digest today: `ce9cc466` (round 262) -> `9dfb839d` (round 264) ->
+      `b60545d8` (round 266) -> `309b98c7` (now) -- **four values in one working day**, every one of them a
+      by-design red against a pin the freeze forbids updating, and the frozen side clean at every read. This is why
+      both sides are measured every round instead of carrying "unchanged" forward.
+  THE_FREEZE_HOLDS_FOR_THE_SEVENTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      `de_multiday_gate1_params_v20.json` absent (0 matches on disk in any state), head still v19;
+      `p003_de_multiday_gate1_design_v28.json` absent (0 matches), head still v27. R-780 recorded both "composed and
+      unwritten"; R-782's routing puts DE 131's absolutes in the same queue behind the freeze lift, so the
+      unwritten set is growing rather than draining.
+  E2_AT_NINETY_MINUTES_WITH_MemoryPeak_IDENTICAL_AT_SEVEN_READS:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/deEARLY20260904.service
+    as_of: 2026-09-07T10:49:16Z
+    said: >-
+      Read while loaded (rule 20) at 10:43:02Z: LoadState loaded / ActiveState active / SubState running /
+      ExecMainStatus 0 / Result success, `InvocationID 775e46b59fee42228efab036b6abad58`. 87 minutes 15 seconds
+      elapsed against `ExecMainStartTimestamp` Mon 2026-09-07 09:15:47 UTC; expected exit about 10:55Z, so it is
+      inside its window. `MemoryPeak` 3,119,230,976 -- IDENTICAL AT ALL SEVEN READS across rounds 261-267. Its
+      artifact was still absent at 10:43:02Z (0 matches for the 09-04 name), so **all three of the predictions I
+      recorded at round 266 are still open**, and the third of them -- no decision ledger on this path -- is now
+      strengthened from an entry-point observation to a commit-wide one.
   # --- MEM round 266, 2026-09-07T10:31:21Z (the clock read by which every measurement below was complete) ---
   ON_E2s_OWN_PATH_NO_DECISION_LEDGER_IS_WRITTEN_AT_ALL:
     prov: CHECKED

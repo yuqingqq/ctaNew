@@ -1,3 +1,111 @@
+# READ FIRST — round 267 (MEM, 2026-09-07T10:49:16Z, tip `4e93675`)
+
+**R-782 swept, with every landing between the tip I read at round 266 (`6b509a4`) and `4e93675`.** STATE
+ONLY. MEM asserts no result and rules nothing.
+
+## 1. The user's third ruling of the day, verbatim
+
+At **2026-09-07T10:42:24Z** — *"plz record the absolute number as well for reference"* — asked after *"what's
+the result of 0-cancel"*. A **USER** ruling, not a coordinator one. The three of the day: **R-754** (read the
+four sealed days early; EXPLORATORY, days consumed, no interval — the authority the 09-03 artifact's
+`seal_standing` names), **R-765** (the seal retired for new runs; every run stores its numbers; a per-day
+decision ledger persists beside each receipt), **R-782** (above).
+
+## 2. R-782's claim, verified at the artifact — and MEM's routed task (d)
+
+The 09-03 arm-day `economic` mapping is **exactly six keys** — `D_E0`, `Z`, `null_draws_summary`,
+`null_mean`, `null_sd`, `p_location` — and none is an absolute for either side. The block's other fields are
+counts. R-782's characterisation is exact.
+
+| arm | `D_E0` | Z | arm fills | baseline fills | cancels |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−16,592.33c** (−$165.92) | −2.3014 | 30,171 | 46,439 | 5,146 |
+| `HAZARD_OVER_SKEWED_REF` | **−4,822.26c** (−$48.22) | −5.3007 | 44,895 | 46,439 | 700 |
+
+**These are EXCESSES over the 0-cancel baseline, not absolutes.** Labels, all read from the artifact: G 4;
+`interval` `NONE_BELOW_FIVE_DAYS`; `verdict_class` **EXPLORATORY**; both arm-days `sealed: false`;
+`seal_standing.authority` "R-754, recorded 2026-09-07T06:18:16Z". One day, no interval, **not a verdict**.
+The unit is **cents — maker P&L at level-to-markout with no fee term** (`_value_cents`, `:4536`; the dry-run
+path labels it "cents, maker fee zero"); RESULTS §0's development-hour figures use the same suffix, so they
+are comparable. **The unit is named in no artifact today**, which is why R-782(a) requires it.
+
+## 3. But both absolutes are already computed on the real path
+
+```
+:5991   base_value = _value_cents(base["fills"])          ← the 0-cancel reference's own value
+:6016   observed   = _value_cents(arm_replay["fills"]) - base_value
+:6045   _ledger765[arm] = { "observed": …, "arm_value": …, "base_value": base_value, … }
+```
+
+**The two fields R-782(b) asks DA to derive already exist, under exactly those names, populated.** And the
+reconciliation R-782(a) asks DE 131 to assert to 1e-9 holds *by construction* at these bytes — `observed` **is**
+`arm_value − base_value`. Worth knowing before that assertion is written: on this path it cannot fail, so it
+only earns its keep once the two sides come from different code, which is what "by leg and total" introduces.
+
+## 4. And the ledger write is unreachable at `fe76d83` — for all four runs
+
+I searched **all 1,682** Python files at that commit, with the known-positive required to appear (my first
+probe returned empty from a broken pathspec; I treated that as a broken instrument, not a clean result):
+
+- the only production `write_ledger` is `:6139`, behind `if _ruling765 and _ledger765 and receipt_path is not None:`;
+- **no caller anywhere passes `receipt_path`** — sixteen `run_day` call sites (fifteen in the runner's
+  `selftest`/`_day_path_checks`, one at `de_early_read.py:346`), none of them;
+- and the `*` in `run_day`'s signature makes it **keyword-only**, so it cannot arrive positionally either.
+
+**So my round-266 limit — *"E2 only; I did not check their entry points"* — extends to E2, E3, E4 and GO #8.**
+R-782(b)'s route has no ledger to read for any of the four, while `base_value` and `arm_value` sit in
+`_ledger765` on every one of those runs and are dropped at exit. **The gap is persistence, not computation** —
+much smaller than "the reference was never emitted" suggests.
+
+**Corrected before shipping: DE 131 closed the forward half three minutes before my clock.** `286335f`
+(10:46:02Z, **outside my swept window** — queued for round 268) does not touch `receipt_path` or the ledger
+guard; it emits `r["absolute"]` **into the arm-day block itself**, with `unit: VALUATION_UNIT`,
+`zero_cancel_baseline`, `arm`, and a `reconciliation` that refuses by name (`ABSOLUTES_DO_NOT_RECONCILE`)
+above 1e-9 — i.e. exactly the route that does not depend on `receipt_path`, one of the three my flag listed.
+**`VALUATION_UNIT = "cents"`**, which confirms the unit I read off `_value_cents` and puts it in the field
+R-782(a) asked for. And my remark that the 1e-9 check *"only earns its keep once the two sides come from
+different code"* is now literal: `absolute_legs` is a second implementation — though over the same
+`fill_value_cents` primitive, so it guards drift between the two loops rather than the valuation itself. Its
+**inventory leg is genuinely new**, present only where BE 96's fields are and `None` with a reason otherwise,
+never 0.
+
+**What does not change: E2, E3, E4 and GO #8 run `fe76d83`, which predates DE 131 by ~100 minutes.** No
+`absolute` block, and no ledger. R-782(b)'s route still has no input for those four, and R-782(c)'s replay is
+still the only way to an absolute for 09-03. MEM rules nothing.
+
+## 5. DE 130, and the half of my flag it did not touch
+
+Verified at the file: `:6427` now reads *"the exported `EXPECTED_CHECKS` **IS a typed constant**, and what
+this cell establishes is that it EQUALS THE DERIVED TOTAL rather than being tuned to the run — so adding a
+check moves both derived sides and the constant must then be **EDITED** to match the parse"*, with the module
+comment naming why the old wording was dangerous. REV 98 §C item 1 closed. **The other half of my round-266
+flag stands**: three modules import the constant and get `217` whether or not the battery ever ran.
+
+**DE 130 landed inside my round-266 read-to-write gap** (10:26:52Z, after my 10:24:36Z fetch, before my
+10:34:04Z commits) — the second consecutive round. Nothing was lost, because each state file declares its
+window by commit rather than implying it.
+
+## 6. Standing
+
+- **Cascade:** SHARED `309b98c7` — a **fourth digest today** (`ce9cc466` → `9dfb839d` → `b60545d8` →
+  `309b98c7`) — `fe76d83` `ee4034c1`. **9/10 and 10/10**, one module, by design.
+- **Freeze holds a seventh round** (`params_v20`, `design_v28` absent; heads v19/v27). DE 131's absolutes now
+  queue behind the same lift, so the unwritten set is growing rather than draining.
+- **E2** at 10:43:02Z: 87m15s in, expected exit ≈10:55Z, `MemoryPeak` 3,119,230,976 — identical at **all seven
+  reads**. Artifact still absent, so **all three round-266 predictions stay open** — and the third of them is
+  now strengthened from an entry-point observation to a commit-wide one.
+
+## 7. Counts
+
+flags 1986 → **2004**, provenance 1531 → **1549** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate run before writing). **1,259 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 143rd
+round unchanged on UNMARKED. Orphans 0; missing-artifact 174, unchanged. Window trimmed 4 → 3, **Batch 249**
+archived.
+
+**NEXT:** E2 exits (≈10:55Z) → DA 126 → REV 98 part B. MEM sweeps R-783 onward.
+
+---
+
 # READ FIRST — round 266 (MEM, 2026-09-07T10:31:21Z, tip `6b509a4`)
 
 **R-780 and R-781 swept, with every landing between the tip I read at round 265 (`cc289e5`) and `6b509a4`.**

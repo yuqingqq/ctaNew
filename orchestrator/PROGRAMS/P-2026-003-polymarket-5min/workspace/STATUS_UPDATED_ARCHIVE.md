@@ -19658,3 +19658,66 @@ generation and the window went 4 → 3. Nothing rewritten.
   missing-artifact findings, 172 at my round start plus ONE of mine, the running unit. Window trimmed
   4 -> 3, **Batch 245** archived. Q-MEM-251 filed through the script.)
 ```
+
+## Batch 249 — archived 2026-09-07T10:49:16Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:55:03Z (MEM ROUND 264 -- R-778 SWEPT, with every landing between my own 52eded1 bound and
+  the tip `81c7c17`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***DE 128's A5 FIX MOVED THE CALL INSIDE THE GUARD AND LEFT THE CONSUMER OUTSIDE -- THE DEFECT MOVED
+  ONE STEP RATHER THAN CLOSING.*** R-778 records REV 96's first item as "the A5 cell actually guarded", and
+  the CALL has indeed moved: `rehearse(_st["next_unread"])` is now at :819, indent 8, inside the `else`.
+  **But the `ok(...)` that consumes its result is still outside** -- :821-:828 read `reh["status"]`,
+  `reh["blocking"]`, `dc["is_a_full_pair"]` and four more, after the if/else closes. ***AND I DID NOT JUDGE
+  THIS BY INDENTATION***: parsed with `ast`, the `If` whose test is `_st['next_unread'] is None` begins at
+  **:802**, its if-body spans **804..811**, its **else-body spans 819..820** (exactly the two assignments),
+  and **the If statement ENDS at line 820**. Every statement from :821 is a sibling of the `if`. ***AND
+  `reh`/`dc` HAVE NO OTHER BINDING IN THE MODULE*** -- a search over the whole file returns exactly those
+  two assignments, both in the else. So on the terminal path the else never runs and the names at :821 are
+  unbound.
+  ***WHAT I ESTABLISHED AND WHAT I DID NOT***: established -- the binding geometry and the use site, both
+  from the parse. Not done -- **I DID NOT RUN IT**, so I assert neither the exception type nor that the
+  interpreter reaches that line under every configuration; a drive settles both and driving DE's battery is
+  DE's act and REV's. **This is round 263's rule on its first occasion: a flag about code says READ AT THE
+  FILE unless something ran, and this one was read.**
+  (2) ***THIS IS THE THIRD ITERATION OF ONE DEFECT***: REV 94's NO-GO was a `KeyError: 'preconditions'`
+  after E1's success consumed a hardcoded rehearsal; DE fixed the cell and REV 96 found the CALL past the
+  guard; DE 128 moved the call and the CONSUMER is now past the guard. **Each fix moved the boundary one
+  statement.** DE's own row title reads "my A5 fix had stepped past its own guard", so the seat sees the
+  pattern; what the third iteration shows is that **the guard keeps being placed around the producer rather
+  than around the whole dependent region.** And it sits inside the batch **REV 97 part A is reading now as
+  the E4 gate** -- not a launch blocker (REV 96 established it fires after the day's work is written), but a
+  gate reading the fix is the moment the geometry is worth having.
+  (3) ***THE PHASE4 DERIVATION IS NOW GENUINELY TWO-SIDED, AND MY ROUND-263 FINDING IS PART CLOSED AND PART
+  STANDING.*** CLOSED: at :6361-:6373 the assertion is that **the eligible sites that did not run are
+  exactly the conditional arms** -- `_sites771` parsed from the file's own AST, `_ran771` recorded by each
+  call as it executes, compared only over sites strictly above the assertion (the cell "cannot count
+  itself", which DE found by having it fail on its own existence). Its message says it: *"the sites come
+  from the AST, the executions from each call recording its own line."* **That closes my round-255 concern
+  too** -- "212 of 252 declared checks reachable" is now a property asserted by name and line. STANDING: the
+  second assertion at :6377 is still `EXPECTED_CHECKS == n[0] + 1 + _n_cond771`, and `n[0]` is what RAN --
+  so **for a check that executes, adding it and bumping the constant keeps both assertions true**. The
+  comment claims the constant "is now checked against the parse"; it is checked against a **mixture**. I
+  record both halves because "closed" would lose the second and "not closed" would erase a real improvement.
+  (4) **`EXPECTED_CHECKS` reads 217** at :83, up from 216 at round 262 -- bumped with DE 128's own new cell,
+  which is exactly the move the paragraph above says the assertions still permit, performed legitimately
+  here. ***AND THE CODE NOW NAMES THE DRIFT ITSELF***: :6380 reads "...checked against the parse rather than
+  maintained by hand, **which is how it reached 252 against 209 sites**". At round 262 I listed three phase4
+  numbers and could not reconcile them; **252 is a fourth -- the historical drifted constant** -- and the
+  size of the drift is now written where the constant is. My population question stays open; the drift that
+  made it matter does not.
+  (5) ***THE CASCADE PIN MOVED AGAIN AND THE FROZEN RUNS ARE STILL CLEAN***: v19 still pins
+  `de_phase4_diag_runner.py` at `ee4034c1`; the SHARED tree now hashes **`9dfb839d`** (it was `ce9cc466` at
+  round 262 -- DE 128 touched the file again) and `fe76d83` still hashes `ee4034c1`. **SHARED 9 of 10,
+  fe76d83 TEN OF TEN.** The by-design red persists with a NEW digest and the runs remain untouched -- which
+  is why both sides are measured every round instead of carrying "unchanged" forward. The freeze holds for
+  the fourth round: `params_v20` and `design_v28` still unwritten, heads still v19 and v27, and DE has now
+  composed them twice over.
+  (6) **E2 is still running at 09:52:30Z**, thirty-seven minutes in, expected ≈ 10:55Z, `MemoryPeak`
+  3,119,230,976 -- **the identical value at all four of my reads**.
+  Counts: flags 1,937 -> **1,952**; provenance 1,482 -> **1,497**; tasks 19; **1,208 CHECKED /
+  284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-FORTIETH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **174** missing-artifact findings, 173 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 246** archived. Q-MEM-252 filed through the script.)
+```
