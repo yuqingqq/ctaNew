@@ -452,8 +452,24 @@ def write(path=None, records_dir=None, derived=None) -> dict:
             f"disagrees with the records it is derived from. {v[0]['detail']}")
     before = (hashlib.sha256(path.read_bytes()).hexdigest()
               if path.exists() else None)
-    body = "\n".join(json.dumps(r, sort_keys=True)
-                     for r in [header] + rows) + "\n"
+    # AS-OF IS THE CONTENT'S, NOT THE RUN'S. If `as_of_utc` moved on every
+    # build, the file's digest would move too and "has this drifted?" could
+    # not be answered by comparing digests -- a re-derive would be
+    # indistinguishable from a change. So the rows decide: identical rows
+    # keep the landed `as_of_utc`, and the write is a no-op the caller is
+    # told about. That makes `--build` a DRIFT DETECTOR as well as a writer,
+    # which is the whole point of deriving the file (REV 89 §3.2).
+    rows_now = [json.dumps(r, sort_keys=True) for r in rows]
+    unchanged = False
+    if path.exists():
+        old = [l for l in path.read_text().splitlines() if l.strip()]
+        if old and old[1:] == rows_now:
+            try:
+                header["as_of_utc"] = json.loads(old[0])["as_of_utc"]
+                unchanged = True
+            except (json.JSONDecodeError, KeyError):
+                pass
+    body = "\n".join([json.dumps(header, sort_keys=True)] + rows_now) + "\n"
     fd, tmp = tempfile.mkstemp(dir=str(path.parent), suffix=".tmp")
     try:
         with os.fdopen(fd, "w") as fh:
@@ -466,6 +482,8 @@ def write(path=None, records_dir=None, derived=None) -> dict:
         raise
     after = hashlib.sha256(path.read_bytes()).hexdigest()
     return {"path": str(path), "sha256_before": before, "sha256_after": after,
+            "rows_unchanged": unchanged,
+            "digest_stable": before == after,
             "n_rows": len(rows), "records_seen": header["records_seen"],
             "records_by_class": header["records_by_class"]}
 
@@ -605,6 +623,21 @@ def selftest() -> int:
     ok(_sf["ok"],
        f"REV 84 §3.2: this battery RUNS `declaration_chain.py --falsify` as "
        f"a subprocess -> rc {_sf['rc']}, {_sf['summary']!r}")
+
+    # ---- CELL: A RE-DERIVE IS A NO-OP, SO A DIGEST ANSWERS "HAS IT DRIFTED"
+    d4 = Path(tempfile.mkdtemp(prefix="peaks_idem_"))
+    out = d4 / "peaks.jsonl"
+    w1 = write(out)
+    w2 = write(out)
+    ok(w1["sha256_before"] is None and w2["digest_stable"] is True
+       and w2["rows_unchanged"] is True
+       and w1["sha256_after"] == w2["sha256_after"],
+       f"A RE-DERIVE OVER UNCHANGED RECORDS IS BYTE-IDENTICAL "
+       f"({w2['sha256_after'][:16]}... twice, rows_unchanged="
+       f"{w2['rows_unchanged']}): `as_of_utc` is the CONTENT's, so the file's "
+       f"digest moves only when the data does and `--build` doubles as the "
+       f"drift detector. A run-stamped header would make every re-derive look "
+       f"like a change")
 
     print()
     if fails:
