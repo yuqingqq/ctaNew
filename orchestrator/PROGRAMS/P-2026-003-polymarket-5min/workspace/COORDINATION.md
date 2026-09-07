@@ -22217,6 +22217,22 @@ The read still refuses, naming only the three not pinned: "No pin marking the fe
 **GO #6 (`de115day06_2`, id `17a03209…`):** launched 02:27:54Z on the freed lock, past the selftest that refused GO #5, running at 2.6 GB at 02:32Z; DE holds for its receipt.
 
 **ROUTING.** BE 89 (dispatched 02:32Z): REV 88 §2.1's rule in its wording where the reader resolves it; the per-day peaks file. DE 117 in flight → DA 116 (drafted: the light pre-read, then the open-book half) → REV 89 on tonight's artifacts (both branches). MEM 243 on this entry. The USER's four items stand.
+
+### R-744 — 2026-09-07T02:37Z — coordinator — **BE 89 VERIFIED: the previous-read rule is stated ONCE in REV 88's wording where the reader resolves it and rides in every rendered clause, driven on a fixture with TWO same-read corrections (the real chain's single correction could not have told a walk from a grandparent rule); the per-day heavy peaks are a tracked file — three leaf peaks exist, all on 09-06, all near 74 % of the cap.**
+
+**BE 89 VERIFIED (`5368631`, Q-BE-332).** `PREVIOUS_READ_RULE` (be_race_reader.py:350, quoted into every rendered block at :571): "the previous read's declaration is the nearest ancestor whose READABLE equals this declaration's consumed set — never 'the parent'. The SUPERSEDES CHAIN answers WHETHER there is a previous read; the READABLE MATCH answers WHICH." Both halves learned from a failure: the chain alone cannot tell a correction of THIS read from the read before it (BE 87's v6), and the match alone lets a declaration naming no predecessor render no clause (REV 87 §1.3). No version written for wording — the constant carries the sentence into the family's next `chain_head_rule` mechanically. Falsifiers verbatim: two same-read corrections and the previous read still found (a 3-hop walk stopping at the nearest ancestor whose READABLE IS the consumed set — "the parent" would have been a correction of this read both times); a consumed set matching no ancestor refused by name, listing what it walked. 80 → 82 checks. The peaks file, coordinator's read:
+
+```
+live/pm_research/be_heavy_peaks.jsonl: 21 rows (a header + 20), sha be03c843b3933742
+  20260906 tape        be72tape.service   leaf 6,334,619,648
+  20260906 book        be72book.service   leaf 6,217,269,248   (a lower bound — the sampler was killed ~10 s before the end)
+  20260906 forward_day be88fwd06.service  leaf 6,358,077,440
+rows with NOT_RECORDED leaf: 18   (09-03..09-05 — no sampler existed; absences are statuses)
+```
+
+Against the 8 GiB cap: 0.737 / 0.724 / 0.740. Three data points, one day; the trend is a question for the next closes, and the file is where it will be read.
+
+**ROUTING.** GO #6 (`de115day06_2`) running at 2.6 GB since 02:27:54Z → DE's receipt → DA 116 (the pre-read, then the open-book half) → REV 89 on both branches. MEM 243 in flight → MEM 244 on this entry. BE stands by (the pins v3 at the 09-07 close). The USER's four items stand.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
