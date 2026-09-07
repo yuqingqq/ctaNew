@@ -153,6 +153,192 @@ def write_next(day, feed_path, scores_path=None, produced_by=None,
     return DC.write_next_version(d, FAMILY, payload, head["pair"])
 
 
+#: The pins' OWN field, quoted rather than paraphrased: a content
+#: disagreement fires THIS, by name, because the pins already declare what a
+#: mismatch means and an instrument should not invent a second word for it.
+VOIDS_FIELD = "the_read_voids_on_mismatch"
+
+#: Every per-day verdict `verify` can return. Three are answers; two are
+#: refusals. `NO_SOURCE` is a refusal and NOT a pass -- a day nothing can
+#: re-derive is exactly the case a silent skip would hide (R-649).
+VERDICTS = ("VERIFIED_FROM_RECEIPT", "VERIFIED_FROM_FILE",
+            "CORROBORATED_ABSENT", "MISMATCH", "NO_SOURCE")
+
+
+class PinsVerificationFailed(RuntimeError):
+    """A named refusal: a landed pin does not survive re-derivation."""
+
+
+def producing_receipt(pin: dict, day: str) -> Path:
+    """The receipt of the run that WROTE this feed.
+
+    Found from the pin's OWN path -- the feed and its receipt are written
+    side by side by `be_forward_day` -- and not by searching for a receipt
+    that agrees. LIMITATION STATED: the pin therefore chooses which receipt
+    answers. What that cannot fake is the comparison: the receipt names the
+    feed's path itself, so a pin pointing at the wrong run surfaces as a
+    missing receipt or a PATH mismatch rather than passing quietly. (For
+    20260906 two run directories exist -- `_be87`'s refused attempt and
+    `_be88`'s -- and the pin's path selects be88, the run that produced the
+    bytes.)
+    """
+    return Path(pin["path"]).parent / f"be_forward_day_receipt_{day}.json"
+
+
+def rederive_day(pin: dict, day: str) -> dict:
+    """Re-derive one day's {path, sha256, bytes} WITHOUT reading the feed.
+
+    THE ORDER OF SOURCES, and both are repo-produced:
+
+      1. THE PRODUCING RECEIPT. `be_forward_day.py` records the feed's path,
+         sha256 and byte count in its own `feed` block at emit. That is the
+         producer attesting its own output and is preferred wherever it
+         exists.
+      2. THE FILE'S BYTES. sha256 and `st_size`, nothing else -- the file is
+         never parsed, no line is read or counted, and this module never
+         touches the reader or `--open`.
+
+    Which one answered is REPORTED per day, because "verified" from a
+    producer's attestation and "verified" by re-hashing are not the same
+    claim and a reader must be able to tell them apart.
+    """
+    out = {"day": day, "source": None, "path": None, "sha256": None,
+           "bytes": None, "receipt": None, "receipt_exists": False,
+           "file_exists": False}
+    rcp = producing_receipt(pin, day)
+    out["receipt"] = str(rcp)
+    out["receipt_exists"] = rcp.exists()
+    feed = Path(pin["path"])
+    out["file_exists"] = feed.exists()
+    if rcp.exists():
+        try:
+            doc = json.loads(rcp.read_text())
+        except (OSError, json.JSONDecodeError) as e:
+            doc = None
+            out["receipt_unreadable"] = f"{type(e).__name__}: {e}"
+        blk = (doc or {}).get("feed")
+        if isinstance(blk, dict) and isinstance(blk.get("sha256"), str):
+            out.update({"source": "PRODUCING_RECEIPT",
+                        "path": blk.get("path"),
+                        "sha256": blk.get("sha256"),
+                        "bytes": blk.get("bytes")})
+            return out
+    if feed.exists():
+        st = feed.stat()
+        out.update({"source": "THE_FILE_BYTES", "path": str(feed),
+                    "sha256": _sha(feed), "bytes": st.st_size})
+        return out
+    out["source"] = "NEITHER"
+    return out
+
+
+def verify(version=None, declarations=None) -> dict:
+    """Re-derive a LANDED pins version's per_day content and compare it.
+
+    A byte-identical re-derive turns a scratch-built pin into a repo-verified
+    one WITHOUT touching it: this writes nothing, supersedes nothing and is
+    not a version (rule 13 / R-711 untouched). What it can and cannot settle
+    is stated in the result rather than left to the reader: it establishes
+    CONTENT -- the file at this path had this digest and this size -- and it
+    does NOT establish the pins' TIMING claim (`pinned_before`), which no
+    digest can carry (REV 90 §B4).
+    """
+    d = Path(declarations) if declarations else DECL
+    if version is None:
+        head = DC.resolve_head(d, FAMILY)
+        path, name = Path(head["path"]), head["name"]
+    else:
+        name = (version if str(version).endswith(".json")
+                else f"{FAMILY}_v{version}.json")
+        path = d / name
+        if not path.exists():
+            raise PinsVerificationFailed(
+                f"VERSION_ABSENT: no {name} under {d}. A check that depends "
+                f"on a declaration FAILS when it is gone (R-649).")
+    doc = json.loads(path.read_text())
+    per_day = doc.get("per_day") or {}
+    days = []
+    for day in sorted(per_day):
+        pin = per_day[day]
+        got = rederive_day(pin, day)
+        row = {"day": day, "pin_says_exists": bool(pin.get("exists")),
+               "source": got["source"], "receipt": got["receipt"],
+               "receipt_exists": got["receipt_exists"],
+               "file_exists": got["file_exists"], "fields": {}}
+        if not pin.get("exists"):
+            # THE ABSENT PINS ARE CHECKED, NOT SKIPPED. `exists: false` is a
+            # claim -- that no feed was produced -- and it is falsified by
+            # either source producing one.
+            if got["source"] == "NEITHER":
+                row["verdict"] = "CORROBORATED_ABSENT"
+                row["detail"] = ("the producing receipt carries no `feed` "
+                                 "block and no file is at the pinned path: "
+                                 "both sources agree there is nothing")
+            else:
+                row["verdict"] = "MISMATCH"
+                row["detail"] = (f"the pin says `exists: false` but "
+                                 f"{got['source']} produced a feed "
+                                 f"({str(got['sha256'])[:16]}…, "
+                                 f"{got['bytes']} bytes)")
+            days.append(row)
+            continue
+        if got["source"] == "NEITHER":
+            row["verdict"] = "NO_SOURCE"
+            row["detail"] = (f"nothing can re-derive this day: no `feed` "
+                             f"block in {Path(got['receipt']).name} "
+                             f"(exists: {got['receipt_exists']}) and no file "
+                             f"at {pin['path']}. NOT a pass")
+            days.append(row)
+            continue
+        bad = []
+        for f in ("path", "sha256", "bytes"):
+            want, have = pin.get(f), got.get(f)
+            row["fields"][f] = {"landed": want, "rederived": have,
+                                "equal": want == have}
+            if want != have:
+                bad.append(f)
+        row["verdict"] = "MISMATCH" if bad else (
+            "VERIFIED_FROM_RECEIPT" if got["source"] == "PRODUCING_RECEIPT"
+            else "VERIFIED_FROM_FILE")
+        if bad:
+            row["detail"] = (f"{', '.join(bad)} disagree(s) with "
+                             f"{got['source']}")
+        days.append(row)
+    bad_days = [r for r in days if r["verdict"] in ("MISMATCH", "NO_SOURCE")]
+    res = {
+        "verified": name,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "n_days": len(days),
+        "by_verdict": {v: sum(1 for r in days if r["verdict"] == v)
+                       for v in VERDICTS
+                       if any(r["verdict"] == v for r in days)},
+        "days": days,
+        "wrote_nothing": True,
+        "what_this_establishes": "CONTENT: each day's feed path, sha256 and "
+                                 "byte count, re-derived from the producing "
+                                 "receipt or the file's bytes and compared "
+                                 "field by field to the landed pin.",
+        "what_this_does_NOT_establish": "TIMING. The pins claim `pinned_"
+                                        "before: any read of the feed`; no "
+                                        "digest can carry that, and this "
+                                        "check does not pretend to "
+                                        "(REV 90 §B4).",
+        "never_read": "no feed was parsed; no line, row or field was read or "
+                      "counted; the reader was not invoked and nothing was "
+                      "--open'ed.",
+    }
+    if bad_days:
+        res["ok"] = False
+        res[VOIDS_FIELD] = doc.get(VOIDS_FIELD)
+        raise PinsVerificationFailed(
+            f"PINS_CONTENT_DISAGREES: {name} -- "
+            f"{[(r['day'], r['verdict']) for r in bad_days]}. The pins' own "
+            f"`{VOIDS_FIELD}` is {doc.get(VOIDS_FIELD)!r}, and this fires it "
+            f"by name. {bad_days[0]['detail']}", res)
+    res["ok"] = True
+    return res
+
+
 def selftest() -> int:
     import tempfile
     checks, fails = 0, []
@@ -236,6 +422,135 @@ def selftest() -> int:
        "POSITIVE CONTROL: the head is resolved through the shared chain and "
        "superseded BY THE PAIR, never by a filename -- and the write itself "
        "goes through declaration_chain's compare-and-swap")
+    # ---- `--verify`: FIVE PER-DAY VERDICTS, DRIVEN ON SCRATCH ----------
+    # No feed is parsed anywhere below: the fixtures write tiny files and the
+    # module hashes their BYTES. The real reader is never invoked and nothing
+    # is --open'ed.
+    vd = Path(tempfile.mkdtemp(prefix="pins_verify_"))
+    run = vd / "run"
+    run.mkdir()
+
+    def _fixture(n, per_day, voids=True):
+        (vd / f"{FAMILY}_v{n}.json").write_text(json.dumps(
+            {"protocol": PROTOCOL, "supersedes": None, "per_day": per_day,
+             "the_read_voids_on_mismatch": voids}, indent=1,
+            sort_keys=True) + "\n")
+
+    feed_a = run / "be_forward_day_SEALED_feed_20990101.jsonl"
+    feed_a.write_text('{"row": 1}\n')
+    sha_a, bytes_a = _sha(feed_a), feed_a.stat().st_size
+    (run / "be_forward_day_receipt_20990101.json").write_text(json.dumps(
+        {"feed": {"path": str(feed_a), "sha256": sha_a, "bytes": bytes_a}}))
+    good = {"20990101": {"exists": True, "path": str(feed_a),
+                         "sha256": sha_a, "bytes": bytes_a}}
+    _fixture(1, good)
+    r = verify(1, vd)
+    ok(r["ok"] is True and r["days"][0]["verdict"] == "VERIFIED_FROM_RECEIPT"
+       and all(r["days"][0]["fields"][f]["equal"] for f in
+               ("path", "sha256", "bytes")) and r["wrote_nothing"] is True,
+       f"POSITIVE CONTROL: a pin whose three fields agree with the PRODUCING "
+       f"RECEIPT verifies ({r['days'][0]['verdict']}) and the check writes "
+       f"nothing -- a verification, not a version (rule 13 untouched). A "
+       f"control shown only to refuse has not been shown to admit")
+
+    # (a) ONE MOVED DIGEST -- refuses NAMING THE DAY.
+    moved = {"20990101": dict(good["20990101"], sha256="e" * 64)}
+    _fixture(2, moved)
+    try:
+        verify(2, vd); ra = "NOT REFUSED"; res_a = {}
+    except PinsVerificationFailed as e:
+        ra, res_a = str(e.args[0]), (e.args[1] if len(e.args) > 1 else {})
+    ok(ra.startswith("PINS_CONTENT_DISAGREES:") and "20990101" in ra
+       and res_a.get("days", [{}])[0].get("verdict") == "MISMATCH"
+       and res_a["days"][0]["fields"]["sha256"]["equal"] is False
+       and res_a["days"][0]["fields"]["bytes"]["equal"] is True
+       and res_a.get(VOIDS_FIELD) is True,
+       f"KNOWN-BAD A -- ONE MOVED DIGEST: refused, NAMING THE DAY, and the "
+       f"pins' OWN `{VOIDS_FIELD}` ({res_a.get(VOIDS_FIELD)!r}) is fired BY "
+       f"NAME rather than an invented second word: {ra[:150]!r}. The report "
+       f"is field by field -- sha256 unequal, bytes and path EQUAL -- so a "
+       f"reader is told WHICH field moved, not merely that something did")
+
+    # (b) NO RECEIPT AND NO FILE -- refuses, and does NOT read as absent.
+    _fixture(3, {"20990102": {"exists": True,
+                                 "path": str(run / "gone_20990102.jsonl"),
+                                 "sha256": "a" * 64, "bytes": 7}})
+    try:
+        verify(3, vd); rb = "NOT REFUSED"; res_b = {}
+    except PinsVerificationFailed as e:
+        rb, res_b = str(e.args[0]), (e.args[1] if len(e.args) > 1 else {})
+    ok("NO_SOURCE" in rb and res_b["days"][0]["verdict"] == "NO_SOURCE"
+       and res_b["days"][0]["receipt_exists"] is False
+       and res_b["days"][0]["file_exists"] is False
+       and "NOT a pass" in res_b["days"][0]["detail"],
+       f"KNOWN-BAD B -- NOTHING TO RE-DERIVE FROM: no producing receipt and "
+       f"no file, and the day is `NO_SOURCE` and REFUSED, never silently "
+       f"passed (R-649: a check that cannot run is not a check that ran). "
+       f"The distinction that matters: this is a pin claiming a feed EXISTS "
+       f"with nothing to confirm it -- not the same as a pin claiming none")
+
+    # (c) THE FILE FALLBACK, exercised -- a receipt with no `feed` block.
+    feed_c = run / "be_forward_day_SEALED_feed_20990103.jsonl"
+    feed_c.write_text('{"row": 3}\n{"row": 4}\n')
+    (run / "be_forward_day_receipt_20990103.json").write_text(
+        json.dumps({"day": "20990103", "outcome": "no feed block here"}))
+    _fixture(4, {"20990103": {"exists": True, "path": str(feed_c),
+                                 "sha256": _sha(feed_c),
+                                 "bytes": feed_c.stat().st_size}})
+    rc = verify(4, vd)
+    ok(rc["ok"] is True
+       and rc["days"][0]["verdict"] == "VERIFIED_FROM_FILE"
+       and rc["days"][0]["receipt_exists"] is True
+       and rc["days"][0]["source"] == "THE_FILE_BYTES",
+       f"THE SECOND SOURCE IS REACHABLE AND REPORTED: a receipt that exists "
+       f"but carries no `feed` block falls through to the FILE'S BYTES and "
+       f"the verdict SAYS which answered ({rc['days'][0]['verdict']}). "
+       f"`verified from the producer's attestation` and `verified by "
+       f"re-hashing` are different claims and the row distinguishes them")
+
+    # (d) AN `exists: false` PIN IS CHECKED, NOT SKIPPED -- both directions.
+    _fixture(5, {"20990104": {"exists": False,
+                                 "path": str(run / "never_20990104.jsonl")}})
+    rd = verify(5, vd)
+    _fixture(6, {"20990101": {"exists": False, "path": str(feed_a)}})
+    try:
+        verify(6, vd); re_ = "NOT REFUSED"; res_e = {}
+    except PinsVerificationFailed as e:
+        re_, res_e = str(e.args[0]), (e.args[1] if len(e.args) > 1 else {})
+    ok(rd["ok"] is True
+       and rd["days"][0]["verdict"] == "CORROBORATED_ABSENT"
+       and res_e.get("days", [{}])[0].get("verdict") == "MISMATCH"
+       and "exists: false" in res_e["days"][0]["detail"],
+       f"AN ABSENT PIN IS A CLAIM AND IS FALSIFIABLE: with neither source "
+       f"producing a feed it is {rd['days'][0]['verdict']}; with a receipt "
+       f"that DOES produce one the same pin is MISMATCH and refused. "
+       f"Skipping `exists: false` days would have made two of the five "
+       f"landed pins unexaminable")
+
+    # ---- THE REAL v1 AND v2, DRIVEN HERE AND NOT ONLY IN A REPORT -------
+    # REV 90 §B4 asked whether a scratch-built precondition can be trusted.
+    # Its content can be RE-DERIVED, and that is what this cell asserts --
+    # standing, so it fires the day either version stops re-deriving rather
+    # than resting on one round's run. It does NOT assert the timing claim,
+    # which no digest carries.
+    real = {}
+    for n in (1, 2):
+        try:
+            real[n] = verify(n)
+        except PinsVerificationFailed as e:
+            real[n] = {"ok": False, "by_verdict": str(e.args[0])[:160]}
+    ok(real[1].get("ok") is True and real[2].get("ok") is True
+       and real[1]["by_verdict"] == {"CORROBORATED_ABSENT": 2,
+                                     "VERIFIED_FROM_RECEIPT": 3}
+       and real[2]["by_verdict"] == {"CORROBORATED_ABSENT": 2,
+                                     "VERIFIED_FROM_RECEIPT": 4},
+       f"THE TWO LANDED VERSIONS RE-DERIVE BYTE FOR BYTE: v1 "
+       f"{real[1].get('by_verdict')}, v2 {real[2].get('by_verdict')} -- every "
+       f"present day answered by its PRODUCING RECEIPT (no file needed "
+       f"hashing) and every absent day corroborated by both sources. That "
+       f"converts v1 and v2 from scratch-built to repo-verified in CONTENT "
+       f"without either file being touched")
+
     # REV 84 §3.2 -- ONE IMPLEMENTATION, N DETECTORS. This module imports
     # `declaration_chain`, so it RUNS that module's own falsifier as a
     # subprocess cell: a regression there fails every importer at once, and
@@ -263,9 +578,22 @@ def main(argv=None) -> int:
     ap.add_argument("--scores")
     ap.add_argument("--produced-by")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--verify", nargs="?", const="HEAD",
+                    help="re-derive a LANDED version's per_day content and "
+                         "compare it field by field; writes nothing")
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.verify:
+        try:
+            r = verify(None if a.verify == "HEAD" else a.verify)
+        except PinsVerificationFailed as e:
+            print(json.dumps(e.args[1] if len(e.args) > 1 else {"error": str(e)},
+                             indent=1, sort_keys=True))
+            print(f"\nREFUSED: {e.args[0]}")
+            return 1
+        print(json.dumps(r, indent=1, sort_keys=True))
+        return 0
     if not (a.day and a.feed):
         ap.print_help()
         return 2
