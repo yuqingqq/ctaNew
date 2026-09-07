@@ -109,6 +109,12 @@ reference is still a placeholder that needs substituting.**
 My commits name their three paths explicitly, so it is not swept in
 (R-387/R-623); recorded so a later reader knows it was here at 01:48Z.
 
+**Closed within the round:** BE 87 landed it itself at `ebd7c3b` (with `e126529`,
+Q-BE-330) between that reading and my commit — **v6 is now tracked**, my commit
+carries exactly its three paths, and BE's row reports the forward-day run
+**stopped on a third upstream gap**, refusing on DA's missing closed-day verdict.
+That, and R-737, are MEM 239's.
+
 **Chain ahead:** DE 116 (diagnose, fix, falsify, land, stop; REV 88 reads the diff
 before GO #6) → BE 87 (three launcher findings, v6, the forward-day run, then pins
 v2) → DA 114 → REV 88.

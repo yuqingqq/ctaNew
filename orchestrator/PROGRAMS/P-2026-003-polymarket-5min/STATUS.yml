@@ -128,7 +128,10 @@ updated: >-
   `live/pm_research/declarations/be_race_read_declaration_v6.json`, 12,456 B, `a240ccc5fb171641`,
   UNTRACKED -- BE 87's v6 correction written but not yet landed. My commits name their three paths
   explicitly, so it is not swept in (R-387/R-623); recorded so a later reader knows it was here at
-  01:48Z.
+  01:48Z. **CLOSED WITHIN THE ROUND:** BE 87 landed it itself at `ebd7c3b` (with `e126529`,
+  Q-BE-330) between that reading and my commit -- v6 is now TRACKED, my commit carries exactly its
+  three paths, and BE's row reports the forward-day run **STOPPED on a third upstream gap**, refusing
+  on DA's missing closed-day verdict. That, and R-737, are MEM 239's.
   Counts: flags 1,558 -> 1,569; provenance 1,103 -> 1,114; tasks 19; **838 CHECKED / 276 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-FOURTEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 220 archived. Q-MEM-226 filed through the script.)
