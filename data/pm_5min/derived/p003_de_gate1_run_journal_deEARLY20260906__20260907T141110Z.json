@@ -1,0 +1,105 @@
+{
+  "day": "2026-09-06",
+  "decision_ledger": {
+    "bytes": 6645474,
+    "digests_agree": true,
+    "exists": true,
+    "n_rows": 198611,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz",
+    "schema_version": 2,
+    "sha256_in_the_artifact": "e6cb8600e0bbc22068a56603ddd08b8b420d6512306f745e7da064ebec505698",
+    "sha256_recomputed": "e6cb8600e0bbc22068a56603ddd08b8b420d6512306f745e7da064ebec505698"
+  },
+  "emitted_artifact": {
+    "bytes": 49572,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_early_read_day_20260906__20260907T124731Z.json",
+    "sha256": "67bce38f9a0492eadf8473958947c6be3a64ce9835f0df81014291909adfe00e"
+  },
+  "exit_resolved_through_the_map": {
+    "75_is_never_used": true,
+    "declared_codes": [
+      "0",
+      "1"
+    ],
+    "exit_code": 0,
+    "mapped_by": {
+      "path": "/home/yuqing/ctaNew/live/pm_research/declarations/producer_exit_maps_v9.json",
+      "sha256": "482527d4810b0f746df9b13aaeaf8cc1dc566020f4ade3acdcd62f11bd11825b",
+      "version": 9
+    },
+    "producer_module": "live/pm_research/de_early_read.py",
+    "resolved_kind": "the early-read day completed and its artifact was written, or --selftest passed",
+    "the_map_is_read_from": "the chain head by the pair, never a filename literal",
+    "why_the_code_alone_is_not_the_kind": "every refusal in this module exits 1, so a non-zero code is resolved to a KIND only with the EARLY_READ_* name from the run's output beside it"
+  },
+  "five_fields_and_id_at_exit_while_loaded": {
+    "ActiveState": "active",
+    "ExecMainExitTimestamp": "Mon 2026-09-07 14:10:41 UTC",
+    "ExecMainStartTimestamp": "Mon 2026-09-07 12:47:27 UTC",
+    "ExecMainStatus": "0",
+    "InvocationID": "045ec2314c1646c29381b8d87fe2a1d2",
+    "LoadState": "loaded",
+    "MemoryPeak": "2588209152",
+    "Result": "success",
+    "SubState": "exited",
+    "as_of": "2026-09-07T14:11:10Z"
+  },
+  "five_fields_and_id_at_launch": {
+    "ActiveState": "active",
+    "ExecMainStatus": 0,
+    "InvocationID": "045ec2314c1646c29381b8d87fe2a1d2",
+    "LoadState": "loaded",
+    "MemoryPeak": 42586112,
+    "Result": "success",
+    "SubState": "running",
+    "as_of": null,
+    "why_as_of_is_null": "the launch reading was taken immediately after `systemd-run` returned and its clock was NOT read, so no time is written here: the unit's own ExecMainStartTimestamp is the authority for the launch instant. (E3's capture record carries '2026-09-07T11:29:13Z' in this field, which was DERIVED from the launch time plus the sleep and not read from a clock -- recorded here as the correction; that artifact is landed and is not edited, rule 13)"
+  },
+  "go": "GO E4",
+  "head_for_the_whole_run": "6c3a121163ad2ff91f59497558bc8afd2802bb79",
+  "head_is": "the E3/E4 composition REV 102 cleared, on origin/mm-research-e3-composition",
+  "invocation_id": "045ec2314c1646c29381b8d87fe2a1d2",
+  "journal_by_both_invocation_fields": {
+    "after_the_stop": {
+      "as_of": "2026-09-07T14:11:32Z",
+      "manager_lines_USER_INVOCATION_ID": 3,
+      "manager_text": "2026-09-07T12:47:27+00:00 ip-172-31-78-41 systemd[1004]: Started deEARLY20260906.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-06 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T14:11:30+00:00 ip-172-31-78-41 systemd[1004]: Stopped deEARLY20260906.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-06 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T14:11:30+00:00 ip-172-31-78-41 systemd[1004]: deEARLY20260906.service: Consumed 1h 23min 6.778s CPU time, 2.4G memory peak, 0B memory swap peak.\n",
+      "payload_lines__SYSTEMD_INVOCATION_ID": 5,
+      "retention_state_is_a_MEASUREMENT": {
+        "as_of": "2026-09-07T14:11:32Z",
+        "oldest_entry_the_journal_holds": "2026-09-07T09:30:00+00:00 ip-172",
+        "the_query_that_produced_it": "journalctl --user -o short-iso --no-pager | head -1"
+      },
+      "sha256_of_the_manager_text": "56729e26d8138d4c84f2b39912459dcfd11fedb0ccaa5711194f44bcb29ba241",
+      "unit_query_lines_for_cross_check": 8,
+      "why_it_is_here": "the record was written WHILE the unit was loaded and the Stopped/Consumed lines exist only after the stop; the file was uncommitted and seconds old when this was added, and nothing landed was edited (rule 13)"
+    },
+    "copied_at": "2026-09-07T14:11:10Z",
+    "manager_lines_USER_INVOCATION_ID": 1,
+    "manager_text": "2026-09-07T12:47:27+00:00 ip-172-31-78-41 systemd[1004]: Started deEARLY20260906.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_early_read.py --early-read-day 2026-09-06 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n",
+    "payload_lines__SYSTEMD_INVOCATION_ID": 5,
+    "retention_state_is_a_MEASUREMENT": {
+      "as_of": "2026-09-07T14:11:10Z",
+      "oldest_entry_the_journal_holds": "2026-09-07T09:30:00+00:00 ip-172",
+      "the_query_that_produced_it": "journalctl --user -o short-iso --no-pager | head -1"
+    },
+    "unit_query_lines_for_cross_check": 6
+  },
+  "kind": "de_heavy_run_capture_record",
+  "launched_at": "2026-09-07T12:47:27Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-de",
+  "leaf_peak_bytes_sampled_in_process": 2425655296,
+  "leaf_peak_samples_taken_alive": 164,
+  "no_economic_value_is_quoted_here": "DA's reader prints the table",
+  "rev_102_cleared": {
+    "all_five_asserted_before_the_launch": true,
+    "design_v27": "3bcdf3c234cb7d4e4be116c2d97a28293c37f419d9a0b062125b0f1f151e272b",
+    "early_read": "5aa544ef8d594efd807624fa35c0590eb6c00e52677ccea69aa8e55a9591e0e4",
+    "ledger": "d78c370151cea431127bbb778683739dcd66cb259b07ad6c09eb418d1eec2a3a",
+    "params_v19": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6",
+    "runner": "eaa68ea55eadc4a07c9c6a286b308932020036269e88451e8665aa9ad1308cd8",
+    "ten_cascade_pins_mismatched": 0
+  },
+  "unit": "deEARLY20260906.service",
+  "written_at": "2026-09-07T14:11:10Z"
+}
