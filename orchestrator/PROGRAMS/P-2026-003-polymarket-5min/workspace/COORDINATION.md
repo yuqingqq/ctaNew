@@ -22280,6 +22280,12 @@ de115day06_2.service: Main process exited, code=exited, status=1/FAILURE
 **Recovery, dispatched 03:49Z (DE 118, GO #7):** DE first lands GO #6's capture from its helper's `wait117.out` into the ledger; then relaunches as `de115day06_3` from wt-de AT ITS CURRENT TIP 2503162 (the runner byte-identical to 0f0d301's, verified by digest; the four conjuncts hold — the refused launch wrote nothing, the lock frees when the failed unit is stopped, a unique name, the code unchanged), with the explicit rule that nothing moves wt-de while it runs. DA 117 (the pre-read) still waits on the receipt; REV 89 after it. The runbook's §7c live block is corrected (`f58e1f4`).
 
 **Everything else from R-746 stands:** the five seats reloaded and confirmed from the files (tips 2503162 after refresh — BE, DA, REV, MEM; DE at 2503162 by the same refresh that cost the run), the consolidation landed, MEM resumes as sole writer at MEM 245 (sweep R-745..R-747).
+
+### R-748 — 2026-09-07T05:08Z — coordinator — **BE 90 VERIFIED: every version written through the shared CAS writer is now landed world-readable, and no `_v<N>.json` at mode 0600 remains under the declarations or the ledger (coordinator's `find … -perm 0600` → 0), digests unchanged. GO #7 still running at 77 minutes. This is the last entry of the session being cleared; the handoff is the runbook §7c.**
+
+**BE 90 VERIFIED (`d81962d`, Q-BE-333).** DE's reset-time finding (R-746) closed at the module: `declaration_chain.write_next_version` sets the landed file's mode after `tempfile.mkstemp` (which creates owner-only), with a `--falsify` cell; the versions already landed at 0600 re-moded with their digests asserted unchanged. Coordinator's read: `find live/pm_research/declarations data/pm_5min/derived -name '*_v[0-9]*.json' -perm 0600 | wc -l` → 0 at 05:08Z.
+
+**STATE at 05:08Z:** GO #7 (`de115day06_3`, id `c3f28dfb…`) RUNNING since 03:51:22Z (77 min; the 09-05 day took ≈ 70 min), 2.6 GB, no `…20260906_SEALED__*` receipt yet; MEM 245 and DA 118 in flight; BE idle until the 09-07 close; REV idle until REV 89; DE holding for the receipt. The coordinator's context is cleared after this entry; the next coordinator starts at the runbook §7c and verifies MEM 245 / DA 118 landed before dispatching DA 117 on the receipt.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
