@@ -67,6 +67,70 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T08:27:23Z (MEM ROUND 255 -- R-768 AND R-769 SWEPT, with every landing between my own 0cf7579
+  and the tip `452e115`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY
+  KIND.
+  (1) ***AN ENTRY LANDED INSIDE MY LAST ROUND'S WINDOW, AND THE BOUND IS WHAT KEPT THE ROW TRUE.*** R-768
+  landed at `527d454`, committed **08:19:30Z** -- sixteen seconds after my round-254 row's timestamp and
+  39 seconds before my state commit, and `merge-base --is-ancestor` confirms it precedes my own `0cf7579`.
+  My tip read for that round was 08:14:41Z and I did not re-read before committing. **The row is still
+  exactly true**, because it names its bound: *"every landing between my own ad99d53 and 356ffc9"*, closing
+  with *"MEM sweeps R-768 onward"*. At round 251 the same class bit and a cross-check caught it; **here
+  nothing caught it and nothing needed to** -- the sweep was reported as a CLOSED INTERVAL, not as
+  "everything up to now". **A bounded claim survives a moving tree; an unbounded one does not**, and that is
+  cheaper than re-reading.
+  (2) ***AFTER FOUR STOPS AND FOUR RULINGS, NONE OF DE 124 IS LANDED.*** Design head still **v25**
+  `b95ac59cf46d941d`, 24 versions, orphans empty; `de_multiday_gate1_params_v18.json` **does not exist** in
+  the ledger's declarations and the params head is still **v17**. Params v18 `cfc2b06f`, the retired seal,
+  the decision ledger, the narrowed guard and the four permissions are green in wt-de2 and **unlanded** --
+  the state files must not read as though any of it is in force.
+  (3) ***R-769's FINDING HOLDS AT THE ARTIFACT, AND R7 SAYS OF ITSELF THAT IT IS A MEASUREMENT.***
+  `R7_the_day_set` carries `declared_ledger_root`, `ledger_root_read`, `ledger_root_resolved`,
+  `root_verified_at_run_time` **true**, `ledger_rows_as_read` and `root_resolution` with its branch. **A
+  block that records which root it read and that it verified it at run time is a measurement by its own
+  text.** Its arithmetic is internally consistent: `n_verdict_files_read` **12** equals the **12** entries
+  of `ledger_rows_as_read` (2026-08-26..09-06), and `qualifying_on_quality` holds **6** days under four
+  named conjuncts plus quality. ***AND THE 12 -> 13 REPRODUCES ONCE THE POPULATION IS THE CLAIM'S***: the
+  glob `da_dayverdict_*.json` returns **22** files, of which only **13** are plain per-day files
+  (20260826..20260907) -- the other nine are the preserved `superseded_*` copies. **My first count was the
+  glob again**, the sixth instance of a count over a population the claim never named -- and the difference
+  this round is that **I reconciled it instead of routing it**.
+  (4) ***THE ROOT FACT THE COORDINATOR'S PROBE GOT WRONG IS A BOOLEAN IN THAT SAME BLOCK.***
+  `R7_the_day_set.root_resolution.PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir` = **TRUE**, beside
+  `why_the_root_is_recorded`, which explains that reading the committed shell instead of the R-397 symlink
+  "silently produced a 3-da[y]" answer. **The knowledge was already written, as a boolean, in an artifact
+  the probe's own subject pins.** Recorded as an observation about where knowledge lives -- the criticism
+  itself is already in band at R-765 -- because **a rule in a runbook is found by someone who reads
+  runbooks; a boolean in the declaration is found by the code.**
+  (5) ***FOUR STOPS IN ONE BATCH, EACH A CHECK REFUSING TO REDEFINE A RECORDED FACT, AND NO CHECK LOOSENED
+  TO PASS***: the deepcopy-inherited merge declarations (R-766), the frozen-block rule against the merge
+  guard (R-767), the permitted-additions list against the USER's ruling block and the params pin (R-768),
+  and the derived blocks against the byte census (R-769). ***AND TWO COORDINATOR RULINGS WERE INFEASIBLE
+  UNDER THE RULES AS THEY STOOD*** -- R-767's (C) and "carry every frozen block unchanged" -- both recorded
+  against the coordinator in its own voice. Carried because **a ruling that cannot be satisfied looks
+  exactly like a seat that will not comply until someone drives it**, and DE drove it four times rather than
+  complying or arguing.
+  (6) ***THE CENSUS HAD BEEN COMPARING MEASUREMENTS AS IF THEY WERE DECLARATIONS***, so the design family
+  was UNBUMPABLE from the moment 09-06's verdict landed at 02:00Z -- and nothing said so, because nothing
+  tried to bump it until the USER's ruling forced one. **A latent refusal is invisible until something needs
+  the path** -- rule 17's shape from the other side. The line is now set by RE-DERIVATION, not bytes: R7's
+  day set monotone and equal to the ledger's verdicts at the recorded as-of (`DERIVED_DAY_SET_SHRANK`,
+  `DERIVED_DAY_SET_NOT_IN_LEDGER`), R15's count equal to the battery's run (`DERIVED_BATTERY_COUNT_NOT_RUN`),
+  R22's closure equal to the captured one (`DERIVED_CLOSURE_NOT_CAPTURED`), every other block frozen.
+  **Three named refusals rather than one permission is what keeps it from being a hole.**
+  (7) ***BE 96 LANDED THE PRODUCER HALF AND THE CONSUMER HALF IS UNLANDED***: position state at the fill on
+  both the arm and the 0-cancel baseline (`c707eb8` / `83d62e6`, +192/-12 across three modules, with a
+  refusal named `FILL_RECORD_HAS_NO_POSITION_STATE`) -- **and `ABSENT_UNTIL_BE_96` still appears in two of
+  those modules at the tip**, while DE's decision ledger, the consumer that would carry `inventory_leg`, is
+  unlanded. I record the split rather than reporting BE 96 as closing the item.
+  (8) ***E1 IS STILL RUNNING AT FIFTY-SIX MINUTES***: loaded / active / RUNNING at 08:25:13Z with
+  `ExecMainExitTimestamp` **empty** -- a second reading that says running, beside `SubState` -- MemoryPeak
+  still 2,715,901,952, expected exit ≈ 08:55Z. **REV 93 gates GO E2 and GO #8** once DE 124 lands.
+  Counts: flags 1,802 -> **1,817**; provenance 1,347 -> **1,362**; tasks 19; **1,081 CHECKED /
+  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-FIRST round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **165** missing-artifact findings, 164 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 237** archived. Q-MEM-243 filed through the script.)
   2026-09-07T08:15:46Z (MEM ROUND 254 -- R-767 SWEPT, with every landing between my own ad99d53 and the
   tip `356ffc9`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY KIND.
   (1) ***IN-BAND CORRECTION OF MY OWN ROUND 253: DESIGN v26-v30 WERE NEVER LANDED AND ARE WITHDRAWN. THE
@@ -204,83 +268,6 @@ updated: >-
   duplicate-name gate exists to protect. ORPHAN census **0**; the audit exits **1** on **161**
   missing-artifact findings, 160 at my round start plus ONE of mine, the running unit. Window trimmed
   4 -> 3, **Batch 235** archived. Q-MEM-241 filed through the script.)
-  2026-09-07T07:50:07Z (MEM ROUND 252 -- R-764 AND R-765 SWEPT, with every landing between my own 1eca591
-  and the tip `7889d81`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO SEALED RECEIPT:
-  four declaration/design JSONs, one Python source, one shell script, unit readings, git objects, the
-  register.
-  (1) ***THE USER'S SECOND RULING OF THE DAY RETIRES THE SEAL FOR EVERY RUN FROM NOW ON.*** Verbatim at
-  **2026-09-07T07:47:01Z**: *"The sealing mechanism is stupid, make sure to store the numbers after each
-  run, and record everything we can to avoid rerun."* Routed as DE 124: params **v18**, design **v26**, ONE
-  path and ONE emission; the seal-scope lists stay declared and marked RETIRED; the six-day gate and clock
-  stay declared but gate only an AGGREGATE READ, never an emission; and every day persists a **DECISION
-  LEDGER** (path + sha256 + row count + schema version in the receipt) with acceptance cells that recompute
-  `D_E0` and `Z` **from the ledger alone** to 1e-9, read it with the book absent, and refuse a ledger whose
-  digest is not the receipt's. Landed sealed receipts are untouched (rule 13). ***TWO USER RULINGS NOW
-  STAND BESIDE NINE COORDINATOR ONES***, and MEM keeps the distinction: a coordinator ruling is overrulable
-  by one user line; a USER ruling is the decision itself. Both of today's pushed against a mechanism the
-  programme had built, and both were routed rather than argued.
-  (2) ***THE FOUR EARLY READS ARE NOW TWO DIFFERENT THINGS, AND THAT IS DISCLOSED, NOT ACCIDENTAL.*** E1
-  (09-03) is **still running** -- loaded / active / RUNNING at 07:48:37Z, id `e40782fa…`, nineteen minutes
-  in, expected ≈ 08:54Z -- and **finishes under the OLD code**: its artifact carries the economics, which
-  was the early read's whole point, but **no decision ledger**; 09-03's ledger is recorded by one later
-  replay ONLY if the user asks. **E2..E4 wait for DE 124 + REV 92 part B** so 09-04/05/06 are recorded once
-  and fully, and tonight's GO #8 runs with the recording code so no day from 09-07 on is ever replayed for
-  its numbers. The user's 09-04..09-06 numbers therefore arrive later than a straight E1..E4 would have
-  delivered them, in exchange for never re-running them. ***AND E1's PEAK HAS NOT MOVED IN SEVENTEEN
-  MINUTES***: 2,715,901,952 at 07:31:38Z and the identical value at 07:48:37Z. MemoryPeak is monotonic, so
-  the high-water mark was reached in the first three minutes and the run has been below it since -- the
-  honest follow-up to round 251's flag that it had already passed the ~2.4 GB estimate. It says nothing
-  about a stall; `SubState` still reads running.
-  (3) ***R-764's MATERIALITY RULING HOLDS UNDER MY OWN MEASUREMENT -- TESTED AS A PREDICATE, NOT READ.***
-  The ruling turns on the v14→v15 / design v21→v23 delta carrying "NO estimand, NO bar, NO pin". Over every
-  changed leaf between design v21 and v23, the count whose PATH matches
-  `estimand|threshold|bar|alpha|p_?value|holm|min_|n_draws|criterion|decision_rule|pin` is **ZERO**, and the
-  changed leaves fall exactly where the ruling says: **45 seal scope** (26 `R29_seal_scope` + 19
-  `R30_seal_scope_corrected`), **7 import-closure naming**, **9 counts and stamps** (`output_name_check` 4,
-  `source_identity` 3, `battery` 2) and **9 chain bookkeeping**. ***BUT MY LEAF COUNTS ARE 13 AND 70, NOT 2
-  AND 42.*** The first reconciles exactly -- 2 SUBSTANTIVE (`.design_declaration.path` v21→v23 and the
-  sentence naming it) + 11 BOOKKEEPING (version, protocol, nine `supersedes` fields) = 13 -- so "two leaves"
-  is right about what it means, and a reader recomputing naively gets 13. **The second I cannot reconcile**
-  without the coordinator's counting rule: 70 against 42, same substance, different arithmetic. ROUTED, NOT
-  RULED, and stated as a difference in counting rather than an error, because the ruling does not turn on
-  the count. ***AND WHERE THE CHANGES WERE IS ITSELF WORTH RECORDING***: two of the three biggest keys are
-  the SEAL SCOPE -- the very mechanism the user retired an hour later.
-  (4) ***MY ROUND-251 FLAG IS CLOSED***: the checker's superseded-fork statuses, which lived only in the
-  shared tree's working copy, landed at `ff8b0a9` with a size filter before the ledger grep and a
-  `pre_edit_digest_pinned_by` field; `git status` is clean for that path. Closed at the artifact by the
-  coordinator's own act, one round after it was raised.
-  (5) ***H1 IS CLOSED BOTH WAYS AND THE "REGRESSION" WAS THE PROBE.*** DE 123 phase 2 adopted DA 105's
-  per-receipt grouping with a supersession link outranking it AND runs both seats' resolvers compared in
-  the battery -- the cross-check REV 89 asked for. R-764's "six-day regression" notice was the coordinator's
-  own probe passing the REPO root where the function takes the DATA root, so every day failed for want of
-  `pm_5min/derived`; DE established it with three roots in one process. **H1's grouping did not regress
-  09-06.** The half that was real is closed by a NAMED refusal with a check behind it:
-  `READ_GATE_ROOT_IS_NOT_THE_LEDGER` at `de_multiday_gate1_runner.py:2329`, asserted by a battery cell at
-  :10409/:10416 -- rule 15's standard applied to a defect the coordinator's own probe surfaced.
-  (6) ***THE COORDINATOR'S THIRD PROBE ERROR TODAY, NAMED BY ITSELF WITH ITS RULE***: R-756 (a scratch
-  drive with an unset path variable in the shared tree), R-760 (a revert on a tip read three minutes
-  earlier), and now a probe's ARGUMENT assumed and its output read as a finding. The rule added: **a probe
-  of a seat's function names the argument's meaning from the function's DOCSTRING, not from the
-  coordinator's habit.** All three are R-747's family -- a fact true in one context assumed in the next --
-  and all three carry mechanical remedies.
-  (7) **CHAINS**: `producer_exit_maps` head **v9** `482527d4` (9 versions, 0 orphans -- DA 124's block for
-  its own reader landed); params head still **v17** `81b2c291`; `PARAMS_REL` still names **v15**. The gap I
-  have carried since round 249 is now scheduled to CLOSE rather than widen -- R-765 moves `PARAMS_REL` to
-  v18 so the sealed-path / early-read split becomes one path. I will re-measure when v18 lands.
-  (8) ***AND A SLIP OF MY OWN, CAUGHT BY AN ARITHMETIC THAT DID NOT ADD UP.*** I wrote fifteen flags and
-  the audit reported flags 1,757 -> 1,771 -- FOURTEEN. The cause: I reused a flag NAME from round 246
-  (`I_OPENED_NO_SEALED_RECEIPT_THIS_ROUND_EITHER`), and a duplicate YAML key does not error, it SHADOWS --
-  the twenty-third occurrence of the shadowing my own flag
-  `MY_OWN_STATUS_YML_SHADOWS_22_OCCURRENCES_BY_DUPLICATE_KEY` recorded. Renamed to
-  `..._AT_ROUND_252_EITHER`; round 246's line is untouched. **What caught it was the count, not a check** --
-  a round-over-round delta that must equal what I wrote, which is why the counts are stated as a delta and
-  not as a total. A flag name that repeats a habitual sentence will collide again; from here the round
-  number goes in the name when the sentence is one I write every round.
-  Counts: flags 1,757 -> **1,772**; provenance 1,302 -> **1,317**; tasks 19; **1,037 CHECKED /
-  275 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-EIGHTH round unchanged on UNMARKED**.
-  ORPHAN census **0**; the audit exits **1** on **160** missing-artifact findings, 158 at my round start
-  plus TWO of mine, both readings of the running unit. Window trimmed 4 -> 3, **Batch 234** archived.
-  Q-MEM-240 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -452,6 +439,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 255, R-768 + R-769 swept (and every landing between 0cf7579 and 452e115) ---
+  R_768_LANDED_INSIDE_MY_ROUND_254_WINDOW_AND_MY_BOUND_IS_WHAT_KEPT_THE_ROW_TRUE: 08-19-30Z-VS-MY-08-19-14Z
+  STATING_THE_TIP_SHA_IS_WHAT_MAKES_A_STALE_READ_HARMLESS: THE-BOUND-NOT-THE-FRESHNESS
+  THE_DESIGN_HEAD_IS_STILL_v25_AND_NOTHING_OF_DE_124_HAS_LANDED: PARAMS-STILL-V17-V18-ABSENT
+  R7_SAYS_OF_ITSELF_THAT_IT_IS_READ_FROM_THE_LEDGER_AT_EMIT: LEDGER-ROOT-READ-AND-VERIFIED-AT-RUN-TIME
+  and_ITS_OWN_ARITHMETIC_IS_INTERNALLY_CONSISTENT: N-VERDICT-FILES-READ-12-EQUALS-12-ROWS
+  THE_12_TO_13_REPRODUCES_ONCE_THE_POPULATION_IS_THE_PLAIN_PER_DAY_FILES: 13-NOT-THE-22-THE-GLOB-RETURNS
+  MY_FIRST_COUNT_WAS_THE_GLOB_AGAIN_AND_I_RECONCILED_IT_THIS_TIME: NINE-OF-THE-22-ARE-SUPERSEDED-COPIES
+  THE_ROOT_FACT_THE_COORDINATORS_PROBE_GOT_WRONG_IS_A_BOOLEAN_IN_R7: PM-DATA-ROOT-NAMES-THE-REPO-ROOT-TRUE
+  FOUR_STOPS_IN_ONE_BATCH_EACH_A_CHECK_REFUSING_TO_REDEFINE_A_RECORDED_FACT: NO-CHECK-LOOSENED-TO-PASS
+  TWO_COORDINATOR_RULINGS_WERE_INFEASIBLE_UNDER_THE_RULES_AS_THEY_STOOD: R-767-C-AND-CARRY-EVERY-BLOCK
+  THE_CENSUS_WAS_COMPARING_MEASUREMENTS_AS_IF_THEY_WERE_DECLARATIONS: UNBUMPABLE-SINCE-THE-FIRST-VERDICT
+  THE_LINE_IS_SET_BY_RE_DERIVATION_NOT_BY_BYTES: THREE-BLOCKS-THREE-NAMED-REFUSALS
+  BE_96_LANDED_THE_PRODUCER_HALF_AND_THE_CONSUMER_HALF_IS_UNLANDED: FILL-RECORD-HAS-NO-POSITION-STATE
+  E1_IS_STILL_RUNNING_AT_FIFTY_SIX_MINUTES: NO-EXIT-TIMESTAMP-YET
+  I_OPENED_NO_SEALED_RECEIPT_AT_ROUND_255_EITHER: ONE-DESIGN-DECLARATION-GIT-AND-A-UNIT
   # --- MEM round 254, R-767 swept (and every landing between ad99d53 and 356ffc9) ---
   THE_WITHDRAWAL_IS_COMPLETE_AT_MY_READ_v26_TO_v30_ARE_GONE: ONLY-V24-AND-V25-REMAIN-BOTH-TRACKED
   THE_HEAD_IS_v25_AGAIN_AND_IT_IS_THE_SAME_DIGEST_AS_BEFORE_THE_BATCH: B95AC59C-24-VERSIONS-0-ORPHANS
@@ -26239,6 +26242,168 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 255, 2026-09-07T08:27:23Z (the clock read by which every measurement below was complete) ---
+  R_768_LANDED_INSIDE_MY_ROUND_254_WINDOW_AND_MY_BOUND_IS_WHAT_KEPT_THE_ROW_TRUE:
+    prov: CHECKED
+    artifact: "git: log --all --grep R-768 on mm-research"
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      R-768 landed at commit 527d454, committed 2026-09-07T08:19:30Z -- SIXTEEN SECONDS after my round-254
+      row's timestamp (08:19:14Z) and 39 seconds before my state commit (08:20:09Z), and `git merge-base
+      --is-ancestor` confirms it is an ancestor of my own 0cf7579. So an entry landed INSIDE my round-254
+      window and I did not see it: my tip read for that round was 08:14:41Z and I did not re-read before
+      committing.
+  STATING_THE_TIP_SHA_IS_WHAT_MAKES_A_STALE_READ_HARMLESS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      and the round-254 row is STILL EXACTLY TRUE, because it names its bound: "R-767 swept, with every
+      landing between my own ad99d53 and 356ffc9", and it closes with "MEM sweeps R-768 onward". R-768 is
+      outside that bound and is named as the next round's work. AT ROUND 251 THE SAME CLASS BIT AND A
+      CROSS-CHECK CAUGHT IT; HERE NOTHING CAUGHT IT AND NOTHING NEEDED TO -- the sweep was reported as a
+      closed interval, not as "everything up to now". A bounded claim survives a moving tree; an unbounded
+      one does not. That is the practice, and it is cheaper than re-reading.
+  THE_DESIGN_HEAD_IS_STILL_v25_AND_NOTHING_OF_DE_124_HAS_LANDED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      resolved through the shared resolver: design head v25 b95ac59cf46d941d, 24 versions, orphans EMPTY --
+      unchanged from round 254. `de_multiday_gate1_params_v18.json` does NOT exist in the ledger's
+      declarations and the params head is still v17 81b2c2910b3c4799. So after FOUR stops and four rulings,
+      DE 124's whole batch -- params v18 cfc2b06f, the retired seal, the decision ledger, the narrowed
+      guard, the four permissions -- is green in wt-de2 and NONE of it is landed. The state files must not
+      read as though any of it is in force.
+  R7_SAYS_OF_ITSELF_THAT_IT_IS_READ_FROM_THE_LEDGER_AT_EMIT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      R-769's finding is that three design blocks are MEASUREMENTS, not declarations. I checked R7 at the
+      artifact rather than take it: `R7_the_day_set` carries `declared_ledger_root`, `ledger_root_read`,
+      `ledger_root_resolved`, `root_verified_at_run_time` true, `ledger_rows_as_read` (a per-day map) and
+      `root_resolution` with its branch ("1_env_PM_DATA_ROOT"). A block that records WHICH ROOT IT READ AND
+      THAT IT VERIFIED IT AT RUN TIME is a measurement by its own text. The finding holds at the artifact.
+  and_ITS_OWN_ARITHMETIC_IS_INTERNALLY_CONSISTENT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      `n_verdict_files_read` is 12 and `ledger_rows_as_read` holds exactly 12 entries, 2026-08-26 through
+      2026-09-06 -- the field equals the length of the thing it counts, asserted rather than assumed.
+      `qualifying_on_quality` holds 6 days (08-29, 09-01..09-05) under four named conjuncts plus day
+      quality. So the block's summary agrees with its own parts, which is the property that lets a
+      re-derivation check mean anything.
+  THE_12_TO_13_REPRODUCES_ONCE_THE_POPULATION_IS_THE_PLAIN_PER_DAY_FILES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      R-769 reports the re-derivation now yields 13 where v25 recorded 12. Counted at the ledger: the glob
+      `da_dayverdict_*.json` returns 22 files, but only THIRTEEN are plain per-day
+      `da_dayverdict_<8 digits>.json`, ranging 20260826..20260907 -- the other nine are the preserved
+      `superseded_*` copies R-739 describes. So 12 -> 13 REPRODUCES EXACTLY on the population the block
+      actually reads (08-26 onward, one file per day), and the ledger advanced by the 09-07 verdict.
+  MY_FIRST_COUNT_WAS_THE_GLOB_AGAIN_AND_I_RECONCILED_IT_THIS_TIME:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      my first probe counted the glob and returned 22 against the entry's 13 -- which reads as a
+      discrepancy and is not one. THE SAME SHAPE AS THE pgrep PREFIX, THE grep -c OF A PATTERN, THE cut
+      WINDOW, THE KEY AT THE WRONG LEVEL AND THE CASE-SENSITIVE GREP: a count over a population the claim
+      never named. The difference this round is that I RECONCILED IT INSTEAD OF ROUTING IT -- the population
+      is the plain per-day files and the nine superseded copies are not verdicts of new days. A count is
+      only a check when its population is the claim's.
+  THE_ROOT_FACT_THE_COORDINATORS_PROBE_GOT_WRONG_IS_A_BOOLEAN_IN_R7:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      R-764's "six-day regression" was the coordinator passing the REPO root where the function takes the
+      DATA root (R-765's in-band correction). That exact fact is a FIELD in the design block the runner
+      pins: `R7_the_day_set.root_resolution.PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir` = TRUE, beside
+      `why_the_root_is_recorded`, which explains that reading the committed shell instead of the R-397
+      symlink "silently produced a 3-da[y]" answer. THE KNOWLEDGE WAS ALREADY WRITTEN, AS A BOOLEAN, IN AN
+      ARTIFACT THE PROBE'S OWN SUBJECT PINS. Recorded as an observation about where knowledge lives, not as
+      a criticism already made in band: a rule in a runbook is found by someone who reads runbooks; a
+      boolean in the declaration is found by the code.
+  FOUR_STOPS_IN_ONE_BATCH_EACH_A_CHECK_REFUSING_TO_REDEFINE_A_RECORDED_FACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      DE 124 stopped four times: the deepcopy-inherited merge declarations (R-766), the frozen-block rule
+      against the merge guard (R-767), the permitted-additions list against the USER's ruling block and the
+      params pin (R-768), and the derived blocks against the byte census (R-769). EVERY ONE WAS A CHECK
+      REFUSING A CHANGE THAT WOULD HAVE REDEFINED A RECORDED FACT, AND THE SEAT DECLINED TO LOOSEN ANY OF
+      THEM TO PASS ITS OWN WORK. R-768 records that as the system working and R-769 repeats it. MEM carries
+      the count and the shape; the judgement is the coordinator's.
+  TWO_COORDINATOR_RULINGS_WERE_INFEASIBLE_UNDER_THE_RULES_AS_THEY_STOOD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      R-767's ruling (C) ("compose v26 from a schema carrying every frozen block of v25 unchanged") could
+      not be satisfied: the permitted-additions list forbade the ruling block and the pin move (R-768), and
+      three frozen blocks are re-measured at emit so they cannot be carried unchanged at all (R-769). Both
+      entries record it against the coordinator in its own voice. Carried because A RULING THAT CANNOT BE
+      SATISFIED LOOKS EXACTLY LIKE A SEAT THAT WILL NOT COMPLY until someone drives it, and DE drove it four
+      times rather than either complying or arguing.
+  THE_CENSUS_WAS_COMPARING_MEASUREMENTS_AS_IF_THEY_WERE_DECLARATIONS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      the coordinator's own reading, recorded: the byte-identical frozen-block census "had been comparing
+      MEASUREMENTS as if they were DECLARATIONS -- every design version since v25 would have refused on R7
+      alone once 09-06's verdict landed at 02:00Z 09-07; the defect surfaced only because the user's ruling
+      forced a bump". So the family had been UNBUMPABLE for hours and nothing said so, because nothing tried
+      to bump it. A LATENT REFUSAL IS INVISIBLE UNTIL SOMETHING NEEDS THE PATH -- the same shape as rule 17
+      (suite-green is not pipeline-wired) seen from the other side.
+  THE_LINE_IS_SET_BY_RE_DERIVATION_NOT_BY_BYTES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      the ruling: a DECLARED block never changes; a DERIVED block may change only to what its own
+      measurement re-derives, checked by RE-DERIVING and never by bytes -- R7's `qualifying_on_quality` must
+      equal the ledger's verdicts at the version's recorded as_of AND contain the previous version's set
+      (monotone), refusing `DERIVED_DAY_SET_SHRANK` or `DERIVED_DAY_SET_NOT_IN_LEDGER`; R15's
+      `day_path_checks_declared` must equal the count the battery ran, refusing
+      `DERIVED_BATTERY_COUNT_NOT_RUN`; R22's `the_closure_by_name` must equal the closure captured at that
+      emit, refusing `DERIVED_CLOSURE_NOT_CAPTURED`. Every other block stays frozen; red-first per refusal.
+      Three named refusals rather than one permission is what keeps this from being a hole.
+  BE_96_LANDED_THE_PRODUCER_HALF_AND_THE_CONSUMER_HALF_IS_UNLANDED:
+    prov: CHECKED
+    artifact: live/pm_research/harmful_stateful_policy.py
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      BE 96 landed at c707eb8 / 83d62e6 -- position state at the fill on both the arm and the 0-cancel
+      baseline, +192/-12 across be_cancel_axis_null.py, de_phase4_diag_runner.py and
+      harmful_stateful_policy.py, with a refusal named `FILL_RECORD_HAS_NO_POSITION_STATE` added in the
+      diff. AND `ABSENT_UNTIL_BE_96` still appears in two of those modules at the tip, while DE's decision
+      ledger -- the consumer that would carry `inventory_leg` -- is unlanded in wt-de2. So the producer half
+      is in and the leg is still ABSENT until both halves land: I record the split rather than reporting
+      BE 96 as closing the item.
+  E1_IS_STILL_RUNNING_AT_FIFTY_SIX_MINUTES:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260903.service (a unit, not a file)
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      loaded / active / RUNNING at 08:25:13Z with `ExecMainExitTimestamp` EMPTY -- fifty-six minutes in
+      against an expected exit about 08:55Z, MemoryPeak still 2,715,901,952 (the same value at 07:31:38Z,
+      07:48:37Z, 08:04:57Z, 08:14:41Z and now). The empty exit timestamp is the second reading that says
+      running, beside SubState.
+  I_OPENED_NO_SEALED_RECEIPT_AT_ROUND_255_EITHER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T08:27:23Z
+    said: >-
+      what I opened: one design declaration on the ledger disk (v25), a directory listing of the verdict
+      family, the shared resolver, a git diff, one unit reading and the register. No receipt of any kind --
+      E1's still does not exist.
   # --- MEM round 254, 2026-09-07T08:15:46Z (the clock read by which every measurement below was complete) ---
   THE_WITHDRAWAL_IS_COMPLETE_AT_MY_READ_v26_TO_v30_ARE_GONE:
     prov: CHECKED

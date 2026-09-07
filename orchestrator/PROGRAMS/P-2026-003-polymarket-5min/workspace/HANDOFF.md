@@ -1,3 +1,106 @@
+# READ FIRST — round 255 (MEM, 2026-09-07T08:27:23Z, tip `452e115`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-768 and R-769 swept, with
+every landing between my own `0cf7579` and the tip. **I opened no receipt of any kind.**
+
+## 0. State
+
+| | |
+|---|---|
+| **DE 124** | four stops, four rulings, **nothing landed** — params v18 `cfc2b06f`, the retired seal, the decision ledger, the narrowed guard, the four permissions all green in **wt-de2** and unlanded |
+| **Heads** | design **v25** `b95ac59c` (24 versions, 0 orphans); params **v17** — v18 absent from the ledger |
+| **E1** | still **running** at 08:25:13Z, 56 min in, `ExecMainExitTimestamp` empty, expected ≈ 08:55Z |
+| **Gates** | **REV 93** gates GO E2 and GO #8 once DE 124 lands |
+| **BE 96** | **landed** — producer half only; `inventory_leg` still ABSENT until DE's ledger lands |
+
+## 1. An entry landed inside my last round's window — and the bound kept the row true
+
+R-768 landed at `527d454`, committed **08:19:30Z**: sixteen seconds after my round-254
+row's timestamp, 39 seconds before my state commit, and an ancestor of my own `0cf7579`.
+My tip read for that round was 08:14:41Z and I did not re-read before committing.
+
+**The row is still exactly true**, because it names its bound — *"every landing between
+my own ad99d53 and 356ffc9"* — and closes with *"MEM sweeps R-768 onward"*. At round 251
+the same class bit and a cross-check caught it; **here nothing caught it and nothing
+needed to**. The sweep was reported as a **closed interval**, not as "everything up to
+now". **A bounded claim survives a moving tree; an unbounded one does not** — and that is
+cheaper than re-reading.
+
+## 2. R-769's finding holds at the artifact, and the numbers reconcile
+
+`R7_the_day_set` carries `declared_ledger_root`, `ledger_root_read`,
+`ledger_root_resolved`, `root_verified_at_run_time` **true**, `ledger_rows_as_read` and
+`root_resolution`. **A block that records which root it read and that it verified it at
+run time is a measurement by its own text.**
+
+| | |
+|---|---|
+| `n_verdict_files_read` | **12** = the **12** entries of `ledger_rows_as_read` (08-26 → 09-06) |
+| `qualifying_on_quality` | **6** days, under four named conjuncts plus quality |
+| glob `da_dayverdict_*.json` | **22** files — of which **13** are plain per-day (20260826 → 20260907) |
+
+**So 12 → 13 reproduces exactly** once the population is the claim's: the other nine are
+preserved `superseded_*` copies. **My first count was the glob again** — the sixth
+instance of a count over a population the claim never named — and the difference this
+round is that **I reconciled it instead of routing it**.
+
+## 3. The root fact the coordinator's probe got wrong is a boolean in that same block
+
+`R7_the_day_set.root_resolution.PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir` =
+**TRUE**, beside `why_the_root_is_recorded`, which explains that reading the committed
+shell instead of the R-397 symlink *"silently produced a 3-da[y]"* answer. **The
+knowledge was already written, as a boolean, in an artifact the probe's own subject
+pins.** An observation about where knowledge lives — the criticism is already in band at
+R-765 — because **a rule in a runbook is found by someone who reads runbooks; a boolean
+in the declaration is found by the code.**
+
+## 4. Four stops, no check loosened, and two rulings that could not be satisfied
+
+| stop | the check that refused |
+|---|---|
+| R-766 | the deepcopy-inherited merge declarations |
+| R-767 | BE's frozen-block rule against the merge guard |
+| R-768 | the permitted-additions list against the USER's ruling block and the params pin |
+| R-769 | the derived blocks against the byte census |
+
+**Every one refused a change that would have redefined a recorded fact, and the seat
+declined to loosen any of them.** And **two coordinator rulings were infeasible under the
+rules as they stood** — R-767's (C) and "carry every frozen block unchanged" — both
+recorded against the coordinator in its own voice. Carried because **a ruling that cannot
+be satisfied looks exactly like a seat that will not comply until someone drives it**, and
+DE drove it four times rather than complying or arguing.
+
+## 5. The census was comparing measurements as if they were declarations
+
+The design family was **unbumpable** from the moment 09-06's verdict landed at 02:00Z —
+and nothing said so, because nothing tried to bump it until the USER's ruling forced one.
+**A latent refusal is invisible until something needs the path** — rule 17's shape from
+the other side.
+
+The line is now set by **re-derivation, not bytes**: R7's day set monotone and equal to
+the ledger's verdicts at the recorded as-of (`DERIVED_DAY_SET_SHRANK`,
+`DERIVED_DAY_SET_NOT_IN_LEDGER`); R15's count equal to the battery's run
+(`DERIVED_BATTERY_COUNT_NOT_RUN`); R22's closure equal to the captured one
+(`DERIVED_CLOSURE_NOT_CAPTURED`); every other block frozen. **Three named refusals rather
+than one permission is what keeps it from being a hole.**
+
+## 6. BE 96 landed the producer half
+
+Position state at the fill on both the arm and the 0-cancel baseline (`c707eb8` /
+`83d62e6`, +192/−12 across three modules, with a refusal named
+`FILL_RECORD_HAS_NO_POSITION_STATE`) — **and `ABSENT_UNTIL_BE_96` still appears in two of
+those modules at the tip**, while DE's decision ledger, the consumer that would carry
+`inventory_leg`, is unlanded. **I record the split rather than reporting BE 96 as closing
+the item.**
+
+Counts: flags 1,802 → **1,817**; provenance 1,347 → **1,362**; tasks 19; **1,081 CHECKED
+/ 276 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-first round
+unchanged on UNMARKED; fifteen written, fifteen counted. ORPHAN census **0**; audit exit
+**1** on **165** — 164 at round start plus one of mine, the running unit. Window trimmed
+4 → 3, **Batch 237** archived. Q-MEM-243 filed through the script.
+
+---
+
 # READ FIRST — round 254 (MEM, 2026-09-07T08:15:46Z, tip `356ffc9`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-767 swept, with every
