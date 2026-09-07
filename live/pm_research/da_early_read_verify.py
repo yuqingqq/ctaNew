@@ -129,6 +129,21 @@ def counts_provenance(day: str) -> str:
     return COUNTS_PROVENANCE.get(str(day), COUNTS_PROVENANCE["_default"])
 
 
+#: THE ONLY FIELDS THIS READER TAKES FROM A SEALED RECEIPT. The receipt is
+#: opened for ONE purpose -- to learn which params the sealed run declared --
+#: and the paths it may read are enumerated here so the scope is a constant
+#: a reader can check, not a habit. NOTHING ECONOMIC is among them, and the
+#: battery drives a receipt with a planted economic field to show none of it
+#: reaches this reader's output.
+SEALED_RECEIPT_READ_SCOPE = (
+    "provenance.params.sha256",
+    "provenance.params.path",
+    "provenance.digests_at_load_and_at_emit.inputs.params",
+    "provenance.status",
+    "provenance.inputs.params",
+)
+
+
 class EarlyReadVerifyRefused(RuntimeError):
     """A named refusal. Every message begins with its own reason code."""
 
@@ -310,6 +325,135 @@ def check_receipt_against_the_bar(doc: dict, bar_row: dict,
     return out
 
 
+def _params_declared_by_the_sealed_run(receipt: dict) -> dict:
+    """The params digest the SEALED RECEIPT declares -- and nothing else.
+
+    Two places carry it and both are read: `provenance.params` (the pair the
+    run recorded) and `provenance.digests_at_load_and_at_emit.inputs.params`
+    (the SAME file digested at load and again at emit, which is how a file
+    changing under a run is caught -- REV 75 S1.1). A receipt whose own two
+    readings disagree is refused by its own name rather than averaged or
+    preferred.
+    """
+    prov = (receipt.get("provenance") or {})
+    pair = (prov.get("params") or {})
+    at = (((prov.get("digests_at_load_and_at_emit") or {}).get("inputs")
+           or {}).get("params") or {})
+    #: THE THIRD STATE, FOUND AT THE ARTIFACTS (DA 123). 2026-09-03's
+    #: receipt stamped NO params: its provenance block says of itself
+    #: "RECONSTRUCTED, not stamped ... no digest here was taken at load or
+    #: at emit, and none is offered as one", and the digest comes from git
+    #: at the carrying commit. That is not a declaration BY THE ACT, and
+    #: comparing against it would be comparing against a reconstruction.
+    recon = (prov.get("inputs") or {}).get("params") or {}
+    return {"declared_sha256": pair.get("sha256"),
+            "declared_path": pair.get("path"),
+            "at_load": at.get("sha256_at_load"),
+            "at_emit": at.get("sha256_at_emit"),
+            "the_receipts_own_two_readings_agree": at.get("agrees"),
+            "is_RECONSTRUCTED": (str(prov.get("status")) == "RECONSTRUCTED"
+                                 or str(recon.get("status"))
+                                 == "RECONSTRUCTED"),
+            "reconstructed_path": recon.get("path"),
+            "reconstructed_sha256": recon.get(
+                "sha256_AT_THE_CARRYING_COMMIT_RECONSTRUCTED"),
+            "read_scope": list(SEALED_RECEIPT_READ_SCOPE)}
+
+
+def check_computation_params(doc: dict, bar_row: dict, *, data_root) -> dict:
+    """THE EARLY READ'S WHOLE CLAIM, MADE A PREDICATE (REV 91 S C2).
+
+    The artifact says *"the COMPUTATION is the sealed runs' -- v15. Only the
+    seal bar comes from the ruling."* That is a RECORDED FIELD, and a
+    recorded field is a claim until something compares it: this compares the
+    params digest the RUN ACTUALLY LOADED against the params digest THE
+    DAY'S SEALED RECEIPT DECLARES. If they differ, the early read is a
+    DIFFERENT computation wearing the sealed run's name, and no table drawn
+    from it is comparable to the sealed days.
+
+    ABSENCE IS NEVER A PASS. A receipt that is not there, or that declares
+    no params, REFUSES by its own name -- this is the one check that cannot
+    be skipped without the whole claim going unchecked.
+    """
+    cp = (doc.get("computation_params") or {})
+    got = cp.get("sha256")
+    if not (isinstance(got, str) and DIGEST64.match(got)):
+        raise EarlyReadVerifyRefused(
+            f"COMPUTATION_PARAMS_NOT_DECLARED: the artifact's "
+            f"`computation_params.sha256` is {got!r}, not a 64-hex digest. "
+            f"The early read's claim is that it computed what the sealed "
+            f"runs computed; without the digest of what it loaded there is "
+            f"nothing to compare that claim against.")
+    name = Path(str(bar_row["path"])).name
+    receipt_p = Path(data_root) / "pm_5min/derived" / name
+    if not receipt_p.is_file():
+        raise EarlyReadVerifyRefused(
+            f"COMPUTATION_PARAMS_NOT_CHECKABLE_SEALED_RECEIPT_ABSENT: "
+            f"{name} is not under {data_root}. The comparison this check "
+            f"exists for needs the sealed run's own declaration, and a "
+            f"check that cannot run FAILS rather than passing quietly "
+            f"(R-649).")
+    declared = _params_declared_by_the_sealed_run(
+        json.loads(receipt_p.read_bytes()))
+    if declared["is_RECONSTRUCTED"]:
+        raise EarlyReadVerifyRefused(
+            f"COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED: {name}'s "
+            f"provenance says of ITSELF that it is RECONSTRUCTED -- the run "
+            f"stamped no params, and the digest "
+            f"({str(declared['reconstructed_sha256'])[:16]}… for "
+            f"{Path(str(declared['reconstructed_path'])).name}) comes from "
+            f"git at the carrying commit, not from the act. ***A "
+            f"reconstruction is not a declaration by the run***, and this "
+            f"reader will not certify 'the computation is the sealed run's' "
+            f"against one. THREE STATES, NOT TWO: this is neither a match "
+            f"nor a mismatch, and it is said rather than resolved either "
+            f"way.")
+    if not (isinstance(declared["declared_sha256"], str)
+            and DIGEST64.match(declared["declared_sha256"])):
+        raise EarlyReadVerifyRefused(
+            f"COMPUTATION_PARAMS_NOT_CHECKABLE_RECEIPT_DECLARES_NO_PARAMS: "
+            f"{name} carries no `provenance.params.sha256`. The sealed run "
+            f"named no params, so what it computed cannot be identified.")
+    if declared["the_receipts_own_two_readings_agree"] is False:
+        raise EarlyReadVerifyRefused(
+            f"SEALED_RUNS_PARAMS_MOVED_UNDER_THE_RUN: {name} digested its "
+            f"params at load ({str(declared['at_load'])[:16]}…) and again at "
+            f"emit ({str(declared['at_emit'])[:16]}…) and they DISAGREE. "
+            f"Which computation that run performed has no single answer, so "
+            f"nothing may be compared to it.")
+    if declared["declared_sha256"] != got:
+        raise EarlyReadVerifyRefused(
+            f"COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS: the early read loaded "
+            f"params {got[:16]}… and {name} declares "
+            f"{declared['declared_sha256'][:16]}…. ***The early read's whole "
+            f"claim is that the computation is the sealed runs'***; a "
+            f"different params file makes it a different computation wearing "
+            f"that claim, and the four days would not be comparable to the "
+            f"sealed ones or to each other.")
+    return {"the_artifact_loaded": {"path": cp.get("path"), "sha256": got},
+            "the_sealed_receipt_declares": {
+                "receipt": name, "path": declared["declared_path"],
+                "sha256": declared["declared_sha256"]},
+            "at_load_and_at_emit": {
+                "at_load": declared["at_load"], "at_emit": declared["at_emit"],
+                "agree": declared["the_receipts_own_two_readings_agree"]},
+            "they_are_the_same_params": True,
+            "the_receipt_was_opened_for_this_and_only_this": {
+                "read_scope": list(SEALED_RECEIPT_READ_SCOPE),
+                "why_opening_it_is_allowed_here": (
+                    "the seal withholds the ECONOMICS. The provenance block "
+                    "says which declaration the run loaded, and reading it "
+                    "is what DA 117's pre-read already does. No economic "
+                    "field is read, and the battery drives a receipt with a "
+                    "planted economic field to show none reaches this "
+                    "reader's output")},
+            "why_this_is_the_load_bearing_check": (
+                "every other check here is about labels, identity and shape. "
+                "THIS one is the early read's own claim -- that the "
+                "computation is the sealed runs' -- turned from a recorded "
+                "field into a compared one")}
+
+
 def check_labels(doc: dict, ruling: dict) -> dict:
     """The labels R-754 fixed. Missing and DIFFERENT are separate refusals."""
     out = {}
@@ -439,11 +583,20 @@ def census_arm_day(doc: dict) -> dict:
 
 def verify(path, *, repo_root=None, data_root=None) -> dict:
     """One artifact, end to end. Every failure raises BY NAME."""
+    root = Path(repo_root) if repo_root else HERE.parents[1]
+    #: THE DATA ROOT IS RESOLVED AND SAID. The params check needs the day's
+    #: sealed receipt, and a reader must know WHICH ledger answered.
+    if data_root is None and (root / "data").exists():
+        data_root = root / "data"
     doc = load_artifact(path, repo_root=repo_root)
     day = doc.get("day_run", {}).get("day") or doc.get("day")
     ruling = the_ruling_by_the_pair(doc, repo_root=repo_root)
     bar = the_bar_for_the_day(ruling, day)
+    #: ORDER: the receipt's IDENTITY is established before a single field of
+    #: it is read. Reading provenance out of a receipt whose digest has not
+    #: been checked would be trusting bytes nobody pinned.
     receipt = check_receipt_against_the_bar(doc, bar, data_root=data_root)
+    params = check_computation_params(doc, bar, data_root=data_root)
     labels = check_labels(doc, ruling)
     statuses = check_not_computed(doc)
     census = census_arm_day(doc)
@@ -458,6 +611,8 @@ def verify(path, *, repo_root=None, data_root=None) -> dict:
                    "the_current_head": ruling["the_current_head"],
                    "resolved_by": ruling["resolved_by"]},
         "bar": bar, "sealed_receipt_identity": receipt,
+        "computation_params": params,
+        "data_root_used": str(data_root),
         "labels": labels, "not_computed_statuses": statuses,
         "census": census,
         "label_line": LABEL_LINE,
@@ -498,6 +653,11 @@ def print_table(res: dict) -> str:
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
     lines.append(f"  the three COUNTS on this day: "
                  f"{counts_provenance(res['day'])}")
+    lines.append(f"  the computation is the SEALED RUN'S: params "
+                 f"{res['computation_params']['the_artifact_loaded']['sha256'][:16]}"
+                 f"… equals the digest "
+                 f"{res['computation_params']['the_sealed_receipt_declares']['receipt']}"
+                 f" declares -- CHECKED, not recorded")
     lines.append("  NOT COMPUTED for these days, as named statuses: "
                  + ", ".join(NOT_COMPUTED_KEYS))
     return "\n".join(lines)
@@ -515,6 +675,15 @@ def _fixture_artifact(d: Path, ruling_name: str, ruling_sha: str,
         "interval": "NONE_BELOW_FIVE_DAYS",
         "verdict_class": "EXPLORATORY",
         "days_consumed": list(DAYS_CONSUMED),
+        #: v15's REAL digest: the fixture must claim what the sealed runs
+        #: actually loaded, or the well-formed case would pass a check the
+        #: real artifacts have to pass.
+        "computation_params": {
+            "path": "live/pm_research/declarations/"
+                    "de_multiday_gate1_params_v15.json",
+            "sha256": ("92858fc7f9493f8e8fcc721d0390843bce86bbab1"
+                       "7d633a0bf3210d633fb6037"),
+            "why": "the COMPUTATION is the sealed runs' -- v15"},
         "economics_field_availability": {
             "not_computed_by_this_path": {
                 k: f"{k} was never computed by this path, and the reason is "
@@ -569,13 +738,19 @@ def selftest() -> tuple:                                      # noqa: C901
        f"({_sha(v17)[:16] if have17 else '-'}…)")
     sha16, sha17 = _sha(v16), _sha(v17)
     b17 = json.loads(v17.read_text())["user_ruled_early_read"]
-    row17 = next(r for r in b17["this_reads_bar"]["receipts"]
-                 if r["day"] == "2026-09-03")
+    _rows17 = {r["day"]: r for r in b17["this_reads_bar"]["receipts"]}
+    #: THE WELL-FORMED FIXTURE USES A DAY WHOSE SEALED RECEIPT STAMPED ITS
+    #: PARAMS. 2026-09-03's did not (its provenance says of itself that it
+    #: is RECONSTRUCTED), and 09-04's stamped v14 -- both are DRIVEN BELOW
+    #: as the two real findings this check turned up on its first run.
+    row17 = _rows17["2026-09-06"]
 
     with tempfile.TemporaryDirectory() as td:
         t = Path(td)
-        good = _fixture_artifact(t, v17.name, sha17, row17)
-        gp = t / f"{EARLY_FAMILY}_20260903__20260101T000000Z.json"
+        good = _fixture_artifact(t, v17.name, sha17, row17,
+                                 day="2026-09-06")
+        good["day_run"]["day"] = "2026-09-06"
+        gp = t / f"{EARLY_FAMILY}_20260906__20260101T000000Z.json"
         gp.write_text(json.dumps(good))
         res = verify(gp, repo_root=root)
         ck("A WELL-FORMED ARTIFACT VERIFIES AND PRINTS: the ruling resolves "
@@ -720,35 +895,127 @@ def selftest() -> tuple:                                      # noqa: C901
            and r_rname == "EARLY_READ_RECEIPT_NOT_THE_BAR",
            f"wrong digest -> {r_recv}; another day's receipt -> {r_rname}")
 
+    # -- REV 91 S C2: THE EARLY READ'S OWN CLAIM, AS A PREDICATE --------
+    _cp = res["computation_params"]
+    ck("REV 91 S C2 -- ***THE CLAIM 'THE COMPUTATION IS THE SEALED RUNS'' IS "
+       "NOW COMPARED, NOT RECORDED***: the params the artifact says the run "
+       "LOADED are digested against the params THE DAY'S SEALED RECEIPT "
+       "DECLARES, and the receipt's own load-and-emit pair must agree with "
+       "itself first",
+       _cp["they_are_the_same_params"]
+       and _cp["the_artifact_loaded"]["sha256"]
+       == _cp["the_sealed_receipt_declares"]["sha256"]
+       and _cp["at_load_and_at_emit"]["agree"] is True,
+       f"artifact loaded {_cp['the_artifact_loaded']['sha256'][:16]}…; "
+       f"{_cp['the_sealed_receipt_declares']['receipt']} declares "
+       f"{_cp['the_sealed_receipt_declares']['sha256'][:16]}…; the "
+       f"receipt's load/emit pair agrees: "
+       f"{_cp['at_load_and_at_emit']['agree']}")
+
+    #: ITS OWN DIRECTORY: the fixture dir above has closed by now, and a
+    #: cell that writes into a gone directory fails for a reason that has
+    #: nothing to do with what it tests.
+    _cpd_ctx = tempfile.TemporaryDirectory()
+    _cpd = Path(_cpd_ctx.name)
+
+    def _refuses_cp(mutate, dr=None, base=None, day="20260906"):
+        bad = json.loads(json.dumps(base if base is not None else good))
+        mutate(bad)
+        bp = _cpd / f"{EARLY_FAMILY}_{day}__20260101T000020Z.json"
+        bp.write_text(json.dumps(bad))
+        try:
+            verify(bp, repo_root=root, data_root=dr)
+            return "ADMITTED"
+        except EarlyReadVerifyRefused as e:
+            return str(e).split(":")[0]
+
+    _cp_diff = _refuses_cp(lambda b: b["computation_params"].update(
+        {"sha256": "d" * 64}))
+    _cp_gone = _refuses_cp(lambda b: b.pop("computation_params"))
+    with tempfile.TemporaryDirectory() as _dr:
+        (Path(_dr) / "pm_5min/derived").mkdir(parents=True)
+        _cp_absent = _refuses_cp(lambda b: None, dr=Path(_dr))
+    ck("KNOWN-BAD, DRIVEN -- ***A DIFFERENT PARAMS DIGEST IS REFUSED BY "
+       "NAME***: an early read that loaded something other than what the "
+       "sealed run declared is a DIFFERENT COMPUTATION wearing the sealed "
+       "run's claim, and its four days would be comparable neither to the "
+       "sealed days nor to each other. An UNDECLARED digest refuses too, "
+       "and so does an ABSENT receipt -- ***this is the one check that "
+       "cannot be skipped without the whole claim going unchecked***",
+       _cp_diff == "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS"
+       and _cp_gone == "COMPUTATION_PARAMS_NOT_DECLARED"
+       and _cp_absent
+       == "COMPUTATION_PARAMS_NOT_CHECKABLE_SEALED_RECEIPT_ABSENT",
+       f"a different digest -> {_cp_diff}; no computation_params -> "
+       f"{_cp_gone}; the receipt not under the root -> {_cp_absent}")
+
+    #: THE TWO REAL FINDINGS THIS CHECK TURNED UP ON ITS FIRST RUN,
+    #: DRIVEN AGAINST THE BAR'S OWN RECEIPTS -- not a mutation of mine.
+    _a03 = _fixture_artifact(_cpd, v17.name, sha17, _rows17["2026-09-03"],
+                             day="2026-09-03")
+    _a03["day_run"]["day"] = "2026-09-03"
+    _a04 = _fixture_artifact(_cpd, v17.name, sha17, _rows17["2026-09-04"],
+                             day="2026-09-04")
+    _a04["day_run"]["day"] = "2026-09-04"
+    _r03 = _refuses_cp(lambda b: None, base=_a03, day="20260903")
+    _r04 = _refuses_cp(lambda b: None, base=_a04, day="20260904")
+    ck("***AND THE CHECK FOUND TWO REAL THINGS ON ITS FIRST RUN, ON THE "
+       "BAR'S OWN RECEIPTS.*** 2026-09-03's sealed receipt is RECONSTRUCTED "
+       "-- the run stamped no params and the digest comes from git at the "
+       "carrying commit -- so this reader refuses to certify the claim "
+       "against it; and 2026-09-04's receipt STAMPED params v14, not the "
+       "v15 the early read loads, so an artifact claiming v15 for that day "
+       "is refused NOT_THE_SEALED_RUNS. ***Neither is ruled on here***: the "
+       "reader reports which state each day is in",
+       _r03 == "COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED"
+       and _r04 == "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS",
+       f"09-03 -> {_r03}; 09-04 -> {_r04}")
+    _cpd_ctx.cleanup()
+
+    _moved = _params_declared_by_the_sealed_run({"provenance": {
+        "params": {"sha256": "a" * 64, "path": "p.json"},
+        "digests_at_load_and_at_emit": {"inputs": {"params": {
+            "sha256_at_load": "a" * 64, "sha256_at_emit": "b" * 64,
+            "agrees": False}}}}})
+    _leak_probe = _params_declared_by_the_sealed_run({"provenance": {
+        "params": {"sha256": "c" * 64, "path": "p.json"},
+        "D_E0": -4242.42, "null_mean": 17.5}, "per_day_sealed_artifacts": [
+            {"arm": "X", "D_E0": -4242.42}]})
+    ck("AND THE RECEIPT IS OPENED FOR ONE PURPOSE AND READ FOR ONE THING: a "
+       "receipt whose own params digests DISAGREE between load and emit is "
+       "refused by its own name, and a receipt carrying planted ECONOMIC "
+       "fields yields NONE of them to this reader -- the read scope is a "
+       "declared constant, not a habit",
+       _moved["the_receipts_own_two_readings_agree"] is False
+       and "4242.42" not in json.dumps(_leak_probe)
+       and "null_mean" not in json.dumps(_leak_probe)
+       and set(_leak_probe["read_scope"]) == set(SEALED_RECEIPT_READ_SCOPE),
+       f"load/emit disagreement is visible: "
+       f"{_moved['the_receipts_own_two_readings_agree']}; a planted D_E0 "
+       f"and null_mean reach none of {sorted(_leak_probe)}")
+
     #: REV 90 S A2 -- THE COUNTS' PROVENANCE IS SAID PER DAY.
-    with tempfile.TemporaryDirectory() as td3:
-        t3 = Path(td3)
-        a03 = _fixture_artifact(t3, v17.name, sha17, row17, day="2026-09-03")
-        p03 = t3 / f"{EARLY_FAMILY}_20260903__20260101T000010Z.json"
-        p03.write_text(json.dumps(a03))
-        r03 = verify(p03, repo_root=root)
-        t03 = print_table(r03)
-        row06 = next(r for r in b17["this_reads_bar"]["receipts"]
-                     if r["day"] == "2026-09-06")
-        a06 = _fixture_artifact(t3, v17.name, sha17, row06, day="2026-09-06")
-        a06["day_run"]["day"] = "2026-09-06"
-        p06 = t3 / f"{EARLY_FAMILY}_20260906__20260101T000011Z.json"
-        p06.write_text(json.dumps(a06))
-        r06 = verify(p06, repo_root=root)
-        t06 = print_table(r06)
+    #: 09-06 is driven END TO END through `verify` + `print_table`; 09-03
+    #: is driven at the mapping, because its sealed receipt is
+    #: RECONSTRUCTED and this reader refuses to certify a claim against a
+    #: reconstruction (the cell above). The property here is the PER-DAY
+    #: mapping, and it is asserted on both days either way.
+    _t06 = print_table(res)
+    _p03, _p06 = counts_provenance("2026-09-03"), counts_provenance(
+        "2026-09-06")
     ck("REV 90 S A2 -- ***THE THREE COUNTS CARRY THEIR PROVENANCE, PER DAY, "
        "IN THE PRINTED TABLE***: 09-03's were VISIBLE IN THE OPEN since "
        "2026-09-06T14:01Z under the EIGHT-name seal scope, and the other "
        "three days' are unsealed BY THIS READ under the ELEVEN-name scope. "
        "A table showing four days' counts without saying which is which "
        "would invite a comparison across two different blindness states",
-       "VISIBLE IN THE OPEN" in t03 and "2026-09-06T14:01Z" in t03
-       and "unsealed BY THIS READ" in t06
-       and "VISIBLE IN THE OPEN" not in t06
-       and r03["counts_provenance"]["says"]
-       != r06["counts_provenance"]["says"],
-       f"09-03 -> {r03['counts_provenance']['says'][:52]}…; 09-06 -> "
-       f"{r06['counts_provenance']['says'][:52]}…")
+       "VISIBLE IN THE OPEN" in _p03 and "2026-09-06T14:01Z" in _p03
+       and "unsealed BY THIS READ" in _p06
+       and "VISIBLE IN THE OPEN" not in _p06
+       and "unsealed BY THIS READ" in _t06
+       and "VISIBLE IN THE OPEN" not in _t06,
+       f"09-03 -> {_p03[:52]}…; 09-06 -> {_p06[:52]}…; the 09-06 table "
+       f"carries its own line")
 
     # ---- rule 20's clause (REV 84 S3.2 / REV 85 S3, R-726) -------------
     #: THE SHARED MODULE'S OWN FALSIFIER, AS ONE CELL OF THIS BATTERY. This
