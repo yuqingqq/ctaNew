@@ -138,6 +138,52 @@ edited, rule 13); and the predicate is `>= L` on floats — a fill at t0 + 100 m
 measures 99.99999999999964 ms, so **no declared L may sit on a value a fill lands
 exactly on**.
 
+## 3c. `placement_latency_grid` — the L is SWEPT (R-811, the USER)
+
+**THE USER, 2026-09-07 (R-811):** *"Then can you put a 250ms latency, or make it
+configured to different values to get different numbers under different latency"*.
+
+v20 declares:
+
+```
+placement_latency_grid:
+  primary_L_ms:      250        # PROPOSED, not chosen -- the arms' own cancel latency
+  grid_ms:           [0, 50, 100, 250, 500]     # PROPOSED
+  the_days_L_comes_from: the BOOK's builder receipt, read per run, never a constant
+  quoting_rule:      a day's number is quoted ONLY with its L beside it
+  siblings:          two runs of one day at different L are SIBLINGS, not a chain;
+                     neither supersedes the other
+```
+
+**Where the L comes from, and why it is not a runner argument.** The runner never
+calls `build_reference`; the parameter reaches a day only through
+`be_daybook_build`'s call and a **rebuilt book** (REV 104B §7, and the USER's own
+finding at R-810). So the run READS its L from the book's builder receipt and
+records it with the book's path and sha256 — a number that travels with the data
+rather than with the code. **BE 101** makes the builder record it; **BE 102**
+rebuilds the books across the grid. Until a book records one, the field reads 0
+with `THE BOOK'S BUILDER RECEIPT DECLARES NONE` — which is a measured fact about
+those books (the building code has no placement-latency field at all), not an
+assumption.
+
+**The guard v20 arms:** `settlement_endpoint.require_book_declares_L: true` makes a
+book that records no L REFUSE the run by name
+(`SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY`). It is NOT armed in code today,
+deliberately: every landed book predates BE 101, so arming it would refuse the four
+re-runs the USER asked for tonight.
+
+**Siblings, not successors.** The early read REFUSES
+`EARLY_READ_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY` when a read at one L names an
+artifact run at another: they measure different makers, and calling one the
+successor of the other would hide that. **DA's half is open:** `resolve_early_read_head`
+keys on the day alone today, so two L-siblings for one day would read as
+`EARLY_READ_HEAD_AMBIGUOUS` until the resolver keys on **(day, L)**. Nothing tonight
+hits it — the four re-runs are all at L = 0 and supersede L = 0 heads — but the grid
+cannot be run until that lands.
+
+**What the four re-runs tonight are.** L = 0, because that is what the landed books
+carry. Not a design choice: a measurement of the books.
+
 ## 4. The admissible days — rule 11, in the declaration
 
 - **09-03 … 09-06 are DESIGN data.** The USER's early read (R-754) consumed them;

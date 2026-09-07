@@ -45,7 +45,19 @@ from pathlib import Path
 #: the fill on the arm AND the 0-cancel baseline, so the inventory leg
 #: stopped being ABSENT_UNTIL_BE_96 and became a number this file can
 #: carry. v1 ledgers have no inventory fields and say so; v2 ledgers do.
-SCHEMA_VERSION = 2
+#: v3 (DE 139, DA 131 / Q-DA-356): a v3 ledger carries the R-801
+#: SETTLEMENT rows (`SETTLEMENT_SCALARS`, `SETTLEMENT_SLUG`). DA measured
+#: why the version had to move: a CONFORMING v2 reader written before
+#: DE 136 SILENTLY SKIPS those rows and returns a complete-looking result
+#: with the 5-second D_E0 as the day's number -- under an unchanged
+#: version an older reader cannot tell a ledger carrying the ruled
+#: endpoint from one that does not. A reader that does not know a version
+#: REFUSES it by name (`LEDGER_SCHEMA_UNKNOWN`) instead of misreporting.
+SCHEMA_VERSION = 3
+#: The versions THIS reader understands. A file outside the set refuses --
+#: which is the property the bump exists to create, and it is driven by
+#: pointing a reader whose known set is {1, 2} at a v3 file.
+KNOWN_SCHEMA_VERSIONS = (1, 2, 3)
 LEDGER_PREFIX = "p003_de_decision_ledger"
 
 
@@ -194,12 +206,29 @@ def read_ledger(path, *, expect_sha256: str | None = None) -> dict:
             f"is not the one the receipt was written beside cannot be read "
             f"as the numbers that receipt reports.")
     out: dict = {"header": None, "arms": {}}
+    _kinds_seen: dict = {}
     with gzip.open(path, "rt") as fh:
         for line in fh:
             r = json.loads(line)
             k = r["row"]
+            _kinds_seen[k] = _kinds_seen.get(k, 0) + 1
             if k == "HEADER":
                 out["header"] = r
+                _sv = r.get("schema_version")
+                if _sv not in KNOWN_SCHEMA_VERSIONS:
+                    raise LedgerRefused(
+                        f"LEDGER_SCHEMA_UNKNOWN: this ledger declares "
+                        f"schema_version {_sv!r} and this reader knows "
+                        f"{list(KNOWN_SCHEMA_VERSIONS)}. A reader that "
+                        f"does not know a version REFUSES it -- it does "
+                        f"not skip the rows it cannot name and return a "
+                        f"complete-looking result (DA 131: a conforming "
+                        f"v2 reader silently dropped the SETTLEMENT rows "
+                        f"and reported the 5-second D_E0 as the day's "
+                        f"number).")
+                continue
+            if k in ("SETTLEMENT_SCALARS", "SETTLEMENT_SLUG"):
+                out.setdefault("settlement_rows", []).append(r)
                 continue
             a = out["arms"].setdefault(r["arm"], {
                 "scalars": None, "null_values": [], "null_cancels": [],
@@ -214,6 +243,14 @@ def read_ledger(path, *, expect_sha256: str | None = None) -> dict:
                 a["fills"][r["book"]].append(r)
             elif k == "DECISION":
                 a["decisions"].append(r)
+    # DA 131: WHETHER THE RULED ENDPOINT IS IN THIS FILE, SAID BY NAME.
+    # A v2 ledger has no settlement rows and a reader must not present
+    # the 5-second D_E0 as "the day's number" without saying so.
+    out["settlement_rows_status"] = (
+        "SETTLEMENT_ROWS_PRESENT" if out.get("settlement_rows")
+        else "SETTLEMENT_ROWS_ABSENT")
+    out["row_kinds_seen"] = _kinds_seen
+    out["schema_version_read"] = (out["header"] or {}).get("schema_version")
     return out
 
 
@@ -318,7 +355,7 @@ def recompute(led: dict, arm: str) -> dict:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 9
+EXPECTED_CHECKS = 11
 
 
 def selftest(quiet: bool = False) -> int:
@@ -427,6 +464,60 @@ def selftest(quiet: bool = False) -> int:
             for e in o:
                 n += _keys_named(e, name)
         return n
+    # ---- DA 131 / Q-DA-356: THE VERSION IS WHAT STOPS A SILENT SKIP --
+    # DA measured it: a CONFORMING v2 reader written before DE 136 skips
+    # the SETTLEMENT rows and returns a complete-looking result with the
+    # 5-second D_E0 as the day's number. So a v3 ledger carries those
+    # rows and a reader that does not know the version REFUSES it.
+    import gzip as _gz131
+    _v3 = Path(tempfile.mkdtemp(prefix="ledger_v3_")) / "v3.jsonl.gz"
+    with _gz131.open(_v3, "wt") as _fh:
+        _fh.write(json.dumps({"row": "HEADER", "schema_version": 3,
+                              "day": "FIXTURE", "arms": []}) + "\n")
+        _fh.write(json.dumps({"row": "SETTLEMENT_SCALARS", "arm": "A",
+                              "D_E_settle": 1.0}) + "\n")
+    _r3 = read_ledger(_v3)
+    # THE OLD READER, SIMULATED HONESTLY: the same function with a known
+    # set of {1, 2} -- which is exactly what a pre-DE-136 reader had.
+    _known_before = KNOWN_SCHEMA_VERSIONS
+    _refused131 = None
+    try:
+        globals()["KNOWN_SCHEMA_VERSIONS"] = (1, 2)
+        read_ledger(_v3)
+    except LedgerRefused as _e:
+        _refused131 = str(_e).split(":")[0]
+    finally:
+        globals()["KNOWN_SCHEMA_VERSIONS"] = _known_before
+    ok(SCHEMA_VERSION == 3
+       and _r3["schema_version_read"] == 3
+       and _r3["settlement_rows_status"] == "SETTLEMENT_ROWS_PRESENT"
+       and len(_r3["settlement_rows"]) == 1
+       and _refused131 == "LEDGER_SCHEMA_UNKNOWN"
+       and KNOWN_SCHEMA_VERSIONS == (1, 2, 3),
+       f"DA 131: THE SCHEMA IS v{SCHEMA_VERSION} AND AN UNKNOWN VERSION "
+       f"REFUSES. A v3 ledger reads as "
+       f"`{_r3['settlement_rows_status']}` with its settlement rows "
+       f"kept; a reader whose known set is {{1, 2}} -- what every reader "
+       f"written before DE 136 had -- REFUSES it `{_refused131}` "
+       f"instead of skipping the rows it cannot name and reporting the "
+       f"5-second D_E0 as the day's number. The known set is restored, "
+       f"asserted here")
+    _v2land = Path("/home/yuqing/ctaNew/data/pm_5min/derived/"
+                   "p003_de_decision_ledger_20260905__20260907T124104Z"
+                   ".jsonl.gz")
+    if _v2land.is_file():
+        _r2 = read_ledger(_v2land)
+        ok(_r2["schema_version_read"] == 2
+           and _r2["settlement_rows_status"] == "SETTLEMENT_ROWS_ABSENT"
+           and "SETTLEMENT_SLUG" not in _r2["row_kinds_seen"],
+           f"DA 131: and a v3 READER on the LANDED v2 ledger (09-05) "
+           f"reads it as schema {_r2['schema_version_read']} with "
+           f"`{_r2['settlement_rows_status']}` -- the landed bytes are "
+           f"readable and SAY they carry no ruled endpoint, rather than "
+           f"letting a reader present their 5-second number as the "
+           f"day's. Row kinds seen: {sorted(_r2['row_kinds_seen'])}")
+    else:
+        ok(False, "DA 131: the landed 09-05 ledger is not on disk")
     ok(_keys_named(rc, "inventory_leg") == 0
        and _keys_named(rc, "trades_cash_flow_cents") == 1
        and "inventory_leg" in json.dumps(rc),
