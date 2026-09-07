@@ -152,6 +152,24 @@ def the_ruling(repo_root=None) -> dict:
 #: Named as STATUSES, never dropped in silence (reliability rule 4). Each
 #: one would be a NEW statistic, and a read whose remit is "show what
 #: those runs computed and stripped" may not invent one.
+#: DE 129: THREE OF THESE FIVE ARE NOW COMPUTED, and this block said
+#: otherwise in every artifact it was emitted into. The DECISION LEDGER
+#: (R-765) recomputes `p_two_sided`, `rho = adverse/spread` and -- since
+#: BE 96 -- the `inventory_leg`, from stored rows with the book absent.
+#: What this block describes is the ARM-DAY ECONOMIC BLOCK in the receipt,
+#: which still carries none of them; a reader has to be told WHERE to
+#: look rather than that the number does not exist.
+WHERE_THE_FIVE_LIVE_NOW = {
+    "p_two_sided": "COMPUTED, in the decision ledger "
+                   "(de_decision_ledger.recompute)",
+    "rho_adverse_over_spread": "COMPUTED, in the decision ledger",
+    "inventory_leg": "COMPUTED since BE 96, in the decision ledger",
+    "fills_leg": "COMPUTED, in the decision ledger",
+    "D_E_MINUS_R": "STILL NOT COMPUTED ANYWHERE -- the robustness "
+                   "endpoint needs the rebate's identity value, which is "
+                   "not on DE's surface",
+}
+
 NOT_COMPUTED_BY_THIS_PATH = {
     "fills_leg": "the arm-day economic block is a SINGLE excess `D_E0` "
                  "against the 0-cancel baseline. There is no fills/"
@@ -179,7 +197,14 @@ def economics_available_per_arm_day() -> dict:
         "from_the_arm_level": ["n_fills_arm", "n_fills_baseline",
                                "n_cancels_issued", "status",
                                "admissibility", "seed", "draw_provenance"],
-        "not_computed_by_this_path": NOT_COMPUTED_BY_THIS_PATH,
+        "not_computed_by_this_path_the_ARM_DAY_BLOCK":
+            NOT_COMPUTED_BY_THIS_PATH,
+        "where_the_five_live_now": WHERE_THE_FIVE_LIVE_NOW,
+        "read_this_first": "four of the five ARE computed, in the DECISION "
+                           "LEDGER beside the receipt; only D_E_MINUS_R is "
+                           "computed nowhere. This block used to say all "
+                           "five were absent, which stopped being true at "
+                           "R-765 and BE 96.",
     }
 
 
@@ -810,25 +835,27 @@ def _selftest_body(quiet: bool = False) -> int:
            f"sweep is complete and the entry offers to run none of it "
            f"again")
     else:
-        # REV 96 §1: THE READY DRIVE LIVES HERE, inside the branch that
-        # knows a day is unread. It sat OUTSIDE and read
-        # `["preconditions"]` unconditionally, so after E4 -- no unread
-        # day -- it would raise the very `KeyError: 'preconditions'` that
-        # was REV 94's NO-GO. My §A5 fix guarded the state and then
-        # stepped straight past its own guard.
+        # REV 97 §A1: THE WHOLE DRIVE IS IN HERE -- the rehearse call,
+        # every read of its result, AND the `ok()` that asserts on it. REV
+        # 96 moved ONE STATEMENT: `reh` and `dc` were assigned inside this
+        # branch and read OUTSIDE it, so the post-E4 world traded a
+        # `KeyError` for an `UnboundLocalError` and the cell still could
+        # not run in the world it exists to describe. A guard around one
+        # statement is not a guard around the block.
         reh = rehearse(_st["next_unread"])
         dc = reh["preconditions"]["digest_comparison"]
-    ok(reh["status"] == "READY" and reh["blocking"] == []
-       and dc["is_a_full_pair"] is True
-       and len(dc["bar_says"]) == 64 and dc["bar_says"] == dc["artifact_is"]
-       and dc["prefix_agrees_with_the_full_digest"] is True,
-       f"DRIVE 4d (GREEN, THE NEXT UNREAD DAY {_st['next_unread']}): it "
-       f"rehearses "
-       f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
-       f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
-       f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 hex "
-       f"compared and equal, with v16's prefix kept beside it and "
-       f"agreeing")
+        ok(reh["status"] == "READY" and reh["blocking"] == []
+           and dc["is_a_full_pair"] is True
+           and len(dc["bar_says"]) == 64
+           and dc["bar_says"] == dc["artifact_is"]
+           and dc["prefix_agrees_with_the_full_digest"] is True,
+           f"DRIVE 4d (GREEN, THE NEXT UNREAD DAY {_st['next_unread']}): it "
+           f"rehearses "
+           f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
+           f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
+           f"receipt check is now a FULL pair (`is_a_full_pair` True), 64 "
+           f"hex compared and equal, with v16's prefix kept beside it and "
+           f"agreeing")
 
     # ---- REV 91 §C1 / REV 93 #4: THE SHARED FALSIFIER, AS ONE CELL ---
     # The gap REV named is DETECTION COVERAGE, not correctness: the shared
@@ -926,13 +953,20 @@ def _selftest_body(quiet: bool = False) -> int:
 
     # ---- the absent fields are STATUSES, never silent drops -----------
     av = economics_available_per_arm_day()
-    ok(len(av["not_computed_by_this_path"]) == 5
-       and all(isinstance(v, str) and len(v) > 40
-               for v in av["not_computed_by_this_path"].values()),
-       f"the {len(av['not_computed_by_this_path'])} fields the dispatch "
-       f"asked for that this path does not compute are named with their "
-       f"reasons -- {sorted(av['not_computed_by_this_path'])} -- not "
-       f"dropped in silence (reliability rule 4)")
+    _absent = av["not_computed_by_this_path_the_ARM_DAY_BLOCK"]
+    _where = av["where_the_five_live_now"]
+    ok(len(_absent) == 5
+       and all(isinstance(v, str) and len(v) > 40 for v in _absent.values())
+       and set(_where) == set(_absent)
+       and sum(1 for v in _where.values() if v.startswith("COMPUTED")) == 4
+       and _where["D_E_MINUS_R"].startswith("STILL NOT COMPUTED"),
+       f"DE 129: the five the dispatch asked for are named with their "
+       f"reasons AND with WHERE THEY LIVE NOW -- four of them "
+       f"({sorted(k for k, v in _where.items() if v.startswith('COMPUTED'))}) "
+       f"are computed in the DECISION LEDGER since R-765 and BE 96, and "
+       f"only `D_E_MINUS_R` is computed nowhere. This block said all five "
+       f"were absent in every artifact it was emitted into, which stopped "
+       f"being true two rounds ago")
 
     shutil.rmtree(tmp, ignore_errors=True)
     _sum = RUN.battery_summary("de_early_read", n_run=n[0],

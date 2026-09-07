@@ -3640,6 +3640,7 @@ def selftest() -> int:
         raise, and because the call stood on its own line the suite died
         by traceback with no FAIL line -- the DE41-R1 class, in the
         control that was supposed to prove the gate ADMITS."""
+        _mark_site()
         try:
             fn()
         except REFUSAL_TYPES as exc:
@@ -6317,12 +6318,18 @@ def selftest() -> int:
     # are read from this file's own parse now, so adding a check moves
     # both sides of the assertion and a line number can never drift.
     import ast as _ast771
+    # EVERY HELPER THAT INCREMENTS THE COUNTER. My walker knew `ok` and
+    # `refuses` and not `admits` -- a third helper that also does
+    # `n[0] += 1` -- so the parse predicted 216 against a run of 217 and
+    # I nearly attributed the difference to an unreadable loop. The list
+    # is derived from the helpers that touch `n`, not typed from memory.
+    _COUNTING_HELPERS = ("ok", "refuses", "admits")
     _src771 = Path(__file__).resolve().read_text()
     _tree771 = _ast771.parse(_src771)
     _sites771 = {n.lineno for n in _ast771.walk(_tree771)
                  if isinstance(n, _ast771.Call)
                  and isinstance(n.func, _ast771.Name)
-                 and n.func.id in ("ok", "refuses")}
+                 and n.func.id in _COUNTING_HELPERS}
     # THE CONDITIONAL ARMS, DERIVED: an `ok(False, ...)` inside the TRY of
     # a try/except -- the line that runs only if the guard under test
     # stops refusing. Nothing about them is typed.
@@ -6374,9 +6381,47 @@ def selftest() -> int:
     # AND THE EXPORTED CONSTANT IS TIED TO THE DERIVATION, so a reader
     # importing `EXPECTED_CHECKS` gets the same number the parse produces
     # and it cannot drift the way 252 did.
-    ok(EXPECTED_CHECKS == n[0] + 1 + _n_cond771,
-       f"R-771: the exported `EXPECTED_CHECKS` ({EXPECTED_CHECKS}) equals "
-       f"n_run ({n[0] + 1}) + n_conditional ({_n_cond771}). The constant is a PUBLISHED value other modules "
+    # REV 97 §A4: THE TOTAL IS DERIVED BY THE SAME WALKER, no typed
+    # number anywhere in the assertion path. A site inside a `for`/`while`
+    # inside the selftest runs once per iteration of a range whose length
+    # is a literal in the loop header; the walker reads that length from
+    # the AST, so `sites + extra_from_loops` is a parse result and the
+    # comparison has a derived quantity on BOTH sides.
+    _loopmul771 = 0
+    for _lp in _ast771.walk(_tree771):
+        if not isinstance(_lp, (_ast771.For, _ast771.While)):
+            continue
+        _inner = [x for x in _ast771.walk(_lp)
+                  if isinstance(x, _ast771.Call)
+                  and isinstance(x.func, _ast771.Name)
+                  and x.func.id in _COUNTING_HELPERS]
+        if not _inner:
+            continue
+        _n_iter = None
+        if isinstance(_lp, _ast771.For) and isinstance(_lp.iter,
+                                                       (_ast771.List,
+                                                        _ast771.Tuple)):
+            _n_iter = len(_lp.iter.elts)
+        elif (isinstance(_lp, _ast771.For)
+              and isinstance(_lp.iter, _ast771.Call)
+              and isinstance(_lp.iter.func, _ast771.Name)
+              and _lp.iter.func.id == "range"
+              and len(_lp.iter.args) == 1
+              and isinstance(_lp.iter.args[0], _ast771.Constant)):
+            _n_iter = _lp.iter.args[0].value
+        if _n_iter:
+            _loopmul771 += len(_inner) * (_n_iter - 1)
+    _derived_total771 = len(_sites771) + _loopmul771
+    ok(_derived_total771 == n[0] + 1 + _n_cond771
+       and EXPECTED_CHECKS == _derived_total771,
+       f"R-771 / REV 97 §A4: THE TOTAL IS A PARSE RESULT. The same walker "
+       f"that finds the conditional arms counts {len(_sites771)} call "
+       f"sites and {_loopmul771} extra executions from sites inside loops "
+       f"whose iteration count is a literal in the loop header -- "
+       f"{_derived_total771} derived -- and the run produced n_run "
+       f"{n[0] + 1} + n_conditional {_n_cond771} = "
+       f"{n[0] + 1 + _n_cond771}. The exported `EXPECTED_CHECKS` "
+       f"({EXPECTED_CHECKS}) equals the DERIVED total, not a typed one. The constant is a PUBLISHED value other modules "
        f"read, so it stays -- but it is now checked against the parse "
        f"rather than maintained by hand, which is how it reached 252 "
        f"against 209 sites")
