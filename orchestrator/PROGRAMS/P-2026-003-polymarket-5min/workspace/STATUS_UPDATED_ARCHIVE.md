@@ -19957,3 +19957,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2026 -> 2044, provenance 1571 -> 1589 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 251 archived.)
 ```
+
+## Batch 255 — archived 2026-09-07T13:07:39Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T11:34:05Z (MEM ROUND 270 -- R-787 AND R-788 SWEPT, with every landing between the tip I read at round 269
+  (`afd74c3`) and `3d1dc7f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE v20/v28 RE-POINT NEVER EXISTED AS FILES -- SETTLED IN HISTORY, NOT ON DISK.*** `git log --all` over
+  `*params_v20.json` returns **0 commits** and over `*design_v28*` **0 commits**, with the falsifier returning 1
+  for v19 and 1 for v27. So they were never committed and then removed either. **What I measured for nine rounds
+  was right** (absent, heads v19/v27); **what I repeated was not mine** -- R-780's phrase "composed and
+  unwritten", carried forward three times without asking what "composed" pointed at. It pointed at MEASUREMENTS
+  in Q-DE-131/133. A file-existence count cannot tell "never written" from "written then removed"; the history
+  check can. **A word inherited from an entry is not a measurement, even when the number beside it is.**
+  (2) The harvest's other warning, checked: `ls | sort -V | tail` and `resolve_head` **AGREE TODAY** on both
+  families (v27, v19). The warning is about a SHAPE the chain can take, not a present divergence -- and my own
+  usage is clean for a nameable reason: `ls` counts tested the ABSENCE of v20/v28 (a file question), `resolve_head`
+  named every HEAD from round 267 (the chain question).
+  (3) **E3 IS RUNNING** -- `deEARLY20260905.service`, read while loaded at 11:30:55Z: loaded/active/running/0/
+  success, InvocationID `ab140ff1...`, MemoryPeak 2,410,196,992, **WorkingDirectory `/home/yuqing/ctaNew-wt-de`,
+  which `git worktree list` puts at `6c3a121`** -- the cleared composition, so the required refresh happened.
+  **ROUND 268'S RULE APPLIED THE FIRST TIME IT MATTERS**: E3's run journal does not exist yet, so this reading
+  lives in the prose with its clock and the `artifact:` field is the register, not the transient unit path.
+  (4) **REV 102'S TRACED CHAIN VERIFIED AT `6c3a121`, THE BYTES E3 RUNS**: `_main_day:11677` passes five keywords
+  and **neither `ledger_anchor` nor `receipt_path`**; `day_split_residency_proof:6700` takes `**kw` and forwards
+  it at `:6710`; `run_day:6020` calls `assert_ledger_anchor` with `_anchor = ledger_anchor if not None else
+  receipt_path`. **A pass-through does not supply a default it was never given.** And `receipt_path=` is passed
+  INTO `run_day` **nowhere** -- the same zero I established across 1,682 files at `fe76d83`. (REV's "the only
+  occurrence of that name is the default at `:5931`" is a little loose -- the NAME occurs at eleven lines, in a
+  different function and as dict keys -- but its point holds exactly.)
+  (5) **THE EARLY-READ PATH PASSES `ledger_anchor=out`** (call opens `:414`, keyword at `:418`), which is why
+  E3/E4 clear and GO #8 does not: **one keyword is the entire difference.** So **E3's artifact SHOULD carry a
+  non-null `decision_ledger` and a ledger file beside it -- the first of this family that would** (falsifiable;
+  neither existed at 11:30:55Z). Why it never bit before: v15 carried no R-765 ruling; **v19 carries
+  `user_ruled_unsealed_emission` (verified)**, so GO #8 is the first real day to meet the guard. **This is the
+  guard working** -- the cost is a refused launch, not ninety minutes, which is R-610's principle paying out.
+  (6) RESULTS §0b tables both days under "the coordinator computed nothing", and carries the 8-vs-11 seal-scope
+  distinction I measured last round in the same terms. Cascade on three refs: `fe76d83` 10/10, **`6c3a121`
+  10/10**, shared 9/10 -- **and I now say what that red DOES: the battery stops at check 7 and nothing after it
+  is observed** (round 269's correction, in practice). DE's reset is complete and its four answers were verified
+  at the files. The replay debt stands for 09-03 and 09-04. Freeze holds a TENTH round -- now a statement about
+  files that never existed.
+  COUNTS (by YAML parse): flags 2044 -> 2062, provenance 1589 -> 1607 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 252 archived.)
+```

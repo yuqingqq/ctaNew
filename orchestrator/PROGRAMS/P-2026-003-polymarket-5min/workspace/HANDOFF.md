@@ -1,3 +1,104 @@
+# READ FIRST — round 273 (MEM, 2026-09-07T13:07:39Z, tip `c1ce532`)
+
+**R-795 swept, with every landing between the tip I read at round 272 (`20b6dfc`) and `c1ce532`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. `inventory_leg` is a field of no ledger row type — and I had verified the block twice without opening it
+
+Measured at the 09-05 ledger, all four row types: **HEADER** (8 keys), **ARM_SCALARS** (12, carrying
+`arm_value_cents` / `baseline_value_cents` / `observed_D_E0`), **NULL_DRAW** (5), **FILL** (17, carrying BE 96's
+five per-fill position fields). **`inventory_leg` occurs in none of them.** The ledger holds the *inputs* to such
+a leg, on every fill, for both books — not the leg.
+
+**So the artifact's `where_the_five_live_now` claim — `inventory_leg: "COMPUTED since BE 96, in the decision
+ledger"` — is false where it points.**
+
+**And that is a correction to my own reading.** At round 265 I printed that block's key set, counted its four
+"COMPUTED" entries, and caught its prose-vs-data mismatch; at round 272 I confirmed it shipped in E3's artifact.
+**Both readings were about the block — its keys, its internal count, its presence. Neither opened the file the
+claim names.** Rule 16 is *verify at the artifact a claim names*, and that artifact was a different file.
+
+## 2. Computed is not recomputable
+
+The ledger makes its own claim, and it is **true**: `what_cannot_be_recomputed_from_this` says the five fields
+are on every fill for the arm *and* the baseline, "**so the INVENTORY LEG is recomputable from this file**".
+Verified — `inventory_after` is non-None on **all 177,467 fill rows**.
+
+| statement | says | true? |
+|---|---|---|
+| artifact: "COMPUTED … in the decision ledger" | a **value** is there | **no** |
+| ledger header: "recomputable from this file" | its **inputs** are there | **yes** |
+
+**A pointer to a value and a pointer to its inputs are different promises, and only one can be followed without
+a ruling.** That reconciles two sentences about one file that look contradictory.
+
+## 3. The estimand, by construction
+
+`fill_value_cents(f)` = `sgn × (mid_cents_at_markout − px_cents) × size` — **it reads no `inventory_*` field**.
+So the day value is the fills leg **by construction**, not because someone set `total` to it; `what_total_is`
+states a fact, not a choice.
+
+And the code's `inventory_leg` is `Σ (inventory_after − inventory_before) × inventory_mark_cents` — the position
+*change* per fill is its signed size, so this is **the cash flow of the fills at each fill's own mark**. Not a
+position valuation, not a P&L leg. **The name is the misleading part.**
+
+**So my round-272 deltas (−216,448.71 / −28,401.85) were differences of cash flows** — correctly read from a
+misleadingly named field. I recorded them as arithmetic and routed nothing; the reason that was the right amount
+to say is now visible.
+
+## 4. BE 97's residuals, reproduced exactly
+
+Last FILL per `(book, arm, slug)` by `fill_ns`, summing `|inventory_after|`:
+
+| path | slugs | non-zero | Σ\|residual\| | BE 97 |
+|---|---:|---:|---:|---:|
+| `CONDVALUE_X_SKEW` (ARM) | 288 | **287** | **5,100** | 5,100 |
+| `HAZARD_OVER_SKEWED_REF` (ARM) | 288 | 288 | **9,184** | 9,184 |
+| BASELINE (both labels) | 288 | 288 | **10,188** | 10,188 |
+
+Every figure, with the 287-vs-288 split exactly where BE's "287–288 of 288" implies, and the baseline identical
+under both arm labels — one replay recorded twice. Two implementations, no shared code, same numbers.
+
+**My first pass was mis-scoped** — keyed on `(arm, slug)`, giving 7,502 / 9,263 — and I did not report the
+disagreement, because the fill counts named the cause: `2×49,668 + 78,131 = 177,467`, so each arm's block carries
+both books, and the discriminator is `book` (ARM 78,131 / BASELINE 99,336; per-`(arm, book)` counts reproduce the
+artifact's fill counts exactly). **The fourth scope mismatch in four rounds, and this one was mine.**
+
+So the fills-leg comparison **is** between paths that do not end flat and do not end alike — verified, not
+relayed. That is a statement about what the estimand includes, not that it is wrong.
+
+## 5. The ruling is the user's
+
+BE's two illustrative rules **differ by more than the day's fills leg on every path** — so the choice of rule can
+exceed the result it would modify. Under rule 14, **an inventory leg is a ruling, routed to the USER**: the
+fourth user ruling in play today (R-754, R-765, R-782) and **the only one open**. The coordinator's three-part
+recommendation is **disclosed, not adopted** — keep `D_E0` on the fills leg; report a Chainlink-marked residual
+as a separate exploratory column once joined; **adopt no fill-mark/flat-mark rule meanwhile**, which is the part
+that keeps the question open rather than settling it by default. MEM takes no position.
+
+**The label "fills leg only" now rides with every `D_E0` quotation** — a label, not a caveat, in the family of
+EXPLORATORY / one day / no interval / days consumed.
+
+## 6. Standing
+
+- **E4 still running** (`deEARLY20260906`, loaded/active/running, MemoryPeak unchanged), **`wt-de` still at
+  `6c3a121`** — the refresh to `5020f96` correctly has not happened. Exit ≈14:07Z.
+- **Freeze holds a thirteenth round.** The 09-03/09-04 replay debt stands.
+- **The four-day table's heterogeneity gains a fifth item:** absolutes (2 of 4), ledgers (one real / one explicit
+  null / one no key), the bare `G` (sealed vs early read), the params-stamp spans — **and now the "fills leg
+  only" label, which is the one thing uniform across all four days while everything else varies.**
+
+## 7. Counts
+
+flags 2098 → **2116**, provenance 1643 → **1661** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,371 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 149th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my eighteen added none. Window trimmed 4 → 3,
+**Batch 255** archived.
+
+**NEXT:** E4 exits → DA 128 (09-06, its sealed stamp read at that receipt). MEM sweeps R-796 onward.
+
+---
+
 # READ FIRST — round 272 (MEM, 2026-09-07T13:00:23Z, tip `20b6dfc`)
 
 **R-791..R-794 and RESULTS `d1dd353` swept, with every landing between the tip I read at round 271 (`f77b95d`)

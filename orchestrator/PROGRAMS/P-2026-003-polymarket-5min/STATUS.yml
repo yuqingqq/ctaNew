@@ -67,6 +67,41 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T13:07:39Z (MEM ROUND 273 -- R-795 SWEPT, with every landing between the tip I read at round 272 (`20b6dfc`) and
+  `c1ce532`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***`inventory_leg` IS A FIELD OF NO LEDGER ROW TYPE.*** Measured at the 09-05 ledger across all four types
+  -- HEADER (8 keys), ARM_SCALARS (12), NULL_DRAW (5), FILL (17) -- **zero occurrences**. What the ledger holds
+  are BE 96's five per-fill INPUTS on every fill for both books. **So the artifact's `where_the_five_live_now`
+  claim, `inventory_leg: "COMPUTED since BE 96, in the decision ledger"`, is FALSE where it points.**
+  (2) ***AND I VERIFIED THAT BLOCK TWICE WITHOUT FOLLOWING ONE OF ITS POINTERS.*** At round 265 I printed its key
+  set, counted the four "COMPUTED" entries and caught its prose-vs-data mismatch; at round 272 I confirmed it
+  shipped in E3's artifact. **Both readings were about the block. Neither opened the file the claim names.** Rule
+  16 says verify at the artifact a claim NAMES -- and that artifact was a different file.
+  (3) **THE LEDGER MAKES ITS OWN CLAIM AND IT IS TRUE**: the header says the inventory leg is **RECOMPUTABLE**
+  from the file, and all five inputs are present with `inventory_after` non-None on **all 177,467 fill rows**.
+  ***COMPUTED IS NOT RECOMPUTABLE***, and that reconciles two sentences about one file that look contradictory:
+  a pointer to a VALUE and a pointer to its INPUTS are different promises, and only one can be followed without
+  a ruling.
+  (4) `fill_value_cents` is `sgn x (markout - level) x size` and **reads no `inventory_*` field**, so the day
+  value is the fills leg **BY CONSTRUCTION**, not by a choice of `total`. And the code's `inventory_leg` is
+  `Σ (after - before) x own mark` = **the cash flow of the fills**, not a position valuation -- the name is the
+  misleading part. **So my round-272 deltas (-216,448.71 / -28,401.85) were differences of CASH FLOWS**,
+  correctly read from a misleadingly named field; I recorded them as arithmetic and routed nothing, and the
+  reason that was the right amount to say is now visible.
+  (5) ***I REPRODUCED BE 97's RESIDUALS EXACTLY***, by last-fill-per-slug over the ledger: CONDVALUE **5,100**
+  (287 of 288 non-zero), HAZARD **9,184** (288), BASELINE **10,188** (288) -- every figure BE cites, with the
+  287/288 split exactly where BE's range implies, and the baseline identical under both arm labels (one replay
+  recorded twice). **My first pass was mis-scoped** -- keyed on `(arm, slug)`, giving 7,502/9,263 -- and I did
+  not report the disagreement: the fill counts (`2x49,668 + 78,131 = 177,467`) named the cause, the `book` field.
+  **The fourth scope mismatch in four rounds, and this one was mine.**
+  (6) So the fills-leg comparison IS between paths with materially different terminal inventory, verified not
+  relayed. **AN INVENTORY LEG IS A RULING AND IT IS THE USER'S** (rule 14) -- the fourth user ruling in play
+  today and the only one OPEN; the coordinator's three-part recommendation is DISCLOSED, not adopted, and
+  declining either illustrative rule is what keeps it open. **The label "fills leg only" now rides with every
+  `D_E0` quotation** -- a label, not a caveat, and the one thing uniform across all four days while everything
+  else varies. E4 still running, `wt-de` still at `6c3a121`. Freeze holds a THIRTEENTH round.
+  COUNTS (by YAML parse): flags 2098 -> 2116, provenance 1643 -> 1661 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 255 archived.)
   2026-09-07T13:00:23Z (MEM ROUND 272 -- R-791..R-794 AND RESULTS `d1dd353` SWEPT, with every landing between the tip I read
   at round 271 (`f77b95d`) and `20b6dfc`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***MY ROUND-270 PREDICTION HELD, TO THE FILENAME.*** I predicted a non-null `decision_ledger` and named the
@@ -145,45 +180,6 @@ updated: >-
   09-03/09-04 replay debt stands.
   COUNTS (by YAML parse): flags 2062 -> 2080, provenance 1607 -> 1625 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 253 archived.)
-  2026-09-07T11:34:05Z (MEM ROUND 270 -- R-787 AND R-788 SWEPT, with every landing between the tip I read at round 269
-  (`afd74c3`) and `3d1dc7f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE v20/v28 RE-POINT NEVER EXISTED AS FILES -- SETTLED IN HISTORY, NOT ON DISK.*** `git log --all` over
-  `*params_v20.json` returns **0 commits** and over `*design_v28*` **0 commits**, with the falsifier returning 1
-  for v19 and 1 for v27. So they were never committed and then removed either. **What I measured for nine rounds
-  was right** (absent, heads v19/v27); **what I repeated was not mine** -- R-780's phrase "composed and
-  unwritten", carried forward three times without asking what "composed" pointed at. It pointed at MEASUREMENTS
-  in Q-DE-131/133. A file-existence count cannot tell "never written" from "written then removed"; the history
-  check can. **A word inherited from an entry is not a measurement, even when the number beside it is.**
-  (2) The harvest's other warning, checked: `ls | sort -V | tail` and `resolve_head` **AGREE TODAY** on both
-  families (v27, v19). The warning is about a SHAPE the chain can take, not a present divergence -- and my own
-  usage is clean for a nameable reason: `ls` counts tested the ABSENCE of v20/v28 (a file question), `resolve_head`
-  named every HEAD from round 267 (the chain question).
-  (3) **E3 IS RUNNING** -- `deEARLY20260905.service`, read while loaded at 11:30:55Z: loaded/active/running/0/
-  success, InvocationID `ab140ff1...`, MemoryPeak 2,410,196,992, **WorkingDirectory `/home/yuqing/ctaNew-wt-de`,
-  which `git worktree list` puts at `6c3a121`** -- the cleared composition, so the required refresh happened.
-  **ROUND 268'S RULE APPLIED THE FIRST TIME IT MATTERS**: E3's run journal does not exist yet, so this reading
-  lives in the prose with its clock and the `artifact:` field is the register, not the transient unit path.
-  (4) **REV 102'S TRACED CHAIN VERIFIED AT `6c3a121`, THE BYTES E3 RUNS**: `_main_day:11677` passes five keywords
-  and **neither `ledger_anchor` nor `receipt_path`**; `day_split_residency_proof:6700` takes `**kw` and forwards
-  it at `:6710`; `run_day:6020` calls `assert_ledger_anchor` with `_anchor = ledger_anchor if not None else
-  receipt_path`. **A pass-through does not supply a default it was never given.** And `receipt_path=` is passed
-  INTO `run_day` **nowhere** -- the same zero I established across 1,682 files at `fe76d83`. (REV's "the only
-  occurrence of that name is the default at `:5931`" is a little loose -- the NAME occurs at eleven lines, in a
-  different function and as dict keys -- but its point holds exactly.)
-  (5) **THE EARLY-READ PATH PASSES `ledger_anchor=out`** (call opens `:414`, keyword at `:418`), which is why
-  E3/E4 clear and GO #8 does not: **one keyword is the entire difference.** So **E3's artifact SHOULD carry a
-  non-null `decision_ledger` and a ledger file beside it -- the first of this family that would** (falsifiable;
-  neither existed at 11:30:55Z). Why it never bit before: v15 carried no R-765 ruling; **v19 carries
-  `user_ruled_unsealed_emission` (verified)**, so GO #8 is the first real day to meet the guard. **This is the
-  guard working** -- the cost is a refused launch, not ninety minutes, which is R-610's principle paying out.
-  (6) RESULTS §0b tables both days under "the coordinator computed nothing", and carries the 8-vs-11 seal-scope
-  distinction I measured last round in the same terms. Cascade on three refs: `fe76d83` 10/10, **`6c3a121`
-  10/10**, shared 9/10 -- **and I now say what that red DOES: the battery stops at check 7 and nothing after it
-  is observed** (round 269's correction, in practice). DE's reset is complete and its four answers were verified
-  at the files. The replay debt stands for 09-03 and 09-04. Freeze holds a TENTH round -- now a statement about
-  files that never existed.
-  COUNTS (by YAML parse): flags 2044 -> 2062, provenance 1589 -> 1607 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 252 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -355,6 +351,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 273, R-795 swept (20b6dfc -> c1ce532) ---
+  inventory_leg_IS_A_FIELD_OF_NO_LEDGER_ROW_TYPE: FOUR-ROW-TYPES-ZERO-OCCURRENCES
+  SO_THE_ARTIFACTS_COMPUTED_IN_THE_DECISION_LEDGER_IS_FALSE_AT_THE_LEDGER: THE-POINTER-NAMES-A-PLACE-THAT-HAS-NO-SUCH-FIELD
+  AND_I_VERIFIED_THAT_BLOCK_TWICE_WITHOUT_FOLLOWING_ONE_OF_ITS_POINTERS: RULE-16-ON-MY-OWN-READING
+  THE_LEDGER_HEADER_SAYS_RECOMPUTABLE_WHICH_IS_TRUE_AND_A_DIFFERENT_CLAIM: THE-FIVE-INPUTS-ARE-ON-EVERY-FILL
+  COMPUTED_IS_NOT_RECOMPUTABLE_AND_THAT_RECONCILES_THE_TWO_STATEMENTS: A-VALUE-VERSUS-ITS-INPUTS
+  fill_value_cents_HAS_NO_POSITION_TERM: LEVEL-TO-MARKOUT-TIMES-SIZE
+  SO_THE_DAY_VALUE_IS_THE_FILLS_LEG_BY_CONSTRUCTION: NOT-BY-CHOICE-OF-TOTAL
+  I_REPRODUCED_BE_97s_RESIDUALS_EXACTLY_FROM_THE_LEDGER: 5100-10188-9184-AND-287-288-288
+  MY_FIRST_PASS_WAS_MIS_SCOPED_UNTIL_THE_FILL_COUNTS_POINTED_AT_book: THE-FOURTH-SCOPE-MISMATCH-AND-THIS-ONE-WAS-MINE
+  THE_BASELINE_RESIDUAL_IS_IDENTICAL_UNDER_BOTH_ARM_LABELS: ONE-REPLAY-RECORDED-TWICE
+  SO_THE_FILLS_LEG_COMPARISON_IS_BETWEEN_PATHS_WITH_DIFFERENT_TERMINAL_INVENTORY: VERIFIED-NOT-RELAYED
+  THE_CODES_inventory_leg_IS_A_CASH_FLOW_SUM_NOT_AN_INVENTORY_VALUATION: DELTA-POSITION-TIMES-OWN-MARK
+  SO_MY_ROUND_272_DELTAS_WERE_DIFFERENCES_OF_CASH_FLOWS: THE-FIELD-READ-CORRECTLY-THE-NAME-MISLEADING
+  AN_INVENTORY_LEG_IS_A_RULING_AND_IT_IS_THE_USERS: RULE-14-MODELS-ESTIMATE-THEY-NEVER-DECIDE
+  THE_COORDINATORS_RECOMMENDATION_IS_DISCLOSED_NOT_ADOPTED: THREE-PARTS-NAMED
+  THE_LABEL_FILLS_LEG_ONLY_RIDES_WITH_EVERY_D_E0_QUOTATION_FROM_HERE: A-LABEL-NOT-A-CAVEAT
+  E4_STILL_RUNNING_AND_wt_de_STILL_AT_6c3a121: THE-REFRESH-HAS-NOT-HAPPENED
+  MY_FOUR_SHAPES_NOTE_STANDS_AND_GAINS_A_FIFTH: THE-FILLS-LEG-ONLY-LABEL
   # --- MEM round 272, R-791..R-794 + RESULTS d1dd353 swept (f77b95d -> 20b6dfc) ---
   MY_ROUND_270_PREDICTION_HELD_AND_THE_FILENAME_MATCHED_EXACTLY: THE-FAMILYS-FIRST-LEDGER
   THE_LEDGER_BLOCK_VERIFIED_KEY_BY_KEY_AT_THE_ARTIFACT: NINE-KEYS-SCHEMA-2
@@ -26457,6 +26472,210 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 273, 2026-09-07T13:07:39Z (the clock read by which every measurement below was complete) ---
+  inventory_leg_IS_A_FIELD_OF_NO_LEDGER_ROW_TYPE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      **MEASURED AT THE LEDGER ITSELF, 40,000 rows scanned across every row type it contains.** The four types and
+      their key sets: **HEADER** (8 keys: `arms`, `buy_side`, `day`, `inventory_fields_from_BE_96`, `row`, `ruling`,
+      `schema_version`, `what_cannot_be_recomputed_from_this`); **ARM_SCALARS** (12: `arm`, `arm_value_cents`,
+      `baseline_value_cents`, `head`, `n_cancels_issued`, `n_decisions`, `n_fills_arm`, `n_fills_baseline`,
+      `observed_D_E0`, `row`, `seed`, `theta`); **NULL_DRAW** (5); **FILL** (17, including BE 96's five per-fill
+      position fields `inventory_before`, `inventory_after`, `inventory_mark_cents`, `inventory_mark_source`,
+      `inventory_unit`). **`inventory_leg` occurs in NONE of them.** What the ledger holds are the INPUTS to such a leg,
+      on every fill, for both books -- not the leg.
+  SO_THE_ARTIFACTS_COMPUTED_IN_THE_DECISION_LEDGER_IS_FALSE_AT_THE_LEDGER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      The consequence for a block I have twice reported as landed. `economics_field_availability
+      .where_the_five_live_now` states `inventory_leg: "COMPUTED since BE 96, in the decision ledger"`. **A reader who
+      follows that pointer to the ledger finds no field of that name in any row type.** The claim is false where it
+      points. R-795 routes the correction to DE next round ("correct the artifact's claim to what the file carries, code
+      only"), and the landed 09-05 artifact is never edited (rule 13) -- so this stands as provenance and the correction
+      comes in a later emission.
+  AND_I_VERIFIED_THAT_BLOCK_TWICE_WITHOUT_FOLLOWING_ONE_OF_ITS_POINTERS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      **MY OWN READING, CORRECTED.** At round 265 I read `WHERE_THE_FIVE_LIVE_NOW` at the source, printed its key set,
+      counted the entries beginning "COMPUTED" (four), and flagged that its prose header said THREE where its data said
+      four. At round 272 I verified the block was PRESENT in E3's artifact and recorded that correction as landed.
+      **Both readings were about the block: its keys, its internal count, its presence. Neither followed a pointer to
+      the place it names.** CLAUDE.md rule 16 is "verify at the artifact a claim NAMES" -- and the artifact this claim
+      names is a different file. BE 97 opened that file; I had not. What I established (the block exists, is internally
+      inconsistent by one word, and now ships) is all true and none of it tests whether the pointers resolve.
+  THE_LEDGER_HEADER_SAYS_RECOMPUTABLE_WHICH_IS_TRUE_AND_A_DIFFERENT_CLAIM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      And the ledger makes its OWN claim, which is not the artifact's and is TRUE. `HEADER
+      .what_cannot_be_recomputed_from_this` reads: "BE 96 (`c707eb8`) closed the one gap. `inventory_before`,
+      `inventory_after`, `inventory_unit`, `inventory_mark_cents` and `inventory_mark_source` are on every fill record
+      here, for the arm AND the 0-cancel baseline, **so the INVENTORY LEG is recomputable from this file**." Verified:
+      all five fields are on the FILL row type, and `inventory_after` is non-None on **every one of the 177,467 fill
+      rows** (0 with None). So the inputs really are complete on both books.
+  COMPUTED_IS_NOT_RECOMPUTABLE_AND_THAT_RECONCILES_THE_TWO_STATEMENTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      **THE PRECISE RECONCILIATION, because the artifact and the ledger look like they contradict each other and do
+      not.** The artifact says the leg is **COMPUTED** in the ledger -- that a number is there. The ledger says the leg
+      is **RECOMPUTABLE** from the ledger -- that the inputs are there. **Both sentences are about the same file and
+      only one of them is true.** A reader wanting a value finds none; a reader willing to derive one can -- but only
+      after someone rules HOW, which is precisely BE 97's point that two candidate rules differ by more than the day's
+      fills leg. The distinction is worth keeping as a phrase: **a pointer to a value and a pointer to its inputs are
+      different promises, and only one of them can be followed without a ruling.**
+  fill_value_cents_HAS_NO_POSITION_TERM:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      Read at the function the whole estimand rests on. `fill_value_cents(f)` returns `sgn * (float(mkt) -
+      float(lvl)) * sz` where `lvl = px_cents`, `mkt = mid_cents_at_markout`, `sz = size`, and `sgn` is +1 on the buy
+      side -- documented as "One fill's maker P&L, in the convention DE58 fixed: the level-to-markout move, NEVER that
+      plus the entry edge it contains." **No `inventory_*` field is read anywhere in it.** So no position term enters
+      the per-fill value, and none can enter the sum.
+  SO_THE_DAY_VALUE_IS_THE_FILLS_LEG_BY_CONSTRUCTION:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      Which makes the artifact's `what_total_is` a statement of fact rather than a choice: "the fills leg, which is
+      what `_value_cents` sums and therefore exactly what D(E0) is the difference of". `_value_cents` sums
+      `fill_value_cents` over fills and nothing else; `absolute_legs` returns `"total": total` where `total` is that
+      same sum. **The day value is the fills leg BY CONSTRUCTION, not because someone chose to set `total` to it** --
+      and that is why the reconciliation to `D_E0` can hold to 1e-9 and why an inventory leg cannot be folded in
+      without changing the estimand.
+  I_REPRODUCED_BE_97s_RESIDUALS_EXACTLY_FROM_THE_LEDGER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      **A SECOND IMPLEMENTATION REACHING BE'S NUMBERS.** I took the last FILL per `(book, arm, slug)` by `fill_ns` and
+      summed `|inventory_after|` across slugs. **CONDVALUE_X_SKEW arm: 5,100, non-zero on 287 of 288.
+      HAZARD_OVER_SKEWED_REF arm: 9,184, non-zero on 288 of 288. BASELINE: 10,188, non-zero on 288 of 288.** BE 97
+      cites 5,100 / 10,188 / 9,184 and "287-288 of 288" -- **every figure, and the 287-vs-288 split falls exactly where
+      BE's range implies.** This is the R-235 do-not-harmonize shape working as intended: two implementations, no shared
+      code, same numbers.
+  MY_FIRST_PASS_WAS_MIS_SCOPED_UNTIL_THE_FILL_COUNTS_POINTED_AT_book:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      **AND THE FOURTH SCOPE MISMATCH IN FOUR ROUNDS WAS MINE.** My first pass keyed on `(arm, slug)` and got
+      CONDVALUE 7,502 / HAZARD 9,263 with 288/288 non-zero on both -- disagreeing with BE. I did NOT report that as a
+      contradiction: the FILL counts by arm label were 80,160 and 97,307, and `2 x 49,668 + 78,131 = 177,467` matched
+      exactly, which said each arm's block carries BOTH its own fills and the baseline's. The discriminator is the
+      `book` field (`ARM` 78,131 / `BASELINE` 99,336), and the per-`(arm, book)` counts reproduce the artifact's
+      `n_fills_arm`/`n_fills_baseline` exactly (30,492 / 49,668 and 47,639 / 49,668). **The arithmetic that exposed my
+      error was the same arithmetic that named its cause.** Selftest, runner-grep, the G-sweep, and now this -- and the
+      lesson keeps being the same one: a probe's scope is part of its claim.
+  THE_BASELINE_RESIDUAL_IS_IDENTICAL_UNDER_BOTH_ARM_LABELS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      A free internal check that the ledger is what it says it is. The BASELINE book appears twice -- once under each
+      arm label, 49,668 fills each -- and its terminal residual computes to **10,188 on 288 slugs under BOTH**. One
+      shared 0-cancel replay recorded once per arm, as the artifact's identical `zero_cancel_baseline` blocks also
+      implied. Had the two differed, the "same replay" claim under both arms would have been wrong and every
+      arm-versus-baseline difference on the day would have been comparing to two different references.
+  SO_THE_FILLS_LEG_COMPARISON_IS_BETWEEN_PATHS_WITH_DIFFERENT_TERMINAL_INVENTORY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      The finding those numbers carry, now VERIFIED rather than relayed: the three paths end the day holding
+      materially different positions -- baseline 10,188 shares of absolute residual, HAZARD 9,184, CONDVALUE 5,100 --
+      on essentially every slug (287 or 288 of 288). **So `D_E0` compares the fills legs of paths that do not end
+      flat and do not end alike.** That is a statement about what the estimand does and does not include; it is not a
+      statement that the estimand is wrong, and MEM asserts no result. It is exactly why an inventory leg is a
+      question and not a bug.
+  THE_CODES_inventory_leg_IS_A_CASH_FLOW_SUM_NOT_AN_INVENTORY_VALUATION:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      Read at `absolute_legs`, which is where the number in the artifact comes from: `inv += (float(a_) - float(b)) *
+      float(mk)` summed over fills, i.e. **Σ (inventory_after - inventory_before) x inventory_mark_cents**. The
+      difference `a_ - b` is the position CHANGE on that fill -- the signed size -- so the sum is **Σ signed size x that
+      fill's own mark: the cash flow of the fills**, valued at each fill's own mark. It is not the terminal position
+      marked to anything, and it is not a P&L leg. BE 97 characterises it as "a reader's Σ(signed size x own mark) =
+      fills cash flow, in neither ledger nor value" and the code says exactly that. **The field's NAME is the misleading
+      part**, which is the "name is not the definition" class this programme has recorded five times.
+  SO_MY_ROUND_272_DELTAS_WERE_DIFFERENCES_OF_CASH_FLOWS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      Refining my own record rather than retracting it. At round 272 I read the artifact's `inventory_leg` on each side
+      and recorded the differences -- CONDVALUE **-216,448.71**, HAZARD **-28,401.85** -- explicitly "as arithmetic and
+      nothing more", routing nothing. Those numbers are correctly read from the field. **What BE 97 establishes is what
+      the field IS**: differences of fills cash flows, not of inventory values, and not the residual-position quantity
+      either (which is 5,100 / 10,188 / 9,184 SHARES, a different unit entirely). I recorded a correct reading of a
+      misleadingly named field and said only what arithmetic supports -- and the reason that was the right amount to
+      say is now visible: the quantity's meaning needed a measurement I had not made.
+  AN_INVENTORY_LEG_IS_A_RULING_AND_IT_IS_THE_USERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      R-795's disposition, carried as the OPEN item it is. BE's two illustrative rules "differ by more than the day's
+      fills leg on every path", so the choice of rule is not a detail inside a result -- it can exceed the result. Under
+      CLAUDE.md rule 14 (models estimate; they never decide) and rule 9's neighbourhood, **an inventory leg is a RULING
+      and it is routed to the USER.** It is the fourth user ruling in play on this programme today alongside R-754,
+      R-765 and R-782, and the only one still open. **MEM carries it as open and takes no position on it.**
+  THE_COORDINATORS_RECOMMENDATION_IS_DISCLOSED_NOT_ADOPTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      Recorded with the distinction the register itself draws. The coordinator's recommendation is DISCLOSED for the
+      user's decision, in three parts: keep `D_E0` on the FILLS LEG as the decision metric; report a
+      Chainlink-settlement-marked residual as a SEPARATE EXPLORATORY COLUMN once the join exists; adopt NO
+      fill-mark/flat-mark rule in the meantime. **Disclosed is not adopted** -- the same shape as R-794's materiality
+      ruling, which was recorded as exploratory-standing and explicitly opened for overrule. The third part is the load-
+      bearing one: declining to adopt either illustrative rule is what keeps the question open rather than settling it
+      by default.
+  THE_LABEL_FILLS_LEG_ONLY_RIDES_WITH_EVERY_D_E0_QUOTATION_FROM_HERE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      R-795 attaches a standing label: **"fills leg only" rides with every `D_E0` quotation from here.** Recorded as a
+      LABEL rather than a caveat, in the same family as EXPLORATORY, "one day", "no interval" and "days consumed" --
+      things that travel WITH a number rather than being said once near it. It is the honest form of the finding above:
+      the estimand is well defined and complete on its own terms, and a reader who is not told which leg it is will
+      assume it is all of them.
+  E4_STILL_RUNNING_AND_wt_de_STILL_AT_6c3a121:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      Read while loaded (rule 20) at 13:05:29Z: `deEARLY20260906.service` -- LoadState loaded, ActiveState active,
+      SubState **running**, Result success, MemoryPeak 2,588,209,152 (unchanged from my 12:57:50Z read). `git worktree
+      list` puts `wt-de` at **`6c3a121`**, so the refresh to `5020f96` still correctly has not happened; it is due after
+      E4 and before 00:00Z under REV 103 §5's two conditions. Exit expected about 14:07Z. Per round 268's rule the
+      durable citation will be E4's run journal.
+  MY_FOUR_SHAPES_NOTE_STANDS_AND_GAINS_A_FIFTH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T13:07:39Z
+    said: >-
+      The four-day table's heterogeneity, updated. Standing from round 272: **(1)** absolutes -- 09-05/06 yes, 09-03/04
+      no, each owing a replay with no GO; **(2)** ledgers -- 09-05 real (196,898 rows), 09-04 explicitly `None`, 09-03
+      no key; **(3)** the bare `G` -- sealed receipts carry `G: 6`, early reads carry the block; **(4)** params-stamp
+      spans (09-05 sealed under v15, read under v19; 09-06's to be read AT ITS OWN RECEIPT, a fourth span if it
+      differs). **NEW (5): the "fills leg only" label**, which applies to every `D_E0` in the table including the two
+      days that have no absolutes at all -- so it is the one label that is uniform across all four while everything
+      else varies.
   # --- MEM round 272, 2026-09-07T13:00:23Z (the clock read by which every measurement below was complete) ---
   MY_ROUND_270_PREDICTION_HELD_AND_THE_FILENAME_MATCHED_EXACTLY:
     prov: CHECKED
