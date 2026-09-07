@@ -58,7 +58,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 30
+EXPECTED_CHECKS = 32
 
 
 class EarlyReadRefused(RuntimeError):
@@ -407,7 +407,8 @@ def economics_available_per_arm_day(ledger_path=None,
     }
 
 
-def early_read_preconditions(day: str, root, ruling: dict) -> dict:
+def early_read_preconditions(day: str, root, ruling: dict,
+                             supersedes=None) -> dict:
     """P9's REPLACEMENT FOR THIS ENTRY (coordinator ruling, DE 122).
 
     P9 on the sealed `--day` path refuses a day that already has a sealed
@@ -496,14 +497,76 @@ def early_read_preconditions(day: str, root, ruling: dict) -> dict:
             f"`sha256` begins {got[:16]}…. A version that disagrees with "
             f"itself names no artifact.")
     already = sorted(der.glob(f"{DAY_FAMILY}_{compact}__*.json"))
+    # ---- REVIEW 104A §3: A SECOND READ IS A SUPERSESSION, NAMED ------
+    # `EARLY_READ_ALREADY_EMITTED` was right while nothing could say
+    # which of two answers is newest. A re-run under a NEW estimand can
+    # say it -- by naming the artifact it replaces, as a PAIR -- and DA
+    # 130 already reads exactly that shape (`supersedes` = {path,
+    # sha256}, the digest 64 lowercase hex, both halves landing on a file
+    # present on disk). So the door opens ONLY for a named, verified
+    # target: no target, or one that does not verify, and the refusal
+    # stands. The superseded artifact and its ledger are NEVER edited
+    # (rule 13); it stays as provenance and DA's resolver labels it.
+    supersedes_block = None
     if already:
-        raise EarlyReadRefused(
-            f"EARLY_READ_ALREADY_EMITTED: {day} already has "
-            f"{len(already)} early-read artifact(s) "
-            f"({[a.name for a in already]}). A second emission would "
-            f"leave two answers to one question with no rule saying which "
-            f"is newest -- which is P9's reasoning, in the place it "
-            f"belongs for this entry.")
+        if supersedes is None:
+            raise EarlyReadRefused(
+                f"EARLY_READ_ALREADY_EMITTED: {day} already has "
+                f"{len(already)} early-read artifact(s) "
+                f"({[a.name for a in already]}) and this read names none "
+                f"of them as the artifact it SUPERSEDES. A second "
+                f"emission with no link would leave two answers to one "
+                f"question with no rule saying which is newest -- P9's "
+                f"reasoning, in the place it belongs for this entry. "
+                f"Pass the day's HEAD (resolve it with "
+                f"`da_early_read_verify.resolve_early_read_head`, never "
+                f"`ls | tail`).")
+        # THE TARGET IS A PATH **OR** THE PAIR ITSELF. A caller that
+        # already holds DA's resolved head passes the dict; the launch
+        # form passes the path. Both name one file, and the digest is
+        # recomputed from it either way.
+        _named = (supersedes.get("path") if isinstance(supersedes, dict)
+                  else supersedes)
+        if not _named:
+            raise EarlyReadRefused(
+                "EARLY_READ_SUPERSEDES_TARGET_ABSENT: the supersession "
+                "target names no path. A link is a PAIR and its first "
+                "half is a file.")
+        tgt = Path(_named)
+        if not tgt.is_absolute():
+            tgt = der / tgt.name
+        if not tgt.is_file():
+            raise EarlyReadRefused(
+                f"EARLY_READ_SUPERSEDES_TARGET_ABSENT: this read names "
+                f"{tgt.name} as the artifact it supersedes and that file "
+                f"is not under {der}. A link to a file nobody has is not "
+                f"a link (DA 130's own words for the reader's half).")
+        tgt_sha = _sha(tgt)
+        # THE DIGEST IS RECOMPUTED AT THE WRITE, from the bytes on disk --
+        # never copied from a caller's argument, which is how a pair
+        # comes to name bytes that are not there.
+        named_sha = None
+        if isinstance(supersedes, dict):
+            named_sha = str(supersedes.get("sha256") or "")
+        if named_sha and named_sha != tgt_sha:
+            raise EarlyReadRefused(
+                f"EARLY_READ_SUPERSEDES_DIGEST_MISMATCH: the target named "
+                f"{named_sha[:16]}… and {tgt.name} digests "
+                f"{tgt_sha[:16]}…. The bytes this read claims to replace "
+                f"are not the bytes on disk.")
+        # AND IT MUST BE THE DAY'S HEAD, BY DA's RESOLVER -- superseding
+        # an already-superseded artifact would fork the chain and DA's
+        # reader would then refuse the day as AMBIGUOUS.
+        import da_early_read_verify as _DAV
+        _head = _DAV.resolve_early_read_head(day, derived=der)
+        if Path(_head["path"]).name != tgt.name:
+            raise EarlyReadRefused(
+                f"EARLY_READ_SUPERSEDES_NOT_THE_HEAD: {tgt.name} is not "
+                f"the day's head -- DA's resolver says the head is "
+                f"{_head['head']}. Superseding anything but the head "
+                f"forks the chain, and the next reader would refuse the "
+                f"day as EARLY_READ_HEAD_AMBIGUOUS.")
+        supersedes_block = {"path": str(tgt), "sha256": tgt_sha}
     return {
         "replaces": "P9_no_sealed_receipt_for_this_day_yet",
         "why_replaced": "P9's premise is that a day run twice has no "
@@ -523,7 +586,22 @@ def early_read_preconditions(day: str, root, ruling: dict) -> dict:
             "a_prefix_only_bar": "REFUSES by name "
                                  "(EARLY_READ_BAR_CARRIES_ONLY_A_PREFIX); "
                                  "it is never silently compared on 16 hex"},
-        "no_early_read_artifact_yet": True,
+        "no_early_read_artifact_yet": not already,
+        "supersedes": supersedes_block,
+        "supersession": ({
+            "target": supersedes_block,
+            "verified": ("the target is present, its digest was "
+                         "RECOMPUTED from the bytes on disk, and DA "
+                         "130's resolver confirms it is the day's HEAD"),
+            "the_superseded_artifact_is": ("kept, unedited, as "
+                                           "provenance (rule 13); DA's "
+                                           "`head_standing` labels it"),
+            "pair_keys": ["path", "sha256"],
+            "digest_is": "64 lowercase hex, never a prefix",
+        } if supersedes_block else {
+            "target": None,
+            "why": ("this day had no earlier artifact, so this read "
+                    "supersedes nothing")}),
         "sealed_day_path_unaffected": "the `--day` entry keeps P9 "
                                       "byte-identical; this function is "
                                       "not on that path",
@@ -554,7 +632,8 @@ def bar_day_states(*, repo_root=None, root=None) -> dict:
                                  "day the cell was written on"}
 
 
-def rehearse(day: str, *, repo_root=None, root=None) -> dict:
+def rehearse(day: str, *, repo_root=None, root=None,
+             supersedes=None) -> dict:
     """READY, or the blocker BY NAME. Touches no book and takes no lock."""
     out = {"day": day, "entry": "de_early_read --early-read-day",
            "as_of": datetime.datetime.now(
@@ -567,7 +646,8 @@ def rehearse(day: str, *, repo_root=None, root=None) -> dict:
     out["ruling"] = ruling["ruling_by_pair"]
     r = Path(root) if root else Path(RUN.DR.resolve()["data_root"])
     try:
-        pre = early_read_preconditions(day, r, ruling)
+        pre = early_read_preconditions(day, r, ruling,
+                                       supersedes=supersedes)
     except EarlyReadRefused as e:
         return {**out, "status": "NOT_READY",
                 "blocking": [str(e).split(":")[0]], "detail": str(e)}
@@ -588,7 +668,7 @@ def day_artifact_name(day: str, now=None) -> str:
 
 
 def run_early_read_day(day: str, book, outdir, *, repo_root=None,
-                       before_work=None) -> dict:
+                       supersedes=None, before_work=None) -> dict:
     """ONE DAY, UNSEALED UNDER THE RULING. The heavy call.
 
     `params` is v15's -- `RUN.load_params()` -- so the computation is the
@@ -601,7 +681,8 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
             f"{ruling['days']}. The ruling names four days; a fifth would "
             f"be consumed by a read nobody authorised.")
     pre = early_read_preconditions(
-        day, Path(RUN.DR.resolve()["data_root"]), ruling)
+        day, Path(RUN.DR.resolve()["data_root"]), ruling,
+        supersedes=supersedes)
     params = RUN.load_params()
     # DE 132: THE LEDGER IS ANCHORED ON THIS ARTIFACT'S OWN PATH. The
     # early read has no `receipt_path` -- its artifact is its own family --
@@ -664,6 +745,13 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
                            / RUN.PARAMS_REL),
             "why": "the COMPUTATION is the sealed runs' -- v15. Only the "
                    "seal bar comes from the ruling."},
+        # REVIEW 104A §3: THE LINK, AS DA 130 READS IT. `{path, sha256}`
+        # with the digest RECOMPUTED at the write from the bytes on disk
+        # -- 64 lowercase hex, never a prefix. Absent (not null) when
+        # this read supersedes nothing, so a reader never meets a link
+        # that names nothing.
+        **({"supersedes": pre["supersedes"]} if pre.get("supersedes")
+           else {}),
         "economics_field_availability": economics_available_per_arm_day(
             ledger_path=(_led or {}).get("path"),
             arm_days=(result or {}).get("per_day_sealed_artifacts")),
@@ -916,6 +1004,72 @@ def _selftest_body(quiet: bool = False) -> int:
            f"artifact REFUSES -- `{str(e).split(':')[0]}`. Two answers to "
            f"one question with no rule saying which is newest is P9's own "
            f"reasoning, in the place it belongs for this entry")
+    # ---- REVIEW 104A §3: THE SECOND READ IS A SUPERSESSION, NAMED ---
+    # The refusal above is the RED this opens a door in: a re-run may
+    # emit for a day that already has an artifact ONLY by naming the one
+    # it replaces, as the PAIR DA 130 reads. Every half is driven.
+    _fa104 = fder / f"{DAY_FAMILY}_20260903__20260907T000000Z.json"
+    _fa104.write_text(json.dumps({"day": "2026-09-03", "note": "first"}))
+    _sha104 = _sha(_fa104)
+    _no_t104 = _bad_t104 = _abs_t104 = _nothead104 = None
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live)
+    except EarlyReadRefused as e:
+        _no_t104 = str(e).split(":")[0]
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live,
+                                 supersedes={"path": str(_fa104),
+                                             "sha256": "0" * 64})
+    except EarlyReadRefused as e:
+        _bad_t104 = str(e).split(":")[0]
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live,
+                                 supersedes=str(fder / "no_such.json"))
+    except EarlyReadRefused as e:
+        _abs_t104 = str(e).split(":")[0]
+    _pre104 = early_read_preconditions(
+        "2026-09-03", froot, ruling_live, supersedes=str(_fa104))
+    ok(_no_t104 == "EARLY_READ_ALREADY_EMITTED"
+       and _bad_t104 == "EARLY_READ_SUPERSEDES_DIGEST_MISMATCH"
+       and _abs_t104 == "EARLY_READ_SUPERSEDES_TARGET_ABSENT"
+       and _pre104["supersedes"] == {"path": str(_fa104),
+                                     "sha256": _sha104}
+       and len(_pre104["supersedes"]["sha256"]) == 64,
+       f"REVIEW 104A §3, THE DOOR AND ITS THREE LOCKS: a second read with "
+       f"NO target refuses `{_no_t104}`; one naming a digest the file "
+       f"does not have refuses `{_bad_t104}`; one naming a file that is "
+       f"not there refuses `{_abs_t104}`; and one naming the day's "
+       f"artifact with its REAL digest ADMITS, carrying the pair "
+       f"{{path, sha256}} with the FULL 64-hex digest RECOMPUTED from "
+       f"the bytes on disk -- the shape DA 130 reads")
+    # AND SUPERSEDING ANYTHING BUT THE HEAD FORKS THE CHAIN.
+    _fb104 = fder / f"{DAY_FAMILY}_20260903__20260907T010000Z.json"
+    _fb104.write_text(json.dumps({"day": "2026-09-03",
+                                  "supersedes": {"path": str(_fa104),
+                                                 "sha256": _sha104}}))
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live,
+                                 supersedes=str(_fa104))
+    except EarlyReadRefused as e:
+        _nothead104 = str(e).split(":")[0]
+    _pre2_104 = early_read_preconditions(
+        "2026-09-03", froot, ruling_live, supersedes=str(_fb104))
+    import da_early_read_verify as _DAV104
+    _h104 = _DAV104.resolve_early_read_head("2026-09-03", derived=fder)
+    ok(_nothead104 == "EARLY_READ_SUPERSEDES_NOT_THE_HEAD"
+       and _pre2_104["supersedes"]["path"] == str(_fb104)
+       and _h104["head"] == _fb104.name
+       and _h104["superseded"] == [_fa104.name]
+       and _h104["links"] == [{"newer": _fb104.name,
+                               "supersedes": _fa104.name,
+                               "sha256": _sha104}],
+       f"REVIEW 104A §3, THE CHAIN: with a SECOND artifact naming the "
+       f"first by pair, DA 130's OWN resolver -- imported, not "
+       f"re-implemented -- resolves the head to `{_h104['head']}` with "
+       f"{_h104['superseded']} superseded; superseding the OLD one now "
+       f"refuses `{_nothead104}` (it would fork the chain and the next "
+       f"reader would refuse the day AMBIGUOUS), while superseding THE "
+       f"HEAD admits. Neither earlier artifact is touched (rule 13)")
     shutil.rmtree(froot, ignore_errors=True)
 
     # 4e: A v16-SHAPED BAR -- prefix only -- REFUSES BY ITS OWN NAME.
@@ -1393,6 +1547,13 @@ if __name__ == "__main__":
                          "the exit codes OBSERVED against the declared "
                          "map (R-709). Runs no battery, so it cannot "
                          "recurse.")
+    ap.add_argument("--supersedes", type=str, default=None,
+                    help="the artifact this read REPLACES, for a day that "
+                         "already has one (REVIEW 104A S3). Resolve it "
+                         "with da_early_read_verify.resolve_early_read_head "
+                         "-- never `ls | tail`. The digest is recomputed "
+                         "here from the bytes on disk and written into the "
+                         "new artifact as a {path, sha256} PAIR.")
     ap.add_argument("--book", type=Path)
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
@@ -1433,6 +1594,7 @@ if __name__ == "__main__":
         # refuses before the day is spent, not after 80 minutes of draws.
         selftest(quiet=True)
         out = run_early_read_day(a.day, a.book, a.output,
+                                 supersedes=a.supersedes,
                                  before_work=lambda: RUN.selftest(
                                      quiet=True, offline=False))
         print(json.dumps(out, indent=2))
