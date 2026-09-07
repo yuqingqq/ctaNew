@@ -1,3 +1,95 @@
+# READ FIRST — round 274 (MEM, 2026-09-07T14:22:37Z, tip `5c9c0d4`)
+
+**R-796, R-797, R-798 and the two RESULTS §0b commits swept, with every landing between the tip I read at round
+273 (`c1ce532`) and `5c9c0d4`.** STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. The four-day early read is complete — table rebuilt from the four artifacts
+
+Assembled at the files, not from DA's print or the register. **Every value is the FILLS LEG ONLY** (R-795).
+
+| day | arm | `D_E0` | Z | p | baseline abs | arm abs |
+|---|---|---:|---:|---:|---:|---:|
+| 09-03 | CONDVALUE | −16,592.33 | −2.30 | 0.994 | — | — |
+| 09-03 | HAZARD | −4,822.26 | −5.30 | 1.000 | — | — |
+| 09-04 | CONDVALUE | −31,428.00 | −4.74 | 1.000 | — | — |
+| 09-04 | HAZARD | −2,364.97 | −1.48 | 0.936 | — | — |
+| 09-05 | CONDVALUE | −29,585.13 | −3.47 | 1.000 | 88,698.17 | 59,113.05 |
+| 09-05 | HAZARD | **+6,540.20** | **+4.33** | **0.002** | 88,698.17 | 95,238.37 |
+| 09-06 | CONDVALUE | −32,132.13 | −5.15 | 1.000 | 90,153.40 | 58,021.27 |
+| 09-06 | HAZARD | −2,111.88 | −1.17 | 0.904 | 90,153.40 | 88,041.52 |
+
+**Sign counts reproduce:** CONDVALUE above the 0-cancel baseline **0 of 4**; HAZARD **1 of 4**, that day being
+09-05 — which also carries the table's only positive `Z` and its only `p_location` below 0.5. 09-06's absolutes
+reconcile **by subtraction at my own hand**: 58,021.27 − 90,153.40 = −32,132.13; 88,041.52 − 90,153.40 =
+−2,111.88.
+
+## 2. And the floor is 0.0625
+
+With four days and a per-day sign, the smallest attainable one-sided p is **2⁻⁴ = 0.0625 — above 0.05**. So **the
+four-day read could not have produced a significance-bearing result no matter which way every day fell.** That is
+why *"nothing is a pass or a fail"* is arithmetic, not a hedge, and why R-754 ruled it EXPLORATORY with the days
+consumed. E1/E2 remain tabled at R-773; E3/E4 are read, not judged.
+
+## 3. Two params spans, four day-shapes — measured, not predicted
+
+| day | sealed stamp | ledger | absolutes |
+|---|---|---|---|
+| 09-03 | v14 | **no key** | no |
+| 09-04 | v14 | **explicit null** | no |
+| 09-05 | v15 | real, 196,898 rows | yes |
+| 09-06 | v15 | real, 198,611 rows | yes |
+
+Regex over each whole sealed file: **exactly two spans, not four**. 09-06 falls in 09-05's span, so R-794's single
+measurement covers both and **the "fourth span if it differs" contingency did not fire.** (DA's finer
+reconstructed-vs-stamped distinction for 09-03 is DA's; I did not test how that attribution was obtained.)
+
+**And the two days without absolutes are exactly the two owing a replay** — one cause (no ledger anchor when they
+ran), one remedy, and no GO for either. The heterogeneity is not four quirks; it is one gap plus the stamp spans.
+
+## 4. DE 135 Part A is done, and both conditions hold
+
+`wt-de` is at **`5020f96`** — exactly the fourth composition. Measured **inside** the worktree at 14:20:09Z:
+**pins 10/10**, and `git status --short` returning exactly one line, `?? data`, the launch symlink. **I measured
+the same two conditions before the refresh at round 271, explicitly as a value and not a clearance** — two
+readings across the event distinguish *"the refresh preserved it"* from *"it was always so"*.
+
+## 5. A refinement of my own round-272 closure
+
+The `ABSOLUTES_DO_NOT_RECONCILE` cell is **two** cells: `EXPECTED_CHECKS` 374 → 376 and occurrences 2 → 4,
+verified at both objects. **But `a71b714` is not an ancestor of `5020f96`.** So **the bytes GO #8 runs tonight
+carry the guard and not the cells that watch it.** My "watched on every run" is true at the tip, not for
+tonight's run — the same distinction I have drawn about `fe76d83` for ten rounds, now applying to a closure of
+mine.
+
+## 6. The propagation, assembled
+
+DE wrote *"computed in the decision ledger"* into the artifact → **I verified that block twice without opening the
+ledger** (rounds 265, 272) → DA repeated it in its row → **BE 97 opened the file and found no such field** → DA
+has now corrected its own row **in band**, and DE 135 Part B corrects the artifact, code only, not composed.
+
+**Three seats checked, and every check was scoped to where the claim sat rather than where it pointed.** Two seats
+correcting it in the two places each is responsible for is the right shape.
+
+## 7. Standing
+
+- **The user's inventory ruling (R-795) is OPEN** — the only open one of today's four (R-754, R-765, R-782,
+  R-795). It sits underneath a finished table rather than blocking it: the table is readable as it stands and
+  would be a different table under a different rule.
+- **Freeze holds a fourteenth round.** Ahead: the close at 00:00Z → GO #8 from `5020f96` (its receipt read
+  `day_run.decision_ledger` **first**) → the freeze lifts → v20/v28 **by re-measurement** (they never existed as
+  files) → the 09-03/09-04 replays, which are the two missing shapes.
+
+## 8. Counts
+
+flags 2116 → **2134**, provenance 1661 → **1679** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,389 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 150th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my eighteen added none. Window trimmed 4 → 3,
+**Batch 256** archived.
+
+**NEXT:** the close → GO #8 from `5020f96`. MEM sweeps R-799 onward.
+
+---
+
 # READ FIRST — round 273 (MEM, 2026-09-07T13:07:39Z, tip `c1ce532`)
 
 **R-795 swept, with every landing between the tip I read at round 272 (`20b6dfc`) and `c1ce532`.** STATE ONLY.

@@ -20001,3 +20001,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2044 -> 2062, provenance 1589 -> 1607 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 252 archived.)
 ```
+
+## Batch 256 — archived 2026-09-07T14:22:37Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T12:08:38Z (MEM ROUND 271 -- R-789 AND R-790 SWEPT, with every landing between the tip I read at round 270
+  (`3d1dc7f`) and `f77b95d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE POST-EMIT CENSUS READ A KEY THE ARTIFACT ITSELF SAYS NOTHING READ.*** The 09-04 receipt's
+  `day_run.G_and_which_G_it_is.no_bare_G_key_here` states: "removed at REV 90 §A0(3). **Nothing read it: a sweep
+  of live/pm_research found no consumer of a day-run receipt's top-level `G`**." At `6c3a121` -- the module that
+  emitted that artifact -- `:11888` reads `payload["G"]`. **SOMETHING READ IT.** The mechanism of the miss is the
+  transferable part: the sweep looked for consumers of an EMITTED RECEIPT; the surviving read is of the IN-MEMORY
+  payload. Same key, two shapes -- **the third instance in three rounds of a correctly-executed probe answering a
+  differently-scoped question, and the most expensive, because its conclusion was written into an artifact as a
+  fact and shipped.**
+  (2) **WHAT WOULD HAVE HAPPENED TONIGHT, both branches.** `payload["G"]` is never assigned in `_main_day`, so at
+  `6c3a121` that line raises **`KeyError: 'G'` AFTER the receipt is on disk**. With a bare G restored the
+  condition `n_days_complete (5) < G (6)` is TRUE and the body is `out_path.unlink(...)` + a refusal -- **and
+  `_post` is non-empty BY DESIGN under R-765**, which made economic keys mandatory. A guard written when leaking
+  economics was the failure would, under the ruling that made them required, delete every incomplete day's
+  receipt. Smaller, from the same six lines: the guard is **half on the artifact and half on memory** (`_back`
+  for the keys, `payload` for the count) in a cell whose own comment insists on the difference.
+  (3) DE 134 = ONE FILE, +343/-5, carrying both fixes with red and green cells. **The fourth composition
+  `5020f96` is `6c3a121` + exactly that one file** (parent verified at the object). **REV 103's three digests
+  verified at it**: runner `883b5f3a811e9576`, early read `5aa544ef8d594efd`, ledger `d78c370151cea431` -- the
+  early-read digest unchanged, which is why E3/E4 stay at `6c3a121`.
+  (4) ***NO DECISION LEDGER HAS EVER BEEN WRITTEN ANYWHERE***: `find data -name '*decision_ledger*'` returns
+  **0**, with the falsifier returning 2 for the early-read family. **So R-765's "a ledger beside each receipt"
+  has never once happened** -- v15 carried no ruling, E1/E2 had no anchor, and every battery call is a fixture
+  that receives the named status. The anchor-to-write join has no production history at all. **TWO FIRSTS ARE IN
+  PLAY AND THEY DIFFER**: R-790's "first time tonight" is the DAY path's; **E3 exercises the EARLY-READ path's
+  join first, this afternoon.** My round-270 prediction now has an exact filename --
+  `p003_de_decision_ledger_20260905__<STAMP>.jsonl.gz`, in the shared derived dir because `wt-de/data` is a
+  symlink to it (verified, made 11:28, a minute before E3's 11:29:08Z start).
+  (5) `wt-de`'s working files hash **10 of 10** against v19's pins -- the second blocking condition on the
+  refresh, recorded as a value at my read, not a clearance. E3 still running at 12:06:36Z, 37m28s in, MemoryPeak
+  identical at three reads, exit expected about 12:40Z. The `ABSOLUTES_DO_NOT_RECONCILE` cell is carried as
+  CONCURRENT work under GO E4, not composed -- the composition stays minimal so a NO-GO names a specific delta.
+  (6) And from the same field, for whoever builds the four-day table: "**the four landed sealed receipts
+  (09-03..09-06) still carry the old bare `G: 6`**" while the early reads carry the block -- a schema change
+  between days, written into the artifact rather than left to be discovered. Freeze holds an ELEVENTH round; the
+  09-03/09-04 replay debt stands.
+  COUNTS (by YAML parse): flags 2062 -> 2080, provenance 1607 -> 1625 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 253 archived.)
+```

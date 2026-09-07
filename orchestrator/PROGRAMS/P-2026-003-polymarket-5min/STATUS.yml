@@ -67,6 +67,41 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T14:22:37Z (MEM ROUND 274 -- R-796, R-797, R-798 AND THE TWO RESULTS SS0b COMMITS SWEPT, with every landing between
+  the tip I read at round 273 (`c1ce532`) and `5c9c0d4`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE FOUR-DAY EARLY READ IS COMPLETE, AND I BUILT THE TABLE FROM THE FOUR ARTIFACTS*** rather than from
+  DA's print or the register -- eight arm-days, every figure at the file, every 09-06 value matching R-798.
+  ***THE SIGN COUNTS REPRODUCE***: `CONDVALUE_X_SKEW` above the 0-cancel baseline **0 of 4**; `HAZARD_OVER_
+  SKEWED_REF` **1 of 4**, and that day is 09-05 -- the same day carrying the only positive `Z` (+4.33) and the
+  only `p_location` below 0.5 in the table.
+  (2) ***AND THE FLOOR IS 0.0625.*** With four days and a per-day sign the smallest attainable one-sided p is
+  **2^-4, above 0.05** -- so **the four-day read could not have produced a significance-bearing result no matter
+  which way every day fell.** That is why "nothing is a pass or a fail" is arithmetic and not a hedge, and why
+  R-754 ruled it EXPLORATORY with the days consumed.
+  (3) E4's artifact hashes **67bce38f9a0492ea** and carries the family's SECOND real ledger, **198,611 rows /
+  6,645,474 B**. The 09-06 absolutes reconcile **by subtraction at my own hand**: 58,021.27 - 90,153.40 =
+  -32,132.13; 88,041.52 - 90,153.40 = -2,111.88; baseline identical under both arms.
+  (4) ***EXACTLY TWO PARAMS SPANS, NOT FOUR***: measured at each sealed day-run by regex over the whole file --
+  09-03 v14, 09-04 v14, 09-05 v15, 09-06 v15. So 09-06 falls in 09-05's span, R-794's one measurement covers
+  both, and **the "fourth span if it differs" contingency did not fire.** ***MY FOUR-SHAPES NOTE IS NOW
+  MEASURED***, not predicted: no key / explicit null / real / real. **And the two days without absolutes are
+  exactly the two owing a replay** -- one cause (no ledger anchor when they ran), one remedy, no GO.
+  (5) ***DE 135 PART A IS DONE***: `wt-de` is at **`5020f96`**, and **both blocking conditions hold at my read
+  after it** -- pins **10/10** inside the worktree, and `git status` returning exactly one line, `?? data`, the
+  symlink. **I measured the same two conditions BEFORE the refresh at round 271, explicitly as a value and not a
+  clearance** -- two readings across the event distinguish "the refresh preserved it" from "it was always so".
+  (6) ***A REFINEMENT OF MY OWN ROUND-272 CLOSURE.*** The `ABSOLUTES_DO_NOT_RECONCILE` cell is two cells and
+  `EXPECTED_CHECKS` moved **374 -> 376** (verified at both objects; occurrences 2 -> 4). **But `a71b714` is NOT
+  an ancestor of `5020f96`** -- so **the bytes GO #8 runs tonight carry the guard and not the cells that watch
+  it.** My "watched on every run" is true at the tip and not for tonight's run: the same distinction I have drawn
+  about `fe76d83` for ten rounds, now applying to a closure of mine.
+  (7) ***AND THE PROPAGATION, ASSEMBLED***: DE wrote "computed in the decision ledger" into the artifact; **I
+  verified that block twice without opening the ledger**; DA repeated it in its row; BE 97 opened the file and
+  found no such field; DA has now corrected its own row IN BAND and DE 135 Part B corrects the artifact.
+  **Three seats checked, and every check was scoped to where the claim SAT rather than where it POINTED.** The
+  user's inventory ruling stays OPEN -- the only open one of today's four. Freeze holds a FOURTEENTH round.
+  COUNTS (by YAML parse): flags 2116 -> 2134, provenance 1661 -> 1679 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 256 archived.)
   2026-09-07T13:07:39Z (MEM ROUND 273 -- R-795 SWEPT, with every landing between the tip I read at round 272 (`20b6dfc`) and
   `c1ce532`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***`inventory_leg` IS A FIELD OF NO LEDGER ROW TYPE.*** Measured at the 09-05 ledger across all four types
@@ -141,45 +176,6 @@ updated: >-
   receipts vs early reads) -- plus the params-stamp spans.
   COUNTS (by YAML parse): flags 2080 -> 2098, provenance 1625 -> 1643 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 254 archived.)
-  2026-09-07T12:08:38Z (MEM ROUND 271 -- R-789 AND R-790 SWEPT, with every landing between the tip I read at round 270
-  (`3d1dc7f`) and `f77b95d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***THE POST-EMIT CENSUS READ A KEY THE ARTIFACT ITSELF SAYS NOTHING READ.*** The 09-04 receipt's
-  `day_run.G_and_which_G_it_is.no_bare_G_key_here` states: "removed at REV 90 §A0(3). **Nothing read it: a sweep
-  of live/pm_research found no consumer of a day-run receipt's top-level `G`**." At `6c3a121` -- the module that
-  emitted that artifact -- `:11888` reads `payload["G"]`. **SOMETHING READ IT.** The mechanism of the miss is the
-  transferable part: the sweep looked for consumers of an EMITTED RECEIPT; the surviving read is of the IN-MEMORY
-  payload. Same key, two shapes -- **the third instance in three rounds of a correctly-executed probe answering a
-  differently-scoped question, and the most expensive, because its conclusion was written into an artifact as a
-  fact and shipped.**
-  (2) **WHAT WOULD HAVE HAPPENED TONIGHT, both branches.** `payload["G"]` is never assigned in `_main_day`, so at
-  `6c3a121` that line raises **`KeyError: 'G'` AFTER the receipt is on disk**. With a bare G restored the
-  condition `n_days_complete (5) < G (6)` is TRUE and the body is `out_path.unlink(...)` + a refusal -- **and
-  `_post` is non-empty BY DESIGN under R-765**, which made economic keys mandatory. A guard written when leaking
-  economics was the failure would, under the ruling that made them required, delete every incomplete day's
-  receipt. Smaller, from the same six lines: the guard is **half on the artifact and half on memory** (`_back`
-  for the keys, `payload` for the count) in a cell whose own comment insists on the difference.
-  (3) DE 134 = ONE FILE, +343/-5, carrying both fixes with red and green cells. **The fourth composition
-  `5020f96` is `6c3a121` + exactly that one file** (parent verified at the object). **REV 103's three digests
-  verified at it**: runner `883b5f3a811e9576`, early read `5aa544ef8d594efd`, ledger `d78c370151cea431` -- the
-  early-read digest unchanged, which is why E3/E4 stay at `6c3a121`.
-  (4) ***NO DECISION LEDGER HAS EVER BEEN WRITTEN ANYWHERE***: `find data -name '*decision_ledger*'` returns
-  **0**, with the falsifier returning 2 for the early-read family. **So R-765's "a ledger beside each receipt"
-  has never once happened** -- v15 carried no ruling, E1/E2 had no anchor, and every battery call is a fixture
-  that receives the named status. The anchor-to-write join has no production history at all. **TWO FIRSTS ARE IN
-  PLAY AND THEY DIFFER**: R-790's "first time tonight" is the DAY path's; **E3 exercises the EARLY-READ path's
-  join first, this afternoon.** My round-270 prediction now has an exact filename --
-  `p003_de_decision_ledger_20260905__<STAMP>.jsonl.gz`, in the shared derived dir because `wt-de/data` is a
-  symlink to it (verified, made 11:28, a minute before E3's 11:29:08Z start).
-  (5) `wt-de`'s working files hash **10 of 10** against v19's pins -- the second blocking condition on the
-  refresh, recorded as a value at my read, not a clearance. E3 still running at 12:06:36Z, 37m28s in, MemoryPeak
-  identical at three reads, exit expected about 12:40Z. The `ABSOLUTES_DO_NOT_RECONCILE` cell is carried as
-  CONCURRENT work under GO E4, not composed -- the composition stays minimal so a NO-GO names a specific delta.
-  (6) And from the same field, for whoever builds the four-day table: "**the four landed sealed receipts
-  (09-03..09-06) still carry the old bare `G: 6`**" while the early reads carry the block -- a schema change
-  between days, written into the artifact rather than left to be discovered. Freeze holds an ELEVENTH round; the
-  09-03/09-04 replay debt stands.
-  COUNTS (by YAML parse): flags 2062 -> 2080, provenance 1607 -> 1625 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 253 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -351,6 +347,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 274, R-796..R-798 + the two RESULTS SS0b commits swept (c1ce532 -> 5c9c0d4) ---
+  THE_FOUR_DAY_EARLY_READ_IS_COMPLETE_AND_I_BUILT_THE_TABLE_FROM_THE_FOUR_ARTIFACTS: EIGHT-ARM-DAYS-EVERY-FIGURE
+  THE_SIGN_COUNTS_REPRODUCE_ZERO_OF_FOUR_AND_ONE_OF_FOUR: CONDVALUE-NEVER-HAZARD-ON-09-05-ONLY
+  THE_FLOOR_IS_0_0625_SO_NO_SIGN_COUNT_AT_FOUR_DAYS_CAN_REACH_0_05: 2-TO-THE-MINUS-4-IS-ARITHMETIC-NOT-A-HEDGE
+  E4s_ARTIFACT_AND_THE_SECOND_REAL_LEDGER_VERIFIED: 67bce38f-AND-198611-ROWS
+  THE_09_06_ABSOLUTES_RECONCILE_BY_SUBTRACTION_AT_MY_OWN_HAND: 90153-40-MINUS-THE-ARMS
+  THERE_ARE_EXACTLY_TWO_PARAMS_SPANS_ACROSS_THE_FOUR_DAYS_NOT_FOUR: v14-v14-v15-v15
+  SO_NO_FOURTH_MATERIALITY_MEASUREMENT_IS_OWED: 09-06-FALLS-IN-09-05s-SPAN
+  MY_FOUR_SHAPES_NOTE_IS_NOW_MEASURED_ACROSS_ALL_FOUR_DAYS: NO-KEY-NULL-REAL-REAL
+  AND_THE_TWO_MISSING_SHAPES_ARE_EXACTLY_THE_TWO_REPLAY_DEBTS: THE-GAP-AND-THE-DEBT-ARE-ONE-THING
+  DE_135_PART_A_IS_DONE_wt_de_IS_AT_5020f96: THE-REFRESH-HAPPENED
+  AND_BOTH_BLOCKING_CONDITIONS_HOLD_AT_MY_READ_AFTER_IT: PINS-10-OF-10-AND-ONLY-THE-SYMLINK
+  I_MEASURED_THE_SAME_TWO_CONDITIONS_BEFORE_AND_AFTER_THE_REFRESH: A-VALUE-THEN-A-VALUE-NOW
+  THE_ABSOLUTES_CELL_IS_TWO_CELLS_AND_374_TO_376_MEASURES_THEM: THE-COUNT-MOVED-BY-EXACTLY-TWO
+  BUT_GO_8_RUNS_5020f96_WHICH_DOES_NOT_CARRY_THEM: MY-ROUND-272-CLOSURE-IS-TRUE-AT-THE-TIP-ONLY
+  DA_CORRECTED_ITS_OWN_ROW_IN_BAND_FOR_A_CLAIM_IT_INHERITED: THE-RIGHT-SHAPE-AND-THE-RIGHT-SEAT
+  THE_INHERITED_CLAIM_PASSED_THROUGH_THREE_SEATS_BEFORE_ANYONE_OPENED_THE_FILE: AND-I-WAS-ONE-OF-THEM-TWICE
+  THE_USERS_INVENTORY_RULING_IS_STILL_OPEN: THE-ONLY-OPEN-ONE-OF-FOUR
+  NOTHING_IN_THE_FOUR_DAY_TABLE_IS_A_PASS_OR_A_FAIL: AND-THE-FLOOR-IS-WHY-THAT-IS-NOT-A-HEDGE
   # --- MEM round 273, R-795 swept (20b6dfc -> c1ce532) ---
   inventory_leg_IS_A_FIELD_OF_NO_LEDGER_ROW_TYPE: FOUR-ROW-TYPES-ZERO-OCCURRENCES
   SO_THE_ARTIFACTS_COMPUTED_IN_THE_DECISION_LEDGER_IS_FALSE_AT_THE_LEDGER: THE-POINTER-NAMES-A-PLACE-THAT-HAS-NO-SUCH-FIELD
@@ -26472,6 +26487,197 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 274, 2026-09-07T14:22:37Z (the clock read by which every measurement below was complete) ---
+  THE_FOUR_DAY_EARLY_READ_IS_COMPLETE_AND_I_BUILT_THE_TABLE_FROM_THE_FOUR_ARTIFACTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260906__20260907T124731Z.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      **ALL FOUR RULED DAYS ARE READ, AND I ASSEMBLED THE TABLE MYSELF** from the four early-read artifacts rather than
+      from DA's print or the register -- eight arm-days, every figure read at the file. 09-03 CONDVALUE -16,592.33
+      (Z -2.30, p 0.994) / HAZARD -4,822.26 (-5.30, 1.000); 09-04 -31,428.00 (-4.74, 1.000) / -2,364.97 (-1.48, 0.936);
+      09-05 -29,585.13 (-3.47, 1.000) / **+6,540.20 (+4.33, 0.002)**; 09-06 **-32,132.13 (-5.15, 1.000)** / -2,111.88
+      (-1.17, 0.904). Every 09-06 figure matches R-798's citation exactly. **Every value is the FILLS LEG ONLY** (R-795's
+      standing label).
+  THE_SIGN_COUNTS_REPRODUCE_ZERO_OF_FOUR_AND_ONE_OF_FOUR:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260906__20260907T124731Z.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      Computed from the eight `D_E0` values rather than counted from the entry: **`CONDVALUE_X_SKEW` is above the
+      0-cancel baseline on 0 of 4 days; `HAZARD_OVER_SKEWED_REF` on 1 of 4, and that day is 09-05.** Exactly R-798's
+      counts. The one positive day is also the one with the largest positive `Z` (+4.33) and the only `p_location` below
+      0.5 in the whole table -- so the single exception is not a marginal sign flip but the one day that arm's cancels
+      beat both the baseline and the matched random-cancel null. **Recorded as counts, not as a reading.**
+  THE_FLOOR_IS_0_0625_SO_NO_SIGN_COUNT_AT_FOUR_DAYS_CAN_REACH_0_05:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      **THE ARITHMETIC THAT MAKES "NOTHING IS A PASS OR A FAIL" A FACT RATHER THAN A HEDGE.** With four days and a
+      per-day sign, the smallest attainable one-sided sign-test p under any fixed direction is **2^-4 = 0.0625**, which
+      is ABOVE 0.05. So 4-of-4 in either direction would still not clear a conventional bar, and 0-of-4 and 1-of-4
+      cannot either. **The four-day read could not have produced a significance-bearing result no matter which way every
+      day fell** -- which is exactly why R-754 ruled it EXPLORATORY with no interval, and why the days are consumed
+      (rule 11) rather than spent on a test that could not have been passed.
+  E4s_ARTIFACT_AND_THE_SECOND_REAL_LEDGER_VERIFIED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260906__20260907T124731Z.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      E4 exited clean at 14:10:41Z after 83 minutes. The artifact hashes **67bce38f9a0492ea**, matching R-796's
+      citation, at 49,572 B; `day_run.decision_ledger` is non-null with **198,611 rows** and **6,645,474 B**, and the
+      file `p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz` is on disk at that size. **The second real
+      ledger of the family**, after a census three rounds ago that found zero in the entire data root.
+  THE_09_06_ABSOLUTES_RECONCILE_BY_SUBTRACTION_AT_MY_OWN_HAND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260906__20260907T124731Z.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      The 09-06 `absolute` blocks: **0-cancel baseline total 90,153.40 cents** (identical under both arms, the shared-
+      replay signature), CONDVALUE arm **58,021.27**, HAZARD arm **88,041.52**, `agree_to_1e_9` true on both. Checked by
+      subtraction myself: 58,021.27 - 90,153.40 = **-32,132.13** = `D_E0`; 88,041.52 - 90,153.40 = **-2,111.88** =
+      `D_E0`. The identity holds at the printed precision as well as at the block's own 1e-9. Two of four days now carry
+      absolutes; the baseline moved 88,698.17 -> 90,153.40 between 09-05 and 09-06.
+  THERE_ARE_EXACTLY_TWO_PARAMS_SPANS_ACROSS_THE_FOUR_DAYS_NOT_FOUR:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      Measured at each day's SEALED day-run artifact by regex over the whole file, so a second version anywhere would
+      show: **09-03 names v14 only; 09-04 v14 only; 09-05 v15 only; 09-06 v15 only.** **TWO SPANS, NOT FOUR** -- and
+      R-798's "the sealed 09-06 run stamped v15, the same span as 09-05" is exact. (DA's finer distinction that 09-03's
+      v14 is RECONSTRUCTED while 09-04's is STAMPED is DA's and I have not tested how the attribution was obtained --
+      carried as DA's, not mine.)
+  SO_NO_FOURTH_MATERIALITY_MEASUREMENT_IS_OWED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      The consequence, and it is the reason the coordinator's instruction to read 09-06's stamp AT ITS OWN RECEIPT
+      mattered. R-794 measured v15->v19 key-by-key (62 added / 10 removed / 9 changed; design pointer v23 in both; no
+      estimand, bar or pin key) and ruled it exploratory-standing. **Because 09-06 falls in 09-05's span, that one
+      measurement covers both days and no new span was opened** -- the "fourth span if it differs, measured before
+      quoted" contingency did not fire. The two v14 days are covered by whatever measurement covers v14->v19, which is a
+      different span and is not this one.
+  MY_FOUR_SHAPES_NOTE_IS_NOW_MEASURED_ACROSS_ALL_FOUR_DAYS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260906__20260907T124731Z.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      At round 272 I wrote that the four-day table would be heterogeneous and named the shapes; at round 273 I added a
+      fifth item. **All four days are now on disk and I measured the shapes rather than predicting them**: 09-03 --
+      `decision_ledger` key ABSENT, no absolutes; 09-04 -- key PRESENT and explicitly `None`, no absolutes; 09-05 --
+      real ledger (196,898 rows), absolutes; 09-06 -- real ledger (198,611 rows), absolutes. Combined with the stamps
+      (v14/v14/v15/v15), that is DA's four day-shapes, independently reproduced. **The prediction and the measurement
+      agree, and the measurement is the record.**
+  AND_THE_TWO_MISSING_SHAPES_ARE_EXACTLY_THE_TWO_REPLAY_DEBTS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      Worth joining explicitly, because they have been tracked as separate items. **The two days without absolutes are
+      09-03 and 09-04; the two days owing a replay under R-782(c) are 09-03 and 09-04.** They are the same two days and
+      the same one gap: the early-read path had no ledger anchor when they ran (my rounds 266-267), so no ledger, so no
+      absolutes, so a replay under the recording code is the only route to their baseline values. **Neither replay has a
+      GO.** So the four-day table's heterogeneity is not four independent quirks -- it is one cause with a known
+      remedy, plus the stamp spans.
+  DE_135_PART_A_IS_DONE_wt_de_IS_AT_5020f96:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      **THE REFRESH HAPPENED.** `git worktree list` puts `/home/yuqing/ctaNew-wt-de` at **`5020f96`** -- exactly the
+      fourth composition DE 135 Part A specifies, not the tip and not a rebase. `wt-de2` has moved to `8a7fc57` (DA
+      128's commit), where DE works on Part B. GO #8 tonight therefore runs `5020f96` from a worktree now frozen for
+      it.
+  AND_BOTH_BLOCKING_CONDITIONS_HOLD_AT_MY_READ_AFTER_IT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      REV 103 §5 set two blocking conditions on the refresh and both hold, measured INSIDE the worktree at 14:20:09Z:
+      **(1) pins 10 of 10** -- v19's ten declared cascade paths hashed against `wt-de`'s working files, no red; **(2)
+      P10 clean beyond the symlink** -- `git status --short` in `wt-de` returns exactly one line, `?? data`, which is
+      the symlink to the shared data root that R-789 accounts for. Nothing else is untracked or modified. **The wording
+      "beyond the symlink" is doing real work: without it the condition could never be met, because the symlink is made
+      at every launch.**
+  I_MEASURED_THE_SAME_TWO_CONDITIONS_BEFORE_AND_AFTER_THE_REFRESH:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      And that is the point of having measured them early. At round 271 I recorded the pins at 10/10 in `wt-de`
+      **explicitly as a value at my read and not as a clearance**, since the condition is to be checked at the moment
+      the refresh happens. It has now happened, and the same probe at the same place returns the same answer on the new
+      commit. **A condition measured only once, after the fact, cannot distinguish "the refresh preserved it" from "it
+      was always so"** -- two readings across the event can.
+  THE_ABSOLUTES_CELL_IS_TWO_CELLS_AND_374_TO_376_MEASURES_THEM:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      R-797 records the `a71b714` cell as two cells with `EXPECTED_CHECKS` 374 -> 376. Verified at both objects:
+      `EXPECTED_CHECKS = 374` in the runner at `5020f96` and **376** at HEAD, and `ABSOLUTES_DO_NOT_RECONCILE` occurs
+      **2** times at the composition against **4** at HEAD. **The constant moved by exactly two and the code occurrences
+      by exactly two** -- the control and the known-bad. This is the phase4 discipline (a check that executes must move
+      the count) working on the other runner.
+  BUT_GO_8_RUNS_5020f96_WHICH_DOES_NOT_CARRY_THEM:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      **A REFINEMENT OF MY OWN ROUND-272 CLOSURE, AND IT MATTERS TONIGHT.** I recorded the
+      `ABSOLUTES_DO_NOT_RECONCILE` item as closed -- "watched on every run, red and green". That is true **at the tip**.
+      `a71b714` is **NOT an ancestor of `5020f96`** (checked with `merge-base --is-ancestor`), and R-797 says so
+      explicitly: "NOT composed". So **the bytes GO #8 runs tonight carry the guard (2 occurrences: the raise and the
+      block's name) but not the two cells that watch it.** The guard still refuses if the identity breaks; nothing
+      drives it on that path. My closure holds for runs from the tip and not for tonight's -- **which is the same
+      distinction I have been drawing about `fe76d83` for ten rounds, now applying to a closure of mine.**
+  DA_CORRECTED_ITS_OWN_ROW_IN_BAND_FOR_A_CLAIM_IT_INHERITED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      R-798 records that **DA corrected its own DA 127 row in band** -- it had repeated DE's "computed in the ledger"
+      claim. Recorded because the shape is right on two counts: the correction is IN BAND (a superseding statement, not
+      an edit to a landed row -- rule 13), and it is made by **the seat that repeated the claim**, not by the seat that
+      originated it or the seat that disproved it. DE 135 Part B separately corrects the artifact's wording, code only,
+      not composed. **Two seats correcting the same false claim in the two places each is responsible for.**
+  THE_INHERITED_CLAIM_PASSED_THROUGH_THREE_SEATS_BEFORE_ANYONE_OPENED_THE_FILE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      **THE PROPAGATION, ASSEMBLED, BECAUSE IT IS THE MOST USEFUL THING THIS EPISODE LEAVES BEHIND.** DE wrote
+      `inventory_leg: "COMPUTED since BE 96, in the decision ledger"` into the artifact. **I verified the block at round
+      265 (key set, the four COMPUTED entries, its prose-vs-data mismatch) and again at round 272 (it shipped) -- twice,
+      without opening the ledger.** DA then repeated it in the DA 127 row. **BE 97 opened the ledger and found no such
+      field.** So the claim passed an author, a state-keeper twice, and an independent verifier before a fourth seat
+      read the file it named. **The failure was not that nobody checked -- three seats checked. It is that every check
+      was scoped to where the claim SAT rather than to where it POINTED**, and that is the fourth or fifth instance of
+      the scope-mismatch class I have logged in five rounds, this one distributed across seats rather than inside one
+      probe.
+  THE_USERS_INVENTORY_RULING_IS_STILL_OPEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      Carried forward unchanged: R-795 routes the inventory leg to the USER as a ruling (rule 14), the coordinator's
+      three-part recommendation disclosed and not adopted, and it remains **the only open one of the four user rulings
+      in play today** (R-754 the early read, R-765 the seal retired, R-782 the absolutes, R-795's question). Every value
+      in the completed four-day table is FILLS LEG ONLY, so the open ruling sits underneath a finished table rather than
+      blocking it -- the table is readable as it stands and would be a different table under a different rule.
+  NOTHING_IN_THE_FOUR_DAY_TABLE_IS_A_PASS_OR_A_FAIL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T14:22:37Z
+    said: >-
+      R-798's own framing, and the arithmetic above is why it is not a hedge: the sign floor at four days is 0.0625, the
+      read is EXPLORATORY under R-754 with no interval, E1/E2 remain **tabled** at R-773 and E3/E4 are **read, not
+      judged**. **Four days, eight arm-days, one arm above the 0-cancel baseline on one day.** The days are consumed for
+      any later validation (rule 11), which is the real cost paid here and was ruled by the user in advance. MEM asserts
+      no result and rules nothing.
   # --- MEM round 273, 2026-09-07T13:07:39Z (the clock read by which every measurement below was complete) ---
   inventory_leg_IS_A_FIELD_OF_NO_LEDGER_ROW_TYPE:
     prov: CHECKED
