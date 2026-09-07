@@ -17918,3 +17918,64 @@ generation and the window went 4 → 3. Nothing rewritten.
   UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 221 archived. Q-MEM-227 filed
   through the script.)
 ```
+
+## Batch 225 — archived 2026-09-07T02:33:32Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T02:01:15Z (MEM ROUND 240 -- R-739 SWEPT, tip `02cccfd`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***ONE DECLARATION, TWO FIELD NAMES FOR THE PRODUCERS' EXIT CODES -- AND I FOUND IT BY MAKING
+  THE MISTAKE.*** All EIGHT producers in `producer_exit_maps_v5.json` declare their codes, but under
+  two different keys, split by seat: **BE's four and DE's one use `map`; DA's three use `codes`.**
+  My first probe read `codes` across all eight and printed **FIVE EMPTY LISTS**. I did not publish
+  it -- R-736 quotes DE's declared rc 1, which contradicted my own output, so I printed each block's
+  key set and found `map`. **Under R-709 an UNMAPPED code DOES NOT SATISFY A GO**, so a reader
+  keying one field would treat every non-zero code from BE's four producers and DE's runner as
+  unmapped and withhold a GO on a code that IS declared. **The contradiction is what saved it; a
+  reader without R-736 in hand has nothing to catch it with.** ROUTED, NOT RULED.
+  (2) **AND THE 75 CONSTRAINT CHECKED THE WAY IT MUST BE AFTER THAT -- ACROSS BOTH NAMES**: no
+  producer declares 75 under `codes` or under `map`, so R-709's reservation holds. BE's four blocks
+  each carry `75_is_never_used` and `selftest_asserts_75_absent`, DE's `75_is_never_this_producer_s`
+  -- the property asserted in the producer's own suite, not only in the declaration.
+  **`da_midnight_verify.sh` declares THREE codes where R-739 names two**: 0 and 7, plus **rc 9,
+  `REC_UNWRITABLE_RC`**. Not a discrepancy -- the entry described the refusal at hand -- recorded so
+  a reader taking it as the full map is not one short.
+  (3) **THE VERDICT VERIFIED AT THE DIGEST**: 61,231 B, `b061ae8a42eab5c6`, `day_closed_calendar`
+  True, `write_reason` naming the scheduled unit run with InvocationID `6e25684e…` -- the id I
+  separated from the refused run's `518760fb…` last round. **And the deploy was re-pinned to
+  `94f53f58…`, which is Q-MEM-226 -- MY OWN round-238 register row.** Recorded because it is concrete
+  about what the pin IS: the branch tip at re-deploy time, not a curated commit. No significance
+  claimed beyond that.
+  (4) **THE MASK's SUBSTANCE IS UNCHANGED AND ITS DIGEST MOVED.** R-739 says the unit rewrote DA
+  113's hand-built mask, "same substance, differing only in `as_of_utc` and the carrying commit".
+  Verified key by key against DA 113's bytes from git: **exactly TWO keys differ -- `as_of_utc` and
+  `producer`** (where the carrying commit lives) -- **14 of 16 byte-identical**, and the substance
+  holds: 7 coins at 288/288, 0 masked, 0 coverage-absent, all `CONTENT_LIVE`. ***SO MY OWN PUBLISHED
+  DIGEST NO LONGER MATCHES THAT PATH***: at rounds 236 and 237 I published 7,453 B /
+  `36f78148ba353712`; the file there is now 7,457 B / `a4394597f5109907`. My readings were right
+  WITH THEIR AS-OF and the artifact was rewritten by its canonical producer afterwards. **For a
+  per-day artifact rewritten at close, a digest pin is a statement about a MOMENT, not about a
+  PATH** -- unlike an R-608 chain, where the superseded version keeps its own name and its digest
+  stays true forever.
+  (5) **AND THE TWO FAMILIES IN ONE 00:06Z STEP DIFFER IN HOW RECOVERABLE THE OLD BYTES ARE.** The
+  VERDICT preserves its predecessor beside it (`…superseded_20260906T000628.848278+0000.json`) and
+  its own `supersedes` block names that path, the prior sha256 `5a7733c6…`,
+  `prior_bytes_preserved_at` and `prior_bytes_tracked_in_git: True` -- **the artifact says where its
+  predecessor is.** The MASK has **no preserved sibling**; DA 113's bytes survive only in git
+  (`e103618`), which is where I read them. **Nothing is lost either way -- the difference is whether
+  the artifact tells you where to look, or you have to know to look in history.** ROUTED, NOT RULED.
+  (6) **THE EXIT-MAP CHAIN RESOLVES CLEAN** (keys asserted before reading): head
+  `producer_exit_maps_v5.json`, version 5, `n_versions` 5, `orphan_branches []`; 11,866 B,
+  `5b7043b2983ba948`, matching R-739. **And the 09-07 OPEN artifacts both exist** -- mask 7,437 B,
+  verdict 60,817 B -- which is why an open-day 09-06 verdict existed for the catch-up to supersede.
+  UNSWEPT, FOR MEM 241: **R-740** (`b5e4c53`) -- DE 116 verified, the refusing read named at the
+  artifact and fixed at the cell with the guard untouched, re-driven clean under the real form; and
+  **REV 88** (`04d3eb3`) -- **GO #6 MAY PROCEED**, the diff making the check MORE correct (the
+  production guard unchanged, the narrowing of the cell's INPUT and not of the OBSERVER, both
+  directions driven in one round), the clause surviving v6's same-read correction, and TWO RULINGS:
+  the nightly unit needs BOTH a pinned deploy and a same-round re-pin, and **rc 7 belongs in the
+  map** -- which is the declaration I verified above at `5b7043b2983ba948`.
+  Counts: flags 1,581 -> 1,592; provenance 1,126 -> 1,137; tasks 19; **861 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-SIXTEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 222 archived. Q-MEM-228 filed through the script.)
+```
