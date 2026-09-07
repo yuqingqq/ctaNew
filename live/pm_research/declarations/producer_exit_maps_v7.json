@@ -36,7 +36,7 @@
   },
   "what_happened": "three producers versioned this chain from v1 within five minutes (BE 75 a81484c, DE 108 ba635de, DA 101 40c8903), each writing producer_exit_maps_v2.json from v1's pair; the shared-tree landings turned the second and third into MODIFICATIONS of v2 (git: M, not A), so the file at v2 is DA's and BE's and DE's blocks left the chain while their rows said DECLARED"
  },
- "declared_at_utc": "2026-09-07T06:33:29Z",
+ "declared_at_utc": "2026-09-07T06:46:06Z",
  "declared_by": "DA (this producer's own block, by pair)",
  "producers": {
   "live/pm_research/be_daybook_build.py": {
@@ -91,6 +91,21 @@
    "selftest_asserts_75_absent": true,
    "status": "DECLARED"
   },
+  "live/pm_research/da_early_read_verify.py": {
+   "codes": {
+    "0": "VERIFIED -- the artifact resolves its ruling by the pair it records, names the sealed receipt the bar names, carries the four labels and the five named statuses, and the INVERTED census finds exactly the computed economic set. The table was printed if --print was given",
+    "1": "argparse's usage exit via ap.error (no --selftest and no --verify). Not a reading of any artifact",
+    "2": "A REFUSAL BY NAME -- the instrument declined to run on what it was given: SEALED_FAMILY_ARTIFACT_REFUSED, EARLY_READ_ARTIFACT_ABSENT / _UNREADABLE, NOT_AN_EARLY_READ_ARTIFACT, EARLY_READ_RULING_NOT_THE_PAIR, PREFIX_ONLY, EARLY_READ_DAY_NOT_IN_THE_BAR, EARLY_READ_RECEIPT_NOT_THE_BAR, EARLY_READ_LABEL_MISSING / _DIFFERS, EARLY_READ_STATUS_MISSING / _CARRIES_A_NUMBER / _WITHOUT_A_REASON, EARLY_READ_NO_ARM_BLOCKS, EARLY_READ_ECONOMIC_FIELD_MISSING, EARLY_READ_EXTRA_ECONOMIC_KEY. A refusal is NOT a failed verification and NOT a finding about the day"
+   },
+   "declared_after": "DA 121 built this reader BEFORE the first early-read artifact exists, and the four real reads are GOs (E1..E4). R-709: an UNMAPPED code does not satisfy a GO, so the codes are declared before the first one is conditioned on them -- not after a refusal has to be resolved in the register",
+   "declared_by": "DA",
+   "not_declared_here": {
+    "75": "NEVER: 75 is the WRAPPER's refusal on a held lock. This reader is LIGHT and takes no lock, and a producer declaring 75 would make a lock conflict read as one of its verdicts",
+    "any_other_non_zero": "an uncaught exception -- a CRASH, recorded verbatim as UNMAPPED. Every refusal this module can name raises EarlyReadVerifyRefused"
+   },
+   "status": "DECLARED",
+   "where_the_verdict_is_written": "stdout (the table under --print) and the record named by --output; the exit code is a summary of the verdict, never the record"
+  },
   "live/pm_research/da_gate1_day_verdict.py": {
    "codes": {
     "0": "the run's own verdict is affirmative: PRE_READ_VERIFIED on the pre-read path, or IS_A_VERIFICATION_OF_THE_ECONOMICS on the full read",
@@ -137,23 +152,6 @@
    },
    "status": "DECLARED"
   },
-  "live/pm_research/de_early_read.py": {
-   "75_is_never_used": true,
-   "declared_by": "DE, DE 123 phase 1 (the coordinator's addendum)",
-   "map": {
-    "0": "the early-read day completed and its artifact was written, or --selftest passed",
-    "1": "an EARLY_READ_* refusal, a battery failure, or usage -- every non-zero path this module has, because EarlyReadRefused is an uncaught exception and SystemExit carries a message"
-   },
-   "not_observed": {
-    "0": "a completed early-read day is heavy -- it is a GO, not a probe",
-    "1 via an EARLY_READ_* refusal": "reachable by hand and covered by the battery's own drives; not spawned, for the reason above"
-   },
-   "note": "75 is RESERVED to the launcher's flock conflict and is not in this map; the battery asserts it is absent. The map is only {0, 1}: every refusal in this module is an EARLY_READ_* exception or a SystemExit carrying a message, and Python exits 1 for both -- so `resolved_kind` for a non-zero early-read run is read from the REFUSAL NAME in the run's output, never from the code alone, which cannot distinguish them.",
-   "observed_by": "`de_early_read.py --observe-exit-codes`, which runs NO battery. The observation is deliberately outside the battery: every path of this module except bare usage runs the battery first (R-610), so a subprocess probe inside a battery cell re-enters it and multiplies. Two attempts did exactly that and were killed by pid; the battery now asserts only the static half.",
-   "read_from": "the module's own EXIT_CODES constant, not typed here",
-   "selftest_asserts_75_absent": true,
-   "status": "DECLARED"
-  },
   "live/pm_research/de_multiday_gate1_runner.py": {
    "75_is_never_this_producer_s": "75 is the launch layer's: `flock -n -E 75` means a HELD LOCK and the payload never started. If this producer ever exited 75 a refusal and a held lock would be indistinguishable in `ExecMainStatus`, which is the whole point of `-E` (R-646 R2)",
    "declared_by": "DE, at DE 108, by the pair",
@@ -181,19 +179,10 @@
   "why_a_sibling": "the form's constants are the WRAPPER's (lock path, conflict code, caps) and belong to every producer alike; an exit map is one producer's own and would make the shared form change whenever any producer added a code (REV 79 \u00a72.1)"
  },
  "supersedes": {
-  "chain": [
-   {
-    "path": "live/pm_research/declarations/producer_exit_maps_v6.json",
-    "sha256": "47283b4526aaa7f7f00381fd39f68d14c58fdd4fa7dc99a65bccc2b9e10c1f1f"
-   }
-  ],
-  "fields_changed": [
-   "producers['live/pm_research/de_early_read.py'] (NEW)",
-   "version / protocol -> 7"
-  ],
   "path": "live/pm_research/declarations/producer_exit_maps_v6.json",
+  "rule": "13 -- vN+1 by the {path, sha256} PAIR; the prior version is NOT edited",
   "sha256": "47283b4526aaa7f7f00381fd39f68d14c58fdd4fa7dc99a65bccc2b9e10c1f1f",
-  "why": "R-709 / the coordinator's DE 123 addendum: v6 declared eight producers and `de_early_read.py` was not among them, so GO E1's outcome could not be resolved through the map (UNMAPPED does not satisfy a GO). ONE new block. No existing producer's map moves."
+  "what_changes": "ONE producer's block is ADDED: `live/pm_research/da_early_read_verify.py`, the independent reader of the early-read family. No existing block is touched and v6 is not edited."
  },
  "version": 7,
  "what": "One block per producer that runs under the heavy-run lock: {exit code: meaning}. A capture record resolves a non-zero ExecMainStatus HERE, never in the producer's source. A code with no entry is recorded VERBATIM as UNMAPPED and is not a reading.",

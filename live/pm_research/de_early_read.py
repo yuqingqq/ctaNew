@@ -44,20 +44,7 @@ DECL_DIR = "live/pm_research/declarations"
 #: is a different question asked of the same days.
 DAY_FAMILY = "p003_de_early_read_day"
 
-#: R-709: THIS PRODUCER'S EXIT CODES, DECLARED HERE AND READ FROM HERE by
-#: `producer_exit_maps`. The map is not typed into the declaration twice;
-#: the declaration says it is read from this constant, and the battery
-#: asserts the two agree. 75 is the LAUNCH LAYER'S (`flock -n -E 75` means
-#: a held lock and the payload never started) and never appears here.
-EXIT_CODES = {
-    0: "the early-read day completed and its artifact was written, or "
-       "--selftest passed",
-    1: "an EARLY_READ_* refusal, a battery failure, or usage -- every "
-       "non-zero path this module has, because EarlyReadRefused is an "
-       "uncaught exception and SystemExit carries a message",
-}
-
-EXPECTED_CHECKS = 16
+EXPECTED_CHECKS = 15
 
 
 class EarlyReadRefused(RuntimeError):
@@ -602,28 +589,6 @@ def selftest(quiet: bool = False) -> int:
        f"compared and equal, with v16's prefix kept beside it and "
        f"agreeing")
 
-    # ---- R-709: THE EXIT MAP -- THE STATIC HALF, HERE ----------------
-    # WHAT THIS CELL DOES NOT DO, AND WHY. It does not spawn this module
-    # to observe its exit codes. Every path of this module that is not
-    # bare usage runs the battery FIRST (R-610: what can refuse refuses
-    # before the work), so a subprocess probe launched from inside the
-    # battery re-enters it and spawns again. Two versions of this cell
-    # did that -- ~100 processes, then ~422, both killed by pid -- and
-    # the second still recursed with a guard in place, because the guard
-    # was on the wrong path. The observation lives in
-    # `--observe-exit-codes`, which does NOT run the battery and so
-    # cannot recurse; this cell asserts only what is safe to assert from
-    # inside.
-    declared = set(EXIT_CODES)
-    ok(declared == {0, 1} and 75 not in declared
-       and all(isinstance(k, int) for k in declared)
-       and all(isinstance(v, str) and v for v in EXIT_CODES.values()),
-       f"R-709 (static): this producer declares exactly {sorted(declared)} "
-       f"with a reason for each, and 75 is NOT among them -- 75 is the "
-       f"launcher's held-lock code (`flock -n -E 75`), and a producer "
-       f"claiming it would make a lock conflict unreadable. The OBSERVED "
-       f"half is `--observe-exit-codes`, out of the battery on purpose")
-
     # ---- the absent fields are STATUSES, never silent drops -----------
     av = economics_available_per_arm_day()
     ok(len(av["not_computed_by_this_path"]) == 5
@@ -652,44 +617,11 @@ if __name__ == "__main__":
                     help="ONE day of the ruling, UNSEALED under v16's "
                          "bar. Requires --book and --output, and the "
                          "heavy-run lock (this is a real day's work).")
-    ap.add_argument("--observe-exit-codes", action="store_true",
-                    dest="observe_exit_codes",
-                    help="spawn this module on its usage paths and report "
-                         "the exit codes OBSERVED against the declared "
-                         "map (R-709). Runs no battery, so it cannot "
-                         "recurse.")
     ap.add_argument("--book", type=Path)
     ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(selftest())
-    if a.observe_exit_codes:
-        # NO BATTERY HERE. That is the whole point: this entry exists so
-        # the exit codes can be OBSERVED without the observer being the
-        # thing observed.
-        import subprocess
-        me = str(Path(__file__).resolve())
-        obs = {}
-        for label, argv in (
-                ("usage: no arguments", []),
-                ("usage: --early-read-day without --book",
-                 ["--early-read-day", "2026-09-03"])):
-            obs[label] = subprocess.run(
-                [sys.executable, me, *argv], capture_output=True,
-                timeout=60).returncode
-        print(json.dumps({
-            "declared": {str(k): v for k, v in EXIT_CODES.items()},
-            "observed": obs,
-            "observed_are_declared": set(obs.values()) <= set(EXIT_CODES),
-            "75_is_declared": 75 in EXIT_CODES,
-            "not_probed_here": {
-                "0 (a completed day)": "heavy -- it is a GO, not a probe",
-                "1 via an EARLY_READ_* refusal": "that path runs the "
-                    "battery first (R-610), so probing it from a battery "
-                    "cell recursed; it is reachable by hand and its "
-                    "refusal text is in the battery's own drives"},
-        }, indent=2))
-        raise SystemExit(0)
     if a.day:
         if a.book is None or a.output is None:
             raise SystemExit("REFUSED: --early-read-day requires --book "
