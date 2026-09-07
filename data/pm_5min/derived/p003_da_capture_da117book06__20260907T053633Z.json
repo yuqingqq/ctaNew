@@ -1,0 +1,80 @@
+{
+  "CPUUsageNSec": "5046360000",
+  "MemoryPeak_property_source": "systemd's MemoryPeak property -- BE 74 measured that this, read after the unit exits, is NOT the run's peak",
+  "MemoryPeak_property_verbatim": "2330624",
+  "as_of_utc": "2026-09-07T05:36:06Z",
+  "cgroup_leaf_read_inside_the_run": {
+    "memory.current": "1999101952",
+    "memory.max": "8589934592",
+    "memory.peak": "2136506368"
+  },
+  "copied_while_loaded": true,
+  "exec_main_status_verbatim": "0",
+  "exit_map": {
+    "head": "producer_exit_maps_v5.json",
+    "sha256": "5b7043b2983ba94865f9b5421b6c45e7c7574f16c32a0d4a64aeabe986eab1ed"
+  },
+  "invocation_id": "ed567744f60548508a0e1521df9547bb",
+  "journal_copy": {
+    "n_lines_by_id": 2,
+    "n_lines_by_id_manager": 1,
+    "n_lines_by_id_payload": 1,
+    "n_lines_for_the_unit_name": 2,
+    "output_format": "short-iso",
+    "query": "journalctl --user _SYSTEMD_INVOCATION_ID=ed567744f60548508a0e1521df9547bb + USER_INVOCATION_ID=ed567744f60548508a0e1521df9547bb",
+    "read_at_utc": "2026-09-07T05:34:27Z",
+    "retention_state_MEASURED": {
+      "as_of_utc": "2026-09-07T05:36:06Z",
+      "newest_entry": "2026-09-07T05:35:49+00:00",
+      "oldest_entry_the_journal_holds": "2026-09-07T01:05:38+00:00",
+      "query": "journalctl --user --no-pager -o short-iso | head/tail",
+      "why": "the window's start advances; a state named once and re-quoted later is stale. This run's lines (05:33:59, 05:34:04) are inside the window AT THIS READING and a later reader must not assume so -- which is why they are copied above rather than cited"
+    },
+    "the_copy_reconciles": true,
+    "the_payload_line_verbatim": "2026-09-06: PRE_READ_VERIFIED -- POPULATION RECOMPUTED THROUGH BE'S STRUCTURE: AGREES, sealed=True, economics read: NONE (verification of the economics=False)",
+    "why_reconciles": "1 payload line + 1 manager Started line = 2, and `-u da117book06.service` returns 2. A copy returning 0 where -u has lines would be a REFUSAL of the copy, never a record (R-641)"
+  },
+  "mapped_by": "the producer's block in producer_exit_maps_v5.json (sha256 5b7043b2983ba94865f9b5421b6c45e7c7574f16c32a0d4a64aeabe986eab1ed)",
+  "producer_module": "live/pm_research/da_gate1_day_verdict.py",
+  "producer_sha256": "8e6747b97de26411c4f6260dff90ea4230499a5b0917c66b45ae6b8822c34d5f",
+  "producing_commit": "2c07ac12cd11",
+  "protocol": "P003_DA_CAPTURE_V2",
+  "resolved_kind": "VERDICT by name: the run's own verdict is affirmative: PRE_READ_VERIFIED on the pre-read path, or IS_A_VERIFICATION_OF_THE_ECONOMICS on the full read",
+  "the_five_fields_at_exit": {
+    "ActiveState": "active",
+    "ExecMainStatus": "0",
+    "LoadState": "loaded",
+    "Result": "success",
+    "SubState": "exited"
+  },
+  "the_five_fields_at_launch": {
+    "ActiveState": "active",
+    "ExecMainStatus": "0",
+    "LoadState": "loaded",
+    "Result": "success",
+    "SubState": "running",
+    "read_at_utc": "2026-09-07T05:33:59Z",
+    "why": "SubState is the discriminator: `running` at launch and `exited` at the capture, both loaded/active with ExecMainStatus 0 -- which is why the launch reading is NOT an outcome"
+  },
+  "the_leaf_sampler_took_no_sample_and_says_so": {
+    "n_samples": 0,
+    "what_would_have_been_lost": "nothing here: a released leaf cannot be read afterwards, and the in-run read is the peak of record for this unit",
+    "why": "the external sampler polls every 2 s and the run lived about 5 s: its first tick found the unit already `exited`. The LEAF READ in this capture is therefore the one the RUN ITSELF took from inside, at the end, before the cgroup was released -- not a sample this capture took"
+  },
+  "the_record_it_produced": {
+    "path": "p003_da_gate1_pre_read_20260906__20260907T053359Z.json",
+    "sha256": "cb75e5fe9112b096ff7bd477e21b13bd30b10dbd2811d645dd8cef6baf26e068"
+  },
+  "the_two_disagree": true,
+  "this_capture_holds_both_readings": true,
+  "unit": "da117book06.service",
+  "wall": {
+    "payload_line_utc": "2026-09-07T05:34:04Z",
+    "source": "the manager's Started line and the payload's own line, both from the journal copy above",
+    "started_utc": "2026-09-07T05:33:59Z",
+    "why_not_computed_here": "a duration is read from the two stamps, never estimated"
+  },
+  "why_copied_while_loaded": "rule 20: a reading taken while LoadState=loaded is a reading; after the unit is collected `systemctl show` returns DEFAULTS and the copy would be VOID whatever its strings say. The InvocationID is non-empty here, which is the other half of that test",
+  "why_mapped_by_exists": "REV 81 S2: the mapping's provenance was IMPLIED. A reader had to infer whether a kind came from the producer's own block or from the map's runtime_default; now it is stated, with the head it was resolved in named by {path, sha256}",
+  "why_no_agreement_claim": null
+}
