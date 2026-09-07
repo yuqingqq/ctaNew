@@ -22934,6 +22934,31 @@ Key-walk (keys, booleans, labels only): G 4, EXPLORATORY, NONE_BELOW_FIVE_DAYS, 
 **REV 99 part A (`aaba406`; `reviews/REVIEW_99_THE_ABSOLUTES_AND_A_GUARD_NOT_YET_WATCHED_2026-09-07.md`), read at the file:** DE 131's verification method — restoring `de_phase4_diag_runner.py` temporarily to the bytes v19 pins (`ee4034c1…`, which are ALSO wt-de's frozen content) to run the red-by-design battery, then restoring — is SOUND "for a better reason than it was the only way": the bytes verified against are the bytes the runs execute. §A2: the absolutes landed and REV drove the arithmetic. §A3, the one finding: **the reconciliation refusal (`arm_total − baseline_total ≠ D_E0`) has never been watched fire** — routed to DE. **DE 131 (`286335f`, Q-DE-135) landed** for GO #9 onward. **MEM 267 landed** (`1bd30f6` + row): the absolutes computed on the real path; "the ledger write is unreachable at fe76d83" — the same finding from the other seat.
 
 **ROUTING.** DA 126 → the 09-04 table (no baseline line) → DE 132 → REV 99 part B (gates E3; the E2 artifact's null ledger censused) → wt-de refreshed to the cleared commit → GO E3 → DA → GO E4 → DA → the four-day table → the close → GO #8 from the same commit → the freeze lifted → v20/v28 → the 09-03 and 09-04 ledger replays as GOs. MEM 268 (R-783).
+
+### R-784 — 2026-09-07T11:07Z — coordinator — **THE SECOND EARLY-READ TABLE — 2026-09-04 — read by DA's independent reader (Q-DA-352) and cross-checked at DE's artifact by key: on that day both cancel arms again finished BELOW the 0-cancel baseline and BELOW the matched random-cancel null — CONDVALUE_X_SKEW by 4.7 null standard deviations (worse than every one of 500 random draws), HAZARD_OVER_SKEWED_REF by 1.5 (worse than 93.6 %). EXPLORATORY, G 4, no interval, one day; no baseline line — the ledger was not written on this path (R-783). Also: two seats' rows deadlocked in the legacy landing form and were landed together by the coordinator; every seat is now told to use the locked `--row` form.**
+
+**THE TABLE, verbatim from DA's print (`--print-under-ruling R-764`), every value re-read by DA from `day_run.per_day_sealed_artifacts[*].economic` and the arm top level of `p003_de_early_read_day_20260904__20260907T105906Z.json` `b196bf32…` and agreeing exactly:**
+
+```
+EARLY READ -- day 2026-09-04 -- EXPLORATORY, G 4, point estimates, NO INTERVAL, days consumed
+  ruling de_multiday_gate1_params_v19.json dd8db7ded9e6ed97… (head today: de_multiday_gate1_params_v19.json)
+  sealed receipt p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json 6c74928fbc6c8a6b…
+  arm                                   D_E0                   Z         p(1-sided)           null_mean             null_sd  n_draws  fills_arm  fills_base  cancels
+  CONDVALUE_X_SKEW        -31428.00479349999  -4.735057621396074                1.0  -6146.768792169096  5339.1612146584675      500      36806       57850     6417
+  HAZARD_OVER_SKEWED_REF  -2364.965129999997  -1.477158249512807  0.936127744510978  -623.1250302779971  1179.1831378232423      500      55952       57850      858
+  p is ONE-SIDED (p_location). EXPLORATORY, G 4, point estimates, NO INTERVAL, days consumed.
+  the three COUNTS on this day: unsealed BY THIS READ -- sealed under the ELEVEN-name scope, which includes the three counts
+  LEDGER_ABSENT: `day_run.decision_ledger` is present and NULL: no ledger was written on the early-read path for this day
+  MATERIALITY -- REFUSED COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS, PRINTED UNDER R-764: the sealed run's params v14 2da40f4e7b2305df… (STAMPED) against this read's v19 dd8db7ded9e6ed97… -- design pointer v21->v23: seal scope and closure naming only; no estimand, bar or pin
+```
+
+**Read plainly for this ONE day:** random cancellation of the same count lost against never cancelling (null means −6,147 and −623), and the models' chosen cancels lost MORE — CONDVALUE 4.7 sd below its null (worse than all 500 draws), HAZARD 1.5 sd below (worse than 93.6 % of draws). Same direction as 09-03 on both arms; two days of four, directional only, no interval at G = 4. Labels: computed under params v19 (the frozen `PARAMS_REL`) against a sealed run stamped v14 — R-764's materiality line printed beside the standing refusal; the three counts were SEALED before this read (eleven-name scope) — unlike 09-03's. The 0-cancel baseline's own value is NOT derivable for 09-04: `LEDGER_ABSENT` by name (R-783). The plain read refused `COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS` as expected; DA reports the v19-vs-v14 class as the same class as v15-vs-v14 (the chain v14→v19 adds the retired seal and the ledger to the design pointer; no estimand, bar or pin). DA computed nothing and opened no book.
+
+**THE DEADLOCK AND THE SWITCH.** At 11:03–11:05Z `Q-MEM-255` and `Q-REV-99` sat uncommitted in the shared register together; under the legacy form each seat's landing refused FOREIGN_ROW_IN_REGISTER on the other's row and both waited (the coordinator's own instruction: never withdraw a row that is not yours — a deadlock by construction). The coordinator landed both by ids-regex through the shared script (`7002edc`, attribution with the rows' authors, POST-CONDITION OK) — the R-586 unblock — and R-783 landed behind them. **At 11:06:03Z every seat was told: rows are landed ONLY with `scripts/land_register_row.sh --row <rowfile> '<id>' <msgfile>` — the locked insertion (REV 93 §B1 read it; the regex guard landed at `49f3b52`); nobody edits `COORDINATION.md` by hand; on HELD REGISTER_DIRTY wait and re-run.** DE reported it had already been "pulling Q-DE-136 back out, arming a monitor, re-inserting" around the same collision — machinery now retired.
+
+**IN FLIGHT:** DE 132 (the early-read ledger write; gates E3); REV 99 part B (gates E3 on DE 132; E2's artifact by keys; DA 126); MEM 268 pending. E3 and E4 HELD until REV clears; then wt-de refreshed to the cleared commit.
+
+**ROUTING.** DE 132 → REV 99 part B → wt-de refresh → GO E3 (09-05, with its ledger) → DA → GO E4 → DA → the four-day table (two days with ledgers and baseline lines, two without) → the close → GO #8 → the freeze lifted → the 09-03 and 09-04 ledger replays. MEM 268 (R-783, R-784).
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
