@@ -32,5 +32,6 @@ for f in "$DIR"/*_v[0-9]*.json; do [ -e "$f" ] || continue; NF=$((NF+1)); check 
 done
 # REV 81 §1.3: the denominator -- what this run did NOT judge, named as history, so exit 0 reads as
 # "nothing edited since $BASE" and never as "the declarations are immutable".
-echo "HISTORY (not judged): $HF of $NF version files in ${#HFAM[@]} families had in-place edits BEFORE base $BASE"
+NFAM=$(set +u; echo "${#HFAM[@]}")  # an EMPTY associative array is "unbound" under set -u (bash 5.1); counted with -u off so the denominator line always prints
+echo "HISTORY (not judged): $HF of $NF version files in $NFAM families had in-place edits BEFORE base $BASE"
 echo "base $BASE; exit $RC"; exit $RC
