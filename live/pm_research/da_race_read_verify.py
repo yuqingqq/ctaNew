@@ -73,7 +73,41 @@ FEED_FIELDS = ("slug", "side", "gen", "t0", "t_start", "score",
                "preventable_shares", "level")
 
 OP_DECL = HERE / "declarations" / "be_operating_point_declaration_v1.json"
-PINS_DECL = HERE / "declarations" / "be_race_read_feed_pins_v1.json"
+
+#: ***THIS LITERAL IS A READER OF A PAST ACT, NOT A CONSUMER OF THE HEAD***
+#: (REV 86 section 8; the non-head census flagged it as a stale pin and the
+#: classification is the answer). The FIRST race read --
+#: `be_race_read_result_v2.json`, days 20260903..20260905, G = 3, CLOSED and
+#: CONSUMED -- was taken under `be_race_read_feed_pins_v1.json`, and that
+#: artifact names this file itself in
+#: `pinned_days_not_in_READABLE.copied_from`.
+#:
+#: FOLLOWING THE HEAD HERE WOULD BE THE DEFECT, NOT THE FIX, AND IT IS
+#: MEASURED: the head is `be_race_read_feed_pins_v2.json`, whose `per_day`
+#: carries SIX days (the first read's five plus 20260906, taken for the
+#: SECOND read). A reader that followed it would report a five-day act as a
+#: six-day one -- a closed read re-described with the days of a read that
+#: has not happened. The head is REPORTED beside this, never followed.
+#:
+#: WHAT THE PAIR ADDS TO THE NAME: a filename is an address, and an address
+#: verifies nothing. The digest below is checked on every read, so this
+#: reader REFUSES BY NAME if the file it cites is not the file the act used.
+FIRST_READ_PINS = {
+    "path": "be_race_read_feed_pins_v1.json",
+    "sha256": ("2cca55c64ffca8e78937533da617a52501a5af1f74"
+               "18f4b4be8e538a683f9b04"),
+    "the_act": ("the FIRST race read -- be_race_read_result_v2.json, days "
+                "20260903, 20260904, 20260905, G = 3, CONSUMED"),
+    "how_the_act_names_it": (
+        "be_race_read_result_v2.json carries "
+        "`pinned_days_not_in_READABLE.copied_from` = "
+        "'be_race_read_feed_pins_v1.json'"),
+    "why_not_the_head": (
+        "the head is the SECOND read's pins: a different act, a different "
+        "day set. A reader of history resolves by the pair the act "
+        "recorded; the head is for writers."),
+}
+PINS_DECL = HERE / "declarations" / FIRST_READ_PINS["path"]
 
 #: The comparison is EXACT and the reason is in the definition, not in a
 #: preference: every term is a finite sum of the SAME float64 values selected
@@ -313,17 +347,53 @@ def compare_day(mine: dict, theirs: dict) -> dict:
 
 # ------------------------------------------------------------- the race gate
 
-def pinned_feeds() -> dict:
-    """The five pinned real paths, READ from the pins declaration."""
-    d = json.loads(PINS_DECL.read_text())
+def pinned_feeds(*, decl_dir: Path | None = None) -> dict:
+    """THE FIRST READ'S five pinned real paths, resolved BY THE PAIR.
+
+    Not the family head, and the record says which: `the_family_head_today`
+    is resolved through the shared chain resolver and REPORTED, so a reader
+    can see that the head has moved and that this answer did not move with
+    it. `decl_dir` exists for the battery, which drives exactly that.
+    """
+    d_dir = Path(decl_dir) if decl_dir else (HERE / "declarations")
+    p = d_dir / FIRST_READ_PINS["path"]
+    if not p.is_file():
+        raise RaceVerifyRefused(
+            f"REFUSED: PINS_DECLARATION_ABSENT — the FIRST read's pins are "
+            f"not at {p}. A check that depends on a declaration FAILS when "
+            f"it is gone; it does not skip (R-649).")
+    got = hashlib.sha256(p.read_bytes()).hexdigest()
+    if got != FIRST_READ_PINS["sha256"]:
+        raise RaceVerifyRefused(
+            f"REFUSED: PINS_NOT_THE_PAIR_THE_ACT_RECORDED — "
+            f"{FIRST_READ_PINS['path']} digests {got[:16]}… and the act "
+            f"recorded {FIRST_READ_PINS['sha256'][:16]}…. A name whose "
+            f"bytes have moved is an address pointing at a different "
+            f"object, which is what the pair exists to catch.")
+    d = json.loads(p.read_text())
     per = d["per_day"]
+    try:
+        import declaration_chain as CHAIN                     # noqa: PLC0415
+        head = CHAIN.resolve_head(d_dir, "be_race_read_feed_pins")
+        head_block = {"name": head["name"], "sha256": head["sha256"],
+                      "n_days_in_the_head": len(
+                          (head["doc"].get("per_day") or {})),
+                      "resolved_by": "declaration_chain.resolve_head"}
+    except Exception as e:                                    # noqa: BLE001
+        head_block = {"name": None, "why": f"{type(e).__name__}: {e}"}
     return {"days": sorted(per),
             "n_days": len(per),
             "n_present": sum(1 for v in per.values() if v.get("exists")),
             "absent_days": sorted(k for k, v in per.items()
                                   if not v.get("exists")),
             "all_five_present": bool(d.get("all_five_present")),
-            "pins_sha256": hashlib.sha256(PINS_DECL.read_bytes()).hexdigest(),
+            "pins_sha256": got,
+            "THIS_IS_THE_FIRST_READS_PINS_NOT_THE_HEAD": True,
+            "the_act": FIRST_READ_PINS["the_act"],
+            "resolved_by": "the pair the act recorded, verified here",
+            "the_family_head_today": head_block,
+            "the_head_is_reported_never_followed": FIRST_READ_PINS[
+                "why_not_the_head"],
             "the_read_voids_on_mismatch": d.get("the_read_voids_on_mismatch")}
 
 
@@ -581,14 +651,125 @@ def selftest() -> tuple:                                      # noqa: C901
        "BEFORE GO" in why_pre and "NOT OPENED" in why_post
        and "NOT OPENED" not in why_pre and "BEFORE GO" not in why_post,
        f"pre: '{why_pre[:58]}...'; post: '{why_post[:58]}...'")
-    ck("AND THE PINS ARE READ RATHER THAN ASSUMED -- the declaration itself "
-       "records that the feed exists for only SOME of the pinned days, "
-       "which is a population fact the read cannot wish away",
+    ck("AND THE PINS ARE READ RATHER THAN ASSUMED -- ***THESE ARE THE "
+       "FIRST READ'S PINS***, the act of 20260903..20260905 (G = 3, "
+       "CONSUMED), and the declaration itself records that the feed exists "
+       "for only SOME of the pinned days, which is a population fact the "
+       "read cannot wish away",
        pins["n_days"] == 5 and pins["n_present"] == 3
        and pins["all_five_present"] is False
-       and pins["absent_days"] == ["20260901", "20260902"],
+       and pins["absent_days"] == ["20260901", "20260902"]
+       and pins["THIS_IS_THE_FIRST_READS_PINS_NOT_THE_HEAD"] is True
+       and "FIRST race read" in pins["the_act"],
        f"{pins['n_present']} of {pins['n_days']} feeds present; absent "
-       f"{pins['absent_days']}; pins sha {pins['pins_sha256'][:16]}")
+       f"{pins['absent_days']}; pins sha {pins['pins_sha256'][:16]}; the "
+       f"act: {pins['the_act'][:60]}")
+
+    # -- 10a. THE CLASSIFICATION, DRIVEN: a reader of a PAST act ----------
+    #: The non-head census flagged line 76 as a stale pin. It is not: it is
+    #: a reader of a CLOSED act, and the two are told apart by what happens
+    #: when the head moves. FOLLOWING THE HEAD IS THE DEFECT, MEASURED.
+    _head_doc = json.loads(
+        (HERE / "declarations" / "be_race_read_feed_pins_v2.json").read_text()
+    ) if (HERE / "declarations"
+          / "be_race_read_feed_pins_v2.json").is_file() else {"per_day": {}}
+    ck("RED FIRST -- ***FOLLOWING THE HEAD WOULD GIVE THE WRONG ANSWER, AND "
+       "HERE IS THE NUMBER***: the head's `per_day` carries SIX days "
+       "(the first read's five plus the second read's 20260906), so a "
+       "reader that resolved the head would report a five-day act as a "
+       "six-day one. The pair keeps it at five",
+       len(_head_doc.get("per_day") or {}) == 6 and pins["n_days"] == 5
+       and pins["the_family_head_today"]["name"]
+       == "be_race_read_feed_pins_v2.json",
+       f"head {pins['the_family_head_today']['name']} carries "
+       f"{pins['the_family_head_today']['n_days_in_the_head']} days; this "
+       f"reader reports {pins['n_days']}, the days the act declared")
+
+    with tempfile.TemporaryDirectory() as _pd:
+        _pdir = Path(_pd)
+        _v1 = HERE / "declarations" / FIRST_READ_PINS["path"]
+        (_pdir / FIRST_READ_PINS["path"]).write_bytes(_v1.read_bytes())
+        _before = pinned_feeds(decl_dir=_pdir)
+        #: THE HEAD MOVES, in the fixture's own directory
+        (_pdir / "be_race_read_feed_pins_v9.json").write_text(json.dumps({
+            "per_day": {"29990101": {"exists": True}},
+            "supersedes": {"path": FIRST_READ_PINS["path"],
+                           "sha256": FIRST_READ_PINS["sha256"]}}))
+        _after = pinned_feeds(decl_dir=_pdir)
+        ck("THE HEAD MOVING CHANGES THE ANSWER THE RIGHT WAY: a NEW version "
+           "lands in the fixture's directory and ***the reported head "
+           "changes while the answer does not*** -- five days before and "
+           "after, and the head field moves from v1 to v9. A reader of a "
+           "past act that moved with the head would be the stale pin the "
+           "census suspected",
+           _before["n_days"] == _after["n_days"] == 5
+           and _before["days"] == _after["days"]
+           and _before["the_family_head_today"]["name"]
+           == FIRST_READ_PINS["path"]
+           and _after["the_family_head_today"]["name"]
+           == "be_race_read_feed_pins_v9.json",
+           f"head {_before['the_family_head_today']['name']} -> "
+           f"{_after['the_family_head_today']['name']}; days "
+           f"{_before['n_days']} -> {_after['n_days']}")
+
+        #: KNOWN-BAD 1: the bytes move under the name.
+        _bad = json.loads((_pdir / FIRST_READ_PINS["path"]).read_text())
+        _bad["per_day"]["29990102"] = {"exists": True}
+        (_pdir / FIRST_READ_PINS["path"]).write_text(json.dumps(_bad))
+        _why_moved = ""
+        try:
+            pinned_feeds(decl_dir=_pdir)
+        except RaceVerifyRefused as e:
+            _why_moved = str(e)
+        #: KNOWN-BAD 2: the file is gone.
+        (_pdir / FIRST_READ_PINS["path"]).unlink()
+        _why_absent = ""
+        try:
+            pinned_feeds(decl_dir=_pdir)
+        except RaceVerifyRefused as e:
+            _why_absent = str(e)
+    ck("KNOWN-BADS, DRIVEN, BOTH: bytes that MOVED under the pinned name "
+       "are refused as NOT THE PAIR THE ACT RECORDED, and an ABSENT "
+       "declaration FAILS rather than skipping -- a name without a digest "
+       "is an address that verifies nothing, which is what the census's "
+       "flag was really about",
+       "PINS_NOT_THE_PAIR_THE_ACT_RECORDED" in _why_moved
+       and "PINS_DECLARATION_ABSENT" in _why_absent,
+       f"moved -> '{_why_moved[:64]}…'; absent -> '{_why_absent[:56]}…'")
+
+    # -- 10b. THE SECOND DOOR: the REAL path's pins, resolved from the ACT -
+    #: The same literal was ALSO the CLI's `--pins` default, and there it
+    #: was a CONSUMER: it would have verified the SECOND read's artifact
+    #: against the FIRST read's pins, and the mismatch would have read as a
+    #: finding about the read.
+    with tempfile.TemporaryDirectory() as _ad:
+        _adir = Path(_ad)
+        _names = _adir / "names_its_pins.json"
+        _names.write_text(json.dumps({
+            "pinned_days_not_in_READABLE": {
+                "copied_from": "be_race_read_feed_pins_v1.json"}}))
+        _silent = _adir / "names_none.json"
+        _silent.write_text(json.dumps({"protocol": "X"}))
+        _p_named, _how_named = pins_for_the_artifact(str(_names))
+        _p_expl, _how_expl = pins_for_the_artifact(
+            str(_silent), str(_adir / "explicit.json"))
+        _why_none = ""
+        try:
+            pins_for_the_artifact(str(_silent))
+        except RaceVerifyRefused as e:
+            _why_none = str(e)
+    ck("THE REAL PATH RESOLVES ITS PINS FROM THE ARTIFACT, AND REFUSES "
+       "RATHER THAN DEFAULTING: an artifact that NAMES its pins resolves to "
+       "them, an explicit --pins still wins, and an artifact that names "
+       "none is REFUSED BY NAME -- ***the filename default is gone, so a "
+       "later read can no longer be checked against the first read's "
+       "pins***",
+       _p_named.name == "be_race_read_feed_pins_v1.json"
+       and "the artifact names it" in _how_named
+       and _p_expl.name == "explicit.json"
+       and "PINS_NOT_RESOLVABLE_FROM_THE_ARTIFACT" in _why_none,
+       f"named -> {_p_named.name} ({_how_named}); explicit -> "
+       f"{_p_expl.name}; silent -> '{_why_none[:60]}…'")
 
     # -- 11. an empty feed is a FAILURE, not an empty result --------------
     (td / "e").mkdir(exist_ok=True)
@@ -619,7 +800,13 @@ def main() -> int:
     #: EXISTENCE, and `--real` merely selects the path that checks for it.
     ap.add_argument("--real", action="store_true")
     ap.add_argument("--read-artifact")
-    ap.add_argument("--pins", default=str(PINS_DECL))
+    #: NOT a default any more (DA 119). The real path verifies ONE read
+    #: artifact against THE PINS THAT READ WAS TAKEN UNDER, and a filename
+    #: default is the FIRST read's -- so the second read's artifact would
+    #: have been checked against the first read's pins and the mismatch
+    #: would have looked like a finding about the read. Unsupplied, the
+    #: pins are resolved FROM THE ARTIFACT; unresolvable, it REFUSES.
+    ap.add_argument("--pins", default=None)
     ap.add_argument("--output", type=Path, default=None)
     ap.add_argument("--supersedes", default=None,
                     help="the record this one replaces, by the R-608 pair")
@@ -633,8 +820,10 @@ def main() -> int:
         #: means it verified. A caller that could not tell 2 from 1 would
         #: read "the read has not happened yet" as "the read disagrees".
         try:
-            r = verify_real_read(a.read_artifact, a.pins, output=a.output,
+            _pins, _how = pins_for_the_artifact(a.read_artifact, a.pins)
+            r = verify_real_read(a.read_artifact, _pins, output=a.output,
                                  supersedes=a.supersedes)
+            r["pins_resolution"] = {"path": str(_pins), "how": _how}
         except RaceVerifyRefused as e:
             #: R-697: this refusal stays at 2 and is SEPARABLE from
             #: argparse's usage exit by STREAM and by STRING -- it prints
@@ -1014,6 +1203,42 @@ def _record_supersession(prior) -> dict:
     return {"path": f.name, "sha256": sha, "chain": chain,
             "the_link_is_the_PAIR": ["path", "sha256"],
             "rule": "13 -- vN+1; the superseded record is not edited"}
+
+
+def pins_for_the_artifact(read_artifact, explicit=None) -> tuple:
+    """WHICH pins a read artifact is to be verified against, and HOW.
+
+    Three sources, in order, and NEVER a filename default: an explicit
+    `--pins`; the pins THE ARTIFACT ITSELF NAMES; otherwise a named
+    refusal. The middle one is REV 86 section 8 applied to this seam --
+    the artifact is the act, and the act recorded the pins it used.
+    """
+    if explicit:
+        return Path(explicit), "the caller's --pins"
+    ap_ = Path(read_artifact)
+    if not ap_.is_file():
+        raise RaceVerifyRefused(
+            f"REFUSED: READ_ARTIFACT_ABSENT_THE_READ_HAS_NOT_BEEN_OPENED — "
+            f"no read artifact at {read_artifact}, so it names no pins.")
+    try:
+        art = json.loads(ap_.read_bytes())
+    except json.JSONDecodeError as e:
+        raise RaceVerifyRefused(
+            f"REFUSED: READ_ARTIFACT_UNREADABLE — {ap_.name} is not "
+            f"readable JSON ({e.msg} at line {e.lineno}).")
+    named = ((art.get("pinned_days_not_in_READABLE") or {})
+             .get("copied_from")
+             or (art.get("consumption") or {}).get("pins_declaration")
+             or (art.get("pre_state") or {}).get("pins_declaration"))
+    if named:
+        p = HERE / "declarations" / Path(str(named)).name
+        return p, (f"the artifact names it: {Path(str(named)).name}")
+    raise RaceVerifyRefused(
+        f"REFUSED: PINS_NOT_RESOLVABLE_FROM_THE_ARTIFACT — {ap_.name} names "
+        f"no pins declaration, and this verifier will not fall back to a "
+        f"filename: the FIRST read's pins would then silently verify a "
+        f"LATER read. Supply --pins with the declaration that read was "
+        f"taken under.")
 
 
 def verify_real_read(read_artifact: str, pins_path: str, *,

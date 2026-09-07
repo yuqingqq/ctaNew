@@ -480,6 +480,19 @@ for _i in "${!DAYS[@]}"; do
   elif "$PY" -c 'import json,sys
 d=json.load(open(sys.argv[1]))
 sys.exit(0 if d.get("day_token")==sys.argv[2] and d.get("predicates") else 1)'        "$tmp" "$d" 2>/dev/null; then
+    # THE MODE, SET BEFORE THE RENAME (DA 119; BE 90's finding, in shell).
+    # `mktemp` at the top of this loop is a SECRET-file constructor -- it
+    # creates 0600 by design -- and `mv` carries that mode to the landed
+    # verdict. Twelve landed day verdicts were therefore readable only by
+    # the seat that wrote them, while their own `.superseded_*` neighbours,
+    # written by the python producer with a plain create, were 0664. A day
+    # verdict is the opposite of a secret: BE's forward day, DE's runner
+    # and the read gate all resolve it.
+    # NOT a hard-coded 0644 -- that is the literal that goes wrong on the
+    # first box whose umask is not 022, and it is wrong on this one
+    # (umask 0002 -> 0664). BEFORE the rename, so the destination never
+    # exists at the wrong mode, not even for the width of one syscall.
+    chmod "$(printf '%04o' $(( 0666 & ~0$(umask) )))" "$tmp"
     mv -f "$tmp" "$OUTDIR/da_dayverdict_$d.json"
     # NAME THE ARTIFACT, not just the fact that one was written. The verdict
     # path is stable, so ANY later re-run -- a rehearsal, a manual verify --

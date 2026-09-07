@@ -1449,6 +1449,45 @@ def selftest() -> int:
        "PAIR-2 FALSIFIER: delete that one invocation from a copy of the "
        "script and the pairing check FAILS -- a static check that has never "
        "been shown to fire is not evidence the wiring is there (rule 15)")
+
+    # ---- MODE-1/2: the landed verdict is as readable as its neighbours --
+    # It lives beside PAIR-1 because this is the ONE reader of the nightly
+    # script's bytes; a second reader would be a second definition of what
+    # the script says. `mktemp` creates 0600 and `mv` carries it, so the
+    # chmod must sit BETWEEN them -- ordering, not presence, is the
+    # property, and a chmod after the rename would leave the destination at
+    # 0600 for the width of a syscall and pass a presence check.
+    def _mode_before_move(t: str) -> dict:
+        mk = t.find('tmp="$(mktemp "$OUTDIR/.da_dayverdict_$d.XXXXXX.json")"')
+        ch = t.find('chmod "$(printf \'%04o\' $(( 0666 & ~0$(umask) )))" "$tmp"')
+        mv = t.find('mv -f "$tmp" "$OUTDIR/da_dayverdict_$d.json"')
+        return {"mktemp": mk, "chmod": ch, "mv": mv,
+                "ordered": (mk >= 0 and ch > mk and mv > ch),
+                "not_hardcoded": ("umask" in t and '0644' not in t.split(
+                    'da_dayverdict')[0][-400:])}
+    _md = _mode_before_move(_txt)
+    ok(_md["ordered"] and _md["not_hardcoded"],
+       f"MODE-1 THE LANDED DAY VERDICT IS AS READABLE AS ITS NEIGHBOURS: the "
+       f"nightly script chmods the temp to the mode a PLAIN CREATE would "
+       f"produce (0666 & ~umask, never a hard-coded 0644) and does it "
+       f"BETWEEN the mktemp and the mv, so the destination never exists at "
+       f"0600 ({_md})")
+    ok(not _mode_before_move(_txt.replace(
+        'chmod "$(printf \'%04o\' $(( 0666 & ~0$(umask) )))" "$tmp"',
+        "# removed"))["ordered"],
+       "MODE-2 FALSIFIER: delete that chmod from a copy of the script and "
+       "the ordering check FAILS -- and it fails for the RIGHT reason, "
+       "because the same check passes when the chmod is present and the "
+       "mktemp and mv are unmoved")
+    _CH = 'chmod "$(printf \'%04o\' $(( 0666 & ~0$(umask) )))" "$tmp"'
+    _MV = 'mv -f "$tmp" "$OUTDIR/da_dayverdict_$d.json"'
+    _late = _txt.replace(_CH + "\n", "").replace(_MV, _MV + "\n    " + _CH)
+    ok(_CH in _late and not _mode_before_move(_late)["ordered"],
+       "MODE-3 AND IT IS THE ORDER THAT IS TESTED, NOT THE PRESENCE: move "
+       "the SAME chmod to AFTER the rename in a copy -- it is still there, "
+       "and the check FAILS -- because a chmod after the mv leaves the "
+       "destination at 0600 for the width of a syscall, which is the "
+       "difference BE 90 wrote down and a presence check cannot see")
     try:
         import de_admissible_windows as _DE
         # THE REAL ARTIFACT, not a hand-built envelope. A four-key fixture
