@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:13:40Z (MEM ROUND 276 -- R-800 SWEPT, with every landing between the tip I read at round 275 (`71349a3`) and
+  `8a12422`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***I REPRODUCED EVERY ONE OF BE 98's POSITION FIGURES FROM BOTH LEDGERS***, my own pass over
+  `|inventory_before|`/`|inventory_after|` per slug: 09-05 BASELINE max **157.26** (p50 56.68, **168** of 288
+  above 50), CONDVALUE max **278.76**; 09-06 BASELINE max **144.23** (p50 50.37, **147** above 50), CONDVALUE max
+  **307.52**. Every figure BE cites. **AND THE DISTRIBUTION SHOWS WHAT THE MAXIMA DO NOT**: CONDVALUE's p50 is
+  33 against the baseline's 57/50 and only 71/51 of its slugs exceed 50 against 168/147 -- **it carries less
+  inventory usually and far more occasionally**, and a maximum alone reads as the opposite of a median.
+  **NO POSITION-LIMIT TERM EXISTS ACROSS ALL 260 MODULES** (six terms searched, falsifier: 7 modules mention
+  `inventory_after`).
+  (2) ***SETTLEMENT IS NOT IN THE DAY PATH***, verified at the four day-path modules -- zero hits for
+  `resolutions.jsonl` / `winners` / `umaResolution` in each, falsifier 8 hits for `markout` in the runner. **And
+  the horizon is a constant**: `MARKOUT_HORIZON_S = 5.0`, used as `fill_t + MARKOUT_HORIZON_S`, with a NAMED
+  status `PM_GAP_OR_TICK_IN_MARKOUT_HORIZON` when the window is contaminated. ***AND NO SETTLEMENT-MARKED NULL
+  CAN EXIST FROM THE LEDGER***: `NULL_DRAW` carries five keys -- a scalar `value` and NO fills -- so the draws
+  cannot be re-marked. The settlement view can have a point estimate and **never a Z or a p from this file**.
+  (3) ***I DID NOT REIMPLEMENT THE SETTLEMENT VALUATION AND SAY SO.*** Reimplementing a convention I was not told
+  and then reporting a difference would manufacture a contradiction out of my own guess -- the trap I avoided at
+  round 273. **My `closed is True` count is 38,257 against BE's 38,248 -- nine apart -- and I report that as a
+  DIFFERENCE OF PREDICATES, not an error**, because I did not reproduce BE's population. The settlement numbers
+  are carried as BE's with the basis named: baseline **81,238 / 46,562** at settlement against **88,698 / 90,153**
+  at 5 s; **on 09-06 BOTH arms above the baseline (+2,244 / +10,408) against the landed -32,132 / -2,112**.
+  (4) ***SO THE RANKING DEPENDS ON THE VALUATION HORIZON*** -- same fills, same paths, same ledger, opposite sign.
+  Neither view is wrong; they answer different questions. **BUT R-795's STANDING LABEL IS HALF OF WHAT A READER
+  NEEDS**: "fills leg only" says WHICH LEG and not WHICH HORIZON, and the horizon is what flips 09-06. The
+  complete label is "fills leg only, marked at the 5-second book mid" -- **an observation for the coordinator;
+  MEM does not route and does not amend a standing label.**
+  (5) Chainlink is mentioned in **all 38,292** market rows -- the declared source universally -- and in **none**
+  of the four day-path modules; BE used **the venue's recorded winner**. The declared source and the used source
+  are two different things and the entry keeps them apart. **TWO USER DECISIONS ARE NOW OPEN, NOT ONE**: a
+  settlement-marked `D_E_settle` scoped FORWARD from 09-07 (so the four-day table is not reopened), and the
+  inventory leg. Five user rulings in play, two open. The coordinator's trace is published as an artifact and I
+  record the pointer without reading it.
+  (6) `wt-de` HEAD `5020f96`, status exactly `?? data` -- the third consecutive round. **Nothing in BE 98 touches
+  the bytes GO #8 runs**; it is a re-valuation of landed ledgers. Freeze holds a SIXTEENTH round, and the
+  09-03/09-04 replay debt gains a second reason: **those days have no ledger, so neither the settlement
+  re-valuation nor the position census can run on them at all.**
+  COUNTS (by YAML parse): flags 2150 -> 2166, provenance 1695 -> 1711 (sixteen written, sixteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 258 archived.)
   2026-09-07T14:29:48Z (MEM ROUND 275 -- R-799 SWEPT, with every landing between the tip I read at round 274 (`5c9c0d4`) and
   `71349a3`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***ALL FIVE OF REV 103 §5's DIGESTS RECOMPUTE EQUAL AT `wt-de`***, hashed by me at the worktree's own
@@ -140,41 +179,6 @@ updated: >-
   user's inventory ruling stays OPEN -- the only open one of today's four. Freeze holds a FOURTEENTH round.
   COUNTS (by YAML parse): flags 2116 -> 2134, provenance 1661 -> 1679 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 256 archived.)
-  2026-09-07T13:07:39Z (MEM ROUND 273 -- R-795 SWEPT, with every landing between the tip I read at round 272 (`20b6dfc`) and
-  `c1ce532`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***`inventory_leg` IS A FIELD OF NO LEDGER ROW TYPE.*** Measured at the 09-05 ledger across all four types
-  -- HEADER (8 keys), ARM_SCALARS (12), NULL_DRAW (5), FILL (17) -- **zero occurrences**. What the ledger holds
-  are BE 96's five per-fill INPUTS on every fill for both books. **So the artifact's `where_the_five_live_now`
-  claim, `inventory_leg: "COMPUTED since BE 96, in the decision ledger"`, is FALSE where it points.**
-  (2) ***AND I VERIFIED THAT BLOCK TWICE WITHOUT FOLLOWING ONE OF ITS POINTERS.*** At round 265 I printed its key
-  set, counted the four "COMPUTED" entries and caught its prose-vs-data mismatch; at round 272 I confirmed it
-  shipped in E3's artifact. **Both readings were about the block. Neither opened the file the claim names.** Rule
-  16 says verify at the artifact a claim NAMES -- and that artifact was a different file.
-  (3) **THE LEDGER MAKES ITS OWN CLAIM AND IT IS TRUE**: the header says the inventory leg is **RECOMPUTABLE**
-  from the file, and all five inputs are present with `inventory_after` non-None on **all 177,467 fill rows**.
-  ***COMPUTED IS NOT RECOMPUTABLE***, and that reconciles two sentences about one file that look contradictory:
-  a pointer to a VALUE and a pointer to its INPUTS are different promises, and only one can be followed without
-  a ruling.
-  (4) `fill_value_cents` is `sgn x (markout - level) x size` and **reads no `inventory_*` field**, so the day
-  value is the fills leg **BY CONSTRUCTION**, not by a choice of `total`. And the code's `inventory_leg` is
-  `Σ (after - before) x own mark` = **the cash flow of the fills**, not a position valuation -- the name is the
-  misleading part. **So my round-272 deltas (-216,448.71 / -28,401.85) were differences of CASH FLOWS**,
-  correctly read from a misleadingly named field; I recorded them as arithmetic and routed nothing, and the
-  reason that was the right amount to say is now visible.
-  (5) ***I REPRODUCED BE 97's RESIDUALS EXACTLY***, by last-fill-per-slug over the ledger: CONDVALUE **5,100**
-  (287 of 288 non-zero), HAZARD **9,184** (288), BASELINE **10,188** (288) -- every figure BE cites, with the
-  287/288 split exactly where BE's range implies, and the baseline identical under both arm labels (one replay
-  recorded twice). **My first pass was mis-scoped** -- keyed on `(arm, slug)`, giving 7,502/9,263 -- and I did
-  not report the disagreement: the fill counts (`2x49,668 + 78,131 = 177,467`) named the cause, the `book` field.
-  **The fourth scope mismatch in four rounds, and this one was mine.**
-  (6) So the fills-leg comparison IS between paths with materially different terminal inventory, verified not
-  relayed. **AN INVENTORY LEG IS A RULING AND IT IS THE USER'S** (rule 14) -- the fourth user ruling in play
-  today and the only one OPEN; the coordinator's three-part recommendation is DISCLOSED, not adopted, and
-  declining either illustrative rule is what keeps it open. **The label "fills leg only" now rides with every
-  `D_E0` quotation** -- a label, not a caveat, and the one thing uniform across all four days while everything
-  else varies. E4 still running, `wt-de` still at `6c3a121`. Freeze holds a THIRTEENTH round.
-  COUNTS (by YAML parse): flags 2098 -> 2116, provenance 1643 -> 1661 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 255 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -346,6 +350,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 276, R-800 swept (71349a3 -> 8a12422) ---
+  I_REPRODUCED_EVERY_ONE_OF_BE_98s_POSITION_FIGURES_FROM_BOTH_LEDGERS: 157-26-144-23-278-76-307-52-168-147
+  AND_THE_DISTRIBUTION_SHOWS_SOMETHING_THE_MAXIMA_DO_NOT: CONDVALUE-SMALLER-TYPICAL-LARGER-WORST
+  NO_POSITION_LIMIT_TERM_EXISTS_ACROSS_260_MODULES: SEARCHED-WITH-A-FALSIFIER
+  SETTLEMENT_IS_NOT_IN_THE_DAY_PATH_VERIFIED_AT_FOUR_MODULES: ZERO-WINNER-READS-FALSIFIER-EIGHT
+  THE_MARKOUT_HORIZON_IS_5_0_SECONDS_AT_THE_CONSTANT: MARKOUT_HORIZON_S-EQUALS-5-0
+  NO_SETTLEMENT_MARKED_NULL_CAN_EXIST_FROM_THE_LEDGER: NULL_DRAW-IS-A-SCALAR
+  MY_CLOSED_COUNT_IS_38257_AND_BE_CITES_38248: NINE-APART-AND-I-DID-NOT-REPRODUCE-BEs-PREDICATE
+  I_DID_NOT_REIMPLEMENT_THE_SETTLEMENT_VALUATION_AND_SAY_SO: THE-TRAP-I-AVOIDED-AT-ROUND-273
+  SO_THE_SETTLEMENT_NUMBERS_ARE_CARRIED_AS_BEs_WITH_THE_BASIS_NAMED: RELAYED-IN-KIND-NOT-VERIFIED
+  THE_RANKING_DEPENDS_ON_THE_VALUATION_HORIZON: BOTH-ARMS-FLIP-ON-09-06-AT-SETTLEMENT
+  SO_THE_FILLS_LEG_ONLY_LABEL_NEEDS_A_SECOND_HALF: WHICH-LEG-AND-WHICH-HORIZON
+  CHAINLINK_IS_UNIVERSAL_IN_THE_MARKET_TEXT_AND_ABSENT_FROM_THE_DAY_PATH: 38292-OF-38292-AND-ZERO
+  TWO_USER_DECISIONS_ARE_NOW_OPEN_NOT_ONE: D_E_settle-AND-THE-INVENTORY-LEG
+  THE_COORDINATORS_TRACE_IS_PUBLISHED_AS_AN_ARTIFACT: A-POINTER-RECORDED-NOT-A-CLAIM
+  GO_8_TONIGHT_IS_UNCHANGED_AND_wt_de_IS_STILL_FROZEN: 5020f96-AND-ONLY-THE-SYMLINK
+  THE_FREEZE_HOLDS_FOR_THE_SIXTEENTH_ROUND: AND-THE-REPLAY-DEBT-STANDS
   # --- MEM round 275, R-799 swept (5c9c0d4 -> 71349a3) ---
   ALL_FIVE_OF_REV_103s_DIGESTS_RECOMPUTE_EQUAL_AT_wt_de: A-SECOND-READING-AFTER-THE-COORDINATORS
   AND_BOTH_BLOCKING_CONDITIONS_HOLD_AT_MY_READ: PINS-10-OF-10-AND-ONLY-THE-SYMLINK
@@ -26503,6 +26524,182 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 276, 2026-09-07T15:13:40Z (the clock read by which every measurement below was complete) ---
+  I_REPRODUCED_EVERY_ONE_OF_BE_98s_POSITION_FIGURES_FROM_BOTH_LEDGERS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      **A SECOND IMPLEMENTATION, AND IT LANDS ON EVERY FIGURE.** I took the max of `|inventory_before|` and
+      `|inventory_after|` per `(book/arm, slug)` across both real ledgers -- my own pass, no shared code with BE.
+      **09-05**: BASELINE max **157.26** shares, p50 **56.68**, **168** of 288 slugs above 50; `CONDVALUE_X_SKEW` max
+      **278.76**; `HAZARD_OVER_SKEWED_REF` max 148.19. **09-06**: BASELINE max **144.23**, p50 **50.37**, **147** above
+      50; CONDVALUE max **307.52**; HAZARD max 141.67. BE 98 cites 157.26 / 144.23, p50 ~50-57, 168/147 of 288, and
+      CONDVALUE 278.76 / 307.52 -- **every one.**
+  AND_THE_DISTRIBUTION_SHOWS_SOMETHING_THE_MAXIMA_DO_NOT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      A distributional fact from my own pass that the reported maxima do not carry, recorded as arithmetic.
+      **`CONDVALUE_X_SKEW` holds SMALLER positions than the baseline on the typical slug and much LARGER ones on its
+      worst**: p50 33.15 vs the baseline's 56.68 on 09-05 (33.05 vs 50.37 on 09-06), and only 71 slugs above 50 against
+      the baseline's 168 (51 against 147) -- while its maximum is nearly double the baseline's (278.76 vs 157.26;
+      307.52 vs 144.23). `HAZARD_OVER_SKEWED_REF` tracks the baseline closely on all three statistics, which is
+      consistent with its far smaller cancel count. **The cancelling arm does not simply carry less inventory; it
+      carries less usually and far more occasionally** -- and a maximum alone reads as the opposite of a median.
+  NO_POSITION_LIMIT_TERM_EXISTS_ACROSS_260_MODULES:
+    prov: CHECKED
+    artifact: live/pm_research/harmful_stateful_policy.py
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      BE 98's first answer to the user, checked independently and widened past the policy module. A case-insensitive
+      search for `max_position`, `position_limit`, `inventory_limit`, `pos_cap`, `max_inventory` and `cap_position`
+      across **all 260 modules in `live/pm_research/`** returns **nothing**, with the falsifier in the same command
+      showing the files are being read (**7 modules mention `inventory_after`**). So the replay imposes no position
+      constraint, and the peaks above are what an unconstrained path produced rather than what a cap allowed.
+  SETTLEMENT_IS_NOT_IN_THE_DAY_PATH_VERIFIED_AT_FOUR_MODULES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      BE 98's second answer, verified at the four modules that make up the day path: `de_multiday_gate1_runner.py`,
+      `harmful_stateful_policy.py`, `de_early_read.py` and `de_decision_ledger.py` each return **ZERO** hits for
+      `resolutions.jsonl`, `winners` or `umaResolution` -- with the falsifier in the same command showing the grep works
+      (**8** hits for `markout` in the runner). **So no settled outcome enters the value the day path computes**;
+      `D_E0` is a markout quantity end to end, and the settlement view is a re-valuation from outside it.
+  THE_MARKOUT_HORIZON_IS_5_0_SECONDS_AT_THE_CONSTANT:
+    prov: CHECKED
+    artifact: live/pm_research/adverse_feature_rows_fast.py
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      And the horizon is not a description but a constant: **`MARKOUT_HORIZON_S = 5.0`** at
+      `adverse_feature_rows_fast.py:41`, used as `fill_t + MARKOUT_HORIZON_S` at `:499` and `:507` with
+      `tape.mark_state_at(...)`, and guarded by a NAMED unavailability status
+      **`PM_GAP_OR_TICK_IN_MARKOUT_HORIZON`** when the tape is touched inside the window. So "every fill marked at the
+      book mid 5 s later" is exact, and a contaminated window is a status rather than a silent value -- rule 4 again,
+      already in place here.
+  NO_SETTLEMENT_MARKED_NULL_CAN_EXIST_FROM_THE_LEDGER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260906__20260907T141037Z.jsonl.gz
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      BE 98 states that no null exists under the settlement valuation because the draw fills are discarded.
+      **VERIFIED STRUCTURALLY AT THE FILE**: the `NULL_DRAW` row type carries exactly five keys -- `arm`, `cancels`,
+      `i`, `row`, `value` -- **a scalar value and no fills**, on both ledgers. A settlement re-valuation needs each
+      draw's fills to re-mark, and they are not retained. **So the settlement view can have a point estimate and can
+      never have a Z or a p from this file** -- not because nobody computed one, but because the input does not exist.
+  MY_CLOSED_COUNT_IS_38257_AND_BE_CITES_38248:
+    prov: CHECKED
+    artifact: data/pm_5min/resolutions.jsonl
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      **A NINE-ROW DIFFERENCE I AM REPORTING AS A DIFFERENCE, NOT AN ERROR.** `resolutions.jsonl` holds **38,268**
+      rows; **38,257** carry `winners`; **38,257** have `source == "clob"`; and my predicate `closed is True` counts
+      **38,257**. BE 98 cites **38,248 closed slugs** -- nine fewer. **I did not reproduce BE's population predicate**,
+      which is presumably narrower (a date or coin scope, or an additional condition), so the right statement is that my
+      count and BE's are of different populations and I have not established BE's. Recorded because a later reader
+      comparing the two numbers should know which predicate produced which, and because at round 273 the same shape --
+      my number disagreeing with a seat's -- turned out to be my scope and not theirs.
+  I_DID_NOT_REIMPLEMENT_THE_SETTLEMENT_VALUATION_AND_SAY_SO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      **THE LIMIT OF THIS ROUND'S VERIFICATION, STATED PLAINLY.** BE 98's settlement figures require a valuation
+      convention -- which side maps to which outcome, how the fills' cash flow and the terminal position are combined,
+      which slugs are in scope. **I did not reimplement it.** Reimplementing a convention I have not been told and then
+      reporting a difference would manufacture a contradiction out of my own guess, which is precisely the trap I
+      avoided at round 273 by checking my scope before reporting a disagreement with BE 97. **What I verified instead
+      are the structural claims the numbers rest on** -- no settlement in the day path, the 5 s horizon at its constant,
+      the null's shape, the resolution file's fields and counts -- and those all hold.
+  SO_THE_SETTLEMENT_NUMBERS_ARE_CARRIED_AS_BEs_WITH_THE_BASIS_NAMED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      Carried in kind, with the basis attached to every figure: valued at **the venue's recorded winner**
+      (`resolutions.jsonl` `winners`, source `"clob"`), the baseline is worth **81,238 / 46,562 cents** at settlement
+      against **88,698 / 90,153** at the 5 s markout; **on 09-06 BOTH arms end ABOVE the baseline -- CONDVALUE
+      +2,244, HAZARD +10,408 -- against the landed `D_E0` of -32,132 and -2,112**; ~110 of 288 slugs are negative at
+      settlement on every path-day; the residual's settlement value is BASELINE **+12,011 / +10,390**. **These are BE's
+      measurements, reproduced by BE from the coordinator's disclosed arithmetic, and not independently recomputed by
+      me.**
+  THE_RANKING_DEPENDS_ON_THE_VALUATION_HORIZON:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      **THE FINDING, AND IT IS ABOUT THE ESTIMAND RATHER THAN ABOUT EITHER NUMBER.** The four-day table has CONDVALUE
+      below the 0-cancel baseline on 4 of 4 days and HAZARD on 3 of 4. Under the settlement valuation, **on 09-06 both
+      arms are above it**. Same fills, same paths, same ledger -- **a different valuation horizon, and the sign of the
+      comparison changes.** That does not make either view wrong: a 5 s markout and a settlement mark answer different
+      questions, and the day path's estimand is declared as the markout one. **What it does mean is that "which arm did
+      better" is not a property of the day; it is a property of the day AND the horizon**, and no quotation of `D_E0`
+      that omits the horizon says which question it answered. MEM asserts no result.
+  SO_THE_FILLS_LEG_ONLY_LABEL_NEEDS_A_SECOND_HALF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      R-795 attached a standing label -- **"fills leg only"** -- to every `D_E0` quotation, and I have carried it for
+      three rounds. **BE 98 shows that label is half of what a reader needs.** "Fills leg only" says WHICH LEG (not the
+      inventory one); it does not say WHICH HORIZON, and the horizon is what flips 09-06. The complete label is
+      something like **"fills leg only, marked at the 5-second book mid"** -- both halves measured, both now known to
+      change the answer. Recorded as an observation for the coordinator to take or leave; **MEM does not route and does
+      not amend a standing label.** The two open user decisions are exactly the two halves: the inventory leg (R-795)
+      and a settlement-marked endpoint (R-800).
+  CHAINLINK_IS_UNIVERSAL_IN_THE_MARKET_TEXT_AND_ABSENT_FROM_THE_DAY_PATH:
+    prov: CHECKED
+    artifact: data/pm_5min/resolutions.jsonl
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      Measured on both sides. **All 38,292 rows of `markets.jsonl` mention Chainlink** -- so it is the declared
+      settlement source universally, not for a subset, which is consistent with the standing programme fact that
+      settlement is Chainlink and not Binance. **Five modules in `live/pm_research/` mention Chainlink, and none of them
+      is one of the four day-path modules** (all four return zero for winner/resolution reads). So BE's careful wording
+      holds: Chainlink is the DECLARED source in the market text, the value BE used is **the venue's recorded winner**,
+      and no Chainlink read has been verified anywhere in this path. **The declared source and the used source are two
+      different things and the entry keeps them apart.**
+  TWO_USER_DECISIONS_ARE_NOW_OPEN_NOT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      The open set has grown. **(i) Declare a settlement-marked secondary endpoint `D_E_settle` for days from 09-07
+      on** (R-800); **(ii) the inventory leg** (R-795). Both are USER decisions under rule 14, both have the
+      coordinator's recommendation **disclosed and nothing taken**, and both are questions about what the estimand
+      should include rather than about any measurement. Together with R-754, R-765 and R-782 that makes five user
+      rulings in play on this programme, of which **two are open**. Note (i) is scoped **forward** -- days from 09-07 --
+      so it does not reopen the four-day table, which stays as read.
+  THE_COORDINATORS_TRACE_IS_PUBLISHED_AS_AN_ARTIFACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      R-800 records that the replay logic was traced at `5020f96` and written up for the user, with the write-up
+      published at `https://claude.ai/code/artifact/3214dc3d-ee88-49f5-aa25-d196061baad5`. **Recorded as a POINTER, not
+      as a claim**: I have not read it and I make no statement about its contents. It is kept here because a URL in a
+      register entry is the kind of reference that becomes unfindable three weeks later, and because the state files are
+      where a cold reader looks for what exists.
+  GO_8_TONIGHT_IS_UNCHANGED_AND_wt_de_IS_STILL_FROZEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      Re-measured rather than carried: `wt-de` HEAD is **`5020f96`** and `git status --short` there returns exactly
+      `?? data` -- the same state I verified at rounds 274 and 275, now for the third consecutive round. **Nothing in
+      BE 98 touches the bytes GO #8 runs**: the settlement work is a re-valuation of landed ledgers, not a code change,
+      and neither open user decision has been taken. GO #8 still waits only on the close.
+  THE_FREEZE_HOLDS_FOR_THE_SIXTEENTH_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:13:40Z
+    said: >-
+      `params_v20` and `design_v28` both absent (0 matches in any state), heads v19 and v27, and per round 270 neither
+      has ever existed as a file. The 09-03/09-04 replay debt stands -- and BE 98 adds a reason to want it beyond the
+      absolutes: **those two days have no ledger, so neither the settlement re-valuation nor the position census can be
+      run on them at all.** Two of the four days can be looked at three ways; two can be looked at one way.
   # --- MEM round 275, 2026-09-07T14:29:48Z (the clock read by which every measurement below was complete) ---
   ALL_FIVE_OF_REV_103s_DIGESTS_RECOMPUTE_EQUAL_AT_wt_de:
     prov: CHECKED

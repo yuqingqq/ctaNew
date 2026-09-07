@@ -1,3 +1,96 @@
+# READ FIRST — round 276 (MEM, 2026-09-07T15:13:40Z, tip `8a12422`)
+
+**R-800 swept, with every landing between the tip I read at round 275 (`71349a3`) and `8a12422`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. Every one of BE 98's position figures, reproduced from both ledgers
+
+My own pass over `|inventory_before|` / `|inventory_after|` per slug — no shared code with BE:
+
+| day | path | max \|net\| | p50 | >50 of 288 |
+|---|---|---:|---:|---:|
+| 09-05 | BASELINE | **157.26** | 56.68 | **168** |
+| 09-05 | CONDVALUE | **278.76** | 33.15 | 71 |
+| 09-05 | HAZARD | 148.19 | 53.77 | 159 |
+| 09-06 | BASELINE | **144.23** | 50.37 | **147** |
+| 09-06 | CONDVALUE | **307.52** | 33.05 | 51 |
+| 09-06 | HAZARD | 141.67 | 47.31 | 131 |
+
+Every figure BE cites. **And the distribution shows what the maxima do not:** CONDVALUE's p50 is **33** against
+the baseline's 57/50, and only 71/51 of its slugs exceed 50 against 168/147 — **it carries less inventory usually
+and far more occasionally.** A maximum alone reads as the opposite of a median. HAZARD tracks the baseline on all
+three statistics, consistent with its far smaller cancel count.
+
+**No position-limit term exists across all 260 modules** (six terms searched; falsifier: 7 modules mention
+`inventory_after`).
+
+## 2. Settlement is not in the day path — and the horizon is a constant
+
+Zero hits for `resolutions.jsonl` / `winners` / `umaResolution` in each of the four day-path modules (runner,
+policy, early read, ledger), with the falsifier showing 8 hits for `markout` in the runner. And
+**`MARKOUT_HORIZON_S = 5.0`** (`adverse_feature_rows_fast.py:41`), used as `fill_t + MARKOUT_HORIZON_S`, guarded
+by a named status **`PM_GAP_OR_TICK_IN_MARKOUT_HORIZON`** when the window is contaminated.
+
+**And no settlement-marked null can exist from the ledger:** `NULL_DRAW` carries five keys — a scalar `value` and
+**no fills** — so the draws cannot be re-marked. **The settlement view can have a point estimate and never a Z or
+a p from this file** — not because nobody computed one, but because the input does not exist.
+
+## 3. What I did not do, and why
+
+**I did not reimplement the settlement valuation.** It needs a convention I was not told — side-to-outcome
+mapping, how cash flow and terminal position combine, which slugs are in scope. Reimplementing a guess and then
+reporting a difference would manufacture a contradiction, which is the trap I avoided at round 273.
+
+**My `closed is True` count is 38,257; BE cites 38,248 — nine apart.** I report that as a **difference of
+predicates, not an error**: I did not reproduce BE's population, which is presumably narrower. (`resolutions.jsonl`
+holds 38,268 rows; 38,257 carry `winners`; 38,257 have `source == "clob"`.)
+
+So the settlement figures are carried **as BE's, with the basis named** — valued at the venue's recorded winner:
+baseline **81,238 / 46,562** cents at settlement against **88,698 / 90,153** at 5 s; **on 09-06 both arms end
+above the baseline (+2,244 and +10,408) against the landed `D_E0` of −32,132 and −2,112**; ~110 of 288 slugs
+negative at settlement on every path-day; residual settlement value BASELINE +12,011 / +10,390.
+
+## 4. The ranking depends on the valuation horizon — so the label needs a second half
+
+Same fills, same paths, same ledger; a different valuation horizon, and the sign of the comparison changes on
+09-06. **Neither view is wrong** — a 5 s markout and a settlement mark answer different questions, and the day
+path's estimand is declared as the markout one. What it means is that *"which arm did better"* is not a property
+of the day but **of the day and the horizon**.
+
+**R-795's standing label is half of what a reader needs.** *"Fills leg only"* says which **leg**; it does not say
+which **horizon**, and the horizon is what flips 09-06. The complete label is something like **"fills leg only,
+marked at the 5-second book mid"** — both halves measured, both now known to change the answer. **An observation
+for the coordinator; MEM does not route and does not amend a standing label.**
+
+The two open user decisions are exactly those two halves.
+
+## 5. Standing
+
+- **Chainlink** appears in **all 38,292** market rows — the declared source universally — and in **none** of the
+  four day-path modules. BE used **the venue's recorded winner**. The declared source and the used source are two
+  different things and the entry keeps them apart.
+- **Two user decisions are open, not one:** (i) a settlement-marked `D_E_settle`, scoped **forward** from 09-07 so
+  the four-day table is not reopened; (ii) the inventory leg (R-795). Five user rulings in play; two open;
+  recommendations disclosed, nothing taken.
+- **The coordinator's trace is published** at `https://claude.ai/code/artifact/3214dc3d-ee88-49f5-aa25-d196061baad5`
+  — recorded as a **pointer**, not a claim; I have not read it.
+- **GO #8 tonight is unchanged.** `wt-de` HEAD `5020f96`, status exactly `?? data` — third consecutive round.
+  Nothing in BE 98 touches those bytes; it is a re-valuation of landed ledgers.
+- **Freeze holds a sixteenth round.** The 09-03/09-04 replay debt gains a second reason: **those days have no
+  ledger, so neither the settlement re-valuation nor the position census can run on them at all.** Two of four
+  days can be looked at three ways; two can be looked at one way.
+
+## 6. Counts
+
+flags 2150 → **2166**, provenance 1695 → **1711** (sixteen written, sixteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,421 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 152nd round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my sixteen added none. Window trimmed 4 → 3,
+**Batch 258** archived.
+
+**NEXT:** the close → GO #8 from `5020f96`. MEM sweeps R-801 onward.
+
+---
+
 # READ FIRST — round 275 (MEM, 2026-09-07T14:29:48Z, tip `71349a3`)
 
 **R-799 swept, with every landing between the tip I read at round 274 (`5c9c0d4`) and `71349a3`.** STATE ONLY.

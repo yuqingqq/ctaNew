@@ -20089,3 +20089,43 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2080 -> 2098, provenance 1625 -> 1643 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 254 archived.)
 ```
+
+## Batch 258 — archived 2026-09-07T15:13:40Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T13:07:39Z (MEM ROUND 273 -- R-795 SWEPT, with every landing between the tip I read at round 272 (`20b6dfc`) and
+  `c1ce532`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***`inventory_leg` IS A FIELD OF NO LEDGER ROW TYPE.*** Measured at the 09-05 ledger across all four types
+  -- HEADER (8 keys), ARM_SCALARS (12), NULL_DRAW (5), FILL (17) -- **zero occurrences**. What the ledger holds
+  are BE 96's five per-fill INPUTS on every fill for both books. **So the artifact's `where_the_five_live_now`
+  claim, `inventory_leg: "COMPUTED since BE 96, in the decision ledger"`, is FALSE where it points.**
+  (2) ***AND I VERIFIED THAT BLOCK TWICE WITHOUT FOLLOWING ONE OF ITS POINTERS.*** At round 265 I printed its key
+  set, counted the four "COMPUTED" entries and caught its prose-vs-data mismatch; at round 272 I confirmed it
+  shipped in E3's artifact. **Both readings were about the block. Neither opened the file the claim names.** Rule
+  16 says verify at the artifact a claim NAMES -- and that artifact was a different file.
+  (3) **THE LEDGER MAKES ITS OWN CLAIM AND IT IS TRUE**: the header says the inventory leg is **RECOMPUTABLE**
+  from the file, and all five inputs are present with `inventory_after` non-None on **all 177,467 fill rows**.
+  ***COMPUTED IS NOT RECOMPUTABLE***, and that reconciles two sentences about one file that look contradictory:
+  a pointer to a VALUE and a pointer to its INPUTS are different promises, and only one can be followed without
+  a ruling.
+  (4) `fill_value_cents` is `sgn x (markout - level) x size` and **reads no `inventory_*` field**, so the day
+  value is the fills leg **BY CONSTRUCTION**, not by a choice of `total`. And the code's `inventory_leg` is
+  `Σ (after - before) x own mark` = **the cash flow of the fills**, not a position valuation -- the name is the
+  misleading part. **So my round-272 deltas (-216,448.71 / -28,401.85) were differences of CASH FLOWS**,
+  correctly read from a misleadingly named field; I recorded them as arithmetic and routed nothing, and the
+  reason that was the right amount to say is now visible.
+  (5) ***I REPRODUCED BE 97's RESIDUALS EXACTLY***, by last-fill-per-slug over the ledger: CONDVALUE **5,100**
+  (287 of 288 non-zero), HAZARD **9,184** (288), BASELINE **10,188** (288) -- every figure BE cites, with the
+  287/288 split exactly where BE's range implies, and the baseline identical under both arm labels (one replay
+  recorded twice). **My first pass was mis-scoped** -- keyed on `(arm, slug)`, giving 7,502/9,263 -- and I did
+  not report the disagreement: the fill counts (`2x49,668 + 78,131 = 177,467`) named the cause, the `book` field.
+  **The fourth scope mismatch in four rounds, and this one was mine.**
+  (6) So the fills-leg comparison IS between paths with materially different terminal inventory, verified not
+  relayed. **AN INVENTORY LEG IS A RULING AND IT IS THE USER'S** (rule 14) -- the fourth user ruling in play
+  today and the only one OPEN; the coordinator's three-part recommendation is DISCLOSED, not adopted, and
+  declining either illustrative rule is what keeps it open. **The label "fills leg only" now rides with every
+  `D_E0` quotation** -- a label, not a caveat, and the one thing uniform across all four days while everything
+  else varies. E4 still running, `wt-de` still at `6c3a121`. Freeze holds a THIRTEENTH round.
+  COUNTS (by YAML parse): flags 2098 -> 2116, provenance 1643 -> 1661 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 255 archived.)
+```
