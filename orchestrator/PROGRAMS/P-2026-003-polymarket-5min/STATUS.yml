@@ -106,6 +106,16 @@ updated: >-
   (6) Cascade both sides: SHARED `309b98c7` -- a FOURTH digest today -- `fe76d83` `ee4034c1`; 9/10 and 10/10.
   Freeze holds a SEVENTH round. E2 at 87m15s, `MemoryPeak` identical at all SEVEN reads, artifact still
   absent, so all three round-266 predictions stay open.
+  ***SETTLEMENT, 2026-09-07T11:04:30Z, WHILE MY REGISTER ROW WAS QUEUED BEHIND A FOREIGN ROW: E2 EXITED AND ITS ARTIFACT SETTLES
+  ALL THREE RECORDED PREDICTIONS.*** `p003_de_early_read_day_20260904__20260907T105906Z.json`, 10:59:06Z, 44,741 B,
+  sha `b196bf32fe54c918`. **(1) MINE, round 265 -- CONFIRMED**: `ruling.path` is ABSOLUTE into
+  `/home/yuqing/ctaNew-wt-de`, key set exactly `path`+`sha256`, no `path_is`. **(2) REV's B0 -- REFUTED**: NO `schema`
+  key anywhere, and the only `inventory` key is `not_computed_by_this_path.inventory_leg`, the pre-DE-129 block. Its
+  facts about the commit were all true; the step from "the code can" to "the run does" was not. **(3) MINE, rounds
+  266/267 -- CONFIRMED IN THE STRONGEST FORM**: `day_run.decision_ledger` is present and **explicitly `None`** -- what
+  `_ledger_block = None` yields when the `receipt_path` guard is false. THE GUARD NOT FIRING IS RECORDED IN THE ARTIFACT.
+  **RULE-20 NOTE ON MY OWN READING**: at 11:02:37Z the unit reads `LoadState=not-found` with an EMPTY `InvocationID`, so
+  MY terminal reading is VOID and I quote no exit fields from it; the GO E2 capture is the authority.
   COUNTS (by YAML parse): flags 1986 -> 2004, provenance 1531 -> 1549 (eighteen written, eighteen
   counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 249
   archived.)
@@ -360,6 +370,11 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 267 SETTLEMENT, 2026-09-07T11:04:30Z: E2 exited and its artifact settles all three recorded predictions ---
+  PREDICTION_1_CONFIRMED_E2s_ARTIFACT_NAMES_ITS_RULING_AT_AN_ABSOLUTE_WORKTREE_PATH: MINE-ROUND-265
+  PREDICTION_2_REVs_B0_REFUTED_THERE_IS_NO_SCHEMA_KEY_IN_THE_ARTIFACT_AT_ALL: THE-FACTS-HELD-THE-INFERENCE-DID-NOT
+  PREDICTION_3_CONFIRMED_day_run_decision_ledger_IS_EXPLICITLY_None: THE-GUARD-NOT-FIRING-IS-IN-THE-ARTIFACT
+  MY_TERMINAL_READING_OF_E2s_UNIT_IS_VOID_BECAUSE_LoadState_IS_not_found: THE-CAPTURE-RECORD-IS-THE-AUTHORITY
   # --- MEM round 267, R-782 swept (6b509a4 -> 4e93675) ---
   USER_RULING_R_782_RECORD_THE_ABSOLUTE_NUMBER_AS_WELL_FOR_REFERENCE: THE-THIRD-USER-RULING-OF-THE-DAY
   THE_THREE_USER_RULINGS_OF_THE_DAY_ARE_R_754_R_765_AND_R_782: USER-RULINGS-NOT-COORDINATOR-ONES
@@ -26362,6 +26377,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 267 SETTLEMENT, 2026-09-07T11:04:30Z ---
+  PREDICTION_1_CONFIRMED_E2s_ARTIFACT_NAMES_ITS_RULING_AT_AN_ABSOLUTE_WORKTREE_PATH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:04:30Z
+    said: >-
+      SETTLED AT THE ARTIFACT, which landed at 10:59:06Z while my register row was queued behind a foreign row -- so I
+      read it rather than ship a row saying the prediction was open. `p003_de_early_read_day_20260904__20260907T105906Z.json`,
+      44,741 B, sha `b196bf32fe54c918`. Its `ruling` key set is exactly `path` + `sha256`, and `ruling.path` reads
+      `/home/yuqing/ctaNew-wt-de/live/pm_research/declarations/de_multiday_gate1_params_v19.json` -- ABSOLUTE, naming the
+      worktree, with NO `path_is` key. **CONFIRMED**, and for the reason given at round 265: the frozen bytes contain no
+      `relative_to`, so DE 128's REV-95 fix could not reach the emission. It names params v19 where the 09-03 artifact named
+      v17, which is proper -- each artifact records the ruling it read at its own time.
+  PREDICTION_2_REVs_B0_REFUTED_THERE_IS_NO_SCHEMA_KEY_IN_THE_ARTIFACT_AT_ALL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:04:30Z
+    said: >-
+      REV 98's SB0 predicted E2's artifact would "declare schema 2 with the fields present". **REFUTED AT THE FILE**: a
+      recursive scan of the whole artifact finds NO key containing "schema" anywhere, and the only key containing "inventory"
+      is `economics_field_availability.not_computed_by_this_path.inventory_leg` -- the OLD block, the pre-DE-129 shape, saying
+      the leg is NOT computed, exactly as my round-265 finding that `WHERE_THE_FIVE_LIVE_NOW` is absent from `fe76d83`
+      predicted. **SB0's FACTS ABOUT THE COMMIT WERE ALL TRUE AND I VERIFIED EVERY ONE OF THEM; ITS INFERENCE ABOUT THE
+      ARTIFACT WAS NOT.** The gap was the one I named at round 266: the module declares v2, and nothing on this path writes a
+      ledger for it to declare. Recorded plainly because REV's method -- read the ancestry, read the blob -- was right, and
+      the step that failed is the one from "the code can" to "the run does".
+  PREDICTION_3_CONFIRMED_day_run_decision_ledger_IS_EXPLICITLY_None:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T11:04:30Z
+    said: >-
+      **CONFIRMED, AND IN THE STRONGEST FORM THE ARTIFACT COULD GIVE.** `day_run.decision_ledger` is PRESENT and its value
+      is explicitly `None` -- which is precisely what `_ledger_block = None` at `:6125` produces when the guard at `:6126`
+      (`receipt_path is not None`) is false, carried into the receipt at `:6240`. **THE GUARD NOT FIRING IS RECORDED IN THE
+      ARTIFACT ITSELF.** No ledger file, no schema, for the reason read at the bytes across rounds 266 and 267: nothing in the
+      1,682 files at `fe76d83` passes `receipt_path`, and it is keyword-only. So R-782(b)'s route has no input for E2 as
+      MEASURED, not only as predicted -- and E3, E4 and GO #8 run the same bytes.
+  MY_TERMINAL_READING_OF_E2s_UNIT_IS_VOID_BECAUSE_LoadState_IS_not_found:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/deEARLY20260904.service
+    as_of: 2026-09-07T11:04:30Z
+    said: >-
+      A rule-20 refusal against my own reading. At 11:02:37Z the unit shows `ActiveState=inactive`, `SubState=dead`,
+      `Result=success`, `ExecMainStatus=0` -- but also **`LoadState=not-found` and an EMPTY `InvocationID`**, and rule 20 says
+      the five fields are read WHILE LOADED or the reading is VOID. So I quote no exit fields from it: those two values print,
+      and a reading taken after the unit is unloaded is not a reading of that run. `MemoryPeak` now returns `[not set]`, which
+      is the same fact from the other side -- the property I had recorded identical at seven reads is simply gone with the
+      unit. The GO E2 entry records a capture taken in time; THAT capture, not mine, is the authority for how E2 ended.
   # --- MEM round 267, 2026-09-07T10:49:16Z (the clock read by which every measurement below was complete) ---
   USER_RULING_R_782_RECORD_THE_ABSOLUTE_NUMBER_AS_WELL_FOR_REFERENCE:
     prov: CHECKED

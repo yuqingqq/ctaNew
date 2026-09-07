@@ -102,7 +102,33 @@ duplicate-name gate run before writing). **1,259 CHECKED / 285 RELAYED + 5 MALFO
 round unchanged on UNMARKED. Orphans 0; missing-artifact 174, unchanged. Window trimmed 4 → 3, **Batch 249**
 archived.
 
-**NEXT:** E2 exits (≈10:55Z) → DA 126 → REV 98 part B. MEM sweeps R-783 onward.
+## 8. SETTLEMENT (11:04:30Z) — E2 exited, and its artifact settles all three predictions
+
+`p003_de_early_read_day_20260904__20260907T105906Z.json`, emitted 10:59:06Z, 44,741 B, sha `b196bf32fe54c918`.
+Read while my register row was queued behind a foreign row, rather than ship a row saying they were open.
+
+| # | prediction | outcome |
+|---|---|---|
+| 1 | **mine, r265** — ruling path absolute into wt-de, no `path_is` | **CONFIRMED** — `/home/yuqing/ctaNew-wt-de/…/de_multiday_gate1_params_v19.json`; `ruling` key set exactly `path`+`sha256` |
+| 2 | **REV's §B0** — declares ledger schema 2, inventory fields present | **REFUTED** — no `schema` key anywhere; the only `inventory` key is `not_computed_by_this_path.inventory_leg`, the pre-DE-129 block |
+| 3 | **mine, r266/267** — no decision ledger on this path | **CONFIRMED** — `day_run.decision_ledger` is present and **explicitly `None`** |
+
+**(3) is confirmed in the strongest form the artifact could give**: `None` is exactly what `_ledger_block = None`
+(`:6125`) yields when the `receipt_path` guard (`:6126`) is false, carried into the receipt at `:6240`. **The guard not
+firing is recorded in the artifact itself.** So R-782(b)'s route has no input for E2 as *measured*, not only as
+predicted — and E3, E4 and GO #8 run the same bytes.
+
+On (2): **§B0's facts about the commit were all true and I verified every one of them.** The step that failed is the one
+from *"the code can"* to *"the run does"*.
+
+**Rule-20 note against my own reading:** at 11:02:37Z the unit shows `LoadState=not-found` and an empty `InvocationID`,
+so **my terminal reading is VOID** — `Result=success` / `ExecMainStatus=0` print, but a reading taken after the unit is
+unloaded is not a reading of that run, and `MemoryPeak` now returns `[not set]`. The GO E2 entry's capture is the
+authority for how E2 ended.
+
+**NOT FOLDED (queued for 268):** DE 131 (`286335f`), Q-DE-135 (`717f634`), REV 99 part A (`aaba406`), GO E2 (`0fb127f`).
+
+**NEXT:** DA 126 reads the 09-04 artifact → REV 98 part B. MEM sweeps R-783 onward.
 
 ---
 
