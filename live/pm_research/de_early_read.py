@@ -58,7 +58,7 @@ EXIT_CODES = {
        "uncaught exception and SystemExit carries a message",
 }
 
-EXPECTED_CHECKS = 32
+EXPECTED_CHECKS = 33
 
 
 class EarlyReadRefused(RuntimeError):
@@ -408,7 +408,7 @@ def economics_available_per_arm_day(ledger_path=None,
 
 
 def early_read_preconditions(day: str, root, ruling: dict,
-                             supersedes=None) -> dict:
+                             supersedes=None, this_L=None) -> dict:
     """P9's REPLACEMENT FOR THIS ENTRY (coordinator ruling, DE 122).
 
     P9 on the sealed `--day` path refuses a day that already has a sealed
@@ -566,7 +566,34 @@ def early_read_preconditions(day: str, root, ruling: dict,
                 f"{_head['head']}. Superseding anything but the head "
                 f"forks the chain, and the next reader would refuse the "
                 f"day as EARLY_READ_HEAD_AMBIGUOUS.")
-        supersedes_block = {"path": str(tgt), "sha256": tgt_sha}
+        # R-811 (2): A RUN AT A DIFFERENT PLACEMENT LATENCY SUPERSEDES
+        # NOTHING -- IT IS A SIBLING. Two runs of one day at different L
+        # are two different measurements of two different makers, and
+        # calling one the successor of the other would hide that. The L
+        # is compared from the artifacts' own declared field.
+        try:
+            _tgt_doc = json.loads(tgt.read_bytes())
+        except (OSError, ValueError):
+            _tgt_doc = {}
+        # the field lives in `day_run` on this family's artifacts and at
+        # the top level on a day-run receipt; both are read, neither is
+        # assumed.
+        _tgt_L = (((_tgt_doc.get("day_run") or {}).get(
+            "placement_latency") or {}).get("L_place_ms")
+            if isinstance(_tgt_doc.get("day_run"), dict) else None)
+        if _tgt_L is None:
+            _tgt_L = ((_tgt_doc.get("placement_latency") or {})
+                      .get("L_place_ms"))
+        if _tgt_L is not None and this_L is not None and _tgt_L != this_L:
+            raise EarlyReadRefused(
+                f"EARLY_READ_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY: "
+                f"{tgt.name} was run at L_place = {_tgt_L} ms and this "
+                f"read is at {this_L} ms. A run at a different placement "
+                f"latency measures a DIFFERENT MAKER: it is a SIBLING, "
+                f"not a successor, and superseding it would hide that "
+                f"(R-811). Quote each with its own L beside it.")
+        supersedes_block = {"path": str(tgt), "sha256": tgt_sha,
+                            "both_at_L_place_ms": this_L}
     return {
         "replaces": "P9_no_sealed_receipt_for_this_day_yet",
         "why_replaced": "P9's premise is that a day run twice has no "
@@ -680,9 +707,16 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
             f"EARLY_READ_DAY_NOT_IN_THE_BAR: {day} is not among "
             f"{ruling['days']}. The ruling names four days; a fifth would "
             f"be consumed by a read nobody authorised.")
+    # R-811: THIS RUN'S L, from the BOOK's own builder receipt -- so
+    # the supersession check compares makers, not filenames.
+    _brp = RUN.builder_receipt_for(
+        Path(book), day, RUN.load_params().get("coin", "btc"))
+    _thisL = RUN.placement_latency_from_the_book(
+        json.loads(Path(_brp).read_text()) if Path(_brp).is_file() else {},
+        book_path=book)["L_place_ms"]
     pre = early_read_preconditions(
         day, Path(RUN.DR.resolve()["data_root"]), ruling,
-        supersedes=supersedes)
+        supersedes=supersedes, this_L=_thisL)
     params = RUN.load_params()
     # DE 132: THE LEDGER IS ANCHORED ON THIS ARTIFACT'S OWN PATH. The
     # early read has no `receipt_path` -- its artifact is its own family --
@@ -1032,8 +1066,8 @@ def _selftest_body(quiet: bool = False) -> int:
     ok(_no_t104 == "EARLY_READ_ALREADY_EMITTED"
        and _bad_t104 == "EARLY_READ_SUPERSEDES_DIGEST_MISMATCH"
        and _abs_t104 == "EARLY_READ_SUPERSEDES_TARGET_ABSENT"
-       and _pre104["supersedes"] == {"path": str(_fa104),
-                                     "sha256": _sha104}
+       and _pre104["supersedes"]["path"] == str(_fa104)
+       and _pre104["supersedes"]["sha256"] == _sha104
        and len(_pre104["supersedes"]["sha256"]) == 64,
        f"REVIEW 104A §3, THE DOOR AND ITS THREE LOCKS: a second read with "
        f"NO target refuses `{_no_t104}`; one naming a digest the file "
@@ -1042,6 +1076,40 @@ def _selftest_body(quiet: bool = False) -> int:
        f"artifact with its REAL digest ADMITS, carrying the pair "
        f"{{path, sha256}} with the FULL 64-hex digest RECOMPUTED from "
        f"the bytes on disk -- the shape DA 130 reads")
+    # R-811 (2): A RUN AT A DIFFERENT L IS A SIBLING, NOT A SUCCESSOR.
+    # ITS OWN ROOT. Mutating `_fa104` here broke the chain the NEXT cell
+    # builds on it -- DA's resolver caught it by name
+    # (SUPERSESSION_PAIR_MISMATCH), which is the third time in three
+    # rounds that a cell of mine inherited another cell's fixture. This
+    # one copies the root and works in the copy.
+    _froot2 = Path(tempfile.mkdtemp(prefix="er_sibling_"))
+    shutil.copytree(froot, _froot2, dirs_exist_ok=True)
+    _fder2 = _froot2 / "pm_5min/derived"
+    for _q in _fder2.glob(f"{DAY_FAMILY}_20260903__*.json"):
+        _q.unlink()
+    _fL104 = _fder2 / f"{DAY_FAMILY}_20260903__20260907T003000Z.json"
+    _fL104.write_text(json.dumps(
+        {"day": "2026-09-03",
+         "day_run": {"placement_latency": {"L_place_ms": 0.0}}}))
+    _sib104 = None
+    try:
+        early_read_preconditions("2026-09-03", _froot2, ruling_live,
+                                 supersedes=str(_fL104), this_L=250.0)
+    except EarlyReadRefused as e:
+        _sib104 = str(e).split(":")[0]
+    _same104 = early_read_preconditions(
+        "2026-09-03", _froot2, ruling_live, supersedes=str(_fL104),
+        this_L=0.0)
+    shutil.rmtree(_froot2, ignore_errors=True)
+    ok(_sib104 == "EARLY_READ_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY"
+       and _same104["supersedes"]["both_at_L_place_ms"] == 0.0,
+       f"R-811 (2), A SIBLING IS NOT A SUCCESSOR: a read at L_place 250 "
+       f"naming an artifact run at L 0 REFUSES `{_sib104}` -- two runs "
+       f"of one day at different placement latencies measure DIFFERENT "
+       f"MAKERS, and calling one the successor of the other would hide "
+       f"that. At the SAME L the supersession admits and the pair "
+       f"records the L both were run at "
+       f"({_same104['supersedes']['both_at_L_place_ms']})")
     # AND SUPERSEDING ANYTHING BUT THE HEAD FORKS THE CHAIN.
     _fb104 = fder / f"{DAY_FAMILY}_20260903__20260907T010000Z.json"
     _fb104.write_text(json.dumps({"day": "2026-09-03",

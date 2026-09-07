@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 392
+EXPECTED_CHECKS = 394
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4760,7 +4760,85 @@ def winner_source(*, root=None, required_slugs=None,
                "per_slug_status": "one of VERIFIED_AGREE / DISAGREE / "
                                   "CHAINLINK_UNAVAILABLE / "
                                   "VENUE_UNRESOLVED, per slug"}
+    # ===== R-810, THE USER's REVIEW: THE GATE VALIDATES EVIDENCE
+    # IDENTITY, NOT SHAPE. The USER reproduced it: `all_agree=True` with
+    # an EMPTY `per_slug` and EMPTY `counts` returned
+    # `is_final_for_quotation=True` and `require_verified=True` PASSED --
+    # zero slugs verified is not verification. Recomputing the counts
+    # fixed the boolean and left the DOOR open, which is the half that
+    # matters. Every condition below is checked against the evidence, and
+    # `is_final_for_quotation` is the AND of all of them.
+    _fin = None
+    if verification is not None:
+        _ps = verification["per_slug"]
+        _req = sorted(set(required_slugs or []))
+        _have = sorted(_ps)
+        _fin = {
+            "a_slug_set_equals_the_days":
+                (bool(_req) and _have == _req),
+            "a_n_slugs_verified": len(_ps),
+            "a_n_slugs_required": len(_req),
+            "a_missing": [x for x in _req if x not in _ps][:5],
+            "a_extra": [x for x in _have if x not in set(_req)][:5],
+            "b_counts_recomputed_here": True,
+            "c_every_status_is_VERIFIED_AGREE":
+                (_c["VERIFIED_AGREE"] == len(_ps) and len(_ps) > 0),
+            "d_convention_is_the_pinned_one": True,
+            "e_n_hourly_files_read": (
+                (verification.get("stream_provenance") or {})
+                .get("n_hourly_files", 0)),
+            "f_provenance": {
+                "venue_record": {"path": str(path), "sha256": sha},
+                "stream_files_digest": (
+                    (verification.get("stream_provenance") or {})
+                    .get("files_digest")),
+                "reader_module": (
+                    (verification.get("stream_provenance") or {})
+                    .get("reader_module"))},
+        }
+        _fin["f_provenance_complete"] = bool(
+            _fin["f_provenance"]["stream_files_digest"]
+            and (_fin["f_provenance"]["reader_module"] or {}).get("sha256"))
+        _fin["is_final"] = bool(
+            _fin["a_slug_set_equals_the_days"]
+            and _fin["c_every_status_is_VERIFIED_AGREE"]
+            and _fin["e_n_hourly_files_read"] > 0
+            and _fin["f_provenance_complete"])
+        ver["finality"] = _fin
+        ver["status"] = ("VERIFIED_AGAINST_CHAINLINK" if _fin["is_final"]
+                         else ver["status"])
     if require_verified:
+        # R-810 (a): ZERO SLUGS VERIFIED IS NOT VERIFICATION, and a set
+        # that is not the day's is evidence about some other day.
+        if _fin is not None and not _fin["a_slug_set_equals_the_days"]:
+            if _fin["a_n_slugs_verified"] == 0:
+                raise RunnerRefused(
+                    "REFUSED SETTLEMENT_VERIFICATION_EMPTY: the "
+                    "verification carries NO per-slug verdicts. Zero "
+                    "slugs verified is not verification -- the USER's "
+                    "own reproduction (R-810), which passed this door "
+                    "while `all_agree` was a boolean the caller wrote.")
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_VERIFICATION_SLUG_SET_MISMATCH: the "
+                f"verification covers {_fin['a_n_slugs_verified']} slug(s) "
+                f"and this day names {_fin['a_n_slugs_required']}. "
+                f"Missing {_fin['a_missing']}, extra {_fin['a_extra']}. "
+                f"Evidence about a different set of slugs is not evidence "
+                f"about this day.")
+        # R-810 (e): a verdict read from no files at all.
+        if _fin is not None and _fin["e_n_hourly_files_read"] <= 0:
+            raise RunnerRefused(
+                "REFUSED SETTLEMENT_CHAINLINK_NO_FILES_READ: the "
+                "verification reports ZERO Chainlink hourly files read. A "
+                "winner checked against nothing is not a checked winner.")
+        # R-810 (f): the evidence must be locatable.
+        if _fin is not None and not _fin["f_provenance_complete"]:
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_VERIFICATION_PROVENANCE_INCOMPLETE: "
+                f"the verification names no stream-files digest and/or no "
+                f"reader-module digest "
+                f"({_fin['f_provenance']}). A verdict nobody can re-read "
+                f"the inputs of is a claim, not a verification.")
         # THE FAILING STATUSES REFUSE BY THEIR OWN NAMES. An unverified
         # value may be COMPUTED and LABELLED (R-803); what it may never
         # be is quoted as final, and this is the door that says no.
@@ -4797,8 +4875,8 @@ def winner_source(*, root=None, required_slugs=None,
                        "with `closed: true`; the UP share pays "
                        "SETTLE_UP_CENTS iff winners['Up'] is True"),
             "chainlink_verification": ver,
-            "is_final_for_quotation":
-                ver["status"] == "VERIFIED_AGAINST_CHAINLINK"}
+            "is_final_for_quotation": bool(
+                (ver.get("finality") or {}).get("is_final"))}
 
 
 #: R-803 / BE 99 (Q-BE-342): the ONE convention that reproduces the
@@ -4872,8 +4950,21 @@ def chainlink_streams(days, *, coin: str = "btc"):
         streams = _M6.load_streams()
     finally:
         _M6.PM = _old_pm
+    # R-810 (f): THE STREAM'S OWN PROVENANCE. A verification that names
+    # no files is not evidence; the digest is over the BYTES the reader
+    # read, in a fixed order, so a later reader can ask whether the same
+    # stream would give the same winners.
+    _fh = hashlib.sha256()
+    _names = []
+    for _t in ("crypto_prices_twap_sixty", "crypto_prices_twap_thirty"):
+        for _f in sorted((tmp / "prices" / _t).glob("*")):
+            _names.append(f"{_t}/{_f.name}")
+            _fh.update(_f.name.encode())
+            _fh.update(Path(_os.path.realpath(_f)).read_bytes())
     out = {"streams": streams, "n_hourly_files": n_files,
            "hours": sorted(hours),
+           "files": _names,
+           "files_digest": _fh.hexdigest(),
            "reader_module": {
                "path": "live/pm_research/exp_m6_settlement.py",
                "sha256": hashlib.sha256(
@@ -4885,7 +4976,8 @@ def chainlink_streams(days, *, coin: str = "btc"):
 
 
 def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
-                                     coin: str = "btc") -> dict:
+                                     coin: str = "btc",
+                                     stream_provenance=None) -> dict:
     """THE VENUE'S WINNER, CHECKED AGAINST THE CHAINLINK STREAM.
 
     R-803: rule 9's door. The venue record is the JOIN; the stream is the
@@ -4939,6 +5031,15 @@ def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
     return {"convention": SETTLEMENT_CONVENTION,
             "per_slug": per, "counts": counts,
             "n_slugs": len(per),
+            # R-810 (e)+(f): the evidence travels WITH the verdict.
+            "stream_provenance": {
+                "n_hourly_files": (stream_provenance or {}).get(
+                    "n_hourly_files", 0),
+                "files_digest": (stream_provenance or {}).get(
+                    "files_digest"),
+                "reader_module": (stream_provenance or {}).get(
+                    "reader_module"),
+                "hours": (stream_provenance or {}).get("hours")},
             "all_agree": (counts["VERIFIED_AGREE"] == len(per)
                           and len(per) > 0)}
 
@@ -5112,6 +5213,85 @@ def assert_settlement_day_admissible(day: str, params: dict, *,
         raise RunnerRefused(
             f"REFUSED {verdict['refusal_name']}: {verdict['why']}")
     return verdict
+
+
+def placement_latency_from_the_book(builder_receipt: dict, *,
+                                    book_path=None,
+                                    book_sha256=None,
+                                    require_declared: bool = False) -> dict:
+    """WHAT PLACEMENT LATENCY THIS DAY'S BOOK WAS BUILT AT -- COMPUTED.
+
+    R-810, the USER's second finding: `placement_latency_ms` is DECLARED
+    (DE 137) and no caller passes it, because the runner never calls
+    `build_reference` -- the parameter reaches a day only through
+    `be_daybook_build`'s call and a REBUILT book, which is BE 101's item
+    and a design step, not tonight's. So the receipt must not merely say
+    "0": it says what the BOOK it ran on was built at, read from the
+    builder receipt's OWN keys, so a later reader can tell a run at
+    L = 0 from a run on a rebuilt book without trusting this sentence."""
+    found = {}
+
+    def _walk(o, path=""):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if "placement_latency" in str(k).lower():
+                    found[f"{path}.{k}"] = v
+                _walk(v, f"{path}.{k}")
+        elif isinstance(o, list):
+            for i, e in enumerate(o):
+                _walk(e, f"{path}[{i}]")
+    _walk(builder_receipt or {})
+    _book = {"path": (str(book_path) if book_path else None),
+             "sha256": book_sha256}
+    if found:
+        vals = sorted({float(v) for v in found.values()
+                       if isinstance(v, (int, float))})
+        return {"L_place_ms": (vals[0] if len(vals) == 1 else None),
+                "source": "THE BOOK'S BUILDER RECEIPT",
+                "found_at": found,
+                "ambiguous": len(vals) > 1,
+                "book": _book,
+                "why": ("read from the receipt of the book this day ran "
+                        "on -- never typed here")}
+    # R-811 (1): a book that does not RECORD its L must be refusable --
+    # once BE 101 makes the builder record it, a book without it is a
+    # real defect, not a fact about the world. The guard is ARMED BY THE
+    # DECLARATION (`settlement_endpoint.require_book_declares_L`), never
+    # by a constant here: every book that exists tonight was built before
+    # the builder recorded anything, so arming it in code would refuse
+    # the four re-runs the USER asked for -- and those four are at the L
+    # the landed books CARRY, which is a measured fact, not a choice.
+    if require_declared:
+        raise RunnerRefused(
+            "REFUSED SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY: the "
+            "builder receipt for " + str(_book["path"]) + " records no "
+            "placement latency and the declaration requires one. A day's "
+            "number is quoted only with its L beside it (R-811); a book "
+            "that does not say what it was built at cannot supply one.")
+    return {"L_place_ms": 0.0,
+            "source": "THE BOOK'S BUILDER RECEIPT DECLARES NONE",
+            "found_at": {},
+            "book": _book,
+            "guard": {"require_book_declares_L": False,
+                      "armed_by": ("params `settlement_endpoint."
+                                   "require_book_declares_L`, unset today"),
+                      "why_not_armed": (
+                          "every landed book predates BE 101's builder "
+                          "change, so arming it would refuse the four "
+                          "re-runs; the L those books carry is 0 BY "
+                          "CONSTRUCTION -- the building code has no "
+                          "placement-latency field at all -- which is a "
+                          "measured fact, not an assumption")},
+            "why": ("no key naming a placement latency appears anywhere "
+                    "in this book's builder receipt, so the book was "
+                    "built by code that has none and the day runs at "
+                    "L_place = 0 BY CONSTRUCTION. DE 137 declared the "
+                    "parameter on `build_reference`, which the runner "
+                    "never calls; the pass-through and the cost of "
+                    "rebuilding books at L = 250 are BE 101's (R-810). "
+                    "COMPUTED from the receipt's own keys, so a run on a "
+                    "rebuilt book says so here without anyone editing "
+                    "this sentence.")}
 
 
 def settlement_not_valued_reason(status: str, admissibility: dict) -> str:
@@ -6864,7 +7044,11 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             _cl801 = chainlink_streams([day], coin=params.get("coin", "btc"))
             _ver801 = verify_winners_against_chainlink(
                 _win801["winners"], _slugs801, streams=_cl801["streams"],
-                coin=params.get("coin", "btc"))
+                coin=params.get("coin", "btc"),
+                stream_provenance=_cl801)
+            # R-810: the source is re-resolved WITH the verification and
+            # the day's own slug set, so the finality gate compares the
+            # per-slug evidence against the slugs this day actually names.
             _win801 = winner_source(required_slugs=_slugs801,
                                     verification=_ver801)
             _win801["chainlink_verification"]["reader_module"] = \
@@ -7175,6 +7359,10 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
+    _plat = placement_latency_from_the_book(
+        receipt, book_path=book_path, book_sha256=book_sha,
+        require_declared=bool((params.get("settlement_endpoint") or {})
+                              .get("require_book_declares_L")))
     r20 = assert_rule20(obs, wall_s=wall, peak_rss_mb=peak, day=day)
     peak_pred = peak_stage_predicate(stages,
                                      declared=declared_peak_stage())
@@ -7276,6 +7464,10 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # The params file is NAMED, not versioned into the key: a key
         # called `design_G_from_params_v15` is a literal that must track a
         # moving thing, and `PARAMS_REL` is the thing that moves.
+        #
+        # R-810: WHAT MAKER THIS DAY MEASURED, from the book's own
+        # builder receipt rather than from a sentence here.
+        "placement_latency": _plat,
         "G_and_which_G_it_is": {
             "design_G_from_params": params["G"],
             "params_file": PARAMS_REL,
@@ -10405,21 +10597,26 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     _bad_stream = {(_symc, 60): ([_t0c * 1000, (_t0c + 300) * 1000],
                                  [_t0c * 1000, (_t0c + 300) * 1000],
                                  [100.0, 99.0])}
+    _prov803 = {"n_hourly_files": 54, "files_digest": "c" * 64,
+                "reader_module": {"path": "live/pm_research/"
+                                          "exp_m6_settlement.py",
+                                  "sha256": "d" * 64}, "hours": []}
     _v_bad = verify_winners_against_chainlink(
-        _venue_up, [_slugc], streams=_bad_stream)
+        _venue_up, [_slugc], streams=_bad_stream,
+        stream_provenance=_prov803)
     _dis803 = None
     try:
-        winner_source(root=_wr801.parent, verification=_v_bad,
-                      require_verified=True)
+        winner_source(root=_wr801.parent, required_slugs=[_slugc],
+                      verification=_v_bad, require_verified=True)
     except RunnerRefused as _e:
         _dis803 = str(_e).split(":")[0].replace("REFUSED ", "")
     # and a stream that is not there at all
     _v_none = verify_winners_against_chainlink(
-        _venue_up, [_slugc], streams={})
+        _venue_up, [_slugc], streams={}, stream_provenance=_prov803)
     _unv803 = None
     try:
-        winner_source(root=_wr801.parent, verification=_v_none,
-                      require_verified=True)
+        winner_source(root=_wr801.parent, required_slugs=[_slugc],
+                      verification=_v_none, require_verified=True)
     except RunnerRefused as _e:
         _unv803 = str(_e).split(":")[0].replace("REFUSED ", "")
     # the GREEN control: a stream that RISES agrees with the venue
@@ -10427,9 +10624,11 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                                   [_t0c * 1000, (_t0c + 300) * 1000],
                                   [99.0, 100.0])}
     _v_ok = verify_winners_against_chainlink(
-        _venue_up, [_slugc], streams=_good_stream)
-    _ws_ok = winner_source(root=_wr801.parent, verification=_v_ok,
-                           require_verified=True)
+        _venue_up, [_slugc], streams=_good_stream,
+        stream_provenance=_prov803)
+    _ws_ok = winner_source(root=_wr801.parent,
+                           required_slugs=[_slugc],
+                           verification=_v_ok, require_verified=True)
     ok(_dis803 == "SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK"
        and _v_bad["counts"]["DISAGREE"] == 1
        and _unv803 == "SETTLEMENT_CHAINLINK_UNAVAILABLE"
@@ -10451,24 +10650,27 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     # REV's exact dict: a per-slug map of DISAGREE, a made-up convention
     # name, empty counts and `all_agree: True` -> VERIFIED_AGAINST_
     # CHAINLINK, is_final True, require_verified PASSES.
-    _revdict = {"per_slug": {"S1": {"status": "DISAGREE",
-                                    "venue_up_won": True,
-                                    "chainlink_up_won": False}},
+    _revdict = {"per_slug": {_slugc: {"status": "DISAGREE",
+                                      "venue_up_won": True,
+                                      "chainlink_up_won": False}},
                 "convention": {"name": "a rule I made up"},
-                "counts": {}, "all_agree": True}
+                "counts": {}, "all_agree": True,
+                "stream_provenance": _prov803}
     _madeup104 = None
     try:
-        winner_source(root=_wr801.parent, verification=_revdict,
-                      require_verified=True)
+        winner_source(root=_wr801.parent, required_slugs=[_slugc],
+                      verification=_revdict, require_verified=True)
     except RunnerRefused as _e:
         _madeup104 = str(_e).split(":")[0].replace("REFUSED ", "")
     _revdict2 = {**_revdict,
                  "convention": dict(SETTLEMENT_CONVENTION)}
-    _lied104 = winner_source(root=_wr801.parent, verification=_revdict2)
+    _lied104 = winner_source(root=_wr801.parent,
+                             required_slugs=[_slugc],
+                             verification=_revdict2)
     _lied_req104 = None
     try:
-        winner_source(root=_wr801.parent, verification=_revdict2,
-                      require_verified=True)
+        winner_source(root=_wr801.parent, required_slugs=[_slugc],
+                      verification=_revdict2, require_verified=True)
     except RunnerRefused as _e:
         _lied_req104 = str(_e).split(":")[0].replace("REFUSED ", "")
     ok(_madeup104 == "SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE"
@@ -10487,6 +10689,109 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"`{_lied104['chainlink_verification']['status']}`, "
        f"`is_final_for_quotation` is False and the quotable path refuses "
        f"`{_lied_req104}`. Nothing here is read from the dict handed in")
+    # ===== R-811, THE USER: the placement latency is a SWEPT parameter
+    # "Then can you put a 250ms latency, or make it configured to
+    # different values to get different numbers under different latency".
+    # The receipt reads its L FROM THE BOOK's builder receipt -- never a
+    # constant -- and carries the book's own pair beside it.
+    _r0_811 = placement_latency_from_the_book(
+        {"scope": {"placement_latency_ms": 0.0}},
+        book_path="/x/book0.pkl", book_sha256="0" * 64)
+    _r250_811 = placement_latency_from_the_book(
+        {"scope": {"placement_latency_ms": 250.0}},
+        book_path="/x/book250.pkl", book_sha256="2" * 64)
+    _rnone_811 = placement_latency_from_the_book(
+        {"scope": {}}, book_path="/x/bookX.pkl", book_sha256="3" * 64)
+    _armed_811 = None
+    try:
+        placement_latency_from_the_book(
+            {"scope": {}}, book_path="/x/bookX.pkl",
+            require_declared=True)
+    except RunnerRefused as _e:
+        _armed_811 = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_r0_811["L_place_ms"] == 0.0 and _r250_811["L_place_ms"] == 250.0
+       and _r0_811["source"] == "THE BOOK'S BUILDER RECEIPT"
+       and _r250_811["book"]["sha256"] == "2" * 64
+       and _rnone_811["L_place_ms"] == 0.0
+       and _rnone_811["source"].endswith("DECLARES NONE")
+       and _armed_811 == "SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY",
+       f"R-811, THE L IS READ FROM THE BOOK AND NEVER TYPED: a builder "
+       f"receipt declaring 0 gives {_r0_811['L_place_ms']} and one "
+       f"declaring 250 gives {_r250_811['L_place_ms']}, each with the "
+       f"book's own path and sha256 beside it -- so two runs of one day "
+       f"at different L are distinguishable at a DECLARED FIELD. A book "
+       f"declaring none reads 0 BY CONSTRUCTION today and REFUSES "
+       f"`{_armed_811}` once the declaration arms the guard "
+       f"(`settlement_endpoint.require_book_declares_L`), which is where "
+       f"BE 101's builder change lands. **NOT ESTABLISHED HERE: that two "
+       f"L values give different FILL COUNTS** -- no code path rebuilds a "
+       f"book at L != 0, which is precisely BE 101/102's item; this cell "
+       f"drives the receipt half, which is mine")
+    # ===== R-810, THE USER's OWN REPRODUCTION, DRIVEN =================
+    # The USER: `winner_source(..., require_verified=True)` with
+    # `all_agree=True`, an EMPTY `per_slug` and EMPTY `counts` returned
+    # `is_final_for_quotation=True` and the door PASSED. Recomputing the
+    # counts fixed the boolean and LEFT THE DOOR OPEN -- the half that
+    # matters. The gate now validates EVIDENCE IDENTITY, not shape.
+    (_wr801 / "resolutions.jsonl").write_text("\n".join(
+        json.dumps({"slug": f"S{_i}", "closed": True,
+                    "winners": {"Up": True, "Down": False},
+                    "source": "clob"}) for _i in range(3)) + "\n")
+    _prov810 = {"n_hourly_files": 54, "files_digest": "a" * 64,
+                "reader_module": {"path": "live/pm_research/"
+                                          "exp_m6_settlement.py",
+                                  "sha256": "b" * 64}, "hours": []}
+    _C810 = dict(SETTLEMENT_CONVENTION)
+    _req810 = ["S0", "S1", "S2"]
+
+    def _agree810(*names):
+        return {n: {"status": "VERIFIED_AGREE"} for n in names}
+
+    def _door810(ver, req):
+        try:
+            _w = winner_source(root=_wr801.parent, required_slugs=req,
+                               verification=ver, require_verified=True)
+            return ("PASSED", _w["is_final_for_quotation"])
+        except RunnerRefused as _e:
+            return (str(_e).split(":")[0].replace("REFUSED ", ""), None)
+    # THE USER'S EXACT DICT
+    _u1 = _door810({"per_slug": {}, "counts": {}, "all_agree": True,
+                    "convention": _C810,
+                    "stream_provenance": _prov810}, _req810)
+    _u2 = _door810({"per_slug": _agree810("S0", "S1"),
+                    "convention": _C810,
+                    "stream_provenance": _prov810}, _req810)
+    _u3 = _door810({"per_slug": {**_agree810("S0", "S1"),
+                                 "S2": {"status": "DISAGREE"}},
+                    "convention": _C810,
+                    "stream_provenance": _prov810}, _req810)
+    _u4 = _door810({"per_slug": _agree810("S0"),
+                    "convention": {"name": "a rule I made up"},
+                    "stream_provenance": _prov810}, ["S0"])
+    _u5 = _door810({"per_slug": _agree810(*_req810), "convention": _C810,
+                    "stream_provenance": {**_prov810,
+                                          "n_hourly_files": 0}}, _req810)
+    _u6 = _door810({"per_slug": _agree810(*_req810), "convention": _C810,
+                    "stream_provenance": {"n_hourly_files": 54}}, _req810)
+    _u7 = _door810({"per_slug": _agree810(*_req810), "convention": _C810,
+                    "stream_provenance": _prov810}, _req810)
+    ok(_u1[0] == "SETTLEMENT_VERIFICATION_EMPTY"
+       and _u2[0] == "SETTLEMENT_VERIFICATION_SLUG_SET_MISMATCH"
+       and _u3[0] == "SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK"
+       and _u4[0] == "SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE"
+       and _u5[0] == "SETTLEMENT_CHAINLINK_NO_FILES_READ"
+       and _u6[0] == "SETTLEMENT_VERIFICATION_PROVENANCE_INCOMPLETE"
+       and _u7 == ("PASSED", True),
+       f"R-810, THE USER'S REVIEW, EVERY CASE DRIVEN: the USER'S OWN "
+       f"reproduction -- `all_agree=True`, per_slug {{}}, counts {{}} -- "
+       f"now refuses `{_u1[0]}` (zero slugs verified is not "
+       f"verification); a per-slug set that is not the day's refuses "
+       f"`{_u2[0]}`; one DISAGREE `{_u3[0]}`; a foreign convention name "
+       f"`{_u4[0]}`; ZERO hourly files read `{_u5[0]}`; missing stream "
+       f"and reader digests `{_u6[0]}`; and the complete evidence -- the "
+       f"day's exact slug set, every status VERIFIED_AGREE, files read, "
+       f"provenance recorded -- PASSES with is_final {_u7[1]}. The gate "
+       f"validates EVIDENCE IDENTITY, not shape")
     # (4) A DECLARATION MAY NOT RE-OPEN A CONSUMED DAY. REV's case:
     # `admissible_days = ["2026-09-05"]`, a day the early read CONSUMED.
     _consumed104 = (_dd801[0] if _dd801 else "2026-09-05")
