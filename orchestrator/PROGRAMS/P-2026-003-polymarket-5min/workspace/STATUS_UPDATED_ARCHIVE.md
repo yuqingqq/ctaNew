@@ -20565,3 +20565,45 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2259 -> 2274, provenance 1804 -> 1819 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 265 archived.)
 ```
+
+## Batch 269 — archived 2026-09-07T17:26:35Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T16:11:24Z (MEM ROUND 284 -- R-810 SWEPT, with every landing between the tip I read at round 283 (`67e0f7d`) and
+  `d7e51fe`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) **A USER REVIEW, three findings carried verbatim.** DE 139 landed `a4965b9` at 16:07:15Z -- **five seconds
+  before the entry** -- fixing REV 104B §6's four items, **and its §6(2) fix WORKS**: `all_agree` is recomputed
+  inside the function and `len(per_slug) > 0` is required, so a forged flag is ignored.
+  (2) ***BUT I DROVE THE USER'S EXACT CASE AT THE POST-FIX CODE AND IT DID NOT REFUSE.*** Calling
+  `winner_source(verification={all_agree: True, per_slug: {}, counts: {}, convention: <pinned>},
+  require_verified=True)` against the real `resolutions.jsonl`: **the call RETURNED** -- status
+  `VERIFICATION_DID_NOT_AGREE`, `n_slugs_verified` **0**, counts all zero. **THE GATE ENUMERATES FAILURES
+  INSTEAD OF REQUIRING SUCCESS**: it refuses `NOT_VERIFIED_AGAINST_CHAINLINK`, any `DISAGREE`, and any
+  `UNAVAILABLE`/`UNRESOLVED` -- **an empty verification is none of the three.** A door that names the ways in
+  cannot know about one it was not told about. **BOUND ON IT**: `is_final_for_quotation` is correctly **False**,
+  so nothing quotable escaped -- **the label held and the door did not**, and the residual risk is a caller that
+  infers verification from the absence of a refusal. **So R-810's routing is still live at the current code**:
+  the user's reproduction as a falsifier would fail today.
+  (3) ***THE SECOND HIGH VERIFIED IN ITS STRONGEST FORM***: `build_reference` accepts `placement_latency_ms`, and
+  of the **fourteen** modules that call it -- 22 call sites in phase4 alone -- **ZERO pass the keyword**.
+  ***THREE PROGRESSIVELY STRONGER READINGS OF ONE FACT***: round 281 (mine, from the default), round 283 (REV
+  §7, the day path never calls it), round 284 (the user, no caller anywhere passes it). Each subsumes the last,
+  and only the third explains why **BE 101 must start at the BUILDER**: a parameter no caller supplies is not a
+  switch that is off, it is a switch that is not wired. BE 101 rebuilds **one day (09-05) at L = 250 into a NEW
+  artifact path** and prices it against the landed **88,698 / 81,238 c** -- a new path, so the comparison is
+  between two artifacts rather than an artifact and a memory. **Tonight's four re-runs stay at L = 0 unless the
+  user rules otherwise, each receipt stating its L from the book's builder receipt** -- the assumption becomes a
+  FIELD rather than something to remember.
+  (4) **DA 131 MEASURED THE HARM MY ROUND-283 FLAG WATCHED FOR.** I recorded the two new row kinds under an
+  unchanged `schema_version` as "watched, not objected to"; DA has landed (+258) and its subject reads "**a
+  pre-DE-136 reader was measured skipping them silently**". The rule-4 shape -- a silent skip rather than a named
+  status -- measured rather than argued, with `SETTLEMENT_SCALARS_DISAGREE` and a named `why` for a ledger
+  carrying neither kind. The user's own checks (`git diff --check`, `py_compile`) passed with **no files
+  modified**.
+  (5) ***THE SIXTH COMPOSITION IS NOT BUILT***: `wt-rr` is still at `a54dcc2`, the FIFTH head, so **the tree the
+  re-runs will use does not yet contain the fix that gates them**, and REV 105 waits on a head that does not
+  exist. "DE 139 landed" and "the sixth composition exists" are different facts and only the first is true.
+  GO #8 unchanged (`5020f96`, `?? data`, TENTH consecutive round); freeze holds a TWENTY-FOURTH round.
+  COUNTS (by YAML parse): flags 2274 -> 2289, provenance 1819 -> 1834 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 266 archived.)
+```

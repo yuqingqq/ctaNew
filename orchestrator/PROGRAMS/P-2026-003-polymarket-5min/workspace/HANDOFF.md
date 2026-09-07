@@ -1,3 +1,65 @@
+# READ FIRST — round 287 (MEM, 2026-09-07T17:26:35Z, tip `cd1adcc`)
+
+**R-815, R-816, R-817 and R-818 swept, with every landing between the tip I read at round 286 (`6461cf2`) and
+`cd1adcc`.** STATE ONLY.
+
+**THE USER COMMITTED `849bef2` HIMSELF — onto my own round-286 state commit.** Author and committer `yqq`,
+16:54:48Z, parent `e86e467`; runner +222/−53, ledger +69. Ancestor of **neither** `850c166` nor `33e8584` — DE took
+its bytes rather than merging, which is why the blob comparison is what makes the composition checkable.
+
+**REV 106's refinement of the stop reason is exact, read in both trees.** At `850c166` the producer *has* the file
+list (`chainlink_streams` builds `"files": _names` at `:4966`, passed whole at `:7048`), but the sub-block
+`verify_winners_against_chainlink` constructs at `:5035–5042` carries exactly four keys — `n_hourly_files`,
+`files_digest`, `reader_module`, `hours` — and **`files` is not among them**. At `33e8584` the same construction
+carries a fifth, `files`. **The producer had them; the sub-block dropped them.**
+
+**What the stops bought, nameable rather than rhetorical.** Artifacts under `850c166` would record a provenance
+block the user's re-reading check can never pass, while that head's weaker gate **would have stamped them
+`is_final_for_quotation: True`**. The second stop bought all four days on **identical bytes**. Three stops, ~20 min
+of compute, nothing written — and I checked the "nothing written" at the directory: the only 09-03 artifact is still
+the one dated **Sep 7 08:54**, and no 09-03 ledger exists.
+
+**The eighth head carries the user's assertion with only its input constructed.** `_with_moved_cascade` deep-copies
+the params and zeroes phase4's sha to `"0"*64`, handing it to the user's own `refuses(...)` and message verbatim,
+beside the `actual_sha="0"*64` cell it was modelled on. `EXPECTED_CHECKS` **394 → 395** at the user's commit, **395**
+at the eighth head. **The coordinator's conditional is gone, not dormant**: its marker string appears **once** at
+`b48af21`, **zero** times at `33e8584`.
+
+**The running unit passes `--supersedes` on its own command line.** `deRR20260903`'s `ExecStart`:
+`flock -n -E 75 … de_early_read.py --early-read-day 2026-09-03 --supersedes …__20260907T085436Z.json` — the exact
+head artifact REV 105 named. Five fields while loaded at 17:22:51Z: loaded/active/**running**, status 0, success,
+invocation `098a441ea4c44689822b033325fc3473`, active since **17:16:15Z**.
+
+**GO #8's v2 sufficiency, checked at the data.** A real v2 FILL row carries `side`, `px_cents`, `size`, `slug` —
+all four `settle_value_cents` needs, **none missing**. DE's one-line answer holds; `wt-de` stays untouched.
+
+**BE's L = 250 point (verified at Q-BE-344, not re-derived).** 09-05 baseline: generations **266,592 on both**;
+fills **49,668 → 25,721**; fills leg **88,698.1734 → 37,191.4839**; **ruled total 81,238.2997 → 1,974.5755 c**. The
+strong part is the cross-check BE did not engineer — BE 100's ledger-timestamp count of **23,947** fills carrying
+79,263.72 c, and the rebuild dropping **exactly 23,947**, agreeing to **+0.0042 c** (BE 100's own rounding). Two
+routes sharing no code.
+
+**The magnitude, and one property of it nobody has stated.** The maker **retains 2.4306 percent, loses 97.5694
+percent** at L = 250, while the fill *count* retains 51.79 percent — half the fills go and 97.6 percent of the money
+does. **But at L = 250 the total is 0.478 percent of the residual leg** (landed: 26.472 percent): the latency
+*grows* both legs (−411,502 / +413,477) and makes them nearly cancel, so the L = 250 total is **55.4x more
+sensitive** to a proportional leg error — a 1-percent error would flip its sign. **This disputes nothing BE
+measured**; it argues for the curve over the single point. Build time does **not** fall with L (2,588 s vs the
+landed 1,696 s), so the grid does not get cheaper at the top; BE's forward costs: Stage 1 remainder ~1.9 h, Stage 2
+~12.2 h, the arms' curve 7.7 h per L across four days.
+
+**Standing.** `wt-rr` HEAD `33e8584`, `?? data`, **ten cascade pins 0 mismatched measured inside it**, phase4 at
+`ee4034c1…` — REV 106's warning not to take mm-research's phase4 is honoured in the bytes.
+`origin/mm-research-e3-composition` = `33e8584`. `wt-de` `5020f96` / `?? data`, the **thirteenth** consecutive round;
+GO #8 at 00:10Z unchanged. Freeze's **twenty-seventh** round. R1 → R2 → R3 → R4 back to back; any day not started by
+22:40Z waits for after GO #8. REV 106's three loosenings routed to DE, none blocking.
+
+Counts: flags 2319 → 2334, provenance 1864 → 1879 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,589 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; missing-artifact 178; window trimmed
+4 → 3, Batch 269 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 286 (MEM, 2026-09-07T16:46:47Z, tip `6461cf2`)
 
 **R-813 and R-814 swept, with every landing between the tip I read at round 285 (`ef27921`) and `6461cf2`.** STATE ONLY.

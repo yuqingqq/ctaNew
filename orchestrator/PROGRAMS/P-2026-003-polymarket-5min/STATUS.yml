@@ -67,6 +67,36 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T17:26:35Z (MEM ROUND 287 -- R-815, R-816, R-817 AND R-818 SWEPT, with every landing between
+  the tip I read at round 286 (`6461cf2`) and `cd1adcc`. STATE ONLY. ***THE USER COMMITTED `849bef2` HIMSELF, DIRECTLY ON
+  TOP OF MY OWN ROUND-286 STATE COMMIT `e86e467`*** (author and committer yqq, 16:54:48Z, runner +222/-53, ledger
+  +69), and it is an ancestor of neither `850c166` nor `33e8584` -- DE took its BYTES. ***REV 106'S REFINEMENT OF THE
+  STOP REASON IS EXACT AND I READ IT IN BOTH TREES***: at `850c166` the producer HAS the file list
+  (`chainlink_streams` builds `"files": _names` at `:4966`, passed whole at `:7048`) but the sub-block
+  `verify_winners_against_chainlink` builds at `:5035-5042` carries exactly four keys and `files` is not among them;
+  at `33e8584` the same construction carries a fifth, `files`. So it is not that the head did not record them --
+  THE PRODUCER HAD THEM AND THE SUB-BLOCK DROPPED THEM. What the stops bought is nameable: artifacts under `850c166`
+  would record a provenance block the user's new re-reading check can NEVER pass, while that head's weaker gate would
+  have stamped them `is_final_for_quotation: True`; and the second stop bought all four days on IDENTICAL bytes.
+  ***THE EIGHTH HEAD CARRIES THE USER'S ASSERTION WITH ONLY ITS INPUT CONSTRUCTED***: `_with_moved_cascade` deep-copies
+  the params and zeroes phase4's sha to "0"*64, handing it to the user's own `refuses(...)` and message verbatim,
+  beside the `actual_sha="0"*64` cell it was modelled on; `EXPECTED_CHECKS` 394 -> 395 at the user's commit and 395 at
+  the eighth head; and ***THE COORDINATOR'S CONDITIONAL IS GONE, NOT DORMANT*** -- its marker string appears ONCE at
+  `b48af21` and ZERO times at `33e8584`. ***THE RUNNING UNIT PASSES `--supersedes` ON ITS OWN COMMAND LINE***
+  (`deRR20260903`, `flock -n -E 75`, the 08:54 head artifact as the target; five fields read while loaded, invocation
+  `098a441e...`, active since 17:16:15Z), and ***THE TWO STOPS LEFT THE DISK UNCHANGED*** -- the only 09-03 artifact
+  is still the one dated Sep 7 08:54 and no 09-03 ledger exists. GO #8's v2 sufficiency checked AT A REAL FILL ROW,
+  not only in the code: side, `px_cents`, size and slug all present, none missing. ***BE'S L = 250 POINT, VERIFIED AT
+  Q-BE-344 AND NOT RE-DERIVED***: the 09-05 ruled total falls 81,238.2997 -> 1,974.5755 c, with the strong part being
+  a cross-check BE did not engineer -- BE 100's ledger-timestamp count of 23,947 fills carrying 79,263.72 c, and the
+  rebuild dropping EXACTLY 23,947, agreeing to +0.0042 c. ***THE MAGNITUDE***: the maker retains 2.4306 % and loses
+  97.5694 % at L = 250, while the fill COUNT retains 51.79 % -- half the fills go and 97.6 % of the money does.
+  ***AND A PROPERTY OF THAT POINT NOBODY HAS STATED***: at L = 250 the total is 0.478 % of the residual leg against
+  26.472 % on the landed book -- the latency GROWS both legs and makes them nearly cancel, so the L = 250 total is
+  55.4x more sensitive to a proportional leg error, and a 1 % error would flip its sign. That disputes nothing BE
+  measured; it argues for the CURVE over the single point. Flags 2319 -> 2334, prov 1864 -> 1879; window trimmed
+  4 -> 3, Batch 269 archived. `wt-rr` at `33e8584` with ten pins 0 mismatched, `wt-de` `5020f96` / `?? data` the
+  THIRTEENTH consecutive round, the freeze a TWENTY-SEVENTH. MEM asserts no result.)
   2026-09-07T16:46:47Z (MEM ROUND 286 -- R-813 AND R-814 SWEPT, with every landing between the tip I
   read at round 285 (`ef27921`) and `6461cf2`. STATE ONLY. ***REV 105 IS ONE VERDICT FOR FOUR DAYS***: GO R1..R4 MAY
   PROCEED at `850c166` from `wt-rr`, whose HEAD and `?? data` status I measured; the third pre-launch condition, a
@@ -123,43 +153,6 @@ updated: >-
   1834 -> 1849; window trimmed 4 -> 3, Batch 267 archived. BE 102's six books do not exist; the freeze holds a
   TWENTY-FIFTH round; `wt-de` `5020f96` / `?? data`, the ELEVENTH consecutive round; GO #8 unchanged.
   MEM asserts no result.)
-  2026-09-07T16:11:24Z (MEM ROUND 284 -- R-810 SWEPT, with every landing between the tip I read at round 283 (`67e0f7d`) and
-  `d7e51fe`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) **A USER REVIEW, three findings carried verbatim.** DE 139 landed `a4965b9` at 16:07:15Z -- **five seconds
-  before the entry** -- fixing REV 104B §6's four items, **and its §6(2) fix WORKS**: `all_agree` is recomputed
-  inside the function and `len(per_slug) > 0` is required, so a forged flag is ignored.
-  (2) ***BUT I DROVE THE USER'S EXACT CASE AT THE POST-FIX CODE AND IT DID NOT REFUSE.*** Calling
-  `winner_source(verification={all_agree: True, per_slug: {}, counts: {}, convention: <pinned>},
-  require_verified=True)` against the real `resolutions.jsonl`: **the call RETURNED** -- status
-  `VERIFICATION_DID_NOT_AGREE`, `n_slugs_verified` **0**, counts all zero. **THE GATE ENUMERATES FAILURES
-  INSTEAD OF REQUIRING SUCCESS**: it refuses `NOT_VERIFIED_AGAINST_CHAINLINK`, any `DISAGREE`, and any
-  `UNAVAILABLE`/`UNRESOLVED` -- **an empty verification is none of the three.** A door that names the ways in
-  cannot know about one it was not told about. **BOUND ON IT**: `is_final_for_quotation` is correctly **False**,
-  so nothing quotable escaped -- **the label held and the door did not**, and the residual risk is a caller that
-  infers verification from the absence of a refusal. **So R-810's routing is still live at the current code**:
-  the user's reproduction as a falsifier would fail today.
-  (3) ***THE SECOND HIGH VERIFIED IN ITS STRONGEST FORM***: `build_reference` accepts `placement_latency_ms`, and
-  of the **fourteen** modules that call it -- 22 call sites in phase4 alone -- **ZERO pass the keyword**.
-  ***THREE PROGRESSIVELY STRONGER READINGS OF ONE FACT***: round 281 (mine, from the default), round 283 (REV
-  §7, the day path never calls it), round 284 (the user, no caller anywhere passes it). Each subsumes the last,
-  and only the third explains why **BE 101 must start at the BUILDER**: a parameter no caller supplies is not a
-  switch that is off, it is a switch that is not wired. BE 101 rebuilds **one day (09-05) at L = 250 into a NEW
-  artifact path** and prices it against the landed **88,698 / 81,238 c** -- a new path, so the comparison is
-  between two artifacts rather than an artifact and a memory. **Tonight's four re-runs stay at L = 0 unless the
-  user rules otherwise, each receipt stating its L from the book's builder receipt** -- the assumption becomes a
-  FIELD rather than something to remember.
-  (4) **DA 131 MEASURED THE HARM MY ROUND-283 FLAG WATCHED FOR.** I recorded the two new row kinds under an
-  unchanged `schema_version` as "watched, not objected to"; DA has landed (+258) and its subject reads "**a
-  pre-DE-136 reader was measured skipping them silently**". The rule-4 shape -- a silent skip rather than a named
-  status -- measured rather than argued, with `SETTLEMENT_SCALARS_DISAGREE` and a named `why` for a ledger
-  carrying neither kind. The user's own checks (`git diff --check`, `py_compile`) passed with **no files
-  modified**.
-  (5) ***THE SIXTH COMPOSITION IS NOT BUILT***: `wt-rr` is still at `a54dcc2`, the FIFTH head, so **the tree the
-  re-runs will use does not yet contain the fix that gates them**, and REV 105 waits on a head that does not
-  exist. "DE 139 landed" and "the sixth composition exists" are different facts and only the first is true.
-  GO #8 unchanged (`5020f96`, `?? data`, TENTH consecutive round); freeze holds a TWENTY-FOURTH round.
-  COUNTS (by YAML parse): flags 2274 -> 2289, provenance 1819 -> 1834 (fifteen written, fifteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 266 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -331,6 +324,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 287, R-815..R-818 swept (6461cf2 -> cd1adcc) ---
+  THE_USER_COMMITTED_849bef2_HIMSELF_ON_TOP_OF_MY_OWN_STATE_COMMIT: AUTHOR-yqq-PARENT-e86e467
+  AND_REV_106s_REFINEMENT_IS_EXACT_AT_BOTH_TREES: PRODUCER-HAD-files-SUBBLOCK-DROPPED-THEM
+  SO_THE_STOP_WAS_RIGHT_AND_I_CAN_NAME_WHAT_IT_BOUGHT: FOUR-ARTIFACTS-STAMPED-FINAL-BY-A-WEAKER-GATE
+  THE_EIGHTH_HEAD_CARRIES_THE_USERS_ASSERTION_AND_ONLY_ITS_INPUT_IS_CONSTRUCTED: _with_moved_cascade-ZEROES-PHASE4
+  AND_THE_COORDINATORS_CONDITIONAL_IS_GONE_NOT_DORMANT: ONE-AT-b48af21-ZERO-AT-33e8584
+  EXPECTED_CHECKS_MOVED_394_TO_395_AND_STAYED: 850c166-394-USER-395-EIGHTH-395
+  THE_RUNNING_UNIT_CARRIES_supersedes_ON_ITS_OWN_COMMAND_LINE: AND-THE-DECLARED-flock--n--E-75
+  AND_THE_TWO_STOPS_LEFT_THE_DISK_UNCHANGED: ONE-09-03-ARTIFACT-STILL-DATED-0854
+  GO_8s_v2_SUFFICIENCY_IS_TRUE_AT_THE_DATA_NOT_ONLY_IN_THE_CODE: ALL-FOUR-KEYS-PRESENT-NONE-MISSING
+  BE_101s_L_250_POINT_VERIFIED_AT_THE_ROW_AND_ITS_CROSS_CHECK_IS_THE_STRONG_PART: 23947-EXACTLY-AND-0.0042-c
+  THE_MAGNITUDE_STATED_PLAINLY_ON_ONE_DAY_AND_ONE_POINT: 97.57-PERCENT-OF-THE-RULED-TOTAL-GONE
+  BUT_THE_L_250_TOTAL_IS_A_SMALL_DIFFERENCE_OF_TWO_LARGE_LEGS: 0.478-PERCENT-OF-THE-RESIDUAL-LEG
+  SO_ITS_LEG_LEVEL_SENSITIVITY_IS_FIFTY_FIVE_TIMES_THE_LANDED_BOOKS: A-ONE-PERCENT-LEG-ERROR-FLIPS-THE-SIGN
+  BUILD_TIME_DOES_NOT_FALL_WITH_L_WHICH_PRICES_THE_WHOLE_GRID: 2588-s-AGAINST-1696-DROPPING-23947
+  wt_rr_IS_AT_THE_EIGHTH_HEAD_WITH_TEN_PINS_AND_THE_FREEZE_HOLDS_A_TWENTY_SEVENTH_ROUND: 33e8584-AND-5020f96-THIRTEENTH
   # --- MEM round 286, R-813 and R-814 swept (ef27921 -> 6461cf2) ---
   REV_105_IS_ONE_VERDICT_FOR_FOUR_AND_wt_rr_MEETS_ITS_PRE_LAUNCH_CONDITIONS: 850c166-AND-EXACTLY-??-data
   THE_09_03_DAY_LEVEL_FACT_REPRODUCED_INDEPENDENTLY_AT_THE_VENUE_RECORD: 287-OF-288-THE-1520Z-WINDOW-ABSENT
@@ -26668,6 +26677,178 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 287, 2026-09-07T17:26:35Z (the clock read by which every measurement below was complete) ---
+  THE_USER_COMMITTED_849bef2_HIMSELF_ON_TOP_OF_MY_OWN_STATE_COMMIT:
+    prov: CHECKED
+    artifact: git:849bef2dfe4b3e454e59d5ee2b3cf4473fd0bd35
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      Verified at the object: **author AND committer `yqq <yuqing002@ntu.edu.sg>`, 2026-09-07T16:54:48Z**, subject
+      "Fix P003 settlement verification and ledger reads", `de_multiday_gate1_runner.py` **+222/-53** and
+      `de_decision_ledger.py` **+69**. ***ITS PARENT IS `e86e467` -- MY OWN ROUND-286 STATE COMMIT*** -- so the user
+      committed straight onto the tip my last round left, and it is **NOT an ancestor of `850c166`** (the composition
+      the four re-runs were executing) **nor of `33e8584`** (DE took its BYTES rather than merging, which is why the
+      blob comparison is the thing that makes the composition checkable).
+  AND_REV_106s_REFINEMENT_IS_EXACT_AT_BOTH_TREES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      ***THE DECIDING FACT OF THE DAY, AND I READ IT IN BOTH TREES RATHER THAN TAKING EITHER SEAT'S WORD.*** At
+      `850c166` the producer DOES have the file list -- `chainlink_streams(...)` builds `"files": _names` at `:4966`
+      and is passed whole as `stream_provenance=_cl801` at `:7048` -- but the sub-block
+      `verify_winners_against_chainlink` constructs at `:5035-5042` carries **exactly four keys**
+      (`n_hourly_files`, `files_digest`, `reader_module`, `hours`) and **`files` is not among them**. At `33e8584`
+      the same construction carries a **fifth key**, `"files": (stream_provenance or {}).get("files")`. **So it is
+      not that the head "did not record files" -- the producer had them and the sub-block dropped them on the way
+      through**, which is REV 106's refinement of the coordinator's reading, and it is right.
+  SO_THE_STOP_WAS_RIGHT_AND_I_CAN_NAME_WHAT_IT_BOUGHT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_106_DELTA_849bef2_2026-09-07.md
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      What the two stops bought, in the shape that makes it checkable rather than rhetorical: an artifact produced
+      under `850c166` would record a `stream_provenance` block the USER's new
+      `chainlink_stream_provenance_check` **can never pass** (it re-reads the named files, and the names are not
+      there) -- while `850c166`'s own weaker gate **would have stamped `is_final_for_quotation: True`**. REV: "the
+      alternative was four artifacts whose finality verdict the next commit would withdraw." The second stop bought
+      something different and equally concrete: **all four days on IDENTICAL bytes**, since a cell that differed
+      between R1 and R2..R4 would leave the days incomparable in the one dimension the re-runs exist to fix.
+      **Three stops, ~20 minutes of compute, nothing written** -- and I verified the "nothing written" separately.
+  THE_EIGHTH_HEAD_CARRIES_THE_USERS_ASSERTION_AND_ONLY_ITS_INPUT_IS_CONSTRUCTED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      REV 106 S4a's cell read at `33e8584:8096-8105`: `_with_moved_cascade(params)` deep-copies through
+      `json.loads(json.dumps(params))` and sets phase4's `sha256` to `"0" * 64`, then hands that to **the USER's own
+      `refuses(...)` call with the user's message verbatim** ("KNOWN-BAD: the frozen params refuse on the moved
+      phase4 cascade module instead of letting the battery run through a different null producer",
+      `BE_CASCADE_DIFFERS`). It sits directly beside the pre-existing `verify_be_module(P, actual_sha="0"*64)` cell
+      it was modelled on. **The assertion is the user's and only the INPUT is constructed** -- which is why it fires
+      in a tree at the pin and a tree off it alike, where the applicability gate fired in only one.
+  AND_THE_COORDINATORS_CONDITIONAL_IS_GONE_NOT_DORMANT:
+    prov: CHECKED
+    artifact: git:b48af21e1b50b8ea452a6efb5a205991f753899d
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      A withdrawal that leaves the withdrawn thing in the tree is not a withdrawal. Counted: the conditional's own
+      marker string **"THIS IS NOT A PASS" appears ONCE at `b48af21`** (the seventh head, where the coordinator's
+      37-line applicability block lived) **and ZERO times at `33e8584`**. So R-817's "WITHDRAWN AND GONE" is true in
+      the bytes, and no skip is counted anywhere in the eighth head's 395.
+  EXPECTED_CHECKS_MOVED_394_TO_395_AND_STAYED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      Read at all three heads: `EXPECTED_CHECKS = 394` at `850c166`, **395** at the user's `849bef2`, **395** at
+      `33e8584`. So the user's single added cell is accounted for in the declared total, it survived both the
+      coordinator's conditional and REV's replacement of it, and the "PASS 395 / 0 disarmed / 0 skipped" REV drove in
+      both trees is measured against a number that moved for a named reason.
+  THE_RUNNING_UNIT_CARRIES_supersedes_ON_ITS_OWN_COMMAND_LINE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      ***THE STRONGEST FORM OF REV 105'S LAUNCH CONDITION IS NOT THAT THE FLAG EXISTS BUT THAT THE RUNNING UNIT
+      PASSES IT***, and it does: `deRR20260903.service`'s own `ExecStart` reads `/usr/bin/flock -n -E 75
+      /home/yuqing/ctaNew/data/.heavy_run.lock ... de_early_read.py --early-read-day 2026-09-03 --supersedes
+      .../p003_de_early_read_day_20260903__20260907T085436Z.json` -- the day's head artifact, the exact target REV
+      105 named (`5c8a58f5...`), and the declared conflict code `-E 75` in the wrapper. Five fields read WHILE
+      loaded at 17:22:51Z: `loaded / active / running`, `ExecMainStatus 0`, `Result success`, InvocationID
+      `098a441ea4c44689822b033325fc3473` (R-818's `098a441e...`), `ActiveEnterTimestamp` **17:16:15Z** exactly as the
+      entry says, MemoryCurrent 1.686 GB at 396 s in.
+  AND_THE_TWO_STOPS_LEFT_THE_DISK_UNCHANGED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      "Nothing written" checked at the directory rather than taken from the entry: the ONLY 09-03 early-read artifact
+      on disk is **`p003_de_early_read_day_20260903__20260907T085436Z.json`, dated Sep 7 08:54** -- the original, and
+      the supersession target of the run now going -- and **no 09-03 decision ledger exists at all**. Both stops and
+      the relaunch have added nothing, so the supersession chain has never been exercised on a real second artifact
+      (the gap I first recorded at round 279 remains closed in code and open in data).
+  GO_8s_v2_SUFFICIENCY_IS_TRUE_AT_THE_DATA_NOT_ONLY_IN_THE_CODE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260905__20260907T124104Z.jsonl.gz
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      R-818 keeps GO #8 at `5020f96` on DE's one-line answer from the code -- "a v2 ledger is sufficient input for
+      the later valuation; moving it buys a schema label, not data", since `settle_value_cents` needs side,
+      `px_cents`, size and slug. **Checked at a real v2 FILL row instead of at the code**: all four keys are present
+      and **none is missing**. So the claim holds at the data, and the stated cost -- 09-07 needing one re-run for
+      its settlement null, which it needs regardless -- is the whole of it, with `wt-de` left untouched for the bytes
+      REVIEW 103 cleared.
+  BE_101s_L_250_POINT_VERIFIED_AT_THE_ROW_AND_ITS_CROSS_CHECK_IS_THE_STRONG_PART:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      Verified AT Q-BE-344 as instructed, not re-derived. 09-05 baseline, landed (pre-parameter) vs L = 250:
+      generations **266,592 on BOTH** (the parameter drops TRANCHES, not generations); fills **49,668 -> 25,721**;
+      dropped tranches **none recorded -> 23,947**; fills leg **88,698.1734 -> 37,191.4839**; trades leg
+      -225,644.56 -> -411,502.44; residual 306,882.86 -> 413,477.01; **ruled total 81,238.2997 -> 1,974.5755 c**.
+      ***THE CROSS-CHECK IS THE PART THAT CARRIES THE WEIGHT***: BE 100 measured from the LEDGER's timestamps alone
+      that **23,947** fills land within 250 ms carrying 79,263.72 c; the rebuild drops **exactly 23,947** -- equal,
+      not approximately -- and 81,238.2997 - 79,263.72 = 1,974.5797 against the measured 1,974.5755, **+0.0042 c**,
+      which is BE 100's own two-decimal rounding. **Two routes sharing no code, the same number.**
+  THE_MAGNITUDE_STATED_PLAINLY_ON_ONE_DAY_AND_ONE_POINT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      The answer to the user's "put a 250ms latency", arithmetic done on BE's own two numbers: the never-cancel
+      maker's 09-05 ruled total **retains 2.4306 % and loses 97.5694 %** at L = 250. The fills leg retains 41.93 %
+      and the fill COUNT retains 51.79 % -- **so half the fills are lost and 97.6 % of the money is**, because the
+      fills that go are not an average sample of the fills that stay. BE draws no conclusion from one point and
+      neither do I: **one day, one L, the maker-only arm, no null**. But the number is the number, and it is the
+      single most consequential figure produced today.
+  BUT_THE_L_250_TOTAL_IS_A_SMALL_DIFFERENCE_OF_TWO_LARGE_LEGS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      ***A PROPERTY OF THE L = 250 POINT NOBODY HAS STATED, AND IT IS NOT A DISPUTE OF IT.*** At L = 250 the ruled
+      total is **1,974.57 c standing between legs of -411,502.44 and +413,477.01** -- the total is **0.478 % of the
+      residual leg**. On the landed book it was 81,238.30 against -225,644.56 / +306,882.86, i.e. **26.472 %**. The
+      latency does not shrink the legs; **it grows them and makes them nearly cancel** (both legs roughly DOUBLE
+      while the total falls 41-fold).
+  SO_ITS_LEG_LEVEL_SENSITIVITY_IS_FIFTY_FIVE_TIMES_THE_LANDED_BOOKS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      The consequence, quantified: the L = 250 total is **55.4x more sensitive to a proportional error in either leg**
+      than the landed book's total. A 1 % error in the residual leg moves the landed total by **4 %** of itself and
+      the L = 250 total by **209 %** -- i.e. it would **flip the sign**. **This does not dispute BE's number**, whose
+      two-route agreement to 0.0042 c is strong evidence it is computed right; it says the QUANTITY is fragile to
+      leg-level error in a way the landed one is not, and that is an argument for the CURVE over the single point --
+      a near-cancellation is exactly where one point tells you least.
+  BUILD_TIME_DOES_NOT_FALL_WITH_L_WHICH_PRICES_THE_WHOLE_GRID:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      BE's cost finding, kept because it governs what the user can afford to ask for: the L = 250 rebuild took
+      **2,588.4 s (43.1 min) at 3.574 GB against the landed 09-05 build's 1,696.4 s** -- **build time does NOT fall
+      with L** even though 23,947 tranches were dropped. So the grid does not get cheaper at the top. BE's measured
+      forward costs: Stage 1 remainder ~1.9 h, Stage 2 ~12.2 h, and **the ARMS' curve at 1.25 runner-hours per
+      (day, L) -- 7.7 h per L across four days, 11.1 h for a six-point grid on 09-05 alone, 46.3 h for all four
+      days**. "The maker-only curve is the cheap half by roughly five to one."
+  wt_rr_IS_AT_THE_EIGHTH_HEAD_WITH_TEN_PINS_AND_THE_FREEZE_HOLDS_A_TWENTY_SEVENTH_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T17:26:35Z
+    said: >-
+      Standing, measured at 17:23:28Z: **`wt-rr` HEAD `33e8584`, status exactly `?? data`, and TEN cascade pins 0
+      mismatched measured INSIDE that tree**; phase4 there hashes `ee4034c15c274982...` = v19's pin, so REV 106's
+      warning (do NOT take mm-research's phase4 -- it would break the pin REVIEW 105 cleared, change the null
+      producer on the draw path, and make the re-runs not like-for-like with the artifacts they supersede) is
+      honoured in the bytes. `origin/mm-research-e3-composition` = `33e8584`. **`wt-de` at `5020f96`, `?? data`, the
+      THIRTEENTH consecutive round**; GO #8 there at 00:10Z unchanged. `params_v20` / `design_v28` **ABSENT** (heads
+      v19/v27) -- the freeze's **twenty-seventh** round. Three loosenings REV 106 named (the tautological cascade
+      positive control, the R-648 unit-outcome cell's dropped assertions, the flock cell's 5 s retry) are routed to
+      DE and none blocks.
   # --- MEM round 286, 2026-09-07T16:46:47Z (the clock read by which every measurement below was complete) ---
   REV_105_IS_ONE_VERDICT_FOR_FOUR_AND_wt_rr_MEETS_ITS_PRE_LAUNCH_CONDITIONS:
     prov: CHECKED
