@@ -4,16 +4,16 @@
   "commits_behind_origin_at_deploy": 0,
   "deploy_host": "ip-172-31-78-41",
   "deploy_tree": "/home/yuqing/ctaNew",
-  "deployed_at_utc": "2026-09-07T02:11:49Z",
+  "deployed_at_utc": "2026-09-07T05:55:23Z",
   "deployed_by": "DA seat (pm-da)",
-  "deployed_commit": "9abba110a9a9b269677e735e28e61e456d3df8fc",
+  "deployed_commit": "bbb618fc2e1970a44471040f5939627a1877440f",
   "deployed_commit_can_be_orphaned": "PROVENANCE, NOT A GATE, AND THE LIMITATION IS NAMED: a later history rewrite (rebase, amend, force-push) can leave `deployed_commit` pointing at a commit no longer reachable from any branch -- the same dangling-pointer class as any recorded commit ref. NOTHING AT RUN TIME DEPENDS ON IT: the 00:06Z gate compares DIGESTS, and an orphaned commit id degrades what a reader can look up, never what the unit will do. Recorded because an unstated limitation is indistinguishable from an unnoticed one (reviewer 118af18).",
   "drift_exit_code": 7,
   "files": [
     {
-      "bytes": 33628,
+      "bytes": 34534,
       "path": "live/pm_research/da_midnight_verify.sh",
-      "sha256": "2e6d34c5a23e6aadd03654187f59674a1f440b285f9ff3569c48cdbd6c3f0788",
+      "sha256": "abd8ce275aabf362ef60382c29b526d56ead9b0a0d112375c697f510b78c4670",
       "tier": "REFUSE",
       "why": "executed directly by the unit on every run (ExecStart, or invoked by it before any write)"
     },
@@ -25,9 +25,9 @@
       "why": "executed directly by the unit on every run (ExecStart, or invoked by it before any write)"
     },
     {
-      "bytes": 84467,
+      "bytes": 86937,
       "path": "live/pm_research/da_blackout_mask.py",
-      "sha256": "62dbcd769e47f96dd8dc1fa547a6cd9af6e4db926f5f4a17f2581338b88c3e27",
+      "sha256": "33298a2f9912a4a754c0a041ce268a989f73315b1771073fbbb369f088ef14dd",
       "tier": "REFUSE",
       "why": "entry point run by the unit"
     },
@@ -283,7 +283,7 @@
   "module_dir_dirty_at_deploy": false,
   "n_refuse": 7,
   "n_report": 26,
-  "origin_mm_research_at_deploy": "9abba110a9a9b269677e735e28e61e456d3df8fc",
+  "origin_mm_research_at_deploy": "bbb618fc2e1970a44471040f5939627a1877440f",
   "protocol": "P003_DA_DEPLOY_RECORD_V1",
   "record_schema": 1,
   "unit_exit_codes": {
