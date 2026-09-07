@@ -1,27 +1,65 @@
 #!/usr/bin/env bash
-# Land register rows / entries in P-2026-003's COORDINATION.md (REV 83 §4, R-717).
-# Usage: land_register_row.sh <ids-regex> <commit-msg-file> [--dry]
-#   <ids-regex>: the row/entry ids this landing adds, e.g. 'Q-DA-332' or '(Q-DE-111|Q-DE-112)' or 'R-717'.
-#   The working-tree register must differ from HEAD ONLY by added lines whose id matches the regex.
-# Closure = the post-condition on the commit's OWN diff, not the hold: added rows = exactly the caller's ids,
-# zero foreign rows, no landed line changed or removed. Trailer: Landed-By: land_register_row.sh <sha256 of this file>.
+# Land register rows in P-2026-003's COORDINATION.md (REV 83 §4, R-717; SERIALISED at R-751).
+# Usage:
+#   land_register_row.sh <ids-regex> <commit-msg-file> [--dry]                  # legacy: the caller already inserted its row(s)
+#   land_register_row.sh --row <rowfile> <ids-regex> <commit-msg-file> [--dry]  # serialised: the SCRIPT inserts the row(s) under the lock
+#   <ids-regex>: the row ids this landing adds, e.g. 'Q-DA-332' or '(Q-DE-111|Q-DE-112)'.
+#   <rowfile>: one complete table row per line, each beginning "| <id> |"; inserted after the LAST "| Q-" row of the table.
+# THE LOCK (R-751): an exclusive flock on <root>/.git/p003_register.lock is held from before the fetch to after the push, so two
+#   seats' landings SERIALISE instead of racing on one file (two whole-file read-modify-writes collided on 2026-09-07; the
+#   FOREIGN_ROW guard caught both, the fix is serialisation). Waits LOCK_WAIT_S (default 600 s), then exits 12 LOCK_TIMEOUT.
+# Closure = the post-condition on the commit's OWN diff: added rows = exactly the caller's ids, zero foreign rows, no landed line
+#   changed or removed. Trailer: Landed-By: land_register_row.sh <sha256 of this file>.
+# LAND_ROOT / LAND_REMOTE / LAND_BRANCH override the repo root, remote and branch -- for the falsifier
+#   (scripts/land_register_row_falsify.sh), never for a real landing.
 set -u
+ROWF=""; if [ "${1:-}" = "--row" ]; then ROWF="${2:?rowfile}"; shift 2; fi
 IDS="${1:?ids-regex}"; MSGF="${2:?commit-msg-file}"; DRY="${3:-}"
-ROOT=/home/yuqing/ctaNew; REG=orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+ROOT="${LAND_ROOT:-/home/yuqing/ctaNew}"; REMOTE="${LAND_REMOTE:-origin}"; BRANCH="${LAND_BRANCH:-mm-research}"
+REG=orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
 cd "$ROOT" || exit 2
 SELF_SHA=$(sha256sum "$0" | cut -c1-64)
+LOCKF="$(git rev-parse --git-common-dir)/p003_register.lock"
+exec 9>"$LOCKF" || { echo "LOCK_OPEN_FAILED $LOCKF"; exit 12; }
+flock -w "${LOCK_WAIT_S:-600}" 9 || { echo "LOCK_TIMEOUT: another landing has held $LOCKF for ${LOCK_WAIT_S:-600} s"; exit 12; }
+echo "LOCK HELD $(date -u +%H:%M:%SZ) pid $$"
 diff_lines() { git diff --no-color -U0 -- "$REG" | grep -E '^[+-]' | grep -vE '^(\+\+\+|---)'; }
+# 0. ROW MODE: fetch, fast-forward if the register is clean, insert the caller's rows from the file
+if [ -n "$ROWF" ]; then
+  out=$(git fetch -q "$REMOTE" "$BRANCH" 2>&1) || { echo "FETCH FAILED: $out"; exit 9; }
+  if [ -n "$(git status --short -- "$REG")" ]; then echo "HELD REGISTER_DIRTY: another seat's uncommitted edit is in the register -- wait for its commit, do not withdraw it"; exit 3; fi
+  if [ "$(git rev-list --count HEAD..$REMOTE/$BRANCH)" -gt 0 ]; then
+    out=$(git merge -q --ff-only "$REMOTE/$BRANCH" 2>&1) || { echo "HELD BEHIND_AND_NOT_FF: $out"; exit 13; }
+  fi
+  python3 - "$REG" "$ROWF" "$IDS" <<'PY' || exit $?
+import re,sys
+reg,rowf,ids=sys.argv[1:4]
+s=open(reg,encoding='utf-8').read().split('\n')
+rows=[l.rstrip('\r') for l in open(rowf,encoding='utf-8').read().split('\n') if l.strip()]
+if not rows: print("REFUSED EMPTY_ROWFILE"); sys.exit(6)
+pat=re.compile(r'^\| ('+ids+r') \|')
+bad=[l for l in rows if not pat.match(l)]
+if bad: print("REFUSED ROW_ID_MISMATCH: a row does not begin '| <id> |' with an id in ("+ids+"): "+bad[0][:90]); sys.exit(6)
+for l in rows:
+    rid=l.split('|')[1].strip()
+    if any(x.startswith('| '+rid+' |') for x in s): print("REFUSED DUPLICATE_ID: "+rid+" is already in the register (supersede in band with a new id)"); sys.exit(14)
+q=[i for i,l in enumerate(s) if l.startswith('| Q-')]
+if not q: print("REFUSED NO_TABLE: no '| Q-' row found"); sys.exit(15)
+last=q[-1]; s[last+1:last+1]=rows
+open(reg,'w',encoding='utf-8').write('\n'.join(s)); print("INSERTED %d row(s) after line %d" % (len(rows), last+1))
+PY
+fi
 # 1. HOLD + SHAPE: only additions, and every added row/entry line carries one of the caller's ids
 D=$(diff_lines)
 if [ -z "$D" ]; then echo "NOTHING_TO_LAND: the register equals HEAD"; exit 3; fi
 REMOVED=$(echo "$D" | grep -c '^-' || true)
-[ "$REMOVED" -eq 0 ] || { echo "REFUSED REGISTER_EDITED: $REMOVED landed line(s) changed or removed (a landed row is never edited; supersede in band)"; echo "$D" | grep '^-' | head -3 | cut -c1-160; exit 4; }
+[ "$REMOVED" -eq 0 ] || { echo "REFUSED REGISTER_EDITED: $REMOVED landed line(s) changed or removed (a landed row is never edited; supersede in band)"; echo "$D" | grep '^-' | head -3 | cut -c1-160; [ -n "$ROWF" ] && git checkout -q -- "$REG"; exit 4; }
 FOREIGN=$(echo "$D" | grep -E '^\+(\| Q-|### R-)' | grep -vE "^\+(\| |### )?($IDS)\b" | grep -vE "^\+### ($IDS)\b" || true)
 [ -z "$FOREIGN" ] && FOREIGN=$(echo "$D" | grep -E '^\+\| Q-' | grep -vE "^\+\| ($IDS) " || true)
 [ -z "$FOREIGN" ] || { echo "REFUSED FOREIGN_ROW_IN_REGISTER: an added row is not among ($IDS):"; echo "$FOREIGN" | cut -c1-120 | head -3; exit 5; }
 ADDED_IDS=$(echo "$D" | grep -oE "^\+(\| |### )($IDS)\b" | grep -oE "($IDS)" | sort -u | tr '\n' ' ')
 [ -n "$ADDED_IDS" ] || { echo "REFUSED NO_ROW_WITH_THE_CALLER_IDS: the diff adds no line whose id matches ($IDS)"; exit 6; }
-[ "$DRY" = "--dry" ] && { echo "DRY OK: would land [$ADDED_IDS] ($(echo "$D" | grep -c '^+') added lines)"; exit 0; }
+[ "$DRY" = "--dry" ] && { echo "DRY OK: would land [$ADDED_IDS] ($(echo "$D" | grep -c '^+') added lines)"; [ -n "$ROWF" ] && git checkout -q -- "$REG" && echo "DRY: insertion undone"; exit 0; }
 # 2. COMMIT by file pathspec with the trailer
 { cat "$MSGF"; printf '\nLanded-By: land_register_row.sh %s\n' "$SELF_SHA"; } > "$MSGF.landed"
 git add -- "$REG" && git commit -q -F "$MSGF.landed" -- "$REG" || { echo "COMMIT FAILED"; git restore -q --staged --worktree -- "$REG" 2>/dev/null; exit 7; }
@@ -32,10 +70,10 @@ if [ "$PATHS" != "1" ] || [ "$PREM" != "0" ] || [ "$PFOR" != "0" ]; then echo "P
 echo "POST-CONDITION OK: paths 1, removed 0, foreign 0, ids [$ADDED_IDS], trailer $SELF_SHA"
 # 4. PUSH: capture, test, then trim
 for i in 1 2 3; do
-  out=$(git fetch -q origin mm-research 2>&1) || { echo "FETCH FAILED: $out"; exit 9; }
-  if [ "$(git rev-list --count HEAD..origin/mm-research)" -gt 0 ]; then
-    rb=$(git rebase -q origin/mm-research 2>&1) || { git rebase --abort 2>/dev/null; echo "REBASE FAILED: $rb"; exit 10; }
+  out=$(git fetch -q "$REMOTE" "$BRANCH" 2>&1) || { echo "FETCH FAILED: $out"; exit 9; }
+  if [ "$(git rev-list --count HEAD..$REMOTE/$BRANCH)" -gt 0 ]; then
+    rb=$(git rebase -q "$REMOTE/$BRANCH" 2>&1) || { git rebase --abort 2>/dev/null; echo "REBASE FAILED: $rb"; exit 10; }
   fi
-  out=$(git push -q origin mm-research 2>&1) && { echo "PUSHED $(git rev-parse --short HEAD)"; exit 0; }
+  out=$(git push -q "$REMOTE" "HEAD:$BRANCH" 2>&1) && { echo "PUSHED $(git rev-parse --short HEAD)"; exit 0; }
   echo "push refused ($i): $(echo "$out" | tail -1)"; sleep 5
 done; exit 11
