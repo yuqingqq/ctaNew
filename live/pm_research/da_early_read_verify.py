@@ -144,6 +144,44 @@ SEALED_RECEIPT_READ_SCOPE = (
 )
 
 
+#: THE RULING THIS READER MAY PRINT UNDER (R-764, coordinator, routine and
+#: disclosed for overrule). DA 123's check refused two of the four ruled
+#: days; the coordinator then DIFFED the declarations leaf by leaf and ruled
+#: that what differs is the SEAL SCOPE, not the computation. The ruling does
+#: NOT soften the codes -- `verify()` still refuses by name, and this mode
+#: prints BESIDE the refusal, never instead of it. Any OTHER refusal refuses
+#: under this mode too.
+RULED_CODES = ("COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED",
+               "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS")
+RULINGS = {
+    "R-764": {
+        "id": "R-764",
+        "ruled_by": "the coordinator (routine, disclosed for overrule)",
+        "what_was_measured": (
+            "params v14 -> v15 diffed LEAF BY LEAF: 2 leaves changed, both "
+            "the design pointer v21 -> v23. design v21 -> v23 leaf by leaf: "
+            "42 leaves -- the R29/R30 seal-scope clauses, the R22 closure "
+            "names, battery counts, output name, provenance stamps -- and "
+            "the declaration's own text: 'changes_nothing_else: NO "
+            "estimand, NO bar, NO pin'"),
+        "measured_by": "the coordinator at R-764, not by this reader",
+        "therefore": (
+            "for 2026-09-03 and 2026-09-04 the early read's COMPUTATION is "
+            "the sealed runs' computation; what differs is the seal scope "
+            "the run was sealed under and, for 09-03, that the run stamped "
+            "no pin at all"),
+        "the_delta": ("design pointer v21->v23: seal scope and closure "
+                      "naming only; no estimand, bar or pin -- measured by "
+                      "the coordinator at R-764"),
+        "codes_it_rides_beside": list(RULED_CODES),
+        "what_it_does_NOT_do": (
+            "it does not soften a refusal. `verify()` refuses by name "
+            "whatever this mode prints, the code is named in the printed "
+            "table, and every OTHER refusal still refuses here"),
+    },
+}
+
+
 class EarlyReadVerifyRefused(RuntimeError):
     """A named refusal. Every message begins with its own reason code."""
 
@@ -582,7 +620,26 @@ def census_arm_day(doc: dict) -> dict:
 
 
 def verify(path, *, repo_root=None, data_root=None) -> dict:
-    """One artifact, end to end. Every failure raises BY NAME."""
+    """One artifact, end to end. EVERY failure raises BY NAME.
+
+    This entry never softens anything: it is the one the GOs use, and the
+    ruling mode below is a SECOND entry that calls the same checks.
+    """
+    res, err = _verify_parts(path, repo_root=repo_root, data_root=data_root)
+    if err is not None:
+        raise err
+    return res
+
+
+def _verify_parts(path, *, repo_root=None, data_root=None) -> tuple:
+    """(result, the params refusal or None). EVERY OTHER refusal RAISES.
+
+    Only the computation-params refusal is returned rather than raised, and
+    only so `verify_under_ruling` can decide whether a RULING covers it.
+    Nothing else is catchable here: a wrong ruling pair, a relabelled read,
+    a status carrying a number or an extra economic key raises from inside
+    this function exactly as before.
+    """
     root = Path(repo_root) if repo_root else HERE.parents[1]
     #: THE DATA ROOT IS RESOLVED AND SAID. The params check needs the day's
     #: sealed receipt, and a reader must know WHICH ledger answered.
@@ -596,15 +653,29 @@ def verify(path, *, repo_root=None, data_root=None) -> dict:
     #: it is read. Reading provenance out of a receipt whose digest has not
     #: been checked would be trusting bytes nobody pinned.
     receipt = check_receipt_against_the_bar(doc, bar, data_root=data_root)
-    params = check_computation_params(doc, bar, data_root=data_root)
+    #: CAUGHT, NOT SOFTENED: returned to the caller, which raises it unless a
+    #: RULING covers the code. The other four checks below still raise.
+    params, params_err = None, None
+    try:
+        params = check_computation_params(doc, bar, data_root=data_root)
+    except EarlyReadVerifyRefused as e:
+        params_err = e
+        params = {"REFUSED": str(e).split(":")[0],
+                  "measured": _params_declared_by_the_sealed_run(
+                      json.loads((Path(data_root) / "pm_5min/derived"
+                                  / Path(str(bar["path"])).name).read_bytes()))
+                  if (Path(data_root) / "pm_5min/derived"
+                      / Path(str(bar["path"])).name).is_file() else None,
+                  "the_artifact_loaded": (doc.get("computation_params")
+                                          or {})}
     labels = check_labels(doc, ruling)
     statuses = check_not_computed(doc)
     census = census_arm_day(doc)
     return {
         "protocol": PROTOCOL, "artifact": str(path),
         "artifact_sha256": _sha(Path(path)), "day": day,
-        "IS_A_VERIFICATION": True,
-        "verdict": "VERIFIED",
+        "IS_A_VERIFICATION": params_err is None,
+        "verdict": "VERIFIED" if params_err is None else "REFUSED",
         "ruling": {"name": ruling["name"], "sha256": ruling["sha256"],
                    "version": ruling["version"],
                    "is_the_current_head": ruling["is_the_current_head"],
@@ -629,7 +700,101 @@ def verify(path, *, repo_root=None, data_root=None) -> dict:
             "every number below is DE's, read from the artifact and checked "
             "for presence and shape. This reader re-derives no economic "
             "quantity and opens no book"),
-    }
+    }, params_err
+
+
+def _version_of(path_or_name) -> str:
+    """`…_params_v14.json` -> `v14`. Computed from the name, never typed."""
+    m = re.search(r"_v(\d+)\.json$", str(Path(str(path_or_name)).name))
+    return f"v{m.group(1)}" if m else "an unversioned file"
+
+
+def params_label(res: dict) -> str:
+    """THE PER-DAY LABEL, from what was MEASURED on that day's receipt.
+
+    Three readings, three sentences -- and the counts clause rides along
+    where it applies, because the two facts a reader must hold about
+    2026-09-03 are that it was computed under a later params version AND
+    that its three counts were never sealed.
+    """
+    cp = res.get("computation_params") or {}
+    read_v = _version_of((cp.get("the_artifact_loaded") or {}).get("path"))
+    if not cp.get("REFUSED"):
+        base = "params match"
+    else:
+        m = cp.get("measured") or {}
+        if cp["REFUSED"] == "COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED":
+            sealed_v = _version_of(m.get("reconstructed_path"))
+            base = (f"computed under {read_v}; sealed run RECONSTRUCTED "
+                    f"{sealed_v}")
+        else:
+            sealed_v = _version_of(m.get("declared_path"))
+            base = f"computed under {read_v}; sealed run stamped {sealed_v}"
+    if "VISIBLE IN THE OPEN" in counts_provenance(res.get("day")):
+        base += ("; counts visible since 2026-09-06T14:01Z "
+                 "(eight-name scope)")
+    return base
+
+
+def verify_under_ruling(path, *, ruling_id="R-764", repo_root=None,
+                        data_root=None) -> dict:
+    """THE RULING RIDES BESIDE THE REFUSAL -- it never replaces it.
+
+    For an artifact refused ONLY by a code the ruling covers, the table is
+    printed WITH a MATERIALITY line that names the code, both params
+    versions, the measured delta and the ruling's id. ***Every other
+    refusal still refuses here***: a wrong ruling pair, a relabelled read,
+    a status carrying a number and an extra economic key all raise out of
+    `_verify_parts` before this function sees anything.
+    """
+    ruling = RULINGS.get(str(ruling_id))
+    if ruling is None:
+        raise EarlyReadVerifyRefused(
+            f"UNKNOWN_RULING: {ruling_id!r} is not a ruling this reader "
+            f"carries ({sorted(RULINGS)}). A mode that printed under a "
+            f"ruling nobody landed would be this reader ruling.")
+    res, err = _verify_parts(path, repo_root=repo_root, data_root=data_root)
+    if err is None:
+        return dict(res, under_ruling={
+            "applies": False,
+            "why": "nothing was refused; the ruling had nothing to ride "
+                   "beside"})
+    code = str(err).split(":")[0]
+    if code not in ruling["codes_it_rides_beside"]:
+        #: NOT COVERED -- and the refusal is re-raised unchanged.
+        raise err
+    cp = res.get("computation_params") or {}
+    m = cp.get("measured") or {}
+    sealed_path = (m.get("declared_path") if code
+                   == "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS"
+                   else m.get("reconstructed_path"))
+    sealed_sha = (m.get("declared_sha256") if code
+                  == "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS"
+                  else m.get("reconstructed_sha256"))
+    return dict(res, under_ruling={
+        "applies": True, "ruling_id": ruling["id"],
+        "refusal_code": code,
+        "the_refusal_stands": (
+            "this artifact IS refused by `verify()`, which is the entry the "
+            "GOs use. This mode prints beside that refusal and names it"),
+        "the_sealed_runs_params": {
+            "version": _version_of(sealed_path), "path": sealed_path,
+            "sha256": sealed_sha,
+            "state": ("RECONSTRUCTED" if code
+                      == "COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED"
+                      else "STAMPED")},
+        "the_reads_params": {
+            "version": _version_of(
+                (cp.get("the_artifact_loaded") or {}).get("path")),
+            "path": (cp.get("the_artifact_loaded") or {}).get("path"),
+            "sha256": (cp.get("the_artifact_loaded") or {}).get("sha256")},
+        "the_measured_delta": ruling["the_delta"],
+        "what_was_measured": ruling["what_was_measured"],
+        "measured_by": ruling["measured_by"],
+        "therefore": ruling["therefore"],
+        "ruled_by": ruling["ruled_by"],
+        "overrulable": True,
+    })
 
 
 def print_table(res: dict) -> str:
@@ -653,6 +818,21 @@ def print_table(res: dict) -> str:
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
     lines.append(f"  the three COUNTS on this day: "
                  f"{counts_provenance(res['day'])}")
+    ur = res.get("under_ruling") or {}
+    if ur.get("applies"):
+        lines.append(
+            f"  MATERIALITY -- REFUSED {ur['refusal_code']}, PRINTED UNDER "
+            f"{ur['ruling_id']}: the sealed run's params "
+            f"{ur['the_sealed_runs_params']['version']} "
+            f"{str(ur['the_sealed_runs_params']['sha256'])[:16]}… "
+            f"({ur['the_sealed_runs_params']['state']}) against this read's "
+            f"{ur['the_reads_params']['version']} "
+            f"{str(ur['the_reads_params']['sha256'])[:16]}… -- "
+            f"{ur['the_measured_delta']}. The refusal STANDS; "
+            f"{ur['ruling_id']} is {ur['ruled_by']} and is overrulable.")
+        lines.append(f"  this day: {params_label(res)}")
+        return "\n".join(lines)
+    lines.append(f"  this day: {params_label(res)}")
     lines.append(f"  the computation is the SEALED RUN'S: params "
                  f"{res['computation_params']['the_artifact_loaded']['sha256'][:16]}"
                  f"… equals the digest "
@@ -994,6 +1174,108 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{_moved['the_receipts_own_two_readings_agree']}; a planted D_E0 "
        f"and null_mean reach none of {sorted(_leak_probe)}")
 
+    # -- R-764: THE RULING RIDES BESIDE THE REFUSAL, NEVER INSTEAD ------
+    _rd = tempfile.TemporaryDirectory()
+    _rp = Path(_rd.name)
+
+    def _write(base, day):
+        p = _rp / f"{EARLY_FAMILY}_{day.replace('-', '')}__20260101T000030Z.json"
+        p.write_text(json.dumps(base))
+        return p
+
+    _u03 = _write(_a03, "2026-09-03")
+    _u04 = _write(_a04, "2026-09-04")
+    _u06 = _write(good, "2026-09-06")
+    _ur03 = verify_under_ruling(_u03, repo_root=root)
+    _ur04 = verify_under_ruling(_u04, repo_root=root)
+    _ur06 = verify_under_ruling(_u06, repo_root=root)
+    _t03, _t04, _t06r = (print_table(_ur03), print_table(_ur04),
+                         print_table(_ur06))
+    _still03 = "ADMITTED"
+    try:
+        verify(_u03, repo_root=root)
+    except EarlyReadVerifyRefused as e:
+        _still03 = str(e).split(":")[0]
+    ck("R-764 -- ***THE RULING RIDES BESIDE THE REFUSAL AND NEVER REPLACES "
+       "IT***: the SAME 09-03 artifact still REFUSES under `verify()`, the "
+       "entry the GOs use, while `--print-under-ruling R-764` prints the "
+       "table with a MATERIALITY line that NAMES the refusal code, both "
+       "params versions, the measured delta and the ruling's id",
+       _still03 == "COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED"
+       and _ur03["under_ruling"]["applies"] is True
+       and _ur03["verdict"] == "REFUSED"
+       and _ur03["IS_A_VERIFICATION"] is False
+       and "MATERIALITY -- REFUSED "
+       "COMPUTATION_PARAMS_RECONSTRUCTED_NOT_STAMPED" in _t03
+       and "R-764" in _t03 and "The refusal STANDS" in _t03
+       and "seal scope and closure naming only" in _t03,
+       f"verify() -> {_still03}; under the ruling -> verdict "
+       f"{_ur03['verdict']}, applies "
+       f"{_ur03['under_ruling']['applies']}, sealed "
+       f"{_ur03['under_ruling']['the_sealed_runs_params']['version']} "
+       f"({_ur03['under_ruling']['the_sealed_runs_params']['state']}) vs "
+       f"read {_ur03['under_ruling']['the_reads_params']['version']}")
+
+    ck("AND THE PER-DAY LABEL SAYS WHICH STATE THE DAY IS IN, in the words "
+       "the table carries: 09-03 'computed under v15; sealed run "
+       "RECONSTRUCTED v14; counts visible since 2026-09-06T14:01Z "
+       "(eight-name scope)'; 09-04 'computed under v15; sealed run stamped "
+       "v14'; 09-06 'params match'",
+       params_label(_ur03) == ("computed under v15; sealed run "
+                               "RECONSTRUCTED v14; counts visible since "
+                               "2026-09-06T14:01Z (eight-name scope)")
+       and params_label(_ur04) == ("computed under v15; sealed run stamped "
+                                   "v14")
+       and params_label(_ur06) == "params match"
+       and _ur04["under_ruling"]["refusal_code"]
+       == "COMPUTATION_PARAMS_NOT_THE_SEALED_RUNS"
+       and _ur06["under_ruling"]["applies"] is False,
+       f"09-03: {params_label(_ur03)} | 09-04: {params_label(_ur04)} | "
+       f"09-06: {params_label(_ur06)} (ruling applies "
+       f"{_ur06['under_ruling']['applies']})")
+
+    def _under_ruling_refuses(mutate, base=None, day="2026-09-06"):
+        bad = json.loads(json.dumps(base if base is not None else good))
+        mutate(bad)
+        p = _write(bad, day)
+        try:
+            verify_under_ruling(p, repo_root=root)
+            return "ADMITTED"
+        except EarlyReadVerifyRefused as e:
+            return str(e).split(":")[0]
+
+    _u_pair = _under_ruling_refuses(
+        lambda b: b["ruling"].update({"sha256": "e" * 64}))
+    _u_num = _under_ruling_refuses(
+        lambda b: b["economics_field_availability"][
+            "not_computed_by_this_path"].update(
+                {"rho_adverse_over_spread": 0.42}))
+    _u_lab = _under_ruling_refuses(lambda b: b.update(
+        {"is_a_validation": True}))
+    _u_extra = _under_ruling_refuses(
+        lambda b: b["day_run"]["per_day_sealed_artifacts"][0].update(
+            {"D_E_MINUS_R": -12.0}))
+    _u_unknown = "ADMITTED"
+    try:
+        verify_under_ruling(_u06, ruling_id="R-999", repo_root=root)
+    except EarlyReadVerifyRefused as e:
+        _u_unknown = str(e).split(":")[0]
+    _rd.cleanup()
+    ck("KNOWN-BADS, DRIVEN UNDER THE MODE ITSELF -- ***EVERY OTHER REFUSAL "
+       "STILL REFUSES WITH `--print-under-ruling`***: a wrong ruling pair, a "
+       "status carrying a NUMBER, a relabelled read and an extra economic "
+       "key all refuse under it, and an UNKNOWN ruling id refuses too "
+       "(a mode that printed under a ruling nobody landed would be this "
+       "reader ruling)",
+       _u_pair == "EARLY_READ_RULING_NOT_THE_PAIR"
+       and _u_num == "EARLY_READ_STATUS_CARRIES_A_NUMBER"
+       and _u_lab == "EARLY_READ_LABEL_DIFFERS"
+       and _u_extra == "EARLY_READ_EXTRA_ECONOMIC_KEY"
+       and _u_unknown == "UNKNOWN_RULING",
+       f"wrong pair -> {_u_pair}; a number in a status -> {_u_num}; "
+       f"is_a_validation true -> {_u_lab}; an extra economic key -> "
+       f"{_u_extra}; ruling R-999 -> {_u_unknown}")
+
     #: REV 90 S A2 -- THE COUNTS' PROVENANCE IS SAID PER DAY.
     #: 09-06 is driven END TO END through `verify` + `print_table`; 09-03
     #: is driven at the mapping, because its sealed receipt is
@@ -1061,6 +1343,12 @@ def main() -> int:
     ap.add_argument("--verify", metavar="ARTIFACT")
     ap.add_argument("--print", dest="do_print", action="store_true",
                     help="print the coordinator's table (values)")
+    ap.add_argument("--print-under-ruling", dest="under_ruling",
+                    default=None, metavar="RULING_ID",
+                    help="print the table BESIDE a refusal the named ruling "
+                         "covers (R-764). The refusal still stands and is "
+                         "named in the table; every other refusal still "
+                         "refuses under this mode")
     ap.add_argument("--data-root", default=None)
     ap.add_argument("--output", type=Path, default=None)
     a = ap.parse_args()
@@ -1073,13 +1361,23 @@ def main() -> int:
     #: 0 is verified. A caller that could not tell them apart would read "you
     #: handed me a sealed receipt" as "the read disagrees".
     try:
-        res = verify(a.verify, data_root=a.data_root)
+        if a.under_ruling:
+            res = verify_under_ruling(a.verify, ruling_id=a.under_ruling,
+                                      data_root=a.data_root)
+        else:
+            res = verify(a.verify, data_root=a.data_root)
     except EarlyReadVerifyRefused as e:
         print(str(e))
         return 2
     if a.output:
         a.output.write_text(json.dumps(res, indent=2, sort_keys=True) + "\n")
-    if a.do_print:
+    #: 3 -- PRINTED UNDER A RULING, AND STILL REFUSED. Never 0: a caller
+    #: that could not tell this from a clean verification would read "the
+    #: coordinator ruled the delta immaterial" as "there was no delta".
+    if (res.get("under_ruling") or {}).get("applies"):
+        print(print_table(res))
+        return 3
+    if a.do_print or a.under_ruling:
         print(print_table(res))
     else:
         print(f"{res['verdict']} -- day {res['day']}, ruling "
