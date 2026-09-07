@@ -67,6 +67,34 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T16:46:47Z (MEM ROUND 286 -- R-813 AND R-814 SWEPT, with every landing between the tip I
+  read at round 285 (`ef27921`) and `6461cf2`. STATE ONLY. ***REV 105 IS ONE VERDICT FOR FOUR DAYS***: GO R1..R4 MAY
+  PROCEED at `850c166` from `wt-rr`, whose HEAD and `?? data` status I measured; the third pre-launch condition, a
+  free heavy lock, is NOT met yet. ***I REPRODUCED REV'S 09-03 FINDING FROM THE VENUE RECORD MYSELF***: over the 288
+  possible boundaries of 2026-09-03 `resolutions.jsonl` carries 287 `btc-updown-5m` slugs and the absent one is
+  `btc-updown-5m-1788448800` = 15:20:00Z exactly; and driving `exp_m6_settlement`'s own readers, the 21:05:00Z slug
+  `btc-updown-5m-1788469500` has the venue at Up while the PINNED S60(T) >= S60(t0) reads Down. ***AND I MEASURED
+  WHAT THE DISAGREEMENT IS***: -0.1418 bps across the window, on a boundary sample 2,000 ms stale -- a real
+  disagreement and a tiny one. ***THE OBVIOUS WRONG MOVE IS CLOSED BEFORE ANYONE MAKES IT***: S30 reads +3.0851 bps
+  and agrees with the venue on that slug, but BE 99 measured S30/S30 disagreeing on 23 and 17 slugs where S60/S60
+  disagreed on none -- a convention that fixes one window and breaks twenty is not a fix, and picking one on the day
+  it disagrees is choosing after seeing. So 09-03 runs, emits, and is NOT quotable as final, and no checker may
+  assert 288/288. ***REV'S SCHEMA ASYMMETRY IS MEASURED, NOT INFERRED***: the pre-composition reader reads a v3
+  ledger WITHOUT refusing and returns no settlement keys at all, while the new reader returns `schema_version_read`
+  and a `settlement_rows_status` on both -- the absence becomes a named status instead of silence. My first fixture
+  for that test was BROKEN and both readers failed identically on a missing `book` key; I rebuilt it from 40 real
+  ledger rows before believing either arm. ***AND THE NUMBER BE'S L = 0 REBUILD IS MEASURED AGAINST HAS TWO VALUES***:
+  R-813 names 88,698.17341109998 (the seats' recompute, in four Q-rows and R-794) while the 09-05 artifact records
+  88,698.17341110039 -- 4.075e-10 cents apart, equal at 1e-6 relative and NOT equal under `==`, so the equivalence
+  test needs a named source and a tolerance, which is R-811's own rule about L one field over. REV's two read
+  conditions confirmed at the digests (`27cc9925` at the composition, `4ffeeefc` at the tip) and at the six refusal
+  names in the composition's runner, with `--supersedes` defaulting to None and `de_early_read.py:512` refusing
+  without it. BE 101's four build costs reconcile to the receipts exactly (1,696.4 / 2,115.7 / 2,379.8 / 3,560.7 s),
+  ***BUT THE L = 250 BUILD IS AT 1,952 s AND 4.666 GB AT 16:44:23Z AGAINST THE 1,696.4 s DAY IT REBUILDS***, so
+  "lock free ~17:10Z" is the optimistic end. REV 105's filing landed 22 s before my own round-285 row -- the SEVENTH
+  landing in the read-write gap. Flags 2304 -> 2319, prov 1849 -> 1864; window trimmed 4 -> 3, Batch 268 archived.
+  The freeze holds a TWENTY-SIXTH round; `wt-de` `5020f96` / `?? data`, the TWELFTH consecutive round; GO #8
+  unchanged. MEM asserts no result.)
   2026-09-07T16:34:23Z (MEM ROUND 285 -- R-811, R-812 AND R-813 SWEPT, with every landing between the tip I
   read at round 284 (`d7e51fe`) and `ef27921` -- and FIVE of them arrived after this round's own
   fetch, R-813 while I was composing. STATE ONLY. ***THE SIXTH COMPOSITION EXISTS AND `wt-rr` IS ON IT***: `850c166` at 16:24:00Z, its three
@@ -132,46 +160,6 @@ updated: >-
   GO #8 unchanged (`5020f96`, `?? data`, TENTH consecutive round); freeze holds a TWENTY-FOURTH round.
   COUNTS (by YAML parse): flags 2274 -> 2289, provenance 1819 -> 1834 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 266 archived.)
-  2026-09-07T16:05:47Z (MEM ROUND 283 -- R-809 SWEPT, with every landing between the tip I read at round 282 (`51cf79e`) and
-  `67e0f7d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***MY ROUND-282 CONSTRAINT WAS IMPLEMENTED EXACTLY, AND BY THE CLEANEST MEANS.*** I wrote that the fifth
-  composition "must take THAT ONE FILE from `5020f96` and everything else from the additions". **`a54dcc2` does
-  it by EXCLUSION: `de_phase4_diag_runner.py` is not among its four changed files at all** -- one parent
-  `5020f96`, four files (`da_early_read_verify` +811, `de_decision_ledger` +138, `de_early_read` +545, the runner
-  +1144), and phase4 hashing **`ee4034c15c274982`, exactly v19's pin**. A constraint met by not touching a file
-  leaves no residue to check later. ***AND ITS CASCADE IS 10/10*** (against HEAD's 9/10), so **its battery will
-  not stop at check 7** -- the visibility requirement from round 282, met.
-  (2) **`wt-rr` NOW EXISTS** -- absent at rounds 281 and 282 -- at **`a54dcc2`**, `?? data` only, and **pins
-  10/10 measured inside it**: the same two conditions REV 103 set for `wt-de`, checked the same way. `wt-de`
-  untouched at `5020f96`, NINTH consecutive round.
-  (3) ***REV §7 VERIFIED MYSELF***: `build_reference` occurs **0 times** in the runner, the early read and the
-  policy; it is defined in phase4 and called from fourteen modules, **none on the day path**. ***SO THE RE-RUNS
-  ARE AT L_place = 0 BY CONSTRUCTION, NOT BY THE DEFAULT*** -- which is **a stronger reason than the one I gave
-  at round 281**, where I inferred it from `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` and left open that someone could
-  set the parameter. Setting it would change nothing without a rebuilt book. My conclusion was right and my
-  reason was the weaker of the two available.
-  (4) ***REV §5's CAVEAT IS MY ROUND-269 FINDING, REACHED INDEPENDENTLY***: "on the mainline tip the runner's
-  battery cannot run at all", `verify_be_module` refusing `BE_CASCADE_DIFFERS`. A third seat, its own direction.
-  **And the consequence rides with every number**: REV's counts (runner 388, ledger 9, early read 30, phase4
-  214+4) are **scratch-clone figures with phase4 restored** -- "nobody should read '388 PASS' as '388 PASS on the
-  tip'". **So every battery count in today's record, including the four I reconciled at round 282, is a
-  scratch-clone number.**
-  (5) The estimator **reproduces BE 99's ruled P&L to the cent on all three paths** of the real 09-05 ledger
-  (REV's drive, at 177,467 FILL rows -- the figure I measured at round 273). **FOUR things must not ship**: a
-  `why` literal serving two statuses and contradicting `admissible: true` beside it; `winner_source` trusting a
-  caller-supplied dict (REV drove a DISAGREE map to `VERIFIED`); a degenerate null raising an uncaught refusal
-  that emits **no receipt after 70-80 minutes**; and `settlement_admissibility` letting a declaration re-open a
-  CONSUMED day. (2) and (3) before any real day is valued. **The first is the class this programme keeps paying
-  for** -- and I have logged it three times from my own readings (`no_bare_G_key_here`, `where_the_five_live_now`,
-  DE 130's wording); one literal serving two statuses is the same defect by a different mechanism.
-  (6) **THE FIFTH HEAD IS SUPERSEDED BEFORE IT IS EVER GATED** -- the sixth is `a54dcc2` + DE 139, and REV 105
-  waits on the sixth. Six heads in one afternoon, each its predecessor plus a named minimal change: what lets a
-  NO-GO name a delta, and what makes "the composition" ambiguous unless the head is named. DA 131 adds two row
-  kinds under an UNCHANGED `schema_version` -- watched, not objected to, since DA's reader branches on the kind.
-  Clock: **GO R1 ≈ 17:40Z earliest**, four before the close if nothing refuses, **GO #8 at 00:10Z** -- two lines
-  of work from two different trees. Freeze holds a TWENTY-THIRD round, and REV now names its cost in the record.
-  COUNTS (by YAML parse): flags 2259 -> 2274, provenance 1804 -> 1819 (fifteen written, fifteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 265 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -343,6 +331,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 286, R-813 and R-814 swept (ef27921 -> 6461cf2) ---
+  REV_105_IS_ONE_VERDICT_FOR_FOUR_AND_wt_rr_MEETS_ITS_PRE_LAUNCH_CONDITIONS: 850c166-AND-EXACTLY-??-data
+  THE_09_03_DAY_LEVEL_FACT_REPRODUCED_INDEPENDENTLY_AT_THE_VENUE_RECORD: 287-OF-288-THE-1520Z-WINDOW-ABSENT
+  AND_THE_ONE_DISAGREEING_WINDOW_REPRODUCED_WITH_THE_MODULES_OWN_READERS: VENUE-Up-PINNED-S60-Down
+  THE_DISAGREEMENT_IS_A_SUB_BASIS_POINT_CALL_ON_A_TWO_SECOND_STALE_SAMPLE: MINUS-0.1418-bps
+  AND_S30_AGREES_WITH_THE_VENUE_THERE_SO_IT_IS_NOT_A_CASE_FOR_SWITCHING: PLUS-3.0851-bps
+  THE_SCHEMA_ASYMMETRY_IS_MEASURED_NOT_INFERRED: PRE-READER-SILENT-NEW-READER-STATUS
+  MY_FIRST_SCHEMA_FIXTURE_WAS_BROKEN_AND_BOTH_READERS_FAILED_IDENTICALLY: A-MISSING-book-KEY-NOT-A-RESULT
+  THE_EQUIVALENCE_TARGET_EXISTS_IN_TWO_LITERALS_THAT_ARE_NOT_EQUAL: SEATS-109998-ARTIFACT-110039
+  SO_THE_L_ZERO_EQUIVALENCE_NEEDS_A_NAMED_SOURCE_AND_A_TOLERANCE: 4.075e-10-CENTS-APART
+  THE_COMPOSITION_CARRIES_DA_130s_VERIFIER_AND_THE_TIP_CARRIES_DA_131s: 27cc9925-vs-4ffeeefc
+  ALL_SIX_REFUSAL_NAMES_ARE_PRESENT_IN_THE_COMPOSITIONS_RUNNER: AND-supersedes-DEFAULTS-None
+  BE_101s_FOUR_BUILD_COSTS_RECONCILE_TO_THE_RECEIPTS_EXACTLY: 1696-2116-2380-3561-s
+  BUT_THE_L_250_BUILD_IS_ALREADY_PAST_THE_REFERENCE_IT_REBUILDS: 1952-s-AND-4.67-GB-AT-1644Z
+  REV_105_LANDED_TWENTY_TWO_SECONDS_BEFORE_MY_OWN_ROW: SEVENTH-LANDING-IN-THE-GAP
+  THE_FREEZE_HOLDS_A_TWENTY_SIXTH_ROUND_AND_GO_8_IS_UNCHANGED: 5020f96-TWELFTH-CONSECUTIVE-ROUND
   # --- MEM round 285, R-811, R-812 and R-813 swept (d7e51fe -> ef27921) ---
   THE_SIXTH_COMPOSITION_EXISTS_AND_wt_rr_IS_ON_IT: 850c166-PINS-10-OF-10
   THE_USERS_HIGH_1_IS_SHUT_AND_HIS_EXACT_DICT_NOW_REFUSES: SETTLEMENT_VERIFICATION_EMPTY
@@ -26664,6 +26668,166 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 286, 2026-09-07T16:46:47Z (the clock read by which every measurement below was complete) ---
+  REV_105_IS_ONE_VERDICT_FOR_FOUR_AND_wt_rr_MEETS_ITS_PRE_LAUNCH_CONDITIONS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_105_GO_R1_R4_2026-09-07.md
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      **GO R1, R2, R3 and R4 MAY PROCEED at `850c166` from `wt-rr`** -- one verdict for four days, not four. Verified
+      at the objects rather than the filing: **exactly four paths differ from `5020f96`** (`da_early_read_verify.py`,
+      `de_decision_ledger.py`, `de_early_read.py`, `de_multiday_gate1_runner.py`), `de_phase4_diag_runner.py` still
+      hashes v19's pin, and I measured the **ten cascade pins 0 mismatched INSIDE `wt-rr`** last round at this same
+      head. **`wt-rr` HEAD `850c166`, `git status --short` exactly `?? data`** -- both of REV S7's pre-launch
+      conditions met at 16:44:23Z; the third (the heavy lock free) is NOT met yet and is the gate on the clock.
+  THE_09_03_DAY_LEVEL_FACT_REPRODUCED_INDEPENDENTLY_AT_THE_VENUE_RECORD:
+    prov: CHECKED
+    artifact: data/pm_5min/resolutions.jsonl
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      ***REV'S S8 IS RIGHT AND I REPRODUCED IT FROM THE VENUE RECORD MYSELF, NOT FROM THE FILING.*** Over the 288
+      possible five-minute boundaries of 2026-09-03 (00:00Z = epoch 1788393600, step 300), `resolutions.jsonl`
+      carries **287 `btc-updown-5m` slugs**, and the one absent is **`btc-updown-5m-1788448800` = 15:20:00Z**
+      exactly as REV named. 38,394 records scanned. **A checker asserting 288/288 or "all four days final" fails on a
+      true fact** -- and this is the day that shows the per-day check is not ceremony.
+  AND_THE_ONE_DISAGREEING_WINDOW_REPRODUCED_WITH_THE_MODULES_OWN_READERS:
+    prov: CHECKED
+    artifact: data/pm_5min/prices/crypto_prices_twap_sixty
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      Driven through `exp_m6_settlement`'s OWN `load_streams` / `read_at` (imported, never re-implemented -- BE 99's
+      method), the glob narrowed to 09-03 20h..22h: for **`btc-updown-5m-1788469500` = 2026-09-03T21:05:00Z** the
+      venue record says **Up** (`winners {"Up": true, "Down": false}`, `source clob`) while the PINNED convention
+      **S60(T) >= S60(t0) reads Down** -- S60(t0) 8.13680124619007e22 at 1788469500000, S60(T) 8.136685877417208e22
+      at 1788469798000. **One window, reproduced end to end from two independent artifacts.**
+  THE_DISAGREEMENT_IS_A_SUB_BASIS_POINT_CALL_ON_A_TWO_SECOND_STALE_SAMPLE:
+    prov: CHECKED
+    artifact: data/pm_5min/prices/crypto_prices_twap_sixty
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      What the disagreement actually IS, measured so nobody reads it as a broken venue or a broken stream: the S60
+      series moves **-0.1418 bps** across the window (relative gap -1.418e-05), and the boundary reader's last sample
+      at or before the close sits at 1788469798000 -- **2,000 ms before the boundary**. So a coin-flip-scale call
+      decided by a fraction of a basis point on a two-second-stale read. **It is a REAL disagreement and a TINY one**,
+      and both halves belong in the row.
+  AND_S30_AGREES_WITH_THE_VENUE_THERE_SO_IT_IS_NOT_A_CASE_FOR_SWITCHING:
+    prov: CHECKED
+    artifact: data/pm_5min/prices/crypto_prices_twap_thirty
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      ***AND THE OBVIOUS WRONG MOVE IS CLOSED BEFORE ANYONE MAKES IT***: on this very slug the **S30 series reads
+      +3.0851 bps -> Up**, agreeing with the venue. That does NOT argue for S30: BE 99 measured S30/S30 disagreeing on
+      **23 and 17** slugs on 09-05 and 09-06 where S60/S60 disagreed on none. **A convention that fixes one window and
+      breaks twenty is not a fix**, and choosing a convention on the day it disagrees is choosing after seeing (rule
+      11). The right consequence is REV's: 09-03 runs, emits, and is NOT quotable as final.
+  THE_SCHEMA_ASYMMETRY_IS_MEASURED_NOT_INFERRED:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      REV's read-condition 2 driven on real-shaped ledgers built from the landed 09-05 rows (header bumped, the two
+      settlement kinds appended): the **PRE-composition reader (`5020f96`, `SCHEMA_VERSION = 2`) READS a v3 ledger
+      WITHOUT REFUSING and returns NO settlement keys at all** -- the rows vanish. The **new reader (`850c166`)
+      returns `schema_version_read` 2 or 3 AND a `settlement_rows_status` on BOTH ledgers**, plus `settlement_rows`
+      when they exist. **The absence becomes a named status instead of silence (rule 4)** -- and the control (a v2
+      ledger through both) reads cleanly, so the difference is the schema and not the fixture.
+  MY_FIRST_SCHEMA_FIXTURE_WAS_BROKEN_AND_BOTH_READERS_FAILED_IDENTICALLY:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      Recorded because it is the rule that saved the finding: my first hand-written v3 fixture omitted the FILL rows'
+      `book` key and **both readers raised the same `KeyError: 'book'`** -- an identical failure on both arms, which
+      is a **broken instrument, not a result**. I rebuilt the fixture from 40 REAL rows of the landed 09-05 ledger and
+      only then did the two readers diverge. **An empty or symmetric probe result is a broken instrument until proven
+      otherwise**; this is the third time that rule has caught me (a bad pathspec at 266, a TSV read as CSV at 280).
+  THE_EQUIVALENCE_TARGET_EXISTS_IN_TWO_LITERALS_THAT_ARE_NOT_EQUAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260905__20260907T112912Z.json
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      ***THE NUMBER BE'S L = 0 REBUILD IS MEASURED AGAINST HAS TWO VALUES ON THIS PROGRAMME'S RECORD.*** R-813 names
+      the target **88,698.17341109998**, which is the literal in **Q-DA-353, Q-BE-340, Q-DA-354, Q-BE-341 and R-794**
+      -- the seats' own recompute. The **09-05 artifact records 88,698.17341110039** at
+      `day_run.per_day_sealed_artifacts[*].absolute.zero_cancel_baseline.fills_leg` (and `.total`). Same quantity,
+      different summation order.
+  SO_THE_L_ZERO_EQUIVALENCE_NEEDS_A_NAMED_SOURCE_AND_A_TOLERANCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      The gap is **4.075e-10 cents** -- equal at a 1e-6 relative tolerance, **NOT equal under `==`**. So an
+      equivalence test written as exact equality against either literal is testing float summation order, and it can
+      fail while the rebuild is perfect or pass while it is not. **The target must be READ FROM A NAMED ARTIFACT and
+      compared with a stated tolerance** -- which is R-811's own rule about L, one field over: a number that matters
+      is read from where it was produced, never typed into the test. Recorded before BE's L = 0 build lands, not
+      after.
+  THE_COMPOSITION_CARRIES_DA_130s_VERIFIER_AND_THE_TIP_CARRIES_DA_131s:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      REV's read-condition 1, confirmed at the digests: `da_early_read_verify.py` hashes **`27cc992543ccf0e7` at
+      `850c166`** and **`4ffeeefc24b7f48e` at the tip**, and those are exactly DA 130's landing (`1ae19f7`) and DA
+      131's (`4ce219b`). **The composition was cut at 16:24:00Z and DA 131 landed at 16:06:51Z, so it was available
+      and was left out.** Nothing the re-runs EXECUTE touches it -- the runner never calls DA's verifier -- so the
+      risk is entirely in **who verifies from where**: DA reads with the LANDED file, never with `wt-rr`'s copy.
+  ALL_SIX_REFUSAL_NAMES_ARE_PRESENT_IN_THE_COMPOSITIONS_RUNNER:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      Counted in the composition's own bytes (`850c166`), not the tip's: `SETTLEMENT_VERIFICATION_EMPTY` 2,
+      `SETTLEMENT_VERIFICATION_SLUG_SET_MISMATCH` 2, `SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK` 4,
+      `SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE` 3, `SETTLEMENT_CHAINLINK_NO_FILES_READ` 2,
+      `SETTLEMENT_WINNERS_NOT_VERIFIED` 2. And the launch condition is real at the code: `--supersedes` is an argparse
+      flag with **`default=None`**, and `de_early_read.py:512` branches `if supersedes is None:` into
+      `EARLY_READ_ALREADY_EMITTED` -- **so omitting it does not degrade the run, it refuses it**, which is why REV
+      calls it non-optional rather than recommended.
+  BE_101s_FOUR_BUILD_COSTS_RECONCILE_TO_THE_RECEIPTS_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260906_btc.json
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      R-813's cost table checked at the four builder receipts' own `resources`: **09-05 1,696.4 s / 3.551 GB**
+      (R-813's "1,696 s / 3.55 GB"), 09-03 2,115.7 s / 5.317 GB, 09-04 2,379.8 s / 4.913 GB, **09-06 3,560.7 s /
+      3.766 GB** -- so R-813's stated range "1,696-3,561 s at 3.55-5.32 GB" is exact at both ends. The cost claims
+      behind the lock ruling are the receipts' own numbers, not estimates.
+  BUT_THE_L_250_BUILD_IS_ALREADY_PAST_THE_REFERENCE_IT_REBUILDS:
+    prov: CHECKED
+    artifact: git:2ad6a82d7cb710fab57e10e5c7d953dffcada08b
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      ***THE SCHEDULE'S ONE SOFT NUMBER, MEASURED.*** `be101L250.service` -- five fields read WHILE loaded (rule 20):
+      `LoadState loaded / ActiveState active / SubState running / ExecMainStatus 0 / Result success`, `InvocationID
+      5784c0926a354dd2b599710399f9e494`, `ActiveEnterTimestamp` **16:11:51Z**. At **16:44:23Z that is 1,952 s
+      elapsed against the 1,696.4 s it took to build the same day**, with `MemoryPeak` **4.666 GB against that
+      build's 3.551 GB peak**. Its `ExecStart` is the launcher's own bytes: `be_heavy_run.sh --inner --lock
+      .../data/.heavy_run.lock ... be_daybook_build.py --day 20260905 --placement-latency-ms 250`, and `fuser` shows
+      the lock held by its `flock`+`python3` pair. **R-813's "lock free ~17:10Z" assumed ~28 min a build; the first
+      build is at 32.5 min and not done**, so GO R1 at ~17:15Z is the optimistic end. Stated as a measurement, not an
+      alarm -- the coordinator owns the clock.
+  REV_105_LANDED_TWENTY_TWO_SECONDS_BEFORE_MY_OWN_ROW:
+    prov: CHECKED
+    artifact: git:a5603f8
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      `a5603f8` (REV 105's filing) landed at **16:38:06Z** and my round-285 row at **16:38:28Z** -- twenty-two
+      seconds, so REV's filing is an ANCESTOR of my own row and my round-285 state does not mention it. **The
+      SEVENTH landing to arrive between a read and a write** (265, 267, 279, 282, 284, 285's BE 101, this). This is
+      the whole reason the window is bounded on the tip READ and never on my own commit: had I bounded on `3f93956`
+      I would have swept forward from a commit that already contained a filing I had never read.
+  THE_FREEZE_HOLDS_A_TWENTY_SIXTH_ROUND_AND_GO_8_IS_UNCHANGED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T16:46:47Z
+    said: >-
+      Standing, measured at 16:44:23Z: **`params_v20` and `design_v28` ABSENT** (heads v19/v27) -- the R-775 freeze's
+      **twenty-sixth** round, and still the thing that keeps DE 139's `require_book_declares_L` guard unarmed.
+      **`wt-de` at `5020f96`, `git status --short` exactly `?? data`, the TWELFTH consecutive round I have measured
+      it**; GO #8 at 00:10Z unchanged. `origin/mm-research-e3-composition` now reads **`850c166`** -- it read
+      `a54dcc2` at my last measurement, so the sixth head is pushed and REV's verdict names the ref that is actually
+      there.
   # --- MEM round 285, 2026-09-07T16:34:23Z (the clock read by which every measurement below was complete) ---
   THE_SIXTH_COMPOSITION_EXISTS_AND_wt_rr_IS_ON_IT:
     prov: CHECKED

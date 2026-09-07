@@ -20520,3 +20520,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2243 -> 2259, provenance 1788 -> 1804 (sixteen written, sixteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 264 archived.)
 ```
+
+## Batch 268 — archived 2026-09-07T16:46:47Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T16:05:47Z (MEM ROUND 283 -- R-809 SWEPT, with every landing between the tip I read at round 282 (`51cf79e`) and
+  `67e0f7d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***MY ROUND-282 CONSTRAINT WAS IMPLEMENTED EXACTLY, AND BY THE CLEANEST MEANS.*** I wrote that the fifth
+  composition "must take THAT ONE FILE from `5020f96` and everything else from the additions". **`a54dcc2` does
+  it by EXCLUSION: `de_phase4_diag_runner.py` is not among its four changed files at all** -- one parent
+  `5020f96`, four files (`da_early_read_verify` +811, `de_decision_ledger` +138, `de_early_read` +545, the runner
+  +1144), and phase4 hashing **`ee4034c15c274982`, exactly v19's pin**. A constraint met by not touching a file
+  leaves no residue to check later. ***AND ITS CASCADE IS 10/10*** (against HEAD's 9/10), so **its battery will
+  not stop at check 7** -- the visibility requirement from round 282, met.
+  (2) **`wt-rr` NOW EXISTS** -- absent at rounds 281 and 282 -- at **`a54dcc2`**, `?? data` only, and **pins
+  10/10 measured inside it**: the same two conditions REV 103 set for `wt-de`, checked the same way. `wt-de`
+  untouched at `5020f96`, NINTH consecutive round.
+  (3) ***REV §7 VERIFIED MYSELF***: `build_reference` occurs **0 times** in the runner, the early read and the
+  policy; it is defined in phase4 and called from fourteen modules, **none on the day path**. ***SO THE RE-RUNS
+  ARE AT L_place = 0 BY CONSTRUCTION, NOT BY THE DEFAULT*** -- which is **a stronger reason than the one I gave
+  at round 281**, where I inferred it from `PLACEMENT_LATENCY_MS_DEFAULT = 0.0` and left open that someone could
+  set the parameter. Setting it would change nothing without a rebuilt book. My conclusion was right and my
+  reason was the weaker of the two available.
+  (4) ***REV §5's CAVEAT IS MY ROUND-269 FINDING, REACHED INDEPENDENTLY***: "on the mainline tip the runner's
+  battery cannot run at all", `verify_be_module` refusing `BE_CASCADE_DIFFERS`. A third seat, its own direction.
+  **And the consequence rides with every number**: REV's counts (runner 388, ledger 9, early read 30, phase4
+  214+4) are **scratch-clone figures with phase4 restored** -- "nobody should read '388 PASS' as '388 PASS on the
+  tip'". **So every battery count in today's record, including the four I reconciled at round 282, is a
+  scratch-clone number.**
+  (5) The estimator **reproduces BE 99's ruled P&L to the cent on all three paths** of the real 09-05 ledger
+  (REV's drive, at 177,467 FILL rows -- the figure I measured at round 273). **FOUR things must not ship**: a
+  `why` literal serving two statuses and contradicting `admissible: true` beside it; `winner_source` trusting a
+  caller-supplied dict (REV drove a DISAGREE map to `VERIFIED`); a degenerate null raising an uncaught refusal
+  that emits **no receipt after 70-80 minutes**; and `settlement_admissibility` letting a declaration re-open a
+  CONSUMED day. (2) and (3) before any real day is valued. **The first is the class this programme keeps paying
+  for** -- and I have logged it three times from my own readings (`no_bare_G_key_here`, `where_the_five_live_now`,
+  DE 130's wording); one literal serving two statuses is the same defect by a different mechanism.
+  (6) **THE FIFTH HEAD IS SUPERSEDED BEFORE IT IS EVER GATED** -- the sixth is `a54dcc2` + DE 139, and REV 105
+  waits on the sixth. Six heads in one afternoon, each its predecessor plus a named minimal change: what lets a
+  NO-GO name a delta, and what makes "the composition" ambiguous unless the head is named. DA 131 adds two row
+  kinds under an UNCHANGED `schema_version` -- watched, not objected to, since DA's reader branches on the kind.
+  Clock: **GO R1 ≈ 17:40Z earliest**, four before the close if nothing refuses, **GO #8 at 00:10Z** -- two lines
+  of work from two different trees. Freeze holds a TWENTY-THIRD round, and REV now names its cost in the record.
+  COUNTS (by YAML parse): flags 2259 -> 2274, provenance 1804 -> 1819 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 265 archived.)
+```
