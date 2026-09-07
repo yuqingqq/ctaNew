@@ -202,6 +202,26 @@ restatement.
 
 ---
 
+## 0a. 2026-09-07T03:42Z — consolidation at the second seat reset (all seats + the coordinator), R-746
+
+**Every number here was read at the artifact during this consolidation (03:41Z 09-07). This block supersedes §0's "state" lines where they disagree; §0's economics stand.**
+
+**The forward race — the first read is CLOSED.** `data/pm_5min/derived/be_race_read_result_v2.json` (BE 73's correction of the read; the days 09-03..09-05, G = 3 because 09-01/02 were unrecoverable): the only quotable fields are `day_signs` = {09-03: −1, 09-04: +1, 09-05: −1} and `permutation_floors.neither_clears_0_05` = true. The readable days are NOT consistent in direction, and the G = 3 floor (0.25, m = 2) could not clear Holm by design (R-529(A): direction and consistency only). Those three days are CONSUMED; the reader must never be `--open`ed for them again. **The SECOND read is pre-declared** (`be_race_read_declaration_v6.json` a240ccc5…, READABLE 09-06..09-09, G = 4 by the user's R-531, floor 0.125 stated as the best attainable p, a NEW result family `be_race_read2_result`, horizon 2026-09-10T01:00Z) and **AUTHORISED by the coordinator's ruling at R-745 (overrulable)**; one of its four days is pinned (`be_race_read_feed_pins_v2.json` 26b0a67d… carries the 09-06 sealed feed 0dfa62f3…); the two reads are never pooled (foreclosed by v5's own sentence).
+
+**Gate 1 on the V2 line — three of six days sealed, the fourth running.** Heads: 09-03 `…140155Z.v2.json` (b4f11590…), 09-04 `…171144Z.v3.json` (6c74928f…), 09-05 `…180043Z.v3.json` (5f0241fc…) — DE 109's corrections carry `n_days_complete_TRUE_AT_EMIT_RECONSTRUCTED` 1/2/3 with the emitted `n_days_complete` untouched. The 09-06 day run is `de115day06_2.service` (InvocationID 17a0320936bd40929474a21e85f0b87c, launched 02:27:53Z from wt-de at 04d3eb3 with the runner byte-identical to 0f0d301, past the selftest that refused GO #5), RUNNING at this writing (73 min; the 09-05 day took ≈ 70 min); no `…20260906_SEALED__*` receipt exists yet. The read gate opens at `n_days_complete` ≥ 6 (2026-09-09). Nothing economic is quotable from any receipt.
+
+**E2-A (P-2026-002)** — not advanced by measurement; its admission bar is REPLACED by an outage predicate from 09-06 onward by the coordinator's ruling R-745 (4) (overrulable); DA found at the stop that the E2-A declaration head is **v7** (57c92c9e…), so the next version is v8 by the pair, not "v6".
+
+**The day-close chain, learned tonight by four refusals that wrote nothing** (R-734..R-741; the runbook §7b holds it as a predicate): the deploy pin current → DA's blackout mask → DA's closed-day verdict (the nightly unit at 00:06Z) → BE fragment → tape → book → structure → then two branches: `be_forward_day` → the sealed feed → the race pins (the race-read branch) and DE's day run → DA's pre-read (the Gate-1 branch). Tonight's three heavy peaks were 6.33 / 6.32 / 6.36 GB against the 8 GiB cap (`live/pm_research/be_heavy_peaks.jsonl`).
+
+**Chain heads at this writing:** design v25 (b95ac59c…), params v15 (92858fc7…), `heavy_run_form` v4 (b599f2e2…), `producer_exit_maps` v5 (5b7043b2…), `be_daybook_structure` v4 (1913a599…, four books), `da_midnight_deploy_pin` v2 (e454ff3d…), `da_anti_echo` v1 (77bf68cd…). All resolve through `live/pm_research/declaration_chain.py` (the compare-and-swap at the write; landed versions immutable).
+
+**The five former user items — RULED at R-745, each overrulable by one line** (the second read authorised; the cadence session-driven; the V2 line parked for want of an owned execution export; E2-A's bar replaced forward-only; the XS rebalance notional not invented). MEM's flag from round 233 said FOUR items: E2-A's admission rule was never in that enumeration (R-729 listed the cadence, the V2 line, the XS notional and the second read); the coordinator's 03:2xZ summary substituted E2-A's bar for the notional and R-745 ruled five — a coordinator enumeration drift, corrected here.
+
+**Seats at the stop (03:39Z):** every worktree without unpushed commits; the main tree clean at 6ff7174; wt-be stale at f7e3a28 with two files byte-identical to origin (refresh before use); wt-de at 04d3eb3; four collectors alive; the heavy lock held by GO #6 alone.
+
+---
+
 ## 0. 2026-09-04 — the first absolute economics, and what they say
 
 **This section supersedes §1 wherever they disagree.** Until today this

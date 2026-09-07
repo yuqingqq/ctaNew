@@ -2,6 +2,11 @@ program: P-2026-003-polymarket-5min
 name: Polymarket Crypto 5-min Markets
 phase: resumed-loop-within-v2-scope
 status: resumed-2026-09-05T15:01:22Z-USER
+# ---- COORDINATOR CONSOLIDATION 2026-09-07T03:42Z (R-746; the sole writer MEM is halted for a reset -- exception logged at R-746 and ended; MEM sweeps R-745..R-746 at its next round) ----
+# The first race read CLOSED (09-03..05: day signs -,+,- ; neither floor clears 0.05 -- the only quotable fields); the SECOND read pre-declared v6 (09-06..09-09, G=4) and AUTHORISED at R-745 (overrulable), one of four days pinned.
+# Gate 1: three of six days sealed (09-03 .v2, 09-04 .v3, 09-05 .v3); the 09-06 day run de115day06_2 RUNNING at the stop (id 17a03209...), its receipt to land by itself.
+# The five former user items RULED at R-745, each overrulable. Chain heads: design v25, params v15, heavy_run_form v4, producer_exit_maps v5, be_daybook_structure v4, da_midnight_deploy_pin v2, da_anti_echo v1.
+# Seats at the stop 03:39Z: nothing unpushed anywhere; main tree clean; collectors alive; the heavy lock held by GO #6 alone. Details: RESULTS.md 0a, HANDOFF.md top block, COORDINATOR_RUNBOOK.md 7c.
                                # THE USER RESUMED THE LOOP at 2026-09-05T14:54Z.
                                # RESUMED IS NOT REOPENED. The scope is V2's own
                                # and is NAMED, not assumed: documentation,

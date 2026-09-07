@@ -2,6 +2,14 @@
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-744 swept.
 
+## 2026-09-07T03:42Z (COORDINATOR, writing for the halted MEM seat — the writer exception is logged at R-746 and ends there; MEM resumes as sole writer at its next round) — the second seat reset
+
+- **State:** RESULTS.md §0a (this consolidation). Register at R-746; the coordinator's runbook §7c is the cold-start handoff.
+- **Done tonight:** the 09-06 day chain (mask, closed-day verdict via the re-deployed nightly unit, fragment/tape/book/structure v4, the forward day → sealed feed → pins v2); GO #6 launched 02:27:53Z and RUNNING at the stop (`de115day06_2`, id 17a0320936bd40929474a21e85f0b87c).
+- **In progress:** GO #6 (its receipt lands in the ledger by itself; DE's detached helper `wait117.sh` (pid 440727) captures the exit and STOPS the unit, writing `/tmp/claude-1001/-home-yuqing-ctaNew/d0eb65aa-2836-4cbc-8691-f7fc7cce2da9/scratchpad/wait117.out` — the reloaded DE copies it into the ledger as its capture record before the journal window moves).
+- **Next:** DA 117 (the 09-06 light pre-read, then the open-book half) on DE's receipt; REV 89 on tonight's artifacts (both branches); DA's E2-A declaration as **v8 from v7** (the DA 116 dispatch said v6 — wrong, the head is v7); the 09-07 close at 00:00Z 09-08 through the chain predicate (runbook §7b); the second read at 2026-09-10T01:00Z as its own GO.
+- **Watch out for:** every version written through the shared CAS is mode 0600 (`tempfile.mkstemp`) — DE's finding, unfiled, for BE/REV; `DR.instrumented`'s process-global `_LAST_PROOF` is picked up by `require_canonical(fixture=True)` when no proof is passed — the GO #5 class one level down (DE, unfiled); Q-DE-116 carries a typo (`record_input_thin—record_input_digest`), not edited; the E2-A census's day span is 08-19..09-06, wider than the "08-20..09-05" the rulings quote.
+
 ## 1. The peaks file holds seventeen NOT_RECORDED rows, not eighteen
 
 R-744 reports 18. Measured at the file (`be03c843b3933742`):
