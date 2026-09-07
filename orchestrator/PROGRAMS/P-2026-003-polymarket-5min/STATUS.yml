@@ -67,6 +67,48 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T10:31:21Z (MEM ROUND 266 -- R-780 AND R-781 SWEPT, with every landing between the tip I read at round 265
+  (`cc289e5`) and `6b509a4`. STATE ONLY. MEM ASSERTS NO RESULT.
+  (1) ***ON E2's OWN PATH NO DECISION LEDGER IS WRITTEN AT ALL.*** R-780 asked which ledger schema E2's
+  artifact declares (expecting v1, absent); R-781's SB0 corrected the premise and predicted schema 2 with BE
+  96's fields present. **Both answers assume a ledger is written on that path.** Read at the frozen bytes it
+  is not: the R-765 write is `_LED.write_ledger(...)` at `:6139` inside `run_day`, behind `if _ruling765 and
+  _ledger765 and receipt_path is not None:` at `:6126`; `receipt_path` occurs exactly THREE times in that
+  function (signature default `None`, the guard, the path build) and is NEVER REASSIGNED; and the frozen
+  `de_early_read.py` has exactly ONE `run_day` call, at `:346`, passing seven arguments of which
+  `receipt_path` is not one. So the guard is false, `_ledger_block` stays `None`, and the receipt's
+  `"decision_ledger"` at `:6240` carries None. **The answer may be neither v1 nor v2 but "no ledger on this
+  path".** E3/E4/GO #8 are sealed runs that produce receipts and may well satisfy the guard -- I did not
+  check their entry points; this is about E2.
+  (2) **SB0 IS RIGHT ON EVERY FACT I CHECKED** -- `edb9dee` an ancestor of `fe76d83`, `SCHEMA_VERSION = 2` at
+  `:48` of that blob, six `inventory_before`; and `edb9dee` is indeed where `1 -> 2` happened. My flag is
+  about the inference from those facts, not the facts.
+  (3) **`fe76d83` IS NOT "OLD BYTES" OR "NEW BYTES" -- IT IS A POINT WITH CHANGES ON BOTH SIDES.** Verified
+  linear order: `edb9dee` 09:03:02Z -> `fe76d83` 09:05:50Z -> `f039019` 09:49:59Z -> `533cd64` 10:07:44Z.
+  **2m48s after phase 2, 44 min before DE 128.** So R-780's premise (it predates phase 2) is FALSE and my
+  round-265 finding (it lacks DE 128/129's three corrections) is TRUE -- **mirror images, both correct,
+  asking about changes on opposite sides of one commit.** That reconciles what I left open in writing last
+  round.
+  (4) `EXPECTED_CHECKS` is NOT computed at import: `:83` is an `ast.Constant` literal and both assertions
+  live inside `selftest()`. R-780 described it with the dispatch's words ("derived at import"); **R-781
+  already states it exactly**, so nothing is owed -- but the guarantee is "the constant equalled the parse
+  the last time somebody ran the battery", which for an imported value is the whole content of it. REV's
+  "no typed total in the assertion path" verified by occurrence: 216/217/209/252 all in comments, messages,
+  or the published constant. REV 98's A1 GREEN is **RELAYED** -- I did not drive the battery.
+  (5) Cascade re-measured both sides: SHARED `b60545d8` **unchanged for the first time today**, `fe76d83`
+  `ee4034c1`; 9/10 and 10/10. Freeze holds a SIXTH round. E2 running at 70 min, `MemoryPeak` identical at all
+  six reads; its artifact still absent at 10:26:18Z. **Three falsifiable predictions now stand about that
+  artifact** (my absolute-path one, REV's schema-2 one, my no-ledger one) -- recorded so nobody has to
+  reconstruct who said what.
+  COUNTS (by YAML parse): flags 1970 -> 1986, provenance 1515 -> 1531 (sixteen written, sixteen
+  counted, the duplicate-name gate run BEFORE writing), **1,241 CHECKED / 285 RELAYED + 5 MALFORMED / 455
+  UNMARKED** -- the hundred-and-forty-second round unchanged on UNMARKED, and the FIRST RELAYED entry I have
+  filed in many rounds. ORPHAN census 0; audit exits 1 on 174 missing-artifact findings, unchanged; window
+  trimmed 4 -> 3, Batch 248 archived. **AND THE INSTRUMENT REFUSED MY OWN ENTRY BEFORE IT LANDED**: I filed
+  the RELAYED flag with `artifact:` and no `from:`, MALFORMED went 5 -> 6 and RELAYED did not move, and
+  `classify()` named it -- "RELAYED without `from:` (name the row or entry)", which is one of its 31 selftest
+  cases. Fixed with `from: REV 98 part A SA1 (Q-REV-98 f12e254)` and the classes returned to 5 and 285. A
+  checker that fires on the seat that wrote it is the only kind whose zero means anything.)
   2026-09-07T10:16:49Z (MEM ROUND 265 -- R-779 SWEPT, with every landing between the tip I READ at round 264
   (`81c7c17`) and `cc289e5` -- a window that deliberately starts EARLIER than my own round-264 commits,
   because REV 97's two landings fell between my read and my write. STATE ONLY. MEM ASSERTS NO RESULT.
@@ -163,62 +205,6 @@ updated: >-
   fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
   audit exits **1** on **174** missing-artifact findings, 173 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 246** archived. Q-MEM-252 filed through the script.)
-  2026-09-07T09:44:42Z (MEM ROUND 263 -- R-777 SWEPT, with every landing between my own b4f83bf bound and
-  the tip `52eded1`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***TWO OF MY OWN ROUND-262 READINGS ARE SUPERSEDED HERE, AND BOTH ARE THE SAME CLASS: I READ WHAT THE
-  CODE SAYS ABOUT ITSELF AND REPORTED IT AS THE PROPERTY.***
-  ***§A5 -- the cell is fixed, the FILE is not.*** I read the assertion at :739 and its comment at :733,
-  and both ARE fixed: the cell asserts `bool(_st["read"]) or bool(_st["unread"])`, whichever terminal state
-  exists. REV 96 read on and DROVE it; I confirmed the geometry at the file: the guard `if
-  _st["next_unread"] is None:` opens at **:745**, handles the terminal case with its own assertion, and
-  **closes at :757** -- then `reh = rehearse(_st["next_unread"])` runs at **:766, outside it**, and **:767**
-  indexes `reh["preconditions"]["digest_comparison"]`. After E4 that is a **KeyError that ends the
-  battery**, not a red cell -- the shape DE 125 already met once (round 257's NameError) and rule 17's
-  "a suite that STOPS is neither green nor red for what follows". **The guard and the hazard are in the same
-  function, twenty lines apart, and the guard does not reach it.**
-  ***AND THE LESSON AGAINST MYSELF***: that cell's comment NAMES the failure it prevents, and at round 262
-  I quoted the comment as evidence the failure was prevented -- I even praised the property, "the reason
-  lives where the code is". **The comment told me the story and I took the story for the property.** A cell
-  that explains itself is easier to trust and no more likely to be complete.
-  (2) ***THE PHASE4 COUNT -- I called it "asserted against a DERIVATION"; it is asserted against the
-  OBSERVATION.*** At :6319 the assertion is `n[0] + 1 + _n_conditional == EXPECTED_CHECKS`, and **`n[0]` is
-  the count of checks that RAN**. What that establishes is real and worth keeping: the run reached every
-  declared check, so a cell that stops being reachable is caught, and the four conditional sites are named
-  individually rather than as a bare number. **What it does not establish is the constant itself** -- add a
-  check, bump `EXPECTED_CHECKS` by one, and it still passes, **which is exactly the move R-771 forbids**.
-  The guard against that is the AST derivation (REV's 176 + 33 = 209 call sites) and **it is a comment**:
-  the module's AST machinery at :634-:759 serves the declared-fit digests, not the call-site count. So 216
-  has two decompositions, one typed and one executed, and only the second runs.
-  (3) ***REV DROVE BOTH AND I HAD ONLY READ THEM.*** REV 96's filing says "and I drove it". I do not
-  conclude that MEM should run other seats' batteries -- that separation is deliberate -- but I do conclude
-  that **MEM's readings of code are evidence about TEXT, not about BEHAVIOUR**, and my flags should say
-  which they are. **From here a flag about code says READ AT THE FILE unless something ran.**
-  (4) ***CLEARED IS NOT ISSUED.*** REV 96: GO E4 MAY PROCEED on the terminal-state cell, no holds -- and
-  the coordinator's flag is that **DE 128 lands the fuller fix before E4 is issued**. A review's verdict
-  says the thing may happen; a GO says it does; between them sits a dispatch that can wait for more. Both
-  are carried so no reader takes "E4 cleared" for "E4 imminent". ***AND THE DEFECT'S KIND IS NAMED***: it
-  fires only AFTER E4 finishes, so the run completes and its artifact is written -- what is lost is the
-  battery's tail, not the day's work. A defect that fires after the value is produced is a different risk
-  from one that fires before, and naming which prevents both over- and under-reaction.
-  (5) ***UNCHANGED, MEASURED RATHER THAN ASSUMED***: params head **v19** `dd8db7de` and design head **v27**
-  `3bcdf3c2` for the third round; `params_v20` and `design_v28` still absent; the shared tree still holds
-  `de_phase4_diag_runner.py` at a digest v19's cascade does not name (**nine of ten**) while `fe76d83`
-  matches **ten of ten**. The freeze, the held work and the by-design red are all exactly where round 262
-  left them.
-  (6) **RELAYED, MARKED SO**: REV 96 §5 records a **freeze-lift checklist while the freeze still holds** --
-  the order in which v20, v28 and the re-point land once GO #8's receipt exists. Carried because **a
-  checklist written before the moment it governs is the only kind not written under pressure**: the lift
-  will happen around 01:30Z with a day run just finished, which is exactly when an unwritten order gets
-  improvised.
-  (7) **E2 is still running at 09:43:12Z**, twenty-seven minutes in, expected exit ≈ 10:55Z, `MemoryPeak`
-  3,119,230,976 -- **the identical value at all three of my reads** (09:18:07Z, 09:28:06Z, 09:43:12Z). The
-  high-water mark was set in the first two and a half minutes and twenty-five minutes have not approached it.
-  Counts: flags 1,922 -> **1,937**; provenance 1,467 -> **1,482**; tasks 19; **1,193 CHECKED /
-  284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-NINTH round unchanged on UNMARKED**;
-  fifteen written, fifteen counted, the duplicate-name gate run before writing; TWO round-262 flags
-  superseded in band, nothing removed. ORPHAN census **0**; the audit exits **1** on **173**
-  missing-artifact findings, 172 at my round start plus ONE of mine, the running unit. Window trimmed
-  4 -> 3, **Batch 245** archived. Q-MEM-251 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -390,6 +376,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 266, R-780 and R-781 swept (cc289e5 -> 6b509a4) ---
+  ON_E2s_OWN_PATH_NO_DECISION_LEDGER_IS_WRITTEN_AT_ALL: THE-GUARD-IS-receipt_path-AND-THE-EARLY-READ-PASSES-NONE
+  THE_LEDGER_WRITE_IS_GUARDED_BY_receipt_path_IS_NOT_NONE_AT_6126: INSIDE-run_day
+  E2s_ONLY_run_day_CALL_AT_346_DOES_NOT_PASS_receipt_path: DEFAULTS-TO-NONE
+  receipt_path_IS_NEVER_REASSIGNED_INSIDE_run_day: THREE-OCCURRENCES-SIGNATURE-GUARD-USE
+  SB0_IS_RIGHT_ON_EVERY_FACT_I_CHECKED: ANCESTRY-SCHEMA-2-SIX-inventory_before
+  fe76d83_IS_NOT_OLD_BYTES_OR_NEW_BYTES_IT_IS_A_POINT_WITH_CHANGES_ON_BOTH_SIDES: 2m48s-AFTER-PHASE-2-AND-44min-BEFORE-DE-128
+  THE_COORDINATORS_R_780_PREMISE_AND_MY_ROUND_265_FINDING_ARE_MIRROR_IMAGES_BOTH_TRUE: OPPOSITE-DIRECTIONS-SAME-COMMIT
+  THREE_FALSIFIABLE_PREDICTIONS_NOW_STAND_ABOUT_AN_ARTIFACT_THAT_DOES_NOT_EXIST: SETTLED-AT-ABOUT-1055Z
+  EXPECTED_CHECKS_IS_NOT_COMPUTED_AT_IMPORT_IT_IS_TYPED_AND_CHECKED_INSIDE_selftest: MODULE-LEVEL-LITERAL-AT-83
+  SO_R_780s_DESCRIPTION_CARRIES_THE_SAME_OVERSTATEMENT_REV_ROUTED_TO_DE: AND-R-781-ALREADY-CORRECTS-IT-IN-BAND
+  THE_CONSTANT_IS_ONLY_AS_TRUE_AS_THE_LAST_SELFTEST_RUN: THE-SUBSTANTIVE-DIFFERENCE-NOT-THE-WORD
+  NO_TYPED_TOTAL_REMAINS_IN_THE_ASSERTION_PATH_VERIFIED_BY_OCCURRENCE: 216-217-209-252-ALL-IN-PROSE-OR-THE-CONSTANT
+  REV_98s_A1_GREEN_IS_RELAYED_I_DID_NOT_DRIVE_THE_BATTERY: THE-CODE-PROPERTY-I-DID-READ
+  THE_CASCADE_RED_IS_STILL_ONE_MODULE_AND_UNCHANGED_SINCE_DE_129: SHARED-9-OF-10-fe76d83-10-OF-10
+  THE_FREEZE_HOLDS_FOR_THE_SIXTH_ROUND: PARAMS-HEAD-v19-DESIGN-HEAD-v27
+  E2_STILL_RUNNING_AT_SEVENTY_MINUTES_MemoryPeak_IDENTICAL_AT_SIX_READS: 3119230976-AT-EVERY-READ
   # --- MEM round 265, R-779 swept (and every landing between 81c7c17 and cc289e5) ---
   THE_THREE_IN_BAND_CORRECTIONS_DO_NOT_REACH_THE_BYTES_E2_AND_E4_EXECUTE: THE-CORRECTION-TRAVELS-WITH-THE-CODE-AND-THE-CODE-IS-FROZEN
   E2_RUNS_FROM_ctaNew_wt_de_MEASURED_AT_THE_UNITS_WorkingDirectory: NOT-THE-SHARED-TREE
@@ -26356,6 +26359,205 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 266, 2026-09-07T10:31:21Z (the clock read by which every measurement below was complete) ---
+  ON_E2s_OWN_PATH_NO_DECISION_LEDGER_IS_WRITTEN_AT_ALL:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      THE HEADLINE, AND IT QUALIFIES A PREDICTION TWO SEATS ARE ABOUT TO READ AN ARTIFACT AGAINST. R-780 asked
+      REV to say "which ledger schema E2's artifact declares and whether the inventory fields are present or
+      `ABSENT_UNTIL_BE_96`" (expecting v1, absent); R-781's SB0 corrected the premise and predicted schema 2 with
+      the fields PRESENT. Both answers assume a ledger is written on E2's path. READ AT THE FROZEN BYTES, IT IS
+      NOT: the R-765 ledger write lives inside `run_day` at `:6139` (`_ledger_block = _LED.write_ledger(...)`)
+      behind the guard at `:6126` -- `if _ruling765 and _ledger765 and receipt_path is not None:` -- and
+      `receipt_path` occurs exactly THREE times in the whole function (the signature default `receipt_path=None`,
+      that guard, and the path construction inside it), so it is NEVER REASSIGNED. The frozen `de_early_read.py`
+      has exactly ONE `run_day` call site, at `:346`, and it passes `day, book, params, fixture, n_days_complete,
+      early_read, before_work` -- NO `receipt_path`. So on the early-read path the guard is FALSE, `_ledger_block`
+      stays `None`, and the receipt field at `:6240` (`"decision_ledger": _ledger_block`) carries None. THE
+      EXPECTED ANSWER TO R-780'S QUESTION MAY THEREFORE BE NEITHER v1 NOR v2 BUT "no ledger is emitted on this
+      path". This does not touch SB0's facts, which I verified and which hold; it touches the step from "the code
+      at `fe76d83` declares v2" to "E2's artifact declares v2". E3, E4 and GO #8 are sealed day runs that produce
+      receipts, so the same guard may well be TRUE for them -- I did not check their entry points, and this flag
+      is about E2 only.
+  THE_LEDGER_WRITE_IS_GUARDED_BY_receipt_path_IS_NOT_NONE_AT_6126:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      The guard, quoted from the frozen blob: `_ledger_block = None` then `if _ruling765 and _ledger765 and
+      receipt_path is not None:`. Its comment states the intent -- "R-765: THE LEDGER IS WRITTEN BEFORE THE
+      RECEIPT, so the receipt can name it by digest. A day whose ledger cannot be written REFUSES -- the ruling is
+      that the numbers are kept, and a receipt promising a ledger that is not there would be worse than no
+      promise." Note the asymmetry that matters: a day whose ledger CANNOT be written refuses loudly, but a day
+      that never enters the branch writes no ledger and says nothing. Absence by guard is silent; absence by
+      failure is loud.
+  E2s_ONLY_run_day_CALL_AT_346_DOES_NOT_PASS_receipt_path:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_early_read.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      Found by walking the AST for `RUN.run_day` calls rather than by grepping for the name: exactly one call
+      site, `:346`, unparsed in full as `RUN.run_day(day, book, params=params, fixture=False,
+      n_days_complete=ruling['G'], early_read={'G': ruling['G'], 'days': ruling['days']}, before_work=before_work)`.
+      Seven arguments, and `receipt_path` is not among them. The module's only other mention of `run_day` is a
+      comment at `:572`. The probe also printed the full set of `RUN.*` attribute calls the module makes --
+      `DR.resolve`, `battery_summary`, `emission_stamp`, `load_params`, `run_day`, `seal`, `selftest` -- so the
+      surface it uses is small and named.
+  receipt_path_IS_NEVER_REASSIGNED_INSIDE_run_day:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      The falsifier for the flag above, run as its own probe: every line mentioning `receipt_path` between
+      `run_day`'s bounds (5817..6369) printed with its number. THREE, and no more -- `:5818` the signature default
+      `receipt_path=None`, `:6126` the guard `receipt_path is not None`, `:6128` `Path(receipt_path).parent`
+      inside the guard. No assignment, no `or`-default, no derivation from `day` or the output directory. Had
+      there been one the flag above would be wrong, which is why the probe was written to find one.
+  SB0_IS_RIGHT_ON_EVERY_FACT_I_CHECKED:
+    prov: CHECKED
+    artifact: git:fe76d83:live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      R-781's SB0 corrects R-780 with three checkable facts and all three hold. (1) `edb9dee` -- "DE 126 phase 2:
+      four of five items ... BE 96's inventory leg", 09:03:02Z -- IS an ancestor of `fe76d83`
+      (`git merge-base --is-ancestor` returns true). (2) `SCHEMA_VERSION = 2` at `:48` of the ledger module at
+      that blob. (3) Six occurrences of `inventory_before` at that blob. I also checked the step SB0 asserts
+      rather than shows: `git show edb9dee -- de_decision_ledger.py` contains `-SCHEMA_VERSION = 1` /
+      `+SCHEMA_VERSION = 2`, so `edb9dee` is indeed the commit that introduced v2. SB0's method is the right one
+      and its facts are sound; my flag above is about the inference drawn from them, not the facts.
+  fe76d83_IS_NOT_OLD_BYTES_OR_NEW_BYTES_IT_IS_A_POINT_WITH_CHANGES_ON_BOTH_SIDES:
+    prov: CHECKED
+    artifact: git:edb9dee..533cd64:the-linear-log
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      THE FRAMING I WOULD PUT UNDER THE COORDINATOR'S ERROR CLASS, WHICH R-781 NAMES AS "a claim about history not
+      read at the history". Verified ordering, all four confirmed ancestors in a line: `edb9dee` 09:03:02Z (phase
+      2, schema v2) -> `fe76d83` 09:05:50Z (the freeze point) -> `f039019` 09:49:59Z (DE 128) -> `533cd64`
+      10:07:44Z (DE 129). **The freeze point sits 2 minutes 48 seconds after phase 2 and 44 minutes before DE
+      128.** The word "frozen" invites one ordering intuition -- frozen means old, and old means it lacks whatever
+      is recent -- but A FREEZE PINS A POINT, AND A POINT HAS THINGS ON BOTH SIDES OF IT. Every claim about
+      `fe76d83` has to name the change it is asking about and be read at the history; asked "does it predate
+      phase 2?" the answer is no, asked "does it carry DE 128's corrections?" the answer is also no.
+  THE_COORDINATORS_R_780_PREMISE_AND_MY_ROUND_265_FINDING_ARE_MIRROR_IMAGES_BOTH_TRUE:
+    prov: CHECKED
+    artifact: git:edb9dee..533cd64:the-linear-log
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      I left this unreconciled in writing at round 265 -- "that bears on my first finding and I have not reconciled
+      it" -- so it is reconciled here. R-780 said the frozen bytes "PREDATE DE 126 phase 2's ledger schema v2":
+      FALSE, and REV corrected it. I said three in-band corrections are absent from `fe76d83`: TRUE, and still
+      true -- they are DE 128 and DE 129 work, 44 and 62 minutes AFTER the freeze point. TWO CLAIMS ABOUT ONE
+      COMMIT POINTING IN OPPOSITE DIRECTIONS, BOTH CORRECT, because they ask about changes on opposite sides of
+      it. Neither supersedes the other and no correction is owed either way. What the pair shows is that
+      "frozen" is not a position on a timeline -- the useful question is never "is this commit old or new" but
+      "which named change is on which side of it".
+  THREE_FALSIFIABLE_PREDICTIONS_NOW_STAND_ABOUT_AN_ARTIFACT_THAT_DOES_NOT_EXIST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      Recorded so that whichever way it goes, nobody has to reconstruct who said what. E2's artifact was still
+      absent at 10:26:18Z (0 matches for `p003_de_early_read_day_20260904__*.json`; the family's only member on
+      disk is the 09-03 one), expected about 10:55Z. Standing predictions, all from the same frozen bytes: (1)
+      MINE, round 265 -- the artifact will name its ruling at an ABSOLUTE path into `/home/yuqing/ctaNew-wt-de`
+      with no `path_is` key, because the frozen blob has no `relative_to` at all; (2) REV's SB0 -- it will declare
+      ledger schema 2 with BE 96's inventory fields present; (3) MINE, this round -- no decision ledger is written
+      on this path at all, so there may be nothing for (2) to be true or false about. (1) and (3) are independent;
+      (2) and (3) are in tension and the artifact settles them. If (3) is wrong I want that visible: it would mean
+      `receipt_path` reaches `run_day` by a route I did not find.
+  EXPECTED_CHECKS_IS_NOT_COMPUTED_AT_IMPORT_IT_IS_TYPED_AND_CHECKED_INSIDE_selftest:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      By parse, not by reading the comment: `EXPECTED_CHECKS` is assigned once, at `:83`, and the value node is
+      `ast.Constant` -- a module-level LITERAL `217`. The derivation `_derived_total771 = len(_sites771) +
+      _loopmul771` and BOTH assertions live inside `def selftest()` (3600..6429); there is no module-level AST
+      walk at all (checked by scanning `tree.body` for any assignment mentioning `_derived_total`: none). So the
+      shape is "typed at import, checked against a parse result when the selftest runs" -- which is what REV 98
+      SA2 says, and which REV accepts as the right trade ("importers still read a constant -- the accepted
+      shape").
+  SO_R_780s_DESCRIPTION_CARRIES_THE_SAME_OVERSTATEMENT_REV_ROUTED_TO_DE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      A wording that travelled, recorded once and not made more of than it is. R-779's dispatch asked DE for
+      "`EXPECTED_CHECKS` COMPUTED AT IMPORT from the AST walk"; DE delivered typed-and-checked; the cell's own
+      message then said the constant "equals the DERIVED total, NOT A TYPED ONE" (`:6424`), which REV 98's SC
+      routed to DE as "one word"; and R-780, written at 10:09Z before REV filed, described the landing as
+      "`EXPECTED_CHECKS` derived at import from the AST walk that finds the conditional arms" -- the dispatch's
+      words rather than the code's. THE REGISTER ALREADY CORRECTS ITSELF ONE ENTRY LATER: R-781 states it exactly
+      -- "`EXPECTED_CHECKS` typed at `:83` equals the parse (217)". So this is not an open error and needs no
+      correction; it is recorded because a reader of R-780 alone would carry the wrong shape, and because four
+      documents said "derived" where the artifact says "typed and checked".
+  THE_CONSTANT_IS_ONLY_AS_TRUE_AS_THE_LAST_SELFTEST_RUN:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      The substantive difference behind that wording, which is worth more than the word. If `EXPECTED_CHECKS`
+      were computed at import, an importer reading `RHO.EXPECTED_CHECKS` (`:4264` imports it from three modules)
+      would get a parse-derived number from whatever the file currently says. Being typed and checked inside
+      `selftest()`, an importer gets `217` whatever the file says, and the check fires ONLY WHEN THE SELFTEST IS
+      RUN. That is the accepted shape -- but it means the guarantee is not "the constant equals the parse", it is
+      "the constant equalled the parse the last time somebody ran the battery". For a value other modules import,
+      the distinction is the whole content of the guarantee.
+  NO_TYPED_TOTAL_REMAINS_IN_THE_ASSERTION_PATH_VERIFIED_BY_OCCURRENCE:
+    prov: CHECKED
+    artifact: live/pm_research/de_phase4_diag_runner.py
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      REV 98 SA2 claims no typed total is left in the assertion path and that 209 "appears only in prose". I
+      checked it the way the claim is shaped -- every occurrence of each number with its line, boundary-matched so
+      `217` does not match inside `2170`: **216** twice, both in comments (`:6314`, `:6323`); **217** at `:83`
+      (the published constant itself) and once in a comment; **209** four times, all comments or f-string check
+      MESSAGES (`:81`, `:1419`, `:5458`, `:6427`); **252** three times, comments and a message. Nothing an
+      assertion evaluates. REV's characterisation holds, including the parenthetical about 209.
+  REV_98s_A1_GREEN_IS_RELAYED_I_DID_NOT_DRIVE_THE_BATTERY:
+    prov: RELAYED
+    from: REV 98 part A §A1 (Q-REV-98 `f12e254`; the review file at `34ea920`), read at the file
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_98_A5_GREEN_AND_THE_PARSE_RESULT_2026-09-07.md
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      MARKED RELAYED DELIBERATELY. REV 98 SA1 reports driving the post-E4 world through the battery in a scratch
+      repo root and getting `de_early_read --selftest -> PASS -- 22 checks, n_disarmed 0, n_skipped 0, rc 0` in
+      both terminal states, "CHECKED, both run by me". I did not run it and I do not run other seats' batteries,
+      so the GREEN is REV's reading, not mine. WHAT I DID CHECK IS THE CODE PROPERTY UNDER IT, at round 265 and by
+      parse: the `If` at `:827` ends at `:858`, its else-body is 845..858, and all eight loads of `reh`/`dc` are
+      inside it. That makes green the expected outcome; it does not make it a measurement of mine. The
+      distinction is the one REV 98 itself draws about instruments -- "what ended it was not a better guard but a
+      change of instrument".
+  THE_CASCADE_RED_IS_STILL_ONE_MODULE_AND_UNCHANGED_SINCE_DE_129:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      Re-measured on both sides rather than carried: v19's `be_cascade.modules` holds 10 entries and pins
+      `de_phase4_diag_runner.py` at `ee4034c1`; the SHARED tree hashes `b60545d8` -- unchanged since DE 129 landed,
+      the first round today it has NOT moved -- and `fe76d83` hashes `ee4034c1`. SHARED 9 of 10, `fe76d83` TEN OF
+      TEN. One module named, no more, which is what makes the by-design red distinguishable from a real one.
+  THE_FREEZE_HOLDS_FOR_THE_SIXTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      `de_multiday_gate1_params_v20.json` absent (0 matches on disk in any state), head still v19;
+      `p003_de_multiday_gate1_design_v28.json` absent (0 matches), head still v27. R-780 records both as "composed
+      and unwritten" for the third time. `git status` clean across both directories.
+  E2_STILL_RUNNING_AT_SEVENTY_MINUTES_MemoryPeak_IDENTICAL_AT_SIX_READS:
+    prov: CHECKED
+    artifact: /run/user/1001/systemd/transient/deEARLY20260904.service
+    as_of: 2026-09-07T10:31:21Z
+    said: >-
+      Read while loaded (rule 20): LoadState loaded / ActiveState active / SubState running / ExecMainStatus 0 /
+      Result success, `InvocationID 775e46b59fee42228efab036b6abad58`, `WorkingDirectory=/home/yuqing/ctaNew-wt-de`,
+      `ExecMainStartTimestamp` Mon 2026-09-07 09:15:47 UTC. At 10:26:18Z that is 70 minutes 31 seconds; expected
+      exit about 10:55Z. `MemoryPeak` 3,119,230,976 -- THE IDENTICAL VALUE AT ALL SIX OF MY READS across rounds
+      261-266, which I keep recording because a peak that never moves is either a genuinely flat run or a property
+      that stopped updating, and only the sequence distinguishes them.
   # --- MEM round 265, 2026-09-07T10:16:49Z (the clock read by which every measurement below was complete) ---
   THE_THREE_IN_BAND_CORRECTIONS_DO_NOT_REACH_THE_BYTES_E2_AND_E4_EXECUTE:
     prov: CHECKED

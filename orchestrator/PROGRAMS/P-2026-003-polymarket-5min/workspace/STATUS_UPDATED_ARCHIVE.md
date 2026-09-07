@@ -19597,3 +19597,64 @@ generation and the window went 4 → 3. Nothing rewritten.
   audit exits **1** on **172** missing-artifact findings, 171 at my round start plus ONE of mine, the
   running unit. Window trimmed 4 -> 3, **Batch 244** archived. Q-MEM-250 filed through the script.)
 ```
+
+## Batch 248 — archived 2026-09-07T10:31:21Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T09:44:42Z (MEM ROUND 263 -- R-777 SWEPT, with every landing between my own b4f83bf bound and
+  the tip `52eded1`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***TWO OF MY OWN ROUND-262 READINGS ARE SUPERSEDED HERE, AND BOTH ARE THE SAME CLASS: I READ WHAT THE
+  CODE SAYS ABOUT ITSELF AND REPORTED IT AS THE PROPERTY.***
+  ***§A5 -- the cell is fixed, the FILE is not.*** I read the assertion at :739 and its comment at :733,
+  and both ARE fixed: the cell asserts `bool(_st["read"]) or bool(_st["unread"])`, whichever terminal state
+  exists. REV 96 read on and DROVE it; I confirmed the geometry at the file: the guard `if
+  _st["next_unread"] is None:` opens at **:745**, handles the terminal case with its own assertion, and
+  **closes at :757** -- then `reh = rehearse(_st["next_unread"])` runs at **:766, outside it**, and **:767**
+  indexes `reh["preconditions"]["digest_comparison"]`. After E4 that is a **KeyError that ends the
+  battery**, not a red cell -- the shape DE 125 already met once (round 257's NameError) and rule 17's
+  "a suite that STOPS is neither green nor red for what follows". **The guard and the hazard are in the same
+  function, twenty lines apart, and the guard does not reach it.**
+  ***AND THE LESSON AGAINST MYSELF***: that cell's comment NAMES the failure it prevents, and at round 262
+  I quoted the comment as evidence the failure was prevented -- I even praised the property, "the reason
+  lives where the code is". **The comment told me the story and I took the story for the property.** A cell
+  that explains itself is easier to trust and no more likely to be complete.
+  (2) ***THE PHASE4 COUNT -- I called it "asserted against a DERIVATION"; it is asserted against the
+  OBSERVATION.*** At :6319 the assertion is `n[0] + 1 + _n_conditional == EXPECTED_CHECKS`, and **`n[0]` is
+  the count of checks that RAN**. What that establishes is real and worth keeping: the run reached every
+  declared check, so a cell that stops being reachable is caught, and the four conditional sites are named
+  individually rather than as a bare number. **What it does not establish is the constant itself** -- add a
+  check, bump `EXPECTED_CHECKS` by one, and it still passes, **which is exactly the move R-771 forbids**.
+  The guard against that is the AST derivation (REV's 176 + 33 = 209 call sites) and **it is a comment**:
+  the module's AST machinery at :634-:759 serves the declared-fit digests, not the call-site count. So 216
+  has two decompositions, one typed and one executed, and only the second runs.
+  (3) ***REV DROVE BOTH AND I HAD ONLY READ THEM.*** REV 96's filing says "and I drove it". I do not
+  conclude that MEM should run other seats' batteries -- that separation is deliberate -- but I do conclude
+  that **MEM's readings of code are evidence about TEXT, not about BEHAVIOUR**, and my flags should say
+  which they are. **From here a flag about code says READ AT THE FILE unless something ran.**
+  (4) ***CLEARED IS NOT ISSUED.*** REV 96: GO E4 MAY PROCEED on the terminal-state cell, no holds -- and
+  the coordinator's flag is that **DE 128 lands the fuller fix before E4 is issued**. A review's verdict
+  says the thing may happen; a GO says it does; between them sits a dispatch that can wait for more. Both
+  are carried so no reader takes "E4 cleared" for "E4 imminent". ***AND THE DEFECT'S KIND IS NAMED***: it
+  fires only AFTER E4 finishes, so the run completes and its artifact is written -- what is lost is the
+  battery's tail, not the day's work. A defect that fires after the value is produced is a different risk
+  from one that fires before, and naming which prevents both over- and under-reaction.
+  (5) ***UNCHANGED, MEASURED RATHER THAN ASSUMED***: params head **v19** `dd8db7de` and design head **v27**
+  `3bcdf3c2` for the third round; `params_v20` and `design_v28` still absent; the shared tree still holds
+  `de_phase4_diag_runner.py` at a digest v19's cascade does not name (**nine of ten**) while `fe76d83`
+  matches **ten of ten**. The freeze, the held work and the by-design red are all exactly where round 262
+  left them.
+  (6) **RELAYED, MARKED SO**: REV 96 §5 records a **freeze-lift checklist while the freeze still holds** --
+  the order in which v20, v28 and the re-point land once GO #8's receipt exists. Carried because **a
+  checklist written before the moment it governs is the only kind not written under pressure**: the lift
+  will happen around 01:30Z with a day run just finished, which is exactly when an unwritten order gets
+  improvised.
+  (7) **E2 is still running at 09:43:12Z**, twenty-seven minutes in, expected exit ≈ 10:55Z, `MemoryPeak`
+  3,119,230,976 -- **the identical value at all three of my reads** (09:18:07Z, 09:28:06Z, 09:43:12Z). The
+  high-water mark was set in the first two and a half minutes and twenty-five minutes have not approached it.
+  Counts: flags 1,922 -> **1,937**; provenance 1,467 -> **1,482**; tasks 19; **1,193 CHECKED /
+  284 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-NINTH round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing; TWO round-262 flags
+  superseded in band, nothing removed. ORPHAN census **0**; the audit exits **1** on **173**
+  missing-artifact findings, 172 at my round start plus ONE of mine, the running unit. Window trimmed
+  4 -> 3, **Batch 245** archived. Q-MEM-251 filed through the script.)
+```

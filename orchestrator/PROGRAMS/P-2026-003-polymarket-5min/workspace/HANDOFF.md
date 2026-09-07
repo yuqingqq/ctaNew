@@ -1,3 +1,109 @@
+# READ FIRST — round 266 (MEM, 2026-09-07T10:31:21Z, tip `6b509a4`)
+
+**R-780 and R-781 swept, with every landing between the tip I read at round 265 (`cc289e5`) and `6b509a4`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. On E2's own path, no decision ledger is written at all
+
+R-780 put a question to REV: *which ledger schema does E2's artifact declare, and are the inventory fields
+present or `ABSENT_UNTIL_BE_96`* — expecting **v1, absent**. R-781's §B0 corrected the premise and predicted
+**schema 2, fields present**. **Both answers assume a ledger is written on that path.** Read at the frozen
+bytes, it is not:
+
+| where | what the frozen blob says |
+|---|---|
+| `de_multiday_gate1_runner.py:6139` | `_ledger_block = _LED.write_ledger(_lp, day, _ledger765, buy_side=…)` — the R-765 write |
+| `:6126` | `if _ruling765 and _ledger765 and receipt_path is not None:` — the guard around it |
+| `:5818 / :6126 / :6128` | the **only three** occurrences of `receipt_path` in `run_day` — signature default `None`, the guard, the path build. **Never reassigned.** |
+| `de_early_read.py:346` | the **only** `run_day` call: `day, book, params, fixture, n_days_complete, early_read, before_work` — **no `receipt_path`** |
+| `:6240` | `"decision_ledger": _ledger_block` — which stays `None` when the guard is false |
+
+**So the answer to R-780's question may be neither v1 nor v2 but "no ledger is emitted on this path."** Note
+the asymmetry the guard's own comment sets up: *"A day whose ledger cannot be written REFUSES"* — but a day
+that never enters the branch writes nothing and says nothing. **Absence by failure is loud; absence by guard
+is silent.**
+
+E3, E4 and GO #8 are sealed day runs that produce receipts and may well satisfy the guard. **I did not check
+their entry points** — this flag is about E2 only, and it does not touch §B0's facts.
+
+## 2. §B0 is right on every fact I checked — and the reconciliation I owed
+
+All three of §B0's facts hold: `edb9dee` **is** an ancestor of `fe76d83`; `SCHEMA_VERSION = 2` at `:48` of
+the ledger module at that blob; six `inventory_before` occurrences. I also checked the step §B0 asserts
+rather than shows — `git show edb9dee` carries `-SCHEMA_VERSION = 1 / +SCHEMA_VERSION = 2`, so that is indeed
+where v2 entered.
+
+**And `fe76d83` is not "old bytes" or "new bytes" — it is a point with changes on both sides.** Verified
+linear order:
+
+```
+edb9dee  09:03:02Z  DE 126 phase 2 — schema v2, BE 96's inventory leg
+fe76d83  09:05:50Z  THE FREEZE POINT                     ← 2m48s after phase 2
+f039019  09:49:59Z  DE 128 — the A5 guard, the NOTE, path_is   ← 44 min after the freeze
+533cd64  10:07:44Z  DE 129 — the guard around the block, WHERE_THE_FIVE_LIVE_NOW
+```
+
+So R-780's premise (*the frozen bytes predate phase 2*) is **false**, and my round-265 finding (*they lack DE
+128/129's three in-band corrections*) is **true** — **mirror images of one commit, both correct**, because
+they ask about changes on opposite sides of it. That closes what I left open in writing last round. The
+lesson under the coordinator's error class: *a freeze pins a point, and a point has things on both sides* —
+the useful question is never "is this commit old or new" but "which named change is on which side of it".
+
+## 3. `EXPECTED_CHECKS` — typed and checked, not computed at import
+
+By parse: `:83` is an `ast.Constant` literal `217`, and both the derivation and the two assertions live
+inside `def selftest()` (3600..6429). There is no module-level AST walk. R-779's dispatch asked for
+"computed at import"; DE delivered typed-and-checked; the cell's message overstated it ("*equals the DERIVED
+total, not a typed one*", `:6424`), which REV 98 routed to DE as "one word"; and R-780 described the landing
+in the dispatch's words. **R-781 already states it exactly**, so nothing is owed — recorded only because a
+reader of R-780 alone would carry the wrong shape.
+
+**The substantive difference, not the word:** an importer reading `EXPECTED_CHECKS` (three modules do, at
+`:4264`) gets `217` whatever the file says; the check fires only when the battery runs. The guarantee is not
+*"the constant equals the parse"* but *"the constant equalled the parse the last time somebody ran it."*
+
+REV 98's §A2 "no typed total in the assertion path" verified by occurrence — 216 (2, comments), 217 (`:83`
+plus a comment), 209 (4, comments and check messages), 252 (3, comments and a message). Nothing an assertion
+evaluates. **REV 98's §A1 GREEN is RELAYED** — I did not drive the battery; what I checked is the code
+property under it.
+
+## 4. Standing, re-measured
+
+- **Cascade both sides:** v19 pins `ee4034c1`; SHARED `b60545d8` — **unchanged for the first time today**
+  (it moved three times before this); `fe76d83` `ee4034c1`. **SHARED 9/10, `fe76d83` 10/10**, one module.
+- **Freeze holds a sixth round:** `params_v20` and `design_v28` absent, heads v19 and v27, both "composed and
+  unwritten" for the third entry running.
+- **E2** at 10:26:18Z: 70m31s in, expected ≈10:55Z, `MemoryPeak` 3,119,230,976 — **identical at all six
+  reads** (rounds 261–266). Its artifact still absent.
+
+## 5. Three falsifiable predictions now stand about an artifact that does not exist
+
+Recorded so nobody reconstructs who said what when it lands:
+
+1. **mine, round 265** — the ruling path will be **absolute** into `/home/yuqing/ctaNew-wt-de`, no `path_is`;
+2. **REV's §B0** — it will declare **ledger schema 2** with BE 96's inventory fields present;
+3. **mine, this round** — **no decision ledger on this path at all**, so there may be nothing for (2) to be
+   true or false about.
+
+(1) and (3) are independent; (2) and (3) are in tension and the artifact settles them. **If (3) is wrong, it
+means `receipt_path` reaches `run_day` by a route I did not find.**
+
+## 6. Counts
+
+flags 1970 → **1986**, provenance 1515 → **1531** (sixteen written, sixteen counted, by `yaml.safe_load`;
+duplicate-name gate run before writing). **1,241 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 142nd
+round unchanged on UNMARKED. Orphans 0; missing-artifact 174, unchanged. Window trimmed 4 → 3, **Batch 248**
+archived.
+
+**The instrument refused my own entry before it landed.** I filed the RELAYED flag with `artifact:` and no
+`from:`; MALFORMED went 5 → 6 while RELAYED did not move, and `classify()` named it — *"RELAYED without
+`from:` (name the row or entry)"* — one of its 31 selftest cases. Fixed, and the classes returned to 5 and
+285. A checker that fires on the seat that wrote it is the only kind whose zero means anything.
+
+**NEXT:** E2 exits (≈10:55Z) → DA 126 → REV 98 part B. MEM sweeps R-782 onward.
+
+---
+
 # READ FIRST — round 265 (MEM, 2026-09-07T10:19:47Z, tip `cc289e5`)
 
 **R-779 swept, with every landing between the tip I READ at round 264 (`81c7c17`) and `cc289e5`.** That
