@@ -5565,6 +5565,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             fixture: bool = False, receipt_path=None,
             n_days_complete: int = 1,
             peak_rss_mb_budget: float | None = None,
+            early_read: dict | None = None,
             before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
@@ -5794,9 +5795,37 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # string.
     reasons_checked = [assert_reasons_carry_no_sealed_value(r)
                        for r in results]
-    sealed = [seal(r, n_days_complete, params["G"]) for r in results]
-    for a in sealed:
-        assert_no_economic_leak(a, n_days_complete, params["G"])
+    # DE 121 / R-754: THE USER-RULED EARLY READ. `early_read` is None on
+    # every path that is not that read, and when it is None NOTHING below
+    # differs by a byte from what the four sealed days ran -- the same
+    # `seal()`, the same arguments, the same leak assertion. When it is
+    # set, the SAME seal function is called with the ruled bar on both
+    # sides, which is the documented unsealed state (`n >= g`), so the
+    # economics that this day just computed are carried instead of
+    # stripped. Nothing about the COMPUTATION changes: the numbers are the
+    # ones the sealed run produced and threw away.
+    if early_read is None:
+        sealed = [seal(r, n_days_complete, params["G"]) for r in results]
+        for a in sealed:
+            assert_no_economic_leak(a, n_days_complete, params["G"])
+    else:
+        _bar = int(early_read["G"])
+        if day not in early_read["days"]:
+            raise RunnerRefused(
+                f"REFUSED EARLY_READ_DAY_NOT_IN_THE_BAR: {day} is not one "
+                f"of the days the ruling names ({early_read['days']}). The "
+                f"early read opens exactly the days the USER ruled and no "
+                f"others; a fifth day would be consumed by a read nobody "
+                f"authorised.")
+        sealed = [seal(r, _bar, _bar) for r in results]
+        for a in sealed:
+            if a.get("sealed") is not False:
+                raise RunnerRefused(
+                    "REFUSED EARLY_READ_STILL_SEALED: the early read asked "
+                    "for the unsealed layout and got a sealed artifact. "
+                    "The read exists to show the economics; an artifact "
+                    "that still hides them is not the thing that was "
+                    "ruled.")
     # THE CONSUMER FALSIFIER MEETS A REAL EMISSION (reviewer §1.4). It had
     # three call sites, all in the battery. Each emitted result is checked
     # in BOTH states -- the artifact as sealed here, and the same result
