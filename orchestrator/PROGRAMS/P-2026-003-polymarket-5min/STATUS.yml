@@ -2,11 +2,10 @@ program: P-2026-003-polymarket-5min
 name: Polymarket Crypto 5-min Markets
 phase: resumed-loop-within-v2-scope
 status: resumed-2026-09-05T15:01:22Z-USER
-# ---- COORDINATOR CONSOLIDATION 2026-09-07T03:42Z (R-746; the sole writer MEM is halted for a reset -- exception logged at R-746 and ended; MEM sweeps R-745..R-746 at its next round) ----
-# The first race read CLOSED (09-03..05: day signs -,+,- ; neither floor clears 0.05 -- the only quotable fields); the SECOND read pre-declared v6 (09-06..09-09, G=4) and AUTHORISED at R-745 (overrulable), one of four days pinned.
-# Gate 1: three of six days sealed (09-03 .v2, 09-04 .v3, 09-05 .v3); the 09-06 day run de115day06_2 RUNNING at the stop (id 17a03209...), its receipt to land by itself.
-# The five former user items RULED at R-745, each overrulable. Chain heads: design v25, params v15, heavy_run_form v4, producer_exit_maps v5, be_daybook_structure v4, da_midnight_deploy_pin v2, da_anti_echo v1.
-# Seats at the stop 03:39Z: nothing unpushed anywhere; main tree clean; collectors alive; the heavy lock held by GO #6 alone. Details: RESULTS.md 0a, HANDOFF.md top block, COORDINATOR_RUNBOOK.md 7c.
+# ---- MEM 245, 2026-09-07T05:04:22Z: the coordinator's R-746 consolidation block that stood here is FOLDED into this round and RETIRED. ----
+# It was written for the halted MEM seat under the writer exception R-746 logs AND ENDS in the same sentence; MEM is sole writer of this file again from this round.
+# Its content is carried in `updated:` round 245 and in this round's flags (each with a flag_provenance entry, every claim re-verified at the artifact, not copied).
+# The block itself stands verbatim in git at 6d31e04 -- nothing it said is dropped, and this pointer is here so a reader can resolve it rather than trust this line.
                                # THE USER RESUMED THE LOOP at 2026-09-05T14:54Z.
                                # RESUMED IS NOT REOPENED. The scope is V2's own
                                # and is NAMED, not assumed: documentation,
@@ -68,6 +67,154 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T05:04:22Z (MEM ROUND 245 -- R-745, R-746 AND R-747 SWEPT IN ONE BATCH, tip `56f2425`.
+  STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. First round after the second seat reset;
+  round 245 was stopped before any write at the reset and is redone here. ***I OPENED NO SEALED
+  RECEIPT AND QUOTED NO SEALED FIELD*** -- everything I opened is a declaration, a capture record,
+  a source file, a unit reading, a directory listing or a git object.
+  (1) ***MY OWN AUDIT'S 150 "ARTIFACT NOT ON DISK" FINDINGS CARRY NO SIGNAL, AND I HAD BEEN
+  REPORTING THE WRONG HALF OF IT.*** The audit returns 155 findings (5 MALFORMED + 150 CHECKED
+  flags whose artifact "is not on disk"). I resolved all 150 myself rather than counting them:
+  **44 name a file that resolves in the repo** (a path plus a qualifier such as `--selftest` or a
+  symbol name, a glob, or a bare filename), **104 name no file at all** (a unit, a commit, a
+  systemctl reading, prose), and **2 name a file that resolves nowhere BECAUSE ITS ABSENCE IS THE
+  FLAG'S CONTENT** -- the second read's result family, which must not exist yet. ***NOT ONE OF THE
+  150 IS AN ARTIFACT THAT ACTUALLY VANISHED***, which is the failure the check exists for. The
+  instrument already returns "undecidable" for `git:` and `http:` references so that "cannot be
+  checked here" stays outside the codomain of "was checked and is gone"; every one of these 150
+  belongs to that same class. Those are the numbers AT MY READ, before this round's own entries;
+  after this batch the same audit reports **158 findings and 153 missing**, and the delta is exactly
+  my four unit/process readings minus the one citation I corrected at (3). ROUTED, NOT RULED: the
+  remedy is a third answer for non-path references, and it is MEM's own instrument to fix in a round
+  of its own, not inside a sweep.
+  (2) ***AND MY STANDING ROUND LINE SAID "ORPHAN AUDIT 0 FINDINGS EXIT 0", WHICH THIS INSTRUMENT
+  NEVER RETURNS.*** The orphan half is exact and I re-measured it both ways: `orphan_entries` is
+  **0** now and **0** at round 243's own committed file. The exit half is not: the audit exits **1**
+  whenever a finding stands, and it did at round 243's file (**145 findings**) exactly as it does
+  now (**155**). Two facts compressed into one line, and the weaker one borrowed the stronger one's
+  authority for at least three rounds. From this round the line reports both numbers separately.
+  (3) ***THE ONE CITATION A REPO-ROOT READER CANNOT RESOLVE IS THE FLAG FOR THE LOCATABILITY RULE
+  ITSELF.*** Of the 44 path-shaped references, exactly one failed: `the_two_protocol_rules_landed_
+  at_c09369b` cited `workspace/SEAT_PROTOCOL.md at c09369b` -- **program-relative, while the
+  resolver is repo-relative** -- and that flag's subject is R-726's rule that A CITED ARTIFACT IS
+  LOCATABLE. Corrected this round to the full path, its `said:` untouched and the correction named
+  in band -- twice: the program prefix, and then the documented `git:<ref>:<path>` shape, because with
+  the bare path the resolver still answered "not on disk" (the trailing " at c09369b" defeats it) and
+  the claim is about the file AT a commit. **Of this round's own 29 provenance entries, 25 resolve to a
+  file and 4 do not** -- all four readings of things that are not files (two of the same unit, one unit
+  listing, one process listing); the two git-object claims carry the `git:` prefix and are counted
+  UNDECIDABLE, not missing, which is the correct answer for them. Measured after writing, not asserted
+  before: my first draft of this sentence said 18 and 5, and the count corrected it.
+  (4) ***R-729 NAMES E2-A ZERO TIMES, SO MY ROUND-233 "FOUR ITEMS" WAS RIGHT AND THE FIFTH IS AN
+  ENUMERATION THAT GREW.*** Read at R-729's own text, not at the correction of it: "recorded here as
+  the fourth open user item (with the overnight cadence, the V2 line's ruling, and the XS rebalance
+  notional's source)" -- four -- and a grep for E2-A over the entry returns **0**. R-745 ruled five;
+  the coordinator's summary had substituted E2-A's admission bar for the notional. R-746 and RESULTS
+  0a record the drift as the coordinator's, and I confirmed it at the entry. The round-233 flag now
+  points forward; both lines stand.
+  (5) ***THE FIVE ITEMS ARE RULED BY THE COORDINATOR, EACH OVERRULABLE BY ONE LINE***, and MEM
+  carries them as state: the second race read AUTHORISED under R-531 (horizon 2026-09-10T01:00Z, its
+  own GO, the two reads never pooled); the overnight cadence SESSION-DRIVEN until two clean closes
+  (09-07, 09-08); the V2 line PARKED at 1/7 for want of an owned execution export, no proxy; E2-A's
+  admission bar REPLACED by an outage predicate pre-declared from 2026-09-06 forward and never
+  re-applied to the consumed window; the XS rebalance notional NOT invented, the size-aware arm
+  refused. Rulings, not results, and not the USER's.
+  (6) ***GO #6 WROTE NOTHING AND THE ZERO IS MEASURED THREE WAYS***: no file matches
+  `p003_de_gate1_day_run_20260906_SEALED__*.json`; the capture record's own
+  `files_written_to_derived_after_launch` is **0** with `receipt_written` false; and the sealed-family
+  digest census finds heads for 09-03 (`b4f11590`), 09-04 (`6c74928f`) and 09-05 (`5f0241fc`) and
+  **ABSENT** for 09-06 -- eight files, none opened. Eighty minutes of day run, nothing false recorded.
+  The guard that refused is `assert_source_unchanged` (defined line 586, called at 10630 as "the
+  day-run emit"): "the run is fine, Python holds the modules in memory; what is not fine is a receipt
+  that names bytes which did not produce" -- head_at_launch `04d3eb3c44a0`, head_at_emit
+  `25031620bb2e`.
+  (7) ***THE CAPTURE RECORD CARRIES WHAT RULE 20 ASKS, INCLUDING THE HALF THAT IS USUALLY MISSING***:
+  five fields + InvocationID read while loaded (loaded / failed / failed / 1 / exit-code, id
+  `17a03209...`), the journal copy with its own digest AND
+  `journal_horizon_oldest_at_capture 2026-09-06T23:24:33Z` -- the retention state as a MEASUREMENT
+  beside the copy -- and the helper's `wait117.out` by path, digest and attribution. It says of itself
+  "NOT a receipt". ***AND R-747'S "2.4G PEAK" IS GiB AND RECONCILES EXACTLY***: 2,596,265,984 B =
+  2.596 GB = **2.418 GiB**. Recorded so the next reader does not file a discrepancy that is not there.
+  (8) ***GO #7 IS RUNNING AT MY READ AND SubState IS WHAT SAYS SO***: `de115day06_3`, id
+  `c3f28dfb22584efca4d37a10a72240e8`, loaded / active / **running**, ExecMainStatus 0, Result success,
+  MemoryPeak 2,601,975,808. Under `RemainAfterExit` a FINISHED unit reads loaded/active/exited with
+  the same 0 and success, so SubState is the discriminator -- rule 20's own reading. The lock agrees:
+  exactly two processes on the declared lock, `flock` 557443 and its payload 557444, GO #7 alone. The
+  unit's `ExecMainStartTimestamp` is **03:51:19Z** against the entry's **03:51:22Z**; both recorded,
+  neither called wrong -- different events three seconds apart.
+  (9) ***wt-de DID NOT FOLLOW THE TWO COMMITS THAT LANDED AFTER GO #7 LAUNCHED***: wt-de stands at
+  `2503162`, the tip R-747 says it launched from, while the shared tree moved 0c9a7f3 -> 56f2425. The
+  hazard R-747 names is the RUNNING unit's working directory, not the shared tree. Nothing may move
+  wt-de until GO #7 exits.
+  (10) ***SIX BE UNITS ARE STILL LOADED AFTER THEIR RECEIPTS LANDED*** -- be72book, be72frag2,
+  be72struct, be72tape (loaded/active/exited) and be72frag, be87fwd06 (loaded/failed/failed). Rule 20:
+  "after the receipt lands and the five fields + id are copied, stop the unit so the name is free -- a
+  loaded name, exited or failed, makes the next systemd-run FAIL"; a failed one needs `reset-failed`.
+  `de115day06_2` is NOT among them, so DE's helper did stop its unit. BE's surface: ROUTED, not
+  touched, and it blocks nothing today because every launch takes a unique name.
+  (11) ***ALL SEVEN CHAIN HEADS IN RESULTS 0a RESOLVE EXACTLY, THROUGH THE RESOLVER AND NOT BY
+  FILENAME***, every family with `orphan_branches` EMPTY: design v25 `b95ac59c` (24 versions, two
+  forks both MERGED), params v15 `92858fc7`, heavy_run_form v4 `b599f2e2`, producer_exit_maps v5
+  `5b7043b2`, be_daybook_structure v4 `1913a599`, da_midnight_deploy_pin v2 `e454ff3d`, da_anti_echo
+  v1 `77bf68cd` -- and beside them the two race families, be_race_read_declaration v6 `a240ccc5` and
+  be_race_read_feed_pins v2 `26b0a67d` (one of four days pinned).
+  (12) ***E2-A'S HEAD IS v7 AT THE FILES, SO THE NEXT VERSION IS v8 BY THE PAIR***: seven versions
+  v1..v7 with no gaps, v7 = `57c92c9e899eb691`, exactly the harvest's digest; the DA 116 dispatch's
+  "v6 superseding v5" was the coordinator's error. ***AND THE CENSUS'S DAY SPAN IS WIDER THAN THE
+  RULINGS QUOTE***: 8 symbols, the union of their day lists spanning **20260819..20260906 (19 days)**,
+  gap_threshold 0.05, citing declaration v5 by path and sha256 -- against the "08-20..09-05" R-745
+  quotes.
+  (13) ***FOUR COLLECTORS ARE ALIVE AND MY FIRST PROBE COULD NOT TELL TWO OF THEM APART***: pids 1049
+  (collect_pm_prices), 30901 (collect_hf), 30902 (collect_hl), 1108125 (collect_pm). `pgrep -f
+  collect_pm` returned 1049 for BOTH collect_pm and collect_pm_prices because one name is a prefix of
+  the other -- it would have reported four while seeing three. The count is right; the probe that
+  first produced it was not, and the discriminating one is the one recorded.
+  (16) ***SECOND ADDENDUM, 05:18:15Z -- FOUR COMMITS AND R-748 LANDED WHILE I WROTE, AND MY OWN
+  "NOTHING LANDED" FLAG IS SUPERSEDED BY THIS LINE.*** R-748 (05:08Z: BE 90 verified, no mode-0600
+  version remains, GO #7 still running at 77 minutes) calls itself the last entry of the session being
+  cleared; b416224 and d81962d (Q-BE-333), 7494760 (the runbook at R-749) and 53cc4be (DA 118's E2-A
+  emitter at **v8**, matching the v8-from-v7 correction I verified at the files) landed beside it.
+  **None is swept here** -- R-748 onward is MEM 246's batch, and I claim nothing about them beyond
+  their existence. ***AND TWO SEATS' ROWS MUTUALLY BLOCKED EACH OTHER IN THE SHARED REGISTER***: at
+  05:14:54Z my row was alone and the dry-run passed; by the real run DE's Q-DE-117 was in the file too
+  and the script REFUSED with FOREIGN_ROW_IN_REGISTER -- **correctly**, because a commit by file
+  pathspec would have carried another seat's row (R-562's hazard), and the guard is symmetric, so DE's
+  landing was refused by MY row at the same moment. I withdrew mine to unblock DE; DE's was already
+  gone, almost certainly withdrawn for the same reason. **Two seats were polite and both rows ended up
+  unlanded.** The guard is right and stays; the missing piece is a queue discipline for the moment two
+  seats hold rows at once -- ROUTED to the coordinator, it is the shared script. ***AND A HAZARD OF MY
+  OWN, NAMED RATHER THAN EXCUSED***: I edit the register by whole-file read-modify-write, so a
+  concurrent insertion inside that window would be silently clobbered. I cannot exclude by inspection
+  that this is what removed DE's row rather than DE removing it -- only that my edit deleted no line
+  but my own. **Q-DE-117 was absent from HEAD, origin and the working file at 05:18:15Z -- and at
+  05:20Z it is LANDED at `950cd6a`**, so the withdrawal did what it was for and nothing was lost. That
+  settles the clobber question at the artifact rather than by argument: the row exists and DE landed it
+  itself. The hazard stands as a hazard I carry, not as a loss I caused.
+  (15) ***ADDENDUM WITHIN THE ROUND, 05:12:59Z -- GO #7 FINISHED WHILE I WROTE, AND (8) ABOVE IS
+  SUPERSEDED BY IT (nothing there is withdrawn: it was read at 04:5xZ and carries that as-of).*** The
+  five fields + id, read WHILE LOADED at 05:12:38Z: loaded / active / **EXITED** / ExecMainStatus 0 /
+  Result success, id `c3f28dfb2258…`, start 03:51:19Z, **exit 05:11:43Z** (wall 1 h 20 min 24 s), CPU
+  4,815.5 s, MemoryPeak 2,601,975,808. ***THE 09-06 SEALED RECEIPT EXISTS***:
+  `p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json`, 64,429 B, sha256 `1a2dd10f017d975f…`
+  -- a digest of BYTES; **I did not open it and quote no field of it.** The sealed census is now
+  **FOUR** days (09-03 `b4f11590`, 09-04 `6c74928f`, 09-05 `5f0241fc`, 09-06 `1a2dd10f`) against the
+  **six** the read gate needs at 2026-09-09; I assert nothing about `n_days_complete`, which is a field
+  inside those receipts. ***AND IT IS NOT IN THE LEDGER YET***: `git check-ignore` resolves it to
+  `.gitignore:9` (`data/`) while the eight earlier sealed receipts are tracked, so the day is PRODUCED
+  and NOT LANDED -- a reader grepping the ledger will not find it, and landing it is DE's act with its
+  capture record. The heavy lock is **FREE** at this read (fuser returns nothing, against two processes
+  at 05:01Z), so the next heavy launch is unblocked.
+  (14) ***THE COORDINATOR'S TWO BLOCKS ARE FOLDED AND RETIRED, AND MEM IS SOLE WRITER AGAIN.*** R-746
+  logs the writer exception and ends it in the same sentence. The HANDOFF top block and the STATUS.yml
+  comment block written for the halted seat are carried here and in this round's flags, and each is
+  replaced by a pointer to `6d31e04`, which holds them verbatim. Nothing they said is dropped.
+  Counts: flags 1,636 -> **1,665**; provenance 1,181 -> **1,210**; tasks 19; **932 CHECKED /
+  273 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-FIRST round unchanged on
+  UNMARKED**. My earlier rows reported "278 RELAYED", which folded the 5 MALFORMED in; the split is
+  reported separately from here. ORPHAN census **0** entries; the audit itself exits **1** on 153
+  missing-artifact findings, every one of them classified at (1) above. Of my own 29 entries, 25
+  resolve and 4 are readings of things that are not files. Window trimmed 4 -> 3, **Batch 227**
+  archived. Q-MEM-233 filed through the script.)
   2026-09-07T02:39:16Z (MEM ROUND 244 -- R-744 SWEPT, tip `a487e22`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) ***THE PEAKS FILE HOLDS SEVENTEEN NOT_RECORDED ROWS, NOT EIGHTEEN.*** R-744 reports 18;
@@ -170,51 +317,6 @@ updated: >-
   Counts: flags 1,614 -> 1,625; provenance 1,159 -> 1,170; tasks 19; **892 CHECKED / 278 RELAYED /
   455 UNMARKED -- the HUNDRED-AND-NINETEENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 225 archived. Q-MEM-231 filed through the script.)
-  2026-09-07T02:16:02Z (MEM ROUND 242 -- R-742 SWEPT, tip `adf2f76`. STATE ONLY. MEM ASSERTS NO
-  RESULT.
-  (1) ***THE PIN STATUS DRIVEN READ-ONLY AT THE REAL PIN***: keys printed and asserted, then
-  **status CLEAN, `n_stale` 0, `n_missing` 0**, both lists empty -- so all 33 pinned files' on-disk
-  digests match the pin AT THIS READING. A live state: the drift this check exists for is exactly a
-  landing moving one of those files, and DA lands often, so it carries its as-of. ***AND I DID NOT
-  RUN DA's CENSUS, BECAUSE IT WRITES***: `da_nonhead_census` emits a record into DA's family, so
-  running it would have made me a producer of another seat's artifact; `stale_pins()` is a pure read,
-  so I called that. **The falsifier R-742 quotes (edit -> STALE -> restore -> CLEAN) I did NOT
-  reproduce** -- it edits a real pinned file. Taken as RELAYED, and said so.
-  (2) ***THE UNIT's `ExecStart` IS THE SCRIPT THE EXIT MAP DECLARES.*** The unit runs
-  `/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh`; the exit map's producer key is
-  `live/pm_research/da_midnight_verify.sh` -- **the same script**. So rc 7's declaration is attached
-  to the code the unit actually runs, not to a namesake, which is what makes *"rc 7 = DEPLOY_DRIFT,
-  nothing ran, a catch-up day"* resolvable by a reader holding only the unit's exit status.
-  (3) **v1's `unit` FIELD WAS A LIST AND v2's IS A STRING** -- the defect DA caught by reading its own
-  artifact after writing it, visible at the files: v1's `unit` is an array of unit-file objects, so a
-  reader asking *which unit is this pin for* got a list of paths; v2's is
-  `"da-midnight-verify.service"`. ***AND THE CORRECTION RENAMES RATHER THAN DROPS***: v2 ADDS
-  `installed_unit_files`, so the list v1 mis-filed is still carried, under a name that says what it
-  is. **That is what keeps a v2 a correction and not a loss.** v1 is not edited.
-  (4) **33 FILES COUNTED FROM THE ARRAY, NOT READ FROM `n_files`** -- 33, equal to the field, the
-  total agreeing with its parts; tier split **REPORT 26 / REFUSE 7 = 33**, matching the entry; commit
-  `9abba110a9a9b269…`, `deployed_at` 02:11:49Z. **And every one of the 33 entries carries a 64-hex
-  digest** -- R-608's *"the link IS the pair"* applied to a DEPLOY PIN rather than a declaration
-  chain, which is what lets `stale_pins()` answer at all. The chain resolves to v2 (2 versions,
-  `orphan_branches []`; v1 `38287c4fe32351cc`, v2 `e454ff3d53236dc9`).
-  (5) **EXIT 8 VERIFIED AT THE LINE, NOT BY PATTERN.** My first grep guessed the shapes
-  (`exit(8)`, `SystemExit(8)`, `rc 8`, `EXIT_8`) and found **nothing** -- which I did **not** report
-  as an absence. I listed every `exit` in the script instead and found it at line 132:
-  `|| { echo "REFUSED: the pin was not written: $_PIN" >&2; exit 8; }`. **Sixth time this session a
-  guessed pattern returned an empty answer, and the sixth time listing the real thing was one command
-  away.**
-  (6) **THE ROLL-UP PRECEDENCE IS STALE-BEATS-MISSING**, read at the source:
-  `status = "DEPLOY_PIN_STALE" if stale else "PINNED_FILE_ABSENT" if missing else "CLEAN"`. If a file
-  is stale AND another missing, the single word says STALE -- but both lists come back with their own
-  counts, so **nothing is lost, only summarised**. Recorded so neither is mistaken for the other.
-  **`PINNED_FILE_ABSENT` exists** because, in DA's words, *"an absent file has no digest, and reading
-  that as clean is how a deleted guard would deploy itself"* -- rule 16's shape at the deploy layer,
-  absence given its own name instead of falling through to the good case. (That reason is RELAYED;
-  what I measured is that the status is in the code and the real pin reports 0 missing.)
-  Counts: flags 1,603 -> 1,614; provenance 1,148 -> 1,159; tasks 19; **882 CHECKED / 277 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-EIGHTEENTH round unchanged on UNMARKED**; RELAYED moves by one, for
-  the falsifier I declined to reproduce. ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 224
-  archived. Q-MEM-230 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -386,6 +488,36 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 245, R-745 + R-746 + R-747 swept (first round after the second seat reset) ---
+  GO_7_EXITED_0_WITHIN_MY_ROUND_and_the_09_06_receipt_EXISTS: 1A2DD10F-64429-B-05-11-43Z
+  the_sealed_day_census_is_now_FOUR_and_the_read_gate_needs_SIX: 09-03-04-05-06-GATE-2026-09-09
+  the_new_receipt_is_ON_DISK_but_NOT_IN_THE_LEDGER_yet: DATA-GITIGNORED-EIGHT-OLDER-ONES-TRACKED
+  the_heavy_lock_is_FREE_at_my_second_read: FUSER-RETURNS-NOTHING
+  USER_items_FIVE_RULED_BY_COORDINATOR_each_OVERRULABLE_by_one_line: R-745-READ-CADENCE-V2-E2A-NOTIONAL
+  and_the_round_233_FOUR_items_flag_is_SUPERSEDED_by_that_ruling: FOUR-WAS-RIGHT-AT-R-729
+  R_729_names_E2A_ZERO_times_so_the_enumeration_GREW_without_an_entry: COORDINATOR-DRIFT-NOT-MY-MISCOUNT
+  GO_6_REFUSED_at_its_emit_and_wrote_NOTHING_measured_three_ways: 0-FILES-RECEIPT-FALSE-09-06-ABSENT
+  the_cause_was_the_RESET_BRIEF_refreshing_wt_de_UNDER_the_running_unit: 04D3EB3-TO-2503162-AT-THE-EMIT
+  the_GO_6_capture_record_carries_what_rule_20_asks_INCLUDING_the_journal_horizon: FIVE-FIELDS-ID-HELPER-DIGEST
+  R_747s_2_4G_is_GiB_and_it_RECONCILES_with_the_records_bytes: 2596265984-IS-2-418-GiB
+  GO_7_is_RUNNING_at_my_read_and_SubState_is_what_says_so: LOADED-ACTIVE-RUNNING-C3F28DFB
+  the_units_OWN_start_stamp_is_03_51_19Z_the_entry_says_03_51_22Z: BOTH-RECORDED-NEITHER-CALLED-WRONG
+  wt_de_did_NOT_follow_the_TWO_commits_that_landed_after_GO_7_launched: WT-2503162-MAIN-56F2425
+  SIX_BE_units_are_STILL_LOADED_after_their_receipts_landed: FOUR-EXITED-TWO-FAILED-RULE-20-SAYS-STOP
+  the_heavy_lock_is_held_by_GO_7_ALONE_at_my_read: ONE-FLOCK-ONE-PAYLOAD
+  ALL_SEVEN_chain_heads_in_RESULTS_0a_resolve_EXACTLY_through_the_shared_resolver: ZERO-ORPHAN-BRANCHES
+  the_sealed_family_census_by_DIGEST_confirms_THREE_heads_and_09_06_ABSENT: B4F11590-6C74928F-5F0241FC
+  E2A_head_is_v7_at_the_files_so_the_next_version_is_v8_by_the_pair: 57C92C9E-SEVEN-VERSIONS
+  the_E2A_census_day_span_is_WIDER_than_the_rulings_quote: 20260819-20260906-19-DAYS-8-SYMBOLS
+  MY_OWN_AUDITS_150_MISSING_ARTIFACT_FINDINGS_CARRY_NO_SIGNAL: 44-RESOLVE-104-NOT-A-FILE-2-ABSENT-BY-DESIGN
+  ZERO_of_the_150_is_an_artifact_that_actually_VANISHED: THE-CHECK-FIRES-ON-NOTHING-IT-EXISTS-FOR
+  and_my_standing_round_line_EXIT_0_is_NOT_what_this_instrument_RETURNS: ORPHANS-0-WAS-THE-TRUE-HALF
+  the_ONE_citation_a_REPO_ROOT_reader_cannot_resolve_is_the_LOCATABILITY_flag_itself: CORRECTED-THIS-ROUND
+  FOUR_collectors_alive_and_my_FIRST_probe_could_not_tell_TWO_of_them_apart: PGREP-COLLAPSED-PM-INTO-PM-PRICES
+  the_coordinators_TWO_BLOCKS_are_FOLDED_and_MEM_is_SOLE_WRITER_again: R-746-EXCEPTION-ENDED-AT-THAT-ENTRY
+  nothing_landed_between_my_reads_and_my_commit_beyond_56f2425: SUPERSEDED-AT-05-18Z-FOUR-COMMITS-AND-R-748-LANDED
+  R_748_LANDED_WHILE_I_WROTE_and_is_UNSWEPT_by_design: SWEPT-NEXT-ROUND-NOT-CLAIMED-HERE
+  TWO_SEATS_ROWS_MUTUALLY_BLOCKED_EACH_OTHER_IN_THE_SHARED_REGISTER: BOTH-WITHDREW-DE-RELANDED-950CD6A
   # --- MEM round 244, R-744 swept ---
   the_peaks_file_holds_SEVENTEEN_NOT_RECORDED_not_eighteen: 17-PLUS-3-EQUALS-THE-20-DATA-ROWS
   and_the_files_OWN_n_rows_field_reconciles_with_the_count: 20-EQUALS-20
@@ -541,7 +673,7 @@ flags:
   I_opened_no_result_this_round_either: SYNTHETIC-FIXTURE-ONLY
   the_clause_generator_matches_its_own_docstring_clause_for_clause: PAIR-DAYS-M-FLOORS-PREDICATE-NO-SIGN
   a_quiet_hold_is_the_next_valid_state: ALL-PRODUCING-SEATS-STAND-BY-FOR-0000Z
-  USER_items_FOUR_open_with_the_second_reads_horizon: HORIZON-2026-09-10T01-00-00Z-3D4H17M-FROM-20-42-41Z
+  USER_items_FOUR_open_with_the_second_reads_horizon: SUPERSEDED-BY-R-745-FIVE-RULED-OVERRULABLE
   REVs_substance_claim_INDEPENDENTLY_CONFIRMED_with_a_control_that_fires: 09-03-04-05-PRESENT-09-06-ABSENT
   and_MY_FIRST_PROBE_COULD_NOT_DISCRIMINATE_so_it_proved_nothing: CONTROL-READ-ZERO-ON-A-CONSUMED-DAY-TOO
   pooling_is_foreclosed_by_v5s_OWN_sentence_read_at_the_artifact: BEFORE-EITHER-READ-IS-OPENED-ALREADY-IMPOSSIBLE
@@ -25997,6 +26129,321 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 245, 2026-09-07T05:04:22Z (the clock read by which every measurement below was complete) ---
+  R_748_LANDED_WHILE_I_WROTE_and_is_UNSWEPT_by_design:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T05:18:15Z
+    said: >-
+      R-748 (2026-09-07T05:08Z) landed after my sweep began: BE 90 verified, no `_v<N>.json` at mode
+      0600 remains, GO #7 still running at 77 minutes, and it names itself "the last entry of the
+      session being cleared". Three more commits landed in the same window -- b416224 and d81962d
+      (Q-BE-333), 7494760 (the runbook's next-entry line at R-749) and 53cc4be (DA 118's E2-A emitter
+      at v8, matching the v8-from-v7 correction I verified at the files). NONE of them is swept by this
+      round and I claim nothing about them beyond their existence; R-748 onward is MEM 246's batch.
+  TWO_SEATS_ROWS_MUTUALLY_BLOCKED_EACH_OTHER_IN_THE_SHARED_REGISTER:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-07T05:18:15Z
+    said: >-
+      reconstructed from commit timestamps and file states, not from a report. 05:14:54Z I inserted
+      Q-MEM-233; the dry-run passed with one added line (mine alone); by my real run DE's Q-DE-117 was
+      also in the file and the script REFUSED with FOREIGN_ROW_IN_REGISTER, naming DE's row -- correctly,
+      because a commit by file pathspec would have carried another seat's row (R-562's hazard). The guard
+      is symmetric, so DE's own landing was refused by MY row at the same moment. I withdrew mine to
+      unblock DE (saved verbatim, re-inserted after); by then DE's row was already gone, almost certainly
+      withdrawn for the same reason. TWO SEATS WERE POLITE AND BOTH ROWS ENDED UP UNLANDED. The guard is
+      right and stays; what is missing is a queue discipline for the moment two seats hold rows at once.
+      ROUTED to the coordinator: it is the shared script, not MEM's. AND A HAZARD OF MY OWN, NAMED: I edit
+      the register by whole-file read-modify-write, so a concurrent insertion inside that window would be
+      silently clobbered -- I cannot exclude by inspection that this is what removed DE's row rather than
+      DE removing it, only that my edit deleted no line but my own. RESOLVED AT THE ARTIFACT 05:20Z: Q-DE-117 is
+      LANDED at 950cd6a -- the withdrawal did what it was for, nothing was lost, and the read-modify-write
+      hazard stands as a hazard I carry rather than a loss I caused.
+  GO_7_EXITED_0_WITHIN_MY_ROUND_and_the_09_06_receipt_EXISTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json
+    as_of: 2026-09-07T05:12:59Z
+    said: >-
+      GO #7 was RUNNING at 04:5xZ and had EXITED by my 05:12:28Z read; the five fields + id, read
+      WHILE LOADED at 05:12:38Z: loaded / active / EXITED / ExecMainStatus 0 / Result success,
+      InvocationID c3f28dfb22584efca4d37a10a72240e8, ExecMainStartTimestamp 03:51:19Z,
+      ExecMainExitTimestamp 05:11:43Z (wall 1 h 20 min 24 s), CPUUsageNSec 4,815,534,224,000 (about
+      4,815.5 s), MemoryPeak 2,601,975,808. Under RemainAfterExit, SubState EXITED against ExecMainStatus
+      0 and Result success is a FINISHED run -- the same three fields that read RUNNING an hour earlier.
+      The receipt exists at the path above: 64,429 B, mtime 2026-09-07T05:11:43.333Z, sha256
+      1a2dd10f017d975f624093f41fe4a329255d16cd8ee71fd30e832df4811ff384 -- a digest of BYTES. I DID NOT
+      OPEN IT and quote no field of it; DE's capture and DA 117 are the next acts, not mine.
+  the_sealed_day_census_is_now_FOUR_and_the_read_gate_needs_SIX:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T05:12:59Z
+    said: >-
+      re-censused by digest after GO #7 exited, still without opening any of them: 09-03 b4f1159015ebda65
+      (.v2), 09-04 6c74928fbc6c8a6b (.v3), 09-05 5f0241fc4d082420 (.v3), 09-06 1a2dd10f017d975f (no
+      correction yet). FOUR of the six days the read gate needs at 2026-09-09. I assert nothing about
+      n_days_complete: it is a field inside these receipts and DE's corrections are what reconcile it.
+  the_new_receipt_is_ON_DISK_but_NOT_IN_THE_LEDGER_yet:
+    prov: CHECKED
+    artifact: .gitignore
+    as_of: 2026-09-07T05:12:59Z
+    said: >-
+      git check-ignore resolves the new receipt to .gitignore:9 (`data/`), so it is ignored, not merely
+      untracked -- while git ls-files shows the EIGHT earlier sealed receipts tracked, landed with the
+      `git add -f` rule 21 requires. So the day is produced but NOT YET LANDED, and a reader who greps
+      the ledger for it will not find it. State, not a complaint: landing it is DE's act, with its
+      capture record.
+  the_heavy_lock_is_FREE_at_my_second_read:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    as_of: 2026-09-07T05:12:59Z
+    said: >-
+      fuser on the declared lock returns NOTHING now, where at 05:01Z it returned exactly two processes
+      (flock 557443 and payload 557444). The lock released with GO #7's exit, so the next heavy launch
+      is unblocked. Read, not inferred from the unit's state.
+  USER_items_FIVE_RULED_BY_COORDINATOR_each_OVERRULABLE_by_one_line:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      R-745 rules five items, each disclosed for overrule by one line: (1) the SECOND race read is
+      AUTHORISED under R-531 -- the race's standing design, not a one-shot, the two reads never
+      pooled, the read opening at its horizon 2026-09-10T01:00Z as a separate GO; (2) the overnight
+      cadence stays SESSION-DRIVEN, a timer chain re-proposed only after two clean closes (09-07 and
+      09-08); (3) the V2 line stays PARKED at 1/7 for want of an owned execution export -- no proxy,
+      rules 3 and 9; (4) E2-A's admission bar is REPLACED by an OUTAGE predicate (any bookTicker gap
+      run >= 60 s) pre-declared for days from 2026-09-06 onward and never re-applied to the consumed
+      window, quote age reported not admitting; (5) the XS rebalance notional is NOT invented and the
+      size-aware arm stays refused. These are the coordinator's rulings, not the USER's; MEM carries
+      them as state and rules nothing.
+  and_the_round_233_FOUR_items_flag_is_SUPERSEDED_by_that_ruling:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      the round-233 flag USER_items_FOUR_open_with_the_second_reads_horizon stands at its line with
+      its provenance intact; its value now points forward to this ruling. FOUR was right when it was
+      written and FIVE is what R-745 ruled -- the difference is an enumeration that grew, not a
+      miscount, and both lines stand.
+  R_729_names_E2A_ZERO_times_so_the_enumeration_GREW_without_an_entry:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      I read R-729's own text rather than the summary of it. Its enumeration is "recorded here as the
+      fourth open user item (with the overnight cadence, the V2 line's ruling, and the XS rebalance
+      notional's source)" -- four, and a grep for E2-A over the whole entry returns ZERO occurrences.
+      So E2-A's admission bar was never in the enumeration my round-233 flag carried; the coordinator's
+      03:2xZ summary substituted it for the notional and R-745 ruled five. R-746 and RESULTS 0a record
+      the drift as the coordinator's. I verified it at the entry, not at the correction.
+  GO_6_REFUSED_at_its_emit_and_wrote_NOTHING_measured_three_ways:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      three independent readings, none of them a report: (a) zero files match
+      p003_de_gate1_day_run_20260906_SEALED__*.json in the ledger; (b) the capture record's own
+      files_written_to_derived_after_launch is 0 and receipt_written is false; (c) the sealed-family
+      digest census finds heads for 09-03, 09-04 and 09-05 and ABSENT for 09-06. Eighty minutes of
+      day run, nothing written, nothing false recorded.
+  the_cause_was_the_RESET_BRIEF_refreshing_wt_de_UNDER_the_running_unit:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      assert_source_unchanged is defined at line 586 ("REFUSE THE EMIT if ANY of the code that ran
+      changed under it. Not the RUN -- the run is fine, Python holds the modules in memory. What is
+      not fine is a receipt that names bytes which did not produce") and is called at line 10630 as
+      "the day-run emit". The capture record names the same mechanism: head_at_launch 04d3eb3c44a0,
+      head_at_emit 25031620bb2e, refusal_predicate head_unchanged_during_the_run. The guard did what
+      rule 12 asks of a carrying_commit; the cost was the coordinator's brief, which R-747 says in
+      its own voice.
+  the_GO_6_capture_record_carries_what_rule_20_asks_INCLUDING_the_journal_horizon:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_de115day06_2__20260907T035020Z.json
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      key set read first, then the fields. five_fields_and_id_read_while_loaded = loaded / failed /
+      failed / ExecMainStatus 1 / Result exit-code, InvocationID 17a0320936bd40929474a21e85f0b87c,
+      read at 03:50:02Z from outside the unit. journal_capture carries payload_lines 13, manager_lines
+      4, its own sha256 and journal_horizon_oldest_at_capture 2026-09-06T23:24:33Z -- the retention
+      state as a MEASUREMENT beside the copy, which is the half rule 20 added after DE 84's Started
+      line vanished. helper_capture carries wait117.out's path, digest and attribution. The record
+      says of itself "NOT a receipt".
+  R_747s_2_4G_is_GiB_and_it_RECONCILES_with_the_records_bytes:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_gate1_run_journal_de115day06_2__20260907T035020Z.json
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      the record's memory_peak_bytes is 2,596,265,984 -- 2.596 GB and 2.418 GiB. R-747's "2.4G peak"
+      is the GiB reading and agrees exactly; a reader comparing 2.6 GB with 2.4G would file a
+      discrepancy that is not there. Recorded so the next reader does not.
+  GO_7_is_RUNNING_at_my_read_and_SubState_is_what_says_so:
+    prov: CHECKED
+    artifact: systemctl --user show de115day06_3.service (a unit, not a file)
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      LoadState loaded, ActiveState active, SubState running, ExecMainStatus 0, Result success,
+      InvocationID c3f28dfb22584efca4d37a10a72240e8, MemoryPeak 2,601,975,808 at my read. Under
+      RemainAfterExit a finished unit reads loaded/active/EXITED with the same ExecMainStatus 0 and
+      Result success, so SubState is the discriminator and it says RUNNING -- the reading rule 20
+      names. The lock's holder agrees: one flock (557443) and one payload (557444) on the declared
+      lock, GO #7 alone.
+  the_units_OWN_start_stamp_is_03_51_19Z_the_entry_says_03_51_22Z:
+    prov: CHECKED
+    artifact: systemctl --user show de115day06_3.service (a unit, not a file)
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      ExecMainStartTimestamp is Mon 2026-09-07 03:51:19 UTC; R-747's routing and the runbook say the
+      unit was launched 03:51:22Z. Both are recorded and neither is called wrong -- the manager's
+      main-process start and the launcher's own line are different events three seconds apart. Named
+      only so a later reader resolving "when did GO #7 start" knows which field answers which question.
+  wt_de_did_NOT_follow_the_TWO_commits_that_landed_after_GO_7_launched:
+    prov: CHECKED
+    artifact: "git: rev-parse in /home/yuqing/ctaNew-wt-de and /home/yuqing/ctaNew"
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      wt-de's HEAD is 2503162 -- the tip R-747 says GO #7 launched from -- while the main tree has
+      moved to 56f2425 through 0c9a7f3. The hazard R-747 names is the RUNNING unit's working
+      directory, not the shared tree, and the worktree has stayed put; the shared tree moving twice
+      under a run in wt-de is harmless. Nothing may move wt-de until GO #7 exits.
+  SIX_BE_units_are_STILL_LOADED_after_their_receipts_landed:
+    prov: CHECKED
+    artifact: systemctl --user list-units --all (units, not files)
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      be72book, be72frag2, be72struct, be72tape read loaded/active/exited and be72frag, be87fwd06
+      read loaded/failed/failed -- six names still held after their receipts landed. Rule 20's clause
+      is "after the receipt lands and the five fields + id are copied, stop the unit so the name is
+      free -- a loaded name, exited or failed, makes the next systemd-run FAIL", and a failed unit
+      needs reset-failed. de115day06_2 is NOT in the list, so DE's helper did stop its unit. This is
+      BE's surface: ROUTED, not touched. It blocks nothing today because every launch takes a unique
+      name.
+  the_heavy_lock_is_held_by_GO_7_ALONE_at_my_read:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      fuser on the declared lock returns exactly two processes, 557443 (flock) and 557444 (python3) --
+      one heavy run, which is what rule 20 requires. I read the holder rather than trying to take the
+      lock; a flock -n probe would have attempted an acquisition.
+  ALL_SEVEN_chain_heads_in_RESULTS_0a_resolve_EXACTLY_through_the_shared_resolver:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      resolved through declaration_chain.resolve_head, never by filename literal, and every digest
+      matches RESULTS 0a to the sixteen characters it quotes: design v25 b95ac59cf46d941d (24
+      versions, two forks both MERGED), params v15 92858fc7f9493f8e, heavy_run_form v4
+      b599f2e2e50a026f, producer_exit_maps v5 5b7043b2983ba948, be_daybook_structure v4
+      1913a59937158fc8, da_midnight_deploy_pin v2 e454ff3d53236dc9, da_anti_echo v1 77bf68cd76701e0a.
+      orphan_branches is EMPTY in every family, including the two race families I resolved beside
+      them (be_race_read_declaration v6 a240ccc5fb171641, be_race_read_feed_pins v2 26b0a67d93462b3f).
+      The design family lives under data/pm_5min/derived, not the declarations directory.
+  the_sealed_family_census_by_DIGEST_confirms_THREE_heads_and_09_06_ABSENT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      eight files in the family, digested WITHOUT being opened: 09-03's head is the .v2 at
+      b4f1159015ebda65, 09-04's the .v3 at 6c74928fbc6c8a6b, 09-05's the .v3 at 5f0241fc4d082420 --
+      the three RESULTS 0a names -- and 09-06 has no file at all. Three of the six days the read gate
+      needs. No sealed field was opened or quoted.
+  E2A_head_is_v7_at_the_files_so_the_next_version_is_v8_by_the_pair:
+    prov: CHECKED
+    artifact: live/mm_research/declarations
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      seven files, p002_e2_a_declaration_v1..v7, no gaps; v7's sha256 is 57c92c9e899eb691, exactly the
+      digest R-746's harvest names. So DA's next E2-A declaration is v8 superseding v7 by the pair,
+      and the DA 116 dispatch's "v6 superseding v5" was the coordinator's error, as R-746 says. I
+      confirmed this at the files rather than from the harvest.
+  the_E2A_census_day_span_is_WIDER_than_the_rulings_quote:
+    prov: CHECKED
+    artifact: data/mm_hf/e1/p002_e2a_census8__20260906T055936Z.json
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      key set first, then the fields: 8 symbols (AAVE, ADA, AVAX, BNB, DOGE, FIL, ICP, LTC), the union
+      of their day lists spanning 20260819..20260906 = 19 days, gap_threshold 0.05, and the census
+      cites declaration v5 (90a9a99f...) by path and sha256. R-745's rulings quote the consumed window
+      as "08-20..09-05"; the census's own span is wider at both ends. R-746 flagged this and it holds
+      at the artifact.
+  MY_OWN_AUDITS_150_MISSING_ARTIFACT_FINDINGS_CARRY_NO_SIGNAL:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      the audit reports 155 findings (5 MALFORMED + 150 "CHECKED, but its artifact is not on disk").
+      I classified all 150 by resolving each entry's artifact string myself: 44 name a file that
+      resolves somewhere in the repo (a path plus a qualifier like --selftest or a symbol, a glob, or
+      a bare filename), 104 name no file at all (a unit name, a commit, a systemctl reading, prose),
+      and 2 name a file that resolves nowhere BECAUSE ITS ABSENCE IS THE FLAG'S CONTENT (the second
+      read's result family, which must not exist yet). artifact_exists returns None -- undecidable --
+      for git: and http: references precisely so that "cannot be checked here" stays outside the
+      codomain of "was checked and is gone", and every one of these 150 belongs to that same class or
+      is decidable-and-present. ROUTED, NOT RULED: the remedy is a third answer for non-path
+      references, so the count becomes a signal again.
+  ZERO_of_the_150_is_an_artifact_that_actually_VANISHED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      the finding class exists for a real failure -- "three arms artifacts vanished on 2026-09-04 and
+      a flag citing one still read as established" is in the instrument's own docstring. Measured
+      today, not one of the 150 is that: every path-shaped reference resolves, the two that resolve
+      nowhere are negative existence claims, and the rest are not paths. A check firing 150 times on
+      nothing it exists for is the shape its own docstring warns about ("a check that fires on all 458
+      is a check that gets turned off").
+  and_my_standing_round_line_EXIT_0_is_NOT_what_this_instrument_RETURNS:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      my rounds have carried "ORPHAN audit 0 findings exit 0". The orphan half is exact and I
+      re-measured it: orphan_entries is 0, today and at round 243's own committed file. The exit half
+      is not: the audit exits 1 whenever any finding stands, and it did at round 243's file too (145
+      findings) and does now (155). The two facts were compressed into one line and the weaker one
+      carried the stronger one's authority. From this round the line reports both numbers separately.
+  the_ONE_citation_a_REPO_ROOT_reader_cannot_resolve_is_the_LOCATABILITY_flag_itself:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      of the 44 path-shaped references, exactly one could not be resolved from the repo root:
+      the_two_protocol_rules_landed_at_c09369b cited "workspace/SEAT_PROTOCOL.md at c09369b", which is
+      program-relative while the resolver is repo-relative. The flag's own subject is R-726's rule
+      that A CITED ARTIFACT IS LOCATABLE. Corrected this round to the full path; its said: is
+      untouched and the correction is named there in band.
+  FOUR_collectors_alive_and_my_FIRST_probe_could_not_tell_TWO_of_them_apart:
+    prov: CHECKED
+    artifact: ps -eo pid,etimes,cmd (processes, not files)
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      four distinct processes with four distinct pids: collect_pm_prices.py 1049, collect_hf.py 30901,
+      collect_hl.py 30902, collect_pm.py --heartbeat-mode 1108125. My first probe used pgrep -f
+      collect_pm and returned pid 1049 for BOTH collect_pm and collect_pm_prices, because the pattern
+      is a prefix of the other name -- it would have reported four collectors alive while seeing three.
+      The count is right; the probe that produced it first was not, and the discriminating one is the
+      one recorded.
+  the_coordinators_TWO_BLOCKS_are_FOLDED_and_MEM_is_SOLE_WRITER_again:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      R-746 logs the writer exception and ends it in the same sentence: the coordinator wrote a
+      HANDOFF top block and a STATUS.yml comment block for the halted MEM seat, "the writer exception
+      is logged here and ends here: MEM resumes as sole writer at its next round and sweeps
+      R-745..R-746". Both blocks are folded into this round's own form and retired with a pointer to
+      the commit that holds them verbatim (6d31e04); nothing they said is dropped.
+  nothing_landed_between_my_reads_and_my_commit_beyond_56f2425:
+    prov: CHECKED
+    artifact: "git: log on mm-research"
+    as_of: 2026-09-07T05:04:22Z
+    said: >-
+      the tip was 0c9a7f3 at my round start and 56f2425 by 04:56:33Z -- one runbook commit recording
+      the MEM 245, BE 90 and DA 118 dispatches. No register entry landed after R-747, so the next
+      entry number is R-748 and my sweep is complete against the register as it stands. Re-checked at
+      commit time.
   # --- MEM round 244, 2026-09-07T02:39:16Z ---
   the_peaks_file_holds_SEVENTEEN_NOT_RECORDED_not_eighteen:
     prov: CHECKED
@@ -27254,6 +27701,11 @@ flag_provenance:
       3 days 4h17m from my round-start clock 2026-09-06T20:42:41Z. Until it is ruled, v5 stands (it
       opens nothing), the pins are taken at each close, and NO read is dispatched. MEM carries the
       item; the decision is the USER's and MEM asserts nothing about it.
+      SUPERSEDED 2026-09-07T05:04:22Z BY R-745, which ruled FIVE items -- the four here plus E2-A's
+      admission bar. Nothing above is withdrawn: R-729's own text enumerates FOUR and names E2-A zero
+      times (I re-read the entry this round), so the fifth is an enumeration that grew in the
+      coordinator's summary, recorded as the coordinator's drift at R-746 and RESULTS 0a. The ruling
+      itself is carried at USER_items_FIVE_RULED_BY_COORDINATOR_each_OVERRULABLE_by_one_line.
   REVs_substance_claim_INDEPENDENTLY_CONFIRMED_with_a_control_that_fires:
     prov: CHECKED
     artifact: /home/yuqing/ctaNew_forward_runs/, the feed paths named in be_race_read_feed_pins_v1
@@ -27520,7 +27972,16 @@ flag_provenance:
       in-process call routes around.
   the_two_protocol_rules_landed_at_c09369b:
     prov: CHECKED
-    artifact: workspace/SEAT_PROTOCOL.md at c09369b
+    artifact: "git:c09369b:orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md"
+    citation_corrected: >-
+      2026-09-07T05:04:22Z (MEM 245): the path read `workspace/SEAT_PROTOCOL.md at c09369b` -- program-relative
+      while the resolver is repo-relative, so it was the ONE path-shaped citation in the whole map that a
+      repo-root reader could not resolve, on the flag for R-726's rule that a cited artifact is locatable.
+      Corrected in two steps, both measured: the program prefix, and then the documented `git:<ref>:<path>`
+      shape -- because the claim is about the file AT a commit, and with the bare prefix alone the resolver
+      still answered "not on disk" (the trailing " at c09369b" defeats it). Under `git:` the instrument
+      answers UNDECIDABLE-ON-THIS-DISK, which is the true answer for a commit-pinned artifact. `said:` is
+      untouched.
     as_of: 2026-09-06T20:31:00Z
     said: >-
       9 insertions, one file: the importer rule as amended (an importer's independent cell tests its

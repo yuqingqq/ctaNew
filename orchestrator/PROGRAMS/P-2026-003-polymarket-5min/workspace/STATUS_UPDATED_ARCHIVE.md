@@ -18039,3 +18039,53 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-SEVENTEENTH round unchanged on UNMARKED.** ORPHAN audit 0
   findings. Window trimmed 4 -> 3, Batch 223 archived. Q-MEM-229 filed through the script.)
 ```
+
+## Batch 227 — archived 2026-09-07T05:04:22Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T02:16:02Z (MEM ROUND 242 -- R-742 SWEPT, tip `adf2f76`. STATE ONLY. MEM ASSERTS NO
+  RESULT.
+  (1) ***THE PIN STATUS DRIVEN READ-ONLY AT THE REAL PIN***: keys printed and asserted, then
+  **status CLEAN, `n_stale` 0, `n_missing` 0**, both lists empty -- so all 33 pinned files' on-disk
+  digests match the pin AT THIS READING. A live state: the drift this check exists for is exactly a
+  landing moving one of those files, and DA lands often, so it carries its as-of. ***AND I DID NOT
+  RUN DA's CENSUS, BECAUSE IT WRITES***: `da_nonhead_census` emits a record into DA's family, so
+  running it would have made me a producer of another seat's artifact; `stale_pins()` is a pure read,
+  so I called that. **The falsifier R-742 quotes (edit -> STALE -> restore -> CLEAN) I did NOT
+  reproduce** -- it edits a real pinned file. Taken as RELAYED, and said so.
+  (2) ***THE UNIT's `ExecStart` IS THE SCRIPT THE EXIT MAP DECLARES.*** The unit runs
+  `/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh`; the exit map's producer key is
+  `live/pm_research/da_midnight_verify.sh` -- **the same script**. So rc 7's declaration is attached
+  to the code the unit actually runs, not to a namesake, which is what makes *"rc 7 = DEPLOY_DRIFT,
+  nothing ran, a catch-up day"* resolvable by a reader holding only the unit's exit status.
+  (3) **v1's `unit` FIELD WAS A LIST AND v2's IS A STRING** -- the defect DA caught by reading its own
+  artifact after writing it, visible at the files: v1's `unit` is an array of unit-file objects, so a
+  reader asking *which unit is this pin for* got a list of paths; v2's is
+  `"da-midnight-verify.service"`. ***AND THE CORRECTION RENAMES RATHER THAN DROPS***: v2 ADDS
+  `installed_unit_files`, so the list v1 mis-filed is still carried, under a name that says what it
+  is. **That is what keeps a v2 a correction and not a loss.** v1 is not edited.
+  (4) **33 FILES COUNTED FROM THE ARRAY, NOT READ FROM `n_files`** -- 33, equal to the field, the
+  total agreeing with its parts; tier split **REPORT 26 / REFUSE 7 = 33**, matching the entry; commit
+  `9abba110a9a9b269…`, `deployed_at` 02:11:49Z. **And every one of the 33 entries carries a 64-hex
+  digest** -- R-608's *"the link IS the pair"* applied to a DEPLOY PIN rather than a declaration
+  chain, which is what lets `stale_pins()` answer at all. The chain resolves to v2 (2 versions,
+  `orphan_branches []`; v1 `38287c4fe32351cc`, v2 `e454ff3d53236dc9`).
+  (5) **EXIT 8 VERIFIED AT THE LINE, NOT BY PATTERN.** My first grep guessed the shapes
+  (`exit(8)`, `SystemExit(8)`, `rc 8`, `EXIT_8`) and found **nothing** -- which I did **not** report
+  as an absence. I listed every `exit` in the script instead and found it at line 132:
+  `|| { echo "REFUSED: the pin was not written: $_PIN" >&2; exit 8; }`. **Sixth time this session a
+  guessed pattern returned an empty answer, and the sixth time listing the real thing was one command
+  away.**
+  (6) **THE ROLL-UP PRECEDENCE IS STALE-BEATS-MISSING**, read at the source:
+  `status = "DEPLOY_PIN_STALE" if stale else "PINNED_FILE_ABSENT" if missing else "CLEAN"`. If a file
+  is stale AND another missing, the single word says STALE -- but both lists come back with their own
+  counts, so **nothing is lost, only summarised**. Recorded so neither is mistaken for the other.
+  **`PINNED_FILE_ABSENT` exists** because, in DA's words, *"an absent file has no digest, and reading
+  that as clean is how a deleted guard would deploy itself"* -- rule 16's shape at the deploy layer,
+  absence given its own name instead of falling through to the good case. (That reason is RELAYED;
+  what I measured is that the status is in the code and the real pin reports 0 missing.)
+  Counts: flags 1,603 -> 1,614; provenance 1,148 -> 1,159; tasks 19; **882 CHECKED / 277 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-EIGHTEENTH round unchanged on UNMARKED**; RELAYED moves by one, for
+  the falsifier I declined to reproduce. ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 224
+  archived. Q-MEM-230 filed through the script.)
+```
