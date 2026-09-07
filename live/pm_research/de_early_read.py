@@ -44,7 +44,7 @@ DECL_DIR = "live/pm_research/declarations"
 #: is a different question asked of the same days.
 DAY_FAMILY = "p003_de_early_read_day"
 
-EXPECTED_CHECKS = 7
+EXPECTED_CHECKS = 12
 
 
 class EarlyReadRefused(RuntimeError):
@@ -134,6 +134,130 @@ def economics_available_per_arm_day() -> dict:
     }
 
 
+def early_read_preconditions(day: str, root, ruling: dict) -> dict:
+    """P9's REPLACEMENT FOR THIS ENTRY (coordinator ruling, DE 122).
+
+    P9 on the sealed `--day` path refuses a day that already has a sealed
+    receipt, because a day run twice has no newest result. THIS entry's
+    premise is the opposite: it opens days precisely BECAUSE they are
+    sealed, and it writes a DIFFERENT family, so it supersedes nothing.
+    The precondition is therefore inverted and split in two, each half
+    refusing by its own name:
+
+      EARLY_READ_NO_SEALED_RECEIPT     the day's sealed chain-head
+                                       receipt is not there at all;
+      EARLY_READ_RECEIPT_NOT_THE_PAIR  it is there but is not the one
+                                       v16's bar names for that day;
+      EARLY_READ_ALREADY_EMITTED       this read has already run for the
+                                       day, and a second emission would
+                                       leave two answers with no rule
+                                       saying which is newest -- P9's own
+                                       reasoning, applied where it does
+                                       belong.
+
+    ON WHAT "THE PAIR" IS HERE. v16's bar carries `path` and `sha256_16`
+    -- a SIXTEEN-HEX PREFIX, not the full digest -- and v16 is landed and
+    immutable, so this compares the basename exactly and the prefix. That
+    is a prefix comparison and is reported as one in `digest_comparison`;
+    a params v17 carrying full digests would make it a full pair, and
+    until one exists this must not be described as verifying a digest.
+    """
+    root = Path(root)
+    der = root / "pm_5min/derived"
+    entry = next((r for r in ruling["receipts"] if r["day"] == day), None)
+    if entry is None:
+        raise EarlyReadRefused(
+            f"EARLY_READ_DAY_NOT_IN_THE_BAR: {day} is not among "
+            f"{ruling['days']}.")
+    compact = day.replace("-", "")
+    found = sorted(der.glob(
+        f"p003_de_gate1_day_run_{compact}_SEALED__*.json"))
+    if not found:
+        raise EarlyReadRefused(
+            f"EARLY_READ_NO_SEALED_RECEIPT: {day} has no sealed day-run "
+            f"receipt under {der}. This read shows what a SEALED run "
+            f"computed and stripped; with no sealed run there is nothing "
+            f"it is the early read OF.")
+    want_name = Path(entry["path"]).name
+    have = der / want_name
+    if not have.is_file():
+        raise EarlyReadRefused(
+            f"EARLY_READ_RECEIPT_NOT_THE_PAIR: v16's bar names "
+            f"{want_name} for {day}, and that file is not present. The "
+            f"{len(found)} sealed artifact(s) that ARE present "
+            f"({[f.name for f in found]}) are not the one the ruling "
+            f"authorised.")
+    got = _sha(have)
+    want16 = str(entry["sha256_16"])
+    if not got.startswith(want16):
+        raise EarlyReadRefused(
+            f"EARLY_READ_RECEIPT_NOT_THE_PAIR: {want_name} is present but "
+            f"its digest is {got[:16]}…, and v16's bar names {want16}… "
+            f"for {day}. The read opens the artifact the USER's ruling "
+            f"named, never whatever now sits at that path.")
+    already = sorted(der.glob(f"{DAY_FAMILY}_{compact}__*.json"))
+    if already:
+        raise EarlyReadRefused(
+            f"EARLY_READ_ALREADY_EMITTED: {day} already has "
+            f"{len(already)} early-read artifact(s) "
+            f"({[a.name for a in already]}). A second emission would "
+            f"leave two answers to one question with no rule saying which "
+            f"is newest -- which is P9's reasoning, in the place it "
+            f"belongs for this entry.")
+    return {
+        "replaces": "P9_no_sealed_receipt_for_this_day_yet",
+        "why_replaced": "P9's premise is that a day run twice has no "
+                        "newest result. This entry writes a DIFFERENT "
+                        "family and supersedes nothing, and it requires "
+                        "the sealed receipt to EXIST -- the opposite "
+                        "condition (coordinator ruling, DE 122).",
+        "sealed_receipt": {"path": str(have), "sha256": got,
+                           "name": want_name},
+        "digest_comparison": {
+            "compared": "basename exactly, and the first 16 hex of the "
+                        "digest",
+            "is_a_full_pair": False,
+            "why_not": "v16's bar carries `sha256_16`, a prefix, and a "
+                       "landed version is immutable. A params v17 "
+                       "carrying full digests would make this a full "
+                       "pair.",
+            "bar_says": want16, "artifact_is": got[:16]},
+        "no_early_read_artifact_yet": True,
+        "sealed_day_path_unaffected": "the `--day` entry keeps P9 "
+                                      "byte-identical; this function is "
+                                      "not on that path",
+        "holds": True,
+    }
+
+
+def rehearse(day: str, *, repo_root=None, root=None) -> dict:
+    """READY, or the blocker BY NAME. Touches no book and takes no lock."""
+    out = {"day": day, "entry": "de_early_read --early-read-day",
+           "as_of": datetime.datetime.now(
+               datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+    try:
+        ruling = the_ruling(repo_root)
+    except EarlyReadRefused as e:
+        return {**out, "status": "NOT_READY",
+                "blocking": [str(e).split(":")[0]], "detail": str(e)}
+    out["ruling"] = ruling["ruling_by_pair"]
+    r = Path(root) if root else Path(RUN.DR.resolve()["data_root"])
+    try:
+        pre = early_read_preconditions(day, r, ruling)
+    except EarlyReadRefused as e:
+        return {**out, "status": "NOT_READY",
+                "blocking": [str(e).split(":")[0]], "detail": str(e)}
+    book = r / "pm_5min/derived" / f"be_daybook_{day.replace('-','')}_btc.pkl"
+    if not book.is_file():
+        return {**out, "status": "NOT_READY",
+                "blocking": ["EARLY_READ_BOOK_ABSENT"],
+                "detail": f"EARLY_READ_BOOK_ABSENT: {book}"}
+    return {**out, "status": "READY", "blocking": [],
+            "preconditions": pre, "book": str(book),
+            "G": ruling["G"], "verdict_class": ruling["verdict_class"],
+            "interval": ruling["interval"]}
+
+
 def day_artifact_name(day: str, now=None) -> str:
     stamp = RUN.emission_stamp(now)
     return f"{DAY_FAMILY}_{day.replace('-', '')}__{stamp}.json"
@@ -152,6 +276,8 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
             f"EARLY_READ_DAY_NOT_IN_THE_BAR: {day} is not among "
             f"{ruling['days']}. The ruling names four days; a fifth would "
             f"be consumed by a read nobody authorised.")
+    pre = early_read_preconditions(
+        day, Path(RUN.DR.resolve()["data_root"]), ruling)
     params = RUN.load_params()
     result = RUN.run_day(day, book, params=params, fixture=False,
                          n_days_complete=ruling["G"],
@@ -177,6 +303,7 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
             "why": "the COMPUTATION is the sealed runs' -- v15. Only the "
                    "seal bar comes from the ruling."},
         "economics_field_availability": economics_available_per_arm_day(),
+        "preconditions": pre,
         "day_run": result,
         "as_of": datetime.datetime.now(
             datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -302,6 +429,75 @@ def selftest(quiet: bool = False) -> int:
            f"ITS OWN REASON CODE -- `{str(e).split(':')[0]}` -- before it "
            f"reads a book or takes a lock. A fifth day would be consumed "
            f"by a read nobody authorised")
+
+    # ---- DRIVE 4: P9's REPLACEMENT, ALL THREE HALVES + THE REAL DAY ---
+    # A fixture ledger root, so each half is driven against a root built
+    # to trip exactly it. The real day is driven LAST, against the real
+    # ledger, because a rehearsal that only ever saw fixtures has not
+    # rehearsed anything.
+    ruling_live = the_ruling()
+    froot = Path(tempfile.mkdtemp(prefix="early_read_root_"))
+    fder = froot / "pm_5min/derived"
+    fder.mkdir(parents=True)
+
+    # 4a: no sealed receipt at all
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live)
+        ok(False, "KNOWN-BAD: a day with NO sealed receipt was admitted")
+    except EarlyReadRefused as e:
+        ok(str(e).startswith("EARLY_READ_NO_SEALED_RECEIPT"),
+           f"DRIVE 4a (RED): a day with no sealed day-run receipt REFUSES "
+           f"-- `{str(e).split(':')[0]}`. With no sealed run there is "
+           f"nothing this is the early read OF")
+
+    # 4b: a sealed receipt whose digest is NOT the one the bar names
+    entry = next(r for r in ruling_live["receipts"]
+                 if r["day"] == "2026-09-03")
+    (fder / Path(entry["path"]).name).write_text(
+        '{"day": "2026-09-03", "not": "the ruled bytes"}')
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live)
+        ok(False, "KNOWN-BAD: a receipt off the bar was admitted")
+    except EarlyReadRefused as e:
+        ok(str(e).startswith("EARLY_READ_RECEIPT_NOT_THE_PAIR"),
+           f"DRIVE 4b (RED): a sealed receipt AT THE RULED PATH whose "
+           f"digest is not the ruled one REFUSES -- "
+           f"`{str(e).split(':')[0]}`. The read opens the artifact the "
+           f"ruling named, never whatever now sits at that path")
+
+    # 4c: the ruled receipt is present, but this read already ran
+    real_der = Path(RUN.DR.resolve()["data_root"]) / "pm_5min/derived"
+    shutil.copy(real_der / Path(entry["path"]).name,
+                fder / Path(entry["path"]).name)
+    ok(early_read_preconditions("2026-09-03", froot,
+                                ruling_live)["holds"] is True,
+       "DRIVE 4c CONTROL (GREEN): with the RULED receipt in place the "
+       "same fixture root ADMITS -- so 4a and 4b measured their own "
+       "halves and not the fixture's emptiness")
+    (fder / f"{DAY_FAMILY}_20260903__20260907T000000Z.json").write_text("{}")
+    try:
+        early_read_preconditions("2026-09-03", froot, ruling_live)
+        ok(False, "KNOWN-BAD: a second early read of one day was "
+                  "admitted")
+    except EarlyReadRefused as e:
+        ok(str(e).startswith("EARLY_READ_ALREADY_EMITTED"),
+           f"DRIVE 4c (RED): a day that already has an early-read "
+           f"artifact REFUSES -- `{str(e).split(':')[0]}`. Two answers to "
+           f"one question with no rule saying which is newest is P9's own "
+           f"reasoning, in the place it belongs for this entry")
+    shutil.rmtree(froot, ignore_errors=True)
+
+    # 4d: THE REAL DAY, against the REAL ledger
+    reh = rehearse("2026-09-03")
+    ok(reh["status"] == "READY" and reh["blocking"] == []
+       and reh["preconditions"]["digest_comparison"]["is_a_full_pair"]
+       is False,
+       f"DRIVE 4d (GREEN, THE REAL DAY): 2026-09-03 rehearses "
+       f"{reh['status']}, blocking {reh['blocking']}, G {reh['G']}, class "
+       f"{reh['verdict_class']}, interval {reh['interval']} -- and the "
+       f"receipt check reports itself as a PREFIX comparison "
+       f"(`is_a_full_pair` False), because v16's bar carries sha256_16 "
+       f"and a landed version is immutable")
 
     # ---- the absent fields are STATUSES, never silent drops -----------
     av = economics_available_per_arm_day()
