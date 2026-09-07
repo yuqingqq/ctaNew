@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T12:08:38Z (MEM ROUND 271 -- R-789 AND R-790 SWEPT, with every landing between the tip I read at round 270
+  (`3d1dc7f`) and `f77b95d`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***THE POST-EMIT CENSUS READ A KEY THE ARTIFACT ITSELF SAYS NOTHING READ.*** The 09-04 receipt's
+  `day_run.G_and_which_G_it_is.no_bare_G_key_here` states: "removed at REV 90 §A0(3). **Nothing read it: a sweep
+  of live/pm_research found no consumer of a day-run receipt's top-level `G`**." At `6c3a121` -- the module that
+  emitted that artifact -- `:11888` reads `payload["G"]`. **SOMETHING READ IT.** The mechanism of the miss is the
+  transferable part: the sweep looked for consumers of an EMITTED RECEIPT; the surviving read is of the IN-MEMORY
+  payload. Same key, two shapes -- **the third instance in three rounds of a correctly-executed probe answering a
+  differently-scoped question, and the most expensive, because its conclusion was written into an artifact as a
+  fact and shipped.**
+  (2) **WHAT WOULD HAVE HAPPENED TONIGHT, both branches.** `payload["G"]` is never assigned in `_main_day`, so at
+  `6c3a121` that line raises **`KeyError: 'G'` AFTER the receipt is on disk**. With a bare G restored the
+  condition `n_days_complete (5) < G (6)` is TRUE and the body is `out_path.unlink(...)` + a refusal -- **and
+  `_post` is non-empty BY DESIGN under R-765**, which made economic keys mandatory. A guard written when leaking
+  economics was the failure would, under the ruling that made them required, delete every incomplete day's
+  receipt. Smaller, from the same six lines: the guard is **half on the artifact and half on memory** (`_back`
+  for the keys, `payload` for the count) in a cell whose own comment insists on the difference.
+  (3) DE 134 = ONE FILE, +343/-5, carrying both fixes with red and green cells. **The fourth composition
+  `5020f96` is `6c3a121` + exactly that one file** (parent verified at the object). **REV 103's three digests
+  verified at it**: runner `883b5f3a811e9576`, early read `5aa544ef8d594efd`, ledger `d78c370151cea431` -- the
+  early-read digest unchanged, which is why E3/E4 stay at `6c3a121`.
+  (4) ***NO DECISION LEDGER HAS EVER BEEN WRITTEN ANYWHERE***: `find data -name '*decision_ledger*'` returns
+  **0**, with the falsifier returning 2 for the early-read family. **So R-765's "a ledger beside each receipt"
+  has never once happened** -- v15 carried no ruling, E1/E2 had no anchor, and every battery call is a fixture
+  that receives the named status. The anchor-to-write join has no production history at all. **TWO FIRSTS ARE IN
+  PLAY AND THEY DIFFER**: R-790's "first time tonight" is the DAY path's; **E3 exercises the EARLY-READ path's
+  join first, this afternoon.** My round-270 prediction now has an exact filename --
+  `p003_de_decision_ledger_20260905__<STAMP>.jsonl.gz`, in the shared derived dir because `wt-de/data` is a
+  symlink to it (verified, made 11:28, a minute before E3's 11:29:08Z start).
+  (5) `wt-de`'s working files hash **10 of 10** against v19's pins -- the second blocking condition on the
+  refresh, recorded as a value at my read, not a clearance. E3 still running at 12:06:36Z, 37m28s in, MemoryPeak
+  identical at three reads, exit expected about 12:40Z. The `ABSOLUTES_DO_NOT_RECONCILE` cell is carried as
+  CONCURRENT work under GO E4, not composed -- the composition stays minimal so a NO-GO names a specific delta.
+  (6) And from the same field, for whoever builds the four-day table: "**the four landed sealed receipts
+  (09-03..09-06) still carry the old bare `G: 6`**" while the early reads carry the block -- a schema change
+  between days, written into the artifact rather than left to be discovered. Freeze holds an ELEVENTH round; the
+  09-03/09-04 replay debt stands.
+  COUNTS (by YAML parse): flags 2062 -> 2080, provenance 1607 -> 1625 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 253 archived.)
   2026-09-07T11:34:05Z (MEM ROUND 270 -- R-787 AND R-788 SWEPT, with every landing between the tip I read at round 269
   (`afd74c3`) and `3d1dc7f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***THE v20/v28 RE-POINT NEVER EXISTED AS FILES -- SETTLED IN HISTORY, NOT ON DISK.*** `git log --all` over
@@ -146,45 +185,6 @@ updated: >-
   E3/E4/GO #8 wait on the third composition, REV 102 and the DE reset (98 % context). Freeze holds a NINTH round.
   COUNTS (by YAML parse): flags 2026 -> 2044, provenance 1571 -> 1589 (eighteen written, eighteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 251 archived.)
-  2026-09-07T11:14:34Z (MEM ROUND 268 -- R-783 AND R-784 SWEPT, with every landing between the tip I read at round 267
-  (`4e93675`) and `c8ff91e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. FIRST ROUND ON THE LOCKED
-  `--row` FORM.
-  (1) **THE SECOND TABLE VERIFIED AT THE ARTIFACT: ALL SIXTEEN CITED FIGURES MATCH.** R-784 quotes DA's print;
-  I read the file. 09-04, EXPLORATORY, one day, no interval, `sealed: false`, 500 draws, four days consumed:
-  **`CONDVALUE_X_SKEW`** `D_E0` **-31,428.00c (-$314.28)**, Z -4.74, p 1.000, null mean -6,146.77, sd 5,339.16,
-  36,806 vs 57,850 fills, 6,417 cancels; **`HAZARD_OVER_SKEWED_REF`** **-2,364.97c (-$23.65)**, Z -1.48,
-  p 0.936, null mean -623.13, sd 1,179.18, 55,952 vs 57,850, 858 cancels. Both arms' `D_E0` and `Z` negative on
-  both days -- **stated as arithmetic; the reading is not MEM's** -- and the per-arm ORDERING SWAPS between the
-  days.
-  (2) **THE COUNTS LABEL, VERIFIED AT THE SEALED RUNS.** 09-03's sealed day run lists **EIGHT** sealed names
-  and CARRIES the count values (5,146 / 30,171 / 46,439 and 700 / 44,895 / 46,439 -- exactly what its early read
-  later reported); 09-04's lists **ELEVEN**, the three counts among them, and carries no count fields at all.
-  The v23 boundary in production. **So the 09-03 read revealed no new counts and the 09-04 read revealed all
-  six.** A first probe grepped the pre-reads for the NAMES and seemed to find them for both days; counting KEYS
-  gives zero -- the string matched prose.
-  (3) ***THE MISSING-ARTIFACT CHECK FIRED ON A REAL VANISHING***: 174 -> 178, and all four newly-missing flags
-  cite `/run/user/1001/systemd/transient/deEARLY20260904.service`, gone when E2 unloaded. **A TRANSIENT UNIT FILE
-  HAS THE SAME LIFETIME AS THE RUN IT DESCRIBES**, so citing it guarantees the entry expires exactly when someone
-  would check it. The remedy already exists and is TRACKED: GO E2 landed a **run journal** carrying the five
-  fields at launch AND `five_fields_and_id_at_exit_while_loaded`. From here MEM cites the journal, never the
-  transient path; the four expired flags stand as written (rule 13).
-  (4) **THE CAPTURE GIVES THE EXIT MY ROUND-267 READING REFUSED TO**: at 10:59:12Z, loaded/active/**exited**/0/
-  success, same InvocationID; launched 09:15:47Z, exited 10:59:18Z, `runtime_s` **6,211**, worktree
-  `/home/yuqing/ctaNew-wt-de`, head `fe76d83` -- confirming my round-265 `WorkingDirectory` reading from the other
-  side. **AND IT CLOSES MY OWN OPEN QUESTION**: MemoryPeak at launch was **1,016,365,xxx** against 3,119,230,976 at
-  exit, so the property WAS updating and my seven identical reads were a real plateau, not a stuck field.
-  (5) The journal names the cause in the same terms I read at the code -- "`run_day` writes the ledger only when
-  `receipt_path is not None`, and the early-read entry never passes one" -- and attributes it "DE's, landed at
-  DE 124 and unnoticed through four reviews" (the coordinator's attribution, not mine). **REV 100 §2 reaches my
-  round-267 asymmetry independently and states it better: "the guard is an `if`, not a refusal."** DE 132 fixes
-  both ends AND ships a green cell and a red one in one landing (rule 15); **DE 131's reconciliation guard still
-  has only the green half** (REV 99 §A3), and my round-267 note explains why no natural input can ever drive it.
-  (6) REV 99's line numbers are exact at ITS pinned tip (`717f634`: 6125/6143) and one off at mine, because DE 132
-  added 23 lines. Cascade: SHARED `309b98c7` unchanged, `fe76d83` `ee4034c1`, 9/10 and 10/10 -- and REV 100 §6
-  turns that by-design red into the **NO-GO for GO E3 at the tip**. Six rounds measured, now load-bearing. Freeze
-  holds an EIGHTH round.
-  COUNTS (by YAML parse): flags 2008 -> 2026, provenance 1553 -> 1571 (eighteen written, eighteen counted,
-  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 250 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -356,6 +356,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 271, R-789 and R-790 swept (3d1dc7f -> f77b95d) ---
+  THE_POST_EMIT_CENSUS_READ_A_KEY_THE_ARTIFACT_SAYS_NOTHING_READ: THE-FIELD-AND-THE-CODE-CONTRADICT
+  AND_THE_SWEEP_THAT_JUSTIFIED_THE_REMOVAL_HAD_THE_WRONG_SCOPE: CONSUMERS-OF-A-RECEIPT-VERSUS-THE-PAYLOAD
+  AT_6c3a121_THE_FAILURE_IS_A_KeyError_AFTER_THE_WRITE_NOT_A_DELETION: THE-COUNTERFACTUAL-AND-THE-ACTUAL-DIFFER
+  WITH_A_BARE_G_RESTORED_IT_WOULD_HAVE_UNLINKED_TONIGHTS_RECEIPT: FIVE-LESS-THAN-SIX-IS-TRUE
+  THE_CENSUS_GUARD_IS_HALF_ON_THE_ARTIFACT_AND_HALF_ON_MEMORY: _back-FOR-THE-KEYS-payload-FOR-THE-COUNT
+  DE_134_LANDED_ONE_FILE_CARRYING_BOTH_FIXES: 343-INSERTIONS-5-DELETIONS
+  THE_FOURTH_COMPOSITION_IS_6c3a121_PLUS_EXACTLY_THAT_ONE_FILE: PARENT-VERIFIED-AT-THE-OBJECT
+  REV_103s_THREE_DIGESTS_VERIFIED_AT_5020f96: RUNNER-EARLY-READ-AND-LEDGER
+  THE_wt_de_data_ENTRY_IS_A_SYMLINK_TO_THE_SHARED_ROOT: MADE-AT-1128-JUST-BEFORE-THE-LAUNCH
+  wt_des_PINS_ARE_TEN_OF_TEN_AT_MY_READ: ONE-OF-THE-TWO-BLOCKING-CONDITIONS
+  NO_DECISION_LEDGER_HAS_EVER_BEEN_WRITTEN_ANYWHERE: ZERO-UNDER-THE-WHOLE-DATA-ROOT
+  SO_R_765s_LEDGER_BESIDE_EACH_RECEIPT_HAS_NEVER_ONCE_HAPPENED: THE-RULING-IS-EIGHT-DAYS-OLD
+  THE_TWO_ANCHOR_JOINS_ARE_DIFFERENT_FIRSTS: E3-IS-THE-EARLY-READS-TONIGHT-IS-THE-DAY-PATHS
+  MY_ROUND_270_PREDICTION_IS_STILL_OPEN_AND_NOW_HAS_AN_EXACT_FILENAME: p003_de_decision_ledger_20260905__STAMP-jsonl-gz
+  E3_IS_STILL_RUNNING_AT_THIRTY_SEVEN_MINUTES: MemoryPeak-IDENTICAL-AT-THREE-READS
+  THE_ABSOLUTES_CELL_IS_CARRIED_AS_CONCURRENT_WORK_NOT_COMPOSED: THE-COMPOSITION-STAYS-MINIMAL
+  THE_FREEZE_HOLDS_FOR_THE_ELEVENTH_ROUND: AND-THE-REPLAY-DEBT-STANDS
+  THE_FOUR_LANDED_SEALED_RECEIPTS_STILL_CARRY_THE_OLD_BARE_G: A-SCHEMA-CHANGE-BETWEEN-DAYS-SAID-IN-BAND
   # --- MEM round 270, R-787 and R-788 swept (afd74c3 -> 3d1dc7f) ---
   THE_v20_v28_REPOINT_NEVER_EXISTED_AS_FILES_SETTLED_IN_HISTORY: ZERO-COMMITS-EVER-TOUCHED-EITHER-PATH
   MY_NINE_ROUNDS_OF_ABSENT_WERE_RIGHT_AND_COMPOSED_WAS_A_WORD_I_REPEATED: MEASURED-MINE-FRAMING-INHERITED
@@ -26420,6 +26439,211 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 271, 2026-09-07T12:08:38Z (the clock read by which every measurement below was complete) ---
+  THE_POST_EMIT_CENSUS_READ_A_KEY_THE_ARTIFACT_SAYS_NOTHING_READ:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      **THE ROUND'S HEADLINE, AND IT IS AN ARTIFACT CONTRADICTING THE CODE THAT WROTE IT.** The 09-04 receipt's
+      `day_run.G_and_which_G_it_is` carries a field `no_bare_G_key_here` whose text reads: "removed at REV 90 §A0(3).
+      **Nothing read it: a sweep of live/pm_research found no consumer of a day-run receipt's top-level `G`.**" At
+      `6c3a121` -- the very module that emitted this artifact -- line **11888** reads
+      `if _post and payload["n_days_complete"] < payload["G"]:`. **SOMETHING READ IT.** I checked the other half too:
+      `payload["G"]` is never ASSIGNED anywhere in `_main_day` (its payload assignments are `split_residency_proof`,
+      `source_identity`, `committed_bytes_policy`, `battery`, `battery_scope`, `data_root`, `as_of`, `launched_at_utc`,
+      `emitted_at_utc`, `days_complete_when_this_day_started`, `provenance`, `launch_form` -- no `G`), and the emitted
+      artifact confirms it from the other side: `day_run` has **no `G` key** while `G_and_which_G_it_is` is present with
+      `design_G_from_params: 6` and `n_days_complete_at_this_emit: 4`. DE 134 removed the read; R-789 records it as
+      "the post-emit census's `payload["G"]` read of a key DE 124 removed".
+  AND_THE_SWEEP_THAT_JUSTIFIED_THE_REMOVAL_HAD_THE_WRONG_SCOPE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      The mechanism of the miss, which is the transferable part. The sweep looked for "**no consumer of a day-run
+      receipt's top-level `G`**" -- consumers of an EMITTED RECEIPT, a thing parsed from disk. The surviving read is
+      `payload["G"]`, the IN-MEMORY object being assembled and then read back beside its own file. **SAME KEY, TWO
+      SHAPES**, and a search scoped to receipt-consumers cannot see the construction that produces the receipt. This is
+      the third instance in three rounds of a correctly-executed probe answering a differently-scoped question -- my
+      `selftest`-only walk and my runner-only grep last round, and this sweep -- and it is the most expensive of the
+      three, because its conclusion was written into an artifact as a fact and shipped.
+  AT_6c3a121_THE_FAILURE_IS_A_KeyError_AFTER_THE_WRITE_NOT_A_DELETION:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      Precision on what would actually have happened tonight, because the counterfactual and the actual differ and both
+      are in the register. The census sequence at `6c3a121` is: write the receipt, then `_back = json.loads(out_path
+      .read_text())`, then `_post = _economic_keys_in(_back)`, then `if _post and payload["n_days_complete"] <
+      payload["G"]:`. **Since `payload` has no `G`, evaluating that condition raises `KeyError: 'G'` -- AFTER the file is
+      on disk.** So at the third composition GO #8 would have written its receipt and died in the census, leaving the
+      file behind with an unhandled exception rather than a named refusal. R-790's phrasing describes the OTHER branch
+      (see the next flag); both are fatal, and they fail differently.
+  WITH_A_BARE_G_RESTORED_IT_WOULD_HAVE_UNLINKED_TONIGHTS_RECEIPT:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      R-790: "with bare G restored the census would have DELETED tonight's receipt after writing it". Verified as a
+      counterfactual at the code: had `payload["G"]` existed with the design's six, the condition would be
+      `n_days_complete (5) < G (6)` -> **TRUE**, and the branch body is `out_path.unlink(missing_ok=True)` followed by
+      `RunnerRefused("REFUSED after writing: the receipt READ BACK FROM DISK carries sealed names as KEYS ... The file
+      has been removed; a sealed day that leaks is not a day.")`. **AND `_post` WOULD BE NON-EMPTY BY DESIGN**: R-765
+      retired the seal, so economic keys are SUPPOSED to be in the receipt now. A guard written when leaking economics
+      was the failure would, under the ruling that made them mandatory, delete every incomplete day's receipt. DE 134's
+      replacement reads the regime from the PARAMS and the bar from `G_and_which_G_it_is`, and RETURNS a status instead
+      of printing a verdict.
+  THE_CENSUS_GUARD_IS_HALF_ON_THE_ARTIFACT_AND_HALF_ON_MEMORY:
+    prov: CHECKED
+    artifact: git:6c3a121:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      A smaller observation from the same six lines, worth recording because the module's own comment argues the
+      opposite. The comment above reads: "PAYLOAD IN MEMORY; what a reader gets is the BYTES. Serialisation can differ
+      from the object ... and the claim on the artifact is about the artifact." The code then honours that for one
+      operand -- `_post = _economic_keys_in(_back)`, read back from disk -- and breaks it for the other:
+      `payload["n_days_complete"] < payload["G"]`, both from the in-memory object. **HALF THE GUARD IS ABOUT THE
+      ARTIFACT AND HALF IS ABOUT MEMORY**, in a cell whose comment exists to insist on the difference. Not routed by me;
+      MEM does not route.
+  DE_134_LANDED_ONE_FILE_CARRYING_BOTH_FIXES:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      `e533c0f`, 11:48:23Z: `live/pm_research/de_multiday_gate1_runner.py` alone, **+343 / -5**. Both routed items in
+      it: (1) the day path's anchor -- a new named function `day_run_ledger_anchor(output_dir, *, fixture)` with battery
+      cells that drive `assert_ledger_anchor(live, fixture=False, anchor=None)` for the refusal and
+      `assert_ledger_anchor(live, fixture=False, anchor=_a134)` for the admission, so the fix ships red and green like DE
+      132/133's did; (2) the census, whose deleted line is exactly `- if _post and payload["n_days_complete"] <
+      payload["G"]:`. One file, two fixes, both drivable.
+  THE_FOURTH_COMPOSITION_IS_6c3a121_PLUS_EXACTLY_THAT_ONE_FILE:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      Verified at the objects rather than from the entry: `5020f96` ("E3/E4/GO #8 composition, fourth head: 6c3a121 +
+      DE 134's runner"), **parent `6c3a121`**, and `git diff --stat 6c3a121 5020f96` is **one file, +343/-5** -- byte-for-
+      byte DE 134's commit and nothing else. The composition discipline holds for the fourth time: each head is its
+      predecessor plus a named, minimal change, so a NO-GO at any of them names a specific delta.
+  REV_103s_THREE_DIGESTS_VERIFIED_AT_5020f96:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      REV 103 clears GO #8 at `5020f96` citing runner `883b5f3a...`, early read `5aa544ef...`, ledger `d78c3701...`,
+      params v19, design v27. Hashed at that object myself: `de_multiday_gate1_runner.py` **883b5f3a811e9576**,
+      `de_early_read.py` **5aa544ef8d594efd**, `de_decision_ledger.py` **d78c370151cea431**. All three match, and the
+      early-read digest is unchanged from the third composition -- DE 134 touched only the runner, so E3 and E4 at
+      `6c3a121` are unaffected by it, which is why REV leaves them where they are.
+  THE_wt_de_data_ENTRY_IS_A_SYMLINK_TO_THE_SHARED_ROOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      R-789 accounts for the `??` entry in `wt-de`'s status as a symlink made at the launch. Confirmed on the
+      filesystem: `data -> /home/yuqing/ctaNew/data`, a symlink (`-L` true), **timestamped Sep 7 11:28** -- one minute
+      before E3's `ExecMainStartTimestamp` of 11:29:08Z. So it is untracked-but-explained, and it is why the first
+      blocking condition on the refresh is worded "P10 clean BEYOND THE SYMLINK" rather than simply "clean".
+  wt_des_PINS_ARE_TEN_OF_TEN_AT_MY_READ:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v19.json
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      The second blocking condition on refreshing `wt-de` to `5020f96`, measured where it must hold -- inside the
+      worktree, not at the shared tree. Hashing v19's ten declared cascade paths against `wt-de`'s WORKING FILES:
+      **10 of 10, no red.** That is the state a refresh must preserve; I record it as the value at my read rather than
+      as a clearance, since the refresh has not happened and the condition is to be checked at the moment it does.
+  NO_DECISION_LEDGER_HAS_EVER_BEEN_WRITTEN_ANYWHERE:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      **A census I had not run before and it comes back empty.** `find data -name '*decision_ledger*'` returns **0
+      files** across the entire data root; the falsifier in the same command (`p003_de_early_read_day*`) returns **2**,
+      so the search can find files of a neighbouring family. The writer's naming is
+      `ledger_name(day, stamp) = f"{LEDGER_PREFIX}_{day}__{stamp}.jsonl.gz"` with `LEDGER_PREFIX =
+      "p003_de_decision_ledger"`, so a written ledger would be visible to that glob. **None exists.**
+  SO_R_765s_LEDGER_BESIDE_EACH_RECEIPT_HAS_NEVER_ONCE_HAPPENED:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      What the empty census means, said plainly. R-765 is a USER ruling: the seal is retired for every new run, every
+      run stores its numbers, and **a per-day DECISION LEDGER persists beside each receipt**. Between the ruling and now
+      the ledger has been written **zero times**: GO #7 ran under v15 which carries no ruling; E1 and E2 ran the
+      early-read path with no anchor (my rounds 266-267, confirmed in E2's artifact by `decision_ledger: null`); every
+      battery call is a FIXTURE, which by DE 133 receives the named status `NO_LEDGER_FOR_A_FIXTURE_DAY` and no ledger.
+      **So the anchor-to-write join has never executed in production at all**, and the module's `SCHEMA_VERSION = 2`
+      describes a file that does not yet exist anywhere.
+  THE_TWO_ANCHOR_JOINS_ARE_DIFFERENT_FIRSTS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      A distinction to keep, because two "first times" are in play and they are not the same one. R-790 says "the
+      real-day anchor->write join runs for the FIRST time tonight" -- that is `_main_day`'s path, whose anchor DE 134
+      supplied and which GO #8 exercises at `5020f96`. **E3 exercises the EARLY-READ path's join first**, this
+      afternoon, at `6c3a121`, where `de_early_read.py` has passed `ledger_anchor=out` since DE 132/133. One write site
+      (`run_day`), two entry points, two firsts -- and E3's comes first in time. If E3's ledger lands, tonight's is the
+      second execution of that write and the first from the day path.
+  MY_ROUND_270_PREDICTION_IS_STILL_OPEN_AND_NOW_HAS_AN_EXACT_FILENAME:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      Sharpened rather than restated. At round 270 I predicted E3's 09-05 artifact would carry a non-null
+      `decision_ledger` with a ledger file beside it. The name is now exact: **`p003_de_decision_ledger_20260905__<STAMP>
+      .jsonl.gz`**, in `data/pm_5min/derived/` -- which is where it will appear even though E3 runs from `wt-de`, because
+      that worktree's `data` is a symlink to the shared root. Neither the artifact nor any ledger existed at 12:06:24Z.
+      **And the census above raises the stakes on it**: since no ledger has ever been written, E3 is the first run in
+      which `_LED.write_ledger` executes at all, so this prediction tests a code path with no production history.
+  E3_IS_STILL_RUNNING_AT_THIRTY_SEVEN_MINUTES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      Read while loaded (rule 20) at 12:06:36Z: `deEARLY20260905.service`, LoadState loaded, ActiveState active,
+      SubState **running**, ExecMainStatus 0, Result success, InvocationID `ab140ff1fcce421fa2f650e7319bbccf`,
+      WorkingDirectory `/home/yuqing/ctaNew-wt-de`. `ExecMainStartTimestamp` Mon 2026-09-07 11:29:08 UTC -- 37m28s
+      elapsed, expected exit about 12:40Z. `MemoryPeak` 2,410,196,992, **identical at all three of my reads** (11:30:55,
+      11:34:20, 12:06:36) -- and E2's launch capture taught me that a flat peak here means a plateau reached early, not
+      a stuck property. Per round 268's rule the durable citation will be E3's run journal; this reading is live and
+      carries its clock, and the `artifact:` field is the register.
+  THE_ABSOLUTES_CELL_IS_CARRIED_AS_CONCURRENT_WORK_NOT_COMPOSED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      R-790 records that the `ABSOLUTES_DO_NOT_RECONCILE` cell -- REV 99 §A3's routed item, which REV 101 drove by hand
+      and which I carried at rounds 268-269 as "fires but is not watched" -- goes to DE as **concurrent work under GO
+      E4, not composed into `5020f96`**. That is the right shape and worth recording as such: the composition stays
+      minimal so a NO-GO names a specific delta, and a cell that guards a GO #9 obligation does not need to be inside
+      the commit that GO #8 runs. The item is still open and is now scheduled rather than merely routed.
+  THE_FREEZE_HOLDS_FOR_THE_ELEVENTH_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      `params_v20` and `design_v28` both absent (0 matches in any state), heads v19 and v27 -- and per round 270's
+      history check they have never existed at all. The replay debt stands unchanged for 09-03 and 09-04, the two
+      absences still differing in shape (09-04 `decision_ledger` present and explicitly null; 09-03 no ledger key at
+      all). The sequence ahead, as R-790 sets it: E3 exits about 12:40Z -> DA 127 -> GO E4 with `wt-de` STAYING at
+      `6c3a121` -> DA -> the four-day table -> `wt-de` refreshed to `5020f96` before 00:00Z under the two blocking
+      conditions -> the close -> GO #8.
+  THE_FOUR_LANDED_SEALED_RECEIPTS_STILL_CARRY_THE_OLD_BARE_G:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T105906Z.json
+    as_of: 2026-09-07T12:08:38Z
+    said: >-
+      From the same field, and it is the part a later reader will trip on: "**The four landed sealed receipts
+      (09-03..09-06) still carry the old bare `G: 6`; from here on receipts carry this block instead, which is a schema
+      change between days and is said so here rather than discovered later.**" So the receipt family is
+      heterogeneous by design across the very four days the table is built from -- the four sealed receipts have a bare
+      `G`, the early-read artifacts have `G_and_which_G_it_is` -- and any reader resolving `G` across the set must
+      handle both shapes. Recorded because it is exactly the kind of thing that is obvious while someone holds it and
+      invisible three weeks later, and because DE wrote it into the artifact rather than leaving it to be discovered,
+      which is the behaviour the programme keeps asking for.
   # --- MEM round 270, 2026-09-07T11:34:05Z (the clock read by which every measurement below was complete) ---
   THE_v20_v28_REPOINT_NEVER_EXISTED_AS_FILES_SETTLED_IN_HISTORY:
     prov: CHECKED

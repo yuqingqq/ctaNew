@@ -19868,3 +19868,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 249
   archived.)
 ```
+
+## Batch 253 — archived 2026-09-07T12:08:38Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T11:14:34Z (MEM ROUND 268 -- R-783 AND R-784 SWEPT, with every landing between the tip I read at round 267
+  (`4e93675`) and `c8ff91e`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. FIRST ROUND ON THE LOCKED
+  `--row` FORM.
+  (1) **THE SECOND TABLE VERIFIED AT THE ARTIFACT: ALL SIXTEEN CITED FIGURES MATCH.** R-784 quotes DA's print;
+  I read the file. 09-04, EXPLORATORY, one day, no interval, `sealed: false`, 500 draws, four days consumed:
+  **`CONDVALUE_X_SKEW`** `D_E0` **-31,428.00c (-$314.28)**, Z -4.74, p 1.000, null mean -6,146.77, sd 5,339.16,
+  36,806 vs 57,850 fills, 6,417 cancels; **`HAZARD_OVER_SKEWED_REF`** **-2,364.97c (-$23.65)**, Z -1.48,
+  p 0.936, null mean -623.13, sd 1,179.18, 55,952 vs 57,850, 858 cancels. Both arms' `D_E0` and `Z` negative on
+  both days -- **stated as arithmetic; the reading is not MEM's** -- and the per-arm ORDERING SWAPS between the
+  days.
+  (2) **THE COUNTS LABEL, VERIFIED AT THE SEALED RUNS.** 09-03's sealed day run lists **EIGHT** sealed names
+  and CARRIES the count values (5,146 / 30,171 / 46,439 and 700 / 44,895 / 46,439 -- exactly what its early read
+  later reported); 09-04's lists **ELEVEN**, the three counts among them, and carries no count fields at all.
+  The v23 boundary in production. **So the 09-03 read revealed no new counts and the 09-04 read revealed all
+  six.** A first probe grepped the pre-reads for the NAMES and seemed to find them for both days; counting KEYS
+  gives zero -- the string matched prose.
+  (3) ***THE MISSING-ARTIFACT CHECK FIRED ON A REAL VANISHING***: 174 -> 178, and all four newly-missing flags
+  cite `/run/user/1001/systemd/transient/deEARLY20260904.service`, gone when E2 unloaded. **A TRANSIENT UNIT FILE
+  HAS THE SAME LIFETIME AS THE RUN IT DESCRIBES**, so citing it guarantees the entry expires exactly when someone
+  would check it. The remedy already exists and is TRACKED: GO E2 landed a **run journal** carrying the five
+  fields at launch AND `five_fields_and_id_at_exit_while_loaded`. From here MEM cites the journal, never the
+  transient path; the four expired flags stand as written (rule 13).
+  (4) **THE CAPTURE GIVES THE EXIT MY ROUND-267 READING REFUSED TO**: at 10:59:12Z, loaded/active/**exited**/0/
+  success, same InvocationID; launched 09:15:47Z, exited 10:59:18Z, `runtime_s` **6,211**, worktree
+  `/home/yuqing/ctaNew-wt-de`, head `fe76d83` -- confirming my round-265 `WorkingDirectory` reading from the other
+  side. **AND IT CLOSES MY OWN OPEN QUESTION**: MemoryPeak at launch was **1,016,365,xxx** against 3,119,230,976 at
+  exit, so the property WAS updating and my seven identical reads were a real plateau, not a stuck field.
+  (5) The journal names the cause in the same terms I read at the code -- "`run_day` writes the ledger only when
+  `receipt_path is not None`, and the early-read entry never passes one" -- and attributes it "DE's, landed at
+  DE 124 and unnoticed through four reviews" (the coordinator's attribution, not mine). **REV 100 §2 reaches my
+  round-267 asymmetry independently and states it better: "the guard is an `if`, not a refusal."** DE 132 fixes
+  both ends AND ships a green cell and a red one in one landing (rule 15); **DE 131's reconciliation guard still
+  has only the green half** (REV 99 §A3), and my round-267 note explains why no natural input can ever drive it.
+  (6) REV 99's line numbers are exact at ITS pinned tip (`717f634`: 6125/6143) and one off at mine, because DE 132
+  added 23 lines. Cascade: SHARED `309b98c7` unchanged, `fe76d83` `ee4034c1`, 9/10 and 10/10 -- and REV 100 §6
+  turns that by-design red into the **NO-GO for GO E3 at the tip**. Six rounds measured, now load-bearing. Freeze
+  holds an EIGHTH round.
+  COUNTS (by YAML parse): flags 2008 -> 2026, provenance 1553 -> 1571 (eighteen written, eighteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 250 archived.)
+```

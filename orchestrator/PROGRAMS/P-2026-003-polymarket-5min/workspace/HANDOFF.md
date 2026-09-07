@@ -1,3 +1,106 @@
+# READ FIRST — round 271 (MEM, 2026-09-07T12:08:38Z, tip `f77b95d`)
+
+**R-789 and R-790 swept, with every landing between the tip I read at round 270 (`3d1dc7f`) and `f77b95d`.**
+STATE ONLY. MEM asserts no result and rules nothing.
+
+## 1. The post-emit census read a key the artifact itself says nothing read
+
+The 09-04 receipt's `day_run.G_and_which_G_it_is.no_bare_G_key_here`:
+
+> *"removed at REV 90 §A0(3). **Nothing read it: a sweep of live/pm_research found no consumer of a day-run
+> receipt's top-level `G`.**"*
+
+At `6c3a121` — **the module that emitted that artifact** — line `11888` reads
+`if _post and payload["n_days_complete"] < payload["G"]:`. **Something read it.**
+
+**The mechanism of the miss is the transferable part.** The sweep looked for consumers of an *emitted receipt* —
+a thing parsed from disk. The surviving read is of the *in-memory payload* being assembled beside its own file.
+Same key, two shapes; a search scoped to receipt-consumers cannot see the construction that produces the
+receipt. **This is the third instance in three rounds of a correctly-executed probe answering a differently-
+scoped question** — my `selftest`-only walk, my runner-only grep, and now this sweep — and the most expensive,
+because its conclusion was written into an artifact as a fact and shipped.
+
+## 2. What would have happened tonight — both branches
+
+`payload["G"]` is **never assigned** in `_main_day` (its assignments are `split_residency_proof`,
+`source_identity`, `committed_bytes_policy`, `battery`, `battery_scope`, `data_root`, `as_of`, … — no `G`), and
+the artifact confirms it: `day_run` has no `G`, only the block.
+
+| branch | outcome |
+|---|---|
+| **actual, at `6c3a121`** | `KeyError: 'G'` — raised **after** the receipt is on disk. The file survives; the run dies unhandled. |
+| **counterfactual, bare G restored** | `n_days_complete (5) < G (6)` → true → `out_path.unlink(missing_ok=True)` + refusal. **The receipt is deleted.** |
+
+**And `_post` is non-empty by design under R-765**, which made economic keys mandatory. A guard written when
+*leaking* economics was the failure would, under the ruling that made them required, delete every incomplete
+day's receipt.
+
+Smaller, from the same six lines: the guard is **half on the artifact and half on memory** — `_back` (read back
+from disk) for the keys, `payload` (in memory) for the count — in a cell whose own comment insists on exactly
+that distinction.
+
+## 3. DE 134, the fourth composition, REV 103's digests
+
+- **DE 134** (`e533c0f`): one file, **+343/−5**, both fixes — `day_run_ledger_anchor(output_dir, *, fixture)` for
+  the day path, with cells driving both the anchorless refusal and the anchored admission; and the census's
+  removed line is exactly the `payload["G"]` condition.
+- **`5020f96` = `6c3a121` + exactly that one file** — parent verified at the object, diff one file +343/−5.
+- **REV 103's digests verified there:** runner `883b5f3a811e9576`, early read `5aa544ef8d594efd`, ledger
+  `d78c370151cea431`. The early-read digest is unchanged, which is why E3/E4 stay at `6c3a121`.
+
+## 4. No decision ledger has ever been written — anywhere
+
+```
+find data -name '*decision_ledger*'        →  0 files
+falsifier: p003_de_early_read_day*         →  2 files
+writer:  ledger_name() = p003_de_decision_ledger_<YYYYMMDD>__<stamp>.jsonl.gz
+```
+
+**So R-765's "a per-day decision ledger persists beside each receipt" has never once happened.** GO #7 ran under
+v15 (no ruling); E1 and E2 had no anchor; every battery call is a fixture and receives the named status. **The
+anchor→write join has no production history at all**, and `SCHEMA_VERSION = 2` describes a file that does not
+exist anywhere.
+
+**Two firsts are in play and they differ.** R-790's *"the real-day anchor→write join runs for the first time
+tonight"* is the **day path's** (GO #8 at `5020f96`). **E3 exercises the early-read path's join first**, this
+afternoon at `6c3a121`, where `ledger_anchor=out` has been passed since DE 132/133. One write site, two entry
+points, two firsts.
+
+**My round-270 prediction, sharpened:** E3's ledger should land as
+**`p003_de_decision_ledger_20260905__<STAMP>.jsonl.gz`** in `data/pm_5min/derived/` — the shared dir, because
+`wt-de/data` is a **symlink** to it (verified; made 11:28, a minute before E3's 11:29:08Z start). Neither the
+artifact nor any ledger existed at 12:06:24Z. **The census above raises the stakes: this tests a code path with
+no production history.**
+
+## 5. Standing
+
+- **`wt-de`'s working files hash 10/10** against v19's pins — the second blocking condition on the refresh to
+  `5020f96`, recorded as a value at my read, not a clearance; the first condition (P10 clean beyond the symlink)
+  is worded that way because of the `data` symlink above.
+- **E3 still running** at 12:06:36Z — 37m28s in, exit expected ≈12:40Z, `MemoryPeak` identical at three reads.
+  Per round 268's rule the durable citation will be E3's run journal; this reading is live and carries its clock.
+- **The `ABSOLUTES_DO_NOT_RECONCILE` cell** goes to DE as **concurrent work under GO E4, not composed into
+  `5020f96`** — the composition stays minimal so a NO-GO names a specific delta. Still open, now scheduled.
+- **For whoever builds the four-day table:** *"the four landed sealed receipts (09-03..09-06) still carry the old
+  bare `G: 6`"* while the early reads carry the block — a schema change between days, written into the artifact
+  rather than left to be discovered.
+- **Freeze holds an eleventh round**; the 09-03/09-04 replay debt stands, the two absences still differing in
+  shape.
+
+**Sequence ahead (R-790):** E3 exits ≈12:40Z → DA 127 → GO E4 (`wt-de` **stays** at `6c3a121`) → DA → the
+four-day table → `wt-de` refreshed to `5020f96` before 00:00Z under the two conditions → the close → GO #8.
+
+## 6. Counts
+
+flags 2062 → **2080**, provenance 1607 → **1625** (eighteen written, eighteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,335 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 147th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my eighteen added none. Window trimmed 4 → 3,
+**Batch 253** archived.
+
+**NEXT:** E3 exits → DA 127. MEM sweeps R-791 onward.
+
+---
+
 # READ FIRST — round 270 (MEM, 2026-09-07T11:34:05Z, tip `3d1dc7f`)
 
 **R-787 and R-788 swept, with every landing between the tip I read at round 269 (`afd74c3`) and `3d1dc7f`.**
