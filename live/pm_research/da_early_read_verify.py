@@ -576,21 +576,37 @@ def census_arm_day(doc: dict) -> dict:
             "EARLY_READ_NO_ARM_BLOCKS: `day_run.per_day_sealed_artifacts` is "
             "empty or absent. An empty read is a FAILURE, not a day with "
             "nothing in it.")
-    per_arm, extras, missing = {}, [], []
+    per_arm, extras, missing, where = {}, [], [], set()
     for blk in arms:
         arm = blk.get("arm")
-        keys = set(blk)
+        #: WHERE THE SIX LIVE, MEASURED PER ARM RATHER THAN ASSUMED. DE's
+        #: UNSEALED emission nests them under `economic`; the SEALED
+        #: receipts carry the same names flat at the arm's top level (they
+        #: are what sealing REMOVES). ***This reader was built against the
+        #: sealed shape and its fixture reproduced that assumption***, so
+        #: the first real artifact refused ECONOMIC_FIELD_MISSING on an
+        #: artifact that had every field. Both shapes are read now, the one
+        #: in use is REPORTED, and the counts stay where DE puts them -- at
+        #: the arm's top level, outside the economic block.
+        econ = blk.get("economic") if isinstance(
+            blk.get("economic"), dict) else {}
+        where.add("economic_block" if econ else "flat_on_the_arm")
+        keys = set(blk) | set(econ)
+
+        def _g(k, _blk=blk, _e=econ):
+            return _e.get(k, _blk.get(k))
+
         for k in ECON_REQUIRED + COUNTS_REQUIRED:
             if k not in keys:
                 missing.append(f"{arm}.{k}")
         for k in sorted(keys & ECON_VOCAB - ALLOWED_ECON):
             extras.append(f"{arm}.{k}")
-        nds = blk.get("null_draws_summary")
+        nds = _g("null_draws_summary")
         n_draws = nds.get("n") if isinstance(nds, dict) else None
         per_arm[arm] = {
-            "D_E0": blk.get("D_E0"), "Z": blk.get("Z"),
-            "p_location": blk.get("p_location"),
-            "null_mean": blk.get("null_mean"), "null_sd": blk.get("null_sd"),
+            "D_E0": _g("D_E0"), "Z": _g("Z"),
+            "p_location": _g("p_location"),
+            "null_mean": _g("null_mean"), "null_sd": _g("null_sd"),
             "n_draws": n_draws,
             "n_fills_arm": blk.get("n_fills_arm"),
             "n_fills_baseline": blk.get("n_fills_baseline"),
@@ -612,6 +628,15 @@ def census_arm_day(doc: dict) -> dict:
             f"INVENTION, and this census is the inverted one: it asks what is "
             f"here that should not be.")
     return {"n_arms": len(per_arm), "per_arm": per_arm,
+            "where_the_six_were_found": sorted(where),
+            "why_both_shapes_are_read": (
+                "DE's UNSEALED emission nests the six under `economic`; the "
+                "SEALED receipts carry the same names flat at the arm's top "
+                "level. This reader was built against the sealed shape and "
+                "its own fixture reproduced that assumption, so the FIRST "
+                "REAL ARTIFACT refused ECONOMIC_FIELD_MISSING on an artifact "
+                "that had every field -- the refusal was honest and the "
+                "locator was wrong"),
             "allowed": sorted(ALLOWED_ECON),
             "vocabulary_checked_against": sorted(ECON_VOCAB - ALLOWED_ECON),
             "the_census_is_INVERTED_for_this_family": (
@@ -805,16 +830,30 @@ def print_table(res: dict) -> str:
              f"(head today: {res['ruling']['the_current_head'].get('name')})",
              f"  sealed receipt {res['sealed_receipt_identity']['the_bar_names']['name']} "
              f"{str(res['bar']['sha256'])[:16]}…",
-             "  arm                     D_E0         Z   p(1-sided)"
-             "   null_mean    null_sd   n_draws   fills_arm  fills_base"
-             "   cancels"]
+             ]
+    #: THE COLUMNS ARE SIZED TO THE VALUES. ***A quoted number is never
+    #: truncated to fit a column***: this table is the one place these
+    #: numbers may be read, and a width chosen in advance would either
+    #: clip a float or silently round it.
+    _cols = [("arm", "arm"), ("D_E0", "D_E0"), ("Z", "Z"),
+             ("p_location", "p(1-sided)"), ("null_mean", "null_mean"),
+             ("null_sd", "null_sd"), ("n_draws", "n_draws"),
+             ("n_fills_arm", "fills_arm"),
+             ("n_fills_baseline", "fills_base"),
+             ("n_cancels_issued", "cancels")]
+    _rows = []
     for arm, v in sorted(res["census"]["per_arm"].items()):
-        lines.append(
-            f"  {arm:<20} {str(v['D_E0']):>10} {str(v['Z']):>9} "
-            f"{str(v['p_location']):>12} {str(v['null_mean']):>11} "
-            f"{str(v['null_sd']):>10} {str(v['n_draws']):>9} "
-            f"{str(v['n_fills_arm']):>11} {str(v['n_fills_baseline']):>11} "
-            f"{str(v['n_cancels_issued']):>9}")
+        _rows.append([arm] + [repr(v[k]) if isinstance(v[k], float)
+                              else str(v[k]) for k, _ in _cols[1:]])
+    _w = [max(len(h), *(len(r[i]) for r in _rows)) if _rows else len(h)
+          for i, (_, h) in enumerate(_cols)]
+    lines.append("  " + "  ".join(
+        h.ljust(_w[i]) if i == 0 else h.rjust(_w[i])
+        for i, (_, h) in enumerate(_cols)))
+    for r in _rows:
+        lines.append("  " + "  ".join(
+            c.ljust(_w[i]) if i == 0 else c.rjust(_w[i])
+            for i, c in enumerate(r)))
     lines.append(f"  p is ONE-SIDED (p_location). {LABEL_LINE}.")
     lines.append(f"  the three COUNTS on this day: "
                  f"{counts_provenance(res['day'])}")
@@ -872,17 +911,27 @@ def _fixture_artifact(d: Path, ruling_name: str, ruling_sha: str,
         "preconditions": {"sealed_receipt": {
             "path": f"data/pm_5min/derived/{Path(bar_row['path']).name}",
             "sha256": bar_row["sha256"]}},
+        #: DE'S REAL SHAPE (measured at
+        #: p003_de_early_read_day_20260903__20260907T085436Z.json,
+        #: 5c8a58f501d3b61b…): the six live under `economic` and the three
+        #: counts at the arm's top level. ***The first fixture put them
+        #: flat, which was this reader's own assumption from the SEALED
+        #: receipts, and the fixture reproduced the assumption instead of
+        #: testing it*** -- so the first real artifact refused
+        #: ECONOMIC_FIELD_MISSING on an artifact that had every field.
         "day_run": {"day": day, "per_day_sealed_artifacts": [
             {"arm": "CONDVALUE_X_SKEW", "day": day, "status": "OK",
-             "D_E0": -1234.5, "Z": -0.87, "p_location": 0.19,
-             "null_mean": -900.1, "null_sd": 380.4,
-             "null_draws_summary": {"n": 500},
+             "sealed": False, "sealed_field_names": [],
+             "economic": {"D_E0": -1234.5, "Z": -0.87, "p_location": 0.19,
+                          "null_mean": -900.1, "null_sd": 380.4,
+                          "null_draws_summary": {"n": 500}},
              "n_fills_arm": 30171, "n_fills_baseline": 46439,
              "n_cancels_issued": 5146},
             {"arm": "HAZARD_OVER_SKEWED_REF", "day": day, "status": "OK",
-             "D_E0": 210.75, "Z": 0.41, "p_location": 0.66,
-             "null_mean": 12.0, "null_sd": 480.9,
-             "null_draws_summary": {"n": 500},
+             "sealed": False, "sealed_field_names": [],
+             "economic": {"D_E0": 210.75, "Z": 0.41, "p_location": 0.66,
+                          "null_mean": 12.0, "null_sd": 480.9,
+                          "null_draws_summary": {"n": 500}},
              "n_fills_arm": 44895, "n_fills_baseline": 46439,
              "n_cancels_issued": 700}]},
         "as_of": "2026-01-01T00:00:00Z",
@@ -1020,12 +1069,20 @@ def selftest() -> tuple:                                      # noqa: C901
            and r_gone == "EARLY_READ_STATUS_MISSING",
            f"rho = 0.42 -> {r_num}; fills_leg removed -> {r_gone}")
 
-        r_extra = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"][0]
-                          .update({"D_E_MINUS_R": -12.0}), "extra")
-        r_miss = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"][0]
-                         .pop("null_sd"), "missing econ")
-        r_ndraw = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"][0]
-                          .update({"null_draws_summary": {}}), "n")
+        r_extra = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"]
+                          [0]["economic"].update({"D_E_MINUS_R": -12.0}),
+                          "extra")
+        r_miss = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"]
+                         [0]["economic"].pop("null_sd"), "missing econ")
+        r_ndraw = refuses(lambda b: b["day_run"]["per_day_sealed_artifacts"]
+                          [0]["economic"].update({"null_draws_summary": {}}),
+                          "n")
+        #: AND THE SAME KNOWN-BAD ON THE ARM'S TOP LEVEL, because an
+        #: invented economic name must be caught wherever it is put -- the
+        #: census reads BOTH shapes now, so both must refuse.
+        r_extra_flat = refuses(
+            lambda b: b["day_run"]["per_day_sealed_artifacts"][0].update(
+                {"sd_over_abs_mean": 0.5}), "extra flat")
         ck("KNOWN-BADS -- THE INVERTED CENSUS, BOTH DIRECTIONS: an EXTRA "
            "economic key (`D_E_MINUS_R`, a sealed NAME no arm-day block "
            "produces) is refused, and a MISSING one is refused, and a "
@@ -1034,9 +1091,11 @@ def selftest() -> tuple:                                      # noqa: C901
            "exactly the computed set***",
            r_extra == "EARLY_READ_EXTRA_ECONOMIC_KEY"
            and r_miss == "EARLY_READ_ECONOMIC_FIELD_MISSING"
-           and r_ndraw == "EARLY_READ_ECONOMIC_FIELD_MISSING",
+           and r_ndraw == "EARLY_READ_ECONOMIC_FIELD_MISSING"
+           and r_extra_flat == "EARLY_READ_EXTRA_ECONOMIC_KEY",
            f"D_E_MINUS_R -> {r_extra}; null_sd removed -> {r_miss}; "
-           f"empty draws summary -> {r_ndraw}")
+           f"empty draws summary -> {r_ndraw}; an extra name on the arm's "
+           f"top level -> {r_extra_flat}")
 
         sealed = t / "p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.v2.json"
         sealed.write_text(json.dumps({"protocol": "X"}))
@@ -1173,6 +1232,32 @@ def selftest() -> tuple:                                      # noqa: C901
        f"load/emit disagreement is visible: "
        f"{_moved['the_receipts_own_two_readings_agree']}; a planted D_E0 "
        f"and null_mean reach none of {sorted(_leak_probe)}")
+
+    # -- DA 125: BOTH SHAPES, because my fixture had reproduced my own
+    # assumption and the first real artifact caught it -----------------
+    _flat = json.loads(json.dumps(good))
+    for _b in _flat["day_run"]["per_day_sealed_artifacts"]:
+        _b.update(_b.pop("economic"))
+    with tempfile.TemporaryDirectory() as _fd:
+        _fp2 = Path(_fd) / f"{EARLY_FAMILY}_20260906__20260101T000040Z.json"
+        _fp2.write_text(json.dumps(_flat))
+        _rflat = verify(_fp2, repo_root=root)
+    ck("DA 125 -- ***BOTH SHAPES ARE READ, AND THE ONE IN USE IS REPORTED.*** "
+       "DE's UNSEALED emission nests the six under `economic`; the SEALED "
+       "receipts carry the same names FLAT at the arm's top level. This "
+       "reader was built against the sealed shape and ***its own fixture "
+       "reproduced that assumption***, so the first REAL artifact refused "
+       "ECONOMIC_FIELD_MISSING on an artifact that had every field -- an "
+       "honest refusal from a wrong locator. The fixture now carries DE's "
+       "real shape and the flat one is driven beside it",
+       res["census"]["where_the_six_were_found"] == ["economic_block"]
+       and _rflat["census"]["where_the_six_were_found"]
+       == ["flat_on_the_arm"]
+       and res["census"]["per_arm"] == _rflat["census"]["per_arm"],
+       f"nested -> {res['census']['where_the_six_were_found']}; flat -> "
+       f"{_rflat['census']['where_the_six_were_found']}; the same values "
+       f"either way: "
+       f"{res['census']['per_arm'] == _rflat['census']['per_arm']}")
 
     # -- R-764: THE RULING RIDES BESIDE THE REFUSAL, NEVER INSTEAD ------
     _rd = tempfile.TemporaryDirectory()
