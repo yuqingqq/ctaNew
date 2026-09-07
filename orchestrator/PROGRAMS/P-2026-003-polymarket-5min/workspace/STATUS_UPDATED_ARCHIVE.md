@@ -18929,3 +18929,73 @@ generation and the window went 4 → 3. Nothing rewritten.
   plus TWO of mine, both readings of the running unit. Window trimmed 4 -> 3, **Batch 234** archived.
   Q-MEM-240 filed through the script.)
 ```
+
+## Batch 238 — archived 2026-09-07T08:40:28Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T08:06:12Z (MEM ROUND 253 -- R-766 SWEPT, with every landing between my own 6a72b71 and the
+  tip `8d19686`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO SEALED RECEIPT: six
+  design declarations on the ledger disk, the coordinator's checker, unit readings, git plumbing, the
+  register.
+  (1) ***THE PROPERTY HOLDS WHERE THE PROXY BROKE, AND I MEASURED BOTH HALVES.*** Resolved through the
+  shared resolver: `n_merge_links` **20**, `merged_tips` **5**, `orphan_branches` **EMPTY**. So R-766's
+  arithmetic is exact and every tip is absorbed with nothing left open -- while the cell asserting
+  `len(merged_tips) == n_merge_links` is red. **A count equality was standing in for "every tip absorbed
+  exactly once", and the proxy broke where the property did not**, which is what the ruling rests on. The
+  inheritance is visible at the files, not only in DE's account: `also_supersedes` is **5 entries in v25,
+  v26, v27 and v28** (4 x 5 = the 20 links) and **absent in v29 and v30**.
+  (2) ***THE RULED CORRECTION WAS ALREADY IN v30 BEFORE I SWEPT THE ENTRY THAT MADE IT.*** Ruling (2) asks
+  that v26-v28 be neither deleted nor edited and that the NEXT version name their re-declared merges as a
+  deepcopy inheritance that performed no merge. v30 (written 08:03Z, after the 08:02:53Z ruling) carries a
+  top-level `REDECLARED_MERGES_v26_v27_v28` block whose
+  `absorbed_by_the_earliest_version_naming_it` maps each tip -- design v16 and the four timestamped v3/v4/v5
+  forks -- to **v25**. That is ruling (1)'s property written into the artifact AS A FIELD, resolvable by a
+  reader who never sees the register. Recorded because a state file reporting it as pending would have been
+  stale on arrival. ***AND THE HEAD IS v30, NOT v29***: DE continued after the entry, as the entry says it
+  would.
+  (3) ***FIVE DESIGN VERSIONS EXIST WHERE EVERY RESOLVER READS THEM AND GIT DOES NOT.*** Measured per file:
+  v25 `git ls-files` 1, not ignored; **v26, v27, v28, v29, v30 each ls-files 0 and `check-ignore` YES**,
+  written 07:50 / 07:53 / 07:58 / 08:00 / 08:03Z. **That is why they are neither deleted nor edited**: the
+  shared ledger is not revertible the way a commit is, and a resolver that saw v26 cannot be told it never
+  existed. The correction goes forward, in band.
+  (4) ***MY ROUND-251 READING AND REV's ARE ONE FACT IN TWO VOCABULARIES, AND I ADOPT THE SHARPER ONE.***
+  At round 251 I measured the single hit for v7's pre-edit digest and walked its JSON to the leaf:
+  `supersedes.the_incident.das_v7`, narrative inside the repairing artifact, v8's actual pair naming
+  `abbc077d`. REV 92 §A6 reports `pre_edit_digest_pinned_by=[producer_exit_maps_v8.json]` -- ONE FILE PINS
+  IT -- and then says what I said: **no RESOLUTION pin names v7's pre-edit bytes; exactly one INCIDENT
+  record does, deliberately; and the field cannot tell them apart.** I checked why at the script: its own
+  header defines the field as "every declaration or ledger JSON <= 5 MB that **NAMES** the pre-edit digest,
+  full or 16-hex" -- **names, not links**. Same file, same JSON path, two words for it. My "nothing pins"
+  was the LOOSER word -- the same looseness R-762's headline was corrected for -- so **from here: a
+  RESOLUTION PIN is a `supersedes`-shaped link a resolver follows; an INCIDENT RECORD is a digest named in
+  prose.** The round-251 flag stands unedited with this beside it. And REV's routed item -- that the field
+  print `…v8.json:supersedes.the_incident.das_v7` -- is the path I published from the leaf walk: not a claim
+  of priority, but **the path is the answer and the filename is not**, and two seats reaching it by
+  different routes is what makes it safe to build the field on.
+  (5) **RELAYED, MARKED SO**: H1 closed both ways -- DE reading 09-03/04/05 PRESENT n=1 and 09-06
+  PRESENT_CHAIN_HEAD n=2, DA MATCH on all four, the OLD grouping kept as a known-bad still reading
+  AMBIGUOUS (a delta from the landed behaviour, not agreement with the new code), and the battery
+  cross-checking both resolvers every run, "disagreeing: none". **Verifying it means running two seats'
+  gates over the ledger, which is REV's act and not MEM's**, and I will not restate another seat's
+  execution as my own reading.
+  (6) ***TWO ACTS OF ANOTHER SEAT WORTH RECORDING AS STATE.*** DE's cell went red because of DE's own
+  composition error and **DE stopped for a ruling rather than adjust the cell to pass** -- and the ruling
+  then replaced the PROXY with the PROPERTY rather than deleting the check. And the USER's "record
+  everything we can" asked for inventory before/after; DE found **the fill record carries no position
+  state** in BE's replay and stored the field ABSENT with its reason (`ABSENT_UNTIL_BE_96`) rather than
+  deriving something that looks like it -- rule 4's shape applied to a field a USER asked for, which is the
+  case where inventing is most tempting.
+  (7) ***E1 IS STILL RUNNING AND ITS PEAK HAS NOT MOVED IN THIRTY-THREE MINUTES***: loaded / active /
+  RUNNING at 08:04:57Z, id `e40782fa…`, MemoryPeak 2,715,901,952 -- the identical value at 07:31:38Z,
+  07:48:37Z and now. Thirty-six minutes in against an expected exit about 08:55Z. Monotonic, so the peak
+  came early and nothing since has approached it; `SubState` is what says the run is alive.
+  (8) **AND ROUND 252's LESSON RAN AS A PRE-WRITE GATE, NOT A POST-HOC CATCH**: before writing I checked all
+  fifteen flag names against the file -- none already present. Last round a reused name shadowed silently
+  and only the count delta caught it; this round the check ran first and cost one command.
+  Counts: flags 1,772 -> **1,787**; provenance 1,317 -> **1,332**; tasks 19; **1,051 CHECKED /
+  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-NINTH round unchanged on UNMARKED**;
+  RELAYED moves by exactly one, §5's H1 reading. **Fifteen written, fifteen counted** -- the delta the
+  duplicate-name gate exists to protect. ORPHAN census **0**; the audit exits **1** on **161**
+  missing-artifact findings, 160 at my round start plus ONE of mine, the running unit. Window trimmed
+  4 -> 3, **Batch 235** archived. Q-MEM-241 filed through the script.)
+```

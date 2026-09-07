@@ -1,3 +1,96 @@
+# READ FIRST — round 256 (MEM, 2026-09-07T08:40:28Z, tip `4700030`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-770 swept, with every landing
+between my own `4f8ed4c` and the tip — which moved to `4700030` while I read. **I opened
+no receipt of any kind.**
+
+## 0. State — the USER's ruling is in the ledger
+
+| | |
+|---|---|
+| **The seal** | **RETIRED IN CODE and landed** — params **v18** `cfc2b06f`, design **v26** `7de8906e`, both tracked; `PARAMS_REL` → v18 |
+| **But** | **nothing has run under it.** REV 93 (dispatched 08:38:28Z) part A gates GO E2 **and** tonight's GO #8 |
+| **E1** | still **running** under the **old** code, 70 min in, `ExecMainExitTimestamp` empty, expected ≈ 08:55Z — economics yes, **no decision ledger** |
+| **Heads** | design v26 (25 versions, 0 orphans); params v18 (18 versions, 0 orphans) — both advanced by one, neither with an open branch |
+| **Ledger module** | `de_decision_ledger.py` on disk at the tip; its claims are DE's and REV 93's to verify |
+
+## 1. The dispatch's question, answered with its when
+
+**Design v26 is TRACKED at my read** — `ls-files` 1, `check-ignore` no, sha
+`7de8906e607a66d4`. The commit that landed it is **`4700030`** (*"DE 124 (landing
+omission): track design v26 — the ledger disk is not landing"*), **after the tip the
+dispatch named**. So the omission R-770 flagged was closed between the entry and my read
+at 08:39:03Z: **"tracked" was false when the entry was written and true when I looked**,
+and both halves are recorded.
+
+## 2. The seal is retired, and the status is computed
+
+At runner `:1363` the emit sets `seal_status` to an **f-string** —
+`f"UNSEALED_BY_USER_RULING R-765 -- {n_days_complete} of {g} days complete"` — beside
+`sealed` False, `sealed_field_names` `[]`, `sealed_at_every_depth` False. **Rule 10
+satisfied at the exact line where it was violated.**
+
+***And my round-250 finding is closed in the strongest available form.*** The literal I
+read at `:1329` for REV 90's NO-GO survives at exactly two sites, **neither the emit** —
+a comment at `:1379`, and `:10725` `_old125 = "UNSEALED_ALL_DAYS_COMPLETE"` **inside a
+known-bad cell** whose own comment reads *"THE KNOWN-BAD, against the OLD behaviour as
+its baseline: the literal this replaced carries no counts, so the predicate that passes
+above must FAIL on it … The cell measures a delta from the behaviour that was landed, not
+agreement with the words I just wrote."* **The literal that was the defect is now the
+control's baseline.**
+
+## 3. And the params gap I have carried since round 249 is closed
+
+| round | head | `PARAMS_REL` |
+|---|---|---|
+| 249 | v16 | v15 |
+| 250 | v17 | v15 — *the gap doubled in one round* |
+| **256** | **v18** | **v18 — equal** |
+
+The reason it was deliberate expired with it: the USER's ruling made the sealed path and
+the early-read path **one path**, which is what the pin was waiting for. **A literal I
+flagged as "correct today, indistinguishable tomorrow from the defect" is now simply
+correct.**
+
+## 4. Six withdrawn drafts — and two of them share a name
+
+`withdrawn_before_landing.files` holds **six** entries: v26 `5dcf6f0f`, v27 `f3db5112`,
+v28 `5b4bfd75`, v29 `a74e4263`, v30 `db995875`, and a **second v26** `22e26bf0` — the
+recomposed draft. **My round-254 count of five was right for what existed then**; the
+sixth was written and withdrawn after it.
+
+***Two entries bear the same name with different digests*** — two files that occupied one
+path at different minutes. **That is exactly why the ruling required name *and* digest per
+entry**: a name-only record would have collapsed them and lost a draft. The requirement
+reads like bookkeeping until the case arrives, and it arrived inside the batch that made
+the rule.
+
+## 5. The fence is now in the artifact
+
+v26 carries `user_ruled_unsealed_emission` (the USER's block under R-768's predicate) and
+`withdrawn_before_landing` with `authority`, `the_precedent_is_BOUNDED` (*"only versions
+never committed, written by the same seat in the same unfinished batch…"*) and
+`the_rule_this_leaves` (*"**COMPOSE FROM A SCHEMA, never from a deepcopy of the
+parent**…"*). **A resolver finds them without reading the register** — the good-direction
+twin of round 255's finding that the root fact the coordinator's probe missed was already
+a boolean in R7.
+
+## 6. Six walls, none loosened
+
+Four stops became **six walls** by the batch's end and not one was loosened. Two further
+rulings landed with it: the eight permitted keys classified by **measured change cadence**
+(only `as_of` changes on every version), and the head-version cell naming **pre** and
+**post** emission. **The contract moved to accommodate the USER's ruling rather than the
+checks bending to accommodate the work.**
+
+Counts: flags 1,817 → **1,832**; provenance 1,362 → **1,377**; tasks 19; **1,096 CHECKED
+/ 276 RELAYED + 5 MALFORMED / 455 UNMARKED** — the hundred-and-thirty-second round
+unchanged on UNMARKED; fifteen written, fifteen counted. ORPHAN census **0**; audit exit
+**1** on **166** — 165 at round start plus one of mine, the running unit. Window trimmed
+4 → 3, **Batch 238** archived. Q-MEM-244 filed through the script.
+
+---
+
 # READ FIRST — round 255 (MEM, 2026-09-07T08:27:23Z, tip `452e115`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-768 and R-769 swept, with

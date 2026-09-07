@@ -67,6 +67,67 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T08:40:28Z (MEM ROUND 256 -- R-770 SWEPT, with every landing between my own 4f8ed4c and the
+  tip, which moved to `4700030` while I read. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED
+  NO RECEIPT OF ANY KIND.
+  (1) ***THE DISPATCH'S QUESTION, ANSWERED WITH ITS WHEN: DESIGN v26 IS TRACKED AT MY READ.*** `git
+  ls-files` returns it, `check-ignore` says no, sha256 `7de8906e607a66d4` -- and the commit that landed it
+  is **`4700030`**, *"DE 124 (landing omission): track design v26 -- the ledger disk is not landing"*, which
+  is AFTER the tip the dispatch named (`c90eb9e`). **So the omission R-770 flagged was closed between the
+  entry and my read at 08:39:03Z**: "tracked" was false when the entry was written and true when I looked,
+  and both halves are recorded.
+  (2) ***THE USER'S RULING IS IN THE LEDGER, NOT ONLY IN A WORKTREE.*** params v18 `cfc2b06fe2c9e792` and
+  design v26 `7de8906e607a66d4`, both `ls-files` 1, both the entry's digests; design head **v26** (25
+  versions, orphans empty) and params head **v18** (18 versions, orphans empty) -- **both families advanced
+  by exactly one version in the same landing and neither carries an open branch**, after a batch that
+  produced six withdrawn drafts, a fork repaired forward and a merge-count cell replaced by a property. Round
+  255 insisted on the difference between a ruling recorded and a ruling in force; **it is in force now.**
+  (3) ***THE SEAL IS RETIRED IN CODE AND THE STATUS IS COMPUTED, NOT PRINTED.*** At runner `:1363` the emit
+  sets `seal_status` to an F-STRING -- `f"UNSEALED_BY_USER_RULING R-765 -- {n_days_complete} of {g} days
+  complete"` -- beside `sealed` False, `sealed_field_names` [] and `sealed_at_every_depth` False. **CLAUDE.md
+  rule 10 satisfied at the exact line where it was violated.** ***AND MY ROUND-250 FINDING IS CLOSED IN THE
+  STRONGEST AVAILABLE FORM***: the literal I read at `:1329` for REV 90's NO-GO now survives at exactly two
+  sites, NEITHER the emit -- a comment at `:1379`, and `:10725` `_old125 = "UNSEALED_ALL_DAYS_COMPLETE"`
+  **inside a known-bad cell** whose own comment reads *"THE KNOWN-BAD, against the OLD behaviour as its
+  baseline: the literal this replaced carries no counts, so the predicate that passes above must FAIL on it
+  … The cell measures a delta from the behaviour that was landed, not agreement with the words I just
+  wrote."* **The literal that was the defect is now the control's baseline** -- REV 83 §5's rule applied to
+  the very string that caused the NO-GO.
+  (4) ***AND THE PARAMS GAP I HAVE CARRIED SINCE ROUND 249 IS CLOSED.*** Head v16 against `PARAMS_REL` v15,
+  then v17 against v15 (the gap doubling in one round), now **head v18 and `PARAMS_REL` v18 -- EQUAL**. The
+  reason it was deliberate expired with it: the USER's ruling made the sealed path and the early-read path
+  ONE path, which is what the pin was waiting for. **A literal I flagged as "correct today, indistinguishable
+  tomorrow from the defect" is now simply correct.**
+  (5) ***THE WITHDRAWAL RECORD NAMES SIX DRAFTS, NOT FIVE -- AND TWO OF THEM SHARE A NAME.***
+  `withdrawn_before_landing.files` holds six entries: v26 `5dcf6f0f`, v27 `f3db5112`, v28 `5b4bfd75`, v29
+  `a74e4263`, v30 `db995875`, and a SECOND v26 `22e26bf0` -- the recomposed draft. **My round-254 count of
+  five was right for what existed then**; the sixth was written and withdrawn after it. ***TWO ENTRIES BEAR
+  THE SAME NAME WITH DIFFERENT DIGESTS***, two files that occupied one path at different minutes -- **which
+  is exactly why the ruling required name AND digest per entry**: a name-only record would have collapsed
+  them and lost a draft. The requirement reads like bookkeeping until the case arrives, and it arrived inside
+  the batch that made the rule.
+  (6) ***AND THE FENCE I CARRIED VERBATIM FROM THE REGISTER IS NOW IN THE ARTIFACT.*** v26 carries
+  `user_ruled_unsealed_emission` (the USER's block under R-768's predicate) and `withdrawn_before_landing`
+  with `authority`, `the_precedent_is_BOUNDED` ("only versions never committed, written by the same seat in
+  the same unfinished batch…") and `the_rule_this_leaves` ("**COMPOSE FROM A SCHEMA, never from a deepcopy
+  of the parent**…"). **A resolver finds them without reading the register** -- the good-direction twin of
+  round 255's observation that the root fact the coordinator's probe missed was already a boolean in R7.
+  (7) ***THE SEAL IS RETIRED IN CODE AND NOTHING HAS RUN UNDER IT.*** REV 93 was dispatched 08:38:28Z and
+  its part A gates GO E2 **and** tonight's GO #8, so the first run under the unsealed path is still behind a
+  review. **E1 executes the OLD code**: SubState running with `ExecMainExitTimestamp` EMPTY at 08:39:03Z,
+  MemoryPeak still 2,715,901,952, seventy minutes in, expected ≈ 08:55Z -- its artifact will carry the
+  economics and **no decision ledger**, exactly as R-765 disclosed. The decision-ledger module
+  (`de_decision_ledger.py`) is on disk at the tip; its claims are DE's and REV 93's to verify, and I record
+  only that it exists and is landed.
+  (8) **SIX WALLS IN ONE BATCH, NONE LOOSENED**, with two further rulings recorded at the landing: the eight
+  permitted keys classified by MEASURED change cadence (only `as_of` changes on every version), and the
+  head-version cell naming PRE and POST emission. **The contract moved to accommodate the USER's ruling
+  rather than the checks bending to accommodate the work.**
+  Counts: flags 1,817 -> **1,832**; provenance 1,362 -> **1,377**; tasks 19; **1,096 CHECKED /
+  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-THIRTY-SECOND round unchanged on UNMARKED**;
+  fifteen written, fifteen counted, the duplicate-name gate run before writing. ORPHAN census **0**; the
+  audit exits **1** on **166** missing-artifact findings, 165 at my round start plus ONE of mine, the
+  running unit. Window trimmed 4 -> 3, **Batch 238** archived. Q-MEM-244 filed through the script.)
   2026-09-07T08:27:23Z (MEM ROUND 255 -- R-768 AND R-769 SWEPT, with every landing between my own 0cf7579
   and the tip `452e115`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO RECEIPT OF ANY
   KIND.
@@ -203,71 +264,6 @@ updated: >-
   audit exits **1** on **164** missing-artifact findings -- 163 at my round start (161 at round 253's write
   plus the TWO the withdrawal created) plus ONE of mine, the running unit. Window trimmed 4 -> 3, **Batch
   236** archived. Q-MEM-242 filed through the script.)
-  2026-09-07T08:06:12Z (MEM ROUND 253 -- R-766 SWEPT, with every landing between my own 6a72b71 and the
-  tip `8d19686`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING. I OPENED NO SEALED RECEIPT: six
-  design declarations on the ledger disk, the coordinator's checker, unit readings, git plumbing, the
-  register.
-  (1) ***THE PROPERTY HOLDS WHERE THE PROXY BROKE, AND I MEASURED BOTH HALVES.*** Resolved through the
-  shared resolver: `n_merge_links` **20**, `merged_tips` **5**, `orphan_branches` **EMPTY**. So R-766's
-  arithmetic is exact and every tip is absorbed with nothing left open -- while the cell asserting
-  `len(merged_tips) == n_merge_links` is red. **A count equality was standing in for "every tip absorbed
-  exactly once", and the proxy broke where the property did not**, which is what the ruling rests on. The
-  inheritance is visible at the files, not only in DE's account: `also_supersedes` is **5 entries in v25,
-  v26, v27 and v28** (4 x 5 = the 20 links) and **absent in v29 and v30**.
-  (2) ***THE RULED CORRECTION WAS ALREADY IN v30 BEFORE I SWEPT THE ENTRY THAT MADE IT.*** Ruling (2) asks
-  that v26-v28 be neither deleted nor edited and that the NEXT version name their re-declared merges as a
-  deepcopy inheritance that performed no merge. v30 (written 08:03Z, after the 08:02:53Z ruling) carries a
-  top-level `REDECLARED_MERGES_v26_v27_v28` block whose
-  `absorbed_by_the_earliest_version_naming_it` maps each tip -- design v16 and the four timestamped v3/v4/v5
-  forks -- to **v25**. That is ruling (1)'s property written into the artifact AS A FIELD, resolvable by a
-  reader who never sees the register. Recorded because a state file reporting it as pending would have been
-  stale on arrival. ***AND THE HEAD IS v30, NOT v29***: DE continued after the entry, as the entry says it
-  would.
-  (3) ***FIVE DESIGN VERSIONS EXIST WHERE EVERY RESOLVER READS THEM AND GIT DOES NOT.*** Measured per file:
-  v25 `git ls-files` 1, not ignored; **v26, v27, v28, v29, v30 each ls-files 0 and `check-ignore` YES**,
-  written 07:50 / 07:53 / 07:58 / 08:00 / 08:03Z. **That is why they are neither deleted nor edited**: the
-  shared ledger is not revertible the way a commit is, and a resolver that saw v26 cannot be told it never
-  existed. The correction goes forward, in band.
-  (4) ***MY ROUND-251 READING AND REV's ARE ONE FACT IN TWO VOCABULARIES, AND I ADOPT THE SHARPER ONE.***
-  At round 251 I measured the single hit for v7's pre-edit digest and walked its JSON to the leaf:
-  `supersedes.the_incident.das_v7`, narrative inside the repairing artifact, v8's actual pair naming
-  `abbc077d`. REV 92 §A6 reports `pre_edit_digest_pinned_by=[producer_exit_maps_v8.json]` -- ONE FILE PINS
-  IT -- and then says what I said: **no RESOLUTION pin names v7's pre-edit bytes; exactly one INCIDENT
-  record does, deliberately; and the field cannot tell them apart.** I checked why at the script: its own
-  header defines the field as "every declaration or ledger JSON <= 5 MB that **NAMES** the pre-edit digest,
-  full or 16-hex" -- **names, not links**. Same file, same JSON path, two words for it. My "nothing pins"
-  was the LOOSER word -- the same looseness R-762's headline was corrected for -- so **from here: a
-  RESOLUTION PIN is a `supersedes`-shaped link a resolver follows; an INCIDENT RECORD is a digest named in
-  prose.** The round-251 flag stands unedited with this beside it. And REV's routed item -- that the field
-  print `…v8.json:supersedes.the_incident.das_v7` -- is the path I published from the leaf walk: not a claim
-  of priority, but **the path is the answer and the filename is not**, and two seats reaching it by
-  different routes is what makes it safe to build the field on.
-  (5) **RELAYED, MARKED SO**: H1 closed both ways -- DE reading 09-03/04/05 PRESENT n=1 and 09-06
-  PRESENT_CHAIN_HEAD n=2, DA MATCH on all four, the OLD grouping kept as a known-bad still reading
-  AMBIGUOUS (a delta from the landed behaviour, not agreement with the new code), and the battery
-  cross-checking both resolvers every run, "disagreeing: none". **Verifying it means running two seats'
-  gates over the ledger, which is REV's act and not MEM's**, and I will not restate another seat's
-  execution as my own reading.
-  (6) ***TWO ACTS OF ANOTHER SEAT WORTH RECORDING AS STATE.*** DE's cell went red because of DE's own
-  composition error and **DE stopped for a ruling rather than adjust the cell to pass** -- and the ruling
-  then replaced the PROXY with the PROPERTY rather than deleting the check. And the USER's "record
-  everything we can" asked for inventory before/after; DE found **the fill record carries no position
-  state** in BE's replay and stored the field ABSENT with its reason (`ABSENT_UNTIL_BE_96`) rather than
-  deriving something that looks like it -- rule 4's shape applied to a field a USER asked for, which is the
-  case where inventing is most tempting.
-  (7) ***E1 IS STILL RUNNING AND ITS PEAK HAS NOT MOVED IN THIRTY-THREE MINUTES***: loaded / active /
-  RUNNING at 08:04:57Z, id `e40782fa…`, MemoryPeak 2,715,901,952 -- the identical value at 07:31:38Z,
-  07:48:37Z and now. Thirty-six minutes in against an expected exit about 08:55Z. Monotonic, so the peak
-  came early and nothing since has approached it; `SubState` is what says the run is alive.
-  (8) **AND ROUND 252's LESSON RAN AS A PRE-WRITE GATE, NOT A POST-HOC CATCH**: before writing I checked all
-  fifteen flag names against the file -- none already present. Last round a reused name shadowed silently
-  and only the count delta caught it; this round the check ran first and cost one command.
-  Counts: flags 1,772 -> **1,787**; provenance 1,317 -> **1,332**; tasks 19; **1,051 CHECKED /
-  276 RELAYED + 5 MALFORMED / 455 UNMARKED -- the HUNDRED-AND-TWENTY-NINTH round unchanged on UNMARKED**;
-  RELAYED moves by exactly one, §5's H1 reading. **Fifteen written, fifteen counted** -- the delta the
-  duplicate-name gate exists to protect. ORPHAN census **0**; the audit exits **1** on **161**
-  missing-artifact findings, 160 at my round start plus ONE of mine, the running unit. Window trimmed
-  4 -> 3, **Batch 235** archived. Q-MEM-241 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -439,6 +435,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 256, R-770 swept (and every landing between 4f8ed4c and 4700030) ---
+  DESIGN_v26_IS_TRACKED_AT_MY_READ_AND_I_SAY_WHEN: 4700030-LANDED-AFTER-THE-ENTRYS-TIP
+  THE_SEAL_IS_RETIRED_IN_CODE_AND_THE_STATUS_IS_COMPUTED_NOT_PRINTED: N-OF-G-IN-AN-F-STRING
+  MY_ROUND_250_LITERAL_FINDING_IS_CLOSED_AND_THE_LITERAL_IS_NOW_THE_FALSIFIERS_BASELINE: OLD125-KNOWN-BAD
+  THE_PARAMS_GAP_I_CARRIED_FOR_SEVEN_ROUNDS_IS_CLOSED: HEAD-V18-AND-PARAMS-REL-V18
+  params_v18_AND_design_v26_ARE_BOTH_LANDED_AND_TRACKED: CFC2B06F-AND-7DE8906E
+  THE_WITHDRAWAL_RECORD_NAMES_SIX_DRAFTS_NOT_FIVE: THE-RECOMPOSED-V26-IS-THE-SIXTH
+  and_TWO_ENTRIES_SHARE_A_NAME_WITH_DIFFERENT_DIGESTS: WHY-A-NAME-ALONE-COULD-NOT-RECORD-IT
+  v26_CARRIES_THE_USERS_RULING_AND_THE_BOUNDED_PRECEDENT_IN_ITS_OWN_TEXT: USER-RULED-UNSEALED-EMISSION
+  THE_RULE_THE_WITHDRAWAL_LEAVES_IS_IN_THE_ARTIFACT: COMPOSE-FROM-A-SCHEMA-NEVER-A-DEEPCOPY
+  THE_DECISION_LEDGER_MODULE_EXISTS_AT_THE_TIP: DE-DECISION-LEDGER-PY
+  SIX_WALLS_IN_ONE_BATCH_NONE_LOOSENED_and_TWO_MORE_RULINGS_RECORDED: KEYS-BY-CADENCE-AND-PRE-POST
+  THE_SEAL_IS_RETIRED_IN_CODE_BUT_NOTHING_HAS_RUN_UNDER_IT: REV-93-GATES-E2-AND-GO-8
+  E1_IS_STILL_RUNNING_UNDER_THE_OLD_CODE_AT_SEVENTY_MINUTES: NO-LEDGER-FOR-09-03
+  THE_TWO_HEADS_MOVED_TOGETHER_AND_BOTH_CHAINS_ARE_CLEAN: DESIGN-25-VERSIONS-PARAMS-18-ZERO-ORPHANS
+  I_OPENED_NO_SEALED_RECEIPT_AT_ROUND_256_EITHER: DECLARATIONS-SOURCE-GIT-AND-A-UNIT
   # --- MEM round 255, R-768 + R-769 swept (and every landing between 0cf7579 and 452e115) ---
   R_768_LANDED_INSIDE_MY_ROUND_254_WINDOW_AND_MY_BOUND_IS_WHAT_KEPT_THE_ROW_TRUE: 08-19-30Z-VS-MY-08-19-14Z
   STATING_THE_TIP_SHA_IS_WHAT_MAKES_A_STALE_READ_HARMLESS: THE-BOUND-NOT-THE-FRESHNESS
@@ -26242,6 +26254,161 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 256, 2026-09-07T08:40:28Z (the clock read by which every measurement below was complete) ---
+  DESIGN_v26_IS_TRACKED_AT_MY_READ_AND_I_SAY_WHEN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      the dispatch asked me to verify whether v26 is tracked at my read and to say so. IT IS: `git ls-files`
+      returns it, `git check-ignore` says no, sha256 7de8906e607a66d4 (the entry's digest), and the commit
+      that landed it is 4700030, "DE 124 (landing omission): track design v26 -- the ledger disk is not
+      landing". THAT COMMIT IS AFTER THE TIP THE DISPATCH NAMED (c90eb9e), so the omission R-770 flagged was
+      closed between the entry and my read at 08:39:03Z. Recorded with its when, because "tracked" was false
+      when the entry was written and true when I looked.
+  THE_SEAL_IS_RETIRED_IN_CODE_AND_THE_STATUS_IS_COMPUTED_NOT_PRINTED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      at :1363 the emit sets `out["seal_status"]` to an F-STRING --
+      f"UNSEALED_BY_USER_RULING R-765 -- {n_days_complete} of {g} days complete" -- beside `sealed` False,
+      `sealed_field_names` [] and `sealed_at_every_depth` False. The status is COMPUTED FROM THE RUN'S OWN
+      COUNTS, which is CLAUDE.md rule 10 ("compute predicates, never print conclusions") satisfied at the
+      exact line where it was violated.
+  MY_ROUND_250_LITERAL_FINDING_IS_CLOSED_AND_THE_LITERAL_IS_NOW_THE_FALSIFIERS_BASELINE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      at round 250 I read REV 90's NO-GO literal at its line -- `out["seal_status"] =
+      "UNSEALED_ALL_DAYS_COMPLETE"` at :1329, a hardcoded string asserting a completeness the branch does not
+      evaluate. It survives at exactly TWO sites now, NEITHER of them the emit: a comment at :1379, and
+      :10725 `_old125 = "UNSEALED_ALL_DAYS_COMPLETE"` INSIDE A KNOWN-BAD CELL whose own comment reads "THE
+      KNOWN-BAD, against the OLD behaviour as its baseline: the literal this replaced carries no counts, so
+      the predicate that passes above must FAIL on it ... The cell measures a delta from the behaviour that
+      was landed, not agreement with the words I just wrote". THE LITERAL THAT WAS THE DEFECT IS NOW THE
+      CONTROL'S BASELINE -- REV 83 section 5's rule (a known-bad asserts a delta from its own baseline)
+      applied to the very string that caused the NO-GO. My flag is closed in the strongest available form.
+  THE_PARAMS_GAP_I_CARRIED_FOR_SEVEN_ROUNDS_IS_CLOSED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      from round 249 I have re-measured the distance between the params chain head and the literal the
+      sealed path names: head v16 vs PARAMS_REL v15, then v17 vs v15 (the gap doubling in one round), now
+      HEAD v18 AND `PARAMS_REL = ".../de_multiday_gate1_params_v18.json"` -- EQUAL. The reason it was
+      deliberate has expired with it: the USER's ruling made the sealed path and the early-read path ONE
+      path, which is what the pin was waiting for. A literal I flagged as "correct today, indistinguishable
+      tomorrow from the defect" is now simply correct.
+  params_v18_AND_design_v26_ARE_BOTH_LANDED_AND_TRACKED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v18.json
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      params v18 sha cfc2b06fe2c9e792, `git ls-files` 1; design v26 sha 7de8906e607a66d4, `git ls-files` 1.
+      Both digests are the entry's. The USER's R-765 ruling is therefore IN THE LEDGER, not only in a
+      worktree -- which is the difference between a ruling recorded and a ruling in force, and the
+      difference my round-255 flag insisted on while the batch was green-but-unlanded.
+  THE_WITHDRAWAL_RECORD_NAMES_SIX_DRAFTS_NOT_FIVE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      `withdrawn_before_landing.files` holds SIX entries: v26 5dcf6f0f519df50b, v27 f3db51120d2707d0, v28
+      5b4bfd75d328a890, v29 a74e4263c167f1e6, v30 db9958753ec23223, and a SECOND v26 22e26bf07306d1e7 --
+      the recomposed draft R-768 records as "withdrawn too, it changed `parameters`". My round-254 count of
+      FIVE was right for what existed at that moment; the sixth was written and withdrawn after it. The
+      record is complete and I am the one whose earlier number it extends.
+  and_TWO_ENTRIES_SHARE_A_NAME_WITH_DIFFERENT_DIGESTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      two of the six entries are both named `p003_de_multiday_gate1_design_v26.json`, with digests
+      5dcf6f0f519df50b and 22e26bf07306d1e7 -- two different files that occupied one path at different
+      minutes. THAT IS WHY THE RULING REQUIRED NAME AND DIGEST PER ENTRY AND NOT A LIST OF NAMES: a
+      name-only record would have collapsed them into one and lost a draft. The requirement reads like
+      bookkeeping until the case arrives; it arrived inside the same batch that made the rule.
+  v26_CARRIES_THE_USERS_RULING_AND_THE_BOUNDED_PRECEDENT_IN_ITS_OWN_TEXT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      the version carries `user_ruled_unsealed_emission` (the USER's R-765 block under R-768's predicate --
+      ruler, verbatim, time, register id) and `withdrawn_before_landing` with `authority`,
+      `the_precedent_is_BOUNDED` ("only versions never committed, written by the same seat in the same
+      unfinished batch, dele[ted before that batch lands]...") and `the_rule_this_leaves`. THE FENCE I
+      CARRIED VERBATIM AT ROUND 254 FROM THE REGISTER IS NOW IN THE ARTIFACT ITSELF, where a resolver finds
+      it without reading the register -- which is the difference between a precedent recorded and a
+      precedent that travels.
+  THE_RULE_THE_WITHDRAWAL_LEAVES_IS_IN_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      `withdrawn_before_landing.the_rule_this_leaves` reads "COMPOSE FROM A SCHEMA, never from a deepcopy of
+      the parent, and EMIT THROUGH THE FAMILY'S ..." -- the lesson of four stops written where the next
+      composer reads it rather than only in the register. A rule in a runbook is found by someone who reads
+      runbooks; a rule in the declaration is found by the code that composes the next version. Same
+      observation as round 255's boolean in R7, arriving from the good direction this time.
+  THE_DECISION_LEDGER_MODULE_EXISTS_AT_THE_TIP:
+    prov: CHECKED
+    artifact: live/pm_research/de_decision_ledger.py
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      the module the USER's "record everything we can" asked for is on disk at the tip (written 08:35Z). Its
+      claims -- about 2 MB gzipped per two-arm day, D_E0 and Z recomputed from the ledger alone to 1e-9,
+      one- and two-sided p, rho, the fills leg without a replay, `inventory_leg` ABSENT_UNTIL_BE_96 pending
+      DE 125 -- are DE's and REV 93's to verify; I record that the module exists and is landed, which is the
+      part a state file is for.
+  SIX_WALLS_IN_ONE_BATCH_NONE_LOOSENED_and_TWO_MORE_RULINGS_RECORDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      four stops became SIX walls by the batch's end, and none was loosened to let the work pass. Two
+      further rulings are recorded with the landing: (5) the eight permitted keys classified by MEASURED
+      change cadence -- only `as_of` changes on every version -- and (6) the head-version cell names PRE and
+      POST emission. The pattern MEM carries from this batch is the one the entries state themselves: every
+      wall was a check refusing to redefine a recorded fact, and the contract moved to accommodate the USER's
+      ruling rather than the checks bending to accommodate the work.
+  THE_SEAL_IS_RETIRED_IN_CODE_BUT_NOTHING_HAS_RUN_UNDER_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      the distinction the state files must keep: the retirement is LANDED IN CODE and NO RUN HAS EXECUTED
+      IT. REV 93 was dispatched 08:38:28Z and its part A gates GO E2 AND tonight's GO #8, so the first run
+      under the unsealed path is still behind a review. E1, running now, executes the OLD code. A reader
+      asking "is the seal retired" gets yes-in-the-code and not-yet-in-any-artifact, and both halves matter.
+  E1_IS_STILL_RUNNING_UNDER_THE_OLD_CODE_AT_SEVENTY_MINUTES:
+    prov: CHECKED
+    artifact: systemctl --user show deEARLY20260903.service (a unit, not a file)
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      SubState running with `ExecMainExitTimestamp` EMPTY at 08:39:03Z, MemoryPeak still 2,715,901,952 --
+      seventy minutes in against an expected exit about 08:55Z. It launched at 07:28:57Z from wt-de at
+      cb7933a, so it runs the SEALED code: its artifact will carry the economics (the early read's point)
+      and NO decision ledger, exactly as R-765 disclosed. 09-03's ledger is one later replay only if the
+      user asks.
+  THE_TWO_HEADS_MOVED_TOGETHER_AND_BOTH_CHAINS_ARE_CLEAN:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      resolved through the shared resolver: design head v26 7de8906e607a66d4, 25 versions, orphan_branches
+      EMPTY; params head v18 cfc2b06fe2c9e792, 18 versions, orphan_branches EMPTY. Both families advanced by
+      exactly one version in the same landing and neither carries an open branch -- after a batch that
+      produced six withdrawn drafts, a fork repaired forward, and a merge-count cell replaced by a property.
+  I_OPENED_NO_SEALED_RECEIPT_AT_ROUND_256_EITHER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-07T08:40:28Z
+    said: >-
+      what I opened: two declarations (params v18, design v26), one Python source at four line ranges, git
+      plumbing, one unit reading and the register. No receipt of any kind -- E1's still does not exist, and
+      when it does DA's reader prints the table.
   # --- MEM round 255, 2026-09-07T08:27:23Z (the clock read by which every measurement below was complete) ---
   R_768_LANDED_INSIDE_MY_ROUND_254_WINDOW_AND_MY_BOUND_IS_WHAT_KEPT_THE_ROW_TRUE:
     prov: CHECKED
