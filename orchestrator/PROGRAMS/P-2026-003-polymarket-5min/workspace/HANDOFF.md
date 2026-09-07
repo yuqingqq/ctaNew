@@ -1,3 +1,95 @@
+# READ FIRST — round 280 (MEM, 2026-09-07T15:44:21Z, tip `d1b9e62`)
+
+**R-806 swept, with every landing between the tip I read at round 279 (`06d3010`) and `d1b9e62`.** STATE ONLY.
+MEM asserts no result and rules nothing.
+
+## 1. The early-read path across the two composition heads — traced, not asserted
+
+**`de_early_read.py` is byte-identical at both**: `5aa544ef8d594efd807624fa` at `6c3a121` and `5020f96`, with the
+runner the only file differing. So every difference the early-read *path* can have comes from the runner
+functions it calls.
+
+**But two of its callees changed, not just an added helper.** Hashing each function's own source:
+
+| | |
+|---|---|
+| **added** by DE 134 | `_forwards_kwargs`, `_passes_anchor`, `day_run_ledger_anchor`, `ledger_path_for`, `post_emit_census_status` |
+| **changed** | `_main_day`, **`run_day`**, **`selftest`** |
+| identical | the other 155 |
+
+Of the eleven things the early read calls from `RUN`, **`run_day` and `selftest` both differ.**
+
+**REV's gating claim is exact at the call sites:** `post_emit_census_status` at 9247/9259/9269/9271/9277 all in
+`selftest` and **`:12211` in `_main_day`**; `day_run_ledger_anchor` at 9093/9103/9201 in `selftest` and **`:11998`
+in `_main_day`**. Two of the three added functions are unreachable from the early read.
+
+**And `ledger_path_for` is the one that isn't** — called at **`:6407` inside `run_day`**, which the early read
+reaches at its `:414`. **So the entry's "only `ledger_path_for`" is right, and now traced.** A compression that is
+correct is still worth tracing: the trace is what lets the next reader confirm it without re-deriving the call
+graph.
+
+## 2. DA 129's Chainlink figures, reproduced
+
+Parsed the raw stream myself — TSV: `recv_ns`, tab, JSON — over three hourly files of 09-05, **0 unparsed lines**:
+
+| symbol | n | cadence p50 | min | max | world→us lag p50 |
+|---|---:|---:|---:|---:|---:|
+| btc/usd | 10,237 | **0.964 s** | 0.210 | 12.5 | **1.689 s** |
+| eth/usd | 10,241 | **0.961 s** | 0.078 | 13.2 | **1.700 s** |
+
+Against DA's cadence 0.93–0.96 s and lag ~1.68 s. Max inter-arrivals of 12.5–13.2 s in three hours are consistent
+with DA's 13–25 s in-window gaps.
+
+**On three hours of one day, not four days, and I say so** — a spot check that agrees, not an independent
+measurement of the same population. My p50s sit at or just above the top of DA's range, which is what a narrower
+window can do and is not a disagreement.
+
+**And my first parse was wrong:** I read the `.csv.gz` as CSV and got a "header" that was plainly one record split
+on its own commas (a 19-digit integer and an opening brace in the field names). **An instrument whose output is
+implausible on its face is telling you about the instrument.**
+
+## 3. The sigma block, and REV's three steps
+
+`da_fair_price_identity.py` takes **`sigma: float, sigma_as_of: float` as parameters** (`:671`) and consumes sigma
+throughout — **it consumes a sigma and produces none**, so the gap DA names is upstream of it. *(Whether a
+qualifying live producer exists is DA's determination; I checked the consumption side only.)*
+
+**REV §3's remedy, in three steps:** (1) the new artifact carries `supersedes` as a `{path, sha256}` pair **with
+the digest recomputed at the write**; (2) the precondition admits a second read **only with a verified target** —
+so `EARLY_READ_ALREADY_EMITTED` stops being absolute without becoming absent; (3) **DA's reader resolves the head
+by the chain**. DA 130 dispatched 15:37:56Z for (3); DE 138 carries (1)–(2) as Part A.
+
+**And the missing rule is machinery this programme already has elsewhere.** At round 279 I verified with a
+falsifier that no day artifact carries a chain key while the params declaration carries `/supersedes/chain`;
+`resolve_head`, the `{path, sha256}` link discipline, `also_supersedes` and the orphan census all exist. **The
+early-read day family is the one family emitting versions without any of it** — which is why REV calls the fix
+one round of DE's work, not a design question.
+
+## 4. Standing
+
+- **E1r/E2r stay NO-GO** and now wait on **DE 138 Part A + a REV re-check**, explicitly after GO #8 if the clock
+  is tight. **The replay debt is blocked behind a code change rather than behind a GO** — a different kind of
+  wait from the one it has been in all afternoon. Those two days remain without ledgers, absolutes, settlement
+  re-valuation or position census.
+- **DE 138 queued behind DE 137**, Part B deferring the quoter to **DA as owner** — the right assignment given
+  the block is a missing sigma producer.
+- **Runbook §7e addendum 2** (`2bdcf4a`) records where each of the user's three tracks stands; a seat reloading
+  now needs the addendum, not the original §7e alone.
+- **GO #8 unchanged** — `wt-de` `5020f96`, status exactly `?? data`, **sixth** consecutive round. Nothing this
+  round touched those bytes: REV 104A was read-only at `5020f96` and DA 129 measured the price stream.
+- **Freeze holds a twentieth round.** In flight: DE 137, DA 130, REV 104's second half.
+
+## 5. Counts
+
+flags 2213 → **2228**, provenance 1758 → **1773** (fifteen written, fifteen counted, by `yaml.safe_load`;
+duplicate-name gate before writing). **1,483 CHECKED / 285 RELAYED + 5 MALFORMED / 455 UNMARKED** — 156th round
+unchanged on UNMARKED. Orphans 0; missing-artifact **178**, my fifteen added none. Window trimmed 4 → 3,
+**Batch 262** archived.
+
+**NEXT:** DE 137, DA 130, REV 104 second half → the close → GO #8. MEM sweeps R-807 onward.
+
+---
+
 # READ FIRST — round 279 (MEM, 2026-09-07T15:37:58Z, tip `06d3010`)
 
 **R-804 and R-805 swept, with every landing between the tip I read at round 278 (`e0b6a55`) and `06d3010`.**

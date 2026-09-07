@@ -20256,3 +20256,46 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2150 -> 2166, provenance 1695 -> 1711 (sixteen written, sixteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 258 archived.)
 ```
+
+## Batch 262 — archived 2026-09-07T15:44:21Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T15:19:44Z (MEM ROUND 277 -- R-801 AND R-802 SWEPT, with every landing between the tip I read at round 276
+  (`8a12422`) and `1e43c4f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***A USER RULING, THE FIFTH AND THE LARGEST: THE ESTIMAND CHANGES.*** Verbatim -- **"the pnls are from
+  trades and remaining position's settlement p&l, need to calculate this correctly"**, preceded by **"then the
+  simulation logic does not make sense at all"**. A path's P&L on a slug is the trades' cash flow PLUS the
+  settlement value of the position it still holds; the 5-second markout `D_E0` is DEMOTED TO A DIAGNOSTIC.
+  (2) ***I VERIFIED THE DECOMPOSITION AT THE 09-06 LEDGER, NOT ONLY AS ALGEBRA***: reading `buy_side` from the
+  header, `total = trades cash flow + net x settle` holds EXACTLY on all three paths **for settle = 100 AND
+  settle = 0** -- two values, so it is a check and not a tautology. ***AND MY NUMBERS ARE NOT SETTLEMENT P&Ls
+  AND I SAY SO***: settlement is PER SLUG, so a constant settle is a counterfactual that isolates the algebra
+  and values nothing. The real valuation needs the per-slug winner and is BE 99's.
+  (3) ***THE SUBSUMPTION IS OF R-795's QUESTION, NOT OF THE CODE'S FIELD.*** The ruling answers "does the
+  residual belong in the estimand" -- yes, at settlement. But the field named `inventory_leg` is, from my round
+  273 reading of `absolute_legs`, `Σ (after - before) x own mark` -- **the fills' CASH FLOW**, not a position
+  marked at settlement. The numbers make it unmissable: **225,644.56 and 248,737.89 against BE 98's residual
+  +12,011 and +10,390 -- nineteen and twenty-four times apart.** Two quantities, one name. **What must not happen
+  is the ruled residual landing in the field that already carries a different number under that name.**
+  (4) **MY ROUND-276 NULL FINDING IS NOW LOAD-BEARING**: `NULL_DRAW` is a scalar with no fills, so the draws
+  cannot be re-marked -- which the ruling's reading (3) turns into a dispatch line for DE 136. The Chainlink
+  verification source checks out on disk (`crypto_prices_twap_thirty` 366M, `_sixty` 368M,
+  `collect_pm_prices.py:40` "THE SETTLEMENT STREAM ... Chainlink RTDS TWAP relay", `exp_m6_settlement.py`
+  present). **The venue's record is the JOIN KEY and Chainlink is the VERIFIER** -- two jobs kept separate.
+  (5) **RULE 11 RECLASSIFIES THE FOUR READ DAYS AS DESIGN DATA** for the new endpoint -- consumed a SECOND time,
+  for a second question -- and **09-07 may not be valued before v20/v28 land**, a guard DE 136 must ship as a
+  refusal by name rather than a convention. The four-day table is not withdrawn: its numbers are unchanged and
+  what changes is what they are FOR.
+  (6) **MY ROUND-276 LABEL OBSERVATION IS OVERTAKEN, AND THE TIMES SAY I DID NOT ANTICIPATE IT**: I wrote it at
+  15:13:40Z; the ruling arrived between 15:07:32Z and 15:09:15Z. Two readings of the same evidence converged
+  within minutes and **the ruling goes far further than a label.** R-802 corrects R-801's "~15:1xZ" in band --
+  a placeholder digit caught by **the register's own placeholder check** -- which is R-466/R-467/R-755's
+  times-from-the-clock rule enforced by an instrument rather than by memory.
+  (7) **THE REPLAY ENGINE IS NOT WHAT THE RULING CHANGES; THE VALUATION IS** -- tape, queue, latency, matched
+  null, seed and per-fill ledger stand. Position caps and the quoter's placement remain OPEN with the user.
+  GO #8 tonight is UNCHANGED (`wt-de` `5020f96`, `?? data`, third round) and **its ledger is the input to an
+  endpoint that did not exist when its code was frozen** -- possible only because R-765 made the per-fill records
+  persist. Freeze holds a SEVENTEENTH round, and v20/v28 must now carry the new endpoint as well as the pins.
+  COUNTS (by YAML parse): flags 2166 -> 2183, provenance 1711 -> 1728 (seventeen written, seventeen
+  counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 259 archived.)
+```

@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T15:44:21Z (MEM ROUND 280 -- R-806 SWEPT, with every landing between the tip I read at round 279 (`06d3010`) and
+  `d1b9e62`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
+  (1) ***`de_early_read.py` IS BYTE-IDENTICAL AT BOTH COMPOSITION HEADS*** -- `5aa544ef8d594efd807624fa` at
+  `6c3a121` and `5020f96`, with the runner the only file differing between them. **BUT TWO OF ITS CALLEES
+  CHANGED, NOT JUST AN ADDED HELPER**: hashing each function's own source, DE 134 ADDED five and CHANGED three
+  (`_main_day`, `run_day`, `selftest`), the other 155 identical -- and of the eleven things the early read calls
+  from `RUN`, **`run_day` and `selftest` both differ.**
+  (2) ***REV's GATING CLAIM IS EXACT AT THE CALL SITES***: `post_emit_census_status` at 9247/9259/9269/9271/9277
+  all in `selftest` and **`:12211` in `_main_day`**; `day_run_ledger_anchor` at 9093/9103/9201 in `selftest` and
+  **`:11998` in `_main_day`**. So two of the three added functions cannot be reached from the early read at all.
+  ***AND `ledger_path_for` IS THE ONE NEW FUNCTION THAT CAN BE***: called at **`:6407` inside `run_day`**, which
+  the early read reaches at its `:414`. **So the entry's "only `ledger_path_for`" is RIGHT, and now traced** --
+  a compression that is correct is worth tracing anyway, because the trace is what lets the next reader confirm
+  it without re-deriving the call graph.
+  (3) ***I REPRODUCED DA 129's CHAINLINK FIGURES***: parsing the raw stream myself (TSV: `recv_ns`, tab, JSON),
+  three hourly files of 09-05, **0 unparsed lines** -- **btc/usd cadence p50 0.964 s, eth/usd 0.961 s**, and
+  **world->us lag p50 1.689 s / 1.700 s** against DA's ~1.68; max inter-arrivals 12.5-13.2 s, consistent with
+  DA's 13-25 s gaps. ***ON THREE HOURS OF ONE DAY, NOT FOUR DAYS, AND I SAY SO*** -- a spot check that agrees,
+  not an independent measurement of the same population. **And my first parse was wrong**: I read the `.csv.gz`
+  as CSV and got a "header" that was plainly one record split on its own commas. **An instrument whose output is
+  implausible on its face is telling you about the instrument.**
+  (4) DA 129's quoter view is blocked on a sigma producer; I checked the consumption side only --
+  `da_fair_price_identity.py` takes **`sigma` and `sigma_as_of` as PARAMETERS** (`:671`), so **it consumes a
+  sigma and produces none**, and the gap is upstream of it. Whether a qualifying producer exists is DA's
+  determination and I did not test it.
+  (5) **REV §3's three steps**: the new artifact carries `supersedes` as a `{path, sha256}` pair with the digest
+  recomputed AT THE WRITE; the precondition admits a second read only with a VERIFIED TARGET; DA's reader
+  resolves the head BY THE CHAIN. **And the missing rule is machinery this programme already has elsewhere** --
+  at round 279 I verified with a falsifier that no day artifact carries a chain key while the params declaration
+  carries `/supersedes/chain`; `resolve_head`, `also_supersedes` and the orphan census all exist. **The
+  early-read day family is the one family emitting versions without any of it**, which is why REV calls it one
+  round of DE's work.
+  (6) E1r/E2r stay NO-GO and now wait on **DE 138 Part A + a REV re-check**, explicitly after GO #8 if the clock
+  is tight -- **the replay debt is blocked behind a code change rather than behind a GO.** DE 138 is queued
+  behind DE 137, Part B deferring the quoter to DA as owner. DA 130 dispatched 15:37:56Z. Runbook §7e addendum 2
+  (`2bdcf4a`) records where each track stands. GO #8 unchanged (`5020f96`, `?? data`, SIXTH consecutive round);
+  freeze holds a TWENTIETH round.
+  COUNTS (by YAML parse): flags 2213 -> 2228, provenance 1758 -> 1773 (fifteen written, fifteen counted,
+  duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 262 archived.)
   2026-09-07T15:37:58Z (MEM ROUND 279 -- R-804 AND R-805 SWEPT, with every landing between the tip I read at round 278
   (`e0b6a55`) and `06d3010`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
   (1) ***CORRECTION IN BAND TO MY OWN ROUND-278 ENTRY: MY LATENCY EVIDENCE WAS A MISREADING.*** I wrote that
@@ -148,44 +187,6 @@ updated: >-
   GO #8 unchanged (`5020f96`, `?? data`, FOURTH consecutive round); freeze holds an EIGHTEENTH round.
   COUNTS (by YAML parse): flags 2183 -> 2198, provenance 1728 -> 1743 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 260 archived.)
-  2026-09-07T15:19:44Z (MEM ROUND 277 -- R-801 AND R-802 SWEPT, with every landing between the tip I read at round 276
-  (`8a12422`) and `1e43c4f`. STATE ONLY. MEM ASSERTS NO RESULT AND RULES NOTHING.
-  (1) ***A USER RULING, THE FIFTH AND THE LARGEST: THE ESTIMAND CHANGES.*** Verbatim -- **"the pnls are from
-  trades and remaining position's settlement p&l, need to calculate this correctly"**, preceded by **"then the
-  simulation logic does not make sense at all"**. A path's P&L on a slug is the trades' cash flow PLUS the
-  settlement value of the position it still holds; the 5-second markout `D_E0` is DEMOTED TO A DIAGNOSTIC.
-  (2) ***I VERIFIED THE DECOMPOSITION AT THE 09-06 LEDGER, NOT ONLY AS ALGEBRA***: reading `buy_side` from the
-  header, `total = trades cash flow + net x settle` holds EXACTLY on all three paths **for settle = 100 AND
-  settle = 0** -- two values, so it is a check and not a tautology. ***AND MY NUMBERS ARE NOT SETTLEMENT P&Ls
-  AND I SAY SO***: settlement is PER SLUG, so a constant settle is a counterfactual that isolates the algebra
-  and values nothing. The real valuation needs the per-slug winner and is BE 99's.
-  (3) ***THE SUBSUMPTION IS OF R-795's QUESTION, NOT OF THE CODE'S FIELD.*** The ruling answers "does the
-  residual belong in the estimand" -- yes, at settlement. But the field named `inventory_leg` is, from my round
-  273 reading of `absolute_legs`, `Σ (after - before) x own mark` -- **the fills' CASH FLOW**, not a position
-  marked at settlement. The numbers make it unmissable: **225,644.56 and 248,737.89 against BE 98's residual
-  +12,011 and +10,390 -- nineteen and twenty-four times apart.** Two quantities, one name. **What must not happen
-  is the ruled residual landing in the field that already carries a different number under that name.**
-  (4) **MY ROUND-276 NULL FINDING IS NOW LOAD-BEARING**: `NULL_DRAW` is a scalar with no fills, so the draws
-  cannot be re-marked -- which the ruling's reading (3) turns into a dispatch line for DE 136. The Chainlink
-  verification source checks out on disk (`crypto_prices_twap_thirty` 366M, `_sixty` 368M,
-  `collect_pm_prices.py:40` "THE SETTLEMENT STREAM ... Chainlink RTDS TWAP relay", `exp_m6_settlement.py`
-  present). **The venue's record is the JOIN KEY and Chainlink is the VERIFIER** -- two jobs kept separate.
-  (5) **RULE 11 RECLASSIFIES THE FOUR READ DAYS AS DESIGN DATA** for the new endpoint -- consumed a SECOND time,
-  for a second question -- and **09-07 may not be valued before v20/v28 land**, a guard DE 136 must ship as a
-  refusal by name rather than a convention. The four-day table is not withdrawn: its numbers are unchanged and
-  what changes is what they are FOR.
-  (6) **MY ROUND-276 LABEL OBSERVATION IS OVERTAKEN, AND THE TIMES SAY I DID NOT ANTICIPATE IT**: I wrote it at
-  15:13:40Z; the ruling arrived between 15:07:32Z and 15:09:15Z. Two readings of the same evidence converged
-  within minutes and **the ruling goes far further than a label.** R-802 corrects R-801's "~15:1xZ" in band --
-  a placeholder digit caught by **the register's own placeholder check** -- which is R-466/R-467/R-755's
-  times-from-the-clock rule enforced by an instrument rather than by memory.
-  (7) **THE REPLAY ENGINE IS NOT WHAT THE RULING CHANGES; THE VALUATION IS** -- tape, queue, latency, matched
-  null, seed and per-fill ledger stand. Position caps and the quoter's placement remain OPEN with the user.
-  GO #8 tonight is UNCHANGED (`wt-de` `5020f96`, `?? data`, third round) and **its ledger is the input to an
-  endpoint that did not exist when its code was frozen** -- possible only because R-765 made the per-fill records
-  persist. Freeze holds a SEVENTEENTH round, and v20/v28 must now carry the new endpoint as well as the pins.
-  COUNTS (by YAML parse): flags 2166 -> 2183, provenance 1711 -> 1728 (seventeen written, seventeen
-  counted, duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 259 archived.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -357,6 +358,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 280, R-806 swept (06d3010 -> d1b9e62) ---
+  de_early_read_py_IS_BYTE_IDENTICAL_AT_BOTH_COMPOSITION_HEADS: 5aa544ef-AT-6c3a121-AND-5020f96
+  BUT_TWO_OF_ITS_CALLEES_CHANGED_NOT_JUST_AN_ADDED_HELPER: run_day-AND-selftest-BOTH-DIFFER
+  REVs_GATING_CLAIM_IS_EXACT_AT_THE_CALL_SITES: PRODUCTION-CALLERS-IN-_main_day-ONLY
+  AND_ledger_path_for_IS_THE_ONE_NEW_FUNCTION_THE_EARLY_READ_REACHES: CALLED-AT-6407-INSIDE-run_day
+  SO_THE_ENTRYS_ONLY_ledger_path_for_IS_RIGHT_AND_NOW_TRACED: THE-COMPRESSION-HOLDS-AND-HERE-IS-WHY
+  I_REPRODUCED_DA_129s_CHAINLINK_CADENCE_AND_LAG: p50-0-961-TO-0-964-AND-1-689-TO-1-700
+  ON_THREE_HOURS_OF_ONE_DAY_NOT_FOUR_DAYS_AND_I_SAY_SO: A-SPOT-CHECK-NOT-A-REPLICATION
+  AND_MY_FIRST_PARSE_OF_THE_STREAM_WAS_WRONG: A-TSV-READ-AS-CSV
+  THE_FAIR_VALUE_IDENTITY_CONSUMES_SIGMA_IT_DOES_NOT_PRODUCE_ONE: sigma-AND-sigma_as_of-ARE-PARAMETERS
+  REVs_THREE_STEPS_FOR_THE_SUPERSESSION_RULE: CARRY-ADMIT-RESOLVE
+  THE_MISSING_RULE_IS_MACHINERY_THIS_PROGRAMME_ALREADY_HAS_ELSEWHERE: THE-path-sha256-PAIR-DISCIPLINE
+  E1r_AND_E2r_WAIT_ON_DE_138_AND_A_REV_RECHECK: AFTER-GO-8-IF-THE-CLOCK-IS-TIGHT
+  DE_138_IS_QUEUED_BEHIND_DE_137_AND_DEFERS_THE_QUOTER_TO_DA: PART-A-THE-RULE-PART-B-TRACK-C
+  THE_RUNBOOK_ADDENDUM_RECORDS_WHERE_EACH_TRACK_STANDS: 2bdcf4a
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_TWENTIETH_ROUND: 5020f96-SIXTH-CONSECUTIVE-ROUND
   # --- MEM round 279, R-804 and R-805 swept (e0b6a55 -> 06d3010) ---
   CORRECTION_MY_ROUND_278_LATENCY_EVIDENCE_WAS_A_MISREADING: I-READ-A-LITERAL-NOT-A-PARAMETER-NAME
   _qr_spec_HAS_NO_PLACEMENT_LATENCY_FIELD_AT_ALL: latency_ms-MAPS-TO-cancel_latency_ms
@@ -26581,6 +26598,164 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 280, 2026-09-07T15:44:21Z (the clock read by which every measurement below was complete) ---
+  de_early_read_py_IS_BYTE_IDENTICAL_AT_BOTH_COMPOSITION_HEADS:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_early_read.py
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      The starting fact for REV 104A's §1, verified myself: `de_early_read.py` hashes **`5aa544ef8d594efd807624fa` at
+      `6c3a121` AND at `5020f96`** -- not "differs in no byte that matters" but **the same bytes exactly**. And
+      `git diff --stat` between the two heads shows **one file changed**: the runner (+343/-5, DE 134). So every
+      difference the early-read PATH can have between those commits comes from the runner functions it calls, which is
+      exactly the question REV set itself.
+  BUT_TWO_OF_ITS_CALLEES_CHANGED_NOT_JUST_AN_ADDED_HELPER:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      Hashing each function's own source at both heads: DE 134 **ADDED five** (`_forwards_kwargs`, `_passes_anchor`,
+      `day_run_ledger_anchor`, `ledger_path_for`, `post_emit_census_status`) and **CHANGED three** (`_main_day`,
+      `run_day`, `selftest`); the other 155 are identical. **Of the eleven things `de_early_read.py` calls from `RUN`,
+      TWO changed -- `run_day` and `selftest`.** So at the byte level the entry's "only `ledger_path_for`" understates
+      what moved; the reason it is nonetheless correct is reachability, below. **Recorded because a reader told
+      "differs in no byte that matters" would be surprised to find `run_day` and `selftest` differ.**
+  REVs_GATING_CLAIM_IS_EXACT_AT_THE_CALL_SITES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104A_E1R_E2R_NOGO_2026-09-07.md
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      REV 104A §1 traces the new functions by call site and reports `post_emit_census_status` and
+      `day_run_ledger_anchor` as having their **production caller inside `_main_day` only**. Verified at `5020f96` by
+      walking every call: `post_emit_census_status` at 9247, 9259, 9269, 9271, 9277 -- **all in `selftest`** -- and
+      **`:12211` in `_main_day`**; `day_run_ledger_anchor` at 9093, 9103, 9201 in `selftest` and **`:11998` in
+      `_main_day`**. **Exact.** So two of the three added functions cannot be reached from the early-read path at
+      all.
+  AND_ledger_path_for_IS_THE_ONE_NEW_FUNCTION_THE_EARLY_READ_REACHES:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      The third is different, and this is what makes the entry's phrasing right. **`ledger_path_for` is called at
+      `:6407` -- inside `run_day`** (its other two call sites, 9113 and 9114, are in `selftest`). The early read calls
+      `RUN.run_day` at its `:414`. **So `ledger_path_for` is the ONE new function on the early read's own path**, and
+      `run_day`'s change is otherwise gated to callers the early read is not. That is why "the early-read path differs
+      only in `ledger_path_for`" is true even though `run_day` itself differs.
+  SO_THE_ENTRYS_ONLY_ledger_path_for_IS_RIGHT_AND_NOW_TRACED:
+    prov: CHECKED
+    artifact: git:5020f96:live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      The two readings resolved rather than left in tension. **Byte level**: `de_early_read.py` identical; `run_day`
+      and `selftest` changed; five functions added. **Reachability**: two additions gated to `_main_day`, one
+      (`ledger_path_for`) reached through `run_day`. **Behaviour**: REV's conclusion that the early-read path is
+      behaviourally identical stands, and the single reachable difference is named. **A compression that is correct is
+      worth tracing anyway** -- the trace is what lets the next reader confirm it without re-deriving the call graph,
+      and it is the difference between "no byte that matters" as an assertion and as a result.
+  I_REPRODUCED_DA_129s_CHAINLINK_CADENCE_AND_LAG:
+    prov: CHECKED
+    artifact: data/pm_5min/prices/crypto_prices_twap_sixty
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      DA 129 characterises the settlement stream as cadence **p50 0.93-0.96 s** and world->us lag **~1.68 s p50**. I
+      measured it myself from the raw stream -- three hourly files of 09-05 (`20260905_10/11/12`), parsing each line as
+      `recv_ns \t JSON` and grouping by `payload.symbol`, **0 unparsed lines**: **btc/usd cadence p50 0.964 s**
+      (n=10,237, min 0.210, max 12.5) and **eth/usd 0.961 s** (n=10,241, min 0.078, max 13.2); **world->us lag p50
+      1.689 s and 1.700 s** against DA's ~1.68. **Both figures reproduced**, and the max inter-arrivals of 12.5-13.2 s
+      in three hours are consistent with DA's "in-window gaps up to 13-25 s".
+  ON_THREE_HOURS_OF_ONE_DAY_NOT_FOUR_DAYS_AND_I_SAY_SO:
+    prov: CHECKED
+    artifact: data/pm_5min/prices/crypto_prices_twap_sixty
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      The scope of my check, stated so it is not mistaken for a replication. **DA measured four days and all symbols;
+      I measured three hours of one day and two symbols.** My cadence p50s (0.961, 0.964) sit at or just above the top
+      of DA's 0.93-0.96 range, which is what a narrower window can do and is not a disagreement -- a three-hour slice
+      of one day has no obligation to land inside a four-day range. **It is a spot check that agrees, not an
+      independent measurement of the same population**, and the distinction is the same one I drew at round 276 about
+      BE's closed-slug count.
+  AND_MY_FIRST_PARSE_OF_THE_STREAM_WAS_WRONG:
+    prov: CHECKED
+    artifact: data/pm_5min/prices/crypto_prices_twap_sixty
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      Recorded because the probe told me, not the data. My first attempt read the `.csv.gz` files **as CSV** and
+      printed a "header" that was plainly a data row -- `['1788602399618277473\t{"connection_id":...', '"payload":
+      {"full_accuracy_value":...']` -- i.e. one record split on its own commas. The files are **TSV: `recv_ns`, a tab,
+      then a JSON object**. I re-parsed on that shape and got 0 unparsed lines. **An instrument whose output is
+      implausible on its face is telling you about the instrument**; the give-away was a header field containing a
+      19-digit integer and an opening brace.
+  THE_FAIR_VALUE_IDENTITY_CONSUMES_SIGMA_IT_DOES_NOT_PRODUCE_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/da_fair_price_identity.py
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      DA 129 reports the fair-value identity as a quoter view **BLOCKED on a sigma producer that does not exist**. I
+      checked the consumption side only: `da_fair_price_identity.py` takes **`sigma: float, sigma_as_of: float` as
+      PARAMETERS** (`:671`), and its `_asian_log_shape(sigma, a, length)` consumes sigma throughout -- **so the module
+      requires a sigma to be supplied and produces none.** Sigma machinery exists elsewhere (`sigma_kernels.py`,
+      `exp_blend_v3.py`). **Whether a qualifying live PRODUCER exists is DA's determination and I did not test it**; what
+      I establish is the shape of the block -- the identity is a consumer, so the gap is upstream of it.
+  REVs_THREE_STEPS_FOR_THE_SUPERSESSION_RULE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_104A_E1R_E2R_NOGO_2026-09-07.md
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      REV §3's remedy, carried as three steps because it is the actionable core of the NO-GO: **(1)** the new artifact
+      carries `supersedes` as a **`{path, sha256}` pair with the digest recomputed AT THE WRITE**; **(2)** the
+      precondition admits a second read **only with a verified target** -- so `EARLY_READ_ALREADY_EMITTED` stops being
+      absolute without becoming absent; **(3)** DA's reader **resolves the head by the chain** rather than by filename
+      or mtime. DA 130 was dispatched at **15:37:56Z** for step 3, and DE 138 (queued behind DE 137) carries steps 1-2
+      as its Part A.
+  THE_MISSING_RULE_IS_MACHINERY_THIS_PROGRAMME_ALREADY_HAS_ELSEWHERE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T085436Z.json
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      The point worth keeping: this is not a new mechanism to invent. At round 279 I verified with a falsifier that
+      **none of the four early-read day artifacts carries any supersession or chain key**, while the params
+      declaration carries `/supersedes`, `/supersedes/chain` and `/read_gate_predicate/SUPERSEDED_BY`. The programme
+      already has `declaration_chain.resolve_head`, the `{path, sha256}` link discipline, `also_supersedes` for merges
+      and an orphan census. **The early-read day family is the one artifact family emitting versions without any of
+      it** -- which is why REV calls the fix "one round of DE's work, not a design question".
+  E1r_AND_E2r_WAIT_ON_DE_138_AND_A_REV_RECHECK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      The state of track A, precisely: **NO-GO stands**, and the re-runs wait on **DE 138 Part A** (the rule) and a
+      **REV re-check** afterwards -- explicitly "after GO #8 if the clock is tight". So the two days that have no
+      ledgers, and therefore no absolutes, no settlement re-valuation and no position census, stay that way through
+      tonight's run. **The replay debt is now blocked behind a code change rather than behind a GO**, which is a
+      different kind of wait from the one it has been in all afternoon.
+  DE_138_IS_QUEUED_BEHIND_DE_137_AND_DEFERS_THE_QUOTER_TO_DA:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      DE 138's shape, recorded because the ordering matters: **queued behind DE 137** (which carries the
+      `S60(T) >= S60(t0)` wiring, the `inventory_leg` rename and the declared `placement_latency_ms`), with **Part A the
+      supersession rule** and **Part B the Track C design draft -- with the quoter view DEFERRED TO DA as owner**. That
+      last is the right assignment given DA 129's finding: the block is a missing sigma producer, which is upstream of
+      anything DE would write into the quoter.
+  THE_RUNBOOK_ADDENDUM_RECORDS_WHERE_EACH_TRACK_STANDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      `2bdcf4a`, runbook §7e addendum 2: the user's work order (R-804) in three tracks and where each stands across
+      R-803..R-806. Recorded as a pointer for a cold reader -- the runbook is the coordinator's cold-start path and this
+      is the first addendum since the estimand changed, so a seat reloading now needs §7e's addendum 2 rather than the
+      original §7e alone.
+  GO_8_UNCHANGED_AND_THE_FREEZE_HOLDS_FOR_THE_TWENTIETH_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-07T15:44:21Z
+    said: >-
+      `wt-de` HEAD **`5020f96`**, status exactly `?? data` -- the **sixth** consecutive round at that state.
+      `params_v20` and `design_v28` absent; heads v19/v27. **Twentieth round of the freeze.** In flight: DE 137, DA 130
+      (head resolution in the reader), REV 104's second half; DE 138 queued. Nothing in this round touches the bytes
+      GO #8 runs -- REV 104A's work was read-only at `5020f96` and DA 129's was a measurement over the price stream.
   # --- MEM round 279, 2026-09-07T15:37:58Z (the clock read by which every measurement below was complete) ---
   CORRECTION_MY_ROUND_278_LATENCY_EVIDENCE_WAS_A_MISREADING:
     prov: CHECKED
