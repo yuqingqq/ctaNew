@@ -63,6 +63,67 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-07T01:53:16Z (MEM ROUND 239 -- R-737 AND R-738 SWEPT, tip `274b9f9`. STATE ONLY. MEM
+  ASSERTS NO RESULT.
+  (1) **v6 VERIFIED, AND ITS BYTES DID NOT MOVE**: 12,456 B, `a240ccc5fb171641` -- identical to what
+  I censused at round 238 while the file was still UNTRACKED. **`pins.taken_by` now reads
+  "be_forward_day -- THE PRODUCER OF THE DAY'S SEALED FEED"**, correcting exactly the field whose
+  misnaming I read in v5's own words last round, and v5 is not edited -- the pair carries it.
+  (2) ***A KEY DIFF FINDS FIVE WHERE `declared_changes` NAMES FOUR.*** Recomputed: v5 has 19 keys,
+  v6 has 20, the ADDED one being `correction_census`; **15 byte-identical** (matching R-738);
+  `declared_changes` exactly `[pins, protocol, as_of_utc, supersedes]`. **The fifth difference is
+  the block doing the declaring** -- not a defect, since BE 81 made it a declared exemption because
+  the emitter writes it AFTER the census runs. **AND THIS IS THE SECOND FAMILY WITH THAT PROPERTY**:
+  at round 226 I diffed the design v24 -> v25 and found nine against a declared eight, reconciled on
+  the same key. **A reader diffing versions from outside will always find exactly one more
+  difference than the census names, and it will always be `correction_census`.**
+  (3) **THE MULTI-HOP WALK VERIFIED ON A FIXTURE.** Built v1 (a first read over 09-03..05), v2 (the
+  second read -> v1) and v3 (a CORRECTION of v2 within the same read -> v2) -- the exact shape v6
+  created. A one-hop follow from v3 lands on v2, whose READABLE is the second read's days; it renders
+  correctly, `generated_from` carrying **`every_hop_verified: 2`** with each hop's pair, and the
+  sentence naming **"A first read over 20260903..20260905 (3 days)"**.
+  (4) ***BUT MY FIXTURE ISOLATED THE DECLARATIONS AND NOT THE DERIVED TREE.*** `not_pooled_clause`
+  takes `decl_dir` AND `derived_dir`; I passed the first and left the second at its DEFAULT, which
+  resolves to the real ledger -- **so BE's code read the real first read's result inside my process,
+  three times**, to compute the consistency word. At rounds 234 and 235 I DECLINED to run BE's
+  battery for exactly that reason and relayed its check count instead; **isolating the declarations
+  while leaving the derived tree at default reached the same read by a side door. The parameter
+  existed and I did not pass it.** On exposure, precisely: `day_signs` is one of the two PERMITTED
+  fields (R-707) and its consistency verdict was published in R-707 itself, so nothing unpermitted
+  was read or is quoted -- **what lapsed is the discipline, not the read order.** **And the remedy
+  is measured, not promised**: with `derived_dir` on an empty directory the generator REFUSES by
+  name, `FIRST_READ_RESULT_UNRESOLVED`. From here a MEM drive passes it explicitly; a drive that
+  cannot say which derived tree it read is not isolated.
+  (5) **`be87fwd06`'s id MATCHES R-738 AND ITS UNIT IS LOADED**: `51113c22b8b14c4d...`, status 1,
+  Result exit-code -- admissible, unlike `de115day06`, which still reads `not-found` with an empty id
+  and whose `Result=success` is still a DEFAULT (unchanged from round 238).
+  (6) ***THE FOURTH GAP CLOSED AT MY READ TIME.*** R-738 records the only 09-06 verdict as the one
+  written at the 09-05 close with `day_closed_calendar False`. **At my reading there is one with
+  TRUE** -- 61,231 B, `as_of_utc 2026-09-07T01:54:05Z` -- DA 114's catch-up verdict, landed between
+  R-738 (01:52Z) and my read (01:55Z). `be87fwd06`'s refusal precondition no longer holds.
+  (7) ***TWO INVOCATION IDS UNDER ONE UNIT NAME, AND THE SUCCESS IS THE CATCH-UP.*** The unit
+  `da-midnight-verify` NOW reads loaded / inactive / dead, `ExecMainStatus 0`, **`Result=success`** --
+  but the journal under that NAME carries TWO ids: `518760fb20e2437596b82953429c270d` (8 lines,
+  carrying the `DEPLOY_DRIFT rc 7` refusal R-738 quotes) and `6e25684e52614fe98523c979f9e8e067`
+  (3 lines, the catch-up). **A reader taking those five fields as "the 00:06Z run" would read SUCCESS
+  where a refusal happened.** Only the id separates them -- and the verdict artifact stamps that id
+  into its own `write_reason`, so the artifact says which run wrote it. **That is why rule 20 requires
+  the id beside the fields.**
+  (8) **MY ROUND-OPENING PULL REFUSED, CAPTURED NOT MASKED**: exit **128**, "cannot pull with rebase:
+  You have unstaged changes", because DA 114's re-deploy had `da_deploy_record.json` and `.sha256`
+  MODIFIED in the shared tree. Neither is one of MEM's three paths, so neither is mine to stage,
+  land or revert; HEAD already equalled origin so the refused pull cost nothing.
+  (9) ***AND I BROKE THIS FILE'S YAML WITH A MARKDOWN KEY.*** I wrote a flag key wrapped in
+  emphasis, and YAML reads a leading `*` as an ALIAS token -- the whole document stopped parsing
+  ("while scanning an alias ... but found '*'", line 424). Renamed to a bare identifier in both
+  blocks and re-parsed clean. **A new shape for my recurring class -- a FORMATTING character in a
+  STRUCTURAL position rather than a guessed name -- and the loudest failure yet: the parser refused
+  the entire document rather than returning something plausible.** The emphasis belongs in this
+  prose, never in a key.
+  Counts, final after two late flags: flags 1,569 -> 1,581; provenance 1,114 -> 1,126; tasks 19;
+  **850 CHECKED / 276 RELAYED / 455 UNMARKED -- the HUNDRED-AND-FIFTEENTH round unchanged on
+  UNMARKED.** ORPHAN audit 0 findings. Window trimmed 4 -> 3, Batch 221 archived. Q-MEM-227 filed
+  through the script.)
   2026-09-07T01:43:26Z (MEM ROUND 238 -- R-736 SWEPT, tip `cb294c8`. STATE ONLY. MEM ASSERTS NO
   RESULT.
   (1) **THE BOOK'S BYTES HASH TO THE RECEIPT'S DIGEST -- I HASHED THE FILE.** Resolved the book
@@ -194,56 +255,6 @@ updated: >-
   1,092 -> 1,103; tasks 19; **827 CHECKED / 276 RELAYED / 455 UNMARKED -- the HUNDRED-AND-THIRTEENTH
   round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 219 archived. Q-MEM-225 filed through the script.)
-  2026-09-07T00:06:14Z (MEM ROUND 236 -- R-734 SWEPT, tip `442c6ed`. STATE ONLY. MEM ASSERTS NO
-  RESULT. The 09-06 UTC day closed at 00:00:00Z and the chain began.
-  (1) ***MY ROUND-229 TRAILER FINDING IS CLOSED AT THE DIGEST.*** The coordinator's entry-landing
-  script is now TRACKED -- `scripts/land_register_entry.sh`, 3,903 B, `22016996f6ad8a66` -- and the
-  trailer on the newest R-entry reads `land_entry.sh 22016996f6ad8a66...`, so **the digest resolves
-  to a file a reader can open.** That is the substantive half of what I flagged for three rounds.
-  ***BUT THE TRAILER STILL NAMES A FILENAME THAT DOES NOT EXIST***: it says `land_entry.sh` while
-  the tracked file is `land_register_entry.sh`, and no `land_entry.sh` is in the repo. **The digest
-  resolves; the name does not.** A residual, ROUTED NOT RULED -- it is the coordinator's own
-  instrument and the substantive fix has landed.
-  (2) **BOTH UNITS READ WHILE `LoadState=loaded`, so neither reading is VOID** (rule 20).
-  **`be72frag`**: loaded / failed / failed / `ExecMainStatus 1` / `Result exit-code`, InvocationID
-  `2c23ac2571a44999...` -- **matching R-734 exactly**, and a failed unit staying loaded until
-  `reset-failed` is precisely what rule 20 describes. **`be72frag2`**: loaded / active / **RUNNING**
-  / `ExecMainStatus 0` / `Result success`, id `0dd3da0a...`. ***A LIVE STATE, STAMPED BECAUSE IT WILL
-  CHANGE***: SubState is the discriminator R-653 names, and here it discriminates in the useful
-  direction -- **BE 72's fragment was still executing when I read it.** A later reader must re-read
-  the unit, never carry the word forward -- **and I did that myself at commit time**: re-read at
-  **00:07:33Z**, still `SubState running`. Two readings ~2.5 min apart, each with its own as-of.
-  (3) **THE JOURNAL COPY RECONCILES: 18 + 4 = 22.** `_SYSTEMD_INVOCATION_ID` 18 lines (the
-  payload's), `USER_INVOCATION_ID` 4 (the manager's), `-u be72frag.service` 22 -- exact, so the copy
-  is complete rather than a partial that reads clean. The refusal message matches R-734 verbatim,
-  including the path it expected the mask at. **RETENTION MEASURED, NOT ASSUMED** (R-641): at
-  00:05:31Z the oldest entry is **2026-09-06T19:51:24Z**, the newest 00:05:35Z -- a window about
-  **4 h 14 min** deep. The 00:02:01Z refusal is inside it AT THIS READING; a later reader must not
-  assume so.
-  (4) ***THE REFUSAL's EXPECTED PATH IS NOW FILLED, END TO END.*** The refusal named
-  `…/ctaNew-wt-be/data/pm_5min/derived/da_blackout_mask_20260906.json`; `readlink` shows
-  `wt-be/data -> /home/yuqing/ctaNew/data`; the file is there at 7,453 B, `36f78148ba353712`, and
-  `cmp` says **byte-identical** to the main tree's copy. **DA 113's mask satisfies the exact
-  precondition the refused unit named**, which is why `be72frag2` could start. Read-only throughout:
-  no git command and no write inside BE's worktree while BE is running (R-627).
-  (5) **THE MASK CADENCE MEASURED FROM THE MTIMES, not asserted:** six masks, 09-01..09-06, one per
-  day -- the 09-04 at Sep 5 00:06, the **09-05 at Sep 6 00:06 (matching R-734's "the last landed
-  2026-09-06T00:06Z")**, the 09-06 at Sep 7 00:03, three minutes after the close. The artifact
-  R-734 calls the day's FIRST step is produced at the close, and DA 113 kept the cadence.
-  (6) ***AND I MISLABELLED MY OWN RETENTION LINE.*** My first probe printed
-  `journalctl -n1 --reverse | tail -1` under the label "oldest entry the journal holds" -- that
-  combination returns the **NEWEST** entry, and it printed 00:04:35Z where the true oldest is
-  19:51:24Z. Caught before any sentence by reading both ends explicitly. **It is the same family as
-  this session's three key-guesses: a LABEL attached to a value without checking what the command
-  actually returns.** Four instances now, all one shape; the only one that ever reached a published
-  sentence remains round 225's.
-  UNSWEPT, FOR MEM 237: **R-735** (`2404765`) -- DA 113 verified (the 09-06 blackout mask, 0 masked,
-  the consumer's own validator admits it), BE 72's fragment relaunched, and **R-734's placeholder
-  corrected** -- with `978793d` (Q-DA-339) and `e103618`. Landed while I was writing; the mask I
-  verified above at the file is the artifact it verifies.
-  Counts: flags 1,537 -> 1,547; provenance 1,082 -> 1,092; tasks 19; **816 CHECKED / 276 RELAYED /
-  455 UNMARKED -- the HUNDRED-AND-TWELFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
-  Window trimmed 4 -> 3, Batch 218 archived. Q-MEM-224 filed through the script.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -415,6 +426,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  I_BROKE_THIS_FILES_YAML_WITH_A_MARKDOWN_KEY_AND_THE_PARSER_REFUSED: ASTERISK-READS-AS-AN-ALIAS-TOKEN
+  # --- MEM round 239, R-737 + R-738 swept ---
+  v6s_bytes_are_UNCHANGED_from_my_round_238_census_of_the_untracked_file: A240CCC5FB171641-BOTH
+  v6_pins_taken_by_NOW_NAMES_be_forward_day: THE-MISNAMING-I-READ-AT-ROUND-238-IS-CORRECTED
+  a_KEY_DIFF_finds_FIVE_where_declared_changes_names_FOUR: THE-FIFTH-IS-correction_census-ITSELF
+  and_that_is_the_SECOND_family_with_the_census_not_naming_itself: DESIGN-V25-AT-ROUND-226-NOW-THE-READ
+  the_MULTI_HOP_walk_verified_on_a_fixture: EVERY-HOP-VERIFIED-2-SENTENCE-NAMES-THE-FIRST-READS-DAYS
+  MY_FIXTURE_ISOLATED_THE_DECLARATIONS_BUT_NOT_THE_DERIVED_TREE: DEFAULT-DERIVED-DIR-READ-THE-REAL-RESULT
+  and_the_ENFORCEABLE_form_is_now_established: EMPTY-DERIVED-DIR-REFUSES-BY-NAME
+  be87fwd06s_id_matches_R_738_and_the_unit_is_LOADED: 51113C22-STATUS-1-ADMISSIBLE
+  THE_FOURTH_GAP_CLOSED_AT_MY_READ_TIME: 09-06-VERDICT-EXISTS-DAY-CLOSED-CALENDAR-TRUE-01-54-05Z
+  TWO_INVOCATION_IDS_UNDER_ONE_UNIT_NAME_and_the_success_is_the_CATCH_UP: REFUSAL-518760FB-CATCHUP-6E25684E
+  my_pull_REFUSED_on_DAs_in_flight_files_and_I_left_them_alone: RC-128-CAPTURED-NOT-MASKED
   # --- MEM round 238, R-736 swept ---
   the_BOOKS_BYTES_HASH_TO_THE_RECEIPTS_DIGEST_I_hashed_the_file: AC2AC952-275035656-B-EXACT
   structure_v4_pairs_to_v3_and_names_FOUR_books: 1913A599-TO-F6D3E831-09-03-THROUGH-09-06
@@ -25953,6 +25977,139 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  I_BROKE_THIS_FILES_YAML_WITH_A_MARKDOWN_KEY_AND_THE_PARSER_REFUSED:
+    prov: CHECKED
+    artifact: this file, and the ScannerError it raised
+    as_of: 2026-09-07T01:56:00Z
+    said: >-
+      recorded against myself. I wrote a flag key wrapped in markdown emphasis --
+      `***MY_FIXTURE_ISOLATED...***:` -- and YAML reads a leading `*` as an ALIAS token, so the whole
+      file stopped parsing: "while scanning an alias ... expected alphabetic or numeric character,
+      but found '*'" at line 424. Renamed to a bare identifier in BOTH blocks and re-parsed clean.
+      A NEW shape for my recurring class -- not a guessed name this time but a FORMATTING character
+      in a STRUCTURAL position -- and it failed the loudest way yet: the parser refused the entire
+      document rather than returning something plausible. The emphasis belongs in the entry prose,
+      never in a key.
+  # --- MEM round 239, 2026-09-07T01:53:16Z ---
+  v6s_bytes_are_UNCHANGED_from_my_round_238_census_of_the_untracked_file:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/be_race_read_declaration_v6.json
+    as_of: 2026-09-07T01:54:00Z
+    said: >-
+      12,456 B, sha256 a240ccc5fb171641 -- identical to what I censused at round 238 when the file
+      was still UNTRACKED in the shared tree. So BE wrote it, I read it, and BE landed it, and the
+      bytes did not move in between; the digest R-738 names is the same object.
+  v6_pins_taken_by_NOW_NAMES_be_forward_day:
+    prov: CHECKED
+    artifact: v6's pins.taken_by, against v5's
+    as_of: 2026-09-07T01:54:00Z
+    said: >-
+      v6 reads "be_forward_day -- THE PRODUCER OF THE DAY'S SEALED FEED. It is that run, and only
+      that run, that writes be_forward_day_SEALED_feed_<DAY>.jsonl". At round 238 I read v5's own
+      words crediting "the day's fragment/tape/book run", and measured that no 09-06 sealed feed
+      exists while 09-03..05 each have one. The correction lands exactly on the field I found wrong,
+      and v5 is not edited -- the pair carries it.
+  a_KEY_DIFF_finds_FIVE_where_declared_changes_names_FOUR:
+    prov: CHECKED
+    artifact: v5 and v6, diffed key by key with canonical JSON
+    as_of: 2026-09-07T01:54:00Z
+    said: >-
+      recomputed rather than relayed: v5 has 19 keys, v6 has 20, the ADDED one being
+      correction_census; 15 keys are byte-identical, matching R-738; and declared_changes reads
+      exactly [pins, protocol, as_of_utc, supersedes]. So a plain key diff finds FIVE differences
+      where the census declares FOUR, and the fifth is THE BLOCK DOING THE DECLARING. Not a defect:
+      BE 81 made correction_census a declared exemption precisely because the emitter writes it
+      AFTER the census runs, so a v1 carrying it would freeze the field about to be written.
+  and_that_is_the_SECOND_family_with_the_census_not_naming_itself:
+    prov: CHECKED
+    artifact: this diff, and my round-226 diff of the design family
+    as_of: 2026-09-07T01:54:00Z
+    said: >-
+      the reason to record it as a property rather than an anomaly: at round 226 I diffed the design
+      family v24 -> v25 and found NINE changes against a declared EIGHT, reconciled on the same
+      key -- the census does not name itself. Two families now, same offset, same key. So a reader
+      diffing versions from outside will ALWAYS find exactly one more difference than
+      declared_changes names, and it will always be correction_census. Predictable, not surprising.
+  the_MULTI_HOP_walk_verified_on_a_fixture:
+    prov: CHECKED
+    artifact: live/pm_research/be_race_reader.py not_pooled_clause, on a three-version fixture
+    as_of: 2026-09-07T01:55:00Z
+    said: >-
+      built v1 (a first read over 09-03..05), v2 (the second read, pairing to v1) and v3 (a
+      CORRECTION of v2 within the same read, pairing to v2) -- the exact shape v6 created. A one-hop
+      follow from v3 lands on v2, whose READABLE is the SECOND read's days. It renders correctly:
+      generated_from carries every_hop_verified 2 with each hop's pair, and the sentence names "A
+      first read over 20260903..20260905 (3 days)". The fix R-738 describes is real under drive.
+  MY_FIXTURE_ISOLATED_THE_DECLARATIONS_BUT_NOT_THE_DERIVED_TREE:
+    prov: CHECKED
+    artifact: my own three drives this round
+    as_of: 2026-09-07T01:55:00Z
+    said: >-
+      A CORRECTION TO MY OWN PRACTICE, established not inferred. not_pooled_clause takes decl_dir AND
+      derived_dir; I passed decl_dir and left derived_dir at its DEFAULT, which resolves to the real
+      ledger -- so BE's code read the REAL first read's result inside my process, three times, to
+      compute the consistency word. At rounds 234 and 235 I DECLINED to run BE's battery for exactly
+      that reason and relayed its check count instead; isolating the declarations while leaving the
+      derived tree at default reached the same read by a side door. THE PARAMETER EXISTED AND I DID
+      NOT PASS IT. On exposure, precisely: day_signs is one of the TWO PERMITTED FIELDS (R-707) and
+      its consistency verdict was published in R-707 itself, so nothing unpermitted was read and
+      nothing unpermitted is quoted -- what lapsed is the discipline, not the read order.
+  and_the_ENFORCEABLE_form_is_now_established:
+    prov: CHECKED
+    artifact: the same generator, driven with an empty derived_dir
+    as_of: 2026-09-07T01:55:00Z
+    said: >-
+      the remedy, measured rather than promised: with derived_dir pointed at an empty temp directory
+      the generator REFUSES by name -- FIRST_READ_RESULT_UNRESOLVED, "the family
+      'be_race_read_result' does not resolve to a head in ...". So the isolation IS enforceable and
+      it fails loudly when absent. From here a MEM drive of this generator passes derived_dir
+      explicitly; a drive that cannot say which derived tree it read is not isolated.
+  be87fwd06s_id_matches_R_738_and_the_unit_is_LOADED:
+    prov: CHECKED
+    artifact: systemctl --user show be87fwd06.service
+    as_of: 2026-09-07T01:55:20Z
+    said: >-
+      loaded / failed / failed, ExecMainStatus 1, Result exit-code, InvocationID
+      51113c22b8b14c4dacfec9ca34609e59 -- matching R-738's 51113c22. LOADED, so the reading is
+      admissible under rule 20, unlike de115day06 which still reads not-found with an empty id and
+      whose Result=success is still a DEFAULT (unchanged from round 238).
+  THE_FOURTH_GAP_CLOSED_AT_MY_READ_TIME:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260906.json
+    as_of: 2026-09-07T01:55:20Z
+    said: >-
+      R-738 records that the only 09-06 verdict on disk was written at the 09-05 close with
+      day_closed_calendar False, which is why be87fwd06 refused. AT MY READING there is one with
+      day_closed_calendar TRUE, 61,231 B, as_of_utc 2026-09-07T01:54:05Z -- DA 114's catch-up
+      verdict, landed between R-738 (01:52Z) and my read (01:55Z). So the fourth gap is closed and
+      be87fwd06's refusal precondition no longer holds. A live state with its as-of; the next reader
+      re-reads.
+  TWO_INVOCATION_IDS_UNDER_ONE_UNIT_NAME_and_the_success_is_the_CATCH_UP:
+    prov: CHECKED
+    artifact: journalctl --user -u da-midnight-verify.service, by invocation id
+    as_of: 2026-09-07T01:55:20Z
+    said: >-
+      THE HAZARD R-646 NAMES, LIVE. The unit NOW reads loaded / inactive / dead with ExecMainStatus 0
+      and Result SUCCESS -- but the journal under that unit NAME carries TWO distinct invocation ids:
+      518760fb20e2437596b82953429c270d (8 lines, carrying the DEPLOY_DRIFT rc 7 refusal R-738 quotes)
+      and 6e25684e52614fe98523c979f9e8e067 (3 lines, the catch-up run). The unit's current success
+      belongs to the CATCH-UP, and a reader taking those five fields as "the 00:06Z run" would read
+      SUCCESS where a refusal happened. Only the id separates them -- and the verdict artifact stamps
+      the id into its own write_reason, so the artifact says which run wrote it. That is the good
+      half, and it is why rule 20 requires the id beside the fields.
+  my_pull_REFUSED_on_DAs_in_flight_files_and_I_left_them_alone:
+    prov: CHECKED
+    artifact: git pull --rebase, exit captured; git status --short
+    as_of: 2026-09-07T01:53:16Z
+    said: >-
+      my round-opening pull exited 128 -- "cannot pull with rebase: You have unstaged changes" --
+      because live/pm_research/systemd/da_deploy_record.json and .sha256 were MODIFIED in the shared
+      tree by DA 114's re-deploy, in flight. Captured, not masked, by the unpiped-with-exit form.
+      Neither path is one of MEM's three, so neither is mine to stage, land or revert; HEAD already
+      equalled origin (274b9f9, 0 ahead 0 behind) so the refused pull cost nothing. Noted as a
+      landing hazard for this round: the landing script rebases only when origin has moved, and a
+      rebase on a dirty tree would refuse -- in which case the commit is stranded and reported
+      (rule 21), not forced.
   # --- MEM round 238, 2026-09-07T01:43:26Z ---
   the_BOOKS_BYTES_HASH_TO_THE_RECEIPTS_DIGEST_I_hashed_the_file:
     prov: CHECKED

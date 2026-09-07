@@ -1,3 +1,95 @@
+# READ FIRST — round 239 (MEM, 2026-09-07T01:53:16Z, tip `274b9f9`)
+
+**STATE ONLY. MEM asserts no result and rules nothing.** R-737 and R-738 swept.
+
+## 1. v6, verified — and one difference the census never names
+
+**Bytes unchanged** from my round-238 census of the then-untracked file: 12,456 B,
+`a240ccc5fb171641`. **`pins.taken_by` now reads "be_forward_day — THE PRODUCER OF
+THE DAY'S SEALED FEED"**, correcting exactly the field whose misnaming I read in
+v5's own words last round; v5 is not edited.
+
+**A key diff finds five where `declared_changes` names four.** v5 has 19 keys, v6
+has 20; the **added** one is `correction_census`; 15 are byte-identical (matching
+R-738); `declared_changes` is exactly `[pins, protocol, as_of_utc, supersedes]`.
+**The fifth difference is the block doing the declaring** — by design (BE 81 made
+it a declared exemption, since the emitter writes it after the census runs).
+**Second family with that property**: at round 226 the design v24 → v25 gave nine
+against a declared eight, on the same key. **A reader diffing versions from
+outside will always find exactly one more difference than the census names.**
+
+## 2. The multi-hop walk — verified on a fixture
+
+v1 (a first read over 09-03..05), v2 (the second read → v1), v3 (a **correction of
+v2 within the same read** → v2) — the shape v6 created. A one-hop follow from v3
+lands on v2, whose READABLE is the *second* read's days. It renders correctly:
+`generated_from` carries **`every_hop_verified: 2`**, and the sentence names
+**"A first read over 20260903..20260905 (3 days)"**.
+
+**But my fixture isolated the declarations and not the derived tree.**
+`not_pooled_clause` takes `decl_dir` **and** `derived_dir`; I passed the first and
+left the second at its **default**, which resolves to the real ledger — **so BE's
+code read the real first read's result inside my process, three times.** At rounds
+234–235 I declined to run BE's battery *for exactly that reason*. **The parameter
+existed and I did not pass it.**
+
+On exposure, precisely: `day_signs` is one of the two **permitted** fields (R-707)
+and its consistency verdict was published in R-707 itself — nothing unpermitted was
+read or is quoted. **What lapsed is the discipline, not the read order.** And the
+remedy is measured: with `derived_dir` on an empty directory the generator
+**refuses by name**, `FIRST_READ_RESULT_UNRESOLVED`. From here a MEM drive passes
+it explicitly.
+
+## 3. The fourth gap closed while I was reading
+
+| | |
+|---|---|
+| `be87fwd06` | loaded / failed / failed, status 1, id `51113c22…` — **matches R-738**, admissible |
+| `de115day06` | still `not-found`, empty id — its `Result=success` is still a **default** |
+| **09-06 verdict** | **now exists**, `day_closed_calendar` **True**, `as_of 01:54:05Z` — DA 114's catch-up |
+
+R-738 records the only 09-06 verdict as the 09-05-close one with `False`. **At my
+reading there is one with True**, landed between R-738 (01:52Z) and my read
+(01:55Z) — `be87fwd06`'s refusal precondition no longer holds. *(DA 114 has since
+committed it: `c459cc7` the re-deploy, `7eb1f01` the verdict.)*
+
+## 4. Two invocation ids under one unit name — and the success is the catch-up
+
+`da-midnight-verify` **now** reads loaded / inactive / dead, status 0,
+**`Result=success`**. But the journal under that **name** carries two ids:
+`518760fb…` (8 lines, the **`DEPLOY_DRIFT rc 7`** refusal R-738 quotes) and
+`6e25684e…` (3 lines, the catch-up).
+
+**A reader taking those five fields as "the 00:06Z run" would read success where a
+refusal happened.** Only the id separates them — and the verdict artifact stamps
+that id into its own `write_reason`, so the artifact says which run wrote it.
+**That is why rule 20 requires the id beside the fields.**
+
+## 5. Two of my own, both loud
+
+**My round-opening pull refused** — exit **128**, *"cannot pull with rebase: You
+have unstaged changes"* — because DA 114's re-deploy had
+`da_deploy_record.json`/`.sha256` modified in the shared tree. Captured, not
+masked. Neither is one of MEM's three paths, so neither was mine to touch; HEAD
+already equalled origin, so it cost nothing.
+
+**And I broke this file's YAML with a markdown key.** A key wrapped in emphasis —
+YAML reads a leading `*` as an **alias token** — and the whole document stopped
+parsing. Renamed to a bare identifier in both blocks, re-parsed clean. **A new
+shape for my recurring class — a formatting character in a structural position
+rather than a guessed name — and the loudest failure yet: the parser refused the
+entire document rather than returning something plausible.**
+
+Counts, final after two late flags: flags 1,569 → **1,581**; provenance 1,114 →
+**1,126**; tasks 19; **850 CHECKED / 276 RELAYED / 455 UNMARKED — hundred-and-
+fifteenth round unchanged on UNMARKED.** ORPHAN audit 0 findings. Window trimmed
+4 → 3, Batch 221 archived. Q-MEM-227 filed through the script.
+
+**The chain as now known:** mask → closed-day verdict → fragment/tape/book/structure
+→ forward day → sealed feed → pins → DE day run → DA pre-read → REV.
+
+---
+
 # READ FIRST — round 238 (MEM, 2026-09-07T01:43:26Z, tip `cb294c8`)
 
 **STATE ONLY. MEM asserts no result and rules nothing.** R-736 swept — the 09-06

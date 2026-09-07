@@ -17656,3 +17656,58 @@ generation and the window went 4 → 3. Nothing rewritten.
   455 UNMARKED -- the HUNDRED-AND-ELEVENTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
   Window trimmed 4 -> 3, Batch 217 archived. Q-MEM-223 filed through the script.)
 ```
+
+## Batch 221 — archived 2026-09-07T01:53:16Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T00:06:14Z (MEM ROUND 236 -- R-734 SWEPT, tip `442c6ed`. STATE ONLY. MEM ASSERTS NO
+  RESULT. The 09-06 UTC day closed at 00:00:00Z and the chain began.
+  (1) ***MY ROUND-229 TRAILER FINDING IS CLOSED AT THE DIGEST.*** The coordinator's entry-landing
+  script is now TRACKED -- `scripts/land_register_entry.sh`, 3,903 B, `22016996f6ad8a66` -- and the
+  trailer on the newest R-entry reads `land_entry.sh 22016996f6ad8a66...`, so **the digest resolves
+  to a file a reader can open.** That is the substantive half of what I flagged for three rounds.
+  ***BUT THE TRAILER STILL NAMES A FILENAME THAT DOES NOT EXIST***: it says `land_entry.sh` while
+  the tracked file is `land_register_entry.sh`, and no `land_entry.sh` is in the repo. **The digest
+  resolves; the name does not.** A residual, ROUTED NOT RULED -- it is the coordinator's own
+  instrument and the substantive fix has landed.
+  (2) **BOTH UNITS READ WHILE `LoadState=loaded`, so neither reading is VOID** (rule 20).
+  **`be72frag`**: loaded / failed / failed / `ExecMainStatus 1` / `Result exit-code`, InvocationID
+  `2c23ac2571a44999...` -- **matching R-734 exactly**, and a failed unit staying loaded until
+  `reset-failed` is precisely what rule 20 describes. **`be72frag2`**: loaded / active / **RUNNING**
+  / `ExecMainStatus 0` / `Result success`, id `0dd3da0a...`. ***A LIVE STATE, STAMPED BECAUSE IT WILL
+  CHANGE***: SubState is the discriminator R-653 names, and here it discriminates in the useful
+  direction -- **BE 72's fragment was still executing when I read it.** A later reader must re-read
+  the unit, never carry the word forward -- **and I did that myself at commit time**: re-read at
+  **00:07:33Z**, still `SubState running`. Two readings ~2.5 min apart, each with its own as-of.
+  (3) **THE JOURNAL COPY RECONCILES: 18 + 4 = 22.** `_SYSTEMD_INVOCATION_ID` 18 lines (the
+  payload's), `USER_INVOCATION_ID` 4 (the manager's), `-u be72frag.service` 22 -- exact, so the copy
+  is complete rather than a partial that reads clean. The refusal message matches R-734 verbatim,
+  including the path it expected the mask at. **RETENTION MEASURED, NOT ASSUMED** (R-641): at
+  00:05:31Z the oldest entry is **2026-09-06T19:51:24Z**, the newest 00:05:35Z -- a window about
+  **4 h 14 min** deep. The 00:02:01Z refusal is inside it AT THIS READING; a later reader must not
+  assume so.
+  (4) ***THE REFUSAL's EXPECTED PATH IS NOW FILLED, END TO END.*** The refusal named
+  `…/ctaNew-wt-be/data/pm_5min/derived/da_blackout_mask_20260906.json`; `readlink` shows
+  `wt-be/data -> /home/yuqing/ctaNew/data`; the file is there at 7,453 B, `36f78148ba353712`, and
+  `cmp` says **byte-identical** to the main tree's copy. **DA 113's mask satisfies the exact
+  precondition the refused unit named**, which is why `be72frag2` could start. Read-only throughout:
+  no git command and no write inside BE's worktree while BE is running (R-627).
+  (5) **THE MASK CADENCE MEASURED FROM THE MTIMES, not asserted:** six masks, 09-01..09-06, one per
+  day -- the 09-04 at Sep 5 00:06, the **09-05 at Sep 6 00:06 (matching R-734's "the last landed
+  2026-09-06T00:06Z")**, the 09-06 at Sep 7 00:03, three minutes after the close. The artifact
+  R-734 calls the day's FIRST step is produced at the close, and DA 113 kept the cadence.
+  (6) ***AND I MISLABELLED MY OWN RETENTION LINE.*** My first probe printed
+  `journalctl -n1 --reverse | tail -1` under the label "oldest entry the journal holds" -- that
+  combination returns the **NEWEST** entry, and it printed 00:04:35Z where the true oldest is
+  19:51:24Z. Caught before any sentence by reading both ends explicitly. **It is the same family as
+  this session's three key-guesses: a LABEL attached to a value without checking what the command
+  actually returns.** Four instances now, all one shape; the only one that ever reached a published
+  sentence remains round 225's.
+  UNSWEPT, FOR MEM 237: **R-735** (`2404765`) -- DA 113 verified (the 09-06 blackout mask, 0 masked,
+  the consumer's own validator admits it), BE 72's fragment relaunched, and **R-734's placeholder
+  corrected** -- with `978793d` (Q-DA-339) and `e103618`. Landed while I was writing; the mask I
+  verified above at the file is the artifact it verifies.
+  Counts: flags 1,537 -> 1,547; provenance 1,082 -> 1,092; tasks 19; **816 CHECKED / 276 RELAYED /
+  455 UNMARKED -- the HUNDRED-AND-TWELFTH round unchanged on UNMARKED.** ORPHAN audit 0 findings.
+  Window trimmed 4 -> 3, Batch 218 archived. Q-MEM-224 filed through the script.)
+```
