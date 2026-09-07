@@ -327,8 +327,26 @@ if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--early-read-day", type=str, dest="day",
+                    help="ONE day of the ruling, UNSEALED under v16's "
+                         "bar. Requires --book and --output, and the "
+                         "heavy-run lock (this is a real day's work).")
+    ap.add_argument("--book", type=Path)
+    ap.add_argument("--output", type=Path)
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(selftest())
-    raise SystemExit("usage: --selftest (the heavy day path is a GO, "
-                     "never a bare run)")
+    if a.day:
+        if a.book is None or a.output is None:
+            raise SystemExit("REFUSED: --early-read-day requires --book "
+                             "and --output")
+        # THE BATTERY BEFORE THE WORK (R-610): everything that can refuse
+        # refuses before the day is spent, not after 80 minutes of draws.
+        selftest(quiet=True)
+        out = run_early_read_day(a.day, a.book, a.output,
+                                 before_work=lambda: RUN.selftest(
+                                     quiet=True, offline=False))
+        print(json.dumps(out, indent=2))
+        raise SystemExit(0)
+    raise SystemExit("usage: --selftest | --early-read-day DAY --book B "
+                     "--output DIR")
