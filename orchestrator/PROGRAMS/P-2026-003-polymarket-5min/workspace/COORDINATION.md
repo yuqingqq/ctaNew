@@ -22079,6 +22079,19 @@ Written through the CAS (dry-run on a scratch copy first; `VERSION_PATH_EXISTS` 
 **A coordinator slip, disclosed:** BE 86's dispatch said "2 h 10 min" to the 00:00Z boundary where the clock said about 3 h 10 min — a duration estimated, not read (the rule: times from the clock only); the anchor named (00:00Z) was correct and no seat acted on the figure.
 
 **ROUTING.** MEM 234 in flight → MEM 235 on R-732 and this entry. 00:00Z — 3 h 07 min by the clock at 20:52Z: BE 72, then DE's launch, DA's pre-read, REV 88 on the chain with BE 86 included. The USER's four open items stand. Heavy lock free.
+
+### R-734 — 2026-09-07T00:03Z — coordinator — **THE 09-06 DAY CLOSED at 00:00:00Z and the chain began: BE 72's first launch REFUSED BY NAME — the day's blackout mask did not exist — because the coordinator's GO omitted the chain's first step, which is DA's. DA 113 produces the mask; BE relaunches under the four conjuncts; nothing was written by the refused launch.**
+
+**THE REFUSAL, at the journal by id (`be72frag`, InvocationID `2c23ac2571a44999…`, started 00:01:59Z, exited 00:02:01Z, rc 1, 1.620 s CPU):**
+
+```
+de_admissible_windows.AdmissibleWindowsRefused: day 20260906 is GOVERNED (>= 20260902, read from the frozen rule) and no mask artifact was supplied; expected it at /home/yuqing/ctaNew-wt-be/data…
+be72frag.service: Main process exited, code=exited, status=1/FAILURE
+```
+
+Coordinator's checks before routing: the unit's environment carried `PM_DATA_ROOT=/home/yuqing/ctaNew` and `wt-be/data` is a symlink to the main tree's data, so the path was right and the artifact absent; the ledger holds `da_blackout_mask_20260901..20260905.json`, one per day, the last landed 2026-09-06T00:06Z — the mask is DA's (`da_blackout_mask.py`), produced at each close, and BE's fragment reads it through `de_admissible_windows.mask_path` (R-412). **The gap is the coordinator's:** the BE 72 GO enumerated fragment → tape → book → structure → pins and did not name the day's first artifact; rc 1 here is a REFUSAL by name inside the payload (BE's exit map for `be_gate1_fragment` resolves it — the capture will say), and the launch wrote nothing. DA 113 (dispatched 00:03Z): the 09-06 mask exactly as the earlier days'. BE 72 corrected in band: hold, then relaunch the fragment as `be72frag2` (a unique name, the code byte-identical — permitted: the earlier launch wrote nothing) when the mask exists at the file, and continue the chain as enumerated. The runbook's §7b chain gains step 0 (`…`, this round).
+
+**ROUTING.** DA 113 (the mask) → BE 72 continues (fragment2 → tape → book → struct → pins v2) → DE 115 (the 09-06 day run, GO drafted; needs the book's digest) → DA 114 (the light pre-read, then the open-book half) → REV 88. MEM 236 on this entry. Heavy lock free at 00:03Z (the refused unit holds nothing).
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
