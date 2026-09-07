@@ -1,0 +1,76 @@
+{
+  "kind": "de_heavy_run_capture_record",
+  "unit": "de115day06_3.service",
+  "invocation_id": "c3f28dfb22584efca4d37a10a72240e8",
+  "day": "2026-09-06",
+  "go": "GO #7 (coordinator dispatch DE 118, 2026-09-07T03:49:44Z)",
+  "supersedes_context": "GO #6 (de115day06_2, 17a0320936bd40929474a21e85f0b87c) REFUSED at its own emit; capture record p003_de_gate1_run_journal_de115day06_2__20260907T035020Z.json",
+  "launched_at": "2026-09-07T03:51:19Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-de",
+  "head_for_the_whole_run": "25031620bb2e97b368b0c13c21ff0c29f4139cdf",
+  "runner_sha256": "dfbe2266f442a36531f4413ee84440a2933cc38c7b5af048cb0077aec8f023cc",
+  "runner_byte_identical_to_0f0d301": true,
+  "five_fields_and_id_at_launch": {
+    "as_of": "2026-09-07T03:51:27Z",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "SubState": "running",
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "InvocationID": "c3f28dfb22584efca4d37a10a72240e8",
+    "MemoryPeak": 948953088
+  },
+  "five_fields_and_id_at_exit_while_loaded": {
+    "as_of": "2026-09-07T05:11:54Z",
+    "LoadState": "loaded",
+    "ActiveState": "active",
+    "SubState": "exited",
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "InvocationID": "c3f28dfb22584efca4d37a10a72240e8",
+    "MemoryPeak": 2601975808,
+    "ControlGroup": ""
+  },
+  "leaf_peak_bytes_sampled_in_process": 2601975808,
+  "leaf_peak_method": "cgroup memory.peak sampled every 20 s while alive; the cgroup is gone at exit (ControlGroup empty), so it cannot be read after",
+  "main_process_exited_at": "2026-09-07T05:11:52Z",
+  "stopped_at": "2026-09-07T05:13:18Z",
+  "cpu_time_consumed": "1h 20min 15.534s",
+  "memory_peak_at_stop": "2.4G",
+  "journal_by_both_invocation_fields": {
+    "before_the_stop": {
+      "as_of": "2026-09-07T05:11:54Z",
+      "payload_lines": 1,
+      "manager_lines": 1
+    },
+    "after_the_stop": {
+      "as_of": "2026-09-07T05:13:20Z",
+      "payload_lines": 1,
+      "manager_lines": 3,
+      "why": "under RemainAfterExit the manager emits Stopped and Consumed AT THE STOP, so a pre-stop copy holds the run's OUTPUT and not its COST (chain step 7)"
+    },
+    "journal_horizon_oldest_at_capture": "2026-09-07T00:46:37+00:00"
+  },
+  "emitted_receipt": {
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json",
+    "sha256": "1a2dd10f017d975f624093f41fe4a329255d16cd8ee71fd30e832df4811ff384",
+    "bytes": 64429,
+    "status": "DAY_RUN_SEALED"
+  },
+  "capture_files": {
+    "exit_capture": {
+      "path": "/tmp/claude-1001/-home-yuqing-ctaNew/1e067041-7b8c-4c6b-a903-4af18ce1a4b1/scratchpad/wait_go7.out",
+      "sha256": "d29037ec0c1ebf9e77b26621da713bd949f0058395dfcb4d979d244956b37918",
+      "attributed_to": "wait_go7.sh (detached, pid 559460), launched by the DE seat",
+      "as_of": "2026-09-07T05:11:54Z",
+      "text": "=== EXIT at 2026-09-07T05:11:54Z ===\nleaf_peak_bytes_sampled_in_process: 2601975808\n--- five fields + id + MemoryPeak + ControlGroup, read WHILE LOADED (from outside) ---\nResult=success\nExecMainStatus=0\nControlGroup=\nMemoryPeak=2601975808\nLoadState=loaded\nActiveState=active\nSubState=exited\nInvocationID=c3f28dfb22584efca4d37a10a72240e8\n--- journal by BOTH invocation fields, before the stop ---\npayload lines (_SYSTEMD_INVOCATION_ID): 1\nmanager lines (USER_INVOCATION_ID):     1\n-u total:                               2\n--- host journal horizon at this copy (a measurement, with its own as-of) ---\noldest: 2026-09-07T00:46:37+00:00  read_at: 2026-09-07T05:11:54Z\n--- last payload line ---\n{\"post_emit_census\": {\"read_back_from\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json\", \"sealed_keys_found\": 0, \"rule\": \"a sealed name present as a KEY is a leak whatever its value, including [] and {} and null; the census walks KEYS, never leaves\"}, \"emitted\": \"/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json\", \"status\": \"DAY_RUN_SEALED\", \"day\": \"2026-09-06\", \"arms\": {\"CONDVALUE_X_SKEW\": \"OK\", \"HAZARD_OVER_SKEWED_REF\": \"OK\"}, \"decisions\": {\"CONDVALUE_X_SKEW\": 18108, \"HAZARD_OVER_SKEWED_REF\": 1753}, \"peak_rss_mb\": 2319.6, \"wall_s\": 4822.6, \"lock_held\": true, \"heavy_by_measurement\": true, \"no_tape_artifact_opened\": true, \"battery\": \"PASS\"}\n"
+    },
+    "post_stop_journal": {
+      "path": "/tmp/claude-1001/-home-yuqing-ctaNew/1e067041-7b8c-4c6b-a903-4af18ce1a4b1/scratchpad/go7_journal_poststop.txt",
+      "sha256": "bd735f4788aa580463b326318755d5b2059b66f14822910e27884491bf83840a",
+      "as_of": "2026-09-07T05:13:20Z",
+      "text": "=== POST-STOP journal copy (chain step 7), 2026-09-07T05:13:20Z ===\npayload lines (_SYSTEMD_INVOCATION_ID): 1\nmanager lines (USER_INVOCATION_ID):     3\n--- manager lines ---\n2026-09-07T03:51:19+00:00 ip-172-31-78-41 systemd[1004]: Started de115day06_3.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-06 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T05:13:18+00:00 ip-172-31-78-41 systemd[1004]: Stopped de115day06_3.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-06 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T05:13:18+00:00 ip-172-31-78-41 systemd[1004]: de115day06_3.service: Consumed 1h 20min 15.534s CPU time, 2.4G memory peak, 0B memory swap peak.\n"
+    }
+  },
+  "written_at": "2026-09-07T05:13:48Z"
+}

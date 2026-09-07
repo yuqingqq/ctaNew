@@ -1,0 +1,47 @@
+{
+  "kind": "de_heavy_run_capture_record",
+  "note": "NOT a receipt. GO #6 produced no receipt: the runner REFUSED at its own emit.",
+  "unit": "de115day06_2.service",
+  "invocation_id": "17a0320936bd40929474a21e85f0b87c",
+  "day": "2026-09-06",
+  "launched_at": "2026-09-07T02:27:53Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-de",
+  "head_at_launch": "04d3eb3c44a0",
+  "main_process_exited_at": "2026-09-07T03:48:11Z",
+  "five_fields_and_id_read_while_loaded": {
+    "as_of": "2026-09-07T03:50:02Z",
+    "read_by": "DE seat, from outside the unit",
+    "LoadState": "loaded",
+    "ActiveState": "failed",
+    "SubState": "failed",
+    "ExecMainStatus": 1,
+    "Result": "exit-code",
+    "InvocationID": "17a0320936bd40929474a21e85f0b87c",
+    "MemoryPeak": 2596265984
+  },
+  "outcome": "REFUSED at the day-run emit by assert_source_unchanged (de_multiday_gate1_runner.py:605, called at :10630)",
+  "refusal_predicate": "head_unchanged_during_the_run",
+  "head_at_emit": "25031620bb2e",
+  "cause": "scripts/wt_refresh.sh moved wt-de's HEAD 04d3eb3->2503162 at ~03:45:50Z while this unit's WorkingDirectory was wt-de. Coordinator's reload brief, R-747.",
+  "receipt_written": false,
+  "files_written_to_derived_after_launch": 0,
+  "cpu_time_consumed": "1h 20min 10.920s",
+  "memory_peak_bytes": 2596265984,
+  "helper_capture": {
+    "attributed_to": "wait117.sh (pid 440727), launched by the DE seat before its reset",
+    "as_of": "2026-09-07T03:48:41Z",
+    "path": "/tmp/claude-1001/-home-yuqing-ctaNew/d0eb65aa-2836-4cbc-8691-f7fc7cce2da9/scratchpad/wait117.out",
+    "sha256": "551d24a155ae3ac9379f9cc50511a581d96e1aae5924b9df56876cab3ff92696",
+    "text": "=== EXIT at 2026-09-07T03:48:41Z ===\n--- five fields + id + the post-exit property, read WHILE LOADED (from outside) ---\nResult=exit-code\nExecMainStatus=1\nControlGroup=\nMemoryPeak=2596265984\nLoadState=loaded\nActiveState=failed\nSubState=failed\nInvocationID=17a0320936bd40929474a21e85f0b87c\n--- journal by BOTH invocation fields, before the stop ---\npayload lines (_SYSTEMD_INVOCATION_ID): 13\nmanager lines (USER_INVOCATION_ID):     4\n-u total:                               17\n--- host journal horizon at this copy (a measurement, with its own as-of) ---\noldest: 2026-09-06T23:24:33+00:00  read_at: 2026-09-07T03:48:41Z\n--- last payload line ---\nRunnerRefused: REFUSED at the day-run emit: THE WORKTREE'S HEAD MOVED UNDER THIS RUN -- 04d3eb3c44a0 -> 25031620bb2e. A receipt's carrying_commit would name a commit that was not the one this run executed from.\n"
+  },
+  "journal_capture": {
+    "captured_at": "2026-09-07T03:48:58Z",
+    "captured_by": "DE seat",
+    "sha256": "88416964cc78e0ddf76c44546999d4648174417169d33640ababc97c3dbb1aef",
+    "payload_lines": 13,
+    "manager_lines": 4,
+    "journal_horizon_oldest_at_capture": "2026-09-06T23:24:33+00:00",
+    "text": "=== payload (_SYSTEMD_INVOCATION_ID=17a0320936bd40929474a21e85f0b87c), captured 2026-09-07T03:48:58Z ===\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]: Traceback (most recent call last):\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:   File \"/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py\", line 10862, in <module>\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:     raise SystemExit(main())\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:                      ^^^^^^\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:   File \"/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py\", line 10533, in main\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:     return _main_day(a)\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:            ^^^^^^^^^^^^\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:   File \"/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py\", line 10630, in _main_day\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:     **assert_source_unchanged(\"the day-run emit\",\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:   File \"/home/yuqing/ctaNew-wt-de/live/pm_research/de_multiday_gate1_runner.py\", line 605, in assert_source_unchanged\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]:     raise RunnerRefused(\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 flock[439311]: RunnerRefused: REFUSED at the day-run emit: THE WORKTREE'S HEAD MOVED UNDER THIS RUN -- 04d3eb3c44a0 -> 25031620bb2e. A receipt's carrying_commit would name a commit that was not the one this run executed from.\n\n=== manager (USER_INVOCATION_ID=17a0320936bd40929474a21e85f0b87c) ===\n2026-09-07T02:27:53+00:00 ip-172-31-78-41 systemd[1004]: Started de115day06_2.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-06 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 systemd[1004]: de115day06_2.service: Main process exited, code=exited, status=1/FAILURE\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 systemd[1004]: de115day06_2.service: Failed with result 'exit-code'.\n2026-09-07T03:48:11+00:00 ip-172-31-78-41 systemd[1004]: de115day06_2.service: Consumed 1h 20min 10.920s CPU time, 2.4G memory peak, 0B memory swap peak.\n"
+  },
+  "written_at": "2026-09-07T03:50:20Z"
+}
