@@ -788,11 +788,6 @@ def selftest() -> tuple:                                      # noqa: C901
 
     checks.extend(selftest_real())
 
-    n_fail = sum(1 for c in checks if not c["passed"])
-    for c in checks:
-        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
-        print("       " + c["detail"])
-
     # ---- rule 20's clause (REV 84 S3.2 / REV 85 S3, R-726): THE SHARED
     # MODULE'S OWN FALSIFIER RUNS AS ONE CELL OF THIS BATTERY -----------
     #: This module IMPORTS `declaration_chain`, so a regression in the one
@@ -839,6 +834,11 @@ def selftest() -> tuple:                                      # noqa: C901
        and "1 failures" in _bad_sum and _bad_fails,
        f"disarmed copy -> rc {_bad_rc}: {_bad_sum!r}; "
        f"{(_bad_fails or [''])[0][:80]}")
+
+    n_fail = sum(1 for c in checks if not c["passed"])
+    for c in checks:
+        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
+        print("       " + c["detail"])
 
     print(f"\n{'SELFTEST OK' if not n_fail else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {n_fail} failure(s)")
