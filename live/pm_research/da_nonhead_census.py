@@ -1158,10 +1158,23 @@ def marked_families(derived: Path | None = None,
 
 
 def _deploy_pin_state(root: Path) -> dict:
-    """The nightly unit's deploy pin, checked against the files on disk."""
+    """The nightly unit's deploy pin, checked against the files on disk.
+
+    ***BOTH HALVES READ THE SAME TREE (DA 119).*** `stale_pins` takes the
+    FILES from `root` -- the canonical code root this census resolves --
+    but its `decl_dir` defaulted to the IMPORTING MODULE'S OWN directory,
+    so a census run from a seat worktree resolved the pin VERSION from that
+    worktree while checking the ledger's files against it. Measured
+    2026-09-07: from `ctaNew-wt-da` the head read v2 and named two files
+    STALE that a canonical read calls CLEAN, minutes after v3 landed. One
+    census, two trees -- the R-601 class arriving through a default
+    argument.
+    """
     try:
         import da_deploy_pin as _P                            # noqa: PLC0415
-        return _P.stale_pins(root)
+        return _P.stale_pins(
+            root, decl_dir=Path(root) / "live" / "pm_research"
+            / "declarations")
     except Exception as e:                                    # noqa: BLE001
         #: A CENSUS THAT CANNOT ASK IS NOT A CENSUS THAT PASSED.
         return {"status": "DEPLOY_PIN_NOT_CHECKABLE",
@@ -1793,6 +1806,47 @@ def selftest() -> tuple:
        and blk["what_changes"] == WHAT_CHANGES_IN_V2 and refused_by_name,
        f"pair on {pri.name}: sha {blk['sha256'][:12]}…; absent prior -> "
        f"refused by name: {refused_by_name}")
+
+    # ---- DA 119: ONE CENSUS, ONE TREE --------------------------------
+    #: The chains half resolves through `da_root.code_root`; the deploy-pin
+    #: half called `stale_pins(root)` and let `decl_dir` DEFAULT to the
+    #: importing module's own directory. Run from a seat worktree the two
+    #: halves then read two different trees, which is how a CLEAN pin read
+    #: STALE minutes after its successor landed.
+    with tempfile.TemporaryDirectory() as _t3:
+        _sr = Path(_t3)
+        _sd = _sr / "live" / "pm_research" / "declarations"
+        _sd.mkdir(parents=True)
+        (_sr / "live" / "pm_research" / "pinned_thing.py").write_text("x = 1\n")
+        _pinned_sha = hashlib.sha256(
+            (_sr / "live" / "pm_research" / "pinned_thing.py").read_bytes()
+        ).hexdigest()
+        (_sd / "da_midnight_deploy_pin_v1.json").write_text(json.dumps({
+            "unit": "scratch.service", "commit": "0" * 40,
+            "deployed_at": "2026-01-01T00:00:00Z", "n_files": 1,
+            "first_of_family": True,
+            "files": [{"path": "live/pm_research/pinned_thing.py",
+                       "sha256": _pinned_sha, "tier": "REFUSE"}]}))
+        _scoped = _deploy_pin_state(_sr)
+        import da_deploy_pin as _P                            # noqa: PLC0415
+        _defaulted = _P.stale_pins(_sr)
+        ck("ONE CENSUS, ONE TREE: the deploy-pin half now resolves the pin "
+           "from the ROOT THIS CENSUS RESOLVED -- driven on a scratch root "
+           "whose pin family is a v1 of its own, it reads THAT v1 and calls "
+           "it CLEAN",
+           _scoped["pin"]["name"] == "da_midnight_deploy_pin_v1.json"
+           and _scoped["status"] == "CLEAN" and _scoped["n_stale"] == 0,
+           f"scoped -> {_scoped['pin']['name']} {_scoped['status']}")
+        ck("KNOWN-BAD, DRIVEN AT THE DEFAULT THAT CAUSED IT: the same call "
+           "WITHOUT `decl_dir` resolves the pin from the IMPORTING MODULE'S "
+           "own directory while checking the scratch root's files against "
+           "it -- a different version and a different verdict from the same "
+           "root. ***That is the reading that reported two files STALE from "
+           "a seat worktree minutes after v3 landed in the ledger***",
+           _defaulted["pin"]["name"] != _scoped["pin"]["name"],
+           f"defaulted -> {_defaulted['pin']['name']} "
+           f"{_defaulted['status']} vs scoped -> "
+           f"{_scoped['pin']['name']} {_scoped['status']}")
 
     print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
           f"{len(checks)} checks, {fails} failure(s)")
