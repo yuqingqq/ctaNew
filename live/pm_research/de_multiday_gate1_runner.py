@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 347
+EXPECTED_CHECKS = 350
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -1326,7 +1326,18 @@ def seal(day_result: dict, n_days_complete: int, g: int) -> dict:
         # for an OK arm-day, absent for a refused one.
         out.setdefault("economic", None)
         out["sealed"] = False
-        out["seal_status"] = "UNSEALED_ALL_DAYS_COMPLETE"
+        # REV 90 §A0 / CLAUDE.md rule 10: THIS WAS A LITERAL, and it was
+        # FALSE under the ruled early-read bar -- `seal(arm, 4, 4)` wrote
+        # "UNSEALED_ALL_DAYS_COMPLETE" beside `n_days_complete 4` and
+        # `G 6`, so the one field describing the read's standing IN WORDS
+        # asserted that all days were complete when four of six were. The
+        # sealed branch six lines below always computed its string; the
+        # asymmetry was the defect. Both branches compute now, from the
+        # bar THIS CALL was handed, so no early-read special case exists
+        # and no caller can be given a status its own numbers contradict.
+        out["seal_status"] = (
+            f"UNSEALED -- {n_days_complete} of {g} days complete under the "
+            f"bar this call was given")
         out["sealed_field_names"] = []
         out["sealed_at_every_depth"] = False
         return out
@@ -5916,7 +5927,39 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         "fixture_day_lock": day_lock,
         "launch_form_at_runtime": launch_runtime,
         "lock_form_at_runtime": lock_runtime,
-        "n_days_complete": n_days_complete, "G": params["G"],
+        "n_days_complete": n_days_complete,
+        # REV 90 §A0(3): `G` USED TO SIT HERE AS A BARE NUMBER and it was
+        # v15's SIX, beside `n_days_complete` 4 and the early-read
+        # wrapper's `G` 4 -- two different G's in one artifact, with the
+        # smaller one outside this block. A reader met "4 of 6" and a
+        # status claiming all days were complete. There is no bare `G`
+        # now: the number keeps its provenance in the same object, and
+        # the key names WHICH G it is.
+        #
+        # The params file is NAMED, not versioned into the key: a key
+        # called `design_G_from_params_v15` is a literal that must track a
+        # moving thing, and `PARAMS_REL` is the thing that moves.
+        "G_and_which_G_it_is": {
+            "design_G_from_params": params["G"],
+            "params_file": PARAMS_REL,
+            "n_days_complete_at_this_emit": n_days_complete,
+            "the_bar_this_run_sealed_against": (
+                int(early_read["G"]) if early_read else params["G"]),
+            "why_two_numbers_exist": (
+                "the design's G is the ruled six-day population; the bar "
+                "a run seals against is the same six EXCEPT under the "
+                "user-ruled early read (R-754), which seals against its "
+                "own four. They are different questions and they are no "
+                "longer both called G."),
+            "no_bare_G_key_here": (
+                "removed at REV 90 §A0(3). Nothing read it: a sweep of "
+                "live/pm_research found no consumer of a day-run "
+                "receipt's top-level `G`. The four landed sealed receipts "
+                "(09-03..09-06) still carry the old bare `G: 6`; from "
+                "here on receipts carry this block instead, which is a "
+                "schema change between days and is said so here rather "
+                "than discovered later."),
+        },
         "memory_plan": {
             "stages": [{"stage": k, "holds": v} for k, v in DAY_STAGES],
             "observed": stages,
@@ -10150,6 +10193,59 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"passed' beside three disarmed cells would report the "
        f"measurement's failure as coverage -- the DE 110 defect one level "
        f"up")
+    # ===== DE 125 (REV 90 §A0): NO BRANCH OF seal() PRINTS A LITERAL ===
+    # Driven on a 09-06-SHAPED arm-day -- the real landed shape, arm and
+    # counts -- through BOTH branches of the one function, because the
+    # defect was an ASYMMETRY between them and a cell that exercises one
+    # branch cannot see it.
+    _a125 = {"day": "2026-09-06", "arm": "CONDVALUE_X_SKEW", "status": "OK",
+             "economic": {"D_E0": 2.5, "Z": 2.45, "p_location": 0.008,
+                          "null_mean": 0.0066, "null_sd": 1.0158,
+                          "null_draws_summary": {"n": 600}},
+             "n_fills_arm": 30171, "n_fills_baseline": 46439,
+             "n_cancels_issued": 5146}
+    _ruled125 = seal(dict(_a125), 4, 4)      # the early read's own call
+    _six125 = seal(dict(_a125), 6, 6)        # the honest six-day unseal
+    _sealed125 = seal(dict(_a125), 3, 6)     # the sealed path, 09-06's own
+    # THE RED HALF: a status that does not carry the day counts FAILS.
+    # `4` and `6` are read out of the string, not compared to a sentence
+    # anybody typed -- a cell that matched the new wording would go green
+    # on the next rewording and prove nothing.
+    ok("4 of 4" in _ruled125["seal_status"]
+       and _ruled125["sealed"] is False
+       and "ALL_DAYS_COMPLETE" not in _ruled125["seal_status"]
+       and "6 of 6" in _six125["seal_status"]
+       and "3 of 6" in _sealed125["seal_status"]
+       and _sealed125["sealed"] is True,
+       f"REV 90 §A0: NEITHER BRANCH PRINTS A LITERAL. Under the ruled bar "
+       f"the status is `{_ruled125['seal_status']}` -- it carries its own "
+       f"4 of 4 and no longer claims ALL_DAYS_COMPLETE, which is what it "
+       f"said beside `n_days_complete 4, G 6`. The honest six-day unseal "
+       f"reads `{_six125['seal_status']}`, and the sealed path is "
+       f"unchanged: `{_sealed125['seal_status'][:34]}…`")
+    # THE KNOWN-BAD, against the OLD behaviour as its baseline: the
+    # literal this replaced carries no counts, so the predicate that
+    # passes above must FAIL on it.
+    _old125 = "UNSEALED_ALL_DAYS_COMPLETE"
+    ok(not any(f"{i} of {j}" in _old125 for i in range(9)
+               for j in range(9)),
+       f"REV 90 §A0 KNOWN-BAD: the literal this replaced -- "
+       f"`{_old125}` -- contains no `N of M`, so the predicate above "
+       f"FAILS on it. The cell measures a delta from the behaviour that "
+       f"was landed, not agreement with the words I just wrote")
+    # AND THE SEALED PATH'S BYTES ARE UNCHANGED, not merely its prose:
+    # the sealed branch is compared field by field against what it
+    # produced before this change, which is the string 09-06 landed with.
+    ok(_sealed125["seal_status"].startswith(
+           "SEALED -- 3 of 6 days complete.")
+       and _sealed125["sealed_at_every_depth"] is True
+       and _sealed125["sealed_field_names"] == list(ECONOMIC_FIELDS)
+       and "economic" not in _sealed125,
+       f"REV 90 §A0: the SEALED branch is byte-identical to what the four "
+       f"landed days emitted -- `{_sealed125['seal_status'][:38]}…`, "
+       f"{len(_sealed125['sealed_field_names'])} sealed names, economics "
+       f"absent. This change touched the unsealed branch only")
+
     # ===== DE 119 (REV 88 §1.3): A SKIP IS THE THIRD OUTCOME ===========
     # Driven on the SUMMARY PATH, in all three shapes a caller can hand
     # it, and the run count is held fixed at 42 in every one -- because

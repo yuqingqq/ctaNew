@@ -337,6 +337,28 @@ def run_early_read_day(day: str, book, outdir, *, repo_root=None,
         "interval": "NONE_BELOW_FIVE_DAYS",
         "verdict_class": ruling["verdict_class"],
         "days_consumed": ruling["days_consumed"],
+        # REV 90 §A0, the second half of the closure. `seal()` now computes
+        # a truthful status from the bar it was handed ("4 of 4"), which is
+        # right but says nothing about the SIX. This artifact is the one a
+        # human reads, so the relation between the two numbers is stated
+        # here in words, with the ruling that authorises it.
+        "seal_standing": {
+            "line": (f"UNSEALED under the USER's ruling R-754: "
+                     f"{ruling['G']} of "
+                     f"{len(ruling['block']['the_six_day_population']['days'])}"
+                     f" ruled days, read early on the user's instruction. "
+                     f"NOT all days complete, NOT a validation, no "
+                     f"interval."),
+            "ruled_days_read": ruling["G"],
+            "ruled_days_in_the_population": len(
+                ruling["block"]["the_six_day_population"]["days"]),
+            "authority": "R-754, recorded "
+                         f"{ruling.get('recorded_at_utc')}",
+            "why_seal_status_inside_day_run_says_4_of_4": (
+                "that field reports the bar THAT CALL was given, which is "
+                "the ruling's four -- it is not a claim about the six. The "
+                "six is here, and in `day_run.G_and_which_G_it_is`."),
+        },
         "computation_params": {
             "path": RUN.PARAMS_REL,
             "sha256": _sha(Path(__file__).resolve().parents[2]
