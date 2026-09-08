@@ -149,7 +149,8 @@ def write_ledger(path, day: str, per_arm: dict,
             }, sort_keys=True) + "\n")
             n += 1
             _sv = a.get("null_settle_values") or []
-            for i, v in enumerate(a["null_values"]):
+            # R-828: a POINT-ESTIMATE run drew no null -- None, not [].
+            for i, v in enumerate(a["null_values"] or []):
                 fh.write(json.dumps({
                     "row": "NULL_DRAW", "arm": arm, "i": i, "value": v,
                     # R-825 / DE 143 (v4): the SETTLEMENT draw beside the

@@ -4447,7 +4447,17 @@ def builder_receipt_for(book_path: Path, day: str, coin: str = "btc") -> Path:
     'no builder receipt' at GO for a NAMING reason while the receipt sat
     beside the book. Every candidate is tried and, on a miss, ALL of them
     are named, so the refusal is actionable rather than a puzzle."""
-    cands = []
+    # DE 150: THE BOOK'S OWN RECEIPT COMES FIRST, SUFFIX AND ALL. BE 102
+    # writes `be_daybook_20260905_btc__L250ms.pkl` beside
+    # `be_daybook_receipt_20260905_btc__L250ms.json`, and the day-form
+    # candidates below resolve the L = 0 receipt for it -- so a 250 ms
+    # book would have been verified against the 0 ms book's digest (it
+    # would refuse, correctly, but for the wrong reason) and its
+    # placement latency would have READ 0.0 from the wrong file. The
+    # receipt whose name is the BOOK's name is tried first.
+    cands = [book_path.parent
+             / book_path.name.replace("be_daybook_", "be_daybook_receipt_",
+                                      1).replace(".pkl", ".json")]
     for d in sorted(day_forms(day)):
         cands.append(book_path.parent / f"be_daybook_receipt_{d}_{coin}.json")
     cands.append(book_path.with_suffix(".json"))
@@ -7506,7 +7516,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
         # ruled quantity is the one the user named.
-        if _win801 is not None and r.get("status") == "OK":
+        if _win801 is not None and r.get("status") in ("OK", "OK_POINT_ESTIMATE"):
             _sarm801 = settle_value_cents(arm_replay["fills"],
                                           _win801["winners"])
             _armlegs801 = settlement_legs_by_slug(arm_replay["fills"],
@@ -7558,7 +7568,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "what_D_E0_is_now": ("a DIAGNOSTIC of short-horizon "
                                      "adverse selection, not the result"),
             }
-        elif r.get("status") == "OK":
+        elif r.get("status") in ("OK", "OK_POINT_ESTIMATE"):
             _st801 = ("NO_WINNER_SOURCE_ON_A_FIXTURE"
                       if (fixture and _adm801["admissible"])
                       else "NOT_VALUED_DAY_NOT_ADMISSIBLE")
@@ -7629,7 +7639,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "baseline_total_cents": _base801["total_cents"],
                 "D_E_settle": _obs801,
                 "unit": VALUATION_UNIT,
-            } if (_win801 is not None and r.get("status") == "OK")
+            } if (_win801 is not None and r.get("status") in ("OK", "OK_POINT_ESTIMATE"))
                 else None),
             "observed": observed,
             "arm_value": _value_cents(arm_replay["fills"]),
