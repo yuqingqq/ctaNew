@@ -1,3 +1,66 @@
+# READ FIRST — round 288 (MEM, 2026-09-08T01:49:04Z, tip `6f34c6e`)
+
+**R-819 through R-824 swept, with every landing between the tip I read at round 287 (`cd1adcc`) and `6f34c6e`.**
+STATE ONLY.
+
+**THE FIRST TWO DAYS UNDER THE RULED ENDPOINT, READ AT BOTH ARTIFACTS.** 09-03 (n = 246): CONDVALUE `D_E_settle`
+−39,954.7459, Z −3.8612, p 1.0; HAZARD −11,166.4423, Z −2.9251, p 0.9980; both **not final**. 09-04 (n = 288):
+CONDVALUE −13,819.1376, Z −0.2670, p 0.6248; HAZARD −16,306.2415, Z −3.0721, p 1.0; both **final True**.
+**CONDVALUE 0 of 2, HAZARD 0 of 2 below the 0-cancel baseline.** The populations differ — the days are not one
+column.
+
+**DA's BINDING NULL FINDING, REPRODUCED AT THE LEDGER ROWS.** Both ledgers' 1,000 `NULL_DRAW` rows carry one scalar
+`value` and no fills. Their moments match **RESULTS §0b's DIAGNOSTIC null exactly on all four arm-days** — at
+`ddof = 0`, the population sd (3,830.0556, not the sample 3,833.89: a re-deriver needs that too) — and match the
+settlement null on **neither**. The settlement null's sd is **2.71x–5.11x** wider.
+
+**AND THE CONSEQUENCE, MADE CONCRETE.** Recomputing Z from each artifact's own settlement moments reproduces the
+recorded Z to 1e-9 on all four. Recomputing it from the **persisted** draws gives **−8.40 vs −3.86**, **−13.04 vs
+−2.93**, **−1.44 vs −0.27**, **−13.30 vs −3.07** — 2.2x to 5.4x more extreme, **more extreme on every one**. The
+error runs toward **overstating significance**. DE 143 is blocking for any quoted settlement Z.
+
+**A FINDING I HAVE CARRIED SINCE ROUND 285 CLOSED TONIGHT.** 09-07's book is the first built through BE 101's
+pass-through: its receipt carries `placement_latency_ms 0.0` and DE's reader returns L = 0.0 with
+**`source: "THE BOOK'S BUILDER RECEIPT"`** — read, not the constant. 09-05's landed receipt still returns the
+constant with `"…DECLARES NONE"`. Both shapes are on disk and `source` tells them apart.
+
+**BUT THE SAME READER REFUSES THE L = 250 BOOK — the artifact the whole latency programme exists to produce.**
+Driven on the real receipt: `REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: the builder receipt names 2
+placement-latency value(s), [250.0, 23947.0]`. **Mechanism, proven:** the walk matches any key *containing*
+`placement_latency`, and `TRANCHE_BEFORE_PLACEMENT_LATENCY` contains it — a **count** is collected as a **value**.
+It passes on every book read so far only because count and latency are **both 0**. **BE's next queued build is the
+L = 0 equivalence build, whose count is 0 by construction — it will pass, and the defect will surface on the first
+L > 0 valuation instead.** A seam defect: neither seat is wrong alone; the fix is one predicate or one rename, and
+it is a seat's call.
+
+**MY OWN FIRST PROBE WAS THE BROKEN ONE.** I read `memory_plan.observed.S4_null.elapsed_s` as a stage duration and
+printed **100.00 percent** — a stage cannot be all of a run — so I chased the mismatch against R-824's 99.2 rather
+than publishing it. **The fields are cumulative from the run's start.** Once the stage is a difference the entry is
+exact: 9,542.571 − 75.137 = **9,467.434 s** of 9,546.306 (**99.1738 percent**) and 10,510.568 − 76.682 =
+**10,433.886 s** of 10,515.122 (**99.2274 percent**).
+
+**Also verified.** GO #8 running from `wt-de` **unrefreshed at the full sha `5020f968edd3…`**, `?? data` only, unit
+`de145day07` loaded/active/running, invocation `5c7b0a692fdb45dcb41fc9d36e90795d`, since **01:33:43Z**. DA's carried
+`producer_exit_maps` debt closed — nine versions, **eight pairs, all PAIR_OK** recomputed from disk. The 09-07
+verdict `all_pass` True, sha `e236488a…` digit-for-digit, and its **predecessor superseded beside it**, not
+overwritten. `be_daybook_structure_v5` and `v6` both landed under the superset ruling.
+
+**One shape for whoever writes the four-day table.** Inside one `economic_settlement` object,
+`arm_legs.n_slugs` = **246** (the day's population) and `winner_source.n_slugs` = **38,439** (the venue record's
+size). Same key, two quantities three orders apart — resolve it with its parent.
+
+**Standing.** Freeze's **twenty-eighth** round (`params_v20`/`design_v28` absent, heads v19/v27); it lifts after
+GO #8's receipt, read `day_run.decision_ledger` **first**. `wt-de` `5020f96` / `?? data`, the **fourteenth**
+consecutive round. `origin/mm-research-e3-composition` = `33e8584`. Owed: **DE 142** (the `files` line, two days'
+evidence), **DE 143** (the settlement draws), **DE 144** (the parallel null, 99.2 percent of a run). R3/R4 after
+GO #8; BE's deferred structure verification, `be_forward_day` and pins.
+
+Counts: flags 2334 → 2349, provenance 1879 → 1894 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,604 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; missing-artifact 178; window trimmed
+4 → 3, Batch 270 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 287 (MEM, 2026-09-07T17:26:35Z, tip `cd1adcc`)
 
 **R-815, R-816, R-817 and R-818 swept, with every landing between the tip I read at round 286 (`6461cf2`) and

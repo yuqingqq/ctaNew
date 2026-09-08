@@ -20607,3 +20607,36 @@ generation and the window went 4 → 3. Nothing rewritten.
   COUNTS (by YAML parse): flags 2274 -> 2289, provenance 1819 -> 1834 (fifteen written, fifteen counted,
   duplicate-name gate run BEFORE writing); ORPHAN census 0; window trimmed 4 -> 3, Batch 266 archived.)
 ```
+
+## Batch 270 — archived 2026-09-08T01:49:04Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T16:34:23Z (MEM ROUND 285 -- R-811, R-812 AND R-813 SWEPT, with every landing between the tip I
+  read at round 284 (`d7e51fe`) and `ef27921` -- and FIVE of them arrived after this round's own
+  fetch, R-813 while I was composing. STATE ONLY. ***THE SIXTH COMPOSITION EXISTS AND `wt-rr` IS ON IT***: `850c166` at 16:24:00Z, its three
+  files byte-identical to mm-research `6372626`, phase4 at v19's pin `ee4034c1`, and pins 10/10 measured INSIDE
+  `wt-rr` -- absent when I recorded it at rounds 281, 282 and 284. ***THE USER'S HIGH #1 IS SHUT***: I drove his
+  exact forged dict at the tip's bytes and it REFUSES `SETTLEMENT_VERIFICATION_EMPTY`, where at 16:11:25Z it
+  returned -- my round-284 "that falsifier would fail today" is superseded in band, and the guard ADMITS at
+  `require_verified=False`, so it is a gate and not a wall. ***BUT TONIGHT'S L IS A CONSTANT, NOT A READING***:
+  R-811 ruled the L be READ FROM THE BOOK'S BUILDER RECEIPT AND NEVER TYPED, and driving
+  `placement_latency_from_the_book` on all four REAL landed receipts returns the function's own literal 0.0 with
+  `source "THE BOOK'S BUILDER RECEIPT DECLARES NONE"` -- the four receipts contain zero occurrences of
+  `placement_latency`. ***AND TWO LANDED READERS GIVE OPPOSITE ANSWERS ON THOSE SAME BOOKS***: BE's
+  `placement_latency_of` RAISES ("an unrecorded L and an L of zero are the same number and opposite facts") while
+  DE's returns 0.0, its refusal armed only by a declaration key in `params_v20`, which the freeze forbids. ***A
+  THIRD ROUTE SITS IN THE RECEIPTS AND NEITHER READER USES IT***: `producing_code.builder_commit` on 09-05/09-06
+  resolves to builder bytes with ZERO occurrences of the parameter, so L = 0 is DERIVABLE as provenance -- but
+  09-03 has no `producing_code` at all and 09-04's commit survives only in a SUPERSEDED v2, whose head deliberately
+  renamed the key so "a resolver keying on `builder_commit` must find NOTHING here". ***THE CHEAPEST REPAIR IS
+  ALREADY BUILT***: `apply_placement_latency` is the IDENTITY at L <= 0 and BE 101's CLI writes an L-variant to its
+  own path with its own receipt, so an L = 0 rebuild yields the same fills WITH the L recorded -- the curve's own
+  first leg. ***I MEASURED MY ROUND-282 WORRY AND IT DOES NOT BITE***: four of R-811's six grid values drop a fill
+  placed exactly at t0 + L, yet ZERO of 20,000 real fill-minus-generation deltas are a whole number of ms. ***AND I
+  OWE A CORRECTION ON MY OWN INSTRUMENT***: round 284's "fourteen callers, checked by AST" was a MENTION count --
+  the call-site census is 8 sites in 5 modules, of which 1 now passes the keyword (`be_daybook_build.py:706`, BE
+  101, landed ONE SECOND after my round-284 row and touching no pin, HEAD still 9/10). Flags 2289 -> 2304, prov
+  1834 -> 1849; window trimmed 4 -> 3, Batch 267 archived. BE 102's six books do not exist; the freeze holds a
+  TWENTY-FIFTH round; `wt-de` `5020f96` / `?? data`, the ELEVENTH consecutive round; GO #8 unchanged.
+  MEM asserts no result.)
+```

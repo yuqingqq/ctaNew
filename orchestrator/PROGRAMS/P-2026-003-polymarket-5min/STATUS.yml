@@ -67,6 +67,32 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-08T01:49:04Z (MEM ROUND 288 -- R-819 THROUGH R-824 SWEPT, with every landing between the
+  tip I read at round 287 (`cd1adcc`) and `6f34c6e`. STATE ONLY. The first two days under the USER's ruled endpoint
+  read exactly as filed -- 09-03 over 246 windows and 09-04 over 288, populations kept apart, **CONDVALUE 0 of 2 and
+  HAZARD 0 of 2 below the 0-cancel baseline**. ***I REPRODUCED DA'S BINDING NULL FINDING AT THE LEDGER ROWS***: both
+  ledgers' 1,000 NULL_DRAW rows carry one scalar `value` and no fills, and their moments match RESULTS S0b's
+  DIAGNOSTIC null EXACTLY on all four arm-days -- at `ddof = 0`, the population sd, which a re-deriver must also
+  know -- and match the settlement null on NEITHER. ***AND I MADE THE CONSEQUENCE CONCRETE***: recomputing Z from
+  each artifact's own settlement moments reproduces the recorded Z to 1e-9 on all four, while recomputing it from
+  the persisted draws gives -8.40 against -3.86, -13.04 against -2.93, -1.44 against -0.27 and -13.30 against -3.07
+  -- 2.2x to 5.4x MORE EXTREME on every one, because the settlement null is 2.7-5.1x wider. **The error runs toward
+  overstating significance.** ***A FINDING I HAVE CARRIED SINCE ROUND 285 CLOSED TONIGHT***: 09-07's book is the
+  first built through BE 101's pass-through, and DE's reader driven on its receipt returns L = 0.0 with `source:
+  "THE BOOK'S BUILDER RECEIPT"` -- READ, not the constant, while 09-05's landed receipt still returns the constant.
+  ***AND DRIVING THE SAME READER ON THE REAL L = 250 RECEIPT, IT REFUSES***
+  `SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS`, naming `[250.0, 23947.0]` -- because the walk matches any key
+  CONTAINING `placement_latency` and `TRANCHE_BEFORE_PLACEMENT_LATENCY` contains it, so a COUNT is collected as a
+  VALUE. It passes on every book read so far only because the count and the latency are both 0, and **BE's next
+  queued build is the L = 0 equivalence build, whose count is 0 by construction -- so it will pass and the defect
+  will surface on the first L > 0 valuation instead.** ***AND MY OWN FIRST PROBE WAS THE BROKEN ONE***: I read
+  `S4_null.elapsed_s` as a duration, printed 100.00 %, and chased the mismatch against R-824's 99.2 % rather than
+  publishing it -- the fields are CUMULATIVE from the run's start, and once the stage is a difference the entry is
+  exact at 99.1738 % and 99.2274 %. GO #8 running from `wt-de` UNREFRESHED at the full sha, invocation `5c7b0a69...`
+  since 01:33:43Z; DA's exit-map debt closed with all eight pairs resolving; the 09-07 verdict superseded rather
+  than overwrote and its sha matches to the digit. Flags 2334 -> 2349, prov 1879 -> 1894; window trimmed 4 -> 3,
+  Batch 270 archived. The freeze holds a TWENTY-EIGHTH round; `wt-de` `5020f96` / `?? data`, the FOURTEENTH
+  consecutive round. MEM asserts no result.)
   2026-09-07T17:26:35Z (MEM ROUND 287 -- R-815, R-816, R-817 AND R-818 SWEPT, with every landing between
   the tip I read at round 286 (`6461cf2`) and `cd1adcc`. STATE ONLY. ***THE USER COMMITTED `849bef2` HIMSELF, DIRECTLY ON
   TOP OF MY OWN ROUND-286 STATE COMMIT `e86e467`*** (author and committer yqq, 16:54:48Z, runner +222/-53, ledger
@@ -125,34 +151,6 @@ updated: >-
   landing in the read-write gap. Flags 2304 -> 2319, prov 1849 -> 1864; window trimmed 4 -> 3, Batch 268 archived.
   The freeze holds a TWENTY-SIXTH round; `wt-de` `5020f96` / `?? data`, the TWELFTH consecutive round; GO #8
   unchanged. MEM asserts no result.)
-  2026-09-07T16:34:23Z (MEM ROUND 285 -- R-811, R-812 AND R-813 SWEPT, with every landing between the tip I
-  read at round 284 (`d7e51fe`) and `ef27921` -- and FIVE of them arrived after this round's own
-  fetch, R-813 while I was composing. STATE ONLY. ***THE SIXTH COMPOSITION EXISTS AND `wt-rr` IS ON IT***: `850c166` at 16:24:00Z, its three
-  files byte-identical to mm-research `6372626`, phase4 at v19's pin `ee4034c1`, and pins 10/10 measured INSIDE
-  `wt-rr` -- absent when I recorded it at rounds 281, 282 and 284. ***THE USER'S HIGH #1 IS SHUT***: I drove his
-  exact forged dict at the tip's bytes and it REFUSES `SETTLEMENT_VERIFICATION_EMPTY`, where at 16:11:25Z it
-  returned -- my round-284 "that falsifier would fail today" is superseded in band, and the guard ADMITS at
-  `require_verified=False`, so it is a gate and not a wall. ***BUT TONIGHT'S L IS A CONSTANT, NOT A READING***:
-  R-811 ruled the L be READ FROM THE BOOK'S BUILDER RECEIPT AND NEVER TYPED, and driving
-  `placement_latency_from_the_book` on all four REAL landed receipts returns the function's own literal 0.0 with
-  `source "THE BOOK'S BUILDER RECEIPT DECLARES NONE"` -- the four receipts contain zero occurrences of
-  `placement_latency`. ***AND TWO LANDED READERS GIVE OPPOSITE ANSWERS ON THOSE SAME BOOKS***: BE's
-  `placement_latency_of` RAISES ("an unrecorded L and an L of zero are the same number and opposite facts") while
-  DE's returns 0.0, its refusal armed only by a declaration key in `params_v20`, which the freeze forbids. ***A
-  THIRD ROUTE SITS IN THE RECEIPTS AND NEITHER READER USES IT***: `producing_code.builder_commit` on 09-05/09-06
-  resolves to builder bytes with ZERO occurrences of the parameter, so L = 0 is DERIVABLE as provenance -- but
-  09-03 has no `producing_code` at all and 09-04's commit survives only in a SUPERSEDED v2, whose head deliberately
-  renamed the key so "a resolver keying on `builder_commit` must find NOTHING here". ***THE CHEAPEST REPAIR IS
-  ALREADY BUILT***: `apply_placement_latency` is the IDENTITY at L <= 0 and BE 101's CLI writes an L-variant to its
-  own path with its own receipt, so an L = 0 rebuild yields the same fills WITH the L recorded -- the curve's own
-  first leg. ***I MEASURED MY ROUND-282 WORRY AND IT DOES NOT BITE***: four of R-811's six grid values drop a fill
-  placed exactly at t0 + L, yet ZERO of 20,000 real fill-minus-generation deltas are a whole number of ms. ***AND I
-  OWE A CORRECTION ON MY OWN INSTRUMENT***: round 284's "fourteen callers, checked by AST" was a MENTION count --
-  the call-site census is 8 sites in 5 modules, of which 1 now passes the keyword (`be_daybook_build.py:706`, BE
-  101, landed ONE SECOND after my round-284 row and touching no pin, HEAD still 9/10). Flags 2289 -> 2304, prov
-  1834 -> 1849; window trimmed 4 -> 3, Batch 267 archived. BE 102's six books do not exist; the freeze holds a
-  TWENTY-FIFTH round; `wt-de` `5020f96` / `?? data`, the ELEVENTH consecutive round; GO #8 unchanged.
-  MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -324,6 +322,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 288, R-819..R-824 swept (cd1adcc -> 6f34c6e) ---
+  THE_FIRST_TWO_DAYS_UNDER_THE_RULED_ENDPOINT_READ_EXACTLY_AS_FILED: BOTH-ARMS-BELOW-ON-BOTH-DAYS
+  AND_I_REPRODUCED_DAs_BINDING_NULL_FINDING_FROM_THE_LEDGER_ROWS: THE-PERSISTED-DRAWS-ARE-THE-5-SECOND-ONES
+  THE_PERSISTED_MOMENTS_MATCH_THE_DIAGNOSTIC_AT_ddof_ZERO_AND_THE_SETTLEMENT_NULL_ON_NEITHER_DAY: FOUR-ARM-DAYS-FOUR-EXACT-MATCHES
+  AND_A_READER_WHO_RE_DERIVES_Z_FROM_THEM_OVERSTATES_IT_EVERY_TIME: 2.2x-TO-5.4x-ALWAYS-MORE-EXTREME
+  THE_09_07_BOOK_IS_THE_FIRST_THAT_RECORDS_ITS_OWN_L_AND_MY_ROUND_285_FINDING_CLOSES_THERE: source-THE-BOOKS-BUILDER-RECEIPT
+  BUT_DEs_L_READER_REFUSES_THE_ONE_BOOK_THE_LATENCY_PROGRAMME_EXISTS_TO_PRODUCE: L250-REFUSED-AMBIGUOUS-AT-THE-REAL-RECEIPT
+  THE_MECHANISM_IS_A_COUNTS_NAME_CONTAINING_A_VALUES_KEY: TRANCHE_BEFORE_PLACEMENT_LATENCY
+  AND_IT_PASSES_ON_EVERY_BOOK_READ_SO_FAR_ONLY_BECAUSE_ZERO_EQUALS_ZERO: THE-L-0-EQUIVALENCE-BUILD-WILL-NOT-SURFACE-IT
+  GO_8_IS_RUNNING_FROM_wt_de_UNREFRESHED_AT_THE_FULL_SHA: 5c7b0a69-SINCE-013343Z
+  DAs_CARRIED_EXIT_MAP_DEBT_IS_CLOSED_AND_EVERY_PAIR_IN_THE_CHAIN_RESOLVES: NINE-VERSIONS-EIGHT-PAIRS-ALL-OK
+  THE_09_07_VERDICT_SUPERSEDED_RATHER_THAN_OVERWROTE_AND_ITS_SHA_MATCHES: e236488a-AND-THE-PREDECESSOR-BESIDE-IT
+  MY_FIRST_S4_NULL_PROBE_READ_100_PERCENT_WHICH_IS_HOW_I_FOUND_THE_FIELD_IS_CUMULATIVE: A-STAGE-CANNOT-BE-ALL-OF-A-RUN
+  AND_R_824s_NINETY_NINE_POINT_TWO_IS_EXACT_ONCE_THE_STAGE_IS_A_DIFFERENCE: 99.1738-AND-99.2274-PERCENT
+  TWO_FIELDS_NAMED_n_slugs_IN_ONE_BLOCK_MEAN_246_AND_38439: THE-DAYS-POPULATION-AND-THE-VENUE-RECORD
+  BE_103s_v5_AND_v6_LANDED_AND_THE_FREEZE_HOLDS_A_TWENTY_EIGHTH_ROUND: 5020f96-FOURTEENTH-CONSECUTIVE-ROUND
   # --- MEM round 287, R-815..R-818 swept (6461cf2 -> cd1adcc) ---
   THE_USER_COMMITTED_849bef2_HIMSELF_ON_TOP_OF_MY_OWN_STATE_COMMIT: AUTHOR-yqq-PARENT-e86e467
   AND_REV_106s_REFINEMENT_IS_EXACT_AT_BOTH_TREES: PRODUCER-HAD-files-SUBBLOCK-DROPPED-THEM
@@ -26677,6 +26691,184 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 288, 2026-09-08T01:49:04Z (the clock read by which every measurement below was complete) ---
+  THE_FIRST_TWO_DAYS_UNDER_THE_RULED_ENDPOINT_READ_EXACTLY_AS_FILED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T195637Z.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      Read at both artifacts, every figure agreeing with R-819 and R-822 to the digit. **09-03 (n = 246):**
+      CONDVALUE `D_E_settle` -39,954.7458880002, `Z` -3.8612309333657002, `p_location` 1.0; HAZARD -11,166.442287999918,
+      `Z` -2.9250591951574574, `p` 0.998003992015968; both `is_final_for_quotation` **False**. **09-04 (n = 288):**
+      CONDVALUE -13,819.137629000004, `Z` -0.26699012504373665, `p` 0.624750499001996; HAZARD -16,306.241527999722,
+      `Z` -3.072082689591877, `p` 1.0; both **True**. `arm_legs.n_slugs` and `zero_cancel_baseline_legs.n_slugs` are
+      246 and 246 on 09-03, 288 and 288 on 09-04 -- **the populations differ and the days are not one column**.
+      **CONDVALUE 0 of 2, HAZARD 0 of 2 below the 0-cancel baseline under the ruled endpoint.**
+  AND_I_REPRODUCED_DAs_BINDING_NULL_FINDING_FROM_THE_LEDGER_ROWS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260903__20260907T195522Z.jsonl.gz
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      ***THE FINDING THAT BINDS EVERY SETTLEMENT Z AND p, AND I MEASURED IT AT THE ROWS RATHER THAN TAKING DA'S
+      WORD.*** Both new ledgers carry 1,000 `NULL_DRAW` rows with keys `['arm','cancels','i','row','value']` -- 500
+      per arm, **one scalar `value` each and no fills**. Their moments (09-03): CONDVALUE mean -7,777.9006 sd
+      3,830.0556; HAZARD mean -478.2376 sd 819.5168. (09-04): CONDVALUE mean -6,146.7688 sd 5,339.1612; HAZARD mean
+      -623.1250 sd 1,179.1831. **Those are the 5-SECOND draws**, not the settlement ones.
+  THE_PERSISTED_MOMENTS_MATCH_THE_DIAGNOSTIC_AT_ddof_ZERO_AND_THE_SETTLEMENT_NULL_ON_NEITHER_DAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_decision_ledger_20260903__20260907T195522Z.jsonl.gz
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      Compared both ways. Against **RESULTS S0b's DIAGNOSTIC null table** the four arm-days match to the published
+      precision: -7,777.90 / 3,830.06, -478.24 / 819.52, -6,146.77 / 5,339.16, -623.13 / 1,179.18 -- **exact on all
+      four**. Against the artifacts' own **settlement** moments (09-03 CONDVALUE 4,358.8563 / 11,476.5480; HAZARD
+      1,088.9704 / 4,189.7999; 09-04 CONDVALUE -9,958.0988 / 14,461.3546; HAZARD -405.9956 / 5,175.7220) they match
+      **none**. ***AND ONE DETAIL A RE-DERIVER MUST HAVE***: the sd that reproduces is the **POPULATION** sd
+      (`ddof = 0`) -- 3,830.0556 against a sample sd of 3,833.89 -- so even the diagnostic null is only re-derivable
+      with the right estimator. The settlement null's sd is **2.71x to 5.11x** the diagnostic's.
+  AND_A_READER_WHO_RE_DERIVES_Z_FROM_THEM_OVERSTATES_IT_EVERY_TIME:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      ***THE CONSEQUENCE, MADE CONCRETE RATHER THAN LEFT AS "CANNOT BE VERIFIED".*** Recomputing Z from each
+      artifact's OWN settlement moments reproduces the recorded Z exactly on all four arm-days (agreement to 1e-9,
+      driven). Recomputing it from the PERSISTED draws instead gives **-8.4011 against -3.8612** (09-03 CONDVALUE),
+      **-13.0421 against -2.9251** (09-03 HAZARD), **-1.4370 against -0.2670** (09-04 CONDVALUE) and **-13.3000
+      against -3.0721** (09-04 HAZARD) -- **2.2x to 5.4x more extreme, and MORE extreme on every one**, because the
+      settlement null is the wider distribution. **The error runs in the direction of overstating significance**,
+      which is the dangerous direction, and it is why "a settlement Z is READ, never verified" has to hold until
+      DE 143 persists the settlement draws.
+  THE_09_07_BOOK_IS_THE_FIRST_THAT_RECORDS_ITS_OWN_L_AND_MY_ROUND_285_FINDING_CLOSES_THERE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260907_btc.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      ***A FINDING I HAVE CARRIED SINCE ROUND 285 CLOSES TONIGHT, AND I DROVE THE CLOSURE.*** I recorded that
+      tonight's L was "a constant returned, not a value read" because every landed builder receipt was
+      pre-parameter. The 09-07 receipt -- the first book built through BE 101's pass-through -- carries
+      `placement_latency.placement_latency_ms 0.0` and `TRANCHE_BEFORE_PLACEMENT_LATENCY 0`, and DE's
+      `placement_latency_from_the_book` driven on it returns `L_place_ms 0.0` with **`source: "THE BOOK'S BUILDER
+      RECEIPT"`** and three real `found_at` paths -- **READ, not returned**. Driven beside it, 09-05's landed receipt
+      still returns the constant with `source: "...DECLARES NONE"`. **Both shapes now exist on disk and the `source`
+      field is what tells them apart**, which is exactly what it was for.
+  BUT_DEs_L_READER_REFUSES_THE_ONE_BOOK_THE_LATENCY_PROGRAMME_EXISTS_TO_PRODUCE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc__L250ms.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      ***AND DRIVING THE SAME READER ON THE REAL L = 250 BUILDER RECEIPT, IT REFUSES.*** Verbatim:
+      `REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: the builder receipt names 2 placement-latency value(s),
+      [250.0, 23947.0], at {'.placement_latency.TRANCHE_BEFORE_PLACEMENT_LATENCY': 23947,
+      '.placement_latency.placement_latency_ms': 250.0, '.reference.statuses.TRANCHE_BEFORE_PLACEMENT_LATENCY':
+      23947}. A day measures one maker, so its book must name exactly one L.` **This is the artifact R-811's swept
+      grid exists to produce, and no receipt can record its L from it.** R-811 requires the L be READ from the book
+      and never typed; R-818 has the day run read it; so **any valuation on any L > 0 book refuses by name today**.
+  THE_MECHANISM_IS_A_COUNTS_NAME_CONTAINING_A_VALUES_KEY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc__L250ms.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      The mechanism, proven not guessed: the reader's walk collects every key whose lowercased name CONTAINS
+      `placement_latency`, and **`'TRANCHE_BEFORE_PLACEMENT_LATENCY'.lower()` contains it** -- so a COUNT of dropped
+      tranches is gathered as a latency VALUE, and the function refuses when the set has more than one member.
+      Neither seat is wrong on its own: BE named its count for the thing it counts, and DE walked for a key it could
+      not know would be a prefix of another. **It is a SEAM defect** -- the class the register keeps paying for --
+      and the fix is one predicate (match the key `placement_latency_ms` exactly, or exclude `TRANCHE`) or one
+      rename, either of which is a seat's call and not mine.
+  AND_IT_PASSES_ON_EVERY_BOOK_READ_SO_FAR_ONLY_BECAUSE_ZERO_EQUALS_ZERO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260907_btc.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      ***WHY IT HAS NOT BITTEN, AND WHY THE NEXT BUILD WILL NOT SURFACE IT EITHER.*** On every book the reader has
+      ever been given, the count and the latency are **both 0** -- 09-07 records `placement_latency_ms 0.0` beside
+      `TRANCHE_BEFORE_PLACEMENT_LATENCY 0`, so the value set collapses to `{0.0}` and it returns cleanly. The two
+      quantities coincide **exactly when L = 0**. ***AND BE'S NEXT QUEUED BUILD IS THE L = 0 EQUIVALENCE BUILD***,
+      whose dropped-tranche count is 0 by construction -- **so it will pass, and the defect will surface on the
+      first L = 25 or L = 250 valuation instead**, which is the worst place to find it. Recorded now, before that
+      run, rather than after.
+  GO_8_IS_RUNNING_FROM_wt_de_UNREFRESHED_AT_THE_FULL_SHA:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      Five fields read WHILE loaded at 01:44:19Z: `de145day07.service` **loaded / active / running**,
+      `ExecMainStatus 0`, `Result success`, InvocationID **`5c7b0a692fdb45dcb41fc9d36e90795d`** (R-824's
+      `5c7b0a69...`), `ActiveEnterTimestamp` **01:33:43Z** exactly, MemoryCurrent 1.42 GB / MemoryPeak 3.23 GB at
+      ~10.6 min in. Its `ExecStart` is the launcher's own bytes -- `flock -n -E 75 .../data/.heavy_run.lock ...
+      de_multiday_gate1_runner.py --day 2026-09-07 --book .../be_daybook_20260907_btc.pkl` -- and **`wt-de` reads
+      HEAD `5020f968edd36130181d97259a78437b039e0b2c` with `git status --short` exactly `?? data`**: the FULL sha,
+      unrefreshed to any composition, the **FOURTEENTH** consecutive round I have measured it.
+  DAs_CARRIED_EXIT_MAP_DEBT_IS_CLOSED_AND_EVERY_PAIR_IN_THE_CHAIN_RESOLVES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      R-820 records the coordinator closing DA's carried `producer_exit_maps_v8` debt at the artifact. **Measured
+      here independently**: nine versions on disk, `v1` the chain root, and **v2 -> v1, v3 -> v2, v4 -> v3, v5 -> v4,
+      v6 -> v5, v7 -> v6, v8 -> v7, v9 -> v8 all PAIR_OK** -- each `supersedes.sha256` equal to the sha256 of the
+      file it names, recomputed from disk. The revert-of-revert restored v7's bytes and the chain is whole, so **a
+      fresh DA does not inherit that debt** and the closure is a measurement rather than folklore.
+  THE_09_07_VERDICT_SUPERSEDED_RATHER_THAN_OVERWROTE_AND_ITS_SHA_MATCHES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260907.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      Read at the file: `all_pass` **True**, `day_closed_calendar` True, per-coin `verdict_split.day_closed` True,
+      `selector_era` `clob_v4_1`, `freeze_epoch` 1787897340.0, and sha256
+      **`e236488ae6671b0a6c4c97e7994f06bcc43088edcadf9cf19eb9937c8396521c`** -- R-823's digit for digit. **And the
+      predecessor is still there beside it** (`da_dayverdict_20260907.superseded_20260907T015431.247251+0000.json`,
+      60,817 B against the new 63,765 B): an automated nightly producer using the same supersession discipline the
+      declaration chains use. `day_closed_selector` reads **False** as R-823 flagged -- settled by BE at the code as
+      a property of the verdict's 00:06:01Z as-of, not of the data.
+  MY_FIRST_S4_NULL_PROBE_READ_100_PERCENT_WHICH_IS_HOW_I_FOUND_THE_FIELD_IS_CUMULATIVE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      ***MY OWN INSTRUMENT, CAUGHT BY ITS OWN ABSURDITY.*** My first pass took `memory_plan.observed.S4_null.
+      elapsed_s` as a stage DURATION and divided by the largest `elapsed_s` in the file -- which is that same field
+      -- and printed **100.00 %** on both days. **A stage cannot be all of a run**, and R-824 said 99.2 %, so I
+      chased the mismatch instead of publishing it. **The fields are CUMULATIVE FROM THE RUN'S START**, not per-stage:
+      09-03 reads S3_baseline 75.137 -> S4_null 9,542.571 -> S5_seal 9,542.579 against a `wrapper.rule20.wall_s` of
+      9,546.306. **A reader taking them as durations overstates every stage and always reads the last one as the
+      whole run.**
+  AND_R_824s_NINETY_NINE_POINT_TWO_IS_EXACT_ONCE_THE_STAGE_IS_A_DIFFERENCE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260904__20260907T195637Z.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      With the semantics right, the entry's numbers are exact: the null stage is **9,542.571 - 75.137 = 9,467.434 s**
+      on 09-03 and **10,510.568 - 76.682 = 10,433.886 s** on 09-04 -- R-824's "9,467 s" and "10,434 s" -- against
+      wall clocks of 9,546.306 and 10,515.122, i.e. **99.1738 %** and **99.2274 %**. So DE 144's parallel null is
+      aimed at essentially the whole cost of a day run, and the two re-runs' 2 h 39 m and 2 h 55 m are the null
+      almost in full. **The entry was right and my first probe was wrong**, which is the order this rule exists to
+      produce.
+  TWO_FIELDS_NAMED_n_slugs_IN_ONE_BLOCK_MEAN_246_AND_38439:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      A naming hazard for whoever writes the four-day table, found while reading the settlement blocks: inside ONE
+      `economic_settlement` object, **`arm_legs.n_slugs` is 246 (the day's population) and `winner_source.n_slugs`
+      is 38,439 (the venue record's size)** -- 38,663 on 09-04. Same key, same block, two quantities three orders of
+      magnitude apart. DA counted the population three independent ways for exactly this reason; a reader that
+      resolves `n_slugs` without its parent gets the resolutions file's row count and would report a 38,439-window
+      day. Recorded as a shape, not a defect -- neither field is wrong where it sits.
+  BE_103s_v5_AND_v6_LANDED_AND_THE_FREEZE_HOLDS_A_TWENTY_EIGHTH_ROUND:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-08T01:49:04Z
+    said: >-
+      Standing, measured at 01:44Z: **`be_daybook_structure_v5.json` (12,525 B) AND `v6.json` (13,194 B) are both on
+      disk** under the coordinator's superset ruling -- the contract that keeps the four landed two-key books
+      verified while requiring the header from BE 101 forward. `params_v20` / `design_v28` **ABSENT** (heads
+      v19/v27): the R-775 freeze's **twenty-eighth** round, and it lifts only after GO #8's receipt lands.
+      `origin/mm-research-e3-composition` = `33e8584`. Owed and named: **DE 142** (the `files` line, two days'
+      evidence behind it), **DE 143** (the settlement draws, which the null finding above makes blocking for any
+      quoted Z), **DE 144** (the parallel null, at 99.2 % of a run); R3/R4 after GO #8; BE's deferred structure
+      verification, `be_forward_day` and pins.
   # --- MEM round 287, 2026-09-07T17:26:35Z (the clock read by which every measurement below was complete) ---
   THE_USER_COMMITTED_849bef2_HIMSELF_ON_TOP_OF_MY_OWN_STATE_COMMIT:
     prov: CHECKED
