@@ -334,6 +334,35 @@ def build(records_dir=None, derived=None) -> tuple:
                     row["ratio_in_process_to_cap"] = _ratio(
                         row["in_process_peak_bytes"], CAP_BYTES)
                     rows.append(row)
+                # BE 103: DO NOT STOP HERE. One (day, stage) can hold several
+                # books once L-variants exist -- 20260905/book now has the
+                # landed pre-parameter build (unit `be64book`, known only from
+                # its receipt) AND BE 101's `be101L250` rebuild. Before this,
+                # the presence of ANY record suppressed the receipt-only row
+                # and `be64book` silently vanished from the roll-up, which is
+                # the drift REV 89 §3.2 named, reintroduced by a new door.
+                _ru, _usrc = _unit_from_receipt(derived, stage, day)
+                if _ru and _ru not in {f"{u}.service" for u in runs}:
+                    ip2 = _in_process(derived, stage, day)
+                    r2 = {"day": day, "stage": stage, "unit": _ru,
+                          "unit_source": _usrc,
+                          "no_launcher_record": (
+                              "UNIT_NAMED_BY_RECEIPT_ONLY -- this run left no "
+                              f"{RECORD_STEM}<unit>.jsonl, and it is NOT one "
+                              "of the recorded runs for this (day, stage): "
+                              f"{sorted(runs)}"),
+                          "cap": "MemoryMax=8G", "cap_bytes": CAP_BYTES,
+                          "leaf_peak_status": "NOT_RECORDED",
+                          "leaf_peak_bytes": None,
+                          "leaf_peak_is_a_lower_bound": None,
+                          "leaf_peak_note": "no launcher record exists for "
+                                            "this run",
+                          "leaf_peak_source": None}
+                    r2.update(ip2)
+                    r2["ratio_leaf_to_cap"] = None
+                    r2["ratio_in_process_to_cap"] = _ratio(
+                        r2["in_process_peak_bytes"], CAP_BYTES)
+                    rows.append(r2)
                 continue
             u, usrc = _unit_from_receipt(derived, stage, day)
             has_receipt = ip["in_process_source"].startswith(
@@ -609,7 +638,7 @@ def selftest() -> int:
     ok(v4 == [] and "be72frag.service" in named
        and "be87fwd06.service" in named and "be64book.service" in named,
        f"THE REAL LEDGER: {len(rows)} rows from {h['records_seen']} records "
-       f"({h['records_by_class']}), zero violations, and all THREE names REV "
+       f"({h['records_by_class']}), {len(v4)} violations, and all THREE names REV "
        f"89 §3.2 measured as drifted are present -- be72frag and be87fwd06 "
        f"(record, no row) and be64book (row, no record, now carried with its "
        f"reason)")

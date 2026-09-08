@@ -2110,24 +2110,49 @@ def selftest() -> int:
         (Path(where) / "be_daybook_receipt_19700101_btc.json").write_text(
             json.dumps({"book": {"sha256": _sha_file(b)}}))
         return b
-    _bad = _fixture_book(_tf.mkdtemp(prefix="be65_struct_"),
-                         {"fr": {}, "not_asm": {}})
-    try:
-        verify_structure(_bad)
-        ok(False, "a book with the wrong top-level keys must refuse")
-    except BookRefused as _e:
-        ok("contradicts be_daybook_structure" in str(_e)
-           and "top-level keys" in str(_e),
-           "KNOWN-BAD: a pickle whose top-level keys are not the declared "
-           "ones REFUSES BY NAME -- the verifier does not report a shape it "
-           "did not find")
+    # BE 103: v5's contract is a SUPERSET, not set equality (the
+    # coordinator's ruling), so this known-bad drives the TWO refusals that
+    # replaced the one: a MISSING REQUIRED key, and an EXTRA key the
+    # declaration does not NAME as optional. The old fixture
+    # `{"fr": {}, "not_asm": {}}` is both at once and could no longer tell
+    # them apart.
+    def _refusal(payload, prefix):
+        _b = _fixture_book(_tf.mkdtemp(prefix=prefix), payload)
+        try:
+            verify_structure(_b)
+            return "NOT REFUSED"
+        except BookRefused as _e:
+            return str(_e).split("be_daybook_structure:")[-1].strip()
+
+    _miss = _refusal({"fr": {}, "not_asm": {}}, "be103_missing_")
+    _xtra = _refusal({"fr": {}, "asm": {"by_arm": {}, "assembly": {}},
+                      "sneaky": 1}, "be103_extra_")
+    ok("every REQUIRED key" in _miss and "asm" in _miss
+       and "NAMED optional" in _xtra and "sneaky" in _xtra,
+       f"KNOWN-BAD x2 UNDER v5's SUPERSET CONTRACT: a book MISSING a "
+       f"required key refuses ({_miss[:64]!r}) and a book carrying an EXTRA "
+       f"key the declaration does not NAME refuses separately "
+       f"({_xtra[:64]!r}). Set equality could only ever say `not the "
+       f"declared ones`; the superset contract says WHICH fault it is")
     _good = _fixture_book(_tf.mkdtemp(prefix="be65_structok_"), {
-        "fr": {"reference": {}},
+        "header": {"protocol": "BE_DAYBOOK_HEADER_V1",
+                   "day": "19700101", "coin": "btc",
+                   "placement_latency": {
+                       "placement_latency_ms": 0.0,
+                       "source": "PLACEMENT_LATENCY_MS_DEFAULT",
+                       "TRANCHE_BEFORE_PLACEMENT_LATENCY": 0}},
+"fr": {"reference": {}},
         "asm": {"by_arm": {("btc", "h"): [{"k": 1}, {}]},
                 "assembly": {"n_chunks": 1, "kept_by_coin": {},
                              "drops_by_coin": {}}}})
     _empty = _fixture_book(_tf.mkdtemp(prefix="be66_structempty_"), {
-        "fr": {"reference": {}},
+        "header": {"protocol": "BE_DAYBOOK_HEADER_V1",
+                   "day": "19700101", "coin": "btc",
+                   "placement_latency": {
+                       "placement_latency_ms": 0.0,
+                       "source": "PLACEMENT_LATENCY_MS_DEFAULT",
+                       "TRANCHE_BEFORE_PLACEMENT_LATENCY": 0}},
+"fr": {"reference": {}},
         "asm": {"by_arm": {}, "assembly": {"n_chunks": 0,
                                            "kept_by_coin": {},
                                            "drops_by_coin": {}}}})
@@ -2771,9 +2796,47 @@ def verify_structure(book_path, *, declaration: dict | None = None) -> dict:
                               f"be_daybook_structure: {why}")
 
     _need(isinstance(book, dict), "the top level is a dict")
-    _need(set(book) == set(d["top_level"]["keys"]),
-          f"the top-level keys are {d['top_level']['keys']}, found "
+    # ---- THE RULED CONTRACT (v5, coordinator's ruling on BE 103) --------
+    # SUPERSET, not equality: `required` must all be present; extra keys are
+    # admitted only if the declaration NAMES them as optional. Rule 13 --
+    # the four landed two-key books were valid under the contract in force
+    # when they were written, and a stricter contract would retroactively
+    # unverify them; and the day runner's own by-key reads are the
+    # operational contract this describes.
+    _tl = d["top_level"]
+    _req = set(_tl.get("required") or _tl.get("keys") or ())
+    _opt = set((_tl.get("optional") or {}).keys())
+    _need(_req <= set(book),
+          f"the top level carries every REQUIRED key {sorted(_req)}; found "
           f"{sorted(book)}")
+    _extra = set(book) - _req
+    _need(_extra <= _opt,
+          f"every key beyond the required set is NAMED optional in the "
+          f"declaration ({sorted(_opt)}); found unnamed {sorted(_extra - _opt)}")
+    # OPTIONAL IS NOT UNCHECKED. A header that is present must satisfy its
+    # constraint, so a book carrying a header WITHOUT its recorded L is
+    # REFUSED by name rather than admitted as "optional".
+    _hdr_rule = (_tl.get("optional") or {}).get("header") or {}
+    _hdr_req = list(_hdr_rule.get("when_present_must_carry") or ())
+    if "header" in book and _hdr_req:
+        _pl = ((book.get("header") or {}).get("placement_latency") or {})
+        _missing = [k for k in _hdr_req if _pl.get(k) is None]
+        _need(not _missing,
+              f"HEADER_PRESENT_WITHOUT_ITS_RECORDED_L: the header carries "
+              f"{sorted(_pl)} and is missing {_missing} of the required "
+              f"{_hdr_req}. An optional field is not an unchecked one")
+    # AND FROM BE 101'S LANDING THE HEADER IS REQUIRED. A book built by the
+    # current builder without one cannot say its L, and R-811 quotes a day's
+    # number only with its L beside it. The four books built BEFORE the
+    # parameter existed are GRANDFATHERED, named individually in the
+    # declaration -- computed from that list, never assumed from the shape.
+    _gf = set((_tl.get("grandfathered_two_key_books") or {}).keys())
+    if "header" not in book:
+        _need(q.name in _gf,
+              f"HEADER_REQUIRED_FROM_BE_101: {q.name} carries no `header`, "
+              f"and it is not among the {len(_gf)} books grandfathered as "
+              f"built before the placement-latency parameter existed "
+              f"({sorted(_gf)})")
     asm = book["asm"]
     _need(isinstance(asm, dict) and "by_arm" in asm and "assembly" in asm,
           "asm carries by_arm and assembly")

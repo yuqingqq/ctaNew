@@ -1,0 +1,176 @@
+{
+ "STATUS": "VERIFIED AGAINST FOUR REAL BOOKS (09-03, 09-04, 09-05, 09-06)",
+ "artifact": {
+  "digest_to_bind_to": "the receipt's `book.sha256`, which the builder takes from the buffer it wrote and states again as an independent `readback_sha256`",
+  "format": "python pickle, protocol HIGHEST_PROTOCOL, written as ONE buffer",
+  "not_json": "this is the fact DA's reader refused on; the receipt beside it IS json",
+  "path_pattern": "data/pm_5min/derived/be_daybook_<YYYYMMDD>_<coin>.pkl",
+  "receipt_pattern": "data/pm_5min/derived/be_daybook_receipt_<YYYYMMDD>_<coin>.json"
+ },
+ "as_of_utc": "2026-09-08T01:36:21Z",
+ "correction_in_band": "v5 set STATUS to 'ACTIVE' and thereby broke a landed check: be_daybook_build's R-654 cell asserts the head's STATUS starts with 'VERIFIED AGAINST' -- deliberately a PROPERTY rather than v2's old literal. v5's contract (superset + named-optional header + the grandfather clause) is UNCHANGED and correct; only the STATUS string was wrong. v5 is NOT edited (rule 13): this version restores the string from v4 verbatim and says why. The count of books this declaration is VERIFIED AGAINST is still four -- 20260907 is built and its verification is DEFERRED while GO #8 holds the heavy lock.",
+ "declaration": "BE_DAYBOOK_STRUCTURE",
+ "how_to_verify_this_declaration": "python3 live/pm_research/be_daybook_build.py --verify-structure <book.pkl>: opens ONE real book and asserts every claim above against it, refusing by name on the first mismatch. HEAVY -- it must run in the service form on the lock as its own unit.",
+ "status_detail": "v5 supersedes v4 by the pair after BE 103 found the 09-07 book refused by v4's set-equality test: BE 101 added the `header` key without superseding this declaration in the same round, which is the defect class R-741 names. The verifier's refusal was correct and is what caught it.",
+ "supersedes": {
+  "path": "live/pm_research/declarations/be_daybook_structure_v5.json",
+  "rule": "13 / R-608 -- vN+1 by the {path, sha256} PAIR; v5 is NOT edited",
+  "sha256": "79ed5e86e2617526da48e3f181dcdf5d71e94ec60b5b95c62ba23bb944c4e7e3"
+ },
+ "supersedes_note": "the oldest version of this family: it names no predecessor. A null here is a STATEMENT, not an absence.",
+ "top_level": {
+  "THREE_STATUSES": {
+   "GRANDFATHERED": "4 named books, admitted without a header",
+   "REFUSED": "a header present but incomplete, or absent from a book not grandfathered",
+   "REQUIRED": "20260907 and every later book must carry a header that satisfies `when_present_must_carry`"
+  },
+  "asm": {
+   "assembly": {
+    "may_a_population_recompute_read_it": true,
+    "shape": "dict with n_chunks, chunk_windows, kept_by_coin, drops_by_coin, n_tape_rows, splits, split_set",
+    "units_warning": "drops_by_coin and kept_by_coin count FRAGMENT ROWS; the receipt's uncovered count is in REFERENCE GENERATIONS. Comparing them for equality is the defect round 62 withdrew."
+   },
+   "by_arm": {
+    "caveat_measured_by_the_reviewer": "the second element is a COUNT MAP, not the thetas (REV 64 \u00a72.2) -- a reader wanting thetas must take them from the receipt's `asm.coverage_by_head[*].theta`, not from the pickle",
+    "may_a_population_recompute_read_it": true,
+    "shape": "dict keyed by the TUPLE (coin, head); each value is a sequence whose FIRST element carries the scored keys",
+    "source": "be_daybook_build: `asm[\"by_arm\"][k][0]`, and be_cancel_axis_null.py:217 builds the decision population for BOTH arms from the CONDVALUE head's key set alone"
+   },
+   "keys_named_by_the_builder": [
+    "by_arm",
+    "assembly"
+   ],
+   "what": "the assembly, from build_tape_index/measure_assembly over the day's tape"
+  },
+  "contract": "SUPERSET: every key in `required` must be present; any further key must be NAMED in `optional`. Ruled by the coordinator on BE 103: (1) rule 13 -- the four landed two-key books were valid under the contract in force when they were written, and a stricter contract would rewrite the meaning of landed history rather than describe it; (2) the declaration exists to catch a book MISSING what readers need, not to forbid additive fields a reader ignores; (3) the day runner reads book['fr'] and book['asm'] BY KEY and asserts no key set, so this describes the operational contract.",
+  "fr": {
+   "holds": "the reference generations and their statuses; `fr[\"reference\"]` is the per-slug/side structure the receipt's `reference.generations` counts",
+   "may_a_population_recompute_read_it": true,
+   "what": "the day's REFERENCE, from de_phase4_diag_runner.build_reference(coin, selector=sel)",
+   "why": "it is the decision-time population itself: rows, arm membership and the seeds a recompute needs"
+  },
+  "grandfather_basis": "COMPUTED, NOT TYPED: a landed book is grandfathered iff its OWN RECEIPT carries no `placement_latency` block AND its reference statuses carry no TRANCHE_BEFORE_PLACEMENT_LATENCY -- which is what 'built before the parameter existed' means at the artifact. Each receipt's sha256 is recorded beside it so the basis is checkable.",
+  "grandfathered_two_key_books": {
+   "be_daybook_20260903_btc.pkl": {
+    "day": "20260903",
+    "receipt": "be_daybook_receipt_20260903_btc.json",
+    "receipt_sha256": "70d583d87090def40c6aad852f4549438b3d526d2490daf52684c2f52e49ee85",
+    "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+    "why": "built BEFORE the placement-latency parameter existed: its receipt carries no `placement_latency` block and its reference statuses carry no TRANCHE_BEFORE_PLACEMENT_LATENCY. Computed from the receipt, not assumed from the book's shape."
+   },
+   "be_daybook_20260904_btc.pkl": {
+    "day": "20260904",
+    "receipt": "be_daybook_receipt_20260904_btc.json",
+    "receipt_sha256": "1f15d54f6101041bd1f86cd2bf0e89f2c8c2dc4d3116eda8ec802402a374171c",
+    "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+    "why": "built BEFORE the placement-latency parameter existed: its receipt carries no `placement_latency` block and its reference statuses carry no TRANCHE_BEFORE_PLACEMENT_LATENCY. Computed from the receipt, not assumed from the book's shape."
+   },
+   "be_daybook_20260905_btc.pkl": {
+    "day": "20260905",
+    "receipt": "be_daybook_receipt_20260905_btc.json",
+    "receipt_sha256": "394c292cd92dfafee6e844285eddb6536a4b579ace34075b1149d33209107edd",
+    "sha256": "499f859673676827923df8fddad6f267fcfff07ee06cd64f57dbff9bc215f1f6",
+    "why": "built BEFORE the placement-latency parameter existed: its receipt carries no `placement_latency` block and its reference statuses carry no TRANCHE_BEFORE_PLACEMENT_LATENCY. Computed from the receipt, not assumed from the book's shape."
+   },
+   "be_daybook_20260906_btc.pkl": {
+    "day": "20260906",
+    "receipt": "be_daybook_receipt_20260906_btc.json",
+    "receipt_sha256": "56cddcc84fbe18a4d4f191437efd4fd72d68cafc290e7dc283ecd3ecf6a01c30",
+    "sha256": "ac2ac95204864c7e7fd7f89e0f424f75f39617d83958d126adeb0c76ea24a4c7",
+    "why": "built BEFORE the placement-latency parameter existed: its receipt carries no `placement_latency` block and its reference statuses carry no TRANCHE_BEFORE_PLACEMENT_LATENCY. Computed from the receipt, not assumed from the book's shape."
+   }
+  },
+  "keys": [
+   "fr",
+   "asm"
+  ],
+  "keys_v4_meaning": "v4 declared `keys` = ['fr', 'asm'] and the verifier tested SET EQUALITY. v5 replaces that with REQUIRED + NAMED OPTIONAL; `keys` is retained unchanged above for a v4-era reader and is no longer the test.",
+  "optional": {
+   "header": {
+    "OPTIONAL_IS_NOT_UNCHECKED": "a book carrying a header WITHOUT its recorded L is REFUSED by name (HEADER_PRESENT_WITHOUT_ITS_RECORDED_L), never admitted because the field is optional. An unrecorded L and an L of zero are the same number and opposite facts.",
+    "REQUIRED_FROM_BE_101": "from BE 101's landing the header is REQUIRED: a book built by the current builder without one cannot say its L, R-811 quotes a day's number only with its L beside it, and R-818 makes the day run read L from the book. A book with no header that is not in `grandfathered_two_key_books` is REFUSED (HEADER_REQUIRED_FROM_BE_101).",
+    "added_by": "BE 101 (2ad6a82), so a book can say which placement latency produced its fills without a reader loading the receipt",
+    "shape": "dict with protocol, day, coin, placement_latency",
+    "when_present_must_carry": [
+     "placement_latency_ms",
+     "source",
+     "TRANCHE_BEFORE_PLACEMENT_LATENCY"
+    ]
+   }
+  },
+  "required": [
+   "asm",
+   "fr"
+  ],
+  "source": "be_daybook_build.build(): `book = {\"fr\": fr, \"asm\": asm}`"
+ },
+ "verified_books": {
+  "20260903": {
+   "checks": "7 of 7 declared claims hold",
+   "file": "be_daybook_20260903_btc.pkl",
+   "peak_rss_gb": 2.079,
+   "record": "be_daybook_structure_verification_20260903_btc.json",
+   "sha256": "aad816d637f8445abd53f8e69e44eee058f8d4e196eb9a434da20d0938470323",
+   "verified_by": "BE 66 / be66struct"
+  },
+  "20260904": {
+   "checks": "7 of 7 declared claims hold",
+   "file": "be_daybook_20260904_btc.pkl",
+   "peak_rss_gb": 2.405,
+   "record": "be_daybook_structure_verification_20260904_btc.json",
+   "sha256": "9193206c2fa338784bac8dbcb2c66c0f1c90e8c747b3a434a73ec829cffb5858",
+   "verified_by": "BE 74 / be74struct04"
+  },
+  "20260905": {
+   "checks": "7 of 7 declared claims hold",
+   "file": "be_daybook_20260905_btc.pkl",
+   "peak_rss_gb": 1.879,
+   "record": "be_daybook_structure_verification_20260905_btc.json",
+   "sha256": "499f859673676827923df8fddad6f267fcfff07ee06cd64f57dbff9bc215f1f6",
+   "verified_by": "BE 74 / be74struct05"
+  },
+  "20260906": {
+   "checks": "7 of 7 declared claims hold",
+   "file": "be_daybook_20260906_btc.pkl",
+   "peak_of_record": "ABSENT AND SAID SO -- the run finished in 3.1 s, before the leaf sampler's first read, and the leaf is released at exit. systemd's MemoryPeak property is recorded verbatim in the record and is NOT that number (BE 74).",
+   "peak_rss_gb": 1.974,
+   "record": "be_daybook_structure_verification_20260906_btc.json",
+   "record_sha256": "17a28d2332904d9f5fe0a5b260dec71f648956e2c2c16a1ab6a9b10113f8d0ee",
+   "sha256": "ac2ac95204864c7e7fd7f89e0f424f75f39617d83958d126adeb0c76ea24a4c7",
+   "unit_outcome": {
+    "ActiveState": "active",
+    "ExecMainStatus": "0",
+    "InvocationID": "c3b088be50bd43d18d95b07fd3b49049",
+    "LoadState": "loaded",
+    "MemoryPeak": "638128128",
+    "Result": "success",
+    "SubState": "exited"
+   },
+   "verified_by": "BE 72 / be72struct"
+  }
+ },
+ "verified_books_note": "20260907 is NOT here yet: its verification run is HEAVY (~2 GB) and GO #8 holds the heavy lock. It is added in the next version once the run passes. Its book is be_daybook_20260907_btc.pkl sha256 00b136a889e75e516ee772ccf480dbb648a695eb1e15344f4d2cfc34ad727b88, receipt records placement_latency_ms 0.0 source PLACEMENT_LATENCY_MS_DEFAULT, TRANCHE_BEFORE_PLACEMENT_LATENCY 0.",
+ "version": 6,
+ "what_a_population_recompute_MAY_read": [
+  "fr (the reference and its statuses)",
+  "asm.by_arm[*][0] (the scored key sets, for set equality and coverage)",
+  "asm.assembly (chunk and drop accounting, in ROWS)"
+ ],
+ "what_a_reader_may_infer": {
+  "may": [
+   "that these THREE books have the declared shape, each measured, not argued",
+   "that the builder which wrote them is the builder declared here, over three consecutive days and three different builder commits",
+   "that a loader may map any of these three through this declaration"
+  ],
+  "may_NOT": [
+   "that a FOURTH day's book has this shape. Nothing here is a claim about an unverified artifact: the declaration is a record of what was opened, not a prediction about what will be written.",
+   "that the builder cannot change. A future book must be verified before this head names it, and until it does DA's loader SHOULD refuse it by name -- that refusal is the guard working, not a gap."
+  ],
+  "what_a_fourth_day_requires": "one run of `be_daybook_build.py --verify-structure <book>` under the lock, then a vN+1 naming it. Widening this declaration to cover an unopened book would be the defect it exists to prevent."
+ },
+ "what_it_MAY_NOT_read": {
+  "sealed_economics": "NOTHING in this pickle carries the sealed economics -- D_E0, Z, p, null mean/sd and the draws summary live in DE's sealed DAY RECEIPT, not in the book. A reader must not infer that the book is safe to open BECAUSE it holds no economics; it must still not derive an economic quantity from `fr`/`asm` before the seal opens (the arm scores are here, and a p-value can be computed from them).",
+  "the_rule": "the book is a POPULATION artifact. Population, coverage, set equality and accounting may be recomputed from it; any economic statistic may not be computed from it before the ruled read."
+ },
+ "why_this_exists": "R-654 / DA 89's seam. DA's pre-read population half REFUSED the real 09-03 book by name -- BOOK_IS_A_PICKLE_NOT_THIS_READER'S_JSON -- because every fixture it had been driven on was JSON and the real book is a Python pickle. A reader that has never seen the artifact it must read will refuse it or, worse, guess at it. This declares the shape so DA 91 maps the book THROUGH a declaration instead of guessing."
+}
