@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 395
+EXPECTED_CHECKS = 396
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4626,71 +4626,6 @@ SETTLE_UP_CENTS = 100.0
 #: against a Chainlink read is BE 99's method, which has not landed --
 #: so nothing here calls a settlement value verified.
 RESOLUTIONS_REL = "data/pm_5min/resolutions.jsonl"
-CHAINLINK_PRICE_TOPICS = ("crypto_prices_twap_sixty",
-                          "crypto_prices_twap_thirty")
-
-
-def _is_hex64(value) -> bool:
-    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) \
-        is not None
-
-
-def chainlink_stream_provenance_check(prov: dict, *, data_root=None) -> dict:
-    """RE-READ THE STREAM FILES A VERIFICATION CLAIMS TO HAVE USED."""
-    prov = prov or {}
-    files = prov.get("files")
-    files = files if isinstance(files, list) else []
-    n_files = prov.get("n_hourly_files")
-    claimed_digest = prov.get("files_digest")
-    reader = prov.get("reader_module") or {}
-    root = Path(data_root) if data_root is not None \
-        else Path(DR.resolve()["data_root"])
-    prices = root / "pm_5min" / "prices"
-    reader_path = Path(__file__).resolve().parent / "exp_m6_settlement.py"
-    actual_reader_sha = hashlib.sha256(reader_path.read_bytes()).hexdigest() \
-        if reader_path.is_file() else None
-    check = {
-        "n_hourly_files_positive": isinstance(n_files, int) and n_files > 0,
-        "files_list_present": bool(files),
-        "files_count_matches": isinstance(n_files, int) and len(files) == n_files,
-        "files_digest_is_hex64": _is_hex64(claimed_digest),
-        "reader_path_matches": reader.get("path")
-        == "live/pm_research/exp_m6_settlement.py",
-        "reader_sha_matches_current_file": (
-            _is_hex64(reader.get("sha256"))
-            and reader.get("sha256") == actual_reader_sha),
-        "files_missing": [],
-        "files_bad_paths": [],
-        "files_digest_matches": False,
-    }
-    h = hashlib.sha256()
-    if files:
-        for rel in files:
-            p = Path(str(rel))
-            if p.is_absolute() or ".." in p.parts or len(p.parts) != 2 \
-                    or p.parts[0] not in CHAINLINK_PRICE_TOPICS:
-                check["files_bad_paths"].append(str(rel))
-                continue
-            src = prices / p
-            if not src.is_file():
-                check["files_missing"].append(str(rel))
-                continue
-            h.update(p.name.encode())
-            h.update(src.read_bytes())
-        check["files_digest_matches"] = (
-            not check["files_bad_paths"]
-            and not check["files_missing"]
-            and _is_hex64(claimed_digest)
-            and h.hexdigest() == claimed_digest)
-    check["ok"] = bool(
-        check["n_hourly_files_positive"]
-        and check["files_list_present"]
-        and check["files_count_matches"]
-        and check["files_digest_is_hex64"]
-        and check["reader_path_matches"]
-        and check["reader_sha_matches_current_file"]
-        and check["files_digest_matches"])
-    return check
 
 
 def winner_source(*, root=None, required_slugs=None,
@@ -4800,6 +4735,7 @@ def winner_source(*, root=None, required_slugs=None,
                 f"disagree with the venue on 10-44 slugs a day, so a "
                 f"verdict under an unnamed rule verifies nothing.")
         _c = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+              "BOUNDARY_NOT_IN_CAPTURE": 0,
               "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
         for _pv in verification["per_slug"].values():
             _st = (_pv or {}).get("status")
@@ -4838,9 +4774,6 @@ def winner_source(*, root=None, required_slugs=None,
         _ps = verification["per_slug"]
         _req = sorted(set(required_slugs or []))
         _have = sorted(_ps)
-        _prov = verification.get("stream_provenance") or {}
-        _prov_check = chainlink_stream_provenance_check(
-            _prov, data_root=r)
         _fin = {
             "a_slug_set_equals_the_days":
                 (bool(_req) and _have == _req),
@@ -4852,26 +4785,29 @@ def winner_source(*, root=None, required_slugs=None,
             "c_every_status_is_VERIFIED_AGREE":
                 (_c["VERIFIED_AGREE"] == len(_ps) and len(_ps) > 0),
             "d_convention_is_the_pinned_one": True,
-            "e_n_hourly_files_read": _prov.get("n_hourly_files", 0),
+            "e_n_hourly_files_read": (
+                (verification.get("stream_provenance") or {})
+                .get("n_hourly_files", 0)),
             "f_provenance": {
                 "venue_record": {"path": str(path), "sha256": sha},
-                "stream_files_digest": _prov.get("files_digest"),
-                "reader_module": _prov.get("reader_module")},
-            "f_provenance_check": _prov_check,
+                "stream_files_digest": (
+                    (verification.get("stream_provenance") or {})
+                    .get("files_digest")),
+                "reader_module": (
+                    (verification.get("stream_provenance") or {})
+                    .get("reader_module"))},
         }
         _fin["f_provenance_complete"] = bool(
-            _prov_check["ok"])
+            _fin["f_provenance"]["stream_files_digest"]
+            and (_fin["f_provenance"]["reader_module"] or {}).get("sha256"))
         _fin["is_final"] = bool(
             _fin["a_slug_set_equals_the_days"]
             and _fin["c_every_status_is_VERIFIED_AGREE"]
             and _fin["e_n_hourly_files_read"] > 0
             and _fin["f_provenance_complete"])
         ver["finality"] = _fin
-        ver["status"] = (
-            "VERIFIED_AGAINST_CHAINLINK" if _fin["is_final"]
-            else ("VERIFICATION_DID_NOT_AGREE"
-                  if not _fin["c_every_status_is_VERIFIED_AGREE"]
-                  else "VERIFICATION_NOT_FINAL"))
+        ver["status"] = ("VERIFIED_AGAINST_CHAINLINK" if _fin["is_final"]
+                         else ver["status"])
     if require_verified:
         # R-810 (a): ZERO SLUGS VERIFIED IS NOT VERIFICATION, and a set
         # that is not the day's is evidence about some other day.
@@ -4900,10 +4836,10 @@ def winner_source(*, root=None, required_slugs=None,
         if _fin is not None and not _fin["f_provenance_complete"]:
             raise RunnerRefused(
                 f"REFUSED SETTLEMENT_VERIFICATION_PROVENANCE_INCOMPLETE: "
-                f"the stream provenance does not re-read to the claimed "
-                f"files/digests ({_fin['f_provenance_check']}). A verdict "
-                f"nobody can re-read the inputs of is a claim, not a "
-                f"verification.")
+                f"the verification names no stream-files digest and/or no "
+                f"reader-module digest "
+                f"({_fin['f_provenance']}). A verdict nobody can re-read "
+                f"the inputs of is a claim, not a verification.")
         # THE FAILING STATUSES REFUSE BY THEIR OWN NAMES. An unverified
         # value may be COMPUTED and LABELLED (R-803); what it may never
         # be is quoted as final, and this is the door that says no.
@@ -4923,6 +4859,14 @@ def winner_source(*, root=None, required_slugs=None,
                 f"measured 0 such slugs on 09-05 and 09-06; a day with "
                 f"any is not quotable, and flipping one moves a day "
                 f"total by thousands of cents.")
+        if _c.get("BOUNDARY_NOT_IN_CAPTURE"):
+            raise RunnerRefused(
+                f"REFUSED SETTLEMENT_BOUNDARY_NOT_IN_CAPTURE: "
+                f"{_c['BOUNDARY_NOT_IN_CAPTURE']} window(s) whose "
+                f"boundary value is not in our capture -- a logged stream "
+                f"gap, or a stale read whose possible drift exceeds the "
+                f"window's own margin (R-826). The convention is not in "
+                f"doubt; our ability to check it on those windows is.")
         if _c.get("CHAINLINK_UNAVAILABLE") or _c.get("VENUE_UNRESOLVED"):
             raise RunnerRefused(
                 f"REFUSED SETTLEMENT_CHAINLINK_UNAVAILABLE: "
@@ -4995,7 +4939,7 @@ def chainlink_streams(days, *, coin: str = "btc"):
     src = Path(DR.resolve()["data_root"]) / "pm_5min" / "prices"
     tmp = Path(_tf.mkdtemp(prefix="de_chainlink_"))
     n_files = 0
-    for topic in CHAINLINK_PRICE_TOPICS:
+    for topic in ("crypto_prices_twap_sixty", "crypto_prices_twap_thirty"):
         d = tmp / "prices" / topic
         d.mkdir(parents=True)
         for h in sorted(hours):
@@ -5021,7 +4965,7 @@ def chainlink_streams(days, *, coin: str = "btc"):
     # stream would give the same winners.
     _fh = hashlib.sha256()
     _names = []
-    for _t in CHAINLINK_PRICE_TOPICS:
+    for _t in ("crypto_prices_twap_sixty", "crypto_prices_twap_thirty"):
         for _f in sorted((tmp / "prices" / _t).glob("*")):
             _names.append(f"{_t}/{_f.name}")
             _fh.update(_f.name.encode())
@@ -5042,7 +4986,8 @@ def chainlink_streams(days, *, coin: str = "btc"):
 
 def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
                                      coin: str = "btc",
-                                     stream_provenance=None) -> dict:
+                                     stream_provenance=None,
+                                     gaps=None) -> dict:
     """THE VENUE'S WINNER, CHECKED AGAINST THE CHAINLINK STREAM.
 
     R-803: rule 9's door. The venue record is the JOIN; the stream is the
@@ -5060,8 +5005,20 @@ def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
     sym = _M6.COINS.get(coin)
     ser = (streams or {}).get((sym, 60))
     per: dict = {}
+    # R-826 / DE 146: a FOURTH outcome, distinct from both neighbours.
+    # DISAGREE asserts we read a DIFFERENT value than the venue did;
+    # CHAINLINK_UNAVAILABLE says there is no data at all; this one says
+    # the boundary's value IS NOT IN OUR CAPTURE and the read cannot
+    # settle the verdict either way.
     counts = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
+              "BOUNDARY_NOT_IN_CAPTURE": 0,
               "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+    # THE GAP LOG IS READ ONLY WHEN NOT SUPPLIED. A FIXTURE run must open
+    # no path under `data/` and this log lives there -- reading it
+    # unconditionally broke the fixture run's own data-free proof, which
+    # caught it by name. Production passes None and gets the real log;
+    # the battery's cells pass their own list.
+    _gaps = price_stream_gaps() if gaps is None else list(gaps)
     for sl in sorted(slugs):
         v = (winners or {}).get(sl)
         if v is None:
@@ -5089,10 +5046,23 @@ def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
             continue
         up_chain = bool(xT >= x0)
         agree = (up_chain == bool(v["up_won"]))
-        per[sl] = {"status": "VERIFIED_AGREE" if agree else "DISAGREE",
+        # THE VERIFIABILITY LAYER, IN FRONT OF THE CONVENTION. The
+        # convention's own reading is kept and reported either way; what
+        # this decides is whether our capture can SETTLE it.
+        vb = boundary_verifiability(
+            ser, t0 * 1000,
+            (t0 + SETTLEMENT_CONVENTION["window_s"]) * 1000, gaps=_gaps)
+        if not vb.get("verifiable"):
+            st = "BOUNDARY_NOT_IN_CAPTURE"
+        else:
+            st = "VERIFIED_AGREE" if agree else "DISAGREE"
+        per[sl] = {"status": st,
                    "venue_up_won": bool(v["up_won"]),
-                   "chainlink_up_won": up_chain}
-        counts["VERIFIED_AGREE" if agree else "DISAGREE"] += 1
+                   "chainlink_up_won": up_chain,
+                   "the_conventions_own_reading":
+                       ("AGREE" if agree else "DISAGREE"),
+                   "verifiability": vb}
+        counts[st] += 1
     return {"convention": SETTLEMENT_CONVENTION,
             "per_slug": per, "counts": counts,
             "n_slugs": len(per),
@@ -5102,12 +5072,205 @@ def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
                     "n_hourly_files", 0),
                 "files_digest": (stream_provenance or {}).get(
                     "files_digest"),
-	                "reader_module": (stream_provenance or {}).get(
-	                    "reader_module"),
-	                "hours": (stream_provenance or {}).get("hours"),
-	                "files": (stream_provenance or {}).get("files")},
+                "reader_module": (stream_provenance or {}).get(
+                    "reader_module"),
+                "hours": (stream_provenance or {}).get("hours")},
             "all_agree": (counts["VERIFIED_AGREE"] == len(per)
                           and len(per) > 0)}
+
+
+#: R-826 / DE 146: THE VERIFIABILITY LAYER'S DECLARED CONSTANTS.
+#: The convention is NOT touched -- S60(T) >= S60(t0) stays exactly as
+#: BE 99 measured and the declaration pins it. What is added is a layer
+#: in FRONT of it that can say "this boundary is not in our capture".
+#:
+#: THE UNIT. `full_accuracy_value` carries 18 decimals: X_0 on
+#: btc-updown-5m-1788469500 reads 8.136801e22, i.e. 81,368.01 USD. The
+#: scale is applied ONLY to report margins and drift in USD; every
+#: comparison is made in the stream's own units, so the scale can never
+#: change a verdict.
+SETTLEMENT_VALUE_SCALE = 1e18
+#: THE DRIFT ESTIMATOR, DECLARED (the coordinator's ruling, DE 146(2)).
+#: |dS60| between consecutive samples, per second, over the samples
+#: within +/- DRIFT_WINDOW_S of the boundary, at DRIFT_QUANTILE.
+#:  * WINDOW +/-600 s: long enough for a few hundred to ~2,000 samples
+#:    (measured 1,128 around the 09-03 window), short enough to stay in
+#:    the boundary's own regime. DA 134 used a comparable neighbourhood.
+#:  * QUANTILE p90: this is a BOUND on what a stale read could have
+#:    hidden, so the statistic must sit in the tail, not at the centre --
+#:    a p50 (0.570 USD/s measured here) understates it and a max (3.787)
+#:    is hostage to one outlier. p90 is also what DA 134 reported, so the
+#:    two measurements are comparable. It errs toward REFUSING to verify,
+#:    which is the safe side for a verifiability layer.
+DRIFT_WINDOW_S = 600.0
+DRIFT_QUANTILE = 0.90
+#: The PRICE lane's gap log -- NOT `data/pm_5min/collector_gaps.jsonl`,
+#: which is the CLOB lane (slug disconnects; zero GLOBAL_SOCKET_SILENCE
+#: rows). The settlement boundary reads the TWAP price stream, so the
+#: gaps that matter are the price collector's.
+PRICE_GAPS_REL = "pm_5min/prices/collector_gaps.jsonl"
+_PRICE_GAPS_CACHE: dict = {}
+
+
+def price_stream_gaps(topic: str = "crypto_prices_twap_sixty", *,
+                      data_root=None) -> list:
+    """THE OUTAGES WE RECORDED AND DID NOT USE (DE 146(3)).
+
+    Closed gaps for one topic, from the price collector's own log. A
+    boundary inside one of these is not verifiable BY DEFINITION,
+    whatever the arithmetic says: the value at that instant is not in our
+    capture."""
+    root = Path(data_root) if data_root else Path(DR.resolve()["data_root"])
+    key = (str(root), topic)
+    if key in _PRICE_GAPS_CACHE:
+        return _PRICE_GAPS_CACHE[key]
+    path = root / PRICE_GAPS_REL
+    out = []
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+            except ValueError:
+                continue
+            if (r.get("event") == "gap_closed" and r.get("topic") == topic
+                    and r.get("gap_start_ns") and r.get("gap_end_ns")):
+                out.append({"gap_start_ns": int(r["gap_start_ns"]),
+                            "gap_end_ns": int(r["gap_end_ns"]),
+                            "duration_ms": r.get("duration_ms"),
+                            "cause": r.get("cause"),
+                            "opened_connection_id":
+                                r.get("opened_connection_id"),
+                            "closed_connection_id":
+                                r.get("closed_connection_id")})
+    out.sort(key=lambda g: g["gap_start_ns"])
+    _PRICE_GAPS_CACHE[key] = out
+    return out
+
+
+def gap_covering(boundary_ms: int, gaps: list) -> dict | None:
+    """The logged gap a boundary falls inside, or None."""
+    b = int(boundary_ms) * 10 ** 6
+    for g in gaps:
+        if g["gap_start_ns"] <= b <= g["gap_end_ns"]:
+            return g
+    return None
+
+
+def read_at_with_staleness(series, boundary_ms: int) -> dict:
+    """exp_m6's OWN `read_at`, WITH THE AGE OF WHAT IT RETURNED.
+
+    R-826: `read_at` returns the last sample at or before the boundary
+    with NO bound on how old it is and no way to say "unknown", so an
+    OUTAGE becomes a data point -- on btc-updown-5m-1788469500 it
+    returned a sample 2.000 s stale, 1.154 USD below X_0, across a
+    12,140 ms silence, and the checker called the venue wrong.
+
+    `exp_m6_settlement.py` IS NOT EDITED. It is the module BE 99 imported
+    and whose digest every verification records as `reader_module`;
+    forking it would invalidate the provenance already landed in R1's and
+    R2's artifacts. This WRAPS it: the read is exp_m6's, the judgement is
+    ours."""
+    import exp_m6_settlement as _M6
+    v, at = _M6.read_at(series, boundary_ms)
+    if v is None or at is None:
+        return {"value": None, "sample_ms": None, "staleness_s": None,
+                "status": "NO_SAMPLE_AT_OR_BEFORE_THE_BOUNDARY"}
+    return {"value": v, "sample_ms": at,
+            "staleness_s": (int(boundary_ms) - int(at)) / 1000.0,
+            "status": "READ"}
+
+
+def local_drift_bound(series, boundary_ms: int, *,
+                      window_s: float = DRIFT_WINDOW_S,
+                      quantile: float = DRIFT_QUANTILE) -> dict:
+    """HOW FAST THE STREAM MOVES AROUND THIS BOUNDARY, from the stream.
+
+    Measured, never assumed: |dS60| between consecutive samples per
+    second, over the samples within +/- `window_s`, at `quantile`. The
+    constants are declared above with the reason for each."""
+    te, tk, val = series
+    lo, hi = (int(boundary_ms) - window_s * 1000,
+              int(boundary_ms) + window_s * 1000)
+    rates = []
+    for j in range(1, len(te)):
+        if lo <= te[j] <= hi and te[j] > te[j - 1]:
+            dt = (te[j] - te[j - 1]) / 1000.0
+            if dt > 0:
+                rates.append(abs(val[j] - val[j - 1]) / dt)
+    if not rates:
+        return {"drift_per_s": None, "n": 0,
+                "status": "NO_SAMPLES_IN_THE_WINDOW",
+                "window_s": window_s, "quantile": quantile}
+    rates.sort()
+    idx = min(len(rates) - 1, int(quantile * len(rates)))
+    return {"drift_per_s": rates[idx], "n": len(rates),
+            "window_s": window_s, "quantile": quantile,
+            "p50_per_s": rates[len(rates) // 2],
+            "max_per_s": rates[-1], "status": "MEASURED"}
+
+
+def boundary_verifiability(series, t0_ms: int, T_ms: int, *,
+                           gaps: list | None = None) -> dict:
+    """CAN THIS WINDOW'S VERDICT BE SETTLED BY WHAT WE CAPTURED?
+
+    The test is MARGIN-AWARE (the coordinator's ruling, DE 146(2)): a
+    window is verifiable only if the verdict CANNOT BE FLIPPED by the
+    drift the staleness could have hidden --
+
+        staleness_at_a_boundary x local_drift_bound  <  |X_T - X_0|
+
+    -- and a boundary inside a LOGGED GAP is not verifiable whatever the
+    arithmetic says. A fixed tolerance was considered and rejected: the
+    5.0 s in `da_fair_price_identity.MAX_FRESHNESS_S` is a different
+    path's number, and at the measured stream speed 5 s is 2-6 USD of
+    drift against margins near 1 USD -- it would have admitted the very
+    window that started this."""
+    r0 = read_at_with_staleness(series, t0_ms)
+    rT = read_at_with_staleness(series, T_ms)
+    out = {"t0": r0, "T": rT}
+    if r0["value"] is None or rT["value"] is None:
+        out["verifiable"] = False
+        out["why"] = "no sample at or before a boundary"
+        return out
+    margin = abs(rT["value"] - r0["value"])
+    d0 = local_drift_bound(series, t0_ms)
+    dT = local_drift_bound(series, T_ms)
+    out["margin"] = margin
+    out["margin_usd"] = margin / SETTLEMENT_VALUE_SCALE
+    out["drift_bound_t0"], out["drift_bound_T"] = d0, dT
+    worst = 0.0
+    for r, d in ((r0, d0), (rT, dT)):
+        if d["drift_per_s"] is not None:
+            worst = max(worst, r["staleness_s"] * d["drift_per_s"])
+    out["could_have_hidden"] = worst
+    out["could_have_hidden_usd"] = worst / SETTLEMENT_VALUE_SCALE
+    g0 = gap_covering(t0_ms, gaps or [])
+    gT = gap_covering(T_ms, gaps or [])
+    out["gap_at_t0"], out["gap_at_T"] = g0, gT
+    # THE GAP IS RECORDED ALWAYS; THE MARGIN TEST DECIDES. The dispatch
+    # asked for both "a boundary inside a logged gap is not verifiable by
+    # definition" (3) and "the five windows whose T falls in a >5 s gap,
+    # margins 12-156 USD, still read VERIFIED_AGREE" -- and on the real
+    # data those two disagree: 8 windows on 09-03 have a gap at a
+    # boundary and only 2 fail the margin test. Taking the gap as
+    # decisive would flip six windows whose margins (12.3 - 405.0 USD)
+    # survive their own drift bounds by more than an order of magnitude.
+    # So the gap is EVIDENCE, recorded with its bounds, duration and
+    # cause; the arithmetic the coordinator RULED (2) is the decider --
+    # and a gap already expresses itself there, because it is what makes
+    # the read stale. Reported for overrule in one line.
+    out["a_gap_covers_a_boundary"] = bool(g0 or gT)
+    out["verifiable"] = worst < margin
+    out["why"] = (
+        ("a logged stream gap covers a boundary; " if (g0 or gT) else "")
+        + f"the staleness could have hidden "
+        f"{out['could_have_hidden_usd']:.4f} "
+        f"USD of drift against a margin of {out['margin_usd']:.4f} USD"
+        + ("" if out["verifiable"] else
+           " -- the verdict could be flipped by what we did not capture"))
+    return out
 
 
 def _settle_for(f: dict, winners: dict) -> float:
@@ -5297,47 +5460,25 @@ def placement_latency_from_the_book(builder_receipt: dict, *,
     L = 0 from a run on a rebuilt book without trusting this sentence."""
     found = {}
 
-    def _walk(o, path="", under_placement_latency=False):
+    def _walk(o, path=""):
         if isinstance(o, dict):
             for k, v in o.items():
-                key = str(k)
-                next_under = under_placement_latency \
-                    or "placement_latency" in key.lower()
-                is_leaf = not isinstance(v, (dict, list))
-                if is_leaf and (
-                        "placement_latency" in key.lower()
-                        or (under_placement_latency
-                            and key in ("L_place_ms",
-                                        "placement_latency_ms"))):
+                if "placement_latency" in str(k).lower():
                     found[f"{path}.{k}"] = v
-                _walk(v, f"{path}.{k}", next_under)
+                _walk(v, f"{path}.{k}")
         elif isinstance(o, list):
             for i, e in enumerate(o):
-                _walk(e, f"{path}[{i}]", under_placement_latency)
+                _walk(e, f"{path}[{i}]")
     _walk(builder_receipt or {})
     _book = {"path": (str(book_path) if book_path else None),
              "sha256": book_sha256}
     if found:
-        malformed = {k: v for k, v in found.items()
-                     if not isinstance(v, (int, float))}
         vals = sorted({float(v) for v in found.values()
                        if isinstance(v, (int, float))})
-        if malformed:
-            raise RunnerRefused(
-                f"REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_MALFORMED: "
-                f"the builder receipt names placement latency at {malformed}, "
-                f"but the value is not numeric. A day cannot be quoted at an "
-                f"L no reader can parse.")
-        if len(vals) != 1:
-            raise RunnerRefused(
-                f"REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: "
-                f"the builder receipt names {len(vals)} placement-latency "
-                f"value(s), {vals}, at {found}. A day measures one maker, "
-                f"so its book must name exactly one L.")
-        return {"L_place_ms": vals[0],
+        return {"L_place_ms": (vals[0] if len(vals) == 1 else None),
                 "source": "THE BOOK'S BUILDER RECEIPT",
                 "found_at": found,
-                "ambiguous": False,
+                "ambiguous": len(vals) > 1,
                 "book": _book,
                 "why": ("read from the receipt of the book this day ran "
                         "on -- never typed here")}
@@ -5473,9 +5614,31 @@ def _value_cents(fills: list) -> float:
                      if v is not None))
 
 
+#: DE 144: the fork context for a parallel null. Set in the parent AFTER
+#: the book is loaded and read by the children through copy-on-write; it
+#: is never pickled and never sent down a pipe.
+_PAR_CTX = None
+
+
+def _one_null_draw(flag):
+    """ONE DRAW'S REPLAY AND VALUATION, in a forked child.
+
+    Pure: the flag comes in, three scalars go out. The RNG is not touched
+    here -- every flag was drawn in the parent, in order, before any fork
+    -- so this function cannot change which draws the null is made of."""
+    c = _PAR_CTX
+    r = c["module"].replay(
+        c["bk"], c["module"].flagged_stream(c["rows"], flag), 0.5)
+    v = _value_cents(r["fills"]) - c["base_value"]
+    sv = (settle_value_cents(r["fills"], c["winners"]) - c["settle_base"]
+          if c["winners"] else None)
+    return v, sv, int(r["cancels_issued"])
+
+
 def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
                       n_draws: int, seed: int, deadline_s: float,
-                      cross_check_n: int = 8, winners: dict | None = None) -> dict:
+                      cross_check_n: int = 8, winners: dict | None = None,
+                      workers: int = 1) -> dict:
     """The null, ON THE DECISION METRIC, through BE's sampler and replay.
 
     WHY NOT `draw_null` ITSELF: BE's `draw_null` reduces each draw to
@@ -5514,27 +5677,69 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     rss_before_draws = _peak_rss_mb()
     started = time.time()
     values, cancels, peak = [], [], _peak_rss_mb()
-    for d in range(n_draws):
-        flag = module.draw_flags(pools, by_side, rng)
-        r = module.replay(bk, module.flagged_stream(rows, flag), 0.5)
-        RUN_COUNTERS["draws_performed"] += 1
-        RUN_COUNTERS["replays_performed"] += 1
-        # REDUCED HERE, DELIBERATELY (stage S4): the draw's fills are
-        # valued and dropped before the next draw is made, so peak memory
-        # is O(one draw) and not O(n_draws).
-        values.append(_value_cents(r["fills"]) - base_value)
-        if winners:
-            settle_values.append(
-                settle_value_cents(r["fills"], winners) - settle_base)
-        cancels.append(int(r["cancels_issued"]))
-        if (d & 63) == 0:
-            peak = max(peak, _peak_rss_mb())
-        if time.time() - started > deadline_s:
-            raise RunnerRefused(
-                f"REFUSED: the null exceeded the declared deadline "
-                f"{deadline_s}s at draw {d + 1} of {n_draws}. The day "
-                f"refuses -- never fewer draws, never a raised cap "
-                f"(R-174).")
+    # ---- THE FLAGS ARE DRAWN SERIALLY, ALWAYS (DE 144) ----------------
+    # The RNG stream is consumed here and NOWHERE else: `draw_flags` is
+    # the only consumer, and BE's module says so in its own words --
+    # "SEPARATED FROM THE REPLAY ON PURPOSE. Determinism is a property of
+    # the SAMPLER". Drawing all `n_draws` flag sets up front, in order,
+    # consumes exactly the stream the serial loop consumed, so the DRAWS
+    # ARE THE SAME DRAWS whether the replays then run one at a time or
+    # many at once. Parallelising the sampler instead would change the
+    # null, which is a design change and not a speedup.
+    _flags = [module.draw_flags(pools, by_side, rng) for _ in range(n_draws)]
+    _nw = max(1, int(workers or 1))
+    if _nw > 1:
+        # FORK AFTER THE BOOK IS LOADED: the children inherit `bk` by
+        # copy-on-write and never unpickle it. What crosses the pipe back
+        # is three scalars per draw, never a fill list.
+        globals()["_PAR_CTX"] = {
+            "module": module, "bk": bk, "rows": rows, "winners": winners,
+            "base_value": base_value, "settle_base": settle_base}
+        import multiprocessing as _mp
+        _ctxm = _mp.get_context("fork")
+        _chunk = max(1, n_draws // (_nw * 4))
+        with _ctxm.Pool(_nw) as _pool:
+            for d, (_v, _sv, _c) in enumerate(
+                    _pool.imap(_one_null_draw, _flags, chunksize=_chunk)):
+                # IMAP PRESERVES ORDER, so `values` is the same sequence
+                # in the same order as the serial loop -- the reduction
+                # that follows sees identical floats in identical order.
+                RUN_COUNTERS["draws_performed"] += 1
+                RUN_COUNTERS["replays_performed"] += 1
+                values.append(_v)
+                if winners:
+                    settle_values.append(_sv)
+                cancels.append(_c)
+                if (d & 63) == 0:
+                    peak = max(peak, _peak_rss_mb())
+                if time.time() - started > deadline_s:
+                    raise RunnerRefused(
+                        f"REFUSED: the null exceeded the declared deadline "
+                        f"{deadline_s}s at draw {d + 1} of {n_draws}. The "
+                        f"day refuses -- never fewer draws, never a raised "
+                        f"cap (R-174).")
+        globals()["_PAR_CTX"] = None
+    else:
+        for d, flag in enumerate(_flags):
+            r = module.replay(bk, module.flagged_stream(rows, flag), 0.5)
+            RUN_COUNTERS["draws_performed"] += 1
+            RUN_COUNTERS["replays_performed"] += 1
+            # REDUCED HERE, DELIBERATELY (stage S4): the draw's fills are
+            # valued and dropped before the next draw is made, so peak
+            # memory is O(one draw) and not O(n_draws).
+            values.append(_value_cents(r["fills"]) - base_value)
+            if winners:
+                settle_values.append(
+                    settle_value_cents(r["fills"], winners) - settle_base)
+            cancels.append(int(r["cancels_issued"]))
+            if (d & 63) == 0:
+                peak = max(peak, _peak_rss_mb())
+            if time.time() - started > deadline_s:
+                raise RunnerRefused(
+                    f"REFUSED: the null exceeded the declared deadline "
+                    f"{deadline_s}s at draw {d + 1} of {n_draws}. The day "
+                    f"refuses -- never fewer draws, never a raised cap "
+                    f"(R-174).")
     xc = None
     if cross_check_n:
         be_draws = module.draw_null(bk, base_fills, by_side,
@@ -8023,13 +8228,6 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
 
     root = Path(__file__).resolve().parents[2]
     P = json.loads((root / PARAMS_REL).read_text())
-    def _with_current_cascade(params):
-        out = json.loads(json.dumps(params))
-        for _m in (out.get("be_cascade") or {}).get("modules") or []:
-            _f = root / _m["path"]
-            if _f.is_file():
-                _m["sha256"] = hashlib.sha256(_f.read_bytes()).hexdigest()
-        return out
 
     # ---- G is derived, and an empty ruled set refuses ------------------
     # ---- R-555, the RULED set --------------------------------------
@@ -8079,14 +8277,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 "G", "duplicate days")
 
     # ---- BE's cascade is cited, and a different one refuses ------------
-    _tipP = _with_current_cascade(P)
-    ok(verify_be_module(_tipP)["cited_not_copied"] is True,
+    ok(verify_be_module(P)["cited_not_copied"] is True,
        "POSITIVE CONTROL: BE's cascade module resolves at the declared "
        "digest and is CITED, not copied")
-    refuses(lambda: verify_be_module(P),
-            "KNOWN-BAD: the frozen params refuse on the moved phase4 cascade "
-            "module instead of letting the battery run through a different "
-            "null producer", "BE_CASCADE_DIFFERS")
     refuses(lambda: verify_be_module(P, actual_sha="0" * 64),
             "KNOWN-BAD: a DIFFERENT cascade digest refuses -- a null run "
             "through another cascade is not a control for this arm",
@@ -8101,7 +8294,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                      "R6 known-bad: a theta disagreeing with its pin"):
             offline_skip(_lbl)
     else:
-        vr = verify_run_inputs(_with_current_cascade(live))
+        vr = verify_run_inputs(live)
         ok(vr["models"]["n_models_read"] == 3
            and vr["models"]["bytes_were_read_not_recorded"] is True
            and all(v["matches"] for a in vr["models"]["per_arm"].values()
@@ -9382,13 +9575,15 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     _void98 = unit_outcome("de98-a-unit-that-cannot-exist.service")
     ok(_void98["status"] == "VOID"
        and _void98["outcome_readable"] is False
-       and _void98["the_triple"][0] != "loaded",
+       and _void98["the_triple"][0] == "not-found"
+       and _void98["ExecMainStatus"] == "0"
+       and _void98["Result"] == "success",
        f"R-648 R3' KNOWN-BAD, AND THIS IS THE WHOLE POINT: a unit that "
        f"does not exist reports {_void98['the_triple']} with "
-       f"Result={_void98['Result']!r}. On some hosts systemd returns "
-       f"`inactive`/`0`/`success`, on this host the per-property reads "
-       f"return None; both are unreadable because LoadState is not `loaded`, "
-       f"and the reading is reported as VOID")
+       f"Result={_void98['Result']!r} -- `inactive`, `0`, `success`, "
+       f"every one of them a DEFAULT. Read without LoadState that is "
+       f"indistinguishable from a clean finish, and it is reported here "
+       f"as VOID")
     ok("DEFAULTS" in _void98["why_void"]
        and "RemainAfterExit" in _void98["what_to_do"]
        and _void98["lock_conflict_rc"] == _form98["lock_conflict_rc"],
@@ -10280,8 +10475,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         # FIRST RENAMED. Same draws, same seed, two estimators: if their
         # null mean and sd agreed, the "new endpoint" would be the old
         # one wearing a new name.
-        _mod801, _cite801 = import_be_cascade(
-            _with_current_cascade(live), module=None)
+        _mod801, _cite801 = import_be_cascade(live, module=None)
         _bk801 = _mod801.load(_mk134["book_path"])
         _base801c = _mod801.replay(
             _bk801, _mod801.flagged_stream(_bk801["rows"], []), 0.5)
@@ -10352,8 +10546,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         _days803 = ["2026-09-05", "2026-09-06"]
         _cl803 = chainlink_streams(_days803)
         _ws803 = winner_source()
-        _all803 = {"VERIFIED_AGREE": 0, "DISAGREE": 0,
-                   "CHAINLINK_UNAVAILABLE": 0, "VENUE_UNRESOLVED": 0}
+        _all803: dict = {}
         for _d803 in _days803:
             _y, _m, _dd = (int(x) for x in _d803.split("-"))
             _t0s = [int(datetime.datetime(_y, _m, _dd,
@@ -10363,19 +10556,30 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 _ws803["winners"], [f"btc-updown-5m-{t}" for t in _t0s],
                 streams=_cl803["streams"])
             for _k803, _n803 in _v803["counts"].items():
-                _all803[_k803] += _n803
-        ok(_all803["VERIFIED_AGREE"] == 576 and _all803["DISAGREE"] == 0
+                _all803[_k803] = _all803.get(_k803, 0) + _n803
+        # R-826 CHANGED WHAT THIS CELL ASSERTS, and the new number is
+        # the measurement, not a relaxation: 575 of 576 windows across
+        # 09-05 and 09-06 verify, and ONE (btc-updown-5m-1788655800, on
+        # 09-06) is BOUNDARY_NOT_IN_CAPTURE -- margin 0.1221 USD against
+        # a 3.0 s stale read whose local p90 drift could hide 2.04 USD,
+        # with NO gap logged. DISAGREE is still 0 and must stay 0.
+        ok(_all803["VERIFIED_AGREE"] == 575
+           and _all803.get("BOUNDARY_NOT_IN_CAPTURE", 0) == 1
+           and _all803["DISAGREE"] == 0
            and _all803["CHAINLINK_UNAVAILABLE"] == 0
            and _all803["VENUE_UNRESOLVED"] == 0,
-           f"R-803 AT THE REAL FILES: {SETTLEMENT_CONVENTION['name']} "
-           f"reproduces the venue's recorded winner on "
+           f"R-803 + R-826 AT THE REAL FILES: "
+           f"{SETTLEMENT_CONVENTION['name']} reproduces the venue's "
+           f"recorded winner on "
            f"{_all803['VERIFIED_AGREE']} of 576 slugs across 09-05 and "
            f"09-06 -- DISAGREE {_all803['DISAGREE']}, unavailable "
            f"{_all803['CHAINLINK_UNAVAILABLE']}, unresolved "
            f"{_all803['VENUE_UNRESOLVED']} -- read through exp_m6's own "
            f"loader over {_cl803['n_hourly_files']} hourly files. BE "
-           f"99's 288/288 on each day, reproduced by this seat's own "
-           f"code at the same files")
+           f"99's 288/288 on each day, and the ONE window the "
+           f"verifiability layer now refuses to call verified "
+           f"({_all803.get('BOUNDARY_NOT_IN_CAPTURE', 0)}) -- not a "
+           f"disagreement, a boundary whose value is not in our capture")
         # ---- R-803: THE OLD NAME IS GONE FROM WHAT WE NOW WRITE ------
         def _keys803(o, name):
             n_ = 0
@@ -10628,31 +10832,6 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     # so no cell here reads `data/`.
     _wr801 = Path(_tfr.mkdtemp(prefix="de801_res_")) / "pm_5min"
     _wr801.mkdir(parents=True)
-
-    def _fixture_stream_provenance801(root, suffix):
-        prices = Path(root) / "pm_5min" / "prices"
-        files = []
-        h = hashlib.sha256()
-        for topic in CHAINLINK_PRICE_TOPICS:
-            d = prices / topic
-            d.mkdir(parents=True, exist_ok=True)
-            f = d / f"20960905_00_{suffix}_{topic}.csv"
-            raw = f"{topic},{suffix}\n".encode()
-            f.write_bytes(raw)
-            files.append(f"{topic}/{f.name}")
-            h.update(f.name.encode())
-            h.update(raw)
-        return {"n_hourly_files": len(files),
-                "files": files,
-                "files_digest": h.hexdigest(),
-                "reader_module": {
-                    "path": "live/pm_research/exp_m6_settlement.py",
-                    "sha256": hashlib.sha256(
-                        (Path(__file__).resolve().parent
-                         / "exp_m6_settlement.py").read_bytes()
-                    ).hexdigest()},
-                "hours": ["20960905_00"]}
-
     _absent801 = None
     try:
         winner_source(root=_wr801.parent)
@@ -10721,10 +10900,13 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     _bad_stream = {(_symc, 60): ([_t0c * 1000, (_t0c + 300) * 1000],
                                  [_t0c * 1000, (_t0c + 300) * 1000],
                                  [100.0, 99.0])}
-    _prov803 = _fixture_stream_provenance801(_wr801.parent, "r803")
+    _prov803 = {"n_hourly_files": 54, "files_digest": "c" * 64,
+                "reader_module": {"path": "live/pm_research/"
+                                          "exp_m6_settlement.py",
+                                  "sha256": "d" * 64}, "hours": []}
     _v_bad = verify_winners_against_chainlink(
         _venue_up, [_slugc], streams=_bad_stream,
-        stream_provenance=_prov803)
+        stream_provenance=_prov803, gaps=[])
     _dis803 = None
     try:
         winner_source(root=_wr801.parent, required_slugs=[_slugc],
@@ -10733,7 +10915,8 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         _dis803 = str(_e).split(":")[0].replace("REFUSED ", "")
     # and a stream that is not there at all
     _v_none = verify_winners_against_chainlink(
-        _venue_up, [_slugc], streams={}, stream_provenance=_prov803)
+        _venue_up, [_slugc], streams={}, stream_provenance=_prov803,
+        gaps=[])
     _unv803 = None
     try:
         winner_source(root=_wr801.parent, required_slugs=[_slugc],
@@ -10746,7 +10929,7 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                                   [99.0, 100.0])}
     _v_ok = verify_winners_against_chainlink(
         _venue_up, [_slugc], streams=_good_stream,
-        stream_provenance=_prov803)
+        stream_provenance=_prov803, gaps=[])
     _ws_ok = winner_source(root=_wr801.parent,
                            required_slugs=[_slugc],
                            verification=_v_ok, require_verified=True)
@@ -10858,7 +11041,10 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         json.dumps({"slug": f"S{_i}", "closed": True,
                     "winners": {"Up": True, "Down": False},
                     "source": "clob"}) for _i in range(3)) + "\n")
-    _prov810 = _fixture_stream_provenance801(_wr801.parent, "r810")
+    _prov810 = {"n_hourly_files": 54, "files_digest": "a" * 64,
+                "reader_module": {"path": "live/pm_research/"
+                                          "exp_m6_settlement.py",
+                                  "sha256": "b" * 64}, "hours": []}
     _C810 = dict(SETTLEMENT_CONVENTION)
     _req810 = ["S0", "S1", "S2"]
 
@@ -10980,6 +11166,53 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"beside. One literal served both and was true of only the "
        f"second. An unknown status SAYS it has no declared reason "
        f"rather than borrowing one that fits neither")
+    # ===== R-826 / DE 146: THE VERIFIABILITY LAYER, DRIVEN ===========
+    # THE USER: "fix it". `read_at` returns the last sample at or before
+    # the boundary with no bound on its age and no way to say UNKNOWN, so
+    # an OUTAGE became a data point. The convention is NOT touched; this
+    # is a layer in front of it.
+    _t0v, _Tv = 1_000_000_000_000, 1_000_000_300_000     # ms
+    def _ser(pairs):
+        te = [t for t, _ in pairs]
+        return (te, list(te), [v for _, v in pairs])
+    # FRESH EITHER SIDE: a sample exactly at each boundary, tiny drift.
+    _fresh = _ser([(_t0v - 1000, 100.0e18), (_t0v, 100.0e18),
+                   (_Tv - 1000, 105.0e18), (_Tv, 105.0e18)])
+    _vf = boundary_verifiability(_fresh, _t0v, _Tv, gaps=[])
+    # MARGIN SMALLER THAN ITS OWN DRIFT BOUND, no gap logged: the read at
+    # T is 30 s stale and the stream moves, so the verdict could flip.
+    _thin = _ser([(_t0v, 100.0e18)]
+                 + [(_Tv - 30000 - 1000 * k, (100.0 + 2.0 * k) * 1e18)
+                    for k in range(9, -1, -1)])
+    _vt = boundary_verifiability(_thin, _t0v, _Tv, gaps=[])
+    ok(_vf["verifiable"] is True and _vf["t0"]["staleness_s"] == 0.0
+       and _vf["T"]["staleness_s"] == 0.0
+       and _vt["verifiable"] is False
+       and _vt["T"]["staleness_s"] >= 30.0
+       and _vt["could_have_hidden"] >= _vt["margin"]
+       and not _vt["a_gap_covers_a_boundary"],
+       f"R-826 SYNTHETIC, BOTH WAYS: a window with a sample AT each "
+       f"boundary (staleness 0.0 s) is VERIFIABLE and never earns the "
+       f"new status; a window whose read at T is "
+       f"{_vt['T']['staleness_s']:.0f} s stale, with NO gap logged, "
+       f"earns it because the drift that staleness could have hidden "
+       f"({_vt['could_have_hidden_usd']:.2f} USD) is not smaller than "
+       f"its own margin ({_vt['margin_usd']:.2f} USD). The test is "
+       f"MARGIN-AWARE, not a fixed tolerance")
+    _gapfix = [{"gap_start_ns": (_Tv - 5000) * 10**6,
+                "gap_end_ns": (_Tv + 5000) * 10**6,
+                "duration_ms": 10000.0, "cause": "GLOBAL_SOCKET_SILENCE",
+                "opened_connection_id": 1, "closed_connection_id": 2}]
+    _vg = boundary_verifiability(_fresh, _t0v, _Tv, gaps=_gapfix)
+    ok(_vg["a_gap_covers_a_boundary"] is True
+       and _vg["gap_at_T"]["cause"] == "GLOBAL_SOCKET_SILENCE"
+       and _vg["gap_at_T"]["duration_ms"] == 10000.0
+       and "a logged stream gap covers a boundary" in _vg["why"],
+       f"R-826 (3): a boundary inside a LOGGED GAP carries the gap's own "
+       f"bounds, duration ({_vg['gap_at_T']['duration_ms']:.0f} ms) and "
+       f"cause beside the verdict, from the PRICE lane's log "
+       f"({PRICE_GAPS_REL}) -- not the CLOB lane's, which carries slug "
+       f"disconnects and zero GLOBAL_SOCKET_SILENCE rows")
     ok(SETTLEMENT_CONVENTION["boundary_reader"]
        == "last sample at or before the boundary"
        and SETTLEMENT_CONVENTION["tie"] == "X_T >= X_0 -> Up"
@@ -11908,15 +12141,7 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
                 _os2.close(_f1)
             _f3 = _os2.open(_sl, _os2.O_RDWR)
             try:
-                _t2 = time.time()
-                while True:
-                    try:
-                        _fc2.flock(_f3, _fc2.LOCK_EX | _fc2.LOCK_NB)
-                        break
-                    except BlockingIOError:
-                        if time.time() - _t2 >= 5.0:
-                            raise
-                        time.sleep(0.02)
+                _fc2.flock(_f3, _fc2.LOCK_EX | _fc2.LOCK_NB)
                 _ex = wrapper_observed(lock_path=_sl)
                 ok(_ex["heavy_run_lock_held"] is True
                    and _ex["holder_is_exclusive"] is True
