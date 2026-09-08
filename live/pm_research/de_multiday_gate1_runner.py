@@ -34,6 +34,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import math
 import random
 import re
 import statistics
@@ -51,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 401
+EXPECTED_CHECKS = 402
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -5527,62 +5528,55 @@ PLACEMENT_LATENCY_ABSENT = (
 
 
 def placement_latency_leaves(doc) -> dict:
-    """Every `L_place_ms` in a document, by its full path.
-
-    Separate from the assertion so a caller can SEE the sites, and so the
-    known-bad can plant a disagreement at a site it names."""
+    """Return every scalar named `L_place_ms`, keyed by its full path."""
     found = {}
 
-    def _walk(o, path=""):
-        if isinstance(o, dict):
-            for k, v in o.items():
-                if k == "L_place_ms" and not isinstance(v, (dict, list)):
-                    found[f"{path}.{k}"] = v
-                _walk(v, f"{path}.{k}")
-        elif isinstance(o, list):
-            for i, e in enumerate(o):
-                _walk(e, f"{path}[{i}]")
+    def _walk(value, path=""):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                child_path = f"{path}.{key}" if path else str(key)
+                if key == "L_place_ms" and not isinstance(child, (dict, list)):
+                    found[child_path] = child
+                _walk(child, child_path)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                _walk(child, f"{path}[{index}]")
+
     _walk(doc)
     return found
 
 
 def assert_one_placement_latency(doc) -> dict:
-    """A DOCUMENT NAMES ONE MAKER (DE 151, the USER's first finding).
-
-    An artifact carried `L_place_ms` at two sites -- the top level, read
-    from the parsed builder receipt, and nested under `day_run`, computed
-    from the receipt's PATH by mistake -- and they disagreed: 250.0
-    against 0.0 on every L = 250 run. Neither number entered a
-    computation, so no result moved; but a document that states two
-    makers cannot be quoted at either, and no checker anywhere would have
-    said so. This runs at the EMIT, before the bytes are written.
-
-    ABSENCE REFUSES TOO. An empty walk is not agreement -- it is a
-    document that never said what maker it measured, and reading it as a
-    pass is the shape rule 11 names."""
+    """Refuse an artifact that names no latency or more than one latency."""
     found = placement_latency_leaves(doc)
     if not found:
         raise RunnerRefused(
             f"REFUSED {PLACEMENT_LATENCY_ABSENT}: no `L_place_ms` appears "
-            f"anywhere in this document. Every day is quoted with its L "
-            f"beside it (R-811); a document that names none cannot be.")
-    malformed = {k: v for k, v in found.items()
-                 if not isinstance(v, (int, float))}
-    vals = sorted({float(v) for v in found.values()
-                   if isinstance(v, (int, float))})
-    if malformed or len(vals) != 1:
+            "in this document. A result that does not name its maker "
+            "latency cannot be quoted.")
+    malformed = {
+        path: value for path, value in found.items()
+        if isinstance(value, bool)
+        or not isinstance(value, (int, float))
+        or not math.isfinite(float(value))
+        or float(value) < 0.0
+    }
+    values = sorted({
+        float(value) for path, value in found.items() if path not in malformed
+    })
+    if malformed or len(values) != 1:
         raise RunnerRefused(
             f"REFUSED {PLACEMENT_LATENCY_DISAGREES}: this document names "
-            f"{len(vals)} placement-latency value(s) {vals}"
-            + (f" plus non-numeric {malformed}" if malformed else "")
-            + f" across {len(found)} site(s): {found}. One run measured "
-              f"one maker. A reader that resolves the first site it finds "
-              f"would quote a day at a latency the run did not use.")
-    return {"L_place_ms": vals[0], "agree": True,
-            "n_sites": len(found), "sites": found,
-            "why": ("asserted over the FINISHED document at the emit, so "
-                    "the two sites cannot drift apart unnoticed the way "
-                    "they did before DE 151")}
+            f"values {values} across {len(found)} site(s): {found}"
+            + (f"; malformed values: {malformed}" if malformed else "")
+            + ". One run measures one maker latency; readers must not be "
+              "able to select whichever copy they encounter first.")
+    return {
+        "status": "PLACEMENT_LATENCY_AGREES",
+        "value_ms": values[0],
+        "n_sites_checked": len(found),
+        "sites_checked": sorted(found),
+    }
 
 
 def placement_latency_from_the_book(builder_receipt: dict, *,
@@ -5623,31 +5617,14 @@ def placement_latency_from_the_book(builder_receipt: dict, *,
         elif isinstance(o, list):
             for i, e in enumerate(o):
                 _walk(e, f"{path}[{i}]", under_placement_latency)
-    # DE 151, THE USER'S FIRST FINDING, AND THE DEFECT IT NAMES.
-    # `run_day` passed the receipt's PATH here -- `builder_receipt_for()`
-    # returns a Path -- and a Path is neither a dict nor a list, so the
-    # walk below visited NOTHING, `found` stayed empty, and this function
-    # returned its documented L = 0 default with the source string "THE
-    # BOOK'S BUILDER RECEIPT DECLARES NONE". A legitimate-looking answer
-    # for an input it could not read: every L = 250 artifact carried 0.0
-    # in its NESTED block while the top-level block, which was handed the
-    # PARSED receipt, read 250.0 from the same file. No number moved --
-    # the latency is applied by BE at BOOK BUILD time and this value is
-    # computed at EMIT, after S5 -- but the document contradicted itself.
-    # AN INPUT THIS FUNCTION CANNOT READ NOW REFUSES BY NAME rather than
-    # answering from the default (rule 16: a control that cannot fail).
     if not isinstance(builder_receipt, dict):
         raise RunnerRefused(
-            f"REFUSED SETTLEMENT_BOOK_RECEIPT_NOT_PARSED: this function "
-            f"reads the builder receipt's OWN KEYS and was handed a "
-            f"{type(builder_receipt).__name__}"
-            + (f" ({builder_receipt})"
-               if isinstance(builder_receipt, (str, Path)) else "")
-            + ". Parse the receipt and pass the dict. A non-dict walks to "
-              "nothing and would return L = 0 'DECLARES NONE' for a book "
-              "whose receipt declares 250 -- which is exactly what "
-              "happened to every nested placement_latency block written "
-              "before DE 151.")
+            "REFUSED SETTLEMENT_BOOK_RECEIPT_NOT_PARSED: placement latency "
+            "is read from the builder receipt's keys, but the caller passed "
+            f"{type(builder_receipt).__name__}. Parse the receipt and pass "
+            "the resulting object; treating an unreadable input as an empty "
+            "receipt previously converted every 250 ms run to a nested "
+            "0 ms label.")
     _walk(builder_receipt)
     _book = {"path": (str(book_path) if book_path else None),
              "sha256": book_sha256}
@@ -7890,13 +7867,6 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
-    # DE 151: THE PARSED RECEIPT, not its Path. `receipt` is the path
-    # `builder_receipt_for()` resolved and `verify_book_against_builder_
-    # receipt()` already verified the book's digest against -- the same
-    # file the emitter reads, so both sites compute this value from one
-    # source. That they AGREE is not left to hope: the emitter asserts
-    # every `L_place_ms` in the finished document is one value
-    # (`assert_one_placement_latency`) and refuses by name otherwise.
     _plat = placement_latency_from_the_book(
         json.loads(Path(receipt).read_text()),
         book_path=book_path, book_sha256=book_sha,
@@ -11365,107 +11335,87 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"L values give different FILL COUNTS** -- no code path rebuilds a "
        f"book at L != 0, which is precisely BE 101/102's item; this cell "
        f"drives the receipt half, which is mine")
-    # ===== DE 151, THE USER: ONE DOCUMENT, ONE MAKER ==================
-    # (a) THE KNOWN-BAD IS THE DEFECT ITSELF: the receipt's PATH, which
-    # is what `run_day` passed until this round. Pre-fix it returned
-    # L = 0.0 "DECLARES NONE"; it must now REFUSE BY NAME. Driven on a
-    # REAL builder receipt written by BE, not on a fixture -- the whole
-    # point is that the file DID declare 250 and the reader could not see
-    # it. Skipped by name (never silently) if the book is not on disk.
-    _rpath151 = (Path(DR.resolve()["data_root"]) / "pm_5min/derived"
-                 / "be_daybook_receipt_20260904_btc__L250ms.json")
+    _path_refusal = None
+    try:
+        placement_latency_from_the_book(
+            Path("/tmp/receipt-declaring-250.json"), book_path="/x/book.pkl")
+    except RunnerRefused as _e:
+        _path_refusal = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_r250_811["L_place_ms"] == 250.0
+       and _path_refusal == "SETTLEMENT_BOOK_RECEIPT_NOT_PARSED",
+       "DE 151 known-bad: a parsed receipt declaring 250 ms reads 250, "
+       "while passing the receipt Path now refuses by name instead of "
+       "silently walking zero keys and returning the 0 ms default")
+
+    _consistent = {
+        "placement_latency": {"L_place_ms": 250.0},
+        "day_run": {"placement_latency": {"L_place_ms": 250}},
+    }
+    _consistency = assert_one_placement_latency(_consistent)
+    _bad_latency = json.loads(json.dumps(_consistent))
+    _bad_latency["day_run"]["placement_latency"]["L_place_ms"] = 0.0
+    _latency_refusals = []
+    for candidate in (_bad_latency, {}, {"L_place_ms": True},
+                      {"L_place_ms": float("nan")}):
+        try:
+            assert_one_placement_latency(candidate)
+        except RunnerRefused as _e:
+            _latency_refusals.append(
+                str(_e).split(":")[0].replace("REFUSED ", ""))
+    ok(_consistency["value_ms"] == 250.0
+       and _consistency["n_sites_checked"] == 2
+       and _latency_refusals == [PLACEMENT_LATENCY_DISAGREES,
+                                 PLACEMENT_LATENCY_ABSENT,
+                                 PLACEMENT_LATENCY_DISAGREES,
+                                 PLACEMENT_LATENCY_DISAGREES],
+       "DE 151 document guard: equal 250 ms copies pass; a planted 0 ms "
+       "copy, absence, boolean and NaN all refuse by explicit names")
+
+    # ---- DE 152: THE KNOWN-BAD, DRIVEN ON BE'S REAL 09-04 L=250 RECEIPT
+    # The cell above drives the type refusal on a Path that does not
+    # exist, which proves the TYPE check. This one proves the PROPERTY the
+    # defect actually had: a real builder receipt that DOES declare 250 ms
+    # reads 250.0 when parsed and 0.0 "DECLARES NONE" when its Path is
+    # handed over -- so the silent default was not a hypothetical, it was
+    # what every L = 250 artifact's nested block recorded. Verified at the
+    # artifact a claim names (rule 16), not at a fixture written by the
+    # same hand as the checker. Skipped BY NAME when the receipt is not on
+    # disk, and skipped as an `offline` cell because it READS `data/`.
+    _rp152 = (Path(DR.resolve()["data_root"]) / "pm_5min/derived"
+              / "be_daybook_receipt_20260904_btc__L250ms.json")
     if offline:
-        offline_skip("DE 151 (a) the known-bad on BE's real 09-04 L=250 "
+        offline_skip("DE 152 the known-bad on BE's real 09-04 L=250 "
                      "builder receipt (it READS `data/`)")
-    elif _rpath151.is_file():
-        _rec151 = json.loads(_rpath151.read_text())
-        _asdict151 = placement_latency_from_the_book(
-            _rec151, book_path="/x/b.pkl")
-        _refused151 = None
-        try:
-            placement_latency_from_the_book(_rpath151, book_path="/x/b.pkl")
-        except RunnerRefused as _e:
-            _refused151 = str(_e).split(":")[0].replace("REFUSED ", "")
-        _refused151s = None
-        try:
-            placement_latency_from_the_book(str(_rpath151),
-                                            book_path="/x/b.pkl")
-        except RunnerRefused as _e:
-            _refused151s = str(_e).split(":")[0].replace("REFUSED ", "")
-        ok(_asdict151["L_place_ms"] == 250.0
-           and _asdict151["source"] == "THE BOOK'S BUILDER RECEIPT"
-           and _refused151 == "SETTLEMENT_BOOK_RECEIPT_NOT_PARSED"
-           and _refused151s == "SETTLEMENT_BOOK_RECEIPT_NOT_PARSED",
-           f"DE 151 KNOWN-BAD, ON BE'S REAL 09-04 L=250 RECEIPT: the "
-           f"PARSED receipt reads {_asdict151['L_place_ms']} from "
-           f"{list(_asdict151['found_at'])}, and handing the same file's "
-           f"PATH (or its string) -- which is what `run_day` did until "
-           f"this round -- now REFUSES `{_refused151}` instead of "
-           f"answering 0.0 'DECLARES NONE' from the default. That silent "
-           f"default is why every L = 250 artifact's NESTED block read "
-           f"0.0 while its top level read 250.0")
+    elif _rp152.is_file():
+        _parsed152 = placement_latency_from_the_book(
+            json.loads(_rp152.read_text()), book_path="/x/b.pkl")
+        _byname152 = []
+        for _arg in (_rp152, str(_rp152)):
+            try:
+                placement_latency_from_the_book(_arg, book_path="/x/b.pkl")
+                _byname152.append("ADMITTED")
+            except RunnerRefused as _e:
+                _byname152.append(
+                    str(_e).split(":")[0].replace("REFUSED ", ""))
+        ok(_parsed152["L_place_ms"] == 250.0
+           and _parsed152["source"] == "THE BOOK'S BUILDER RECEIPT"
+           and _byname152 == ["SETTLEMENT_BOOK_RECEIPT_NOT_PARSED"] * 2,
+           f"DE 152 KNOWN-BAD ON THE REAL RECEIPT: BE's own 09-04 L=250 "
+           f"builder receipt PARSES to {_parsed152['L_place_ms']} at "
+           f"{list(_parsed152['found_at'])}, and handing the SAME file as a "
+           f"Path or a str refuses {_byname152[0]} both ways. Before DE 151 "
+           f"that call answered 0.0 'DECLARES NONE' from the default, which "
+           f"is why the nested block of every 250 ms artifact read 0.0")
     else:
-        # NOT an offline skip: the file is genuinely absent, which is a
-        # DIFFERENT fact from "this cell reads data/ and we are offline".
-        # Recorded with its own reason so the two never merge.
-        offline_skip("DE 151 (a) the known-bad on BE's real 09-04 L=250 "
+        offline_skip("DE 152 the known-bad on BE's real 09-04 L=250 "
                      "builder receipt",
-                     why=("the receipt is not on disk at "
-                          + str(_rpath151) + " -- the cell is absent for "
-                          "want of its input, NOT skipped for being "
-                          "online/offline"))
+                     why=("the receipt is not on disk at " + str(_rp152)
+                          + " -- absent for want of its input, NOT skipped "
+                            "for being online/offline"))
 
-    # (b) THE DOCUMENT-LEVEL ASSERTION, BOTH DIRECTIONS. A document whose
-    # sites AGREE passes and reports its denominator; one where a site is
-    # planted with another value REFUSES BY NAME; and a document with NO
-    # site refuses too, because an empty walk is not agreement.
-    _doc_ok151 = {"placement_latency": {"L_place_ms": 250.0},
-                  "day_run": {"placement_latency": {"L_place_ms": 250.0},
-                              "per_day": [{"plat": {"L_place_ms": 250.0}}]}}
-    _one151 = assert_one_placement_latency(_doc_ok151)
-    _doc_bad151 = json.loads(json.dumps(_doc_ok151))
-    _doc_bad151["day_run"]["placement_latency"]["L_place_ms"] = 0.0
-    _dis151 = None
-    try:
-        assert_one_placement_latency(_doc_bad151)
-    except RunnerRefused as _e:
-        _dis151 = str(_e).split(":")[0].replace("REFUSED ", "")
-    _abs151 = None
-    try:
-        assert_one_placement_latency({"day_run": {"status": "OK"}})
-    except RunnerRefused as _e:
-        _abs151 = str(_e).split(":")[0].replace("REFUSED ", "")
-    _mal151 = None
-    try:
-        assert_one_placement_latency({"placement_latency":
-                                      {"L_place_ms": "250"}})
-    except RunnerRefused as _e:
-        _mal151 = str(_e).split(":")[0].replace("REFUSED ", "")
-    ok(_one151["agree"] is True and _one151["L_place_ms"] == 250.0
-       and _one151["n_sites"] == 3
-       and _dis151 == PLACEMENT_LATENCY_DISAGREES
-       and _abs151 == PLACEMENT_LATENCY_ABSENT
-       and _mal151 == PLACEMENT_LATENCY_DISAGREES,
-       f"DE 151 THE DOCUMENT ASSERTION, BOTH DIRECTIONS: a document whose "
-       f"{_one151['n_sites']} `L_place_ms` sites all read "
-       f"{_one151['L_place_ms']} PASSES and reports its own denominator; "
-       f"planting 0.0 at ONE nested site -- the exact shape of the landed "
-       f"artifacts -- REFUSES `{_dis151}`; a document with NO site refuses "
-       f"`{_abs151}` rather than reading an empty walk as agreement; and a "
-       f"non-numeric L refuses `{_mal151}`")
-
-    # (c) THE TWO MODULES' NO-NULL STATUS IS ONE STRING. The ledger names
-    # it too, and a status compared across two modules is a literal that
-    # must track a moving thing (R-247's shape).
     import de_decision_ledger as _LED151
-    ok(_LED151.NULL_NOT_DRAWN_STATUS == NULL_NOT_DRAWN_STATUS
-       == "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
-       f"DE 151: the runner and `de_decision_ledger` name the no-null "
-       f"status with ONE string ({NULL_NOT_DRAWN_STATUS}) -- asserted "
-       f"across the module boundary, because DA's reader resolves it by "
-       f"name and two modules drifting apart on it would be invisible to "
-       f"both batteries")
-
+    ok(_LED151.NULL_NOT_DRAWN_STATUS == NULL_NOT_DRAWN_STATUS,
+       "DE 151: runner and ledger reader use the same named no-null status")
     # ===== R-810, THE USER's OWN REPRODUCTION, DRIVEN =================
     # The USER: `winner_source(..., require_verified=True)` with
     # `all_agree=True`, an EMPTY `per_slug` and EMPTY `counts` returned
@@ -14616,6 +14566,8 @@ def _main_day(a) -> int:
     payload["name_stamp"] = assert_name_stamp_is_the_clock(
         out_path, payload["as_of"])
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    payload["placement_latency_consistency"] = (
+        assert_one_placement_latency(payload))
     out_path.write_text(json.dumps(payload, indent=2, sort_keys=True,
                                    default=str) + "\n")
     # THE RECEIPT IS READ BACK FROM DISK AND CENSUSED BEFORE IT IS CALLED
@@ -14625,6 +14577,11 @@ def _main_day(a) -> int:
     # cannot encode -- and the claim on the artifact is about the
     # artifact.
     _back = json.loads(out_path.read_text())
+    try:
+        assert_one_placement_latency(_back)
+    except RunnerRefused:
+        out_path.unlink(missing_ok=True)
+        raise
     _post = _economic_keys_in(_back)
     # NOT WRITTEN INTO `payload`: the receipt is already on disk and the
     # census is an act ON THOSE BYTES. Assigning it here looked like a

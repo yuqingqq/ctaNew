@@ -65,7 +65,7 @@ armed independently.
 |---|---|
 | `/home/yuqing/ctaNew` | the SHARED tree. Landings only: `add -f` + `commit -- <paths>` + `push`. Never `checkout`, `reset`, `stash`, `clean`, `rebase` here. |
 | `/home/yuqing/ctaNew-wt-de` | **THE RUN WORKTREE. FROZEN.** Runs execute from it and its HEAD does not move until the coordinator's GO names the refresh. As of this writing it is at `5020f96` — the bytes REVIEW 103 cleared, which GO #8 ran. |
-| `/home/yuqing/ctaNew-wt-de2` | the working tree: edits, batteries, landings — **AND the tree the POINT-ESTIMATE runs execute from.** Refresh it to the tip BEFORE editing. |
+| `/home/yuqing/ctaNew-wt-de2` | the working tree: edits, batteries, landings, and the first point-estimate runs. A result run here requires a clean committed HEAD and freezes the worktree for its duration, exactly like wt-de. Refresh it to the tip BEFORE editing. |
 | `/home/yuqing/ctaNew-wt-e3` | the composition worktree: build and push composition heads here. |
 | `/home/yuqing/ctaNew-wt-rr` | the re-run worktree, created at a composition head so wt-de can stay frozen for a different GO. |
 
@@ -84,16 +84,19 @@ armed independently.
   every point-estimate run's `launch_form_at_runtime.cgroup_leaf` is `dePE…` and
   its `before_work.residency` paths are under `/home/yuqing/ctaNew-wt-de2`. That
   path does not trip `BE_CASCADE_DIFFERS` because its `be_module_citation.scope`
-  is **THE ENTRY POINT ONLY** — no `be_cascade` in the params it resolves. wt-de
-  stays frozen for the FULL day runs; wt-de2 carries the fast path.
+  is **THE ENTRY POINT ONLY** — no `be_cascade` in the params it resolves.
 * **AND A SECOND CORRECTION, to §3: DE 131's temporary phase4 copy is for the DAY
   PATH, never the battery.** Pinning phase4 to v19's `ee4034c1…` in wt-de2 makes
   the battery FAIL at the cascade known-bad — `refuses(lambda: verify_be_module(P),
   … "BE_CASCADE_DIFFERS")` needs the module to be OFF the pin, and the positive
   control beside it uses `_with_current_cascade(P)`, which re-reads the digest from
   disk and passes either way. **The battery is green in wt-de2's NORMAL state**
-  (phase4 at `52e76689…`, 401 checks). Copy the pinned bytes in only to drive
-  `--synthetic-day` or a real day, and restore them after.
+  (phase4 at `52e76689…`). Copy the pinned bytes in only to drive `--synthetic-day`
+  or a real day, and restore them after.
+* **CHECK THE SHARED TREE'S STATUS BEFORE STARTING A ROUND (DE 152).** A dirty
+  shared tree means someone else is mid-round in it. Two implementations of DE 151
+  were written in parallel — one here, one in the shared tree — because neither
+  side looked. `git -C /home/yuqing/ctaNew status --short` is the whole check.
 
 ---
 
@@ -167,7 +170,10 @@ is worth building.
 **Ledger**: `DECISION_LEDGER_HAS_NO_ANCHOR` · `_ABSENT` · `_DIGEST_MISMATCH` ·
 `_NO_INVENTORY_FIELDS` · `_NO_SIGN_CONVENTION` · `_SETTLEMENT_SCALARS_ABSENT_FOR_ARM` ·
 `_SETTLEMENT_VALUE_ABSENT_FOR_ARM` · `_SETTLEMENT_NULL_NOT_REDERIVABLE` ·
-`LEDGER_SCHEMA_UNKNOWN`.
+`LEDGER_SCHEMA_UNKNOWN` · `DECISION_LEDGER_FULL_RUN_HAS_NO_NULL_DRAWS` ·
+`DECISION_LEDGER_POINT_ESTIMATE_HAS_NULL_DRAWS` ·
+`DECISION_LEDGER_MIXED_RUN_MODES` ·
+`DECISION_LEDGER_NULL_VALUES_FIELD_ABSENT`.
 
 **Valuation**: `ABSOLUTES_DO_NOT_RECONCILE` · `SETTLEMENT_LEGS_DO_NOT_RECONCILE` ·
 `SETTLEMENT_EXCESS_DOES_NOT_RECONCILE` · `SETTLEMENT_NULL_DEGENERATE` (a STATUS,
@@ -184,7 +190,10 @@ never an abort — a degenerate null must not kill a day that already computed D
 `SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE`.
 
 **Placement latency**: `SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY` ·
-`SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS`.
+`SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS` ·
+`SETTLEMENT_BOOK_RECEIPT_NOT_PARSED` ·
+`SETTLEMENT_PLACEMENT_LATENCY_DISAGREES_IN_THE_DOCUMENT` ·
+`SETTLEMENT_PLACEMENT_LATENCY_ABSENT_FROM_THE_DOCUMENT`.
 
 **Early read**: `EARLY_READ_NO_SEALED_RECEIPT` · `_RECEIPT_NOT_THE_PAIR` ·
 `_ALREADY_EMITTED` · `_BAR_CARRIES_ONLY_A_PREFIX` · `_BAR_DIGEST_MALFORMED` ·
@@ -192,7 +201,34 @@ never an abort — a degenerate null must not kill a day that already computed D
 `_WROTE_NO_DECISION_LEDGER` · `_SUPERSEDES_TARGET_ABSENT` · `_SUPERSEDES_DIGEST_MISMATCH` ·
 `_SUPERSEDES_NOT_THE_HEAD` · `_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY`.
 
-**Point estimate**: `POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC`.
+**Point estimate** (the family lives in `de_point_estimate_day.py`):
+`POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC` · `POINT_ESTIMATE_RESULT_CONTRACT_VIOLATION` ·
+`POINT_ESTIMATE_DRIVER_CHANGED_DURING_RUN` · `POINT_ESTIMATE_DRIVER_NOT_COMMITTED` ·
+`POINT_ESTIMATE_OUTPUT_EXISTS` · `POINT_ESTIMATE_OUTPUT_NOT_DIRECTORY` ·
+`POINT_ESTIMATE_PLACEMENT_LATENCY_ABSENT` · `POINT_ESTIMATE_PRIOR_UNREADABLE` ·
+`POINT_ESTIMATE_PRIOR_IDENTITY_MISMATCH` · `POINT_ESTIMATE_PRIOR_LATENCY_MISMATCH` ·
+`POINT_ESTIMATE_SUPERSEDES_NOT_A_POINT_ESTIMATE_RUN` ·
+`POINT_ESTIMATE_SUPERSEDES_TARGET_ABSENT` · `POINT_ESTIMATE_SUPERSEDES_DIGEST_MISMATCH` ·
+`POINT_ESTIMATE_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY`.
+
+**Note the two SUPERSEDES families and do not confuse them.** The EARLY READ family
+above (`EARLY_READ_SUPERSEDES_*`) validates a target the CALLER names; the point-estimate
+family DISCOVERS its priors from the `(day, L_place_ms)` glob, so `_TARGET_ABSENT` and
+`_DIGEST_MISMATCH` there are about a discovered pair going stale between resolution and
+the write, not about a bad argument.
+
+**AND THE LATENCY IS GUARDED TWICE, ON PURPOSE — DE 153, and the DE 152 merge lost one
+of them by treating the two as one name.** `POINT_ESTIMATE_PRIOR_LATENCY_MISMATCH` says
+**A FILE IS MISLABELLED**: it sits in the `L<tag>ms` family and declares another L.
+`POINT_ESTIMATE_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY` says **THE RELATIONSHIP IS
+WRONG**: a run at one latency is about to publish another latency's artifact as its
+PREDECESSOR (R-811, R-828 §(2) — siblings, not successors). **The second is the one that
+protects the published link, and it was measured missing:** discovery never globbed a
+foreign-L file and a mislabelled one refused, but the path that FORMS the link compared
+no latency at all and ADMITTED an L = 0 target for an L = 250 run. The guarantee had come
+to rest on a FILENAME. It now rests on the target's own declared L, re-read from disk at
+the write. **The lesson, which is the general one: a guarantee that survives only because
+of a naming convention has not survived — name it and assert it.**
 
 ### RED BY DESIGN in the shared tree
 mm-research's `de_phase4_diag_runner.py` is off v19's cascade pin, so **the runner's
@@ -247,6 +283,29 @@ the file says which it is and the falsifier pins it.
 `run_day(..., point_estimate=True)` **skips S4 entirely** — not a shorter null, no
 null. The draw count is never lowered (R-174); it is not taken at all.
 
+The builder is tracked at `live/pm_research/de_point_estimate_day.py`; do not copy
+it to scratch. From the clean, frozen run worktree, launch it through §1's service
+and lock form:
+
+```
+systemd-run --user --unit=<NAME> --slice=research.slice \
+  -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes \
+  --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew \
+  --working-directory=<CLEAN-FROZEN-WORKTREE> \
+  -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock \
+     /home/yuqing/pricer-sol/venv/bin/python3 \
+     live/pm_research/de_point_estimate_day.py \
+     <YYYY-MM-DD> <BOOK.pkl> \
+     --output-dir /home/yuqing/ctaNew/data/pm_5min/derived
+```
+
+The driver takes `placement_latency` from the completed `day_run`, uses that same
+object at the top level, checks every serialized `L_place_ms` before an atomic
+publish, and names the prior `(day, L_place_ms)` artifact by path and recomputed
+digest. If a family has an earlier abandoned sibling, `also_supersedes` names it
+too, so the correction leaves one head. Contradictory priors remain unedited and
+are superseded in-band.
+
 * Every statistic field — `Z`, `p_location`, `null_mean`, `null_sd`,
   `null_draws_summary.n`, and the same five in `economic_settlement` — carries the
   string **`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`**. **Never a null, never a zero.**
@@ -260,33 +319,9 @@ null. The draw count is never lowered (R-174); it is not taken at all.
 * The estimates are the SAME numbers as a full run: same replays, same arithmetic,
   only the control absent. The falsifier proves it digit for digit.
 
-Measured cost: **~2 minutes a day** against ~2 h 45 m for a full run (09-04 154.7 s
-peak 3.110 GB, 09-05 219.6 s peak 2.527 GB, 09-06 122.2 s peak 2.615 GB).
+Measured cost: **~2 minutes a day** against ~2 h 45 m for a full run (09-03 125.8 s, 09-04 129.4 s peak 3.110 GB, 09-05 124.7 s, 09-06 125.3 s peak 2.615 GB, 09-05 at L = 0 118.6 s peak 2.527 GB, 09-07 114.1 s).
 
-### THE INVOCATION (DE 151 — §7 stated the contract and not how to run it)
-The driver was `pe_run.py` in a session SCRATCHPAD for two rounds: the artifacts
-landed and their builder did not, which is rule 12's shape. **It is now
-`live/pm_research/de_point_estimate_day.py`**, so its digest joins the
-import-closure stamp like every other producer.
-
-```
-systemd-run --user --unit=dePE<DAY> --slice=research.slice \
-  -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes \
-  -p StandardOutput=append:<log> -p StandardError=append:<log> \
-  --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew \
-  --working-directory=/home/yuqing/ctaNew-wt-de2 \
-  -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock \
-     /home/yuqing/pricer-sol/venv/bin/python3 \
-     live/pm_research/de_point_estimate_day.py \
-     --day <YYYY-MM-DD> --book <…/be_daybook_<D>_btc[__L250ms].pkl> \
-     [--supersedes <the artifact this one replaces>]
-```
-
-`-p StandardOutput=append:` keeps `flock` the DIRECT parent of python3 — the run
-reads `/proc/<ppid>/exe` and refuses if its parent is not flock, so a `bash -c`
-wrapper for redirection would break the lock-form check. **The L is never passed
-on the command line**: it is read from the book's own builder receipt, and the
-receipt is resolved by the BOOK's name first (DE 150).
+**ONE PROCESS PER DAY.** A batch that ran six days in one process FAILED on day two: `_peak_rss_mb()` is `ru_maxrss`, non-decreasing for the life of the PROCESS, so day two's battery inherited day one's high-water and the peak-stage cell measured history rather than a property. Each day is its own transient unit, with `flock` the DIRECT parent of python3 — the run reads `/proc/<ppid>/exe` and refuses if its parent is not flock, so no shell may sit between them (use `-p StandardOutput=append:` for a log, never a `bash -c` wrapper).
 
 ---
 
@@ -338,32 +373,28 @@ empty, and the function returned its documented `L_place_ms: 0.0` with the sourc
 string `"THE BOOK'S BUILDER RECEIPT DECLARES NONE"`. **Every L = 250 artifact
 therefore said 250.0 at the top level and 0.0 under `day_run`, naming the same book
 and the same digest.** No number moved — the latency is applied by BE at BOOK BUILD
-time (`TRANCHE_BEFORE_PLACEMENT_LATENCY` dropped in the book) and `_plat` is computed
-at the emit, after `S5_seal`, with exactly two references in the whole runner — but
-a document that states two makers cannot be quoted at either.
+time and `_plat` is computed at the emit, after `S5_seal`, with exactly two
+references in the whole runner — and the six re-emits proved it: every economic
+field reproduced byte for byte while the nested value moved 0.0 → 250.0.
 
 **The three lessons, because none of them is "read more carefully":**
 1. **A reader handed an input it cannot parse must REFUSE, not answer from its
-   default.** `placement_latency_from_the_book` now raises
-   `SETTLEMENT_BOOK_RECEIPT_NOT_PARSED` on a non-dict. The default was reachable
-   by accident and looked like a measurement.
-2. **A document must assert its own agreement before its bytes exist.**
-   `assert_one_placement_latency(doc)` walks every `L_place_ms` leaf at the emit
-   and refuses `SETTLEMENT_PLACEMENT_LATENCY_DISAGREES_IN_THE_DOCUMENT`; **absence
-   refuses too** (`…_ABSENT_FROM_THE_DOCUMENT`) — an empty walk is not agreement.
+   default** (`SETTLEMENT_BOOK_RECEIPT_NOT_PARSED`).
+2. **A document must assert its own agreement before its bytes exist** —
+   `assert_one_placement_latency` at the emit, on the serialised form AND on the
+   bytes read back; **absence refuses too**, and so do `bool`, NaN and negatives,
+   because `True` is an `int` in Python and would otherwise read as 1.0 ms.
 3. **The type is the check.** Two call sites, one passing a `Path` and one a
-   `dict`, disagreed for months of rounds and no battery could see it, because
-   both returned a well-formed block. The known-bad is now BE's REAL 09-04
-   L = 250 receipt, handed in both forms.
+   `dict`, disagreed for rounds and no battery could see it, because both returned
+   a well-formed block.
 
 **And the same class in a second module, same round:** `de_decision_ledger.recompute()`
 called `statistics.fmean(vals)` as its FIRST arithmetic, so a POINT-ESTIMATE
-ledger — which has no null by contract — raised `StatisticsError` and **nothing**
-in the file could be read: not the settlement scalars, not the fills legs, not the
-absolutes, none of which need a null. That is the path DA verifies with. **No null
-is a STATUS, never a crash and never a zero**: the five null-dependent fields carry
-`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN` and everything else computes as before. The
-runner's battery asserts the two modules name that status with ONE string.
+ledger raised `StatisticsError` and **nothing** in the file could be read. **No null
+is a STATUS, never a crash and never a zero** — and the ledger now DECLARES its
+`run_mode` in the header rather than letting a reader infer it from an empty
+container, with write-time refusals for a full run with no draws, a point estimate
+carrying draws, mixed modes across arms, and a missing `null_values` field.
 
 ---
 
@@ -436,14 +467,18 @@ into `scripts/` so it survives** (open item).
    read it; delete or leave untracked.
 8. Write the landing guard (§9) into `scripts/`.
 
-**CLOSED at DE 151:** item 5's register row is filed with this round; the driver is
-no longer scratch-only (`live/pm_research/de_point_estimate_day.py`, item added and
-closed in one round); the placement-latency contradiction and the ledger's
-point-estimate crash are fixed with falsifiers both directions, and all seven
-point-estimate artifacts are re-emitted superseding the old by pair.
-**STILL OPEN:** items 2 (DE 144's parallel null), 3 (DE 142's
-`stream_provenance.files`), 4 (DE 149's per-worker memory), 6 (the `_SEALED_` glob
-on an unsealed receipt's filename) and 8.
+**CLOSED at DE 151/152:** the driver is no longer scratch-only
+(`live/pm_research/de_point_estimate_day.py`, and it now REFUSES to emit unless its
+own bytes are the bytes HEAD holds — `POINT_ESTIMATE_DRIVER_NOT_COMMITTED`); the
+placement-latency contradiction and the ledger's point-estimate crash are fixed with
+falsifiers in both directions; all six point-estimate artifacts are re-emitted
+superseding the old by pair; and the point-estimate family now RESOLVES its own
+priors (`also_supersedes` absorbs an abandoned sibling), which was the head-resolution
+gap this file had only flagged. **STILL OPEN:** items 2 (DE 144's parallel null),
+3 (DE 142's `stream_provenance.files`), 4 (DE 149's per-worker memory), 6 (the
+`_SEALED_` glob on an unsealed receipt's filename) and 8. **AND ONE NEW:** `D_E0_role`
+and `settlement_rows_status` — the fields that say "diagnostic, not ruled endpoint" —
+are read by no module but `de_decision_ledger.py`.
 
 ---
 

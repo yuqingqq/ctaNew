@@ -1,0 +1,1027 @@
+{
+  "as_of": "2026-09-08T12:28:11Z",
+  "book": {
+    "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260907_btc__L250ms.json",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms.pkl",
+    "sha256": "ecc8e6323259224087093504ed9879a329ed3ff4a9ad530ce0057d7c95cce214"
+  },
+  "day": "2026-09-07",
+  "day_run": {
+    "G_and_which_G_it_is": {
+      "design_G_from_params": 6,
+      "n_days_complete_at_this_emit": 5,
+      "no_bare_G_key_here": "removed at REV 90 \u00a7A0(3). Nothing read it: a sweep of live/pm_research found no consumer of a day-run receipt's top-level `G`. The four landed sealed receipts (09-03..09-06) still carry the old bare `G: 6`; from here on receipts carry this block instead, which is a schema change between days and is said so here rather than discovered later.",
+      "params_file": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+      "the_bar_this_run_sealed_against": 6,
+      "why_two_numbers_exist": "the design's G is the ruled six-day population; the bar a run seals against is the same six EXCEPT under the user-ruled early read (R-754), which seals against its own four. They are different questions and they are no longer both called G."
+    },
+    "as_of": "2026-09-08T12:28:11.160926+00:00",
+    "battery_stage_is_inside_the_budget": true,
+    "be_module_citation": {
+      "cited_not_copied": true,
+      "digest_is_of_the_file_the_import_loaded": true,
+      "loaded_from": "/home/yuqing/ctaNew-wt-de2/live/pm_research/be_cancel_axis_null.py",
+      "modules_checked": [
+        "live/pm_research/be_cancel_axis_null.py"
+      ],
+      "n_modules_checked": 1,
+      "path": "live/pm_research/be_cancel_axis_null.py",
+      "scope": "THE ENTRY POINT ONLY -- no `be_cascade` in the params, or a digest was supplied by the caller",
+      "sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+      "verified_at_run_time": true
+    },
+    "before_work": {
+      "ran": true,
+      "residency": {
+        "data_paths_opened": [
+          "/home/yuqing/ctaNew-wt-de2/data/pm_5min/derived/be_cancel_axis_null_v1.json",
+          "/home/yuqing/ctaNew-wt-de2/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+          "/home/yuqing/ctaNew-wt-de2/data/pm_5min/derived/phase2_fits/lgbm_haz_btc.txt",
+          "/home/yuqing/ctaNew-wt-de2/data/pm_5min/derived/phase2_fits/lgbm_thresholds_btc.json",
+          "/home/yuqing/ctaNew-wt-de2/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260826.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260827.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260828.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260829.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260830.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260831.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260901.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260902.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260903.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260904.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260905.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260906.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260907.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260908.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/da_pred_state_v1_schema.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T140810Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T152649Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T181831Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T182045Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T192751Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163619Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T184545Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T184545Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T192753Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T183508Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T184653Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T184653Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T192755Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260906__20260907T053253Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260906__20260907T053359Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_fixture__20260906T082803Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v2.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v3.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260907_SEALED__20260908T030451Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v10__20260906T064720Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v11__20260906T071214Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v13__20260906T083511Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v14__20260906T091319Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v15__20260906T094500Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v16.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v18.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v19.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v21.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v22.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v24.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v7__20260906T045059Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v9__20260906T062115Z.json",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/collector_gaps.jsonl",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260904_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260905_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260906_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260907_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_sixty/20260907_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260904_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260905_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_02.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_03.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_04.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_05.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_06.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_07.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_08.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_09.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_10.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_11.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_12.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_13.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_14.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_15.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_16.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_17.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_18.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_19.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_20.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_21.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_22.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260906_23.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260907_00.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/prices/crypto_prices_twap_thirty/20260907_01.csv.gz",
+          "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/empty_coins.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/fit_manifest.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/fit_population_parity.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/fit_slugs.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/lgbm_haz_btc.txt",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/lgbm_haz_eth.txt",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/lgbm_thresholds_btc.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/lgbm_thresholds_eth.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/lgbm_val_btc.txt",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/lgbm_val_eth.txt",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/linear_btc.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/linear_eth.json",
+          "/tmp/tmpv1iu0687/data/pm_5min/derived/phase2_fits/val_models.json"
+        ],
+        "day_draws_when_the_hook_returned": 0,
+        "distinct_paths_truncated": true,
+        "draws_the_hook_itself_made": 14016,
+        "n_distinct_paths": 1519,
+        "n_paths_opened": 10095,
+        "n_paths_opened_uncapped": 1519,
+        "non_vacuous": true,
+        "tape_artifacts_opened": [],
+        "what_it_was": "the in-run battery, run BEFORE the day's work"
+      },
+      "when": "after the book digest was verified, before S1 -- NOT at the emit (R-610)"
+    },
+    "day": "2026-09-07",
+    "decision_ledger": {
+      "bytes": 4041514,
+      "n_rows": 116636,
+      "named_here_by_digest": "the receipt is tracked and names this file by sha256; the file is not",
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260907__20260908T122808Z.jsonl.gz",
+      "recompute_with": "de_decision_ledger.read_ledger(path, expect_sha256=<this sha256>) then .recompute(led, arm)",
+      "ruling": "R-765",
+      "schema_version": 4,
+      "sha256": "97b85bcd7e92fd9d83d41fc90f89a31e3dc239243b8b1119b8a46023e487b815",
+      "the_bytes_are_gitignored": true
+    },
+    "decision_populations": {
+      "CONDVALUE_X_SKEW": {
+        "arm": "CONDVALUE_X_SKEW",
+        "by_side": {
+          "BUY_UP": 9881,
+          "SELL_UP": 9883
+        },
+        "decisions": 19764,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "q1_arrival_composed_lgbm",
+        "n_scored_rows": 301894,
+        "theta": 0.32450609461933483,
+        "theta_was_not_refitted_here": true
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "by_side": {
+          "BUY_UP": 971,
+          "SELL_UP": 926
+        },
+        "decisions": 1897,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "incumbent_linear_d",
+        "n_scored_rows": 301894,
+        "theta": 0.43525926488298716,
+        "theta_was_not_refitted_here": true
+      }
+    },
+    "draw_pool_set_equality_checked": true,
+    "fixture": false,
+    "fixture_day_lock": {
+      "day": "2026-09-07",
+      "decided_on_the_day_not_the_callers_flag": true,
+      "fixture": false,
+      "in_ruled_day_set": true,
+      "ruled_day_set_read_from": "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
+    },
+    "interpreter": {
+      "is_a_symlink": true,
+      "realpath": "/usr/bin/python3.12",
+      "sys_executable": "/home/yuqing/pricer-sol/venv/bin/python3",
+      "version": "3.12.3"
+    },
+    "launch_form_at_runtime": {
+      "cgroup_leaf": "dePE151_0907L250.service",
+      "checked": true,
+      "day": "2026-09-07",
+      "fixture": false,
+      "fixture_exemption_by_name": false,
+      "kind": "transient service",
+      "kind_is_known": true,
+      "refused": false,
+      "the_exemption_is_the_GATE": "not a report beside it: `fixture=True` alone used to admit a REAL DAY NAME (REV 68 S1.2)",
+      "the_real_day_predicate_is_POSITIVE": "refuse unless kind == 'transient service'. The negative test `kind == 'scope'` FAILED OPEN on kind None and on an empty observation (REV 68 S1.3)",
+      "why_checked_may_be_false": "an unknown kind is not a passed check. It used to admit a real day AND claim `checked` true"
+    },
+    "lock_form_at_runtime": {
+      "carries_dash_E_with_the_declared_rc": true,
+      "carries_the_declared_lock_path": true,
+      "checked": true,
+      "day": "2026-09-07",
+      "declared_lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+      "declared_rc": "75",
+      "fixture": false,
+      "identity_from": "/proc/<ppid>/exe -- the file the kernel mapped, never argv[0], which `exec -a` sets to anything",
+      "parent_argv": [
+        "/usr/bin/flock",
+        "-n",
+        "-E",
+        "75",
+        "/home/yuqing/ctaNew/data/.heavy_run.lock",
+        "/home/yuqing/pricer-sol/venv/bin/python3",
+        "live/pm_research/de_point_estimate_day.py",
+        "--day",
+        "2026-09-07",
+        "--book",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms.pkl"
+      ],
+      "parent_exe": "/usr/bin/flock",
+      "parent_is_flock": true,
+      "ppid": 2602511,
+      "why_runtime_not_the_lint": "the lint reads the string a builder produced; this reads what actually ran. `-E` is what makes a held lock readable from a crash (REV 69 S1.2)"
+    },
+    "memory_plan": {
+      "baseline_rss_mb": 21.76953125,
+      "budget_is_on_GROWTH_not_the_process_peak": "ru_maxrss never falls, so a fixture day run inside a real day's process inherits that day's peak. It cost the 09-03 smoke 85 minutes: the day's work finished and the emit-time battery refused its own fixture on the real day's high-water",
+      "budget_mb": 4000.0,
+      "growth_is_process_history_dependent": "a warm process grows less than a cold one -- the allocator already holds what an earlier run took. The REAL day runs in a FRESH process, which is the regime the 4000 MB budget is derived against",
+      "growth_rss_mb": 1111.8125,
+      "hook_stage_growth_mb": 601.23046875,
+      "index_splits": {
+        "answer": "NONE, at any stage",
+        "consequence_for_BEs_assembly": "the index is needed only to PRODUCE `asm`. It does not have to be resident alongside the reference and `asm` at all, because the consumer of those two is a different process. If BE releases the index before assembling and writing the book, the whole-day peak is max(index stage, assembly stage) rather than their sum",
+        "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming that head; a run with no tape artifact reachable at all still completes",
+        "measured_by": "day_split_residency_proof() -- the day path run under instrumentation, asserting no tape/index/fragment artifact was opened",
+        "per_stage": {
+          "S0b_battery": "no split. The battery reads BE's committed null receipt and the ledger -- declared reads, none of them a tape, index or fragment artifact -- and it runs under its OWN residency instrument, whose opens are SUBTRACTED from the day path's claim so that claim stays about the day path (R-610)",
+          "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the scored set; the scorer is a dict lookup that REFUSES on a miss rather than computing a feature",
+          "S3_baseline_and_S4_null": "no split. Each replay values its fills from the fill record and the reference; per WINDOW and streamable, with nothing accumulated across draws",
+          "economics_valuation": "no split, and NOT per-window-resident either -- one fill list at a time"
+        },
+        "question": "which tape-index splits must be resident during `--day`, and at which stage",
+        "what_DE_cannot_rule": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling, not DE's. What is declared here is only what the CONSUMER needs, which is the half BE was waiting on",
+        "why": "the decision population is read from `asm` -- BE's already assembled per-generation scores, keyed (slug, side, t0) -- and the economics valuation reads only the replay's own fill records and the reference's levels and markouts (`de_phase4_diag_runner.fill_value_cents`). Neither touches a tape row"
+      },
+      "observed": {
+        "S0_verify": {
+          "elapsed_s": 0.415,
+          "peak_rss_mb_highwater": 36.88671875,
+          "rss_mb_current": 35.17578125
+        },
+        "S0b_battery": {
+          "elapsed_s": 89.533,
+          "peak_rss_mb_highwater": 871.05859375,
+          "rss_mb_current": 623.0
+        },
+        "S1_load": {
+          "elapsed_s": 95.783,
+          "peak_rss_mb_highwater": 2994.21484375,
+          "rss_mb_current": 812.59375
+        },
+        "S2_population": {
+          "elapsed_s": 96.27,
+          "peak_rss_mb_highwater": 2994.21484375,
+          "rss_mb_current": 847.34375
+        },
+        "S3_baseline": {
+          "elapsed_s": 100.596,
+          "peak_rss_mb_highwater": 2994.21484375,
+          "rss_mb_current": 1059.4140625
+        },
+        "S4_null": {
+          "elapsed_s": 111.405,
+          "peak_rss_mb_highwater": 2994.21484375,
+          "rss_mb_current": 1133.58203125
+        },
+        "S4_null_SKIPPED_POINT_ESTIMATE": {
+          "elapsed_s": 111.343,
+          "peak_rss_mb_highwater": 2994.21484375,
+          "rss_mb_current": 1133.58203125
+        },
+        "S5_seal": {
+          "elapsed_s": 111.413,
+          "peak_rss_mb_highwater": 2994.21484375,
+          "rss_mb_current": 1133.58203125
+        },
+        "S_start": {
+          "elapsed_s": 0.003,
+          "peak_rss_mb_highwater": 21.63671875,
+          "rss_mb_current": 21.76953125
+        }
+      },
+      "peak_rss_mb": 2994.21484375,
+      "peak_stage": {
+        "argmax_taken_over": [
+          "S0_verify",
+          "S1_load",
+          "S2_population",
+          "S3_baseline",
+          "S4_null",
+          "S5_seal"
+        ],
+        "baseline_highwater_mb": 21.63671875,
+        "before_work_hook_highwater_delta_mb": 834.1719,
+        "binds_on_a_real_day_only": "on a real day the book dominates (BE: 2.008 GB reference) and S1 being the peak is what the 8 GiB ceiling rests on, so a disagreement REFUSES the day. On a fixture the book is a few hundred KB and the draw loop's fixed cost is larger, so the measured peak is S4_null -- recorded, not refused, and design v9 stated the claim flatly where it should have stated the condition",
+        "computable": true,
+        "current_rss_mb_by_stage": {
+          "S0_verify": 35.17578125,
+          "S0b_battery": 623.0,
+          "S1_load": 812.59375,
+          "S2_population": 847.34375,
+          "S3_baseline": 1059.4140625,
+          "S4_null": 1133.58203125,
+          "S4_null_SKIPPED_POINT_ESTIMATE": 1133.58203125,
+          "S5_seal": 1133.58203125,
+          "S_start": 21.76953125
+        },
+        "declared_peak_stage": "S1_load",
+        "declared_read_from": "DAY_STAGES marker '[DECLARED PEAK]'",
+        "declared_stage_is_the_measured_peak": true,
+        "highwater_by_stage": {
+          "S0_verify": 36.88671875,
+          "S0b_battery": 871.05859375,
+          "S1_load": 2994.21484375,
+          "S2_population": 2994.21484375,
+          "S3_baseline": 2994.21484375,
+          "S4_null": 2994.21484375,
+          "S4_null_SKIPPED_POINT_ESTIMATE": 2994.21484375,
+          "S5_seal": 2994.21484375,
+          "S_start": 21.63671875
+        },
+        "highwater_delta_argmax_equals_current_rss_argmax": false,
+        "highwater_delta_mb_by_stage": {
+          "S0_verify": 15.25,
+          "S0b_battery": 834.1719,
+          "S1_load": 2123.1562,
+          "S2_population": 0.0,
+          "S3_baseline": 0.0,
+          "S4_null": 0.0,
+          "S5_seal": 0.0
+        },
+        "highwater_is_non_decreasing_BY_CONSTRUCTION": true,
+        "measured_peak_stage": "S1_load",
+        "measured_peak_stage_by_current_rss": "S4_null_SKIPPED_POINT_ESTIMATE",
+        "this_boolean_does_NOT_refuse": "it compares two ways of naming the peak STAGE and is diagnostic. The binding field is `peak_stage_assertion.agrees`.",
+        "why_the_DELTA_is_the_peak": "a transient a stage allocates and frees before its mark is invisible to the current-RSS series and VISIBLE in the highwater delta, because the highwater recorded it and never came down. The delta is what attributes growth to a stage",
+        "why_the_hook_is_not_in_the_argmax": "the `before_work` hook is the BATTERY, not the day path. Its high-water is a transient it frees before returning (measured 838 MB peak, 26 MB retained); the 8 GiB ceiling rests on the DAY PATH's shape, and letting a freed transient win the argmax would refuse a day over a stage the ceiling does not rest on. Its delta is computed, reported, and counted in the day's GROWTH BUDGET -- only the argmax excludes it",
+        "why_two_instruments": "the highwater bounds the process and can never fall; the current-RSS series can, so it is the only one that can locate a peak"
+      },
+      "peak_stage_assertion": {
+        "agrees": true,
+        "asserted": true,
+        "recorded_not_refused_because_fixture": false
+      },
+      "stages": [
+        {
+          "holds": "digests only: BE's builder receipt, the book's bytes, the pinned models and thetas, BE's cascade module. The book is READ ONCE here as bytes for its digest and the buffer is handed to S1, never read twice (BE's B-1)",
+          "stage": "S0_verify"
+        },
+        {
+          "holds": "THE IN-RUN BATTERY, MOVED HERE FROM THE EMIT (R-610). It ran AFTER the day's work: ~15 s of fixture runs and a 13-module closure re-capture at the end of 85 minutes, and if it refused, the day was lost -- which is exactly what happened to the 09-03 smoke. Its memory is INSIDE the day's growth budget on purpose: a stage whose cost escapes the budget is a stage nobody bounded",
+          "stage": "S0b_battery"
+        },
+        {
+          "holds": "[DECLARED PEAK] reference + asm + rows. THE PEAK OF THE DAY PATH WHEN THE BOOK DOMINATES -- which is the real-day regime (BE measured a day's reference at 2.008 GB) and is NOT true on a small fixture: on the synthetic book, measured, the peak is S4_null, because the draw loop's fixed cost is larger than a few hundred KB of book. The claim is CONDITIONAL, the condition is stated, and it is ASSERTED on a real day -- where the 8 GiB ceiling rests on it",
+          "stage": "S1_load"
+        },
+        {
+          "holds": "adds one score float per generation per arm, twice. asm's gen_scores are ALREADY resident from S1; the arm stream is a view over `rows`",
+          "stage": "S2_population"
+        },
+        {
+          "holds": "adds the no-cancel replay's fills -- the neutral reference path (CLAUDE.md reliability rule 1)",
+          "stage": "S3_baseline"
+        },
+        {
+          "holds": "one draw's flags and one replayed fill list AT A TIME. The draws are REDUCED to a value each as they are made; no draw's fills survive the next. O(1) in n_draws",
+          "stage": "S4_null"
+        },
+        {
+          "holds": "counts and statuses only. The economic fields are computed and withheld, never carried into the artifact",
+          "stage": "S5_seal"
+        }
+      ],
+      "within_budget": true
+    },
+    "n_admissible_arms": 2,
+    "n_days_complete": 5,
+    "per_day_sealed_artifacts": [
+      {
+        "R5_retired_from": "params v18 / design v26",
+        "absolute": {
+          "arm": {
+            "fills_leg": 14270.029288700007,
+            "n_fills": 13885,
+            "n_fills_valued": 13885,
+            "n_fills_with_inventory": 13885,
+            "total": 14270.029288700007,
+            "trades_cash_flow_cents": -34611.13633059995,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          },
+          "read_from": "the same replay that computes D(E0) -- never a second pass",
+          "reconciliation": {
+            "D_E0": -15598.74384049999,
+            "agree_to_1e_9": true,
+            "arm_total_minus_baseline_total": -15598.743840500018,
+            "refuses_by_name_otherwise": "ABSOLUTES_DO_NOT_RECONCILE"
+          },
+          "ruling": "R-782, the USER: 'plz record the absolute number as well for reference'",
+          "unit": "cents",
+          "zero_cancel_baseline": {
+            "fills_leg": 29868.773129200024,
+            "n_fills": 27611,
+            "n_fills_valued": 27611,
+            "n_fills_with_inventory": 27611,
+            "total": 29868.773129200024,
+            "trades_cash_flow_cents": -330216.51619960024,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          }
+        },
+        "admissibility": {
+          "admissible": true,
+          "bar": 30,
+          "n_decisions": 19764,
+          "note": "R4's decision bar is checked; R8's draw minimum does not apply to a run that draws none"
+        },
+        "arm": "CONDVALUE_X_SKEW",
+        "day": "2026-09-07",
+        "decision_population": {
+          "arm": "CONDVALUE_X_SKEW",
+          "by_side": {
+            "BUY_UP": 9881,
+            "SELL_UP": 9883
+          },
+          "decisions": 19764,
+          "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+          "head": "q1_arrival_composed_lgbm",
+          "n_scored_rows": 301894,
+          "theta": 0.32450609461933483,
+          "theta_was_not_refitted_here": true
+        },
+        "draw_provenance": null,
+        "economic": {
+          "D_E0": -15598.74384049999,
+          "Z": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "null_draws_summary": {
+            "n": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"
+          },
+          "null_mean": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "null_sd": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "p_location": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"
+        },
+        "economic_settlement": {
+          "admissibility": {
+            "admissible": false,
+            "class": "NOT_ADMISSIBLE",
+            "declared_days": null,
+            "design_days": [
+              "2026-09-03",
+              "2026-09-04",
+              "2026-09-05",
+              "2026-09-06"
+            ],
+            "refusal_name": "SETTLEMENT_DAY_NOT_ADMISSIBLE",
+            "why": "2026-09-07 is neither one of the design days nor in a landed declaration's admissible set. R-801 (6): 09-07 and later are the validation population for this endpoint and NOBODY values one before params v20 / design v28 land. Choosing an estimator after seeing the day is what rule 11 forbids."
+          },
+          "status": "NOT_VALUED_DAY_NOT_ADMISSIBLE",
+          "why": "rule 11: this day is NOT in the admissible set (class 'NOT_ADMISSIBLE'), so the ruled endpoint is not computed for it. The estimator REFUSES if asked directly (SETTLEMENT_DAY_NOT_ADMISSIBLE); this receipt records that it was not asked."
+        },
+        "n_cancels_issued": 6411,
+        "n_fills_arm": 13885,
+        "n_fills_baseline": 27611,
+        "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 5 of 6 days complete",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": [],
+        "seed": 3661872047,
+        "status": "OK_POINT_ESTIMATE",
+        "why_no_test_statistic": "this run SKIPPED S4: no draw was made, so there is no null and no Z, p, mean or sd exists to report. The point estimates are the same arithmetic on the same replays as a full run -- only the control is absent. Nothing quoted from this artifact may imply significance."
+      },
+      {
+        "R5_retired_from": "params v18 / design v26",
+        "absolute": {
+          "arm": {
+            "fills_leg": 31013.86054120002,
+            "n_fills": 25865,
+            "n_fills_valued": 25865,
+            "n_fills_with_inventory": 25865,
+            "total": 31013.86054120002,
+            "trades_cash_flow_cents": -301703.52153559984,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          },
+          "read_from": "the same replay that computes D(E0) -- never a second pass",
+          "reconciliation": {
+            "D_E0": 1145.0874120000008,
+            "agree_to_1e_9": true,
+            "arm_total_minus_baseline_total": 1145.0874119999971,
+            "refuses_by_name_otherwise": "ABSOLUTES_DO_NOT_RECONCILE"
+          },
+          "ruling": "R-782, the USER: 'plz record the absolute number as well for reference'",
+          "unit": "cents",
+          "zero_cancel_baseline": {
+            "fills_leg": 29868.773129200024,
+            "n_fills": 27611,
+            "n_fills_valued": 27611,
+            "n_fills_with_inventory": 27611,
+            "total": 29868.773129200024,
+            "trades_cash_flow_cents": -330216.51619960024,
+            "trades_cash_flow_sign_convention": "SELLS - BUYS: positive means cash taken in; the negative of the old `inventory_leg`",
+            "unit": "cents",
+            "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+            "why_trades_cash_flow_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded quantity is not a zero one"
+          }
+        },
+        "admissibility": {
+          "admissible": true,
+          "bar": 30,
+          "n_decisions": 1897,
+          "note": "R4's decision bar is checked; R8's draw minimum does not apply to a run that draws none"
+        },
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "day": "2026-09-07",
+        "decision_population": {
+          "arm": "HAZARD_OVER_SKEWED_REF",
+          "by_side": {
+            "BUY_UP": 971,
+            "SELL_UP": 926
+          },
+          "decisions": 1897,
+          "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+          "head": "incumbent_linear_d",
+          "n_scored_rows": 301894,
+          "theta": 0.43525926488298716,
+          "theta_was_not_refitted_here": true
+        },
+        "draw_provenance": null,
+        "economic": {
+          "D_E0": 1145.0874120000008,
+          "Z": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "null_draws_summary": {
+            "n": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"
+          },
+          "null_mean": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "null_sd": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "p_location": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"
+        },
+        "economic_settlement": {
+          "admissibility": {
+            "admissible": false,
+            "class": "NOT_ADMISSIBLE",
+            "declared_days": null,
+            "design_days": [
+              "2026-09-03",
+              "2026-09-04",
+              "2026-09-05",
+              "2026-09-06"
+            ],
+            "refusal_name": "SETTLEMENT_DAY_NOT_ADMISSIBLE",
+            "why": "2026-09-07 is neither one of the design days nor in a landed declaration's admissible set. R-801 (6): 09-07 and later are the validation population for this endpoint and NOBODY values one before params v20 / design v28 land. Choosing an estimator after seeing the day is what rule 11 forbids."
+          },
+          "status": "NOT_VALUED_DAY_NOT_ADMISSIBLE",
+          "why": "rule 11: this day is NOT in the admissible set (class 'NOT_ADMISSIBLE'), so the ruled endpoint is not computed for it. The estimator REFUSES if asked directly (SETTLEMENT_DAY_NOT_ADMISSIBLE); this receipt records that it was not asked."
+        },
+        "n_cancels_issued": 897,
+        "n_fills_arm": 25865,
+        "n_fills_baseline": 27611,
+        "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 5 of 6 days complete",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": [],
+        "seed": 1524410510,
+        "status": "OK_POINT_ESTIMATE",
+        "why_no_test_statistic": "this run SKIPPED S4: no draw was made, so there is no null and no Z, p, mean or sd exists to report. The point estimates are the same arithmetic on the same replays as a full run -- only the control is absent. Nothing quoted from this artifact may imply significance."
+      }
+    ],
+    "placement_latency": {
+      "L_place_ms": 250.0,
+      "ambiguous": false,
+      "book": {
+        "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms.pkl",
+        "sha256": "ecc8e6323259224087093504ed9879a329ed3ff4a9ad530ce0057d7c95cce214"
+      },
+      "found_at": {
+        ".placement_latency.placement_latency_ms": 250.0
+      },
+      "source": "THE BOOK'S BUILDER RECEIPT",
+      "why": "read from the receipt of the book this day ran on -- never typed here"
+    },
+    "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+    "reasons_carry_no_sealed_value": [
+      {
+        "checked_against": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ],
+        "n_reasons": 0,
+        "no_sealed_value_in_any_reason": true,
+        "present_since": "design v2 -- including the 09-03 receipt, where it is an empty list",
+        "what_the_reasons_may_carry": "OPEN numbers only: the decision count and the declared minimum, and the declared sd floor fraction. The sd reason is a VERDICT ONLY",
+        "why_a_check_and_not_a_promise": "the stripper removes keys; a value interpolated into a string survives it. Before this, nothing but the author's care stopped one",
+        "written_by": "de_multiday_design_declaration.arm_day_admissible()"
+      },
+      {
+        "checked_against": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ],
+        "n_reasons": 0,
+        "no_sealed_value_in_any_reason": true,
+        "present_since": "design v2 -- including the 09-03 receipt, where it is an empty list",
+        "what_the_reasons_may_carry": "OPEN numbers only: the decision count and the declared minimum, and the declared sd floor fraction. The sd reason is a VERDICT ONLY",
+        "why_a_check_and_not_a_promise": "the stripper removes keys; a value interpolated into a string survives it. Before this, nothing but the author's care stopped one",
+        "written_by": "de_multiday_design_declaration.arm_day_admissible()"
+      }
+    ],
+    "reference_book": {
+      "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260907_btc__L250ms.json",
+      "day": "2026-09-07",
+      "day_forms_matched": [
+        "2026-09-07",
+        "20260907"
+      ],
+      "digest_read_from_field": "book.sha256",
+      "digest_recomputed_at_read_time": true,
+      "digest_source": "BE's builder receipt, not a DE constant",
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms.pkl",
+      "receipt_day": "20260907",
+      "sha256": "ecc8e6323259224087093504ed9879a329ed3ff4a9ad530ce0057d7c95cce214"
+    },
+    "resources": {
+      "peak_rss_mb": 2994.21484375,
+      "per_arm": {
+        "CONDVALUE_X_SKEW": {
+          "null_elapsed_s": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "null_peak_rss_mb": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "status": "OK_POINT_ESTIMATE"
+        },
+        "HAZARD_OVER_SKEWED_REF": {
+          "null_elapsed_s": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "null_peak_rss_mb": "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN",
+          "status": "OK_POINT_ESTIMATE"
+        }
+      },
+      "scope_memory": {
+        "anon_bytes": 1169022976,
+        "anon_gb": 1.0887374877929688,
+        "cap_was_hit": false,
+        "cgroup": "/user.slice/user-1001.slice/user@1001.service/research.slice/dePE151_0907L250.service",
+        "events": {
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0
+        },
+        "expected_slice": "research.slice",
+        "file_bytes": 180355072,
+        "file_gb": 0.16796875,
+        "in_research_slice": true,
+        "kernel_bytes": 10805248,
+        "leaf": "dePE151_0907L250.service",
+        "leaf_is_the_ruled_launch_form": true,
+        "memory_peak_bytes": 3311681536,
+        "memory_peak_gb": 3.0842437744140625,
+        "path": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/dePE151_0907L250.service",
+        "read_while_the_payload_lives": true,
+        "status": "MEASURED",
+        "the_arbiter_is_memory_events": "`max` counts times the limit was hit and `oom` times it killed. A high peak with max 0 is headroom the kernel simply had no reason to reclaim",
+        "the_post_exit_property": {
+          "status": "NOT_READ_FROM_INSIDE_THE_UNIT",
+          "why": "`systemctl show -p MemoryPeak` after the payload exits is the launcher's or the coordinator's read, recorded VERBATIM beside this one and never as a reading of the run's peak (form chain v4, memory_peak_reading)"
+        },
+        "this_is_the_peak_of_record": true,
+        "why_anon_and_file_apart": "rule 20's 8 GiB cap counts page cache. DA 63 measured 7.79 GiB peak with 1.13 GiB anon and 5.17 GiB reclaimable file, events max 0 -- a peak near the cap that the cap never enforced. One number cannot tell those apart",
+        "why_not_the_peak_of_record": null
+      },
+      "wall_seconds": 113.631582736969
+    },
+    "run_mode": "POINT_ESTIMATE",
+    "run_mode_note": "S4 SKIPPED: no null drawn, no Z, no p, no control. The point estimates are the same arithmetic on the same replays as a full run. Nothing quoted from this artifact may imply significance, and asking it for a test statistic REFUSES by name (POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC).",
+    "seal_layout_symmetry_checked_on_the_emitted_results": [
+      {
+        "conditional_key": "economic",
+        "keys_present_in_both": [
+          "sealed",
+          "seal_status",
+          "sealed_at_every_depth",
+          "sealed_field_names"
+        ],
+        "sealed_reads": {
+          "economic_present": false,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+          "sealed": true,
+          "sealed_at_every_depth": true,
+          "sealed_field_names": [
+            "D_E0",
+            "D_E_MINUS_R",
+            "Z",
+            "p_location",
+            "null_mean",
+            "null_sd",
+            "null_draws_summary",
+            "sd_over_abs_mean",
+            "n_fills_arm",
+            "n_fills_baseline",
+            "n_cancels_issued"
+          ]
+        },
+        "symmetric": true,
+        "unsealed_reads": {
+          "economic_present": true,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "UNSEALED -- 6 of 6 days complete under the bar this call was given",
+          "sealed": false,
+          "sealed_at_every_depth": false,
+          "sealed_field_names": []
+        }
+      },
+      {
+        "conditional_key": "economic",
+        "keys_present_in_both": [
+          "sealed",
+          "seal_status",
+          "sealed_at_every_depth",
+          "sealed_field_names"
+        ],
+        "sealed_reads": {
+          "economic_present": false,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+          "sealed": true,
+          "sealed_at_every_depth": true,
+          "sealed_field_names": [
+            "D_E0",
+            "D_E_MINUS_R",
+            "Z",
+            "p_location",
+            "null_mean",
+            "null_sd",
+            "null_draws_summary",
+            "sd_over_abs_mean",
+            "n_fills_arm",
+            "n_fills_baseline",
+            "n_cancels_issued"
+          ]
+        },
+        "symmetric": true,
+        "unsealed_reads": {
+          "economic_present": true,
+          "keys_missing": [],
+          "readable": true,
+          "seal_status": "UNSEALED -- 6 of 6 days complete under the bar this call was given",
+          "sealed": false,
+          "sealed_at_every_depth": false,
+          "sealed_field_names": []
+        }
+      }
+    ],
+    "status": "DAY_RUN_UNSEALED",
+    "what_this_is_not": {
+      "D_E_MINUS_R_is_UNBOUND": "the robustness endpoint needs the rebate's identity value, which is NOT on DE's surface. D(E0) -- the DECLARED PRIMARY -- is computed here from `de_phase4_diag_runner.fill_value_cents`, which is level-to-markout with NO fee term and therefore IS the E0 endpoint. D(E-R) is not computed and is not approximated",
+      "a_result": false,
+      "the_economics_are_SEALED": false,
+      "the_economics_are_SEALED_read_from": "the emitted arm-days' own `sealed` flags, never from `n_days_complete < G` -- which was true on the R-754 early read while both arm-days were unsealed",
+      "the_seal_scope_in_force_for_THIS_receipt": {
+        "design_version": 23,
+        "generated_from": "ECONOMIC_FIELDS and SEALED_FROM_DESIGN_VERSION -- the map the emitter actually applied, read at emit",
+        "n_sealed": 11,
+        "open_population_sizes": [
+          "n_decisions",
+          "n_scored_rows"
+        ],
+        "sealed_names": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ],
+        "the_open_sizes_are": "the action-side counts rule 8 requires and what R4's admissibility bar reads. `n_decisions` cannot be sealed without making the bar uncheckable",
+        "the_sealed_outcome_counts_are": "counts of what the policy DID: arm fills MINUS baseline fills is the intervention's effect in events (R-659)",
+        "why_generated": "a literal list here said four counts were open SIZES while the emitter sealed three of them (R-674). A receipt that describes its own seal from a constant somebody edited separately describes a different seal"
+      }
+    },
+    "work_counters": {
+      "draws_performed_by_the_before_work_hook": 14016,
+      "draws_performed_by_this_day": 0,
+      "process_total_draws": 14016,
+      "why_deltas": "the battery runs FIXTURE days and those draw; a process-wide counter would credit the day with the battery's work"
+    },
+    "wrapper": {
+      "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+      "ancestor_pids": [
+        1,
+        1004,
+        2602511,
+        2602513
+      ],
+      "cgroup_leaf": "dePE151_0907L250.service",
+      "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+      "flock_holder_pids": [
+        2602511
+      ],
+      "flock_modes_on_the_inode": [
+        "WRITE"
+      ],
+      "fresh_probe": {
+        "holder_is_exclusive": true,
+        "probed": true,
+        "probes": [
+          "LOCK_EX|LOCK_NB",
+          "LOCK_SH|LOCK_NB"
+        ],
+        "someone_holds_it": true,
+        "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+      },
+      "heavy_run_lock_held": true,
+      "held_by_self_or_ancestor": true,
+      "holder_is_exclusive": true,
+      "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+      "in_a_transient_scope": false,
+      "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+      "lock_fds": [
+        3
+      ],
+      "lock_is_held_by_someone": true,
+      "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+      "n_flock_holders": 1,
+      "rule20": {
+        "bar": {
+          "rss_gb": 1.0,
+          "wall_s": 60.0
+        },
+        "heavy_by_measurement": true,
+        "lock_held": true,
+        "peak_rss_gb": 2.9240379333496094,
+        "rule": "R-575(C) -- heavy implies the lock, checked here rather than promised in a wrapper string",
+        "wall_s": 113.631582736969
+      },
+      "self_or_ancestor_holds_EXCLUSIVE": true
+    }
+  },
+  "placement_latency": {
+    "L_place_ms": 250.0,
+    "ambiguous": false,
+    "book": {
+      "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms.pkl",
+      "sha256": null
+    },
+    "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260907_btc__L250ms.json",
+    "found_at": {
+      ".placement_latency.placement_latency_ms": 250.0
+    },
+    "source": "THE BOOK'S BUILDER RECEIPT",
+    "why": "read from the receipt of the book this day ran on -- never typed here"
+  },
+  "placement_latency_agreement": {
+    "L_place_ms": 250.0,
+    "agree": true,
+    "n_sites": 2,
+    "sites": {
+      ".day_run.placement_latency.L_place_ms": 250.0,
+      ".placement_latency.L_place_ms": 250.0
+    },
+    "why": "asserted over the FINISHED document at the emit, so the two sites cannot drift apart unnoticed the way they did before DE 151"
+  },
+  "protocol": "P003_DE_POINT_ESTIMATE_DAY_V1",
+  "run_mode": "POINT_ESTIMATE",
+  "supersedes": null,
+  "what_this_is": "the RULED settlement P&L at a declared placement latency, WITHOUT the null: S4 was skipped, so there is no Z, no p and no control. Nothing here implies significance."
+}
