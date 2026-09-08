@@ -53,11 +53,11 @@ from pathlib import Path
 #: version an older reader cannot tell a ledger carrying the ruled
 #: endpoint from one that does not. A reader that does not know a version
 #: REFUSES it by name (`LEDGER_SCHEMA_UNKNOWN`) instead of misreporting.
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 #: The versions THIS reader understands. A file outside the set refuses --
 #: which is the property the bump exists to create, and it is driven by
 #: pointing a reader whose known set is {1, 2} at a v3 file.
-KNOWN_SCHEMA_VERSIONS = (1, 2, 3)
+KNOWN_SCHEMA_VERSIONS = (1, 2, 3, 4)
 LEDGER_PREFIX = "p003_de_decision_ledger"
 
 
@@ -109,6 +109,19 @@ def write_ledger(path, day: str, per_arm: dict,
                 arm for arm in per_arm if per_arm[arm].get("settlement")),
             "settlement_row_kinds": ["SETTLEMENT_SCALARS",
                                      "SETTLEMENT_SLUG"],
+            # R-825 / DE 143: whether the SETTLEMENT null is re-derivable
+            # from THIS file -- computed from what is about to be
+            # written, never promised. A v3 ledger says false here.
+            "settlement_draws_persisted": sorted(
+                arm for arm in per_arm
+                if (per_arm[arm].get("null_settle_values") or [])),
+            "moments_ddof": 0,
+            "moments_ddof_note": ("the receipts' null_sd is the "
+                                  "POPULATION sd (statistics.pstdev, "
+                                  "ddof 0). A re-deriver assuming ddof 1 "
+                                  "gets a third number -- measured on "
+                                  "09-04: 5339.1612146584675 against "
+                                  "5344.508397986252"),
             # THE SIGN CONVENTION TRAVELS WITH THE FILE. `fill_value_cents`
             # signs by `HSP.SIDES[0]`; a reader that guessed "B" would
             # value every fill backwards the day that constant changed,
@@ -135,9 +148,14 @@ def write_ledger(path, day: str, per_arm: dict,
                 "n_fills_baseline": a.get("n_fills_baseline"),
             }, sort_keys=True) + "\n")
             n += 1
+            _sv = a.get("null_settle_values") or []
             for i, v in enumerate(a["null_values"]):
                 fh.write(json.dumps({
                     "row": "NULL_DRAW", "arm": arm, "i": i, "value": v,
+                    # R-825 / DE 143 (v4): the SETTLEMENT draw beside the
+                    # 5-second one. `None` where the day was not valued
+                    # under the endpoint -- absent is a fact, not a zero.
+                    "settle_value": (_sv[i] if i < len(_sv) else None),
                     "cancels": (a["null_cancels"][i]
                                 if a.get("null_cancels") else None)},
                     sort_keys=True) + "\n")
@@ -247,6 +265,10 @@ def read_ledger(path, *, expect_sha256: str | None = None) -> dict:
             elif k == "NULL_DRAW":
                 a["null_values"].append(r["value"])
                 a["null_cancels"].append(r["cancels"])
+                # R-825 / DE 143 (v4): the draw's SETTLEMENT value, so
+                # the endpoint's own moments re-derive from this file.
+                a.setdefault("null_settle_values", []).append(
+                    r.get("settle_value"))
             elif k == "FILL":
                 a["fills"][r["book"]].append(r)
             elif k == "DECISION":
@@ -358,8 +380,41 @@ def recompute(led: dict, arm: str) -> dict:
             f"DECISION_LEDGER_SETTLEMENT_VALUE_ABSENT_FOR_ARM: arm {arm!r}'s "
             f"SETTLEMENT_SCALARS row has no D_E_settle. A v3 ledger must not "
             f"fall back to the diagnostic D_E0 as the day's ruled result.")
+    # ---- R-825 / DE 143: THE SETTLEMENT NULL, RE-DERIVED HERE --------
+    # The receipts' Z and p under the ruled endpoint were READ and not
+    # re-derivable: this file carried only the DIAGNOSTIC's draws, and a
+    # good-faith re-derivation from those is 2.2x-5.4x MORE EXTREME on
+    # every arm-day -- the error runs toward OVERSTATING significance.
+    # THE ddof IS PINNED: the receipts' `null_sd` is the POPULATION sd
+    # (`statistics.pstdev`, ddof 0) -- measured on 09-04 as
+    # 5339.1612146584675 against a sample sd of 5344.508397986252, so a
+    # re-deriver assuming ddof 1 gets a third number.
+    _sv = [x for x in (a.get("null_settle_values") or []) if x is not None]
+    if settlement_scalars and len(_sv) != n:
+        raise LedgerRefused(
+            f"DECISION_LEDGER_SETTLEMENT_NULL_NOT_REDERIVABLE: this "
+            f"ledger carries SETTLEMENT scalars for arm {arm!r} and "
+            f"{len(_sv)} of {n} draws with a settlement value. A file "
+            f"that publishes a settlement Z whose null cannot be "
+            f"re-derived from its own rows is asking to be trusted, "
+            f"which is what R-825 refused.")
+    _settle_null = None
+    if _sv:
+        _sm, _ss = statistics.fmean(_sv), statistics.pstdev(_sv)
+        _obs_s = (settlement_scalars or {}).get("D_E_settle")
+        _settle_null = {
+            "n_null_draws": len(_sv), "null_mean": _sm, "null_sd": _ss,
+            "moments_ddof": 0,
+            "moments_are": ("population moments -- statistics.fmean and "
+                            "statistics.pstdev (ddof 0), the same the "
+                            "receipt used"),
+            "D_E_settle": _obs_s,
+            "Z": (((_obs_s - _sm) / _ss) if (_ss and _obs_s is not None)
+                  else None),
+        }
     out = {
         "absolute": a.get("absolute"),
+        "settlement_null": _settle_null,
         "D_E0": obs, "n_null_draws": n,
         "D_E0_role": ("DIAGNOSTIC_ONLY_SETTLEMENT_ROWS_PRESENT"
                       if settlement_scalars else "PRIMARY_WHEN_NO_SETTLEMENT"),
@@ -397,7 +452,7 @@ def recompute(led: dict, arm: str) -> dict:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 11
+EXPECTED_CHECKS = 13
 
 
 def selftest(quiet: bool = False) -> int:
@@ -432,6 +487,12 @@ def selftest(quiet: bool = False) -> int:
                      "n_decisions": 200, "n_cancels_issued": 11,
                      "n_fills_arm": len(fills), "n_fills_baseline": 55,
                      "null_values": vals, "null_cancels": None,
+                     # R-825 / DE 143: a fixture that carries SETTLEMENT
+                     # scalars must carry the settlement DRAWS too -- the
+                     # new guard refused this fixture the moment it
+                     # landed, which is the guard working on its own
+                     # battery.
+                     "null_settle_values": [v * 1.5 - 3.0 for v in vals],
                      "arm_fills": fills, "baseline_fills": fills[:20],
                      "decisions": [{"t": 1.0, "slug": "s0", "side": "B",
                                     "gen": 0, "score": 0.9}],
@@ -523,6 +584,68 @@ def selftest(quiet: bool = False) -> int:
             for e in o:
                 n += _keys_named(e, name)
         return n
+    # ---- R-825 / DE 143: THE SETTLEMENT NULL RE-DERIVES, ddof PINNED --
+    # The ledger persisted only the DIAGNOSTIC's draws, so every
+    # settlement Z and p was read and not checkable -- and a good-faith
+    # re-derivation from the 5-second rows is 2.2x-5.4x MORE EXTREME on
+    # every arm-day: the error runs toward OVERSTATING significance.
+    import statistics as _st143
+    _sv143 = [float(i) - 7.0 for i in range(40)]
+    _obs143 = 25.0
+    _per143 = {"A": {
+        "observed": 1.0, "arm_value": 2.0, "base_value": 1.0,
+        "null_values": [float(i) for i in range(40)],
+        "null_cancels": [1] * 40,
+        "null_settle_values": _sv143,
+        "arm_fills": fills, "baseline_fills": fills, "decisions": [],
+        "settlement": {"ruling": "R-801", "unit": "cents",
+                       "D_E_settle": _obs143,
+                       "arm_total_cents": 1.0,
+                       "baseline_total_cents": -24.0,
+                       "arm_per_slug": {}, "baseline_per_slug": {},
+                       "winner_source": {"path": "x", "sha256": "y"}}}}
+    _p143 = Path(tempfile.mkdtemp(prefix="ledger_143_")) / "l.jsonl.gz"
+    _w143 = write_ledger(_p143, "FIXTURE", _per143, buy_side="B")
+    _r143 = recompute(read_ledger(_p143), "A")
+    _sn143 = _r143["settlement_null"]
+    _want_mean = _st143.fmean(_sv143)
+    _want_sd0 = _st143.pstdev(_sv143)
+    _want_sd1 = _st143.stdev(_sv143)
+    _want_Z = (_obs143 - _want_mean) / _want_sd0
+    ok(_sn143 is not None
+       and abs(_sn143["null_mean"] - _want_mean) < 1e-9
+       and abs(_sn143["null_sd"] - _want_sd0) < 1e-9
+       and abs(_sn143["Z"] - _want_Z) < 1e-9
+       and _sn143["moments_ddof"] == 0
+       and abs(_want_sd0 - _want_sd1) > 1e-9
+       and _sn143["n_null_draws"] == 40,
+       f"R-825 / DE 143: THE SETTLEMENT NULL RE-DERIVES FROM THE FILE'S "
+       f"OWN ROWS -- mean {_sn143['null_mean']:.9f}, sd "
+       f"{_sn143['null_sd']:.9f}, Z {_sn143['Z']:.9f}, all matching an "
+       f"independent computation to 1e-9 over "
+       f"{_sn143['n_null_draws']} persisted draws. AND THE ddof IS "
+       f"PINNED AT {_sn143['moments_ddof']}: the population sd is "
+       f"{_want_sd0:.6f} and the SAMPLE sd is {_want_sd1:.6f}, so a "
+       f"re-deriver that assumed ddof 1 would get a third number -- MEM "
+       f"288 found the receipts match ddof 0")
+    # RED: settlement scalars whose null CANNOT be re-derived.
+    _per143b = {"A": {**_per143["A"], "null_settle_values": []}}
+    _p143b = Path(tempfile.mkdtemp(prefix="ledger_143b_")) / "l.jsonl.gz"
+    write_ledger(_p143b, "FIXTURE", _per143b, buy_side="B")
+    _ref143 = None
+    try:
+        recompute(read_ledger(_p143b), "A")
+    except LedgerRefused as _e:
+        _ref143 = str(_e).split(":")[0]
+    ok(_ref143 == "DECISION_LEDGER_SETTLEMENT_NULL_NOT_REDERIVABLE"
+       and SCHEMA_VERSION == 4,
+       f"R-825 RED: a ledger carrying SETTLEMENT scalars whose null "
+       f"cannot be re-derived from its own rows REFUSES BY NAME -- "
+       f"`{_ref143}` -- instead of publishing a Z a reader must take on "
+       f"trust. Schema v{SCHEMA_VERSION}: a v3 file has the settlement "
+       f"ROWS and not the settlement DRAWS, and the two are "
+       f"distinguishable by version, which is DA 131's rule applied to "
+       f"my own addition")
     # ---- DA 131 / Q-DA-356: THE VERSION IS WHAT STOPS A SILENT SKIP --
     # DA measured it: a CONFORMING v2 reader written before DE 136 skips
     # the SETTLEMENT rows and returns a complete-looking result with the
@@ -547,12 +670,12 @@ def selftest(quiet: bool = False) -> int:
         _refused131 = str(_e).split(":")[0]
     finally:
         globals()["KNOWN_SCHEMA_VERSIONS"] = _known_before
-    ok(SCHEMA_VERSION == 3
+    ok(SCHEMA_VERSION == 4
        and _r3["schema_version_read"] == 3
        and _r3["settlement_rows_status"] == "SETTLEMENT_ROWS_PRESENT"
        and len(_r3["settlement_rows"]) == 1
        and _refused131 == "LEDGER_SCHEMA_UNKNOWN"
-       and KNOWN_SCHEMA_VERSIONS == (1, 2, 3),
+       and KNOWN_SCHEMA_VERSIONS == (1, 2, 3, 4),
        f"DA 131: THE SCHEMA IS v{SCHEMA_VERSION} AND AN UNKNOWN VERSION "
        f"REFUSES. A v3 ledger reads as "
        f"`{_r3['settlement_rows_status']}` with its settlement rows "

@@ -51,7 +51,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 397
+EXPECTED_CHECKS = 398
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -5533,11 +5533,16 @@ def placement_latency_from_the_book(builder_receipt: dict, *,
                 next_under = under_placement_latency \
                     or "placement_latency" in key.lower()
                 is_leaf = not isinstance(v, (dict, list))
-                if is_leaf and (
-                        "placement_latency" in key.lower()
-                        or (under_placement_latency
-                            and key in ("L_place_ms",
-                                        "placement_latency_ms"))):
+                # DE 148: THE LEAF NAMES THE VALUE, NOT THE SUBJECT.
+                # Matching any key CONTAINING "placement_latency" made
+                # BE 102's L=250 book read as AMBIGUOUS: its receipt
+                # carries `placement_latency_ms: 250.0` AND
+                # `TRANCHE_BEFORE_PLACEMENT_LATENCY: 23947` -- a COUNT of
+                # tranches dropped, not a latency -- so the walk found
+                # two "values" and the guard refused a book that says
+                # exactly one L. The names that carry an L are named.
+                if is_leaf and key in ("L_place_ms",
+                                       "placement_latency_ms"):
                     found[f"{path}.{k}"] = v
                 _walk(v, f"{path}.{k}", next_under)
         elif isinstance(o, list):
@@ -5609,6 +5614,71 @@ def placement_latency_from_the_book(builder_receipt: dict, *,
                     "COMPUTED from the receipt's own keys, so a run on a "
                     "rebuilt book says so here without anyone editing "
                     "this sentence.")}
+
+
+#: R-828 / DE 148: the ONE name a point-estimate receipt carries where a
+#: full run carries its test statistics. Never a null, never a zero.
+NULL_NOT_DRAWN_STATUS = "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"
+#: The refusal any reader gets for asking such a receipt for Z or p.
+#: DA's reader must refuse on the SAME name -- filed in the register for
+#: DA to adopt rather than agreed by assumption.
+POINT_ESTIMATE_REFUSAL = "POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC"
+
+
+def point_estimate_arm_day(day: str, arm: str, observed: float,
+                           n_decisions: int, params: dict) -> dict:
+    """AN ARM-DAY WITHOUT ITS NULL -- and it says so where the numbers go.
+
+    S4 is 99.2 % of a run (9,467 s of 9,546 s measured on 09-03) and the
+    null buys ONLY Z and p. The point estimates -- the baseline, both
+    arms, their legs and the ruled excess -- are three replays and about
+    two minutes. So a run that wants the ESTIMATES and not the
+    SIGNIFICANCE skips S4 entirely, and every field the null would have
+    filled carries the status instead: not a null, not a zero, and not a
+    number anyone can mistake for a test."""
+    return {
+        "day": day, "arm": arm, "status": "OK_POINT_ESTIMATE",
+        "admissibility": {"admissible": True, "n_decisions": n_decisions,
+                          "bar": params["min_decisions_per_arm_day"],
+                          "note": ("R4's decision bar is checked; R8's "
+                                   "draw minimum does not apply to a run "
+                                   "that draws none")},
+        "draw_provenance": None,
+        "economic": {"D_E0": observed,
+                     "Z": NULL_NOT_DRAWN_STATUS,
+                     "p_location": NULL_NOT_DRAWN_STATUS,
+                     "null_mean": NULL_NOT_DRAWN_STATUS,
+                     "null_sd": NULL_NOT_DRAWN_STATUS,
+                     "null_draws_summary": {"n": NULL_NOT_DRAWN_STATUS}},
+        "why_no_test_statistic": (
+            "this run SKIPPED S4: no draw was made, so there is no null "
+            "and no Z, p, mean or sd exists to report. The point "
+            "estimates are the same arithmetic on the same replays as a "
+            "full run -- only the control is absent. Nothing quoted from "
+            "this artifact may imply significance."),
+    }
+
+
+def test_statistic_from(receipt: dict, field: str = "Z"):
+    """ASKING A POINT-ESTIMATE RECEIPT FOR A TEST STATISTIC REFUSES.
+
+    R-828 (3). The status is a STRING where a number belongs, so a
+    careless reader gets a type error at best; this makes it a refusal
+    BY NAME at worst and at best."""
+    for a in (receipt.get("day_run") or receipt).get(
+            "per_day_sealed_artifacts", []) or []:
+        v = ((a.get("economic") or {}).get(field))
+        if v == NULL_NOT_DRAWN_STATUS:
+            raise RunnerRefused(
+                f"REFUSED {POINT_ESTIMATE_REFUSAL}: arm {a.get('arm')!r} "
+                f"carries `{field}` = {NULL_NOT_DRAWN_STATUS}. This "
+                f"artifact is a POINT-ESTIMATE run: S4 was skipped, no "
+                f"null was drawn, and no test statistic exists to read. "
+                f"A full run at the same (day, L) is a DIFFERENT "
+                f"artifact, not a successor to this one.")
+    return {a.get("arm"): (a.get("economic") or {}).get(field)
+            for a in (receipt.get("day_run") or receipt).get(
+                "per_day_sealed_artifacts", []) or []}
 
 
 def settlement_not_valued_reason(status: str, admissibility: dict) -> str:
@@ -7147,6 +7217,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             early_read: dict | None = None,
             ledger_anchor=None,
             winners: dict | None = None,
+            point_estimate: bool = False,
             before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
@@ -7403,23 +7474,34 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         arm_replay = mod.replay(bk, _stream765, spec["theta"])
         observed = _value_cents(arm_replay["fills"]) - base_value
         seed = seed_for(book_sha, arm)
-        nul = null_draws_valued(
-            mod, bk, base["fills"], pop["by_side"],
-            n_draws=params["min_draws_per_arm_day"], seed=seed,
-            deadline_s=params["per_day_deadline_s"],
-            winners=(_win801["winners"] if _win801 else None))
-        prov = {"module_sha256": cite["sha256"], "seed": seed,
-                "book_digest": book_sha, "arm": arm,
-                "draw_source": "GENERATED_IN_PROCESS",
-                "generated_in_process": True,
-                "pid": __import__("os").getpid(),
-                "n_draws": nul["n_draws"],
-                "reproduces_BEs_draw_null":
-                    nul["reproduces_BEs_draw_null"]}
-        r = arm_day(day, arm, observed, nul["values"], pop["decisions"],
-                    params, elapsed_s=time.time() - t_start,
-                    draw_provenance=prov, book_digest=book_sha,
-                    verified_module_sha=cite["sha256"])
+        if point_estimate:
+            # R-828 / DE 148: S4 IS SKIPPED ENTIRELY. Not a shorter null
+            # -- no null. The draw count is never lowered (R-174); it is
+            # not taken at all, and the receipt says so where every
+            # statistic would have gone.
+            nul = None
+            r = point_estimate_arm_day(day, arm, observed,
+                                       pop["decisions"], params)
+            _mark("S4_null_SKIPPED_POINT_ESTIMATE")
+        else:
+            nul = null_draws_valued(
+                mod, bk, base["fills"], pop["by_side"],
+                n_draws=params["min_draws_per_arm_day"], seed=seed,
+                deadline_s=params["per_day_deadline_s"],
+                winners=(_win801["winners"] if _win801 else None))
+            prov = {"module_sha256": cite["sha256"], "seed": seed,
+                    "book_digest": book_sha, "arm": arm,
+                    "draw_source": "GENERATED_IN_PROCESS",
+                    "generated_in_process": True,
+                    "pid": __import__("os").getpid(),
+                    "n_draws": nul["n_draws"],
+                    "reproduces_BEs_draw_null":
+                        nul["reproduces_BEs_draw_null"]}
+            r = arm_day(day, arm, observed, nul["values"],
+                        pop["decisions"], params,
+                        elapsed_s=time.time() - t_start,
+                        draw_provenance=prov, book_digest=book_sha,
+                        verified_module_sha=cite["sha256"])
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
@@ -7439,8 +7521,22 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                     f"{_recon801!r} and the per-fill valuation gives "
                     f"{_obs801!r}. The decomposition and the excess must "
                     f"be the same number.")
+            _sblock = (
+                {"D_E_settle": _obs801,
+                 "Z": NULL_NOT_DRAWN_STATUS,
+                 "p_location": NULL_NOT_DRAWN_STATUS,
+                 "null_mean": NULL_NOT_DRAWN_STATUS,
+                 "null_sd": NULL_NOT_DRAWN_STATUS,
+                 "null_draws_summary": {"n": NULL_NOT_DRAWN_STATUS},
+                 "endpoint": "R-801 SETTLEMENT P&L (trades + residual)",
+                 "why_no_test_statistic": (
+                     "S4 was skipped: the ESTIMATE is the same "
+                     "arithmetic on the same replays as a full run; only "
+                     "the control is absent")}
+                if point_estimate else
+                settlement_arm_day(_obs801, nul["settle_values"], params))
             r["economic_settlement"] = {
-                **settlement_arm_day(_obs801, nul["settle_values"], params),
+                **_sblock,
                 "arm_total_cents": _sarm801,
                 "zero_cancel_baseline_total_cents": _sbase801,
                 "arm_legs": {k: v for k, v in _armlegs801.items()
@@ -7543,16 +7639,34 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             "n_cancels_issued": int(arm_replay["cancels_issued"]),
             "n_fills_arm": int(arm_replay["n_fills"]),
             "n_fills_baseline": int(base["n_fills"]),
-            "null_values": nul["values"], "null_cancels": nul.get("cancels"),
+            # R-828: a POINT-ESTIMATE run drew no null, so the ledger
+            # carries none -- an empty list here would read as "500 draws
+            # that all came out zero".
+            "null_values": (nul["values"] if nul else None),
+            "null_cancels": (nul.get("cancels") if nul else None),
+            "null_not_drawn": (NULL_NOT_DRAWN_STATUS if nul is None
+                               else None),
+            # R-825 / DE 143: THE SETTLEMENT DRAW'S OWN VALUE, PERSISTED.
+            # The ledger carried only the DIAGNOSTIC's draws, so every
+            # settlement Z and p in a receipt was a number a reader could
+            # only take on trust -- and a good-faith re-derivation from
+            # the 5-second rows comes out 2.2x-5.4x MORE EXTREME on every
+            # arm-day, i.e. the error runs toward OVERSTATING
+            # significance. Kept beside the 5-second value, one float per
+            # draw, so the endpoint's own moments re-derive from the file.
+            "null_settle_values": (nul.get("settle_values")
+                                   if nul else None),
             "arm_fills": arm_replay["fills"],
             "baseline_fills": base["fills"],
             "decisions": [dict(r) for r in _stream765
                           if float(r["score"]) >= spec["theta"]],
         }
-        per_arm_detail[arm] = {"status": r["status"],
-                               "null_elapsed_s": nul["elapsed_s"],
-                               "null_peak_rss_mb":
-                                   nul["peak_rss_mb_during_draws"]}
+        per_arm_detail[arm] = {
+            "status": r["status"],
+            "null_elapsed_s": (nul["elapsed_s"] if nul
+                               else NULL_NOT_DRAWN_STATUS),
+            "null_peak_rss_mb": (nul["peak_rss_mb_during_draws"] if nul
+                                 else NULL_NOT_DRAWN_STATUS)}
     _mark("S4_null")
 
     # ---- S5: seal. Counts and statuses only. ---------------------------
@@ -7785,6 +7899,20 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # R-810: WHAT MAKER THIS DAY MEASURED, from the book's own
         # builder receipt rather than from a sentence here.
         "placement_latency": _plat,
+        # R-828 (4): THE RUN'S OWN IDENTITY. A point-estimate run is a
+        # DIFFERENT KIND of artifact, not a lesser one and not a
+        # predecessor: a full run at the same (day, L) neither supersedes
+        # it nor is superseded by it -- they answer different questions.
+        "run_mode": ("POINT_ESTIMATE" if point_estimate else "FULL"),
+        "run_mode_note": (
+            ("S4 SKIPPED: no null drawn, no Z, no p, no control. The "
+             "point estimates are the same arithmetic on the same "
+             "replays as a full run. Nothing quoted from this artifact "
+             "may imply significance, and asking it for a test "
+             "statistic REFUSES by name "
+             f"({POINT_ESTIMATE_REFUSAL}).")
+            if point_estimate else
+            "the full run: S4 drawn, the null valued, Z and p computed"),
         "G_and_which_G_it_is": {
             "design_G_from_params": params["G"],
             "params_file": PARAMS_REL,
@@ -10470,6 +10598,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         offline_skip("R-803 the renamed field is absent from a real "
                      "fixture receipt and ledger; it writes and re-reads "
                      "them beside a run that reads data/")
+        offline_skip("R-828 point-estimate mode -- it runs two real "
+                     "replays and compares them to a full run; both "
+                     "read BE's committed null receipt under data/")
     else:
         _mk134 = write_synthetic_day("FIXTURE-DAY-1",
                                      _tfr.mkdtemp(prefix="de134_day_"),
@@ -10642,6 +10773,44 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"with SELLS - BUYS stated beside it. BE 99 measured the old "
            f"field to be the trades cash flow with the opposite sign; "
            f"the LANDED artifacts keep their bytes (rule 13)")
+        # ---- R-828 / DE 148: THE POINT-ESTIMATE MODE ----------------
+        # S4 is 99.2 % of a run and buys ONLY Z and p. A run that wants
+        # the ESTIMATES skips it entirely -- and the estimates must be
+        # the SAME NUMBERS, because they are the same arithmetic on the
+        # same replays.
+        _pe828 = run_day("FIXTURE-DAY-1", _mk134["book_path"], params=live,
+                         fixture=True, n_days_complete=1,
+                         point_estimate=True)
+        _fu828 = run_day("FIXTURE-DAY-1", _mk134["book_path"], params=live,
+                         fixture=True, n_days_complete=1)
+        _pev = {a["arm"]: (a.get("economic") or {}).get("D_E0")
+                for a in _pe828["per_day_sealed_artifacts"]}
+        _fuv = {a["arm"]: (a.get("economic") or {}).get("D_E0")
+                for a in _fu828["per_day_sealed_artifacts"]}
+        _ref828 = None
+        try:
+            test_statistic_from(_pe828, "Z")
+        except RunnerRefused as _e828:
+            _ref828 = str(_e828).split(":")[0].replace("REFUSED ", "")
+        _fullZ = test_statistic_from(_fu828, "Z")
+        ok(_pe828["run_mode"] == "POINT_ESTIMATE"
+           and _fu828["run_mode"] == "FULL"
+           and _pev == _fuv and all(v is not None for v in _pev.values())
+           and all((a.get("economic") or {}).get("Z")
+                   == NULL_NOT_DRAWN_STATUS
+                   for a in _pe828["per_day_sealed_artifacts"])
+           and _ref828 == POINT_ESTIMATE_REFUSAL
+           and all(isinstance(v, float) for v in _fullZ.values()),
+           f"R-828 / DE 148: THE POINT ESTIMATE IS THE SAME NUMBER. "
+           f"Skipping S4 entirely reproduces the FULL run's D_E0 on both "
+           f"arms EXACTLY ({list(_pev.values())} == "
+           f"{list(_fuv.values())}) -- same replays, same arithmetic, "
+           f"only the control absent. Where the statistics would be the "
+           f"receipt carries `{NULL_NOT_DRAWN_STATUS}` (never a null, "
+           f"never a zero), asking it for Z REFUSES `{_ref828}`, and a "
+           f"FULL receipt still answers with real floats. `run_mode` "
+           f"marks the artifact so it can never be read as, or "
+           f"supersede, a full run")
         import shutil as _sh801
         _sh801.rmtree(_d801, ignore_errors=True)
     import shutil as _sh134
