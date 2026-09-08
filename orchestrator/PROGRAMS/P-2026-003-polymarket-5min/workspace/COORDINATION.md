@@ -23548,6 +23548,36 @@ EARLY READ -- day 2026-09-04 -- EXPLORATORY, G 4, point estimates, NO INTERVAL, 
 **State at the clear.** GO #8's receipt landed (`f13ed34`); the two 250 ms point estimates landed (`f84c3fa`) with the three status-comparison fixes; `DE_PROCEDURE.md` landed (`151b80d`). BE is building 09-04's book at 250 ms (started 03:55:48Z). Not started, per instruction: 09-05 at L = 0 as the paired control, the remaining days at 250, DE 144's parallel null, and DE's own register row for the point-estimate round.
 
 **ROUTING.** DE cleared and reloaded from `DE_PROCEDURE.md`, SEAT_PROTOCOL, R-830 and R-831, the runbook's §7e addenda and its own last rows → confirms from the files → resumes: the remaining days at 250 as BE's books land, 09-05 at L = 0 as the paired control, then DE 144. REV reads `f84c3fa` and sweeps for other equality-compared status strings. MEM 289 sweeps R-825..R-831.
+
+### R-832 — 2026-09-08T05:30Z — coordinator — **FOUR DAYS OF REAL SETTLED P&L AT BOTH LATENCIES, AND THE FAST PATH IS VALIDATED. The falsifier held EXACTLY: 09-05 at L = 0 in point-estimate mode reproduces the landed full run digit for digit — baseline 81,238.29966 against 81,238.2997, CONDVALUE 30,045.04110 against 30,045.0411 (D −51,193.25856 against −51,193.2586), HAZARD 88,884.09136 against 88,884.0914 (D +7,645.79169 against +7,645.7917). Same replays, only the null absent, exactly as DE 148's contract says. **Every 250 ms number produced tonight is therefore a measurement, not a new pipeline's first output.****
+
+**THE MAKER'S LATENCY COST, four days, cents:**
+| day | never cancel L = 0 | never cancel L = 250 | loss |
+|---|---|---|---|
+| 09-03 | 82,142.82 | 37,849.85 | −53.9 % |
+| 09-04 | 102,193.69 | 38,452.91 | −62.4 % |
+| 09-05 | 81,238.30 | 1,974.58 | −97.6 % |
+| 09-06 | 46,562.18 | 20,750.59 | −55.4 % |
+
+**THE POLICIES AGAINST IT (arm − baseline), and the ordering does NOT survive:**
+| day | CONDVALUE L = 0 | CONDVALUE L = 250 | HAZARD L = 0 | HAZARD L = 250 |
+|---|---|---|---|---|
+| 09-03 | −39,954.75 | −16,510.70 | −11,166.44 | −10,817.15 |
+| 09-04 | −13,819.14 | −14,432.27 | −16,306.24 | −17,441.80 |
+| 09-05 | −51,193.26 | **+10,257.74** | +7,645.79 | **+11,610.50** |
+| 09-06 | **+2,243.97** | −5,269.25 | **+10,408.02** | **+7,336.86** |
+
+**Read plainly: at 250 ms each arm wins twice and loses twice across four days, and the days on which they win are not the same days.** 09-06 is the only day where a policy led at L = 0 and LOST at 250 (CONDVALUE, +2,244 → −5,269); 09-05 is the only day where both flipped the other way. 09-04 is the only day where both lose at both latencies. **The one effect that points the same direction on every day is the latency itself** — it costs the maker between 54 % and 98 % of its money, an order of magnitude more than either policy moves it. **No significance attaches to any of this**: point estimates, no null, no Z, no p; four days; design data under rule 11; and L = 250 remains a declared assumption that BE 104 showed the data brackets (≈ 90 ms median, 0.9–1.3 s p95–p99 for a symmetric round trip) rather than confirms.
+
+**The mechanism, unchanged and now visible on four days: the maker's money is the residual, not the trading.** 09-06 at L = 250: baseline trades **−328,520.45**, residual **+349,271.04**, total 20,750.59. Every path on every day trades cash OUT and is repaid at settlement; latency removes the fills that made the repayment exceed the outlay.
+
+**A COORDINATOR ERROR, corrected in band within four minutes.** I reported the 09-06 book as "3.6 MB against roughly 9 MB for the other days" and called it suspicious. **That was a truncated column in my own `ls` formatting, not a file size.** Measured properly: 09-03 275.9 MB, 09-04 323.4 MB, 09-05 247.0 MB, 09-06 260.9 MB at L = 250, each very slightly SMALLER than its L = 0 twin (277.3 / 325.2 / 248.4 / 262.3 MB), which is correct because dropped fills remove content. The receipts agree: 288 windows and 23,749 dropped tranches on 09-06 against 288 and 23,947 on 09-05. **Nothing was wrong with the book; the fault was in how I read my own output** — the same class as the top-level `.get` misread at R-791 and the row-versus-landing-commit error at R-793, and the third time this session that my own instrument, not the artifact, was the defect.
+
+**BE 104's operational finding, acted on:** the 09-04 build hit `MemoryMax=8G` **775 times** (`memory.events max 775`, `oom_kill 0`, `memory.current` 5.42 GB after) and took 48 min against 09-03's 34 — 09-04 is the heaviest day at 208,458 FILL rows. BE was told to raise the envelope for the remaining builds **from what it measured rather than to a round number**, and to record the value, the reason and the evidence in the receipt so the launch form's envelope is a declared number. 09-06 then built in ~27 min. Also asked and not yet answered: whether a book built under memory pressure differs in any way from one built without it — expected no, checked anyway.
+
+**THE FRESH DE FOUND A RULE-12 DEFECT WITHIN AN HOUR OF ITS RESET, which is the reset paying for itself.** The point-estimate driver that produced tonight's artifacts **lived only in the PREVIOUS seat's session scratchpad** — "a landed artifact whose builder lives only in scratch is the rule-12 shape that voided a freeze once". It copied the file byte-identically (sha `ba91c687f4ae9e73…`), ran from the copy, said so, and proposed moving the driver into `live/pm_research/` or `scripts/` with its landing rather than continuing quietly. **Three corrections it now owes its own file, all found by reading the file against reality: §7 needs the INVOCATION beside the contract (it cost ~7 minutes to reconstruct); §2 must record that runs EXECUTE from wt-de2, not only edits and landings; and the driver must stop being scratch-only.** A procedure file that a fresh seat can fault within an hour is a procedure file doing its job.
+
+**ROUTING.** BE is building the last book, **09-07 at L = 250** (started 05:29:39Z); its L = 0 twin already exists from tonight's close, so that completes five days at both latencies. Then: DE's register row for the whole point-estimate round (unfiled since Q-DE-144), the driver's proper home, the three file corrections, DA reads all seven point-estimate artifacts with the landed reader, and then the nulls — DE 143's re-derivable settlement draws are landed, DE 144's parallel replays are not. MEM 289 sweeps R-825..R-832.
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
