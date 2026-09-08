@@ -59,6 +59,17 @@ SCHEMA_VERSION = 4
 #: pointing a reader whose known set is {1, 2} at a v3 file.
 KNOWN_SCHEMA_VERSIONS = (1, 2, 3, 4)
 LEDGER_PREFIX = "p003_de_decision_ledger"
+#: DE 151, the USER's second finding. A POINT-ESTIMATE run draws no null
+#: (R-828), so this module's `recompute()` had no null to work with and
+#: raised `statistics.StatisticsError` on its FIRST line of arithmetic --
+#: which made every ledger the fast mode wrote unreadable by the path DA
+#: verifies with. NO NULL IS A STATUS, NEVER A CRASH AND NEVER A ZERO:
+#: the null-dependent fields carry this name so a reader sees why they
+#: are absent instead of reading a 0.0 mean and a p of 1/(0+1) = 1.0.
+#: The runner declares the same string; the runner's battery asserts the
+#: two agree, because a status compared across two modules is a literal
+#: that must track a moving thing.
+NULL_NOT_DRAWN_STATUS = "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"
 
 
 class LedgerRefused(RuntimeError):
@@ -292,16 +303,32 @@ def recompute(led: dict, arm: str) -> dict:
     receipt disagree, one of them is wrong and the acceptance cell says
     which."""
     a = led["arms"][arm]
-    vals = list(a["null_values"])
+    # DE 151: `null_values` is None on a POINT-ESTIMATE ledger, not [] --
+    # an empty list would read as "draws that all came out zero" (the
+    # writer's own rule, DE 143). `or []` is the shape every consumer of
+    # this field uses.
+    vals = list(a["null_values"] or [])
     obs = a["scalars"]["observed_D_E0"]
-    mean = statistics.fmean(vals)
-    sd = statistics.pstdev(vals)
     n = len(vals)
-    ge = sum(1 for v in vals if v >= obs)
-    le = sum(1 for v in vals if v <= obs)
-    # THE SAME +1/+1 CONVENTION THE DESIGN USES for a permutation p.
-    p_one = (ge + 1) / (n + 1)
-    p_two = min(1.0, 2.0 * min((ge + 1) / (n + 1), (le + 1) / (n + 1)))
+    # ---- THE NO-NULL CASE IS A STATUS, NOT A CRASH (DE 151) ---------
+    # `statistics.fmean([])` raises, and it raised here BEFORE anything
+    # else in this function ran -- so a point-estimate ledger could not
+    # be recomputed AT ALL: not its settlement scalars, not its fills
+    # legs, not its absolutes, none of which need a null. Everything
+    # that does not depend on the null is computed exactly as before;
+    # only the five null-dependent fields carry the name.
+    _no_null = not vals
+    if _no_null:
+        mean = sd = p_one = p_two = NULL_NOT_DRAWN_STATUS
+    else:
+        mean = statistics.fmean(vals)
+        sd = statistics.pstdev(vals)
+        ge = sum(1 for v in vals if v >= obs)
+        le = sum(1 for v in vals if v <= obs)
+        # THE SAME +1/+1 CONVENTION THE DESIGN USES for a permutation p.
+        p_one = (ge + 1) / (n + 1)
+        p_two = min(1.0, 2.0 * min((ge + 1) / (n + 1),
+                                   (le + 1) / (n + 1)))
     fills = a["fills"]["ARM"]
     legs = {"n_fills_valued": 0, "fills_leg_cents": 0.0,
             "spread_captured_cents": 0.0, "adverse_cents": 0.0,
@@ -391,7 +418,13 @@ def recompute(led: dict, arm: str) -> dict:
     # 5339.1612146584675 against a sample sd of 5344.508397986252, so a
     # re-deriver assuming ddof 1 gets a third number.
     _sv = [x for x in (a.get("null_settle_values") or []) if x is not None]
-    if settlement_scalars and len(_sv) != n:
+    # DE 151: the guard is on a ledger THAT DREW A NULL. On a
+    # point-estimate ledger n is 0 and `_sv` is empty, so `len(_sv) != n`
+    # is False and the guard passes -- by arithmetic coincidence, not by
+    # a decision. Stated as a decision: there is no settlement Z to
+    # re-derive when no draw was taken, and a control that passes for a
+    # reason nobody chose is the shape rule 16 names.
+    if settlement_scalars and not _no_null and len(_sv) != n:
         raise LedgerRefused(
             f"DECISION_LEDGER_SETTLEMENT_NULL_NOT_REDERIVABLE: this "
             f"ledger carries SETTLEMENT scalars for arm {arm!r} and "
@@ -420,8 +453,20 @@ def recompute(led: dict, arm: str) -> dict:
         "D_E0_role": ("DIAGNOSTIC_ONLY_SETTLEMENT_ROWS_PRESENT"
                       if settlement_scalars else "PRIMARY_WHEN_NO_SETTLEMENT"),
         "null_mean": mean, "null_sd": sd,
-        "Z": ((obs - mean) / sd) if sd else math.inf,
+        # DE 151: Z is the fifth null-dependent field. `math.inf` was the
+        # sd == 0 branch; a MISSING null is a different fact from a
+        # degenerate one and gets its own name rather than an infinity.
+        "Z": (NULL_NOT_DRAWN_STATUS if _no_null
+              else (((obs - mean) / sd) if sd else math.inf)),
         "p_one_sided": p_one, "p_two_sided": p_two,
+        "null_status": (NULL_NOT_DRAWN_STATUS if _no_null
+                        else "NULL_DRAWN"),
+        "null_status_note": (
+            "S4 was skipped: this ledger's run drew no null, so null_mean, "
+            "null_sd, Z, p_one_sided and p_two_sided carry the status "
+            "instead of a number. Every other field here is computed the "
+            "same way it is for a full run." if _no_null else
+            "the null was drawn; every statistic here is a number"),
         "primary_result_field": primary_name,
         "primary_result_cents": primary_value,
         "settlement_rows_status": led.get("settlement_rows_status"),
@@ -453,7 +498,7 @@ def recompute(led: dict, arm: str) -> dict:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 13
+EXPECTED_CHECKS = 16
 
 
 def selftest(quiet: bool = False) -> int:
@@ -780,6 +825,81 @@ def selftest(quiet: bool = False) -> int:
        f"roughly {2 * (600 + 45000 + 19000) * _per_row / 1e6:.0f} MB "
        f"gzipped -- the estimate is stated here rather than discovered on "
        f"the first real day")
+
+    # ---- DE 151: A POINT-ESTIMATE LEDGER IS READABLE ------------------
+    # THE KNOWN-BAD IS THE SHIPPED CODE'S OWN BEHAVIOUR. Before this
+    # round `recompute()` called `statistics.fmean(vals)` as its first
+    # arithmetic, so a ledger whose run drew no null raised
+    # StatisticsError and NOTHING in the file could be read -- not the
+    # settlement scalars, not the fills legs, not the absolutes, none of
+    # which need a null. That is the path DA verifies with, so every
+    # ledger the fast mode wrote was unverifiable. The cell drives the
+    # pre-fix behaviour explicitly and then drives the fix.
+    _pe_arm = dict(per_arm["A"])
+    # THE WRITER'S OWN SHAPE for a point-estimate run: None, never [].
+    _pe_arm["null_values"] = None
+    _pe_arm["null_settle_values"] = None
+    _pe_lp = d / ledger_name("2026-09-07", "20260908T000000Z")
+    _pe_w = write_ledger(_pe_lp, "2026-09-07", {"A": _pe_arm}, buy_side="B")
+    _pe_r = read_ledger(_pe_lp, expect_sha256=_pe_w["sha256"])
+    # the pre-fix expression, driven on this fixture: it MUST raise, or
+    # the cell is asserting a property the defect never had.
+    _raised = None
+    try:
+        statistics.fmean(list(_pe_r["arms"]["A"]["null_values"] or []))
+    except Exception as _e:                      # noqa: BLE001
+        _raised = type(_e).__name__
+    _pe_rc = recompute(_pe_r, "A")
+    ok(_raised is not None
+       and _pe_rc["null_status"] == NULL_NOT_DRAWN_STATUS
+       and _pe_rc["null_mean"] == NULL_NOT_DRAWN_STATUS
+       and _pe_rc["null_sd"] == NULL_NOT_DRAWN_STATUS
+       and _pe_rc["Z"] == NULL_NOT_DRAWN_STATUS
+       and _pe_rc["p_one_sided"] == NULL_NOT_DRAWN_STATUS
+       and _pe_rc["p_two_sided"] == NULL_NOT_DRAWN_STATUS
+       and _pe_rc["n_null_draws"] == 0,
+       f"DE 151 KNOWN-BAD + FIX: the pre-fix arithmetic on this very "
+       f"fixture raises {_raised} (so the defect is real and this cell "
+       f"can fail), and `recompute()` now returns the named status in "
+       f"all five null-dependent fields -- null_mean, null_sd, Z, "
+       f"p_one_sided, p_two_sided = {NULL_NOT_DRAWN_STATUS} -- never a "
+       f"0.0 mean and never p = 1/(0+1)")
+    # ---- AND EVERYTHING THAT DOES NOT NEED THE NULL IS STILL THERE ----
+    # The point of the fix is not that it stops raising: it is that the
+    # rest of the file becomes readable. Asserted against the FULL
+    # ledger's own recompute on the same fills, so the cell measures
+    # equality between two paths rather than echoing one.
+    ok(_pe_rc["D_E_settle"] == 1234.0
+       and _pe_rc["primary_result_field"] == "D_E_settle"
+       and _pe_rc["primary_result_cents"] == 1234.0
+       and _pe_rc["settlement_rows_status"] == "SETTLEMENT_ROWS_PRESENT"
+       and _pe_rc["n_fills_valued"] == rc["n_fills_valued"]
+       and abs(_pe_rc["fills_leg_cents"] - rc["fills_leg_cents"]) < 1e-9
+       and abs(_pe_rc["trades_cash_flow_cents"]
+               - rc["trades_cash_flow_cents"]) < 1e-9
+       and _pe_rc["settlement_null"] is None,
+       f"DE 151: and the no-null ledger's OTHER fields recompute "
+       f"IDENTICALLY to the full ledger's -- D_E_settle "
+       f"{_pe_rc['D_E_settle']}, {_pe_rc['n_fills_valued']} fills valued, "
+       f"fills leg {_pe_rc['fills_leg_cents']:.6f}, trades cash flow "
+       f"{_pe_rc['trades_cash_flow_cents']:.6f} -- so the fast mode's "
+       f"ledgers are readable by the path DA verifies with, not merely "
+       f"non-crashing. `settlement_null` is None because no draw exists "
+       f"to re-derive it from, which is the R-825 guard declining for a "
+       f"stated reason rather than passing on len 0 == n 0")
+    # ---- AND THE FULL LEDGER IS UNCHANGED BY THE FIX ------------------
+    ok(rc["null_status"] == "NULL_DRAWN"
+       and isinstance(rc["null_mean"], float)
+       and isinstance(rc["Z"], float) and rc["n_null_draws"] == 600
+       and abs(rc["null_mean"] - statistics.fmean(vals)) < 1e-9
+       and abs(rc["null_sd"] - statistics.pstdev(vals)) < 1e-9
+       and rc["settlement_null"] is not None,
+       f"DE 151 POSITIVE CONTROL: a ledger that DID draw its null is "
+       f"untouched -- null_status NULL_DRAWN, {rc['n_null_draws']} draws, "
+       f"mean {rc['null_mean']:.9f} and sd {rc['null_sd']:.9f} still "
+       f"numbers to 1e-9, and the settlement null still re-derives. The "
+       f"fix adds a branch for the empty case; it does not change the "
+       f"populated one")
 
     shutil.rmtree(d, ignore_errors=True)
     shutil.rmtree(_iso, ignore_errors=True)
