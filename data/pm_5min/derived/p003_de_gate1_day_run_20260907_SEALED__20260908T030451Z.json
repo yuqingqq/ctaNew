@@ -1,0 +1,1414 @@
+{
+  "G_and_which_G_it_is": {
+    "design_G_from_params": 6,
+    "n_days_complete_at_this_emit": 4,
+    "no_bare_G_key_here": "removed at REV 90 \u00a7A0(3). Nothing read it: a sweep of live/pm_research found no consumer of a day-run receipt's top-level `G`. The four landed sealed receipts (09-03..09-06) still carry the old bare `G: 6`; from here on receipts carry this block instead, which is a schema change between days and is said so here rather than discovered later.",
+    "params_file": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+    "the_bar_this_run_sealed_against": 6,
+    "why_two_numbers_exist": "the design's G is the ruled six-day population; the bar a run seals against is the same six EXCEPT under the user-ruled early read (R-754), which seals against its own four. They are different questions and they are no longer both called G."
+  },
+  "as_of": "2026-09-08T03:04:51.630970+00:00",
+  "battery": {
+    "clean": true,
+    "disarmed": [],
+    "n_checks_run": 374,
+    "n_disarmed": 0,
+    "n_skipped": 0,
+    "offline": false,
+    "outcome": "PASS",
+    "ran_in_the_emitting_process": true,
+    "resources": {
+      "fraction_of_the_heavy_bar_by_memory": 0.866,
+      "fraction_of_the_heavy_bar_by_wall": 0.648,
+      "heavy_bar_mb": 1024.0,
+      "heavy_bar_seconds": 60.0,
+      "most_of_the_peak_is_one_check": "REV 53 S0.3's control inflates the process past the 700 MB fixture budget ON PURPOSE and frees it immediately -- it has to exceed that budget to reproduce the case. That is why the peak is ~850 MB and the RETAINED figure is ~26 MB, and why the peak cannot be reduced without retiring the control",
+      "process_peak_rss_mb_at_the_end": 886.3,
+      "process_peak_rss_mb_at_the_start": 57.6,
+      "ran_holding_the_heavy_run_lock": true,
+      "wall_seconds": 38.88,
+      "would_need_the_lock_standalone": false
+    },
+    "skipped": [],
+    "skips_unnamed": [],
+    "summary_line": "[de_multiday_gate1_runner] PASS -- 374 checks, n_disarmed 0, n_skipped 0",
+    "why_skipped": null
+  },
+  "battery_scope": {
+    "day_draws_when_the_battery_returned": 0,
+    "day_path_checks_declared": 102,
+    "offline": false,
+    "ran_before_the_days_work": true,
+    "why": "a REAL day runs the FULL battery -- the four R6 controls and all 102 day-path checks -- because the run is already reading the ledger (reviewer S3.4). THIS COUNT IS COMPUTED: it read a literal 23 beside a constant of 38 and then 49, which is rule 10 in my own receipt",
+    "why_not_at_the_emit": "it WAS at the emit. On 2026-09-03 the day's 84 minutes finished and a FIXTURE check inside the battery refused on the real day's process-wide high-water; nothing was written and the day was lost. The budget defect is fixed (growth, per stage), but the ORDER was the other half: a check that can refuse must refuse before the work it would waste. Measured by `before_work.residency.day_draws_when_the_hook_returned`, which is 0"
+  },
+  "battery_stage_is_inside_the_budget": true,
+  "be_module_citation": {
+    "cited_not_copied": true,
+    "digest_is_of_the_file_the_import_loaded": true,
+    "loaded_from": "/home/yuqing/ctaNew-wt-de/live/pm_research/be_cancel_axis_null.py",
+    "modules_checked": [
+      "live/pm_research/be_cancel_axis_null.py"
+    ],
+    "n_modules_checked": 1,
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "scope": "THE ENTRY POINT ONLY -- no `be_cascade` in the params, or a digest was supplied by the caller",
+    "sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+    "verified_at_run_time": true
+  },
+  "before_work": {
+    "ran": true,
+    "residency": {
+      "data_paths_opened": [
+        "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/be_cancel_axis_null_v1.json",
+        "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+        "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/phase2_fits/lgbm_haz_btc.txt",
+        "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/phase2_fits/lgbm_thresholds_btc.json",
+        "/home/yuqing/ctaNew-wt-de/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc.pkl",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc.pkl",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc.pkl",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc.pkl",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260826.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260827.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260828.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260829.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260830.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260831.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260901.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260902.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260903.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260904.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260905.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260906.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260907.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_dayverdict_20260908.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_pred_state_v1_schema.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T140810Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T142749Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T152649Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T181831Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T182045Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260903__20260906T192751Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163619Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T163925Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T184545Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T184545Z.v2.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260904__20260906T192753Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T183508Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T184653Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T184653Z.v2.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260905__20260906T192755Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260906__20260907T053253Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_20260906__20260907T053359Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_da_gate1_pre_read_fixture__20260906T082803Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.v2.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T163351Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v2.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T175550Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v2.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v3.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v10__20260906T064720Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v11__20260906T071214Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v12__20260906T074622Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v13__20260906T083511Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v14__20260906T091319Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v15__20260906T094500Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v16.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v17.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v18.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v19.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v20.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v21.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v22.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v24.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v25.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v26.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v27.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v2__20260906T035617Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v7__20260906T045059Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v8__20260906T055810Z.json",
+        "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_multiday_gate1_design_v9__20260906T062115Z.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/empty_coins.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/fit_manifest.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/fit_population_parity.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/fit_slugs.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/lgbm_haz_btc.txt",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/lgbm_haz_eth.txt",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/lgbm_thresholds_btc.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/lgbm_thresholds_eth.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/lgbm_val_btc.txt",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/lgbm_val_eth.txt",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/linear_btc.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/linear_d_btc.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/linear_d_eth.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/linear_eth.json",
+        "/tmp/tmpptv7hs7u/data/pm_5min/derived/phase2_fits/val_models.json"
+      ],
+      "day_draws_when_the_hook_returned": 0,
+      "distinct_paths_truncated": true,
+      "draws_the_hook_itself_made": 10500,
+      "n_distinct_paths": 1292,
+      "n_paths_opened": 9358,
+      "n_paths_opened_uncapped": 1292,
+      "non_vacuous": true,
+      "tape_artifacts_opened": [],
+      "what_it_was": "the in-run battery, run BEFORE the day's work"
+    },
+    "when": "after the book digest was verified, before S1 -- NOT at the emit (R-610)"
+  },
+  "committed_bytes_policy": {
+    "fixture": "producing_code_is_the_committed_bytes MAY be false and is RECORDED, never refused -- a hard refusal would block every pre-commit fixture emission and push someone to commit blind (RULED, DE 78)",
+    "producing_code_is_the_committed_bytes": true,
+    "real_day": "a REAL day REFUSES on false: a result-bearing day artifact naming a commit that does not hold the code that ran is provenance theatre",
+    "this_run_is_a_fixture": false
+  },
+  "data_root": {
+    "PM_DATA_ROOT_env": "/home/yuqing/ctaNew",
+    "PM_DATA_ROOT_names_the_REPO_root_not_the_data_dir": true,
+    "branch": "1_env_PM_DATA_ROOT",
+    "data_root": "/home/yuqing/ctaNew/data",
+    "data_root_resolved": "/home/yuqing/ctaNew/data",
+    "fixture": false,
+    "is_canonical": true,
+    "purpose": "the sealed day run",
+    "refusal": null,
+    "repo_root": "/home/yuqing/ctaNew",
+    "resolution_owner": "pm_tape_density._resolve_data_root (imported, not reimplemented)",
+    "tape_present": true
+  },
+  "day": "2026-09-07",
+  "days_complete_when_this_day_started": {
+    "G": 6,
+    "counted_by": "find_sealed_day_receipt -- the READ GATE'S own resolver, so `complete` means what the gate means by it",
+    "days_complete": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06"
+    ],
+    "n_days_complete": 4,
+    "per_day": {
+      "2026-09-03": {
+        "n_matches": 2,
+        "present": true,
+        "status": "PRESENT_CHAIN_HEAD"
+      },
+      "2026-09-04": {
+        "n_matches": 3,
+        "present": true,
+        "status": "PRESENT_CHAIN_HEAD"
+      },
+      "2026-09-05": {
+        "n_matches": 3,
+        "present": true,
+        "status": "PRESENT_CHAIN_HEAD"
+      },
+      "2026-09-06": {
+        "n_matches": 1,
+        "present": true,
+        "status": "PRESENT"
+      },
+      "2026-09-07": {
+        "n_matches": 0,
+        "present": false,
+        "status": "MISSING"
+      },
+      "2026-09-08": {
+        "n_matches": 0,
+        "present": false,
+        "status": "MISSING"
+      }
+    },
+    "ruled_days": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06",
+      "2026-09-07",
+      "2026-09-08"
+    ],
+    "was_a_default_parameter": "1, and nothing on the real path passed it. The 09-04 receipt reads `1 of 6` on a day when two were complete (REV 75 S1.2). Fail-safe by accident: a constant 1 can only over-seal"
+  },
+  "decision_ledger": {
+    "bytes": 7024282,
+    "n_rows": 208083,
+    "named_here_by_digest": "the receipt is tracked and names this file by sha256; the file is not",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260907__20260908T030447Z.jsonl.gz",
+    "recompute_with": "de_decision_ledger.read_ledger(path, expect_sha256=<this sha256>) then .recompute(led, arm)",
+    "ruling": "R-765",
+    "schema_version": 2,
+    "sha256": "418e23bbca879ce02559ec078c050c22c925843bace9d732f16830c9bdb3181c",
+    "the_bytes_are_gitignored": true
+  },
+  "decision_populations": {
+    "CONDVALUE_X_SKEW": {
+      "arm": "CONDVALUE_X_SKEW",
+      "by_side": {
+        "BUY_UP": 9881,
+        "SELL_UP": 9883
+      },
+      "decisions": 19764,
+      "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+      "head": "q1_arrival_composed_lgbm",
+      "n_scored_rows": 301894,
+      "theta": 0.32450609461933483,
+      "theta_was_not_refitted_here": true
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "by_side": {
+        "BUY_UP": 971,
+        "SELL_UP": 926
+      },
+      "decisions": 1897,
+      "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+      "head": "incumbent_linear_d",
+      "n_scored_rows": 301894,
+      "theta": 0.43525926488298716,
+      "theta_was_not_refitted_here": true
+    }
+  },
+  "draw_pool_set_equality_checked": true,
+  "emitted_at_utc": "2026-09-08T03:04:51.630970+00:00",
+  "fixture": false,
+  "fixture_day_lock": {
+    "day": "2026-09-07",
+    "decided_on_the_day_not_the_callers_flag": true,
+    "fixture": false,
+    "in_ruled_day_set": true,
+    "ruled_day_set_read_from": "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
+  },
+  "interpreter": {
+    "is_a_symlink": true,
+    "realpath": "/usr/bin/python3.12",
+    "sys_executable": "/home/yuqing/pricer-sol/venv/bin/python3",
+    "version": "3.12.3"
+  },
+  "launch_form": {
+    "coverage_at_emit": {
+      "covered": null,
+      "host_horizon": {
+        "oldest_epoch": 1788819753.0,
+        "oldest_utc": "2026-09-07T22:22:33Z",
+        "output_format": "short-iso --utc",
+        "query": "journalctl --user -o short-iso --no-pager --utc",
+        "read_at_utc": "2026-09-08T03:04:51Z",
+        "status": "MEASURED"
+      },
+      "reference_is": null,
+      "reference_utc": null,
+      "regime": "BURSTY_UNIT__the_reference_is_the_unit_start",
+      "status": "NOT_DETERMINABLE",
+      "two_clocks_no_text_search": true,
+      "unit_start": {
+        "query": "systemctl --user show de145day07.service -p ExecMainStartTimestamp --value",
+        "raw": "Tue 2026-09-08 01:33:43 UTC",
+        "start_epoch": null,
+        "start_utc": null,
+        "status": "NO_START_TIMESTAMP",
+        "unit": "de145day07.service"
+      },
+      "why": "one of the two clocks is unreadable, so coverage is UNKNOWN -- never assumed either way"
+    },
+    "declared": "systemd-run --user transient SERVICE (never --scope)",
+    "journal_at_emit": {
+      "copied_at_the_moment_of_reading": true,
+      "counts_agree": true,
+      "counts_note": "they differ legitimately when the NAME has been used more than once; the id is the run",
+      "coverage": {
+        "covered": null,
+        "host_horizon": {
+          "oldest_epoch": 1788819753.0,
+          "oldest_utc": "2026-09-07T22:22:33Z",
+          "output_format": "short-iso --utc",
+          "query": "journalctl --user -o short-iso --no-pager --utc",
+          "read_at_utc": "2026-09-08T03:04:52Z",
+          "status": "MEASURED"
+        },
+        "reference_is": null,
+        "reference_utc": null,
+        "regime": "BURSTY_UNIT__the_reference_is_the_unit_start",
+        "status": "NOT_DETERMINABLE",
+        "two_clocks_no_text_search": true,
+        "unit_start": {
+          "query": "systemctl --user show de145day07.service -p ExecMainStartTimestamp --value",
+          "raw": "Tue 2026-09-08 01:33:43 UTC",
+          "start_epoch": null,
+          "start_utc": null,
+          "status": "NO_START_TIMESTAMP",
+          "unit": "de145day07.service"
+        },
+        "why": "one of the two clocks is unreadable, so coverage is UNKNOWN -- never assumed either way"
+      },
+      "cross_check": "the by-id count against `-u <unit>`; a unit NAME names every run ever launched under it, an id names ONE",
+      "field_not_used_here": "INVOCATION_ID -- the SYSTEM manager's field; it matches nothing under --user",
+      "fields_matched": [
+        "_SYSTEMD_INVOCATION_ID (the payload's lines)",
+        "USER_INVOCATION_ID (the user manager's lines: Started, Consumed, Failed)"
+      ],
+      "how_that_is_computed": "da_root.journal_coverage: the host journal's oldest retained entry against the unit's own start timestamp -- TWO MEASURED CLOCKS, no needle. The old predicate searched the copied lines for ' Started ' and reported TRUE on a tail that had lost 141 of 161 lines",
+      "invocation_id": "5c7b0a692fdb45dcb41fc9d36e90795d",
+      "invocation_id_source": "the unit's own `InvocationID` property",
+      "journalctl_error_by_id": null,
+      "journalctl_error_by_unit": null,
+      "lines": [
+        "2026-09-08T01:33:43.103399+00:00 ip-172-31-78-41 systemd[1004]: Started de145day07.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-07 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived."
+      ],
+      "n_lines_by_id": 1,
+      "n_lines_by_unit_name": 1,
+      "oldest_line_raw": "2026-09-08T01:33:43.103399+00:00",
+      "oldest_line_utc": "2026-09-08T01:33:43.103399+00:00",
+      "output_format": "short-iso-precise",
+      "output_format_note": "journalctl -o short-iso-precise: an ISO timestamp, the host and the process prefix, then the message. A copy that does not name its format cannot be diffed against one that used another",
+      "query": "journalctl --user _SYSTEMD_INVOCATION_ID=5c7b0a692fdb45dcb41fc9d36e90795d + USER_INVOCATION_ID=5c7b0a692fdb45dcb41fc9d36e90795d",
+      "read_at_utc": "2026-09-08T03:04:51.830967+00:00",
+      "retention": {
+        "it_is_a_MEASUREMENT_not_a_property": "five reads across one hour walked the window's start from 08:45Z to 09:29:57Z -- about as fast as the clock. A retention state named once is stale within minutes, so it carries its own as-of and query (R-646 R4)",
+        "measured_at_utc": "2026-09-08T03:04:51.830967+00:00",
+        "oldest_entry_from": "the entry's OWN clock, as journald printed it -- never typed, never a policy setting",
+        "oldest_entry_raw": "2026-09-07T22:22:33.442513+00:00",
+        "oldest_user_journal_entry_utc": "2026-09-07T22:22:33.442513+00:00",
+        "query": "journalctl --user --no-pager -o short-iso-precise (first line = the oldest entry retained)"
+      },
+      "status": "PRESENT",
+      "unit": "de145day07.service",
+      "window_fully_covered": null
+    },
+    "observed": {
+      "cgroup_leaf": "de145day07.service",
+      "invocation_id": "5c7b0a692fdb45dcb41fc9d36e90795d",
+      "is_the_declared_launch_form": true,
+      "kind": "transient service",
+      "unit": "de145day07.service",
+      "why_that_matters": "a `.scope` leaf means the run is in a CALLER's process group and dies with it -- that is how the 09-03 re-run lost 35 minutes (R-628)"
+    },
+    "requirements": {
+      "absolute_interpreter": "the venv's own python3, resolved",
+      "lock_inside_the_unit": "`flock -n` is the unit's own ExecStart, so a held lock exits 1 INSIDE the unit and the payload never starts -- read `ExecMainStatus`, never assume it started",
+      "memory_and_cpu": "-p MemoryMax=8G -p CPUQuota=100%",
+      "no_scope": "`--scope` runs the payload in the CALLER's process group",
+      "slice": "`--slice=research.slice` so rule 20's cgroup accounting applies",
+      "unit_named": "`--unit=` so the run can be polled and stopped by NAME, never by a child PID",
+      "working_directory": "`--working-directory=` because the manager does not inherit the caller's cwd"
+    },
+    "why_it_is_in_the_receipt": "the 09-03 re-run died at 35 minutes because it ran in a `.scope` -- the caller's process group. A receipt that does not say which wrapper produced it cannot be asked that"
+  },
+  "launch_form_at_runtime": {
+    "cgroup_leaf": "de145day07.service",
+    "checked": true,
+    "day": "2026-09-07",
+    "fixture": false,
+    "fixture_exemption_by_name": false,
+    "kind": "transient service",
+    "kind_is_known": true,
+    "refused": false,
+    "the_exemption_is_the_GATE": "not a report beside it: `fixture=True` alone used to admit a REAL DAY NAME (REV 68 S1.2)",
+    "the_real_day_predicate_is_POSITIVE": "refuse unless kind == 'transient service'. The negative test `kind == 'scope'` FAILED OPEN on kind None and on an empty observation (REV 68 S1.3)",
+    "why_checked_may_be_false": "an unknown kind is not a passed check. It used to admit a real day AND claim `checked` true"
+  },
+  "launched_at_utc": "2026-09-08T01:33:43.232817+00:00",
+  "lock_form_at_runtime": {
+    "carries_dash_E_with_the_declared_rc": true,
+    "carries_the_declared_lock_path": true,
+    "checked": true,
+    "day": "2026-09-07",
+    "declared_lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "declared_rc": "75",
+    "fixture": false,
+    "identity_from": "/proc/<ppid>/exe -- the file the kernel mapped, never argv[0], which `exec -a` sets to anything",
+    "parent_argv": [
+      "/usr/bin/flock",
+      "-n",
+      "-E",
+      "75",
+      "/home/yuqing/ctaNew/data/.heavy_run.lock",
+      "/home/yuqing/pricer-sol/venv/bin/python3",
+      "live/pm_research/de_multiday_gate1_runner.py",
+      "--day",
+      "2026-09-07",
+      "--book",
+      "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl",
+      "--output",
+      "/home/yuqing/ctaNew/data/pm_5min/derived"
+    ],
+    "parent_exe": "/usr/bin/flock",
+    "parent_is_flock": true,
+    "ppid": 2066371,
+    "why_runtime_not_the_lint": "the lint reads the string a builder produced; this reads what actually ran. `-E` is what makes a held lock readable from a crash (REV 69 S1.2)"
+  },
+  "memory_plan": {
+    "baseline_rss_mb": 43.0859375,
+    "budget_is_on_GROWTH_not_the_process_peak": "ru_maxrss never falls, so a fixture day run inside a real day's process inherits that day's peak. It cost the 09-03 smoke 85 minutes: the day's work finished and the emit-time battery refused its own fixture on the real day's high-water",
+    "budget_mb": 4000.0,
+    "growth_is_process_history_dependent": "a warm process grows less than a cold one -- the allocator already holds what an earlier run took. The REAL day runs in a FRESH process, which is the regime the 4000 MB budget is derived against",
+    "growth_rss_mb": 899.5546875,
+    "hook_stage_growth_mb": 56.78125,
+    "index_splits": {
+      "answer": "NONE, at any stage",
+      "consequence_for_BEs_assembly": "the index is needed only to PRODUCE `asm`. It does not have to be resident alongside the reference and `asm` at all, because the consumer of those two is a different process. If BE releases the index before assembling and writing the book, the whole-day peak is max(index stage, assembly stage) rather than their sum",
+      "falsifier": "a book whose `asm` lacks a pinned head REFUSES naming that head; a run with no tape artifact reachable at all still completes",
+      "measured_by": "day_split_residency_proof() -- the day path run under instrumentation, asserting no tape/index/fragment artifact was opened",
+      "per_stage": {
+        "S0b_battery": "no split. The battery reads BE's committed null receipt and the ledger -- declared reads, none of them a tape, index or fragment artifact -- and it runs under its OWN residency instrument, whose opens are SUBTRACTED from the day path's claim so that claim stays about the day path (R-610)",
+        "S2_population": "no split. `asm['by_arm'][(coin, head)][0]` IS the scored set; the scorer is a dict lookup that REFUSES on a miss rather than computing a feature",
+        "S3_baseline_and_S4_null": "no split. Each replay values its fills from the fill record and the reference; per WINDOW and streamable, with nothing accumulated across draws",
+        "economics_valuation": "no split, and NOT per-window-resident either -- one fill list at a time"
+      },
+      "question": "which tape-index splits must be resident during `--day`, and at which stage",
+      "what_DE_cannot_rule": "WHICH split BE must build to produce a September day's `asm` is BE's measurement and R-496(E)'s ruling, not DE's. What is declared here is only what the CONSUMER needs, which is the half BE was waiting on",
+      "why": "the decision population is read from `asm` -- BE's already assembled per-generation scores, keyed (slug, side, t0) -- and the economics valuation reads only the replay's own fill records and the reference's levels and markouts (`de_phase4_diag_runner.fill_value_cents`). Neither touches a tape row"
+    },
+    "observed": {
+      "S0_verify": {
+        "elapsed_s": 0.406,
+        "peak_rss_mb_highwater": 57.640625,
+        "rss_mb_current": 54.08203125
+      },
+      "S0b_battery": {
+        "elapsed_s": 39.31,
+        "peak_rss_mb_highwater": 886.31640625,
+        "rss_mb_current": 99.8671875
+      },
+      "S1_load": {
+        "elapsed_s": 45.29,
+        "peak_rss_mb_highwater": 2638.98828125,
+        "rss_mb_current": 446.66015625
+      },
+      "S2_population": {
+        "elapsed_s": 45.78,
+        "peak_rss_mb_highwater": 2638.98828125,
+        "rss_mb_current": 481.171875
+      },
+      "S3_baseline": {
+        "elapsed_s": 49.363,
+        "peak_rss_mb_highwater": 2638.98828125,
+        "rss_mb_current": 723.3828125
+      },
+      "S4_null": {
+        "elapsed_s": 5463.911,
+        "peak_rss_mb_highwater": 2638.98828125,
+        "rss_mb_current": 942.640625
+      },
+      "S5_seal": {
+        "elapsed_s": 5463.919,
+        "peak_rss_mb_highwater": 2638.98828125,
+        "rss_mb_current": 942.640625
+      },
+      "S_start": {
+        "elapsed_s": 0.003,
+        "peak_rss_mb_highwater": 42.890625,
+        "rss_mb_current": 43.0859375
+      }
+    },
+    "peak_rss_mb": 2638.98828125,
+    "peak_stage": {
+      "argmax_taken_over": [
+        "S0_verify",
+        "S1_load",
+        "S2_population",
+        "S3_baseline",
+        "S4_null",
+        "S5_seal"
+      ],
+      "baseline_highwater_mb": 42.890625,
+      "before_work_hook_highwater_delta_mb": 828.6758,
+      "binds_on_a_real_day_only": "on a real day the book dominates (BE: 2.008 GB reference) and S1 being the peak is what the 8 GiB ceiling rests on, so a disagreement REFUSES the day. On a fixture the book is a few hundred KB and the draw loop's fixed cost is larger, so the measured peak is S4_null -- recorded, not refused, and design v9 stated the claim flatly where it should have stated the condition",
+      "computable": true,
+      "current_rss_mb_by_stage": {
+        "S0_verify": 54.08203125,
+        "S0b_battery": 99.8671875,
+        "S1_load": 446.66015625,
+        "S2_population": 481.171875,
+        "S3_baseline": 723.3828125,
+        "S4_null": 942.640625,
+        "S5_seal": 942.640625,
+        "S_start": 43.0859375
+      },
+      "declared_peak_stage": "S1_load",
+      "declared_read_from": "DAY_STAGES marker '[DECLARED PEAK]'",
+      "declared_stage_is_the_measured_peak": true,
+      "highwater_by_stage": {
+        "S0_verify": 57.640625,
+        "S0b_battery": 886.31640625,
+        "S1_load": 2638.98828125,
+        "S2_population": 2638.98828125,
+        "S3_baseline": 2638.98828125,
+        "S4_null": 2638.98828125,
+        "S5_seal": 2638.98828125,
+        "S_start": 42.890625
+      },
+      "highwater_delta_argmax_equals_current_rss_argmax": false,
+      "highwater_delta_mb_by_stage": {
+        "S0_verify": 14.75,
+        "S0b_battery": 828.6758,
+        "S1_load": 1752.6719,
+        "S2_population": 0.0,
+        "S3_baseline": 0.0,
+        "S4_null": 0.0,
+        "S5_seal": 0.0
+      },
+      "highwater_is_non_decreasing_BY_CONSTRUCTION": true,
+      "measured_peak_stage": "S1_load",
+      "measured_peak_stage_by_current_rss": "S4_null",
+      "this_boolean_does_NOT_refuse": "it compares two ways of naming the peak STAGE and is diagnostic. The binding field is `peak_stage_assertion.agrees`.",
+      "why_the_DELTA_is_the_peak": "a transient a stage allocates and frees before its mark is invisible to the current-RSS series and VISIBLE in the highwater delta, because the highwater recorded it and never came down. The delta is what attributes growth to a stage",
+      "why_the_hook_is_not_in_the_argmax": "the `before_work` hook is the BATTERY, not the day path. Its high-water is a transient it frees before returning (measured 838 MB peak, 26 MB retained); the 8 GiB ceiling rests on the DAY PATH's shape, and letting a freed transient win the argmax would refuse a day over a stage the ceiling does not rest on. Its delta is computed, reported, and counted in the day's GROWTH BUDGET -- only the argmax excludes it",
+      "why_two_instruments": "the highwater bounds the process and can never fall; the current-RSS series can, so it is the only one that can locate a peak"
+    },
+    "peak_stage_assertion": {
+      "agrees": true,
+      "asserted": true,
+      "recorded_not_refused_because_fixture": false
+    },
+    "stages": [
+      {
+        "holds": "digests only: BE's builder receipt, the book's bytes, the pinned models and thetas, BE's cascade module. The book is READ ONCE here as bytes for its digest and the buffer is handed to S1, never read twice (BE's B-1)",
+        "stage": "S0_verify"
+      },
+      {
+        "holds": "THE IN-RUN BATTERY, MOVED HERE FROM THE EMIT (R-610). It ran AFTER the day's work: ~15 s of fixture runs and a 13-module closure re-capture at the end of 85 minutes, and if it refused, the day was lost -- which is exactly what happened to the 09-03 smoke. Its memory is INSIDE the day's growth budget on purpose: a stage whose cost escapes the budget is a stage nobody bounded",
+        "stage": "S0b_battery"
+      },
+      {
+        "holds": "[DECLARED PEAK] reference + asm + rows. THE PEAK OF THE DAY PATH WHEN THE BOOK DOMINATES -- which is the real-day regime (BE measured a day's reference at 2.008 GB) and is NOT true on a small fixture: on the synthetic book, measured, the peak is S4_null, because the draw loop's fixed cost is larger than a few hundred KB of book. The claim is CONDITIONAL, the condition is stated, and it is ASSERTED on a real day -- where the 8 GiB ceiling rests on it",
+        "stage": "S1_load"
+      },
+      {
+        "holds": "adds one score float per generation per arm, twice. asm's gen_scores are ALREADY resident from S1; the arm stream is a view over `rows`",
+        "stage": "S2_population"
+      },
+      {
+        "holds": "adds the no-cancel replay's fills -- the neutral reference path (CLAUDE.md reliability rule 1)",
+        "stage": "S3_baseline"
+      },
+      {
+        "holds": "one draw's flags and one replayed fill list AT A TIME. The draws are REDUCED to a value each as they are made; no draw's fills survive the next. O(1) in n_draws",
+        "stage": "S4_null"
+      },
+      {
+        "holds": "counts and statuses only. The economic fields are computed and withheld, never carried into the artifact",
+        "stage": "S5_seal"
+      }
+    ],
+    "within_budget": true
+  },
+  "n_admissible_arms": 2,
+  "n_days_complete": 4,
+  "name_stamp": {
+    "as_of": "2026-09-08T03:04:51.630970+00:00",
+    "delta_seconds": -0.63097,
+    "name_carries_a_stamp": true,
+    "stamp": "20260908T030451Z",
+    "stamp_is_the_clock": true,
+    "tolerance_s": 300
+  },
+  "output_name": {
+    "composed_name": "p003_de_gate1_day_run_20260907_SEALED__20260908T030451Z.json",
+    "directory": "/home/yuqing/ctaNew/data/pm_5min/derived",
+    "emitted_at_utc": "2026-09-08T03:04:51.630970+00:00",
+    "launched_at_utc": "2026-09-08T01:33:43.232817+00:00",
+    "matches_the_declared_convention": "the runner's own: p003_de_gate1_day_run_<YYYYMMDD>_SEALED__<stamp>.json",
+    "no_sealed_receipt_yet": {
+      "day": "2026-09-07",
+      "expected_glob": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260907_SEALED__*.json",
+      "n_sealed_artifacts_present": 0
+    },
+    "output_is_a_directory": true,
+    "resolves_under_the_sealed_glob": true,
+    "the_filename_is_composed_by": "day_receipt_name(), from emission_stamp() at the moment of writing",
+    "wall_between_launch_and_emit_s": 5468.398153,
+    "why_a_fixture_cannot": "a fixture receipt carries '_FIXTURE__', so it cannot match the sealed glob AT ALL -- not merely carry a different day",
+    "why_not_the_caller": "a path that must be known in advance cannot carry an honest stamp (DE 88); the directory is knowable in advance and carries none"
+  },
+  "per_day_sealed_artifacts": [
+    {
+      "R5_retired_from": "params v18 / design v26",
+      "absolute": {
+        "arm": {
+          "fills_leg": 51001.56757284991,
+          "inventory_leg": -40889.61281940001,
+          "n_fills": 31193,
+          "n_fills_valued": 31193,
+          "n_fills_with_inventory": 31193,
+          "total": 51001.56757284991,
+          "unit": "cents",
+          "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+          "why_inventory_leg_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded leg is not a zero one"
+        },
+        "read_from": "the same replay that computes D(E0) -- never a second pass",
+        "reconciliation": {
+          "D_E0": -40138.447387999986,
+          "agree_to_1e_9": true,
+          "arm_total_minus_baseline_total": -40138.44738799967,
+          "refuses_by_name_otherwise": "ABSOLUTES_DO_NOT_RECONCILE"
+        },
+        "ruling": "R-782, the USER: 'plz record the absolute number as well for reference'",
+        "unit": "cents",
+        "zero_cancel_baseline": {
+          "fills_leg": 91140.01496084958,
+          "inventory_leg": 281708.4803335995,
+          "n_fills": 52141,
+          "n_fills_valued": 52141,
+          "n_fills_with_inventory": 52141,
+          "total": 91140.01496084958,
+          "unit": "cents",
+          "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+          "why_inventory_leg_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded leg is not a zero one"
+        }
+      },
+      "admissibility": {
+        "admissible": true,
+        "decisions_meet_bar": true,
+        "min_decisions_per_arm_day": 30,
+        "n_decisions": 19764,
+        "null_mean": -8660.303182718591,
+        "null_sd": 4760.154939079676,
+        "reasons": [],
+        "sd_floor_fraction": 0.25,
+        "sd_meets_floor": true,
+        "sd_over_abs_mean": 0.5496522279472202,
+        "status": "OK"
+      },
+      "arm": "CONDVALUE_X_SKEW",
+      "day": "2026-09-07",
+      "decision_population": {
+        "arm": "CONDVALUE_X_SKEW",
+        "by_side": {
+          "BUY_UP": 9881,
+          "SELL_UP": 9883
+        },
+        "decisions": 19764,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "q1_arrival_composed_lgbm",
+        "n_scored_rows": 301894,
+        "theta": 0.32450609461933483,
+        "theta_was_not_refitted_here": true
+      },
+      "draw_provenance": {
+        "arm": "CONDVALUE_X_SKEW",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "00b136a889e75e516ee772ccf480dbb648a695eb1e15344f4d2cfc34ad727b88",
+        "draw_source": "GENERATED_IN_PROCESS",
+        "generated_in_process": true,
+        "module_sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+        "n_draws": 500,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": {
+          "field": "cancels_issued",
+          "identical": true,
+          "n_compared": 8,
+          "seed": 90225432,
+          "why": "the cascade is BE's; only the METRIC is DE's"
+        },
+        "seed": 90225432
+      },
+      "economic": {
+        "D_E0": -40138.447387999986,
+        "Z": -6.612840255860946,
+        "null_draws_summary": {
+          "n": 500
+        },
+        "null_mean": -8660.303182718591,
+        "null_sd": 4760.154939079676,
+        "p_location": 1.0
+      },
+      "n_cancels_issued": 6402,
+      "n_fills_arm": 31193,
+      "n_fills_baseline": 52141,
+      "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete",
+      "sealed": false,
+      "sealed_at_every_depth": false,
+      "sealed_field_names": [],
+      "seed": 90225432,
+      "status": "OK"
+    },
+    {
+      "R5_retired_from": "params v18 / design v26",
+      "absolute": {
+        "arm": {
+          "fills_leg": 91016.74771734946,
+          "inventory_leg": 246337.6391365995,
+          "n_fills": 49944,
+          "n_fills_valued": 49944,
+          "n_fills_with_inventory": 49944,
+          "total": 91016.74771734946,
+          "unit": "cents",
+          "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+          "why_inventory_leg_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded leg is not a zero one"
+        },
+        "read_from": "the same replay that computes D(E0) -- never a second pass",
+        "reconciliation": {
+          "D_E0": -123.26724349999859,
+          "agree_to_1e_9": true,
+          "arm_total_minus_baseline_total": -123.26724350012955,
+          "refuses_by_name_otherwise": "ABSOLUTES_DO_NOT_RECONCILE"
+        },
+        "ruling": "R-782, the USER: 'plz record the absolute number as well for reference'",
+        "unit": "cents",
+        "zero_cancel_baseline": {
+          "fills_leg": 91140.01496084958,
+          "inventory_leg": 281708.4803335995,
+          "n_fills": 52141,
+          "n_fills_valued": 52141,
+          "n_fills_with_inventory": 52141,
+          "total": 91140.01496084958,
+          "unit": "cents",
+          "what_total_is": "the fills leg, which is what `_value_cents` sums and therefore exactly what D(E0) is the difference of",
+          "why_inventory_leg_may_be_None": "BE 96's position fields are absent on these fills; an unrecorded leg is not a zero one"
+        }
+      },
+      "admissibility": {
+        "admissible": true,
+        "decisions_meet_bar": true,
+        "min_decisions_per_arm_day": 30,
+        "n_decisions": 1897,
+        "null_mean": -643.3645723618928,
+        "null_sd": 1147.5340904785055,
+        "reasons": [],
+        "sd_floor_fraction": 0.25,
+        "sd_meets_floor": true,
+        "sd_over_abs_mean": 1.783645136482612,
+        "status": "OK"
+      },
+      "arm": "HAZARD_OVER_SKEWED_REF",
+      "day": "2026-09-07",
+      "decision_population": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "by_side": {
+          "BUY_UP": 971,
+          "SELL_UP": 926
+        },
+        "decisions": 1897,
+        "definition": "above-threshold generations at the arm's FIXED theta -- the set a cancel decision is drawn from",
+        "head": "incumbent_linear_d",
+        "n_scored_rows": 301894,
+        "theta": 0.43525926488298716,
+        "theta_was_not_refitted_here": true
+      },
+      "draw_provenance": {
+        "arm": "HAZARD_OVER_SKEWED_REF",
+        "binds_the_verified_module_to_the_numbers": true,
+        "book_digest": "00b136a889e75e516ee772ccf480dbb648a695eb1e15344f4d2cfc34ad727b88",
+        "draw_source": "GENERATED_IN_PROCESS",
+        "generated_in_process": true,
+        "module_sha256": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+        "n_draws": 500,
+        "recomputed_by_the_runner": true,
+        "reproduces_BEs_draw_null": {
+          "field": "cancels_issued",
+          "identical": true,
+          "n_compared": 8,
+          "seed": 2915479163,
+          "why": "the cascade is BE's; only the METRIC is DE's"
+        },
+        "seed": 2915479163
+      },
+      "economic": {
+        "D_E0": -123.26724349999859,
+        "Z": 0.45323039478942273,
+        "null_draws_summary": {
+          "n": 500
+        },
+        "null_mean": -643.3645723618928,
+        "null_sd": 1147.5340904785055,
+        "p_location": 0.3313373253493014
+      },
+      "n_cancels_issued": 914,
+      "n_fills_arm": 49944,
+      "n_fills_baseline": 52141,
+      "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete",
+      "sealed": false,
+      "sealed_at_every_depth": false,
+      "sealed_field_names": [],
+      "seed": 2915479163,
+      "status": "OK"
+    }
+  ],
+  "protocol": "P003_DE_MULTIDAY_GATE1_DAY_RUN_V1",
+  "provenance": {
+    "as_the_run_resolved_them": "these are the files THIS run read, digested at emit -- not a version a reader infers from a name and not a pin copied from a declaration",
+    "design": {
+      "exists": true,
+      "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+      "sha256": "f248e8438e5254999e1d41ee60a8db4041e9c0d71af1e6c94d1903c9a4e586ce"
+    },
+    "design_chain_orphans_at_emit": {
+      "chain_has_an_orphan_branch": false,
+      "dir": "/home/yuqing/ctaNew/data/pm_5min/derived",
+      "family": "p003_de_multiday_gate1_design",
+      "n_orphan_branches": 0,
+      "rule": "REV 81 \u00a75 -- a fork is REPORTED, never resolved by picking; while this is non-empty every receipt with a design pin carries it",
+      "shared_resolver": {
+        "fork_status": {
+          "p003_de_multiday_gate1_design_v15__20260906T094500Z.json": "MERGED",
+          "p003_de_multiday_gate1_design_v2__20260906T035617Z.json": "MERGED"
+        },
+        "forks_two_versions_superseding_one": {
+          "p003_de_multiday_gate1_design_v15__20260906T094500Z.json": [
+            "p003_de_multiday_gate1_design_v16.json",
+            "p003_de_multiday_gate1_design_v17.json"
+          ],
+          "p003_de_multiday_gate1_design_v2__20260906T035617Z.json": [
+            "p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+            "p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+            "p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+            "p003_de_multiday_gate1_design_v6__20260906T043936Z.json",
+            "p003_de_multiday_gate1_design_v7__20260906T045059Z.json"
+          ]
+        },
+        "head": "p003_de_multiday_gate1_design_v27.json",
+        "head_sha256": "3bcdf3c234cb7d4e4be116c2d97a28293c37f419d9a0b062125b0f1f151e272b",
+        "implementation": "declaration_chain.resolve_head (BE 77) -- the one chain implementation",
+        "merged_tips": [
+          "p003_de_multiday_gate1_design_v16.json",
+          "p003_de_multiday_gate1_design_v3__20260906T040539Z.json",
+          "p003_de_multiday_gate1_design_v4__20260906T042458Z.json",
+          "p003_de_multiday_gate1_design_v5__20260906T043134Z.json",
+          "p003_de_multiday_gate1_design_v6__20260906T043936Z.json"
+        ],
+        "n_merge_links": 5,
+        "n_orphan_branches": 0,
+        "n_versions": 26,
+        "orphan_branches": []
+      },
+      "the_two_resolvers_agree_on_the_count": true,
+      "this_seats_resolver": {
+        "head": "p003_de_multiday_gate1_design_v27.json",
+        "implementation": "de_multiday_gate1_runner.design_chain -- from DE 111 this RESOLVES THROUGH `declaration_chain.resolve_head` (BE 77/80) and keeps its own walk only as a cross-check; the two are no longer independent answers and this block is no longer a second one",
+        "n_orphan_branches": 0,
+        "orphan_branches": [],
+        "own_walk_cross_check": {
+          "agreement": {
+            "head": true,
+            "n_merge_links": true,
+            "orphan_names": true
+          },
+          "globs": "the BARE `_v<N>.json` names only; the shared resolver globs `_v*` and so also sees the STAMPED versions this family used before v16 -- the two ANSWER THE SAME QUESTION over DIFFERENT populations, and the orphan-name comparison below is the one that matters",
+          "orphan_branches_as_names": []
+        },
+        "resolved_by": "declaration_chain.resolve_head (BE 77/80) -- the ONE chain implementation"
+      }
+    },
+    "digests_at_load_and_at_emit": {
+      "all_agree": true,
+      "inputs": {
+        "design": {
+          "agrees": true,
+          "existed_at_load": true,
+          "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v23.json",
+          "read_at_utc": "2026-09-08T01:33:43.663387+00:00",
+          "sha256_at_emit": "f248e8438e5254999e1d41ee60a8db4041e9c0d71af1e6c94d1903c9a4e586ce",
+          "sha256_at_load": "f248e8438e5254999e1d41ee60a8db4041e9c0d71af1e6c94d1903c9a4e586ce"
+        },
+        "params": {
+          "agrees": true,
+          "existed_at_load": true,
+          "path": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+          "read_at_utc": "2026-09-08T01:33:43.254498+00:00",
+          "sha256_at_emit": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6",
+          "sha256_at_load": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6"
+        }
+      },
+      "n_inputs": 2,
+      "no_null_halves": true,
+      "the_design_is_digested_at_params_load": "not at the emit, where its two digests would be one read twice and the pair could not detect the file changing under the run (REV 75 S1.1)",
+      "why_both_digests": "the one taken WHERE THE FILE WAS READ and the one taken at the emit. The block used to carry only the second and claim it was 'the files THIS run read'"
+    },
+    "launch_form_declaration": {
+      "chain": [
+        {
+          "agrees": true,
+          "declared_sha256": "f5c65564d67d6f48e6c1de0620525b80b449acdae54c579b197abf3594fa309c",
+          "recomputed_sha256": "f5c65564d67d6f48e6c1de0620525b80b449acdae54c579b197abf3594fa309c",
+          "supersedes": "heavy_run_form_v1.json",
+          "version": 2
+        },
+        {
+          "agrees": true,
+          "declared_sha256": "4a9409a1f712921abe5c7cc6f464df55f84f919b84a62454dfd5ba101ccfd7a4",
+          "recomputed_sha256": "4a9409a1f712921abe5c7cc6f464df55f84f919b84a62454dfd5ba101ccfd7a4",
+          "supersedes": "heavy_run_form_v2.json",
+          "version": 3
+        },
+        {
+          "agrees": true,
+          "declared_sha256": "e6ddd378d259fa198056d9341d51a51b20a7d052d1d40ecebed1c135e7714158",
+          "recomputed_sha256": "e6ddd378d259fa198056d9341d51a51b20a7d052d1d40ecebed1c135e7714158",
+          "supersedes": "heavy_run_form_v3.json",
+          "version": 4
+        }
+      ],
+      "exists": true,
+      "path": "live/pm_research/declarations/heavy_run_form_v4.json",
+      "resolved_as": "the chain head, not a filename literal",
+      "sha256": "b599f2e2e50a026ff60c000e8eb476f22aaf4ac0bcc09a67b7d5e51df7dabe6c"
+    },
+    "params": {
+      "exists": true,
+      "path": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+      "sha256": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6"
+    },
+    "peak_of_record_rule": {
+      "and_the_in_process_rss_is_a_different_quantity": "`memory_plan.peak_rss_mb` / `resources.peak_rss_mb` are ru_maxrss, the PROCESS's RSS high-water. They are kept -- the stage budget is built on them -- and they are NOT the peak of record, which is the cgroup leaf's",
+      "resolved_as": "the chain head, not a filename literal",
+      "resolved_from": {
+        "path": "live/pm_research/declarations/heavy_run_form_v4.json",
+        "sha256": "b599f2e2e50a026ff60c000e8eb476f22aaf4ac0bcc09a67b7d5e51df7dabe6c",
+        "version": 4
+      },
+      "status": "RESOLVED",
+      "the_post_exit_property": "systemd's `MemoryPeak`, recorded VERBATIM. It is not a reading of the run's peak and must not be quoted as one.",
+      "the_runs_peak": "the cgroup LEAF's `memory.peak`, read WHILE THE PAYLOAD LIVES -- in-process at the end of the run, or by `be_heavy_run.sh --capture` which resolves the leaf from `ControlGroup=` while the unit is still loaded.",
+      "this_receipts_peak_of_record_field": "resources.scope_memory.memory_peak_bytes -- the unit leaf's `memory.peak`, read IN-PROCESS at the emit, while the payload lives",
+      "what_this_receipt_does_NOT_carry": "systemd's post-exit `MemoryPeak` property: a process inside the unit cannot read it after its own exit, so it is the launcher's or the coordinator's copy and is recorded verbatim there"
+    },
+    "pin_direction": "design -> params",
+    "producer_exit_map": {
+      "agrees_with_the_module": true,
+      "codes": [
+        0,
+        1
+      ],
+      "head_path": "producer_exit_maps_v9.json",
+      "head_sha256": "482527d4810b0f746df9b13aaeaf8cc1dc566020f4ade3acdcd62f11bd11825b",
+      "head_version": 9,
+      "lock_conflict_rc_excluded": 75,
+      "map": {
+        "0": "the run completed and the artifact was written",
+        "1": "RunnerRefused, or a battery failure -- SystemExit with a message. Every refusal this producer raises exits 1"
+      },
+      "status": "DECLARED"
+    },
+    "why_it_is_open": "the 09-03 receipt carried source_identity and no params or design pin; params appeared only inside a fixture-lock field and the design only as an opened path, so DA's pre-read had to infer both (R-654)"
+  },
+  "reasons_carry_no_sealed_value": [
+    {
+      "checked_against": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary",
+        "sd_over_abs_mean",
+        "n_fills_arm",
+        "n_fills_baseline",
+        "n_cancels_issued"
+      ],
+      "n_reasons": 0,
+      "no_sealed_value_in_any_reason": true,
+      "present_since": "design v2 -- including the 09-03 receipt, where it is an empty list",
+      "what_the_reasons_may_carry": "OPEN numbers only: the decision count and the declared minimum, and the declared sd floor fraction. The sd reason is a VERDICT ONLY",
+      "why_a_check_and_not_a_promise": "the stripper removes keys; a value interpolated into a string survives it. Before this, nothing but the author's care stopped one",
+      "written_by": "de_multiday_design_declaration.arm_day_admissible()"
+    },
+    {
+      "checked_against": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary",
+        "sd_over_abs_mean",
+        "n_fills_arm",
+        "n_fills_baseline",
+        "n_cancels_issued"
+      ],
+      "n_reasons": 0,
+      "no_sealed_value_in_any_reason": true,
+      "present_since": "design v2 -- including the 09-03 receipt, where it is an empty list",
+      "what_the_reasons_may_carry": "OPEN numbers only: the decision count and the declared minimum, and the declared sd floor fraction. The sd reason is a VERDICT ONLY",
+      "why_a_check_and_not_a_promise": "the stripper removes keys; a value interpolated into a string survives it. Before this, nothing but the author's care stopped one",
+      "written_by": "de_multiday_design_declaration.arm_day_admissible()"
+    }
+  ],
+  "reference_book": {
+    "builder_receipt": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_receipt_20260907_btc.json",
+    "day": "2026-09-07",
+    "day_forms_matched": [
+      "2026-09-07",
+      "20260907"
+    ],
+    "digest_read_from_field": "book.sha256",
+    "digest_recomputed_at_read_time": true,
+    "digest_source": "BE's builder receipt, not a DE constant",
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl",
+    "receipt_day": "20260907",
+    "sha256": "00b136a889e75e516ee772ccf480dbb648a695eb1e15344f4d2cfc34ad727b88"
+  },
+  "resources": {
+    "peak_rss_mb": 2638.98828125,
+    "per_arm": {
+      "CONDVALUE_X_SKEW": {
+        "null_elapsed_s": 2680.258462190628,
+        "null_peak_rss_mb": 2638.98828125,
+        "status": "OK"
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "null_elapsed_s": 2726.6608481407166,
+        "null_peak_rss_mb": 2638.98828125,
+        "status": "OK"
+      }
+    },
+    "scope_memory": {
+      "anon_bytes": 968609792,
+      "anon_gb": 0.9020881652832031,
+      "cap_was_hit": false,
+      "cgroup": "/user.slice/user-1001.slice/user@1001.service/research.slice/de145day07.service",
+      "events": {
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0
+      },
+      "expected_slice": "research.slice",
+      "file_bytes": 297287680,
+      "file_gb": 0.2768707275390625,
+      "in_research_slice": true,
+      "kernel_bytes": 5828608,
+      "leaf": "de145day07.service",
+      "leaf_is_the_ruled_launch_form": true,
+      "memory_peak_bytes": 3229511680,
+      "memory_peak_gb": 3.0077171325683594,
+      "path": "/sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/research.slice/de145day07.service",
+      "read_while_the_payload_lives": true,
+      "status": "MEASURED",
+      "the_arbiter_is_memory_events": "`max` counts times the limit was hit and `oom` times it killed. A high peak with max 0 is headroom the kernel simply had no reason to reclaim",
+      "the_post_exit_property": {
+        "status": "NOT_READ_FROM_INSIDE_THE_UNIT",
+        "why": "`systemctl show -p MemoryPeak` after the payload exits is the launcher's or the coordinator's read, recorded VERBATIM beside this one and never as a reading of the run's peak (form chain v4, memory_peak_reading)"
+      },
+      "this_is_the_peak_of_record": true,
+      "why_anon_and_file_apart": "rule 20's 8 GiB cap counts page cache. DA 63 measured 7.79 GiB peak with 1.13 GiB anon and 5.17 GiB reclaimable file, events max 0 -- a peak near the cap that the cap never enforced. One number cannot tell those apart",
+      "why_not_the_peak_of_record": null
+    },
+    "wall_seconds": 5468.018827199936
+  },
+  "seal_layout_symmetry_checked_on_the_emitted_results": [
+    {
+      "conditional_key": "economic",
+      "keys_present_in_both": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_reads": {
+        "economic_present": false,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+        "sealed": true,
+        "sealed_at_every_depth": true,
+        "sealed_field_names": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ]
+      },
+      "symmetric": true,
+      "unsealed_reads": {
+        "economic_present": true,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "UNSEALED -- 6 of 6 days complete under the bar this call was given",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": []
+      }
+    },
+    {
+      "conditional_key": "economic",
+      "keys_present_in_both": [
+        "sealed",
+        "seal_status",
+        "sealed_at_every_depth",
+        "sealed_field_names"
+      ],
+      "sealed_reads": {
+        "economic_present": false,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "SEALED -- 0 of 6 days complete. Every economic field is ABSENT from this artifact, not present-and-ignored, so whoever runs the remaining days has not seen this one's result",
+        "sealed": true,
+        "sealed_at_every_depth": true,
+        "sealed_field_names": [
+          "D_E0",
+          "D_E_MINUS_R",
+          "Z",
+          "p_location",
+          "null_mean",
+          "null_sd",
+          "null_draws_summary",
+          "sd_over_abs_mean",
+          "n_fills_arm",
+          "n_fills_baseline",
+          "n_cancels_issued"
+        ]
+      },
+      "symmetric": true,
+      "unsealed_reads": {
+        "economic_present": true,
+        "keys_missing": [],
+        "readable": true,
+        "seal_status": "UNSEALED -- 6 of 6 days complete under the bar this call was given",
+        "sealed": false,
+        "sealed_at_every_depth": false,
+        "sealed_field_names": []
+      }
+    }
+  ],
+  "source_identity": {
+    "carrying_commit": "5020f968edd36130181d97259a78437b039e0b2c",
+    "closure_drift": [],
+    "closure_unchanged_during_the_run": true,
+    "digest_taken_at": "MODULE IMPORT, before any work",
+    "head_at_emit": {
+      "dirty": true,
+      "dirty_beyond_the_shared_data_link": false,
+      "dirty_paths": [
+        "data"
+      ],
+      "dirty_paths_beyond_the_shared_data_link": [],
+      "head": "5020f968edd36130181d97259a78437b039e0b2c",
+      "porcelain": {
+        "malformed": [],
+        "n_malformed": 0,
+        "n_rows": 1,
+        "parser": "da_root.parse_porcelain -- the programme's ONE porcelain reader (R-641)",
+        "renames": []
+      },
+      "shared_data_link_exempted": [
+        "data"
+      ],
+      "why_exempted": "an UNTRACKED SYMLINK resolving to the canonical data root -- `scripts/wt_refresh.sh` makes it so every seat reads one data tree. Verified as a property (untracked AND a symlink AND resolving to the data root), never matched by name",
+      "worktree": "/home/yuqing/ctaNew-wt-de"
+    },
+    "head_at_import": {
+      "dirty": true,
+      "dirty_beyond_the_shared_data_link": false,
+      "dirty_paths": [
+        "data"
+      ],
+      "dirty_paths_beyond_the_shared_data_link": [],
+      "head": "5020f968edd36130181d97259a78437b039e0b2c",
+      "porcelain": {
+        "malformed": [],
+        "n_malformed": 0,
+        "n_rows": 1,
+        "parser": "da_root.parse_porcelain -- the programme's ONE porcelain reader (R-641)",
+        "renames": []
+      },
+      "shared_data_link_exempted": [
+        "data"
+      ],
+      "why_exempted": "an UNTRACKED SYMLINK resolving to the canonical data root -- `scripts/wt_refresh.sh` makes it so every seat reads one data tree. Verified as a property (untracked AND a symlink AND resolving to the data root), never matched by name",
+      "worktree": "/home/yuqing/ctaNew-wt-de"
+    },
+    "head_unchanged_during_the_run": true,
+    "import_closure": {
+      "basenames_collide": false,
+      "captured_at": [
+        "module import",
+        "the cascade's first import",
+        "after the cascade's first load(), which imports harmful_stateful_policy and de_phase4_diag_runner LAZILY -- the closure reached the cascade and stopped there, and the two modules that do the REPLAYING were outside it (REV 53 S1.1)"
+      ],
+      "colliding_basenames": [],
+      "digested": "from the bytes observed when each module first entered THIS run -- never a second read, because import_module can return a cached module whose file has since moved",
+      "modules": {
+        "be_cancel_axis_null.py": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+        "be_data_root.py": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+        "da_gate1_day_verdict.py": "63b0e2e9dbbcc788f47e31c6dcfa4d3a7b1b8e4be9ce209c2f7cad9a65427df6",
+        "da_root.py": "0c0e604bc50693ae66c35d24febae59ceff8b5b5957a089ab97083ba0e3be1f9",
+        "de_data_root.py": "eaffa4f949c7adb81333526a5536785d3d86d675bbd160f934c790a4a91b8619",
+        "de_decision_ledger.py": "d78c370151cea431127bbb778683739dcd66cb259b07ad6c09eb418d1eec2a3a",
+        "de_head_scoring.py": "60ef48fea69e83f16e93dd1e86ea83c7a866cf3a70fe47e0516f195fffba2b62",
+        "de_matched_random_control.py": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+        "de_multiday_design_declaration.py": "85c55b0ec83ce814ef0fc8ecf87202ba61c1193fee4513e4860dc2850671d2c7",
+        "de_multiday_gate1_runner.py": "883b5f3a811e9576d0c970554d5e7987c9654521543ebd1268c31311886615e2",
+        "de_phase4_diag_runner.py": "ee4034c15c2749829631503f66b76ba31ac7665664c1a6e209f6a535fe20d92c",
+        "de_rho_estimator.py": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+        "de_score_stream.py": "f85be3354610e2cebf452696f2c7c32e1f4a9bc3d2116ab8b7e799f4bf2a7bb1",
+        "declaration_chain.py": "bd9525529505e23456f5781ceba172d01a18947b81ddd1131926d2c1aa14efc0",
+        "harmful_stateful_policy.py": "14e669b10ff6115b37830107b09c3484f357de5b223d4694395b7b8cf9e0c926",
+        "phase2_arms.py": "e8c7134da15112e18825ec5046513b894490d3dd803189e06d00238eafc0205c",
+        "phase2_declaration.py": "aa866f8261677d799dbf56bcb2feb9a7f99f59db7982820e60fff05db0a54df9",
+        "phase2_state_schema_freeze.py": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+        "phase4_generation_tables.py": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+        "pm_tape_density.py": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+      },
+      "modules_by_path": {
+        "pm_research/be_cancel_axis_null.py": "5607bfbfe1b4ef897b272d28c9cbd6bd042a9dbd7aa39c8e038444c294cd1a4c",
+        "pm_research/be_data_root.py": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+        "pm_research/da_gate1_day_verdict.py": "63b0e2e9dbbcc788f47e31c6dcfa4d3a7b1b8e4be9ce209c2f7cad9a65427df6",
+        "pm_research/da_root.py": "0c0e604bc50693ae66c35d24febae59ceff8b5b5957a089ab97083ba0e3be1f9",
+        "pm_research/de_data_root.py": "eaffa4f949c7adb81333526a5536785d3d86d675bbd160f934c790a4a91b8619",
+        "pm_research/de_decision_ledger.py": "d78c370151cea431127bbb778683739dcd66cb259b07ad6c09eb418d1eec2a3a",
+        "pm_research/de_head_scoring.py": "60ef48fea69e83f16e93dd1e86ea83c7a866cf3a70fe47e0516f195fffba2b62",
+        "pm_research/de_matched_random_control.py": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+        "pm_research/de_multiday_design_declaration.py": "85c55b0ec83ce814ef0fc8ecf87202ba61c1193fee4513e4860dc2850671d2c7",
+        "pm_research/de_multiday_gate1_runner.py": "883b5f3a811e9576d0c970554d5e7987c9654521543ebd1268c31311886615e2",
+        "pm_research/de_phase4_diag_runner.py": "ee4034c15c2749829631503f66b76ba31ac7665664c1a6e209f6a535fe20d92c",
+        "pm_research/de_rho_estimator.py": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+        "pm_research/de_score_stream.py": "f85be3354610e2cebf452696f2c7c32e1f4a9bc3d2116ab8b7e799f4bf2a7bb1",
+        "pm_research/declaration_chain.py": "bd9525529505e23456f5781ceba172d01a18947b81ddd1131926d2c1aa14efc0",
+        "pm_research/harmful_stateful_policy.py": "14e669b10ff6115b37830107b09c3484f357de5b223d4694395b7b8cf9e0c926",
+        "pm_research/phase2_arms.py": "e8c7134da15112e18825ec5046513b894490d3dd803189e06d00238eafc0205c",
+        "pm_research/phase2_declaration.py": "aa866f8261677d799dbf56bcb2feb9a7f99f59db7982820e60fff05db0a54df9",
+        "pm_research/phase2_state_schema_freeze.py": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+        "pm_research/phase4_generation_tables.py": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+        "pm_research/pm_tape_density.py": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+      },
+      "n_modules": 20,
+      "n_modules_equals_len_modules": true,
+      "root": "/home/yuqing/ctaNew-wt-de/live"
+    },
+    "launch_time_utc": "2026-09-08T01:33:43.232817+00:00",
+    "on_disk_sha256_at_emit": "883b5f3a811e9576d0c970554d5e7987c9654521543ebd1268c31311886615e2",
+    "producing_code": "de_multiday_gate1_runner.py",
+    "producing_code_is_the_committed_bytes": true,
+    "producing_code_path": "live/pm_research/de_multiday_gate1_runner.py",
+    "producing_code_sha256": "883b5f3a811e9576d0c970554d5e7987c9654521543ebd1268c31311886615e2",
+    "source_unchanged_during_the_run": true,
+    "tree_dirty": true,
+    "tree_dirty_is_NOT_the_check": "other seats' uncommitted files say nothing about this producer; the check above compares THIS file's blob at HEAD with the bytes that ran",
+    "worktree_had_any_untracked_entry_at_import": true,
+    "worktree_was_dirty_at_import": false
+  },
+  "split_residency_proof": {
+    "capped_list_truncated": true,
+    "instrument_observed_the_book_read": true,
+    "markers_tested": [
+      "pm_5min/raw",
+      "harmful_exposure_rows",
+      "tape_index",
+      "_fragment",
+      "fragment_",
+      "state_tape",
+      "/tape"
+    ],
+    "n_distinct_paths": 1296,
+    "n_paths_opened": 9402,
+    "n_paths_opened_uncapped": 1296,
+    "no_tape_index_or_fragment_artifact_was_opened": true,
+    "non_vacuous": true,
+    "path_list_capped_at": 200,
+    "py_sources_excluded_on_purpose": "`pm_tape_density.py` is a MODULE whose name contains 'tape'; matching it would make the proof fire on its own imports",
+    "tape_artifacts_opened": [],
+    "tape_artifacts_opened_by_the_before_work_hook": [],
+    "tape_artifacts_opened_by_the_whole_process": [],
+    "the_book_was_in_the_CAPPED_list_too": true,
+    "the_claim_is_about": "the DAY PATH: the whole-process set MINUS the before_work hook's own set. Both are reported, so the subtraction is auditable",
+    "why_that_second_field_exists": "the capped list is what the ARTIFACT carries and the uncapped set is what the QUESTION is asked of. When they disagree the cap bit, and a reader can see that it did rather than wondering why a 200-entry list does not contain the book",
+    "why_truncation_does_not_hide_a_hit": "the tape scan reads `data_paths_opened`, which is NOT capped, in union with the capped list -- every marker lives under `data/`"
+  },
+  "status": "DAY_RUN_UNSEALED",
+  "what_this_is_not": {
+    "D_E_MINUS_R_is_UNBOUND": "the robustness endpoint needs the rebate's identity value, which is NOT on DE's surface. D(E0) -- the DECLARED PRIMARY -- is computed here from `de_phase4_diag_runner.fill_value_cents`, which is level-to-markout with NO fee term and therefore IS the E0 endpoint. D(E-R) is not computed and is not approximated",
+    "a_result": false,
+    "the_economics_are_SEALED": false,
+    "the_economics_are_SEALED_read_from": "the emitted arm-days' own `sealed` flags, never from `n_days_complete < G` -- which was true on the R-754 early read while both arm-days were unsealed",
+    "the_seal_scope_in_force_for_THIS_receipt": {
+      "design_version": 23,
+      "generated_from": "ECONOMIC_FIELDS and SEALED_FROM_DESIGN_VERSION -- the map the emitter actually applied, read at emit",
+      "n_sealed": 11,
+      "open_population_sizes": [
+        "n_decisions",
+        "n_scored_rows"
+      ],
+      "sealed_names": [
+        "D_E0",
+        "D_E_MINUS_R",
+        "Z",
+        "p_location",
+        "null_mean",
+        "null_sd",
+        "null_draws_summary",
+        "sd_over_abs_mean",
+        "n_fills_arm",
+        "n_fills_baseline",
+        "n_cancels_issued"
+      ],
+      "the_open_sizes_are": "the action-side counts rule 8 requires and what R4's admissibility bar reads. `n_decisions` cannot be sealed without making the bar uncheckable",
+      "the_sealed_outcome_counts_are": "counts of what the policy DID: arm fills MINUS baseline fills is the intervention's effect in events (R-659)",
+      "why_generated": "a literal list here said four counts were open SIZES while the emitter sealed three of them (R-674). A receipt that describes its own seal from a constant somebody edited separately describes a different seal"
+    }
+  },
+  "work_counters": {
+    "draws_performed_by_the_before_work_hook": 10500,
+    "draws_performed_by_this_day": 1000,
+    "process_total_draws": 11500,
+    "why_deltas": "the battery runs FIXTURE days and those draw; a process-wide counter would credit the day with the battery's work"
+  },
+  "wrapper": {
+    "a_SHARED_hold_does_not_satisfy_rule_20": "rule 20 is ONE heavy run at a time. `flock -s` lets two holders in at once, and both would have read `held: true` under the previous two-conjunct test (REV 41)",
+    "ancestor_pids": [
+      1,
+      1004,
+      2066371,
+      2066373
+    ],
+    "cgroup_leaf": "de145day07.service",
+    "declared_wrapper_is_not_evidence": "params carries a `wrapper` string; a string in a file cannot say what launched this process (R-575(C))",
+    "flock_holder_pids": [
+      2066371
+    ],
+    "flock_modes_on_the_inode": [
+      "WRITE"
+    ],
+    "fresh_probe": {
+      "holder_is_exclusive": true,
+      "probed": true,
+      "probes": [
+        "LOCK_EX|LOCK_NB",
+        "LOCK_SH|LOCK_NB"
+      ],
+      "someone_holds_it": true,
+      "why_two": "a shared hold blocks an exclusive request and admits a shared one; only an exclusive hold blocks both. Rule 20 needs exclusivity"
+    },
+    "heavy_run_lock_held": true,
+    "held_by_self_or_ancestor": true,
+    "holder_is_exclusive": true,
+    "how": "a fresh-fd LOCK_EX|LOCK_NB that FAILS, AND a /proc/locks FLOCK entry on the lock's inode whose pid is this process or an ancestor -- the holder is the `flock` wrapper, not the python child",
+    "in_a_transient_scope": false,
+    "lock_fd_is_corroboration_not_the_test": "an fd on the lock file says the file is OPEN. Two lines of `open()` with no flock forged the old field, and a 1-hour / 6.84 GiB run certified itself (reviewer \u00a72.3)",
+    "lock_fds": [
+      3
+    ],
+    "lock_is_held_by_someone": true,
+    "lock_path": "/home/yuqing/ctaNew/data/.heavy_run.lock",
+    "n_flock_holders": 1,
+    "rule20": {
+      "bar": {
+        "rss_gb": 1.0,
+        "wall_s": 60.0
+      },
+      "heavy_by_measurement": true,
+      "lock_held": true,
+      "peak_rss_gb": 2.577136993408203,
+      "rule": "R-575(C) -- heavy implies the lock, checked here rather than promised in a wrapper string",
+      "wall_s": 5468.018827199936
+    },
+    "self_or_ancestor_holds_EXCLUSIVE": true
+  }
+}

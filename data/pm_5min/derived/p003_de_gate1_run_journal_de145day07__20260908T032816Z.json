@@ -1,0 +1,91 @@
+{
+  "day": "2026-09-07",
+  "decision_ledger": {
+    "THE_REAL_DAY_ANCHOR_HELD": "the anchor->write join ran for the FIRST time on a real day and produced a ledger, not a named status (REVIEW 103 \u00a71)",
+    "n_rows": 208083,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_decision_ledger_20260907__20260908T030447Z.jsonl.gz",
+    "schema_version": 2,
+    "sha256_in_the_receipt": "418e23bbca879ce02559ec078c050c22c925843bace9d732f16830c9bdb3181c",
+    "sha256_recomputed": "418e23bbca879ce02559ec078c050c22c925843bace9d732f16830c9bdb3181c"
+  },
+  "emitted_receipt": {
+    "bytes": 73227,
+    "path": "/home/yuqing/ctaNew/data/pm_5min/derived/p003_de_gate1_day_run_20260907_SEALED__20260908T030451Z.json",
+    "sha256": "7a1dd9a50288d91c0eda729e997a0bffec05130f3834a8499b06e4e583d676dd"
+  },
+  "exit_resolved_through_the_map": {
+    "declared_codes": [
+      "0",
+      "1"
+    ],
+    "exit_code": 0,
+    "mapped_by": {
+      "path": "/home/yuqing/ctaNew/live/pm_research/declarations/producer_exit_maps_v9.json",
+      "sha256": "482527d4810b0f746df9b13aaeaf8cc1dc566020f4ade3acdcd62f11bd11825b",
+      "version": 9
+    },
+    "producer_module": "live/pm_research/de_multiday_gate1_runner.py",
+    "resolved_kind": "the run completed and the artifact was written"
+  },
+  "five_fields_and_id_at_exit_while_loaded": {
+    "ActiveState": "active",
+    "ExecMainExitTimestamp": "Tue 2026-09-08 03:04:52 UTC",
+    "ExecMainStartTimestamp": "Tue 2026-09-08 01:33:43 UTC",
+    "ExecMainStatus": "0",
+    "InvocationID": "5c7b0a692fdb45dcb41fc9d36e90795d",
+    "LoadState": "loaded",
+    "MemoryPeak": "3229511680",
+    "Result": "success",
+    "SubState": "exited",
+    "as_of": "2026-09-08T03:28:16Z"
+  },
+  "go": "GO #8",
+  "head_for_the_whole_run": "5020f968edd36130181d97259a78437b039e0b2c",
+  "head_is": "the bytes REVIEW 103 cleared; wt-de was NOT refreshed to any composition",
+  "invocation_id": "5c7b0a692fdb45dcb41fc9d36e90795d",
+  "journal_by_both_invocation_fields": {
+    "after_the_stop": {
+      "as_of": "2026-09-08T03:28:46Z",
+      "manager_text": "2026-09-08T01:33:43+00:00 ip-172-31-78-41 systemd[1004]: Started de145day07.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-07 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-08T03:28:44+00:00 ip-172-31-78-41 systemd[1004]: Stopped de145day07.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-07 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n2026-09-08T03:28:44+00:00 ip-172-31-78-41 systemd[1004]: de145day07.service: Consumed 1h 31min 484ms CPU time, 3.0G memory peak, 0B memory swap peak.\n",
+      "retention_state_is_a_MEASUREMENT": {
+        "as_of": "2026-09-08T03:28:46Z",
+        "oldest_entry_the_journal_holds": "2026-09-07T22:50:34+00:00 ip-172"
+      },
+      "sha256_of_the_manager_text": "db2cef746fad2951bbf8491c2cdd9212ce9b72664a6a10f89bbf0968ecb5f1a2",
+      "why_it_is_here": "written WHILE loaded; the Stopped/Consumed lines exist only after the stop (rule 13: nothing landed was edited)"
+    },
+    "copied_at": "2026-09-08T03:28:16Z",
+    "manager_lines_USER_INVOCATION_ID": 1,
+    "manager_text": "2026-09-08T01:33:43+00:00 ip-172-31-78-41 systemd[1004]: Started de145day07.service - /usr/bin/flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock /home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/de_multiday_gate1_runner.py --day 2026-09-07 --book /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc.pkl --output /home/yuqing/ctaNew/data/pm_5min/derived.\n",
+    "payload_lines__SYSTEMD_INVOCATION_ID": 1,
+    "retention_state_is_a_MEASUREMENT": {
+      "as_of": "2026-09-08T03:28:16Z",
+      "oldest_entry_the_journal_holds": "2026-09-07T22:50:34+00:00 ip-172",
+      "the_query_that_produced_it": "journalctl --user -o short-iso --no-pager | head -1"
+    },
+    "unit_query_lines_for_cross_check": 2
+  },
+  "kind": "de_heavy_run_capture_record",
+  "launched_at": "2026-09-08T01:33:43Z",
+  "launched_from_worktree": "/home/yuqing/ctaNew-wt-de",
+  "leaf_peak_bytes_sampled_in_process": 2767179776,
+  "leaf_peak_samples_taken_alive": 180,
+  "no_economic_value_is_quoted_here": "DA's reader prints",
+  "the_filename_is_a_GLOB_not_a_claim": {
+    "arm_days": {
+      "CONDVALUE_X_SKEW": {
+        "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete",
+        "sealed": false
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "seal_status": "UNSEALED_BY_USER_RULING R-765 -- 4 of 6 days complete",
+        "sealed": false
+      }
+    },
+    "n_sealed_artifacts_present": 0,
+    "name_carries": "_SEALED_",
+    "why_it_matters": "the receipt is UNSEALED under R-765 and its own fields say so; the legacy glob in the FILENAME should stop looking like a claim"
+  },
+  "unit": "de145day07.service",
+  "written_at": "2026-09-08T03:28:16Z"
+}
