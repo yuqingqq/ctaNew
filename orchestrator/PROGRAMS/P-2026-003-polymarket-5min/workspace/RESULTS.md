@@ -249,6 +249,27 @@ Two of four days read at this writing; 09-05 and 09-06 follow as GO E3/E4 from t
 
 **What changed structurally on 2026-09-07 (three USER rulings):** R-754 the early read (this block); R-765 the seal RETIRED for every run from now on, ONE path ONE emission, a per-day decision ledger persisted beside each receipt; R-782 the absolutes recorded. Params v19 / design v27 are the heads; a FREEZE on new params/design versions holds until GO #8's receipt lands (the frozen worktree resolves the design head from the shared ledger).
 
+## 0c. 2026-09-08T13:18:37Z — USER-directed settlement-P&L and placement-latency record update
+
+**Scope and supersession.** This section supersedes §0b only where §0b calls the fills leg the economic result or reads signs from that leg. It does not edit any landed artifact, turn a seen day into validation or change the predeclared Gate-1 stopping rule. The result endpoint under R-801 is **settlement P&L = trade cash flow plus the settlement value of the residual position at each 5-minute window close**, summed over the day. The old `D_E0` fills-leg value is diagnostic adverse-selection evidence, not this endpoint.
+
+DE re-emitted the point-estimate receipts after the latency-document repair. Each latest receipt reads placement latency from the digest-matched book-builder receipt, records the same value at both document sites and asserts `placement_latency_agreement.agree = true`. The four `L_place = 250 ms` receipts explicitly supersede their internally contradictory predecessors without editing them. These are point estimates only: S4 was skipped and every null, Z and p field is the named status `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`. Independent DA verification of these superseding receipts is still required.
+
+| day | never-cancel settlement P&L (cents) | CONDVALUE delta (cents; n decisions) | HAZARD delta (cents; n decisions) | settlement-boundary check | latest receipt / as-of |
+|---|---:|---:|---:|---|---|
+| 2026-09-03 | 37,849.85 | -16,510.70; 15,935 | -10,817.15; 1,398 | 244 agree; 2 `BOUNDARY_NOT_IN_CAPTURE`; not final | `p003_de_point_estimate_day_20260903_L250ms__20260908T121128Z.json` `ab8c2bd1…`; 12:13:34Z |
+| 2026-09-04 | 38,452.91 | -14,432.27; 19,287 | -17,441.80; 1,773 | 288/288 agree; final | `p003_de_point_estimate_day_20260904_L250ms__20260908T121711Z.json` `36cf846d…`; 12:19:21Z |
+| 2026-09-05 | 1,974.58 | +10,257.74; 16,744 | +11,610.50; 1,684 | 288/288 agree; final | `p003_de_point_estimate_day_20260905_L250ms__20260908T121956Z.json` `d8ec4d3b…`; 12:22:01Z |
+| 2026-09-06 | 20,750.59 | -5,269.25; 18,108 | +7,336.86; 1,753 | 287 agree; 1 `BOUNDARY_NOT_IN_CAPTURE`; not final | `p003_de_point_estimate_day_20260906_L250ms__20260908T122206Z.json` `182af450…`; 12:24:12Z |
+
+**Directional read, not inference:** at 250 ms, CONDVALUE is above the never-cancel baseline on **1/4** days and HAZARD on **2/4**. The unweighted four-day sums of arm-minus-baseline settlement P&L are **-25,954.48 cents** and **-9,311.59 cents**, respectively. There is no replay null for this endpoint, no day-cluster interval and no significance claim. The four days are consumed design data. Register entry R-832's prose says both arms won twice at 250 ms; its own table and the superseding receipts show CONDVALUE won once and lost three times. `COORDINATION.md` is append-only and is not edited here; that prose requires an appended coordinator/USER correction.
+
+**Placement-latency sensitivity:** the re-emitted 09-05 `L_place = 0 ms` control (`p003_de_point_estimate_day_20260905_L0ms__20260908T122417Z.json` `d0d69ec2…`, as-of 12:26:15Z; 288/288 boundaries agree) has a never-cancel baseline of **81,238.30 cents**, CONDVALUE delta **-51,193.26 cents** and HAZARD delta **+7,645.79 cents**. At 250 ms the same day's values are 1,974.58, +10,257.74 and +11,610.50 cents. Placement latency therefore materially changes the replay and must remain an explicit, frozen sensitivity; the 0 ms and 250 ms columns are not interchangeable.
+
+**09-07 is not a settlement result.** The latest 250 ms point receipt (`p003_de_point_estimate_day_20260907_L250ms__20260908T122617Z.json` `f1723c29…`, as-of 12:28:11Z) records 19,764 / 1,897 decisions but refuses the settlement endpoint as `NOT_VALUED_DAY_NOT_ADMISSIBLE`: no prospective declaration admitted the day. Its fills-leg numbers are diagnostic only. Because the day has now been opened, 09-03 through 09-07 are seen/consumed and cannot be reused as untouched validation days.
+
+**Baseline mechanics:** “never cancel” means no model-triggered cancel/hold decision, not an order left forever at one price. QR_SKEW_ONLY still follows the best bid/ask, joins both sides inside the inventory band, and may improve only the inventory-reducing side by one tick when the spread permits; every new generation experiences the declared placement latency. The treatment arms add their model-triggered cancel/hold/repost decisions to that same baseline. No cancellation arm has yet demonstrated incremental value under the ruled settlement endpoint and replay null, so QR_SKEW_ONLY remains the incumbent.
+
 ## 0. 2026-09-04 — the first absolute economics, and what they say
 
 **This section supersedes §1 wherever they disagree.** Until today this

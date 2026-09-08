@@ -65,7 +65,7 @@ armed independently.
 |---|---|
 | `/home/yuqing/ctaNew` | the SHARED tree. Landings only: `add -f` + `commit -- <paths>` + `push`. Never `checkout`, `reset`, `stash`, `clean`, `rebase` here. |
 | `/home/yuqing/ctaNew-wt-de` | **THE RUN WORKTREE. FROZEN.** Runs execute from it and its HEAD does not move until the coordinator's GO names the refresh. As of this writing it is at `5020f96` — the bytes REVIEW 103 cleared, which GO #8 ran. |
-| `/home/yuqing/ctaNew-wt-de2` | the working tree: edits, batteries, landings. Refresh it to the tip BEFORE editing. |
+| `/home/yuqing/ctaNew-wt-de2` | the working tree: edits, batteries, landings, and the first point-estimate runs. A result run here requires a clean committed HEAD and freezes the worktree for its duration, exactly like wt-de. Refresh it to the tip BEFORE editing. |
 | `/home/yuqing/ctaNew-wt-e3` | the composition worktree: build and push composition heads here. |
 | `/home/yuqing/ctaNew-wt-rr` | the re-run worktree, created at a composition head so wt-de can stay frozen for a different GO. |
 
@@ -152,7 +152,10 @@ is worth building.
 **Ledger**: `DECISION_LEDGER_HAS_NO_ANCHOR` · `_ABSENT` · `_DIGEST_MISMATCH` ·
 `_NO_INVENTORY_FIELDS` · `_NO_SIGN_CONVENTION` · `_SETTLEMENT_SCALARS_ABSENT_FOR_ARM` ·
 `_SETTLEMENT_VALUE_ABSENT_FOR_ARM` · `_SETTLEMENT_NULL_NOT_REDERIVABLE` ·
-`LEDGER_SCHEMA_UNKNOWN`.
+`LEDGER_SCHEMA_UNKNOWN` · `DECISION_LEDGER_FULL_RUN_HAS_NO_NULL_DRAWS` ·
+`DECISION_LEDGER_POINT_ESTIMATE_HAS_NULL_DRAWS` ·
+`DECISION_LEDGER_MIXED_RUN_MODES` ·
+`DECISION_LEDGER_NULL_VALUES_FIELD_ABSENT`.
 
 **Valuation**: `ABSOLUTES_DO_NOT_RECONCILE` · `SETTLEMENT_LEGS_DO_NOT_RECONCILE` ·
 `SETTLEMENT_EXCESS_DOES_NOT_RECONCILE` · `SETTLEMENT_NULL_DEGENERATE` (a STATUS,
@@ -169,7 +172,10 @@ never an abort — a degenerate null must not kill a day that already computed D
 `SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE`.
 
 **Placement latency**: `SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY` ·
-`SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS`.
+`SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS` ·
+`SETTLEMENT_BOOK_RECEIPT_NOT_PARSED` ·
+`SETTLEMENT_PLACEMENT_LATENCY_DISAGREES_IN_THE_DOCUMENT` ·
+`SETTLEMENT_PLACEMENT_LATENCY_ABSENT_FROM_THE_DOCUMENT`.
 
 **Early read**: `EARLY_READ_NO_SEALED_RECEIPT` · `_RECEIPT_NOT_THE_PAIR` ·
 `_ALREADY_EMITTED` · `_BAR_CARRIES_ONLY_A_PREFIX` · `_BAR_DIGEST_MALFORMED` ·
@@ -177,7 +183,8 @@ never an abort — a degenerate null must not kill a day that already computed D
 `_WROTE_NO_DECISION_LEDGER` · `_SUPERSEDES_TARGET_ABSENT` · `_SUPERSEDES_DIGEST_MISMATCH` ·
 `_SUPERSEDES_NOT_THE_HEAD` · `_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY`.
 
-**Point estimate**: `POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC`.
+**Point estimate**: `POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC` ·
+`POINT_ESTIMATE_RESULT_CONTRACT_VIOLATION`.
 
 ### RED BY DESIGN in the shared tree
 mm-research's `de_phase4_diag_runner.py` is off v19's cascade pin, so **the runner's
@@ -231,6 +238,29 @@ the file says which it is and the falsifier pins it.
 
 `run_day(..., point_estimate=True)` **skips S4 entirely** — not a shorter null, no
 null. The draw count is never lowered (R-174); it is not taken at all.
+
+The builder is tracked at `live/pm_research/de_point_estimate_day.py`; do not copy
+it to scratch. From the clean, frozen run worktree, launch it through §1's service
+and lock form:
+
+```
+systemd-run --user --unit=<NAME> --slice=research.slice \
+  -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes \
+  --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew \
+  --working-directory=<CLEAN-FROZEN-WORKTREE> \
+  -- flock -n -E 75 /home/yuqing/ctaNew/data/.heavy_run.lock \
+     /home/yuqing/pricer-sol/venv/bin/python3 \
+     live/pm_research/de_point_estimate_day.py \
+     <YYYY-MM-DD> <BOOK.pkl> \
+     --output-dir /home/yuqing/ctaNew/data/pm_5min/derived
+```
+
+The driver takes `placement_latency` from the completed `day_run`, uses that same
+object at the top level, checks every serialized `L_place_ms` before an atomic
+publish, and names the prior `(day, L_place_ms)` artifact by path and recomputed
+digest. If a family has an earlier abandoned sibling, `also_supersedes` names it
+too, so the correction leaves one head. Contradictory priors remain unedited and
+are superseded in-band.
 
 * Every statistic field — `Z`, `p_location`, `null_mean`, `null_sd`,
   `null_draws_summary.n`, and the same five in `economic_settlement` — carries the
