@@ -961,20 +961,45 @@ def compare_arm(recomputed: dict, receipt_arm: dict) -> dict:
     if "seed" in prov:
         cmp("seed", recomputed["seed"], prov.get("seed"))
 
+    #: DA 164 / REVIEW 140. THE RULED ENDPOINT, CHECKED WHERE IT CAN BE
+    #: CHECKED AND NAMED WHERE IT CANNOT.
+    #:
+    #: This verifier REPLAYS THE NULL, so what it independently recomputes
+    #: is the DIAGNOSTIC -- D_E0, Z, p, the null moments. `D_E_settle` is
+    #: a settled-money quantity built from the decision ledger's FILL
+    #: rows, and THIS MODULE LOADS NO LEDGER, so it cannot re-derive it
+    #: here and must not imply that it did.
+    #:
+    #: What it CAN do from the receipt alone is the ruled block's own
+    #: identity -- `D_E_settle == arm_total - zero_cancel_baseline_total`
+    #: -- which is a real check on the primary endpoint and was never
+    #: being made. So the ruled endpoint is CHECKED FOR INTERNAL
+    #: CONSISTENCY, the recompute is LABELLED as covering the diagnostic
+    #: only, and a full re-derivation is named as owed rather than left to
+    #: be assumed from a green verdict.
+    ruled = _compare_ruled_endpoint(receipt_arm, cmp)
+
     if seal["sealed"]:
         return {"arm": recomputed["arm"], "seal": seal,
                 "checks": checks, "n_mismatches": len(mismatches),
                 "mismatched_fields": mismatches,
                 "economic_comparison":
                     "ECONOMIC_COMPARISON_NOT_POSSIBLE_SEALED",
+                "ruled_endpoint": ruled,
                 "IS_A_VERIFICATION_OF_THE_ECONOMICS": False,
                 "why": ("the receipt carries no economic field, so the "
                         "recomputed D(E0), Z, p and null moments agree with "
                         "NOTHING. Reporting zero mismatches here would be "
                         "certifying an empty set.")}
 
-    econ_mine = recomputed.get("economic") or {}
-    econ_theirs = receipt_arm.get("economic") or {}
+    #: THE BLOCK IS NAMED EXPLICITLY. Five of these names -- Z,
+    #: p_location, null_mean, null_sd, null_draws_summary -- exist in
+    #: `economic_settlement` TOO (`FIELDS_IN_BOTH_BLOCKS`, measured), so a
+    #: bare `.get(f)` against the wrong sibling returns a number and no
+    #: error. Reading `DIAGNOSTIC_BLOCK` by name is what stops that being
+    #: silent, and the result says which block it read.
+    econ_mine = recomputed.get(DIAGNOSTIC_BLOCK) or {}
+    econ_theirs = receipt_arm.get(DIAGNOSTIC_BLOCK) or {}
     for f in ("D_E0", "Z", "p_location", "null_mean", "null_sd"):
         if f in econ_mine:
             cmp(f, econ_mine[f], econ_theirs.get(f))
@@ -985,8 +1010,75 @@ def compare_arm(recomputed: dict, receipt_arm: dict) -> dict:
             "n_mismatches": len(mismatches),
             "mismatched_fields": mismatches,
             "economic_comparison": "COMPARED_EXACT",
+            "compared_block": DIAGNOSTIC_BLOCK,
+            "ruled_endpoint": ruled,
             "IS_A_VERIFICATION_OF_THE_ECONOMICS": True,
+            "WHICH_ENDPOINT_THIS_VERIFIES": (
+                "the DIAGNOSTIC (`economic`: D_E0, Z, p, null moments), "
+                "independently recomputed from a replayed null. The RULED "
+                "endpoint R-801 named -- `economic_settlement.D_E_settle`, "
+                "the settlement P&L -- is CHECKED FOR INTERNAL CONSISTENCY "
+                "here and NOT re-derived, because that needs the decision "
+                "ledger's FILL rows and this module loads none. See "
+                "`ruled_endpoint`."),
             "verdict": "AGREES" if not mismatches else "FLAGGED"}
+
+
+def _compare_ruled_endpoint(receipt_arm: dict, cmp) -> dict:
+    """R-801's PRIMARY endpoint, checked from the receipt alone.
+
+    `D_E_settle` must equal `arm_total_cents` minus
+    `zero_cancel_baseline_total_cents`. Both legs and the difference are
+    in the same block, so the identity is checkable without the ledger --
+    and it is the only statement about the ruled endpoint this module is
+    entitled to make.
+
+    ABSENCE IS A STATUS, NEVER A PASS (rule 4): a receipt with no
+    settlement block gets `RULED_ENDPOINT_ABSENT`, not agreement."""
+    settle = receipt_arm.get(SETTLEMENT_BLOCK)
+    if not isinstance(settle, dict):
+        return {"status": "RULED_ENDPOINT_ABSENT",
+                "block": SETTLEMENT_BLOCK,
+                "is_a_verification": False,
+                "why": ("this receipt carries no `economic_settlement`, so "
+                        "R-801's endpoint is not present to check. That is "
+                        "a status about the receipt, not agreement.")}
+    missing = [f for f in SETTLEMENT_FIELDS if f not in settle]
+    if missing:
+        return {"status": "RULED_ENDPOINT_INCOMPLETE",
+                "block": SETTLEMENT_BLOCK, "missing": missing,
+                "present": [f for f in SETTLEMENT_FIELDS if f in settle],
+                "is_a_verification": False,
+                "why": ("the identity D_E_settle = arm_total - baseline_total "
+                        "needs all three; a partial block cannot be checked "
+                        "and must not read as checked")}
+    arm_t = float(settle["arm_total_cents"])
+    base_t = float(settle["zero_cancel_baseline_total_cents"])
+    declared = float(settle["D_E_settle"])
+    implied = arm_t - base_t
+    #: EXACT on the economics, as everywhere else in this comparison: the
+    #: two are the same float arithmetic on the same numbers, so anything
+    #: but equality within float noise is a real disagreement.
+    agrees = abs(implied - declared) <= 1e-6
+    cmp("economic_settlement.D_E_settle", implied, declared)
+    return {"status": "RULED_ENDPOINT_INTERNALLY_CONSISTENT" if agrees
+                      else "RULED_ENDPOINT_INTERNALLY_INCONSISTENT",
+            "block": SETTLEMENT_BLOCK,
+            "D_E_settle_declared": declared,
+            "arm_total_cents": arm_t,
+            "zero_cancel_baseline_total_cents": base_t,
+            "D_E_settle_implied_by_the_legs": implied,
+            "agrees": agrees,
+            "is_a_verification": False,
+            "what_this_IS": ("the ruled block's own identity: D_E_settle "
+                             "equals its two legs' difference"),
+            "what_this_IS_NOT": (
+                "an independent re-derivation of the settlement P&L. That "
+                "needs the decision ledger's FILL rows -- trades cash flow "
+                "plus residual times settlement (R-801) -- and this module "
+                "loads no ledger. A reader wanting the endpoint VERIFIED "
+                "needs the ledger recompute, which is a different "
+                "instrument and is OWED.")}
 
 
 def verify_book_digest(book_path: str, receipt_sha: str) -> dict:
