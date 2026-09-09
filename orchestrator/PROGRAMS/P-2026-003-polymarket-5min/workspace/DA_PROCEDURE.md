@@ -109,6 +109,39 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## A sibling key nobody surfaces is not an answer (DA 150)
+
+BE 116 put `BINANCE_GAP_EXCLUDED_STATUS` beside the count rather than in it —
+correct, because a string in the count slot raises `TypeError` in this file's sum
+(driven here, not taken from BE's receipt). **But my own verifier published only the
+SUM**: its block mentioned neither the count nor the status, so a reader met the zero
+folded inside `admitted_plus_excluded` and was never led to the sibling. **DA 147's
+question was still open on MY surface.**
+
+**The general form: when another seat adds a field to answer a finding of yours, ask
+whether YOUR output leads a reader to it.** A producer-side fix and a reader-side fix
+are different fixes. Every exclusion summand now carries its count, its sibling, and
+what the number means — and a zero with **no** sibling is named `NOT COMPUTABLE`,
+which is what all twelve landed receipts carry.
+
+## Nothing found: the seed and the draw pool (DA 150) — do not re-till
+
+Rule 10's "the seed must pin the data, not just the RNG", driven both directions.
+`seed_for(book_sha, arm)` pins the book's bytes; the pool is derived from them by
+`be_cancel_axis_null.load()`, whose logic changed at BE 107 — **but
+`verify_draw_provenance` binds `module_sha256` to that very module**, and all five
+bindings (module, book, seed, arm, block-present) **refuse alone** with the positive
+control admitting. `load()` reaches `de_phase4_diag_runner`, one of the ten modules
+params pins under `be_cascade.modules`. **The closure is pinned, just elsewhere. No
+gap.** Not driven: `draw_null` generating draws.
+
+## Times: I committed the fourth instance of the placeholder slip (DA 150)
+
+I wrote `as-of 09:00:0xZ` in a row header — an estimate with a placeholder digit —
+while holding an `08:58:17Z` reading I had already taken. **The rule is not "estimate
+carefully": read the clock in a separate call BEFORE composing, and quote that**
+(rule 12). A placeholder digit is the tell. Corrected in band at Q-DA-374.
+
 ## Enumerate by OPERATION, never by SPELLING (DA 149) — I got this wrong
 
 DA 148 closed DA's consumer set at **three**. It is **four**. `da_de53_exclusion`
