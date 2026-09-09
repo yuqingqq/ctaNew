@@ -67,6 +67,50 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T14:57:56Z (MEM ROUND 319 -- ***THE PROGRAMME HAS PRODUCED ITS FIRST CORRECTED NUMBER SINCE THE RETRACTION, AND
+  THE USER HAS RULED ON FOUR THINGS.*** From `e975d81` to `ac99226`. **I read every figure at the artifact rather
+  than taking the dispatch**: `p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json` on book **EV21
+  (`ae98b92219940c19...`)**, exit rc 0 at 14:05Z -- ***`D_E_settle` +11,191.244402***, arm total **48,506.795833**
+  (trades **-179,803.284167**, residual **+228,310.08**) against a zero-cancel baseline of **37,315.551431** (trades
+  **-226,590.602369**, residual **+263,906.1538**), **20,682 arm fills against 22,675 baseline, 3,863 cancels over
+  19,523 decisions, 246 slugs on both legs, `theta_was_not_refitted_here: True`** -- ***AND THE ESTIMAND'S OWN
+  ARITHMETIC CLOSES THREE WAYS EXACTLY, TO THE LAST DECIMAL: THE ARM LEGS SUM TO THE ARM TOTAL, THE BASELINE LEGS TO
+  THE BASELINE TOTAL, AND THEIR DIFFERENCE TO `D_E_settle`.*** The artifact carries R-801's definition in
+  `what_total_is` -- *the same field that corrected ME at round 289 when I read the fills leg as the total.* ***AND
+  ITS LIMITS ARE IN THE ARTIFACT, NOT ONLY IN THE PROSE: `run_mode: POINT_ESTIMATE` AT THREE LEVELS AND
+  `result_contract.null_status: NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, NO NULL, NO Z, NO p, NO CONTROL, AND ASKING IT
+  FOR A TEST STATISTIC REFUSES BY NAME. "THE POINT ESTIMATE STANDS" IS THE MOST THAT MAY BE SAID*** -- *I declared
+  that reading in round 315 before the number existed and the artifact now enforces it, so a reader who never saw
+  this file cannot over-read it either.* ***AND THE FACT EASIEST TO CELEBRATE AND MOST IMPORTANT NOT TO: THE SIGN IS
+  A REVERSAL -- THE RETRACTED ARMS LOST HEAVILY AND THIS ONE IS POSITIVE -- WHICH DA 162 IS EXAMINING AS POSSIBLY
+  THE POPULATION RATHER THAN THE REPAIRS, SINCE THE BOOK IS BUILT OVER A DIFFERENT ERA WITH REAL GAPS ATTACHED***;
+  **two things changed at once, the code AND the data the code sees, and this file asserts no explanation until DA
+  reports.** ***I PRE-REGISTERED THREE EXIT NUMBERS LAST ROUND AND SCORED THEM MYSELF AGAINST THE EV21 RECEIPT: ALL
+  THREE LANDED -- `n_excluded = 9`; the new statuses PRESENT WITH EXPLICIT ZEROS; `generations = 313140`, exactly
+  313,149 - 9*** -- and the second landed **better than I asked for**, since each zero carries a `disposition`
+  (`NON_FINITE`/`MALFORMED` "REFUSED, not excluded"; `INVERTED` "counted here, LEFT IN THE REFERENCE and refused by
+  `validate_reference`") -- ***A ZERO WITH A DISPOSITION ANSWERS THE QUESTION A BARE ZERO LEAVES OPEN.*** **THE FOUR
+  USER RULINGS. (a) THE MATCHING UNIT IS B, WITH THE 1-IN-3,862 DOUBLE-CANCELLED REFERENCE GENERATION RECORDED AS A
+  NAMED, MEASURED EXCEPTION IN THE RECEIPT -- CONDVALUE FAIL-CLOSED UNTIL ITS SINGLE COLLISION IS HANDLED, HAZARD'S
+  NULL FREE TO RUN -- WHICH CLOSES THE ITEM OPEN SINCE THE COORDINATOR'S PREMISE FOR B PROVED FALSE**, *the ruling
+  not restoring the premise but replacing the assumption with a COUNT.* **(b) THE MONEY-LEVEL LATENCY COMPARISON
+  WILL BE CLOSED BY BE VALUING DROPPED TRANCHES AT BUILD SO ONE BOOK CARRIES BOTH L=0 AND L=250, NOT BY A SECOND L=0
+  BUILD, BECAUSE THE ONLY L=0 09-03 BOOK IS PRE-FIX AND BUILT OVER THE WRONG ERA AND WOULD CONFOUND ERA WITH
+  LATENCY** -- *answering DA's own named limit by changing the BUILD rather than accepting a contaminated
+  comparator.* **(c) THE 09-04..09-07 QUEUE IS HELD UNTIL (a) AND (b) SETTLE** -- *not a refusal but a SEQUENCE,
+  since four days built before either settles are four days built to a specification about to change.* **(d) A DAY
+  WHOSE BOOK-CODE VERDICT IS `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED PROVIDED THE UNNAMED ARE THE
+  KNOWN LAZY-IMPORT PAIR -- AND DE IS MAKING THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED**,
+  *which is the difference between a ruling and a loophole.* ***THE LATENCY STATUS, PRECISELY: THE 51.17 % TRANCHE
+  EFFECT REPRODUCES ON THE CORRECTED BOOK -- 23,765 AGAINST 22,675 OF 46,440, IDENTICAL TO DA'S EV20 FIGURE -- SO
+  THE MECHANISM SURVIVES THE ERA FIX, THE CAUSAL-SCORING REPAIR AND THE ZERO-LENGTH EXCLUSION; BUT THE MONEY-LEVEL
+  54 / 62 / 98 / 55 % IS NOT YET REPRODUCED***, with DA's warning governing the reading -- **a COUNT of tranches and
+  a SHARE of settled money are different estimands.** ***AND DE DECLINED THE AVAILABLE SHORTCUT IN ONE SENTENCE: IT
+  WOULD NOT USE THE PRE-FIX L=0 BOOK -- "I WON'T DRESS THE SECOND UP AS THE FIRST" -- WHICH MAKES FOUR SEATS IN ONE
+  NIGHT DECLINING A RESULT THEY COULD HAVE HAD.*** Finally, **BE's cold-cache correction moves the queue's price in
+  the expensive direction: 09-04 REACHES 9.70 GB, 82 % OF THE ENVELOPE, NOT THE 63 % REPORTED FROM A SINGLE WARM
+  RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2786, prov 2318 -> 2331; window 3/3, Batch
+  301 archived. MEM asserts no result.)
   2026-09-09T12:56:22Z (MEM ROUND 318 -- ***THE 09-03 REBUILD IS RUNNING.*** From `c98a547` to `4784242`, two commits.
   **`p003ev210903a` is `active`, launched 12:52:32Z from `wt-be`, payload `be_daybook_build.py`, args `--day 20260903
   --placement-latency-ms 250 --artifact-revision EV21`, expected ~13:47Z ON THE MEASURED 54.3-MINUTE WALL and not the
@@ -160,51 +204,6 @@ updated: >-
   COMMITS.*** DA 160 also lands **`seam.commit` arriving as a MAPPING where its reader took it for a STRING -- THE
   FALSE FLAG ON THE FIRST CORRECTED BOOK.** Flags 2744 -> 2761, prov 2289 -> 2306; window 3/3, Batch 299 archived.
   MEM asserts no result.)
-  2026-09-09T12:40:35Z (MEM ROUND 316 -- ***THE POINT ESTIMATE REFUSED ON THE FIRST CORRECTED BOOK, AND THE REFUSAL IS THE
-  SYSTEM WORKING.*** From `7b7bc41` to `2816978`, THREE commits -- I swept one to `c379953` and REV 137 landed while I wrote, CORRECTING THE SCOPE OF ONE OF MY POINTS AND FINDING THE PROBE I RAN SHIPS NO FALSIFIER; folded in an addendum below. **`dePE0903EV20` exited status 1 at 12:32:30Z after
-  2 min 45 s, 1.2 GB peak, NO ARTIFACT WRITTEN** -- *which answers the open observation I ended round 315 with, and
-  it is the better of the two possibilities.* ***I RAN `de_reference_integrity_probe.py` MYSELF ON AN IDLE MACHINE
-  RATHER THAN RELAYING DE'S DIAGNOSIS, AND IT REPRODUCES EXACTLY: `n_generations 313149`, `n_refused 9`,
-  `n_slugs_affected 7`, `n_tranches_on_them 0`, sha256 matching the book I hashed last round -- AND THE `by_kind`
-  BREAKDOWN IS `{ZERO_LENGTH: 9}`, ALL NINE ONE KIND, NONE INVERTED, NONE NON-FINITE***, the examples carrying `t0`
-  and `t1` identical to the last decimal and **two of them the SAME `t0` on BUY_UP and SELL_UP of one slug** -- *a
-  single failure mode with a repeated timestamp is a mechanism, not nine coincidences.* ***AND THE CONTROL IS IN THE
-  SAME RUN: THE PRE-FIX BOOK HAS 313,114 GENERATIONS AND `n_refused: 0` -- ZERO BEFORE, NINE AFTER, SO THE EV20 BUILD
-  PATH INTRODUCED THEM***, which is `build_reference`'s output and BE'S SURFACE; **BE 129 has it.** ***DE REFUSED THE
-  EASY FIX AND SAID WHY IN ONE SENTENCE: IT DID NOT WEAKEN `validate_reference` TO ADMIT THEM -- "A ZERO-LENGTH
-  GENERATION IS A REAL DEFECT AND ADMITTING IT WOULD BE THE FIX THAT HIDES IT"*** -- the easy fix was one predicate
-  and would have produced a number today; **this is the same choice DA made leaving a red standing and BE made
-  withdrawing its own eight, THREE SEATS AND THREE REFUSALS TO MANUFACTURE A GREEN UNDER PRESSURE TO DELIVER.** And
-  the architectural point is now demonstrated rather than argued: **the driver runs its battery BEFORE replay
-  precisely so a bad book cannot become a number, AND IT DID EXACTLY THAT ON THE FIRST ARTIFACT IT WAS EVER POINTED
-  AT** -- *an unexercised guard is a hope; this one has fired on a real book at a real defect before any expensive
-  work* -- **and note the ordering, that the user's blocker had to close before this battery could run at all, so
-  tonight's repairs are what made tonight's refusal possible.** ***THE NIGHT'S BIGGEST QUESTION IS ANSWERED IN THE
-  AFFIRMATIVE AND I DROVE IT: 313,149 AGAINST 313,114, THIRTY-FIVE MORE, WITH `assembly_differs: True` -- THE
-  REPAIRS REACHED THE BOOK*** (fuller comparison still owed by BE 128: *"different" is established, "different HOW"
-  is not*). ***BUT A PRECISION THAT MATTERS MORE THAN THE VERDICT, WHICH MY OWN RUN FORCED: THE AFFIRMATIVE RESTS ON
-  THE GENERATION COUNT AND NOT ON `assembly_differs`.*** The +35 is LIKE-WITH-LIKE; **`assembly_differs` is
-  TRIVIALLY TRUE and establishes NOTHING about scores**, because per head the pre-fix assembly is **`shape:
-  PER_GENERATION_SCORES`, 297,379 entries, `value_type: float`** and the corrected is **`shape: PER_ROW_SCORES`,
-  350,474 entries, `value_type: dict` with three value keys** -- ***A DIFFERENT SHAPE, A DIFFERENT VALUE TYPE AND
-  53,095 MORE ENTRIES: THE LOOK-AHEAD REPAIR VISIBLE IN THE ARTIFACT, AND SIMULTANEOUSLY THE REASON `--against`
-  CANNOT COMPARE THE TWO ASSEMBLIES ELEMENT-WISE, SINCE FLOATS KEYED PER GENERATION AND DICTS KEYED PER ROW HAVE NO
-  COMMON INDEX.*** **That is REV 137's sharpest question and this is my answer to it from my own drive: on the
-  assembly, `--against` does NOT compare like with like.** ***THE OPEN QUESTION NOBODY HAS ANSWERED: ARE THE NINE AND
-  THE THIRTY-FIVE THE SAME PHENOMENON?*** Both BE and REV asked; **the arithmetic is suggestive and settles nothing
-  -- the nine could be a subset of the thirty-five, disjoint from them, or overlapping, and nothing in the probe's
-  output distinguishes these because it COUNTS both books and MATCHES neither**; *the cheap test is whether the nine
-  `(slug, side, gen)` keys exist in the pre-fix reference at all, and it is one line for whoever runs it.* **THREE
-  SEATS ARE ON THE BOOK FROM DIFFERENT ANGLES: BE 129 on the CAUSE and on whether a fix needs A REBUILD (54 min) OR
-  CAN BE DONE AT THE REFERENCE (minutes) -- two orders of magnitude, which is why diagnosis must precede decision;
-  DA 160 on a FULL INDEPENDENT BOOK VERIFICATION, ALSO THE FIRST REAL TEST OF DA'S OWN GATE-ITEM-8 FIX AGAINST A
-  REAL PER-ROW BOOK RATHER THAN A FIXTURE; and REV 137 on the probe.** ***REV 137 MATTERS MOST OF THE THREE BECAUSE
-  THE REBUILD DECISION NOW RESTS ON AN INSTRUMENT WRITTEN AT 12:34:26Z, HOURS OLD, AFTER THE REFUSAL IT EXISTS TO
-  EXPLAIN -- AND MY OWN RUN ALREADY FOUND ONE FLAG ON IT THAT CANNOT FAIL.*** **The build's own numbers stand
-  unchanged -- rc 0, wall 3,257.2 s = 54.3 min against 74-76, assembly 2,566.7 s, peak 5.484 GB of an 11.87 GB cap,
-  with my round-315 precision intact that the leaf's peak of record is 6.354 GB so true headroom is 53.5 % -- AND
-  THEY ARE STILL NOT THE QUEUE'S BASIS: BE 128 HAS NOT ACCOUNTED FOR THE TWENTY MINUTES AND NOTHING BEYOND 09-03 IS
-  AUTHORISED.** Flags 2727 -> 2744, prov 2272 -> 2289; window 3/3, Batch 298 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -376,6 +375,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 319, THE FIRST CORRECTED NUMBER + four user rulings (e975d81 -> ac99226) ---
+  THE_FIRST_CORRECTED_NUMBER_SINCE_THE_RETRACTION_AND_I_READ_IT_AT_THE_ARTIFACT: D_E_settle-PLUS-11191-244402
+  AND_THE_ESTIMANDS_OWN_ARITHMETIC_CLOSES_THREE_WAYS_EXACTLY: LEGS-BASELINE-AND-DIFFERENCE
+  ITS_LIMITS_ARE_IN_THE_ARTIFACT_NOT_ONLY_IN_THE_PROSE: NULL_NOT_DRAWN_POINT_ESTIMATE_RUN
+  THE_SIGN_IS_A_REVERSAL_AND_DA_162_IS_EXAMINING_WHETHER_IT_IS_THE_POPULATION: POSITIVE-WHERE-THE-ARMS-LOST
+  MY_THREE_PRE_REGISTERED_EXIT_NUMBERS_ALL_LANDED: NINE-ZEROS-AND-313140
+  AND_THE_ZEROS_ARE_PRESENT_WITH_A_DISPOSITION_BESIDE_EACH: NOT-ABSENT-NOT-BARE
+  RULING_A_THE_MATCHING_UNIT_IS_B_WITH_A_MEASURED_EXCEPTION: ONE-IN-3862
+  RULING_B_ONE_BOOK_CARRIES_BOTH_LATENCIES_RATHER_THAN_A_SECOND_BUILD: ERA-WOULD-CONFOUND-LATENCY
+  RULING_C_THE_QUEUE_IS_HELD_UNTIL_A_AND_B_SETTLE: NOT-A-REFUSAL-A-SEQUENCE
+  RULING_D_UNNAMED_MEMBERS_MAY_BE_QUOTED_IF_THEY_ARE_THE_KNOWN_PAIR: AND-DE-MAKES-IT-A-PREDICATE
+  THE_TRANCHE_EFFECT_REPRODUCES_AND_THE_MONEY_LEVEL_ONE_DOES_NOT_YET: IDENTICAL-TO-THE-EV20-FIGURE
+  AND_DE_DECLINED_THE_AVAILABLE_SHORTCUT_IN_ONE_SENTENCE: I-WONT-DRESS-THE-SECOND-UP
+  THE_QUEUE_MUST_BE_PLANNED_ON_THE_COLD_BASIS_NOT_A_WARM_RUN: 82-PERCENT-NOT-63
   # --- MEM round 318, the EV21 rebuild is running; both fixes verified in it (c98a547 -> 4784242) ---
   THE_09_03_REBUILD_IS_RUNNING_AND_BOTH_FIXES_ARE_IN_IT: EV21-LAUNCHED-12-52-32Z
   A_NEW_UNIT_NAME_KEEPS_THE_DIAGNOSING_RUNS_RECORD_AS_EVIDENCE: p003ev200903c-PRESERVED
@@ -27205,6 +27218,165 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 319, 2026-09-09T14:57:56Z ---
+  THE_FIRST_CORRECTED_NUMBER_SINCE_THE_RETRACTION_AND_I_READ_IT_AT_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***THE PROGRAMME HAS PRODUCED ITS FIRST CORRECTED NUMBER SINCE THE RETRACTION, AND I READ EVERY FIGURE AT THE
+      ARTIFACT RATHER THAN TAKING THE DISPATCH.*** `p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json`
+      on book **EV21 (`ae98b92219940c1985bdbcbcebcbda13f1328dd2f0f08ae9c932d6188615f0e2`)**, exit rc 0 at 14:05Z:
+      ***`D_E_settle` +11,191.244402***; **arm total 48,506.795833 (trades -179,803.284167, residual +228,310.08)
+      against a zero-cancel baseline total of 37,315.551431 (trades -226,590.602369, residual +263,906.1538);
+      20,682 arm fills against 22,675 baseline; 19,523 decisions; 246 slugs on both legs; `theta_was_not_refitted_
+      here: True` on both heads and on the sealed artifact.** *Every one of those reproduced from the file.*
+  AND_THE_ESTIMANDS_OWN_ARITHMETIC_CLOSES_THREE_WAYS_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      **And I checked the estimand's own arithmetic, which CLOSES THREE WAYS EXACTLY:** ***arm legs -179,803.284167
+      + 228,310.08 = 48,506.795833; baseline -226,590.602369 + 263,906.1538 = 37,315.551431; and 48,506.795833 -
+      37,315.551431 = 11,191.244402*** -- **to the last decimal in all three.** *This is R-801's ruled P&L computing
+      as ruled: trades cash flow plus residual times settlement, differenced against the baseline* -- and the
+      artifact says so itself in `what_total_is`, **"R-801's ruled P&L: the cash flow of the trades plus the
+      settlement value of the ..."**, which is the same field that corrected ME at round 289 when I read the fills
+      leg as the total. **The definition travels with the number.**
+  ITS_LIMITS_ARE_IN_THE_ARTIFACT_NOT_ONLY_IN_THE_PROSE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***AND ITS LIMITS ARE IN THE ARTIFACT, NOT ONLY IN THE PROSE, WHICH IS THE WHOLE OF WHAT TONIGHT TAUGHT:***
+      **`run_mode: POINT_ESTIMATE` AT THREE SEPARATE LEVELS** (top level, `day_run`, and `decision_ledger`) **and
+      `result_contract.null_status: NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`.** **NO null, NO Z, NO p, NO control -- and
+      asking it for a test statistic REFUSES BY NAME.** ***"THE POINT ESTIMATE STANDS" IS THE MOST THAT MAY BE
+      SAID.*** *I declared that reading in round 315 before the number existed; the artifact now enforces it, so a
+      reader who never saw this file cannot over-read it either* -- **the qualification at the address the reader
+      reaches, which is the pattern this night named three times and has now been built in.**
+  THE_SIGN_IS_A_REVERSAL_AND_DA_162_IS_EXAMINING_WHETHER_IT_IS_THE_POPULATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***AND THE FACT THAT WOULD BE EASIEST TO CELEBRATE AND MUST NOT BE: THE SIGN IS A REVERSAL. THE RETRACTED ARMS
+      LOST HEAVILY; THIS ONE IS POSITIVE.*** **DA 162 is examining whether that is THE POPULATION RATHER THAN THE
+      REPAIRS, since the book is built over a DIFFERENT ERA WITH REAL GAPS ATTACHED.** *A sign flip between a
+      retracted number and a corrected one is exactly the shape that invites "the fixes worked", and the honest
+      reading is that TWO things changed at once -- the code AND the data the code sees.* **Until DA reports, this
+      file records the number, its sign, and the open question about its cause, and asserts no explanation.**
+  MY_THREE_PRE_REGISTERED_EXIT_NUMBERS_ALL_LANDED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV21.json
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***I PRE-REGISTERED THREE EXIT NUMBERS LAST ROUND BEFORE THE REBUILD LANDED, AND I SCORED THEM MYSELF AGAINST
+      THE EV21 RECEIPT: ALL THREE LANDED.*** **(i) `zero_length_generations.n_excluded = 9` -- nine, as a counted
+      status. (ii) The new status names are PRESENT with explicit zeros. (iii) `generations = 313140` -- exactly the
+      number I derived as 313,149 - 9.** *Declaring the expected values before the artifact existed is what makes
+      this a measurement rather than a reading-after-the-fact, and it cost one paragraph.* **A prediction that lands
+      is worth less than the discipline of having made it -- but a prediction that had MISSED would have been the
+      round's finding, and that asymmetry is the point.**
+  AND_THE_ZEROS_ARE_PRESENT_WITH_A_DISPOSITION_BESIDE_EACH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV21.json
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      **And the second one landed in a better form than I asked for.** I required only that the zeros be **PRESENT
+      rather than ABSENT**; the receipt carries ***`NON_FINITE_GENERATION_BOUND: {n: 0, disposition: "REFUSED, not
+      excluded"}`, `MALFORMED_GENERATION_BOUND: {n: 0, disposition: "REFUSED, not excluded"}` and
+      `INVERTED_GENERATION: {n: 0, disposition: "counted here, LEFT IN THE REFERENCE and refused by
+      validate_reference, whose predicate already covers it"}`.*** ***A ZERO WITH A DISPOSITION BESIDE IT ANSWERS
+      THE QUESTION A BARE ZERO LEAVES OPEN -- "none occurred" VERSUS "none would have been caught here anyway"***,
+      and the three dispositions are not the same. **A zero that is present is a measurement; a zero that says what
+      would have happened is a design.**
+  RULING_A_THE_MATCHING_UNIT_IS_B_WITH_A_MEASURED_EXCEPTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***USER RULING (a): THE MATCHING UNIT IS B, WITH THE 1-IN-3,862 DOUBLE-CANCELLED REFERENCE GENERATION RECORDED
+      AS A NAMED, MEASURED EXCEPTION IN THE RECEIPT -- CONDVALUE FAIL-CLOSED UNTIL ITS SINGLE COLLISION IS HANDLED,
+      HAZARD'S NULL FREE TO RUN.*** **THIS CLOSES THE ITEM THAT HAD BEEN OPEN SINCE THE COORDINATOR'S PREMISE FOR B
+      PROVED FALSE.** *The premise was "a generation yields at most one cancel"; production repost cancels one
+      reference generation twice. The ruling does not restore the premise -- it MEASURES the exception at 1 in
+      3,862, names it in the receipt, and fail-closes the one arm where it actually collides.* **A ruling that
+      survives its own premise being wrong, by replacing the assumption with a count, is the strongest form
+      available.**
+  RULING_B_ONE_BOOK_CARRIES_BOTH_LATENCIES_RATHER_THAN_A_SECOND_BUILD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***USER RULING (b): THE MONEY-LEVEL LATENCY COMPARISON WILL BE CLOSED BY BE VALUING DROPPED TRANCHES AT BUILD,
+      SO ONE BOOK CARRIES BOTH L=0 AND L=250 -- NOT BY A SECOND L=0 BUILD.*** **The reason is exact and is the
+      night's own lesson about controls: THE ONLY L=0 09-03 BOOK IS PRE-FIX AND BUILT OVER THE WRONG ERA, SO USING
+      IT WOULD CONFOUND ERA WITH LATENCY.** *DA had already named this limit -- "no L=0 EV20 book exists, so DA
+      140's set-equality control cannot be repeated on corrected data today" -- and the ruling answers it by
+      changing the BUILD rather than by accepting a contaminated comparator.* **One book carrying both arms removes
+      the confound by construction instead of adjusting for it.**
+  RULING_C_THE_QUEUE_IS_HELD_UNTIL_A_AND_B_SETTLE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***USER RULING (c): THE 09-04..09-07 QUEUE IS HELD UNTIL (a) AND (b) SETTLE.*** **This is not a refusal, it is
+      a SEQUENCE**: the matching unit decides what the null is matched on, and the both-latencies build decides what
+      each day must carry -- ***so four days built before either settles would be four days built to a specification
+      that is about to change.*** *The programme has already paid 54 minutes twice for running before a question
+      closed; holding four days is the same lesson at four times the price.* **Recorded as the reason, not merely as
+      the state.**
+  RULING_D_UNNAMED_MEMBERS_MAY_BE_QUOTED_IF_THEY_ARE_THE_KNOWN_PAIR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***USER RULING (d): A DAY WHOSE BOOK-CODE VERDICT IS `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED
+      PROVIDED THE UNNAMED ARE THE KNOWN LAZY-IMPORT PAIR*** -- `harmful_hazard_model.py` and
+      `phase2_state_schema_freeze.py`, **legitimately absent from an honest recording because those branches did not
+      run.** ***AND DE IS MAKING THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED*** -- which is
+      the difference between a ruling and a loophole. *A permission stated in prose is a permission that widens; the
+      same permission compiled into a check stays the size it was granted.* **This is BE 121's refusable/reportable
+      split reaching its natural end: the reportable set now has an admissible MEMBERSHIP, not just an admissible
+      count.**
+  THE_TRANCHE_EFFECT_REPRODUCES_AND_THE_MONEY_LEVEL_ONE_DOES_NOT_YET:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***THE LATENCY STATUS, PRECISELY: THE 51.17 % TRANCHE EFFECT REPRODUCES ON THE CORRECTED BOOK ---
+      `TRANCHE_BEFORE_PLACEMENT_LATENCY` 23,765 AGAINST `TRANCHE_KEPT` 22,675 OF 46,440, IDENTICAL TO DA'S EV20
+      FIGURE -- SO THE MECHANISM SURVIVES THE ERA FIX, THE CAUSAL-SCORING REPAIR AND THE ZERO-LENGTH EXCLUSION.***
+      *Three independent corrections and the number does not move: that is a strong stability result about the
+      TRANCHE-LEVEL effect.* ***BUT THE MONEY-LEVEL 54 / 62 / 98 / 55 % IS NOT YET REPRODUCED***, and DA's warning
+      from last round governs the reading: **51.17 % is a COUNT of tranches and 54 % is a SHARE of settled money --
+      different estimands that must not be read as agreeing.** **Ruling (b) is what will make the money-level
+      comparison possible.**
+  AND_DE_DECLINED_THE_AVAILABLE_SHORTCUT_IN_ONE_SENTENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      ***AND DE DECLINED THE AVAILABLE SHORTCUT IN ONE SENTENCE, WHICH BELONGS IN THE RECORD BESIDE THE OTHER THREE
+      REFUSALS: IT WOULD NOT USE THE PRE-FIX L=0 BOOK FOR THE MONEY-LEVEL COMPARISON -- "I WON'T DRESS THE SECOND UP
+      AS THE FIRST."*** **The comparison was available today, would have produced a money-level number today, and
+      would have been confounded by era.** *That is now FOUR seats in one night declining a result they could have
+      had: DA leaving a red standing, BE withdrawing its own eight, DE refusing to weaken `validate_reference`, and
+      DE again refusing a contaminated comparator.* ***THE PROGRAMME'S CHARACTERISTIC FAILURE HAS BEEN CHECKS TOO
+      WEAK TO FAIL; ITS CHARACTERISTIC BEHAVIOUR TONIGHT HAS BEEN REFUSING TO MANUFACTURE ONE.***
+  THE_QUEUE_MUST_BE_PLANNED_ON_THE_COLD_BASIS_NOT_A_WARM_RUN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:57:56Z
+    said: >-
+      **BE's cold-cache correction, and it moves the queue's price in the expensive direction: 09-04 REACHES 9.70 GB,
+      82 % OF THE ENVELOPE -- NOT THE 63 % REPORTED FROM A SINGLE WARM RUN.** ***THE QUEUE MUST BE PLANNED ON THE
+      COLD BASIS.*** *This is the third time in two days that a number priced from one run has had to be corrected
+      -- the twenty-minute wall, the lost run's two surviving scalars, and now a warm-cache peak -- and every one of
+      them was a MEASUREMENT TAKEN UNDER CONDITIONS THE QUEUE WILL NOT REPRODUCE.* **82 % of the envelope on the
+      heaviest day leaves 18 % of headroom for a day nobody has built**, which is a materially different decision
+      from 63 %.
   # --- MEM round 318, 2026-09-09T12:56:22Z ---
   THE_09_03_REBUILD_IS_RUNNING_AND_BOTH_FIXES_ARE_IN_IT:
     prov: CHECKED

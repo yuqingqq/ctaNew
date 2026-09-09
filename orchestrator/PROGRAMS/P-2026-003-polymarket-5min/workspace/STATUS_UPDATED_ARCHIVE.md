@@ -21904,3 +21904,53 @@ generation and the window went 4 → 3. Nothing rewritten.
   FOR 09-04..09-07 REMAINS THE USER'S CALL**: *a successful first day is not a standing authorisation.* Flags 2715 ->
   2727, prov 2260 -> 2272; window 3/3, Batch 297 archived. MEM asserts no result.)
 ```
+
+## Batch 301 — archived 2026-09-09T14:57:56Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T12:40:35Z (MEM ROUND 316 -- ***THE POINT ESTIMATE REFUSED ON THE FIRST CORRECTED BOOK, AND THE REFUSAL IS THE
+  SYSTEM WORKING.*** From `7b7bc41` to `2816978`, THREE commits -- I swept one to `c379953` and REV 137 landed while I wrote, CORRECTING THE SCOPE OF ONE OF MY POINTS AND FINDING THE PROBE I RAN SHIPS NO FALSIFIER; folded in an addendum below. **`dePE0903EV20` exited status 1 at 12:32:30Z after
+  2 min 45 s, 1.2 GB peak, NO ARTIFACT WRITTEN** -- *which answers the open observation I ended round 315 with, and
+  it is the better of the two possibilities.* ***I RAN `de_reference_integrity_probe.py` MYSELF ON AN IDLE MACHINE
+  RATHER THAN RELAYING DE'S DIAGNOSIS, AND IT REPRODUCES EXACTLY: `n_generations 313149`, `n_refused 9`,
+  `n_slugs_affected 7`, `n_tranches_on_them 0`, sha256 matching the book I hashed last round -- AND THE `by_kind`
+  BREAKDOWN IS `{ZERO_LENGTH: 9}`, ALL NINE ONE KIND, NONE INVERTED, NONE NON-FINITE***, the examples carrying `t0`
+  and `t1` identical to the last decimal and **two of them the SAME `t0` on BUY_UP and SELL_UP of one slug** -- *a
+  single failure mode with a repeated timestamp is a mechanism, not nine coincidences.* ***AND THE CONTROL IS IN THE
+  SAME RUN: THE PRE-FIX BOOK HAS 313,114 GENERATIONS AND `n_refused: 0` -- ZERO BEFORE, NINE AFTER, SO THE EV20 BUILD
+  PATH INTRODUCED THEM***, which is `build_reference`'s output and BE'S SURFACE; **BE 129 has it.** ***DE REFUSED THE
+  EASY FIX AND SAID WHY IN ONE SENTENCE: IT DID NOT WEAKEN `validate_reference` TO ADMIT THEM -- "A ZERO-LENGTH
+  GENERATION IS A REAL DEFECT AND ADMITTING IT WOULD BE THE FIX THAT HIDES IT"*** -- the easy fix was one predicate
+  and would have produced a number today; **this is the same choice DA made leaving a red standing and BE made
+  withdrawing its own eight, THREE SEATS AND THREE REFUSALS TO MANUFACTURE A GREEN UNDER PRESSURE TO DELIVER.** And
+  the architectural point is now demonstrated rather than argued: **the driver runs its battery BEFORE replay
+  precisely so a bad book cannot become a number, AND IT DID EXACTLY THAT ON THE FIRST ARTIFACT IT WAS EVER POINTED
+  AT** -- *an unexercised guard is a hope; this one has fired on a real book at a real defect before any expensive
+  work* -- **and note the ordering, that the user's blocker had to close before this battery could run at all, so
+  tonight's repairs are what made tonight's refusal possible.** ***THE NIGHT'S BIGGEST QUESTION IS ANSWERED IN THE
+  AFFIRMATIVE AND I DROVE IT: 313,149 AGAINST 313,114, THIRTY-FIVE MORE, WITH `assembly_differs: True` -- THE
+  REPAIRS REACHED THE BOOK*** (fuller comparison still owed by BE 128: *"different" is established, "different HOW"
+  is not*). ***BUT A PRECISION THAT MATTERS MORE THAN THE VERDICT, WHICH MY OWN RUN FORCED: THE AFFIRMATIVE RESTS ON
+  THE GENERATION COUNT AND NOT ON `assembly_differs`.*** The +35 is LIKE-WITH-LIKE; **`assembly_differs` is
+  TRIVIALLY TRUE and establishes NOTHING about scores**, because per head the pre-fix assembly is **`shape:
+  PER_GENERATION_SCORES`, 297,379 entries, `value_type: float`** and the corrected is **`shape: PER_ROW_SCORES`,
+  350,474 entries, `value_type: dict` with three value keys** -- ***A DIFFERENT SHAPE, A DIFFERENT VALUE TYPE AND
+  53,095 MORE ENTRIES: THE LOOK-AHEAD REPAIR VISIBLE IN THE ARTIFACT, AND SIMULTANEOUSLY THE REASON `--against`
+  CANNOT COMPARE THE TWO ASSEMBLIES ELEMENT-WISE, SINCE FLOATS KEYED PER GENERATION AND DICTS KEYED PER ROW HAVE NO
+  COMMON INDEX.*** **That is REV 137's sharpest question and this is my answer to it from my own drive: on the
+  assembly, `--against` does NOT compare like with like.** ***THE OPEN QUESTION NOBODY HAS ANSWERED: ARE THE NINE AND
+  THE THIRTY-FIVE THE SAME PHENOMENON?*** Both BE and REV asked; **the arithmetic is suggestive and settles nothing
+  -- the nine could be a subset of the thirty-five, disjoint from them, or overlapping, and nothing in the probe's
+  output distinguishes these because it COUNTS both books and MATCHES neither**; *the cheap test is whether the nine
+  `(slug, side, gen)` keys exist in the pre-fix reference at all, and it is one line for whoever runs it.* **THREE
+  SEATS ARE ON THE BOOK FROM DIFFERENT ANGLES: BE 129 on the CAUSE and on whether a fix needs A REBUILD (54 min) OR
+  CAN BE DONE AT THE REFERENCE (minutes) -- two orders of magnitude, which is why diagnosis must precede decision;
+  DA 160 on a FULL INDEPENDENT BOOK VERIFICATION, ALSO THE FIRST REAL TEST OF DA'S OWN GATE-ITEM-8 FIX AGAINST A
+  REAL PER-ROW BOOK RATHER THAN A FIXTURE; and REV 137 on the probe.** ***REV 137 MATTERS MOST OF THE THREE BECAUSE
+  THE REBUILD DECISION NOW RESTS ON AN INSTRUMENT WRITTEN AT 12:34:26Z, HOURS OLD, AFTER THE REFUSAL IT EXISTS TO
+  EXPLAIN -- AND MY OWN RUN ALREADY FOUND ONE FLAG ON IT THAT CANNOT FAIL.*** **The build's own numbers stand
+  unchanged -- rc 0, wall 3,257.2 s = 54.3 min against 74-76, assembly 2,566.7 s, peak 5.484 GB of an 11.87 GB cap,
+  with my round-315 precision intact that the leaf's peak of record is 6.354 GB so true headroom is 53.5 % -- AND
+  THEY ARE STILL NOT THE QUEUE'S BASIS: BE 128 HAS NOT ACCOUNTED FOR THE TWENTY MINUTES AND NOTHING BEYOND 09-03 IS
+  AUTHORISED.** Flags 2727 -> 2744, prov 2272 -> 2289; window 3/3, Batch 298 archived. MEM asserts no result.)
+```
