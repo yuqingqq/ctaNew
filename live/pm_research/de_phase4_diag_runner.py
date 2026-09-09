@@ -36,6 +36,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import sys
 import time
@@ -84,7 +85,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 220
+EXPECTED_CHECKS = 222
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -4825,6 +4826,87 @@ def selftest() -> int:
        f"new issues {_c_new[0]} -- a cancellation that only ever existed "
        f"because a score was moved backwards in time")
 
+    # ---- DE 158 (3), REV 107: A NaN SCORE FROM FINITE FEATURES --------
+    # REV's drive, reproduced: every input finite, the incumbent's product
+    # overflows to nan. `nan >= theta` is False, so the score became a
+    # SILENT "do not cancel" -- not a refusal, not a counted status.
+    _iw158 = _incm["_n_features"]
+    _big158 = [1e308] * _iw158
+    _nanscore = HS.score_incumbent_condvalue(_incm, _big158)
+    # AND WHERE THAT INPUT ENTERS THE REAL PATH IT IS CAUGHT EARLIER, by
+    # (3)'s FEATURE half: composing 1e308 through the z-scale overflows,
+    # so `compose_head_inputs` refuses first. Stated because it is the
+    # honest reading -- the two halves are defence in depth, and the score
+    # predicate exists for the case a FINITE vector scores non-finitely,
+    # which is what REV's drive shows is possible.
+    _feat_first = None
+    try:
+        HS.compose_head_inputs([1e308] * 31, [1e308] * (_iw158 - 31),
+                               [1e308] * _nst, norms=_norms,
+                               incumbent_width=_iw158,
+                               lgbm_width=_norms["n_raw"] + 1)
+    except HS.HeadRefused as _e:
+        _feat_first = str(_e).split(":")[0]
+    # THE SCORE PREDICATE ITSELF, driven where it lives: a scorer that
+    # returns a non-finite value must refuse, whatever produced it.
+    _real_sc = HS.score_incumbent_condvalue
+    _r3s = None
+    try:
+        HS.score_incumbent_condvalue = lambda *a, **k: float("nan")
+        generation_scores(_blk(_rows[:1]), _fixref, coin="btc",
+                          head="incumbent_linear_d")
+    except DiagRefused as _e:
+        _r3s = str(_e).split(":")[0]
+    finally:
+        HS.score_incumbent_condvalue = _real_sc
+    ok(not math.isfinite(_nanscore)
+       and all(math.isfinite(x) for x in _big158)
+       and _feat_first == "NON_FINITE_FEATURE"
+       and _r3s == "NON_FINITE_SCORE",
+       f"DE 158 (3) THE SCORE SIDE IS CLOSED: REV's inputs are all finite "
+       f"({_big158[0]:.0e}) and the incumbent returns {_nanscore!r} -- the "
+       f"product overflows, and `nan >= theta` is False, so this was a "
+       f"silent 'do not cancel'. `generation_scores` now refuses "
+       f"`{_r3s}` where the score is COMPUTED, driven with a scorer that "
+       f"returns nan. AND THE TWO HALVES ARE DEFENCE IN DEPTH: REV's "
+       f"literal vector is intercepted one step earlier by "
+       f"`{_feat_first}`, because 1e308 through the z-scale overflows -- "
+       f"the score predicate is for the finite vector that scores "
+       f"non-finitely, which is the case REV showed exists")
+
+    # ---- DE 158 (5), REV 107: THE BOUNDARY WAS MINE AND IT WAS WRONG ---
+    # I filed that the per-generation INPUT count existed nowhere and
+    # needed a new return value from `phase2_arms._feature_pass` -- BE's
+    # surface. REV refuted it at the code: `split_of` is built over
+    # `PA.tape_index(sp)`, the tape rows BEFORE the feature pass drops
+    # anything, keyed (slug, side, gen, t_start). The count is a group-by
+    # over a parameter this module is already passed.
+    _so5 = {("s1", HSP.SIDES[0], 0, 100.0): "A",
+            ("s1", HSP.SIDES[0], 0, 103.0): "A",
+            ("s1", HSP.SIDES[0], 0, 106.0): "A",
+            ("s1", HSP.SIDES[0], 1, 400.0): "B"}
+    _in5 = rows_in_by_generation(_so5)
+    _p5 = partial_rows_from({("s1", HSP.SIDES[0], 0): 2,
+                             ("s1", HSP.SIDES[0], 1): 1}, _in5)
+    _full5 = partial_rows_from({("s1", HSP.SIDES[0], 0): 3,
+                                ("s1", HSP.SIDES[0], 1): 1}, _in5)
+    _none5 = partial_rows_from({("s1", HSP.SIDES[0], 0): 2}, {})
+    ok(_in5 == {("s1", HSP.SIDES[0], 0): 3, ("s1", HSP.SIDES[0], 1): 1}
+       and _p5["PARTIAL_ROWS"] == 1
+       and _p5["ROWS_DROPPED_IN_PARTIAL_GENERATIONS"] == 1
+       and _p5["PARTIAL_ROWS_STATUS"] == "COMPUTED_AGAINST_THE_TAPE_INDEX"
+       and _full5["PARTIAL_ROWS"] == 0
+       and _none5["PARTIAL_ROWS_STATUS"].startswith("NOT_COMPUTABLE"),
+       f"DE 158 (5) COMPUTED, NOT DEFERRED TO BE: the tape index gives "
+       f"{_in5[('s1', HSP.SIDES[0], 0)]} input rows for gen 0 and 1 for "
+       f"gen 1; a generation that kept 2 of 3 is PARTIAL "
+       f"({_p5['PARTIAL_ROWS']}, {_p5['ROWS_DROPPED_IN_PARTIAL_GENERATIONS']} "
+       f"row dropped) and one that kept all of them is not "
+       f"({_full5['PARTIAL_ROWS']}). AND A MISSING INDEX IS STILL A "
+       f"NAMED UNKNOWN, never a 0 that reads as 'none partial'. My filing "
+       f"that this needed BE was wrong: REV found it derivable from "
+       f"`split_of`, which this function already receives")
+
     # ---- DE 158: THE READER'S ROWS ARE THE OTHER HALF OF DE 155 (1) ---
     # `be_cancel_axis_null.load()` derives the decision stream from the
     # REFERENCE, one row per generation at `g["t0"]`, filtered on
@@ -8675,6 +8757,9 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
     # DE 155 (4): the generations ANY chunk covered, per arm. The corrected
     # NO_ROWS_KEPT is a fact about this UNION, not a per-chunk count.
     _seen_gens: dict = {(c, h): set() for c in coins for h in heads}
+    #: DE 158 (5): the tape index's keys, unioned over every split -- the
+    #: per-generation INPUT count the partial-row detector compares to.
+    _split_of_all: dict = {}
     drops: dict = {c: {} for c in coins}
     kept_total: dict = {c: 0 for c in coins}
     n_chunks = 0
@@ -8711,6 +8796,7 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                 t_c = time.time()
                 blocks = PA._feature_pass(chunk_path, "phase4_diag",
                                           TAPE=tp["TAPE"])
+                _split_of_all.update(tp["split_of"] or {})
                 _check_assembled_widths(blocks, pre)
                 for coin in coins:
                     b = blocks.get(coin)
@@ -8727,6 +8813,7 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                         sc, st, sb = generation_scores(
                             b, refs[coin], coin=coin, head=head,
                             split_of=tp["split_of"], count_missing=False)
+                        # (the union is accumulated once per chunk below)
                         # ---- DE 155 (6): A MERGE THAT COMBINES ---------
                         # `.update()` let a later chunk OVERWRITE a key an
                         # earlier one had produced. Under DE 155 (1) the
@@ -8779,6 +8866,15 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
     # orders of magnitude, and it read as a catastrophic exclusion rate.
     # A generation is uncovered only if NO chunk covered it, so it is
     # computed here, once, from the union.
+    # DE 158 (5): PARTIAL_ROWS at the UNION, from the merged per-row
+    # scores against the tape index's input counts.
+    _rows_in = rows_in_by_generation(_split_of_all)
+    for (_c, _h) in list(statuses):
+        _kept: dict = {}
+        for (_sl, _sd, _t), _v in scores[(_c, _h)].items():
+            _g = (_sl, _sd, _v["gen"])
+            _kept[_g] = _kept.get(_g, 0) + 1
+        statuses[(_c, _h)].update(partial_rows_from(_kept, _rows_in))
     for (_c, _h), _seen in _seen_gens.items():
         _all = {(sl, sd, g["gen"])
                 for sl, sides in refs[_c].items()
@@ -8905,6 +9001,25 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
               if head == "incumbent_linear_d"
               else HS.score_lgbm_condvalue(
                   booster, value_booster, wl, v))
+        # ---- DE 158 (3), REV 107: A NON-FINITE SCORE FROM FINITE INPUTS
+        # The feature side refuses before the clamp, but non-finiteness
+        # does NOT require a non-finite feature: REV drove
+        # `score_incumbent_condvalue(inc, [1e308] * n)` -> nan with every
+        # input finite -- the product overflows. `nan >= theta` is False,
+        # so an unrepresentable score silently becomes "do not cancel"
+        # rather than a refusal or a counted status, and it is reachable
+        # through the door (2) was about: a near-zero `norm_sd` makes
+        # enormous finite z-scores. Checked where the score is COMPUTED.
+        if isinstance(sc, bool) or not isinstance(sc, (int, float)) \
+                or not math.isfinite(float(sc)):
+            # SITE: gen#nonfinite_score
+            raise DiagRefused(
+                f"NON_FINITE_SCORE: {head} scored row "
+                f"{(r['slug'], r['side'], r['gen'], r['t_start'])} as "
+                f"{sc!r} from FINITE features. `nan >= theta` is False and "
+                f"`+inf >= theta` is True, so an unrepresentable score "
+                f"would become a silent decision -- not cancelling, or "
+                f"cancelling everything -- instead of a refusal.")
         gk = (r["slug"], r["side"], r["gen"])
         # DE 155 (1): THE ROW'S OWN TIME TRAVELS WITH ITS SCORE. It is the
         # whole repair: the score cannot be timestamped anywhere but where
@@ -8978,32 +9093,76 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                     "UNLABELLED" if sp == {None}
                     else "MIXED" if len(sp) > 1 else sorted(sp)[0])
                 statuses["SCORED"] += 1
-    statuses["PARTIAL_ROWS"] = sum(
-        1 for k, v in by_gen.items() if len(v) < _rows_expected(k, reference))
-    # DE 155 (5), NAMED RATHER THAN LEFT AS A ZERO. `_rows_expected` returns
-    # 0, so this sum is 0 BY CONSTRUCTION and a reader must not take it for
-    # "no generation was partial" (rule 11: absence never reads as a pass).
-    # Under (1) this stopped being cosmetic: a MAX is insensitive to a
-    # missing row, a FIRST CROSSING is not -- a dropped early row moves the
-    # cancel later, or removes it. Making it real needs a per-generation
-    # INPUT count from the feature pass, which no structure carries today
-    # (`blocks["drops"]` is aggregate, by reason, for the whole coin).
-    statuses["PARTIAL_ROWS_STATUS"] = (
-        "NOT_COMPUTABLE_NO_PER_GENERATION_INPUT_COUNT: `_rows_expected` "
-        "returns 0, so PARTIAL_ROWS is 0 BY CONSTRUCTION and is NOT "
-        "evidence that no generation was partial (rule 11). WHAT IS "
-        "MISSING, EXACTLY: `phase2_arms._feature_pass` returns per coin "
-        "{PM, FN, ST, kept, drops} -- `kept` is the SURVIVING rows and "
-        "`drops` is a counter BY REASON over the whole coin. The rows it "
-        "dropped are not returned and their generation identity is not "
-        "retained, so no caller can know how many rows a generation "
-        "STARTED with. Closing this needs ONE additional return value "
-        "from that function: rows-in per (slug, side, gen), counted "
-        "before the drops. THAT FUNCTION IS NOT DE's SURFACE, so it is "
-        "named here rather than changed. It matters more since DE 155 "
-        "(1): a MAXIMUM is insensitive to a missing row, a FIRST CROSSING "
-        "is not.")
+    # ---- DE 158 (5), REV 107: COMPUTED, from `split_of` -------------
+    # `split_of` is built over `PA.tape_index(sp)` -- the tape rows as
+    # INDEXED, before the feature pass drops anything -- and is keyed
+    # (slug, side, gen, t_start). The input count is a group-by over a
+    # parameter this function is already passed. On a CHUNKED run the
+    # comparison is deferred to the union: `split_of` spans the day while
+    # a chunk's `kept` spans one slice, so comparing here would report
+    # every partially covered generation as partial.
+    _kept_by_gen = {gk: len(v) for gk, v in by_gen.items()}
+    if count_missing:
+        statuses.update(partial_rows_from(_kept_by_gen,
+                                          rows_in_by_generation(split_of)))
+    else:
+        statuses["PARTIAL_ROWS"] = 0
+        statuses["PARTIAL_ROWS_STATUS"] = (
+            "DEFERRED_TO_THE_UNION: this call saw ONE CHUNK's rows while "
+            "`split_of` spans the day, so a per-chunk comparison would "
+            "call every partially covered generation partial. The run "
+            "computes it once from the merged counts.")
     return scores, statuses, split_by_gen
+
+
+def rows_in_by_generation(split_of: dict | None) -> dict:
+    """Per-generation INPUT row counts -- the thing (5) needed all along.
+
+    DE 158, REV 107: I filed that this count existed nowhere and that
+    closing (5) needed a new return value from `phase2_arms._feature_pass`
+    -- BE's surface. **That was wrong, and REV refuted it at the code.**
+    `build_tape_index` builds `split_of` over `PA.tape_index(sp)` for every
+    split -- THE TAPE ROWS AS INDEXED, BEFORE THE FEATURE PASS DROPS
+    ANYTHING -- and its key is the very tuple this module already looks up,
+    `(slug, side, gen, t_start)`. So the input count is a group-by over a
+    parameter `generation_scores` is ALREADY PASSED, and nothing has to
+    come from BE.
+
+    WHERE the comparison happens is the one real caveat, and it decides
+    WHERE not WHETHER: on a chunked run `split_of` spans the whole day
+    while a chunk's `kept` spans one slice, so comparing inside a chunk
+    would report every partially covered generation as partial. The
+    comparison belongs to the MERGED per-generation counts, after the
+    chunk union -- which is where `_rows_expected`'s own docstring always
+    said it belonged ("the run, which has both")."""
+    out: dict = {}
+    for k in (split_of or {}):
+        if isinstance(k, tuple) and len(k) >= 3:
+            gk = (k[0], k[1], k[2])
+            out[gk] = out.get(gk, 0) + 1
+    return out
+
+
+def partial_rows_from(kept_by_gen: dict, rows_in: dict) -> dict:
+    """PARTIAL_ROWS, computed -- generations the feature pass thinned.
+
+    A generation is PARTIAL when fewer rows survived than the tape index
+    held for it. It matters more since DE 155 (1): a MAXIMUM is
+    insensitive to a missing row, a FIRST CROSSING is not -- a dropped
+    early row moves the cancel later, or removes it."""
+    if not rows_in:
+        return {"PARTIAL_ROWS": 0,
+                "PARTIAL_ROWS_STATUS": (
+                    "NOT_COMPUTABLE_NO_SPLIT_OF: no tape index was "
+                    "supplied, so there is no input count to compare "
+                    "against. This is a 0 that means UNKNOWN.")}
+    partial = {g: (kept_by_gen.get(g, 0), n)
+               for g, n in rows_in.items() if kept_by_gen.get(g, 0) < n}
+    return {"PARTIAL_ROWS": len(partial),
+            "PARTIAL_ROWS_STATUS": "COMPUTED_AGAINST_THE_TAPE_INDEX",
+            "PARTIAL_ROWS_DENOMINATOR": len(rows_in),
+            "ROWS_DROPPED_IN_PARTIAL_GENERATIONS":
+                sum(n - k for k, n in partial.values())}
 
 
 def _rows_expected(key, reference: dict) -> int:
