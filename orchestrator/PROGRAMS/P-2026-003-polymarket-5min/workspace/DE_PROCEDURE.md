@@ -201,6 +201,22 @@ never an abort — a degenerate null must not kill a day that already computed D
 `_WROTE_NO_DECISION_LEDGER` · `_SUPERSEDES_TARGET_ABSENT` · `_SUPERSEDES_DIGEST_MISMATCH` ·
 `_SUPERSEDES_NOT_THE_HEAD` · `_SUPERSEDES_DIFFERENT_PLACEMENT_LATENCY`.
 
+**Score routing (DE 164, gate item 4)**: `SCORE_BELONGS_TO_ANOTHER_GENERATION`
+(the assembled score at a row's `(slug, side, t)` was built for a DIFFERENT
+generation -- the abutting-boundary case DA 143 drove) ·
+`SCORE_ROW_NAMES_NO_GENERATION` (the row carries no `gen`, so the comparison
+would be SKIPPED, and a skipped check reads as a passed one). On the policy
+side the disagreement is not a refusal but a COUNTED status --
+`crossings_for_another_generation` / `reduce_crossings_for_another_generation`
+in `harmful_stateful_policy` -- because a misrouted crossing is an exclusion,
+not a broken run.
+
+**Ledger write (DE 164, REV 115/116)**:
+`DECISION_LEDGER_NULL_PARALLEL_LIST_LENGTH` ·
+`DECISION_LEDGER_NULL_DRAW_PAIRING_UNRECORDED` ·
+`DECISION_LEDGER_NULL_DRAW_PAIRING_BROKEN` ·
+`DECISION_LEDGER_DIGEST_NOT_SUPPLIED`.
+
 **Point estimate** (the family lives in `de_point_estimate_day.py`):
 `POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC` · `POINT_ESTIMATE_RESULT_CONTRACT_VIOLATION` ·
 `POINT_ESTIMATE_DRIVER_CHANGED_DURING_RUN` · `POINT_ESTIMATE_DRIVER_NOT_COMMITTED` ·
@@ -466,6 +482,52 @@ into `scripts/` so it survives** (open item).
    57,752 B) is the ABANDONED first 09-05 attempt with no settlement block. Never
    read it; delete or leave untracked.
 8. Write the landing guard (§9) into `scripts/`.
+
+**CLOSED at DE 164:** item 8 -- the landing guard is `scripts/de_land.sh`.
+It EXITS NON-ZERO (3 = dirty outside the pathspec, 4 = a path moved in the
+shared tree since the worktree's base, 5 = copy/commit failed, 6 = STRANDED)
+and it runs BEFORE the copy. Both guards are driven with a positive control;
+drive them again if you change it, because a guard that only prints is how
+`849bef2` was overwritten. It skips the copy when source and destination are
+the same inode (a seat worktree's `data` is a symlink to the shared tree's).
+
+**AND FOUR THINGS DE 164 LEARNED THE HARD WAY:**
+1. **A FLAKY CELL IS A REAL DEFECT UNTIL PROVEN OTHERWISE.** The DE48 cell
+   failed one run in four and looked like scheduling noise. It was not: the
+   heartbeat daemon thread could append AFTER `TERMINAL`, so the log's last
+   line was a heartbeat and a reader would read a DEAD RUN AS ALIVE -- the
+   exact failure DE48 exists to prevent. Reproduced DETERMINISTICALLY by
+   calling `stage()` after `terminal()` on the HEAD bytes at the unit; no
+   load needed once you know where to look. **Load-dependence is a SYMPTOM
+   of a race, and the race is in the thing being measured more often than in
+   the measurement.** The cell now WAITS FOR THE CONDITION (never a fixed
+   sleep) and the log SEALS at `TERMINAL`.
+2. **A BATTERY RED IN THIS TREE IS NOT NECESSARILY YOURS.** Establish the
+   baseline by running the module at HEAD's bytes in a scratch copy
+   (`git show <tip>:<path> > scratch/...`) BEFORE spending a round on it.
+   Two of the three reds I met were pre-existing: `be_cancel_axis_null` and
+   `da_elementwise*` on the stale `de_section81_cache_12.pkl`
+   (`ASSEMBLY_PREDATES_CAUSAL_SCORING`, BE's to rebuild), and
+   **`de_lane4_real_parity` GATE 3, red since BE 96 (`c707eb8`,
+   2026-09-07T08:23:42Z)** -- the machine's `FILL_CHARGED` gained
+   `inventory_before/after/unit` and the INDEPENDENT builder never did, so
+   the LANE4 parity anchor has not compared anything for two days. Do NOT
+   "fix" it by copying the machine's fields into the independent builder:
+   that is R-235's do-not-harmonize hazard, and the builder is written from
+   the DECLARED semantics on purpose.
+3. **THE DESIGN EMITTER NEEDS `PM_DATA_ROOT=/home/yuqing/ctaNew`.** Without
+   it the emission's frozen `data_root` / `worktree_data_shell_trap` blocks
+   resolve to the seat worktree and `correction_census` refuses the version
+   as a FROZEN BLOCK CHANGE. The battery goes green the moment the env var
+   is set; nothing about the code is wrong.
+4. **THE PIN CRANK IS FOUR EDITS, NOT ONE.** params v<N+1> (both sites: the
+   `be_cascade.modules` digests AND `be_module`), the design module's
+   `VERSION` **and** `PARAMS_REL` **and** its `V<N>_DECLARATION` chain entry
+   (the battery refuses if the chain is one short), and
+   `de_multiday_gate1_runner.PARAMS_REL` -- which is the one that bites: the
+   runner resolves params by that literal, so leaving it behind makes the
+   run refuse `BE_CASCADE_DIFFERS` against the OLD version's digests while
+   the new version sits on disk agreeing with everything.
 
 **CLOSED at DE 151/152:** the driver is no longer scratch-only
 (`live/pm_research/de_point_estimate_day.py`, and it now REFUSES to emit unless its
