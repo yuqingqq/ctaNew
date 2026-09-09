@@ -504,3 +504,16 @@ except where marked USER-ONLY.
     wearing a different hat: an instrument that cannot fail is not an instrument.
     The fix is always one required field on the output plus a predicate that
     evaluates the thing, never more prose. (REV 149, R-874)
+
+36. **A derived ratio carries its caveat out of the artifact, or it does not
+    leave.** REV 151 established that the 09-04 artifact is structurally SOUND —
+    `DROPPED.total_cents` and `ALL_TRANCHES.total_cents` sit in the same block as
+    `UPPER_BOUND`, `SCOPE` and `HOW_IT_MUST_BE_SAID`, so the caveat is a SIBLING
+    of the number. **The detachment happened in PROSE**: the coordinator computed
+    62.37 % into a summary and left the upper-bound qualifier behind. Rules 34 and
+    35 govern artifacts; this one governs REPORTING, and it binds the coordinator
+    first because that is where it broke. **A ratio that is not IN the artifact is
+    a claim you are making, not a number you are reading** — so it travels with
+    the qualifier that sits beside its inputs, in the same sentence, every time it
+    is written. "62.37 %" alone is a different claim from "62.37 % as an upper
+    bound on one BTC-only day with no null drawn." (REV 151, R-878)
