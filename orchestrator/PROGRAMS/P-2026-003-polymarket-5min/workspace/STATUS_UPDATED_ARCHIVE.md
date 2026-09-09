@@ -21468,3 +21468,52 @@ generation and the window went 4 → 3. Nothing rewritten.
   mismatched. Flags 2595 -> 2610, prov 2140 -> 2155; window 3/3, Batch 288 archived. **NOTHING BUILT, NO HEAVY LOCK
   SINCE 07:15:47Z.** MEM asserts no result.)
 ```
+
+## Batch 292 — archived 2026-09-09T10:24:45Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T09:50:31Z (MEM ROUND 307 -- R-861 SWEPT, LIGHT ROUND, from `07da57b` to `47bc449`, four commits. STATE ONLY.
+  ***THE STATE IS A PER-DEFECT LEDGER IN THE USER'S OWN TERMS, NOT A NARRATIVE, AND IT CARRIES THREE STATES RATHER
+  THAN TWO.*** **(1) THE CANCEL-MATCHED NULL -- FIXED AND DOUBLE-VERIFIED**: REV 128 at the entry point against its
+  own baseline, DA 154 at runtime with all four refusal shapes firing, and my own AST census -- `arm_cancels` and
+  `control_set_path` now passed, `matched_on` ABSENT -> `CANCELS`, reaching sites **1 of 1 against 0 of 1** -- and
+  ***DA'S FORMULATION IS THE ONE TO KEEP: "WHICH NULL RUNS IS NOW UNFALSIFIABLE BY OMISSION"***, which is the precise
+  repair, not that the right null runs but that a run CANNOT BE SILENT ABOUT WHICH ONE DID. **(2) THE INFLATED
+  DECISION COUNT -- FIXED IN MECHANISM, REAL FACTOR UNQUANTIFIED. (3) THE FALSE CANCEL-MATCHING PREMISE -- HANDLED IN
+  MECHANISM, REAL DOUBLE-CANCEL RATE UNQUANTIFIED.** Both need a CORRECTED BOOK and none exists, so the repairs are
+  verifiable and their MAGNITUDE is not -- ***"FIXED IN MECHANISM, UNQUANTIFIED" IS A THIRD STATE AND NOT A SOFTER
+  "FIXED"***, and rounding it to either would be a false claim. **(5a) THE PREDICATE ACCEPTING A SUBSET -- FIXED**,
+  the completeness refusal, 0 of 5 single-module receipts accepted. **(5b) THE PREDICATE CHECKING THE WRONG SET --
+  OPEN**, re-measured by me: ***`derived_closures` and `be_producing_closure` appear ZERO times in the runner at my
+  read***, so it still filters the recorded closure to the typed five, and a completeness guard over the wrong
+  membership reports full coverage of a set nobody wanted. ***THE DEFENSIBLE SET IS NAMED WITH ITS OPERATION: BE'S
+  DERIVED EIGHT, MEMBERSHIP = REACHABILITY FROM THE SCORING ENTRY POINTS WITHIN THE RECORDING*** -- the cascade TEN
+  being a DIFFERENT claim already pinned by params v28, and the recorded 49 NOT the answer since it is everything the
+  run imported; **rule 32 asked what operation would constitute membership and this is the first time the answer is
+  an OPERATION rather than a list**, which is why it can be handed to a seat. Routed to DE. **(6a) THE PROTOCOL
+  STRING -- OPEN**, and I drove it at HEAD across every version rather than taking the report: ***`protocol
+  P003_DE_MULTIDAY_GATE1_PARAMS_V20` at v25, v26, v27 AND v28, with `version` reading 25/26/27/28 -- INCLUDING THE
+  VERSION LANDED IN THE ROUND THAT CLAIMED TO REPAIR IT.*** What DE built is narrower and defensible on its own
+  terms -- `load_params` refuses an UNDECLARED divergence and v27/v28 carry `protocol_version_note` -- but ***A
+  DECLARED DIVERGENCE IS A DIFFERENT THING FROM A CORRECTED STRING***, and the note's own
+  `readers_that_print_the_pair` names **`da_gate1_day_verdict`, THE VERY GATE DA FOUND IS RED on
+  `protocol.endswith(V28)`**: the declaration acknowledges the reader by name and still leaves it failing. **DA
+  CORRECTS ITS OWN Q-DA-376 IN BAND WITH THE CAUSE NAMED**: it had reported "four sites and not one comparison", and
+  ***A LITERAL REGEX COULD NOT SEE A COMPARISON BUILT DYNAMICALLY WITH AN f-STRING*** -- DA's THIRD
+  enumeration-by-spelling error, rule 32's own class in the seat that wrote the lesson -- ***AND THE COROLLARY
+  REVERSES: THE STRING IS NOT INERT, SO BUMPING IT IS NOT FREE AND POINTLESS BUT CLEARS A RED DA'S OWN GATE IS
+  CARRYING.*** ***AND A CORRECTION TO WHAT I WAS ASKED TO RECORD, WHERE I RECORD WHAT WAS DRIVEN INSTEAD***: the
+  flake was **NOT** `git status --porcelain` in `_is_committed` making a verdict a function of other seats' timing --
+  **DA 155 corrects that in band, "no cell asserts on either committed field and they are independent", naming why
+  its earlier account was wrong: "MY Q-DA-377 EXPLANATION WAS READ, NOT DRIVEN."** The driven cause: **`audit_module`
+  raised a BARE `SyntaxError` and the battery hands it git-show stdout and scratch text, so any transient yielding
+  unusable source killed the run with rc 1 and stdout truncated mid-cell -- the observed signature**; unusable bytes
+  now refuse `SOURCE_DID_NOT_PARSE`. ***A PLAUSIBLE MECHANISM THAT EXPLAINS THE SYMPTOM IS NOT THE MECHANISM.*** And
+  the defect found WHILE fixing it is the better one: **`_is_committed` returned False for a path OUTSIDE the tree
+  where git exits 128 -- ABSENCE READ AS A NEGATIVE -- reporting every scratch module as uncommitted**, DA's "own
+  class in my own module"; three named states, 21 -> 23 checks. **Rule 24 is now satisfied by EVERY seat**: REV 130
+  wrote `REV_PROCEDURE.md` at a reset **from the ledger 100..129 rather than from memory**, leading with *"A REVIEW
+  DRIVES, IT DOES NOT READ"* and the THREE-DRIVE STANDARD where **two of three is a fail.** Flags 2610 -> 2622, prov
+  2155 -> 2167; window 3/3, Batch 289 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z; NO "CLOSED AND
+  VERIFIED" COUNT IS RESTORED BEYOND THE LEDGER ABOVE.** MEM asserts no result.)
+```

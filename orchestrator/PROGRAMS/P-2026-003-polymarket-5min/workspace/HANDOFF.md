@@ -1,3 +1,94 @@
+# READ FIRST — round 310 (MEM, 2026-09-09T10:24:45Z, tip `fc13f77`)
+
+**R-863 swept — eight commits since `5c7d220`.** Light round, ledger form.
+
+# THE PER-DEFECT LEDGER
+
+| # | defect | state |
+|---|---|---|
+| **1** | the cancel-matched null | **CLOSED, DOUBLE-VERIFIED** |
+| **2** | the inflated decision count | **FIXED IN MECHANISM**, **UNQUANTIFIED** |
+| **3** | the false cancel-matching premise | **HANDLED IN MECHANISM**, **UNQUANTIFIED** |
+| **5a** | the predicate accepting a subset | **CLOSED** |
+| **5b** | the predicate checking the wrong set | **⚠ RE-OPENED — now two reasons** → DE 168 |
+| **6a** | the protocol string | **CLOSED AND VERIFIED** |
+
+# BE 121 — the open property becomes a **bounded contract**
+
+REV 132 and DA 156 established that *the artifact names its own examination scope*. **BE 121 answers the other half:
+yes, a consumer CAN recompute the expected set at check time.** `expected_set_from_disk` runs the same operation —
+transitive reference from the producing function — **against the code on disk, no closure restricting it**. Driven by
+me: **12 modules of the 268 in the root, 0.61 s, pure AST, no import and no execution.**
+
+**⚠ But static reachability OVER-approximates the run — also driven by me.** `harmful_hazard_model.py` and
+`phase2_state_schema_freeze.py` are reached from `phase2_arms` only through **lazy, function-local imports** (`:57`,
+`:515`, `:766`, `:768`, `:1851`):
+
+| import `phase2_arms` pulls in… | |
+|---|---|
+| `harmful_hazard_model` | **False** |
+| `phase2_state_schema_freeze` | **False** |
+
+**⇒ Both are legitimately absent from an honest build's recording — those branches did not run. THE DELTA IS
+REPORTED AND NEVER REFUSED ON; refusing would refuse honest receipts.** *Both failure directions are now named in
+one place: a guard too narrow passes silently, a guard too wide refuses the truth.*
+
+**THE CONTRACT, adopted verbatim — the receipt-free set is an UPPER BOUND ON SCOPE:**
+- every module in it **and named by the receipt** must **digest-match** — **refusable**;
+- every module in it the receipt **does not name** is **reported by name** — **under-declaration goes from INVISIBLE
+  to VISIBLE.**
+
+**It is not a closure, and BE says so:** *"the scope stops depending on the receipt; the values do not. The receipt
+remains the only record of which bytes ran."* **A receipt naming all 12 with each file's current digest passes both
+halves whatever produced the book. The only independent check is a rebuild** — which puts this exposure exactly
+where rows (2) and (3) already sit: **behind the build.**
+
+## ⚠ AND THE COMPARISON IS A FINDING AGAINST BE'S OWN EARLIER WORK
+
+**Receipt-scoped walk = 8. Receipt-free walk = 12.** The four missing: `flow_intensity.py`,
+`harmful_exposure_rows.py`, `harmful_hazard_model.py`, `phase2_state_schema_freeze.py` — **and two of them are in the
+recorded 49**, which I confirmed at a landed receipt (`be_daybook_receipt_20260907_btc__L250ms.json`, 49 modules:
+`flow_intensity` **True**, `harmful_exposure_rows` **True**). **The whitelist stopped the walk at the two the
+recording does not name, and everything behind them was lost.** BE: ***"the closure restriction is a TRUNCATION, not
+a safety property, and BE 117 published it as a virtue."***
+
+**⇒ (5b) stays RE-OPENED with TWO reasons:** (i) the fallback computes `mods ⊆ mods` and **0 of 12** landed receipts
+carry the derived block; (ii) **the set the declared path checks against is itself truncated.** *DE 167 adopted the
+derived eight in good faith; BE has withdrawn the virtue claim from its own derivation.* **A row with two live
+reasons is re-opened, not "mostly fixed."**
+
+## REV 133 — and the whole loop, recorded as ONE item
+
+**23 checks, 0 failures, rc 0 from `/home/yuqing/ctaNew` AND from `wt-rev`** — and the clause that matters more than
+the green: ***"the fix did not cost the assertion."*** Established by **re-introducing both defects by monkeypatch**:
+the DA 154 collapse makes the cell **fail**, the DA 155 form makes it **fail** — **reproducing REV's own red on
+demand.** *A cell made deterministic by weakening what it asserts would also go green from both trees.* REV adds
+honestly that **the property asked about was never this cell's — the conjunct admits CLEAN and DIRTY alike.**
+
+**The loop, because it is the seam working:** REV 131 found it **red from every worktree** → DA 156 diagnosed the
+**wrong tree being asked**, and **explicitly declined** the available rule-31 dirtiness narrative (*"a spotless
+worktree fails it identically"*) → DA fixed it by **separating "is this file committed" from "does that tree hold it
+committed"**, recording `committed_state_asked_of` → REV 133 re-drove it **from both trees**. **Four seat-turns, no
+seat defending its own work, and the only plausible story refused by the seat it would have excused.**
+
+## DA 157 — housekeeping, with a disclosure that reverses its own report
+
+**The `wt-da` leftover was TWO files.** The undisclosed one, `da_early_read_verify.py`, matches blob **`8cea440`
+(DA 132, 09-07)**, an ancestor of HEAD. **Nothing unlanded was at risk — and the exposure ran the other way: that
+copy predates DA 133 and has no `settlement_statistics`, so it is *the reader without the primary endpoint's test*.**
+*A stale file in a worktree is dangerous not because it might be lost but because it might be run.* `wt_refresh.sh`
+**discriminated correctly** (restored the identical, refused `rc 3` on the differing) **with its bound named — it
+compares against one ref.** wt-da now `5c7d220`, 0 status lines, 394/394 skip-worktree.
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z.**
+
+Counts: flags 2646 → 2658, provenance 2191 → 2203 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 292 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 309 (MEM, 2026-09-09T10:12:28Z, tip `e9078c9`)
 
 **R-862 swept — six commits since `521438d`.** Light round, ledger form.
