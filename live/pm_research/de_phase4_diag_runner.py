@@ -4697,7 +4697,7 @@ def selftest() -> int:
              {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t_start": -6.0}]
     _gs, _gst, _gsp = generation_scores(_blk(_rows), _fixref, coin="btc",
                                         head="incumbent_linear_d")
-    _each = [HS.score_incumbent(_incm, HS.compose_head_inputs(
+    _each = [HS.score_incumbent_condvalue(_incm, HS.compose_head_inputs(
         _blk(_rows)["PM"][i], _blk(_rows)["FN"][i], _blk(_rows)["ST"][i],
         norms=_norms, incumbent_width=_incm["_n_features"],
         lgbm_width=106)["incumbent_linear_d"]) for i in range(3)]
@@ -8631,10 +8631,11 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
     row-level stream gets wrong:
 
     1. **The generation is the unit, and its score is the MAX of its rows'
-       scores.** `phase2_arms.freeze_thresholds` resolves theta over
-       per-generation MAXIMA precisely because the evaluator ranks
-       generations; a mean or a first-row score compared against that theta
-       selects a different count and is not the policy's statistic.
+       expected cancel values.** `phase2_arms.freeze_thresholds` resolves
+       theta over per-generation MAXIMA of `p_fill * conditional_value`
+       precisely because the evaluator ranks generations; hazard probability,
+       a mean, or a first-row score compared against that theta selects a
+       different count and is not the policy's statistic.
     2. **A generation whose rows the feature pass dropped is EXCLUDED WITH
        A STATUS**, never scored from whatever rows survived and never
        silently absent (rule 4). `_feature_pass` drops rows for named
@@ -8652,7 +8653,7 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
        empty and is COUNTED rather than assumed empty."""
     norms = HS.load_lgbm_normalisers(coin)
     inc = HS.load_incumbent(coin)
-    booster, wl = HS.load_lgbm(coin)
+    booster, value_booster, wl = HS.load_lgbm_condvalue(coin)
     pm, fn, st = blocks["PM"], blocks["FN"], blocks["ST"]
     kept = blocks["kept"]
     if not (len(pm) == len(fn) == len(st) == len(kept)):
@@ -8668,8 +8669,10 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
         v = HS.compose_head_inputs(
             pm[i], fn[i], st[i], norms=norms,
             incumbent_width=inc["_n_features"], lgbm_width=wl)[head]
-        sc = (HS.score_incumbent(inc, v) if head == "incumbent_linear_d"
-              else HS.score_lgbm(booster, wl, v))
+        sc = (HS.score_incumbent_condvalue(inc, v)
+              if head == "incumbent_linear_d"
+              else HS.score_lgbm_condvalue(
+                  booster, value_booster, wl, v))
         gk = (r["slug"], r["side"], r["gen"])
         by_gen.setdefault(gk, []).append(sc)
         spl_gen.setdefault(gk, set()).add(

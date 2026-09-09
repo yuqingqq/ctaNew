@@ -23,6 +23,16 @@ THE INCUMBENT'S ARITHMETIC IS COPIED FROM THE FIT'S OWN APPLY PATH
     x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
     p = predict_p(hazard_weights, x)
 
+The decision score is then the fit's frozen expected cancel value, not that
+probability alone:
+
+    score = p * dot(value_weights, x)
+
+The LGBM arm applies the same contract with its manifest-bound value booster.
+`phase2_arms.freeze_thresholds` fitted both arms' cutoffs on this product;
+comparing those cutoffs with `p` is a unit error and is refused by the policy
+contract below.
+
 `linear_d_{coin}.json` records `features: "PM+fine only, NO state features"`
 -- a SENTENCE, not a list -- so the vector's identity comes from its LENGTH
 (`len(norm_mu)`, 60) and from the family widths the block records, never
@@ -39,7 +49,12 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 31
+EXPECTED_CHECKS = 37
+
+#: The thresholds persisted by ``phase2_arms.freeze_thresholds`` are
+#: quantiles of ``p_fill * conditional_value``.  This is therefore the only
+#: score contract that may be compared with them by the replay policy.
+EXPECTED_VALUE_SCORE_KIND = "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import de_score_stream as SS                     # noqa: E402
@@ -100,12 +115,17 @@ def load_incumbent(coin: str) -> dict:
             # SITE: incumbent#1
             raise HeadRefused(f"linear_d_{coin}.json carries no {k!r}")
     n = len(d["norm_mu"])
-    if len(d["hazard_weights"]) != n + 1 or len(d["norm_sd"]) != n:
+    if (len(d["hazard_weights"]) != n + 1
+            or not isinstance(d["value_weights"], list)
+            or len(d["value_weights"]) != n + 1
+            or len(d["norm_sd"]) != n):
         # SITE: incumbent#2
         raise HeadRefused(
-            f"{len(d['hazard_weights'])} hazard weights against {n} "
-            f"normalisers: the intercept convention is `[1.0] + zscaled`, "
-            f"so the weights must be one longer than the means")
+            f"{len(d['hazard_weights'])} hazard and "
+            f"{len(d['value_weights']) if isinstance(d['value_weights'], list) else 'no'} "
+            f"value weights against {n} normalisers: the intercept "
+            f"convention is `[1.0] + zscaled`, so both heads must be one "
+            f"longer than the means")
     d["_n_features"] = n
     return d
 
@@ -129,6 +149,16 @@ def score_incumbent(model: dict, raw: list[float]) -> float:
     w = model["hazard_weights"]
     z = max(-30.0, min(30.0, sum(a * b for a, b in zip(w, x))))
     return 1.0 / (1.0 + math.exp(-z))
+
+
+def score_incumbent_condvalue(model: dict, raw: list[float]) -> float:
+    """Frozen incumbent ``p_fill * conditional_value`` decision score."""
+    p_fill = score_incumbent(model, raw)
+    mu, sd = model["norm_mu"], model["norm_sd"]
+    x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
+    conditional_value = float(sum(
+        weight * value for weight, value in zip(model["value_weights"], x)))
+    return p_fill * conditional_value
 
 
 def load_lgbm(coin: str):
@@ -166,6 +196,64 @@ def score_lgbm(booster, width: int, raw: list[float]) -> float:
             f"the LGBM head refused the row it was handed ({exc}); the "
             f"width matched ({width}) so this is the model's own "
             f"objection, converted at its boundary") from exc
+
+
+def load_lgbm_condvalue(coin: str):
+    """Verified hazard and value boosters for the frozen LGBM policy."""
+    SS.verify_head("q1_arrival_composed_lgbm", coin)
+    record = json.loads((FITS / "val_models.json").read_text())
+    if record.get(coin) is not True:
+        # SITE: lgbmvalue#1
+        raise HeadRefused(
+            f"the fit does not record a value model for {coin}; the frozen "
+            f"threshold is an expected-value threshold and must not be "
+            f"compared with hazard probability alone")
+    hazard, width = load_lgbm(coin)
+    try:
+        import lightgbm as lgb
+        value = lgb.Booster(model_file=str(FITS / f"lgbm_val_{coin}.txt"))
+    except Exception as exc:                       # pragma: no cover
+        # SITE: lgbmvalue#2
+        raise HeadRefused(
+            f"the recorded LGBM value head for {coin} cannot be loaded "
+            f"({exc})") from exc
+    value_width = int(value.num_feature())
+    if value_width != width:
+        # SITE: lgbmvalue#3
+        raise HeadRefused(
+            f"the LGBM hazard head has {width} features but its value head "
+            f"has {value_width}; their product is not a fitted score")
+    return hazard, value, width
+
+
+def score_lgbm_condvalue(hazard, value, width: int,
+                         raw: list[float]) -> float:
+    """Frozen LGBM ``p_fill * conditional_value`` decision score."""
+    p_fill = score_lgbm(hazard, width, raw)
+    if len(raw) != width:
+        raise HeadRefused(
+            f"row has {len(raw)} features but the LGBM value head was fitted "
+            f"on {width}")
+    try:
+        conditional_value = float(value.predict([list(raw)])[0])
+    except Exception as exc:                       # pragma: no cover
+        # SITE: lgbmvalue#4
+        raise HeadRefused(
+            f"the LGBM value head refused the row it was handed ({exc})") \
+            from exc
+    return p_fill * conditional_value
+
+
+def score_contract(head: str) -> dict:
+    """Machine-readable score/threshold identity for result receipts."""
+    if head not in SS.HEADS:
+        raise HeadRefused(f"unknown head {head!r}")
+    return {
+        "score_kind": EXPECTED_VALUE_SCORE_KIND,
+        "formula": "p_fill * predicted_conditional_value",
+        "threshold_kind": EXPECTED_VALUE_SCORE_KIND,
+        "comparison": "cancel iff generation_max_score >= theta",
+    }
 
 
 def load_lgbm_normalisers(coin: str) -> dict:
@@ -267,15 +355,15 @@ def thresholds(coin: str, head: str, *, fits: Path | None = None,
     else:
         # SITE: thresholds#2
         raise HeadRefused(f"unknown head {head!r}")
-    # DE35-R3: a threshold outside (0, 1) cancels everything or nothing,
-    # silently. Refused for EITHER head, wherever the number came from.
-    bad = sorted(k for k, v in out.items() if not (0.0 < v < 1.0))
+    # These are expected-value thresholds, not probabilities.  Negative and
+    # >1 values are valid in the fit target's units; only non-finite values
+    # have no ordered comparison semantics.
+    bad = sorted(k for k, v in out.items() if not math.isfinite(v))
     if bad:
         # SITE: thresholds#3
         raise HeadRefused(
-            f"{head}/{coin} carries non-probability threshold(s) for "
-            f"{bad}: a cancel threshold outside (0, 1) either cancels "
-            f"everything or nothing, silently")
+            f"{head}/{coin} carries non-finite expected-value threshold(s) "
+            f"for {bad}")
     return out
 
 
@@ -345,12 +433,37 @@ def selftest() -> int:
        f"and the score MOVES with the features ({_p2:.6f} against "
        f"{p:.6f}), so it is a function of the row rather than round 33's "
        f"constant 0.5")
+    _raw0 = [0.0] * 60
+    _x0 = [1.0] + [(_raw0[i] - inc["norm_mu"][i])
+                    / inc["norm_sd"][i] for i in range(60)]
+    _v0 = float(sum(a * b for a, b in zip(inc["value_weights"], _x0)))
+    _ev0 = score_incumbent_condvalue(inc, _raw0)
+    ok(abs(_ev0 - p * _v0) < 1e-12 and _ev0 != p,
+       f"THE INCUMBENT POLICY SCORE IS EXPECTED VALUE: p_fill {p:.6f} x "
+       f"conditional value {_v0:.6f} = {_ev0:.6f}, not the probability "
+       f"alone that the replay previously compared with this fit's "
+       f"expected-value threshold")
     for _bad in (59, 61, 1):
         refuses(lambda w=_bad: score_incumbent(inc, [0.0] * w),
                 f"KNOWN-BAD: a {_bad}-feature row REFUSES against a "
                 f"60-feature head -- weights on a differently-shaped vector "
                 f"yield a number, not a prediction",
                 needle="not a prediction")
+    with _tf.TemporaryDirectory() as d:
+        _bad = dict(inc)
+        _bad["value_weights"] = _bad["value_weights"][:-1]
+        _bad.pop("_n_features", None)
+        (Path(d) / "linear_d_btc.json").write_text(json.dumps(_bad))
+        _sv = globals()["FITS"]
+        globals()["FITS"] = Path(d)
+        try:
+            refuses(lambda: load_incumbent("btc"),
+                    "KNOWN-BAD: an incumbent whose VALUE head has the wrong "
+                    "width REFUSES at load -- hazard-only scoring is not a "
+                    "fallback for an expected-value policy",
+                    needle="value weights")
+        finally:
+            globals()["FITS"] = _sv
 
     # ---- the HEAD UNDER TEST, on the real fit ---------------------------
     booster, width = load_lgbm("btc")
@@ -372,6 +485,16 @@ def selftest() -> int:
        f"{q:.6f} twice and a second row {_q2:.6f} -- difference is "
        f"reported rather than asserted, because a tree ensemble may map "
        f"two synthetic rows to one leaf")
+    _hb, _vb, _vw = load_lgbm_condvalue("btc")
+    ok(_vw == width and int(_vb.num_feature()) == width,
+       f"THE LGBM VALUE HEAD LOADS FROM THE MANIFEST-BOUND FIT and matches "
+       f"the hazard width: {width} columns each")
+    _lv = float(_vb.predict([[0.0] * width])[0])
+    _lev = score_lgbm_condvalue(_hb, _vb, width, [0.0] * width)
+    ok(abs(_lev - q * _lv) < 1e-12 and _lev != q,
+       f"THE LGBM POLICY SCORE IS EXPECTED VALUE: p_fill {q:.6f} x "
+       f"conditional value {_lv:.6f} = {_lev:.6f}, matching the statistic "
+       f"whose training maxima produced the frozen threshold")
     for _bad in (1, 105, 107):
         refuses(lambda w=_bad: score_lgbm(booster, width, [0.0] * w),
                 f"KNOWN-BAD: a {_bad}-feature row REFUSES against the "
@@ -408,11 +531,17 @@ def selftest() -> int:
         _hi["causal_thresholds"] = dict(_hi["causal_thresholds"], **{"10%": 1.5})
         (Path(d) / "linear_d_btc_hi.json").write_text(json.dumps(_hi))
         (Path(d) / "linear_d_btc.json").write_text(json.dumps(_hi))
+        ok(thresholds("btc", "incumbent_linear_d", fits=Path(d),
+                      verify=False)["10%"] == 1.5,
+           "EXPECTED-VALUE CONTRACT: a finite threshold above one is valid "
+           "in the fit target's units; treating it as a probability was the "
+           "same unit error as scoring on p_fill alone")
+        _hi["causal_thresholds"]["10%"] = float("nan")
+        (Path(d) / "linear_d_btc.json").write_text(json.dumps(_hi))
         refuses(lambda: thresholds("btc", "incumbent_linear_d",
                                    fits=Path(d), verify=False),
-                "DE35-R3: a threshold OUTSIDE (0, 1) refuses -- 1.5 cancels "
-                "nothing and 0 cancels everything, either of them silently",
-                needle="non-probability threshold")
+                "KNOWN-BAD: a non-finite expected-value threshold REFUSES",
+                needle="non-finite expected-value")
         (Path(d) / "linear_d_btc.json").write_text(json.dumps(_bad_fit))
         refuses(lambda: thresholds("btc", "incumbent_linear_d",
                                    fits=Path(d), verify=False),
@@ -424,6 +553,12 @@ def selftest() -> int:
         ok(thresholds("btc", "incumbent_linear_d") == ti,
            "POSITIVE CONTROL: the real fit still answers after that "
            "known-bad, which is what says the injection touched nothing")
+    ok(all(score_contract(h)["score_kind"]
+           == score_contract(h)["threshold_kind"]
+           == EXPECTED_VALUE_SCORE_KIND for h in SS.HEADS),
+       "BOTH replay arms declare the same expected-value identity for score "
+       "and threshold; a probability/expected-value comparison cannot pass "
+       "this contract")
 
     # ---- the composition: what each head is actually fed (DE36 item 4) ----
     _nb = load_lgbm_normalisers("btc")

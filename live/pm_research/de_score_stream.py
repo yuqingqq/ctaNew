@@ -11,10 +11,13 @@ WHAT IT BINDS.  Every file it reads is verified against
 `phase2_fits/fit_manifest.json` by sha256 prefix BEFORE it is opened as a
 model -- the incumbent head `linear_d_{coin}.json` (btc `18701008c2bd18c6`,
 R-398) and the head under test, `Q1_arrival` of `composed_lgbm`
-(`lgbm_haz_{coin}.txt` with `lgbm_thresholds_{coin}.json`).  A file whose
-bytes do not match the manifest is REFUSED by name; a fit belonging to the
-OTHER coin is REFUSED even though it loads perfectly, because the manifest
-knows which coin a file is for and the model does not.
+(`lgbm_haz_{coin}.txt` and `lgbm_val_{coin}.txt`, with `val_models.json`
+and `lgbm_thresholds_{coin}.json`).  The value head is part of the policy:
+the frozen thresholds were produced from `p_fill * conditional_value`, not
+from hazard probability alone.  A file whose bytes do not match the manifest
+is REFUSED by name; a fit belonging to the OTHER coin is REFUSED even though
+it loads perfectly, because the manifest knows which coin a file is for and
+the model does not.
 
 THE DECLARED LIMIT -- IR-R4, stated rather than worked around (R-459 §3):
 there is no generation-tranche artifact with a production consumer, so this
@@ -53,6 +56,8 @@ MANIFEST = FITS / "fit_manifest.json"
 HEADS = {
     "incumbent_linear_d": ("linear_d_{coin}.json",),
     "q1_arrival_composed_lgbm": ("lgbm_haz_{coin}.txt",
+                                 "lgbm_val_{coin}.txt",
+                                 "val_models.json",
                                  "lgbm_thresholds_{coin}.json"),
 }
 COINS = ("btc", "eth")
@@ -227,7 +232,8 @@ def selftest() -> int:
     v_q1 = verify_head("q1_arrival_composed_lgbm", "btc")
     ok(v_inc == {"linear_d_btc.json": "18701008c2bd18c6"},
        f"INCUMBENT HEAD VERIFIED at the bytes: {v_inc}")
-    ok(set(v_q1) == {"lgbm_haz_btc.txt", "lgbm_thresholds_btc.json"}
+    ok(set(v_q1) == {"lgbm_haz_btc.txt", "lgbm_val_btc.txt",
+                     "val_models.json", "lgbm_thresholds_btc.json"}
        and all(v_q1[k] == h[k] for k in v_q1),
        f"HEAD UNDER TEST VERIFIED at the bytes -- R-424's component of "
        f"record, Q1_arrival of composed_lgbm: {v_q1}")

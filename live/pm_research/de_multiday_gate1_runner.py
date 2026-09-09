@@ -67,7 +67,7 @@ EXPECTED_CHECKS = 402
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v20.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -8515,12 +8515,18 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
 
     # ---- BE's cascade is cited, and a different one refuses ------------
     _tipP = _with_current_cascade(P)
-    ok(verify_be_module(_tipP)["cited_not_copied"] is True,
+    ok(verify_be_module(P)["cited_not_copied"] is True
+       and _tipP["be_cascade"] == P["be_cascade"],
        "POSITIVE CONTROL: BE's cascade module resolves at the declared "
-       "digest and is CITED, not copied")
-    refuses(lambda: verify_be_module(P),
-            "KNOWN-BAD: the frozen params refuse on the moved phase4 cascade "
-            "module instead of letting the battery run through a different "
+       "digest and is CITED, not copied; v20 already names the current "
+       "corrected closure rather than relying on a test-only repoint")
+    _bad_cascade = json.loads(json.dumps(P))
+    next(r for r in _bad_cascade["be_cascade"]["modules"]
+         if r["path"].endswith("de_phase4_diag_runner.py"))["sha256"] = \
+        "0" * 64
+    refuses(lambda: verify_be_module(_bad_cascade),
+            "KNOWN-BAD: a params file pinning the old phase4 cascade "
+            "REFUSES instead of letting the battery run through a different "
             "null producer", "BE_CASCADE_DIFFERS")
     refuses(lambda: verify_be_module(P, actual_sha="0" * 64),
             "KNOWN-BAD: a DIFFERENT cascade digest refuses -- a null run "
@@ -8537,7 +8543,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
             offline_skip(_lbl)
     else:
         vr = verify_run_inputs(_with_current_cascade(live))
-        ok(vr["models"]["n_models_read"] == 3
+        _n_models_declared = sum(len(a["model_digests"])
+                                 for a in live["arms"].values())
+        ok(vr["models"]["n_models_read"] == _n_models_declared
            and vr["models"]["bytes_were_read_not_recorded"] is True
            and all(v["matches"] for a in vr["models"]["per_arm"].values()
                    for v in a.values())

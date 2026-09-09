@@ -45,11 +45,12 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: filename, the protocol suffix and the head of the chain are now
 #: DERIVED from this integer and a battery check asserts all three
 #: agree.
-#: DE 126: 27. v19 re-points the cascade citation after BE 96, so the
-#: two-way pin follows it -- R31's paired bump, and this caller's own
-#: predicate (i) permits the move only because v19 supersedes v18 by a
-#: verifying pair.
-VERSION = 27
+#: DE 127: 28. Params v20 corrects the replay score contract from hazard
+#: probability to the expected cancel value whose frozen thresholds encode.
+#: The six ruled days are already consumed, so this declaration authorises
+#: correction replays as exploratory supersessions only; it does not create a
+#: new confirmatory population.
+VERSION = 28
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
 EXPECTED_CHECKS = 134
 
@@ -162,6 +163,10 @@ V26_DECLARATION = ("p003_de_multiday_gate1_design_v26.json",
                    "7de8906e607a66d48d163ead98d898f1cc0fca73f4aa3bc21d5a"
                    "bbdb505616ca")
 
+V27_DECLARATION = ("p003_de_multiday_gate1_design_v27.json",
+                   "3bcdf3c234cb7d4e4be116c2d97a28293c37f419d9a0b062125b"
+                   "0f1f151e272b")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -171,7 +176,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V19_DECLARATION, V20_DECLARATION,
                     V21_DECLARATION, V22_DECLARATION,
                     V23_DECLARATION, V24_DECLARATION,
-                    V25_DECLARATION, V26_DECLARATION)
+                    V25_DECLARATION, V26_DECLARATION,
+                    V27_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -644,7 +650,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 #: USER's ruling retiring R5. The move is permitted by this caller's own
 #: predicate (i) only because v18 supersedes v15 by a verifying pair --
 #: through v16 and v17 -- and the digest verifies (DE 124).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v19.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v20.json"
 
 
 def _params_path() -> Path:
