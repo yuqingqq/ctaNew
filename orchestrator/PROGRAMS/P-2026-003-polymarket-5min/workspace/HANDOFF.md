@@ -54,8 +54,8 @@ with a disposition answers the question a bare zero leaves open.***
 - **(c) THE 09-04..09-07 QUEUE IS HELD** until (a) and (b) settle. *Not a refusal — a sequence: four days built
   before either settles are four days built to a specification about to change.*
 - **(d) `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED** provided the unnamed are the **known lazy-import
-  pair** — **and DE is making that a PREDICATE, refusing by name if any other module is unnamed.** *The difference
-  between a ruling and a loophole.*
+  pair** — **and DE is TO make that a PREDICATE** — ***which REV 139 has now driven, and it is NOT a predicate yet. See the
+  addendum.***
 
 # THE LATENCY STATUS — precisely
 
@@ -82,8 +82,44 @@ twenty-minute wall, the lost run's two surviving scalars, now a warm-cache peak 
 conditions the queue will not reproduce.* **82 % on the heaviest day leaves 18 % of headroom for a day nobody has
 built.**
 
-Counts: flags 2773 → 2786, provenance 2318 → 2331 (thirteen written, thirteen counted, duplicate-name gate run
+Counts: flags 2773 → 2790, provenance 2318 → 2335 (seventeen written, seventeen counted, duplicate-name gate run
 BEFORE writing); orphans 0; window 3/3, Batch 301 archived. MEM asserts no result.
+
+## ⚠ ADDENDUM 2026-09-09T14:59:31Z — REV 139 landed while I wrote, and corrects my tense
+
+**I wrote that "DE is making that a predicate." REV drove it: THE RULED EXEMPTION IS NOT A PREDICATE YET.** On the
+real EV21 receipt, **the ruled pair, a THIRD module, and FIVE unnamed modules all give the IDENTICAL status and
+`is_a_match False` with NO refusal** — only the count in the flag string changes. *DE's code is honest about why:
+the policy question "is not decided here" (rule 14), written **before** the ruling existed.* **REV's framing, which
+I adopt: this table is the BASELINE the implementation must be measured against.** ***The ruling is made; the
+predicate is owed.***
+
+**REV also confirms by re-derivation, not reading:** the two unnamed on EV21 are **exactly** `harmful_hazard_model.py`
+and `phase2_state_schema_freeze.py` — **BE 122's lazy pair, not merely two.** *So the ruling's precondition holds
+today even though nothing enforces it.*
+
+### ⚠ And a correction to something I recorded above as a strength
+
+**"Asking it for a test statistic refuses by name" is true and driven** — `test_statistic_from(receipt) → REFUSED
+POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC` — ***but the function reads `economic` hardcoded and never
+`economic_settlement`, the ruled primary endpoint.*** Both blocks carry the status on **this** artifact so it fires
+anyway; **a receipt carrying it only on the settlement block would return a value instead of refusing.** **The
+property holds by coincidence of this artifact's shape, not by construction.**
+
+***And REV names it: "REVIEW 123's `ECONOMIC_FIELDS` shape — the guard protects the diagnostic and not the result."***
+**That is the same defect this file recorded at round 303, now appearing a THIRD time in a different function.**
+*R-801 made the settlement P&L the primary endpoint, and the guards keep being written against the diagnostic that
+preceded it. A ruling that changes which quantity is the result does not propagate itself into every guard that names
+a quantity.*
+
+### On ruling (a)'s number — the hard part verified, a soft part found
+
+**The rate is keyed `(slug, side, int(ref_gen))` — the REFERENCE id space — and the denominator is reference
+generations THAT WERE CANCELLED, the right one for the premise.** The script ships no selftest, so REV drove the
+function: **clean → rate 0, `premise_holds True`; gen 7 twice → `n_ref_gens 2`, max 2, `premise_holds False`; three
+times → max 3. It fires.** ***But a provenance gap on a number the user ruled on: `de_corrected_book_measures.py`
+does `sys.path.insert(0, "/home/yuqing/ctaNew-wt-de2/live/pm_research")`, so the number came from a hardcoded
+worktree rather than the tree the artifact cites.***
 
 ---
 

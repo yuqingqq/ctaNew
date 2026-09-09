@@ -100,7 +100,7 @@ updated: >-
   comparator.* **(c) THE 09-04..09-07 QUEUE IS HELD UNTIL (a) AND (b) SETTLE** -- *not a refusal but a SEQUENCE,
   since four days built before either settles are four days built to a specification about to change.* **(d) A DAY
   WHOSE BOOK-CODE VERDICT IS `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED PROVIDED THE UNNAMED ARE THE
-  KNOWN LAZY-IMPORT PAIR -- AND DE IS MAKING THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED**,
+  KNOWN LAZY-IMPORT PAIR -- AND DE IS TO MAKE THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED -- WHICH REV 139 HAS NOW DRIVEN AND IT IS **NOT A PREDICATE YET**; SEE THE ADDENDUM**,
   *which is the difference between a ruling and a loophole.* ***THE LATENCY STATUS, PRECISELY: THE 51.17 % TRANCHE
   EFFECT REPRODUCES ON THE CORRECTED BOOK -- 23,765 AGAINST 22,675 OF 46,440, IDENTICAL TO DA'S EV20 FIGURE -- SO
   THE MECHANISM SURVIVES THE ERA FIX, THE CAUSAL-SCORING REPAIR AND THE ZERO-LENGTH EXCLUSION; BUT THE MONEY-LEVEL
@@ -109,7 +109,7 @@ updated: >-
   WOULD NOT USE THE PRE-FIX L=0 BOOK -- "I WON'T DRESS THE SECOND UP AS THE FIRST" -- WHICH MAKES FOUR SEATS IN ONE
   NIGHT DECLINING A RESULT THEY COULD HAVE HAD.*** Finally, **BE's cold-cache correction moves the queue's price in
   the expensive direction: 09-04 REACHES 9.70 GB, 82 % OF THE ENVELOPE, NOT THE 63 % REPORTED FROM A SINGLE WARM
-  RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2786, prov 2318 -> 2331; window 3/3, Batch
+  RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2790, prov 2318 -> 2335; window 3/3, Batch
   301 archived. MEM asserts no result.)
   2026-09-09T12:56:22Z (MEM ROUND 318 -- ***THE 09-03 REBUILD IS RUNNING.*** From `c98a547` to `4784242`, two commits.
   **`p003ev210903a` is `active`, launched 12:52:32Z from `wt-be`, payload `be_daybook_build.py`, args `--day 20260903
@@ -375,6 +375,11 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 319 ADDENDUM 2026-09-09T14:59:31Z: REV 139 landed while I wrote ---
+  REV_139_LANDED_AND_CORRECTS_MY_TENSE_ON_RULING_D: NOT-A-PREDICATE-YET
+  THE_TEST_STATISTIC_REFUSAL_IS_REAL_BUT_GUARDS_THE_WRONG_BLOCK: economic-NOT-economic_settlement
+  AND_THAT_IS_THE_ECONOMIC_FIELDS_SHAPE_RETURNING_A_THIRD_TIME: THE-GUARD-PROTECTS-THE-DIAGNOSTIC
+  THE_PREMISE_RATE_IS_KEYED_RIGHT_AND_I_RECORD_ITS_PROVENANCE_GAP: A-HARDCODED-WORKTREE
   # --- MEM round 319, THE FIRST CORRECTED NUMBER + four user rulings (e975d81 -> ac99226) ---
   THE_FIRST_CORRECTED_NUMBER_SINCE_THE_RETRACTION_AND_I_READ_IT_AT_THE_ARTIFACT: D_E_settle-PLUS-11191-244402
   AND_THE_ESTIMANDS_OWN_ARITHMETIC_CLOSES_THREE_WAYS_EXACTLY: LEGS-BASELINE-AND-DIFFERENCE
@@ -27218,6 +27223,60 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 319 ADDENDUM, 2026-09-09T14:59:31Z ---
+  REV_139_LANDED_AND_CORRECTS_MY_TENSE_ON_RULING_D:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:59:31Z
+    said: >-
+      ***REV 139 LANDED WHILE I WROTE AND CORRECTS MY TENSE ON RULING (d): I WROTE "DE IS MAKING THAT A PREDICATE";
+      REV DROVE IT AND THE RULED EXEMPTION IS NOT A PREDICATE YET.*** **On the real EV21 receipt, the ruled pair, a
+      THIRD module, and FIVE unnamed modules all give the IDENTICAL status and `is_a_match False` WITH NO REFUSAL --
+      only the count in the flag string changes.** *DE's code is honest about why: the policy question "is not
+      decided here" under rule 14, written BEFORE the ruling existed.* **REV's framing is the right one and I adopt
+      it: THIS TABLE IS THE BASELINE THE IMPLEMENTATION MUST BE MEASURED AGAINST.** ***THE RULING IS MADE; THE
+      PREDICATE IS OWED, AND MY FILES SAY SO RATHER THAN CREDITING IT AS DONE.*** And REV **CONFIRMS BY
+      RE-DERIVATION, NOT READING, that the two unnamed on EV21 ARE EXACTLY `harmful_hazard_model.py` and
+      `phase2_state_schema_freeze.py` -- BE 122's lazy pair, NOT MERELY TWO** -- so the ruling's precondition holds
+      today even though nothing enforces it.
+  THE_TEST_STATISTIC_REFUSAL_IS_REAL_BUT_GUARDS_THE_WRONG_BLOCK:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T14:59:31Z
+    said: >-
+      ***AND A CORRECTION TO SOMETHING I RECORDED THIS ROUND AS A STRENGTH: "ASKING IT FOR A TEST STATISTIC REFUSES
+      BY NAME" IS TRUE AND DRIVEN -- `test_statistic_from(receipt) -> REFUSED POINT_ESTIMATE_RUN_HAS_NO_TEST_
+      STATISTIC` -- BUT THE FUNCTION READS `economic` HARDCODED AND NEVER `economic_settlement`, THE RULED PRIMARY
+      ENDPOINT.*** **Both blocks carry the status on THIS artifact so it fires anyway** -- *which is why my reading
+      was correct about today and wrong about the guard* -- ***BUT A RECEIPT CARRYING THE STATUS ONLY ON THE
+      SETTLEMENT BLOCK WOULD RETURN A VALUE INSTEAD OF REFUSING.*** **The property holds by coincidence of this
+      artifact's shape, not by construction.**
+  AND_THAT_IS_THE_ECONOMIC_FIELDS_SHAPE_RETURNING_A_THIRD_TIME:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T14:59:31Z
+    said: >-
+      ***AND REV NAMES IT AS THE SHAPE IT IS: "REVIEW 123'S `ECONOMIC_FIELDS` SHAPE -- THE GUARD PROTECTS THE
+      DIAGNOSTIC AND NOT THE RESULT."*** **That is the same defect this file recorded at round 303, when
+      `ECONOMIC_FIELDS` named `D_E0`, `Z` and `p_location` and NONE of the six ruled-endpoint fields** -- and it has
+      now appeared **a third time**, in a different function, against the same distinction. ***R-801 MADE THE
+      SETTLEMENT P&L THE PRIMARY ENDPOINT AND THE GUARDS KEEP BEING WRITTEN AGAINST THE DIAGNOSTIC THAT PRECEDED
+      IT.*** *A ruling that changes which quantity is the result does not propagate itself into every guard that
+      names a quantity; someone has to go and look, and three times now nobody had.*
+  THE_PREMISE_RATE_IS_KEYED_RIGHT_AND_I_RECORD_ITS_PROVENANCE_GAP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T14:59:31Z
+    said: >-
+      **On ruling (a)'s number, REV verifies the hard part and finds a soft one.** ***THE RATE IS KEYED `(slug,
+      side, int(ref_gen))` -- THE REFERENCE ID SPACE, NOT THE POLICY ONE -- AND THE DENOMINATOR IS REFERENCE
+      GENERATIONS THAT WERE CANCELLED, WHICH IS THE RIGHT DENOMINATOR FOR THE PREMISE.*** The script ships no
+      selftest, **so REV drove the function: clean -> rate 0, `premise_holds True`; gen 7 twice -> `n_ref_gens 2`,
+      max 2, `premise_holds False`; three times -> max 3. IT FIRES.** ***BUT A PROVENANCE GAP ON A NUMBER THE USER
+      RULED ON: `de_corrected_book_measures.py` DOES `sys.path.insert(0, "/home/yuqing/ctaNew-wt-de2/live/pm_
+      research")`, SO THE NUMBER CAME FROM A HARDCODED WORKTREE RATHER THAN THE TREE THE ARTIFACT CITES.*** **The
+      1-in-3,862 is measured on the right property by an instrument shown to fire, and its code provenance does not
+      resolve to the cited tree.**
   # --- MEM round 319, 2026-09-09T14:57:56Z ---
   THE_FIRST_CORRECTED_NUMBER_SINCE_THE_RETRACTION_AND_I_READ_IT_AT_THE_ARTIFACT:
     prov: CHECKED
@@ -27335,7 +27394,7 @@ flag_provenance:
       ***USER RULING (d): A DAY WHOSE BOOK-CODE VERDICT IS `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED
       PROVIDED THE UNNAMED ARE THE KNOWN LAZY-IMPORT PAIR*** -- `harmful_hazard_model.py` and
       `phase2_state_schema_freeze.py`, **legitimately absent from an honest recording because those branches did not
-      run.** ***AND DE IS MAKING THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED*** -- which is
+      run.** ***AND DE IS TO MAKE THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED -- WHICH REV 139 HAS NOW DRIVEN AND IT IS **NOT A PREDICATE YET**; SEE THE ADDENDUM*** -- which is
       the difference between a ruling and a loophole. *A permission stated in prose is a permission that widens; the
       same permission compiled into a check stays the size it was granted.* **This is BE 121's refusable/reportable
       split reaching its natural end: the reportable set now has an admissible MEMBERSHIP, not just an admissible
