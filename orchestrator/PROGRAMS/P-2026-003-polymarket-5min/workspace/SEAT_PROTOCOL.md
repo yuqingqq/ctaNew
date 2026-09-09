@@ -363,6 +363,27 @@ except where marked USER-ONLY.
     when a guard false-positives, find out whether the defect is in the
     COMPARISON or in the MATCHING, and change only the one that is wrong.
 
+28. **THE EVIDENCE IS RECORDED AND THE CHECK IS OFF** (REV, R-848; found four times in
+    one night and named by the seat that found them all). *This pipeline repeatedly
+    records or publishes the right thing and leaves the check that would make it
+    load-bearing switched off.* The instances: **REVIEW 111** — the book's
+    `producing_code.import_closure` records the 49 modules that computed its scores and
+    no consumer reads it back; **REVIEW 115** — the writer pads a short settlement list
+    and only the reader refuses, long after the run that produced the file;
+    **REVIEW 116** — the receipt publishes `read_ledger(path, expect_sha256=…)` and the
+    parameter **defaults to `None`, so the unsafe call is the shorter one**;
+    **REVIEW 117** — `exp_m6_settlement.read_at` returns `(value, sample_time)` and the
+    consumer writes `x0, _ = read_at(...)`, so **the staleness of the sample that decides
+    a winner is computed, returned, and thrown away on the same line.** Two more of the
+    same shape: `require_book_declares_L` was never armable in any landed params version
+    (DA 140), and the era default answered for a day it was never given (REV 112).
+    **THE RULE, in REV's words: when a producer already returns the evidence, the consumer
+    must CARRY it or REFUSE on it — discarding it into `_` is the defect, not the absence
+    of the evidence.** And its sibling, which is gate item 4's root in one sentence:
+    **identity that exists in the data and is not load-bearing is a defect waiting for a
+    boundary.** When you add a producer that returns evidence, add the consumer's refusal
+    in the same change, and default the safe call, not the short one.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
