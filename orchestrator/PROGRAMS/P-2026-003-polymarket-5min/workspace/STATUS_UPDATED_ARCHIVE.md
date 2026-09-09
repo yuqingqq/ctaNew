@@ -21517,3 +21517,51 @@ generation and the window went 4 → 3. Nothing rewritten.
   2155 -> 2167; window 3/3, Batch 289 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z; NO "CLOSED AND
   VERIFIED" COUNT IS RESTORED BEYOND THE LEDGER ABOVE.** MEM asserts no result.)
 ```
+
+## Batch 293 — archived 2026-09-09T10:46:53Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T10:04:14Z (MEM ROUND 308 -- DE 167 and REV 131 SWEPT, LIGHT ROUND, from `7640559` to `34a0dd3`, four commits.
+  STATE ONLY, PER-DEFECT LEDGER FORM KEPT. ***TWO ROWS MOVE AND BOTH MOVE TO "FIXED PENDING VERIFICATION", WHICH IS
+  NOT "FIXED".*** **(5b) THE PREDICATE CHECKING THE WRONG SET -- FIXED PENDING VERIFICATION**: I re-ran last round's
+  own measurement and **`derived_closures` / `be_producing_closure` now appear ELEVEN times in the runner against
+  ZERO at my round-307 read**, with the set sourced as `derived_closures.scoring (BE 117's derivation)` and a NAMED
+  refusal for a receipt with none -- **DE has moved it off the typed five onto BE's DERIVED EIGHT** -- and ***REV 132
+  DRIVES WHETHER IT READS `derived_closures.scoring.modules` AND ASSERTS `n_checked == n` BESIDE THE KEY-SET
+  COMPARISON.*** **(6a) THE PROTOCOL STRING -- FIXED PENDING VERIFICATION**: driven at HEAD, **`params_v29` carries
+  `protocol P003_DE_MULTIDAY_GATE1_PARAMS_V29` with `version: 29`, THE FIRST AGREEMENT SINCE V20**, against `..._V20`
+  still standing at v27 and v28, and `PARAMS_REL` pins v29; DE reports it *clears a live red in DA's gate* and ***THE
+  VERIFICATION IS DA 156 RE-RUNNING THAT GATE, NOT DE'S REPORT AND NOT MY READ.*** ***AND THE VERIFICATION MATTERS
+  MORE THAN USUAL BECAUSE DA DELIBERATELY LEFT THAT RED STANDING RATHER THAN SILENCING IT -- "it should stay red
+  until that string is fixed; silencing it would be exactly the loosening rule 27 warns about" -- SO THE RED CLEARING
+  IS THE EVIDENCE THE FIX LANDED AND THE RED NOT CLEARING WOULD MEAN THE FIX MISSED THE CONJUNCT***, a conjunct built
+  dynamically with an f-string, which is why DA's earlier literal sweep could not see it. **ROWS (2) AND (3) ARE
+  UNCHANGED**, still FIXED / HANDLED IN MECHANISM with the REAL ROWS-PER-DECISION FACTOR and the REAL DOUBLE-CANCEL
+  RATE UNQUANTIFIED, both needing A CORRECTED BOOK -- two rounds of repair have moved four rows and cannot move these
+  two, ***BECAUSE THE MISSING THING IS NOT WORK BUT DATA.*** ***DE'S OWN FRAMING, AND THE FIRST TIME THE RULE HAS
+  CAUGHT THINGS PROSPECTIVELY: THE TWO DE 165 ITEMS WERE ALREADY LANDED AND VERIFYING THEM FROM THE ENTRY POINT
+  "EACH FOUND A HOLE RULE 33 PREDICTED" -- AND BOTH HOLES WERE AT THE THIRD DRIVE, REFUSE A PARTIAL INPUT***, pass
+  and fail being already green in each case. Hole one, `de_section81_arms`, the fifth exposed consumer whose
+  published output IS an exclusion count: DE 166 closed the LOOKUP and left the DETECTOR matching on whatever it
+  happened to find, ***"`any` asks 'is at least one entry per-row'; the question is 'is EVERY entry the same
+  shape'"*** -- and the two partial inputs failed in the two worst ways, **MIXED giving `TypeError: 'float' object is
+  not subscriptable`, A CRASH AND NOT A NAMED REFUSAL, and dicts carrying no `gen` read as PER_GENERATION and
+  reporting "3 of 3 dropped", A SILENT BOGUS EXCLUSION FRACTION.** Hole two: REV 115's residuals re-driven **FROM THE
+  ENTRY POINT with the PRODUCER mutated rather than `write_ledger` fed hand-built dicts**, 500 null_values against
+  500 settlement draws -- *testing the writer proves the writer; the claim was about the day.* ***REV 131's FINDING
+  AGAINST DA'S OWN FIX IS SHARPER THAN THE QUESTION I WAS GIVEN: THE ANSWER IS NEITHER "EVERY WORKTREE IS GENUINELY
+  DIRTY" NOR "THE FUNCTION IS BROKEN" -- THE NEW `committed_state` CELL IS A FUNCTION OF THE LAUNCH DIRECTORY***, its
+  positive control asserting `committed_state(Path(__file__).resolve())` where `__file__` is inside `AUDIT_ROOT` ONLY
+  from the ledger tree: same bytes, **`SELFTEST OK 23/0 rc 0` from `/home/yuqing/ctaNew` and `SELFTEST FAILED 23
+  checks 1 failure rc 1` from `wt-rev`**, `NOT_IN_THIS_TREE` for wt-rev, wt-be and wt-de alike. ***EVERY SEAT RUNS
+  FROM A WORKTREE BY PROTOCOL, SO A GENUINE DEFECT AND "YOU RAN FROM A WORKTREE" GIVE THE IDENTICAL RED -- THE SAME
+  CLASS THE ROUND WAS FIXING***, DA having just repaired a bool that collapsed absence into "uncommitted"; one-line
+  repair, name `AUDIT_ROOT`. REV also VERIFIES the horizon cell (20/0, three monkeypatched clocks giving an IDENTICAL
+  asserted reading while the live reading moves, still red on costs x5.0) with **TWO RESIDUALS, both rule 16: the
+  clauses billed as "the arithmetic, which no clock can move" CANNOT FAIL** -- `(margin >= 0) == before` true by
+  construction, only an 18-second rounding band reachable -- **and the pinned anchor COSTS SENSITIVITY at 4.719x,
+  43,320 s/day against the measured 9,180.5, SO ANY REGRESSION UNDER 372 % IS INVISIBLE.** And REV **refutes the
+  flake premise at the code independently of DA**: `git status --porcelain -- <path>` is PATH-SCOPED, no other seat's
+  timing enters -- **two seats, two methods, one answer.** Flags 2622 -> 2634, prov 2167 -> 2179; window 3/3, Batch
+  290 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
+```

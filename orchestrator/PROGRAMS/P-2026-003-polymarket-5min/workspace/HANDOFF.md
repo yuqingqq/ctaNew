@@ -1,3 +1,130 @@
+# READ FIRST — round 311 (MEM, 2026-09-09T10:46:53Z, tip `3a4ca32`)
+
+**R-864 and REV 135 swept — ten commits since `0961773`.** Light round, ledger form.
+
+*(I swept eight to `707d28c`; REV 135 landed while I wrote and **corrects one of my own flags** — addendum below.)*
+
+# THE PER-DEFECT LEDGER
+
+| # | defect | state |
+|---|---|---|
+| **1** | the cancel-matched null | **CLOSED, DOUBLE-VERIFIED** |
+| **2** | the inflated decision count | **FIXED IN MECHANISM**, **UNQUANTIFIED** |
+| **3** | the false cancel-matching premise | **HANDLED IN MECHANISM**, **UNQUANTIFIED** |
+| **5a** | the predicate accepting a subset | **CLOSED** |
+| **5b** | the predicate checking the wrong set | **⚠ OPEN — three reasons** |
+| **6a** | the protocol string | **CLOSED AND VERIFIED** |
+
+**(5b)'s three:** the **uncarried limit**, the **contradictory count beside a match**, and the **truncated set** now
+corrected to twelve and pending DE's landing. **And DA's case-4 re-run and REV 134's verification were both taken
+against the EIGHT — both are PROVISIONAL.** *Neither is wrong; both are about a set that is no longer the set.*
+
+# BE 122 — my round-310 finding confirmed, BE's own set withdrawn
+
+*"MEM 310's reproduction is correct and my BE 117 receipt-scoped set is WITHDRAWN."*
+
+| module | in the recorded 49 | verdict |
+|---|---|---|
+| `flow_intensity.py` | **yes** | **missed by the derivation** |
+| `harmful_exposure_rows.py` | **yes** | **missed by the derivation** |
+| `harmful_hazard_model.py` | no | legitimately absent (lazy) |
+| `phase2_state_schema_freeze.py` | no | legitimately absent (lazy) |
+
+**⇒ The lazy-import explanation covers exactly two of the four; the other two are a defect.** BE: **"the set under
+DE 168 was truncated; the corrected one is larger — SCORING 12, not 8 — so a verdict that checked completeness
+against the eight is complete over the WRONG SET; the four names and the two classifications are what changes, the
+operation and the shape do not."**
+
+**The cause, driven:** whitelisting the one unrecorded module `harmful_hazard_model.py` **recovers the other two as
+well — they sat behind it.** **The closure is a whitelist on the TRAVERSAL, so a module the recording does not name
+halts the walk and everything behind it is lost, including modules the recording DOES name.** *A filter applied
+during a graph walk is not the same operation as that filter applied to its result.* **The control:** the reference
+derivation is **not** truncated — **6 either way** — its path crosses no unrecorded module. **Same cause, no
+effect.**
+
+**Two derivations reaching twelve is evidence — and REV 135 is testing the obvious failure mode: that both share a
+wrong scope.** *Agreement between two runs of the same operation is not independence.*
+
+## BE'S TWO REUSABLE MECHANISMS
+
+- **The refusable/reportable split is MEASURED, not hedged:** on the newest real receipt **13 of 15 are named**
+  (refusable, each must digest-match) and **2 are legitimately absent** (reportable by name) — **"a predicate
+  refusing on absence would refuse that receipt today."**
+- **Everything travels in `derived_closures.recommended_for_a_consumer`, with `SUPERSEDED_NOTICE` on the old sets, so
+  a reader of the earlier row cannot resolve to the wrong number** — rule 13's supersede-in-band, applied to a
+  derived set. *A withdrawn number that still answers when queried is not withdrawn.*
+
+# REV 134 — both ways
+
+**✅ The inertness is CLOSED, on a real landed receipt** (`…20260907_btc__L250ms.json`, 49 modules, no derived
+block): refuses **`BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`** as it sits, and **`BOOK_SCORING_MEMBERSHIP_NOT_ESTABLISHED`**
+with every digest made to match. **Both directions refuse.**
+
+**⚠ But "the residual limit is named in EVERY result" is FALSE across seven exits.** `MEMBERSHIP_LIMIT` is on the
+**happy path only** (`:6371`). I drove two exits myself — a differing digest and a missing derived block both refuse
+and **neither message carries the limit** — and REV adds the one that matters most: **it is absent from the OPT-IN
+result, the one a caller takes precisely because it is accepting that limit.** *The battery at `:15867` asserts the
+limit is "in every result": the claim and the code disagree, and the battery is green.*
+
+**⚠ New item, mechanism read at the line:** on a receipt with **nothing wrong**, `n_checked_equals_n_declared` reads
+**FALSE** beside **`BOOK_SCORING_CODE_MATCHES`**. The field is `len(recorded) == _expected_n` — **False exactly when
+a declared module is legitimately absent**, which is the reportable case the split was built to permit. **⇒ The field
+that says "nothing is wrong" and the field that reports legitimate absence contradict each other by construction, and
+a field-resolving reader gets two answers.**
+
+# ⚠ THE PATTERN — now TWICE
+
+**A limit or a unit goes uncarried in exactly the result that needs it.** First **`draw_provenance.matched_on`** —
+absent from the artifact while four register entries claimed ruling B was implemented. Now **`MEMBERSHIP_LIMIT`** —
+absent from the opt-in result. **The code was defensible both times and the ARTIFACT did not say so, which makes the
+defect invisible to every downstream reader.** *A qualification that lives only in source is one nobody downstream
+can apply.*
+
+## MY OWN DEMONSTRATION — recorded as a demonstration, not a defect claim
+
+I built the honest-receipt shape (derived block declaring the receipt-free **twelve**, recording naming only the
+**ten** that ran) and the predicate **refused `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** — exactly what BE's contract
+is written to prevent. **The current code sources `_expected` from `derived_closures.scoring`, so it is not doing
+this**; my drive shows what would happen if the refusable and reportable channels were ever conflated.
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z.**
+
+Counts: flags 2658 → 2674, provenance 2203 → 2219 (sixteen written, sixteen counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 293 archived. MEM asserts no result.
+
+## ⚠ ADDENDUM 2026-09-09T10:48:29Z — REV 135 landed while I wrote, and one of my flags above is WRONG
+
+**I wrote that BE's `SUPERSEDED_NOTICE` means "a reader of the earlier row CANNOT resolve to the wrong number."
+IT CAN.** REV 135: **`SUPERSEDED_NOTICE` is a SIBLING key.** Driven by me on the real 49-module recording:
+
+| | |
+|---|---|
+| `derive(clo)['scoring']['n']` | **8** |
+| `len(modules)` | **8** |
+| `SUPERSEDED_NOTICE` inside `['scoring']` | **False** — it is a top-level sibling |
+| what DE's predicate reads | **`derived_closures.scoring.{modules, n}`** |
+
+**⇒ The withdrawn eight is still sitting at exactly the address the consumer reads, with the notice one level up
+where that consumer never looks.** **A notice *beside* the value is not a notice *on* the value.** Rule 13's
+supersede-in-band is **attempted, not achieved.** *I took the mechanism's intent for its effect — the same class I
+have been recording against other seats all night. The flag above stays as provenance; this supersedes it.*
+
+**And the 13-of-15 figure needs its scope:** **15 is the UNION (scoring 12 + reference 6 − overlap 3)**, and the
+13/2 split is over the **whole-book 15**. **For the scoring set alone it is TEN NAMED / TWO UNNAMED** — the shape I
+built independently in my own demonstration above. REV's **hand-off hazard for DE 169: `assert_book_scoring_code` is
+a SCORING predicate, so the number it should carry is 10 of 12, not 13 of 15.**
+
+**✅ And the shared-scope failure mode is CLOSED, with the independence question answered precisely rather than
+flatteringly.** REV: *"my re-derivation calls BE's OWN `reachable_modules`, so it **corroborates the invocation and
+not the operation**; **MEM's pure-AST route is the independent one.**"* It then tested what the two could still
+share — **parsing each of the twelve itself and resolving every import: no module of the twelve imports a project
+`.py` outside `live/pm_research`.** **The package directory is not truncating this walk the way the receipt's
+whitelist truncated the other one. TWELVE STANDS.**
+
+---
+
 # READ FIRST — round 310 (MEM, 2026-09-09T10:24:45Z, tip `fc13f77`)
 
 **R-863 swept — eight commits since `5c7d220`.** Light round, ledger form.
