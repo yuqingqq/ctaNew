@@ -151,6 +151,54 @@ def population(day: str, coin: str = COIN) -> dict:
             "slugs": slugs}
 
 
+#: See `be_daybook_build`'s twin. The field NAME differs -- the fragment's
+#: is `windows_excluded_binance_gap`, the reference's is
+#: `BINANCE_GAP_EXCLUDED` -- so these are two statements about two
+#: artifacts rather than one fact written twice. The predicate they both
+#: name is `harmful_exposure_rows.binance_continuity_ok`.
+BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR = 0
+BINANCE_CONTINUITY_DISCLOSURE = {
+    "filter_applied_by_this_selector": False,
+    "field_it_lands_in": "windows_excluded_binance_gap "
+                         "(harmful_exposure_rows.build_rows)",
+    "value_published": BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR,
+    "what_the_value_is": "a PROPERTY OF THIS SELECTOR, not a measurement: no "
+                         "window was excluded for a Binance gap because no "
+                         "Binance continuity test was applied",
+    "why_this_path_does_not_apply_it": "the day's population is gated "
+                                       "upstream by "
+                                       "`de_admissible_windows.supply` and "
+                                       "the blackout mask; whether Binance "
+                                       "feed continuity should ALSO gate it "
+                                       "is a population decision (rule 14)",
+    "predicate_that_would_measure_it":
+        "harmful_exposure_rows.binance_continuity_ok(t0, coin, bounds)",
+    "measured_once_NOT_recomputed_by_the_build": {
+        "day": "20260903", "coin": "btc",
+        "n_supplied_windows": 247,
+        "n_that_would_be_excluded": 3,
+        "excluded_window_starts": [1788407700, 1788424500, 1788438600],
+        "binance_gap_index": {"n_gaps": 3, "last": 1788483598.0953279},
+        "as_of_utc": "2026-09-09T08:14Z",
+        "cost_s": 409.0,
+        "SO_THE_ZERO_IS_NOT_HARMLESS_BY_COINCIDENCE": (
+            "had this path applied the same filter `select_v2_era` applies, "
+            "THREE of 09-03's 247 windows would have been excluded and the "
+            "status would read 3. The published 0 is true of what the "
+            "selector did and is NOT the measurement a reader of that field "
+            "would take it for"),
+        "why_it_is_not_recomputed_here": (
+            "409 s per day against a ~2,500 s build, because "
+            "`_bn_gap_index` is rebuilt per window. It is a DATED one-off "
+            "and deliberately not a live field; recompute it with the "
+            "predicate named above rather than trusting this number"),
+        "what_it_does_NOT_decide": "whether the day path should apply the "
+                                   "filter -- that changes the population "
+                                   "and belongs to the coordinator (rule 14)",
+    },
+}
+
+
 def selector_for(pop: dict):
     """`build_rows`' selector hook, over the day's slugs only.
 
@@ -178,8 +226,17 @@ def selector_for(pop: dict):
             f"population).")
 
     def _sel(coins, population_name):
+        # BE 114, rule 28 sweep: the second value is NOT a spare slot.
+        # `HER.build_rows` does `selected, n_bn_gap = selector(...)` and
+        # publishes it as `windows_excluded_binance_gap` -- a MEASUREMENT
+        # when `select_v2_era` produces it (`n_gap += 1` per window
+        # `binance_continuity_ok` refuses) and a selector PROPERTY here,
+        # because this path applies no Binance continuity filter at all.
+        # The zero is true of what this selector did; the disclosure that
+        # tells the two kinds of zero apart travels beside it.
         return [(s, paths[s], toks[s][0], toks[s][1], gaps.get(s, []))
-                for s in want], 0
+                for s in want], BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR
+    _sel.binance_continuity = BINANCE_CONTINUITY_DISCLOSURE
     _sel.era = era
     _sel.era_resolution = era_res
     _sel.n_gap_bearing_windows = sum(1 for s in want if gaps.get(s))
@@ -322,6 +379,21 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
         "day": day, "coin": coin,
         "fragment": {"path": str(dst), **w},
         "population": {k: v for k, v in pop.items() if k != "slugs"},
+        # BE 114, rule 28 sweep: `selector_for` COMPUTES the era resolution,
+        # the gap-bearing count and the Binance-continuity disclosure, and
+        # this receipt recorded none of them -- the producer returned the
+        # evidence and the consumer dropped it. The fragment is the book's
+        # input, so a reader of a fragment could not tell which era statused
+        # its windows.
+        "selection": {
+            "era": getattr(sel, "era", None),
+            "era_resolution": getattr(sel, "era_resolution", None),
+            "n_gap_bearing_windows": getattr(sel, "n_gap_bearing_windows",
+                                             None),
+            "binance_continuity": getattr(sel, "binance_continuity", None),
+            "windows_excluded_binance_gap_reported_by_build_rows":
+                built.get("windows_excluded_binance_gap"),
+        },
         "build": {"n_rows": len(rows), "n_windows": built.get("n_windows"),
                   "days": built.get("days"),
                   "reconciliation_failures":

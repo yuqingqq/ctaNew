@@ -595,6 +595,28 @@ def day_slugs(day: str, coin: str = COIN, *, supply: dict = None) -> list:
         import be_forward_day as FD
         import de_admissible_windows as AW
         supply = AW.supply(day, FD.present_from_ledger(day))
+    # BE 114, rule 28 SWEEP -- MY OWN, AND I ENLARGED IT LAST ROUND. The
+    # supply CARRIES the day it was built for and this function read only
+    # its `windows`. While `supply=` was a falsifier-only injection point
+    # that was theoretical; BE 113 made `day_selector` pass its own supply
+    # in PRODUCTION, and a supply for another day would have returned that
+    # day's slugs under this day's name -- silently, with every downstream
+    # count consistent and wrong. The evidence was in the argument the
+    # whole time; carrying it is the fix (rule 28: the consumer must carry
+    # the evidence or refuse on it).
+    sday = supply.get("day")
+    if sday is None:
+        raise BookRefused(
+            f"REFUSED -- SUPPLY_DOES_NOT_NAME_ITS_DAY: the supply passed for "
+            f"{day} carries no `day` field, so it cannot be checked against "
+            f"the day it is being used for. An unnameable supply is not a "
+            f"supply for this day (rule 11).")
+    if str(sday) != str(day):
+        raise BookRefused(
+            f"REFUSED -- SUPPLY_IS_FOR_A_DIFFERENT_DAY: the supply names "
+            f"{str(sday)!r} and it is being used to build {day!r}. Every "
+            f"count downstream would be internally consistent and about "
+            f"another day.")
     w = (supply.get("windows") or {}).get(coin) or []
     out = [x["slug"] for x in w]
     if not out:
@@ -602,6 +624,63 @@ def day_slugs(day: str, coin: str = COIN, *, supply: dict = None) -> list:
             f"REFUSED: no supplied {coin} windows for {day}. A book over an "
             f"empty day is not a small book, it is a different question.")
     return sorted(out)
+
+
+#: WHAT THIS SELECTOR PUTS IN `statuses["BINANCE_GAP_EXCLUDED"]` AND WHY.
+#: Rule 28's shape (BE 114): the value is true and the check behind it is
+#: not running, and nothing in the artifact said so. `select_v2_era`'s value
+#: is a MEASUREMENT (`n_gap += 1` per window `binance_continuity_ok`
+#: refuses); this path's is a PROPERTY OF THE SELECTOR -- it applies no
+#: Binance continuity filter at all, because the day's population is gated
+#: upstream by `de_admissible_windows.supply` and the blackout mask, not by
+#: Binance feed continuity. Whether the day path SHOULD apply it is a
+#: population decision and belongs to the coordinator (rule 14); this seat
+#: reports rather than decides, and the receipt now says which of the two
+#: kinds of zero a reader is holding.
+BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR = 0
+BINANCE_CONTINUITY_DISCLOSURE = {
+    "filter_applied_by_this_selector": False,
+    "value_published_in_statuses": BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR,
+    "what_the_value_is": "a PROPERTY OF THIS SELECTOR, not a measurement: "
+                         "no window was excluded for a Binance gap because "
+                         "no Binance continuity test was applied",
+    "what_it_is_NOT": "`harmful_exposure_rows.select_v2_era` publishes the "
+                      "SAME field as a measurement (`n_gap += 1` for every "
+                      "window `binance_continuity_ok` refuses). A reader "
+                      "comparing the two would be comparing a count to a "
+                      "constant",
+    "why_this_path_does_not_apply_it": "the day's population is gated "
+                                       "upstream by "
+                                       "`de_admissible_windows.supply` and "
+                                       "the blackout mask; whether Binance "
+                                       "feed continuity should ALSO gate it "
+                                       "is a population decision (rule 14)",
+    "predicate_that_would_measure_it":
+        "harmful_exposure_rows.binance_continuity_ok(t0, coin, bounds)",
+    "measured_once_NOT_recomputed_by_the_build": {
+        "day": "20260903", "coin": "btc",
+        "n_supplied_windows": 247,
+        "n_that_would_be_excluded": 3,
+        "excluded_window_starts": [1788407700, 1788424500, 1788438600],
+        "binance_gap_index": {"n_gaps": 3, "last": 1788483598.0953279},
+        "as_of_utc": "2026-09-09T08:14Z",
+        "cost_s": 409.0,
+        "SO_THE_ZERO_IS_NOT_HARMLESS_BY_COINCIDENCE": (
+            "had this path applied the same filter `select_v2_era` applies, "
+            "THREE of 09-03's 247 windows would have been excluded and the "
+            "status would read 3. The published 0 is true of what the "
+            "selector did and is NOT the measurement a reader of that field "
+            "would take it for"),
+        "why_it_is_not_recomputed_here": (
+            "409 s per day against a ~2,500 s build, because "
+            "`_bn_gap_index` is rebuilt per window. It is a DATED one-off "
+            "and deliberately not a live field; recompute it with the "
+            "predicate named above rather than trusting this number"),
+        "what_it_does_NOT_decide": "whether the day path should apply the "
+                                   "filter -- that changes the population "
+                                   "and belongs to the coordinator (rule 14)",
+    },
+}
 
 
 def mask_block(sup: dict, day: str, coin: str, n_wanted: int) -> dict:
@@ -627,12 +706,33 @@ def mask_block(sup: dict, day: str, coin: str, n_wanted: int) -> dict:
     only, because there exactly one supplied window produced no valued
     fill. It is a property of the replay, not of the day, and it is not a
     window count."""
+    if str((sup or {}).get("day")) != str(day):
+        raise BookRefused(
+            f"REFUSED -- MASK_SUPPLY_IS_FOR_A_DIFFERENT_DAY: the supply "
+            f"names {(sup or {}).get('day')!r} and the mask block is being "
+            f"built for {day!r}. The mask's identity and the day's "
+            f"denominator would come from different days.")
     c = ((sup.get("counts") or {}).get(coin)) or {}
     n_present = c.get("n_present")
     n_masked = c.get("n_masked_applied")
     n_supplied = c.get("n_supplied")
     closes = (None if None in (n_present, n_masked, n_supplied)
               else n_present - n_masked == n_supplied == n_wanted)
+    # BE 114, rule 28 SWEEP -- MINE, ADDED LAST ROUND. This read
+    # `if closes is False: raise`, so a supply MISSING the coin's counts
+    # gave `closes = None` and the block was emitted with three nulls and
+    # `arithmetic_closes: null` -- the check switched off by the very
+    # absence it exists to catch, and indistinguishable in the receipt from
+    # a mask that was never applied. Absence must never read as a pass
+    # (rule 11).
+    if closes is None:
+        raise BookRefused(
+            f"REFUSED -- MASK_COUNTS_ABSENT for {day}/{coin}: the supply "
+            f"carries present={n_present!r}, masked={n_masked!r}, "
+            f"supplied={n_supplied!r}. A denominator that cannot be checked "
+            f"is not a checked denominator, and emitting it as nulls beside "
+            f"`arithmetic_closes: null` would publish an unverified "
+            f"population as a verified one.")
     if closes is False:
         raise BookRefused(
             f"REFUSED -- MASK_ARITHMETIC_DOES_NOT_CLOSE for {day}/{coin}: "
@@ -722,7 +822,20 @@ def day_selector(day: str, coin: str = COIN):
     def _sel(coins, population):
         out = [(s, paths[s], toks[s][0], toks[s][1], gaps.get(s, []))
                for s in sorted(want)]
-        return out, 0
+        # THE SECOND RETURN VALUE IS NOT A SPARE SLOT (BE 114, rule 28
+        # sweep). `de_phase4_diag_runner.build_reference` does
+        #   selected, n_bn_gap = selector((coin,), population)
+        #   ... "BINANCE_GAP_EXCLUDED": n_bn_gap
+        # so it lands in the reference's STATUSES and in every receipt.
+        # `HER.select_v2_era` MEASURES it -- `n_gap += 1` each time
+        # `binance_continuity_ok` refuses a window. This selector applies
+        # NO such filter, so the honest value is zero; but a literal zero in
+        # that field reads to any consumer as "the check ran and excluded
+        # none", which is a different fact from "the check never ran". The
+        # zero stays, because it is true of what this selector did, and the
+        # DISCLOSURE travels beside it in the receipt.
+        return out, BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR
+    _sel.binance_continuity = BINANCE_CONTINUITY_DISCLOSURE
     _sel.era = era
     _sel.era_resolution = era_res
     _sel.n_gap_bearing_windows = sum(1 for s in want if gaps.get(s))
@@ -1164,7 +1277,12 @@ def build(day: str, *, coin: str = COIN,
                           getattr(sel, "n_gap_bearing_windows", None),
                       # REV 114 §3: the mask is an EXCLUSION and it travels
                       # with its count. 0 of 12 receipts on disk name one.
-                      "mask": getattr(sel, "mask", None)},
+                      "mask": getattr(sel, "mask", None),
+                      # BE 114: which KIND of zero `statuses
+                      # ["BINANCE_GAP_EXCLUDED"] = 0` is, beside the status
+                      # itself -- a selector property, not a measurement.
+                      "binance_continuity":
+                          getattr(sel, "binance_continuity", None)},
         # BE 101: the value USED, its SOURCE and the dropped-tranche count,
         # all three read back from the reference's own report.
         "placement_latency": _pl,
@@ -1278,7 +1396,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 148
+EXPECTED_CHECKS = 157
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1415,7 +1533,8 @@ def selftest() -> int:
     # earlier. Both halves are fixed: the refusal is REACHED by injecting a
     # supply, and the assertion names the TYPE as well as the text.
     try:
-        day_slugs("20260903", supply={"windows": {"eth": [{"slug": "x"}]}})
+        day_slugs("20260903", supply={"day": "20260903",
+                                      "windows": {"eth": [{"slug": "x"}]}})
         ok(False, "an empty btc supply must refuse")
     except BookRefused as e:
         ok("no supplied btc windows for 20260903" in str(e),
@@ -1490,6 +1609,85 @@ def selftest() -> int:
            f"and the default not used -- so a reader can see which book they "
            f"are holding without diffing code")
 
+    # ---- BE 114: THE RULE 28 SWEEP'S OWN THREE FIXES, DRIVEN ----------
+    # All three are MINE and two of them I added in the round before this
+    # one. Each is a value the pipeline already had and a check that was
+    # switched off.
+    _okslug = {"day": "20260903", "windows": {COIN: [{"slug": "s-1"}]}}
+    ok(day_slugs("20260903", COIN, supply=_okslug) == ["s-1"],
+       "POSITIVE CONTROL: a supply that NAMES the day it is for is admitted "
+       "-- the guard below must let the good case through, not only refuse "
+       "the bad one (rule 16)")
+    for _sup, _needle, _why in (
+            ({"day": "20260904", "windows": {COIN: [{"slug": "s-1"}]}},
+             "SUPPLY_IS_FOR_A_DIFFERENT_DAY",
+             "a supply built for another day would have returned THAT day's "
+             "slugs under this day's name, with every downstream count "
+             "internally consistent and wrong"),
+            ({"windows": {COIN: [{"slug": "s-1"}]}},
+             "SUPPLY_DOES_NOT_NAME_ITS_DAY",
+             "and a supply that cannot say which day it is for is refused "
+             "rather than trusted -- absence is not a pass (rule 11)")):
+        try:
+            day_slugs("20260903", COIN, supply=_sup)
+            ok(False, f"{_needle} must refuse")
+        except BookRefused as e:
+            ok(_needle in str(e),
+               f"KNOWN-BAD: {_needle} -- {_why}. The supply CARRIED its day "
+               f"the whole time and this function read only its `windows`; "
+               f"BE 113 made it a production argument")
+    _mok = {"day": "20260903",
+            "counts": {COIN: {"n_present": 287, "n_masked_applied": 40,
+                              "n_supplied": 247}}, "mask_identity": {}}
+    ok(mask_block(_mok, "20260903", COIN, 247)["arithmetic_closes"] is True,
+       "POSITIVE CONTROL: a coherent supply produces a closing mask block")
+    for _sup, _needle, _why in (
+            ({"day": "20260903", "counts": {}, "mask_identity": {}},
+             "MASK_COUNTS_ABSENT",
+             "MINE, ADDED AT BE 113: the guard read `if closes is False`, so "
+             "a supply MISSING the coin's counts gave closes=None and the "
+             "block was emitted as three nulls beside `arithmetic_closes: "
+             "null` -- the check switched off by the very absence it exists "
+             "to catch"),
+            ({"day": "20260904",
+              "counts": {COIN: {"n_present": 287, "n_masked_applied": 40,
+                                "n_supplied": 247}}, "mask_identity": {}},
+             "MASK_SUPPLY_IS_FOR_A_DIFFERENT_DAY",
+             "the mask's identity and the day's denominator would come from "
+             "different days")):
+        try:
+            mask_block(_sup, "20260903", COIN, 247)
+            ok(False, f"{_needle} must refuse")
+        except BookRefused as e:
+            ok(_needle in str(e), f"KNOWN-BAD: {_needle} -- {_why}")
+    _bc = BINANCE_CONTINUITY_DISCLOSURE
+    ok(_bc["filter_applied_by_this_selector"] is False
+       and _bc["value_published_in_statuses"]
+       == BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR == 0
+       and "binance_continuity_ok" in _bc["predicate_that_would_measure_it"],
+       f"AND THE THIRD: `statuses['BINANCE_GAP_EXCLUDED']` is fed by the "
+       f"SELECTOR'S SECOND RETURN VALUE, which `select_v2_era` MEASURES "
+       f"(`n_gap += 1` per window `binance_continuity_ok` refuses) and this "
+       f"path returns as a constant 0 -- true of what the selector did, and "
+       f"indistinguishable in the receipt from a check that ran and found "
+       f"none. The zero stays and the DISCLOSURE now travels beside it, so "
+       f"a reader can tell the two kinds of zero apart. Whether the day "
+       f"path SHOULD apply the filter is a population decision (rule 14)")
+    _bm = _bc["measured_once_NOT_recomputed_by_the_build"]
+    ok(_bm["n_that_would_be_excluded"] == 3 and _bm["n_supplied_windows"] == 247
+       and _bm["as_of_utc"].startswith("2026-09-09")
+       and _bm["cost_s"] > 0
+       and "NOT_recomputed" in "".join(_bc),
+       f"AND THE ZERO IS NOT HARMLESS BY COINCIDENCE, MEASURED: "
+       f"{_bm['n_that_would_be_excluded']} of {_bm['n_supplied_windows']} of "
+       f"09-03's windows FAIL `binance_continuity_ok` "
+       f"({_bm['excluded_window_starts']}, from "
+       f"{_bm['binance_gap_index']['n_gaps']} real Binance gaps, as-of "
+       f"{_bm['as_of_utc']}, {_bm['cost_s']} s). Had this path applied the "
+       f"filter `select_v2_era` applies, the status would read 3. The "
+       f"number is a DATED one-off, labelled as such and not a live field, "
+       f"because recomputing it costs 409 s of a 2,500 s build")
+
     # ---- BE 113: THE MASK TRAVELS WITH ITS COUNT (REV 114 (2)) --------
     if not reachable:
         for _lbl in ("the mask block on the real supply",
@@ -1510,7 +1708,11 @@ def selftest() -> int:
            f"({_mb['mask_identity_hash'][:16]}…). 0 of the 12 receipts on "
            f"disk name a mask at all, so a reader of a 247-window book "
            f"could not tell 247 from 287-with-40-masked")
-        _bad = {"counts": {COIN: {"n_present": 287, "n_masked_applied": 40,
+        # BE 114: the `day` is now part of a well-formed supply, so this
+        # known-bad carries it -- otherwise the day guard fires first and
+        # this cell stops driving the ARITHMETIC refusal it is named for.
+        _bad = {"day": "20260903",
+                "counts": {COIN: {"n_present": 287, "n_masked_applied": 40,
                                   "n_supplied": 248}},
                 "mask_identity": {}, "governed": True}
         try:
@@ -2864,6 +3066,14 @@ def selftest() -> int:
     # `be_score_coverage`; its falsifier is a cell of BOTH batteries, so a
     # regression in the one implementation of the membership test fails
     # every site that depends on it.
+    _swf = _R22.shared_falsifier(
+        prog=Path(__file__).resolve().parent / "be_rule28_sweep.py")
+    ok(_swf["ok"],
+       f"AND `be_rule28_sweep.py --falsify` -> rc {_swf['rc']}, "
+       f"{_swf['summary']!r}: the census that found the three fixes above, "
+       f"with positive controls on REVIEW 116's and REVIEW 117's own shapes "
+       f"and a polarity known-bad that would otherwise invert it. "
+       f"{_swf['failed_cells'] or _swf['stderr_tail'] or ''}")
     _eff = _R22.shared_falsifier(
         prog=Path(__file__).resolve().parent / "be_era_for_day.py")
     ok(_eff["ok"],
