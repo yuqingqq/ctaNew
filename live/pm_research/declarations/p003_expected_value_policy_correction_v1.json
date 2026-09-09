@@ -1,0 +1,146 @@
+{
+  "affected_outputs": {
+    "daybook_artifacts": [
+      {
+        "book_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc__L250ms.pkl",
+        "book_sha256": "d1bfb3be3996b2a9ca2153dcb4b19673688ee30372ef77d9218ab8c731e448d5",
+        "day": "2026-09-03",
+        "receipt_path": "data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms.json",
+        "receipt_sha256": "7817132ac78f483bdeff3548006a605db3a2f719b9e861b92148453fb9a25ab6"
+      },
+      {
+        "book_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260904_btc__L250ms.pkl",
+        "book_sha256": "8010717c1b576ebaa338a94e5a7c7f273243ba748310208ff6036aacf6f0d218",
+        "day": "2026-09-04",
+        "receipt_path": "data/pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms.json",
+        "receipt_sha256": "bf7ffae5b890fbf15cd57704e6e227d613de9a17ab4f935b235b4543579c72ea"
+      },
+      {
+        "book_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260905_btc__L250ms.pkl",
+        "book_sha256": "8ee033ba3d581965dc046452802a020ed668f05b3409c9b2ac3a0a8ddfa9b29a",
+        "day": "2026-09-05",
+        "receipt_path": "data/pm_5min/derived/be_daybook_receipt_20260905_btc__L250ms.json",
+        "receipt_sha256": "9c3ccee07c99e0b61200b990f1bee271c385a3e0ac31861c79d0b298c283521d"
+      },
+      {
+        "book_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260906_btc__L250ms.pkl",
+        "book_sha256": "be3c2a579e2b3fa8d1d539fabae15b5fc384c9bf58025a0b6f284be89d485b58",
+        "day": "2026-09-06",
+        "receipt_path": "data/pm_5min/derived/be_daybook_receipt_20260906_btc__L250ms.json",
+        "receipt_sha256": "4256b2886dd77927bb5859947e47cd726c9efe783fb6e80baff22efe87f0ed45"
+      },
+      {
+        "book_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms.pkl",
+        "book_sha256": "ecc8e6323259224087093504ed9879a329ed3ff4a9ad530ce0057d7c95cce214",
+        "day": "2026-09-07",
+        "receipt_path": "data/pm_5min/derived/be_daybook_receipt_20260907_btc__L250ms.json",
+        "receipt_sha256": "653a15772982bbfb686ecbfe089c5aa9497940568281ea7253918af601364812"
+      }
+    ],
+    "no_value_was_moved_or_relabelled": true,
+    "point_estimate_artifacts": [
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260908T035014Z.json",
+        "sha256": "d5ae761d040be8520c66b6853a9225d752a7f10479c68087def34f1756b6fc1a"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260908T121128Z.json",
+        "sha256": "ab8c2bd159d9ae15589a90277967e0beb67fb05b4b8b207f6eda462b50d1919d"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260904_L250ms__20260908T044901Z.json",
+        "sha256": "411f4cbf90ebcb873d8779bcba4ad50a5a451667d9ab38cf19490e8f9c7a8c67"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260904_L250ms__20260908T121711Z.json",
+        "sha256": "36cf846d79abb01c473577a57f62cae5941fc46e21ceb9b3a8ec3aec71e6aede"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T034458Z.json",
+        "sha256": "13ce2e5d8bff04fb85dda26de65bb2ccabe8462507fa861461b6f17d83761921"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T034739Z.json",
+        "sha256": "91e2302932cf2f076d56dc7d0420ba39efa32905a8334a6d1cc5d5e2f922b7b5"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T121956Z.json",
+        "sha256": "d8ec4d3bdc4025fe6905a1148cebf60774a6cf0c67b79b021c6b671ac898d1b7"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T144544Z.json",
+        "sha256": "d8ccb6da58b1d79cd4129242e6085828c723edd3803e8e6d9d0d9368d25de456"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T145637Z.json",
+        "sha256": "6f32b9f2752ded86de853633949b1b3369c2ae6eb1108d6f2bf62545c347205f"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260906_L250ms__20260908T052519Z.json",
+        "sha256": "91b044a4f3f63a8c469d3351f295b230be077849dd12abaf0b6065bea8268946"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260906_L250ms__20260908T122206Z.json",
+        "sha256": "182af45087a6186e0a0259f2d2d351f57312d9a9ee959b8448c0b3d1cd5558fb"
+      },
+      {
+        "path": "data/pm_5min/derived/p003_de_point_estimate_day_20260907_L250ms__20260908T122617Z.json",
+        "sha256": "f1723c29575e7ecb772e6461b40c005670f92c9396368d9291b3923a9683b775"
+      }
+    ],
+    "status": "RETRACTED_AS_EVIDENCE_FOR_THE_INTENDED_EXPECTED_VALUE_POLICY",
+    "what_remains_true": "The artifacts remain immutable results of the accidental p_fill-only cancellation policy, including their accounting. Their economic values are not results for the intended expected-value policy."
+  },
+  "as_of_utc": "2026-09-09T03:03:45.624747+00:00",
+  "authority": "USER, 2026-09-09: correct and commit the policy, then adopt the new policy to update the results",
+  "corrected_result_attempt": {
+    "artifact_revision": "EV20",
+    "blocking_boundary": "The repository requires a systemd --user transient service in research.slice with the heavy lock inside the unit. This sandbox cannot connect to the user bus; bypassing the launcher would invalidate the run and is not done.",
+    "classification": "EXPLORATORY_CORRECTION_ON_CONSUMED_DAYS__NOT_VALIDATION",
+    "command": "live/pm_research/be_heavy_run.sh p003ev200903 be_daybook_build.py --day 20260903 --placement-latency-ms 250 --artifact-revision EV20",
+    "corrected_book_exists": false,
+    "corrected_book_path": "data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV20.pkl",
+    "corrected_receipt_exists": false,
+    "first_day": "2026-09-03",
+    "heavy_lock_observation": "FREE immediately before the launch attempt",
+    "launch_record": {
+      "path": "data/pm_5min/derived/be_heavy_run_record_p003ev200903.jsonl",
+      "sha256": "196d114bb176bf13fa9715f4f4f64797233648fa095bf94f2ee2c09d35e5ebe7"
+    },
+    "launcher_result": "NOT_STARTED",
+    "launcher_stderr": "Failed to connect to bus: Operation not permitted",
+    "placement_latency_ms": 250.0
+  },
+  "policy": {
+    "design": "data/pm_5min/derived/p003_de_multiday_gate1_design_v28.json",
+    "design_sha256": "07e567b08818779dc8bc96828276d7453f988e418ce6b4ed61619d747710d826",
+    "models_refit": false,
+    "params": "live/pm_research/declarations/de_multiday_gate1_params_v20.json",
+    "params_sha256": "74acc2940b056db5046c8684a48e92d247a9fd7331a17e796e9c9b91482fc89a",
+    "policy_commit": "1d309bc766936c30b87439134b42dd34a451c089",
+    "revisioned_output_commit": "1c5ae6ccaf3e10531dc6cd73cd1761635d48f4fa",
+    "score_contract": {
+      "aggregation": "maximum over decision rows within each cancellable generation",
+      "comparison": "cancel iff generation_max_score >= theta",
+      "formula": "p_fill * predicted_conditional_value",
+      "score_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+      "threshold_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS"
+    },
+    "thresholds_refit": false
+  },
+  "protocol": "P003_EXPECTED_VALUE_POLICY_CORRECTION_V1",
+  "result_update": {
+    "economic_values": "PENDING_CORRECTED_REPLAY",
+    "next_required_steps": [
+      "Run the recorded heavy command on a host with the user systemd bus available.",
+      "Run de_point_estimate_day.py against the EV20 daybook to emit a superseding point-estimate receipt.",
+      "Repeat serially for 2026-09-04 through 2026-09-07; these are exploratory corrections because the days are consumed."
+    ],
+    "why_no_numbers_are_reported": "No corrected daybook exists. Reporting the p_fill-only numbers under the expected-value policy would preserve the defect this correction closes."
+  },
+  "status": "PRIOR_RESULTS_RETRACTED__CORRECTED_REPLAY_NOT_STARTED",
+  "supersedes": null,
+  "validation_status": "No confirmatory claim. A new validation population must be later untouched complete days, declared before reading.",
+  "version": 1
+}
+
