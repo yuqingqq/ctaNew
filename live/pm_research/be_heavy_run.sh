@@ -474,12 +474,31 @@ TIP=$(git -C "$WT" rev-parse HEAD 2>/dev/null || echo UNRESOLVED)
 # must stay under that.
 MEMMAX="${BE_MEMORY_MAX:-8G}"
 MEMBASIS="${BE_MEMORY_MAX_BASIS:-the launcher default, unchanged since R-551}"
+# BE 142, USER REVIEW: THE SCOPE CLAIM IS DERIVED, NOT TYPED. The EV21
+# launches carried `BE_MEMORY_MAX_BASIS='R-837, EV20 queue only: ...'`
+# because a human typed the caller's rationale and the revision moved
+# under it -- the same class as a `_PARAMS_V20` protocol string that no
+# longer matches what it labels. The RATIFICATION's scope is a constant
+# (R-837 ratified the envelope for the EV20 queue only, expiring with it);
+# the LAUNCH's revision is read from this invocation's own arguments; and
+# whether they match is COMPUTED. A typed rationale may still be passed,
+# and is recorded verbatim, but it is no longer the only scope claim.
+REV_LAUNCHED=""
+_prev=""
+for _a in "$@"; do
+  [ "$_prev" = "--artifact-revision" ] && REV_LAUNCHED="$_a"
+  _prev="$_a"
+done
+[ -n "$REV_LAUNCHED" ] || REV_LAUNCHED="NONE_PASSED"
+RATIFIED_FOR="EV20 queue only (R-837, ratified on its recorded basis and expiring with that queue)"
+if [ "$REV_LAUNCHED" = "EV20" ]; then SCOPE_MATCH=true; else SCOPE_MATCH=false; fi
 printf '{"event":"launch","utc":"%s","unit":"%s","payload":"%s","args":"%s","tip":"%s","worktree":"%s","lock":"%s","conflict_rc":%s,"declaration":"%s","stdout_file":"%s","stdout_note":"the payload'"'"'s stdout is appended to this file AS IT RUNS; the journal keeps stderr and the manager lines. A record that lives only in a rotating journal is not a record (rule 20)."}\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$UNIT" "$TARGET" "$*" "$TIP" "$WT" "$LOCK" \
   "$LOCK_CONFLICT_RC" "$DECL" \
   "$REPO/data/pm_5min/derived/be_heavy_run_stdout_${UNIT}.log" >> "$REC"
-printf '{"event":"memory_envelope","utc":"%s","unit":"%s","MemoryMax":"%s","basis":"%s","slice_MemoryMax_bytes":%s,"caps_are_never_raised":"rule 8 / rule 20 / R-174 say a cap is never raised; this override was DISPATCHED by the coordinator at BE 104 and reaffirmed at BE 110 and wants a register amendment, which BE has flagged and not assumed."}\n' \
+printf '{"event":"memory_envelope","utc":"%s","unit":"%s","MemoryMax":"%s","basis":"%s","artifact_revision_launched":"%s","envelope_ratified_for":"%s","ratification_scope_matches_this_launch":%s,"scope_note":"the NUMBERS are unchanged and sufficient; this records that the ratification'"'"'s scope and this launch'"'"'s revision are read from different places -- the first a constant, the second THIS invocation'"'"'s own arguments -- so a typed rationale can no longer be the only scope claim (BE 142, user review)","slice_MemoryMax_bytes":%s,"caps_are_never_raised":"rule 8 / rule 20 / R-174 say a cap is never raised; this override was DISPATCHED by the coordinator at BE 104 and reaffirmed at BE 110 and wants a register amendment, which BE has flagged and not assumed."}\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$UNIT" "$MEMMAX" "$MEMBASIS" \
+  "$REV_LAUNCHED" "$RATIFIED_FOR" "$SCOPE_MATCH" \
   "$(systemctl --user show research.slice -p MemoryMax --value 2>/dev/null || echo null)" >> "$REC"
 
 # (c) THE PAYLOAD'S OWN RECORD GOES TO A FILE, AT RUN TIME (BE 72 finding
