@@ -1,3 +1,92 @@
+# READ FIRST — round 313 (MEM, 2026-09-09T11:04:08Z, tip `db90183`) — **CLOSING SWEEP**
+
+**R-865 swept. All five of the user's defects are CLOSED AND VERIFIED. The programme now waits on TWO USER
+DECISIONS.** This file is written to stand on its own for someone arriving cold.
+
+# ⓪ FIVE THINGS A COLD READER MUST FIND WITHOUT ASKING
+
+### (a) NOTHING HAS BEEN BUILT
+**No heavy lock has been taken since 07:15:47Z.** Measured at 2026-09-09T11:04:08Z: **`/proc/locks` by dev:inode on
+`data/.heavy_run.lock` — NO HOLDERS**; no heavy process; last heavy-run record
+`be_heavy_run_record_p003ev200903b.jsonl` **@ 07:15:47Z**; newest in `derived/` is
+`p003_de_multiday_gate1_design_v37.json`, **a declaration**; still **twelve** landed builder receipts. **No book has
+been written.**
+
+### (b) THE BUILD IS UNAUTHORISED — and it is the USER's decision
+| | |
+|---|---|
+| cost | **five days at the EV20 wall, ~5–6 hours serial** |
+| concurrency | **ruled out on memory** (BE 106) |
+| cheap path | **does not exist** — `fr` cannot be byte-identical (the selector's fifth element feeds the replay, and the replay's output *is* `fr`) |
+| risk shape | **uneven — 09-03 alone is 160 of 266 affected windows and 77 % of the seconds**, so a surprise lands on **day one**, the cheap end to find it |
+| inputs | **all five queued days clean** on era, agreement, attachment, refusal and mask (BE 120) |
+| **why it matters** | **it is the ONLY way to quantify defects (2) and (3)** |
+
+*No recommendation from this seat.*
+
+### (c) THE MATCHING UNIT IS OPEN WITH THE USER
+**Ruling B — the control samples CANCELS — was recommended on the premise that a generation yields at most one
+cancel. That premise is FALSE:** production repost cancels one **reference** generation twice (`7`, `7.r1`), while
+the invariant that "proved" it passed **because it checks POLICY-generation ids**. **The coordinator does not
+re-rule it, "having been wrong once on its own framing."**
+
+### (d) THE SEAL — de-prioritised by user ruling, **OWED BEFORE ANY FUTURE SEALED RACE**
+`ECONOMIC_FIELDS` names **none** of the six ruled-endpoint fields. No live sealed race, every arm result retracted,
+nothing decided on a sealed artifact — **so the cost is prospective. The debt is dated, not cancelled.**
+
+### (e) THE ~30 OLDER PHRASE ASSERTIONS — a **named follow-on**, deliberately not dispatched
+*Expanding scope is exactly what the user's "fix the issues first" ruling corrected.*
+
+---
+
+# THE LEDGER — FINAL
+
+| # | defect | state |
+|---|---|---|
+| **1** | the unreachable cancel-matched null | **CLOSED AND DOUBLE-VERIFIED** — *"which null runs is now unfalsifiable by omission"* |
+| **2** | the inflated decision count | **FIXED IN MECHANISM** — real factor **UNQUANTIFIED, needs a corrected book** |
+| **3** | the false cancel-matching premise | **FIXED IN MECHANISM** — real double-cancel rate **UNQUANTIFIED, needs a corrected book** |
+| **5a** | the predicate accepting a subset | **CLOSED** |
+| **5b** | the predicate checking the wrong set | **CLOSED AND VERIFIED** — after re-opening **twice** |
+| **6a** | the protocol string | **CLOSED AND VERIFIED** — by a red DA refused to silence |
+
+**The two exceptions are the same exception.** Rows (2) and (3) are unquantified for **one** reason. **⇒ The
+programme is not waiting on engineering; it is waiting on a decision.**
+
+**(5b)'s two re-openings stay in the record because they are the evidence, not a blemish on it:** the fallback
+asserting **`mods ⊆ mods`** while **0 of 12** landed receipts carried a derived block (inert on every real
+artifact), then **the derived set itself truncated, 8 against 12.** *A row that closed on the first attempt would
+have closed over a check that could not fail, on a set short by four.*
+
+**Two properties make the final verdict worth more than a green:**
+- **The limit is carried BY CONSTRUCTION, not by enumeration** — one raiser puts `MEMBERSHIP_LIMIT` in the message
+  and on the exception, **so an exit cannot be written without it** — **and REV established it by enumerating the
+  exits FROM THE CODE rather than from its own list of seven** (four raise sites, three codes, two returns; third
+  code reached with an empty root; limit first key on every one, **including the opt-in**).
+- **The contradictory count field was replaced by an invariant that DISCRIMINATES, not deleted to end a
+  contradiction** — `membership_complete` **True** on a complete receipt, **False on the real one**, and the False
+  case **explicitly not a match**. *The named risk, tested for rather than assumed away.*
+
+---
+
+# ✅ THE LINE THAT IS THE WHOLE NIGHT
+
+***Every defect — the seats' eight and the user's five — was found BEFORE a single book was written. Nothing is
+contaminated.*** **Thirteen defects, several of which would have invalidated a result, and the cost of every one is a
+re-run that has not happened rather than a retraction that has.**
+
+## ONE PRECISION KEPT AT THE CLOSE
+
+**DA's case-4 re-run had NOT landed at my read** — last DA filing `Q-DA-380`, no commit since `db90183`. **The five
+close on REV 136's full independent drive from the entry point; DA's would be a second verifier.** *Recorded so a
+cold reader counting verifiers gets the right number.*
+
+Counts: flags 2691 → 2703, provenance 2236 → 2248 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 295 archived. **State is complete and the programme waits on the user.** MEM
+asserts no result.
+
+---
+
 # READ FIRST — round 312 (MEM, 2026-09-09T10:57:58Z, tip `126381e`)
 
 **R-864, REV 135, DE 169, BE 123 and REV 136 swept — five commits since `1374681`.** Light round, ledger form.

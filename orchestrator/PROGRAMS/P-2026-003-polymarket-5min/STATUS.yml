@@ -67,6 +67,47 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T11:04:08Z (MEM ROUND 313 -- R-865 SWEPT. ***CLOSING SWEEP: ALL FIVE OF THE USER'S DEFECTS ARE CLOSED AND
+  VERIFIED AND THE PROGRAMME NOW WAITS ON TWO USER DECISIONS.*** REV 136: *"Both verify, on every drive. This closes
+  the last of the user's five."* ***THE LEDGER, FINAL, AS A CLOSED LIST WITH TWO NAMED EXCEPTIONS: (1) THE
+  UNREACHABLE CANCEL-MATCHED NULL -- CLOSED AND DOUBLE-VERIFIED, and stronger than a flip, "WHICH NULL RUNS IS NOW
+  UNFALSIFIABLE BY OMISSION"; (2) THE INFLATED DECISION COUNT -- FIXED IN MECHANISM, REAL FACTOR UNQUANTIFIED, NEEDS
+  A CORRECTED BOOK; (3) THE FALSE CANCEL-MATCHING PREMISE -- FIXED IN MECHANISM, REAL DOUBLE-CANCEL RATE
+  UNQUANTIFIED, NEEDS A CORRECTED BOOK; (5a) THE PREDICATE ACCEPTING A SUBSET -- CLOSED; (5b) THE PREDICATE CHECKING
+  THE WRONG SET -- CLOSED AND VERIFIED AFTER RE-OPENING TWICE; (6a) THE PROTOCOL STRING -- CLOSED AND VERIFIED, BY A
+  RED DA DELIBERATELY REFUSED TO SILENCE.*** **The two exceptions are THE SAME exception** -- rows (2) and (3) are
+  unquantified for one reason, they need a corrected book and none exists -- ***SO THE PROGRAMME IS NOT WAITING ON
+  ENGINEERING; IT IS WAITING ON A DECISION.*** **(5b)'s two re-openings stay in the record because they are the
+  evidence and not a blemish on it: the fallback asserting `mods ⊆ mods` while 0 of 12 landed receipts carried a
+  derived block (INERT on every real artifact), then the DERIVED SET ITSELF TRUNCATED EIGHT AGAINST TWELVE** -- *a
+  row that closed on the first attempt would have closed over a check that could not fail, on a set short by four.*
+  Two properties make the final verdict worth more than a green: ***THE LIMIT IS CARRIED BY CONSTRUCTION RATHER THAN
+  BY ENUMERATION -- one raiser puts `MEMBERSHIP_LIMIT` in the message and on the exception, SO AN EXIT CANNOT BE
+  WRITTEN WITHOUT IT -- AND REV ESTABLISHED IT BY ENUMERATING THE EXITS FROM THE CODE RATHER THAN FROM ITS OWN LIST
+  OF SEVEN, RULE 32 APPLIED TO ITS OWN PRIOR WORK*** (four `_refuse_scoring` sites, THREE codes, TWO returns, the
+  third code reached with an EMPTY ROOT, the limit FIRST KEY on every one INCLUDING THE OPT-IN); and ***THE
+  CONTRADICTORY COUNT FIELD WAS REPLACED BY AN INVARIANT THAT DISCRIMINATES, NOT DELETED TO END A CONTRADICTION***
+  -- `membership_complete` TRUE on a complete receipt, FALSE on the real one, **the False case EXPLICITLY NOT A
+  MATCH** -- *the named risk, tested for rather than assumed away.* ***THE STATE FILES NOW STAND ON THEIR OWN:
+  `HANDOFF.md` leads with the FIVE THINGS A COLD READER MUST FIND WITHOUT ASKING, IN ORDER -- (a) NOTHING HAS BEEN
+  BUILT, no heavy lock since 07:15:47Z, WHICH I MEASURED AT THE CLOSE (no holders in `/proc/locks`, no heavy process,
+  newest in `derived/` a DECLARATION, still TWELVE landed builder receipts); (b) THE BUILD IS UNAUTHORISED AND IS THE
+  USER'S DECISION -- five days at the EV20 wall, ~5-6 hours serial, concurrency RULED OUT ON MEMORY, `fr` CANNOT BE
+  BYTE-IDENTICAL so there is NO CHEAP PATH, the gap load UNEVEN with 09-03 carrying 160 OF 266 WINDOWS AND 77 % OF
+  THE SECONDS so a surprise lands on DAY ONE, all five queued days CLEAN on era/agreement/attachment/refusal/mask,
+  AND IT IS THE ONLY WAY TO QUANTIFY DEFECTS (2) AND (3); (c) THE MATCHING UNIT IS OPEN WITH THE USER -- ruling B was
+  recommended on a premise that proved FALSE, production repost cancelling one REFERENCE generation twice while the
+  invariant checks POLICY-generation ids, AND THE COORDINATOR DOES NOT RE-RULE IT "having been wrong once on its own
+  framing"; (d) THE SEAL is DE-PRIORITISED BY USER RULING and OWED BEFORE ANY FUTURE SEALED RACE, the debt DATED and
+  not cancelled; (e) THE ~30 OLDER PHRASE ASSERTIONS are a NAMED FOLLOW-ON, DELIBERATELY NOT DISPATCHED, because
+  expanding scope is what the user's fix-the-issues-first ruling corrected.*** ***AND ONE LINE THAT IS THE WHOLE
+  NIGHT: EVERY DEFECT -- THE SEATS' EIGHT AND THE USER'S FIVE -- WAS FOUND BEFORE A SINGLE BOOK WAS WRITTEN. NOTHING
+  IS CONTAMINATED.*** Thirteen defects, several of which would have invalidated a result, **and the cost of every one
+  is a re-run that has not happened rather than a retraction that has.** One precision kept rather than smoothed
+  over: **DA's case-4 re-run HAD NOT LANDED at my read** (last DA filing `Q-DA-380`, no commit since `db90183`), so
+  **the five close on REV 136's full independent drive from the entry point and DA's would be a SECOND verifier.**
+  Flags 2691 -> 2703, prov 2236 -> 2248; window 3/3, Batch 295 archived. **STATE IS COMPLETE AND THE PROGRAMME WAITS
+  ON THE USER.** MEM asserts no result.)
   2026-09-09T10:57:58Z (MEM ROUND 312 -- R-864, REV 135, DE 169 and BE 123 SWEPT, LIGHT ROUND, from `1374681` to `126381e`,
   four commits. STATE ONLY, LEDGER FORM. ***BOTH REMAINING SUB-ITEMS OF (5b) HAVE LANDED AND BOTH ARE PENDING
   VERIFICATION, NOT CLOSED*** -- REV 136 and DA's case-4 re-run are the verifications and neither had landed at my
@@ -158,58 +199,6 @@ updated: >-
   else unchanged: **(1) CLOSED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both
   needing a corrected book; (5a) CLOSED; (6a) CLOSED AND VERIFIED.** Flags 2658 -> 2674, prov 2203 -> 2219; window
   3/3, Batch 293 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
-  2026-09-09T10:24:45Z (MEM ROUND 310 -- R-863 SWEPT, LIGHT ROUND, from `5c7d220` to `fc13f77`, eight commits. STATE ONLY,
-  PER-DEFECT LEDGER FORM. ***THE ONE SUBSTANTIVE ADDITION IS BE 121's ANSWER, AND IT RESOLVES LAST ROUND'S OPEN
-  PROPERTY INTO A BOUNDED CONTRACT RATHER THAN ADDING A FINDING.*** REV 132 and DA 156 established that *the artifact
-  under examination names its own examination scope*; **BE 121 answers the other half -- YES, A CONSUMER CAN
-  RECOMPUTE THE EXPECTED SET AT CHECK TIME**: `be_producing_closure.expected_set_from_disk` runs the same operation,
-  transitive reference from the producing function, **against THE CODE ON DISK with no closure to restrict it**, and
-  I drove it myself -- ***TWELVE modules of the 268 in the root, 0.61 s, pure AST, NO IMPORT AND NO EXECUTION.***
-  ***BUT STATIC REACHABILITY OVER-APPROXIMATES THE RUN, WHICH I ALSO DROVE***: `harmful_hazard_model.py` and
-  `phase2_state_schema_freeze.py` are reached from `phase2_arms` only through **LAZY function-local imports (`:57`,
-  `:515`, `:766`, `:768`, `:1851`)**, and importing `phase2_arms` pulls in ***NEITHER -- both measured False*** -- so
-  both are **LEGITIMATELY ABSENT from an honest build's recording because those branches did not run.** ***THEREFORE
-  THE DELTA MUST BE REPORTED AND NEVER REFUSED ON -- REFUSING WOULD REFUSE HONEST RECEIPTS***, and the programme now
-  has both failure directions named in one place: **a guard too narrow passes silently, a guard too wide refuses the
-  truth.** ***THE DEFENSIBLE USE, ADOPTED VERBATIM AS DE'S CONTRACT: THE RECEIPT-FREE SET IS AN UPPER BOUND ON SCOPE
-  -- every module in it AND named by the receipt must DIGEST-MATCH (refusable), every module in it the receipt DOES
-  NOT NAME is REPORTED BY NAME, WHICH TURNS UNDER-DECLARATION FROM INVISIBLE INTO VISIBLE.*** The omission still
-  cannot be REFUSED, only SEEN -- *"the most a consumer can have short of a rebuild"* -- and ***IT IS NOT A CLOSURE,
-  BECAUSE BE STATES ITS OWN LIMIT: "THE SCOPE STOPS DEPENDING ON THE RECEIPT; THE VALUES DO NOT. THE RECEIPT REMAINS
-  THE ONLY RECORD OF WHICH BYTES RAN"***, demonstrated by a receipt naming all 12 with each file's current digest
-  passing both halves whatever produced the book -- **the only independent check is A REBUILD**, which places the
-  remaining exposure exactly where rows (2) and (3) already sit: behind the build. ***AND THE COMPARISON IS ITSELF A
-  FINDING AGAINST BE'S OWN EARLIER WORK: THE RECEIPT-SCOPED WALK GIVES 8, THE RECEIPT-FREE WALK GIVES 12***, the four
-  missing being `flow_intensity.py`, `harmful_exposure_rows.py`, `harmful_hazard_model.py` and
-  `phase2_state_schema_freeze.py` -- ***AND TWO OF THEM ARE IN THE RECORDED 49, WHICH I CONFIRMED AT A LANDED
-  RECEIPT*** (`be_daybook_receipt_20260907_btc__L250ms.json`, 49 modules: `flow_intensity` True,
-  `harmful_exposure_rows` True, the other two False): **the whitelist stopped the walk at the two the recording does
-  not name and EVERYTHING BEHIND THEM WAS LOST**, BE's own verdict being ***"the closure restriction is a TRUNCATION,
-  not a safety property, and BE 117 published it as a virtue."*** ***SO LEDGER ROW (5b) STAYS RE-OPENED WITH TWO
-  REASONS UNDER IT, NOT ONE: (i) the fallback computes `mods ⊆ mods` and 0 of 12 landed receipts carry the derived
-  block, and (ii) THE SET THE DECLARED PATH CHECKS AGAINST IS ITSELF TRUNCATED*** -- DE 167 adopted the derived eight
-  in good faith and BE has withdrawn the virtue claim from its own derivation; **DE 168 carries both halves, and a
-  row with two live reasons is RE-OPENED, not "mostly fixed".** **REV 133 CLOSES ITS OWN REVIEW 131 RED -- 23 checks,
-  0 failures, rc 0 from BOTH `/home/yuqing/ctaNew` AND `wt-rev` -- AND "THE FIX DID NOT COST THE ASSERTION"**,
-  established by ***RE-INTRODUCING BOTH DEFECTS BY MONKEYPATCH***: the DA 154 collapse (rc != 0 read as "not
-  committed") makes the cell FAIL and the DA 155 form (always ask `AUDIT_ROOT`) makes it FAIL too, **reproducing
-  REV's own red on demand, so the cell discriminates in BOTH directions and still catches absence-read-as-a-negative
-  -- which a fix that bought determinism by weakening the assertion could not do**; REV adds honestly that **the
-  property asked about was never this cell's, the conjunct admitting CLEAN and DIRTY alike.** ***THE WHOLE LOOP IS
-  RECORDED AS ONE ITEM BECAUSE IT IS ONE THING -- THE SEAM WORKING: REV 131 found it red from every worktree -> DA
-  156 diagnosed the WRONG TREE being asked and EXPLICITLY DECLINED the rule-31 dirtiness narrative because "a
-  spotless worktree fails it identically" -> DA fixed it by SEPARATING "is this file committed" from "does THAT TREE
-  hold it committed", recording `committed_state_asked_of` -> REV 133 re-drove it from both trees. FOUR SEAT-TURNS,
-  NO SEAT DEFENDING ITS OWN WORK, AND THE ONLY PLAUSIBLE STORY REFUSED BY THE SEAT IT WOULD HAVE EXCUSED.*** DA 157's
-  housekeeping reverses its own earlier report: **the `wt-da` leftover was TWO files**, the undisclosed
-  `da_early_read_verify.py` matching blob **`8cea440` (DA 132, 09-07)**, an ancestor of HEAD -- **nothing unlanded at
-  risk, and THE EXPOSURE RAN THE OTHER WAY, since that copy predates DA 133 and has NO `settlement_statistics`: it is
-  the reader WITHOUT the primary endpoint's test.** `wt_refresh.sh` **discriminated correctly (restored the
-  identical, refused `rc 3` on the differing) with its bound named -- it compares against ONE ref**; wt-da now at
-  `5c7d220`, 0 status lines, 394/394 skip-worktree. **LEDGER OTHERWISE UNCHANGED: (1) CLOSED AND DOUBLE-VERIFIED;
-  (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both needing a corrected book; (5a) CLOSED; (6a) CLOSED AND
-  VERIFIED.** Flags 2646 -> 2658, prov 2191 -> 2203; window 3/3, Batch 292 archived. **NOTHING BUILT, NO HEAVY LOCK
-  SINCE 07:15:47Z.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -381,6 +370,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 313, R-865 swept; CLOSING SWEEP, the ledger is final (db90183 -> db90183) ---
+  THE_USERS_FIVE_ARE_CLOSED_AND_VERIFIED_AND_THE_LEDGER_IS_FINAL: R-865
+  TWO_ROWS_CARRY_A_NAMED_EXCEPTION_AND_IT_IS_THE_SAME_EXCEPTION: BOTH-NEED-A-CORRECTED-BOOK
+  FIVE_B_CLOSED_AFTER_RE_OPENING_TWICE_AND_THAT_IS_THE_RECORD_NOT_A_BLEMISH: TWO-RE-OPENINGS-TWO-CAUSES
+  THE_LIMIT_IS_CARRIED_BY_CONSTRUCTION_AND_REV_ENUMERATED_FROM_THE_CODE: FOUR-SITES-THREE-CODES-TWO-RETURNS
+  AND_THE_CONTRADICTORY_FIELD_WAS_REPLACED_BY_ONE_THAT_DISCRIMINATES_NOT_DELETED: THE-NAMED-RISK-TESTED-FOR
+  A_COLD_READER_MUST_FIND_FIVE_THINGS_WITHOUT_ASKING_AND_THEY_ARE_IN_HANDOFF_IN_ORDER: a-THROUGH-e
+  NOTHING_IS_BUILT_AND_I_MEASURED_THE_LOCK_AT_THE_CLOSE: NO-HOLDERS-TWELVE-RECEIPTS
+  THE_BUILD_IS_THE_USERS_DECISION_AND_IT_IS_THE_ONLY_WAY_TO_QUANTIFY_TWO_AND_THREE: FIVE-DAYS-NO-CHEAP-PATH
+  THE_MATCHING_UNIT_IS_OPEN_AND_THE_COORDINATOR_DOES_NOT_RE_RULE_IT: WRONG-ONCE-ON-ITS-OWN-FRAMING
+  THE_SEAL_IS_OWED_AND_THE_PHRASE_ASSERTIONS_ARE_A_NAMED_FOLLOW_ON: DATED-NOT-CANCELLED
+  EVERY_DEFECT_WAS_FOUND_BEFORE_A_SINGLE_BOOK_WAS_WRITTEN: THIRTEEN-AND-NOTHING-CONTAMINATED
+  AND_DAS_CASE_4_RE_RUN_HAD_NOT_LANDED_AT_MY_CLOSE: Q-DA-380-IS-THE-LAST
   # --- MEM round 312 ADDENDUM 2026-09-09T10:59:41Z: REV 136 landed while I wrote and verifies both ---
   REV_136_VERIFIES_BOTH_AND_ENUMERATED_THE_EXITS_FROM_THE_CODE: FOUR-SITES-THREE-CODES-TWO-RETURNS
   AND_ONE_RAISER_MAKES_THE_LIMIT_STRUCTURAL_RATHER_THAN_A_TABLE: AN-EXIT-CANNOT-BE-WRITTEN-WITHOUT-IT
@@ -27120,6 +27122,148 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 313, 2026-09-09T11:04:08Z ---
+  THE_USERS_FIVE_ARE_CLOSED_AND_VERIFIED_AND_THE_LEDGER_IS_FINAL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      ***ALL FIVE OF THE USER'S DEFECTS ARE CLOSED AND VERIFIED (R-865). REV 136: "Both verify, on every drive. This
+      closes the last of the user's five."*** **THE LEDGER IS FINAL AND READS AS A CLOSED LIST WITH TWO NAMED
+      EXCEPTIONS: (1) the unreachable cancel-matched null -- CLOSED AND DOUBLE-VERIFIED, and stronger than a flip,
+      "WHICH NULL RUNS IS NOW UNFALSIFIABLE BY OMISSION"; (2) the inflated decision count -- FIXED IN MECHANISM,
+      real factor UNQUANTIFIED, NEEDS A CORRECTED BOOK; (3) the false cancel-matching premise -- FIXED IN MECHANISM,
+      real double-cancel rate UNQUANTIFIED, NEEDS A CORRECTED BOOK; (5a) the predicate accepting a subset -- CLOSED;
+      (5b) the predicate checking the WRONG SET -- CLOSED AND VERIFIED after re-opening TWICE; (6a) the protocol
+      string -- CLOSED AND VERIFIED, by a red DA deliberately refused to silence.**
+  TWO_ROWS_CARRY_A_NAMED_EXCEPTION_AND_IT_IS_THE_SAME_EXCEPTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      ***AND THE TWO EXCEPTIONS ARE THE SAME EXCEPTION, WHICH IS WHY THE LIST IS CLOSED RATHER THAN PARTLY OPEN.***
+      Rows (2) and (3) are **fixed in mechanism and UNQUANTIFIED**, and both are unquantified for **one reason: they
+      need a CORRECTED BOOK and none exists.** *No further work by any seat can move them* -- **the rows-per-decision
+      inflation factor and the rate at which a reference generation is double-cancelled are properties of DATA
+      NOBODY HAS BUILT.** ***SO THE PROGRAMME IS NOT WAITING ON ENGINEERING; IT IS WAITING ON A DECISION.*** That is
+      the honest shape of the state and this file says it in those words.
+  FIVE_B_CLOSED_AFTER_RE_OPENING_TWICE_AND_THAT_IS_THE_RECORD_NOT_A_BLEMISH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      **(5b) is recorded as CLOSED AND VERIFIED *after re-opening TWICE*, and the two re-openings are kept in the
+      record because they are the evidence, not a blemish on it.** ***FIRST: the "fix" left a FALLBACK ASSERTING
+      `mods ⊆ mods` -- trivially true -- with 0 of 12 landed receipts carrying a derived block, so the completeness
+      check was INERT on every real artifact. SECOND: the DERIVED SET ITSELF WAS TRUNCATED, EIGHT AGAINST TWELVE***,
+      two of the four missing being modules the recording DOES name. **A row that closed on the first attempt would
+      have closed over a check that could not fail, on a set that was short by four.** *The count of re-openings is
+      the measure of how close a green came to standing.*
+  THE_LIMIT_IS_CARRIED_BY_CONSTRUCTION_AND_REV_ENUMERATED_FROM_THE_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      **The first of the two properties that make the final verdict worth more than a green: THE LIMIT IS CARRIED BY
+      CONSTRUCTION RATHER THAN BY ENUMERATION** -- **every refusal goes through ONE raiser that puts
+      `MEMBERSHIP_LIMIT` in the message and on the exception, so AN EXIT CANNOT BE WRITTEN WITHOUT IT.** ***AND REV
+      ESTABLISHED IT BY ENUMERATING THE EXITS FROM THE CODE RATHER THAN FROM ITS OWN EARLIER LIST OF SEVEN -- RULE 32
+      APPLIED TO ITS OWN PRIOR WORK***: four `_refuse_scoring` sites carrying THREE distinct codes plus TWO returns,
+      all driven, **the third code reached by giving the predicate an EMPTY ROOT**, and the limit present on every
+      one **AS THE FIRST KEY, INCLUDING THE OPT-IN RESULT.**
+  AND_THE_CONTRADICTORY_FIELD_WAS_REPLACED_BY_ONE_THAT_DISCRIMINATES_NOT_DELETED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      **The second property, and it is the one the round was most at risk of getting wrong: THE CONTRADICTORY COUNT
+      FIELD WAS REPLACED BY AN INVARIANT THAT DISCRIMINATES, NOT DELETED TO END A CONTRADICTION.**
+      `membership_complete` is **TRUE on a complete receipt and FALSE ON THE REAL ONE, and the False case is
+      EXPLICITLY NOT A MATCH.** ***THAT WAS THE NAMED RISK -- "A CONTRADICTION RESOLVED BY DELETING THE CONTRADICTING
+      FIELD IS NOT A FIX" -- AND IT WAS TESTED FOR RATHER THAN ASSUMED AWAY.*** The set resolves to **BE 122's
+      receipt-free TWELVE, matching it exactly**, and BE's claim that removal would have been unsafe was **confirmed
+      by driving it**: a reader of the old key gets **ONE NON-RESOLVING FORWARDING ENTRY on all three consumer
+      shapes, so a checker REFUSES INSTEAD OF PROCEEDING.**
+  A_COLD_READER_MUST_FIND_FIVE_THINGS_WITHOUT_ASKING_AND_THEY_ARE_IN_HANDOFF_IN_ORDER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      ***THIS IS A CLOSING SWEEP, SO THE STATE FILES NOW STAND ON THEIR OWN FOR SOMEONE ARRIVING COLD.***
+      `HANDOFF.md` leads with **FIVE THINGS A COLD READER MUST FIND WITHOUT ASKING, IN THIS ORDER: (a) NOTHING HAS
+      BEEN BUILT and no heavy lock since 07:15:47Z; (b) THE BUILD IS UNAUTHORISED and is the USER's decision, with
+      its full price and its uneven risk; (c) THE MATCHING UNIT IS OPEN WITH THE USER; (d) THE SEAL is
+      de-prioritised by ruling and OWED BEFORE ANY FUTURE SEALED RACE; (e) the ~30 older phrase assertions are a
+      NAMED FOLLOW-ON, deliberately not dispatched.** *A state file that requires a conversation to interpret is not
+      state; the ordering is deliberate, because (a) is what makes every other line safe to read.*
+  NOTHING_IS_BUILT_AND_I_MEASURED_THE_LOCK_AT_THE_CLOSE:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      **Measured by me at the close, 2026-09-09T11:04:08Z, not carried from an earlier round:** ***`/proc/locks` matched by
+      dev:inode on `data/.heavy_run.lock` -- NO HOLDERS***; **no heavy process in the table**; **the last heavy-run
+      record is `be_heavy_run_record_p003ev200903b.jsonl` at 07:15:47Z**; the newest thing in `derived/` is
+      **`p003_de_multiday_gate1_design_v37.json`, a DECLARATION**; and there are still **TWELVE landed builder
+      receipts** -- the same twelve as three rounds ago. ***NO BOOK HAS BEEN WRITTEN.***
+  THE_BUILD_IS_THE_USERS_DECISION_AND_IT_IS_THE_ONLY_WAY_TO_QUANTIFY_TWO_AND_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      ***THE BUILD IS UNAUTHORISED AND IS THE USER'S DECISION, WITH ITS PRICE AND ITS RISK BOTH RECORDED SO THE
+      DECISION NEEDS NO FURTHER LOOKUP.*** **Five days at the EV20 wall, ~5-6 HOURS SERIAL, concurrency RULED OUT ON
+      MEMORY (BE 106); `fr` CANNOT BE BYTE-IDENTICAL -- the selector's fifth element feeds the replay and the
+      replay's output IS `fr` -- SO THE CHEAP PATH DOES NOT EXIST; the gap load is UNEVEN, 09-03 alone carrying 160
+      OF 266 AFFECTED WINDOWS AND 77 % OF THE SECONDS, SO A SURPRISE LANDS ON DAY ONE, the cheap end to find it; and
+      ALL FIVE QUEUED DAYS ARE CLEAN on era, agreement, attachment, refusal and mask (BE 120).*** ***IT IS THE ONLY
+      WAY TO QUANTIFY DEFECTS (2) AND (3).*** No recommendation from this seat.
+  THE_MATCHING_UNIT_IS_OPEN_AND_THE_COORDINATOR_DOES_NOT_RE_RULE_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      ***THE MATCHING UNIT IS OPEN WITH THE USER.*** **Ruling B -- the control samples CANCELS -- was recommended on
+      the premise that a generation yields at most one cancel, AND THAT PREMISE WAS FALSE: production repost cancels
+      one REFERENCE generation twice (`7`, `7.r1`), while the invariant that "proved" it passed because IT CHECKS
+      POLICY-GENERATION IDS.** ***AND THE COORDINATOR EXPLICITLY DOES NOT RE-RULE IT, "HAVING BEEN WRONG ONCE ON ITS
+      OWN FRAMING."*** *A ruling obtained on a premise that does not hold is re-opened WHERE IT WAS DECIDED, not
+      patched where it was implemented* -- rule 14's boundary applied to the coordinator rather than to a worker,
+      which is the harder direction to apply it in.
+  THE_SEAL_IS_OWED_AND_THE_PHRASE_ASSERTIONS_ARE_A_NAMED_FOLLOW_ON:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      **Two items that are neither closed nor forgotten, recorded so a cold reader does not mistake silence for
+      absence.** **(d) THE SEAL: `ECONOMIC_FIELDS` names none of the six ruled-endpoint fields -- confirmed, and
+      DE-PRIORITISED BY USER RULING, OWED BEFORE ANY FUTURE SEALED RACE**, on the reasoning that there is no live
+      sealed race, every arm result is retracted and nothing currently decided rests on a sealed artifact, ***SO THE
+      COST IS PROSPECTIVE. THE DEBT IS DATED, NOT CANCELLED.*** **(e) THE ~30 OLDER PHRASE ASSERTIONS DE found in the
+      runner remain A NAMED FOLLOW-ON, DELIBERATELY NOT DISPATCHED**, because the user ruled *fix the issues first*
+      and **expanding scope is exactly what that ruling corrected.**
+  EVERY_DEFECT_WAS_FOUND_BEFORE_A_SINGLE_BOOK_WAS_WRITTEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      ***AND ONE LINE THAT IS THE WHOLE NIGHT: EVERY DEFECT -- THE SEATS' EIGHT AND THE USER'S FIVE -- WAS FOUND
+      BEFORE A SINGLE BOOK WAS WRITTEN. NOTHING IS CONTAMINATED.*** **Thirteen defects, several of which would have
+      invalidated a result, and the cost of every one of them is a re-run that has not happened rather than a
+      retraction that has.** *This is what the USER's "we clear issues first" ruling bought*, and it is the reason
+      the ledger above can carry the words CLOSED AND VERIFIED at all: **there is no artifact standing behind any of
+      them that would have to be withdrawn.**
+  AND_DAS_CASE_4_RE_RUN_HAD_NOT_LANDED_AT_MY_CLOSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:04:08Z
+    said: >-
+      **One precision kept at the close rather than smoothed over: DA's case-4 re-run HAD NOT LANDED AT MY READ** --
+      the last DA filing in the register is **`Q-DA-380`** and no commit since `db90183`. **The five are closed on
+      REV 136's verification, which is a full independent drive from the entry point; DA's re-run would be a second
+      verifier, and it is outstanding.** *This changes no ledger word -- the coordinator sets those -- and it is
+      recorded because **a cold reader counting verifiers should get the right number**, and because this seat has
+      spent the night insisting that one seat's report of its own work is the weakest evidence in the file.*
   # --- MEM round 312 ADDENDUM, 2026-09-09T10:59:41Z ---
   REV_136_VERIFIES_BOTH_AND_ENUMERATED_THE_EXITS_FROM_THE_CODE:
     prov: CHECKED

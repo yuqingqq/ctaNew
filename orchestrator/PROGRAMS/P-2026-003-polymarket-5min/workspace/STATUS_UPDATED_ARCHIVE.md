@@ -21610,3 +21610,60 @@ generation and the window went 4 → 3. Nothing rewritten.
   (5a) FIXED.** Flags 2634 -> 2646, prov 2179 -> 2191; window 3/3, Batch 291 archived. **NOTHING BUILT, NO HEAVY
   LOCK SINCE 07:15:47Z.** MEM asserts no result.)
 ```
+
+## Batch 295 — archived 2026-09-09T11:04:08Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T10:24:45Z (MEM ROUND 310 -- R-863 SWEPT, LIGHT ROUND, from `5c7d220` to `fc13f77`, eight commits. STATE ONLY,
+  PER-DEFECT LEDGER FORM. ***THE ONE SUBSTANTIVE ADDITION IS BE 121's ANSWER, AND IT RESOLVES LAST ROUND'S OPEN
+  PROPERTY INTO A BOUNDED CONTRACT RATHER THAN ADDING A FINDING.*** REV 132 and DA 156 established that *the artifact
+  under examination names its own examination scope*; **BE 121 answers the other half -- YES, A CONSUMER CAN
+  RECOMPUTE THE EXPECTED SET AT CHECK TIME**: `be_producing_closure.expected_set_from_disk` runs the same operation,
+  transitive reference from the producing function, **against THE CODE ON DISK with no closure to restrict it**, and
+  I drove it myself -- ***TWELVE modules of the 268 in the root, 0.61 s, pure AST, NO IMPORT AND NO EXECUTION.***
+  ***BUT STATIC REACHABILITY OVER-APPROXIMATES THE RUN, WHICH I ALSO DROVE***: `harmful_hazard_model.py` and
+  `phase2_state_schema_freeze.py` are reached from `phase2_arms` only through **LAZY function-local imports (`:57`,
+  `:515`, `:766`, `:768`, `:1851`)**, and importing `phase2_arms` pulls in ***NEITHER -- both measured False*** -- so
+  both are **LEGITIMATELY ABSENT from an honest build's recording because those branches did not run.** ***THEREFORE
+  THE DELTA MUST BE REPORTED AND NEVER REFUSED ON -- REFUSING WOULD REFUSE HONEST RECEIPTS***, and the programme now
+  has both failure directions named in one place: **a guard too narrow passes silently, a guard too wide refuses the
+  truth.** ***THE DEFENSIBLE USE, ADOPTED VERBATIM AS DE'S CONTRACT: THE RECEIPT-FREE SET IS AN UPPER BOUND ON SCOPE
+  -- every module in it AND named by the receipt must DIGEST-MATCH (refusable), every module in it the receipt DOES
+  NOT NAME is REPORTED BY NAME, WHICH TURNS UNDER-DECLARATION FROM INVISIBLE INTO VISIBLE.*** The omission still
+  cannot be REFUSED, only SEEN -- *"the most a consumer can have short of a rebuild"* -- and ***IT IS NOT A CLOSURE,
+  BECAUSE BE STATES ITS OWN LIMIT: "THE SCOPE STOPS DEPENDING ON THE RECEIPT; THE VALUES DO NOT. THE RECEIPT REMAINS
+  THE ONLY RECORD OF WHICH BYTES RAN"***, demonstrated by a receipt naming all 12 with each file's current digest
+  passing both halves whatever produced the book -- **the only independent check is A REBUILD**, which places the
+  remaining exposure exactly where rows (2) and (3) already sit: behind the build. ***AND THE COMPARISON IS ITSELF A
+  FINDING AGAINST BE'S OWN EARLIER WORK: THE RECEIPT-SCOPED WALK GIVES 8, THE RECEIPT-FREE WALK GIVES 12***, the four
+  missing being `flow_intensity.py`, `harmful_exposure_rows.py`, `harmful_hazard_model.py` and
+  `phase2_state_schema_freeze.py` -- ***AND TWO OF THEM ARE IN THE RECORDED 49, WHICH I CONFIRMED AT A LANDED
+  RECEIPT*** (`be_daybook_receipt_20260907_btc__L250ms.json`, 49 modules: `flow_intensity` True,
+  `harmful_exposure_rows` True, the other two False): **the whitelist stopped the walk at the two the recording does
+  not name and EVERYTHING BEHIND THEM WAS LOST**, BE's own verdict being ***"the closure restriction is a TRUNCATION,
+  not a safety property, and BE 117 published it as a virtue."*** ***SO LEDGER ROW (5b) STAYS RE-OPENED WITH TWO
+  REASONS UNDER IT, NOT ONE: (i) the fallback computes `mods ⊆ mods` and 0 of 12 landed receipts carry the derived
+  block, and (ii) THE SET THE DECLARED PATH CHECKS AGAINST IS ITSELF TRUNCATED*** -- DE 167 adopted the derived eight
+  in good faith and BE has withdrawn the virtue claim from its own derivation; **DE 168 carries both halves, and a
+  row with two live reasons is RE-OPENED, not "mostly fixed".** **REV 133 CLOSES ITS OWN REVIEW 131 RED -- 23 checks,
+  0 failures, rc 0 from BOTH `/home/yuqing/ctaNew` AND `wt-rev` -- AND "THE FIX DID NOT COST THE ASSERTION"**,
+  established by ***RE-INTRODUCING BOTH DEFECTS BY MONKEYPATCH***: the DA 154 collapse (rc != 0 read as "not
+  committed") makes the cell FAIL and the DA 155 form (always ask `AUDIT_ROOT`) makes it FAIL too, **reproducing
+  REV's own red on demand, so the cell discriminates in BOTH directions and still catches absence-read-as-a-negative
+  -- which a fix that bought determinism by weakening the assertion could not do**; REV adds honestly that **the
+  property asked about was never this cell's, the conjunct admitting CLEAN and DIRTY alike.** ***THE WHOLE LOOP IS
+  RECORDED AS ONE ITEM BECAUSE IT IS ONE THING -- THE SEAM WORKING: REV 131 found it red from every worktree -> DA
+  156 diagnosed the WRONG TREE being asked and EXPLICITLY DECLINED the rule-31 dirtiness narrative because "a
+  spotless worktree fails it identically" -> DA fixed it by SEPARATING "is this file committed" from "does THAT TREE
+  hold it committed", recording `committed_state_asked_of` -> REV 133 re-drove it from both trees. FOUR SEAT-TURNS,
+  NO SEAT DEFENDING ITS OWN WORK, AND THE ONLY PLAUSIBLE STORY REFUSED BY THE SEAT IT WOULD HAVE EXCUSED.*** DA 157's
+  housekeeping reverses its own earlier report: **the `wt-da` leftover was TWO files**, the undisclosed
+  `da_early_read_verify.py` matching blob **`8cea440` (DA 132, 09-07)**, an ancestor of HEAD -- **nothing unlanded at
+  risk, and THE EXPOSURE RAN THE OTHER WAY, since that copy predates DA 133 and has NO `settlement_statistics`: it is
+  the reader WITHOUT the primary endpoint's test.** `wt_refresh.sh` **discriminated correctly (restored the
+  identical, refused `rc 3` on the differing) with its bound named -- it compares against ONE ref**; wt-da now at
+  `5c7d220`, 0 status lines, 394/394 skip-worktree. **LEDGER OTHERWISE UNCHANGED: (1) CLOSED AND DOUBLE-VERIFIED;
+  (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both needing a corrected book; (5a) CLOSED; (6a) CLOSED AND
+  VERIFIED.** Flags 2646 -> 2658, prov 2191 -> 2203; window 3/3, Batch 292 archived. **NOTHING BUILT, NO HEAVY LOCK
+  SINCE 07:15:47Z.** MEM asserts no result.)
+```
