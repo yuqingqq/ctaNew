@@ -109,6 +109,47 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## Uncommitted work in the SHARED TREE is not safe (DA 148) — the one that cost a round
+
+I completed DA 148 once — builder, three wirings, five cells, battery green at 38 —
+then found all four files **clean at HEAD with every edit gone**. The reflog showed
+no revert, which is consistent: **`git checkout -- <path>` does not move HEAD and
+leaves no reflog entry.** Six other-seat commits landed in that window. R-557
+forbids that command in the shared tree precisely because seats keep uncommitted
+work there; something did it anyway.
+
+**My share, and the rule that follows: I held four edited files uncommitted while a
+battery ran.** Test-then-land is right, but the gap between them is the exposure.
+
+> **On the shared tree, commit each edited file as soon as it parses, and let the
+> battery gate the PUSH, not the commit.** A local commit is recoverable from the
+> reflog; an uncommitted edit is not recoverable from anything.
+
+## The score-event stream: three DA probes had the shape bug too (DA 148)
+
+`da_elementwise`, `da_elem_grid`, `da_elementwise_hz` each built their event rows
+inline with a PER_GENERATION membership test **and stamped every event at the
+generation's start** — so on a corrected book they would drop most of the
+population *and* re-create DE 155's look-ahead inside DA's own code. Fixed through
+one shared builder, `da_book_verify.scored_stream_rows`, imported by all three.
+
+**The fix is not conditional on anyone's first-row claim (REV 121):** even under
+PER_GENERATION, if the feature pass dropped the row at the generation's start, the
+key is absent and the generation reads UNSCORED though its other rows scored.
+
+Standing cells for this class: (a) PER_GENERATION byte-for-byte as before,
+(b) PER_ROW one event per row at its own time **with the old expression computed on
+the same map as the known-bad**, (c) REV 121's dropped-start-row case,
+(d) **a genuinely under-covered map still reported under-covered**, (e) rule 17
+wiring checked at the **comment-stripped** bytes, so a comment quoting the old form
+does not read as wiring.
+
+**Enumerations of "which modules have this" are samples until swept.** REV 122
+said five where the brief said three; my own regex sweep over comment-stripped
+`live/` independently surfaced `de_section81_arms.py:526` — same test, same
+stamping, and it *counts* the misses, so it would publish a bogus exclusion
+fraction. DE's module: report, never edit (R-235).
+
 ## Verify the COMMIT, not the commit message (DA 146)
 
 DE 162's message stated mode C's message no longer blames the feature pass.
