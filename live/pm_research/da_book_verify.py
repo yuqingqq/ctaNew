@@ -1893,19 +1893,60 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{_u_i['n_reference_generations']}, rows "
        f"{[(r['t'], r['gen']) for r in _u_rows]}; empty -> "
        f"{_e_i['n_rows']} rows, {_e_i['n_generations_unscored']} unscored")
-    _wired = {}
-    for _m in ("da_elementwise", "da_elem_grid", "da_elementwise_hz",
-               "da_de53_exclusion"):
-        _src = (Path(__file__).resolve().parent / f"{_m}.py").read_text()
+    #: DA 151: THE CONSUMER SET IS DERIVED, NOT TYPED. It was a hand-typed
+    #: tuple of four asserted with `len(...) == 4` -- which passes for the
+    #: members it names and says nothing about completeness. That is the
+    #: shape the USER found in `assert_book_scoring_code`, which accepts a
+    #: receipt carrying ONE of its five modules and reports
+    #: `BOOK_SCORING_CODE_MATCHES`; DA 146 drove that it CAN pass and never
+    #: drove that it can pass ON A SUBSET. A typed set is a claim about
+    #: what someone remembered.
+    #:
+    #: Every `da_*.py` that reads an assembled score map is DISCOVERED
+    #: here, and each must either call the shared builder or be listed as
+    #: exempt WITH ITS REASON. A new consumer therefore fails this cell
+    #: rather than passing unseen.
+    #: EXEMPT WITH A REASON, each classified by DRIVING REV 122's four
+    #: operation classes over the module's comment-stripped code rather
+    #: than by reading its name.
+    _EXEMPT = {
+        "da_book_verify.py": "defines the shared builder",
+        "da_early_read_verify.py":
+            "its `by_arm` matches are `fills_by_arm` and `es_by_arm` -- "
+            "fills grouped by arm and economic-settlement blocks by arm. "
+            "It never touches `asm[\"by_arm\"]`; all four sites read.",
+        "da_gate1_day_verdict.py":
+            "reads `asm[\"by_arm\"]` STRUCTURALLY -- which (coin, head) "
+            "entries exist and whether the head's entry is unique -- and "
+            "takes `len(element0)` as a ROW count, published as "
+            "`n_scored_rows_recomputed`, which is the right unit under "
+            "BOTH shapes. Driven against REV 122's four operation classes: "
+            "0 hits on a t0-keyed lookup, 0 on len-as-a-GENERATION-count, "
+            "0 on iterating the assembly as generations, 0 on reading the "
+            "key's third element as a t0.",
+    }
+    _here = Path(__file__).resolve().parent
+    _wired, _undeclared = {}, []
+    for _f in sorted(_here.glob("da_*.py")):
+        _src = _f.read_text()
         _code = "\n".join(l.split("#")[0] for l in _src.splitlines())
-        _wired[_m] = {"calls": _code.count("BV.scored_stream_rows"),
-                      "old_expr": _code.count('float(g["t0"])) in gs')}
+        if 'by_arm' not in _code:
+            continue
+        if _f.name in _EXEMPT:
+            continue
+        _n_call = _code.count("BV.scored_stream_rows")
+        _n_old = (_code.count('float(g["t0"])) in gs')
+                  + _code.count("key in gen_scores"))
+        _wired[_f.stem] = {"calls": _n_call, "old_expr": _n_old}
+        if _n_call == 0:
+            _undeclared.append(_f.name)
     ck("DA 148/149 (e) ALL FOUR CONSUMERS ARE WIRED TO IT (rule 17: suite-green "
        "is not pipeline-wired) -- each calls it once and none retains the "
        "old expression in CODE; the source is comment-stripped first, so "
        "a comment quoting the old form does not count as wiring",
        all(v["calls"] == 1 and v["old_expr"] == 0
-           for v in _wired.values()) and len(_wired) == 4,
+           for v in _wired.values()) and not _undeclared
+       and len(_wired) >= 4,
        f"{_wired}. REV 122 answered its own question with FIVE consumers, "
        f"and my own sweep over comment-stripped `live/` independently "
        f"found `de_section81_arms.py:526` carrying the same test, the "
