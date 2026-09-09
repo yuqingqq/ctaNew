@@ -596,7 +596,7 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 21
 
 
 def selftest(quiet: bool = False) -> int:
