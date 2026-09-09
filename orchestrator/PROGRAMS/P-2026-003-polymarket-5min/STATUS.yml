@@ -67,6 +67,33 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T07:16:02Z (MEM ROUND 291 -- R-836 AND R-837 SWEPT as a numbered queue under rule 23,
+  from my round-290 tip `6120e61` to `726f785`, eleven commits. STATE ONLY. ***THREE USER RULINGS, RECORDED AS RULED
+  AND NO LONGER AS OPEN***: (a) the null's sampling unit is **B, MATCH ON CANCELS** -- under first-crossing a
+  generation yields at most one cancel, so the cancel IS the action and B is the only option matching on the
+  DECISION variable (rule 7); the seed cost is REPLACED rather than absorbed, DE 160 persisting the DRAWN CONTROL
+  SET as an artifact with a can-fail control, and theta is NOT re-fitted by ruling. (b) `research.slice` is APPROVED
+  at N = 8 and -- as I wrote that -- ALREADY APPLIED: I measured 200 % at 07:11:39Z and wrote "not applied" at
+  07:16:02Z, while the drop-in went to `CPUQuota=1000%` at 07:12 and R-838 landed 07:13Z; re-measured 07:17:10Z the
+  manager reports 10s = 1000 %. ***MY OWN READING WENT STALE INSIDE THE ROUND***, which is the class I keep flagging
+  in others. ***AND I TRACED THAT OVERRIDE, WHICH R-837 CALLS "OF UNKNOWN PROVENANCE"***: it is
+  `~/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf`, dated Sep 6 03:53, whose own header says it
+  was "created via `systemctl set-property`" -- persistent, not runtime -- and its 200 % is **SEAT_PROTOCOL rule
+  20's own documented number**, R-551 having LOWERED the slice from 800 %, which rule 8 explicitly permits.
+  ***SO THE HAZARD IS INVERTED***: drop-ins override the fragment, and the running state proves it, so a
+  `daemon-reload` does NOT jump to 1200 % -- the dangerous act is REMOVING the drop-in, which would expose the
+  fragment's 1200 %, four times the approved 1000 %. The same directory supplies the slice's `MemoryMax`
+  15,032,385,536 and `MemoryHigh` 12,884,901,888, ***WHICH PLACES THE RATIFIED ENVELOPE PRECISELY***: 11,869,652,313
+  sits BELOW the 12 GiB throttle point, so a build reaches its own cap without the slice reclaiming. (c) the memory
+  envelope is RATIFIED FOR THE EV20 FIVE-DAY QUEUE ONLY and expires with it -- my round-290 flag is RESOLVED, and
+  the SCOPE is what this file now carries. My rounding observation is in R-837 as I wrote it. ***AND THE ONE
+  SURVIVING FINDING IS NOW DERIVED THREE INDEPENDENT WAYS***: DA 137 recomputed all four percentages by a SECOND
+  IMPLEMENTATION from the baseline fill rows and `resolutions.jsonl` -- -53.9219, -62.3725, -97.5694, -55.4347 --
+  every absolute and percentage IDENTICAL to what I read from DE's artifacts at round 289, and it tested the
+  survival claim at the code with a POSITIVE CONTROL that fires and by FINDING the one real channel rather than
+  assuming it away. Flags 2379 -> 2394, prov 1924 -> 1939; window trimmed 4 -> 3, Batch 273 archived. **THE
+  RETRACTION IS UNCHANGED: NO CORRECTED NUMBER EXISTS AND THESE FILES QUOTE NOTHING CORRECTED.** MEM asserts no
+  result.)
   2026-09-09T07:08:01Z (MEM ROUND 290 -- the post-R-835 sweep worked as a NUMBERED QUEUE under the
   new rule 23, from my round-289 tip `3828ed7` to `6120e61`, eight commits. STATE ONLY. ***RULE 23 LANDED WITH MY
   ROUND-289 WORDING AND A HALF I DID NOT PROPOSE***: the coordinator's own obligation to arm a Monitor on every
@@ -123,32 +150,6 @@ updated: >-
   been created; window trimmed 4 -> 3, Batch 271 archived. **NOTHING CORRECTED
   HAS BEEN QUOTED AND THIS FILE QUOTES NOTHING CORRECTED.** `wt-de` `5020f96` / `?? data`, the FIFTEENTH consecutive
   round. MEM asserts no result.)
-  2026-09-08T01:49:04Z (MEM ROUND 288 -- R-819 THROUGH R-824 SWEPT, with every landing between the
-  tip I read at round 287 (`cd1adcc`) and `6f34c6e`. STATE ONLY. The first two days under the USER's ruled endpoint
-  read exactly as filed -- 09-03 over 246 windows and 09-04 over 288, populations kept apart, **CONDVALUE 0 of 2 and
-  HAZARD 0 of 2 below the 0-cancel baseline**. ***I REPRODUCED DA'S BINDING NULL FINDING AT THE LEDGER ROWS***: both
-  ledgers' 1,000 NULL_DRAW rows carry one scalar `value` and no fills, and their moments match RESULTS S0b's
-  DIAGNOSTIC null EXACTLY on all four arm-days -- at `ddof = 0`, the population sd, which a re-deriver must also
-  know -- and match the settlement null on NEITHER. ***AND I MADE THE CONSEQUENCE CONCRETE***: recomputing Z from
-  each artifact's own settlement moments reproduces the recorded Z to 1e-9 on all four, while recomputing it from
-  the persisted draws gives -8.40 against -3.86, -13.04 against -2.93, -1.44 against -0.27 and -13.30 against -3.07
-  -- 2.2x to 5.4x MORE EXTREME on every one, because the settlement null is 2.7-5.1x wider. **The error runs toward
-  overstating significance.** ***A FINDING I HAVE CARRIED SINCE ROUND 285 CLOSED TONIGHT***: 09-07's book is the
-  first built through BE 101's pass-through, and DE's reader driven on its receipt returns L = 0.0 with `source:
-  "THE BOOK'S BUILDER RECEIPT"` -- READ, not the constant, while 09-05's landed receipt still returns the constant.
-  ***AND DRIVING THE SAME READER ON THE REAL L = 250 RECEIPT, IT REFUSES***
-  `SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS`, naming `[250.0, 23947.0]` -- because the walk matches any key
-  CONTAINING `placement_latency` and `TRANCHE_BEFORE_PLACEMENT_LATENCY` contains it, so a COUNT is collected as a
-  VALUE. It passes on every book read so far only because the count and the latency are both 0, and **BE's next
-  queued build is the L = 0 equivalence build, whose count is 0 by construction -- so it will pass and the defect
-  will surface on the first L > 0 valuation instead.** ***AND MY OWN FIRST PROBE WAS THE BROKEN ONE***: I read
-  `S4_null.elapsed_s` as a duration, printed 100.00 %, and chased the mismatch against R-824's 99.2 % rather than
-  publishing it -- the fields are CUMULATIVE from the run's start, and once the stage is a difference the entry is
-  exact at 99.1738 % and 99.2274 %. GO #8 running from `wt-de` UNREFRESHED at the full sha, invocation `5c7b0a69...`
-  since 01:33:43Z; DA's exit-map debt closed with all eight pairs resolving; the 09-07 verdict superseded rather
-  than overwrote and its sha matches to the digit. Flags 2334 -> 2349, prov 1879 -> 1894; window trimmed 4 -> 3,
-  Batch 270 archived. The freeze holds a TWENTY-EIGHTH round; `wt-de` `5020f96` / `?? data`, the FOURTEENTH
-  consecutive round. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -320,6 +321,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 291, R-836 and R-837 swept; three USER rulings (6120e61 -> 726f785) ---
+  THE_USER_RULED_THE_NULLS_SAMPLING_UNIT_B_MATCH_ON_CANCELS: RULED-NOT-OPEN
+  AND_THE_SEED_COST_IS_REPLACED_RATHER_THAN_ABSORBED: THE-DRAWN-SET-BECOMES-AN-ARTIFACT
+  THE_SLICE_IS_APPROVED_AT_N_8_AND_DELIBERATELY_NOT_APPLIED: THE-FILE-AND-THE-MANAGER-DISAGREE
+  I_TRACED_THE_SLICE_OVERRIDE_AND_IT_IS_NOT_OF_UNKNOWN_PROVENANCE: A-set-property-DROP-IN-DATED-SEP-6-0353
+  IT_IS_SEAT_PROTOCOL_RULE_20s_OWN_200_PERCENT_AND_R_551_LOWERED_IT_FROM_800: A-LOWERING-WHICH-RULE-8-PERMITS
+  SO_THE_RELOAD_HAZARD_IS_INVERTED_AND_THE_REAL_ONE_IS_REMOVING_THE_DROP_IN: DROP-INS-WIN-OVER-THE-FRAGMENT
+  THE_SAME_DIRECTORY_EXPLAINS_THE_SLICES_MEMORY_CEILING_TOO: MemoryMax-15032385536-BY-DROP-IN
+  THE_MEMORY_ENVELOPE_IS_RATIFIED_FOR_THE_EV20_QUEUE_ONLY_AND_MY_FLAG_IS_RESOLVED: EXPIRES-WITH-THAT-QUEUE
+  AND_MY_ROUNDING_OBSERVATION_IS_IN_THE_REGISTER_AS_I_WROTE_IT: NOBODY-EDITS-THE-DECLARATION
+  THE_SURVIVING_FINDING_IS_NOW_DERIVED_THREE_INDEPENDENT_WAYS: DE-ARTIFACTS-MEM-289-AND-DA-137
+  DA_137_TESTED_THE_SURVIVAL_CLAIM_AT_THE_CODE_WITH_A_CONTROL_THAT_CAN_FIRE: EMPTY-FLAGS-0.0-AND-FLAG-1-GIVES-1.0
+  AND_IT_FOUND_THE_ONE_REAL_CHANNEL_RATHER_THAN_ASSUMING_IT_AWAY: gen_start_ns-WHICH-THE-VALUATION-NEVER-READS
+  DE_159s_INSTRUMENT_SHARES_ITS_REFUSAL_NAME_WITH_THE_RUNNER: ASSEMBLY_PREDATES_CAUSAL_SCORING-IN-BOTH
+  THE_RELAUNCH_IS_HEALTHY_UNDER_THE_RATIFIED_ENVELOPE: 5.87-GiB-AT-13-MIN-CAPPED-AT-ONE-CORE
+  THE_RETRACTION_IS_UNCHANGED_AND_MY_FILES_STILL_QUOTE_NOTHING_CORRECTED: NO-CORRECTED-NUMBER-EXISTS
   # --- MEM round 290, the post-R-835 sweep and the p003ev200903 loss (3828ed7 -> 6120e61) ---
   RULE_23_LANDED_WITH_MY_WORDING_AND_A_COORDINATOR_HALF_I_DID_NOT_PROPOSE: ARM-A-MONITOR-ON-EVERY-HEAVY-UNIT
   RULE_24_MAKES_THE_PROCEDURE_FILE_A_STANDING_OBLIGATION: AND-A-SEAT-WRITES-IT-RATHER-THAN-REPORTS-IT
@@ -26721,6 +26738,198 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 291, 2026-09-09T07:16:02Z (the clock read by which every measurement below was complete) ---
+  THE_USER_RULED_THE_NULLS_SAMPLING_UNIT_B_MATCH_ON_CANCELS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      **RULED, not open** (R-837, rulings received before 07:09:48Z — the clock read at the DE 160 dispatch that
+      acted on them, and ahead of any corrected number, which is the order rule 11 wants). **The null's sampling
+      unit is (B), MATCH ON CANCELS.** The reasoning on the record: under the ruled first-crossing rule a generation
+      yields **at most one cancel**, so the cancel IS the action, and B is the only one of the three that matches on
+      the **DECISION variable** (rule 7). (A) rows is biased in the arm's favour because 39.7 % of rows begin after
+      their generation's start; (C) generations samples something the arm does not decide on. **My round-289 file
+      carried all three as open; they are not open, and B is what the state says from here.**
+  AND_THE_SEED_COST_IS_REPLACED_RATHER_THAN_ABSORBED:
+    prov: CHECKED
+    artifact: live/pm_research/drafts/DE158_null_sampling_unit_QUESTION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      The cost DE named for (B) was real and is not waved away: the draw size becomes data-dependent and so does RNG
+      consumption, **breaking the seed reproducibility every landed null has**. The dispatch REPLACES the guarantee
+      instead of absorbing the loss — **DE 160 persists the DRAWN CONTROL SET as an artifact and reproduces from the
+      artifact, "verified against its can-fail control, not assumed"** (rule 16 both directions). So reproducibility
+      moves from "the same seed regenerates it" to "the artifact IS it, and a control proves the check can fail."
+      **theta is NOT re-fitted, by ruling**, and the calibration consequence goes in the receipt rather than into a
+      silent re-fit.
+  THE_SLICE_IS_APPROVED_AT_N_8_AND_DELIBERATELY_NOT_APPLIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      ***SUPERSEDED WITHIN THIS ROUND, AND THE STALE READING WAS MINE.*** I measured `CPUQuotaPerSecUSec=2s` at
+      **07:11:39Z** and wrote "deliberately NOT APPLIED" at **07:16:02Z** -- but the drop-in was rewritten to
+      `CPUQuota=1000%` at **Sep 9 07:12** and R-838 landed 07:13Z, so **my flag was false at its own as_of by about
+      four minutes**. Re-measured at **07:17:10Z: `CPUQuotaPerSecUSec=10s` -- 1000 %, APPLIED and verified at the
+      running manager.** The exact class I keep flagging in others: a short-half-life fact recorded without the
+      clock of its measurement. What was true when taken: **`research.slice` APPROVED at N = 8** (unit 800 %, slice
+      1000 %) **and not yet applied**, because the cap is not what the file says: the declared config carries `CPUQuota=1200%` while the running manager
+      reports `CPUQuotaPerSecUSec=2s` — **200 %**. Approving a number and then not applying it, because the surface
+      you would apply it to is not the surface you think it is, is the right order. **And it costs the book queue
+      nothing**: the running build is capped at `CPUQuotaPerSecUSec=1s` — ONE core — so the 200 % wall binds only
+      DE's parallel null, not the EV20 builds.
+  I_TRACED_THE_SLICE_OVERRIDE_AND_IT_IS_NOT_OF_UNKNOWN_PROVENANCE:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      ***R-837 SAYS THE OVERRIDE IS "OF UNKNOWN PROVENANCE" AND IS BEING TRACED; THE TRACE IS DONE AND THE ANSWER IS
+      IN THE FILE'S OWN HEADER.*** `systemctl --user show research.slice` reports
+      `DropInPaths=/home/yuqing/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf` (and four more).
+      That file, **dated Sep 6 03:53**, reads verbatim: *"# This is a drop-in unit file extension, created via
+      \"systemctl set-property\" or an equivalent operation. Do not edit."* followed by `[Slice]` /
+      `CPUQuota=200%`. **So the override is a `systemctl --user set-property` act, it is PERSISTENT (it lives under
+      `~/.config/systemd/user.control/`, not `/run`), and it names its own mechanism.** Nothing needs re-deriving.
+  IT_IS_SEAT_PROTOCOL_RULE_20s_OWN_200_PERCENT_AND_R_551_LOWERED_IT_FROM_800:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      ***AND THE 200 % IS NOT AN ACCIDENT SITTING UNDER A FILE — IT IS THIS PROGRAMME'S OWN DOCUMENTED DECISION.***
+      SEAT_PROTOCOL **rule 20, line 130**: *"The slice itself is capped at CPUQuota=200% so light suites can overlap
+      a heavy run."* Rule 20 is R-551 (USER review 2026-09-06), and R-551's own text records what it was BEFORE:
+      *"`research.slice` carried `CPUQuota = 800%` and `MemoryMax = 14 GiB` at the slice level"*. **The drop-in's
+      Sep 6 03:53 timestamp matches R-551's date.** So the chain is: fragment declares 1200 % (R-148/R-150, Aug 26)
+      → R-551 LOWERS the effective cap to 200 % by `set-property` → rule 20 documents it. **A lowering, which rule 8
+      explicitly permits.** Raising it to 1000 % would override a ruled decision, not correct a stray.
+  SO_THE_RELOAD_HAZARD_IS_INVERTED_AND_THE_REAL_ONE_IS_REMOVING_THE_DROP_IN:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      ***A CORRECTION TO THE HAZARD R-837 NAMES, AND IT MATTERS FOR WHAT IS SAFE TO DO NEXT.*** R-837: "a blind
+      `daemon-reload` would jump the slice 200 % → 1200 % as a side effect that nobody ruled." **Drop-ins OVERRIDE
+      the fragment**, and the running state proves it: the fragment says `CPUQuota=1200%`, the drop-in says
+      `CPUQuota=200%`, and the manager reports **2s = 200 %** — the drop-in's value, with the fragment already
+      loaded (`FragmentPath` names it). **A `daemon-reload` re-reads BOTH and the drop-in still wins, so it does not
+      jump.** The real hazard is the opposite act: **removing the drop-in — `set-property CPUQuota=` or deleting
+      `50-CPUQuota.conf` — exposes the fragment's 1200 %, four times the approved N = 8 slice value of 1000 %.**
+      ***R-838 (07:13Z) REACHES THE SAME TRACE INDEPENDENTLY*** -- the set-property drop-in at 2026-09-06 03:53:19,
+      provenance R-551 -- and adds the WHY I did not have: the slice then carried 800 % while each scope had only
+      `MemoryMax=8G`, **so two heavy scopes could run concurrently**, and the clamp to 200 % was DEFENCE IN DEPTH
+      BEHIND rule 20's flock, making a bypass of the lock harmless. One narrow tension recorded and NOT adjudicated:
+      R-838 states "a drop-in beats a fragment" and also that a `daemon-reload` "would have jumped the slice to
+      1200 %". **By the precedence it names -- and by the state I measured before the change -- a reload alone
+      leaves the drop-in in force.** The empirically dangerous act is REMOVING the drop-in.
+  THE_SAME_DIRECTORY_EXPLAINS_THE_SLICES_MEMORY_CEILING_TOO:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      The same `user.control` directory answers a second question this state file has been carrying. BE 110 recorded
+      `slice_MemoryMax_bytes` **15,032,385,536** (14.00 GiB) and the fragment says only `MemoryMax=60%` — the
+      concrete number comes from **`50-MemoryMax.conf` (Sep 3 09:12), `MemoryMax=15032385536`**, with
+      **`50-MemoryHigh.conf` (Sep 3 09:13) at 12,884,901,888 (12.00 GiB)** beside it. ***AND THAT PLACES THE
+      RATIFIED ENVELOPE PRECISELY***: the unit's 11,869,652,313 B (11.05 GiB) sits **below the slice's MemoryHigh
+      throttle point of 12 GiB**, so a build may reach its own cap without the slice beginning to reclaim — which is
+      a property nobody had stated and which the ratification depends on.
+  THE_MEMORY_ENVELOPE_IS_RATIFIED_FOR_THE_EV20_QUEUE_ONLY_AND_MY_FLAG_IS_RESOLVED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      **RULED (c): the memory envelope is RATIFIED for the EV20 FIVE-DAY QUEUE ONLY**, on its recorded basis, and
+      **expires with that queue**; rules 8/20 and R-174 are otherwise untouched. **My round-290 FLAG on it is
+      therefore RESOLVED** and this file no longer carries the raise as unratified — but it carries the SCOPE, which
+      is the part a later reader would otherwise lose: this is not a new standing cap, it is one queue's exception
+      with an expiry, and the next queue starts from 8 GiB again unless someone rules otherwise.
+  AND_MY_ROUNDING_OBSERVATION_IS_IN_THE_REGISTER_AS_I_WROTE_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      R-837 carries my round-290 arithmetic verbatim in substance: *"15,489 × 638,602 × 1.20 = 11,869,567,654, which
+      is 84,659 B SHORT of the declared 11,869,652,313 — the record's unrounded rate (8,430,505,984 / 544,286 =
+      15,489.110475) reproduces the declared number to the byte. 15,489 is a display value; nobody closes that gap
+      by editing the declaration."* **Recorded here because the whole point of that flag was to survive into the
+      register**, where a future reader tempted to "fix" an 84,659 B discrepancy will find the reason not to.
+  THE_SURVIVING_FINDING_IS_NOW_DERIVED_THREE_INDEPENDENT_WAYS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      ***THE PROGRAMME'S ONE SURVIVING FINDING IS NO LONGER A SINGLE PIPELINE'S OUTPUT.*** DA 137 (Q-DA-360,
+      `c2946bb`, read-only, as-of 07:09:07Z) recomputed all four percentages **by a SECOND IMPLEMENTATION from the
+      baseline fill rows and the venue winners (`resolutions.jsonl`, read independently of the ledgers)** under
+      R-801: **09-03 82,142.82003 → 37,849.85143 = −53.9219 %; 09-04 102,193.68861 → 38,452.90807 = −62.3725 %;
+      09-05 81,238.29966 → 1,974.57551 = −97.5694 %; 09-06 46,562.18395 → 20,750.58659 = −55.4347 %.** **Every
+      absolute and every percentage is identical to what I read from DE's artifacts at round 289** (53.92 / 62.37 /
+      97.57 / 55.43). **So the finding now has three derivations — DE's artifacts, my read of them, and DA's
+      independent recompute from different inputs — and the state may say it is independently verified.**
+  DA_137_TESTED_THE_SURVIVAL_CLAIM_AT_THE_CODE_WITH_A_CONTROL_THAT_CAN_FIRE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      The claim the survival RESTS on — that the baseline makes no cancel decisions and is untouched by both
+      retracted defects — was tested at the code path in five links rather than accepted as prose. The link that
+      matters most, because it is rule 16 done properly: the baseline is built with an **EMPTY flag list**, and
+      driven, `flagged_stream(rows, [])` returns a score of **exactly 0.0 on every row** — while the **POSITIVE
+      CONTROL** `flagged_stream(rows, [1])` returns **`[0.0, 1.0, 0.0]`**, proving the same function CAN emit a
+      crossing score. **A zero from an instrument that never proved it can fire is not a result**; this one proved
+      it. Then `0.0 >= 0.5` is False, `BASELINE_CANCELS = 0` is pinned at `be_cancel_axis_null.py:185` with its own
+      refusing gate, and an AST census shows the two defect surfaces are reached ONLY by `arm_stream`.
+  AND_IT_FOUND_THE_ONE_REAL_CHANNEL_RATHER_THAN_ASSUMING_IT_AWAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      ***THE PART THAT MAKES IT A VERIFICATION AND NOT A REASSURANCE***: DA looked for a route by which the
+      contaminated `asm` could still reach the baseline and **FOUND ONE** — `bk["rows"]` IS derived from `asm`,
+      through `received_fills(res, bk["ref"], R._decision_times(scores))` — rather than concluding there was none.
+      It then bounded it: that route sets **only the `gen_start_ns` FIELD** of a fill
+      (`de_phase4_diag_runner.py:2944`), and the settlement valuation never reads that field —
+      `grep -c gen_start_ns` over the valuation block returns **0**. **A channel found and measured to be inert is
+      worth more than a channel declared absent**, and it is why this survives as double-derived rather than as
+      un-refuted.
+  DE_159s_INSTRUMENT_SHARES_ITS_REFUSAL_NAME_WITH_THE_RUNNER:
+    prov: CHECKED
+    artifact: live/pm_research/de_cancel_count_delta.py
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      DE 159 landed `de_cancel_count_delta.py` (387 lines, `703a1be`) — the cancel-count measurement (old
+      aggregation vs first-crossing, per arm per day; the evidence a theta re-fit would be ruled on) **built AHEAD
+      of the book, with its falsifier**, which is the cheap order: a defect found now costs nothing and one found
+      after the book costs a re-run. Checked at the code: **the refusal name `ASSEMBLY_PREDATES_CAUSAL_SCORING`
+      appears in BOTH the new module (`:45`) and `de_phase4_diag_runner.py` (`:9240`)** — one name across the seam
+      rather than two spellings of one refusal, and the stale cache now PROVES the guard fires instead of merely
+      being refused by it. REV 110 is running it adversarially before it meets the book.
+  THE_RELAUNCH_IS_HEALTHY_UNDER_THE_RATIFIED_ENVELOPE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903b.jsonl
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      Five fields read WHILE loaded at 07:13:10Z: `p003ev200903b` **loaded / active / running**,
+      `ExecMainStatus 0`, `Result success`, InvocationID **`d60d8b7b8807402c876dc606c7cdecce`**, and
+      **`CPUQuotaPerSecUSec=1s`** — ONE core, which is what makes R-837's "the 200 % wall does not touch the book
+      queue" true rather than asserted. `MemoryPeak` **6,301,487,104 B (5.87 GiB)** at ~13 minutes in, against the
+      lost run's 8,121,389,056 B peak and the ratified 11,869,652,313 B envelope: **it has room the old cap did not
+      give it.** The exit check that decides everything is BE's `asm` comparison — an `asm` identical to the
+      pre-fix book's would mean the repair never reached the book.
+  THE_RETRACTION_IS_UNCHANGED_AND_MY_FILES_STILL_QUOTE_NOTHING_CORRECTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-09T07:16:02Z
+    said: >-
+      Unchanged and still binding: **no corrected number exists anywhere**, every arm result stays withdrawn, and
+      the retraction notice remains at line 1 of `RESULTS.md`. What changed in this sweep is only what may be said
+      about the SURVIVOR — it is now independently verified — and about the three questions, which are RULED. **My
+      two files quote nothing corrected.** Also actioned and deliberately NOT re-filed here: §7g's dead in-flight
+      item is superseded in `133b432` (which also corrects a Monitor belief — *a clear does NOT kill a Monitor, only
+      its timeout does; check what is still alive before re-arming*) and adds the standing rule that answers my
+      round-290 observation: **while a build holds the heavy lock, ITS WORKTREE IS FROZEN.** The §7f/§7g ordering
+      wart is the coordinator's to fix.
   # --- MEM round 290, 2026-09-09T07:08:01Z (the clock read by which every measurement below was complete) ---
   RULE_23_LANDED_WITH_MY_WORDING_AND_A_COORDINATOR_HALF_I_DID_NOT_PROPOSE:
     prov: CHECKED

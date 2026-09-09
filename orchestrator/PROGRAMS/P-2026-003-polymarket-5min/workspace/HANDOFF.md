@@ -1,3 +1,94 @@
+# READ FIRST — round 291 (MEM, 2026-09-09T07:16:02Z, tip `726f785`)
+
+**R-836 and R-837 swept as a numbered queue under rule 23 — from my round-290 tip `6120e61` to `726f785`, eleven
+commits.** STATE ONLY.
+
+## THREE USER RULINGS — recorded as RULED, not open
+
+**(a) The null's sampling unit is (B), MATCH ON CANCELS.** Under the ruled first-crossing rule a generation yields
+at most one cancel, so **the cancel IS the action**, and B is the only option that matches on the **decision
+variable** (rule 7). (A) rows is biased in the arm's favour — 39.7 % of rows begin after their generation's start;
+(C) generations samples something the arm does not decide on. **The seed cost is replaced, not absorbed:** DE 160
+persists the **drawn control set as an artifact** and reproduces from it, *verified against its can-fail control,
+not assumed*. **theta is not re-fitted, by ruling.**
+
+**(b) `research.slice` — APPROVED at N = 8, and APPLIED while this round was being written.** I measured
+`CPUQuotaPerSecUSec=2s` at **07:11:39Z** and wrote "not applied" at **07:16:02Z**; the drop-in was rewritten to
+`CPUQuota=1000%` at **Sep 9 07:12** (R-838, 07:13Z). **Re-measured 07:17:10Z: `CPUQuotaPerSecUSec=10s` — 1000 %,
+applied and verified at the running manager.** *My own reading went stale inside the round — the exact class I keep
+flagging in others.* What was true when taken: the declared file said `CPUQuota=1200%` and the manager said 200 %.
+
+**⇒ I traced the override R-837 calls "of unknown provenance", and it is fully accounted for.**
+`DropInPaths` names `~/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf`, **dated Sep 6 03:53**, whose
+own header reads *"created via `systemctl set-property`"* — **persistent, not runtime**. Its `CPUQuota=200%` is
+**SEAT_PROTOCOL rule 20's own documented number** (line 130: *"The slice itself is capped at CPUQuota=200% so light
+suites can overlap a heavy run"*), and R-551 — whose date the drop-in matches — records the slice as having carried
+**800 %** before. **So this is a ruled LOWERING, which rule 8 explicitly permits**, not a stray.
+
+**⇒ And the hazard is inverted.** Drop-ins override the fragment, and the running state proves it (fragment 1200 %,
+drop-in 200 %, manager 200 %). **A `daemon-reload` does not jump to 1200 %.** The dangerous act is the opposite —
+**removing the drop-in exposes the fragment's 1200 %, four times the approved 1000 %.** R-838 reaches the same trace
+independently and adds the *why*: the clamp was **defence in depth behind rule 20's flock** — the slice then carried
+800 % while each scope had only `MemoryMax=8G`, so two heavy scopes could run concurrently, and the clamp made a lock
+bypass harmless. *(One tension, recorded not adjudicated: R-838 says both "a drop-in beats a fragment" and that a
+reload "would have jumped the slice to 1200 %". By the precedence it names — and by the state I measured before the
+change — a reload alone leaves the drop-in in force.)*
+
+**(c) The memory envelope is RATIFIED for the EV20 five-day queue only**, on its recorded basis, expiring with that
+queue. **My round-290 flag is resolved.** What this file now carries instead is the **scope**: not a new standing
+cap — one queue's exception with an expiry. My rounding observation is in R-837 as I wrote it.
+
+**A property nobody had stated, from the same directory:** the slice's concrete `MemoryMax` (15,032,385,536) and
+`MemoryHigh` (12,884,901,888) are also `set-property` drop-ins — so the ratified **11,869,652,313 B sits below the
+12 GiB throttle point**, and a build can reach its own cap without the slice beginning to reclaim.
+
+## THE SURVIVING FINDING IS NOW DERIVED THREE INDEPENDENT WAYS
+
+DA 137 (`c2946bb`, read-only) recomputed all four percentages **by a second implementation** from the baseline fill
+rows and the venue winners (`resolutions.jsonl`, read independently of the ledgers) under R-801:
+
+| day | ruled L=0 | ruled L=250 | lost |
+|---|---:|---:|---:|
+| 09-03 | 82,142.82003 | 37,849.85143 | **−53.9219 %** |
+| 09-04 | 102,193.68861 | 38,452.90807 | **−62.3725 %** |
+| 09-05 | 81,238.29966 | 1,974.57551 | **−97.5694 %** |
+| 09-06 | 46,562.18395 | 20,750.58659 | **−55.4347 %** |
+
+**Every absolute and every percentage is identical to what I read from DE's artifacts at round 289.** Three
+derivations: DE's artifacts, my read of them, DA's independent recompute from different inputs.
+
+**And the survival claim was tested at the code, with a control that can fire.** The baseline is built with an
+**empty flag list**; driven, `flagged_stream(rows, [])` scores **exactly 0.0** on every row, while the **positive
+control** `flagged_stream(rows, [1])` returns **`[0.0, 1.0, 0.0]`** — the same function *can* emit a crossing score.
+Then `0.0 >= 0.5` is False, `BASELINE_CANCELS = 0` is pinned with its own refusing gate, and an AST census shows the
+two defect surfaces are reached only by `arm_stream`. **DA also FOUND the one real channel rather than assuming it
+away** — `bk["rows"]` *is* derived from the contaminated `asm` — and bounded it: it sets only the `gen_start_ns`
+field, which the valuation never reads (`grep -c gen_start_ns` over the valuation block = 0).
+
+## STATE
+
+`p003ev200903b` loaded/active/**running**, invocation `d60d8b7b8807402c876dc606c7cdecce`, **`CPUQuotaPerSecUSec=1s`
+— one core**, which is what makes "the 200 % wall does not touch the book queue" true rather than asserted.
+MemoryPeak **6,301,487,104 B (5.87 GiB)** at ~13 min, against the lost run's 8.12 GiB peak and the ratified 11.05
+GiB envelope. **The exit check that decides everything is BE's `asm` comparison** — an `asm` identical to the
+pre-fix book's would mean the repair never reached the book.
+
+DE 159's cancel-count instrument landed **ahead of the book, with its falsifier** (`de_cancel_count_delta.py`, 387
+lines); its refusal name `ASSEMBLY_PREDATES_CAUSAL_SCORING` appears in **both** it and the runner — one name across
+the seam. REV 110 is running it adversarially before it meets the book.
+
+**THE RETRACTION IS UNCHANGED: no corrected number exists, every arm result stays withdrawn, and these files quote
+nothing corrected.** (Actioned elsewhere and not re-filed here: §7g's dead in-flight item is superseded in
+`133b432`, which also corrects a Monitor belief — *a clear does not kill a Monitor, only its timeout does* — and
+adds the standing rule that answers my round-290 observation: **while a build holds the heavy lock, its worktree is
+frozen.**)
+
+Counts: flags 2379 → 2394, provenance 1924 → 1939 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,649 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 273
+archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 290 (MEM, 2026-09-09T07:08:01Z, tip `6120e61`)
 
 **The post-R-835 sweep, worked as a numbered queue under the new rule 23 — from my round-289 tip `3828ed7` to

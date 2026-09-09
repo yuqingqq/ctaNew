@@ -20708,3 +20708,34 @@ generation and the window went 4 → 3. Nothing rewritten.
   4 -> 3, Batch 269 archived. `wt-rr` at `33e8584` with ten pins 0 mismatched, `wt-de` `5020f96` / `?? data` the
   THIRTEENTH consecutive round, the freeze a TWENTY-SEVENTH. MEM asserts no result.)
 ```
+
+## Batch 273 — archived 2026-09-09T07:16:02Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-08T01:49:04Z (MEM ROUND 288 -- R-819 THROUGH R-824 SWEPT, with every landing between the
+  tip I read at round 287 (`cd1adcc`) and `6f34c6e`. STATE ONLY. The first two days under the USER's ruled endpoint
+  read exactly as filed -- 09-03 over 246 windows and 09-04 over 288, populations kept apart, **CONDVALUE 0 of 2 and
+  HAZARD 0 of 2 below the 0-cancel baseline**. ***I REPRODUCED DA'S BINDING NULL FINDING AT THE LEDGER ROWS***: both
+  ledgers' 1,000 NULL_DRAW rows carry one scalar `value` and no fills, and their moments match RESULTS S0b's
+  DIAGNOSTIC null EXACTLY on all four arm-days -- at `ddof = 0`, the population sd, which a re-deriver must also
+  know -- and match the settlement null on NEITHER. ***AND I MADE THE CONSEQUENCE CONCRETE***: recomputing Z from
+  each artifact's own settlement moments reproduces the recorded Z to 1e-9 on all four, while recomputing it from
+  the persisted draws gives -8.40 against -3.86, -13.04 against -2.93, -1.44 against -0.27 and -13.30 against -3.07
+  -- 2.2x to 5.4x MORE EXTREME on every one, because the settlement null is 2.7-5.1x wider. **The error runs toward
+  overstating significance.** ***A FINDING I HAVE CARRIED SINCE ROUND 285 CLOSED TONIGHT***: 09-07's book is the
+  first built through BE 101's pass-through, and DE's reader driven on its receipt returns L = 0.0 with `source:
+  "THE BOOK'S BUILDER RECEIPT"` -- READ, not the constant, while 09-05's landed receipt still returns the constant.
+  ***AND DRIVING THE SAME READER ON THE REAL L = 250 RECEIPT, IT REFUSES***
+  `SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS`, naming `[250.0, 23947.0]` -- because the walk matches any key
+  CONTAINING `placement_latency` and `TRANCHE_BEFORE_PLACEMENT_LATENCY` contains it, so a COUNT is collected as a
+  VALUE. It passes on every book read so far only because the count and the latency are both 0, and **BE's next
+  queued build is the L = 0 equivalence build, whose count is 0 by construction -- so it will pass and the defect
+  will surface on the first L > 0 valuation instead.** ***AND MY OWN FIRST PROBE WAS THE BROKEN ONE***: I read
+  `S4_null.elapsed_s` as a duration, printed 100.00 %, and chased the mismatch against R-824's 99.2 % rather than
+  publishing it -- the fields are CUMULATIVE from the run's start, and once the stage is a difference the entry is
+  exact at 99.1738 % and 99.2274 %. GO #8 running from `wt-de` UNREFRESHED at the full sha, invocation `5c7b0a69...`
+  since 01:33:43Z; DA's exit-map debt closed with all eight pairs resolving; the 09-07 verdict superseded rather
+  than overwrote and its sha matches to the digit. Flags 2334 -> 2349, prov 1879 -> 1894; window trimmed 4 -> 3,
+  Batch 270 archived. The freeze holds a TWENTY-EIGHTH round; `wt-de` `5020f96` / `?? data`, the FOURTEENTH
+  consecutive round. MEM asserts no result.)
+```
