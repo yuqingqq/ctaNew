@@ -109,6 +109,36 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## The abutting boundary (DA 143) — the open edge of 361/362
+
+**Status: 361 CLOSED, 362 OPEN.** DE 162 bounded score times by the generation's
+`t1`. It excludes `t > t1 + 1e-9`, so **`t == t1` is admitted**, and
+`validate_reference` refuses only `t0 < prev_t1 - EPS` — **strict** overlap — so
+**abutting generations are legal**. `harmful_stateful_policy` calls abutting the
+normal case in its own comments and names a real instance (2026-09-01,
+`btc-updown-5m-1787580000/BUY_UP/gen 449`, a tranche at exactly its `t1` == the
+next `t0`).
+
+At that shared instant, three things happen and none of them is visible:
+1. a gen-N score event is admitted;
+2. the engine routes by time, and GEN_START outranks GEN_END, so **N+1 is live** —
+   the cancel records `ref_gen: N+1`;
+3. `score_events_for` also emits N+1's *unscored fallback* at its `t0` — the same
+   instant — so `_head_scorer` serves **N's score to N+1's event**, and the refusal
+   DE 155 deliberately preserved ("a generation with no assembled score … still
+   REFUSES by name") is **unreachable**, because another generation occupies its key.
+
+**Test any future fix here with ABUTTING generations.** DE's own cell uses
+`[100,200]` and `[400,500]` — a 200 s hole — and cannot see any of this. Drive:
+`t = t1` exactly, plus a control one tick earlier (must be correct) and a genuine
+next-generation label (must give the identical outcome, proving the label inert).
+
+**Two candidate closures, both with costs I could not price:** exclude `t >= t1`
+(one character, but drops every row landing at a generation's close, and HSP says
+those exist); or require `gen` on the event and route by it (drops nothing, costs a
+24-literal fixture migration in a BE-shared module). That choice is DE's and the
+USER's.
+
 ## Verifying someone else's fix (DA 142, rule 27) — the four moves
 
 1. **Build your own fixture.** A fix driven only against its author's fixture is
