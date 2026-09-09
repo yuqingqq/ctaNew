@@ -109,6 +109,55 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## The baseline/arm seam (DA 137) — where a retraction stops
+
+When an ARM result is retracted, the question is always whether the 0-cancel
+baseline goes with it. It does not, and the reason is five links, each checkable
+in seconds — check them, don't recite them:
+
+1. `run_day:7469` builds the baseline as `mod.replay(bk, mod.flagged_stream(bk["rows"], []), 0.5)`
+   — **the flag list is EMPTY**, so every score is 0.0. Drive `flagged_stream(rows, [1])`
+   as the positive control: it emits 1.0, so the zeros are the empty list, not a
+   builder that can only emit zeros.
+2. The policy cancels on "first score crossing >= theta_cancel"; 0.0 >= 0.5 is False.
+   `BASELINE_CANCELS = 0` is pinned in `be_cancel_axis_null.py` and its
+   `reproduction_gate` refuses otherwise.
+3. **The defect surfaces are `arm_stream`-only.** AST census: `flagged_stream`
+   touches `['gen','side','slug','t']` and no attributes; `arm_stream` touches
+   `_head_scorer` and `bk["asm"]["by_arm"]`. Scoring-model defects (a wrong or
+   unloaded head) and book-`asm` defects (look-ahead) both live behind those two.
+4. **The one real channel — do not skip it.** `bk["rows"]` IS built from the
+   contaminated `asm`, and its row COUNT changes between a pre-fix
+   (`PER_GENERATION_SCORES`) and a corrected (`PER_ROW_SCORES`) book. It reaches
+   the baseline only via `_decision_times(scores)` → the `gen_start_ns` FIELD.
+   It selects no fills: `replay_policy` iterates `reference.items()`, never the
+   score stream.
+5. `settle_value_cents` / `settlement_legs_by_slug` read `px_cents`, `size`,
+   `side`, `slug` — `gen_start_ns` appears **zero** times in the settlement
+   valuation. So the one channel moves a field the ruled number never reads.
+
+**The empirical companion, and it is the cheapest confirmation available:** recompute
+the baseline from EVERY ledger of a (day, L) chain. On 09-05 L=250 all five gave
+1,974.57551 c over 25,721 fills — the fix rounds moved the arm side and the metadata
+and left the baseline untouched.
+
+## Recomputing a day's baseline — the four things to state every time
+
+- **Deduplicate, and prove it lossless.** BASELINE fill rows are emitted ONCE PER
+  ARM. Reading one arm's copy is right, but hash the sorted
+  `(slug, side, px_cents, size, fill_ns)` tuples per arm and show the digests equal
+  — otherwise it is a silent choice that happens to be correct.
+- **Name the denominator.** The loss % is against THAT DAY'S OWN L=0 total, so it is
+  within-day. Verify the L=0 and L=250 slug SETS are identical (they were, all four
+  days) — that is what makes it a matched-population measurement rather than two
+  different books compared.
+- **Populations still differ ACROSS days** — 09-03 is 246 windows, the rest 288. Four
+  within-day ratios may sit side by side; they may not be averaged or pooled.
+- **Say which days have two implementations and which have one.** 09-06 L=0 is
+  SCHEMA 2 with no settlement rows: recompute-only. The other seven cross-check
+  against their own `SETTLEMENT_SLUG` BASELINE rows to 1e-9. A uniform table that
+  did not say so would imply a check that day never had.
+
 ## Two battery cells whose premise changed with the v3 ledger
 
 1. **The missing-status known-bad** must now expect `EARLY_READ_STATUS_UNACCOUNTED`, and
