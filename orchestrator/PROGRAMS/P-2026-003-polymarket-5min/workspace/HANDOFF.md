@@ -1,3 +1,86 @@
+# READ FIRST — round 318 (MEM, 2026-09-09T12:56:22Z, tip `4784242`)
+
+# 🔁 THE 09-03 REBUILD IS RUNNING — `p003ev210903a`
+
+| | |
+|---|---|
+| launched | **12:52:32Z** from `wt-be`, `active` |
+| args | `--day 20260903 --placement-latency-ms 250 --artifact-revision **EV21**` |
+| **launched tip** | **`f722bb3768f1ab…`** |
+| expected | **≈13:47Z** — on the **measured 54.3-min wall**, not the superseded 74–76 min forecast |
+
+***I did not take "both fixes are in" on trust:*** `git merge-base --is-ancestor` puts **`15ed903`** (the zero-length
+exclusion, **verified by REV 138 on all four**) and **`f722bb3`** (BE 130) **inside the launched tip.**
+
+**The unit name is deliberately new** so `p003ev200903c` keeps the record of the run that produced the diagnosis —
+**and that record is now evidence.** *BE's own lesson this morning, applied prospectively: an artifact overwritten is
+a diagnosis that cannot be re-read.*
+
+**It needed no new authorisation** — the standing instruction was *"build and replay 09-03 for the early point
+estimate"*; the first attempt **refused** on a defect now fixed, so **this is that same task retried.** The
+coordinator **stated that reading to the user before releasing it** — *an interpretation of a standing instruction is
+announced before it is acted on, not defended afterwards.* **Nothing beyond 09-03 is authorised.**
+
+## ⭐ THE ROUND'S LESSON — BE 130: FINITENESS BEFORE EQUALITY
+
+`t0 == t1` was tested **without** finiteness, so **`inf`/`inf` and two equal STRINGS were dropped under
+`ZERO_LENGTH_GENERATION_EXCLUDED`.** The hidden shapes now have their own names (confirmed in the diff):
+**`NON_FINITE_GENERATION_BOUND`, `MALFORMED_GENERATION_BOUND`, `INVERTED_GENERATION`,
+`GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS`.**
+
+***It cost SECONDS to fix before the run and would have cost 54 MINUTES after*** — the whole argument for verifying
+before the expensive thing, in one number.
+
+***And the generalisation: the exact defect DE 172 removed from its probe forty minutes earlier reappeared in the
+builder — and is worse there, because a mislabelled count in a probe becomes a SILENT DROP FROM THE POPULATION in a
+builder.*** Same mistake, different seat, different file, no copying. **The same code shape carries two entirely
+different costs depending on where it sits.**
+
+# DA — the first corrected book verifies, **0 flags**
+
+*"Nothing else in the book is wrong **that I could find**; the digest chain, the population, the shape, the span
+ordering and the tranche accounting all reconcile, **two ways where two ways exist**."* Filed **Q-DA-381, not 380**
+(380 was DA 157's). **Also the first real exercise of DA's gate-item-8 fix against a REAL per-row book, not a
+fixture.**
+
+**One observation is a RESULT: 51.17 % of tranches dropped before the latency** —
+`TRANCHE_BEFORE_PLACEMENT_LATENCY` **23,765** vs `TRANCHE_KEPT` **22,675** of **46,440** offered, DA's histogram
+reconciling to `TRANCHE_KEPT` exactly. *I checked: **23,765 + 22,675 = 46,440 exactly** — the two statuses partition
+the denominator with no remainder.*
+
+**Where DA agrees, at the code — the strongest part:** `apply_placement_latency` **reads only `t['t']`, `t0` and
+`L`, and runs inside `build_reference`, so every retracted defect is downstream of it.**
+
+## ⚠ WHERE DA DOES **NOT** AGREE — recorded as the dissent, not the headline
+
+1. ***"First evidence since the retraction" credits it with closing a gap R-835 says was never open*** — the
+   0-cancel baseline makes no decisions and **already survived both scoring defects.**
+2. ***"51.17 % is a COUNT of tranches while 54 % is a SHARE OF SETTLED MONEY — different estimands that must not be
+   read as agreeing."*** *Two numbers near 50 % that measure different things are not corroboration.* **Sameness of
+   mechanism is not agreement of estimate.**
+3. **No L=0 EV20 book exists**, so **DA 140's set-equality control cannot be repeated on corrected data today.**
+
+**DE's point estimate is what tests it at the money level.**
+
+# 📌 THE THREE EXIT NUMBERS — pre-registered **before** the run lands
+
+| # | expectation |
+|---|---|
+| 1 | zero-length generations excluded = **NINE**, as a **counted status** |
+| 2 | the new non-finite / malformed statuses = **ZERO on this day**, and **PRESENT rather than absent** |
+| 3 | generation total = **313,140** *(checked: 313,149 − 9)* — **a different number is a finding** |
+
+***A zero that is PRESENT is a measurement; a zero that is ABSENT is an unrun check.***
+
+**Also:** `require_book_declares_L` **is now ARMABLE and its excuse has EXPIRED** — this book declares **`250.0`,
+`source: "the caller"`**. *The second guard tonight whose excuse expired unnoticed at the moment it did — and both
+were found by someone looking at the **artifact**, not at the guard.*
+
+Counts: flags 2761 → 2773, provenance 2306 → 2318 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 300 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 317 (MEM, 2026-09-09T12:48:04Z, tip `26bf90c`)
 
 # ✅ CLOSED: the repairs reached the artifact — measured at the book

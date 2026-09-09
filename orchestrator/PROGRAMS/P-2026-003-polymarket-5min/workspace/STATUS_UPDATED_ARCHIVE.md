@@ -21860,3 +21860,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   ***ROWS (2) AND (3) OF THE LEDGER -- THE ROWS THAT NEEDED A CORRECTED BOOK -- HAVE THEIR BLOCKER IN FLIGHT FOR THE
   FIRST TIME.*** MEM asserts no result.)
 ```
+
+## Batch 300 — archived 2026-09-09T12:56:22Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T12:32:59Z (MEM ROUND 315 -- ***THE FIRST CORRECTED BOOK SINCE THE RETRACTION IS ON DISK.*** From `6c9791e` to
+  `397ba24`, three commits. **`be_daybook_20260903_btc__L250ms__EV20.pkl`, 307,227,345 bytes, written 12:27:36Z, with
+  its receipt at 12:27:45Z -- AND I HASHED IT MYSELF RATHER THAN QUOTING THE DIGEST I WAS GIVEN:
+  `dfbe09fda407a805910c7b95d0566b1b2dd3beb6cfb48f5bac730f72d6b70e98`, MATCHING BYTE FOR BYTE.** The run's own record
+  reads **`{"event": "exit", "rc": 0, "utc": "2026-09-09T12:27:46Z"}`**, launch-to-exit **3,266 s = 54.4 min**
+  against the payload's measured 3,257.2 s, and **the stage lines are the substantive record: `selected` 247 slugs /
+  era `clob_v4_1`; `reference` 247 windows / 313,149 GENERATIONS; `tape` 120.6 s / 544,286 TAPE ROWS / after-tape
+  peak 3.202 GB; `assembled` 2,566.7 s / peak 5.484 GB.** ***IT BEAT ITS OWN FORECAST ON EVERY AXIS AND THAT IS
+  ITSELF A NUMBER TO CARRY RATHER THAN A RELIEF TO FEEL: WALL 54.3 MIN AGAINST 74-76; ASSEMBLY 2,566.7 s AGAINST THE
+  LOST EV20 RUN'S 3,793.8 s, 32.3 % LESS; PEAK WELL UNDER THE ~8.1 GB PREDICTED FROM THAT RUN'S LEAF -- A FORECAST
+  BEATEN BY TWENTY MINUTES IS NOT A BONUS, IT IS A MODEL THAT WAS WRONG, AND THE SAME MODEL PRICES THE OTHER FOUR
+  DAYS.*** **A precision I keep rather than smooth: TWO PEAKS ARE ON THE RECORD AND THEY MEASURE DIFFERENT THINGS --
+  the `assembled` line's `peak_gb 5.484` is the peak AT ASSEMBLY, while the `leaf_peak` event's
+  `peak_of_record_bytes 6353506304` = 6.354 GB is the high-water mark SAMPLED WHILE ALIVE over 642 samples, so the
+  true headroom is 53.5 % of the 11.87 GB basis and not 46.2 %; neither breaches the cap and both are true.**
+  ***DO NOT RECORD THE NEW NUMBERS AS THE QUEUE'S BASIS UNTIL BE 128 EXPLAINS THEM: the same basis prices the
+  remaining four days and 09-04 IS THE HEAVIEST AT 638,602 ROWS*** against 09-03's 544,286 -- *pricing four unrun
+  days on one day's surprise is how a queue estimate becomes wrong in the expensive direction.* ***DE 171 IS RUNNING
+  THE POINT ESTIMATE -- THE USER'S STATED GOAL -- AND I SAW IT AT THE MACHINE***, `de_point_estimate_day.py
+  2026-09-03` pointed at the corrected book **BY FULL PATH**, holding the heavy lock in the same flock-and-child
+  shape as the build; **and that run is ALSO THE TEST THAT THE REPAIRS REACH A RESULT, since the driver's battery
+  refuses AHEAD OF REPLAY (`de_point_estimate_day.py:359`) -- which is exactly why the user's blocker had to close
+  first -- so a completed point estimate is evidence BOTH that the number exists AND that every repair landed
+  tonight survives contact with a real day from the entry point.** ***THE QUESTION THAT OUTRANKS EVERY NUMBER ABOVE,
+  ASKED OF BOTH BE AND DE AND RECORDED AS OPEN: DOES THE CORRECTED `asm` DIFFER FROM THE PRE-FIX BOOK'S? IDENTICAL
+  SCORES WOULD MEAN THE NIGHT'S REPAIRS NEVER REACHED THE ARTIFACT*** -- *a book that builds, exits zero, hashes
+  clean and carries a perfect receipt can still be the old book with new provenance, which is tonight's recurring
+  class one level up* -- **and I did NOT answer it myself, because loading two ~300 MB pickles while DE 171 holds the
+  lock would compete with the run.** One free datum, recorded AS a datum and NOT as an answer: **the pre-fix
+  comparator is on disk, `be_daybook_20260903_btc__L250ms.pkl` at 289,333,978 B, and the corrected book is 17.9 MB /
+  6.2 % LARGER** -- ***A SIZE DIFFERENCE DOES NOT ESTABLISH THAT `asm` DIFFERS, BUT IDENTICAL SCORES INSIDE A FILE
+  6.2 % LARGER WOULD BE SURPRISING***, and the comparator is named so whoever answers need not find it. ***WHAT A
+  POINT ESTIMATE IS AND IS NOT, DECLARED BEFORE IT LANDS SO NO READER OVER-READS WHAT ARRIVES: it carries
+  `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, IT HAS NO CONTROL, AND "THE POINT ESTIMATE STANDS" IS THE MOST THAT MAY BE
+  SAID*** -- not a result against a null, not evidence of skill, not comparable to the retracted arm numbers; **the
+  full null remains FAIL-CLOSED if multiple cancels share one reference generation, WHICH THE USER HAS RULED DOES NOT
+  BLOCK THIS**, fail-closed and blocking being different words. **NOTHING BEYOND 09-03 IS AUTHORISED AND THE QUEUE
+  FOR 09-04..09-07 REMAINS THE USER'S CALL**: *a successful first day is not a standing authorisation.* Flags 2715 ->
+  2727, prov 2260 -> 2272; window 3/3, Batch 297 archived. MEM asserts no result.)
+```
