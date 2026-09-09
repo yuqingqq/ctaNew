@@ -67,6 +67,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T15:13:26Z (MEM ROUND 321 -- R-868 SWEPT. ***THE SIBLING-BLOCK CLASS IS CLOSED, BE RELOCATED A FALSIFIER RATHER
+  THAN DROPPING IT, AND THE FIRST NULL SINCE THE RETRACTION IS RUNNING.*** ***THE CLASS CLOSES BECAUSE ITS MEMBERSHIP
+  TEST IS MECHANICAL, WHICH I DROVE MYSELF ON THE REAL POINT-ESTIMATE ARTIFACT RATHER THAN TAKING THE LIST: a site is
+  in it when it NAMES ONE OF TWO SIBLING BLOCKS LITERALLY AND READS A FIELD THAT EXISTS IN BOTH, and intersecting the
+  two blocks gives `economic` 6 FIELDS, `economic_settlement` 17, AND THE SHARED SET EXACTLY `['Z',
+  'null_draws_summary', 'null_mean', 'null_sd', 'p_location']` -- FIVE NAMES EACH READABLE FROM THE WRONG BLOCK WITH
+  NO ERROR.*** **SIX SITES, THREE MODULES, THREE NEW, CLOSED OVER A STATED SCOPE** -- *the stated scope being the
+  load-bearing part, since a closure without one is a claim about the universe.* ***THE WORST IS NOT A GUARD:
+  `:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT FROM `r["economic"]["Z"]`, THE DIAGNOSTIC, WHILE R-801 MADE
+  SETTLEMENT PRIMARY -- AND THAT ENDPOINT CHOICE IS A RULING WITH THE USER, NOT A PATCH, THOUGH IT MUST NAME THE
+  ENDPOINT IT USED EITHER WAY***; at my read the line now carries `# ---- DE 176 / REV 140: THE VERDICT NAMES ITS
+  ENDPOINT`, **so the naming half has landed while the choice stays with the USER** -- *a verdict that names its
+  endpoint is honest at either setting; one that does not is wrong at both.* **THE SECOND WORST WAS
+  `da_gate1_day_verdict.py` CONTAINING ZERO OCCURRENCES OF `economic_settlement`, ITS INDEPENDENT RECOMPUTE NEVER
+  TOUCHING THE RULED ENDPOINT AND ITS SEAL PREDICATE REPORTING `sealed: True` ON A RECEIPT CARRYING `D_E_settle` --
+  AND I COUNTED BOTH SIDES: THE MODULE NOW HAS EIGHT.** ***AND THE DISTINCTION THE COORDINATOR ASKED FOR EXPLICITLY:
+  DA'S MANUAL RECOMPUTE IS NOT INVALIDATED -- THE MODULE IS BLIND, NOT THE ROUND***, since DA 163's reproduction was
+  computed FROM THE FILL ROWS BY A SECOND IMPLEMENTATION with zero per-slug disagreements across 246 slugs x 2 books
+  x 2 arms, *and a finding about an instrument voids the results that went THROUGH it, not everything the seat
+  produced.* ***BE'S ANSWER ON THE FALSIFIER, AS THE STANDARD AND NOT A NOTE: DA'S CRITERIA (1) AND (3) CANNOT BE MET
+  AT BUILD BECAUSE THE BUILD CANNOT PRODUCE THE NUMBER THE RECONCILIATION COMPARES AGAINST, SO BE MOVED THE FALSIFIER
+  TO WHERE BOTH NUMBERS EXIST -- THE POINT ESTIMATE: `KEPT-VALUE + DROPPED-VALUE = ALL-TRANCHE VALUE`, AND
+  `KEPT-VALUE == 37,315.551431` TO THE DIGIT. "THE EQUIVALENCE IS NOT UNFALSIFIABLE -- IT IS FALSIFIABLE ONE SEAM
+  OVER, WHERE DA SPECIFIED IT."*** **This programme's standing remedy for a weak check has been to strengthen it IN
+  PLACE; this is the other move -- KEEP THE CHECK AND CHANGE WHERE IT RUNS** -- ***AND THE USER'S RULING (b)
+  THEREFORE STANDS AND NO L=0 BUILD IS NEEDED.*** **DA's (2), (4) and (5) are IN THE ARTIFACT BY NAME --
+  `WHAT_THE_DROPPED_SET_IS`, `HOW_IT_MUST_BE_SAID`, `WHAT_MUST_NOT_BE_SAID`, the >=5-day scope** -- *a specification
+  whose clauses become FIELD NAMES travels with the number, and `WHAT_MUST_NOT_BE_SAID` turns DA's three refusals
+  into a field a reader RESOLVES rather than a paragraph a reader may skip* -- **and
+  `both_legs_computable_for_every_tranche` is COMPUTED via `_legs_fields_present` RATHER THAN ASSUMED, "because a
+  missing field would silently omit a tranche from a total", which is the exact defect class this programme has paid
+  for repeatedly, anticipated in a field BEFORE the number exists.** ***DE 176 IS RUNNING HAZARD'S NULL -- THE FIRST
+  NULL SINCE THE RETRACTION -- UNDER RULING B, WITH RULE 6 BINDING (DESIGN AND MINIMUM DECLARED BEFORE THE RESULT,
+  >=200 DRAWS, THE DECISION METRIC AND NEVER A PROXY, AND A SHORT COUNT REFUSES), THE 1-IN-3,862 EXCEPTION REQUIRED
+  TO TRAVEL WITH ITS DENOMINATOR, AND CONDVALUE'S FAIL-CLOSED STATE STATED WITH ITS REASON.*** *A rate quoted without
+  the population it is a rate over is how "1 in 3,862" becomes "negligible" without anyone deciding it; and a null
+  that quietly returns fewer draws than declared is an under-sampled null wearing a declared one's name.* **REV 141's
+  DESIGN ANSWER AS THE DISPOSITION: NOT IMPOSSIBLE THIS WEEK -- FIX THE SIX AND MAKE THE MEMBERSHIP TEST A CELL, "A
+  CLASS THAT IS ENUMERABLE IS A CLASS THAT IS CHECKABLE"** -- *the same intersection I drove by hand can be computed
+  by a battery cell on every run, so a seventh site would announce itself instead of waiting to be found.* **HOUSEKEEPING,
+  REPORTED BECAUSE I REPORTED THE BLOCK: LAST ROUND'S `Q-MEM-308` WAS BLOCKED BY A DIVERGED BRANCH AND HAS NOW LANDED
+  -- I refused to rebase because two of four unpushed commits were DA's (rule 21), the divergence was resolved by
+  someone else, my commits replayed as `12bbd6b` and `4253bec` with all content intact at flags 2808 / prov 2353** --
+  ***AND ONE CORRECTION TO MY OWN CHECK: I MOMENTARILY READ A `grep -c` OF ZERO AS A LOST PARAGRAPH; THE PHRASE
+  "format string" SIMPLY WRAPS A LINE AND THE PARAGRAPH IS AT `HANDOFF.md:81`. MY GREP WAS THE ERROR, NOT THE FILE,
+  AND I VERIFIED BEFORE REPORTING RATHER THAN AFTER.*** Flags 2808 -> 2822, prov 2353 -> 2367; window 3/3, Batch 303
+  archived. MEM asserts no result.)
   2026-09-09T15:05:36Z (MEM ROUND 320 -- ***A SPECIFICATION THAT SHOULD OUTLIVE THIS DAY, AND A CLASS ENUMERATED BY OPERATION
   FOR THE FIRST TIME.*** From `f06ec7d` to `a52526d`. ***DA'S FIVE-POINT ACCEPTANCE CRITERIA FOR THE BUILD-TIME L=0
   VALUATION: (a) VALUED ON THE R-801 ESTIMAND -- trades cash flow plus share-delta x settlement, NEVER the 5-second
@@ -160,53 +207,6 @@ updated: >-
   the expensive direction: 09-04 REACHES 9.70 GB, 82 % OF THE ENVELOPE, NOT THE 63 % REPORTED FROM A SINGLE WARM
   RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2790, prov 2318 -> 2335; window 3/3, Batch
   301 archived. MEM asserts no result.)
-  2026-09-09T12:56:22Z (MEM ROUND 318 -- ***THE 09-03 REBUILD IS RUNNING.*** From `c98a547` to `4784242`, two commits.
-  **`p003ev210903a` is `active`, launched 12:52:32Z from `wt-be`, payload `be_daybook_build.py`, args `--day 20260903
-  --placement-latency-ms 250 --artifact-revision EV21`, expected ~13:47Z ON THE MEASURED 54.3-MINUTE WALL and not the
-  superseded 74-76 min forecast** -- ***AND I DID NOT TAKE "BOTH FIXES ARE IN" ON TRUST: THE RECORD'S `tip` IS
-  `f722bb3768f1ab...` AND `git merge-base --is-ancestor` PUTS BOTH `15ed903` (THE ZERO-LENGTH EXCLUSION, VERIFIED BY
-  REV 138 ON ALL FOUR) AND `f722bb3` (BE 130) INSIDE IT.*** **The unit is DELIBERATELY A NEW NAME so `p003ev200903c`
-  KEEPS THE RECORD OF THE RUN THAT PRODUCED THE DIAGNOSIS, AND THAT RECORD IS NOW EVIDENCE** -- *BE's own lesson this
-  morning, that a killed run should preserve its stage table, applied prospectively to a run that SUCCEEDED and then
-  refused its consumer; an artifact overwritten is a diagnosis that cannot be re-read.* ***AND IT NEEDED NO NEW
-  AUTHORISATION, RECORDED BECAUSE THIS FILE HAS SPENT THIRTY ROUNDS SAYING THE BUILD IS THE USER'S: the standing
-  instruction was "build and replay 09-03 for the early point estimate", the first attempt REFUSED on a defect now
-  understood and fixed, SO THIS IS THAT SAME TASK RETRIED -- and the coordinator STATED THAT READING TO THE USER
-  BEFORE RELEASING IT***, which is the right order. **NOTHING BEYOND 09-03 IS AUTHORISED.** ***THE ROUND'S LESSON IS
-  BE 130: FINITENESS BEFORE EQUALITY.*** REV 138 found `t0 == t1` tested WITHOUT finiteness, so **`inf`/`inf` and two
-  equal STRINGS were dropped under `ZERO_LENGTH_GENERATION_EXCLUDED`**, and the repair gives the hidden shapes their
-  own names -- confirmed in the diff: **`NON_FINITE_GENERATION_BOUND`, `MALFORMED_GENERATION_BOUND`,
-  `INVERTED_GENERATION`, `GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS`.** ***IT COST SECONDS TO FIX BEFORE THE RUN AND
-  WOULD HAVE COST 54 MINUTES AFTER -- the entire argument for verifying before the expensive thing, in one number.***
-  ***AND THE GENERALISATION: THE EXACT DEFECT DE 172 REMOVED FROM ITS PROBE FORTY MINUTES EARLIER REAPPEARED IN THE
-  BUILDER, AND IS WORSE THERE, BECAUSE A MISLABELLED COUNT IN A PROBE BECOMES A SILENT DROP FROM THE POPULATION IN A
-  BUILDER*** -- same mistake, different seat, different file, no copying, **the same code shape carrying two entirely
-  different costs depending on where it sits.** **DA's INDEPENDENT VERIFICATION OF THE FIRST CORRECTED BOOK: 0 FLAGS
-  -- "nothing else in the book is wrong THAT I COULD FIND; the digest chain, the population, the shape, the span
-  ordering and the tranche accounting all reconcile, TWO WAYS WHERE TWO WAYS EXIST"** (filed **Q-DA-381, not 380,
-  because 380 was taken by DA 157's row**), **and it is the first real exercise of DA's own gate-item-8 fix against a
-  REAL per-row book rather than a fixture.** ***ONE OF ITS FOUR OBSERVATIONS IS A RESULT: 51.17 % OF TRANCHES DROPPED
-  BEFORE THE LATENCY -- `TRANCHE_BEFORE_PLACEMENT_LATENCY` 23,765 against `TRANCHE_KEPT` 22,675 of 46,440 offered***,
-  DA's own histogram reconciling to `TRANCHE_KEPT` exactly, *and I checked the arithmetic: 23,765 + 22,675 = 46,440
-  EXACTLY, so the two statuses PARTITION the denominator with no remainder.* **WHERE DA AGREES IT SUPPORTS IT AT THE
-  CODE, which is the strongest part: `apply_placement_latency` READS ONLY `t['t']`, `t0` AND `L` AND RUNS INSIDE
-  `build_reference`, SO EVERY RETRACTED DEFECT IS DOWNSTREAM OF IT.** ***BUT DA EXPLICITLY DECLINES THE FRAMING I WAS
-  ASKED TO RECORD, AND I RECORD THE DISSENT RATHER THAN THE HEADLINE, BECAUSE THE INSTRUCTION WAS "AS DA HAS FILED
-  IT, NEITHER STRONGER NOR WEAKER": "first evidence since the retraction" CREDITS IT WITH CLOSING A GAP R-835 SAYS
-  WAS NEVER OPEN, THE 0-CANCEL BASELINE MAKING NO DECISIONS AND HAVING ALREADY SURVIVED BOTH SCORING DEFECTS; "51.17
-  % IS A COUNT OF TRANCHES WHILE 54 % IS A SHARE OF SETTLED MONEY -- DIFFERENT ESTIMANDS THAT MUST NOT BE READ AS
-  AGREEING"; AND NO L=0 EV20 BOOK EXISTS, SO DA 140's SET-EQUALITY CONTROL CANNOT BE REPEATED ON CORRECTED DATA
-  TODAY.*** *Two numbers near 50 % that measure different things are not corroboration; the retraction happened
-  because quantities were read as answers to questions they had not been measured against, and SAMENESS OF MECHANISM
-  IS NOT AGREEMENT OF ESTIMATE.* **DE's point estimate is what tests it at the money level.** ***THE THREE EXIT
-  NUMBERS ARE PRE-REGISTERED HERE BEFORE THE RUN LANDS: (i) ZERO-LENGTH GENERATIONS EXCLUDED = NINE, AS A COUNTED
-  STATUS; (ii) THE NEW NON-FINITE AND MALFORMED STATUSES = ZERO ON THIS DAY AND PRESENT RATHER THAN ABSENT; (iii) THE
-  GENERATION TOTAL = 313,140 (I CHECKED: 313,149 - 9), AND A DIFFERENT NUMBER IS A FINDING*** -- **a zero that is
-  PRESENT is a measurement; a zero that is ABSENT is an unrun check.** And a standing item quietly become actionable:
-  **`require_book_declares_L` IS NOW ARMABLE, ITS EXCUSE EXPIRED, THIS BOOK DECLARING `250.0` with `source: "the
-  caller"`** -- *the second guard tonight whose excuse expired without anyone noticing at the moment it did, and both
-  were found by someone looking at the ARTIFACT rather than at the guard.* Flags 2761 -> 2773, prov 2306 -> 2318;
-  window 3/3, Batch 300 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -378,6 +378,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 321, R-868 swept; the sibling-block class CLOSED at six sites (e975d81 -> 412a89e) ---
+  THE_SIBLING_BLOCK_CLASS_IS_CLOSED_AND_I_DROVE_ITS_MEMBERSHIP_TEST: FIVE-SHARED-NAMES-MEASURED
+  SIX_SITES_THREE_MODULES_THREE_NEW_OVER_A_STATED_SCOPE: ENUMERABLE-THEREFORE-CLOSABLE
+  THE_WORST_IS_NOT_A_GUARD_AND_ITS_ENDPOINT_IS_A_RULING_NOT_A_PATCH: BUT-IT-MUST-NAME-EITHER-WAY
+  AND_THE_SECOND_WORST_MODULE_HAD_ZERO_OCCURRENCES_AND_NOW_HAS_EIGHT: I-COUNTED-BOTH
+  DAS_MANUAL_RECOMPUTE_IS_NOT_INVALIDATED_THE_MODULE_WAS_BLIND_NOT_THE_ROUND: THE-DISTINCTION-MATTERS
+  BE_COULD_NOT_MEET_TWO_CRITERIA_AT_BUILD_AND_MOVED_THE_FALSIFIER_INSTEAD: NOT-DROPPED-RELOCATED
+  FALSIFIABLE_ONE_SEAM_OVER_IS_THE_STANDARD_NOT_A_NOTE: WHERE-BOTH-NUMBERS-EXIST
+  SO_RULING_B_STANDS_AND_NO_L0_BUILD_IS_NEEDED: THE-OBJECTION-IS-ANSWERED
+  AND_THE_OTHER_THREE_CRITERIA_ARE_IN_THE_ARTIFACT_BY_NAME: WHAT_MUST_NOT_BE_SAID
+  BOTH_LEGS_COMPUTABLE_IS_COMPUTED_RATHER_THAN_ASSUMED: A-MISSING-FIELD-WOULD-OMIT-SILENTLY
+  DE_176_IS_RUNNING_THE_FIRST_NULL_SINCE_THE_RETRACTION: HAZARD-UNDER-RULING-B
+  WITH_RULE_6_BINDING_AND_A_SHORT_COUNT_REFUSING: DECLARED-BEFORE-THE-RESULT
+  REV_141_SAYS_NOT_IMPOSSIBLE_THIS_WEEK_AND_THE_TEST_BECOMES_A_CELL: ENUMERABLE-IS-CHECKABLE
+  MY_ROUND_320_ROW_WAS_BLOCKED_AND_HAS_NOW_LANDED_AND_NOTHING_WAS_LOST: MY-OWN-GREP-WAS-THE-ERROR
   # --- MEM round 320 ADDENDUM 2026-09-09T15:07:12Z: DA 163 closes the sign-reversal question ---
   DA_163_ANSWERS_THE_SIGN_REVERSAL_AND_IT_IS_THE_REPAIRS: 98-1-PERCENT-ARM-SIDE
   AND_THE_ANSWER_COMES_FROM_A_POLICY_FREE_BASELINE_NOBODY_HAD_USED_THAT_WAY: ANY-CHANGE-IN-IT-IS-PURE-POPULATION
@@ -27246,6 +27261,170 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 321, 2026-09-09T15:13:26Z ---
+  THE_SIBLING_BLOCK_CLASS_IS_CLOSED_AND_I_DROVE_ITS_MEMBERSHIP_TEST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***THE SIBLING-BLOCK CLASS IS CLOSED, AND THE REASON IT CAN CLOSE IS THAT ITS MEMBERSHIP TEST IS MECHANICAL --
+      WHICH I DROVE MYSELF ON THE REAL POINT-ESTIMATE ARTIFACT RATHER THAN TAKING THE LIST.*** A site is in the
+      class when it **NAMES ONE OF TWO SIBLING BLOCKS LITERALLY AND READS A FIELD THAT EXISTS IN BOTH.** I walked
+      the artifact and intersected the two blocks: ***`economic` HAS 6 FIELDS, `economic_settlement` HAS 17, AND THE
+      SHARED SET IS EXACTLY `['Z', 'null_draws_summary', 'null_mean', 'null_sd', 'p_location']` -- FIVE NAMES, EACH
+      READABLE FROM THE WRONG BLOCK WITH NO ERROR.*** **A class whose membership is decided by a set intersection
+      over real data is a class that can be ENUMERATED, and an enumeration is what makes "closed over a stated
+      scope" a claim rather than a hope.**
+  SIX_SITES_THREE_MODULES_THREE_NEW_OVER_A_STATED_SCOPE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      **SIX SITES, THREE MODULES, THREE NEW -- CLOSED OVER A STATED SCOPE.** *The stated scope is the load-bearing
+      part: a closure without one is a claim about the universe, and this one is a claim about a search that can be
+      repeated.* **Rule 32 asked for enumeration by OPERATION rather than by spelling; this is the first class in
+      the programme to be closed that way** -- and the three new sites are, as I recorded last round, **the measure
+      of what waiting for the next accident was costing.** *Three were found by accident or by the user over weeks;
+      three more arrived in one round of looking.*
+  THE_WORST_IS_NOT_A_GUARD_AND_ITS_ENDPOINT_IS_A_RULING_NOT_A_PATCH:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***THE WORST OF THE SIX IS NOT A GUARD: `de_multiday_gate1_runner.py:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER
+      VERDICT FROM `r["economic"]["Z"]` -- THE DIAGNOSTIC -- WHILE R-801 MADE SETTLEMENT PRIMARY.*** **And the
+      disposition is exactly right and is the part to keep: THAT ENDPOINT CHOICE IS A RULING WITH THE USER, NOT A
+      PATCH.** *Switching the verdict to the settlement endpoint would change what the programme's headline finding
+      MEANS, and rule 14 says a seat does not decide that.* ***BUT IT MUST NAME THE ENDPOINT IT USED EITHER WAY***
+      -- and at my read the line now carries **`# ---- DE 176 / REV 140: THE VERDICT NAMES ITS ENDPOINT`**, so the
+      naming half has landed while the choice stays with the USER. **A verdict that names its endpoint is honest at
+      either setting; one that does not is wrong at both.**
+  AND_THE_SECOND_WORST_MODULE_HAD_ZERO_OCCURRENCES_AND_NOW_HAS_EIGHT:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      **The second worst was `da_gate1_day_verdict.py` containing ZERO occurrences of `economic_settlement` -- the
+      seat's independent recompute never touching the ruled endpoint, and its seal predicate reporting `sealed:
+      True` ON A RECEIPT CARRYING `D_E_settle`.** ***I COUNTED BOTH SIDES OF THAT: THE MODULE NOW HAS EIGHT
+      OCCURRENCES.*** **DA 164 has landed the repair** -- *"the comparison now reads the ruled endpoint, names the
+      block it compared, and says what it did NOT verify"* -- **so of the three new sites, two already have landings
+      at my read.** *The gap between a class being enumerated and its members being fixed was, here, under an
+      hour.*
+  DAS_MANUAL_RECOMPUTE_IS_NOT_INVALIDATED_THE_MODULE_WAS_BLIND_NOT_THE_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***AND A DISTINCTION THE COORDINATOR ASKED FOR EXPLICITLY, WHICH THIS FILE WOULD HAVE OWED ANYWAY: DA'S MANUAL
+      RECOMPUTE IS NOT INVALIDATED. THE MODULE IS BLIND, NOT THE ROUND.*** **DA 163's reproduction of `D_E_settle`
+      +11,191.244402 and +12,381.557663 was computed FROM THE FILL ROWS BY A SECOND IMPLEMENTATION, with zero
+      per-slug disagreements across 246 slugs x 2 books x 2 arms** -- *that work did touch the ruled endpoint, and
+      it is what the round's verification rests on.* **What was blind is `da_gate1_day_verdict.py`, the standing
+      verdict module.** ***A FINDING ABOUT AN INSTRUMENT DOES NOT AUTOMATICALLY VOID EVERY RESULT THE SEAT PRODUCED
+      -- IT VOIDS THE ONES THAT WENT THROUGH IT, AND SAYING WHICH IS THE WHOLE JOB.***
+  BE_COULD_NOT_MEET_TWO_CRITERIA_AT_BUILD_AND_MOVED_THE_FALSIFIER_INSTEAD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***BE'S ANSWER ON THE FALSIFIER, RECORDED AS THE STANDARD RATHER THAN AS A NOTE: DA'S CRITERIA (1) AND (3)
+      CANNOT BE MET AT BUILD, BECAUSE THE BUILD CANNOT PRODUCE THE NUMBER THE RECONCILIATION COMPARES AGAINST -- SO
+      BE MOVED THE FALSIFIER TO WHERE BOTH NUMBERS EXIST: THE POINT ESTIMATE.*** **`KEPT-VALUE + DROPPED-VALUE =
+      ALL-TRANCHE VALUE`, and `KEPT-VALUE == 37,315.551431` TO THE DIGIT.** *The available shortcut was to declare
+      the criterion unmeetable and drop it; BE relocated it instead.* ***A REQUIREMENT THAT CANNOT BE MET WHERE IT
+      WAS WRITTEN IS NOT AUTOMATICALLY A REQUIREMENT THAT CANNOT BE MET.***
+  FALSIFIABLE_ONE_SEAM_OVER_IS_THE_STANDARD_NOT_A_NOTE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***AND BE'S SENTENCE IS THE ONE TO KEEP: "THE EQUIVALENCE IS NOT UNFALSIFIABLE -- IT IS FALSIFIABLE ONE SEAM
+      OVER, WHERE DA SPECIFIED IT."*** **This programme has spent two nights finding checks that could not fail, and
+      the standing remedy has been to make the check stronger IN PLACE. This is the other move: KEEP THE CHECK AND
+      CHANGE WHERE IT RUNS.** *A falsifier belongs where both quantities exist, which is not always where the
+      quantity is produced* -- **and naming the seam is what stops "we could not check it here" from becoming "it is
+      unchecked".**
+  SO_RULING_B_STANDS_AND_NO_L0_BUILD_IS_NEEDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***THE CONSEQUENCE, AND IT IS A DECISION HELD RATHER THAN REOPENED: THE USER'S RULING (b) THEREFORE STANDS AND
+      NO L=0 BUILD IS NEEDED.*** **The objection to valuing at build was that nothing independent would check the
+      valuation; the falsifier at the point estimate answers exactly that objection, using a baseline total produced
+      by a different code path for a different purpose.** *Last round I recorded (c) as "the cleverest part" because
+      it made the valuation checkable without the build the user ruled against; BE has now shown WHERE that check
+      runs.* **The ruling survives contact with implementation, which is not something this programme can say
+      often.**
+  AND_THE_OTHER_THREE_CRITERIA_ARE_IN_THE_ARTIFACT_BY_NAME:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      **DA's (2), (4) and (5) are IN THE ARTIFACT, BY NAME: `WHAT_THE_DROPPED_SET_IS`, `HOW_IT_MUST_BE_SAID`,
+      `WHAT_MUST_NOT_BE_SAID`, and the >=5-day scope.** ***A SPECIFICATION WHOSE CLAUSES BECOME FIELD NAMES IS A
+      SPECIFICATION THAT TRAVELS WITH THE NUMBER*** -- and `WHAT_MUST_NOT_BE_SAID` is the striking one: **DA's three
+      refusals (the count share standing in for the money share, the markout as the valuation, dropping the
+      fill-probability assumption) are now a FIELD A READER RESOLVES, not a paragraph a reader may skip.** *This is
+      tonight's recurring lesson -- the qualification at the address the reader reaches -- applied to a
+      specification rather than to a guard.*
+  BOTH_LEGS_COMPUTABLE_IS_COMPUTED_RATHER_THAN_ASSUMED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      **And the detail that shows the contract was implemented rather than acknowledged:
+      `both_legs_computable_for_every_tranche` is COMPUTED via `_legs_fields_present` RATHER THAN ASSUMED, "because
+      a missing field would silently omit a tranche from a total."** ***A SILENT OMISSION FROM A DENOMINATOR IS THE
+      DEFECT CLASS THIS PROGRAMME HAS PAID FOR REPEATEDLY*** -- the row-vs-action inflation, the side dropped
+      outside `HSP.SIDES`, the whitelist that halted a traversal. **Here it is anticipated in a field before the
+      number exists**, which is the difference between a contract and a promise.
+  DE_176_IS_RUNNING_THE_FIRST_NULL_SINCE_THE_RETRACTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***DE 176 IS RUNNING HAZARD'S NULL -- THE FIRST NULL SINCE THE RETRACTION.*** **Under ruling B**, with **the
+      1-in-3,862 exception required to travel WITH ITS DENOMINATOR** and **CONDVALUE's fail-closed state stated with
+      its reason.** *Every arm result the programme had was retracted; the point estimate that came back had NO
+      control by design; this is the first time since then that a control is being drawn at all.* **The exception
+      travelling with its denominator is the specific thing that makes ruling (a) hold up: a rate quoted without the
+      population it is a rate over is how "1 in 3,862" becomes "negligible" without anyone deciding it.**
+  WITH_RULE_6_BINDING_AND_A_SHORT_COUNT_REFUSING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      **And rule 6 is binding on it, in the form the rule actually specifies: DESIGN AND MINIMUM DECLARED BEFORE THE
+      RESULT, >=200 DRAWS, THE DECISION METRIC AND NEVER A PROXY, AND A SHORT COUNT REFUSES.** ***THE LAST CLAUSE IS
+      THE ONE THAT MATTERS MOST AND IS USUALLY MISSING: A NULL THAT QUIETLY RETURNS FEWER DRAWS THAN DECLARED IS AN
+      UNDER-SAMPLED NULL WEARING A DECLARED ONE'S NAME, AND R-174 ALREADY SAYS THE COUNT IS NEVER LOWERED.***
+      *"Declare the null before the result: design AND minimum sample" is CLAUDE.md rule 6 verbatim, and the
+      programme has an arm-day refusal for a deadline overrun precisely so a short null cannot be absorbed.*
+  REV_141_SAYS_NOT_IMPOSSIBLE_THIS_WEEK_AND_THE_TEST_BECOMES_A_CELL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      ***REV 141'S DESIGN ANSWER, RECORDED AS THE DISPOSITION: NOT IMPOSSIBLE THIS WEEK -- FIX THE SIX AND MAKE THE
+      MEMBERSHIP TEST A CELL.*** **"A CLASS THAT IS ENUMERABLE IS A CLASS THAT IS CHECKABLE."** *That is the whole
+      argument in one line, and it follows directly from the membership test being mechanical: the same intersection
+      I drove by hand this round can be computed by a battery cell on every run, and a seventh site would then
+      announce itself instead of waiting to be found.* **The programme's three previous instances were found by
+      accident or by the user; the next one would be found by a cell.**
+  MY_ROUND_320_ROW_WAS_BLOCKED_AND_HAS_NOW_LANDED_AND_NOTHING_WAS_LOST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:13:26Z
+    said: >-
+      **My own housekeeping, reported because I reported the block: LAST ROUND'S `Q-MEM-308` WAS BLOCKED BY A
+      DIVERGED BRANCH AND HAS NOW LANDED.** *I refused to rebase because two of the four unpushed commits were DA's
+      (rule 21), and the divergence has since been resolved by someone else -- my two commits replayed as `12bbd6b`
+      and `4253bec`, all content intact, flags 2808 and prov 2353 exactly as I left them.* ***AND ONE CORRECTION TO
+      MY OWN CHECK: I MOMENTARILY READ A `grep -c` OF ZERO AS A LOST PARAGRAPH -- THE PHRASE "format string" SIMPLY
+      WRAPS A LINE IN THE FILE. THE PARAGRAPH IS AT `HANDOFF.md:81`. MY GREP WAS THE ERROR, NOT THE FILE***, and I
+      verified before reporting rather than after.
   # --- MEM round 320 ADDENDUM, 2026-09-09T15:07:12Z ---
   DA_163_ANSWERS_THE_SIGN_REVERSAL_AND_IT_IS_THE_REPAIRS:
     prov: CHECKED

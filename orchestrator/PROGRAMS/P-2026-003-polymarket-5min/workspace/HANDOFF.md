@@ -1,3 +1,90 @@
+# READ FIRST — round 321 (MEM, 2026-09-09T15:13:26Z, tip `412a89e`)
+
+**R-868 swept.** Three things: **a class closed**, **a falsifier relocated**, and **the first null since the
+retraction running.**
+
+# 🔒 (1) THE SIBLING-BLOCK CLASS — CLOSED
+
+**It closes because its membership test is MECHANICAL — which I drove myself on the real point-estimate artifact
+rather than taking the list.** A site is in the class when it **names one of two sibling blocks literally and reads a
+field that exists in both.**
+
+| | |
+|---|---|
+| `economic` fields | **6** |
+| `economic_settlement` fields | **17** |
+| **shared — readable from the wrong block with no error** | **`['Z', 'null_draws_summary', 'null_mean', 'null_sd', 'p_location']` — five names** |
+
+**SIX SITES · THREE MODULES · THREE NEW · closed over a stated scope.** *The stated scope is load-bearing: a closure
+without one is a claim about the universe.*
+
+**⛔ The worst is NOT a guard.** `de_multiday_gate1_runner.py:2865` computes **the multi-day day-cluster verdict**
+from `r["economic"]["Z"]` — **the diagnostic** — while R-801 made settlement primary. ***That endpoint choice is a
+RULING with the USER, not a patch — though it must NAME the endpoint it used either way.*** At my read the line now
+carries `# ---- DE 176 / REV 140: THE VERDICT NAMES ITS ENDPOINT`: **the naming half has landed, the choice stays
+with the user.** *A verdict that names its endpoint is honest at either setting; one that does not is wrong at
+both.*
+
+**⛔ The second worst:** `da_gate1_day_verdict.py` had **ZERO** occurrences of `economic_settlement` — its
+independent recompute never touched the ruled endpoint, and its seal predicate reported `sealed: True` on a receipt
+carrying `D_E_settle`. **I counted both sides: the module now has EIGHT.** *Of the three new sites, two already have
+landings.*
+
+**⇒ And the distinction that must not blur: DA's MANUAL RECOMPUTE IS NOT INVALIDATED. The MODULE was blind, not the
+round.** DA 163 computed **from the fill rows by a second implementation**, zero per-slug disagreements across 246
+slugs × 2 books × 2 arms. ***A finding about an instrument voids the results that went THROUGH it — not everything
+the seat produced — and saying which is the whole job.***
+
+# 🔧 (2) BE MOVED THE FALSIFIER RATHER THAN DROPPING IT — record it as the standard
+
+**DA's criteria (1) and (3) cannot be met AT BUILD** — the build cannot produce the number the reconciliation
+compares against. **So BE moved the falsifier to where both numbers exist: the point estimate.**
+
+> **`KEPT-VALUE + DROPPED-VALUE = ALL-TRANCHE VALUE`, and `KEPT-VALUE == 37,315.551431` to the digit.**
+> ***"The equivalence is not unfalsifiable — it is falsifiable ONE SEAM OVER, where DA specified it."***
+
+*The programme's standing remedy for a weak check has been to strengthen it in place. **This is the other move: keep
+the check and change where it runs.*** **⇒ The USER's ruling (b) stands and NO L=0 BUILD IS NEEDED.**
+
+**DA's (2), (4), (5) are in the artifact by name:** `WHAT_THE_DROPPED_SET_IS`, `HOW_IT_MUST_BE_SAID`,
+**`WHAT_MUST_NOT_BE_SAID`**, the ≥5-day scope. *A specification whose clauses become field names travels with the
+number* — and `WHAT_MUST_NOT_BE_SAID` turns DA's three refusals into **a field a reader resolves**, not a paragraph
+a reader may skip. **And `both_legs_computable_for_every_tranche` is COMPUTED via `_legs_fields_present` rather than
+assumed — "because a missing field would silently omit a tranche from a total."** *The exact defect class this
+programme has paid for repeatedly, anticipated in a field before the number exists.*
+
+# 🎲 (3) DE 176 IS RUNNING HAZARD'S NULL — **the first null since the retraction**
+
+Under **ruling B**, with **rule 6 binding**: design and minimum **declared before the result**, **≥200 draws**, **the
+decision metric and never a proxy**, and ***a short count REFUSES***. The **1-in-3,862 exception must travel WITH ITS
+DENOMINATOR**, and **CONDVALUE's fail-closed state is stated with its reason.**
+
+*A rate quoted without the population it is a rate over is how "1 in 3,862" becomes "negligible" without anyone
+deciding it. And a null that quietly returns fewer draws than declared is an under-sampled null wearing a declared
+one's name.*
+
+## (4) REV 141's DISPOSITION
+
+***"Not impossible this week — fix the six and make the membership test A CELL. A class that is enumerable is a class
+that is checkable."*** *The same intersection I drove by hand this round can run as a battery cell on every run — so
+a seventh site would announce itself instead of waiting to be found.* **The previous three were found by accident or
+by the user.**
+
+## HOUSEKEEPING — the blocked row, and a correction to my own check
+
+**Last round's `Q-MEM-308` was blocked by a diverged branch and has now landed.** *I refused to rebase because two of
+the four unpushed commits were DA's (rule 21); the divergence was resolved by someone else, and my commits replayed
+as `12bbd6b` / `4253bec` with all content intact — flags 2808, prov 2353, exactly as I left them.*
+
+***And one correction to my own check: I momentarily read a `grep -c` of zero as a lost paragraph. The phrase
+"format string" simply wraps a line; the paragraph is at `HANDOFF.md:81`. My grep was the error, not the file — and I
+verified before reporting rather than after.***
+
+Counts: flags 2808 → 2822, provenance 2353 → 2367 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 303 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 320 (MEM, 2026-09-09T15:05:36Z, tip `a52526d`)
 
 # 📐 DA'S FIVE-POINT ACCEPTANCE CRITERIA — a specification meant to outlive this day

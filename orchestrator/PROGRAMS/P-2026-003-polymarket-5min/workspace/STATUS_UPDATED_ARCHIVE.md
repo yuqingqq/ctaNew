@@ -22005,3 +22005,55 @@ generation and the window went 4 → 3. Nothing rewritten.
   FALSE FLAG ON THE FIRST CORRECTED BOOK.** Flags 2744 -> 2761, prov 2289 -> 2306; window 3/3, Batch 299 archived.
   MEM asserts no result.)
 ```
+
+## Batch 303 — archived 2026-09-09T15:13:26Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T12:56:22Z (MEM ROUND 318 -- ***THE 09-03 REBUILD IS RUNNING.*** From `c98a547` to `4784242`, two commits.
+  **`p003ev210903a` is `active`, launched 12:52:32Z from `wt-be`, payload `be_daybook_build.py`, args `--day 20260903
+  --placement-latency-ms 250 --artifact-revision EV21`, expected ~13:47Z ON THE MEASURED 54.3-MINUTE WALL and not the
+  superseded 74-76 min forecast** -- ***AND I DID NOT TAKE "BOTH FIXES ARE IN" ON TRUST: THE RECORD'S `tip` IS
+  `f722bb3768f1ab...` AND `git merge-base --is-ancestor` PUTS BOTH `15ed903` (THE ZERO-LENGTH EXCLUSION, VERIFIED BY
+  REV 138 ON ALL FOUR) AND `f722bb3` (BE 130) INSIDE IT.*** **The unit is DELIBERATELY A NEW NAME so `p003ev200903c`
+  KEEPS THE RECORD OF THE RUN THAT PRODUCED THE DIAGNOSIS, AND THAT RECORD IS NOW EVIDENCE** -- *BE's own lesson this
+  morning, that a killed run should preserve its stage table, applied prospectively to a run that SUCCEEDED and then
+  refused its consumer; an artifact overwritten is a diagnosis that cannot be re-read.* ***AND IT NEEDED NO NEW
+  AUTHORISATION, RECORDED BECAUSE THIS FILE HAS SPENT THIRTY ROUNDS SAYING THE BUILD IS THE USER'S: the standing
+  instruction was "build and replay 09-03 for the early point estimate", the first attempt REFUSED on a defect now
+  understood and fixed, SO THIS IS THAT SAME TASK RETRIED -- and the coordinator STATED THAT READING TO THE USER
+  BEFORE RELEASING IT***, which is the right order. **NOTHING BEYOND 09-03 IS AUTHORISED.** ***THE ROUND'S LESSON IS
+  BE 130: FINITENESS BEFORE EQUALITY.*** REV 138 found `t0 == t1` tested WITHOUT finiteness, so **`inf`/`inf` and two
+  equal STRINGS were dropped under `ZERO_LENGTH_GENERATION_EXCLUDED`**, and the repair gives the hidden shapes their
+  own names -- confirmed in the diff: **`NON_FINITE_GENERATION_BOUND`, `MALFORMED_GENERATION_BOUND`,
+  `INVERTED_GENERATION`, `GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS`.** ***IT COST SECONDS TO FIX BEFORE THE RUN AND
+  WOULD HAVE COST 54 MINUTES AFTER -- the entire argument for verifying before the expensive thing, in one number.***
+  ***AND THE GENERALISATION: THE EXACT DEFECT DE 172 REMOVED FROM ITS PROBE FORTY MINUTES EARLIER REAPPEARED IN THE
+  BUILDER, AND IS WORSE THERE, BECAUSE A MISLABELLED COUNT IN A PROBE BECOMES A SILENT DROP FROM THE POPULATION IN A
+  BUILDER*** -- same mistake, different seat, different file, no copying, **the same code shape carrying two entirely
+  different costs depending on where it sits.** **DA's INDEPENDENT VERIFICATION OF THE FIRST CORRECTED BOOK: 0 FLAGS
+  -- "nothing else in the book is wrong THAT I COULD FIND; the digest chain, the population, the shape, the span
+  ordering and the tranche accounting all reconcile, TWO WAYS WHERE TWO WAYS EXIST"** (filed **Q-DA-381, not 380,
+  because 380 was taken by DA 157's row**), **and it is the first real exercise of DA's own gate-item-8 fix against a
+  REAL per-row book rather than a fixture.** ***ONE OF ITS FOUR OBSERVATIONS IS A RESULT: 51.17 % OF TRANCHES DROPPED
+  BEFORE THE LATENCY -- `TRANCHE_BEFORE_PLACEMENT_LATENCY` 23,765 against `TRANCHE_KEPT` 22,675 of 46,440 offered***,
+  DA's own histogram reconciling to `TRANCHE_KEPT` exactly, *and I checked the arithmetic: 23,765 + 22,675 = 46,440
+  EXACTLY, so the two statuses PARTITION the denominator with no remainder.* **WHERE DA AGREES IT SUPPORTS IT AT THE
+  CODE, which is the strongest part: `apply_placement_latency` READS ONLY `t['t']`, `t0` AND `L` AND RUNS INSIDE
+  `build_reference`, SO EVERY RETRACTED DEFECT IS DOWNSTREAM OF IT.** ***BUT DA EXPLICITLY DECLINES THE FRAMING I WAS
+  ASKED TO RECORD, AND I RECORD THE DISSENT RATHER THAN THE HEADLINE, BECAUSE THE INSTRUCTION WAS "AS DA HAS FILED
+  IT, NEITHER STRONGER NOR WEAKER": "first evidence since the retraction" CREDITS IT WITH CLOSING A GAP R-835 SAYS
+  WAS NEVER OPEN, THE 0-CANCEL BASELINE MAKING NO DECISIONS AND HAVING ALREADY SURVIVED BOTH SCORING DEFECTS; "51.17
+  % IS A COUNT OF TRANCHES WHILE 54 % IS A SHARE OF SETTLED MONEY -- DIFFERENT ESTIMANDS THAT MUST NOT BE READ AS
+  AGREEING"; AND NO L=0 EV20 BOOK EXISTS, SO DA 140's SET-EQUALITY CONTROL CANNOT BE REPEATED ON CORRECTED DATA
+  TODAY.*** *Two numbers near 50 % that measure different things are not corroboration; the retraction happened
+  because quantities were read as answers to questions they had not been measured against, and SAMENESS OF MECHANISM
+  IS NOT AGREEMENT OF ESTIMATE.* **DE's point estimate is what tests it at the money level.** ***THE THREE EXIT
+  NUMBERS ARE PRE-REGISTERED HERE BEFORE THE RUN LANDS: (i) ZERO-LENGTH GENERATIONS EXCLUDED = NINE, AS A COUNTED
+  STATUS; (ii) THE NEW NON-FINITE AND MALFORMED STATUSES = ZERO ON THIS DAY AND PRESENT RATHER THAN ABSENT; (iii) THE
+  GENERATION TOTAL = 313,140 (I CHECKED: 313,149 - 9), AND A DIFFERENT NUMBER IS A FINDING*** -- **a zero that is
+  PRESENT is a measurement; a zero that is ABSENT is an unrun check.** And a standing item quietly become actionable:
+  **`require_book_declares_L` IS NOW ARMABLE, ITS EXCUSE EXPIRED, THIS BOOK DECLARING `250.0` with `source: "the
+  caller"`** -- *the second guard tonight whose excuse expired without anyone noticing at the moment it did, and both
+  were found by someone looking at the ARTIFACT rather than at the guard.* Flags 2761 -> 2773, prov 2306 -> 2318;
+  window 3/3, Batch 300 archived. MEM asserts no result.)
+```
