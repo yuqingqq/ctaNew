@@ -537,54 +537,6 @@ its controls at both endpoints; Gate 1's three sampler refusals stand.
 
 **§7e addendum 2 (2026-09-07T15:38Z, R-803..R-806) — THE USER'S WORK ORDER (R-804) and where it stands.** The user: "make these few days data correct … Check above issues, fix then review" (five critical issues, verbatim in R-804). Three tracks: **A** (data correct under the ruled P&L) — 09-05/09-06 DONE at the ledgers (R-803: trades + residual, Chainlink-verified winner, convention S60(T) ≥ S60(t0) reproduces the venue 576/576); 09-03/09-04 have NO ledgers → GO E1r/E2r re-runs from wt-de at `5020f96`, **NO-GO at REVIEW 104A until the early-read family has a SUPERSESSION RULE** (`EARLY_READ_ALREADY_EMITTED` is right; DE 138 Part A adds `supersedes: {path, sha256}` + the precondition; DA 130 adds head resolution) → then E1r, E2r (after GO #8 if the clock is tight) → BE values them. The misnamed `inventory_leg` (= −trades cash flow) → DE 137 renames. **B** (the settlement null + declaration) — DE 136 LANDED `1f171e8` (estimator, inline-valued null, rule-11 guard, four falsifiers, draft `live/pm_research/drafts/R801_params_v20_design_v28_DRAFT.md`; winner NOT_VERIFIED_AGAINST_CHAINLINK until DE 137 wires BE 99's convention) → REV 104 second half → GO #8 (unchanged) → v20/v28 LAND → settlement-null runs 09-03..09-06 (design) + 09-07 (validation). **C** (design fixes, each a declared parameter + falsifier, validated from the first day AFTER landing) — DE 138 Part B draft: position cap, hold_side_after_cancel, (side, hour)-stratified null, thresholds re-fit on the consumed days, **placement_latency_ms** (BE 100: the reference spec has NO placement latency; 48–56 % of fills land within 250 ms of placement and carry 98 % / 55 % of the baseline's settlement P&L — the largest assumption in the numbers); the quoter's settlement view is DEFERRED — DA 129: the fair-value identity needs a **sigma producer that does not exist** (owner DA). Capacity is NOT a weakness (our fills 2–8 % of tape volume per slug). Coordinator claim corrected in band at R-805 (the "zero placement latency" wording). Seat rounds at this writing: BE 100, DA 130 (in flight), DE 137 (in flight; 138 queued in the scratchpad — re-create from R-806 if lost), REV 104 (second half in flight), MEM 279 (in flight); next entry R-807.
 
-## 7g. ON RESUME — DO THESE FIRST (2026-09-09T05:46Z)
-
-**A cleared coordinator loses three things and NOTHING ELSE: the live Monitors, the
-`/loop` duty, and the scratchpad. Everything else is in git.** Re-establish in this order.
-
-**CORRECTED 2026-09-09T07:04Z (R-836): a clear does NOT kill a Monitor.** Three Monitors
-armed before the 06:58Z clear survived it and delivered events into the fresh context. What a
-clear loses is the `/loop` duty and the scratchpad; a Monitor still ends at its own TIMEOUT
-(the build watch expired ~07:02Z and was re-armed `persistent`). So on resume: CHECK what is
-still alive before re-arming, and re-arm only what has expired.
-
-**STANDING (R-836): while a build holds the heavy lock, ITS WORKTREE IS FROZEN.** The owning
-seat lands from the SHARED tree or it does not land. `p003ev200903` assembled for 74 minutes
-and was refused at the write because BE's own BE 109 commit went into wt-be at 05:58:16Z under
-a run that had started from `c9f8b31` at 05:09:52Z. Second loss of this class.
-
-1. **Re-arm the unit watch immediately.** Seat in-pane watchers are DEAD (R-821), so a
-   heavy unit that exits with no coordinator Monitor leaves its seat idling indefinitely —
-   this cost ~47 minutes in one session. Check for a running unit first:
-   `systemctl --user list-units --type=service --no-legend | grep -E 'p003ev|be10|dePE|deRR'`
-   and `fuser data/.heavy_run.lock`.
-2. **SUPERSEDED — that run died at 06:24:20Z (R-836); the relaunch `p003ev200903b` started
-   06:59:59Z, InvocationID `d60d8b7b8807402c876dc606c7cdecce`, envelope raised to
-   11,869,652,313 B (flagged, NOT ratified). The exit report owed is unchanged, below.**
-   IN FLIGHT AT THE EARLIER WRITING: `p003ev200903` — BE's **09-03 book at revision EV20**,
-   the FIRST built through the repaired scorer, started 05:09:52Z, ~35 min expected.
-   **At its exit: prompt BE** for the book path+sha, wall, peak, and the two things that
-   pass only this build can show — (a) the receipt's manifest including `linear_{coin}.json`
-   now under the digest set, (b) whether the corrected `asm` DIFFERS from the pre-fix
-   book's (identical scores would mean the fix did not reach the book), and (c) whether the
-   rebuilt `fr` is byte-identical to the existing book's — **if it is, the remaining four
-   days are minutes rather than ~40 each and the night changes.** Then **prompt DE** to run
-   the point estimate on it (~2 min).
-3. **BE's queue:** 09-04, 09-05, 09-06, 09-07 at L=250 revision EV20, one at a time under
-   the lock, ~40 min each, concurrency ruled out on memory (BE 106).
-4. **DE's queue:** the cancel-count measurement (old aggregation vs first-crossing, per arm
-   per day — the evidence a theta re-fit would be ruled on, still not produced); corrected
-   point estimates as books land; the parallel null's deployment.
-5. **MEM 289 was mid-sweep when this was written** — STATUS.yml and HANDOFF.md were last
-   written at round 288 (`0542820`, 09-08 01:50Z) and are STALE by two retractions until it
-   lands. Read §7f and RESULTS.md's retraction notice instead, and check MEM's newest
-   commit before trusting the state files.
-6. **Do not quote any corrected number** until the user rules the null's sampling unit.
-
-**Read order for a cold start:** §7f, then §7g (this), then RESULTS.md's retraction notice,
-then the last five register entries, then the four seat procedure files if you need to
-know how a seat works.
-
 ## 7f. STATE at 2026-09-09T05:43Z (R-835) — read this FIRST; it supersedes §7e and its addenda
 
 **EVERY ARM RESULT IS RETRACTED. The latency finding survives.** Two USER-found scoring
@@ -631,6 +583,58 @@ prompt the seat at its exit — seat in-pane watchers are DEAD (R-821) and every
 waiting otherwise.** All four working seats now carry procedure files
 (`BE`/`DA_PROCEDURE.md`/`MEM_PROCEDURE.md`/`DE_PROCEDURE.md`); a seat at the end of its
 context WRITES its file rather than reporting it (R-831).
+
+## 7g. ON RESUME — DO THESE FIRST (2026-09-09T05:46Z)
+
+**A cleared coordinator loses three things and NOTHING ELSE: the live Monitors, the
+`/loop` duty, and the scratchpad. Everything else is in git.** Re-establish in this order.
+
+**CORRECTED 2026-09-09T07:04Z (R-836): a clear does NOT kill a Monitor.** Three Monitors
+armed before the 06:58Z clear survived it and delivered events into the fresh context. What a
+clear loses is the `/loop` duty and the scratchpad; a Monitor still ends at its own TIMEOUT
+(the build watch expired ~07:02Z and was re-armed `persistent`). So on resume: CHECK what is
+still alive before re-arming, and re-arm only what has expired.
+
+**STANDING (R-836): while a build holds the heavy lock, ITS WORKTREE IS FROZEN.** The owning
+seat lands from the SHARED tree or it does not land. `p003ev200903` assembled for 74 minutes
+and was refused at the write because BE's own BE 109 commit went into wt-be at 05:58:16Z under
+a run that had started from `c9f8b31` at 05:09:52Z. Second loss of this class.
+
+1. **Re-arm the unit watch immediately.** Seat in-pane watchers are DEAD (R-821), so a
+   heavy unit that exits with no coordinator Monitor leaves its seat idling indefinitely —
+   this cost ~47 minutes in one session. Check for a running unit first:
+   `systemctl --user list-units --type=service --no-legend | grep -E 'p003ev|be10|dePE|deRR'`
+   and `fuser data/.heavy_run.lock`.
+2. **NOTHING IS BUILDING, BY USER RULING (R-839, 2026-09-09T07:15:47Z): "dont have to
+   build now, we clear issues first". `p003ev200903b` was stopped clean — nothing written,
+   lock free — and the five-day queue is STOOD DOWN. Do not launch a build, and let no seat
+   take the heavy lock, until the issue-clearing rounds land and the user or you dispatch
+   one explicitly. The envelope raise is RATIFIED for the EV20 queue only (R-837) and the
+   slice clamp is OWED BACK at 200 % when the null is done (R-838).**
+   HISTORICAL, both dead: `p003ev200903b` (06:59:59Z, stopped 07:15:47Z) and before it
+   `p003ev200903` — BE's **09-03 book at revision EV20**,
+   the FIRST built through the repaired scorer, started 05:09:52Z, ~35 min expected.
+   **At its exit: prompt BE** for the book path+sha, wall, peak, and the two things that
+   pass only this build can show — (a) the receipt's manifest including `linear_{coin}.json`
+   now under the digest set, (b) whether the corrected `asm` DIFFERS from the pre-fix
+   book's (identical scores would mean the fix did not reach the book), and (c) whether the
+   rebuilt `fr` is byte-identical to the existing book's — **if it is, the remaining four
+   days are minutes rather than ~40 each and the night changes.** Then **prompt DE** to run
+   the point estimate on it (~2 min).
+3. **BE's queue:** 09-04, 09-05, 09-06, 09-07 at L=250 revision EV20, one at a time under
+   the lock, ~40 min each, concurrency ruled out on memory (BE 106).
+4. **DE's queue:** the cancel-count measurement (old aggregation vs first-crossing, per arm
+   per day — the evidence a theta re-fit would be ruled on, still not produced); corrected
+   point estimates as books land; the parallel null's deployment.
+5. **MEM 289 was mid-sweep when this was written** — STATUS.yml and HANDOFF.md were last
+   written at round 288 (`0542820`, 09-08 01:50Z) and are STALE by two retractions until it
+   lands. Read §7f and RESULTS.md's retraction notice instead, and check MEM's newest
+   commit before trusting the state files.
+6. **Do not quote any corrected number** until the user rules the null's sampling unit.
+
+**Read order for a cold start:** §7f, then §7g (this), then RESULTS.md's retraction notice,
+then the last five register entries, then the four seat procedure files if you need to
+know how a seat works.
 
 ## Worktree data rule (R-553)
 
