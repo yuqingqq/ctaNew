@@ -21176,3 +21176,41 @@ generation and the window went 4 → 3. Nothing rewritten.
   trimmed 4 -> 3, Batch 281 archived. **NOTHING BUILT AND NO HEAVY LOCK SINCE 07:15:47Z, NO CORRECTED BOOK, NO
   CORRECTED NUMBER, AND THE STOPPING CRITERION IS STILL UNRULED.** MEM asserts no result.)
 ```
+
+## Batch 285 — archived 2026-09-09T08:54:28Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:31:33Z (MEM ROUND 300 -- R-852 AND REV 120'S BUILD SYNTHESIS SWEPT as a numbered
+  queue under rule 23, from my round-299 tip `a4c4e89` to `586be44`. STATE ONLY. ***THE SYNTHESIS IS THE MOST
+  DECISION-RELEVANT DOCUMENT SINCE THE RETRACTION AND THIS FILE CARRIES ITS THREE CATEGORIES RATHER THAN A SUMMARY
+  OF THEM.*** (a) BAKED IN AND INVISIBLE -- NOTHING FOUND, and REV makes the negative worth something by naming the
+  seven candidates it checked: the era and therefore the gaps, the scoring path's causality and old/new
+  equivalence, the cancel unit, the null's draws and moments, the ledger's write-and-read contract, the mask's
+  soundness and its interaction with the gap channel, the boundary reader's staleness distribution -- each now
+  either FIXED AND DRIVEN or MEASURED AND BOUNDED. Driven end to end, ***THE BUILDER AND DA NOW AGREE ON THE ERA***:
+  09-01 265 windows with 159 carrying gaps, 09-02 248 with 145, 09-06 288 with 14 -- ***AND 09-06's FOURTEEN ARE THE
+  SAME FOURTEEN REVIEW 112 NAMED AS LOST, SO 112 CLOSES AND 114's TWO-CHANNEL COLLAPSE CLOSES WITH IT***, a closure
+  by member identity and not merely by count. ***I DID NOT REPRODUCE THOSE PER-DAY COUNTS AND I SAY SO***: my
+  spot-check of `day_selector('20260906','btc')` returned an object typed `function`, unusable, though its `era`
+  read `clob_v4_1`; by my own rule an unexpected probe is a broken instrument, so I stopped rather than publish.
+  (b) ONE ITEM WOULD REFUSE AND ***BUILDING IS WHAT CLEARS IT***: `require_book_declares_L` refuses the FOUR BOOKS
+  THAT ALREADY EXIST because they predate BE 101's builder, and 09-07 passes BECAUSE IT WAS REBUILT -- "the armed
+  guard refuses yesterday's books; it does not block today's build. It is a reason to rebuild, not a reason to
+  wait." R-851's refutation STANDS and its SCOPE was wider than the fact, which is my own round-299 sequencing
+  formulation reached from the other side. ***AND THE FACT IT RESTS ON IS ONE I MEASURED AT ROUND 288***: 09-07 was
+  the first book to record its own L, and DE's reader returned `source: "THE BOOK'S BUILDER RECEIPT"` on it. (c)
+  WRONG BUT VISIBLE -- three, all priceable, ***ALL THREE ALREADY IN THIS FILE***: 09-03's DISAGREE, the mask's
+  exclusion not travelling into the receipt, and the point-estimate `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`. ***AND A
+  NEW OPEN ITEM THAT IS NOT ON THE GATE AT ALL***: the corrected assembly changed its KEYS and not only its values
+  -- old `(slug, side, t0)` one key per GENERATION, corrected `(slug, side, t_start)` one key per ROW -- and THREE
+  DA consumers test membership with the old shape. I verified all three at their lines: `da_elementwise.py:32`,
+  `da_elem_grid.py:33`, `da_elementwise_hz.py:32` each carry `if (s_, sd, float(g["t0"])) in gs:`, with `PER_ROW`
+  and `t_start` each returning 0, 0, 0 across the three. ***THE FAILURE IS SILENT AND READS AS A SMALLER
+  POPULATION*** -- a generation whose first row starts 3 s late reads as UNSCORED though it has two scored rows, the
+  assembly right and the consumer wrong -- ***AND ITS RATE IS UNMEASURABLE UNTIL THE FIRST CORRECTED BOOK EXISTS, SO
+  THE BUILD IS THE INSTRUMENT THAT SETTLES IT***; if DE's never-verified first-row claim fails, the BOOK is still
+  correct and the three consumers are what break. Flags 2514 -> 2529, prov 2059 -> 2074; window trimmed 4 -> 3,
+  Batch 282 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD DECISION IS WITH THE USER --
+  REV RECOMMENDS BUILD AND THE COORDINATOR CONCURS.** ***AND THE SHARED TREE IS STILL DIVERGED, SO NO SEAT CAN LAND
+  A REGISTER ROW: Q-MEM-287 AND Q-MEM-288 ARE COMPOSED AND UNLANDED.*** MEM asserts no result.)
+```

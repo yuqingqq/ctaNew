@@ -1,3 +1,84 @@
+# READ FIRST — round 303 (MEM, 2026-09-09T08:54:28Z, tip `17bbe9b`)
+
+**R-856 swept — eighteen commits since `0c297dd`.** STATE ONLY.
+
+## ⚠ (a) THE SEAL DOES NOT NAME THE RULED RESULT — verified at the tuple
+
+`ECONOMIC_FIELDS` names **`D_E0`, `D_E_MINUS_R`, `Z`, `p_location`, `null_mean`, `null_sd`,
+`null_draws_summary`, `sd_over_abs_mean`**. I tested each ruled-endpoint field against it:
+
+| field | named by the seal |
+|---|---|
+| `D_E_settle` · `arm_total_cents` · `zero_cancel_baseline_total_cents` | **False** |
+| `trades_leg_cents` · `residual_leg_cents` · `total_cents` | **False** |
+
+**Not one field of R-801's settlement P&L is named. The seal has been protecting the DIAGNOSTIC and leaving the
+RESULT exposed.**
+
+**And the tuple's own comments make it worse.** It was revisited **twice** for diagnostic fields — **R-599** added
+`sd_over_abs_mean` (*"the RATIO survived the seal while BOTH quantities it is formed from were sealed"*), **R-659**
+reversed R-656 on three count fields (*"a reader who can order the arms by intervention size on day 1 has seen
+something about the result"*) — **and never once when R-801 changed which quantity *is* the result.** *A set kept
+current against its old purpose is harder to notice than an abandoned one.*
+
+**I could not reproduce the artifact-level "1 of 6", and report what I measured instead.** My first probe scanned
+`*SEALED*` day-run files → **0 of 10** (my instrument: they predate the settlement block). Re-probed on
+`day_run.per_day_sealed_artifacts`: **6 day artifacts carry sealed entries, 2 carry ruled fields** — and the one I
+opened reads **`seal_status: 'UNSEALED_BY_USER_RULING R-765'`, `sealed: False`**, so there the fields are not under
+a seal at all. My predicate is looser than REV's, and my call to `assert_no_economic_leak` passed one argument where
+it takes three. **The code-level finding is confirmed; the count is REV's.**
+
+## ⚠ (b) THE CLOSURE PREDICATE CHECKS **5 of a recorded 49**
+
+`SCORING_PATH_MODULES` is a **hand-typed five** — all genuinely in the closure, so **it is a *sample* of the closure
+the book already records** (49 modules in `producing_code.import_closure`). **And it is not even a superset of the
+ten-module cascade `params_v25` pins**, missing six: `be_cancel_axis_null`, `be_data_root`,
+`de_matched_random_control`, `de_rho_estimator`, `phase4_generation_tables`, `pm_tape_density`.
+
+**⇒ Two sets governing the same run disagree about which modules matter, and neither is derived from the other.** A
+module can be pinned and unchecked, or checked and unpinned.
+
+**⇒ And rule 28 has now recurred inside its own remedy twice** — an *assertion* where a check was available (round
+298), and now a *sample* where the evidence was recorded.
+
+## RULES 31 AND 32
+
+**Rule 32** supplies the test I will apply to any set: **"what operation would constitute membership; was the set
+built that way; would a missed member be LOUD or SILENT. Only the silent ones matter."** Three sets in one night,
+**and every time the missed member was the consequential one.** Its model for repair is already here: **the
+heavy-run lock decides heaviness by MEASUREMENT — where a set can be derived from what the artifact already records,
+derive it.** The book's 49-module closure is exactly that.
+
+**Rule 31 — commit each file as soon as it parses; let the battery gate the PUSH.** DA lost a full round (battery
+green at 38, four files clean, every edit gone). **"A local commit is recoverable from the reflog; an uncommitted
+edit is recoverable from nothing."** **It binds me too** — my rounds hold three written state files uncommitted for
+the length of a batch, which is the same exposure.
+
+**The incident's epistemics, kept honest:** the loss is consistent with `git checkout -- <path>`, which **moves no
+HEAD and leaves no reflog entry**, and which **R-557 already forbids**. The coordinator recorded what it ran and
+stated plainly that **a negative cannot be proven from a reflog that records nothing.** *An unfalsifiable
+exoneration offered as one would be worse than an open question.*
+
+## QUEUE ITEM (4) — already done, and said so rather than filed twice
+
+**"Three consumers" was corrected to FIVE at round 302** (`STATUS.yml`'s
+`BUT_THREE_CONSUMERS_IS_MINE_AND_IT_IS_WRONG`; `HANDOFF.md:25`), including that **the two missed compute exclusion
+counts**. What this round adds is **rule 32's test**, which round 302 did not have.
+
+**And DA 149 has now corrected a *wiring cell* that still said three** — so the figure had reached a battery cell.
+***A wrong number in prose misleads a reader; the same number in a cell makes the suite vouch for it.*** **The sweep
+for a corrected number must include the checks that quote it.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z, build decision with the USER.**
+
+Counts: flags 2551 → 2563, provenance 2096 → 2108 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); 1,818 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 285
+archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 302 (MEM, 2026-09-09T08:48:28Z, tip `0c297dd`)
 
 **R-854 and R-855 swept — seventeen commits since `acaa5ea`.** STATE ONLY. **This round carries two corrections to

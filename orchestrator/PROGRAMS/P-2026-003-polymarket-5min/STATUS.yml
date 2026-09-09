@@ -67,6 +67,42 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T08:54:28Z (MEM ROUND 303 -- R-856 SWEPT as a numbered queue under rule 23, from my
+  round-302 tip `0c297dd` to `17bbe9b`, eighteen commits. STATE ONLY. ***THE FINDING THAT CHANGES WHAT A SEALED
+  ARTIFACT MEANS, VERIFIED BY ME AT THE TUPLE***: `ECONOMIC_FIELDS` names `D_E0`, `D_E_MINUS_R`, `Z`, `p_location`,
+  `null_mean`, `null_sd`, `null_draws_summary` and `sd_over_abs_mean` -- and I tested each ruled field against it,
+  `D_E_settle`, `arm_total_cents`, `zero_cancel_baseline_total_cents`, `trades_leg_cents`, `residual_leg_cents` and
+  `total_cents` ALL ABSENT. ***NOT ONE FIELD OF R-801's SETTLEMENT P&L IS NAMED BY THE SEAL, WHICH HAS BEEN
+  PROTECTING THE DIAGNOSTIC AND LEAVING THE RESULT EXPOSED.*** And the tuple's own comments make it WORSE: it was
+  revisited TWICE for diagnostic fields (R-599 adding `sd_over_abs_mean` because the RATIO survived while both its
+  quantities were sealed; R-659 reversing R-656 on three count fields) and NEVER when R-801 changed which quantity
+  IS the result -- ***A SET KEPT CURRENT AGAINST ITS OLD PURPOSE IS HARDER TO NOTICE THAN AN ABANDONED ONE.*** ***I
+  COULD NOT REPRODUCE THE ARTIFACT-LEVEL "1 OF 6" AND I REPORT WHAT I MEASURED***: my first probe scanned `*SEALED*`
+  day-run files and returned 0 of 10 (my instrument -- they predate the settlement block); re-probed on
+  `day_run.per_day_sealed_artifacts`, SIX day artifacts carry sealed entries and TWO carry ruled fields, and the one
+  I opened reads `seal_status: UNSEALED_BY_USER_RULING R-765` with `sealed: False`, so on that entry the fields are
+  not under a seal at all; my predicate is looser than REV's and my call to `assert_no_economic_leak` passed one
+  argument where it takes three. THE CODE-LEVEL FINDING IS CONFIRMED AND THE COUNT IS REV'S. ***THE SECOND FINDING,
+  MEASURED END TO END***: `SCORING_PATH_MODULES` is a HAND-TYPED FIVE against the **49** the book's own receipt
+  records in `producing_code.import_closure` -- all five real, so it is A SAMPLE OF THE CLOSURE THE BOOK ALREADY
+  RECORDS -- ***AND IT IS NOT EVEN A SUPERSET OF THE TEN-MODULE CASCADE***, missing `be_cancel_axis_null`,
+  `be_data_root`, `de_matched_random_control`, `de_rho_estimator`, `phase4_generation_tables` and `pm_tape_density`,
+  so two sets governing the SAME RUN disagree about which modules matter and neither is derived from the other.
+  ***SO RULE 28 HAS NOW RECURRED INSIDE ITS OWN REMEDY TWICE***: an ASSERTION where a check was available at round
+  298, and a SAMPLE where the evidence was recorded now. Rule 32 makes the method binding with the test I will apply
+  to any set -- what operation would constitute membership, was the set built that way, would a missed member be
+  LOUD or SILENT, ONLY THE SILENT ONES MATTER -- on the evidence of three sets in one night where EVERY TIME the
+  missed member was the consequential one; and its model for repair is already in the codebase, THE HEAVY-RUN LOCK
+  DECIDING HEAVINESS BY MEASUREMENT, with the book's own 49-module closure available to derive the scoring-path
+  check from. RULE 31 -- commit each file as soon as it parses, let the battery gate the PUSH -- cost DA a full round
+  (battery green at 38, four files clean, every edit gone) and ***IT BINDS ME TOO***, since my own rounds hold three
+  written state files uncommitted for the length of a batch. The loss is consistent with `git checkout -- <path>`,
+  which moves no HEAD and leaves no reflog entry and which R-557 already forbids; the coordinator recorded what it
+  ran and stated that ***A NEGATIVE CANNOT BE PROVEN FROM A REFLOG THAT RECORDS NOTHING***. Queue item (4) was
+  ALREADY DONE at round 302 and I say so rather than filing it twice -- and DA 149 has now corrected a WIRING CELL
+  that still said three, ***A WRONG NUMBER IN PROSE MISLEADS A READER AND THE SAME NUMBER IN A CELL MAKES THE SUITE
+  VOUCH FOR IT***. Flags 2551 -> 2563, prov 2096 -> 2108; window trimmed 4 -> 3, Batch 285 archived. **NOTHING
+  BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM asserts no result.)
   2026-09-09T08:48:28Z (MEM ROUND 302 -- R-854 AND R-855 SWEPT as a numbered queue under rule 23,
   from my round-301 tip `acaa5ea` to `0c297dd`, seventeen commits. STATE ONLY, AND IT CARRIES TWO CORRECTIONS TO
   NUMBERS RATHER THAN SUPERSEDING THEM QUIETLY. ***(a) THE 27 PER CENT***: checked in my own files first, because
@@ -129,39 +165,6 @@ updated: >-
   failing inside the register itself. I have renumbered NOTHING and edited NO history. Flags 2529 -> 2539, prov
   2074 -> 2084; window trimmed 4 -> 3, Batch 283 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE
   BUILD DECISION IS WITH THE USER.** MEM asserts no result.)
-  2026-09-09T08:31:33Z (MEM ROUND 300 -- R-852 AND REV 120'S BUILD SYNTHESIS SWEPT as a numbered
-  queue under rule 23, from my round-299 tip `a4c4e89` to `586be44`. STATE ONLY. ***THE SYNTHESIS IS THE MOST
-  DECISION-RELEVANT DOCUMENT SINCE THE RETRACTION AND THIS FILE CARRIES ITS THREE CATEGORIES RATHER THAN A SUMMARY
-  OF THEM.*** (a) BAKED IN AND INVISIBLE -- NOTHING FOUND, and REV makes the negative worth something by naming the
-  seven candidates it checked: the era and therefore the gaps, the scoring path's causality and old/new
-  equivalence, the cancel unit, the null's draws and moments, the ledger's write-and-read contract, the mask's
-  soundness and its interaction with the gap channel, the boundary reader's staleness distribution -- each now
-  either FIXED AND DRIVEN or MEASURED AND BOUNDED. Driven end to end, ***THE BUILDER AND DA NOW AGREE ON THE ERA***:
-  09-01 265 windows with 159 carrying gaps, 09-02 248 with 145, 09-06 288 with 14 -- ***AND 09-06's FOURTEEN ARE THE
-  SAME FOURTEEN REVIEW 112 NAMED AS LOST, SO 112 CLOSES AND 114's TWO-CHANNEL COLLAPSE CLOSES WITH IT***, a closure
-  by member identity and not merely by count. ***I DID NOT REPRODUCE THOSE PER-DAY COUNTS AND I SAY SO***: my
-  spot-check of `day_selector('20260906','btc')` returned an object typed `function`, unusable, though its `era`
-  read `clob_v4_1`; by my own rule an unexpected probe is a broken instrument, so I stopped rather than publish.
-  (b) ONE ITEM WOULD REFUSE AND ***BUILDING IS WHAT CLEARS IT***: `require_book_declares_L` refuses the FOUR BOOKS
-  THAT ALREADY EXIST because they predate BE 101's builder, and 09-07 passes BECAUSE IT WAS REBUILT -- "the armed
-  guard refuses yesterday's books; it does not block today's build. It is a reason to rebuild, not a reason to
-  wait." R-851's refutation STANDS and its SCOPE was wider than the fact, which is my own round-299 sequencing
-  formulation reached from the other side. ***AND THE FACT IT RESTS ON IS ONE I MEASURED AT ROUND 288***: 09-07 was
-  the first book to record its own L, and DE's reader returned `source: "THE BOOK'S BUILDER RECEIPT"` on it. (c)
-  WRONG BUT VISIBLE -- three, all priceable, ***ALL THREE ALREADY IN THIS FILE***: 09-03's DISAGREE, the mask's
-  exclusion not travelling into the receipt, and the point-estimate `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`. ***AND A
-  NEW OPEN ITEM THAT IS NOT ON THE GATE AT ALL***: the corrected assembly changed its KEYS and not only its values
-  -- old `(slug, side, t0)` one key per GENERATION, corrected `(slug, side, t_start)` one key per ROW -- and THREE
-  DA consumers test membership with the old shape. I verified all three at their lines: `da_elementwise.py:32`,
-  `da_elem_grid.py:33`, `da_elementwise_hz.py:32` each carry `if (s_, sd, float(g["t0"])) in gs:`, with `PER_ROW`
-  and `t_start` each returning 0, 0, 0 across the three. ***THE FAILURE IS SILENT AND READS AS A SMALLER
-  POPULATION*** -- a generation whose first row starts 3 s late reads as UNSCORED though it has two scored rows, the
-  assembly right and the consumer wrong -- ***AND ITS RATE IS UNMEASURABLE UNTIL THE FIRST CORRECTED BOOK EXISTS, SO
-  THE BUILD IS THE INSTRUMENT THAT SETTLES IT***; if DE's never-verified first-row claim fails, the BOOK is still
-  correct and the three consumers are what break. Flags 2514 -> 2529, prov 2059 -> 2074; window trimmed 4 -> 3,
-  Batch 282 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD DECISION IS WITH THE USER --
-  REV RECOMMENDS BUILD AND THE COORDINATOR CONCURS.** ***AND THE SHARED TREE IS STILL DIVERGED, SO NO SEAT CAN LAND
-  A REGISTER ROW: Q-MEM-287 AND Q-MEM-288 ARE COMPOSED AND UNLANDED.*** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -333,6 +336,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 303, R-856 swept; the seal does not name the ruled result (0c297dd -> 17bbe9b) ---
+  THE_SEAL_NAMES_THE_DIAGNOSTIC_AND_NOT_ONE_FIELD_OF_THE_RULED_RESULT: SIX-RULED-FIELDS-ALL-ABSENT
+  AND_THE_TUPLE_WAS_MAINTAINED_TWICE_FOR_THE_DIAGNOSTIC_AND_NEVER_FOR_THE_ENDPOINT: R-599-AND-R-659-IN-ITS-COMMENTS
+  I_COULD_NOT_REPRODUCE_THE_ONE_OF_SIX_AND_I_SAY_WHAT_I_FOUND_INSTEAD: TWO-OF-SIX-AND-ONE-MARKED-UNSEALED
+  THE_CLOSURE_PREDICATE_CHECKS_FIVE_OF_A_RECORDED_FORTY_NINE: A-SAMPLE-OF-WHAT-THE-BOOK-RECORDS
+  AND_IT_IS_NOT_EVEN_A_SUPERSET_OF_THE_CASCADE_IT_SHARES_A_RUN_WITH: SIX-CASCADE-MODULES-MISSED
+  SO_RULE_28_HAS_NOW_RECURRED_INSIDE_ITS_OWN_REMEDY_TWICE: AN-ASSERTION-THEN-A-SAMPLE
+  RULE_32_GIVES_THE_TEST_AND_ONLY_THE_SILENT_MISSES_MATTER: THREE-SETS-IN-ONE-NIGHT
+  AND_ITS_MODEL_FOR_REPAIR_IS_ALREADY_IN_THE_CODEBASE: THE-LOCK-DECIDES-HEAVINESS-BY-MEASUREMENT
+  RULE_31_COSTS_A_ROUND_TO_LEARN_AND_BINDS_ME_TOO: COMMIT-WHEN-IT-PARSES-GATE-THE-PUSH
+  A_NEGATIVE_CANNOT_BE_PROVEN_FROM_A_REFLOG_THAT_RECORDS_NOTHING: checkout----path-MOVES-NO-HEAD
+  MY_CONSUMER_CORRECTION_WAS_ALREADY_LANDED_LAST_ROUND: FIVE-OF-TEN-IN-ROUND-302
+  AND_DA_IS_NOW_CORRECTING_A_CELL_THAT_STILL_SAYS_THREE: THE-NUMBER-OUTLIVED-THE-FINDING
   # --- MEM round 302, R-854/R-855 swept; two of my numbers corrected (acaa5ea -> 0c297dd) ---
   MY_FILES_CARRY_THE_27_PERCENT_AND_NOT_THE_WITHDRAWN_CLAIM: TWO-USES-BOTH-IN-THE-SAMPLING-UNIT-CONTEXT
   THE_NUMBER_IS_NOT_IN_TENSION_WITH_THE_CLAIM_IT_WAS_CITED_AGAINST: IF-THE-CLAIM-IS-TRUE-EVERY-MULTI-ROW-GENERATION-COUNTS
@@ -26918,6 +26934,147 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 303, 2026-09-09T08:54:28Z (the clock read by which every measurement below was complete) ---
+  THE_SEAL_NAMES_THE_DIAGNOSTIC_AND_NOT_ONE_FIELD_OF_THE_RULED_RESULT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      ***THE FINDING THAT CHANGES WHAT A SEALED ARTIFACT MEANS, AND I VERIFIED IT AT THE TUPLE ITSELF.***
+      `ECONOMIC_FIELDS` in `de_multiday_gate1_runner.py:` names **`D_E0`, `D_E_MINUS_R`, `Z`, `p_location`,
+      `null_mean`, `null_sd`, `null_draws_summary`, `sd_over_abs_mean`** — and I tested each ruled-endpoint field
+      against it: **`D_E_settle` False, `arm_total_cents` False, `zero_cancel_baseline_total_cents` False,
+      `trades_leg_cents` False, `residual_leg_cents` False, `total_cents` False.** ***NOT ONE FIELD OF R-801's
+      SETTLEMENT P&L IS NAMED BY THE SEAL.*** The seal has been protecting the **DIAGNOSTIC** and leaving the
+      **RESULT** exposed.
+  AND_THE_TUPLE_WAS_MAINTAINED_TWICE_FOR_THE_DIAGNOSTIC_AND_NEVER_FOR_THE_ENDPOINT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      ***AND THE TUPLE'S OWN COMMENTS MAKE IT WORSE, NOT BETTER.*** It has been revisited **twice**, carefully, for
+      diagnostic fields: **R-599 (DA 68)** added `sd_over_abs_mean` because *"the RATIO survived the seal while BOTH
+      quantities it is formed from were sealed"*, and **R-659 (REV 71 §4.1) reversed R-656** on three count fields
+      because *"they are OUTCOME counts under a policy … a reader who can order the arms by intervention size on
+      day 1 has seen something about the result."* **So this list is not neglected — it is actively maintained, and
+      it was never revisited when R-801 changed which quantity IS the result.** *A set kept current against its old
+      purpose is harder to notice than an abandoned one.*
+  I_COULD_NOT_REPRODUCE_THE_ONE_OF_SIX_AND_I_SAY_WHAT_I_FOUND_INSTEAD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      ***THE ARTIFACT-LEVEL HALF I DID NOT REPRODUCE, AND I REPORT WHAT I MEASURED RATHER THAN EITHER ACCEPTING OR
+      DISPUTING IT.*** My first probe scanned `*SEALED*` day-run files and found **0 of 10** — my instrument: those
+      predate the settlement block. Re-probed on the family that carries it, `day_run.per_day_sealed_artifacts`:
+      **6 day artifacts carry sealed entries and 2 carry ruled-endpoint fields** — against REV's *1 of 6* — **and
+      the one I opened reads `seal_status: 'UNSEALED_BY_USER_RULING R-765 — 4 of 6 days complete'`, `sealed:
+      False`**, so on that entry the fields are not under a seal at all. My predicate is looser than REV's (any of
+      six fields, sealed or not) and **`assert_no_economic_leak` takes three arguments, so my one-argument call was
+      also wrong.** ***THE CODE-LEVEL FINDING IS CONFIRMED; THE COUNT IS REV'S AND I HAVE NOT INDEPENDENTLY
+      ESTABLISHED IT.***
+  THE_CLOSURE_PREDICATE_CHECKS_FIVE_OF_A_RECORDED_FORTY_NINE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      The second finding, measured end to end: **`SCORING_PATH_MODULES` is a hand-typed FIVE** —
+      `de_phase4_diag_runner.py`, `de_head_scoring.py`, `de_score_stream.py`, `harmful_stateful_policy.py`,
+      `phase2_arms.py` — and the book's own receipt records **49** modules in `producing_code.import_closure`. All
+      five are genuinely in that closure, so they are not wrong; ***THEY ARE A SAMPLE OF THE CLOSURE THE BOOK
+      ALREADY RECORDS.*** This is the predicate REVIEW 111 asked for as the fix for its silent pin site — **so the
+      remedy for "the evidence is recorded and the check is off" checks five forty-ninths of the recorded
+      evidence.**
+  AND_IT_IS_NOT_EVEN_A_SUPERSET_OF_THE_CASCADE_IT_SHARES_A_RUN_WITH:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      And the sharper measurement, because "a sample of 49" could still have been a well-chosen one: **the typed set
+      is NOT a superset of the ten-module cascade that `params_v25` pins.** It misses **six**:
+      `be_cancel_axis_null.py`, `be_data_root.py`, `de_matched_random_control.py`, `de_rho_estimator.py`,
+      `phase4_generation_tables.py`, `pm_tape_density.py`. ***SO TWO SETS THAT GOVERN THE SAME RUN — THE PINNED
+      CASCADE AND THE SCORING-PATH CLOSURE — DISAGREE ABOUT WHICH MODULES MATTER***, and neither is derived from the
+      other. A module can be pinned and unchecked, or checked and unpinned.
+  SO_RULE_28_HAS_NOW_RECURRED_INSIDE_ITS_OWN_REMEDY_TWICE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      ***THE PATTERN THIS FILE HAS NOW RECORDED TWICE IN SIX ROUNDS, WHICH IS WHAT MAKES IT STRUCTURAL RATHER THAN
+      BAD LUCK.*** At round 298 REV 118 marked DE 163's fix for rule 28's own site 4 *"an ASSERTION where a CHECK is
+      available — rule 28 applied to the fix for rule 28's own site 4."* Now REV 123 finds the closure predicate
+      built for the same site is **a hand-typed sample of the recorded closure.** **The remedy for "the evidence is
+      recorded and the check is off" has itself twice been shipped with the check narrower than the evidence** —
+      first as an assertion, now as a sample.
+  RULE_32_GIVES_THE_TEST_AND_ONLY_THE_SILENT_MISSES_MATTER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      **Rule 32** makes the method binding and supplies the test I will apply to any set from here: ***"what
+      operation would constitute membership; was the set built that way; would a missed member be LOUD or SILENT.
+      Only the silent ones matter."*** Its evidence is three sets in one night, **and every time the missed member
+      was the consequential one**: the pin sites (missed one **silent**), the consumers (missed two **compute
+      exclusion counts**), and `ECONOMIC_FIELDS` (the seal protects the diagnostic, not the result). **My round-302
+      formulation was the same rule reached from my own failure; this is it with a test attached.**
+  AND_ITS_MODEL_FOR_REPAIR_IS_ALREADY_IN_THE_CODEBASE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      And the part of rule 32 that turns a caution into a construction: ***"the heavy-run lock decides heaviness BY
+      MEASUREMENT, not by enumeration — where a set can be derived from what the artifact already records, derive
+      it."*** That is exactly available here: **the book records its 49-module closure**, so the scoring-path check
+      can be derived from the receipt instead of typed, and **the mask arithmetic (`287 − 40 = 247`, refusing
+      `MASK_ARITHMETIC_DOES_NOT_CLOSE`) is the same move already landed on another surface.** *The programme has the
+      pattern; it has not been applied to the sets that govern a run.*
+  RULE_31_COSTS_A_ROUND_TO_LEARN_AND_BINDS_ME_TOO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      **Rule 31: on the shared tree, COMMIT EACH FILE AS SOON AS IT PARSES; let the battery gate the PUSH, not the
+      commit.** DA completed a full round — builder, wirings, cells, **battery green at 38** — and found all four
+      files clean with every edit gone. DA's own share, kept in its words: *"I held four edited files uncommitted
+      while a battery ran. Test-then-land is right, but the gap between them is my exposure to shorten."*
+      ***"A LOCAL COMMIT IS RECOVERABLE FROM THE REFLOG; AN UNCOMMITTED EDIT IS RECOVERABLE FROM NOTHING."*** **It
+      binds every seat and the coordinator, and it binds me** — my own rounds hold three written state files
+      uncommitted for the length of a batch, which is the same exposure.
+  A_NEGATIVE_CANNOT_BE_PROVEN_FROM_A_REFLOG_THAT_RECORDS_NOTHING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      The incident's epistemics, recorded because they are the honest part: the loss is **consistent with `git
+      checkout -- <path>`, which does not move HEAD and leaves no reflog entry** — and **R-557 already forbids that
+      command here.** The coordinator recorded what IT ran in the 08:41–08:44Z window (pull `--ff-only`, status, a
+      Python insert, add/commit by pathspec, push — no checkout, restore, clean or stash) **and stated plainly that
+      a negative cannot be proven from a reflog that records nothing.** ***AN UNFALSIFIABLE EXONERATION OFFERED AS
+      ONE IS WORSE THAN AN OPEN QUESTION***; recording it as unresolved is what keeps rule 31 the remedy rather than
+      blame.
+  MY_CONSUMER_CORRECTION_WAS_ALREADY_LANDED_LAST_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      Queue item (4) asked me to correct "three consumers" to FIVE — ***IT WAS ALREADY DONE AT ROUND 302 AND I SAY
+      SO RATHER THAN FILING IT TWICE.*** `STATUS.yml` carries the flag
+      `BUT_THREE_CONSUMERS_IS_MINE_AND_IT_IS_WRONG` and `HANDOFF.md:25` reads *"REV 122 enumerated constructively:
+      FIVE of ten, not three"*, both naming `da_de53_exclusion.py` (two `t0`-keyed sites) and `de_section81_arms.py`
+      and both recording that **the two missed COMPUTE EXCLUSION COUNTS.** What this round adds is rule 32's
+      **test**, which round 302 did not have.
+  AND_DA_IS_NOW_CORRECTING_A_CELL_THAT_STILL_SAYS_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:54:28Z
+    said: >-
+      And the reason a correction has to reach every place the number lives: **DA 149 landed `09d7e81` — "correct
+      the wiring cell's own stale claim that DA's set is three"** — so the figure had propagated into a **battery
+      cell**, where it would have asserted a stale set as a passing test. ***A WRONG NUMBER IN PROSE MISLEADS A
+      READER; THE SAME NUMBER IN A CELL MAKES THE SUITE VOUCH FOR IT.*** My files were corrected the round before
+      and DA's cell the round after, which is the right order only by accident — the lesson is that the sweep for a
+      corrected number must include the checks that quote it.
   # --- MEM round 302, 2026-09-09T08:48:28Z (the clock read by which every measurement below was complete) ---
   MY_FILES_CARRY_THE_27_PERCENT_AND_NOT_THE_WITHDRAWN_CLAIM:
     prov: CHECKED
