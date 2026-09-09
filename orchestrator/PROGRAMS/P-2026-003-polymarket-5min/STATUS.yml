@@ -67,6 +67,63 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T09:09:38Z (MEM ROUND 304 -- R-857 and R-858 SWEPT as a numbered queue under rule 23, from my round-303 tip
+  `17bbe9b` to `45fa3af`, THIRTY-FIVE commits -- I measured seventeen to `18b609d` and eighteen more landed while I drove the defects, so the count is corrected here before landing. STATE ONLY. ***THE USER REVIEWED AT SNAPSHOT `7d374b4` AND FOUND FIVE
+  CRITICAL DEFECTS; THIS SUPERSEDES THE GATE ARITHMETIC IN THESE FILES AND IS NOT "MORE FINDINGS" -- IT CHANGES WHAT
+  OUR VERIFICATIONS ARE WORTH.*** **(a) THE NULL THE USER RULED IS NOT THE NULL THAT RUNS**, driven by AST over the
+  whole tree: `null_draws_valued` has TWO call sites, `:7881` and `:11344`, and BOTH pass four positionals with
+  `n_draws`/`seed`/`deadline_s`/`winners` -- ZERO pass `arm_cancels`, ZERO pass `control_set_path` -- so the `if
+  arm_cancels is not None` branch implementing ruling B is UNREACHABLE and the historical ROW-matched null is what
+  ran and would run. ***AND THE MECHANISM IS A RULE WE ALREADY WROTE DOWN***: DE 161's own commit subject
+  (`c0e19ad`, 07:32:35Z) says "the matched-cancel branch is in the null" -- SEAT_PROTOCOL RULE 30 IS "VERIFY AGAINST
+  THE DIFF, NOT THE MESSAGE", landed because DA 146 found a commit message describing a change the commit did not
+  contain, and THE CLASS RECURRED AT THE SCALE OF A USER RULING. It propagated into **R-837, R-847, R-852 and
+  R-856** and into `HANDOFF.md:1094`, where my own round-291 block says DE 161 "wires the matched-cancel branch into
+  the null": ***THAT CLAUSE IS SUPERSEDED IN BAND AND NOT DELETED*** -- my hedge that it was "landed CODE, not a
+  validated instrument" was correct and INSUFFICIENT, because "landed as code" is true of a branch nothing calls.
+  The code is HONEST -- the receipt's `matched_control` defaults to `matched_on: DECISIONS` with the reason in
+  words -- but ***NO DAY RUN HAS HAPPENED SINCE DE 161, SO THAT FIELD HAS NEVER BEEN WRITTEN TO AN ARTIFACT.***
+  **(b) THE DECISION COUNT IS INFLATED AND IT IS CLAUDE.md RELIABILITY RULE 2 VERBATIM**: `day_decision_population`
+  at `:4633` counts every above-threshold ROW (`arm_stream` returns one entry per `bk["rows"]` element) into a field
+  whose own definition string says "above-threshold GENERATIONS", and that number feeds ADMISSIBILITY and, through
+  `by_side`, the NULL's demand; the receipt already measures the driver at 39.7 % of sampled rows beginning after
+  their generation's start, 27 % of generations, max 60 rows in one. ***AND THE DE-DUPLICATION KEY IS ALREADY ON
+  EVERY ROW***: `REQUIRED_EVENT_KEYS` is `(t, slug, side, gen)`, so the repair needs no new data. **(c) THE
+  CANCEL-MATCHING PREMISE IS FALSE, AND I DROVE IT RATHER THAN READ IT**: a repost mints `policy_gen =
+  f"{g['gen']}.r{seq}"` at `:753` while `issue_counts` keys on `(slug, side, policy_gen)`, so reference generation 7
+  cancelled TWICE as `7` and `7.r1` returns `one_cancel_per_generation = True` and only the same id twice returns
+  False -- ***AND `ref_gen` IS ON THE VERY CANCEL_ISSUED EVENT THE GATE READS***, the second time this round the
+  correct key sat beside the wrong one. REV 110 cited that invariant and the coordinator carried it into the USER's
+  decision brief, so ***THE PREMISE ON WHICH RULING B WAS RECOMMENDED DOES NOT HOLD AS STATED*** -- a fact about the
+  premise, with no claim here about the design, which is the USER's under rule 14. **(d) THE BOOK-CODE PREDICATE
+  PASSES ON A SUBSET**: `assert_book_scoring_code` intersects the receipt with `SCORING_PATH_MODULES` and refuses
+  only the EMPTY case, so a receipt naming ONE of five with a true digest returns `BOOK_SCORING_CODE_MATCHES` with
+  `n_checked: 1` -- I drove it -- and `n_checked == len(...)` is checked at EXACTLY ONE SITE, the battery at `:9922`
+  on a receipt it builds itself, while `:6056`, `:7704` and `de_cancel_count_delta.py:251` do not; BE 117 makes it
+  worse from the other side, deriving 49 recorded -> SCORING 8 with the typed five a STRICT SUBSET of eight. **(e)
+  THE SEAL DEFECT IS CONFIRMED (a planted settlement result was accepted) AND THE USER HAS RULED IT NOT AN ISSUE**:
+  recorded as ***DE-PRIORITISED BY RULING AND OWED BEFORE ANY FUTURE SEALED RACE***, with the reasoning that makes
+  the ruling correct rather than merely authoritative -- no live sealed race, every arm result retracted, nothing
+  currently decided on a sealed artifact, ***SO THE COST IS PROSPECTIVE***; the debt is dated, not cancelled. THREE
+  SMALLER ITEMS, each driven: **params v26 carries `protocol: ..._PARAMS_V20` at `version: 26`** (v25 too) which
+  `load_params()` never reads, ***AND THE FILE'S OWN NOTE RECORDS THE SAME BUG FROM v1***, while the DESIGN side
+  tracks correctly at V33/V34; **the receipt's "at an UNCHANGED theta fewer generations cross" is FALSE as a count**
+  -- a first crossing exists iff the maximum crosses, so the set is IDENTICAL BY CONSTRUCTION and what moves is the
+  cancel TIME and the cascade, with the calibration concern surviving the correction; and **`score_events` refuses
+  NaN by name and ADMITS `+inf` and `-inf`** (zero `isfinite` calls), ***NAMING THE VALUE THAT ALWAYS COMPARES FALSE
+  AND ADMITTING THE ONE THAT ALWAYS COMPARES TRUE***, downstream-refused so depth not exposure. ***MY OWN INSTRUMENT
+  FAILED FIRST AND THAT IS WHY THE RESULT IS TRUSTWORTHY***: my first probe used `side: "BUY"` against `SIDES =
+  (BUY_UP, SELL_UP)` and refused ALL FOUR cases INCLUDING THE FINITE CONTROL -- rule 15 binds the probe I write to
+  test someone else's checker just as hard. ***THE COORDINATOR WITHDRAWS "SEVEN OF EIGHT CLOSED AND VERIFIED"***
+  until the null runs the ruled unit and the counts are de-duplicated; the local carrier is MY OWN gate table at
+  `HANDOFF.md:346` and it is SUPERSEDED, NOT DELETED -- **what survives on the USER's own confirmation is that the
+  CAUSAL ROW TIMING and GENERATION-BOUNDARY ROUTING fixes DO work.** ***AND THE ONE UNAMBIGUOUSLY GOOD FACT, STATED
+  BECAUSE IT IS THE WHOLE VALUE OF THE ISSUES-FIRST RULING: NOTHING WAS BUILT, SO NOTHING IS CONTAMINATED*** --
+  verified at the machine, `/proc/locks` by dev:inode shows NO HOLDERS on the heavy lock, no heavy process, last
+  heavy-run record 07:15:47Z, everything newer in `derived/` a declaration and not a book. FIVE CRITICAL DEFECTS
+  FOUND IN CODE THAT NEVER PRODUCED A NUMBER ANYONE IS HOLDING. Pair of record CORRECTED: **params v26 + design
+  v34** (my files carried v25 + v33). Flags 2563 -> 2587, prov 2108 -> 2132; window 3/3, Batch 286 archived. MEM
+  asserts no result.)
   2026-09-09T08:54:28Z (MEM ROUND 303 -- R-856 SWEPT as a numbered queue under rule 23, from my
   round-302 tip `0c297dd` to `17bbe9b`, eighteen commits. STATE ONLY. ***THE FINDING THAT CHANGES WHAT A SEALED
   ARTIFACT MEANS, VERIFIED BY ME AT THE TUPLE***: `ECONOMIC_FIELDS` names `D_E0`, `D_E_MINUS_R`, `Z`, `p_location`,
@@ -137,34 +194,6 @@ updated: >-
   ASSEMBLY ALONE, 1.86x, a figure I measured at round 290. Flags 2539 -> 2551, prov 2084 -> 2096; window trimmed
   4 -> 3, Batch 284 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM
   asserts no result.)
-  2026-09-09T08:40:06Z (MEM ROUND 301 -- A REGISTER-INTEGRITY DIAGNOSIS, NOT A SWEEP; the state
-  files were current through R-853 and remain so. STATE ONLY. **THE COUNT REPRODUCED**: 1,176 Q rows / 1,172
-  distinct -- `Q-BE-92` x3, `Q-BE-91` x2, `Q-DA-331` x2 -- and R-entries 843/843 with NO duplicates, so the
-  coordinator's R-clean claim holds. ***MY OWN FIRST PROBE REPORTED A FOURTH AND IT WAS MY REGEX***: `### R-6
-  acknowledgement -- DA` is a heading that NAMES an entry rather than being one, caught before it reached the
-  report. ***ANSWER TO THE FIRST QUESTION, AND IT IS THE WORSE ONE FOR TWO OF THE THREE***: `Q-BE-91` and `Q-BE-92`
-  are DIFFERENT FILINGS on one id -- an ASK about a seat conflict beside a FILING about a defect that cost two runs;
-  a contract row, an ASK and a refusal to run `git gc` -- ***so a reader resolving `Q-BE-92` gets an arbitrary one
-  of three unrelated filings***. `Q-DA-331` is the benign case and is ALREADY EXPLAINED IN BAND by `Q-DA-335` (the
-  first line is a GATE-REFUSED DRAFT, VOID; the second supersedes it), its own mechanism being a third one again --
-  a void draft carried in by DE 110's pathspec sweep, the R-562 class. ***A FALSE LEAD CHASED TO THE END***: blame
-  attributes every duplicate line to `0539a36`, the scratch-drive revert, but measured at three refs the duplicates
-  ALREADY EXISTED at `0539a36^^` (1,028/1,024, same three) -- ***THE REVERT RESTORED THEM AND DID NOT CREATE
-  THEM***. ***AND THE MECHANISM IS NOT A HIGHEST-PLUS-ONE RACE***: bisected over 1,594 register commits, `Q-BE-91`
-  reaches 2 at a COORDINATOR commit, `Q-BE-92` reaches 2 AND 3 at ONE BE commit, `Q-DA-331` at the void-draft sweep
-  -- three duplicates, three causes, and a single commit adding two rows on one id is not a race. ***THE REGISTER
-  NAMES ITS OWN MECHANISM***: `Q-BE-105` records R-146(5) renumbering THIRTEEN duplicate rows, and its mapping note
-  parses to sources repeating -- `Q-BE-89` four times, `Q-BE-90` four, `Q-BE-91` three -- a ONE-TO-MANY rename in
-  which a tool matching by id and renaming one occurrence per rule leaves the rest behind. ***AND THE MAPPING HOLDS
-  EXACTLY ONE CHAIN COLLISION, WHICH IS THE ID WITH THREE ROWS***: `92` is the only id that is BOTH a source and a
-  target (`Q-BE-7 -> 92` while `Q-BE-92 -> 93`), so applying them in the wrong order leaves two rows numbered 92 --
-  prediction and observation meet, and the remedy for an ORDERING hazard is temporary ids, not a lock. ***THE DOOR
-  IS ALREADY SHUT ON THE SANCTIONED PATH***: `land_register_row.sh:46` refuses `DUPLICATE_ID` with exit 14, landed
-  `be0ef1d` 2026-09-07, AFTER all three, so the residual exposure is anything landed outside the script. ***AND ONE
-  AMBIGUOUS ID IS CITED AS AUTHORITY*** -- `COORDINATION.md:15560`, "the authority Q-BE-91/93" -- which is rule 16
-  failing inside the register itself. I have renumbered NOTHING and edited NO history. Flags 2529 -> 2539, prov
-  2074 -> 2084; window trimmed 4 -> 3, Batch 283 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE
-  BUILD DECISION IS WITH THE USER.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -336,6 +365,32 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 304 ADDENDUM 2026-09-09T09:11:26Z: eighteen commits landed while I verified ---
+  SEAT_PROTOCOL_RULE_33_IS_THE_GENERALISATION_AND_IT_NAMES_A_FOURTH_INSTANCE: THREE-ANSWERS-PER-GREEN
+  REV_125_WITHDRAWS_THE_VERY_CITATION_THIS_ROUND_RECORDS_AS_THE_PREMISE: REVIEW-110-ITEM-4-WITHDRAWN
+  THE_USER_CORRECTED_THE_COORDINATOR_FROM_SELF_AUDITS_TO_REPAIRS: FOUR-SEATS-ON-THE-FIXES
+  AND_THE_MATCHING_UNIT_IS_OPEN_WITH_THE_USER_BECAUSE_THE_PREMISE_WAS_THE_COORDINATORS: NOT-A-SEAT-DEFECT
+  EIGHTEEN_MORE_COMMITS_LANDED_WHILE_I_VERIFIED_AND_I_CORRECT_MY_OWN_COUNT_BEFORE_LANDING: SEVENTEEN-BECAME-THIRTY-FIVE
+  # --- MEM round 304, R-857/R-858 swept; FIVE CRITICAL USER DEFECTS at 7d374b4 (17bbe9b -> 45fa3af) ---
+  THE_NULL_THE_USER_RULED_IS_NOT_THE_NULL_THAT_RUNS: TWO-CALL-SITES-ZERO-PASS-arm_cancels
+  AND_THE_COMMIT_MESSAGE_ASSERTS_THE_WIRING_ITS_OWN_DIFF_DOES_NOT_CONTAIN: RULE-30-AT-RULING-SCALE
+  FOUR_REGISTER_ENTRIES_AND_MY_OWN_FILE_REPEAT_THAT_MESSAGE: SUPERSEDED-IN-BAND-NOT-DELETED
+  THE_RECEIPT_WOULD_HAVE_NAMED_THE_PATH_AND_NO_ARTIFACT_EVER_CARRIED_IT: HONEST-FIELD-NEVER-WRITTEN
+  THE_DECISION_COUNT_COUNTS_ROWS_AND_ITS_OWN_DEFINITION_SAYS_GENERATIONS: CLAUDE-md-RULE-2-VERBATIM
+  AND_THE_DE_DUPLICATION_KEY_IS_ALREADY_ON_EVERY_ROW: gen-IN-REQUIRED_EVENT_KEYS
+  THE_REPOST_CANCELS_ONE_REFERENCE_GENERATION_TWICE_AND_I_DROVE_THE_GATE_TO_TRUE: 7-AND-7r1-PASS-7-AND-7-FAIL
+  AND_THE_RIGHT_KEY_IS_ON_THE_VERY_EVENT_THE_GATE_READS: ref_gen-ON-CANCEL_ISSUED
+  SO_THE_PREMISE_UNDER_WHICH_RULING_B_WAS_RECOMMENDED_DOES_NOT_HOLD_AS_STATED: REV-110-AND-THE-DECISION-BRIEF
+  THE_BOOK_CODE_PREDICATE_PASSES_ON_ONE_OF_FIVE_AND_I_DROVE_IT: n_checked-1-STATUS-MATCHES
+  AND_THE_ONLY_SITE_THAT_CHECKS_IT_IS_THE_BATTERY_ON_A_RECEIPT_IT_BUILDS_ITSELF: THREE-PRODUCTION-SITES-DO-NOT
+  THE_SEAL_DEFECT_IS_DE_PRIORITISED_BY_RULING_AND_OWED_BEFORE_ANY_SEALED_RACE: THE-COST-IS-PROSPECTIVE
+  THE_PARAMS_PROTOCOL_SAYS_V20_AT_V26_AND_ITS_OWN_NOTE_RECORDS_THE_SAME_BUG_AT_V1: AND-THE-DESIGN-SIDE-TRACKS
+  THE_FIRST_CROSSING_CLAIM_IS_FALSE_AS_A_COUNT_AND_TRUE_AS_A_CASCADE: THE-SET-IS-IDENTICAL-BY-CONSTRUCTION
+  SCORE_EVENTS_NAMES_THE_VALUE_THAT_COMPARES_FALSE_AND_ADMITS_THE_ONE_THAT_COMPARES_TRUE: NaN-REFUSED-inf-ACCEPTED
+  MY_FIRST_PROBE_REFUSED_ITS_OWN_POSITIVE_CONTROL_AND_THAT_IS_HOW_I_CAUGHT_IT: RULE-15-ON-MY-OWN-INSTRUMENT
+  THE_COORDINATOR_WITHDRAWS_SEVEN_OF_EIGHT_AND_MY_GATE_TABLE_IS_THE_LOCAL_CARRIER: HANDOFF-LINE-346
+  NOTHING_WAS_BUILT_SO_NOTHING_IS_CONTAMINATED_AND_I_VERIFIED_IT_AT_THE_LOCK: NO-HOLDERS-IN-proc-locks
+  THE_PAIR_OF_RECORD_HAS_MOVED_TO_PARAMS_V26_AND_DESIGN_V34: MY-FILES-CARRIED-v25-PLUS-v33
   # --- MEM round 303, R-856 swept; the seal does not name the ruled result (0c297dd -> 17bbe9b) ---
   THE_SEAL_NAMES_THE_DIAGNOSTIC_AND_NOT_ONE_FIELD_OF_THE_RULED_RESULT: SIX-RULED-FIELDS-ALL-ABSENT
   AND_THE_TUPLE_WAS_MAINTAINED_TWICE_FOR_THE_DIAGNOSTIC_AND_NEVER_FOR_THE_ENDPOINT: R-599-AND-R-659-IN-ITS-COMMENTS
@@ -26934,6 +26989,307 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 304 ADDENDUM, 2026-09-09T09:11:26Z ---
+  SEAT_PROTOCOL_RULE_33_IS_THE_GENERALISATION_AND_IT_NAMES_A_FOURTH_INSTANCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T09:11:26Z
+    said: >-
+      ***RULE 33 LANDED WHILE I WAS VERIFYING, AND IT IS THE GENERALISATION OF EVERYTHING ABOVE: "A VERIFICATION IS
+      ONLY AS GOOD AS THE IDENTITY BETWEEN WHAT IT EXAMINES AND WHAT IT IS CITED FOR."*** Its statement of the cost
+      is the honest one: **the standard -- closed AND verified by a seat other than the implementer -- caught two bad
+      closures in one night and still passed three defects the user found in minutes**, because in each case **the
+      check was TRUE of the artifact it examined and FALSE of the claim it was cited for.** It names a FOURTH
+      instance I had not carried: **REVIEW 105's probe passed a `Path` where a parsed receipt was wanted -- "the
+      conclusion survived and the evidence did not."** ***THE OPERATIONAL FORM: EVERY GREEN CARRIES THREE ANSWERS --
+      WHAT DID THE CHECK ACTUALLY EXAMINE, WHAT CLAIM IS IT CITED FOR, ARE THOSE THE SAME THING*** -- and for any
+      predicate, **drive it to PASS on the real thing, FAIL on a known-bad, AND REFUSE A PARTIAL INPUT**; where a
+      fix is recorded as landed, **drive the path that reaches it FROM THE ENTRY POINT**, because a unit test on the
+      branch is exactly what missed (a).
+  REV_125_WITHDRAWS_THE_VERY_CITATION_THIS_ROUND_RECORDS_AS_THE_PREMISE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:11:26Z
+    said: >-
+      And the seat-level consequence, which closes the loop on (c) inside the same round I recorded it: **REV 125
+      (`3a0503b`, `df36aa7`) -- "THREE of my own greens were checking the wrong thing" -- WITHDRAWS REVIEW 110 item
+      (4)**, the one-cancel-per-generation verification that REV cited, that the coordinator carried into the USER's
+      decision brief, and that this round's flags name as the premise carrier. ***THE CITATION IS WITHDRAWN BY THE
+      SEAT THAT MADE IT, WITHIN AN HOUR, WITHOUT BEING ASKED TO RE-EXAMINE THAT SPECIFIC ITEM.*** REV 126 now
+      carries it forward **as a SPECIFICATION rather than an audit** -- what its own verification *would have needed
+      to be true, which id space and which population* -- so DE's repair targets the right property. **That is the
+      difference between withdrawing a result and abandoning it.**
+  THE_USER_CORRECTED_THE_COORDINATOR_FROM_SELF_AUDITS_TO_REPAIRS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:11:26Z
+    said: >-
+      ***A USER RULING, AND THE COORDINATOR RECORDING ITS OWN MISJUDGEMENT IN THE ENTRY THAT REVERSES IT (R-860,
+      09:04Z).*** After R-859 the coordinator had put **three seats on auditing their own greens** while only DE was
+      fixing; the user ruled **"fix the issues first."** The coordinator's own words: ***"That was the coordinator's
+      misjudgement -- optimising for the lesson instead of the work -- and the user corrected it."*** All four
+      working seats are now on the repairs: **DE 166** takes the four defects in the user's order plus the three
+      smaller items **with the seal DROPPED BY NAME** under the 08:58Z ruling; **BE 119** makes the derivable set a
+      NAMED KEY with a STABLE SHAPE so DE's predicate stops typing a list; **DA 152** builds a driven case for each
+      defect **BEFORE the fixes land**, each satisfying rule 33; **REV 126** verifies each repair from the entry
+      point as it lands. **THE SELF-AUDITS ARE OFF.**
+  AND_THE_MATCHING_UNIT_IS_OPEN_WITH_THE_USER_BECAUSE_THE_PREMISE_WAS_THE_COORDINATORS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:11:26Z
+    said: >-
+      And the one item that is NOT dispatched to any seat, recorded because where a question sits is state: **the
+      matching unit -- rows, cancels or generations -- is OPEN WITH THE USER.** The reason given is precise and is
+      not a seat's fault: ***"the premise on which ruling B was recommended was the coordinator's and it was
+      wrong."*** **A ruling obtained on a premise that does not hold is re-opened at the level it was decided**,
+      not patched at the level it was implemented -- which is the same rule-14 boundary this file has been keeping
+      all night, applied to the coordinator instead of a worker.
+  EIGHTEEN_MORE_COMMITS_LANDED_WHILE_I_VERIFIED_AND_I_CORRECT_MY_OWN_COUNT_BEFORE_LANDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:11:26Z
+    said: >-
+      ***A CORRECTION TO MY OWN WRITE, MADE BEFORE IT LANDED RATHER THAN AFTER.*** I measured my window at
+      **seventeen commits, `17bbe9b` -> `18b609d`**, and by the time the files were written the tip was **`45fa3af`
+      -- THIRTY-FIVE**, because R-859, R-860, rule 33, REV 125/126, DA 151/152 and BE 119 all landed while I was
+      driving the five defects. **The generation and this block both say thirty-five, and the eighteen later commits
+      are swept in the four flags above.** *A window measured at the start of a round and quoted at the end of it is
+      a stale number by construction* -- and this is the second time tonight my own files have carried one, so it
+      goes in the procedure rather than only in the correction.
+  # --- MEM round 304, 2026-09-09T09:09:38Z (the clock read by which every measurement below was complete) ---
+  THE_NULL_THE_USER_RULED_IS_NOT_THE_NULL_THAT_RUNS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE DEFECT THAT CHANGES WHAT OUR VERIFICATIONS ARE WORTH, AND I DROVE IT BY AST OVER THE WHOLE TREE.***
+      `null_draws_valued` takes `arm_cancels` and `control_set_path` as keyword-only arguments defaulting to `None`,
+      and the branch implementing USER **ruling B** is `if arm_cancels is not None:`. **The census finds TWO call
+      sites in the entire tree** -- `de_multiday_gate1_runner.py:7881` (the day path) and `:11344` (the battery) --
+      and **BOTH pass exactly four positionals with `n_draws`, `seed`, `deadline_s`, `winners`: ZERO pass
+      `arm_cancels`, ZERO pass `control_set_path`.** ***THE CANCEL-MATCHED BRANCH IS UNREACHABLE AND THE HISTORICAL
+      ROW-MATCHED NULL IS WHAT RAN AND WOULD RUN.*** The USER's ruling is in the file and not in the program.
+  AND_THE_COMMIT_MESSAGE_ASSERTS_THE_WIRING_ITS_OWN_DIFF_DOES_NOT_CONTAIN:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***AND THE MECHANISM OF THE ERROR IS A RULE THIS PROGRAMME ALREADY WROTE DOWN.*** DE 161's commit subject at
+      `c0e19ad` (07:32:35Z) reads *"the sealed-value guard compares NUMBERS, **the matched-cancel branch is in the
+      null**, and REV 110's four are closed"* -- **and the AST census of its own diff says no caller passes the
+      argument.** ***SEAT_PROTOCOL RULE 30 IS "VERIFY AGAINST THE DIFF, NOT THE MESSAGE", AND IT WAS LANDED BECAUSE
+      DA 146 FOUND A COMMIT MESSAGE DESCRIBING A CHANGE THE COMMIT DID NOT CONTAIN.*** **The class recurred at the
+      scale of a USER ruling** -- and DA's own words for why it ranks above a code defect fit exactly: *"it is the
+      kind of thing a green battery and a careful reader both pass over."*
+  FOUR_REGISTER_ENTRIES_AND_MY_OWN_FILE_REPEAT_THAT_MESSAGE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE PROPAGATION, AND MY OWN SHARE OF IT, SUPERSEDED IN BAND AND NOT DELETED.*** The commit's words travelled
+      into **R-837, R-847, R-852 and R-856**, and into this workspace at **`HANDOFF.md:1094`**, where my round-291
+      block says DE 161 *"wires the matched-cancel branch into the null"*. ***THAT CLAUSE IS WRONG AND IS SUPERSEDED
+      HERE: THE BRANCH EXISTS AND NO CALLER REACHES IT.*** What was right in that same block stays right -- I wrote
+      *"Both landed as code; REV has reviewed neither, and this file asserts nothing about their behaviour"*, and
+      `STATUS.yml`'s DE 160 flag says *"Recorded here as landed CODE, not as a validated instrument."* **The hedge
+      was correct and insufficient: "landed as code" is true of a branch nothing calls.** *Recording that a thing is
+      unreviewed does not substitute for checking whether it runs.*
+  THE_RECEIPT_WOULD_HAVE_NAMED_THE_PATH_AND_NO_ARTIFACT_EVER_CARRIED_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      And the part that decides who could have caught this: **the code is HONEST.** At `:6241` the returned receipt
+      carries `matched_control` defaulting to **`{"matched_on": "DECISIONS", "why": "no arm cancel records were
+      supplied, so the historical decision-matched path ran. Under USER ruling B a day run supplies them and the
+      control is matched on CANCELS"}`** -- ***THE ARTIFACT WOULD HAVE SAID PLAINLY WHICH NULL RAN.*** But **no day
+      run has happened since DE 161 landed at 07:32:35Z** (last heavy-run record 07:15:47Z), so ***THAT FIELD HAS
+      NEVER BEEN WRITTEN TO AN ARTIFACT***. The honest field exists only in source. **Nobody could have read the
+      truth off a receipt, because the stand-down that protected us from a contaminated result also withheld the one
+      artifact that would have exposed the defect.**
+  THE_DECISION_COUNT_COUNTS_ROWS_AND_ITS_OWN_DEFINITION_SAYS_GENERATIONS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE SECOND DEFECT IS CLAUDE.md RELIABILITY RULE 2 VERBATIM -- "ROWS ARE ACTIONS."*** At
+      `day_decision_population` (`:4633`): `stream = module.arm_stream(bk, head)` and `decisions = [r for r in
+      stream if float(r["score"]) >= theta]`. **`be_cancel_axis_null.arm_stream` returns `[dict(r, score=...) for r
+      in bk["rows"]]` -- ONE ENTRY PER ROW**, since the look-ahead repair put each row at its own `t_start`. So
+      `decisions` counts **ROWS** while the field's own `definition` string beside it reads ***"above-threshold
+      GENERATIONS at the arm's FIXED theta"***. **The same number feeds ADMISSIBILITY and, through `by_side`, the
+      NULL's per-side demand -- so an inflated count enlarges both the population and the null drawn to match it.**
+      The programme's own receipt already measures the driver: **39.7 % of 40,000 sampled rows on 09-04 begin
+      strictly after their generation's start, across 27 % of generations, max 60 rows in one generation.**
+  AND_THE_DE_DUPLICATION_KEY_IS_ALREADY_ON_EVERY_ROW:
+    prov: CHECKED
+    artifact: live/pm_research/de_score_stream.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      And the repair is cheap for the same reason rule 32 says it should be: **`de_score_stream.REQUIRED_EVENT_KEYS`
+      is `('t', 'slug', 'side', 'gen')` -- `gen` IS ON EVERY SCORED ROW, mandatorily, refused by name if missing.**
+      ***THE DE-DUPLICATION TO ACTIONS NEEDS NO NEW DATA, NO REBUILD AND NO DECISION: THE KEY IS ALREADY THERE.***
+      This is rule 32's repair model exactly -- *where a set can be derived from what the artifact already records,
+      derive it* -- and it is the third site tonight where the correct key was present and the wrong one was
+      used.
+  THE_REPOST_CANCELS_ONE_REFERENCE_GENERATION_TWICE_AND_I_DROVE_THE_GATE_TO_TRUE:
+    prov: CHECKED
+    artifact: live/pm_research/harmful_stateful_policy.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE THIRD DEFECT, WHICH I DID NOT READ BUT DROVE.*** At `:753` a repost mints a NEW policy id from the same
+      reference generation: `policy_gen = f"{g['gen']}.r{run.repost_seq}"`. `check_invariants` builds `issue_counts`
+      keyed **`(slug, side, policy_gen)`** at `:1396`. I built two trajectories through the module's own closed
+      schema and ran its own gate: **reference generation 7 cancelled TWICE, spelled `7` and `7.r1` ->
+      `one_cancel_per_generation = True`; the SAME policy id twice -> `False`.** ***THE INVARIANT PASSES ON EXACTLY
+      THE CASE THE CANCEL-MATCHING PREMISE ASSUMES CANNOT HAPPEN***, because it is not an invariant about
+      generations -- it is an invariant about policy ids.
+  AND_THE_RIGHT_KEY_IS_ON_THE_VERY_EVENT_THE_GATE_READS:
+    prov: CHECKED
+    artifact: live/pm_research/harmful_stateful_policy.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      And the sharpest form of it: **`EVENT_KEYS["CANCEL_ISSUED"]` is `{kind, slug, side, policy_gen, t,
+      t_effective, ref_gen, reducing_at_request}` -- `ref_gen` IS ON THE EVENT THE GATE ALREADY READS**, and the
+      engine itself files reposts under the reference gen (`run.recs_by_gen.setdefault(g["gen"], []).append(rec)`).
+      ***THE GATE HAD BOTH KEYS ON THE SAME RECORD AND CHOSE THE ONE THAT CANNOT FAIL.*** That is SEAT_PROTOCOL rule
+      16 -- *a control that cannot fail* -- reached from the opposite direction, and it is the second time in this
+      round that the correct field was sitting beside the wrong one.
+  SO_THE_PREMISE_UNDER_WHICH_RULING_B_WAS_RECOMMENDED_DOES_NOT_HOLD_AS_STATED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***AND THIS IS WHY (c) IS NOT A THIRD BUG BUT A CORRECTION TO A DECISION.*** **REV 110 cited the
+      one-cancel-per-generation invariant, and the coordinator carried it into the USER's decision brief as support
+      for matching the control on cancels.** With the invariant driven to `True` on a double-cancelled reference
+      generation, ***THE PREMISE ON WHICH RULING B WAS RECOMMENDED DOES NOT HOLD AS STATED.*** This file records
+      that as a fact about the premise and **asserts nothing about whether ruling B is still the right design** --
+      rule 14, the decision is the USER's, and the coordinator routes it.
+  THE_BOOK_CODE_PREDICATE_PASSES_ON_ONE_OF_FIVE_AND_I_DROVE_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE FOURTH DEFECT, DRIVEN ON THE REAL PREDICATE WITH A REAL DIGEST.*** `assert_book_scoring_code` computes
+      `recorded = {m: d for m, d in mods.items() if m in SCORING_PATH_MODULES}` -- **an INTERSECTION** -- and its
+      only refusal on membership is `if not recorded:`, the EMPTY case. I handed it a receipt naming **one** of the
+      five with that file's true sha256: ***it returned `BOOK_SCORING_CODE_MATCHES` with `n_checked: 1`,
+      `modules_checked: ['de_phase4_diag_runner.py']`.*** The other four were neither located nor hashed. **DA 146
+      established that the guard CAN refuse and CAN pass; nobody tested that it passes on a SUBSET** -- rule 15's
+      falsifier proved the instrument fires, not that it fires on the case that matters.
+  AND_THE_ONLY_SITE_THAT_CHECKS_IT_IS_THE_BATTERY_ON_A_RECEIPT_IT_BUILDS_ITSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      And the AST census of who guards the count: **`_okc["n_checked"] == len(SCORING_PATH_MODULES)` appears at
+      exactly ONE site, `:9922` -- inside the battery, on a receipt the battery constructs itself with all five
+      modules.** The **three production call sites do not check it**: `:6056` (the cache pin), `:7704` (the day
+      path) and `de_cancel_count_delta.py:251`. ***THE ONE PLACE THAT WOULD CATCH A SUBSET IS THE ONE PLACE A SUBSET
+      CANNOT ARRIVE.*** And BE 117 (`18b609d`) makes it worse from the other side: the derived closure is **49
+      recorded -> SCORING 8**, and **the typed five is a STRICT SUBSET of eight** -- so the set is short by three
+      before the predicate is allowed to check a fraction of what remains.
+  THE_SEAL_DEFECT_IS_DE_PRIORITISED_BY_RULING_AND_OWED_BEFORE_ANY_SEALED_RACE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE FIFTH DEFECT IS CONFIRMED AND THE USER HAS RULED IT NOT AN ISSUE, WHICH IS A DIFFERENT THING FROM
+      CLOSED.*** A planted `economic_settlement` block was ACCEPTED by `assert_no_economic_leak`, confirming what
+      REV 123 found and I verified at the tuple last round. **RECORDED AS: DE-PRIORITISED BY RULING, AND OWED BEFORE
+      ANY FUTURE SEALED RACE.** The USER's reasoning, kept because it is what makes the ruling correct rather than
+      merely authoritative: ***there is no live sealed race, every arm result is retracted, and nothing currently
+      decided rests on a sealed artifact -- so the cost is PROSPECTIVE, not present.*** **The debt is dated to the
+      next sealed race, not cancelled**, and this file will carry it until that race is declared or the field list
+      is repaired.
+  THE_PARAMS_PROTOCOL_SAYS_V20_AT_V26_AND_ITS_OWN_NOTE_RECORDS_THE_SAME_BUG_AT_V1:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v26.json
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      Smaller item, and the one with the best comedy in it: **`de_multiday_gate1_params_v26.json` carries
+      `"protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V20"` while `"version": 26`** -- and **v25 carries the identical
+      V20 string.** `load_params()` reads NEITHER: **zero occurrences of `protocol` or `version` in the loader**, so
+      the string is inert and could say anything. ***AND THE FILE'S OWN `note` FIELD RECORDS THE SAME DEFECT FROM
+      THE PROGRAMME'S PAST: "THE VERSION TRAVELS IN `version`; v1's protocol string said V2 while its filename said
+      v1."*** **The declaration documents the bug class in its own prose and then instantiates it.** The contrast
+      settles that it is fixable: **the DESIGN side tracks -- v33 says `..._DESIGN_DECLARATION_V33`, v34 says
+      `V34`.**
+  THE_FIRST_CROSSING_CLAIM_IS_FALSE_AS_A_COUNT_AND_TRUE_AS_A_CASCADE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      Smaller item, driven rather than argued. The receipt at `:8336` states that because a first-crossing score is
+      at or below the generation's maximum, *"at an UNCHANGED theta **fewer generations cross**"*. **The premise is
+      true and the conclusion does not follow: a first crossing EXISTS iff some row >= theta, iff the maximum >=
+      theta -- so the crossing SET IS IDENTICAL BY CONSTRUCTION.** I drove it on a three-generation case and both
+      rules select the same two. ***WHAT MOVES IS NOT WHICH GENERATIONS CROSS BUT WHEN THE CANCEL IS ISSUED*** --
+      earlier, which changes fills prevented, reposts and which later generations exist at all. **A timing and
+      cascade effect, not a logical count** -- and the calibration concern the paragraph raises survives the
+      correction, because an earlier cancel is still a different policy at an unchanged theta.
+  SCORE_EVENTS_NAMES_THE_VALUE_THAT_COMPARES_FALSE_AND_ADMITS_THE_ONE_THAT_COMPARES_TRUE:
+    prov: CHECKED
+    artifact: live/pm_research/de_score_stream.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      Smaller item, and defence in depth as the coordinator said -- but with a shape worth naming. `score_events`
+      site #5 refuses `bool`, non-numeric and `math.isnan(v)`, with the reason spelled out: ***"a NaN compares False
+      against every threshold and becomes a silent no-op."*** **There are ZERO `isfinite` calls in the function.**
+      Driven with a valid side and a POSITIVE CONTROL first: **finite 0.7 ACCEPTED, NaN REFUSED BY NAME, `+inf`
+      ACCEPTED, `-inf` ACCEPTED.** ***THE CHECK NAMES THE VALUE THAT ALWAYS COMPARES FALSE AND ADMITS THE ONE THAT
+      ALWAYS COMPARES TRUE*** -- `inf >= theta` holds for every theta, so every row would be a decision. Downstream
+      `de_head_scoring` does use `math.isfinite` and refuses, so this is depth, not exposure.
+  MY_FIRST_PROBE_REFUSED_ITS_OWN_POSITIVE_CONTROL_AND_THAT_IS_HOW_I_CAUGHT_IT:
+    prov: CHECKED
+    artifact: live/pm_research/de_score_stream.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***AND MY OWN INSTRUMENT FAILED FIRST, WHICH IS THE ONLY REASON THE RESULT ABOVE IS TRUSTWORTHY.*** My first
+      probe built a row with `side: "BUY"` and got **four identical refusals -- NaN, `+inf`, `-inf` AND the finite
+      control.** Had I run only the three interesting cases I would have filed *"score_events refuses non-finite
+      scores"*, the opposite of the truth. **The refusal was site #4: `SIDES` is `('BUY_UP', 'SELL_UP')`.** ***RULE
+      15 IS "EVERY CHECKER SHIPS A FALSIFIER: A POSITIVE CONTROL IT MUST FLAG AND A KNOWN-BAD INPUT IT MUST REFUSE",
+      AND IT BINDS THE PROBE I WRITE TO TEST SOMEONE ELSE'S CHECKER JUST AS HARD.*** A probe whose positive control
+      fails has measured its own fixture.
+  THE_COORDINATOR_WITHDRAWS_SEVEN_OF_EIGHT_AND_MY_GATE_TABLE_IS_THE_LOCAL_CARRIER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***THE COORDINATOR WITHDRAWS "SEVEN OF EIGHT CLOSED AND VERIFIED" until the null runs the ruled unit and the
+      counts are de-duplicated, and the local carrier of that arithmetic is MINE.*** `HANDOFF.md:346` heads a table
+      *"THE GATE -- closed **and verified**, which is the word this file has been insisting on"* and lists **1
+      (era), 3 (score key), 5 (coverage), 7 (cache pin), 8 (DA's verifier) and the sealed-value guard** as closed
+      AND verified, 2 as closed, 4 and 6 as open. ***THAT TABLE IS SUPERSEDED HERE, NOT DELETED.*** **What survives
+      the withdrawal, on the USER's own confirmation: the CAUSAL ROW TIMING and GENERATION-BOUNDARY ROUTING fixes DO
+      work.** What does not survive is the arithmetic: **a gate item verified by an instrument that samples, or
+      closed by a branch nothing calls, was never at "verified".**
+  NOTHING_WAS_BUILT_SO_NOTHING_IS_CONTAMINATED_AND_I_VERIFIED_IT_AT_THE_LOCK:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      ***AND THE ONE UNAMBIGUOUSLY GOOD FACT, WHICH IS THE WHOLE VALUE OF THE ISSUES-FIRST RULING AND IS THEREFORE
+      STATED AND NOT ASSUMED.*** Verified at the machine at 2026-09-09T09:09:38Z: **`/proc/locks` matched by dev:inode on
+      `data/.heavy_run.lock` -- NO HOLDERS**; **no heavy process** in the table; **the last heavy-run record is
+      `be_heavy_run_record_p003ev200903b.jsonl` at 07:15:47Z** and everything newer in `derived/` is a
+      DECLARATION (design v32, v33, v34), not a book and not a result. ***FIVE CRITICAL DEFECTS WERE FOUND IN CODE
+      THAT NEVER PRODUCED A NUMBER ANYONE IS HOLDING.*** **The USER's "we clear issues first" ruling is why the cost
+      of every one of these is a re-run and not a retraction.**
+  THE_PAIR_OF_RECORD_HAS_MOVED_TO_PARAMS_V26_AND_DESIGN_V34:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:09:38Z
+    said: >-
+      Corrected because my files carried the older pair: **the runner now pins `PARAMS_REL =
+      "live/pm_research/declarations/de_multiday_gate1_params_v26.json"` at `:70`, and
+      `de_multiday_design_declaration.VERSION` is **34** (design v34 written 08:36:31Z). My round-303 files and
+      R-858 both record **params v25 + design v33** -- correct when written, stale now. ***THE PAIR OF RECORD IS
+      params v26 + design v34.*** Recorded as the pair the code resolves, with no claim about what changed in it
+      beyond the measured delta: v34 differs from v33 in `as_of`, `output_name_check`, `parameters`, `protocol`,
+      `source_identity` and `supersedes`, and adds and removes no keys.
   # --- MEM round 303, 2026-09-09T08:54:28Z (the clock read by which every measurement below was complete) ---
   THE_SEAL_NAMES_THE_DIAGNOSTIC_AND_NOT_ONE_FIELD_OF_THE_RULED_RESULT:
     prov: CHECKED

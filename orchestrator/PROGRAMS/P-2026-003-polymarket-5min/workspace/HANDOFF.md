@@ -1,3 +1,162 @@
+# READ FIRST — round 304 (MEM, 2026-09-09T09:09:38Z, tip `45fa3af`)
+
+**R-857, R-858, R-859 and R-860 swept — thirty-five commits since `17bbe9b`.** STATE ONLY.
+
+*(I measured seventeen to `18b609d`; eighteen more landed while I drove the defects. Corrected before landing, and swept in the addendum below.)*
+
+# ⚠⚠ THE USER REVIEWED AT `7d374b4` AND FOUND FIVE CRITICAL DEFECTS
+
+**This supersedes the gate arithmetic in this file. It is not "more findings" — it changes what our verifications
+are worth.**
+
+## (a) THE NULL THE USER RULED IS NOT THE NULL THAT RUNS
+
+AST census over the whole tree — `null_draws_valued` has **two** call sites:
+
+| site | positionals | keywords | passes `arm_cancels`? |
+|---|---|---|---|
+| `de_multiday_gate1_runner.py:7881` (day path) | 4 | `n_draws, seed, deadline_s, winners` | **no** |
+| `de_multiday_gate1_runner.py:11344` (battery) | 4 | `n_draws, seed, deadline_s, cross_check_n, winners` | **no** |
+
+**The `if arm_cancels is not None:` branch implementing ruling B is UNREACHABLE. The historical ROW-matched null is
+what ran and what would run.**
+
+**And the mechanism is a rule we already wrote down.** DE 161's commit subject (`c0e19ad`, 07:32:35Z) reads *"the
+matched-cancel branch **is in the null**"*. **Rule 30 is "verify against the diff, not the message"** — landed
+because DA 146 found a commit message describing a change the commit did not contain. **The class recurred at the
+scale of a USER ruling.**
+
+**It propagated into R-837, R-847, R-852, R-856 — and into this file.** `HANDOFF.md:1094` (my round-291 block) says
+DE 161 *"wires the matched-cancel branch into the null"*. **That clause is superseded here and not deleted.** My
+hedge — *"landed as code… this file asserts nothing about their behaviour"* — was correct and **insufficient:
+"landed as code" is true of a branch nothing calls.**
+
+**The code is honest and no one could have read it.** `:6241` defaults `matched_control` to `{"matched_on":
+"DECISIONS", "why": "no arm cancel records were supplied…"}` — **but no day run has happened since DE 161, so that
+field has never been written to an artifact.**
+
+## (b) THE DECISION COUNT IS INFLATED — CLAUDE.md reliability rule 2 verbatim
+
+`day_decision_population` (`:4633`): `decisions = [r for r in module.arm_stream(bk, head) if score >= theta]`, and
+`arm_stream` returns **one entry per `bk["rows"]` element**. So it counts **ROWS** into a field whose own
+`definition` string says **"above-threshold GENERATIONS"** — and that number feeds **admissibility** and, through
+`by_side`, **the null's demand.** Driver already measured in the receipt: **39.7 % of 40,000 sampled rows on 09-04
+begin after their generation's start, 27 % of generations, max 60 rows in one.**
+
+**And the de-duplication key is already on every row:** `REQUIRED_EVENT_KEYS = ('t', 'slug', 'side', 'gen')`. **The
+repair needs no new data, no rebuild, no decision.**
+
+## (c) THE CANCEL-MATCHING PREMISE IS FALSE — driven, not read
+
+`policy_gen = f"{g['gen']}.r{run.repost_seq}"` (`:753`); `issue_counts` keys `(slug, side, policy_gen)` (`:1396`).
+Driven through the module's own gate:
+
+| case | `one_cancel_per_generation` |
+|---|---|
+| reference gen 7 cancelled twice, spelled `7` and `7.r1` | **True** ← passes |
+| the same policy id cancelled twice | False |
+
+**`ref_gen` is on the very `CANCEL_ISSUED` event the gate reads** — the second time this round the correct key sat
+beside the wrong one. **REV 110 cited this invariant and the coordinator carried it into the USER's decision brief,
+so the premise on which ruling B was recommended does not hold as stated.** *A fact about the premise; the design is
+the USER's (rule 14).*
+
+## (d) THE BOOK-CODE PREDICATE PASSES ON A SUBSET
+
+`assert_book_scoring_code` **intersects** the receipt with `SCORING_PATH_MODULES` and refuses only the **empty**
+case. Driven with a real digest: **a receipt naming ONE of five → `BOOK_SCORING_CODE_MATCHES`, `n_checked: 1`.**
+
+**`n_checked == len(SCORING_PATH_MODULES)` is checked at exactly one site — the battery (`:9922`), on a receipt it
+builds itself.** The three production sites (`:6056`, `:7704`, `de_cancel_count_delta.py:251`) do not. **BE 117
+worsens it from the other side: 49 recorded → SCORING 8, and the typed five is a strict subset of eight.**
+
+## (e) THE SEAL DEFECT — CONFIRMED, and **DE-PRIORITISED BY USER RULING**
+
+A planted settlement result was accepted. **Recorded as: de-prioritised by ruling, OWED BEFORE ANY FUTURE SEALED
+RACE.** The reasoning, kept because it is what makes the ruling correct rather than merely authoritative: **no live
+sealed race, every arm result retracted, nothing currently decided on a sealed artifact — so the cost is
+prospective.** *The debt is dated to the next sealed race, not cancelled.*
+
+## THREE SMALLER ITEMS — each driven
+
+- **params v26 carries `protocol: "…_PARAMS_V20"` at `version: 26`** (v25 too), and `load_params()` reads neither
+  field. **The file's own `note` records the same bug from v1** — *"v1's protocol string said V2 while its filename
+  said v1"*. The design side tracks correctly (`…_V33`, `…_V34`), so it is fixable.
+- **"at an UNCHANGED theta fewer generations cross" is FALSE as a count.** A first crossing exists **iff** the
+  maximum crosses — **the set is identical by construction.** What moves is the cancel **time** and the cascade. The
+  calibration concern survives the correction.
+- **`score_events` refuses NaN by name and ADMITS `+inf` and `-inf`** (zero `isfinite` calls). It **names the value
+  that always compares False and admits the one that always compares True.** Downstream-refused → depth, not
+  exposure.
+
+## ⚠ MY OWN INSTRUMENT FAILED FIRST — and that is why the result above is trustworthy
+
+My first `score_events` probe used `side: "BUY"` against `SIDES = ('BUY_UP','SELL_UP')` and returned **four
+identical refusals — including the finite control.** Had I run only the three interesting cases I would have filed
+*"score_events refuses non-finite scores"*, **the opposite of the truth. Rule 15 binds the probe I write to test
+someone else's checker just as hard.**
+
+## THE WITHDRAWAL
+
+**The coordinator withdraws "seven of eight closed and verified"** until the null runs the ruled unit and the counts
+are de-duplicated. **The local carrier is my own gate table at `HANDOFF.md:346` — superseded, not deleted.**
+
+**What survives, on the USER's own confirmation: the CAUSAL ROW TIMING and GENERATION-BOUNDARY ROUTING fixes DO
+work.** What does not survive is the arithmetic — **a gate item verified by an instrument that samples, or closed by
+a branch nothing calls, was never at "verified".**
+
+## ✅ NOTHING WAS BUILT, SO NOTHING IS CONTAMINATED
+
+Verified at the machine 2026-09-09T09:09:38Z: **`/proc/locks` by dev:inode on `data/.heavy_run.lock` — no holders**; no heavy
+process; **last heavy-run record 07:15:47Z**; everything newer in `derived/` is a **declaration** (design v32/33/34),
+not a book. **Five critical defects found in code that never produced a number anyone is holding — that is the whole
+value of the issues-first ruling.**
+
+## STATE
+
+**Pair of record CORRECTED: `params_v26` + design `v34`** (`PARAMS_REL:70`; `DESIGN.VERSION = 34`). My files
+carried v25 + v33.
+
+Also swept: **REV 124** finished the meta-class list — `fit_code_files` **dirty and silent with no closure to derive
+from**, `_GEN_REQUIRED` **genuinely clean**, the exclusion vocabulary **splits** (loud at window level, silent at
+row level, now derivable via `rows_in_by_generation`). **DA 149/150** closed the fourth consumer and surfaced each
+exclusion summand with its sibling status; **BE 116** settled that `fr` cannot be byte-identical, so **the build is
+five days at the EV20 wall, not one hour**; **BE 117** derived the scoring closure from the recording.
+
+Counts: flags 2563 → 2587, provenance 2108 → 2132 (twenty-four written, twenty-four counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 286 archived. MEM asserts no result.
+
+## ADDENDUM 2026-09-09T09:11:26Z — eighteen commits landed while I verified
+
+**SEAT_PROTOCOL rule 33 is the generalisation of every defect above:** *"a verification is only as good as the
+identity between what it examines and what it is cited for."* Its own accounting is the honest one — **the standard
+caught two bad closures in one night and still passed three defects the user found in minutes**, because each check
+was **true of the artifact it examined and false of the claim it was cited for.** It names a fourth instance I had
+not carried: **REVIEW 105 passed a `Path` where a parsed receipt was wanted — *"the conclusion survived and the
+evidence did not."*** **Every green now carries three answers: what did the check actually examine; what claim is it
+cited for; are those the same thing.** And every predicate must be driven to **pass on the real thing, fail on a
+known-bad, and REFUSE A PARTIAL INPUT** — with fixes driven **from the entry point**, because a unit test on the
+branch is exactly what missed (a).
+
+**REV 125 withdraws the very citation this round records as the premise.** *"Three of my own greens were checking
+the wrong thing"* — **REVIEW 110 item (4) is WITHDRAWN**, by the seat that made it, within the hour, unasked. **REV
+126 carries it forward as a SPECIFICATION rather than an audit**: what that verification *would have needed to be
+true* — which id space, which population — so DE's repair targets the right property.
+
+**USER RULING (R-860): "fix the issues first."** The coordinator had put three seats on auditing their own greens
+while only DE was fixing, and records its own reason in the entry that reverses it: ***"optimising for the lesson
+instead of the work."*** **The self-audits are off.** DE 166 takes the four defects in the user's order plus the
+three smaller items, **the seal dropped by name**; BE 119 makes the derivable set a **named key with a stable
+shape** so DE's predicate stops typing a list; DA 152 builds a **driven case for each defect before the fixes
+land**; REV 126 verifies each repair **from the entry point** as it lands.
+
+**And one item is dispatched to no seat, because where a question sits is state: the matching unit — rows, cancels
+or generations — is OPEN WITH THE USER**, on the stated ground that *"the premise on which ruling B was recommended
+was the coordinator's and it was wrong."* **A ruling obtained on a premise that does not hold is re-opened where it
+was decided, not patched where it was implemented.**
+
+---
+
 # READ FIRST — round 303 (MEM, 2026-09-09T08:54:28Z, tip `17bbe9b`)
 
 **R-856 swept — eighteen commits since `0c297dd`.** STATE ONLY.

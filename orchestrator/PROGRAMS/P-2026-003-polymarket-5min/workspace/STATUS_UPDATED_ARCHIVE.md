@@ -21214,3 +21214,36 @@ generation and the window went 4 → 3. Nothing rewritten.
   REV RECOMMENDS BUILD AND THE COORDINATOR CONCURS.** ***AND THE SHARED TREE IS STILL DIVERGED, SO NO SEAT CAN LAND
   A REGISTER ROW: Q-MEM-287 AND Q-MEM-288 ARE COMPOSED AND UNLANDED.*** MEM asserts no result.)
 ```
+
+## Batch 286 — archived 2026-09-09T09:09:38Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:40:06Z (MEM ROUND 301 -- A REGISTER-INTEGRITY DIAGNOSIS, NOT A SWEEP; the state
+  files were current through R-853 and remain so. STATE ONLY. **THE COUNT REPRODUCED**: 1,176 Q rows / 1,172
+  distinct -- `Q-BE-92` x3, `Q-BE-91` x2, `Q-DA-331` x2 -- and R-entries 843/843 with NO duplicates, so the
+  coordinator's R-clean claim holds. ***MY OWN FIRST PROBE REPORTED A FOURTH AND IT WAS MY REGEX***: `### R-6
+  acknowledgement -- DA` is a heading that NAMES an entry rather than being one, caught before it reached the
+  report. ***ANSWER TO THE FIRST QUESTION, AND IT IS THE WORSE ONE FOR TWO OF THE THREE***: `Q-BE-91` and `Q-BE-92`
+  are DIFFERENT FILINGS on one id -- an ASK about a seat conflict beside a FILING about a defect that cost two runs;
+  a contract row, an ASK and a refusal to run `git gc` -- ***so a reader resolving `Q-BE-92` gets an arbitrary one
+  of three unrelated filings***. `Q-DA-331` is the benign case and is ALREADY EXPLAINED IN BAND by `Q-DA-335` (the
+  first line is a GATE-REFUSED DRAFT, VOID; the second supersedes it), its own mechanism being a third one again --
+  a void draft carried in by DE 110's pathspec sweep, the R-562 class. ***A FALSE LEAD CHASED TO THE END***: blame
+  attributes every duplicate line to `0539a36`, the scratch-drive revert, but measured at three refs the duplicates
+  ALREADY EXISTED at `0539a36^^` (1,028/1,024, same three) -- ***THE REVERT RESTORED THEM AND DID NOT CREATE
+  THEM***. ***AND THE MECHANISM IS NOT A HIGHEST-PLUS-ONE RACE***: bisected over 1,594 register commits, `Q-BE-91`
+  reaches 2 at a COORDINATOR commit, `Q-BE-92` reaches 2 AND 3 at ONE BE commit, `Q-DA-331` at the void-draft sweep
+  -- three duplicates, three causes, and a single commit adding two rows on one id is not a race. ***THE REGISTER
+  NAMES ITS OWN MECHANISM***: `Q-BE-105` records R-146(5) renumbering THIRTEEN duplicate rows, and its mapping note
+  parses to sources repeating -- `Q-BE-89` four times, `Q-BE-90` four, `Q-BE-91` three -- a ONE-TO-MANY rename in
+  which a tool matching by id and renaming one occurrence per rule leaves the rest behind. ***AND THE MAPPING HOLDS
+  EXACTLY ONE CHAIN COLLISION, WHICH IS THE ID WITH THREE ROWS***: `92` is the only id that is BOTH a source and a
+  target (`Q-BE-7 -> 92` while `Q-BE-92 -> 93`), so applying them in the wrong order leaves two rows numbered 92 --
+  prediction and observation meet, and the remedy for an ORDERING hazard is temporary ids, not a lock. ***THE DOOR
+  IS ALREADY SHUT ON THE SANCTIONED PATH***: `land_register_row.sh:46` refuses `DUPLICATE_ID` with exit 14, landed
+  `be0ef1d` 2026-09-07, AFTER all three, so the residual exposure is anything landed outside the script. ***AND ONE
+  AMBIGUOUS ID IS CITED AS AUTHORITY*** -- `COORDINATION.md:15560`, "the authority Q-BE-91/93" -- which is rule 16
+  failing inside the register itself. I have renumbered NOTHING and edited NO history. Flags 2529 -> 2539, prov
+  2074 -> 2084; window trimmed 4 -> 3, Batch 283 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE
+  BUILD DECISION IS WITH THE USER.** MEM asserts no result.)
+```
