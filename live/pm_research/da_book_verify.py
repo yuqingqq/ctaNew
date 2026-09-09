@@ -694,6 +694,27 @@ def assembly_shape_of_values(scored) -> str:
     return "MIXED_SCORE_SHAPES"
 
 
+def _raise_on_string_in_count_slot():
+    """BE 116 refused to write the status INTO the count slot because this
+    file sums it. Driven rather than asserted: the exception is returned so
+    a cell can name its type."""
+    try:
+        receipt_population_predicates(
+            {"reference": {"windows": 10, "n_slugs": 10, "generations": 5,
+                           "n_terminal_marks": 10,
+                           "statuses": {"ADMITTED": 10, "NO_REPLAY": 0,
+                                        "RECONCILIATION_FAILED": 0,
+                                        "TERMINAL_MARK_OK": 10,
+                                        "TERMINAL_MARK_MISSING": 0,
+                                        "BINANCE_GAP_EXCLUDED":
+                                            "NOT_APPLIED_ON_THE_DAY_PATH"}},
+             "selection": {"n_supplied_slugs": 10},
+             "asm": {"coverage_by_head": {}}})
+    except TypeError as e:
+        return e
+    return None
+
+
 def scored_stream_rows(ref: dict, gs: dict, sides) -> tuple:
     """THE SCORE-EVENT ROWS FOR ONE HEAD, SHAPE-AWARE (DA 148).
 
@@ -1946,6 +1967,48 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{round(1 - len(_m_u['covered_generation_keys']) / 2, 4)}; empty "
        f"map -> covered {len(_m_e['covered_generation_keys'])}, "
        f"excluded_fraction 1.0")
+
+    # -- 8e. DA 150: A ZERO IS LED TO ITS SIBLING, OR NAMED UNREADABLE --
+    def _pop(stat):
+        return receipt_population_predicates(
+            {"reference": {"windows": 10, "n_slugs": 10, "generations": 5,
+                           "n_terminal_marks": 10, "statuses": stat},
+             "selection": {"n_supplied_slugs": 10},
+             "asm": {"coverage_by_head": {}}})
+    _b = {"ADMITTED": 10, "NO_REPLAY": 0, "RECONCILIATION_FAILED": 0,
+          "TERMINAL_MARK_OK": 10, "TERMINAL_MARK_MISSING": 0}
+    _with = _pop({**_b, "BINANCE_GAP_EXCLUDED": 0,
+                  "BINANCE_GAP_EXCLUDED_STATUS": "NOT_APPLIED_ON_THE_DAY_PATH"})
+    _without = _pop({**_b, "BINANCE_GAP_EXCLUDED": 0})
+    _real = _pop({**_b, "ADMITTED": 8, "BINANCE_GAP_EXCLUDED": 2})
+    _w = _with["exclusion_summands"]["BINANCE_GAP_EXCLUDED"]
+    _o = _without["exclusion_summands"]["BINANCE_GAP_EXCLUDED"]
+    _r = _real["exclusion_summands"]["BINANCE_GAP_EXCLUDED"]
+    ck("DA 150 A ZERO NEVER APPEARS ALONE: with BE 116's sibling present "
+       "the summand carries the STATUS and says the count is standing in "
+       "for it; with NO sibling -- which is what all twelve landed "
+       "receipts carry -- it is named NOT COMPUTABLE rather than left to "
+       "read as 'none excluded' (DA 147); and a real non-zero still reads "
+       "as a measured count. ***BE's sibling key only answers DA 147 if "
+       "something SURFACES it, and this is that something***",
+       _w["status"] == "NOT_APPLIED_ON_THE_DAY_PATH"
+       and _w["has_a_sibling_status"] is True
+       and "NOT 'none were excluded'" in _w["reads_as"]
+       and _o["status"] is None and _o["has_a_sibling_status"] is False
+       and "NOT COMPUTABLE" in _o["reads_as"]
+       and _r["count"] == 2 and _r["reads_as"] == "a measured count",
+       f"with sibling -> {_w['reads_as'][:58]}…; without -> "
+       f"{_o['reads_as'][:58]}…; non-zero -> {_r['reads_as']}")
+    ck("AND THE SUM IS UNAFFECTED, WHICH IS WHY BE PUT THE STATUS IN A "
+       "SIBLING: the merged block still sums to the windows, while a "
+       "string IN the count slot raises -- BE's stated reason, driven "
+       "HERE at the file it names rather than taken from its receipt",
+       _with["admitted_plus_excluded"] == 10
+       and _with["admitted_plus_excluded_equals_windows"] is True
+       and _real["admitted_plus_excluded"] == 10
+       and isinstance(_raise_on_string_in_count_slot(), TypeError),
+       f"merged sums to {_with['admitted_plus_excluded']}; a string in the "
+       f"count slot raises {type(_raise_on_string_in_count_slot()).__name__}")
 
     # -- 9. a receipt for the WRONG DAY or COIN REFUSES -------------------
     why_day = why_coin = ""
