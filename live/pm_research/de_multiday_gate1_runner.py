@@ -9080,27 +9080,26 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                         draw_provenance=prov, book_digest=book_sha,
                         verified_module_sha=cite["sha256"])
         r["cancel_unit_exception"] = _cancel_unit_exception
-        if _win801 is not None:
+        if _win801 is not None and point_estimate:
             r["placement_latency_reconciliation"] = _plr177
-            if point_estimate:
-                # THE OBJECTS THEMSELVES, NOT COPIES -- the driver values
-                # THE SAME reference and THE SAME winners this day valued,
-                # which is the identity rule 33 is about. Point estimate
-                # only: nothing else pops this key, and a live reference
-                # object must never reach a serialiser.
-                # `bk` IS `be_cancel_axis_null.load`'s RETURN, whose key
-                # is `ref`. DE 181 wrote `bk["fr"]["reference"]` -- the
-                # shape of the RAW PICKLE, which that loader unwraps --
-                # because that expression was carried forward from DE
-                # 178's `what_it_would_be` string, a proposal that had
-                # never been executed. It cost a 3-minute run at 16:53Z
-                # and nothing else, because it raised. THE LESSON IS THE
-                # ONE THIS PROGRAMME KEEPS PAYING FOR: a call site that
-                # has never run is a claim, not code, and copying it into
-                # code does not execute it.
-                r[PLR_INPUTS_KEY] = plr_inputs(
-                    bk, _win801["winners"], _base801["total_cents"],
-                    day=day, arm=arm)
+            # THE OBJECTS THEMSELVES, NOT COPIES -- the driver values
+            # THE SAME reference and THE SAME winners this day valued,
+            # which is the identity rule 33 is about. Point estimate
+            # only: nothing else pops this key, and a live reference
+            # object must never reach a serialiser.
+            # `bk` IS `be_cancel_axis_null.load`'s RETURN, whose key
+            # is `ref`. DE 181 wrote `bk["fr"]["reference"]` -- the
+            # shape of the RAW PICKLE, which that loader unwraps --
+            # because that expression was carried forward from DE
+            # 178's `what_it_would_be` string, a proposal that had
+            # never been executed. It cost a 3-minute run at 16:53Z
+            # and nothing else, because it raised. THE LESSON IS THE
+            # ONE THIS PROGRAMME KEEPS PAYING FOR: a call site that
+            # has never run is a claim, not code, and copying it into
+            # code does not execute it.
+            r[PLR_INPUTS_KEY] = plr_inputs(
+                bk, _win801["winners"], _base801["total_cents"],
+                day=day, arm=arm)
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
@@ -13074,9 +13073,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         # same replays.
         _pe828 = run_day("FIXTURE-DAY-1", _mk134["book_path"], params=live,
                          fixture=True, n_days_complete=1,
-                         point_estimate=True)
+                         point_estimate=True, winners=_w801)
         _fu828 = run_day("FIXTURE-DAY-1", _mk134["book_path"], params=live,
-                         fixture=True, n_days_complete=1)
+                         fixture=True, n_days_complete=1, winners=_w801)
         _pev = {a["arm"]: (a.get("economic") or {}).get("D_E0")
                 for a in _pe828["per_day_sealed_artifacts"]}
         _fuv = {a["arm"]: (a.get("economic") or {}).get("D_E0")
@@ -13093,6 +13092,13 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            and all((a.get("economic") or {}).get("Z")
                    == NULL_NOT_DRAWN_STATUS
                    for a in _pe828["per_day_sealed_artifacts"])
+           and all((a.get("placement_latency_reconciliation") or {}).get(
+                       "status") == "PERFORMED_BY_POINT_ESTIMATE_DRIVER"
+                   and PLR_INPUTS_KEY in a
+                   for a in _pe828["per_day_sealed_artifacts"])
+           and all("placement_latency_reconciliation" not in a
+                   and PLR_INPUTS_KEY not in a
+                   for a in _fu828["per_day_sealed_artifacts"])
            and _ref828 == POINT_ESTIMATE_REFUSAL
            and all(isinstance(v, float) for v in _fullZ.values()),
            f"R-828 / DE 148: THE POINT ESTIMATE IS THE SAME NUMBER. "
@@ -13102,7 +13108,9 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            f"only the control absent. Where the statistics would be the "
            f"receipt carries `{NULL_NOT_DRAWN_STATUS}` (never a null, "
            f"never a zero), asking it for Z REFUSES `{_ref828}`, and a "
-           f"FULL receipt still answers with real floats. `run_mode` "
+           f"FULL receipt still answers with real floats. The reconciliation "
+           f"handover exists on point-estimate arms only; a full-null arm "
+           f"never claims that another driver performed it. `run_mode` "
            f"marks the artifact so it can never be read as, or "
            f"supersede, a full run")
         import shutil as _sh801
