@@ -67,6 +67,37 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T05:49:56Z (MEM ROUND 289 -- R-825 THROUGH R-835 SWEPT, fifty-four commits between the
+  tip I read at round 288 (`6f34c6e`) and `3828ed7`, and the USER asked that the docs be brought up to date, so this
+  generation carries the retractions rather than the results. STATE ONLY. ***TWO RETRACTIONS, BOTH THE USER'S OWN
+  COMMITS, AND THEY COMPOUND***: `1d309bc` / `03dbc1e` -- the policy scored on hazard probability while its frozen
+  thresholds were fit on `p_fill * predicted_conditional_value`, THE VALUE HEAD WAS NEVER LOADED -- and `c501824`,
+  the look-ahead, where the generation MAXIMUM was stamped at the GENERATION START so later information triggered
+  an earlier cancel. ***EVERY ARM NUMBER THIS PROGRAMME HAS PRODUCED IS RETRACTED***: the arms decided on the wrong
+  quantity AND used information they could not have had, and every arm figure I carried in rounds 286-288 goes with
+  them. ***THE 0-CANCEL BASELINE MAKES NO DECISIONS AND IS UNTOUCHED BY BOTH***, so the LATENCY finding stands and
+  is now the programme's one robust result -- and I recomputed all four days from the artifacts: at L = 250 the
+  never-cancel maker loses 53.92 % (09-03), 62.37 % (09-04), 97.57 % (09-05) and 55.43 % (09-06) of its settled
+  money, the register's figures exact at every day, with 09-05 agreeing with my own independent round-287 route.
+  ***AND MY FIRST READ OF THAT TABLE WAS WRONG***: I took `absolute.zero_cancel_baseline.total`, which is the FILLS
+  LEG, and got 54.2 % on 09-05 -- the artifact's own `what_total_is` field is what corrected me, the ruled P&L
+  living at `economic_settlement.zero_cancel_baseline_legs.total_cents`. ALL SEVEN USER DEFECTS ARE CLOSED and
+  REV 107's closed form on the exclusion inflation checks to the unit: (12,853,409 - 15,735) / 41 = 313,114 EXACTLY,
+  an 816.9x overstatement. R-835's "four moved cascade modules" is exact AT `ecc7116` (one was already off-pin from
+  the look-ahead repair, three moved there) and FIVE at HEAD, the fifth arriving at `70b54a4` -- which is the second
+  pin site v22 missed. **Params v23 matches 10/10 at HEAD and v20 matches 5/10**, so REV 109's "a day can run" is
+  true at the pins; design v29/v30/v31 all PAIR_OK, pinning params v21/v22/v23. ***MY ROUND-288 AMBIGUITY FINDING IS
+  CLOSED***: the L = 250 receipt now reads 250.0 from the builder receipt, the predicate is an exact leaf-name list,
+  and the refusal name was KEPT rather than deleted. ***AND A STANDING FACT OF MINE IS NOW FALSE***: the R-775
+  freeze, which I recorded holding for twenty-eight rounds, LIFTED inside the user's own `1d309bc`. Two decisions
+  wait on the user (the null's sampling unit -- 15,867 of 40,000 rows begin after their generation's start -- and
+  the `research.slice` 200 % cap, verified at the running manager). BE has no procedure file while the other three
+  seats do. Flags 2349 -> 2364, prov 1894 -> 1909; missing-artifact 178 -> 176 and findings 183 -> 181, and I chased that
+  rather than publishing it: THE IMPROVEMENT IS IN THE FILESYSTEM, NOT IN THIS FILE -- the previously committed
+  STATUS.yml audits to 176 today and audited to 178 yesterday, so two artifacts a CHECKED flag cites have since
+  been created; window trimmed 4 -> 3, Batch 271 archived. **NOTHING CORRECTED
+  HAS BEEN QUOTED AND THIS FILE QUOTES NOTHING CORRECTED.** `wt-de` `5020f96` / `?? data`, the FIFTEENTH consecutive
+  round. MEM asserts no result.)
   2026-09-08T01:49:04Z (MEM ROUND 288 -- R-819 THROUGH R-824 SWEPT, with every landing between the
   tip I read at round 287 (`cd1adcc`) and `6f34c6e`. STATE ONLY. The first two days under the USER's ruled endpoint
   read exactly as filed -- 09-03 over 246 windows and 09-04 over 288, populations kept apart, **CONDVALUE 0 of 2 and
@@ -123,34 +154,6 @@ updated: >-
   measured; it argues for the CURVE over the single point. Flags 2319 -> 2334, prov 1864 -> 1879; window trimmed
   4 -> 3, Batch 269 archived. `wt-rr` at `33e8584` with ten pins 0 mismatched, `wt-de` `5020f96` / `?? data` the
   THIRTEENTH consecutive round, the freeze a TWENTY-SEVENTH. MEM asserts no result.)
-  2026-09-07T16:46:47Z (MEM ROUND 286 -- R-813 AND R-814 SWEPT, with every landing between the tip I
-  read at round 285 (`ef27921`) and `6461cf2`. STATE ONLY. ***REV 105 IS ONE VERDICT FOR FOUR DAYS***: GO R1..R4 MAY
-  PROCEED at `850c166` from `wt-rr`, whose HEAD and `?? data` status I measured; the third pre-launch condition, a
-  free heavy lock, is NOT met yet. ***I REPRODUCED REV'S 09-03 FINDING FROM THE VENUE RECORD MYSELF***: over the 288
-  possible boundaries of 2026-09-03 `resolutions.jsonl` carries 287 `btc-updown-5m` slugs and the absent one is
-  `btc-updown-5m-1788448800` = 15:20:00Z exactly; and driving `exp_m6_settlement`'s own readers, the 21:05:00Z slug
-  `btc-updown-5m-1788469500` has the venue at Up while the PINNED S60(T) >= S60(t0) reads Down. ***AND I MEASURED
-  WHAT THE DISAGREEMENT IS***: -0.1418 bps across the window, on a boundary sample 2,000 ms stale -- a real
-  disagreement and a tiny one. ***THE OBVIOUS WRONG MOVE IS CLOSED BEFORE ANYONE MAKES IT***: S30 reads +3.0851 bps
-  and agrees with the venue on that slug, but BE 99 measured S30/S30 disagreeing on 23 and 17 slugs where S60/S60
-  disagreed on none -- a convention that fixes one window and breaks twenty is not a fix, and picking one on the day
-  it disagrees is choosing after seeing. So 09-03 runs, emits, and is NOT quotable as final, and no checker may
-  assert 288/288. ***REV'S SCHEMA ASYMMETRY IS MEASURED, NOT INFERRED***: the pre-composition reader reads a v3
-  ledger WITHOUT refusing and returns no settlement keys at all, while the new reader returns `schema_version_read`
-  and a `settlement_rows_status` on both -- the absence becomes a named status instead of silence. My first fixture
-  for that test was BROKEN and both readers failed identically on a missing `book` key; I rebuilt it from 40 real
-  ledger rows before believing either arm. ***AND THE NUMBER BE'S L = 0 REBUILD IS MEASURED AGAINST HAS TWO VALUES***:
-  R-813 names 88,698.17341109998 (the seats' recompute, in four Q-rows and R-794) while the 09-05 artifact records
-  88,698.17341110039 -- 4.075e-10 cents apart, equal at 1e-6 relative and NOT equal under `==`, so the equivalence
-  test needs a named source and a tolerance, which is R-811's own rule about L one field over. REV's two read
-  conditions confirmed at the digests (`27cc9925` at the composition, `4ffeeefc` at the tip) and at the six refusal
-  names in the composition's runner, with `--supersedes` defaulting to None and `de_early_read.py:512` refusing
-  without it. BE 101's four build costs reconcile to the receipts exactly (1,696.4 / 2,115.7 / 2,379.8 / 3,560.7 s),
-  ***BUT THE L = 250 BUILD IS AT 1,952 s AND 4.666 GB AT 16:44:23Z AGAINST THE 1,696.4 s DAY IT REBUILDS***, so
-  "lock free ~17:10Z" is the optimistic end. REV 105's filing landed 22 s before my own round-285 row -- the SEVENTH
-  landing in the read-write gap. Flags 2304 -> 2319, prov 1849 -> 1864; window trimmed 4 -> 3, Batch 268 archived.
-  The freeze holds a TWENTY-SIXTH round; `wt-de` `5020f96` / `?? data`, the TWELFTH consecutive round; GO #8
-  unchanged. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -322,6 +325,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 289, R-825..R-835 swept (6f34c6e -> 3828ed7) ---
+  BOTH_RETRACTIONS_ARE_THE_USERS_OWN_COMMITS_AND_THEY_COMPOUND: 03dbc1e-AND-c501824-LINEAGE
+  THE_ARM_SIDE_OF_EVERY_RESULT_IS_RETRACTED_AND_THE_BASELINE_IS_UNTOUCHED: WRONG-QUANTITY-AND-FUTURE-INFORMATION
+  THE_LATENCY_FINDING_IS_THE_ONE_ROBUST_RESULT_AND_ALL_FOUR_DAYS_RECOMPUTE_EXACTLY: 53.92-62.37-97.57-55.43-PERCENT
+  MY_FIRST_LATENCY_READ_WAS_WRONG_AND_THE_ARTIFACT_ITSELF_TOLD_ME_WHY: TWO-TOTALS-ONE-NAMED-what_total_is
+  REV_107s_CLOSED_FORM_ON_THE_EXCLUSION_INFLATION_IS_EXACT_TO_THE_UNIT: 41-x-313114-PLUS-15735
+  R_835s_FOUR_MOVED_MODULES_IS_EXACT_AT_ITS_OWN_COMMIT_AND_FIVE_AT_HEAD: ONE-BEFORE-THREE-AT-ONE-AFTER
+  PARAMS_v23_MATCHES_TEN_OF_TEN_SO_A_DAY_CAN_RUN_AND_v20_MATCHES_FIVE: REV-109-CONFIRMED-AT-THE-PINS
+  THE_DESIGN_CHAIN_PAIRS_AND_LIVES_IN_A_DIFFERENT_DIRECTORY_FROM_THE_PARAMS: derived-NOT-declarations
+  MY_ROUND_288_AMBIGUITY_FINDING_IS_CLOSED_AND_THE_GUARD_WAS_KEPT_NOT_DELETED: THE-LEAF-NAMES-THE-VALUE
+  THE_SLICE_CAP_IS_TRUE_OF_THE_RUNNING_MACHINE_NOT_ONLY_THE_PROPOSAL: CPUQuotaPerSecUSec-2s
+  THE_NULLS_SAMPLING_UNIT_QUESTION_IS_WRITTEN_UP_WITH_ITS_MEASUREMENT: 15867-OF-40000-ROWS-39.7-PERCENT
+  THREE_SEATS_HAVE_PROCEDURE_FILES_AND_BE_HAS_NONE: DA-DE-MEM-PRESENT-BE-ABSENT
+  THE_CORRECTED_09_03_BOOK_IS_BUILDING_AND_NOTHING_CORRECTED_HAS_BEEN_QUOTED: a83a9d1d-SINCE-050952Z
+  I_PROPOSE_THE_QUEUE_INSTRUCTION_AS_SEAT_PROTOCOL_RULE_23: A-NUMBERED-QUEUE-IS-WORKED-END-TO-END
+  THE_FREEZE_LIFTED_AND_THREE_PIN_PAIRS_REPLACED_IT_WHILE_wt_de_STAYED_UNTOUCHED: 5020f96-FIFTEENTH-CONSECUTIVE-ROUND
   # --- MEM round 288, R-819..R-824 swept (cd1adcc -> 6f34c6e) ---
   THE_FIRST_TWO_DAYS_UNDER_THE_RULED_ENDPOINT_READ_EXACTLY_AS_FILED: BOTH-ARMS-BELOW-ON-BOTH-DAYS
   AND_I_REPRODUCED_DAs_BINDING_NULL_FINDING_FROM_THE_LEDGER_ROWS: THE-PERSISTED-DRAWS-ARE-THE-5-SECOND-ONES
@@ -26691,6 +26710,195 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 289, 2026-09-09T05:49:56Z (the clock read by which every measurement below was complete) ---
+  BOTH_RETRACTIONS_ARE_THE_USERS_OWN_COMMITS_AND_THEY_COMPOUND:
+    prov: CHECKED
+    artifact: git:03dbc1e
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      Read at the objects: **`1d309bc` "fix(p003): align replay scores with frozen value thresholds" and `03dbc1e`
+      "docs(p003): retract probability-scored policy results" are both authored AND committed by `yqq`** -- the
+      USER's own commits, as `849bef2` was. The first adds `lgbm_val_{coin}.txt` and `val_models.json` to the
+      manifest and LANDS `params_v20` (542 lines) in the same commit; the second lands
+      `p003_expected_value_policy_correction_v1.json` (146 lines) and amends the V2 plan. **The units defect: the
+      policy scored on hazard probability alone while its frozen thresholds were fit on
+      `p_fill * predicted_conditional_value` -- the value head was never loaded.** The causality defect
+      (`c501824`, DE 155 (1)) followed at 04:02:41Z. **Six hours apart, the same scoring path, and they compound.**
+  THE_ARM_SIDE_OF_EVERY_RESULT_IS_RETRACTED_AND_THE_BASELINE_IS_UNTOUCHED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      The consequence stated as the register states it, because a state file that softens this is worse than one
+      that omits it: **every arm number the programme has produced came from a policy that decided on the WRONG
+      QUANTITY and decided using INFORMATION IT COULD NOT HAVE HAD.** `generation_scores()` took the MAXIMUM across a
+      generation and `score_events_for()` stamped that maximum at the GENERATION START, so later information
+      triggered an earlier cancel. **What is retracted is every statement about whether cancelling helps, at either
+      latency, under either scoring.** **The 0-cancel baseline makes no cancel decisions and is untouched by both** --
+      which is why exactly one class of result survives. Every arm figure this state file carried in rounds 286-288
+      is retracted with them, and they are not restated here.
+  THE_LATENCY_FINDING_IS_THE_ONE_ROBUST_RESULT_AND_ALL_FOUR_DAYS_RECOMPUTE_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T121956Z.json
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      ***THE PROGRAMME'S ONE SURVIVING RESULT, AND I RECOMPUTED ALL FOUR DAYS FROM THE ARTIFACTS.*** Taking each
+      re-emitted point-estimate artifact's `economic_settlement.zero_cancel_baseline_legs.total_cents` at L = 250
+      against the landed L = 0 ruled baseline: **09-03 37,849.85 against 82,142.82 = 53.92 % lost; 09-04 38,452.91
+      against 102,193.69 = 62.37 %; 09-05 1,974.58 against 81,238.30 = 97.57 %; 09-06 20,750.59 against 46,562.18 =
+      55.43 %.** The register's 53.9 / 62.4 / 97.6 / 55.4 are exact at every day. 09-05's 97.57 % is also the number
+      I computed independently at round 287 from BE's own rebuild, by a different route. **The never-cancel maker
+      loses between half and nearly all of its settled money to a quarter-second of placement latency.**
+  MY_FIRST_LATENCY_READ_WAS_WRONG_AND_THE_ARTIFACT_ITSELF_TOLD_ME_WHY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260905_L250ms__20260908T121956Z.json
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      ***AND I GOT IT WRONG FIRST, WHICH IS WORTH MORE THAN GETTING IT RIGHT QUIETLY.*** My first pass read
+      `absolute.zero_cancel_baseline.total` -- 37,191.48 on 09-05 -- and produced 55.5 / 65.3 / **54.2** / -- ; the
+      09-05 cell disagreeing with the register by 43 points is what stopped me. **There are TWO `total`s**: the
+      `absolute` block's is the **FILLS LEG** (its own `what_total_is` says "the fills leg, which is what
+      `_value_cents` sums"), and `economic_settlement.zero_cancel_baseline_legs.total_cents` is **R-801's ruled P&L**
+      (its `what_total_is` says so). **The artifact carries a field that names which quantity each total is, and
+      that field is what corrected me** -- the same shape as round 288's two `n_slugs`, but with the disambiguator
+      already built in. Any four-day table must read the settlement block, never the absolute one.
+  REV_107s_CLOSED_FORM_ON_THE_EXCLUSION_INFLATION_IS_EXACT_TO_THE_UNIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_107_DE155_SCORING_2026-09-09.md
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      Defect (4): every chunk compared against the WHOLE day's reference and the counts were summed, so with 42
+      chunks the defective sum is `41 x N + U`. **Checked arithmetically here: (12,853,409 - 15,735) / 41 =
+      313,114.0 -- an EXACT integer -- and 41 x 313,114 + 15,735 = 12,853,409, the reported number to the unit.**
+      An **816.9x** overstatement, and the corrected 15,735 is independently corroborated: the same figure appears
+      in `REVIEW_09_04_BOOK_AND_DE92` and `REVIEW_BE55_THE_09_03_BOOK` as 09-03's uncovered count (5.03 %, identical
+      for both heads). **A diagnosis that reproduces the wrong number in closed form is proven, not argued.**
+  R_835s_FOUR_MOVED_MODULES_IS_EXACT_AT_ITS_OWN_COMMIT_AND_FIVE_AT_HEAD:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      A number that did not match, chased rather than published. R-835 says `ecc7116` moved **FOUR** cascade
+      modules; I measure **FIVE** off v20's pins at HEAD. **Both are right, and the difference is the whole reason
+      it took three pin pairs.** Measured against v20's ten pins: **before `ecc7116` 9/10** (`de_phase4_diag_runner.py`
+      already off-pin, moved by the look-ahead repair `c501824`); **at `ecc7116` 6/10** -- it moved three more
+      (`de_head_scoring.py`, `de_score_stream.py`, `harmful_stateful_policy.py`), **four off-pin in total, which is
+      R-835's count exactly**; **at `70b54a4` 5/10**, a FIFTH (`be_cancel_axis_null.py`) moving when DE closed (3)
+      and (5). **The fifth module arrived after v22 was cut, which is precisely the "second pin site" v22 missed.**
+  PARAMS_v23_MATCHES_TEN_OF_TEN_SO_A_DAY_CAN_RUN_AND_v20_MATCHES_FIVE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      REV 109's "a day CAN now run" verified at the pins rather than at the filing: **params v23's ten cascade
+      modules match the files on disk 10/10**, while **params v20's match 5/10** -- mismatched on
+      `be_cancel_axis_null.py`, `de_head_scoring.py`, `de_phase4_diag_runner.py`, `de_score_stream.py`,
+      `harmful_stateful_policy.py`. So the blocker REV found is real (the in-run battery would refuse
+      `BE_CASCADE_DIFFERS` under v20 and no day could run) and it is closed under v23. **The pair of record is
+      params v23 + design v31.**
+  THE_DESIGN_CHAIN_PAIRS_AND_LIVES_IN_A_DIFFERENT_DIRECTORY_FROM_THE_PARAMS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v31.json
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      The three design artifacts resolve: **v29 -> v28, v30 -> v29, v31 -> v30, all PAIR_OK** by recomputed sha256,
+      and each pins its params by path with `pin_direction: "design -> params"` -- v29 to params v21, v30 to v22,
+      **v31 to v23**. ***A RESOLUTION HAZARD WORTH WRITING DOWN***: the design family lives under
+      `data/pm_5min/derived/p003_de_multiday_gate1_design_v*.json` while the params family lives under
+      `live/pm_research/declarations/de_multiday_gate1_params_v*.json`. **I looked for the design files in the
+      declarations directory first and did not find them.** Two halves of one pinned pair in two directories with
+      two prefixes; a reader resolving "the pair of record" needs both paths, not one convention.
+  MY_ROUND_288_AMBIGUITY_FINDING_IS_CLOSED_AND_THE_GUARD_WAS_KEPT_NOT_DELETED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      ***CLOSED, AND I DROVE THE CLOSURE.*** At round 288 `placement_latency_from_the_book` REFUSED the real L = 250
+      builder receipt `SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS` on `[250.0, 23947.0]`. Driven at HEAD it now
+      returns **L = 250.0, `source: "THE BOOK'S BUILDER RECEIPT"`** (and 09-07 still reads 0.0 the same way). The
+      fix is DE 148's, and it names the case in its own comment -- "THE LEAF NAMES THE VALUE, NOT THE SUBJECT ...
+      `TRANCHE_BEFORE_PLACEMENT_LATENCY: 23947` -- a COUNT of tranches dropped, not a latency" -- with the predicate
+      now an exact leaf-name list `key in ("L_place_ms", "placement_latency_ms")`. ***AND THE REFUSAL NAME IS STILL
+      THERE (1 occurrence)***: the guard was kept for the case it is actually for, not deleted to make the symptom
+      go away. My finding and the USER's R-833 (1) had the same root, and closing theirs closed mine.
+  THE_SLICE_CAP_IS_TRUE_OF_THE_RUNNING_MACHINE_NOT_ONLY_THE_PROPOSAL:
+    prov: CHECKED
+    artifact: live/pm_research/drafts/DE158_parallel_null_slice_PROPOSAL.md
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      Checked at the live manager, not only in the document: **`systemctl --user show research.slice` returns
+      `CPUQuotaPerSecUSec=2s`** -- 200 %, two cores -- with `CPUAccounting=yes`. So the proposal's central claim is
+      a property of the running system: raising a unit's `CPUQuota` leaves the SLICE as the wall, and **the parallel
+      null's measured 12.7x collapses to about 2x** until the slice changes. It is machine-wide and affects every
+      seat, which is why DE proposed rather than changed it. **A decision the user has not taken.**
+  THE_NULLS_SAMPLING_UNIT_QUESTION_IS_WRITTEN_UP_WITH_ITS_MEASUREMENT:
+    prov: CHECKED
+    artifact: live/pm_research/drafts/DE158_null_sampling_unit_QUESTION.md
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      The second open decision, and its measurement is in the document: on 09-04, **15,867 of 40,000 rows (39.7 %)
+      begin AFTER their generation's start, across 6,586 of 24,133 generations (27 %), up to 60 rows in one**. With
+      per-row rows, "matched on the action count" no longer names one quantity. Three options with their costs:
+      **(A) match on ROWS** -- no new machinery, but the control's cancel count sits systematically BELOW the arm's,
+      a bias in the arm's favour unrelated to the policy; **(B) match on CANCELS** -- honest, but the draw size and
+      the RNG consumption become data-dependent, breaking the seed reproducibility every landed null has; **(C)
+      sample GENERATIONS** -- reproducible, but the control samples a different object from the one the arm decides
+      on, so **the arm's advantage from WHEN it cancels -- the entire content of the look-ahead repair -- is not
+      represented in the control at all.** DE's framing kept: comparability with the days already run is NOT a
+      consideration, because none of them survives.
+  THREE_SEATS_HAVE_PROCEDURE_FILES_AND_BE_HAS_NONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      ***A GAP IN THE THING R-831 SAYS IS COMPLETE, AND IT MATTERS BECAUSE OF THE HARVEST METHOD R-831 ESTABLISHED.***
+      R-831: "ALL FOUR WORKING SEATS NOW HAVE PROCEDURE FILES -- BE's in its own rounds, `DA_PROCEDURE.md`,
+      `MEM_PROCEDURE.md`, and now DE's." Measured: the workspace holds **`DA_PROCEDURE.md` (10,026 B),
+      `DE_PROCEDURE.md` (29,411 B) and `MEM_PROCEDURE.md` (6,283 B)** -- and a repo-wide search for any BE procedure
+      file by any name returns **nothing**. "In its own rounds" is not a file a re-briefed seat can be pointed at.
+      **BE is the one seat that would lose its method on a reset**, and R-831's own fix -- a seat at the end of its
+      context WRITES the file rather than reporting it -- is exactly what has not happened for BE. Recorded as an
+      observation, not a task I may assign.
+  THE_CORRECTED_09_03_BOOK_IS_BUILDING_AND_NOTHING_CORRECTED_HAS_BEEN_QUOTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      Five fields read WHILE loaded at 05:46:41Z: **`p003ev200903.service` loaded / active / running**,
+      `ExecMainStatus 0`, `Result success`, InvocationID **`a83a9d1dbc8841d892597db6afc498ec`**,
+      `ActiveEnterTimestamp` **05:09:52Z** (~37 min in), `MemoryPeak` 5.578 GB, holding the heavy lock (its `flock`
+      and `python3` pair are the only holders). Its `ExecStart` is the launcher's own bytes:
+      `be_daybook_build.py --day 20260903 --placement-latency-ms 250 --artifact-revision EV20` -- **the first book
+      through the repaired scorer.** Also loaded and FAILED beside it: `be103struct.service`, the structure step
+      that failed on BE 101's own header defect (R-824). **Nothing corrected has been quoted, and this state file
+      quotes nothing corrected.**
+  I_PROPOSE_THE_QUEUE_INSTRUCTION_AS_SEAT_PROTOCOL_RULE_23:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      **PROPOSED, NOT WRITTEN** -- SEAT_PROTOCOL is not mine (rule 6 gives me STATUS/HANDOFF and not the protocol),
+      and the coordinator asked for the proposal in my flags. Suggested as **rule 23, the seat-side twin of rules 18
+      and 5**: *"A seat given a NUMBERED QUEUE works it END TO END and reports ONCE at the end -- or the moment
+      something BLOCKS it, or a falsifier FAILS. It does not report between items and wait. Batching is about
+      completeness (R-381); a seat pausing for a go it was already given is the DISPATCHER becoming the bottleneck,
+      not discipline."* Its evidence is in R-835 and it is the coordinator's own: **twice a seat finished, reported
+      and waited -- 14 minutes, then 33 -- for ~47 minutes lost on a queue where nothing needed the user's
+      decision**; the user asked "Why you become idle? Can you just proceed to fix the issues"; the instruction was
+      issued at DE 156 and **six defects landed in one 17-minute batch afterwards.** The measurement is what makes
+      it a rule rather than an exhortation.
+  THE_FREEZE_LIFTED_AND_THREE_PIN_PAIRS_REPLACED_IT_WHILE_wt_de_STAYED_UNTOUCHED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-09T05:49:56Z
+    said: >-
+      ***A STANDING FACT OF MINE THAT IS NOW FALSE AND MUST STOP BEING REPEATED***: I recorded "the R-775 freeze
+      holds" for twenty-eight consecutive rounds. **It has lifted.** `params_v20` through `v23` are all present, and
+      **v20 was landed by the USER's own commit `1d309bc` at 02:51:28Z**, not by a DE landing -- so the freeze ended
+      inside the same commit that fixed the value-head defect. What replaced it is stricter, not looser: three pin
+      pairs in ninety minutes and a design family that pins its params BY DIGEST, so a params edit cannot patch a
+      moved module. **`wt-de` is still at `5020f96` with `git status --short` exactly `?? data`, the FIFTEENTH
+      consecutive round I have measured it**, and `wt-rr` at `33e8584`, `?? data`.
   # --- MEM round 288, 2026-09-08T01:49:04Z (the clock read by which every measurement below was complete) ---
   THE_FIRST_TWO_DAYS_UNDER_THE_RULED_ENDPOINT_READ_EXACTLY_AS_FILED:
     prov: CHECKED

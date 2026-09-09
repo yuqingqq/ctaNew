@@ -20640,3 +20640,36 @@ generation and the window went 4 → 3. Nothing rewritten.
   TWENTY-FIFTH round; `wt-de` `5020f96` / `?? data`, the ELEVENTH consecutive round; GO #8 unchanged.
   MEM asserts no result.)
 ```
+
+## Batch 271 — archived 2026-09-09T05:49:56Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T16:46:47Z (MEM ROUND 286 -- R-813 AND R-814 SWEPT, with every landing between the tip I
+  read at round 285 (`ef27921`) and `6461cf2`. STATE ONLY. ***REV 105 IS ONE VERDICT FOR FOUR DAYS***: GO R1..R4 MAY
+  PROCEED at `850c166` from `wt-rr`, whose HEAD and `?? data` status I measured; the third pre-launch condition, a
+  free heavy lock, is NOT met yet. ***I REPRODUCED REV'S 09-03 FINDING FROM THE VENUE RECORD MYSELF***: over the 288
+  possible boundaries of 2026-09-03 `resolutions.jsonl` carries 287 `btc-updown-5m` slugs and the absent one is
+  `btc-updown-5m-1788448800` = 15:20:00Z exactly; and driving `exp_m6_settlement`'s own readers, the 21:05:00Z slug
+  `btc-updown-5m-1788469500` has the venue at Up while the PINNED S60(T) >= S60(t0) reads Down. ***AND I MEASURED
+  WHAT THE DISAGREEMENT IS***: -0.1418 bps across the window, on a boundary sample 2,000 ms stale -- a real
+  disagreement and a tiny one. ***THE OBVIOUS WRONG MOVE IS CLOSED BEFORE ANYONE MAKES IT***: S30 reads +3.0851 bps
+  and agrees with the venue on that slug, but BE 99 measured S30/S30 disagreeing on 23 and 17 slugs where S60/S60
+  disagreed on none -- a convention that fixes one window and breaks twenty is not a fix, and picking one on the day
+  it disagrees is choosing after seeing. So 09-03 runs, emits, and is NOT quotable as final, and no checker may
+  assert 288/288. ***REV'S SCHEMA ASYMMETRY IS MEASURED, NOT INFERRED***: the pre-composition reader reads a v3
+  ledger WITHOUT refusing and returns no settlement keys at all, while the new reader returns `schema_version_read`
+  and a `settlement_rows_status` on both -- the absence becomes a named status instead of silence. My first fixture
+  for that test was BROKEN and both readers failed identically on a missing `book` key; I rebuilt it from 40 real
+  ledger rows before believing either arm. ***AND THE NUMBER BE'S L = 0 REBUILD IS MEASURED AGAINST HAS TWO VALUES***:
+  R-813 names 88,698.17341109998 (the seats' recompute, in four Q-rows and R-794) while the 09-05 artifact records
+  88,698.17341110039 -- 4.075e-10 cents apart, equal at 1e-6 relative and NOT equal under `==`, so the equivalence
+  test needs a named source and a tolerance, which is R-811's own rule about L one field over. REV's two read
+  conditions confirmed at the digests (`27cc9925` at the composition, `4ffeeefc` at the tip) and at the six refusal
+  names in the composition's runner, with `--supersedes` defaulting to None and `de_early_read.py:512` refusing
+  without it. BE 101's four build costs reconcile to the receipts exactly (1,696.4 / 2,115.7 / 2,379.8 / 3,560.7 s),
+  ***BUT THE L = 250 BUILD IS AT 1,952 s AND 4.666 GB AT 16:44:23Z AGAINST THE 1,696.4 s DAY IT REBUILDS***, so
+  "lock free ~17:10Z" is the optimistic end. REV 105's filing landed 22 s before my own round-285 row -- the SEVENTH
+  landing in the read-write gap. Flags 2304 -> 2319, prov 1849 -> 1864; window trimmed 4 -> 3, Batch 268 archived.
+  The freeze holds a TWENTY-SIXTH round; `wt-de` `5020f96` / `?? data`, the TWELFTH consecutive round; GO #8
+  unchanged. MEM asserts no result.)
+```

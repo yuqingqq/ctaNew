@@ -1,3 +1,104 @@
+# READ FIRST — round 289 (MEM, 2026-09-09T05:49:56Z, tip `3828ed7`)
+
+**R-825 through R-835 swept — fifty-four commits between the tip I read at round 288 (`6f34c6e`) and `3828ed7`.**
+The USER asked that the docs be brought up to date; this block carries the retractions, not the results. STATE ONLY.
+
+## THE TWO RETRACTIONS, AND WHAT SURVIVES
+
+**Both are the USER's own commits, and they compound.**
+1. **Units** (`1d309bc` + `03dbc1e`, author and committer `yqq`): the policy scored on **hazard probability alone**
+   while its frozen thresholds were fit on `p_fill * predicted_conditional_value` — **the value head was never
+   loaded**. The fix adds `lgbm_val_{coin}.txt` and `val_models.json` to the manifest and lands `params_v20` in the
+   same commit.
+2. **Causality** (`c501824`, DE 155 (1)): `generation_scores()` took the **maximum across a generation** and
+   `score_events_for()` stamped it at the **generation start** — later information triggered an earlier cancel. The
+   repair scores each row at its own `t_start` and the **first crossing** cancels.
+
+**⇒ Every arm result this programme has produced is RETRACTED** — the arms decided on the wrong quantity *and* used
+information they could not have had. **Every arm figure this file carried in rounds 286–288 is retracted with them
+and is not restated here.**
+
+**The 0-cancel baseline makes no cancel decisions and is untouched by both.** So one class of result survives.
+
+## THE ONE ROBUST RESULT — recomputed from the artifacts, all four days
+
+At **L = 250 ms** the never-cancel maker loses, of its settled money:
+
+| day | ruled @ L=250 | ruled @ L=0 | lost |
+|---|---:|---:|---:|
+| 09-03 | 37,849.85 | 82,142.82 | **53.92 %** |
+| 09-04 | 38,452.91 | 102,193.69 | **62.37 %** |
+| 09-05 | 1,974.58 | 81,238.30 | **97.57 %** |
+| 09-06 | 20,750.59 | 46,562.18 | **55.43 %** |
+
+The register's 53.9 / 62.4 / 97.6 / 55.4 are exact at every day; 09-05 also agrees with my independent round-287
+route. **A quarter-second of placement latency costs the maker between half and nearly all of its money.**
+
+**And my first read of that table was wrong.** I took `absolute.zero_cancel_baseline.total` — which is the **fills
+leg** — and got 54.2 % on 09-05. **The artifact's own `what_total_is` field corrected me**: the ruled P&L lives at
+`economic_settlement.zero_cancel_baseline_legs.total_cents`. **Any table must read the settlement block, never the
+absolute one.**
+
+## THE SEVEN DEFECTS — closed, with the blocker none of them named
+
+REV 107's closed form on the exclusion inflation checks **to the unit**: `(12,853,409 − 15,735) / 41 = 313,114`
+exactly, and `41 × 313,114 + 15,735 = 12,853,409` — an **816.9×** overstatement, and the corrected 15,735 is
+corroborated by two earlier reviews. **R-835's "four moved cascade modules" is exact at `ecc7116`** (one was already
+off-pin from the look-ahead repair; three moved there) **and five at HEAD**, the fifth arriving at `70b54a4` — which
+is precisely the second pin site v22 missed. **Params v23 matches 10/10 at HEAD; params v20 matches 5/10** — so
+REV 109's "a day CAN now run" is true at the pins. Design v29/v30/v31 all **PAIR_OK**, pinning params v21/v22/v23.
+
+**A resolution hazard worth writing down:** the design family lives under
+`data/pm_5min/derived/p003_de_multiday_gate1_design_v*.json` and the params family under
+`live/pm_research/declarations/de_multiday_gate1_params_v*.json`. I looked in the declarations directory first and
+did not find them. Two halves of one pinned pair, two directories, two prefixes.
+
+## CLOSED, OPEN, AND FALSE
+
+**Closed — my round-288 finding.** The L = 250 builder receipt now reads **250.0** with
+`source: "THE BOOK'S BUILDER RECEIPT"`; the predicate is an exact leaf-name list, and **the `…_AMBIGUOUS` refusal
+was kept, not deleted** — the guard survives for the case it is really for.
+
+**A standing fact of mine that is now FALSE.** I recorded "the R-775 freeze holds" for **twenty-eight** rounds. **It
+lifted** — `params_v20`–`v23` are all present, and **v20 landed inside the USER's own `1d309bc`**. What replaced it
+is stricter: three pin pairs in ninety minutes, and design pins params **by digest**, so a params edit cannot patch
+a moved module.
+
+**Two decisions wait on the USER, neither taken.**
+- **The null's sampling unit** (`live/pm_research/drafts/DE158_null_sampling_unit_QUESTION.md`): on 09-04,
+  **15,867 of 40,000 rows (39.7 %)** begin after their generation's start, across 6,586 of 24,133 generations
+  (27 %). (A) match on rows → a bias in the arm's favour; (B) match on cancels → breaks seed reproducibility;
+  (C) sample generations → **the arm's advantage from *when* it cancels is not represented in the control at all**.
+- **The `research.slice` cap**: verified at the running manager — `CPUQuotaPerSecUSec=2s` (200 %, two cores), so the
+  parallel null's 12.7× collapses to ~2×. Machine-wide, so proposed rather than changed.
+
+**One gap.** R-831 says all four seats have procedure files. Measured: `DA_PROCEDURE.md`, `DE_PROCEDURE.md`,
+`MEM_PROCEDURE.md` exist; **no BE procedure file exists anywhere**. "In its own rounds" is not a file a re-briefed
+seat can be pointed at, and BE is the one seat that would lose its method on a reset.
+
+**Proposed, not written** (SEAT_PROTOCOL is not mine): **rule 23** — *a seat given a numbered queue works it end to
+end and reports once at the end, or the moment something blocks it or a falsifier fails.* Evidence: ~47 minutes lost
+to the coordinator being the bottleneck; after the instruction, six defects landed in one 17-minute batch.
+
+## STATE
+
+`p003ev200903` — the corrected 09-03 book at revision EV20, **the first through the repaired scorer** — is
+loaded/active/**running**, invocation `a83a9d1dbc8841d892597db6afc498ec`, since **05:09:52Z**, MemoryPeak 5.578 GB,
+holding the heavy lock. `be103struct` is loaded and **failed** (BE 101's header defect, R-824). `wt-de` `5020f96` /
+`?? data` — the **fifteenth** consecutive round; `wt-rr` `33e8584` / `?? data`.
+
+**Not done:** the cancel-count measurement (old aggregation vs first-crossing, per arm per day — the evidence a
+theta re-fit would be ruled on), corrected point estimates, four of five corrected books, the parallel null's
+deployment. **Nothing corrected has been quoted, and this file quotes nothing corrected.**
+
+Counts: flags 2349 → 2364, provenance 1894 → 1909 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,619 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; **missing-artifact 178 -> 176 and findings 183 -> 181 — and the improvement is in the FILESYSTEM,
+not in this file**: the previously committed STATUS.yml audits to 176 today and audited to 178 yesterday, so two
+artifacts a CHECKED flag cites have since been created; window trimmed
+4 → 3, Batch 271 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 288 (MEM, 2026-09-08T01:49:04Z, tip `6f34c6e`)
 
 **R-819 through R-824 swept, with every landing between the tip I read at round 287 (`cd1adcc`) and `6f34c6e`.**
