@@ -31,10 +31,32 @@ robust result:
 (cents, settled P&L = trades cash flow + residual × settlement, R-801. Each day over its
 own window count; 09-03 covers 246 windows, the rest 288.)
 
+**⚠ AMENDED 2026-09-09T07:41Z (R-843) — THE SURVIVING FINDING NOW CARRIES A NAMED,
+UNQUANTIFIED EXPOSURE, AND THE TABLE ABOVE MUST BE READ WITH IT.** REV 112 found that
+`be_daybook_build.day_selector` passes `era=None` to `_era_or_refuse`, resolving a module
+default `clob_v3_1` day-independently, while every September day is entirely `clob_v4_1`.
+The two eras' gap tables are **disjoint** (1,143 slugs against 727, zero in common), so
+`build_reference` receives **`gaps=[]` for every window of every September day**. On 09-03
+that is **160 of 287 windows and 2,294.7 s — 38 minutes of missing tape assembled as if
+continuous**, and the error runs the unsafe way: the builder UNDER-reports gaps, so the
+book covers MORE content than is admissible (CLAUDE.md rule 5). **Every book on disk was
+built through this path, including the reference the 0-cancel baseline replays over.**
+The four percentages are triple-derived — MEM's artifact read, DA 137's independent second
+implementation, and a five-link code-path test with a positive control — and DA 140 has
+since driven the placement-latency MECHANISM end to end with a control that could have
+failed. **None of that touches this defect, which enters upstream of the arm/baseline
+split.** The finding is NOT withdrawn and the numbers are NOT corrected; the exposure is
+named because nobody has established independence from it. DA 141 is measuring the bound:
+what share of the baseline's settled money falls inside 09-03's gapped windows.
+
 **Status of the repair:** all seven USER-filed defects are closed (R-835); REV 109
 confirms a day can run; the pin pair of record is **params v23 + design v31**.
-**No corrected number has been produced or quoted yet.** Two rulings are open with the
-user: the null's sampling unit, and the `research.slice` 200 % cap.
+**No corrected number has been produced or quoted yet.** All three open rulings landed
+2026-09-09 (R-837, R-838): the null's sampling unit is **B, match on cancels**;
+`research.slice` is raised to 1000 %; the build unit's memory envelope is ratified for the
+EV20 queue only. **The USER has ruled that issues are cleared before any book is built
+(R-839); no day is built and no seat takes the heavy lock until the seven-item build gate
+is cleared** — see §7h of `COORDINATOR_RUNBOOK.md` for the gate and its owners.
 
 ---
 
