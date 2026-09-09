@@ -46,6 +46,19 @@ defect itself: under the wrong era the same query marks **0** windows gapped on 
 and **0 fills land inside a gap interval on any day**, so nothing was fabricated — the
 contamination is structural, a reference assembled as if continuous.
 
+**AND A FOURTH LIMIT, ON WHAT THE FINDING IS AT ALL (REV 115, 2026-09-09T07:54Z): IT HAS
+NO CONTROL.** All **14** point-estimate artifacts carry `run_mode: "POINT_ESTIMATE"` and, in
+both economic blocks, `Z: "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"` — a named status, never a
+number. **So the settlement numbers on the L250ms and L0ms days are point estimates with no
+null drawn against them, and "the latency finding stands" can only ever mean THE POINT
+ESTIMATE STANDS.** That labelling is honest and correct — the artifact refuses to offer a
+number it did not compute — but it must not be read as a tested claim. The nulls that DO
+exist are the `D_E0` nulls in the sealed day runs, and REV 115 established that those
+re-derive from their persisted draws to the last digit on both arms and both endpoints,
+with a control that could have failed: cross-deriving with R-825's wrong (5-second) moments
+changes `Z` on both arms and **flips the sign on HAZARD** (+0.032416 against −0.043431), so
+the wrong moments can change the DIRECTION of an excess and not merely its size.
+
 **THREE LIMITS ON THE CAVEAT, DA's own and not softened:** (a) ungapped windows are **not a
 random subsample** — gap incidence plausibly correlates with volatility and volume — so this
 is a ROBUSTNESS CHECK, not a corrected estimate; (b) 09-03's clean subset is only **87
