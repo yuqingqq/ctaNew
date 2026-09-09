@@ -1,3 +1,177 @@
+# READ FIRST — round 300 (MEM, 2026-09-09T08:31:33Z, tip `586be44`)
+
+**R-852 and REV 120's build synthesis swept as a numbered queue under rule 23 — from my round-299 tip `a4c4e89`.**
+STATE ONLY.
+
+## ⚠ OPERATIONAL BLOCKER, SECOND ROUND RUNNING — no seat can land a register row
+
+The shared tree is **diverged**: **two commits local-only** (`d460e7c` BE 114, `8aaf55f` BE_PROCEDURE) and **one
+origin-only** (`586be44` REV 120), so `land_register_row.sh` aborts with *"Not possible to fast-forward"*.
+**Q-MEM-287 (round 299) and Q-MEM-288 (round 300) are composed and unlanded.** I have touched neither seat's commit;
+committing my own state files leaves the tree **clean**, which is the condition the coordinator's rebase needs.
+
+## REV 120 — THE BUILD SYNTHESIS, in its three categories
+
+### (a) Baked in and invisible — **nothing found**
+REV makes the negative worth something by naming **what it checked**: the era and therefore the gaps · the scoring
+path's causality and old/new aggregation equivalence · the cancel unit · the null's draws and moments · the ledger's
+write-and-read contract · the mask's soundness and its interaction with the gap channel · the boundary reader's
+staleness distribution. **Each was a candidate for a silent bake-in; each is now fixed-and-driven or
+measured-and-bounded.**
+
+**The builder and DA now AGREE on the era**, driven end to end:
+
+| day | builder / DA | windows | now carrying gaps |
+|---|---|---:|---:|
+| 09-01 | `clob_v4_1` / `['clob_v4_1']` **AGREE** | 265 | 159 |
+| 09-02 | **AGREE** | 248 | 145 |
+| 09-06 | **AGREE** | 288 | 14 |
+
+**And 09-06's fourteen are the same fourteen REVIEW 112 named as lost — so REVIEW 112 closes, and REVIEW 114's
+two-channel collapse closes with it.** *A closure by member identity, not by count.*
+
+**I did not reproduce those per-day counts.** My spot-check of `day_selector('20260906','btc')` returned an object
+typed `function` — unusable — though its `era` read `clob_v4_1`. **By my own rule an unexpected probe is a broken
+instrument, so I stopped rather than publish a number.** The table is REV's drive, DA-corroborated on the era; my
+independent corroboration covers 09-03's 160 windows / 2,294.7 s from round 293.
+
+### (b) Would refuse — **one, and building is what clears it**
+`require_book_declares_L` refuses **the four books that already exist**, because they predate BE 101's builder;
+**09-07 passes because it was rebuilt.** REV's operative sentence, adopted verbatim:
+
+> **"The armed guard refuses yesterday's books; it does not block today's build. It is a reason to rebuild, not a
+> reason to wait."**
+
+**R-851's refutation stands; its scope was wider than the fact** — true of the past, silent about the future. That
+is my own round-299 sequencing formulation reached from the other side. **And the fact it rests on is one I measured
+at round 288**: 09-07 was the first book to record its own L, and DE's reader returned `source: "THE BOOK'S BUILDER
+RECEIPT"` on it. *A curiosity recorded twelve rounds ago is now load-bearing in a build decision.*
+
+### (c) Wrong but visible — **three, all priceable, and all three already in this file**
+09-03's settlement DISAGREE (REVIEW 117's boundary artifact; keeps that day **not quotable as final**) · the mask's
+exclusion not travelling into the receipt (**zero of twelve receipts name a mask**) · a point-estimate run's
+`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN` (**52 of 52 fields, no numeric Z anywhere**). **None is new and none is
+hidden** — which is why they are (c) and not (a).
+
+## ⚠ A NEW OPEN ITEM THAT IS NOT ON THE GATE — three consumers nobody enumerated
+
+**The repair changed the assembly's KEYS, not only its values:** old `(slug, side, t0)` — **one key per
+generation**; corrected `(slug, side, t_start)` — **one key per row.** *"That is what nobody swept."*
+
+**Verified at all three lines myself:** `da_elementwise.py:32`, `da_elem_grid.py:33`, `da_elementwise_hz.py:32` each
+carry `if (s_, sd, float(g["t0"])) in gs:` — the old shape, the same test in all three — and grepping the three for
+`PER_ROW` gives **0, 0, 0** and for `t_start` **0, 0, 0**. **Zero shape-awareness, exactly as stated.**
+
+**Driven by REV:** a generation whose first row starts **3 s late reads as UNSCORED though it has two scored rows.**
+**The assembly is right and the consumer reads it wrong — silently, as a smaller population.** *A population that is
+wrong and does not say so is what rule 4 exists to forbid.*
+
+**And its rate is unmeasurable today, because no corrected assembly exists.** DE's claim that a first row starts
+exactly at its `t0` was measured on 09-04 and **has never been verified by anyone** (flagged in REVIEW 105, still
+open). **So the first corrected book is the artifact that settles it — the build is the instrument.** If the claim
+fails, **the book is still correct**; the three consumers are what break. It is not on the gate because the gate was
+built from defects in the scoring path, and **this is a defect in what reads the repaired output.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z, no corrected book, no corrected number.** **The build decision is
+with the USER** — REV recommends BUILD, the coordinator concurs, and the issues-first ruling (R-839) is the user's
+to reverse.
+
+Counts: flags 2514 → 2529, provenance 2059 → 2074 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,784 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 282
+archived. MEM asserts no result.
+
+---
+
+# READ FIRST — round 299 (MEM, 2026-09-09T08:24:24Z, tip `a4c4e89`)
+
+**R-851 swept as a numbered queue under rule 23 — from my round-298 tip `ac505b3` to `a4c4e89`, eleven commits.**
+STATE ONLY.
+
+## THE GATE — closed **and verified**, which is the word this file has been insisting on
+
+| state | items |
+|---|---|
+| **closed AND verified** | **1** (era) · **3** (score key) · **5** (coverage) · **7** (cache pin) · **8** (DA's verifier) · **the sealed-value guard** — verified by REV 118 **against the verbatim old rule, not the count** |
+| closed this round | **2** |
+| **open** | **4** (abutting boundary, DE under ruling (b)) · **6** (below) |
+
+**Item 1's verification is the strongest form on the board.** DA 145 drove it **at the integration**: **160 gapped
+windows and 2,294.7 s now reach `build_reference` where zero arrived before**; `resolve` has **one return and six
+raises, and there is no `except` in the wrapper** — *the structural half of "refuse, never default."*
+
+## DA 146 SPLIT ITS OWN BRIEF — item 2 closed, item 6 **not**
+
+**"A commit message describing a change the commit does not contain."** DA is explicit it is **not a defect in the
+fix**, and applies rule 27 to itself: **no regression — the message is byte-identical.** The statuses are counted
+correctly in all three cases **"if the message pointed at them."**
+
+**Why DA ranks it above a code defect:** *"it is the kind of thing a green battery and a careful reader both pass
+over"* — a battery tests behaviour and passes; a reviewer reads the message and believes it. **And the fix widened
+the path to it:** the round that added `ROW_AFTER_GENERATION_END` **added a second way to reach the wrong message**,
+so the population that can be misled grew even though the string did not.
+
+DA's procedure now carries the lesson: **"verify the commit and not the commit message, and always ask whether a
+refusing guard CAN pass."**
+
+## ⚠ A CORRECTION AGAINST MYSELF — the second round running
+
+At round 298 I called `de_v2_local_selector.py:151` **"correct by accident and not by construction … the same defect
+asleep"** and recorded it as routed to DE. **DA 145 reports it checked and correct — not a defect.**
+
+**The mechanism I missed:** that selector is imported only by the five `de_v2_gate*_smoke` modules and **refuses
+unless `population == "v3_4_consumed_fragment"` — a `clob_v3_1` artifact.** **The literal is bound to the era by a
+refusal, not by luck.** My line reading was right; my characterisation was wrong, and I inferred "nobody chose it"
+from the shape rather than establishing it.
+
+**⇒ The era item is TWO SITES FIXED AND ZERO OPEN**, not two-and-one. DA reported it *"so nobody re-finds it and
+reads it as a miss"* — which is exactly what I had done to it a round earlier.
+
+## REV 118 CORRECTED ITS OWN REVIEW 105 — and a guard caught the reviewer
+
+**"The conclusion survives and the evidence did not."** REV had passed `builder_receipt_for(...)` — which returns a
+**`Path`** — where the function wants the **parsed receipt**, so *"the walk found nothing because it was walking a
+`Path`… **the conclusion was VACUOUS: the probe could not have found an L if one had been there.**"* With the
+receipts parsed, those four books genuinely do declare no L.
+
+**And DE 163's `SETTLEMENT_BOOK_RECEIPT_NOT_PARSED` is what caught it** — *"a guard that catches a reviewer's own
+bad probe is a good guard, and I would not have found my error without it."* **A guard whose first real catch is the
+reviewer reviewing it is better evidence than any authored known-bad, because nobody wrote the case.**
+
+*(For the record: at rounds 285 and 288 I drove the same function passing a **parsed dict** and got non-vacuous
+results — `0.0` / `"…DECLARES NONE"` on the landed books, `250.0` from `"THE BOOK'S BUILDER RECEIPT"` on the L=250
+rebuild. Same probe, two seats, one vacuous run and one not, same conclusion. Those flags stand unchanged.)*
+
+## THE ARMING REFUTATION IS A **SEQUENCING** CLAIM
+
+**09-03 → 09-06 all refuse; only 09-07 passes.** So the honest form is **"arming costs every book that has not been
+rebuilt and is free only after the rebuild lands"** — *a sequencing claim, not a price.* REV routes it to DE as item
+(3) **first**: state the sequencing beside the flag. My round-297 *"closes"* was wrong; my round-298 *"open again"*
+was right but under-specified. **This is the form the state carries.**
+
+## TWO SEATS, ONE CAUSE, TWELVE MINUTES APART
+
+**DA 144 hit a refusing landing gate and traced it by AST to `params_v25`. REV 118, parsing receipts to verify that
+same version, found the mechanism — four of five days refusing.** Neither knew of the other. **One met the symptom
+and identified the input; the other examined the input and derived the symptom, and the two meet exactly** — the
+strongest available evidence the cause is real rather than an artifact of one seat's method, and rule 25's argument
+arriving by accident.
+
+## STATE
+
+Verified 08:21:09Z: **no lock holders, no live heavy unit — nothing built and no heavy lock since 07:15:47Z — no
+corrected book, no corrected number, and the stopping criterion is STILL UNRULED.** `RESULTS.md` records the era
+defect as **fixed and verified**, with the exposure figures **describing the books on disk, not the rebuild**; DA 145
+puts the same point forward — **the four days' books must be rebuilt before those percentages mean anything about a
+correct build.**
+
+Counts: flags 2499 → 2514, provenance 2044 → 2059 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,769 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 281
+archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 298 (MEM, 2026-09-09T08:17:59Z, tip `ac505b3`)
 
 **R-848, R-849 and R-850 swept as a numbered queue under rule 23 — from my round-297 tip `97731e3` to `ac505b3`,

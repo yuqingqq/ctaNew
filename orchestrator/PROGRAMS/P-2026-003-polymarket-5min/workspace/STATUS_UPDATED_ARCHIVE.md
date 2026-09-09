@@ -21002,3 +21002,96 @@ generation and the window went 4 → 3. Nothing rewritten.
   edit rewrote more than intended, once inside the design module's OWN known-bad fixtures, and THE BATTERY CAUGHT
   IT IMMEDIATELY, both reverted, neither reaching a commit. MEM asserts no result.)
 ```
+
+## Batch 281 — archived 2026-09-09T08:24:24Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:03:41Z (MEM ROUND 296 -- R-846 SWEPT as a numbered queue under rule 23, from my
+  round-295 tip `9fe6317` to `9312227`, fourteen commits. STATE ONLY. ***THE SCOPE FACT THAT CHANGES WHAT THE
+  SURVIVING FINDING MAY CLAIM, AND IT IS A LIMIT IN THESE FILES AND NOT A FOOTNOTE***: the settlement numbers on
+  every L = 250 and L = 0 day are POINT ESTIMATES WITH NO CONTROL AT ALL -- not a weak null, none drawn -- and I
+  measured it across every artifact rather than sampling: **14 artifacts, 52 `Z` fields, every one the string
+  `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, zero numeric Z anywhere.** The absence is a NAMED STATUS in all fifty-two
+  places it could have been a number, which is rule 4 done right by the producer. ***SO "THE LATENCY FINDING STANDS"
+  CAN ONLY EVER MEAN "THE POINT ESTIMATE STANDS"***, and the four limits now compound: a point estimate with no
+  null, over a reference assembled with `gaps=[]`, whose ungapped robustness check rests on a non-random subsample
+  thinnest on the most exposed day, with the absolutes withdrawn. ***REV 115 EXAMINED THE NULL'S MACHINERY AND IT
+  HOLDS***: `null_mean`, `null_sd` and `Z` re-derive from the persisted draws TO THE LAST DIGIT on a live run and on
+  the landed sealed 09-07 artifact -- and its control could have disagreed and DID: cross-derived against the
+  5-second moments, CONDVALUE +0.011344 against +0.006874 and HAZARD +0.032416 against -0.043431, ***THE SIGN
+  FLIPPING ON HAZARD***. ***THAT IS STRONGER THAN MY OWN ROUND-288 CLAIM AND I RECORD THE REFINEMENT***: I measured
+  2.2x-5.4x more extreme on four arm-days and wrote that the error runs toward OVERSTATING; that was true of those
+  four and IS NOT A GENERAL LAW -- the general property is that the wrong moments can change the DIRECTION, and the
+  operative factor REV names is the sd ratio. R-825, the finding I filed at round 288, is CLOSED BY RE-DERIVATION
+  AND NOT BY READING THE FIX. ***GATE ITEM 4 IS REOPENED -- THE FIRST ITEM TO GO BACKWARD, AND IT WENT BACKWARD
+  UNDER VERIFICATION RATHER THAN IN PRODUCTION***: DA 143 found DE 162 accurate on 361 (the collision now REFUSES
+  `SCORE_KEY_COLLISION` instead of overwriting) and OVER-CONFIDENT on 362, the `t1` bound holding strictly inside a
+  generation and failing at the ABUTTING BOUNDARY the policy module documents as routine -- gen 1 served gen 0's
+  score, driven end to end through the fixed pipeline -- ***AND THE GUARD DE PRESERVED SAID NOTHING THERE***, a
+  control that fires in the interior and is silent at the edge. The coordinator ruled DA's option (b), require `gen`
+  and route by it, over (a)'s one-character bound, BECAUSE (a) DROPS REAL ROWS to work around a ROUTING bug --
+  disclosed for the user to overrule. Gate: item 5 is the ONLY VERIFIED closure (new equals old exactly, 24/24,
+  14/14, 0/0, against an assembly DA CONSTRUCTED); 4 reopened; 2/3/6 closed-unverified; 1, 7, 8 open, and item 1
+  remains the largest with no landed code against it. Pair of record re-measured: params v23 9/10, v24 10/10, so
+  v24 + design v32; ***AND THE R-835 PIN BLOCKER DID NOT RECUR*** -- DE 162 moved a pinned module and shipped
+  `params_v24` IN THE SAME COMMIT, costing zero pin pairs against three last time. Flags 2454 -> 2469, prov 1999 ->
+  2014; window trimmed 4 -> 3, Batch 278 archived. Verified 08:00:28Z: **NO BUILD, NO LOCK, NO CORRECTED BOOK, AND
+  NO CORRECTED NUMBER COMPUTABLE FROM DISK.** ***ADDENDUM 08:04:48Z, VERIFIED BEFORE RECORDING BECAUSE THE PAIR OF
+  RECORD NAMED ABOVE IS NOW ONE VERSION BEHIND***: `params_v25` is on disk at 10/10 against the cascade at HEAD and
+  design v33 pins it with the digest matching disk, superseding v32 PAIR_OK -- ***THE PAIR OF RECORD IS NOW params
+  v25 + design v33***, the R-835 class again not recurring because the crank turned inside DE 163's own landing.
+  DE 163 closed REV 113's tokeniser hole with a 408-CASE DIFFERENTIAL -- the shape rule 27 asks for, since 'is
+  there a form the OLD one caught that the NEW one does not' is answered by a differential over a corpus rather
+  than asserted -- and armed DA 140's expired guard; LANDED, UNREVIEWED, and this file asserts nothing about its
+  behaviour. MEM asserts no result.)
+```
+
+## Batch 282 — archived 2026-09-09T08:31:33Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:10:55Z (MEM ROUND 297 -- R-847 SWEPT as a numbered queue under rule 23, from my
+  round-296 tip `9312227` to `97731e3`, eleven commits. STATE ONLY. ***THE LARGEST GATE ITEM HAS LANDED CODE***: BE
+  113 (`8df760d`, 08:05:57Z, one minute before my fetch) changes the line this file has quoted for five rounds to
+  `era = HER._era_or_refuse(fi, era_res["era"], "be_daybook_build")` -- THE DAY'S ERA IS PASSED WHERE `None` WAS --
+  with the era module NOT edited, which is the right shape since the defect was the caller answering for a day it
+  never asked about. RECORDED AS LANDED CODE AND NOT AS A CLOSURE; REV has not verified it. The defective line
+  SURVIVES AS A COMMENT above its replacement carrying the whole diagnosis, because a register entry can be lost to
+  a reader of the code and a comment at the call site cannot. ***AND I COUNTED THE FOOTPRINT MYSELF***: 12 book
+  receipts on disk, `selection.era` clob_v3_1 on TWELVE OF TWELVE -- so "every book on disk" is now a COUNT and not
+  an inference. ***THE SAME COMMIT ADDRESSES THE DISCREPANCY I HAVE HELD OPEN SINCE ROUND 294 AT ITS ROOT***: the
+  selector now carries `n_masked_applied`, `mask_identity` and `mask_identity_hash`, BE writing that "a reader of a
+  247-window book could not tell whether the day had 247, or 287 with 40 masked" -- the three numbers were never in
+  conflict, the artifacts simply never said which was which, and I still pick none for the days already built.
+  ***AND MY 727 AGAINST BE'S 728 RESOLVES INTO A RULE RATHER THAN A CORRECTION***: re-measured 728 now, the table
+  gained ONE SLUG in the thirty-two minutes between the readings -- CLAUDE.md rule 8's "carries its n AND its
+  as-of" occurring live. ***RULE 28 IS CARRIED HERE AS PROGRAMME STATE***: "THE EVIDENCE IS RECORDED AND THE CHECK
+  IS OFF" -- when a producer already returns the evidence, the consumer must CARRY it or REFUSE on it, and
+  DISCARDING IT INTO `_` IS THE DEFECT; its four/six reconcile as four found by REV in one night plus two of the
+  same shape from other seats; ***AND I HAVE STANDING IN ITS SHARPEST INSTANCE***, having computed by hand at round
+  286 the very sample staleness `x0, _ = read_at(...)` throws away. REV 117 explains the standing blemish: 09-03's
+  single DISAGREE is A BOUNDARY-READER ARTIFACT, a 2-second-stale sample deciding a 14-ppm move, the convention and
+  the venue disagreeing about WHICH SAMPLE STANDS FOR THE BOUNDARY INSTANT rather than about the world -- with the
+  bound that makes it honest: over 2,880 boundary reads the staleness is median 0.0 s, p99 2.0 s, MAX 11.0 s,
+  nothing over 30 s, so the unbounded reach is INERT on these days -- ***AND ONE VERDICT IN 1,440 TURNS ON IT AND IT
+  IS THE ONE***, which is why neither reading may be quoted alone. My round-285 thread CLOSES: `params_v25` carries
+  `settlement_endpoint.require_book_declares_L = True`, armed by DE 163 MAKING THE FIXTURE DECLARE ITS L RATHER THAN
+  EXEMPTING IT -- named at 285, classified by DA 140, generalised as rule 28, armed at DE 163. The pair of record
+  moved TWICE tonight and NEITHER MOVE BLOCKED A DAY, against R-835's one move at three pin pairs. DE 163's three
+  are LANDED and REV 118 is verifying them; DE was reset at 100 % at 08:03Z with its PROCEDURE FILE CARRYING THE
+  METHOD, rule 24 paying off in the case it was written for. Flags 2469 -> 2484, prov 2014 -> 2029; window trimmed
+  4 -> 3, Batch 279 archived. **NO BUILD, NO LOCK, NO CORRECTED BOOK, NO CORRECTED NUMBER.** ***ADDENDUM 08:12:11Z, VERIFIED BEFORE
+  RECORDING BECAUSE MY LONGEST OPEN ITEM IS NOW ANSWERED FROM THE CODE***: `287 - 40 = 247` is the population built
+  over on 09-03/btc, checked by `da_blackout_mask_v1` which REFUSES `MASK_ARITHMETIC_DOES_NOT_CLOSE` otherwise,
+  driven both ways -- so admissible/supplied/total is ESTABLISHED, not guessed -- ***AND 246 IS NOT A WINDOW COUNT
+  AT ALL***: it is `arm_legs.n_slugs` = `len(per)` in `settlement_legs_by_slug`, keyed off `f.get("slug")` OVER
+  FILLS, and it EQUALS the supplied window count on 09-04/05/06 (288 against 288, three times) and is one short on
+  09-03 only, where exactly one supplied window produced no valued fill in that replay. ***WHICH CORRECTS MY OWN
+  PHRASING AND I RECORD IT AGAINST MYSELF***: I wrote at round 294 that '247 -> 246 is one slug', and BE's answer is
+  that this is 'arithmetically true and misleading -- the number is a property of ONE REPLAY'. I was right to refuse
+  to pick and right that the three answered different questions; I was WRONG to present 247 -> 246 as a one-slug
+  population gap, because 246 is not a population -- A DIFFERENCE BETWEEN TWO NUMBERS IS ONLY A GAP IF BOTH COUNT
+  THE SAME KIND OF THING. THE ITEM IS CLOSED. And the era fix is TWO SITES: `be_gate1_fragment.selector_for:159`
+  carried the identical call AND THE FRAGMENT IS AN INPUT TO THE BOOK, with all eight September days resolving
+  `clob_v4_1` -- 'the literal was right for the days it was written for and wrong for every day in the queue'.
+  MEM asserts no result.)
+```
