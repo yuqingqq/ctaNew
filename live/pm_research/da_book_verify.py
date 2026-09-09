@@ -2228,10 +2228,16 @@ def selftest() -> tuple:                                      # noqa: C901
     #: 09-04 writes a MAPPING -- so the cell after this one was green on a
     #: shape no producer has written in five days (DA 125, in this module).
     _fdoor = "de_phase4_diag_runner.day_assembly_inputs"
+    #: the pathspec is relative to CWD (unlike `git show <rev>:<path>`,
+    #: which is relative to the repo ROOT -- the two differ and this cell
+    #: got it wrong first, loudly, which is the behaviour I want from it).
     _sha = subprocess.run(
         ["git", "log", "-1", "--format=%H", "--",
-         "live/pm_research/de_phase4_diag_runner.py"],
+         "de_phase4_diag_runner.py"],
         capture_output=True, text=True, cwd=str(HERE)).stdout.strip()
+    assert len(_sha) == 40, (
+        f"this cell resolved no commit for DE's front-door module ({_sha!r}); "
+        f"it must fail here rather than report a shape result it never got")
     _as_str = front_door_at(_fdoor, _sha)
     _as_map = front_door_at(_fdoor, {"commit": _sha, "short": _sha[:7],
                                      "module": "de_phase4_diag_runner.py",
