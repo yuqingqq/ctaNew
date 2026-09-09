@@ -67,6 +67,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T15:28:30Z (MEM ROUND 323 -- ***THREE USER RULINGS AND A REVIEW THAT STOPPED A MISTAKE BEFORE IT LANDED.***
+  ***RULING (a): THETA STAYS FROZEN, WITH THE REQUIREMENT THAT THE DRIFT TRAVEL.*** REV 143 measured the frozen
+  `0.43525926488298716` now at the **95.24th PERCENTILE where it was CHOSEN at the 99.55th**: **tail mass 0.446 % ->
+  4.756 %, x10.65; HAZARD decisions 1,398 -> 14,893; BROAD rather than a boundary artifact, only 0.5 % of decisions
+  within `theta + 0.001` and 5.0 % within `+0.01`; CONDVALUE's theta selecting 6.235 %, the 93.77th.** ***AND THE
+  RULING'S OWN SENTENCE IS THE ONE TO KEEP: "COMPARABILITY WAS THE REASON TO FREEZE, THE DRIFT IS THE PRICE, AND A
+  PRICE THAT IS NOT STATED IS NOT PAID"*** -- *the whole of what this file has argued all night, in one line and
+  from the USER rather than from a seat.* **AND IT SPECIFIES THE ADDRESS: THE DRIFT GOES IN THE RECEIPT WHERE A
+  READER MEETS THE DECISION COUNT -- not in a review, not in a register entry, not under the number, but BESIDE THE
+  FIELD IT QUALIFIES**, which is the fourth time in two days the remedy has been ADDRESSING rather than content.
+  ***RULING (b): THE MULTI-DAY VERDICT IS REPOINTED TO THE SETTLEMENT ENDPOINT AT `:2865`***, which had been
+  computing the day-cluster verdict from `r["economic"]["Z"]`, the DIAGNOSTIC, while R-801 made settlement primary
+  -- *two rounds ago I recorded this as the worst of the six sibling-block sites and noted the endpoint choice was a
+  RULING with the USER; it has now been ruled* -- **AND IT MUST NAME THE ENDPOINT IT USED, REV'S CONDITION, WHICH
+  HOLDS EITHER WAY**, with **PRIOR VERDICTS STAYING AS PROVENANCE AND NOT REWRITTEN** (*rule 13 applied to a verdict
+  rather than a receipt: rewriting it would destroy a true record of what the programme concluded in order to fix a
+  false statement about the endpoint*). ***RULING (c): BUILD 09-04 FIRST, THEN REASSESS -- BE'S OWN RECOMMENDATION ON
+  BE'S OWN SIZING: 09-04 BINDING AT ~82 % OF THE ENVELOPE WITH 18 % MARGIN AGAINST A 30 % MEASURED COLD/WARM SWING,
+  AND 09-05/09-06 LEAST CERTAIN BECAUSE BY-ROWS AND BY-WINDOW DIFFER BY 2.2 GB (63 % AGAINST 81 %) ON DAYS MUCH
+  SPARSER PER WINDOW THAN THE BASIS DAY. ALL FIGURES EXTRAPOLATE FROM ONE DAY.*** **AND THE CLAUSE THAT MAKES IT A
+  TEST RATHER THAN A HOPE: IF 09-04 EXCEEDS THE ENVELOPE THAT IS THE FINDING AND IT STOPS THE QUEUE -- NO CAP RAISE;
+  THAT IS THE 2026-08-26 SHAPE AND IT GOES TO THE USER** -- *an exceedance declared in advance as a finding cannot
+  later be re-read as an obstacle to route around.* ***REV 144 STOPPED A MISTAKE BEFORE IT LANDED: BE'S
+  RECONCILIATION FALSIFIES ON ONE SIDE ONLY -- THE DROPPED TOTAL IS UNCHECKED -- AND THE WIRING IS HELD.*** Driven
+  each side separately: **a corrupted KEPT REFUSES `KEPT_VALUE_DOES_NOT_MATCH_THE_BASELINE`, a corrupted BASELINE
+  refuses, A CORRUPTED DROPPED VALUE IS ADMITTED**; *I read the module myself -- 402 lines, `KEPT` 8, `DROPPED` 20,
+  `ALL_TRANCHE` 1, the ledger anchor `37315` exactly ONCE, 7 `ok(` cells* -- ***THE ANCHOR THAT REACHES A NUMBER
+  FROM A DIFFERENT SOURCE APPEARS ONE TIME AND IT REACHES KEPT.*** ***AND REV'S DIAGNOSIS IS SHARPER THAN "ONE SIDE
+  IS UNCHECKED": DA'S FIRST EQUALITY IS A TAUTOLOGY AS IMPLEMENTED, BECAUSE `value_all` BUILDS ALL AS THE
+  CONCATENATION OF THE TWO SETS AND `settlement_legs_by_slug` IS ADDITIVE PER SLUG, SO `KEPT + DROPPED == ALL`
+  CANNOT FAIL -- MEASURED WITH EACH SET CORRUPTED IN TURN AT 5630.0 == 5630.0 AND 6640.0 == 6640.0, AND
+  `LEGS_DO_NOT_CLOSE` IS UNREACHABLE. RULE 16 INSIDE THE FALSIFIER WRITTEN BECAUSE THE PREVIOUS CHECK DID NOT EXIST:
+  THE CLASS RECURRING INSIDE ITS OWN REMEDY FOR THE THIRD TIME TONIGHT.*** ***SO THE DROPPED TOTAL -- THE NUMBER THIS
+  CHANGE EXISTS TO PRODUCE AND PUBLISH AS THE UPPER BOUND -- IS NEVER CROSS-CHECKED: AN IDENTITY PLUS AN ANCHOR ON
+  ONE TERM CONSTRAINS THAT TERM AND NOTHING ELSE, UNLESS THE IDENTITY IS INDEPENDENT OF HOW THE TERMS WERE BUILT***,
+  and closing it needs a SECOND INDEPENDENT SOURCE. **BE'S TEN CELLS PASS BECAUSE THEY EXERCISE THE SIDE THAT IS
+  CHECKED** -- *rule 33's identity question at the level of a suite: ten cells verified the half that was already
+  strong.* ***AND THE COORDINATOR'S REASON FOR HOLDING IS THE ONE I GOT WRONG LAST ROUND, CAUGHT ONE STEP EARLIER:
+  WIRING IT WOULD LET RULING (b) READ AS SATISFIED WHEN HALF OF IT IS UNVERIFIED -- THE SAME ERROR AS REPORTING BE'S
+  SPECIFICATION AS A CHECK, AND A CORRECTION MADE ONE STEP EARLIER EACH TIME IS WHAT LEARNING LOOKS LIKE IN A SYSTEM
+  THAT CANNOT STOP MAKING THE ERROR.*** **THE L=0 VALUATION REMAINS UNVERIFIED UNTIL THE TWO-SIDED FIX LANDS, REV
+  VERIFIES IT AND DE WIRES IT** -- BE's own words kept exactly: ***"THE CHECK EXISTS, IS FALSIFIED, AND IS RUN BY
+  NOBODY"***, the last clause confirmed by me since `be_placement_latency_reconcile` is referenced only by itself and
+  `be_daybook_build.py`; **and BE DECLINED TO REACH INTO DE'S FILE TO WIRE IT, WHICH WAS THE RIGHT BOUNDARY.**
+  *Three rounds ago this was a sentence, two rounds ago absent code, now unrun code with a known hole: the state is
+  improving and the word is still UNVERIFIED.* Flags 2840 -> 2853, prov 2385 -> 2398; window 3/3, Batch 305 archived.
+  MEM asserts no result.)
   2026-09-09T15:18:59Z (MEM ROUND 322 -- ***A CORRECTION THAT LANDS ON MY OWN FILES, AN INDEPENDENT REPRODUCTION, AND A CAVEAT
   THAT MUST TRAVEL WITH EVERY NUMBER FROM THIS BOOK.*** ***THE RELOCATED FALSIFIER DOES NOT EXIST, AND I DROVE IT
   RATHER THAN ACCEPTING IT: `tranches_before_placement_latency` AND `KEPT-VALUE` OCCUR ZERO TIMES IN
@@ -165,55 +212,6 @@ updated: >-
   "format string" SIMPLY WRAPS A LINE AND THE PARAGRAPH IS AT `HANDOFF.md:81`. MY GREP WAS THE ERROR, NOT THE FILE,
   AND I VERIFIED BEFORE REPORTING RATHER THAN AFTER.*** Flags 2808 -> 2822, prov 2353 -> 2367; window 3/3, Batch 303
   archived. MEM asserts no result.)
-  2026-09-09T15:05:36Z (MEM ROUND 320 -- ***A SPECIFICATION THAT SHOULD OUTLIVE THIS DAY, AND A CLASS ENUMERATED BY OPERATION
-  FOR THE FIRST TIME.*** From `f06ec7d` to `a52526d`. ***DA'S FIVE-POINT ACCEPTANCE CRITERIA FOR THE BUILD-TIME L=0
-  VALUATION: (a) VALUED ON THE R-801 ESTIMAND -- trades cash flow plus share-delta x settlement, NEVER the 5-second
-  markout; (b) LABELLED AS AN UPPER BOUND IN THE ARTIFACT; (c) THE FALSIFIER THE BUILD OWES -- `kept-value +
-  dropped-value = all-tranche value` AND `kept-value` MUST EQUAL THE BASELINE TOTAL ALREADY IN THE LEDGER; (d) BOTH
-  LEGS TRAVEL SEPARATELY; (e) >=5 COMPLETE UTC DAYS BEFORE "THE LATENCY EFFECT IS REAL" MAY BE SAID.*** **And how it
-  came to exist is worth as much as its content: DA WROTE IT WHEN ASKED WHAT FRAMING IT WOULD ACCEPT, AFTER DECLINING
-  THE COORDINATOR'S, AND IT REACHED BE AS ITS CONTRACT WHILE BE WAS STILL DECIDING WHAT TO BUILD** -- *a seat that
-  declines a framing and is then asked for its own produces a SPECIFICATION; a seat that only declines produces a
-  DELAY; and a contract that reaches the builder BEFORE the build is a specification, while the same words afterwards
-  are a complaint.* ***(b) IS THE ONE TO KEEP IF ONLY ONE COULD BE KEPT, AND DA'S REASON IS VERBATIM: "A DROPPED
-  TRANCHE IS A FILL THAT HAPPENED BEFORE OUR QUOTE COULD REST; VALUING IT ASSUMES WE WOULD HAVE GOT IT -- A
-  FILL-PROBABILITY ASSUMPTION, AND FILLS ARE ENDOGENOUS" -- CLAUDE.md RULE 1 APPLIED TO A NUMBER NOBODY HAD YET
-  COMPUTED.*** ***(c) IS THE CLEVEREST PART AND ANSWERS THE ONE REAL OBJECTION TO RULING (b): it makes a build-time
-  valuation CHECKABLE WITHOUT THE L=0 BUILD THE USER RULED AGAINST, because the baseline total is already computed,
-  already landed, and was produced by a different code path for a different purpose*** -- **and one precision I
-  contribute from reading the ledger rather than the contract: "TO THE DIGIT" MEETS A FLOAT. The artifact stores
-  `zero_cancel_baseline_total_cents` as `37315.55143100004`, NOT `37315.551431`; I checked both -- NOT equal exactly
-  (4.37e-11) and equal at `round(...,6)` -- SO THE FALSIFIER MUST SAY WHICH REPRESENTATION IS AUTHORITATIVE OR IT CAN
-  FIRE ON FLOAT NOISE ALONE**, and *a falsifier that can fire spuriously gets disabled, after which the control is
-  gone.* **(d)'s reason is that a dropped tranche moves the RESIDUAL by 100 c/share INDEPENDENT OF ITS PRICE; (e) is
-  rule 8, and with exactly ONE corrected day and the queue held, (e) IS THE REASON THE QUEUE MATTERS.** ***DA'S
-  SIGNABLE SENTENCE, VERBATIM: "ON 09-03 AT L=250, TRANCHES ARRIVING BEFORE THE QUOTE COULD REST ACCOUNT FOR X CENTS
-  OF SETTLED VALUE UNDER THE ASSUMPTION THAT EVERY ONE WOULD HAVE FILLED -- AN UPPER BOUND ON THE LATENCY EFFECT"***
-  -- every clause load-bearing, and **what DA will NOT accept recorded as tightly as what it will: THE COUNT SHARE
-  STANDING IN FOR THE MONEY SHARE, THE MARKOUT AS THE VALUATION, OR ANY PHRASING THAT DROPS THE FILL-PROBABILITY
-  ASSUMPTION** -- *the first being the 51.17 / 54 confusion DA already refused once, now forbidden IN ADVANCE rather
-  than corrected afterwards.* **REV 139's four are ALREADY IN THESE FILES from my round-319 addendum, with my own
-  tense correction attached, and I do not re-file them.** ***WHAT IS NEW IS REV 140: THE CLASS SWEPT BY OPERATION AND
-  IT IS SIX SITES IN THREE MODULES, THREE OF THEM NEW. THE OPERATION: "A SITE NAMES ONE OF TWO SIBLING BLOCKS
-  LITERALLY AND READS A FIELD THAT EXISTS IN BOTH", WITH THE SHARED FIELD LIST MEASURED NOT GUESSED -- `Z`,
-  `null_draws_summary`, `null_mean`, `null_sd`, `p_location`, FIVE NAMES READABLE FROM THE WRONG BLOCK WITH NO
-  ERROR.*** I confirmed the shape at the code: `v = ((a.get("economic") or {}).get(field))` at `:5945` with the same
-  literal at `:5954`, `:12172`, `:12174`, **while the same file writes `economic_settlement` at `:8471` and `:8498`
-  -- the block is right there and the guard does not consult it.** ***AND THE WORST OF THE SIX IS NOT A GUARD BUT
-  THE VERDICT: `:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT AND THE SECTION-7 PREDICATE FROM
-  `r["economic"]["Z"]`, THE 5-SECOND DIAGNOSTIC, WHILE R-801 MADE THE SETTLEMENT P&L PRIMARY -- SILENT, BECAUSE THE
-  KEY EXISTS.*** *Every previous instance exposed a RESULT to a reader; this one COMPUTES a verdict from the wrong
-  quantity, and the programme's headline finding would have been a statement about the markout wearing the name of
-  the ruled endpoint.* ***AND THE SECOND NEW SITE TURNS AN INDEPENDENT VERIFICATION INTO A TAUTOLOGY:
-  `da_gate1_day_verdict.py:925-926` RECOMPUTES AND COMPARES IN THE `economic` BLOCK ONLY AND THE MODULE CONTAINS
-  ZERO OCCURRENCES OF `economic_settlement`, SO DA'S INDEPENDENT RECOMPUTE NEVER TOUCHES THE RULED ENDPOINT AND
-  REPORTS "0 MISMATCHES" OVER THE DIAGNOSTIC*** -- rule 33 in its purest form, in the seat whose job is to ask it.
-  **The third new site, driven: `receipt_is_sealed` at `:876` reads `arm_block["economic"]`, so a receipt carrying
-  `D_E_settle` 30045.04, both arm totals and a settlement `Z`, with `economic` stripped, READS `sealed=True` -- THE
-  USER'S PLANTED-SETTLEMENT PROBE REPRODUCING AT A THIRD SITE.** ***AND THE LESSON: THREE INSTANCES WERE EACH FOUND
-  BY ACCIDENT OR BY THE USER AND NEVER BY LOOKING -- AND THE FOURTH, FIFTH AND SIXTH ARRIVED WITHIN ONE ROUND OF
-  SOMEBODY DECIDING TO ENUMERATE BY OPERATION. THE THREE NEW SITES ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS
-  COSTING.*** Flags 2790 -> 2808, prov 2335 -> 2353; window 3/3, Batch 302 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -385,6 +383,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 323, three USER rulings; the reconciliation falsifies on one side only (e961437 -> 5df2f46) ---
+  RULING_A_THETA_STAYS_FROZEN_AND_THE_DRIFT_MUST_TRAVEL: 99-55TH-TO-95-24TH
+  A_PRICE_THAT_IS_NOT_STATED_IS_NOT_PAID: THE-RULINGS-OWN-SENTENCE
+  AND_THE_DRIFT_GOES_WHERE_A_READER_MEETS_THE_DECISION_COUNT: AN-ADDRESS-NOT-A-FOOTNOTE
+  RULING_B_THE_MULTI_DAY_VERDICT_IS_REPOINTED_TO_THE_SETTLEMENT_ENDPOINT: 2865-AND-IT-MUST-NAME
+  AND_PRIOR_VERDICTS_STAY_AS_PROVENANCE_AND_ARE_NOT_REWRITTEN: RULE-13-AGAIN
+  RULING_C_BUILD_09_04_FIRST_ON_BES_OWN_SIZING: 82-PERCENT-BINDING
+  AND_IF_IT_EXCEEDS_THE_ENVELOPE_THAT_IS_THE_FINDING_AND_IT_STOPS_THE_QUEUE: NO-CAP-RAISE
+  REV_144_STOPPED_A_MISTAKE_BEFORE_IT_LANDED_AND_I_DROVE_THE_ASYMMETRY: THE-WIRING-IS-HELD
+  THE_FIRST_EQUALITY_IS_A_TAUTOLOGY_AS_IMPLEMENTED: LEGS_DO_NOT_CLOSE-IS-UNREACHABLE
+  SO_THE_NUMBER_THE_CHANGE_EXISTS_TO_PUBLISH_IS_THE_ONE_NOTHING_ANCHORS: THE-UPPER-BOUND-ITSELF
+  BES_TEN_CELLS_PASS_BECAUSE_THEY_EXERCISE_THE_SIDE_THAT_IS_CHECKED: GREEN-ON-THE-WRONG-HALF
+  THE_COORDINATOR_HELD_THE_WIRING_FOR_THE_REASON_I_GOT_WRONG_LAST_ROUND: CAUGHT-ONE-STEP-EARLIER
+  THE_CHECK_EXISTS_IS_FALSIFIED_AND_IS_RUN_BY_NOBODY: BES-OWN-WORDS
   # --- MEM round 322 ADDENDUM 2026-09-09T15:20:44Z: BE 135, REV 143 and DE 176 landed while I wrote ---
   BE_135_WROTE_THE_MISSING_MODULE_WITHIN_THE_ROUND_AND_I_CONFIRMED_IT_EXISTS: 402-LINES-AND-IT-NEEDS-NO-REPLAY
   SO_THE_UNVERIFIED_STANDS_BUT_ITS_REASON_HAS_CHANGED: ABSENT-BECAME-UNRUN
@@ -27288,6 +27300,161 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 323, 2026-09-09T15:28:30Z ---
+  RULING_A_THETA_STAYS_FROZEN_AND_THE_DRIFT_MUST_TRAVEL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***USER RULING (a): THETA STAYS FROZEN -- WITH THE REQUIREMENT THAT THE DRIFT TRAVEL.*** REV 143 measured the
+      frozen threshold **`0.43525926488298716`** now sitting at the **95.24th PERCENTILE where it was CHOSEN at the
+      99.55th**: **tail mass 0.446 % -> 4.756 %, x10.65; HAZARD decisions 1,398 -> 14,893; and BROAD rather than a
+      boundary artifact -- only 0.5 % of decisions within `theta + 0.001` and 5.0 % within `+0.01`.** **CONDVALUE's
+      theta selects 6.235 %, the 93.77th percentile.** *The ruling keeps what freezing bought -- comparability with
+      the pre-fix arms -- and refuses to pretend it was free.*
+  A_PRICE_THAT_IS_NOT_STATED_IS_NOT_PAID:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***AND THE RULING'S OWN SENTENCE IS THE ONE TO KEEP: "COMPARABILITY WAS THE REASON TO FREEZE, THE DRIFT IS THE
+      PRICE, AND A PRICE THAT IS NOT STATED IS NOT PAID."*** **That is the whole of what this file has been arguing
+      all night, in one line and from the USER rather than from a seat.** *A trade-off recorded only in the mind of
+      whoever made it is not a trade-off, it is an assumption* -- and **the difference between "we froze theta for
+      comparability" and "we froze theta for comparability AND HERE IS WHAT THAT COST" is the difference between a
+      decision and a claim.*** *This programme retracted every arm result because quantities travelled without the
+      questions they answered.*
+  AND_THE_DRIFT_GOES_WHERE_A_READER_MEETS_THE_DECISION_COUNT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      **And the ruling specifies the ADDRESS, not just the obligation: THE DRIFT GOES IN THE RECEIPT WHERE A READER
+      MEETS THE DECISION COUNT.** ***NOT IN A REVIEW, NOT IN A REGISTER ENTRY, NOT UNDER THE NUMBER -- BESIDE THE
+      FIELD IT QUALIFIES.*** *Last round I wrote that a caveat printed under a number is at the wrong address and
+      belongs in the field the reader resolves; the ruling says exactly that and makes it binding.* **This is the
+      fourth time in two days the remedy has been ADDRESSING rather than content** -- `matched_on`,
+      `MEMBERSHIP_LIMIT`, the superseded set at its own key, and now the theta drift. **The information was never
+      missing; the reader's path to it was.**
+  RULING_B_THE_MULTI_DAY_VERDICT_IS_REPOINTED_TO_THE_SETTLEMENT_ENDPOINT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***USER RULING (b): THE MULTI-DAY VERDICT IS REPOINTED TO THE SETTLEMENT ENDPOINT AT
+      `de_multiday_gate1_runner.py:2865`***, which had been **computing the day-cluster verdict from
+      `r["economic"]["Z"]` -- THE DIAGNOSTIC -- while R-801 made settlement primary.** *Two rounds ago I recorded
+      this as the worst of the six sibling-block sites and noted that the endpoint choice was a RULING with the
+      USER, not a patch; it has now been ruled.* **AND IT MUST NAME THE ENDPOINT IT USED, WHICH WAS REV'S CONDITION
+      AND HOLDS EITHER WAY** -- ***A VERDICT THAT NAMES ITS ENDPOINT IS HONEST AT EITHER SETTING; ONE THAT DOES NOT
+      IS WRONG AT BOTH.***
+  AND_PRIOR_VERDICTS_STAY_AS_PROVENANCE_AND_ARE_NOT_REWRITTEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      **And the disposition for what already exists: PRIOR VERDICTS STAY AS PROVENANCE AND ARE NOT REWRITTEN.**
+      ***THAT IS RULE 13 -- CORRECTIONS SUPERSEDE IN-BAND, THE OLD RECEIPT STAYS AS PROVENANCE, NEVER EDIT A FROZEN
+      ARTIFACT*** -- applied to a verdict rather than to a receipt. *A verdict computed from the diagnostic is a
+      true record of what the programme concluded at the time and a false statement about the settlement endpoint;
+      rewriting it would destroy the first to fix the second.* **The same reasoning that made BE land `params_v29`
+      rather than edit v28.**
+  RULING_C_BUILD_09_04_FIRST_ON_BES_OWN_SIZING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***USER RULING (c): BUILD 09-04 FIRST, THEN REASSESS -- AND IT IS BE'S OWN RECOMMENDATION, ON BE'S OWN
+      SIZING.*** **09-04 is BINDING at ~82 % of the envelope with 18 % MARGIN AGAINST A 30 % MEASURED cold/warm
+      SWING**, and **09-05/09-06 are LEAST CERTAIN because by-rows and by-window differ by 2.2 GB (63 % against
+      81 %) on days much sparser per window than the basis day.** ***ALL FIGURES EXTRAPOLATE FROM ONE DAY*** -- *the
+      third time in two days a number priced from a single run has had to carry that caveat, and the first time it
+      is carried BEFORE the decision rather than after.* **A seat recommending the order that tests its own weakest
+      estimate first is the right instinct.**
+  AND_IF_IT_EXCEEDS_THE_ENVELOPE_THAT_IS_THE_FINDING_AND_IT_STOPS_THE_QUEUE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***AND THE CLAUSE THAT MAKES (c) A TEST RATHER THAN A HOPE: IF 09-04 EXCEEDS THE ENVELOPE THAT IS THE FINDING
+      AND IT STOPS THE QUEUE -- NO CAP RAISE.*** **The ruling names the precedent by date: THAT IS THE 2026-08-26
+      SHAPE, AND IT GOES TO THE USER.** *R-174, rule 8 and rule 20 all say a cap is never raised, and the programme
+      has one recorded instance of an envelope override that required a dispatch to authorise.* ***AN EXCEEDANCE
+      DECLARED IN ADVANCE AS A FINDING CANNOT LATER BE RE-READ AS AN OBSTACLE TO ROUTE AROUND*** -- which is the
+      same discipline as pre-registering an exit number, applied to a resource limit.
+  REV_144_STOPPED_A_MISTAKE_BEFORE_IT_LANDED_AND_I_DROVE_THE_ASYMMETRY:
+    prov: CHECKED
+    artifact: live/pm_research/be_placement_latency_reconcile.py
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***REV 144 STOPPED A MISTAKE BEFORE IT LANDED: BE'S RECONCILIATION "FALSIFIES ON ONE SIDE ONLY -- THE DROPPED
+      TOTAL IS UNCHECKED", AND THE WIRING IS HELD.*** REV drove each side separately: **a corrupted KEPT value
+      REFUSES `KEPT_VALUE_DOES_NOT_MATCH_THE_BASELINE`; a corrupted BASELINE refuses; A CORRUPTED DROPPED VALUE IS
+      ADMITTED.** *I read the module myself to check the shape of the claim: 402 lines, `KEPT` 8 occurrences,
+      `DROPPED` 20, `ALL_TRANCHE` 1, the ledger anchor `37315` exactly ONCE, and 7 `ok(` cells* -- ***THE ANCHOR
+      THAT REACHES OUT TO A NUMBER FROM A DIFFERENT SOURCE APPEARS ONE TIME, AND IT REACHES KEPT.***
+  THE_FIRST_EQUALITY_IS_A_TAUTOLOGY_AS_IMPLEMENTED:
+    prov: CHECKED
+    artifact: live/pm_research/be_placement_latency_reconcile.py
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***AND REV'S DIAGNOSIS IS SHARPER THAN "ONE SIDE IS UNCHECKED": DA'S FIRST EQUALITY IS A TAUTOLOGY AS
+      IMPLEMENTED.*** **`value_all` builds ALL as `_fills_from("tranches") + _fills_from(DROPPED_KEY)` -- THE
+      CONCATENATION OF THE TWO SETS -- and `settlement_legs_by_slug` is additive per slug, SO `KEPT + DROPPED ==
+      ALL` CANNOT FAIL.** REV measured it with each set corrupted in turn: ***5630.0 == 5630.0 AND 6640.0 == 6640.0.
+      `LEGS_DO_NOT_CLOSE` IS UNREACHABLE.*** **So of DA's two equalities, ONE IS A REAL CHECK anchored on a number
+      from a different source, and THE OTHER RESTATES HOW `ALL` WAS BUILT.** ***RULE 16 -- A CONTROL THAT CANNOT
+      FAIL -- INSIDE THE FALSIFIER THAT WAS WRITTEN BECAUSE THE PREVIOUS CHECK DID NOT EXIST: THE CLASS RECURRING
+      INSIDE ITS OWN REMEDY FOR THE THIRD TIME TONIGHT.***
+  SO_THE_NUMBER_THE_CHANGE_EXISTS_TO_PUBLISH_IS_THE_ONE_NOTHING_ANCHORS:
+    prov: CHECKED
+    artifact: live/pm_research/be_placement_latency_reconcile.py
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***AND THE CONSEQUENCE IS EXACTLY THE WRONG WAY ROUND: THE DROPPED TOTAL -- THE NUMBER THIS CHANGE EXISTS TO
+      PRODUCE AND PUBLISH AS THE UPPER BOUND -- IS NEVER CROSS-CHECKED.*** **DA's criterion `KEPT + DROPPED = ALL`
+      anchors the SUM, and `KEPT == 37,315.551431` anchors ONE SIDE; NOTHING ANCHORED THE OTHER.** *The asymmetry is
+      obvious only in hindsight, which is why it is recorded here in the form that makes it findable next time:*
+      ***AN IDENTITY PLUS AN ANCHOR ON ONE TERM CONSTRAINS THAT TERM AND NOTHING ELSE, UNLESS THE IDENTITY IS
+      INDEPENDENT OF HOW THE TERMS WERE BUILT.*** **REV: closing it needs a SECOND INDEPENDENT SOURCE for one of
+      them.**
+  BES_TEN_CELLS_PASS_BECAUSE_THEY_EXERCISE_THE_SIDE_THAT_IS_CHECKED:
+    prov: CHECKED
+    artifact: live/pm_research/be_placement_latency_reconcile.py
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      **And why ten green cells did not catch it: BE'S TEN CELLS PASS BECAUSE THEY EXERCISE THE SIDE THAT IS
+      CHECKED.** ***A BATTERY THAT DRIVES THE ANCHORED TERM WILL BE GREEN WHETHER OR NOT THE OTHER TERM IS ANCHORED,
+      AND WILL LOOK LIKE A THOROUGH BATTERY WHILE DOING IT.*** *This is rule 33's identity question at the level of
+      a test suite rather than a single check -- what did these cells ACTUALLY exercise, what claim are they cited
+      for, are those the same thing* -- **and the answer is that ten cells verified the half that was already
+      strong.** *The same shape as REVIEW 122's consumers, REVIEW 123's `ECONOMIC_FIELDS` and REVIEW 111's pin
+      sites: the green was real and the scope was short.*
+  THE_COORDINATOR_HELD_THE_WIRING_FOR_THE_REASON_I_GOT_WRONG_LAST_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***AND THE COORDINATOR'S REASON FOR HOLDING THE WIRING IS THE ONE I GOT WRONG LAST ROUND, CAUGHT ONE STEP
+      EARLIER THIS TIME: WIRING IT WOULD LET THE USER'S RULING (b) READ AS SATISFIED WHEN HALF OF IT IS
+      UNVERIFIED.*** **That is the same error I made in reporting BE's specification as a check** -- *I recorded a
+      design as a landing; this would have been recording a half-check as a check* -- **and the difference is that
+      it was caught BEFORE the wiring rather than after.** ***A CORRECTION MADE ONE STEP EARLIER EACH TIME IS WHAT
+      LEARNING LOOKS LIKE IN A SYSTEM THAT CANNOT STOP MAKING THE ERROR***, and this file records the coordinator's
+      catch with the same weight it recorded my own miss.
+  THE_CHECK_EXISTS_IS_FALSIFIED_AND_IS_RUN_BY_NOBODY:
+    prov: CHECKED
+    artifact: live/pm_research/be_placement_latency_reconcile.py
+    as_of: 2026-09-09T15:28:30Z
+    said: >-
+      ***THE L=0 VALUATION REMAINS UNVERIFIED IN THESE FILES UNTIL THE TWO-SIDED FIX LANDS, REV VERIFIES IT, AND DE
+      WIRES IT.*** **BE's own words are the exact status and I keep them: "THE CHECK EXISTS, IS FALSIFIED, AND IS
+      RUN BY NOBODY."** *I confirmed the last clause myself: `be_placement_latency_reconcile` is referenced only by
+      itself and `be_daybook_build.py` -- **DE has not wired it.*** **And BE DECLINED TO REACH INTO DE'S FILE TO
+      WIRE IT, WHICH WAS THE RIGHT BOUNDARY** -- *R-235's seam discipline, and the same instinct that made BE land a
+      SIBLING key rather than write a string into a field another seat's verifier sums.* ***THREE ROUNDS AGO THIS
+      WAS A SENTENCE; TWO ROUNDS AGO IT WAS ABSENT CODE; NOW IT IS UNRUN CODE WITH A KNOWN HOLE. THE STATE IS
+      IMPROVING AND THE WORD IS STILL UNVERIFIED.***
   # --- MEM round 322 ADDENDUM, 2026-09-09T15:20:44Z ---
   BE_135_WROTE_THE_MISSING_MODULE_WITHIN_THE_ROUND_AND_I_CONFIRMED_IT_EXISTS:
     prov: CHECKED

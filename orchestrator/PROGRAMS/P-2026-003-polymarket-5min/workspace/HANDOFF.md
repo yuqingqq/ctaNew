@@ -1,3 +1,97 @@
+# READ FIRST — round 323 (MEM, 2026-09-09T15:28:30Z, tip `5df2f46`)
+
+**Three user rulings and a review that stopped a mistake before it landed.** *Last round's blocked `Q-MEM-310` has
+landed (`dcc107f`); the divergence resolved and all content survived.*
+
+# ⚖ THE THREE RULINGS
+
+## (a) THETA STAYS FROZEN — **and the drift must travel**
+
+| | |
+|---|---|
+| frozen theta | **`0.43525926488298716`** |
+| chosen at | **99.55th percentile** |
+| now sits at | **95.24th percentile** |
+| tail mass | 0.446 % → **4.756 %** (**×10.65**) |
+| HAZARD decisions | 1,398 → **14,893** |
+| **broad, not a boundary artifact** | only **0.5 %** within `theta+0.001`, **5.0 %** within `+0.01` |
+| CONDVALUE | 6.235 %, the **93.77th** |
+
+***"Comparability was the reason to freeze, the drift is the price, and a price that is not stated is not paid."***
+*The whole of what this file has argued all night, in one line — and from the USER, not a seat.*
+
+**And it specifies the ADDRESS: the drift goes in the receipt WHERE A READER MEETS THE DECISION COUNT** — not in a
+review, not in a register entry, not under the number. **The fourth time in two days the remedy has been *addressing*
+rather than content.**
+
+## (b) THE MULTI-DAY VERDICT IS REPOINTED to the settlement endpoint (`:2865`)
+
+It had been computing the day-cluster verdict from `r["economic"]["Z"]` — **the diagnostic** — while R-801 made
+settlement primary. *Two rounds ago I recorded this as the worst of the six sibling-block sites and that the endpoint
+was a **ruling** with the user; it has now been ruled.* **It must NAME the endpoint it used — REV's condition, which
+holds either way.** **Prior verdicts stay as PROVENANCE and are not rewritten** — *rule 13 applied to a verdict:
+rewriting would destroy a true record of what the programme concluded in order to fix a false statement about the
+endpoint.*
+
+## (c) BUILD 09-04 FIRST, then reassess — **BE's own recommendation, on BE's own sizing**
+
+**09-04 is BINDING at ~82 % of the envelope, 18 % margin against a 30 % measured cold/warm swing.** **09-05/09-06 are
+least certain** — by-rows and by-window differ by **2.2 GB** (63 % vs 81 %) on days much sparser per window than the
+basis day. ***All figures extrapolate from ONE day.***
+
+***And the clause that makes it a test rather than a hope: if 09-04 exceeds the envelope THAT IS THE FINDING AND IT
+STOPS THE QUEUE — no cap raise. That is the 2026-08-26 shape, and it goes to the user.*** *An exceedance declared in
+advance as a finding cannot later be re-read as an obstacle to route around.*
+
+# ⛔ REV 144 STOPPED A MISTAKE BEFORE IT LANDED — the wiring is HELD
+
+**BE's reconciliation falsifies on ONE SIDE ONLY.** Driven, each side separately:
+
+| corrupted | result |
+|---|---|
+| KEPT value | **REFUSES `KEPT_VALUE_DOES_NOT_MATCH_THE_BASELINE`** |
+| BASELINE | **refuses** |
+| **DROPPED value** | **ADMITTED** |
+
+*I read the module myself: 402 lines, `KEPT` ×8, `DROPPED` ×20, `ALL_TRANCHE` ×1, the ledger anchor `37315` **exactly
+once**, 7 `ok(` cells.* ***The anchor that reaches a number from a different source appears one time — and it reaches
+KEPT.***
+
+**⇒ And REV's diagnosis is sharper than "one side is unchecked": DA's first equality is a TAUTOLOGY as implemented.**
+`value_all` builds ALL as the **concatenation** of the two sets and `settlement_legs_by_slug` is additive per slug,
+so **`KEPT + DROPPED == ALL` cannot fail** — measured with each set corrupted in turn at **5630.0 == 5630.0** and
+**6640.0 == 6640.0**. **`LEGS_DO_NOT_CLOSE` is unreachable.**
+
+***Rule 16 — a control that cannot fail — inside the falsifier written because the previous check did not exist. The
+class recurring inside its own remedy, for the third time tonight.***
+
+**⇒ So the DROPPED total — the number this change exists to produce and publish as the upper bound — is never
+cross-checked.** ***An identity plus an anchor on one term constrains that term and nothing else, unless the identity
+is independent of how the terms were built.*** Closing it needs **a second independent source**.
+
+**Why ten green cells missed it: BE's ten cells exercise the side that IS checked.** *Rule 33's identity question at
+the level of a suite — ten cells verified the half that was already strong.*
+
+***And the coordinator's reason for holding is the one I got wrong last round, caught one step earlier: wiring it
+would let ruling (b) read as SATISFIED when half of it is unverified — the same error as reporting BE's
+specification as a check.*** **A correction made one step earlier each time is what learning looks like in a system
+that cannot stop making the error.**
+
+# THE L=0 VALUATION — still **UNVERIFIED**
+
+Until **the two-sided fix lands, REV verifies it, and DE wires it.** BE's own words, kept exactly: ***"the check
+exists, is falsified, and is run by nobody."*** *I confirmed the last clause: `be_placement_latency_reconcile` is
+referenced only by itself and `be_daybook_build.py`.* **And BE declined to reach into DE's file to wire it — the
+right boundary.**
+
+*Three rounds ago this was a sentence; two rounds ago absent code; now unrun code with a known hole.* **The state is
+improving and the word is still UNVERIFIED.**
+
+Counts: flags 2840 → 2853, provenance 2385 → 2398 (thirteen written, thirteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 305 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 322 (MEM, 2026-09-09T15:18:59Z, tip `7cf8a9d`)
 
 # ⚠ (1) A CORRECTION THAT LANDS ON MY OWN FILES — the relocated falsifier does not exist

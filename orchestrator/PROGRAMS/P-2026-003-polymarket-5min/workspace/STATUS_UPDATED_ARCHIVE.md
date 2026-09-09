@@ -22106,3 +22106,57 @@ generation and the window went 4 → 3. Nothing rewritten.
   RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2790, prov 2318 -> 2335; window 3/3, Batch
   301 archived. MEM asserts no result.)
 ```
+
+## Batch 305 — archived 2026-09-09T15:28:30Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T15:05:36Z (MEM ROUND 320 -- ***A SPECIFICATION THAT SHOULD OUTLIVE THIS DAY, AND A CLASS ENUMERATED BY OPERATION
+  FOR THE FIRST TIME.*** From `f06ec7d` to `a52526d`. ***DA'S FIVE-POINT ACCEPTANCE CRITERIA FOR THE BUILD-TIME L=0
+  VALUATION: (a) VALUED ON THE R-801 ESTIMAND -- trades cash flow plus share-delta x settlement, NEVER the 5-second
+  markout; (b) LABELLED AS AN UPPER BOUND IN THE ARTIFACT; (c) THE FALSIFIER THE BUILD OWES -- `kept-value +
+  dropped-value = all-tranche value` AND `kept-value` MUST EQUAL THE BASELINE TOTAL ALREADY IN THE LEDGER; (d) BOTH
+  LEGS TRAVEL SEPARATELY; (e) >=5 COMPLETE UTC DAYS BEFORE "THE LATENCY EFFECT IS REAL" MAY BE SAID.*** **And how it
+  came to exist is worth as much as its content: DA WROTE IT WHEN ASKED WHAT FRAMING IT WOULD ACCEPT, AFTER DECLINING
+  THE COORDINATOR'S, AND IT REACHED BE AS ITS CONTRACT WHILE BE WAS STILL DECIDING WHAT TO BUILD** -- *a seat that
+  declines a framing and is then asked for its own produces a SPECIFICATION; a seat that only declines produces a
+  DELAY; and a contract that reaches the builder BEFORE the build is a specification, while the same words afterwards
+  are a complaint.* ***(b) IS THE ONE TO KEEP IF ONLY ONE COULD BE KEPT, AND DA'S REASON IS VERBATIM: "A DROPPED
+  TRANCHE IS A FILL THAT HAPPENED BEFORE OUR QUOTE COULD REST; VALUING IT ASSUMES WE WOULD HAVE GOT IT -- A
+  FILL-PROBABILITY ASSUMPTION, AND FILLS ARE ENDOGENOUS" -- CLAUDE.md RULE 1 APPLIED TO A NUMBER NOBODY HAD YET
+  COMPUTED.*** ***(c) IS THE CLEVEREST PART AND ANSWERS THE ONE REAL OBJECTION TO RULING (b): it makes a build-time
+  valuation CHECKABLE WITHOUT THE L=0 BUILD THE USER RULED AGAINST, because the baseline total is already computed,
+  already landed, and was produced by a different code path for a different purpose*** -- **and one precision I
+  contribute from reading the ledger rather than the contract: "TO THE DIGIT" MEETS A FLOAT. The artifact stores
+  `zero_cancel_baseline_total_cents` as `37315.55143100004`, NOT `37315.551431`; I checked both -- NOT equal exactly
+  (4.37e-11) and equal at `round(...,6)` -- SO THE FALSIFIER MUST SAY WHICH REPRESENTATION IS AUTHORITATIVE OR IT CAN
+  FIRE ON FLOAT NOISE ALONE**, and *a falsifier that can fire spuriously gets disabled, after which the control is
+  gone.* **(d)'s reason is that a dropped tranche moves the RESIDUAL by 100 c/share INDEPENDENT OF ITS PRICE; (e) is
+  rule 8, and with exactly ONE corrected day and the queue held, (e) IS THE REASON THE QUEUE MATTERS.** ***DA'S
+  SIGNABLE SENTENCE, VERBATIM: "ON 09-03 AT L=250, TRANCHES ARRIVING BEFORE THE QUOTE COULD REST ACCOUNT FOR X CENTS
+  OF SETTLED VALUE UNDER THE ASSUMPTION THAT EVERY ONE WOULD HAVE FILLED -- AN UPPER BOUND ON THE LATENCY EFFECT"***
+  -- every clause load-bearing, and **what DA will NOT accept recorded as tightly as what it will: THE COUNT SHARE
+  STANDING IN FOR THE MONEY SHARE, THE MARKOUT AS THE VALUATION, OR ANY PHRASING THAT DROPS THE FILL-PROBABILITY
+  ASSUMPTION** -- *the first being the 51.17 / 54 confusion DA already refused once, now forbidden IN ADVANCE rather
+  than corrected afterwards.* **REV 139's four are ALREADY IN THESE FILES from my round-319 addendum, with my own
+  tense correction attached, and I do not re-file them.** ***WHAT IS NEW IS REV 140: THE CLASS SWEPT BY OPERATION AND
+  IT IS SIX SITES IN THREE MODULES, THREE OF THEM NEW. THE OPERATION: "A SITE NAMES ONE OF TWO SIBLING BLOCKS
+  LITERALLY AND READS A FIELD THAT EXISTS IN BOTH", WITH THE SHARED FIELD LIST MEASURED NOT GUESSED -- `Z`,
+  `null_draws_summary`, `null_mean`, `null_sd`, `p_location`, FIVE NAMES READABLE FROM THE WRONG BLOCK WITH NO
+  ERROR.*** I confirmed the shape at the code: `v = ((a.get("economic") or {}).get(field))` at `:5945` with the same
+  literal at `:5954`, `:12172`, `:12174`, **while the same file writes `economic_settlement` at `:8471` and `:8498`
+  -- the block is right there and the guard does not consult it.** ***AND THE WORST OF THE SIX IS NOT A GUARD BUT
+  THE VERDICT: `:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT AND THE SECTION-7 PREDICATE FROM
+  `r["economic"]["Z"]`, THE 5-SECOND DIAGNOSTIC, WHILE R-801 MADE THE SETTLEMENT P&L PRIMARY -- SILENT, BECAUSE THE
+  KEY EXISTS.*** *Every previous instance exposed a RESULT to a reader; this one COMPUTES a verdict from the wrong
+  quantity, and the programme's headline finding would have been a statement about the markout wearing the name of
+  the ruled endpoint.* ***AND THE SECOND NEW SITE TURNS AN INDEPENDENT VERIFICATION INTO A TAUTOLOGY:
+  `da_gate1_day_verdict.py:925-926` RECOMPUTES AND COMPARES IN THE `economic` BLOCK ONLY AND THE MODULE CONTAINS
+  ZERO OCCURRENCES OF `economic_settlement`, SO DA'S INDEPENDENT RECOMPUTE NEVER TOUCHES THE RULED ENDPOINT AND
+  REPORTS "0 MISMATCHES" OVER THE DIAGNOSTIC*** -- rule 33 in its purest form, in the seat whose job is to ask it.
+  **The third new site, driven: `receipt_is_sealed` at `:876` reads `arm_block["economic"]`, so a receipt carrying
+  `D_E_settle` 30045.04, both arm totals and a settlement `Z`, with `economic` stripped, READS `sealed=True` -- THE
+  USER'S PLANTED-SETTLEMENT PROBE REPRODUCING AT A THIRD SITE.** ***AND THE LESSON: THREE INSTANCES WERE EACH FOUND
+  BY ACCIDENT OR BY THE USER AND NEVER BY LOOKING -- AND THE FOURTH, FIFTH AND SIXTH ARRIVED WITHIN ONE ROUND OF
+  SOMEBODY DECIDING TO ENUMERATE BY OPERATION. THE THREE NEW SITES ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS
+  COSTING.*** Flags 2790 -> 2808, prov 2335 -> 2353; window 3/3, Batch 302 archived. MEM asserts no result.)
+```
