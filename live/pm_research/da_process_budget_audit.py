@@ -994,9 +994,41 @@ IN_TREE_DIRTY = "PRESENT_BUT_NOT_COMMITTED"
 NOT_IN_TREE = "NOT_IN_THIS_TREE"
 
 
-def committed_state(path: Path) -> str:
-    """CLEAN / DIRTY / NOT-IN-THIS-TREE, distinguished by name."""
-    r = subprocess.run(["git", "-C", str(AUDIT_ROOT), "status", "--porcelain",
+def _tree_containing(path: Path):
+    """The git top-level the FILE lives in, or None if it lives in none.
+
+    DA 156 / REV 131. `committed_state` asked AUDIT_ROOT -- the MAIN tree --
+    about whatever path it was handed, so the auditor's own file read
+    NOT_IN_THIS_TREE from every worktree and the cell asserting a real
+    in-tree state was RED FROM EVERY WORKTREE. That is not the tree
+    disagreeing; it is the question being asked of the wrong tree. The
+    committed state of a file is a fact about the file's OWN repository,
+    so that is what is asked.
+    """
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(path.parent), "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True, timeout=20)
+    except Exception:                                         # noqa: BLE001
+        return None
+    return Path(r.stdout.strip()) if r.returncode == 0 and r.stdout.strip() \
+        else None
+
+
+def committed_state(path: Path, root=None) -> str:
+    """CLEAN / DIRTY / NOT-IN-THIS-TREE, distinguished by name.
+
+    `root` defaults to the tree the PATH lives in -- not to AUDIT_ROOT --
+    so the answer is a fact about the file rather than about which tree the
+    caller happens to treat as canonical. Pass `root` explicitly to ask a
+    NAMED tree about a path, which is a different and also legitimate
+    question; the two disagree for a worktree file and that disagreement
+    was the whole of REV 131's red.
+    """
+    tree = Path(root) if root is not None else _tree_containing(path)
+    if tree is None:
+        return NOT_IN_TREE
+    r = subprocess.run(["git", "-C", str(tree), "status", "--porcelain",
                         "--", str(path)], capture_output=True, text=True)
     if r.returncode != 0:
         return NOT_IN_TREE
@@ -1376,7 +1408,11 @@ def audit_module(path: Path, role: str) -> dict:
         "committed_in_that_tree": _is_committed(path),
         #: DA 155: the STATE, so a scratch module outside the tree is not
         #: reported as an uncommitted one.
-        "committed_state": committed_state(path),
+        #: asked of the AUDIT tree ON PURPOSE -- this census is about what
+        #: THAT tree holds -- while the auditor's own identity below asks
+        #: the file's own tree. Two questions, both named (DA 156).
+        "committed_state": committed_state(path, root=AUDIT_ROOT),
+        "committed_state_asked_of": str(AUDIT_ROOT),
         "role": role,
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "bytes": path.stat().st_size,
@@ -1850,9 +1886,19 @@ def selftest() -> tuple:                                      # noqa: C901
        "collapsed that into False -- so every planted module this battery "
        "audits was reported as uncommitted code. Absence read as a "
        "negative, in my own instrument",
-       committed_state(_ok_src) == NOT_IN_TREE
+       committed_state(_ok_src, root=AUDIT_ROOT) == NOT_IN_TREE
+       #: ITS OWN TREE, not AUDIT_ROOT -- this is REV 131's red: run from
+       #: a worktree the auditor's file is not under AUDIT_ROOT, so asking
+       #: the main tree about it returned NOT_IN_THIS_TREE and the cell
+       #: failed from every worktree while the code was correct.
        and committed_state(Path(__file__).resolve()) in
            (IN_TREE_CLEAN, IN_TREE_DIRTY)
+       #: AND THE DISAGREEMENT IS THE POINT, asserted so it cannot quietly
+       #: go away: from a worktree the two questions differ, and from the
+       #: main tree they agree. Either way the file IS in a tree.
+       and (committed_state(Path(__file__).resolve(), root=AUDIT_ROOT)
+            == NOT_IN_TREE) == (not Path(__file__).resolve()
+                                .is_relative_to(AUDIT_ROOT))
        and _is_committed(_ok_src) is False,
        f"scratch module -> {committed_state(_ok_src)}; this auditor's own "
        f"file -> {committed_state(Path(__file__).resolve())}; the bool "
