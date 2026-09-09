@@ -109,6 +109,31 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## The placement latency is DRIVEN and clean (DA 140) — do not re-audit it
+
+Verified end to end 2026-09-09, five checks each with a control; **nothing wrong**.
+Do not spend another round here unless a book is rebuilt at a new L.
+
+- `apply_placement_latency` keeps `(t − t0)·1000 >= L`; units ms vs ms, identity at L ≤ 0.
+- **The L = 250 books contain EXACTLY the L = 0 fills surviving that predicate** — set
+  equality on all four days. **Control: the predicate matches at NO other L** (200/240/
+  260/300 all fail), so the match is a measurement.
+- Timestamps are real: 0 offsets exactly 0.0 of 57,850; 30,975 distinct values among the
+  31,471 dropped; no negatives.
+- Boundaries are not fill-induced: first-fill p50 172 ms vs later 555 ms, no pile at zero.
+- **The DECISION population is identical across L** (delta 0 on three days, per arm too)
+  while generations-with-fills halves — the unit is the generation, so the null's matching
+  variable is stable across L.
+
+**The open item left behind:** `settlement_endpoint.require_book_declares_L` is absent from
+params v19–v23 and can never fire. Its justification — "every landed book predates BE 101"
+— **expires at the first rebuild**, because `build_reference` now writes a
+`placement_latency` block on every call including L = 0. The fallback is LABELLED
+(`source: THE BOOK'S BUILDER RECEIPT DECLARES NONE`), so it is not silent, which is why it
+rates below a real defect. **A guard whose stated reason has expired is a control that
+cannot fire wearing a justification that no longer holds** — check this class whenever a
+guard is left unarmed "for now".
+
 ## Hunting untargeted (DA 138/139) — what actually worked
 
 Two defects in two rounds, both in code declared complete. Neither came from
