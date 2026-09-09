@@ -250,3 +250,218 @@ CASES = ("cancel_matched_null_reachable", "decision_count_is_actions",
          "one_cancel_per_REFERENCE_generation",
          "book_code_predicate_requires_the_whole_set",
          "params_protocol_matches_version")
+
+
+# ======================================================================
+# THE CASES' OWN FALSIFIERS. A case that only fires on today's broken code
+# proves nothing about tomorrow's fix, so each is driven THREE ways: on a
+# construction where the defect is PRESENT, on one where it is FIXED, and
+# on a PARTIAL input it must refuse rather than answer.
+# ======================================================================
+def selftest() -> tuple:
+    checks: list = []
+
+    def ck(name, passed, detail):
+        checks.append({"check": name, "passed": bool(passed),
+                       "detail": detail})
+
+    def refuses(fn, tag):
+        try:
+            fn()
+            return f"{tag}: ADMITTED (should have refused)"
+        except CaseRefused as e:
+            return f"{tag}: REFUSED -- {str(e).split(':')[0]}"
+
+    # ---- case 1 -------------------------------------------------------
+    def _broken():
+        nul = null_draws_valued(mod, bk, base, by_side, n_draws=1, seed=2)
+    def _fixed():
+        nul = null_draws_valued(mod, bk, base, by_side, n_draws=1, seed=2,
+                                arm_cancels=ac, control_set_path=p)
+    def _none():
+        x = 1
+    b1 = case_1_cancel_matched_null_reachable(_broken)
+    f1 = case_1_cancel_matched_null_reachable(_fixed)
+    ck("CASE 1 fires on a call site that passes NEITHER kwarg and clears on "
+       "one that passes both -- read at the CALLER, which is where this "
+       "defect lived while the callee's branch was tested",
+       b1["verdict"] == PRESENT and b1["n_call_sites_that_reach_it"] == 0
+       and f1["verdict"] == FIXED and f1["n_call_sites_that_reach_it"] == 1,
+       f"no-kwarg call -> {b1['verdict']} ({b1['kwargs_at_each_call_site']}); "
+       f"both-kwarg call -> {f1['verdict']} "
+       f"({f1['kwargs_at_each_call_site']})")
+    ck("CASE 1 REFUSES a function containing no such call at all, rather "
+       "than reporting FIXED for code it never examined",
+       "REFUSED" in refuses(
+           lambda: case_1_cancel_matched_null_reachable(_none), "x"),
+       refuses(lambda: case_1_cancel_matched_null_reachable(_none),
+               "a caller with no call to the null"))
+
+    # ---- case 2 -------------------------------------------------------
+    _rows = [{"slug": "s", "side": "BUY_UP", "gen": 0, "score": 0.9},
+             {"slug": "s", "side": "BUY_UP", "gen": 0, "score": 0.95},
+             {"slug": "s", "side": "BUY_UP", "gen": 1, "score": 0.8},
+             {"slug": "s", "side": "BUY_UP", "gen": 2, "score": 0.1}]
+    b2 = case_2_decision_count(_rows, 0.5)
+    _one = [{"slug": "s", "side": "BUY_UP", "gen": g, "score": 0.9}
+            for g in (0, 1, 2)]
+    f2 = case_2_decision_count(_one, 0.5)
+    ck("CASE 2 shows the count BEFORE and AFTER de-duplication to actions: "
+       "3 rows above theta over 2 distinct generations is an inflation of 1 "
+       "(ratio 1.5); a stream with one row per generation is clean",
+       b2["verdict"] == PRESENT and b2["n_rows_above_theta"] == 3
+       and b2["n_distinct_actions"] == 2 and b2["inflation"] == 1
+       and b2["inflation_ratio"] == 1.5
+       and f2["verdict"] == FIXED and f2["inflation"] == 0,
+       f"inflated -> rows {b2['n_rows_above_theta']} vs actions "
+       f"{b2['n_distinct_actions']}, ratio {b2['inflation_ratio']}; "
+       f"clean -> {f2['verdict']}")
+    ck("CASE 2 REFUSES an empty stream and a row with no `gen` -- on both, "
+       "rows and actions agree trivially and the case would read FIXED",
+       "REFUSED" in refuses(lambda: case_2_decision_count([], 0.5), "x")
+       and "REFUSED" in refuses(
+           lambda: case_2_decision_count(
+               [{"slug": "s", "side": "BUY_UP", "score": 0.9}], 0.5), "y"),
+       refuses(lambda: case_2_decision_count([], 0.5), "empty stream") + "; "
+       + refuses(lambda: case_2_decision_count(
+           [{"slug": "s", "side": "BUY_UP", "score": 0.9}], 0.5),
+           "row with no gen"))
+
+    # ---- case 3 -------------------------------------------------------
+    _rep = [{"slug": "s", "side": "BUY_UP", "ref_gen": 7, "policy_gen": "7"},
+            {"slug": "s", "side": "BUY_UP", "ref_gen": 7,
+             "policy_gen": "7.r1"}]
+    b3 = case_3_cancel_per_reference_generation(_rep)
+    _ok = [{"slug": "s", "side": "BUY_UP", "ref_gen": 7, "policy_gen": "7"},
+           {"slug": "s", "side": "BUY_UP", "ref_gen": 8, "policy_gen": "8"}]
+    f3 = case_3_cancel_per_reference_generation(_ok)
+    ck("CASE 3 SEPARATES THE TWO ID SPACES EXPLICITLY: the repost pair "
+       "(`7`, `7.r1`) is UNIQUE in the policy space -- which is why the "
+       "shipped invariant passes -- and NOT unique in the reference space, "
+       "where reference generation 7 is cancelled twice. That is the "
+       "premise the cancel-matched control rests on",
+       b3["verdict"] == PRESENT
+       and b3["unique_in_POLICY_id_space"] is True
+       and b3["unique_in_REFERENCE_id_space"] is False
+       and b3["reference_generations_cancelled_more_than_once"][0]["n"] == 2
+       and f3["verdict"] == FIXED
+       and f3["unique_in_REFERENCE_id_space"] is True,
+       f"repost pair -> policy-unique {b3['unique_in_POLICY_id_space']}, "
+       f"reference-unique {b3['unique_in_REFERENCE_id_space']}, "
+       f"{b3['reference_generations_cancelled_more_than_once']}; "
+       f"distinct generations -> {f3['verdict']}")
+    ck("CASE 3 REFUSES an empty cancel list and a record carrying only one "
+       "of the two id fields -- the comparison IS the case",
+       "REFUSED" in refuses(
+           lambda: case_3_cancel_per_reference_generation([]), "x")
+       and "REFUSED" in refuses(
+           lambda: case_3_cancel_per_reference_generation(
+               [{"slug": "s", "side": "BUY_UP", "ref_gen": 7}]), "y"),
+       refuses(lambda: case_3_cancel_per_reference_generation([]),
+               "no cancels") + "; "
+       + refuses(lambda: case_3_cancel_per_reference_generation(
+           [{"slug": "s", "side": "BUY_UP", "ref_gen": 7}]),
+           "record with no policy_gen"))
+
+    # ---- case 4 -------------------------------------------------------
+    _EXP = ("a.py", "b.py", "c.py")
+    _DIG = {m: f"{i}" * 64 for i, m in enumerate(_EXP)}
+
+    def _subset_ok(receipt, *, where, root=None):
+        rec = {m: d for m, d in ((receipt.get("producing_code") or {})
+                                 .get("import_closure") or {})
+               .get("modules", {}).items() if m in _EXP}
+        if not rec:
+            raise RuntimeError("NOT_RECORDED")
+        for m, d in rec.items():
+            if d != _DIG[m]:
+                raise RuntimeError("DIFFERS")
+        return {"status": "MATCHES", "n_checked": len(rec)}
+
+    def _whole_only(receipt, *, where, root=None):
+        rec = ((receipt.get("producing_code") or {})
+               .get("import_closure") or {}).get("modules", {})
+        missing = [m for m in _EXP if m not in rec]
+        if missing:
+            raise RuntimeError(f"INCOMPLETE {missing}")
+        return _subset_ok(receipt, where=where)
+    b4 = case_4_book_code_predicate_requires_the_whole_set(
+        _subset_ok, _EXP, _DIG)
+    f4 = case_4_book_code_predicate_requires_the_whole_set(
+        _whole_only, _EXP, _DIG)
+    ck("CASE 4 IS THE PARTIAL-INPUT REFUSAL ITSELF: a predicate that "
+       "accepts any single-module receipt reads DEFECT_PRESENT naming every "
+       "module it accepted alone; one that demands the whole recorded set "
+       "reads FIXED. ***This is the control DA 146 did not run: I drove "
+       "that the predicate CAN pass, not that it can pass on a SUBSET***",
+       b4["verdict"] == PRESENT
+       and b4["n_single_module_receipts_accepted"] == 3
+       and b4["full_set_accepted"] is True
+       and f4["verdict"] == FIXED
+       and f4["n_single_module_receipts_accepted"] == 0
+       and f4["full_set_accepted"] is True,
+       f"subset-accepting predicate -> {b4['verdict']}, accepted alone "
+       f"{b4['single_module_receipts_accepted']}; whole-set predicate -> "
+       f"{f4['verdict']}, full set still accepted "
+       f"{f4['full_set_accepted']}")
+    ck("CASE 4 REFUSES a one-module expectation (no proper subset exists, "
+       "so it could not fail) and a digest map missing a module it must "
+       "build the full-set control from",
+       "REFUSED" in refuses(
+           lambda: case_4_book_code_predicate_requires_the_whole_set(
+               _subset_ok, ("a.py",), _DIG), "x")
+       and "REFUSED" in refuses(
+           lambda: case_4_book_code_predicate_requires_the_whole_set(
+               _subset_ok, _EXP, {"a.py": _DIG["a.py"]}), "y"),
+       refuses(lambda: case_4_book_code_predicate_requires_the_whole_set(
+           _subset_ok, ("a.py",), _DIG), "one-module expectation") + "; "
+       + refuses(lambda: case_4_book_code_predicate_requires_the_whole_set(
+           _subset_ok, _EXP, {"a.py": _DIG["a.py"]}), "incomplete digests"))
+
+    # ---- case 4b ------------------------------------------------------
+    b5 = case_4b_params_protocol_matches_version(
+        {"protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V20", "version": "v26"})
+    f5 = case_4b_params_protocol_matches_version(
+        {"protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V26", "version": "v26"})
+    ck("CASE 4b fires where the protocol string names a different version "
+       "from the version field and clears where they agree",
+       b5["verdict"] == PRESENT and b5["version_in_the_protocol_string"] == "20"
+       and b5["version_field"] == "26" and f5["verdict"] == FIXED,
+       f"V20 protocol on a v26 payload -> {b5['verdict']} "
+       f"({b5['version_in_the_protocol_string']} vs {b5['version_field']}); "
+       f"matching -> {f5['verdict']}")
+    ck("CASE 4b REFUSES a payload missing either half -- a version claim "
+       "needs both",
+       "REFUSED" in refuses(
+           lambda: case_4b_params_protocol_matches_version(
+               {"version": "v26"}), "x"),
+       refuses(lambda: case_4b_params_protocol_matches_version(
+           {"version": "v26"}), "no protocol string"))
+
+    fails = sum(1 for c in checks if not c["passed"])
+    for c in checks:
+        print(f"{'ok  ' if c['passed'] else 'FAIL'} {c['check']}")
+        print(f"       {c['detail']}")
+    print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
+          f"{len(checks)} checks, {fails} failure(s)")
+    return checks, fails
+
+
+def main(argv=None) -> int:
+    a = (argv if argv is not None else sys.argv[1:])
+    if "--selftest" in a:
+        return 1 if selftest()[1] else 0
+    import de_multiday_gate1_runner as R
+    import hashlib
+    here = Path(R.__file__).resolve().parent
+    dig = {m: hashlib.sha256((here / m).read_bytes()).hexdigest()
+           for m in R.SCORING_PATH_MODULES}
+    out = {"case_1": case_1_cancel_matched_null_reachable(),
+           "case_4": case_4_book_code_predicate_requires_the_whole_set(
+               R.assert_book_scoring_code, R.SCORING_PATH_MODULES, dig)}
+    print(json.dumps(out, indent=1, sort_keys=True, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
