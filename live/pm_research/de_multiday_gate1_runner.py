@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 406
+EXPECTED_CHECKS = 407
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -67,7 +67,7 @@ EXPECTED_CHECKS = 406
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v23.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v24.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -843,7 +843,8 @@ def verify_be_module(params: dict, *, actual_sha: str | None = None) -> dict:
         actual_sha = hashlib.sha256(src.read_bytes()).hexdigest()
     if actual_sha != declared:
         raise RunnerRefused(
-            f"REFUSED: BE's cascade module digest differs -- declared "
+            f"REFUSED BE_CASCADE_DIFFERS: BE's cascade module digest "
+            f"differs -- declared "
             f"{declared[:16]}, found {actual_sha[:16]}. A null run through "
             f"a DIFFERENT cascade is not a control for this arm, and the "
             f"citation must be re-pointed deliberately.")
@@ -5918,6 +5919,93 @@ def _value_cents(fills: list) -> float:
                      if v is not None))
 
 
+#: REV 111 / DE 162: THE MODULES WHOSE BYTES DETERMINE A BOOK'S SCORES.
+#: A book caches its assembly, so the scoring code that built it is part
+#: of the book's identity -- and it was the only SILENT pin site on the
+#: critical path: every other site refuses by name, this one had nothing
+#: at all. It is true of EVERY book on disk right now, which is the point.
+SCORING_PATH_MODULES = (
+    "de_phase4_diag_runner.py", "de_head_scoring.py", "de_score_stream.py",
+    "harmful_stateful_policy.py", "phase2_arms.py")
+BOOK_SCORING_DIFFERS = "BOOK_BUILT_BY_DIFFERENT_SCORING_CODE"
+BOOK_SCORING_UNRECORDED = "BOOK_SCORING_CODE_NOT_RECORDED"
+
+
+def assert_book_scoring_code(receipt: dict, *, where: str,
+                             root=None) -> dict:
+    """The book's scores were produced by THESE bytes -- checked.
+
+    A day book carries its assembly, so a book built by different scoring
+    code is a different book however its own digest verifies. The builder
+    receipt records its import closure; this compares the SCORING-PATH
+    modules in it against the files on disk and refuses BY NAME, with each
+    module and BOTH digests.
+
+    ABSENCE IS A REFUSAL, NOT A PASS (rule 11): a receipt whose closure
+    names none of these modules cannot say what scored the book, and
+    reading that as agreement is the silence this predicate replaces."""
+    mods = (((receipt or {}).get("producing_code") or {})
+            .get("import_closure") or {}).get("modules") or {}
+    root = Path(root) if root is not None else Path(__file__).resolve().parent
+    recorded = {m: d for m, d in mods.items() if m in SCORING_PATH_MODULES}
+    if not recorded:
+        raise RunnerRefused(
+            f"REFUSED {BOOK_SCORING_UNRECORDED} at {where}: the builder "
+            f"receipt's import closure names none of "
+            f"{list(SCORING_PATH_MODULES)}, so nothing says which scoring "
+            f"code produced this book's assembly. A book caches its "
+            f"scores; an unrecorded scorer is not a verified one.")
+    differ = []
+    for name, declared in sorted(recorded.items()):
+        f = root / name
+        if not f.is_file():
+            differ.append({"module": name, "declared": declared,
+                           "actual": "ABSENT"})
+            continue
+        actual = hashlib.sha256(f.read_bytes()).hexdigest()
+        if not actual.startswith(str(declared)[:16]):
+            differ.append({"module": name, "declared": str(declared),
+                           "actual": actual})
+    if differ:
+        raise RunnerRefused(
+            f"REFUSED {BOOK_SCORING_DIFFERS} at {where}: this book's "
+            f"assembly was produced by scoring code that is not the code "
+            f"on disk -- {differ}. The book's own digest verifies and says "
+            f"nothing about this: the scores are IN the book, so different "
+            f"scoring code makes it a different book. Rebuild it, or read "
+            f"it with the code that made it.")
+    return {"status": "BOOK_SCORING_CODE_MATCHES",
+            "modules_checked": sorted(recorded),
+            "n_checked": len(recorded), "where": where}
+
+
+CACHE_NO_CODE_PIN = "CACHE_HAS_NO_SCORING_CODE_PIN"
+
+
+def assert_cache_code_pin(cache_path, *, root=None) -> dict:
+    """REV 111 site 4: `de_section81_cache_12.pkl` has NO code pin at all.
+
+    Four BE modules read it as their default reference and nothing records
+    which scoring code built its assembly -- not even the closure a day
+    book's receipt carries. This NAMES the gap instead of letting the
+    cache be read as though it were pinned: it looks for a sidecar
+    `<cache>.code_closure.json` of the shape a builder receipt uses and
+    REFUSES when there is none. Writing that sidecar is the cache owner's
+    act; refusing without it is this function's."""
+    c = Path(cache_path)
+    side = c.with_suffix(c.suffix + ".code_closure.json")
+    if not side.is_file():
+        raise RunnerRefused(
+            f"REFUSED {CACHE_NO_CODE_PIN}: {c.name} is read as a default "
+            f"reference by four BE modules and nothing on disk records "
+            f"which scoring code produced its assembly -- no builder "
+            f"receipt and no {side.name}. An unpinned cache is not a "
+            f"verified one, and this one predates the causal repair.")
+    return assert_book_scoring_code(json.loads(side.read_text()),
+                                    where=f"the cache pin for {c.name}",
+                                    root=root)
+
+
 def _stamp_now() -> str:
     """The clock, for a control set's name. Read here, never typed."""
     return datetime.datetime.now(datetime.timezone.utc).strftime(
@@ -7519,6 +7607,25 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     book_path = Path(book_path)
     receipt = builder_receipt_for(book_path, day, params.get("coin", "btc"))
     bookcite = verify_book_against_builder_receipt(day, book_path, receipt)
+    # ---- REV 111 / DE 162: WHICH SCORING CODE BUILT THIS BOOK --------
+    # The only pin site on the critical path that was SILENT. A book
+    # caches its assembly, so scoring code that is not the code on disk
+    # makes it a different book -- and its own digest says nothing about
+    # that. THE FIXTURE EXEMPTION IS THE GATE, not a note beside it: a
+    # synthetic book is built in-process by this very code, so there is no
+    # builder closure to compare and the exemption is recorded, by name,
+    # in the receipt.
+    if fixture:
+        _scode = {"status": "NOT_CHECKED_FIXTURE_BOOK",
+                  "why": ("a synthetic book is built in-process by the "
+                          "code under test; there is no independent "
+                          "builder closure to compare against"),
+                  "modules_that_would_be_checked":
+                      list(SCORING_PATH_MODULES)}
+    else:
+        _scode = assert_book_scoring_code(
+            json.loads(Path(receipt).read_text()),
+            where=f"the day path for {day}")
     book_sha = bookcite["sha256"]
     mod, cite = import_be_cascade(params, module=module)
     if not fixture:
@@ -8109,6 +8216,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # R-810: WHAT MAKER THIS DAY MEASURED, from the book's own
         # builder receipt rather than from a sentence here.
         "placement_latency": _plat,
+        "book_scoring_code": _scode,
         # ---- DE 155 (1): THE DECISION IS CAUSAL NOW, AND THE THRESHOLD
         # ---- IT IS COMPARED AGAINST WAS NOT FITTED FOR IT.
         # Carried on every receipt because a reader who does not know this
@@ -9564,6 +9672,44 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 f"R-599's second leak, and it fires on a REFUSED arm-day, "
                 f"exactly where the numbers are most tempting",
                 "carries the VALUE of a sealed quantity")
+    # ---- REV 111 / DE 162: THE BOOK'S SCORING CODE, BOTH DIRECTIONS ---
+    _here162 = Path(__file__).resolve().parent
+    _good162 = {"producing_code": {"import_closure": {"modules": {
+        m: hashlib.sha256((_here162 / m).read_bytes()).hexdigest()
+        for m in SCORING_PATH_MODULES}}}}
+    _okc = assert_book_scoring_code(_good162, where="the battery")
+    _bad162 = {"producing_code": {"import_closure": {"modules": dict(
+        _good162["producing_code"]["import_closure"]["modules"],
+        **{"de_phase4_diag_runner.py": "0" * 64})}}}
+    _r1c = _r2c = _r3c = None
+    try:
+        assert_book_scoring_code(_bad162, where="the battery")
+    except RunnerRefused as _e:
+        _r1c = str(_e).split(":")[0].replace("REFUSED ", "").split(" at ")[0]
+    try:
+        assert_book_scoring_code(
+            {"producing_code": {"import_closure": {"modules": {
+                "be_daybook_build.py": "a" * 64}}}}, where="the battery")
+    except RunnerRefused as _e:
+        _r2c = str(_e).split(":")[0].replace("REFUSED ", "").split(" at ")[0]
+    try:
+        assert_cache_code_pin(Path(DR.resolve()["data_root"])
+                              / "pm_5min/derived/de_section81_cache_12.pkl")
+    except RunnerRefused as _e:
+        _r3c = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_okc["status"] == "BOOK_SCORING_CODE_MATCHES"
+       and _okc["n_checked"] == len(SCORING_PATH_MODULES)
+       and _r1c == BOOK_SCORING_DIFFERS and _r2c == BOOK_SCORING_UNRECORDED
+       and _r3c == CACHE_NO_CODE_PIN,
+       f"REV 111 THE ONLY SILENT PIN SITE IS NAMED NOW: a closure matching "
+       f"the {_okc['n_checked']} scoring-path modules on disk is ADMITTED; "
+       f"one module moved refuses `{_r1c}` with both digests; a closure "
+       f"naming NONE of them refuses `{_r2c}` rather than passing, because "
+       f"a receipt that cannot say what scored the book is not agreement "
+       f"(rule 11); and the cache four BE modules read as their default "
+       f"reference refuses `{_r3c}` -- it has no code pin AT ALL and "
+       f"predates the causal repair")
+
     # ---- DE 161: THE GUARD COMPARES NUMBERS, NOT SUBSTRINGS ----------
     # It flagged `len(f) >= 3 and f in text`. That is wrong in BOTH
     # directions of magnitude and it was luck that only one path reached a

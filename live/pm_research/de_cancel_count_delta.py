@@ -243,8 +243,17 @@ def measure_book(book_path, day: str, *, params=None, split_of=None) -> dict:
     t0 = time.time()
     P = params or R.load_params()
     coin = P.get("coin", "btc")
+    # REV 111 / DE 162: the same predicate, at the same strength, here --
+    # this module reads a book's cached assembly directly, so a book built
+    # by different scoring code would give a delta between two things that
+    # are not what the caller thinks they are.
+    _rp = R.builder_receipt_for(Path(book_path), day, coin)
+    scode = R.assert_book_scoring_code(
+        json.loads(Path(_rp).read_text()),
+        where=f"the cancel-count measurement for {day}")
     bk = B.load(Path(book_path))
     out = {"protocol": PROTOCOL, "day": day, "book": str(book_path),
+           "book_scoring_code": scode,
            "book_sha256": bk["source_sha256"], "params_file": R.PARAMS_REL,
            "arms": {}}
     for arm, spec in P["arms"].items():

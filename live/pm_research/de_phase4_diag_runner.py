@@ -85,7 +85,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 222
+EXPECTED_CHECKS = 225
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -4701,8 +4701,12 @@ def selftest() -> int:
                        for i in range(len(rows))],
                 "ST": [[0.3 * (i + 1)] * _nst for i in range(len(rows))],
                 "kept": rows}
-    _fixref = {"s1": {HSP.SIDES[0]: [{"gen": 0, "t0": 100.0},
-                                     {"gen": 1, "t0": 400.0}],
+    # DE 162 / DA 139: THE FIXTURE CARRIES `t1`. It did not, so the
+    # upper bound this round adds was unexercised by the battery that was
+    # meant to cover this function -- a fixture missing the very field the
+    # guard reads is a cell that cannot fail.
+    _fixref = {"s1": {HSP.SIDES[0]: [{"gen": 0, "t0": 100.0, "t1": 200.0},
+                                     {"gen": 1, "t0": 400.0, "t1": 500.0}],
                       HSP.SIDES[1]: []}}
     # DE 155 (1): THE FIXTURE IS NOW COHERENT WITH THE REAL ROWS, and it
     # was not before: it paired generations at t0 100/400 with rows at
@@ -4906,6 +4910,75 @@ def selftest() -> int:
        f"NAMED UNKNOWN, never a 0 that reads as 'none partial'. My filing "
        f"that this needed BE was wrong: REV found it derivable from "
        f"`split_of`, which this function already receives")
+
+    # ---- DE 162 / DA 138 + DA 139: THE WINDOW CLOSES BOTH -------------
+    # (a) A row AFTER its generation's t1 is excluded WITH A STATUS.
+    _rows162 = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                 "t_start": 100.0},
+                {"slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                 "t_start": 250.0},          # past t1 = 200.0
+                {"slug": "s1", "side": HSP.SIDES[0], "gen": 1,
+                 "t_start": 400.0}]
+    _gs162, _st162, _ = generation_scores(_blk(_rows162), _fixref,
+                                          coin="btc",
+                                          head="incumbent_linear_d")
+    ok(_st162["ROW_AFTER_GENERATION_END"] == 1
+       and _st162["ROWS_SCORED"] == 2
+       and ("s1", HSP.SIDES[0], 250.0) not in _gs162
+       and _st162["ROWS_SCORED"] == len(_gs162),
+       f"DE 162 (a) A ROW PAST ITS GENERATION'S END IS EXCLUDED BY NAME: "
+       f"t=250.0 sits after gen 0's t1=200.0 and is counted as "
+       f"ROW_AFTER_GENERATION_END ({_st162['ROW_AFTER_GENERATION_END']}), "
+       f"not clamped back -- a clamp would move its information EARLIER, "
+       f"which is the look-ahead this whole repair removed. "
+       f"{_st162['ROWS_SCORED']} rows scored, {len(_gs162)} keys")
+
+    # (b) DA's INVARIANT, and a known-bad that makes it fire. Two
+    # generations of one (slug, side) whose windows OVERLAP -- which
+    # `validate_reference` refuses, but `generation_scores` can be handed
+    # -- put two scored rows on ONE key, and the EARLIER one loses.
+    _ovref = {"s1": {HSP.SIDES[0]: [{"gen": 0, "t0": 100.0, "t1": 500.0},
+                                    {"gen": 1, "t0": 100.0, "t1": 500.0}],
+                     HSP.SIDES[1]: []}}
+    _ovrows = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                "t_start": 300.0},
+               {"slug": "s1", "side": HSP.SIDES[0], "gen": 1,
+                "t_start": 300.0}]
+    _coll = None
+    try:
+        generation_scores(_blk(_ovrows), _ovref, coin="btc",
+                          head="incumbent_linear_d")
+    except DiagRefused as _e:
+        _coll = str(_e).split(":")[0]
+    ok(_coll == "SCORE_KEY_COLLISION"
+       and _st162["ROWS_SCORED"] == len(_gs162),
+       f"DE 162 (b) DA's INVARIANT, BOTH WAYS: two generations sharing a "
+       f"row time collapse onto the key (slug, side, t) -- which no longer "
+       f"names the generation -- and the EARLIER one is overwritten; the "
+       f"invariant ROWS_SCORED == len(scores) fires `{_coll}`. It ADMITS "
+       f"the well-formed fixture ({_st162['ROWS_SCORED']} == "
+       f"{len(_gs162)}), so it is a measurement and not a constant. In "
+       f"production the collision was SILENT: `load()` refuses only when "
+       f"the map is entirely empty")
+
+    # (c) WHICH OF THE TWO THE FIX CLOSES. The engine's `_on_score` still
+    # never reads `s["gen"]` -- that is unchanged and deliberate. What
+    # changes is that every event now lies INSIDE its own generation's
+    # window, and `validate_reference` refuses overlapping generations, so
+    # the live generation at `t` IS the one the event names.
+    _t_out = 250.0
+    ok(_gs162[("s1", HSP.SIDES[0], 100.0)]["gen"] == 0
+       and _gs162[("s1", HSP.SIDES[0], 400.0)]["gen"] == 1
+       and ("s1", HSP.SIDES[0], _t_out) not in _gs162,
+       f"DE 162 (c) WHAT THE FIX ACTUALLY CLOSES: the KEY collision (DA "
+       f"138) is closed by the window, because non-overlapping windows "
+       f"make two generations of one (slug, side) unable to share a `t`. "
+       f"The ENGINE (DA 139) is NOT changed -- `_on_score` still routes by "
+       f"time and never reads `s['gen']` -- but the MISATTRIBUTION is "
+       f"closed, because an event past its generation's end no longer "
+       f"exists to be routed to the next one. The label is now checkable "
+       f"rather than inert, and t={_t_out} is absent instead of silently "
+       f"becoming gen 1's")
 
     # ---- DE 158: THE READER'S ROWS ARE THE OTHER HALF OF DE 155 (1) ---
     # `be_cancel_axis_null.load()` derives the decision stream from the
@@ -9031,7 +9104,8 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
     scores: dict = {}
     split_by_gen: dict = {}
     statuses = {"SCORED": 0, "NO_ROWS_KEPT": 0, "PARTIAL_ROWS": 0,
-                "ROWS_SCORED": 0, "ROW_BEFORE_GENERATION_START": 0}
+                "ROWS_SCORED": 0, "ROW_BEFORE_GENERATION_START": 0,
+                "ROW_AFTER_GENERATION_END": 0}
     for slug, sides in reference.items():
         for side in HSP.SIDES:
             for g in sides[side]:
@@ -9066,8 +9140,28 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                 # handed more than one event per generation. So the repair
                 # is entirely here, in how the stream is BUILT.
                 _t0 = float(g["t0"])
+                # ---- DE 162 / DA 139: THE GENERATION'S OWN WINDOW ------
+                # `_GEN_REQUIRED` already carries `t1` and the exclusion
+                # below applied only a LOWER bound, so a row could sit
+                # after its generation ended. Bounding by `t1` closes DA
+                # 138 AND DA 139 at this one site: non-overlapping windows
+                # make two generations of one (slug, side) unable to share
+                # a `t` (so the key cannot collide), and an event past its
+                # generation's end no longer exists to be routed to the
+                # NEXT generation while carrying the previous one's label.
+                # The engine is unchanged: `_on_score` still routes by
+                # time and never reads `s["gen"]` -- what changes is that
+                # the label and the routing now agree by construction.
+                _t1 = float(g["t1"]) if g.get("t1") is not None else None
                 per_t: dict = {}
                 for t, sc in got:
+                    if _t1 is not None and t > _t1 + 1e-9:
+                        # An EXCLUSION WITH A STATUS (rule 4). Never
+                        # clamped back: a clamp would move the row's
+                        # information EARLIER, which is the look-ahead
+                        # this whole repair removed.
+                        statuses["ROW_AFTER_GENERATION_END"] += 1
+                        continue
                     if t < _t0 - 1e-9:
                         # A row whose information predates the quote cannot
                         # act on it. An EXCLUSION WITH A STATUS (rule 4),
@@ -9093,6 +9187,23 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                     "UNLABELLED" if sp == {None}
                     else "MIXED" if len(sp) > 1 else sorted(sp)[0])
                 statuses["SCORED"] += 1
+    # ---- DE 162 / DA 138: THE INVARIANT OF THE REPAIRED DESIGN -------
+    # Every row this function SCORED must be a key in `scores`. DA's
+    # invariant, adopted verbatim: it fires whenever two scored rows
+    # collapse onto one key, whatever the cause, and it would have caught
+    # the collision that prompted it.
+    if statuses["ROWS_SCORED"] != len(scores):
+        raise DiagRefused(
+            f"SCORE_KEY_COLLISION: {statuses['ROWS_SCORED']} rows were "
+            f"scored and the score map holds {len(scores)} keys, so "
+            f"{statuses['ROWS_SCORED'] - len(scores)} row(s) were "
+            f"overwritten. The key is (slug, side, t) and does not name "
+            f"the generation, so two generations of one (slug, side) "
+            f"sharing a row time collapse and the EARLIER one loses. In "
+            f"production this is SILENT: `be_cancel_axis_null.load()` "
+            f"derives its rows from this map and refuses only when the "
+            f"map is ENTIRELY empty.")
+
     # ---- DE 158 (5), REV 107: COMPUTED, from `split_of` -------------
     # `split_of` is built over `PA.tape_index(sp)` -- the tape rows as
     # INDEXED, before the feature pass drops anything -- and is keyed
