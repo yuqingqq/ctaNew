@@ -417,6 +417,41 @@ battery, spawned as a SUBPROCESS, through `be_rule22.shared_falsifier(prog=…)`
 cell that can only fail. `EXPECTED_CHECKS` in the shared module must count
 the cells the failure branch also prints, or the count guard fires.
 
+## 6f. RULE 28 ON THIS SURFACE (BE 114)
+
+*The pipeline records the right thing and leaves the check that would make it
+load-bearing switched off.* `be_rule28_sweep.py --sweep` is the census;
+`--falsify` proves it can fire. **It grades PRESENCE, not IDENTITY** -- what
+happens when a caller passes nothing -- so a clean `on_omission` column is
+not a clean surface: two of BE 114's three fixes were about whether the value
+PASSED was the right one, and the census classifies both as SUBSTITUTES,
+correctly and unhelpfully.
+
+**Three that were real, all mine, two of them one round old:**
+
+1. **A supply must name its own day.** `day_slugs(supply=...)` and
+   `mask_block(sup, …)` read only `windows`/`counts`; the supply carries
+   `day`. Harmless while `supply=` was falsifier-only; **BE 113 made it a
+   production argument.** Now `SUPPLY_IS_FOR_A_DIFFERENT_DAY`,
+   `SUPPLY_DOES_NOT_NAME_ITS_DAY`, `MASK_SUPPLY_IS_FOR_A_DIFFERENT_DAY`.
+2. **`if x is False` is not `if not x`.** `mask_block` refused only on
+   `closes is False`, so a supply MISSING the counts gave `closes = None` and
+   emitted three nulls beside `arithmetic_closes: null`. Now
+   `MASK_COUNTS_ABSENT`.
+3. **THE SELECTOR'S SECOND RETURN VALUE IS A STATUS FIELD.**
+   `build_reference` does `selected, n_bn_gap = selector(...)` ->
+   `statuses["BINANCE_GAP_EXCLUDED"]`; `build_rows` -> the fragment's
+   `windows_excluded_binance_gap`. `select_v2_era` MEASURES it; both of my
+   day selectors returned a hardcoded `0`. **Measured 2026-09-09: 3 of
+   09-03's 247 windows fail `binance_continuity_ok`** (three real Binance
+   gaps, 409 s to compute), so the zero is not harmless by coincidence. The
+   zero stays -- changing the population is not this seat's call -- and a
+   DISCLOSURE travels beside it so a reader can tell a selector property from
+   a measurement.
+
+**When you add a producer that returns evidence, add the consumer's refusal
+in the same change, and default the safe call, not the short one.**
+
 ## 7. What I have learned the hard way
 
 * **`?? data` is correct**; anything more is not. See §0.
