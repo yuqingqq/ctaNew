@@ -23945,6 +23945,22 @@ EARLY READ -- day 2026-09-04 -- EXPLORATORY, G 4, point estimates, NO INTERVAL, 
 **METHOD NOTE WORTH KEEPING: DA measured the gap WITHOUT the lock and WITHOUT the book, at 1/100 scale, when taking the lock was the obvious move and was what I had explicitly told it not to do an hour earlier after it blocked DE's launch. An answer that costs nothing to obtain is worth more than a better answer that blocks the user's run.**
 **QUEUE AS IT NOW STANDS: 09-05 building → BE RELEASES the lock → DE retries the 09-04 point estimate in the gap (the guard fix at `:11339` makes it possible, REV 150 is verifying it first) → 09-06 builds → DA's timed draw, on a CONSUMED day per rule 34, settling the CANCELS-path memory AND the unestablished wall clock in one unit.**
 
+### R-876 — 2026-09-09T18:15:18Z — coordinator — **THE FIRST NUMBER SINCE THE RETRACTION. The 09-04 point estimate EMITTED, the two-sided reconciliation PASSED on real data, and the corrected book reproduces the WITHDRAWN figures to the cent — which is either a confirmation or a tautology, and both seats are on it.**
+**THE ARTIFACT:** `p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json`, sha256 `c11c2a8c5fa5149611ff58f0cf2f167339fe98b9524a89f54091283fa35afbed`, 1,313,281 B, emitted 17:59:38Z. `run_mode: POINT_ESTIMATE`, `status: DAY_RUN_UNSEALED`, superseding `...20260908T121711Z` with `PLACEMENT_LATENCY_AGREES`. Unit `dePE0904retry`, rc 0, ~3 min 45 s.
+| | corrected EV21 | withdrawn table row |
+|---|---|---|
+| all tranches | **102,193.68861109993 c** | ~~102,193.69~~ |
+| KEPT (L=250) | **38,452.90807249997 c** | ~~38,452.91~~ |
+| DROPPED | **63,740.78053859994 c** | — |
+| dropped share | **62.372522 %** | −62.373 % |
+**THE RECONCILIATION RAN ON REAL DATA AND PASSED BOTH SIDES** — not a fixture: `legs_close: True`; `kept_equals_the_baseline: True` against `baseline_total_cents_from_the_ledger` **38,452.9080725**; **both legs independently cross-checked by direct arithmetic** (KEPT agreeing to ~1e-10, DROPPED exactly); `n_generations` 358,108 and `n_with_the_dropped_key` 358,108; `arms_agreed_on_all_three_inputs: True`; `n_arm_days_that_handed_over: 2`. **This is BE 138's two-sided fix and DE 181's driver wiring earning their keep on a real book.**
+**THE INFERENCE I DREW, FLAGGED AS AN INFERENCE BECAUSE IT MAY BE A TAUTOLOGY.** The corrected book was built over **52 gap-bearing windows** where the retracted build had **ZERO**, and the day totals are IDENTICAL. I wrote that up as *the era contamination was STRUCTURAL, not arithmetic* — DA's own argument, that no fill lands inside a gap interval. **But if both runs draw the day total from a common upstream input the era never touched, agreement is GUARANTEED and proves nothing about the correction.** DA 180 has the arithmetic and provenance; REV 151 has the inference, with instructions to say so plainly if it is circular. **I would rather withdraw the sentence than have the first post-retraction claim rest on a circularity — it is not asserted here until one of them establishes it.**
+**WHAT THE NUMBER IS NOT, from the artifact's own fields and not from my summary: `DROPPED` is an UPPER BOUND on the latency effect, NOT the effect — a dropped tranche arrived before the quote could rest, which is not the same as money the maker would have kept. ONE DAY IS A POINT ESTIMATE WITH NO INTERVAL (rule 8, >= 5 complete UTC days). NO NULL DRAWN. BTC-ONLY (R-869).**
+**STILL OPEN AND ROUTED: DE 183 — `:8891` still sets `"status": "PERFORMED_BY_POINT_ESTIMATE_DRIVER"` as a LITERAL with no conditional anywhere in the module (verified after the user's commit `68f3c64`). On the full-null path a receipt claims a reconciliation the driver never ran, and unlike today no driver-side `RECONCILE_INPUTS_ABSENT` covers that path. THE NULL IS THE NEXT THING WE RUN.**
+**CLOSED: DE 189 (`51ebf13`) names the absent complement leg instead of REV 150's false boolean — rule 35's fifth instance, shut before 09-03 runs. REV 151 is verifying it.**
+**PROCESS FAILURE, MINE: the heavy lock sat FREE AND IDLE for FOURTEEN MINUTES after the retry because BE 146 said "launch when the retry finishes" and BE's TURN ENDED before the retry did. A hand-off that depends on a seat still being awake is not a hand-off — arm a poller that survives the turn boundary, or hand off to a Monitor.**
+**09-06 launched 18:14Z, the last of the four corrected books.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
