@@ -215,18 +215,115 @@ def load(path: Path | None = None) -> dict:
     c = pickle.loads(buf)
     ref, asm = c["fr"]["reference"], c["asm"]
     scored = asm["by_arm"][(COIN, ARMS["CONDVALUE_X_SKEW"]["head"])][0]
-    rows = [{"t": g["t0"], "slug": s_, "side": sd, "gen": g["gen"]}
-            for s_, sides in sorted(ref.items()) for sd in HSP.SIDES
-            for g in sides[sd] if (s_, sd, float(g["t0"])) in scored]
+    # ---- BE 107: ONE ROW PER SCORED ROW, NOT ONE PER GENERATION --------
+    # After the look-ahead repair the book's `asm` carries PER-ROW scores,
+    # each with its own `gen` and `t0`. The previous expression walked the
+    # REFERENCE's generations and looked each one up at `float(g["t0"])`, so
+    # it admitted at most one row per generation AND only if that row sat
+    # exactly at the generation's start. On a corrected book that is neither
+    # the old max-aggregation nor the specified first-crossing rule -- it is
+    # a third thing (first-row-only), and it would have been measured
+    # silently. Verified at this module rather than taken on report: the old
+    # key was `(s_, sd, float(g["t0"]))` and the iteration was over `ref`.
+    #
+    # Sorted for determinism. The empty-population refusal is unchanged.
+    # TWO SHAPES, AND THE DISPATCH'S EXPRESSION ONLY HANDLES ONE. Verified
+    # at this module rather than taken on report: on a PRE-FIX book the
+    # values of `scored` are FLOATS (one score per generation, keyed at the
+    # generation's t0), which is why the old expression took `gen` from the
+    # REFERENCE. `v["gen"]` raises TypeError on every book built before the
+    # look-ahead repair. So the shape is detected and NAMED, and `gen` comes
+    # from the value where the value carries it and from the reference where
+    # it does not -- both faithful to their own book, neither silent.
+    _gen_at = {(s_, sd, float(g["t0"])): g["gen"]
+               for s_, sides in ref.items() for sd in HSP.SIDES
+               for g in sides.get(sd, ())}
+    _per_row = any(isinstance(v, dict) and "gen" in v for v in scored.values())
+    _shape = "PER_ROW_SCORES" if _per_row else "PER_GENERATION_SCORES"
+    if _per_row:
+        rows = [{"t": t, "slug": s_, "side": sd, "gen": v["gen"]}
+                for (s_, sd, t), v in sorted(scored.items())]
+    else:
+        _miss = [k for k in scored if k not in _gen_at]
+        if _miss:
+            raise CancelNullRefused(
+                f"REFUSED: {len(_miss)} scored key(s) carry no `gen` and are "
+                f"not at any reference generation's t0 (first: {_miss[0]}). "
+                f"A row whose generation cannot be named is not a row this "
+                f"null can draw.")
+        rows = [{"t": t, "slug": s_, "side": sd, "gen": _gen_at[(s_, sd, t)]}
+                for (s_, sd, t) in sorted(scored)]
     if not rows:
         raise CancelNullRefused("REFUSED: the scored generation population "
                                 "is empty; there is nothing to decide over.")
+    # ---- AND THE EXCLUSIONS GET A NAME AND A COUNT ---------------------
+    # A generation that no longer reaches `rows` used to vanish in silence,
+    # which is a population change nobody could see (rule 4: an exclusion is
+    # a status with a count, never an absence). Two distinct facts, counted
+    # separately because they are different faults:
+    _ref_gens = {(s_, sd, g["gen"])
+                 for s_, sides in ref.items() for sd in HSP.SIDES
+                 for g in sides.get(sd, ())}
+    _scored_gens = {(s_, sd, (v["gen"] if isinstance(v, dict) and "gen" in v
+                              else _gen_at.get((s_, sd, _t))))
+                    for (s_, sd, _t), v in scored.items()}
+    _scored_gens = {k for k in _scored_gens if k[2] is not None}
+    _first_t = {}
+    for (s_, sd, t), v in scored.items():
+        k = (s_, sd, v["gen"] if isinstance(v, dict) and "gen" in v
+             else _gen_at.get((s_, sd, t)))
+        if k[2] is None:
+            continue
+        if k not in _first_t or t < _first_t[k]:
+            _first_t[k] = t
+    _t0_of = {(s_, sd, g["gen"]): float(g["t0"])
+              for s_, sides in ref.items() for sd in HSP.SIDES
+              for g in sides.get(sd, ())}
+    _late = sum(1 for k, t in _first_t.items()
+                if k in _t0_of and float(t) != _t0_of[k])
+    exclusions = {
+        "score_shape": _shape,
+        "score_shape_meaning":
+            "PER_ROW_SCORES: the book carries one scored entry per DECISION "
+            "ROW, each with its own `gen` and `t0` (a book built through the "
+            "corrected scorer). PER_GENERATION_SCORES: one float per "
+            "generation keyed at its t0 (every book built before the "
+            "look-ahead repair). The dispatch's one-expression change "
+            "assumes the first and raises TypeError on the second, so both "
+            "are handled and the shape found is reported.",
+        "GENERATION_NOT_SCORED": len(_ref_gens - _scored_gens),
+        "GENERATION_NOT_SCORED_meaning":
+            "a reference generation with NO scored row at all -- it reaches "
+            "`rows` under neither the old rule nor this one, and it is "
+            "counted here instead of vanishing",
+        "FIRST_SCORED_ROW_NOT_AT_GENERATION_START": _late,
+        "FIRST_SCORED_ROW_NOT_AT_GENERATION_START_meaning":
+            "a scored generation whose earliest scored row is NOT at the "
+            "generation's `t0`. The PREVIOUS expression dropped every one of "
+            "these silently, because it looked the generation up at t0 and "
+            "found nothing; they are admitted now and counted so the change "
+            "in population is visible rather than inferred",
+        "n_reference_generations": len(_ref_gens),
+        "n_scored_generations": len(_scored_gens),
+        "n_rows": len(rows),
+        "rows_per_scored_generation": (round(len(rows) / len(_scored_gens), 4)
+                                       if _scored_gens else None),
+        "what_this_does_NOT_change":
+            "the null's SAMPLING is untouched by this round. `rows` is also "
+            "the control's sampling unit, so a per-row `rows` changes what a "
+            "draw draws and the matched action count stops being the arm's "
+            "cancel count -- that is a DESIGN question with the USER and no "
+            "control is drawn on a corrected book until it is ruled (BE 107 "
+            "dispatch). This change makes `rows` faithful to the book; it "
+            "does not re-specify the matching.",
+    }
     # RULE 10 FROM OUTSIDE THIS WORKTREE, AND NOW OF THE RIGHT BYTES. The
     # book is a pickle with no digest anywhere: the 3-point reproduction gate
     # satisfies rule 10 BEHAVIOURALLY, and this makes it checkable by bytes.
     # `source_sha256` is now taken from the SAME buffer that was unpickled
     # (B-1); `read_once` records that so a reader need not trust the claim.
     return {"ref": ref, "asm": asm, "rows": rows,
+            "exclusions": exclusions,
             "n_gens_with_fills": R.generations_with_fills(ref),
             "source": str(p),
             "source_sha256": digest,
@@ -701,7 +798,7 @@ def run(outdir: Path | None = None, *, n_draws: int = N_DRAWS,
     return out
 
 
-EXPECTED_CHECKS = 23      # BE 96: +4, the position at every fill
+EXPECTED_CHECKS = 25      # BE 107: +2, per-row `rows` and its named exclusions      # BE 96: +4, the position at every fill
 
 
 def selftest() -> int:
@@ -922,6 +1019,66 @@ def selftest() -> int:
        f"could disagree with it -- and the SOURCE records which level "
        f"answered, the tranche's or the generation's, which the estimator "
        f"computed and dropped")
+
+    # ---- BE 107: `rows` IS PER-ROW, AND THE OLD RULE IS THE KNOWN-BAD ---
+    # DE established the defect; this drives it on MY surface, because the
+    # null's contract is this module's. The fixture is the exact shape the
+    # dispatch names: ONE generation whose FIRST row is below theta and whose
+    # LATER row crosses. Under the old expression it is one row (the first,
+    # below theta) or none at all; under the new one it is both rows, so a
+    # first-crossing rule can see the crossing.
+    import pickle as _pk107, tempfile as _tf107
+    _THETA = 0.5
+    _g0, _g1 = 100.0, 130.0            # one generation, two scored rows
+    _scored = {("w1", "BUY_UP", _g0): {"gen": 1, "t0": _g0, "score": 0.10},
+               ("w1", "BUY_UP", _g1): {"gen": 1, "t0": _g0, "score": 0.90},
+               # a SECOND generation whose first scored row is NOT at t0 --
+               # the class the old expression dropped in silence
+               ("w1", "SELL_UP", 260.0): {"gen": 2, "t0": 250.0, "score": 0.7}}
+    _ref107 = {"w1": {"BUY_UP": [{"gen": 1, "t0": _g0, "t1": 200.0,
+                                  "level": 0.5, "displayed": 5.0,
+                                  "tranches": []}],
+                      "SELL_UP": [{"gen": 2, "t0": 250.0, "t1": 300.0,
+                                   "level": 0.5, "displayed": 5.0,
+                                   "tranches": []}]}}
+    _bk107 = {"fr": {"reference": _ref107},
+              "asm": {"by_arm": {(COIN, ARMS["CONDVALUE_X_SKEW"]["head"]):
+                                 (_scored, {})},
+                      "assembly": {}}}
+    _p107 = Path(_tf107.mkdtemp(prefix="be107_")) / "book.pkl"
+    _p107.write_bytes(_pk107.dumps(_bk107))
+    _ld = load(_p107)
+    _rows = _ld["rows"]
+    _ex = _ld["exclusions"]
+    # THE OLD EXPRESSION, re-typed here ONLY as the known-bad it now is.
+    _old = [{"t": g["t0"], "slug": s_, "side": sd, "gen": g["gen"]}
+            for s_, sides in sorted(_ref107.items()) for sd in HSP.SIDES
+            for g in sides.get(sd, ())
+            if (s_, sd, float(g["t0"])) in _scored]
+    _gen1_new = [r for r in _rows if r["gen"] == 1]
+    _gen1_old = [r for r in _old if r["gen"] == 1]
+    ok(len(_rows) == 3 and len(_gen1_new) == 2 and len(_old) == 1
+       and len(_gen1_old) == 1
+       and sorted(r["t"] for r in _gen1_new) == [_g0, _g1],
+       f"KNOWN-BAD, THE OLD RULE, DRIVEN BESIDE THE NEW: generation 1 has a "
+       f"row below theta at t={_g0} and a CROSSING row at t={_g1}. The old "
+       f"expression yields {len(_old)} row(s) in total and {len(_gen1_old)} "
+       f"for that generation -- the first only, so the crossing is invisible "
+       f"-- while the new one yields {len(_rows)} and {len(_gen1_new)}, at "
+       f"t={sorted(r['t'] for r in _gen1_new)}. It also drops generation 2 "
+       f"entirely, whose first scored row is at 260.0 and whose t0 is 250.0")
+    ok(_ex["FIRST_SCORED_ROW_NOT_AT_GENERATION_START"] == 1
+       and _ex["GENERATION_NOT_SCORED"] == 0
+       and _ex["n_reference_generations"] == 2
+       and _ex["n_scored_generations"] == 2
+       and _ex["n_rows"] == 3,
+       f"AND THE EXCLUSIONS ARE NAMED AND COUNTED, not silent: "
+       f"FIRST_SCORED_ROW_NOT_AT_GENERATION_START={_ex['FIRST_SCORED_ROW_NOT_AT_GENERATION_START']} "
+       f"(generation 2, the class the old expression dropped without a "
+       f"word), GENERATION_NOT_SCORED={_ex['GENERATION_NOT_SCORED']}, "
+       f"{_ex['n_reference_generations']} reference generations, "
+       f"{_ex['n_scored_generations']} scored, {_ex['n_rows']} rows "
+       f"({_ex['rows_per_scored_generation']} per scored generation)")
 
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
