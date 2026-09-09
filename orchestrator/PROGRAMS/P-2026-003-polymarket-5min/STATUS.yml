@@ -67,6 +67,48 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T16:51:48Z (MEM ROUND 327 -- ***ALL FIVE OF THE USER'S REVIEW ITEMS ARE CLOSED AND THE 09-04 POINT ESTIMATE IS
+  RUNNING.*** ***ITEM 1 IS CLOSED AND IT IS THE LAST OF THE FIVE*** (`a1de5ee` + `451bd1f`, DE 181), **the
+  reconciliation wired IN THE DRIVER AND NOT THE SCORING-PATH RUNNER, per the user's own words -- WHICH I CONFIRMED
+  THREE WAYS: `de_point_estimate_day.py:425` reads `out = PLR.reconcile(first["reference"], first["winners"], ...`;
+  THE RUNNER CARRIES ZERO `reconcile(` CALLS AND THE DRIVER CARRIES TWO; AND `NOT_WIRED_PENDING_BE_138` IS GONE FROM
+  EVERY MODULE** -- *the reason being the programme fact recorded two rounds ago, that EDITING THE RUNNER WOULD STALE
+  EVERY BOOK.* **AND THE COORDINATOR RAN BOTH SELFTESTS RATHER THAN READING THEM: DRIVER 21/21, RUNNER rc 0**,
+  *recorded as RUN and not read because that distinction decided three findings tonight.* ***THE PART WORTH
+  PRESERVING: THE FALSIFIER FOUND A REAL DEFECT WHILE PROVING ITSELF -- A `shares: nan` RECONCILES CLEANLY ON BOTH
+  SIDES OF BE'S CHECKER, BECAUSE NaN COMPARES FALSE TO EVERYTHING, SO EVERY `abs(a - b) > tol` GUARD IS SATISFIED BY
+  IT RATHER THAN TRIPPED. FAIL-OPEN IN A CHECKER WHOSE JOB IS TO REFUSE.*** *This is the THIRD appearance of the
+  compares-False family tonight -- `score_events` naming NaN and admitting `+inf`, the builder testing `t0 == t1`
+  before finiteness, and now a tolerance guard SATISFIED by the one value that can never satisfy it honestly* --
+  ***A COMPARISON-BASED GUARD IS ONLY AS STRONG AS ITS ASSUMPTION THAT ITS INPUTS ARE ORDERED, AND NaN IS NOT.***
+  **NOTHING WAS EXPOSED: THE DRIVER CATCHES IT INDEPENDENTLY (`POINT_ESTIMATE_RECONCILIATION_NOT_FINITE`), SO THE
+  SECOND LINE OF DEFENCE CAUGHT WHAT THE FIRST LET THROUGH, AND BE 144 IS FIXING THE CHECKER.** ***R-869's SURVIVING
+  FINDING IS THAT THE PROGRAMME IS BTC-ONLY, AND I DROVE THE ZERO: SCANNING ALL 15 POINT-ESTIMATE ARTIFACTS GIVES
+  1,110 DISTINCT `btc-updown-5m-*` SLUGS AND **ZERO** `eth-updown-5m-*`*** (DA reports 3,618 btc; **the load-bearing
+  figure, ZERO eth, is identical**), **with NO `be_gate1_state_tape_receipt_<day>_eth.json` FOR ANY DAY and `COIN =
+  "btc"` a MODULE CONSTANT WITH NO CLI OVERRIDE, which I found at `be_gate1_state_tape.py:71`,
+  `be_gate1_fragment.py:93` and `be_generation_count_derivation.py:63`.** ***IT IS NOT A RULE-4 EXCLUSION AND NOT A
+  RULE-11 SELECTION -- THE SCOPE WAS NEVER REQUESTED, SO THERE IS NO DEFECT TO NAME AND NO SEAT TO ROUTE IT TO, AND
+  THAT IS PRECISELY WHY IT SURVIVED EVERY REVIEW UNTIL SOMEONE COUNTED THE SLUGS: THE INSTRUMENTS BUILT TO CATCH
+  SILENT DROPS CANNOT SEE A POPULATION THAT WAS NEVER OFFERED.*** **BUT IT BINDS QUOTATION ANYWAY, BECAUSE ETH DATA
+  EXISTS AND PASSES DAY QUALITY AND Q-BE-156 TOOK THE FREEZE LAYER BOTH COINS UNSCOPED** -- *the freeze's scope and
+  the evidence's scope disagree, so nothing may be quoted without the btc-only qualifier.* ***THE 09-04 EV21 BOOK IS
+  BUILT AND I HASHED IT MYSELF: `d8a6ffe13dbd48fff0085700584bc6b15cdf3c0ea222626cde079c922ded602a`, A
+  CHARACTER-FOR-CHARACTER MATCH, AT 383,210,163 BYTES, WALL 4,444.4 s, PEAK RSS 5.175 GB, WITHIN BUDGET AND CAP***
+  (*the day BE priced as BINDING at ~82 % came in comfortably under*), ***AND IT IS THE FIRST 09-04 BOOK NOT
+  ASSEMBLED AS IF THE TAPE WERE CONTINUOUS: I READ EVERY FIGURE AT THE RECEIPT -- `selection.era = "clob_v4_1"`
+  RESOLVED FROM THE DAY (era=None ON EVERY RETRACTED BUILD), `n_gap_bearing_windows = 52` (ZERO BEFORE BE 113),
+  `placement_latency_split` PRESENT ON BOTH LEGS, `n_generations` 358,110, `TRANCHE_BEFORE_PLACEMENT_LATENCY` 31,471,
+  COVERAGE 0.9175388 WITH 29,530 UNCOVERED OF 358,108 CARRIED AS A REPORTED NUMBER.*** **DA'S Q-DA-386 VERIFIED
+  THREE OF THE FIVE AND MOVED ONE UPWARD: THE 09-03 CANCEL INCIDENCE IS UNRECOVERABLE, NOT MERELY UNREPORTED -- NO
+  CANCEL ROW KIND EXISTS IN ANY OF THE 130,838 LEDGER ROWS** -- *unreported invites a re-read; UNRECOVERABLE closes
+  it* -- **AND THE 1-IN-3,862 IS NOT IN THE 09-03 ARTIFACT: ITS FOUR `3862` HITS ARE COINCIDENTAL SUBSTRINGS OF
+  CHAINLINK DRIFT BOUNDS, WHICH I CONFIRMED BY PULLING ONE, `"margin": 1.1433862175499118e+20`** -- ***A SUBSTRING
+  MATCH IS NOT A REFERENCE, WHICH IS RULE 16 VERBATIM, AND HERE THE VOCABULARY WAS FOUR DIGITS.*** ***TWO ITEMS STAY
+  OPEN WITH THE USER, UNCHANGED, AND THIS FILE DOES NOT CLOSE THEM: THE NULL'S SAMPLING UNIT (A ROWS / B CANCELS /
+  C GENERATIONS) AND THE `research.slice` 200 % CAP -- A SWEEP THAT CLOSES FIVE ITEMS IS EXACTLY THE MOMENT AN OPEN
+  ITEM GETS QUIETLY ABSORBED, AND THESE TWO ARE RECORDED SO THAT CANNOT HAPPEN.*** Flags 2888 -> 2902, prov 2433 ->
+  2447; window 3/3, Batch 309 archived. MEM asserts no result.)
   2026-09-09T16:13:39Z (MEM ROUND 326 -- ***USER REVIEW. FIX-ONLY ROUND: THE USER HAS RULED THAT WHEN THEY REPORT ISSUES WE
   FIX THOSE AND NOTHING ELSE UNTIL CLOSED, SO THEIR REVIEW WAS MY ONLY QUEUE -- NO SWEEP, NO STATE TRUE-UP, NO
   ANALYSIS.*** Three of their five items are record items and are landed here IN THE USER'S OWN TERMS. ***(1) 09-03's
@@ -143,58 +185,6 @@ updated: >-
   STREAMING LIVE, so a killed run leaves A0/A1/A2 behind -- THE RECORDING GAP BE ITSELF NAMED AT BE 128, CLOSED BY
   BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2882, prov 2411 -> 2427; window 3/3, Batch 307 archived. MEM asserts
   no result.)
-  2026-09-09T15:35:25Z (MEM ROUND 324 -- ***THE CORRECTED BOOK REFUSES ITS OWN REPLAY, AND THAT IS A PROGRAMME FACT RATHER
-  THAN AN INCIDENT.*** ***HAZARD'S NULL DID NOT RUN: THE EV21 BOOK REFUSES `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`,
-  `de_multiday_gate1_runner.py` BOOK=`b4532d00c9ac`, BECAUSE THE SCORING PATH KEPT MOVING AFTER THE BOOK WAS BUILT --
-  SO THE FIRST NULL SINCE THE RETRACTION IS BLOCKED ON A REBUILD, NOT ON THE LOCK, AND NO SEAT CAN CLEAR IT BY FIXING
-  ANYTHING.*** ***THE GENERAL STATEMENT: A BOOK IS ONLY CONSUMABLE WHILE THE CODE IT NAMES STANDS STILL*** -- a book
-  caches its scores, so **the scoring code is part of the artifact and not merely its provenance**, and *the
-  consequence nobody had drawn until today is the SCHEDULING one:* ***EVERY HOUR OF SCORING-PATH REPAIR SHORTENS THE
-  WINDOW IN WHICH AN EXISTING BOOK CAN BE CONSUMED, AND A NIGHT OF PRODUCTIVE FIXES CAN CLOSE THAT WINDOW
-  ENTIRELY.*** ***AND I DROVE THE DIGESTS MYSELF, WHICH SHARPENS IT: THE DISPATCH REPORTS DISK AS `9bb93da45274` AND
-  I HASHED THE MODULE AT 2026-09-09T15:35:25Z AND GOT `a76e81c3391e` -- THREE DISTINCT DIGESTS FOR ONE MODULE IN ONE SESSION,
-  SO THE SCORING PATH HAS NOT MERELY MOVED, IT IS STILL MOVING***, *which is exactly the condition under which a
-  freeze is what makes a rebuild worth its 68 minutes.* **AND THE DISPOSITION IS RIGHT: THAT IS REV 111'S PREDICATE
-  WORKING EXACTLY AS DESIGNED -- not a defect, not a regression, not an over-strict guard, but THE FIRST TIME THE
-  BOOK-CODE PIN HAS CAUGHT A REAL DIVERGENCE ON A REAL ARTIFACT, BEFORE A NULL WAS DRAWN AGAINST A BOOK WHOSE SCORES
-  NO LONGER MATCH THE CODE THAT WOULD READ THEM**; *tonight has repeatedly found guards too weak to fail, and a guard
-  that has never blocked anything is indistinguishable from one that cannot.* **A SCORING-PATH FREEZE OVER THE TWELVE
-  DERIVED MODULES IS WITH THE USER, AND DA 168 IS ESTABLISHING WHAT ACTUALLY MOVED BETWEEN THE DIGESTS SO THE USER
-  CAN CHOOSE BETWEEN A 68-MINUTE REBUILD AND AN EXPLICIT SUPERSESSION** -- the second option existing only because DE
-  176 landed it this afternoon, *a capability built for one reason and available for another within hours.* ***REV
-  145: ALL SIX OF TODAY'S NEW CHECKS ARE TWO-SIDED -- 23 SIDES DRIVEN, 23 ANCHORED -- AND I RECORD THE CLEAN RESULT
-  BY NAME BECAUSE KNOWING WHICH CHECKS ARE GENUINELY TWO-SIDED IS AS LOAD-BEARING AS KNOWING WHICH WAS NOT***: the
-  zero-length exclusion (4 sides, closing REVIEW 138 AT ITS CAUSE), the book-code predicate (3 sides, a set forged to
-  2 of 12 INERT because DE 169 recomputes from disk, closing REVIEW 132 MORE STRONGLY THAN ASKED),
-  `assert_pin_sites_agree` (5 sides, a closure-pin refusal COMPUTED BY WALKING THE PAYLOAD), `committed_state` (the
-  DISAGREEMENT being the asserted property), the cancel-count (3 sides on `int(ref_gen)`) and the matched-cancel
-  control (5 sides, AN ABSENT STRATUM REFUSING RATHER THAN SILENTLY CONTRIBUTING NOTHING). ***AND REV EXPLAINS THE
-  ASYMMETRY FROM FIRST PRINCIPLES, WHICH MAKES IT A DESIGN RULE: "THOSE SIX TEST A PROPERTY OF ONE OBJECT, SO EACH
-  SIDE IS A WAY FOR THAT OBJECT TO BE WRONG; THE RECONCILIATION TESTS AN IDENTITY BETWEEN THREE QUANTITIES, TWO FROM
-  THE SAME SOURCE -- AN IDENTITY WHOSE TERMS ARE NOT INDEPENDENTLY SOURCED HAS FEWER SIDES THAN IT APPEARS TO."***
-  **THE RECONCILIATION WAS THE OUTLIER, NOT THE PATTERN, AND IT IS HELD UNWIRED.** **DE 178 implements ruling (a) at
-  the address the ruling named -- THETA'S DRIFT TRAVELS BESIDE THE DECISION COUNT, the fourth instance tonight of the
-  same remedy after `matched_on`, `MEMBERSHIP_LIMIT` and the superseded set at its own key** -- and repoints the
-  multi-day verdict to the settlement endpoint **AND NAMES IT**, with a detail that is its own small finding: ***ITS
-  PLANTED-VALUE TEST PREVIOUSLY PLANTED ONLY THE DIAGNOSTIC, THE BLOCK THE VERDICT NO LONGER READS -- A KNOWN-BAD
-  THAT CANNOT FIRE, RULE 15'S FALSIFIER QUIETLY DISARMED BY THE VERY REPAIR THAT FIXED THE VERDICT, CAUGHT IN THE
-  SAME CHANGE THAT CREATED IT.*** ***AND THE PART THIS SEAT VALUES MOST: THE RECONCILIATION CALL SITE CARRIES
-  `NOT_WIRED_PENDING_BE_138` WITH THE REASON AND THE EXACT ONE-LINE CALL -- I CONFIRMED THE MARKER IN THE RUNNER --
-  SO THE HOLD IS RECORDED IN THE CODE RATHER THAN ONLY IN A DISPATCH: A DELIBERATE GAP THAT NAMES ITSELF, ITS REASON
-  AND ITS REMEDY AT THE SITE OF THE GAP IS THE OPPOSITE OF A SILENT OMISSION.*** ***DA 166/167 CLOSED ITS OWN
-  CRITERION: `kept + dropped = all` IS AN IDENTITY OVER AN EXACT PARTITION -- EVIDENCE ABOUT THE PARTITION, NOT THE
-  VALUATION -- AND DA WROTE THE CRITERION, REV FOUND IT TAUTOLOGICAL, AND DA AGREED AND REPLACED IT RATHER THAN
-  DEFENDING IT***, *the third seat today to withdraw its own published work after BE's derived eight and REV's own
-  REVIEW 110 item (4).* **The replacement is exact on both halves: THE KEPT SIDE PER SLUG, 492 EQUATIONS ACROSS 246
-  SLUGS AGAINST THE LEDGER'S `SETTLEMENT_SLUG` ROWS, AND THE PARTITION PER ROW -- DISJOINT SETS, UNION EQUAL TO
-  CANDIDATES, EVERY DROPPED ROW `(t-t0)*1000 < L` AND EVERY KEPT ROW `>= L`** -- *one aggregate anchor becoming 492
-  independent ones, and the partition PREDICATE checked rather than its arithmetic consequence.* **BE IS BUILDING
-  09-04 BY USER RULING AND I VERIFIED IT AT THE MACHINE: `p003ev210904a`, LAUNCHED 15:31:26Z, ARGS `--day 20260904
-  --placement-latency-ms 250 --artifact-revision EV21`, TIP `b841683ad2d1...`, ONE LOCK HOLDER** -- ***AND IT IS
-  RECORDING WHICH MODULE DIGESTS IT BUILDS AGAINST AND WHETHER ANY OF THE TWELVE IS EXPECTED TO MOVE AGAIN TONIGHT,
-  WHICH IS THE QUESTION NOBODY ASKED BEFORE THE 09-03 BOOK AND WHOSE ANSWER TURNED OUT TO BE YES.*** DE was RESET
-  from 97 % at 15:31Z. Flags 2853 -> 2866, prov 2398 -> 2411; window 3/3, Batch 306 archived. MEM asserts no
-  result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -366,6 +356,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 327, all five user items CLOSED; the 09-04 book is built (c4de5e6 -> f456fd7) ---
+  ITEM_1_IS_CLOSED_AND_IT_IS_THE_LAST_OF_THE_USERS_FIVE: ALL-FIVE-CLOSED
+  AND_THE_WIRING_IS_IN_THE_DRIVER_NOT_THE_RUNNER_WHICH_I_CONFIRMED_THREE_WAYS: ZERO-IN-THE-RUNNER-TWO-IN-THE-DRIVER
+  THE_CHECKS_WERE_RUN_NOT_READ: 21-OF-21-AND-rc-0
+  THE_FALSIFIER_FOUND_A_REAL_DEFECT_WHILE_PROVING_ITSELF: AND-THAT-IS-THE-PART-TO-PRESERVE
+  A_NAN_SATISFIES_EVERY_TOLERANCE_GUARD_RATHER_THAN_TRIPPING_IT: FAIL-OPEN-IN-A-REFUSER
+  AND_THE_SECOND_LINE_OF_DEFENCE_CAUGHT_WHAT_THE_FIRST_LET_THROUGH: NOTHING-WAS-EXPOSED
+  THE_SURVIVING_FINDING_IS_BTC_ONLY_AND_I_DROVE_THE_ZERO: ZERO-ETH-SLUGS-ZERO-ETH-RECEIPTS
+  IT_IS_NEITHER_A_RULE_4_EXCLUSION_NOR_A_RULE_11_SELECTION: THE-SCOPE-WAS-NEVER-REQUESTED
+  BUT_IT_BINDS_QUOTATION_BECAUSE_THE_FREEZE_LAYER_WAS_TAKEN_BOTH_COINS_UNSCOPED: Q-BE-156
+  THE_09_04_BOOK_IS_BUILT_AND_I_HASHED_IT_MYSELF: d8a6ffe13dbd48ff
+  AND_IT_IS_THE_FIRST_09_04_BOOK_NOT_ASSEMBLED_AS_IF_CONTINUOUS: 52-GAP-BEARING-WINDOWS
+  THE_09_03_CANCEL_INCIDENCE_IS_UNRECOVERABLE_NOT_MERELY_UNREPORTED: NO-CANCEL-ROW-KIND-AT-ALL
+  AND_THE_FOUR_3862_HITS_ARE_CHAINLINK_DRIFT_BOUNDS_WHICH_I_CONFIRMED: 1-1433862175499118e+20
+  TWO_ITEMS_STAY_OPEN_WITH_THE_USER_AND_I_DO_NOT_CLOSE_THEM: THE-UNIT-AND-THE-CAP
   # --- MEM round 326, USER REVIEW: three record items, fix-only round, no sweep ---
   USER_ITEM_1_THE_09_03_EV21_BOOK_LACKS_placement_latency_split: THE-USERS-OWN-TERMS
   AND_IT_IS_A_LIMITATION_OF_THAT_BOOK_NOT_A_DEFECT_AND_NOT_WORK_OUTSTANDING: 09-04-IS-WHERE-IT-FIRST-CHECKS
@@ -27322,6 +27327,168 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 327, 2026-09-09T16:51:48Z ---
+  ITEM_1_IS_CLOSED_AND_IT_IS_THE_LAST_OF_THE_USERS_FIVE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***ITEM 1 IS CLOSED AND IT IS THE LAST OF THE USER'S FIVE -- ALL FIVE REVIEW ITEMS ARE NOW CLOSED*** (`a1de5ee`
+      + `451bd1f`, DE 181). **The reconciliation is wired, and the fix-only round the user ruled is complete.**
+      *Last round I landed three of the five as record items in the user's own terms; DE and BE carried the other
+      two, and this is the last of them.* **A user review opened at five items and closed at five, with no item
+      converted into a backlog entry along the way** -- which is what the fix-only ruling was for.
+  AND_THE_WIRING_IS_IN_THE_DRIVER_NOT_THE_RUNNER_WHICH_I_CONFIRMED_THREE_WAYS:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***AND THE WIRING IS IN THE DRIVER, NOT THE SCORING-PATH RUNNER, PER THE USER'S OWN WORDS -- WHICH I CONFIRMED
+      THREE WAYS: `de_point_estimate_day.py:425` READS `out = PLR.reconcile(first["reference"], first["winners"],
+      ...`; THE RUNNER CARRIES **ZERO** `reconcile(` CALLS AND THE DRIVER CARRIES TWO; AND
+      `NOT_WIRED_PENDING_BE_138` IS GONE FROM EVERY MODULE.*** **The reason is the one this file recorded two rounds
+      ago as a programme fact: EDITING THE RUNNER WOULD STALE EVERY BOOK.** *A capability added to the driver
+      changes nothing about which books remain consumable; the same capability added to the runner would have
+      invalidated the artifact it was meant to check.*
+  THE_CHECKS_WERE_RUN_NOT_READ:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***AND THE COORDINATOR RAN BOTH SELFTESTS RATHER THAN READING THEM: DRIVER 21/21, RUNNER rc 0.*** **Recorded
+      as RUN, not read, because that distinction has decided three findings tonight** -- *REV 142 grepped for a
+      falsifier that did not exist, REV 144 drove each side of a checker separately and found one admitted, and I
+      reproduced a probe's count only to have REV point out the probe had never been shown to fire.* ***A GREEN
+      QUOTED FROM A COMMIT MESSAGE AND A GREEN OBSERVED FROM A RUN ARE DIFFERENT CLAIMS, AND THIS PROGRAMME HAS PAID
+      FOR THE DIFFERENCE REPEATEDLY.***
+  THE_FALSIFIER_FOUND_A_REAL_DEFECT_WHILE_PROVING_ITSELF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***THE PART WORTH PRESERVING: THE FALSIFIER FOUND A REAL DEFECT WHILE PROVING ITSELF.*** **A falsifier's job is
+      to demonstrate that a checker CAN fail; this one, in the act of demonstrating it, found a case where the
+      checker CANNOT.** *That is the best possible outcome from writing a falsifier and the strongest argument for
+      rule 15 that this programme has produced* -- **not "the check works" but "here is the input on which it does
+      not".** ***A KNOWN-BAD THAT MERELY GOES RED CONFIRMS WHAT WAS ALREADY BELIEVED; A KNOWN-BAD THAT GOES GREEN
+      TEACHES SOMETHING.***
+  A_NAN_SATISFIES_EVERY_TOLERANCE_GUARD_RATHER_THAN_TRIPPING_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***THE DEFECT, IN ITS GENERAL FORM: A `shares: nan` RECONCILES CLEANLY ON BOTH SIDES OF BE'S CHECKER, BECAUSE
+      NaN COMPARES FALSE TO EVERYTHING -- SO EVERY `abs(a - b) > tol` GUARD IS SATISFIED BY IT RATHER THAN TRIPPED.
+      FAIL-OPEN IN A CHECKER WHOSE JOB IS TO REFUSE.*** **This is the third distinct appearance of the
+      compares-False family tonight**: *`score_events` named NaN as "compares False against every threshold and
+      becomes a silent no-op" while admitting `+inf`, which always compares TRUE; the builder tested `t0 == t1`
+      before finiteness so `inf` and equal strings were dropped under a false label; and now a tolerance guard is
+      SATISFIED by the one value that can never satisfy it honestly.* ***A COMPARISON-BASED GUARD IS ONLY AS STRONG
+      AS ITS ASSUMPTION THAT ITS INPUTS ARE ORDERED, AND NaN IS NOT.***
+  AND_THE_SECOND_LINE_OF_DEFENCE_CAUGHT_WHAT_THE_FIRST_LET_THROUGH:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      **AND NOTHING WAS EXPOSED, BECAUSE THE DRIVER CATCHES IT INDEPENDENTLY: `POINT_ESTIMATE_RECONCILIATION_NOT_
+      FINITE`.** ***SECOND LINE OF DEFENCE CAUGHT WHAT THE FIRST LET THROUGH*** -- *which is exactly the disposition
+      the programme recorded for `score_events` admitting `+inf`: downstream `de_head_scoring` refused it, so the
+      exposure was depth rather than a live hole.* **BE 144 is fixing the checker.** ***TWO INDEPENDENT GUARDS THAT
+      FAIL IN DIFFERENT DIRECTIONS ARE WORTH MORE THAN ONE GUARD BELIEVED TO BE COMPLETE, AND THIS IS THE SECOND
+      TIME TONIGHT THAT ARRANGEMENT HAS PAID.***
+  THE_SURVIVING_FINDING_IS_BTC_ONLY_AND_I_DROVE_THE_ZERO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***R-869's SURVIVING FINDING IS THAT THE PROGRAMME IS BTC-ONLY, AND I DROVE THE ZERO MYSELF: I SCANNED ALL 15
+      POINT-ESTIMATE ARTIFACTS AND FOUND 1,110 DISTINCT `btc-updown-5m-*` SLUGS AND **ZERO** `eth-updown-5m-*`.***
+      *(DA reports 3,618 distinct btc slugs; my count is over the 15 artifacts as distinct-across-all and the
+      load-bearing figure -- ZERO eth -- is identical.)* **And the two structural halves confirm it: NO
+      `be_gate1_state_tape_receipt_<day>_eth.json` EXISTS FOR ANY DAY (zero on disk), and `COIN = "btc"` is a MODULE
+      CONSTANT with no CLI override** -- I found it at `be_gate1_state_tape.py:71`, `be_gate1_fragment.py:93` and
+      `be_generation_count_derivation.py:63`. **Landed as RESULTS.md's FIFTH limit.**
+  IT_IS_NEITHER_A_RULE_4_EXCLUSION_NOR_A_RULE_11_SELECTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***AND THE CLASSIFICATION IS THE CAREFUL PART: IT IS NOT A RULE-4 EXCLUSION AND NOT A RULE-11 SELECTION -- THE
+      SCOPE WAS NEVER REQUESTED.*** **Rule 4 governs exclusions, which are statuses reported with their counts;
+      nothing was excluded here. Rule 11 governs choosing after seeing; nothing was chosen here.** *There is no
+      defect to name and no seat to route it to* -- ***THE PROGRAMME SIMPLY NEVER ASKED FOR ETH, AND A SCOPE THAT
+      WAS NEVER REQUESTED LEAVES NO TRACE IN EITHER RULE'S VOCABULARY.*** **That is precisely why it survived every
+      review until someone counted the slugs: the instruments this programme built to catch silent drops cannot see
+      a population that was never offered.**
+  BUT_IT_BINDS_QUOTATION_BECAUSE_THE_FREEZE_LAYER_WAS_TAKEN_BOTH_COINS_UNSCOPED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***BUT IT BINDS QUOTATION ANYWAY, AND THE REASON IS EXACT: ETH DATA EXISTS AND PASSES DAY QUALITY, AND Q-BE-156
+      TOOK THE FREEZE LAYER BOTH COINS UNSCOPED.*** **So a result stated without a coin qualifier would be read
+      against a freeze that covers two coins while resting on evidence from one.** *This is the addressing lesson
+      one more time, at the scale of a programme rather than a field: the SCOPE of a claim must travel with the
+      claim, and here the freeze's scope and the evidence's scope disagree.* **Nothing may be quoted without the
+      btc-only qualifier.**
+  THE_09_04_BOOK_IS_BUILT_AND_I_HASHED_IT_MYSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260904_btc__L250ms__EV21.pkl
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      **THE 09-04 EV21 BOOK IS BUILT, AND I HASHED IT MYSELF RATHER THAN QUOTING THE DIGEST:
+      `be_daybook_20260904_btc__L250ms__EV21.pkl`, `sha256sum` RETURNING
+      `d8a6ffe13dbd48fff0085700584bc6b15cdf3c0ea222626cde079c922ded602a` -- A CHARACTER-FOR-CHARACTER MATCH -- AT
+      383,210,163 BYTES, WRITTEN 16:45:30Z.** **Wall 4,444.4 s, peak RSS 5.175 GB, WITHIN BUDGET AND CAP** -- *the
+      day BE priced as BINDING at ~82 % of the envelope came in comfortably under it, which is a fact the queue's
+      remaining pricing should absorb along with BE 128's caution that all figures extrapolate from one day.*
+  AND_IT_IS_THE_FIRST_09_04_BOOK_NOT_ASSEMBLED_AS_IF_CONTINUOUS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms__EV21.json
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***AND IT IS THE FIRST 09-04 BOOK THAT IS NOT ASSEMBLED AS IF THE TAPE WERE CONTINUOUS -- I READ EVERY FIGURE
+      AT THE RECEIPT: `selection.era = "clob_v4_1"` RESOLVED FROM THE DAY (era=None on every retracted build),
+      `n_gap_bearing_windows = 52` (ZERO BEFORE BE 113), `placement_latency_split` PRESENT ON BOTH LEGS,
+      `n_generations` 358,110, `TRANCHE_BEFORE_PLACEMENT_LATENCY` 31,471, COVERAGE 0.9175388.*** **And the coverage
+      shortfall is CARRIED AS A REPORTED NUMBER -- 29,530 uncovered of 358,108** -- *which is rule 4 working: the
+      gap is a counted quantity in the artifact rather than a silent denominator.* **This is the book the latency
+      reconciliation first has something to check.**
+  THE_09_03_CANCEL_INCIDENCE_IS_UNRECOVERABLE_NOT_MERELY_UNREPORTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***DA'S Q-DA-386 VERIFIED THREE OF THE FIVE AND MOVED ONE UPWARD, WHICH IS THE FINDING OF THAT FILING: THE
+      09-03 CANCEL INCIDENCE IS UNRECOVERABLE, NOT MERELY UNREPORTED -- NO CANCEL ROW KIND EXISTS IN ANY OF THE
+      130,838 LEDGER ROWS.*** **Last round I recorded the user's words that the artifact "records cancel totals but
+      not actual multiple-cancel incidence"; DA establishes that it CANNOT be recovered from that artifact at all.**
+      *Unreported invites a re-read; UNRECOVERABLE closes it* -- ***AND A SEAT STRENGTHENING A LIMITATION AGAINST ITS
+      OWN PROGRAMME'S INTEREST IS THE SAME DISPOSITION THAT PRODUCED FOUR WITHDRAWALS TODAY.*** **The 09-03 artifact
+      is not a source for that number under any reading.**
+  AND_THE_FOUR_3862_HITS_ARE_CHAINLINK_DRIFT_BOUNDS_WHICH_I_CONFIRMED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***AND THE 1-IN-3,862 IS NOT IN THE 09-03 ARTIFACT: ITS FOUR `3862` HITS ARE COINCIDENTAL SUBSTRINGS OF
+      CHAINLINK DRIFT BOUNDS, WHICH I CONFIRMED BY PULLING ONE -- `"margin": 1.1433862175499118e+20`.*** **So the
+      number rests on the hardcoded-worktree script's arithmetic**, *which is now the THIRD qualification recorded
+      against it: REV 139's provenance finding, the user's "the existing artifact does not carry the incidence", and
+      DA's demonstration that a grep for it in the artifact finds only drift bounds.* ***A SUBSTRING MATCH IS NOT A
+      REFERENCE, WHICH IS RULE 16 VERBATIM -- "GREP HITS ON VOCABULARY ARE NOT REFERENCES" -- AND HERE THE
+      VOCABULARY WAS FOUR DIGITS.***
+  TWO_ITEMS_STAY_OPEN_WITH_THE_USER_AND_I_DO_NOT_CLOSE_THEM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:51:48Z
+    said: >-
+      ***TWO ITEMS STAY OPEN WITH THE USER, UNCHANGED, AND THIS FILE DOES NOT CLOSE THEM: THE NULL'S SAMPLING UNIT
+      (A ROWS / B CANCELS / C GENERATIONS) AND THE `research.slice` 200 % CAP.*** **Both have been open since the
+      early rounds of this thread and neither has moved.** *The sampling unit was the subject of ruling B, whose
+      premise proved false and which the user then re-ruled with a measured exception; the slice cap has sat since
+      R-551.* ***A SWEEP THAT CLOSES FIVE ITEMS IS EXACTLY THE MOMENT AN OPEN ITEM GETS QUIETLY ABSORBED INTO THE
+      GENERAL SENSE THAT THINGS ARE CLOSING, AND THESE TWO ARE RECORDED HERE SO THAT CANNOT HAPPEN.***
   # --- MEM round 326, 2026-09-09T16:13:39Z ---
   USER_ITEM_1_THE_09_03_EV21_BOOK_LACKS_placement_latency_split:
     prov: CHECKED

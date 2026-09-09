@@ -1,3 +1,93 @@
+# READ FIRST — round 327 (MEM, 2026-09-09T16:51:48Z, tip `f456fd7`)
+
+# ✅ ALL FIVE OF THE USER'S REVIEW ITEMS ARE CLOSED — and the 09-04 point estimate is running
+
+## (1) Item 1 closed — the last of the five
+
+**The reconciliation is wired IN THE DRIVER, not the scoring-path runner, per the user's own words.** *Confirmed
+three ways:*
+
+| | |
+|---|---|
+| `de_point_estimate_day.py:425` | `out = PLR.reconcile(first["reference"], first["winners"], …` |
+| `reconcile(` calls in the **runner** | **0** |
+| `reconcile(` calls in the **driver** | **2** |
+| `NOT_WIRED_PENDING_BE_138` | **gone from every module** |
+
+*The reason is the programme fact recorded two rounds ago: **editing the runner would stale every book**.*
+
+**And the coordinator RAN both selftests rather than reading them: driver 21/21, runner rc 0.** *Recorded as **run,
+not read** — that distinction decided three findings tonight.*
+
+## ⭐ (2) THE FALSIFIER FOUND A REAL DEFECT WHILE PROVING ITSELF
+
+***A `shares: nan` reconciles CLEANLY on both sides of BE's checker — NaN compares False to everything, so every
+`abs(a − b) > tol` guard is SATISFIED by it rather than tripped. Fail-open in a checker whose job is to refuse.***
+
+*This is the **third** appearance of the compares-False family tonight:* `score_events` naming NaN while admitting
+`+inf`; the builder testing `t0 == t1` before finiteness; and now a tolerance guard **satisfied by the one value that
+can never satisfy it honestly.** ***A comparison-based guard is only as strong as its assumption that its inputs are
+ordered — and NaN is not.***
+
+**Nothing was exposed: the driver catches it independently (`POINT_ESTIMATE_RECONCILIATION_NOT_FINITE`).** **Second
+line of defence caught what the first let through.** **BE 144 is fixing the checker.** *A known-bad that goes red
+confirms what was believed; **a known-bad that goes green teaches something.***
+
+# 🌐 (3) R-869 — THE SURVIVING FINDING: THE PROGRAMME IS **btc-only**
+
+*Driven by me:* **15 point-estimate artifacts scanned → 1,110 distinct `btc-updown-5m-*` slugs and ZERO
+`eth-updown-5m-*`.** *(DA reports 3,618 btc; the load-bearing figure — **zero eth** — is identical.)* **No
+`be_gate1_state_tape_receipt_<day>_eth.json` for any day**, and **`COIN = "btc"` is a module constant with no CLI
+override** — found at `be_gate1_state_tape.py:71`, `be_gate1_fragment.py:93`, `be_generation_count_derivation.py:63`.
+
+***It is NOT a rule-4 exclusion and NOT a rule-11 selection — the scope was never REQUESTED.*** *Nothing was excluded;
+nothing was chosen. There is no defect to name and no seat to route it to* — **and that is precisely why it survived
+every review until someone counted the slugs: the instruments built to catch silent drops cannot see a population
+that was never offered.**
+
+**But it binds quotation anyway: eth data exists and passes day quality, and Q-BE-156 took the freeze layer BOTH
+COINS UNSCOPED.** *The freeze's scope and the evidence's scope disagree.* **Nothing may be quoted without the
+btc-only qualifier.** Landed as RESULTS.md's **fifth** limit.
+
+# 📗 (4) THE 09-04 EV21 BOOK IS BUILT — and I hashed it myself
+
+| | |
+|---|---|
+| **sha256** | **`d8a6ffe13dbd48fff0085700584bc6b15cdf3c0ea222626cde079c922ded602a`** — character-for-character |
+| size · written | **383,210,163 B** · 16:45:30Z |
+| wall · peak RSS | **4,444.4 s** · **5.175 GB** — within budget and cap |
+
+***And it is the first 09-04 book NOT assembled as if the tape were continuous*** — every figure read by me at the
+receipt: **`selection.era = "clob_v4_1"` resolved FROM THE DAY** (era = None on every retracted build),
+**`n_gap_bearing_windows = 52`** (zero before BE 113), **`placement_latency_split` present on both legs**,
+**`n_generations` 358,110**, **`TRANCHE_BEFORE_PLACEMENT_LATENCY` 31,471**, **coverage 0.9175388** with **29,530
+uncovered of 358,108 carried as a reported number** — *rule 4 working: the gap is a counted quantity, not a silent
+denominator.* **This is the book the latency reconciliation first has something to check.**
+
+# (5) DA's Q-DA-386 — three verified, one moved UPWARD
+
+***The 09-03 cancel incidence is UNRECOVERABLE, not merely unreported — no CANCEL row kind exists in any of the
+130,838 ledger rows.*** *Last round I recorded the user's "records cancel totals but not actual multiple-cancel
+incidence"; DA establishes it **cannot be recovered at all**. Unreported invites a re-read; unrecoverable closes it.*
+
+**And the 1-in-3,862 is NOT in the 09-03 artifact** — its four `3862` hits are **coincidental substrings of Chainlink
+drift bounds**, which I confirmed by pulling one: `"margin": 1.1433862175499118e+20`. **It rests on the
+hardcoded-worktree script's arithmetic.** ***A substring match is not a reference — rule 16 verbatim, and here the
+vocabulary was four digits.*** *Third qualification now recorded against that number.*
+
+## ⛔ STILL OPEN WITH THE USER — unchanged, and not closed here
+
+1. **the null's sampling unit** — A rows / B cancels / C generations
+2. **the `research.slice` 200 % cap**
+
+***A sweep that closes five items is exactly the moment an open item gets quietly absorbed into the general sense
+that things are closing. These two are recorded so that cannot happen.***
+
+Counts: flags 2888 → 2902, provenance 2433 → 2447 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 309 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 326 (MEM, 2026-09-09T16:13:39Z, tip `7736972`) — **USER REVIEW, FIX-ONLY**
 
 ***The user has ruled: when they report issues, we fix those and nothing else until closed.*** **Their review was my
