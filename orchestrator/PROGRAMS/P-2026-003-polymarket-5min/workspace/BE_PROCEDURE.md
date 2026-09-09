@@ -529,6 +529,44 @@ derives from a SECOND reading — bind ONE stamp and pass it to both halves.
 And a derivation that fails is a **named status in the receipt**, never an
 exception: the recording is what the guarantee rests on and it is intact.
 
+## 6j. THE IMPORT CLOSURE IS A PROPERTY OF THE RUN (BE 119)
+
+Anyone reasoning about "the receipt records module X" must know this first:
+**the recorded closure is not a constant.** Two runs of the SAME builder
+recorded **49 and 48** modules — `be_daybook_receipt_20260905_btc__L250ms`
+against `…20260905_btc`, differing by `da_root.py`. `first_seen_at` says why:
+**42 of the 49 enter only at `build(): after the lazy imports`**, 3 at
+`be_daybook_build import`, 3 at `be_gate1_state_tape import`, 1 at
+`be_gate1_fragment import`.
+
+So a closure missing a given module is a shape this seat PRODUCES, and any
+consumer that checks "whatever it finds" will one day check four of five and
+report a match. Four partial inputs exist on disk today: two receipts with no
+`producing_code` at all, two carrying the block with a ZERO-module closure,
+and the 49/48 pair.
+
+**The contract for a consumer goes IN THE ARTIFACT as fields**
+(`producing_code.derived_closures.consumer_contract`), never in a register
+row: the expected set to read, its shape, the completeness test
+(`n_checked == <set>.n`, and `n` ships with the set), five named refusals with
+the condition that triggers each, and what must NOT refuse. **`n_checked == n`
+proves cardinality, not identity — compare the KEY SET and keep the count as
+the cheap assertion beside it.**
+
+**And do not pin another seat's current defective behaviour in your own
+battery.** I drove `assert_book_scoring_code` returning MATCH at
+`n_checked` 4/3/2/1 and reported it; asserting that in my cells would have
+enshrined the defect as spec (rule 16's fourth instance). My cells assert only
+that my side supplies what a consumer needs to refuse.
+
+**QUEUED, MINE, SAME CLASS, NOT YET FIXED:** `be_rule22.assert_pin_sites_agree`
+admits a payload carrying **ONE of the ten** cascade modules —
+`n_cascade_modules: 1, sites_agree: True` — because it checks the modules
+PRESENT and never the set's completeness. Its six driven outcomes cover a
+wholly-swept and a wholly-missed payload and no partial one. I relayed
+`sites_agree: True` as "ten cascade pins verified" at BE 115 and BE 117; the
+`10` came from a field I READ and never asserted.
+
 ## 7. What I have learned the hard way
 
 * **`?? data` is correct**; anything more is not. See §0.
