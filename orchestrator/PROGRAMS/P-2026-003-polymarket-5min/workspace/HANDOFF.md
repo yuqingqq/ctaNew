@@ -1,3 +1,104 @@
+# READ FIRST — round 293 (MEM, 2026-09-09T07:38:05Z, tip `c0e19ad`)
+
+**R-840, R-841 and R-842 swept as a numbered queue under rule 23 — from my round-292 tip `d7de95e` to `c0e19ad`,
+sixteen commits.** STATE ONLY.
+
+## ⚠ SIX DEFECTS IN THIRTY MINUTES, AND THE BUILD GATE IS NOW SEVEN ITEMS
+
+**Three seats hunting with no target named found six defects on the path the rebuild would have run.** Not one was
+found by a seat told where to look — the record R-839 cited when it sent DA out untargeted. **A gate that grows
+while a queue is stood down is the stand-down working**, not the programme regressing.
+
+## (a) THE BUILDER NEVER ASKS THE DAY ITS ERA — reproduced end to end, by me
+
+1. `be_daybook_build.py:616` — `era = HER._era_or_refuse(fi, None, "be_daybook_build")`, **the era argument is
+   literally `None`** — and two lines later `gaps = fi.gaps_by_slug(era)`.
+2. Driven, that call returns **`'clob_v3_1'`** (= `fi.ERA`), a module literal whose own docstring calls it *"an era
+   that closed"* — resolved **day-independently**.
+3. The two eras' gap tables hold **1,143** and **727** slugs, with an **INTERSECTION OF ZERO**.
+4. Of 09-03's **247 supplied** btc slugs: **0 in the era the builder reads, 160 in the era the day is in.**
+5. Over those 160 windows I summed **376 gap records = 2,294.7 s = 38.2 minutes** — reproducing REV 112's figure
+   **to the tenth of a second**. **All of it assembled as if continuous.**
+
+**The zero intersection is why it is silent.** A partly overlapping table would have looked wrong somewhere;
+complete disjointness means every September slug looks up cleanly and gets **nothing**, so `build_reference` gets
+`gaps=[]` and every downstream check sees a well-formed answer. It is **CLAUDE.md rule 5 reaching the book**: the
+day-level predicate passes while the event-level table comes from the wrong era.
+
+*(Two numbers reconciled: REV says 160 of **287**, I measure 160 of **247** — same numerator, different populations.
+287 is the day's market count, which I verified independently at round 286; 247 is what `day_slugs` supplies to the
+builder. A table must say which it quotes. And my first duration sum returned 0 s because my parser expected dicts;
+the records are `[[start, end], …]` pairs — **my instrument, not the data**, recorded because a published zero would
+have agreed with the defect.)*
+
+## WHAT THIS SAYS ABOUT THE RETRACTED RESULTS — exposure, not ruling
+
+The era resolution is day-independent, so this is not a property of one day or one build: **every book on disk was
+assembled over gaps it was told did not exist.** The retracted arm results were computed from those books. The two
+retractions already on the record concern the **decision** path; this concerns **the reference the decisions were
+replayed against** — a layer underneath both.
+
+**⚠ And the part that must not be soft-pedalled.** The one surviving finding — the never-cancel maker's latency loss
+— survived the retractions **because the 0-cancel baseline makes no cancel decisions**. That is an argument about
+the decision path. **It says nothing about the reference, and the baseline runs over the same reference that (a)
+built with `gaps=[]`.** **The latency finding's independence from (a) has NOT been established by anyone** — not by
+DA 137, whose five links tested the decision path; not by me; not by REV.
+
+**⚠ A correction to what this file has said since round 291.** I recorded the finding as *"independently verified,
+three ways"*. **All three derivations consumed the same books.** They establish that **the arithmetic over the given
+fills is right** — which they do, to the digit — and **not** that the fills are what a gap-aware assembly would have
+produced. From this round the file says exactly that and no more.
+
+**What this seat does not do:** I do not extend the retraction, quote any number as affected or unaffected, or
+withdraw anything. A retraction is a ruling. **I file the exposure and its one open question — is the surviving
+finding independent of (a)? — for the coordinator to route**, which on this programme's evidence means someone not
+told where to look.
+
+## THE REST OF THE GATE
+
+- **(b)** the book's `producing_code.import_closure` — recorded, read by nobody (R-840; I measured 8 of 49 moved on
+  three books last round).
+- **(c)+(d)** *one root* (R-842): the key `(slug, side, t)` no longer names the generation and carries `gen` in the
+  value, which the engine then **ignores**. Upstream a row is dropped; downstream a cancel is attributed to the
+  wrong generation — **and a misattributed cancel is invisible in every artifact this programme produces.**
+  Reachable only on a post-DE-155 book.
+- **(e)** the builder's coverage evidence uses the pre-fix membership test and would go into all five books (R-841).
+- **(f)** mode C blames the wrong subsystem.
+- **DA corrected its own overlap figure** six minutes after filing it, and `DA_PROCEDURE.md` now records *"the
+  instrument failure I committed while doing it"* — the standard working.
+- **BE 111** (`ec3073f`, `d7de95e`) refuses **at the repoint**, not at minute forty; **DE 161** (`c0e19ad`) makes
+  the sealed-value guard **compare numbers** rather than substring-match numeric renderings, and wires the
+  matched-cancel branch into the null. Both landed as code; **REV has reviewed neither**, and this file asserts
+  nothing about their behaviour.
+
+## STATE
+
+Verified at the machine 07:34:29Z: **no holders on the heavy lock, no live heavy unit.** **No corrected book, no
+corrected number, no build dispatched.** The R-839 stand-down holds. **These files quote nothing corrected.**
+
+Counts: flags 2409 → 2424, provenance 1954 → 1969 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,679 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 275
+archived. MEM asserts no result.
+
+---
+
+## ADDENDUM 07:39:23Z — DA 140 strengthens the MECHANISM, and explicitly does not touch (a)
+
+Landed after this round's window closed; verified at its row (Q-DA-363, as-of 07:36:06Z, read-only) **because a
+reader could otherwise take "nothing wrong with the placement latency" for "independence established". It is not.**
+
+DA 140 drove the question **DA 137 had explicitly not**: *does an L = 250 book represent 250 ms?* Five checks, each
+with a control. The units are right at `de_phase4_diag_runner.py:506`, and the decisive test is at the artifacts —
+**the L = 250 books contain exactly the L = 0 fills that survive the predicate, on all four days**, by set equality
+of `(slug, side, ref_gen, fill_ns, size)`. **Nothing wrong found.**
+
+**But its own "areas avoided as instructed" list names REV 112's builder/era gaps.** So the surviving finding's
+**mechanism** is now driven and clean, while its **input** — the reference assembled with `gaps=[]` — is untouched.
+**The independence question this round filed remains open**, and R-843's phrase *"day-independent by construction"*
+describes the defect, not the finding.
+
+---
+
 # READ FIRST — round 292 (MEM, 2026-09-09T07:28:29Z, tip `d7de95e`)
 
 **R-838 and R-839 swept as a numbered queue under rule 23 — from my round-291 tip `726f785` to `d7de95e`, thirteen

@@ -20775,3 +20775,33 @@ generation and the window went 4 → 3. Nothing rewritten.
   HAS BEEN QUOTED AND THIS FILE QUOTES NOTHING CORRECTED.** `wt-de` `5020f96` / `?? data`, the FIFTEENTH consecutive
   round. MEM asserts no result.)
 ```
+
+## Batch 275 — archived 2026-09-09T07:38:05Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T07:08:01Z (MEM ROUND 290 -- the post-R-835 sweep worked as a NUMBERED QUEUE under the
+  new rule 23, from my round-289 tip `3828ed7` to `6120e61`, eight commits. STATE ONLY. ***RULE 23 LANDED WITH MY
+  ROUND-289 WORDING AND A HALF I DID NOT PROPOSE***: the coordinator's own obligation to arm a Monitor on every
+  heavy unit and prompt the seat at its exit, since in-pane watchers are dead -- a seat-side rule alone would have
+  put the whole burden on the seat. Rule 24 makes the procedure file a standing obligation with the clause that
+  keeps it honest: a fresh seat faulting its own file within an hour is the file WORKING. ***THE GAP I NAMED AT
+  ROUND 289 WAS CLOSED NINE MINUTES LATER*** -- `BE_PROCEDURE.md`, 330 lines, 05:58:39Z, and all four seats now have
+  files at the filesystem. ***AND THE COMMIT THAT CLOSED MY GAP IS THE COMMIT THAT KILLED A 74-MINUTE BUILD***:
+  `eb2c24d` went into `wt-be` at 05:58:16Z while `p003ev200903` was executing from that worktree, and at the write
+  `be_rule22` refused -- "THE WORKTREE'S HEAD MOVED UNDER THIS RUN -- c9f8b31f94ef -> eb2c24dfabda". The run had
+  ASSEMBLED (`assembly_s` 3793.8, 63.2 minutes, leaf peak of record 8,121,389,056 B over 889 samples) and wrote
+  nothing; exit 06:24:20Z rc 1. ***THE ASYMMETRY WORTH RECORDING***: rule 22 is worded about CODE, and the file that
+  cost the build was a MARKDOWN procedure document no run imports -- the guard checks the WORKTREE'S HEAD, so any
+  commit of any file type refuses the write, and the wording is what a seat reads before deciding it may land.
+  ***AND THE DEAD UNIT NOW READS SUCCESS***: collected, `LoadState=not-found`, so `show` answers with DEFAULTS
+  `ExecMainStatus 0 / Result success` -- R-648's trap on the most expensive run of the day, and the only true account
+  of the loss is the launcher's own jsonl record and stdout log, both named in the flags. BE 110's memory envelope is
+  carried as a FLAG and not a settled fact, which is BE's own position: the raise from 8 GiB to 11,869,652,313 B is
+  DISPATCHED and wants a register amendment BE has "flagged and not assumed" (rules 8/20/R-174); its arithmetic
+  reproduces TO THE BYTE from the unrounded 15,489.110475 B/row and NOT from the rounded 15,489, which is 84,659 B
+  short; the raise is live on the running unit and fits inside the slice's 14.00 GiB. Also recorded: three launches
+  under one unit name, one of them from the SHARED tree; and that runbook §7g's on-resume checklist names an
+  in-flight unit that has since died. Flags 2364 -> 2379, prov 1909 -> 1924; window trimmed 4 -> 3, Batch 272
+  archived. **NOTHING CORRECTED IS QUOTED HERE AND BOTH USER RULINGS ARE STILL OPEN.** `p003ev200903b` running since
+  06:59:59Z; `wt-de` `5020f96` / `?? data`, the SIXTEENTH consecutive round. MEM asserts no result.)
+```

@@ -67,6 +67,40 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T07:38:05Z (MEM ROUND 293 -- R-840, R-841 AND R-842 SWEPT as a numbered queue under
+  rule 23, from my round-292 tip `d7de95e` to `c0e19ad`, sixteen commits. STATE ONLY. ***IN ABOUT THIRTY MINUTES OF
+  ISSUE-CLEARING, THREE SEATS HUNTING UNTARGETED FOUND SIX DEFECTS ON THE PATH THE REBUILD WOULD HAVE RUN, AND THE
+  BUILD GATE NOW STANDS AT SEVEN ITEMS WHERE IT STOOD AT ONE LAST NIGHT.*** The severest, REPRODUCED BY ME END TO
+  END RATHER THAN RELAYED: ***THE BUILDER NEVER ASKS THE DAY ITS ERA.*** `be_daybook_build.py:616` calls
+  `_era_or_refuse(fi, None, ...)` -- the era argument LITERALLY `None` -- then `gaps = fi.gaps_by_slug(era)`; driven,
+  that returns `'clob_v3_1'`, a module literal its own docstring calls "an era that closed"; the two eras' gap
+  tables hold 1,143 and 727 slugs with an ***INTERSECTION OF ZERO***; and of 09-03's 247 supplied btc slugs, ZERO
+  are in the era the builder reads while 160 are in the era the day is in. Over those 160 windows I summed
+  ***376 GAP RECORDS TOTALLING 2,294.7 s -- 38.2 MINUTES*** of missing tape, reproducing REV 112's figure to the
+  tenth of a second, all of it assembled as if continuous. THE ZERO INTERSECTION IS WHY IT IS SILENT: a partly
+  overlapping table would have looked wrong somewhere; complete disjointness means every September slug looks up
+  cleanly and gets NOTHING. ***AND THE EXPOSURE THIS CREATES, STATED WITHOUT A NUMBER AND WITHOUT A RULING***: the
+  era resolution is day-independent, so EVERY BOOK ON DISK was assembled over gaps it was told did not exist; the
+  retracted arm results were computed from those books; ***AND THE 0-CANCEL BASELINE RUNS OVER THE SAME
+  REFERENCE***. The surviving latency finding survived the two retractions because the baseline makes no CANCEL
+  DECISIONS -- an argument about the decision path that says nothing about the reference. ***ITS INDEPENDENCE FROM
+  THE ERA DEFECT HAS NOT BEEN ESTABLISHED BY ANYONE***, and a correction to what this file has said since round 291
+  follows: the three derivations I called independent all consumed THE SAME BOOKS, so they establish that the
+  ARITHMETIC over the given fills is right and NOT that the fills are what a gap-aware assembly would have produced.
+  I do not extend the retraction, I quote no number, I withdraw nothing -- a retraction is a ruling and rulings are
+  not mine -- and I FILE the exposure and its one open question for the coordinator to route. Also swept: the
+  unread `producing_code.import_closure` (R-840); the score key and the engine as ONE root, with a misattributed
+  cancel INVISIBLE in every artifact this programme produces (R-842); the coverage evidence's pre-fix membership
+  test (R-841); BE 111's repoint guard and DE 161's numeric comparison, both landed as code and neither reviewed.
+  Flags 2409 -> 2424, prov 1954 -> 1969; window trimmed 4 -> 3, Batch 275 archived. Verified at the machine
+  07:34:29Z: **NO CORRECTED BOOK, NO CORRECTED NUMBER, NO BUILD, NO LOCK.** ***ADDENDUM 07:39:23Z, AFTER THIS ROUND'S
+  WINDOW CLOSED AND VERIFIED AT ITS ROW BEFORE RECORDING***: DA 140 (Q-DA-363) drove the question DA 137 explicitly
+  had not -- whether an L = 250 book represents 250 ms -- with five checks each carrying a control, and found
+  NOTHING WRONG: the units are right at `:506` and the L = 250 books contain EXACTLY the L = 0 fills surviving the
+  predicate on all four days, by set equality. ***THAT STRENGTHENS THE FINDING'S MECHANISM AND LEAVES ITS INPUT
+  UNTOUCHED***: DA 140's own 'areas avoided as instructed' names REV 112's builder/era gaps, so the independence
+  question filed above REMAINS OPEN, and R-843's phrase 'day-independent by construction' describes the DEFECT and
+  not the finding. MEM asserts no result.)
   2026-09-09T07:28:29Z (MEM ROUND 292 -- R-838 AND R-839 SWEPT as a numbered queue under rule 23,
   from my round-291 tip `726f785` to `d7de95e`, thirteen commits. STATE ONLY. ***THE USER STOOD THE BUILD QUEUE
   DOWN*** -- "dont have to build now, we clear issues first" -- and the stand-down is REAL AT THE MACHINE, not only
@@ -129,31 +163,6 @@ updated: >-
   assuming it away. Flags 2379 -> 2394, prov 1924 -> 1939; window trimmed 4 -> 3, Batch 273 archived. **THE
   RETRACTION IS UNCHANGED: NO CORRECTED NUMBER EXISTS AND THESE FILES QUOTE NOTHING CORRECTED.** MEM asserts no
   result.)
-  2026-09-09T07:08:01Z (MEM ROUND 290 -- the post-R-835 sweep worked as a NUMBERED QUEUE under the
-  new rule 23, from my round-289 tip `3828ed7` to `6120e61`, eight commits. STATE ONLY. ***RULE 23 LANDED WITH MY
-  ROUND-289 WORDING AND A HALF I DID NOT PROPOSE***: the coordinator's own obligation to arm a Monitor on every
-  heavy unit and prompt the seat at its exit, since in-pane watchers are dead -- a seat-side rule alone would have
-  put the whole burden on the seat. Rule 24 makes the procedure file a standing obligation with the clause that
-  keeps it honest: a fresh seat faulting its own file within an hour is the file WORKING. ***THE GAP I NAMED AT
-  ROUND 289 WAS CLOSED NINE MINUTES LATER*** -- `BE_PROCEDURE.md`, 330 lines, 05:58:39Z, and all four seats now have
-  files at the filesystem. ***AND THE COMMIT THAT CLOSED MY GAP IS THE COMMIT THAT KILLED A 74-MINUTE BUILD***:
-  `eb2c24d` went into `wt-be` at 05:58:16Z while `p003ev200903` was executing from that worktree, and at the write
-  `be_rule22` refused -- "THE WORKTREE'S HEAD MOVED UNDER THIS RUN -- c9f8b31f94ef -> eb2c24dfabda". The run had
-  ASSEMBLED (`assembly_s` 3793.8, 63.2 minutes, leaf peak of record 8,121,389,056 B over 889 samples) and wrote
-  nothing; exit 06:24:20Z rc 1. ***THE ASYMMETRY WORTH RECORDING***: rule 22 is worded about CODE, and the file that
-  cost the build was a MARKDOWN procedure document no run imports -- the guard checks the WORKTREE'S HEAD, so any
-  commit of any file type refuses the write, and the wording is what a seat reads before deciding it may land.
-  ***AND THE DEAD UNIT NOW READS SUCCESS***: collected, `LoadState=not-found`, so `show` answers with DEFAULTS
-  `ExecMainStatus 0 / Result success` -- R-648's trap on the most expensive run of the day, and the only true account
-  of the loss is the launcher's own jsonl record and stdout log, both named in the flags. BE 110's memory envelope is
-  carried as a FLAG and not a settled fact, which is BE's own position: the raise from 8 GiB to 11,869,652,313 B is
-  DISPATCHED and wants a register amendment BE has "flagged and not assumed" (rules 8/20/R-174); its arithmetic
-  reproduces TO THE BYTE from the unrounded 15,489.110475 B/row and NOT from the rounded 15,489, which is 84,659 B
-  short; the raise is live on the running unit and fits inside the slice's 14.00 GiB. Also recorded: three launches
-  under one unit name, one of them from the SHARED tree; and that runbook §7g's on-resume checklist names an
-  in-flight unit that has since died. Flags 2364 -> 2379, prov 1909 -> 1924; window trimmed 4 -> 3, Batch 272
-  archived. **NOTHING CORRECTED IS QUOTED HERE AND BOTH USER RULINGS ARE STILL OPEN.** `p003ev200903b` running since
-  06:59:59Z; `wt-de` `5020f96` / `?? data`, the SIXTEENTH consecutive round. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -325,6 +334,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 293, R-840/R-841/R-842 swept; the era defect (d7de95e -> c0e19ad) ---
+  THE_ERA_DEFECT_IS_REPRODUCED_END_TO_END_AT_THE_CODE_AND_THE_TABLES: DRIVEN-NOT-READ
+  THE_BUILDER_PASSES_None_AND_GETS_A_CLOSED_ERA_DAY_INDEPENDENTLY: be_daybook_build-616
+  THE_TWO_GAP_TABLES_ARE_DISJOINT_AND_I_MEASURED_THE_INTERSECTION_AT_ZERO: 1143-AND-727-SHARING-NONE
+  SO_09_03s_160_WINDOWS_ARE_ASSEMBLED_OVER_TAPE_THEY_ARE_TOLD_IS_CONTINUOUS: 376-GAPS-2294.7-s-38.2-min
+  MY_DENOMINATOR_DIFFERS_FROM_REVs_AND_BOTH_ARE_RIGHT: 160-OF-247-SUPPLIED-VS-287-MARKETS
+  THIS_REACHES_THE_BOOKS_THE_RETRACTED_RESULTS_WERE_COMPUTED_FROM: EVERY-BOOK-ON-DISK
+  AND_THE_ZERO_CANCEL_BASELINE_RUNS_OVER_THE_SAME_REFERENCE: THE-SURVIVORS-INPUT-IS-EXPOSED
+  SO_INDEPENDENTLY_VERIFIED_MEANT_THE_ARITHMETIC_AND_NOT_THE_INPUT: THREE-DERIVATIONS-ONE-SET-OF-BOOKS
+  I_DO_NOT_EXTEND_THE_RETRACTION_AND_I_FILE_THE_EXPOSURE_FOR_ROUTING: THE-COORDINATORS-TO-RULE
+  SIX_DEFECTS_IN_THIRTY_MINUTES_ALL_FROM_UNTARGETED_HUNTING: THREE-SEATS-NO-TARGETS-NAMED
+  THE_BUILD_GATE_NOW_STANDS_AT_SEVEN_ITEMS: WAS-ONE-LAST-NIGHT
+  THE_SCORE_KEY_AND_THE_ENGINE_ARE_ONE_ROOT_AND_A_MISATTRIBUTED_CANCEL_IS_INVISIBLE: NO-ARTIFACT-WOULD-SHOW-IT
+  DA_CORRECTED_ITS_OWN_OVERLAP_FIGURE_IN_THE_SAME_HOUR_IT_FILED_IT: Q-DA-362-A
+  BE_111s_REPOINT_GUARD_AND_DE_161s_NUMERIC_COMPARISON_LANDED: REFUSE-AT-THE-REPOINT-NOT-AT-MINUTE-FORTY
+  STILL_NO_CORRECTED_BOOK_NO_NUMBER_NO_BUILD_NO_LOCK: UNCHANGED
   # --- MEM round 292, R-838/R-839 swept; the queue STOOD DOWN (726f785 -> d7de95e) ---
   THE_USER_STOOD_THE_BUILD_QUEUE_DOWN_AND_THE_STAND_DOWN_IS_REAL_AT_THE_MACHINE: LOCK-FREE-AND-NO-HEAVY-UNIT
   NOTHING_WAS_WRITTEN_AND_THERE_IS_STILL_NO_CORRECTED_BOOK_OR_NUMBER: 15-MIN-48-S-DISCARDED
@@ -26758,6 +26783,174 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 293, 2026-09-09T07:38:05Z (the clock read by which every measurement below was complete) ---
+  THE_ERA_DEFECT_IS_REPRODUCED_END_TO_END_AT_THE_CODE_AND_THE_TABLES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_112_ERA_WINDOW_SETS_2026-09-09.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      ***THE MOST CONSEQUENTIAL FINDING OF THE NIGHT, AND I REPRODUCED IT MYSELF RATHER THAN RELAYING IT.*** REV 112:
+      **the builder never asks the day its era.** Four steps, each driven: (1) `be_daybook_build.py:616` calls
+      `HER._era_or_refuse(fi, None, "be_daybook_build")` -- **the era argument is literally `None`** -- and two lines
+      later `gaps = fi.gaps_by_slug(era)`; (2) driven, that call returns **`'clob_v3_1'`**, equal to `fi.ERA`, a
+      module literal whose own docstring calls it "an era that closed"; (3) the two eras' gap tables are
+      **1,143 and 727 slugs with an INTERSECTION OF ZERO**; (4) of 09-03's 247 supplied btc slugs, **0 are in the
+      era the builder reads and 160 are in the era the day is in.** The whole chain, at the code and the tables.
+  THE_BUILDER_PASSES_None_AND_GETS_A_CLOSED_ERA_DAY_INDEPENDENTLY:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      The mechanism in one line, and it is CLAUDE.md rule 5 arriving at the book: `day_selector`'s own docstring says
+      the supply is "gated by the DAY'S SUPPLY rather than by a declared population interval", so **the DAY-level
+      predicate passes** -- and then the EVENT-level gap table is fetched for an era resolved **without reference to
+      the day at all**. `_era_or_refuse(fi, None, ...)` falls through to `fi.ERA`, pinned to `clob_v3_1`. **A
+      predicate that is right at one granularity and applied at another is exactly the class rule 5 names**, and it
+      sits between two functions that are each defensible alone.
+  THE_TWO_GAP_TABLES_ARE_DISJOINT_AND_I_MEASURED_THE_INTERSECTION_AT_ZERO:
+    prov: CHECKED
+    artifact: live/pm_research/flow_intensity.py
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      Measured, not assumed: `fi.gaps_by_slug('clob_v3_1')` returns **1,143** slugs and
+      `fi.gaps_by_slug('clob_v4_1')` returns **727**, and the intersection of the two key sets is **ZERO**.
+      ***THAT ZERO IS WHY THE DEFECT IS SILENT RATHER THAN LOUD***: a partially-overlapping table would have made
+      some windows look wrong and drawn attention. Complete disjointness means every September slug looks up cleanly
+      and gets **nothing**, so `build_reference` receives `gaps=[]` and every downstream check sees a well-formed
+      answer. **An empty result that is indistinguishable from "no gaps here" is the shape my own procedure calls a
+      broken instrument until proven otherwise** -- and here nothing proved otherwise for the life of every book.
+  SO_09_03s_160_WINDOWS_ARE_ASSEMBLED_OVER_TAPE_THEY_ARE_TOLD_IS_CONTINUOUS:
+    prov: CHECKED
+    artifact: live/pm_research/flow_intensity.py
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      The consequence summed independently: over the 160 of 09-03's windows that the `clob_v4_1` table does record,
+      there are **376 gap records totalling 2,294.7 s -- 38.2 minutes** of missing tape. REV 112 quotes **2,294.7 s**
+      and my own sum over the `(start, end)` pairs reproduces it **to the tenth of a second**. **Those windows are
+      assembled as if continuous.** (My first attempt at the sum returned 0 s because my parser expected a dict; the
+      records are `[[start, end], ...]` pairs -- my instrument, not the data, and it is recorded because a zero I
+      had published would have read as "no gaps" and agreed with the defect.)
+  MY_DENOMINATOR_DIFFERS_FROM_REVs_AND_BOTH_ARE_RIGHT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      A number that did not match, chased rather than published: REV 112 says **160 of 287 windows**; I measure
+      **160 of 247**. **The numerator is identical and the denominators are two different populations** -- 287 is
+      09-03's market count (which I verified independently at round 286 from `resolutions.jsonl`, with the 15:20Z
+      window absent), while 247 is what `be_daybook_build.day_slugs('20260903','btc')` actually supplies to the
+      builder. **Both are correct and they answer different questions**: how much of the DAY is affected, and how
+      much of what the BUILDER was given. A four-day table would need to say which it is quoting.
+  THIS_REACHES_THE_BOOKS_THE_RETRACTED_RESULTS_WERE_COMPUTED_FROM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      ***THE EXPOSURE, STATED PLAINLY AND WITHOUT A NUMBER ATTACHED.*** The era resolution is day-independent, so it
+      is not a property of one day or one build: **every book on disk was assembled over gaps it was told did not
+      exist.** The retracted arm results were computed from those books. So the two retractions already on the
+      record (the unloaded value head, the look-ahead) concern the DECISION path, while this concerns **the
+      REFERENCE the decisions were replayed against** -- a different layer, underneath both. Recorded as an
+      exposure, not as a conclusion: **no number is quoted here and none is withdrawn here.**
+  AND_THE_ZERO_CANCEL_BASELINE_RUNS_OVER_THE_SAME_REFERENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      ***AND THIS IS THE PART THAT MUST NOT BE SOFT-PEDALLED.*** The programme's ONE surviving finding -- the
+      never-cancel maker's latency loss -- survived the two retractions **because the 0-cancel baseline makes no
+      cancel decisions**. That argument is about the DECISION path. **It says nothing about the reference the
+      baseline is replayed over, and the baseline runs over the SAME reference that (a) built with `gaps=[]`.**
+      **The latency finding's independence from (a) has NOT been established by anyone** -- not by DA 137, whose
+      five links tested the decision path; not by me; not by REV. It may well survive; **nobody has shown it, and
+      this file will not imply it.**
+  SO_INDEPENDENTLY_VERIFIED_MEANT_THE_ARITHMETIC_AND_NOT_THE_INPUT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      ***A CORRECTION TO WHAT MY OWN FILES HAVE BEEN SAYING SINCE ROUND 291.*** I recorded the latency finding as
+      "independently verified, three ways" -- DE's artifacts, my read of them, DA 137's second implementation from
+      the fill rows and `resolutions.jsonl`. **All three consumed the SAME BOOKS.** So what those three agree on is
+      that **the arithmetic over the given fills is right** -- which they do establish, to the digit -- and NOT that
+      **the fills are the fills a gap-aware assembly would have produced.** "Independently verified" is true of the
+      computation and unproven of the input, and from this round my files say exactly that and no more.
+  I_DO_NOT_EXTEND_THE_RETRACTION_AND_I_FILE_THE_EXPOSURE_FOR_ROUTING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      **What this seat does NOT do**, stated so the boundary is on the record: I do not extend the retraction, I
+      quote no number as affected or unaffected, and I withdraw nothing. **Rule 14 and my own surface: a retraction
+      is a ruling and rulings are not mine.** What I file is the exposure and its one unanswered question --
+      **whether the surviving latency finding is independent of (a)** -- for the coordinator to route to whichever
+      seat can settle it, which on this programme's evidence means someone not told where to look. The finding
+      stands as it stands until then, with its independence OPEN rather than assumed.
+  SIX_DEFECTS_IN_THIRTY_MINUTES_ALL_FROM_UNTARGETED_HUNTING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      The pattern, now with a number on it: **in about thirty minutes of issue-clearing, three seats hunting with no
+      target named found SIX defects on the path the rebuild would have run** -- REV 111's silent third pin site,
+      REV 112's era defect, DA 138's score key, DA 139's engine, BE 111's coverage-evidence membership test, and
+      mode C's misattribution. **Not one was found by a seat told where to look**, which is precisely the record
+      R-839 cited when it sent DA 138 out untargeted. **The user's "clear issues first" bought all six**, and every
+      one of them would otherwise have gone into five books.
+  THE_BUILD_GATE_NOW_STANDS_AT_SEVEN_ITEMS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      **The build gate was one item last night and is SEVEN now**, which is the honest direction of travel for a
+      path nobody had hunted: (a) the era, (b) the unread `producing_code.import_closure`, (c) the score key,
+      (d) the engine ignoring the generation, (e) the coverage evidence's pre-fix membership test, (f) mode C's
+      misattribution, plus the pin-site work already in flight. **A gate that grows while a queue is stood down is
+      the stand-down working**, not the programme regressing -- each item is a defect that existed before anyone
+      looked, and the only thing that changed is that someone looked.
+  THE_SCORE_KEY_AND_THE_ENGINE_ARE_ONE_ROOT_AND_A_MISATTRIBUTED_CANCEL_IS_INVISIBLE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      R-842 joins DA 138 and DA 139 into ONE root: the score dict key `(slug, side, t)` no longer contains the
+      generation (`de_phase4_diag_runner.py:9226` says so in its own words) and carries `gen` in the VALUE instead,
+      while the engine then **ignores** that value. Upstream a row is dropped; downstream a cancel can be attributed
+      to the wrong generation. ***AND THE PART THAT MAKES IT THE WORST KIND***: a misattributed cancel is
+      **invisible in every artifact this programme produces** -- no status counts it, no receipt field carries it,
+      so no reader could detect it after the fact. **Reachable only on a post-DE-155 book**, i.e. only on the books
+      the rebuild exists to produce.
+  DA_CORRECTED_ITS_OWN_OVERLAP_FIGURE_IN_THE_SAME_HOUR_IT_FILED_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      Recorded as the standard working rather than as a wobble: DA 139 (Q-DA-362) opens by **correcting DA 138's own
+      overlap figure** -- filed at 07:23:26Z, corrected at 07:29:56Z, in the same hunt -- and `DA_PROCEDURE.md`
+      gained "how the untargeted hunt found two defects, **and the instrument failure I committed while doing it**".
+      **A seat that files its own instrument failure beside its own finding is the reason the finding can be
+      trusted**, and it is the same move I made this round on my gap-duration parser.
+  BE_111s_REPOINT_GUARD_AND_DE_161s_NUMERIC_COMPARISON_LANDED:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      Landed and recorded as code, not as validated behaviour (REV has reviewed neither at this writing):
+      **BE 111** (`ec3073f`, `d7de95e`) makes the two-pin-site trap a guard that **refuses AT THE REPOINT** rather
+      than forty minutes into a run, with a half-swept repoint driven as its falsifier, and its second half follows
+      the cap through its variable rather than matching a literal. **DE 161** (`c0e19ad`) makes the sealed-value
+      guard **compare NUMBERS instead of substring-matching numeric renderings** -- a guard that could pass on
+      "1974.5755" appearing inside a longer rendering -- wires the matched-cancel branch into the null, and closes
+      REV 110's four.
+  STILL_NO_CORRECTED_BOOK_NO_NUMBER_NO_BUILD_NO_LOCK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:38:05Z
+    said: >-
+      Unchanged and verified at the machine at 07:34:29Z: **no holders on `data/.heavy_run.lock`, no live heavy
+      unit, no corrected book, no corrected number, and no build dispatched.** The stand-down from R-839 holds. Every
+      arm result remains retracted on the two decision-path defects, and this round adds an EXPOSURE at the
+      reference layer that is filed and not ruled. **These files quote nothing corrected.**
   # --- MEM round 292, 2026-09-09T07:28:29Z (the clock read by which every measurement below was complete) ---
   THE_USER_STOOD_THE_BUILD_QUEUE_DOWN_AND_THE_STAND_DOWN_IS_REAL_AT_THE_MACHINE:
     prov: CHECKED
