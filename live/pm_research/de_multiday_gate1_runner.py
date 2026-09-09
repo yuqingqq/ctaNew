@@ -2862,10 +2862,23 @@ def aggregate(day_results: list, params: dict) -> dict:
                 "why": "a refused arm-day is a STATUS; the arm is not "
                        "aggregated over a smaller G"}
             continue
+        # ---- DE 176 / REV 140: THE VERDICT NAMES ITS ENDPOINT --------
+        # This reads `economic.Z` -- the 5-SECOND MARKOUT DIAGNOSTIC --
+        # while R-801 makes `economic_settlement` the ruled primary
+        # endpoint. **WHETHER THE MULTI-DAY VERDICT SHOULD BE COMPUTED ON
+        # THE RULED ENDPOINT IS A RULING AND IT IS WITH THE USER; it is
+        # NOT repointed here.** What is fixed is the silence: an
+        # aggregate that does not say which endpoint it aggregated is a
+        # number a reader will assume is the ruled one, and this
+        # programme has now found three guards that protected the
+        # diagnostic while the reader believed otherwise. The field is
+        # named in the result, beside the value it produced.
         z = {d: r["economic"]["Z"] for d, r in days.items()}
         out[arm] = DESIGN.day_cluster_verdict(
             z, alpha=params["alpha"], m=params["multiplicity_m"], g=g)
+        out[arm]["endpoint"] = VERDICT_ENDPOINT
     return {"per_arm": out, "G": g, "multiplicity_m": params["multiplicity_m"],
+            "endpoint": VERDICT_ENDPOINT,
             "section_7": {
                 arm: v.get("FAILS_THE_SECTION_7_PREDICATE")
                 for arm, v in out.items()},
@@ -5940,6 +5953,24 @@ def point_estimate_arm_day(day: str, arm: str, observed: float,
 #: block it happens to name.
 STATISTIC_BLOCKS = ("economic_settlement", "economic")
 
+#: WHICH ENDPOINT THE MULTI-DAY VERDICT IS COMPUTED ON, said in the
+#: artifact rather than left to a reader (DE 176, REV 140). It is the
+#: 5-second DIAGNOSTIC, not R-801's ruled settlement P&L. That choice is
+#: the USER's to make and is not made here; what is not optional is
+#: SAYING it, because an aggregate that names no endpoint is read as the
+#: ruled one.
+VERDICT_ENDPOINT = {
+    "block": "economic",
+    "field": "Z",
+    "what_it_is": ("the 5-second MARKOUT diagnostic -- NOT R-801's ruled "
+                   "settlement P&L (`economic_settlement`)"),
+    "why_it_is_named_here": ("REV 140 found this aggregate computing the "
+                             "multi-day verdict from the diagnostic with "
+                             "nothing in the result saying so. Repointing "
+                             "it is a RULING and is with the USER; naming "
+                             "it is not"),
+    "ruling_owner": "USER"}
+
 
 def test_statistic_from(receipt: dict, field: str = "Z", *,
                         block: str | None = None):
@@ -6173,9 +6204,6 @@ MEMBERSHIP_LIMIT = (
     "digest that differs. The recording's own honesty is guarded on the "
     "PRODUCING side by rule 22's import-closure capture (DE 168 / REV 132)")
 PARAMS_VERSION_DISAGREES = "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE"
-
-
-LAZY_ONLY_EXEMPTION = "BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET"
 
 
 #: THE RULED EXEMPTION'S SET (USER, DE 174 (2)), DECLARED WITH ITS
