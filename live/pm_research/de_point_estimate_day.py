@@ -36,6 +36,7 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
+import be_placement_latency_reconcile as PLR  # noqa: E402
 import de_data_root as DR  # noqa: E402
 import de_multiday_gate1_runner as R  # noqa: E402
 
@@ -315,6 +316,7 @@ def write_artifact(path: Path, payload: dict) -> dict:
         raise R.RunnerRefused(
             f"REFUSED POINT_ESTIMATE_OUTPUT_EXISTS: {path} already exists; "
             "a result artifact is never overwritten.")
+    payload["private_key_sweep"] = assert_no_private_keys(payload)
     payload["placement_latency_consistency"] = (
         R.assert_one_placement_latency(payload))
     encoded = json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n"
@@ -340,6 +342,157 @@ def write_artifact(path: Path, payload: dict) -> dict:
             "bytes": path.stat().st_size}
 
 
+RECONCILE_INPUTS_ABSENT = "POINT_ESTIMATE_RECONCILIATION_INPUTS_ABSENT"
+RECONCILE_INPUTS_INCOMPLETE = "POINT_ESTIMATE_RECONCILIATION_INPUTS_INCOMPLETE"
+RECONCILE_INPUTS_DISAGREE = "POINT_ESTIMATE_RECONCILIATION_INPUTS_DISAGREE"
+PRIVATE_KEY_SURVIVED = "POINT_ESTIMATE_PRIVATE_KEY_REACHED_THE_PAYLOAD"
+RECONCILE_NON_FINITE = "POINT_ESTIMATE_RECONCILIATION_NOT_FINITE"
+
+
+def _finite_scalars(node, path="$"):
+    """Every float in a block, with its path. Bools are not numbers here."""
+    out = []
+    if isinstance(node, dict):
+        for k, v in node.items():
+            out += _finite_scalars(v, f"{path}.{k}")
+    elif isinstance(node, (list, tuple)):
+        for i, v in enumerate(node):
+            out += _finite_scalars(v, f"{path}[{i}]")
+    elif isinstance(node, float) and not isinstance(node, bool):
+        out.append((path, node))
+    return out
+
+
+def reconcile_placement_latency(result: dict) -> dict:
+    """DA's reconciliation, run where BOTH numbers exist.
+
+    THE INPUTS COME FROM THE RUN ITSELF, not from a second derivation.
+    `run_day` attaches the reference it valued, the winners it used and
+    the zero-cancel baseline it computed under a PRIVATE key; this pops
+    them, checks they agree across arms, and hands them to BE's checker.
+    Re-deriving any of the three here would be a different population
+    valued a different way, and the reconciliation would then be
+    comparing this function's work with itself.
+
+    IT RAISES. `be_placement_latency_reconcile` ships two forms and the
+    choice between them is the whole point: `reconcile_status` is for a
+    long run that must not die for a diagnostic, and `reconcile` is for a
+    caller that would rather not publish. An artifact is a publication."""
+    arms = result.get("per_day_sealed_artifacts") or []
+    found = []
+    for a in arms:
+        got = a.pop(R.PLR_INPUTS_KEY, None)
+        if got is not None:
+            found.append(got)
+    if not found:
+        raise R.RunnerRefused(
+            f"REFUSED {RECONCILE_INPUTS_ABSENT}: not one of the "
+            f"{len(arms)} arm-days carried "
+            f"`{R.PLR_INPUTS_KEY}`. The runner attaches it whenever a "
+            f"winner source resolved in point-estimate mode, so its "
+            f"absence means either that no settlement was valued or that "
+            f"this result came from a path that does not reconcile. "
+            f"Emitting a point estimate with the reconciliation silently "
+            f"skipped is the shape this wiring exists to close.")
+    for key in ("reference", "winners", "baseline_total_cents"):
+        for f in found:
+            if f.get(key) is None:
+                raise R.RunnerRefused(
+                    f"REFUSED {RECONCILE_INPUTS_INCOMPLETE}: an arm-day "
+                    f"handed over `{key}` as None. A missing input is a "
+                    f"refusal, never a default: BE's checker would value "
+                    f"an empty set and report a clean zero.")
+    # THE ARMS MUST AGREE ON ALL THREE. They are properties of the DAY,
+    # not of an arm -- the same book reference, the same winners, the
+    # same zero-cancel baseline (the baseline makes no decisions, so it
+    # cannot differ by arm). A disagreement means one arm valued a
+    # different population, and reconciling only the first would hide it.
+    first = found[0]
+    for other in found[1:]:
+        if (other["reference"] is not first["reference"]
+                or other["winners"] is not first["winners"]
+                or abs(float(other["baseline_total_cents"])
+                       - float(first["baseline_total_cents"])) > 1e-9):
+            raise R.RunnerRefused(
+                f"REFUSED {RECONCILE_INPUTS_DISAGREE}: arm "
+                f"{other.get('arm')!r} handed over a different reference, "
+                f"a different winner map or a different zero-cancel "
+                f"baseline than arm {first.get('arm')!r} "
+                f"({other['baseline_total_cents']!r} against "
+                f"{first['baseline_total_cents']!r}). These are "
+                f"properties of the DAY; if they differ, one of the two "
+                f"arm-days valued a population the other did not.")
+    out = PLR.reconcile(first["reference"], first["winners"],
+                        first["baseline_total_cents"])
+    # ---- DE 181, FOUND BY DRIVING IT: A NON-FINITE VALUE PASSES EVERY
+    # EQUALITY IN THE RECONCILIATION. ------------------------------------
+    # `nan` compares False to everything, so `abs(sum - all) > tol` is
+    # False, `abs(kept - baseline) > tol` is False, and the two
+    # independent arithmetic paths "agree" because `abs(nan - nan) > tol`
+    # is False too. A single `shares: nan` in one tranche therefore
+    # reconciles CLEANLY on both sides and publishes a nan total. This is
+    # REVIEW 138's class one module over -- BE 130 closed it for
+    # zero-length generations -- and it is guarded HERE rather than
+    # silently tolerated, because this is the surface that PUBLISHES.
+    # Reported to BE for the checker itself; the guard stays either way,
+    # since a publisher should not depend on its checker's arithmetic
+    # being total.
+    _nf = [(k, v) for k, v in _finite_scalars(out) if not math.isfinite(v)]
+    if _nf:
+        raise R.RunnerRefused(
+            f"REFUSED {RECONCILE_NON_FINITE}: the reconciliation returned "
+            f"non-finite values at {[k for k, _ in _nf]}. Every equality "
+            f"in it PASSED, because a NaN compares False to everything -- "
+            f"so a clean-looking reconciliation is exactly what a "
+            f"non-finite input produces. The artifact is not written.")
+    return dict(out,
+                run_by="de_point_estimate_day.reconcile_placement_latency",
+                inputs_from=("the run itself -- the reference `run_day` "
+                             "valued, the winners it used and the "
+                             "zero-cancel baseline it computed, handed "
+                             "over under a private key and popped here"),
+                n_arm_days_that_handed_over=len(found),
+                arms_agreed_on_all_three_inputs=True,
+                the_refusal_is_not_absorbed=(
+                    "`reconcile` RAISES and this function does not catch "
+                    "it: a point estimate that does not reconcile is NOT "
+                    "EMITTED. BE's non-throwing `reconcile_status` exists "
+                    "for a consumer that must not die; an artifact is a "
+                    "publication and this is not that consumer"))
+
+
+def assert_no_private_keys(payload: dict) -> dict:
+    """NOTHING PRIVATE REACHES THE BYTES -- checked, not intended.
+
+    The runner hands over a LIVE 300 MB reference object. A pop that
+    silently missed one would either blow the artifact up or serialise a
+    book into it, and the failure would arrive at `json.dumps` as a type
+    error with no name on it. So the emit asserts the property instead."""
+    hits = []
+
+    def walk(node, path="$"):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                if isinstance(k, str) and k.startswith("_") \
+                        and k.endswith("_DO_NOT_SERIALISE"):
+                    hits.append(f"{path}.{k}")
+                walk(v, f"{path}.{k}")
+        elif isinstance(node, (list, tuple)):
+            for i, v in enumerate(node):
+                walk(v, f"{path}[{i}]")
+
+    walk(payload)
+    if hits:
+        raise R.RunnerRefused(
+            f"REFUSED {PRIVATE_KEY_SURVIVED}: {hits}. A key the runner "
+            f"marked DO_NOT_SERIALISE reached the payload, so a live "
+            f"object was about to be written into an artifact.")
+    return {"checked": True, "n_private_keys_found": 0,
+            "rule": "a key ending `_DO_NOT_SERIALISE` may not reach the "
+                    "bytes; the emit asserts it rather than trusting the "
+                    "pop"}
+
+
 def run(day: str, book: Path, output_dir: Path) -> dict:
     started = time.time()
     book = Path(book).resolve()
@@ -359,6 +512,19 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
         before_work=lambda: R.selftest(quiet=True, offline=False),
     )
     result_contract = assert_point_estimate_result(result)
+    # ---- DE 181: THE PLACEMENT-LATENCY RECONCILIATION, HERE AND NOT IN
+    # THE RUNNER (USER ruling) ------------------------------------------
+    # `de_multiday_gate1_runner.py` is ON THE BOOK'S SCORING PATH: an edit
+    # there stales every book on disk, which is what forced today's
+    # waiver. This driver is not on that path, so the call costs no book.
+    # It runs AFTER the replay and BEFORE the emit, and a
+    # `ReconcileRefused` PROPAGATES: the artifact is not written. That is
+    # deliberate -- BE ships a non-throwing `reconcile_status` for a
+    # consumer that must not die, and this is not that consumer. A point
+    # estimate whose kept tranches do not value to the ledger's own
+    # baseline is not a result with a caveat; it is a number nobody should
+    # read.
+    reconciliation = reconcile_placement_latency(result)
     placement = result.get("placement_latency") or {}
     value_ms = placement.get("L_place_ms")
     if value_ms is None:
@@ -386,6 +552,7 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
         "run_mode": result["run_mode"],
         "result_contract": result_contract,
         "placement_latency": placement,
+        "placement_latency_reconciliation": reconciliation,
         "book": {
             "path": str(book),
             "sha256": result["reference_book"]["sha256"],
@@ -429,7 +596,7 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 9
+EXPECTED_CHECKS = 22
 
 
 def selftest(quiet: bool = False) -> int:
@@ -644,6 +811,139 @@ def selftest(quiet: bool = False) -> int:
            f"import (`{DRIVER_SHA256_AT_IMPORT[:16]}`). The two rounds "
            f"before this one were driven by a scratchpad file whose digest "
            f"reached no artifact")
+
+    # ---- DE 181: THE PLACEMENT-LATENCY RECONCILIATION, DRIVEN BOTH WAYS
+    # Rule 15: a checker ships a positive control it must flag and a
+    # known-bad it must refuse. The two known-bads here are the two SIDES
+    # -- REV 144 found BE's first version falsifying on ONE of them, and a
+    # wiring that only drove the side that was already checked would
+    # inherit that hole one layer out.
+    def _refuses(fn, needle, label):
+        try:
+            fn()
+        except (R.RunnerRefused, PLR.ReconcileRefused) as e:
+            ok(needle in str(e), f"{label} -- refuses {needle}")
+        else:
+            ok(False, f"{label} -- DID NOT REFUSE")
+
+    _W181 = {"s1": {"settle_cents": 100.0, "up_won": True}}
+
+    def _ref181(kept, dropped):
+        return {"s1": {"BUY_UP": [{"gen": 0, "t0": 0.0, "t1": 9.0,
+                                   "level": 0.5, "tranches": list(kept),
+                                   PLR.DROPPED_KEY: list(dropped)}],
+                       "SELL_UP": []}}
+
+    def _result181(ref, winners, base, *, arms=1, key=None):
+        key = key or R.PLR_INPUTS_KEY
+        return {"per_day_sealed_artifacts": [
+            {"arm": f"ARM{i}", "status": "OK_POINT_ESTIMATE",
+             key: {"reference": ref, "winners": winners,
+                   "baseline_total_cents": base, "day": "2026-09-04",
+                   "arm": f"ARM{i}"}} for i in range(arms)]}
+
+    _K181 = [{"t": 0.4, "shares": 10.0, "level": 0.60}]
+    _D181 = [{"t": 0.05, "shares": 4.0, "level": 0.25}]
+    _ref181a = _ref181(_K181, _D181)
+    _kept181 = PLR.value(_ref181a, "tranches", _W181)["total_cents"]
+    _res181 = _result181(_ref181a, _W181, _kept181)
+    _good181 = reconcile_placement_latency(_res181)
+    ok(_good181["legs_close"] is True
+       and _good181["kept_equals_the_baseline"] is True
+       and _good181["KEPT_cross_checked_by_direct_arithmetic"]["agrees"]
+       and _good181["DROPPED_cross_checked_by_direct_arithmetic"]["agrees"]
+       and _good181["n_arm_days_that_handed_over"] == 1
+       and "UPPER BOUND" in _good181["UPPER_BOUND"],
+       f"DE 181 POSITIVE CONTROL: the reconciliation RUNS in this driver "
+       f"and both sides are anchored -- KEPT against the ledger's "
+       f"zero-cancel baseline, DROPPED against a second arithmetic path "
+       f"({_good181['DROPPED']['total_cents']:.2f} c), with the "
+       f"upper-bound caveat travelling in the block rather than in a "
+       f"report")
+    ok(R.PLR_INPUTS_KEY not in _res181["per_day_sealed_artifacts"][0],
+       "DE 181 THE PRIVATE KEY IS POPPED: the live reference object is off "
+       "the result before anything can serialise it")
+
+    # KNOWN-BAD, SIDE ONE: a KEPT value that is not the ledger's baseline.
+    _refuses(lambda: reconcile_placement_latency(
+        _result181(_ref181a, _W181, _kept181 + 1.0)),
+        "KEPT_VALUE_DOES_NOT_MATCH_THE_BASELINE",
+        "DE 181 KNOWN-BAD (KEPT perturbed)")
+    # KNOWN-BAD, SIDE TWO: THE DROPPED SIDE, PERTURBED WHERE ITS ANCHOR
+    # ACTUALLY IS. KEPT is anchored by an EXTERNAL number (the ledger's
+    # baseline), so a bad input moves it off that number and refuses.
+    # DROPPED has no external anchor -- `KEPT + DROPPED == ALL` is a
+    # tautology over a partition (DA 167), so ANY input perturbation moves
+    # all three totals together and the sum still closes. Its anchor is
+    # BE 138's SECOND arithmetic path, which exists only to disagree. So
+    # the known-bad for this side is an IMPLEMENTATION disagreement, and
+    # driving it with a bad input instead would have reported a pass for
+    # the wrong reason -- which is exactly REV 144's finding one layer up.
+    _real_legs = PLR.legs_directly
+
+    def _wrong_direct(ref, key, winners):
+        got = _real_legs(ref, key, winners)
+        if key == PLR.DROPPED_KEY:
+            return dict(got, total_cents=got["total_cents"] + 1.0)
+        return got
+
+    PLR.legs_directly = _wrong_direct
+    try:
+        _refuses(lambda: reconcile_placement_latency(
+            _result181(_ref181a, _W181, _kept181)),
+            "DROPPED", "DE 181 KNOWN-BAD (DROPPED, the side REV 144 found "
+                       "unchecked): the two arithmetic paths made to "
+                       "disagree by 1 cent")
+    finally:
+        PLR.legs_directly = _real_legs
+    ok(PLR.legs_directly is _real_legs,
+       "DE 181 the patched arithmetic path is restored -- a cell owns its "
+       "fixture and does not leave one behind")
+
+    # KNOWN-BAD, SIDE THREE, AND IT IS A HOLE I FOUND BY DRIVING THIS:
+    # a NON-FINITE tranche passes EVERY equality in the reconciliation.
+    _nan181 = _ref181(_K181, [{"t": 0.05, "shares": float("nan"),
+                               "level": 0.25}])
+    _nanout = PLR.reconcile(_nan181, _W181, _kept181)
+    ok(_nanout["legs_close"] is True
+       and _nanout["kept_equals_the_baseline"] is True
+       and _nanout["DROPPED_cross_checked_by_direct_arithmetic"]["agrees"]
+       and not math.isfinite(_nanout["DROPPED"]["total_cents"]),
+       f"DE 181 ANCHOR FOR THE NEXT CELL -- and it is a finding: ONE "
+       f"`shares: nan` reconciles CLEANLY on BOTH sides "
+       f"(legs_close, kept==baseline, both cross-checks agree) while "
+       f"DROPPED totals {_nanout['DROPPED']['total_cents']!r}. A NaN "
+       f"compares False to everything, so every `abs(a - b) > tol` guard "
+       f"in the checker is satisfied by it. Reported to BE")
+    _refuses(lambda: reconcile_placement_latency(
+        _result181(_nan181, _W181, _kept181)),
+        RECONCILE_NON_FINITE,
+        "DE 181 KNOWN-BAD (non-finite): THIS DRIVER refuses to publish it "
+        "even though the checker passed it")
+    # AND THE INPUTS THEMSELVES REFUSE RATHER THAN DEFAULT.
+    _refuses(lambda: reconcile_placement_latency(
+        {"per_day_sealed_artifacts": [{"arm": "A"}]}),
+        RECONCILE_INPUTS_ABSENT, "DE 181 no arm handed the inputs over")
+    _refuses(lambda: reconcile_placement_latency(
+        _result181(None, _W181, _kept181)),
+        RECONCILE_INPUTS_INCOMPLETE, "DE 181 a None input")
+    _two181 = _result181(_ref181a, _W181, _kept181, arms=2)
+    _two181["per_day_sealed_artifacts"][1][R.PLR_INPUTS_KEY][
+        "baseline_total_cents"] = _kept181 + 5.0
+    _refuses(lambda: reconcile_placement_latency(_two181),
+             RECONCILE_INPUTS_DISAGREE, "DE 181 arms disagreeing on a "
+             "day-level input")
+
+    # AND THE EMIT REFUSES IF ANYTHING PRIVATE SURVIVED. `json.dumps` here
+    # uses `default=str`, so a live 300 MB reference would NOT crash -- it
+    # would be stringified INTO the artifact. That is why this is a
+    # predicate and not a comment.
+    ok(assert_no_private_keys({"a": {"b": 1}})["n_private_keys_found"] == 0,
+       "DE 181 the private-key sweep passes a clean payload")
+    _refuses(lambda: assert_no_private_keys(
+        {"day_run": {"arms": [{R.PLR_INPUTS_KEY: {"reference": {}}}]}}),
+        PRIVATE_KEY_SURVIVED,
+        "DE 181 KNOWN-BAD: a surviving private key NESTED two levels down")
 
     if n[0] != EXPECTED_CHECKS:
         raise SystemExit(f"[de_point_estimate_day] FAIL: check count "

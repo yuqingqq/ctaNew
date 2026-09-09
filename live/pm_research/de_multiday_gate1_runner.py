@@ -6265,6 +6265,11 @@ ACCEPT_UNVERIFIABLE_MEMBERSHIP = "ACCEPT_MEMBERSHIP_NOT_ESTABLISHED"
 #: judgement: a caller TYPES the token to ask, and the predicate decides. A
 #: waiver a human can assert without the predicate holding is not a waiver,
 #: it is a bypass, and the difference is that this one can say NO.
+#: DE 181: the runner hands the point-estimate driver the three objects
+#: the placement-latency reconciliation needs, under a key that is PRIVATE
+#: by convention AND by construction -- the driver pops it before the emit
+#: and refuses if anything like it survives into the bytes.
+PLR_INPUTS_KEY = "_placement_latency_reconciliation_inputs_DO_NOT_SERIALISE"
 BOOK_SCORING_WAIVER_NOT_AVAILABLE = "BOOK_SCORING_WAIVER_NOT_AVAILABLE"
 BOOK_SCORING_WAIVER_TOKEN_WRONG = "BOOK_SCORING_WAIVER_TOKEN_NOT_THE_TOKEN"
 WAIVED_SCORING_PATH = "WAIVED_SCORING_PATH_BYTE_IDENTICAL"
@@ -8717,33 +8722,51 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                                            _win801["winners"])
             _base801 = settlement_legs_by_slug(base["fills"],
                                                _win801["winners"])
-            # ---- DE 178: THE RECONCILIATION IS **NOT** WIRED YET -----
-            # DE 177 (3) asked for `PLR.reconcile(...)` here and I wrote
-            # it. **HELD, by the coordinator, on REV 144's finding: BE's
-            # module FALSIFIES ON ONE SIDE ONLY -- the DROPPED total is
-            # unchecked, so a wrong dropped value PASSES, and its 10 cells
-            # pass because they exercise the side that IS checked.**
-            # Wiring it would put a one-sided check on the MANDATORY path
-            # and let the USER's ruling (b) read as satisfied while half
-            # of it is unverified. The call site stays named here and
-            # empty so the wiring is a one-line change the moment REV
-            # verifies BE 138's two-sided fix -- and so that nobody has to
-            # rediscover where it goes.
+            # ---- DE 181: THE HOLD IS RELEASED, AND THE CALL LIVES IN
+            # THE DRIVER, NOT HERE. -------------------------------------
+            # REV 144's one-sided finding is CLOSED: BE 138 anchors KEPT
+            # and DROPPED separately (`_cross_check` on each, 14/14), so
+            # a wrong DROPPED no longer passes on the strength of a sum
+            # whose terms are not independently sourced.
+            #
+            # THE PLACEMENT IS THE USER'S RULING AND THE REASON IS THIS
+            # MODULE'S OWN COST: `de_multiday_gate1_runner.py` IS ON THE
+            # BOOK'S SCORING PATH -- it is in every book receipt's
+            # refusable set -- so editing it STALES EVERY BOOK ON DISK,
+            # which is exactly why HAZARD's null needed a waiver today.
+            # `de_point_estimate_day.py` is NOT on that path, so wiring
+            # the call there costs no book. And a refusal raised HERE
+            # would stop scoring runs that are not certifying anything.
+            #
+            # So this block DECLARES where the check happens, and the
+            # three inputs travel to the driver under a PRIVATE key that
+            # the driver POPS and never serialises. They are attached
+            # ONLY in point-estimate mode: the `--day` full-null path
+            # does not run the driver, and a live reference object
+            # reaching a json.dumps would be a 300 MB artifact or a
+            # crash.
             _plr177 = {
-                "status": "NOT_WIRED_PENDING_BE_138",
-                "why": ("REV 144: `be_placement_latency_reconcile` "
-                        "falsifies on one side only -- the DROPPED total "
-                        "is unchecked and a wrong dropped value passes. A "
-                        "one-sided check on the mandatory path would let "
-                        "ruling (b) read as satisfied with half of it "
-                        "unverified"),
-                "call_site": ("de_multiday_gate1_runner.run_day, beside "
-                              "`_base801` -- one line, held by the "
-                              "coordinator, released when REV verifies "
-                              "BE 138"),
-                "what_it_would_be": ("PLR.reconcile(bk['fr']['reference'], "
-                                     "_win801['winners'], "
-                                     "_base801['total_cents'])")}
+                "status": "PERFORMED_BY_POINT_ESTIMATE_DRIVER",
+                "site": ("de_point_estimate_day.run -- after "
+                         "`R.run_day(...)` and BEFORE the emit"),
+                "checker": ("be_placement_latency_reconcile.reconcile -- "
+                            "two-sided since BE 138 (REV 144): KEPT is "
+                            "anchored by the ledger's zero-cancel "
+                            "baseline, DROPPED by a SECOND independent "
+                            "arithmetic path that exists only to "
+                            "disagree"),
+                "why_not_here": (
+                    "this module is ON THE BOOK'S SCORING PATH, so an "
+                    "edit here stales every book on disk; and a refusal "
+                    "raised inside `run_day` would stop scoring runs "
+                    "that are not certifying a latency split (USER "
+                    "ruling, DE 181)"),
+                "inputs_travel_as": PLR_INPUTS_KEY,
+                "if_this_status_is_the_only_thing_you_find": (
+                    "the reconciliation did NOT run for this artifact. "
+                    "The driver replaces this key with the checker's own "
+                    "block; a receipt still carrying this status was "
+                    "emitted by a path that does not reconcile")}
     _mark("S3_baseline")
 
     # ---- S4: the null and the observed value, per arm. -----------------
@@ -8917,6 +8940,17 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         r["cancel_unit_exception"] = _cancel_unit_exception
         if _win801 is not None:
             r["placement_latency_reconciliation"] = _plr177
+            if point_estimate:
+                # THE OBJECTS THEMSELVES, NOT COPIES -- the driver values
+                # THE SAME reference and THE SAME winners this day valued,
+                # which is the identity rule 33 is about. Point estimate
+                # only: nothing else pops this key, and a live reference
+                # object must never reach a serialiser.
+                r[PLR_INPUTS_KEY] = {
+                    "reference": bk["fr"]["reference"],
+                    "winners": _win801["winners"],
+                    "baseline_total_cents": _base801["total_cents"],
+                    "day": day, "arm": arm}
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
