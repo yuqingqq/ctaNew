@@ -67,6 +67,44 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T09:40:36Z (MEM ROUND 306 -- DE 166 and REV 128 SWEPT, LIGHT ROUND, from `1f98fc7` to `623c050`, SEVEN commits -- I swept four to `da1a117` and THREE MORE LANDED WHILE I WROTE, so DA's verdict and REV 129 are folded in an addendum below rather than left to next round.
+  STATE ONLY. ***THE STATE CHANGE: THE USER'S DEFECTS ARE REPAIRED AND THE FIRST VERIFICATION IS IN.*** I re-ran my
+  own round-304 census rather than reading DE's claim: **the day path `:8120` now passes `arm_cancels=True` and
+  `control_set_path=True`**, and the two other call sites pass neither BECAUSE THAT IS CORRECT -- `:11659` is the
+  second-valuation cell **declaring the historical row-matched unit EXPLICITLY rather than reaching it by
+  omission**, `:15125` drives the refusal cases. ***AND IT IS CLOSED AT THE ARTIFACT, NOT ONLY IN THE CODE***: REV
+  128 re-drove its own REVIEW 126 baseline at the same entry point -- `arm_cancels` False -> True,
+  `control_set_path` False -> True, **`draw_provenance.matched_on` ABSENT -> `CANCELS`** -- and ***AN ABSENT FIELD
+  IS EXACTLY WHAT LET R-837, R-847, R-852 AND R-856 CLAIM RULING B WAS IMPLEMENTED WITH NO RECEIPT CONTRADICTING
+  THEM***; the receipt reads the unit back FROM THE NULL'S RESULT, never from the argument, and DE found
+  `verify_draw_provenance` DROPPING `matched_on` while rebuilding the block, one field below its own comment about
+  not dropping the cross-check (rule 28 again). **The refusal is real, driven five ways**: `matched_on` omitted /
+  `None` / `ROWS` -> `NULL_MATCHING_UNIT_NOT_DECLARED`; `CANCELS` without cancel records or without a control set ->
+  `NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS`; the declared alternative `DECISIONS` proceeds -- ***THE UNIT IS
+  REQUIRED AND CHECKED AGAINST THE INPUTS THAT WOULD MAKE IT TRUE***, and the cell asserting the row-matched
+  cross-check `identical is True` WENT RED the moment the ruled null was wired. DE'S GENERALISATION, WHICH IS THE
+  RIGHT ONE: ***"A DEFAULT IS WHAT MADE A WIRED-LOOKING THING UNWIRED"***, and the unreachable case is now IMPOSSIBLE
+  rather than fixed. **(b) and (d) re-driven by me**: `day_decision_population` builds `_gens = {(slug, side,
+  int(gen))}` and counts `by_side` over THAT, so the number is ACTIONS and the `definition` string is now TRUE; the
+  one-module receipt that passed last round now REFUSES `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`, with
+  `closure_coverage` PUBLISHED as 5 of 49. ***A DISTINCTION I MEASURED AND WILL NOT LET BLUR: (c) IS REPAIRED AT THE
+  CONSUMER, NOT AT THE INVARIANT*** -- `one_cancel_per_generation` STILL returns True on `7` / `7.r1`, correctly,
+  being an invariant about POLICY ids; what changed is that `de_matched_cancel_control` measures the relation keyed
+  `(slug, side, ref_gen)` and REFUSES `MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE`, both old
+  consequences having been measured (a saturated stratum refusing `STRATUM_TOO_SMALL`, LOUD FOR THE WRONG REASON;
+  a stratum with room drawing SILENTLY on 2 reference generations where the arm acted on 1). ***AND WHAT DE
+  EXPLICITLY DID NOT ESTABLISH, BECAUSE IT BOUNDS WHAT THE REPAIR CAN CLAIM: THE REAL ROWS-PER-DECISION FACTOR AND
+  THE REAL RATE OF DOUBLE-CANCELLED GENERATIONS BOTH NEED A CORRECTED BOOK AND NONE EXISTS -- FIXED IN MECHANISM,
+  UNQUANTIFIED UNTIL SOMETHING IS BUILT.*** DE disclosed THREE SLIPS caught before landing -- an if/else that
+  INVERTED `PARTIAL_ROWS`, which PARSED AND WAS WRONG, and **TWO ASSERTIONS THAT TESTED A PHRASE RATHER THAN THE
+  PROPERTY, RULE 33'S OWN CLASS FOUND BY THE SEAT IN ITS OWN WORK** -- carried RELAYED, not CHECKED, because I could
+  not reach them at an artifact. And `de_land.sh`'s guard **based its diff on the WORKTREE'S HEAD, which under rule
+  31 is a local commit the shared tree never saw**, refusing seven of DE's own paths; the base is the MERGE-BASE now
+  and re-driven both ways. ***THE GATE ARITHMETIC STAYS WITHDRAWN -- DO NOT RESTORE "CLOSED AND VERIFIED" COUNTS:
+  DA'S VERDICT LANDED WHILE I WROTE AND (d) IS ONLY HALF-REPAIRED -- SEE THE ADDENDUM.*** Pair of record advanced TWICE, each crank
+  in the same commit as the fix that moved the module: **params v28 + design v36**, 10/10 cascade digests 0
+  mismatched. Flags 2595 -> 2610, prov 2140 -> 2155; window 3/3, Batch 288 archived. **NOTHING BUILT, NO HEAVY LOCK
+  SINCE 07:15:47Z.** MEM asserts no result.)
   2026-09-09T09:16:15Z (MEM ROUND 305 -- R-860 SWEPT, LIGHT ROUND, BOOKKEEPING AND NOT ANALYSIS, from `45fa3af` to
   `e6b37e7`, six commits. STATE ONLY. ***THE STATE IN THREE LINES.*** **(a) THE FOUR USER DEFECTS ARE STILL
   PRESENT**, re-measured by me at live code rather than carried: `null_draws_valued`'s two sites still pass no
@@ -155,42 +193,6 @@ updated: >-
   FOUND IN CODE THAT NEVER PRODUCED A NUMBER ANYONE IS HOLDING. Pair of record CORRECTED: **params v26 + design
   v34** (my files carried v25 + v33). Flags 2563 -> 2587, prov 2108 -> 2132; window 3/3, Batch 286 archived. MEM
   asserts no result.)
-  2026-09-09T08:54:28Z (MEM ROUND 303 -- R-856 SWEPT as a numbered queue under rule 23, from my
-  round-302 tip `0c297dd` to `17bbe9b`, eighteen commits. STATE ONLY. ***THE FINDING THAT CHANGES WHAT A SEALED
-  ARTIFACT MEANS, VERIFIED BY ME AT THE TUPLE***: `ECONOMIC_FIELDS` names `D_E0`, `D_E_MINUS_R`, `Z`, `p_location`,
-  `null_mean`, `null_sd`, `null_draws_summary` and `sd_over_abs_mean` -- and I tested each ruled field against it,
-  `D_E_settle`, `arm_total_cents`, `zero_cancel_baseline_total_cents`, `trades_leg_cents`, `residual_leg_cents` and
-  `total_cents` ALL ABSENT. ***NOT ONE FIELD OF R-801's SETTLEMENT P&L IS NAMED BY THE SEAL, WHICH HAS BEEN
-  PROTECTING THE DIAGNOSTIC AND LEAVING THE RESULT EXPOSED.*** And the tuple's own comments make it WORSE: it was
-  revisited TWICE for diagnostic fields (R-599 adding `sd_over_abs_mean` because the RATIO survived while both its
-  quantities were sealed; R-659 reversing R-656 on three count fields) and NEVER when R-801 changed which quantity
-  IS the result -- ***A SET KEPT CURRENT AGAINST ITS OLD PURPOSE IS HARDER TO NOTICE THAN AN ABANDONED ONE.*** ***I
-  COULD NOT REPRODUCE THE ARTIFACT-LEVEL "1 OF 6" AND I REPORT WHAT I MEASURED***: my first probe scanned `*SEALED*`
-  day-run files and returned 0 of 10 (my instrument -- they predate the settlement block); re-probed on
-  `day_run.per_day_sealed_artifacts`, SIX day artifacts carry sealed entries and TWO carry ruled fields, and the one
-  I opened reads `seal_status: UNSEALED_BY_USER_RULING R-765` with `sealed: False`, so on that entry the fields are
-  not under a seal at all; my predicate is looser than REV's and my call to `assert_no_economic_leak` passed one
-  argument where it takes three. THE CODE-LEVEL FINDING IS CONFIRMED AND THE COUNT IS REV'S. ***THE SECOND FINDING,
-  MEASURED END TO END***: `SCORING_PATH_MODULES` is a HAND-TYPED FIVE against the **49** the book's own receipt
-  records in `producing_code.import_closure` -- all five real, so it is A SAMPLE OF THE CLOSURE THE BOOK ALREADY
-  RECORDS -- ***AND IT IS NOT EVEN A SUPERSET OF THE TEN-MODULE CASCADE***, missing `be_cancel_axis_null`,
-  `be_data_root`, `de_matched_random_control`, `de_rho_estimator`, `phase4_generation_tables` and `pm_tape_density`,
-  so two sets governing the SAME RUN disagree about which modules matter and neither is derived from the other.
-  ***SO RULE 28 HAS NOW RECURRED INSIDE ITS OWN REMEDY TWICE***: an ASSERTION where a check was available at round
-  298, and a SAMPLE where the evidence was recorded now. Rule 32 makes the method binding with the test I will apply
-  to any set -- what operation would constitute membership, was the set built that way, would a missed member be
-  LOUD or SILENT, ONLY THE SILENT ONES MATTER -- on the evidence of three sets in one night where EVERY TIME the
-  missed member was the consequential one; and its model for repair is already in the codebase, THE HEAVY-RUN LOCK
-  DECIDING HEAVINESS BY MEASUREMENT, with the book's own 49-module closure available to derive the scoring-path
-  check from. RULE 31 -- commit each file as soon as it parses, let the battery gate the PUSH -- cost DA a full round
-  (battery green at 38, four files clean, every edit gone) and ***IT BINDS ME TOO***, since my own rounds hold three
-  written state files uncommitted for the length of a batch. The loss is consistent with `git checkout -- <path>`,
-  which moves no HEAD and leaves no reflog entry and which R-557 already forbids; the coordinator recorded what it
-  ran and stated that ***A NEGATIVE CANNOT BE PROVEN FROM A REFLOG THAT RECORDS NOTHING***. Queue item (4) was
-  ALREADY DONE at round 302 and I say so rather than filing it twice -- and DA 149 has now corrected a WIRING CELL
-  that still said three, ***A WRONG NUMBER IN PROSE MISLEADS A READER AND THE SAME NUMBER IN A CELL MAKES THE SUITE
-  VOUCH FOR IT***. Flags 2551 -> 2563, prov 2096 -> 2108; window trimmed 4 -> 3, Batch 285 archived. **NOTHING
-  BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -362,6 +364,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 306 ADDENDUM 2026-09-09T09:42:11Z: DA's verdict and REV 129 landed while I wrote ---
+  DAS_VERDICT_LANDED_WHILE_I_WROTE_AND_THREE_FLIP_WITH_THE_FOURTH_CORRECTLY_NOT: THE-OTHER-HALF-IS-IN
+  THE_PREDICATE_STILL_TYPES_A_LIST_AND_THE_FALSE_MATCH_IS_PRODUCIBLE_INSIDE_ITS_OWN_SET: TYPED-5-DERIVED-8-CASCADE-10-RECORDED-49
+  SO_D_IS_HALF_REPAIRED_THE_SUBSET_IS_REFUSED_AND_THE_SHORT_LIST_REMAINS: TWO-SEATS-TWO-HALVES-BOTH-RIGHT
+  AND_SOMETHING_DOES_COMPARE_THE_PROTOCOL_STRING_WHICH_CORRECTS_WHAT_I_RECORDED_LAST_ROUND: THIRD-SPELLING-SWEEP-ERROR
+  # --- MEM round 306, DE 166 + REV 128 swept; the ruled null now runs (1f98fc7 -> 623c050) ---
+  THE_RULED_NULL_NOW_RUNS_AND_I_RE_MEASURED_THE_WIRING_MYSELF: DAY-PATH-PASSES-BOTH
+  AND_THE_ARTIFACT_NAMES_ITS_MATCHING_UNIT_WHICH_IS_THE_FAILURE_THAT_LET_FOUR_ENTRIES_STAND: ABSENT-TO-CANCELS
+  THE_UNIT_IS_REQUIRED_AND_CHECKED_AGAINST_THE_INPUTS_THAT_WOULD_MAKE_IT_TRUE: FIVE-WAYS-DRIVEN
+  A_DEFAULT_IS_WHAT_MADE_A_WIRED_LOOKING_THING_UNWIRED: DEs-OWN-GENERALISATION
+  THE_DECISION_COUNT_IS_DE_DUPLICATED_AND_THE_PREDICATE_REFUSES_A_SUBSET: BOTH-RE-DRIVEN-BY-ME
+  THE_PREMISE_IS_REPAIRED_AT_THE_CONSUMER_AND_NOT_AT_THE_INVARIANT: THE-GATE-STILL-RETURNS-TRUE
+  WHAT_DE_DID_NOT_ESTABLISH_BOUNDS_WHAT_THE_REPAIR_CAN_CLAIM: BOTH-NEED-A-CORRECTED-BOOK
+  THE_LAND_GUARD_BASE_WAS_THE_WORKTREE_HEAD_AND_RULE_31_EXPOSED_IT: MERGE-BASE-NOW
+  DE_DISCLOSED_THREE_SLIPS_AND_I_CARRY_THEM_RELAYED: NO-ARTIFACT-I-CAN-REACH
+  DO_NOT_RESTORE_THE_CLOSED_AND_VERIFIED_COUNTS_UNTIL_DAs_VERDICT: ONE-HALF-OF-TWO
+  THE_PAIR_OF_RECORD_ADVANCED_TWICE_TO_PARAMS_V28_AND_DESIGN_V36: CRANKED-WITH-EACH-FIX
   # --- MEM round 305, R-860 swept; light round, bookkeeping (45fa3af -> e6b37e7) ---
   THE_FOUR_USER_DEFECTS_ARE_STILL_PRESENT_AND_I_RE_MEASURED_ALL_FOUR: NO-DE-REPAIR-LANDED-YET
   WHAT_IS_CLEAN_IS_THE_BUILD_INPUTS_ON_ALL_FIVE_QUEUED_DAYS: AGREEMENT-5-OF-5
@@ -26995,6 +27014,197 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 306 ADDENDUM, 2026-09-09T09:42:11Z ---
+  DAS_VERDICT_LANDED_WHILE_I_WROTE_AND_THREE_FLIP_WITH_THE_FOURTH_CORRECTLY_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:42:11Z
+    said: >-
+      ***THE OTHER HALF LANDED WHILE I WAS WRITING THIS ROUND, SO THE "STILL RUNNING" I WAS GIVEN IS ALREADY STALE
+      AND I CORRECT IT BEFORE LANDING RATHER THAN AFTER.*** DA 154 (`Q-DA-377`): **(1) null FIXED -- driven AT
+      RUNTIME, all four refusal shapes fire; (2) decision count FIXED -- `decisions = 2 = actions` with
+      `decisions_unit GENERATION` and the row count beside it; (4) book-code subset FIXED -- 0 of 5 single-module
+      receipts accepted, full set still admitted.** ***AND (3) DOES NOT FLIP, CORRECTLY***: DE established the
+      premise and did not re-rule it, **the engine still double-cancels BY DESIGN**, and the fix is in
+      `demand_from_arm` -- *"which my case was not testing -- my own audited class."* Driven both directions with
+      real slugs: **distinct generations ADMIT, the `7`/`7.r1` pair REFUSES by name.** **So DA independently reaches
+      the same consumer-not-invariant reading I measured, from its own cases.**
+  THE_PREDICATE_STILL_TYPES_A_LIST_AND_THE_FALSE_MATCH_IS_PRODUCIBLE_INSIDE_ITS_OWN_SET:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:42:11Z
+    said: >-
+      **And REV 129 (`Q-REV-130`) landed in the same minutes with a finding that keeps (d) OPEN**: ***THE PREDICATE
+      STILL TYPES A LIST.*** There is **no reference to `derived_closures` or `be_producing_closure` in
+      `de_multiday_gate1_runner.py`** -- it still filters the recorded closure to the typed names, *"so anything
+      outside the five is never hashed"*. **DE recorded the fact in a comment beside it, so it is known and not
+      hidden -- but unfixed.** ***THE GAP, IN ONE LINE: TYPED 5 | BE-DERIVED 8 | CASCADE 10 | RECORDED 49*** --
+      derived-not-typed being `de_data_root.py`, `de_multiday_gate1_runner.py`, `pm_tape_density.py`, and
+      typed-not-derived **none**. **The list is not WRONG but SHORT -- the more dangerous shape, because everything
+      it checks is legitimate and what it omits is invisible** -- and REV drove **the false MATCH with victims chosen
+      INSIDE the derived scoring set**, so the *"that belongs to the cascade check"* defence is unavailable.
+  SO_D_IS_HALF_REPAIRED_THE_SUBSET_IS_REFUSED_AND_THE_SHORT_LIST_REMAINS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:42:11Z
+    said: >-
+      ***SO DEFECT (d) IS HALF-REPAIRED, AND DA AND REV ARE BOTH RIGHT ABOUT DIFFERENT HALVES.*** DA drove **0 of 5
+      single-module receipts accepted** -- the SUBSET-ACCEPTANCE half, which I also re-drove to
+      `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`. REV drove the **MEMBERSHIP** half -- the set the coverage is measured
+      *against* is still five typed names, so a module outside them is never hashed and **a false MATCH is producible
+      inside the derived scoring set.** **A coverage guard over a short list reports full coverage of the wrong
+      set**; the two findings do not conflict and neither closes the item. ***THIS FILE RECORDS (d) AS OPEN.***
+  AND_SOMETHING_DOES_COMPARE_THE_PROTOCOL_STRING_WHICH_CORRECTS_WHAT_I_RECORDED_LAST_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:42:11Z
+    said: >-
+      ***AND A CORRECTION TO WHAT I RECORDED LAST ROUND, SUPERSEDED IN BAND.*** My round-305 generation and
+      `HANDOFF.md:121` carry DA 153's *"a tree-wide sweep for the literal finds FOUR SITES AND NOT ONE COMPARISON"*.
+      **DA 154 corrects its own Q-DA-376 in band: `da_gate1_day_verdict`'s red is CORRECT, its only failing conjunct
+      being `protocol.endswith(V28)` -- SO SOMETHING DOES COMPARE THE PROTOCOL STRING, BUILT DYNAMICALLY, AND DA'S
+      LITERAL REGEX MISSED IT.** DA names it **its THIRD spelling-sweep error**, which is rule 32's own class
+      (*enumerate by operation, not by spelling*) recurring in the seat that wrote the lesson. ***AND THE COROLLARY
+      REVERSES: THE STRING IS NOT INERT, SO BUMPING IT IS NOT FREE*** -- which is a fact the v27/v28 declaration
+      choice now depends on. **My files carried the stronger claim for one round; this supersedes it.**
+  # --- MEM round 306, 2026-09-09T09:40:36Z ---
+  THE_RULED_NULL_NOW_RUNS_AND_I_RE_MEASURED_THE_WIRING_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      ***THE STATE CHANGE: THE USER'S DEFECTS ARE REPAIRED, AND I RE-RAN MY OWN ROUND-304 CENSUS RATHER THAN READING
+      DE'S CLAIM.*** The day path now passes both -- **`:8120` `arm_cancels=True`, `control_set_path=True`.** The two
+      other call sites pass neither **and that is correct, not a miss**: `:11659` is the second-valuation cell, which
+      **declares the historical row-matched unit EXPLICITLY rather than reaching it by omission**, and `:15125`
+      drives the refusal cases. **DE's wiring takes the arm's own cancel records through BE's OWN `params_for` and
+      the shared policy module -- the identical call, not a second implementation -- AND THE TWO ARE ASSERTED TO
+      AGREE ON `cancels_issued`**, because a second call that silently disagreed would put the control's demand on a
+      different arm than the result.
+  AND_THE_ARTIFACT_NAMES_ITS_MATCHING_UNIT_WHICH_IS_THE_FAILURE_THAT_LET_FOUR_ENTRIES_STAND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      ***AND THE HALF THAT MATTERS MOST TO THIS SEAT: IT IS CLOSED AT THE ARTIFACT, NOT ONLY IN THE CODE.*** REV 128
+      re-drove its own REVIEW 126 baseline at the same entry point: **`arm_cancels` False -> True,
+      `control_set_path` False -> True, and `draw_provenance.matched_on` ABSENT -> `CANCELS`.** ***AN ABSENT FIELD IS
+      EXACTLY WHAT LET R-837, R-847, R-852 AND R-856 CLAIM RULING B WAS IMPLEMENTED WITH NO RECEIPT CONTRADICTING
+      THEM*** -- last round I recorded that the honest fallback existed in source and had never been written to an
+      artifact. **Now the artifact names its own matching unit**, and the receipt reads that unit back ***FROM THE
+      NULL'S RESULT, NEVER FROM THE ARGUMENT.*** DE also found `verify_draw_provenance` **DROPPING `matched_on` and
+      the control-set artifact while rebuilding the block -- one field below its own comment about not dropping the
+      cross-check** (rule 28, again).
+  THE_UNIT_IS_REQUIRED_AND_CHECKED_AGAINST_THE_INPUTS_THAT_WOULD_MAKE_IT_TRUE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      **The refusal is real and driven five ways through `null_draws_valued`** (both refusal names present in the
+      module at my read): `matched_on` **omitted / `None` / `'ROWS'` -> `NULL_MATCHING_UNIT_NOT_DECLARED`**;
+      **`CANCELS` with no `arm_cancels`, or with no control set -> `NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS`**;
+      **the declared alternative `DECISIONS` proceeds**, and `DECISIONS` while carrying cancel records refuses.
+      ***THE UNIT IS REQUIRED AND CHECKED AGAINST THE INPUTS THAT WOULD MAKE IT TRUE*** -- not merely recorded. And
+      the falsifier arrived on its own: **the cell asserting the row-matched cross-check `identical is True` WENT RED
+      the moment the ruled null was wired**, having been green throughout.
+  A_DEFAULT_IS_WHAT_MADE_A_WIRED_LOOKING_THING_UNWIRED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      ***DE'S OWN GENERALISATION, AND IT IS THE RIGHT ONE: "A DEFAULT IS WHAT MADE A WIRED-LOOKING THING UNWIRED."***
+      `arm_cancels: list | None = None` meant the branch's guard was False on every real day **while every reader --
+      four register entries, a review, this workspace -- saw a branch that existed.** The repair is stated in the
+      same register: ***"the unreachable case is IMPOSSIBLE rather than fixed."*** **A parameter that can be omitted
+      is a claim nobody has to make**, which is the same shape as rule 32's silent-miss test arriving from the
+      argument list instead of the set.
+  THE_DECISION_COUNT_IS_DE_DUPLICATED_AND_THE_PREDICATE_REFUSES_A_SUBSET:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      **Both re-driven by me at live code, not carried.** (b) `day_decision_population` now builds **`_gens =
+      {(slug, side, int(gen)) for r in above}`** and counts `by_side` over THAT, keeping `_rows_by_side` alongside --
+      ***SO THE NUMBER IS ACTIONS AND THE `definition` STRING THAT ALWAYS SAID "GENERATIONS" IS NOW TRUE***, with
+      admissibility and the null's draw size both fed the de-duplicated count. (d) the one-module receipt that
+      returned `BOOK_SCORING_CODE_MATCHES, n_checked: 1` last round now ***REFUSES `BOOK_SCORING_CODE_RECEIPT_
+      INCOMPLETE`*** when I drive it, and the predicate **PUBLISHES `closure_coverage` -- 5 of 49 as a number in the
+      result rather than a fact only a reviewer knows.** *`not recorded` was a NOT-EMPTY guard where a COVERAGE guard
+      was wanted.*
+  THE_PREMISE_IS_REPAIRED_AT_THE_CONSUMER_AND_NOT_AT_THE_INVARIANT:
+    prov: CHECKED
+    artifact: live/pm_research/de_matched_cancel_control.py
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      ***A DISTINCTION I MEASURED AND WILL NOT LET BLUR: (c) IS REPAIRED AT THE CONSUMER, NOT AT THE INVARIANT.***
+      Driving the live gate again, **`one_cancel_per_generation` STILL returns `True` on `7` / `7.r1`** -- by design,
+      because it is an invariant about POLICY ids and remains true of them. What changed is the module that
+      **relied** on the premise: `de_matched_cancel_control` now measures the relation keyed **`(slug, side,
+      int(ref_gen))`** -- *"how many cancels does a REFERENCE generation get", the question ruling B's premise
+      answers with "at most one" and **nobody had measured*** -- and `demand_from_arm` ***REFUSES BY NAME,
+      `MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE`.*** Both old consequences were measured: in a
+      saturated stratum `draw_one` refused `STRATUM_TOO_SMALL` -- **loud for the WRONG REASON** -- and in a stratum
+      with room it drew **SILENTLY**, acting on 2 distinct reference generations where the arm acted on 1. **So a day
+      cannot quietly produce a mis-matched null while the unit is with the USER.**
+  WHAT_DE_DID_NOT_ESTABLISH_BOUNDS_WHAT_THE_REPAIR_CAN_CLAIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      ***AND WHAT DE EXPLICITLY DID NOT ESTABLISH, RECORDED BECAUSE IT BOUNDS WHAT THE REPAIR CAN CLAIM: THE REAL
+      ROWS-PER-DECISION FACTOR AND THE REAL RATE OF DOUBLE-CANCELLED GENERATIONS BOTH NEED A CORRECTED BOOK, AND
+      NONE EXISTS (R-834).*** **Fixed in MECHANISM, UNQUANTIFIED until something is built.** So the honest statement
+      of tonight's position is that **the code now computes the right quantity and nobody knows by how much the old
+      one was wrong** -- which is a repair, not a measurement, and this file will not let the two be read as one.
+  THE_LAND_GUARD_BASE_WAS_THE_WORKTREE_HEAD_AND_RULE_31_EXPOSED_IT:
+    prov: CHECKED
+    artifact: scripts/de_land.sh
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      **A tooling bug that RULE 31 ITSELF EXPOSED, which is the sort of thing a new rule surfaces in its first
+      hours.** `de_land.sh`'s guard based its diff on **the worktree's HEAD** -- and under *"commit each file as soon
+      as it parses"* that is ***A LOCAL COMMIT THE SHARED TREE HAS NEVER SEEN***, so it refused **seven paths, all
+      of them DE's own.** The base is now the **MERGE-BASE** (`:49`, with an explicit refusal when there is none),
+      *"which is the question the guard was always asking."* **Re-driven both ways: it still refuses a path another
+      seat moved (`COORDINATION.md`) and admits DE's.** *The rule that shortens the exposure window changed what
+      "HEAD" means to every guard that used it as a baseline.*
+  DE_DISCLOSED_THREE_SLIPS_AND_I_CARRY_THEM_RELAYED:
+    prov: RELAYED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      **DE disclosed three slips caught BEFORE landing, and I carry them RELAYED rather than CHECKED because I could
+      not reach them at an artifact** -- they are not in the commit message, the register row or `DE_PROCEDURE.md`
+      at my read, and I say so rather than marking my own inability as verification. As relayed by the coordinator:
+      **an inserted if/else that INVERTED `PARTIAL_ROWS` -- it PARSED AND WAS WRONG** -- and ***TWO ASSERTIONS THAT
+      TESTED A PHRASE RATHER THAN THE PROPERTY, WHICH IS RULE 33'S OWN CLASS FOUND BY THE SEAT IN ITS OWN WORK,
+      DURING THE ROUND THAT REPAIRS RULE 33'S OTHER INSTANCES.*** **Self-disclosure of a caught slip is the behaviour
+      the programme wants**; the classification records only that I have not seen it myself.
+  DO_NOT_RESTORE_THE_CLOSED_AND_VERIFIED_COUNTS_UNTIL_DAs_VERDICT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      ***THE GATE ARITHMETIC STAYS WITHDRAWN. DO NOT RESTORE "CLOSED AND VERIFIED" COUNTS: DA'S FOUR CASES ARE STILL
+      RUNNING AND ITS VERDICT IS THE OTHER HALF.*** REV 128 is **one** independent verification, at the entry point,
+      against its own prior baseline -- **which is exactly the form rule 33 asks for and is still one of two.** DA's
+      cases were **built BEFORE the fixes so they already fire on the defect**; a repair that does not flip them is
+      the strongest available evidence and it has not been read yet. **This file quotes no restored count**, and the
+      state it carries is *repaired and verified once*, not *closed*.
+  THE_PAIR_OF_RECORD_ADVANCED_TWICE_TO_PARAMS_V28_AND_DESIGN_V36:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:40:36Z
+    said: >-
+      **The pin crank ran TWICE, each in the same commit as the fix that moved the module** -- params v27 + design
+      v35, then **params v28 + design v36**, with **10/10 cascade digests and `be_module` against disk, 0
+      mismatched.** Confirmed at the code: `PARAMS_REL` is `..._params_v28.json` (`:70`) and
+      `de_multiday_design_declaration.VERSION` is **36**. My round-305 files carried **v26 + v34**; ***THE PAIR OF
+      RECORD IS params v28 + design v36.*** And **6a** is repaired without over-reaching: `load_params` now refuses
+      an **UNDECLARED** divergence and **does NOT assert that the suffix must equal the version**, because *a
+      pin-crank version has a real claim to keeping its protocol string and choosing is a RULING*; v27 DECLARES the
+      divergence, with the caveat kept that **v25 armed `require_book_declares_L`, so "nothing but pins since V20"
+      is not exactly true.**
   # --- MEM round 305, 2026-09-09T09:16:15Z ---
   THE_FOUR_USER_DEFECTS_ARE_STILL_PRESENT_AND_I_RE_MEASURED_ALL_FOUR:
     prov: CHECKED

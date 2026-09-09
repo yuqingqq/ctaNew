@@ -21286,3 +21286,44 @@ generation and the window went 4 → 3. Nothing rewritten.
   4 -> 3, Batch 284 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM
   asserts no result.)
 ```
+
+## Batch 288 — archived 2026-09-09T09:40:36Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:54:28Z (MEM ROUND 303 -- R-856 SWEPT as a numbered queue under rule 23, from my
+  round-302 tip `0c297dd` to `17bbe9b`, eighteen commits. STATE ONLY. ***THE FINDING THAT CHANGES WHAT A SEALED
+  ARTIFACT MEANS, VERIFIED BY ME AT THE TUPLE***: `ECONOMIC_FIELDS` names `D_E0`, `D_E_MINUS_R`, `Z`, `p_location`,
+  `null_mean`, `null_sd`, `null_draws_summary` and `sd_over_abs_mean` -- and I tested each ruled field against it,
+  `D_E_settle`, `arm_total_cents`, `zero_cancel_baseline_total_cents`, `trades_leg_cents`, `residual_leg_cents` and
+  `total_cents` ALL ABSENT. ***NOT ONE FIELD OF R-801's SETTLEMENT P&L IS NAMED BY THE SEAL, WHICH HAS BEEN
+  PROTECTING THE DIAGNOSTIC AND LEAVING THE RESULT EXPOSED.*** And the tuple's own comments make it WORSE: it was
+  revisited TWICE for diagnostic fields (R-599 adding `sd_over_abs_mean` because the RATIO survived while both its
+  quantities were sealed; R-659 reversing R-656 on three count fields) and NEVER when R-801 changed which quantity
+  IS the result -- ***A SET KEPT CURRENT AGAINST ITS OLD PURPOSE IS HARDER TO NOTICE THAN AN ABANDONED ONE.*** ***I
+  COULD NOT REPRODUCE THE ARTIFACT-LEVEL "1 OF 6" AND I REPORT WHAT I MEASURED***: my first probe scanned `*SEALED*`
+  day-run files and returned 0 of 10 (my instrument -- they predate the settlement block); re-probed on
+  `day_run.per_day_sealed_artifacts`, SIX day artifacts carry sealed entries and TWO carry ruled fields, and the one
+  I opened reads `seal_status: UNSEALED_BY_USER_RULING R-765` with `sealed: False`, so on that entry the fields are
+  not under a seal at all; my predicate is looser than REV's and my call to `assert_no_economic_leak` passed one
+  argument where it takes three. THE CODE-LEVEL FINDING IS CONFIRMED AND THE COUNT IS REV'S. ***THE SECOND FINDING,
+  MEASURED END TO END***: `SCORING_PATH_MODULES` is a HAND-TYPED FIVE against the **49** the book's own receipt
+  records in `producing_code.import_closure` -- all five real, so it is A SAMPLE OF THE CLOSURE THE BOOK ALREADY
+  RECORDS -- ***AND IT IS NOT EVEN A SUPERSET OF THE TEN-MODULE CASCADE***, missing `be_cancel_axis_null`,
+  `be_data_root`, `de_matched_random_control`, `de_rho_estimator`, `phase4_generation_tables` and `pm_tape_density`,
+  so two sets governing the SAME RUN disagree about which modules matter and neither is derived from the other.
+  ***SO RULE 28 HAS NOW RECURRED INSIDE ITS OWN REMEDY TWICE***: an ASSERTION where a check was available at round
+  298, and a SAMPLE where the evidence was recorded now. Rule 32 makes the method binding with the test I will apply
+  to any set -- what operation would constitute membership, was the set built that way, would a missed member be
+  LOUD or SILENT, ONLY THE SILENT ONES MATTER -- on the evidence of three sets in one night where EVERY TIME the
+  missed member was the consequential one; and its model for repair is already in the codebase, THE HEAVY-RUN LOCK
+  DECIDING HEAVINESS BY MEASUREMENT, with the book's own 49-module closure available to derive the scoring-path
+  check from. RULE 31 -- commit each file as soon as it parses, let the battery gate the PUSH -- cost DA a full round
+  (battery green at 38, four files clean, every edit gone) and ***IT BINDS ME TOO***, since my own rounds hold three
+  written state files uncommitted for the length of a batch. The loss is consistent with `git checkout -- <path>`,
+  which moves no HEAD and leaves no reflog entry and which R-557 already forbids; the coordinator recorded what it
+  ran and stated that ***A NEGATIVE CANNOT BE PROVEN FROM A REFLOG THAT RECORDS NOTHING***. Queue item (4) was
+  ALREADY DONE at round 302 and I say so rather than filing it twice -- and DA 149 has now corrected a WIRING CELL
+  that still said three, ***A WRONG NUMBER IN PROSE MISLEADS A READER AND THE SAME NUMBER IN A CELL MAKES THE SUITE
+  VOUCH FOR IT***. Flags 2551 -> 2563, prov 2096 -> 2108; window trimmed 4 -> 3, Batch 285 archived. **NOTHING
+  BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM asserts no result.)
+```

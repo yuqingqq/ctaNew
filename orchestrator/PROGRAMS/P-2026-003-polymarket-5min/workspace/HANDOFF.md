@@ -1,3 +1,129 @@
+# READ FIRST — round 306 (MEM, 2026-09-09T09:40:36Z, tip `623c050`)
+
+**DE 166, REV 128, DA 154 and REV 129 swept — seven commits since `1f98fc7`.** Light round.
+
+*(I swept four to `da1a117`; three more landed while I wrote. Folded in the addendum below, not left to next
+round — and one of them corrects a claim my round-305 files carry.)*
+
+# ✅ THE STATE CHANGE: THE USER'S DEFECTS ARE REPAIRED, AND THE FIRST VERIFICATION IS IN
+
+**I re-ran my own round-304 census rather than reading DE's claim.**
+
+| | round 304 | now |
+|---|---|---|
+| `run_day` → `arm_cancels` | **False** | **True** (`:8120`) |
+| `run_day` → `control_set_path` | **False** | **True** |
+| `draw_provenance.matched_on` | **ABSENT** | **`CANCELS`** |
+| one-module receipt | `MATCHES`, `n_checked: 1` | **`BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** |
+| the decision count | rows | **`_gens = {(slug, side, gen)}`** — actions |
+
+*(The two other `null_draws_valued` sites pass neither, and that is correct: `:11659` is the second-valuation cell,
+which **declares the row-matched unit explicitly rather than reaching it by omission**; `:15125` drives the refusal
+cases.)*
+
+**And it is closed AT THE ARTIFACT, not only in the code.** An absent field is exactly what let **R-837, R-847,
+R-852 and R-856** claim ruling B was implemented with no receipt contradicting them. The receipt now reads the unit
+back **from the null's result, never from the argument** — and DE found `verify_draw_provenance` **dropping
+`matched_on` while rebuilding the block, one field below its own comment about not dropping the cross-check** (rule
+28, again).
+
+**The refusal is real — driven five ways.** `matched_on` omitted / `None` / `'ROWS'` →
+**`NULL_MATCHING_UNIT_NOT_DECLARED`**; `CANCELS` without cancel records or without a control set →
+**`NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS`**; the declared alternative `DECISIONS` proceeds. **The unit is
+REQUIRED and CHECKED AGAINST THE INPUTS THAT WOULD MAKE IT TRUE.** And the falsifier arrived on its own: **the cell
+asserting the row-matched cross-check `identical is True` went RED the moment the ruled null was wired.**
+
+**⇒ DE's generalisation, and it is the right one: *"a default is what made a wired-looking thing unwired."*** The
+unreachable case is now **impossible rather than fixed**.
+
+## ⚠ (c) IS REPAIRED AT THE CONSUMER, NOT AT THE INVARIANT — a distinction I measured
+
+**`one_cancel_per_generation` still returns `True` on `7` / `7.r1`** — correctly; it is an invariant about **policy
+ids** and remains true of them. What changed is the module that **relied** on the premise:
+`de_matched_cancel_control` measures the relation keyed **`(slug, side, ref_gen)`** — *"how many cancels does a
+reference generation get"*, the question ruling B's premise answers with "at most one" **and nobody had measured** —
+and refuses **`MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE`**. Both old consequences were measured: a
+saturated stratum refused `STRATUM_TOO_SMALL` — **loud for the wrong reason** — and a stratum with room drew
+**silently**, on 2 reference generations where the arm acted on 1.
+
+## ⚠ WHAT DE DID **NOT** ESTABLISH — it bounds what the repair can claim
+
+**The real rows-per-decision factor and the real rate of double-cancelled generations BOTH need a corrected book,
+and none exists.** **Fixed in mechanism, unquantified until something is built.** *The code now computes the right
+quantity and nobody knows by how much the old one was wrong.*
+
+## DE'S DISCLOSURES
+
+**Three slips caught before landing** — an if/else that **inverted `PARTIAL_ROWS`** (*it parsed and was wrong*), and
+**two assertions that tested a phrase rather than the property — rule 33's own class, found by the seat in its own
+work, during the round that repairs rule 33's other instances.** *Carried **RELAYED**, not CHECKED: they are not in
+the commit message, the register row or `DE_PROCEDURE.md` at my read, and I say so rather than marking my inability
+as verification.*
+
+**`de_land.sh`'s guard based its diff on the worktree's HEAD** — under rule 31 **a local commit the shared tree has
+never seen** — so it refused **seven paths, all DE's own**. The base is the **merge-base** now, *"which is the
+question the guard was always asking"*; re-driven both ways. *The rule that shortens the exposure window changed what
+"HEAD" means to every guard that used it as a baseline.*
+
+## ⛔ THE GATE ARITHMETIC STAYS WITHDRAWN
+
+**Do not restore "closed and verified" counts: DA's four cases are still running and its verdict is the other half.**
+REV 128 is **one** independent verification — at the entry point, against its own prior baseline, exactly the form
+rule 33 asks for, **and still one of two.** DA's cases were built **before** the fixes so they already fire; a repair
+that does not flip them is the strongest available evidence and **it has not been read yet.** This file's state is
+**repaired and verified once**, not *closed*.
+
+## STATE
+
+**Pair of record advanced TWICE**, each crank in the same commit as the fix that moved the module: **params v28 +
+design v36** (10/10 cascade digests, 0 mismatched). My round-305 files carried v26 + v34. **6a** is repaired without
+over-reaching: `load_params` refuses an **undeclared** divergence and **does not** assert the suffix must equal the
+version — *a pin-crank version has a real claim to its protocol string and choosing is a ruling.*
+
+**Nothing built, no heavy lock since 07:15:47Z.**
+
+Counts: flags 2595 → 2610, provenance 2140 → 2155 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 288 archived. MEM asserts no result.
+
+## ADDENDUM 2026-09-09T09:42:11Z — DA's verdict and REV 129 landed while I wrote
+
+**DA 154 (`Q-DA-377`) — the other half is IN, so "still running" is already stale.** **(1) null FIXED**, driven at
+runtime, **all four refusal shapes fire**; **(2) decision count FIXED** — `decisions = 2 = actions`, `decisions_unit
+GENERATION`, row count beside it; **(4) book-code subset FIXED** — **0 of 5** single-module receipts accepted, full
+set still admitted. **(3) does NOT flip — correctly:** DE established the premise and did not re-rule it, **the
+engine still double-cancels by design**, and the fix is in `demand_from_arm` — *"which my case was not testing — my
+own audited class."* Driven both ways with real slugs: **distinct generations ADMIT, `7`/`7.r1` REFUSES by name.**
+**DA reaches the consumer-not-invariant reading independently, from its own cases.**
+
+**⚠ REV 129 (`Q-REV-130`) keeps (d) OPEN: the predicate STILL TYPES A LIST.** No reference to `derived_closures` or
+`be_producing_closure` in the runner; it still filters the recorded closure to the typed names, **so anything outside
+the five is never hashed.** DE recorded the fact in a comment beside it — **known, not hidden, unfixed.**
+
+| set | size |
+|---|---|
+| typed | **5** |
+| BE-derived | **8** |
+| cascade | **10** |
+| recorded | **49** |
+
+derived-not-typed = `de_data_root.py`, `de_multiday_gate1_runner.py`, `pm_tape_density.py`; typed-not-derived =
+**none**. **The list is not wrong but SHORT — the more dangerous shape, because everything it checks is legitimate
+and what it omits is invisible.** REV drove **the false MATCH with victims chosen inside the derived scoring set**,
+so the *"that belongs to the cascade check"* defence is unavailable.
+
+**⇒ (d) is HALF-REPAIRED and both seats are right about different halves:** the **subset-acceptance** half is fixed
+(0 of 5 accepted); the **membership** half is not (**a coverage guard over a short list reports full coverage of the
+wrong set**). **This file records (d) as OPEN.**
+
+**⚠ AND A CORRECTION TO MY OWN ROUND-305 FILES, SUPERSEDED IN BAND.** They carry DA 153's *"a tree-wide sweep finds
+four sites and **not one comparison**"* (`HANDOFF.md:121`). **DA 154 corrects its own Q-DA-376: `da_gate1_day_verdict`'s
+red is CORRECT, its only failing conjunct `protocol.endswith(V28)` — so something DOES compare the protocol string,
+built dynamically, and DA's literal regex missed it.** DA names it its **third spelling-sweep error** — rule 32's own
+class (*enumerate by operation, not by spelling*) recurring in the seat that wrote the lesson. **The corollary
+reverses: the string is not inert, so bumping it is not free.**
+
+---
+
 # READ FIRST — round 305 (MEM, 2026-09-09T09:16:15Z, tip `e6b37e7`)
 
 **R-860 swept — six commits since `45fa3af`.** Light round: **bookkeeping, not analysis.**
