@@ -27170,7 +27170,8 @@ flag_provenance:
       "HEAD" means to every guard that used it as a baseline.*
   DE_DISCLOSED_THREE_SLIPS_AND_I_CARRY_THEM_RELAYED:
     prov: RELAYED
-    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    from: the MEM 306 coordinator dispatch, relaying DE's own report -- NOT found by me
+      in `3b93077`'s message, the `Q-DE-148` register row or `DE_PROCEDURE.md`
     as_of: 2026-09-09T09:40:36Z
     said: >-
       **DE disclosed three slips caught BEFORE landing, and I carry them RELAYED rather than CHECKED because I could
