@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 423
+EXPECTED_CHECKS = 424
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -5814,6 +5814,70 @@ def assert_one_placement_latency(doc) -> dict:
 PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED = (
     "SETTLEMENT_BOOK_PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED")
 
+#: DE 189 / REV 150's residual, and it is rule 35's shape a fifth time:
+#: `split_book: False` is a BOOLEAN, so nothing NAMES the absent
+#: complement leg, and the only thing standing between a reader and a
+#: half-checked reconciliation was BE's module refusing one seam over.
+#: A name binds where a boolean does not.
+COMPLEMENT_KEPT = "COMPLEMENT_LEG_KEPT__L0_COMPARISON_AVAILABLE"
+COMPLEMENT_DISCARDED = ("COMPLEMENT_LEG_COUNTED_AND_DISCARDED__"
+                        "L0_COMPARISON_IMPOSSIBLE_ON_THIS_BOOK")
+COMPLEMENT_UNDECLARED = ("COMPLEMENT_LEG_UNDECLARED__"
+                         "THE_RECEIPT_DOES_NOT_SAY")
+
+
+def complement_leg_status(receipt: dict) -> dict:
+    """WHAT BECAME OF THE TRANCHES THAT ARRIVED BEFORE THE QUOTE RESTED.
+
+    Three states, and the difference decides whether the placement-latency
+    question CAN be asked of a book at all:
+
+      KEPT       the builder split them off and KEPT them
+                 (`placement_latency_split`, BE 133). 09-04 onward.
+      DISCARDED  they were COUNTED and THROWN AWAY -- the receipt says how
+                 many (`n_tranches_dropped`) and the book does not carry
+                 them. 09-03's EV21 book. The L=0 comparison cannot be
+                 made from this book AT ALL, and no amount of care
+                 downstream recovers it.
+      UNDECLARED neither is stated. Not read as either.
+
+    REV 150's residual: the previous form was `split_book: False`, a bare
+    boolean, so nothing on the result NAMED the absent leg -- the only
+    cover was `be_placement_latency_reconcile` refusing
+    DROPPED_TRANCHES_ABSENT_FROM_THE_BOOK one module over. A consumer
+    reading only this function got a clean-looking result about a book
+    whose complement had been destroyed at build time."""
+    pl = (receipt or {}).get("placement_latency") or {}
+    has_split = "placement_latency_split" in (receipt or {})
+    dropped = pl.get("n_tranches_dropped")
+    if has_split:
+        status, why = COMPLEMENT_KEPT, (
+            "the receipt declares `placement_latency_split`, so the "
+            "tranches that arrived before the quote could rest are IN the "
+            "book and both legs can be valued from one replay")
+    elif isinstance(dropped, (int, float)) and not isinstance(dropped, bool):
+        status, why = COMPLEMENT_DISCARDED, (
+            f"the receipt declares no split and reports "
+            f"`n_tranches_dropped: {dropped}` -- those tranches were "
+            f"counted and discarded at BUILD time, so the L=0 leg does "
+            f"not exist in this book and cannot be recovered from it")
+    else:
+        status, why = COMPLEMENT_UNDECLARED, (
+            "the receipt declares neither a split nor a dropped count, so "
+            "what became of the pre-placement tranches is unknown. This is "
+            "NOT 'no tranches were dropped'")
+    return {"status": status, "why": why,
+            "n_tranches_discarded_at_build": (
+                dropped if status == COMPLEMENT_DISCARDED else None),
+            "the_reconciliation_can_run": status == COMPLEMENT_KEPT,
+            "what_a_consumer_must_do": (
+                "read this before quoting a placement-latency comparison. "
+                "On a DISCARDED or UNDECLARED book the comparison has no "
+                "second term, and a reconciliation that 'passes' there has "
+                "checked half of what its name claims"),
+            "rule": ("35 -- a limit that lives only in a declaration does "
+                     "not bind the result, so the limit is ON the result")}
+
 
 def _scalar_siblings(receipt: dict, dotted: str) -> dict:
     """The scalar fields of the block at `dotted` (a `.a.b` path)."""
@@ -5970,6 +6034,10 @@ def placement_latency_from_the_book(builder_receipt: dict, *,
                 "declared_at": _decl,
                 "sub_records": _accounted,
                 "split_book": bool(_accounted),
+                # DE 189 / REV 150: THE BOOLEAN ABOVE DOES NOT NAME
+                # ANYTHING. This does, and it is the field a consumer must
+                # read before quoting any L=0 comparison.
+                "complement_leg": complement_leg_status(builder_receipt),
                 "ambiguous": False,
                 "book": _book,
                 "LIMIT": (
@@ -11385,6 +11453,40 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"reconciliation calls those an UPPER BOUND under a "
        f"fill-probability assumption")
 
+    # ---- DE 189 / REV 150's RESIDUAL: THE ABSENT LEG IS NAMED --------
+    # `split_book: False` is a BOOLEAN, so nothing on the result named the
+    # missing complement, and the only cover was BE's module refusing one
+    # seam over. Rule 35's shape a fifth time. Three states, driven
+    # separately, because the one that matters is the middle one: a book
+    # whose complement was DESTROYED AT BUILD TIME looks, to a boolean,
+    # exactly like one that simply has no split.
+    _cl_kept = complement_leg_status(
+        {"placement_latency_split": {"legs": 2},
+         "placement_latency": {"placement_latency_ms": 250.0}})
+    _cl_disc = complement_leg_status(
+        {"placement_latency": {"placement_latency_ms": 250.0,
+                               "n_tranches_dropped": 23765}})
+    _cl_und = complement_leg_status(
+        {"placement_latency": {"placement_latency_ms": 250.0}})
+    ok(_cl_kept["status"] == COMPLEMENT_KEPT
+       and _cl_kept["the_reconciliation_can_run"] is True
+       and _cl_disc["status"] == COMPLEMENT_DISCARDED
+       and _cl_disc["the_reconciliation_can_run"] is False
+       and _cl_disc["n_tranches_discarded_at_build"] == 23765
+       and _cl_und["status"] == COMPLEMENT_UNDECLARED
+       and _cl_und["the_reconciliation_can_run"] is False
+       and _cl_und["n_tranches_discarded_at_build"] is None
+       and "NOT 'no tranches were dropped'" in _cl_und["why"],
+       f"DE 189 THE ABSENT COMPLEMENT LEG IS NAMED, NOT A FALSE BOOLEAN: "
+       f"a split receipt says `{_cl_kept['status']}`; a receipt that "
+       f"COUNTED AND DISCARDED them says "
+       f"`{_cl_disc['status']}` AND CARRIES THE COUNT "
+       f"({_cl_disc['n_tranches_discarded_at_build']}), which is the state "
+       f"a boolean could not distinguish from the third; and a receipt "
+       f"declaring NEITHER says `{_cl_und['status']}` and is explicitly "
+       f"not read as 'no tranches were dropped'. Only the first permits "
+       f"an L=0 comparison, and the field says so ON THE RESULT (rule 35)")
+
     # AND THE SAME PROPERTY ON THE REAL RECEIPTS -- the 09-04 book that
     # actually refused, and the 09-03 book that did not.
     if offline:
@@ -11403,7 +11505,15 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            and all(v["L_place_ms"] == 250.0 for v in _o185.values())
            and (_s04.get("split_book") is True if _s04 else True)
            and ((_o185.get("20260903") or {}).get("split_book") is False
-                if "20260903" in _o185 else True),
+                if "20260903" in _o185 else True)
+           # DE 189: AND THE REAL 09-03 BOOK NAMES ITS DESTROYED LEG.
+           and ((_o185["20260903"]["complement_leg"]["status"]
+                 == COMPLEMENT_DISCARDED
+                 and _o185["20260903"]["complement_leg"][
+                     "n_tranches_discarded_at_build"] == 23765)
+                if "20260903" in _o185 else True)
+           and ((_s04.get("complement_leg") or {}).get("status")
+                == COMPLEMENT_KEPT if _s04 else True),
            f"DE 185 ON THE REAL ARTIFACTS: the 09-04 EV21 receipt -- the "
            f"one that refused a 4 min 25 s run at 17:04Z -- resolves to "
            f"L = {_s04.get('L_place_ms')} with its nested 0.0 accounted "
