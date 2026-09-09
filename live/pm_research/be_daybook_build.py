@@ -604,6 +604,70 @@ def day_slugs(day: str, coin: str = COIN, *, supply: dict = None) -> list:
     return sorted(out)
 
 
+def mask_block(sup: dict, day: str, coin: str, n_wanted: int) -> dict:
+    """THE DAY'S DENOMINATOR, AND WHAT WAS TAKEN OUT OF IT (REV 114 §3).
+
+    `de_admissible_windows.supply` computes both the mask's IDENTITY and the
+    per-coin counts at the supply boundary, and until BE 113 neither reached
+    the book. That is REVIEW 111's site-3 shape one module over: a fact
+    computed where it is known and dropped before the artifact.
+
+    THE ARITHMETIC IS CHECKED, NOT COPIED (rule 10). `n_present -
+    n_masked_applied == n_supplied == the population this selector will
+    build over` -- three numbers from two producers, so a disagreement is a
+    real one. On 09-03/btc it is 287 - 40 = 247, and 247 is what
+    `reference.windows` has recorded in every receipt.
+
+    NOTE ON THE THIRD NUMBER, which is NOT here and must not be read as
+    absent-because-zero: `economic_settlement.arm_legs.n_slugs` = 246 on
+    09-03 is `len(per)` over FILLS in
+    `de_multiday_gate1_runner.settlement_legs_by_slug` -- the slugs that
+    produced at least one valued fill in ONE replay. It equals the window
+    count on 09-04/05/06 (288 each, measured) and is one short on 09-03
+    only, because there exactly one supplied window produced no valued
+    fill. It is a property of the replay, not of the day, and it is not a
+    window count."""
+    c = ((sup.get("counts") or {}).get(coin)) or {}
+    n_present = c.get("n_present")
+    n_masked = c.get("n_masked_applied")
+    n_supplied = c.get("n_supplied")
+    closes = (None if None in (n_present, n_masked, n_supplied)
+              else n_present - n_masked == n_supplied == n_wanted)
+    if closes is False:
+        raise BookRefused(
+            f"REFUSED -- MASK_ARITHMETIC_DOES_NOT_CLOSE for {day}/{coin}: "
+            f"present {n_present} - masked {n_masked} = "
+            f"{None if n_present is None else n_present - n_masked}, "
+            f"supplied {n_supplied}, and this selector builds over "
+            f"{n_wanted}. The day's denominator must be one number.")
+    ident = sup.get("mask_identity") or {}
+    return {
+        "governed": sup.get("governed"),
+        "mask_consumed": sup.get("mask_consumed"),
+        "mask_requirement_basis": sup.get("mask_requirement_basis"),
+        "mask_identity": ident,
+        "mask_identity_hash": sup.get("mask_identity_hash"),
+        "mask_artifact": ident.get("artifact"),
+        "mask_as_of_utc": ident.get("as_of_utc"),
+        "n_present": n_present,
+        "n_masked": n_masked,
+        "n_supplied": n_supplied,
+        "n_built_over": n_wanted,
+        "arithmetic_closes": closes,
+        "arithmetic": "n_present - n_masked == n_supplied == n_built_over",
+        "why_it_is_here": (
+            "the mask REMOVES windows from the day, and an exclusion travels "
+            "with its count (rule 4). Without this a reader of a "
+            f"{n_wanted}-window book cannot tell whether the day had "
+            f"{n_wanted}, or {n_present} with {n_masked} masked, or by which "
+            "artifact -- and the mask file may since have been regenerated"),
+        "what_this_is_NOT": (
+            "`economic_settlement.arm_legs.n_slugs` (246 on 09-03) is a "
+            "count of slugs with at least one valued FILL in one replay, "
+            "not a window count -- it equals the window count on 09-04/05/06"),
+    }
+
+
 def day_selector(day: str, coin: str = COIN):
     """A `build_reference` selector scoped to ONE DAY.
 
@@ -611,10 +675,41 @@ def day_selector(day: str, coin: str = COIN):
     -- built from the same three indices, but gated by the DAY'S SUPPLY
     rather than by a declared population interval. The population intervals
     end 2026-08-26T00:00, so no September day can pass through them."""
+    import be_era_for_day as EFD
+    import be_forward_day as FD
+    import de_admissible_windows as AW
     import flow_intensity as fi
     import harmful_exposure_rows as HER
-    want = set(day_slugs(day, coin))
-    era = HER._era_or_refuse(fi, None, "be_daybook_build")
+    # ONE supply, and it is KEPT (BE 113, REV 114 routing (2)). `day_slugs`
+    # built one internally and threw it away, so the mask that produced the
+    # day's denominator never reached the artifact -- `AW.supply` computes
+    # `mask_identity` and the per-coin `n_masked_applied` and NOTHING
+    # carried them, and 0 of 12 book receipts on disk name a mask at all.
+    # An EXCLUSION travels with its count (rule 4); a reader of a 247-window
+    # book could not tell whether the day had 247, or 287 with 40 masked, or
+    # by which artifact.
+    sup = AW.supply(day, FD.present_from_ledger(day))
+    want = set(day_slugs(day, coin, supply=sup))
+    # THE DAY IS PASSED (BE 113, gate item 1). This line was
+    #   era = HER._era_or_refuse(fi, None, "be_daybook_build")
+    # and `None` resolves the MODULE LITERAL `fi.ERA` = clob_v3_1 -- an era
+    # that closed 2026-08-30T05:30:01Z -- day-independently, while every
+    # September day lies entirely inside clob_v4_1. The two gap tables are
+    # DISJOINT (1,143 slugs against 728, zero in common), so `gaps.get(s,
+    # [])` below returned [] for EVERY window of EVERY September day: on
+    # 09-03, 160 of 247 windows and 2,294.7 s of tape reached
+    # `build_reference` as continuous. All twelve book receipts on disk
+    # record `selection.era: clob_v3_1`.
+    #
+    # The era module is NOT edited: `harmful_exposure_rows.py` and
+    # `flow_intensity.py` are both in `fit_manifest.json`'s
+    # `fit_code_files`, so a changed CALLED function there is BLOCKING in
+    # `verify_called_code()` and no day would run. The resolution lives in
+    # `be_era_for_day`, which REFUSES BY NAME rather than defaulting, and
+    # its answer is PASSED here -- so `_era_or_refuse`'s `None` branch is
+    # never taken on a day path and its own declared reason stays true.
+    era_res = EFD.resolve(fi, day, want)
+    era = HER._era_or_refuse(fi, era_res["era"], "be_daybook_build")
     paths, toks = fi._archive_paths(), fi.token_map()
     gaps = fi.gaps_by_slug(era)
     missing = sorted(s for s in want if s not in paths or s not in toks)
@@ -629,7 +724,10 @@ def day_selector(day: str, coin: str = COIN):
                for s in sorted(want)]
         return out, 0
     _sel.era = era
+    _sel.era_resolution = era_res
+    _sel.n_gap_bearing_windows = sum(1 for s in want if gaps.get(s))
     _sel.n_wanted = len(want)
+    _sel.mask = mask_block(sup, day, coin, len(want))
     return _sel
 
 
@@ -1056,7 +1154,17 @@ def build(day: str, *, coin: str = COIN,
                                                "intervals end "
                                                "2026-08-26T00:00, so no "
                                                "September day passes them",
-                      "era": sel.era, "n_supplied_slugs": sel.n_wanted},
+                      "era": sel.era, "n_supplied_slugs": sel.n_wanted,
+                      # BE 113: WHERE THE ERA CAME FROM, and how many
+                      # windows it actually statused. A receipt that names
+                      # an era without saying it was resolved from the day
+                      # reads identically whether it was or not.
+                      "era_resolution": getattr(sel, "era_resolution", None),
+                      "n_gap_bearing_windows":
+                          getattr(sel, "n_gap_bearing_windows", None),
+                      # REV 114 §3: the mask is an EXCLUSION and it travels
+                      # with its count. 0 of 12 receipts on disk name one.
+                      "mask": getattr(sel, "mask", None)},
         # BE 101: the value USED, its SOURCE and the dropped-tranche count,
         # all three read back from the reference's own report.
         "placement_latency": _pl,
@@ -1170,7 +1278,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 142
+EXPECTED_CHECKS = 148
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1346,6 +1454,120 @@ def selftest() -> int:
            "KNOWN-BAD: sets differing by one element each REFUSE the DAY, "
            "naming the symmetric difference -- the shared pool is only sound "
            "while they are identical, and this day would make it a choice")
+    # ---- BE 113: THE ERA REACHES THE SELECTOR, AND THE GAPS REACH THE
+    # ---- ENTRIES. Rule 17: green cells prove the unit, not the wiring.
+    # This runs the integration the way `build` runs it and asserts the
+    # number that was zero at `9fe6317`.
+    if not reachable:
+        for _lbl in ("the day_selector era seam",
+                     "the module-default known-bad at the seam"):
+            skip(_lbl, why_not)
+    else:
+        import be_era_for_day as _EFD
+        import flow_intensity as _fi
+        _sel113 = day_selector("20260903", COIN)
+        _ent113, _ = _sel113(None, None)
+        _wg = sum(1 for e in _ent113 if e[4])
+        ok(_sel113.era == "clob_v4_1" and _sel113.n_wanted == 247
+           and _wg == 160 and _sel113.n_gap_bearing_windows == 160
+           and _sel113.era_resolution["n_windows_in_the_era"] == 247,
+           f"THE ERA SEAM, END TO END: `day_selector('20260903')` resolves "
+           f"{_sel113.era} over {_sel113.era_resolution['n_windows_in_the_era']}"
+           f"/{_sel113.n_wanted} windows and hands `build_reference` "
+           f"{_wg} entries CARRYING GAPS. At 9fe6317 this was clob_v3_1 and "
+           f"ZERO -- the selector is where the day's gaps enter the book, and "
+           f"the unit test above cannot see whether they arrive")
+        _gdef = _fi.gaps_by_slug(_fi.ERA)
+        _want = set(day_slugs("20260903", COIN))
+        ok(sum(1 for x in _want if _gdef.get(x)) == 0
+           and _sel113.era != _fi.ERA
+           and _sel113.era_resolution[
+               "module_default_NOT_used"]["agrees_with_the_resolved_era"]
+           is False,
+           f"KNOWN-BAD AT THE SAME SEAM: the module default `fi.ERA` is still "
+           f"{_fi.ERA!r} and its gap table covers 0 of the day's "
+           f"{len(_want)} windows. The receipt records BOTH -- the era used "
+           f"and the default not used -- so a reader can see which book they "
+           f"are holding without diffing code")
+
+    # ---- BE 113: THE MASK TRAVELS WITH ITS COUNT (REV 114 (2)) --------
+    if not reachable:
+        for _lbl in ("the mask block on the real supply",
+                     "the mask-arithmetic known-bad",
+                     "the three window counts, reconciled at their sources"):
+            skip(_lbl, why_not)
+    else:
+        _mb = day_selector("20260903", COIN).mask
+        ok(_mb["n_present"] == 287 and _mb["n_masked"] == 40
+           and _mb["n_supplied"] == _mb["n_built_over"] == 247
+           and _mb["arithmetic_closes"] is True
+           and _mb["mask_artifact"] == "da_blackout_mask_v1"
+           and len(_mb["mask_identity"]["masked"]["btc"]) == 40,
+           f"THE MASK REACHES THE RECEIPT: 09-03/btc is {_mb['n_present']} "
+           f"present - {_mb['n_masked']} masked = {_mb['n_supplied']} "
+           f"supplied, built over {_mb['n_built_over']}, by "
+           f"{_mb['mask_artifact']} as of {_mb['mask_as_of_utc']} "
+           f"({_mb['mask_identity_hash'][:16]}…). 0 of the 12 receipts on "
+           f"disk name a mask at all, so a reader of a 247-window book "
+           f"could not tell 247 from 287-with-40-masked")
+        _bad = {"counts": {COIN: {"n_present": 287, "n_masked_applied": 40,
+                                  "n_supplied": 248}},
+                "mask_identity": {}, "governed": True}
+        try:
+            mask_block(_bad, "20260903", COIN, 247)
+            ok(False, "a supply whose counts do not close must refuse")
+        except BookRefused as e:
+            ok("MASK_ARITHMETIC_DOES_NOT_CLOSE" in str(e),
+               "KNOWN-BAD: a supply whose three counts disagree REFUSES by "
+               "name -- the day's denominator must be ONE number, and "
+               "copying it into the receipt without checking it is how two "
+               "populations end up eleven lines apart in one document")
+        # THE THIRD NUMBER, PINNED RATHER THAN ASSERTED IN PROSE (rule 15).
+        # `arm_legs.n_slugs` is `len(per)` over FILLS, so it EQUALS the
+        # window count on days where every window filled and falls short
+        # where one did not. Measured at DE's own artifacts.
+        import glob as _glob
+        import os as _os
+        def _nslugs(day):
+            g = sorted(_glob.glob(str(LEDGER_DERIVED /
+                                      f"p003_de_point_estimate_day_{day}"
+                                      f"_L250ms__*.json")),
+                       key=_os.path.getmtime, reverse=True)
+            if not g:
+                return None
+            def _w(o):
+                if isinstance(o, dict):
+                    if "arm_legs" in o:
+                        yield o["arm_legs"].get("n_slugs")
+                    for v in o.values():
+                        yield from _w(v)
+                elif isinstance(o, list):
+                    for v in o:
+                        yield from _w(v)
+            return sorted({x for x in _w(json.loads(Path(g[0]).read_text()))
+                           if x is not None})
+        _n = {d: _nslugs(d) for d in ("20260903", "20260904", "20260905",
+                                      "20260906")}
+        _sup = {d: len(day_slugs(d, COIN)) for d in _n}
+        if any(v is None for v in _n.values()):
+            skip("the three window counts, reconciled at their sources",
+                 "a point-estimate artifact is absent")
+        else:
+            ok(_n["20260903"] == [246] and _sup["20260903"] == 247
+               and all(_n[d] == [_sup[d]] for d in ("20260904", "20260905",
+                                                    "20260906")),
+               f"THE THREE 09-03 WINDOW COUNTS, EACH AT ITS OWN SOURCE: "
+               f"**287** present from the ledger, **247** supplied after the "
+               f"mask removed 40 -- and **246** is NOT a window count. It is "
+               f"`arm_legs.n_slugs` = `len(per)` over FILLS, and it EQUALS "
+               f"the supplied count on 09-04/05/06 "
+               f"({[_n[d][0] for d in ('20260904', '20260905', '20260906')]} "
+               f"against {[_sup[d] for d in ('20260904', '20260905', '20260906')]}) "
+               f"while falling one short on 09-03, where exactly one "
+               f"supplied window produced no valued fill. **247 is the day's "
+               f"window count**; 246 is a property of one replay and moves "
+               f"with the arm, the latency and the policy")
+
     # ---- THE COVERAGE GUARD, DRIVEN BOTH WAYS (R-841 [1], BE 112) -----
     # EVERY block below comes from `_COV.generation_coverage` -- the
     # producer -- never typed here: a fixture must not supply what the code
@@ -2642,6 +2864,14 @@ def selftest() -> int:
     # `be_score_coverage`; its falsifier is a cell of BOTH batteries, so a
     # regression in the one implementation of the membership test fails
     # every site that depends on it.
+    _eff = _R22.shared_falsifier(
+        prog=Path(__file__).resolve().parent / "be_era_for_day.py")
+    ok(_eff["ok"],
+       f"AND `be_era_for_day.py --falsify` -> rc {_eff['rc']}, "
+       f"{_eff['summary']!r}: the day-era resolution this file and "
+       f"`be_gate1_fragment` both import, with its census over every "
+       f"collected day and a real known-bad for each refusal name. "
+       f"{_eff['failed_cells'] or _eff['stderr_tail'] or ''}")
     _scf = _R22.shared_falsifier(
         prog=Path(__file__).resolve().parent / "be_score_coverage.py")
     ok(_scf["ok"],

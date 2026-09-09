@@ -152,11 +152,21 @@ def population(day: str, coin: str = COIN) -> dict:
 
 
 def selector_for(pop: dict):
-    """`build_rows`' selector hook, over the day's slugs only."""
+    """`build_rows`' selector hook, over the day's slugs only.
+
+    BE 113: THE SAME DAY-INDEPENDENT ERA DEFECT AS `be_daybook_build.
+    day_selector`, on the same seat's surface and one call earlier in the
+    pipeline -- the fragment is an INPUT to the book. It read
+    `HER._era_or_refuse(fi, None, ...)`, which returns the module literal
+    `fi.ERA` = clob_v3_1 whatever day it is asked about, so `gaps.get(s,
+    [])` handed every September window an empty gap list. The day is passed
+    now, and an unresolvable day REFUSES by name instead of defaulting."""
+    import be_era_for_day as EFD
     import flow_intensity as fi
     import harmful_exposure_rows as HER
     want = list(pop["slugs"])
-    era = HER._era_or_refuse(fi, None, "be_gate1_fragment")
+    era_res = EFD.resolve(fi, pop["day"], want)
+    era = HER._era_or_refuse(fi, era_res["era"], "be_gate1_fragment")
     paths, toks = fi._archive_paths(), fi.token_map()
     gaps = fi.gaps_by_slug(era)
     missing = [s for s in want if s not in paths or s not in toks]
@@ -171,6 +181,8 @@ def selector_for(pop: dict):
         return [(s, paths[s], toks[s][0], toks[s][1], gaps.get(s, []))
                 for s in want], 0
     _sel.era = era
+    _sel.era_resolution = era_res
+    _sel.n_gap_bearing_windows = sum(1 for s in want if gaps.get(s))
     return _sel
 
 
@@ -344,7 +356,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 23
+EXPECTED_CHECKS = 25
 
 
 def selftest() -> int:
@@ -527,7 +539,34 @@ def selftest() -> int:
        f"module fails every importer's battery at once, and no importer "
        f"re-implements the logic. "
        f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
+    _eff = _R22.shared_falsifier(prog=HERE / "be_era_for_day.py")
+    ok(_eff["ok"],
+       f"AND `be_era_for_day.py --falsify` -> rc {_eff['rc']}, "
+       f"{_eff['summary']!r} -- the day-era resolution `selector_for` now "
+       f"calls, with a real known-bad for each refusal name and a census "
+       f"over every collected day. "
+       f"{_eff['failed_cells'] or _eff['stderr_tail'] or ''}")
 
+    # ---- BE 113: THE ERA REACHES THIS SELECTOR TOO (rule 17) ----------
+    # The fragment is an INPUT to the book, so the same day-independent era
+    # was emptying gap lists one call EARLIER than the builder. Driven at
+    # the integration, not at the unit.
+    try:
+        _pop = population("20260903", "btc")
+        _fsel = selector_for(_pop)
+        _fent, _ = _fsel(None, None)
+        _fwg = sum(1 for e in _fent if e[4])
+        ok(_fsel.era == "clob_v4_1" and len(_fent) == 247 and _fwg == 160
+           and _fsel.era_resolution["module_default_NOT_used"][
+               "agrees_with_the_resolved_era"] is False,
+           f"THE ERA SEAM IN THE FRAGMENT: `selector_for` resolves "
+           f"{_fsel.era} for 09-03 and hands {_fwg} of {len(_fent)} entries "
+           f"a NON-EMPTY gap list. At 9fe6317 it read the module literal "
+           f"{_fsel.era_resolution['module_default_NOT_used']['fi.ERA']!r} "
+           f"and handed over zero")
+    except Exception as e:                                   # noqa: BLE001
+        ok(False, f"the fragment era seam could not run: "
+                  f"{type(e).__name__}: {e}")
 
     print()
     if fails:
