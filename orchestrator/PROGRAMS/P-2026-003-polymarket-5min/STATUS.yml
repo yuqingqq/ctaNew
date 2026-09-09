@@ -27147,7 +27147,7 @@ flag_provenance:
       "not asked".*
   THE_REVIEWER_SEAT_NOW_HAS_A_PROCEDURE_FILE_RECONSTRUCTED_FROM_ITS_LEDGER:
     prov: CHECKED
-    artifact: live/pm_research/REV_PROCEDURE.md
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/REV_PROCEDURE.md
     as_of: 2026-09-09T09:50:31Z
     said: >-
       **Rule 24 is now satisfied by every seat: REV was the only one without a procedure file, and REV 130 wrote it
