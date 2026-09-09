@@ -1858,7 +1858,12 @@ def selftest() -> tuple:                                      # noqa: C901
        f"found `de_section81_arms.py:526` carrying the same test, the "
        f"same stamping, and COUNTING the misses as "
        f"`excluded_no_assembled_score` -- DE's module, REPORTED not "
-       f"edited (R-235). DA's own set is these three")
+       f"edited (R-235). DA 148 CLOSED DA'S SET AT THREE AND THAT WAS "
+       f"WRONG: REV 122 enumerated by OPERATION CLASS, not by spelling, "
+       f"and `da_de53_exclusion` -- which spells it `key in gen_scores` "
+       f"-- is the fourth. It is in this cell now. An enumeration by "
+       f"spelling is a sample; mine was a wider sample than REV's first "
+       f"and still a sample")
 
     # -- 8d. DA 149: MEMBERSHIP, WHICH IS WHAT A CLASSIFIER NEEDS ------
     #: `da_de53_exclusion` does not build a stream -- it CLASSIFIES every
