@@ -537,6 +537,53 @@ its controls at both endpoints; Gate 1's three sampler refusals stand.
 
 **§7e addendum 2 (2026-09-07T15:38Z, R-803..R-806) — THE USER'S WORK ORDER (R-804) and where it stands.** The user: "make these few days data correct … Check above issues, fix then review" (five critical issues, verbatim in R-804). Three tracks: **A** (data correct under the ruled P&L) — 09-05/09-06 DONE at the ledgers (R-803: trades + residual, Chainlink-verified winner, convention S60(T) ≥ S60(t0) reproduces the venue 576/576); 09-03/09-04 have NO ledgers → GO E1r/E2r re-runs from wt-de at `5020f96`, **NO-GO at REVIEW 104A until the early-read family has a SUPERSESSION RULE** (`EARLY_READ_ALREADY_EMITTED` is right; DE 138 Part A adds `supersedes: {path, sha256}` + the precondition; DA 130 adds head resolution) → then E1r, E2r (after GO #8 if the clock is tight) → BE values them. The misnamed `inventory_leg` (= −trades cash flow) → DE 137 renames. **B** (the settlement null + declaration) — DE 136 LANDED `1f171e8` (estimator, inline-valued null, rule-11 guard, four falsifiers, draft `live/pm_research/drafts/R801_params_v20_design_v28_DRAFT.md`; winner NOT_VERIFIED_AGAINST_CHAINLINK until DE 137 wires BE 99's convention) → REV 104 second half → GO #8 (unchanged) → v20/v28 LAND → settlement-null runs 09-03..09-06 (design) + 09-07 (validation). **C** (design fixes, each a declared parameter + falsifier, validated from the first day AFTER landing) — DE 138 Part B draft: position cap, hold_side_after_cancel, (side, hour)-stratified null, thresholds re-fit on the consumed days, **placement_latency_ms** (BE 100: the reference spec has NO placement latency; 48–56 % of fills land within 250 ms of placement and carry 98 % / 55 % of the baseline's settlement P&L — the largest assumption in the numbers); the quoter's settlement view is DEFERRED — DA 129: the fair-value identity needs a **sigma producer that does not exist** (owner DA). Capacity is NOT a weakness (our fills 2–8 % of tape volume per slug). Coordinator claim corrected in band at R-805 (the "zero placement latency" wording). Seat rounds at this writing: BE 100, DA 130 (in flight), DE 137 (in flight; 138 queued in the scratchpad — re-create from R-806 if lost), REV 104 (second half in flight), MEM 279 (in flight); next entry R-807.
 
+## 7f. STATE at 2026-09-09T05:43Z (R-835) — read this FIRST; it supersedes §7e and its addenda
+
+**EVERY ARM RESULT IS RETRACTED. The latency finding survives.** Two USER-found scoring
+defects compound: the **value head was never loaded** (thresholds fit on
+`p_fill * conditional_value`, scoring on hazard alone — R-833, `1d309bc`) and
+**LOOK-AHEAD in the decision** (generation MAX stamped at the GENERATION START, so later
+information triggered an earlier cancel — R-834, `c501824`; the rule is now each row at
+its own `t_start`, FIRST crossing cancels). The **0-cancel baseline makes no decisions**
+and is untouched by either, so the placement-latency result stands and is the programme's
+one robust finding: at L=250 the never-cancel maker loses **53.9 / 62.4 / 97.6 / 55.4 %**
+of its settled money on 09-03/04/05/06. RESULTS.md carries the retraction notice.
+
+**ALL SEVEN USER DEFECTS CLOSED (R-835), plus a blocker none of them named.** The repairs
+moved four pinned cascade modules while params v20 pinned pre-fix digests, so **no day
+could run**, and it took THREE pin pairs to close (v21+v29, v22+v30, **v23+v31** —
+v22 missed a second site). **REV 109 (`839c072`): a day CAN now run. The pair of record is
+params v23 + design v31.** REV also refuted DE's claim that defect (5) was outside its
+surface, and demonstrated a non-finite SCORE from a finite feature vector that (3)'s first
+fix had missed.
+
+**TWO RULINGS OPEN WITH THE USER — nothing corrected is quoted until the first lands.**
+(a) **The null's sampling unit** (`live/pm_research/drafts/DE158_null_sampling_unit_QUESTION.md`):
+per-row rows mean "matched on the action count" no longer names one quantity (39.7 % of
+rows begin after their generation's start). **A** match on rows — biased in the arm's
+favour; **B** match on cancels — honest but breaks seed reproducibility; **C** sample
+generations — reproducible but the control no longer samples what the arm decides on.
+Comparability with landed days is NOT a consideration: none survives. (b) **`research.slice`
+is capped at 200 %**, so the parallel null's 12.7× becomes ~2× until it is raised
+(`DE158_parallel_null_slice_PROPOSAL.md`); machine-wide, so proposed not changed.
+
+**WHAT IS NOT DONE.** The cancel-count measurement (old aggregation vs first-crossing, per
+arm per day — the evidence a theta re-fit is ruled on; theta is NOT re-fitted, by ruling,
+and the consequence is recorded in the receipt instead). Corrected point estimates. Four of
+five corrected books (09-03 EV20 was building at this writing; the others queued, ~40 min
+each, concurrency ruled out on memory by BE 106). The parallel null's deployment (built and
+verified, 403 green, element-by-element reproduction with a can-fail control).
+
+**COORDINATOR DISCIPLINE, learned expensively this session and now standing:** ~47 minutes
+were lost because seats finished a unit of work, reported, and waited for a go that needed
+no decision. **When a seat is given a numbered queue it works it END TO END and reports
+ONCE at the end, or the moment something BLOCKS it or a falsifier FAILS.** Issued at DE 156;
+six defects landed in one 17-minute batch afterwards. **Arm a Monitor on any heavy unit and
+prompt the seat at its exit — seat in-pane watchers are DEAD (R-821) and every seat idles
+waiting otherwise.** All four working seats now carry procedure files
+(`BE`/`DA_PROCEDURE.md`/`MEM_PROCEDURE.md`/`DE_PROCEDURE.md`); a seat at the end of its
+context WRITES its file rather than reporting it (R-831).
+
 ## Worktree data rule (R-553)
 
 **Refresh a seat worktree ONLY with `bash scripts/wt_refresh.sh <wt> [ref]` (R-625).** A bare `checkout --detach` re-materialises `data/` whenever a landed commit adds a tracked data path (REV 59 §8); the script drops the symlink, checks out, sweeps skip-worktree over every tracked data file, re-links and verifies. Sparse-checkout was tried and rejected: git ignores the skip-worktree bits under it.
