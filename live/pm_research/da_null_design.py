@@ -270,3 +270,220 @@ def item_8_multiplicity(d: dict) -> dict:
 ITEMS = (item_1_permutation, item_2_matching, item_3_minimum_sample,
          item_4_estimand, item_5_latency, item_6_exclusions,
          item_7_falsifiers, item_8_multiplicity)
+
+
+# ======================================================================
+# FALSIFIERS. Each item is driven on the REAL declaration (must hold), on
+# a MUTATION that breaks exactly its clause (must fail), and on a partial
+# input (must refuse). A mutation is built by DAMAGING THE REAL FILE, not
+# by writing a toy -- a fixture written by the same hand as the checker
+# proves nothing about the producer (DA 125).
+# ======================================================================
+import copy  # noqa: E402
+
+
+def _break(d: dict, path: list, value) -> dict:
+    m = copy.deepcopy(d)
+    o = m
+    for k in path[:-1]:
+        o = o[k]
+    if value is None:
+        o.pop(path[-1], None)
+    else:
+        o[path[-1]] = value
+    return m
+
+
+def refuses(fn, label):
+    try:
+        fn()
+        return f"{label}: DID NOT REFUSE"
+    except DesignRefused as e:
+        return f"REFUSED -- {str(e)[:40]}"
+    except Exception as e:                                    # noqa: BLE001
+        return f"{label}: WRONG EXCEPTION {type(e).__name__}"
+
+
+def selftest() -> tuple:
+    checks: list = []
+
+    def ck(name, passed, detail):
+        checks.append({"check": name, "passed": bool(passed),
+                       "detail": detail})
+
+    D = load()
+    rp = (HERE.parent.parent / "data" / "pm_5min" / "derived"
+          / "be_daybook_receipt_20260904_btc__L250ms__EV21.json")
+    receipt = json.loads(rp.read_text()) if rp.is_file() else None
+
+    ck("ITEM 1 THE PERMUTATION IS AT THE GENERATION and the declaration "
+       "holds -- and it FAILS if the unit is anything else, if the key is "
+       "not (slug, side, gen), or if ***rows and fills are not EXPLICITLY "
+       "excluded***, which is the silence that let a row-matched null run "
+       "for four register entries",
+       item_1_permutation(D)["verdict"] == HOLDS
+       and item_1_permutation(_break(D, ["unit"], "ROW"))["verdict"] == VIOLATED
+       and item_1_permutation(_break(D, ["permutation", "resampled_key"],
+                                     ["slug", "side"]))["verdict"] == VIOLATED
+       and item_1_permutation(_break(D, ["permutation", "NOT_resampled"],
+                                     ["tranches"]))["verdict"] == VIOLATED,
+       f"real -> {item_1_permutation(D)['verdict']}; unit=ROW, short key, "
+       f"and rows/fills not excluded each -> VIOLATED")
+
+    ck("ITEM 2 THE MATCHING: matched on action count, side and hour, "
+       "compared on net value and rho -- and it FAILS if a matched "
+       "variable has NO ENFORCEMENT clause (named but uncontrolled), if a "
+       "***PROXY like harm share is substituted***, or if a failed match "
+       "is anything other than a refusal",
+       item_2_matching(D)["verdict"] == HOLDS
+       and item_2_matching(_break(D, ["matching", "enforcement"],
+                                  {"side": "x"}))["verdict"] == VIOLATED
+       and item_2_matching(_break(D, ["matching", "compared_on"],
+                                  ["harm_share"]))["verdict"] == VIOLATED
+       and item_2_matching(_break(D, ["matching", "on_failure"],
+                                  "rebalance quietly"))["verdict"] == VIOLATED,
+       f"real -> {item_2_matching(D)['verdict']}; enforcement stripped, "
+       f"harm_share substituted, silent rebalance -> VIOLATED each")
+
+    i3 = item_3_minimum_sample(D)
+    ck("ITEM 3 THE MINIMUM SAMPLE clears rule 6's floor of 200 from a "
+       "PRE-DECLARED params file -- and FAILS at 199, fails if the bar is "
+       "read off the receipt, and ***fails if the wall clock is stated "
+       "without being declared unestablished***, because an unpriced race "
+       "is authorised in a sentence and runs for days",
+       i3["verdict"] == HOLDS and i3["n_draws"] == 500
+       and item_3_minimum_sample(
+           _break(D, ["minimum_sample", "n_draws"], 199))["verdict"] == VIOLATED
+       and item_3_minimum_sample(
+           _break(D, ["minimum_sample", "source_of_the_bar"],
+                  "the receipt's own claim"))["verdict"] == VIOLATED
+       and item_3_minimum_sample(
+           _break(D, ["wall_clock", "status"], "fine"))["verdict"] == VIOLATED,
+       f"n=500 -> {i3['verdict']}; {i3['implied_waves_at_this_concurrency']} "
+       f"wave(s) at concurrency {i3['concurrency']} -> "
+       f"{i3['implied_wall_clock_hours']} h implied, cost declared "
+       f"unestablished {i3['cost_is_declared_unestablished']}")
+
+    ck("ITEM 4 THE ESTIMAND IS R-801 and the markout is a DIAGNOSTIC -- "
+       "and it FAILS if the markout is promoted to the tested quantity, "
+       "***including by LEAKING INTO compared_on while the estimand text "
+       "stays perfectly correct***, which a text-only check would pass",
+       item_4_estimand(D)["verdict"] == HOLDS
+       and item_4_estimand(_break(D, ["estimand", "the_5s_markout_is"],
+                                  "the tested quantity"))["verdict"] == VIOLATED
+       and item_4_estimand(_break(D, ["matching", "compared_on"],
+                                  ["net_value_cents", "rho_x",
+                                   "markout_cents"]))["verdict"] == VIOLATED,
+       f"real -> {item_4_estimand(D)['verdict']}; markout promoted, and "
+       f"markout leaked into compared_on with the estimand text intact "
+       f"-> VIOLATED both")
+
+    ck("ITEM 5 LATENCY IS IN THE ESTIMAND and L is READ FROM THE BOOK -- "
+       "it FAILS if L is typed into the declaration instead, because a "
+       "typed L is a claim about a book rather than a fact from it",
+       item_5_latency(D)["verdict"] == HOLDS
+       and item_5_latency(_break(D, ["latency", "L_place_ms_source"],
+                                 "250.0, typed here"))["verdict"] == VIOLATED
+       and item_5_latency(_break(D, ["latency", "predicate"],
+                                 "value everything"))["verdict"] == VIOLATED,
+       f"real -> {item_5_latency(D)['verdict']}; typed L and a predicate "
+       f"that values everything -> VIOLATED")
+
+    i6 = item_6_exclusions(D, receipt)
+    ck("ITEM 6 THE POPULATION RECONCILES AND EVERY EXCLUSION CARRIES ITS "
+       "COUNT: 328,578 covered + 29,530 uncovered = 358,108, the declared "
+       "coverage RECOMPUTES from those counts, and ***it AGREES WITH THE "
+       "09-04 BOOK RECEIPT*** -- and it FAILS on a moved count even when "
+       "the coverage figure is left untouched",
+       i6["verdict"] == HOLDS
+       and i6["covered_plus_uncovered_equals_n"] is True
+       and i6["coverage_recomputes_from_the_counts"] is True
+       and i6["agrees_with_the_book_receipt"] is True
+       and item_6_exclusions(
+           _break(D, ["population_09_04", "n_uncovered"], 29531),
+           receipt)["verdict"] == VIOLATED,
+       f"{i6['n_covered']} + {i6['n_uncovered']} = "
+       f"{i6['n_reference_generations']}, coverage "
+       f"{i6['declared_coverage']} recomputes; receipt agrees "
+       f"{i6['agrees_with_the_book_receipt']}; one count moved -> VIOLATED")
+
+    ck("ITEM 7 IT SHIPS BOTH FALSIFIERS -- a POSITIVE CONTROL the null "
+       "must flag (an outcome-aware oracle arm landing in the tail, which "
+       "is what demonstrates POWER) and a KNOWN-BAD it must refuse. It "
+       "fails if either is missing, because ***a zero from an instrument "
+       "that never proved it can fire is not a result***",
+       item_7_falsifiers(D)["verdict"] == HOLDS
+       and item_7_falsifiers(
+           _break(D, ["falsifiers", "positive_control_the_null_MUST_flag"],
+                  "it should look sensible"))["verdict"] == VIOLATED
+       and item_7_falsifiers(
+           _break(D, ["falsifiers", "known_bad_the_null_MUST_refuse"],
+                  None))["verdict"] == VIOLATED,
+       f"real -> {item_7_falsifiers(D)['verdict']}; a vague control and a "
+       f"missing known-bad -> VIOLATED")
+
+    i8 = item_8_multiplicity(D)
+    ck("ITEM 8 THE MULTIPLICITY IS RECORDED NOW and the CONSUMED DAYS are "
+       "named: 2 candidates matching the list, recorded before any draw, "
+       "and ***all four days this race runs on are ALREADY CONSUMED***, so "
+       "validation needs later untouched days. It fails if the count "
+       "disagrees with the list -- a number typed beside a list",
+       i8["verdict"] == HOLDS and i8["n_candidates"] == 2
+       and i8["all_of_them_already_consumed"] is True
+       and item_8_multiplicity(
+           _break(D, ["multiplicity", "n_candidates_in_this_race"],
+                  1))["verdict"] == VIOLATED
+       and item_8_multiplicity(
+           _break(D, ["consumed_days",
+                      "september_days_consumed_by_this_programme"],
+                  ["2026-09-03"]))["verdict"] == VIOLATED,
+       f"{i8['n_candidates']} candidates {i8['candidates']}, all consumed "
+       f"{i8['all_of_them_already_consumed']}; count typed as 1, and a day "
+       f"dropped from the consumed list -> VIOLATED")
+
+    ck("AND THE WHOLE DECLARATION REFUSES WHEN ABSENT -- a null with no "
+       "declaration is exactly what rule 6 forbids, so absence must be a "
+       "REFUSAL and never an empty pass",
+       "REFUSED" in refuses(lambda: load("/nonexistent/decl.json"), "absent")
+       and "REFUSED" in refuses(lambda: item_1_permutation({}), "empty")
+       and "REFUSED" in refuses(lambda: item_8_multiplicity({}), "empty"),
+       refuses(lambda: load("/nonexistent/decl.json"), "absent"))
+
+    fails = sum(1 for c in checks if not c["passed"])
+    for c in checks:
+        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
+        print("       " + c["detail"])
+    print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
+          f"{len(checks)} checks, {fails} failure(s)")
+    return checks, fails
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--check", action="store_true")
+    ap.add_argument("--declaration")
+    a = ap.parse_args(argv)
+    if a.selftest:
+        return 1 if selftest()[1] else 0
+    if not a.check:
+        ap.error("--selftest or --check")
+    D = load(a.declaration)
+    rp = (HERE.parent.parent / "data" / "pm_5min" / "derived"
+          / "be_daybook_receipt_20260904_btc__L250ms__EV21.json")
+    receipt = json.loads(rp.read_text()) if rp.is_file() else None
+    out = {}
+    for fn in ITEMS:
+        nm = fn.__name__
+        try:
+            out[nm] = (fn(D, receipt) if fn is item_6_exclusions else fn(D))
+        except DesignRefused as e:
+            out[nm] = {"verdict": "REFUSED", "why": str(e)}
+    out["ALL_ITEMS_HOLD"] = all(v.get("verdict") == HOLDS
+                                for v in out.values() if isinstance(v, dict))
+    print(json.dumps(out, indent=1, sort_keys=True, default=str))
+    return 0 if out["ALL_ITEMS_HOLD"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
