@@ -679,9 +679,11 @@ def stub_scores(slug: str, sides: dict) -> list[dict]:
         for g in sides[side]:
             span = g["t1"] - g["t0"]
             ev.append({"t": g["t0"] + STUB_EARLY_FRAC * span, "slug": slug,
-                       "side": side, "score": stub_score(slug, side, g["gen"])})
+                       "side": side, "gen": g["gen"],
+                       "score": stub_score(slug, side, g["gen"])})
             ev.append({"t": g["t0"] + STUB_LATE_FRAC * span, "slug": slug,
-                       "side": side, "score": STUB_LATE_SCORE})
+                       "side": side, "gen": g["gen"],
+                       "score": STUB_LATE_SCORE})
     ev.sort(key=lambda s: (s["t"], SIDE_IDX[s["side"]]))
     return ev
 
@@ -1371,8 +1373,10 @@ def selftest() -> int:
        "zero -- the exclusion counters are not always firing")
 
     # ---- the gates on the fixture ---------------------------------------
-    scores = [{"t": 6.0, "slug": "w", "side": "BUY_UP", "score": 0.99},
-              {"t": 9.0, "slug": "w", "side": "BUY_UP", "score": 0.0}]
+    scores = [{"t": 6.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+               "score": 0.99},
+              {"t": 9.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+               "score": 0.0}]
     ref = {"w": sides}
     pt = hsp.build_passthrough_trajectory(ref)
     dis = hsp.replay_policy(ref, scores, DISABLED_PARAMS)
@@ -1404,7 +1408,7 @@ def selftest() -> int:
        "KNOWN-BAD (LANE4 falsifier 1): ONE extra event breaks parity -- if a "
        "one-event perturbation did not, the anchor would be decorative")
 
-    adv = [{"t": t, "slug": "w", "side": "BUY_UP", "score": 0.99}
+    adv = [{"t": t, "slug": "w", "side": "BUY_UP", "gen": 1, "score": 0.99}
            for t in (6.0, 6.2, 6.4, 7.5, 8.5)]
     a2 = hsp.replay_policy(ref, adv, ACTIVE_PARAMS)
     ok(a2["cancel_lifecycle"]["issued"] == 1,

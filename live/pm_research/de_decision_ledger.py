@@ -64,6 +64,113 @@ FULL_RUN_NO_NULL_REFUSAL = "DECISION_LEDGER_FULL_RUN_HAS_NO_NULL_DRAWS"
 POINT_ESTIMATE_HAS_NULL_REFUSAL = (
     "DECISION_LEDGER_POINT_ESTIMATE_HAS_NULL_DRAWS")
 NULL_VALUES_ABSENT_REFUSAL = "DECISION_LEDGER_NULL_VALUES_FIELD_ABSENT"
+#: ---- REV 115's TWO RESIDUALS (DE 164) --------------------------------
+#: R-825 was ONE instance of a class: two parallel per-draw lists whose
+#: correspondence lived in the shape of one loop and was recorded nowhere.
+#: The reader already refuses a length mismatch (`recompute`), but it does
+#: so long after the run that produced the file, and a length check cannot
+#: see a MIS-ORDERED pairing at all -- two length-500 lists in the wrong
+#: order pass it and reproduce R-825 exactly. Both are closed HERE, at the
+#: write, BEFORE any bytes exist.
+DIGEST_NOT_SUPPLIED_REFUSAL = "DECISION_LEDGER_DIGEST_NOT_SUPPLIED"
+#: The ONLY way to read a ledger without checking it against a digest, and
+#: it is a value a caller has to type. REV 116 (Q-REV-117): `expect_sha256`
+#: was a keyword with a `None` default, so `read_ledger(path)` verified
+#: NOTHING and returned a complete-looking result from whatever bytes were
+#: at that path -- while the safe call was documented only as PROSE in the
+#: receipt's `recompute_with` string. REV drove the consequence: one
+#: NULL_DRAW value moved by +1000 in a 208,083-row file reads clean without
+#: a digest and shifts Z from -6.612840255860946 to -6.613055993292873.
+#: The unsafe call was also the SHORTER one. It is now the LONGER one, it
+#: names what it gives up, and the result says so where a reader can see it.
+UNVERIFIED = "UNVERIFIED_READ_NO_DIGEST_AVAILABLE"
+PARALLEL_LENGTH_REFUSAL = "DECISION_LEDGER_NULL_PARALLEL_LIST_LENGTH"
+PAIRING_UNRECORDED_REFUSAL = "DECISION_LEDGER_NULL_DRAW_PAIRING_UNRECORDED"
+PAIRING_BROKEN_REFUSAL = "DECISION_LEDGER_NULL_DRAW_PAIRING_BROKEN"
+#: The per-draw ordinal each parallel list's element came from. The
+#: producer appends it in the SAME statement as the value, so the pairing
+#: is a RECORD rather than an inference from where the appends happen to
+#: sit; this file then asserts it. Required only where there is a pairing
+#: to assert -- a settlement draw list -- because a check that can be
+#: skipped is a check that reads as passed.
+DRAW_INDEX_FIELDS = {"null_values": "null_draw_index",
+                     "null_settle_values": "settle_draw_index",
+                     "null_cancels": "cancel_draw_index"}
+
+
+def assert_null_draw_pairing(arm: str, values: dict) -> dict:
+    """Every per-draw list is as long as `null_values` AND says which draw
+    each of its elements came from. Returns what it checked, so a caller
+    can put the reading in a receipt instead of re-deriving it.
+
+    REV 115 (2026-09-09), residuals 1 and 2. Residual 1: the writer used
+    to PAD -- `settle_value: (_sv[i] if i < len(_sv) else None)` -- so a
+    short settlement list became a file full of `None`s and the mismatch
+    surfaced only when a reader recomputed it. Residual 2: alignment is
+    by INDEX and was asserted nowhere; length equality cannot see a gap,
+    a duplicate or an out-of-order assembly.
+
+    WHAT THIS DOES NOT CLOSE, said plainly because a guard's advertised
+    reach is how it gets trusted past it: a settlement list of the RIGHT
+    LENGTH carrying the WRONG NUMBERS, stamped 0..n-1 by a producer that
+    believed itself, is ADMITTED here -- index equality cannot see values.
+    R-825's own instance was of that kind (the settlement moments taken
+    from the 5-second draws), and what catches THAT is the reader's
+    re-derivation from the persisted rows, which REV 115 drove. This
+    closes the SHAPE half: no padded file, and no parallel list whose
+    provenance was never recorded at all. The battery's last cell computes
+    the admitted case rather than leaving it to this paragraph."""
+    n = len(values["null_values"])
+    out = {"n_null_values": n, "checked": []}
+    for field, idx_field in DRAW_INDEX_FIELDS.items():
+        if field == "null_values":
+            continue
+        seq = values.get(field)
+        if not seq:
+            # ABSENT IS A FACT, NOT A ZERO: a day not valued under the
+            # settlement endpoint carries no settlement draws, and a run
+            # that kept no cancel counts carries none. There is no pairing
+            # to assert, and inventing one would be worse than none.
+            out["checked"].append({"field": field, "status": "ABSENT"})
+            continue
+        if len(seq) != n:
+            raise LedgerRefused(
+                f"{PARALLEL_LENGTH_REFUSAL}: arm {arm!r} carries {len(seq)} "
+                f"{field} against {n} null_values. These are PARALLEL "
+                f"per-draw lists and the ledger pairs them BY INDEX, so an "
+                f"unequal length is not a file to pad -- padding writes a "
+                f"`None` that reads as 'this draw had no settlement value' "
+                f"when the truth is that the producer lost one. Refused at "
+                f"the WRITE, before any bytes exist; the reader's own "
+                f"refusal fires only when somebody recomputes the file.")
+        idx = values.get(idx_field)
+        if idx is None:
+            raise LedgerRefused(
+                f"{PAIRING_UNRECORDED_REFUSAL}: arm {arm!r} carries "
+                f"{field} but no {idx_field!r}. The i-th element is claimed "
+                f"to belong to the i-th draw and nothing in this dict says "
+                f"so -- the correspondence lives in the shape of the loop "
+                f"that appended them, which is exactly the invariant R-825 "
+                f"violated. The producer records the draw ordinal beside "
+                f"each value; absence is refused rather than assumed, "
+                f"because a skipped check reads as a passed one.")
+        want = list(range(n))
+        got = list(idx)
+        if got != want:
+            _first = next((i for i in range(n)
+                           if i >= len(got) or got[i] != i), len(got))
+            raise LedgerRefused(
+                f"{PAIRING_BROKEN_REFUSAL}: arm {arm!r}'s {idx_field} is "
+                f"not the draw ordinals 0..{n - 1} in order (first "
+                f"disagreement at position {_first}). The ledger pairs "
+                f"these lists BY INDEX and the producer stamps each "
+                f"element with the draw it came from, so a gap, a "
+                f"duplicate or an out-of-order assembly is caught here "
+                f"instead of becoming a per-draw record that pairs one "
+                f"draw's diagnostic value with another draw's settlement "
+                f"value.")
+        out["checked"].append({"field": field, "status": "PAIRED", "n": n})
+    return out
 
 
 class LedgerRefused(RuntimeError):
@@ -112,6 +219,8 @@ def write_ledger(path, day: str, per_arm: dict,
                     f"{FULL_RUN_NO_NULL_REFUSAL}: arm {arm!r} has a FULL "
                     "null_values container with zero draws.")
             run_modes[arm] = "FULL"
+            # REV 115's two residuals, closed BEFORE the file is opened.
+            assert_null_draw_pairing(arm, values)
     if len(set(run_modes.values())) != 1:
         raise LedgerRefused(
             "DECISION_LEDGER_MIXED_RUN_MODES: every arm in one ledger must "
@@ -198,9 +307,20 @@ def write_ledger(path, day: str, per_arm: dict,
                     # R-825 / DE 143 (v4): the SETTLEMENT draw beside the
                     # 5-second one. `None` where the day was not valued
                     # under the endpoint -- absent is a fact, not a zero.
-                    "settle_value": (_sv[i] if i < len(_sv) else None),
+                    # REV 115 residual 1: NO PADDING. `_sv` is either
+                    # empty (the day was not valued under the endpoint --
+                    # absent is a fact, not a zero) or exactly as long as
+                    # `null_values`, because `assert_null_draw_pairing`
+                    # refused the write otherwise. The old expression
+                    # `(_sv[i] if i < len(_sv) else None)` turned a
+                    # producer's loss into a file of plausible `None`s.
+                    "settle_value": (_sv[i] if _sv else None),
                     "cancels": (a["null_cancels"][i]
                                 if a.get("null_cancels") else None)},
+                    # (as above: a non-empty `null_cancels` is guaranteed
+                    # to be as long as `null_values`, so this index cannot
+                    # raise -- it used to be able to, as an IndexError
+                    # rather than a named refusal.)
                     sort_keys=True) + "\n")
                 n += 1
             for which, fills in (("ARM", a["arm_fills"]),
@@ -252,22 +372,47 @@ def write_ledger(path, day: str, per_arm: dict,
                                     "file by sha256; the file is not"}
 
 
-def read_ledger(path, *, expect_sha256: str | None = None) -> dict:
-    """READ IT BACK, WITH THE BOOK ABSENT. Digest checked BY NAME."""
+def read_ledger(path, *, expect_sha256: str) -> dict:
+    """READ IT BACK, WITH THE BOOK ABSENT. Digest checked BY NAME.
+
+    `expect_sha256` IS REQUIRED (REV 116 / Q-REV-117). It used to default
+    to `None`, which meant the shortest call did no verification at all and
+    the safe one existed only as prose in the receipt's `recompute_with`
+    field -- "a stated requirement that is not a checked one", which is the
+    class REV has now named three times. A caller with no digest passes
+    `UNVERIFIED` explicitly and the result carries
+    `read_verification: UNVERIFIED_READ_NO_DIGEST_AVAILABLE`, so an
+    unverified read is visible in what it returns rather than
+    indistinguishable from a verified one."""
     path = Path(path)
+    if not isinstance(expect_sha256, str) or not expect_sha256:
+        raise LedgerRefused(
+            f"{DIGEST_NOT_SUPPLIED_REFUSAL}: `expect_sha256` is required "
+            f"and was {expect_sha256!r}. The receipt that names this ledger "
+            f"also names its digest; pass it. A caller that genuinely has "
+            f"no digest passes the declared constant "
+            f"`de_decision_ledger.UNVERIFIED`, which is recorded in the "
+            f"result -- the point is that an unverified read cannot happen "
+            f"by omission.")
     if not path.is_file():
         raise LedgerRefused(
             f"DECISION_LEDGER_ABSENT: {path} is not there. The receipt "
             f"names a ledger; without it the day would have to be re-run, "
             f"which is what the ruling exists to prevent.")
     got = _sha(path)
-    if expect_sha256 is not None and got != expect_sha256:
+    if expect_sha256 == UNVERIFIED:
+        _verification = UNVERIFIED
+    elif got != expect_sha256:
         raise LedgerRefused(
             f"DECISION_LEDGER_DIGEST_MISMATCH: the receipt names "
             f"{expect_sha256} and the file on disk is {got}. A ledger that "
             f"is not the one the receipt was written beside cannot be read "
             f"as the numbers that receipt reports.")
-    out: dict = {"header": None, "arms": {}}
+    else:
+        _verification = "VERIFIED_AGAINST_THE_SUPPLIED_DIGEST"
+    out: dict = {"header": None, "arms": {},
+                 "read_verification": _verification,
+                 "sha256_on_disk": got}
     _kinds_seen: dict = {}
     with gzip.open(path, "rt") as fh:
         for line in fh:
@@ -527,7 +672,7 @@ def recompute(led: dict, arm: str) -> dict:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 18
+EXPECTED_CHECKS = 24
 
 
 def selftest(quiet: bool = False) -> int:
@@ -568,6 +713,10 @@ def selftest(quiet: bool = False) -> int:
                      # landed, which is the guard working on its own
                      # battery.
                      "null_settle_values": [v * 1.5 - 3.0 for v in vals],
+                     # REV 115 residual 2 / DE 164: the pairing the writer
+                     # now ASSERTS, recorded by the producer at the append.
+                     "null_draw_index": list(range(len(vals))),
+                     "settle_draw_index": list(range(len(vals))),
                      "arm_fills": fills, "baseline_fills": fills[:20],
                      "decisions": [{"t": 1.0, "slug": "s0", "side": "B",
                                     "gen": 0, "score": 0.9}],
@@ -672,6 +821,9 @@ def selftest(quiet: bool = False) -> int:
         "null_values": [float(i) for i in range(40)],
         "null_cancels": [1] * 40,
         "null_settle_values": _sv143,
+        "null_draw_index": list(range(40)),
+        "settle_draw_index": list(range(40)),
+        "cancel_draw_index": list(range(40)),
         "arm_fills": fills, "baseline_fills": fills, "decisions": [],
         "settlement": {"ruling": "R-801", "unit": "cents",
                        "D_E_settle": _obs143,
@@ -681,7 +833,7 @@ def selftest(quiet: bool = False) -> int:
                        "winner_source": {"path": "x", "sha256": "y"}}}}
     _p143 = Path(tempfile.mkdtemp(prefix="ledger_143_")) / "l.jsonl.gz"
     _w143 = write_ledger(_p143, "FIXTURE", _per143, buy_side="B")
-    _r143 = recompute(read_ledger(_p143), "A")
+    _r143 = recompute(read_ledger(_p143, expect_sha256=_w143["sha256"]), "A")
     _sn143 = _r143["settlement_null"]
     _want_mean = _st143.fmean(_sv143)
     _want_sd0 = _st143.pstdev(_sv143)
@@ -709,7 +861,7 @@ def selftest(quiet: bool = False) -> int:
     write_ledger(_p143b, "FIXTURE", _per143b, buy_side="B")
     _ref143 = None
     try:
-        recompute(read_ledger(_p143b), "A")
+        recompute(read_ledger(_p143b, expect_sha256=UNVERIFIED), "A")
     except LedgerRefused as _e:
         _ref143 = str(_e).split(":")[0]
     ok(_ref143 == "DECISION_LEDGER_SETTLEMENT_NULL_NOT_REDERIVABLE"
@@ -733,14 +885,14 @@ def selftest(quiet: bool = False) -> int:
                               "day": "FIXTURE", "arms": []}) + "\n")
         _fh.write(json.dumps({"row": "SETTLEMENT_SCALARS", "arm": "A",
                               "D_E_settle": 1.0}) + "\n")
-    _r3 = read_ledger(_v3)
+    _r3 = read_ledger(_v3, expect_sha256=UNVERIFIED)
     # THE OLD READER, SIMULATED HONESTLY: the same function with a known
     # set of {1, 2} -- which is exactly what a pre-DE-136 reader had.
     _known_before = KNOWN_SCHEMA_VERSIONS
     _refused131 = None
     try:
         globals()["KNOWN_SCHEMA_VERSIONS"] = (1, 2)
-        read_ledger(_v3)
+        read_ledger(_v3, expect_sha256=UNVERIFIED)
     except LedgerRefused as _e:
         _refused131 = str(_e).split(":")[0]
     finally:
@@ -763,7 +915,7 @@ def selftest(quiet: bool = False) -> int:
                    "p003_de_decision_ledger_20260905__20260907T124104Z"
                    ".jsonl.gz")
     if _v2land.is_file():
-        _r2 = read_ledger(_v2land)
+        _r2 = read_ledger(_v2land, expect_sha256=UNVERIFIED)
         ok(_r2["schema_version_read"] == 2
            and _r2["settlement_rows_status"] == "SETTLEMENT_ROWS_ABSENT"
            and "SETTLEMENT_SLUG" not in _r2["row_kinds_seen"],
@@ -795,7 +947,7 @@ def selftest(quiet: bool = False) -> int:
     write_ledger(_lp2, "2026-09-08", _no_inv, buy_side="B")
     _code_inv = None
     try:
-        recompute(read_ledger(_lp2), "A")
+        recompute(read_ledger(_lp2, expect_sha256=UNVERIFIED), "A")
     except LedgerRefused as e:
         _code_inv = str(e).split(":")[0]
     ok(_code_inv == "DECISION_LEDGER_NO_INVENTORY_FIELDS",
@@ -810,7 +962,7 @@ def selftest(quiet: bool = False) -> int:
     # directory that contains the ledger and nothing else.
     _iso = Path(tempfile.mkdtemp(prefix="ledger_iso_"))
     shutil.copy(lp, _iso / lp.name)
-    r2 = read_ledger(_iso / lp.name)
+    r2 = read_ledger(_iso / lp.name, expect_sha256=w["sha256"])
     rc2 = recompute(r2, "A")
     ok(rc2 == rc and not any(p.suffix == ".pkl" for p in _iso.iterdir()),
        f"R-765 (2): the ledger reads and recomputes IDENTICALLY from a "
@@ -836,7 +988,8 @@ def selftest(quiet: bool = False) -> int:
        f"digest is the only thing binding them")
     _absent = None
     try:
-        read_ledger(_iso / "no_such_ledger.jsonl.gz")
+        read_ledger(_iso / "no_such_ledger.jsonl.gz",
+                    expect_sha256=UNVERIFIED)
     except LedgerRefused as e:
         _absent = str(e).split(":")[0]
     ok(_absent == "DECISION_LEDGER_ABSENT",
@@ -968,6 +1121,144 @@ def selftest(quiet: bool = False) -> int:
        f"numbers to 1e-9 against an independent computation, and the "
        f"settlement null still re-derives. The fix adds a branch for the "
        f"empty case; it does not change the populated one")
+
+    # ---- REV 116 / Q-REV-117 (DE 164): THE DIGEST IS NO LONGER OPTIONAL -
+    # REV drove the consequence of the `None` default on a real 09-07
+    # ledger: one NULL_DRAW value moved by +1000 in 208,083 rows reads
+    # CLEAN without a digest and moves Z. The finding was not that the
+    # check is wrong -- it verifies correctly when asked -- but that the
+    # SHORTEST call did not ask, while the safe call lived as prose in a
+    # receipt field. This reproduces REV's control on this battery's own
+    # fixture and drives all four ways the reader can now be called.
+    _tamp = _iso / "rev116_tampered.jsonl.gz"
+    with gzip.open(lp, "rt") as _fin, gzip.open(_tamp, "wt") as _fout:
+        _moved = 0
+        for _line in _fin:
+            _row = json.loads(_line)
+            if _row.get("row") == "NULL_DRAW" and _row.get("i") == 0 \
+                    and not _moved:
+                _row["value"] = float(_row["value"]) + 1000.0
+                _moved = 1
+            _fout.write(json.dumps(_row, sort_keys=True) + "\n")
+    _r116 = {}
+    try:
+        read_ledger(_tamp)                      # the call REV found unsafe
+        _r116["omitted"] = "ADMITTED"
+    except TypeError:
+        _r116["omitted"] = "TYPEERROR"
+    try:
+        read_ledger(_tamp, expect_sha256=None)
+        _r116["none"] = "ADMITTED"
+    except LedgerRefused as _e:
+        _r116["none"] = str(_e).split(":")[0]
+    try:
+        read_ledger(_tamp, expect_sha256=w["sha256"])
+        _r116["digest"] = "ADMITTED"
+    except LedgerRefused as _e:
+        _r116["digest"] = str(_e).split(":")[0]
+    _unv = read_ledger(_tamp, expect_sha256=UNVERIFIED)
+    _z_tampered = recompute(_unv, "A")["Z"]
+    _z_true = recompute(read_ledger(lp, expect_sha256=w["sha256"]), "A")["Z"]
+    ok(_r116 == {"omitted": "TYPEERROR",
+                 "none": DIGEST_NOT_SUPPLIED_REFUSAL,
+                 "digest": "DECISION_LEDGER_DIGEST_MISMATCH"}
+       and _moved == 1 and abs(_z_tampered - _z_true) > 1e-9,
+       f"REV 116 / Q-REV-117: THE UNSAFE CALL NO LONGER EXISTS. Omitting "
+       f"`expect_sha256` is a TypeError, passing None refuses "
+       f"`{_r116['none']}`, and the receipt's digest against a file with "
+       f"ONE moved draw refuses `{_r116['digest']}`. The tamper is real "
+       f"and the comparison discriminates it: Z {_z_tampered:.12f} against "
+       f"{_z_true:.12f} on the untouched file")
+    ok(_unv["read_verification"] == UNVERIFIED
+       and _unv["sha256_on_disk"] == _sha(_tamp)
+       and read_ledger(lp, expect_sha256=w["sha256"])["read_verification"]
+       == "VERIFIED_AGAINST_THE_SUPPLIED_DIGEST",
+       f"POSITIVE CONTROL, AND THE ESCAPE IS VISIBLE: a caller with no "
+       f"digest passes the declared constant and gets a result that SAYS "
+       f"`{_unv['read_verification']}` beside the digest it actually read "
+       f"({_unv['sha256_on_disk'][:12]}...), while a verified read says "
+       f"VERIFIED_AGAINST_THE_SUPPLIED_DIGEST. An unverified read cannot "
+       f"happen by omission and cannot be mistaken for a verified one "
+       f"afterwards")
+
+    # ---- REV 115's TWO RESIDUALS (DE 164): DRIVEN, BOTH DIRECTIONS -----
+    # The base fixture `_per143` writes cleanly above, so every cell here
+    # is that fixture with ONE field disturbed -- the delta is the cell.
+    def _write143(**over):
+        """Write `_per143` with fields replaced. Returns (reason, path)."""
+        _pp = Path(tempfile.mkdtemp(prefix="ledger_164_")) / "l.jsonl.gz"
+        try:
+            write_ledger(_pp, "FIXTURE", {"A": {**_per143["A"], **over}},
+                         buy_side="B")
+            return None, _pp
+        except LedgerRefused as _e:
+            return str(_e).split(":")[0], _pp
+
+    # RESIDUAL 1, RED: a SHORT settlement list. The pre-fix writer padded
+    # it with `None`s and the file was produced; the mismatch surfaced
+    # only when somebody recomputed it, long after the run.
+    _short = _sv143[:30]
+    _pad_would_write = [(_short[i] if i < len(_short) else None)
+                        for i in range(40)]          # the PRE-FIX expression
+    _r1, _p1 = _write143(null_settle_values=_short,
+                         settle_draw_index=list(range(30)))
+    ok(_r1 == PARALLEL_LENGTH_REFUSAL and not _p1.exists()
+       and _pad_would_write[:30] == _short
+       and _pad_would_write[30:] == [None] * 10,
+       f"REV 115 RESIDUAL 1, RED: 30 settlement draws against 40 "
+       f"null_values REFUSES `{_r1}` AT THE WRITE and NO FILE IS CREATED "
+       f"({_p1.exists()}). The pre-fix expression is reconstructed beside "
+       f"it and computed: it would have written the 30 real values "
+       f"followed by {_pad_would_write[30:].count(None)} `None`s -- which "
+       f"read as 'these draws had no settlement value' when the truth is "
+       f"that the producer lost ten of them")
+    # RESIDUAL 2, RED (a): the pairing is not RECORDED at all.
+    _r2a, _ = _write143(settle_draw_index=None)
+    # RESIDUAL 2, RED (b): recorded and BROKEN -- a duplicate ordinal,
+    # which is what a loop that appended one draw twice produces. The
+    # LENGTH CHECK CANNOT SEE IT, and that is computed here, not claimed.
+    _dup = list(range(39)) + [38]
+    _r2b, _ = _write143(settle_draw_index=_dup)
+    ok(_r2a == PAIRING_UNRECORDED_REFUSAL
+       and _r2b == PAIRING_BROKEN_REFUSAL
+       and len(_dup) == len(_per143["A"]["null_values"]),
+       f"REV 115 RESIDUAL 2, RED BOTH WAYS: a settlement list with NO "
+       f"recorded pairing refuses `{_r2a}`, and one whose recorded "
+       f"ordinals contain a DUPLICATE refuses `{_r2b}` -- while its "
+       f"length ({len(_dup)}) equals null_values' exactly, so the length "
+       f"check that existed before admits it. The correspondence used to "
+       f"live in the shape of one loop; it is now a record the write "
+       f"asserts")
+    # POSITIVE CONTROL: the guard admits the honest fixture, and the file
+    # it writes is the one the cells above already recomputed.
+    _r3, _p3 = _write143()
+    ok(_r3 is None and _p3.exists()
+       and recompute(read_ledger(_p3, expect_sha256=UNVERIFIED), "A")["settlement_null"][
+           "n_null_draws"] == 40,
+       f"POSITIVE CONTROL: the unmodified fixture still writes ({_r3}) and "
+       f"its settlement null still re-derives over 40 draws -- the three "
+       f"refusals above are about the disturbance and not about the "
+       f"writer having been made unable to write")
+    # AND THE LIMIT, COMPUTED RATHER THAN CONFESSED IN A DOCSTRING: a
+    # settlement list of the RIGHT LENGTH carrying the WRONG NUMBERS,
+    # honestly stamped 0..39, is ADMITTED here. R-825's own instance was
+    # of exactly that kind, and what catches it is the reader's
+    # re-derivation -- which is why this guard is the SHAPE half and says
+    # so.
+    _wrong = list(_per143["A"]["null_values"])        # the 5-second draws
+    _r4, _p4 = _write143(null_settle_values=_wrong)
+    _sn4 = recompute(read_ledger(_p4, expect_sha256=UNVERIFIED), "A")["settlement_null"]
+    ok(_r4 is None and _p4.exists()
+       and abs(_sn4["null_mean"] - statistics.fmean(_wrong)) < 1e-9
+       and abs(_sn4["null_mean"] - statistics.fmean(_sv143)) > 1e-9,
+       f"THE LIMIT, DRIVEN: R-825's OWN SHAPE -- the 5-second draws handed "
+       f"over as the settlement draws, right length, honest ordinals -- is "
+       f"ADMITTED by this guard ({_r4}) and the file's settlement mean "
+       f"comes out {_sn4['null_mean']:.6f} against the true "
+       f"{statistics.fmean(_sv143):.6f}. Index equality cannot see values. "
+       f"This guard closes the SHAPE half (no padding, no unrecorded "
+       f"parallel list); the VALUE half is the reader's re-derivation, and "
+       f"a claim that the write now makes R-825 impossible would be false")
 
     shutil.rmtree(d, ignore_errors=True)
     shutil.rmtree(_iso, ignore_errors=True)

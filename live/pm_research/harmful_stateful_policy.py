@@ -98,7 +98,7 @@ statuses, never silent drops (rule 4).
 
     python3 live/pm_research/harmful_stateful_policy.py --selftest
 
-Selftest: 89 checks (EXPECTED_CHECKS below; the run asserts the count, so
+Selftest: 98 checks (EXPECTED_CHECKS below; the run asserts the count, so
 the claim is computed at run time, not remembered here).
 """
 from __future__ import annotations
@@ -107,7 +107,7 @@ import json
 import math
 from typing import Any, Sequence
 
-EXPECTED_CHECKS = 91          # asserted by selftest(); update together
+EXPECTED_CHECKS = 98          # asserted by selftest(); update together
 
 SIDES = ("BUY_UP", "SELL_UP")
 RANK_GEN_START, RANK_FILL, RANK_GEN_END, RANK_SCORE = 0, 1, 2, 3
@@ -380,19 +380,47 @@ def validate_reference(reference: dict[str, Any]) -> None:
                 prev_gen = g["gen"]
 
 
+#: THE KEYS EVERY SCORE EVENT MUST CARRY.  `gen` joined this tuple at
+#: DE 164 (DA 143, coordinator ruling (b)) and it is LOAD-BEARING, not
+#: decoration: `_on_score` routes the cancel/reduce decision by it.
+_SCORE_REQUIRED = ("t", "slug", "side", "score", "gen")
+
+
 def validate_scores(scores: Sequence[dict[str, Any]]) -> None:
     """Refuse malformed score events.  A NaN score compares False against
     every threshold -- a silent semantic drop -- so it is refused, not
     counted.  An unknown slug is a legitimate mismatch and is COUNTED at
-    replay time instead (rule 4)."""
+    replay time instead (rule 4).
+
+    DE 164 / DA 143, COORDINATOR RULING (b): `gen` IS REQUIRED.  Until now
+    an event named its (t, slug, side) and the engine routed the decision
+    to whatever policy record happened to be current at that instant, so
+    the generation label the stream already carried was decoration.  At an
+    ABUTTING boundary -- `t1` of N == `t0` of N+1, which `_on_gen_start`
+    documents as routine on real data -- GEN_START outranks GEN_END, so
+    N+1's record is current when N's own last score arrives and N's score
+    decided N+1's cancel.  The identity existed in the data and was not
+    load-bearing; here it is made so."""
     for i, s in enumerate(scores):
         if not isinstance(s, dict):
             raise ReferenceIntegrityError(f"score[{i}]: not a dict")
-        for key in ("t", "slug", "side", "score"):
+        for key in _SCORE_REQUIRED:
             if key not in s:
                 raise ReferenceIntegrityError(f"score[{i}]: missing {key!r}")
         if not _fin(s["t"]):
             raise ReferenceIntegrityError(f"score[{i}]: non-finite t")
+        if not isinstance(s["gen"], int) or isinstance(s["gen"], bool):
+            # The reference holds `gen` to exactly this predicate
+            # (`validate_reference`), and the two are compared for equality
+            # in `_on_score`.  A str "0" or a float 0.0 would compare
+            # unequal to the reference's int and silently route NOTHING --
+            # a stream that never cancels, which reads as a policy result.
+            raise ReferenceIntegrityError(
+                f"score[{i}]: gen {s['gen']!r} must be an int, the type "
+                f"`validate_reference` holds generation ids to. The engine "
+                f"routes this event's decision by comparing it to the "
+                f"reference's `gen`, so a foreign type matches nothing and "
+                f"turns every crossing into a counted no-op")
         if s["side"] not in SIDES:
             raise ReferenceIntegrityError(
                 f"score[{i}]: side {s['side']!r} not in {SIDES}")
@@ -969,6 +997,27 @@ class _SlugReplay:
             self.c["crossings_while_idle" if crossing
                    else "reduce_crossings_while_idle"] += 1
             return
+        # ---- DE 164 / DA 143, COORDINATOR RULING (b): ROUTE BY `gen` -----
+        # The decision is GENERATION-SCOPED and now says so.  Everything
+        # above this line is SIDE-scoped by design -- the below-clock and
+        # the repost check are pure functions of the (slug, side) score
+        # stream ("score is a step function between its own events", header)
+        # and are deliberately NOT gated on the generation: gating them
+        # would freeze repost eligibility across a generation boundary,
+        # where by construction no record of the new generation is held.
+        #
+        # WHAT THIS CHANGES, stated exactly: at an abutting boundary
+        # (t1 of N == t0 of N+1) the merged order is GEN_START(N+1) <
+        # GEN_END(N) < SCORE, so N's own last score arrived with N+1's
+        # record current and CANCELLED N+1.  It is counted here instead.
+        # Where the stream and the reference agree -- every event strictly
+        # inside its generation, which is every event on the fixtures and
+        # the overwhelming majority of real rows -- this branch is not
+        # taken and the trajectory is bit-identical.
+        if rec["ref"]["gen"] != s["gen"]:
+            self.c["crossings_for_another_generation" if crossing
+                   else "reduce_crossings_for_another_generation"] += 1
+            return
         if rec["non_ok"]:
             self.c["crossings_on_non_ok_generation"] += 1
             return
@@ -1097,6 +1146,14 @@ _COUNTER_NAMES = (
     "reposts", "reposts_mid_generation", "reposts_at_generation_start",
     "gen_starts_missed_held", "non_ok_generations",
     "scores_ignored_predictor_disabled", "scores_unknown_slug",
+    # DE 164 / DA 143 ruling (b): a crossing whose event names a generation
+    # OTHER than the one the policy currently holds.  An exclusion with a
+    # status (rule 4), never a silent drop and never applied to the wrong
+    # record.  Structurally reachable only where the stream and the merged
+    # event order disagree -- an abutting generation boundary is the case
+    # that produced it.
+    "crossings_for_another_generation",
+    "reduce_crossings_for_another_generation",
 )
 
 
@@ -1418,12 +1475,12 @@ def _ref1() -> dict:
 
 def _scores1() -> list:
     return [
-        {"t": 1.0, "slug": "w1", "side": "BUY_UP", "score": 0.1},
-        {"t": 3.0, "slug": "w1", "side": "SELL_UP", "score": 0.05},
-        {"t": 6.0, "slug": "w1", "side": "BUY_UP", "score": 0.9},
-        {"t": 7.0, "slug": "w1", "side": "BUY_UP", "score": 0.95},
-        {"t": 9.0, "slug": "w1", "side": "BUY_UP", "score": 0.1},
-        {"t": 12.0, "slug": "w1", "side": "BUY_UP", "score": 0.2},
+        {"t": 1.0, "slug": "w1", "side": "BUY_UP", "gen": 1, "score": 0.1},
+        {"t": 3.0, "slug": "w1", "side": "SELL_UP", "gen": 1, "score": 0.05},
+        {"t": 6.0, "slug": "w1", "side": "BUY_UP", "gen": 1, "score": 0.9},
+        {"t": 7.0, "slug": "w1", "side": "BUY_UP", "gen": 1, "score": 0.95},
+        {"t": 9.0, "slug": "w1", "side": "BUY_UP", "gen": 1, "score": 0.1},
+        {"t": 12.0, "slug": "w1", "side": "BUY_UP", "gen": 2, "score": 0.2},
     ]
 
 
@@ -1658,7 +1715,8 @@ def selftest() -> int:
        "POSITIVE CONTROL: the reposting run does NOT match cancel-and-hold")
 
     # ---- group D: gate 4 -- at most one cancel per generation -----------
-    adv_scores = [{"t": t, "slug": "w1", "side": "BUY_UP", "score": s}
+    adv_scores = [{"t": t, "slug": "w1", "side": "BUY_UP", "gen": 1,
+                   "score": s}
                   for t, s in ((6.0, 0.9), (6.2, 0.99), (6.4, 0.99),
                                (7.5, 0.99), (8.5, 0.99))]
     adv = replay_policy(ref, adv_scores, _params())
@@ -1820,11 +1878,11 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
     """Groups H..N of the battery (same closures, same running count)."""
     # ---- group H: data refusals and counted exclusions ------------------
     refuses(ReferenceIntegrityError, lambda: validate_scores(
-        [{"t": 1.0, "slug": "w1", "side": "BUY_UP",
+        [{"t": 1.0, "slug": "w1", "side": "BUY_UP", "gen": 1,
           "score": float("nan")}]),
         "a NaN score is refused, never a silent below-threshold no-op")
     refuses(ReferenceIntegrityError, lambda: validate_scores(
-        [{"t": 1.0, "slug": "w1", "side": "UP", "score": 0.5}]),
+        [{"t": 1.0, "slug": "w1", "side": "UP", "gen": 1, "score": 0.5}]),
         "an unknown maker side is refused")
     bad_ref = _ref1()
     bad_ref["w1"]["BUY_UP"][0]["tranches"][0]["t"] = 55.0
@@ -1850,7 +1908,7 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
         "SELL_UP": []}}
     nok = replay_policy(ref_nok,
                         [{"t": 1.0, "slug": "w3", "side": "BUY_UP",
-                          "score": 0.9}], _params())
+                          "gen": 1, "score": 0.9}], _params())
     ok(nok["counters"]["crossings_on_non_ok_generation"] == 1
        and nok["cancel_lifecycle"]["issued"] == 0
        and abs(nok["fills"]["received_unvalued_shares"] - 1.0) < 1e-12,
@@ -1858,7 +1916,8 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
        "accepted, its crossing is a counted status (no cancel), and its "
        "unvalued fill is charged and counted, never dropped")
     extra = replay_policy(ref, scores + [{"t": 2.5, "slug": "w9",
-                                          "side": "BUY_UP", "score": 0.99}],
+                                          "side": "BUY_UP", "gen": 1,
+                                          "score": 0.99}],
                           _params())
     ok(extra["counters"]["scores_unknown_slug"] == 1
        and extra["cancel_lifecycle"]["issued"] == 1,
@@ -1869,8 +1928,10 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
         "BUY_UP": [_gen(1, 0.0, 10.0, [(2.0, 2.0, -10.0), (6.5, 1.0, -4.0),
                                        (8.0, 1.0, -25.0)])],
         "SELL_UP": [_gen(1, 0.0, 20.0, [(1.0, 3.0, 2.0)], level=0.51)]}}
-    sc_p = [{"t": 6.0, "slug": "w2", "side": "BUY_UP", "score": 0.9},
-            {"t": 7.0, "slug": "w2", "side": "BUY_UP", "score": 0.95}]
+    sc_p = [{"t": 6.0, "slug": "w2", "side": "BUY_UP", "gen": 1,
+             "score": 0.9},
+            {"t": 7.0, "slug": "w2", "side": "BUY_UP", "gen": 1,
+             "score": 0.95}]
     prot = replay_policy(ref_p, sc_p, _params(
         protection_mode="REDUCING_SIDE_PROTECTION"))
     ovr = replay_policy(ref_p, sc_p, _params())
@@ -1894,9 +1955,12 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
        "the two protection cells are distinct trajectories, not labels")
 
     # ---- group J: rate limiting counts requested/passed/suppressed ------
-    sc_r = [{"t": 6.0, "slug": "w1", "side": "BUY_UP", "score": 0.9},
-            {"t": 8.0, "slug": "w1", "side": "BUY_UP", "score": 0.1},
-            {"t": 12.0, "slug": "w1", "side": "BUY_UP", "score": 0.9}]
+    sc_r = [{"t": 6.0, "slug": "w1", "side": "BUY_UP", "gen": 1,
+             "score": 0.9},
+            {"t": 8.0, "slug": "w1", "side": "BUY_UP", "gen": 1,
+             "score": 0.1},
+            {"t": 12.0, "slug": "w1", "side": "BUY_UP", "gen": 2,
+             "score": 0.9}]
     lim = replay_policy(ref, sc_r, _params(max_cancels_per_minute=1.0))
     ok({k: lim["rate_limit"][k] for k in _CNT}
        == {"requested": 2, "passed": 1, "suppressed": 1}
@@ -1926,8 +1990,10 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
         "BUY_UP": [_gen(1, 0.0, 10.0, [(2.0, 2.0, -10.0), (6.5, 2.0, -4.0),
                                        (8.0, 1.0, -25.0)])],
         "SELL_UP": []}}
-    sc_k = [{"t": 4.0, "slug": "w1", "side": "BUY_UP", "score": 0.6},
-            {"t": 7.0, "slug": "w1", "side": "BUY_UP", "score": 0.9}]
+    sc_k = [{"t": 4.0, "slug": "w1", "side": "BUY_UP", "gen": 1,
+             "score": 0.6},
+            {"t": 7.0, "slug": "w1", "side": "BUY_UP", "gen": 1,
+             "score": 0.9}]
     red = replay_policy(ref_k, sc_k, _params(
         enable_reduce=True, theta_reduce=0.5,
         reduce_remaining_fraction=0.5))
@@ -1987,7 +2053,7 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
             "an event with a key outside the closed schema is refused -- "
             "the path a feature would need to leak through does not exist")
     scores_z = scores + [{"t": 6.0, "slug": "w1", "side": "SELL_UP",
-                          "score": 0.9}]
+                          "gen": 1, "score": 0.9}]
     zed = replay_policy(ref, scores_z, _params())
     ok(zed["cancel_lifecycle"]["zero_value"] == 1
        and zed["cancel_lifecycle"]["effective"] == 2
@@ -2027,7 +2093,8 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
                "SELL_UP": [_gen(1, 0.0, 10.0, [(8.0, 1.0, -30.0)],
                                 level=0.51)]},
     }
-    sc_o = [{"t": 6.0, "slug": "m2", "side": "SELL_UP", "score": 0.9}]
+    sc_o = [{"t": 6.0, "slug": "m2", "side": "SELL_UP", "gen": 1,
+             "score": 0.9}]
     p_o = _params(protection_mode="REDUCING_SIDE_PROTECTION")
     fix_two = replay_policy(ref_o, sc_o, p_o)
     ok(fix_two["cancel_lifecycle"]["issued"] == 1
@@ -2095,9 +2162,12 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
                    _gen(2, 5.0, 10.0, [(10.0, 1.0, -5.0)]),
                    _gen(3, 10.0, 15.0, [])],
         "SELL_UP": []}}
-    sc_p2 = [{"t": 1.0, "slug": "w", "side": "BUY_UP", "score": 0.99},
-             {"t": 2.0, "slug": "w", "side": "BUY_UP", "score": 0.5},
-             {"t": 6.0, "slug": "w", "side": "BUY_UP", "score": 0.0}]
+    sc_p2 = [{"t": 1.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+              "score": 0.99},
+             {"t": 2.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+              "score": 0.5},
+             {"t": 6.0, "slug": "w", "side": "BUY_UP", "gen": 2,
+              "score": 0.0}]
     p_p2 = _params(protection_mode="ALL_ORDERS_OVERRIDE",
                    repost_dwell_s=0.5)
     bnd = replay_policy(ref_p2, sc_p2, p_p2)
@@ -2161,7 +2231,8 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
     ref_q = {"w": {"BUY_UP": [_gen(1, 0.0, 5.0, []),
                               _gen(2, 5.0, 10.0, [(7.0, 1.0, -9.0)])],
                    "SELL_UP": []}}
-    sc_q = [{"t": 1.0, "slug": "w", "side": "BUY_UP", "score": 0.99}]
+    sc_q = [{"t": 1.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+             "score": 0.99}]
     q = replay_policy(ref_q, sc_q, _params(
         protection_mode="ALL_ORDERS_OVERRIDE"))
     ok(q["counters"]["gen_starts_missed_held"] == 1
@@ -2193,6 +2264,153 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
        "its generation's end resolves STALE, holds nothing, and the next "
        "generation is placed and charged normally -- the settle-first fix "
        "does not manufacture holds")
+
+    # ---- group R: DE 164 / DA 143 -- THE EVENT'S GENERATION ROUTES ------
+    # DA 143 drove DE 162's `t1` bound and found it accurate strictly
+    # INSIDE a generation and silent at the ABUTTING boundary -- `t1` of N
+    # == `t0` of N+1, which `_on_gen_start` above documents as routine on
+    # real data.  GEN_START outranks GEN_END at equal times, so at that
+    # instant N+1's record is already current and N's own last score
+    # decided N+1's cancel.  Coordinator ruling (b): the event carries its
+    # generation and the DECISION routes by it.
+    #
+    # THE KNOWN-BAD IS RECONSTRUCTED IN THIS CELL, not read from history:
+    # the pre-fix wiring routed by TIME and ignored the label, which is
+    # exactly "force the label to agree with whatever record is current".
+    def _pre_de164_time_routed_replay(reference, score_events, params):
+        """Reconstruct the pre-DE-164 wiring: the cancel/reduce decision
+        routed by TIME alone, the event's `gen` ignored.  Test instrument
+        only -- it forces the label to the current record, which is what
+        reading no label amounts to."""
+        orig_on_score = _SlugReplay._on_score
+
+        def patched(self, side, s, t):
+            rec = self.side_runs[side].current_pol
+            if rec is not None:
+                s = {**s, "gen": rec["ref"]["gen"]}
+            return orig_on_score(self, side, s, t)
+
+        _SlugReplay._on_score = patched
+        try:
+            return replay_policy(reference, score_events, params)
+        finally:
+            _SlugReplay._on_score = orig_on_score
+
+    # gen 1 has no fills; gen 2 abuts it and carries the adverse one.  The
+    # single score belongs to gen 1 and lands at the shared boundary.
+    ref_r = {"w": {"BUY_UP": [_gen(1, 0.0, 10.0, []),
+                              _gen(2, 10.0, 20.0, [(15.0, 1.0, -30.0)])],
+                   "SELL_UP": []}}
+    sc_r164 = [{"t": 10.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+                "score": 0.99}]
+    pre_r = _pre_de164_time_routed_replay(ref_r, sc_r164, _params())
+    ok(pre_r["cancel_lifecycle"]["issued"] == 1
+       and pre_r["cancels"][0]["ref_gen"] == 2
+       and abs(pre_r["economics"]["harm_avoided_cents"] - 30.0) < 1e-9
+       and pre_r["counters"]["crossings_for_another_generation"] == 0,
+       "KNOWN-BAD (pre-DE-164 time routing): a score that NAMES generation "
+       "1 and lands at the abutting boundary cancels generation 2 and "
+       "banks 30 cents of harm avoided that generation 1's information "
+       "never entitled it to")
+    fix_r = replay_policy(ref_r, sc_r164, _params())
+    ok(fix_r["cancel_lifecycle"]["issued"] == 0
+       and fix_r["counters"]["crossings_for_another_generation"] == 1
+       and abs(fix_r["fills"]["received_markout_cents"] + 30.0) < 1e-9
+       and all(check_invariants(fix_r).values()),
+       "ROUTED BY `gen`: the same crossing is a COUNTED exclusion (rule 4), "
+       "no cancel is issued, and generation 2's adverse fill is charged -- "
+       "the 30 cents were never the arm's to keep")
+    # POSITIVE CONTROL: the guard narrows the MISROUTED event only.
+    sc_r164_own = [dict(sc_r164[0], gen=2)]
+    own_r = replay_policy(ref_r, sc_r164_own, _params())
+    ok(own_r["cancel_lifecycle"]["issued"] == 1
+       and own_r["counters"]["crossings_for_another_generation"] == 0
+       and bit_identical(own_r["trajectory"], pre_r["trajectory"]),
+       "POSITIVE CONTROL: the SAME event at the SAME instant, labelled "
+       "with the generation it belongs to, still cancels -- and its "
+       "trajectory is bit-identical to the pre-fix run, so what changed "
+       "is the routing and not the machine")
+    # RULE 27's QUESTION, ANSWERED BY MEASUREMENT: is there a form the old
+    # routing handled that the new one does not?  On every stream whose
+    # events lie strictly inside their own generations -- which is what
+    # `generation_scores`' `t0`/`t1` bounds produce -- the two are
+    # bit-identical, on three fixtures with cancels, holds, reposts,
+    # rate limiting and an abutting boundary between them.
+    _same = [(ref, scores, _params()),
+             (ref, sc_r, _params(max_cancels_per_minute=1.0)),
+             (ref_p2, sc_p2, _params(protection_mode="ALL_ORDERS_OVERRIDE",
+                                     repost_dwell_s=0.5)),
+             (ref_q, sc_q, _params(protection_mode="ALL_ORDERS_OVERRIDE"))]
+    _ident = [bit_identical(
+        replay_policy(_rf, _sc, _pp)["trajectory"],
+        _pre_de164_time_routed_replay(_rf, _sc, _pp)["trajectory"])
+        for _rf, _sc, _pp in _same]
+    _routed = [replay_policy(_rf, _sc, _pp)["counters"][
+        "crossings_for_another_generation"] for _rf, _sc, _pp in _same]
+    ok(_ident == [True, True, True, True] and _routed == [0, 0, 0, 0],
+       f"NO REGRESSION ({_ident}): where the label and the time agree -- "
+       f"every event strictly inside its generation -- routing by `gen` is "
+       f"bit-identical to routing by time on four fixtures, and the new "
+       f"counter is 0 on all of them ({_routed}). The narrowing is exactly "
+       f"the misrouted event and nothing else")
+
+    # ---- group R, second half: `gen` IS REQUIRED, AND ITS TYPE IS -------
+    _r_ev = {"t": 1.0, "slug": "w", "side": "BUY_UP", "gen": 1,
+             "score": 0.99}
+    validate_scores([_r_ev])
+    refuses(ReferenceIntegrityError,
+            lambda: validate_scores([{k: v for k, v in _r_ev.items()
+                                      if k != "gen"}]),
+            "a score event with NO generation is refused: the engine routes "
+            "the decision by it, so an unlabelled event cannot be routed")
+    _types = []
+    for _bad in ("1", 1.0, True, None):
+        try:
+            validate_scores([dict(_r_ev, gen=_bad)])
+            _types.append("ADMITTED")
+        except ReferenceIntegrityError:
+            _types.append("REFUSED")
+    ok(_types == ["REFUSED", "REFUSED", "REFUSED", "REFUSED"],
+       f"a str, a float, a bool and None `gen` are all REFUSED ({_types}) "
+       f"-- `validate_reference` holds generation ids to `int` and the two "
+       f"are compared for equality")
+    # WHAT THAT TYPE CHECK PREVENTS, MEASURED. Driven at the unit because
+    # `validate_scores` makes it unreachable through `replay_policy` --
+    # which is the whole point of checking it at the door.
+    def _bare_run(slug_scores):
+        counters = {k: 0 for k in _COUNTER_NAMES}
+        econ = {"queue_reset_cost_cents_total": 0.0,
+                "hold_seconds_total": 0.0, "hold_seconds_max": 0.0,
+                "holds": [],
+                "fills": {"reference_shares": 0.0, "received_shares": 0.0,
+                          "received_markout_cents": 0.0,
+                          "received_unvalued_shares": 0.0,
+                          "stale_shares": 0.0, "stale_markout_cents": 0.0},
+                "not_received": {b: {"shares": 0.0, "value_cents": 0.0,
+                                     "harm_avoided_cents": 0.0,
+                                     "sacrifice_cents": 0.0,
+                                     "unvalued_shares": 0.0}
+                                 for b in _NOT_RECEIVED_BUCKETS}}
+        inv = {"net": 0.0, "peak_abs_net": 0.0,
+               "received_increasing_shares": 0.0,
+               "received_reducing_shares": 0.0}
+        _SlugReplay("w", ref_r["w"], slug_scores, validate_params(_params()),
+                    counters, [], [], econ, inv).run()
+        return counters
+    _int_gen = _bare_run([{"t": 5.0, "slug": "w", "side": "BUY_UP",
+                           "gen": 1, "score": 0.99}])
+    _str_gen = _bare_run([{"t": 5.0, "slug": "w", "side": "BUY_UP",
+                           "gen": "1", "score": 0.99}])
+    ok(_int_gen["cancels_issued"] == 1
+       and _int_gen["crossings_for_another_generation"] == 0
+       and _str_gen["cancels_issued"] == 0
+       and _str_gen["crossings_for_another_generation"] == 1,
+       f"AND THE CONSEQUENCE IS MEASURED, NOT ASSERTED: the same crossing "
+       f"with `gen` as the str \"1\" issues "
+       f"{_str_gen['cancels_issued']} cancels against "
+       f"{_int_gen['cancels_issued']} with the int 1 -- a foreign type "
+       f"matches no generation, so every crossing becomes a counted no-op "
+       f"and the run reports zero cancels while every status reads healthy")
 
 
 def main(argv: Sequence[str] | None = None) -> int:

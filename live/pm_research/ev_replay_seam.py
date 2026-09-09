@@ -304,6 +304,7 @@ class ActionValuePolicy:
                     t = g["t0"] + frac * span
                     ctx = context_from_generation(slug, side, g, t, window_end)
                     out.append({"t": t, "slug": slug, "side": side,
+                                "gen": g["gen"],
                                 "score": float(self.score(ctx))})
         out.sort(key=lambda s: (s["t"], SIDES.index(s["side"])))
         return out
@@ -358,7 +359,7 @@ class DeclaredStubPolicy(ActionValuePolicy):
                     ctx = context_from_generation(slug, side, g, t, window_end)
                     v = self.score(ctx) if i == 0 else 0.0
                     out.append({"t": t, "slug": slug, "side": side,
-                                "score": float(v)})
+                                "gen": g["gen"], "score": float(v)})
         out.sort(key=lambda s: (s["t"], SIDES.index(s["side"])))
         return out
 

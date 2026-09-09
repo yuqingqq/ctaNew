@@ -67,7 +67,7 @@ EXPECTED_CHECKS = 410
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v25.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v26.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -6104,6 +6104,17 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     settle_base = (settle_value_cents(base_fills, winners)
                    if winners else None)
     settle_values: list = []
+    # ---- REV 115 residual 2 / DE 164: THE PAIRING IS RECORDED ---------
+    # These lists are paired with `values` BY INDEX, and until now that
+    # correspondence existed only in the fact that the appends sit in one
+    # loop body. That is an invariant of a function's SHAPE, and it is the
+    # invariant R-825 violated. The draw ordinal is appended in the SAME
+    # statement as each value, so `de_decision_ledger.write_ledger` can
+    # ASSERT the pairing instead of inheriting it -- and a length check
+    # alone could never see an order swap, which is what R-825 was.
+    values_index: list = []
+    settle_index: list = []
+    cancel_index: list = []
     rss_before_draws = _peak_rss_mb()
     started = time.time()
     values, cancels, peak = [], [], _peak_rss_mb()
@@ -6147,10 +6158,13 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
         # valued and dropped before the next draw is made, so peak memory
         # is O(one draw) and not O(n_draws).
         values.append(_value_cents(r["fills"]) - base_value)
+        values_index.append(d)
         if winners:
             settle_values.append(
                 settle_value_cents(r["fills"], winners) - settle_base)
+            settle_index.append(d)
         cancels.append(int(r["cancels_issued"]))
+        cancel_index.append(d)
         if (d & 63) == 0:
             peak = max(peak, _peak_rss_mb())
         if time.time() - started > deadline_s:
@@ -6200,6 +6214,12 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
             # wearing the same seed, which is what the cross-check above
             # exists to forbid.
             "settle_values": (settle_values if winners else None),
+            # REV 115 residual 2: which DRAW each parallel element came
+            # from, recorded at the append and asserted at the ledger
+            # write (`de_decision_ledger.assert_null_draw_pairing`).
+            "draw_index": values_index,
+            "settle_draw_index": (settle_index if winners else None),
+            "cancel_draw_index": cancel_index,
             "settle_base_value_cents": settle_base,
             "second_valuation_residency": {
                 "fills_retained_per_draw": 0,
@@ -8030,6 +8050,13 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             # draw, so the endpoint's own moments re-derive from the file.
             "null_settle_values": (nul.get("settle_values")
                                    if nul else None),
+            # REV 115 residual 2 / DE 164: the recorded pairing travels
+            # with the values it pairs, so the write asserts it.
+            "null_draw_index": (nul.get("draw_index") if nul else None),
+            "settle_draw_index": (nul.get("settle_draw_index")
+                                  if nul else None),
+            "cancel_draw_index": (nul.get("cancel_draw_index")
+                                  if nul else None),
             "arm_fills": arm_replay["fills"],
             "baseline_fills": base["fills"],
             "decisions": [dict(r) for r in _stream765
@@ -8157,6 +8184,16 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         _ledger_block["recompute_with"] = (
             "de_decision_ledger.read_ledger(path, "
             "expect_sha256=<this sha256>) then .recompute(led, arm)")
+        # REV 116 / Q-REV-117 (DE 164): the instruction above is no longer
+        # the only thing standing between a reader and an unverified read.
+        # `expect_sha256` is REQUIRED, so the call in that string is the
+        # ONLY call; omitting the digest is a TypeError and passing None is
+        # a named refusal. A reader with no digest must pass
+        # `de_decision_ledger.UNVERIFIED`, and the result then says so.
+        _ledger_block["recompute_contract"] = {
+            "expect_sha256": "REQUIRED",
+            "unverified_read": _LED.UNVERIFIED,
+            "result_field_naming_the_state": "read_verification"}
 
     # THE DAY'S SEAL STATE, READ FROM WHAT WAS EMITTED (DE 126).
     _all_sealed = bool(sealed) and all(a.get("sealed") is True

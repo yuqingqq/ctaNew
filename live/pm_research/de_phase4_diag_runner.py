@@ -85,7 +85,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 225
+EXPECTED_CHECKS = 231
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -4367,7 +4367,7 @@ def selftest() -> int:
     # The score is BELOW theta so the generation is NOT cancelled and its
     # fill is RECEIVED -- otherwise the statuses would be empty for the
     # trivial reason that no fill reached the estimator.
-    _nm = arm_result(_nomid, [{"t": 1.0, "slug": _slug[0],
+    _nm = arm_result(_nomid, [{"t": 1.0, "slug": _slug[0], "gen": 1,
                                "side": "BUY_UP", "score": 0.1}], good,
                      theta=0.5)
     ok(_nm["rho"] is None
@@ -4381,7 +4381,7 @@ def selftest() -> int:
     _empty_ref = {_slug[0]: {"BUY_UP": [_gen(1, 0.0, 20.0, [])],
                              "SELL_UP": []}}
     _empty_scores = [{"t": 1.0, "slug": _slug[0], "side": "BUY_UP",
-                      "score": 0.95}]
+                      "gen": 1, "score": 0.95}]
     _er = arm_result(_empty_ref, _empty_scores, good, theta=0.5)
     ok(_er["rho"] is None
        and all(v["rho_statuses"]["REACHABLE"] == 0
@@ -4761,15 +4761,15 @@ def selftest() -> int:
        f"from the scores -- an exclusion with a status, never a "
        f"generation scored from nothing (rule 4)")
     refuses(lambda: _head_scorer("incumbent_linear_d", "btc", _gs2)(
-        {"slug": "s1", "side": HSP.SIDES[0], "t": 400.0}),
+        {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t": 400.0}),
         "and the scorer REFUSES that generation if the population was not "
         "filtered first -- the excluded generation must be removed before "
         "scoring, not scored from a miss", needle="no assembled score")
     ok(abs(_head_scorer("incumbent_linear_d", "btc", _gs)(
-        {"slug": "s1", "side": HSP.SIDES[0], "t": 100.0})
+        {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t": 100.0})
         - _each[0]) < 1e-12
        and abs(_head_scorer("incumbent_linear_d", "btc", _gs)(
-           {"slug": "s1", "side": HSP.SIDES[0], "t": 103.0})
+           {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t": 103.0})
            - _each[1]) < 1e-12,
        "POSITIVE CONTROL: given the assembled scores the SAME scorer "
        "returns THAT ROW's number at THAT ROW's time -- so the refusal "
@@ -4973,12 +4973,71 @@ def selftest() -> int:
        f"DE 162 (c) WHAT THE FIX ACTUALLY CLOSES: the KEY collision (DA "
        f"138) is closed by the window, because non-overlapping windows "
        f"make two generations of one (slug, side) unable to share a `t`. "
-       f"The ENGINE (DA 139) is NOT changed -- `_on_score` still routes by "
-       f"time and never reads `s['gen']` -- but the MISATTRIBUTION is "
-       f"closed, because an event past its generation's end no longer "
-       f"exists to be routed to the next one. The label is now checkable "
-       f"rather than inert, and t={_t_out} is absent instead of silently "
-       f"becoming gen 1's")
+       f"The MISATTRIBUTION is closed HERE too, because an event past its "
+       f"generation's end no longer exists to be routed to the next one, "
+       f"and t={_t_out} is absent instead of silently becoming gen 1's. "
+       f"SUPERSEDED IN PART BY (d): this cell's claim that the engine "
+       f"needs no change held only STRICTLY INSIDE a generation. DA 143 "
+       f"drove the ABUTTING boundary and it did not hold there, so "
+       f"`_on_score` now routes by `s['gen']` (coordinator ruling (b))")
+
+    # ---- (d) DE 164 / DA 143: THE ABUTTING BOUNDARY, BOTH DIRECTIONS ---
+    # (c) above claimed the label was made checkable "because an event past
+    # its generation's end no longer exists". DA 143 drove that claim and
+    # found it true STRICTLY INSIDE a generation and FALSE at the boundary
+    # `harmful_stateful_policy._on_gen_start` documents as routine: when
+    # gen N+1's `t0` EQUALS gen N's `t1`, gen N's own last row (admitted by
+    # the `t1` bound, which is inclusive) already occupies the key
+    # (slug, side, t0), so an UNSCORED gen N+1 is served gen N's number and
+    # DE 155's refusal never fires. DA's own control was live: the
+    # non-abutting fixture (`t0` = 400, unoccupied) DID refuse.
+    _abref = {"s1": {HSP.SIDES[0]: [{"gen": 0, "t0": 100.0, "t1": 200.0},
+                                    {"gen": 1, "t0": 200.0, "t1": 300.0}],
+                     HSP.SIDES[1]: []}}
+    # gen 1 keeps NO rows -- the feature-pass drop DE 155's guard exists for
+    _abrows = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                "t_start": 100.0},
+               {"slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                "t_start": 200.0}]      # == gen 0's t1 == gen 1's t0
+    _absc, _abst, _ = generation_scores(_blk(_abrows), _abref, coin="btc",
+                                        head="incumbent_linear_d")
+    _abkey = ("s1", HSP.SIDES[0], 200.0)
+    # THE KNOWN-BAD, RECONSTRUCTED IN THE CELL: the pre-DE-164 lookup was
+    # the key alone. It is one expression, so it is reproduced rather than
+    # cited, and the number it hands back is READ.
+    _pre164 = _absc[_abkey]["score"]
+    ok(_abst["NO_ROWS_KEPT"] == 1 and _abst["ROWS_SCORED"] == 2
+       and _absc[_abkey]["gen"] == 0,
+       f"DE 164 (d) THE SHAPE DA 143 FOUND: gen 1 kept no rows "
+       f"({_abst['NO_ROWS_KEPT']} NO_ROWS_KEPT) and gen 0's last row sits "
+       f"at t=200.0, which IS gen 1's t0 -- so the key gen 1 would be "
+       f"looked up under is OCCUPIED, by a score built for generation "
+       f"{_absc[_abkey]['gen']} ({_pre164:.6f}). Pre-fix that number was "
+       f"returned to gen 1 and DE 155's refusal never fired")
+    refuses(lambda: _head_scorer("incumbent_linear_d", "btc", _absc)(
+        {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t": 200.0}),
+        "DE 164 (d) AND IT NOW REFUSES BY NAME: the unscored generation at "
+        "the abutting boundary is an exclusion, not a neighbour's score",
+        needle="SCORE_BELONGS_TO_ANOTHER_GENERATION")
+    ok(abs(_head_scorer("incumbent_linear_d", "btc", _absc)(
+        {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t": 200.0})
+        - _pre164) < 1e-12,
+       f"POSITIVE CONTROL: the SAME key at the SAME time, asked for by the "
+       f"generation it was built for, still returns {_pre164:.6f} -- the "
+       f"refusal above is about the generation and not about the scorer "
+       f"having gone inert")
+    refuses(lambda: _head_scorer("incumbent_linear_d", "btc", _absc)(
+        {"slug": "s1", "side": HSP.SIDES[0], "t": 200.0}),
+        "and a row that names NO generation is refused rather than having "
+        "the comparison skipped -- a skipped check reads as a passed one",
+        needle="SCORE_ROW_NAMES_NO_GENERATION")
+    # DA'S CONTROL, KEPT LIVE: the NON-abutting fixture refused before this
+    # round and must still refuse, for its own reason.
+    refuses(lambda: _head_scorer("incumbent_linear_d", "btc", _gs2)(
+        {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t": 400.0}),
+        "DA 143's live control still fires for ITS reason: a non-abutting "
+        "unscored generation has no key at all",
+        needle="no assembled score")
 
     # ---- DE 158: THE READER'S ROWS ARE THE OTHER HALF OF DE 155 (1) ---
     # `be_cancel_axis_null.load()` derives the decision stream from the
@@ -6318,10 +6377,40 @@ def selftest() -> int:
         "time.sleep(120)\n"
     ) % str(Path(__file__).resolve().parent)
 
+    def _rows(logp):
+        """Every COMPLETE row. A line being appended by the heartbeat
+        thread while this reads can be partial, and treating a partial
+        line as 'no rows' is how a poll turns into a coin toss."""
+        out = []
+        for l in Path(logp).read_text().splitlines():
+            if not l.strip():
+                continue
+            try:
+                out.append(json.loads(l))
+            except json.JSONDecodeError:
+                continue
+        return out
+
     def _last(logp):
-        rows = [json.loads(l) for l in Path(logp).read_text().splitlines()
-                if l.strip()]
+        rows = _rows(logp)
         return rows[-1] if rows else {}
+
+    def _wait_for_heartbeat(logp, deadline_s=30.0):
+        """WAIT FOR THE CONDITION, NEVER FOR A DURATION (DE 164).
+
+        This cell used to `time.sleep(0.8)` and then require a heartbeat
+        at `interval_s=0.3`. Under box load the thread does not
+        necessarily get there in 0.8 s, so the VERDICT depended on what
+        else the machine was doing -- it failed once in four runs. The
+        deadline is generous and its expiry is a REAL failure with its own
+        message, not a flake: it means the heartbeat never fired."""
+        _t_end = time.time() + deadline_s
+        while time.time() < _t_end:
+            _n = sum(1 for r in _rows(logp) if r.get("stage") == "heartbeat")
+            if _n >= 1:
+                return _n, round(time.time() - (_t_end - deadline_s), 3)
+            time.sleep(0.02)
+        return 0, deadline_s
 
     with _tf4.TemporaryDirectory() as _d4:
         _d4 = Path(_d4)
@@ -6329,25 +6418,68 @@ def selftest() -> int:
         _pr = _sp.Popen([sys.executable, "-c", _HARNESS, str(_d4), "hang"],
                         stdout=_sp.PIPE, text=True)
         _pr.stdout.readline()                     # READY: inside the stage
-        time.sleep(0.8)                           # let a heartbeat land
+        # DE 164: the SIGNAL is sent once the heartbeat has DEMONSTRABLY
+        # landed, so neither half of this cell's claim rests on a sleep.
+        _beats, _waited = _wait_for_heartbeat(_d4 / "p.log")
         _pr.send_signal(__import__("signal").SIGTERM)
         _pr.wait(timeout=30)
-        _sig_row = _last(_d4 / "p.log")
-        _beats = sum(1 for l in (_d4 / "p.log").read_text().splitlines()
-                     if json.loads(l)["stage"] == "heartbeat")
+        _rows4 = _rows(_d4 / "p.log")
+        _sig_row = _rows4[-1] if _rows4 else {}
+        _after_terminal = [r["stage"] for r in _rows4[
+            next((i for i, r in enumerate(_rows4)
+                  if r.get("stage") == "TERMINAL"), len(_rows4)) + 1:]]
         ok(_sig_row.get("stage") == "TERMINAL"
            and _sig_row.get("outcome") == "SIGNAL"
            and _sig_row.get("signal_name") == "SIGTERM"
-           and _beats >= 1,
+           and _sig_row.get("log_sealed_here") is True
+           and _beats >= 1 and _after_terminal == [],
            f"DE48, DRIVEN BY KILLING A LIVE PROCESS MID-STAGE: a run "
            f"SIGTERMed while a stage is running ends with "
            f"TERMINAL/{_sig_row.get('outcome')}/"
-           f"{_sig_row.get('signal_name')} as the log's LAST line, and "
-           f"{_beats} heartbeat(s) were written while it worked. The "
-           f"ruled run of 2026-09-03 wrote ONE line at 07:01:37Z, died at "
-           f"07:09:18Z, and was found by checking the process table -- a "
-           f"dead run that looks alive for five hours is worse than one "
+           f"{_sig_row.get('signal_name')} as the log's LAST line, with "
+           f"{_beats} heartbeat(s) written while it worked (waited "
+           f"{_waited}s for the first, rather than sleeping a fixed 0.8s "
+           f"and hoping) and {len(_after_terminal)} row(s) after TERMINAL. "
+           f"The ruled run of 2026-09-03 wrote ONE line at 07:01:37Z, died "
+           f"at 07:09:18Z, and was found by checking the process table -- "
+           f"a dead run that looks alive for five hours is worse than one "
            f"that fails loudly")
+
+        # ---- DE 164: THE SEAL ITSELF, KNOWN-BAD AND CONTROL ------------
+        # The cell above can only observe that nothing DID follow TERMINAL
+        # on this run; under the pre-fix code that was true most of the
+        # time, which is exactly why the defect read as flakiness. So the
+        # property is driven directly, in-process, at the unit -- a writer
+        # calling `stage` after `terminal` is what the heartbeat thread
+        # does, and here it is made to happen every time instead of
+        # sometimes.
+        _seal_log = Progress(_d4 / "seal.log")
+        _seal_log.stage("before_terminal")
+        _n_before = len(_rows(_d4 / "seal.log"))
+        _seal_log.terminal("SUCCESS")
+        _dropped = _seal_log.stage("heartbeat")
+        _dropped2 = _seal_log.terminal("EXIT_WITHOUT_RECORD")
+        _seal_rows = _rows(_d4 / "seal.log")
+        ok(_n_before == 1
+           and [r["stage"] for r in _seal_rows] == ["before_terminal",
+                                                    "TERMINAL"]
+           and _dropped["written"] is False
+           and _dropped["reason"] == "LOG_SEALED_AT_TERMINAL"
+           and _dropped2["written"] is False
+           and _seal_log.dropped_after_terminal == 2
+           and _seal_rows[-1].get("log_sealed_here") is True,
+           f"DE 164, THE SEAL DRIVEN AT THE UNIT, BOTH DIRECTIONS: the SAME "
+           f"`stage('heartbeat')` call WRITES before TERMINAL "
+           f"({_n_before} row) and is REFUSED after it "
+           f"({_dropped['reason']}), a second TERMINAL is refused too, and "
+           f"the file's rows are exactly "
+           f"{[r['stage'] for r in _seal_rows]}. Pre-fix the heartbeat ran "
+           f"in a daemon thread nothing stopped on the signal path, so a "
+           f"row could land AFTER the terminal one while the interpreter "
+           f"unwound -- and a reader checking the last line would have "
+           f"read a dead run as alive. The {_seal_log.dropped_after_terminal} "
+           f"refused writes are COUNTED, not silently dropped (rule 4)")
+
         for _f in _d4.iterdir():
             _f.unlink()
         # (b) DIED INSIDE A STAGE by an unhandled exception
@@ -6907,12 +7039,47 @@ class Progress:
     afterwards rather than guessed at."""
 
     def __init__(self, path: Path, *, cap_bytes: int | None = None):
+        import threading as _th
         self.path = Path(path)
         self.t0 = time.time()
         self.cap_bytes = cap_bytes
         self.n = 0
+        # ---- DE 164: THE LOG SEALS AT `TERMINAL` -----------------------
+        # `terminal()`'s docstring promises "THE LAST LINE, and there is
+        # always one", and the FIRST half was not held. The heartbeat runs
+        # in a DAEMON THREAD that nothing stops on the signal path:
+        # `_on_signal` writes TERMINAL and raises SystemExit, and the
+        # interpreter then unwinds, runs atexit handlers and exits -- all
+        # of it time during which `_beat` can wake and append a
+        # `heartbeat` row AFTER the terminal one. A reader that checks the
+        # last line then sees a heartbeat and concludes the run is ALIVE,
+        # which is the exact failure DE48 exists to prevent. It is
+        # LOAD-DEPENDENT, which is why it presented as a flaky battery
+        # cell (one failure in four runs) rather than as the defect it is
+        # -- and a battery whose verdict depends on box load is worth
+        # fixing rather than re-running until green.
+        # Sealing closes it for EVERY writer on every exit path, without
+        # the terminal record having to know which threads exist.
+        self._sealed = False
+        self.dropped_after_terminal = 0
+        # Two threads write this file (the main thread and the heartbeat),
+        # and `stage` was doing an unlocked read-modify-write of `self.n`
+        # plus a multi-call append. The seal would be racy without this,
+        # and so was the sequence number.
+        self._lock = _th.RLock()
 
     def stage(self, name: str, **facts) -> dict:
+        with self._lock:
+            if self._sealed:
+                # An exclusion with a COUNT, never a silent drop (rule 4).
+                # It is readable in-process; the FILE cannot carry it,
+                # because carrying it is the thing being refused.
+                self.dropped_after_terminal += 1
+                return {"stage": name, "written": False,
+                        "reason": "LOG_SEALED_AT_TERMINAL"}
+            return self._write(name, **facts)
+
+    def _write(self, name: str, **facts) -> dict:
         import datetime as _dt
         rss = _peak_rss_mb()
         row = {"seq": self.n, "stage": name,
@@ -6926,11 +7093,13 @@ class Progress:
             row["peak_rss_fraction_of_cap"] = round(
                 rss * 2**20 / self.cap_bytes, 3)
         row.update(facts)
-        self.n += 1
-        with open(self.path, "a") as fh:
-            fh.write(json.dumps(row, sort_keys=True, default=str) + "\n")
-            fh.flush()
-            os.fsync(fh.fileno())
+        with self._lock:
+            row["seq"] = self.n
+            self.n += 1
+            with open(self.path, "a") as fh:
+                fh.write(json.dumps(row, sort_keys=True, default=str) + "\n")
+                fh.flush()
+                os.fsync(fh.fileno())
         return row
 
     def terminal(self, outcome: str, **facts) -> dict:
@@ -6941,8 +7110,20 @@ class Progress:
         ago. Measured: the ruled run of 2026-09-03 died at 07:09:18Z
         having written ONE line at 07:01:37Z, and it was found by
         checking the process table rather than by reading the log. A dead
-        run that looks alive is worse than one that fails loudly."""
-        return self.stage("TERMINAL", outcome=outcome, **facts)
+        run that looks alive is worse than one that fails loudly.
+
+        DE 164: and it is now the last line BY CONSTRUCTION. This writes
+        THROUGH the seal and then SETS it, so no writer on any thread can
+        append after it -- see `__init__`."""
+        with self._lock:
+            if self._sealed:
+                self.dropped_after_terminal += 1
+                return {"stage": "TERMINAL", "written": False,
+                        "reason": "LOG_SEALED_AT_TERMINAL"}
+            row = self._write("TERMINAL", outcome=outcome,
+                              log_sealed_here=True, **facts)
+            self._sealed = True
+            return row
 
 
 def install_terminal_record(log: Progress):
@@ -9355,6 +9536,49 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
                     f"was built from are gone, so this book cannot be "
                     f"scored under the first-crossing rule. Rebuild the "
                     f"book's assembly.")
+            # ---- DE 164 / DA 143, COORDINATOR RULING (b) ---------------
+            # THE LOOKUP IS BY (slug, side, t) AND THE ROW NAMES A
+            # GENERATION, SO THE TWO MUST BE MADE TO AGREE HERE.
+            # DE 155 deliberately kept `score_events_for` enumerating
+            # generations FROM THE REFERENCE, so a generation with no
+            # assembled score still emits its `t0` row and the branch
+            # above refuses it by name. DA 143 drove that guard and found
+            # it UNREACHABLE at an ABUTTING boundary: when gen N+1's `t0`
+            # equals gen N's `t1`, gen N's own last row already occupies
+            # the key `(slug, side, t0)`, so the unscored gen N+1 was
+            # SERVED GEN N'S SCORE and nothing said so. Driven both ways
+            # by DA: non-abutting (`t0` = 400, unoccupied) refused;
+            # abutting (`t0` = 200, occupied) did not.
+            #
+            # The row's `gen` is REQUIRED, not defaulted: a missing key
+            # would skip the comparison, and a skipped check reads as a
+            # passed one.
+            if "gen" not in row:
+                # SITE: scorer#4
+                raise DiagRefused(
+                    f"SCORE_ROW_NAMES_NO_GENERATION: the row {k} carries "
+                    f"no `gen`, so the assembled score found at its "
+                    f"(slug, side, t) cannot be checked against the "
+                    f"generation it was built for. `de_score_stream."
+                    f"REQUIRED_EVENT_KEYS` puts `gen` on every event this "
+                    f"scorer is called with; a row without one reached "
+                    f"here from somewhere that does not.")
+            if _v["gen"] != row["gen"]:
+                # SITE: scorer#5
+                raise DiagRefused(
+                    f"SCORE_BELONGS_TO_ANOTHER_GENERATION: the row "
+                    f"{(k[0], k[1], row['gen'], k[2])} found an assembled "
+                    f"score at its (slug, side, t) that was built for "
+                    f"generation {_v['gen']} (t0 {_v.get('t0')!r}). The "
+                    f"key does not name the generation, so at an ABUTTING "
+                    f"boundary -- `t1` of N == `t0` of N+1, which "
+                    f"`harmful_stateful_policy._on_gen_start` documents as "
+                    f"routine on real data -- an UNSCORED generation is "
+                    f"served the PREVIOUS generation's number instead of "
+                    f"being refused as an exclusion. This is that "
+                    f"refusal, made reachable: a generation whose rows the "
+                    f"feature pass dropped must be removed from the "
+                    f"population, never scored from a neighbour.")
             return _v["score"]
         return _score
     # SITE: scorer#1
