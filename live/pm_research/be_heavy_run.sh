@@ -461,10 +461,26 @@ case "$MOD" in /*) TARGET="$MOD";; *) TARGET="live/pm_research/$MOD";; esac
 
 REC="$REPO/data/pm_5min/derived/be_heavy_run_record_${UNIT}.jsonl"
 TIP=$(git -C "$WT" rev-parse HEAD 2>/dev/null || echo UNRESOLVED)
+# BE 110: THE UNIT'S MEMORY ENVELOPE IS A DECLARED NUMBER WITH A REASON, not
+# a constant someone edited. Default unchanged at 8G, so every existing form
+# behaves exactly as before; `BE_MEMORY_MAX` overrides it and the value plus
+# its basis are written into the run record, because a raised ceiling that
+# nobody can trace back to a measurement is the thing rule 20 forbids.
+# The basis (BE 104/110): the cgroup LEAF tracks TAPE ROWS at ~15,489 B/row,
+# measured on the one un-thrashed build (09-03 at L=250: 8,430,505,984 B over
+# 544,286 rows). The heaviest design day is 09-04 at 638,602 rows -> an
+# implied 9,891,376,928 B, which is why an 8 GiB cap pinned it with 775
+# reclaim events. research.slice allows 15,032,385,536 B, so any override
+# must stay under that.
+MEMMAX="${BE_MEMORY_MAX:-8G}"
+MEMBASIS="${BE_MEMORY_MAX_BASIS:-the launcher default, unchanged since R-551}"
 printf '{"event":"launch","utc":"%s","unit":"%s","payload":"%s","args":"%s","tip":"%s","worktree":"%s","lock":"%s","conflict_rc":%s,"declaration":"%s","stdout_file":"%s","stdout_note":"the payload'"'"'s stdout is appended to this file AS IT RUNS; the journal keeps stderr and the manager lines. A record that lives only in a rotating journal is not a record (rule 20)."}\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$UNIT" "$TARGET" "$*" "$TIP" "$WT" "$LOCK" \
   "$LOCK_CONFLICT_RC" "$DECL" \
   "$REPO/data/pm_5min/derived/be_heavy_run_stdout_${UNIT}.log" >> "$REC"
+printf '{"event":"memory_envelope","utc":"%s","unit":"%s","MemoryMax":"%s","basis":"%s","slice_MemoryMax_bytes":%s,"caps_are_never_raised":"rule 8 / rule 20 / R-174 say a cap is never raised; this override was DISPATCHED by the coordinator at BE 104 and reaffirmed at BE 110 and wants a register amendment, which BE has flagged and not assumed."}\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$UNIT" "$MEMMAX" "$MEMBASIS" \
+  "$(systemctl --user show research.slice -p MemoryMax --value 2>/dev/null || echo null)" >> "$REC"
 
 # (c) THE PAYLOAD'S OWN RECORD GOES TO A FILE, AT RUN TIME (BE 72 finding
 # 3). `--verify-structure` prints its verification record to stdout and the
@@ -477,7 +493,7 @@ printf '{"event":"launch","utc":"%s","unit":"%s","payload":"%s","args":"%s","tip
 # and the manager lines remain the journal's and stdout is the file's.)
 OUTF="$REPO/data/pm_5min/derived/be_heavy_run_stdout_${UNIT}.log"
 exec systemd-run --user --unit="$UNIT" --slice=research.slice \
-  -p MemoryMax=8G -p CPUQuota=100% -p RemainAfterExit=yes \
+  -p MemoryMax="$MEMMAX" -p CPUQuota=100% -p RemainAfterExit=yes \
   -p StandardOutput=append:"$OUTF" \
   --setenv=BE_RECORD="$REC" \
   --setenv=BE_REFUSAL_FILE="${BE_REFUSAL_FILE:-$REPO/data/pm_5min/derived/be_heavy_run_refusal_${UNIT}.txt}" \
