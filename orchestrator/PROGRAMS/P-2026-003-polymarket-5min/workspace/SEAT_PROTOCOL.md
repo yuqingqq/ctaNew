@@ -478,3 +478,15 @@ except where marked USER-ONLY.
 - Race accrual: freeze-commit epoch (1787897340); accrual ≠ day quality
   (split_verdict, R-240).
 - Boundary deploys: 00:00:00Z exactly, per runbook, era-stamped.
+
+34. **Days from 2026-09-08 onward are PROTECTED — do not touch them.** No probe,
+    diagnostic, smoke test, quick look or sanity check against any day from
+    2026-09-08 on. Rule 11 does not care about intent: seen days are consumed,
+    and a five-minute curiosity on 09-08 spends a validation day that cannot be
+    bought back. **Every day this programme currently holds is already spent** —
+    09-03..09-06 are the latency days, and 09-07 carries a sealed run with 500
+    drawn nulls — so the untouched set starts at 09-08 and reaches five (the
+    rule-8 minimum) around **2026-09-13**. Exercise corrected pipelines on the
+    days already consumed; they are free to re-run precisely because they are
+    spent. If a fix genuinely cannot be demonstrated on a consumed day, ASK THE
+    USER before the day is touched, never after. (R-873)

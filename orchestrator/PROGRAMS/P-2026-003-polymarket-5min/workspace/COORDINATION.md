@@ -23914,6 +23914,19 @@ EARLY READ -- day 2026-09-04 -- EXPLORATORY, G 4, point estimates, NO INTERVAL, 
 **STILL UNANSWERED and routed to DE: does the FULL-NULL path hit this same guard (it matters — the null is next), and is `--waive-scoring-path`, which was on this launch, masking a second problem underneath.**
 **09-05 REBUILD LAUNCHED 17:05:42Z** (`p003ev210905a`, EV21 L=250), 09-06 armed behind it, both on the user's R-870 ruling.
 
+### R-873 — 2026-09-09T17:13:19Z — coordinator — **VALIDATION HAS A DATE, AND IT IS ~2026-09-13. THE DAYS THAT WOULD SUPPLY IT DO NOT EXIST YET AND ARE TRIVIALLY EASY TO SPEND BY ACCIDENT.**
+**WHY THIS IS ON THE REGISTER AT ALL:** DA's null declaration (`18c79d8`, Q-DA-387) establishes that **the null runs entirely on SEEN days and therefore CANNOT VALIDATE anything** — it is a control for a point estimate, never a validation (rule 11). That sentence is the most consequential in the document and it raises the obvious question, which nobody had costed: **when could we validate?**
+**MEASURED, not estimated:** `R.days_complete_now(params)` returns **`n_days_complete: 5`** — `['2026-09-03','2026-09-04','2026-09-05','2026-09-06','2026-09-07']` — and both collectors are alive (`collect_pm_prices.py` pid 1049, `collect_pm.py` pid 1108125), so the set grows about one day per day.
+**ALL FIVE ARE CONSUMED, INCLUDING THE ONE THAT LOOKS FREE.** 09-03..09-06 are the four latency days, named and consumed. **09-07 is NOT free either** — it carries a sealed day run whose 500 persisted null draws REV 115 re-derived `null_mean`, `null_sd` and `Z` from, to the last digit. A day you have drawn a null on is seen. **So the untouched set starts at 09-08 and today is 09-09.**
+| | |
+|---|---|
+| untouched complete days available now | **0** |
+| first untouched | 09-08 (collecting) |
+| five untouched complete | 09-08 … 09-12 |
+| **earliest honest validation** | **~2026-09-13**, subject to day quality and the collectors staying up |
+**THE STANDING CONSEQUENCE, AND IT BINDS EVERY SEAT: 09-08 ONWARD ARE PROTECTED. Do not run a probe, a diagnostic, a smoke test, a "quick look" or a sanity check against any day from 2026-09-08 on. Rule 11 does not care about intent — seen days are consumed, and a five-minute curiosity on 09-08 costs a validation day that cannot be bought back. Exercise the corrected pipeline on the days ALREADY consumed (09-03..09-07), which are free to re-run precisely because they are already spent.** If a fix genuinely cannot be demonstrated on a consumed day, that is a question for the USER before the day is touched, not after.
+**This is a constraint, not a plan: ~2026-09-13 is when validation BECOMES POSSIBLE, and only if nobody spends the days between now and then.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
