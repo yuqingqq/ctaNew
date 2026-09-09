@@ -1841,23 +1841,74 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{[(r['t'], r['gen']) for r in _u_rows]}; empty -> "
        f"{_e_i['n_rows']} rows, {_e_i['n_generations_unscored']} unscored")
     _wired = {}
-    for _m in ("da_elementwise", "da_elem_grid", "da_elementwise_hz"):
+    for _m in ("da_elementwise", "da_elem_grid", "da_elementwise_hz",
+               "da_de53_exclusion"):
         _src = (Path(__file__).resolve().parent / f"{_m}.py").read_text()
         _code = "\n".join(l.split("#")[0] for l in _src.splitlines())
         _wired[_m] = {"calls": _code.count("BV.scored_stream_rows"),
                       "old_expr": _code.count('float(g["t0"])) in gs')}
-    ck("DA 148 (e) ALL THREE PROBES ARE WIRED TO IT (rule 17: suite-green "
+    ck("DA 148/149 (e) ALL FOUR CONSUMERS ARE WIRED TO IT (rule 17: suite-green "
        "is not pipeline-wired) -- each calls it once and none retains the "
        "old expression in CODE; the source is comment-stripped first, so "
        "a comment quoting the old form does not count as wiring",
        all(v["calls"] == 1 and v["old_expr"] == 0
-           for v in _wired.values()) and len(_wired) == 3,
+           for v in _wired.values()) and len(_wired) == 4,
        f"{_wired}. REV 122 answered its own question with FIVE consumers, "
        f"and my own sweep over comment-stripped `live/` independently "
        f"found `de_section81_arms.py:526` carrying the same test, the "
        f"same stamping, and COUNTING the misses as "
        f"`excluded_no_assembled_score` -- DE's module, REPORTED not "
        f"edited (R-235). DA's own set is these three")
+
+    # -- 8d. DA 149: MEMBERSHIP, WHICH IS WHAT A CLASSIFIER NEEDS ------
+    #: `da_de53_exclusion` does not build a stream -- it CLASSIFIES every
+    #: reference generation scored/excluded, publishes `n_excluded` and
+    #: `excluded_fraction`, and feeds the split to a permutation audit.
+    #: A wrong membership test there does not mislabel a count, it hands
+    #: `PA.compare` a population that is an artefact of the test.
+    _m_pg_rows, _m_pg = scored_stream_rows(_sref, _pg, _SD)
+    _m_pr_rows, _m_pr = scored_stream_rows(_sref, _pr, _SD)
+    _old_pg = {(s_, sd, g["gen"])
+               for s_, sides in _sref.items() for sd in _SD
+               for g in (sides.get(sd) or ())
+               if (s_, sd, float(g["t0"])) in _pg}
+    _old_pr = {(s_, sd, g["gen"])
+               for s_, sides in _sref.items() for sd in _SD
+               for g in (sides.get(sd) or ())
+               if (s_, sd, float(g["t0"])) in _pr}
+    ck("DA 149 (f) THE COVERED SET IS THE SAME AS THE OLD TEST'S UNDER "
+       "PER_GENERATION AND STRICTLY LARGER UNDER PER_ROW -- which is the "
+       "whole exposure: on the per-row map the OLD test retains 1 of 2 "
+       "generations and would publish an excluded_fraction of 0.5 for a "
+       "map that scores BOTH",
+       _m_pg["covered_generation_keys"] == _old_pg
+       and len(_m_pg["covered_generation_keys"]) == 2
+       and _m_pr["covered_generation_keys"] == {("sA", "BUY_UP", 0),
+                                                ("sA", "BUY_UP", 1)}
+       and _old_pr == {("sA", "BUY_UP", 0)}
+       and _m_pr["covered_generation_keys"] > _old_pr,
+       f"PER_GENERATION: shared {sorted(_m_pg['covered_generation_keys'])} "
+       f"== old {sorted(_old_pg)}. PER_ROW: shared "
+       f"{sorted(_m_pr['covered_generation_keys'])} vs old "
+       f"{sorted(_old_pr)} -- the old test would call generation 1 "
+       f"EXCLUDED and report 0.5 where the truth is 0.0")
+    #: AND THE CELL THAT MATTERS, in the classifier's own terms.
+    _m_u_rows, _m_u = scored_stream_rows(_sref, _uncov, _SD)
+    _m_e_rows, _m_e = scored_stream_rows(_sref, {}, _SD)
+    ck("DA 149 (g) A GENUINELY UNDER-COVERED MAP IS STILL CLASSIFIED "
+       "UNDER-COVERED: generation 1 has no scored row under EITHER shape, "
+       "so it stays OUT of the covered set and the classifier still "
+       "reports it excluded -- excluded_fraction 0.5, not 0.0. An EMPTY "
+       "map covers NOTHING, fraction 1.0. ***The membership became "
+       "correct, not permissive***",
+       _m_u["covered_generation_keys"] == {("sA", "BUY_UP", 0)}
+       and len(_m_u["covered_generation_keys"]) == 1
+       and _m_e["covered_generation_keys"] == set(),
+       f"under-covered: covered {sorted(_m_u['covered_generation_keys'])} "
+       f"of 2 -> excluded_fraction "
+       f"{round(1 - len(_m_u['covered_generation_keys']) / 2, 4)}; empty "
+       f"map -> covered {len(_m_e['covered_generation_keys'])}, "
+       f"excluded_fraction 1.0")
 
     # -- 9. a receipt for the WRONG DAY or COIN REFUSES -------------------
     why_day = why_coin = ""
