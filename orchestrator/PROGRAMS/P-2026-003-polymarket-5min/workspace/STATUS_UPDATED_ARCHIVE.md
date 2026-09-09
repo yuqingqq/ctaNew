@@ -21389,3 +21389,39 @@ generation and the window went 4 → 3. Nothing rewritten.
   v34** (my files carried v25 + v33). Flags 2563 -> 2587, prov 2108 -> 2132; window 3/3, Batch 286 archived. MEM
   asserts no result.)
 ```
+
+## Batch 290 — archived 2026-09-09T10:04:14Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T09:16:15Z (MEM ROUND 305 -- R-860 SWEPT, LIGHT ROUND, BOOKKEEPING AND NOT ANALYSIS, from `45fa3af` to
+  `e6b37e7`, six commits. STATE ONLY. ***THE STATE IN THREE LINES.*** **(a) THE FOUR USER DEFECTS ARE STILL
+  PRESENT**, re-measured by me at live code rather than carried: `null_draws_valued`'s two sites still pass no
+  `arm_cancels`; the definition string still says "generations" over a row count; `7` / `7.r1` still returns
+  `one_cancel_per_generation = True`; a one-module receipt still returns `BOOK_SCORING_CODE_MATCHES` with
+  `n_checked: 1` of 5. **DE has landed no repair, and DA 152's five driven cases report four `DEFECT_PRESENT`
+  against live code** (10 checks, 0 failures, DE's files untouched), its case (2) driving the LIVE
+  `day_decision_population` to `decisions = 4 == ROWS != ACTIONS(2)`. **(b) WHAT IS CLEAN IS THE BUILD INPUTS**: BE
+  120 finds all five queued days resolving `clob_v4_1`, **agreement 5/5** with DA's own `selector_era` and
+  `era_admissible_ruled` fields, **no queued day refusing, masks closing**, and the gap attachment driven **at the
+  selector's entries** -- `sel.n_gap_bearing_windows` equals the count of `_sel` entries with a non-empty fifth
+  element -- **160 / 52 / 13 / 14 / 27 across 09-03..09-07, with the counterfactual ZERO on all five under the old
+  module default**, so the fix moves 266 windows and 2,987.2 s of tape. BE 119's consumer contract **VERIFIES on all
+  three** (REV 127, 16 cells 0 failures): **DERIVED** -- the real 49-module recording gives `scoring.n = 8` and
+  dropping a module from the RECORDING drops it from the set -- with **the user's one-module case named as the
+  acceptance criterion and driven on the real 09-05 receipt pair**, where ***TWO RUNS OF THE SAME BUILDER RECORDED
+  48 AND 49 MODULES: THE IMPORT CLOSURE IS A PROPERTY OF THE RUN, NOT A CONSTANT.*** ***REFUSAL IS POSSIBLE, NOT
+  ENFORCED -- no `assert_` helper -- AND THE ENFORCEMENT IS DE'S HALF***, so (d) is half-repaired from the recording
+  side and open at the checking side. **(c) THE v26 PROTOCOL STRING IS SILENT**: DA 153 at the real declaration
+  finds `protocol P003_DE_MULTIDAY_GATE1_PARAMS_V20` with `version 26`, case 4b `DEFECT_PRESENT`, and the mechanism
+  worse than "accepts" -- **`load_params` NEVER READS IT**, an AST census of its keys giving `G`,
+  `G_derived_from_len_days`, `days`, `expected_G`, `previously_opened_for`, `required_previously_opened_for` across
+  46 lines and 6 raise sites, and a tree-wide sweep for the literal finding **four sites and NOT ONE comparison** --
+  ***AND IT PROPAGATES INTO AN EMITTED ARTIFACT AT `da_accrual_report:242`.*** ***THE NUMBER FOR THE BUILD DECISION:
+  THE GAP LOAD IS UNEVEN -- 09-03 ALONE IS 160 OF THE 266 WINDOWS AND 77 % OF THE AFFECTED SECONDS, SO A SURPRISE IS
+  LIKELIEST ON DAY ONE OF A FIVE-HOUR QUEUE, THE CHEAP END TO FIND IT; ALL FIVE STILL NEED FULL REBUILDS AND `fr` IS
+  BYTE-IDENTICAL ON NONE.*** Recorded as an input to the USER's decision, no recommendation from this seat.
+  **SEAT_PROTOCOL RULE 33 IS PROGRAMME STATE** and DA 152 is the first work built to it -- pass on the real thing,
+  fail on a known-bad, REFUSE a partial input -- **its case (1) reading AT THE CALLER, "where the defect lived", not
+  at the branch.** Flags 2587 -> 2595, prov 2132 -> 2140; window 3/3, Batch 287 archived. **NOTHING BUILT, NO HEAVY
+  LOCK SINCE 07:15:47Z, THE BUILD DECISION AND THE MATCHING UNIT BOTH WITH THE USER.** MEM asserts no result.)
+```

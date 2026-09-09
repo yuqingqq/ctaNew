@@ -67,6 +67,49 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T10:04:14Z (MEM ROUND 308 -- DE 167 and REV 131 SWEPT, LIGHT ROUND, from `7640559` to `34a0dd3`, four commits.
+  STATE ONLY, PER-DEFECT LEDGER FORM KEPT. ***TWO ROWS MOVE AND BOTH MOVE TO "FIXED PENDING VERIFICATION", WHICH IS
+  NOT "FIXED".*** **(5b) THE PREDICATE CHECKING THE WRONG SET -- FIXED PENDING VERIFICATION**: I re-ran last round's
+  own measurement and **`derived_closures` / `be_producing_closure` now appear ELEVEN times in the runner against
+  ZERO at my round-307 read**, with the set sourced as `derived_closures.scoring (BE 117's derivation)` and a NAMED
+  refusal for a receipt with none -- **DE has moved it off the typed five onto BE's DERIVED EIGHT** -- and ***REV 132
+  DRIVES WHETHER IT READS `derived_closures.scoring.modules` AND ASSERTS `n_checked == n` BESIDE THE KEY-SET
+  COMPARISON.*** **(6a) THE PROTOCOL STRING -- FIXED PENDING VERIFICATION**: driven at HEAD, **`params_v29` carries
+  `protocol P003_DE_MULTIDAY_GATE1_PARAMS_V29` with `version: 29`, THE FIRST AGREEMENT SINCE V20**, against `..._V20`
+  still standing at v27 and v28, and `PARAMS_REL` pins v29; DE reports it *clears a live red in DA's gate* and ***THE
+  VERIFICATION IS DA 156 RE-RUNNING THAT GATE, NOT DE'S REPORT AND NOT MY READ.*** ***AND THE VERIFICATION MATTERS
+  MORE THAN USUAL BECAUSE DA DELIBERATELY LEFT THAT RED STANDING RATHER THAN SILENCING IT -- "it should stay red
+  until that string is fixed; silencing it would be exactly the loosening rule 27 warns about" -- SO THE RED CLEARING
+  IS THE EVIDENCE THE FIX LANDED AND THE RED NOT CLEARING WOULD MEAN THE FIX MISSED THE CONJUNCT***, a conjunct built
+  dynamically with an f-string, which is why DA's earlier literal sweep could not see it. **ROWS (2) AND (3) ARE
+  UNCHANGED**, still FIXED / HANDLED IN MECHANISM with the REAL ROWS-PER-DECISION FACTOR and the REAL DOUBLE-CANCEL
+  RATE UNQUANTIFIED, both needing A CORRECTED BOOK -- two rounds of repair have moved four rows and cannot move these
+  two, ***BECAUSE THE MISSING THING IS NOT WORK BUT DATA.*** ***DE'S OWN FRAMING, AND THE FIRST TIME THE RULE HAS
+  CAUGHT THINGS PROSPECTIVELY: THE TWO DE 165 ITEMS WERE ALREADY LANDED AND VERIFYING THEM FROM THE ENTRY POINT
+  "EACH FOUND A HOLE RULE 33 PREDICTED" -- AND BOTH HOLES WERE AT THE THIRD DRIVE, REFUSE A PARTIAL INPUT***, pass
+  and fail being already green in each case. Hole one, `de_section81_arms`, the fifth exposed consumer whose
+  published output IS an exclusion count: DE 166 closed the LOOKUP and left the DETECTOR matching on whatever it
+  happened to find, ***"`any` asks 'is at least one entry per-row'; the question is 'is EVERY entry the same
+  shape'"*** -- and the two partial inputs failed in the two worst ways, **MIXED giving `TypeError: 'float' object is
+  not subscriptable`, A CRASH AND NOT A NAMED REFUSAL, and dicts carrying no `gen` read as PER_GENERATION and
+  reporting "3 of 3 dropped", A SILENT BOGUS EXCLUSION FRACTION.** Hole two: REV 115's residuals re-driven **FROM THE
+  ENTRY POINT with the PRODUCER mutated rather than `write_ledger` fed hand-built dicts**, 500 null_values against
+  500 settlement draws -- *testing the writer proves the writer; the claim was about the day.* ***REV 131's FINDING
+  AGAINST DA'S OWN FIX IS SHARPER THAN THE QUESTION I WAS GIVEN: THE ANSWER IS NEITHER "EVERY WORKTREE IS GENUINELY
+  DIRTY" NOR "THE FUNCTION IS BROKEN" -- THE NEW `committed_state` CELL IS A FUNCTION OF THE LAUNCH DIRECTORY***, its
+  positive control asserting `committed_state(Path(__file__).resolve())` where `__file__` is inside `AUDIT_ROOT` ONLY
+  from the ledger tree: same bytes, **`SELFTEST OK 23/0 rc 0` from `/home/yuqing/ctaNew` and `SELFTEST FAILED 23
+  checks 1 failure rc 1` from `wt-rev`**, `NOT_IN_THIS_TREE` for wt-rev, wt-be and wt-de alike. ***EVERY SEAT RUNS
+  FROM A WORKTREE BY PROTOCOL, SO A GENUINE DEFECT AND "YOU RAN FROM A WORKTREE" GIVE THE IDENTICAL RED -- THE SAME
+  CLASS THE ROUND WAS FIXING***, DA having just repaired a bool that collapsed absence into "uncommitted"; one-line
+  repair, name `AUDIT_ROOT`. REV also VERIFIES the horizon cell (20/0, three monkeypatched clocks giving an IDENTICAL
+  asserted reading while the live reading moves, still red on costs x5.0) with **TWO RESIDUALS, both rule 16: the
+  clauses billed as "the arithmetic, which no clock can move" CANNOT FAIL** -- `(margin >= 0) == before` true by
+  construction, only an 18-second rounding band reachable -- **and the pinned anchor COSTS SENSITIVITY at 4.719x,
+  43,320 s/day against the measured 9,180.5, SO ANY REGRESSION UNDER 372 % IS INVISIBLE.** And REV **refutes the
+  flake premise at the code independently of DA**: `git status --porcelain -- <path>` is PATH-SCOPED, no other seat's
+  timing enters -- **two seats, two methods, one answer.** Flags 2622 -> 2634, prov 2167 -> 2179; window 3/3, Batch
+  290 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
   2026-09-09T09:50:31Z (MEM ROUND 307 -- R-861 SWEPT, LIGHT ROUND, from `07da57b` to `47bc449`, four commits. STATE ONLY.
   ***THE STATE IS A PER-DEFECT LEDGER IN THE USER'S OWN TERMS, NOT A NARRATIVE, AND IT CARRIES THREE STATES RATHER
   THAN TWO.*** **(1) THE CANCEL-MATCHED NULL -- FIXED AND DOUBLE-VERIFIED**: REV 128 at the entry point against its
@@ -149,37 +192,6 @@ updated: >-
   in the same commit as the fix that moved the module: **params v28 + design v36**, 10/10 cascade digests 0
   mismatched. Flags 2595 -> 2610, prov 2140 -> 2155; window 3/3, Batch 288 archived. **NOTHING BUILT, NO HEAVY LOCK
   SINCE 07:15:47Z.** MEM asserts no result.)
-  2026-09-09T09:16:15Z (MEM ROUND 305 -- R-860 SWEPT, LIGHT ROUND, BOOKKEEPING AND NOT ANALYSIS, from `45fa3af` to
-  `e6b37e7`, six commits. STATE ONLY. ***THE STATE IN THREE LINES.*** **(a) THE FOUR USER DEFECTS ARE STILL
-  PRESENT**, re-measured by me at live code rather than carried: `null_draws_valued`'s two sites still pass no
-  `arm_cancels`; the definition string still says "generations" over a row count; `7` / `7.r1` still returns
-  `one_cancel_per_generation = True`; a one-module receipt still returns `BOOK_SCORING_CODE_MATCHES` with
-  `n_checked: 1` of 5. **DE has landed no repair, and DA 152's five driven cases report four `DEFECT_PRESENT`
-  against live code** (10 checks, 0 failures, DE's files untouched), its case (2) driving the LIVE
-  `day_decision_population` to `decisions = 4 == ROWS != ACTIONS(2)`. **(b) WHAT IS CLEAN IS THE BUILD INPUTS**: BE
-  120 finds all five queued days resolving `clob_v4_1`, **agreement 5/5** with DA's own `selector_era` and
-  `era_admissible_ruled` fields, **no queued day refusing, masks closing**, and the gap attachment driven **at the
-  selector's entries** -- `sel.n_gap_bearing_windows` equals the count of `_sel` entries with a non-empty fifth
-  element -- **160 / 52 / 13 / 14 / 27 across 09-03..09-07, with the counterfactual ZERO on all five under the old
-  module default**, so the fix moves 266 windows and 2,987.2 s of tape. BE 119's consumer contract **VERIFIES on all
-  three** (REV 127, 16 cells 0 failures): **DERIVED** -- the real 49-module recording gives `scoring.n = 8` and
-  dropping a module from the RECORDING drops it from the set -- with **the user's one-module case named as the
-  acceptance criterion and driven on the real 09-05 receipt pair**, where ***TWO RUNS OF THE SAME BUILDER RECORDED
-  48 AND 49 MODULES: THE IMPORT CLOSURE IS A PROPERTY OF THE RUN, NOT A CONSTANT.*** ***REFUSAL IS POSSIBLE, NOT
-  ENFORCED -- no `assert_` helper -- AND THE ENFORCEMENT IS DE'S HALF***, so (d) is half-repaired from the recording
-  side and open at the checking side. **(c) THE v26 PROTOCOL STRING IS SILENT**: DA 153 at the real declaration
-  finds `protocol P003_DE_MULTIDAY_GATE1_PARAMS_V20` with `version 26`, case 4b `DEFECT_PRESENT`, and the mechanism
-  worse than "accepts" -- **`load_params` NEVER READS IT**, an AST census of its keys giving `G`,
-  `G_derived_from_len_days`, `days`, `expected_G`, `previously_opened_for`, `required_previously_opened_for` across
-  46 lines and 6 raise sites, and a tree-wide sweep for the literal finding **four sites and NOT ONE comparison** --
-  ***AND IT PROPAGATES INTO AN EMITTED ARTIFACT AT `da_accrual_report:242`.*** ***THE NUMBER FOR THE BUILD DECISION:
-  THE GAP LOAD IS UNEVEN -- 09-03 ALONE IS 160 OF THE 266 WINDOWS AND 77 % OF THE AFFECTED SECONDS, SO A SURPRISE IS
-  LIKELIEST ON DAY ONE OF A FIVE-HOUR QUEUE, THE CHEAP END TO FIND IT; ALL FIVE STILL NEED FULL REBUILDS AND `fr` IS
-  BYTE-IDENTICAL ON NONE.*** Recorded as an input to the USER's decision, no recommendation from this seat.
-  **SEAT_PROTOCOL RULE 33 IS PROGRAMME STATE** and DA 152 is the first work built to it -- pass on the real thing,
-  fail on a known-bad, REFUSE a partial input -- **its case (1) reading AT THE CALLER, "where the defect lived", not
-  at the branch.** Flags 2587 -> 2595, prov 2132 -> 2140; window 3/3, Batch 287 archived. **NOTHING BUILT, NO HEAVY
-  LOCK SINCE 07:15:47Z, THE BUILD DECISION AND THE MATCHING UNIT BOTH WITH THE USER.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -351,6 +363,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 308, DE 167 + REV 131 swept; two ledger rows move to PENDING (7640559 -> 34a0dd3) ---
+  FIVE_B_IS_FIXED_PENDING_VERIFICATION_AND_THE_RUNNER_NOW_READS_THE_DERIVED_SET: ELEVEN-REFERENCES-AGAINST-ZERO
+  SIX_A_IS_FIXED_PENDING_VERIFICATION_AND_THE_SUFFIX_TRACKS_AT_v29: V29-AT-v29-FIRST-TIME-SINCE-V20
+  AND_THE_RED_DA_LEFT_STANDING_IS_THE_FALSIFIER_FOR_BOTH_DIRECTIONS: REFUSING-TO-SILENCE-IT-IS-WHY
+  ROWS_TWO_AND_THREE_ARE_UNCHANGED_AND_STILL_NEED_A_CORRECTED_BOOK: NO-MOVEMENT-IS-ALSO-STATE
+  RULE_33_CAUGHT_TWO_HOLES_PROSPECTIVELY_AND_BOTH_WERE_AT_THE_THIRD_DRIVE: REFUSE-A-PARTIAL-INPUT
+  THE_DETECTOR_ASKED_IS_AT_LEAST_ONE_WHERE_THE_QUESTION_WAS_IS_EVERY: any-VERSUS-all
+  AND_ONE_PARTIAL_INPUT_REPORTED_A_SILENT_BOGUS_EXCLUSION_FRACTION: THREE-OF-THREE-DROPPED
+  REV_115s_RESIDUALS_WERE_RE_DRIVEN_WITH_THE_PRODUCER_MUTATED_NOT_THE_LEDGER: WHERE-A-LOST-DRAW-COMES-FROM
+  DAS_NEW_CELL_IS_A_FUNCTION_OF_THE_LAUNCH_DIRECTORY_NOT_OF_DIRTINESS: SAME-BYTES-rc0-AND-rc1
+  AND_A_GENUINE_DEFECT_AND_YOU_RAN_FROM_A_WORKTREE_GIVE_THE_IDENTICAL_RED: THE-CLASS-THE-ROUND-WAS-FIXING
+  THE_HORIZON_CELLS_ARITHMETIC_CANNOT_FAIL_AND_THE_ANCHOR_COSTS_372_PERCENT: RULE-16-WITH-A-NUMBER
+  AND_REV_REFUTES_THE_FLAKE_PREMISE_AT_THE_CODE_INDEPENDENTLY_OF_DA: PATH-SCOPED-porcelain
   # --- MEM round 307, R-861 swept; the per-defect ledger (07da57b -> 47bc449) ---
   THE_PER_DEFECT_LEDGER_REPLACES_THE_NARRATIVE_AND_IT_IS_SIX_ROWS: THREE-STATES-NOT-TWO
   ONE_IS_FIXED_AND_DOUBLE_VERIFIED_AND_UNFALSIFIABLE_BY_OMISSION: ONE-OF-ONE-AGAINST-ZERO-OF-ONE
@@ -27014,6 +27039,159 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 308, 2026-09-09T10:04:14Z ---
+  FIVE_B_IS_FIXED_PENDING_VERIFICATION_AND_THE_RUNNER_NOW_READS_THE_DERIVED_SET:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      ***LEDGER ROW (5b) MOVES -- AND IT MOVES TO "FIXED PENDING VERIFICATION", WHICH IS NOT "FIXED".*** I re-ran
+      last round's own measurement: **`derived_closures` / `be_producing_closure` now appear ELEVEN times in
+      `de_multiday_gate1_runner.py` against ZERO at my round-307 read**, with `_dc = (receipt or
+      {}).get("derived_closures")` at `:6108`, the set sourced as **`derived_closures.scoring (BE 117's
+      derivation)`**, and a NAMED refusal for *"no readable `derived_closures.scoring`; this is a receipt..."*.
+      **DE has moved the predicate off the typed five and onto BE's DERIVED EIGHT** -- the set whose membership
+      operation is reachability from the scoring entry points within the recording. ***REV 132 DRIVES WHETHER IT
+      READS `derived_closures.scoring.modules` AND ASSERTS `n_checked == n` BESIDE THE KEY-SET COMPARISON; UNTIL
+      THAT LANDS THIS ROW IS PENDING, AND THIS FILE SAYS SO.***
+  SIX_A_IS_FIXED_PENDING_VERIFICATION_AND_THE_SUFFIX_TRACKS_AT_v29:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      ***LEDGER ROW (6a) MOVES, ALSO TO "FIXED PENDING VERIFICATION", AND I DROVE IT AT HEAD.*** **`params_v29`
+      carries `protocol: 'P003_DE_MULTIDAY_GATE1_PARAMS_V29'` with `version: 29` -- THE FIRST TIME THE SUFFIX AND THE
+      VERSION HAVE AGREED SINCE V20**, against `..._V20` still standing at v27 and v28 above it, and
+      **`PARAMS_REL` pins v29** (`:70`). DE reports the correction *"clears a live red in DA's gate"*. ***THE
+      VERIFICATION IS DA 156 RE-RUNNING THAT GATE, NOT DE'S REPORT AND NOT MY READ OF THE FILE***: a suffix that
+      agrees in a declaration and a conjunct that passes in another seat's instrument are two different claims, which
+      is the whole of rule 33.
+  AND_THE_RED_DA_LEFT_STANDING_IS_THE_FALSIFIER_FOR_BOTH_DIRECTIONS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      ***AND THE VERIFICATION MATTERS MORE THAN USUAL HERE BECAUSE OF A CHOICE DA MADE EARLIER: IT DELIBERATELY LEFT
+      THE RED STANDING RATHER THAN SILENCING IT.*** In DA's own words: ***"it should stay red until that string is
+      fixed; silencing it would be exactly the loosening rule 27 warns about."*** **That refusal is what makes the
+      gate a falsifier now**: ***THE RED CLEARING IS THE EVIDENCE THE FIX LANDED, AND THE RED NOT CLEARING WOULD MEAN
+      THE FIX MISSED THE CONJUNCT*** -- and the conjunct is `protocol.endswith(V<n>)`, **built dynamically with an
+      f-string**, which is exactly why DA's earlier literal sweep could not see it. *A seat that had tidied its own
+      red away three rounds ago would have nothing to read today.*
+  ROWS_TWO_AND_THREE_ARE_UNCHANGED_AND_STILL_NEED_A_CORRECTED_BOOK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      **Ledger rows (2) and (3) are UNCHANGED and recorded as such, because no movement is also state**: **the
+      inflated decision count and the false cancel-matching premise remain FIXED / HANDLED IN MECHANISM with the REAL
+      ROWS-PER-DECISION FACTOR and the REAL DOUBLE-CANCEL RATE UNQUANTIFIED, both needing A CORRECTED BOOK.** Two
+      rounds of repair and verification have moved four rows and **cannot move these two**, ***BECAUSE THE MISSING
+      THING IS NOT WORK BUT DATA*** -- which is the cleanest statement available of what the build decision is
+      actually for.
+  RULE_33_CAUGHT_TWO_HOLES_PROSPECTIVELY_AND_BOTH_WERE_AT_THE_THIRD_DRIVE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      ***DE'S OWN FRAMING, AND IT IS THE FIRST TIME THE RULE HAS CAUGHT THINGS PROSPECTIVELY RATHER THAN EXPLAINED
+      THEM AFTERWARDS: THE TWO DE 165 ITEMS WERE ALREADY LANDED, AND VERIFYING THEM FROM THE ENTRY POINT "EACH FOUND
+      A HOLE RULE 33 PREDICTED".*** And the shape is the same in both: ***BOTH HOLES WERE AT THE THIRD DRIVE --
+      REFUSE A PARTIAL INPUT.*** Pass and fail were already green in each case. **The rule's third clause is the one
+      that was not previously in anybody's habit, and it is the one that pays** -- which is the argument for keeping
+      it as a standard rather than a slogan, and REV's own procedure file states it the same way: **two of three is a
+      fail.**
+  THE_DETECTOR_ASKED_IS_AT_LEAST_ONE_WHERE_THE_QUESTION_WAS_IS_EVERY:
+    prov: CHECKED
+    artifact: live/pm_research/de_section81_arms.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      **Hole one, in `de_section81_arms` -- THE FIFTH EXPOSED CONSUMER, whose published output IS an exclusion
+      count.** DE 166 closed the LOOKUP and **left the DETECTOR matching on whatever it happened to find**:
+      `any(isinstance(v, dict) and "gen" in v for v in ...)`. ***"`any` ASKS 'IS AT LEAST ONE ENTRY PER-ROW'; THE
+      QUESTION IS 'IS EVERY ENTRY THE SAME SHAPE'."*** `assembly_shape` now decides over the WHOLE assembly and
+      refuses `SECTION81_ASSEMBLY_SHAPE_UNDECIDABLE` / `..._IS_EMPTY`, **both real shapes still decide, and DA 144's
+      cell (c) still holds -- a genuinely under-covered book is STILL flagged.** *An existential where a universal
+      was meant is the same defect as a subset accepted as a set, one quantifier down.*
+  AND_ONE_PARTIAL_INPUT_REPORTED_A_SILENT_BOGUS_EXCLUSION_FRACTION:
+    prov: CHECKED
+    artifact: live/pm_research/de_section81_arms.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      And why that hole was worth the round: **the two partial inputs failed in the two worst available ways.**
+      **MIXED** (per-row dicts beside a bare float) gave ***`TypeError: 'float' object is not subscriptable` -- a
+      CRASH, not a named refusal***; and dicts **CARRYING NO `gen`** were ***read as PER_GENERATION, looked every
+      generation up at its `t0`, found none, and reported "3 of 3 dropped" -- A SILENT BOGUS EXCLUSION FRACTION.***
+      **A crash is loud and recoverable; a fabricated exclusion count is neither**, and this is a module whose entire
+      published output is that count -- CLAUDE.md rule 4's *"exclusions are statuses, never silent drops"* failing
+      from the opposite side, by inventing drops that did not happen.
+  REV_115s_RESIDUALS_WERE_RE_DRIVEN_WITH_THE_PRODUCER_MUTATED_NOT_THE_LEDGER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      **Hole two, and the methodological point is better than the finding: REV 115's two residuals were re-verified
+      FROM THE ENTRY POINT.** The DE 164 cells had driven `write_ledger` **with hand-built dicts**, but ***THE CLAIM
+      IS THAT A REAL DAY CANNOT WRITE A PADDED OR MIS-PAIRED LEDGER*** -- so the day is run **with the PRODUCER
+      mutated, which is where a lost or mis-ordered draw would actually come from**, passing at **500 null_values
+      against 500 settlement draws**. **Testing the writer proves the writer; the claim was about the day.** *This is
+      rule 33's identity question -- what did the check examine, what is it cited for -- applied to a cell that was
+      already green.*
+  DAS_NEW_CELL_IS_A_FUNCTION_OF_THE_LAUNCH_DIRECTORY_NOT_OF_DIRTINESS:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      ***REV 131's FINDING AGAINST DA'S OWN FIX, LANDED THE HOUR DA LANDED IT -- AND IT IS SHARPER THAN THE QUESTION
+      I WAS GIVEN. THE ANSWER IS NEITHER "EVERY WORKTREE IS GENUINELY DIRTY" NOR "THE `committed_state` FUNCTION IS
+      BROKEN": THE CELL IS A FUNCTION OF THE LAUNCH DIRECTORY.*** Its positive control asserts
+      **`committed_state(Path(__file__).resolve()) in (CLEAN, DIRTY)`, and `__file__` is inside `AUDIT_ROOT` ONLY
+      from the ledger tree.** Driven on the SAME BYTES: ***`SELFTEST OK 23/0 rc 0` from `/home/yuqing/ctaNew`,
+      `SELFTEST FAILED 23 checks 1 failure rc 1` from `wt-rev`***, the failing cell printing its own cause
+      (*"this auditor's own file -> NOT_IN_THIS_TREE"*), and `NOT_IN_THIS_TREE` for **wt-rev, wt-be and wt-de
+      alike.** **One-line repair: name `AUDIT_ROOT` / the relative path, so the control tests the FUNCTION and not
+      the launch directory.**
+  AND_A_GENUINE_DEFECT_AND_YOU_RAN_FROM_A_WORKTREE_GIVE_THE_IDENTICAL_RED:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      And the consequence that makes it urgent rather than cosmetic: ***EVERY SEAT RUNS FROM A WORKTREE BY PROTOCOL,
+      SO A GENUINE `committed_state` DEFECT AND "YOU RAN FROM A WORKTREE" PRODUCE THE IDENTICAL RED.*** **A control
+      that fires for two causes and names one of them cannot distinguish them** -- and ***IT IS THE SAME CLASS THE
+      ROUND WAS FIXING***: DA had just repaired `_is_committed` for collapsing *absence* into *"uncommitted"*, and
+      the new cell collapses *"the function is wrong"* into *"you are standing in the wrong place."* **Routed to DA;
+      recorded here as REV's driven finding, not as an open question.**
+  THE_HORIZON_CELLS_ARITHMETIC_CANNOT_FAIL_AND_THE_ANCHOR_COSTS_372_PERCENT:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      **REV 131 verifies the horizon cell -- battery 20/0, `now_utc` monkeypatched to three wall clocks giving an
+      IDENTICAL asserted reading (09-08 projected 02:33:00Z, -2.45 h to the bar) while the LIVE reading moves
+      (-9.48 / -19.31 / -104.48 h), and it still goes red for what it was built to catch: costs x5.0 flips
+      `all_six` to False.** *"It was not made deterministic by dropping what it asserts."* **TWO RESIDUALS, both
+      rule 16.** ***(1a) THE CLAUSES BILLED AS "THE ARITHMETIC, WHICH NO CLOCK CAN MOVE" CANNOT FAIL***:
+      `before_the_seal_open_bar = f <= t_bar` and `margin_to_the_bar_h = round((t_bar - f)/3600, 2)` are the same
+      comparison on adjacent lines, so `(margin >= 0) == before` is **true by construction** -- measured TRUE in all
+      six drives including both where the pinned clauses went FALSE, the only reachable disagreement an **18-second
+      rounding band (17 disagreements at f = bar+1..17 s)**. **The pinned anchor is what restores determinism, not
+      the arithmetic.** ***(1b) AND THE ANCHOR COSTS SENSITIVITY, WITH A NUMBER: 4.719x -- 43,320 s/day against the
+      measured 9,180.5 -- SO ANY REGRESSION UNDER 372 % IS INVISIBLE.*** Assert the anchored margin within a band
+      and it fails on a few per cent instead.
+  AND_REV_REFUTES_THE_FLAKE_PREMISE_AT_THE_CODE_INDEPENDENTLY_OF_DA:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T10:04:14Z
+    said: >-
+      And a corroboration worth recording because it arrived independently: ***REV 131 REFUTES THE FLAKE PREMISE AT
+      THE CODE, reaching the same place DA 155 reached in band and I recorded last round.*** **`git status
+      --porcelain -- <path>` is PATH-SCOPED**: on a controlled repo, `b.py` modified AND staged leaves `a.py` at
+      `COMMITTED_IN_THIS_TREE`; **only `a.py`'s own dirtiness moves it, and NO OTHER SEAT'S TIMING ENTERS.** REV also
+      records that **the fix loosens nothing** -- dirtiness is NAMED where the bool collapsed absence into
+      "uncommitted", and the field **was never gating** in this module or its sibling in `da_gate1_day_verdict`,
+      both by stated design. **Two seats, two methods, one answer**: the premise I was asked to file two rounds ago
+      is refuted from both directions.
   # --- MEM round 307, 2026-09-09T09:50:31Z ---
   THE_PER_DEFECT_LEDGER_REPLACES_THE_NARRATIVE_AND_IT_IS_SIX_ROWS:
     prov: CHECKED

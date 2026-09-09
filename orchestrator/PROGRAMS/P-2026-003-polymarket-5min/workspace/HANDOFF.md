@@ -1,3 +1,102 @@
+# READ FIRST — round 308 (MEM, 2026-09-09T10:04:14Z, tip `34a0dd3`)
+
+**DE 167 and REV 131 swept — four commits since `7640559`.** Light round, **ledger form kept.**
+
+# THE PER-DEFECT LEDGER — two rows move, both to **PENDING**, not to closed
+
+| # | defect | state |
+|---|---|---|
+| **1** | the cancel-matched null | **FIXED, DOUBLE-VERIFIED** |
+| **2** | the inflated decision count | **FIXED IN MECHANISM**, factor **UNQUANTIFIED** — *unchanged* |
+| **3** | the false cancel-matching premise | **HANDLED IN MECHANISM**, rate **UNQUANTIFIED** — *unchanged* |
+| **5a** | the predicate accepting a subset | **FIXED** |
+| **5b** | the predicate checking the **wrong set** | **FIXED PENDING VERIFICATION** → REV 132 |
+| **6a** | the protocol string | **FIXED PENDING VERIFICATION** → DA 156 |
+
+**(5b)** — I re-ran my own round-307 measurement: **`derived_closures` / `be_producing_closure` now appear ELEVEN
+times in the runner, against ZERO last round**, set sourced as **`derived_closures.scoring` (BE 117's derivation)**
+with a named refusal for a receipt carrying none. **REV 132 drives whether it reads
+`derived_closures.scoring.modules` and asserts `n_checked == n` beside the key-set comparison.**
+
+**(6a)** — driven at HEAD:
+
+| params | `version` | `protocol` |
+|---|---|---|
+| v27 · v28 | 27 · 28 | `…_PARAMS_V20` |
+| **v29** *(pinned)* | **29** | **`…_PARAMS_V29`** ← first agreement since V20 |
+
+**The verification is DA 156 re-running the gate — not DE's report and not my read of the file.**
+
+## ⚠ WHY THE VERIFICATION MATTERS MORE THAN USUAL HERE
+
+**DA deliberately left that red standing rather than silencing it:** *"it should stay red until that string is
+fixed; silencing it would be exactly the loosening rule 27 warns about."* **⇒ The red clearing is the evidence the
+fix landed; the red NOT clearing would mean the fix missed the conjunct** — which is `protocol.endswith(V<n>)`,
+**built dynamically with an f-string**, exactly why DA's earlier literal sweep could not see it. *A seat that had
+tidied its red away three rounds ago would have nothing to read today.*
+
+## ROWS (2) AND (3) — unchanged, and that is state
+
+**Both still need a corrected book.** Two rounds of repair and verification have moved four rows and **cannot move
+these two, because the missing thing is not work but data.**
+
+## RULE 33 CAUGHT TWO HOLES **PROSPECTIVELY** — DE's own framing
+
+Both DE 165 items were **already landed**; verifying them from the entry point **"each found a hole rule 33
+predicted"** — **and both holes were at the THIRD drive, *refuse a partial input*.** Pass and fail were already green
+in each. *The third clause is the one that was not in anybody's habit, and it is the one that pays.*
+
+**Hole one — `de_section81_arms`, the fifth exposed consumer, whose published output IS an exclusion count.** DE 166
+closed the *lookup* and left the *detector* matching on whatever it found: `any(... "gen" in v ...)`. ***"`any` asks
+'is at least one entry per-row'; the question is 'is EVERY entry the same shape'."*** The two partial inputs failed
+in the two worst ways:
+
+| partial input | behaviour |
+|---|---|
+| MIXED (dicts + a bare float) | **`TypeError: 'float' object is not subscriptable`** — a crash, not a named refusal |
+| dicts carrying no `gen` | read as PER_GENERATION → **"3 of 3 dropped": a silent bogus exclusion fraction** |
+
+*A crash is loud and recoverable; a fabricated exclusion count is neither.*
+
+**Hole two — REV 115's residuals, re-driven FROM THE ENTRY POINT** with the **producer mutated** rather than
+`write_ledger` fed hand-built dicts (500 null_values vs 500 settlement draws). ***Testing the writer proves the
+writer; the claim was about the day.***
+
+## ⚠ REV 131 vs DA'S OWN FIX — sharper than the question asked
+
+**The answer is neither "every worktree is genuinely dirty" nor "the function is broken": the new `committed_state`
+cell is a function of the LAUNCH DIRECTORY.** Its positive control asserts
+`committed_state(Path(__file__).resolve())`, and `__file__` is inside `AUDIT_ROOT` **only from the ledger tree**.
+Same bytes:
+
+| launched from | result |
+|---|---|
+| `/home/yuqing/ctaNew` | **SELFTEST OK 23/0, rc 0** |
+| `wt-rev` (also wt-be, wt-de) | **SELFTEST FAILED 23 checks 1 failure, rc 1** — *"this auditor's own file →
+`NOT_IN_THIS_TREE`"* |
+
+**⇒ Every seat runs from a worktree by protocol, so a genuine defect and "you ran from a worktree" give the
+IDENTICAL red — the same class the round was fixing** (DA had just repaired a bool that collapsed *absence* into
+*"uncommitted"*). **One-line repair: name `AUDIT_ROOT`.** Routed to DA.
+
+**REV verifies the horizon cell** (20/0; three monkeypatched clocks → identical asserted reading, live reading moves;
+still red on costs ×5.0) with **two residuals, both rule 16**: the clauses billed as *"the arithmetic, which no clock
+can move"* **cannot fail** — `(margin >= 0) == before` is true by construction, only an 18-second rounding band
+reachable — and **the pinned anchor costs sensitivity: 4.719× (43,320 s/day vs the measured 9,180.5), so any
+regression under 372 % is invisible.**
+
+**And REV refutes the flake premise at the code, independently of DA:** `git status --porcelain -- <path>` is
+**path-scoped**; no other seat's timing enters. **Two seats, two methods, one answer.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z.**
+
+Counts: flags 2622 → 2634, provenance 2167 → 2179 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 290 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 307 (MEM, 2026-09-09T09:50:31Z, tip `47bc449`)
 
 **R-861 swept — four commits since `07da57b`.** Light round.
