@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 418
+EXPECTED_CHECKS = 419
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -2873,7 +2873,21 @@ def aggregate(day_results: list, params: dict) -> dict:
         # programme has now found three guards that protected the
         # diagnostic while the reader believed otherwise. The field is
         # named in the result, beside the value it produced.
-        z = {d: r["economic"]["Z"] for d, r in days.items()}
+        z = {d: (r.get(VERDICT_ENDPOINT["block"]) or {}).get(
+                 VERDICT_ENDPOINT["field"]) for d, r in days.items()}
+        _missing = sorted(d for d, v in z.items() if v is None)
+        if _missing:
+            out[arm] = {"status": "NO_VERDICT_ENDPOINT_ABSENT",
+                        "endpoint": VERDICT_ENDPOINT,
+                        "days_without_it": _missing,
+                        "why": ("the verdict is computed on "
+                                f"`{VERDICT_ENDPOINT['block']}."
+                                f"{VERDICT_ENDPOINT['field']}` (USER "
+                                "ruling, DE 177) and these arm-days carry "
+                                "no value there. A verdict computed over "
+                                "the days that happen to have it would be "
+                                "a smaller G wearing the full one's name")}
+            continue
         out[arm] = DESIGN.day_cluster_verdict(
             z, alpha=params["alpha"], m=params["multiplicity_m"], g=g)
         out[arm]["endpoint"] = VERDICT_ENDPOINT
@@ -4743,6 +4757,13 @@ def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
     for r in above:
         _rows_by_side[r["side"]] = _rows_by_side.get(r["side"], 0) + 1
     return {"arm": arm, "head": head, "theta": theta,
+            # ---- DE 177 (1) / REV 143: THE PRICE OF FREEZING THETA ----
+            # The USER ruled theta STAYS FROZEN -- comparability is the
+            # reason -- AND that the drift must travel. It travels HERE,
+            # where a reader meets the decision count, so nobody reads
+            # 14,893 decisions as a CHOICE rather than a CONSEQUENCE.
+            # A price that is not stated is not paid.
+            "theta_drift": THETA_DRIFT.get(arm, THETA_DRIFT["_unknown_arm"]),
             "n_scored_rows": len(stream),
             "decisions": len(_gens),
             "by_side": dict(sorted(by_side.items())),
@@ -5959,16 +5980,57 @@ STATISTIC_BLOCKS = ("economic_settlement", "economic")
 #: the USER's to make and is not made here; what is not optional is
 #: SAYING it, because an aggregate that names no endpoint is read as the
 #: ruled one.
+#: WHAT FREEZING THETA COSTS, MEASURED BY REV 143 AND CARRIED IN THE
+#: RECEIPT BESIDE THE DECISION COUNT (USER ruling, DE 177 (1)).
+#: The threshold is NOT re-fitted -- comparability across v1..v4 is why it
+#: is frozen, and re-fitting inside a defect repair would change the
+#: policy under cover of a bug fix (rule 14). But the same number now
+#: selects a different part of the distribution, and a decision count read
+#: without that is read as a choice somebody made.
+THETA_DRIFT = {
+    "HAZARD_OVER_SKEWED_REF": {
+        "theta": 0.43525926488298716,
+        "percentile_when_chosen": 99.55,
+        "percentile_now": 95.24,
+        "tail_mass_when_chosen_pct": 0.446,
+        "tail_mass_now_pct": 4.756,
+        "tail_mass_ratio": 10.65,
+        "decisions_when_chosen": 1398,
+        "decisions_now": 14893},
+    "CONDVALUE_X_SKEW": {
+        "percentile_now": 93.77,
+        "selects_pct_of_rows": 6.235},
+    "_unknown_arm": {"status": "NO_DRIFT_MEASUREMENT_FOR_THIS_ARM"},
+    "measured_by": "REV 143",
+    "is_it_a_boundary_artifact": (
+        "NO -- the shift is BROAD: only 0.5 % of decisions fall within "
+        "theta + 0.001 and 5.0 % within theta + 0.01, so the count is not "
+        "a pile sitting on the threshold that a hair's move would clear"),
+    "theta_refitted": False,
+    "why_not": ("comparability across versions is the reason it is frozen; "
+                "re-fitting inside a defect repair would change the policy "
+                "under cover of a bug fix (rule 14, and the decision is "
+                "the USER's)"),
+    "ruling": "USER, DE 177 (1) -- theta stays frozen AND the drift travels",
+}
+
 VERDICT_ENDPOINT = {
-    "block": "economic",
+    "block": "economic_settlement",
     "field": "Z",
-    "what_it_is": ("the 5-second MARKOUT diagnostic -- NOT R-801's ruled "
-                   "settlement P&L (`economic_settlement`)"),
-    "why_it_is_named_here": ("REV 140 found this aggregate computing the "
-                             "multi-day verdict from the diagnostic with "
-                             "nothing in the result saying so. Repointing "
-                             "it is a RULING and is with the USER; naming "
-                             "it is not"),
+    "what_it_is": ("R-801's RULED settlement P&L -- trades cash flow plus "
+                   "residual x settlement. NOT the 5-second markout "
+                   "diagnostic (`economic`)"),
+    "repointed_at": "DE 177, USER ruling (2)",
+    "was": ("`economic.Z`, the 5-second DIAGNOSTIC. REV 140 found the "
+            "aggregate computing the multi-day verdict from it with "
+            "nothing in the result saying so; DE 176 named the endpoint "
+            "without moving it, because the move was a RULING; the USER "
+            "has now ruled it to the settlement endpoint"),
+    "prior_verdicts": ("stay as provenance and are NOT rewritten -- they "
+                       "were computed on `economic.Z` and say so only "
+                       "from DE 176 on. A verdict emitted before that "
+                       "names no endpoint and must be read as the "
+                       "diagnostic"),
     "ruling_owner": "USER"}
 
 
@@ -8503,6 +8565,33 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                                            _win801["winners"])
             _base801 = settlement_legs_by_slug(base["fills"],
                                                _win801["winners"])
+            # ---- DE 178: THE RECONCILIATION IS **NOT** WIRED YET -----
+            # DE 177 (3) asked for `PLR.reconcile(...)` here and I wrote
+            # it. **HELD, by the coordinator, on REV 144's finding: BE's
+            # module FALSIFIES ON ONE SIDE ONLY -- the DROPPED total is
+            # unchecked, so a wrong dropped value PASSES, and its 10 cells
+            # pass because they exercise the side that IS checked.**
+            # Wiring it would put a one-sided check on the MANDATORY path
+            # and let the USER's ruling (b) read as satisfied while half
+            # of it is unverified. The call site stays named here and
+            # empty so the wiring is a one-line change the moment REV
+            # verifies BE 138's two-sided fix -- and so that nobody has to
+            # rediscover where it goes.
+            _plr177 = {
+                "status": "NOT_WIRED_PENDING_BE_138",
+                "why": ("REV 144: `be_placement_latency_reconcile` "
+                        "falsifies on one side only -- the DROPPED total "
+                        "is unchecked and a wrong dropped value passes. A "
+                        "one-sided check on the mandatory path would let "
+                        "ruling (b) read as satisfied with half of it "
+                        "unverified"),
+                "call_site": ("de_multiday_gate1_runner.run_day, beside "
+                              "`_base801` -- one line, held by the "
+                              "coordinator, released when REV verifies "
+                              "BE 138"),
+                "what_it_would_be": ("PLR.reconcile(bk['fr']['reference'], "
+                                     "_win801['winners'], "
+                                     "_base801['total_cents'])")}
     _mark("S3_baseline")
 
     # ---- S4: the null and the observed value, per arm. -----------------
@@ -8674,6 +8763,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                         draw_provenance=prov, book_digest=book_sha,
                         verified_module_sha=cite["sha256"])
         r["cancel_unit_exception"] = _cancel_unit_exception
+        if _win801 is not None:
+            r["placement_latency_reconciliation"] = _plr177
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
@@ -9919,11 +10010,35 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
 
     # ---- the planted arms, both directions -----------------------------
     Pg = dict(P); Pg["G"] = 5
+    # DE 177 (2): THE PLANTED ROWS CARRY THE RULED ENDPOINT. They carried
+    # `economic.Z` -- the diagnostic -- which is what the verdict used to
+    # be computed on. The USER repointed it to `economic_settlement`, so a
+    # fixture that keeps planting the diagnostic would be testing the
+    # aggregate over a block it no longer reads.
     fail_rows = [{"day": f"d{i}", "arm": "PLANTED_FAIL", "status": "OK",
-                  "economic": {"Z": 0.0}} for i in range(5)]
+                  "economic": {"Z": 4.0},
+                  "economic_settlement": {"Z": 0.0}} for i in range(5)]
     pass_rows = [{"day": f"d{i}", "arm": "PLANTED_PASS", "status": "OK",
-                  "economic": {"Z": 4.0}} for i in range(5)]
+                  "economic": {"Z": 0.0},
+                  "economic_settlement": {"Z": 4.0}} for i in range(5)]
     agg = aggregate(fail_rows + pass_rows, Pg)
+    # AND THE FIXTURE IS BUILT SO THE TWO BLOCKS DISAGREE, deliberately:
+    # each planted arm carries the OPPOSITE value in the diagnostic, so a
+    # verdict computed on the wrong block gives the wrong answer and this
+    # cell catches a silent repoint in either direction.
+    _endpoint_rows = [{"day": f"d{i}", "arm": "NO_SETTLEMENT",
+                       "status": "OK", "economic": {"Z": 4.0}}
+                      for i in range(5)]
+    _no_ep = aggregate(_endpoint_rows, Pg)["per_arm"]["NO_SETTLEMENT"]
+    ok(_no_ep.get("status") == "NO_VERDICT_ENDPOINT_ABSENT"
+       and _no_ep["endpoint"]["block"] == "economic_settlement",
+       f"DE 177 (2): AN ARM-DAY WITH NO SETTLEMENT BLOCK GETS NO VERDICT "
+       f"({_no_ep.get('status')}) rather than one computed over the days "
+       f"that happen to have it -- that would be a smaller G wearing the "
+       f"full one's name. And the result NAMES the endpoint "
+       f"(`{_no_ep['endpoint']['block']}.{_no_ep['endpoint']['field']}`), "
+       f"which was REV 140's condition and holds whichever way the ruling "
+       f"had gone")
     ok(agg["per_arm"]["PLANTED_FAIL"]["FAILS_THE_SECTION_7_PREDICATE"]
        is True,
        "A PLANTED MUST-FAIL ARM FAILS: Z = 0 on every day, mean not above "
