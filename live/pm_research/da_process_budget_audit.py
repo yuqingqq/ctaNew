@@ -983,10 +983,29 @@ def _guard_admits(text: str) -> bool:
     return _is_battery_switch(text, negated=False)
 
 
-def _is_committed(path: Path) -> bool:
+#: DA 155: THREE STATES, NOT A BOOL. `git status --porcelain -- <path>`
+#: exits 128 for a path OUTSIDE the tree, and collapsing that into False
+#: reports "this file is uncommitted" for a file the tree has never heard
+#: of -- every scratch module this battery audits was reported that way.
+#: Absence read as a negative, which is the class this seat has been
+#: finding all night, here in its own instrument.
+IN_TREE_CLEAN = "COMMITTED_IN_THIS_TREE"
+IN_TREE_DIRTY = "PRESENT_BUT_NOT_COMMITTED"
+NOT_IN_TREE = "NOT_IN_THIS_TREE"
+
+
+def committed_state(path: Path) -> str:
+    """CLEAN / DIRTY / NOT-IN-THIS-TREE, distinguished by name."""
     r = subprocess.run(["git", "-C", str(AUDIT_ROOT), "status", "--porcelain",
                         "--", str(path)], capture_output=True, text=True)
-    return r.returncode == 0 and r.stdout.strip() == ""
+    if r.returncode != 0:
+        return NOT_IN_TREE
+    return IN_TREE_CLEAN if r.stdout.strip() == "" else IN_TREE_DIRTY
+
+
+def _is_committed(path: Path) -> bool:
+    """Kept for callers that want the bool; TRUE only for CLEAN."""
+    return committed_state(path) == IN_TREE_CLEAN
 
 
 def fixture_on_real_path(tree: ast.AST, src: str) -> dict:
@@ -1330,6 +1349,9 @@ def audit_module(path: Path, role: str) -> dict:
                  if path.is_relative_to(AUDIT_ROOT) else str(path)),
         "read_from_tree": str(AUDIT_ROOT),
         "committed_in_that_tree": _is_committed(path),
+        #: DA 155: the STATE, so a scratch module outside the tree is not
+        #: reported as an uncommitted one.
+        "committed_state": committed_state(path),
         "role": role,
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "bytes": path.stat().st_size,
