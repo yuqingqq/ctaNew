@@ -452,6 +452,48 @@ correctly and unhelpfully.
 **When you add a producer that returns evidence, add the consumer's refusal
 in the same change, and default the safe call, not the short one.**
 
+## 6g. THE GAPS ARE AN INPUT TO `fr`, AND THE RECEIPT CANNOT SHOW IT (BE 116)
+
+Asked whether a rebuilt `fr` could be byte-identical to the landed L=250
+books'. **It cannot**, and the chain is worth keeping because it needs no book
+load:
+
+* the selector's 5th element goes straight into the replay --
+  `HER.replay_with_recorder(ent[1], ent[2], ent[3], ent[4], spec)`,
+  `de_phase4_diag_runner.py:571`;
+* what that replay produces is stored IN `fr` -- the generation `t1` at
+  `:649`, the terminal mark's `ended_in_gap` at `:675`;
+* the landed books used `gaps=[]` for every window (all twelve receipts say
+  `selection.era: clob_v3_1`, and **0** of 09-03's 247 windows are gapped
+  under that era against **160** under `clob_v4_1`);
+* driven on four spread-sampled gapped windows: **`n_gens` identical,
+  `sum(t1)` moves by −12.1 to −32.1 s.** THE GAPS TRUNCATE GENERATION
+  LIFETIMES -- same population, different bounds.
+
+**THE TRAP, and it is the part to remember: no receipt count shows this.**
+`n_gens`, `n_fills` and `n_tranches` are unchanged, and
+`TERMINAL_MARK_ENDED_IN_GAP` -- the status one would reach for -- is already
+63/247 with `gaps=[]` and flipped in **0 of 10** sampled gapped windows (only
+the day's widest gap, 111.3 s, flips). **A corrected receipt could match the
+landed one on every number in its `reference` block while the reference
+underneath differs.**
+
+**And do not load a landed book to answer a question like this.** A day book
+is ~290 MB on disk; unpickling it exceeds the 1 GiB that makes a step HEAVY by
+rule 20's own definition and would need the lock.
+
+## 6h. A STATUS ADDED TO A COUNTS DICT IS A SIBLING KEY, NEVER A REPLACEMENT
+
+DA 147 asked for a STATUS where `statuses["BINANCE_GAP_EXCLUDED"]` published a
+hardcoded `0`. **The literal form breaks another seat's verifier:**
+`da_book_verify.py:742` computes `sum(st.get(k, 0) for k in excl)` over that
+exact key, so a string there raises `TypeError` -- and that file is DA's, which
+this seat reads and never edits (R-235). So the count keeps its type and
+`BINANCE_GAP_EXCLUDED_STATUS` sits beside it in the same block, with a
+known-bad in the battery driving BOTH directions (the merged block still sums;
+the string-in-the-count-slot raises). **Before changing the TYPE of anything in
+a shared dict, grep for who sums it.**
+
 ## 7. What I have learned the hard way
 
 * **`?? data` is correct**; anything more is not. See §0.
