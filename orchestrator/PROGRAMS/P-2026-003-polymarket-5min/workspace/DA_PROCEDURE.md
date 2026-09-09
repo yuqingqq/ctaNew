@@ -109,6 +109,35 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## Bounding an upstream data defect (DA 141) — the move that made it answerable
+
+REV 112 found the builder resolving the wrong collector era, so every September
+window got `gaps=[]`. The question "is the surviving finding safe?" looked binary
+(small share = safe, large share = unsafe). **It was not, and the move that
+dissolved it generalises:**
+
+1. **Find the defect's ONE channel and prove it is the only one.** AST census of
+   `day_selector` + signatures: `_archive_paths()` and `token_map()` take no era;
+   `gaps_by_slug(era)` is the sole era-dependent input.
+2. **That licenses a clean subpopulation.** For a window with no gaps in the
+   CORRECT table, `gaps=[]` is the RIGHT input — so the defect is *inert* there,
+   not merely absent. Without step 1 the clean set is just a subset.
+3. **Recompute the STATISTIC on it.** The four latency percentages moved
+   +1.251 / +2.807 / +4.126 / +1.297 pp — all one direction, all under 4.2 pp.
+4. **Report both halves separately.** The SHARE was large (60.3 % of 09-03's
+   settled money in gapped windows) so the ABSOLUTES are exposed; the PERCENTAGE
+   survives. A question posed as binary often has two answers about two quantities.
+
+**State the limits or the bound is oversold:** a clean subset is not a random
+subsample (gap incidence correlates with market conditions), 09-03's clean set is
+only 87 of 246 windows — thinnest on the most exposed day — and **no corrected
+number exists without a rebuild.** Say that rather than approximate it.
+
+**Reconcile with the finder's own counts before filing.** `day_slugs('20260903')`
+= 247, of which 160 gapped over 2,294.7 s — REV 112 exactly; my 159 / 2,183.4 s is
+the same fact scoped to the 246 settled windows. Numbers that differ for a stated
+reason read as agreement; unexplained they read as contradiction.
+
 ## The placement latency is DRIVEN and clean (DA 140) — do not re-audit it
 
 Verified end to end 2026-09-09, five checks each with a control; **nothing wrong**.
