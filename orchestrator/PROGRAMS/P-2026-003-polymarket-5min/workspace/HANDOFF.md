@@ -83,8 +83,52 @@ both now fixed, with falsifiers driven on blocks that DISAGREE** — *the right 
 the same values cannot distinguish a checker that reads the right one from one that reads either.* **A seat sweeping
 its own surface and finding the count smaller than feared is worth as much as one finding it larger.**
 
-Counts: flags 2822 → 2835, provenance 2367 → 2380 (thirteen written, thirteen counted, duplicate-name gate run
+Counts: flags 2822 → 2840, provenance 2367 → 2385 (eighteen written, eighteen counted, duplicate-name gate run
 BEFORE writing); orphans 0; window 3/3, Batch 304 archived. MEM asserts no result.
+
+## ADDENDUM 2026-09-09T15:20:44Z — BE 135, REV 143 and DE 176 landed while I wrote
+
+**BE 135 answers the correction above: *"the reconciliation is a module now, not a sentence — and it needs no
+replay."*** Confirmed at the tree: **`be_placement_latency_reconcile.py`, 402 lines**, and
+`tranches_before_placement_latency` now resolves in **two** modules where an hour ago it resolved in **none**.
+***The gap between my recording the falsifier as absent and its existing was under an hour*** — *the strongest
+argument for filing a gap precisely rather than diplomatically.* **"It needs no replay" is the load-bearing half: a
+reconciliation requiring a re-run would have been a 54-minute check nobody would run twice.**
+
+**⚠ My "UNVERIFIED" stands, but its REASON has changed, and these are different states.** An hour ago the L=0
+valuation was unverified because **the check did not exist**; now it is unverified because **the check has not been
+run against the artifact and nobody has reported its result.** *Absent became unrun.* ***A module that exists and has
+not produced a number is exactly the shape this programme has misread all night*** — the branch nothing called, the
+predicate whose declared path no artifact reached, the exemption that was a ruling and not a predicate. **No number
+may be quoted as reconciled until the reconciliation has RUN.**
+
+### ✅ REV 143 answers the caveat's key question: **BROAD, not concentrated**
+
+| | pre-fix | corrected |
+|---|---|---|
+| HAZARD decisions | 1,398 of 313,114 = **0.446 %** | 14,893 of 313,140 = **4.756 %** |
+| percentile | **99.55th** | **95.24th** |
+| tail mass | | **×10.65** *(checked: 4.756/0.446 = 10.66)* |
+
+**CONDVALUE** (no pre-fix comparator given): 19,523 = **6.235 %**, the **93.77th**.
+
+***A threshold that was selecting the top half-percent now selects the top five percent — that is the caveat in its
+proper units, and a far more useful sentence than "10.7× more decisions".***
+
+**Not a band:** only **5.0 %** of admitted rows lie within `theta+0.01` and **40 %** within `theta+0.10` against a
+max score of **15.02** — so **60 % sit more than 0.10 above theta.** **Theta has not landed on a spike; the
+distribution moved across its range.** Spread holds in both other dimensions: **246 of 247 slugs** (top-10 share
+13.2 % vs 4.0 % uniform) and **23 of 24 hours**. *A broad shift is the better of the two answers.* REV worked
+**read-only and light — no book unpickled, nothing competing with DA's lock or DE's null.**
+
+### DE 176 — the null was blocked by **a guard that was right**
+
+`assert_no_sealed_receipt_yet` refused 09-03 before any work: the day has a sealed chain, and *"a day that runs twice
+is not a day with a newest result"*. ***But after R-834 retracted every arm result, a corrected day MUST be runnable
+— and the day path had no way to say it was a correction.*** **The remedy is the one the refusal's own message
+pointed at: the day path can now SUPERSEDE, so a retracted day is re-run as a CORRECTION rather than as a second
+result.** *Rule 13 reaching the RUN layer, not only the receipt layer — and a guard that refuses correctly and names
+the missing capability in its own message is the best kind of blocker there is.*
 
 ---
 

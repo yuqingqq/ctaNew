@@ -117,7 +117,7 @@ updated: >-
   NOW FIXED, WITH FALSIFIERS DRIVEN ON BLOCKS THAT DISAGREE** -- *the right falsifier, since two blocks carrying the
   same values cannot distinguish a checker that reads the right one from a checker that reads either* -- **and a seat
   sweeping its own surface and finding the count SMALLER than feared is worth as much as one finding it larger.**
-  Flags 2822 -> 2835, prov 2367 -> 2380; window 3/3, Batch 304 archived. MEM asserts no result.)
+  Flags 2822 -> 2840, prov 2367 -> 2385; window 3/3, Batch 304 archived. MEM asserts no result.)
   2026-09-09T15:13:26Z (MEM ROUND 321 -- R-868 SWEPT. ***THE SIBLING-BLOCK CLASS IS CLOSED, BE RELOCATED A FALSIFIER RATHER
   THAN DROPPING IT, AND THE FIRST NULL SINCE THE RETRACTION IS RUNNING.*** ***THE CLASS CLOSES BECAUSE ITS MEMBERSHIP
   TEST IS MECHANICAL, WHICH I DROVE MYSELF ON THE REAL POINT-ESTIMATE ARTIFACT RATHER THAN TAKING THE LIST: a site is
@@ -385,6 +385,12 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 322 ADDENDUM 2026-09-09T15:20:44Z: BE 135, REV 143 and DE 176 landed while I wrote ---
+  BE_135_WROTE_THE_MISSING_MODULE_WITHIN_THE_ROUND_AND_I_CONFIRMED_IT_EXISTS: 402-LINES-AND-IT-NEEDS-NO-REPLAY
+  SO_THE_UNVERIFIED_STANDS_BUT_ITS_REASON_HAS_CHANGED: ABSENT-BECAME-UNRUN
+  REV_143_ANSWERS_THE_CAVEATS_KEY_QUESTION_AND_THE_EFFECT_IS_BROAD: NOT-A-BAND-NOT-A-SPIKE
+  THETA_MOVED_FROM_THE_99_55TH_PERCENTILE_TO_THE_95_24TH: TAIL-MASS-x10-65
+  AND_A_DAY_CAN_NOW_SUPERSEDE_RATHER_THAN_BECOME_A_SECOND_RESULT: THE-GUARD-WAS-RIGHT
   # --- MEM round 322, the relocated falsifier does not exist; my round-321 record superseded (f05a6a5 -> 7cf8a9d) ---
   THE_RELOCATED_FALSIFIER_DOES_NOT_EXIST_AND_I_DROVE_THE_ZERO_MYSELF: FIVE-MODULES-ZERO-OCCURRENCES
   SO_MY_ROUND_321_RECORD_IS_SUPERSEDED_IN_BAND: I-READ-A-DESIGN-AS-A-LANDING
@@ -27282,6 +27288,70 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 322 ADDENDUM, 2026-09-09T15:20:44Z ---
+  BE_135_WROTE_THE_MISSING_MODULE_WITHIN_THE_ROUND_AND_I_CONFIRMED_IT_EXISTS:
+    prov: CHECKED
+    artifact: live/pm_research/be_placement_latency_reconcile.py
+    as_of: 2026-09-09T15:20:44Z
+    said: >-
+      ***BE 135 LANDED WHILE I WROTE AND ANSWERS THE CORRECTION ABOVE: "THE RECONCILIATION IS A MODULE NOW, NOT A
+      SENTENCE -- AND IT NEEDS NO REPLAY."*** I confirmed it at the tree rather than taking it: **a new file,
+      `be_placement_latency_reconcile.py`, 402 lines, and `tranches_before_placement_latency` now resolves in TWO
+      modules (it and `be_daybook_build.py`) where an hour ago it resolved in NONE.** ***THE GAP BETWEEN MY
+      RECORDING THE FALSIFIER AS ABSENT AND ITS EXISTING WAS UNDER AN HOUR*** -- *which is the second time today a
+      finding and its repair have landed inside the same round, and it is the strongest argument for filing the gap
+      precisely rather than diplomatically.* **"It needs no replay" is the load-bearing half: a reconciliation that
+      required re-running the day would have been a 54-minute check nobody would run twice.**
+  SO_THE_UNVERIFIED_STANDS_BUT_ITS_REASON_HAS_CHANGED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:20:44Z
+    said: >-
+      ***AND MY "UNVERIFIED" STANDS, BUT ITS REASON HAS CHANGED, WHICH IS A DIFFERENT STATE AND THIS FILE WILL NOT
+      COLLAPSE THEM.*** **An hour ago the L=0 valuation was unverified because THE CHECK DID NOT EXIST; now it is
+      unverified because THE CHECK HAS NOT BEEN RUN AGAINST THE ARTIFACT AND NOBODY HAS REPORTED ITS RESULT.**
+      *Absent became unrun.* ***A MODULE THAT EXISTS AND HAS NOT PRODUCED A NUMBER IS EXACTLY THE SHAPE THIS
+      PROGRAMME HAS MISREAD ALL NIGHT -- the cancel-matched branch nothing called, the predicate whose declared path
+      no artifact reached, the exemption that was a ruling and not a predicate.*** **No number from the L=0
+      valuation may be quoted as reconciled until the reconciliation has RUN and its output is on disk.**
+  REV_143_ANSWERS_THE_CAVEATS_KEY_QUESTION_AND_THE_EFFECT_IS_BROAD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:20:44Z
+    said: >-
+      ***REV 143 ANSWERS THE QUESTION I RECORDED AS THE ONE THAT DECIDES HOW BAD THE CAVEAT IS -- UNIFORM OR
+      CONCENTRATED -- AND THE ANSWER IS BROAD: "NOT A BAND".*** **Only 5.0 % of HAZARD's admitted rows lie within
+      `theta+0.01` and 40 % within `theta+0.10`, against a max score of 15.02 -- SO SIXTY PER CENT SIT MORE THAN 0.10
+      ABOVE THETA.** ***THETA HAS NOT LANDED ON A SPIKE; THE DISTRIBUTION HAS MOVED ACROSS ITS RANGE.*** **And the
+      spread is real in both other dimensions: 246 OF 247 SLUGS carry a decision (top-10 share 13.2 % against 4.0 %
+      uniform) and 23 OF 24 HOURS, with a 9.1x busiest/quietest ratio REV attributes to the day's activity rather
+      than a threshold artefact.** *A broad shift is the better of the two answers: the extra decisions are not
+      coming from one place.*
+  THETA_MOVED_FROM_THE_99_55TH_PERCENTILE_TO_THE_95_24TH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:20:44Z
+    said: >-
+      **And the quantile itself, which is the number the caveat should carry: ***PRE-FIX 1,398 OF 313,114
+      GENERATIONS = 0.446 %, THE 99.55TH PERCENTILE; CORRECTED 14,893 OF 313,140 = 4.756 %, THE 95.24TH. TAIL MASS
+      x10.65*** -- *I checked: 4.756 / 0.446 = 10.66, which reconciles with the 10.7x decision count.* **CONDVALUE,
+      for which no pre-fix comparator was given, sits at 19,523 of 313,140 = 6.235 %, the 93.77th.** ***A THRESHOLD
+      THAT WAS SELECTING THE TOP HALF-PERCENT NOW SELECTS THE TOP FIVE PERCENT: THAT IS THE CAVEAT IN ITS PROPER
+      UNITS, AND IT IS A FAR MORE USEFUL SENTENCE THAN "10.7x MORE DECISIONS".*** REV worked **read-only and light
+      -- no book unpickled, so nothing competed with DA's lock or DE's null.**
+  AND_A_DAY_CAN_NOW_SUPERSEDE_RATHER_THAN_BECOME_A_SECOND_RESULT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:20:44Z
+    said: >-
+      **DE 176, and the framing is exactly right: THE NULL WAS BLOCKED BY A GUARD THAT WAS RIGHT.**
+      `assert_no_sealed_receipt_yet` refused 09-03 before any work, because **the day already has a sealed chain and
+      "a day that runs twice is not a day with a newest result".** ***BUT AFTER R-834 RETRACTED EVERY ARM RESULT, A
+      CORRECTED DAY MUST BE RUNNABLE -- AND THE DAY PATH HAD NO WAY TO SAY IT WAS A CORRECTION.*** **The remedy is
+      the one the refusal's own message pointed at: the day path can now SUPERSEDE, so a retracted day is re-run AS
+      A CORRECTION RATHER THAN AS A SECOND RESULT.** *This is rule 13 -- corrections supersede in-band -- reaching
+      the RUN layer rather than only the receipt layer*, and **a guard that refuses correctly and names the missing
+      capability in its own message is the best kind of blocker there is.**
   # --- MEM round 322, 2026-09-09T15:18:59Z ---
   THE_RELOCATED_FALSIFIER_DOES_NOT_EXIST_AND_I_DROVE_THE_ZERO_MYSELF:
     prov: CHECKED
