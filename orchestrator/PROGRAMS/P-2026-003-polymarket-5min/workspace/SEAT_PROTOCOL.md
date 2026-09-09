@@ -400,6 +400,21 @@ except where marked USER-ONLY.
     past a red gate is how a programme stops being able to trust its own checkers, and
     it is worse than the red.
 
+30. **A COMMIT MESSAGE CAN DESCRIBE A CHANGE THE COMMIT DOES NOT CONTAIN** (DA, R-852).
+    DE 162's message said mode C's message "stops blaming the wrong subsystem"; DA drove
+    the three cases and found the message **byte-identical to before** — the phrase
+    appears **zero times in the diff, neither added nor removed** — and confirmed no
+    later commit fixed it before calling the item open. Worse, the same round's new
+    `ROW_AFTER_GENERATION_END` exclusion **added a SECOND route to the misattributing
+    message.** *"It is worth catching precisely because a green battery doesn't test it
+    and a careful reader agrees with it."* **A battery tests behaviour; nothing tests
+    prose. So a verifier checks the claim against the DIFF, not against the message** —
+    `git show <commit> | grep` for the string the message says changed, and confirm no
+    later commit did it, before either accepting or reopening. This is the same shape as
+    rule 10 (compute predicates, never print conclusions) moved up one level: a
+    hardcoded verdict beside a table has contradicted the table three times, and now a
+    commit message has contradicted its own diff.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
