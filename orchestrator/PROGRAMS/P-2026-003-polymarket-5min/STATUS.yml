@@ -115,7 +115,7 @@ updated: >-
   USER'S PLANTED-SETTLEMENT PROBE REPRODUCING AT A THIRD SITE.** ***AND THE LESSON: THREE INSTANCES WERE EACH FOUND
   BY ACCIDENT OR BY THE USER AND NEVER BY LOOKING -- AND THE FOURTH, FIFTH AND SIXTH ARRIVED WITHIN ONE ROUND OF
   SOMEBODY DECIDING TO ENUMERATE BY OPERATION. THE THREE NEW SITES ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS
-  COSTING.*** Flags 2790 -> 2804, prov 2335 -> 2349; window 3/3, Batch 302 archived. MEM asserts no result.)
+  COSTING.*** Flags 2790 -> 2808, prov 2335 -> 2353; window 3/3, Batch 302 archived. MEM asserts no result.)
   2026-09-09T14:57:56Z (MEM ROUND 319 -- ***THE PROGRAMME HAS PRODUCED ITS FIRST CORRECTED NUMBER SINCE THE RETRACTION, AND
   THE USER HAS RULED ON FOUR THINGS.*** From `e975d81` to `ac99226`. **I read every figure at the artifact rather
   than taking the dispatch**: `p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json` on book **EV21
@@ -378,6 +378,11 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 320 ADDENDUM 2026-09-09T15:07:12Z: DA 163 closes the sign-reversal question ---
+  DA_163_ANSWERS_THE_SIGN_REVERSAL_AND_IT_IS_THE_REPAIRS: 98-1-PERCENT-ARM-SIDE
+  AND_THE_ANSWER_COMES_FROM_A_POLICY_FREE_BASELINE_NOBODY_HAD_USED_THAT_WAY: ANY-CHANGE-IN-IT-IS-PURE-POPULATION
+  THE_RESULT_REPRODUCES_TO_THE_DIGIT_ON_BOTH_ARMS_BY_A_SECOND_IMPLEMENTATION: ZERO-DISAGREEMENTS-IN-984-CELLS
+  BUT_THE_CAVEAT_IS_NOT_ABOUT_THE_ARITHMETIC_AND_IT_IS_LARGE: 1398-TO-14893-AT-UNCHANGED-THETA
   # --- MEM round 320, DA's five-point contract; the sibling-block class enumerated (f06ec7d -> a52526d) ---
   DAS_FIVE_POINT_ACCEPTANCE_CRITERIA_ARE_A_SPECIFICATION_THAT_OUTLIVES_THIS_DAY: FIVE-POINTS-VERBATIM
   IT_WAS_WRITTEN_WHEN_ASKED_WHAT_FRAMING_IT_WOULD_ACCEPT_AFTER_DECLINING_ONE: THE-RIGHT-QUESTION-TO-ASK
@@ -27241,6 +27246,57 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 320 ADDENDUM, 2026-09-09T15:07:12Z ---
+  DA_163_ANSWERS_THE_SIGN_REVERSAL_AND_IT_IS_THE_REPAIRS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:07:12Z
+    said: >-
+      ***DA 163 LANDED WHILE I WROTE AND ANSWERS THE QUESTION I RECORDED AS OPEN LAST ROUND: THE SIGN REVERSAL IS
+      THE REPAIRS, NOT THE POPULATION.*** I had written that *two things changed at once, the code AND the data the
+      code sees*, and that this file would assert no explanation until DA reported. **DA has reported, with a
+      decomposition: THE POPULATION CHANNEL IS 1.9 % AND THE ARM SIDE 98.1 %.** *I checked the arithmetic: a
+      baseline move of -534.30 against a +27,701.94 swing in `D_E_settle` is 1.93 % -- the figures reconcile.*
+      ***THE OPEN QUESTION IS CLOSED AND IT CLOSED IN THE DIRECTION THAT WOULD HAVE BEEN EASIEST TO ASSUME, WHICH IS
+      EXACTLY WHY IT WAS WORTH LEAVING OPEN FOR A ROUND RATHER THAN ASSUMING IT.***
+  AND_THE_ANSWER_COMES_FROM_A_POLICY_FREE_BASELINE_NOBODY_HAD_USED_THAT_WAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:07:12Z
+    said: >-
+      ***AND THE METHOD IS THE PART TO KEEP, BECAUSE IT USES A CONTROL THAT WAS ALREADY THERE: "THE 0-CANCEL
+      BASELINE IS POLICY-FREE, SO ANY CHANGE IN IT IS PURE POPULATION."*** **Its fill set is 99.987 % IDENTICAL
+      ACROSS THE REBUILD and its total moved -534.30** -- so the baseline isolates the data channel **because it
+      makes no decisions**, and whatever moves it cannot be the policy. *DA called this "the answer nobody had
+      given", and it is: for thirty rounds the 0-cancel baseline has been described as the thing that SURVIVED the
+      scoring defects, and nobody had noticed that the same property makes it a NATURAL CONTROL for
+      population-versus-policy.* ***A QUANTITY THAT WAS ALREADY IN EVERY ARTIFACT, RE-READ AS AN INSTRUMENT.***
+  THE_RESULT_REPRODUCES_TO_THE_DIGIT_ON_BOTH_ARMS_BY_A_SECOND_IMPLEMENTATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:07:12Z
+    said: >-
+      **And the reproduction is stronger than the headline: `D_E_settle` +11,191.244402 on CONDVALUE and
+      +12,381.557663 on HAZARD, BOTH RECOMPUTED FROM THE FILL ROWS BY A SECOND IMPLEMENTATION, with ZERO PER-SLUG
+      DISAGREEMENTS ACROSS 246 SLUGS x 2 BOOKS x 2 ARMS** -- *984 per-slug cells and not one disagreement.* **DA
+      137's dedup control holds BY MEASUREMENT: the two arms' BASELINE DIGESTS ARE IDENTICAL.** ***THE NUMBER I
+      READ AT THE ARTIFACT LAST ROUND AND WHOSE INTERNAL ARITHMETIC I CHECKED THREE WAYS HAS NOW BEEN RECOMPUTED
+      FROM THE UNDERLYING ROWS BY DIFFERENT CODE AND AGREES TO THE DIGIT*** -- which is a different and stronger
+      claim than that the totals sum correctly.
+  BUT_THE_CAVEAT_IS_NOT_ABOUT_THE_ARITHMETIC_AND_IT_IS_LARGE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:07:12Z
+    said: >-
+      ***AND THE CAVEAT DA ATTACHES IS NOT ABOUT THE ARITHMETIC AND IT IS LARGE: AT UNCHANGED THETA, DECISIONS WENT
+      1,398 -> 14,893 ON HAZARD -- A FACTOR OF 10.7, WHICH I CHECKED -- SO A FIXED THRESHOLD CHOSEN UNDER THE
+      DEFECTIVE SCORING NOW SELECTS A DIFFERENT QUANTILE OF THE SCORE DISTRIBUTION.*** **The estimate is right about
+      the policy it describes, and the policy is not the one theta was chosen for.** *Rule 11 says choosing after
+      seeing voids the test; this is its mirror -- a threshold chosen BEFORE, on a distribution that has since
+      moved, is no longer the threshold anyone selected.* **`theta_was_not_refitted_here: True` is correct and
+      honest, and it is exactly what makes this caveat necessary rather than optional.** DA also files: **R-833
+      swept gone BY OPERATION (9 sites at 250.0, none other); DE's consistency block names 4 of those 9; the
+      refusal's partial-input leg RETURNS `{}` SILENTLY; and DA HAS NO READER for `P003_DE_POINT_ESTIMATE_DAY_V1`.**
   # --- MEM round 320, 2026-09-09T15:05:36Z ---
   DAS_FIVE_POINT_ACCEPTANCE_CRITERIA_ARE_A_SPECIFICATION_THAT_OUTLIVES_THIS_DAY:
     prov: CHECKED
