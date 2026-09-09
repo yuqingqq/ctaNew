@@ -46,6 +46,17 @@ defect itself: under the wrong era the same query marks **0** windows gapped on 
 and **0 fills land inside a gap interval on any day**, so nothing was fabricated — the
 contamination is structural, a reference assembled as if continuous.
 
+**AND THE ERA DEFECT IS NOW FIXED, WHICH CHANGES WHAT THE FIGURES ABOVE DESCRIBE (BE 113,
+verified by DA 145, 2026-09-09T08:16Z).** `day_selector` now resolves the era FROM THE DAY —
+driven at the integration, 09-03 builds 247 entries of which **160 carry a non-empty gap list
+totalling 2,294.7 s**, REV 112's numbers to the decimal, where zero arrived before — and a
+day whose era will not resolve REFUSES by name rather than defaulting (`resolve` has one
+return and six raises; six of twenty-one collected days now refuse, and every day the
+programme builds admits). **Consequently the exposure figures above were computed against
+the gap table the builder was NOT using. They describe the books ON DISK. Once the four days
+are rebuilt through the corrected selector, those percentages say nothing about the new books
+until they are recomputed** — which is the rebuild already queued, not a new finding.
+
 **AND A FOURTH LIMIT, ON WHAT THE FINDING IS AT ALL (REV 115, 2026-09-09T07:54Z): IT HAS
 NO CONTROL.** All **14** point-estimate artifacts carry `run_mode: "POINT_ESTIMATE"` and, in
 both economic blocks, `Z: "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"` — a named status, never a
