@@ -1,3 +1,97 @@
+# READ FIRST — round 324 (MEM, 2026-09-09T15:35:25Z, tip `b841683`)
+
+# ⛔ THE STRUCTURAL PROBLEM — the corrected book REFUSES ITS OWN REPLAY
+
+**HAZARD's null did not run.** The EV21 book refuses **`BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`** —
+`de_multiday_gate1_runner.py` **book = `b4532d00c9ac`** — **because the scoring path kept moving after the book was
+built.** ***The first null since the retraction is blocked on a REBUILD, not on the lock — and no seat can clear it
+by fixing anything.***
+
+## ⇒ THE PROGRAMME FACT: **a book is only consumable while the code it names stands still**
+
+*A book caches its scores, so the scoring code is **part of the artifact**, not merely its provenance* — which the
+predicate's own message has always said. ***The consequence nobody had drawn until today is the SCHEDULING one:
+every hour of scoring-path repair shortens the window in which an existing book can be consumed, and a night of
+productive fixes can close that window entirely.*** **The programme spent today repairing the scoring path *and*
+building a book from it. Those two activities are in tension, and nobody had written that down.**
+
+**⚠ And I drove the digests myself, which sharpens it:**
+
+| | digest |
+|---|---|
+| what the **book** records | **`b4532d00c9ac`** |
+| what **disk held** when the refusal was seen | `9bb93da45274` |
+| what **disk holds now** (hashed by me at 2026-09-09T15:35:25Z) | **`a76e81c3391e`** |
+
+***Three distinct digests for one module in one session. The scoring path has not merely moved — it is STILL
+MOVING*** — which is exactly the condition under which a **freeze** is what makes a rebuild worth its 68 minutes.
+
+**The disposition is right: this is REV 111's predicate working exactly as designed.** *Not a defect, not a
+regression, not an over-strict guard* — **the first time the book-code pin has caught a real divergence on a real
+artifact, before a null was drawn against a book whose scores no longer match the code that would read them.**
+*Tonight has repeatedly found guards too weak to fail; a guard that has never blocked anything is indistinguishable
+from one that cannot.*
+
+**A scoring-path freeze over the twelve derived modules is with the USER**, and **DA 168 is establishing what
+actually moved between the digests** so the choice between a **68-minute rebuild** and an **explicit supersession**
+is priced. *The second option exists only because DE 176 landed it this afternoon — a capability built for one reason
+and available for another within hours.*
+
+# ✅ REV 145 — all six of today's new checks are TWO-SIDED: **23 sides driven, 23 anchored**
+
+| check | sides |
+|---|---|
+| zero-length exclusion (BE 129/130) | **4** — `inf`, `nan`, `None`, missing keys, equal strings all refuse; **REVIEW 138 closed at its cause** |
+| book-code predicate (DE 168/169) | **3** — a set **forged to 2 of 12 is INERT** because DE 169 recomputes from disk; **REVIEW 132 closed more strongly than asked** |
+| `assert_pin_sites_agree` (BE 111) | **5** — closure-pin refusal **computed by walking the payload** |
+| `committed_state` (DA 156) | both questions answer; **the disagreement is the asserted property** |
+| cancel-count (DE 159) | **3**, keyed on `int(ref_gen)` |
+| matched-cancel control (DE 160) | **5** — **an absent stratum REFUSES rather than silently contributing nothing** |
+
+***And REV explains the asymmetry from first principles, which makes it a design rule:*** *"those six test a property
+of ONE object, so each side is a way for that object to be wrong; the reconciliation tests an identity between three
+quantities, two from the same source — **an identity whose terms are not independently sourced has fewer sides than
+it appears to.**"* **The reconciliation was the outlier, not the pattern — and it is held unwired.**
+
+# DE 178
+
+- **Theta's drift TRAVELS beside the decision count** — ruling (a) implemented **at the address the ruling named**.
+  *The fourth instance tonight of the same remedy: `matched_on`, `MEMBERSHIP_LIMIT`, the superseded set at its own
+  key, now the drift.*
+- **The multi-day verdict is repointed to the settlement endpoint AND NAMES IT** — with its own small finding:
+  ***its planted-value test previously planted only the DIAGNOSTIC, the block the verdict no longer reads. A
+  known-bad that cannot fire — rule 15's falsifier quietly disarmed by the very repair that fixed the verdict.***
+  **Caught in the same change that created it.**
+- ***And the part this seat values most: the reconciliation call site carries `NOT_WIRED_PENDING_BE_138` with the
+  reason and the exact one-line call*** — confirmed in the runner. **The hold is recorded IN THE CODE, not only in a
+  dispatch.** *A deliberate gap that names itself, its reason and its remedy at the site of the gap is the opposite
+  of a silent omission.*
+
+# DA 166/167 — closed its own criterion
+
+***`kept + dropped = all` is an IDENTITY over an exact partition — evidence about the PARTITION, not the
+VALUATION.*** **DA wrote the criterion, REV found it tautological, and DA agreed and replaced it rather than
+defending it** — *the third seat today to withdraw its own published work, after BE's derived eight and REV's own
+REVIEW 110 item (4).*
+
+**The replacement is exact on both halves:** the **KEPT side per slug** — **492 equations across 246 slugs** against
+the ledger's `SETTLEMENT_SLUG` rows — and the **partition per row**: disjoint sets, union equal to candidates, every
+dropped row `(t−t0)·1000 < L` and every kept row `>= L`. *One aggregate anchor becomes 492 independent ones, and the
+partition **predicate** is checked rather than its arithmetic consequence.* **BE is implementing it.**
+
+## STATE
+
+**BE is building 09-04 by user ruling** — verified at the machine: **`p003ev210904a`, launched 15:31:26Z**, `--day
+20260904 --placement-latency-ms 250 --artifact-revision EV21`, **tip `b841683ad2d1…`**, one lock holder. ***And it is
+recording which module digests it builds against and whether any of the twelve is expected to move again tonight —
+the question nobody asked before the 09-03 book, whose answer turned out to be yes.*** **DE was reset from 97 % at
+15:31Z.**
+
+Counts: flags 2853 → 2866, provenance 2398 → 2411 (thirteen written, thirteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 306 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 323 (MEM, 2026-09-09T15:28:30Z, tip `5df2f46`)
 
 **Three user rulings and a review that stopped a mistake before it landed.** *Last round's blocked `Q-MEM-310` has

@@ -67,6 +67,58 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T15:35:25Z (MEM ROUND 324 -- ***THE CORRECTED BOOK REFUSES ITS OWN REPLAY, AND THAT IS A PROGRAMME FACT RATHER
+  THAN AN INCIDENT.*** ***HAZARD'S NULL DID NOT RUN: THE EV21 BOOK REFUSES `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`,
+  `de_multiday_gate1_runner.py` BOOK=`b4532d00c9ac`, BECAUSE THE SCORING PATH KEPT MOVING AFTER THE BOOK WAS BUILT --
+  SO THE FIRST NULL SINCE THE RETRACTION IS BLOCKED ON A REBUILD, NOT ON THE LOCK, AND NO SEAT CAN CLEAR IT BY FIXING
+  ANYTHING.*** ***THE GENERAL STATEMENT: A BOOK IS ONLY CONSUMABLE WHILE THE CODE IT NAMES STANDS STILL*** -- a book
+  caches its scores, so **the scoring code is part of the artifact and not merely its provenance**, and *the
+  consequence nobody had drawn until today is the SCHEDULING one:* ***EVERY HOUR OF SCORING-PATH REPAIR SHORTENS THE
+  WINDOW IN WHICH AN EXISTING BOOK CAN BE CONSUMED, AND A NIGHT OF PRODUCTIVE FIXES CAN CLOSE THAT WINDOW
+  ENTIRELY.*** ***AND I DROVE THE DIGESTS MYSELF, WHICH SHARPENS IT: THE DISPATCH REPORTS DISK AS `9bb93da45274` AND
+  I HASHED THE MODULE AT 2026-09-09T15:35:25Z AND GOT `a76e81c3391e` -- THREE DISTINCT DIGESTS FOR ONE MODULE IN ONE SESSION,
+  SO THE SCORING PATH HAS NOT MERELY MOVED, IT IS STILL MOVING***, *which is exactly the condition under which a
+  freeze is what makes a rebuild worth its 68 minutes.* **AND THE DISPOSITION IS RIGHT: THAT IS REV 111'S PREDICATE
+  WORKING EXACTLY AS DESIGNED -- not a defect, not a regression, not an over-strict guard, but THE FIRST TIME THE
+  BOOK-CODE PIN HAS CAUGHT A REAL DIVERGENCE ON A REAL ARTIFACT, BEFORE A NULL WAS DRAWN AGAINST A BOOK WHOSE SCORES
+  NO LONGER MATCH THE CODE THAT WOULD READ THEM**; *tonight has repeatedly found guards too weak to fail, and a guard
+  that has never blocked anything is indistinguishable from one that cannot.* **A SCORING-PATH FREEZE OVER THE TWELVE
+  DERIVED MODULES IS WITH THE USER, AND DA 168 IS ESTABLISHING WHAT ACTUALLY MOVED BETWEEN THE DIGESTS SO THE USER
+  CAN CHOOSE BETWEEN A 68-MINUTE REBUILD AND AN EXPLICIT SUPERSESSION** -- the second option existing only because DE
+  176 landed it this afternoon, *a capability built for one reason and available for another within hours.* ***REV
+  145: ALL SIX OF TODAY'S NEW CHECKS ARE TWO-SIDED -- 23 SIDES DRIVEN, 23 ANCHORED -- AND I RECORD THE CLEAN RESULT
+  BY NAME BECAUSE KNOWING WHICH CHECKS ARE GENUINELY TWO-SIDED IS AS LOAD-BEARING AS KNOWING WHICH WAS NOT***: the
+  zero-length exclusion (4 sides, closing REVIEW 138 AT ITS CAUSE), the book-code predicate (3 sides, a set forged to
+  2 of 12 INERT because DE 169 recomputes from disk, closing REVIEW 132 MORE STRONGLY THAN ASKED),
+  `assert_pin_sites_agree` (5 sides, a closure-pin refusal COMPUTED BY WALKING THE PAYLOAD), `committed_state` (the
+  DISAGREEMENT being the asserted property), the cancel-count (3 sides on `int(ref_gen)`) and the matched-cancel
+  control (5 sides, AN ABSENT STRATUM REFUSING RATHER THAN SILENTLY CONTRIBUTING NOTHING). ***AND REV EXPLAINS THE
+  ASYMMETRY FROM FIRST PRINCIPLES, WHICH MAKES IT A DESIGN RULE: "THOSE SIX TEST A PROPERTY OF ONE OBJECT, SO EACH
+  SIDE IS A WAY FOR THAT OBJECT TO BE WRONG; THE RECONCILIATION TESTS AN IDENTITY BETWEEN THREE QUANTITIES, TWO FROM
+  THE SAME SOURCE -- AN IDENTITY WHOSE TERMS ARE NOT INDEPENDENTLY SOURCED HAS FEWER SIDES THAN IT APPEARS TO."***
+  **THE RECONCILIATION WAS THE OUTLIER, NOT THE PATTERN, AND IT IS HELD UNWIRED.** **DE 178 implements ruling (a) at
+  the address the ruling named -- THETA'S DRIFT TRAVELS BESIDE THE DECISION COUNT, the fourth instance tonight of the
+  same remedy after `matched_on`, `MEMBERSHIP_LIMIT` and the superseded set at its own key** -- and repoints the
+  multi-day verdict to the settlement endpoint **AND NAMES IT**, with a detail that is its own small finding: ***ITS
+  PLANTED-VALUE TEST PREVIOUSLY PLANTED ONLY THE DIAGNOSTIC, THE BLOCK THE VERDICT NO LONGER READS -- A KNOWN-BAD
+  THAT CANNOT FIRE, RULE 15'S FALSIFIER QUIETLY DISARMED BY THE VERY REPAIR THAT FIXED THE VERDICT, CAUGHT IN THE
+  SAME CHANGE THAT CREATED IT.*** ***AND THE PART THIS SEAT VALUES MOST: THE RECONCILIATION CALL SITE CARRIES
+  `NOT_WIRED_PENDING_BE_138` WITH THE REASON AND THE EXACT ONE-LINE CALL -- I CONFIRMED THE MARKER IN THE RUNNER --
+  SO THE HOLD IS RECORDED IN THE CODE RATHER THAN ONLY IN A DISPATCH: A DELIBERATE GAP THAT NAMES ITSELF, ITS REASON
+  AND ITS REMEDY AT THE SITE OF THE GAP IS THE OPPOSITE OF A SILENT OMISSION.*** ***DA 166/167 CLOSED ITS OWN
+  CRITERION: `kept + dropped = all` IS AN IDENTITY OVER AN EXACT PARTITION -- EVIDENCE ABOUT THE PARTITION, NOT THE
+  VALUATION -- AND DA WROTE THE CRITERION, REV FOUND IT TAUTOLOGICAL, AND DA AGREED AND REPLACED IT RATHER THAN
+  DEFENDING IT***, *the third seat today to withdraw its own published work after BE's derived eight and REV's own
+  REVIEW 110 item (4).* **The replacement is exact on both halves: THE KEPT SIDE PER SLUG, 492 EQUATIONS ACROSS 246
+  SLUGS AGAINST THE LEDGER'S `SETTLEMENT_SLUG` ROWS, AND THE PARTITION PER ROW -- DISJOINT SETS, UNION EQUAL TO
+  CANDIDATES, EVERY DROPPED ROW `(t-t0)*1000 < L` AND EVERY KEPT ROW `>= L`** -- *one aggregate anchor becoming 492
+  independent ones, and the partition PREDICATE checked rather than its arithmetic consequence.* **BE IS BUILDING
+  09-04 BY USER RULING AND I VERIFIED IT AT THE MACHINE: `p003ev210904a`, LAUNCHED 15:31:26Z, ARGS `--day 20260904
+  --placement-latency-ms 250 --artifact-revision EV21`, TIP `b841683ad2d1...`, ONE LOCK HOLDER** -- ***AND IT IS
+  RECORDING WHICH MODULE DIGESTS IT BUILDS AGAINST AND WHETHER ANY OF THE TWELVE IS EXPECTED TO MOVE AGAIN TONIGHT,
+  WHICH IS THE QUESTION NOBODY ASKED BEFORE THE 09-03 BOOK AND WHOSE ANSWER TURNED OUT TO BE YES.*** DE was RESET
+  from 97 % at 15:31Z. Flags 2853 -> 2866, prov 2398 -> 2411; window 3/3, Batch 306 archived. MEM asserts no
+  result.)
   2026-09-09T15:28:30Z (MEM ROUND 323 -- ***THREE USER RULINGS AND A REVIEW THAT STOPPED A MISTAKE BEFORE IT LANDED.***
   ***RULING (a): THETA STAYS FROZEN, WITH THE REQUIREMENT THAT THE DRIFT TRAVEL.*** REV 143 measured the frozen
   `0.43525926488298716` now at the **95.24th PERCENTILE where it was CHOSEN at the 99.55th**: **tail mass 0.446 % ->
@@ -165,53 +217,6 @@ updated: >-
   same values cannot distinguish a checker that reads the right one from a checker that reads either* -- **and a seat
   sweeping its own surface and finding the count SMALLER than feared is worth as much as one finding it larger.**
   Flags 2822 -> 2840, prov 2367 -> 2385; window 3/3, Batch 304 archived. MEM asserts no result.)
-  2026-09-09T15:13:26Z (MEM ROUND 321 -- R-868 SWEPT. ***THE SIBLING-BLOCK CLASS IS CLOSED, BE RELOCATED A FALSIFIER RATHER
-  THAN DROPPING IT, AND THE FIRST NULL SINCE THE RETRACTION IS RUNNING.*** ***THE CLASS CLOSES BECAUSE ITS MEMBERSHIP
-  TEST IS MECHANICAL, WHICH I DROVE MYSELF ON THE REAL POINT-ESTIMATE ARTIFACT RATHER THAN TAKING THE LIST: a site is
-  in it when it NAMES ONE OF TWO SIBLING BLOCKS LITERALLY AND READS A FIELD THAT EXISTS IN BOTH, and intersecting the
-  two blocks gives `economic` 6 FIELDS, `economic_settlement` 17, AND THE SHARED SET EXACTLY `['Z',
-  'null_draws_summary', 'null_mean', 'null_sd', 'p_location']` -- FIVE NAMES EACH READABLE FROM THE WRONG BLOCK WITH
-  NO ERROR.*** **SIX SITES, THREE MODULES, THREE NEW, CLOSED OVER A STATED SCOPE** -- *the stated scope being the
-  load-bearing part, since a closure without one is a claim about the universe.* ***THE WORST IS NOT A GUARD:
-  `:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT FROM `r["economic"]["Z"]`, THE DIAGNOSTIC, WHILE R-801 MADE
-  SETTLEMENT PRIMARY -- AND THAT ENDPOINT CHOICE IS A RULING WITH THE USER, NOT A PATCH, THOUGH IT MUST NAME THE
-  ENDPOINT IT USED EITHER WAY***; at my read the line now carries `# ---- DE 176 / REV 140: THE VERDICT NAMES ITS
-  ENDPOINT`, **so the naming half has landed while the choice stays with the USER** -- *a verdict that names its
-  endpoint is honest at either setting; one that does not is wrong at both.* **THE SECOND WORST WAS
-  `da_gate1_day_verdict.py` CONTAINING ZERO OCCURRENCES OF `economic_settlement`, ITS INDEPENDENT RECOMPUTE NEVER
-  TOUCHING THE RULED ENDPOINT AND ITS SEAL PREDICATE REPORTING `sealed: True` ON A RECEIPT CARRYING `D_E_settle` --
-  AND I COUNTED BOTH SIDES: THE MODULE NOW HAS EIGHT.** ***AND THE DISTINCTION THE COORDINATOR ASKED FOR EXPLICITLY:
-  DA'S MANUAL RECOMPUTE IS NOT INVALIDATED -- THE MODULE IS BLIND, NOT THE ROUND***, since DA 163's reproduction was
-  computed FROM THE FILL ROWS BY A SECOND IMPLEMENTATION with zero per-slug disagreements across 246 slugs x 2 books
-  x 2 arms, *and a finding about an instrument voids the results that went THROUGH it, not everything the seat
-  produced.* ***BE'S ANSWER ON THE FALSIFIER, AS THE STANDARD AND NOT A NOTE: DA'S CRITERIA (1) AND (3) CANNOT BE MET
-  AT BUILD BECAUSE THE BUILD CANNOT PRODUCE THE NUMBER THE RECONCILIATION COMPARES AGAINST, SO BE MOVED THE FALSIFIER
-  TO WHERE BOTH NUMBERS EXIST -- THE POINT ESTIMATE: `KEPT-VALUE + DROPPED-VALUE = ALL-TRANCHE VALUE`, AND
-  `KEPT-VALUE == 37,315.551431` TO THE DIGIT. "THE EQUIVALENCE IS NOT UNFALSIFIABLE -- IT IS FALSIFIABLE ONE SEAM
-  OVER, WHERE DA SPECIFIED IT."*** **This programme's standing remedy for a weak check has been to strengthen it IN
-  PLACE; this is the other move -- KEEP THE CHECK AND CHANGE WHERE IT RUNS** -- ***AND THE USER'S RULING (b)
-  THEREFORE STANDS AND NO L=0 BUILD IS NEEDED.*** **DA's (2), (4) and (5) are IN THE ARTIFACT BY NAME --
-  `WHAT_THE_DROPPED_SET_IS`, `HOW_IT_MUST_BE_SAID`, `WHAT_MUST_NOT_BE_SAID`, the >=5-day scope** -- *a specification
-  whose clauses become FIELD NAMES travels with the number, and `WHAT_MUST_NOT_BE_SAID` turns DA's three refusals
-  into a field a reader RESOLVES rather than a paragraph a reader may skip* -- **and
-  `both_legs_computable_for_every_tranche` is COMPUTED via `_legs_fields_present` RATHER THAN ASSUMED, "because a
-  missing field would silently omit a tranche from a total", which is the exact defect class this programme has paid
-  for repeatedly, anticipated in a field BEFORE the number exists.** ***DE 176 IS RUNNING HAZARD'S NULL -- THE FIRST
-  NULL SINCE THE RETRACTION -- UNDER RULING B, WITH RULE 6 BINDING (DESIGN AND MINIMUM DECLARED BEFORE THE RESULT,
-  >=200 DRAWS, THE DECISION METRIC AND NEVER A PROXY, AND A SHORT COUNT REFUSES), THE 1-IN-3,862 EXCEPTION REQUIRED
-  TO TRAVEL WITH ITS DENOMINATOR, AND CONDVALUE'S FAIL-CLOSED STATE STATED WITH ITS REASON.*** *A rate quoted without
-  the population it is a rate over is how "1 in 3,862" becomes "negligible" without anyone deciding it; and a null
-  that quietly returns fewer draws than declared is an under-sampled null wearing a declared one's name.* **REV 141's
-  DESIGN ANSWER AS THE DISPOSITION: NOT IMPOSSIBLE THIS WEEK -- FIX THE SIX AND MAKE THE MEMBERSHIP TEST A CELL, "A
-  CLASS THAT IS ENUMERABLE IS A CLASS THAT IS CHECKABLE"** -- *the same intersection I drove by hand can be computed
-  by a battery cell on every run, so a seventh site would announce itself instead of waiting to be found.* **HOUSEKEEPING,
-  REPORTED BECAUSE I REPORTED THE BLOCK: LAST ROUND'S `Q-MEM-308` WAS BLOCKED BY A DIVERGED BRANCH AND HAS NOW LANDED
-  -- I refused to rebase because two of four unpushed commits were DA's (rule 21), the divergence was resolved by
-  someone else, my commits replayed as `12bbd6b` and `4253bec` with all content intact at flags 2808 / prov 2353** --
-  ***AND ONE CORRECTION TO MY OWN CHECK: I MOMENTARILY READ A `grep -c` OF ZERO AS A LOST PARAGRAPH; THE PHRASE
-  "format string" SIMPLY WRAPS A LINE AND THE PARAGRAPH IS AT `HANDOFF.md:81`. MY GREP WAS THE ERROR, NOT THE FILE,
-  AND I VERIFIED BEFORE REPORTING RATHER THAN AFTER.*** Flags 2808 -> 2822, prov 2353 -> 2367; window 3/3, Batch 303
-  archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -383,6 +388,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 324, the EV21 book refuses its own replay; 09-04 building (cfce85a -> b841683) ---
+  HAZARDS_NULL_DID_NOT_RUN_BECAUSE_THE_BOOK_REFUSES_ITS_OWN_REPLAY: BOOK_BUILT_BY_DIFFERENT_SCORING_CODE
+  A_BOOK_IS_ONLY_CONSUMABLE_WHILE_THE_CODE_IT_NAMES_STANDS_STILL: A-PROGRAMME-FACT-NOT-AN-INCIDENT
+  AND_THE_MODULE_HAS_MOVED_AGAIN_SINCE_THE_REFUSAL_WAS_OBSERVED: THREE-DIGESTS-ONE-SESSION
+  THE_PREDICATE_IS_WORKING_EXACTLY_AS_DESIGNED_AND_THAT_IS_THE_POINT: REV-111-CATCHING-A-REAL-ONE
+  A_SCORING_PATH_FREEZE_IS_WITH_THE_USER_AND_DA_168_PRICES_THE_CHOICE: 68-MINUTES-OR-SUPERSESSION
+  ALL_SIX_OF_TODAYS_NEW_CHECKS_ARE_TWO_SIDED_AND_I_RECORD_THE_CLEAN_RESULT_BY_NAME: 23-SIDES-23-ANCHORED
+  THE_RECONCILIATION_WAS_THE_OUTLIER_NOT_THE_PATTERN: AND-REV-SAYS-WHY
+  THETAS_DRIFT_NOW_TRAVELS_BESIDE_THE_DECISION_COUNT: RULING-a-IMPLEMENTED
+  AND_THE_PLANTED_VALUE_TEST_HAD_PLANTED_ONLY_THE_DIAGNOSTIC: THE-BLOCK-IT-NO-LONGER-READS
+  THE_HOLD_IS_RECORDED_IN_THE_CODE_RATHER_THAN_ONLY_IN_A_DISPATCH: NOT_WIRED_PENDING_BE_138
+  DA_CLOSED_ITS_OWN_CRITERION_AND_CALLED_ITS_IDENTITY_AN_IDENTITY: EVIDENCE-ABOUT-THE-PARTITION
+  THE_REPLACEMENT_IS_PER_SLUG_AND_PER_ROW_AND_BOTH_ARE_EXACT: 492-EQUATIONS-AND-A-DISJOINT-UNION
+  BE_IS_BUILDING_09_04_AND_RECORDING_WHICH_DIGESTS_IT_BUILDS_AGAINST: LAUNCHED-15-31-26Z
   # --- MEM round 323, three USER rulings; the reconciliation falsifies on one side only (e961437 -> 5df2f46) ---
   RULING_A_THETA_STAYS_FROZEN_AND_THE_DRIFT_MUST_TRAVEL: 99-55TH-TO-95-24TH
   A_PRICE_THAT_IS_NOT_STATED_IS_NOT_PAID: THE-RULINGS-OWN-SENTENCE
@@ -27300,6 +27319,162 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 324, 2026-09-09T15:35:25Z ---
+  HAZARDS_NULL_DID_NOT_RUN_BECAUSE_THE_BOOK_REFUSES_ITS_OWN_REPLAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV21.json
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***THE STRUCTURAL PROBLEM, AND IT IS WHY THE NIGHT'S HEADLINE RESULT CANNOT YET BE TESTED: HAZARD'S NULL DID
+      NOT RUN. THE CORRECTED EV21 BOOK REFUSES ITS OWN REPLAY*** -- `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`,
+      **`de_multiday_gate1_runner.py` book=`b4532d00c9ac` against disk** -- **because THE SCORING PATH KEPT MOVING
+      AFTER THE BOOK WAS BUILT.** *The first null since the retraction was dispatched, and the artifact it was to
+      run against will not admit the code that would run it.* **HAZARD's null is blocked ON A REBUILD, NOT ON THE
+      LOCK** -- which is a materially different blocker from every other one tonight, because **no seat can clear it
+      by fixing anything.**
+  A_BOOK_IS_ONLY_CONSUMABLE_WHILE_THE_CODE_IT_NAMES_STANDS_STILL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***THE GENERAL STATEMENT, RECORDED AS A PROGRAMME FACT RATHER THAN AN INCIDENT: A BOOK IS ONLY CONSUMABLE
+      WHILE THE CODE IT NAMES STANDS STILL.*** **A book caches its scores, so the scoring code is part of the
+      artifact and not merely its provenance** -- *which the predicate's own refusal message has said all along:
+      "the scores are IN the book, so different scoring code makes it a different book."* ***THE CONSEQUENCE NOBODY
+      HAD DRAWN UNTIL TODAY IS THE SCHEDULING ONE: EVERY HOUR OF SCORING-PATH REPAIR SHORTENS THE WINDOW IN WHICH AN
+      EXISTING BOOK CAN BE CONSUMED, AND A NIGHT OF PRODUCTIVE FIXES CAN CLOSE THAT WINDOW ENTIRELY.*** **The
+      programme spent today repairing the scoring path and building a book from it; those two activities are in
+      tension and nobody had written that down.**
+  AND_THE_MODULE_HAS_MOVED_AGAIN_SINCE_THE_REFUSAL_WAS_OBSERVED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***AND I DROVE THE DIGESTS MYSELF, WHICH SHARPENS IT: THE MODULE HAS MOVED AGAIN SINCE THE REFUSAL WAS
+      OBSERVED.*** The dispatch reports book `b4532d00c9ac` against disk `9bb93da45274`; **I hashed
+      `de_multiday_gate1_runner.py` at 2026-09-09T15:35:25Z and got `a76e81c3391e`.** ***THREE DISTINCT DIGESTS FOR ONE MODULE
+      IN ONE SESSION: WHAT THE BOOK RECORDS, WHAT DISK HELD WHEN THE REFUSAL WAS SEEN, AND WHAT DISK HOLDS NOW.***
+      **So the scoring path has not merely "moved after the book was built" -- IT IS STILL MOVING**, *which is
+      exactly the condition under which a freeze is the only thing that makes a rebuild worth its 68 minutes: a
+      rebuild against a moving target buys a book that expires the next time anyone lands a fix.*
+  THE_PREDICATE_IS_WORKING_EXACTLY_AS_DESIGNED_AND_THAT_IS_THE_POINT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      **And the disposition is the right one and worth stating plainly: THAT IS REV 111'S PREDICATE WORKING EXACTLY
+      AS DESIGNED.** ***THIS IS NOT A DEFECT, A REGRESSION OR AN OVER-STRICT GUARD -- IT IS THE FIRST TIME THE
+      BOOK-CODE PIN HAS CAUGHT A REAL DIVERGENCE ON A REAL ARTIFACT, AND IT CAUGHT IT BEFORE A NULL WAS DRAWN
+      AGAINST A BOOK WHOSE SCORES NO LONGER MATCH THE CODE THAT WOULD READ THEM.*** *Tonight has repeatedly found
+      guards too weak to fail; this one refused, correctly, at cost.* **A guard that has never blocked anything is
+      indistinguishable from one that cannot; this one is now distinguishable.**
+  A_SCORING_PATH_FREEZE_IS_WITH_THE_USER_AND_DA_168_PRICES_THE_CHOICE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***A SCORING-PATH FREEZE OVER THE TWELVE DERIVED MODULES HAS BEEN PUT TO THE USER, AND DA 168 IS ESTABLISHING
+      WHAT ACTUALLY MOVED BETWEEN THE TWO DIGESTS SO THE USER CAN CHOOSE BETWEEN A 68-MINUTE REBUILD AND AN EXPLICIT
+      SUPERSESSION.*** **That is the right pair of options and the right seat to price them: the choice turns on
+      whether the movement between digests TOUCHED SCORING or was incidental, which is a measurement, not a
+      judgement.** *And the second option exists only because DE 176 landed it this afternoon* -- **THE DAY PATH CAN
+      SUPERSEDE, SO A RETRACTED DAY CAN BE RE-RUN AS A CORRECTION RATHER THAN AS A SECOND RESULT** -- *a capability
+      built for one reason, available for another within hours.*
+  ALL_SIX_OF_TODAYS_NEW_CHECKS_ARE_TWO_SIDED_AND_I_RECORD_THE_CLEAN_RESULT_BY_NAME:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***REV 145: ALL SIX OF TODAY'S NEW CHECKS ARE TWO-SIDED -- 23 SIDES DRIVEN, 23 ANCHORED -- AND I RECORD THE
+      CLEAN RESULT BY NAME, BECAUSE KNOWING WHICH CHECKS ARE GENUINELY TWO-SIDED IS AS LOAD-BEARING AS KNOWING WHICH
+      WAS NOT.*** **(1) the zero-length exclusion (BE 129/130), 4 sides -- `inf`/`inf`, `nan`, `None`, missing keys
+      and equal strings all now REFUSE `GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS`, closing REVIEW 138 AT ITS CAUSE;
+      (2) the book-code predicate (DE 168/169), 3 sides, with a derived set FORGED TO 2 OF 12 rendered INERT because
+      DE 169 recomputes from disk -- REVIEW 132 closed MORE STRONGLY THAN ASKED; (3) `assert_pin_sites_agree` (BE
+      111), 5 sides, including a closure-pin refusal COMPUTED BY WALKING THE PAYLOAD -- rule 15 applied to a site
+      list; (4) `committed_state` (DA 156), both questions answering and the DISAGREEMENT being the asserted
+      property; (5) the cancel-count (DE 159), 3 sides, keyed on `int(ref_gen)`; (6) the matched-cancel control (DE
+      160), 5 sides, including AN ABSENT STRATUM REFUSING RATHER THAN SILENTLY CONTRIBUTING NOTHING.**
+  THE_RECONCILIATION_WAS_THE_OUTLIER_NOT_THE_PATTERN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***AND REV EXPLAINS THE ASYMMETRY FROM FIRST PRINCIPLES RATHER THAN AS AN OVERSIGHT, WHICH MAKES IT A DESIGN
+      RULE: "THOSE SIX TEST A PROPERTY OF ONE OBJECT, SO EACH SIDE IS A WAY FOR THAT OBJECT TO BE WRONG; THE
+      RECONCILIATION TESTS AN IDENTITY BETWEEN THREE QUANTITIES, TWO FROM THE SAME SOURCE -- AN IDENTITY WHOSE TERMS
+      ARE NOT INDEPENDENTLY SOURCED HAS FEWER SIDES THAN IT APPEARS TO."*** **THE RECONCILIATION WAS THE OUTLIER,
+      NOT THE PATTERN**, and it is **held unwired**. *That sentence is the transferable part of last round's finding
+      and belongs in any future check design: count the INDEPENDENT SOURCES, not the terms.*
+  THETAS_DRIFT_NOW_TRAVELS_BESIDE_THE_DECISION_COUNT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      **DE 178 implements ruling (a) at the address the ruling named: THETA'S DRIFT TRAVELS BESIDE THE DECISION
+      COUNT.** *The ruling said the drift goes in the receipt where a reader meets the decision count -- not in a
+      review, not under the number -- and that is where it now is.* ***THE PRICE THE USER SAID MUST BE STATED IS NOW
+      STATED IN THE PLACE A READER CANNOT MISS IT, WHICH IS THE FOURTH INSTANCE TONIGHT OF THE SAME REMEDY:
+      `matched_on`, `MEMBERSHIP_LIMIT`, THE SUPERSEDED SET AT ITS OWN KEY, AND NOW THE DRIFT.*** **A programme that
+      has learned one thing today has learned that content is not enough without an address.**
+  AND_THE_PLANTED_VALUE_TEST_HAD_PLANTED_ONLY_THE_DIAGNOSTIC:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      **And the multi-day verdict is REPOINTED to the settlement endpoint AND NAMES IT -- with a detail that is its
+      own small finding: ITS PLANTED-VALUE TEST PREVIOUSLY PLANTED ONLY THE DIAGNOSTIC, THE BLOCK THE VERDICT NO
+      LONGER READS.** ***A KNOWN-BAD THAT PLANTS A VALUE IN THE BLOCK THE CODE HAS STOPPED READING IS A KNOWN-BAD
+      THAT CANNOT FIRE*** -- rule 15's falsifier quietly disarmed by the very repair that fixed the verdict. *This
+      is the sibling-block class one more time, arriving in the TEST rather than in the code, and it would have left
+      a green cell guarding nothing.* **Caught in the same change that created it.**
+  THE_HOLD_IS_RECORDED_IN_THE_CODE_RATHER_THAN_ONLY_IN_A_DISPATCH:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***AND THE PART OF DE 178 THIS SEAT VALUES MOST: THE RECONCILIATION CALL SITE CARRIES `NOT_WIRED_PENDING_BE_138`
+      WITH THE REASON AND THE EXACT ONE-LINE CALL, SO THE HOLD IS RECORDED IN THE CODE RATHER THAN ONLY IN A
+      DISPATCH*** -- I confirmed the marker is in `de_multiday_gate1_runner.py`. **A hold that lives only in a
+      register entry is invisible to whoever next opens the file**, *and this programme has spent two days on
+      exactly that failure: the right information at an address nobody is required to read.* ***A DELIBERATE GAP
+      THAT NAMES ITSELF, ITS REASON AND ITS REMEDY AT THE SITE OF THE GAP IS THE OPPOSITE OF A SILENT
+      OMISSION.***
+  DA_CLOSED_ITS_OWN_CRITERION_AND_CALLED_ITS_IDENTITY_AN_IDENTITY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      ***DA 166/167 CLOSED ITS OWN CRITERION, AND THE FORM OF THE CLOSURE IS THE POINT: `kept + dropped = all` IS AN
+      IDENTITY OVER AN EXACT PARTITION -- EVIDENCE ABOUT THE PARTITION, NOT THE VALUATION.*** **DA wrote the
+      criterion; REV found it tautological; DA agreed and replaced it rather than defending it.** *That is the third
+      seat today to withdraw its own published work -- BE its derived eight, REV its REVIEW 110 item (4), and now DA
+      its own acceptance criterion* -- **and in each case the seat that withdrew it is the one that had the most to
+      lose by doing so.** ***A CRITERION AUTHOR CONCEDING THAT THE CRITERION MEASURED THE WRONG THING IS THE
+      CHEAPEST CORRECTION AVAILABLE AND THE HARDEST TO MAKE.***
+  THE_REPLACEMENT_IS_PER_SLUG_AND_PER_ROW_AND_BOTH_ARE_EXACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      **And the replacement is exact on both halves, which is what the old form lacked: THE KEPT SIDE PER SLUG --
+      492 EQUATIONS ACROSS 246 SLUGS AGAINST THE LEDGER'S `SETTLEMENT_SLUG` ROWS -- AND THE PARTITION PER ROW:
+      DISJOINT SETS, UNION EQUAL TO CANDIDATES, EVERY DROPPED ROW `(t-t0)*1000 < L` AND EVERY KEPT ROW `>= L`.**
+      ***THE FIRST REPLACES ONE AGGREGATE ANCHOR WITH 492 INDEPENDENT ONES, AND THE SECOND CHECKS THE PARTITION
+      PREDICATE ITSELF RATHER THAN ITS ARITHMETIC CONSEQUENCE*** -- *so the identity that could not fail becomes two
+      families of checks that can, one per slug and one per row.* **BE is implementing it.**
+  BE_IS_BUILDING_09_04_AND_RECORDING_WHICH_DIGESTS_IT_BUILDS_AGAINST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210904a.jsonl
+    as_of: 2026-09-09T15:35:25Z
+    said: >-
+      **BE IS BUILDING 09-04 BY USER RULING, AND I VERIFIED IT AT THE MACHINE**: `p003ev210904a`, **launched
+      15:31:26Z from `wt-be`, payload `be_daybook_build.py`, args `--day 20260904 --placement-latency-ms 250
+      --artifact-revision EV21`, tip `b841683ad2d1...` -- THE CURRENT BRANCH TIP** -- with one lock holder in the
+      usual flock-and-child shape. ***AND THE INSTRUCTION THAT MATTERS GIVEN EVERYTHING ABOVE: IT IS RECORDING WHICH
+      MODULE DIGESTS IT BUILDS AGAINST AND WHETHER ANY OF THE TWELVE IS EXPECTED TO MOVE AGAIN TONIGHT.*** **The
+      09-03 book was built without anyone asking that second question, and the answer turned out to be yes.** *DE
+      was RESET from 97 % at 15:31Z.*
   # --- MEM round 323, 2026-09-09T15:28:30Z ---
   RULING_A_THETA_STAYS_FROZEN_AND_THE_DRIFT_MUST_TRAVEL:
     prov: CHECKED

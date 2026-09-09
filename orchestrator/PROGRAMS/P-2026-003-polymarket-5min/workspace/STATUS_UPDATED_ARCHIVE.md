@@ -22160,3 +22160,55 @@ generation and the window went 4 → 3. Nothing rewritten.
   SOMEBODY DECIDING TO ENUMERATE BY OPERATION. THE THREE NEW SITES ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS
   COSTING.*** Flags 2790 -> 2808, prov 2335 -> 2353; window 3/3, Batch 302 archived. MEM asserts no result.)
 ```
+
+## Batch 306 — archived 2026-09-09T15:35:25Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T15:13:26Z (MEM ROUND 321 -- R-868 SWEPT. ***THE SIBLING-BLOCK CLASS IS CLOSED, BE RELOCATED A FALSIFIER RATHER
+  THAN DROPPING IT, AND THE FIRST NULL SINCE THE RETRACTION IS RUNNING.*** ***THE CLASS CLOSES BECAUSE ITS MEMBERSHIP
+  TEST IS MECHANICAL, WHICH I DROVE MYSELF ON THE REAL POINT-ESTIMATE ARTIFACT RATHER THAN TAKING THE LIST: a site is
+  in it when it NAMES ONE OF TWO SIBLING BLOCKS LITERALLY AND READS A FIELD THAT EXISTS IN BOTH, and intersecting the
+  two blocks gives `economic` 6 FIELDS, `economic_settlement` 17, AND THE SHARED SET EXACTLY `['Z',
+  'null_draws_summary', 'null_mean', 'null_sd', 'p_location']` -- FIVE NAMES EACH READABLE FROM THE WRONG BLOCK WITH
+  NO ERROR.*** **SIX SITES, THREE MODULES, THREE NEW, CLOSED OVER A STATED SCOPE** -- *the stated scope being the
+  load-bearing part, since a closure without one is a claim about the universe.* ***THE WORST IS NOT A GUARD:
+  `:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT FROM `r["economic"]["Z"]`, THE DIAGNOSTIC, WHILE R-801 MADE
+  SETTLEMENT PRIMARY -- AND THAT ENDPOINT CHOICE IS A RULING WITH THE USER, NOT A PATCH, THOUGH IT MUST NAME THE
+  ENDPOINT IT USED EITHER WAY***; at my read the line now carries `# ---- DE 176 / REV 140: THE VERDICT NAMES ITS
+  ENDPOINT`, **so the naming half has landed while the choice stays with the USER** -- *a verdict that names its
+  endpoint is honest at either setting; one that does not is wrong at both.* **THE SECOND WORST WAS
+  `da_gate1_day_verdict.py` CONTAINING ZERO OCCURRENCES OF `economic_settlement`, ITS INDEPENDENT RECOMPUTE NEVER
+  TOUCHING THE RULED ENDPOINT AND ITS SEAL PREDICATE REPORTING `sealed: True` ON A RECEIPT CARRYING `D_E_settle` --
+  AND I COUNTED BOTH SIDES: THE MODULE NOW HAS EIGHT.** ***AND THE DISTINCTION THE COORDINATOR ASKED FOR EXPLICITLY:
+  DA'S MANUAL RECOMPUTE IS NOT INVALIDATED -- THE MODULE IS BLIND, NOT THE ROUND***, since DA 163's reproduction was
+  computed FROM THE FILL ROWS BY A SECOND IMPLEMENTATION with zero per-slug disagreements across 246 slugs x 2 books
+  x 2 arms, *and a finding about an instrument voids the results that went THROUGH it, not everything the seat
+  produced.* ***BE'S ANSWER ON THE FALSIFIER, AS THE STANDARD AND NOT A NOTE: DA'S CRITERIA (1) AND (3) CANNOT BE MET
+  AT BUILD BECAUSE THE BUILD CANNOT PRODUCE THE NUMBER THE RECONCILIATION COMPARES AGAINST, SO BE MOVED THE FALSIFIER
+  TO WHERE BOTH NUMBERS EXIST -- THE POINT ESTIMATE: `KEPT-VALUE + DROPPED-VALUE = ALL-TRANCHE VALUE`, AND
+  `KEPT-VALUE == 37,315.551431` TO THE DIGIT. "THE EQUIVALENCE IS NOT UNFALSIFIABLE -- IT IS FALSIFIABLE ONE SEAM
+  OVER, WHERE DA SPECIFIED IT."*** **This programme's standing remedy for a weak check has been to strengthen it IN
+  PLACE; this is the other move -- KEEP THE CHECK AND CHANGE WHERE IT RUNS** -- ***AND THE USER'S RULING (b)
+  THEREFORE STANDS AND NO L=0 BUILD IS NEEDED.*** **DA's (2), (4) and (5) are IN THE ARTIFACT BY NAME --
+  `WHAT_THE_DROPPED_SET_IS`, `HOW_IT_MUST_BE_SAID`, `WHAT_MUST_NOT_BE_SAID`, the >=5-day scope** -- *a specification
+  whose clauses become FIELD NAMES travels with the number, and `WHAT_MUST_NOT_BE_SAID` turns DA's three refusals
+  into a field a reader RESOLVES rather than a paragraph a reader may skip* -- **and
+  `both_legs_computable_for_every_tranche` is COMPUTED via `_legs_fields_present` RATHER THAN ASSUMED, "because a
+  missing field would silently omit a tranche from a total", which is the exact defect class this programme has paid
+  for repeatedly, anticipated in a field BEFORE the number exists.** ***DE 176 IS RUNNING HAZARD'S NULL -- THE FIRST
+  NULL SINCE THE RETRACTION -- UNDER RULING B, WITH RULE 6 BINDING (DESIGN AND MINIMUM DECLARED BEFORE THE RESULT,
+  >=200 DRAWS, THE DECISION METRIC AND NEVER A PROXY, AND A SHORT COUNT REFUSES), THE 1-IN-3,862 EXCEPTION REQUIRED
+  TO TRAVEL WITH ITS DENOMINATOR, AND CONDVALUE'S FAIL-CLOSED STATE STATED WITH ITS REASON.*** *A rate quoted without
+  the population it is a rate over is how "1 in 3,862" becomes "negligible" without anyone deciding it; and a null
+  that quietly returns fewer draws than declared is an under-sampled null wearing a declared one's name.* **REV 141's
+  DESIGN ANSWER AS THE DISPOSITION: NOT IMPOSSIBLE THIS WEEK -- FIX THE SIX AND MAKE THE MEMBERSHIP TEST A CELL, "A
+  CLASS THAT IS ENUMERABLE IS A CLASS THAT IS CHECKABLE"** -- *the same intersection I drove by hand can be computed
+  by a battery cell on every run, so a seventh site would announce itself instead of waiting to be found.* **HOUSEKEEPING,
+  REPORTED BECAUSE I REPORTED THE BLOCK: LAST ROUND'S `Q-MEM-308` WAS BLOCKED BY A DIVERGED BRANCH AND HAS NOW LANDED
+  -- I refused to rebase because two of four unpushed commits were DA's (rule 21), the divergence was resolved by
+  someone else, my commits replayed as `12bbd6b` and `4253bec` with all content intact at flags 2808 / prov 2353** --
+  ***AND ONE CORRECTION TO MY OWN CHECK: I MOMENTARILY READ A `grep -c` OF ZERO AS A LOST PARAGRAPH; THE PHRASE
+  "format string" SIMPLY WRAPS A LINE AND THE PARAGRAPH IS AT `HANDOFF.md:81`. MY GREP WAS THE ERROR, NOT THE FILE,
+  AND I VERIFIED BEFORE REPORTING RATHER THAN AFTER.*** Flags 2808 -> 2822, prov 2353 -> 2367; window 3/3, Batch 303
+  archived. MEM asserts no result.)
+```
