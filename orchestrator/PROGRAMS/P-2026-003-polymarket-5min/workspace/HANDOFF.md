@@ -1,3 +1,81 @@
+# READ FIRST — round 325 (MEM, 2026-09-09T15:42:43Z, tip `03d495b`)
+
+# 🔬 THE REBUILD BUYS PROVENANCE, NOT CORRECTNESS — and I drove the mechanism
+
+**DA 168/169: *"nothing that moved can change this book's scores."*** Established **structurally rather than by
+classifying commits** — *"these four changes look harmless" is an opinion; "the scoring path is one function and it
+is byte-identical" is a measurement.*
+
+**The chain, confirmed at the code:**
+
+| | |
+|---|---|
+| `SCORING_ENTRY_POINTS` | **exactly two functions** in `de_phase4_diag_runner` — `assemble_streaming`, `build_tape_index` |
+| the refusing module | **on the executed path** via `build_tape_index → _ruled_day_set_imported → _G.ruled_day_set()` |
+| **the scoring path through it** | ***exactly one function: `ruled_day_set`*** |
+| **hashed by me from disk** | **8 lines, sha256[:16] = `41988ef4272c73a9` — DA's digest to the character** |
+| module size | I measure **16,626** lines against DA's 16,205 — *consistent with the module having moved again since; the **ratio** is the point* |
+
+*The function reads one constant, and its docstring says why it is not a parameter: **"a lock whose input the caller
+supplies is not a lock."*** **The four commits touched 8 functions and 11 module constants; the intersection with
+that path is EMPTY** — ***and I checked the one input that could have carried a change in: `PARAMS_REL` appears 25
+times and is untouched across the last four commits (I diffed for `^[+-]PARAMS_REL` and found nothing).***
+
+**The two changes that LOOKED alarming and were not:** `day_decision_population`'s **seven lines are all
+ADDITIONS** — a `theta_drift` field appended, **`decisions`, `by_side` and every computed quantity untouched** — and
+the multi-day repoint is **cross-day, not per-day**. ***And the first is the function whose defect started this whole
+thread, so seeing it in a diff is exactly where a classify-the-commits approach would have stopped and ordered the
+rebuild.***
+
+***DA's sentence, verbatim: "more is reported, no number differs."***
+
+**⚠ And DA states its own limit before anyone asks:** the result is about **this book against these four commits**
+and is **not a general licence**; the next refusal needs the same derivation. *The scope clause is the difference
+between evidence and precedent.* **REV 146 is deriving the reachable set independently** — *"because a waiver would
+rest on 'the path is one function' and that is about to be load-bearing."* **The correct trigger, in the right
+terms.** *(My reproduction corroborates DA's **invocation**; REV tests the **operation** — the same distinction REV
+135 drew about my pure-AST route.)*
+
+# 🧭 THE DESIGN ANSWER — ***"do not narrow the condition. Widen the payload."***
+
+**Whole-module stays the predicate — *"these bytes produced this book"*, and there is no honest weaker form.** *The
+temptation was to make the predicate reachability-aware so this refusal would not have fired — trading a guard that
+is **right** for one that is **convenient**.*
+
+**But the refusal must also carry:** the **reachable closure from the scoring entry points ∩ what changed**, plus the
+**byte-identity of the functions on that path** — **so the rebuild-versus-supersede decision is readable from the
+refusal.** *A refusal that carries its own diagnosis costs the next seat minutes instead of a round.*
+
+***And the constraint that keeps it honest: the payload is EVIDENCE FOR A HUMAN DECISION, not a licence for the code
+to proceed — the run still refuses.*** *Without that clause the widening becomes the narrowing by another route: a
+refusal carrying a field that says "nothing relevant changed" is one refactor away from a refusal that consults it.*
+**This programme has watched a diagnostic become a licence three times tonight.**
+
+# ⏳ THE PENDING RULING — and its precedent
+
+**May HAZARD's null run on the EV21 book under an explicit recorded waiver instead of a 68-minute rebuild?**
+***Structurally the same question the user already ruled on for `MATCHES_WITH_UNNAMED_MEMBERS`: may a run proceed
+past a refusal when the reason is known and named — and they answered YES, PROVIDED THE EXEMPTION IS A PREDICATE
+RATHER THAN A CONVENTION.*** *The user has already supplied the **shape** of the answer; the work is establishing
+whether this exemption can be written as a predicate — and **REV 139 drove that the last one was not a predicate when
+it was first claimed to be**. The same trap is available here.*
+
+**The coordinator is NOT putting it to the user until REV's independent derivation lands, *"because it would
+otherwise rest on one seat's word."*** ***The same judgement as holding the reconciliation wiring, made one step
+earlier again: a ruling requested on evidence that has not been independently derived is a ruling the user cannot
+properly give.***
+
+## STATE
+
+**09-04 is building (`p003ev210904a`) with the stage table now STREAMING LIVE**, so a killed run leaves A0/A1/A2
+behind — ***the recording gap BE itself named at BE 128, closed by BE, on the very next build.*** *Two rounds ago BE
+could not account for twenty minutes because the lost run had left only two scalars.*
+
+Counts: flags 2866 → 2879, provenance 2411 → 2424 (thirteen written, thirteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 307 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 324 (MEM, 2026-09-09T15:35:25Z, tip `b841683`)
 
 # ⛔ THE STRUCTURAL PROBLEM — the corrected book REFUSES ITS OWN REPLAY

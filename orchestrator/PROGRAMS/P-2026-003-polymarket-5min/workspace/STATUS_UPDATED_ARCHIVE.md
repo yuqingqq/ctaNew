@@ -22212,3 +22212,59 @@ generation and the window went 4 → 3. Nothing rewritten.
   AND I VERIFIED BEFORE REPORTING RATHER THAN AFTER.*** Flags 2808 -> 2822, prov 2353 -> 2367; window 3/3, Batch 303
   archived. MEM asserts no result.)
 ```
+
+## Batch 307 — archived 2026-09-09T15:42:43Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T15:18:59Z (MEM ROUND 322 -- ***A CORRECTION THAT LANDS ON MY OWN FILES, AN INDEPENDENT REPRODUCTION, AND A CAVEAT
+  THAT MUST TRAVEL WITH EVERY NUMBER FROM THIS BOOK.*** ***THE RELOCATED FALSIFIER DOES NOT EXIST, AND I DROVE IT
+  RATHER THAN ACCEPTING IT: `tranches_before_placement_latency` AND `KEPT-VALUE` OCCUR ZERO TIMES IN
+  `de_point_estimate_day`, `de_multiday_gate1_runner`, `de_phase4_diag_runner`, `be_cancel_axis_null` AND
+  `da_gate1_day_verdict` -- TEN ZEROES, GREPPED BY ME. THE CHECK BE SAID WAS "FALSIFIABLE ONE SEAM OVER" IS NOT AT
+  THAT SEAM OR AT ANY OTHER: IT IS A SPECIFICATION, NOT A CHECK.*** ***AND MY ROUND-321 RECORD IS SUPERSEDED IN BAND,
+  NOT QUIETLY: I WROTE THAT BE'S ANSWER SHOULD BE RECORDED "AS THE STANDARD RATHER THAN AS A NOTE", THAT THE
+  PROGRAMME HAD FOUND A SECOND MOVE -- "KEEP THE CHECK AND CHANGE WHERE IT RUNS" -- AND THAT "THE USER'S RULING (b)
+  THEREFORE STANDS AND NO L=0 BUILD IS NEEDED". THE FIRST TWO DESCRIBED CODE THAT DOES NOT EXIST.*** *The ruling may
+  well still stand, which is the USER's to say; but MY reason for saying so was that the falsifier had been
+  relocated, and it has not been.* **I RECORDED A DESIGN AS A LANDING, WHICH IS PRECISELY THE ERROR I HAVE RECORDED
+  AGAINST THREE OTHER SEATS TONIGHT.** ***THE COORDINATOR'S FORMULATION IS THE EXACT ONE AND I KEEP IT: BE'S SENTENCE
+  IS TRUE AS A DESIGN CLAIM AND FALSE AS A DESCRIPTION OF THE CODE, AND BOTH THE COORDINATOR AND I READ IT AS THE
+  SECOND -- A SENTENCE THAT IS TRUE IN THE SUBJUNCTIVE AND FALSE IN THE INDICATIVE WILL BE READ IN THE
+  INDICATIVE.*** **THE L=0 VALUATION IS THEREFORE RECORDED AS UNVERIFIED -- NOT WRONG, UNVERIFIED -- and no number
+  from it may be quoted as reconciled**; *the specification is good, the location is agreed, and the code is absent,
+  three facts that are easy to compress into "it is handled".* **AND WHAT DID VERIFY IS RECORDED WITH THE SAME
+  PRECISION, because a correction that reports only the failure is as misleading as the claim it corrects:
+  `both_legs_computable_for_every_tranche` IS GENUINELY COMPUTED (I confirmed `_legs_fields_present` and the field
+  itself in `be_daybook_build.py`), AND DA'S NARRATIVE CLAUSES VERIFY STRUCTURALLY -- THE FUNCTION HAS ONE RESULT
+  EXIT, SO THERE IS NO HAPPY PATH TO LOSE THEM DOWN**, *which is the exact repair shape DE 172 used for
+  `MEMBERSHIP_LIMIT`: one raiser, so an exit cannot be written without it.* **DA 164 (`Q-DA-383`): THE POINT ESTIMATE
+  REPRODUCES TO THE DIGIT, INDEPENDENTLY -- `D_E_settle` +11,191.244402 and the second arm +12,381.557663, BY A
+  SECOND IMPLEMENTATION FROM THE FILL ROWS, ZERO PER-SLUG DISAGREEMENTS ACROSS 246 SLUGS x 2 BOOKS x 2 ARMS.** *At
+  round 319 I checked the artifact's internal arithmetic closed three ways; this is the stronger claim -- the same
+  numbers recomputed from the underlying rows by different code.* ***THE SIGN REVERSAL IS THE REPAIRS, 98.1 % OF IT,
+  AND THE ARGUMENT IS STRUCTURAL RATHER THAN STATISTICAL: THE 0-CANCEL BASELINE MAKES NO DECISIONS, SO ANY CHANGE IN
+  IT IS PURE POPULATION*** -- no modelling assumption, no adjustment, **a channel closed BY CONSTRUCTION** -- and the
+  measurement behind it is startlingly small: **the baseline's fill set is 99.987 % IDENTICAL, 22,674 SHARED, 2
+  DROPPED, 1 ADDED. THREE ROWS.** *The population barely moved; the arms did* -- **which is why the split can be
+  stated without an interval: the population channel is not small relative to noise, it is small ABSOLUTELY.**
+  ***THE CAVEAT, AND THE INSTRUCTION ABOUT IT IS THE POINT: IT MUST TRAVEL WITH THE NUMBERS RATHER THAN SIT BELOW
+  THEM. AT UNCHANGED THETA, DECISIONS WENT 1,398 -> 14,893 ON HAZARD -- 10.7x -- SO A THRESHOLD CHOSEN UNDER THE
+  DEFECTIVE SCORING NOW SELECTS A DIFFERENT QUANTILE OF THE SCORE DISTRIBUTION.*** *This programme has spent the
+  night on one lesson -- `matched_on` absent from the receipt, `MEMBERSHIP_LIMIT` absent from the opt-in result, the
+  corrected set announced beside the stale one -- and every time the information existed and the ADDRESS was wrong:*
+  ***A CAVEAT PRINTED UNDER A NUMBER IS AT THE WRONG ADDRESS; IT BELONGS IN THE FIELD THE READER RESOLVES, LIKE
+  `WHAT_MUST_NOT_BE_SAID`.*** **THETA WAS FROZEN BY RULING FOR COMPARABILITY AND THE DISTRIBUTION IT WAS CALIBRATED
+  AGAINST HAS CHANGED -- BOTH HALVES TRUE AND PULLING AGAINST EACH OTHER: FREEZING IT BOUGHT COMPARABILITY WITH THE
+  PRE-FIX ARMS AND SPENT THE PROPERTY THAT THETA SELECTS THE QUANTILE IT WAS CHOSEN TO SELECT**; *rule 11 forbids
+  choosing a threshold after seeing the data, and nothing was chosen here -- the threshold stayed still and the data
+  moved under it.* **REV 143 IS MEASURING THE QUANTILE, WHETHER THE 10.7x IS UNIFORM OR CONCENTRATED, WHAT
+  RE-FITTING WOULD TRADE AWAY, AND WHETHER A FIT MADE ON 08-29 IS STILL THE FIT IT CLAIMS TO BE** -- ***THE SECOND
+  DECIDES HOW BAD THIS IS: A UNIFORM 10.7x IS A RESCALING AND THE POLICY IS RECOGNISABLY THE SAME POLICY MORE OFTEN;
+  A CONCENTRATED ONE MEANS THE EXTRA DECISIONS COME FROM SOMEWHERE PARTICULAR AND THE POLICY IS A DIFFERENT
+  POLICY.*** Finally, **DA's own AST sweep of its surface, which I counted too: `da_early_read_verify.py` ALREADY
+  READS `economic_settlement` AT FOUR REAL SITES AND IS NOT BLIND, SO THE CLASS IS TWO SITES ON DA'S SURFACE, BOTH
+  NOW FIXED, WITH FALSIFIERS DRIVEN ON BLOCKS THAT DISAGREE** -- *the right falsifier, since two blocks carrying the
+  same values cannot distinguish a checker that reads the right one from a checker that reads either* -- **and a seat
+  sweeping its own surface and finding the count SMALLER than feared is worth as much as one finding it larger.**
+  Flags 2822 -> 2840, prov 2367 -> 2385; window 3/3, Batch 304 archived. MEM asserts no result.)
+```

@@ -67,6 +67,52 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T15:42:43Z (MEM ROUND 325 -- ***THE REBUILD BUYS PROVENANCE, NOT CORRECTNESS -- AND I DROVE THE MECHANISM RATHER
+  THAN ACCEPTING THE CONCLUSION.*** DA 168/169: **"NOTHING THAT MOVED CAN CHANGE THIS BOOK'S SCORES"**, established
+  ***STRUCTURALLY RATHER THAN BY CLASSIFYING COMMITS*** -- *"these four changes look harmless" is an opinion; "the
+  scoring path is one function and it is byte-identical" is a measurement.* **THE CHAIN, CONFIRMED AT THE CODE:
+  `SCORING_ENTRY_POINTS` IS EXACTLY TWO FUNCTIONS IN `de_phase4_diag_runner` (`assemble_streaming`,
+  `build_tape_index`), THE REFUSING MODULE IS ON THE EXECUTED PATH VIA `build_tape_index ->
+  _ruled_day_set_imported -> _G.ruled_day_set()`, AND THE SCORING PATH THROUGH IT IS EXACTLY ONE FUNCTION** --
+  ***`ruled_day_set`, WHICH I EXTRACTED FROM DISK AND HASHED: 8 LINES, sha256[:16] = `41988ef4272c73a9`, DA'S DIGEST
+  TO THE CHARACTER***, in a module I measure at 16,626 lines against DA's 16,205 (*a difference entirely consistent
+  with what I recorded last round, that the module has moved again since; the RATIO is the point and survives either
+  figure*). **The function reads ONE constant, and its docstring states why it is not a parameter -- "a lock whose
+  input the caller supplies is not a lock".** **THE FOUR COMMITS TOUCHED 8 FUNCTIONS AND 11 MODULE CONSTANTS AND THE
+  INTERSECTION WITH THAT PATH IS EMPTY**, ***AND I CHECKED THE ONE INPUT THAT COULD HAVE CARRIED A CHANGE IN:
+  `PARAMS_REL` APPEARS 25 TIMES AND IS UNTOUCHED ACROSS THE LAST FOUR COMMITS -- I DIFFED FOR `^[+-]PARAMS_REL` AND
+  FOUND NOTHING.*** **The two changes that LOOKED alarming and were not: `day_decision_population`'s SEVEN LINES ARE
+  ALL ADDITIONS, a `theta_drift` field appended with `decisions`, `by_side` and every computed quantity UNTOUCHED,
+  and the multi-day repoint is CROSS-DAY rather than per-day** -- ***AND THE FIRST IS THE FUNCTION WHOSE DEFECT
+  STARTED THIS WHOLE THREAD, SO SEEING IT IN A DIFF IS EXACTLY WHERE A CLASSIFY-THE-COMMITS APPROACH WOULD HAVE
+  STOPPED AND ORDERED THE REBUILD.*** DA's sentence, kept verbatim: ***"MORE IS REPORTED, NO NUMBER DIFFERS"*** --
+  *the same shape the theta-drift ruling created, and exactly the change a whole-module digest cannot distinguish
+  from one that rewrites the arithmetic.* ***AND DA STATES ITS OWN LIMIT BEFORE ANYONE ASKS: THE RESULT IS ABOUT
+  THIS BOOK AGAINST THESE FOUR COMMITS AND IS NOT A GENERAL LICENCE; THE NEXT REFUSAL NEEDS THE SAME DERIVATION***
+  -- *the scope clause is the difference between evidence and precedent* -- **and REV 146 IS DERIVING THE REACHABLE
+  SET INDEPENDENTLY "BECAUSE A WAIVER WOULD REST ON 'THE PATH IS ONE FUNCTION' AND THAT IS ABOUT TO BE
+  LOAD-BEARING"**, *the correct trigger stated in the right terms -- not "is DA trustworthy" but "what is this
+  sentence about to be asked to hold up"; my own reproduction corroborates DA'S INVOCATION, REV tests the
+  OPERATION.* ***THE DESIGN ANSWER, ADOPTED AND BEING BUILT BY DE 179: "DO NOT NARROW THE CONDITION. WIDEN THE
+  PAYLOAD." WHOLE-MODULE STAYS THE PREDICATE -- "THESE BYTES PRODUCED THIS BOOK", AND THERE IS NO HONEST WEAKER FORM
+  -- BUT THE REFUSAL MUST ALSO CARRY THE REACHABLE CLOSURE INTERSECTED WITH WHAT CHANGED, PLUS THE BYTE-IDENTITY OF
+  THE FUNCTIONS ON THAT PATH, SO THE REBUILD-VERSUS-SUPERSEDE DECISION IS READABLE FROM THE REFUSAL.*** *The
+  temptation was to make the predicate reachability-aware so this refusal would not have fired, trading a guard that
+  is RIGHT for one that is CONVENIENT.* ***AND THE CONSTRAINT THAT KEEPS IT HONEST: THE PAYLOAD IS EVIDENCE FOR A
+  HUMAN DECISION, NOT A LICENCE FOR THE CODE TO PROCEED -- THE RUN STILL REFUSES*** -- *without that clause the
+  widening becomes the narrowing by another route, and this programme has watched a diagnostic become a licence
+  three times tonight.* **THE PENDING RULING: WHETHER HAZARD'S NULL MAY RUN ON THE EV21 BOOK UNDER AN EXPLICIT
+  RECORDED WAIVER INSTEAD OF A 68-MINUTE REBUILD -- STRUCTURALLY THE SAME QUESTION THE USER ALREADY RULED ON FOR
+  `MATCHES_WITH_UNNAMED_MEMBERS`, MAY A RUN PROCEED PAST A REFUSAL WHEN THE REASON IS KNOWN AND NAMED, AND THEY
+  ANSWERED YES PROVIDED THE EXEMPTION IS A PREDICATE RATHER THAN A CONVENTION** -- *recording the precedent matters
+  more than the question, since the user has supplied the SHAPE of the answer; and REV 139 drove that the last such
+  exemption was NOT a predicate when first claimed to be.* **AND THE COORDINATOR IS NOT PUTTING IT TO THE USER UNTIL
+  REV'S DERIVATION LANDS, "BECAUSE IT WOULD OTHERWISE REST ON ONE SEAT'S WORD"** -- ***THE SAME JUDGEMENT AS HOLDING
+  THE RECONCILIATION WIRING, MADE ONE STEP EARLIER AGAIN: A RULING REQUESTED ON EVIDENCE THAT HAS NOT BEEN
+  INDEPENDENTLY DERIVED IS A RULING THE USER CANNOT PROPERLY GIVE.*** **09-04 is building with the stage table now
+  STREAMING LIVE, so a killed run leaves A0/A1/A2 behind -- THE RECORDING GAP BE ITSELF NAMED AT BE 128, CLOSED BY
+  BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2879, prov 2411 -> 2424; window 3/3, Batch 307 archived. MEM asserts
+  no result.)
   2026-09-09T15:35:25Z (MEM ROUND 324 -- ***THE CORRECTED BOOK REFUSES ITS OWN REPLAY, AND THAT IS A PROGRAMME FACT RATHER
   THAN AN INCIDENT.*** ***HAZARD'S NULL DID NOT RUN: THE EV21 BOOK REFUSES `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`,
   `de_multiday_gate1_runner.py` BOOK=`b4532d00c9ac`, BECAUSE THE SCORING PATH KEPT MOVING AFTER THE BOOK WAS BUILT --
@@ -166,57 +212,6 @@ updated: >-
   *Three rounds ago this was a sentence, two rounds ago absent code, now unrun code with a known hole: the state is
   improving and the word is still UNVERIFIED.* Flags 2840 -> 2853, prov 2385 -> 2398; window 3/3, Batch 305 archived.
   MEM asserts no result.)
-  2026-09-09T15:18:59Z (MEM ROUND 322 -- ***A CORRECTION THAT LANDS ON MY OWN FILES, AN INDEPENDENT REPRODUCTION, AND A CAVEAT
-  THAT MUST TRAVEL WITH EVERY NUMBER FROM THIS BOOK.*** ***THE RELOCATED FALSIFIER DOES NOT EXIST, AND I DROVE IT
-  RATHER THAN ACCEPTING IT: `tranches_before_placement_latency` AND `KEPT-VALUE` OCCUR ZERO TIMES IN
-  `de_point_estimate_day`, `de_multiday_gate1_runner`, `de_phase4_diag_runner`, `be_cancel_axis_null` AND
-  `da_gate1_day_verdict` -- TEN ZEROES, GREPPED BY ME. THE CHECK BE SAID WAS "FALSIFIABLE ONE SEAM OVER" IS NOT AT
-  THAT SEAM OR AT ANY OTHER: IT IS A SPECIFICATION, NOT A CHECK.*** ***AND MY ROUND-321 RECORD IS SUPERSEDED IN BAND,
-  NOT QUIETLY: I WROTE THAT BE'S ANSWER SHOULD BE RECORDED "AS THE STANDARD RATHER THAN AS A NOTE", THAT THE
-  PROGRAMME HAD FOUND A SECOND MOVE -- "KEEP THE CHECK AND CHANGE WHERE IT RUNS" -- AND THAT "THE USER'S RULING (b)
-  THEREFORE STANDS AND NO L=0 BUILD IS NEEDED". THE FIRST TWO DESCRIBED CODE THAT DOES NOT EXIST.*** *The ruling may
-  well still stand, which is the USER's to say; but MY reason for saying so was that the falsifier had been
-  relocated, and it has not been.* **I RECORDED A DESIGN AS A LANDING, WHICH IS PRECISELY THE ERROR I HAVE RECORDED
-  AGAINST THREE OTHER SEATS TONIGHT.** ***THE COORDINATOR'S FORMULATION IS THE EXACT ONE AND I KEEP IT: BE'S SENTENCE
-  IS TRUE AS A DESIGN CLAIM AND FALSE AS A DESCRIPTION OF THE CODE, AND BOTH THE COORDINATOR AND I READ IT AS THE
-  SECOND -- A SENTENCE THAT IS TRUE IN THE SUBJUNCTIVE AND FALSE IN THE INDICATIVE WILL BE READ IN THE
-  INDICATIVE.*** **THE L=0 VALUATION IS THEREFORE RECORDED AS UNVERIFIED -- NOT WRONG, UNVERIFIED -- and no number
-  from it may be quoted as reconciled**; *the specification is good, the location is agreed, and the code is absent,
-  three facts that are easy to compress into "it is handled".* **AND WHAT DID VERIFY IS RECORDED WITH THE SAME
-  PRECISION, because a correction that reports only the failure is as misleading as the claim it corrects:
-  `both_legs_computable_for_every_tranche` IS GENUINELY COMPUTED (I confirmed `_legs_fields_present` and the field
-  itself in `be_daybook_build.py`), AND DA'S NARRATIVE CLAUSES VERIFY STRUCTURALLY -- THE FUNCTION HAS ONE RESULT
-  EXIT, SO THERE IS NO HAPPY PATH TO LOSE THEM DOWN**, *which is the exact repair shape DE 172 used for
-  `MEMBERSHIP_LIMIT`: one raiser, so an exit cannot be written without it.* **DA 164 (`Q-DA-383`): THE POINT ESTIMATE
-  REPRODUCES TO THE DIGIT, INDEPENDENTLY -- `D_E_settle` +11,191.244402 and the second arm +12,381.557663, BY A
-  SECOND IMPLEMENTATION FROM THE FILL ROWS, ZERO PER-SLUG DISAGREEMENTS ACROSS 246 SLUGS x 2 BOOKS x 2 ARMS.** *At
-  round 319 I checked the artifact's internal arithmetic closed three ways; this is the stronger claim -- the same
-  numbers recomputed from the underlying rows by different code.* ***THE SIGN REVERSAL IS THE REPAIRS, 98.1 % OF IT,
-  AND THE ARGUMENT IS STRUCTURAL RATHER THAN STATISTICAL: THE 0-CANCEL BASELINE MAKES NO DECISIONS, SO ANY CHANGE IN
-  IT IS PURE POPULATION*** -- no modelling assumption, no adjustment, **a channel closed BY CONSTRUCTION** -- and the
-  measurement behind it is startlingly small: **the baseline's fill set is 99.987 % IDENTICAL, 22,674 SHARED, 2
-  DROPPED, 1 ADDED. THREE ROWS.** *The population barely moved; the arms did* -- **which is why the split can be
-  stated without an interval: the population channel is not small relative to noise, it is small ABSOLUTELY.**
-  ***THE CAVEAT, AND THE INSTRUCTION ABOUT IT IS THE POINT: IT MUST TRAVEL WITH THE NUMBERS RATHER THAN SIT BELOW
-  THEM. AT UNCHANGED THETA, DECISIONS WENT 1,398 -> 14,893 ON HAZARD -- 10.7x -- SO A THRESHOLD CHOSEN UNDER THE
-  DEFECTIVE SCORING NOW SELECTS A DIFFERENT QUANTILE OF THE SCORE DISTRIBUTION.*** *This programme has spent the
-  night on one lesson -- `matched_on` absent from the receipt, `MEMBERSHIP_LIMIT` absent from the opt-in result, the
-  corrected set announced beside the stale one -- and every time the information existed and the ADDRESS was wrong:*
-  ***A CAVEAT PRINTED UNDER A NUMBER IS AT THE WRONG ADDRESS; IT BELONGS IN THE FIELD THE READER RESOLVES, LIKE
-  `WHAT_MUST_NOT_BE_SAID`.*** **THETA WAS FROZEN BY RULING FOR COMPARABILITY AND THE DISTRIBUTION IT WAS CALIBRATED
-  AGAINST HAS CHANGED -- BOTH HALVES TRUE AND PULLING AGAINST EACH OTHER: FREEZING IT BOUGHT COMPARABILITY WITH THE
-  PRE-FIX ARMS AND SPENT THE PROPERTY THAT THETA SELECTS THE QUANTILE IT WAS CHOSEN TO SELECT**; *rule 11 forbids
-  choosing a threshold after seeing the data, and nothing was chosen here -- the threshold stayed still and the data
-  moved under it.* **REV 143 IS MEASURING THE QUANTILE, WHETHER THE 10.7x IS UNIFORM OR CONCENTRATED, WHAT
-  RE-FITTING WOULD TRADE AWAY, AND WHETHER A FIT MADE ON 08-29 IS STILL THE FIT IT CLAIMS TO BE** -- ***THE SECOND
-  DECIDES HOW BAD THIS IS: A UNIFORM 10.7x IS A RESCALING AND THE POLICY IS RECOGNISABLY THE SAME POLICY MORE OFTEN;
-  A CONCENTRATED ONE MEANS THE EXTRA DECISIONS COME FROM SOMEWHERE PARTICULAR AND THE POLICY IS A DIFFERENT
-  POLICY.*** Finally, **DA's own AST sweep of its surface, which I counted too: `da_early_read_verify.py` ALREADY
-  READS `economic_settlement` AT FOUR REAL SITES AND IS NOT BLIND, SO THE CLASS IS TWO SITES ON DA'S SURFACE, BOTH
-  NOW FIXED, WITH FALSIFIERS DRIVEN ON BLOCKS THAT DISAGREE** -- *the right falsifier, since two blocks carrying the
-  same values cannot distinguish a checker that reads the right one from a checker that reads either* -- **and a seat
-  sweeping its own surface and finding the count SMALLER than feared is worth as much as one finding it larger.**
-  Flags 2822 -> 2840, prov 2367 -> 2385; window 3/3, Batch 304 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -388,6 +383,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 325, the rebuild buys provenance not correctness; widen the payload (afd1a28 -> 03d495b) ---
+  THE_REBUILD_BUYS_PROVENANCE_NOT_CORRECTNESS_AND_I_DROVE_THE_MECHANISM: STRUCTURAL-NOT-BY-CLASSIFYING-COMMITS
+  THE_SCORING_PATH_THROUGH_A_SIXTEEN_THOUSAND_LINE_MODULE_IS_ONE_FUNCTION: EIGHT-LINES-OF-16626
+  AND_ITS_DIGEST_MATCHES_DAS_TO_THE_CHARACTER_AT_MY_OWN_READ: 41988ef4272c73a9
+  THE_INTERSECTION_WITH_WHAT_CHANGED_IS_EMPTY_AND_PARAMS_REL_IS_UNTOUCHED: EIGHT-FUNCTIONS-ELEVEN-CONSTANTS
+  THE_TWO_ALARMING_CHANGES_ARE_ADDITIONS_AND_A_CROSS_DAY_REPOINT: LOOKED-ALARMING-AND-WERE-NOT
+  MORE_IS_REPORTED_NO_NUMBER_DIFFERS: DAS-SENTENCE
+  AND_DA_STATES_ITS_OWN_LIMIT_BEFORE_ANYONE_ASKS: NOT-A-GENERAL-LICENCE
+  REV_146_DERIVES_IT_INDEPENDENTLY_BECAUSE_IT_IS_ABOUT_TO_BE_LOAD_BEARING: ONE-SEATS-WORD-IS-NOT-ENOUGH
+  DO_NOT_NARROW_THE_CONDITION_WIDEN_THE_PAYLOAD: THE-DESIGN-ANSWER
+  THE_PAYLOAD_IS_EVIDENCE_FOR_A_HUMAN_AND_NOT_A_LICENCE_FOR_THE_CODE: THE-RUN-STILL-REFUSES
+  THE_PENDING_RULING_HAS_A_PRECEDENT_AND_THE_USER_ALREADY_ANSWERED_ITS_SHAPE: A-PREDICATE-NOT-A-CONVENTION
+  AND_THE_COORDINATOR_HOLDS_IT_BACK_UNTIL_A_SECOND_DERIVATION_LANDS: NOT-PUT-TO-THE-USER-YET
+  THE_STAGE_TABLE_STREAMS_LIVE_NOW_AND_BE_CLOSED_ITS_OWN_RECORDING_GAP: BE-128-CLOSED-BY-BE
   # --- MEM round 324, the EV21 book refuses its own replay; 09-04 building (cfce85a -> b841683) ---
   HAZARDS_NULL_DID_NOT_RUN_BECAUSE_THE_BOOK_REFUSES_ITS_OWN_REPLAY: BOOK_BUILT_BY_DIFFERENT_SCORING_CODE
   A_BOOK_IS_ONLY_CONSUMABLE_WHILE_THE_CODE_IT_NAMES_STANDS_STILL: A-PROGRAMME-FACT-NOT-AN-INCIDENT
@@ -27319,6 +27328,159 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 325, 2026-09-09T15:42:43Z ---
+  THE_REBUILD_BUYS_PROVENANCE_NOT_CORRECTNESS_AND_I_DROVE_THE_MECHANISM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***DA 168/169'S FINDING, AND IT IS WORTH 68 MINUTES: "NOTHING THAT MOVED CAN CHANGE THIS BOOK'S SCORES. THE
+      REBUILD BUYS PROVENANCE, NOT CORRECTNESS."*** **And the reason it is checkable at all is that DA established
+      it STRUCTURALLY RATHER THAN BY CLASSIFYING COMMITS** -- *"these four changes look harmless" is an opinion; "the
+      scoring path is one function and it is byte-identical" is a measurement.* ***I DROVE THE MECHANISM MYSELF
+      RATHER THAN ACCEPTING THE CONCLUSION, AND EVERY STRUCTURAL CLAIM REPRODUCES.*** **A finding that can be
+      re-derived by a seat that did not make it is the only kind that can support a waiver.**
+  THE_SCORING_PATH_THROUGH_A_SIXTEEN_THOUSAND_LINE_MODULE_IS_ONE_FUNCTION:
+    prov: CHECKED
+    artifact: live/pm_research/be_producing_closure.py
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      **The chain, confirmed at the code: `SCORING_ENTRY_POINTS` IS EXACTLY TWO FUNCTIONS IN
+      `de_phase4_diag_runner` -- `assemble_streaming` and `build_tape_index`** -- and the module that refused is on
+      the executed path via `build_tape_index -> _ruled_day_set_imported -> _G.ruled_day_set()`. ***BUT THE SCORING
+      PATH THROUGH `de_multiday_gate1_runner.py` IS EXACTLY ONE FUNCTION: `ruled_day_set`, EIGHT LINES OF A MODULE I
+      MEASURE AT 16,626.*** *DA reports 16,205 and I read 16,626 -- a difference entirely consistent with what I
+      recorded last round, that the module has moved again since; **the ratio is the point and it survives either
+      figure: one function in sixteen thousand lines.***
+  AND_ITS_DIGEST_MATCHES_DAS_TO_THE_CHARACTER_AT_MY_OWN_READ:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***AND THE LOAD-BEARING NUMBER REPRODUCES EXACTLY: I EXTRACTED `ruled_day_set` FROM DISK AND HASHED IT --
+      8 LINES, sha256[:16] = `41988ef4272c73a9`, WHICH IS DA'S DIGEST TO THE CHARACTER.*** **The function reads one
+      constant and its docstring states why it is not a parameter: *"Deliberately not a parameter: this is the one
+      fact the fixture/real lock turns on, and A LOCK WHOSE INPUT THE CALLER SUPPLIES IS NOT A LOCK."*** *A
+      byte-identity claim that a second seat can reproduce from disk in one command is the strongest form of
+      evidence available for "nothing that matters moved".*
+  THE_INTERSECTION_WITH_WHAT_CHANGED_IS_EMPTY_AND_PARAMS_REL_IS_UNTOUCHED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      **The four commits touched 8 FUNCTIONS AND 11 MODULE CONSTANTS; THE INTERSECTION WITH THAT PATH IS EMPTY.**
+      ***AND I CHECKED THE ONE INPUT THAT COULD HAVE CARRIED A CHANGE IN: `PARAMS_REL` APPEARS 25 TIMES IN THE
+      MODULE AND IS UNTOUCHED ACROSS THE LAST FOUR COMMITS TO IT -- I DIFFED FOR `^[+-]PARAMS_REL` AND FOUND
+      NOTHING.*** *So the single constant the single scoring-path function reads did not move, and the function that
+      reads it did not move* -- **which is what makes "nothing that moved can change this book's scores" a closed
+      argument rather than a survey.**
+  THE_TWO_ALARMING_CHANGES_ARE_ADDITIONS_AND_A_CROSS_DAY_REPOINT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      **And DA names the two changes that LOOKED alarming and were not, which is the part a survey would have got
+      wrong: `day_decision_population`'s SEVEN LINES ARE ALL ADDITIONS -- a `theta_drift` field appended, with
+      `decisions`, `by_side` AND EVERY COMPUTED QUANTITY UNTOUCHED -- and the multi-day repoint is CROSS-DAY RATHER
+      THAN PER-DAY.** ***THE FIRST IS THE FUNCTION WHOSE DEFECT STARTED THIS WHOLE THREAD, SO SEEING IT IN A DIFF IS
+      EXACTLY WHERE A CLASSIFY-THE-COMMITS APPROACH WOULD HAVE STOPPED AND ORDERED THE REBUILD.*** *An additive
+      change to a function that once counted rows instead of actions is alarming by association and harmless by
+      construction, and only the structural argument tells them apart.*
+  MORE_IS_REPORTED_NO_NUMBER_DIFFERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***DA'S SENTENCE, KEPT VERBATIM BECAUSE IT IS THE WHOLE FINDING IN FOUR WORDS: "MORE IS REPORTED, NO NUMBER
+      DIFFERS."*** **That is precisely the distinction the theta-drift ruling created -- the drift TRAVELS with the
+      decision count without changing it** -- *and it is the shape every good addition to an artifact should have:
+      a reader learns more and every existing quantity means what it meant.* **A change that only adds fields is
+      exactly the change a whole-module digest cannot distinguish from one that rewrites the arithmetic**, which is
+      why the payload widening below matters.
+  AND_DA_STATES_ITS_OWN_LIMIT_BEFORE_ANYONE_ASKS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***AND DA STATES ITS OWN LIMIT BEFORE ANYONE ASKS, WHICH IS WHY THE FINDING CAN BE TRUSTED: THE RESULT IS
+      ABOUT THIS BOOK AGAINST THESE FOUR COMMITS AND IS NOT A GENERAL LICENCE; THE NEXT REFUSAL NEEDS THE SAME
+      DERIVATION.*** **A seat producing an argument that would let a run proceed, and bounding it in the same
+      filing, is the disposition this programme has been building toward all day** -- *DA leaving a red standing, BE
+      withdrawing its own eight, DE refusing the contaminated comparator, DA withdrawing its own criterion, and now
+      DA declining to let its own good argument generalise.* **The scope clause is the difference between evidence
+      and precedent.**
+  REV_146_DERIVES_IT_INDEPENDENTLY_BECAUSE_IT_IS_ABOUT_TO_BE_LOAD_BEARING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      **REV 146 IS DERIVING THE REACHABLE SET INDEPENDENTLY, "BECAUSE A WAIVER WOULD REST ON 'THE PATH IS ONE
+      FUNCTION' AND THAT IS ABOUT TO BE LOAD-BEARING."** ***THAT IS THE CORRECT TRIGGER FOR A SECOND DERIVATION AND
+      IT IS STATED IN THE RIGHT TERMS: NOT "IS DA TRUSTWORTHY" BUT "WHAT IS THIS SENTENCE ABOUT TO BE ASKED TO
+      HOLD UP".*** *My own reproduction above is a third read, and it is not a substitute for REV's -- I extracted
+      and hashed the function DA named, which corroborates DA's INVOCATION; REV is deriving the REACHABLE SET, which
+      tests the OPERATION.* **The same distinction REV 135 drew when it named my pure-AST route the independent
+      one.**
+  DO_NOT_NARROW_THE_CONDITION_WIDEN_THE_PAYLOAD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***THE DESIGN ANSWER, ADOPTED AND NOW BEING BUILT BY DE 179: "DO NOT NARROW THE CONDITION. WIDEN THE
+      PAYLOAD."*** **WHOLE-MODULE STAYS THE PREDICATE -- "these bytes produced this book", AND THERE IS NO HONEST
+      WEAKER FORM** -- *the temptation was to make the predicate reachability-aware so this refusal would not have
+      fired, and that would have traded a guard that is right for one that is convenient.* **BUT THE REFUSAL MUST
+      ALSO CARRY THE REACHABLE CLOSURE FROM THE SCORING ENTRY POINTS INTERSECTED WITH WHAT CHANGED, PLUS THE
+      BYTE-IDENTITY OF THE FUNCTIONS ON THAT PATH, SO THE REBUILD-VERSUS-SUPERSEDE DECISION IS READABLE FROM THE
+      REFUSAL.** ***A REFUSAL THAT CARRIES ITS OWN DIAGNOSIS COSTS THE NEXT SEAT MINUTES INSTEAD OF A ROUND.***
+  THE_PAYLOAD_IS_EVIDENCE_FOR_A_HUMAN_AND_NOT_A_LICENCE_FOR_THE_CODE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***AND THE CONSTRAINT THE COORDINATOR ATTACHED IS THE ONE THAT KEEPS IT HONEST: THE PAYLOAD IS EVIDENCE FOR A
+      HUMAN DECISION, NOT A LICENCE FOR THE CODE TO PROCEED -- THE RUN STILL REFUSES.*** **Without that clause the
+      widening becomes the narrowing by another route: a refusal carrying a field that says "nothing relevant
+      changed" is one refactor away from a refusal that consults that field.** *This programme has watched a
+      diagnostic become a licence three times tonight -- the seal protecting `economic`, the exemption that was a
+      convention, the reconciliation that could not fail* -- **and the clause exists because the failure mode is
+      familiar.**
+  THE_PENDING_RULING_HAS_A_PRECEDENT_AND_THE_USER_ALREADY_ANSWERED_ITS_SHAPE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      ***THE PENDING RULING: WHETHER HAZARD'S NULL MAY RUN ON THE EV21 BOOK UNDER AN EXPLICIT RECORDED WAIVER
+      INSTEAD OF A 68-MINUTE REBUILD -- AND IT IS STRUCTURALLY THE SAME QUESTION THE USER ALREADY RULED ON FOR
+      `MATCHES_WITH_UNNAMED_MEMBERS`: MAY A RUN PROCEED PAST A REFUSAL WHEN THE REASON IS KNOWN AND NAMED.*** **They
+      answered YES, PROVIDED THE EXEMPTION IS A PREDICATE RATHER THAN A CONVENTION.** *Recording the precedent
+      matters more than recording the question: the user has already supplied the SHAPE of the answer, so the work
+      is to establish whether this exemption can be written as a predicate -- and REV 139 drove that the last one
+      was NOT a predicate when it was first claimed to be.* **The same trap is available here.**
+  AND_THE_COORDINATOR_HOLDS_IT_BACK_UNTIL_A_SECOND_DERIVATION_LANDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      **AND THE COORDINATOR IS NOT PUTTING IT TO THE USER UNTIL REV'S INDEPENDENT DERIVATION LANDS, "BECAUSE IT
+      WOULD OTHERWISE REST ON ONE SEAT'S WORD."** ***THAT IS THE SAME JUDGEMENT AS HOLDING THE RECONCILIATION
+      WIRING LAST ROUND, MADE ONE STEP EARLIER AGAIN: A RULING REQUESTED ON EVIDENCE THAT HAS NOT BEEN INDEPENDENTLY
+      DERIVED IS A RULING THE USER CANNOT PROPERLY GIVE.*** *The coordinator was wrong once on its own framing --
+      ruling B's premise -- and has since declined to re-rule that, declined to wire a half-verified check, and now
+      declines to ask for a waiver on one derivation.* **A seat that has been wrong once and adjusts its threshold
+      for asking is doing the right thing with the lesson.**
+  THE_STAGE_TABLE_STREAMS_LIVE_NOW_AND_BE_CLOSED_ITS_OWN_RECORDING_GAP:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210904a.jsonl
+    as_of: 2026-09-09T15:42:43Z
+    said: >-
+      **09-04 is building (`p003ev210904a`) with the stage table now STREAMING LIVE, so a killed run leaves A0/A1/A2
+      behind** -- ***THE RECORDING GAP BE ITSELF NAMED AT BE 128, CLOSED BY BE.*** *Two rounds ago BE could not
+      account for a twenty-minute discrepancy because R-836 had recorded only `assembly_s` and `peak_gb` for the lost
+      run, and BE's own lesson was that A KILLED RUN SHOULD PRESERVE ITS STAGE TABLE SINCE IT BECOMES THE BASIS
+      EVERYTHING IS PRICED AGAINST.* **The seat that was blocked by the gap is the seat that closed it, inside the
+      same day, on the very next build** -- and the queue's remaining four days will be priced on a basis that
+      survives its own run being killed.
   # --- MEM round 324, 2026-09-09T15:35:25Z ---
   HAZARDS_NULL_DID_NOT_RUN_BECAUSE_THE_BOOK_REFUSES_ITS_OWN_REPLAY:
     prov: CHECKED
