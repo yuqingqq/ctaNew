@@ -21,6 +21,46 @@ evidence about the intended policy.
 by both defects. So the placement-latency finding stands and is the programme's one
 robust result:
 
+**FIRST POST-RETRACTION RECOMPUTATION — 2026-09-04, landed 2026-09-09T17:59:38Z
+(R-876, R-877, R-878).** `p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json`,
+sha256 `c11c2a8c5fa5149611ff58f0cf2f167339fe98b9524a89f54091283fa35afbed`.
+**Stated under rule 36, with the qualifier attached rather than appended: at L=250 ms
+on 2026-09-04, tranches arriving before the quote could rest account for
+63,740.78 of 102,193.69 cents — 62.37 % AS AN UPPER BOUND on the latency effect,
+on ONE BTC-ONLY day, with NO NULL DRAWN and NO INTERVAL.** `UPPER_BOUND` and `SCOPE`
+are fields on the artifact, not prose: a dropped tranche *arrived* before the quote
+could rest, which is not the same as money the maker would have kept.
+
+**The two-sided reconciliation ran on a real book and passed both legs** — the first
+time BE 138's fix and DE 181's driver wiring have been exercised outside a fixture.
+`legs_close: True`; `kept_equals_the_baseline: True` against the ledger's zero-cancel
+baseline **38,452.9080725** (delta **−2.9e-11**); both legs independently cross-checked
+by direct arithmetic; all 358,108 generations carry the dropped key. Recomputed rather
+than accepted (DA 180): ALL = −124,871.621689 trades + 227,065.310300 residual =
+**102,193.688611** (57,850 fills); DROPPED **63,740.780539** (31,471); KEPT
+**38,452.908072** (26,379).
+
+**WHAT THIS DOES *NOT* SHOW, withdrawn in band before it was ever asserted (R-877).**
+The corrected book reproduces the struck-through row above to the cent, and the
+coordinator first read that as evidence the era contamination was structural rather
+than arithmetic. **It is not.** DA 180 and REV 151, given different questions
+(arithmetic/provenance and inference) and converging independently, established that
+the pre-fix 09-04 book **already carried 78 gap-ended windows, not zero**: the era fix
+moved `TERMINAL_MARK_ENDED_IN_GAP` **78 → 80** and added **one** generation
+(358,107 → 358,108), with `TRANCHE_KEPT` (26,379) and
+`TRANCHE_BEFORE_PLACEMENT_LATENCY` (31,471) **identical across both books**. **The
+reproduction confirms DETERMINISM, not that the era contamination was harmless.** The
+coordinator's error was comparing `selection.n_gap_bearing_windows = 52` against a
+"zero" describing a *different quantity* — rule 16, the vocabulary matched and the
+identity did not.
+
+**TWO GAPS BLOCK QUOTATION OF THIS ARTIFACT (not the result):** the exclusions and
+coverage are **absent from the result** — coverage 0.9175, 29,530 uncovered of 358,108
+lives only in the *book receipt*, so rule 4 is unmet where the number is — and
+**BTC-only is not resolvable on the artifact** (`BTC_ONLY`/`btc_only` absent), so a
+reader must already know R-869. Both routed; neither changes the arithmetic.
+
+
 | day | baseline at L=0 | baseline at L=250 | loss (all windows) | loss (ungapped only) | gapped share of settled money |
 |---|---|---|---|---|---|
 | 2026-09-03 | ~~82,142.82~~ | ~~37,849.85~~ | −53.922 % | −52.671 % (n=87) | **60.3 %** |
