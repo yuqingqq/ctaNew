@@ -20960,3 +20960,45 @@ generation and the window went 4 → 3. Nothing rewritten.
   discrepancy, DA 141 counts 159 of 246 where REV 112 counted 160 of 287 -- STILL UNRECONCILED AND STILL NOT MINE
   TO PICK. MEM asserts no result.)
 ```
+
+## Batch 280 — archived 2026-09-09T08:17:59Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T07:52:10Z (MEM ROUND 295 -- R-845 SWEPT as a numbered queue under rule 23, from my
+  round-294 tip `0713049` to `9fe6317`, fifteen commits. STATE ONLY. ***THE RULING THIS FILE NOW MATCHES***: the
+  ABSOLUTE CENT FIGURES ARE WITHDRAWN -- 60.3 % of 09-03's settled money sits in windows the builder assembled as if
+  continuous (159 of 246 gapped; 15.6 % on 09-04; 09-05/09-06 immaterial) -- and ***NO DAY TOTAL IS QUOTED AS FINAL
+  HERE***. THE FOUR PERCENTAGES STAND AND ARE QUOTABLE ONLY WITH TWO THINGS BESIDE THEM: the ungapped recomputation
+  (+1.251, +2.807, +4.126, +1.297 pp, one direction, under 4.2 pp, still large) and DA's THREE LIMITS UNSOFTENED --
+  the ungapped windows are NOT a random subsample so this is a ROBUSTNESS CHECK not a corrected estimate; 09-03's
+  clean subset is 87 windows, 35.4 %, the thinnest subset on the most exposed day; and NO CORRECTED NUMBER IS
+  COMPUTABLE FROM DISK. ***THE GATE ARITHMETIC, KEPT HONEST***: four of seven items are CLOSED IN CODE and NONE IS
+  VERIFIED -- DE 162's four and BE 112's coverage fix landed and unreviewed, DA 142 driving BE 112 now under rule 27
+  -- and ***ITEM 1, THE BUILDER'S ERA, IS STILL OPEN AND IS THE LARGEST***, the one of the seven with no landed code
+  against it, so a reader counting "four closed" must not infer the remainder are small. REV 114 supplied the
+  cleanest control of the night AND IT COULD HAVE FAILED: `MASKED n GAPPED(clob_v4_1) = 0` against 22.3 EXPECTED had
+  the detector not excluded them -- zero observed against twenty-two expected -- so the mask is SOUND and reads the
+  September-bearing ledger; and its structural half is why the defect is worse than R-843 said, gaps travelling by a
+  PARTITION OF TWO CHANNELS that `era=None` collapses to one, ***TWO COMPONENTS EACH CORRECT UNDER ITS OWN CONTRACT
+  AND A DEFECT LIVING ONLY IN THE SEAM***. My round-294 stranded commit was rebased and pushed as `8f115e3`, nothing
+  stranded now, ***AND THE REBASE MOVED NO BYTES***: `params_v24` hashes `1cf512b5cbd9cdad` before and after and
+  design v32 pins exactly that, PAIR_OK to v31. TWO NEW STANDING RULES RECORDED AS PROGRAMME STATE: rule 25 makes the
+  untargeted round STANDING and binds the coordinator to naming only what is covered; rule 27 ranks VERIFYING a fix
+  above making the next one and names the question a green battery cannot answer -- "is there a form the OLD one
+  caught that the NEW one does not". And my window-count discrepancy STAYS OPEN with a third use of 287 (REV 114's
+  40 of 287) beside DA 141's 159 of 246 and REV 112's 160 of 287: 247 against 246 is still unreconciled and I still
+  pick none. Flags 2439 -> 2454, prov 1984 -> 1999; window trimmed 4 -> 3, Batch 277 archived. **NO BUILD, NO LOCK,
+  NO CORRECTED BOOK, AND NO CORRECTED NUMBER -- THE LAST NOW STRONGER THAN A STATUS, SINCE NONE IS COMPUTABLE FROM
+  DISK.** ***ADDENDUM 07:53:19Z, AFTER THIS ROUND'S WINDOW CLOSED AND VERIFIED BEFORE RECORDING BECAUSE THE GATE
+  ARITHMETIC ABOVE IS STALE IN BOTH NUMERATOR AND DENOMINATOR***: R-846 puts it at FIVE closed of EIGHT items, the
+  eighth found IN DA'S VERIFIER BY BE -- the seam again -- and ***ONE ITEM IS NOW VERIFIED WHERE NONE WAS***:
+  DA 142 drove BE 112 under rule 27 and reports 'THE FIX IS RIGHT AND I FOUND NO REGRESSION', with the half it will
+  not overclaim -- whether `assert_coverage` refuses on REAL under-coverage rather than only at zero is 'HALF YES,
+  and I state the half that is NO' -- every drive against a reference and an assembly DA CONSTRUCTED, never BE's
+  fixture. ***AND DA 142 FOUND AN OPERATIONAL BLOCKER: params v23 no longer matches disk, so no day can run until a
+  re-pin.*** Measured here at HEAD: params v23 is 9/10 (`de_phase4_diag_runner.py` moved under DE 162) while
+  ***params v24 is 10/10 and clean***, so the blocker is about WHAT STILL RESOLVES v23 rather than about v24 being
+  wrong -- which of the two it is, I have not established. Also kept from DE 162's own disclosure: twice a scripted
+  edit rewrote more than intended, once inside the design module's OWN known-bad fixtures, and THE BATTERY CAUGHT
+  IT IMMEDIATELY, both reverted, neither reaching a commit. MEM asserts no result.)
+```

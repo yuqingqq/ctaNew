@@ -1,3 +1,126 @@
+# READ FIRST — round 298 (MEM, 2026-09-09T08:17:59Z, tip `ac505b3`)
+
+**R-848, R-849 and R-850 swept as a numbered queue under rule 23 — from my round-297 tip `97731e3` to `ac505b3`,
+fifteen commits.** STATE ONLY.
+
+## GATE ITEM 1 IS CLOSED — and the fix's shape was forced, not chosen
+
+**`_era_or_refuse` was not edited because it lives inside a SECOND PIN SURFACE nobody had written down.** Editing it
+would have been **blocking** — R-835's class through a door nobody had opened — and would have **falsified its own
+`DECLARED_ADDITIVE` reason. So the resolver is a new BE module whose answer is passed in.**
+
+**I counted that surface at both manifests:** `fit_manifest.json` → `fit_code_files` = **12 entries**, including
+**`harmful_exposure_rows.py`** (the home of `_era_or_refuse`), and **zero `be_*.py`** — which is exactly why a new
+BE module carries the resolver at no pin cost. The twelve names are now in **BE_PROCEDURE §6b**.
+
+**Closed UNVERIFIED** — DA 145 is verifying now.
+
+## ⚠ MY LONGEST OPEN ITEM IS RETIRED — and two of the three never measured the same thing
+
+- **247** — the day's window count.
+- **287** — `n_present`, *before* the mask.
+- **246** — **never a window count.** It is `arm_legs.n_slugs` over **fills**, **equal to the supplied count on
+  09-04/05/06 (288 = 288, three times, at DE's own artifacts)** and one short on 09-03 only, where one supplied
+  window produced no valued fill. **A property of one replay; it moves with arm, latency and policy.**
+
+**Refusing to pick was right; calling 247 → 246 "one slug" was not.** *The item is retired.*
+
+**And the repair that stops it recurring:** `selection.mask` now carries identity, digest, as-of and counts, with
+**`287 − 40 = 247` CHECKED** — the builder refuses **`MASK_ARITHMETIC_DOES_NOT_CLOSE`** otherwise. Against **zero of
+the twelve receipts on disk naming a mask at all** (versus twelve of twelve naming the wrong era). **The exclusion
+never travelled with its count on any book this programme has built.**
+
+## ⚠ MY OWN ROUND-297 CLOSURE IS REFUTED WITHIN ONE ROUND
+
+I recorded my round-285 thread as **"closed"** because `params_v25` arms `require_book_declares_L`. **REV 118:
+"(3) REFUTED — ARMING DOES NOT COST NOTHING: FOUR OF FIVE DAYS REFUSE, AND THEY ARE THE FOUR DESIGN DAYS."**
+
+**My measurement stands** — the key is armed, verified at the declaration. **The word "closes" was wrong.**
+**"Armed" is a fact about a declaration; "right to arm" is a fact about what refuses afterwards** — the same shape
+as my own standing *"landed is not reviewed"*, which I applied to DE's code and not to my own conclusion. **The
+thread is open again.**
+
+## TWO MORE FROM REV 118, both worth keeping
+
+- **Rule 28 reproduced inside its own repair.** REV verified DE 163's fix for *site 4* and still marked it **"an
+  ASSERTION where a CHECK is available — rule 28 applied to the fix for rule 28's own site 4."** The verdict is
+  VERIFIED; the observation is that **the class recurs in its own remedy**, which is the strongest evidence rule 28
+  names something structural.
+- **REV verified repairs to its own findings and said so:** *"I took the shift rather than pushing back"*, holding
+  the adversarial corpus and the verbatim old rule, naming *"check the claim rather than the count"* as the part
+  needing a reviewer. Recorded as what happened, not as an endorsement of the arrangement.
+
+## SMALLER, BUT STATE
+
+- **`float("inf")` is not JSON.** An open era end is now **`None` with `era_span_open_ended`** beside it, on the
+  reasoning **"jq accepting it is not the test"** — a permissive reader accepting a non-conforming value is not
+  evidence it conforms. Same family as rules 16 and 17.
+- **A third call site still carries the shape:** `de_v2_local_selector.py:151` reads
+  `_era_or_refuse(fi, None, "v2_one_window_local_selector")` — **correct by accident, not by construction.** Routed
+  to DE. **The era item is two sites fixed and one open.**
+
+## RULE 29 — a red gate that was nobody's defect
+
+`da_land_gate` refused with two reds, both green an hour earlier and both **outside the changed module's import
+closure, established by AST rather than by reading**. The failing cell **named its own input**: *"the bars come from
+the newest params present … v25 … newest chosen"* — **and v25 had landed eight minutes earlier from another seat.**
+**"A checker that resolves 'the newest params present' changes verdict the moment anyone lands a params version.
+That is CORRECT behaviour, not a defect."**
+
+**And the hardest clause:** *"A seat that lands with a gate refusing SAYS SO PLAINLY"* — DA did, by pathspec —
+because *"a seat quietly landing past a red gate is how a programme stops being able to trust its own checkers, and
+it is worse than the red."* **Binding on this seat as on any other.**
+
+## GATE
+
+| state | items |
+|---|---|
+| **closed AND verified** | **5, 8** — two of eight |
+| closed, unverified | **1** (DA 145 verifying) · **2, 3, 6, 7** (REV 118 drove three; **3 REFUTED**) |
+| **reopened** | **4** — under ruling (b), with a freshly-reset DE |
+
+Item 8 was closed **with a cell that could have failed** (DA 144, three directions driven) — and DA's own filing
+records that **its verifier had the shape bug and its fixture is why the bug survived**.
+
+## STATE
+
+**Nothing built and no heavy lock since 07:15:47Z** (verified 08:14:34Z: no holders, no live unit). **The stopping
+criterion put to the user is still UNRULED.** No corrected number, no corrected book, no day total as final.
+
+Counts: flags 2484 → 2499, provenance 2029 → 2044 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,754 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 280
+archived. MEM asserts no result.
+
+---
+
+## ADDENDUM 08:19:09Z — GATE ITEM 1 IS NOW CLOSED **AND VERIFIED**, and my own numbers meet it from the other side
+
+Verified before recording, **because the table above says item 1 is "closed, unverified — DA 145 verifying now"**
+and DA 145 has reported.
+
+**DA 145 drove it at the integration, not by reading:** `be_daybook_build.day_selector("20260903","btc")` built
+**247 entries, of which 160 carry a non-empty gap list, totalling 2,294.7 s** — `len(gapped) == 160` and
+`|secs − 2294.7| < 0.05` both True — with **`sel.era = 'clob_v4_1'`**, no default anywhere, day-dependence
+established **by measurement**, and **six correct refusals**.
+
+**⇒ Those are my own numbers, arrived at from the opposite end of the fix.** At round 293 I measured **160 of 247**
+and summed **376 gap records = 2,294.7 s** as what the builder *was not getting*; DA now measures the same 160 and
+the same 2,294.7 s as what the builder *now gets*. **The defect and its repair are described by one pair of numbers,
+measured independently on either side of it.** They are also the population DA 141 priced at **60.3 % of 09-03's
+settled money.**
+
+**DA also swept for a third call site and found one — and found it CORRECT**, which is the
+`de_v2_local_selector.py:151` site I confirmed independently in the block above as *correct by accident, not by
+construction.* **Same site, two seats, same round.**
+
+**And a scoping line from `RESULTS.md` that this file should carry:** the exposure figures — the 60.3 %, the
+withdrawal — **"describe the books ON DISK"**, not a rebuild. **The defect is fixed; the books built under it are
+not.**
+
+**Gate now: (1), (5) and (8) closed AND verified — three of eight.**
+
+---
+
 # READ FIRST — round 297 (MEM, 2026-09-09T08:10:55Z, tip `97731e3`)
 
 **R-847 swept as a numbered queue under rule 23 — from my round-296 tip `9312227` to `97731e3`, eleven commits.**
