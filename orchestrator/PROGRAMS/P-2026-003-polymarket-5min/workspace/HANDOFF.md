@@ -1,3 +1,66 @@
+# READ FIRST — round 326 (MEM, 2026-09-09T16:13:39Z, tip `7736972`) — **USER REVIEW, FIX-ONLY**
+
+***The user has ruled: when they report issues, we fix those and nothing else until closed.*** **Their review was my
+only queue this round — no sweep, no state true-up, no analysis.** Three of their five items are record items and are
+landed below **in the user's own terms**.
+
+## ⚠ (1) 09-03's EV21 book lacks `placement_latency_split`
+
+> ***"A new 09-03 rebuild is required if that validation is needed."***
+
+**Its latency reconciliation cannot run.** *Confirmed by me at the artifact: `placement_latency_split` occurs **zero**
+times in the EV21 09-03 receipt.*
+
+***Recorded as a LIMITATION OF THAT BOOK — not a defect, and not work outstanding.*** The book was built before the
+split existed; **nothing is wrong with it and nothing is owed on it.** **09-04 is being built WITH the split and is
+where the reconciliation first has something to check.** *A 09-03 rebuild is available **if** that validation is
+needed and is not otherwise implied* — **so this file records no outstanding task against 09-03 on this account, and
+the limitation must not be converted into a backlog item.**
+
+## ⚠ (2) Cancel evidence
+
+> ***"The existing 09-03 artifact records cancel totals but not actual multiple-cancel incidence. Current code now
+> records `cancel_unit_exception` at `de_multiday_gate1_runner.py:8765`, so future replays are covered."***
+
+*I confirmed both halves: `:8765` reads `r["cancel_unit_exception"] = _cancel_unit_exception` (built at `:8663`), and
+the 09-03 point-estimate artifact carries **zero** occurrences of it.*
+
+***⇒ The qualification now travels wherever the 1-in-3,862 appears in these files: the existing 09-03 artifact does
+NOT carry the incidence, the user's ruling put that exception into the receipt, and a reader must not take the 09-03
+artifact as its source.*** *This is the second qualification on that number from a different direction — after REV
+139's finding that it was computed by a script importing from a hardcoded worktree. Not where the code came from, but
+**which artifact can evidence it**.*
+
+## ⛔ (3) Quotation
+
+> ***"09-03 remains exploratory — 244 boundaries agree and 2 are outside capture; `is_final_for_quotation=false`."***
+
+*Confirmed at the artifact: `"is_final_for_quotation": false`, present twice.*
+
+***NOTHING FROM 09-03 MAY BE QUOTED AS FINAL — and that includes the `D_E_settle +11,191.244402` point estimate. It
+is exploratory, un-nulled, and on a day that is not final for quotation.***
+
+**I recorded that number at round 319 as "the first corrected number since the retraction", checked its arithmetic
+three ways, and recorded at 322 that DA had reproduced it to the digit by a second implementation.** ***None of that
+makes it quotable. Reproduced is not the same as final.*** **Three qualifications now travel with it:**
+
+1. **no control** — `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`
+2. **a threshold at a drifted quantile** — 99.55th → 95.24th
+3. **a day that is not final for quotation**
+
+***This file will not let its own earlier framing be read as a licence.***
+
+## NOT MINE
+
+**DE** is wiring the repaired reconciliation through **`de_point_estimate_day.py`** — *not the runner, because
+editing the runner would stale every book.* **BE** is fixing the **`EV20 queue only`** scope string in the EV21
+launch record.
+
+Counts: flags 2882 → 2888, provenance 2427 → 2433 (six written, six counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 308 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 325 (MEM, 2026-09-09T15:42:43Z, tip `03d495b`)
 
 # 🔬 THE REBUILD BUYS PROVENANCE, NOT CORRECTNESS — and I drove the mechanism

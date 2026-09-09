@@ -67,6 +67,36 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T16:13:39Z (MEM ROUND 326 -- ***USER REVIEW. FIX-ONLY ROUND: THE USER HAS RULED THAT WHEN THEY REPORT ISSUES WE
+  FIX THOSE AND NOTHING ELSE UNTIL CLOSED, SO THEIR REVIEW WAS MY ONLY QUEUE -- NO SWEEP, NO STATE TRUE-UP, NO
+  ANALYSIS.*** Three of their five items are record items and are landed here IN THE USER'S OWN TERMS. ***(1) 09-03's
+  EV21 BOOK LACKS `placement_latency_split`, SO ITS LATENCY RECONCILIATION CANNOT RUN -- "A NEW 09-03 REBUILD IS
+  REQUIRED IF THAT VALIDATION IS NEEDED."*** **Confirmed by me at the artifact: `placement_latency_split` occurs ZERO
+  times in the EV21 09-03 receipt.** ***AND IT IS RECORDED AS A LIMITATION OF THAT BOOK, NOT AS A DEFECT AND NOT AS
+  WORK OUTSTANDING*** -- the book was built before the split existed, **nothing is wrong with it and nothing is owed
+  on it**, and ***09-04 IS BEING BUILT WITH THE SPLIT AND IS WHERE THE RECONCILIATION FIRST HAS SOMETHING TO
+  CHECK***; a 09-03 rebuild is available IF that validation is needed and is not otherwise implied, so **this file
+  records no outstanding task against 09-03 on this account.** ***(2) CANCEL EVIDENCE: "THE EXISTING 09-03 ARTIFACT
+  RECORDS CANCEL TOTALS BUT NOT ACTUAL MULTIPLE-CANCEL INCIDENCE. CURRENT CODE NOW RECORDS `cancel_unit_exception` AT
+  `de_multiday_gate1_runner.py:8765`, SO FUTURE REPLAYS ARE COVERED."*** **I confirmed both halves -- `:8765` reads
+  `r["cancel_unit_exception"] = _cancel_unit_exception`, built at `:8663`, and the 09-03 point-estimate artifact
+  carries ZERO occurrences of it.** ***SO THE QUALIFICATION NOW TRAVELS WHEREVER THE 1-IN-3,862 APPEARS IN THESE
+  FILES: THE EXISTING 09-03 ARTIFACT DOES NOT CARRY THE INCIDENCE, THE USER'S RULING PUT THAT EXCEPTION INTO THE
+  RECEIPT, AND A READER MUST NOT TAKE THE 09-03 ARTIFACT AS ITS SOURCE*** -- *this is the second qualification on
+  that number from a different direction, after REV 139's finding that it was computed by a script importing from a
+  hardcoded worktree: not where the code came from, but WHICH ARTIFACT CAN EVIDENCE IT.* ***(3) QUOTATION, RECORDED
+  EXACTLY AND WITH THE COUNTS: "09-03 REMAINS EXPLORATORY -- 244 BOUNDARIES AGREE AND 2 ARE OUTSIDE CAPTURE;
+  `is_final_for_quotation=false`."*** **I confirmed the field at the artifact, present twice.** ***NOTHING FROM 09-03
+  MAY BE QUOTED AS FINAL, AND THAT INCLUDES THE `D_E_settle +11,191.244402` POINT ESTIMATE -- IT IS EXPLORATORY,
+  UN-NULLED, AND ON A DAY THAT IS NOT FINAL FOR QUOTATION.*** **I recorded that number at round 319 as "the first
+  corrected number since the retraction", checked its arithmetic three ways, and recorded at 322 that DA had
+  reproduced it to the digit by a second implementation** -- ***NONE OF THAT MAKES IT QUOTABLE; REPRODUCED IS NOT
+  THE SAME AS FINAL, AND THREE QUALIFICATIONS NOW TRAVEL WITH IT: NO CONTROL, A THRESHOLD AT A DRIFTED QUANTILE, AND
+  A DAY THAT IS NOT FINAL FOR QUOTATION. THIS FILE WILL NOT LET ITS OWN EARLIER FRAMING BE READ AS A LICENCE.*** The
+  other two of the five are not mine: **DE is wiring the repaired reconciliation through `de_point_estimate_day.py`
+  -- NOT the runner, because editing the runner would stale every book -- and BE is fixing the `EV20 queue only`
+  scope string in the EV21 launch record.** Flags 2882 -> 2888, prov 2427 -> 2433; window 3/3, Batch 308 archived.
+  MEM asserts no result.)
   2026-09-09T15:42:43Z (MEM ROUND 325 -- ***THE REBUILD BUYS PROVENANCE, NOT CORRECTNESS -- AND I DROVE THE MECHANISM RATHER
   THAN ACCEPTING THE CONCLUSION.*** DA 168/169: **"NOTHING THAT MOVED CAN CHANGE THIS BOOK'S SCORES"**, established
   ***STRUCTURALLY RATHER THAN BY CLASSIFYING COMMITS*** -- *"these four changes look harmless" is an opinion; "the
@@ -165,53 +195,6 @@ updated: >-
   WHICH IS THE QUESTION NOBODY ASKED BEFORE THE 09-03 BOOK AND WHOSE ANSWER TURNED OUT TO BE YES.*** DE was RESET
   from 97 % at 15:31Z. Flags 2853 -> 2866, prov 2398 -> 2411; window 3/3, Batch 306 archived. MEM asserts no
   result.)
-  2026-09-09T15:28:30Z (MEM ROUND 323 -- ***THREE USER RULINGS AND A REVIEW THAT STOPPED A MISTAKE BEFORE IT LANDED.***
-  ***RULING (a): THETA STAYS FROZEN, WITH THE REQUIREMENT THAT THE DRIFT TRAVEL.*** REV 143 measured the frozen
-  `0.43525926488298716` now at the **95.24th PERCENTILE where it was CHOSEN at the 99.55th**: **tail mass 0.446 % ->
-  4.756 %, x10.65; HAZARD decisions 1,398 -> 14,893; BROAD rather than a boundary artifact, only 0.5 % of decisions
-  within `theta + 0.001` and 5.0 % within `+0.01`; CONDVALUE's theta selecting 6.235 %, the 93.77th.** ***AND THE
-  RULING'S OWN SENTENCE IS THE ONE TO KEEP: "COMPARABILITY WAS THE REASON TO FREEZE, THE DRIFT IS THE PRICE, AND A
-  PRICE THAT IS NOT STATED IS NOT PAID"*** -- *the whole of what this file has argued all night, in one line and
-  from the USER rather than from a seat.* **AND IT SPECIFIES THE ADDRESS: THE DRIFT GOES IN THE RECEIPT WHERE A
-  READER MEETS THE DECISION COUNT -- not in a review, not in a register entry, not under the number, but BESIDE THE
-  FIELD IT QUALIFIES**, which is the fourth time in two days the remedy has been ADDRESSING rather than content.
-  ***RULING (b): THE MULTI-DAY VERDICT IS REPOINTED TO THE SETTLEMENT ENDPOINT AT `:2865`***, which had been
-  computing the day-cluster verdict from `r["economic"]["Z"]`, the DIAGNOSTIC, while R-801 made settlement primary
-  -- *two rounds ago I recorded this as the worst of the six sibling-block sites and noted the endpoint choice was a
-  RULING with the USER; it has now been ruled* -- **AND IT MUST NAME THE ENDPOINT IT USED, REV'S CONDITION, WHICH
-  HOLDS EITHER WAY**, with **PRIOR VERDICTS STAYING AS PROVENANCE AND NOT REWRITTEN** (*rule 13 applied to a verdict
-  rather than a receipt: rewriting it would destroy a true record of what the programme concluded in order to fix a
-  false statement about the endpoint*). ***RULING (c): BUILD 09-04 FIRST, THEN REASSESS -- BE'S OWN RECOMMENDATION ON
-  BE'S OWN SIZING: 09-04 BINDING AT ~82 % OF THE ENVELOPE WITH 18 % MARGIN AGAINST A 30 % MEASURED COLD/WARM SWING,
-  AND 09-05/09-06 LEAST CERTAIN BECAUSE BY-ROWS AND BY-WINDOW DIFFER BY 2.2 GB (63 % AGAINST 81 %) ON DAYS MUCH
-  SPARSER PER WINDOW THAN THE BASIS DAY. ALL FIGURES EXTRAPOLATE FROM ONE DAY.*** **AND THE CLAUSE THAT MAKES IT A
-  TEST RATHER THAN A HOPE: IF 09-04 EXCEEDS THE ENVELOPE THAT IS THE FINDING AND IT STOPS THE QUEUE -- NO CAP RAISE;
-  THAT IS THE 2026-08-26 SHAPE AND IT GOES TO THE USER** -- *an exceedance declared in advance as a finding cannot
-  later be re-read as an obstacle to route around.* ***REV 144 STOPPED A MISTAKE BEFORE IT LANDED: BE'S
-  RECONCILIATION FALSIFIES ON ONE SIDE ONLY -- THE DROPPED TOTAL IS UNCHECKED -- AND THE WIRING IS HELD.*** Driven
-  each side separately: **a corrupted KEPT REFUSES `KEPT_VALUE_DOES_NOT_MATCH_THE_BASELINE`, a corrupted BASELINE
-  refuses, A CORRUPTED DROPPED VALUE IS ADMITTED**; *I read the module myself -- 402 lines, `KEPT` 8, `DROPPED` 20,
-  `ALL_TRANCHE` 1, the ledger anchor `37315` exactly ONCE, 7 `ok(` cells* -- ***THE ANCHOR THAT REACHES A NUMBER
-  FROM A DIFFERENT SOURCE APPEARS ONE TIME AND IT REACHES KEPT.*** ***AND REV'S DIAGNOSIS IS SHARPER THAN "ONE SIDE
-  IS UNCHECKED": DA'S FIRST EQUALITY IS A TAUTOLOGY AS IMPLEMENTED, BECAUSE `value_all` BUILDS ALL AS THE
-  CONCATENATION OF THE TWO SETS AND `settlement_legs_by_slug` IS ADDITIVE PER SLUG, SO `KEPT + DROPPED == ALL`
-  CANNOT FAIL -- MEASURED WITH EACH SET CORRUPTED IN TURN AT 5630.0 == 5630.0 AND 6640.0 == 6640.0, AND
-  `LEGS_DO_NOT_CLOSE` IS UNREACHABLE. RULE 16 INSIDE THE FALSIFIER WRITTEN BECAUSE THE PREVIOUS CHECK DID NOT EXIST:
-  THE CLASS RECURRING INSIDE ITS OWN REMEDY FOR THE THIRD TIME TONIGHT.*** ***SO THE DROPPED TOTAL -- THE NUMBER THIS
-  CHANGE EXISTS TO PRODUCE AND PUBLISH AS THE UPPER BOUND -- IS NEVER CROSS-CHECKED: AN IDENTITY PLUS AN ANCHOR ON
-  ONE TERM CONSTRAINS THAT TERM AND NOTHING ELSE, UNLESS THE IDENTITY IS INDEPENDENT OF HOW THE TERMS WERE BUILT***,
-  and closing it needs a SECOND INDEPENDENT SOURCE. **BE'S TEN CELLS PASS BECAUSE THEY EXERCISE THE SIDE THAT IS
-  CHECKED** -- *rule 33's identity question at the level of a suite: ten cells verified the half that was already
-  strong.* ***AND THE COORDINATOR'S REASON FOR HOLDING IS THE ONE I GOT WRONG LAST ROUND, CAUGHT ONE STEP EARLIER:
-  WIRING IT WOULD LET RULING (b) READ AS SATISFIED WHEN HALF OF IT IS UNVERIFIED -- THE SAME ERROR AS REPORTING BE'S
-  SPECIFICATION AS A CHECK, AND A CORRECTION MADE ONE STEP EARLIER EACH TIME IS WHAT LEARNING LOOKS LIKE IN A SYSTEM
-  THAT CANNOT STOP MAKING THE ERROR.*** **THE L=0 VALUATION REMAINS UNVERIFIED UNTIL THE TWO-SIDED FIX LANDS, REV
-  VERIFIES IT AND DE WIRES IT** -- BE's own words kept exactly: ***"THE CHECK EXISTS, IS FALSIFIED, AND IS RUN BY
-  NOBODY"***, the last clause confirmed by me since `be_placement_latency_reconcile` is referenced only by itself and
-  `be_daybook_build.py`; **and BE DECLINED TO REACH INTO DE'S FILE TO WIRE IT, WHICH WAS THE RIGHT BOUNDARY.**
-  *Three rounds ago this was a sentence, two rounds ago absent code, now unrun code with a known hole: the state is
-  improving and the word is still UNVERIFIED.* Flags 2840 -> 2853, prov 2385 -> 2398; window 3/3, Batch 305 archived.
-  MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -383,6 +366,13 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 326, USER REVIEW: three record items, fix-only round, no sweep ---
+  USER_ITEM_1_THE_09_03_EV21_BOOK_LACKS_placement_latency_split: THE-USERS-OWN-TERMS
+  AND_IT_IS_A_LIMITATION_OF_THAT_BOOK_NOT_A_DEFECT_AND_NOT_WORK_OUTSTANDING: 09-04-IS-WHERE-IT-FIRST-CHECKS
+  USER_ITEM_2_THE_EXISTING_09_03_ARTIFACT_DOES_NOT_CARRY_MULTIPLE_CANCEL_INCIDENCE: TOTALS-BUT-NOT-INCIDENCE
+  SO_THE_1_IN_3862_MUST_NOT_BE_SOURCED_TO_THE_09_03_ARTIFACT: THE-QUALIFICATION-TRAVELS-WITH-IT
+  USER_ITEM_3_09_03_REMAINS_EXPLORATORY_AND_IS_NOT_FINAL_FOR_QUOTATION: 244-AGREE-2-OUTSIDE-CAPTURE
+  AND_THAT_INCLUDES_THE_POINT_ESTIMATE_THIS_FILE_RECORDED_AS_THE_FIRST_CORRECTED_NUMBER: PLUS-11191-244402
   # --- MEM round 325 ADDENDUM 2026-09-09T15:44:12Z: REV 146's independent derivation holds ---
   REV_146_LANDED_AND_THE_SECOND_DERIVATION_HOLDS: EIGHTEEN-FUNCTIONS-ONE-ATTRIBUTE
   SO_THE_CONDITION_THE_COORDINATOR_SET_IS_MET_AND_THE_WAIVER_CAN_GO_TO_THE_USER: NO-LONGER-ONE-SEATS-WORD
@@ -27332,6 +27322,74 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 326, 2026-09-09T16:13:39Z ---
+  USER_ITEM_1_THE_09_03_EV21_BOOK_LACKS_placement_latency_split:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV21.json
+    as_of: 2026-09-09T16:13:39Z
+    said: >-
+      ***USER REVIEW ITEM (1), IN THE USER'S OWN TERMS: 09-03's EV21 BOOK LACKS `placement_latency_split`, SO ITS
+      LATENCY RECONCILIATION CANNOT RUN -- "A NEW 09-03 REBUILD IS REQUIRED IF THAT VALIDATION IS NEEDED."***
+      **Confirmed by me at the artifact: `placement_latency_split` occurs ZERO times in
+      `be_daybook_receipt_20260903_btc__L250ms__EV21.json`.** *The reconciliation module BE 135 wrote, and the
+      two-sided repair DA 166/167 specified, have nothing on this book to check.*
+  AND_IT_IS_A_LIMITATION_OF_THAT_BOOK_NOT_A_DEFECT_AND_NOT_WORK_OUTSTANDING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV21.json
+    as_of: 2026-09-09T16:13:39Z
+    said: >-
+      ***AND THE USER'S FRAMING IS RECORDED AS THE FRAMING: THIS IS A LIMITATION OF THAT BOOK, NOT A DEFECT AND NOT
+      WORK OUTSTANDING.*** **The 09-03 book was built before the split existed; nothing is wrong with it and nothing
+      is owed on it.** ***09-04 IS BEING BUILT WITH THE SPLIT AND IS WHERE THE RECONCILIATION FIRST HAS SOMETHING TO
+      CHECK.*** *A rebuild of 09-03 is available IF that validation is needed and is not otherwise implied* -- **so
+      this file records no outstanding task against 09-03 on this account, and a reader must not convert the
+      limitation into a backlog item.**
+  USER_ITEM_2_THE_EXISTING_09_03_ARTIFACT_DOES_NOT_CARRY_MULTIPLE_CANCEL_INCIDENCE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T16:13:39Z
+    said: >-
+      ***USER REVIEW ITEM (2), IN THE USER'S OWN TERMS: "THE EXISTING 09-03 ARTIFACT RECORDS CANCEL TOTALS BUT NOT
+      ACTUAL MULTIPLE-CANCEL INCIDENCE. CURRENT CODE NOW RECORDS `cancel_unit_exception` AT
+      `de_multiday_gate1_runner.py:8765`, SO FUTURE REPLAYS ARE COVERED."*** **I confirmed both halves: line 8765
+      reads `r["cancel_unit_exception"] = _cancel_unit_exception` (built at `:8663`), and the 09-03 point-estimate
+      artifact carries ZERO occurrences of `cancel_unit_exception`.** *The capability exists going forward; the
+      artifact that already exists predates it.*
+  SO_THE_1_IN_3862_MUST_NOT_BE_SOURCED_TO_THE_09_03_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T16:13:39Z
+    said: >-
+      ***THE QUALIFICATION, RECORDED WHEREVER THE 1-IN-3,862 APPEARS IN THESE FILES: THE EXISTING 09-03 ARTIFACT
+      DOES NOT CARRY THE INCIDENCE, AND THE USER'S RULING PUT THAT EXCEPTION INTO THE RECEIPT -- SO A READER MUST NOT
+      TAKE THE 09-03 ARTIFACT AS ITS SOURCE.*** **This file recorded the 1-in-3,862 at round 319 as ruling (a)'s
+      measured exception and at round 320 with REV 139's provenance note** -- *that it was computed by a script
+      importing from a hardcoded worktree* -- **and this is the second qualification on the same number, from a
+      different direction: not where the code came from, but WHICH ARTIFACT CAN AND CANNOT EVIDENCE IT.** *A rate
+      whose denominator is not in the artifact a reader is holding is a rate that reader cannot check.*
+  USER_ITEM_3_09_03_REMAINS_EXPLORATORY_AND_IS_NOT_FINAL_FOR_QUOTATION:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T16:13:39Z
+    said: >-
+      ***USER REVIEW ITEM (3), RECORDED EXACTLY AND WITH THE COUNTS: "09-03 REMAINS EXPLORATORY -- 244 BOUNDARIES
+      AGREE AND 2 ARE OUTSIDE CAPTURE; `is_final_for_quotation=false`."*** **I confirmed the field at the artifact:
+      `"is_final_for_quotation": false`, present twice.** ***NOTHING FROM 09-03 MAY BE QUOTED AS FINAL.*** *The
+      artifact has said so in its own field since it was written; what this entry adds is that the state files now
+      say it too, in the user's words and with the counts, so the constraint does not depend on a reader opening the
+      JSON.*
+  AND_THAT_INCLUDES_THE_POINT_ESTIMATE_THIS_FILE_RECORDED_AS_THE_FIRST_CORRECTED_NUMBER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T16:13:39Z
+    said: >-
+      ***AND THE USER NAMES THE CASE THAT MATTERS MOST TO THIS FILE: THAT INCLUDES THE `D_E_settle +11,191.244402`
+      POINT ESTIMATE -- IT IS EXPLORATORY, UN-NULLED, AND ON A DAY THAT IS NOT FINAL FOR QUOTATION.*** **I recorded
+      that number at round 319 as "the first corrected number since the retraction", checked its arithmetic three
+      ways, and recorded at 322 that DA had reproduced it to the digit by a second implementation.** ***NONE OF THAT
+      MAKES IT QUOTABLE.*** *Reproduced is not the same as final; three qualifications now travel with it -- NO
+      CONTROL (`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`), A THRESHOLD AT A DRIFTED QUANTILE, AND A DAY THAT IS NOT FINAL
+      FOR QUOTATION* -- **and this file will not let its own earlier framing be read as a licence.**
   # --- MEM round 325 ADDENDUM, 2026-09-09T15:44:12Z ---
   REV_146_LANDED_AND_THE_SECOND_DERIVATION_HOLDS:
     prov: CHECKED
