@@ -109,6 +109,47 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## My own verifier had the shape bug too (DA 144) — and what it teaches
+
+`da_book_verify` asserted `n_scored_keys == n_covered` and recomputed coverage as
+`len(keys)/n_generations`. **Both hold only under PER_GENERATION.** On a per-row
+book the key count is a ROW count — 1,080 rows against 360 generations, coverage
+2.7 — so this seat would have raised a **false population alarm on every EV20
+book**, on the first one built. BE found it in my module and correctly did not
+touch it (R-235).
+
+**The fixture is why it survived: it built a LIST of string keys** — neither real
+shape — so no cell of mine could ever have exercised the per-row case. DA 125's
+lesson, in my own module. **A fixture that does not reproduce the producer's shape
+proves nothing about the producer.** It now emits `(slug, side, t)` triples with
+bare floats or dicts carrying `gen`, and `rows_per_gen` makes rows outnumber
+generations so a wrong divisor gives a wrong answer instead of an accidentally
+right one.
+
+**Condition the predicate; never drop it.** PER_GENERATION keeps the strict
+equality; PER_ROW gets `n_scored_keys >= n_covered` (rows can never be fewer than
+the generations they cover); an undetermined shape gets the weak form **reported as
+the weak form**, never as a pass.
+
+**Resolve the shape yourself where you can (R-235).** The book tier holds the
+pickle, so it derives the shape from the assembly's own values and *compares* it to
+the receipt's declared field — a receipt declaring the wrong shape is visible
+rather than believed. The receipt-only tier has no values: it takes the declared
+field, else infers per-generation **with the reason recorded**.
+
+**The third cell is the one that matters.** Removing a false alarm is how a real
+alarm gets through. Always drive: a book that genuinely does not cover what its
+receipt claims — 60 generations dropped from the assembly and not the receipt —
+and confirm it is STILL flagged under BOTH shapes. And make the known-bad the
+*old expression computed on the same book*, so the green is a measurement of the
+fix rather than of an easy input.
+
+**Operational note:** checkers that resolve "the newest params present" change
+verdict the moment anyone lands a params version. `da_gate1_day_verdict` and
+`da_accrual_report` went red on `params_v25` landing mid-round. **Every params
+landing needs its DA-side re-run in the same round** — and when the gate refuses,
+prove the reds are outside your import closure by AST before landing, and say so.
+
 ## The abutting boundary (DA 143) — the open edge of 361/362
 
 **Status: 361 CLOSED, 362 OPEN.** DE 162 bounded score times by the generation's
