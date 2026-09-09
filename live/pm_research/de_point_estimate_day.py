@@ -377,6 +377,7 @@ RECONCILE_INPUTS_INCOMPLETE = "POINT_ESTIMATE_RECONCILIATION_INPUTS_INCOMPLETE"
 RECONCILE_INPUTS_DISAGREE = "POINT_ESTIMATE_RECONCILIATION_INPUTS_DISAGREE"
 PRIVATE_KEY_SURVIVED = "POINT_ESTIMATE_PRIVATE_KEY_REACHED_THE_PAYLOAD"
 RECONCILE_NON_FINITE = "POINT_ESTIMATE_RECONCILIATION_NOT_FINITE"
+RECONCILE_NO_SPLIT = "RECONCILIATION_UNAVAILABLE_BOOK_CARRIES_NO_SPLIT"
 
 
 def _finite_scalars(node, path="$"):
@@ -452,8 +453,44 @@ def reconcile_placement_latency(result: dict) -> dict:
                 f"{first['baseline_total_cents']!r}). These are "
                 f"properties of the DAY; if they differ, one of the two "
                 f"arm-days valued a population the other did not.")
-    out = PLR.reconcile(first["reference"], first["winners"],
-                        first["baseline_total_cents"])
+    # ---- DE 186: A BOOK WITH NO SPLIT SAYS SO. IT DOES NOT RECONCILE
+    # AGAINST NOTHING. ---------------------------------------------------
+    # 09-03's EV21 book has no `placement_latency_split`: BE's own
+    # `_both_sets` refuses DROPPED_TRANCHES_ABSENT_FROM_THE_BOOK on it.
+    # That is a property of how the BOOK WAS BUILT, not a disagreement
+    # between numbers, so it is a STATUS and not a refusal -- refusing
+    # would make a whole class of existing books un-runnable for a reason
+    # that says nothing about the numbers being published. But it is a
+    # LOUD status: `ok: False`, `MUST_BE_SURFACED: True`, and a name, so
+    # a reader can never mistake "the check could not run" for "the check
+    # passed". A PARTIAL split stays a REFUSAL -- that one IS a defect.
+    try:
+        out = PLR.reconcile(first["reference"], first["winners"],
+                            first["baseline_total_cents"])
+    except PLR.ReconcileRefused as e:
+        if "DROPPED_TRANCHES_ABSENT_FROM_THE_BOOK" not in str(e):
+            raise
+        return {"protocol": "BE_PLACEMENT_LATENCY_RECONCILE_V1",
+                "ok": False,
+                "MUST_BE_SURFACED": True,
+                "status": RECONCILE_NO_SPLIT,
+                "refusal_from_the_checker": str(e).split(":")[0].strip(),
+                "what_is_unavailable": (
+                    "the L=0 complement leg. This book carries only the "
+                    "KEPT tranches, so KEPT-value cannot be compared "
+                    "against anything and the placement-latency question "
+                    "HAS NOT BEEN CHECKED for this day"),
+                "what_must_not_be_said": (
+                    "that the reconciliation passed, or that the latency "
+                    "effect is zero here. Neither was measured: the "
+                    "comparison has no second term"),
+                "how_to_get_it": (
+                    "rebuild the day with `split_by_placement_latency`, "
+                    "which keeps the complement instead of counting and "
+                    "discarding it (BE 133). 09-04 onward carry it"),
+                "day": first.get("day"),
+                "baseline_total_cents_from_the_ledger":
+                    float(first["baseline_total_cents"])}
     # ---- DE 181, FOUND BY DRIVING IT: A NON-FINITE VALUE PASSES EVERY
     # EQUALITY IN THE RECONCILIATION. ------------------------------------
     # `nan` compares False to everything, so `abs(sum - all) > tol` is
@@ -645,7 +682,7 @@ def run(day: str, book: Path, output_dir: Path, *,
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 23
+EXPECTED_CHECKS = 25
 
 
 def selftest(quiet: bool = False) -> int:
@@ -993,6 +1030,45 @@ def selftest(quiet: bool = False) -> int:
         {"day_run": {"arms": [{R.PLR_INPUTS_KEY: {"reference": {}}}]}}),
         PRIVATE_KEY_SURVIVED,
         "DE 181 KNOWN-BAD: a surviving private key NESTED two levels down")
+
+    # ---- DE 186: A NO-SPLIT BOOK SAYS SO, AND A PARTIAL ONE REFUSES ---
+    # 09-03's EV21 shape. The failure this cell exists for is the quiet
+    # one: a reconciliation that "passed" because it had nothing to
+    # compare. Anchored -- the checker really does refuse on this book --
+    # then the driver's own handling is driven.
+    _nosplit186 = {"s1": {"BUY_UP": [{"gen": 0, "t0": 0.0, "t1": 9.0,
+                                      "level": 0.5, "tranches": list(_K181)}],
+                          "SELL_UP": []}}
+    _anchored186 = None
+    try:
+        PLR.reconcile(_nosplit186, _W181, _kept181)
+    except PLR.ReconcileRefused as _e:
+        _anchored186 = "DROPPED_TRANCHES_ABSENT_FROM_THE_BOOK" in str(_e)
+    _out186 = reconcile_placement_latency(
+        _result181(_nosplit186, _W181, _kept181))
+    ok(_anchored186 is True
+       and _out186["ok"] is False
+       and _out186["MUST_BE_SURFACED"] is True
+       and _out186["status"] == RECONCILE_NO_SPLIT
+       and "HAS NOT BEEN CHECKED" in _out186["what_is_unavailable"],
+       f"DE 186 A BOOK WITH NO SPLIT SAYS SO RATHER THAN RECONCILING "
+       f"AGAINST NOTHING: BE's checker refuses "
+       f"DROPPED_TRANCHES_ABSENT_FROM_THE_BOOK on 09-03's shape (anchored), "
+       f"and this driver turns THAT ONE refusal into a LOUD STATUS -- "
+       f"`ok: false`, `MUST_BE_SURFACED: true`, `{_out186['status']}` -- "
+       f"because a book built without the complement leg is a fact about "
+       f"its CONSTRUCTION, not a disagreement between numbers. It is not "
+       f"a pass and no reader can read it as one")
+    # AND A PARTIAL SPLIT IS STILL A REFUSAL -- that one IS a defect.
+    _partial186 = {"s1": {"BUY_UP": [
+        {"gen": 0, "t0": 0.0, "t1": 9.0, "level": 0.5,
+         "tranches": list(_K181), PLR.DROPPED_KEY: list(_D181)},
+        {"gen": 1, "t0": 0.0, "t1": 9.0, "level": 0.5,
+         "tranches": list(_K181)}], "SELL_UP": []}}
+    _refuses(lambda: reconcile_placement_latency(
+        _result181(_partial186, _W181, _kept181)),
+        "DROPPED_TRANCHES_ON_ONLY_SOME_GENERATIONS",
+        "DE 186 KNOWN-BAD: a PARTIAL split is not a split")
 
     # ---- DE 182: THE WAIVER ASK, AND THE DEFAULT THAT MUST BE NO ------
     import de_scoring_path_delta as _SPD182

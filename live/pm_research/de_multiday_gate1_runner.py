@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 421
+EXPECTED_CHECKS = 423
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -5811,6 +5811,23 @@ def assert_one_placement_latency(doc) -> dict:
     }
 
 
+PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED = (
+    "SETTLEMENT_BOOK_PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED")
+
+
+def _scalar_siblings(receipt: dict, dotted: str) -> dict:
+    """The scalar fields of the block at `dotted` (a `.a.b` path)."""
+    node = receipt
+    for part in [p for p in dotted.split(".") if p]:
+        if not isinstance(node, dict) or part not in node:
+            return {}
+        node = node[part]
+    if not isinstance(node, dict):
+        return {}
+    return {k: v for k, v in node.items()
+            if not isinstance(v, (dict, list))}
+
+
 def placement_latency_from_the_book(builder_receipt: dict, *,
                                     book_path=None,
                                     book_sha256=None,
@@ -5871,17 +5888,98 @@ def placement_latency_from_the_book(builder_receipt: dict, *,
                 f"the builder receipt names placement latency at {malformed}, "
                 f"but the value is not numeric. A day cannot be quoted at an "
                 f"L no reader can parse.")
-        if len(vals) != 1:
+        # ---- DE 185: A DECLARATION AND A SUB-RECORD ARE NOT TWO ANSWERS.
+        # THE GUARD'S PREMISE WENT STALE, exactly as the coordinator read
+        # it -- but not in the direction of "the book now has two Ls".
+        # BE 133's EV21 receipt says something narrower and says it in
+        # words: the REFERENCE is built at L=0 so that BOTH valuations
+        # come from ONE replay, and "the declared L is applied afterwards
+        # and IS the L of `tranches`". So the book has ONE declared L and
+        # ONE recorded construction detail, and the walk was counting the
+        # detail as a rival declaration because it matched on the leaf
+        # NAME wherever it appeared (rule 32: the spelling is not the
+        # membership operation).
+        #
+        # THE PARTITION IS BY POSITION AND THE SUB-RECORD MUST BE
+        # ACCOUNTED FOR. A leaf directly inside the receipt or inside a
+        # `placement_latency` block DECLARES. A leaf nested deeper is a
+        # SUB-RECORD, and it is admitted ONLY IF the enclosing block
+        # states the same number under a key that is not a latency name --
+        # here `reference_built_at: 0.0`, which is `as_build_reference_
+        # reported_it.placement_latency_ms` to the digit. An unexplained
+        # nested value refuses under its OWN name, because it is a
+        # different fault from a receipt that declares two Ls.
+        #
+        # WHAT THIS DELIBERATELY DOES NOT DO, and it is a judgement:
+        # it does not let a caller REQUEST a leg. The L=0 set is the
+        # DROPPED tranches, which BE's own reconciliation calls an upper
+        # bound under a fill-probability assumption, and DA's
+        # `WHAT_MUST_NOT_BE_SAID` forbids quoting it as the effect.
+        # A leg-selection API would make "the day at L=0" a first-class
+        # answer this runner can emit, which is the road to publishing
+        # exactly what DA prohibited. The book answers at ONE L; the
+        # other leg is reported BESIDE it by the reconciliation, with its
+        # caveat attached.
+        _decl = {k: v for k, v in found.items()
+                 if k.count(".") <= 2 and isinstance(v, (int, float))}
+        _sub = {k: v for k, v in found.items()
+                if k not in _decl and isinstance(v, (int, float))}
+        _dvals = sorted({float(v) for v in _decl.values()})
+        if len(_dvals) != 1:
             raise RunnerRefused(
                 f"REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: "
-                f"the builder receipt names {len(vals)} placement-latency "
-                f"value(s), {vals}, at {found}. A day measures one maker, "
-                f"so its book must name exactly one L.")
-        return {"L_place_ms": vals[0],
+                f"the builder receipt DECLARES {len(_dvals)} placement-"
+                f"latency value(s), {_dvals}, at {_decl}. A day measures "
+                f"one maker, so its book must declare exactly one L. "
+                f"(Sub-records found at {_sub}; those are not the fault "
+                f"here -- the DECLARATIONS disagree.)")
+        _L = _dvals[0]
+        _accounted, _unaccounted = {}, {}
+        for k, v in _sub.items():
+            if float(v) == _L:
+                _accounted[k] = {"value": v, "accounted_by": "EQUALS THE "
+                                 "DECLARED L"}
+                continue
+            block = k.rsplit(".", 2)[0] if k.count(".") >= 2 else ""
+            owner = _scalar_siblings(builder_receipt, block)
+            match = [kk for kk, vv in owner.items()
+                     if isinstance(vv, (int, float))
+                     and not isinstance(vv, bool)
+                     and float(vv) == float(v)
+                     and kk not in ("L_place_ms", "placement_latency_ms")]
+            if match:
+                _accounted[k] = {"value": v, "accounted_by": sorted(match),
+                                 "in_block": block}
+            else:
+                _unaccounted[k] = v
+        if _unaccounted:
+            raise RunnerRefused(
+                f"REFUSED {PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED}: the "
+                f"builder receipt DECLARES L = {_L} and carries nested "
+                f"placement-latency value(s) {_unaccounted} that nothing "
+                f"in their own block accounts for. A nested L that the "
+                f"receipt does not explain is exactly the shape DE 151 "
+                f"found -- an artifact saying 250 at the top and 0 "
+                f"underneath -- so it refuses. A receipt that MEANS to "
+                f"record its reference's build latency states that number "
+                f"under its own name beside the declaration, as BE 133's "
+                f"`reference_built_at` does.")
+        return {"L_place_ms": _L,
                 "source": "THE BOOK'S BUILDER RECEIPT",
                 "found_at": found,
+                "declared_at": _decl,
+                "sub_records": _accounted,
+                "split_book": bool(_accounted),
                 "ambiguous": False,
                 "book": _book,
+                "LIMIT": (
+                    "a sub-record is accounted for when the enclosing "
+                    "block states the same number under a non-latency "
+                    "key. A block carrying an unrelated field that "
+                    "happens to equal the sub-record would satisfy that "
+                    "test -- the guard is not fooled into USING the "
+                    "sub-record (the L is always the DECLARED one), only "
+                    "into admitting the receipt"),
                 "why": ("read from the receipt of the book this day ran "
                         "on -- never typed here")}
     # R-811 (1): a book that does not RECORD its L must be refusable --
@@ -8612,6 +8710,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "day may proceed on it is a POLICY question and is not "
                 "decided here.")
     book_sha = bookcite["sha256"]
+    _plat_pre = None
     mod, cite = import_be_cascade(params, module=module)
     if not fixture:
         verify_pinned_models(params)
@@ -8626,6 +8725,22 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         _drel0 = (params.get("design_declaration") or {}).get("path")
         if _drel0:
             record_input_digest("design", _drel0)
+        # ---- DE 185: READ THE BOOK'S L AT S0, NOT AT THE EMIT ---------
+        # This reads the BUILDER RECEIPT and nothing else, so every
+        # refusal it can raise is knowable before the book is loaded --
+        # and it was raised at the EMIT, after the whole day. On 09-04 at
+        # 17:04Z that cost a 4 min 25 s point-estimate run; on the
+        # FULL-NULL path, which reaches the identical call unconditionally,
+        # it would cost S4's ~2 h 45 m of draws and write nothing. Same
+        # function, same input, same refusals -- this one just happens
+        # early. It is a FAIL-FAST and never the authority: the emit's
+        # call still computes the value that reaches the artifact.
+        # R-610's lesson, applied to the second check that could pay it.
+        _plat_pre = placement_latency_from_the_book(
+            json.loads(Path(receipt).read_text()),
+            book_path=book_path, book_sha256=bookcite["sha256"],
+            require_declared=bool((params.get("settlement_endpoint") or {})
+                                  .get("require_book_declares_L")))
     _mark("S0_verify")
 
     # ---- S0b: THE BATTERY, BEFORE THE DAY'S WORK (R-610) ---------------
@@ -9296,6 +9411,26 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         book_path=book_path, book_sha256=book_sha,
         require_declared=bool((params.get("settlement_endpoint") or {})
                               .get("require_book_declares_L")))
+    # DE 185: THE PREFLIGHT IS LOAD-BEARING, not a discarded fail-fast.
+    # An early read whose answer nobody compares is rule 28's shape --
+    # the evidence is computed and thrown away. The two reads are of the
+    # SAME file at the START and the END of the day, so a disagreement
+    # means the builder receipt CHANGED UNDER THE RUN, which no artifact
+    # should be written over.
+    if _plat_pre is not None and \
+            _plat_pre["L_place_ms"] != _plat["L_place_ms"]:
+        raise RunnerRefused(
+            f"REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_MOVED_DURING_THE_RUN:"
+            f" the builder receipt read L = {_plat_pre['L_place_ms']} at S0 "
+            f"and L = {_plat['L_place_ms']} at the emit. The receipt changed "
+            f"while the day ran, so neither value is safe to stamp on the "
+            f"artifact.")
+    _plat["preflight_agreed"] = (
+        {"L_place_ms_at_S0": _plat_pre["L_place_ms"],
+         "read_at": "S0_verify, before the book was loaded",
+         "why": "an early read nobody compares is evidence discarded"}
+        if _plat_pre is not None else
+        {"status": "NOT_READ_AT_S0", "why": "fixture run"})
     r20 = assert_rule20(obs, wall_s=wall, peak_rss_mb=peak, day=day)
     peak_pred = peak_stage_predicate(stages,
                                      declared=declared_peak_stage())
@@ -11201,6 +11336,81 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"predates the causal repair")
 
 
+
+    # ---- DE 185: A SPLIT BOOK IS NOT AN AMBIGUOUS ONE ----------------
+    # The guard refused the 09-04 EV21 book after a 4 min 25 s run. Its
+    # premise -- "two placement-latency values means a corrupt receipt" --
+    # went stale when BE 133 began building the reference at L=0 so that
+    # both valuations come from ONE replay, and recording that fact.
+    # THE PROPERTY IS DRIVEN SYNTHETICALLY so it holds in a fixture run
+    # that may open nothing under `data/`; the REAL receipts are the cell
+    # after this one, which skips offline.
+    _split185 = {"placement_latency": {
+        "placement_latency_ms": 250.0,
+        "reference_built_at": 0.0,
+        "why_the_two_differ": "the reference is built at L=0 so BOTH "
+                              "valuations come from ONE replay",
+        "as_build_reference_reported_it": {"placement_latency_ms": 0.0,
+                                           "n_tranches_dropped": 0}}}
+    _flat185 = {"placement_latency": {"placement_latency_ms": 250.0}}
+    _unacc185 = json.loads(json.dumps(_split185))
+    _unacc185["placement_latency"].pop("reference_built_at")
+    _unacc185["placement_latency"].pop("why_the_two_differ")
+    _twodecl185 = {"placement_latency": {"placement_latency_ms": 250.0},
+                   "L_place_ms": 0.0}
+    _sp = placement_latency_from_the_book(_split185, book_path="x")
+    _fl = placement_latency_from_the_book(_flat185, book_path="x")
+    _n1 = _n2 = None
+    try:
+        placement_latency_from_the_book(_unacc185, book_path="x")
+    except RunnerRefused as _e:
+        _n1 = str(_e).split(":")[0].replace("REFUSED ", "")
+    try:
+        placement_latency_from_the_book(_twodecl185, book_path="x")
+    except RunnerRefused as _e:
+        _n2 = str(_e).split(":")[0].replace("REFUSED ", "")
+    ok(_sp["L_place_ms"] == 250.0 and _sp["split_book"] is True
+       and _fl["L_place_ms"] == 250.0 and _fl["split_book"] is False
+       and _n1 == PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED
+       and _n2 == "SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS",
+       f"DE 185 A SPLIT BOOK IS NOT AN AMBIGUOUS ONE, AND THE TWO FAULTS "
+       f"HAVE TWO NAMES: a receipt DECLARING 250 with a nested 0.0 that "
+       f"`reference_built_at` ACCOUNTS FOR resolves to "
+       f"{_sp['L_place_ms']} and is marked a split book; the same receipt "
+       f"with the accounting field REMOVED refuses `{_n1}` -- DE 151's "
+       f"shape, a nested L nothing explains; a receipt DECLARING two "
+       f"values still refuses `{_n2}`, the original name for the original "
+       f"fault; and a flat receipt is unchanged. THE GUARD PICKS NOTHING "
+       f"-- the L is always the DECLARED one, and no caller may request a "
+       f"leg, because the L=0 set is the DROPPED tranches and BE's own "
+       f"reconciliation calls those an UPPER BOUND under a "
+       f"fill-probability assumption")
+
+    # AND THE SAME PROPERTY ON THE REAL RECEIPTS -- the 09-04 book that
+    # actually refused, and the 09-03 book that did not.
+    if offline:
+        offline_skip("DE 185 the real EV21 receipts resolve to one L")
+    else:
+        _here185 = Path(DR.resolve()["data_root"]) / "pm_5min" / "derived"
+        _o185 = {}
+        for _d185 in ("20260903", "20260904"):
+            _f185 = (_here185
+                     / f"be_daybook_receipt_{_d185}_btc__L250ms__EV21.json")
+            if _f185.is_file():
+                _o185[_d185] = placement_latency_from_the_book(
+                    json.loads(_f185.read_text()), book_path="x")
+        _s04 = _o185.get("20260904") or {}
+        ok(bool(_o185)
+           and all(v["L_place_ms"] == 250.0 for v in _o185.values())
+           and (_s04.get("split_book") is True if _s04 else True)
+           and ((_o185.get("20260903") or {}).get("split_book") is False
+                if "20260903" in _o185 else True),
+           f"DE 185 ON THE REAL ARTIFACTS: the 09-04 EV21 receipt -- the "
+           f"one that refused a 4 min 25 s run at 17:04Z -- resolves to "
+           f"L = {_s04.get('L_place_ms')} with its nested 0.0 accounted "
+           f"for by {[a.get('accounted_by') for a in (_s04.get('sub_records') or {}).values()]}, "
+           f"and 09-03's resolves with no sub-record at all. Driven at "
+           f"the artifacts the claim names, not at a fixture of them")
 
     # ---- DE 182: THE HANDOVER READS THE KEY THE LOADER RETURNS -------
     # This is the cell that would have caught `bk["fr"]["reference"]`. The
