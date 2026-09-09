@@ -78,6 +78,49 @@ class ClosureRefused(RuntimeError):
     """A named refusal."""
 
 
+#: THE VALUE THAT REPLACES A WITHDRAWN SET AT ITS OWN ADDRESS (BE 123).
+#:
+#: REV 135: *"the supersession notice is a SIBLING KEY and the stale set is
+#: still at the old address."* A notice BESIDE a stale set informs a reader
+#: who happens to look at the sibling; it does not stop one that reads the
+#: old key. Rule 28's shape exactly.
+#:
+#: THE CHOICE WAS DRIVEN, NOT ARGUED. Three consumer shapes were run against
+#: three options -- the landed block, the key REMOVED, and this marker:
+#:
+#:   landed      strict index -> 8 modules; `.get(...) or []` -> 8 modules;
+#:               iterate+check on disk -> 8 of 8 resolve. SILENTLY WRONG on
+#:               every shape.
+#:   REMOVED     strict index -> KeyError (loud), BUT the defensive idiom
+#:               this package uses everywhere, `(d.get(k) or {}).get(m) or
+#:               []`, yields ZERO modules and "0 of 0 resolve" -- a checker
+#:               that checks nothing and PASSES. Absence read as a pass is
+#:               the very failure being closed, so REMOVAL IS NOT SAFE HERE.
+#:   THIS        every shape yields exactly ONE element that resolves to no
+#:               file, so an existence or digest check fails on it and the
+#:               consumer REFUSES -- and the element it names in its own
+#:               refusal message IS the forwarding address.
+#:
+#: A dict keyed by the message rather than a bare string, because iterating
+#: a string yields 69 characters and iterating this yields one legible line.
+WITHDRAWN_MARK = ("WITHDRAWN_AT_BE_122__read_derived_closures."
+                  "recommended_for_a_consumer")
+
+
+def _withdrawn(was: int, why: str) -> dict:
+    """A set's old address, made LOUD rather than merely annotated."""
+    return {"status": "WITHDRAWN",
+            "modules": {WITHDRAWN_MARK: None},
+            "n": None,
+            "n_it_used_to_report": was,
+            "why": why,
+            "what_a_consumer_that_ignores_this_gets": (
+                "one element that resolves to no file, so its existence or "
+                "digest check fails and it REFUSES -- loudly, and naming "
+                "the forwarding address. It does not get the stale set"),
+            "read_instead": "derived_closures.recommended_for_a_consumer"}
+
+
 #: WHAT A CONSUMER OF THIS BLOCK MUST REFUSE -- the recording side's half of
 #: the fix, stated as FIELDS so DE's predicate is written against an artifact
 #: and not against a sentence in a register row.
@@ -407,35 +450,42 @@ def derive(closure: dict, root: Path | None = None) -> dict:
             "Restricted throughout to the closure the builder recorded",
         "root": str(root),
         "n_recorded": len(closure),
-        "scoring": {
-            "entry_points": [f"{m}.{f}" for m, f in SCORING_ENTRY_POINTS],
-            "produces": "asm['by_arm'] -- the scores the book CACHES, and "
-                        "the tape index they are assembled from",
-            "modules": _with_digests(sc),
-            "n": len(sc),
-            "first_edge_to_each": {k: v[0] for k, v in sorted(sc.items())},
-        },
-        "reference": {
-            "entry_points": [f"{m}.{f}" for m, f in REFERENCE_ENTRY_POINTS],
-            "produces": "fr -- the reference the book carries beside asm",
-            "modules": _with_digests(rf),
-            "n": len(rf),
-            "first_edge_to_each": {k: v[0] for k, v in sorted(rf.items())},
-        },
-        "union": {"modules": _with_digests(both), "n": len(both)},
+        # BE 123: THE RECEIPT-SCOPED SETS ARE WITHDRAWN AT THEIR OWN
+        # ADDRESSES, not annotated beside them. The receipt-scoped
+        # OPERATION is withdrawn -- not just the one output that was
+        # measurably wrong -- because `reference` matching the receipt-free
+        # walk today is a property of this tree, not of the method: one
+        # unrecorded module landing on that path would truncate it silently
+        # too. Killing the mechanism, not the instance.
+        "scoring": _withdrawn(
+            len(sc), "the closure is a WHITELIST on the traversal, so a "
+                     "module the recording does not name halts the walk "
+                     "there and severs everything behind it -- measured 8 "
+                     "against 12, and two of the four lost ARE in the "
+                     "recording"),
+        "reference": _withdrawn(
+            len(rf), "the same receipt-scoped operation. Its value happened "
+                     "to equal the receipt-free walk on this tree (6 = 6) "
+                     "and that is a coincidence of which modules were "
+                     "imported, not a property -- so it is withdrawn with "
+                     "the mechanism rather than kept because it was lucky"),
+        "union": _withdrawn(len(both), "derived from the two withdrawn sets"),
         # BE 122: THE RECEIPT-SCOPED SETS ABOVE ARE TRUNCATED AND ARE NO
         # LONGER THE ANSWER. The corrected sets are computed WITHOUT the
         # receipt and are published beside them with the delta, so a reader
         # of an older row cannot resolve to the wrong number.
         "SUPERSEDED_NOTICE": {
-            "what": "`scoring` and `reference` above are the RECEIPT-SCOPED "
-                    "walk, kept because they say what the recording "
-                    "supports -- they are NOT the set a consumer should "
-                    "check against",
-            "why": "the closure is a WHITELIST on the traversal, so a module "
-                   "the recording does not name halts the walk THERE and "
-                   "every module behind it is lost, including ones the "
-                   "recording DOES name. Measured: SCORING 8 against 12",
+            "what": "`scoring`, `reference` and `union` are WITHDRAWN AT "
+                    "THEIR OWN ADDRESSES (BE 123) -- their values are "
+                    "refusal markers, not sets. This notice is no longer "
+                    "what stops a stale read; the value is",
+            "why_a_notice_was_not_enough": "REV 135: a sibling key informs a "
+                                           "reader who looks at the "
+                                           "sibling. It does not stop one "
+                                           "that reads the old key, and "
+                                           "every consumer shape driven "
+                                           "against the annotated block "
+                                           "silently got the stale eight",
             "check_against": "recommended_for_a_consumer, below",
         },
         "recommended_for_a_consumer": _recommended(root, closure, sc, rf),
@@ -514,9 +564,16 @@ def _recommended(root: Path, closure: dict, sc: dict, rf: dict) -> dict:
         "operation": "REFERENCED_CALLED_OR_ATTRIBUTE_READ_THROUGH_AN_IMPORT_"
                      "ALIAS_TRANSITIVELY_FROM_THE_PRODUCER__COMPUTED_FROM_"
                      "THE_CODE_ON_DISK",
-        "for_a_SCORING_predicate": {"modules": fd_s["modules"],
-                                    "n": fd_s["n"]},
-        "for_a_WHOLE_BOOK_predicate": {"modules": u, "n": len(u)},
+        "for_a_SCORING_predicate": {
+            "modules": {m: closure.get(m) for m in fd_s["modules"]},
+            "n": fd_s["n"]},
+        "for_a_WHOLE_BOOK_predicate": {
+            "modules": {m: closure.get(m) for m in u}, "n": len(u)},
+        "digest_source": "the RECORDING's own digest for each module the "
+                         "receipt names; **None means the receipt does not "
+                         "name it** -- REPORTABLE, never refusable. So "
+                         "REFUSABLE and REPORTABLE read off ONE map and a "
+                         "consumer needs no second lookup",
         "REFUSABLE": {
             "rule": "every module of the chosen set that the receipt NAMES "
                     "must digest-match the file on disk",
@@ -578,7 +635,7 @@ def _from_disk_comparison(closure: dict, root: Path, scoped: dict) -> dict:
 # THE FALSIFIER
 # ---------------------------------------------------------------------------
 
-EXPECTED_CHECKS = 26
+EXPECTED_CHECKS = 29
 
 _A = '''
 import bmod as B
@@ -698,7 +755,11 @@ def falsify() -> int:
         typed = ("de_phase4_diag_runner.py", "de_head_scoring.py",
                  "de_score_stream.py", "harmful_stateful_policy.py",
                  "phase2_arms.py")
-        sc = set(out["scoring"]["modules"])
+        # BE 123: READ THE RECOMMENDED SET. These cells were consumers of
+        # the old address and FAILED LOUDLY when it was withdrawn, which is
+        # the withdrawal working on its first real consumer -- mine.
+        rec = out["recommended_for_a_consumer"]
+        sc = set(rec["for_a_SCORING_predicate"]["modules"])
         missed = sorted(sc - set(typed))
         extra = sorted(set(typed) - sc)
         ok(len(sc) > len(typed) and missed,
@@ -709,24 +770,27 @@ def falsify() -> int:
            f"and the typed modules the derivation does NOT reach are "
            f"{extra or 'none'} -- reported either way, because a typed name "
            f"the producer never calls is as much a defect as a missing one")
-        ok(set(out["reference"]["modules"]) != sc,
-           f"the REFERENCE set ({out['reference']['n']}) and the SCORING "
-           f"set ({out['scoring']['n']}) are different sets, which is why "
-           f"one typed list cannot answer both questions a book raises")
+        _rf123 = expected_set_from_disk(HERE, REFERENCE_ENTRY_POINTS)
+        ok(set(_rf123["modules"]) != sc,
+           f"the REFERENCE set ({_rf123['n']}) and the SCORING set "
+           f"({len(sc)}) are different sets, which is why one typed list "
+           f"cannot answer both questions a book raises")
         ok(out["LOWER_BOUND_NOT_UPPER"]["known_dynamic_sites"]
            and all("consequence" in s for s in
                    out["LOWER_BOUND_NOT_UPPER"]["known_dynamic_sites"]),
            "and the derivation ships its OWN limit with the consequence "
            "spelled out, because a lower bound offered as a guard is the "
            "silent under-cover rule 28 names")
-        ok(all(m in clo for m in out["union"]["modules"])
-           and all(out["union"]["modules"][m] == clo[m]
-                   for m in out["union"]["modules"])
-           and isinstance(out["scoring"]["modules"], dict),
-           f"every derived module is emitted AS {{module: digest}} with the "
-           f"RECORDING's own digest -- {out['union']['n']} of them -- so a "
-           f"consumer reads one key, compares each against disk, and types "
-           f"no list. A second hashing here would have been a second number")
+        _wm = rec["for_a_WHOLE_BOOK_predicate"]["modules"]
+        _named = {m: g for m, g in _wm.items() if g}
+        ok(isinstance(_wm, dict) and _named
+           and all(_named[m] == clo[m] for m in _named)
+           and all(m not in clo for m, g in _wm.items() if not g),
+           f"every recommended module is emitted AS {{module: digest}} with "
+           f"the RECORDING's own digest where the receipt names it and "
+           f"**None where it does not** -- {len(_named)} named of "
+           f"{len(_wm)} -- so REFUSABLE and REPORTABLE read off ONE map. A "
+           f"second hashing here would have been a second number")
 
     # ---- BE 119: THE CONSUMER CONTRACT, AND ITS CITATIONS CHECKED -----
     # The contract names REAL FILES as instances of each partial input. A
@@ -781,16 +845,20 @@ def falsify() -> int:
                   "membership-varies claim could not be driven")
     if rc:
         out2 = derive(clo, root=HERE)
-        ok(out2["scoring"]["n"] == len(out2["scoring"]["modules"])
-           and out2["union"]["n"] == len(out2["union"]["modules"])
+        _r2 = out2["recommended_for_a_consumer"]
+        ok(_r2["for_a_SCORING_predicate"]["n"]
+           == len(_r2["for_a_SCORING_predicate"]["modules"])
+           and _r2["for_a_WHOLE_BOOK_predicate"]["n"]
+           == len(_r2["for_a_WHOLE_BOOK_predicate"]["modules"])
            and out2["consumer_contract"]["the_expected_set_is_READ_not_typed"][
                "the_completeness_test"].startswith("n_checked =="),
            f"THE COMPLETENESS TEST IS ANSWERABLE FROM THE RECEIPT: the "
-           f"expected set ships with its own count ({out2['scoring']['n']} "
-           f"scoring, {out2['union']['n']} union) and `n` equals "
-           f"`len(modules)` in both, so `n_checked == n` needs no typed "
-           f"list -- and the contract says in the same block that a count "
-           f"alone proves cardinality and not identity")
+           f"recommended set ships with its own count "
+           f"({_r2['for_a_SCORING_predicate']['n']} scoring, "
+           f"{_r2['for_a_WHOLE_BOOK_predicate']['n']} whole-book) and `n` "
+           f"equals `len(modules)` in both, so `n_checked == n` needs no "
+           f"typed list -- and the contract says in the same block that a "
+           f"count alone proves cardinality and not identity")
 
     # ---- BE 121: THE EXPECTED SET WITHOUT THE RECEIPT -----------------
     fd = expected_set_from_disk(HERE)
@@ -893,6 +961,51 @@ def falsify() -> int:
         for _ in range(4):
             ok(False, "no real receipt, so the BE 122 reconciliation could "
                       "not be driven")
+    # ---- BE 123: THE WITHDRAWAL IS LOAD-BEARING, DRIVEN ---------------
+    if rc:
+        blk123 = derive(clo, root=HERE)
+        shapes = {
+            "strict index": lambda b: b["scoring"]["modules"],
+            "defensive .get(...) or []":
+                lambda b: (b.get("scoring") or {}).get("modules") or [],
+        }
+        got = {}
+        for nm, fn in shapes.items():
+            m = list(fn(blk123))
+            got[nm] = (len(m), sum(1 for x in m if (HERE / str(x)).is_file()))
+        ok(all(n == 1 and f == 0 for n, f in got.values())
+           and WITHDRAWN_MARK in str(list(shapes["strict index"](blk123))[0]),
+           f"THE OLD ADDRESS CANNOT SILENTLY YIELD THE OLD SET: every "
+           f"consumer shape gets ONE element that resolves to NO file "
+           f"({got}), so an existence or digest check fails on it and the "
+           f"consumer REFUSES -- naming the forwarding address in its own "
+           f"message. Before this the same shapes each got EIGHT modules, "
+           f"all resolving to real files")
+        import copy as _cp123
+        removed = _cp123.deepcopy(blk123)
+        removed.pop("scoring", None)
+        m_rm = list((removed.get("scoring") or {}).get("modules") or [])
+        ok(m_rm == [],
+           f"KNOWN-BAD THAT DECIDED THE CHOICE: REMOVING the key instead "
+           f"gives the defensive idiom -- the one this package uses "
+           f"everywhere -- {len(m_rm)} modules, so a checker iterating it "
+           f"checks NOTHING and PASSES. **Absence read as a pass is the "
+           f"failure being closed, so removal was not safe here and a "
+           f"truthy non-set value was**")
+        _sm = blk123["recommended_for_a_consumer"][
+            "for_a_SCORING_predicate"]["modules"]
+        ok(sum(1 for v in _sm.values() if v) == 10
+           and sorted(k for k, v in _sm.items() if not v)
+           == ["harmful_hazard_model.py", "phase2_state_schema_freeze.py"],
+           f"and the recommended map carries the split: "
+           f"{sum(1 for v in _sm.values() if v)} modules with the "
+           f"recording's digest (REFUSABLE) and "
+           f"{sorted(k for k, v in _sm.items() if not v)} with None "
+           f"(REPORTABLE) -- one map, no second lookup")
+    else:
+        for _ in range(3):
+            ok(False, "no real receipt, so the BE 123 withdrawal could not "
+                      "be driven")
     import tempfile as _tf121
     _empty = Path(_tf121.mkdtemp(prefix="be121_empty_"))
     try:

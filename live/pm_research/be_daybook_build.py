@@ -1690,29 +1690,34 @@ def selftest() -> int:
         _st117 = json.loads(_rcs[-1].read_text())["producing_code"]
         _blk = _producing_closure_block(_st117)
         _clo117 = (_st117.get("import_closure") or {}).get("modules") or {}
+        # BE 123: this cell read the OLD address and failed loudly when it
+        # was withdrawn -- the withdrawal working on its first real
+        # consumer, which was mine. It reads the recommended set now.
+        _rec = _blk["recommended_for_a_consumer"]
+        _wb = _rec["for_a_WHOLE_BOOK_predicate"]["modules"]
         ok(_blk.get("protocol") == "BE_PRODUCING_CLOSURE_V1"
            and _blk["n_recorded"] == len(_clo117) == 49
-           and _blk["scoring"]["n"] == 8 and _blk["reference"]["n"] == 6
-           and all(_blk["union"]["modules"][m] == _clo117[m]
-                   for m in _blk["union"]["modules"]),
-           f"THE DERIVED CLOSURES REACH THE RECEIPT: {_blk['n_recorded']} "
-           f"recorded -> SCORING {_blk['scoring']['n']}, REFERENCE "
-           f"{_blk['reference']['n']}, union {_blk['union']['n']}, each "
-           f"emitted as {{module: digest}} with THE RECORDING'S OWN digest. "
-           f"A consumer reads one key and types no list")
+           and _rec["for_a_SCORING_predicate"]["n"] == 12
+           and _rec["for_a_WHOLE_BOOK_predicate"]["n"] == 15
+           and _blk["scoring"]["status"] == "WITHDRAWN"
+           and all(_wb[m] == _clo117[m] for m in _wb if _wb[m]),
+           f"THE RECOMMENDED CLOSURES REACH THE RECEIPT: "
+           f"{_blk['n_recorded']} recorded -> SCORING "
+           f"{_rec['for_a_SCORING_predicate']['n']}, whole-book "
+           f"{_rec['for_a_WHOLE_BOOK_predicate']['n']}, as "
+           f"{{module: digest}} carrying THE RECORDING'S OWN digest where "
+           f"the receipt names the module and None where it does not -- and "
+           f"the receipt-scoped addresses are {_blk['scoring']['status']}")
         _typed = ("de_phase4_diag_runner.py", "de_head_scoring.py",
                   "de_score_stream.py", "harmful_stateful_policy.py",
                   "phase2_arms.py")
-        _sc117 = set(_blk["scoring"]["modules"])
-        ok(set(_typed) < _sc117
-           and sorted(_sc117 - set(_typed)) == ["de_data_root.py",
-                                                "de_multiday_gate1_runner.py",
-                                                "pm_tape_density.py"],
-           f"AND THE TYPED FIVE IS A STRICT SUBSET OF THE DERIVED EIGHT: "
-           f"every typed module IS reached, and the three it does not name "
-           f"are {sorted(_sc117 - set(_typed))}. `pm_tape_density.py` is in "
-           f"the ten-module cascade as well, so neither pin site names it "
-           f"for the SCORING question")
+        _sc117 = set(_rec["for_a_SCORING_predicate"]["modules"])
+        ok(set(_typed) < _sc117 and len(_sc117 - set(_typed)) == 7,
+           f"AND THE TYPED FIVE IS A STRICT SUBSET OF THE CORRECTED TWELVE: "
+           f"every typed module IS reached, and the {len(_sc117 - set(_typed))} "
+           f"it does not name are {sorted(_sc117 - set(_typed))}. "
+           f"`pm_tape_density.py` is in the ten-module cascade as well, so "
+           f"neither pin site names it for the SCORING question")
         _small = {"import_closure": {"modules": dict(list(_clo117.items())[:3])}}
         ok(_producing_closure_block(_st117)["n_recorded"] == 49
            and _producing_closure_block(_small).get("n_recorded") == 3,
