@@ -1324,9 +1324,34 @@ def rule22_stamp(tree: ast.AST, src: str, _via: bool = True) -> dict:
 
 # ------------------------------------------------------------ the module
 
+UNPARSEABLE = "SOURCE_DID_NOT_PARSE"
+
+
+class AuditRefused(RuntimeError):
+    """This module cannot be audited from the bytes it was given."""
+
+
 def audit_module(path: Path, role: str) -> dict:
+    #: DA 155: AN UNPARSEABLE INPUT IS A NAMED REFUSAL, NOT A TRACEBACK.
+    #: `ast.parse` raised a bare SyntaxError here, and this battery feeds
+    #: `audit_module` the stdout of a `git show` and text written to
+    #: scratch -- so ANY transient that yields partial source killed the
+    #: whole run with rc 1 and stdout truncated mid-cell, which is exactly
+    #: the signature observed twice during a landing window and never
+    #: since. The verdict now depends on the SUBJECT's bytes: unusable
+    #: bytes refuse by name and the caller decides, rather than the
+    #: process dying and the battery reading as a failure of the module
+    #: it happened to be examining.
     src = path.read_text()
-    tree = ast.parse(src)
+    try:
+        tree = ast.parse(src)
+    except SyntaxError as e:
+        raise AuditRefused(
+            f"REFUSED {UNPARSEABLE} for {path.name}: {e.msg} at line "
+            f"{e.lineno}. {len(src)} bytes were read. This audit reads "
+            f"source it is HANDED -- from `git show`, from scratch, from "
+            f"the tree -- and text that does not parse is an unusable "
+            f"input, not a finding about the module.") from None
     meas = measuring_functions(tree, src)
     consts = module_constants(tree)
     fx_sel = fixture_selected_budgets(tree, src)
@@ -1751,7 +1776,17 @@ def selftest() -> tuple:                                      # noqa: C901
          "77c723e:live/pm_research/de_multiday_gate1_runner.py"],
         capture_output=True, text=True)
     if smoke_bytes.returncode == 0:
-        old = _audit_text(tmp, "runner_at_77c723e.py", smoke_bytes.stdout)
+        #: DA 155: rc 0 IS NOT ENOUGH. This hands `git show`'s stdout
+        #: straight to the auditor; under concurrent git activity that
+        #: text can arrive unusable, and an uncaught SyntaxError killed
+        #: the run rather than failing a cell.
+        try:
+            old = _audit_text(tmp, "runner_at_77c723e.py", smoke_bytes.stdout)
+        except AuditRefused as _e:
+            ck("THE KNOWN-BAD AT 77c723e IS REACHABLE", False,
+               f"`git show` returned rc 0 and {len(smoke_bytes.stdout)} "
+               f"bytes that do not parse -- {str(_e)[:110]}")
+            old = None
         new = audit_module(
             AUDIT_ROOT / "live/pm_research/de_multiday_gate1_runner.py",
             "DE_runner")
@@ -1782,6 +1817,47 @@ def selftest() -> tuple:                                      # noqa: C901
     else:
         ck("THE KNOWN-BAD AT 77c723e IS REACHABLE", False,
            "git show failed: " + smoke_bytes.stderr[:120])
+
+    # -- B2. DA 155: UNUSABLE INPUT REFUSES BY NAME, BOTH DIRECTIONS -----
+    _ok_src = _scratch(tmp, "parses_fine.py", CLEAN_SRC)
+    _bad_src = _scratch(tmp, "does_not_parse.py", "def f(:\n")
+    _empty = _scratch(tmp, "empty.py", "")
+    try:
+        audit_module(_bad_src, "planted")
+        _bad_verdict = "ADMITTED"
+    except AuditRefused as _e:
+        _bad_verdict = str(_e).split(":")[0].replace("REFUSED ", "")
+    except SyntaxError:
+        _bad_verdict = "RAISED_SyntaxError"
+    _ok_verdict = audit_module(_ok_src, "planted")["verdict"]
+    _empty_verdict = audit_module(_empty, "planted")["verdict"]
+    ck("DA 155 -- UNPARSEABLE SOURCE IS A NAMED REFUSAL, NOT A TRACEBACK, "
+       "AND REAL SOURCE STILL AUDITS. This battery hands `audit_module` the "
+       "stdout of a `git show` and text written to scratch; a bare "
+       "SyntaxError there killed the whole run with rc 1 and stdout "
+       "truncated mid-cell -- the signature seen twice in a landing window "
+       "and never since. ***The verdict now depends on the SUBJECT's bytes: "
+       "unusable bytes refuse by name and the caller decides***",
+       _bad_verdict.startswith(UNPARSEABLE)
+       and "does_not_parse.py" in _bad_verdict
+       and _ok_verdict != UNPARSEABLE and _empty_verdict != UNPARSEABLE,
+       f"unparseable -> {_bad_verdict}; real source -> {_ok_verdict}; an "
+       f"EMPTY file still audits ({_empty_verdict}) because empty is valid "
+       f"Python and is a fact about the module, not an unusable input")
+    ck("DA 155 -- AND THE COMMITTED STATE IS THREE STATES: a scratch module "
+       "OUTSIDE the tree reads NOT_IN_THIS_TREE rather than 'uncommitted'. "
+       "`git status --porcelain -- <path>` exits 128 there, and the bool "
+       "collapsed that into False -- so every planted module this battery "
+       "audits was reported as uncommitted code. Absence read as a "
+       "negative, in my own instrument",
+       committed_state(_ok_src) == NOT_IN_TREE
+       and committed_state(Path(__file__).resolve()) in
+           (IN_TREE_CLEAN, IN_TREE_DIRTY)
+       and _is_committed(_ok_src) is False,
+       f"scratch module -> {committed_state(_ok_src)}; this auditor's own "
+       f"file -> {committed_state(Path(__file__).resolve())}; the bool "
+       f"still answers False for the scratch path, which is why it needed "
+       f"a name beside it")
 
     # -- C. PLANTED FIXTURE-IN-REAL-PATH, both directions ----------------
     clean = _audit_text(tmp, "clean_mod.py", CLEAN_SRC)
