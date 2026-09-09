@@ -1,3 +1,89 @@
+# READ FIRST — round 309 (MEM, 2026-09-09T10:12:28Z, tip `e9078c9`)
+
+**R-862 swept — six commits since `521438d`.** Light round, ledger form.
+
+# THE PER-DEFECT LEDGER — one row closes, one **re-opens**
+
+| # | defect | state |
+|---|---|---|
+| **1** | the cancel-matched null | **FIXED, DOUBLE-VERIFIED** |
+| **2** | the inflated decision count | **FIXED IN MECHANISM**, factor **UNQUANTIFIED** |
+| **3** | the false cancel-matching premise | **HANDLED IN MECHANISM**, rate **UNQUANTIFIED** |
+| **5a** | the predicate accepting a subset | **FIXED** |
+| **5b** | the predicate checking the wrong set | **⚠ RE-OPENED** → DE 168 |
+| **6a** | the protocol string | **✅ CLOSED AND VERIFIED** |
+
+## ✅ (6a) CLOSED AND VERIFIED — and the falsifier held
+
+DA's landing gate: **9 green / 3 red + `LAND REFUSED` → 10 GREEN / 2 RED (both long-declared), rc 0.** **The red
+that cleared is the one DA deliberately left standing** rather than silencing — *"silencing it would be exactly the
+loosening rule 27 warns about."* **⇒ The clearing is a falsifier, not a coincidence:** the conjunct is
+`protocol.endswith(V<n>)`, built dynamically, and could only go green by the string actually changing.
+
+**How it was fixed is rule 13 working rather than being quoted** — verified by me at the files:
+
+| params | protocol | |
+|---|---|---|
+| v25 · v26 · v27 · v28 | `…_PARAMS_V20` | **unchanged, exactly as landed** (v28's last commit still `3b93077`) |
+| **v29** | **`…_PARAMS_V29`** | the superseding version carries the correction |
+
+**A landed declaration was not rewritten, and another seat's gate cleared. The cheap fix was one character in v28 and
+it was not taken.**
+
+## ⚠ (5b) DOES NOT CLOSE — IT SPLITS. I drove **both** paths.
+
+| path | one-module receipt |
+|---|---|
+| **declared** (receipt carries `derived_closures.scoring`) | **REFUSES `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** — and so does seven-of-eight; full set passes at `n_checked == n_expected` |
+| **fallback** (no derived block) | **`BOOK_SCORING_CODE_MATCHES`, `n_checked: 1`** — the user's original probe passes again |
+
+**Mechanism:** when the derived block is unreadable the code sets **`_expected = dict(mods)`**, then computes
+**`mods ⊆ mods` — trivially true, so completeness cannot fail on that path.** The fallback's own comment says
+*"falling back to a typed list is the defect returning under another name"* and *"the RECORDING cannot under-cover,
+so it is the safe fallback"* — **and that second sentence is the tautology: the recording cannot under-cover
+itself.**
+
+**And I counted the artifacts myself: TWELVE landed builder receipts, ZERO carrying a `derived_closures` block.** BE
+117 landed the derivation on the recording side; **no book has been rebuilt since.**
+
+**⇒ Every real artifact today takes the fallback, so the completeness check is INERT on all of them.** The declared
+path is correct and **currently unreachable**; the reachable path is a self-comparison. *The repair and the artifacts
+it governs are separated by exactly the build that has not been authorised.*
+
+**The one mitigant, kept:** the fallback **names itself** in `_set_source` — **disclosed, not silent.** *What is
+missing is not the disclosure but the refusal.*
+
+## THE CLASS — two seats, two routes, one property
+
+**REV 132: *"the expected set is the receipt's own and NOTHING RECOMPUTES IT."*** **The artifact under examination
+names its own examination scope, so a receipt that omits a module is never asked about it — and digest-correctness
+cannot save that.** Every hash compared can be right; **a module the receipt omits is outside the question, not
+failing it.** *Same shape as (5a)'s not-empty-vs-coverage guard, one level up: there the set was short, here the set
+is whatever arrives.*
+
+## REV 131's RED — not the story it looked like
+
+`AUDIT_ROOT` resolved to the **main tree**, so from a worktree **`git -C <main> status -- <worktree path>` exits 128**
+and `committed_state` read `NOT_IN_THIS_TREE`. **The question was being asked of the wrong tree.** **DA explicitly
+does *not* claim the rule-31 dirtiness story: *"a spotless worktree fails it identically."*** The easy narrative was
+available and true-sounding, and DA refused it because its own control rules it out.
+
+**And DA's disclosure against itself is how the (5b) split was found:** *"my case drove ONLY the fallback and first
+reported the whole predicate broken — my own class, caught by **asking why a case that had flipped un-flipped**."*
+*That question separated "the predicate is broken" from "the predicate has two paths and I tested one."*
+
+**R-862 also names ~30 older assertions that test a phrase rather than the property as a follow-on NOT swept into
+scope.** *Naming the backlog keeps it findable without making the user's five items wait behind it.*
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z.**
+
+Counts: flags 2634 → 2646, provenance 2179 → 2191 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 291 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 308 (MEM, 2026-09-09T10:04:14Z, tip `34a0dd3`)
 
 **DE 167 and REV 131 swept — four commits since `7640559`.** Light round, **ledger form kept.**

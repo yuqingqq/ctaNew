@@ -67,6 +67,46 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T10:12:28Z (MEM ROUND 309 -- R-862 SWEPT, LIGHT ROUND, from `521438d` to `e9078c9`, six commits. STATE ONLY,
+  PER-DEFECT LEDGER FORM. ***TWO ROWS MOVE AND ONE RE-OPENS.*** **(6a) THE PROTOCOL STRING IS CLOSED AND VERIFIED**
+  -- the first row to reach that word since the gate arithmetic was withdrawn: DA 156 re-ran its own landing gate,
+  ***9 GREEN / 3 RED + `LAND REFUSED` -> 10 GREEN / 2 RED (both long-declared), rc 0***, **and the red that cleared
+  is the one DA DELIBERATELY LEFT STANDING rather than silencing** ("silencing it would be exactly the loosening
+  rule 27 warns about"), ***SO THE CLEARING IS A FALSIFIER AND NOT A COINCIDENCE*** -- the conjunct was
+  `protocol.endswith(V<n>)`, built dynamically, and could only go green by the string actually changing. ***AND HOW
+  DE FIXED IT IS RULE 13 WORKING RATHER THAN BEING QUOTED: IT LANDED `params_v29` CARRYING `..._PARAMS_V29` RATHER
+  THAN EDITING v28***, which I verified at the files -- **v25, v26, v27 AND v28 all still read `..._PARAMS_V20`
+  exactly as they landed**, v28's last touching commit still `3b93077`: a landed declaration was NOT rewritten, the
+  superseding version carries the correction, and another seat's gate cleared. **The cheap fix was one character in
+  v28 and it was not taken.** ***(5b) DOES NOT CLOSE -- IT SPLITS, AND THE SPLIT IS THE FINDING; MARKED RE-OPENED,
+  WITH DE 168.*** I drove BOTH predicate paths at HEAD rather than either alone. **DECLARED PATH: the full set
+  passes at `n_checked = 5` with `n_checked == n_expected`, and a one-module receipt REFUSES
+  `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** -- DA adds that seven-of-eight refuses too, so it is genuinely COMPLETE
+  over the derived set. ***FALLBACK PATH: THE SAME ONE-MODULE RECEIPT RETURNS `BOOK_SCORING_CODE_MATCHES` WITH
+  `n_checked: 1` -- THE USER'S ORIGINAL PROBE PASSES AGAIN*** -- because when the derived block is unreadable the
+  code sets `_expected = dict(mods)` and then computes `mods ⊆ mods`, ***TRIVIALLY TRUE, SO COMPLETENESS CANNOT FAIL
+  ON THAT PATH***; the fallback's own comment says "falling back to a typed list is the defect returning under
+  another name" and "the RECORDING cannot under-cover, so it is the safe fallback" -- **and that second sentence IS
+  the tautology, since the recording cannot under-cover ITSELF.** ***AND I COUNTED THE ARTIFACTS MYSELF: TWELVE
+  LANDED BUILDER RECEIPTS, ZERO CARRYING A `derived_closures` BLOCK*** -- BE 117 landed the derivation on the
+  recording side and **no book has been rebuilt since**, so ***EVERY REAL ARTIFACT TODAY TAKES THE FALLBACK AND THE
+  COMPLETENESS CHECK IS INERT ON ALL OF THEM***: the declared path is correct and currently UNREACHABLE, the
+  reachable path is a self-comparison. The one mitigant, kept: **the fallback NAMES ITSELF in `_set_source`, so it
+  is DISCLOSED, NOT SILENT** -- what is missing is not the disclosure but the REFUSAL. ***REV 132 REACHES THE SAME
+  PROPERTY FROM THE OTHER SIDE, WHICH TURNS IT FROM A BUG INTO A CLASS: "THE EXPECTED SET IS THE RECEIPT'S OWN AND
+  NOTHING RECOMPUTES IT" -- THE ARTIFACT UNDER EXAMINATION NAMES ITS OWN EXAMINATION SCOPE, SO A RECEIPT THAT OMITS
+  A MODULE IS NEVER ASKED ABOUT IT, AND DIGEST-CORRECTNESS CANNOT SAVE THAT***: every hash compared can be right,
+  because a module the receipt omits is OUTSIDE the question rather than failing it. **REV 131's RED, DIAGNOSED BY
+  DA 156, WAS NOT THE STORY IT LOOKED LIKE**: `AUDIT_ROOT` resolved to the MAIN tree, so from a worktree `git -C
+  <main> status -- <worktree path>` EXITS 128 and `committed_state` read `NOT_IN_THIS_TREE` -- ***THE QUESTION WAS
+  BEING ASKED OF THE WRONG TREE, AND DA EXPLICITLY DOES NOT CLAIM THE RULE-31 DIRTINESS STORY BECAUSE "A SPOTLESS
+  WORKTREE FAILS IT IDENTICALLY"***; the easy narrative was available and DA refused it. And DA's disclosure against
+  itself is how the split was found: ***"my case drove ONLY the fallback and first reported the whole predicate
+  broken -- my own class, caught by ASKING WHY A CASE THAT HAD FLIPPED UN-FLIPPED."*** R-862 also names **~30 OLDER
+  ASSERTIONS THAT TEST A PHRASE RATHER THAN THE PROPERTY as a follow-on NOT swept into scope.** UNCHANGED: **(1)
+  FIXED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both needing a corrected book;
+  (5a) FIXED.** Flags 2634 -> 2646, prov 2179 -> 2191; window 3/3, Batch 291 archived. **NOTHING BUILT, NO HEAVY
+  LOCK SINCE 07:15:47Z.** MEM asserts no result.)
   2026-09-09T10:04:14Z (MEM ROUND 308 -- DE 167 and REV 131 SWEPT, LIGHT ROUND, from `7640559` to `34a0dd3`, four commits.
   STATE ONLY, PER-DEFECT LEDGER FORM KEPT. ***TWO ROWS MOVE AND BOTH MOVE TO "FIXED PENDING VERIFICATION", WHICH IS
   NOT "FIXED".*** **(5b) THE PREDICATE CHECKING THE WRONG SET -- FIXED PENDING VERIFICATION**: I re-ran last round's
@@ -154,44 +194,6 @@ updated: >-
   DRIVES, IT DOES NOT READ"* and the THREE-DRIVE STANDARD where **two of three is a fail.** Flags 2610 -> 2622, prov
   2155 -> 2167; window 3/3, Batch 289 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z; NO "CLOSED AND
   VERIFIED" COUNT IS RESTORED BEYOND THE LEDGER ABOVE.** MEM asserts no result.)
-  2026-09-09T09:40:36Z (MEM ROUND 306 -- DE 166 and REV 128 SWEPT, LIGHT ROUND, from `1f98fc7` to `623c050`, SEVEN commits -- I swept four to `da1a117` and THREE MORE LANDED WHILE I WROTE, so DA's verdict and REV 129 are folded in an addendum below rather than left to next round.
-  STATE ONLY. ***THE STATE CHANGE: THE USER'S DEFECTS ARE REPAIRED AND THE FIRST VERIFICATION IS IN.*** I re-ran my
-  own round-304 census rather than reading DE's claim: **the day path `:8120` now passes `arm_cancels=True` and
-  `control_set_path=True`**, and the two other call sites pass neither BECAUSE THAT IS CORRECT -- `:11659` is the
-  second-valuation cell **declaring the historical row-matched unit EXPLICITLY rather than reaching it by
-  omission**, `:15125` drives the refusal cases. ***AND IT IS CLOSED AT THE ARTIFACT, NOT ONLY IN THE CODE***: REV
-  128 re-drove its own REVIEW 126 baseline at the same entry point -- `arm_cancels` False -> True,
-  `control_set_path` False -> True, **`draw_provenance.matched_on` ABSENT -> `CANCELS`** -- and ***AN ABSENT FIELD
-  IS EXACTLY WHAT LET R-837, R-847, R-852 AND R-856 CLAIM RULING B WAS IMPLEMENTED WITH NO RECEIPT CONTRADICTING
-  THEM***; the receipt reads the unit back FROM THE NULL'S RESULT, never from the argument, and DE found
-  `verify_draw_provenance` DROPPING `matched_on` while rebuilding the block, one field below its own comment about
-  not dropping the cross-check (rule 28 again). **The refusal is real, driven five ways**: `matched_on` omitted /
-  `None` / `ROWS` -> `NULL_MATCHING_UNIT_NOT_DECLARED`; `CANCELS` without cancel records or without a control set ->
-  `NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS`; the declared alternative `DECISIONS` proceeds -- ***THE UNIT IS
-  REQUIRED AND CHECKED AGAINST THE INPUTS THAT WOULD MAKE IT TRUE***, and the cell asserting the row-matched
-  cross-check `identical is True` WENT RED the moment the ruled null was wired. DE'S GENERALISATION, WHICH IS THE
-  RIGHT ONE: ***"A DEFAULT IS WHAT MADE A WIRED-LOOKING THING UNWIRED"***, and the unreachable case is now IMPOSSIBLE
-  rather than fixed. **(b) and (d) re-driven by me**: `day_decision_population` builds `_gens = {(slug, side,
-  int(gen))}` and counts `by_side` over THAT, so the number is ACTIONS and the `definition` string is now TRUE; the
-  one-module receipt that passed last round now REFUSES `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`, with
-  `closure_coverage` PUBLISHED as 5 of 49. ***A DISTINCTION I MEASURED AND WILL NOT LET BLUR: (c) IS REPAIRED AT THE
-  CONSUMER, NOT AT THE INVARIANT*** -- `one_cancel_per_generation` STILL returns True on `7` / `7.r1`, correctly,
-  being an invariant about POLICY ids; what changed is that `de_matched_cancel_control` measures the relation keyed
-  `(slug, side, ref_gen)` and REFUSES `MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE`, both old
-  consequences having been measured (a saturated stratum refusing `STRATUM_TOO_SMALL`, LOUD FOR THE WRONG REASON;
-  a stratum with room drawing SILENTLY on 2 reference generations where the arm acted on 1). ***AND WHAT DE
-  EXPLICITLY DID NOT ESTABLISH, BECAUSE IT BOUNDS WHAT THE REPAIR CAN CLAIM: THE REAL ROWS-PER-DECISION FACTOR AND
-  THE REAL RATE OF DOUBLE-CANCELLED GENERATIONS BOTH NEED A CORRECTED BOOK AND NONE EXISTS -- FIXED IN MECHANISM,
-  UNQUANTIFIED UNTIL SOMETHING IS BUILT.*** DE disclosed THREE SLIPS caught before landing -- an if/else that
-  INVERTED `PARTIAL_ROWS`, which PARSED AND WAS WRONG, and **TWO ASSERTIONS THAT TESTED A PHRASE RATHER THAN THE
-  PROPERTY, RULE 33'S OWN CLASS FOUND BY THE SEAT IN ITS OWN WORK** -- carried RELAYED, not CHECKED, because I could
-  not reach them at an artifact. And `de_land.sh`'s guard **based its diff on the WORKTREE'S HEAD, which under rule
-  31 is a local commit the shared tree never saw**, refusing seven of DE's own paths; the base is the MERGE-BASE now
-  and re-driven both ways. ***THE GATE ARITHMETIC STAYS WITHDRAWN -- DO NOT RESTORE "CLOSED AND VERIFIED" COUNTS:
-  DA'S VERDICT LANDED WHILE I WROTE AND (d) IS ONLY HALF-REPAIRED -- SEE THE ADDENDUM.*** Pair of record advanced TWICE, each crank
-  in the same commit as the fix that moved the module: **params v28 + design v36**, 10/10 cascade digests 0
-  mismatched. Flags 2595 -> 2610, prov 2140 -> 2155; window 3/3, Batch 288 archived. **NOTHING BUILT, NO HEAVY LOCK
-  SINCE 07:15:47Z.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -363,6 +365,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 309, R-862 swept; 6a CLOSED AND VERIFIED, 5b RE-OPENED (521438d -> e9078c9) ---
+  SIX_A_IS_CLOSED_AND_VERIFIED_AND_THE_RED_THAT_CLEARED_IS_THE_ONE_DA_REFUSED_TO_SILENCE: 9-3-REFUSED-TO-10-2-rc0
+  AND_HOW_IT_WAS_FIXED_IS_THE_RULE_13_DISCIPLINE_WORKING: A-NEW-VERSION-NOT-AN-EDIT
+  FIVE_B_DOES_NOT_CLOSE_IT_SPLITS_AND_I_DROVE_BOTH_PATHS: RE-OPENED-WITH-DE-168
+  THE_FALLBACK_COMPUTES_MODS_SUBSET_MODS_AND_THE_USERS_PROBE_PASSES_AGAIN: n_checked-1-ONCE-MORE
+  AND_ZERO_OF_TWELVE_LANDED_RECEIPTS_CARRY_THE_DERIVED_BLOCK: COUNTED-BY-ME-AT-THE-FILES
+  SO_ON_EVERY_REAL_ARTIFACT_TODAY_THE_COMPLETENESS_CHECK_IS_INERT: THE-DECLARED-PATH-IS-UNREACHABLE
+  THE_FALLBACK_NAMES_ITSELF_SO_IT_IS_DISCLOSED_NOT_SILENT: THE-ONE-MITIGANT-AND-I-KEEP-IT
+  REV_132_STATES_THE_SAME_PROPERTY_FROM_THE_OTHER_SIDE_AND_TOGETHER_THEY_GENERALISE_IT: NOTHING-RECOMPUTES-IT
+  AND_DIGEST_CORRECTNESS_CANNOT_SAVE_A_SCOPE_THE_ARTIFACT_CHOSE: EVERY-HASH-RIGHT-SET-WRONG
+  DAS_RED_WAS_THE_WRONG_TREE_ASKED_NOT_THE_DIRTINESS_STORY: GIT-EXITS-128-FROM-A-WORKTREE
+  AND_DA_FOUND_ITS_OWN_CLASS_BY_ASKING_WHY_A_FLIPPED_CASE_UN_FLIPPED: IT-DROVE-ONLY-THE-FALLBACK
+  THIRTY_OLDER_PHRASE_ASSERTIONS_ARE_A_NAMED_FOLLOW_ON_NOT_SWEPT_INTO_SCOPE: NAMED-NOT-ABSORBED
   # --- MEM round 308, DE 167 + REV 131 swept; two ledger rows move to PENDING (7640559 -> 34a0dd3) ---
   FIVE_B_IS_FIXED_PENDING_VERIFICATION_AND_THE_RUNNER_NOW_READS_THE_DERIVED_SET: ELEVEN-REFERENCES-AGAINST-ZERO
   SIX_A_IS_FIXED_PENDING_VERIFICATION_AND_THE_SUFFIX_TRACKS_AT_v29: V29-AT-v29-FIRST-TIME-SINCE-V20
@@ -27039,6 +27054,143 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 309, 2026-09-09T10:12:28Z ---
+  SIX_A_IS_CLOSED_AND_VERIFIED_AND_THE_RED_THAT_CLEARED_IS_THE_ONE_DA_REFUSED_TO_SILENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      ***LEDGER ROW (6a) IS CLOSED AND VERIFIED -- THE FIRST ROW TO REACH THAT WORD SINCE THE GATE ARITHMETIC WAS
+      WITHDRAWN.*** DA 156 re-ran its own landing gate: ***9 GREEN / 3 RED + `LAND REFUSED` -> 10 GREEN / 2 RED
+      (both long-declared), rc 0.*** **And the red that cleared is the one DA DELIBERATELY LEFT STANDING three
+      rounds ago rather than silencing** -- *"it should stay red until that string is fixed; silencing it would be
+      exactly the loosening rule 27 warns about."* ***THAT REFUSAL IS WHY THE CLEARING IS A FALSIFIER AND NOT A
+      COINCIDENCE***: the conjunct was `protocol.endswith(V<n>)`, built dynamically, and it could only go green by
+      the string actually changing. **A red kept honestly for three rounds paid for itself in one.**
+  AND_HOW_IT_WAS_FIXED_IS_THE_RULE_13_DISCIPLINE_WORKING:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      ***AND HOW DE FIXED IT IS THE POINT, BECAUSE IT IS RULE 13 WORKING RATHER THAN BEING QUOTED: IT LANDED
+      `params_v29` CARRYING `P003_DE_MULTIDAY_GATE1_PARAMS_V29` RATHER THAN EDITING v28.*** I verified the
+      immutability half at the files: **v25, v26, v27 AND v28 all still read `..._PARAMS_V20` exactly as they
+      landed**, and v28's last touching commit is still `3b93077` (DE 166). ***A LANDED DECLARATION WAS NOT
+      REWRITTEN, THE SUPERSEDING VERSION CARRIES THE CORRECTION, AND ANOTHER SEAT'S GATE CLEARED*** -- *"corrections
+      supersede in-band"* with nothing edited behind a reader's back. **The cheap fix was one character in v28 and
+      it was not taken.**
+  FIVE_B_DOES_NOT_CLOSE_IT_SPLITS_AND_I_DROVE_BOTH_PATHS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      ***LEDGER ROW (5b) DOES NOT CLOSE -- IT SPLITS, AND THE SPLIT IS THE FINDING. MARKED RE-OPENED, WITH DE 168.***
+      I drove **both** predicate paths at HEAD rather than either alone. **DECLARED PATH (receipt carries
+      `derived_closures.scoring`): the full set passes at `n_checked = 5` with `n_checked == n_expected`, and a
+      one-module receipt REFUSES `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** -- DA adds that **seven-of-eight refuses
+      too**, so it is genuinely complete over the derived set. ***FALLBACK PATH (no derived block): the SAME
+      one-module receipt returns `BOOK_SCORING_CODE_MATCHES` WITH `n_checked: 1`.*** **The user's original probe
+      passes again.**
+  THE_FALLBACK_COMPUTES_MODS_SUBSET_MODS_AND_THE_USERS_PROBE_PASSES_AGAIN:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      And the mechanism, read at the lines that do it: when the derived block is unreadable the code sets
+      ***`_expected = dict(mods)`*** and then computes `recorded = {m: d for m, d in mods.items() if m in
+      _expected}` -- ***`mods ⊆ mods`, TRIVIALLY TRUE, SO COMPLETENESS CANNOT FAIL ON THAT PATH.*** The fallback's
+      own comment says *"falling back to a typed list is the defect returning under another name"* and *"the
+      RECORDING cannot under-cover, so it is the safe fallback"* -- **and that second sentence is exactly the
+      tautology**: the recording cannot under-cover ITSELF. ***THE FIX AVOIDED THE TYPED LIST AND LANDED ON A
+      SELF-COMPARISON***, which is rule 16 -- a control that cannot fail -- reached from a third direction.
+  AND_ZERO_OF_TWELVE_LANDED_RECEIPTS_CARRY_THE_DERIVED_BLOCK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      **And the census that decides which path is the real one, counted by me at the files rather than taken from
+      the report: I parsed every landed builder receipt in `data/pm_5min/derived/` -- ***TWELVE RECEIPTS, ZERO
+      CARRYING A `derived_closures` BLOCK.*** BE 117 landed the derivation on the RECORDING side hours ago; **no
+      book has been rebuilt since, and a receipt only gains the block when its builder runs.** *The repair and the
+      artifacts it governs are separated by exactly the build that has not been authorised.*
+  SO_ON_EVERY_REAL_ARTIFACT_TODAY_THE_COMPLETENESS_CHECK_IS_INERT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      ***PUTTING THE TWO TOGETHER IS THE STATE: EVERY REAL ARTIFACT TODAY TAKES THE FALLBACK, SO ON EVERY REAL
+      ARTIFACT TODAY THE COMPLETENESS CHECK IS INERT.*** The declared path is correct and **currently unreachable**;
+      the reachable path is a tautology. **A guard verified on the path nothing uses is the same class the programme
+      has now found five times** -- rule 33's identity question, arriving as *which path did the verification
+      examine, and which path does production take.* ***THIS IS WHY THE ROW IS RE-OPENED RATHER THAN CLOSED WITH A
+      CAVEAT.***
+  THE_FALLBACK_NAMES_ITSELF_SO_IT_IS_DISCLOSED_NOT_SILENT:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      **The one mitigant, kept because it is real and because a re-opened row should still record what is right:
+      THE FALLBACK NAMES ITSELF.** `_set_source` is written into the result as *"producing_code.import_closure
+      (FALLBACK: the receipt carries no readable `derived_closures.scoring`; this is a receipt older than BE 117,
+      or its derivation reported DERIVATION_FAILED...)"*. ***SO IT IS DISCLOSED, NOT SILENT -- A READER OF THE
+      RESULT CAN SEE WHICH SET WAS USED***, which is the same repair shape that closed row (1): `matched_on` made
+      the null's unit unfalsifiable by omission. **What is missing here is not the disclosure but the refusal.**
+  REV_132_STATES_THE_SAME_PROPERTY_FROM_THE_OTHER_SIDE_AND_TOGETHER_THEY_GENERALISE_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      ***AND REV 132 REACHES THE SAME PROPERTY FROM THE OTHER SIDE, WHICH IS WHAT TURNS IT FROM A BUG INTO A CLASS:
+      "THE EXPECTED SET IS THE RECEIPT'S OWN AND NOTHING RECOMPUTES IT."*** DA came at it through a case that
+      un-flipped; REV came at it through DE 167's three drives, which it VERIFIES on all three. Stated generally:
+      ***THE ARTIFACT UNDER EXAMINATION NAMES ITS OWN EXAMINATION SCOPE, SO A RECEIPT THAT OMITS A MODULE IS NEVER
+      ASKED ABOUT IT.*** **Two seats, two routes, one property** -- the same convergence that settled the flake
+      premise last round, and the reason this file records it as a programme fact rather than a DE finding.
+  AND_DIGEST_CORRECTNESS_CANNOT_SAVE_A_SCOPE_THE_ARTIFACT_CHOSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      And the clause that closes off the obvious defence: ***DIGEST-CORRECTNESS CANNOT SAVE THAT.*** Every hash the
+      predicate compares can be right -- **it verifies exactly the modules the receipt chose to name, and a module
+      the receipt omits is outside the question, not failing it.** *A checker whose scope is supplied by the thing
+      it checks measures the thing's honesty, not its correctness*, and no amount of cryptographic rigour inside the
+      scope repairs a scope the subject selected. **This is the same shape as (5a)'s NOT-EMPTY-vs-COVERAGE guard,
+      one level up: there the SET was short, here the SET IS WHATEVER ARRIVES.**
+  DAS_RED_WAS_THE_WRONG_TREE_ASKED_NOT_THE_DIRTINESS_STORY:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      **REV 131's red, diagnosed by DA 156, and the redness was NOT the story it looked like:** `AUDIT_ROOT`
+      resolved to the **MAIN tree**, so from a worktree ***`git -C <main> status -- <worktree path>` EXITS 128 and
+      `committed_state` read `NOT_IN_THIS_TREE`*** -- **the question was being asked of the WRONG TREE.** ***AND DA
+      EXPLICITLY DOES NOT CLAIM THE RULE-31 DIRTINESS STORY: "a spotless worktree fails it identically."*** **The
+      easy narrative was available and true-sounding -- every seat commits as it goes, so every worktree is dirty --
+      and DA refused it because the control it drove rules it out.** `committed_state` now defaults to the FILE'S
+      OWN tree. *Rejecting a plausible explanation you cannot drive is the same discipline that corrected the flake
+      premise, in the same module, twice.*
+  AND_DA_FOUND_ITS_OWN_CLASS_BY_ASKING_WHY_A_FLIPPED_CASE_UN_FLIPPED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      And DA's disclosure against itself, which is how the (5b) split was found at all: ***"my case drove ONLY the
+      fallback and first reported the whole predicate broken -- my own class, caught by ASKING WHY A CASE THAT HAD
+      FLIPPED UN-FLIPPED."*** **A case built before the fix is supposed to stop firing when the fix lands; this one
+      kept firing, and instead of filing "the fix did not work" DA asked which path its case took.** ***THE
+      QUESTION "WHY DID MY OWN CASE NOT FLIP" IS WHAT SEPARATED "THE PREDICATE IS BROKEN" FROM "THE PREDICATE HAS
+      TWO PATHS AND I TESTED ONE"*** -- and only the second is true and actionable.
+  THIRTY_OLDER_PHRASE_ASSERTIONS_ARE_A_NAMED_FOLLOW_ON_NOT_SWEPT_INTO_SCOPE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:12:28Z
+    said: >-
+      **R-862 records a follow-on the way this programme has learned to: NAMED, NOT ABSORBED.** DE's own repair
+      round surfaced **~30 OLDER ASSERTIONS THAT TEST A PHRASE RATHER THAN THE PROPERTY** -- rule 33's class, in
+      cells that predate it -- **and they are recorded as a named follow-on rather than swept into the current
+      scope.** *Widening a repair round to every instance of the class it discovered is how a repair round stops
+      landing*; naming the backlog keeps it findable without making the user's five items wait behind it.
   # --- MEM round 308, 2026-09-09T10:04:14Z ---
   FIVE_B_IS_FIXED_PENDING_VERIFICATION_AND_THE_RUNNER_NOW_READS_THE_DERIVED_SET:
     prov: CHECKED

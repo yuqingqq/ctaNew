@@ -21425,3 +21425,46 @@ generation and the window went 4 → 3. Nothing rewritten.
   at the branch.** Flags 2587 -> 2595, prov 2132 -> 2140; window 3/3, Batch 287 archived. **NOTHING BUILT, NO HEAVY
   LOCK SINCE 07:15:47Z, THE BUILD DECISION AND THE MATCHING UNIT BOTH WITH THE USER.** MEM asserts no result.)
 ```
+
+## Batch 291 — archived 2026-09-09T10:12:28Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T09:40:36Z (MEM ROUND 306 -- DE 166 and REV 128 SWEPT, LIGHT ROUND, from `1f98fc7` to `623c050`, SEVEN commits -- I swept four to `da1a117` and THREE MORE LANDED WHILE I WROTE, so DA's verdict and REV 129 are folded in an addendum below rather than left to next round.
+  STATE ONLY. ***THE STATE CHANGE: THE USER'S DEFECTS ARE REPAIRED AND THE FIRST VERIFICATION IS IN.*** I re-ran my
+  own round-304 census rather than reading DE's claim: **the day path `:8120` now passes `arm_cancels=True` and
+  `control_set_path=True`**, and the two other call sites pass neither BECAUSE THAT IS CORRECT -- `:11659` is the
+  second-valuation cell **declaring the historical row-matched unit EXPLICITLY rather than reaching it by
+  omission**, `:15125` drives the refusal cases. ***AND IT IS CLOSED AT THE ARTIFACT, NOT ONLY IN THE CODE***: REV
+  128 re-drove its own REVIEW 126 baseline at the same entry point -- `arm_cancels` False -> True,
+  `control_set_path` False -> True, **`draw_provenance.matched_on` ABSENT -> `CANCELS`** -- and ***AN ABSENT FIELD
+  IS EXACTLY WHAT LET R-837, R-847, R-852 AND R-856 CLAIM RULING B WAS IMPLEMENTED WITH NO RECEIPT CONTRADICTING
+  THEM***; the receipt reads the unit back FROM THE NULL'S RESULT, never from the argument, and DE found
+  `verify_draw_provenance` DROPPING `matched_on` while rebuilding the block, one field below its own comment about
+  not dropping the cross-check (rule 28 again). **The refusal is real, driven five ways**: `matched_on` omitted /
+  `None` / `ROWS` -> `NULL_MATCHING_UNIT_NOT_DECLARED`; `CANCELS` without cancel records or without a control set ->
+  `NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS`; the declared alternative `DECISIONS` proceeds -- ***THE UNIT IS
+  REQUIRED AND CHECKED AGAINST THE INPUTS THAT WOULD MAKE IT TRUE***, and the cell asserting the row-matched
+  cross-check `identical is True` WENT RED the moment the ruled null was wired. DE'S GENERALISATION, WHICH IS THE
+  RIGHT ONE: ***"A DEFAULT IS WHAT MADE A WIRED-LOOKING THING UNWIRED"***, and the unreachable case is now IMPOSSIBLE
+  rather than fixed. **(b) and (d) re-driven by me**: `day_decision_population` builds `_gens = {(slug, side,
+  int(gen))}` and counts `by_side` over THAT, so the number is ACTIONS and the `definition` string is now TRUE; the
+  one-module receipt that passed last round now REFUSES `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`, with
+  `closure_coverage` PUBLISHED as 5 of 49. ***A DISTINCTION I MEASURED AND WILL NOT LET BLUR: (c) IS REPAIRED AT THE
+  CONSUMER, NOT AT THE INVARIANT*** -- `one_cancel_per_generation` STILL returns True on `7` / `7.r1`, correctly,
+  being an invariant about POLICY ids; what changed is that `de_matched_cancel_control` measures the relation keyed
+  `(slug, side, ref_gen)` and REFUSES `MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE`, both old
+  consequences having been measured (a saturated stratum refusing `STRATUM_TOO_SMALL`, LOUD FOR THE WRONG REASON;
+  a stratum with room drawing SILENTLY on 2 reference generations where the arm acted on 1). ***AND WHAT DE
+  EXPLICITLY DID NOT ESTABLISH, BECAUSE IT BOUNDS WHAT THE REPAIR CAN CLAIM: THE REAL ROWS-PER-DECISION FACTOR AND
+  THE REAL RATE OF DOUBLE-CANCELLED GENERATIONS BOTH NEED A CORRECTED BOOK AND NONE EXISTS -- FIXED IN MECHANISM,
+  UNQUANTIFIED UNTIL SOMETHING IS BUILT.*** DE disclosed THREE SLIPS caught before landing -- an if/else that
+  INVERTED `PARTIAL_ROWS`, which PARSED AND WAS WRONG, and **TWO ASSERTIONS THAT TESTED A PHRASE RATHER THAN THE
+  PROPERTY, RULE 33'S OWN CLASS FOUND BY THE SEAT IN ITS OWN WORK** -- carried RELAYED, not CHECKED, because I could
+  not reach them at an artifact. And `de_land.sh`'s guard **based its diff on the WORKTREE'S HEAD, which under rule
+  31 is a local commit the shared tree never saw**, refusing seven of DE's own paths; the base is the MERGE-BASE now
+  and re-driven both ways. ***THE GATE ARITHMETIC STAYS WITHDRAWN -- DO NOT RESTORE "CLOSED AND VERIFIED" COUNTS:
+  DA'S VERDICT LANDED WHILE I WROTE AND (d) IS ONLY HALF-REPAIRED -- SEE THE ADDENDUM.*** Pair of record advanced TWICE, each crank
+  in the same commit as the fix that moved the module: **params v28 + design v36**, 10/10 cascade digests 0
+  mismatched. Flags 2595 -> 2610, prov 2140 -> 2155; window 3/3, Batch 288 archived. **NOTHING BUILT, NO HEAVY LOCK
+  SINCE 07:15:47Z.** MEM asserts no result.)
+```
