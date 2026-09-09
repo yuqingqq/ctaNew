@@ -444,6 +444,32 @@ except where marked USER-ONLY.
     enumeration** — where a set can be derived from what the artifact already records,
     derive it.
 
+33. **A VERIFICATION IS ONLY AS GOOD AS THE IDENTITY BETWEEN WHAT IT EXAMINES AND
+    WHAT IT IS CITED FOR** (USER review at `7d374b4`, R-859). The programme's
+    verification standard — *closed AND verified by a seat other than the implementer* —
+    caught two bad closures in one night and still passed three defects the user found
+    in minutes. Each failure had the same shape: **the check was TRUE of the artifact it
+    examined and FALSE of the claim it was cited for.**
+    - **The wrong id space.** The "one cancel per generation" invariant passes because
+      it checks POLICY-generation ids; production repost cancels one REFERENCE
+      generation twice (`7`, `7.r1`). REV cited it as proof the cancel is the action
+      and the coordinator carried that into a USER RULING.
+    - **A subset accepted as the set.** The book-code predicate was verified to be
+      capable of passing; nobody tested that it passes on a SUBSET, and it returns
+      `BOOK_SCORING_CODE_MATCHES, n_checked: 1`.
+    - **A branch nobody reached.** The cancel-matched null was built, reviewed and
+      recorded as implemented in FOUR register entries; `run_day()` never passes its
+      arguments, so the historical row-matched null ran.
+    - **A probe that could not have found what it looked for.** A `Path` passed where a
+      parsed receipt was wanted (REVIEW 105) — *the conclusion survived and the evidence
+      did not*.
+    **So every green carries three answers, not one: what did the check ACTUALLY examine;
+    what claim is it cited for; are those the same thing.** And for any predicate:
+    **drive it to PASS on the real thing, to FAIL on a known-bad, AND to REFUSE a
+    partial input** — a checker that matches on whatever it happens to find is not a
+    checker. Where a fix is recorded as landed, **drive the path that reaches it from
+    the entry point**, not the unit alone.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
