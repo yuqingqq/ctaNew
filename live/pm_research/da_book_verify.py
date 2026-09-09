@@ -718,7 +718,14 @@ def scored_stream_rows(ref: dict, gs: dict, sides) -> tuple:
     rows: list = []
     info = {"score_shape": shape, "n_reference_generations": 0,
             "n_generations_with_a_row": 0, "n_rows": 0,
-            "n_generations_unscored": 0}
+            "n_generations_unscored": 0,
+            #: DA 149: the COVERED SET, because a caller that classifies
+            #: generations (scored / excluded) needs membership, not an
+            #: event stream. `da_de53_exclusion` computes an EXCLUSION
+            #: COUNT and then runs a permutation audit on the split, so a
+            #: wrong membership test does not merely mislabel -- it feeds
+            #: a statistical test a garbage population.
+            "covered_generation_keys": set()}
     by_gen: dict = {}
     if shape == SHAPE_PER_ROW:
         for k, v in gs.items():
@@ -741,6 +748,8 @@ def scored_stream_rows(ref: dict, gs: dict, sides) -> tuple:
                         info["n_generations_unscored"] += 1
                         continue
                     info["n_generations_with_a_row"] += 1
+                    info["covered_generation_keys"].add(
+                        (slug, sd, g["gen"]))
                     for t in ts:
                         rows.append({"t": t, "slug": slug, "side": sd,
                                      "gen": g["gen"]})
@@ -750,6 +759,8 @@ def scored_stream_rows(ref: dict, gs: dict, sides) -> tuple:
                     #: byte-for-byte the behaviour the three probes had.
                     if (slug, sd, float(g["t0"])) in gs:
                         info["n_generations_with_a_row"] += 1
+                        info["covered_generation_keys"].add(
+                            (slug, sd, g["gen"]))
                         rows.append({"t": g["t0"], "slug": slug,
                                      "side": sd, "gen": g["gen"]})
                     else:
