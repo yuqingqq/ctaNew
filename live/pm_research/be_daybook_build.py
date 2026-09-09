@@ -869,12 +869,18 @@ def split_by_placement_latency(fr: dict, L: float) -> dict:
                 "not replay, so it cannot produce the number the "
                 "reconciliation compares against",
             "so_the_falsifier_runs_WHERE_BOTH_NUMBERS_EXIST":
-                "at the point estimate, which already computes the "
-                "baseline total. KEPT-VALUE + DROPPED-VALUE = ALL-TRANCHE "
-                "VALUE, and KEPT-VALUE == the baseline total to the digit. "
-                "This build's job is to make that computable and "
-                "checkable from ONE book, which is what retaining the "
-                "dropped set does",
+                "**`be_placement_latency_reconcile.py` (BE 135)** -- it "
+                "reads the point estimate's RECORDED "
+                "`zero_cancel_baseline_total_cents` and needs no replay, "
+                "and it REFUSES by name rather than reporting zero. At "
+                "BE 133 this said 'at the point estimate', which REV 142 "
+                "drove and found was a SPECIFICATION AND NOT A CHECK: the "
+                "key appeared zero times in every consumer. It is a "
+                "module now",
+            "IS_IT_MANDATORY": "NO -- OPT-IN. Nothing calls it yet. A "
+                               "reconciliation nobody runs is the same as "
+                               "one that does not exist, so this says so "
+                               "rather than implying otherwise",
         },
         "FIELDS_PRESENT_FOR_BOTH_LEGS_SEPARATELY": {
             "trades_leg_needs": ["level (price)", "shares",
