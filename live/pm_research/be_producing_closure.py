@@ -152,6 +152,47 @@ CONSUMER_CONTRACT = {
                 "set is a subset of it by construction; extra modules are "
                 "the normal case, not a fault"},
     ],
+    "STILL_GETS_PAST_even_with_a_receipt_free_expected_set": [
+        {"name": "MIS-DECLARATION",
+         "what": "a receipt that NAMES every expected module and supplies "
+                 "the CURRENT digest for each, while the book's scores were "
+                 "produced by other bytes",
+         "why_nothing_catches_it": "the receipt is the ONLY record of which "
+                                   "bytes ran; the book carries scores, not "
+                                   "a code identity. Recomputation fixes "
+                                   "WHICH modules are asked about and not "
+                                   "WHAT the answer is compared against",
+         "the_only_independent_check": "rebuilding the book -- ~70 minutes "
+                                       "a day"},
+        {"name": "A MODULE REACHED ONLY DYNAMICALLY",
+         "what": "a scoring path entered through getattr, a callback or a "
+                 "monkey-patch is in NEITHER set, so a receipt omitting it "
+                 "is not detectable by comparison either",
+         "driven": "the falsifier plants `getattr(cmod, 'leaf')` and the "
+                   "walk returns only the caller -- cmod is imported, named "
+                   "in the source and completely invisible"},
+        {"name": "A SHRUNKEN PATH ON TODAY'S TREE",
+         "what": "the expected set is computed from the CODE ON DISK NOW. "
+                 "If today's scoring path is narrower than the one that "
+                 "built the book, the modules it dropped are not asked "
+                 "about by either side"},
+        {"name": "A HONEST RECEIPT REFUSED",
+         "what": "the reverse hazard, and the reason the delta is REPORTED "
+                 "rather than refused on: static reachability "
+                 "OVER-approximates the run. `harmful_hazard_model.py` and "
+                 "`phase2_state_schema_freeze.py` are reachable from "
+                 "`phase2_arms` through LAZY imports (:57, :515, :766, "
+                 ":768, :1851) and are absent from a real build's recording "
+                 "because those branches did not run. Refusing on their "
+                 "absence would refuse an honest receipt"},
+    ],
+    "so_the_defensible_use_of_the_receipt_free_set": (
+        "it is an UPPER bound on scope. Every module that is in it AND "
+        "named by the receipt must digest-match -- refusable. Every module "
+        "in it that the receipt does NOT name is REPORTED with its name, "
+        "which turns under-declaration from invisible into visible. The "
+        "gap cannot be refused on without refusing honest receipts, and "
+        "saying so is the answer, not a hedge"),
     "why_the_count_is_not_enough_on_its_own": (
         "`n_checked` equal to `n` proves cardinality, not identity. The "
         "consumer compares the KEY SET, and the count is the cheap "
@@ -286,6 +327,53 @@ def reachable_modules(root: Path, closure: dict, seeds) -> dict:
     return seen_mod
 
 
+def expected_set_from_disk(root: Path | None = None, seeds=None) -> dict:
+    """THE EXPECTED SET, COMPUTED WITHOUT THE RECEIPT (BE 121).
+
+    REV 132 and DA 156 reached the same property from two sides: **the
+    artifact under examination names its own examination scope.** A receipt
+    that omits a module from its closure is never asked about that module,
+    and digest-correctness cannot save it, because a digest is only checked
+    for a module the receipt CHOSE to name.
+
+    This is the other half. The same operation -- transitive reference from
+    the producing function -- runs against THE CODE ON DISK with no closure
+    to restrict it, so the set is a property of the tree and not of the
+    receipt. A receipt that under-declares becomes VISIBLE BY COMPARISON
+    instead of believed by default.
+
+    It costs an AST walk of the reachable set over the modules in the root:
+    **measured 0.63 s and 0.10 GB over 268 files**, no import and no
+    execution -- so a consumer can run it at check time.
+
+    WHAT IT DOES NOT FIX, and the distinction decides how DE may use it:
+    the SCOPE stops depending on the receipt; the VALUES do not. The
+    receipt remains the only record of WHICH BYTES RAN, so recomputation
+    detects UNDER-DECLARATION and cannot detect MIS-DECLARATION."""
+    root = Path(root) if root else HERE
+    on_disk = {q.name: "ON_DISK" for q in Path(root).glob("*.py")}
+    if not on_disk:
+        raise ClosureRefused(
+            f"REFUSED -- NO_MODULES_ON_DISK: {root} holds no .py file, so an "
+            f"expected set computed here would be empty and would ask a "
+            f"receipt about nothing.")
+    seeds = tuple(seeds) if seeds else SCORING_ENTRY_POINTS
+    hit = reachable_modules(root, on_disk, seeds)
+    return {"root": str(root), "n_modules_on_disk": len(on_disk),
+            "entry_points": [f"{m}.{f}" for m, f in seeds],
+            "modules": sorted(hit), "n": len(hit),
+            "first_edge_to_each": {k: v[0] for k, v in sorted(hit.items())},
+            "computed_from": "THE CODE ON DISK -- no receipt, no closure, no "
+                             "import and no execution",
+            "detects": "UNDER-DECLARATION: a module in this set that the "
+                       "receipt does not name is a scope the receipt "
+                       "silently excluded from its own examination",
+            "does_NOT_detect": "MIS-DECLARATION: the receipt is still the "
+                               "only record of WHICH BYTES RAN, so a digest "
+                               "it supplies cannot be checked against "
+                               "anything but the file it names"}
+
+
 def derive(closure: dict, root: Path | None = None) -> dict:
     """The two derived sets, with the operation that produced them."""
     if not closure:
@@ -335,6 +423,12 @@ def derive(closure: dict, root: Path | None = None) -> dict:
             "first_edge_to_each": {k: v[0] for k, v in sorted(rf.items())},
         },
         "union": {"modules": _with_digests(both), "n": len(both)},
+        # BE 121: THE SAME OPERATION WITHOUT THE RECEIPT, AND THE
+        # DIFFERENCE, because the difference is the finding. The
+        # closure-restricted walk is NOT merely narrower than the
+        # recording -- it can be narrower than BOTH, when a module the
+        # recording does not name sits on the path to modules it does.
+        "from_disk": _from_disk_comparison(closure, root, sc),
         "consumer_contract": CONSUMER_CONTRACT,
         "how_a_consumer_uses_this": (
             "read `modules` -- it is {module: digest}, the digests being the "
@@ -371,11 +465,42 @@ def derive(closure: dict, root: Path | None = None) -> dict:
     }
 
 
+def _from_disk_comparison(closure: dict, root: Path, scoped: dict) -> dict:
+    """The receipt-free set beside the receipt-scoped one, and the delta."""
+    try:
+        d = expected_set_from_disk(root)
+    except Exception as e:                                   # noqa: BLE001
+        return {"status": "NOT_COMPUTED", "error": f"{type(e).__name__}: {e}"}
+    free, sc = set(d["modules"]), set(scoped)
+    blocked = sorted(free - sc)
+    return {
+        "n": d["n"], "modules": d["modules"],
+        "n_scoped_by_the_receipt": len(sc),
+        "reachable_but_NOT_in_the_scoped_set": blocked,
+        "of_those_the_recording_does_name": sorted(m for m in blocked
+                                                   if m in closure),
+        "of_those_the_recording_does_NOT_name": sorted(m for m in blocked
+                                                       if m not in closure),
+        "why_the_scoped_set_can_be_smaller_than_both": (
+            "the closure is a WHITELIST on the walk, so a module the "
+            "recording does not name stops the walk THERE -- and every "
+            "module behind it is lost too, including ones the recording "
+            "DOES name. The restriction is a truncation, not a safety "
+            "property, and BE 117 published it as a virtue"),
+        "an_absence_here_is_NOT_automatically_a_fault": (
+            "static reachability OVER-approximates the run: a lazily "
+            "imported module on an untaken branch is reachable and "
+            "legitimately absent from the recording. So the delta is "
+            "REPORTED, never refused on -- refusing would refuse honest "
+            "receipts"),
+    }
+
+
 # ---------------------------------------------------------------------------
 # THE FALSIFIER
 # ---------------------------------------------------------------------------
 
-EXPECTED_CHECKS = 16
+EXPECTED_CHECKS = 22
 
 _A = '''
 import bmod as B
@@ -588,6 +713,67 @@ def falsify() -> int:
            f"`len(modules)` in both, so `n_checked == n` needs no typed "
            f"list -- and the contract says in the same block that a count "
            f"alone proves cardinality and not identity")
+
+    # ---- BE 121: THE EXPECTED SET WITHOUT THE RECEIPT -----------------
+    fd = expected_set_from_disk(HERE)
+    ok(fd["n"] >= 12 and "de_phase4_diag_runner.py" in fd["modules"]
+       and fd["n_modules_on_disk"] > 200,
+       f"THE EXPECTED SET IS COMPUTABLE WITHOUT THE RECEIPT: {fd['n']} "
+       f"modules from the {fd['n_modules_on_disk']} on disk, by AST alone -- "
+       f"no receipt, no closure, no import, no execution. So a consumer can "
+       f"know what it SHOULD be asking about before it reads what the "
+       f"receipt offers")
+    if rc:
+        out3 = derive(clo, root=HERE)
+        cmp3 = out3["from_disk"]
+        ok(cmp3["n"] > cmp3["n_scoped_by_the_receipt"]
+           and cmp3["reachable_but_NOT_in_the_scoped_set"],
+           f"AND THE COMPARISON IS ITSELF A FINDING: the receipt-free set is "
+           f"{cmp3['n']} against the receipt-scoped "
+           f"{cmp3['n_scoped_by_the_receipt']}. Missing from the scoped set: "
+           f"{cmp3['reachable_but_NOT_in_the_scoped_set']}")
+        ok(cmp3["of_those_the_recording_does_name"],
+           f"**AND THE SCOPED WALK LOST MODULES THE RECORDING DOES NAME**: "
+           f"{cmp3['of_those_the_recording_does_name']} are in the 49 and "
+           f"were still missed, because the whitelist stopped the walk at "
+           f"{cmp3['of_those_the_recording_does_NOT_name']}, which sits on "
+           f"the path to them. **The restriction is a TRUNCATION, not a "
+           f"safety property -- and BE 117 published it as a virtue**")
+    two = expected_set_from_disk(HERE, seeds=(("de_phase4_diag_runner",
+                                               "build_reference"),))
+    ok(set(two["modules"]) != set(fd["modules"]),
+       f"the seeds still decide the answer -- from `build_reference` the "
+       f"receipt-free set is {two['n']} and from the scoring entry points "
+       f"{fd['n']} -- so 'the expected set' is meaningless without naming "
+       f"which producer it is expected for")
+    if rc:
+        import hashlib as _h121
+        _fab = {m: _h121.sha256((HERE / m).read_bytes()).hexdigest()
+                for m in fd["modules"] if (HERE / m).is_file()}
+        _scope_ok = all(m in _fab for m in fd["modules"] if (HERE / m).is_file())
+        _dig_ok = all(_fab[m] == _h121.sha256((HERE / m).read_bytes()).hexdigest()
+                      for m in _fab)
+        ok(_scope_ok and _dig_ok and len(_fab) == fd["n"],
+           f"MIS-DECLARATION IS NOT DETECTABLE, DEMONSTRATED: a receipt "
+           f"whose closure NAMES all {len(_fab)} expected modules and "
+           f"supplies each file's CURRENT digest passes BOTH halves -- the "
+           f"receipt-free scope check and the digest check -- whatever "
+           f"bytes actually produced the book. Recomputation fixes WHICH "
+           f"modules are asked about; the receipt stays the only record of "
+           f"WHAT RAN, and the only independent check is a rebuild")
+    else:
+        ok(False, "no receipt on disk, so the mis-declaration demonstration "
+                  "could not be driven")
+    import tempfile as _tf121
+    _empty = Path(_tf121.mkdtemp(prefix="be121_empty_"))
+    try:
+        expected_set_from_disk(_empty)
+        ok(False, "an empty root must refuse")
+    except ClosureRefused as e:
+        ok("NO_MODULES_ON_DISK" in str(e),
+           "KNOWN-BAD: a root with no modules REFUSES rather than returning "
+           "an empty expected set, which would ask a receipt about nothing "
+           "and pass everything")
 
     print()
     if fails:
