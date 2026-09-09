@@ -41,6 +41,53 @@ not a markout), **the assumption named in the sentence itself**, and **upper bou
 share**; the **markout as the valuation**; **any phrasing that drops the fill-probability assumption.** *The first is
 the 51.17 / 54 confusion DA already refused once — now forbidden in advance rather than corrected afterwards.*
 
+## ✅ ADDENDUM 2026-09-09T15:07:12Z — DA 163 closes the sign-reversal question: **it is the repairs**
+
+*Last round I wrote that two things changed at once and that this file would assert no explanation until DA
+reported.* **DA has reported.**
+
+| channel | share |
+|---|---|
+| **population** | **1.9 %** — baseline moved **−534.30** |
+| **arm side** | **98.1 %** — `D_E_settle` swing **+27,701.94** |
+
+*I checked: −534.30 / 27,701.94 = 1.93 %. The figures reconcile.*
+
+**The method is the part to keep, and it uses a control that was already there:** ***"the 0-cancel baseline is
+policy-free, so any change in it is pure population."*** Its fill set is **99.987 % identical across the rebuild**.
+*For thirty rounds the baseline has been described as the thing that SURVIVED the scoring defects — and nobody had
+noticed the same property makes it a natural control for population-versus-policy.* **A quantity already in every
+artifact, re-read as an instrument.**
+
+**And the reproduction is stronger than the headline:** `D_E_settle` **+11,191.244402** (CONDVALUE) and
+**+12,381.557663** (HAZARD), **both recomputed from the FILL ROWS by a second implementation, zero per-slug
+disagreements across 246 slugs × 2 books × 2 arms** — 984 cells, not one disagreement. **DA 137's dedup control holds
+by measurement: the two arms' baseline digests are identical.** *Last round I checked the totals summed three ways;
+this is different and stronger — recomputed from the underlying rows by different code.*
+
+### ⚠ The caveat is not about the arithmetic, and it is large
+
+***At unchanged theta, decisions went 1,398 → 14,893 on HAZARD — a factor of 10.7 (checked) — so a fixed threshold
+chosen under the defective scoring now selects a different quantile of the score distribution.*** **The estimate is
+right about the policy it describes, and the policy is not the one theta was chosen for.** *Rule 11's mirror: a
+threshold chosen before, on a distribution that has since moved, is no longer the threshold anyone selected.*
+**`theta_was_not_refitted_here: True` is correct and honest — and is exactly what makes this caveat necessary rather
+than optional.**
+
+**Also filed:** R-833 **swept gone by operation** (9 sites at 250.0, none other); **DE's consistency block names 4 of
+those 9**; **the refusal's partial-input leg returns `{}` silently**; and **DA has no reader for
+`P003_DE_POINT_ESTIMATE_DAY_V1`.**
+
+### ⚠ And my own slip, which my procedure file already warned me about
+
+**This addendum failed to reach `HANDOFF.md` on the first attempt: a `TypeError: not enough arguments for format
+string`, because the block is `%`-formatted and contains literal `%` signs (`1.9 %`, `98.1 %`, `99.987 %`).** *That
+is the exact hazard I landed in `MEM_PROCEDURE.md` at round 287 — "prefer a placeholder-and-`.replace()` template
+over `%` or f-string formatting for any text carrying numbers with units."* **I wrote the lesson and then hit it
+again**, and the ordering saved me: **`STATUS.yml` was written first and landed intact**, so the failure cost a
+second commit rather than an orphaned write. ***A procedure note is not a habit until it is the default, and this one
+is now: no `%` formatting in any block I write.***
+
 ---
 
 # 🔎 REV 140 — THE CLASS ENUMERATED BY OPERATION: **six sites, three modules, three NEW**
