@@ -515,7 +515,50 @@ SEAM_STATUS_UNRESOLVED = (
     "PROVENANCE_INCOMPLETE_BUILDER_COMMIT_UNRESOLVED")
 
 
-def front_door_at(front_door: str | None, commit: str | None) -> dict:
+SEAM_COMMIT_SHAPE_UNREADABLE = "SEAM_COMMIT_SHAPE_UNRECOGNISED"
+
+
+def seam_commit_str(commit) -> tuple:
+    """The sha out of `seam.commit`, WHATEVER SHAPE BE WROTE IT IN.
+
+    DA 160. `seam.commit` arrived as a MAPPING and this module read it as
+    a string. BE's receipts carried a bare sha through 09-04; every one
+    since carries `{"commit": …, "module": …, "short": …, "source": …}` --
+    **11 of the 13 on disk** -- and the f-string rendered the whole mapping
+    into the git ref, so `git show "{'commit': …}:live/…"` failed and DE's
+    front door read as NOT PRESENT AT ITS OWN COMMIT. It raised
+    `seam.front_door_does_not_resolve` on the first corrected book.
+
+    ***This is REVIEW 105's shape, which rule 33 names: the wrong object
+    passed where a string was wanted, and THE CONCLUSION SURVIVED WHILE THE
+    EVIDENCE DID NOT.*** `builder_commit_of`, forty lines down, guards the
+    type (`isinstance(v, str)`) and correctly returns None; this did not.
+    **The same module checked a shape in one function and assumed it in the
+    next**, and rule 26 says where to look: the assumption was made at the
+    moment the input changed shape.
+
+    AND THE FIXTURE IS WHY IT SURVIVED (DA 125, my own recorded lesson):
+    the selftest's receipt sets `seam.commit` to a BARE STRING, so the cell
+    asserting `resolves is True` was green on a shape no producer has
+    written since 09-04.
+
+    Returns `(sha or None, how it was resolved)`.
+    """
+    if isinstance(commit, str):
+        return (commit.strip() or None), "a bare string"
+    if isinstance(commit, dict):
+        for k in ("commit", "sha", "sha256", "hexsha"):
+            v = commit.get(k)
+            if isinstance(v, str) and v.strip():
+                return v.strip(), f"the {k!r} key of a mapping"
+        return None, ("a mapping carrying no commit key -- keys "
+                      f"{sorted(map(str, commit))}")
+    if commit is None:
+        return None, "absent"
+    return None, f"a {type(commit).__name__}, which names no commit"
+
+
+def front_door_at(front_door: str | None, commit=None) -> dict:
     """`seam.commit` names DE's FRONT DOOR, so it is checked against DE's
     module -- which is what it names.
 
@@ -529,26 +572,41 @@ def front_door_at(front_door: str | None, commit: str | None) -> dict:
     if not front_door or not commit:
         return {"checked": False,
                 "why": "no front door or no seam commit named"}
+    sha, how = seam_commit_str(commit)
+    #: AN UNREADABLE SHAPE IS `None`, NEVER `False`. False is the answer
+    #: "the module is NOT THERE at that commit" -- a finding about DE's
+    #: tree. A shape this reader cannot parse is a finding about THIS
+    #: READER and gets its own name, so it cannot be counted as a defect
+    #: of the artifact (rule 4: exclusions are statuses, never silent
+    #: drops -- and never someone else's defect either).
+    if sha is None:
+        return {"checked": False, "resolves": None,
+                "status": SEAM_COMMIT_SHAPE_UNREADABLE,
+                "commit_field_shape": how, "commit_field": commit,
+                "why": (f"`seam.commit` is {how}, so no commit could be "
+                        f"resolved from it. This is a limit of this reader, "
+                        f"NOT a statement that the front door is missing.")}
     mod, _, fn = front_door.rpartition(".")
     rel = f"live/pm_research/{mod}.py"
-    r = subprocess.run(["git", "show", f"{commit}:{rel}"],
+    r = subprocess.run(["git", "show", f"{sha}:{rel}"],
                        capture_output=True, text=True, cwd=str(HERE))
     if r.returncode != 0 or not r.stdout:
         return {"checked": True, "resolves": False, "module": rel,
-                "commit": commit,
-                "why": f"{rel} is not readable at {commit}"}
+                "commit": sha, "commit_field_shape": how,
+                "why": f"{rel} is not readable at {sha}"}
     try:
         tree = ast.parse(r.stdout)
     except SyntaxError:
         return {"checked": True, "resolves": False, "module": rel,
-                "commit": commit, "why": "unparseable at that commit"}
+                "commit": sha, "commit_field_shape": how,
+                "why": "unparseable at that commit"}
     has = any(isinstance(n, ast.FunctionDef) and n.name == fn
               for n in ast.walk(tree))
     return {"checked": True, "resolves": has, "module": rel, "function": fn,
-            "commit": commit,
+            "commit": sha, "commit_field_shape": how,
             "why": ("the front door is defined in DE's module at the commit "
                     "the receipt names" if has else
-                    f"{fn} is not defined in {rel} at {commit}")}
+                    f"{fn} is not defined in {rel} at {sha}")}
 
 
 def builder_commit_of(receipt: dict) -> str | None:
