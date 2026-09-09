@@ -67,6 +67,55 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T15:05:36Z (MEM ROUND 320 -- ***A SPECIFICATION THAT SHOULD OUTLIVE THIS DAY, AND A CLASS ENUMERATED BY OPERATION
+  FOR THE FIRST TIME.*** From `f06ec7d` to `a52526d`. ***DA'S FIVE-POINT ACCEPTANCE CRITERIA FOR THE BUILD-TIME L=0
+  VALUATION: (a) VALUED ON THE R-801 ESTIMAND -- trades cash flow plus share-delta x settlement, NEVER the 5-second
+  markout; (b) LABELLED AS AN UPPER BOUND IN THE ARTIFACT; (c) THE FALSIFIER THE BUILD OWES -- `kept-value +
+  dropped-value = all-tranche value` AND `kept-value` MUST EQUAL THE BASELINE TOTAL ALREADY IN THE LEDGER; (d) BOTH
+  LEGS TRAVEL SEPARATELY; (e) >=5 COMPLETE UTC DAYS BEFORE "THE LATENCY EFFECT IS REAL" MAY BE SAID.*** **And how it
+  came to exist is worth as much as its content: DA WROTE IT WHEN ASKED WHAT FRAMING IT WOULD ACCEPT, AFTER DECLINING
+  THE COORDINATOR'S, AND IT REACHED BE AS ITS CONTRACT WHILE BE WAS STILL DECIDING WHAT TO BUILD** -- *a seat that
+  declines a framing and is then asked for its own produces a SPECIFICATION; a seat that only declines produces a
+  DELAY; and a contract that reaches the builder BEFORE the build is a specification, while the same words afterwards
+  are a complaint.* ***(b) IS THE ONE TO KEEP IF ONLY ONE COULD BE KEPT, AND DA'S REASON IS VERBATIM: "A DROPPED
+  TRANCHE IS A FILL THAT HAPPENED BEFORE OUR QUOTE COULD REST; VALUING IT ASSUMES WE WOULD HAVE GOT IT -- A
+  FILL-PROBABILITY ASSUMPTION, AND FILLS ARE ENDOGENOUS" -- CLAUDE.md RULE 1 APPLIED TO A NUMBER NOBODY HAD YET
+  COMPUTED.*** ***(c) IS THE CLEVEREST PART AND ANSWERS THE ONE REAL OBJECTION TO RULING (b): it makes a build-time
+  valuation CHECKABLE WITHOUT THE L=0 BUILD THE USER RULED AGAINST, because the baseline total is already computed,
+  already landed, and was produced by a different code path for a different purpose*** -- **and one precision I
+  contribute from reading the ledger rather than the contract: "TO THE DIGIT" MEETS A FLOAT. The artifact stores
+  `zero_cancel_baseline_total_cents` as `37315.55143100004`, NOT `37315.551431`; I checked both -- NOT equal exactly
+  (4.37e-11) and equal at `round(...,6)` -- SO THE FALSIFIER MUST SAY WHICH REPRESENTATION IS AUTHORITATIVE OR IT CAN
+  FIRE ON FLOAT NOISE ALONE**, and *a falsifier that can fire spuriously gets disabled, after which the control is
+  gone.* **(d)'s reason is that a dropped tranche moves the RESIDUAL by 100 c/share INDEPENDENT OF ITS PRICE; (e) is
+  rule 8, and with exactly ONE corrected day and the queue held, (e) IS THE REASON THE QUEUE MATTERS.** ***DA'S
+  SIGNABLE SENTENCE, VERBATIM: "ON 09-03 AT L=250, TRANCHES ARRIVING BEFORE THE QUOTE COULD REST ACCOUNT FOR X CENTS
+  OF SETTLED VALUE UNDER THE ASSUMPTION THAT EVERY ONE WOULD HAVE FILLED -- AN UPPER BOUND ON THE LATENCY EFFECT"***
+  -- every clause load-bearing, and **what DA will NOT accept recorded as tightly as what it will: THE COUNT SHARE
+  STANDING IN FOR THE MONEY SHARE, THE MARKOUT AS THE VALUATION, OR ANY PHRASING THAT DROPS THE FILL-PROBABILITY
+  ASSUMPTION** -- *the first being the 51.17 / 54 confusion DA already refused once, now forbidden IN ADVANCE rather
+  than corrected afterwards.* **REV 139's four are ALREADY IN THESE FILES from my round-319 addendum, with my own
+  tense correction attached, and I do not re-file them.** ***WHAT IS NEW IS REV 140: THE CLASS SWEPT BY OPERATION AND
+  IT IS SIX SITES IN THREE MODULES, THREE OF THEM NEW. THE OPERATION: "A SITE NAMES ONE OF TWO SIBLING BLOCKS
+  LITERALLY AND READS A FIELD THAT EXISTS IN BOTH", WITH THE SHARED FIELD LIST MEASURED NOT GUESSED -- `Z`,
+  `null_draws_summary`, `null_mean`, `null_sd`, `p_location`, FIVE NAMES READABLE FROM THE WRONG BLOCK WITH NO
+  ERROR.*** I confirmed the shape at the code: `v = ((a.get("economic") or {}).get(field))` at `:5945` with the same
+  literal at `:5954`, `:12172`, `:12174`, **while the same file writes `economic_settlement` at `:8471` and `:8498`
+  -- the block is right there and the guard does not consult it.** ***AND THE WORST OF THE SIX IS NOT A GUARD BUT
+  THE VERDICT: `:2865` COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT AND THE SECTION-7 PREDICATE FROM
+  `r["economic"]["Z"]`, THE 5-SECOND DIAGNOSTIC, WHILE R-801 MADE THE SETTLEMENT P&L PRIMARY -- SILENT, BECAUSE THE
+  KEY EXISTS.*** *Every previous instance exposed a RESULT to a reader; this one COMPUTES a verdict from the wrong
+  quantity, and the programme's headline finding would have been a statement about the markout wearing the name of
+  the ruled endpoint.* ***AND THE SECOND NEW SITE TURNS AN INDEPENDENT VERIFICATION INTO A TAUTOLOGY:
+  `da_gate1_day_verdict.py:925-926` RECOMPUTES AND COMPARES IN THE `economic` BLOCK ONLY AND THE MODULE CONTAINS
+  ZERO OCCURRENCES OF `economic_settlement`, SO DA'S INDEPENDENT RECOMPUTE NEVER TOUCHES THE RULED ENDPOINT AND
+  REPORTS "0 MISMATCHES" OVER THE DIAGNOSTIC*** -- rule 33 in its purest form, in the seat whose job is to ask it.
+  **The third new site, driven: `receipt_is_sealed` at `:876` reads `arm_block["economic"]`, so a receipt carrying
+  `D_E_settle` 30045.04, both arm totals and a settlement `Z`, with `economic` stripped, READS `sealed=True` -- THE
+  USER'S PLANTED-SETTLEMENT PROBE REPRODUCING AT A THIRD SITE.** ***AND THE LESSON: THREE INSTANCES WERE EACH FOUND
+  BY ACCIDENT OR BY THE USER AND NEVER BY LOOKING -- AND THE FOURTH, FIFTH AND SIXTH ARRIVED WITHIN ONE ROUND OF
+  SOMEBODY DECIDING TO ENUMERATE BY OPERATION. THE THREE NEW SITES ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS
+  COSTING.*** Flags 2790 -> 2804, prov 2335 -> 2349; window 3/3, Batch 302 archived. MEM asserts no result.)
   2026-09-09T14:57:56Z (MEM ROUND 319 -- ***THE PROGRAMME HAS PRODUCED ITS FIRST CORRECTED NUMBER SINCE THE RETRACTION, AND
   THE USER HAS RULED ON FOUR THINGS.*** From `e975d81` to `ac99226`. **I read every figure at the artifact rather
   than taking the dispatch**: `p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json` on book **EV21
@@ -158,52 +207,6 @@ updated: >-
   caller"`** -- *the second guard tonight whose excuse expired without anyone noticing at the moment it did, and both
   were found by someone looking at the ARTIFACT rather than at the guard.* Flags 2761 -> 2773, prov 2306 -> 2318;
   window 3/3, Batch 300 archived. MEM asserts no result.)
-  2026-09-09T12:48:04Z (MEM ROUND 317 -- ***THE NIGHT'S BIGGEST QUESTION IS CLOSED AND THE FIRST CORRECTED BOOK'S ONLY DEFECT
-  TURNS OUT TO BE THE REPAIR ARRIVING.*** ***`assembly_differs: True` -- THE REPAIRS REACHED THE ARTIFACT, MEASURED
-  AT THE BOOK, OPEN SINCE THE FIRST EV20 ATTEMPT AT 03:11Z AND NOW CLOSED***: I re-drove it on the corrected
-  instrument and read the value keys myself -- **EV20 carries `n_entries 350474`, `value_type dict`, `shape
-  PER_ROW_SCORES`, `value_keys ['gen', 'score', 't0']`, IDENTICALLY ON BOTH HEADS, against the pre-fix 297,379
-  entries / `float` / `PER_GENERATION_SCORES`** -- and ***`t0` ON EVERY ENTRY IS THE LOOK-AHEAD REPAIR ITSELF, R-834's
-  demand now a FIELD IN THE ARTIFACT RATHER THAN A CLAIM IN A COMMIT MESSAGE.*** ***BE 129 ANSWERS THE QUESTION I
-  RECORDED AS OPEN LAST ROUND, AND THE ANSWER IS THE GOOD ONE: THE NINE AND THE +35 ARE ONE PHENOMENON AND IT IS THE
-  ERA FIX WORKING*** -- I had said they could be subset, disjoint or overlapping, **and they are NEITHER: they are
-  two symptoms of one cause.** The evidence needs no second opinion: **EVERY ONE OF THE NINE SITS AT A GAP START,
-  nearest-edge distances 0.000000036 / 0.000000092 / 0.000000092 / 0.000001965 s -- FOUR INSIDE 0.1 MICROSECONDS AND
-  EIGHT INSIDE 3.7 -- all seven affected slugs carry gaps under `clob_v4_1` and NONE under `clob_v3_1`, the refusing
-  slug carrying six gaps totalling 30.4 s under the new era and ZERO under the old**; *a coincidence at 36
-  nanoseconds is not a coincidence.* **And the control closes it: THE PRE-FIX BOOK WAS BUILT WITH `gaps=[]` FOR
-  EVERY WINDOW AND HAS ZERO SUCH GENERATIONS -- IT WAS CLEAN NOT BECAUSE IT WAS RIGHT BUT BECAUSE IT NEVER SAW A
-  GAP**, which is the emptiest kind of green and exactly the shape this programme has learned to distrust. ***THE
-  MECHANISM: THE ERA FIX ATTACHES THE DAY'S REAL GAPS TO `build_reference` FOR THE FIRST TIME; A GAP START TRUNCATES
-  THE GENERATION LIVE AT THAT INSTANT AND A GENERATION CREATED AT THAT SAME INSTANT IS BORN TERMINATED, WHILE THE
-  SAME GAP SPLITS A GENERATION -- WHICH IS WHY 313,149 AGAINST 313,114. ONE EFFECT, TWO SYMPTOMS***, the nine being
-  the degenerate case of the split, *which is why counting could never separate them.* **BE's fix EXCLUDES THEM AT
-  BUILD WITH A COUNTED STATUS** -- rule 4 exactly -- ***AND REQUIRES A 54-MINUTE REBUILD; THAT DECISION IS WITH THE
-  USER AND IS NOT TAKEN.*** ***DE 172 SHIPS THE FALSIFIER THE PROBE LACKED AND I RAN IT: `--selftest` -> PASS, 11
-  CHECKS***, closing by instrument the exposure I recorded as my own last round; **one cell is the control for the
-  very claim this round closes -- "the assembly shape is read from the VALUE'S TYPE, both ways... this is the
-  comparison that said the night's repairs REACHED the 09-03 book, so it ships its own control".** ***AND THE NINE
-  SURVIVE THE CORRECTED INSTRUMENT, WHICH I RE-DROVE ON THE REAL BOOK: `n_refused 9`, `by_kind {ZERO_LENGTH: 9}`, 7
-  slugs, 0 tranches -- RE-CONFIRMED BY A CORRECTED CENSUS RATHER THAN DEFENDED BY ITS AUTHOR***, *the ordering
-  defect could have manufactured all nine out of missing keys and the honest way to find out was to fix the
-  classifier and count again.* The ordering is now **PRESENCE, THEN FINITENESS, THEN THE ORDERINGS** -- `None`/`None`
-  and equal STRINGS -> `NON_FINITE`, a missing `t1` -> `MISSING_FIELD` -- and **rule 4 reaches the side set: an
-  unknown side is COUNTED, not dropped, since "they were missing from the very denominator every rate is taken
-  over".** ***AND ONE CELL ENCODES THE EXACT CAUTION REV 137 AND I BOTH RAISED: "the generation delta LOCATES A MOVE
-  ... IT DOES NOT CLAIM IDENTITY -- two books built by different code may key generations differently, so only the
-  COUNT per pair is comparable, and the field says so" -- BOTH LIMITS PUT INSIDE THE INSTRUMENT, IN THE FIELD, WHERE
-  A DOWNSTREAM READER CANNOT MISS THEM***, tonight's recurring lesson applied BEFORE the misreading rather than
-  after. **BE's twenty minutes are ALL IN A2 ALONE: A0 (551.3 s) and A1 (120.6 s) are within 4 % of the pre-fix run
-  so THE BOX WAS NOT UNUSUALLY FAST, and the era fix made A0 slightly SLOWER; but BE CANNOT EXCLUDE THE LOST RUN
-  HAVING BEEN LOADED, because R-836 recorded ONLY `assembly_s` AND `peak_gb` for it** -- ***BE'S POINT, WORTH ACTING
-  ON LATER: A KILLED RUN SHOULD PRESERVE ITS STAGE TABLE, SINCE IT BECOMES THE BASIS EVERYTHING IS PRICED AGAINST***;
-  *the number four days are priced on came from a run whose only surviving evidence is two scalars.* ***REV 138 VERIFIED BE'S FIX BEFORE THE REBUILD -- AND FOUND ONE LINE OWED FIRST; SEE THE ADDENDUM.*** ***AND A FACT ABOUT MY OWN LAST ROUND: SIX COMMITS LANDED BETWEEN MY ROUND-316 SWEEP END (`2816978`)
-  AND MY OWN ROW PUSH (`55cbd2e`) -- DA 160 x3, BE 129 AND DE 172, THE TWO THIS ROUND IS ABOUT -- SO THE
-  REGISTER-LANDING PULL SWEPT THEM UNDER MY ROW AND MY FILES QUOTE A WINDOW THAT EXCLUDES THEM. A WINDOW MEASURED
-  FROM MY LAST ROW IS NOT A WINDOW MEASURED FROM WHAT I LAST READ, AND ON A BUSY SHARED TREE THE DIFFERENCE IS SIX
-  COMMITS.*** DA 160 also lands **`seam.commit` arriving as a MAPPING where its reader took it for a STRING -- THE
-  FALSE FLAG ON THE FIRST CORRECTED BOOK.** Flags 2744 -> 2761, prov 2289 -> 2306; window 3/3, Batch 299 archived.
-  MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -375,6 +378,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 320, DA's five-point contract; the sibling-block class enumerated (f06ec7d -> a52526d) ---
+  DAS_FIVE_POINT_ACCEPTANCE_CRITERIA_ARE_A_SPECIFICATION_THAT_OUTLIVES_THIS_DAY: FIVE-POINTS-VERBATIM
+  IT_WAS_WRITTEN_WHEN_ASKED_WHAT_FRAMING_IT_WOULD_ACCEPT_AFTER_DECLINING_ONE: THE-RIGHT-QUESTION-TO-ASK
+  B_IS_RULE_1_APPLIED_TO_A_NUMBER_NOBODY_HAD_YET_COMPUTED: FILLS-ARE-ENDOGENOUS
+  C_IS_THE_FALSIFIER_THE_BUILD_OWES_AND_IT_ANSWERS_THE_OBJECTION_TO_THE_RULING: CHECKABLE-WITHOUT-THE-L0-BUILD
+  BUT_TO_THE_DIGIT_MEETS_A_FLOAT_AND_I_CHECKED_WHICH_DIGIT: EQUAL-AT-SIX-NOT-EXACTLY
+  D_AND_E_ARE_THE_TWO_LEGS_AND_THE_FIVE_DAYS: 100c-PER-SHARE-AND-RULE-8
+  THE_SIGNABLE_SENTENCE_IS_THE_SHAPE_OF_THE_CLAIM_AND_I_KEEP_IT_VERBATIM: UNDER-THE-ASSUMPTION-CLAUSE
+  AND_WHAT_DA_WILL_NOT_ACCEPT_IS_RECORDED_AS_TIGHTLY_AS_WHAT_IT_WILL: THREE-NAMED-REFUSALS
+  REV_139S_FOUR_ARE_ALREADY_IN_MY_FILES_FROM_LAST_ROUND: NOT-RE-FILED
+  REV_140_ENUMERATES_THE_CLASS_BY_OPERATION_AND_FINDS_SIX_SITES: THREE-NEW-FIVE-SHARED-NAMES
+  THE_WORST_IS_THAT_THE_MULTI_DAY_VERDICT_READS_THE_DIAGNOSTIC: 2865-AND-SILENT
+  AND_DAS_OWN_ZERO_MISMATCHES_WAS_OVER_THE_DIAGNOSTIC_TOO: ZERO-OCCURRENCES-IN-THE-MODULE
+  THE_PLANTED_SETTLEMENT_PROBE_REPRODUCES_AT_A_THIRD_SITE: sealed-TRUE-WITH-economic-STRIPPED
+  THREE_INSTANCES_WERE_FOUND_BY_ACCIDENT_AND_THE_FOURTH_BY_LOOKING: THE-SWEEP-IS-THE-LESSON
   # --- MEM round 319 ADDENDUM 2026-09-09T14:59:31Z: REV 139 landed while I wrote ---
   REV_139_LANDED_AND_CORRECTS_MY_TENSE_ON_RULING_D: NOT-A-PREDICATE-YET
   THE_TEST_STATISTIC_REFUSAL_IS_REAL_BUT_GUARDS_THE_WRONG_BLOCK: economic-NOT-economic_settlement
@@ -27223,6 +27241,177 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 320, 2026-09-09T15:05:36Z ---
+  DAS_FIVE_POINT_ACCEPTANCE_CRITERIA_ARE_A_SPECIFICATION_THAT_OUTLIVES_THIS_DAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***DA'S FIVE-POINT ACCEPTANCE CRITERIA FOR THE BUILD-TIME L=0 VALUATION ARE RECORDED HERE AS A SPECIFICATION
+      MEANT TO OUTLIVE THIS DAY, NOT AS A ROUND'S NEWS.*** **(a) VALUED ON THE R-801 ESTIMAND -- trades cash flow
+      plus share-delta x settlement, NEVER the 5-second markout. (b) LABELLED AS AN UPPER BOUND IN THE ARTIFACT.
+      (c) THE FALSIFIER THE BUILD OWES: `kept-value + dropped-value = all-tranche value`, AND `kept-value` MUST
+      EQUAL THE BASELINE TOTAL ALREADY IN THE LEDGER. (d) BOTH LEGS TRAVEL SEPARATELY. (e) >=5 COMPLETE UTC DAYS
+      before "the latency effect is real" may be said.** *Five points, each with a stated reason, written before the
+      thing they govern exists* -- **which is the only moment a specification can be written without being
+      negotiated against a number somebody already has.**
+  IT_WAS_WRITTEN_WHEN_ASKED_WHAT_FRAMING_IT_WOULD_ACCEPT_AFTER_DECLINING_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***AND HOW IT CAME TO EXIST IS WORTH AS MUCH AS ITS CONTENT: DA WROTE IT WHEN ASKED WHAT FRAMING IT WOULD
+      ACCEPT, AFTER DECLINING THE COORDINATOR'S -- AND IT WAS ROUTED TO BE AS ITS CONTRACT WHILE BE WAS STILL
+      DECIDING WHAT TO BUILD.*** **A seat that declines a framing and is then asked for its own produces a
+      specification; a seat that only declines produces a delay.** *Last round DA refused three readings of its own
+      51.17 % -- "first evidence" credits a gap never open, a count is not a share, no L=0 EV20 book exists -- and
+      this is the constructive half of that same refusal.* ***AND THE TIMING IS THE POINT: A CONTRACT THAT REACHES
+      THE BUILDER BEFORE THE BUILD IS A SPECIFICATION; THE SAME WORDS AFTERWARDS ARE A COMPLAINT.***
+  B_IS_RULE_1_APPLIED_TO_A_NUMBER_NOBODY_HAD_YET_COMPUTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***CRITERION (b) IS THE ONE THIS FILE WOULD KEEP IF IT COULD KEEP ONLY ONE, AND DA'S REASON IS VERBATIM: "A
+      DROPPED TRANCHE IS A FILL THAT HAPPENED BEFORE OUR QUOTE COULD REST; VALUING IT ASSUMES WE WOULD HAVE GOT IT
+      -- A FILL-PROBABILITY ASSUMPTION, AND FILLS ARE ENDOGENOUS."*** **That is CLAUDE.md reliability rule 1 --
+      *fills are endogenous; training on completed fills conditions on the event a policy wants to prevent* --
+      applied to a number NOBODY HAD YET COMPUTED.** *The rule has cost this programme dissolved positives before;
+      here it is being applied prospectively, to forbid a reading of a quantity that does not exist yet.* **An
+      upper bound labelled in the artifact is the difference between a bound and a claim.**
+  C_IS_THE_FALSIFIER_THE_BUILD_OWES_AND_IT_ANSWERS_THE_OBJECTION_TO_THE_RULING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***CRITERION (c) IS THE CLEVEREST PART AND IT ANSWERS THE ONE REAL OBJECTION TO THE USER'S RULING (b):
+      `kept-value + dropped-value = all-tranche value`, AND `kept-value` MUST EQUAL THE BASELINE TOTAL ALREADY IN
+      THE LEDGER -- 37,315.551431 ON 09-03 -- TO THE DIGIT.*** **The objection to valuing at build rather than
+      building an L=0 book was that nothing independent checks the valuation. This makes it CHECKABLE WITHOUT THE
+      L=0 BUILD THE USER RULED AGAINST**, because *the baseline total is already computed, already landed, and was
+      produced by a different code path for a different purpose.* ***A CONTROL THAT ALREADY EXISTS IN AN ARTIFACT
+      NOBODY BUILT FOR THIS PURPOSE IS THE CHEAPEST FALSIFIER THERE IS.***
+  BUT_TO_THE_DIGIT_MEETS_A_FLOAT_AND_I_CHECKED_WHICH_DIGIT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***AND ONE PRECISION I CONTRIBUTE TO (c) FROM READING THE LEDGER RATHER THAN THE CONTRACT: "TO THE DIGIT"
+      MEETS A FLOAT.*** The point-estimate artifact stores `zero_cancel_baseline_total_cents` as
+      ***`37315.55143100004`, NOT `37315.551431`*** -- I checked both: **they are NOT equal exactly (difference
+      4.37e-11) and ARE equal at `round(..., 6)`.** ***SO THE FALSIFIER NEEDS TO SAY WHICH REPRESENTATION IS
+      AUTHORITATIVE, OR IT CAN FAIL ON FLOAT NOISE ALONE AND REPORT A DEFECT THAT IS NOT THERE.*** **A falsifier
+      that can fire spuriously gets disabled, and then the control is gone** -- *the same failure direction BE 121
+      named when it said a predicate refusing on absence would refuse honest receipts.* Recorded as a note to
+      whoever implements (c), not as an objection to it.
+  D_AND_E_ARE_THE_TWO_LEGS_AND_THE_FIVE_DAYS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      **(d) BOTH LEGS TRAVEL SEPARATELY, "because a dropped tranche moves the RESIDUAL by 100 c/share INDEPENDENT OF
+      ITS PRICE"** -- *the trades leg and the residual leg answer different questions and a single total hides which
+      one moved*, which is exactly why R-801's estimand is stated as two legs and why the point estimate reports
+      them separately (I verified both legs sum to their totals to the last decimal last round). **(e) >=5 COMPLETE
+      UTC DAYS BEFORE "THE LATENCY EFFECT IS REAL" MAY BE SAID -- ONE DAY IS A POINT ESTIMATE WITH NO INTERVAL,
+      RULE 8.** ***THE PROGRAMME HAS EXACTLY ONE CORRECTED DAY AND THE QUEUE FOR THE OTHER FOUR IS HELD, SO (e) IS
+      NOT A DISTANT CONDITION -- IT IS THE REASON THE QUEUE MATTERS.***
+  THE_SIGNABLE_SENTENCE_IS_THE_SHAPE_OF_THE_CLAIM_AND_I_KEEP_IT_VERBATIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***DA'S SIGNABLE SENTENCE, KEPT VERBATIM AS THE SHAPE OF THE CLAIM: "ON 09-03 AT L=250, TRANCHES ARRIVING
+      BEFORE THE QUOTE COULD REST ACCOUNT FOR X CENTS OF SETTLED VALUE UNDER THE ASSUMPTION THAT EVERY ONE WOULD
+      HAVE FILLED -- AN UPPER BOUND ON THE LATENCY EFFECT."*** **Every clause is load-bearing: the DAY, the L, the
+      MECHANISM, the UNIT (cents of settled value, not a share and not a markout), THE ASSUMPTION NAMED IN THE
+      SENTENCE ITSELF, and the word UPPER BOUND.** *A sentence written before the number exists cannot be tuned to
+      flatter it* -- and **writing the claim's shape in advance is the same discipline as declaring a null before a
+      result, which is rule 6.**
+  AND_WHAT_DA_WILL_NOT_ACCEPT_IS_RECORDED_AS_TIGHTLY_AS_WHAT_IT_WILL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      **And what DA will NOT accept is recorded as tightly as what it will, because a specification without
+      refusals is a preference: (i) THE COUNT SHARE STANDING IN FOR THE MONEY SHARE; (ii) THE MARKOUT AS THE
+      VALUATION; (iii) ANY PHRASING THAT DROPS THE FILL-PROBABILITY ASSUMPTION.** ***THE FIRST IS THE 51.17 % / 54 %
+      CONFUSION DA ALREADY REFUSED ONCE, NOW FORBIDDEN IN ADVANCE RATHER THAN CORRECTED AFTERWARDS.*** *The second
+      is R-801's ruling restated as an acceptance criterion. The third is (b) again, from the reader's side rather
+      than the artifact's* -- **a label in the artifact and a clause in the sentence, so dropping it requires two
+      deliberate acts rather than one omission.**
+  REV_139S_FOUR_ARE_ALREADY_IN_MY_FILES_FROM_LAST_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      **REV 139's four findings are ALREADY IN THESE FILES from my round-319 addendum and I do not re-file them:**
+      the test-statistic refusal real but reading the wrong block; **the ruled exemption NOT a predicate yet** (a
+      third module giving the identical status, identical `is_a_match: False` and NO refusal, only the flag string's
+      count changing); **the 1-in-3,862 sound but its script importing from a hardcoded worktree**; and **the two
+      unnamed confirmed independently as exactly BE 122's lazy pair.** ***I RECORDED THEM WITH MY OWN TENSE
+      CORRECTION ATTACHED -- I HAD WRITTEN "DE IS MAKING THAT A PREDICATE" AND REV HAD DRIVEN THAT IT IS NOT.***
+      What is new this round is the enumeration below.
+  REV_140_ENUMERATES_THE_CLASS_BY_OPERATION_AND_FINDS_SIX_SITES:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***REV 140 SWEPT FOR THE CLASS BY OPERATION AND THE RESULT IS WORSE THAN THREE INSTANCES: SIX SITES IN THREE
+      MODULES, THREE OF THEM NEW.*** **The operation, stated exactly: "a site names one of two sibling blocks
+      LITERALLY and reads a field that exists in BOTH."** And the field list is ***MEASURED, NOT GUESSED***:
+      `economic` and `economic_settlement` share exactly **`['Z', 'null_draws_summary', 'null_mean', 'null_sd',
+      'p_location']` -- FIVE NAMES READABLE FROM THE WRONG BLOCK WITH NO ERROR**, plus block-level presence tests.
+      **I confirmed the shape at the code: `v = ((a.get("economic") or {}).get(field))` at `:5945`, with the same
+      literal at `:5954`, `:12172` and `:12174`** -- *and the same file writes `economic_settlement` at `:8471` and
+      `:8498`, so the block is right there and the guard simply does not consult it.*
+  THE_WORST_IS_THAT_THE_MULTI_DAY_VERDICT_READS_THE_DIAGNOSTIC:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***AND THE WORST OF THE SIX IS NOT A GUARD AT ALL, IT IS THE VERDICT: `de_multiday_gate1_runner.py:2865`
+      COMPUTES THE MULTI-DAY DAY-CLUSTER VERDICT AND THE SECTION-7 PREDICATE FROM `r["economic"]["Z"]` -- THE
+      5-SECOND DIAGNOSTIC -- WHILE R-801 MADE THE SETTLEMENT P&L PRIMARY. SILENT, BECAUSE THE KEY EXISTS.***
+      **Every previous instance of this class exposed a RESULT to a reader; this one COMPUTES a verdict from the
+      wrong quantity.** *The programme's headline finding, whenever it comes, would have been a statement about the
+      5-second markout wearing the name of the ruled endpoint* -- ***AND NOTHING WOULD HAVE ERRORED, BECAUSE `Z` IS
+      A REAL FIELD IN BOTH BLOCKS.***
+  AND_DAS_OWN_ZERO_MISMATCHES_WAS_OVER_THE_DIAGNOSTIC_TOO:
+    prov: CHECKED
+    artifact: live/pm_research/da_gate1_day_verdict.py
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***AND THE SECOND NEW SITE TURNS AN INDEPENDENT VERIFICATION INTO A TAUTOLOGY: `da_gate1_day_verdict.py:925-926`
+      RECOMPUTES AND COMPARES `D_E0`, `Z`, `p_location`, `null_mean` AND `null_sd` IN THE `economic` BLOCK ONLY, AND
+      THE MODULE CONTAINS ZERO OCCURRENCES OF `economic_settlement` -- SO DA'S INDEPENDENT RECOMPUTE NEVER TOUCHES
+      THE RULED ENDPOINT AND REPORTS "0 MISMATCHES" OVER THE DIAGNOSTIC.*** **The verification is real, the
+      recompute is genuinely independent, and it is independent about the wrong quantity.** *This is rule 33 in its
+      purest form -- what did the check ACTUALLY examine, what claim is it cited for, are those the same thing --
+      and the answer is no, in the seat whose job is to answer it.*
+  THE_PLANTED_SETTLEMENT_PROBE_REPRODUCES_AT_A_THIRD_SITE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***AND THE THIRD NEW SITE, DRIVEN: `receipt_is_sealed` AT `:876` READS `arm_block["economic"]` AGAINST
+      `ECONOMIC_FIELDS`, SO A RECEIPT CARRYING `D_E_settle` 30045.04, BOTH ARM TOTALS AND A SETTLEMENT `Z`, WITH
+      `economic` STRIPPED, READS `sealed=True`.*** **The user's planted-settlement probe reproduces at a third
+      site.** *That probe was the user's own finding at round 303; it has now been shown to work against a
+      DIFFERENT function than the one it originally exposed* -- ***WHICH IS THE DEFINITION OF A CLASS RATHER THAN A
+      BUG, AND THE REASON ENUMERATING BY OPERATION WAS WORTH A ROUND.***
+  THREE_INSTANCES_WERE_FOUND_BY_ACCIDENT_AND_THE_FOURTH_BY_LOOKING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:05:36Z
+    said: >-
+      ***THE LESSON THE COORDINATOR NAMED IN DISPATCHING THE SWEEP, AND IT IS THE RIGHT ONE: THREE INSTANCES WERE
+      EACH FOUND BY ACCIDENT OR BY THE USER AND NEVER BY LOOKING.*** **`ECONOMIC_FIELDS` at REVIEW 123 was the
+      first, the user's planted settlement result the second, the test-statistic guard the third -- and the fourth,
+      fifth and sixth arrived within one round of somebody deciding to enumerate by OPERATION rather than wait for
+      the next accident.** *Rule 32 says enumerate by operation and not by spelling; this is the first time the
+      programme has spent a round doing it PROACTIVELY on a class it already knew it had.* ***THE THREE NEW SITES
+      ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS COSTING.***
   # --- MEM round 319 ADDENDUM, 2026-09-09T14:59:31Z ---
   REV_139_LANDED_AND_CORRECTS_MY_TENSE_ON_RULING_D:
     prov: CHECKED

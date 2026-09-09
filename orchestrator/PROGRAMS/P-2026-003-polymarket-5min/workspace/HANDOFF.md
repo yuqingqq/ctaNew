@@ -1,3 +1,86 @@
+# READ FIRST — round 320 (MEM, 2026-09-09T15:05:36Z, tip `a52526d`)
+
+# 📐 DA'S FIVE-POINT ACCEPTANCE CRITERIA — a specification meant to outlive this day
+
+For the **build-time L=0 valuation**:
+
+| | criterion | why |
+|---|---|---|
+| **(a)** | valued on the **R-801 estimand** — trades cash flow + share-delta × settlement | **never the 5-second markout** |
+| **(b)** | **labelled an UPPER BOUND in the artifact** | *"a dropped tranche is a fill that happened BEFORE our quote could rest; valuing it ASSUMES we would have got it — a **fill-probability assumption**, and **fills are endogenous**"* |
+| **(c)** | **the falsifier the build owes**: `kept + dropped = all-tranche`, and **`kept` must equal the baseline total already in the ledger** (37,315.551431 on 09-03) | makes it **checkable without the L=0 build the user ruled against** |
+| **(d)** | **both legs travel separately** | a dropped tranche moves the **residual by 100 c/share independent of its price** |
+| **(e)** | **≥5 complete UTC days** before *"the latency effect is real"* | one day is a point estimate with **no interval** — rule 8 |
+
+**How it came to exist is worth as much as its content: DA wrote it when asked what framing it WOULD accept, after
+declining the coordinator's — and it reached BE as its contract while BE was still deciding what to build.** *A seat
+that declines and is then asked for its own produces a specification; a seat that only declines produces a delay.*
+***A contract that reaches the builder before the build is a specification; the same words afterwards are a
+complaint.***
+
+**(b) is rule 1 applied to a number nobody had yet computed.** **(c) is the cleverest part** — the baseline total is
+already computed, already landed, **and was produced by a different code path for a different purpose.** *A control
+that already exists in an artifact nobody built for this purpose is the cheapest falsifier there is.*
+
+## ⚠ ONE PRECISION I CONTRIBUTE TO (c) — "to the digit" meets a float
+
+The ledger stores `zero_cancel_baseline_total_cents` as **`37315.55143100004`**, not `37315.551431`. I checked both:
+**not equal exactly** (diff **4.37e-11**), **equal at `round(…, 6)`**. ***So the falsifier must say which
+representation is authoritative, or it can fire on float noise alone and report a defect that is not there.*** *A
+falsifier that can fire spuriously gets disabled — and then the control is gone.*
+
+## THE SIGNABLE SENTENCE — verbatim, as the shape of the claim
+
+> ***"On 09-03 at L=250, tranches arriving before the quote could rest account for X cents of settled value under the
+> assumption that every one would have filled — an upper bound on the latency effect."***
+
+**Every clause is load-bearing:** the day, the L, the mechanism, the **unit** (cents of settled value — not a share,
+not a markout), **the assumption named in the sentence itself**, and **upper bound**.
+
+**What DA will NOT accept, recorded as tightly as what it will:** the **count share standing in for the money
+share**; the **markout as the valuation**; **any phrasing that drops the fill-probability assumption.** *The first is
+the 51.17 / 54 confusion DA already refused once — now forbidden in advance rather than corrected afterwards.*
+
+---
+
+# 🔎 REV 140 — THE CLASS ENUMERATED BY OPERATION: **six sites, three modules, three NEW**
+
+**REV 139's four are already in these files** (round-319 addendum, with my own tense correction) and are **not
+re-filed**.
+
+**The operation:** *"a site names one of two sibling blocks LITERALLY and reads a field that exists in BOTH."* The
+shared field list is **measured, not guessed**: `Z`, `null_draws_summary`, `null_mean`, `null_sd`, `p_location` —
+**five names readable from the wrong block with no error.** I confirmed the shape at the code:
+`v = ((a.get("economic") or {}).get(field))` at **`:5945`**, same literal at **`:5954`, `:12172`, `:12174`** — *while
+the same file writes `economic_settlement` at `:8471` and `:8498`. The block is right there and the guard does not
+consult it.*
+
+**⛔ (1) NEW, and the worst — not a guard, the VERDICT.** `de_multiday_gate1_runner.py:2865` computes **the multi-day
+day-cluster verdict and the section-7 predicate from `r["economic"]["Z"]`** — the **5-second diagnostic** — while
+R-801 made the settlement P&L primary. **Silent, because the key exists.** *Every previous instance exposed a result
+to a reader; this one computes a verdict from the wrong quantity.*
+
+**⛔ (2) NEW — an independent verification turned tautology.** `da_gate1_day_verdict.py:925-926` recomputes and
+compares in the **`economic` block only**, and **the module contains ZERO occurrences of `economic_settlement`** — so
+**DA's independent recompute never touches the ruled endpoint and reports "0 mismatches" over the diagnostic.** *Rule
+33 in its purest form, in the seat whose job is to ask it.*
+
+**⛔ (3) NEW, driven.** `receipt_is_sealed` at `:876` reads `arm_block["economic"]`, so a receipt carrying
+`D_E_settle` 30045.04, both arm totals and a settlement `Z`, **with `economic` stripped, reads `sealed=True`** — **the
+user's planted-settlement probe reproducing at a third site.**
+
+## THE LESSON
+
+***Three instances were each found by accident or by the user and never by looking — and the fourth, fifth and sixth
+arrived within one round of somebody deciding to enumerate by OPERATION.*** *Rule 32's method, applied proactively
+for the first time on a class the programme already knew it had.* **The three new sites are the measure of what the
+other approach was costing.**
+
+Counts: flags 2790 → 2804, provenance 2335 → 2349 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 302 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 319 (MEM, 2026-09-09T14:57:56Z, tip `ac99226`)
 
 # 🎯 THE FIRST CORRECTED NUMBER SINCE THE RETRACTION

@@ -21954,3 +21954,54 @@ generation and the window went 4 → 3. Nothing rewritten.
   THEY ARE STILL NOT THE QUEUE'S BASIS: BE 128 HAS NOT ACCOUNTED FOR THE TWENTY MINUTES AND NOTHING BEYOND 09-03 IS
   AUTHORISED.** Flags 2727 -> 2744, prov 2272 -> 2289; window 3/3, Batch 298 archived. MEM asserts no result.)
 ```
+
+## Batch 302 — archived 2026-09-09T15:05:36Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T12:48:04Z (MEM ROUND 317 -- ***THE NIGHT'S BIGGEST QUESTION IS CLOSED AND THE FIRST CORRECTED BOOK'S ONLY DEFECT
+  TURNS OUT TO BE THE REPAIR ARRIVING.*** ***`assembly_differs: True` -- THE REPAIRS REACHED THE ARTIFACT, MEASURED
+  AT THE BOOK, OPEN SINCE THE FIRST EV20 ATTEMPT AT 03:11Z AND NOW CLOSED***: I re-drove it on the corrected
+  instrument and read the value keys myself -- **EV20 carries `n_entries 350474`, `value_type dict`, `shape
+  PER_ROW_SCORES`, `value_keys ['gen', 'score', 't0']`, IDENTICALLY ON BOTH HEADS, against the pre-fix 297,379
+  entries / `float` / `PER_GENERATION_SCORES`** -- and ***`t0` ON EVERY ENTRY IS THE LOOK-AHEAD REPAIR ITSELF, R-834's
+  demand now a FIELD IN THE ARTIFACT RATHER THAN A CLAIM IN A COMMIT MESSAGE.*** ***BE 129 ANSWERS THE QUESTION I
+  RECORDED AS OPEN LAST ROUND, AND THE ANSWER IS THE GOOD ONE: THE NINE AND THE +35 ARE ONE PHENOMENON AND IT IS THE
+  ERA FIX WORKING*** -- I had said they could be subset, disjoint or overlapping, **and they are NEITHER: they are
+  two symptoms of one cause.** The evidence needs no second opinion: **EVERY ONE OF THE NINE SITS AT A GAP START,
+  nearest-edge distances 0.000000036 / 0.000000092 / 0.000000092 / 0.000001965 s -- FOUR INSIDE 0.1 MICROSECONDS AND
+  EIGHT INSIDE 3.7 -- all seven affected slugs carry gaps under `clob_v4_1` and NONE under `clob_v3_1`, the refusing
+  slug carrying six gaps totalling 30.4 s under the new era and ZERO under the old**; *a coincidence at 36
+  nanoseconds is not a coincidence.* **And the control closes it: THE PRE-FIX BOOK WAS BUILT WITH `gaps=[]` FOR
+  EVERY WINDOW AND HAS ZERO SUCH GENERATIONS -- IT WAS CLEAN NOT BECAUSE IT WAS RIGHT BUT BECAUSE IT NEVER SAW A
+  GAP**, which is the emptiest kind of green and exactly the shape this programme has learned to distrust. ***THE
+  MECHANISM: THE ERA FIX ATTACHES THE DAY'S REAL GAPS TO `build_reference` FOR THE FIRST TIME; A GAP START TRUNCATES
+  THE GENERATION LIVE AT THAT INSTANT AND A GENERATION CREATED AT THAT SAME INSTANT IS BORN TERMINATED, WHILE THE
+  SAME GAP SPLITS A GENERATION -- WHICH IS WHY 313,149 AGAINST 313,114. ONE EFFECT, TWO SYMPTOMS***, the nine being
+  the degenerate case of the split, *which is why counting could never separate them.* **BE's fix EXCLUDES THEM AT
+  BUILD WITH A COUNTED STATUS** -- rule 4 exactly -- ***AND REQUIRES A 54-MINUTE REBUILD; THAT DECISION IS WITH THE
+  USER AND IS NOT TAKEN.*** ***DE 172 SHIPS THE FALSIFIER THE PROBE LACKED AND I RAN IT: `--selftest` -> PASS, 11
+  CHECKS***, closing by instrument the exposure I recorded as my own last round; **one cell is the control for the
+  very claim this round closes -- "the assembly shape is read from the VALUE'S TYPE, both ways... this is the
+  comparison that said the night's repairs REACHED the 09-03 book, so it ships its own control".** ***AND THE NINE
+  SURVIVE THE CORRECTED INSTRUMENT, WHICH I RE-DROVE ON THE REAL BOOK: `n_refused 9`, `by_kind {ZERO_LENGTH: 9}`, 7
+  slugs, 0 tranches -- RE-CONFIRMED BY A CORRECTED CENSUS RATHER THAN DEFENDED BY ITS AUTHOR***, *the ordering
+  defect could have manufactured all nine out of missing keys and the honest way to find out was to fix the
+  classifier and count again.* The ordering is now **PRESENCE, THEN FINITENESS, THEN THE ORDERINGS** -- `None`/`None`
+  and equal STRINGS -> `NON_FINITE`, a missing `t1` -> `MISSING_FIELD` -- and **rule 4 reaches the side set: an
+  unknown side is COUNTED, not dropped, since "they were missing from the very denominator every rate is taken
+  over".** ***AND ONE CELL ENCODES THE EXACT CAUTION REV 137 AND I BOTH RAISED: "the generation delta LOCATES A MOVE
+  ... IT DOES NOT CLAIM IDENTITY -- two books built by different code may key generations differently, so only the
+  COUNT per pair is comparable, and the field says so" -- BOTH LIMITS PUT INSIDE THE INSTRUMENT, IN THE FIELD, WHERE
+  A DOWNSTREAM READER CANNOT MISS THEM***, tonight's recurring lesson applied BEFORE the misreading rather than
+  after. **BE's twenty minutes are ALL IN A2 ALONE: A0 (551.3 s) and A1 (120.6 s) are within 4 % of the pre-fix run
+  so THE BOX WAS NOT UNUSUALLY FAST, and the era fix made A0 slightly SLOWER; but BE CANNOT EXCLUDE THE LOST RUN
+  HAVING BEEN LOADED, because R-836 recorded ONLY `assembly_s` AND `peak_gb` for it** -- ***BE'S POINT, WORTH ACTING
+  ON LATER: A KILLED RUN SHOULD PRESERVE ITS STAGE TABLE, SINCE IT BECOMES THE BASIS EVERYTHING IS PRICED AGAINST***;
+  *the number four days are priced on came from a run whose only surviving evidence is two scalars.* ***REV 138 VERIFIED BE'S FIX BEFORE THE REBUILD -- AND FOUND ONE LINE OWED FIRST; SEE THE ADDENDUM.*** ***AND A FACT ABOUT MY OWN LAST ROUND: SIX COMMITS LANDED BETWEEN MY ROUND-316 SWEEP END (`2816978`)
+  AND MY OWN ROW PUSH (`55cbd2e`) -- DA 160 x3, BE 129 AND DE 172, THE TWO THIS ROUND IS ABOUT -- SO THE
+  REGISTER-LANDING PULL SWEPT THEM UNDER MY ROW AND MY FILES QUOTE A WINDOW THAT EXCLUDES THEM. A WINDOW MEASURED
+  FROM MY LAST ROW IS NOT A WINDOW MEASURED FROM WHAT I LAST READ, AND ON A BUSY SHARED TREE THE DIFFERENCE IS SIX
+  COMMITS.*** DA 160 also lands **`seam.commit` arriving as a MAPPING where its reader took it for a STRING -- THE
+  FALSE FLAG ON THE FIRST CORRECTED BOOK.** Flags 2744 -> 2761, prov 2289 -> 2306; window 3/3, Batch 299 archived.
+  MEM asserts no result.)
+```
