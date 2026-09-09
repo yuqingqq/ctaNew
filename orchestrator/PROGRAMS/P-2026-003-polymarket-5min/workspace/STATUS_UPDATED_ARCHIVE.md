@@ -20916,3 +20916,47 @@ generation and the window went 4 → 3. Nothing rewritten.
   question filed above REMAINS OPEN, and R-843's phrase 'day-independent by construction' describes the DEFECT and
   not the finding. MEM asserts no result.)
 ```
+
+## Batch 279 — archived 2026-09-09T08:10:55Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T07:44:37Z (MEM ROUND 294 -- R-843 AND R-844 SWEPT as a numbered queue under rule 23,
+  from my round-293 tip `c0e19ad` to `0713049`, thirteen commits. STATE ONLY. ***THE EXPOSURE ROUND 293 FILED WAS
+  ROUTED WITHIN FOUR MINUTES AND THIS FILE NOW NAMES WHERE IT WENT***: `RESULTS.md`'s retraction notice is AMENDED
+  (`0713049`) with the era mechanism, the disjoint tables, the 160 windows and 2,294.7 s, and the sentence "Every
+  book on disk was built through this path, including the reference the 0-cancel baseline replays over"; and
+  **DA 141** is dispatched to measure what share of 09-03's baseline settled money falls inside the 160 gapped
+  windows -- ***A DECISION RULE DECLARED BEFORE THE NUMBER EXISTS***: a small share bounds it and the finding stands
+  with a caveat, a large share and it is withdrawn. **THE FINDING IS NOT WITHDRAWN AND NO NUMBER IS CORRECTED.** One
+  placement observation, driven and not a dispute of substance: the amendment says "THE TABLE ABOVE MUST BE READ
+  WITH IT" and sits at line 34 BELOW the table at lines 24-29, so a reader stopping at the footnote has all four
+  percentages and none of the exposure. ***AND THE 09-03 WINDOW COUNT HAS THREE VALUES, NOT TWO***, each measured
+  by me at its own source on a different round: **246** the settlement artifact's `arm_legs.n_slugs`, the population
+  the P&L is summed over; **247** `day_slugs`, what the builder is supplied; **287** the day's markets in
+  `resolutions.jsonl` with 15:20Z absent. ***TWO OF THEM NOW SIT ELEVEN LINES APART IN ONE DOCUMENT*** -- RESULTS
+  line 32 says 246 and line 40 says 287 -- which is worse than two entries disagreeing because a reader gets no cue
+  that two populations are in play. **I pick none**; 247->246 is ONE slug and 287->247 is FORTY, suggestive is not
+  reconciled, and the failure mode guarded against is the newest number quietly becoming THE number. DA 140 drove
+  the latency MECHANISM clean with a control that could have failed -- set equality on all four days, zero both ways,
+  while 200/240/260/300 ms predict 29,414/27,042/25,727/23,936 and match at NONE (260 misses 09-05 by six fills) --
+  ***but its own avoided-areas list names the builder/era gaps, so the mechanism is answered and the INPUT is not***.
+  REV 113 found DE 161's rewritten sealed-value guard HOLED two rounds after it landed: a value ending a sentence is
+  not tokenised at all, ***THE OLD GUARD REFUSES WHAT THE NEW ONE PASSES***, and only the COMPARISON needed to
+  change. ***SO "LANDED" IS NOT "REVIEWED"***, my round-293 caution earning its keep in two rounds, and this file
+  asserts nothing about BE 111's or any unreviewed behaviour. Flags 2424 -> 2439, prov 1969 -> 1984; window trimmed
+  4 -> 3, Batch 276 archived. Verified 07:41:29Z: **NO BUILD, NO LOCK, NO CORRECTED BOOK, NO CORRECTED NUMBER.**
+  ***ADDENDUM 07:45:34Z, AFTER THIS ROUND'S WINDOW CLOSED AND VERIFIED BEFORE RECORDING BECAUSE IT MAKES THE LINE
+  ABOVE FALSE***: DA 141 answered and THE DECISION RULE FIRED BOTH WAYS -- 60.3 % of 09-03's settled money sits in
+  windows built as if continuous (159 of 246 gapped; 15.6 % on 09-04; 09-05/09-06 immaterial), so ***THE ABSOLUTE
+  CENT FIGURES ARE WITHDRAWN*** (struck through in RESULTS at 07:43Z) while ***THE PERCENTAGES STAND***, moving
+  +1.251, +2.807, +4.126 and +1.297 pp when recomputed on ungapped windows only -- one direction, under 4.2 pp,
+  still large. What licenses that is ESTABLISHED: an AST census shows `gaps_by_slug(era)` is the SOLE era-dependent
+  input, so where the correct table has no gaps the defect is INERT rather than merely absent; controls show 0
+  windows gapped under the wrong era and 0 fills inside any gap interval, so nothing was fabricated and the
+  contamination is structural. DA's own three limits are kept unsoftened: the ungapped windows are NOT a random
+  subsample, 09-03's clean subset is only 87 windows (35.4 %) -- the thinnest subset on the most exposed day -- and
+  NO CORRECTED NUMBER IS COMPUTABLE FROM DISK. REV 114 adds that the defect is worse than R-843 stated: gaps travel
+  by a TWO-CHANNEL partition and `era=None` empties the second, so the partition collapses. And on my open
+  discrepancy, DA 141 counts 159 of 246 where REV 112 counted 160 of 287 -- STILL UNRECONCILED AND STILL NOT MINE
+  TO PICK. MEM asserts no result.)
+```
