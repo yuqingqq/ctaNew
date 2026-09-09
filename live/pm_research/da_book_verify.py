@@ -651,6 +651,85 @@ def check_seam(receipt: dict) -> dict:
 
 # ------------------------------- (2) the population, RECOMPUTED FROM THE BOOK
 
+#: DA 144 / gate item 8. THE ASSEMBLY HAS TWO SHAPES AND TWO OF THIS
+#: MODULE'S PREDICATES ONLY HOLD UNDER ONE OF THEM.
+#:
+#: Before DE 155 an assembly held ONE entry per GENERATION, keyed at the
+#: generation's t0, so `n_scored_keys` and `n_covered` were the same
+#: number and `len(keys) / n_generations` WAS the coverage. Since DE 155
+#: it holds one entry per scored ROW and the generation moved into the
+#: VALUE -- so `n_scored_keys` counts ROWS. Left alone, this verifier
+#: would have flagged EVERY corrected book as a population defect on the
+#: first one off the pipeline, and sent every seat hunting a defect that
+#: was not there.
+#:
+#: RESOLVED HERE RATHER THAN READ FROM BE (R-235, do-not-harmonize): the
+#: book tier derives the shape from the assembly's OWN values, and where
+#: the receipt also declares one the two are COMPARED and a disagreement
+#: is reported. The receipt-only tier has no values to look at, so it
+#: takes the declared field when there is one and otherwise INFERS
+#: per-generation -- an inference that is RECORDED with its reason, never
+#: silent, because every receipt without the field predates BE 112.
+SHAPE_PER_ROW = "PER_ROW_SCORES"
+SHAPE_PER_GENERATION = "PER_GENERATION_SCORES"
+SHAPE_UNKNOWN = "SHAPE_NOT_DETERMINABLE"
+
+
+def assembly_shape_of_values(scored) -> str:
+    """The shape of one head's assembled scores, from its VALUES.
+
+    A per-row value is a mapping carrying `gen`; a per-generation value is
+    a bare number. A map that is half each is neither, and is named rather
+    than coerced -- `be_cancel_axis_null.load()` would take the per-row
+    branch on it and raise at the first bare float.
+    """
+    if not isinstance(scored, dict) or not scored:
+        return SHAPE_UNKNOWN
+    n_dict = sum(1 for v in scored.values()
+                 if isinstance(v, dict) and "gen" in v)
+    if n_dict == 0:
+        return SHAPE_PER_GENERATION
+    if n_dict == len(scored):
+        return SHAPE_PER_ROW
+    return "MIXED_SCORE_SHAPES"
+
+
+def _scored_keys_predicate(shape, n_scored_keys, n_covered) -> dict:
+    """The relation between the key count and the covered count, BY SHAPE.
+
+    PER_GENERATION -- one key per generation, so they are EQUAL and the
+    strict test is the real one. PER_ROW -- keys are ROWS and covered are
+    GENERATIONS, so a generation with two scored rows makes them differ
+    LEGITIMATELY; what must still hold is that there are at least as many
+    rows as generations they cover. A shape this module could not
+    determine gets the predicate that is true under BOTH, and SAYS that
+    the strict form was not applied (rule 11: absence is never a pass).
+    """
+    if None in (n_scored_keys, n_covered):
+        return {"holds": None, "form": "NOT_COMPUTABLE_MISSING_COUNTS",
+                "why": "the block does not carry both counts"}
+    if shape == SHAPE_PER_GENERATION:
+        return {"holds": n_scored_keys == n_covered,
+                "form": "n_scored_keys == n_covered",
+                "why": "one key per GENERATION, so the counts are the same "
+                       "number and any difference is a real defect"}
+    if shape == SHAPE_PER_ROW:
+        return {"holds": n_scored_keys >= n_covered,
+                "form": "n_scored_keys >= n_covered",
+                "why": "keys are ROWS and covered are GENERATIONS; a "
+                       "generation with several scored rows makes them "
+                       "differ legitimately, but rows can never be fewer "
+                       "than the generations they cover",
+                "rows_per_covered_generation":
+                    (n_scored_keys / n_covered) if n_covered else None}
+    return {"holds": n_scored_keys >= n_covered,
+            "form": "n_scored_keys >= n_covered (WEAK FORM)",
+            "why": f"the assembly shape is {shape!r}, so the strict "
+                   f"per-generation equality was NOT applied; this is the "
+                   f"predicate that holds under both shapes and it is "
+                   f"reported as the weak form rather than as a pass"}
+
+
 def receipt_population_predicates(receipt: dict) -> dict:
     """Everything the receipt can be held to WITHOUT opening the book."""
     ref = receipt.get("reference") or {}
@@ -669,6 +748,19 @@ def receipt_population_predicates(receipt: dict) -> dict:
         n_cov, n_unc = blk.get("n_covered"), blk.get("n_uncovered")
         n_ref = blk.get("n_reference_generations")
         recomputed = (None if not n_ref else n_cov / n_ref)
+        #: DA 144: the shape, and WHERE IT CAME FROM. A receipt written
+        #: before BE 112 carries no such field and is per-generation by
+        #: construction; that inference is recorded, not assumed silently.
+        _decl = blk.get("score_shape")
+        if _decl in (SHAPE_PER_ROW, SHAPE_PER_GENERATION):
+            _shape, _shape_src = _decl, "DECLARED_BY_THE_RECEIPT"
+        elif _decl is None:
+            _shape = SHAPE_PER_GENERATION
+            _shape_src = ("INFERRED_NO_FIELD_IN_THE_RECEIPT -- every "
+                          "receipt without `score_shape` predates BE 112 "
+                          "and its assembly is one entry per generation")
+        else:
+            _shape, _shape_src = SHAPE_UNKNOWN, f"RECEIPT_DECLARED {_decl!r}"
         per_head[head] = {
             "theta": blk.get("theta"),
             "n_covered": n_cov, "n_uncovered": n_unc,
@@ -680,8 +772,18 @@ def receipt_population_predicates(receipt: dict) -> dict:
             "covered_plus_uncovered_equals_generations":
                 (None if None in (n_cov, n_unc, n_ref)
                  else n_cov + n_unc == n_ref),
+            #: DA 144: SHAPE-CONDITIONED. See `_scored_keys_predicate`.
+            #: The receipt-only tier has no assembly values, so the shape
+            #: is the one the receipt DECLARES, or -- absent that -- an
+            #: inference recorded with its reason.
+            "score_shape": _shape,
+            "score_shape_source": _shape_src,
+            "n_scored_keys_vs_n_covered":
+                _scored_keys_predicate(_shape, blk.get("n_scored_keys"),
+                                       n_cov),
             "n_scored_keys_equals_n_covered":
-                blk.get("n_scored_keys") == n_cov,
+                _scored_keys_predicate(_shape, blk.get("n_scored_keys"),
+                                       n_cov)["holds"],
             "reference_generations_matches_the_reference_block":
                 n_ref == gens,
         }
@@ -845,11 +947,14 @@ def book_population_predicates(book: dict, receipt: dict,
     by_arm = asm.get("by_arm") or {}
     ref = book.get("fr") or {}
     r_asm = receipt.get("asm") or {}
-    keys_by_head, thetas, second = {}, {}, {}
+    keys_by_head, thetas, second, scored_by_head = {}, {}, {}, {}
     for k, v in by_arm.items():
         coin, head = (k if isinstance(k, tuple) else tuple(k))
         scored = v[0] if isinstance(v, (list, tuple)) else v
         keys_by_head[head] = set(scored)
+        #: DA 144: the VALUES, not only the keys -- the shape lives in
+        #: them and this tier is the only one that can see it.
+        scored_by_head[head] = scored
         if isinstance(v, (list, tuple)) and len(v) > 1:
             #: THE SECOND ELEMENT IS NOT A THETA. The first real run of this
             #: tier read it as one and flagged BOTH heads on a real book:
@@ -899,14 +1004,46 @@ def book_population_predicates(book: dict, receipt: dict,
     for head in heads:
         n_scored = len(keys_by_head[head])
         d = (r_asm.get("coverage_by_head") or {}).get(head, {})
+        #: DA 144 / gate item 8. THE SHAPE, DERIVED FROM THE ASSEMBLY'S OWN
+        #: VALUES -- this tier holds the pickle, so it does not have to
+        #: take the receipt's word (R-235). Under PER_ROW `len(keys)` is a
+        #: ROW count and `len(keys) / n_generations` is not a coverage at
+        #: all; the covered GENERATIONS are counted from the values' `gen`.
+        _shape = assembly_shape_of_values(scored_by_head[head])
+        _scored = scored_by_head[head]
+        if _shape == SHAPE_PER_ROW:
+            _covered = {(k[0], k[1], v.get("gen"))
+                        for k, v in _scored.items()
+                        if isinstance(k, (tuple, list)) and len(k) == 3
+                        and isinstance(v, dict) and v.get("gen") is not None}
+            n_cov_recomputed = len(_covered)
+        elif _shape == SHAPE_PER_GENERATION:
+            n_cov_recomputed = n_scored
+        else:
+            n_cov_recomputed = None
+        _cov_recomputed = (None if not n_gen or n_cov_recomputed is None
+                           else n_cov_recomputed / n_gen)
+        _decl_shape = d.get("score_shape")
         per_head[head] = {
             "n_scored_keys_recomputed": n_scored,
             "n_scored_keys_declared": d.get("n_scored_keys"),
             "matches": n_scored == d.get("n_scored_keys"),
-            "coverage_recomputed": (None if not n_gen else n_scored / n_gen),
+            "score_shape_recomputed": _shape,
+            "score_shape_declared": _decl_shape,
+            #: NONE when the receipt declares none (it predates BE 112) --
+            #: not a mismatch and not a pass.
+            "score_shape_agrees": (None if _decl_shape is None
+                                   else _decl_shape == _shape),
+            "n_covered_generations_recomputed": n_cov_recomputed,
+            "n_covered_declared": d.get("n_covered"),
+            "n_scored_keys_unit": ("ROWS" if _shape == SHAPE_PER_ROW
+                                   else "GENERATIONS"
+                                   if _shape == SHAPE_PER_GENERATION
+                                   else "UNKNOWN"),
+            "coverage_recomputed": _cov_recomputed,
             "coverage_declared": d.get("coverage"),
-            "coverage_matches": (n_gen is not None
-                                 and n_scored / n_gen == d.get("coverage")),
+            "coverage_matches": (_cov_recomputed is not None
+                                 and _cov_recomputed == d.get("coverage")),
             "theta_in_the_book": thetas.get(head),
             "theta_declared": d.get("theta"),
             #: TRUE when the book carries a theta and it agrees; FALSE when
@@ -1212,19 +1349,56 @@ def synthetic_book_and_receipt(d: Path, *, windows: int = 12,
                                thetas=(0.32450609461933483,
                                        0.43525926488298716),
                                unequal_sets: bool = False,
+                               score_shape: str = "per_generation",
+                               rows_per_gen: int = 1,
+                               #: DA 144: drop generations from the BOOK's
+                               #: assembly WITHOUT touching the receipt --
+                               #: a genuine population defect, the case a
+                               #: shape-conditioned check must still catch.
+                               book_covers_fewer: int = 0,
                                builder_commit: str | None = "HEAD",
                                seam_commit: str | None = "HEAD") -> tuple:
     """A book of BE's OWN shape -- {"fr": …, "asm": {"by_arm": {(coin, head):
     (scored, theta)}}} -- with a receipt of BE_DAYBOOK_V1's shape built from
     it, so every predicate has something true to be true OF."""
     import pickle
-    keys = [f"g{i}" for i in range(gens - uncovered)]
+    #: DA 144: THE FIXTURE PRODUCES BOTH REAL ASSEMBLY SHAPES. It used to
+    #: build a LIST of string keys, which is neither of them -- so the
+    #: cells covering this module could not have exercised the per-row
+    #: shape, which is exactly how gate item 8 survived. The keys are now
+    #: (slug, side, t) triples as the producer emits them, and the values
+    #: are bare floats (PER_GENERATION) or dicts carrying `gen`
+    #: (PER_ROW). `rows_per_gen` > 1 makes rows outnumber generations, so
+    #: a verifier that divides ROWS by generations gets a wrong answer
+    #: rather than an accidentally right one.
+    n_cov_gens = gens - uncovered
+    _gen_ids = list(range(n_cov_gens))
+    keys = [("s1", "BUY_UP", float(100 + i)) for i in _gen_ids]
     by_arm = {}
     for i, (h, th) in enumerate(zip(heads, thetas)):
-        k = list(keys)
+        if score_shape == "per_row":
+            scored = {}
+            for gi in _gen_ids:
+                for r in range(rows_per_gen):
+                    scored[("s1", "BUY_UP", float(100 + gi) + 0.1 * r)] = {
+                        "score": 0.5, "gen": gi, "t0": float(100 + gi)}
+        else:
+            scored = {k: 0.5 for k in keys}
         if unequal_sets and i == 1:
-            k = k[:-3] + ["EXTRA_A", "EXTRA_B"]
-        by_arm[(coin, h)] = (k, th)
+            _drop = list(scored)[-3:]
+            for _k in _drop:
+                scored.pop(_k)
+            for _n, _extra in enumerate(("EXTRA_A", "EXTRA_B")):
+                _ek = ("s9", "BUY_UP", 900.0 + _n)
+                scored[_ek] = ({"score": 0.5, "gen": 900 + _n, "t0": 900.0 + _n}
+                               if score_shape == "per_row" else 0.5)
+        if book_covers_fewer:
+            _lose = {gi for gi in _gen_ids[-book_covers_fewer:]}
+            scored = {k: v for k, v in scored.items()
+                      if not ((isinstance(v, dict) and v.get("gen") in _lose)
+                              or (not isinstance(v, dict)
+                                  and k in [keys[gi] for gi in _lose]))}
+        by_arm[(coin, h)] = (scored, th)
     book = {"fr": {"generations": gens, "windows": windows},
             "asm": {"by_arm": by_arm}}
     bp = d / f"be_daybook_{day}_{coin}.pkl"
@@ -1267,14 +1441,24 @@ def synthetic_book_and_receipt(d: Path, *, windows: int = 12,
                                    "TERMINAL_MARK_MISSING": 0}},
         "asm": {"both_heads_present": True,
                 "by_arm_keys": [[coin, h] for h in heads],
-                "n_shared_keys": len(keys) if not unequal_sets
-                                 else len(set(keys) & set(
-                                     by_arm[(coin, heads[1])][0])),
+                "n_shared_keys": (len(by_arm[(coin, heads[0])][0])
+                                  if not unequal_sets
+                                  else len(set(by_arm[(coin, heads[0])][0])
+                                           & set(by_arm[(coin, heads[1])][0]))),
                 "sets_are_equal": not unequal_sets,
                 "coverage_by_head": {
                     h: {"coverage": n_cov / gens, "n_covered": n_cov,
                         "n_reference_generations": gens,
-                        "n_scored_keys": n_cov, "n_uncovered": uncovered,
+                        #: DA 144: under PER_ROW the producer's own count
+                        #: of scored KEYS is a ROW count, and the receipt
+                        #: declares the shape (BE 112).
+                        "n_scored_keys": (n_cov * rows_per_gen
+                                          if score_shape == "per_row"
+                                          else n_cov),
+                        "score_shape": ("PER_ROW_SCORES"
+                                        if score_shape == "per_row"
+                                        else "PER_GENERATION_SCORES"),
+                        "n_uncovered": uncovered,
                         "theta": th} for h, th in zip(heads, thetas)}},
         "resources": {
             "peak_gb": 5.317, "wall_s": 30.0,
@@ -1421,6 +1605,100 @@ def selftest() -> tuple:                                      # noqa: C901
        "; ".join(f"{h}: {b['n_scored_keys_recomputed']} keys, coverage "
                  f"{b['coverage_recomputed']:.6f}, theta "
                  f"{b['theta_declared']}" for h, b in sorted(ph.items())))
+
+    # -- 8b. DA 144 / GATE ITEM 8: THE SHAPE CONDITIONING, THREE WAYS ----
+    #: This verifier's `n_scored_keys_equals_n_covered` and its
+    #: `len(keys) / n_generations` coverage BOTH hold only under
+    #: PER_GENERATION. On a per-row book -- which is every book off the
+    #: corrected pipeline -- they would have flagged EVERY EV20 book as a
+    #: population defect: a false alarm on the first book, sending every
+    #: seat after a defect that was not there. Found by BE, in my module;
+    #: BE correctly did not touch it (R-235).
+    def _cov_flags(**kw):
+        _td = Path(tempfile.mkdtemp(prefix="da144_"))
+        _bp, _rp, _bk = synthetic_book_and_receipt(_td, **kw)
+        _f = verify_full(_bp, _rp, day="20260903", coin="btc")
+        _ph = _f["population_from_the_book"]["per_head"]
+        _rh = _f["population_from_the_receipt"]["per_head"]
+        _h = sorted(_ph)[0]
+        return ([x for x in _f.get("flags", [])
+                 if "coverage" in x or "scored_keys" in x], _ph[_h], _rh[_h])
+
+    _gen_flags, _gen_b, _gen_r = _cov_flags()
+    _row_flags, _row_b, _row_r = _cov_flags(score_shape="per_row",
+                                            rows_per_gen=3)
+    ck("DA 144 (a) A PER-GENERATION BOOK IS VERIFIED EXACTLY AS BEFORE: the "
+       "strict form is the one applied, the counts are equal, and no "
+       "coverage flag is raised",
+       not _gen_flags
+       and _gen_b["score_shape_recomputed"] == SHAPE_PER_GENERATION
+       and _gen_r["n_scored_keys_vs_n_covered"]["form"]
+           == "n_scored_keys == n_covered"
+       and _gen_r["n_scored_keys_equals_n_covered"] is True
+       and _gen_b["coverage_matches"] is True,
+       f"shape {_gen_b['score_shape_recomputed']}, form "
+       f"{_gen_r['n_scored_keys_vs_n_covered']['form']}, flags {_gen_flags}")
+    #: THE KNOWN-BAD IS THE OLD EXPRESSION ITSELF, computed here on the
+    #: SAME per-row book, so the green above is a measurement of the fix
+    #: and not of a book that happens to be easy.
+    _pre_equal = (_row_b["n_scored_keys_recomputed"]
+                  == _row_r["n_covered"])
+    _pre_cov = (_row_b["n_scored_keys_recomputed"]
+                / _row_b["n_covered_declared"]) if _row_b[
+                    "n_covered_declared"] else None
+    ck("DA 144 (b) A PER-ROW BOOK IS NOT FLAGGED -- AND THE PRE-FIX "
+       "EXPRESSIONS ON THE SAME BOOK ARE BOTH WRONG, which is why this is "
+       "a measurement: `n_scored_keys == n_covered` is FALSE on it "
+       "(1,080 rows against 360 generations) and `len(keys)/n_gen` gives a "
+       "coverage above 1. The corrected reading counts generations from "
+       "the values' `gen` and reports the key count in ROWS",
+       not _row_flags
+       and _row_b["score_shape_recomputed"] == SHAPE_PER_ROW
+       and _row_b["n_scored_keys_unit"] == "ROWS"
+       and _row_b["coverage_matches"] is True
+       and _row_r["n_scored_keys_vs_n_covered"]["form"]
+           == "n_scored_keys >= n_covered"
+       and _pre_equal is False and _pre_cov > 1.0,
+       f"flags {_row_flags}; rows {_row_b['n_scored_keys_recomputed']} vs "
+       f"generations {_row_b['n_covered_generations_recomputed']}; the OLD "
+       f"equality would read {_pre_equal} and the OLD coverage "
+       f"{_pre_cov:.4f}")
+    #: AND THE CELL THAT MATTERS (REV 113's lesson, rule 27): a check
+    #: loosened to stop a false alarm is how a real one gets through.
+    _u_gen, _ub_gen, _ = _cov_flags(book_covers_fewer=60)
+    _u_row, _ub_row, _ = _cov_flags(score_shape="per_row", rows_per_gen=3,
+                                    book_covers_fewer=60)
+    ck("DA 144 (c) A BOOK THAT GENUINELY DOES NOT COVER WHAT ITS RECEIPT "
+       "CLAIMS IS STILL FLAGGED, UNDER BOTH SHAPES: 60 generations dropped "
+       "from the assembly and not from the receipt: 300 covered against "
+       "360 declared, and `coverage_matches` is FALSE either way. The "
+       "conditioning removed a false alarm and NOT the real one",
+       _u_gen and _u_row
+       and _ub_gen["n_covered_generations_recomputed"] == 300
+       and _ub_row["n_covered_generations_recomputed"] == 300
+       and _ub_gen["coverage_matches"] is False
+       and _ub_row["coverage_matches"] is False,
+       f"per-generation flags {_u_gen}; per-row flags {_u_row}; covered "
+       f"{_ub_row['n_covered_generations_recomputed']} against declared "
+       f"{_ub_row['n_covered_declared']}")
+    ck("DA 144 (d) AND THE SHAPE IS RESOLVED FROM THE ASSEMBLY'S OWN "
+       "VALUES, NOT TAKEN FROM BE (R-235): the book tier derives it and "
+       "COMPARES it to the receipt's declared field, so a receipt that "
+       "declared the wrong shape would be visible rather than believed",
+       _row_b["score_shape_recomputed"] == SHAPE_PER_ROW
+       and _row_b["score_shape_declared"] == SHAPE_PER_ROW
+       and _row_b["score_shape_agrees"] is True
+       and assembly_shape_of_values({("s", "B", 1.0): 0.5})
+           == SHAPE_PER_GENERATION
+       and assembly_shape_of_values(
+           {("s", "B", 1.0): {"gen": 0}}) == SHAPE_PER_ROW
+       and assembly_shape_of_values(
+           {("s", "B", 1.0): 0.5, ("s", "B", 2.0): {"gen": 0}})
+           == "MIXED_SCORE_SHAPES",
+       f"recomputed {_row_b['score_shape_recomputed']} vs declared "
+       f"{_row_b['score_shape_declared']}, agrees "
+       f"{_row_b['score_shape_agrees']}; a half-and-half map is named "
+       f"MIXED_SCORE_SHAPES rather than coerced")
 
     # -- 9. a receipt for the WRONG DAY or COIN REFUSES -------------------
     why_day = why_coin = ""
