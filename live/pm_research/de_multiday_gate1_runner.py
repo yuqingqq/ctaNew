@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 407
+EXPECTED_CHECKS = 410
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -67,7 +67,7 @@ EXPECTED_CHECKS = 407
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v24.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v25.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -1587,10 +1587,26 @@ def economic_absence_scoped(rec: dict) -> dict:
 #: DE 161: a numeric literal as a formatter would emit one -- optional
 #: sign, thousands separators, decimal part, exponent. Bounded so a token
 #: is a NUMBER and not a fragment of one.
+#: DE 163 / REV 113: THE BOUNDARIES ARE ABOUT NUMBERS, NOT WORDS.
+#: DE 161 fixed a COMPARISON defect (a sealed 0.0 matched inside "0.05")
+#: and, while there, ALSO narrowed the tokeniser with `(?<![\w.])` /
+#: `(?![\w.])`. Only the comparison needed to change. The word-boundary
+#: exclusions bought nothing -- the numeric comparison alone kills the
+#: 0.05 collision -- and cost the entire ADJACENCY class, because those
+#: classes contain a DOT: a reason ENDING A SENTENCE with the sealed value
+#: ("the sd was 3.14.") produced ZERO tokens, so the old guard refused it
+#: and the new one passed. Worse, "sd of 3.14. The bar was 5" tokenised
+#: only the unrelated 5 and reported no hits -- a leak invisible behind
+#: output that looked like it had examined something.
+#:
+#: The only thing a boundary must prevent is matching PART of a longer
+#: number: not starting after a digit, not starting after `<digit>.`, and
+#: not stopping before a digit or before `.<digit>`. Letters, underscores
+#: and punctuation around a literal are prose and are allowed.
 _NUM_TOKEN = re.compile(
-    r"(?<![\w.])[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\w.])"
-    r"|(?<![\w.])[-+]?\d+\.\d+(?:[eE][-+]?\d+)?(?![\w.])"
-    r"|(?<![\w.])[-+]?\d+(?:[eE][-+]?\d+)?(?![\w.])")
+    r"(?<!\d)(?<!\d\.)[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?(?!\d)(?!\.\d)"
+    r"|(?<!\d)(?<!\d\.)[-+]?\d+\.\d+(?:[eE][-+]?\d+)?(?!\d)(?!\.\d)"
+    r"|(?<!\d)(?<!\d\.)[-+]?\d+(?:[eE][-+]?\d+)?(?!\d)(?!\.\d)")
 
 
 def _numeric_tokens(text: str) -> list:
@@ -5982,6 +5998,42 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
 CACHE_NO_CODE_PIN = "CACHE_HAS_NO_SCORING_CODE_PIN"
 
 
+def write_cache_code_closure(cache_path, *, built_by_this_process: bool,
+                             root=None) -> dict:
+    """RECORD which scoring code built a cache -- REV 111 site 4.
+
+    `de_section81_cache_12.pkl` is read as a default reference by thirteen
+    readers and has NO code pin at all: no builder receipt, no closure,
+    nothing. This writes the sidecar `assert_cache_code_pin` looks for, in
+    the same shape a builder receipt uses.
+
+    `built_by_this_process` is REQUIRED and must be True. Recording a
+    closure for a cache this process did not just build would record
+    TODAY's digests against YESTERDAY's bytes -- which is worse than no
+    pin, because it would read as verified. The caller has to assert it,
+    and the assertion is the whole gate."""
+    if not built_by_this_process:
+        raise RunnerRefused(
+            "REFUSED CACHE_CLOSURE_NOT_FROM_THE_BUILD: a code closure may "
+            "only be recorded by the process that just built the cache. "
+            "Recording it later stamps today's digests on bytes that were "
+            "produced by other code, and a wrong pin reads as a verified "
+            "one -- strictly worse than the absent pin it replaces.")
+    c = Path(cache_path)
+    here = Path(root) if root is not None else Path(__file__).resolve().parent
+    side = c.with_suffix(c.suffix + ".code_closure.json")
+    payload = {"producing_code": {"import_closure": {"modules": {
+        m: hashlib.sha256((here / m).read_bytes()).hexdigest()
+        for m in SCORING_PATH_MODULES}}},
+        "cache": {"path": str(c),
+                  "sha256": (sha256_streamed(c) if c.is_file() else None)},
+        "recorded_by": "de_multiday_gate1_runner.write_cache_code_closure",
+        "why": ("REV 111 site 4: this cache had no code pin at all and is "
+                "read by thirteen readers")}
+    side.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    return {"path": str(side), "modules": sorted(SCORING_PATH_MODULES)}
+
+
 def assert_cache_code_pin(cache_path, *, root=None) -> dict:
     """REV 111 site 4: `de_section81_cache_12.pkl` has NO code pin at all.
 
@@ -7605,6 +7657,12 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     # ---- S0: verify. Digests only. -------------------------------------
     book_path = Path(book_path)
+    # REV 111 site 4: if the book IS the unpinned cache, it is checked by
+    # its own sidecar -- it has no builder receipt to resolve.
+    _cachep = Path(DR.resolve()["data_root"]) / "pm_5min/derived" \
+        / "de_section81_cache_12.pkl"
+    if Path(book_path).resolve() == _cachep.resolve():
+        assert_cache_code_pin(_cachep)
     receipt = builder_receipt_for(book_path, day, params.get("coin", "btc"))
     bookcite = verify_book_against_builder_receipt(day, book_path, receipt)
     # ---- REV 111 / DE 162: WHICH SCORING CODE BUILT THIS BOOK --------
@@ -8537,6 +8595,18 @@ def write_synthetic_day(day: str, outdir, **kw) -> dict:
            "bytes": len(buf),
            "n_slugs": book["fr"]["n_slugs"],
            "SYNTHETIC": True,
+           # DE 163 / DA 140: THE FIXTURE DECLARES ITS L. With
+           # `settlement_endpoint.require_book_declares_L` armed, a book
+           # whose receipt records no placement latency REFUSES -- and the
+           # synthetic book genuinely IS built at L = 0, so it says so
+           # rather than being exempted. A fixture that cannot satisfy a
+           # newly armed guard is a fixture that stops exercising the path.
+           "placement_latency": {
+               "placement_latency_ms": 0.0,
+               "source": "the synthetic builder, which places instantly",
+               "why": ("this book is assembled in-process with no venue "
+                       "and no queue, so its maker is filled the moment "
+                       "it quotes")},
            "why_a_receipt": "BE's declared digest_scheme is a sidecar "
                             "be_daybook_<DAY>.json the READER recomputes; "
                             "the fixture carries the same seam so `--day` "
@@ -9672,6 +9742,120 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 f"R-599's second leak, and it fires on a REFUSED arm-day, "
                 f"exactly where the numbers are most tempting",
                 "carries the VALUE of a sealed quantity")
+    # ---- DE 163 / REV 111 site 4: THE CACHE'S CLOSURE, RECORDED -------
+    import tempfile as _tf163
+    _cd163 = Path(_tf163.mkdtemp(prefix="de163_"))
+    _fake_cache = _cd163 / "de_section81_cache_12.pkl"
+    _fake_cache.write_bytes(b"not a real cache")
+    _before163 = None
+    try:
+        assert_cache_code_pin(_fake_cache)
+    except RunnerRefused as _e:
+        _before163 = str(_e).split(":")[0].replace("REFUSED ", "")
+    _late = None
+    try:
+        write_cache_code_closure(_fake_cache, built_by_this_process=False)
+    except RunnerRefused as _e:
+        _late = str(_e).split(":")[0].replace("REFUSED ", "")
+    _w163 = write_cache_code_closure(_fake_cache,
+                                     built_by_this_process=True)
+    _after163 = assert_cache_code_pin(_fake_cache)
+    import shutil as _sh163
+    _sh163.rmtree(_cd163, ignore_errors=True)
+    ok(_before163 == CACHE_NO_CODE_PIN
+       and _late == "CACHE_CLOSURE_NOT_FROM_THE_BUILD"
+       and _after163["status"] == "BOOK_SCORING_CODE_MATCHES"
+       and len(_w163["modules"]) == len(SCORING_PATH_MODULES),
+       f"DE 163 / REV 111 SITE 4, ROUND TRIP: a cache with no sidecar "
+       f"refuses `{_before163}`; recording one for a cache this "
+       f"process did NOT build refuses `{_late}` -- a wrong pin reads as "
+       f"a verified one and is worse than the absent pin it replaces; and "
+       f"a closure recorded AT THE BUILD then verifies its "
+       f"{len(_w163['modules'])} scoring modules. The real cache still has "
+       f"none, which is why the load path refuses it")
+
+    # ---- DE 163 / REV 113: THE ADJACENCY CLASS, AND THE DIFFERENTIAL --
+    # REV's six rows, each a form of sealed 3.14 that DE 161's tokeniser
+    # could not see because its boundaries excluded a following DOT -- and
+    # a sentence-ending full stop is a dot. The last is the worst: it
+    # tokenised only the unrelated 5 and reported no hits, so the leak was
+    # invisible behind output that looked like it had examined something.
+    _rows163 = ["the sd was 3.14.", "the excess was 3.14bps",
+                "a ratio of 3.14x the floor", "held 3.14s past the open",
+                "z_3.14_flag", "sd of 3.14. The bar was 5"]
+    _missed163 = []
+    for _txt in _rows163:
+        try:
+            assert_reasons_carry_no_sealed_value(
+                {"admissibility": {"reasons": [_txt]},
+                 "economic": {"Z": 3.14}})
+            _missed163.append(_txt)
+        except RunnerRefused:
+            pass
+    ok(not _missed163,
+       f"DE 163 REV 113's SIX ROWS ALL REFUSE NOW: a sealed 3.14 ending a "
+       f"sentence, followed by a unit, an 'x', an 's', inside an "
+       f"identifier, and the one that mattered most -- 'sd of 3.14. The "
+       f"bar was 5', which DE 161 tokenised as only the unrelated 5 and "
+       f"reported CLEAN. The boundaries excluded a following dot and a "
+       f"full stop is a dot; only the COMPARISON ever needed to change")
+
+    # AND THE GENERAL QUESTION, ANSWERED BY DIFFERENTIAL RATHER THAN BY
+    # OPINION: is there any form the OLD guard caught that this one does
+    # not? The old rule is reimplemented here and both are run over every
+    # form the formatter generates, embedded in eight prose contexts.
+    def _old163(text, v):
+        forms = {str(v)}
+        if isinstance(v, float):
+            forms |= {f"{v:.1f}", f"{v:.2f}", f"{v:.3f}", f"{v:.4f}",
+                      f"{v:g}", str(round(v, 6))}
+        elif isinstance(v, int):
+            forms |= {f"{v:,}"}
+        return any(len(f) >= 3 and f in text for f in forms)
+
+    def _new163(text, v):
+        try:
+            assert_reasons_carry_no_sealed_value(
+                {"admissibility": {"reasons": [text]}, "economic": {"Z": v}})
+            return False
+        except RunnerRefused:
+            return True
+
+    _ctx163 = ["the value was {f}", "the value was {f}.", "{f}bps of it",
+               "({f})", "{f}", "a {f}x margin", "z_{f}_flag", "{f}, and so"]
+    _regress163, _n163 = [], 0
+    for _v in (0.0, 1.5, 2.5, 3.14159, 21.53, -0.5, 1234567):
+        for _f in _rendered_forms(_v):
+            for _c in _ctx163:
+                _t = _c.format(f=_f)
+                _n163 += 1
+                if _old163(_t, _v) and not _new163(_t, _v):
+                    _regress163.append((_v, _f, _t))
+    # AND THE FALSE POSITIVES THE OLD ONE HAD, which this one must NOT
+    # reproduce -- the whole reason DE 161 touched it.
+    # THE REAL ONE, verbatim -- and the form that collided is `0.2`, the
+    # `.1f` rendering of the sealed 0.15931..., matching inside the
+    # DECLARED FLOOR "0.25" that the sentence quotes. That is the false
+    # positive that took a whole arm-day down.
+    _real163 = ("the null's dispersion is below the declared floor of "
+                "0.25 * |mean| (Z explodes as sd -> 0). THE VERDICT ONLY: "
+                "sd, mean and their ratio are SEALED")
+    _fp163 = [("the floor is 0.05", 0.0), ("rho was 21.53", 1.5),
+              (_real163, 0.15931299327064835)]
+    _still_fp = [t for t, v in _fp163 if _new163(t, v)]
+    _were_fp = [t for t, v in _fp163 if _old163(t, v)]
+    ok(not _regress163 and not _still_fp and len(_were_fp) == len(_fp163),
+       f"DE 163 THE DIFFERENTIAL, {_n163} cases: every form the formatter "
+       f"generates, for seven sealed values, in eight prose contexts -- "
+       f"there is NO case the old guard caught that this one misses "
+       f"({len(_regress163)} regressions). And all {len(_were_fp)} of the "
+       f"false positives the old one had -- including the REAL one, where "
+       f"the `.1f` form `0.2` of a sealed 0.15931... matched inside the "
+       f"declared floor `0.25` the sentence quotes -- are admitted now. "
+       f"The question was asked "
+       f"in general and is answered by running both, not by reasoning "
+       f"about the regex")
+
     # ---- REV 111 / DE 162: THE BOOK'S SCORING CODE, BOTH DIRECTIONS ---
     _here162 = Path(__file__).resolve().parent
     _good162 = {"producing_code": {"import_closure": {"modules": {
