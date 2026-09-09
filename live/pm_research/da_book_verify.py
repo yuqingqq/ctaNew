@@ -816,6 +816,33 @@ def receipt_population_predicates(receipt: dict) -> dict:
     excl = ("BINANCE_GAP_EXCLUDED", "NO_REPLAY", "RECONCILIATION_FAILED")
     admitted_plus_excluded = (st.get("ADMITTED", 0)
                               + sum(st.get(k, 0) for k in excl))
+    #: DA 150. BE 116 landed `BINANCE_GAP_EXCLUDED_STATUS` as a SIBLING key
+    #: -- correctly, because a string in the COUNT slot raises TypeError in
+    #: the sum above (driven: `unsupported operand type(s) for +: 'int' and
+    #: 'str'`). But a sibling nobody surfaces is not an answer to DA 147:
+    #: this block reported only the SUM, so a reader met a zero inside
+    #: `admitted_plus_excluded` and was never led to the status beside it.
+    #: Every exclusion summand is now published with its count, its sibling
+    #: status if there is one, and WHAT THE NUMBER MEANS -- and the case
+    #: that has no sibling is named rather than left to read as a measured
+    #: zero, which is what all twelve landed receipts carry.
+    exclusion_summands = {}
+    for _k in excl:
+        _n = st.get(_k, 0)
+        _sib = st.get(f"{_k}_STATUS")
+        if _n == 0 and _sib is not None:
+            _reads = (f"ZERO WITH A STATUS BESIDE IT -- {_sib!r}. This is "
+                      f"NOT 'none were excluded'; the sibling says what the "
+                      f"count is standing in for")
+        elif _n == 0:
+            _reads = ("ZERO WITH NO SIBLING STATUS -- a reader cannot tell "
+                      "'none excluded' from 'the check was not applied' "
+                      "(DA 147). NOT COMPUTABLE from this receipt")
+        else:
+            _reads = "a measured count"
+        exclusion_summands[_k] = {"count": _n, "status": _sib,
+                                  "reads_as": _reads,
+                                  "has_a_sibling_status": _sib is not None}
     marks = st.get("TERMINAL_MARK_OK", 0) + st.get("TERMINAL_MARK_MISSING", 0)
     cov = asm.get("coverage_by_head") or {}
     per_head = {}
@@ -870,6 +897,11 @@ def receipt_population_predicates(receipt: dict) -> dict:
         "windows_equals_reference_n_slugs": windows == ref.get("n_slugs"),
         "generations": gens,
         "admitted_plus_excluded": admitted_plus_excluded,
+        "exclusion_summands": exclusion_summands,
+        "why_the_summands_are_published": (
+            "the sum alone let a reader meet a zero without meeting the "
+            "status beside it -- DA 147's finding, and BE 116's sibling "
+            "key only fixes it if something SURFACES the sibling"),
         "admitted_plus_excluded_equals_windows":
             admitted_plus_excluded == windows,
         "terminal_mark_ok_plus_missing": marks,
