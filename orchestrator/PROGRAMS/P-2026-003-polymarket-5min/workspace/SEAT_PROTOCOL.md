@@ -490,3 +490,17 @@ except where marked USER-ONLY.
     days already consumed; they are free to re-run precisely because they are
     spent. If a fix genuinely cannot be demonstrated on a consumed day, ASK THE
     USER before the day is touched, never after. (R-873)
+
+35. **A limit that lives only in a declaration does not bind the result.** If a
+    document states a constraint on how its output may be read — "this cannot
+    validate", "matched only on X", "this set is superseded" — the OUTPUT must
+    carry that limit as a REQUIRED FIELD, not the declaration as prose. A reader
+    resolves fields; nobody reads the design doc beside the number. **REV has now
+    found this same shape four times** (`MEMBERSHIP_LIMIT`, `matched_on`, the
+    superseded-set, and the null's cannot-validate clause), which makes it a class
+    and not an instance. **And the guard on such a clause must test the PROPERTY,
+    never the TEXT** — the null declaration's five-day check was `"5" in <prose>`,
+    which "we have 5 llamas" satisfies. That is rule 15's silent-checker failure
+    wearing a different hat: an instrument that cannot fail is not an instrument.
+    The fix is always one required field on the output plus a predicate that
+    evaluates the thing, never more prose. (REV 149, R-874)
