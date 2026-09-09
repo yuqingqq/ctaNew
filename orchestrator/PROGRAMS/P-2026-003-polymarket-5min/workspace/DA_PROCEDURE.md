@@ -109,6 +109,33 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## Verify the COMMIT, not the commit message (DA 146)
+
+DE 162's message stated mode C's message no longer blames the feature pass.
+**`git show <sha> | grep -c "<the phrase>"` returned 0** — the phrase is neither
+added nor removed in that commit — and `git log <sha>..HEAD -S "<phrase>"` was
+empty, so no later commit touched it. The old text is live, and I reproduced it
+three ways at the tip.
+
+**Make this a standing step when verifying any fix: grep the commit's own diff for
+the string the message claims to have changed.** A commit message is a claim like
+any other; a green battery does not test it, and a careful reader agrees with it.
+Cost: one command.
+
+## "Can it PASS?" is the question that separates a guard from a nuisance
+
+`BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` refuses all twelve books on disk. That alone
+is indistinguishable from a predicate that always refuses. **Construct the input
+that SHOULD pass** — a receipt recording the current sha256 of every
+`SCORING_PATH_MODULES` entry — and confirm `BOOK_SCORING_CODE_MATCHES`. Only then
+do the refusals mean something about the books.
+
+**And when rule 27 is vacuous, say so and check robustness instead.** The predicate
+was new, so no old behaviour could regress. Probing the comparison
+(`actual.startswith(str(declared)[:16])`) instead found that an **empty declared
+digest is admitted** — `"".startswith` is always True — absence reading as a pass
+inside a guard whose docstring forbids exactly that. Low reachability; state it.
+
 ## The era fix is verified (DA 145) — gate item 1 closed
 
 `be_daybook_build.day_selector("20260903","btc")` runs in **1.9 s** read-only and
