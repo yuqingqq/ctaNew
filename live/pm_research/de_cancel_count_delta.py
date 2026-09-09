@@ -135,6 +135,18 @@ def measure_arm(reference: dict, scored: dict, policy_params: dict, *,
     old_ev, new_ev = old_stream(scored), new_stream(scored)
     old, new = (_cancels(reference, old_ev, policy_params),
                 _cancels(reference, new_ev, policy_params))
+    # ---- REV 110 (C): THE INVARIANT IS ASSERTED, NOT RELIED ON -------
+    # Everything below treats one generation as at most one cancel -- it
+    # is why matching on cancels is matching on the decision variable at
+    # all. The engine guarantees it (`one_cancel_per_generation`); this
+    # module DEPENDS on it, so it checks it rather than trusting it.
+    for _lbl, _r in (("OLD", old), ("RULED", new)):
+        if len(_r["by_gen"]) != _r["cancels_issued"]:
+            raise CancelDeltaRefused(
+                f"ONE_CANCEL_PER_GENERATION_VIOLATED: the {_lbl} stream "
+                f"issued {_r['cancels_issued']} cancels over "
+                f"{len(_r['by_gen'])} distinct generations. Every count "
+                f"below assumes those are the same number.")
     o, n = set(old["by_gen"]), set(new["by_gen"])
     both = o & n
     shifts = [new["by_gen"][g] - old["by_gen"][g] for g in both]
@@ -152,9 +164,25 @@ def measure_arm(reference: dict, scored: dict, policy_params: dict, *,
                {"PARTIAL_ROWS": None,
                 "status": ("NOT_COMPUTABLE_NO_SPLIT_OF: no tape index was "
                            "supplied, so PARTIAL_ROWS is UNKNOWN, not 0")})
+    # ---- REV 110 (B): THE EXCLUDED POPULATION IS COUNTED (rule 4) ----
+    # `generation_scores` already computes this and the table a theta
+    # re-fit would be ruled on must carry it: a generation with no scored
+    # row cannot be cancelled by the arm OR drawn by the control, so it is
+    # out of both populations -- and an exclusion is a status, never a
+    # silent absence.
+    _ref_gens = {(slug, side, int(g["gen"]))
+                 for slug, sides in (reference or {}).items()
+                 for side, gens in sides.items() for g in gens}
+    _no_rows = sorted(_ref_gens - set(kept))
     return {
         "assembly": shape,
         "n_generations_scored": len(kept),
+        "n_reference_generations": len(_ref_gens),
+        "n_generations_with_no_scored_rows": len(_no_rows),
+        "generations_with_no_scored_rows_are": (
+            "OUT OF BOTH POPULATIONS -- the arm cannot cancel them and the "
+            "control cannot draw them. Counted here rather than left as a "
+            "difference between two other numbers (rule 4)"),
         "n_scored_rows": len(scored),
         "rows_per_generation_max": (max(kept.values()) if kept else 0),
         "OLD_max_at_generation_start": {
@@ -185,6 +213,14 @@ def measure_arm(reference: dict, scored: dict, policy_params: dict, *,
                 "the generation ended")},
         "partial_rows": partial,
         "theta_refitted": False,
+        "WHY_THE_ATTRIBUTION_IS_SOUND": (
+            "REV 110 (A): the two replays differ ONLY in the score stream. "
+            "Nothing else in the policy can absorb or redistribute a "
+            "changed cancel count -- in particular `max_cancels_per_minute` "
+            "is inf in BOTH `de_phase4_diag_runner.cell_params` and BE's "
+            "`params_for`, so no rate limit silently converts a cancel the "
+            "re-timing moved into one it dropped. The delta below is the "
+            "aggregation and the timestamp, and nothing else."),
         "THE_CALIBRATION_CONSEQUENCE": (
             "theta was fitted over per-generation MAXIMA; a first-crossing "
             "score is at or below that maximum, so an unchanged theta "
@@ -195,7 +231,13 @@ def measure_arm(reference: dict, scored: dict, policy_params: dict, *,
 
 
 def measure_book(book_path, day: str, *, params=None, split_of=None) -> dict:
-    """Both arms of one day, from one book. Requires the heavy lock."""
+    """Both arms of one day, from one book.
+
+    REV 110 (D): this used to say "Requires the heavy lock". It does not
+    TAKE one and cannot enforce one -- it only reads a book and replays.
+    The lock is the CALLER's discipline (rule 20 is about heavy runs, and
+    loading a day book is one), and a docstring that claims a control the
+    code does not hold is the shape rule 16 names."""
     import be_cancel_axis_null as B
     import de_multiday_gate1_runner as R
     t0 = time.time()
@@ -218,7 +260,7 @@ def measure_book(book_path, day: str, *, params=None, split_of=None) -> dict:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 4
+EXPECTED_CHECKS = 6
 
 
 def selftest(quiet: bool = False) -> int:
@@ -290,6 +332,38 @@ def selftest(quiet: bool = False) -> int:
             ("s3", S, 0.0): {"score": 0.9, "gen": 0, "t0": 0.0}}
     ref2 = {k: v for k, v in ref.items() if k in ("s1", "s3")}
     m0 = measure_arm(ref2, flat, pol)
+    ok(m["n_reference_generations"] == 3
+       and m["n_generations_with_no_scored_rows"] == 0
+       and m["WHY_THE_ATTRIBUTION_IS_SOUND"].startswith("REV 110 (A)")
+       and math.isinf(pol.get("max_cancels_per_minute", 0.0)),
+       f"REV 110 (A)+(B): the excluded population is COUNTED -- "
+       f"{m['n_reference_generations']} reference generations, "
+       f"{m['n_generations_with_no_scored_rows']} with no scored row, out "
+       f"of BOTH populations (rule 4) -- and the attribution is sound "
+       f"because `max_cancels_per_minute` is "
+       f"{pol.get('max_cancels_per_minute')} here and in BE's "
+       f"`params_for`, so no rate limit can absorb a cancel the re-timing "
+       f"moved. Checked, not asserted")
+
+    # REV 110 (C): a stream that breaks the invariant refuses.
+    _bad_inv = None
+    try:
+        _cancels_real = _cancels
+        def _fake(reference, events, params):
+            r = _cancels_real(reference, events, params)
+            return {**r, "cancels_issued": r["cancels_issued"] + 1}
+        globals()["_cancels"] = _fake
+        measure_arm(ref, scored, pol)
+    except CancelDeltaRefused as e:
+        _bad_inv = str(e).split(":")[0]
+    finally:
+        globals()["_cancels"] = _cancels_real
+    ok(_bad_inv == "ONE_CANCEL_PER_GENERATION_VIOLATED",
+       f"REV 110 (C) KNOWN-BAD: a stream whose cancel COUNT disagrees with "
+       f"its distinct-generation count refuses `{_bad_inv}`. Every count "
+       f"this module reports assumes those are one number -- it now checks "
+       f"that rather than relying on it")
+
     ok(m0["delta"]["cancels"] == 0
        and m0["generations_that_change_hands"]["cancelled_only_under_OLD"] == 0
        and m0["generations_that_change_hands"][

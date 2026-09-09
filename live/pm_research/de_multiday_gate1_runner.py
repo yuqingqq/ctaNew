@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 402
+EXPECTED_CHECKS = 406
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -1583,6 +1583,68 @@ def economic_absence_scoped(rec: dict) -> dict:
                 "(REV 72 S1.4)")}
 
 
+#: DE 161: a numeric literal as a formatter would emit one -- optional
+#: sign, thousands separators, decimal part, exponent. Bounded so a token
+#: is a NUMBER and not a fragment of one.
+_NUM_TOKEN = re.compile(
+    r"(?<![\w.])[-+]?\d{1,3}(?:,\d{3})+(?:\.\d+)?(?![\w.])"
+    r"|(?<![\w.])[-+]?\d+\.\d+(?:[eE][-+]?\d+)?(?![\w.])"
+    r"|(?<![\w.])[-+]?\d+(?:[eE][-+]?\d+)?(?![\w.])")
+
+
+def _numeric_tokens(text: str) -> list:
+    """Every numeric literal in the text, as written."""
+    return _NUM_TOKEN.findall(text or "")
+
+
+def _decimals_of(tok: str) -> int:
+    """How many decimal places the token was written to."""
+    t = tok.replace(",", "")
+    if "e" in t or "E" in t:
+        return -1                      # exponent form: compared as %g
+    return len(t.split(".")[1]) if "." in t else 0
+
+
+def _rendered_forms(v) -> list:
+    """Every string a formatter here could produce for this value.
+
+    THE REACH OF THE GUARD IS THIS LIST and it is unchanged -- what DE 161
+    changed is that a token is compared to these forms AS A NUMBER instead
+    of being sought inside the text as a substring."""
+    forms = [str(v)]
+    if isinstance(v, int) and not isinstance(v, bool):
+        forms += [f"{v:,}", f"{v:d}"]
+    else:
+        fv = float(v)
+        forms += [f"{fv:.1f}", f"{fv:.2f}", f"{fv:.3f}", f"{fv:.4f}",
+                  f"{fv:g}", str(round(fv, 6)), f"{fv:,.2f}"]
+    return forms
+
+
+def _token_is_value(tok: str, v) -> bool:
+    """Is this token one of the value's OWN rendered forms, numerically?
+
+    Compared to the forms rather than to `v` at the token's precision,
+    because those are two different questions and only the first is the
+    one the guard asks. "0" is not a form of 0.159 -- no formatter here
+    would ever produce it -- but ".2f" of 3.14159 IS "3.14", so a reason
+    quoting 3.14 still leaks and is still caught. Meanwhile "0.05" is no
+    form of 0.0 and "21.53" is no form of 1.5, which is exactly the
+    collision class that made this guard refuse days whose reasons leaked
+    nothing."""
+    try:
+        x = float(tok.replace(",", ""))
+    except ValueError:
+        return False
+    for f in _rendered_forms(v):
+        try:
+            if x == float(f.replace(",", "")):
+                return True
+        except ValueError:
+            continue
+    return False
+
+
 def assert_reasons_carry_no_sealed_value(result: dict) -> dict:
     """R-599's SECOND LEAK, CHECKED RATHER THAN PROMISED (R-674 (c)).
 
@@ -1603,21 +1665,28 @@ def assert_reasons_carry_no_sealed_value(result: dict) -> dict:
     adm = (result or {}).get("admissibility") or {}
     reasons = adm.get("reasons") or []
     text = " || ".join(str(r) for r in reasons)
+    # ---- DE 161: THE COMPARISON IS NUMERIC, NOT A SUBSTRING ----------
+    # This flagged `len(f) >= 3 and f in text` -- a SUBSTRING match on a
+    # numeric rendering -- and that is wrong in BOTH directions of
+    # magnitude: a sealed 0.0 collides with an unrelated "0.05", and a
+    # sealed 1.5 would collide with an unrelated "21.53". It was luck that
+    # only one path ever reached a collision. The reach is NOT narrowed to
+    # get green: every form the formatter produces is still caught when
+    # the value is genuinely interpolated. What changes is that a token is
+    # compared AS A NUMBER, at its own precision.
     hits = []
     for name in ECONOMIC_FIELDS:
         for src in (adm, (result or {}).get("economic") or {}):
             v = src.get(name)
             if v is None or isinstance(v, (bool, dict, list)):
                 continue
-            forms = {str(v)}
-            if isinstance(v, float):
-                forms |= {f"{v:.1f}", f"{v:.2f}", f"{v:.3f}",
-                          f"{v:.4f}", f"{v:g}", str(round(v, 6))}
-            elif isinstance(v, int):
-                forms |= {f"{v:,}"}
-            for f in sorted(forms):
-                if len(f) >= 3 and f in text:
-                    hits.append({"sealed_name": name, "form_found": f})
+            if not isinstance(v, (int, float)):
+                continue
+            for tok in _numeric_tokens(text):
+                if _token_is_value(tok, v):
+                    hits.append({"sealed_name": name, "form_found": tok,
+                                 "matched_numerically_at_precision":
+                                     _decimals_of(tok)})
     if hits:
         raise RunnerRefused(
             f"REFUSED: a refusal REASON carries the VALUE of a sealed "
@@ -5849,9 +5918,17 @@ def _value_cents(fills: list) -> float:
                      if v is not None))
 
 
+def _stamp_now() -> str:
+    """The clock, for a control set's name. Read here, never typed."""
+    return datetime.datetime.now(datetime.timezone.utc).strftime(
+        "%Y%m%dT%H%M%SZ")
+
+
 def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
                       n_draws: int, seed: int, deadline_s: float,
-                      cross_check_n: int = 8, winners: dict | None = None) -> dict:
+                      cross_check_n: int = 8, winners: dict | None = None,
+                      arm_cancels: list | None = None,
+                      control_set_path=None) -> dict:
     """The null, ON THE DECISION METRIC, through BE's sampler and replay.
 
     WHY NOT `draw_null` ITSELF: BE's `draw_null` reduces each draw to
@@ -5890,8 +5967,39 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     rss_before_draws = _peak_rss_mb()
     started = time.time()
     values, cancels, peak = [], [], _peak_rss_mb()
+    # ---- DE 160/161: THE DRAW ----------------------------------------
+    # When the arm's cancel records are supplied the control is matched on
+    # CANCELS (USER ruling B) and the drawn sets are PERSISTED, because a
+    # data-dependent draw is not reproducible from a seed. Otherwise the
+    # historical decision-matched path runs unchanged; the receipt always
+    # NAMES which one ran, so no reader has to infer it.
+    _mcc = None
+    if arm_cancels is not None:
+        import de_matched_cancel_control as MCC
+        _pool = MCC.build_pool_from_rows(rows)
+        _demand = MCC.demand_from_arm(arm_cancels)
+        _sets = MCC.draw_many(_pool, _demand, n_draws=n_draws, seed=seed)
+        MCC.assert_random_wrt_arm(_sets, arm_cancels)
+        _ridx = {(r["slug"], r["side"], float(r["t"])): i
+                 for i, r in enumerate(rows)}
+        _art = (MCC.write_control_set(control_set_path, _sets,
+                                      day=str(bk.get("day", "")),
+                                      arm=str(bk.get("arm", "")),
+                                      demand=_demand, seed=seed)
+                if control_set_path is not None else None)
+        _mcc = {"matched_on": "CANCELS",
+                "ruling": "USER ruling B (DE 160)",
+                "contract": MCC.CONTRACT_CITED,
+                "min_draws_declared": MCC.MIN_DRAWS,
+                "n_demanded_cancels": sum(_demand.values()),
+                "n_strata": len(_demand),
+                "control_set_artifact": _art,
+                "seed_is_not_the_reproduction": (
+                    "the draw is data-dependent; the persisted set is what "
+                    "reproduces it, and the artifact's digest is above")}
     for d in range(n_draws):
-        flag = module.draw_flags(pools, by_side, rng)
+        flag = (MCC.flags_for(_sets[d], _ridx) if _mcc
+                else module.draw_flags(pools, by_side, rng))
         r = module.replay(bk, module.flagged_stream(rows, flag), 0.5)
         RUN_COUNTERS["draws_performed"] += 1
         RUN_COUNTERS["replays_performed"] += 1
@@ -5912,7 +6020,25 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
                 f"refuses -- never fewer draws, never a raised cap "
                 f"(R-174).")
     xc = None
-    if cross_check_n:
+    if _mcc is not None:
+        # ---- DE 161: THE CROSS-CHECK CHANGES, IT DOES NOT VANISH ------
+        # `reproduces_BEs_draw_null` established that DE's loop drew BE's
+        # sequence at the same seed. Under ruling B the control is matched
+        # on CANCELS, so it deliberately does NOT draw BE's row-pool
+        # sequence and could never reproduce it -- keeping the check would
+        # assert a design the USER has replaced, and DELETING it would
+        # lose a control. THE PROVENANCE MOVES TO THE ARTIFACT: the drawn
+        # set is persisted and named by digest, and
+        # `de_matched_cancel_control`'s battery proves a persisted set
+        # reproduces element by element while a different one does not.
+        xc = {"status": "NOT_APPLICABLE_MATCHED_ON_CANCELS",
+              "why": ("BE's `draw_null` samples ROWS at a seed; ruling B "
+                      "samples CANCELS and is data-dependent, so the two "
+                      "sequences differ BY DESIGN. Reproducibility is "
+                      "carried by the persisted control set, not the seed"),
+              "control_set_artifact": _mcc.get("control_set_artifact"),
+              "contract": _mcc.get("contract")}
+    elif cross_check_n:
         be_draws = module.draw_null(bk, base_fills, by_side,
                                     n_draws=max(cross_check_n,
                                                 module.MIN_DRAWS),
@@ -5952,6 +6078,12 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
             # nothing to keep and a later question about the null's
             # mechanics cannot be answered by re-deriving them.
             "cancels": cancels,
+            "matched_control": (_mcc or {
+                "matched_on": "DECISIONS",
+                "why": ("no arm cancel records were supplied, so the "
+                        "historical decision-matched path ran. Under USER "
+                        "ruling B a day run supplies them and the control "
+                        "is matched on CANCELS")}),
             "base_value_cents": base_value,
             "peak_rss_mb_during_draws": peak,
             "elapsed_s": time.time() - started,
@@ -9432,6 +9564,67 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
                 f"R-599's second leak, and it fires on a REFUSED arm-day, "
                 f"exactly where the numbers are most tempting",
                 "carries the VALUE of a sealed quantity")
+    # ---- DE 161: THE GUARD COMPARES NUMBERS, NOT SUBSTRINGS ----------
+    # It flagged `len(f) >= 3 and f in text`. That is wrong in BOTH
+    # directions of magnitude and it was luck that only one path reached a
+    # collision. Four cells, and the two REFUSING ones come first: this
+    # guard is being CHANGED on the strength of a false positive, so its
+    # reach must be shown intact before its narrowing is shown correct.
+    _leak161 = None
+    try:
+        assert_reasons_carry_no_sealed_value(
+            {"admissibility": {"reasons": [
+                "the dispersion was 21.53 and at three places 21.530"]},
+             "economic": {"Z": 21.53}})
+    except RunnerRefused as _e:
+        _leak161 = str(_e).split("--")[0].strip()
+    _leakn161 = None
+    try:
+        assert_reasons_carry_no_sealed_value(
+            {"admissibility": {"reasons": ["the arm filled 1,234,567 times"]},
+             "economic": {"n_fills_arm": 1234567}})
+    except RunnerRefused as _e:
+        _leakn161 = str(_e).split("--")[0].strip()
+    ok(_leak161 is not None and _leakn161 is not None,
+       f"DE 161 (1/4) THE REACH IS INTACT: a reason that genuinely "
+       f"interpolates a sealed 21.53 REFUSES at two precisions ('21.53' "
+       f"and '21.530'), and a sealed integer written with thousands "
+       f"separators ('1,234,567', `n_fills_arm`) REFUSES too. The guard "
+       f"was narrowed "
+       f"only in WHAT COUNTS AS A MATCH, never in what it looks at")
+    _zero161 = assert_reasons_carry_no_sealed_value(
+        {"admissibility": {"reasons": [
+            "the floor fraction is 0.05 and the bar 30"]},
+         "economic": {"sd_over_abs_mean": 0.0}})
+    ok(_zero161["no_sealed_value_in_any_reason"] is True,
+       "DE 161 (2/4) THE COLLISION THAT CAUSED THIS IS ADMITTED: a sealed "
+       "`sd_over_abs_mean` of 0.0 against a reason carrying an unrelated "
+       "0.05. The old test matched '0.0' INSIDE '0.05' and refused a day "
+       "whose reasons leaked nothing -- which is how a degenerate null "
+       "took a whole arm-day down")
+    _far161 = assert_reasons_carry_no_sealed_value(
+        {"admissibility": {"reasons": ["rho was 21.53 on this arm"]},
+         "economic": {"null_sd": 1.5}})
+    ok(_far161["no_sealed_value_in_any_reason"] is True,
+       "DE 161 (3/4) AND THE OTHER DIRECTION OF MAGNITUDE: a sealed 1.5 "
+       "against a reason carrying 21.53. The old test matched '1.5' "
+       "inside '21.53' -- a false positive that no path had happened to "
+       "reach, and the reason to fix the comparison rather than the case")
+    _hit161 = None
+    try:
+        assert_reasons_carry_no_sealed_value(
+            {"admissibility": {"reasons": ["rho was 21.53 on this arm"]},
+             "economic": {"null_sd": 21.53}})
+    except RunnerRefused as _e:
+        _hit161 = str(_e).split("--")[0].strip()
+    ok(_hit161 is not None,
+       "DE 161 (4/4) AND THE SAME TEXT REFUSES WHEN THE VALUE IS REALLY "
+       "THE SEALED ONE: 21.53 in the reason with 21.53 sealed. Cells 3 "
+       "and 4 are the SAME reason text and the SAME sealed field, "
+       "differing only in the VALUE (1.5 against 21.53) -- so what "
+       "separates admit from refuse is the number, not the string, which "
+       "is the whole property this change is about")
+
     # ---- REV 73 S1.1: THE SELECTOR'S THREE HOLES, all driven ---------
     _d103 = Path(DR.resolve()["data_root"]) / "pm_5min/derived"
     _v22f = _d103 / "p003_de_multiday_gate1_design_v22.json"
