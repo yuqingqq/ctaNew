@@ -423,6 +423,22 @@ def derive(closure: dict, root: Path | None = None) -> dict:
             "first_edge_to_each": {k: v[0] for k, v in sorted(rf.items())},
         },
         "union": {"modules": _with_digests(both), "n": len(both)},
+        # BE 122: THE RECEIPT-SCOPED SETS ABOVE ARE TRUNCATED AND ARE NO
+        # LONGER THE ANSWER. The corrected sets are computed WITHOUT the
+        # receipt and are published beside them with the delta, so a reader
+        # of an older row cannot resolve to the wrong number.
+        "SUPERSEDED_NOTICE": {
+            "what": "`scoring` and `reference` above are the RECEIPT-SCOPED "
+                    "walk, kept because they say what the recording "
+                    "supports -- they are NOT the set a consumer should "
+                    "check against",
+            "why": "the closure is a WHITELIST on the traversal, so a module "
+                   "the recording does not name halts the walk THERE and "
+                   "every module behind it is lost, including ones the "
+                   "recording DOES name. Measured: SCORING 8 against 12",
+            "check_against": "recommended_for_a_consumer, below",
+        },
+        "recommended_for_a_consumer": _recommended(root, closure, sc, rf),
         # BE 121: THE SAME OPERATION WITHOUT THE RECEIPT, AND THE
         # DIFFERENCE, because the difference is the finding. The
         # closure-restricted walk is NOT merely narrower than the
@@ -465,6 +481,68 @@ def derive(closure: dict, root: Path | None = None) -> dict:
     }
 
 
+def _recommended(root: Path, closure: dict, sc: dict, rf: dict) -> dict:
+    """THE SET DE'S PREDICATE SHOULD CHECK AGAINST (BE 122).
+
+    Three candidates were on the table -- the receipt-scoped 8, the
+    receipt-free 12, and the recorded 49 -- and the choice is made by the
+    OPERATION, not by size (rule 32).
+
+      THE EIGHT is WITHDRAWN: truncated by the artifact it examines.
+      THE FORTY-NINE is not a scope for this question: it is every module
+        imported anywhere in the build -- the receipt emitter, the fragment
+        builder, the tape builder -- and it is SUPPLIED BY THE RECEIPT,
+        which is the dependency being removed.
+      THE RECEIPT-FREE SET is a property of the TREE: transitive reference
+        from the producing function, computed from the code on disk with no
+        artifact setting its scope.
+
+    And the refusable/reportable split is not a hedge, it is measured: on
+    the newest real receipt 13 of the 15 union members are named and TWO
+    are legitimately absent, because they are reached through lazy imports
+    on branches that did not run. A predicate refusing on absence would
+    refuse THAT receipt, today."""
+    try:
+        fd_s = expected_set_from_disk(root, SCORING_ENTRY_POINTS)
+        fd_r = expected_set_from_disk(root, REFERENCE_ENTRY_POINTS)
+    except Exception as e:                                   # noqa: BLE001
+        return {"status": "NOT_COMPUTED", "error": f"{type(e).__name__}: {e}"}
+    u = sorted(set(fd_s["modules"]) | set(fd_r["modules"]))
+    named = [m for m in u if m in closure]
+    unnamed = [m for m in u if m not in closure]
+    return {
+        "operation": "REFERENCED_CALLED_OR_ATTRIBUTE_READ_THROUGH_AN_IMPORT_"
+                     "ALIAS_TRANSITIVELY_FROM_THE_PRODUCER__COMPUTED_FROM_"
+                     "THE_CODE_ON_DISK",
+        "for_a_SCORING_predicate": {"modules": fd_s["modules"],
+                                    "n": fd_s["n"]},
+        "for_a_WHOLE_BOOK_predicate": {"modules": u, "n": len(u)},
+        "REFUSABLE": {
+            "rule": "every module of the chosen set that the receipt NAMES "
+                    "must digest-match the file on disk",
+            "on_this_receipt": {"n_named": len(named), "modules": named},
+        },
+        "REPORTABLE_NEVER_REFUSABLE": {
+            "rule": "every module of the chosen set the receipt does NOT "
+                    "name is reported BY NAME -- under-declaration becomes "
+                    "visible, and is not refused on",
+            "why_not_refusable": "static reachability OVER-approximates the "
+                                 "run: a module reached through a lazy "
+                                 "import on a branch that did not run is "
+                                 "legitimately absent from an honest "
+                                 "recording",
+            "on_this_receipt": {"n_unnamed": len(unnamed),
+                                "modules": unnamed,
+                                "each_is_a_lazy_import_not_a_defect": True},
+        },
+        "the_receipt_scoped_sets_are_WITHDRAWN": {
+            "scoring_was": len(sc), "scoring_is": fd_s["n"],
+            "reference_was": len(rf), "reference_is": fd_r["n"],
+            "reference_was_NOT_truncated": len(rf) == fd_r["n"],
+        },
+    }
+
+
 def _from_disk_comparison(closure: dict, root: Path, scoped: dict) -> dict:
     """The receipt-free set beside the receipt-scoped one, and the delta."""
     try:
@@ -500,7 +578,7 @@ def _from_disk_comparison(closure: dict, root: Path, scoped: dict) -> dict:
 # THE FALSIFIER
 # ---------------------------------------------------------------------------
 
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 26
 
 _A = '''
 import bmod as B
@@ -764,6 +842,57 @@ def falsify() -> int:
     else:
         ok(False, "no receipt on disk, so the mis-declaration demonstration "
                   "could not be driven")
+    # ---- BE 122: THE CAUSE, DRIVEN, AND THE CORRECTED SET -------------
+    if rc:
+        allpy = {q.name: "x" for q in HERE.glob("*.py")}
+        s8 = set(reachable_modules(HERE, clo, SCORING_ENTRY_POINTS))
+        s12 = set(reachable_modules(HERE, allpy, SCORING_ENTRY_POINTS))
+        four = sorted(s12 - s8)
+        in_rec = sorted(m for m in four if m in clo)
+        not_rec = sorted(m for m in four if m not in clo)
+        ok(len(four) == 4 and in_rec == ["flow_intensity.py",
+                                         "harmful_exposure_rows.py"]
+           and not_rec == ["harmful_hazard_model.py",
+                           "phase2_state_schema_freeze.py"],
+           f"THE FOUR, CLASSIFIED: {in_rec} are IN the recording and were "
+           f"missed anyway -- a DEFECT IN THE DERIVATION; {not_rec} are NOT "
+           f"in the recording and are legitimately absent, reached through "
+           f"LAZY imports on branches that did not run -- a property of the "
+           f"RUN")
+        one = set(reachable_modules(
+            HERE, dict(clo, **{"harmful_hazard_model.py": "x"}),
+            SCORING_ENTRY_POINTS))
+        ok(sorted(one - s8) == ["flow_intensity.py",
+                                "harmful_exposure_rows.py",
+                                "harmful_hazard_model.py"],
+           f"THE CAUSE, DRIVEN AND NOT REASONED: whitelisting the ONE "
+           f"unrecorded module `harmful_hazard_model.py` recovers "
+           f"{sorted(one - s8)} -- **two modules the recording DOES name "
+           f"came back**, because the whitelist had halted the walk at the "
+           f"one it does not. The restriction is a TRUNCATION")
+        rf_sc = set(reachable_modules(HERE, clo, REFERENCE_ENTRY_POINTS))
+        rf_fr = set(reachable_modules(HERE, allpy, REFERENCE_ENTRY_POINTS))
+        ok(rf_sc == rf_fr and len(rf_sc) == 6,
+           f"AND THE REFERENCE DERIVATION IS NOT TRUNCATED ({len(rf_sc)} "
+           f"either way) -- its path crosses no unrecorded module. The same "
+           f"CAUSE did not produce the same EFFECT, which is why the delta "
+           f"is measured per set and not assumed from one")
+        rcm = derive(clo, root=HERE)["recommended_for_a_consumer"]
+        ok(rcm["for_a_SCORING_predicate"]["n"] == 12
+           and rcm["for_a_WHOLE_BOOK_predicate"]["n"] == 15
+           and rcm["REFUSABLE"]["on_this_receipt"]["n_named"] == 13
+           and rcm["REPORTABLE_NEVER_REFUSABLE"]["on_this_receipt"][
+               "n_unnamed"] == 2,
+           f"THE CORRECTED RECOMMENDATION IS IN THE ARTIFACT: SCORING "
+           f"{rcm['for_a_SCORING_predicate']['n']}, whole-book "
+           f"{rcm['for_a_WHOLE_BOOK_predicate']['n']}; on the newest real "
+           f"receipt **13 named (REFUSABLE) and 2 unnamed (REPORTABLE)** -- "
+           f"so a predicate refusing on absence would refuse THAT receipt "
+           f"today, which is the measured reason the split is not a hedge")
+    else:
+        for _ in range(4):
+            ok(False, "no real receipt, so the BE 122 reconciliation could "
+                      "not be driven")
     import tempfile as _tf121
     _empty = Path(_tf121.mkdtemp(prefix="be121_empty_"))
     try:
