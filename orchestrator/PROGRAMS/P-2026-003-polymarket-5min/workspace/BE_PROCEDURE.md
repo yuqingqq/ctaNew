@@ -310,7 +310,8 @@ touching a pinned module costs a params version AND a design version, and
 until both land **no day can run** -- that is R-835's blocker, three pin
 pairs in one day.
 
-**PINNED (params v23 cascade, verified against disk at 07:41Z 2026-09-09):**
+**PINNED (the params HEAD's cascade -- v23 at BE 112, v24 at BE 113; read
+the head, never a version literal):**
 `be_cancel_axis_null.py` (the ENTRY POINT), `be_data_root.py`,
 `de_head_scoring.py`, `de_matched_random_control.py`,
 `de_phase4_diag_runner.py`, `de_rho_estimator.py`, `de_score_stream.py`,
@@ -320,6 +321,26 @@ pairs in one day.
 **NOT PINNED, so free to edit:** `be_daybook_build.py`,
 `be_generation_count_derivation.py`, `be_rule22.py`, `be_score_coverage.py`,
 the gate1 builders, `be_heavy_peaks.py`, `be_race_feed_pins.py`.
+
+**THERE IS A SECOND PIN SURFACE AND IT IS NOT THE CASCADE (BE 113).**
+`de_phase4_diag_runner.pin_statuses` walks `fit_manifest.json`'s
+`fit_code_files` -- **twelve files, and BOTH `harmful_exposure_rows.py` and
+`flow_intensity.py` are in it** -- comparing each against the FIT-COMMIT
+bytes. A file the runner imports whose CALLED function moved, and which
+nobody declared additive in `DECLARED_ADDITIVE`, is **BLOCKING**:
+`verify_called_code()` raises and no day runs. Three functions of
+`harmful_exposure_rows.py` carry declarations (`select_v2_era`,
+`_era_or_refuse`, `_refuse_empty_selection`), each with a REASON that is a
+statement about what the function does -- so editing one both risks the
+block and falsifies its declaration.
+
+**The census, run at BE 113:** `flow_fill_development.py`,
+**`flow_intensity.py`**, `harmful_action_eval.py`,
+`harmful_candidate_manifest.py`, **`harmful_exposure_rows.py`**,
+`harmful_fast_compute.py`, `harmful_hazard_model.py`,
+`harmful_state_features.py`, `phase2_arms.py`, `phase2_declaration.py`,
+`phase2_embargo.py`, `phase2_state_schema_freeze.py`. None of `be_*.py` is
+in it, which is why a new BE-owned module is always the cheap way in.
 
 **`producer_exit_maps` is NOT a source pin.** It declares each producer's
 EXIT-CODE MAP (`be_daybook_build`: 0/1/2, 75 never used) and carries a
@@ -337,6 +358,54 @@ seam cell does against `be_cancel_axis_null.load()`.
 **Check before you edit, not after:**
 `be_rule22.assert_pin_sites_agree(json.load(open(<params head>))["doc"],
 root=<tree>)` recomputes all ten against disk and refuses by name.
+
+## 6d. THE DAY'S ERA IS A PROPERTY OF THE DAY (BE 113)
+
+`flow_intensity.ERA` is a **literal**, `clob_v3_1`, and
+`harmful_exposure_rows._era_or_refuse(fi, None, …)` returns it whatever day
+it is asked about. Its era closed **2026-08-30T05:30:01Z**.
+
+**Measured, over every collected day:** 08-22..25 and 08-27..29 resolve
+`clob_v3_1`; **every September day resolves `clob_v4_1`**; 08-19/20/21/26/30/31
+resolve nothing (collector outages and era transitions). So the literal was
+right for the days it was written for and wrong for every day in the queue --
+which is how a literal survives review and then goes stale under a running
+collector.
+
+**What it cost:** `gaps_by_slug("clob_v3_1")` and `gaps_by_slug("clob_v4_1")`
+are **disjoint** (1,143 slugs against 728, zero in common), so
+`gaps.get(slug, [])` was `[]` for every September window. On 09-03, **160 of
+247 windows and 2,294.7 s of tape** were assembled as if continuous, and all
+twelve landed book receipts record `selection.era: clob_v3_1`.
+
+**Use `be_era_for_day.resolve(fi, day, slugs)`** in any day-scoped selector.
+It has no default and refuses by name: `NO_ERA_SPANS_IN_THE_LEDGER`,
+`NO_WINDOWS`, `WINDOW_START_UNPARSEABLE`, `WINDOWS_IN_NO_ERA`,
+`DAY_STRADDLES_ERA_BOUNDARY`, `WINDOW_IN_MORE_THAN_ONE_ERA`. Pass its answer
+INTO `_era_or_refuse` rather than editing that function -- see §6b for why.
+
+**And `float("inf")` is not JSON.** `fi._eras()` gives a live era an `inf`
+end and `json.dumps` writes `Infinity`, which strict readers reject. Any
+receipt field taken from `_eras()` carries `None` plus a field saying it is
+open-ended.
+
+## 6e. THE 09-03 WINDOW COUNT HAS THREE VALUES AND ONLY TWO ARE WINDOWS
+
+Reconciled at the code, BE 113, after MEM 294 filed it as open:
+
+| value | where | what it is |
+|---:|---|---|
+| **287** | `AW.supply(...)["counts"]["btc"]["n_present"]` | windows present in the ledger for the day |
+| **247** | same block's `n_supplied` = 287 − 40 masked | **the day's window count**; `day_slugs` returns it and `reference.windows` records it |
+| **246** | `economic_settlement.arm_legs.n_slugs` | `len(per)` over **FILLS** in `settlement_legs_by_slug` -- slugs with ≥1 valued fill in ONE replay |
+
+**246 is not a window count.** It equals the supplied count on 09-04/05/06
+(288 each, measured at DE's point-estimate artifacts) and is one short on
+09-03 only, where exactly one supplied window produced no valued fill. It
+moves with the arm, the latency and the policy. Quote **247**.
+
+The 287→247 half now travels in the receipt (`selection.mask`) with its
+arithmetic CHECKED, and the 246 claim is a battery cell, not prose.
 
 ## 6c. The shared-falsifier convention
 
