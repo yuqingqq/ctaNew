@@ -215,6 +215,90 @@ def declaration_head(family: str) -> dict:
                            "implementation)"}
 
 
+class PinSitesDisagree(RuntimeError):
+    """A named refusal: the two pin sites do not describe the same code."""
+
+
+#: The families whose payload carries BE's module pins in TWO places.
+PIN_SITE_FAMILIES = ("de_multiday_gate1_params",)
+
+
+def assert_pin_sites_agree(payload: dict, *, root: Path | None = None,
+                           require_on_disk: bool = True) -> dict:
+    """REFUSE AT THE REPOINT if the two pin sites disagree.
+
+    THE TRAP THIS CLOSES. BE's cascade is pinned twice in one payload:
+    `be_cascade.modules` pins all ten modules, and `be_module` pins the
+    cascade's ENTRY POINT separately. A repoint that sweeps one site and
+    misses the other lands a pair that LOOKS complete -- both sites present,
+    both digests well-formed -- and refuses at run time, forty minutes into
+    a day run, by which point the operator is reading a failure whose cause
+    is two versions behind. It cost three pin pairs (v21+v29, v22+v30,
+    v23+v31) before anyone named the shape.
+
+    So the disagreement is caught where it is CREATED, not where it is
+    consumed. Four refusals, each by name:
+
+      ENTRY_MODULE_ABSENT          no `be_module.path` to check;
+      ENTRY_MODULE_NOT_IN_CASCADE  the entry point is not one of the ten --
+                                   the two sites are not describing one
+                                   cascade at all;
+      PIN_SITES_DISAGREE           the same path carries two different
+                                   digests. THIS is the half-swept repoint;
+      PIN_DOES_NOT_MATCH_DISK      a pinned digest is not the file's bytes
+                                   (both sites are swept but to a stale
+                                   value). Optional, because a payload may
+                                   legitimately be composed for a tree it
+                                   is not being written from.
+    """
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    entry = (payload or {}).get("be_module") or {}
+    casc = ((payload or {}).get("be_cascade") or {}).get("modules") or []
+    if not entry.get("path"):
+        raise PinSitesDisagree(
+            "ENTRY_MODULE_ABSENT: the payload carries no `be_module.path`, "
+            "so there is no entry point to check the cascade against.")
+    by_path = {}
+    for m in casc:
+        if isinstance(m, dict) and m.get("path"):
+            by_path.setdefault(m["path"], []).append(m.get("sha256"))
+    if entry["path"] not in by_path:
+        raise PinSitesDisagree(
+            f"ENTRY_MODULE_NOT_IN_CASCADE: `be_module.path` is "
+            f"{entry['path']!r} and `be_cascade.modules` names "
+            f"{sorted(by_path)}. The two pin sites are not describing one "
+            f"cascade, so no repoint of either can make them agree.")
+    disagree = [d for d in by_path[entry["path"]] if d != entry.get("sha256")]
+    if disagree:
+        raise PinSitesDisagree(
+            f"PIN_SITES_DISAGREE: {entry['path']} is pinned "
+            f"{str(entry.get('sha256'))[:16]}… in `be_module` and "
+            f"{str(disagree[0])[:16]}… in `be_cascade.modules`. A repoint "
+            f"swept one site and missed the other; landing this pair would "
+            f"refuse at run time instead of here.")
+    stale = []
+    if require_on_disk:
+        for path, digests in sorted(by_path.items()):
+            f = root / path
+            if not f.is_file():
+                stale.append({"path": path, "why": "not on disk"})
+                continue
+            actual = hashlib.sha256(f.read_bytes()).hexdigest()
+            for d in digests:
+                if d != actual:
+                    stale.append({"path": path, "pinned": str(d)[:16],
+                                  "on_disk": actual[:16]})
+        if stale:
+            raise PinSitesDisagree(
+                f"PIN_DOES_NOT_MATCH_DISK: {len(stale)} pinned digest(s) are "
+                f"not the bytes on disk -- first {stale[0]}. Both sites may "
+                f"agree with each other and still be a version behind.")
+    return {"entry": entry["path"], "n_cascade_modules": len(by_path),
+            "sites_agree": True, "checked_on_disk": require_on_disk,
+            "why": "the entry point's digest is identical at both pin sites "
+                   "and every pinned module matches its file"}
+
+
 def write_declaration_version(family: str, payload: dict,
                               head_read: dict) -> dict:
     """Write the next version of one of THIS SEAT'S declaration families.
@@ -227,6 +311,11 @@ def write_declaration_version(family: str, payload: dict,
     repeat the in-place landing that removed two seats' blocks from the
     exit-map chain."""
     import declaration_chain as _DCH
+    # THE GUARD FIRES AT THE WRITE, which is the repoint. A half-swept pair
+    # never reaches the ledger, so nobody discovers it forty minutes into a
+    # day run.
+    if family in PIN_SITE_FAMILIES:
+        assert_pin_sites_agree(payload)
     try:
         return _DCH.write_next_version(DECLARATIONS, family, payload,
                                        head_read)
@@ -969,6 +1058,62 @@ def selftest() -> int:
        f"{len(sf['failed_cells'])} failed. Before this cell the only drive "
        f"in this file was inside `shared_falsifier` itself, which the census "
        f"correctly reads as not-in-a-battery")
+
+    # ---- BE 111: THE TWO-PIN-SITE TRAP, CLOSED AT THE REPOINT ----------
+    # A repoint that sweeps `be_cascade.modules` and misses `be_module` (or
+    # the reverse) lands a pair that looks complete and refuses at run time.
+    # Three pin pairs were lost to it. Both directions driven here.
+    import tempfile as _tfP
+    _r = Path(_tfP.mkdtemp(prefix="be111_pins_"))
+    (_r / "live" / "pm_research").mkdir(parents=True)
+    def _mk(name, body):
+        f = _r / "live" / "pm_research" / name
+        f.write_text(body)
+        return (f"live/pm_research/{name}",
+                hashlib.sha256(f.read_bytes()).hexdigest())
+    _pa, _da = _mk("be_entry.py", "A = 1\n")
+    _pb, _db = _mk("be_other.py", "B = 2\n")
+
+    def _payload(entry_sha, casc_sha):
+        return {"be_module": {"path": _pa, "sha256": entry_sha},
+                "be_cascade": {"modules": [{"path": _pa, "sha256": casc_sha},
+                                           {"path": _pb, "sha256": _db}]}}
+
+    def _drive(pl, **kw):
+        try:
+            assert_pin_sites_agree(pl, root=_r, **kw)
+            return "ADMITTED"
+        except PinSitesDisagree as _e:
+            return str(_e).split(":")[0]
+
+    _ok = _drive(_payload(_da, _da))
+    _half = _drive(_payload(_da, "f" * 64))          # cascade swept, entry not
+    _half2 = _drive(_payload("e" * 64, _da))         # entry swept, cascade not
+    _notin = _drive({"be_module": {"path": "live/pm_research/be_ghost.py",
+                                   "sha256": _da},
+                     "be_cascade": {"modules": [{"path": _pa,
+                                                 "sha256": _da}]}})
+    _noentry = _drive({"be_cascade": {"modules": [{"path": _pa,
+                                                   "sha256": _da}]}})
+    (_r / "live" / "pm_research" / "be_other.py").write_text("B = 3\n")
+    _stale = _drive(_payload(_da, _da))              # both agree, disk moved
+    _stale_off = _drive(_payload(_da, _da), require_on_disk=False)
+    ok(_ok == "ADMITTED" and _half == "PIN_SITES_DISAGREE"
+       and _half2 == "PIN_SITES_DISAGREE"
+       and _notin == "ENTRY_MODULE_NOT_IN_CASCADE"
+       and _noentry == "ENTRY_MODULE_ABSENT"
+       and _stale == "PIN_DOES_NOT_MATCH_DISK" and _stale_off == "ADMITTED",
+       f"THE TWO-PIN-SITE TRAP REFUSES AT THE REPOINT, BOTH DIRECTIONS: a "
+       f"correct sweep is {_ok}; sweeping the CASCADE and missing the ENTRY "
+       f"is {_half}; sweeping the ENTRY and missing the CASCADE is {_half2} "
+       f"-- the half-swept pair that cost v21+v29, v22+v30 and v23+v31 and "
+       f"used to surface forty minutes into a day run. An entry outside the "
+       f"cascade is {_notin} and a missing entry is {_noentry}, because "
+       f"those are different faults from a stale digest. AND BOTH SITES "
+       f"AGREEING IS NOT ENOUGH: with the file changed under an agreed pair "
+       f"it is {_stale}, while the same payload with the disk check off is "
+       f"{_stale_off} -- a payload composed for another tree is not a "
+       f"half-swept repoint and is not refused as one")
 
     import tempfile as _tf2
     kb = Path(_tf2.mkdtemp(prefix="be94_rule22_kb_")) / "declaration_chain.py"
