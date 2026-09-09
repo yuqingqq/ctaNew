@@ -21247,3 +21247,42 @@ generation and the window went 4 → 3. Nothing rewritten.
   2074 -> 2084; window trimmed 4 -> 3, Batch 283 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE
   BUILD DECISION IS WITH THE USER.** MEM asserts no result.)
 ```
+
+## Batch 287 — archived 2026-09-09T09:16:15Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:48:28Z (MEM ROUND 302 -- R-854 AND R-855 SWEPT as a numbered queue under rule 23,
+  from my round-301 tip `acaa5ea` to `0c297dd`, seventeen commits. STATE ONLY, AND IT CARRIES TWO CORRECTIONS TO
+  NUMBERS RATHER THAN SUPERSEDING THEM QUIETLY. ***(a) THE 27 PER CENT***: checked in my own files first, because
+  over-correcting is also an error -- it appears TWICE (`STATUS.yml:29045`, `HANDOFF.md:1308-9`) and in both it is
+  DE 158's SAMPLING-UNIT measurement quoted with its own subject, so R-854's withdrawal of R-853's "up to the 27 %
+  of generations" AS AN EXPOSURE ESTIMATE does not land on my files -- ***BUT THE RULING IS RECORDED BESIDE BOTH
+  USES SO NOBODY CARRIES THE NUMBER ACROSS CONTEXTS***. The insight is worth keeping in its own right: the
+  measurement and the `t0` claim are DIFFERENT QUANTITIES AND NOT IN TENSION, since a generation whose first row IS
+  at `t0` and whose later rows come after satisfies the claim AND contributes to both percentages -- ***SO IF THE
+  CLAIM IS TRUE, EVERY MULTI-ROW GENERATION CONTRIBUTES TO THE 27 %***. The exposure is UNMEASURED, which is what my
+  round-300 flag already said in the stronger form ("unmeasurable until the first corrected book exists"), reached
+  from the opposite direction. ***(b) "THREE CONSUMERS" IS MINE AND IT IS WRONG***: REV 122 enumerated
+  CONSTRUCTIVELY and found FIVE of ten -- the three I checked plus `da_de53_exclusion.py` (two sites) and
+  `de_section81_arms.py` (one). ***THE FAILURE NAMED EXACTLY: I TREATED AN ENUMERATION AS FACTS TO CHECK AND NOT AS
+  A CLAIM TO FALSIFY***, running three confirmations with no falsifier for "there are only three" -- a confirmation
+  of every named member is not evidence about membership. ***AND THE TWO MISSED ARE THE WORSE TWO***, which I
+  confirmed at their code: `da_de53_exclusion.py:33-34` builds the `t0` key and then reads `(retained if key in
+  gen_scores else excluded)`, ***SO THE MEMBERSHIP TEST IS THE EXCLUSION DECISION ITSELF*** in a module whose whole
+  subject is a claim about the excluded set. ***AND `grep -c "in gs"` NOW RETURNS ZERO IN ALL FIVE***, including the
+  three it originally found -- invalidated both by code it never matched and by code that changed its words, neither
+  failure announcing itself. THE METHOD, TWICE-PROVEN, RECORDED AS PRACTICE: ***A MEMBER IS DEFINED BY THE OPERATION
+  THAT CONSTITUTES MEMBERSHIP, NOT BY A SPELLING*** -- four classes here, and REVIEW 111's pin sites were the first
+  instance, two by inspection and THREE BY CONSTRUCTION with the missed one the silent one. I ran it myself: 26
+  candidate modules on four operation regexes, ***CONTAINING ALL FIVE***. LIVE: three of the five are being repaired
+  in UNCOMMITTED work (at `586be44` the line read the old test; at HEAD it is a comment; the files are dirty) and
+  the two REV 122 added are not -- uncommitted being a step BEFORE landed, which is a step before reviewed. BUILD
+  READINESS: a THIRD preventable cause, and it is rule 28 INSIDE THE GUARD -- `be_rule22.stamp()` RECORDS
+  `dirty_code` and refuses on neither dirtiness nor its own record, while `da_book_verify` DOES refuse, so a dirty
+  `wt-be` costs the full wall AND the book; the envelope reproduces to the byte with 09-03 at 85.2 % and the basis
+  NOT covering 09-08. ***AND THE TWO HALVES OF THIS ROUND ARE ONE CAUSE***: one entry per ROW instead of per
+  GENERATION both breaks five consumers and triples the wall -- 2,040 s pre-fix TOTAL against 3,793.8 s of EV20
+  ASSEMBLY ALONE, 1.86x, a figure I measured at round 290. Flags 2539 -> 2551, prov 2084 -> 2096; window trimmed
+  4 -> 3, Batch 284 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM
+  asserts no result.)
+```

@@ -1,3 +1,61 @@
+# READ FIRST — round 305 (MEM, 2026-09-09T09:16:15Z, tip `e6b37e7`)
+
+**R-860 swept — six commits since `45fa3af`.** Light round: **bookkeeping, not analysis.**
+
+## THE STATE IN THREE LINES
+
+**(a) THE FOUR USER DEFECTS ARE STILL PRESENT — re-measured at live code, not carried.**
+
+| defect | live at 2026-09-09T09:16:15Z |
+|---|---|
+| the ruled null unreachable | sites `:7881`, `:11344` — **neither passes `arm_cancels`** |
+| the decision count | definition still says **"generations"** over a row count |
+| the cancel premise | `7` / `7.r1` → `one_cancel_per_generation` = **True** |
+| the book-code predicate | one-module receipt → **`n_checked: 1` of 5** |
+
+**DE has landed no repair.** DA 152's five driven cases report **four `DEFECT_PRESENT`** against live code (10
+checks, 0 failures, DE's files untouched) — case (2) drove the **live** `day_decision_population` to `decisions = 4
+== ROWS != ACTIONS(2)`.
+
+**(b) WHAT IS CLEAN IS THE BUILD INPUTS.** BE 120, all five queued days: every day resolves `clob_v4_1`,
+**agreement 5/5** with DA's own `selector_era` and `era_admissible_ruled` fields, **nothing refusing, masks
+closing.** Gap attachment driven **at the selector's entries** (`sel.n_gap_bearing_windows` == count of `_sel`
+entries with a non-empty fifth element): **160 / 52 / 13 / 14 / 27** across 09-03..09-07, **counterfactual ZERO on
+all five under the old default** → the fix moves **266 windows, 2,987.2 s of tape**.
+
+BE 119's consumer contract **verifies on all three** (REV 127, 16 cells, 0 failures): **derived** — the real
+49-module recording gives `scoring.n = 8`, and dropping a module from the recording drops it from the set — with
+**the user's one-module case as the acceptance criterion**, driven on the real 09-05 receipt pair, where **two runs
+of the same builder recorded 48 and 49 modules: the import closure is a property of the run, not a constant.**
+**⚠ Refusal is POSSIBLE, NOT ENFORCED — no `assert_` helper — and the enforcement is DE's half.**
+
+**(c) THE v26 PROTOCOL STRING IS SILENT.** DA 153 at the real declaration: `protocol …_PARAMS_V20` with `version
+26`, case 4b `DEFECT_PRESENT`. **The mechanism is worse than "accepts": `load_params` never reads it** — its AST key
+census is `G`, `G_derived_from_len_days`, `days`, `expected_G`, `previously_opened_for`,
+`required_previously_opened_for`, across 46 lines and 6 raise sites; a tree-wide sweep finds **four sites and not one
+comparison**. **And it propagates into an emitted artifact at `da_accrual_report:242`.**
+
+## THE NUMBER FOR THE BUILD DECISION
+
+**The gap load is uneven: 09-03 alone is 160 of the 266 affected windows and 77 % of the 2,987.2 s.** ⇒ **A surprise
+is likeliest on DAY ONE of a five-hour queue — the cheap end to find it.** **All five still need full rebuilds; `fr`
+is byte-identical on none.** *Recorded as an input to the USER's decision; no recommendation from this seat.*
+
+## RULE 33 IS PROGRAMME STATE
+
+*A verification is only as good as the identity between what it examines and what it is cited for.* **DA 152 is the
+first work built to it** — pass on the real thing, fail on a known-bad, **refuse a partial input** — and its case
+(1) **reads at the CALLER, "where the defect lived", not at the branch.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z. The build decision and the matching unit are both with the USER.**
+
+Counts: flags 2587 → 2595, provenance 2132 → 2140 (eight written, eight counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 287 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 304 (MEM, 2026-09-09T09:09:38Z, tip `45fa3af`)
 
 **R-857, R-858, R-859 and R-860 swept — thirty-five commits since `17bbe9b`.** STATE ONLY.
