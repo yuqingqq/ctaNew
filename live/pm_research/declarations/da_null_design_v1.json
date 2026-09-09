@@ -1,15 +1,18 @@
 {
-  "protocol": "P003_DA_NULL_DESIGN_V1",
-  "version": 1,
+  "protocol": "P003_DA_NULL_DESIGN_V2",
+  "version": 2,
   "declared_by": "DA 175",
   "declared_at_utc": "2026-09-09T17:05Z",
   "ruling": "USER R-870: A DRAW RESAMPLES THE CANCELLABLE GENERATION. The unit is not open and is not re-argued here.",
   "why_this_exists": "CLAUDE.md rule 6. Every arm result this programme has produced is retracted. The next number published must have had its null declared IN ADVANCE, in the repo, with a commit ref. This file is that declaration; da_null_design.py evaluates every clause as a predicate so none of it is a sentence beside a table (rule 10).",
-
   "unit": "CANCELLABLE_GENERATION",
   "permutation": {
     "resampled": "WHICH cancellable generations the arm cancels",
-    "resampled_key": ["slug", "side", "gen"],
+    "resampled_key": [
+      "slug",
+      "side",
+      "gen"
+    ],
     "held_fixed": [
       "the reference path (the neutral no-cancel book)",
       "the book digest",
@@ -19,15 +22,33 @@
       "the side composition of the cancelled set",
       "the hour composition of the cancelled set"
     ],
-    "NOT_resampled": ["rows", "fills", "tranches", "prices", "settlement"],
+    "NOT_resampled": [
+      "rows",
+      "fills",
+      "tranches",
+      "prices",
+      "settlement"
+    ],
     "why_not_rows": "rows are not actions (1.99 rows/fill, max 23), so a row-matched control fails rule 7",
     "why_not_cancels": "cancels are outcome-selected (rule 1), and the ledger carries no CANCEL row kind at all"
   },
-
   "matching": {
-    "matched_on": ["action_count", "side", "hour"],
-    "compared_on": ["net_value_cents", "rho_adverse_over_spread"],
-    "FORBIDDEN_COMPARISON": ["harm_share", "harmful_share", "harmful_fraction", "markout", "D_E0"],
+    "matched_on": [
+      "action_count",
+      "side",
+      "hour"
+    ],
+    "compared_on": [
+      "net_value_cents",
+      "rho_adverse_over_spread"
+    ],
+    "FORBIDDEN_COMPARISON": [
+      "harm_share",
+      "harmful_share",
+      "harmful_fraction",
+      "markout",
+      "D_E0"
+    ],
     "enforcement": {
       "action_count": "EXACT. |drawn| == |arm cancels|; a draw that cannot reach the count is REFUSED, never truncated.",
       "side": "EXACT per side. The drawn set's per-side counts equal the arm's per-side counts.",
@@ -35,14 +56,12 @@
     },
     "on_failure": "REFUSE by name and report the deficit. A relaxed match is a different null and must be declared as one."
   },
-
   "minimum_sample": {
     "n_draws": 500,
     "rule_6_floor": 200,
     "source_of_the_bar": "de_multiday_gate1_params_v29.json min_draws_per_arm_day, a PRE-DECLARED artifact -- never the receipt's own claim",
     "short_count": "REFUSES, never reports"
   },
-
   "estimand": {
     "ruling": "R-801",
     "definition": "trades cash flow + residual x settlement, in cents",
@@ -50,13 +69,11 @@
     "residual_leg": "net_shares per slug x settle_cents, settle = 100 if up_won else 0",
     "the_5s_markout_is": "A DIAGNOSTIC. It may be reported beside the result and may NEVER be the tested quantity."
   },
-
   "latency": {
     "rule": "rule 7 -- latency enters the estimand: value only tranches after t + L",
     "predicate": "(t - t0) * 1000 >= L_place_ms",
     "L_place_ms_source": "the book's own builder receipt, never typed here"
   },
-
   "population_09_04": {
     "book": "be_daybook_20260904_btc__L250ms__EV21.pkl",
     "n_reference_generations": 358108,
@@ -67,34 +84,52 @@
     "tranches_kept_at_L": 26379,
     "tranches_before_L": 31471
   },
-
   "exclusions_are_statuses": {
     "UNCOVERED_GENERATION": 29530,
     "TRANCHE_BEFORE_PLACEMENT_LATENCY": 31471,
     "note": "every exclusion travels with its COUNT (rule 4). A zero with no sibling status is NOT COMPUTABLE, not 'none excluded'."
   },
-
   "multiplicity": {
     "n_candidates_in_this_race": 2,
-    "candidates": ["CONDVALUE_X_SKEW", "HAZARD_OVER_SKEWED_REF"],
+    "candidates": [
+      "CONDVALUE_X_SKEW",
+      "HAZARD_OVER_SKEWED_REF"
+    ],
     "recorded_at": "declaration time, before any draw (rule 12)",
     "n_days_planned": 4,
-    "days": ["2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06"]
+    "days": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06"
+    ]
   },
-
   "consumed_days": {
-    "already_consumed": ["2026-08-20", "2026-08-21", "2026-08-22", "2026-08-23", "2026-08-24", "2026-08-25"],
+    "already_consumed": [
+      "2026-08-20",
+      "2026-08-21",
+      "2026-08-22",
+      "2026-08-23",
+      "2026-08-24",
+      "2026-08-25"
+    ],
     "consumed_for": "the harmful-fill line",
-    "september_days_consumed_by_this_programme": ["2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06"],
+    "september_days_consumed_by_this_programme": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06"
+    ],
     "why": "all four September days have been SEEN -- books built, point estimates read, thresholds and repairs driven against them (rule 11). They cannot validate anything chosen on them.",
-    "validation_requires": "later untouched days, at least 5 complete UTC days, none of them 09-03..09-06"
+    "validation_requires": "at least 5 COMPLETE untouched UTC days, counted -- never asserted in prose. See da_null_design.untouched_complete_days().",
+    "protected_from_utc_date": "2026-09-08",
+    "protected_from_rule": "SEAT_PROTOCOL rule 34 (R-873): days from 2026-09-08 onward are PROTECTED -- no probe, diagnostic, smoke test or quick look. The untouched set STARTS at 2026-09-08.",
+    "min_untouched_complete_days": 5
   },
-
   "falsifiers": {
     "positive_control_the_null_MUST_flag": "an ORACLE arm that cancels exactly the generations with the worst realised settled value must land in the extreme right tail; a null that does not flag it has no power and its zeros mean nothing",
     "known_bad_the_null_MUST_refuse": "a draw set whose action count, side composition or hour composition does not match the arm's -- and a run whose matched_on is absent, None, or names a unit its inputs do not implement"
   },
-
   "wall_clock": {
     "status": "NOT ESTABLISHED -- see da_null_design.py; this is a BLOCKER on authorising the race, not a footnote",
     "read_estimate_s_per_day": 9467,
@@ -102,5 +137,17 @@
     "concurrency": 3,
     "concurrency_source": "DA 172, R-871: peak 2.621 GiB per worker, footprints ADD, N = floor(9 GiB / peak)",
     "DA_own_observation_disagrees": "one draw ran >=225 s without completing (DA 172), about 24x the ~9.5 s/draw the read estimate implies. The estimate and the observation are not reconciled."
+  },
+  "supersedes": {
+    "version": 1,
+    "why": "REV 149: the five-day clause was checked as a SUBSTRING ('5' in prose) -- 'we have 5 llamas' satisfied it -- and the cannot-validate limit lived only here, so nothing made the null's RESULT carry it. SEAT_PROTOCOL rule 35."
+  },
+  "validation_limit": {
+    "rule": "SEAT_PROTOCOL rule 35 (R-874)",
+    "required_field_on_every_result": "validation_limit",
+    "REQUIRED_VALUE": "THIS NULL CANNOT VALIDATE. It runs entirely on CONSUMED days (2026-09-03..2026-09-06), so it is a CONTROL for a point estimate and NOT a validation of anything. Validation requires at least 5 COMPLETE untouched UTC days, and the untouched set starts at 2026-09-08 (rule 34).",
+    "on_absence": "REFUSE TO EMIT. A result that cannot state its own limit must not be published: a reader resolves FIELDS, and nobody reads the design document beside the number (rule 13's reasoning).",
+    "refusal_name": "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT",
+    "why_not_prose_here": "REV 149 found this same shape a FOURTH time -- MEMBERSHIP_LIMIT, matched_on, the superseded set, and this. A limit that lives only in a declaration does not bind the result."
   }
 }

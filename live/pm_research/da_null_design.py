@@ -238,7 +238,7 @@ def item_7_falsifiers(d: dict) -> dict:
 
 
 # ---------------------------------------------------------------- item 8
-def item_8_multiplicity(d: dict) -> dict:
+def item_8_multiplicity(d: dict, as_of: str = "2026-09-09") -> dict:
     """(8) THE MULTIPLICITY, RECORDED NOW (rule 12) -- and the CONSUMED
     DAYS (rule 11)."""
     m = d.get("multiplicity") or {}
@@ -256,8 +256,14 @@ def item_8_multiplicity(d: dict) -> dict:
     sept = set(c.get("september_days_consumed_by_this_programme") or [])
     days = set(m.get("days") or [])
     consumed_ok = bool(sept) and days <= sept
-    val = "5" in str(c.get("validation_requires", ""))
+    #: REV 149: this was `"5" in <prose>` and "we have 5 llamas" passed it.
+    #: It now COUNTS the untouched complete days and compares to the
+    #: declared bar. `as_of` is fixed here so the cell tests the code
+    #: rather than the hour.
+    u = untouched_complete_days(d, as_of=as_of)
+    val = (u["required"] >= 5 and not u["validation_is_possible"])
     return _v(agrees and now and consumed_ok and val,
+              untouched=u,
               item="multiplicity", n_candidates=n, candidates=named,
               count_agrees_with_the_list=agrees,
               recorded_before_any_draw=now,
@@ -265,6 +271,107 @@ def item_8_multiplicity(d: dict) -> dict:
               all_of_them_already_consumed=consumed_ok,
               consumed_elsewhere=c.get("already_consumed"),
               validation_needs_untouched_days=val)
+
+
+# ---------------------------------------------------- rule 35, both halves
+RESULT_LIMIT_FIELD = "validation_limit"
+LIMIT_REFUSAL = "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT"
+
+
+def untouched_complete_days(d: dict, as_of: str) -> dict:
+    """THE PROPERTY, COMPUTED -- how many COMPLETE untouched UTC days exist.
+
+    REV 149. This clause was checked as `"5" in <prose>`, which **"we have
+    5 llamas" satisfies**. That is rule 15's silent-checker failure wearing
+    a different hat: an instrument that cannot fail is not an instrument.
+
+    So it is counted now. A day is untouched when it is on or after the
+    PROTECTED-FROM date (rule 34) and not in the consumed list; it is
+    COMPLETE when it ends strictly before `as_of`. **`as_of` is a
+    PARAMETER, not the wall clock**, so the battery can drive both sides of
+    the predicate -- a cell whose verdict slides with the hour tests the
+    clock, not the code (DA 150's lesson, in my own module)."""
+    import datetime as _dt
+    c = d.get("consumed_days") or {}
+    prot = c.get("protected_from_utc_date")
+    if not prot:
+        raise DesignRefused(
+            "PARTIAL INPUT: the declaration names no `protected_from_utc_"
+            "date`, so the untouched set has no start and cannot be "
+            "counted. Rule 34 makes that a hard boundary, not a default.")
+    consumed = set(c.get("already_consumed") or []) | set(
+        c.get("september_days_consumed_by_this_programme") or [])
+    start = _dt.date.fromisoformat(prot)
+    today = _dt.date.fromisoformat(as_of)
+    days, cur = [], start
+    while cur < today:                       # strictly before => COMPLETE
+        if cur.isoformat() not in consumed:
+            days.append(cur.isoformat())
+        cur += _dt.timedelta(days=1)
+    need = int(c.get("min_untouched_complete_days", 5))
+    #: and the DATE the bar is reached, so the answer is a plan and not
+    #: just a refusal.
+    reach, k, probe = None, 0, start
+    while k < need and (probe - start).days < 400:
+        if probe.isoformat() not in consumed:
+            k += 1
+        probe += _dt.timedelta(days=1)
+    if k >= need:
+        reach = probe.isoformat()
+    return {"as_of": as_of, "protected_from": prot,
+            "n_untouched_complete_days": len(days),
+            "untouched_complete_days": days,
+            "required": need,
+            "validation_is_possible": len(days) >= need,
+            "date_the_bar_is_reached": reach,
+            "why": ("counted, never matched as text -- REV 149's falsifier "
+                    "for the old check was 'we have 5 llamas'")}
+
+
+def require_validation_limit(result: dict, d: dict) -> dict:
+    """RULE 35: THE LIMIT TRAVELS ON THE RESULT, OR THE RESULT DOES NOT EMIT.
+
+    The cannot-validate limit lived in the declaration and nothing made the
+    null's OUTPUT carry it, so a reader holding the number and not the
+    document could take a null result as validation. **A reader resolves
+    FIELDS; nobody reads the design doc beside the number** (rule 13's
+    reasoning). This is the emitter guard: call it on every result before
+    publishing, and a result that cannot state its own limit REFUSES."""
+    v = (d.get("validation_limit") or {})
+    want = v.get("REQUIRED_VALUE")
+    if not want:
+        raise DesignRefused(
+            "PARTIAL INPUT: the declaration carries no REQUIRED_VALUE for "
+            f"`{RESULT_LIMIT_FIELD}`, so there is no limit to enforce and "
+            "this guard would admit everything.")
+    if not isinstance(result, dict):
+        raise DesignRefused("PARTIAL INPUT: the result is not a mapping.")
+    got = result.get(RESULT_LIMIT_FIELD)
+    if got is None:
+        raise DesignRefused(
+            f"REFUSED {LIMIT_REFUSAL}: this result carries no "
+            f"`{RESULT_LIMIT_FIELD}`. It runs on CONSUMED days and cannot "
+            f"validate anything; a number published without that field "
+            f"reads as a validated result to anyone who does not also have "
+            f"the declaration.")
+    if str(got).strip() != str(want).strip():
+        raise DesignRefused(
+            f"REFUSED {LIMIT_REFUSAL}: this result's "
+            f"`{RESULT_LIMIT_FIELD}` is not the declared limit. A limit "
+            f"paraphrased at the emit is a limit that can be softened at "
+            f"the emit.")
+    return {"field": RESULT_LIMIT_FIELD, "carried": True,
+            "value_matches_the_declaration": True}
+
+
+def stamp_validation_limit(result: dict, d: dict) -> dict:
+    """Attach the declared limit to a result, so producers can comply."""
+    v = (d.get("validation_limit") or {})
+    if not v.get("REQUIRED_VALUE"):
+        raise DesignRefused("PARTIAL INPUT: no REQUIRED_VALUE to stamp.")
+    out = dict(result)
+    out[RESULT_LIMIT_FIELD] = v["REQUIRED_VALUE"]
+    return out
 
 
 ITEMS = (item_1_permutation, item_2_matching, item_3_minimum_sample,
