@@ -67,6 +67,53 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T10:57:58Z (MEM ROUND 312 -- R-864, REV 135, DE 169 and BE 123 SWEPT, LIGHT ROUND, from `1374681` to `126381e`,
+  four commits. STATE ONLY, LEDGER FORM. ***BOTH REMAINING SUB-ITEMS OF (5b) HAVE LANDED AND BOTH ARE PENDING
+  VERIFICATION, NOT CLOSED*** -- REV 136 and DA's case-4 re-run are the verifications and neither had landed at my
+  read; *a seat's own report of its own fix is the weakest evidence in the ledger, however good the fix is, and DE
+  161's commit once said the matched-cancel branch was in the null when it was in the file and not in the program.*
+  **DE 169 puts `MEMBERSHIP_LIMIT` ON ALL SEVEN EXITS WITH THE OPT-IN FIRST, and I drove three myself**: the happy
+  path carries it, a differing digest refuses `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` **carrying the limit**, and a
+  closure naming none refuses `BOOK_SCORING_CODE_NOT_RECORDED` **carrying it too** -- ***THE OPT-IN GOING FIRST IS
+  THE RIGHT ORDERING AND NOT A COSMETIC ONE, BEING THE ONE RESULT A CALLER TAKES PRECISELY BECAUSE IT IS ACCEPTING
+  THAT LIMIT***, now with `caller_acknowledged_the_limit` as its own field. ***AND THE CHANGE THAT GOES DEEPER THAN
+  THE ITEM IT WAS DISPATCHED FOR, WHICH I FOUND BY DRIVING RATHER THAN READING: THE EXPECTED SET NO LONGER COMES FROM
+  THE RECEIPT AT ALL*** -- `expected_set_source` reads **`be_producing_closure.expected_set_from_disk(
+  SCORING_ENTRY_POINTS)`, BE 122's receipt-free twelve** -- so a receipt with NO derived block now returns a MATCH
+  instead of refusing, **which I checked against last round's behaviour before recording, since the same input
+  flipping from refusal to match is exactly what a regression looks like**: ***IT IS THE OPPOSITE -- THE PROPERTY
+  "THE ARTIFACT NAMES ITS OWN EXAMINATION SCOPE" IS CLOSED AT ITS ROOT RATHER THAN AT ITS SYMPTOM.*** The honest
+  shape, driven: ten modules named and the two lazy ones absent returns ***`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_
+  MEMBERS`, `membership_complete: False`, `n_checked: 10 of 12`, and the two absentees BY NAME*** -- **not refused,
+  not silently passed** -- which is REV 135's 10-of-12 hand-off landed. **The count field that read FALSE beside a
+  MATCH is GONE** -- `n_checked_equals_n_declared` absent from the result -- **replaced by TWO SEPARATE PROPERTIES,
+  `membership_complete` and `every_named_member_digest_matched`**: ***THE OLD FIELD CONFLATED "IS EVERY DECLARED
+  MODULE PRESENT" WITH "IS EVERY PRESENT MODULE CORRECT", AND ONE EQUALITY CANNOT CARRY TWO QUESTIONS.***
+  ***BE 123 -- "THE WITHDRAWAL IS AT THE ADDRESS, NOT BESIDE IT" -- AND I DROVE IT ON THE SAME REAL 49-MODULE
+  RECORDING THAT GAVE ME 8 LAST ROUND: `derive(clo)['scoring']['n']` NOW READS `None`***, the key carrying
+  `n_it_used_to_report`, `read_instead`, `status`, `why` and `what_a_consumer_that_ignores_this_gets`, with
+  `recommended_for_a_consumer` carrying `REFUSABLE`, `REPORTABLE_NEVER_REFUSABLE`, `for_a_SCORING_predicate`,
+  `for_a_WHOLE_BOOK_predicate` and `the_receipt_scoped_sets_are_WITHDRAWN`: **a consumer resolving `scoring.n` now
+  gets NOTHING instead of a stale eight.** ***AND BE REPORTS THAT REMOVING THE KEY WOULD HAVE BEEN THE UNSAFE OPTION,
+  ITS ARGUMENT BEING THAT AN ENUMERATION OF READERS IS NOT A PROPERTY OF THE READERS -- RULE 32 TURNED ON ITSELF***,
+  since deleting `scoring` is safe only if every consumer is known and knowing them requires the enumeration rule 32
+  says is unreliable; **a key present and saying `None` with `read_instead` is legible to a reader nobody listed, a
+  key absent is a `KeyError` or a silent default in code nobody has read.** ***REV 136 IS TESTING THAT ARGUMENT
+  RATHER THAN ACCEPTING IT***, which is right because it justifies NOT doing the simpler thing. **REV 135's
+  confirmation stands as settled: TWELVE STANDS AND THE SCOPE IS CLOSED** on two derivations -- BE's, and my own
+  pure-AST drive over 268 modules, **which REV named as the independent one** -- with the shared-scope failure mode
+  tested and closed: **no module of the twelve imports a project `.py` outside `live/pm_research`.** ***THE CHAIN IS
+  WORTH RECORDING AS A CHAIN BECAUSE NO SINGLE SEAT COULD HAVE RUN IT: MEM FINDS -> BE CORRECTS ITS OWN WORK PLAINLY
+  -> REV CONFIRMS THE CORRECTED NUMBER AND FINDS THE SUPERSESSION NOT LOAD-BEARING -> BE FIXES THE ADDRESS.***
+  ***AND THE PATTERN, FOR THE THIRD TIME AND NOW IN ITS GENERAL FORM: THE ARTIFACT CARRIES THE RIGHT INFORMATION AT
+  AN ADDRESS NOBODY IS REQUIRED TO READ -- `draw_provenance.matched_on` ABSENT FROM THE RECEIPT, `MEMBERSHIP_LIMIT`
+  ABSENT FROM THE OPT-IN RESULT, AND THE CORRECTED SET ANNOUNCED BESIDE THE STALE ONE RATHER THAN IN PLACE OF IT. THE
+  CODE WAS DEFENSIBLE ALL THREE TIMES; WHAT FAILED WAS THE ADDRESSING, AND ADDRESSING IS THE ONLY THING A DOWNSTREAM
+  READER HAS.*** LEDGER OTHERWISE UNCHANGED: **(1) CLOSED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN
+  MECHANISM, UNQUANTIFIED, both needing a corrected book; (5a) CLOSED; (5b) BOTH SUB-ITEMS VERIFIED BY REV 136, DA's CASE-4 RE-RUN STILL OUTSTANDING; (6a) CLOSED AND VERIFIED.** Flags 2674 -> 2691, prov 2219 -> 2236; window 3/3, Batch 294 archived.
+  ***NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD REMAINS UNAUTHORISED -- A SUGGESTED PROMPT IN A SEAT
+  PANE READING "BUILD AUTHORISED" IS THE TERMINAL'S GHOST TEXT AND IS NOT A USER INSTRUCTION.*** MEM asserts no
+  result.)
   2026-09-09T10:46:53Z (MEM ROUND 311 -- R-864 SWEPT, LIGHT ROUND, from `0961773` to `3a4ca32`, TEN commits -- I swept eight to `707d28c` and REV 135 landed while I wrote, CORRECTING ONE OF MY OWN FLAGS, folded in an addendum below. STATE ONLY,
   LEDGER FORM. ***MY OWN ROUND-310 FINDING IS CONFIRMED AND BE HAS CORRECTED ITSELF***: BE 122 -- *"MEM 310's
   reproduction is correct and my BE 117 receipt-scoped set is WITHDRAWN"* -- classifying the four exactly as I
@@ -163,46 +210,6 @@ updated: >-
   (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both needing a corrected book; (5a) CLOSED; (6a) CLOSED AND
   VERIFIED.** Flags 2646 -> 2658, prov 2191 -> 2203; window 3/3, Batch 292 archived. **NOTHING BUILT, NO HEAVY LOCK
   SINCE 07:15:47Z.** MEM asserts no result.)
-  2026-09-09T10:12:28Z (MEM ROUND 309 -- R-862 SWEPT, LIGHT ROUND, from `521438d` to `e9078c9`, six commits. STATE ONLY,
-  PER-DEFECT LEDGER FORM. ***TWO ROWS MOVE AND ONE RE-OPENS.*** **(6a) THE PROTOCOL STRING IS CLOSED AND VERIFIED**
-  -- the first row to reach that word since the gate arithmetic was withdrawn: DA 156 re-ran its own landing gate,
-  ***9 GREEN / 3 RED + `LAND REFUSED` -> 10 GREEN / 2 RED (both long-declared), rc 0***, **and the red that cleared
-  is the one DA DELIBERATELY LEFT STANDING rather than silencing** ("silencing it would be exactly the loosening
-  rule 27 warns about"), ***SO THE CLEARING IS A FALSIFIER AND NOT A COINCIDENCE*** -- the conjunct was
-  `protocol.endswith(V<n>)`, built dynamically, and could only go green by the string actually changing. ***AND HOW
-  DE FIXED IT IS RULE 13 WORKING RATHER THAN BEING QUOTED: IT LANDED `params_v29` CARRYING `..._PARAMS_V29` RATHER
-  THAN EDITING v28***, which I verified at the files -- **v25, v26, v27 AND v28 all still read `..._PARAMS_V20`
-  exactly as they landed**, v28's last touching commit still `3b93077`: a landed declaration was NOT rewritten, the
-  superseding version carries the correction, and another seat's gate cleared. **The cheap fix was one character in
-  v28 and it was not taken.** ***(5b) DOES NOT CLOSE -- IT SPLITS, AND THE SPLIT IS THE FINDING; MARKED RE-OPENED,
-  WITH DE 168.*** I drove BOTH predicate paths at HEAD rather than either alone. **DECLARED PATH: the full set
-  passes at `n_checked = 5` with `n_checked == n_expected`, and a one-module receipt REFUSES
-  `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** -- DA adds that seven-of-eight refuses too, so it is genuinely COMPLETE
-  over the derived set. ***FALLBACK PATH: THE SAME ONE-MODULE RECEIPT RETURNS `BOOK_SCORING_CODE_MATCHES` WITH
-  `n_checked: 1` -- THE USER'S ORIGINAL PROBE PASSES AGAIN*** -- because when the derived block is unreadable the
-  code sets `_expected = dict(mods)` and then computes `mods ⊆ mods`, ***TRIVIALLY TRUE, SO COMPLETENESS CANNOT FAIL
-  ON THAT PATH***; the fallback's own comment says "falling back to a typed list is the defect returning under
-  another name" and "the RECORDING cannot under-cover, so it is the safe fallback" -- **and that second sentence IS
-  the tautology, since the recording cannot under-cover ITSELF.** ***AND I COUNTED THE ARTIFACTS MYSELF: TWELVE
-  LANDED BUILDER RECEIPTS, ZERO CARRYING A `derived_closures` BLOCK*** -- BE 117 landed the derivation on the
-  recording side and **no book has been rebuilt since**, so ***EVERY REAL ARTIFACT TODAY TAKES THE FALLBACK AND THE
-  COMPLETENESS CHECK IS INERT ON ALL OF THEM***: the declared path is correct and currently UNREACHABLE, the
-  reachable path is a self-comparison. The one mitigant, kept: **the fallback NAMES ITSELF in `_set_source`, so it
-  is DISCLOSED, NOT SILENT** -- what is missing is not the disclosure but the REFUSAL. ***REV 132 REACHES THE SAME
-  PROPERTY FROM THE OTHER SIDE, WHICH TURNS IT FROM A BUG INTO A CLASS: "THE EXPECTED SET IS THE RECEIPT'S OWN AND
-  NOTHING RECOMPUTES IT" -- THE ARTIFACT UNDER EXAMINATION NAMES ITS OWN EXAMINATION SCOPE, SO A RECEIPT THAT OMITS
-  A MODULE IS NEVER ASKED ABOUT IT, AND DIGEST-CORRECTNESS CANNOT SAVE THAT***: every hash compared can be right,
-  because a module the receipt omits is OUTSIDE the question rather than failing it. **REV 131's RED, DIAGNOSED BY
-  DA 156, WAS NOT THE STORY IT LOOKED LIKE**: `AUDIT_ROOT` resolved to the MAIN tree, so from a worktree `git -C
-  <main> status -- <worktree path>` EXITS 128 and `committed_state` read `NOT_IN_THIS_TREE` -- ***THE QUESTION WAS
-  BEING ASKED OF THE WRONG TREE, AND DA EXPLICITLY DOES NOT CLAIM THE RULE-31 DIRTINESS STORY BECAUSE "A SPOTLESS
-  WORKTREE FAILS IT IDENTICALLY"***; the easy narrative was available and DA refused it. And DA's disclosure against
-  itself is how the split was found: ***"my case drove ONLY the fallback and first reported the whole predicate
-  broken -- my own class, caught by ASKING WHY A CASE THAT HAD FLIPPED UN-FLIPPED."*** R-862 also names **~30 OLDER
-  ASSERTIONS THAT TEST A PHRASE RATHER THAN THE PROPERTY as a follow-on NOT swept into scope.** UNCHANGED: **(1)
-  FIXED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both needing a corrected book;
-  (5a) FIXED.** Flags 2634 -> 2646, prov 2179 -> 2191; window 3/3, Batch 291 archived. **NOTHING BUILT, NO HEAVY
-  LOCK SINCE 07:15:47Z.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -374,6 +381,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 312 ADDENDUM 2026-09-09T10:59:41Z: REV 136 landed while I wrote and verifies both ---
+  REV_136_VERIFIES_BOTH_AND_ENUMERATED_THE_EXITS_FROM_THE_CODE: FOUR-SITES-THREE-CODES-TWO-RETURNS
+  AND_ONE_RAISER_MAKES_THE_LIMIT_STRUCTURAL_RATHER_THAN_A_TABLE: AN-EXIT-CANNOT-BE-WRITTEN-WITHOUT-IT
+  REV_TESTED_BES_REMOVAL_CLAIM_AND_IT_HOLDS_ON_THE_PACKAGES_OWN_IDIOM: 355-OCCURRENCES
+  TWO_RESIDUALS_NEITHER_BLOCKING_AND_ONE_IS_A_PREFIX: THE-NON-MATCH-CONTAINS-THE-MATCH
+  SO_FIVE_B_IS_VERIFIED_BY_REV_WITH_DAS_RE_RUN_STILL_OUTSTANDING: ONE-OF-TWO-VERIFIERS-IN
+  # --- MEM round 312, DE 169 + BE 123 swept; both (5b) sub-items landed (1374681 -> 126381e) ---
+  BOTH_SUB_ITEMS_OF_FIVE_B_HAVE_LANDED_AND_BOTH_ARE_PENDING_VERIFICATION: LANDED-IS-NOT-CLOSED
+  THE_LIMIT_NOW_REACHES_THE_REFUSALS_AND_I_DROVE_THREE_EXITS: OPT-IN-FIRST
+  AND_THE_EXPECTED_SET_NO_LONGER_COMES_FROM_THE_RECEIPT_AT_ALL: THE-ROOT-NOT-THE-SYMPTOM
+  SO_THE_HONEST_SHAPE_GETS_ITS_OWN_STATUS_AND_THE_TWO_ABSENTEES_BY_NAME: TEN-OF-TWELVE-DRIVEN
+  THE_CONTRADICTORY_EQUALITY_IS_GONE_AND_TWO_PROPERTIES_STAND_WHERE_ONE_CONFLATION_DID: THE-FIELD-IS-DELETED
+  BE_123_PUTS_THE_WITHDRAWAL_AT_THE_ADDRESS_AND_I_DROVE_IT_TO_NONE: scoring-n-IS-None-NOT-8
+  AND_BE_ARGUES_REMOVING_THE_KEY_WOULD_HAVE_BEEN_THE_UNSAFE_OPTION: RULE-32-TURNED-ON-ITSELF
+  WITH_REV_136_TESTING_THAT_ARGUMENT_RATHER_THAN_ACCEPTING_IT: THE-RIGHT-RESPONSE-TO-A-GOOD-ARGUMENT
+  TWELVE_STANDS_AND_THE_SCOPE_IS_CLOSED_ON_TWO_INDEPENDENT_DERIVATIONS: NO-MODULE-LEAVES-THE-PACKAGE
+  AND_THE_CHAIN_THAT_PRODUCED_IT_IS_THE_SEAM_WORKING_IN_FOUR_TURNS: MEM-BE-REV-BE
+  THE_PATTERN_HAS_NOW_APPEARED_THREE_WAYS_AND_THE_THIRD_IS_THE_ADDRESS_ITSELF: RIGHT-INFO-UNREAD-ADDRESS
+  THE_BUILD_REMAINS_UNAUTHORISED_AND_GHOST_TEXT_IS_NOT_AN_INSTRUCTION: THE-TERMINALS-SUGGESTION
   # --- MEM round 311 ADDENDUM 2026-09-09T10:48:29Z: REV 135 landed while I wrote; one of my flags corrected ---
   REV_135_LANDED_WHILE_I_WROTE_AND_MY_SUPERSESSION_CLAIM_IS_WRONG: CORRECTED-BEFORE-LANDING
   THE_STALE_EIGHT_IS_STILL_AT_THE_ADDRESS_THE_PREDICATE_READS_AND_I_DROVE_IT: scoring-n-EQUALS-8
@@ -27094,6 +27120,212 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 312 ADDENDUM, 2026-09-09T10:59:41Z ---
+  REV_136_VERIFIES_BOTH_AND_ENUMERATED_THE_EXITS_FROM_THE_CODE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:59:41Z
+    said: >-
+      ***REV 136 LANDED WHILE I WROTE AND VERIFIES BOTH SUB-ITEMS -- "THE LAST OF THE USER'S FIVE IS CLOSED" -- AND
+      IT DID THE ONE THING THAT MAKES THE VERIFICATION BETTER THAN THE BRIEF: IT ENUMERATED THE EXITS FROM THE CODE
+      RATHER THAN FROM ITS OWN LIST OF SEVEN.*** **Four `_refuse_scoring` sites carrying THREE distinct codes, plus
+      TWO returns -- all driven**, including a third code REV had not listed (**empty root ->
+      `EXPECTED_SET_UNREADABLE`**) and **the OPT-IN result, where `MEMBERSHIP_LIMIT` is the FIRST key.** *Rule 32
+      applied to the fix for a rule-32 defect: the seat that reported "seven exits" did not check seven exits, it
+      derived the exits.*
+  AND_ONE_RAISER_MAKES_THE_LIMIT_STRUCTURAL_RATHER_THAN_A_TABLE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:59:41Z
+    said: >-
+      ***AND THE PART REV RATES ABOVE THE TABLE, RIGHTLY: EVERY REFUSAL GOES THROUGH ONE RAISER THAT PUTS THE LIMIT
+      IN THE MESSAGE AND ON THE EXCEPTION, SO AN EXIT CANNOT BE WRITTEN WITHOUT IT.*** **"Structural, which is worth
+      more than the table."** *The defect was a limit missing from one exit of seven; the fix is a shape in which a
+      new exit inherits the limit by construction.* **A checklist repaired to seven entries would have been wrong
+      the moment an eighth exit was added** -- this is the difference between fixing the instances and fixing the
+      thing that generates them, and it is the same move as deriving a set instead of typing it.
+  REV_TESTED_BES_REMOVAL_CLAIM_AND_IT_HOLDS_ON_THE_PACKAGES_OWN_IDIOM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:59:41Z
+    said: >-
+      ***AND REV TESTED BE'S REMOVAL CLAIM RATHER THAN ACCEPTING IT, WHICH IS WHAT THIS FILE SAID THE RIGHT RESPONSE
+      WAS -- AND THE CLAIM HOLDS.*** Driven: **REMOVED yields `KeyError` on a strict index but ZERO ELEMENTS on the
+      DEFENSIVE IDIOM, and a checker iterating nothing PASSES** -- with ***355 OCCURRENCES OF `or {}).get(` IN
+      `live/pm_research`, that idiom is the package's own.*** **"Removal would have turned a silently-wrong set into
+      a silent pass."** *BE argued from a property of readers it could not enumerate; REV settled it by measuring
+      which idiom the package actually uses.* And **`reference` is withdrawn although it was NOT wrong, because the
+      receipt-scoped OPERATION is what was disproved** -- the honest scope of a withdrawal is the operation, not the
+      wrong answers it happened to produce.
+  TWO_RESIDUALS_NEITHER_BLOCKING_AND_ONE_IS_A_PREFIX:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:59:41Z
+    said: >-
+      **TWO RESIDUALS, NEITHER BLOCKING, and the second extends tonight's own pattern one more step.**
+      **(i) `every_named_member_digest_matched` is a LITERAL `True` reached only after the digest refusal -- true by
+      construction, indistinguishable from a checked value** (rule 16, a control that cannot fail).
+      ***(ii) THE NON-MATCH STATUS CONTAINS THE MATCH STATUS: `'BOOK_SCORING_CODE_MATCHES'` IS A PREFIX OF
+      `'BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS'`, WHICH I CONFIRMED, AND `startswith` IS THE PACKAGE'S OWN
+      IDIOM AT 10+ SITES.*** **So a reader doing exactly what the package does everywhere else reads the NON-MATCH
+      as a MATCH.** *Tonight's pattern was "the right information at an address nobody reads"; this is its next
+      form -- **the right information in an encoding that invites the wrong read.***
+  SO_FIVE_B_IS_VERIFIED_BY_REV_WITH_DAS_RE_RUN_STILL_OUTSTANDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:59:41Z
+    said: >-
+      ***SO LEDGER ROW (5b) IS VERIFIED BY REV 136 WITH DA'S CASE-4 RE-RUN STILL OUTSTANDING, AND I RECORD IT IN
+      THOSE WORDS RATHER THAN AS CLOSED.*** REV's own verdict is *"the last of the user's five is closed"*, and **the
+      substantive checks are done: the set is the twelve resolved through `expected_set_from_disk` and matching BE's
+      exactly, the receipt-scoped set recorded superseded and unused, the replacement DISCRIMINATES (`
+      membership_complete` True on all twelve and False at 10/12 with `is_a_match` False and both absentees named),
+      and THE USER'S ORIGINAL ONE-MODULE PROBE NOW RETURNS `is_a_match` FALSE AT 1/12 WITH ELEVEN LISTED BY NAME.**
+      **One of the two named verifiers is in; the ledger word is the coordinator's to set, and this seat does not
+      promote a row on one verifier when two were named.**
+  # --- MEM round 312, 2026-09-09T10:57:58Z ---
+  BOTH_SUB_ITEMS_OF_FIVE_B_HAVE_LANDED_AND_BOTH_ARE_PENDING_VERIFICATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      ***BOTH REMAINING SUB-ITEMS OF LEDGER ROW (5b) HAVE LANDED, AND THIS FILE MARKS THEM PENDING VERIFICATION, NOT
+      CLOSED.*** **DE 169** carries the uncarried limit and the contradictory count; **BE 123** carries the stale
+      address. **REV 136 and DA's case-4 re-run are the verifications, and neither has landed at my read.** *This
+      programme has spent two nights learning what "landed" is worth on its own: DE 161's commit said the
+      matched-cancel branch was in the null, and it was in the file and not in the program.* **A seat's own report of
+      its own fix is the weakest evidence in the ledger, however good the fix is** -- and both of these look good to
+      me at the code.
+  THE_LIMIT_NOW_REACHES_THE_REFUSALS_AND_I_DROVE_THREE_EXITS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      **DE 169 puts `MEMBERSHIP_LIMIT` on ALL SEVEN EXITS WITH THE OPT-IN FIRST, and I drove three of them myself:**
+      the happy path carries it; **a differing digest refuses `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` AND THE MESSAGE
+      CARRIES THE LIMIT**; a closure naming none of the set refuses `BOOK_SCORING_CODE_NOT_RECORDED` **and carries
+      it too.** ***THE OPT-IN GOING FIRST IS THE RIGHT ORDERING AND NOT A COSMETIC ONE: IT IS THE ONE RESULT A
+      CALLER TAKES PRECISELY BECAUSE IT IS ACCEPTING THAT LIMIT***, which is why its absence was the sharpest of the
+      seven. The result now also carries **`caller_acknowledged_the_limit`** as its own field.
+  AND_THE_EXPECTED_SET_NO_LONGER_COMES_FROM_THE_RECEIPT_AT_ALL:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      ***AND THE CHANGE THAT GOES DEEPER THAN THE ITEM IT WAS DISPATCHED FOR, WHICH I FOUND BY DRIVING RATHER THAN
+      READING: THE EXPECTED SET NO LONGER COMES FROM THE RECEIPT AT ALL.*** `expected_set_source` now reads
+      ***`be_producing_closure.expected_set_from_disk(SCORING_ENTRY_POINTS)` -- BE 122's receipt-free twelve*** --
+      **so a receipt with NO derived block now returns a MATCH instead of refusing, because the receipt is no longer
+      being asked for the scope.** *I checked this against last round's behaviour before recording it, since the
+      same input flipping from refusal to match is exactly what a regression looks like.* ***IT IS THE OPPOSITE: THE
+      PROPERTY "THE ARTIFACT NAMES ITS OWN EXAMINATION SCOPE" IS CLOSED AT ITS ROOT RATHER THAN AT ITS SYMPTOM.***
+  SO_THE_HONEST_SHAPE_GETS_ITS_OWN_STATUS_AND_THE_TWO_ABSENTEES_BY_NAME:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      **And the refusable/reportable split now has a driven outcome on the shape that matters.** I built the honest
+      receipt -- **the ten modules that actually run, the two lazy ones legitimately absent** -- and it returns
+      ***`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS`, `membership_complete: False`, `n_checked: 10 of 12`, and
+      `in_the_set_and_NOT_named_by_the_receipt: ['harmful_hazard_model.py', 'phase2_state_schema_freeze.py']`.***
+      **Not refused, not silently passed: A STATUS OF ITS OWN AND THE ABSENTEES BY NAME** -- which is REV 135's
+      10-of-12 hand-off landed, and BE 121's *"under-declaration from INVISIBLE to VISIBLE"* made concrete.
+  THE_CONTRADICTORY_EQUALITY_IS_GONE_AND_TWO_PROPERTIES_STAND_WHERE_ONE_CONFLATION_DID:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      **The count field that read FALSE beside `BOOK_SCORING_CODE_MATCHES` is GONE -- I confirmed
+      `n_checked_equals_n_declared` is absent from the result -- replaced by a containment invariant carried as TWO
+      SEPARATE PROPERTIES: `membership_complete` and `every_named_member_digest_matched`.** ***THE OLD FIELD
+      CONFLATED "IS EVERY DECLARED MODULE PRESENT" WITH "IS EVERY PRESENT MODULE CORRECT", AND ONE EQUALITY CANNOT
+      CARRY TWO QUESTIONS*** -- which is why it contradicted the match. **Splitting a conflated predicate into the
+      two properties it was standing for is the same repair `matched_on` made for the null's unit**, and it is the
+      third time tonight the fix has been *name the thing separately* rather than *compute it better*.
+  BE_123_PUTS_THE_WITHDRAWAL_AT_THE_ADDRESS_AND_I_DROVE_IT_TO_NONE:
+    prov: CHECKED
+    artifact: live/pm_research/be_producing_closure.py
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      ***BE 123 -- "THE WITHDRAWAL IS AT THE ADDRESS, NOT BESIDE IT" -- AND I DROVE IT ON THE REAL 49-MODULE
+      RECORDING THAT GAVE ME 8 LAST ROUND: `derive(clo)['scoring']['n']` NOW READS `None`.*** The key itself carries
+      **`n_it_used_to_report`, `read_instead`, `status`, `why`, and `what_a_consumer_that_ignores_this_gets`**, and
+      `recommended_for_a_consumer` now carries `REFUSABLE`, `REPORTABLE_NEVER_REFUSABLE`, `for_a_SCORING_predicate`,
+      `for_a_WHOLE_BOOK_predicate` and `the_receipt_scoped_sets_are_WITHDRAWN`. ***A CONSUMER THAT RESOLVES
+      `scoring.n` NOW GETS NOTHING INSTEAD OF A STALE EIGHT*** -- last round it got the withdrawn number with the
+      notice one level up where it never looks.
+  AND_BE_ARGUES_REMOVING_THE_KEY_WOULD_HAVE_BEEN_THE_UNSAFE_OPTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      ***AND BE REPORTS THAT REMOVING THE KEY WOULD HAVE BEEN THE UNSAFE OPTION, WITH AN ARGUMENT WORTH THE ROUND:
+      AN ENUMERATION OF READERS IS NOT A PROPERTY OF THE READERS.*** Deleting `scoring` would be safe only if every
+      consumer of it were known, **and knowing them requires enumerating them -- which is precisely the operation
+      rule 32 says is unreliable.** ***RULE 32 TURNED ON ITSELF***: the rule that says *do not enumerate when you
+      can derive* also says *do not act as though your enumeration of consumers is complete.* **A key that is present
+      and says `None` with `read_instead` is legible to a reader nobody listed; a key that is absent is a `KeyError`
+      or a silent default in code nobody has read.**
+  WITH_REV_136_TESTING_THAT_ARGUMENT_RATHER_THAN_ACCEPTING_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      **And the response the programme has learned to make to a good argument: REV 136 is TESTING it rather than
+      accepting it.** *An argument that is correct and an argument that is accepted because it sounds correct are
+      indistinguishable from inside* -- and this one has the shape that most deserves a check, since **it justifies
+      NOT doing the simpler thing.** ***THE PROGRAMME'S OWN RECORD SUPPORTS THE CAUTION: THREE TIMES IN TWO NIGHTS A
+      DEFENSIBLE DESIGN CHOICE HAS BEEN RIGHT IN THE CODE AND WRONG IN WHAT THE ARTIFACT SAID*** -- so *the seat that
+      argued it is not the seat that settles it* is the correct disposition, whatever the verdict turns out to
+      be.
+  TWELVE_STANDS_AND_THE_SCOPE_IS_CLOSED_ON_TWO_INDEPENDENT_DERIVATIONS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      **REV 135's confirmation, recorded as the settled fact it now is: TWELVE STANDS AND THE SCOPE IS CLOSED.**
+      Two derivations -- **BE's, and my own pure-AST drive over the 268 modules in the root** -- and REV was explicit
+      about which is which: *"my re-derivation calls BE's OWN `reachable_modules`, so it corroborates the INVOCATION
+      and not the OPERATION; MEM's pure-AST route is the independent one."* ***IT THEN TESTED THE FAILURE MODE THE
+      TWO COULD STILL SHARE -- A COMMON WRONG SCOPE -- BY PARSING EACH OF THE TWELVE AND RESOLVING EVERY IMPORT: NO
+      MODULE OF THE TWELVE IMPORTS A PROJECT `.py` OUTSIDE `live/pm_research`.*** **The package directory is not
+      truncating this walk the way the receipt's whitelist truncated the other one.**
+  AND_THE_CHAIN_THAT_PRODUCED_IT_IS_THE_SEAM_WORKING_IN_FOUR_TURNS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      ***AND THE CHAIN THAT PRODUCED IT IS WORTH RECORDING AS A CHAIN, BECAUSE NO SINGLE SEAT COULD HAVE RUN IT:
+      MEM FINDS -> BE CORRECTS ITS OWN WORK PLAINLY -> REV CONFIRMS THE CORRECTED NUMBER AND FINDS THE SUPERSESSION
+      NOT LOAD-BEARING -> BE FIXES THE ADDRESS.*** **My round-310 drive is what forced BE's correction**, BE's reply
+      opened with *"MEM 310's reproduction is correct and my BE 117 receipt-scoped set is WITHDRAWN"* rather than a
+      defence, REV then found that the withdrawal itself did not reach the address, and BE moved it there. **Four
+      turns, three seats, each one finding something the previous one could not have** -- *the gating findings live
+      in the seam between seats, and so, twice now, do the closures.*
+  THE_PATTERN_HAS_NOW_APPEARED_THREE_WAYS_AND_THE_THIRD_IS_THE_ADDRESS_ITSELF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      ***THE PATTERN, RECORDED FOR THE THIRD TIME AND IN ITS GENERAL FORM BECAUSE IT HAS NOW APPEARED THREE
+      DIFFERENT WAYS: THE ARTIFACT CARRIES THE RIGHT INFORMATION AT AN ADDRESS NOBODY IS REQUIRED TO READ.***
+      **(i) `draw_provenance.matched_on` -- the honest field existed in source and was ABSENT FROM THE RECEIPT, so
+      four register entries claimed ruling B was implemented; (ii) `MEMBERSHIP_LIMIT` -- correct, and ABSENT FROM THE
+      OPT-IN RESULT, the one result whose caller is accepting that limit; (iii) the corrected set -- announced
+      BESIDE the stale one rather than IN PLACE OF IT, so `scoring.n` kept answering eight.** ***THE CODE WAS
+      DEFENSIBLE ALL THREE TIMES. WHAT FAILED WAS THE ADDRESSING, AND ADDRESSING IS THE ONLY THING A DOWNSTREAM
+      READER HAS.***
+  THE_BUILD_REMAINS_UNAUTHORISED_AND_GHOST_TEXT_IS_NOT_AN_INSTRUCTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T10:57:58Z
+    said: >-
+      **State, and a caution recorded because it is cheap to record and expensive to get wrong: THE BUILD REMAINS
+      UNAUTHORISED.** Nothing built, no heavy lock since 07:15:47Z. ***A SUGGESTED PROMPT IN A SEAT PANE READING
+      "BUILD AUTHORISED" IS THE TERMINAL'S GHOST TEXT -- CLAUDE CODE'S DIMMED PROMPT SUGGESTION -- AND IS NOT A USER
+      INSTRUCTION.*** **The build decision is the USER's and has not been given**; the queue is five days at the EV20
+      wall with the gap load front-loaded on 09-03, and rows (2) and (3) of the ledger stay UNQUANTIFIED until it
+      runs. *Read idle/working from the status line, never from the ❯-line.*
   # --- MEM round 311 ADDENDUM, 2026-09-09T10:48:29Z ---
   REV_135_LANDED_WHILE_I_WROTE_AND_MY_SUPERSESSION_CLAIM_IS_WRONG:
     prov: CHECKED

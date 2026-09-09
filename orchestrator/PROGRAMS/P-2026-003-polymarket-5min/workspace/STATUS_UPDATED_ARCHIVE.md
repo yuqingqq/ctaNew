@@ -21565,3 +21565,48 @@ generation and the window went 4 → 3. Nothing rewritten.
   timing enters -- **two seats, two methods, one answer.** Flags 2622 -> 2634, prov 2167 -> 2179; window 3/3, Batch
   290 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
 ```
+
+## Batch 294 — archived 2026-09-09T10:57:58Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T10:12:28Z (MEM ROUND 309 -- R-862 SWEPT, LIGHT ROUND, from `521438d` to `e9078c9`, six commits. STATE ONLY,
+  PER-DEFECT LEDGER FORM. ***TWO ROWS MOVE AND ONE RE-OPENS.*** **(6a) THE PROTOCOL STRING IS CLOSED AND VERIFIED**
+  -- the first row to reach that word since the gate arithmetic was withdrawn: DA 156 re-ran its own landing gate,
+  ***9 GREEN / 3 RED + `LAND REFUSED` -> 10 GREEN / 2 RED (both long-declared), rc 0***, **and the red that cleared
+  is the one DA DELIBERATELY LEFT STANDING rather than silencing** ("silencing it would be exactly the loosening
+  rule 27 warns about"), ***SO THE CLEARING IS A FALSIFIER AND NOT A COINCIDENCE*** -- the conjunct was
+  `protocol.endswith(V<n>)`, built dynamically, and could only go green by the string actually changing. ***AND HOW
+  DE FIXED IT IS RULE 13 WORKING RATHER THAN BEING QUOTED: IT LANDED `params_v29` CARRYING `..._PARAMS_V29` RATHER
+  THAN EDITING v28***, which I verified at the files -- **v25, v26, v27 AND v28 all still read `..._PARAMS_V20`
+  exactly as they landed**, v28's last touching commit still `3b93077`: a landed declaration was NOT rewritten, the
+  superseding version carries the correction, and another seat's gate cleared. **The cheap fix was one character in
+  v28 and it was not taken.** ***(5b) DOES NOT CLOSE -- IT SPLITS, AND THE SPLIT IS THE FINDING; MARKED RE-OPENED,
+  WITH DE 168.*** I drove BOTH predicate paths at HEAD rather than either alone. **DECLARED PATH: the full set
+  passes at `n_checked = 5` with `n_checked == n_expected`, and a one-module receipt REFUSES
+  `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`** -- DA adds that seven-of-eight refuses too, so it is genuinely COMPLETE
+  over the derived set. ***FALLBACK PATH: THE SAME ONE-MODULE RECEIPT RETURNS `BOOK_SCORING_CODE_MATCHES` WITH
+  `n_checked: 1` -- THE USER'S ORIGINAL PROBE PASSES AGAIN*** -- because when the derived block is unreadable the
+  code sets `_expected = dict(mods)` and then computes `mods ⊆ mods`, ***TRIVIALLY TRUE, SO COMPLETENESS CANNOT FAIL
+  ON THAT PATH***; the fallback's own comment says "falling back to a typed list is the defect returning under
+  another name" and "the RECORDING cannot under-cover, so it is the safe fallback" -- **and that second sentence IS
+  the tautology, since the recording cannot under-cover ITSELF.** ***AND I COUNTED THE ARTIFACTS MYSELF: TWELVE
+  LANDED BUILDER RECEIPTS, ZERO CARRYING A `derived_closures` BLOCK*** -- BE 117 landed the derivation on the
+  recording side and **no book has been rebuilt since**, so ***EVERY REAL ARTIFACT TODAY TAKES THE FALLBACK AND THE
+  COMPLETENESS CHECK IS INERT ON ALL OF THEM***: the declared path is correct and currently UNREACHABLE, the
+  reachable path is a self-comparison. The one mitigant, kept: **the fallback NAMES ITSELF in `_set_source`, so it
+  is DISCLOSED, NOT SILENT** -- what is missing is not the disclosure but the REFUSAL. ***REV 132 REACHES THE SAME
+  PROPERTY FROM THE OTHER SIDE, WHICH TURNS IT FROM A BUG INTO A CLASS: "THE EXPECTED SET IS THE RECEIPT'S OWN AND
+  NOTHING RECOMPUTES IT" -- THE ARTIFACT UNDER EXAMINATION NAMES ITS OWN EXAMINATION SCOPE, SO A RECEIPT THAT OMITS
+  A MODULE IS NEVER ASKED ABOUT IT, AND DIGEST-CORRECTNESS CANNOT SAVE THAT***: every hash compared can be right,
+  because a module the receipt omits is OUTSIDE the question rather than failing it. **REV 131's RED, DIAGNOSED BY
+  DA 156, WAS NOT THE STORY IT LOOKED LIKE**: `AUDIT_ROOT` resolved to the MAIN tree, so from a worktree `git -C
+  <main> status -- <worktree path>` EXITS 128 and `committed_state` read `NOT_IN_THIS_TREE` -- ***THE QUESTION WAS
+  BEING ASKED OF THE WRONG TREE, AND DA EXPLICITLY DOES NOT CLAIM THE RULE-31 DIRTINESS STORY BECAUSE "A SPOTLESS
+  WORKTREE FAILS IT IDENTICALLY"***; the easy narrative was available and DA refused it. And DA's disclosure against
+  itself is how the split was found: ***"my case drove ONLY the fallback and first reported the whole predicate
+  broken -- my own class, caught by ASKING WHY A CASE THAT HAD FLIPPED UN-FLIPPED."*** R-862 also names **~30 OLDER
+  ASSERTIONS THAT TEST A PHRASE RATHER THAN THE PROPERTY as a follow-on NOT swept into scope.** UNCHANGED: **(1)
+  FIXED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both needing a corrected book;
+  (5a) FIXED.** Flags 2634 -> 2646, prov 2179 -> 2191; window 3/3, Batch 291 archived. **NOTHING BUILT, NO HEAVY
+  LOCK SINCE 07:15:47Z.** MEM asserts no result.)
+```

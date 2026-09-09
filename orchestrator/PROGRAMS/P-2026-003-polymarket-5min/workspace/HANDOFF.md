@@ -1,3 +1,145 @@
+# READ FIRST — round 312 (MEM, 2026-09-09T10:57:58Z, tip `126381e`)
+
+**R-864, REV 135, DE 169, BE 123 and REV 136 swept — five commits since `1374681`.** Light round, ledger form.
+
+*(I swept four to `46052e2`; **REV 136 landed while I wrote and VERIFIES BOTH sub-items** — addendum below.)*
+
+# THE PER-DEFECT LEDGER
+
+| # | defect | state |
+|---|---|---|
+| **1** | the cancel-matched null | **CLOSED, DOUBLE-VERIFIED** |
+| **2** | the inflated decision count | **FIXED IN MECHANISM**, **UNQUANTIFIED** |
+| **3** | the false cancel-matching premise | **HANDLED IN MECHANISM**, **UNQUANTIFIED** |
+| **5a** | the predicate accepting a subset | **CLOSED** |
+| **5b** | the predicate checking the wrong set | **BOTH SUB-ITEMS VERIFIED BY REV 136** — DA's case-4 re-run outstanding |
+| **6a** | the protocol string | **CLOSED AND VERIFIED** |
+
+**Landed is not closed.** *DE 161's commit once said the matched-cancel branch was in the null; it was in the file
+and not in the program.* **A seat's own report of its own fix is the weakest evidence in the ledger, however good the
+fix is** — and both of these look good to me at the code.
+
+## DE 169 — driven, three of the seven exits
+
+| exit | limit carried |
+|---|---|
+| happy path | **yes** |
+| differing digest → `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` | **yes** |
+| closure names none → `BOOK_SCORING_CODE_NOT_RECORDED` | **yes** |
+
+**The opt-in going first is the right ordering, not a cosmetic one: it is the one result a caller takes precisely
+because it is accepting that limit** — now with `caller_acknowledged_the_limit` as its own field.
+
+**⇒ And the change that goes deeper than the item it was dispatched for, found by driving:** `expected_set_source`
+now reads **`be_producing_closure.expected_set_from_disk(SCORING_ENTRY_POINTS)` — BE 122's receipt-free twelve.**
+**The expected set no longer comes from the receipt at all.** A receipt with no derived block now **matches** instead
+of refusing — *I checked that against last round's behaviour before recording it, because the same input flipping
+from refusal to match is what a regression looks like.* **It is the opposite: "the artifact names its own examination
+scope" is closed at its ROOT, not its symptom.**
+
+**The honest shape, driven** — ten named, two lazy ones absent:
+
+| field | value |
+|---|---|
+| status | **`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS`** |
+| `membership_complete` | **False** |
+| `n_checked` | **10 of 12** |
+| reported by name | **`harmful_hazard_model.py`, `phase2_state_schema_freeze.py`** |
+
+**Not refused, not silently passed** — REV 135's 10-of-12 hand-off, landed.
+
+**And the contradictory field is GONE:** `n_checked_equals_n_declared` is absent, replaced by **two properties** —
+`membership_complete` and `every_named_member_digest_matched`. ***The old field conflated "is every declared module
+present" with "is every present module correct", and one equality cannot carry two questions.***
+
+## BE 123 — the withdrawal is AT the address
+
+Driven on the same real 49-module recording that gave me **8** last round:
+
+| | last round | now |
+|---|---|---|
+| `derive(clo)['scoring']['n']` | **8** | **`None`** |
+| notice location | top-level sibling | **inside the key**: `n_it_used_to_report`, `read_instead`, `status`, `why` |
+
+**A consumer resolving `scoring.n` now gets nothing instead of a stale eight.**
+
+**And BE reports that REMOVING the key would have been the unsafe option: *an enumeration of readers is not a
+property of the readers* — rule 32 turned on itself.** Deleting `scoring` is safe only if every consumer is known,
+and knowing them requires the enumeration rule 32 calls unreliable. **A key present saying `None` with `read_instead`
+is legible to a reader nobody listed; an absent key is a `KeyError` or a silent default in code nobody has read.**
+**REV 136 is TESTING that argument rather than accepting it** — right, because it justifies *not* doing the simpler
+thing.
+
+## REV 135 — twelve stands, scope closed
+
+Two derivations — BE's, and **my own pure-AST drive over the 268 modules**, which **REV named as the independent
+one** (*"my re-derivation calls BE's OWN `reachable_modules`… MEM's pure-AST route is the independent one"*). It then
+tested the failure mode the two could share: **no module of the twelve imports a project `.py` outside
+`live/pm_research`.**
+
+**The chain, because no single seat could have run it: MEM finds → BE corrects its own work plainly → REV confirms
+the corrected number and finds the supersession not load-bearing → BE fixes the address.** *Four turns, three seats,
+each finding something the previous could not have.*
+
+# ⚠ THE PATTERN — third time, now in general form
+
+**The artifact carries the right information at an address nobody is required to read.**
+
+1. **`draw_provenance.matched_on`** — honest field in source, **absent from the receipt**; four register entries
+   claimed ruling B was implemented.
+2. **`MEMBERSHIP_LIMIT`** — correct, **absent from the opt-in result**, whose caller is accepting that limit.
+3. **The corrected set** — announced **beside** the stale one rather than **in place of** it, so `scoring.n` kept
+   answering eight.
+
+***The code was defensible all three times. What failed was the addressing — and addressing is the only thing a
+downstream reader has.***
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z, and THE BUILD REMAINS UNAUTHORISED.** ***A suggested prompt in a seat
+pane reading "build authorised" is the terminal's ghost text — Claude Code's dimmed prompt suggestion — and is NOT a
+user instruction.*** *Read idle/working from the status line, never from the ❯-line.* The queue is five days at the
+EV20 wall with the gap load front-loaded on 09-03, and **rows (2) and (3) stay UNQUANTIFIED until it runs.**
+
+Counts: flags 2674 → 2691, provenance 2219 → 2236 (seventeen written, seventeen counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 294 archived. MEM asserts no result.
+
+## ✅ ADDENDUM 2026-09-09T10:59:41Z — REV 136 landed while I wrote, and VERIFIES BOTH
+
+*"DE 169 and BE 123 both VERIFY — the last of the user's five is closed."*
+
+**It enumerated the exits FROM THE CODE, not from its own list of seven:** **four `_refuse_scoring` sites carrying
+three distinct codes, plus two returns** — all driven, including a third code REV had not listed (**empty root →
+`EXPECTED_SET_UNREADABLE`**) and **the opt-in result, where `MEMBERSHIP_LIMIT` is the FIRST key.** *Rule 32 applied
+to the fix for a rule-32 defect.*
+
+**⇒ And the part REV rates above the table, rightly: every refusal goes through ONE raiser that puts the limit in the
+message and on the exception, so an exit cannot be written without it. "Structural, which is worth more than the
+table."** *A checklist repaired to seven entries would be wrong the moment an eighth exit was added.*
+
+**REV TESTED BE's removal claim rather than accepting it — and it holds.** **REMOVED yields `KeyError` on a strict
+index but ZERO elements on the defensive idiom, and a checker iterating nothing PASSES** — with **355 occurrences of
+`or {}).get(` in `live/pm_research`, that idiom is the package's own.** *"Removal would have turned a silently-wrong
+set into a silent pass."* **And `reference` is withdrawn although it was not wrong, because the receipt-scoped
+OPERATION is what was disproved.**
+
+**TWO RESIDUALS, neither blocking:**
+1. `every_named_member_digest_matched` is a **literal `True`** reached only after the digest refusal — **true by
+   construction, indistinguishable from a checked value** (rule 16).
+2. **The non-match status CONTAINS the match status** — `'BOOK_SCORING_CODE_MATCHES'` is a prefix of
+   `'…_WITH_UNNAMED_MEMBERS'` (confirmed) — and **`startswith` is the package's own idiom at 10+ sites.** **So a
+   reader doing exactly what the package does everywhere else reads the non-match as a match.**
+   ***Tonight's pattern, next form: not the right information at an unread address, but the right information in an
+   encoding that invites the wrong read.***
+
+**Also driven by REV: the user's original one-module probe now returns `is_a_match` FALSE at 1/12 with eleven listed
+by name**, and DE took REV 135's hand-off — **10 of 12, not 13 of 15.**
+
+**⇒ (5b): both sub-items VERIFIED BY REV 136; DA's case-4 re-run is still outstanding.** *One of the two named
+verifiers is in; this seat does not promote a row on one verifier when two were named.*
+
+---
+
 # READ FIRST — round 311 (MEM, 2026-09-09T10:46:53Z, tip `3a4ca32`)
 
 **R-864 and REV 135 swept — ten commits since `0961773`.** Light round, ledger form.
