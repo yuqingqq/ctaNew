@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 418
+EXPECTED_CHECKS = 420
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -6071,11 +6071,68 @@ BOOK_SCORING_INCOMPLETE = "BOOK_SCORING_CODE_RECEIPT_INCOMPLETE"
 #: expected set for a book any more -- completeness over the wrong set is
 #: still the wrong set.
 BOOK_SCORING_SET_UNREADABLE = "BOOK_SCORING_EXPECTED_SET_UNREADABLE"
+#: DE 168 / DA 156. DE 167's fallback set `_expected = dict(mods)` made the
+#: completeness test `mods` subset-of `mods` -- TRIVIALLY TRUE -- so the
+#: USER's one-module probe PASSED AGAIN at `n_checked: 1`, and **0 of 12
+#: landed builder receipts carry the derived block, so on every real
+#: artifact today the completeness check was INERT.** Digest-correctness
+#: still refused, so what was lost is MEMBERSHIP, not comparison. My
+#: reasoning that "the recording cannot under-cover" holds for an HONEST
+#: receipt and NOT for the malformed one the predicate exists for -- which
+#: is the whole case. A check that cannot fail reports a check that never
+#: ran (rule 10, and the `BINANCE_GAP_EXCLUDED: 0` shape).
+MEMBERSHIP_NOT_ESTABLISHED = "BOOK_SCORING_MEMBERSHIP_NOT_ESTABLISHED"
+#: The ONLY way to get a result out of `assert_book_scoring_code` without
+#: membership having been checked, and it is a value a caller has to type.
+#: The result then carries `status: MEMBERSHIP_NOT_ESTABLISHED_...`, never
+#: `BOOK_SCORING_CODE_MATCHES`. **No production caller uses it**: both --
+#: `run_day` and `de_cancel_count_delta` -- treat a non-exception as a pass
+#: and copy the returned dict into an artifact without reading `status`, so
+#: a status alone would be evidence the consumer discards (rule 28). That
+#: is why the DEFAULT is a refusal and not a status.
+ACCEPT_UNVERIFIABLE_MEMBERSHIP = "ACCEPT_MEMBERSHIP_NOT_ESTABLISHED"
+#: DE 168 (b), REV 132's second half, ANSWERED AND THEN BOUNDED. The
+#: consumer CAN recompute the expected set -- the derivation is a pure
+#: function of (closure, code on disk) and BE published it -- so this
+#: predicate re-derives it over the receipt's OWN recording and refuses a
+#: disagreement. **That removes dependence on the producer's DERIVATION.
+#: It does NOT remove dependence on the producer's RECORDING, and no
+#: consumer-side derivation can**, for a reason worth stating exactly:
+#: reachability is MONOTONE IN THE CLOSURE. `reachable(closure)` is the
+#: set reachable from the scoring entry points INTERSECTED with the
+#: closure, so a smaller recording yields a smaller derived set and the
+#: two agree -- there is no contradiction to detect. A builder that
+#: recorded one module would have its one-module derivation confirmed by
+#: this re-derivation.
+#: WHAT WOULD CLOSE IT, and why it is weak here: an independent FLOOR --
+#: the modules reachable from the entry points through NON-LAZY imports,
+#: which any real build must have imported. BE's own contract measures why
+#: that floor is thin: **42 of the 49 modules in a real recording enter
+#: only at `build(): after the lazy imports`**, and two dynamic sites are
+#: named as invisible to any static walk (`KNOWN_DYNAMIC_SITES`). So the
+#: floor would bind a handful of modules, not the set.
+#: THE LIMIT, PLAINLY: this predicate cannot detect a receipt that
+#: UNDER-RECORDS its own import closure. It detects a receipt that
+#: under-DECLARES a derived block over an honest recording, and it detects
+#: any digest that differs. The recording's honesty is the producer's, and
+#: it is guarded on the producing side by rule 22's import-closure capture,
+#: not here.
+MEMBERSHIP_LIMIT = (
+    "THIS PREDICATE CANNOT DETECT A RECEIPT THAT UNDER-RECORDS ITS OWN "
+    "IMPORT CLOSURE. Reachability is monotone in the closure, so a smaller "
+    "recording yields a smaller derived set and the re-derivation agrees "
+    "with it -- there is no contradiction to detect. What IS detected: a "
+    "derived block that disagrees with a re-derivation over the same "
+    "recording, a missing derived block (refused, never a match), and any "
+    "digest that differs. The recording's own honesty is guarded on the "
+    "PRODUCING side by rule 22's import-closure capture (DE 168 / REV 132)")
 PARAMS_VERSION_DISAGREES = "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE"
 
 
 def assert_book_scoring_code(receipt: dict, *, where: str,
-                             root=None) -> dict:
+                             root=None,
+                             membership_unverifiable: str | None = None
+                             ) -> dict:
     """The book's scores were produced by THESE bytes -- checked.
 
     A day book carries its assembly, so a book built by different scoring
@@ -6109,20 +6166,24 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
     _scoring = _dc.get("scoring") or {}
     _expected = _scoring.get("modules") or {}
     _expected_n = _scoring.get("n")
-    if _expected and isinstance(_expected_n, int):
+    _declared_path = bool(_expected) and isinstance(_expected_n, int)
+    if _declared_path:
         _set_source = "derived_closures.scoring (BE 117's derivation)"
     else:
-        # BE's contract, EXPECTED_SET_UNREADABLE: fall back to the
-        # RECORDING -- which cannot under-cover -- and SAY SO. "Falling
-        # back to a typed list is the defect returning under another name."
+        # BE's contract, EXPECTED_SET_UNREADABLE: the comparison falls back
+        # to the RECORDING -- never to a typed list. But the COMPLETENESS
+        # question cannot fall back with it: `mods` subset-of `mods` is a
+        # check that cannot fail (DE 168 / DA 156). So the digests are
+        # still compared, and membership is declared NOT ESTABLISHED.
         _expected = dict(mods)
         _expected_n = len(_expected)
         _set_source = (
             "producing_code.import_closure (FALLBACK: the receipt carries "
             "no readable `derived_closures.scoring`; this is a receipt "
             "older than BE 117, or its derivation reported "
-            "DERIVATION_FAILED. The RECORDING cannot under-cover, so it is "
-            "the safe fallback -- a typed list is not)")
+            "DERIVATION_FAILED. The digests are still compared against "
+            "disk; MEMBERSHIP IS NOT CHECKED, because the recording is "
+            "both sides of that comparison)")
     recorded = {m: d for m, d in mods.items() if m in _expected}
     if not recorded:
         raise RunnerRefused(
@@ -6155,13 +6216,58 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
     # says why both: "a set of the right size with the wrong members is
     # the shape rule 33 is about". The count comes from the RECEIPT, so
     # "did I check all of them" is answerable without a typed list.
-    if len(recorded) != _expected_n:
+    if len(recorded) < _expected_n:
         raise RunnerRefused(
             f"REFUSED {BOOK_SCORING_SET_UNREADABLE} at {where}: the "
             f"expected set declares n = {_expected_n} and this predicate "
             f"resolved {len(recorded)} module(s) to check "
             f"({sorted(recorded)}). The count and the key set must agree "
             f"before either is evidence.")
+    # ---- DE 168 (b) / REV 132: THE CONSUMER RECOMPUTES THE SET --------
+    # REV's headline: "the expected set is the receipt's own and NOTHING
+    # RECOMPUTES IT." On the declared path the set came from
+    # `derived_closures.scoring` and was taken on trust, so a receipt that
+    # OMITTED a module from its own derived block was never asked about it
+    # -- the user's `n_checked: 1` in its general form, and digest
+    # correctness cannot save it because a digest is only checked for a
+    # module the receipt chose to name.
+    #
+    # THE HALF A CONSUMER CAN CLOSE: the derivation is a pure function of
+    # (closure, code on disk), and BE published it. So the consumer runs
+    # it ITSELF over the receipt's own recording and compares. That
+    # removes any dependence on the producer's DERIVATION.
+    # THE HALF IT CANNOT: dependence on the producer's RECORDING. See
+    # `MEMBERSHIP_LIMIT` below -- it is named, not closed.
+    # ---- BE 121's CONTRACT, ADOPTED VERBATIM -------------------------
+    # The receipt-free set is an UPPER BOUND ON SCOPE, computed from the
+    # code on disk without asking the receipt anything:
+    #   (a) every module in it that the receipt NAMES must digest-match
+    #       -- refusable, and it is folded into the comparison below;
+    #   (b) every module in it the receipt does NOT name is REPORTED BY
+    #       NAME and **NEVER REFUSED ON**.
+    # (b) is not a softening, it is a correctness requirement BE measured:
+    # `harmful_hazard_model.py` and `phase2_state_schema_freeze.py` are
+    # reached from `phase2_arms` only through LAZY imports, so they are
+    # LEGITIMATELY ABSENT from an honest build whose branches did not run.
+    # Refusing on the delta would refuse honest receipts -- a worse
+    # failure than the one being closed. Static reachability
+    # OVER-APPROXIMATES THE RUN, and this is not the run's closure.
+    _upper = None
+    try:
+        import be_producing_closure as _PCx
+        _upper = set((_PCx.derive(
+            {f.name: "" for f in sorted(Path(root).glob("*.py"))},
+            root=root).get("scoring") or {}).get("modules") or {})
+    except Exception as _e:                                  # noqa: BLE001
+        _upper = f"UPPER_BOUND_UNAVAILABLE: {type(_e).__name__}: {_e}"
+    _not_named = (sorted(_upper - set(mods))
+                  if isinstance(_upper, set) else _upper)
+    if isinstance(_upper, set):
+        # (a): anything the upper bound names AND the receipt records is
+        # in scope for the digest comparison, whether or not the receipt's
+        # derived block happened to list it.
+        for _m in sorted(_upper & set(mods)):
+            recorded.setdefault(_m, mods[_m])
     differ = []
     for name, declared in sorted(recorded.items()):
         f = root / name
@@ -6191,8 +6297,51 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
     # derive, do not type a longer list), and until that key exists the
     # SHORTFALL IS PUBLISHED HERE rather than being a fact only a reviewer
     # knows. A consumer can read `closure_coverage` and see 5 of 49.
+    # ---- DE 168 (a) / DA 156: THE FALLBACK MAY NOT YIELD A PASS ------
+    # Every digest above has been compared and none differed -- that part
+    # of the fallback is real evidence and is kept. What is NOT evidence
+    # is the completeness result: on this path `_expected` IS `mods`, so
+    # `mods` subset-of `mods` is a check that cannot fail, and the USER's
+    # one-module probe passed again at `n_checked: 1`. **0 of 12 landed
+    # builder receipts carry the derived block, so this was every real
+    # artifact.** The digest comparison runs FIRST, deliberately: a moved
+    # module refuses BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, which is the
+    # more specific answer, and nothing that works is discarded.
+    #
+    # THE DEFAULT IS A REFUSAL, NOT A STATUS, and the reason is the
+    # consumers: `run_day` and `de_cancel_count_delta` both treat a
+    # non-exception as a pass and copy this dict into an artifact WITHOUT
+    # READING `status`. A status they do not read is evidence discarded
+    # (rule 28) -- so the safe behaviour may not depend on them changing.
+    if not _declared_path:
+        if membership_unverifiable != ACCEPT_UNVERIFIABLE_MEMBERSHIP:
+            raise RunnerRefused(
+                f"REFUSED {MEMBERSHIP_NOT_ESTABLISHED} at {where}: this "
+                f"receipt carries no readable `derived_closures.scoring`, "
+                f"so the expected set and the recorded set are THE SAME "
+                f"OBJECT and 'is every expected module present' cannot "
+                f"fail. All {len(recorded)} recorded digest(s) match disk "
+                f"-- that much is established -- but MEMBERSHIP IS NOT. A "
+                f"receipt naming one module would pass a completeness "
+                f"test it is both sides of. Rebuild the book so its "
+                f"receipt carries BE 117's derived block, or call with "
+                f"`membership_unverifiable="
+                f"{ACCEPT_UNVERIFIABLE_MEMBERSHIP!r}` to take a result "
+                f"that says so in its status and is NOT a match.")
+        return {"status": MEMBERSHIP_NOT_ESTABLISHED + "_NO_DERIVED_BLOCK",
+                "is_a_match": False,
+                "digests_compared": sorted(recorded),
+                "n_digests_compared": len(recorded),
+                "membership_checked": False,
+                "why": ("the expected set fell back to the receipt's own "
+                        "recording, so completeness would be `mods` "
+                        "subset-of `mods` -- a check that cannot fail. "
+                        "The digests were compared and none differed; "
+                        "MEMBERSHIP was not established (DE 168 / DA 156)"),
+                "where": where}
     _closure_n = len(mods)
     return {"status": "BOOK_SCORING_CODE_MATCHES",
+            "is_a_match": True,
             "modules_checked": sorted(recorded),
             "n_checked": len(recorded), "where": where,
             "expected_set_source": _set_source,
@@ -6206,9 +6355,20 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
                              if _closure_n else None),
                 "status": ("TYPED_SUBSET_OF_A_RECORDED_CLOSURE"
                            if len(recorded) < _closure_n else "WHOLE"),
-                "owed": "CLOSED at DE 167: the expected set is READ from "
-                        "the receipt (BE 117's derivation, or the "
-                        "recording as the fallback), never typed"}}
+                "owed": "CLOSED at DE 167/168: the expected set is READ "
+                        "from the receipt AND RE-DERIVED here from the "
+                        "receipt's own recording; a receipt with no "
+                        "derived block yields a refusal, never a match"},
+            "receipt_free_upper_bound": (sorted(_upper)
+                                         if isinstance(_upper, set)
+                                         else _upper),
+            # BE 121 (b): UNDER-DECLARATION MADE VISIBLE. Reported by
+            # name, never refused on -- lazy-import members are
+            # legitimately absent from an honest recording.
+            "in_the_upper_bound_and_NOT_named_by_the_receipt": _not_named,
+            "under_declaration_is": ("VISIBLE, not impossible -- see "
+                                     "MEMBERSHIP_LIMIT"),
+            "MEMBERSHIP_LIMIT": MEMBERSHIP_LIMIT}
 
 
 CACHE_NO_CODE_PIN = "CACHE_HAS_NO_SCORING_CODE_PIN"
@@ -6238,16 +6398,58 @@ def write_cache_code_closure(cache_path, *, built_by_this_process: bool,
     c = Path(cache_path)
     here = Path(root) if root is not None else Path(__file__).resolve().parent
     side = c.with_suffix(c.suffix + ".code_closure.json")
-    payload = {"producing_code": {"import_closure": {"modules": {
-        m: hashlib.sha256((here / m).read_bytes()).hexdigest()
-        for m in SCORING_PATH_MODULES}}},
-        "cache": {"path": str(c),
-                  "sha256": (sha256_streamed(c) if c.is_file() else None)},
-        "recorded_by": "de_multiday_gate1_runner.write_cache_code_closure",
-        "why": ("REV 111 site 4: this cache had no code pin at all and is "
-                "read by thirteen readers")}
+    # ---- DE 168: THE SIDECAR RECORDS THE PROCESS'S OWN CLOSURE -------
+    # It recorded `SCORING_PATH_MODULES` -- the typed five REV 129
+    # refuted. A sidecar whose RECORDING is a typed list has the defect
+    # one layer further out: the reader can only ever be asked about the
+    # modules the writer chose to name. Rule 22's shape is the right one
+    # and it is available here: the modules of THIS process's import
+    # closure that live under `live/`, digested from their bytes. The
+    # derived block is emitted beside it through BE's published
+    # derivation, so `assert_cache_code_pin` takes the DECLARED path and
+    # its membership is re-derived like a book's rather than falling into
+    # the `mods` subset-of `mods` hole DA 156 found.
+    # THE CLOSURE IS THE PACKAGE ON DISK, NOT WHAT HAPPENS TO BE IMPORTED.
+    # A `sys.modules` walk was the first version and it recorded FIVE in a
+    # minimal process -- so the derivation refused
+    # `SEED_MODULE_NOT_IN_THE_CLOSURE` and the sidecar was unusable. What
+    # the recording must not do is UNDER-record; a superset is the safe
+    # direction, because reachability is monotone in the closure (see
+    # `MEMBERSHIP_LIMIT`), so deriving over the package gives the scoring
+    # set for the bytes that were on disk when the cache was built --
+    # which is exactly the claim a cache pin makes.
+    _loaded = {f.name: hashlib.sha256(f.read_bytes()).hexdigest()
+               for f in sorted(here.glob("*.py"))}
+    payload = {"producing_code": {"import_closure": {"modules": _loaded}},
+               "cache": {"path": str(c),
+                         "sha256": (sha256_streamed(c) if c.is_file()
+                                    else None)},
+               "recorded_by": ("de_multiday_gate1_runner."
+                               "write_cache_code_closure"),
+               "closure_scope": (
+                   "every module beside this file on disk at the moment "
+                   "the cache was built, digested. DE 168: it was "
+                   "`SCORING_PATH_MODULES`, a typed five, so a reader "
+                   "could only ever be asked about the names the writer "
+                   "chose. A SUPERSET is the safe direction here -- a "
+                   "recording must not UNDER-record"),
+               "why": ("REV 111 site 4: this cache had no code pin at all "
+                       "and is read by thirteen readers")}
+    try:
+        import be_producing_closure as _PCc
+        payload["derived_closures"] = _PCc.derive(_loaded, root=here)
+    except Exception as _e:                                  # noqa: BLE001
+        payload["derived_closures"] = {
+            "status": "DERIVATION_FAILED",
+            "error": f"{type(_e).__name__}: {_e}",
+            "consequence": ("`assert_cache_code_pin` will refuse "
+                            f"{MEMBERSHIP_NOT_ESTABLISHED} rather than "
+                            "return a match")}
     side.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-    return {"path": str(side), "modules": sorted(SCORING_PATH_MODULES)}
+    return {"path": str(side), "modules": sorted(_loaded),
+            "n_recorded": len(_loaded),
+            "derived_scoring_n": ((payload["derived_closures"].get("scoring")
+                                   or {}).get("n"))}
 
 
 def assert_cache_code_pin(cache_path, *, root=None) -> dict:
@@ -7964,11 +8166,20 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     # in the receipt.
     if fixture:
         _scode = {"status": "NOT_CHECKED_FIXTURE_BOOK",
+                  "is_a_match": False,
                   "why": ("a synthetic book is built in-process by the "
                           "code under test; there is no independent "
                           "builder closure to compare against"),
-                  "modules_that_would_be_checked":
-                      list(SCORING_PATH_MODULES)}
+                  # DE 168: this used to name `SCORING_PATH_MODULES` -- the
+                  # typed five REV 129 refuted and DE 167 removed from the
+                  # predicate. A stale typed list surviving in an ARTIFACT
+                  # is the same defect one layer out, so the field says
+                  # where the set comes from instead of naming one.
+                  "the_set_that_would_be_checked":
+                      "derived_closures.scoring, re-derived by the "
+                      "consumer over the receipt's own recording; a "
+                      "receipt without that block REFUSES "
+                      + MEMBERSHIP_NOT_ESTABLISHED}
     else:
         _scode = assert_book_scoring_code(
             json.loads(Path(receipt).read_text()),
@@ -10184,14 +10395,23 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     ok(_before163 == CACHE_NO_CODE_PIN
        and _late == "CACHE_CLOSURE_NOT_FROM_THE_BUILD"
        and _after163["status"] == "BOOK_SCORING_CODE_MATCHES"
-       and len(_w163["modules"]) == len(SCORING_PATH_MODULES),
+       and _after163["is_a_match"] is True
+       and _w163["n_recorded"] > len(SCORING_PATH_MODULES)
+       and _w163["derived_scoring_n"],
        f"DE 163 / REV 111 SITE 4, ROUND TRIP: a cache with no sidecar "
        f"refuses `{_before163}`; recording one for a cache this "
        f"process did NOT build refuses `{_late}` -- a wrong pin reads as "
        f"a verified one and is worse than the absent pin it replaces; and "
-       f"a closure recorded AT THE BUILD then verifies its "
-       f"{len(_w163['modules'])} scoring modules. The real cache still has "
-       f"none, which is why the load path refuses it")
+       f"a closure recorded AT THE BUILD then verifies. **DE 168: the "
+       f"sidecar records THIS PROCESS'S OWN import closure "
+       f"({_w163['n_recorded']} modules under live/, rule 22's shape) and "
+       f"emits BE's derived block beside it "
+       f"({_w163['derived_scoring_n']} scoring modules), so the cache pin "
+       f"takes the DECLARED path.** It used to record the typed five, "
+       f"which put its reader in the `mods` subset-of `mods` hole one "
+       f"layer further out -- the writer chose the names it could be "
+       f"asked about. The real cache still has no sidecar at all, which "
+       f"is why the load path refuses it")
 
     # ---- DE 163 / REV 113: THE ADJACENCY CLASS, AND THE DIFFERENTIAL --
     # REV's six rows, each a form of sealed 3.14 that DE 161's tokeniser
@@ -10349,6 +10569,8 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"and wrong; and the cache four BE modules read as their default "
        f"reference refuses `{_r3c}` -- it has no code pin AT ALL and "
        f"predates the causal repair")
+
+
 
     # ---- DE 161: THE GUARD COMPARES NUMBERS, NOT SUBSTRINGS ----------
     # It flagged `len(f) >= 3 and f in text`. That is wrong in BOTH
@@ -15385,27 +15607,33 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
     # derivation the expected set is the WHOLE RECORDING, so `n_declared`
     # is the closure's size and not 5 or 8; and a wrong digest on ANY
     # recorded module then refuses, including modules no typed list names.
+    # DE 168: the fallback no longer RETURNS without the explicit opt-in,
+    # so the cell that measures WHICH SET it falls back to has to ask for
+    # it by name -- which is the point of the opt-in existing.
     _fb_ok = assert_book_scoring_code(
         _bk167({**_clo167, **_live167}, dc=None), where="cell",
-        root=_root166)
+        root=_root166,
+        membership_unverifiable=ACCEPT_UNVERIFIABLE_MEMBERSHIP)
     _fb_fail = _drive167(_bk167(
         {**_clo167, **_live167, "be_daybook_build.py": "0" * 64}, dc=None))
     _fb_failed_status = _drive167(_bk167(
         {**_clo167, **_live167}, dc={"status": "DERIVATION_FAILED"}))
-    ok(_fb_ok["n_declared"] == len(_clo167) > _n167
-       and _fb_ok["expected_set_source"].startswith(
-           "producing_code.import_closure (FALLBACK")
+    ok(_fb_ok["is_a_match"] is False
+       and _fb_ok["membership_checked"] is False
+       and _fb_ok["n_digests_compared"] == len(_clo167)
        and _fb_fail == BOOK_SCORING_DIFFERS
-       and _fb_failed_status == f"ADMITTED/{len(_clo167)}/{len(_clo167)}",
-       f"AND THE FALLBACK IS THE RECORDING, NEVER A TYPED LIST: with no "
-       f"readable `derived_closures` the expected set is the WHOLE "
-       f"recorded closure -- {_fb_ok['n_declared']} modules, not "
-       f"{_n167} and certainly not {len(SCORING_PATH_MODULES)} -- so a "
-       f"wrong digest on `be_daybook_build.py`, which NO typed list names "
-       f"and which is not in the derived scoring set either, refuses "
-       f"`{_fb_fail}`. A `DERIVATION_FAILED` status takes the same path. "
-       f"BE's contract names the alternative and forbids it: 'falling "
-       f"back to a typed list is the defect returning under another name'")
+       and _fb_failed_status == MEMBERSHIP_NOT_ESTABLISHED,
+       f"AND THE FALLBACK COMPARES THE RECORDING BUT IS NOT A MATCH "
+       f"(DE 168): with no readable `derived_closures` the DIGESTS are "
+       f"still compared -- all {_fb_ok['n_digests_compared']} of them, so "
+       f"a wrong digest on `be_daybook_build.py`, which no typed list "
+       f"names and which is not in the derived scoring set either, still "
+       f"refuses `{_fb_fail}` -- while `membership_checked` is "
+       f"{_fb_ok['membership_checked']} and `is_a_match` is "
+       f"{_fb_ok['is_a_match']}. A `DERIVATION_FAILED` status refuses "
+       f"`{_fb_failed_status}` on the default path. The comparison never "
+       f"falls back to a typed list, and the COMPLETENESS claim is not "
+       f"made at all rather than made against itself")
 
     # ---- (6b) THE FIRST-CROSSING CLAIM, COMPUTED ----------------------
     # The receipt said first-crossing makes FEWER GENERATIONS CROSS. Over
@@ -15503,6 +15731,140 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
        f"ordinals are REVERSED refuses `{_order167}` while passing every "
        f"length check. The DE 164 cells drove `write_ledger`; this drives "
        f"THE DAY, which is what the claim was cited for")
+
+    # THESE CELLS READ A LANDED RECEIPT, and `fixture_run()` re-enters
+    # this battery with `offline=True` inside its data-freeness probe --
+    # where a read under `data/` is exactly what is being refused. The
+    # skip is RECORDED as a cell (REV 88 S1.3), not tallied away.
+    if offline:
+        offline_skip("DE 168: the fallback and the upper bound, driven on "
+                     "a LANDED builder receipt")
+        offline_skip("DE 168 (b): the consumer's receipt-free upper bound "
+                     "against a landed receipt")
+    else:
+        # ---- DE 168 / DA 156 + REV 132: THE FALLBACK, ON A LANDED RECEIPT --
+        # The coordinator's cell, verbatim: drive against a LANDED receipt
+        # with no derived block and show it does NOT return a match. 0 of 12
+        # landed builder receipts carry the block, so this is every real
+        # artifact today -- and on this path DE 167's `_expected = dict(mods)`
+        # made completeness `mods` subset-of `mods`, a check that cannot fail,
+        # and the USER's one-module probe passed again at `n_checked: 1`.
+        _landed168 = sorted((Path(DR.resolve()["data_root"]) / "pm_5min"
+                             / "derived").glob("be_daybook_receipt_*.json"))
+        _rec168 = json.loads(_landed168[-1].read_text())
+        _mods168 = (((_rec168.get("producing_code") or {})
+                     .get("import_closure") or {}).get("modules") or {})
+        _live168 = {m: hashlib.sha256((_here162 / m).read_bytes()).hexdigest()
+                    for m in _mods168 if (_here162 / m).is_file()}
+        _okrec168 = {"producing_code": {"import_closure": {
+            "modules": {**_mods168, **_live168}}}}
+
+        def _d168(receipt, **kw):
+            try:
+                _o = assert_book_scoring_code(receipt, where="cell",
+                                              root=_here162, **kw)
+                return f"{_o['status']}/match={_o.get('is_a_match')}"
+            except RunnerRefused as _e:
+                return (str(_e).split(":")[0].replace("REFUSED ", "")
+                        .split(" at ")[0])
+        _asis168 = _d168(_rec168)
+        _clean168 = _d168(_okrec168)
+        _optin168 = _d168(_okrec168,
+                          membership_unverifiable=ACCEPT_UNVERIFIABLE_MEMBERSHIP)
+        _one = sorted(_live168)[0]
+        _probe168 = _d168({"producing_code": {"import_closure": {
+            "modules": {_one: _live168[_one]}}}})
+        ok(not (_rec168.get("derived_closures") or {}).get("scoring")
+           and _asis168 == BOOK_SCORING_DIFFERS
+           and _clean168 == MEMBERSHIP_NOT_ESTABLISHED
+           and _probe168 == MEMBERSHIP_NOT_ESTABLISHED
+           and _optin168.endswith("/match=False")
+           and _optin168.startswith(MEMBERSHIP_NOT_ESTABLISHED),
+           f"DE 168 (a) THE FALLBACK NO LONGER PASSES, DRIVEN ON THE LANDED "
+           f"RECEIPT `{_landed168[-1].name}` ({len(_mods168)} modules, NO "
+           f"derived block -- 0 of {len(_landed168)} landed receipts carry "
+           f"one). As it sits on disk it refuses `{_asis168}`, the more "
+           f"specific answer, because the digest comparison runs FIRST and "
+           f"nothing that works was discarded. With every digest made to "
+           f"match disk -- so that ONLY membership is at stake -- it refuses "
+           f"`{_clean168}` instead of returning a match, and **the USER's "
+           f"one-module probe refuses too** where DE 167 let it pass again at "
+           f"`n_checked: 1`. The explicit opt-in yields `{_optin168}` -- a "
+           f"named status a caller cannot read as a match. The DEFAULT is a "
+           f"refusal because both production callers copy this dict into an "
+           f"artifact WITHOUT reading `status`")
+        # ---- DE 168 (b) / BE 121: THE RECEIPT-FREE UPPER BOUND ---------
+        # REV 132's headline was "the expected set is the receipt's own and
+        # NOTHING RECOMPUTES IT". BE 121 then established HOW a consumer
+        # may recompute it and, crucially, HOW IT MAY NOT BE USED: static
+        # reachability OVER-APPROXIMATES the run, because
+        # `harmful_hazard_model.py` and `phase2_state_schema_freeze.py`
+        # reach `phase2_arms` only through LAZY imports and are
+        # LEGITIMATELY ABSENT from an honest build whose branches did not
+        # run. So the delta is REPORTED, never refused on -- refusing
+        # would refuse honest receipts, a worse failure than the one being
+        # closed.
+        _dv168 = _PC162.derive({**_mods168, **_live168}, root=_here162)
+        _good168 = {"derived_closures": _dv168,
+                    "producing_code": {"import_closure": {
+                        "modules": {**_mods168, **_live168}}}}
+        _res_good = assert_book_scoring_code(_good168, where="cell",
+                                             root=_here162)
+        _upper168 = set(_res_good["receipt_free_upper_bound"])
+        # A DERIVED BLOCK THAT DROPS A MODULE THE RECORDING STILL NAMES
+        # does not hide it: the upper bound puts it back into the digest
+        # comparison, so a WRONG digest on the dropped module still
+        # refuses. That is the under-declaration hole, closed where it can
+        # be closed -- by comparison, not by refusing on the delta.
+        _short168 = json.loads(json.dumps(_dv168))
+        _dropped = sorted(_short168["scoring"]["modules"])[0]
+        _short168["scoring"]["modules"].pop(_dropped)
+        _short168["scoring"]["n"] -= 1
+        _under_ok = _d168({**_good168, "derived_closures": _short168})
+        _under_bad = _d168({
+            "derived_closures": _short168,
+            "producing_code": {"import_closure": {"modules": {
+                **_mods168, **_live168, _dropped: "0" * 64}}}})
+        # AND A MODULE THE RECORDING DOES NOT NAME AT ALL IS REPORTED,
+        # never refused -- the lazy-import case BE measured.
+        _thin = {m: d for m, d in {**_mods168, **_live168}.items()
+                 if m != _dropped}
+        _res_thin = assert_book_scoring_code(
+            {"derived_closures": _PC162.derive(_thin, root=_here162),
+             "producing_code": {"import_closure": {"modules": _thin}}},
+            where="cell", root=_here162)
+        ok(_res_good["status"] == "BOOK_SCORING_CODE_MATCHES"
+           and _upper168 and _dropped in _upper168
+           and _under_ok == "BOOK_SCORING_CODE_MATCHES/match=True"
+           and _under_bad == BOOK_SCORING_DIFFERS
+           and _res_thin["status"] == "BOOK_SCORING_CODE_MATCHES"
+           and _dropped in _res_thin[
+               "in_the_upper_bound_and_NOT_named_by_the_receipt"]
+           and MEMBERSHIP_LIMIT.startswith("THIS PREDICATE CANNOT DETECT"),
+           f"DE 168 (b) / BE 121: THE RECEIPT-FREE UPPER BOUND, REPORTED "
+           f"AND NEVER REFUSED ON. It names {len(_upper168)} modules "
+           f"computed from the code on disk without asking the receipt "
+           f"anything. **A derived block that DROPS `{_dropped}` no longer "
+           f"hides it**: the upper bound puts it back into the digest "
+           f"comparison, so the honest bytes still MATCH "
+           f"(`{_under_ok}`) and a WRONG digest on the dropped module "
+           f"REFUSES `{_under_bad}` -- under-declaration cannot buy "
+           f"silence. **And a module the RECORDING does not name at all is "
+           f"REPORTED BY NAME** "
+           f"(`in_the_upper_bound_and_NOT_named_by_the_receipt` carries "
+           f"`{_dropped}`) and is NOT refused, because static reachability "
+           f"over-approximates the run: BE measured that "
+           f"`harmful_hazard_model.py` and `phase2_state_schema_freeze.py` "
+           f"reach `phase2_arms` through LAZY imports only, so they are "
+           f"legitimately absent from an honest build. Refusing on the "
+           f"delta would refuse honest receipts. **WHAT A MALFORMED "
+           f"RECEIPT CAN STILL GET PAST: one that UNDER-RECORDS its import "
+           f"closure. Reachability is monotone in the closure, so a "
+           f"smaller recording yields a smaller derived set and the two "
+           f"agree -- there is no contradiction to detect. After this "
+           f"round under-declaration is VISIBLE rather than impossible, "
+           f"and that is the most a consumer can have short of a rebuild "
+           f"(`MEMBERSHIP_LIMIT`, in every result)**")
 
     ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} run + "
