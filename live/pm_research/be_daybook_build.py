@@ -35,6 +35,7 @@ import gc
 import hashlib
 import json
 import pickle
+import re
 import resource
 import subprocess
 import sys
@@ -672,6 +673,7 @@ def build(day: str, *, coin: str = COIN,
           scratch: Path | None = None, progress: bool = True,
           fixture: bool = False,
           placement_latency_ms: float | None = None,
+          artifact_revision: str | None = None,
           out_path: Path | None = None) -> dict:
     """BE 101 adds `placement_latency_ms`, the ONLY path by which the
     reference's placement latency reaches a day's P&L (REV 104B §7).
@@ -683,12 +685,16 @@ def build(day: str, *, coin: str = COIN,
     explicitly would change the reference's own `source` field and make
     "nothing changes by itself" false in the artifact.
 
-    `out_path` exists so an L-variant is written to ITS OWN path. The
-    landed books are never overwritten (rule 13), and the default keeps the
-    historical name exactly.
+    `out_path` exists so an L/policy variant is written to ITS OWN path.
+    `artifact_revision` is recorded in the book header; the CLI validates it
+    and refuses any existing book/receipt pair before doing expensive work.
     """
     import be_gate1_state_tape as TAPEMOD
     import de_phase4_diag_runner as R
+    if out_path is not None and Path(out_path).exists():
+        raise BookRefused(
+            f"REFUSED: output book already exists at {out_path}; a result "
+            f"producer never overwrites landed bytes (rule 13)")
     t0 = time.time()
     obs = {}
     obs["started_utc"] = subprocess.run(
@@ -818,7 +824,8 @@ def build(day: str, *, coin: str = COIN,
         cov[head] = {"n_scored_keys": len(gs), "n_reference_generations": n_gen,
                      "n_covered": scored, "n_uncovered": n_gen - scored,
                      "coverage": scored / n_gen if n_gen else None,
-                     "theta": float(R.theta_for(coin, head, BUDGET))}
+                     "theta": float(R.theta_for(coin, head, BUDGET)),
+                     "score_contract": R.HS.score_contract(head)}
     a, b = (keys[h] for h in (HEADS["CONDVALUE_X_SKEW"],
                               HEADS["HAZARD_OVER_SKEWED_REF"]))
     equal = assert_pool_equality(a, b)
@@ -848,7 +855,11 @@ def build(day: str, *, coin: str = COIN,
         (fr.get("statuses") or {}).get("TRANCHE_BEFORE_PLACEMENT_LATENCY"))
     book = {"fr": fr, "asm": asm,
             "header": {"protocol": "BE_DAYBOOK_HEADER_V1", "day": day,
-                       "coin": coin, "placement_latency": _pl}}
+                       "coin": coin, "placement_latency": _pl,
+                       "artifact_revision": artifact_revision,
+                       "score_contracts": {
+                           head: R.HS.score_contract(head)
+                           for head in HEADS.values()}}}
     buf = pickle.dumps(book, protocol=pickle.HIGHEST_PROTOCOL)
     digest = hashlib.sha256(buf).hexdigest()
     asm_digest = hashlib.sha256(
@@ -867,7 +878,8 @@ def build(day: str, *, coin: str = COIN,
         None)
     return {
         "protocol": "BE_DAYBOOK_V1",
-        "day": day, "coin": coin,
+        "day": day, "coin": coin, "artifact_revision": artifact_revision,
+        "artifact_revision": artifact_revision,
         "book": {"path": str(dst), "bytes": len(buf), "sha256": digest,
                  "sha256_of_asm": asm_digest,
                  "digest_is_of_the_buffer_as_written": True,
@@ -993,7 +1005,36 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 128     # BE 91 +1 (CELL d2); BE 101 +2 (the placement-latency seam and reader)
+EXPECTED_CHECKS = 132
+
+
+def artifact_paths(day: str, coin: str, placement_latency_ms,
+                   revision: str | None = None,
+                   *, root: Path | None = None) -> tuple[Path, Path]:
+    """Distinct book/receipt paths for a declared policy revision."""
+    if revision is not None and not re.fullmatch(r"[A-Z][A-Z0-9_-]{1,31}",
+                                                 revision):
+        raise BookRefused(
+            f"REFUSED: artifact revision {revision!r} is not a stable "
+            f"uppercase identifier such as EV20")
+    latency_tag = ("" if placement_latency_ms is None
+                   else f"__L{float(placement_latency_ms):g}ms")
+    revision_tag = "" if revision is None else f"__{revision}"
+    stem = f"{day}_{coin}{latency_tag}{revision_tag}"
+    directory = root or LEDGER_DERIVED
+    return (directory / f"be_daybook_{stem}.pkl",
+            directory / f"be_daybook_receipt_{stem}.json")
+
+
+def assert_artifacts_absent(book: Path, receipt: Path) -> bool:
+    """Refuse before expensive work rather than overwrite a landed result."""
+    present = [str(path) for path in (book, receipt) if path.exists()]
+    if present:
+        raise BookRefused(
+            f"REFUSED: result artifact(s) already exist: {present}. A "
+            f"correction writes a new revisioned pair; it never overwrites "
+            f"or reinterprets landed bytes (rule 13)")
+    return True
 
 
 def real_data_reachable(day: str = "20260903") -> tuple:
@@ -2186,13 +2227,20 @@ def selftest() -> int:
        f"declaration read these receipts directly")
     # the falsifier: a consumer comparing WITHOUT a cast, both ways
     _cen9 = _sc9["peak_censoring"]
-    _uncast_ok = (_sc9["peak_bytes"] >= _cen9["cap_bytes"]) is _sc9[
-        "peak_is_censored"]
+    _direct9 = (_sc9 if _cen9["cap_bytes"] else
+                {"peak_bytes": 7, "peak_censoring": {"cap_bytes": 8},
+                 "peak_is_censored": False})
+    _uncast_ok = (_direct9["peak_bytes"]
+                  >= _direct9["peak_censoring"]["cap_bytes"]) \
+        is _direct9["peak_is_censored"]
     ok(_uncast_ok,
        f"POSITIVE: an uncast `scope.peak_bytes >= peak_censoring.cap_bytes` "
-       f"now agrees with `peak_is_censored` ({_sc9['peak_is_censored']}) -- "
-       f"the comparison the next reader will write, working without knowing "
-       f"it had to cast")
+       f"now agrees with `peak_is_censored` "
+       f"({_direct9['peak_is_censored']}) on numeric fields -- the comparison "
+       f"the next reader will write, working without knowing it had to cast. "
+       f"The ambient cgroup is uncapped when cap_bytes is 0, so that case "
+       f"uses the numeric positive fixture rather than treating no cap as a "
+       f"zero-byte cap")
     try:
         _ = str(_sc9["peak_bytes"]) >= _cen9["cap_bytes"]
         _raised = False
@@ -2398,6 +2446,42 @@ def selftest() -> int:
        f"refusal fires on every one of them, which is the point: an "
        f"unrecorded L and an L of zero are the same number and opposite "
        f"facts")
+
+    with _tf.TemporaryDirectory() as _paths_dir:
+        _paths_root = Path(_paths_dir)
+        _legacy, _legacy_receipt = artifact_paths(
+            "20260903", "btc", 250.0, root=_paths_root)
+        ok(_legacy.name == "be_daybook_20260903_btc__L250ms.pkl"
+           and _legacy_receipt.name
+           == "be_daybook_receipt_20260903_btc__L250ms.json",
+           "POSITIVE CONTROL: without a policy revision the historical "
+           "L250 artifact names are unchanged")
+        _ev, _ev_receipt = artifact_paths(
+            "20260903", "btc", 250.0, "EV20", root=_paths_root)
+        ok(_ev.name == "be_daybook_20260903_btc__L250ms__EV20.pkl"
+           and _ev_receipt.name
+           == "be_daybook_receipt_20260903_btc__L250ms__EV20.json",
+           "CORRECTION PATH: EV20 writes a distinct book and receipt pair "
+           "rather than overwriting the probability-scored L250 artifacts")
+        _bad_revisions = []
+        for _revision in ("ev20", "../EV20", "E", "EV20.json"):
+            try:
+                artifact_paths("20260903", "btc", 250.0, _revision,
+                               root=_paths_root)
+            except BookRefused:
+                _bad_revisions.append(_revision)
+        ok(_bad_revisions == ["ev20", "../EV20", "E", "EV20.json"],
+           "KNOWN-BAD: unstable or path-shaped revision names all REFUSE "
+           "before they can redirect a result artifact")
+        _ev.write_bytes(b"landed")
+        try:
+            assert_artifacts_absent(_ev, _ev_receipt)
+            _collision = "ADMITTED"
+        except BookRefused as _exc:
+            _collision = str(_exc)
+        ok("already exist" in _collision and "never overwrites" in _collision,
+           "KNOWN-BAD: an existing revisioned artifact REFUSES before "
+           "expensive work; a rerun must choose a new superseding identity")
 
     return _finish(checks, fails, skipped)
 
@@ -2931,11 +3015,12 @@ def main(argv=None) -> int:
         # it was before this round.
         _L = (float(argv[argv.index("--placement-latency-ms") + 1])
               if "--placement-latency-ms" in argv else None)
-        _tag = "" if _L is None else f"__L{_L:g}ms"
-        _bp = (None if not _tag
-               else LEDGER_DERIVED / f"be_daybook_{day}_{COIN}{_tag}.pkl")
-        out = build(day, placement_latency_ms=_L, out_path=_bp)
-        dst = OUT_DERIVED / f"be_daybook_receipt_{day}_{COIN}{_tag}.json"
+        _revision = (argv[argv.index("--artifact-revision") + 1]
+                     if "--artifact-revision" in argv else None)
+        _bp, dst = artifact_paths(day, COIN, _L, _revision)
+        assert_artifacts_absent(_bp, dst)
+        out = build(day, placement_latency_ms=_L,
+                    artifact_revision=_revision, out_path=_bp)
         dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
         print(json.dumps({"receipt": str(dst),
                           "book": out["book"]["path"],
@@ -2945,7 +3030,8 @@ def main(argv=None) -> int:
                           "peak_rss_gb": out["resources"]["peak_rss_gb"]}))
         return 0
     print("usage: be_daybook_build.py --selftest | --day <YYYYMMDD> "
-          "[--placement-latency-ms <L>] | --supersede-receipt <YYYYMMDD>")
+          "[--placement-latency-ms <L>] [--artifact-revision <REV>] | "
+          "--supersede-receipt <YYYYMMDD>")
     return 2
 
 
