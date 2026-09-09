@@ -688,6 +688,30 @@ BINANCE_CONTINUITY_DISCLOSURE = {
 }
 
 
+def _producing_closure_block(stamp: dict) -> dict:
+    """The derived scoring/reference closures, or a NAMED status.
+
+    Emitted beside the recording, never instead of it. A failure to derive
+    is a STATUS in the receipt and not an exception that costs a finished
+    build its artifact -- the recording is what the guarantee rests on and
+    it is already there; the derivation is the convenience that stops a
+    consumer typing a list."""
+    import be_producing_closure as _PC
+    clo = ((stamp or {}).get("import_closure") or {}).get("modules") or {}
+    try:
+        return _PC.derive(clo, root=Path(__file__).resolve().parent)
+    except Exception as e:                                   # noqa: BLE001
+        return {"status": "DERIVATION_FAILED",
+                "error": f"{type(e).__name__}: {e}",
+                "n_recorded": len(clo),
+                "why_this_is_not_fatal":
+                    "the RECORDING is intact and is what any guarantee "
+                    "rests on; this block only spares a consumer from "
+                    "typing a module list. A failure here is reported as a "
+                    "status rather than costing a finished build its "
+                    "receipt (rule 4)."}
+
+
 def mask_block(sup: dict, day: str, coin: str, n_wanted: int) -> dict:
     """THE DAY'S DENOMINATOR, AND WHAT WAS TAKEN OUT OF IT (REV 114 §3).
 
@@ -1263,6 +1287,7 @@ def build(day: str, *, coin: str = COIN,
     obs["asm_peak_gb_PUBLISHED"] = next(
         (r["peak_gb"] for r in stages.rows if r["stage"] == "A2_assemble"),
         None)
+    _pc_stamp = _R22.stamp(__file__)
     return {
         "protocol": "BE_DAYBOOK_V1",
         "day": day, "coin": coin, "artifact_revision": artifact_revision,
@@ -1362,7 +1387,21 @@ def build(day: str, *, coin: str = COIN,
         "resources": obs,
         # RULE 22 AS AMENDED: captured at IMPORT (and again after the lazy
         # imports), reported here, and REFUSED above if anything moved.
-        "producing_code": _R22.stamp(__file__),
+        # REV 123 / BE 117: WHICH OF THE RECORDED MODULES A CONSUMER MUST
+        # CHECK, DERIVED FROM THE RECORDING RATHER THAN TYPED.
+        # `de_multiday_gate1_runner.SCORING_PATH_MODULES` is a hand-typed 5
+        # of these 49; the derivation walks the producer's own call graph
+        # and emits {module: digest} so a consumer needs nothing but this
+        # receipt. It costs 0.66 s and 4.7 KB.
+        #
+        # ONE STAMP, NOT TWO. `stamp()` re-reads the closure each call, so
+        # `dict(stamp(), derived=f(stamp()))` would derive from a SECOND
+        # reading and could publish a derivation of bytes the base block
+        # does not name -- the same "two reads can differ" discipline the
+        # book's own digest follows.
+        "producing_code": dict(_pc_stamp,
+                               derived_closures=_producing_closure_block(
+                                   _pc_stamp)),
         "seam": {"commit": _R22.module_commit(R.__file__),
                  "was_a_typed_literal_until_round_60":
                      "`seam.commit` read \"6f134a6\" for three rounds -- true "
@@ -1426,7 +1465,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 161
+EXPECTED_CHECKS = 166
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1638,6 +1677,59 @@ def selftest() -> int:
            f"{len(_want)} windows. The receipt records BOTH -- the era used "
            f"and the default not used -- so a reader can see which book they "
            f"are holding without diffing code")
+
+    # ---- BE 117: THE DERIVED CLOSURES REACH THE RECEIPT (REV 123) -----
+    _rcs = sorted(LEDGER_DERIVED.glob("be_daybook_receipt_*__L250ms.json"))
+    if not _rcs:
+        for _lbl in ("the derived closure on a real recording",
+                     "the typed-5 comparison",
+                     "the block reads the stamp it is GIVEN",
+                     "the derivation's failure status"):
+            skip(_lbl, "no real receipt on disk")
+    else:
+        _st117 = json.loads(_rcs[-1].read_text())["producing_code"]
+        _blk = _producing_closure_block(_st117)
+        _clo117 = (_st117.get("import_closure") or {}).get("modules") or {}
+        ok(_blk.get("protocol") == "BE_PRODUCING_CLOSURE_V1"
+           and _blk["n_recorded"] == len(_clo117) == 49
+           and _blk["scoring"]["n"] == 8 and _blk["reference"]["n"] == 6
+           and all(_blk["union"]["modules"][m] == _clo117[m]
+                   for m in _blk["union"]["modules"]),
+           f"THE DERIVED CLOSURES REACH THE RECEIPT: {_blk['n_recorded']} "
+           f"recorded -> SCORING {_blk['scoring']['n']}, REFERENCE "
+           f"{_blk['reference']['n']}, union {_blk['union']['n']}, each "
+           f"emitted as {{module: digest}} with THE RECORDING'S OWN digest. "
+           f"A consumer reads one key and types no list")
+        _typed = ("de_phase4_diag_runner.py", "de_head_scoring.py",
+                  "de_score_stream.py", "harmful_stateful_policy.py",
+                  "phase2_arms.py")
+        _sc117 = set(_blk["scoring"]["modules"])
+        ok(set(_typed) < _sc117
+           and sorted(_sc117 - set(_typed)) == ["de_data_root.py",
+                                                "de_multiday_gate1_runner.py",
+                                                "pm_tape_density.py"],
+           f"AND THE TYPED FIVE IS A STRICT SUBSET OF THE DERIVED EIGHT: "
+           f"every typed module IS reached, and the three it does not name "
+           f"are {sorted(_sc117 - set(_typed))}. `pm_tape_density.py` is in "
+           f"the ten-module cascade as well, so neither pin site names it "
+           f"for the SCORING question")
+        _small = {"import_closure": {"modules": dict(list(_clo117.items())[:3])}}
+        ok(_producing_closure_block(_st117)["n_recorded"] == 49
+           and _producing_closure_block(_small).get("n_recorded") == 3,
+           "and the block DERIVES FROM THE STAMP IT IS GIVEN, not from a "
+           "fresh reading -- driven with two different stamps. The receipt "
+           "binds ONE `_R22.stamp(__file__)` and passes it to both halves, "
+           "because `stamp()` re-reads the closure and two reads can differ")
+        ok(_producing_closure_block(_small).get("status")
+           == "DERIVATION_FAILED"
+           and "SEED_MODULE_NOT_IN_THE_CLOSURE"
+           in _producing_closure_block(_small).get("error", ""),
+           f"and a closure that cannot be derived from yields a NAMED "
+           f"STATUS rather than an exception: "
+           f"{_producing_closure_block(_small)['status']}. The RECORDING is "
+           f"what any guarantee rests on and it is intact; the derivation "
+           f"is the convenience, and losing it must not cost a finished "
+           f"build its receipt")
 
     # ---- BE 116: REV 121's NUMBER AND DA 147's STATUS -----------------
     _c116ref, _c116gs = _COV._fixture(per_row=True)
@@ -3150,6 +3242,14 @@ def selftest() -> int:
     # `be_score_coverage`; its falsifier is a cell of BOTH batteries, so a
     # regression in the one implementation of the membership test fails
     # every site that depends on it.
+    _pcf = _R22.shared_falsifier(
+        prog=Path(__file__).resolve().parent / "be_producing_closure.py")
+    ok(_pcf["ok"],
+       f"AND `be_producing_closure.py --falsify` -> rc {_pcf['rc']}, "
+       f"{_pcf['summary']!r}: the derivation this receipt emits, with a "
+       f"planted graph proving it follows calls transitively and IGNORES an "
+       f"import that is never reached, and a `getattr` case proving the set "
+       f"is a LOWER bound. {_pcf['failed_cells'] or _pcf['stderr_tail'] or ''}")
     _swf = _R22.shared_falsifier(
         prog=Path(__file__).resolve().parent / "be_rule28_sweep.py")
     ok(_swf["ok"],
