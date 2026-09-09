@@ -183,25 +183,63 @@ def case_4_book_code_predicate_requires_the_whole_set(
             f"PARTIAL INPUT: no current digest supplied for {missing}; the "
             f"case cannot build the full-set control it needs.")
 
-    def _run(mods):
+    #: DA 156. THE SET MOVED FROM A TYPED FIVE TO BE 117's DERIVED EIGHT,
+    #: and the predicate reads it FROM THE RECEIPT
+    #: (`derived_closures.scoring`), FALLING BACK to the receipt's own
+    #: import_closure when that is absent. Those are TWO PATHS and they do
+    #: not behave alike: on the fallback, `expected` IS `mods`, so
+    #: completeness is `mods subset of mods` -- trivially true, and the
+    #: USER's one-module probe passes again. This case was written without
+    #: a `derived_closures` block, so it only ever drove the FALLBACK and
+    #: would have reported the whole predicate broken. It now drives BOTH
+    #: and reports them separately.
+    def _receipt(mods, declare_derived):
+        r = {"producing_code": {"import_closure": {"modules": mods}}}
+        if declare_derived:
+            full_set = {m: digests[m] for m in expected}
+            r["derived_closures"] = {"scoring": {"modules": full_set,
+                                                 "n": len(full_set)}}
+        return r
+
+    def _run(mods, declare_derived=True):
         try:
-            return True, predicate(
-                {"producing_code": {"import_closure": {"modules": mods}}},
-                where="da_de_fix_cases")
+            return True, predicate(_receipt(mods, declare_derived),
+                                   where="da_de_fix_cases")
         except Exception as e:                                # noqa: BLE001
             return False, e
     ok_full, full = _run({m: digests[m] for m in expected})
-    subsets = {}
-    for m in expected:
-        ok_one, _ = _run({m: digests[m]})
-        subsets[m] = ok_one
+    subsets = {m: _run({m: digests[m]})[0] for m in expected}
     accepted = sorted(m for m, ok in subsets.items() if ok)
+    #: THE FALLBACK, driven separately and REPORTED separately.
+    fb_full, _ = _run({m: digests[m] for m in expected}, declare_derived=False)
+    fb_subsets = {m: _run({m: digests[m]}, declare_derived=False)[0]
+                  for m in expected}
+    fb_accepted = sorted(m for m, ok in fb_subsets.items() if ok)
     return {"case": "book_code_predicate_requires_the_whole_set",
+            #: the VERDICT is about the DECLARED path, because that is the
+            #: one a receipt carrying BE 117's derivation takes. The
+            #: fallback is reported beside it and NOT folded in: it is a
+            #: different question with a different answer.
             "verdict": PRESENT if accepted else (FIXED if ok_full else PRESENT),
             "full_set_accepted": ok_full,
             "n_expected_modules": len(expected),
             "single_module_receipts_accepted": accepted,
             "n_single_module_receipts_accepted": len(accepted),
+            "n_checked_equals_n_expected": (
+                (full.get("n_checked") == len(expected))
+                if ok_full and isinstance(full, dict) else None),
+            "FALLBACK_no_derived_closures": {
+                "full_set_accepted": fb_full,
+                "single_module_receipts_accepted": fb_accepted,
+                "n_single_module_receipts_accepted": len(fb_accepted),
+                "verdict": PRESENT if fb_accepted else FIXED,
+                "why": ("with no `derived_closures.scoring` the predicate "
+                        "falls back to the receipt's OWN import_closure, so "
+                        "`expected` IS `mods` and completeness is trivially "
+                        "satisfied -- the USER's one-module probe passes "
+                        "again. The fallback NAMES itself in the result, so "
+                        "this is disclosed and not silent, and every receipt "
+                        "on disk today takes it")},
             "full_set_n_checked": (full.get("n_checked")
                                    if ok_full and isinstance(full, dict)
                                    else None),
