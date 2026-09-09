@@ -2222,6 +2222,63 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{r_tier['seam']['call_at_the_builder_commit']['source']} and the "
        f"literal agrees")
 
+    #: DA 160. THE SHAPE CELL, AND IT IS THE ONE THAT WAS MISSING.
+    #: Driven straight through `front_door_at` on all three shapes, because
+    #: the fixture below writes a BARE STRING and every real receipt since
+    #: 09-04 writes a MAPPING -- so the cell after this one was green on a
+    #: shape no producer has written in five days (DA 125, in this module).
+    _fdoor = "de_phase4_diag_runner.day_assembly_inputs"
+    _sha = subprocess.run(
+        ["git", "log", "-1", "--format=%H", "--",
+         "live/pm_research/de_phase4_diag_runner.py"],
+        capture_output=True, text=True, cwd=str(HERE)).stdout.strip()
+    _as_str = front_door_at(_fdoor, _sha)
+    _as_map = front_door_at(_fdoor, {"commit": _sha, "short": _sha[:7],
+                                     "module": "de_phase4_diag_runner.py",
+                                     "source": "git log -1 -- <module>"})
+    _no_key = front_door_at(_fdoor, {"short": _sha[:7]})
+    _wrong_t = front_door_at(_fdoor, 12345)
+    _absent = front_door_at(_fdoor, None)
+    _missing_fn = front_door_at("de_phase4_diag_runner.NO_SUCH_FUNCTION",
+                                {"commit": _sha})
+    ck("DA 160 THE PRODUCER'S SHAPE IS THE ONE THAT MATTERS: `seam.commit` "
+       "as a BARE STRING and as the MAPPING every receipt has carried since "
+       "09-04 give the SAME answer, and the mapping is the shape that "
+       "flagged the first corrected book. ***The f-string rendered the whole "
+       "mapping into the git ref, so DE's front door read as NOT PRESENT AT "
+       "ITS OWN COMMIT -- REVIEW 105's shape, the conclusion surviving while "
+       "the evidence did not***",
+       _as_str["resolves"] is True and _as_map["resolves"] is True
+       and _as_map["commit"] == _sha
+       and _as_str["commit_field_shape"] == "a bare string"
+       and "mapping" in _as_map["commit_field_shape"],
+       f"string -> {_as_str['resolves']} ({_as_str['commit_field_shape']}); "
+       f"mapping -> {_as_map['resolves']} ({_as_map['commit_field_shape']})")
+    ck("DA 160 AND AN UNREADABLE SHAPE IS `None`, NEVER `False` -- because "
+       "False is the answer 'THE MODULE IS NOT THERE', which is a finding "
+       "about DE's tree, and a shape this reader cannot parse is a finding "
+       "about THIS READER. It is named, it carries the shape it saw, and "
+       "***it cannot raise the flag***, whose condition is `is False`",
+       _no_key["resolves"] is None and _wrong_t["resolves"] is None
+       and _no_key["status"] == SEAM_COMMIT_SHAPE_UNREADABLE
+       and _wrong_t["status"] == SEAM_COMMIT_SHAPE_UNREADABLE
+       and _absent.get("resolves") is None
+       and not any(x.get("resolves") is False
+                   for x in (_no_key, _wrong_t, _absent)),
+       f"no commit key -> {_no_key['resolves']} "
+       f"({_no_key['commit_field_shape']}); an int -> "
+       f"{_wrong_t['resolves']} ({_wrong_t['commit_field_shape']}); "
+       f"absent -> checked={_absent['checked']}")
+    ck("DA 160 AND IT CAN STILL FIRE FOR THE RIGHT REASON: a front door "
+       "that genuinely is NOT DEFINED in DE's module at the commit the "
+       "receipt names resolves False and says which function it looked for "
+       "-- ***removing a false alarm is how a real one gets through***",
+       _missing_fn["resolves"] is False
+       and _missing_fn["function"] == "NO_SUCH_FUNCTION"
+       and _missing_fn["commit"] == _sha,
+       f"NO_SUCH_FUNCTION at {_sha[:7]} -> {_missing_fn['resolves']}: "
+       f"{_missing_fn['why'][:80]}")
+
     #: and seam.commit is checked against DE's module, which is what it names
     fd = r_tier["seam"]["front_door_check"]
     ck("AND `seam.commit` IS CHECKED AGAINST DE's MODULE -- WHICH IS WHAT IT "
