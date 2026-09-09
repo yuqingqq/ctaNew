@@ -109,6 +109,32 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## Verifying someone else's fix (DA 142, rule 27) — the four moves
+
+1. **Build your own fixture.** A fix driven only against its author's fixture is
+   the class REV 113 caught. Mine was 3 slugs x 2 sides x 2 generations with every
+   row at the generation MIDPOINT, so not one sat at `t0` — the exact case the
+   pre-fix test got wrong.
+2. **Make the corrected count falsifiable.** Run the same generations with rows AT
+   `t0` too: if new == old == n there, the corrected count is not just always-n and
+   the pre-fix recomputation is not inert.
+3. **Answer the dispatch's question, including the half that is NO.** "Does it now
+   refuse real under-coverage?" — structurally yes (five predicates fire by name),
+   on the LEVEL no: 8.3 % coverage is ADMITTED because `MIN_COVERAGE_DEFAULT = None`.
+   Confirm the omission is honest rather than hidden by supplying the floor
+   explicitly and watching it refuse.
+4. **For "did it narrow something correct", name what you found even when it
+   exonerates.** I found two; both were corrections — an old FALSE PASS (two
+   generations "covered" by one key) now refused by the right name, and an
+   unreachable one that fails loud. Check reachability at the validator before
+   calling a narrowing real.
+
+**And run the positive control with the environment check OFF as well as on.** Mine
+refused with the disk check on, which looked like a fix defect and was not: a pinned
+module had moved in a LATER commit. Isolating the logic from the environment
+separated "the fix is wrong" from "the tree moved", and the second was a blocker
+worth more than the round's actual question.
+
 ## Bounding an upstream data defect (DA 141) — the move that made it answerable
 
 REV 112 found the builder resolving the wrong collector era, so every September
