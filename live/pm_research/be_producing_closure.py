@@ -78,6 +78,88 @@ class ClosureRefused(RuntimeError):
     """A named refusal."""
 
 
+#: WHAT A CONSUMER OF THIS BLOCK MUST REFUSE -- the recording side's half of
+#: the fix, stated as FIELDS so DE's predicate is written against an artifact
+#: and not against a sentence in a register row.
+#:
+#: THE DEFECT THIS EXISTS FOR, reproduced from this side at BE 119 rather
+#: than taken from the report: `de_multiday_gate1_runner.assert_book_scoring_
+#: code` returns `BOOK_SCORING_CODE_MATCHES` with `n_checked` of 4, 3, 2 and
+#: **1** when the receipt's closure carries only part of its five typed
+#: modules. Only the ZERO case refuses. **A checker that matches on whatever
+#: it happens to find is not a checker** -- and every one of those inputs is
+#: producible here, which is why the cases are enumerated rather than
+#: imagined.
+CONSUMER_CONTRACT = {
+    "the_expected_set_is_READ_not_typed": {
+        "for_a_SCORING_predicate": "derived_closures.scoring.modules "
+                                   "(+ .n for the count)",
+        "for_a_WHOLE_BOOK_predicate": "derived_closures.union.modules -- a "
+                                      "book carries `fr` as well as `asm`, "
+                                      "and the reference set is not the "
+                                      "scoring set",
+        "shape": "{module_filename: sha256} -- the RECORDING's own digests, "
+                 "so the consumer compares against disk and needs nothing "
+                 "else",
+        "the_completeness_test": "n_checked == <that set>.n. THE COUNT COMES "
+                                 "FROM THE RECEIPT, so 'did I check all of "
+                                 "them' is answerable without a typed list",
+    },
+    "must_refuse": [
+        {"name": "CLOSURE_ABSENT",
+         "when": "the receipt carries no `producing_code.import_closure`",
+         "real_instances_on_disk": ["be_daybook_receipt_20260903_btc.json",
+                                    "be_daybook_receipt_20260904_btc.json"],
+         "note": "pre-rule-22 receipts. Already refused today as "
+                 "BOOK_SCORING_CODE_NOT_RECORDED"},
+        {"name": "CLOSURE_EMPTY",
+         "when": "`producing_code` is present and its closure names zero "
+                 "modules",
+         "real_instances_on_disk": ["be_daybook_receipt_20260904_btc.v2.json",
+                                    "be_daybook_receipt_20260904_btc.v3.json"],
+         "note": "a superseding receipt can carry the block without the "
+                 "closure. Already refused today"},
+        {"name": "EXPECTED_SET_NOT_FULLY_PRESENT",
+         "when": "the closure does not name EVERY module of the expected "
+                 "set -- one missing is enough",
+         "real_instances_on_disk": [],
+         "producible_here": "yes, and it is not hypothetical: two runs of "
+                            "the SAME builder recorded 49 and 48 modules "
+                            "(20260905's L250 and base receipts differ by "
+                            "`da_root.py`), because 42 of the 49 enter only "
+                            "at `build(): after the lazy imports`. Closure "
+                            "membership is a property of the RUN, not a "
+                            "constant",
+         "note": "**THIS IS THE USER'S DEFECT.** Driven from this side: the "
+                 "current predicate returns MATCH with n_checked 4, 3, 2 "
+                 "and 1. A subset must never be accepted as the set"},
+        {"name": "EXPECTED_SET_UNREADABLE",
+         "when": "`derived_closures` is absent (a receipt older than "
+                 "BE 117) or carries `status: DERIVATION_FAILED`",
+         "real_instances_on_disk": ["every receipt on disk today -- the "
+                                    "block ships with the next build"],
+         "note": "the consumer must then fall back to "
+                 "`import_closure.modules` -- the RECORDING, which cannot "
+                 "under-cover -- and SAY SO in its result. Falling back to "
+                 "a typed list is the defect returning under another name"},
+        {"name": "DIGEST_DIFFERS",
+         "when": "a named module's recorded digest is not the file's bytes",
+         "note": "the refusal that already exists; unchanged"},
+    ],
+    "must_NOT_refuse": [
+        {"name": "a closure LARGER than the expected set",
+         "why": "the recording is the whole import closure and the expected "
+                "set is a subset of it by construction; extra modules are "
+                "the normal case, not a fault"},
+    ],
+    "why_the_count_is_not_enough_on_its_own": (
+        "`n_checked` equal to `n` proves cardinality, not identity. The "
+        "consumer compares the KEY SET, and the count is the cheap "
+        "assertion beside it -- a set of the right size with the wrong "
+        "members is the shape rule 33 is about"),
+}
+
+
 def _module_aliases(tree: ast.Module) -> tuple:
     """(alias -> module, imported_name -> module) for one parsed module."""
     mods, names = {}, {}
@@ -253,6 +335,7 @@ def derive(closure: dict, root: Path | None = None) -> dict:
             "first_edge_to_each": {k: v[0] for k, v in sorted(rf.items())},
         },
         "union": {"modules": _with_digests(both), "n": len(both)},
+        "consumer_contract": CONSUMER_CONTRACT,
         "how_a_consumer_uses_this": (
             "read `modules` -- it is {module: digest}, the digests being the "
             "RECORDING's own -- and compare each against the file on disk. "
@@ -292,7 +375,7 @@ def derive(closure: dict, root: Path | None = None) -> dict:
 # THE FALSIFIER
 # ---------------------------------------------------------------------------
 
-EXPECTED_CHECKS = 12
+EXPECTED_CHECKS = 16
 
 _A = '''
 import bmod as B
@@ -441,6 +524,70 @@ def falsify() -> int:
            f"RECORDING's own digest -- {out['union']['n']} of them -- so a "
            f"consumer reads one key, compares each against disk, and types "
            f"no list. A second hashing here would have been a second number")
+
+    # ---- BE 119: THE CONSUMER CONTRACT, AND ITS CITATIONS CHECKED -----
+    # The contract names REAL FILES as instances of each partial input. A
+    # citation nobody verifies is a citation that rots, so the battery reads
+    # them. What it does NOT do is assert DE's CURRENT behaviour on a
+    # subset: that is the defect being fixed, and pinning it here would
+    # enshrine it as spec (rule 16).
+    der = HERE.parents[1] / "data" / "pm_5min" / "derived"
+    cc = CONSUMER_CONTRACT
+    names = [c["name"] for c in cc["must_refuse"]]
+    ok(names == ["CLOSURE_ABSENT", "CLOSURE_EMPTY",
+                 "EXPECTED_SET_NOT_FULLY_PRESENT", "EXPECTED_SET_UNREADABLE",
+                 "DIGEST_DIFFERS"]
+       and all(c.get("when") for c in cc["must_refuse"])
+       and cc["must_NOT_refuse"],
+       f"THE CONTRACT IS FIELDS, NOT PROSE: {len(names)} named refusals "
+       f"{names}, each with the condition that triggers it, plus what must "
+       f"NOT refuse -- so DE's predicate and its falsifier are written "
+       f"against an artifact rather than a register row")
+    cited = {c["name"]: c.get("real_instances_on_disk") or []
+             for c in cc["must_refuse"]}
+    absent = [n for n in cited["CLOSURE_ABSENT"]
+              if (der / n).is_file()
+              and not json.loads((der / n).read_text()).get("producing_code")]
+    empty = [n for n in cited["CLOSURE_EMPTY"]
+             if (der / n).is_file()
+             and json.loads((der / n).read_text()).get("producing_code")
+             and not (((json.loads((der / n).read_text())["producing_code"]
+                        .get("import_closure")) or {}).get("modules"))]
+    ok(len(absent) == len(cited["CLOSURE_ABSENT"]) == 2
+       and len(empty) == len(cited["CLOSURE_EMPTY"]) == 2,
+       f"AND ITS CITATIONS ARE READ, NOT TYPED: {len(absent)} receipts on "
+       f"disk really carry no `producing_code` ({absent}) and {len(empty)} "
+       f"carry the block with an EMPTY closure ({empty}). Both partial "
+       f"inputs exist today")
+    a5 = der / "be_daybook_receipt_20260905_btc.json"
+    b5 = der / "be_daybook_receipt_20260905_btc__L250ms.json"
+    if a5.is_file() and b5.is_file():
+        ma = set((((json.loads(a5.read_text())["producing_code"]
+                    .get("import_closure")) or {}).get("modules")) or {})
+        mb = set((((json.loads(b5.read_text())["producing_code"]
+                    .get("import_closure")) or {}).get("modules")) or {})
+        ok(len(ma) == 48 and len(mb) == 49 and sorted(mb - ma) == ["da_root.py"],
+           f"AND THE THIRD CASE IS NOT HYPOTHETICAL EITHER: two runs of the "
+           f"SAME builder recorded {len(ma)} and {len(mb)} modules, "
+           f"differing by {sorted(mb - ma)}. **CLOSURE MEMBERSHIP IS A "
+           f"PROPERTY OF THE RUN, NOT A CONSTANT** -- which is exactly why "
+           f"a predicate must refuse a partial expected set instead of "
+           f"checking whatever it finds")
+    else:
+        ok(False, "the 09-05 receipt pair is absent, so the "
+                  "membership-varies claim could not be driven")
+    if rc:
+        out2 = derive(clo, root=HERE)
+        ok(out2["scoring"]["n"] == len(out2["scoring"]["modules"])
+           and out2["union"]["n"] == len(out2["union"]["modules"])
+           and out2["consumer_contract"]["the_expected_set_is_READ_not_typed"][
+               "the_completeness_test"].startswith("n_checked =="),
+           f"THE COMPLETENESS TEST IS ANSWERABLE FROM THE RECEIPT: the "
+           f"expected set ships with its own count ({out2['scoring']['n']} "
+           f"scoring, {out2['union']['n']} union) and `n` equals "
+           f"`len(modules)` in both, so `n_checked == n` needs no typed "
+           f"list -- and the contract says in the same block that a count "
+           f"alone proves cardinality and not identity")
 
     print()
     if fails:
