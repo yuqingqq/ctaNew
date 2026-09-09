@@ -67,6 +67,47 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T16:59:32Z (MEM ROUND 328 -- ***A CORRECTION TO MY ROUND-327 FILES AND A USER RULING THAT CLOSES ONE OF THE TWO
+  OPEN ITEMS.*** ***I CARRIED "THE `research.slice` 200 % CAP" AS AN OPEN USER ITEM AND IT DOES NOT EXIST; R-870
+  SUPERSEDES IT IN BAND.*** The coordinator says the error was its own, and that is true of where the sentence came
+  from -- **but I recorded it as an open item in a round whose whole point was that open items get quietly absorbed,
+  and I DID NOT CHECK IT AT THE FILE; the slice is one `cat` away and I had read `/proc/locks` twice that night for
+  less.** ***MEASURED BY ME AT BOTH FILES: `research.slice` GRANTS `CPUQuota=1200%` ON A 16-CORE BOX AND THE ACTUAL
+  LIMITER IS A HARDCODED `-p CPUQuota=100%` PER UNIT AT `be_heavy_run.sh:515` -- SO A UNIT IS PINNED TO ONE CORE
+  INSIDE AN ALLOWANCE OF TWELVE, THE QUESTION WAS NEVER "RAISE A SLICE CAP" BUT "RAISE A PER-UNIT QUOTA INTO
+  HEADROOM THE SLICE ALREADY GRANTS", AND CPU WAS NEVER THE CONSTRAINT AT ALL.*** **THE CONSTRAINT IS MEMORY AND I
+  CONFIRMED THE HARD PART, `MemorySwapMax=0` -- THERE IS NO SWAP ESCAPE**, with the slice setting `MemoryMax=60%`
+  and pre-arming `ManagedOOMMemoryPressure=kill` at an 80 % pressure limit; **and the slice's own header records why
+  it exists -- "BORN FROM THE 03:55 UTC BOX DEATH (AGGREGATE MEMORY EXHAUSTION) -- A SINGLE-JOB CAP CANNOT BOUND THE
+  SUM".** ***THE USER HAS RULED HARD: "DON'T 8x IF IT WILL CAUSE OOM" -- THE DEFAULT IS NO CHANGE, ONE UNIT, AND 8
+  IS A CEILING THE MEASUREMENT MUST EARN, NOT A TARGET; BUDGET AGAINST `MemoryHigh` 12 GB NOT `MemoryMax` 14 GB,
+  MARGIN 0.75 SO USABLE = 9 GB, N = floor(9 / MEASURED PEAK) CAPPED AT 8, AND N < 2 MEANS WE CHANGE NOTHING.***
+  ***AND I APPLIED THAT RULE TO THE PEAKS ALREADY ON THE RECORD: `floor(9/5.175) = 1`, `floor(9/5.484) = 1`,
+  `floor(9/6.354) = 1`, AND 0 AT BE'S COLD 09-04 ESTIMATE OF 9.70 GB -- EVERY PEAK THIS PROGRAMME HAS MEASURED GIVES
+  N = 1, WHICH IS THE RULING'S OWN "CHANGE NOTHING"*** -- **with the qualification stated rather than glossed: THOSE
+  ARE BOOK-BUILD PEAKS, NOT NULL-DRAW PEAKS.** ***AND A DISCREPANCY I FILE FOR DA AND THE COORDINATOR RATHER THAN
+  DISPUTE, BECAUSE IT MOVES N: I COULD NOT LOCATE `MemoryHigh` ANYWHERE, NOT IN THE SLICE AND NOT IN
+  `be_heavy_run.sh`. THE SLICE SETS `MemoryMax=60%` OF A 30 GB BOX = 18 GB AGGREGATE, AND THE PER-UNIT DEFAULT IS
+  `MEMMAX="${BE_MEMORY_MAX:-8G}"` AT `:475` -- SO 12 AND 14 LOOK LIKE PER-UNIT FIGURES WHILE THE CEILING THAT BOUNDS
+  N CONCURRENT UNITS IS THE SLICE'S 18 GB, WHICH IS THE HEADER'S OWN POINT. AT 0.75 THAT IS USABLE 13.5 GB AND N = 2
+  AT EVERY BOOK-BUILD PEAK AGAINST N = 1 UNDER 12 GB.*** *The ruling's ceiling, its prohibition and its N<2 no-op
+  bind either way; only the arithmetic between them moves.* **AND THE NUMBER THAT ACTUALLY DECIDES IT IS NEITHER:
+  WHETHER N DRAWS' FOOTPRINTS ADD (EACH WORKER LOADS ITS OWN REFERENCE) OR OVERLAP BY COPY-ON-WRITE (THEY FORK FROM
+  A PARENT ALREADY HOLDING IT) -- A FACTOR OF SEVERAL IN EITHER DIRECTION. DA 172/173 IS MEASURING IT.** ***THE USER
+  HAS RULED THE NULL'S SAMPLING UNIT: A DRAW RESAMPLES THE CANCELLABLE GENERATION (OPTION C), n = 358,108 REFERENCE
+  GENERATIONS ON 09-04, BINDING EVERY NULL FROM HERE*** -- **the reasoning being the programme's own rules applied
+  by elimination: ROWS ARE NOT ACTIONS (1.99 rows/fill, max 23, so a row-matched control is not matched on the
+  decision variable, rule 7) AND CANCELS ARE OUTCOME-SELECTED (rule 1's endogeneity trap, with DA's seal that the
+  ledger carries NO CANCEL ROW KIND TO DRAW FROM).** ***SO THE TWO ITEMS I REFUSED TO CLOSE LAST ROUND ARE NOW ONE,
+  NOT TWO: THE SAMPLING UNIT IS RULED AND CLOSED; THE CONCURRENCY IS OPEN PENDING DA'S MEASUREMENT UNDER A HARD
+  NO-OOM CONSTRAINT -- AND THE OPEN ONE IS NOT THE ITEM I RECORDED. MY ROUND-327 INSTINCT WAS RIGHT THAT A SWEEP
+  CLOSING FIVE ITEMS IS WHEN AN OPEN ONE GETS ABSORBED, AND THE FAILURE MODE TURNED OUT TO BE THE ADJACENT ONE: NOT
+  AN ITEM QUIETLY CLOSED, BUT AN ITEM CARRIED FORWARD IN THE WRONG TERMS.*** **THE USER RULED 09-05 AND 09-06
+  REBUILD, QUEUED AFTER THE 09-04 POINT ESTIMATE, ~74 MIN EACH -- AND UNTIL THEY EXIST THE FOUR-DAY TABLE CANNOT BE
+  REQUOTED, SINCE 09-03 AND 09-04 HAVE CORRECTED EV21 BOOKS WHILE 09-05 AND 09-06 ARE STILL era=None OVER ZERO
+  GAP-BEARING WINDOWS** -- *a table across four days where two carry gaps and two pretend there are none would
+  compare corrected against uncorrected and read the difference as signal.* Flags 2902 -> 2915, prov 2447 -> 2460;
+  window 3/3, Batch 310 archived. MEM asserts no result.)
   2026-09-09T16:51:48Z (MEM ROUND 327 -- ***ALL FIVE OF THE USER'S REVIEW ITEMS ARE CLOSED AND THE 09-04 POINT ESTIMATE IS
   RUNNING.*** ***ITEM 1 IS CLOSED AND IT IS THE LAST OF THE FIVE*** (`a1de5ee` + `451bd1f`, DE 181), **the
   reconciliation wired IN THE DRIVER AND NOT THE SCORING-PATH RUNNER, per the user's own words -- WHICH I CONFIRMED
@@ -139,52 +180,6 @@ updated: >-
   -- NOT the runner, because editing the runner would stale every book -- and BE is fixing the `EV20 queue only`
   scope string in the EV21 launch record.** Flags 2882 -> 2888, prov 2427 -> 2433; window 3/3, Batch 308 archived.
   MEM asserts no result.)
-  2026-09-09T15:42:43Z (MEM ROUND 325 -- ***THE REBUILD BUYS PROVENANCE, NOT CORRECTNESS -- AND I DROVE THE MECHANISM RATHER
-  THAN ACCEPTING THE CONCLUSION.*** DA 168/169: **"NOTHING THAT MOVED CAN CHANGE THIS BOOK'S SCORES"**, established
-  ***STRUCTURALLY RATHER THAN BY CLASSIFYING COMMITS*** -- *"these four changes look harmless" is an opinion; "the
-  scoring path is one function and it is byte-identical" is a measurement.* **THE CHAIN, CONFIRMED AT THE CODE:
-  `SCORING_ENTRY_POINTS` IS EXACTLY TWO FUNCTIONS IN `de_phase4_diag_runner` (`assemble_streaming`,
-  `build_tape_index`), THE REFUSING MODULE IS ON THE EXECUTED PATH VIA `build_tape_index ->
-  _ruled_day_set_imported -> _G.ruled_day_set()`, AND THE SCORING PATH THROUGH IT IS EXACTLY ONE FUNCTION** --
-  ***`ruled_day_set`, WHICH I EXTRACTED FROM DISK AND HASHED: 8 LINES, sha256[:16] = `41988ef4272c73a9`, DA'S DIGEST
-  TO THE CHARACTER***, in a module I measure at 16,626 lines against DA's 16,205 (*a difference entirely consistent
-  with what I recorded last round, that the module has moved again since; the RATIO is the point and survives either
-  figure*). **The function reads ONE constant, and its docstring states why it is not a parameter -- "a lock whose
-  input the caller supplies is not a lock".** **THE FOUR COMMITS TOUCHED 8 FUNCTIONS AND 11 MODULE CONSTANTS AND THE
-  INTERSECTION WITH THAT PATH IS EMPTY**, ***AND I CHECKED THE ONE INPUT THAT COULD HAVE CARRIED A CHANGE IN:
-  `PARAMS_REL` APPEARS 25 TIMES AND IS UNTOUCHED ACROSS THE LAST FOUR COMMITS -- I DIFFED FOR `^[+-]PARAMS_REL` AND
-  FOUND NOTHING.*** **The two changes that LOOKED alarming and were not: `day_decision_population`'s SEVEN LINES ARE
-  ALL ADDITIONS, a `theta_drift` field appended with `decisions`, `by_side` and every computed quantity UNTOUCHED,
-  and the multi-day repoint is CROSS-DAY rather than per-day** -- ***AND THE FIRST IS THE FUNCTION WHOSE DEFECT
-  STARTED THIS WHOLE THREAD, SO SEEING IT IN A DIFF IS EXACTLY WHERE A CLASSIFY-THE-COMMITS APPROACH WOULD HAVE
-  STOPPED AND ORDERED THE REBUILD.*** DA's sentence, kept verbatim: ***"MORE IS REPORTED, NO NUMBER DIFFERS"*** --
-  *the same shape the theta-drift ruling created, and exactly the change a whole-module digest cannot distinguish
-  from one that rewrites the arithmetic.* ***AND DA STATES ITS OWN LIMIT BEFORE ANYONE ASKS: THE RESULT IS ABOUT
-  THIS BOOK AGAINST THESE FOUR COMMITS AND IS NOT A GENERAL LICENCE; THE NEXT REFUSAL NEEDS THE SAME DERIVATION***
-  -- *the scope clause is the difference between evidence and precedent* -- **and REV 146 IS DERIVING THE REACHABLE
-  SET INDEPENDENTLY "BECAUSE A WAIVER WOULD REST ON 'THE PATH IS ONE FUNCTION' AND THAT IS ABOUT TO BE
-  LOAD-BEARING"**, *the correct trigger stated in the right terms -- not "is DA trustworthy" but "what is this
-  sentence about to be asked to hold up"; my own reproduction corroborates DA'S INVOCATION, REV tests the
-  OPERATION.* ***THE DESIGN ANSWER, ADOPTED AND BEING BUILT BY DE 179: "DO NOT NARROW THE CONDITION. WIDEN THE
-  PAYLOAD." WHOLE-MODULE STAYS THE PREDICATE -- "THESE BYTES PRODUCED THIS BOOK", AND THERE IS NO HONEST WEAKER FORM
-  -- BUT THE REFUSAL MUST ALSO CARRY THE REACHABLE CLOSURE INTERSECTED WITH WHAT CHANGED, PLUS THE BYTE-IDENTITY OF
-  THE FUNCTIONS ON THAT PATH, SO THE REBUILD-VERSUS-SUPERSEDE DECISION IS READABLE FROM THE REFUSAL.*** *The
-  temptation was to make the predicate reachability-aware so this refusal would not have fired, trading a guard that
-  is RIGHT for one that is CONVENIENT.* ***AND THE CONSTRAINT THAT KEEPS IT HONEST: THE PAYLOAD IS EVIDENCE FOR A
-  HUMAN DECISION, NOT A LICENCE FOR THE CODE TO PROCEED -- THE RUN STILL REFUSES*** -- *without that clause the
-  widening becomes the narrowing by another route, and this programme has watched a diagnostic become a licence
-  three times tonight.* **THE PENDING RULING: WHETHER HAZARD'S NULL MAY RUN ON THE EV21 BOOK UNDER AN EXPLICIT
-  RECORDED WAIVER INSTEAD OF A 68-MINUTE REBUILD -- STRUCTURALLY THE SAME QUESTION THE USER ALREADY RULED ON FOR
-  `MATCHES_WITH_UNNAMED_MEMBERS`, MAY A RUN PROCEED PAST A REFUSAL WHEN THE REASON IS KNOWN AND NAMED, AND THEY
-  ANSWERED YES PROVIDED THE EXEMPTION IS A PREDICATE RATHER THAN A CONVENTION** -- *recording the precedent matters
-  more than the question, since the user has supplied the SHAPE of the answer; and REV 139 drove that the last such
-  exemption was NOT a predicate when first claimed to be.* **AND THE COORDINATOR IS NOT PUTTING IT TO THE USER UNTIL
-  REV'S DERIVATION LANDS, "BECAUSE IT WOULD OTHERWISE REST ON ONE SEAT'S WORD"** -- ***THE SAME JUDGEMENT AS HOLDING
-  THE RECONCILIATION WIRING, MADE ONE STEP EARLIER AGAIN: A RULING REQUESTED ON EVIDENCE THAT HAS NOT BEEN
-  INDEPENDENTLY DERIVED IS A RULING THE USER CANNOT PROPERLY GIVE.*** **09-04 is building with the stage table now
-  STREAMING LIVE, so a killed run leaves A0/A1/A2 behind -- THE RECORDING GAP BE ITSELF NAMED AT BE 128, CLOSED BY
-  BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2882, prov 2411 -> 2427; window 3/3, Batch 307 archived. MEM asserts
-  no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -356,6 +351,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 328, R-870: the slice cap does not exist; the sampling unit is RULED ---
+  THE_RESEARCH_SLICE_200_PERCENT_CAP_DOES_NOT_EXIST_AND_I_CARRIED_IT: SUPERSEDED-IN-BAND
+  THE_SLICE_GRANTS_TWELVE_HUNDRED_PERCENT_AND_THE_LIMITER_IS_HARDCODED_PER_UNIT: 515-CPUQuota-100
+  SO_THE_QUESTION_WAS_NEVER_A_SLICE_CAP_AND_CPU_WAS_NEVER_THE_CONSTRAINT: INTO-HEADROOM-ALREADY-GRANTED
+  THE_CONSTRAINT_IS_MEMORY_AND_THERE_IS_NO_SWAP_ESCAPE: MemorySwapMax-0
+  THE_SLICES_OWN_HEADER_RECORDS_WHY_IT_EXISTS: A-SINGLE-JOB-CAP-CANNOT-BOUND-THE-SUM
+  THE_USER_RULED_HARD_DONT_8X_IF_IT_WILL_CAUSE_OOM: EIGHT-IS-A-CEILING-NOT-A-TARGET
+  AND_APPLYING_THE_RULED_SIZING_TO_THE_PEAKS_ON_RECORD_ALREADY_GIVES_ONE: N-LESS-THAN-2-MEANS-NO-CHANGE
+  I_COULD_NOT_LOCATE_MEMORYHIGH_AND_THE_SLICE_MEASURES_EIGHTEEN_GB: A-DISCREPANCY-FOR-DA-NOT-A-DISPUTE
+  THE_DECIDING_NUMBER_IS_WHETHER_FOOTPRINTS_ADD_OR_OVERLAP: COPY-ON-WRITE-OR-NOT
+  THE_NULLS_SAMPLING_UNIT_IS_RULED_AND_I_CLOSE_EXACTLY_THAT_ONE: OPTION-C-n-358108
+  ROWS_ARE_NOT_ACTIONS_AND_CANCELS_ARE_OUTCOME_SELECTED: RULE-7-AND-RULE-1
+  SO_TWO_OPEN_ITEMS_BECOME_ONE_AND_I_SAY_WHY_THE_OTHER_STANDS: CLOSE-ONE-KEEP-ONE
+  AND_09_05_AND_09_06_ARE_RULED_TO_REBUILD_BEFORE_THE_TABLE_CAN_BE_REQUOTED: era-None-OVER-ZERO-GAPS
   # --- MEM round 327, all five user items CLOSED; the 09-04 book is built (c4de5e6 -> f456fd7) ---
   ITEM_1_IS_CLOSED_AND_IT_IS_THE_LAST_OF_THE_USERS_FIVE: ALL-FIVE-CLOSED
   AND_THE_WIRING_IS_IN_THE_DRIVER_NOT_THE_RUNNER_WHICH_I_CONFIRMED_THREE_WAYS: ZERO-IN-THE-RUNNER-TWO-IN-THE-DRIVER
@@ -27327,6 +27336,155 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 328, 2026-09-09T16:59:32Z ---
+  THE_RESEARCH_SLICE_200_PERCENT_CAP_DOES_NOT_EXIST_AND_I_CARRIED_IT:
+    prov: CHECKED
+    artifact: ~/.config/systemd/user/research.slice
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***A CORRECTION TO MY ROUND-327 FILES: I CARRIED "THE `research.slice` 200 % CAP" AS AN OPEN USER ITEM, AND IT
+      DOES NOT EXIST.*** **R-870 supersedes it in band.** *The coordinator states the error was its own and not
+      mine, and that is true of where the sentence came from* -- ***BUT I RECORDED IT AS AN OPEN ITEM IN A ROUND
+      WHOSE WHOLE POINT WAS THAT OPEN ITEMS GET QUIETLY ABSORBED, AND I DID NOT CHECK IT AT THE FILE.*** **The
+      slice is one `cat` away and I had already read `/proc/locks` twice that night for less.** *A relayed
+      constraint I could have measured in one command is a relayed constraint I should have measured.*
+  THE_SLICE_GRANTS_TWELVE_HUNDRED_PERCENT_AND_THE_LIMITER_IS_HARDCODED_PER_UNIT:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***MEASURED BY ME AT BOTH FILES: `research.slice` GRANTS `CPUQuota=1200%` ON A 16-CORE BOX, AND THE ACTUAL
+      LIMITER IS A HARDCODED `-p CPUQuota=100%` PER UNIT AT `be_heavy_run.sh:515`*** -- the line reads `-p
+      MemoryMax="$MEMMAX" -p CPUQuota=100% -p RemainAfterExit=yes \`. **The slice also carries `CPUWeight=50` and
+      `TasksMax=1024`, and its header says research gets "AT MOST 60% of RAM and 75% of CPU" and "yields first under
+      contention (CPUWeight 50 vs collectors' 500)".** ***SO A UNIT IS PINNED TO ONE CORE INSIDE AN ALLOWANCE OF
+      TWELVE.***
+  SO_THE_QUESTION_WAS_NEVER_A_SLICE_CAP_AND_CPU_WAS_NEVER_THE_CONSTRAINT:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***SO THE OPEN QUESTION WAS NEVER "RAISE A SLICE CAP" -- IT IS "RAISE A PER-UNIT QUOTA INTO HEADROOM THE SLICE
+      ALREADY GRANTS", AND CPU WAS NEVER THE CONSTRAINT AT ALL.*** **The two framings point at different files,
+      different owners and different risks: raising a slice cap loosens an AGGREGATE guard born from a box death;
+      raising a per-unit quota spends headroom that guard already allows.** *This programme has spent two nights on
+      the difference between a claim and the artifact it names* -- **and here a single relayed phrase pointed a
+      question at the wrong file for as long as nobody opened it.**
+  THE_CONSTRAINT_IS_MEMORY_AND_THERE_IS_NO_SWAP_ESCAPE:
+    prov: CHECKED
+    artifact: ~/.config/systemd/user/research.slice
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***THE CONSTRAINT IS MEMORY, AND I CONFIRMED THE HARD PART: `MemorySwapMax=0`. THERE IS NO SWAP ESCAPE.***
+      **The slice sets `MemoryMax=60%` of the machine and pre-arms `ManagedOOMMemoryPressure=kill` with
+      `ManagedOOMMemoryPressureLimit=80%`, inert until the daemon is enabled.** *With swap at zero, memory pressure
+      has nowhere to go: reclaim cannot spill, so the failure mode is not slowdown but the kill* -- **which is
+      exactly why the user's ruling is phrased as a prohibition rather than a budget.**
+  THE_SLICES_OWN_HEADER_RECORDS_WHY_IT_EXISTS:
+    prov: CHECKED
+    artifact: ~/.config/systemd/user/research.slice
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***AND THE SLICE'S OWN HEADER RECORDS WHY IT EXISTS, WHICH IS THE BEST ARGUMENT AGAINST TOUCHING IT
+      CASUALLY: "R-148/R-150 (2026-08-26): aggregate resource guard for ALL heavy research jobs. BORN FROM THE 03:55
+      UTC BOX DEATH (AGGREGATE MEMORY EXHAUSTION) -- A SINGLE-JOB CAP CANNOT BOUND THE SUM."*** **A guard whose file
+      carries its own incident date and its own reasoning is a guard a later reader cannot mistake for arbitrary**
+      -- *and it is the same discipline this programme has been landing all night at the level of fields and
+      refusals, present here since August at the level of a config file.*
+  THE_USER_RULED_HARD_DONT_8X_IF_IT_WILL_CAUSE_OOM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***THE USER HAS RULED ON IT, HARD: "DON'T 8x IF IT WILL CAUSE OOM." THE DEFAULT IS NO CHANGE -- ONE UNIT -- AND
+      8 IS A CEILING THE MEASUREMENT MUST EARN, NOT A TARGET.*** **The sizing rule of record: BUDGET AGAINST
+      `MemoryHigh` 12 GB NOT `MemoryMax` 14 GB (because MemoryHigh is where the kernel THROTTLES AND RECLAIMS, and
+      with swap at zero there is nowhere for reclaim to go), KEEP A MARGIN AT 0.75 SO USABLE = 9 GB, AND N =
+      floor(9 GB / MEASURED PEAK) CAPPED AT 8, WITH N < 2 MEANING WE CHANGE NOTHING.** *A ruling that names its
+      denominator, its margin, its cap AND its no-op condition leaves a seat nothing to interpret.*
+  AND_APPLYING_THE_RULED_SIZING_TO_THE_PEAKS_ON_RECORD_ALREADY_GIVES_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***AND I APPLIED THE RULED SIZING TO THE PEAKS ALREADY ON THE RECORD, WHICH IS WORTH DOING BEFORE ANY NEW
+      MEASUREMENT: AT USABLE = 9 GB, `floor(9 / 5.175) = 1`, `floor(9 / 5.484) = 1`, `floor(9 / 6.354) = 1`, AND AT
+      BE'S COLD 09-04 ESTIMATE OF 9.70 GB IT IS 0. EVERY PEAK THIS PROGRAMME HAS MEASURED GIVES N = 1 -- WHICH IS
+      THE RULING'S OWN "CHANGE NOTHING".*** **But the qualification is essential and I state it rather than let the
+      arithmetic overreach: THOSE ARE BOOK-BUILD PEAKS, NOT NULL-DRAW PEAKS.** *A draw may be far smaller than a
+      build, and DA is measuring the right thing* -- ***THE POINT IS THAT THE RULE AS GIVEN ALREADY YIELDS THE
+      DEFAULT ON EVERYTHING WE KNOW, SO THE MEASUREMENT HAS TO EARN ITS WAY UP FROM ONE.***
+  I_COULD_NOT_LOCATE_MEMORYHIGH_AND_THE_SLICE_MEASURES_EIGHTEEN_GB:
+    prov: CHECKED
+    artifact: ~/.config/systemd/user/research.slice
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***AND A DISCREPANCY I FILE FOR DA AND THE COORDINATOR RATHER THAN DISPUTE, BECAUSE IT MOVES N: I COULD NOT
+      LOCATE `MemoryHigh` ANYWHERE -- NOT IN THE SLICE FILE, NOT IN `be_heavy_run.sh`.*** **What I measure is: the
+      SLICE sets `MemoryMax=60%` of a 30 GB box = **18 GB AGGREGATE**; the PER-UNIT default is `MEMMAX="${BE_MEMORY_
+      MAX:-8G}"` at `:475`, overridden per launch (09-03 recorded ~14 GiB).** ***SO THE 12 GB AND 14 GB IN THE RULE
+      LOOK LIKE PER-UNIT FIGURES, WHILE THE CEILING THAT ACTUALLY BOUNDS N CONCURRENT UNITS IS THE SLICE'S 18 GB --
+      WHICH IS THE HEADER'S OWN POINT, "A SINGLE-JOB CAP CANNOT BOUND THE SUM".*** **At 0.75 margin that is usable
+      13.5 GB and N = 2 at every book-build peak, against N = 1 under 12 GB.** *The ruling's ceiling, its no-OOM
+      prohibition and its N<2 no-op all bind either way; only the arithmetic between them moves.*
+  THE_DECIDING_NUMBER_IS_WHETHER_FOOTPRINTS_ADD_OR_OVERLAP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***AND THE NUMBER THAT ACTUALLY DECIDES IT IS NEITHER OF THOSE: WHETHER N DRAWS' FOOTPRINTS **ADD** (EACH
+      WORKER LOADS ITS OWN REFERENCE) OR **OVERLAP BY COPY-ON-WRITE** (THEY FORK FROM A PARENT ALREADY HOLDING IT)
+      -- THAT MOVES THE SAFE N BY A FACTOR OF SEVERAL IN EITHER DIRECTION.*** **DA 172/173 is measuring it.** *This
+      is the right question and it is a MEASUREMENT, not an estimate: fork-and-CoW versus load-per-worker is a
+      property of how the draw loop is written, and the answer is in the code before it is in an RSS reading.* **A
+      sizing rule applied to an unmeasured footprint model would be arithmetic over an assumption, which is how a
+      box dies at 03:55.**
+  THE_NULLS_SAMPLING_UNIT_IS_RULED_AND_I_CLOSE_EXACTLY_THAT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***THE USER HAS RULED THE NULL'S SAMPLING UNIT: A DRAW RESAMPLES THE CANCELLABLE GENERATION (OPTION C), n =
+      358,108 REFERENCE GENERATIONS ON 09-04. IT BINDS EVERY NULL FROM HERE.*** **This item has been open since the
+      first rounds of this thread, through ruling B, through the discovery that ruling B's premise was false, and
+      through the coordinator's refusal to re-rule it.** ***IT IS NOW CLOSED, AND I CLOSE EXACTLY THIS ONE.*** *And
+      the n is the 09-04 book's own generation count, so the unit is defined against an artifact that exists rather
+      than against a description.*
+  ROWS_ARE_NOT_ACTIONS_AND_CANCELS_ARE_OUTCOME_SELECTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      **And the ruling's reasoning is the programme's own two rules, applied to eliminate the other two options:
+      ROWS ARE NOT ACTIONS -- 1.99 rows/fill, max 23, so a row-matched control IS NOT MATCHED ON THE DECISION
+      VARIABLE (rule 7) -- AND CANCELS ARE OUTCOME-SELECTED, WHICH IS RULE 1'S ENDOGENEITY TRAP**, *with the
+      practical seal that DA established last round: THE LEDGER CARRIES NO CANCEL ROW KIND TO DRAW FROM.* ***SO
+      OPTION A FAILS ON A RULE, OPTION B FAILS ON A RULE AND ON THE DATA, AND OPTION C IS WHAT REMAINS -- A RULING
+      REACHED BY ELIMINATION AGAINST WRITTEN RULES RATHER THAN BY PREFERENCE.***
+  SO_TWO_OPEN_ITEMS_BECOME_ONE_AND_I_SAY_WHY_THE_OTHER_STANDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      ***SO THE TWO ITEMS I CORRECTLY REFUSED TO CLOSE LAST ROUND ARE NOW ONE ITEM, NOT TWO, AND I SAY WHICH AND
+      WHY: THE SAMPLING UNIT IS RULED AND CLOSED; THE CONCURRENCY IS OPEN PENDING DA'S MEASUREMENT, UNDER A HARD
+      NO-OOM CONSTRAINT.*** **And the open one is not the item I recorded** -- *it was never a `research.slice`
+      200 % cap; it is a per-unit `CPUQuota=100%` inside a 1200 % allowance, bounded by memory and not by CPU.*
+      **My round-327 instinct was right that a sweep closing five items is when an open one gets absorbed** --
+      ***AND THE FAILURE MODE TURNED OUT TO BE THE ADJACENT ONE: NOT AN ITEM QUIETLY CLOSED, BUT AN ITEM CARRIED
+      FORWARD IN THE WRONG TERMS.***
+  AND_09_05_AND_09_06_ARE_RULED_TO_REBUILD_BEFORE_THE_TABLE_CAN_BE_REQUOTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T16:59:32Z
+    said: >-
+      **THE USER RULED 09-05 AND 09-06 REBUILD, QUEUED AFTER THE 09-04 POINT ESTIMATE, ~74 MIN EACH.** ***AND UNTIL
+      THEY EXIST THE FOUR-DAY TABLE CANNOT BE REQUOTED: 09-03 AND 09-04 HAVE CORRECTED EV21 BOOKS, WHILE 09-05 AND
+      09-06 ARE STILL era=None OVER ZERO GAP-BEARING WINDOWS.*** **That is the same defect the era fix closed --
+      assembled as if the tape were continuous -- still live on two of the four days.** *A table quoted across four
+      days where two carry gaps and two pretend there are none would compare corrected against uncorrected and read
+      the difference as signal* -- **which is the shape of the retraction this programme is still recovering
+      from.**
   # --- MEM round 327, 2026-09-09T16:51:48Z ---
   ITEM_1_IS_CLOSED_AND_IT_IS_THE_LAST_OF_THE_USERS_FIVE:
     prov: CHECKED

@@ -22377,3 +22377,54 @@ generation and the window went 4 → 3. Nothing rewritten.
   from 97 % at 15:31Z. Flags 2853 -> 2866, prov 2398 -> 2411; window 3/3, Batch 306 archived. MEM asserts no
   result.)
 ```
+
+## Batch 310 — archived 2026-09-09T16:59:32Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T15:42:43Z (MEM ROUND 325 -- ***THE REBUILD BUYS PROVENANCE, NOT CORRECTNESS -- AND I DROVE THE MECHANISM RATHER
+  THAN ACCEPTING THE CONCLUSION.*** DA 168/169: **"NOTHING THAT MOVED CAN CHANGE THIS BOOK'S SCORES"**, established
+  ***STRUCTURALLY RATHER THAN BY CLASSIFYING COMMITS*** -- *"these four changes look harmless" is an opinion; "the
+  scoring path is one function and it is byte-identical" is a measurement.* **THE CHAIN, CONFIRMED AT THE CODE:
+  `SCORING_ENTRY_POINTS` IS EXACTLY TWO FUNCTIONS IN `de_phase4_diag_runner` (`assemble_streaming`,
+  `build_tape_index`), THE REFUSING MODULE IS ON THE EXECUTED PATH VIA `build_tape_index ->
+  _ruled_day_set_imported -> _G.ruled_day_set()`, AND THE SCORING PATH THROUGH IT IS EXACTLY ONE FUNCTION** --
+  ***`ruled_day_set`, WHICH I EXTRACTED FROM DISK AND HASHED: 8 LINES, sha256[:16] = `41988ef4272c73a9`, DA'S DIGEST
+  TO THE CHARACTER***, in a module I measure at 16,626 lines against DA's 16,205 (*a difference entirely consistent
+  with what I recorded last round, that the module has moved again since; the RATIO is the point and survives either
+  figure*). **The function reads ONE constant, and its docstring states why it is not a parameter -- "a lock whose
+  input the caller supplies is not a lock".** **THE FOUR COMMITS TOUCHED 8 FUNCTIONS AND 11 MODULE CONSTANTS AND THE
+  INTERSECTION WITH THAT PATH IS EMPTY**, ***AND I CHECKED THE ONE INPUT THAT COULD HAVE CARRIED A CHANGE IN:
+  `PARAMS_REL` APPEARS 25 TIMES AND IS UNTOUCHED ACROSS THE LAST FOUR COMMITS -- I DIFFED FOR `^[+-]PARAMS_REL` AND
+  FOUND NOTHING.*** **The two changes that LOOKED alarming and were not: `day_decision_population`'s SEVEN LINES ARE
+  ALL ADDITIONS, a `theta_drift` field appended with `decisions`, `by_side` and every computed quantity UNTOUCHED,
+  and the multi-day repoint is CROSS-DAY rather than per-day** -- ***AND THE FIRST IS THE FUNCTION WHOSE DEFECT
+  STARTED THIS WHOLE THREAD, SO SEEING IT IN A DIFF IS EXACTLY WHERE A CLASSIFY-THE-COMMITS APPROACH WOULD HAVE
+  STOPPED AND ORDERED THE REBUILD.*** DA's sentence, kept verbatim: ***"MORE IS REPORTED, NO NUMBER DIFFERS"*** --
+  *the same shape the theta-drift ruling created, and exactly the change a whole-module digest cannot distinguish
+  from one that rewrites the arithmetic.* ***AND DA STATES ITS OWN LIMIT BEFORE ANYONE ASKS: THE RESULT IS ABOUT
+  THIS BOOK AGAINST THESE FOUR COMMITS AND IS NOT A GENERAL LICENCE; THE NEXT REFUSAL NEEDS THE SAME DERIVATION***
+  -- *the scope clause is the difference between evidence and precedent* -- **and REV 146 IS DERIVING THE REACHABLE
+  SET INDEPENDENTLY "BECAUSE A WAIVER WOULD REST ON 'THE PATH IS ONE FUNCTION' AND THAT IS ABOUT TO BE
+  LOAD-BEARING"**, *the correct trigger stated in the right terms -- not "is DA trustworthy" but "what is this
+  sentence about to be asked to hold up"; my own reproduction corroborates DA'S INVOCATION, REV tests the
+  OPERATION.* ***THE DESIGN ANSWER, ADOPTED AND BEING BUILT BY DE 179: "DO NOT NARROW THE CONDITION. WIDEN THE
+  PAYLOAD." WHOLE-MODULE STAYS THE PREDICATE -- "THESE BYTES PRODUCED THIS BOOK", AND THERE IS NO HONEST WEAKER FORM
+  -- BUT THE REFUSAL MUST ALSO CARRY THE REACHABLE CLOSURE INTERSECTED WITH WHAT CHANGED, PLUS THE BYTE-IDENTITY OF
+  THE FUNCTIONS ON THAT PATH, SO THE REBUILD-VERSUS-SUPERSEDE DECISION IS READABLE FROM THE REFUSAL.*** *The
+  temptation was to make the predicate reachability-aware so this refusal would not have fired, trading a guard that
+  is RIGHT for one that is CONVENIENT.* ***AND THE CONSTRAINT THAT KEEPS IT HONEST: THE PAYLOAD IS EVIDENCE FOR A
+  HUMAN DECISION, NOT A LICENCE FOR THE CODE TO PROCEED -- THE RUN STILL REFUSES*** -- *without that clause the
+  widening becomes the narrowing by another route, and this programme has watched a diagnostic become a licence
+  three times tonight.* **THE PENDING RULING: WHETHER HAZARD'S NULL MAY RUN ON THE EV21 BOOK UNDER AN EXPLICIT
+  RECORDED WAIVER INSTEAD OF A 68-MINUTE REBUILD -- STRUCTURALLY THE SAME QUESTION THE USER ALREADY RULED ON FOR
+  `MATCHES_WITH_UNNAMED_MEMBERS`, MAY A RUN PROCEED PAST A REFUSAL WHEN THE REASON IS KNOWN AND NAMED, AND THEY
+  ANSWERED YES PROVIDED THE EXEMPTION IS A PREDICATE RATHER THAN A CONVENTION** -- *recording the precedent matters
+  more than the question, since the user has supplied the SHAPE of the answer; and REV 139 drove that the last such
+  exemption was NOT a predicate when first claimed to be.* **AND THE COORDINATOR IS NOT PUTTING IT TO THE USER UNTIL
+  REV'S DERIVATION LANDS, "BECAUSE IT WOULD OTHERWISE REST ON ONE SEAT'S WORD"** -- ***THE SAME JUDGEMENT AS HOLDING
+  THE RECONCILIATION WIRING, MADE ONE STEP EARLIER AGAIN: A RULING REQUESTED ON EVIDENCE THAT HAS NOT BEEN
+  INDEPENDENTLY DERIVED IS A RULING THE USER CANNOT PROPERLY GIVE.*** **09-04 is building with the stage table now
+  STREAMING LIVE, so a killed run leaves A0/A1/A2 behind -- THE RECORDING GAP BE ITSELF NAMED AT BE 128, CLOSED BY
+  BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2882, prov 2411 -> 2427; window 3/3, Batch 307 archived. MEM asserts
+  no result.)
+```

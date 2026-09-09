@@ -1,3 +1,98 @@
+# READ FIRST — round 328 (MEM, 2026-09-09T16:59:32Z, tip `a49dd34`)
+
+# ⚠ A CORRECTION TO MY ROUND-327 FILES — the `research.slice` 200 % cap **does not exist**
+
+**R-870 supersedes it in band.** *The coordinator says the error was its own, and that is true of where the sentence
+came from* — ***but I recorded it as an open item in a round whose whole point was that open items get quietly
+absorbed, and I did not check it at the file.*** **The slice is one `cat` away, and I had read `/proc/locks` twice
+that night for less.**
+
+## What I measured, at both files
+
+| | |
+|---|---|
+| `research.slice` | **`CPUQuota=1200%`** on a **16-core** box · `CPUWeight=50` · `TasksMax=1024` |
+| the actual limiter | **hardcoded `-p CPUQuota=100%` per unit** at `be_heavy_run.sh:515` |
+| memory | **`MemoryMax=60%`**, ***`MemorySwapMax=0` — no swap escape*** · oomd pre-armed at 80 % pressure |
+
+***So a unit is pinned to one core inside an allowance of twelve.*** **The question was never "raise a slice cap" —
+it is "raise a per-unit quota into headroom the slice already grants", and CPU was never the constraint at all.**
+
+**The slice's own header records why it exists:** *"Born from the **03:55 UTC box death (aggregate memory
+exhaustion)** — **a single-job cap cannot bound the sum**."*
+
+# ⛔ THE USER'S RULING — **"don't 8x if it will cause OOM"**
+
+**Default is NO CHANGE — one unit. 8 is a CEILING the measurement must EARN, not a target.** Sizing rule of record:
+budget against **`MemoryHigh` 12 GB** (not `MemoryMax` 14 GB — *MemoryHigh is where the kernel throttles and
+reclaims, and with swap at zero there is nowhere for reclaim to go*), **margin 0.75 → usable 9 GB**, **N = floor(9 /
+measured peak) capped at 8**, **N < 2 means we change nothing.**
+
+**I applied it to the peaks already on the record:**
+
+| measured peak | N at usable 9 GB |
+|---|---|
+| 5.175 / 5.484 / 6.354 GB | **1** |
+| 9.70 GB (BE's cold 09-04) | **0** |
+
+***Every peak this programme has measured gives N = 1 — the ruling's own "change nothing."*** **Qualification stated
+rather than glossed: those are BOOK-BUILD peaks, not NULL-DRAW peaks.**
+
+## ⚠ A discrepancy I file rather than dispute, because it moves N
+
+***I could not locate `MemoryHigh` anywhere — not in the slice file, not in `be_heavy_run.sh`.***
+
+| what I measure | |
+|---|---|
+| **slice** | `MemoryMax=60%` of a **30 GB** box = **18 GB aggregate** |
+| **per-unit default** | `MEMMAX="${BE_MEMORY_MAX:-8G}"` at `:475`, overridden per launch (09-03 ≈ 14 GiB) |
+
+**So 12 and 14 look like PER-UNIT figures, while the ceiling that bounds N concurrent units is the slice's 18 GB —
+which is the header's own point.** At 0.75 that is **usable 13.5 GB → N = 2** at every book-build peak, against
+**N = 1** under 12 GB. *The ruling's ceiling, its prohibition and its N<2 no-op bind either way; only the arithmetic
+between them moves.* **For DA 172/173 and the coordinator.**
+
+**And the number that actually decides it is neither: whether N draws' footprints ADD (each worker loads its own
+reference) or OVERLAP by copy-on-write (they fork from a parent already holding it) — a factor of several either
+way.** *That is a property of how the draw loop is written, and the answer is in the code before it is in an RSS
+reading.*
+
+# ✅ THE NULL'S SAMPLING UNIT IS RULED — and I close exactly that one
+
+***A draw resamples the CANCELLABLE GENERATION (option C), n = 358,108 reference generations on 09-04. It binds
+every null from here.*** Open since the first rounds of this thread — through ruling B, through the discovery that
+its premise was false, through the coordinator's refusal to re-rule it. **Now closed.**
+
+**Reached by elimination against written rules, not by preference:**
+- **rows are not actions** — 1.99 rows/fill, max 23, so a row-matched control **is not matched on the decision
+  variable** (rule 7);
+- **cancels are outcome-selected** — rule 1's endogeneity trap, **and the ledger carries no CANCEL row kind to draw
+  from** (DA, last round).
+
+## ⇒ TWO OPEN ITEMS ARE NOW **ONE**, and here is which
+
+| item | state |
+|---|---|
+| the null's sampling unit | **RULED AND CLOSED** |
+| **concurrency** | **OPEN** — pending DA's measurement, under a hard no-OOM constraint |
+
+***And the open one is not the item I recorded: it was never a `research.slice` 200 % cap; it is a per-unit
+`CPUQuota=100%` inside a 1200 % allowance, bounded by memory and not by CPU.*** **My round-327 instinct was right
+that a sweep closing five items is when an open one gets absorbed — and the failure mode turned out to be the
+adjacent one: not an item quietly closed, but an item carried forward in the wrong terms.**
+
+## STATE
+
+**The user ruled 09-05 and 09-06 REBUILD, queued after the 09-04 point estimate, ~74 min each.** ***Until they exist
+the four-day table cannot be requoted:*** 09-03 and 09-04 have corrected EV21 books; **09-05 and 09-06 are still
+`era=None` over ZERO gap-bearing windows.** *A table across four days where two carry gaps and two pretend there are
+none would compare corrected against uncorrected and read the difference as signal.*
+
+Counts: flags 2902 → 2915, provenance 2447 → 2460 (thirteen written, thirteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 310 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 327 (MEM, 2026-09-09T16:51:48Z, tip `f456fd7`)
 
 # ✅ ALL FIVE OF THE USER'S REVIEW ITEMS ARE CLOSED — and the 09-04 point estimate is running
