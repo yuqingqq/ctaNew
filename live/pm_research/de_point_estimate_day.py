@@ -342,6 +342,36 @@ def write_artifact(path: Path, payload: dict) -> dict:
             "bytes": path.stat().st_size}
 
 
+def waiver_scoring_block(asked: bool, result: dict) -> dict:
+    """What was asked for, and what the predicate did with it.
+
+    REPORTED FROM THE RESULT, never echoed from the argument: what the
+    predicate DID is the fact, and the flag is only what it was asked to
+    do (the same rule the null's `matched_on` is read back under)."""
+    verdict = ((result.get("book_scoring_code") or {}))
+    granted = verdict.get("status") == R.WAIVED_SCORING_PATH
+    return {
+        "asked_by_the_caller": bool(asked),
+        "granted_by_the_predicate": granted,
+        "book_scoring_status": verdict.get("status"),
+        "read_from": ("day_run.book_scoring_code.status -- the run's own "
+                      "result, not this driver's argument"),
+        "what_it_means": (
+            "the book-code predicate REFUSED this book by name and the "
+            "refusal was OVERRIDDEN on computed evidence: nothing that "
+            "differs between the book's scoring code and the code on disk "
+            "is reachable from the builder's scoring entry points. The "
+            "evidence, its five conditions and its LIMITS are in "
+            "`day_run.book_scoring_code.scoring_path_waiver`"
+            if granted else
+            "no waiver was granted; if a waiver was asked for and this "
+            "says False, the run refused rather than proceeding"),
+        "authorised_by": ("USER ruling relayed at DE 180 -- waive AS A "
+                          "PREDICATE, on DA 168's and REV 146's "
+                          "independently derived evidence"
+                          if asked else None)}
+
+
 RECONCILE_INPUTS_ABSENT = "POINT_ESTIMATE_RECONCILIATION_INPUTS_ABSENT"
 RECONCILE_INPUTS_INCOMPLETE = "POINT_ESTIMATE_RECONCILIATION_INPUTS_INCOMPLETE"
 RECONCILE_INPUTS_DISAGREE = "POINT_ESTIMATE_RECONCILIATION_INPUTS_DISAGREE"
@@ -493,7 +523,18 @@ def assert_no_private_keys(payload: dict) -> dict:
                     "pop"}
 
 
-def run(day: str, book: Path, output_dir: Path) -> dict:
+def waiver_token(asked: bool):
+    """The token when a caller ASKED, and None otherwise.
+
+    Read from the module that defines it rather than retyped -- a constant
+    typed twice is a constant that can disagree with itself, and this one
+    is the difference between a waiver and a bypass."""
+    import de_scoring_path_delta as SPD
+    return SPD.WAIVER_TOKEN if asked else None
+
+
+def run(day: str, book: Path, output_dir: Path, *,
+        waive_scoring_path: bool = False) -> dict:
     started = time.time()
     book = Path(book).resolve()
     output_dir = Path(output_dir).resolve()
@@ -509,6 +550,7 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
         day, book, params=params, fixture=False,
         n_days_complete=R.days_complete_now(params)["n_days_complete"],
         point_estimate=True, ledger_anchor=output_dir,
+        scoring_path_waiver=waiver_token(waive_scoring_path),
         before_work=lambda: R.selftest(quiet=True, offline=False),
     )
     result_contract = assert_point_estimate_result(result)
@@ -553,6 +595,13 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
         "result_contract": result_contract,
         "placement_latency": placement,
         "placement_latency_reconciliation": reconciliation,
+        # THE ASK IS AT THE TOP OF THE ARTIFACT, not only nested inside
+        # `day_run.book_scoring_code`. A reader deciding how much to trust
+        # this number must meet the fact that a firing check was overridden
+        # BEFORE they meet the number, and the evidence the predicate
+        # granted on travels with it.
+        "scoring_path_waiver_requested": waiver_scoring_block(
+            waive_scoring_path, result),
         "book": {
             "path": str(book),
             "sha256": result["reference_book"]["sha256"],
@@ -596,7 +645,7 @@ def run(day: str, book: Path, output_dir: Path) -> dict:
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 23
 
 
 def selftest(quiet: bool = False) -> int:
@@ -945,6 +994,25 @@ def selftest(quiet: bool = False) -> int:
         PRIVATE_KEY_SURVIVED,
         "DE 181 KNOWN-BAD: a surviving private key NESTED two levels down")
 
+    # ---- DE 182: THE WAIVER ASK, AND THE DEFAULT THAT MUST BE NO ------
+    import de_scoring_path_delta as _SPD182
+    ok(waiver_token(False) is None
+       and waiver_token(True) == _SPD182.WAIVER_TOKEN,
+       "DE 182 THE DEFAULT IS NO: a run that does not ASK hands `None` to "
+       "`run_day`, so a book whose scoring code moved still refuses. The "
+       "token is READ from the module that defines it, never retyped")
+    ok(waiver_scoring_block(True, {"book_scoring_code": {
+           "status": "BOOK_SCORING_CODE_MATCHES"}})[
+           "granted_by_the_predicate"] is False
+       and waiver_scoring_block(False, {"book_scoring_code": {
+           "status": R.WAIVED_SCORING_PATH}})[
+           "granted_by_the_predicate"] is True,
+       "DE 182 ASKING IS NOT GRANTING, AND THE BLOCK READS THE RESULT: it "
+       "reports False when the caller asked and the predicate did not "
+       "grant, and True from the run's own status regardless of the flag "
+       "-- what the predicate DID is the fact, the argument is only what "
+       "it was asked to do")
+
     if n[0] != EXPECTED_CHECKS:
         raise SystemExit(f"[de_point_estimate_day] FAIL: check count "
                          f"{n[0]} != {EXPECTED_CHECKS}")
@@ -960,6 +1028,16 @@ def main() -> int:
     parser.add_argument("book", nargs="?", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--waive-scoring-path", action="store_true",
+                        help=("ASK for the scoring-path waiver when the "
+                              "book's scoring code does not match the code "
+                              "on disk. ASKING IS NOT GRANTING: "
+                              "`de_scoring_path_delta.waiver_available` "
+                              "decides on five computed conditions and "
+                              "refuses BOOK_SCORING_WAIVER_NOT_AVAILABLE "
+                              "otherwise. The flag exists so that asking is "
+                              "a deliberate act recorded in the launch form "
+                              "AND in the artifact"))
     args = parser.parse_args()
     if args.selftest:
         return selftest()
@@ -967,8 +1045,9 @@ def main() -> int:
         parser.error("day and book are required unless --selftest is used")
     output_dir = args.output_dir or (
         Path(DR.resolve()["data_root"]) / "pm_5min" / "derived")
-    print(json.dumps(run(args.day, args.book, output_dir), indent=2,
-                     sort_keys=True))
+    print(json.dumps(run(args.day, args.book, output_dir,
+                         waive_scoring_path=args.waive_scoring_path),
+                     indent=2, sort_keys=True))
     return 0
 
 
