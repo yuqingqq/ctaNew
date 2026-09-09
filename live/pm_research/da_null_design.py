@@ -401,6 +401,24 @@ def _break(d: dict, path: list, value) -> dict:
     return m
 
 
+def raises_named(fn, name) -> bool:
+    """Did `fn` refuse with THIS refusal name, checked on the FULL message.
+
+    DA 177: my first version of the rule-35 cell asserted the refusal name
+    against `refuses()`, which TRUNCATES to 44 chars -- so the check was
+    matching a cut string and failed on a guard that was working. A
+    text-matching defect inside the round about text-matching defects; the
+    name is compared against the whole exception now.
+    """
+    try:
+        fn()
+        return False
+    except DesignRefused as e:
+        return name in str(e)
+    except Exception:                                         # noqa: BLE001
+        return False
+
+
 def refuses(fn, label):
     try:
         fn()
@@ -547,6 +565,86 @@ def selftest() -> tuple:
        f"{i8['n_candidates']} candidates {i8['candidates']}, all consumed "
        f"{i8['all_of_them_already_consumed']}; count typed as 1, and a day "
        f"dropped from the consumed list -> VIOLATED")
+
+    # ---- REV 149 / rule 35: both halves of the defect ------------------
+    llamas = _break(D, ["consumed_days", "validation_requires"],
+                    "we have 5 llamas")
+    u_now = untouched_complete_days(D, as_of="2026-09-09")
+    u_then = untouched_complete_days(D, as_of="2026-09-13")
+    u_early = untouched_complete_days(D, as_of="2026-09-09")
+    ck("REV 149 (1) THE FIVE-DAY CLAUSE IS COUNTED, NOT MATCHED AS TEXT -- "
+       "***REV's own falsifier, 'we have 5 llamas', satisfied the old "
+       "`\"5\" in <prose>` check and is now INERT***, because the verdict "
+       "no longer reads that field at all: it counts COMPLETE untouched "
+       "UTC days from the protected-from date and compares to the declared "
+       "bar",
+       item_8_multiplicity(llamas, as_of="2026-09-09")["verdict"] == HOLDS
+       and item_8_multiplicity(D, as_of="2026-09-09")["verdict"] == HOLDS
+       and u_now["n_untouched_complete_days"] == 1
+       and u_now["validation_is_possible"] is False,
+       f"'we have 5 llamas' no longer moves the verdict; counted instead: "
+       f"{u_now['n_untouched_complete_days']} untouched complete day(s) "
+       f"{u_now['untouched_complete_days']} against a bar of "
+       f"{u_now['required']} -> validation possible "
+       f"{u_now['validation_is_possible']}")
+
+    ck("REV 149 (1b) AND THE COUNT MOVES WITH THE EVIDENCE RATHER THAN "
+       "WITH THE HOUR: driven at a FIXED `as_of`, the untouched set grows "
+       "from 1 day to 5 and the verdict flips to validation-possible on "
+       "the date rule 34 predicts. ***A consumed day inside the window is "
+       "NOT counted***, which is the whole point of the boundary",
+       u_then["n_untouched_complete_days"] == 5
+       and u_then["validation_is_possible"] is True
+       and u_now["date_the_bar_is_reached"] == "2026-09-13"
+       and "2026-09-06" not in u_then["untouched_complete_days"],
+       f"as_of 2026-09-13 -> {u_then['n_untouched_complete_days']} days "
+       f"{u_then['untouched_complete_days']}, possible "
+       f"{u_then['validation_is_possible']}; bar reached "
+       f"{u_now['date_the_bar_is_reached']}")
+
+    ck("REV 149 (1c) AND IT REFUSES A DECLARATION WITH NO PROTECTED-FROM "
+       "DATE -- rule 34 is a hard boundary, so the untouched set having no "
+       "start is a REFUSAL and never a default",
+       "REFUSED" in refuses(
+           lambda: untouched_complete_days(
+               _break(D, ["consumed_days", "protected_from_utc_date"], None),
+               as_of="2026-09-09"), "no protected-from"),
+       refuses(lambda: untouched_complete_days(
+           _break(D, ["consumed_days", "protected_from_utc_date"], None),
+           as_of="2026-09-09"), "no protected-from date"))
+
+    good = stamp_validation_limit({"D_E_settle": 1.0}, D)
+    ck("REV 149 (2) THE LIMIT TRAVELS ON THE RESULT OR THE RESULT DOES NOT "
+       "EMIT (rule 35). A stamped result ADMITS; ***a result with the "
+       "number and no `validation_limit` REFUSES by name***, because a "
+       "reader holding the number and not the document would take it as "
+       "validated; and a PARAPHRASED limit refuses too, since a limit "
+       "softenable at the emit is not a limit",
+       require_validation_limit(good, D)["carried"] is True
+       and raises_named(
+           lambda: require_validation_limit({"D_E_settle": 1.0}, D),
+           LIMIT_REFUSAL)
+       and raises_named(
+           lambda: require_validation_limit(
+               {"D_E_settle": 1.0,
+                RESULT_LIMIT_FIELD: "exploratory"}, D), LIMIT_REFUSAL),
+       f"stamped -> carried; bare number -> "
+       f"{refuses(lambda: require_validation_limit({'D_E_settle': 1.0}, D), 'x')[:52]}; "
+       f"paraphrased -> refused")
+
+    ck("REV 149 (2b) AND THE GUARD REFUSES WHEN THE DECLARATION ITSELF "
+       "CARRIES NO REQUIRED VALUE -- ***otherwise it would admit "
+       "everything while looking like a guard***, which is the failure "
+       "mode this whole class is made of",
+       "REFUSED" in refuses(
+           lambda: require_validation_limit(
+               good, _break(D, ["validation_limit", "REQUIRED_VALUE"], None)),
+           "no required value")
+       and "REFUSED" in refuses(
+           lambda: require_validation_limit("not a dict", D), "not a dict"),
+       refuses(lambda: require_validation_limit(
+           good, _break(D, ["validation_limit", "REQUIRED_VALUE"], None)),
+           "declaration with no REQUIRED_VALUE"))
 
     ck("AND THE WHOLE DECLARATION REFUSES WHEN ABSENT -- a null with no "
        "declaration is exactly what rule 6 forbids, so absence must be a "
