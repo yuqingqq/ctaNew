@@ -20837,3 +20837,43 @@ generation and the window went 4 → 3. Nothing rewritten.
   RETRACTION IS UNCHANGED: NO CORRECTED NUMBER EXISTS AND THESE FILES QUOTE NOTHING CORRECTED.** MEM asserts no
   result.)
 ```
+
+## Batch 277 — archived 2026-09-09T07:52:10Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T07:28:29Z (MEM ROUND 292 -- R-838 AND R-839 SWEPT as a numbered queue under rule 23,
+  from my round-291 tip `726f785` to `d7de95e`, thirteen commits. STATE ONLY. ***THE USER STOOD THE BUILD QUEUE
+  DOWN*** -- "dont have to build now, we clear issues first" -- and the stand-down is REAL AT THE MACHINE, not only
+  in the register: no holders on the heavy lock and no live heavy unit at 07:21:36Z. `p003ev200903b` stopped
+  07:15:47Z with `Result=success`, NOTHING WRITTEN, no partial book, 15 min 48 s discarded, its record ending at a
+  leaf_peak with NO exit event -- the shape a deliberate stop leaves. ***SO THERE IS STILL NO CORRECTED BOOK AND NO
+  CORRECTED NUMBER, AND EVERY ARM RESULT REMAINS RETRACTED*** -- unchanged across the whole night. ***REV 111 WAS
+  BRIEFED TO PROVE THERE IS NO THIRD PIN SITE AND CAME BACK REFUTED***: the day book's own
+  `producing_code.import_closure` -- 49 module digests RECORDED by the builder and READ BY NOBODY -- so a receipt
+  can cite the CURRENT scoring code as though it produced numbers OLDER code produced. ***I MEASURED IT ON THREE
+  REAL BOOKS RATHER THAN TAKING THE NUMBER***: each records 49 modules and each reads 41 identical at the tip, 8
+  MOVED, 0 missing -- identical on all three, which is what a closure nothing reads looks like -- ***AND THE MOVED
+  SET NAMES `de_head_scoring.py` AND `de_phase4_diag_runner.py`***, the two surfaces the value-head defect and the
+  look-ahead were repaired in. Every book on disk carries PRE-FIX scores and says so in digests nothing reads; both
+  existing checks are LOUD and would pass. That is the strongest argument on the record for the stand-down, found by
+  a seat sent to prove the opposite. REV 110 proved DE 159's instrument by MUTATION and by extracting the REAL
+  pre-fix runner at `c501824^` -- identical event for event to twelve decimals, with ONE divergence in the SAFE
+  direction, named rather than reported clean. ***AND RULE 11 HOLDS, DRIVEN AT THREE ARTIFACTS***: the LINEAR fit
+  frozen 2026-08-26T10:21:49Z, the quantile derived from 08-29 ALONE with its `rule_11_exposure_STATED` in band and
+  R-500's withdrawal cited, and three phase2 freezes dated Aug 28-29 in which a scan for any `2026-09-0x` day
+  returns ZERO -- the days scored appear in none of them. ***ONE HONEST GAP RECORDED***: the quoted fit timestamp
+  2026-08-28T05:52:14Z resolves in none of the artifacts I read, and if it is to be quoted it needs its own artifact
+  named. Flags 2394 -> 2409, prov 1939 -> 1954; window trimmed 4 -> 3, Batch 274 archived. Five seats on
+  issue-clearing, one DELIBERATELY untargeted. My round-290 ordering observation is fixed (7e, 7f, 7g). **THESE
+  FILES QUOTE NOTHING CORRECTED.** ***ADDENDUM 07:29:33Z, AFTER THIS ROUND'S WINDOW CLOSED AND VERIFIED AT ITS ROW
+  BEFORE I RECORDED IT***: DA 138 (`a4ab070`, Q-DA-361) says STOP THE BUILD -- the look-ahead repair re-keyed the
+  assembled scores from one entry per GENERATION to one per ROW, `scores[(slug, side, t)]`, and THE KEY DOES NOT
+  NAME THE GENERATION (the code says so itself at `:9226`); `per_t` de-duplicates INSIDE the per-generation loop, so
+  two generations of the same (slug, side) with a row at the same float `t` OVERWRITE, last writer winning, and the
+  EARLIER generation always loses because the reference is iterated in generation order. Driven: `ROWS_SCORED = 3`
+  against `len(scores) = 2` while EVERY STATUS REPORTS HEALTH, with a POSITIVE CONTROL (generations 300 s apart)
+  agreeing at 3 and 3 -- so the checker can show the property and the disagreement is the defect, not the
+  instrument. ***REACHABLE ONLY ON A POST-DE-155 BOOK***, so it is a defect the repair INTRODUCED and it would have
+  gone into exactly the corrected books the stood-down queue was about to build -- and it came from the
+  DELIBERATELY UNTARGETED hunt, which is the pattern R-839 sent it to exploit. MEM asserts no result.)
+```

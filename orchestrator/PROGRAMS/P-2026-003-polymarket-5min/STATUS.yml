@@ -67,6 +67,43 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T07:52:10Z (MEM ROUND 295 -- R-845 SWEPT as a numbered queue under rule 23, from my
+  round-294 tip `0713049` to `9fe6317`, fifteen commits. STATE ONLY. ***THE RULING THIS FILE NOW MATCHES***: the
+  ABSOLUTE CENT FIGURES ARE WITHDRAWN -- 60.3 % of 09-03's settled money sits in windows the builder assembled as if
+  continuous (159 of 246 gapped; 15.6 % on 09-04; 09-05/09-06 immaterial) -- and ***NO DAY TOTAL IS QUOTED AS FINAL
+  HERE***. THE FOUR PERCENTAGES STAND AND ARE QUOTABLE ONLY WITH TWO THINGS BESIDE THEM: the ungapped recomputation
+  (+1.251, +2.807, +4.126, +1.297 pp, one direction, under 4.2 pp, still large) and DA's THREE LIMITS UNSOFTENED --
+  the ungapped windows are NOT a random subsample so this is a ROBUSTNESS CHECK not a corrected estimate; 09-03's
+  clean subset is 87 windows, 35.4 %, the thinnest subset on the most exposed day; and NO CORRECTED NUMBER IS
+  COMPUTABLE FROM DISK. ***THE GATE ARITHMETIC, KEPT HONEST***: four of seven items are CLOSED IN CODE and NONE IS
+  VERIFIED -- DE 162's four and BE 112's coverage fix landed and unreviewed, DA 142 driving BE 112 now under rule 27
+  -- and ***ITEM 1, THE BUILDER'S ERA, IS STILL OPEN AND IS THE LARGEST***, the one of the seven with no landed code
+  against it, so a reader counting "four closed" must not infer the remainder are small. REV 114 supplied the
+  cleanest control of the night AND IT COULD HAVE FAILED: `MASKED n GAPPED(clob_v4_1) = 0` against 22.3 EXPECTED had
+  the detector not excluded them -- zero observed against twenty-two expected -- so the mask is SOUND and reads the
+  September-bearing ledger; and its structural half is why the defect is worse than R-843 said, gaps travelling by a
+  PARTITION OF TWO CHANNELS that `era=None` collapses to one, ***TWO COMPONENTS EACH CORRECT UNDER ITS OWN CONTRACT
+  AND A DEFECT LIVING ONLY IN THE SEAM***. My round-294 stranded commit was rebased and pushed as `8f115e3`, nothing
+  stranded now, ***AND THE REBASE MOVED NO BYTES***: `params_v24` hashes `1cf512b5cbd9cdad` before and after and
+  design v32 pins exactly that, PAIR_OK to v31. TWO NEW STANDING RULES RECORDED AS PROGRAMME STATE: rule 25 makes the
+  untargeted round STANDING and binds the coordinator to naming only what is covered; rule 27 ranks VERIFYING a fix
+  above making the next one and names the question a green battery cannot answer -- "is there a form the OLD one
+  caught that the NEW one does not". And my window-count discrepancy STAYS OPEN with a third use of 287 (REV 114's
+  40 of 287) beside DA 141's 159 of 246 and REV 112's 160 of 287: 247 against 246 is still unreconciled and I still
+  pick none. Flags 2439 -> 2454, prov 1984 -> 1999; window trimmed 4 -> 3, Batch 277 archived. **NO BUILD, NO LOCK,
+  NO CORRECTED BOOK, AND NO CORRECTED NUMBER -- THE LAST NOW STRONGER THAN A STATUS, SINCE NONE IS COMPUTABLE FROM
+  DISK.** ***ADDENDUM 07:53:19Z, AFTER THIS ROUND'S WINDOW CLOSED AND VERIFIED BEFORE RECORDING BECAUSE THE GATE
+  ARITHMETIC ABOVE IS STALE IN BOTH NUMERATOR AND DENOMINATOR***: R-846 puts it at FIVE closed of EIGHT items, the
+  eighth found IN DA'S VERIFIER BY BE -- the seam again -- and ***ONE ITEM IS NOW VERIFIED WHERE NONE WAS***:
+  DA 142 drove BE 112 under rule 27 and reports 'THE FIX IS RIGHT AND I FOUND NO REGRESSION', with the half it will
+  not overclaim -- whether `assert_coverage` refuses on REAL under-coverage rather than only at zero is 'HALF YES,
+  and I state the half that is NO' -- every drive against a reference and an assembly DA CONSTRUCTED, never BE's
+  fixture. ***AND DA 142 FOUND AN OPERATIONAL BLOCKER: params v23 no longer matches disk, so no day can run until a
+  re-pin.*** Measured here at HEAD: params v23 is 9/10 (`de_phase4_diag_runner.py` moved under DE 162) while
+  ***params v24 is 10/10 and clean***, so the blocker is about WHAT STILL RESOLVES v23 rather than about v24 being
+  wrong -- which of the two it is, I have not established. Also kept from DE 162's own disclosure: twice a scripted
+  edit rewrote more than intended, once inside the design module's OWN known-bad fixtures, and THE BATTERY CAUGHT
+  IT IMMEDIATELY, both reverted, neither reaching a commit. MEM asserts no result.)
   2026-09-09T07:44:37Z (MEM ROUND 294 -- R-843 AND R-844 SWEPT as a numbered queue under rule 23,
   from my round-293 tip `c0e19ad` to `0713049`, thirteen commits. STATE ONLY. ***THE EXPOSURE ROUND 293 FILED WAS
   ROUTED WITHIN FOUR MINUTES AND THIS FILE NOW NAMES WHERE IT WENT***: `RESULTS.md`'s retraction notice is AMENDED
@@ -140,41 +177,6 @@ updated: >-
   UNTOUCHED***: DA 140's own 'areas avoided as instructed' names REV 112's builder/era gaps, so the independence
   question filed above REMAINS OPEN, and R-843's phrase 'day-independent by construction' describes the DEFECT and
   not the finding. MEM asserts no result.)
-  2026-09-09T07:28:29Z (MEM ROUND 292 -- R-838 AND R-839 SWEPT as a numbered queue under rule 23,
-  from my round-291 tip `726f785` to `d7de95e`, thirteen commits. STATE ONLY. ***THE USER STOOD THE BUILD QUEUE
-  DOWN*** -- "dont have to build now, we clear issues first" -- and the stand-down is REAL AT THE MACHINE, not only
-  in the register: no holders on the heavy lock and no live heavy unit at 07:21:36Z. `p003ev200903b` stopped
-  07:15:47Z with `Result=success`, NOTHING WRITTEN, no partial book, 15 min 48 s discarded, its record ending at a
-  leaf_peak with NO exit event -- the shape a deliberate stop leaves. ***SO THERE IS STILL NO CORRECTED BOOK AND NO
-  CORRECTED NUMBER, AND EVERY ARM RESULT REMAINS RETRACTED*** -- unchanged across the whole night. ***REV 111 WAS
-  BRIEFED TO PROVE THERE IS NO THIRD PIN SITE AND CAME BACK REFUTED***: the day book's own
-  `producing_code.import_closure` -- 49 module digests RECORDED by the builder and READ BY NOBODY -- so a receipt
-  can cite the CURRENT scoring code as though it produced numbers OLDER code produced. ***I MEASURED IT ON THREE
-  REAL BOOKS RATHER THAN TAKING THE NUMBER***: each records 49 modules and each reads 41 identical at the tip, 8
-  MOVED, 0 missing -- identical on all three, which is what a closure nothing reads looks like -- ***AND THE MOVED
-  SET NAMES `de_head_scoring.py` AND `de_phase4_diag_runner.py`***, the two surfaces the value-head defect and the
-  look-ahead were repaired in. Every book on disk carries PRE-FIX scores and says so in digests nothing reads; both
-  existing checks are LOUD and would pass. That is the strongest argument on the record for the stand-down, found by
-  a seat sent to prove the opposite. REV 110 proved DE 159's instrument by MUTATION and by extracting the REAL
-  pre-fix runner at `c501824^` -- identical event for event to twelve decimals, with ONE divergence in the SAFE
-  direction, named rather than reported clean. ***AND RULE 11 HOLDS, DRIVEN AT THREE ARTIFACTS***: the LINEAR fit
-  frozen 2026-08-26T10:21:49Z, the quantile derived from 08-29 ALONE with its `rule_11_exposure_STATED` in band and
-  R-500's withdrawal cited, and three phase2 freezes dated Aug 28-29 in which a scan for any `2026-09-0x` day
-  returns ZERO -- the days scored appear in none of them. ***ONE HONEST GAP RECORDED***: the quoted fit timestamp
-  2026-08-28T05:52:14Z resolves in none of the artifacts I read, and if it is to be quoted it needs its own artifact
-  named. Flags 2394 -> 2409, prov 1939 -> 1954; window trimmed 4 -> 3, Batch 274 archived. Five seats on
-  issue-clearing, one DELIBERATELY untargeted. My round-290 ordering observation is fixed (7e, 7f, 7g). **THESE
-  FILES QUOTE NOTHING CORRECTED.** ***ADDENDUM 07:29:33Z, AFTER THIS ROUND'S WINDOW CLOSED AND VERIFIED AT ITS ROW
-  BEFORE I RECORDED IT***: DA 138 (`a4ab070`, Q-DA-361) says STOP THE BUILD -- the look-ahead repair re-keyed the
-  assembled scores from one entry per GENERATION to one per ROW, `scores[(slug, side, t)]`, and THE KEY DOES NOT
-  NAME THE GENERATION (the code says so itself at `:9226`); `per_t` de-duplicates INSIDE the per-generation loop, so
-  two generations of the same (slug, side) with a row at the same float `t` OVERWRITE, last writer winning, and the
-  EARLIER generation always loses because the reference is iterated in generation order. Driven: `ROWS_SCORED = 3`
-  against `len(scores) = 2` while EVERY STATUS REPORTS HEALTH, with a POSITIVE CONTROL (generations 300 s apart)
-  agreeing at 3 and 3 -- so the checker can show the property and the disagreement is the defect, not the
-  instrument. ***REACHABLE ONLY ON A POST-DE-155 BOOK***, so it is a defect the repair INTRODUCED and it would have
-  gone into exactly the corrected books the stood-down queue was about to build -- and it came from the
-  DELIBERATELY UNTARGETED hunt, which is the pattern R-839 sent it to exploit. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -346,6 +348,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 295, R-845 swept; the absolutes withdrawn (0713049 -> 9fe6317) ---
+  MY_STRANDED_STATE_COMMIT_WAS_REBASED_AND_ITS_BYTES_ARE_PROVEN_INTACT: 8f115e3-AND-NOTHING-STRANDED-NOW
+  THE_ABSOLUTES_ARE_WITHDRAWN_AND_MY_FILES_NOW_MATCH_THE_RULING: NO-DAY-TOTAL-QUOTED-AS-FINAL
+  THE_PERCENTAGES_ARE_QUOTABLE_ONLY_WITH_THE_UNGAPPED_FIGURES_AND_DAs_THREE_LIMITS: 1.251-2.807-4.126-1.297-pp
+  FOUR_OF_SEVEN_GATE_ITEMS_ARE_CLOSED_IN_CODE_AND_NONE_IS_VERIFIED: LANDED-IS-NOT-REVIEWED
+  THE_LARGEST_ITEM_THE_BUILDERS_ERA_IS_STILL_OPEN: ITEM-1-UNCLOSED
+  REV_114s_CONTROL_COULD_HAVE_FAILED_AND_RETURNED_ZERO_AGAINST_TWENTY_TWO: MASKED-CAP-GAPPED-EQUALS-0
+  AND_THE_TWO_CHANNEL_PARTITION_EXPLAINS_A_DISAGREEMENT_WITH_NEITHER_SIDE_WRONG: MASK-EXCLUDES-GAPS-TRAVEL
+  BE_112s_FIXTURE_HAS_PROPERTIES_NO_BOOK_ON_DISK_HAS_AND_THE_OLD_TEST_FINDS_ONE_OF_THREE: A-KNOWN-BAD-DRIVEN-AS-THE-OLD-CODE
+  DE_162_CLOSED_TWO_FINDINGS_AT_ONE_SITE_AND_NAMED_THE_SILENT_ONE: THE-t1-BOUND-DA-PROPOSED
+  THE_v24_v32_PAIR_RESOLVES_AND_THE_REBASE_PRESERVED_THE_BYTES: 1cf512b5cbd9cdad-BEFORE-AND-AFTER
+  RULE_25_MAKES_THE_UNTARGETED_ROUND_STANDING_AND_LIMITS_THE_COORDINATORS_HALF: NAME-WHAT-IS-COVERED-AND-NOTHING-ELSE
+  RULE_27_RANKS_VERIFYING_A_FIX_ABOVE_MAKING_THE_NEXT_ONE: A-LOOSENED-GUARD-IS-HIGHEST-PRIORITY
+  AND_RULE_27_NAMES_THE_QUESTION_A_GREEN_BATTERY_CANNOT_ANSWER: WHAT-DID-THE-OLD-ONE-CATCH
+  THE_287_DENOMINATOR_APPEARS_A_THIRD_TIME_AND_MY_DISCREPANCY_STAYS_OPEN: 40-OF-287-MASKED
+  STILL_NO_BUILD_NO_LOCK_AND_NO_CORRECTED_NUMBER: VERIFIED-AT-THE-MACHINE
   # --- MEM round 294, R-843/R-844 swept; the exposure routed (c0e19ad -> 0713049) ---
   THE_EXPOSURE_I_FILED_WAS_ROUTED_AND_MY_FILES_NOW_NAME_WHERE_IT_WENT: RESULTS-AMENDED-AND-DA-141-DISPATCHED
   THE_AMENDMENT_SAYS_THE_TABLE_MUST_BE_READ_WITH_IT_AND_SITS_BELOW_THE_TABLE: LINE-34-AGAINST-LINES-24-29
@@ -26811,6 +26829,181 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 295, 2026-09-09T07:52:10Z (the clock read by which every measurement below was complete) ---
+  MY_STRANDED_STATE_COMMIT_WAS_REBASED_AND_ITS_BYTES_ARE_PROVEN_INTACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      Round 294 ended with FOUR commits stranded, three of them not mine, and rule 21's retry condition unmet
+      because another seat's `params_v24` sat STAGED in the shared tree. **I left them and reported; the coordinator
+      rebased and pushed them.** Verified now: my state commit is on origin as **`8f115e3`**, `git log
+      origin/mm-research..HEAD` is **EMPTY** (nothing stranded), and the working tree is **clean** — the staged file
+      is gone because it landed. ***AND THE REBASE PRESERVED THE BYTES, WHICH IS THE PART WORTH CHECKING RATHER THAN
+      TRUSTING***: `params_v24`'s sha256 is **`1cf512b5cbd9cdad…`**, the digest the coordinator recorded before and
+      after the operation, and design v32 pins that exact digest. **Rule 21 worked end to end: leave, report, and let
+      the one seat with the whole picture rebase.**
+  THE_ABSOLUTES_ARE_WITHDRAWN_AND_MY_FILES_NOW_MATCH_THE_RULING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      ***A COORDINATOR RULING ON DA 141's RECOMMENDATION, RECORDED IN R-845 AND APPLIED IN `RESULTS.md`, AND THESE
+      FILES NOW MATCH IT RATHER THAN CARRYING THE OLDER FRAMING***: **the absolute cent figures are WITHDRAWN** —
+      struck through in the results table — because **60.3 % of 09-03's settled money sits in windows the builder
+      assembled as if continuous** (159 of 246 gapped; 15.6 % on 09-04; 09-05 and 09-06 immaterial). **No day total
+      is quoted as final in this file, and none may be until a corrected build exists.** Round 294's generation said
+      "no number is corrected"; that was true when written at 07:44:37Z and false by 07:43Z's ruling reaching my
+      read — the addendum carried it, and this generation states it outright.
+  THE_PERCENTAGES_ARE_QUOTABLE_ONLY_WITH_THE_UNGAPPED_FIGURES_AND_DAs_THREE_LIMITS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      **The four percentages STAND and are quotable — with two things beside them, never alone.** (i) The ungapped
+      recomputation: **+1.251, +2.807, +4.126 and +1.297 pp**, all one direction, all under 4.2 pp, all still large.
+      (ii) **DA's three limits, unsoftened**: the ungapped windows are **not a random subsample** (gap incidence
+      plausibly correlates with volatility and volume), so it is a **robustness check and not a corrected
+      estimate**; 09-03's clean subset is **87 windows, 35.4 % — the thinnest subset on the most exposed day,
+      exactly the wrong way round**; and **no corrected number is computable from disk** — that needs a rebuild with
+      the era resolved from the day. **A percentage quoted without those is a misquotation of this state.**
+  FOUR_OF_SEVEN_GATE_ITEMS_ARE_CLOSED_IN_CODE_AND_NONE_IS_VERIFIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      ***THE GATE ARITHMETIC, KEPT HONEST, BECAUSE THE TWO WORDS ARE NOT THE SAME WORD***: **four of the seven gate
+      items are CLOSED IN CODE and NONE of the four is VERIFIED.** DE 162's four and BE 112's coverage fix are
+      landed and unreviewed; **DA 142 is driving BE 112 now under rule 27**. The programme has a dated instance of
+      why the distinction is not pedantry: **REV 113 found DE 161 holed roughly two hours after it landed green.**
+      This file therefore records those five as LANDED CODE with their commits and their claims and **asserts
+      nothing about whether they do what they say** until a seat has driven them.
+  THE_LARGEST_ITEM_THE_BUILDERS_ERA_IS_STILL_OPEN:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      **Item 1 — the builder's era — is STILL OPEN and is the largest**, and nothing in this sweep touched it.
+      `be_daybook_build.py:616` still calls `_era_or_refuse(fi, None, ...)`; the gap tables are still disjoint; every
+      book on disk was still assembled with `gaps=[]`. **It is the item the withdrawal of the absolutes rests on and
+      the item a corrected build cannot proceed without**, and it is the one of the seven with no landed code against
+      it. Recorded so a reader counting "four closed" does not infer the remainder are small: **the open three
+      include the biggest one.**
+  REV_114s_CONTROL_COULD_HAVE_FAILED_AND_RETURNED_ZERO_AGAINST_TWENTY_TWO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      ***THE CLEANEST CONTROL OF THE NIGHT, AND IT COULD HAVE FAILED.*** REV 114 asked whether DA's blackout mask is
+      itself contaminated by the same empty-gap-view defect. 09-03's mask masks **40 of 287** btc windows as thin,
+      and the detector's definition excludes windows *"not overlapped by a gap-ledger interval"*. **Driven:
+      `MASKED ∩ GAPPED(clob_v4_1) = 0`, against 22.3 EXPECTED had the detector not excluded them.** **Zero observed
+      against twenty-two expected** — had the detector consulted an empty gap view, *the very defect REV 112 found
+      in the builder*, the intersection would have been about twenty-two. **It is zero, so the mask is sound and
+      reads the September-bearing ledger.** An expected value stated before the measurement is what makes a zero
+      mean something.
+  AND_THE_TWO_CHANNEL_PARTITION_EXPLAINS_A_DISAGREEMENT_WITH_NEITHER_SIDE_WRONG:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      And REV 114's structural finding, which is why the defect is worse than R-843 stated it: **gaps are handled by
+      a PARTITION OF TWO CHANNELS** — the blackout mask excludes thin windows, and the gap list travels with each
+      window that survives — **and DA's detector deliberately does NOT mask gap-explained windows precisely because
+      the gap is supposed to travel by the other channel.** The builder's `era=None` **empties that second
+      channel**, so the partition collapses to one and the windows the mask deliberately let through arrive with
+      nothing attached. ***TWO COMPONENTS EACH CORRECT UNDER ITS OWN CONTRACT, AND A DEFECT THAT LIVES ONLY IN THE
+      SEAM BETWEEN THEM*** — the class this register keeps paying for.
+  BE_112s_FIXTURE_HAS_PROPERTIES_NO_BOOK_ON_DISK_HAS_AND_THE_OLD_TEST_FINDS_ONE_OF_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      BE 112 takes the pre-fix membership test out of **both** sites, and its fixture is rule 2 done properly:
+      `be_score_coverage._fixture` is **a synthetic assembly with exactly the properties no book on disk has** — a
+      generation with three rows whose first IS at its start, two whose first is NOT, and one with no scored row at
+      all: **4 reference generations, 6 scored rows, 3 truly covered, and THE PRE-FIX TEST FINDS ONE.** **The
+      known-bad is driven AS THE OLD CODE**, so the fixture cannot supply what the code under test should produce.
+      Landed `cc148d5`; **DA 142 is driving it now** and this file claims nothing about it until DA reports.
+  DE_162_CLOSED_TWO_FINDINGS_AT_ONE_SITE_AND_NAMED_THE_SILENT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      DE 162 (`060409d`, five files, +817) closes **DA 138's key collision and DA 139's misattribution at ONE
+      site** — the `t1` bound DA itself proposed — rather than patching the two symptoms separately, which is the
+      right shape for two findings the register had already joined to one root. It also **NAMES REV 111's silent
+      third pin site** (the book's `producing_code.import_closure`, recorded and read by nobody) in the guard's own
+      list, and **stops mode C's message blaming the wrong subsystem**. Landed with `params_v24`. **Unreviewed**,
+      and recorded as such.
+  THE_v24_v32_PAIR_RESOLVES_AND_THE_REBASE_PRESERVED_THE_BYTES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_multiday_gate1_design_v32.json
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      Checked at both files rather than taken from the entry: **`params_v24` on disk hashes `1cf512b5cbd9cdad…`**;
+      **design v32's `parameters` block pins `de_multiday_gate1_params_v24.json` at that same digest**, and the
+      digest **matches the file on disk**; and **design v32 supersedes v31 with PAIR_OK** by recomputed sha256.
+      **So the pair of record advances to params v24 + design v32, and the rebase that rescued the stranded design
+      artifact did not move a byte** — the same digest the coordinator recorded before the operation is the one the
+      pin resolves to now.
+  RULE_25_MAKES_THE_UNTARGETED_ROUND_STANDING_AND_LIMITS_THE_COORDINATORS_HALF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      **Rule 25 is programme state now, not a one-night tactic**: *after a repair lands, at least one seat per round
+      hunts with NO TARGET NAMED.* Its evidence is the night just past — **six defects in thirty minutes, all on the
+      path the rebuild would have run, while the seats working to specified briefs had found none in the preceding
+      hours** — and its reasoning is the sharper half: *"A brief tells a seat what to check; it also tells it what
+      not to."* It ratifies the answer this file has been recording: ***"I looked in these six places, drove these
+      controls, and found nothing" is an accepted and valuable answer***, naming DA 140's clean round as the second
+      most useful of that night. **And it BINDS THE COORDINATOR too**: name what is already covered, to prevent
+      duplication, **and nothing else.**
+  RULE_27_RANKS_VERIFYING_A_FIX_ABOVE_MAKING_THE_NEXT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      **Rule 27: verifying a fix outranks making the next one.** Twice in one night a review of a landed repair was
+      worth more than the repair — REV 110 proving the cancel-count instrument sound **by mutation rather than by
+      reading**, and REV 113 finding the sealed-value guard rewritten that morning holed **because it drove its own
+      corpus against BOTH versions instead of trusting four green cells.** This is the rule my round-293 and
+      round-294 caution was reaching for, now written down and binding on dispatch: it is why DA 142 is driving
+      BE 112 instead of a sixth repair being started.
+  AND_RULE_27_NAMES_THE_QUESTION_A_GREEN_BATTERY_CANNOT_ANSWER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      And the operative sentence, which is the most transferable thing in the rule: ***"A guard LOOSENED on the
+      strength of a false positive is the highest-priority thing to re-drive, and the question to ask is always
+      'is there a form the OLD one caught that the NEW one does not' — the regression a green battery cannot
+      show."*** With REV's generalised diagnosis beside it: **when a guard false-positives, find out whether the
+      defect is in the COMPARISON or in the MATCHING, and change only the one that is wrong.** DE 161 changed both
+      and lost the entire adjacency class; that is the named instance.
+  THE_287_DENOMINATOR_APPEARS_A_THIRD_TIME_AND_MY_DISCREPANCY_STAYS_OPEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      My round-294 discrepancy is **not closed and this file will not let it close by attrition**. Three values
+      stand — **246** (`arm_legs.n_slugs`, the population the P&L is summed over), **247** (`day_slugs`, the
+      builder's supply), **287** (the day's markets) — and this sweep adds a **third independent use of 287**:
+      REV 114's *"09-03's mask masks 40 of 287 btc windows as thin"*, alongside DA 141's **159 of 246** and
+      REV 112's **160 of 287**. **The same day is now described with two denominators across four filings**, and
+      the coordinator's own instruction stands: **247 against 246 remains unreconciled and nobody has done it.**
+      I still pick none.
+  STILL_NO_BUILD_NO_LOCK_AND_NO_CORRECTED_NUMBER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:52:10Z
+    said: >-
+      Verified at the machine: **no holders on `data/.heavy_run.lock`, no live heavy unit, no build dispatched, no
+      corrected book, and no corrected number** — the last of which is now stronger than a status, because DA 141
+      established that **no corrected number is COMPUTABLE from disk**: it needs a rebuild with the era resolved
+      from the day, and item 1 is open. The R-839 stand-down holds. **These files quote no day total as final**, and
+      the four percentages appear only with the ungapped figures and DA's three limits beside them.
   # --- MEM round 294, 2026-09-09T07:44:37Z (the clock read by which every measurement below was complete) ---
   THE_EXPOSURE_I_FILED_WAS_ROUTED_AND_MY_FILES_NOW_NAME_WHERE_IT_WENT:
     prov: CHECKED
