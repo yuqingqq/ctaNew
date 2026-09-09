@@ -21,15 +21,47 @@ evidence about the intended policy.
 by both defects. So the placement-latency finding stands and is the programme's one
 robust result:
 
-| day | baseline at L=0 | baseline at L=250 | loss |
-|---|---|---|---|
-| 2026-09-03 | 82,142.82 | 37,849.85 | −53.9 % |
-| 2026-09-04 | 102,193.69 | 38,452.91 | −62.4 % |
-| 2026-09-05 | 81,238.30 | 1,974.58 | −97.6 % |
-| 2026-09-06 | 46,562.18 | 20,750.59 | −55.4 % |
+| day | baseline at L=0 | baseline at L=250 | loss (all windows) | loss (ungapped only) | gapped share of settled money |
+|---|---|---|---|---|---|
+| 2026-09-03 | ~~82,142.82~~ | ~~37,849.85~~ | −53.922 % | −52.671 % (n=87) | **60.3 %** |
+| 2026-09-04 | ~~102,193.69~~ | ~~38,452.91~~ | −62.373 % | −59.565 % (n=236) | 15.6 % |
+| 2026-09-05 | ~~81,238.30~~ | ~~1,974.58~~ | −97.569 % | −93.444 % (n=275) | −1.0 % |
+| 2026-09-06 | ~~46,562.18~~ | ~~20,750.59~~ | −55.435 % | −54.137 % (n=274) | −10.9 % |
 
 (cents, settled P&L = trades cash flow + residual × settlement, R-801. Each day over its
 own window count; 09-03 covers 246 windows, the rest 288.)
+
+**THE ABSOLUTE CENT FIGURES ARE WITHDRAWN (DA 141, Q-DA-364, 2026-09-09T07:43Z; struck
+through above). THE PERCENTAGES STAND, WITH THIS CAVEAT.** Under the era defect above,
+**60.3 % of 09-03's settled money sits in windows the builder assembled as if continuous**
+(159 of 246 windows gapped; 15.6 % of the money on 09-04, and 09-05/09-06 are immaterial),
+so the day totals must not be quoted as final before a corrected build. **The percentages
+are robust to the defect: recomputed on ungapped windows only they move +1.251, +2.807,
++4.126 and +1.297 pp — all in the same direction, all under 4.2 pp, all still large.**
+What licenses that recomputation is established rather than assumed: an AST census of
+`day_selector` shows `gaps_by_slug(era)` is the SOLE era-dependent input (`_archive_paths()`
+and `token_map()` take no era), so on a window with no gaps in the CORRECT table `gaps=[]`
+is the correct input and the defect is **inert there, not merely absent**. Control on the
+defect itself: under the wrong era the same query marks **0** windows gapped on every day;
+and **0 fills land inside a gap interval on any day**, so nothing was fabricated — the
+contamination is structural, a reference assembled as if continuous.
+
+**THREE LIMITS ON THE CAVEAT, DA's own and not softened:** (a) ungapped windows are **not a
+random subsample** — gap incidence plausibly correlates with volatility and volume — so this
+is a ROBUSTNESS CHECK, not a corrected estimate; (b) 09-03's clean subset is only **87
+windows, 35.4 % of the day — the thinnest subset on the most exposed day**, exactly the
+wrong way round; (c) **no corrected number is computable from disk** — that needs a rebuild
+with the era resolved from the day.
+
+**AND THE DEFECT IS WORSE THAN R-843 STATED IT (REV 114).** The design handles gaps by a
+**partition of two channels**: the blackout mask excludes thin windows, and the gap list
+travels with each surviving window — and **DA's detector deliberately does NOT mask
+gap-explained windows precisely because the gap is supposed to travel by the other
+channel.** The builder's `era=None` empties that second channel, so the partition collapses
+to one and **160 windows on 09-03 arrive in the book carrying NEITHER.** The mask itself is
+sound and REV showed the check could have failed: 09-03 masks 40 of 287 windows as thin,
+`MASKED ∩ GAPPED = 0` against **22.3 expected** had the detector consulted an empty gap
+view; and 287 − 40 = 247 reproduces `day_selector`'s own count.
 
 **⚠ AMENDED 2026-09-09T07:41Z (R-843) — THE SURVIVING FINDING NOW CARRIES A NAMED,
 UNQUANTIFIED EXPOSURE, AND THE TABLE ABOVE MUST BE READ WITH IT.** REV 112 found that
