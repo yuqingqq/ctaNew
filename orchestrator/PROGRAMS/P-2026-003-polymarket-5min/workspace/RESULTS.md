@@ -70,6 +70,22 @@ with a control that could have failed: cross-deriving with R-825's wrong (5-seco
 changes `Z` on both arms and **flips the sign on HAZARD** (+0.032416 against −0.043431), so
 the wrong moments can change the DIRECTION of an excess and not merely its size.
 
+**AND A FIFTH LIMIT, ON THE POPULATION (coordinator, 2026-09-09T16:23:48Z): THE FINDING IS
+BTC-ONLY, AND NOTHING ABOVE SAID SO.** Across all **15** point-estimate artifacts, 13 carry
+slugs and their union is **3,618 distinct `btc-updown-5m-*` slugs and ZERO
+`eth-updown-5m-*`**. This is neither an exclusion with a status (rule 4) nor a selection
+after seeing (rule 11): **the Gate-1 tape layer was never built for ETH at all** — no
+`be_gate1_state_tape_receipt_<day>_eth.json` exists for ANY day, and `COIN = "btc"` is a
+module constant (`be_daybook_build.py:76`, plus five sibling Gate-1 modules) with no
+command-line override. The scope is *never requested*, not *dropped*. **It still binds
+quotation**, for two reasons: ETH is not absent for want of data — the HEALTHY line below
+carries eth's own P1/P2/P3 quality numbers, and the programme's action census counted
+**441,409 ETH actions** beside 610,064 BTC — and the programme's freeze layer went
+deliberately **BOTH COINS, UNSCOPED** on BE's own rule-11 argument (Q-BE-156: a btc-only
+scope "would be chosen BECAUSE btc won here, which is a selection on seen data"). **So
+whether the latency loss reproduces on ETH is UNTESTED, and every percentage in the table
+above is a BTC statement.**
+
 **THREE LIMITS ON THE CAVEAT, DA's own and not softened:** (a) ungapped windows are **not a
 random subsample** — gap incidence plausibly correlates with volatility and volume — so this
 is a ROBUSTNESS CHECK, not a corrected estimate; (b) 09-03's clean subset is only **87
