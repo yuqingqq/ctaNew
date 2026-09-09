@@ -21327,3 +21327,65 @@ generation and the window went 4 → 3. Nothing rewritten.
   VOUCH FOR IT***. Flags 2551 -> 2563, prov 2096 -> 2108; window trimmed 4 -> 3, Batch 285 archived. **NOTHING
   BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM asserts no result.)
 ```
+
+## Batch 289 — archived 2026-09-09T09:50:31Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T09:09:38Z (MEM ROUND 304 -- R-857 and R-858 SWEPT as a numbered queue under rule 23, from my round-303 tip
+  `17bbe9b` to `45fa3af`, THIRTY-FIVE commits -- I measured seventeen to `18b609d` and eighteen more landed while I drove the defects, so the count is corrected here before landing. STATE ONLY. ***THE USER REVIEWED AT SNAPSHOT `7d374b4` AND FOUND FIVE
+  CRITICAL DEFECTS; THIS SUPERSEDES THE GATE ARITHMETIC IN THESE FILES AND IS NOT "MORE FINDINGS" -- IT CHANGES WHAT
+  OUR VERIFICATIONS ARE WORTH.*** **(a) THE NULL THE USER RULED IS NOT THE NULL THAT RUNS**, driven by AST over the
+  whole tree: `null_draws_valued` has TWO call sites, `:7881` and `:11344`, and BOTH pass four positionals with
+  `n_draws`/`seed`/`deadline_s`/`winners` -- ZERO pass `arm_cancels`, ZERO pass `control_set_path` -- so the `if
+  arm_cancels is not None` branch implementing ruling B is UNREACHABLE and the historical ROW-matched null is what
+  ran and would run. ***AND THE MECHANISM IS A RULE WE ALREADY WROTE DOWN***: DE 161's own commit subject
+  (`c0e19ad`, 07:32:35Z) says "the matched-cancel branch is in the null" -- SEAT_PROTOCOL RULE 30 IS "VERIFY AGAINST
+  THE DIFF, NOT THE MESSAGE", landed because DA 146 found a commit message describing a change the commit did not
+  contain, and THE CLASS RECURRED AT THE SCALE OF A USER RULING. It propagated into **R-837, R-847, R-852 and
+  R-856** and into `HANDOFF.md:1094`, where my own round-291 block says DE 161 "wires the matched-cancel branch into
+  the null": ***THAT CLAUSE IS SUPERSEDED IN BAND AND NOT DELETED*** -- my hedge that it was "landed CODE, not a
+  validated instrument" was correct and INSUFFICIENT, because "landed as code" is true of a branch nothing calls.
+  The code is HONEST -- the receipt's `matched_control` defaults to `matched_on: DECISIONS` with the reason in
+  words -- but ***NO DAY RUN HAS HAPPENED SINCE DE 161, SO THAT FIELD HAS NEVER BEEN WRITTEN TO AN ARTIFACT.***
+  **(b) THE DECISION COUNT IS INFLATED AND IT IS CLAUDE.md RELIABILITY RULE 2 VERBATIM**: `day_decision_population`
+  at `:4633` counts every above-threshold ROW (`arm_stream` returns one entry per `bk["rows"]` element) into a field
+  whose own definition string says "above-threshold GENERATIONS", and that number feeds ADMISSIBILITY and, through
+  `by_side`, the NULL's demand; the receipt already measures the driver at 39.7 % of sampled rows beginning after
+  their generation's start, 27 % of generations, max 60 rows in one. ***AND THE DE-DUPLICATION KEY IS ALREADY ON
+  EVERY ROW***: `REQUIRED_EVENT_KEYS` is `(t, slug, side, gen)`, so the repair needs no new data. **(c) THE
+  CANCEL-MATCHING PREMISE IS FALSE, AND I DROVE IT RATHER THAN READ IT**: a repost mints `policy_gen =
+  f"{g['gen']}.r{seq}"` at `:753` while `issue_counts` keys on `(slug, side, policy_gen)`, so reference generation 7
+  cancelled TWICE as `7` and `7.r1` returns `one_cancel_per_generation = True` and only the same id twice returns
+  False -- ***AND `ref_gen` IS ON THE VERY CANCEL_ISSUED EVENT THE GATE READS***, the second time this round the
+  correct key sat beside the wrong one. REV 110 cited that invariant and the coordinator carried it into the USER's
+  decision brief, so ***THE PREMISE ON WHICH RULING B WAS RECOMMENDED DOES NOT HOLD AS STATED*** -- a fact about the
+  premise, with no claim here about the design, which is the USER's under rule 14. **(d) THE BOOK-CODE PREDICATE
+  PASSES ON A SUBSET**: `assert_book_scoring_code` intersects the receipt with `SCORING_PATH_MODULES` and refuses
+  only the EMPTY case, so a receipt naming ONE of five with a true digest returns `BOOK_SCORING_CODE_MATCHES` with
+  `n_checked: 1` -- I drove it -- and `n_checked == len(...)` is checked at EXACTLY ONE SITE, the battery at `:9922`
+  on a receipt it builds itself, while `:6056`, `:7704` and `de_cancel_count_delta.py:251` do not; BE 117 makes it
+  worse from the other side, deriving 49 recorded -> SCORING 8 with the typed five a STRICT SUBSET of eight. **(e)
+  THE SEAL DEFECT IS CONFIRMED (a planted settlement result was accepted) AND THE USER HAS RULED IT NOT AN ISSUE**:
+  recorded as ***DE-PRIORITISED BY RULING AND OWED BEFORE ANY FUTURE SEALED RACE***, with the reasoning that makes
+  the ruling correct rather than merely authoritative -- no live sealed race, every arm result retracted, nothing
+  currently decided on a sealed artifact, ***SO THE COST IS PROSPECTIVE***; the debt is dated, not cancelled. THREE
+  SMALLER ITEMS, each driven: **params v26 carries `protocol: ..._PARAMS_V20` at `version: 26`** (v25 too) which
+  `load_params()` never reads, ***AND THE FILE'S OWN NOTE RECORDS THE SAME BUG FROM v1***, while the DESIGN side
+  tracks correctly at V33/V34; **the receipt's "at an UNCHANGED theta fewer generations cross" is FALSE as a count**
+  -- a first crossing exists iff the maximum crosses, so the set is IDENTICAL BY CONSTRUCTION and what moves is the
+  cancel TIME and the cascade, with the calibration concern surviving the correction; and **`score_events` refuses
+  NaN by name and ADMITS `+inf` and `-inf`** (zero `isfinite` calls), ***NAMING THE VALUE THAT ALWAYS COMPARES FALSE
+  AND ADMITTING THE ONE THAT ALWAYS COMPARES TRUE***, downstream-refused so depth not exposure. ***MY OWN INSTRUMENT
+  FAILED FIRST AND THAT IS WHY THE RESULT IS TRUSTWORTHY***: my first probe used `side: "BUY"` against `SIDES =
+  (BUY_UP, SELL_UP)` and refused ALL FOUR cases INCLUDING THE FINITE CONTROL -- rule 15 binds the probe I write to
+  test someone else's checker just as hard. ***THE COORDINATOR WITHDRAWS "SEVEN OF EIGHT CLOSED AND VERIFIED"***
+  until the null runs the ruled unit and the counts are de-duplicated; the local carrier is MY OWN gate table at
+  `HANDOFF.md:346` and it is SUPERSEDED, NOT DELETED -- **what survives on the USER's own confirmation is that the
+  CAUSAL ROW TIMING and GENERATION-BOUNDARY ROUTING fixes DO work.** ***AND THE ONE UNAMBIGUOUSLY GOOD FACT, STATED
+  BECAUSE IT IS THE WHOLE VALUE OF THE ISSUES-FIRST RULING: NOTHING WAS BUILT, SO NOTHING IS CONTAMINATED*** --
+  verified at the machine, `/proc/locks` by dev:inode shows NO HOLDERS on the heavy lock, no heavy process, last
+  heavy-run record 07:15:47Z, everything newer in `derived/` a declaration and not a book. FIVE CRITICAL DEFECTS
+  FOUND IN CODE THAT NEVER PRODUCED A NUMBER ANYONE IS HOLDING. Pair of record CORRECTED: **params v26 + design
+  v34** (my files carried v25 + v33). Flags 2563 -> 2587, prov 2108 -> 2132; window 3/3, Batch 286 archived. MEM
+  asserts no result.)
+```

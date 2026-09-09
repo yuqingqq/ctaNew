@@ -1,3 +1,90 @@
+# READ FIRST — round 307 (MEM, 2026-09-09T09:50:31Z, tip `47bc449`)
+
+**R-861 swept — four commits since `07da57b`.** Light round.
+
+# THE PER-DEFECT LEDGER — the user's terms, three states, no narrative
+
+| # | defect | state |
+|---|---|---|
+| **1** | the cancel-matched null | **FIXED, DOUBLE-VERIFIED** — reaching sites **1 of 1** vs **0 of 1** |
+| **2** | the inflated decision count | **FIXED IN MECHANISM**, real factor **UNQUANTIFIED** |
+| **3** | the false cancel-matching premise | **HANDLED IN MECHANISM**, real rate **UNQUANTIFIED** |
+| **5a** | the predicate accepting a subset | **FIXED** — completeness refusal, 0 of 5 accepted |
+| **5b** | the predicate checking the **wrong set** | **OPEN** → DE |
+| **6a** | the protocol string | **OPEN** |
+
+**No "closed and verified" count is restored beyond this ledger.**
+
+**(1)** REV 128 at the entry point against its own baseline, DA 154 at runtime with **all four refusal shapes
+firing**, plus my own AST census. **DA's formulation is the one to keep: *"which null runs is now UNFALSIFIABLE BY
+OMISSION."*** That is the precise repair — **not that the right null runs, but that a run cannot be silent about
+which one did.** The old failure needed no lie: four register entries stood because the artifact said nothing.
+
+**(2) and (3)** share a state and a blocker: **both need a corrected book and none exists.** The repairs are
+verifiable; their **magnitude** is not. **"Fixed in mechanism, unquantified" is a third state, not a softer
+"fixed"** — rounding it either way is a false claim. *This is the one place the build decision and the defect ledger
+touch.*
+
+**(5b)** re-measured by me: **`derived_closures` and `be_producing_closure` appear ZERO times in the runner.** A
+completeness guard over the wrong membership **reports full coverage of a set nobody wanted.** **The defensible set
+is named with its operation: BE's DERIVED EIGHT — membership = reachability from the scoring entry points within the
+recording.** The cascade **ten** is a *different claim*, already pinned by params v28; the recorded **49** is *not*
+the answer. **Rule 32 asked what operation constitutes membership — this is the first time the answer is an
+operation rather than a list**, which is why it can be handed to a seat.
+
+**(6a)** driven at HEAD across every version:
+
+| params | `version` | `protocol` |
+|---|---|---|
+| v25 · v26 · v27 · **v28** | 25 · 26 · 27 · **28** | **`…_PARAMS_V20`** throughout |
+
+**Including the version landed in the round that claimed to repair it.** What DE built is narrower and defensible:
+`load_params` refuses an **undeclared** divergence, and v27/v28 carry `protocol_version_note`. **But a declared
+divergence is a different thing from a corrected string** — and the note's own `readers_that_print_the_pair` names
+**`da_gate1_day_verdict`, the very gate DA found RED on `protocol.endswith(V28)`.** *It acknowledges the reader by
+name and leaves it failing.*
+
+## DA'S IN-BAND CORRECTION, AND ITS CAUSE
+
+DA had reported *"four sites and not one comparison"*. **A literal regex could not see a comparison built
+dynamically with an f-string** — DA's **third enumeration-by-spelling** error, rule 32's own class in the seat that
+wrote the lesson. **⇒ The corollary REVERSES: the string is not inert, so bumping it is not free and pointless —
+it CLEARS A RED DA's own gate is carrying.** *Every "harmless inconsistency" argument here rested on the sweep that
+missed the reader.*
+
+## ⚠ THE FLAKE'S CAUSE — corrected, and I record what was DRIVEN
+
+I was asked to file it as **`git status --porcelain` in `_is_committed`** making a verdict a function of other
+seats' timing. **DA 155 corrects that in band: it was NOT shared-tree dirtiness** — *"no cell asserts on either
+committed field and they are independent"* — naming why its earlier account was wrong: ***"my Q-DA-377 explanation
+was READ, NOT DRIVEN."***
+
+**Driven cause:** `audit_module` raised a **bare `SyntaxError`**, and the battery hands it git-show stdout and
+scratch text, so **any transient yielding unusable source killed the run with rc 1 and stdout truncated mid-cell —
+the observed signature.** Unusable bytes now refuse `SOURCE_DID_NOT_PARSE`. ***A plausible mechanism that explains
+the symptom is not the mechanism.***
+
+**And the defect found *while* fixing it is the better one:** `_is_committed` returned `False` for a path **outside**
+the tree (git exits 128) — **absence read as a negative** — reporting every scratch module as uncommitted. DA: *"my
+own class in my own module."* Three named states; **21 → 23 checks**. *A boolean that collapses "no" and "cannot
+tell" is the same shape as a default that collapses "row-matched" and "not asked".*
+
+## RULE 24 IS NOW SATISFIED BY EVERY SEAT
+
+REV 130 wrote `REV_PROCEDURE.md` at a reset **from the ledger 100..129, not from memory**. It leads with ***"a review
+DRIVES, it does not READ — the recurring failure is an instrument satisfying the WORDS and not the PROPERTY"*** and
+the **three-drive standard: pass on the real thing, fail on a known-bad BY NAME, refuse a partial input — and two of
+three is a fail.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z.**
+
+Counts: flags 2610 → 2622, provenance 2155 → 2167 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 289 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 306 (MEM, 2026-09-09T09:40:36Z, tip `623c050`)
 
 **DE 166, REV 128, DA 154 and REV 129 swept — seven commits since `1f98fc7`.** Light round.

@@ -67,6 +67,50 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T09:50:31Z (MEM ROUND 307 -- R-861 SWEPT, LIGHT ROUND, from `07da57b` to `47bc449`, four commits. STATE ONLY.
+  ***THE STATE IS A PER-DEFECT LEDGER IN THE USER'S OWN TERMS, NOT A NARRATIVE, AND IT CARRIES THREE STATES RATHER
+  THAN TWO.*** **(1) THE CANCEL-MATCHED NULL -- FIXED AND DOUBLE-VERIFIED**: REV 128 at the entry point against its
+  own baseline, DA 154 at runtime with all four refusal shapes firing, and my own AST census -- `arm_cancels` and
+  `control_set_path` now passed, `matched_on` ABSENT -> `CANCELS`, reaching sites **1 of 1 against 0 of 1** -- and
+  ***DA'S FORMULATION IS THE ONE TO KEEP: "WHICH NULL RUNS IS NOW UNFALSIFIABLE BY OMISSION"***, which is the precise
+  repair, not that the right null runs but that a run CANNOT BE SILENT ABOUT WHICH ONE DID. **(2) THE INFLATED
+  DECISION COUNT -- FIXED IN MECHANISM, REAL FACTOR UNQUANTIFIED. (3) THE FALSE CANCEL-MATCHING PREMISE -- HANDLED IN
+  MECHANISM, REAL DOUBLE-CANCEL RATE UNQUANTIFIED.** Both need a CORRECTED BOOK and none exists, so the repairs are
+  verifiable and their MAGNITUDE is not -- ***"FIXED IN MECHANISM, UNQUANTIFIED" IS A THIRD STATE AND NOT A SOFTER
+  "FIXED"***, and rounding it to either would be a false claim. **(5a) THE PREDICATE ACCEPTING A SUBSET -- FIXED**,
+  the completeness refusal, 0 of 5 single-module receipts accepted. **(5b) THE PREDICATE CHECKING THE WRONG SET --
+  OPEN**, re-measured by me: ***`derived_closures` and `be_producing_closure` appear ZERO times in the runner at my
+  read***, so it still filters the recorded closure to the typed five, and a completeness guard over the wrong
+  membership reports full coverage of a set nobody wanted. ***THE DEFENSIBLE SET IS NAMED WITH ITS OPERATION: BE'S
+  DERIVED EIGHT, MEMBERSHIP = REACHABILITY FROM THE SCORING ENTRY POINTS WITHIN THE RECORDING*** -- the cascade TEN
+  being a DIFFERENT claim already pinned by params v28, and the recorded 49 NOT the answer since it is everything the
+  run imported; **rule 32 asked what operation would constitute membership and this is the first time the answer is
+  an OPERATION rather than a list**, which is why it can be handed to a seat. Routed to DE. **(6a) THE PROTOCOL
+  STRING -- OPEN**, and I drove it at HEAD across every version rather than taking the report: ***`protocol
+  P003_DE_MULTIDAY_GATE1_PARAMS_V20` at v25, v26, v27 AND v28, with `version` reading 25/26/27/28 -- INCLUDING THE
+  VERSION LANDED IN THE ROUND THAT CLAIMED TO REPAIR IT.*** What DE built is narrower and defensible on its own
+  terms -- `load_params` refuses an UNDECLARED divergence and v27/v28 carry `protocol_version_note` -- but ***A
+  DECLARED DIVERGENCE IS A DIFFERENT THING FROM A CORRECTED STRING***, and the note's own
+  `readers_that_print_the_pair` names **`da_gate1_day_verdict`, THE VERY GATE DA FOUND IS RED on
+  `protocol.endswith(V28)`**: the declaration acknowledges the reader by name and still leaves it failing. **DA
+  CORRECTS ITS OWN Q-DA-376 IN BAND WITH THE CAUSE NAMED**: it had reported "four sites and not one comparison", and
+  ***A LITERAL REGEX COULD NOT SEE A COMPARISON BUILT DYNAMICALLY WITH AN f-STRING*** -- DA's THIRD
+  enumeration-by-spelling error, rule 32's own class in the seat that wrote the lesson -- ***AND THE COROLLARY
+  REVERSES: THE STRING IS NOT INERT, SO BUMPING IT IS NOT FREE AND POINTLESS BUT CLEARS A RED DA'S OWN GATE IS
+  CARRYING.*** ***AND A CORRECTION TO WHAT I WAS ASKED TO RECORD, WHERE I RECORD WHAT WAS DRIVEN INSTEAD***: the
+  flake was **NOT** `git status --porcelain` in `_is_committed` making a verdict a function of other seats' timing --
+  **DA 155 corrects that in band, "no cell asserts on either committed field and they are independent", naming why
+  its earlier account was wrong: "MY Q-DA-377 EXPLANATION WAS READ, NOT DRIVEN."** The driven cause: **`audit_module`
+  raised a BARE `SyntaxError` and the battery hands it git-show stdout and scratch text, so any transient yielding
+  unusable source killed the run with rc 1 and stdout truncated mid-cell -- the observed signature**; unusable bytes
+  now refuse `SOURCE_DID_NOT_PARSE`. ***A PLAUSIBLE MECHANISM THAT EXPLAINS THE SYMPTOM IS NOT THE MECHANISM.*** And
+  the defect found WHILE fixing it is the better one: **`_is_committed` returned False for a path OUTSIDE the tree
+  where git exits 128 -- ABSENCE READ AS A NEGATIVE -- reporting every scratch module as uncommitted**, DA's "own
+  class in my own module"; three named states, 21 -> 23 checks. **Rule 24 is now satisfied by EVERY seat**: REV 130
+  wrote `REV_PROCEDURE.md` at a reset **from the ledger 100..129 rather than from memory**, leading with *"A REVIEW
+  DRIVES, IT DOES NOT READ"* and the THREE-DRIVE STANDARD where **two of three is a fail.** Flags 2610 -> 2622, prov
+  2155 -> 2167; window 3/3, Batch 289 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z; NO "CLOSED AND
+  VERIFIED" COUNT IS RESTORED BEYOND THE LEDGER ABOVE.** MEM asserts no result.)
   2026-09-09T09:40:36Z (MEM ROUND 306 -- DE 166 and REV 128 SWEPT, LIGHT ROUND, from `1f98fc7` to `623c050`, SEVEN commits -- I swept four to `da1a117` and THREE MORE LANDED WHILE I WROTE, so DA's verdict and REV 129 are folded in an addendum below rather than left to next round.
   STATE ONLY. ***THE STATE CHANGE: THE USER'S DEFECTS ARE REPAIRED AND THE FIRST VERIFICATION IS IN.*** I re-ran my
   own round-304 census rather than reading DE's claim: **the day path `:8120` now passes `arm_cancels=True` and
@@ -136,63 +180,6 @@ updated: >-
   fail on a known-bad, REFUSE a partial input -- **its case (1) reading AT THE CALLER, "where the defect lived", not
   at the branch.** Flags 2587 -> 2595, prov 2132 -> 2140; window 3/3, Batch 287 archived. **NOTHING BUILT, NO HEAVY
   LOCK SINCE 07:15:47Z, THE BUILD DECISION AND THE MATCHING UNIT BOTH WITH THE USER.** MEM asserts no result.)
-  2026-09-09T09:09:38Z (MEM ROUND 304 -- R-857 and R-858 SWEPT as a numbered queue under rule 23, from my round-303 tip
-  `17bbe9b` to `45fa3af`, THIRTY-FIVE commits -- I measured seventeen to `18b609d` and eighteen more landed while I drove the defects, so the count is corrected here before landing. STATE ONLY. ***THE USER REVIEWED AT SNAPSHOT `7d374b4` AND FOUND FIVE
-  CRITICAL DEFECTS; THIS SUPERSEDES THE GATE ARITHMETIC IN THESE FILES AND IS NOT "MORE FINDINGS" -- IT CHANGES WHAT
-  OUR VERIFICATIONS ARE WORTH.*** **(a) THE NULL THE USER RULED IS NOT THE NULL THAT RUNS**, driven by AST over the
-  whole tree: `null_draws_valued` has TWO call sites, `:7881` and `:11344`, and BOTH pass four positionals with
-  `n_draws`/`seed`/`deadline_s`/`winners` -- ZERO pass `arm_cancels`, ZERO pass `control_set_path` -- so the `if
-  arm_cancels is not None` branch implementing ruling B is UNREACHABLE and the historical ROW-matched null is what
-  ran and would run. ***AND THE MECHANISM IS A RULE WE ALREADY WROTE DOWN***: DE 161's own commit subject
-  (`c0e19ad`, 07:32:35Z) says "the matched-cancel branch is in the null" -- SEAT_PROTOCOL RULE 30 IS "VERIFY AGAINST
-  THE DIFF, NOT THE MESSAGE", landed because DA 146 found a commit message describing a change the commit did not
-  contain, and THE CLASS RECURRED AT THE SCALE OF A USER RULING. It propagated into **R-837, R-847, R-852 and
-  R-856** and into `HANDOFF.md:1094`, where my own round-291 block says DE 161 "wires the matched-cancel branch into
-  the null": ***THAT CLAUSE IS SUPERSEDED IN BAND AND NOT DELETED*** -- my hedge that it was "landed CODE, not a
-  validated instrument" was correct and INSUFFICIENT, because "landed as code" is true of a branch nothing calls.
-  The code is HONEST -- the receipt's `matched_control` defaults to `matched_on: DECISIONS` with the reason in
-  words -- but ***NO DAY RUN HAS HAPPENED SINCE DE 161, SO THAT FIELD HAS NEVER BEEN WRITTEN TO AN ARTIFACT.***
-  **(b) THE DECISION COUNT IS INFLATED AND IT IS CLAUDE.md RELIABILITY RULE 2 VERBATIM**: `day_decision_population`
-  at `:4633` counts every above-threshold ROW (`arm_stream` returns one entry per `bk["rows"]` element) into a field
-  whose own definition string says "above-threshold GENERATIONS", and that number feeds ADMISSIBILITY and, through
-  `by_side`, the NULL's demand; the receipt already measures the driver at 39.7 % of sampled rows beginning after
-  their generation's start, 27 % of generations, max 60 rows in one. ***AND THE DE-DUPLICATION KEY IS ALREADY ON
-  EVERY ROW***: `REQUIRED_EVENT_KEYS` is `(t, slug, side, gen)`, so the repair needs no new data. **(c) THE
-  CANCEL-MATCHING PREMISE IS FALSE, AND I DROVE IT RATHER THAN READ IT**: a repost mints `policy_gen =
-  f"{g['gen']}.r{seq}"` at `:753` while `issue_counts` keys on `(slug, side, policy_gen)`, so reference generation 7
-  cancelled TWICE as `7` and `7.r1` returns `one_cancel_per_generation = True` and only the same id twice returns
-  False -- ***AND `ref_gen` IS ON THE VERY CANCEL_ISSUED EVENT THE GATE READS***, the second time this round the
-  correct key sat beside the wrong one. REV 110 cited that invariant and the coordinator carried it into the USER's
-  decision brief, so ***THE PREMISE ON WHICH RULING B WAS RECOMMENDED DOES NOT HOLD AS STATED*** -- a fact about the
-  premise, with no claim here about the design, which is the USER's under rule 14. **(d) THE BOOK-CODE PREDICATE
-  PASSES ON A SUBSET**: `assert_book_scoring_code` intersects the receipt with `SCORING_PATH_MODULES` and refuses
-  only the EMPTY case, so a receipt naming ONE of five with a true digest returns `BOOK_SCORING_CODE_MATCHES` with
-  `n_checked: 1` -- I drove it -- and `n_checked == len(...)` is checked at EXACTLY ONE SITE, the battery at `:9922`
-  on a receipt it builds itself, while `:6056`, `:7704` and `de_cancel_count_delta.py:251` do not; BE 117 makes it
-  worse from the other side, deriving 49 recorded -> SCORING 8 with the typed five a STRICT SUBSET of eight. **(e)
-  THE SEAL DEFECT IS CONFIRMED (a planted settlement result was accepted) AND THE USER HAS RULED IT NOT AN ISSUE**:
-  recorded as ***DE-PRIORITISED BY RULING AND OWED BEFORE ANY FUTURE SEALED RACE***, with the reasoning that makes
-  the ruling correct rather than merely authoritative -- no live sealed race, every arm result retracted, nothing
-  currently decided on a sealed artifact, ***SO THE COST IS PROSPECTIVE***; the debt is dated, not cancelled. THREE
-  SMALLER ITEMS, each driven: **params v26 carries `protocol: ..._PARAMS_V20` at `version: 26`** (v25 too) which
-  `load_params()` never reads, ***AND THE FILE'S OWN NOTE RECORDS THE SAME BUG FROM v1***, while the DESIGN side
-  tracks correctly at V33/V34; **the receipt's "at an UNCHANGED theta fewer generations cross" is FALSE as a count**
-  -- a first crossing exists iff the maximum crosses, so the set is IDENTICAL BY CONSTRUCTION and what moves is the
-  cancel TIME and the cascade, with the calibration concern surviving the correction; and **`score_events` refuses
-  NaN by name and ADMITS `+inf` and `-inf`** (zero `isfinite` calls), ***NAMING THE VALUE THAT ALWAYS COMPARES FALSE
-  AND ADMITTING THE ONE THAT ALWAYS COMPARES TRUE***, downstream-refused so depth not exposure. ***MY OWN INSTRUMENT
-  FAILED FIRST AND THAT IS WHY THE RESULT IS TRUSTWORTHY***: my first probe used `side: "BUY"` against `SIDES =
-  (BUY_UP, SELL_UP)` and refused ALL FOUR cases INCLUDING THE FINITE CONTROL -- rule 15 binds the probe I write to
-  test someone else's checker just as hard. ***THE COORDINATOR WITHDRAWS "SEVEN OF EIGHT CLOSED AND VERIFIED"***
-  until the null runs the ruled unit and the counts are de-duplicated; the local carrier is MY OWN gate table at
-  `HANDOFF.md:346` and it is SUPERSEDED, NOT DELETED -- **what survives on the USER's own confirmation is that the
-  CAUSAL ROW TIMING and GENERATION-BOUNDARY ROUTING fixes DO work.** ***AND THE ONE UNAMBIGUOUSLY GOOD FACT, STATED
-  BECAUSE IT IS THE WHOLE VALUE OF THE ISSUES-FIRST RULING: NOTHING WAS BUILT, SO NOTHING IS CONTAMINATED*** --
-  verified at the machine, `/proc/locks` by dev:inode shows NO HOLDERS on the heavy lock, no heavy process, last
-  heavy-run record 07:15:47Z, everything newer in `derived/` a declaration and not a book. FIVE CRITICAL DEFECTS
-  FOUND IN CODE THAT NEVER PRODUCED A NUMBER ANYONE IS HOLDING. Pair of record CORRECTED: **params v26 + design
-  v34** (my files carried v25 + v33). Flags 2563 -> 2587, prov 2108 -> 2132; window 3/3, Batch 286 archived. MEM
-  asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -364,6 +351,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 307, R-861 swept; the per-defect ledger (07da57b -> 47bc449) ---
+  THE_PER_DEFECT_LEDGER_REPLACES_THE_NARRATIVE_AND_IT_IS_SIX_ROWS: THREE-STATES-NOT-TWO
+  ONE_IS_FIXED_AND_DOUBLE_VERIFIED_AND_UNFALSIFIABLE_BY_OMISSION: ONE-OF-ONE-AGAINST-ZERO-OF-ONE
+  TWO_AND_THREE_ARE_FIXED_IN_MECHANISM_AND_UNQUANTIFIED_UNTIL_A_BOOK_EXISTS: THE-BOUND-ON-THE-CLAIM
+  FIVE_A_IS_FIXED_AND_FIVE_B_IS_OPEN_WITH_THE_DEFENSIBLE_SET_NAMED: ZERO-REFERENCES-AT-MY-READ
+  AND_THE_MEMBERSHIP_OPERATION_IS_REACHABILITY_NOT_THE_RECORDED_FORTY_NINE: THREE-SETS-THREE-CLAIMS
+  SIX_A_IS_OPEN_AND_THE_STRING_IS_V20_AT_v25_v26_v27_AND_v28: INCLUDING-THE-REPAIR-ROUNDS-OWN-VERSION
+  AND_THE_DECLARATION_NAMES_BY_NAME_THE_READER_IT_LEAVES_RED: da_gate1_day_verdict
+  DA_CORRECTS_Q_DA_376_BECAUSE_A_LITERAL_REGEX_CANNOT_SEE_AN_F_STRING: THIRD-ENUMERATION-BY-SPELLING
+  AND_THE_COROLLARY_REVERSES_BUMPING_THE_STRING_CLEARS_A_RED: NOT-INERT-AND-NOT-FREE
+  THE_FLAKES_CAUSE_IS_CORRECTED_IN_BAND_AND_IT_WAS_NOT_THE_SHARED_TREE: READ-NOT-DRIVEN
+  AND_THE_SECOND_DEFECT_FOUND_WHILE_FIXING_IT_IS_ABSENCE_READ_AS_A_NEGATIVE: GIT-EXITS-128
+  THE_REVIEWER_SEAT_NOW_HAS_A_PROCEDURE_FILE_RECONSTRUCTED_FROM_ITS_LEDGER: FROM-100-TO-129-NOT-MEMORY
   # --- MEM round 306 ADDENDUM 2026-09-09T09:42:11Z: DA's verdict and REV 129 landed while I wrote ---
   DAS_VERDICT_LANDED_WHILE_I_WROTE_AND_THREE_FLIP_WITH_THE_FOURTH_CORRECTLY_NOT: THE-OTHER-HALF-IS-IN
   THE_PREDICATE_STILL_TYPES_A_LIST_AND_THE_FALSE_MATCH_IS_PRODUCIBLE_INSIDE_ITS_OWN_SET: TYPED-5-DERIVED-8-CASCADE-10-RECORDED-49
@@ -27014,6 +27014,149 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 307, 2026-09-09T09:50:31Z ---
+  THE_PER_DEFECT_LEDGER_REPLACES_THE_NARRATIVE_AND_IT_IS_SIX_ROWS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      ***THE STATE IS NOW A PER-DEFECT LEDGER IN THE USER'S OWN TERMS, NOT A NARRATIVE, AND IT CARRIES THREE STATES
+      RATHER THAN TWO.*** **(1) cancel-matched null -- FIXED AND DOUBLE-VERIFIED. (2) inflated decision count --
+      FIXED IN MECHANISM, real factor UNQUANTIFIED. (3) false cancel-matching premise -- HANDLED IN MECHANISM, real
+      double-cancel rate UNQUANTIFIED. (5a) predicate accepting a subset -- FIXED. (5b) predicate checking the WRONG
+      SET -- OPEN, routed to DE. (6a) the protocol string -- OPEN.** ***"FIXED IN MECHANISM, UNQUANTIFIED" IS A
+      THIRD STATE AND NOT A SOFTER "FIXED"***: it says the code now computes the right quantity and **nobody knows by
+      how much the old one was wrong.** A two-state ledger would have to round it to one of them, and either
+      rounding is a false claim.
+  ONE_IS_FIXED_AND_DOUBLE_VERIFIED_AND_UNFALSIFIABLE_BY_OMISSION:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      **(1) FIXED AND DOUBLE-VERIFIED -- REV 128 at the entry point against its own baseline, DA 154 at runtime with
+      all four refusal shapes firing, and my own AST census: `arm_cancels` and `control_set_path` now passed,
+      `matched_on` ABSENT -> `CANCELS`, reaching sites `1 of 1` against `0 of 1`.** ***AND DA'S FORMULATION IS THE
+      ONE TO KEEP: "WHICH NULL RUNS IS NOW UNFALSIFIABLE BY OMISSION."*** That is the precise repair -- **not that
+      the right null runs, but that a run CANNOT BE SILENT ABOUT WHICH ONE DID.** The old failure needed no lie:
+      four register entries stood because the artifact said nothing, and a field that must be present and must agree
+      with its inputs is what removes the silence.
+  TWO_AND_THREE_ARE_FIXED_IN_MECHANISM_AND_UNQUANTIFIED_UNTIL_A_BOOK_EXISTS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      **(2) and (3) share a state and a blocker: FIXED / HANDLED IN MECHANISM with the real number UNQUANTIFIED,
+      because both need A CORRECTED BOOK and none exists.** The rows-per-decision inflation factor and the rate at
+      which a reference generation is double-cancelled are **properties of data nobody has built**, so the repairs
+      can be verified and their MAGNITUDE cannot. ***THIS IS THE ONE PLACE THE BUILD DECISION AND THE DEFECT LEDGER
+      TOUCH***: the two open quantities are the first things a corrected day would settle, and until then **the
+      honest ledger entry is "repaired, size unknown", which this file will keep saying in those words.**
+  FIVE_A_IS_FIXED_AND_FIVE_B_IS_OPEN_WITH_THE_DEFENSIBLE_SET_NAMED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      **(5a) FIXED -- the completeness refusal: a receipt naming fewer than the checked set now refuses by name, 0 of
+      5 single-module receipts accepted (DA 154), which I re-drove to `BOOK_SCORING_CODE_RECEIPT_INCOMPLETE`.
+      (5b) OPEN -- the predicate still checks the WRONG SET**, and I re-measured it: ***`derived_closures` and
+      `be_producing_closure` appear ZERO times in `de_multiday_gate1_runner.py` at my read***, so the runner still
+      filters the recorded closure to the typed five. **A completeness guard over the wrong membership reports full
+      coverage of a set nobody wanted** -- the two halves are independent and only one is closed. Routed to DE.
+  AND_THE_MEMBERSHIP_OPERATION_IS_REACHABILITY_NOT_THE_RECORDED_FORTY_NINE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      ***AND THE PART THAT MAKES (5b) ACTIONABLE RATHER THAN A COMPLAINT: THE DEFENSIBLE SET IS NAMED, WITH ITS
+      MEMBERSHIP OPERATION.*** **BE's DERIVED EIGHT -- membership = REACHABILITY FROM THE SCORING ENTRY POINTS WITHIN
+      THE RECORDING.** And the two rejected candidates are rejected for reasons, not by preference: **the cascade TEN
+      is a DIFFERENT CLAIM, already pinned by params v28**, and ***THE RECORDED 49 IS NOT THE ANSWER*** -- it is
+      everything the run imported, which would make the guard fire on modules the scoring path never touches. **Rule
+      32 asked "what operation would constitute membership"; this is the first time in this thread the answer is
+      stated as an OPERATION rather than a list**, which is exactly why it can be handed to a seat.
+  SIX_A_IS_OPEN_AND_THE_STRING_IS_V20_AT_v25_v26_v27_AND_v28:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v28.json
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      **(6a) OPEN, and I drove it at HEAD across every version rather than taking the report**: ***`protocol:
+      'P003_DE_MULTIDAY_GATE1_PARAMS_V20'` at v25, v26, v27 AND v28 -- with `version` reading 25, 26, 27, 28*** --
+      **including the version landed in the round that claimed to repair it.** What DE actually built is narrower
+      than "repaired" and is defensible on its own terms: `load_params` now refuses an **UNDECLARED** divergence,
+      and v27/v28 carry `protocol_version_note` (`declared_by: DE 166 (6a)`,
+      `protocol_last_changed_at_version: 20`), so the divergence is **declared rather than closed.** ***A DECLARED
+      DIVERGENCE IS A DIFFERENT THING FROM A CORRECTED STRING, AND THE LEDGER SAYS OPEN.***
+  AND_THE_DECLARATION_NAMES_BY_NAME_THE_READER_IT_LEAVES_RED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v28.json
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      And the detail that turns (6a) from cosmetic into operational: **the declaration's own
+      `readers_that_print_the_pair` field names `da_gate1_day_verdict`** -- ***THE VERY GATE DA 154 FOUND IS RED, ITS
+      ONLY FAILING CONJUNCT `protocol.endswith(V28)`.*** **The note acknowledges the reader by name and still leaves
+      it failing.** *A divergence can be declared to a human reader and remain undeclared to the machine that
+      checks it* -- which is rule 33's identity question (what does the check examine vs what is it cited for)
+      arriving from the declaration side.
+  DA_CORRECTS_Q_DA_376_BECAUSE_A_LITERAL_REGEX_CANNOT_SEE_AN_F_STRING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      **DA's in-band correction of its own Q-DA-376, with the cause named rather than the verdict swapped:** it had
+      reported *"four sites and NOT ONE comparison"*, and `da_gate1_day_verdict` **does** compare -- ***A LITERAL
+      REGEX COULD NOT SEE A COMPARISON BUILT DYNAMICALLY WITH AN f-STRING.*** DA files it as **its THIRD
+      enumeration-by-spelling error**, which is rule 32's own class (*enumerate by operation, not by spelling*)
+      recurring in the seat that wrote that lesson. **My round-305 files carried DA's stronger claim for one round
+      and were superseded at round 306**; this records the CAUSE, which is the transferable part: *a sweep for a
+      string cannot find a string that is assembled.*
+  AND_THE_COROLLARY_REVERSES_BUMPING_THE_STRING_CLEARS_A_RED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      ***AND THE COROLLARY REVERSES, WHICH IS THE PRACTICAL CONSEQUENCE AND THE REASON THE CORRECTION MATTERS.***
+      Under the old reading the string was **inert**, so bumping it was free and pointless. Under the corrected one
+      it is **read by a gate**: ***BUMPING THE STRING CLEARS A RED DA'S OWN GATE IS CURRENTLY CARRYING*** -- so the
+      change is neither free nor pointless, it is **a fix with a visible green on the other side.** *Every "harmless
+      inconsistency" argument in this thread rested on the sweep that missed the reader.*
+  THE_FLAKES_CAUSE_IS_CORRECTED_IN_BAND_AND_IT_WAS_NOT_THE_SHARED_TREE:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      ***A CORRECTION TO WHAT I WAS ASKED TO RECORD, AND I RECORD WHAT WAS DRIVEN INSTEAD.*** The dispatch asked me
+      to file the flake's cause as **`git status --porcelain` in `_is_committed` making an audit's verdict a function
+      of OTHER SEATS' TIMING.** **DA 155 corrects that IN BAND: it was NOT shared-tree dirtiness** -- *"no cell
+      asserts on either committed field and they are independent"* -- and DA names why its earlier account was wrong:
+      ***"my Q-DA-377 explanation was READ, NOT DRIVEN."*** **The driven cause: `audit_module` raised a BARE
+      `SyntaxError`, and the battery hands it git-show stdout and scratch text, so any transient yielding unusable
+      source killed the run with rc 1 and stdout truncated mid-cell -- the observed signature.** Unusable bytes now
+      refuse `SOURCE_DID_NOT_PARSE` and the git-show site files a **named failed cell instead of dying.** *A
+      plausible mechanism that explains the symptom is not the mechanism.*
+  AND_THE_SECOND_DEFECT_FOUND_WHILE_FIXING_IT_IS_ABSENCE_READ_AS_A_NEGATIVE:
+    prov: CHECKED
+    artifact: live/pm_research/da_accrual_report.py
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      And the defect found **while** fixing that one, which is the better finding: **`_is_committed` returned `False`
+      for a path OUTSIDE the tree, where git exits 128** -- ***ABSENCE READ AS A NEGATIVE***, reporting **every
+      scratch module as uncommitted.** DA files it as *"my own class in my own module."* **Three named states now;
+      21 -> 23 checks**, and the clock cell re-anchored to assert **at a FIXED anchor plus horizon arithmetic (margins
+      agreeing with verdicts, true at ANY anchor) while REPORTING the live wall-clock beside it** -- 20 checks. *A
+      boolean that collapses "no" and "cannot tell" is the same shape as a default that collapses "row-matched" and
+      "not asked".*
+  THE_REVIEWER_SEAT_NOW_HAS_A_PROCEDURE_FILE_RECONSTRUCTED_FROM_ITS_LEDGER:
+    prov: CHECKED
+    artifact: live/pm_research/REV_PROCEDURE.md
+    as_of: 2026-09-09T09:50:31Z
+    said: >-
+      **Rule 24 is now satisfied by every seat: REV was the only one without a procedure file, and REV 130 wrote it
+      at a reset immediately after REVIEW 129 -- FROM THE LEDGER 100..129 RATHER THAN FROM MEMORY**, which is the
+      same discipline this seat uses for a generation. Its first two entries are the programme's own hard-won ones:
+      ***"A REVIEW DRIVES, IT DOES NOT READ -- the recurring failure is an instrument satisfying the WORDS and not
+      the PROPERTY, and reading code cannot tell the two apart"***, and **the THREE-DRIVE STANDARD as rule 33's
+      operational form: PASS on the real thing, FAIL on a known-bad BY NAME, REFUSE a partial input -- AND TWO OF
+      THREE IS A FAIL.**
   # --- MEM round 306 ADDENDUM, 2026-09-09T09:42:11Z ---
   DAS_VERDICT_LANDED_WHILE_I_WROTE_AND_THREE_FLIP_WITH_THE_FOURTH_CORRECTLY_NOT:
     prov: CHECKED
