@@ -6436,6 +6436,23 @@ ACCEPT_UNVERIFIABLE_MEMBERSHIP = "ACCEPT_MEMBERSHIP_NOT_ESTABLISHED"
 #: by convention AND by construction -- the driver pops it before the emit
 #: and refuses if anything like it survives into the bytes.
 PLR_INPUTS_KEY = "_placement_latency_reconciliation_inputs_DO_NOT_SERIALISE"
+
+#: DE 190 / REV 147. THE STATUS IS A FUNCTION OF THE MODE, NOT A LITERAL.
+#: `PERFORMED_BY_POINT_ESTIMATE_DRIVER` was TYPED, so a FULL-NULL arm-day
+#: receipt claimed a reconciliation the driver never ran -- the driver is
+#: not on that path at all. On a point estimate the claim came true only
+#: because the driver OVERWRITES this block on success
+#: (`RECONCILED_BY_POINT_ESTIMATE_DRIVER`); on the full-null path nothing
+#: overwrites it and the claim stands unchallenged. Rule 10 in a field
+#: automated readers resolve.
+#:
+#: SO NEITHER MODE ASSERTS WHAT THE DRIVER DID. The runner says what THE
+#: RUNNER DID: it handed the inputs over, or it did not. And a PENDING
+#: that survives into a published point estimate is now DIAGNOSTIC -- it
+#: means the driver did not finish the reconciliation -- where PERFORMED
+#: would have read as done.
+PLR_PENDING = "PENDING__INPUTS_HANDED_TO_THE_POINT_ESTIMATE_DRIVER"
+PLR_NOT_PERFORMED = ("NOT_PERFORMED__NO_RECONCILIATION_ON_THIS_PATH")
 PLR_REFERENCE_ABSENT = "PLACEMENT_LATENCY_REFERENCE_ABSENT_FROM_THE_BOOK"
 
 
@@ -8956,7 +8973,29 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             # reaching a json.dumps would be a 300 MB artifact or a
             # crash.
             _plr177 = {
-                "status": "PERFORMED_BY_POINT_ESTIMATE_DRIVER",
+                # COMPUTED FROM THE MODE. See PLR_PENDING above.
+                "status": (PLR_PENDING if point_estimate
+                           else PLR_NOT_PERFORMED),
+                "run_mode": ("POINT_ESTIMATE" if point_estimate else "FULL"),
+                "what_this_run_did": (
+                    "attached the reference, the winners and the "
+                    "zero-cancel baseline for the point-estimate driver to "
+                    "reconcile, and the driver REPLACES this block with "
+                    "the checker's own result on success"
+                    if point_estimate else
+                    "NOTHING. This is a full-null `--day` run: it does not "
+                    "call `de_point_estimate_day`, it hands over no "
+                    "inputs, and NO PLACEMENT-LATENCY RECONCILIATION WAS "
+                    "PERFORMED FOR THIS ARM-DAY. The kept tranches were "
+                    "not compared against the ledger's baseline and the "
+                    "dropped leg was not valued"),
+                "what_must_not_be_read_from_this": (
+                    None if point_estimate else
+                    "that the reconciliation passed, that it failed, or "
+                    "that the latency effect is zero here. It was not "
+                    "run. To get it, run the day through "
+                    "`de_point_estimate_day`, which is where the check "
+                    "lives (USER ruling, DE 181)"),
                 "site": ("de_point_estimate_day.run -- after "
                          "`R.run_day(...)` and BEFORE the emit"),
                 "checker": ("be_placement_latency_reconcile.reconcile -- "
@@ -9148,7 +9187,12 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                         draw_provenance=prov, book_digest=book_sha,
                         verified_module_sha=cite["sha256"])
         r["cancel_unit_exception"] = _cancel_unit_exception
-        if _win801 is not None and point_estimate:
+        if _win801 is not None:
+            # DE 190: EMITTED ON BOTH PATHS. The previous change gated the
+            # whole assignment on the mode, which removed the false claim
+            # by removing the FIELD -- and an absent field is silence, not
+            # a statement (rule 28). The field is present on every valued
+            # arm-day and its STATUS carries the mode.
             r["placement_latency_reconciliation"] = _plr177
             # THE OBJECTS THEMSELVES, NOT COPIES -- the driver values
             # THE SAME reference and THE SAME winners this day valued,
@@ -9165,9 +9209,10 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             # ONE THIS PROGRAMME KEEPS PAYING FOR: a call site that
             # has never run is a claim, not code, and copying it into
             # code does not execute it.
-            r[PLR_INPUTS_KEY] = plr_inputs(
-                bk, _win801["winners"], _base801["total_cents"],
-                day=day, arm=arm)
+            if point_estimate:
+                r[PLR_INPUTS_KEY] = plr_inputs(
+                    bk, _win801["winners"], _base801["total_cents"],
+                    day=day, arm=arm)
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
@@ -13202,13 +13247,32 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
            and all((a.get("economic") or {}).get("Z")
                    == NULL_NOT_DRAWN_STATUS
                    for a in _pe828["per_day_sealed_artifacts"])
+           # ---- DE 190 / REV 147: THE STATUS IS A FUNCTION OF THE MODE.
+           # NON-VACUITY FIRST. Every assertion below is an `all()` over a
+           # list, and `all()` over an EMPTY list is True -- so an empty
+           # arm-day list would make the whole mode-gate check pass while
+           # examining nothing. Both populations are asserted non-empty
+           # before anything is asserted about them.
+           and len(_pe828["per_day_sealed_artifacts"]) >= 1
+           and len(_fu828["per_day_sealed_artifacts"]) >= 1
+           # BOTH SIDES, and the full-null side is the one that matters:
+           # it must REFUSE to say PERFORMED and must SAY what is true.
            and all((a.get("placement_latency_reconciliation") or {}).get(
-                       "status") == "PERFORMED_BY_POINT_ESTIMATE_DRIVER"
+                       "status") == PLR_PENDING
                    and PLR_INPUTS_KEY in a
                    for a in _pe828["per_day_sealed_artifacts"])
-           and all("placement_latency_reconciliation" not in a
+           and all((a.get("placement_latency_reconciliation") or {}).get(
+                       "status") == PLR_NOT_PERFORMED
+                   and "NOTHING" in (a["placement_latency_reconciliation"]
+                                     ["what_this_run_did"])
                    and PLR_INPUTS_KEY not in a
                    for a in _fu828["per_day_sealed_artifacts"])
+           # AND NEITHER MODE EVER SAYS `PERFORMED` FROM THE RUNNER --
+           # that word is the DRIVER's to write, after it has run.
+           and not any("PERFORMED_BY" in json.dumps(
+                           a.get("placement_latency_reconciliation") or {})
+                       for a in (_pe828["per_day_sealed_artifacts"]
+                                 + _fu828["per_day_sealed_artifacts"]))
            and _ref828 == POINT_ESTIMATE_REFUSAL
            and all(isinstance(v, float) for v in _fullZ.values()),
            f"R-828 / DE 148: THE POINT ESTIMATE IS THE SAME NUMBER. "

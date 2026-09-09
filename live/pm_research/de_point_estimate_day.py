@@ -969,8 +969,12 @@ def selftest(quiet: bool = False) -> int:
         key = key or R.PLR_INPUTS_KEY
         return {"day": "2026-09-04", "per_day_sealed_artifacts": [
             {"arm": f"ARM{i}", "status": "OK_POINT_ESTIMATE",
+             # DE 190: THE FIXTURE CARRIES WHAT THE RUNNER WRITES, which
+             # is now PENDING -- this dict simulates `run_day`'s output on
+             # its way INTO the driver, so seeding it with the driver's
+             # own output would have tested the overwrite against itself.
              "placement_latency_reconciliation": {
-                 "status": "PERFORMED_BY_POINT_ESTIMATE_DRIVER"},
+                 "status": R.PLR_PENDING},
              key: {"reference": ref, "winners": winners,
                    "baseline_total_cents": base, "day": "2026-09-04",
                    "arm": f"ARM{i}"}} for i in range(arms)]}
