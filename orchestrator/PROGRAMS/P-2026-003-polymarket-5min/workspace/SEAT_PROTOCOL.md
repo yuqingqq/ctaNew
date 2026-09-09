@@ -298,6 +298,32 @@ except where marked USER-ONLY.
     §3, R-605: a digest of one file closes a third of the class; the closure
     and HEAD close it; a practice that depends on noticing is not a control).
 
+23. **A numbered queue is worked END TO END** (R-835, coordinator failure
+    2026-09-09; MEM 289 proposed the wording): when a seat is given a numbered
+    queue, it works every item and reports ONCE at the end — or the moment
+    something BLOCKS it or a falsifier FAILS. **It does not stop after each
+    item to be told to continue.** The evidence is expensive and specific:
+    on 2026-09-09 a seat finished one item, reported, and waited 14 minutes
+    after ending with "unless you redirect", then **33 minutes after landing
+    a critical fix** — ~47 minutes lost on a queue where nothing needed a
+    decision from anyone. The user asked directly: *"Why you become idle?
+    Can you just proceed to fix the issues"*. The standing instruction was
+    issued and **six defects landed in one 17-minute batch afterwards.**
+    The coordinator's half of this rule: **arm a Monitor on every heavy unit
+    and prompt the seat at its exit** — seat in-pane watchers are DEAD
+    (R-821), so a unit that exits unwatched leaves its seat idling
+    indefinitely.
+
+24. **Every seat keeps a procedure file** (R-831, R-835): `<SEAT>_PROCEDURE.md`
+    in `workspace/`, written and maintained BY that seat, holding what a fresh
+    occupant would otherwise rediscover — the launch forms, the surfaces owned,
+    the refusal names, the contracts, and what has cost the seat a round.
+    **A seat at the end of its context WRITES the file rather than reporting
+    it** (R-831: a stop answer scrolled out of the pane within four minutes;
+    one file write costs the seat almost nothing and the knowledge survives).
+    A fresh seat that faults its own file within an hour is the file working,
+    not failing — record the correction and land it.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
