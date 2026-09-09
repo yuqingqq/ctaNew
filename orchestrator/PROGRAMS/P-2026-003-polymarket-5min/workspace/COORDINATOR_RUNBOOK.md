@@ -671,6 +671,24 @@ split. The retraction has NOT been extended; the exposure is named and routed. *
 DA 141, bounded and read-only: what share of the baseline's settled money falls inside 09-03's
 160 gapped windows.**
 
+**GATE STATUS at 07:52Z (R-846) — FIVE CLOSED IN CODE, ONE VERIFIED, AND AN EIGHTH ITEM:**
+item 1 (era) OPEN with BE 113 — the largest, and its fix must REFUSE by name rather than
+default when a day's era will not resolve; items 2/3/4/6 closed by DE 162 (`060409d`),
+unverified, DA 143 driving 3 and 4 now; item 5 closed by BE 112 (`cc148d5`) and **VERIFIED
+by DA 142** — new equals old exactly on a PER_GENERATION reference (24/24, 14/14, 0/0), so
+nothing correct was narrowed; item 7 (`de_section81_cache_12.pkl`, no code pin) with DE 163;
+**item 8, NEW — `da_book_verify.py:683` and `:906` hold only under PER_GENERATION, so DA's
+verifier would flag EVERY corrected book as a population defect** (found by BE on DA's
+surface, the seam again), open with DA. Also with DE 163: REV 113's sealed-value guard hole
+and DA 140's expiring `require_book_declares_L`. **"Landed" is not "reviewed" — DE 161
+landed green and REV 113 found it holed two hours later.**
+
+**PAIR OF RECORD: params v24 + design v32** (advanced from v23 + v31 at 07:52Z). DE 162 moved
+`de_phase4_diag_runner.py` and turned the pin crank in the SAME commit, so the R-835 blocker
+did NOT recur — driven by the coordinator: **v23 is 9/10 against disk (`de_phase4_diag_runner`
+pinned `c979fda590ec`, disk `437babc07590`), v24 is 10/10 with zero mismatches.** Design v32
+was stranded under rule 21 and was rebased and pushed at 07:47:52Z; origin carries both halves.
+
 **THREE USER RULINGS ARE IN (R-837, R-838):** the null's sampling unit is **B, match on
 cancels**; `research.slice` is raised to the ruled **1000 %** (applied and verified at the
 running manager — and the declared file says 1200 %, a dead value since 09-06, so never
