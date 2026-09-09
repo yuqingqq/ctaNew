@@ -111,7 +111,7 @@ updated: >-
   THE RECONCILIATION WIRING, MADE ONE STEP EARLIER AGAIN: A RULING REQUESTED ON EVIDENCE THAT HAS NOT BEEN
   INDEPENDENTLY DERIVED IS A RULING THE USER CANNOT PROPERLY GIVE.*** **09-04 is building with the stage table now
   STREAMING LIVE, so a killed run leaves A0/A1/A2 behind -- THE RECORDING GAP BE ITSELF NAMED AT BE 128, CLOSED BY
-  BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2879, prov 2411 -> 2424; window 3/3, Batch 307 archived. MEM asserts
+  BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2882, prov 2411 -> 2427; window 3/3, Batch 307 archived. MEM asserts
   no result.)
   2026-09-09T15:35:25Z (MEM ROUND 324 -- ***THE CORRECTED BOOK REFUSES ITS OWN REPLAY, AND THAT IS A PROGRAMME FACT RATHER
   THAN AN INCIDENT.*** ***HAZARD'S NULL DID NOT RUN: THE EV21 BOOK REFUSES `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`,
@@ -383,6 +383,10 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 325 ADDENDUM 2026-09-09T15:44:12Z: REV 146's independent derivation holds ---
+  REV_146_LANDED_AND_THE_SECOND_DERIVATION_HOLDS: EIGHTEEN-FUNCTIONS-ONE-ATTRIBUTE
+  SO_THE_CONDITION_THE_COORDINATOR_SET_IS_MET_AND_THE_WAIVER_CAN_GO_TO_THE_USER: NO-LONGER-ONE-SEATS-WORD
+  AND_THREE_INDEPENDENT_READS_NOW_AGREE_ON_ONE_DIGEST: AND-THE-SCORING-MODULE-NEVER-MOVED
   # --- MEM round 325, the rebuild buys provenance not correctness; widen the payload (afd1a28 -> 03d495b) ---
   THE_REBUILD_BUYS_PROVENANCE_NOT_CORRECTNESS_AND_I_DROVE_THE_MECHANISM: STRUCTURAL-NOT-BY-CLASSIFYING-COMMITS
   THE_SCORING_PATH_THROUGH_A_SIXTEEN_THOUSAND_LINE_MODULE_IS_ONE_FUNCTION: EIGHT-LINES-OF-16626
@@ -27328,6 +27332,45 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 325 ADDENDUM, 2026-09-09T15:44:12Z ---
+  REV_146_LANDED_AND_THE_SECOND_DERIVATION_HOLDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:44:12Z
+    said: >-
+      ***REV 146 LANDED WHILE I WROTE AND THE SECOND DERIVATION HOLDS: "DA 168'S PROOF REPRODUCES INDEPENDENTLY."***
+      REV **derived the reachable set ITSELF**: from the two scoring entry points, **18 `de_phase4_diag_runner`
+      functions are reachable; THE ONLY ATTRIBUTE OF `de_multiday_gate1_runner` REACHED IS `ruled_day_set`; its
+      transitive closure inside that module is `{ruled_day_set}`; and the only constant read on the path is
+      `PARAMS_REL`.** ***AND IT VERIFIED THE ASSUMPTION ITS OWN METHOD RESTS ON, WHICH IS THE PART THAT MAKES IT A
+      DERIVATION RATHER THAN A REPETITION: EXACTLY ONE IMPORT OF THAT MODULE IN 16k LINES -- LINE 7519, LAZY,
+      FUNCTION-LOCAL, ALIASED `_G` -- WITH EXACTLY ONE USE AT 7520 AND NO `getattr` ON IT.*** *An alias assumption
+      stated and then checked at the source is the difference between a reachability argument and a hope.*
+  SO_THE_CONDITION_THE_COORDINATOR_SET_IS_MET_AND_THE_WAIVER_CAN_GO_TO_THE_USER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:44:12Z
+    said: >-
+      ***SO THE CONDITION THE COORDINATOR SET IS MET: THE WAIVER NO LONGER RESTS ON ONE SEAT'S WORD AND CAN GO TO
+      THE USER.*** **The coordinator declined to ask until an independent derivation landed; it has landed and it
+      agrees.** *And REV enumerated WHAT MOVED BY OPERATION rather than from the commit list -- finding the book's
+      own recorded version by SCANNING HISTORY FOR THE RECEIPT'S SHA256 (commit `69123fddb`) and hashing from there*
+      -- ***WHICH IS RULE 32 APPLIED TO THE COMPARISON ITSELF: THE BASELINE WAS DERIVED FROM THE ARTIFACT RATHER
+      THAN TAKEN FROM A LIST OF COMMITS SOMEBODY BELIEVED WAS COMPLETE.*** **The pending question is now properly
+      evidenced, and its shape is already answered: yes, PROVIDED THE EXEMPTION IS A PREDICATE RATHER THAN A
+      CONVENTION.**
+  AND_THREE_INDEPENDENT_READS_NOW_AGREE_ON_ONE_DIGEST:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T15:44:12Z
+    said: >-
+      ***AND A FACT REV SAYS DA'S FRAMING UNDERSELLS, WHICH CHANGES THE PICTURE: `de_phase4_diag_runner.py` -- THE
+      MODULE THE ENTRY POINTS LIVE IN -- IS BYTE-IDENTICAL BETWEEN THE BOOK AND DISK, `cb97b94d` BOTH. THE SCORING
+      MODULE HAS NOT MOVED AT ALL.*** **So the whole question is what INSIDE THE ONE MODULE THAT DID MOVE is
+      reachable -- and it is one 8-line function.** *Three independent reads now agree on that function: DA's, REV's
+      and my own extraction-and-hash at `41988ef4272c73a9`* -- **and I had recorded the ratio as "one function in
+      sixteen thousand lines" when the sharper statement was available: the module that HOLDS the scoring entry
+      points never moved, and the module that moved contributes exactly eight lines to the scoring path.**
   # --- MEM round 325, 2026-09-09T15:42:43Z ---
   THE_REBUILD_BUYS_PROVENANCE_NOT_CORRECTNESS_AND_I_DROVE_THE_MECHANISM:
     prov: CHECKED

@@ -71,8 +71,37 @@ properly give.***
 behind — ***the recording gap BE itself named at BE 128, closed by BE, on the very next build.*** *Two rounds ago BE
 could not account for twenty minutes because the lost run had left only two scalars.*
 
-Counts: flags 2866 → 2879, provenance 2411 → 2424 (thirteen written, thirteen counted, duplicate-name gate run
+Counts: flags 2866 → 2882, provenance 2411 → 2427 (sixteen written, sixteen counted, duplicate-name gate run
 BEFORE writing); orphans 0; window 3/3, Batch 307 archived. MEM asserts no result.
+
+## ✅ ADDENDUM 2026-09-09T15:44:12Z — REV 146's independent derivation LANDED and HOLDS
+
+***"DA 168's proof reproduces independently."*** REV **derived the reachable set itself**:
+
+| | |
+|---|---|
+| reachable `de_phase4_diag_runner` functions | **18** |
+| attributes of `de_multiday_gate1_runner` reached | **exactly one — `ruled_day_set`** |
+| its transitive closure inside that module | **`{ruled_day_set}`** |
+| constants read on the path | **`PARAMS_REL`** only |
+
+***And it verified the assumption its own method rests on — the part that makes it a derivation rather than a
+repetition: exactly ONE import of that module in 16k lines — line 7519, lazy, function-local, aliased `_G` — with
+exactly one use at 7520 and no `getattr` on it.*** *An alias assumption stated and then checked at the source is the
+difference between a reachability argument and a hope.*
+
+**⇒ The condition the coordinator set is MET: the waiver no longer rests on one seat's word and can go to the user.**
+*And REV enumerated **what moved** by OPERATION rather than from the commit list — finding the book's own recorded
+version by **scanning history for the receipt's sha256** (commit `69123fddb`) and hashing from there.* ***Rule 32
+applied to the comparison itself: the baseline was derived from the artifact, not taken from a list of commits
+somebody believed was complete.***
+
+**⚠ And a fact REV says DA's framing undersells, which changes the picture:
+`de_phase4_diag_runner.py` — the module the entry points LIVE IN — is BYTE-IDENTICAL between the book and disk
+(`cb97b94d` both). THE SCORING MODULE HAS NOT MOVED AT ALL.** *So the whole question is what inside **the one module
+that did move** is reachable — and it is one 8-line function.* **Three independent reads now agree on it: DA's,
+REV's, and my own extraction-and-hash at `41988ef4272c73a9`.** *I recorded the ratio as "one function in sixteen
+thousand lines" when the sharper statement was available.*
 
 ---
 
