@@ -415,6 +415,35 @@ except where marked USER-ONLY.
     hardcoded verdict beside a table has contradicted the table three times, and now a
     commit message has contradicted its own diff.
 
+31. **ON THE SHARED TREE, COMMIT EACH FILE AS SOON AS IT PARSES; LET THE BATTERY GATE
+    THE PUSH, NOT THE COMMIT** (DA, R-857). DA completed a full round — builder,
+    wirings, cells, battery green at 38 — then found all four files clean with every
+    edit gone, **and the reflog showed nothing, which is consistent with
+    `git checkout -- <path>`: it does not move HEAD and leaves no reflog entry.**
+    R-557 already forbids that command here. DA's own share, in its words: *"I held
+    four edited files uncommitted while a battery ran. Test-then-land is right, but the
+    gap between them is my exposure to shorten."* **A local commit is recoverable from
+    the reflog; an uncommitted edit is recoverable from nothing.** This binds every
+    seat and the coordinator.
+
+32. **ENUMERATE BY THE OPERATION THAT CONSTITUTES MEMBERSHIP, NEVER BY A SPELLING —
+    AND PREFER MEASUREMENT TO ENUMERATION** (REV, R-857). Three times in one night a
+    set everyone treated as complete was a sample, and **every time the missed member
+    was the consequential one**: the pin-site list was two by inspection and three by
+    construction (the missed one SILENT — REVIEW 111); the consumer list was three by
+    the spelling `in gs` and five by operation (the missed two COMPUTE EXCLUSION
+    COUNTS — REVIEW 122); and `ECONOMIC_FIELDS` was built by inspection before R-801
+    made settlement P&L the primary endpoint and never revisited, **so the seal
+    protects the diagnostic and not the result** (REVIEW 123). Also REVIEW 123:
+    `SCORING_PATH_MODULES` is a **hand-typed 5 of a RECORDED 49**, not even a superset
+    of the ten-module cascade — so a closure predicate checks a sample of the closure
+    the book already records. **The test to apply to any set: what operation would
+    constitute membership; was the set built that way; would a missed member be LOUD or
+    SILENT. Only the silent ones matter.** And the model for repair is already in the
+    codebase: **the heavy-run lock decides heaviness BY MEASUREMENT, not by
+    enumeration** — where a set can be derived from what the artifact already records,
+    derive it.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
