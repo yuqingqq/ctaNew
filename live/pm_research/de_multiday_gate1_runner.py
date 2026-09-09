@@ -7977,6 +7977,40 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # R-810: WHAT MAKER THIS DAY MEASURED, from the book's own
         # builder receipt rather than from a sentence here.
         "placement_latency": _plat,
+        # ---- DE 155 (1): THE DECISION IS CAUSAL NOW, AND THE THRESHOLD
+        # ---- IT IS COMPARED AGAINST WAS NOT FITTED FOR IT.
+        # Carried on every receipt because a reader who does not know this
+        # would attribute the change in cancel count to the market.
+        "scoring_timing": {
+            "rule": ("each scored ROW is emitted at its own `t_start` and "
+                     "the FIRST crossing of theta_cancel cancels "
+                     "(one cancel per generation, the engine's own "
+                     "invariant)"),
+            "was": ("ONE event per generation at the generation's START, "
+                    "carrying the MAXIMUM score over all the generation's "
+                    "rows -- so a row that had not happened yet could "
+                    "decide a cancellation"),
+            "measured_incidence_on_2026-09-04": (
+                "15,867 of 40,000 sampled rows (39.7 %) begin strictly "
+                "after their generation's start, across 6,586 of 24,133 "
+                "generations (27 %); max 60 rows in one generation"),
+            "THE_CALIBRATION_CONSEQUENCE": (
+                "theta was fitted by `phase2_arms.freeze_thresholds` over "
+                "per-generation MAXIMA. A first-crossing score is at or "
+                "below that maximum for the same generation, so at an "
+                "UNCHANGED theta fewer generations cross and the selected "
+                "count moves FOR A REASON THAT IS NOT A MARKET REASON. "
+                "The threshold is frozen and declared and was NOT re-fitted "
+                "here: re-fitting inside a defect repair would change the "
+                "policy under cover of a bug fix (rule 14 -- the decision "
+                "is the USER's). The before/after cancel count per arm per "
+                "day is the evidence a re-fit ruling needs."),
+            "AND_IT_MOVES_THE_CONTROL_TOO": (
+                "the null is matched on the arm's action count, so a "
+                "changed cancel count changes the matched null as well as "
+                "the arm -- the comparison is not an arm-only shift"),
+            "theta_refitted": False,
+        },
         # R-828 (4): THE RUN'S OWN IDENTITY. A point-estimate run is a
         # DIFFERENT KIND of artifact, not a lesser one and not a
         # predecessor: a full run at the same (day, L) neither supersedes

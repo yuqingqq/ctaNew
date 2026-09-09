@@ -84,7 +84,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 218
+EXPECTED_CHECKS = 219
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -2980,11 +2980,22 @@ def received_fills(res: dict, reference: dict,
 
 
 def _decision_times(scores) -> dict:
-    """(slug, side, gen) -> the time of the score event that decided it.
+    """(slug, side, gen) -> the time of the generation's FIRST score event.
 
-    The stream scores each generation once, at its own t0, so this map and
-    the generation starts agree TODAY -- carrying it is what keeps that a
-    fact rather than an assumption (DE31-R1)."""
+    IT NO LONGER AGREES WITH THE GENERATION START BY CONSTRUCTION. Before
+    DE 155 (1) the stream carried one event per generation at its `t0`, so
+    "the time of the score event that decided it" and "the generation
+    start" were the same number and the distinction never had to be made.
+    The stream is now per ROW, and this returns the EARLIEST event, which
+    for a generation whose first row starts at `t0` is still `t0` -- so
+    the value is unchanged for every generation the old stream could
+    describe, and defined for the ones it could not.
+
+    NAMED, because it is a real ambiguity: the event that DECIDED a
+    cancellation is the first CROSSING of theta, which is a property of
+    the policy and its threshold, not of the stream. This map is the
+    stream's earliest event and is used to bound fills; it is not the
+    crossing time. A caller that needs the crossing must ask the policy."""
     out = {}
     for e in scores or ():
         out.setdefault((e.get("slug"), e.get("side"), e.get("gen")),
@@ -4692,24 +4703,49 @@ def selftest() -> int:
     _fixref = {"s1": {HSP.SIDES[0]: [{"gen": 0, "t0": 100.0},
                                      {"gen": 1, "t0": 400.0}],
                       HSP.SIDES[1]: []}}
-    _rows = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": -6.0},
-             {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": -3.0},
-             {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t_start": -6.0}]
+    # DE 155 (1): THE FIXTURE IS NOW COHERENT WITH THE REAL ROWS, and it
+    # was not before: it paired generations at t0 100/400 with rows at
+    # t_start -6/-3, times that belong to no generation here. The old code
+    # could not notice, because it discarded the row times and keyed
+    # everything at t0. Measured on 09-04's real rows: `t_start` and
+    # `gen_t0` are ONE clock, a generation's FIRST row starts exactly at
+    # its `t0`, and NO row precedes its generation.
+    _rows = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": 100.0},
+             {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": 103.0},
+             {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t_start": 400.0}]
     _gs, _gst, _gsp = generation_scores(_blk(_rows), _fixref, coin="btc",
                                         head="incumbent_linear_d")
     _each = [HS.score_incumbent_condvalue(_incm, HS.compose_head_inputs(
         _blk(_rows)["PM"][i], _blk(_rows)["FN"][i], _blk(_rows)["ST"][i],
         norms=_norms, incumbent_width=_incm["_n_features"],
         lgbm_width=106)["incumbent_linear_d"]) for i in range(3)]
+    # ---- DE 155 (1): EACH ROW IS SCORED AT ITS OWN TIME ---------------
+    # THIS CELL REPLACES ONE THAT ASSERTED THE DEFECT AS SPEC. It read:
+    # "a generation's score is the MAX over its rows ... A mean or a
+    # first-row score is compared against a cutoff taken from a different
+    # distribution and selects the wrong count." The threshold argument is
+    # real and is NOT dismissed -- it is recorded in the receipt and put to
+    # the user (the coordinator's ruling: implement the causal timing, do
+    # NOT re-fit theta inside a defect repair). What the old cell missed is
+    # that the max was timestamped at the GENERATION START, so a row that
+    # had not happened yet decided a cancellation.
     ok(_gst["SCORED"] == 2 and _gst["NO_ROWS_KEPT"] == 0
-       and abs(_gs[("s1", HSP.SIDES[0], 100.0)] - max(_each[0], _each[1])) < 1e-12
-       and abs(_gs[("s1", HSP.SIDES[0], 400.0)] - _each[2]) < 1e-12,
-       f"DRIVEN: a generation's score is the MAX over its rows "
-       f"({_each[0]:.6f}, {_each[1]:.6f} -> "
-       f"{_gs[('s1', HSP.SIDES[0], 100.0)]:.6f}), which is the statistic "
-       f"`phase2_arms.freeze_thresholds` resolves theta over. A mean or a "
-       f"first-row score is compared against a cutoff taken from a "
-       f"different distribution and selects the wrong count")
+       and _gst["ROWS_SCORED"] == 3
+       and _gst["ROW_BEFORE_GENERATION_START"] == 0
+       and abs(_gs[("s1", HSP.SIDES[0], 100.0)]["score"] - _each[0]) < 1e-12
+       and abs(_gs[("s1", HSP.SIDES[0], 103.0)]["score"] - _each[1]) < 1e-12
+       and abs(_gs[("s1", HSP.SIDES[0], 400.0)]["score"] - _each[2]) < 1e-12
+       and _gs[("s1", HSP.SIDES[0], 103.0)]["gen"] == 0
+       and abs(max(_each[0], _each[1]) - _each[1]) < 1e-12,
+       f"DE 155 (1) DRIVEN: each row is keyed at ITS OWN time and carries "
+       f"ITS OWN score -- t=100.0 -> {_gs[('s1', HSP.SIDES[0], 100.0)]['score']:.6f} "
+       f"(the first row's), t=103.0 -> "
+       f"{_gs[('s1', HSP.SIDES[0], 103.0)]['score']:.6f} (the second's, "
+       f"which is the generation's maximum). The OLD code put that maximum "
+       f"at t=100.0, where its information did not yet exist. "
+       f"{_gst['ROWS_SCORED']} rows over {_gst['SCORED']} generations, "
+       f"{_gst['ROW_BEFORE_GENERATION_START']} rows before their "
+       f"generation start")
     _gs2, _gst2, _ = generation_scores(_blk(_rows[:1]), _fixref,
                                        coin="btc",
                                        head="incumbent_linear_d")
@@ -4726,10 +4762,69 @@ def selftest() -> int:
         "scoring, not scored from a miss", needle="no assembled score")
     ok(abs(_head_scorer("incumbent_linear_d", "btc", _gs)(
         {"slug": "s1", "side": HSP.SIDES[0], "t": 100.0})
-        - max(_each[0], _each[1])) < 1e-12,
+        - _each[0]) < 1e-12
+       and abs(_head_scorer("incumbent_linear_d", "btc", _gs)(
+           {"slug": "s1", "side": HSP.SIDES[0], "t": 103.0})
+           - _each[1]) < 1e-12,
        "POSITIVE CONTROL: given the assembled scores the SAME scorer "
-       "returns the generation's number, so the refusal above is about "
-       "the miss and not about the scorer being inert")
+       "returns THAT ROW's number at THAT ROW's time -- so the refusal "
+       "above is about the miss and not about the scorer being inert, and "
+       "the scorer is no longer able to hand back a later row's score")
+    # ---- DE 155 (1): THE CANCELLATION ITSELF, DRIVEN ON THE ENGINE ----
+    # The cells above establish the STREAM. These establish what the
+    # POLICY does with it, on `harmful_stateful_policy` itself -- because
+    # the claim is about cancellations, not about a dict. The engine was
+    # ALREADY correct: it issues ONE cancel per generation at the FIRST
+    # crossing of theta_cancel and asserts `one_cancel_per_generation`. It
+    # had simply never been handed more than one event per generation, so
+    # the defect lived entirely in how the stream was built.
+    def _p155(theta):
+        return cell_params(
+            {"coin": "btc", "latency_ms": 250, "budget": BUDGETS[0],
+             "enable_reduce": False,
+             "charge_reset_cost_at_generation_start": False},
+            theta_cancel=theta, protection_mode=HSP.PROTECTION_MODES[0],
+            repost_fill_model=HSP.REPOST_FILL_MODELS[0])
+
+    def _ref155(t1):
+        return {"s1": {HSP.SIDES[0]: [HSP._gen(0, 0.0, t1,
+                                               [(1.0, 2.0, 3.0),
+                                                (4.0, 2.0, 3.0)])],
+                       HSP.SIDES[1]: []}}
+
+    def _ev155(pairs):
+        return [{"t": t, "slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                 "score": sc} for t, sc in pairs]
+
+    def _cx155(t1, pairs):
+        o = HSP.replay_policy(_ref155(t1), _ev155(pairs), _p155(0.6))
+        return (o["counters"].get("cancels_issued", 0),
+                [c["t_request"] for c in o["cancels"]])
+    # (a) the max is in a LATE row and the early rows are below theta.
+    _a_old = _cx155(10.0, [(0.0, 0.9)])          # the OLD stream: max @ t0
+    _a_new = _cx155(10.0, [(0.0, 0.2), (6.0, 0.9)])
+    # (b) the FIRST row already crosses.
+    _b_new = _cx155(10.0, [(0.0, 0.9), (6.0, 0.2)])
+    # (c) the generation ENDS before the crossing: the old stream cancels
+    #     it anyway, the new one cannot.
+    _c_old = _cx155(5.0, [(0.0, 0.9)])
+    _c_new = _cx155(5.0, [(0.0, 0.2), (6.0, 0.9)])
+    ok(_a_old == (1, [0.0]) and _a_new == (1, [6.0])
+       and _b_new == (1, [0.0])
+       and _c_old == (1, [0.0]) and _c_new == (0, []),
+       f"DE 155 (1) THE LOOK-AHEAD, DRIVEN ON THE POLICY ENGINE, THREE "
+       f"WAYS. (a) A generation whose maximum is in a LATE row: the OLD "
+       f"stream cancels at t_request {_a_old[1][0]} -- the generation's "
+       f"START, on information from t=6.0 -- and the per-row stream "
+       f"cancels at {_a_new[1][0]}, the late row's OWN time. (b) A "
+       f"generation whose FIRST row crosses still cancels at "
+       f"{_b_new[1][0]}, so the repair does not merely delay everything. "
+       f"(c) THE OLD CODE CANCELS AND THE NEW DOES NOT: with the "
+       f"generation ending at t=5.0 and the crossing row at t=6.0, the "
+       f"old stream issues {_c_old[0]} cancel at {_c_old[1][0]} and the "
+       f"new issues {_c_new[0]} -- a cancellation that only ever existed "
+       f"because a score was moved backwards in time")
+
     refuses(lambda: generation_scores(
         {"PM": _blk(_rows)["PM"][:2], "FN": _blk(_rows)["FN"],
          "ST": _blk(_rows)["ST"], "kept": _rows}, _fixref, coin="btc",
@@ -6878,9 +6973,34 @@ def score_events_for(reference: dict, *, coin: str, head: str,
     """Score events for every generation in the reference, through the
     manifest-bound adapter -- never a stub."""
     v = SS.verify_head(head, coin)
-    rows = [{"t": g["t0"], "slug": slug, "side": side, "gen": g["gen"]}
-            for slug, sides in sorted(reference.items())
-            for side in HSP.SIDES for g in sides[side]]
+    # ---- DE 155 (1): ONE EVENT PER SCORED ROW, AT ITS OWN TIME ---------
+    # This used to emit ONE event per generation at `g["t0"]`, which is
+    # what applied a later row's score at the generation's start. The
+    # generations are still enumerated FROM THE REFERENCE, and a
+    # generation with no assembled score still emits its `t0` row -- so
+    # `_head_scorer` still REFUSES it by name. Building the stream from
+    # `gen_scores` alone would have made that refusal unreachable, which
+    # is a control removed rather than a defect fixed.
+    by_gen_t: dict = {}
+    for (_sl, _sd, _t), _v in (gen_scores or {}).items():
+        by_gen_t.setdefault((_sl, _sd, _v["gen"]), []).append(float(_t))
+    for _k in by_gen_t:
+        by_gen_t[_k].sort()
+    rows = []
+    for slug, sides in sorted(reference.items()):
+        for side in HSP.SIDES:
+            for g in sides[side]:
+                ts = by_gen_t.get((slug, side, g["gen"]))
+                if ts:
+                    rows.extend({"t": t, "slug": slug, "side": side,
+                                 "gen": g["gen"]} for t in ts)
+                else:
+                    # UNSCORED: emitted so the scorer refuses by name, as
+                    # it did before. An exclusion must be removed from the
+                    # population, not silently absent from the stream.
+                    rows.append({"t": float(g["t0"]), "slug": slug,
+                                 "side": side, "gen": g["gen"]})
+    rows.sort(key=lambda r: (r["t"], r["slug"], r["side"], r["gen"]))
     return SS.score_events(rows, head=head, coin=coin,
                            scorer=_head_scorer(head, coin, gen_scores),
                            verified=v)
@@ -8674,13 +8794,17 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
               else HS.score_lgbm_condvalue(
                   booster, value_booster, wl, v))
         gk = (r["slug"], r["side"], r["gen"])
-        by_gen.setdefault(gk, []).append(sc)
+        # DE 155 (1): THE ROW'S OWN TIME TRAVELS WITH ITS SCORE. It is the
+        # whole repair: the score cannot be timestamped anywhere but where
+        # its information existed.
+        by_gen.setdefault(gk, []).append((float(r["t_start"]), sc))
         spl_gen.setdefault(gk, set()).add(
             (split_of or {}).get(
                 (r["slug"], r["side"], r["gen"], r["t_start"])))
     scores: dict = {}
     split_by_gen: dict = {}
-    statuses = {"SCORED": 0, "NO_ROWS_KEPT": 0, "PARTIAL_ROWS": 0}
+    statuses = {"SCORED": 0, "NO_ROWS_KEPT": 0, "PARTIAL_ROWS": 0,
+                "ROWS_SCORED": 0, "ROW_BEFORE_GENERATION_START": 0}
     for slug, sides in reference.items():
         for side in HSP.SIDES:
             for g in sides[side]:
@@ -8688,7 +8812,45 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                 if not got:
                     statuses["NO_ROWS_KEPT"] += 1
                     continue
-                scores[(slug, side, float(g["t0"]))] = max(got)
+                # ---- DE 155 (1): ONE ENTRY PER ROW, AT ITS OWN TIME ----
+                # WHAT THIS REPLACED, and why it was a defect:
+                #   scores[(slug, side, float(g["t0"]))] = max(got)
+                # -- the MAXIMUM over the generation's rows, timestamped at
+                # the generation's START. A row that occurs later in the
+                # generation therefore decided a cancellation before its
+                # information existed. Measured on 09-04's real rows:
+                # 15,867 of 40,000 rows (39.7 %) begin strictly after their
+                # generation's start, across 6,586 of 24,133 generations
+                # (27 %), up to 60 rows in one generation.
+                #
+                # THE ENGINE ALREADY DOES THE RIGHT THING with a per-row
+                # stream: `harmful_stateful_policy` issues ONE cancel per
+                # generation at the FIRST crossing of theta_cancel and
+                # asserts `one_cancel_per_generation`. It was simply never
+                # handed more than one event per generation. So the repair
+                # is entirely here, in how the stream is BUILT.
+                _t0 = float(g["t0"])
+                per_t: dict = {}
+                for t, sc in got:
+                    if t < _t0 - 1e-9:
+                        # A row whose information predates the quote cannot
+                        # act on it. An EXCLUSION WITH A STATUS (rule 4),
+                        # never clamped forward -- clamping would recreate
+                        # the look-ahead in the opposite direction. Zero on
+                        # 09-04's real rows; the guard is for the day that
+                        # is not.
+                        statuses["ROW_BEFORE_GENERATION_START"] += 1
+                        continue
+                    # Two rows at the SAME instant are not look-ahead: the
+                    # higher score is what that instant knew.
+                    per_t[t] = sc if t not in per_t else max(per_t[t], sc)
+                if not per_t:
+                    statuses["NO_ROWS_KEPT"] += 1
+                    continue
+                for t, sc in per_t.items():
+                    scores[(slug, side, t)] = {"score": sc,
+                                               "gen": g["gen"], "t0": _t0}
+                statuses["ROWS_SCORED"] += len(per_t)
                 sp = spl_gen[(slug, side, g["gen"])]
                 split_by_gen[(slug, side, g["gen"])] = (
                     "UNLABELLED" if sp == {None}
@@ -8696,6 +8858,19 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                 statuses["SCORED"] += 1
     statuses["PARTIAL_ROWS"] = sum(
         1 for k, v in by_gen.items() if len(v) < _rows_expected(k, reference))
+    # DE 155 (5), NAMED RATHER THAN LEFT AS A ZERO. `_rows_expected` returns
+    # 0, so this sum is 0 BY CONSTRUCTION and a reader must not take it for
+    # "no generation was partial" (rule 11: absence never reads as a pass).
+    # Under (1) this stopped being cosmetic: a MAX is insensitive to a
+    # missing row, a FIRST CROSSING is not -- a dropped early row moves the
+    # cancel later, or removes it. Making it real needs a per-generation
+    # INPUT count from the feature pass, which no structure carries today
+    # (`blocks["drops"]` is aggregate, by reason, for the whole coin).
+    statuses["PARTIAL_ROWS_STATUS"] = (
+        "NOT_COMPUTABLE_NO_PER_GENERATION_INPUT_COUNT: `_rows_expected` "
+        "returns 0, so PARTIAL_ROWS is 0 by construction and is NOT "
+        "evidence that no generation was partial. Closing it requires the "
+        "feature pass to report rows-in per generation.")
     return scores, statuses, split_by_gen
 
 
@@ -8751,7 +8926,10 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
                     f"with a status, and must be removed from the "
                     f"population before scoring rather than scored from "
                     f"nothing")
-            return gen_scores[k]
+            # DE 155 (1): the value is {score, gen, t0} -- the score's own
+            # generation and start travel with it, because the stream is
+            # now per-ROW and the key alone no longer names the generation.
+            return gen_scores[k]["score"]
         return _score
     # SITE: scorer#1
     raise DiagRefused(
