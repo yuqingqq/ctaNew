@@ -682,7 +682,7 @@ def run(day: str, book: Path, output_dir: Path, *,
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 25
+EXPECTED_CHECKS = 26
 
 
 def selftest(quiet: bool = False) -> int:
@@ -1015,6 +1015,37 @@ def selftest(quiet: bool = False) -> int:
        "non-finite total by path in a reconciliation block, so if a NaN "
        "ever reaches this driver by a route the checker does not cover, "
        "POINT_ESTIMATE_RECONCILIATION_NOT_FINITE still stops the emit")
+
+    # AND THE INPUTS THEMSELVES REFUSE RATHER THAN DEFAULT.
+    # RESTORED AT DE 186 (2/2): these five cells were deleted by an INDEX
+    # SLICE in my own edit -- `s[:start] + new + s[end:]` where the region
+    # between two comments held more than I meant. CLAUDE.md says it in
+    # one line: "Do not slice source by index to edit it -- anchor to
+    # exact strings." The check-count assertion caught it (21 against 25),
+    # which is what that assertion is for.
+    _refuses(lambda: reconcile_placement_latency(
+        {"per_day_sealed_artifacts": [{"arm": "A"}]}),
+        RECONCILE_INPUTS_ABSENT, "DE 181 no arm handed the inputs over")
+    _refuses(lambda: reconcile_placement_latency(
+        _result181(None, _W181, _kept181)),
+        RECONCILE_INPUTS_INCOMPLETE, "DE 181 a None input")
+    _two181 = _result181(_ref181a, _W181, _kept181, arms=2)
+    _two181["per_day_sealed_artifacts"][1][R.PLR_INPUTS_KEY][
+        "baseline_total_cents"] = _kept181 + 5.0
+    _refuses(lambda: reconcile_placement_latency(_two181),
+             RECONCILE_INPUTS_DISAGREE, "DE 181 arms disagreeing on a "
+             "day-level input")
+
+    # AND THE EMIT REFUSES IF ANYTHING PRIVATE SURVIVED. `json.dumps` here
+    # uses `default=str`, so a live 300 MB reference would NOT crash -- it
+    # would be stringified INTO the artifact. That is why this is a
+    # predicate and not a comment.
+    ok(assert_no_private_keys({"a": {"b": 1}})["n_private_keys_found"] == 0,
+       "DE 181 the private-key sweep passes a clean payload")
+    _refuses(lambda: assert_no_private_keys(
+        {"day_run": {"arms": [{R.PLR_INPUTS_KEY: {"reference": {}}}]}}),
+        PRIVATE_KEY_SURVIVED,
+        "DE 181 KNOWN-BAD: a surviving private key NESTED two levels down")
 
     # ---- DE 186: A NO-SPLIT BOOK SAYS SO, AND A PARTIAL ONE REFUSES ---
     # 09-03's EV21 shape. The failure this cell exists for is the quiet
