@@ -255,10 +255,15 @@ Exclusions are named and counted: `GENERATION_NOT_SCORED`,
 `FIRST_SCORED_ROW_NOT_AT_GENERATION_START`, with the reference/scored
 generation counts beside them.
 
-**UNRESOLVED, WITH THE USER:** a per-row `rows` changes what a draw draws,
-so the matched action count stops being the arm's cancel count. **No control
-is drawn on a corrected book until that is ruled.** BE 107 made `rows`
-faithful to the book; it did not re-specify the matching.
+**RULED 2026-09-09 (R-837), was UNRESOLVED:** the null's sampling unit is
+**B -- match on CANCELS**. Under the ruled first-crossing rule a generation
+yields at most one cancel, so the cancel IS the action and B is the only
+option matching on the decision variable (rule 7); A (rows) is biased in the
+arm's favour because 39.7 % of rows begin after their generation's start.
+The accepted cost is seed reproducibility, replaced rather than absorbed:
+DE 160 persists the DRAWN CONTROL SET as an artifact. theta is NOT re-fitted,
+by ruling. BE 107 made `rows` faithful to the book; the matching is now
+specified elsewhere.
 
 ---
 
@@ -295,6 +300,54 @@ rather than confirming it.
 
 ---
 
+## 6b. WHICH OF MY FILES ARE PINNED (read this before editing one)
+
+Learned at BE 112, and it is the fact that decides the SHAPE of a fix on
+this seat, not just its risk. `de_multiday_gate1_params` pins BE's cascade
+in TWO places (`be_module` = the entry point, `be_cascade.modules` = all
+ten), and `de_multiday_gate1_design` pins the params file BY DIGEST. So
+touching a pinned module costs a params version AND a design version, and
+until both land **no day can run** -- that is R-835's blocker, three pin
+pairs in one day.
+
+**PINNED (params v23 cascade, verified against disk at 07:41Z 2026-09-09):**
+`be_cancel_axis_null.py` (the ENTRY POINT), `be_data_root.py`,
+`de_head_scoring.py`, `de_matched_random_control.py`,
+`de_phase4_diag_runner.py`, `de_rho_estimator.py`, `de_score_stream.py`,
+`harmful_stateful_policy.py`, `phase4_generation_tables.py`,
+`pm_tape_density.py`.
+
+**NOT PINNED, so free to edit:** `be_daybook_build.py`,
+`be_generation_count_derivation.py`, `be_rule22.py`, `be_score_coverage.py`,
+the gate1 builders, `be_heavy_peaks.py`, `be_race_feed_pins.py`.
+
+**`producer_exit_maps` is NOT a source pin.** It declares each producer's
+EXIT-CODE MAP (`be_daybook_build`: 0/1/2, 75 never used) and carries a
+`block_sha256` of that block, not of the file. Editing a producer needs no
+re-pin unless its exit codes change.
+
+**The consequence for a shared fix:** when a defect sits in a pinned module
+AND an unpinned one, do NOT convert the pinned module to import the shared
+implementation. Put the shared implementation in a new unpinned module, let
+the unpinned sites import it, and DRIVE the pinned module's own copy against
+it in the shared module's falsifier -- two implementations that meet in a
+cell do not drift, and no pin moves. That is what `be_score_coverage.py`'s
+seam cell does against `be_cancel_axis_null.load()`.
+
+**Check before you edit, not after:**
+`be_rule22.assert_pin_sites_agree(json.load(open(<params head>))["doc"],
+root=<tree>)` recomputes all ten against disk and refuses by name.
+
+## 6c. The shared-falsifier convention
+
+Every importer runs a shared module's own falsifier as ONE cell of its
+battery, spawned as a SUBPROCESS, through `be_rule22.shared_falsifier(prog=…)`
+(REV 84 §3.2). The helper reads the summary line and requires it to END with
+`0 failures`, so **a shared module must print `<n> cells, <k> failures`** --
+`"26 checks passed"` makes the cell report `ok=False` forever, which is a
+cell that can only fail. `EXPECTED_CHECKS` in the shared module must count
+the cells the failure branch also prints, or the count guard fires.
+
 ## 7. What I have learned the hard way
 
 * **`?? data` is correct**; anything more is not. See §0.
@@ -325,6 +378,23 @@ rather than confirming it.
   report about my own module. BE 107's dispatched one-line change was right
   about the defect and would have raised `TypeError` on every existing book.
 * **Never `pkill -f` on a shared box.** Twice it matched my own shell.
+* **A landing race is normal and the outcome is read at ORIGIN, not at the
+  local sha.** BE 112's copy-land committed onto a tip that moved during the
+  commit; `push` was refused non-fast-forward, the commit was stranded
+  (rule 21: LEAVE it, report it, never rebase it yourself), and it was
+  rebased and pushed within a minute -- **with a NEW sha**. So verify a
+  landing by `git fetch` then a BYTE COMPARE of `git show <origin sha>:<path>`
+  against the worktree's file, never by the local commit id you remember.
+  Run the pre-copy guard INSIDE the act
+  (`git -C <shared> diff --name-only <wt HEAD>..HEAD -- <paths>` EMPTY);
+  an afterwards-diff is how you learn you were lucky.
+* **DA reads my receipt's coverage block, and two of its predicates assume
+  the PRE-FIX shape.** `da_book_verify.py:683` flags
+  `n_scored_keys_equals_n_covered` and `:906` recomputes coverage as
+  `len(keys)/n_gen`. Both are TRUE only under `PER_GENERATION_SCORES`; on a
+  per-row book `len(keys)` is a ROW count. DA's surface, R-235 (read, never
+  edit) -- but a receipt-field change of mine lands in DA's verifier, so say
+  so in the same round.
 * **Land the register row with `--row`**: write the row to a file, then
   `scripts/land_register_row.sh --row <rowfile> '<id>' <msgfile>`; dry-run
   first. Never hand-edit `COORDINATION.md`.
