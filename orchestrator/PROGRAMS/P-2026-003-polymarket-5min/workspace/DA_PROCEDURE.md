@@ -109,6 +109,31 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## The era fix is verified (DA 145) — gate item 1 closed
+
+`be_daybook_build.day_selector("20260903","btc")` runs in **1.9 s** read-only and
+returns 247 entries, **160 gap-bearing, 2,294.7 s** — REV 112's numbers to the
+decimal, and the population Q-DA-364 priced at 60.3 % of the day's settled money.
+`sel.era = clob_v4_1` while `fi.ERA` stays `clob_v3_1`. **Re-run that one call after
+any change to the selector; it is the cheapest end-to-end check the seat has.**
+
+Verified and not to be re-audited: `be_era_for_day.resolve` has one return and six
+raises, no default (its only `fi.ERA` mention is inside the returned *evidence*
+dict); resolution is day-dependent by measurement; six of twenty-one days refuse
+and all six are correct; every day the programme builds admits; the mask closes
+287 − 40 = 247 with a both-directions known-bad.
+
+**Known bound, disclosed by the artifact itself** (`era_span_open_ended: true`): the
+last era span is open, so a day *after* it admits rather than refuses. Unreachable
+through the builder — `day_slugs` refuses a day the ledger has no window for.
+
+**Sweep for the site nobody named (REV 111's shape).** After a two-site fix, grep
+the whole tree for the old form. I found a third live call
+(`de_v2_local_selector.py:151`) and established it **correct** — smoke-only, bound
+to `population == "v3_4_consumed_fragment"`, where the module literal *is* the right
+era. **Record a checked-and-correct third site, or the next seat re-finds it and
+reads it as a miss.**
+
 ## My own verifier had the shape bug too (DA 144) — and what it teaches
 
 `da_book_verify` asserted `n_scored_keys == n_covered` and recomputed coverage as
