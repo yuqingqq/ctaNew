@@ -21142,3 +21142,37 @@ generation and the window went 4 → 3. Nothing rewritten.
   the books built under it are not. GATE NOW: (1), (5) and (8) closed AND verified, three of eight. MEM asserts no
   result.)
 ```
+
+## Batch 284 — archived 2026-09-09T08:48:28Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T08:24:24Z (MEM ROUND 299 -- R-851 SWEPT as a numbered queue under rule 23, from my
+  round-298 tip `ac505b3` to `a4c4e89`, eleven commits. STATE ONLY. ***THE GATE HAS MOVED FURTHER TONIGHT THAN AT ANY
+  POINT SINCE THE RETRACTION AND THIS FILE NOW CARRIES CLOSED-AND-VERIFIED RATHER THAN CLOSED***: items 1 (era),
+  3 (score key), 5 (coverage), 7 (cache pin) and 8 (DA's verifier) plus the sealed-value guard, the last verified by
+  REV 118 AGAINST THE VERBATIM OLD RULE rather than the count; item 2 closed this round; OPEN are item 4 at the
+  abutting boundary and item 6. Item 1's verification is the strongest form on the board -- DA 145 drove it AT THE
+  INTEGRATION, 160 gapped windows and 2,294.7 s now reaching `build_reference` where ZERO arrived before, with
+  `resolve` carrying ONE RETURN AND SIX RAISES AND NO `except` IN THE WRAPPER, which is the structural half of
+  "refuse, never default". ***DA 146 SPLIT ITS OWN BRIEF***: item 2 CLOSED with a real guard, item 6 NOT closed --
+  ***"a commit message describing a change the commit does not contain"***, explicitly NOT a defect in the fix, with
+  rule 27 applied to itself (no regression, the message byte-identical) and the statuses themselves correct "if the
+  message pointed at them"; DA ranks it above a code defect BECAUSE "a green battery and a careful reader both pass
+  over" it, and the round that added `ROW_AFTER_GENERATION_END` ADDED A SECOND WAY TO REACH THE WRONG MESSAGE, so the
+  reach grew even though the string did not. ***AND A CORRECTION AGAINST MYSELF, THE SECOND ROUND RUNNING***: at
+  round 298 I called `de_v2_local_selector.py:151` "correct by accident and not by construction"; DA 145 swept the
+  same shape and reports it CHECKED AND CORRECT -- the selector is imported only by five smoke modules and REFUSES
+  unless `population == "v3_4_consumed_fragment"`, a `clob_v3_1` artifact, ***SO THE LITERAL IS BOUND TO THE ERA BY A
+  REFUSAL AND NOT BY LUCK***. My line reading was right and my characterisation was wrong, and the era item is TWO
+  SITES FIXED AND ZERO OPEN. REV 118 corrected its OWN REVIEW 105 S3 in the framing that matters -- THE CONCLUSION
+  SURVIVES AND THE EVIDENCE DID NOT, a `Path` passed where a parsed receipt was wanted making the probe VACUOUS --
+  and DE 163's `SETTLEMENT_BOOK_RECEIPT_NOT_PARSED` is what caught it: A GUARD WHOSE FIRST REAL CATCH IS THE REVIEWER
+  WHO REVIEWS IT. My own rounds 285 and 288 drove that same function with a PARSED dict and got non-vacuous results,
+  which is why those flags stand unchanged. The arming refutation is a SEQUENCING CLAIM: 09-03..09-06 refuse and only
+  09-07 passes, so arming costs every book not yet rebuilt and is free only after the rebuild lands. ***AND TWO SEATS
+  FOUND ONE CAUSE FROM OPPOSITE ENDS TWELVE MINUTES APART*** -- DA 144 met a refusing gate and traced it by AST to
+  params v25; REV 118, parsing receipts to verify that version, derived the mechanism -- neither knowing of the
+  other, which is the strongest available evidence the cause is real. Flags 2499 -> 2514, prov 2044 -> 2059; window
+  trimmed 4 -> 3, Batch 281 archived. **NOTHING BUILT AND NO HEAVY LOCK SINCE 07:15:47Z, NO CORRECTED BOOK, NO
+  CORRECTED NUMBER, AND THE STOPPING CRITERION IS STILL UNRULED.** MEM asserts no result.)
+```

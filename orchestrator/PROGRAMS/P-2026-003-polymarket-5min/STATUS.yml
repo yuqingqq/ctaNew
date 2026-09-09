@@ -67,6 +67,40 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T08:48:28Z (MEM ROUND 302 -- R-854 AND R-855 SWEPT as a numbered queue under rule 23,
+  from my round-301 tip `acaa5ea` to `0c297dd`, seventeen commits. STATE ONLY, AND IT CARRIES TWO CORRECTIONS TO
+  NUMBERS RATHER THAN SUPERSEDING THEM QUIETLY. ***(a) THE 27 PER CENT***: checked in my own files first, because
+  over-correcting is also an error -- it appears TWICE (`STATUS.yml:29045`, `HANDOFF.md:1308-9`) and in both it is
+  DE 158's SAMPLING-UNIT measurement quoted with its own subject, so R-854's withdrawal of R-853's "up to the 27 %
+  of generations" AS AN EXPOSURE ESTIMATE does not land on my files -- ***BUT THE RULING IS RECORDED BESIDE BOTH
+  USES SO NOBODY CARRIES THE NUMBER ACROSS CONTEXTS***. The insight is worth keeping in its own right: the
+  measurement and the `t0` claim are DIFFERENT QUANTITIES AND NOT IN TENSION, since a generation whose first row IS
+  at `t0` and whose later rows come after satisfies the claim AND contributes to both percentages -- ***SO IF THE
+  CLAIM IS TRUE, EVERY MULTI-ROW GENERATION CONTRIBUTES TO THE 27 %***. The exposure is UNMEASURED, which is what my
+  round-300 flag already said in the stronger form ("unmeasurable until the first corrected book exists"), reached
+  from the opposite direction. ***(b) "THREE CONSUMERS" IS MINE AND IT IS WRONG***: REV 122 enumerated
+  CONSTRUCTIVELY and found FIVE of ten -- the three I checked plus `da_de53_exclusion.py` (two sites) and
+  `de_section81_arms.py` (one). ***THE FAILURE NAMED EXACTLY: I TREATED AN ENUMERATION AS FACTS TO CHECK AND NOT AS
+  A CLAIM TO FALSIFY***, running three confirmations with no falsifier for "there are only three" -- a confirmation
+  of every named member is not evidence about membership. ***AND THE TWO MISSED ARE THE WORSE TWO***, which I
+  confirmed at their code: `da_de53_exclusion.py:33-34` builds the `t0` key and then reads `(retained if key in
+  gen_scores else excluded)`, ***SO THE MEMBERSHIP TEST IS THE EXCLUSION DECISION ITSELF*** in a module whose whole
+  subject is a claim about the excluded set. ***AND `grep -c "in gs"` NOW RETURNS ZERO IN ALL FIVE***, including the
+  three it originally found -- invalidated both by code it never matched and by code that changed its words, neither
+  failure announcing itself. THE METHOD, TWICE-PROVEN, RECORDED AS PRACTICE: ***A MEMBER IS DEFINED BY THE OPERATION
+  THAT CONSTITUTES MEMBERSHIP, NOT BY A SPELLING*** -- four classes here, and REVIEW 111's pin sites were the first
+  instance, two by inspection and THREE BY CONSTRUCTION with the missed one the silent one. I ran it myself: 26
+  candidate modules on four operation regexes, ***CONTAINING ALL FIVE***. LIVE: three of the five are being repaired
+  in UNCOMMITTED work (at `586be44` the line read the old test; at HEAD it is a comment; the files are dirty) and
+  the two REV 122 added are not -- uncommitted being a step BEFORE landed, which is a step before reviewed. BUILD
+  READINESS: a THIRD preventable cause, and it is rule 28 INSIDE THE GUARD -- `be_rule22.stamp()` RECORDS
+  `dirty_code` and refuses on neither dirtiness nor its own record, while `da_book_verify` DOES refuse, so a dirty
+  `wt-be` costs the full wall AND the book; the envelope reproduces to the byte with 09-03 at 85.2 % and the basis
+  NOT covering 09-08. ***AND THE TWO HALVES OF THIS ROUND ARE ONE CAUSE***: one entry per ROW instead of per
+  GENERATION both breaks five consumers and triples the wall -- 2,040 s pre-fix TOTAL against 3,793.8 s of EV20
+  ASSEMBLY ALONE, 1.86x, a figure I measured at round 290. Flags 2539 -> 2551, prov 2084 -> 2096; window trimmed
+  4 -> 3, Batch 284 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, BUILD DECISION WITH THE USER.** MEM
+  asserts no result.)
   2026-09-09T08:40:06Z (MEM ROUND 301 -- A REGISTER-INTEGRITY DIAGNOSIS, NOT A SWEEP; the state
   files were current through R-853 and remain so. STATE ONLY. **THE COUNT REPRODUCED**: 1,176 Q rows / 1,172
   distinct -- `Q-BE-92` x3, `Q-BE-91` x2, `Q-DA-331` x2 -- and R-entries 843/843 with NO duplicates, so the
@@ -128,35 +162,6 @@ updated: >-
   Batch 282 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD DECISION IS WITH THE USER --
   REV RECOMMENDS BUILD AND THE COORDINATOR CONCURS.** ***AND THE SHARED TREE IS STILL DIVERGED, SO NO SEAT CAN LAND
   A REGISTER ROW: Q-MEM-287 AND Q-MEM-288 ARE COMPOSED AND UNLANDED.*** MEM asserts no result.)
-  2026-09-09T08:24:24Z (MEM ROUND 299 -- R-851 SWEPT as a numbered queue under rule 23, from my
-  round-298 tip `ac505b3` to `a4c4e89`, eleven commits. STATE ONLY. ***THE GATE HAS MOVED FURTHER TONIGHT THAN AT ANY
-  POINT SINCE THE RETRACTION AND THIS FILE NOW CARRIES CLOSED-AND-VERIFIED RATHER THAN CLOSED***: items 1 (era),
-  3 (score key), 5 (coverage), 7 (cache pin) and 8 (DA's verifier) plus the sealed-value guard, the last verified by
-  REV 118 AGAINST THE VERBATIM OLD RULE rather than the count; item 2 closed this round; OPEN are item 4 at the
-  abutting boundary and item 6. Item 1's verification is the strongest form on the board -- DA 145 drove it AT THE
-  INTEGRATION, 160 gapped windows and 2,294.7 s now reaching `build_reference` where ZERO arrived before, with
-  `resolve` carrying ONE RETURN AND SIX RAISES AND NO `except` IN THE WRAPPER, which is the structural half of
-  "refuse, never default". ***DA 146 SPLIT ITS OWN BRIEF***: item 2 CLOSED with a real guard, item 6 NOT closed --
-  ***"a commit message describing a change the commit does not contain"***, explicitly NOT a defect in the fix, with
-  rule 27 applied to itself (no regression, the message byte-identical) and the statuses themselves correct "if the
-  message pointed at them"; DA ranks it above a code defect BECAUSE "a green battery and a careful reader both pass
-  over" it, and the round that added `ROW_AFTER_GENERATION_END` ADDED A SECOND WAY TO REACH THE WRONG MESSAGE, so the
-  reach grew even though the string did not. ***AND A CORRECTION AGAINST MYSELF, THE SECOND ROUND RUNNING***: at
-  round 298 I called `de_v2_local_selector.py:151` "correct by accident and not by construction"; DA 145 swept the
-  same shape and reports it CHECKED AND CORRECT -- the selector is imported only by five smoke modules and REFUSES
-  unless `population == "v3_4_consumed_fragment"`, a `clob_v3_1` artifact, ***SO THE LITERAL IS BOUND TO THE ERA BY A
-  REFUSAL AND NOT BY LUCK***. My line reading was right and my characterisation was wrong, and the era item is TWO
-  SITES FIXED AND ZERO OPEN. REV 118 corrected its OWN REVIEW 105 S3 in the framing that matters -- THE CONCLUSION
-  SURVIVES AND THE EVIDENCE DID NOT, a `Path` passed where a parsed receipt was wanted making the probe VACUOUS --
-  and DE 163's `SETTLEMENT_BOOK_RECEIPT_NOT_PARSED` is what caught it: A GUARD WHOSE FIRST REAL CATCH IS THE REVIEWER
-  WHO REVIEWS IT. My own rounds 285 and 288 drove that same function with a PARSED dict and got non-vacuous results,
-  which is why those flags stand unchanged. The arming refutation is a SEQUENCING CLAIM: 09-03..09-06 refuse and only
-  09-07 passes, so arming costs every book not yet rebuilt and is free only after the rebuild lands. ***AND TWO SEATS
-  FOUND ONE CAUSE FROM OPPOSITE ENDS TWELVE MINUTES APART*** -- DA 144 met a refusing gate and traced it by AST to
-  params v25; REV 118, parsing receipts to verify that version, derived the mechanism -- neither knowing of the
-  other, which is the strongest available evidence the cause is real. Flags 2499 -> 2514, prov 2044 -> 2059; window
-  trimmed 4 -> 3, Batch 281 archived. **NOTHING BUILT AND NO HEAVY LOCK SINCE 07:15:47Z, NO CORRECTED BOOK, NO
-  CORRECTED NUMBER, AND THE STOPPING CRITERION IS STILL UNRULED.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -328,6 +333,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 302, R-854/R-855 swept; two of my numbers corrected (acaa5ea -> 0c297dd) ---
+  MY_FILES_CARRY_THE_27_PERCENT_AND_NOT_THE_WITHDRAWN_CLAIM: TWO-USES-BOTH-IN-THE-SAMPLING-UNIT-CONTEXT
+  THE_NUMBER_IS_NOT_IN_TENSION_WITH_THE_CLAIM_IT_WAS_CITED_AGAINST: IF-THE-CLAIM-IS-TRUE-EVERY-MULTI-ROW-GENERATION-COUNTS
+  SO_THE_EXPOSURE_IS_UNMEASURED_AND_MY_FILES_ALREADY_SAID_UNMEASURABLE: ROUND-300s-FLAG-STANDS
+  BUT_THREE_CONSUMERS_IS_MINE_AND_IT_IS_WRONG: FIVE-OF-TEN-NOT-THREE
+  I_VERIFIED_THE_LIST_AND_NEVER_TESTED_WHETHER_THE_LIST_WAS_COMPLETE: A-PROBE-WITH-NO-FALSIFIER
+  THE_TWO_MISSED_ARE_WORSE_BECAUSE_THE_MEMBERSHIP_TEST_IS_THE_EXCLUSION_DECISION: retained-IF-key-in-gen_scores-ELSE-excluded
+  AND_THE_SPELLING_THAT_FOUND_THREE_NOW_FINDS_NONE_OF_THE_FIVE: in-gs-RETURNS-ZERO-EVERYWHERE-TODAY
+  ENUMERATE_BY_THE_OPERATION_THAT_CONSTITUTES_MEMBERSHIP_NOT_BY_A_SPELLING: TWICE-PROVEN-WITH-REVIEW-111
+  MY_OWN_CONSTRUCTIVE_SWEEP_CONTAINS_ALL_FIVE: TWENTY-SIX-CANDIDATES-ON-FOUR-CLASSES
+  THREE_OF_THE_FIVE_ARE_BEING_REPAIRED_IN_UNCOMMITTED_WORK_RIGHT_NOW: NOT-EVEN-LANDED-LET-ALONE-REVIEWED
+  A_THIRD_PREVENTABLE_CAUSE_IS_RULE_28_INSIDE_THE_GUARD_ITSELF: stamp-RECORDS-DIRTY-AND-REFUSES-ON-NEITHER
+  ONE_KEY_SHAPE_CHANGE_HAS_TWO_CONSEQUENCES_AND_THE_SECOND_IS_THE_WALL: FIVE-CONSUMERS-AND-1.86x-THE-BUILD
   # --- MEM round 301, register-integrity diagnosis (not a sweep) ---
   THE_REGISTER_CARRIES_THREE_DUPLICATE_Q_IDS_AND_I_REPRODUCED_THE_COUNT: 1176-ROWS-1172-DISTINCT
   MY_OWN_FIRST_PROBE_REPORTED_A_FOURTH_AND_IT_WAS_MY_REGEX: AN-ACKNOWLEDGEMENT-HEADING-NOT-AN-ENTRY
@@ -26900,6 +26918,144 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 302, 2026-09-09T08:48:28Z (the clock read by which every measurement below was complete) ---
+  MY_FILES_CARRY_THE_27_PERCENT_AND_NOT_THE_WITHDRAWN_CLAIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      ***CHECKED IN MY OWN FILES BEFORE CORRECTING ANYTHING, BECAUSE OVER-CORRECTING IS ALSO AN ERROR.*** The 27 %
+      appears **twice** in my state files — `STATUS.yml:29045` and `HANDOFF.md:1308-9` — and in **both** it is DE 158's
+      sampling-unit measurement, quoted with its own subject: *"15,867 of 40,000 rows (39.7 %) begin after their
+      generation's start, across 6,586 of 24,133 generations (27 %)"*. **R-854 withdraws R-853's phrase "up to the
+      27 % of generations" as an EXPOSURE ESTIMATE.** ***MY FILES NEVER USED IT AS AN EXPOSURE***, so the withdrawal
+      does not land on them — but the ruling is recorded here beside both uses so no reader carries the number
+      across contexts.
+  THE_NUMBER_IS_NOT_IN_TENSION_WITH_THE_CLAIM_IT_WAS_CITED_AGAINST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      The insight in R-854 worth keeping in its own right, because it is what makes the withdrawal correct rather
+      than cautious: the measurement (*rows beginning strictly after their generation's start*) and the claim (*a
+      generation's FIRST row starts exactly at its `t0`*, i.e. `min(t_start) == t0`) are **different quantities AND
+      NOT IN TENSION.** ***A GENERATION WHOSE FIRST ROW IS AT `t0` AND WHOSE SECOND AND THIRD COME LATER SATISFIES
+      THE CLAIM AND CONTRIBUTES TO BOTH PERCENTAGES*** — so **if the claim is TRUE, EVERY multi-row generation
+      contributes to the 27 %.** The 27 % counts multi-row generations; **it is not an exposure and never was.**
+  SO_THE_EXPOSURE_IS_UNMEASURED_AND_MY_FILES_ALREADY_SAID_UNMEASURABLE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      **The exposure is UNMEASURED, not 27 %** — and my round-300 flag already said the stronger thing: *"its rate is
+      unmeasurable until the first corrected book exists … the build is the instrument."* **That flag stands
+      unchanged and is now the register's position too.** Recorded because the two statements arrived from opposite
+      directions — mine from "no corrected assembly exists to measure", REV's from "the number you would have used
+      measures something else" — **and a claim reached twice by different routes is worth more than either
+      route.**
+  BUT_THREE_CONSUMERS_IS_MINE_AND_IT_IS_WRONG:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      ***AND THE SECOND WRONG NUMBER IS MINE, WITHOUT QUALIFICATION.*** My rounds 300 and 301 record **"three
+      consumers"**, with the line *"I verified all three at their lines"*. **REV 122 enumerated CONSTRUCTIVELY and
+      found FIVE of ten modules exposed** — `da_elementwise.py`, `da_elem_grid.py`, `da_elementwise_hz.py`,
+      **`da_de53_exclusion.py` (two sites) and `de_section81_arms.py` (one)**. **THREE IS WRONG. FIVE IS THE
+      NUMBER.** The three I checked were checked correctly; the set was not the set.
+  I_VERIFIED_THE_LIST_AND_NEVER_TESTED_WHETHER_THE_LIST_WAS_COMPLETE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      ***THE FAILURE NAMED EXACTLY, BECAUSE "I RELIED ON REV'S LIST" IS TOO KIND TO ME.*** I treated an ENUMERATION
+      as a set of facts to check and not as a CLAIM TO FALSIFY. My own procedure requires that **every probe carries
+      a falsifier — a known-positive that must appear, or a control that must be absent** — and I ran three
+      confirmations with **no falsifier for the proposition "there are only three."** ***A CONFIRMATION OF EVERY
+      NAMED MEMBER IS NOT EVIDENCE ABOUT MEMBERSHIP***, and it is the same shape as rule 16's guard that cannot
+      fail: my check could not have told me the list was short.
+  THE_TWO_MISSED_ARE_WORSE_BECAUSE_THE_MEMBERSHIP_TEST_IS_THE_EXCLUSION_DECISION:
+    prov: CHECKED
+    artifact: live/pm_research/da_de53_exclusion.py
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      ***AND THE TWO MISSED ARE THE WORSE TWO, WHICH I CONFIRMED AT THEIR CODE.*** `da_de53_exclusion.py` builds
+      `key = (slug, side, float(g["t0"]))` at `:33` and then `:34` reads
+      **`(retained if key in gen_scores else excluded).append(rec)`** — ***THE MEMBERSHIP TEST IS THE EXCLUSION
+      DECISION ITSELF***, and the module's whole subject is a claim about that set (*"DE53's 1,309 excluded
+      generations are NOT distributionally like the 31,122"*). `de_section81_arms.py:526` gates row construction on
+      the same test. **A key-shape change silently MOVES GENERATIONS FROM RETAINED TO EXCLUDED in a module whose
+      output is an argument about the excluded set** — worse than a population count, because the defect and the
+      subject are the same object.
+  AND_THE_SPELLING_THAT_FOUND_THREE_NOW_FINDS_NONE_OF_THE_FIVE:
+    prov: CHECKED
+    artifact: live/pm_research/da_elementwise.py
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      A measurement that makes the method point unarguable: **`grep -c 'in gs'` today returns ZERO in all five
+      modules** — including the three it originally found. Two causes, both instructive: the two REV 122 added never
+      spelled it that way (`in gen_scores`), and **the three are being edited right now**, so the spelling has moved
+      under the search. ***A SEARCH KEYED ON A SPELLING IS INVALIDATED BOTH BY CODE IT NEVER MATCHED AND BY CODE
+      THAT CHANGES ITS WORDS***, and neither failure announces itself: the grep returns a clean zero either way.
+  ENUMERATE_BY_THE_OPERATION_THAT_CONSTITUTES_MEMBERSHIP_NOT_BY_A_SPELLING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      ***THE METHOD, NOW TWICE-PROVEN, RECORDED AS PROGRAMME PRACTICE***: **a member is defined by the OPERATION
+      that constitutes membership, not by a spelling.** Here the four operation classes are **a `t0`-keyed lookup;
+      `len(assembly)` used as a generation count; iterating the assembly as generations; reading the key's third
+      element as a `t0`.** ***AND REVIEW 111'S PIN SITES WERE THE FIRST INSTANCE OF THE SAME LESSON***: two sites by
+      inspection, **three by construction, and the missed one was the silent one** — exactly as here, where the two
+      missed are the two that compute exclusions. **Twice is a method; once was luck.**
+  MY_OWN_CONSTRUCTIVE_SWEEP_CONTAINS_ALL_FIVE:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      I ran the method myself rather than accepting the count: four regexes over the four operation classes across
+      every module in `live/pm_research/` returned **26 candidate modules**, and **all five of REV's exposed set are
+      in it** — the three from REVIEW 120 and **both** REV 122 added, every one of them matching the `t0`-keyed
+      lookup class. **My net is deliberately wider than the exposed set** (26 candidates against REV's ten examined
+      and five exposed) because coarse patterns over-include, and BE's own modules appear though BE handled them.
+      ***THE POINT IS NOT MY 26; IT IS THAT THE OPERATION-KEYED SWEEP SURFACES BOTH MISSED MODULES AND THE SPELLING
+      SWEEP CANNOT.***
+  THREE_OF_THE_FIVE_ARE_BEING_REPAIRED_IN_UNCOMMITTED_WORK_RIGHT_NOW:
+    prov: CHECKED
+    artifact: live/pm_research/da_elementwise.py
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      A live state fact, measured and carefully bounded: at my round-300 tip `586be44`, `da_elementwise.py:32` read
+      `if (s_, sd, float(g["t0"])) in gs:` — **my round-300 verification was correct at its clock.** At HEAD that
+      line is a comment naming *"PER_ROW book that drops most of the population"*, and **all three files are DIRTY
+      in the working tree.** ***SO THREE OF THE FIVE ARE BEING REPAIRED IN UNCOMMITTED WORK AND THE TWO REV 122
+      ADDED ARE NOT*** (`:33` and `:526` still carry the old test). **Uncommitted is a step BEFORE "landed", which is
+      itself a step before "reviewed"** — this file asserts nothing about the repair, and I have touched none of
+      it.
+  A_THIRD_PREVENTABLE_CAUSE_IS_RULE_28_INSIDE_THE_GUARD_ITSELF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      BE 115's pre-flight adds a **third preventable cause of a lost build**, and it is **rule 28 occurring inside
+      the guard whose job is to prevent lost builds**: `be_rule22.stamp()` **RECORDS** `dirty`, `dirty_code` and
+      `dirty_paths` and **REFUSES ONLY ON CLOSURE DRIFT AND A HEAD MOVE — not on dirtiness** — while
+      `da_book_verify` **DOES** refuse (`LaunchCaptureRefused`, *"THE WORKTREE WAS DIRTY AT IMPORT … uncommitted
+      bytes are locatable nowhere"*). **BE found `dirty_code: True` on three paths LIVE, while its own commits were
+      stranded.** ***SO A BUILD FROM A DIRTY wt-be RUNS THE FULL WALL AND THEN LOSES THE BOOK AT VERIFICATION*** —
+      the same ~75-minute shape as the head-move loss, through a third door.
+  ONE_KEY_SHAPE_CHANGE_HAS_TWO_CONSEQUENCES_AND_THE_SECOND_IS_THE_WALL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:48:28Z
+    said: >-
+      ***AND THE TWO HALVES OF THIS ROUND ARE ONE CAUSE, WHICH IS WORTH SAYING IN ONE SENTENCE***: the corrected
+      scorer emits **one entry per ROW instead of one per GENERATION**, and that single shape change both **breaks
+      five consumers** and **triples the build wall** — the pre-fix 09-03 build was **2,040 s TOTAL** while the
+      failed EV20 run's **ASSEMBLY ALONE was 3,793.8 s, 1.86x the whole earlier build** (a figure I measured myself
+      at round 290 from that run's own log). **Plan on the EV20 number.** The era fix adds no measurable replay cost
+      (4.8 s against 3.8 s on the same windows), the envelope reproduces to the byte with **09-03 needing 85.2 %**
+      of it, and **the basis does NOT cover 09-08, whose row count is unknown because it has no tape.**
   # --- MEM round 301, 2026-09-09T08:40:06Z (the clock read by which every measurement below was complete) ---
   THE_REGISTER_CARRIES_THREE_DUPLICATE_Q_IDS_AND_I_REPRODUCED_THE_COUNT:
     prov: CHECKED

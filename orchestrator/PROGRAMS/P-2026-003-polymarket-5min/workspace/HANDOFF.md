@@ -1,3 +1,91 @@
+# READ FIRST — round 302 (MEM, 2026-09-09T08:48:28Z, tip `0c297dd`)
+
+**R-854 and R-855 swept — seventeen commits since `acaa5ea`.** STATE ONLY. **This round carries two corrections to
+numbers, made explicitly rather than superseded quietly.**
+
+## ⚠ CORRECTION (a) — the 27 %, and it does **not** land on my files
+
+**Checked in my own files first, because over-correcting is also an error.** The 27 % appears **twice**
+(`STATUS.yml:29045`, `HANDOFF.md:1308-9`) and in **both** it is DE 158's **sampling-unit** measurement quoted with
+its own subject. **R-854 withdraws R-853's phrase "up to the 27 % of generations" as an EXPOSURE ESTIMATE — my files
+never used it as one.** The ruling is recorded beside both uses so nobody carries the number across contexts.
+
+**The insight is worth keeping in its own right.** The measurement (*rows beginning after their generation's start*)
+and the claim (*a generation's first row starts exactly at its `t0`*) are **different quantities and not in
+tension**: a generation whose first row **is** at `t0` and whose later rows come after **satisfies the claim and
+contributes to both percentages**. **⇒ If the claim is TRUE, every multi-row generation contributes to the 27 %. It
+counts multi-row generations; it is not an exposure.**
+
+**The exposure is UNMEASURED** — which my round-300 flag already said in the stronger form (*"unmeasurable until the
+first corrected book exists; the build is the instrument"*), reached from the opposite direction. **That flag
+stands.**
+
+## ⚠ CORRECTION (b) — **"three consumers" is mine, and it is wrong**
+
+**REV 122 enumerated constructively: FIVE of ten**, not three — the three I checked plus **`da_de53_exclusion.py`
+(two sites)** and **`de_section81_arms.py` (one)**.
+
+**The failure, named exactly:** I treated an **enumeration as facts to check, not as a claim to falsify.** My own
+procedure requires every probe to carry a falsifier; I ran three confirmations with **no falsifier for "there are
+only three."** **A confirmation of every named member is not evidence about membership** — the same shape as a guard
+that cannot fail.
+
+**And the two missed are the worse two**, confirmed at their code: `da_de53_exclusion.py:33-34` builds
+`key = (slug, side, float(g["t0"]))` and then `(retained if key in gen_scores else excluded).append(rec)` —
+**the membership test *is* the exclusion decision**, in a module whose subject is a claim about the excluded set
+(*"DE53's 1,309 excluded generations are NOT distributionally like the 31,122"*). `de_section81_arms.py:526` gates
+row construction on the same test.
+
+**And `grep -c 'in gs'` today returns ZERO in all five** — including the three it originally found: invalidated both
+by code it never matched **and** by code that changed its words. **Neither failure announces itself; the grep
+returns a clean zero either way.**
+
+## THE METHOD — twice-proven, recorded as practice
+
+> **A member is defined by the OPERATION that constitutes membership, not by a spelling.**
+
+Four operation classes here: a `t0`-keyed lookup · `len(assembly)` as a generation count · iterating the assembly as
+generations · reading the key's third element as a `t0`. **REVIEW 111's pin sites were the first instance** — two by
+inspection, **three by construction, and the missed one was the silent one**, exactly as here. **Twice is a method;
+once was luck.**
+
+**I ran it myself:** four regexes over the four classes across `live/pm_research/` → **26 candidate modules,
+containing all five of REV's exposed set** (both missed ones matching the `t0`-lookup class). My net is deliberately
+wider than the exposed set; **the point is that the operation-keyed sweep surfaces both missed modules and the
+spelling sweep cannot.**
+
+## LIVE STATE — three of the five are being repaired in **uncommitted** work
+
+At `586be44`, `da_elementwise.py:32` read the old test — **my round-300 verification was correct at its clock.** At
+HEAD that line is a comment, and **all three files are dirty in the working tree**; the two REV 122 added still
+carry the old test at `:33` and `:526`. **Uncommitted is a step before *landed*, which is a step before
+*reviewed*** — this file asserts nothing about the repair, and I touched none of it.
+
+## BUILD READINESS (BE 115's pre-flight)
+
+- **A third preventable cause, and it is rule 28 inside the guard**: `be_rule22.stamp()` **records** `dirty`,
+  `dirty_code`, `dirty_paths` and **refuses on neither** — only on closure drift and a head move — while
+  `da_book_verify` **does** refuse. **BE found `dirty_code: True` on three paths live** while its commits were
+  stranded. **A dirty `wt-be` costs the full wall *and* the book.**
+- **The envelope reproduces to the byte**; **09-03 needs 85.2 %** of it; **the basis does not cover 09-08**, whose
+  row count is unknown because it has no tape.
+- **Plan on the EV20 wall:** pre-fix 09-03 was **2,040 s total**; the failed EV20 run's **assembly alone was
+  3,793.8 s — 1.86×** (a figure I measured myself at round 290). **The era fix adds no measurable replay cost**
+  (4.8 s vs 3.8 s on the same windows).
+
+**⇒ And the two halves of this round are one cause:** the corrected scorer emits **one entry per row instead of one
+per generation**, and that single shape change **breaks five consumers *and* triples the wall.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z, build decision with the USER.**
+
+Counts: flags 2539 → 2551, provenance 2084 → 2096 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); 1,806 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 284
+archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 301 (MEM, 2026-09-09T08:40:06Z, tip `acaa5ea`)
 
 **A REGISTER-INTEGRITY DIAGNOSIS, not a sweep.** State files were current through R-853 and remain so. **I have
