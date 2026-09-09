@@ -1,3 +1,95 @@
+# READ FIRST — round 329 (MEM, 2026-09-09T17:15:06Z, tip `9beae2d`)
+
+# ⛔ THE 09-04 POINT ESTIMATE **REFUSED** — a refusal, not a failure
+
+**`REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: the builder receipt names 2 placement-latency value(s),
+[0.0, 250.0]`** at `de_multiday_gate1_runner.py:5875`, from `run_day:9294` via `de_point_estimate_day.py:549`. Unit
+`dePE0904L250d2`, **rc 1**, 4 min 25 s CPU, 1.1 G peak, **NO ARTIFACT WRITTEN**. ***The driver declined to publish
+rather than producing a number — which is what it was built to do.***
+
+## The guard is CORRECT and its PREMISE is STALE — a third category
+
+*Written when a book carried **one** latency, so two meant corruption. The EV21 book carries two **by design**, via
+`placement_latency_split`.* ***The feature that lets the book answer the question is the one the guard reads as
+ambiguity.*** The guard's *"two values means corruption"* and ruling (b)'s *"two values is the design"* are the same
+observation with opposite signs.
+
+**Third time tonight a guard has been outlived by its own programme's progress** — after `derived_scoring_n` and
+`require_book_declares_L`. ***A programme that adds a capability must sweep the guards that encoded its absence.***
+
+## ⚠ THE CORRECTION — measured by me at both receipts
+
+| book | placement-latency values | split |
+|---|---|---|
+| **09-03 EV21** | **`[250.0]`** (n=1) | **absent** |
+| **09-04 EV21** | **`[0.0, 250.0]`** (n=2) | **present** |
+
+***The guard blocks every book WITH the split — 09-04, and 09-05/09-06 as they build — while 09-03 PASSES it and has
+no complement leg, so its reconciliation has nothing to check. Opposite problems, not the same one.***
+
+**And my own share of it, recorded because the coordinator recorded its own:** ***the fact needed to predict this
+refusal has been in my files since round 326*** — I landed the user's item 2 verbatim (*"09-03's EV21 book lacks
+`placement_latency_split`"*) **and** "09-04 is being built with the split" **in the same entry**. ***I held both
+halves and drew no consequence from them. Recording a fact and foreseeing what it implies are different acts.***
+
+# 📏 THE CONCURRENCY IS SETTLED BY MEASUREMENT
+
+| | |
+|---|---|
+| per-draw peak | **2.621 GiB** |
+| cgroup cross-check | **2.611 GiB** — **0.38 % apart** (my arithmetic) |
+| composition | **the whole of it is THE BOOK — footprints ADD** |
+| **N** | **`floor(9 / 2.621) = 3`** |
+| 8 × 2.621 | **20.97 GiB against a 14 GiB cap, swap 0 → OOM** |
+
+*I recorded last round that add-vs-CoW "moves the safe N by a factor of several"; it has landed on the expensive
+side.* ***The lever for more than 3 is SHARING one book (fork-and-CoW), not more memory — a design change, not a
+knob.***
+
+**⚠ Continuing last round's filing:** **N = 3 rests on the 9 GiB usable figure — the 12 GB denominator I reported I
+could not locate.** Under the slice's measured **18 GB** aggregate the same peak gives **`floor(13.5/2.621) = 5`**.
+***So the answer is 3 or 5 depending on a number nobody has shown me in a file — and neither is 8, and both are ≥ 2,
+so the ruling is unaffected either way.***
+
+# THE NULL'S DESIGN IS DECLARED **BEFORE** IT RUNS
+
+DA `18c79d8` (data + predicates) + `f54c2a9` (falsifiers, one per clause), Q-DA-387: **`L` read from the receipt,
+never typed**; **coverage recomputed from counts**; **multiplicity 2 recorded before any draw.** *I recomputed the
+coverage myself: **328,578 + 29,530 = 358,108**, ratio **0.9175388430305941** — to the last digit.*
+
+## ⛔ AND THE SENTENCE THAT MATTERS MOST
+
+***The null runs entirely on SEEN days and therefore CANNOT VALIDATE ANYTHING — a control for a point estimate,
+never a validation (rule 11). Validation needs ≥5 later untouched UTC days, which do not exist yet.***
+
+**So the strongest result available this week is a controlled point estimate on consumed days, and the word
+"validated" is not available at any draw count.** *This file will not let a null's arrival be read as validation.*
+
+## DA's honest blocker
+
+**The 5.3 h wall clock rests on DE's DOCSTRING** — *"S4 is 99.2 % of a run, 9,467 s of 9,546 s"* — **cited as READ
+and not measured, and DA's own observation disagrees.** *A number taken from a docstring is exactly the class this
+programme has spent two days on.* **One timed draw settles it plus the CANCELS-path memory question — scheduled
+AFTER 09-06, not now.**
+
+## ALSO
+
+- **BE 144 closed the NaN fail-open**: `VALUE_NOT_FINITE_NO_COMPARISON_POSSIBLE`, `TRANCHE_VALUE_NOT_FINITE`, **both
+  sides falsified independently, finite values still comparing normally**, and `_fills_from` now **names the
+  offending tranche**.
+- **⚠ REV 147 found DE 181's status with the SIGN FLIPPED**: on the full-null path a receipt claims
+  `PERFORMED_BY_POINT_ESTIMATE_DRIVER` **while the driver never runs**. *The field I praised for putting the hold in
+  the code now asserts the opposite on another path.* Fix queued at `:8748`/`:8942`. **Nothing published is wrong;
+  the exposure is forward.**
+- **09-05 is rebuilding** (`p003ev210905a`, 17:05:42Z, seen at the machine), **09-06 armed behind it**. ***And each
+  one that lands with the split will meet the same ambiguity guard — so the refusal is the queue's problem, not one
+  day's, which is better known with two builds in flight than after four.***
+
+Counts: flags 2915 → 2929, provenance 2460 → 2474 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 311 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 328 (MEM, 2026-09-09T16:59:32Z, tip `a49dd34`)
 
 # ⚠ A CORRECTION TO MY ROUND-327 FILES — the `research.slice` 200 % cap **does not exist**

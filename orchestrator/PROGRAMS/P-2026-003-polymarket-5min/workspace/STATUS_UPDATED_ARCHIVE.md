@@ -22428,3 +22428,38 @@ generation and the window went 4 → 3. Nothing rewritten.
   BE, ON THE VERY NEXT BUILD.** Flags 2866 -> 2882, prov 2411 -> 2427; window 3/3, Batch 307 archived. MEM asserts
   no result.)
 ```
+
+## Batch 311 — archived 2026-09-09T17:15:06Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T16:13:39Z (MEM ROUND 326 -- ***USER REVIEW. FIX-ONLY ROUND: THE USER HAS RULED THAT WHEN THEY REPORT ISSUES WE
+  FIX THOSE AND NOTHING ELSE UNTIL CLOSED, SO THEIR REVIEW WAS MY ONLY QUEUE -- NO SWEEP, NO STATE TRUE-UP, NO
+  ANALYSIS.*** Three of their five items are record items and are landed here IN THE USER'S OWN TERMS. ***(1) 09-03's
+  EV21 BOOK LACKS `placement_latency_split`, SO ITS LATENCY RECONCILIATION CANNOT RUN -- "A NEW 09-03 REBUILD IS
+  REQUIRED IF THAT VALIDATION IS NEEDED."*** **Confirmed by me at the artifact: `placement_latency_split` occurs ZERO
+  times in the EV21 09-03 receipt.** ***AND IT IS RECORDED AS A LIMITATION OF THAT BOOK, NOT AS A DEFECT AND NOT AS
+  WORK OUTSTANDING*** -- the book was built before the split existed, **nothing is wrong with it and nothing is owed
+  on it**, and ***09-04 IS BEING BUILT WITH THE SPLIT AND IS WHERE THE RECONCILIATION FIRST HAS SOMETHING TO
+  CHECK***; a 09-03 rebuild is available IF that validation is needed and is not otherwise implied, so **this file
+  records no outstanding task against 09-03 on this account.** ***(2) CANCEL EVIDENCE: "THE EXISTING 09-03 ARTIFACT
+  RECORDS CANCEL TOTALS BUT NOT ACTUAL MULTIPLE-CANCEL INCIDENCE. CURRENT CODE NOW RECORDS `cancel_unit_exception` AT
+  `de_multiday_gate1_runner.py:8765`, SO FUTURE REPLAYS ARE COVERED."*** **I confirmed both halves -- `:8765` reads
+  `r["cancel_unit_exception"] = _cancel_unit_exception`, built at `:8663`, and the 09-03 point-estimate artifact
+  carries ZERO occurrences of it.** ***SO THE QUALIFICATION NOW TRAVELS WHEREVER THE 1-IN-3,862 APPEARS IN THESE
+  FILES: THE EXISTING 09-03 ARTIFACT DOES NOT CARRY THE INCIDENCE, THE USER'S RULING PUT THAT EXCEPTION INTO THE
+  RECEIPT, AND A READER MUST NOT TAKE THE 09-03 ARTIFACT AS ITS SOURCE*** -- *this is the second qualification on
+  that number from a different direction, after REV 139's finding that it was computed by a script importing from a
+  hardcoded worktree: not where the code came from, but WHICH ARTIFACT CAN EVIDENCE IT.* ***(3) QUOTATION, RECORDED
+  EXACTLY AND WITH THE COUNTS: "09-03 REMAINS EXPLORATORY -- 244 BOUNDARIES AGREE AND 2 ARE OUTSIDE CAPTURE;
+  `is_final_for_quotation=false`."*** **I confirmed the field at the artifact, present twice.** ***NOTHING FROM 09-03
+  MAY BE QUOTED AS FINAL, AND THAT INCLUDES THE `D_E_settle +11,191.244402` POINT ESTIMATE -- IT IS EXPLORATORY,
+  UN-NULLED, AND ON A DAY THAT IS NOT FINAL FOR QUOTATION.*** **I recorded that number at round 319 as "the first
+  corrected number since the retraction", checked its arithmetic three ways, and recorded at 322 that DA had
+  reproduced it to the digit by a second implementation** -- ***NONE OF THAT MAKES IT QUOTABLE; REPRODUCED IS NOT
+  THE SAME AS FINAL, AND THREE QUALIFICATIONS NOW TRAVEL WITH IT: NO CONTROL, A THRESHOLD AT A DRIFTED QUANTILE, AND
+  A DAY THAT IS NOT FINAL FOR QUOTATION. THIS FILE WILL NOT LET ITS OWN EARLIER FRAMING BE READ AS A LICENCE.*** The
+  other two of the five are not mine: **DE is wiring the repaired reconciliation through `de_point_estimate_day.py`
+  -- NOT the runner, because editing the runner would stale every book -- and BE is fixing the `EV20 queue only`
+  scope string in the EV21 launch record.** Flags 2882 -> 2888, prov 2427 -> 2433; window 3/3, Batch 308 archived.
+  MEM asserts no result.)
+```

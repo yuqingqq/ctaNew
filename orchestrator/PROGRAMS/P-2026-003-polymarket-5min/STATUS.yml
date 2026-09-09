@@ -67,6 +67,52 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T17:15:06Z (MEM ROUND 329 -- ***THE 09-04 POINT ESTIMATE REFUSED, AND IT IS A REFUSAL AND NOT A FAILURE.***
+  **`REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: the builder receipt names 2 placement-latency value(s),
+  [0.0, 250.0]` at `de_multiday_gate1_runner.py:5875`, from `run_day:9294` via `de_point_estimate_day.py:549`; unit
+  `dePE0904L250d2`, rc 1, 4 min 25 s CPU, 1.1 G peak, NO ARTIFACT WRITTEN** -- ***THE DRIVER DECLINED TO PUBLISH
+  RATHER THAN PRODUCING A NUMBER, WHICH IS WHAT IT WAS BUILT TO DO.*** ***THE GUARD IS CORRECT AND ITS PREMISE IS
+  STALE, WHICH IS A THIRD CATEGORY: IT WAS WRITTEN WHEN A BOOK CARRIED ONE LATENCY, SO TWO MEANT CORRUPTION, AND THE
+  EV21 BOOK CARRIES TWO BY DESIGN VIA `placement_latency_split` -- SO THE FEATURE THAT LETS THE BOOK ANSWER THE
+  QUESTION IS THE ONE THE GUARD READS AS AMBIGUITY.*** *The guard's "two values means corruption" and ruling (b)'s
+  "two values is the design" are the same observation with opposite signs* -- **the third time tonight a guard has
+  been outlived by its own programme's progress, after `derived_scoring_n` and `require_book_declares_L`**, and ***A
+  PROGRAMME THAT ADDS A CAPABILITY MUST SWEEP THE GUARDS THAT ENCODED ITS ABSENCE.*** ***THE CORRECTION, MEASURED BY
+  ME AT BOTH RECEIPTS RATHER THAN TAKEN FROM EITHER CLAIM: 09-03 EV21 CARRIES `[250.0]`, n=1, SPLIT ABSENT; 09-04
+  EV21 CARRIES `[0.0, 250.0]`, n=2, SPLIT PRESENT -- SO THE GUARD BLOCKS EVERY BOOK WITH THE SPLIT WHILE 09-03
+  PASSES AND HAS NO COMPLEMENT LEG. OPPOSITE PROBLEMS, NOT THE SAME ONE.*** ***AND MY OWN SHARE OF IT, RECORDED
+  BECAUSE THE COORDINATOR RECORDED ITS OWN: THE FACT NEEDED TO PREDICT THIS REFUSAL HAS BEEN IN MY FILES SINCE ROUND
+  326, WHERE I LANDED THE USER'S ITEM 2 VERBATIM -- "09-03's EV21 BOOK LACKS `placement_latency_split`" -- AND "09-04
+  IS BEING BUILT WITH THE SPLIT" IN THE SAME ENTRY. I HELD BOTH HALVES AND DREW NO CONSEQUENCE FROM THEM: RECORDING
+  A FACT AND FORESEEING WHAT IT IMPLIES ARE DIFFERENT ACTS.*** ***THE CONCURRENCY IS SETTLED BY MEASUREMENT -- PEAK
+  2.621 GiB PER DRAW, CGROUP CROSS-CHECK 2.611 GiB, THE GAP 0.38 % BY MY OWN ARITHMETIC, THE WHOLE OF IT THE BOOK,
+  SO FOOTPRINTS ADD -- AND `N = floor(9 / 2.621) = 3`, WHICH I CHECKED.*** **EIGHT IS OFF THE TABLE: 8 x 2.621 =
+  20.97 GiB AGAINST A 14 GiB CAP WITH `MemorySwapMax=0`, SO OOM UNDER THE USER'S HARD CONSTRAINT** -- ***AND THE
+  LEVER FOR MORE THAN 3 IS SHARING ONE BOOK (FORK-AND-COW), NOT MORE MEMORY: A DESIGN CHANGE, NOT A KNOB.***
+  **Continuing last round's filing rather than objecting anew: N = 3 RESTS ON THE 9 GiB USABLE FIGURE, WHICH IS THE
+  12 GB DENOMINATOR I REPORTED I COULD NOT LOCATE; UNDER THE SLICE'S MEASURED 18 GB AGGREGATE THE SAME PEAK GIVES
+  `floor(13.5 / 2.621) = 5` -- SO THE ANSWER IS 3 OR 5 DEPENDING ON A NUMBER NOBODY HAS SHOWN ME IN A FILE, AND
+  NEITHER IS 8, AND BOTH ARE >= 2, SO THE RULING IS UNAFFECTED EITHER WAY.** **THE NULL'S DESIGN IS DECLARED BEFORE
+  IT RUNS (DA `18c79d8` + `f54c2a9`, Q-DA-387): `L` READ FROM THE BOOK'S RECEIPT AND NEVER TYPED, COVERAGE
+  RECOMPUTED FROM COUNTS, MULTIPLICITY 2 RECORDED BEFORE ANY DRAW -- AND I RECOMPUTED THE COVERAGE MYSELF, 328,578 +
+  29,530 = 358,108 AND THE RATIO 0.9175388430305941 TO THE LAST DIGIT.** ***AND THE SENTENCE THAT MATTERS MOST,
+  RECORDED HERE WITH THE WEIGHT IT WAS ESCALATED WITH: THE NULL RUNS ENTIRELY ON SEEN DAYS AND THEREFORE CANNOT
+  VALIDATE ANYTHING -- A CONTROL FOR A POINT ESTIMATE, NEVER A VALIDATION (RULE 11). VALIDATION NEEDS >=5 LATER
+  UNTOUCHED UTC DAYS, WHICH DO NOT EXIST YET. SO THE STRONGEST RESULT AVAILABLE THIS WEEK IS A CONTROLLED POINT
+  ESTIMATE ON CONSUMED DAYS, AND THE WORD "VALIDATED" IS NOT AVAILABLE AT ANY DRAW COUNT.*** **DA's HONEST BLOCKER:
+  THE 5.3 h WALL CLOCK RESTS ON DE'S DOCSTRING -- "S4 is 99.2 % of a run, 9,467 s of 9,546 s" -- CITED AS READ AND
+  NOT MEASURED, WITH DA'S OWN OBSERVATION DISAGREEING**, *a number taken from a docstring being exactly the class
+  this programme has spent two days on*; **one timed draw settles it plus the CANCELS-path memory question, and it
+  is scheduled AFTER 09-06 rather than now.** **BE 144 CLOSED THE NaN FAIL-OPEN --
+  `VALUE_NOT_FINITE_NO_COMPARISON_POSSIBLE` AND `TRANCHE_VALUE_NOT_FINITE`, BOTH SIDES FALSIFIED INDEPENDENTLY,
+  FINITE VALUES STILL COMPARING NORMALLY, AND `_fills_from` NOW NAMING THE OFFENDING TRANCHE.** ***REV 147 FOUND DE
+  181's STATUS WITH THE SIGN FLIPPED: ON THE FULL-NULL PATH A RECEIPT CLAIMS `PERFORMED_BY_POINT_ESTIMATE_DRIVER`
+  WHILE THE DRIVER NEVER RUNS*** -- *the field I praised for putting the hold in the code now asserts the opposite on
+  another path* -- **fix queued at `:8748`/`:8942`, nothing published is wrong, the exposure is forward.** **09-05 IS
+  REBUILDING (`p003ev210905a`, launched 17:05:42Z, seen at the machine) WITH 09-06 ARMED BEHIND IT** -- ***AND EACH
+  ONE THAT LANDS WITH THE SPLIT WILL MEET THE SAME AMBIGUITY GUARD, SO THE REFUSAL IS THE QUEUE'S PROBLEM AND NOT
+  ONE DAY'S, WHICH IS BETTER KNOWN WITH TWO BUILDS IN FLIGHT THAN AFTER FOUR.*** Flags 2915 -> 2929, prov 2460 ->
+  2474; window 3/3, Batch 311 archived. MEM asserts no result.)
   2026-09-09T16:59:32Z (MEM ROUND 328 -- ***A CORRECTION TO MY ROUND-327 FILES AND A USER RULING THAT CLOSES ONE OF THE TWO
   OPEN ITEMS.*** ***I CARRIED "THE `research.slice` 200 % CAP" AS AN OPEN USER ITEM AND IT DOES NOT EXIST; R-870
   SUPERSEDES IT IN BAND.*** The coordinator says the error was its own, and that is true of where the sentence came
@@ -150,36 +196,6 @@ updated: >-
   C GENERATIONS) AND THE `research.slice` 200 % CAP -- A SWEEP THAT CLOSES FIVE ITEMS IS EXACTLY THE MOMENT AN OPEN
   ITEM GETS QUIETLY ABSORBED, AND THESE TWO ARE RECORDED SO THAT CANNOT HAPPEN.*** Flags 2888 -> 2902, prov 2433 ->
   2447; window 3/3, Batch 309 archived. MEM asserts no result.)
-  2026-09-09T16:13:39Z (MEM ROUND 326 -- ***USER REVIEW. FIX-ONLY ROUND: THE USER HAS RULED THAT WHEN THEY REPORT ISSUES WE
-  FIX THOSE AND NOTHING ELSE UNTIL CLOSED, SO THEIR REVIEW WAS MY ONLY QUEUE -- NO SWEEP, NO STATE TRUE-UP, NO
-  ANALYSIS.*** Three of their five items are record items and are landed here IN THE USER'S OWN TERMS. ***(1) 09-03's
-  EV21 BOOK LACKS `placement_latency_split`, SO ITS LATENCY RECONCILIATION CANNOT RUN -- "A NEW 09-03 REBUILD IS
-  REQUIRED IF THAT VALIDATION IS NEEDED."*** **Confirmed by me at the artifact: `placement_latency_split` occurs ZERO
-  times in the EV21 09-03 receipt.** ***AND IT IS RECORDED AS A LIMITATION OF THAT BOOK, NOT AS A DEFECT AND NOT AS
-  WORK OUTSTANDING*** -- the book was built before the split existed, **nothing is wrong with it and nothing is owed
-  on it**, and ***09-04 IS BEING BUILT WITH THE SPLIT AND IS WHERE THE RECONCILIATION FIRST HAS SOMETHING TO
-  CHECK***; a 09-03 rebuild is available IF that validation is needed and is not otherwise implied, so **this file
-  records no outstanding task against 09-03 on this account.** ***(2) CANCEL EVIDENCE: "THE EXISTING 09-03 ARTIFACT
-  RECORDS CANCEL TOTALS BUT NOT ACTUAL MULTIPLE-CANCEL INCIDENCE. CURRENT CODE NOW RECORDS `cancel_unit_exception` AT
-  `de_multiday_gate1_runner.py:8765`, SO FUTURE REPLAYS ARE COVERED."*** **I confirmed both halves -- `:8765` reads
-  `r["cancel_unit_exception"] = _cancel_unit_exception`, built at `:8663`, and the 09-03 point-estimate artifact
-  carries ZERO occurrences of it.** ***SO THE QUALIFICATION NOW TRAVELS WHEREVER THE 1-IN-3,862 APPEARS IN THESE
-  FILES: THE EXISTING 09-03 ARTIFACT DOES NOT CARRY THE INCIDENCE, THE USER'S RULING PUT THAT EXCEPTION INTO THE
-  RECEIPT, AND A READER MUST NOT TAKE THE 09-03 ARTIFACT AS ITS SOURCE*** -- *this is the second qualification on
-  that number from a different direction, after REV 139's finding that it was computed by a script importing from a
-  hardcoded worktree: not where the code came from, but WHICH ARTIFACT CAN EVIDENCE IT.* ***(3) QUOTATION, RECORDED
-  EXACTLY AND WITH THE COUNTS: "09-03 REMAINS EXPLORATORY -- 244 BOUNDARIES AGREE AND 2 ARE OUTSIDE CAPTURE;
-  `is_final_for_quotation=false`."*** **I confirmed the field at the artifact, present twice.** ***NOTHING FROM 09-03
-  MAY BE QUOTED AS FINAL, AND THAT INCLUDES THE `D_E_settle +11,191.244402` POINT ESTIMATE -- IT IS EXPLORATORY,
-  UN-NULLED, AND ON A DAY THAT IS NOT FINAL FOR QUOTATION.*** **I recorded that number at round 319 as "the first
-  corrected number since the retraction", checked its arithmetic three ways, and recorded at 322 that DA had
-  reproduced it to the digit by a second implementation** -- ***NONE OF THAT MAKES IT QUOTABLE; REPRODUCED IS NOT
-  THE SAME AS FINAL, AND THREE QUALIFICATIONS NOW TRAVEL WITH IT: NO CONTROL, A THRESHOLD AT A DRIFTED QUANTILE, AND
-  A DAY THAT IS NOT FINAL FOR QUOTATION. THIS FILE WILL NOT LET ITS OWN EARLIER FRAMING BE READ AS A LICENCE.*** The
-  other two of the five are not mine: **DE is wiring the repaired reconciliation through `de_point_estimate_day.py`
-  -- NOT the runner, because editing the runner would stale every book -- and BE is fixing the `EV20 queue only`
-  scope string in the EV21 launch record.** Flags 2882 -> 2888, prov 2427 -> 2433; window 3/3, Batch 308 archived.
-  MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -351,6 +367,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 329, the 09-04 point estimate REFUSED; concurrency settled at N=3 ---
+  THE_09_04_POINT_ESTIMATE_REFUSED_AND_IT_IS_A_REFUSAL_NOT_A_FAILURE: NO-ARTIFACT-WRITTEN
+  THE_GUARD_IS_CORRECT_AND_ITS_PREMISE_IS_STALE: WRITTEN-WHEN-A-BOOK-CARRIED-ONE
+  THE_FEATURE_THAT_ANSWERS_THE_QUESTION_IS_READ_AS_AMBIGUITY: THE-SPLIT-IS-THE-POINT
+  THE_TWO_BOOKS_HAVE_OPPOSITE_PROBLEMS_AND_I_MEASURED_BOTH: 250-VERSUS-0-AND-250
+  AND_THE_FACT_NEEDED_TO_PREDICT_THIS_WAS_IN_MY_OWN_FILES_SINCE_ROUND_326: MY-OWN-SHARE-OF-IT
+  THE_CONCURRENCY_IS_SETTLED_BY_MEASUREMENT_AND_FOOTPRINTS_ADD: 2-621-GiB-PER-DRAW
+  EIGHT_IS_OFF_THE_TABLE_AND_THE_LEVER_IS_SHARING_NOT_MEMORY: 20-97-AGAINST-14
+  AND_N_EQUALS_3_RESTS_ON_THE_DENOMINATOR_I_COULD_NOT_LOCATE: 3-OR-5-AND-NEITHER-IS-8
+  THE_NULLS_DESIGN_IS_DECLARED_BEFORE_IT_RUNS_AND_I_RECOMPUTED_ITS_COVERAGE: TO-THE-LAST-DIGIT
+  THE_NULL_RUNS_ENTIRELY_ON_SEEN_DAYS_AND_CANNOT_VALIDATE_ANYTHING: A-CONTROL-NEVER-A-VALIDATION
+  DAS_HONEST_BLOCKER_IS_A_DOCSTRING_CITED_AS_READ: AND-DAS-OBSERVATION-DISAGREES
+  BE_144_CLOSED_THE_NAN_FAIL_OPEN_ON_BOTH_SIDES: TWO-NAMED-REFUSALS
+  REV_147_FOUND_THE_SAME_STATUS_WITH_THE_SIGN_FLIPPED: THE-EXPOSURE-IS-FORWARD
+  AND_09_05_IS_REBUILDING_WITH_09_06_ARMED_BEHIND_IT: LAUNCHED-17-05-42Z
   # --- MEM round 328, R-870: the slice cap does not exist; the sampling unit is RULED ---
   THE_RESEARCH_SLICE_200_PERCENT_CAP_DOES_NOT_EXIST_AND_I_CARRIED_IT: SUPERSEDED-IN-BAND
   THE_SLICE_GRANTS_TWELVE_HUNDRED_PERCENT_AND_THE_LIMITER_IS_HARDCODED_PER_UNIT: 515-CPUQuota-100
@@ -27336,6 +27367,171 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 329, 2026-09-09T17:15:06Z ---
+  THE_09_04_POINT_ESTIMATE_REFUSED_AND_IT_IS_A_REFUSAL_NOT_A_FAILURE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***THE 09-04 POINT ESTIMATE REFUSED, AND IT IS RECORDED AS A REFUSAL AND NOT A FAILURE.*** **`RunnerRefused:
+      REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: the builder receipt names 2 placement-latency value(s),
+      [0.0, 250.0]` at `de_multiday_gate1_runner.py:5875`, reached from `run_day:9294` via
+      `de_point_estimate_day.py:549`; unit `dePE0904L250d2`, rc 1, 4 min 25 s CPU, 1.1 G peak, NO ARTIFACT
+      WRITTEN.** ***THE DRIVER DECLINED TO PUBLISH RATHER THAN PRODUCING A NUMBER, WHICH IS WHAT IT WAS BUILT TO
+      DO*** -- *the same disposition as the 09-03 refusal on the nine zero-length generations, and the second time
+      this driver's battery has stopped a book before any expensive work.*
+  THE_GUARD_IS_CORRECT_AND_ITS_PREMISE_IS_STALE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***THE GUARD IS CORRECT AND ITS PREMISE IS STALE, WHICH IS A THIRD CATEGORY AND NEEDS ITS OWN NAME.*** **It
+      was written when a book carried ONE latency, so two meant corruption; the EV21 book carries two BY DESIGN via
+      `placement_latency_split`.** *Not a defect in the guard -- its logic is sound against the world it was written
+      for -- and not a defect in the book, which is doing exactly what the user's ruling (b) asked.* ***A GUARD
+      WHOSE PREMISE THE PROGRAMME ITSELF OBSOLETED BY BUILDING THE FEATURE IT WAS GUARDING AGAINST.*** **This is the
+      same shape as `derived_scoring_n` reading a key BE had removed and `require_book_declares_L` whose excuse
+      expired -- the third time tonight a guard has been outlived by its own programme's progress.**
+  THE_FEATURE_THAT_ANSWERS_THE_QUESTION_IS_READ_AS_AMBIGUITY:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***AND THE SHARPEST STATEMENT OF IT: THE FEATURE THAT LETS THE BOOK ANSWER THE QUESTION IS THE ONE THE GUARD
+      READS AS AMBIGUITY.*** **`placement_latency_split` exists precisely so ONE book can carry both L=0 and L=250
+      -- that was the user's ruling (b), taken so no second L=0 build would confound era with latency.** *The
+      guard's "two values means corruption" and the ruling's "two values is the design" are the same observation
+      with opposite signs.* ***A PROGRAMME THAT ADDS A CAPABILITY MUST SWEEP THE GUARDS THAT ENCODED ITS
+      ABSENCE***, and nobody did.
+  THE_TWO_BOOKS_HAVE_OPPOSITE_PROBLEMS_AND_I_MEASURED_BOTH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms__EV21.json
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***THE CORRECTION, AND I MEASURED BOTH RECEIPTS MYSELF RATHER THAN TAKING EITHER CLAIM: 09-03 EV21 CARRIES
+      `[250.0]`, n=1, WITH `placement_latency_split` ABSENT; 09-04 EV21 CARRIES `[0.0, 250.0]`, n=2, WITH THE SPLIT
+      PRESENT.*** **So the guard blocks every book WITH the split -- 09-04, and 09-05/09-06 as they build -- while
+      09-03 PASSES it and has NO COMPLEMENT LEG, so its reconciliation has nothing to check.** ***OPPOSITE PROBLEMS,
+      NOT THE SAME ONE.*** *The coordinator told the user 09-03 "almost certainly has the same two-legged shape" and
+      carries the correction rather than smoothing it; the measurement says the reverse.*
+  AND_THE_FACT_NEEDED_TO_PREDICT_THIS_WAS_IN_MY_OWN_FILES_SINCE_ROUND_326:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***AND MY OWN SHARE OF IT, WHICH I RECORD BECAUSE THE COORDINATOR RECORDED ITS OWN: THE FACT NEEDED TO PREDICT
+      THIS REFUSAL HAS BEEN IN MY FILES SINCE ROUND 326.*** **I landed the user's 16:07Z item 2 verbatim -- "09-03's
+      EV21 BOOK LACKS `placement_latency_split`" -- and confirmed at the artifact that it occurs ZERO times.**
+      *That fact plus "09-04 is being built WITH the split", which I landed in the same entry, is the whole of the
+      refusal.* ***I HELD BOTH HALVES AND DREW NO CONSEQUENCE FROM THEM. RECORDING A FACT AND FORESEEING WHAT IT
+      IMPLIES ARE DIFFERENT ACTS, AND THIS SEAT DOES THE FIRST WELL AND OWES THE SECOND MORE OFTEN THAN IT PAYS
+      IT.***
+  THE_CONCURRENCY_IS_SETTLED_BY_MEASUREMENT_AND_FOOTPRINTS_ADD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***THE CONCURRENCY IS SETTLED BY MEASUREMENT, WHICH IS THE ANSWER I RECORDED LAST ROUND AS THE DECIDING ONE:
+      PEAK 2.621 GiB PER DRAW, CGROUP CROSS-CHECK 2.611 GiB -- I COMPUTED THE GAP AT 0.38 % -- AND THE WHOLE OF IT
+      IS THE BOOK, SO FOOTPRINTS ADD.*** **Not copy-on-write, not shared: each worker holds its own reference.**
+      *I recorded that this question "moves the safe N by a factor of several in either direction"; it has landed on
+      the expensive side.* **`N = floor(9 GiB / 2.621) = 3`, which I checked.** *Two independent measurements 0.4 %
+      apart is the kind of agreement that closes a question rather than opening a review.*
+  EIGHT_IS_OFF_THE_TABLE_AND_THE_LEVER_IS_SHARING_NOT_MEMORY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***AND EIGHT IS OFF THE TABLE, ARITHMETICALLY: 8 x 2.621 = 20.97 GiB AGAINST A 14 GiB CAP WITH
+      `MemorySwapMax=0` -- I CHECKED IT -- SO IT IS OOM UNDER THE USER'S HARD CONSTRAINT "DON'T 8x IF IT WILL CAUSE
+      OOM".*** **The ceiling was never a target and the measurement did not earn it.** ***AND THE LEVER FOR MORE
+      THAN 3 IS SHARING ONE BOOK (FORK-AND-COW), NOT MORE MEMORY -- A DESIGN CHANGE, NOT A KNOB.*** *That
+      distinction is the useful residue of the whole question: the ruling asked for a number, the measurement
+      returned one, and the way past it is not a bigger number but a different architecture.*
+  AND_N_EQUALS_3_RESTS_ON_THE_DENOMINATOR_I_COULD_NOT_LOCATE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      **And a continuation of last round's filing rather than a new objection: N = 3 RESTS ON THE 9 GiB USABLE
+      FIGURE, WHICH IS THE 12 GB `MemoryHigh` DENOMINATOR I REPORTED I COULD NOT LOCATE IN ANY FILE.** *Under the
+      slice's measured aggregate -- `MemoryMax=60%` of 30 GB = 18 GB, x 0.75 = 13.5 GiB usable -- the same per-draw
+      peak gives `floor(13.5 / 2.621) = 5`, which I computed.* ***SO THE ANSWER IS 3 OR 5 DEPENDING ON A NUMBER
+      NOBODY HAS SHOWN ME IN A FILE -- AND NEITHER IS 8, AND BOTH ARE >= 2, SO THE RULING'S CEILING AND ITS N<2
+      NO-OP ARE UNAFFECTED.*** **The decision is safe either way and the provenance of the denominator is still
+      owed.**
+  THE_NULLS_DESIGN_IS_DECLARED_BEFORE_IT_RUNS_AND_I_RECOMPUTED_ITS_COVERAGE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      **THE NULL'S DESIGN IS DECLARED BEFORE IT RUNS -- DA `18c79d8` AS DATA AND AS PREDICATES, `f54c2a9` AS
+      FALSIFIERS, ONE PER CLAUSE, FILED AS Q-DA-387** -- **with `L` READ FROM THE BOOK'S RECEIPT AND NEVER TYPED,
+      COVERAGE RECOMPUTED FROM COUNTS, AND MULTIPLICITY 2 RECORDED BEFORE ANY DRAW.** ***I RECOMPUTED THE COVERAGE
+      MYSELF: 328,578 + 29,530 = 358,108 AND 328,578/358,108 = 0.9175388430305941 -- TO THE LAST DIGIT.*** *Rule 6
+      asks for design AND minimum declared before the result; this declares the inputs, the predicates, the
+      falsifiers and the multiplicity, which is more than the rule asks and exactly what the freeze discipline in
+      rule 12 wants.*
+  THE_NULL_RUNS_ENTIRELY_ON_SEEN_DAYS_AND_CANNOT_VALIDATE_ANYTHING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***AND THE SENTENCE THAT MATTERS MOST, ESCALATED TO THE USER IN ITS OWN REGISTER AND RECORDED HERE WITH THE
+      SAME WEIGHT: THE NULL RUNS ENTIRELY ON SEEN DAYS AND THEREFORE CANNOT VALIDATE ANYTHING. IT IS A CONTROL FOR A
+      POINT ESTIMATE, NEVER A VALIDATION (RULE 11).*** **VALIDATION NEEDS >=5 LATER UNTOUCHED UTC DAYS, WHICH DO NOT
+      EXIST YET.** *Every day in this thread -- 09-03, 09-04, 09-05, 09-06 -- has been opened, inspected, rebuilt and
+      argued over; rule 11 says seen days are consumed and names them.* ***SO THE STRONGEST RESULT THIS PROGRAMME
+      CAN PRODUCE THIS WEEK IS A CONTROLLED POINT ESTIMATE ON CONSUMED DAYS, AND THE WORD "VALIDATED" IS NOT
+      AVAILABLE AT ANY DRAW COUNT.*** **This file will not let a null's arrival be read as validation.**
+  DAS_HONEST_BLOCKER_IS_A_DOCSTRING_CITED_AS_READ:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      **DA's HONEST BLOCKER, filed as a blocker rather than absorbed: THE 5.3 h WALL CLOCK RESTS ON DE'S DOCSTRING
+      -- "S4 is 99.2 % of a run, 9,467 s of 9,546 s measured on 09-03" -- CITED AS READ AND NOT MEASURED, AND DA'S
+      OWN OBSERVATION DISAGREES.** ***A NUMBER TAKEN FROM A DOCSTRING IS EXACTLY THE CLASS THIS PROGRAMME HAS SPENT
+      TWO DAYS ON -- THE COMMIT MESSAGE THAT DESCRIBED A CHANGE THE COMMIT DID NOT CONTAIN, THE SPECIFICATION READ
+      AS A CHECK, THE SET PUBLISHED AS DERIVED AND TYPED.*** **DA names it as read rather than presenting it as
+      measured, which is the whole of the discipline.** *One timed draw settles it plus the CANCELS-path memory
+      question, and it is scheduled AFTER 09-06 rather than now* -- **a seat declining to interrupt a queued
+      rebuild to settle its own uncertainty.**
+  BE_144_CLOSED_THE_NAN_FAIL_OPEN_ON_BOTH_SIDES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      **BE 144 CLOSED THE NaN FAIL-OPEN I RECORDED TWO ROUNDS AGO: `VALUE_NOT_FINITE_NO_COMPARISON_POSSIBLE` AND
+      `TRANCHE_VALUE_NOT_FINITE`, BOTH SIDES FALSIFIED INDEPENDENTLY, AND FINITE VALUES STILL COMPARE NORMALLY** --
+      *the last clause being the one that matters, since a fix that made every comparison refuse would have traded
+      a fail-open for a fail-closed and called it progress.* **Plus `_fills_from` now REFUSES a non-finite level or
+      shares AND NAMES THE TRANCHE.** ***THE FALSIFIER THAT FOUND THE DEFECT WHILE PROVING ITSELF HAS NOW PRODUCED
+      TWO NAMED REFUSALS AND A ROW-LEVEL IDENTIFIER: THE FULL ARC FROM "A KNOWN-BAD WENT GREEN" TO "THE INPUT IS
+      NAMED IN THE MESSAGE" INSIDE TWO ROUNDS.***
+  REV_147_FOUND_THE_SAME_STATUS_WITH_THE_SIGN_FLIPPED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      ***REV 147 FOUND DE 181's STATUS WITH THE SIGN FLIPPED: ON THE FULL-NULL PATH A RECEIPT CLAIMS
+      `PERFORMED_BY_POINT_ESTIMATE_DRIVER` WHILE THE DRIVER NEVER RUNS.*** **The same marker that correctly said
+      `NOT_WIRED_PENDING_BE_138` on one path asserts the opposite on another** -- *a field that was exemplary when I
+      recorded it, because the hold lived in the code rather than only in a dispatch, is now an artifact making a
+      false claim about work that did not happen.* **Fix queued at `:8748` / `:8942`.** ***NOTHING PUBLISHED IS
+      WRONG AND THE EXPOSURE IS FORWARD*** -- *which is the same disposition as the seal defect: confirmed, dated,
+      and owed before the path that would expose it is taken.*
+  AND_09_05_IS_REBUILDING_WITH_09_06_ARMED_BEHIND_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210905a.jsonl
+    as_of: 2026-09-09T17:15:06Z
+    said: >-
+      **09-05 IS REBUILDING -- I SAW IT AT THE MACHINE, `p003ev210905a` LAUNCHED 17:05:42Z ON THE USER'S R-870
+      RULING, WITH ITS RECORD ON DISK AND `be_daybook_build.py` RUNNING -- AND 09-06 IS ARMED BEHIND IT.** *Until
+      both exist the four-day table cannot be requoted: two days carry corrected EV21 books and two are still
+      `era=None` over zero gap-bearing windows.* ***AND EACH ONE THAT LANDS WITH `placement_latency_split` WILL MEET
+      THE SAME AMBIGUITY GUARD AS 09-04 -- SO THE REFUSAL ABOVE IS NOT ONE DAY'S PROBLEM BUT THE QUEUE'S, AND IT IS
+      BETTER TO KNOW THAT WHILE TWO BUILDS ARE STILL IN FLIGHT THAN AFTER FOUR.***
   # --- MEM round 328, 2026-09-09T16:59:32Z ---
   THE_RESEARCH_SLICE_200_PERCENT_CAP_DOES_NOT_EXIST_AND_I_CARRIED_IT:
     prov: CHECKED
