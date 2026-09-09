@@ -21667,3 +21667,52 @@ generation and the window went 4 → 3. Nothing rewritten.
   VERIFIED.** Flags 2646 -> 2658, prov 2191 -> 2203; window 3/3, Batch 292 archived. **NOTHING BUILT, NO HEAVY LOCK
   SINCE 07:15:47Z.** MEM asserts no result.)
 ```
+
+## Batch 296 — archived 2026-09-09T11:37:59Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T10:46:53Z (MEM ROUND 311 -- R-864 SWEPT, LIGHT ROUND, from `0961773` to `3a4ca32`, TEN commits -- I swept eight to `707d28c` and REV 135 landed while I wrote, CORRECTING ONE OF MY OWN FLAGS, folded in an addendum below. STATE ONLY,
+  LEDGER FORM. ***MY OWN ROUND-310 FINDING IS CONFIRMED AND BE HAS CORRECTED ITSELF***: BE 122 -- *"MEM 310's
+  reproduction is correct and my BE 117 receipt-scoped set is WITHDRAWN"* -- classifying the four exactly as I
+  measured them (**`flow_intensity.py` and `harmful_exposure_rows.py` IN the recorded 49, MISSED BY THE DERIVATION;
+  `harmful_hazard_model.py` and `phase2_state_schema_freeze.py` not in the 49, legitimately absent**), ***SO THE
+  LAZY-IMPORT EXPLANATION COVERS EXACTLY TWO OF THE FOUR AND THE OTHER TWO ARE A DEFECT***, and stating the
+  consequence plainly: **"the set under DE 168 was truncated; the corrected one is larger -- SCORING 12, not 8 -- so
+  a verdict that checked completeness against the eight is complete over the WRONG SET; the four names and the two
+  classifications are what changes, THE OPERATION AND THE SHAPE DO NOT."** ***THE CAUSE IS DRIVEN: WHITELISTING THE
+  ONE UNRECORDED MODULE `harmful_hazard_model.py` RECOVERS THE OTHER TWO AS WELL -- THEY SAT BEHIND IT -- BECAUSE
+  THE CLOSURE IS A WHITELIST ON THE TRAVERSAL, SO A MODULE THE RECORDING DOES NOT NAME HALTS THE WALK AND EVERYTHING
+  BEHIND IT IS LOST, INCLUDING MODULES THE RECORDING DOES NAME***; a filter applied DURING a graph walk is not the
+  same operation as the same filter applied to its RESULT, and BE 117's "a subset of the recording BY CONSTRUCTION"
+  was true of the members and false of the traversal. **The control makes it a diagnosis: the REFERENCE derivation
+  is NOT truncated -- SIX either way -- because its path crosses no unrecorded module. Same cause, no effect**, which
+  is why the delta is measured PER SET. ***TWO INDEPENDENT DERIVATIONS REACHING TWELVE IS EVIDENCE, AND REV 135 IS
+  TESTING IT FOR THE OBVIOUS FAILURE MODE -- THAT BOTH COULD SHARE A WRONG SCOPE***: agreement between two runs of
+  the same operation is not independence. BE's two reusable mechanisms: **the refusable/reportable split is MEASURED,
+  not hedged -- on the newest real receipt 13 OF 15 ARE NAMED (refusable, each must digest-match) and 2 ARE
+  LEGITIMATELY ABSENT (reportable by name), with "A PREDICATE REFUSING ON ABSENCE WOULD REFUSE THAT RECEIPT TODAY"**;
+  and **everything travels in `derived_closures.recommended_for_a_consumer` with `SUPERSEDED_NOTICE` on the OLD sets,
+  SO A READER OF THE EARLIER ROW CANNOT RESOLVE TO THE WRONG NUMBER** -- rule 13's supersede-in-band applied to a
+  DERIVED SET, because *a withdrawn number that still answers when queried is not withdrawn*. **REV 134 BOTH WAYS.
+  THE INERTNESS IS CLOSED ON A REAL LANDED RECEIPT** -- `be_daybook_receipt_20260907_btc__L250ms.json`, 49 modules,
+  no derived block -- **refusing `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` as it sits and
+  `BOOK_SCORING_MEMBERSHIP_NOT_ESTABLISHED` with every digest made to match: BOTH DIRECTIONS REFUSE.** ***BUT "THE
+  RESIDUAL LIMIT IS NAMED IN EVERY RESULT" IS FALSE ACROSS SEVEN EXITS***: `MEMBERSHIP_LIMIT` is on the HAPPY PATH
+  ONLY (`:6371`), and I drove two exits myself -- a differing digest and a missing derived block both refuse and
+  **NEITHER MESSAGE CARRIES THE LIMIT** -- while REV adds the one that matters most, ***IT IS ABSENT FROM THE OPT-IN
+  RESULT, THE ONE A CALLER TAKES PRECISELY BECAUSE IT IS ACCEPTING THAT LIMIT***; the battery at `:15867` asserts the
+  limit is "in every result", **so the claim and the code disagree and the battery is green.** And REV's new item,
+  whose mechanism I read at the line: ***ON A RECEIPT WITH NOTHING WRONG `n_checked_equals_n_declared` READS FALSE
+  BESIDE `BOOK_SCORING_CODE_MATCHES`*** -- the field is `len(recorded) == _expected_n`, **False exactly when a
+  declared module is LEGITIMATELY ABSENT**, so ***THE FIELD THAT SAYS NOTHING IS WRONG AND THE FIELD THAT REPORTS
+  LEGITIMATE ABSENCE CONTRADICT EACH OTHER BY CONSTRUCTION*** and a field-resolving reader gets two answers. ***AND
+  THIS IS NOW A PATTERN, NOT AN INCIDENT: A LIMIT OR A UNIT GOES UNCARRIED IN EXACTLY THE RESULT THAT NEEDS IT --
+  FIRST `draw_provenance.matched_on`, NOW `MEMBERSHIP_LIMIT`. THE CODE WAS DEFENSIBLE BOTH TIMES AND THE ARTIFACT
+  DID NOT SAY SO, WHICH MAKES THE DEFECT INVISIBLE TO EVERY DOWNSTREAM READER.*** ***LEDGER: (5b) IS OPEN ON THREE
+  REASONS -- the uncarried limit, the contradictory count beside a match, and the truncated set now corrected to
+  twelve and pending DE's landing -- AND DA'S CASE-4 RE-RUN AND REV 134'S VERIFICATION WERE BOTH TAKEN AGAINST THE
+  EIGHT, SO BOTH ARE PROVISIONAL***: neither is wrong, both are about a set that is no longer the set. Everything
+  else unchanged: **(1) CLOSED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both
+  needing a corrected book; (5a) CLOSED; (6a) CLOSED AND VERIFIED.** Flags 2658 -> 2674, prov 2203 -> 2219; window
+  3/3, Batch 293 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
+```

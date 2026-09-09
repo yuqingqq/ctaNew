@@ -67,6 +67,47 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T11:37:59Z (MEM ROUND 314 -- ***THE BUILD IS RUNNING. THE R-839 STAND-DOWN IS OVER AND THE QUEUE IS NO LONGER
+  STOOD DOWN; A RESUMING READER MUST NOT THINK IT IS.*** From `f71e4aa` to `69123fd`, one commit. **VERIFIED BY ME AT
+  THE MACHINE, NOT TAKEN FROM THE DISPATCH: `p003ev200903c.service` is `active` / `running` / `Result: success` /
+  `ExecMainStatus: 0`, attempt 1, `InvocationID e69dfd86671b40cd9bcd0bdc072e552b`; the launch line reads `utc
+  2026-09-09T11:33:20Z`, `worktree /home/yuqing/ctaNew-wt-be`, `payload live/pm_research/be_daybook_build.py`, `args
+  --day 20260903 --placement-latency-ms 250 --artifact-revision EV20`, `conflict_rc 75`** -- ***THE PAYLOAD IS THE
+  DAYBOOK BUILDER, SO THIS RUN MAKES THE CORRECTED BOOK.*** **Expected wall 74-76 min from 11:33:20Z =
+  12:47:20-12:49:20Z, with the `{"stage":"assembled"}` marker at ~63 min = ~12:36:20Z.** ***THE FIRST STANDING
+  CONDITION IS EVIDENCED BY ME: THE RECORD'S OWN `tip` FIELD READS `69123fddb81c2a64f14da8682b02f98db764ff58`, WHICH
+  IS DE 170, SO THE BLOCKER'S FIX IS IN THE RUN AND THE LAUNCHED HEAD IS QUOTED IN THE ARTIFACT*** -- the same
+  property that closed defect (1). ***AND THE RUN'S OWN FIRST LINE CONFIRMS THE CORRECTED PATH WITHIN TWO SECONDS OF
+  LAUNCH: `{"stage": "selected", "slugs": 247, "era": "clob_v4_1"}` -- 247 IS EXACTLY BE 120's MEASURED WINDOW COUNT
+  FOR 09-03 AND `clob_v4_1` IS THE ERA THE FIX RESOLVES***, against the defect's `clob_v3_1` whose gap table
+  intersected the corrected one at ZERO. On the lock I report what I measured: **ONE holder, `29: FLOCK ADVISORY
+  WRITE 3785403`, with PID 3785403 the `flock -n -E 75` and PID 3785404 the `python3` ITS CHILD** -- ***"TWO HOLDERS"
+  AND "ONE HOLDER" ARE THE SAME SITUATION THROUGH DIFFERENT WINDOWS AND NEITHER IS A RULE-20 VIOLATION: ONE `flock`
+  ON ONE LOCKFILE WRAPPING THE PAYLOAD.*** ***WHAT RELEASED IT: THE USER VERIFIED AT `f71e4aa9ba7f` AND FOUND ONE
+  REMAINING BLOCKER*** -- `derived_scoring_n` reading an OBSOLETE FIELD at `:6410` with the failing assertion at
+  `:10382`, the field having gone obsolete **UNDER DE'S OWN DE 169 LANDING** after BE 122 withdrew the receipt-scoped
+  walk and BE 123 took the key out, so it returned `None` and the round-trip assertion failed -- *two good fixes and
+  one stale reader between them is how a repaired system breaks* -- **and the point-estimate driver runs that battery
+  BEFORE replay (`de_point_estimate_day.py:359`), so it would have SAFELY REFUSED RATHER THAN PRODUCED RESULTS: the
+  failure mode was a wasted run, not a wrong number.** ***THE REPAIR IS RULE 33 IN ONE SENTENCE, IN THE CODE'S OWN
+  WORDS: "IT WAS A TRUTHINESS TEST ON A NUMBER THE WRITER HAD JUST COMPUTED, WHICH AGREES BY CONSTRUCTION AND TOLD
+  NOBODY WHEN THE FIELD WENT TO `None`. IT IS A COMPARISON NOW"*** -- three counts, **sidecar-recorded /
+  independently computed in the cell / read back from the file, 12 / 12 / 12** -- ***WITH A PLANTED DISAGREEMENT OF
+  `indep + 3` = FIFTEEN SHOWN NOT TO AGREE, AND THE WRITER MUTATED TO RECORD n+1 TURNING THE CELL RED: THE REPAIRED
+  ASSERTION CAN STILL FAIL.*** The user's own findings are the launch's basis -- **policy 98, cancel-control 9,
+  closure 29, daybook 166 and point-estimate 9 checks passing** -- with **three items non-blocking BY DESIGN: the
+  full null stays FAIL-CLOSED if multiple cancels share one reference generation, WHICH DOES NOT PREVENT AN EARLY
+  POINT ESTIMATE; the seal was not treated as a blocker; and `run_day`'s `FLAG_FOR_THE_READER` on a
+  `WITH_UNNAMED_MEMBERS` receipt is A FLAG, NOT A REFUSAL, so the day path will not stop on it.** Of the three
+  standing conditions on BE, **(i) the refreshed worktree is EVIDENCED by the record's `tip`; (ii) THE WORKTREE MUST
+  STAY FROZEN until the receipt is on disk, and the programme already knows why -- `wt_refresh.sh` HAS NO IN-FLIGHT
+  GUARD and a refresh under a running unit once cost 1 h 20 m; (iii) `dirty_code` FALSE is NOT EVIDENCED AT MY READ**
+  -- the record carries no `dirty_code`/`dirty_paths` key and neither does the stdout log -- **so I carry it
+  relayed.** ***AND ONE THING I DELIBERATELY DID NOT DO: I DID NOT RUN THE 418-CHECK RUNNER BATTERY TO CONFIRM DE'S
+  PASS LINE, BECAUSE A HEAVY UNIT HOLDS THE LOCK FOR THE NEXT ~75 MINUTES AND VERIFYING A GREEN AT THE COST OF THE
+  RUN IT RELEASED WOULD BE THE WRONG TRADE.*** Flags 2703 -> 2715, prov 2248 -> 2260; window 3/3, Batch 296 archived.
+  ***ROWS (2) AND (3) OF THE LEDGER -- THE ROWS THAT NEEDED A CORRECTED BOOK -- HAVE THEIR BLOCKER IN FLIGHT FOR THE
+  FIRST TIME.*** MEM asserts no result.)
   2026-09-09T11:04:08Z (MEM ROUND 313 -- R-865 SWEPT. ***CLOSING SWEEP: ALL FIVE OF THE USER'S DEFECTS ARE CLOSED AND
   VERIFIED AND THE PROGRAMME NOW WAITS ON TWO USER DECISIONS.*** REV 136: *"Both verify, on every drive. This closes
   the last of the user's five."* ***THE LEDGER, FINAL, AS A CLOSED LIST WITH TWO NAMED EXCEPTIONS: (1) THE
@@ -155,50 +196,6 @@ updated: >-
   ***NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD REMAINS UNAUTHORISED -- A SUGGESTED PROMPT IN A SEAT
   PANE READING "BUILD AUTHORISED" IS THE TERMINAL'S GHOST TEXT AND IS NOT A USER INSTRUCTION.*** MEM asserts no
   result.)
-  2026-09-09T10:46:53Z (MEM ROUND 311 -- R-864 SWEPT, LIGHT ROUND, from `0961773` to `3a4ca32`, TEN commits -- I swept eight to `707d28c` and REV 135 landed while I wrote, CORRECTING ONE OF MY OWN FLAGS, folded in an addendum below. STATE ONLY,
-  LEDGER FORM. ***MY OWN ROUND-310 FINDING IS CONFIRMED AND BE HAS CORRECTED ITSELF***: BE 122 -- *"MEM 310's
-  reproduction is correct and my BE 117 receipt-scoped set is WITHDRAWN"* -- classifying the four exactly as I
-  measured them (**`flow_intensity.py` and `harmful_exposure_rows.py` IN the recorded 49, MISSED BY THE DERIVATION;
-  `harmful_hazard_model.py` and `phase2_state_schema_freeze.py` not in the 49, legitimately absent**), ***SO THE
-  LAZY-IMPORT EXPLANATION COVERS EXACTLY TWO OF THE FOUR AND THE OTHER TWO ARE A DEFECT***, and stating the
-  consequence plainly: **"the set under DE 168 was truncated; the corrected one is larger -- SCORING 12, not 8 -- so
-  a verdict that checked completeness against the eight is complete over the WRONG SET; the four names and the two
-  classifications are what changes, THE OPERATION AND THE SHAPE DO NOT."** ***THE CAUSE IS DRIVEN: WHITELISTING THE
-  ONE UNRECORDED MODULE `harmful_hazard_model.py` RECOVERS THE OTHER TWO AS WELL -- THEY SAT BEHIND IT -- BECAUSE
-  THE CLOSURE IS A WHITELIST ON THE TRAVERSAL, SO A MODULE THE RECORDING DOES NOT NAME HALTS THE WALK AND EVERYTHING
-  BEHIND IT IS LOST, INCLUDING MODULES THE RECORDING DOES NAME***; a filter applied DURING a graph walk is not the
-  same operation as the same filter applied to its RESULT, and BE 117's "a subset of the recording BY CONSTRUCTION"
-  was true of the members and false of the traversal. **The control makes it a diagnosis: the REFERENCE derivation
-  is NOT truncated -- SIX either way -- because its path crosses no unrecorded module. Same cause, no effect**, which
-  is why the delta is measured PER SET. ***TWO INDEPENDENT DERIVATIONS REACHING TWELVE IS EVIDENCE, AND REV 135 IS
-  TESTING IT FOR THE OBVIOUS FAILURE MODE -- THAT BOTH COULD SHARE A WRONG SCOPE***: agreement between two runs of
-  the same operation is not independence. BE's two reusable mechanisms: **the refusable/reportable split is MEASURED,
-  not hedged -- on the newest real receipt 13 OF 15 ARE NAMED (refusable, each must digest-match) and 2 ARE
-  LEGITIMATELY ABSENT (reportable by name), with "A PREDICATE REFUSING ON ABSENCE WOULD REFUSE THAT RECEIPT TODAY"**;
-  and **everything travels in `derived_closures.recommended_for_a_consumer` with `SUPERSEDED_NOTICE` on the OLD sets,
-  SO A READER OF THE EARLIER ROW CANNOT RESOLVE TO THE WRONG NUMBER** -- rule 13's supersede-in-band applied to a
-  DERIVED SET, because *a withdrawn number that still answers when queried is not withdrawn*. **REV 134 BOTH WAYS.
-  THE INERTNESS IS CLOSED ON A REAL LANDED RECEIPT** -- `be_daybook_receipt_20260907_btc__L250ms.json`, 49 modules,
-  no derived block -- **refusing `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` as it sits and
-  `BOOK_SCORING_MEMBERSHIP_NOT_ESTABLISHED` with every digest made to match: BOTH DIRECTIONS REFUSE.** ***BUT "THE
-  RESIDUAL LIMIT IS NAMED IN EVERY RESULT" IS FALSE ACROSS SEVEN EXITS***: `MEMBERSHIP_LIMIT` is on the HAPPY PATH
-  ONLY (`:6371`), and I drove two exits myself -- a differing digest and a missing derived block both refuse and
-  **NEITHER MESSAGE CARRIES THE LIMIT** -- while REV adds the one that matters most, ***IT IS ABSENT FROM THE OPT-IN
-  RESULT, THE ONE A CALLER TAKES PRECISELY BECAUSE IT IS ACCEPTING THAT LIMIT***; the battery at `:15867` asserts the
-  limit is "in every result", **so the claim and the code disagree and the battery is green.** And REV's new item,
-  whose mechanism I read at the line: ***ON A RECEIPT WITH NOTHING WRONG `n_checked_equals_n_declared` READS FALSE
-  BESIDE `BOOK_SCORING_CODE_MATCHES`*** -- the field is `len(recorded) == _expected_n`, **False exactly when a
-  declared module is LEGITIMATELY ABSENT**, so ***THE FIELD THAT SAYS NOTHING IS WRONG AND THE FIELD THAT REPORTS
-  LEGITIMATE ABSENCE CONTRADICT EACH OTHER BY CONSTRUCTION*** and a field-resolving reader gets two answers. ***AND
-  THIS IS NOW A PATTERN, NOT AN INCIDENT: A LIMIT OR A UNIT GOES UNCARRIED IN EXACTLY THE RESULT THAT NEEDS IT --
-  FIRST `draw_provenance.matched_on`, NOW `MEMBERSHIP_LIMIT`. THE CODE WAS DEFENSIBLE BOTH TIMES AND THE ARTIFACT
-  DID NOT SAY SO, WHICH MAKES THE DEFECT INVISIBLE TO EVERY DOWNSTREAM READER.*** ***LEDGER: (5b) IS OPEN ON THREE
-  REASONS -- the uncarried limit, the contradictory count beside a match, and the truncated set now corrected to
-  twelve and pending DE's landing -- AND DA'S CASE-4 RE-RUN AND REV 134'S VERIFICATION WERE BOTH TAKEN AGAINST THE
-  EIGHT, SO BOTH ARE PROVISIONAL***: neither is wrong, both are about a set that is no longer the set. Everything
-  else unchanged: **(1) CLOSED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN MECHANISM, UNQUANTIFIED, both
-  needing a corrected book; (5a) CLOSED; (6a) CLOSED AND VERIFIED.** Flags 2658 -> 2674, prov 2203 -> 2219; window
-  3/3, Batch 293 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -370,6 +367,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 314, THE BUILD IS RUNNING; p003ev200903c launched 11:33:20Z (f71e4aa -> 69123fd) ---
+  THE_BUILD_IS_RUNNING_AND_I_VERIFIED_IT_AT_THE_MACHINE: THE-QUEUE-IS-NO-LONGER-STOOD-DOWN
+  THE_LAUNCHED_TIP_IS_DE_170_SO_THE_BLOCKERS_FIX_IS_IN_THE_RUN: 69123fd-IN-THE-RECORD
+  AND_THE_FIRST_STAGE_LINE_SHOWS_THE_CORRECTED_ERA_ON_THE_EXPECTED_WINDOW_COUNT: 247-SLUGS-clob_v4_1
+  ONE_LOCK_HOLDER_AT_MY_READ_AND_THE_PYTHON_IS_ITS_CHILD: NOT-A-RULE-20-VIOLATION
+  WHAT_RELEASED_IT_WAS_ONE_REMAINING_BLOCKER_THE_USER_FOUND: AN-OBSOLETE-FIELD-AT-6410
+  AND_THE_DRIVER_RAN_THE_BATTERY_BEFORE_REPLAY_SO_IT_WOULD_HAVE_REFUSED_SAFELY: REFUSE-NOT-WRONG-RESULTS
+  THE_REPAIR_IS_RULE_33_IN_ONE_SENTENCE_A_TRUTHINESS_TEST_BECAME_A_COMPARISON: 12-12-12-THREE-WAYS
+  AND_THE_PLANTED_DISAGREEMENT_IS_FIFTEEN_AGAINST_TWELVE_WITH_THE_WRITER_MUTATED_TOO: IT-CAN-STILL-FAIL
+  THE_USERS_OWN_FINDINGS_ARE_THE_LAUNCHS_BASIS_AND_THREE_OF_THEM_ARE_NON_BLOCKING_BY_DESIGN: 98-9-29-166-9
+  THE_THREE_STANDING_CONDITIONS_ON_BE_AND_WHICH_OF_THEM_I_CAN_SEE: TWO-EVIDENCED-ONE-NOT
+  I_DID_NOT_RUN_THE_RUNNER_BATTERY_WHILE_A_HEAVY_UNIT_HOLDS_THE_LOCK: RELAYED-NOT-CHECKED
+  THE_QUEUE_IS_NO_LONGER_STOOD_DOWN_AND_A_RESUMING_READER_MUST_NOT_THINK_IT_IS: THE-POINT-OF-THIS-ROUND
   # --- MEM round 313, R-865 swept; CLOSING SWEEP, the ledger is final (db90183 -> db90183) ---
   THE_USERS_FIVE_ARE_CLOSED_AND_VERIFIED_AND_THE_LEDGER_IS_FINAL: R-865
   TWO_ROWS_CARRY_A_NAMED_EXCEPTION_AND_IT_IS_THE_SAME_EXCEPTION: BOTH-NEED-A-CORRECTED-BOOK
@@ -27122,6 +27132,157 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 314, 2026-09-09T11:37:59Z ---
+  THE_BUILD_IS_RUNNING_AND_I_VERIFIED_IT_AT_THE_MACHINE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903c.jsonl
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***THE BUILD IS RUNNING. THIS IS THE FIRST CORRECTED BOOK THIS PROGRAMME HAS ATTEMPTED SINCE THE RETRACTION,
+      AND I VERIFIED IT AT THE MACHINE RATHER THAN TAKING THE DISPATCH.*** **`p003ev200903c.service` is `active` /
+      `SubState: running` / `Result: success` / `ExecMainStatus: 0`, `InvocationID e69dfd86671b40cd9bcd0bdc072e552b`,
+      attempt 1**; the record's launch line reads **`utc 2026-09-09T11:33:20Z`, `worktree
+      /home/yuqing/ctaNew-wt-be`, `payload live/pm_research/be_daybook_build.py`, `args --day 20260903
+      --placement-latency-ms 250 --artifact-revision EV20`, `conflict_rc 75`.** ***THE PAYLOAD IS THE DAYBOOK
+      BUILDER, NOT THE POINT-ESTIMATE DRIVER*** -- this run makes the corrected BOOK. **Expected wall 74-76 min
+      from 11:33:20Z gives 12:47:20-12:49:20Z, and the `{"stage":"assembled"}` marker at ~63 min gives ~12:36:20Z.**
+      The memory envelope is recorded in band: **`slice_MemoryMax_bytes 15032385536` against a basis of
+      `15489.110475 B/row x 638602 rows x 1.20`, with the record itself carrying `caps_are_never_raised` naming the
+      dispatch that authorised the override** -- the flag this file has carried stays a flag.
+  THE_LAUNCHED_TIP_IS_DE_170_SO_THE_BLOCKERS_FIX_IS_IN_THE_RUN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903c.jsonl
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***THE FIRST STANDING CONDITION, VERIFIED BY ME AND NOT ASSUMED: THE RECORD'S OWN `tip` FIELD READS
+      `69123fddb81c2a64f14da8682b02f98db764ff58` -- WHICH IS DE 170*** -- so **the fix for the one remaining blocker
+      IS IN THE RUN**, and `wt-be` was refreshed to the tip BEFORE the launch rather than after. **The launched HEAD
+      is quoted in the record**, which is the whole point of the condition: *a run whose code version is asserted in
+      prose and not in its own artifact is a run nobody can check later.* This is the same property that closed
+      defect (1) -- **the artifact naming what it did, at an address a reader reaches.**
+  AND_THE_FIRST_STAGE_LINE_SHOWS_THE_CORRECTED_ERA_ON_THE_EXPECTED_WINDOW_COUNT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_stdout_p003ev200903c.log
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      **And the first thing the run itself has said, which is the cheapest possible confirmation that it is on the
+      corrected path:** the stdout log's opening line is ***`{"stage": "selected", "slugs": 247, "era":
+      "clob_v4_1"}`.*** **247 is EXACTLY BE 120's measured window count for 09-03**, and **`clob_v4_1` is the era
+      the fix resolves** -- against the defect's `clob_v3_1`, whose gap table intersected the corrected one at
+      **ZERO**. ***THE RUN IS SELECTING THE RIGHT WINDOWS UNDER THE RIGHT ERA, CONFIRMED FROM ITS OWN OUTPUT WITHIN
+      TWO SECONDS OF LAUNCH.*** *A resuming reader can check this line without waiting for the receipt.*
+  ONE_LOCK_HOLDER_AT_MY_READ_AND_THE_PYTHON_IS_ITS_CHILD:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      **On the lock, I report what I measured rather than the expectation I was given.** `/proc/locks` matched by
+      dev:inode on `data/.heavy_run.lock` shows ***ONE holder at my read: `29: FLOCK ADVISORY WRITE 3785403
+      103:01:1053378 0 EOF`***, and the process tree explains it -- **PID 3785403 is `flock -n -E 75 ... python3
+      be_daybook_build.py` and PID 3785404 is that `python3`, ITS CHILD**, with PID 3785382 the `--inner` wrapper
+      above them. ***SO "TWO HOLDERS" AND "ONE HOLDER" ARE THE SAME SITUATION SEEN THROUGH DIFFERENT WINDOWS, AND
+      NEITHER IS A RULE-20 VIOLATION: ONE `flock` ON ONE LOCKFILE, WRAPPING THE PAYLOAD.*** A second *lockfile*
+      holder would be the violation; a parent and its child are not.
+  WHAT_RELEASED_IT_WAS_ONE_REMAINING_BLOCKER_THE_USER_FOUND:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***WHAT RELEASED THE BUILD: THE USER VERIFIED AT `f71e4aa9ba7f` AND FOUND ONE REMAINING BLOCKER.***
+      `derived_scoring_n` was reading an **obsolete field** at `de_multiday_gate1_runner.py:6410`, with the failing
+      assertion at `:10382`. **The cause is recorded in the code's own comment and it is a chain of two correct
+      moves: BE 122 WITHDREW the receipt-scoped walk (a whitelist on the traversal loses everything behind an
+      unrecorded module) and BE 123 TOOK THE KEY OUT -- so the field went obsolete UNDER DE'S OWN DE 169 LANDING,
+      which moved the predicate to the receipt-free set and left this writer pointing at the old name.** ***IT
+      RETURNED `None` AND THE ROUND-TRIP ASSERTION FAILED.*** *Two good fixes and one stale reader between them is
+      how a repaired system breaks.*
+  AND_THE_DRIVER_RAN_THE_BATTERY_BEFORE_REPLAY_SO_IT_WOULD_HAVE_REFUSED_SAFELY:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      **And the part that decides how bad it was, which is the good news inside it: the point-estimate driver runs
+      that battery BEFORE replay (`de_point_estimate_day.py:359`), so the blocker would have made the day
+      ***SAFELY REFUSE RATHER THAN PRODUCE RESULTS.*** *The failure mode was a wasted run, not a wrong number* --
+      which is the disposition CLAUDE.md rule 14 and this programme's refuse-never-default discipline are built to
+      produce, working in the one place it costs the least. **A blocker discovered by a battery placed before the
+      expensive half is a blocker that costs minutes; the same defect after replay costs the run and, if it were
+      silent, the result.**
+  THE_REPAIR_IS_RULE_33_IN_ONE_SENTENCE_A_TRUTHINESS_TEST_BECAME_A_COMPARISON:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***HOW IT WAS REPAIRED IS RULE 33 IN ONE SENTENCE, AND THE CODE SAYS IT IN ITS OWN WORDS: "IT WAS `and
+      _w163['derived_scoring_n']` -- A TRUTHINESS TEST ON A NUMBER THE WRITER HAD JUST COMPUTED, WHICH AGREES BY
+      CONSTRUCTION AND TOLD NOBODY WHEN THE FIELD WENT TO `None`. IT IS A COMPARISON NOW."*** I read the cell: it
+      now compares **THREE counts -- the sidecar-recorded `derived_scoring_n`, one computed INDEPENDENTLY in the
+      cell via `expected_set_from_disk(_root163, SCORING_ENTRY_POINTS)`, and one READ BACK FROM THE FILE through
+      `derived_closures.recommended_for_a_consumer.for_a_SCORING_predicate.n` -- 12 / 12 / 12.** **The old check was
+      rule 16's "a control that cannot fail" wearing a green; the new one asks a question whose answer the writer
+      does not supply.**
+  AND_THE_PLANTED_DISAGREEMENT_IS_FIFTEEN_AGAINST_TWELVE_WITH_THE_WRITER_MUTATED_TOO:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***AND THE FALSIFIER IS THERE, BOTH WAYS, WHICH IS WHY THIS REPAIR IS TRUSTWORTHY: THE REPAIRED ASSERTION CAN
+      STILL FAIL.*** The cell plants a disagreement in a deep-copied payload -- **`for_a_SCORING_predicate.n =
+      _n163_indep + 3`, which at an independent 12 is FIFTEEN** -- and asserts that the planted value does NOT agree
+      (`_agree163 = [file == indep, planted == indep]`). **And the second direction was driven too: the WRITER was
+      mutated to record `n+1` and the cell went RED.** *Rule 33's three drives -- pass on the real thing, fail on a
+      known-bad, and a shape that cannot silently pass -- applied to a single assertion.*
+  THE_USERS_OWN_FINDINGS_ARE_THE_LAUNCHS_BASIS_AND_THREE_OF_THEM_ARE_NON_BLOCKING_BY_DESIGN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      **The user's own verification is the launch's basis, and it is recorded here as the basis rather than as
+      background:** ***policy 98, cancel-control 9, closure 29, daybook 166 and point-estimate 9 checks PASSING.***
+      **And three findings are non-blocking BY DESIGN, each for a stated reason: the FULL NULL stays FAIL-CLOSED if
+      multiple cancels share one reference generation -- which does NOT prevent an early POINT ESTIMATE; the SEAL
+      was not treated as a blocker (de-prioritised by ruling, owed before any future sealed race); and `run_day`'s
+      `FLAG_FOR_THE_READER` on a `WITH_UNNAMED_MEMBERS` receipt is A FLAG, NOT A REFUSAL, so the day path will not
+      stop on it.** ***THE DISTINCTION BETWEEN "FAIL-CLOSED" AND "BLOCKING" IS THE WHOLE OF WHY THIS RUN COULD
+      START***: a guard that refuses the full null does not refuse the estimate that does not need it.
+  THE_THREE_STANDING_CONDITIONS_ON_BE_AND_WHICH_OF_THEM_I_CAN_SEE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903c.jsonl
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      **The three standing conditions on BE for the next ~75 minutes, with what I can and cannot evidence stated
+      separately.** **(i) wt-be refreshed to the tip so `69123fd` is IN the run and the launched HEAD quoted --
+      ***EVIDENCED: the record's `tip` field is `69123fd...`.*** (ii) THE WORKTREE FROZEN until the receipt is on
+      disk -- **a forward obligation, and the programme already carries why: `wt_refresh.sh` HAS NO IN-FLIGHT GUARD,
+      and a refresh under a running unit made the day-run guard refuse at the emit and cost 1 h 20 m.** (iii)
+      `dirty_code` FALSE at launch with `dirty_paths: ['data']` the ledger symlink -- ***NOT EVIDENCED AT MY READ:
+      the record's keys are `tip, worktree, payload, args, declaration, lock, conflict_rc, ...` and carry NO
+      `dirty_code` or `dirty_paths`, nor does the stdout log.*** **I record it as relayed rather than as something I
+      verified.**
+  I_DID_NOT_RUN_THE_RUNNER_BATTERY_WHILE_A_HEAVY_UNIT_HOLDS_THE_LOCK:
+    prov: RELAYED
+    from: the MEM 314 coordinator dispatch, quoting DE's self-test line -- NOT run by me,
+      because a heavy unit holds the lock
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***AND ONE THING I DELIBERATELY DID NOT DO: I DID NOT RUN THE RUNNER SELF-TEST TO CONFIRM IT.*** The
+      coordinator's verbatim line is **`[de_multiday_gate1_runner] PASS -- 418 checks, n_disarmed 0, n_skipped 0`**,
+      and I carry it **RELAYED, NOT CHECKED**, because ***A 418-CHECK BATTERY IS REAL CPU AND A HEAVY UNIT HOLDS THE
+      LOCK FOR THE NEXT ~75 MINUTES.*** **Verifying a green at the cost of the run it released would be the wrong
+      trade**, and this seat's own habit of driving everything is not a licence to compete with the build for the
+      machine. *The line is checkable the moment the receipt lands, and it costs nothing to wait.*
+  THE_QUEUE_IS_NO_LONGER_STOOD_DOWN_AND_A_RESUMING_READER_MUST_NOT_THINK_IT_IS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T11:37:59Z
+    said: >-
+      ***THE POINT OF THIS ROUND, STATED PLAINLY FOR ANYONE RESUMING: THE R-839 STAND-DOWN IS OVER AND THE QUEUE IS
+      NO LONGER STOOD DOWN.*** For thirty rounds these files have ended *"nothing built, no heavy lock since
+      07:15:47Z, the build decision is the USER's"* -- ***THAT SENTENCE IS NOW FALSE AND EVERY EARLIER GENERATION
+      CARRYING IT IS HISTORY, NOT STATE.*** **The USER has authorised, the unit is running, and the first corrected
+      book since the retraction is being written as this is filed.** The cold-reader block in `HANDOFF.md` is
+      rewritten at (a) and (b) to say so; **rows (2) and (3) of the ledger -- the rows that needed a corrected book
+      -- have their blocker in flight for the first time.**
   # --- MEM round 313, 2026-09-09T11:04:08Z ---
   THE_USERS_FIVE_ARE_CLOSED_AND_VERIFIED_AND_THE_LEDGER_IS_FINAL:
     prov: CHECKED

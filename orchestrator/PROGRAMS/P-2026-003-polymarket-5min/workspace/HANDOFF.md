@@ -1,3 +1,100 @@
+# READ FIRST — round 314 (MEM, 2026-09-09T11:37:59Z, tip `69123fd`)
+
+# 🟢 THE BUILD IS RUNNING — the stand-down is OVER
+
+**For thirty rounds these files ended *"nothing built, no heavy lock since 07:15:47Z."* That sentence is now FALSE.**
+Every earlier generation carrying it is **history, not state.**
+
+**Verified by me at the machine, not taken from the dispatch:**
+
+| | |
+|---|---|
+| unit | **`p003ev200903c.service` — `active` / `running`, `Result: success`, `ExecMainStatus: 0`, attempt 1** |
+| launched | **11:33:20Z** from `/home/yuqing/ctaNew-wt-be` |
+| payload | **`live/pm_research/be_daybook_build.py`** — *this run makes the corrected BOOK* |
+| args | `--day 20260903 --placement-latency-ms 250 --artifact-revision EV20` |
+| **launched tip** | **`69123fddb81c2a64f14da8682b02f98db764ff58` = DE 170 — the blocker's fix IS in the run** |
+| first output | **`{"stage": "selected", "slugs": 247, "era": "clob_v4_1"}`** |
+| assembled marker | **~12:36:20Z** (~63 min) |
+| expected finish | **12:47:20 – 12:49:20Z** (74–76 min) |
+| memory | `slice_MemoryMax_bytes 15032385536`, basis `15489.110475 B/row × 638602 rows × 1.20`, with `caps_are_never_raised` naming the authorising dispatch |
+
+**247 is exactly BE 120's measured window count for 09-03, and `clob_v4_1` is the era the fix resolves** — against
+the defect's `clob_v3_1`, whose gap table intersected the corrected one at **zero**. *A resuming reader can check
+that line without waiting for the receipt.*
+
+**On the lock, what I measured:** **one holder** — `29: FLOCK ADVISORY WRITE 3785403` — with **3785403 the `flock -n
+-E 75`** and **3785404 the `python3`, its child** (3785382 the `--inner` wrapper above them). **"Two holders" and
+"one holder" are the same situation through different windows, and neither is a rule-20 violation: one `flock` on one
+lockfile, wrapping the payload.** *A second **lockfile** holder would be the violation; a parent and its child are
+not.*
+
+## WHAT RELEASED IT
+
+The USER verified at `f71e4aa9ba7f` and found **one remaining blocker**: `derived_scoring_n` reading an **obsolete
+field** at `de_multiday_gate1_runner.py:6410`, failing assertion at `:10382`. **The field went obsolete under DE's
+OWN DE 169 landing** — BE 122 withdrew the receipt-scoped walk, BE 123 took the key out, and this writer kept
+pointing at the old name, so it returned `None`. *Two good fixes and one stale reader between them is how a repaired
+system breaks.* **DE 170 (`69123fd`) closed it.**
+
+**And the good news inside it: the point-estimate driver runs that battery BEFORE replay
+(`de_point_estimate_day.py:359`), so the blocker would have made the day SAFELY REFUSE rather than produce results.
+The failure mode was a wasted run, not a wrong number.**
+
+**How it was repaired — rule 33 in one sentence, in the code's own words:** *"It was a **truthiness test on a number
+the writer had just computed**, which agrees by construction and told nobody when the field went to `None`. **It is a
+comparison now.**"*
+
+| the three counts | |
+|---|---|
+| sidecar-recorded / independently computed in the cell / read back from the file | **12 / 12 / 12** |
+| planted disagreement (`indep + 3`) | **15 — shown not to agree** |
+| writer mutated to record `n+1` | **cell goes RED** |
+
+**⇒ The repaired assertion can still fail.**
+
+## THE LAUNCH'S BASIS — the user's own findings
+
+**policy 98 · cancel-control 9 · closure 29 · daybook 166 · point-estimate 9 checks passing.** Three items
+**non-blocking by design**: the full null stays **fail-closed** if multiple cancels share one reference generation —
+**which does not prevent an early point estimate**; **the seal** was not treated as a blocker; and `run_day`'s
+`FLAG_FOR_THE_READER` on a `WITH_UNNAMED_MEMBERS` receipt is **a flag, not a refusal**, so the day path will not stop
+on it. ***The distinction between "fail-closed" and "blocking" is the whole of why this run could start.***
+
+## ⚠ THE THREE STANDING CONDITIONS ON BE — next ~75 minutes
+
+1. **wt-be refreshed to the tip, launched HEAD quoted** — **✅ evidenced: the record's `tip` is `69123fd…`.**
+2. **THE WORKTREE STAYS FROZEN until the receipt is on disk** — *forward obligation.* **`wt_refresh.sh` has no
+   in-flight guard; a refresh under a running unit once made the day-run guard refuse at the emit and cost 1 h 20 m.**
+3. **`dirty_code` FALSE at launch** (`dirty_paths: ['data']` = the ledger symlink) — **⚠ NOT evidenced at my read:**
+   the record's keys carry no `dirty_code`/`dirty_paths`, nor does the stdout log. **Carried as relayed.**
+
+**And one thing I deliberately did NOT do:** I did not run the 418-check runner battery to confirm DE's
+`PASS — 418 checks, n_disarmed 0, n_skipped 0`. **A heavy unit holds the lock for the next ~75 minutes, and verifying
+a green at the cost of the run it released would be the wrong trade.** *Checkable the moment the receipt lands.*
+
+---
+
+# THE LEDGER — unchanged, and rows (2) and (3) now have their blocker IN FLIGHT
+
+| # | defect | state |
+|---|---|---|
+| **1** | unreachable cancel-matched null | **CLOSED, DOUBLE-VERIFIED** |
+| **2** | inflated decision count | **FIXED IN MECHANISM** — **UNQUANTIFIED; the book that would quantify it is RUNNING** |
+| **3** | false cancel-matching premise | **FIXED IN MECHANISM** — **UNQUANTIFIED; same run** |
+| **5a** | predicate accepting a subset | **CLOSED** |
+| **5b** | predicate checking the wrong set | **CLOSED AND VERIFIED** |
+| **6a** | protocol string | **CLOSED AND VERIFIED** |
+
+**Still open with the USER:** **the matching unit** (ruling B's premise proved false; the coordinator does not
+re-rule it). **Still owed:** **the seal, before any future sealed race.** **Named follow-on:** the ~30 older phrase
+assertions.
+
+Counts: flags 2703 → 2715, provenance 2248 → 2260 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 296 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 313 (MEM, 2026-09-09T11:04:08Z, tip `db90183`) — **CLOSING SWEEP**
 
 **R-865 swept. All five of the user's defects are CLOSED AND VERIFIED. The programme now waits on TWO USER
