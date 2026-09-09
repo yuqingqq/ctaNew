@@ -21814,3 +21814,49 @@ generation and the window went 4 → 3. Nothing rewritten.
   Flags 2691 -> 2703, prov 2236 -> 2248; window 3/3, Batch 295 archived. **STATE IS COMPLETE AND THE PROGRAMME WAITS
   ON THE USER.** MEM asserts no result.)
 ```
+
+## Batch 299 — archived 2026-09-09T12:48:04Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T11:37:59Z (MEM ROUND 314 -- ***THE BUILD IS RUNNING. THE R-839 STAND-DOWN IS OVER AND THE QUEUE IS NO LONGER
+  STOOD DOWN; A RESUMING READER MUST NOT THINK IT IS.*** From `f71e4aa` to `69123fd`, one commit. **VERIFIED BY ME AT
+  THE MACHINE, NOT TAKEN FROM THE DISPATCH: `p003ev200903c.service` is `active` / `running` / `Result: success` /
+  `ExecMainStatus: 0`, attempt 1, `InvocationID e69dfd86671b40cd9bcd0bdc072e552b`; the launch line reads `utc
+  2026-09-09T11:33:20Z`, `worktree /home/yuqing/ctaNew-wt-be`, `payload live/pm_research/be_daybook_build.py`, `args
+  --day 20260903 --placement-latency-ms 250 --artifact-revision EV20`, `conflict_rc 75`** -- ***THE PAYLOAD IS THE
+  DAYBOOK BUILDER, SO THIS RUN MAKES THE CORRECTED BOOK.*** **Expected wall 74-76 min from 11:33:20Z =
+  12:47:20-12:49:20Z, with the `{"stage":"assembled"}` marker at ~63 min = ~12:36:20Z.** ***THE FIRST STANDING
+  CONDITION IS EVIDENCED BY ME: THE RECORD'S OWN `tip` FIELD READS `69123fddb81c2a64f14da8682b02f98db764ff58`, WHICH
+  IS DE 170, SO THE BLOCKER'S FIX IS IN THE RUN AND THE LAUNCHED HEAD IS QUOTED IN THE ARTIFACT*** -- the same
+  property that closed defect (1). ***AND THE RUN'S OWN FIRST LINE CONFIRMS THE CORRECTED PATH WITHIN TWO SECONDS OF
+  LAUNCH: `{"stage": "selected", "slugs": 247, "era": "clob_v4_1"}` -- 247 IS EXACTLY BE 120's MEASURED WINDOW COUNT
+  FOR 09-03 AND `clob_v4_1` IS THE ERA THE FIX RESOLVES***, against the defect's `clob_v3_1` whose gap table
+  intersected the corrected one at ZERO. On the lock I report what I measured: **ONE holder, `29: FLOCK ADVISORY
+  WRITE 3785403`, with PID 3785403 the `flock -n -E 75` and PID 3785404 the `python3` ITS CHILD** -- ***"TWO HOLDERS"
+  AND "ONE HOLDER" ARE THE SAME SITUATION THROUGH DIFFERENT WINDOWS AND NEITHER IS A RULE-20 VIOLATION: ONE `flock`
+  ON ONE LOCKFILE WRAPPING THE PAYLOAD.*** ***WHAT RELEASED IT: THE USER VERIFIED AT `f71e4aa9ba7f` AND FOUND ONE
+  REMAINING BLOCKER*** -- `derived_scoring_n` reading an OBSOLETE FIELD at `:6410` with the failing assertion at
+  `:10382`, the field having gone obsolete **UNDER DE'S OWN DE 169 LANDING** after BE 122 withdrew the receipt-scoped
+  walk and BE 123 took the key out, so it returned `None` and the round-trip assertion failed -- *two good fixes and
+  one stale reader between them is how a repaired system breaks* -- **and the point-estimate driver runs that battery
+  BEFORE replay (`de_point_estimate_day.py:359`), so it would have SAFELY REFUSED RATHER THAN PRODUCED RESULTS: the
+  failure mode was a wasted run, not a wrong number.** ***THE REPAIR IS RULE 33 IN ONE SENTENCE, IN THE CODE'S OWN
+  WORDS: "IT WAS A TRUTHINESS TEST ON A NUMBER THE WRITER HAD JUST COMPUTED, WHICH AGREES BY CONSTRUCTION AND TOLD
+  NOBODY WHEN THE FIELD WENT TO `None`. IT IS A COMPARISON NOW"*** -- three counts, **sidecar-recorded /
+  independently computed in the cell / read back from the file, 12 / 12 / 12** -- ***WITH A PLANTED DISAGREEMENT OF
+  `indep + 3` = FIFTEEN SHOWN NOT TO AGREE, AND THE WRITER MUTATED TO RECORD n+1 TURNING THE CELL RED: THE REPAIRED
+  ASSERTION CAN STILL FAIL.*** The user's own findings are the launch's basis -- **policy 98, cancel-control 9,
+  closure 29, daybook 166 and point-estimate 9 checks passing** -- with **three items non-blocking BY DESIGN: the
+  full null stays FAIL-CLOSED if multiple cancels share one reference generation, WHICH DOES NOT PREVENT AN EARLY
+  POINT ESTIMATE; the seal was not treated as a blocker; and `run_day`'s `FLAG_FOR_THE_READER` on a
+  `WITH_UNNAMED_MEMBERS` receipt is A FLAG, NOT A REFUSAL, so the day path will not stop on it.** Of the three
+  standing conditions on BE, **(i) the refreshed worktree is EVIDENCED by the record's `tip`; (ii) THE WORKTREE MUST
+  STAY FROZEN until the receipt is on disk, and the programme already knows why -- `wt_refresh.sh` HAS NO IN-FLIGHT
+  GUARD and a refresh under a running unit once cost 1 h 20 m; (iii) `dirty_code` FALSE is NOT EVIDENCED AT MY READ**
+  -- the record carries no `dirty_code`/`dirty_paths` key and neither does the stdout log -- **so I carry it
+  relayed.** ***AND ONE THING I DELIBERATELY DID NOT DO: I DID NOT RUN THE 418-CHECK RUNNER BATTERY TO CONFIRM DE'S
+  PASS LINE, BECAUSE A HEAVY UNIT HOLDS THE LOCK FOR THE NEXT ~75 MINUTES AND VERIFYING A GREEN AT THE COST OF THE
+  RUN IT RELEASED WOULD BE THE WRONG TRADE.*** Flags 2703 -> 2715, prov 2248 -> 2260; window 3/3, Batch 296 archived.
+  ***ROWS (2) AND (3) OF THE LEDGER -- THE ROWS THAT NEEDED A CORRECTED BOOK -- HAVE THEIR BLOCKER IN FLIGHT FOR THE
+  FIRST TIME.*** MEM asserts no result.)
+```

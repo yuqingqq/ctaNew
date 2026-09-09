@@ -1,3 +1,121 @@
+# READ FIRST — round 317 (MEM, 2026-09-09T12:48:04Z, tip `26bf90c`)
+
+# ✅ CLOSED: the repairs reached the artifact — measured at the book
+
+**Open since the first EV20 attempt at 03:11Z.** Re-driven by me on the corrected instrument, value keys read this
+time:
+
+| per head | pre-fix | EV20 |
+|---|---|---|
+| shape | `PER_GENERATION_SCORES` | **`PER_ROW_SCORES`** |
+| `n_entries` | 297,379 | **350,474** |
+| `value_type` | float | **dict** |
+| `value_keys` | — | **`['gen', 'score', 't0']`** |
+
+***`t0` on every entry IS the look-ahead repair: R-834's demand is now a field in the artifact rather than a claim
+in a commit message.***
+
+# 🔍 BE 129 — THE NINE AND THE +35 ARE ONE PHENOMENON, AND IT IS THE ERA FIX WORKING
+
+*I recorded last round that they could be subset, disjoint or overlapping.* **They are neither — two symptoms of one
+cause.**
+
+- **Every one of the nine sits at a GAP START.** Nearest-edge distances **0.000000036 / 0.000000092 / 0.000000092 /
+  0.000001965 s — four inside 0.1 µs, eight inside 3.7 µs.** *A coincidence at 36 nanoseconds is not a coincidence.*
+- **All seven affected slugs carry gaps under `clob_v4_1` and NONE under `clob_v3_1`** — the refusing slug has **six
+  gaps totalling 30.4 s** under the new era, **zero** under the old.
+- **The pre-fix book was built with `gaps=[]` for every window and has ZERO such generations** — ***clean not because
+  it was right, but because it never saw a gap.*** *The emptiest kind of green.*
+
+**THE MECHANISM:** the era fix attaches the day's real gaps to `build_reference` for the first time; **a gap start
+truncates the generation live at that instant, and a generation created at that same instant is BORN TERMINATED** —
+while **the same gap SPLITS a generation**, which is why **313,149 vs 313,114**. ***One effect, two symptoms*** — the
+nine are the degenerate case of the split, *which is why counting could never separate them.*
+
+**BE's fix excludes them at build with a COUNTED STATUS** (rule 4 exactly) **and requires a 54-MINUTE REBUILD. That
+decision is with the USER and is not taken.**
+
+# 🔧 DE 172 — the probe ships its falsifier, and the nine survive it
+
+**I ran it: `--selftest` → `PASS — 11 checks`.** *This closes by instrument the exposure I recorded as my own last
+round.* **One cell is the control for the very claim this round closes:** *"the assembly shape is read from the
+VALUE'S TYPE, both ways… this is the comparison that said the night's repairs reached the 09-03 book, so it ships its
+own control."*
+
+**And I re-drove the census on the real book: `n_refused 9`, `by_kind {ZERO_LENGTH: 9}`, 7 slugs, 0 tranches.**
+***The count was re-confirmed by a corrected census, not defended by its author*** — *the ordering defect could have
+manufactured all nine out of missing keys, and the honest way to find out was to fix the classifier and count
+again.*
+
+- **Ordering fixed: presence → finiteness → the orderings.** `None`/`None` and equal **strings** → `NON_FINITE`;
+  missing `t1` → **`MISSING_FIELD`**, now a kind of its own.
+- **Rule 4 reaches the side set:** an unknown side is **counted, not dropped** — *"they were missing from the very
+  denominator every rate is taken over."*
+- ***And one cell encodes the exact caution REV 137 and I both raised:*** *"the generation delta LOCATES A MOVE… it
+  does NOT claim identity — two books built by different code may key generations differently, so only the COUNT per
+  pair is comparable, and the field says so."* **Both limits put inside the instrument, in the field.** *Tonight's
+  recurring lesson applied BEFORE the misreading rather than after.*
+
+## BE'S TWENTY MINUTES — all in A2, and the gap BE names
+
+**A0 (551.3 s) and A1 (120.6 s) are within 4 % of the pre-fix run — the box was not unusually fast, and the era fix
+made A0 slightly SLOWER.** **But BE cannot exclude the lost run having been loaded, because R-836 recorded only
+`assembly_s` and `peak_gb` for it.** ***BE's point, worth acting on later: a killed run should preserve its stage
+table, since it becomes the basis everything is priced against.*** *The number four days are priced on came from a
+run whose only surviving evidence is two scalars.*
+
+**REV 138 verified BE's fix BEFORE the rebuild — and found ONE LINE owed first. See the addendum.**
+
+## ⚠ A FACT ABOUT MY OWN LAST ROUND
+
+**Six commits landed between my round-316 sweep end (`2816978`) and my own row push (`55cbd2e`)** — **DA 160 ×3,
+BE 129 and DE 172**, the two this round is about. The register-landing pull swept them under my row, so
+`git rev-list 55cbd2e..origin` reported **zero** this round while `git branch --contains` said both were on the
+branch: **they are ancestors of my own commit.** ***A window measured from my last ROW is not a window measured from
+what I last READ, and on a busy shared tree the difference is six commits.***
+
+**DA 160 also lands a finding not otherwise recorded here: `seam.commit` arrived as a MAPPING and its reader took it
+for a STRING — the false flag on the first corrected book.**
+
+Counts: flags 2744 → 2761, provenance 2289 → 2306 (seventeen written, seventeen counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 299 archived. MEM asserts no result.
+
+## ⚠ ADDENDUM 2026-09-09T12:49:38Z — REV 138: BE 129 verifies on all four, **one line owed before the 54 minutes**
+
+**The boundary is driven both halves:** zero-length **not** at a gap start → **dropped**; at a gap start with
+`t0<t1` → **kept**; inverted, nan, None, missing keys → **kept and loud** at `validate_reference`.
+
+### ⛔ THE ONE DEFECT — and it is the sharpest recurrence of the night
+
+**`t0 is not None and t1 is not None and t0 == t1` admits `inf == inf` and `"5" == "5"`, so BOTH are dropped and
+reported as `ZERO_LENGTH_GENERATION_EXCLUDED`.**
+
+***That is the exact ordering defect DE 172 removed from the probe forty minutes ago, reappearing in the builder.***
+Not the same code, not the same seat, not copied — **the same mistake, written independently, inside the hour it was
+fixed elsewhere.**
+
+**And REV names why it is worse here:** *"a diagnostic's cost was a wrong label and this one's cost is a generation
+removed from the POPULATION."* **In the probe it mis-described nine generations; in the builder it would DELETE
+them.** *Bounded reassurance:* **tonight's nine are real finite floats, so nothing measured moves — but the rebuild
+runs new code over gaps never attached before**, exactly where an unexercised branch first meets a value it has never
+seen. **The line: `_finite(t0) and _finite(t1) and t0 == t1`.** **REV's recommendation: land the guard, then
+rebuild.**
+
+### What BE built right
+
+- **Counted status meets rule 4 and reaches the receipt** (`be_daybook_build.py:1421`): `status`, `n_excluded`,
+  before/after, `fraction`, `refuse_above`, `n_tranches_on_them`, **the full identities**, `predicate`, `why`.
+  ***"A reader learns which nine and why, not merely that the book is smaller."*** *Tonight's recurring lesson
+  satisfied at the first attempt — the qualification at the address the reader reaches.*
+- **No assembly mismatch, driven:** prune at `build()` **1209**, assembly at **1271**, so **the assembly consumes the
+  pruned reference — and the prune is IN PLACE**, `fr["reference"]` holding only survivors. Excluded generations are
+  **never scored, never in `n_gen`, never a row.** *"Two of the nine are scored" is a property of the CURRENT book,
+  which had no exclusion.*
+- **The cells test the property: no `== 9` anywhere** — identities excluded and survivors asserted on a
+  4-generation fixture, clean positive control, 50-of-50 known-bad refusing by name. **Nine appears only in prose.**
+
+---
+
 # READ FIRST — round 316 (MEM, 2026-09-09T12:40:35Z, tip `2816978`)
 
 # ⛔→✅ THE POINT ESTIMATE REFUSED — and the refusal is the system working
