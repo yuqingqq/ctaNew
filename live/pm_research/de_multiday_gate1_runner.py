@@ -6204,6 +6204,9 @@ MEMBERSHIP_LIMIT = (
     "digest that differs. The recording's own honesty is guarded on the "
     "PRODUCING side by rule 22's import-closure capture (DE 168 / REV 132)")
 PARAMS_VERSION_DISAGREES = "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE"
+DAY_SUPERSEDES_TARGET_ABSENT = "DAY_SUPERSEDES_TARGET_ABSENT"
+DAY_SUPERSEDES_NOTHING = "DAY_SUPERSEDES_NAMES_A_DAY_WITH_NO_SEALED_RECEIPT"
+DAY_SUPERSEDES_NOT_THE_HEAD = "DAY_SUPERSEDES_NOT_THE_CHAIN_HEAD"
 
 
 #: THE RULED EXEMPTION'S SET (USER, DE 174 (2)), DECLARED WITH ITS
@@ -16046,6 +16049,13 @@ def main() -> int:
                     help="how many of the G days are complete; the seal "
                          "opens only at G")
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--supersedes", type=Path, default=None,
+                    help=("the SEALED day receipt this run corrects. A day "
+                          "that already landed one refuses without it "
+                          "(rule 13: a deliberate correction is a "
+                          "SUPERSEDING receipt carrying {path, sha256}). "
+                          "The named target must be the CHAIN HEAD -- "
+                          "superseding anything else leaves two heads"))
     a = ap.parse_args()
     if a.falsify_skipped:
         global PLANT_ONE_UNNAMED_SKIP
@@ -16143,8 +16153,59 @@ def _main_day(a) -> int:
             raise RunnerRefused(
                 f"REFUSED: {day} is not in the ruled day set "
                 f"{params['days']}.")
-        _outdir_check["no_sealed_receipt_yet"] = assert_no_sealed_receipt_yet(
-            day, Path(DR.resolve()["data_root"]))
+        # ---- DE 176: A CORRECTION SUPERSEDES; IT DOES NOT RE-RUN -----
+        # After R-834 retracted every arm result, a corrected day MUST be
+        # runnable -- and the day path had no way to say so. The guard was
+        # right to refuse (a day that runs twice is not a day with a
+        # newest result) and the remedy is the one its own message names:
+        # a SUPERSEDING receipt carrying {path, sha256}. The guard is NOT
+        # weakened -- a run without `--supersedes` still refuses -- and
+        # the target must be the CHAIN HEAD, because superseding anything
+        # else leaves two heads and `find_sealed_day_receipt` would then
+        # report AMBIGUOUS rather than a newest result.
+        _sup_block = None
+        if a.supersedes is None:
+            _outdir_check["no_sealed_receipt_yet"] = \
+                assert_no_sealed_receipt_yet(
+                    day, Path(DR.resolve()["data_root"]))
+        else:
+            _found = find_sealed_day_receipt(
+                day, Path(DR.resolve()["data_root"]))
+            _tgt = Path(a.supersedes).resolve()
+            if not _tgt.is_file():
+                raise RunnerRefused(
+                    f"REFUSED {DAY_SUPERSEDES_TARGET_ABSENT}: "
+                    f"--supersedes names {_tgt}, which is not a file.")
+            _head = Path(_found.get("path") or "").resolve() \
+                if _found.get("path") else None
+            if _found["n_matches"] == 0:
+                raise RunnerRefused(
+                    f"REFUSED {DAY_SUPERSEDES_NOTHING}: day {day} has no "
+                    f"sealed receipt, so there is nothing to supersede. "
+                    f"Run it without `--supersedes`.")
+            if _head != _tgt:
+                raise RunnerRefused(
+                    f"REFUSED {DAY_SUPERSEDES_NOT_THE_HEAD}: "
+                    f"--supersedes names {_tgt.name} and the chain head is "
+                    f"{_head.name if _head else None} "
+                    f"(status {_found['status']}). Superseding anything but "
+                    f"the head leaves TWO heads and the day stops having a "
+                    f"newest result -- which is the property the guard "
+                    f"exists for.")
+            _sup_block = {
+                "path": str(_tgt),
+                "sha256": sha256_streamed(_tgt),
+                "rule": "13 -- corrections supersede IN BAND; the old "
+                        "receipt stays as provenance and is never edited",
+                "why": ("R-834 retracted every arm result of this "
+                        "programme; this run is the corrected day and "
+                        "names the receipt it replaces"),
+                "target_was_the_chain_head_at": _found["status"]}
+            _outdir_check["no_sealed_receipt_yet"] = {
+                "day": day,
+                "n_sealed_artifacts_present": _found["n_matches"],
+                "status": "SUPERSEDED_BY_THIS_RUN",
+                "supersedes": _sup_block}
     # THE BATTERY RUNS BEFORE THE DAY'S WORK (R-610), not at the emit.
     # It used to be called here, AFTER `day_split_residency_proof` had
     # already spent the day: on 2026-09-03 that was 84 minutes of null
@@ -16178,6 +16239,15 @@ def _main_day(a) -> int:
         before_work=_battery_first)
     payload = proof.pop("day_result")
     payload["split_residency_proof"] = proof
+    # ---- DE 176: THE SUPERSESSION REACHES THE ARTIFACT ---------------
+    # A check whose result never leaves the process is a check nobody can
+    # resolve -- rule 13 says a correction supersedes IN BAND, and "in
+    # band" means the emitted receipt names its predecessor by
+    # {path, sha256}. `da_early_read_verify.resolve_early_read_head` and
+    # `find_sealed_day_receipt` both resolve heads by exactly this pair.
+    if _sup_block is not None:
+        payload["supersedes"] = _sup_block
+    payload["output_dir_checks"] = _outdir_check
     payload["source_identity"] = {
         **assert_source_unchanged("the day-run emit",
                                   fixture=fixture),
