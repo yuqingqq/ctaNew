@@ -694,6 +694,70 @@ def assembly_shape_of_values(scored) -> str:
     return "MIXED_SCORE_SHAPES"
 
 
+def scored_stream_rows(ref: dict, gs: dict, sides) -> tuple:
+    """THE SCORE-EVENT ROWS FOR ONE HEAD, SHAPE-AWARE (DA 148).
+
+    Three of this seat's probes built this inline with a PER_GENERATION
+    membership test, stamping every event at the generation's start. On a
+    corrected book that is wrong twice: a generation is kept only if some
+    row happens to sit exactly at its start, so most of the population is
+    DROPPED, and the event carries the generation's time rather than the
+    row's, which is DE 155's look-ahead re-created inside DA's probes.
+
+    AND IT IS WRONG UNDER PER_GENERATION TOO, which is REV 121's point and
+    the reason this is not conditional on anyone's first-row claim: if the
+    feature pass dropped the row at the generation's start, that key is
+    absent and the generation reads UNSCORED although its other rows were
+    scored. That happens at some rate wherever the first row sits.
+
+    Returns `(rows, info)`; `info` carries the shape and the counts, so a
+    caller reports what it built over instead of assuming it (rule 4).
+    """
+    shape = assembly_shape_of_values(gs)
+    sides = tuple(sides)
+    rows: list = []
+    info = {"score_shape": shape, "n_reference_generations": 0,
+            "n_generations_with_a_row": 0, "n_rows": 0,
+            "n_generations_unscored": 0}
+    by_gen: dict = {}
+    if shape == SHAPE_PER_ROW:
+        for k, v in gs.items():
+            if not (isinstance(k, (tuple, list)) and len(k) == 3):
+                continue
+            g_id = v.get("gen") if isinstance(v, dict) else None
+            if g_id is None:
+                continue
+            by_gen.setdefault((k[0], k[1], g_id), []).append(float(k[2]))
+        for t_list in by_gen.values():
+            t_list.sort()
+    for slug in sorted(ref):
+        by_side = ref[slug] or {}
+        for sd in sides:
+            for g in (by_side.get(sd) or ()):
+                info["n_reference_generations"] += 1
+                if shape == SHAPE_PER_ROW:
+                    ts = by_gen.get((slug, sd, g["gen"]))
+                    if not ts:
+                        info["n_generations_unscored"] += 1
+                        continue
+                    info["n_generations_with_a_row"] += 1
+                    for t in ts:
+                        rows.append({"t": t, "slug": slug, "side": sd,
+                                     "gen": g["gen"]})
+                else:
+                    #: PER_GENERATION (and an empty map): the membership
+                    #: test IS the right one, and this branch is
+                    #: byte-for-byte the behaviour the three probes had.
+                    if (slug, sd, float(g["t0"])) in gs:
+                        info["n_generations_with_a_row"] += 1
+                        rows.append({"t": g["t0"], "slug": slug,
+                                     "side": sd, "gen": g["gen"]})
+                    else:
+                        info["n_generations_unscored"] += 1
+    info["n_rows"] = len(rows)
+    return rows, info
+
+
 def _scored_keys_predicate(shape, n_scored_keys, n_covered) -> dict:
     """The relation between the key count and the covered count, BY SHAPE.
 
@@ -1699,6 +1763,90 @@ def selftest() -> tuple:                                      # noqa: C901
        f"{_row_b['score_shape_declared']}, agrees "
        f"{_row_b['score_shape_agrees']}; a half-and-half map is named "
        f"MIXED_SCORE_SHAPES rather than coerced")
+
+    # -- 8c. DA 148: THE STREAM BUILDER THREE PROBES SHARE -------------
+    _SD = ("BUY_UP", "SELL_UP")
+    _sref = {"sA": {"BUY_UP": [{"gen": 0, "t0": 100.0, "t1": 200.0},
+                               {"gen": 1, "t0": 200.0, "t1": 300.0}],
+                    "SELL_UP": []}}
+    _pg = {("sA", "BUY_UP", 100.0): 0.5, ("sA", "BUY_UP", 200.0): 0.6}
+    _pg_rows, _pg_i = scored_stream_rows(_sref, _pg, _SD)
+    ck("DA 148 (a) A PER-GENERATION MAP IS BUILT EXACTLY AS THE THREE "
+       "PROBES BUILT IT: one event per generation whose start key is "
+       "present, stamped there -- byte-for-byte the old behaviour, so a "
+       "consumed-hour cache is unaffected",
+       _pg_i["score_shape"] == SHAPE_PER_GENERATION
+       and [(r["t"], r["gen"]) for r in _pg_rows] == [(100.0, 0), (200.0, 1)]
+       and _pg_i["n_generations_unscored"] == 0,
+       f"shape {_pg_i['score_shape']}, rows "
+       f"{[(r['t'], r['gen']) for r in _pg_rows]}")
+    _pr = {("sA", "BUY_UP", 100.0): {"score": .5, "gen": 0, "t0": 100.0},
+           ("sA", "BUY_UP", 103.0): {"score": .6, "gen": 0, "t0": 100.0},
+           ("sA", "BUY_UP", 106.0): {"score": .7, "gen": 0, "t0": 100.0},
+           ("sA", "BUY_UP", 250.0): {"score": .8, "gen": 1, "t0": 200.0}}
+    _pr_rows, _pr_i = scored_stream_rows(_sref, _pr, _SD)
+    _old_kept = [g for g in (0, 1)
+                 if ("sA", "BUY_UP", float({0: 100.0, 1: 200.0}[g])) in _pr]
+    ck("DA 148 (b) A PER-ROW MAP EMITS ONE EVENT PER SCORED ROW AT ITS "
+       "OWN TIME -- and the KNOWN-BAD is the OLD expression computed on "
+       "the SAME map: it would have kept generation 0 only, DROPPED "
+       "generation 1 entirely, and stamped generation 0 at 100.0 while "
+       "its rows are at 100.0, 103.0 and 106.0",
+       _pr_i["score_shape"] == SHAPE_PER_ROW
+       and [(r["t"], r["gen"]) for r in _pr_rows]
+           == [(100.0, 0), (103.0, 0), (106.0, 0), (250.0, 1)]
+       and _pr_i["n_rows"] == 4 and _pr_i["n_generations_unscored"] == 0
+       and _old_kept == [0],
+       f"rows {[(r['t'], r['gen']) for r in _pr_rows]}; the old test would "
+       f"have kept generations {_old_kept} of [0, 1], all stamped at their "
+       f"generation start")
+    _drop = {k: v for k, v in _pr.items() if k[2] != 100.0}
+    _d_rows, _d_i = scored_stream_rows(_sref, _drop, _SD)
+    _old_after = ("sA", "BUY_UP", 100.0) in _drop
+    ck("DA 148 (c) REV 121's CASE, AND IT NEEDS NO CLAIM ABOUT WHERE THE "
+       "FIRST ROW SITS: keys [100.0, 103.0, 106.0] make the old test read "
+       "True; DROP the 100.0 row -- the feature pass does -- and it reads "
+       "FALSE, so the generation reads UNSCORED though 103.0 and 106.0 "
+       "were scored. This builder keeps both",
+       [(r["t"], r["gen"]) for r in _d_rows]
+           == [(103.0, 0), (106.0, 0), (250.0, 1)]
+       and _d_i["n_generations_unscored"] == 0 and _old_after is False,
+       f"after dropping the start row the old test reads {_old_after}; "
+       f"this builder emits {[(r['t'], r['gen']) for r in _d_rows]}")
+    _uncov = {("sA", "BUY_UP", 103.0): {"score": .6, "gen": 0, "t0": 100.0}}
+    _u_rows, _u_i = scored_stream_rows(_sref, _uncov, _SD)
+    _e_rows, _e_i = scored_stream_rows(_sref, {}, _SD)
+    ck("DA 148 (d) THE CELL THAT MATTERS: A GENUINELY UNDER-COVERED MAP "
+       "IS STILL REPORTED UNDER-COVERED. Generation 1 has no scored row, "
+       "so it is counted unscored 1 of 2 and contributes no event -- the "
+       "builder became correct, not permissive. An EMPTY map yields no "
+       "rows and counts BOTH unscored",
+       _u_i["n_generations_unscored"] == 1
+       and _u_i["n_generations_with_a_row"] == 1
+       and [(r["t"], r["gen"]) for r in _u_rows] == [(103.0, 0)]
+       and _e_i["n_rows"] == 0 and _e_i["n_generations_unscored"] == 2,
+       f"under-covered: unscored {_u_i['n_generations_unscored']} of "
+       f"{_u_i['n_reference_generations']}, rows "
+       f"{[(r['t'], r['gen']) for r in _u_rows]}; empty -> "
+       f"{_e_i['n_rows']} rows, {_e_i['n_generations_unscored']} unscored")
+    _wired = {}
+    for _m in ("da_elementwise", "da_elem_grid", "da_elementwise_hz"):
+        _src = (Path(__file__).resolve().parent / f"{_m}.py").read_text()
+        _code = "\n".join(l.split("#")[0] for l in _src.splitlines())
+        _wired[_m] = {"calls": _code.count("BV.scored_stream_rows"),
+                      "old_expr": _code.count('float(g["t0"])) in gs')}
+    ck("DA 148 (e) ALL THREE PROBES ARE WIRED TO IT (rule 17: suite-green "
+       "is not pipeline-wired) -- each calls it once and none retains the "
+       "old expression in CODE; the source is comment-stripped first, so "
+       "a comment quoting the old form does not count as wiring",
+       all(v["calls"] == 1 and v["old_expr"] == 0
+           for v in _wired.values()) and len(_wired) == 3,
+       f"{_wired}. REV 122 answered its own question with FIVE consumers, "
+       f"and my own sweep over comment-stripped `live/` independently "
+       f"found `de_section81_arms.py:526` carrying the same test, the "
+       f"same stamping, and COUNTING the misses as "
+       f"`excluded_no_assembled_score` -- DE's module, REPORTED not "
+       f"edited (R-235). DA's own set is these three")
 
     # -- 9. a receipt for the WRONG DAY or COIN REFUSES -------------------
     why_day = why_coin = ""

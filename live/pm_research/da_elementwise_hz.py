@@ -14,6 +14,7 @@ sys.path.insert(0, "live/pm_research")
 import harmful_stateful_policy as HSP
 import de_phase4_diag_runner as R
 import de_score_stream as SS
+import da_book_verify as BV
 
 CACHE = ("/home/yuqing/ctaNew/data/pm_5min/derived/"
          "de_section81_cache_12.pkl")
@@ -25,13 +26,14 @@ NO_CANCEL_THETA = 2.0
 
 def stream(head):
     gs = asm["by_arm"][(COIN, head)][0]
-    rows = []
-    for s_, sides in sorted(ref.items()):
-        for sd in HSP.SIDES:
-            for g in sides[sd]:
-                if (s_, sd, float(g["t0"])) in gs:
-                    rows.append({"t": g["t0"], "slug": s_, "side": sd,
-                                 "gen": g["gen"]})
+    # DA 148: SHAPE-AWARE, and NOT conditional on anyone's first-row
+    # claim. The inline test this replaces kept a generation only if a
+    # row sat exactly at its start and stamped the event there: on a
+    # PER_ROW book that drops most of the population AND re-creates DE
+    # 155's look-ahead; on a PER_GENERATION book it still reads a
+    # generation UNSCORED when the feature pass dropped that one row
+    # (REV 121). ONE implementation, imported -- never a fourth copy.
+    rows, _shape_info = BV.scored_stream_rows(ref, gs, HSP.SIDES)
     v = SS.verify_head(head, COIN)
     return SS.score_events(rows, head=head, coin=COIN,
                            scorer=R._head_scorer(head, COIN, gs),
