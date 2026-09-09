@@ -636,6 +636,60 @@ a run that had started from `c9f8b31` at 05:09:52Z. Second loss of this class.
 then the last five register entries, then the four seat procedure files if you need to
 know how a seat works.
 
+## 7h. STATE at 2026-09-09T07:35Z (R-843) — READ THIS FIRST; it supersedes §7f and §7g
+
+**NOTHING IS BUILDING, BY USER RULING (R-839): "dont have to build now, we clear issues
+first".** `p003ev200903b` stopped 07:15:47Z, clean, nothing written. **No seat takes the
+heavy lock and no day is built until the build gate is cleared and a build is dispatched.**
+
+**THE RULING WAS RIGHT AND THE EVIDENCE IS SIX DEFECTS IN THIRTY MINUTES.** Three seats were
+told to hunt with NO TARGET NAMED, and every one of them found something on the path the
+rebuild would have run. The build gate, in severity order, with owners:
+
+1. **The builder never asks the day its era** (REV 112, R-843) — `_era_or_refuse(fi, None, …)`
+   resolves a module default `clob_v3_1` while every September day is `clob_v4_1`; the gap
+   tables are DISJOINT, so `build_reference` gets `gaps=[]` on every window of every day.
+   09-03: **160 of 287 windows, 2,294.7 s built as if continuous.** → BE.
+2. **The book's `producing_code.import_closure` is recorded and read by nobody** (REV 111,
+   R-840) — the only SILENT pin site; true of every book on disk. → DE.
+3. **The score key drops rows** (DA 138, R-842) — `(slug, side, t)` lost the generation. → DE.
+4. **The engine ignores the score event's generation** (DA 139, R-842) — and a misattributed
+   cancel is INVISIBLE in every artifact. Same root as 3; one site (`t1` bound) closes both. → DE.
+5. **The builder's coverage evidence uses the pre-fix membership test** (BE 111, R-841) — it
+   goes into every receipt and `assert_coverage` only refuses at zero. → BE.
+6. **Mode C blames the wrong subsystem** (DA 138) — sends the next debugger into the feature
+   pass. → DE.
+7. **`de_section81_cache_12.pkl` has no code pin at all** (REV 111, site 4). → DE.
+
+**THE ERA DEFECT REACHES BACKWARD, and this is the thing a resuming coordinator must not
+lose:** every book on disk was built through it, including those the retracted arm results
+came from AND the reference the 0-cancel baseline runs over. **The placement-latency finding
+is triple-derived but all three derivations sit on those books, and NOBODY HAS ESTABLISHED
+ITS INDEPENDENCE FROM THE ERA DEFECT.** DA 137's survival argument bounds the SCORING defects
+out of the baseline and says nothing about this one, which enters upstream of the arm/baseline
+split. The retraction has NOT been extended; the exposure is named and routed. **QUEUED as
+DA 141, bounded and read-only: what share of the baseline's settled money falls inside 09-03's
+160 gapped windows.**
+
+**THREE USER RULINGS ARE IN (R-837, R-838):** the null's sampling unit is **B, match on
+cancels**; `research.slice` is raised to the ruled **1000 %** (applied and verified at the
+running manager — and the declared file says 1200 %, a dead value since 09-06, so never
+"reload to make the config take effect"); the build unit's memory envelope is **ratified for
+the EV20 queue only**. **The slice clamp is OWED BACK at 200 % when the null is done.**
+
+**SEATS at this writing:** BE was RESET from 97 % (its harvest is R-841, its method
+`BE_PROCEDURE.md`) and is on BE 112 (coverage fix against a synthetic PER_ROW fixture, site 3
+in its guard); the era fix is its next round. DA 140 — a THIRD untargeted area. DE 162 — gate
+items 2, 3, 4, 6, 7. REV 113 — verifying DE 161's rewritten sealed-value guard, because it was
+LOOSENED on the strength of a false positive, which is where a real leak walks through.
+MEM 293 — the sweep.
+
+**WHAT WORKED, and it is now the programme's most productive instrument: a prompt that names
+no target.** Six defects came from three such prompts in thirty minutes; the seats working to
+specified briefs had found none of them in the preceding hours. See also DA's own rule, earned
+at R-842: **a claim of unchangedness made at the moment its input changed shape is where you
+look.**
+
 ## Worktree data rule (R-553)
 
 **Refresh a seat worktree ONLY with `bash scripts/wt_refresh.sh <wt> [ref]` (R-625).** A bare `checkout --detach` re-materialises `data/` whenever a landed commit adds a tracked data path (REV 59 §8); the script drops the symlink, checks out, sweeps skip-worktree over every tracked data file, re-links and verifies. Sparse-checkout was tried and rejected: git ignores the skip-worktree bits under it.
