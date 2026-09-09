@@ -1,3 +1,93 @@
+# READ FIRST — round 290 (MEM, 2026-09-09T07:08:01Z, tip `6120e61`)
+
+**The post-R-835 sweep, worked as a numbered queue under the new rule 23 — from my round-289 tip `3828ed7` to
+`6120e61`, eight commits.** STATE ONLY.
+
+## THE SWEEP
+
+- **`662776b` — SEAT_PROTOCOL rules 23 and 24.** Rule 23 ("a numbered queue is worked END TO END") landed with my
+  round-289 wording **and a half I did not propose**: *the coordinator's half — arm a Monitor on every heavy unit and
+  prompt the seat at its exit*, since in-pane watchers are dead (R-821). A seat-side rule alone would have put the
+  whole burden on the seat. Rule 24 makes `<SEAT>_PROCEDURE.md` a standing obligation, with the clause that keeps it
+  honest: **a fresh seat that faults its own file within an hour is the file working, not failing.**
+- **`43d97d8` — `BE_PROCEDURE.md`, 330 lines, 05:58:39Z.** The gap I named at round 289 (05:49:56Z) was **closed
+  nine minutes later**. All four seats now have files at the filesystem: BE 16,272 / DA 10,026 / DE 29,411 /
+  MEM 6,283 B.
+- **`94e0437` / `41c5264` / `4074f60`** — the retraction notice at **line 1** of `RESULTS.md`, and runbook §7f
+  (state at R-835) and §7g (on resume).
+
+## THE LOSS — p003ev200903, recorded with its provenance
+
+Launched **05:09:52Z** from `wt-be` at `c9f8b31f94ef…`, invocation `a83a9d1dbc8841d892597db6afc498ec`. It
+**ASSEMBLED** — `{"stage": "assembled", "assembly_s": 3793.8, "peak_gb": 5.562}`, 63.2 minutes — and was then
+**refused at the write** by `be_rule22.py:916`:
+
+> `REFUSED at be_daybook_build: before the book is written: THE WORKTREE'S HEAD MOVED UNDER THIS RUN —
+> c9f8b31f94ef -> eb2c24dfabda. A receipt's builder_commit would name a commit this run did not execute from.`
+
+`[exit] 06:24:20Z rc 1`; leaf peak of record **8,121,389,056 B** over 889 samples, `final_substate "failed"`.
+**74 minutes, nothing written, lock freed.**
+
+**`eb2c24dfabda` is BE 109 — `BE_PROCEDURE.md`, the commit that closed the gap I reported.** My finding was right,
+and its remedy, landed into the worktree its own build was running from, destroyed the run. **The guard did its job;
+the sequencing did not.** Second head-move-under-a-run to cost a day build.
+
+**The asymmetry worth recording:** rule 22 is titled and argued about **code** — but `be_rule22.assert_unchanged`
+checks the **worktree's HEAD**, so *any* commit of *any* file type refuses the write. The file that cost 74 minutes
+was a **Markdown procedure document no run imports.** The guard is broader than the rule's wording, and the wording
+is what a seat reads before deciding whether it may land. *(Observation for the rule's owner; SEAT_PROTOCOL is not
+mine.)*
+
+**And the dead unit now reads success.** At 07:04:59Z `systemctl --user show p003ev200903.service` returns
+`LoadState=not-found`, `ExecMainStatus=0`, `Result=success` — collected, so `show` answers with **defaults**. R-648's
+trap, on the most expensive run of the day. **The only durable account is the launcher's own
+`be_heavy_run_record_p003ev200903.jsonl` and `be_heavy_run_stdout_p003ev200903.log`**, both written as the run went.
+
+Also from the record: **three launches under the one unit name** — 03:01:19Z **from the shared tree**, 03:11:10Z and
+05:09:52Z from `wt-be`. Only the record's per-launch `tip`/`worktree` fields make that history readable. The relaunch
+correctly took a new name.
+
+## CARRIED AS A FLAG, NOT A SETTLED FACT — BE 110's memory envelope
+
+The `memory_envelope` event raises the build unit's `MemoryMax` from 8 GiB to **11,869,652,313 B**. **BE writes the
+caveat itself**: *"rules 8 / 20 / R-174 say a cap is never raised; this override was DISPATCHED by the coordinator at
+BE 104 and reaffirmed at BE 110 and wants a register amendment, which BE has flagged and not assumed."* **The
+amendment is the coordinator's to write and is not written**, so nothing here treats the raise as ruled.
+
+- Evidence BE gives: 09-04 pinned the 8 GiB cap with `memory.events max=775, oom_kill=0` (reclaim thrash, no kill),
+  and the failed EV20 run peaked **8,121,389,056 B — 94.55 % of the old cap.**
+- **Arithmetic checked, and a rounding named:** the dispatch's 15,489 B/row × 638,602 × 1.20 = **11,869,567,654** —
+  **84,659 B short**. The record's unrounded basis (8,430,505,984 B over 544,286 rows = **15,489.110475 B/row**)
+  gives 9,891,376,928 × 1.20 = **11,869,652,313 to the byte.** The declaration is right; 15,489 is the display
+  value. *Nobody should reconcile that gap by editing the declared number.*
+- **Live and contained:** the running unit shows `MemoryMax=11869652313`, and the record's
+  `slice_MemoryMax_bytes` is **15,032,385,536 (14.00 GiB)** — unlike the CPU case, where DE 158 measured the slice
+  as the binding wall at 200 %.
+
+## ONE OBSERVATION FOR THE RUNBOOK'S OWNER
+
+**§7g "ON RESUME — DO THESE FIRST" names an in-flight unit that has since died.** Its item 2 points a cleared
+coordinator at `p003ev200903`, "started 05:09:52Z, ~35 min expected" — that unit exited at 06:24:20Z with nothing
+written and its name no longer resolves; the live run is `p003ev200903b`, and the assembly alone took 63.2 min. Also:
+**§7g sits above §7f in the file** while §7f says "read this FIRST" — file order is 7e, 7g, 7f.
+
+## STATE
+
+`p003ev200903b` running since **06:59:59Z**, invocation `d60d8b7b8807402c876dc606c7cdecce`, under the raised
+envelope. **`wt-be`'s HEAD has moved twice more since the run it killed**: `c9f8b31` → `eb2c24d` (05:58:16Z, the
+refusal) → **`6120e61` (BE 110, 06:59:44Z) — fifteen seconds before the relaunch**, which is the correct order and
+the whole difference between the two runs. `wt-de` `5020f96` / `?? data`, the **sixteenth** consecutive round;
+`wt-rr` and the composition ref both `33e8584`.
+
+**NOTHING CORRECTED IS QUOTED HERE, and both USER rulings — the null's sampling unit and the `research.slice` cap —
+are still open.**
+
+Counts: flags 2364 → 2379, provenance 1909 → 1924 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,634 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 272
+archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 289 (MEM, 2026-09-09T05:49:56Z, tip `3828ed7`)
 
 **R-825 through R-835 swept — fifty-four commits between the tip I read at round 288 (`6f34c6e`) and `3828ed7`.**

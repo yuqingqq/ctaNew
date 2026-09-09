@@ -20673,3 +20673,38 @@ generation and the window went 4 → 3. Nothing rewritten.
   The freeze holds a TWENTY-SIXTH round; `wt-de` `5020f96` / `?? data`, the TWELFTH consecutive round; GO #8
   unchanged. MEM asserts no result.)
 ```
+
+## Batch 272 — archived 2026-09-09T07:08:01Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-07T17:26:35Z (MEM ROUND 287 -- R-815, R-816, R-817 AND R-818 SWEPT, with every landing between
+  the tip I read at round 286 (`6461cf2`) and `cd1adcc`. STATE ONLY. ***THE USER COMMITTED `849bef2` HIMSELF, DIRECTLY ON
+  TOP OF MY OWN ROUND-286 STATE COMMIT `e86e467`*** (author and committer yqq, 16:54:48Z, runner +222/-53, ledger
+  +69), and it is an ancestor of neither `850c166` nor `33e8584` -- DE took its BYTES. ***REV 106'S REFINEMENT OF THE
+  STOP REASON IS EXACT AND I READ IT IN BOTH TREES***: at `850c166` the producer HAS the file list
+  (`chainlink_streams` builds `"files": _names` at `:4966`, passed whole at `:7048`) but the sub-block
+  `verify_winners_against_chainlink` builds at `:5035-5042` carries exactly four keys and `files` is not among them;
+  at `33e8584` the same construction carries a fifth, `files`. So it is not that the head did not record them --
+  THE PRODUCER HAD THEM AND THE SUB-BLOCK DROPPED THEM. What the stops bought is nameable: artifacts under `850c166`
+  would record a provenance block the user's new re-reading check can NEVER pass, while that head's weaker gate would
+  have stamped them `is_final_for_quotation: True`; and the second stop bought all four days on IDENTICAL bytes.
+  ***THE EIGHTH HEAD CARRIES THE USER'S ASSERTION WITH ONLY ITS INPUT CONSTRUCTED***: `_with_moved_cascade` deep-copies
+  the params and zeroes phase4's sha to "0"*64, handing it to the user's own `refuses(...)` and message verbatim,
+  beside the `actual_sha="0"*64` cell it was modelled on; `EXPECTED_CHECKS` 394 -> 395 at the user's commit and 395 at
+  the eighth head; and ***THE COORDINATOR'S CONDITIONAL IS GONE, NOT DORMANT*** -- its marker string appears ONCE at
+  `b48af21` and ZERO times at `33e8584`. ***THE RUNNING UNIT PASSES `--supersedes` ON ITS OWN COMMAND LINE***
+  (`deRR20260903`, `flock -n -E 75`, the 08:54 head artifact as the target; five fields read while loaded, invocation
+  `098a441e...`, active since 17:16:15Z), and ***THE TWO STOPS LEFT THE DISK UNCHANGED*** -- the only 09-03 artifact
+  is still the one dated Sep 7 08:54 and no 09-03 ledger exists. GO #8's v2 sufficiency checked AT A REAL FILL ROW,
+  not only in the code: side, `px_cents`, size and slug all present, none missing. ***BE'S L = 250 POINT, VERIFIED AT
+  Q-BE-344 AND NOT RE-DERIVED***: the 09-05 ruled total falls 81,238.2997 -> 1,974.5755 c, with the strong part being
+  a cross-check BE did not engineer -- BE 100's ledger-timestamp count of 23,947 fills carrying 79,263.72 c, and the
+  rebuild dropping EXACTLY 23,947, agreeing to +0.0042 c. ***THE MAGNITUDE***: the maker retains 2.4306 % and loses
+  97.5694 % at L = 250, while the fill COUNT retains 51.79 % -- half the fills go and 97.6 % of the money does.
+  ***AND A PROPERTY OF THAT POINT NOBODY HAS STATED***: at L = 250 the total is 0.478 % of the residual leg against
+  26.472 % on the landed book -- the latency GROWS both legs and makes them nearly cancel, so the L = 250 total is
+  55.4x more sensitive to a proportional leg error, and a 1 % error would flip its sign. That disputes nothing BE
+  measured; it argues for the CURVE over the single point. Flags 2319 -> 2334, prov 1864 -> 1879; window trimmed
+  4 -> 3, Batch 269 archived. `wt-rr` at `33e8584` with ten pins 0 mismatched, `wt-de` `5020f96` / `?? data` the
+  THIRTEENTH consecutive round, the freeze a TWENTY-SEVENTH. MEM asserts no result.)
+```

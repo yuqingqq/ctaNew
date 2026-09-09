@@ -67,6 +67,31 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T07:08:01Z (MEM ROUND 290 -- the post-R-835 sweep worked as a NUMBERED QUEUE under the
+  new rule 23, from my round-289 tip `3828ed7` to `6120e61`, eight commits. STATE ONLY. ***RULE 23 LANDED WITH MY
+  ROUND-289 WORDING AND A HALF I DID NOT PROPOSE***: the coordinator's own obligation to arm a Monitor on every
+  heavy unit and prompt the seat at its exit, since in-pane watchers are dead -- a seat-side rule alone would have
+  put the whole burden on the seat. Rule 24 makes the procedure file a standing obligation with the clause that
+  keeps it honest: a fresh seat faulting its own file within an hour is the file WORKING. ***THE GAP I NAMED AT
+  ROUND 289 WAS CLOSED NINE MINUTES LATER*** -- `BE_PROCEDURE.md`, 330 lines, 05:58:39Z, and all four seats now have
+  files at the filesystem. ***AND THE COMMIT THAT CLOSED MY GAP IS THE COMMIT THAT KILLED A 74-MINUTE BUILD***:
+  `eb2c24d` went into `wt-be` at 05:58:16Z while `p003ev200903` was executing from that worktree, and at the write
+  `be_rule22` refused -- "THE WORKTREE'S HEAD MOVED UNDER THIS RUN -- c9f8b31f94ef -> eb2c24dfabda". The run had
+  ASSEMBLED (`assembly_s` 3793.8, 63.2 minutes, leaf peak of record 8,121,389,056 B over 889 samples) and wrote
+  nothing; exit 06:24:20Z rc 1. ***THE ASYMMETRY WORTH RECORDING***: rule 22 is worded about CODE, and the file that
+  cost the build was a MARKDOWN procedure document no run imports -- the guard checks the WORKTREE'S HEAD, so any
+  commit of any file type refuses the write, and the wording is what a seat reads before deciding it may land.
+  ***AND THE DEAD UNIT NOW READS SUCCESS***: collected, `LoadState=not-found`, so `show` answers with DEFAULTS
+  `ExecMainStatus 0 / Result success` -- R-648's trap on the most expensive run of the day, and the only true account
+  of the loss is the launcher's own jsonl record and stdout log, both named in the flags. BE 110's memory envelope is
+  carried as a FLAG and not a settled fact, which is BE's own position: the raise from 8 GiB to 11,869,652,313 B is
+  DISPATCHED and wants a register amendment BE has "flagged and not assumed" (rules 8/20/R-174); its arithmetic
+  reproduces TO THE BYTE from the unrounded 15,489.110475 B/row and NOT from the rounded 15,489, which is 84,659 B
+  short; the raise is live on the running unit and fits inside the slice's 14.00 GiB. Also recorded: three launches
+  under one unit name, one of them from the SHARED tree; and that runbook §7g's on-resume checklist names an
+  in-flight unit that has since died. Flags 2364 -> 2379, prov 1909 -> 1924; window trimmed 4 -> 3, Batch 272
+  archived. **NOTHING CORRECTED IS QUOTED HERE AND BOTH USER RULINGS ARE STILL OPEN.** `p003ev200903b` running since
+  06:59:59Z; `wt-de` `5020f96` / `?? data`, the SIXTEENTH consecutive round. MEM asserts no result.)
   2026-09-09T05:49:56Z (MEM ROUND 289 -- R-825 THROUGH R-835 SWEPT, fifty-four commits between the
   tip I read at round 288 (`6f34c6e`) and `3828ed7`, and the USER asked that the docs be brought up to date, so this
   generation carries the retractions rather than the results. STATE ONLY. ***TWO RETRACTIONS, BOTH THE USER'S OWN
@@ -124,36 +149,6 @@ updated: >-
   than overwrote and its sha matches to the digit. Flags 2334 -> 2349, prov 1879 -> 1894; window trimmed 4 -> 3,
   Batch 270 archived. The freeze holds a TWENTY-EIGHTH round; `wt-de` `5020f96` / `?? data`, the FOURTEENTH
   consecutive round. MEM asserts no result.)
-  2026-09-07T17:26:35Z (MEM ROUND 287 -- R-815, R-816, R-817 AND R-818 SWEPT, with every landing between
-  the tip I read at round 286 (`6461cf2`) and `cd1adcc`. STATE ONLY. ***THE USER COMMITTED `849bef2` HIMSELF, DIRECTLY ON
-  TOP OF MY OWN ROUND-286 STATE COMMIT `e86e467`*** (author and committer yqq, 16:54:48Z, runner +222/-53, ledger
-  +69), and it is an ancestor of neither `850c166` nor `33e8584` -- DE took its BYTES. ***REV 106'S REFINEMENT OF THE
-  STOP REASON IS EXACT AND I READ IT IN BOTH TREES***: at `850c166` the producer HAS the file list
-  (`chainlink_streams` builds `"files": _names` at `:4966`, passed whole at `:7048`) but the sub-block
-  `verify_winners_against_chainlink` builds at `:5035-5042` carries exactly four keys and `files` is not among them;
-  at `33e8584` the same construction carries a fifth, `files`. So it is not that the head did not record them --
-  THE PRODUCER HAD THEM AND THE SUB-BLOCK DROPPED THEM. What the stops bought is nameable: artifacts under `850c166`
-  would record a provenance block the user's new re-reading check can NEVER pass, while that head's weaker gate would
-  have stamped them `is_final_for_quotation: True`; and the second stop bought all four days on IDENTICAL bytes.
-  ***THE EIGHTH HEAD CARRIES THE USER'S ASSERTION WITH ONLY ITS INPUT CONSTRUCTED***: `_with_moved_cascade` deep-copies
-  the params and zeroes phase4's sha to "0"*64, handing it to the user's own `refuses(...)` and message verbatim,
-  beside the `actual_sha="0"*64` cell it was modelled on; `EXPECTED_CHECKS` 394 -> 395 at the user's commit and 395 at
-  the eighth head; and ***THE COORDINATOR'S CONDITIONAL IS GONE, NOT DORMANT*** -- its marker string appears ONCE at
-  `b48af21` and ZERO times at `33e8584`. ***THE RUNNING UNIT PASSES `--supersedes` ON ITS OWN COMMAND LINE***
-  (`deRR20260903`, `flock -n -E 75`, the 08:54 head artifact as the target; five fields read while loaded, invocation
-  `098a441e...`, active since 17:16:15Z), and ***THE TWO STOPS LEFT THE DISK UNCHANGED*** -- the only 09-03 artifact
-  is still the one dated Sep 7 08:54 and no 09-03 ledger exists. GO #8's v2 sufficiency checked AT A REAL FILL ROW,
-  not only in the code: side, `px_cents`, size and slug all present, none missing. ***BE'S L = 250 POINT, VERIFIED AT
-  Q-BE-344 AND NOT RE-DERIVED***: the 09-05 ruled total falls 81,238.2997 -> 1,974.5755 c, with the strong part being
-  a cross-check BE did not engineer -- BE 100's ledger-timestamp count of 23,947 fills carrying 79,263.72 c, and the
-  rebuild dropping EXACTLY 23,947, agreeing to +0.0042 c. ***THE MAGNITUDE***: the maker retains 2.4306 % and loses
-  97.5694 % at L = 250, while the fill COUNT retains 51.79 % -- half the fills go and 97.6 % of the money does.
-  ***AND A PROPERTY OF THAT POINT NOBODY HAS STATED***: at L = 250 the total is 0.478 % of the residual leg against
-  26.472 % on the landed book -- the latency GROWS both legs and makes them nearly cancel, so the L = 250 total is
-  55.4x more sensitive to a proportional leg error, and a 1 % error would flip its sign. That disputes nothing BE
-  measured; it argues for the CURVE over the single point. Flags 2319 -> 2334, prov 1864 -> 1879; window trimmed
-  4 -> 3, Batch 269 archived. `wt-rr` at `33e8584` with ten pins 0 mismatched, `wt-de` `5020f96` / `?? data` the
-  THIRTEENTH consecutive round, the freeze a TWENTY-SEVENTH. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -325,6 +320,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 290, the post-R-835 sweep and the p003ev200903 loss (3828ed7 -> 6120e61) ---
+  RULE_23_LANDED_WITH_MY_WORDING_AND_A_COORDINATOR_HALF_I_DID_NOT_PROPOSE: ARM-A-MONITOR-ON-EVERY-HEAVY-UNIT
+  RULE_24_MAKES_THE_PROCEDURE_FILE_A_STANDING_OBLIGATION: AND-A-SEAT-WRITES-IT-RATHER-THAN-REPORTS-IT
+  AND_THE_GAP_I_NAMED_AT_ROUND_289_WAS_CLOSED_NINE_MINUTES_LATER: 330-LINES-16272-B
+  THE_COMMIT_THAT_CLOSED_MY_GAP_IS_THE_COMMIT_THAT_KILLED_THE_BUILD: eb2c24d-INTO-A-LIVE-WORKTREE
+  THE_LOST_RUN_ASSEMBLED_AND_WAS_REFUSED_AT_THE_WRITE_BY_ITS_OWN_GUARD: assembly_s-3793.8-THEN-Rule22Refused
+  RULE_22_IS_WORDED_ABOUT_CODE_AND_THE_FILE_THAT_BROKE_THIS_RUN_WAS_MARKDOWN: THE-GUARD-CHECKS-THE-WORKTREES-HEAD
+  THE_RECORD_SHOWS_THREE_LAUNCHES_UNDER_ONE_UNIT_NAME_AND_ONE_FROM_THE_SHARED_TREE: 0301-0311-0509Z
+  THE_DEAD_UNIT_NOW_READS_SUCCESS_BECAUSE_IT_WAS_COLLECTED: not-found-THEN-DEFAULTS-0-AND-success
+  SO_THE_JSONL_RECORD_IS_THE_ONLY_TRUE_ACCOUNT_OF_THE_LOSS: exit-rc-1-AND-final_substate-failed
+  BE_110s_ENVELOPE_IS_A_FLAG_NOT_A_SETTLED_FACT_AND_BE_SAYS_SO_ITSELF: FLAGGED-AND-NOT-ASSUMED
+  ITS_ARITHMETIC_REPRODUCES_TO_THE_BYTE_FROM_THE_UNROUNDED_RATE: 15489.110475-NOT-15489
+  THE_RAISE_IS_LIVE_ON_THE_RUNNING_UNIT_AND_FITS_INSIDE_THE_SLICE: 11.05-GiB-INSIDE-14-GiB
+  SECTION_7Gs_IN_FLIGHT_LINE_POINTS_A_CLEARED_READER_AT_A_UNIT_THAT_DIED: AND-AT-A-35-MINUTE-EXPECTATION
+  THE_RETRACTION_NOTICE_IS_AT_LINE_ONE_OF_RESULTS_AND_MY_FILES_QUOTE_NOTHING_CORRECTED: BOTH-RULINGS-STILL-OPEN
+  THE_RELAUNCH_IS_RUNNING_AND_wt_be_HAS_MOVED_TWICE_MORE_SINCE_THE_LOSS: d60d8b7b-SINCE-065959Z
   # --- MEM round 289, R-825..R-835 swept (6f34c6e -> 3828ed7) ---
   BOTH_RETRACTIONS_ARE_THE_USERS_OWN_COMMITS_AND_THEY_COMPOUND: 03dbc1e-AND-c501824-LINEAGE
   THE_ARM_SIDE_OF_EVERY_RESULT_IS_RETRACTED_AND_THE_BASELINE_IS_UNTOUCHED: WRONG-QUANTITY-AND-FUTURE-INFORMATION
@@ -26710,6 +26721,182 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 290, 2026-09-09T07:08:01Z (the clock read by which every measurement below was complete) ---
+  RULE_23_LANDED_WITH_MY_WORDING_AND_A_COORDINATOR_HALF_I_DID_NOT_PROPOSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      `662776b` (05:57:02Z, +26 lines): **rule 23 "A numbered queue is worked END TO END"** is in the protocol, and
+      it credits "MEM 289 proposed the wording". Its evidence is carried as I filed it -- the 14 then 33 minutes,
+      ~47 lost, the user's "Why you become idle? Can you just proceed to fix the issues", and six defects in one
+      17-minute batch afterwards. ***AND IT CARRIES A HALF I DID NOT PROPOSE, WHICH IS THE BETTER HALF***: "the
+      coordinator's half of this rule: **arm a Monitor on every heavy unit and prompt the seat at its exit** -- seat
+      in-pane watchers are DEAD (R-821), so a unit that exits unwatched leaves its seat idling indefinitely."
+      **A seat-side rule alone would have put the whole burden on the seat**; the dispatcher's obligation is what
+      makes it symmetric.
+  RULE_24_MAKES_THE_PROCEDURE_FILE_A_STANDING_OBLIGATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      Rule 24, same commit: **every seat keeps `<SEAT>_PROCEDURE.md` in `workspace/`**, written and maintained BY
+      that seat, holding "what a fresh occupant would otherwise rediscover -- the launch forms, the surfaces owned,
+      the refusal names, the contracts, and what has cost the seat a round". **"A seat at the end of its context
+      WRITES the file rather than reporting it"** (R-831's harvest lesson made law), and -- the clause I would not
+      have thought to write -- **"a fresh seat that faults its own file within an hour is the file working, not
+      failing."** That last line is what keeps a procedure file honest instead of ceremonial.
+  AND_THE_GAP_I_NAMED_AT_ROUND_289_WAS_CLOSED_NINE_MINUTES_LATER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/BE_PROCEDURE.md
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      At round 289 (05:49:56Z) I recorded that R-831's "all four working seats now have procedure files" was false
+      at the filesystem: DA's, DE's and mine existed and **a repo-wide search for a BE procedure file by any name
+      returned nothing**. `43d97d8` "BE 109: BE_PROCEDURE.md -- this seat had none" landed at **05:58:39Z** --
+      **330 lines, 16,272 B, nine minutes after the flag**. Measured now: all four files present
+      (BE 16,272 / DA 10,026 / DE 29,411 / MEM 6,283 B). **The gap is closed at the artifact, not merely
+      acknowledged.**
+  THE_COMMIT_THAT_CLOSED_MY_GAP_IS_THE_COMMIT_THAT_KILLED_THE_BUILD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_stdout_p003ev200903.log
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      ***AND THE SAME COMMIT COST A 74-MINUTE BUILD, WHICH IS THE PART THAT BELONGS IN THE STATE.*** BE authored
+      `eb2c24dfabdaa21d9d27678b0b878c17e6c01da1` -- "BE 109: BE_PROCEDURE.md -- this seat had none", 05:58:16Z --
+      **into `wt-be`, the worktree its own `p003ev200903` build was executing from**. At the write, `be_rule22`
+      refused verbatim: *"REFUSED at be_daybook_build: before the book is written: THE WORKTREE'S HEAD MOVED UNDER
+      THIS RUN -- c9f8b31f94ef -> eb2c24dfabda. A receipt's builder_commit would name a commit this run did not
+      execute from."* **My finding was right and its remedy, landed into a live worktree, destroyed the run.** That
+      is not an argument against the finding; it is rule 22's hazard arriving through the door nobody watches.
+  THE_LOST_RUN_ASSEMBLED_AND_WAS_REFUSED_AT_THE_WRITE_BY_ITS_OWN_GUARD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      The loss, at the run's own record and log rather than from the dispatch. Launched **05:09:52Z** from `wt-be`
+      at tip `c9f8b31f94ef…`, InvocationID `a83a9d1dbc8841d892597db6afc498ec`; the log's last progress line is
+      `{"stage": "assembled", "assembly_s": 3793.8, "peak_gb": 5.562}` -- **the assembly COMPLETED, 63.2 minutes of
+      it** -- and then `be_rule22.py:916` raised `Rule22Refused`. `[exit] 06:24:20Z rc 1`; `[leaf_peak]`
+      **peak_of_record 8,121,389,056 B over 889 samples at 5 s, last increase 06:14:37Z, final_substate `failed`**.
+      **74 minutes, nothing written, the lock freed.** The guard did exactly what it exists for; the SEQUENCING did
+      not, and this is the second head-move-under-a-run to cost a day build.
+  RULE_22_IS_WORDED_ABOUT_CODE_AND_THE_FILE_THAT_BROKE_THIS_RUN_WAS_MARKDOWN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      ***THE ASYMMETRY WORTH RECORDING, BECAUSE IT IS WHY A CAREFUL SEAT WALKED INTO IT.*** Rule 22 is titled and
+      argued about CODE -- "a heavy run's CODE is frozen until its receipt lands", "a seat that must land CODE
+      during its own run lands from a SECOND worktree" -- and the module digests it discusses are the import
+      closure. **But `be_rule22.assert_unchanged` checks the WORKTREE'S HEAD, so ANY commit of ANY file type in
+      that tree refuses the write.** The file that cost 74 minutes was a **Markdown procedure document** that no
+      run imports. **The guard is broader than the rule's wording, and the wording is what a seat reads before
+      deciding whether it may land.** Recorded as an observation for the rule's owner; SEAT_PROTOCOL is not mine.
+  THE_RECORD_SHOWS_THREE_LAUNCHES_UNDER_ONE_UNIT_NAME_AND_ONE_FROM_THE_SHARED_TREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      Read from the record's own `launch` events, which is the only place this is visible: **three launches under
+      the single unit name `p003ev200903`** -- 03:01:19Z at tip `1c5ae6c` **from `/home/yuqing/ctaNew`, the SHARED
+      TREE**; 03:11:10Z at `7340d56` from `wt-be`; 05:09:52Z at `c9f8b31` from `wt-be`, the one that ran to
+      06:24:20Z. R-709 requires a UNIQUE unit name per launch so `-u <unit>` is a per-run query again; here three
+      runs share one name and **only the record file's per-launch tip and worktree fields make the history
+      readable**. The relaunch did take a new name (`p003ev200903b`), which is the rule working.
+  THE_DEAD_UNIT_NOW_READS_SUCCESS_BECAUSE_IT_WAS_COLLECTED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      ***A LIVE INSTANCE OF THE TRAP R-648 NAMES, ON THE MOST EXPENSIVE RUN OF THE DAY.*** Queried at 07:04:59Z,
+      `systemctl --user show p003ev200903.service` returns **`LoadState=not-found`, `ActiveState=inactive`,
+      `SubState=dead`, `ExecMainStatus=0`, `Result=success`** -- the transient unit was COLLECTED and `show` is
+      answering with DEFAULTS. **A reader taking those five fields today would conclude the run succeeded.** It
+      failed: rc 1, nothing written, 74 minutes lost. `not-found` makes the reading VOID, never "success", and this
+      is what that rule looks like when it bites.
+  SO_THE_JSONL_RECORD_IS_THE_ONLY_TRUE_ACCOUNT_OF_THE_LOSS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      The consequence for anyone reconstructing this later: the unit is gone, its journal rotates within hours
+      (R-641), and **the only durable account is `be_heavy_run_record_p003ev200903.jsonl` (2,974 B) plus
+      `be_heavy_run_stdout_p003ev200903.log` (31,659 B)** -- the first carrying `[exit] rc 1` and
+      `final_substate "failed"` with the leaf peak, the second carrying the refusal verbatim with its file and line.
+      **Both were written by the launcher AS THE RUN WENT, not reconstructed after**, which is the whole point of
+      the form. This state file names both paths so the loss is resolvable rather than remembered.
+  BE_110s_ENVELOPE_IS_A_FLAG_NOT_A_SETTLED_FACT_AND_BE_SAYS_SO_ITSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903b.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      ***CARRIED AS A FLAG, NOT AS A SETTLED FACT, WHICH IS THE COORDINATOR'S INSTRUCTION AND ALSO BE'S OWN
+      POSITION.*** The `memory_envelope` record event (06:59:59Z) raises the build unit's `MemoryMax` from 8 GiB to
+      **11,869,652,313 B**, and BE writes the caveat into the record itself: *"rules 8 / 20 / R-174 say a cap is
+      never raised; this override was DISPATCHED by the coordinator at BE 104 and reaffirmed at BE 110 and wants a
+      register amendment, which BE has flagged and not assumed."* **The amendment is the coordinator's to write and
+      it is not written**, so nothing here treats the raise as ruled. Evidence BE gives for it: **09-04 pinned the
+      8 GiB cap with `memory.events max=775, oom_kill=0`** -- reclaim thrash, not a kill -- and the failed 09-03
+      EV20 run peaked **8,121,389,056 B, 94.55 % of the old cap.**
+  ITS_ARITHMETIC_REPRODUCES_TO_THE_BYTE_FROM_THE_UNROUNDED_RATE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903b.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      Checked rather than accepted, and it exposes a rounding a later reader could "correct" wrongly. The dispatch's
+      basis -- 15,489 B/row x 638,602 rows x 1.20 -- gives **11,869,567,654 B**, which is **84,659 B BELOW the
+      declared 11,869,652,313**. The record carries the unrounded basis: **8,430,505,984 B over 544,286 rows =
+      15,489.110475 B/row**, and 15,489.110475 x 638,602 = **9,891,376,928 B exactly as BE states**, x 1.20 =
+      **11,869,652,313** to the byte. **So the declaration is right and 15,489 is the rounded display value** --
+      recorded here so nobody reconciles the difference by editing the declared number.
+  THE_RAISE_IS_LIVE_ON_THE_RUNNING_UNIT_AND_FITS_INSIDE_THE_SLICE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903b.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      Not only declared -- applied, and read from the running unit: `p003ev200903b` shows
+      **`MemoryMax=11869652313`** with `LoadState loaded / ActiveState active / SubState running`,
+      `ExecMainStatus 0`, `Result success`, InvocationID **`d60d8b7b8807402c876dc606c7cdecce`**,
+      `ActiveEnterTimestamp` **06:59:59Z**, MemoryCurrent 2.353 GB at ~5 minutes in. And it fits its container: the
+      record's `slice_MemoryMax_bytes` is **15,032,385,536 B (14.00 GiB)** against the unit's **11.05 GiB**, so the
+      raise does not push the unit past the slice -- unlike the CPU case, where DE 158 measured the slice as the
+      binding wall at 200 %.
+  SECTION_7Gs_IN_FLIGHT_LINE_POINTS_A_CLEARED_READER_AT_A_UNIT_THAT_DIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      An observation for the runbook's owner, not an edit. **§7g "ON RESUME -- DO THESE FIRST" (05:46Z) is the first
+      thing a cleared coordinator reads, and its item 2 says: "IN FLIGHT AT THIS WRITING: `p003ev200903` -- BE's
+      09-03 book at revision EV20 ... started 05:09:52Z, ~35 min expected. At its exit: prompt BE".** That unit died
+      at 06:24:20Z with nothing written and **its name no longer resolves** (`LoadState=not-found`); the live run is
+      `p003ev200903b`. The "~35 min" was also wrong by more than 2x -- the assembly alone took 63.2 min. **A
+      resume checklist that names a specific in-flight unit goes stale the moment that unit exits**, which is
+      exactly the loss this round was asked to record. Also noted: **§7g sits ABOVE §7f in the file** while §7f says
+      "read this FIRST" -- two sections both claiming primacy, in the order 7e, 7g, 7f.
+  THE_RETRACTION_NOTICE_IS_AT_LINE_ONE_OF_RESULTS_AND_MY_FILES_QUOTE_NOTHING_CORRECTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      `94e0437` puts the notice at **line 1** of `RESULTS.md`: "# WARNING RETRACTION NOTICE -- 2026-09-09T05:43Z
+      (R-833, R-834, R-835) ... **EVERY ARM RESULT BELOW IS RETRACTED**", naming what goes with it -- "every `D_E0`,
+      `D_E_settle`, `Z` and `p` for CONDVALUE_X_SKEW and ..." -- so a reader cannot reach a retracted table without
+      passing the retraction. Runbook **§7f** (R-835 state) and **§7g** (on-resume) landed the same minute range.
+      **My own two files quote NOTHING corrected and continue to quote nothing corrected**: both USER rulings -- the
+      null's sampling unit and the `research.slice` cap -- are still open, and no corrected point estimate exists.
+  THE_RELAUNCH_IS_RUNNING_AND_wt_be_HAS_MOVED_TWICE_MORE_SINCE_THE_LOSS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903.jsonl
+    as_of: 2026-09-09T07:08:01Z
+    said: >-
+      State at this writing, measured: `p003ev200903b` running since 06:59:59Z under the raised envelope. ***AND
+      `wt-be`'s HEAD HAS MOVED TWICE MORE SINCE THE RUN IT KILLED***: `c9f8b31` (the dead run's start) ->
+      `eb2c24d` (BE 109, 05:58:16Z, the refusal) -> **`6120e61` (BE 110, 06:59:44Z) -- FIFTEEN SECONDS before the
+      relaunch began.** That one landed BEFORE the launch rather than during it, which is the correct order and the
+      whole difference between the two runs. `wt-de` `5020f96` / `?? data`, the SIXTEENTH consecutive round I have
+      measured it; `wt-rr` `33e8584`; the composition ref `33e8584`.
   # --- MEM round 289, 2026-09-09T05:49:56Z (the clock read by which every measurement below was complete) ---
   BOTH_RETRACTIONS_ARE_THE_USERS_OWN_COMMITS_AND_THEY_COMPOUND:
     prov: CHECKED
