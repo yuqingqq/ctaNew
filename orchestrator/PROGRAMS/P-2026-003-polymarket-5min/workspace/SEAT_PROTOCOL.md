@@ -324,6 +324,45 @@ except where marked USER-ONLY.
     A fresh seat that faults its own file within an hour is the file working,
     not failing — record the correction and land it.
 
+25. **After a repair lands, at least one seat per round hunts with NO TARGET
+    NAMED** (R-839 through R-844, 2026-09-09). On the night the corrected books
+    were about to be built, three seats were told to go find what was wrong and
+    to choose where to look; **they found six defects in thirty minutes, all on
+    the path the rebuild would have run, and the seats working to specified
+    briefs had found none of them in the preceding hours.** The record is
+    unambiguous about why: every defect that has actually mattered in this
+    programme — the unloaded value head, the look-ahead, the non-finite score
+    inside a fix declared complete, the pin blocker none of seven defects named,
+    the era label, the score key, the engine's routing — was found by someone
+    who was NOT told where to look. A brief tells a seat what to check; it also
+    tells it what not to. **"I looked in these six places, drove these controls,
+    and found nothing" is an accepted and valuable answer** — DA 140's clean
+    round on the placement latency was the second most useful of that night.
+    The coordinator's half: name what is already covered, to prevent duplication,
+    and NOTHING ELSE.
+
+26. **A claim of unchangedness made at the moment its input changed shape is
+    where you look** (DA, R-842). DA 139 found that the policy engine ignores a
+    score event's generation by reading the commit message that said *"THE ENGINE
+    WAS ALREADY CORRECT … Nothing in the policy is changed"* — written while
+    handing that engine multiple events per generation for the first time. The
+    engine was unchanged; what it was fed was not. Treat every "this did not need
+    to change" written beside a shape change as an unverified claim with a known
+    place to check.
+
+27. **Verifying a fix outranks making the next one** (R-844). Twice in one night
+    a review of a landed repair was worth more than the repair: REV 110 proved
+    the cancel-count instrument sound by MUTATION rather than by reading, and
+    REV 113 found that the sealed-value guard rewritten that morning had a hole
+    on the commonest form in English prose — a reason ending a sentence with the
+    value — because it drove its own corpus against BOTH versions instead of
+    trusting four green cells. **A guard LOOSENED on the strength of a false
+    positive is the highest-priority thing to re-drive**, and the question to ask
+    is always "is there a form the OLD one caught that the NEW one does not" —
+    the regression a green battery cannot show. REV's diagnosis generalises:
+    when a guard false-positives, find out whether the defect is in the
+    COMPARISON or in the MATCHING, and change only the one that is wrong.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
