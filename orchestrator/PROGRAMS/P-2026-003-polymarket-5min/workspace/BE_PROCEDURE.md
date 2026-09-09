@@ -494,6 +494,41 @@ known-bad in the battery driving BOTH directions (the merged block still sums;
 the string-in-the-count-slot raises). **Before changing the TYPE of anything in
 a shared dict, grep for who sums it.**
 
+## 6i. AN ATTRIBUTE READ IS AN EDGE (BE 117)
+
+Asked to derive, from the recorded 49-module closure, the set a consumer must
+check. **The operation is what makes the answer defensible, so state it first:
+a module MATTERS to an artifact if its bytes can change that artifact's bytes,
+so membership is transitive REFERENCE from the producing function --
+restricted to the closure the builder recorded, which makes the derived set a
+subset of the recording by construction.**
+
+**A CALL extends the walk; an ATTRIBUTE READ reaches the module and stops --
+and leaving attribute reads out was my first answer and it was wrong.**
+`harmful_stateful_policy` reaches every generation record through `HSP.OK` and
+`HSP.SIDES` and **no call at all**; a calls-only derivation would have removed
+a module the hand-typed list correctly named.
+
+**Two sets, because the builder makes three producer calls answering two
+questions** (`be_daybook_build.py:1093/:1141/:1158): SCORING (from
+`assemble_streaming` + `build_tape_index`) = 8; REFERENCE (from
+`build_reference`) = 6; union 12 of 49. Emitted at
+`producing_code.derived_closures` as `{module: digest}` **with the
+RECORDING's own digests** — a second hashing is a second number — plus the
+edge that reached each one. 0.66 s, 4.7 KB.
+
+**AND THE SET IS A LOWER BOUND, which decides how it may be used.** A planted
+`getattr(cmod, "leaf")` makes `cmod` **completely invisible** though it is
+imported and named. So the artifact says the only set that cannot silently
+under-cover is the recording itself, and leaves the trade to the consumer —
+**a guard built on a lower bound is rule 28's own failure, and must not be
+handed over labelled as a fix.**
+
+**Two more habits this round confirmed.** `dict(stamp(), derived=f(stamp()))`
+derives from a SECOND reading — bind ONE stamp and pass it to both halves.
+And a derivation that fails is a **named status in the receipt**, never an
+exception: the recording is what the guarantee rests on and it is intact.
+
 ## 7. What I have learned the hard way
 
 * **`?? data` is correct**; anything more is not. See §0.
