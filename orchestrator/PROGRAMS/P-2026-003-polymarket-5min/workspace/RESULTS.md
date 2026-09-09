@@ -1,3 +1,43 @@
+# ⚠ RETRACTION NOTICE — 2026-09-09T05:43Z (R-833, R-834, R-835)
+
+**EVERY ARM RESULT BELOW IS RETRACTED.** Two defects in the scoring path, both found
+by the USER, and they compound:
+
+1. **The value head was never loaded** (R-833, fixed at `1d309bc`). The policy scored
+   on hazard probability alone while its frozen thresholds were fit on
+   `p_fill * predicted_conditional_value`. The arms thresholded one quantity against
+   another quantity's cutoffs.
+2. **Look-ahead in the decision** (R-834, fixed at `c501824`). `generation_scores()`
+   took the MAXIMUM score across a generation and `score_events_for()` stamped it at
+   the GENERATION START, so **later information triggered an earlier cancellation**.
+   The rule is now: each row scored at its own `t_start`, the FIRST crossing cancels.
+
+**What is retracted:** every `D_E0`, `D_E_settle`, `Z` and `p` for CONDVALUE_X_SKEW and
+HAZARD_OVER_SKEWED_REF, at every placement latency, on every day. They remain valid
+results *of an accidental probability-only policy decided with look-ahead*; they are not
+evidence about the intended policy.
+
+**What SURVIVES:** the **0-cancel baseline** makes no cancel decisions and is untouched
+by both defects. So the placement-latency finding stands and is the programme's one
+robust result:
+
+| day | baseline at L=0 | baseline at L=250 | loss |
+|---|---|---|---|
+| 2026-09-03 | 82,142.82 | 37,849.85 | −53.9 % |
+| 2026-09-04 | 102,193.69 | 38,452.91 | −62.4 % |
+| 2026-09-05 | 81,238.30 | 1,974.58 | −97.6 % |
+| 2026-09-06 | 46,562.18 | 20,750.59 | −55.4 % |
+
+(cents, settled P&L = trades cash flow + residual × settlement, R-801. Each day over its
+own window count; 09-03 covers 246 windows, the rest 288.)
+
+**Status of the repair:** all seven USER-filed defects are closed (R-835); REV 109
+confirms a day can run; the pin pair of record is **params v23 + design v31**.
+**No corrected number has been produced or quoted yet.** Two rulings are open with the
+user: the null's sampling unit, and the `research.slice` 200 % cap.
+
+---
+
 # RESULTS — P-2026-003 Polymarket crypto 5-min
 
 Consolidated 2026-09-03T03:23Z, substantially rewritten 2026-09-03T08:29Z,
