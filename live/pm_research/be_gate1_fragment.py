@@ -157,7 +157,10 @@ def population(day: str, coin: str = COIN) -> dict:
 #: artifacts rather than one fact written twice. The predicate they both
 #: name is `harmful_exposure_rows.binance_continuity_ok`.
 BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR = 0
+#: DA 147 / BE 116: the same status, for the fragment's own field.
+BINANCE_GAP_EXCLUDED_STATUS = "NOT_APPLIED_ON_THE_DAY_PATH"
 BINANCE_CONTINUITY_DISCLOSURE = {
+    "status": BINANCE_GAP_EXCLUDED_STATUS,
     "filter_applied_by_this_selector": False,
     "field_it_lands_in": "windows_excluded_binance_gap "
                          "(harmful_exposure_rows.build_rows)",
@@ -393,6 +396,8 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
             "binance_continuity": getattr(sel, "binance_continuity", None),
             "windows_excluded_binance_gap_reported_by_build_rows":
                 built.get("windows_excluded_binance_gap"),
+            "windows_excluded_binance_gap_STATUS":
+                BINANCE_GAP_EXCLUDED_STATUS,
         },
         "build": {"n_rows": len(rows), "n_windows": built.get("n_windows"),
                   "days": built.get("days"),
@@ -428,7 +433,7 @@ def build(day: str, *, coin: str = COIN, progress: bool = True,
     }
 
 
-EXPECTED_CHECKS = 25
+EXPECTED_CHECKS = 26
 
 
 def selftest() -> int:
@@ -636,6 +641,15 @@ def selftest() -> int:
            f"a NON-EMPTY gap list. At 9fe6317 it read the module literal "
            f"{_fsel.era_resolution['module_default_NOT_used']['fi.ERA']!r} "
            f"and handed over zero")
+        ok(BINANCE_GAP_EXCLUDED_STATUS == "NOT_APPLIED_ON_THE_DAY_PATH"
+           and _fsel.binance_continuity["status"]
+           == BINANCE_GAP_EXCLUDED_STATUS,
+           f"DA 147's STATUS on the fragment's own field too: "
+           f"`windows_excluded_binance_gap_STATUS: "
+           f"{BINANCE_GAP_EXCLUDED_STATUS!r}` travels in the receipt's "
+           f"selection block beside the count `build_rows` reports, so the "
+           f"fragment -- the book's INPUT -- says which kind of zero it "
+           f"carries as well")
     except Exception as e:                                   # noqa: BLE001
         ok(False, f"the fragment era seam could not run: "
                   f"{type(e).__name__}: {e}")

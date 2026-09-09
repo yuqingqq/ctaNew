@@ -263,6 +263,30 @@ def generation_coverage(ref: dict, gen_scores: dict, *, sides) -> dict:
         "n_reference_generations": n_gen,
         "n_distinct_reference_generations": len(ref_gens),
         "n_covered": len(covered),
+        # ---- REV 121's NUMBER, EMITTED (BE 116) ------------------------
+        # `n_covered` counts generations SOME scored row names. This counts
+        # the generations that have a scored key AT THEIR OWN t0, and the
+        # gap between the two IS the exposure for every consumer that looks
+        # a generation up at its start. It covers BOTH mechanisms at once --
+        # a generation whose first scored row is LATER than its t0, and one
+        # whose t0 row the feature pass dropped while a later row survived --
+        # because it asks only whether the t0 key is there, not why it is
+        # not. NO ARTIFACT ON DISK CAN ANSWER IT: every landed book predates
+        # the causal scoring and is keyed at t0 BY CONSTRUCTION, so on those
+        # the two numbers are equal by construction rather than by
+        # measurement. The first corrected book is the artifact that settles
+        # it, and this is the field it will settle it in.
+        "n_generations_with_a_key_at_their_own_t0": covered_pre_fix,
+        "n_generations_covered_WITHOUT_a_key_at_their_own_t0":
+            len(covered) - covered_pre_fix,
+        "what_that_gap_is": (
+            "generations a consumer keying at `t0` CANNOT find although the "
+            "book scored them. Two mechanisms, indistinguishable here and "
+            "both counted: the first scored row is later than the "
+            "generation's start, or the t0 row was dropped by the feature "
+            "pass while a later one survived. On a PER_GENERATION book it is "
+            "0 BY CONSTRUCTION -- the keys ARE the t0s -- so a zero from a "
+            "landed book is not evidence"),
         "n_covered_reference_entries": covered_entries,
         "n_uncovered": n_gen - len(covered),
         "coverage": (len(covered) / n_gen) if n_gen else None,
@@ -272,6 +296,11 @@ def generation_coverage(ref: dict, gen_scores: dict, *, sides) -> dict:
         # ---- WHAT THE PRE-FIX TEST WOULD HAVE SAID ---------------------
         "pre_fix": {
             "test": PRE_FIX_TEST,
+            "SAME_NUMBER_AS": "n_generations_with_a_key_at_their_own_t0 -- "
+                              "one computation, published twice because it "
+                              "answers two questions: what the old test "
+                              "measured, and what a t0-keyed consumer can "
+                              "still find",
             "n_covered": covered_pre_fix,
             "understated_coverage_by": len(covered) - covered_pre_fix,
             "what_it_measured": (
@@ -443,7 +472,7 @@ def _pre_fix_block(ref, gs, sides, n_gen):
             "coverage": scored / n_gen if n_gen else None}
 
 
-EXPECTED_CHECKS = 26
+EXPECTED_CHECKS = 28
 
 
 def falsify() -> int:
@@ -481,6 +510,17 @@ def falsify() -> int:
        and new["n_scored_keys_is_commensurable_with_n_covered"] is False,
        "FIXED: the same 6 is published as ROWS and explicitly marked NOT "
        "commensurable with the covered count")
+    ok(new["n_generations_with_a_key_at_their_own_t0"] == 1
+       and new["n_generations_covered_WITHOUT_a_key_at_their_own_t0"] == 2
+       and new["n_generations_with_a_key_at_their_own_t0"]
+       == new["pre_fix"]["n_covered"],
+       f"REV 121's NUMBER, EMITTED: "
+       f"{new['n_generations_with_a_key_at_their_own_t0']} of the fixture's "
+       f"3 covered generations have a scored key AT THEIR OWN t0, so "
+       f"{new['n_generations_covered_WITHOUT_a_key_at_their_own_t0']} are "
+       f"covered and INVISIBLE to a consumer keying at t0 -- the exposure, "
+       f"as a field. It is the same computation as `pre_fix.n_covered` and "
+       f"the two are asserted equal so they can never drift apart")
     ok(new["pre_fix"]["n_covered"] == 1
        and new["pre_fix"]["understated_coverage_by"] == 2,
        f"AND THE DELTA IS A FIELD, not an inference: the corrected block "
@@ -512,6 +552,12 @@ def falsify() -> int:
        f"covered, {new2['n_uncovered']} uncovered). The fix changes nothing "
        f"about any book on disk -- which is what makes it a fix and not a "
        f"re-specification")
+    ok(new2["n_generations_with_a_key_at_their_own_t0"] == new2["n_covered"]
+       and new2["n_generations_covered_WITHOUT_a_key_at_their_own_t0"] == 0,
+       f"and on a PER_GENERATION assembly the gap is 0 BY CONSTRUCTION "
+       f"({new2['n_generations_with_a_key_at_their_own_t0']} == "
+       f"{new2['n_covered']}) -- which is exactly why no book on disk can "
+       f"answer REV 121's question and the first corrected one must")
     ok(new2["n_scored_keys_unit"] == "GENERATIONS"
        and new2["n_scored_keys_is_commensurable_with_n_covered"] is True
        and new2["pre_fix"]["understated_coverage_by"] == 0,

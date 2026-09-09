@@ -638,7 +638,12 @@ def day_slugs(day: str, coin: str = COIN, *, supply: dict = None) -> list:
 #: reports rather than decides, and the receipt now says which of the two
 #: kinds of zero a reader is holding.
 BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR = 0
+#: DA 147 / BE 116: THE STATUS THE FIELD SHOULD HAVE CARRIED ALL ALONG.
+#: `statuses["BINANCE_GAP_EXCLUDED"] = 0` asserts "none excluded"; what is
+#: true is "not applied on this path", and the two are different facts.
+BINANCE_GAP_EXCLUDED_STATUS = "NOT_APPLIED_ON_THE_DAY_PATH"
 BINANCE_CONTINUITY_DISCLOSURE = {
+    "status": BINANCE_GAP_EXCLUDED_STATUS,
     "filter_applied_by_this_selector": False,
     "value_published_in_statuses": BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR,
     "what_the_value_is": "a PROPERTY OF THIS SELECTOR, not a measurement: "
@@ -836,6 +841,7 @@ def day_selector(day: str, coin: str = COIN):
         # DISCLOSURE travels beside it in the receipt.
         return out, BINANCE_GAP_EXCLUDED_BY_THIS_SELECTOR
     _sel.binance_continuity = BINANCE_CONTINUITY_DISCLOSURE
+    _sel.binance_gap_excluded_status = BINANCE_GAP_EXCLUDED_STATUS
     _sel.era = era
     _sel.era_resolution = era_res
     _sel.n_gap_bearing_windows = sum(1 for s in want if gaps.get(s))
@@ -1013,6 +1019,16 @@ def assert_coverage(cov: dict, n_gen: int, day: str, *,
             len({v["n_covered"] for v in cov.values()}) == 1,
         "pre_fix_understatement_by_head":
             {h: v["pre_fix"]["understated_coverage_by"]
+             for h, v in sorted(cov.items())},
+        # REV 121 (BE 116): the number that retires the question, at the
+        # guard as well as in the per-head block, so a reader of the
+        # receipt's guard evidence sees the exposure without opening the
+        # coverage blocks.
+        "n_generations_with_a_key_at_their_own_t0_by_head":
+            {h: v.get("n_generations_with_a_key_at_their_own_t0")
+             for h, v in sorted(cov.items())},
+        "n_generations_covered_WITHOUT_a_key_at_their_own_t0_by_head":
+            {h: v.get("n_generations_covered_WITHOUT_a_key_at_their_own_t0")
              for h, v in sorted(cov.items())},
         "min_coverage": min_coverage,
         "min_coverage_enforced": min_coverage is not None,
@@ -1287,7 +1303,21 @@ def build(day: str, *, coin: str = COIN,
         # all three read back from the reference's own report.
         "placement_latency": _pl,
         "reference": {"windows": len(ref), "generations": n_gen,
-                      "statuses": fr.get("statuses"),
+                      # DA 147 / BE 116: THE STATUS SITS BESIDE THE COUNT,
+                      # in the same block, because that is where a reader
+                      # meets the 0. It is a SIBLING KEY and not a
+                      # replacement: `statuses["BINANCE_GAP_EXCLUDED"]` is
+                      # summed by `da_book_verify.py:742`
+                      # (`sum(st.get(k, 0) for k in excl)`) and a string
+                      # there raises TypeError inside another seat's
+                      # verifier, so the count stays an int and the status
+                      # says what kind of zero it is.
+                      "statuses": dict(fr.get("statuses") or {},
+                                       BINANCE_GAP_EXCLUDED_STATUS=getattr(
+                                           sel, "binance_gap_excluded_status",
+                                           None)),
+                      "statuses_as_the_reference_reported_them":
+                          fr.get("statuses"),
                       "n_slugs": fr.get("n_slugs"),
                       "terminal_marks_present": bool(fr.get("terminal_marks")),
                       "n_terminal_marks": len(fr.get("terminal_marks") or {})},
@@ -1396,7 +1426,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 157
+EXPECTED_CHECKS = 161
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1608,6 +1638,60 @@ def selftest() -> int:
            f"{len(_want)} windows. The receipt records BOTH -- the era used "
            f"and the default not used -- so a reader can see which book they "
            f"are holding without diffing code")
+
+    # ---- BE 116: REV 121's NUMBER AND DA 147's STATUS -----------------
+    _c116ref, _c116gs = _COV._fixture(per_row=True)
+    _c116 = _COV.generation_coverage(_c116ref, _c116gs,
+                                     sides=("BUY_UP", "SELL_UP"))
+    _ev116 = assert_coverage({"h1": _c116, "h2": _c116}, 4, "d")
+    ok(_c116["n_generations_with_a_key_at_their_own_t0"] == 1
+       and _c116["n_generations_covered_WITHOUT_a_key_at_their_own_t0"] == 2
+       and _ev116["n_generations_with_a_key_at_their_own_t0_by_head"]
+       == {"h1": 1, "h2": 1}
+       and _ev116[
+           "n_generations_covered_WITHOUT_a_key_at_their_own_t0_by_head"]
+       == {"h1": 2, "h2": 2},
+       f"REV 121's NUMBER REACHES THE RECEIPT, per head and in the guard "
+       f"evidence: {_c116['n_generations_with_a_key_at_their_own_t0']} of 3 "
+       f"covered generations carry a key AT THEIR OWN t0, so "
+       f"{_c116['n_generations_covered_WITHOUT_a_key_at_their_own_t0']} are "
+       f"covered and INVISIBLE to a t0-keyed consumer. NO BOOK ON DISK CAN "
+       f"ANSWER THIS -- every landed assembly is keyed at t0 by "
+       f"construction, so the gap is 0 there by construction and not by "
+       f"measurement. The first corrected book settles it")
+    _cg116 = _COV.generation_coverage(*_COV._fixture(per_row=False),
+                                      sides=("BUY_UP", "SELL_UP"))
+    ok(_cg116["n_generations_covered_WITHOUT_a_key_at_their_own_t0"] == 0
+       and _cg116["n_generations_with_a_key_at_their_own_t0"]
+       == _cg116["n_covered"],
+       "and the PER_GENERATION control shows why: on a pre-fix assembly the "
+       "gap is 0 because the keys ARE the t0s -- a zero that proves nothing, "
+       "which is the whole reason the question needs a corrected book")
+    _st116 = dict({"ADMITTED": 247, "BINANCE_GAP_EXCLUDED": 0,
+                   "NO_REPLAY": 0, "RECONCILIATION_FAILED": 0},
+                  BINANCE_GAP_EXCLUDED_STATUS=BINANCE_GAP_EXCLUDED_STATUS)
+    _excl116 = ("BINANCE_GAP_EXCLUDED", "NO_REPLAY", "RECONCILIATION_FAILED")
+    ok(_st116["BINANCE_GAP_EXCLUDED_STATUS"] == "NOT_APPLIED_ON_THE_DAY_PATH"
+       and _st116["ADMITTED"] + sum(_st116.get(k, 0) for k in _excl116) == 247,
+       f"DA 147's STATUS SITS BESIDE THE COUNT, IN THE SAME BLOCK: "
+       f"`BINANCE_GAP_EXCLUDED_STATUS: "
+       f"{_st116['BINANCE_GAP_EXCLUDED_STATUS']!r}` next to the 0, so a "
+       f"reader can no longer read `none excluded` off a filter that was "
+       f"never applied -- and `da_book_verify.py:742`'s "
+       f"`sum(st.get(k, 0) for k in excl)` still returns 247")
+    try:
+        _bad116 = dict(_st116,
+                       BINANCE_GAP_EXCLUDED=BINANCE_GAP_EXCLUDED_STATUS)
+        _bad116["ADMITTED"] + sum(_bad116.get(k, 0) for k in _excl116)
+        ok(False, "a string in the COUNT slot must break the arithmetic")
+    except TypeError as e:
+        ok("unsupported operand" in str(e) or "str" in str(e),
+           f"KNOWN-BAD, WHICH IS WHY THE STATUS IS A SIBLING AND NOT A "
+           f"REPLACEMENT: putting the status string INTO "
+           f"`BINANCE_GAP_EXCLUDED` raises {type(e).__name__} inside "
+           f"`da_book_verify`'s exclusion sum -- another seat's verifier, "
+           f"which this seat does not edit (R-235). The count keeps its "
+           f"type; the status says what kind of zero it is")
 
     # ---- BE 114: THE RULE 28 SWEEP'S OWN THREE FIXES, DRIVEN ----------
     # All three are MINE and two of them I added in the round before this
