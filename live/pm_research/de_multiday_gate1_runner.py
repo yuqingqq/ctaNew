@@ -6405,10 +6405,27 @@ def write_cache_code_closure(cache_path, *, built_by_this_process: bool,
                             f"{MEMBERSHIP_NOT_ESTABLISHED} rather than "
                             "return a match")}
     side.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    # ---- DE 170: THE ADDRESS BE 123 MADE LOAD-BEARING ----------------
+    # This read `derived_closures.scoring.n`, which BE has since REMOVED:
+    # the receipt-scoped walk was WITHDRAWN by BE 122 (a whitelist on the
+    # traversal loses everything behind a module the recording does not
+    # name) and BE 123 took the key out. The field went obsolete under my
+    # OWN DE 169 landing, which moved the predicate to the receipt-free
+    # set and left this writer pointing at the old name -- so it returned
+    # `None` and the round-trip assertion failed. `SUPERSEDED_NOTICE`
+    # names the successor and it is read here rather than guessed.
+    _dcw = payload["derived_closures"]
+    _recw = (_dcw.get("recommended_for_a_consumer") or {})
     return {"path": str(side), "modules": sorted(_loaded),
             "n_recorded": len(_loaded),
-            "derived_scoring_n": ((payload["derived_closures"].get("scoring")
-                                   or {}).get("n"))}
+            "derived_scoring_n": ((_recw.get("for_a_SCORING_predicate")
+                                   or {}).get("n")),
+            "derived_scoring_modules": sorted(
+                (_recw.get("for_a_SCORING_predicate") or {}).get("modules")
+                or {}),
+            "derived_set_address": ("derived_closures."
+                                    "recommended_for_a_consumer."
+                                    "for_a_SCORING_predicate")}
 
 
 def assert_cache_code_pin(cache_path, *, root=None) -> dict:
@@ -10372,6 +10389,26 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     _w163 = write_cache_code_closure(_fake_cache,
                                      built_by_this_process=True)
     _after163 = assert_cache_code_pin(_fake_cache)
+    # ---- DE 170: THE INDEPENDENT COUNT, AND A PLANTED DISAGREEMENT ---
+    _sidecar163 = Path(_w163["path"])
+    _payload163 = json.loads(_sidecar163.read_text())
+
+    def _scoring_n(doc):
+        return (((doc.get("derived_closures") or {})
+                 .get("recommended_for_a_consumer") or {})
+                .get("for_a_SCORING_predicate") or {}).get("n")
+    _n163_file = _scoring_n(_payload163)
+    import be_producing_closure as _PC163
+    _root163 = Path(__file__).resolve().parent
+    _indep163 = _PC163.expected_set_from_disk(
+        _root163, _PC163.SCORING_ENTRY_POINTS)
+    _n163_indep, _mods163_indep = _indep163["n"], sorted(_indep163["modules"])
+    # THE KNOWN-BAD: a sidecar whose recorded count is NOT the set's.
+    _planted163 = json.loads(json.dumps(_payload163))
+    _planted163["derived_closures"]["recommended_for_a_consumer"][
+        "for_a_SCORING_predicate"]["n"] = _n163_indep + 3
+    _n163_planted = _scoring_n(_planted163)
+    _agree163 = [_n163_file == _n163_indep, _n163_planted == _n163_indep]
     import shutil as _sh163
     _sh163.rmtree(_cd163, ignore_errors=True)
     ok(_before163 == CACHE_NO_CODE_PIN
@@ -10379,12 +10416,31 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        and _after163["status"] == "BOOK_SCORING_CODE_MATCHES"
        and _after163["is_a_match"] is True
        and _w163["n_recorded"] > len(SCORING_PATH_MODULES)
-       and _w163["derived_scoring_n"],
+       # ---- DE 170 / RULE 33: THIS MUST BE ABLE TO FAIL --------------
+       # It was `and _w163["derived_scoring_n"]` -- a TRUTHINESS test on a
+       # number the writer had just computed, which agrees by
+       # construction and told nobody when the field went to `None`. It is
+       # a COMPARISON now: the count the sidecar recorded against the same
+       # count computed INDEPENDENTLY here, and against the set read back
+       # FROM THE FILE. The known-bad below plants a disagreement and
+       # shows the comparison fires.
+       and _w163["derived_scoring_n"] == _n163_indep
+       and _w163["derived_scoring_modules"] == _mods163_indep
+       and _n163_file == _n163_indep
+       and _n163_planted != _n163_indep
+       and _agree163 == [True, False],
        f"DE 163 / REV 111 SITE 4, ROUND TRIP: a cache with no sidecar "
        f"refuses `{_before163}`; recording one for a cache this "
        f"process did NOT build refuses `{_late}` -- a wrong pin reads as "
        f"a verified one and is worse than the absent pin it replaces; and "
-       f"a closure recorded AT THE BUILD then verifies. **DE 168: the "
+       f"DE 170: the recorded count is READ FROM "
+       f"`{_w163['derived_set_address']}` -- BE 123 REMOVED "
+       f"`derived_closures.scoring`, so the old address returned `None` "
+       f"and this cell's truthiness test failed; it is a COMPARISON now "
+       f"({_w163['derived_scoring_n']} recorded, {_n163_indep} computed "
+       f"independently, {_n163_file} read back from the file) and a "
+       f"PLANTED count of {_n163_planted} does NOT agree "
+       f"({_agree163}), so the assertion can still fail. **DE 168: the "
        f"sidecar records THIS PROCESS'S OWN import closure "
        f"({_w163['n_recorded']} modules under live/, rule 22's shape) and "
        f"emits BE's derived block beside it "
@@ -10488,21 +10544,23 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     import be_producing_closure as _PC162
     _clo162 = _closure_from_disk(_here162)
     _dv162 = _PC162.derive(_clo162, root=_here162)
-    _exp162 = _dv162["scoring"]["modules"]
+    # ---- DE 170: THE SECOND STALE READ OF THE SAME OBSOLETE ADDRESS ---
+    # This built its fixture from `_dv162["scoring"]["modules"]`. BE 123
+    # replaced that key with a TOMBSTONE whose `modules` holds a SENTINEL
+    # FILENAME -- `WITHDRAWN_AT_BE_122__read_derived_closures.
+    # recommended_for_a_consumer` -- so the cell tried to hash a file that
+    # does not exist and the battery died by traceback rather than by a
+    # named check. The tombstone did its job: it made a stale read
+    # impossible to miss. The set comes from the recommended address, the
+    # same one `write_cache_code_closure` now reads.
+    _exp162 = set(_PC162.expected_set_from_disk(
+        _here162, _PC162.SCORING_ENTRY_POINTS)["modules"])
     _good162 = {"derived_closures": _dv162,
                 "producing_code": {"import_closure": {"modules": {
                     **_clo162,
                     **{m: hashlib.sha256(
                         (_here162 / m).read_bytes()).hexdigest()
                        for m in _exp162}}}}}
-    # DE 169: the fixture names the WHOLE receipt-free scoring set, which
-    # is what a `MATCH` now requires (BE 122). It used to name the derived
-    # eight, and the eight is withdrawn.
-    _exp162 = set(_PC162.expected_set_from_disk(
-        _here162, _PC162.SCORING_ENTRY_POINTS)["modules"])
-    _good162["producing_code"]["import_closure"]["modules"].update(
-        {m: hashlib.sha256((_here162 / m).read_bytes()).hexdigest()
-         for m in _exp162})
     _okc = assert_book_scoring_code(_good162, where="the battery")
     _bad162 = {"derived_closures": _dv162,
                "producing_code": {"import_closure": {"modules": dict(
@@ -10540,7 +10598,10 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
     except RunnerRefused as _e:
         _r3c = str(_e).split(":")[0].replace("REFUSED ", "")
     ok(_okc["status"] == "BOOK_SCORING_CODE_MATCHES"
-       and _okc["n_checked"] == _dv162["scoring"]["n"]
+       # DE 170: the THIRD read of the withdrawn key, in the same cell's
+       # own assertion. `_dv162["scoring"]["n"]` is the tombstone's count
+       # now, not the set's.
+       and _okc["n_checked"] == len(_exp162)
        and _okc["every_named_member_digest_matched"] is True
        and _okc["membership_complete"] is True
        and _okc["expected_set_source"].startswith(
