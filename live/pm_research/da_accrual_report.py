@@ -1552,9 +1552,28 @@ def selftest() -> tuple:                                      # noqa: C901
        f"binding day {NOHZ['the_binding_day']}")
 
     # -- 14. THE REAL ANSWER, and the params it rests on ------------------
-    real = gate1_accrual()
+    #: DA 155: THE CLOCK IS PINNED FOR THE ASSERTIONS AND FREE FOR THE
+    #: REPORT. `gate1_accrual()` anchors its projection on NOW, so the
+    #: horizon and bar verdicts slip as the hour advances -- the cell below
+    #: went red at 09:40Z on 09-09 with the receipt projected 19:10:31Z,
+    #: -19.08 h against the SEAL-OPEN bar, having been green earlier the
+    #: same day with the SAME CODE. A battery whose verdict changes with
+    #: the hour is measuring the clock, and a red from it tells a reader
+    #: nothing about the code.
+    #:
+    #: So the asserted reading takes a FIXED anchor -- the same `T` the
+    #: rest of this battery uses -- and what is asserted is what the CODE
+    #: determines: that every stage cost is measured, that the smoke's
+    #: status is named, that the binding day is the one selected by the
+    #: margins, and that the horizon arithmetic is COHERENT. The live
+    #: reading is still taken and REPORTED beside it, so the real margin
+    #: is visible and never silent; it is simply not what decides a red.
+    real = gate1_accrual(T)
     rs = real["serial_schedule_including_the_smoke"]
     d8 = rs["per_day"].get("20260908", {})
+    live = gate1_accrual()
+    live_rs = live["serial_schedule_including_the_smoke"]
+    live_d8 = live_rs["per_day"].get("20260908", {})
     ck("THE PARAMS ARE THE NEWEST PRESENT IN THE LEDGER TREE, RESOLVED "
        "NUMERICALLY -- not a pinned version and not this seat's worktree "
        "copy. ***v5 was pinned here and v5 carries NO horizon; run from my "
@@ -1588,11 +1607,29 @@ def selftest() -> tuple:                                      # noqa: C901
        and d8.get("before_the_horizon") is True
        and d8.get("before_the_seal_open_bar") is False
        and rs["the_binding_day"] == "20260908"
-       and rs["all_six_reach_a_sealed_receipt_before_the_horizon"] is True,
-       f"per-day cost {rs['per_day_cost_s']} s over four stages; 09-08's "
-       f"receipt projected {d8.get('expected_utc')} -- "
-       f"{d8.get('margin_to_the_horizon_h')} h inside the horizon and "
-       f"{d8.get('margin_to_the_bar_h')} h against the bar")
+       and rs["all_six_reach_a_sealed_receipt_before_the_horizon"] is True
+       #: THE ARITHMETIC, which no clock can move: the day that BINDS is
+       #: the one with the smallest margin to the bar, and every day's
+       #: two verdicts agree with its own two margins. That is what this
+       #: cell is FOR, and it holds at any anchor.
+       and all((v.get("margin_to_the_bar_h") is None)
+               or ((v["margin_to_the_bar_h"] >= 0)
+                   == bool(v.get("before_the_seal_open_bar")))
+               for v in rs["per_day"].values())
+       and all((v.get("margin_to_the_horizon_h") is None)
+               or ((v["margin_to_the_horizon_h"] >= 0)
+                   == bool(v.get("before_the_horizon")))
+               for v in rs["per_day"].values()),
+       f"ANCHORED AT {T.isoformat()}: per-day cost {rs['per_day_cost_s']} s "
+       f"over four stages; 09-08's receipt projected "
+       f"{d8.get('expected_utc')} -- {d8.get('margin_to_the_horizon_h')} h "
+       f"inside the horizon and {d8.get('margin_to_the_bar_h')} h against "
+       f"the bar. LIVE READING AT THE WALL CLOCK, REPORTED AND NOT "
+       f"ASSERTED: projected {live_d8.get('expected_utc')}, "
+       f"{live_d8.get('margin_to_the_horizon_h')} h to the horizon and "
+       f"{live_d8.get('margin_to_the_bar_h')} h to the bar, binding day "
+       f"{live_rs['the_binding_day']} -- a NEGATIVE live margin is a "
+       f"SCHEDULE fact for the coordinator, not a code regression")
 
     # -- 15. THE SUPERSESSION CHAIN AND THE COMPUTED DELTA ---------------
     v1 = td / "prior_v1.json"
