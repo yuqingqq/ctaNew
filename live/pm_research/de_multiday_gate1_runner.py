@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 410
+EXPECTED_CHECKS = 416
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -67,7 +67,7 @@ EXPECTED_CHECKS = 410
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v26.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v28.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
@@ -757,6 +757,41 @@ def load_params(path: Path | None = None) -> dict:
     if not p.is_file():
         raise RunnerRefused(f"REFUSED: no parameter file at {p}")
     d = json.loads(p.read_text())
+    # ---- DE 166 (6a): THE VERSION AND THE PROTOCOL STRING MUST AGREE --
+    # ---- OR THE FILE MUST SAY WHY THEY DO NOT ------------------------
+    # The USER found params v26 carrying `version: 26` beside
+    # `protocol: P003_DE_MULTIDAY_GATE1_PARAMS_V20`, accepted here without
+    # a word. It has been true since v21: SIX versions in a row kept a
+    # protocol suffix from a seventh. The design family learned this
+    # exact lesson at its own v7 -- "THE VERSION LIVES IN ONE PLACE. It
+    # travelled in THREE and they disagreed" -- and the params family
+    # never got the check.
+    #
+    # WHAT IS NOT ASSERTED HERE: that the suffix MUST equal the version.
+    # A pin-crank version that changes no protocol content has a real
+    # claim to keeping its protocol string, and choosing between the two
+    # readings is a ruling, not a seat's call. So the rule is the weaker
+    # and checkable one: **a divergence must be DECLARED IN THE FILE, by
+    # a version that names when the protocol last changed.** An
+    # undeclared divergence refuses; a declared one is a fact a reader
+    # can check instead of a literal nobody noticed.
+    _pv = re.search(r"_V(\d+)$", str(d.get("protocol") or ""))
+    _fv = d.get("version")
+    if _pv and isinstance(_fv, int) and int(_pv.group(1)) != _fv:
+        _decl = d.get("protocol_version_note") or {}
+        _at = _decl.get("protocol_last_changed_at_version")
+        if _at != int(_pv.group(1)) or not _decl.get("why_the_file_version_moved_past_it"):
+            raise RunnerRefused(
+                f"REFUSED {PARAMS_VERSION_DISAGREES}: this file declares "
+                f"`version: {_fv}` and `protocol: {d.get('protocol')}`, "
+                f"whose suffix is {_pv.group(1)}. The two disagree and the "
+                f"file does not say why. A reader resolving the protocol "
+                f"string gets a version number that is not this file's -- "
+                f"and `da_gate1_day_verdict` prints exactly that pair "
+                f"today. Either make them agree, or declare the "
+                f"divergence: `protocol_version_note` must carry "
+                f"`protocol_last_changed_at_version` equal to the suffix "
+                f"and `why_the_file_version_moved_past_it`.")
     days = d.get("days")
     if not isinstance(days, list):
         raise RunnerRefused("REFUSED: `days` must be a list")
@@ -1028,6 +1063,19 @@ def verify_draw_provenance(prov: dict, *, arm: str, book_digest: str,
             # silently filters it out of the artifact hides its own
             # strongest evidence.
             "reproduces_BEs_draw_null": prov.get("reproduces_BEs_draw_null"),
+            # ---- DE 166 (1): AND SO IS THE MATCHING UNIT --------------
+            # This function REBUILDS the block field by field, and the
+            # comment above says why the cross-check must not be dropped
+            # -- while the very next field, the unit the control was
+            # matched on, WAS dropped, together with the persisted control
+            # set's path and digest. Under USER ruling B that is the
+            # artifact's only record of WHICH null ran and of the bytes
+            # that reproduce it, so an artifact without it cannot answer
+            # the question DE 166 (1) exists because nobody could answer.
+            # (Rule 28: when a producer already returns the evidence, the
+            # consumer must CARRY it or refuse on it.)
+            "matched_on": prov.get("matched_on"),
+            "matched_control": prov.get("matched_control"),
             "n_draws": prov.get("n_draws"),
             "recomputed_by_the_runner": True,
             "binds_the_verified_module_to_the_numbers": True}
@@ -4631,16 +4679,57 @@ def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
             f"(design R1); a missing head is a day with no decision "
             f"population for that arm, not a smaller one.")
     stream = module.arm_stream(bk, head)
-    decisions = [r for r in stream if float(r["score"]) >= theta]
+    above = [r for r in stream if float(r["score"]) >= theta]
+    # ---- DE 166 (2), CLAUDE.md RELIABILITY RULE 2: ROWS ARE NOT ACTIONS -
+    # `decisions` counted every ABOVE-THRESHOLD ROW and the `definition`
+    # beside it said "above-threshold GENERATIONS". Before BE 107 those
+    # were the same number -- one scored entry per generation -- and the
+    # per-row repair made them different WITHOUT changing this line or its
+    # label. The count feeds two things that are not reporting:
+    #   * ADMISSIBILITY (`min_decisions_per_arm_day`), so an arm-day could
+    #     clear the bar on row multiplicity alone; and
+    #   * `by_side`, which is the historical null's DRAW SIZE.
+    # Rule 2 verbatim: "Rows are actions. One row per cancellable
+    # generation. If several rows can share one outcome, the evaluator must
+    # de-duplicate to actions or the result is inflated."
+    #
+    # THE UNIT HERE IS THE GENERATION, and it is the unit this function's
+    # own docstring and `definition` have always claimed. Whether the
+    # NULL's matching unit is the generation or the CANCEL is a separate,
+    # OPEN question (DE 166 (3): under repost one reference generation can
+    # be cancelled twice), and nothing here pre-empts it -- both counts are
+    # reported so no consumer has to infer either.
+    _gens = {(r["slug"], r["side"], int(r["gen"])) for r in above}
     by_side: dict = {}
-    for r in decisions:
-        by_side[r["side"]] = by_side.get(r["side"], 0) + 1
+    for _sl, _sd, _g in _gens:
+        by_side[_sd] = by_side.get(_sd, 0) + 1
+    _rows_by_side: dict = {}
+    for r in above:
+        _rows_by_side[r["side"]] = _rows_by_side.get(r["side"], 0) + 1
     return {"arm": arm, "head": head, "theta": theta,
             "n_scored_rows": len(stream),
-            "decisions": len(decisions),
+            "decisions": len(_gens),
             "by_side": dict(sorted(by_side.items())),
-            "definition": "above-threshold generations at the arm's FIXED "
-                          "theta -- the set a cancel decision is drawn from",
+            # BOTH NUMBERS TRAVEL. The pre-DE-166 figure is kept under its
+            # own name so a reader comparing an old receipt to a new one
+            # sees the change rather than a number that moved silently.
+            "n_above_threshold_rows": len(above),
+            "n_above_threshold_generations": len(_gens),
+            "rows_by_side": dict(sorted(_rows_by_side.items())),
+            "rows_per_decision": (round(len(above) / len(_gens), 4)
+                                  if _gens else None),
+            "decisions_unit": "GENERATION",
+            "decisions_unit_note": (
+                "DE 166 (2): `decisions` counted ROWS until this change "
+                "while its definition said generations, and it feeds "
+                "ADMISSIBILITY and the historical null's draw size. It is "
+                "now the de-duplicated generation count (CLAUDE.md rule 2) "
+                "and the row count is beside it as "
+                "`n_above_threshold_rows`. The NULL's matching unit is a "
+                "separate open question (DE 166 (3))"),
+            "definition": "above-threshold GENERATIONS at the arm's FIXED "
+                          "theta -- the set a cancel decision is drawn "
+                          "from, de-duplicated to one entry per generation",
             "theta_was_not_refitted_here": True}
 
 
@@ -5945,6 +6034,14 @@ SCORING_PATH_MODULES = (
     "harmful_stateful_policy.py", "phase2_arms.py")
 BOOK_SCORING_DIFFERS = "BOOK_BUILT_BY_DIFFERENT_SCORING_CODE"
 BOOK_SCORING_UNRECORDED = "BOOK_SCORING_CODE_NOT_RECORDED"
+#: DE 166 (5), the USER's probe: `BOOK_SCORING_CODE_MATCHES, n_checked: 1`.
+#: The predicate INTERSECTED its declared set with whatever the receipt
+#: happened to carry, so a receipt naming ONE of the five passed while
+#: saying nothing about the other four -- and `not recorded` only caught
+#: the case where it named NONE. A predicate that matches on what it finds
+#: reports agreement about a set it never saw.
+BOOK_SCORING_INCOMPLETE = "BOOK_SCORING_CODE_RECEIPT_INCOMPLETE"
+PARAMS_VERSION_DISAGREES = "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE"
 
 
 def assert_book_scoring_code(receipt: dict, *, where: str,
@@ -5971,6 +6068,28 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
             f"{list(SCORING_PATH_MODULES)}, so nothing says which scoring "
             f"code produced this book's assembly. A book caches its "
             f"scores; an unrecorded scorer is not a verified one.")
+    # ---- DE 166 (5): EVERY MEMBER, OR NONE OF THE ANSWER --------------
+    # The USER planted a receipt carrying ONE of the five and this
+    # returned `BOOK_SCORING_CODE_MATCHES, n_checked: 1`. `not recorded`
+    # is a NOT-EMPTY guard, not a COVERAGE guard -- the same shape BE 112
+    # took out of `assert_coverage` -- so the predicate agreed about a set
+    # four fifths of which it had not looked at. DA 146 established that
+    # this predicate CAN pass and did not test that it can pass on a
+    # SUBSET; that is the gap, and it is closed by asking for the whole
+    # declared set rather than for a non-empty intersection with it.
+    _absent = [m for m in SCORING_PATH_MODULES if m not in mods]
+    if _absent:
+        raise RunnerRefused(
+            f"REFUSED {BOOK_SCORING_INCOMPLETE} at {where}: the builder "
+            f"receipt's import closure names {sorted(recorded)} and is "
+            f"MISSING {_absent} of the declared scoring path "
+            f"{list(SCORING_PATH_MODULES)}. Checking the intersection "
+            f"returns agreement about the modules that happen to be "
+            f"present and says nothing about the ones that are not -- "
+            f"which is how a receipt carrying ONE module read as "
+            f"BOOK_SCORING_CODE_MATCHES. Every landed BE builder receipt "
+            f"carries all five inside a 49-module closure, so a receipt "
+            f"that does not is malformed, not merely brief.")
     differ = []
     for name, declared in sorted(recorded.items()):
         f = root / name
@@ -5990,9 +6109,36 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
             f"nothing about this: the scores are IN the book, so different "
             f"scoring code makes it a different book. Rebuild it, or read "
             f"it with the code that made it.")
+    # ---- REV 123 / DE 165 (3): WHAT FRACTION OF THE RECORDED CLOSURE --
+    # ---- THIS PREDICATE ACTUALLY CHECKED, AS A NUMBER IN THE RESULT ---
+    # `SCORING_PATH_MODULES` is five TYPED names against a closure the
+    # receipt records in full (49 on every landed book), and it is not
+    # even a superset of the ten-module cascade -- so a change to, say,
+    # `phase4_generation_tables.py` moves the scores and this passes.
+    # The set is BE 117's to derive from the recording side (rule 32:
+    # derive, do not type a longer list), and until that key exists the
+    # SHORTFALL IS PUBLISHED HERE rather than being a fact only a reviewer
+    # knows. A consumer can read `closure_coverage` and see 5 of 49.
+    _closure_n = len(mods)
     return {"status": "BOOK_SCORING_CODE_MATCHES",
             "modules_checked": sorted(recorded),
-            "n_checked": len(recorded), "where": where}
+            "n_checked": len(recorded), "where": where,
+            "declared_set": list(SCORING_PATH_MODULES),
+            "n_declared": len(SCORING_PATH_MODULES),
+            "closure_coverage": {
+                "n_modules_the_receipt_records": _closure_n,
+                "n_this_predicate_checked": len(recorded),
+                "fraction": (round(len(recorded) / _closure_n, 4)
+                             if _closure_n else None),
+                "status": ("TYPED_SUBSET_OF_A_RECORDED_CLOSURE"
+                           if len(recorded) < _closure_n else "WHOLE"),
+                "owed": ("REV 123 / DE 165 (3): the set membership is 'a "
+                         "module whose bytes can change the values in "
+                         "asm[\"by_arm\"]'. That is derivable from the "
+                         "closure the receipt already records; BE 117 is "
+                         "establishing the key and shape from the "
+                         "recording side, and this predicate adopts it "
+                         "rather than typing a longer list")}}
 
 
 CACHE_NO_CODE_PIN = "CACHE_HAS_NO_SCORING_CODE_PIN"
@@ -6064,12 +6210,33 @@ def _stamp_now() -> str:
         "%Y%m%dT%H%M%SZ")
 
 
+#: The matching units a null may declare. There is no default: DE 166 (1)
+#: found that `run_day` never passed `arm_cancels` or `control_set_path`,
+#: so the cancel-matched branch USER ruling B asked for was unreachable and
+#: the historical row-matched null ran in its place -- while four register
+#: entries recorded ruling B as implemented. The branch was reachable only
+#: by a caller that knew to ask, and the caller that mattered did not.
+#: **So the unit is now DECLARED, and an undeclared one REFUSES.** A
+#: fallback is what made a wired-looking thing unwired.
+NULL_MATCHING_UNITS = ("CANCELS", "DECISIONS")
+NULL_UNIT_NOT_DECLARED = "NULL_MATCHING_UNIT_NOT_DECLARED"
+NULL_UNIT_CONTRADICTED = "NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS"
+
+
 def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
                       n_draws: int, seed: int, deadline_s: float,
+                      matched_on: str | None = None,
                       cross_check_n: int = 8, winners: dict | None = None,
                       arm_cancels: list | None = None,
                       control_set_path=None) -> dict:
     """The null, ON THE DECISION METRIC, through BE's sampler and replay.
+
+    `matched_on` IS REQUIRED and is checked against the inputs that would
+    implement it, because the two disagreeing silently is the DE 166 (1)
+    defect: a caller may not say CANCELS without supplying the arm's cancel
+    records and a path to persist the drawn set, and may not say DECISIONS
+    while supplying cancel records. **A run whose null cannot name its
+    matching unit refuses; it does not fall back.**
 
     WHY NOT `draw_null` ITSELF: BE's `draw_null` reduces each draw to
     mechanics fields and DISCARDS the fills, so D(E0) -- which is a sum
@@ -6082,6 +6249,36 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     both produce -- `cancels_issued`. A private loop that drew a different
     sequence would be a different null wearing the same seed."""
     import numpy as np
+    # ---- DE 166 (1): THE DECLARATION, CHECKED AGAINST ITS INPUTS ------
+    if matched_on not in NULL_MATCHING_UNITS:
+        raise RunnerRefused(
+            f"{NULL_UNIT_NOT_DECLARED}: `matched_on` was {matched_on!r} and "
+            f"must be one of {list(NULL_MATCHING_UNITS)}. USER ruling B "
+            f"(R-837) makes the CANCEL the action, and the branch that "
+            f"implements it was reachable only by a caller that passed "
+            f"`arm_cancels` -- which `run_day` never did, so the ruled null "
+            f"was not the null that ran while four register entries said it "
+            f"was. There is no default: the unit is named by the caller and "
+            f"checked here, or the day refuses.")
+    if matched_on == "CANCELS" and arm_cancels is None:
+        raise RunnerRefused(
+            f"{NULL_UNIT_CONTRADICTED}: `matched_on='CANCELS'` with no "
+            f"`arm_cancels`. The demand is READ OFF THE ARM "
+            f"(`de_matched_cancel_control.demand_from_arm`); a caller-chosen "
+            f"count is a control that can be tuned.")
+    if matched_on == "CANCELS" and control_set_path is None:
+        raise RunnerRefused(
+            f"{NULL_UNIT_CONTRADICTED}: `matched_on='CANCELS'` with no "
+            f"`control_set_path`. Matching on cancels makes the draw "
+            f"DATA-DEPENDENT, so a seed no longer reproduces it -- the "
+            f"USER's accepted cost was replaced by persisting the drawn "
+            f"set, and a run that does not persist it has taken the cost "
+            f"without the replacement (R-837(a)).")
+    if matched_on == "DECISIONS" and arm_cancels is not None:
+        raise RunnerRefused(
+            f"{NULL_UNIT_CONTRADICTED}: `matched_on='DECISIONS'` while "
+            f"`arm_cancels` was supplied. The inputs say CANCELS and the "
+            f"declaration says DECISIONS; a run may not be two nulls.")
     rows = bk["rows"]
     total = sum(by_side.values())
     if total <= 0:
@@ -6125,7 +6322,7 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
     # historical decision-matched path runs unchanged; the receipt always
     # NAMES which one ran, so no reader has to infer it.
     _mcc = None
-    if arm_cancels is not None:
+    if matched_on == "CANCELS":
         import de_matched_cancel_control as MCC
         _pool = MCC.build_pool_from_rows(rows)
         _demand = MCC.demand_from_arm(arm_cancels)
@@ -6240,10 +6437,12 @@ def null_draws_valued(module, bk: dict, base_fills: list, by_side: dict, *,
             "cancels": cancels,
             "matched_control": (_mcc or {
                 "matched_on": "DECISIONS",
-                "why": ("no arm cancel records were supplied, so the "
-                        "historical decision-matched path ran. Under USER "
-                        "ruling B a day run supplies them and the control "
-                        "is matched on CANCELS")}),
+                "declared_by_the_caller": matched_on,
+                "why": ("the caller DECLARED DECISIONS, the historical "
+                        "row-matched path. Under USER ruling B a day run "
+                        "declares CANCELS; this branch is now reachable "
+                        "only by an explicit declaration and never by an "
+                        "omitted argument (DE 166 (1))")}),
             "base_value_cents": base_value,
             "peak_rss_mb_during_draws": peak,
             "elapsed_s": time.time() - started,
@@ -7868,6 +8067,46 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         arm_replay = mod.replay(bk, _stream765, spec["theta"])
         observed = _value_cents(arm_replay["fills"]) - base_value
         seed = seed_for(book_sha, arm)
+        # ---- DE 166 (1): THE ARM'S OWN CANCEL RECORDS -------------------
+        # USER ruling B matches the control on CANCELS, and the demand is
+        # READ OFF THE ARM -- so the arm's cancel RECORDS have to reach the
+        # null. `be_cancel_axis_null.replay` reduces its replay to
+        # `cancels_issued`, `fills`, `n_fills` and discards them, and that
+        # module is BE's pinned surface. So the same replay is taken again
+        # HERE, through BE's OWN `params_for` and the shared policy module
+        # -- the identical call with the identical arguments, not a second
+        # implementation of it -- and THE TWO ARE ASSERTED TO AGREE. A
+        # second call that silently disagreed with the one that produced
+        # the observed value would put the control's demand on a different
+        # arm than the result.
+        import harmful_stateful_policy as _HSPd
+        _arm_full = _HSPd.replay_policy(bk["ref"], _stream765,
+                                        mod.params_for(spec["theta"]))
+        _arm_cancels = _arm_full["cancels"]
+        if int(_arm_full["counters"].get("cancels_issued", 0)) != \
+                int(arm_replay["cancels_issued"]):
+            raise RunnerRefused(
+                f"REFUSED DAY {day} / {arm}: the cancel-record replay "
+                f"issued {_arm_full['counters'].get('cancels_issued')} "
+                f"cancels and BE's own replay issued "
+                f"{arm_replay['cancels_issued']} on the same book, stream "
+                f"and parameters. `replay_policy` is a pure function of its "
+                f"three inputs, so a disagreement means they were not the "
+                f"same three inputs -- and the control's demand would be "
+                f"read off a different arm than the observed value.")
+        # THE NAME CARRIES THE RUN, not just the (day, arm). The drawn
+        # set is DATA-DEPENDENT and `write_control_set` REFUSES to
+        # overwrite one -- correctly: a second run at the same day, arm
+        # and book draws a DIFFERENT set, and clobbering the first would
+        # destroy the only thing that reproduces it. So the path is
+        # unique per run: day, arm, the book's digest, and this run's own
+        # start stamp. (The battery found this immediately: it runs the
+        # fixture day more than once in one process.)
+        _cs_path = (Path(book_path).parent
+                    / f"p003_de_null_control_set_{day.replace('-', '')}"
+                      f"_{arm}_{book_sha[:12]}"
+                      f"_{datetime.datetime.fromtimestamp(t_start, datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+                      f".jsonl.gz")
         if point_estimate:
             # R-828 / DE 148: S4 IS SKIPPED ENTIRELY. Not a shorter null
             # -- no null. The draw count is never lowered (R-174); it is
@@ -7882,6 +8121,13 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 mod, bk, base["fills"], pop["by_side"],
                 n_draws=params["min_draws_per_arm_day"], seed=seed,
                 deadline_s=params["per_day_deadline_s"],
+                # USER ruling B (R-837(a)), WIRED. DE 166 (1): this was the
+                # whole defect -- these three arguments were never passed,
+                # so the ruled null was unreachable from the only caller
+                # that runs a day.
+                matched_on="CANCELS",
+                arm_cancels=_arm_cancels,
+                control_set_path=_cs_path,
                 winners=(_win801["winners"] if _win801 else None))
             prov = {"module_sha256": cite["sha256"], "seed": seed,
                     "book_digest": book_sha, "arm": arm,
@@ -7889,8 +8135,21 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                     "generated_in_process": True,
                     "pid": __import__("os").getpid(),
                     "n_draws": nul["n_draws"],
+                    # READ BACK FROM THE RESULT, never echoed from the
+                    # argument: what the null DID is the fact, and the
+                    # argument is only what it was asked to do.
+                    "matched_control": nul["matched_control"],
+                    "matched_on": nul["matched_control"]["matched_on"],
                     "reproduces_BEs_draw_null":
                         nul["reproduces_BEs_draw_null"]}
+            if prov["matched_on"] != "CANCELS":
+                raise RunnerRefused(
+                    f"REFUSED DAY {day} / {arm}: the null reports "
+                    f"`matched_on={prov['matched_on']!r}` where the ruled "
+                    f"unit is CANCELS (R-837(a)). Read back from the "
+                    f"null's own result rather than from the argument, "
+                    f"because DE 166 (1) is exactly the case where the two "
+                    f"disagreed and nothing said so.")
             r = arm_day(day, arm, observed, nul["values"],
                         pop["decisions"], params,
                         elapsed_s=time.time() - t_start,
@@ -8331,19 +8590,53 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "generations (27 %); max 60 rows in one generation"),
             "THE_CALIBRATION_CONSEQUENCE": (
                 "theta was fitted by `phase2_arms.freeze_thresholds` over "
-                "per-generation MAXIMA. A first-crossing score is at or "
-                "below that maximum for the same generation, so at an "
-                "UNCHANGED theta fewer generations cross and the selected "
-                "count moves FOR A REASON THAT IS NOT A MARKET REASON. "
-                "The threshold is frozen and declared and was NOT re-fitted "
-                "here: re-fitting inside a defect repair would change the "
-                "policy under cover of a bug fix (rule 14 -- the decision "
-                "is the USER's). The before/after cancel count per arm per "
-                "day is the evidence a re-fit ruling needs."),
+                "per-generation MAXIMA, and the timing of the decision "
+                "moved. The threshold is frozen and declared and was NOT "
+                "re-fitted here: re-fitting inside a defect repair would "
+                "change the policy under cover of a bug fix (rule 14 -- "
+                "the decision is the USER's). The before/after cancel "
+                "count per arm per day is the evidence a re-fit ruling "
+                "needs."),
+            "CORRECTION_DE_166_6b_THE_EARLIER_WORDING_WAS_WRONG": (
+                "this field used to end '...so at an UNCHANGED theta FEWER "
+                "GENERATIONS CROSS and the selected count moves'. That is "
+                "FALSE AS STATED and the USER caught it. Over the SAME "
+                "rows, `max(scores) >= theta` and 'some row has "
+                "score >= theta' are THE SAME PREDICATE, so the SET of "
+                "generations that cross is IDENTICAL under the old "
+                "per-generation-maximum stream and the new per-row stream. "
+                "What actually moves is (i) WHEN the cancel is issued -- "
+                "the first crossing's own `t_start` instead of the "
+                "generation's start -- and (ii) everything the STATEFUL "
+                "CASCADE does with that timing: held/idle/pending states, "
+                "the repost dwell, rate limiting, protection, and which "
+                "fills fall inside the latency window. A count that moves "
+                "for those reasons is a TIMING AND CASCADE effect, not a "
+                "logical consequence of taking a maximum. Separately, the "
+                "crossing SET can move for a reason that is not timing at "
+                "all: DE 162's `t1` bound and DE 164's generation routing "
+                "EXCLUDE rows, and an excluded row cannot cross -- those "
+                "are exclusions with counted statuses "
+                "(ROW_BEFORE_GENERATION_START, ROW_AFTER_GENERATION_END, "
+                "crossings_for_another_generation), and they are the only "
+                "route by which the crossing set differs. The equivalence "
+                "is COMPUTED in this module's battery rather than argued "
+                "here (rule 10)."),
             "AND_IT_MOVES_THE_CONTROL_TOO": (
                 "the null is matched on the arm's action count, so a "
                 "changed cancel count changes the matched null as well as "
                 "the arm -- the comparison is not an arm-only shift"),
+            "THE_MATCHING_UNIT_IS_OPEN": (
+                "DE 166 (3): under the production repost settings "
+                "(theta_repost = theta_cancel / 2, repost_dwell_s = 2.0) "
+                "ONE REFERENCE GENERATION CAN BE CANCELLED MORE THAN ONCE, "
+                "and `check_invariants`' `one_cancel_per_generation` did "
+                "not see it because it keys on the POLICY generation "
+                "(`7`, `7.r1`) and not the reference one. The premise on "
+                "which ruling B was recommended -- 'a generation yields at "
+                "most one cancel, so the cancel IS the action' -- does not "
+                "hold as stated. The relation is established and reported; "
+                "the unit is the USER's to rule and is NOT re-ruled here"),
             "theta_refitted": False,
         },
         # R-828 (4): THE RUN'S OWN IDENTITY. A point-estimate run is a
@@ -8551,8 +8844,27 @@ def synthetic_day_book(day: str, *, n_slugs: int = 24, n_gens: int = 2,
     # and leaves the dispersion, which is the regime the bar was set for.
     reference, statuses, terminal_marks = {}, {}, {}
     harm: dict = {}
+    # ---- DE 166 (1): HARM IS SPREAD ACROSS THE HOURS, NOT STACKED ----
+    # The block above explains why the markouts are symmetric about zero:
+    # a lopsided fixture makes the null's mean large and its sd small and
+    # R4 refuses every arm. Wiring USER ruling B exposed the SAME defect
+    # on a second axis -- TIME. The control is stratified on (side, HOUR),
+    # and `i < n_slugs * harmful_frac` put every harmful slug in the
+    # earliest hours, which is precisely where the arm's cancels are. So
+    # the control drew from strata that are almost all harmful, gained on
+    # nearly every draw, and produced mean +339.5 with sd 51.5 --
+    # sd/|mean| 0.15, under the declared 0.25 floor, so BOTH arms refused
+    # SD_FLOOR. Measured against the row-matched null on the same book:
+    # mean +2.05, sd 99.8. **The economics did not change; the STRATUM
+    # did.** Interleaving keeps `harmful_frac` exactly (every other slug)
+    # and puts both kinds in every hour, which is the regime the bar was
+    # set for. A fixture the ruled null refuses is a fixture that has
+    # stopped exercising the path.
+    _n_harm = int(n_slugs * harmful_frac)
+    _harm_ix = {int(round(j * n_slugs / _n_harm)) for j in range(_n_harm)} \
+        if _n_harm else set()
     for i, s in enumerate(slugs):
-        harmful = i < int(n_slugs * harmful_frac)
+        harmful = i in _harm_ix
         reference[s] = {}
         for sd in HSP.SIDES:
             gens = []
@@ -11341,10 +11653,14 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         _pop801 = day_decision_population(
             _mod801, _bk801, "CONDVALUE_X_SKEW",
             live["arms"]["CONDVALUE_X_SKEW"])
+        # DE 166 (1): the unit is DECLARED. This cell is about the SECOND
+        # VALUATION, not about the matching, and it declares the historical
+        # row-matched unit explicitly rather than reaching it by omission.
         _n801 = null_draws_valued(
             _mod801, _bk801, _base801c["fills"], _pop801["by_side"],
             n_draws=16, seed=seed_for("de801fixture", "CONDVALUE_X_SKEW"),
-            deadline_s=600.0, cross_check_n=4, winners=_w801)
+            deadline_s=600.0, cross_check_n=4, winners=_w801,
+            matched_on="DECISIONS")
         _m5, _ms = (statistics.fmean(_n801["values"]),
                     statistics.fmean(_n801["settle_values"]))
         _s5, _ss = (statistics.pstdev(_n801["values"]),
@@ -12780,15 +13096,38 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
            "never the draws")
 
         # ---- the null is BE's, cross-checked --------------------------------
-        ok(_pass["draw_provenance"]["reproduces_BEs_draw_null"]["identical"]
-           is True
-           and _pass["draw_provenance"]["reproduces_BEs_draw_null"][
-               "field"] == "cancels_issued",
-           "AND DE's VALUED DRAW LOOP REPRODUCES BE's OWN `draw_null` at the "
-           "same seed on the field both produce. DE drives BE's sampler and "
-           "BE's replay and values the fills itself, because `draw_null` "
-           "discards them -- so the cascade is BE's and only the METRIC is "
-           "DE's, checked rather than asserted")
+        # ---- DE 166 (1): THIS CELL ASSERTED THE UNRULED NULL ----------
+        # It required `reproduces_BEs_draw_null["identical"] is True` --
+        # the ROW-matched cross-check -- and passed for rounds because
+        # `run_day` never asked for the cancel-matched branch. DE 161
+        # replaced that field with a NOT_APPLICABLE status under ruling B
+        # and this cell was not updated, because nothing could reach the
+        # branch that produces it. **The cell going red the moment the
+        # ruled null was wired is the defect's own signature**, and it is
+        # kept here as the record rather than quietly rewritten.
+        _xc166 = _pass["draw_provenance"]["reproduces_BEs_draw_null"]
+        _mc166 = _pass["draw_provenance"]["matched_control"]
+        ok(_pass["draw_provenance"]["matched_on"] == "CANCELS"
+           and _mc166["matched_on"] == "CANCELS"
+           and _mc166["ruling"] == "USER ruling B (DE 160)"
+           and _xc166["status"] == "NOT_APPLICABLE_MATCHED_ON_CANCELS"
+           and isinstance(_mc166.get("control_set_artifact"), dict)
+           and len(_mc166["control_set_artifact"]["sha256"]) == 64
+           and _mc166["control_set_artifact"]["n_draws"]
+           == live["min_draws_per_arm_day"],
+           f"DE 166 (1) THE RULED NULL RAN, READ FROM THE ARTIFACT: "
+           f"matched_on={_pass['draw_provenance']['matched_on']}, "
+           f"{_mc166['n_demanded_cancels']} cancels demanded over "
+           f"{_mc166['n_strata']} strata, and the drawn set is PERSISTED "
+           f"at {_mc166['control_set_artifact']['sha256'][:12]}... over "
+           f"{_mc166['control_set_artifact']['n_draws']} draws -- which is "
+           f"what replaces seed reproducibility once the draw is "
+           f"data-dependent. THE ROW-MATCHED CROSS-CHECK IS CORRECTLY "
+           f"NOT APPLICABLE ({_xc166['status']}): BE's `draw_null` samples "
+           f"ROWS at a seed and ruling B samples CANCELS, so the two "
+           f"sequences differ BY DESIGN. Until this round this cell "
+           f"asserted `identical is True` and passed, because the branch "
+           f"that makes it inapplicable was unreachable")
 
         # ---- R-765: THE DAY ARTIFACT EMITS ITS ECONOMICS --------------------
         # THE RULING INVERTED THIS CELL. It used to assert that at 1 of G
@@ -14745,6 +15084,166 @@ def draw_null(bk, base_fills, by_side, *, n_draws=500, seed=None,
          f". They were two independent answers for a week and disagreed 1 "
          f"vs 5 on this family -- the cost of a second implementation, "
          f"paid and now retired")
+
+
+    # ================= DE 166: THE USER'S REVIEW AT 7d374b4 =============
+    # ---- (1) THE NULL'S MATCHING UNIT IS DECLARED, AND UNDECLARED -----
+    # ---- REFUSES. The defect was that `run_day` never passed --------
+    # ---- `arm_cancels`, so the branch USER ruling B asked for was ----
+    # ---- unreachable and the historical row-matched null ran while ---
+    # ---- four register entries recorded ruling B as implemented. -----
+    # The WIRING is proved from the SOURCE, not from a run: a real day is
+    # ~2.3 h and this battery must not need one. The call site is parsed.
+    import ast as _ast166
+    _src166 = Path(__file__).read_text()
+    _tree166 = _ast166.parse(_src166)
+    _rd166 = next(f for f in _ast166.walk(_tree166)
+                  if isinstance(f, _ast166.FunctionDef)
+                  and f.name == "run_day")
+    _null_calls = [c for c in _ast166.walk(_rd166)
+                   if isinstance(c, _ast166.Call)
+                   and getattr(c.func, "id", None) == "null_draws_valued"]
+    _kw166 = {k.arg for c in _null_calls for k in c.keywords}
+    ok(len(_null_calls) == 1
+       and {"matched_on", "arm_cancels", "control_set_path"} <= _kw166,
+       f"DE 166 (1) WIRED, READ FROM `run_day`'s OWN AST: its single "
+       f"`null_draws_valued` call passes {sorted(_kw166 & {'matched_on', 'arm_cancels', 'control_set_path'})}. "
+       f"Before this round it passed NONE of the three, so "
+       f"`arm_cancels is not None` was False on every real day and the "
+       f"cancel-matched control USER ruling B ordered could not run. A "
+       f"branch reachable only by a caller that knew to ask, and the one "
+       f"caller that matters did not ask")
+    # AND THE UNREACHABLE CASE IS NOW IMPOSSIBLE RATHER THAN FIXED.
+    _mkbk = {"rows": [{"t": 1.0, "slug": "btc-updown-5m-1787580000",
+                       "side": HSP_BUY_SIDE(), "gen": 0}], "ref": {}}
+    _u166 = []
+    for _kw in ({}, {"matched_on": "CANCELS"},
+                {"matched_on": "CANCELS", "arm_cancels": []},
+                {"matched_on": "DECISIONS", "arm_cancels": []},
+                {"matched_on": "ROWS"}):
+        try:
+            null_draws_valued(None, _mkbk, [], {"X": 1}, n_draws=200,
+                              seed=1, deadline_s=1.0, **_kw)
+            _u166.append("ADMITTED")
+        except RunnerRefused as _e:
+            _u166.append(str(_e).split(":")[0])
+    ok(_u166 == [NULL_UNIT_NOT_DECLARED, NULL_UNIT_CONTRADICTED,
+                 NULL_UNIT_CONTRADICTED, NULL_UNIT_CONTRADICTED,
+                 NULL_UNIT_NOT_DECLARED],
+       f"DE 166 (1) AND THE OMISSION IS NOW A REFUSAL, NOT A FALLBACK "
+       f"({_u166}): no `matched_on` refuses; CANCELS without the arm's "
+       f"cancel records refuses; CANCELS without a `control_set_path` "
+       f"refuses (the persisted set IS the reproduction once the draw is "
+       f"data-dependent); DECISIONS while carrying cancel records refuses "
+       f"-- a run may not be two nulls; and an unknown unit refuses. **A "
+       f"default is what made a wired-looking thing unwired**")
+
+    # ---- (2) ROWS ARE NOT ACTIONS (CLAUDE.md reliability rule 2) ------
+    class _M166:
+        COIN = "btc"
+        @staticmethod
+        def arm_stream(bk, head):
+            return bk["_stream"]
+    _sl166 = "btc-updown-5m-1787580000"
+    _S166 = HSP_BUY_SIDE()
+    # THREE above-threshold rows on TWO generations, and one below.
+    _stream166 = [
+        {"t": 1.0, "slug": _sl166, "side": _S166, "gen": 0, "score": 0.9},
+        {"t": 2.0, "slug": _sl166, "side": _S166, "gen": 0, "score": 0.95},
+        {"t": 3.0, "slug": _sl166, "side": _S166, "gen": 1, "score": 0.9},
+        {"t": 4.0, "slug": _sl166, "side": _S166, "gen": 1, "score": 0.1}]
+    _pop166 = day_decision_population(
+        _M166, {"_stream": _stream166, "asm": {"by_arm": {("btc", "h"): 1}}},
+        "A", {"head": "h", "theta": 0.5})
+    ok(_pop166["decisions"] == 2
+       and _pop166["n_above_threshold_rows"] == 3
+       and _pop166["by_side"] == {_S166: 2}
+       and _pop166["rows_by_side"] == {_S166: 3}
+       and _pop166["decisions_unit"] == "GENERATION"
+       and abs(_pop166["rows_per_decision"] - 1.5) < 1e-12,
+       f"DE 166 (2) ROWS ARE NOT ACTIONS: three above-threshold ROWS on "
+       f"two generations give decisions={_pop166['decisions']} and "
+       f"n_above_threshold_rows={_pop166['n_above_threshold_rows']} "
+       f"({_pop166['rows_per_decision']} rows per decision). Before this "
+       f"round `decisions` WAS the row count while the `definition` beside "
+       f"it said 'above-threshold generations' -- identical numbers before "
+       f"BE 107's per-row change, different after, and it feeds "
+       f"ADMISSIBILITY (`min_decisions_per_arm_day`) and the historical "
+       f"null's draw size through `by_side` ({_pop166['by_side']} against "
+       f"the old {_pop166['rows_by_side']}). CLAUDE.md rule 2: several "
+       f"rows sharing one outcome must be de-duplicated to actions")
+    # THE KNOWN-BAD, RECONSTRUCTED: the pre-fix expression, on this fixture.
+    _pre166 = [r for r in _stream166 if float(r["score"]) >= 0.5]
+    ok(len(_pre166) == 3 and len(_pre166) != _pop166["decisions"]
+       and len(_pre166) == _pop166["n_above_threshold_rows"],
+       f"KNOWN-BAD, COMPUTED BESIDE IT: the pre-fix expression "
+       f"`[r for r in stream if r['score'] >= theta]` gives "
+       f"{len(_pre166)} where the de-duplicated count is "
+       f"{_pop166['decisions']} -- a 50 % inflation on a fixture with "
+       f"1.5 rows per generation. The real factor is a property of a "
+       f"CORRECTED book and no corrected book exists (R-834 stopped every "
+       f"build), so the FIRST one must report both numbers; they are both "
+       f"in the receipt for exactly that reason")
+
+    # ---- (5) THE BOOK-CODE PREDICATE REFUSES AN INCOMPLETE RECEIPT ----
+    _root166 = Path(__file__).resolve().parent
+    _real166 = {_m: hashlib.sha256((_root166 / _m).read_bytes()).hexdigest()
+                for _m in SCORING_PATH_MODULES}
+    def _bookrec(mods):
+        return {"producing_code": {"import_closure": {"modules": mods}}}
+    _b166 = []
+    for _mods in ({_m: _real166[_m] for _m in SCORING_PATH_MODULES},
+                  {SCORING_PATH_MODULES[0]: _real166[SCORING_PATH_MODULES[0]]},
+                  {_m: _real166[_m] for _m in SCORING_PATH_MODULES[:4]},
+                  {}):
+        try:
+            _r = assert_book_scoring_code(_bookrec(_mods), where="cell",
+                                          root=_root166)
+            _b166.append(f"ADMITTED/{_r['n_checked']}")
+        except RunnerRefused as _e:
+            _b166.append(str(_e).split(":")[0]
+                          .replace("REFUSED ", "").split(" at ")[0])
+    ok(_b166 == [f"ADMITTED/{len(SCORING_PATH_MODULES)}",
+                 BOOK_SCORING_INCOMPLETE, BOOK_SCORING_INCOMPLETE,
+                 BOOK_SCORING_UNRECORDED],
+       f"DE 166 (5) A SUBSET IS NO LONGER AN ANSWER ({_b166}): the USER's "
+       f"probe -- a receipt carrying ONE of the five -- returned "
+       f"`BOOK_SCORING_CODE_MATCHES, n_checked: 1`, because `not recorded` "
+       f"is a NOT-EMPTY guard and not a COVERAGE guard (the same shape BE "
+       f"112 took out of `assert_coverage`). Four of five refuses too; "
+       f"none still refuses UNRECORDED; the whole set is admitted. DA 146 "
+       f"established this predicate CAN pass and did not test that it can "
+       f"pass on a subset -- that was the gap")
+
+    # ---- (6b) THE FIRST-CROSSING CLAIM, COMPUTED ----------------------
+    # The receipt said first-crossing makes FEWER GENERATIONS CROSS. Over
+    # the same rows that is false, and this computes it rather than
+    # asserting either version (rule 10).
+    import random as _rnd166
+    _rg = _rnd166.Random(166)
+    _dis = 0
+    for _trial in range(500):
+        _theta = _rg.random()
+        _gens166 = {}
+        for _g in range(_rg.randint(1, 6)):
+            _gens166[_g] = [_rg.random()
+                            for _ in range(_rg.randint(1, 8))]
+        _old = {g for g, vs in _gens166.items() if max(vs) >= _theta}
+        _new = {g for g, vs in _gens166.items() if any(v >= _theta for v in vs)}
+        if _old != _new:
+            _dis += 1
+    ok(_dis == 0,
+       f"DE 166 (6b) THE CROSSING SET IS IDENTICAL, COMPUTED OVER 500 "
+       f"RANDOM (theta, generation, row) DRAWS: `max(scores) >= theta` and "
+       f"`any(score >= theta)` disagree on {_dis} of them, because they "
+       f"are the same predicate. So the receipt's old wording -- 'at an "
+       f"UNCHANGED theta FEWER GENERATIONS CROSS' -- was FALSE AS STATED "
+       f"(the USER's finding). What moves is WHEN the cancel is issued and "
+       f"what the STATEFUL CASCADE does with that timing; the crossing SET "
+       f"moves only through the EXCLUSIONS (`ROW_BEFORE_GENERATION_START`, "
+       f"`ROW_AFTER_GENERATION_END`, `crossings_for_another_generation`), "
+       f"each of which is a counted status. Corrected in band in the "
+       f"receipt's `scoring_timing` block")
 
     ok(n[0] + 1 + len(skipped) == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} run + "

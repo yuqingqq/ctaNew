@@ -63,6 +63,63 @@ NOT_RANDOM = "MATCHED_CONTROL_REPRODUCES_THE_TREATED_ARM"
 NO_HOUR = "MATCHED_CONTROL_SLUG_CARRIES_NO_HOUR"
 TOO_FEW_DRAWS = "MATCHED_CONTROL_BELOW_DECLARED_MIN_DRAWS"
 ARTIFACT_DIGEST = "MATCHED_CONTROL_ARTIFACT_DIGEST_MISMATCH"
+#: DE 166 (3), the USER's finding. Ruling B was recommended on the premise
+#: that "under the ruled first-crossing rule a generation yields at most
+#: one cancel, so the cancel IS the action". **The premise does not hold
+#: as stated.** Under the production repost settings
+#: (`theta_repost = theta_cancel / 2`, `repost_dwell_s = 2.0`) a side that
+#: cancels, holds, becomes repost-eligible and re-places on the SAME
+#: reference generation can cancel it AGAIN -- and
+#: `harmful_stateful_policy.check_invariants`' `one_cancel_per_generation`
+#: DID NOT SEE IT, because it keys on the POLICY generation (`7`, `7.r1`)
+#: and not on the reference one. REV 110 and the coordinator both cited
+#: that invariant as proof the cancel is the action; it was checking the
+#: wrong id space.
+#:
+#: THE CONSEQUENCE FOR THIS MODULE, driven both ways (see the battery):
+#:   * `demand_from_arm` counts CANCELS, and `draw_one` samples DISTINCT
+#:     reference generations without replacement -- so when the arm
+#:     cancels one generation twice the demand is 2 and the control draws
+#:     TWO generations. The control acts on a population the arm did not.
+#:   * If the stratum happens to be saturated, `draw_one` refuses
+#:     STRATUM_TOO_SMALL -- loud, but for the WRONG REASON: it reads as
+#:     "the stratum is too small" when the truth is "the demand counts a
+#:     different unit than the pool supplies".
+#:   * `assert_random_wrt_arm` compares SETS of reference generations, so
+#:     it collapses the duplicate and cannot see it either.
+#: **The matching unit is the USER's to rule and is NOT re-ruled here.**
+#: What this module does is refuse to draw a control whose premise it can
+#: see is violated, so a day cannot quietly produce a mis-matched null
+#: while the ruling is pending.
+PREMISE_VIOLATED = "MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE"
+
+
+def cancels_per_reference_generation(arm_cancels) -> dict:
+    """THE MEASURED RELATION between cancels and REFERENCE generations.
+
+    Reported whether or not it violates anything, because "how many
+    cancels does a reference generation get" is the question ruling B's
+    premise answers with "at most one" and nobody had measured."""
+    per: dict = {}
+    for c in arm_cancels:
+        k = (c["slug"], c["side"], int(c["ref_gen"]))
+        per[k] = per.get(k, 0) + 1
+    multi = {f"{k[0]}|{k[1]}|{k[2]}": v for k, v in per.items() if v > 1}
+    return {
+        "n_cancels": sum(per.values()),
+        "n_reference_generations": len(per),
+        "max_cancels_on_one_reference_generation": (max(per.values())
+                                                    if per else 0),
+        "n_reference_generations_cancelled_more_than_once": len(multi),
+        "which": dict(sorted(multi.items())[:20]),
+        "premise_holds": not multi,
+        "premise": ("USER ruling B was recommended on 'a generation yields "
+                    "at most one cancel, so the cancel IS the action'"),
+        "why_the_invariant_missed_it": (
+            "`check_invariants.one_cancel_per_generation` keys on "
+            "(slug, side, POLICY_gen) -- `7` and `7.r1` are two keys with "
+            "one cancel each -- while this counts (slug, side, REF_gen)"),
+    }
 
 
 class MatchedControlRefused(RuntimeError):
@@ -129,6 +186,24 @@ def demand_from_arm(arm_cancels) -> dict:
     `arm_cancels` is the treated arm's own cancel records. A caller-chosen
     count is refused by `draw` -- a control whose size is chosen is a
     control that can be tuned (the cited contract's first rule)."""
+    # ---- DE 166 (3): THE PREMISE IS CHECKED, NOT ASSUMED --------------
+    rel = cancels_per_reference_generation(arm_cancels)
+    if not rel["premise_holds"]:
+        raise MatchedControlRefused(
+            f"{PREMISE_VIOLATED}: {rel['n_cancels']} cancels fall on "
+            f"{rel['n_reference_generations']} reference generations, and "
+            f"{rel['n_reference_generations_cancelled_more_than_once']} of "
+            f"them carry more than one (up to "
+            f"{rel['max_cancels_on_one_reference_generation']}; "
+            f"{rel['which']}). Under repost the SAME reference generation "
+            f"is re-placed as a new POLICY generation and can be cancelled "
+            f"again -- `check_invariants` keys on the policy id and does "
+            f"not see it. This demand counts CANCELS while `draw_one` "
+            f"samples DISTINCT reference generations, so the control would "
+            f"act on more generations than the arm did. REFUSED rather "
+            f"than drawn: the matching unit is the USER's to rule "
+            f"(DE 166 (3)) and a control drawn on a premise known to be "
+            f"false is not a control.")
     d: dict = {}
     for c in arm_cancels:
         st = (c["side"], hour_of(c["slug"]))
@@ -264,7 +339,7 @@ def flags_for(draw: list, row_index: dict) -> list:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 6
+EXPECTED_CHECKS = 9
 
 
 def selftest(quiet: bool = False) -> int:
@@ -306,10 +381,102 @@ def selftest(quiet: bool = False) -> int:
        and all(len({(a["slug"], a["side"], a["gen"]) for a in d}) == len(d)
                for d in draws),
        f"MATCHED ON CANCELS: every one of {len(draws)} draws selects "
-       f"exactly {sum(demand.values())} DISTINCT generations -- under the "
-       f"ruled first-crossing rule a generation yields at most one cancel, "
-       f"so the cancel IS the action and the count is the decision "
-       f"variable (rule 7)")
+       f"exactly {sum(demand.values())} DISTINCT generations, which is the "
+       f"arm's cancel count on THIS fixture -- where each cancel does fall "
+       f"on its own reference generation. **THE SENTENCE THAT USED TO END "
+       f"THIS CELL -- 'under the ruled first-crossing rule a generation "
+       f"yields at most one cancel, so the cancel IS the action' -- IS "
+       f"WITHDRAWN: it is false under repost, and the next cell drives it "
+       f"on the real engine (DE 166 (3), the USER's finding).**")
+
+
+    # ---- DE 166 (3): THE PREMISE, DRIVEN ON THE REAL ENGINE -----------
+    # Ruling B was recommended on "a generation yields at most one cancel".
+    # This does not argue about it: it runs `harmful_stateful_policy` with
+    # the PRODUCTION repost shape (theta_repost = theta_cancel / 2,
+    # repost_dwell_s = 2.0 -- `de_phase4_diag_runner.cell_params`) and
+    # reads what comes out.
+    import harmful_stateful_policy as _H166
+    _S166 = _H166.SIDES[0]
+    _sl166 = f"btc-updown-5m-{base}"
+    _ref166 = {_sl166: {_S166: [_H166._gen(7, 0.0, 40.0,
+                                           [(3.0, 1.0, -5.0),
+                                            (25.0, 1.0, -9.0)])],
+                        _H166.SIDES[1]: []}}
+    _sc166 = [{"t": t, "slug": _sl166, "side": _S166, "gen": 7, "score": v}
+              for t, v in ((1.0, 0.99), (4.0, 0.0), (10.0, 0.0),
+                           (14.0, 0.0), (20.0, 0.99), (30.0, 0.0))]
+    _p166 = _H166._params(theta_cancel=0.8, theta_repost=0.4,
+                          repost_dwell_s=2.0,
+                          cancel_effective_latency_ms=1000.0,
+                          protection_mode="ALL_ORDERS_OVERRIDE")
+    _out166 = _H166.replay_policy(_ref166, _sc166, _p166)
+    _inv166 = _H166.check_invariants(_out166)
+    _rel166 = cancels_per_reference_generation(_out166["cancels"])
+    ok(_rel166["n_cancels"] == 2
+       and _rel166["n_reference_generations"] == 1
+       and _rel166["max_cancels_on_one_reference_generation"] == 2
+       and _rel166["premise_holds"] is False
+       and _inv166["one_cancel_per_generation"] is True
+       and all(_inv166.values())
+       and sorted(c["policy_gen"] for c in _out166["cancels"]) == ["7", "7.r1"],
+       f"DE 166 (3) THE PREMISE IS FALSE, AND THE INVARIANT CANNOT SEE IT: "
+       f"one reference generation takes "
+       f"{_rel166['max_cancels_on_one_reference_generation']} cancels "
+       f"({[c['policy_gen'] for c in _out166['cancels']]}) while "
+       f"`one_cancel_per_generation` reads "
+       f"{_inv166['one_cancel_per_generation']} and EVERY invariant holds "
+       f"-- because it keys on the POLICY generation and the two reposts "
+       f"are two keys with one cancel each. The mechanism is the ordinary "
+       f"one: cancel, hold, dwell below theta_repost, re-place on the same "
+       f"reference generation, cross again")
+    # AND WHAT IT DOES TO THE CONTROL, both branches, measured.
+    _rows166 = [{"t": e["t"], "slug": e["slug"], "side": e["side"],
+                 "gen": e["gen"]} for e in _sc166]
+    _pool166 = build_pool_from_rows(_rows166)
+    _sat = None
+    try:
+        demand_from_arm(_out166["cancels"])
+        _sat = "ADMITTED"
+    except MatchedControlRefused as _e:
+        _sat = str(_e).split(":")[0]
+    # the SILENT branch: the same arm in a stratum with room. Built by
+    # hand from the driven cancels so the control's own arithmetic -- not
+    # the engine -- is what this half measures.
+    _wide = {**_pool166}
+    _st166 = (_S166, hour_of(_sl166))
+    for _i in range(1, 6):
+        _wide[_st166][(f"btc-updown-5m-{base + 300 * _i}", _S166, 7)] = [1.0]
+    _demand_raw = {}
+    for _c in _out166["cancels"]:
+        _k = (_c["side"], hour_of(_c["slug"]))
+        _demand_raw[_k] = _demand_raw.get(_k, 0) + 1
+    _dr = draw_many(_wide, _demand_raw, n_draws=MIN_DRAWS, seed=3)
+    _ctrl_gens = {len({(a["slug"], a["side"], a["gen"]) for a in d})
+                  for d in _dr}
+    ok(_sat == PREMISE_VIOLATED
+       and _demand_raw == {_st166: 2}
+       and _ctrl_gens == {2}
+       and _rel166["n_reference_generations"] == 1,
+       f"AND THE CONTROL WOULD HAVE ACTED ON A POPULATION THE ARM DID NOT: "
+       f"the raw demand is {list(_demand_raw.values())[0]} (it counts "
+       f"CANCELS) and every draw selects {sorted(_ctrl_gens)[0]} DISTINCT "
+       f"reference generations, where the arm acted on "
+       f"{_rel166['n_reference_generations']}. Matched on the COUNT, not "
+       f"on the UNIT. `demand_from_arm` now refuses it by name "
+       f"(`{_sat}`) instead of drawing it -- and in a SATURATED stratum "
+       f"the old code refused `{STRATUM_TOO_SMALL}`, which is loud for the "
+       f"WRONG REASON: it reads as 'the stratum is too small' when the "
+       f"truth is 'the demand counts a different unit than the pool "
+       f"supplies'. THE UNIT IS THE USER'S TO RULE; this refuses in the "
+       f"meantime rather than drawing a control it cannot defend")
+    # POSITIVE CONTROL: the honest arm still draws.
+    ok(sum(demand_from_arm(arm).values()) == 3
+       and cancels_per_reference_generation(arm)["premise_holds"] is True,
+       f"POSITIVE CONTROL: an arm whose cancels fall one per reference "
+       f"generation still passes and still draws -- the refusal above is "
+       f"about the duplicate and not about the module having been made "
+       f"unable to build a demand")
 
     # ---- (2) REPRODUCTION FROM THE ARTIFACT, ELEMENT BY ELEMENT --------
     d = Path(tempfile.mkdtemp(prefix="mcc_"))

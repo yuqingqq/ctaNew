@@ -76,7 +76,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: generation at an abutting boundary is now a counted exclusion, driven
 #: on a fixture where it was worth 30 cents of harm avoided the arm was
 #: not entitled to.
-VERSION = 34
+VERSION = 36
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
 EXPECTED_CHECKS = 134
 
@@ -217,6 +217,14 @@ V33_DECLARATION = ("p003_de_multiday_gate1_design_v33.json",
                    "4b061aebb626e6c35bd8094f6836078f4216d5d2612fda173369"
                    "f8d114e74942")
 
+V34_DECLARATION = ("p003_de_multiday_gate1_design_v34.json",
+                   "395e1defcb85269d4e3d0497a768ca97cc484cc15b352bd925e4"
+                   "3cf0b99dad4e")
+
+V35_DECLARATION = ("p003_de_multiday_gate1_design_v35.json",
+                   "7d5fe0c7efd512ecf0b0f385fc070ac4f79546e9d718dc498949"
+                   "80cc18bec4cd")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -233,7 +241,9 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V30_DECLARATION,
                     V31_DECLARATION,
                     V32_DECLARATION,
-                    V33_DECLARATION)
+                    V33_DECLARATION,
+                    V34_DECLARATION,
+                    V35_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -706,7 +716,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 #: USER's ruling retiring R5. The move is permitted by this caller's own
 #: predicate (i) only because v18 supersedes v15 by a verifying pair --
 #: through v16 and v17 -- and the digest verifies (DE 124).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v26.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v28.json"
 
 
 def _params_path() -> Path:

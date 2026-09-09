@@ -85,7 +85,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 231
+EXPECTED_CHECKS = 233
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -5039,6 +5039,79 @@ def selftest() -> int:
         "unscored generation has no key at all",
         needle="no assembled score")
 
+    # ---- (e) DE 165/166, GATE ITEM 6 (R-852): THE MESSAGE NAMES THE ----
+    # ---- REASON, AND THE THREE ROUTES NOW SAY THREE THINGS -------------
+    # DA drove three ways to reach `scorer#2` and found ALL THREE saying
+    # "the feature pass dropped", while two of them are exclusions
+    # `generation_scores` makes itself -- and DE 162's own
+    # `ROW_AFTER_GENERATION_END` had added the second route in the round
+    # whose commit message claimed the sentence was fixed. This drives all
+    # three and asserts they DIFFER, which is the property a green battery
+    # could not previously have shown: nothing tests prose (rule 30).
+    def _route165(rows, gen):
+        _sc, _st, _ = generation_scores(_blk(rows), _fixref, coin="btc",
+                                        head="incumbent_linear_d")
+        _ex = _st["EXCLUDED_BY_GENERATION"]
+        try:
+            _head_scorer("incumbent_linear_d", "btc", _sc, _ex)(
+                {"slug": "s1", "side": HSP.SIDES[0], "gen": gen,
+                 "t": 400.0})
+            return "ADMITTED", _ex
+        except DiagRefused as _e:
+            return str(_e), _ex
+    _base165 = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0,
+                 "t_start": 100.0}]
+    # (a) the feature pass kept NO row of gen 1
+    _m_a, _ex_a = _route165(_base165, 1)
+    # (b) gen 1's only row is AFTER its own t1 = 500.0
+    _m_b, _ex_b = _route165(_base165 + [{"slug": "s1", "side": HSP.SIDES[0],
+                                         "gen": 1, "t_start": 550.0}], 1)
+    # (c) gen 1's only row is BEFORE its own t0 = 400.0
+    _m_c, _ex_c = _route165(_base165 + [{"slug": "s1", "side": HSP.SIDES[0],
+                                         "gen": 1, "t_start": 350.0}], 1)
+    _k165 = f"s1|{HSP.SIDES[0]}|1"
+    ok(_ex_a[_k165] == "NO_ROWS_KEPT"
+       and _ex_b[_k165] == "ROW_AFTER_GENERATION_END"
+       and _ex_c[_k165] == "ROW_BEFORE_GENERATION_START"
+       and "NO_ROWS_KEPT" in _m_a and "feature pass" in _m_a
+       and "ROW_AFTER_GENERATION_END" in _m_b
+       and "ROW_BEFORE_GENERATION_START" in _m_c
+       and "OWN window bounds" in _m_b and "OWN window bounds" in _m_c
+       # THE TEST IS THE ATTRIBUTION, NOT THE PHRASE. My first version of
+       # this cell asked `"feature pass" not in _m_b` and went red on the
+       # fixed code, because the ROW_ message says "NOT the feature pass"
+       # -- a spelling check on my own instrument, one round after rule 32
+       # named the class. What must be absent is the CLAIM.
+       and "NO_ROWS_KEPT is the feature pass" in _m_a
+       and "NO_ROWS_KEPT is the feature pass" not in _m_b
+       and "NO_ROWS_KEPT is the feature pass" not in _m_c
+       and len({_m_a, _m_b, _m_c}) == 3,
+       f"GATE ITEM 6 CLOSED: the three routes to `scorer#2` now give THREE "
+       f"DIFFERENT reasons -- {_ex_a[_k165]} / {_ex_b[_k165]} / "
+       f"{_ex_c[_k165]} -- and only the FIRST names the feature pass; the "
+       f"other two say `generation_scores`' OWN window bounds. Before this "
+       f"round all three said 'a generation whose rows the feature pass "
+       f"dropped', DE 162's message claimed to have fixed it, and the "
+       f"phrase appears ZERO times in that diff (R-852, rule 30). The "
+       f"reason is RECORDED where the exclusion happens "
+       f"(`EXCLUDED_BY_GENERATION`) and QUOTED here, never inferred")
+    # AND THE ABSENT-MAP CASE DOES NOT GUESS.
+    _m_none = None
+    try:
+        _head_scorer("incumbent_linear_d", "btc", _gs2)(
+            {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t": 400.0})
+    except DiagRefused as _e:
+        _m_none = str(_e)
+    ok(_m_none is not None and "NOT AVAILABLE AT THIS CALL" in _m_none
+       and "does not guess" in _m_none
+       and "ROW_BEFORE_GENERATION_START" in _m_none
+       and "NO_ROWS_KEPT" in _m_none,
+       f"AND A CALLER THAT PASSES NO MAP GETS 'REASON: NOT AVAILABLE AT "
+       f"THIS CALL' with the three candidate statuses NAMED -- it does not "
+       f"guess one. `be_cancel_axis_null.arm_stream` is BE's surface and "
+       f"passes none today, so this is the message a real day still sees "
+       f"from that path, and it is honest about what it does not know")
+
     # ---- DE 158: THE READER'S ROWS ARE THE OTHER HALF OF DE 155 (1) ---
     # `be_cancel_axis_null.load()` derives the decision stream from the
     # REFERENCE, one row per generation at `g["t0"]`, filtered on
@@ -7364,7 +7437,8 @@ def run(outdir: Path | None = None, *, splits, coins=COINS,
 
 
 def score_events_for(reference: dict, *, coin: str, head: str,
-                     gen_scores: dict | None = None) -> list:
+                     gen_scores: dict | None = None,
+                     excluded: dict | None = None) -> list:
     """Score events for every generation in the reference, through the
     manifest-bound adapter -- never a stub."""
     v = SS.verify_head(head, coin)
@@ -7397,7 +7471,8 @@ def score_events_for(reference: dict, *, coin: str, head: str,
                                  "side": side, "gen": g["gen"]})
     rows.sort(key=lambda r: (r["t"], r["slug"], r["side"], r["gen"]))
     return SS.score_events(rows, head=head, coin=coin,
-                           scorer=_head_scorer(head, coin, gen_scores),
+                           scorer=_head_scorer(head, coin, gen_scores,
+                                               excluded),
                            verified=v)
 
 
@@ -9287,6 +9362,23 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
     statuses = {"SCORED": 0, "NO_ROWS_KEPT": 0, "PARTIAL_ROWS": 0,
                 "ROWS_SCORED": 0, "ROW_BEFORE_GENERATION_START": 0,
                 "ROW_AFTER_GENERATION_END": 0}
+    # ---- DE 165 / R-852, GATE ITEM 6: THE REASON TRAVELS WITH THE -----
+    # ---- GENERATION, because the COUNTS cannot say which one applies --
+    # `_head_scorer` refused an unscored generation with the sentence "a
+    # generation whose rows the feature pass dropped", and DA drove three
+    # ways to reach it: a row before its own `t0`, a row after its `t1`,
+    # and the feature pass genuinely dropping every row. **Two of the
+    # three are exclusions THIS FUNCTION made itself**, and DE 162's
+    # `ROW_AFTER_GENERATION_END` added the second of them. The statuses
+    # were already right; nothing carried them to the place that spoke.
+    # A COUNT cannot answer "why is THIS generation missing" -- only a
+    # per-generation record can -- so the record is made here, where the
+    # exclusion happens, and `_head_scorer` quotes it instead of guessing.
+    excluded: dict = {}
+    def _mark_excluded(_sl, _sd, _gn, *reasons) -> None:
+        k = f"{_sl}|{_sd}|{_gn}"
+        have = set(excluded.get(k, "").split("+")) - {""}
+        excluded[k] = "+".join(sorted(have | set(reasons)))
     for slug, sides in reference.items():
         for side in HSP.SIDES:
             for g in sides[side]:
@@ -9302,6 +9394,11 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                     # union and cannot be computed here.
                     if count_missing:
                         statuses["NO_ROWS_KEPT"] += 1
+                        # ONLY the whole-day caller may say this: on a
+                        # chunked run a generation absent from THIS chunk
+                        # is not an exclusion at all, and recording one
+                        # would be the DE 155 (4) defect in prose.
+                        _mark_excluded(slug, side, g["gen"], "NO_ROWS_KEPT")
                     continue
                 # ---- DE 155 (1): ONE ENTRY PER ROW, AT ITS OWN TIME ----
                 # WHAT THIS REPLACED, and why it was a defect:
@@ -9342,6 +9439,8 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                         # information EARLIER, which is the look-ahead
                         # this whole repair removed.
                         statuses["ROW_AFTER_GENERATION_END"] += 1
+                        _mark_excluded(slug, side, g["gen"],
+                                       "ROW_AFTER_GENERATION_END")
                         continue
                     if t < _t0 - 1e-9:
                         # A row whose information predates the quote cannot
@@ -9351,6 +9450,8 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                         # 09-04's real rows; the guard is for the day that
                         # is not.
                         statuses["ROW_BEFORE_GENERATION_START"] += 1
+                        _mark_excluded(slug, side, g["gen"],
+                                       "ROW_BEFORE_GENERATION_START")
                         continue
                     # Two rows at the SAME instant are not look-ahead: the
                     # higher score is what that instant knew.
@@ -9358,6 +9459,10 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                 if not per_t:
                     if count_missing:
                         statuses["NO_ROWS_KEPT"] += 1
+                    # The reason is ALREADY recorded by the bound marks
+                    # above and is chunk-local truth: this call saw those
+                    # rows and excluded them itself, whatever other chunks
+                    # saw. It is recorded whether or not `count_missing`.
                     continue
                 for t, sc in per_t.items():
                     scores[(slug, side, t)] = {"score": sc,
@@ -9404,6 +9509,25 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
             "`split_of` spans the day, so a per-chunk comparison would "
             "call every partially covered generation partial. The run "
             "computes it once from the merged counts.")
+    # A generation that ended up SCORED is not excluded, whatever a
+    # bound did to one of its other rows -- computed from what was
+    # written, never carried forward from the loop's intent.
+    _scored_gens = {f"{k[0]}|{k[1]}|{v['gen']}" for k, v in scores.items()}
+    statuses["EXCLUDED_BY_GENERATION"] = {
+        k: v for k, v in excluded.items() if k not in _scored_gens}
+    statuses["EXCLUDED_BY_GENERATION_SCOPE"] = (
+        "slug|side|gen -> the reason THIS call excluded it, '+'-joined "
+        "when more than one applied. The three reasons are distinct "
+        "subsystems and the refusal must not guess between them: "
+        "NO_ROWS_KEPT is the FEATURE PASS (upstream, and recorded only by "
+        "a caller that sees the whole day), while "
+        "ROW_BEFORE_GENERATION_START and ROW_AFTER_GENERATION_END are "
+        "`generation_scores`' OWN window bounds (R-852: the refusal blamed "
+        "the feature pass for all three)"
+        + ("" if count_missing else
+           ". THIS CALL SAW ONE CHUNK: a generation absent from it is not "
+           "recorded here at all, because absence from a chunk is not an "
+           "exclusion (DE 155 (4))"))
     return scores, statuses, split_by_gen
 
 
@@ -9474,7 +9598,8 @@ def _rows_expected(key, reference: dict) -> int:
     return 0
 
 
-def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
+def _head_scorer(head: str, coin: str, gen_scores: dict | None = None,
+                 excluded: dict | None = None):
     """The real scorer when the assembly has produced scores; otherwise it
     REFUSES, naming the one thing that is missing.
 
@@ -9507,13 +9632,62 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
         def _score(row):
             k = (row["slug"], row["side"], float(row["t"]))
             if k not in gen_scores:
+                # ---- DE 165/166, GATE ITEM 6 (R-852): NAME THE REASON,
+                # ---- DO NOT GUESS IT ---------------------------------
+                # This message said "a generation whose rows the feature
+                # pass dropped" for EVERY route here, and DA drove three:
+                # a row before its own `t0`, a row after its `t1`, and the
+                # feature pass genuinely dropping every row. **Two of the
+                # three are exclusions `generation_scores` made itself**,
+                # and DE 162's `ROW_AFTER_GENERATION_END` added the second
+                # of them while its commit message claimed this sentence
+                # had been fixed -- it appears zero times in that diff.
+                # The statuses were already right; nothing carried them
+                # here. `excluded` is `generation_scores`' own
+                # `EXCLUDED_BY_GENERATION` map, and when the caller
+                # supplies it this refusal QUOTES the reason instead of
+                # attributing one (rule 10: compute predicates, never
+                # print conclusions).
+                _gk = (f"{row['slug']}|{row['side']}|{row['gen']}"
+                       if "gen" in row else None)
+                _why = (excluded or {}).get(_gk) if _gk else None
+                if _why:
+                    _blame = (
+                        f"REASON: {_why}. "
+                        + ("ROW_AFTER_GENERATION_END and "
+                           "ROW_BEFORE_GENERATION_START are "
+                           "`generation_scores`' OWN window bounds -- NOT "
+                           "the feature pass. " if "ROW_" in _why else "")
+                        + ("NO_ROWS_KEPT is the feature pass: it dropped "
+                           "every row of this generation. " if
+                           "NO_ROWS_KEPT" in _why else ""))
+                elif excluded is not None:
+                    _blame = (
+                        "REASON: this generation is not in "
+                        "`EXCLUDED_BY_GENERATION` at all, so it was "
+                        "neither dropped by the feature pass nor excluded "
+                        "by a window bound -- the key looked up here does "
+                        "not correspond to any generation of the "
+                        "reference this assembly was built over. ")
+                else:
+                    _blame = (
+                        "REASON: NOT AVAILABLE AT THIS CALL -- the caller "
+                        "passed no `excluded` map, so this refusal cannot "
+                        "say WHICH exclusion applied and does not guess. "
+                        "The three candidates are distinct subsystems and "
+                        "`generation_scores`' statuses tell them apart: "
+                        "NO_ROWS_KEPT (the feature pass), "
+                        "ROW_BEFORE_GENERATION_START and "
+                        "ROW_AFTER_GENERATION_END (this module's own "
+                        "window bounds). Pass `EXCLUDED_BY_GENERATION` "
+                        "from the assembly's statuses to get the reason "
+                        "by name. ")
                 # SITE: scorer#2
                 raise DiagRefused(
-                    f"no assembled score for generation {k}: a generation "
-                    f"whose rows the feature pass dropped is an EXCLUSION "
-                    f"with a status, and must be removed from the "
-                    f"population before scoring rather than scored from "
-                    f"nothing")
+                    f"no assembled score for generation {k}: an excluded "
+                    f"generation must be removed from the population "
+                    f"before scoring rather than scored from nothing "
+                    f"(rule 4). {_blame}")
             # DE 155 (1): the value is {score, gen, t0} -- the score's own
             # generation and start travel with it, because the stream is
             # now per-ROW and the key alone no longer names the generation.

@@ -40,7 +40,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 26
+EXPECTED_CHECKS = 27
 
 #: The event contract, in ONE place: `score_events` checks these keys and
 #: builds its events from the same tuple, so the two cannot disagree
@@ -184,14 +184,30 @@ def score_events(rows, *, head: str, coin: str, scorer,
             # SITE: score_events#4
             raise ScoreStreamRefused(f"row[{i}]: side {r['side']!r}")
         v = scorer(r)
+        # ---- DE 166 (6c): NON-FINITE, NOT MERELY NaN ------------------
+        # DEFENCE IN DEPTH, AND SAID AS SUCH RATHER THAN DRESSED UP: the
+        # old test was `math.isnan(v)`, so +/-inf passed HERE while
+        # `harmful_stateful_policy.validate_scores` (DE 155 (3)) refuses
+        # every non-finite score downstream. **No stream carrying an
+        # infinity has ever reached a replay** -- the policy module would
+        # have refused it -- so this is NOT a silent economic error and
+        # nothing is retracted by it. What it buys is the row's IDENTITY:
+        # refused here, the message names `row[i]` and the generation;
+        # refused downstream, it names an index into a stream the caller
+        # no longer has. Two guards on one property is the point, and the
+        # weaker of the two was this one.
         if isinstance(v, bool) or not isinstance(v, (int, float)) \
-                or math.isnan(v):
+                or not math.isfinite(float(v)):
             # SITE: score_events#5
             raise ScoreStreamRefused(
-                f"row[{i}]: score {v!r} refused -- a NaN compares False "
-                f"against every threshold and becomes a silent no-op "
-                f"(harmful_stateful_policy:383-404 refuses it downstream; "
-                f"refusing it here names the row)")
+                f"row[{i}] {(r.get('slug'), r.get('side'), r.get('gen'), r.get('t'))}: "
+                f"score {v!r} refused as NON-FINITE. NaN compares False "
+                f"against every threshold (a silent no-op); +inf compares "
+                f"True against every threshold (a silent cancel of "
+                f"everything) and -inf against none. "
+                f"`harmful_stateful_policy.validate_scores` refuses all "
+                f"three downstream, so this is defence in depth -- it "
+                f"names the ROW, which the downstream refusal cannot.")
         # DE38-R3: ONE SOURCE. The required-key tuple and the event
         # construction were two lists saying the same thing, so dropping a
         # key from the check left it in the output and the failure arrived
@@ -420,6 +436,40 @@ def selftest() -> int:
        f"and the coin of a fit is read from the manifest's naming "
        f"({coin_of('lgbm_haz_eth.txt')!r}), with a file that names no coin "
        f"reading None rather than guessing")
+
+
+    # ---- DE 166 (6c): NON-FINITE AT THE ADAPTER, BOTH DIRECTIONS -------
+    # The USER found this admits +inf where the policy module refuses it.
+    # Driven here AND at the downstream guard in the same cell, so the
+    # claim "defence in depth, not a silent economic error" is a
+    # MEASUREMENT of both layers rather than a reassurance about one.
+    import harmful_stateful_policy as _hsp166
+    _row166 = {"t": 1.0, "slug": "w1", "side": SIDES[0], "gen": 1}
+    _ver166 = verify_head("incumbent_linear_d", "btc")
+    _here, _down = [], []
+    for _v in (float("inf"), float("-inf"), float("nan"), 0.5):
+        try:
+            score_events([dict(_row166)], head="incumbent_linear_d",
+                         coin="btc", scorer=lambda r, _v=_v: _v,
+                         verified=_ver166)
+            _here.append("ADMITTED")
+        except ScoreStreamRefused:
+            _here.append("REFUSED")
+        try:
+            _hsp166.validate_scores([dict(_row166, score=_v)])
+            _down.append("ADMITTED")
+        except _hsp166.ReferenceIntegrityError:
+            _down.append("REFUSED")
+    ok(_here == ["REFUSED", "REFUSED", "REFUSED", "ADMITTED"]
+       and _down == ["REFUSED", "REFUSED", "REFUSED", "ADMITTED"],
+       f"DE 166 (6c): +inf, -inf and NaN are REFUSED HERE {_here} and were "
+       f"ALREADY refused downstream by `validate_scores` {_down}, while a "
+       f"finite 0.5 is admitted by both. So no stream carrying an infinity "
+       f"has ever reached a replay and nothing is retracted -- this is "
+       f"DEFENCE IN DEPTH. What it buys is the ROW's identity in the "
+       f"message: refused here it names (slug, side, gen, t); refused "
+       f"downstream it names an index into a stream the caller no longer "
+       f"holds")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

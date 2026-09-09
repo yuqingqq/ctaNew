@@ -227,7 +227,60 @@ def per_unit_figures(net_cents: float, n_cancels: int, n_lost: int) -> dict:
 
 if "--selftest" in sys.argv:
     pass
-EXPECTED_CHECKS = 19
+EXPECTED_CHECKS = 22
+
+
+def eligible_rows(ref: dict, gen_scores: dict):
+    """(rows, dropped, shape) -- WHICH GENERATIONS THIS ARM CAN DECIDE ON.
+
+    DE 165 (4) / REVIEW 122. REV enumerated the consumers of the score
+    assembly BY THE OPERATION that constitutes the dependency rather than
+    by the spelling `in gs`, and found FIVE exposed where its own earlier
+    pass had found three -- and **the two it had missed, this module
+    included, both COMPUTE EXCLUSION COUNTS**, which is why they are the
+    worse two.
+
+    THE OPERATION THAT WAS WRONG: `(slug, side, float(g["t0"])) in
+    gen_scores` assumes ONE KEY PER GENERATION, AT ITS START. Since BE 107
+    the assembly is PER SCORED ROW, so a generation whose first scored row
+    is not exactly at its `t0` has no key there -- and was counted as
+    DROPPED. On a module whose whole published output is an exclusion
+    count, that inflates the number it exists to report.
+
+    THE CELL THAT MATTERS, and it is in the battery: a genuinely
+    under-covered book must STILL be flagged. Eligibility is now "this
+    generation has AT LEAST ONE scored row"; a generation with none is
+    still counted, which is the property the repair must not lose."""
+    _per_row = any(isinstance(v, dict) and "gen" in v
+                   for v in gen_scores.values())
+    shape = "PER_ROW_SCORES" if _per_row else "PER_GENERATION_SCORES"
+    by_gen: dict = {}
+    if _per_row:
+        for (_sl, _sd, _t), _v in gen_scores.items():
+            by_gen.setdefault((_sl, _sd, int(_v["gen"])), []).append(
+                float(_t))
+        for _k in by_gen:
+            by_gen[_k].sort()
+    rows, dropped = [], 0
+    for s_, sides in sorted(ref.items()):
+        for sd in HSP.SIDES:
+            for g in sides[sd]:
+                if _per_row:
+                    # THE GENERATION IS THE UNIT, and its EARLIEST scored
+                    # row is where its stream starts -- not `t0`, which a
+                    # per-row assembly need not carry a key at.
+                    ts = by_gen.get((s_, sd, int(g["gen"])))
+                    if ts:
+                        rows.append({"t": ts[0], "slug": s_, "side": sd,
+                                     "gen": g["gen"]})
+                    else:
+                        dropped += 1
+                elif (s_, sd, float(g["t0"])) in gen_scores:
+                    rows.append({"t": g["t0"], "slug": s_, "side": sd,
+                                 "gen": g["gen"]})
+                else:
+                    dropped += 1
+    return rows, dropped, shape
 
 
 def selftest() -> int:
@@ -438,6 +491,50 @@ def selftest() -> int:
        "fallback. The known-bad is the withdrawn form `'identity': "
        "spec['identity']` standing alone, which is what shipped the "
        "stale label into the 15:31:42Z artifact")
+
+    # ---- DE 165 (4) / REVIEW 122: SHAPE-AWARE, AND STILL FLAGGING -----
+    _S81 = HSP.SIDES[0]
+    _ref81 = {"w1": {_S81: [HSP._gen(0, 100.0, 200.0, []),
+                            HSP._gen(1, 200.0, 300.0, []),
+                            HSP._gen(2, 300.0, 400.0, [])],
+                     HSP.SIDES[1]: []}}
+    # PER-ROW assembly: gen 0's first row is LATE (no key at its t0),
+    # gen 1's is exactly at its t0, gen 2 has NO scored row at all.
+    _pr81 = {("w1", _S81, 137.0): {"score": 0.4, "gen": 0, "t0": 100.0},
+             ("w1", _S81, 168.0): {"score": 0.6, "gen": 0, "t0": 100.0},
+             ("w1", _S81, 200.0): {"score": 0.5, "gen": 1, "t0": 200.0}}
+    _r81, _d81, _sh81 = eligible_rows(_ref81, _pr81)
+    # THE KNOWN-BAD, reconstructed in the cell: the pre-fix membership test.
+    _old81 = sum(1 for _s, _sides in _ref81.items() for _sd in HSP.SIDES
+                 for _g in _sides[_sd]
+                 if (_s, _sd, float(_g["t0"])) not in _pr81)
+    ok(_sh81 == "PER_ROW_SCORES" and _d81 == 1 and len(_r81) == 2
+       and _old81 == 2
+       and sorted(x["gen"] for x in _r81) == [0, 1]
+       and abs(_r81[0]["t"] - 137.0) < 1e-12,
+       f"DE 165 (4): on a PER-ROW assembly the eligible generations are "
+       f"{sorted(x['gen'] for x in _r81)} and the exclusion count is "
+       f"{_d81}. The PRE-FIX membership test at `t0` gives {_old81} -- it "
+       f"counted generation 0 as dropped because its first scored row is "
+       f"at t=137.0 and not at its t0=100.0, inflating the very number "
+       f"this module publishes. The stream now starts at the generation's "
+       f"EARLIEST scored row ({_r81[0]['t']})")
+    ok(_d81 == 1 and 2 not in [x["gen"] for x in _r81],
+       f"AND THE CELL THAT MATTERS: a genuinely under-covered book is "
+       f"STILL FLAGGED -- generation 2 has NO scored row and is counted "
+       f"({_d81} dropped), not absorbed by the repair. A fix that made "
+       f"the count go to zero would have removed the instrument rather "
+       f"than corrected it")
+    # POSITIVE CONTROL: a PER_GENERATION assembly is untouched.
+    _pg81 = {("w1", _S81, 100.0): 0.4, ("w1", _S81, 200.0): 0.5}
+    _r81b, _d81b, _sh81b = eligible_rows(_ref81, _pg81)
+    ok(_sh81b == "PER_GENERATION_SCORES" and _d81b == 1
+       and len(_r81b) == 2,
+       f"POSITIVE CONTROL: a PRE-BE-107 assembly still reads by `t0` "
+       f"({_sh81b}) and gives the same 2 eligible / {_d81b} dropped -- the "
+       f"shape is DETECTED, and each book is read the way its own bytes "
+       f"were written")
+
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     print(f"[de_section81_arms] selftest OK -- {n[0]} checks")
@@ -519,16 +616,17 @@ def run_arms(argv=None):
         correctly, since scoring it would be scoring from nothing -- so the
         exclusion happens HERE, before scoring, and is COUNTED (rule 4)."""
         gen_scores = asm["by_arm"][(COIN, head)][0]
-        rows, dropped = [], 0
-        for s_, sides in sorted(ref.items()):
-            for sd in HSP.SIDES:
-                for g in sides[sd]:
-                    if (s_, sd, float(g["t0"])) in gen_scores:
-                        rows.append({"t": g["t0"], "slug": s_, "side": sd,
-                                     "gen": g["gen"]})
-                    else:
-                        dropped += 1
-        EXCL[head] = {"scored_generations": len(rows),
+        rows, dropped, _per_row = eligible_rows(ref, gen_scores)
+        EXCL[head] = {"assembly_shape": _per_row,
+                      "shape_note": (
+                          "DE 165 (4) / REVIEW 122: on a PER_ROW assembly "
+                          "the eligibility test is 'this generation has "
+                          "at least one scored row', not 'a key exists at "
+                          "its t0'. The old test counted every generation "
+                          "whose first scored row is not at its start as "
+                          "EXCLUDED, which inflates the very number this "
+                          "block publishes"),
+                      "scored_generations": len(rows),
                       "excluded_no_assembled_score": dropped,
                       "reference_generations": len(rows) + dropped,
                       "excluded_fraction": round(dropped/max(len(rows)+dropped,1), 4),

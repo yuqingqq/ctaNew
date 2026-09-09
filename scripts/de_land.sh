@@ -37,7 +37,17 @@ if [ -n "${UNEXPECTED// /}" ]; then
 fi
 
 # (2) THE PRE-COPY GUARD. An afterwards-diff is how you learn you were lucky.
-BASE=$(git -C "$WT" rev-parse HEAD) || exit 5
+#
+# THE BASE IS THE MERGE-BASE, NOT THE WORKTREE'S HEAD (DE 166). Rule 31
+# says commit each file as soon as it parses, so a seat's worktree HEAD is
+# routinely a LOCAL commit the shared tree has never seen -- and
+# `<local HEAD>..<shared HEAD>` then lists every path the seat itself
+# touched, refusing its own landing. The question the guard is asking is
+# "has anything changed in the SHARED tree since the commit my work is
+# based on", and that commit is the merge-base. Found the first time this
+# script met rule 31: it refused seven paths, all of them mine.
+BASE=$(git -C "$SHARED" merge-base "$(git -C "$WT" rev-parse HEAD)" HEAD) \
+    || { echo "REFUSED: no merge-base between the worktree and the shared tree"; exit 4; }
 MOVED=$(git -C "$SHARED" diff --name-only "$BASE"..HEAD -- "$@" 2>/dev/null || true)
 if [ -n "$MOVED" ]; then
   echo "REFUSED: these paths moved in the shared tree since $BASE:"

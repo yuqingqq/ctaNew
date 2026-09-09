@@ -1,0 +1,566 @@
+{
+    "alpha": 0.05,
+    "arms": {
+        "CONDVALUE_X_SKEW": {
+            "head": "q1_arrival_composed_lgbm",
+            "model_digests": {
+                "lgbm_haz_btc.txt": "ec52055214a01ed5",
+                "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f",
+                "lgbm_val_btc.txt": "7ab34a39f2b3993f",
+                "linear_btc.json": "4a9a76ec011fad94",
+                "val_models.json": "8ae8b253933f9877"
+            },
+            "score_contract": {
+                "aggregation": "maximum over decision rows within each cancellable generation",
+                "comparison": "cancel iff generation_max_score >= theta",
+                "formula": "p_fill * predicted_conditional_value",
+                "score_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+                "threshold_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+                "threshold_provenance": "phase2_arms.freeze_thresholds on training-side generation maxima"
+            },
+            "theta": 0.32450609461933483
+        },
+        "HAZARD_OVER_SKEWED_REF": {
+            "head": "incumbent_linear_d",
+            "model_digests": {
+                "linear_d_btc.json": "18701008c2bd18c6"
+            },
+            "score_contract": {
+                "aggregation": "maximum over decision rows within each cancellable generation",
+                "comparison": "cancel iff generation_max_score >= theta",
+                "formula": "p_fill * predicted_conditional_value",
+                "score_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+                "threshold_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+                "threshold_provenance": "phase2_arms.freeze_thresholds on training-side generation maxima"
+            },
+            "theta": 0.43525926488298716
+        }
+    },
+    "be_cascade": {
+        "derived_how": "from the CLOSURE, never typed: import the entry module in a fresh process, drive `params_for`, import what `replay` imports, and take every module in `sys.modules` whose file is under `live/` and was not there before. Re-derive it the same way to check it.",
+        "modules": [
+            {
+                "path": "live/pm_research/be_cancel_axis_null.py",
+                "sha256": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249"
+            },
+            {
+                "path": "live/pm_research/be_data_root.py",
+                "sha256": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd"
+            },
+            {
+                "path": "live/pm_research/de_head_scoring.py",
+                "sha256": "53a406a0ae2a11ff7f4d17e4d65c6266d6fe53cce41fb4f8d7f14286a8adec28"
+            },
+            {
+                "path": "live/pm_research/de_matched_random_control.py",
+                "sha256": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc"
+            },
+            {
+                "path": "live/pm_research/de_phase4_diag_runner.py",
+                "sha256": "99461e8f5de8ea60583746e02103ce24dedeb79575360f7134d41a357c953f45"
+            },
+            {
+                "path": "live/pm_research/de_rho_estimator.py",
+                "sha256": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387"
+            },
+            {
+                "path": "live/pm_research/de_score_stream.py",
+                "sha256": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342"
+            },
+            {
+                "path": "live/pm_research/harmful_stateful_policy.py",
+                "sha256": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42"
+            },
+            {
+                "path": "live/pm_research/phase4_generation_tables.py",
+                "sha256": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680"
+            },
+            {
+                "path": "live/pm_research/pm_tape_density.py",
+                "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+            }
+        ],
+        "n_modules": 10,
+        "verified_at": "2026-09-09T09:21:54Z",
+        "verify_be_module_checks": "EVERY module here, not just the entry point",
+        "why_the_cascade_and_not_one_file": "REV 93 routed #1. `be_module` cited ONE file while a null run executes ten: `replay` reaches `harmful_stateful_policy` and `de_phase4_diag_runner`, and those reach the rest. A citation covering a tenth of the code that produces the numbers is a control that can change under the run without the digest moving."
+    },
+    "be_module": {
+        "SEE": "be_cascade -- this entry is the cascade's ENTRY POINT and is kept for readers that resolve it; the binding citation is `be_cascade`, every module of it",
+        "path": "live/pm_research/be_cancel_axis_null.py",
+        "sha256": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249"
+    },
+    "be_module_repoint": {
+        "BOTH_PIN_SITES_SWEPT": true,
+        "THIS_IS_A_REPOINT_OF_REPAIRED_CODE_NOT_A_DESIGN_CHANGE": "no estimand, bar, threshold, arm, horizon or day set differs. The change is gate item 6 (R-852): the scorer's refusal QUOTES the exclusion reason `generation_scores` recorded, instead of blaming the feature pass for all three routes.",
+        "changed_by": "DE 166 / DE 165 (1) -- gate item 6, the last of the original eight",
+        "modules_moved": [
+            {
+                "after": "99461e8f5de8ea60583746e02103ce24dedeb79575360f7134d41a357c953f45",
+                "before": "cd7f404454198f9032c639c901fe25ff03f680cfd548dbd9aa4dd40e41136aff",
+                "path": "live/pm_research/de_phase4_diag_runner.py"
+            }
+        ]
+    },
+    "candidate_sets": {
+        "SET_A_reads_do_not_consume": [
+            "2026-08-29",
+            "2026-09-01",
+            "2026-09-02",
+            "2026-09-03",
+            "2026-09-04",
+            "2026-09-05"
+        ],
+        "SET_B_reads_consume": [
+            "2026-09-03",
+            "2026-09-04",
+            "2026-09-05"
+        ]
+    },
+    "coin": "btc",
+    "day_runs_allowed_for_closed_qualifying_days": true,
+    "days": [
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07",
+        "2026-09-08"
+    ],
+    "design_declaration": {
+        "note": "THE NAME CARRIES NO STAMP FROM v16. This path must be known BEFORE the design is emitted, because the params name it -- and a stamp that must be chosen in advance is a stamp somebody types. design v15's filename said 09:45:00Z for an artifact written at 09:32:50Z: a name for a moment that had not yet occurred. The version is the identity; the time lives in `as_of`, read from the clock.",
+        "path": "data/pm_5min/derived/p003_de_multiday_gate1_design_v36.json",
+        "pin_direction": "design -> params",
+        "sha256": "NOT_PINNED_HERE -- the pin runs design -> params",
+        "the_design_pins_THIS_file": "design v36",
+        "why_v18_and_not_v17": "`p003_de_multiday_gate1_design_v17.json` on disk carries protocol V16 -- the same version as `..._design_v16.json`, with a different params pin. From v18 the filename version, `protocol` and len(chain) + 1 are one number, and the emitter REFUSES an output name that disagrees (`assert_output_name_matches_version`, DE 90)",
+        "why_v20": "v28 pins params v20, whose score and threshold share the expected-value contract; the prior probability-scored outputs are retracted as tests of that policy"
+    },
+    "expected_G": 6,
+    "head_overlap_floor": 0.9,
+    "min_decisions_per_arm_day": 30,
+    "min_draws_per_arm_day": 500,
+    "multiplicity_m": 2,
+    "note": "G IS DERIVED FROM len(days) AND IS NEVER A CONSTANT; `expected_G` below is a CROSS-CHECK the loader must satisfy, not the source of G. THE VERSION TRAVELS IN `version`; v1's protocol string said V2 while its filename said v1. V20 binds score and theta to one expected-cancel-value contract; prior p_fill-scored outputs are retracted for that intended policy and corrected reruns on the ruled days are exploratory.",
+    "per_day_deadline_s": 43200,
+    "policy_correction": {
+        "affected_existing_outputs": {
+            "days": [
+                "2026-09-03",
+                "2026-09-04",
+                "2026-09-05",
+                "2026-09-06",
+                "2026-09-07"
+            ],
+            "status": "RETRACTED_AS_EVIDENCE_FOR_THE_INTENDED_EXPECTED_VALUE_POLICY",
+            "what_remains_true": "Their accounting and replay are results for the accidental p_fill-only cancellation policy; no numeric field is relabelled as expected-value policy output."
+        },
+        "authority": "USER, 2026-09-09: correct and commit the policy, then adopt the new policy to update the results",
+        "corrected_rerun_class": "EXPLORATORY_CORRECTION_ON_CONSUMED_DAYS",
+        "corrected_score_contract": {
+            "aggregation": "maximum over decision rows within each cancellable generation",
+            "comparison": "cancel iff generation_max_score >= theta",
+            "formula": "p_fill * predicted_conditional_value",
+            "score_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+            "threshold_kind": "P_FILL_X_CONDITIONAL_VALUE_FIT_TARGET_UNITS",
+            "threshold_provenance": "phase2_arms.freeze_thresholds on training-side generation maxima"
+        },
+        "defect": "The replay used hazard p_fill as the generation score while both frozen theta files were quantiles of p_fill * predicted_conditional_value. The comparison mixed probability units with expected-value units.",
+        "frozen_model_and_threshold_values_unchanged": true,
+        "manifest_binding_added": [
+            "lgbm_val_{coin}.txt",
+            "val_models.json"
+        ],
+        "models_refit": false,
+        "result_update_rule": "Write superseding result receipts from corrected daybooks; never overwrite or reinterpret the existing receipts.",
+        "status": "ADOPTED_FOR_CORRECTED_REPLAYS",
+        "thresholds_refit": false,
+        "validation_status": "NOT_VALIDATION; seen days remain consumed and no later population is selected here"
+    },
+    "protocol": "P003_DE_MULTIDAY_GATE1_PARAMS_V20",
+    "protocol_version_note": {
+        "declared_by": "DE 166 (6a)",
+        "protocol_last_changed_at_version": 20,
+        "readers_that_print_the_pair": [
+            "da_gate1_day_verdict"
+        ],
+        "why_the_file_version_moved_past_it": "v21 through v27 are PIN REPOINTS and defect repairs to the code the params cite; the estimand, bars, arms, horizons and day set carried in this file have not been re-authored since V20. THIS FIELD IS A DECLARATION OF THE EXISTING STATE, NOT A NEW RULE: the USER found v26 carrying `version: 26` beside `protocol: ...V20` with `load_params()` accepting it silently (DE 166 (6a)), true since v21 -- six versions keeping a seventh's suffix. `load_params` now REFUSES an UNDECLARED divergence. Whether the suffix should instead TRACK the file version, as the design family's does, is a ruling and not a seat's call; it is reported to the coordinator. One caveat recorded rather than glossed: v25 armed `settlement_endpoint.require_book_declares_L`, which is a BEHAVIOURAL addition, so 'nothing but pins since V20' is not exactly true and the suffix's meaning is what needs ruling."
+    },
+    "read_gate": {
+        "ONE_FIELD": "R-604 item 8 was LIVE in the landed artifacts: v7 carried the eight under `read_gate_predicate` while `read_gate.the_bar_is_a_CONJUNCTION` still listed R-602's TWO strings -- and DA 74 read the latter and reported '2 conjuncts declared'. Two fields, two implementations, silently different bars. There is ONE list now, of OBJECTS with stable ids, and both seats evaluate it by id",
+        "a_conjunct_id_without_an_evaluator_CLOSES_the_gate": "as DA already does for an unknown string: a bar nobody evaluates is not a bar",
+        "a_missing_or_tampered_receipt_REFUSES_BY_NAME": true,
+        "at_the_horizon": {
+            "G": 5,
+            "declared_now_with_its_date": "so the stopping rule is not a degree of freedom chosen after seeing which days landed",
+            "verdict": "DIRECTIONAL ONLY",
+            "why": "2^-5 = 0.03125 is not significant at m = 2 -- the USER's own words"
+        },
+        "enforced_by": [
+            "de_multiday_gate1_runner.read_gate()",
+            "de_multiday_gate1_runner.may_read_aggregate()"
+        ],
+        "horizon_utc": "2026-09-09T12:00:00Z",
+        "ledger_membership_conjuncts": [
+            "day_quality_pass",
+            "era_pure",
+            "counts_toward_race"
+        ],
+        "receipt_naming": {
+            "composed_by": "the RUNNER, at the moment of writing, from `emission_stamp()` -- NOT the caller. REV 55 S2.1: a launch-stamped name refuses at the emit by -5,074 s and a stamp-free name is invisible to this glob",
+            "convention": "the runner's own: p003_de_gate1_day_run_<YYYYMMDD>_SEALED__<stamp>.json",
+            "expected_per_day": {
+                "2026-09-03": "p003_de_gate1_day_run_20260903_SEALED__*.json",
+                "2026-09-04": "p003_de_gate1_day_run_20260904_SEALED__*.json",
+                "2026-09-05": "p003_de_gate1_day_run_20260905_SEALED__*.json",
+                "2026-09-06": "p003_de_gate1_day_run_20260906_SEALED__*.json",
+                "2026-09-07": "p003_de_gate1_day_run_20260907_SEALED__*.json",
+                "2026-09-08": "p003_de_gate1_day_run_20260908_SEALED__*.json"
+            },
+            "fixture_receipts": "p003_de_gate1_day_run_<day>_FIXTURE__<stamp>.json -- cannot match the sealed glob at all",
+            "output_argument": "`--output` names the DIRECTORY the receipt is written into. A caller-supplied filename is REFUSED BEFORE ANY WORK, at zero draws",
+            "resolved_by": "PREFIX glob, with EXACTLY ONE match required -- zero is a day that never ran and two is a day that ran twice, which a read must refuse rather than resolve by picking the newest"
+        },
+        "ruling": "R-602 (coordinator), on DA 72's cadence measurement",
+        "the_bar_is_a_CONJUNCTION": [
+            {
+                "evaluated_by_runner": "read_gate:1_clock",
+                "id": "clock_ge_read_not_before",
+                "text": "now >= read_not_before_utc. A GENUINE conjunct: six receipts before the bar must NOT open the read"
+            },
+            {
+                "evaluated_by_runner": "read_gate:2_all_six_ruled_days_have_a_receipt",
+                "id": "six_ruled_days_from_params",
+                "text": "the six RULED days come from THIS file, never 'six receipts present' -- a receipt for another day fills no hole"
+            },
+            {
+                "evaluated_by_runner": "read_gate:3_digest_matches_the_landing_record",
+                "id": "receipt_at_landing_digest",
+                "text": "each day's sealed receipt digest equals the one DA's pre-read recorded WHEN THE DAY LANDED; a re-run after landing REFUSES -- waiting must not become re-rolling. A superseding vN is admitted only when its chain reaches the landed digest"
+            },
+            {
+                "evaluated_by_runner": "read_gate:4_each_day_has_an_admissible_arm",
+                "id": "at_least_one_admissible_arm",
+                "text": "each day has >= 1 arm with admissibility.admissible true, read from the SEALED artifact. Six all-inadmissible days satisfy existence and contribute ZERO SIGNS"
+            },
+            {
+                "evaluated_by_runner": "read_gate:5_ledger_verdict_holds",
+                "id": "ledger_verdict",
+                "text": "day_quality_pass AND era_pure AND counts_toward_race -- R-555's membership. A sealed receipt is DE's own artifact and is not a day verdict"
+            },
+            {
+                "evaluated_by_runner": "read_gate:6_producing_code_is_locatable",
+                "id": "producing_code_locatable",
+                "text": "producing_code_sha256 equals the runner's blob at the receipt's carrying_commit. For 2026-09-03 the .v2 supersession is what makes this hold: v1 was stamped from a file replaced mid-run (R-603)"
+            },
+            {
+                "evaluated_by_runner": "read_gate:horizon",
+                "id": "horizon_fallback_G5_directional",
+                "text": "if the sixth ruled day has not landed by horizon_utc the read opens at G = 5 over the five LANDED ruled days, DIRECTIONAL ONLY (2^-5 = 0.03125 is not significant at m = 2), with the sixth disclosed as UNBUILT"
+            },
+            {
+                "evaluated_by_runner": "read_gate:8_params_carries_the_predicate",
+                "id": "params_field_required",
+                "text": "a params file lacking this list REFUSES before any day is examined. DA's gate reads the SAME field; two implementations of one bar must not disagree silently"
+            }
+        ],
+        "the_day_set_is_UNCHANGED": "R-555 ruled the population; this rules only WHEN the read may open. Nothing is chosen on data",
+        "why": "DA 72 measured the pipeline at 1.165 h SERIAL per day (fragment 608.4 s + tape 1,471.6 s + book 2,115.7 s = 4,195.7 s), and the sixth ruled day 2026-09-08 completes by CALENDAR at 2026-09-09T00:00:00Z -- six minutes before the ruled read_not_before of 00:06Z. Under a clock bar alone the read would open on FIVE days, and G = 5 gives 2^-5 = 0.03125, which FAILS Holm at m = 2 by the design's own arithmetic"
+    },
+    "read_gate_predicate": {
+        "SUPERSEDED_BY": "read_gate.the_bar_is_a_CONJUNCTION",
+        "why": "one field, so the two seats cannot read different bars (R-604 item 8)"
+    },
+    "read_not_before_utc": "2026-09-09T00:06:00Z",
+    "read_requires_all_ruled_days_sealed": true,
+    "required_previously_opened_for": "none",
+    "ruling": {
+        "authority": "R-555 (USER): untouched days only",
+        "completion": "the 2026-09-09T00:06Z verdict; the run does not start before it",
+        "if_a_future_day_fails_its_verdict": "the set waits for the next qualifying CLOSED day in calendar order. G STAYS 6 and nothing is chosen",
+        "rule": "the four ledger conjuncts AND day-quality, on COMPLETE days only, AND previously_opened_for == none",
+        "smoke_day": "2026-09-03",
+        "smoke_publishes": "resource observations only; its economic fields are SEALED until all 6 days are complete",
+        "why_not_SET_A": "SET A included 08-29, 09-01 and 09-02, whose previously_opened_for is development_read or interim_read_of_frozen_candidate. The USER ruled untouched days only"
+    },
+    "sd_floor_fraction": 0.25,
+    "settlement_endpoint": {
+        "DA_140": "this key was ABSENT from every landed version v19-v23, so `placement_latency_from_the_book(require_declared=...)` was always False: a guard that could never fire, wearing a justification that has expired.",
+        "require_book_declares_L": true,
+        "the_justification_that_expired": "'every landed book predates BE 101's builder change, so arming it would refuse the four re-runs'. Those re-runs are RETRACTED (R-834), `build_reference` now writes a placement_latency block on every call, and every book on disk already refuses BOOK_BUILT_BY_DIFFERENT_SCORING_CODE -- so arming costs nothing that is not already refused and removes an inert control.",
+        "what_it_does_now": "a book whose builder receipt records no placement latency REFUSES SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY instead of being read at an assumed L = 0. A day is quoted only with its L beside it (R-811)."
+    },
+    "status": "DAY_SET_RULED_R555_USER",
+    "supersedes": {
+        "chain": [
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v1.json",
+                "sha256": "b06125e9e10b9652ebb5130fe0f08e5d7b1d312828dac219b7e7ac0496130138"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v2.json",
+                "sha256": "ce46b5775d8f17a4b417640b620db275868a9efec19abdde6caaecd4dbd405dd"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v3.json",
+                "sha256": "d6368dcef76795aa9f626dc38d327ea8261882fea8d7610d79448f357913229c"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v4.json",
+                "sha256": "03e5cd029f69e660b07d3eb7214e4b8b80f54736105353c60227ef6e96c5261d"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v5.json",
+                "sha256": "306bfdb0491afdaded181b0b6777fe4c4a88030e79817881eca076a8452cdc1f"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v6.json",
+                "sha256": "1af1befbbf0b496a841c5538098c0a52948b177791ce35d9e4515e72260b560f"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v7.json",
+                "sha256": "d58426e043a9e6b22c2dc3b8b49ae6606d7b1fe7e82814a2184a4ee43566a42e"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v8.json",
+                "sha256": "8c3f26766bea3af4c4ea213eac368f27231a5672b352ea6698be113d012a1cd6"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v9.json",
+                "sha256": "4e624ba7553280d724db2356c444118a10966c2745d0341a1dd6ca1df4cf6439"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v10.json",
+                "sha256": "6ee79b5e4ac65f9c1f72b9f367cb43038b3d91238dc97738be9e09b54a86bbe6"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v11.json",
+                "sha256": "a82a6320af4eb868a36e6293314023754d6d1c9d87936e0789fda5b30a7a6f4a"
+            },
+            {
+                "path": "/home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/de_multiday_gate1_params_v12.json",
+                "sha256": "7576ae1bb6c7a461c57924518a46da770df066ede70d10ec21cb22739c89fa30"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v13.json",
+                "sha256": "09674cd1c03c1be62ce211149e6be0f3026f8a9bb0c58865072a54a685dbd6c0"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v14.json",
+                "sha256": "2da40f4e7b2305df31ee995480b96236eed29915aa72139395d646305bc236c9"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v15.json",
+                "sha256": "92858fc7f9493f8e8fcc721d0390843bce86bbab17d633a0bf3210d633fb6037"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v16.json",
+                "sha256": "139898d3f6c4b06e8f351cb02c54ed3478699d2a317edab71031ce103cf8230e"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v17.json",
+                "sha256": "81b2c2910b3c4799e2ae12d1b63d15a4c9f140b47d84f71c12b98012cef4f0b6"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v18.json",
+                "sha256": "cfc2b06fe2c9e792fb7500a38bd274a86ca4b10fda5c8371e3122bb637431c0c"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v19.json",
+                "sha256": "dd8db7ded9e6ed9723173a3ac84c401d83ea01bb8d8d056ef797c7d98868e8e6"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v20.json",
+                "sha256": "74acc2940b056db5046c8684a48e92d247a9fd7331a17e796e9c9b91482fc89a"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v21.json",
+                "sha256": "77651cae93b54a566684a619a4085937ba51f507d214058a7e8d5a1b495e75b7"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v22.json",
+                "sha256": "1e6476829b9ca6c7311d7c21dc01759a88437c0fcfea6411967bbbcefddd269c"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v23.json",
+                "sha256": "ba2bb32fcb50d2795948e16cd9790e2ed7e2672195015b607eb5f7c2ffaba048"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v24.json",
+                "sha256": "1cf512b5cbd9cdad5ccd09c098c0228005773f488c15268b28147d2c48947e02"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v25.json",
+                "sha256": "9c4d7f2591c40c2d2944e20af5ca0fea463485e5c94a60850a0fcd51ed13de48"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v26.json",
+                "sha256": "67fde9b4c7c0cff243e5e149c5518112376c4e11708e79a6b1564e9eefb85b12"
+            },
+            {
+                "path": "live/pm_research/declarations/de_multiday_gate1_params_v27.json",
+                "sha256": "ba2c15caac9a12ce7a17f71f5d39d56acc8de42c24cca8ed786d2b1210ef40e1"
+            }
+        ],
+        "fields_changed": [
+            "version",
+            "be_cascade.modules",
+            "be_cascade.verified_at",
+            "design_declaration.path",
+            "be_module_repoint"
+        ],
+        "path": "live/pm_research/declarations/de_multiday_gate1_params_v27.json",
+        "sha256": "ba2c15caac9a12ce7a17f71f5d39d56acc8de42c24cca8ed786d2b1210ef40e1",
+        "why": "DE 166 moved de_phase4_diag_runner again, closing gate item 6"
+    },
+    "supersession_link_definition": {
+        "a_chain_head_is": "the artifact no present file supersedes",
+        "a_link_is": "the PAIR {path, sha256} of the artifact superseded",
+        "a_matching_digest_under_another_name": "is a MOVED file and refuses by name",
+        "a_name_without_the_digest": "is NOT a link",
+        "both_must_match_a_present_file": true,
+        "read_by": [
+            "de_multiday_gate1_runner.find_sealed_day_receipt",
+            "DA's gate"
+        ],
+        "ruling": "R-608 (coordinator), on REV 52 S2.3",
+        "why": "DE resolved links by DIGEST and DA by NAME. Driven on the SAME bytes, exactly one seat refused -- and nothing declared which was right. Both seats read this definition now"
+    },
+    "timing": {
+        "day_runs_allowed_for": "any CLOSED, QUALIFYING day in the ruled set",
+        "enforced_by": [
+            "de_multiday_gate1_runner.may_run_day()",
+            "de_multiday_gate1_runner.may_read_aggregate()"
+        ],
+        "read_not_before_utc_governs": "the AGGREGATE READ only: the unseal of the economic fields and the section-7 verdict",
+        "ruling": "R-572(B)(2) (coordinator)",
+        "superseded_field": "run_not_before_utc",
+        "what_v1_said": "2026-09-09T00:06:00Z",
+        "why_it_was_wrong": "one whole-set field did two jobs and read as a bar on every run. A per-day run is SEALED -- resources, counts and statuses, no economic field -- so it cannot inform a later choice, and holding 09-03 behind 2026-09-09 bought nothing and cost the calendar"
+    },
+    "user_ruled_early_read": {
+        "authority": "SEAT_PROTOCOL rule 14 -- models estimate, the USER decides. The coordinator's objection is RECORDED AND OVERRULED, and it is recorded here rather than argued: rule 11 -- these four days become CONSUMED for validation; G = 4 gives 2^-4 = 0.0625, which clears no 0.05 bar on its own; and there is no interval below five complete UTC days. The read proceeds because the user ruled it, and every consequence above is carried in this block so that no later reader has to reconstruct it.",
+        "blindness_notes": [
+            "the second race read's 2026-09-06 is NO LONGER BLIND: this read shows that day.",
+            "SEPARATE AND FOUND AT THE ARTIFACT BY DE ON 2026-09-07, not previously recorded: the 2026-09-03 receipts (base AND the v2 chain head) already carry n_fills_arm, n_fills_baseline and n_cancels_issued per arm, with values. That day was sealed under an EIGHT-name economic scope; days 09-04, 09-05 and 09-06 were sealed under the ELEVEN-name scope that includes those three counts. So 09-03's fill and cancel counts have been readable since 2026-09-06T14:01Z, and whoever ran the later days could have seen them. This is a scope change between days, not a failed seal, and it is recorded here because it bears on what 'blind' means for this programme -- it is not ruled on in this file."
+        ],
+        "days_consumed_by_this_read": [
+            "2026-09-03",
+            "2026-09-04",
+            "2026-09-05",
+            "2026-09-06"
+        ],
+        "landed_at": "R-754",
+        "read_not_before_utc": "2026-09-07T06:18:16Z",
+        "recorded_at_utc": "2026-09-07T06:18:16Z",
+        "recorded_by": "the coordinator",
+        "ruled_by": "THE USER",
+        "the_ruling_verbatim": "it does not make sense to seal the results, show me 4 days results first, we need to check and review the results",
+        "the_six_day_population": {
+            "days": [
+                "2026-09-03",
+                "2026-09-04",
+                "2026-09-05",
+                "2026-09-06",
+                "2026-09-07",
+                "2026-09-08"
+            ],
+            "status": "NO_LONGER_CONFIRMATORY",
+            "the_next_confirmatory_population": "A LATER USER RULING. It is NOT chosen here, and nothing in this file names candidate days for it -- choosing the next population inside the read that consumed the last one is the same defect one level down.",
+            "why": "four of its six days are seen by this read (rule 11: seen days are consumed). A population four-sixths of which has been inspected cannot serve as the confirmatory population for the thing inspected."
+        },
+        "this_reads_bar": {
+            "days": [
+                "2026-09-03",
+                "2026-09-04",
+                "2026-09-05",
+                "2026-09-06"
+            ],
+            "digests_are_full": true,
+            "digests_verified_at_the_artifact_by": "DE, 2026-09-07, against the files on disk: each named digest is that day's chain head and no other version of it",
+            "receipts": [
+                {
+                    "day": "2026-09-03",
+                    "is_the_chain_head": true,
+                    "path": "data/pm_5min/derived/p003_de_gate1_day_run_20260903_SEALED__20260906T140155Z.v2.json",
+                    "sha256": "b4f1159015ebda6577c83c91e38e2be7dc5d9a0341083cd653e37b34919a9a4d",
+                    "sha256_16": "b4f1159015ebda65",
+                    "sha256_16_is": "the PREFIX v16 carried, kept beside the full digest so a reader of either version resolves the same artifact; the full `sha256` is what the check compares"
+                },
+                {
+                    "day": "2026-09-04",
+                    "is_the_chain_head": true,
+                    "path": "data/pm_5min/derived/p003_de_gate1_day_run_20260904_SEALED__20260906T171144Z.v3.json",
+                    "sha256": "6c74928fbc6c8a6bc50c754141be0265a10b7ecd1f4ba00d61fb72a753eeb91e",
+                    "sha256_16": "6c74928fbc6c8a6b",
+                    "sha256_16_is": "the PREFIX v16 carried, kept beside the full digest so a reader of either version resolves the same artifact; the full `sha256` is what the check compares"
+                },
+                {
+                    "day": "2026-09-05",
+                    "is_the_chain_head": true,
+                    "path": "data/pm_5min/derived/p003_de_gate1_day_run_20260905_SEALED__20260906T180043Z.v3.json",
+                    "sha256": "5f0241fc4d0824206ed182950109725b6ccaacef0160968890c328428db61e8a",
+                    "sha256_16": "5f0241fc4d082420",
+                    "sha256_16_is": "the PREFIX v16 carried, kept beside the full digest so a reader of either version resolves the same artifact; the full `sha256` is what the check compares"
+                },
+                {
+                    "day": "2026-09-06",
+                    "is_the_chain_head": true,
+                    "path": "data/pm_5min/derived/p003_de_gate1_day_run_20260906_SEALED__20260907T051142Z.json",
+                    "sha256": "1a2dd10f017d975f624093f41fe4a329255d16cd8ee71fd30e832df4811ff384",
+                    "sha256_16": "1a2dd10f017d975f",
+                    "sha256_16_is": "the PREFIX v16 carried, kept beside the full digest so a reader of either version resolves the same artifact; the full `sha256` is what the check compares"
+                }
+            ],
+            "what_it_is": "the four ruled days that HAVE SEALED RECEIPTS -- named, with the digest of each day's CHAIN HEAD. This bar is NOT the read_gate: the gate stays as it is and still requires all six.",
+            "why_v17_exists": "v16's bar carried `sha256_16` only, so the early-read receipt check could compare a SIXTEEN-HEX PREFIX and nothing more, and it said so of itself (`is_a_full_pair: false`). DE reported that rather than describe a prefix comparison as verifying a digest; the coordinator RULED at DE 123 that the pair is the FULL digest. v16 is landed and IMMUTABLE (rule 20), so it is not edited -- this version supersedes it by the pair and changes NOTHING but these four `sha256` fields, the two notes beside them, and the version/protocol/supersedes bookkeeping. The ruling, the bar's day set, the receipt paths, the EXPLORATORY class, the absent interval, the consumed days and the confirmatory-population status are all v16's, unchanged."
+        },
+        "verdict_class": "EXPLORATORY",
+        "what_EXPLORATORY_means_here": {
+            "directional_only": true,
+            "intervals": "NONE_BELOW_FIVE_DAYS",
+            "no_pass_or_fail_may_be_read_off_this": "2^-4 = 0.0625 is the smallest two-sided p a four-day sign test can produce, so no arm can clear 0.05 on day signs at G = 4 whatever it shows. This read is for INSPECTION.",
+            "point_estimates": true,
+            "why_no_interval": "G = 4 complete UTC days. The cluster unit is the UTC day and below G = 5 complete days this programme reports a point estimate and says so -- an interval on four clusters is a number with no coverage."
+        },
+        "what_this_block_does_NOT_change": [
+            "read_gate and read_gate_predicate -- untouched; the six-day gate still requires all six days and its own clock",
+            "read_not_before_utc at the top level -- still 2026-09-09T00:06:00Z, the SIX-day read's clock. This block carries its own, for this read only",
+            "days, expected_G, multiplicity_m, alpha, arms, candidate_sets, the estimand, the bar for any arm, and every other field: NOTHING ELSE MOVES"
+        ],
+        "why_that_time": "the ruling's own time. A read authorised by a ruling cannot open before the ruling exists."
+    },
+    "user_ruled_unsealed_emission": {
+        "PARAMS_REL_moves_to_v18": "the runner's params pointer moves here, so the sealed path and the early-read path become ONE path with ONE emission. The early-read entry keeps working for the four ruled days and is not needed for new ones.",
+        "authority": "SEAT_PROTOCOL rule 14 -- the user decides.",
+        "landed_at": "R-765",
+        "recorded_at_utc": "2026-09-07T07:47:01Z",
+        "recorded_by": "the coordinator",
+        "ruled_by": "THE USER",
+        "the_read_gate_is_UNCHANGED_AND_NARROWED": {
+            "the_six_day_gate_and_its_clock": "STAY DECLARED, exactly as they are",
+            "what_they_gate": "THE AGGREGATE READ ONLY -- never an emission. A day's own numbers are now written when the day is computed; what the gate still decides is when the SIX-DAY aggregate may be read as a result.",
+            "why_that_distinction_survives_the_ruling": "the user ruled against hiding a day's numbers, not against multiplicity. G, alpha, Holm and the day set are untouched."
+        },
+        "the_ruling_verbatim": "The sealing mechanism is stupid, make sure to store the numbers after each run, and record everything we can to avoid rerun",
+        "what_every_run_now_emits": {
+            "decision_ledger": "a per-day DECISION LEDGER beside the receipt, its path + sha256 + n_rows + schema_version IN the receipt (the bytes are gitignored; the tracked artifact names the untracked one by digest)",
+            "economics": "the arm-day's computed economic block, in the receipt",
+            "seal_status": "COMPUTED, never a literal: 'UNSEALED_BY_USER_RULING R-765 -- <n> of <g> days complete'",
+            "sealed": false
+        },
+        "what_is_retired": {
+            "applies_to": "EVERY RUN FROM THIS RULING ON. Every landed receipt is UNTOUCHED (rule 13): 09-03..09-06 stay sealed as they were emitted, and this file does not reach backwards.",
+            "retired_from": "params v18 / design v26",
+            "rule": "R5 -- 'the economic fields are ABSENT until every day is complete'",
+            "the_seal_scope_lists_are_KEPT": "ECONOMIC_FIELDS and the per-version seal scopes stay in the code and in the declarations AS THE RECORD of what the sealed days hid, marked RETIRED_FROM v18/v26. Deleting them would make the landed receipts unreadable."
+        },
+        "what_this_block_does_NOT_change": [
+            "days, expected_G, multiplicity_m, alpha, arms, candidate_sets",
+            "read_gate, read_gate_predicate, read_not_before_utc",
+            "user_ruled_early_read -- R-754's block stays exactly as landed"
+        ]
+    },
+    "version": 28,
+    "wrapper": "flock -n /home/yuqing/ctaNew/data/.heavy_run.lock systemd-run --user --scope --slice=research.slice -p MemoryMax=8G -p CPUQuota=100%"
+}
