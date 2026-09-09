@@ -867,21 +867,72 @@ def da_arm_day(replay_fn, rows: list, scored_rows: list, *, arm: str,
 
 # ------------------------------------------------------- receipt comparison
 
+#: DA 164 / REVIEW 140. THE TWO SIBLING BLOCKS, NAMED, BECAUSE THIS
+#: MODULE READ ONLY ONE OF THEM AND IT WAS THE DIAGNOSTIC.
+#:
+#: R-801 made the SETTLEMENT P&L the primary endpoint and left `economic`
+#: as the DIAGNOSTIC. This file contained ZERO occurrences of
+#: `economic_settlement`: DA's independent recompute -- the point of the
+#: seat -- never touched the ruled endpoint, and `receipt_is_sealed`
+#: reported `sealed: True` on a receipt carrying `D_E_settle` and both arm
+#: totals. **That is the seat's own purpose, blind in the seat's own
+#: module.**
+#:
+#: `ECONOMIC_FIELDS` is DE's list, imported at :310, and MEASURED here it
+#: names NEITHER the ruled endpoint nor the arm totals -- REVIEW 123's
+#: finding reaching this module through the import rather than being
+#: repeated in it.
+SETTLEMENT_BLOCK = "economic_settlement"
+DIAGNOSTIC_BLOCK = "economic"
+SETTLEMENT_FIELDS = ("D_E_settle", "arm_total_cents",
+                     "zero_cancel_baseline_total_cents")
+#: THE FIVE NAMES THAT EXIST IN BOTH BLOCKS. Measured on the 09-03 point
+#: estimate, never guessed: reading any of them from the WRONG block
+#: returns a number and NO error, which is the entire class. Any site
+#: naming one block literally and reading one of these is in it.
+FIELDS_IN_BOTH_BLOCKS = ("Z", "null_draws_summary", "null_mean",
+                         "null_sd", "p_location")
+
+
 def receipt_is_sealed(arm_block: dict) -> dict:
-    """Is DE's economic block present, or was it stripped?
+    """Is DE's economic block present, or was it stripped -- AND THE SAME
+    QUESTION, ASKED SEPARATELY, OF THE RULED SETTLEMENT BLOCK.
 
     ABSENCE MUST NOT READ AS A PASS. A sealed receipt has no D_E0 to agree
     with, so the comparison is IMPOSSIBLE and must be reported as such --
-    never as zero mismatches."""
-    econ = arm_block.get("economic")
+    never as zero mismatches.
+
+    DA 164: and a receipt whose DIAGNOSTIC was stripped while the RULED
+    endpoint sits beside it is NOT sealed. Saying so requires asking about
+    both blocks, so `sealed` is now the conjunction and each half is
+    reported by name."""
+    econ = arm_block.get(DIAGNOSTIC_BLOCK)
+    settle = arm_block.get(SETTLEMENT_BLOCK)
     present = [f for f in ECONOMIC_FIELDS
                if isinstance(econ, dict) and f in econ]
-    return {"sealed": not present,
+    settle_present = [f for f in SETTLEMENT_FIELDS
+                      if isinstance(settle, dict) and f in settle]
+    return {"sealed": not (present or settle_present),
+            "sealed_diagnostic": not present,
+            "sealed_ruled": not settle_present,
             "economic_fields_present": present,
             "economic_fields_declared": list(ECONOMIC_FIELDS),
+            "settlement_fields_present": settle_present,
+            "settlement_fields_declared": list(SETTLEMENT_FIELDS),
+            "ECONOMIC_FIELDS_names_the_ruled_endpoint": (
+                "D_E_settle" in ECONOMIC_FIELDS),
             "why": ("DE's `_strip_economic` removes every economic field at "
                     "every depth until G is complete. With none present "
-                    "there is nothing to compare and this verifier says so.")}
+                    "there is nothing to compare and this verifier says so. "
+                    "DA 164: `sealed` is TRUE only when NEITHER block "
+                    "carries anything -- a stripped diagnostic beside a "
+                    "live `economic_settlement` is a receipt whose RULED "
+                    "result is readable, and calling that sealed hid the "
+                    "primary endpoint behind the diagnostic's absence."),
+            "why_ECONOMIC_FIELDS_is_not_enough": (
+                "it is DE's list and it names neither `D_E_settle` nor the "
+                "arm totals (measured, not assumed), so a seal keyed on it "
+                "alone protects the diagnostic and not the result")}
 
 
 def compare_arm(recomputed: dict, receipt_arm: dict) -> dict:
