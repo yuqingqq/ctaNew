@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 420
+EXPECTED_CHECKS = 421
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -6270,6 +6270,33 @@ ACCEPT_UNVERIFIABLE_MEMBERSHIP = "ACCEPT_MEMBERSHIP_NOT_ESTABLISHED"
 #: by convention AND by construction -- the driver pops it before the emit
 #: and refuses if anything like it survives into the bytes.
 PLR_INPUTS_KEY = "_placement_latency_reconciliation_inputs_DO_NOT_SERIALISE"
+PLR_REFERENCE_ABSENT = "PLACEMENT_LATENCY_REFERENCE_ABSENT_FROM_THE_BOOK"
+
+
+def plr_inputs(bk: dict, winners: dict, baseline_total_cents: float, *,
+               day: str, arm: str) -> dict:
+    """The three objects the point-estimate driver reconciles with.
+
+    THE KEY IS `ref`. `bk` is `be_cancel_axis_null.load`'s RETURN, and that
+    loader UNWRAPS the pickle: `c["fr"]["reference"]` is the raw file's
+    shape and `{"ref": ...}` is what a caller gets. DE 181 wrote the raw
+    shape here because the expression was carried forward from DE 178's
+    `what_it_would_be` string -- a proposal that had never executed -- and
+    the run raised `KeyError: 'fr'` three minutes in. A call site that has
+    never run is a claim, not code; this one is a function so it can be
+    driven, and it is, on both shapes."""
+    ref = bk.get("ref") if isinstance(bk, dict) else None
+    if not isinstance(ref, dict) or not ref:
+        raise RunnerRefused(
+            f"REFUSED {PLR_REFERENCE_ABSENT} for {day} / {arm}: the loaded "
+            f"book carries no non-empty `ref`. Keys present: "
+            f"{sorted(bk)[:12] if isinstance(bk, dict) else type(bk).__name__}. "
+            f"The reconciliation would be handed an empty reference and "
+            f"would value an empty set to a clean zero -- which is the "
+            f"shape of a check that did not run reporting one that passed.")
+    return {"reference": ref, "winners": winners,
+            "baseline_total_cents": baseline_total_cents,
+            "day": day, "arm": arm}
 BOOK_SCORING_WAIVER_NOT_AVAILABLE = "BOOK_SCORING_WAIVER_NOT_AVAILABLE"
 BOOK_SCORING_WAIVER_TOKEN_WRONG = "BOOK_SCORING_WAIVER_TOKEN_NOT_THE_TOKEN"
 WAIVED_SCORING_PATH = "WAIVED_SCORING_PATH_BYTE_IDENTICAL"
@@ -8946,11 +8973,19 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 # which is the identity rule 33 is about. Point estimate
                 # only: nothing else pops this key, and a live reference
                 # object must never reach a serialiser.
-                r[PLR_INPUTS_KEY] = {
-                    "reference": bk["fr"]["reference"],
-                    "winners": _win801["winners"],
-                    "baseline_total_cents": _base801["total_cents"],
-                    "day": day, "arm": arm}
+                # `bk` IS `be_cancel_axis_null.load`'s RETURN, whose key
+                # is `ref`. DE 181 wrote `bk["fr"]["reference"]` -- the
+                # shape of the RAW PICKLE, which that loader unwraps --
+                # because that expression was carried forward from DE
+                # 178's `what_it_would_be` string, a proposal that had
+                # never been executed. It cost a 3-minute run at 16:53Z
+                # and nothing else, because it raised. THE LESSON IS THE
+                # ONE THIS PROGRAMME KEEPS PAYING FOR: a call site that
+                # has never run is a claim, not code, and copying it into
+                # code does not execute it.
+                r[PLR_INPUTS_KEY] = plr_inputs(
+                    bk, _win801["winners"], _base801["total_cents"],
+                    day=day, arm=arm)
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
@@ -11166,6 +11201,36 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"predates the causal repair")
 
 
+
+    # ---- DE 182: THE HANDOVER READS THE KEY THE LOADER RETURNS -------
+    # This is the cell that would have caught `bk["fr"]["reference"]`. The
+    # known-bad IS the shape I wrongly assumed -- the RAW PICKLE's -- so
+    # the cell fails on exactly the mistake that was made, not on a
+    # convenient neighbour of it.
+    _plrok = plr_inputs({"ref": {"s1": {"BUY_UP": []}}}, {"s1": 1}, 3.5,
+                        day="2026-09-04", arm="A")
+    _plrbad = []
+    for _shape, _label in (({"fr": {"reference": {"s1": {}}}}, "the RAW "
+                            "PICKLE's shape, which the loader unwraps"),
+                           ({"ref": {}}, "an EMPTY reference"),
+                           ({}, "no reference at all")):
+        try:
+            plr_inputs(_shape, {}, 0.0, day="d", arm="A")
+        except RunnerRefused as _e:
+            _plrbad.append(PLR_REFERENCE_ABSENT in str(_e))
+        else:
+            _plrbad.append(False)
+    ok(_plrok["reference"] == {"s1": {"BUY_UP": []}}
+       and _plrok["baseline_total_cents"] == 3.5
+       and all(_plrbad),
+       f"DE 182 THE HANDOVER READS `ref`, THE KEY THE LOADER ACTUALLY "
+       f"RETURNS: the good shape passes and all three bad ones refuse "
+       f"`{PLR_REFERENCE_ABSENT}` ({_plrbad}) -- including "
+       f"`bk['fr']['reference']`, the RAW PICKLE's shape, which is what "
+       f"DE 181 wrote here by copying DE 178's `what_it_would_be` string. "
+       f"THAT STRING HAD NEVER EXECUTED. A call site that has never run "
+       f"is a claim and not code, and the way to stop copying claims into "
+       f"code is to make them functions and drive them")
 
     # ---- DE 179: THE WIDENED PAYLOAD, AND THE WAIVER AS A PREDICATE --
     # DA 168's design and the USER's ruling, driven through THIS
