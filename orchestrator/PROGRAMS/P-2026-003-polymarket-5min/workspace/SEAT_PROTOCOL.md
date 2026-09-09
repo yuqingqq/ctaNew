@@ -384,6 +384,22 @@ except where marked USER-ONLY.
     boundary.** When you add a producer that returns evidence, add the consumer's refusal
     in the same change, and default the safe call, not the short one.
 
+29. **A PARAMS LANDING NEEDS ITS DA-SIDE RE-RUN IN THE SAME ROUND** (DA, R-850).
+    `da_land_gate` refused with two unexpected reds — `da_gate1_day_verdict` and
+    `da_accrual_report` — both green in the same seat's runs an hour earlier and both
+    **outside the changed module's import closure, established by AST rather than by
+    reading.** The failing cell named its own input: *"THE BARS COME FROM THE NEWEST
+    PARAMS PRESENT … `de_multiday_gate1_params_v25.json` … versions present [1..25],
+    newest chosen"* — and v25 had landed eight minutes earlier, mid-round, from another
+    seat. **A checker that resolves "the newest params present" changes verdict the
+    moment anyone lands a params version. That is CORRECT behaviour, not a defect** —
+    and it means the seat landing a params version owes the DA-side re-run in the same
+    round, and the seat that finds the red owes the AST check before blaming its own
+    change. **A seat that lands with a gate refusing SAYS SO PLAINLY** — DA did, by
+    pathspec, naming the reds and why they were not its doing. A seat quietly landing
+    past a red gate is how a programme stops being able to trust its own checkers, and
+    it is worse than the red.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under
