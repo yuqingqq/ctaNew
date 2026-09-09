@@ -189,6 +189,20 @@ def case_2_rule_6_declared_before_the_result(artifact, params, *,
         if isinstance(n, int) and n < bar:
             short[a.get("arm")] = n
     drew = {k: v for k, v in counts.items() if isinstance(v, int)}
+    #: DA 165, found by driving this case against the 09-03 POINT ESTIMATE
+    #: before the null landed: every arm carried the STRING
+    #: `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN` where an int belongs, so
+    #: `drew` was empty, `short` was empty, and the case reported
+    #: PROPERTY_HOLDS over a run that drew NOTHING. ***Absence reading as
+    #: a pass, in the case built to catch absence reading as a pass.***
+    #: Case 1 refused the same artifact; this one did not, and the
+    #: difference was invisible until both were run on a real file.
+    if not drew:
+        raise CaseRefused(
+            f"PARTIAL INPUT: no arm carries an integer draw count "
+            f"(found {counts!r}), so no null was drawn and there is "
+            f"nothing to hold against the bar. PROPERTY_HOLDS here would "
+            f"certify rule 6 on a run that made no draws.")
 
     # the short-count refusal, DRIVEN
     refusal = None
@@ -363,3 +377,301 @@ CASES = ("matching_unit_declared_and_enforced",
          "rule_6_declared_before_the_result",
          "the_exception_travels_with_its_denominator",
          "comparison_is_on_the_decision_metric")
+
+
+# ======================================================================
+# THE CASES' OWN FALSIFIERS. Every control below is one that COULD fail:
+# each known-bad is built so a case that merely READS fields would report
+# agreement, and each partial input is one where a silent PROPERTY_HOLDS
+# would be certifying an empty set.
+# ======================================================================
+def _arm(name="HAZARD_OVER_SKEWED_REF", *, drew=True, unit="CANCELS",
+         n=500, exc=True, num=1, den=3862, rate=None, fail_closed=False,
+         why=None, endpoint="R-801 SETTLEMENT P&L (trades + residual)",
+         null_in_ruled=True, null_in_diag=True):
+    a = {"arm": name, "status": "OK"}
+    a["draw_provenance"] = ({"matched_on": unit} if drew else None) \
+        if unit != "__ABSENT__" else {}
+    if drew:
+        a[DIAGNOSTIC_BLOCK] = {"D_E0": 1.0}
+        if null_in_diag:
+            a[DIAGNOSTIC_BLOCK]["null_draws_summary"] = {"n": n}
+        a[SETTLEMENT_BLOCK] = {"D_E_settle": 11191.24, "endpoint": endpoint}
+        if null_in_ruled:
+            a[SETTLEMENT_BLOCK]["null_draws_summary"] = {"n": n}
+    else:
+        a[SETTLEMENT_BLOCK] = {"D_E_settle": 11191.24, "endpoint": endpoint}
+    if exc:
+        blk = {"matching_unit": "CANCELS",
+               "max_cancels_on_one_reference_generation": 2,
+               "premise_holds": not fail_closed}
+        if num is not None:
+            blk[EXC_NUMERATOR] = num
+        if den is not None:
+            blk[EXC_DENOMINATOR] = den
+        blk["rate"] = (rate if rate is not None
+                       else (round(num / den, 8) if num is not None and den
+                             else None))
+        a[EXC_BLOCK] = blk
+    if fail_closed:
+        a["status"] = FAIL_CLOSED_STATUS
+        if why is not False:
+            a["why_no_null"] = why or (
+                f"{num} of {den} cancelled reference generations carry MORE "
+                f"THAN ONE cancel, so the premise does not hold")
+    return a
+
+
+def _art(*arms):
+    return {"day_run": {"per_day_sealed_artifacts": list(arms)}}
+
+
+def refuses(fn, label):
+    try:
+        fn()
+        return f"{label}: DID NOT REFUSE"
+    except CaseRefused as e:
+        return f"REFUSED -- {str(e)[:44]}"
+    except Exception as e:                                    # noqa: BLE001
+        return f"{label}: WRONG EXCEPTION {type(e).__name__}"
+
+
+def selftest() -> tuple:
+    checks: list = []
+
+    def ck(name, passed, detail):
+        checks.append({"check": name, "passed": bool(passed),
+                       "detail": detail})
+
+    #: a refuser standing in for `null_draws_valued`: refuses by the ruled
+    #: names, so the case can be driven with no runner import.
+    def _refuser(*a, matched_on=None, arm_cancels=None,
+                 control_set_path=None, **k):
+        if matched_on not in NULL_UNITS:
+            raise RuntimeError(f"NULL_MATCHING_UNIT_NOT_DECLARED: "
+                               f"{matched_on!r}")
+        if matched_on == "CANCELS" and arm_cancels is None:
+            raise RuntimeError("NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS")
+        if matched_on == "CANCELS" and control_set_path is None:
+            raise RuntimeError("NULL_MATCHING_UNIT_CONTRADICTED_BY_ITS_INPUTS")
+        return {"ok": True}
+
+    def _refuser_falls_back(*a, matched_on=None, **k):
+        return {"ok": True}          # the ORIGINAL defect: no refusal
+
+    def _entry_good(bk):
+        null_draws_valued(bk, matched_on="CANCELS", arm_cancels=[],
+                          control_set_path="p", n_draws=1, seed=0)
+
+    def _entry_defective(bk):
+        null_draws_valued(bk, n_draws=1, seed=0)
+
+    # ---- case 1 -------------------------------------------------------
+    g1 = case_1_matching_unit_declared_and_enforced(
+        _art(_arm()), entry=_entry_good, refuser=_refuser)
+    b1_unit = case_1_matching_unit_declared_and_enforced(
+        _art(_arm(unit="DECISIONS")), entry=_entry_good, refuser=_refuser)
+    b1_entry = case_1_matching_unit_declared_and_enforced(
+        _art(_arm()), entry=_entry_defective, refuser=_refuser)
+    b1_fall = case_1_matching_unit_declared_and_enforced(
+        _art(_arm()), entry=_entry_good, refuser=_refuser_falls_back)
+    ck("CASE 1 holds when the artifact NAMES CANCELS, the entry point "
+       "PASSES all three arguments, and the refusal FIRES five ways -- and "
+       "***it fails on each of the three independently***: a unit of "
+       "DECISIONS, an entry point passing nothing (the ORIGINAL defect, "
+       "read at the CALLER), and a callee that falls back instead of "
+       "refusing",
+       g1["verdict"] == PASS and b1_unit["verdict"] == FAIL
+       and b1_entry["verdict"] == FAIL and b1_fall["verdict"] == FAIL
+       and g1["refusals_that_named_the_matching_unit"] == 5
+       and b1_fall["refusals_that_named_the_matching_unit"] == 0,
+       f"good -> {g1['verdict']} ({g1['entry_point_sites_passing_all_three']}"
+       f" site(s) pass all three, {g1['refusals_that_named_the_matching_unit']}"
+       f"/5 named refusals); DECISIONS -> {b1_unit['verdict']}; entry "
+       f"passing nothing -> {b1_entry['verdict']}; callee falling back -> "
+       f"{b1_fall['verdict']}")
+    ck("CASE 1 REFUSES a point-estimate artifact -- no arm drew, so there "
+       "is no declaration to check and ***PROPERTY_HOLDS there would be "
+       "certifying a run that never made a null***",
+       "REFUSED" in refuses(
+           lambda: case_1_matching_unit_declared_and_enforced(
+               _art(_arm(drew=False)), entry=_entry_good, refuser=_refuser),
+           "point estimate")
+       and "REFUSED" in refuses(
+           lambda: case_1_matching_unit_declared_and_enforced(
+               {"day_run": {}}, entry=_entry_good), "no arms"),
+       refuses(lambda: case_1_matching_unit_declared_and_enforced(
+           _art(_arm(drew=False)), entry=_entry_good, refuser=_refuser),
+           "point estimate"))
+
+    # ---- case 2 -------------------------------------------------------
+    P = {"min_draws_per_arm_day": 500}
+    def _bar_checker(draws, params):
+        if len(draws) < params["min_draws_per_arm_day"]:
+            raise RuntimeError("REFUSED_TOO_FEW_DRAWS")
+        return True
+    def _bar_checker_soft(draws, params):
+        return True                  # reports instead of refusing
+    g2 = case_2_rule_6_declared_before_the_result(
+        _art(_arm(n=500)), P, checker=_bar_checker)
+    b2_short = case_2_rule_6_declared_before_the_result(
+        _art(_arm(n=499)), P, checker=_bar_checker)
+    b2_floor = case_2_rule_6_declared_before_the_result(
+        _art(_arm(n=150)), {"min_draws_per_arm_day": 150},
+        checker=_bar_checker)
+    b2_soft = case_2_rule_6_declared_before_the_result(
+        _art(_arm(n=500)), P, checker=_bar_checker_soft)
+    ck("CASE 2 holds at exactly the bar and fails ONE BELOW it -- and "
+       "***fails a bar of 150 that is honestly declared and still violates "
+       "rule 6's floor of 200***, and fails a checker that REPORTS a short "
+       "count instead of refusing",
+       g2["verdict"] == PASS and b2_short["verdict"] == FAIL
+       and b2_floor["verdict"] == FAIL
+       and b2_floor["bar_clears_rule_6_floor"] is False
+       and b2_soft["verdict"] == FAIL,
+       f"n=500 at bar 500 -> {g2['verdict']}; n=499 -> "
+       f"{b2_short['verdict']} {b2_short['arms_below_the_bar']}; declared "
+       f"bar 150 -> {b2_floor['verdict']} (clears floor "
+       f"{b2_floor['bar_clears_rule_6_floor']}); non-refusing checker -> "
+       f"{b2_soft['verdict']} ({b2_soft['short_count_refusal_driven']})")
+    ck("CASE 2 REFUSES params carrying no bar -- ***reading the bar off the "
+       "receipt would be reading a number declared AFTER the draws***, "
+       "which is the thing rule 6 forbids",
+       "REFUSED" in refuses(
+           lambda: case_2_rule_6_declared_before_the_result(
+               _art(_arm()), {}, checker=_bar_checker), "no bar"),
+       refuses(lambda: case_2_rule_6_declared_before_the_result(
+           _art(_arm()), {}, checker=_bar_checker), "no bar in params"))
+
+    ck("CASE 2 REFUSES AN ARTIFACT THAT DREW NOTHING -- ***found by "
+       "driving this case against the 09-03 POINT ESTIMATE before the "
+       "null landed: every arm carried the STRING "
+       "`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN` where an int belongs, so the "
+       "case reported PROPERTY_HOLDS over a run with no draws.*** Case 1 "
+       "refused that same artifact and this one did not -- absence "
+       "reading as a pass, inside the case built to catch it",
+       "REFUSED" in refuses(
+           lambda: case_2_rule_6_declared_before_the_result(
+               _art(_arm(n="NULL_NOT_DRAWN_POINT_ESTIMATE_RUN")), P,
+               checker=_bar_checker), "no draws")
+       and case_2_rule_6_declared_before_the_result(
+           _art(_arm(n=500)), P, checker=_bar_checker)["verdict"] == PASS,
+       refuses(lambda: case_2_rule_6_declared_before_the_result(
+           _art(_arm(n="NULL_NOT_DRAWN_POINT_ESTIMATE_RUN")), P,
+           checker=_bar_checker), "a run that drew nothing"))
+
+    # ---- case 3 -------------------------------------------------------
+    g3 = case_3_the_exception_travels(_art(_arm()))
+    b3_absent = case_3_the_exception_travels(_art(_arm(exc=False)))
+    b3_noden = case_3_the_exception_travels(_art(_arm(den=None)))
+    b3_rate = case_3_the_exception_travels(_art(_arm(rate=0.5)))
+    b3_why = case_3_the_exception_travels(
+        _art(_arm(fail_closed=True, why=False)))
+    b3_thin = case_3_the_exception_travels(
+        _art(_arm(fail_closed=True, why="the premise does not hold")))
+    g3_fc = case_3_the_exception_travels(_art(_arm(fail_closed=True)))
+    ck("CASE 3 holds on an exception carrying BOTH legs and a fail-closed "
+       "arm whose reason CARRIES ITS COUNTS -- and fails four ways: the "
+       "block ABSENT (***the dangerous one: silence reads as 'no "
+       "exceptions'***), a numerator with no denominator, a `rate` that "
+       "does not recompute, and a fail-closed arm with no reason",
+       g3["verdict"] == PASS and g3_fc["verdict"] == PASS
+       and b3_absent["verdict"] == FAIL and b3_noden["verdict"] == FAIL
+       and b3_rate["verdict"] == FAIL and b3_why["verdict"] == FAIL,
+       f"1 of 3862 with rate -> {g3['verdict']}; fail-closed with counts in "
+       f"the reason -> {g3_fc['verdict']}; ABSENT -> "
+       f"{b3_absent['verdict']} ({b3_absent['violations'][0][:58]}...); no "
+       f"denominator -> {b3_noden['verdict']}; wrong rate -> "
+       f"{b3_rate['verdict']}; no reason -> {b3_why['verdict']}")
+    ck("CASE 3 ALSO fails a fail-closed reason that is TRUE BUT EMPTY -- "
+       "***prose without the counts it rests on is exactly the caveat-in-"
+       "prose the ruling replaced***",
+       b3_thin["verdict"] == FAIL
+       and any("does not carry the counts" in v
+               for v in b3_thin["violations"]),
+       f"reason 'the premise does not hold' -> {b3_thin['verdict']}: "
+       f"{[v for v in b3_thin['violations'] if 'counts' in v]}")
+
+    # ---- case 4 -------------------------------------------------------
+    g4 = case_4_comparison_is_on_the_decision_metric(_art(_arm()))
+    b4_proxy = case_4_comparison_is_on_the_decision_metric(
+        _art(_arm(endpoint="harm share of cancelled generations")))
+    b4_mark = case_4_comparison_is_on_the_decision_metric(
+        _art(_arm(endpoint="the 5-second markout D_E0")))
+    b4_none = case_4_comparison_is_on_the_decision_metric(
+        _art(_arm(endpoint=None)))
+    b4_place = case_4_comparison_is_on_the_decision_metric(
+        _art(_arm(null_in_ruled=False)))
+    ck("CASE 4 holds on the ruled endpoint and catches a proxy BY NAME -- "
+       "harm share and the 5-second markout both -- and catches an "
+       "endpoint named NOTHING, because ***a comparison that will not say "
+       "what it compared cannot be checked at all and absence is not a "
+       "pass***",
+       g4["verdict"] == PASS and b4_proxy["verdict"] == FAIL
+       and b4_mark["verdict"] == FAIL and b4_none["verdict"] == FAIL
+       and b4_proxy["per_arm"]["HAZARD_OVER_SKEWED_REF"]["proxy_tokens_found"],
+       f"R-801 endpoint -> {g4['verdict']}; harm share -> "
+       f"{b4_proxy['verdict']} "
+       f"{b4_proxy['per_arm']['HAZARD_OVER_SKEWED_REF']['proxy_tokens_found']}"
+       f"; markout -> {b4_mark['verdict']}; unnamed -> {b4_none['verdict']}")
+    ck("CASE 4 ALSO catches a proxy BY PLACEMENT: the null attached to the "
+       "DIAGNOSTIC block while the ruled settlement endpoint sits beside "
+       "it untouched. ***That is the sibling-block defect DA 164 found in "
+       "this seat's OWN verdict module, and the endpoint STRING is "
+       "perfectly correct in this case*** -- so a name-only check passes "
+       "it",
+       b4_place["verdict"] == FAIL
+       and any("DIAGNOSTIC block only" in v
+               for v in b4_place["violations"])
+       and b4_place["per_arm"]["HAZARD_OVER_SKEWED_REF"][
+           "names_the_ruled_endpoint"] is True,
+       f"null in the diagnostic only, endpoint string still correct "
+       f"(names_the_ruled_endpoint "
+       f"{b4_place['per_arm']['HAZARD_OVER_SKEWED_REF']['names_the_ruled_endpoint']}"
+       f") -> {b4_place['verdict']}")
+
+    fails = sum(1 for c in checks if not c["passed"])
+    for c in checks:
+        print(("ok   " if c["passed"] else "FAIL ") + c["check"])
+        print("       " + c["detail"])
+    print(f"\n{'SELFTEST OK' if not fails else 'SELFTEST FAILED'} -- "
+          f"{len(checks)} checks, {fails} failure(s)")
+    return checks, fails
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--artifact")
+    ap.add_argument("--params")
+    a = ap.parse_args(argv)
+    if a.selftest:
+        return 1 if selftest()[1] else 0
+    if not a.artifact:
+        ap.error("--selftest, or --artifact <path>")
+    art = json.loads(Path(a.artifact).read_text())
+    if a.params:
+        params = json.loads(Path(a.params).read_text())
+    else:
+        d = Path(__file__).resolve().parent / "declarations"
+        ps = sorted(d.glob("de_multiday_gate1_params_v*.json"),
+                    key=lambda p: int(re.search(r"_v(\d+)\.json",
+                                                p.name).group(1)))
+        params = json.loads(ps[-1].read_text()) if ps else {}
+    out = {}
+    for nm, fn, args in (
+            ("case_1", case_1_matching_unit_declared_and_enforced, (art,)),
+            ("case_2", case_2_rule_6_declared_before_the_result,
+             (art, params)),
+            ("case_3", case_3_the_exception_travels, (art,)),
+            ("case_4", case_4_comparison_is_on_the_decision_metric, (art,))):
+        try:
+            out[nm] = fn(*args)
+        except CaseRefused as e:
+            out[nm] = {"verdict": REFUSED, "why": str(e)}
+    print(json.dumps(out, indent=1, sort_keys=True, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
