@@ -688,10 +688,29 @@ def assert_launch_form(text: str | None = None,
         problems.append("carries `--scope`: the payload would run in the "
                         "CALLING shell's process tree and die with it "
                         "(R-628, measured)")
+    # THE DEFAULT IS CHECKED AGAINST THE BODY, NOT THE INVOCATION. `src` is
+    # only the systemd-run lines, and the cap's default now lives in an
+    # assignment above them -- so a token for it in the loop below could
+    # never match and would have been a check that cannot fail (rule 16).
+    if "MemoryMax=" in src and "$MEMMAX" in src and \
+            'BE_MEMORY_MAX:-8G' not in body:
+        problems.append(
+            "declares a memory cap through a variable whose DEFAULT is not "
+            "8G -- an override may raise it per run, but the form's own "
+            "default is the envelope R-551 set")
     for token, why in (("--unit=", "names no `--unit=`, so the run could "
                                    "only be polled by a child PID"),
                        ("--slice=research.slice", "is not in research.slice"),
-                       ("MemoryMax=8G", "declares no memory cap"),
+                       # BE 111: the cap became a DECLARED VARIABLE at
+                       # BE 110 (`-p MemoryMax="$MEMMAX"` with
+                       # `MEMMAX="${BE_MEMORY_MAX:-8G}"`), so a check for the
+                       # literal `MemoryMax=8G` stopped seeing a cap that is
+                       # still there -- and it caught me, which is the point
+                       # of reading the launcher's own bytes. The property is
+                       # "a memory cap is declared AND its default is 8G",
+                       # which survives the value becoming configurable.
+                       ("MemoryMax=", "declares no memory cap"),
+
                        ("CPUQuota=100%", "declares no CPU cap"),
                        ("--setenv=PM_DATA_ROOT=", "does not set the data "
                                                   "root inside the unit"),
