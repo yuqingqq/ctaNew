@@ -109,6 +109,38 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## Enumerate by OPERATION, never by SPELLING (DA 149) — I got this wrong
+
+DA 148 closed DA's consumer set at **three**. It is **four**. `da_de53_exclusion`
+spells the test `key = (slug, side, float(g["t0"]))` then `key in gen_scores`, which
+my regex — which required the tuple inline — could not see. **It appeared in my own
+sweep output marked `['-']` and I read "my pattern did not match" as "this module is
+clean."**
+
+REV 122 enumerated by **operation class** (a start-keyed lookup, `len(assembly)` as a
+generation count, iterating the assembly as generations, reading the key's third
+element as a start time). That finds modules a spelling search cannot. **A grep is a
+sample. Say "I searched this spelling" and never "the set is closed."**
+
+**And the module a spelling search misses is likely to be the worse one.**
+`da_de53_exclusion` publishes `n_excluded` / `excluded_fraction` and feeds the split
+to a 400-permutation audit: on a per-row book it would not mis-count, it would run a
+statistical test on a population that is an artefact of its own membership test.
+
+**A classifier needs MEMBERSHIP, not a stream.** `scored_stream_rows` returns
+`covered_generation_keys` for exactly that; do not build a second traversal.
+
+## Gate item 4 is CLOSED and verified (DA 149) — both halves
+
+DE 164 routes by `gen`. Verified on my own DA 143 constructions: the event labelled
+gen 0 at `t1_0 = t0_1` gives **0 cancels and `crossings_for_another_generation: 1`**
+(counted, not dropped); a genuine gen-1 event at that instant **still** cancels gen 1
+(narrows the misrouted event only); `validate_scores` now **requires** `gen`. And the
+half I found by driving rather than naming — `_head_scorer` serving one generation's
+score to another's event — now refuses **`SCORE_BELONGS_TO_ANOTHER_GENERATION`**.
+Rule 27: a correctly-labelled event timed after its generation ended is **not**
+cancelled retroactively. No regression.
+
 ## Uncommitted work in the SHARED TREE is not safe (DA 148) — the one that cost a round
 
 I completed DA 148 once — builder, three wirings, five cells, battery green at 38 —
