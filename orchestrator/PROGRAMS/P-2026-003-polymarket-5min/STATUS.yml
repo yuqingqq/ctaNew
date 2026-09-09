@@ -67,6 +67,44 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T08:03:41Z (MEM ROUND 296 -- R-846 SWEPT as a numbered queue under rule 23, from my
+  round-295 tip `9fe6317` to `9312227`, fourteen commits. STATE ONLY. ***THE SCOPE FACT THAT CHANGES WHAT THE
+  SURVIVING FINDING MAY CLAIM, AND IT IS A LIMIT IN THESE FILES AND NOT A FOOTNOTE***: the settlement numbers on
+  every L = 250 and L = 0 day are POINT ESTIMATES WITH NO CONTROL AT ALL -- not a weak null, none drawn -- and I
+  measured it across every artifact rather than sampling: **14 artifacts, 52 `Z` fields, every one the string
+  `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, zero numeric Z anywhere.** The absence is a NAMED STATUS in all fifty-two
+  places it could have been a number, which is rule 4 done right by the producer. ***SO "THE LATENCY FINDING STANDS"
+  CAN ONLY EVER MEAN "THE POINT ESTIMATE STANDS"***, and the four limits now compound: a point estimate with no
+  null, over a reference assembled with `gaps=[]`, whose ungapped robustness check rests on a non-random subsample
+  thinnest on the most exposed day, with the absolutes withdrawn. ***REV 115 EXAMINED THE NULL'S MACHINERY AND IT
+  HOLDS***: `null_mean`, `null_sd` and `Z` re-derive from the persisted draws TO THE LAST DIGIT on a live run and on
+  the landed sealed 09-07 artifact -- and its control could have disagreed and DID: cross-derived against the
+  5-second moments, CONDVALUE +0.011344 against +0.006874 and HAZARD +0.032416 against -0.043431, ***THE SIGN
+  FLIPPING ON HAZARD***. ***THAT IS STRONGER THAN MY OWN ROUND-288 CLAIM AND I RECORD THE REFINEMENT***: I measured
+  2.2x-5.4x more extreme on four arm-days and wrote that the error runs toward OVERSTATING; that was true of those
+  four and IS NOT A GENERAL LAW -- the general property is that the wrong moments can change the DIRECTION, and the
+  operative factor REV names is the sd ratio. R-825, the finding I filed at round 288, is CLOSED BY RE-DERIVATION
+  AND NOT BY READING THE FIX. ***GATE ITEM 4 IS REOPENED -- THE FIRST ITEM TO GO BACKWARD, AND IT WENT BACKWARD
+  UNDER VERIFICATION RATHER THAN IN PRODUCTION***: DA 143 found DE 162 accurate on 361 (the collision now REFUSES
+  `SCORE_KEY_COLLISION` instead of overwriting) and OVER-CONFIDENT on 362, the `t1` bound holding strictly inside a
+  generation and failing at the ABUTTING BOUNDARY the policy module documents as routine -- gen 1 served gen 0's
+  score, driven end to end through the fixed pipeline -- ***AND THE GUARD DE PRESERVED SAID NOTHING THERE***, a
+  control that fires in the interior and is silent at the edge. The coordinator ruled DA's option (b), require `gen`
+  and route by it, over (a)'s one-character bound, BECAUSE (a) DROPS REAL ROWS to work around a ROUTING bug --
+  disclosed for the user to overrule. Gate: item 5 is the ONLY VERIFIED closure (new equals old exactly, 24/24,
+  14/14, 0/0, against an assembly DA CONSTRUCTED); 4 reopened; 2/3/6 closed-unverified; 1, 7, 8 open, and item 1
+  remains the largest with no landed code against it. Pair of record re-measured: params v23 9/10, v24 10/10, so
+  v24 + design v32; ***AND THE R-835 PIN BLOCKER DID NOT RECUR*** -- DE 162 moved a pinned module and shipped
+  `params_v24` IN THE SAME COMMIT, costing zero pin pairs against three last time. Flags 2454 -> 2469, prov 1999 ->
+  2014; window trimmed 4 -> 3, Batch 278 archived. Verified 08:00:28Z: **NO BUILD, NO LOCK, NO CORRECTED BOOK, AND
+  NO CORRECTED NUMBER COMPUTABLE FROM DISK.** ***ADDENDUM 08:04:48Z, VERIFIED BEFORE RECORDING BECAUSE THE PAIR OF
+  RECORD NAMED ABOVE IS NOW ONE VERSION BEHIND***: `params_v25` is on disk at 10/10 against the cascade at HEAD and
+  design v33 pins it with the digest matching disk, superseding v32 PAIR_OK -- ***THE PAIR OF RECORD IS NOW params
+  v25 + design v33***, the R-835 class again not recurring because the crank turned inside DE 163's own landing.
+  DE 163 closed REV 113's tokeniser hole with a 408-CASE DIFFERENTIAL -- the shape rule 27 asks for, since 'is
+  there a form the OLD one caught that the NEW one does not' is answered by a differential over a corpus rather
+  than asserted -- and armed DA 140's expired guard; LANDED, UNREVIEWED, and this file asserts nothing about its
+  behaviour. MEM asserts no result.)
   2026-09-09T07:52:10Z (MEM ROUND 295 -- R-845 SWEPT as a numbered queue under rule 23, from my
   round-294 tip `0713049` to `9fe6317`, fifteen commits. STATE ONLY. ***THE RULING THIS FILE NOW MATCHES***: the
   ABSOLUTE CENT FIGURES ARE WITHDRAWN -- 60.3 % of 09-03's settled money sits in windows the builder assembled as if
@@ -143,40 +181,6 @@ updated: >-
   by a TWO-CHANNEL partition and `era=None` empties the second, so the partition collapses. And on my open
   discrepancy, DA 141 counts 159 of 246 where REV 112 counted 160 of 287 -- STILL UNRECONCILED AND STILL NOT MINE
   TO PICK. MEM asserts no result.)
-  2026-09-09T07:38:05Z (MEM ROUND 293 -- R-840, R-841 AND R-842 SWEPT as a numbered queue under
-  rule 23, from my round-292 tip `d7de95e` to `c0e19ad`, sixteen commits. STATE ONLY. ***IN ABOUT THIRTY MINUTES OF
-  ISSUE-CLEARING, THREE SEATS HUNTING UNTARGETED FOUND SIX DEFECTS ON THE PATH THE REBUILD WOULD HAVE RUN, AND THE
-  BUILD GATE NOW STANDS AT SEVEN ITEMS WHERE IT STOOD AT ONE LAST NIGHT.*** The severest, REPRODUCED BY ME END TO
-  END RATHER THAN RELAYED: ***THE BUILDER NEVER ASKS THE DAY ITS ERA.*** `be_daybook_build.py:616` calls
-  `_era_or_refuse(fi, None, ...)` -- the era argument LITERALLY `None` -- then `gaps = fi.gaps_by_slug(era)`; driven,
-  that returns `'clob_v3_1'`, a module literal its own docstring calls "an era that closed"; the two eras' gap
-  tables hold 1,143 and 727 slugs with an ***INTERSECTION OF ZERO***; and of 09-03's 247 supplied btc slugs, ZERO
-  are in the era the builder reads while 160 are in the era the day is in. Over those 160 windows I summed
-  ***376 GAP RECORDS TOTALLING 2,294.7 s -- 38.2 MINUTES*** of missing tape, reproducing REV 112's figure to the
-  tenth of a second, all of it assembled as if continuous. THE ZERO INTERSECTION IS WHY IT IS SILENT: a partly
-  overlapping table would have looked wrong somewhere; complete disjointness means every September slug looks up
-  cleanly and gets NOTHING. ***AND THE EXPOSURE THIS CREATES, STATED WITHOUT A NUMBER AND WITHOUT A RULING***: the
-  era resolution is day-independent, so EVERY BOOK ON DISK was assembled over gaps it was told did not exist; the
-  retracted arm results were computed from those books; ***AND THE 0-CANCEL BASELINE RUNS OVER THE SAME
-  REFERENCE***. The surviving latency finding survived the two retractions because the baseline makes no CANCEL
-  DECISIONS -- an argument about the decision path that says nothing about the reference. ***ITS INDEPENDENCE FROM
-  THE ERA DEFECT HAS NOT BEEN ESTABLISHED BY ANYONE***, and a correction to what this file has said since round 291
-  follows: the three derivations I called independent all consumed THE SAME BOOKS, so they establish that the
-  ARITHMETIC over the given fills is right and NOT that the fills are what a gap-aware assembly would have produced.
-  I do not extend the retraction, I quote no number, I withdraw nothing -- a retraction is a ruling and rulings are
-  not mine -- and I FILE the exposure and its one open question for the coordinator to route. Also swept: the
-  unread `producing_code.import_closure` (R-840); the score key and the engine as ONE root, with a misattributed
-  cancel INVISIBLE in every artifact this programme produces (R-842); the coverage evidence's pre-fix membership
-  test (R-841); BE 111's repoint guard and DE 161's numeric comparison, both landed as code and neither reviewed.
-  Flags 2409 -> 2424, prov 1954 -> 1969; window trimmed 4 -> 3, Batch 275 archived. Verified at the machine
-  07:34:29Z: **NO CORRECTED BOOK, NO CORRECTED NUMBER, NO BUILD, NO LOCK.** ***ADDENDUM 07:39:23Z, AFTER THIS ROUND'S
-  WINDOW CLOSED AND VERIFIED AT ITS ROW BEFORE RECORDING***: DA 140 (Q-DA-363) drove the question DA 137 explicitly
-  had not -- whether an L = 250 book represents 250 ms -- with five checks each carrying a control, and found
-  NOTHING WRONG: the units are right at `:506` and the L = 250 books contain EXACTLY the L = 0 fills surviving the
-  predicate on all four days, by set equality. ***THAT STRENGTHENS THE FINDING'S MECHANISM AND LEAVES ITS INPUT
-  UNTOUCHED***: DA 140's own 'areas avoided as instructed' names REV 112's builder/era gaps, so the independence
-  question filed above REMAINS OPEN, and R-843's phrase 'day-independent by construction' describes the DEFECT and
-  not the finding. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -348,6 +352,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 296, R-846 swept; the null holds and the finding is a point estimate (9fe6317 -> 9312227) ---
+  THE_LATENCY_FINDING_IS_A_POINT_ESTIMATE_WITH_NO_CONTROL_AT_ALL: NOT-A-WEAK-NULL-BUT-NONE-DRAWN
+  FIFTY_TWO_Z_FIELDS_ACROSS_FOURTEEN_ARTIFACTS_AND_EVERY_ONE_IS_THE_NAMED_STATUS: ZERO-NUMERIC-Z-ANYWHERE
+  SO_THE_FINDING_STANDS_CAN_ONLY_MEAN_THE_POINT_ESTIMATE_STANDS: A-FOURTH-LIMIT-BESIDE-DAs-THREE
+  REV_115_RE_DERIVED_THE_NULL_MACHINERY_AND_IT_HOLDS_TO_THE_LAST_DIGIT: LIVE-RUN-AND-THE-SEALED-09-07
+  AND_ITS_CONTROL_FLIPPED_A_SIGN_WHICH_IS_STRONGER_THAN_MY_OWN_ROUND_288_CLAIM: PLUS-0.032416-AGAINST-MINUS-0.043431
+  MY_ALWAYS_TOWARD_OVERSTATING_WAS_POPULATION_SPECIFIC_NOT_A_GENERAL_LAW: FOUR-ARM-DAYS-NOT-A-LAW
+  R_825_IS_CLOSED_BY_RE_DERIVATION_AND_NOT_BY_READING_THE_FIX: THE-SD-RATIO-IS-THE-OPERATIVE-FACTOR
+  GATE_ITEM_4_IS_REOPENED_BECAUSE_DE_162_WAS_ACCURATE_ON_ONE_AND_OVER_CONFIDENT_ON_THE_OTHER: 361-CLOSED-362-REACHES
+  THE_t1_BOUND_HOLDS_INSIDE_A_GENERATION_AND_FAILS_AT_THE_ABUTTING_BOUNDARY: WHICH-THE-POLICY-MODULE-CALLS-ROUTINE
+  AND_THE_GUARD_DE_PRESERVED_SAID_NOTHING_THERE: A-CONTROL-THAT-CANNOT-FIRE-AT-THE-EDGE
+  THE_COORDINATOR_CHOSE_ROUTING_OVER_A_ONE_CHARACTER_BOUND_AND_DISCLOSED_IT: OPTION-b-OVER-OPTION-a
+  ITEM_5_IS_THE_ONLY_VERIFIED_CLOSURE_AND_ITS_EQUIVALENCE_IS_EXACT: 24-OF-24-14-OF-14-0-OF-0
+  THE_PAIR_OF_RECORD_IS_v24_PLUS_v32_AND_I_RE_MEASURED_BOTH: v23-9-OF-10-v24-10-OF-10
+  THE_R_835_PIN_BLOCKER_DID_NOT_RECUR_BECAUSE_THE_CRANK_TURNED_IN_THE_SAME_COMMIT: THREE-PIN-PAIRS-LAST-TIME-ZERO-NOW
+  STILL_NO_BUILD_NO_LOCK_AND_NO_CORRECTED_NUMBER_COMPUTABLE_FROM_DISK: UNCHANGED
   # --- MEM round 295, R-845 swept; the absolutes withdrawn (0713049 -> 9fe6317) ---
   MY_STRANDED_STATE_COMMIT_WAS_REBASED_AND_ITS_BYTES_ARE_PROVEN_INTACT: 8f115e3-AND-NOTHING-STRANDED-NOW
   THE_ABSOLUTES_ARE_WITHDRAWN_AND_MY_FILES_NOW_MATCH_THE_RULING: NO-DAY-TOTAL-QUOTED-AS-FINAL
@@ -26829,6 +26849,171 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 296, 2026-09-09T08:03:41Z (the clock read by which every measurement below was complete) ---
+  THE_LATENCY_FINDING_IS_A_POINT_ESTIMATE_WITH_NO_CONTROL_AT_ALL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      ***THE SCOPE FACT THAT MUST NOT BE A FOOTNOTE, AND MY FILES CARRY IT AS A LIMIT AND NOT AN ASIDE.*** The
+      settlement numbers on every L = 250 ms and L = 0 ms day are **POINT ESTIMATES WITH NO CONTROL AT ALL** — not a
+      weak null, not a wide one, **none drawn**. It is in `RESULTS.md` as a **fourth limit** beside DA's three, and
+      it changes the meaning of the sentence this programme has been repeating for two days: **"the latency finding
+      stands" can only ever mean "the POINT ESTIMATE stands."** Everything the finding has survived — two
+      retractions, the era exposure, DA 140's mechanism drive — it survived as a point estimate.
+  FIFTY_TWO_Z_FIELDS_ACROSS_FOURTEEN_ARTIFACTS_AND_EVERY_ONE_IS_THE_NAMED_STATUS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      Measured across every point-estimate artifact on disk rather than sampled: **14 artifacts, 52 `Z` fields, and
+      every single one is the string `"NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"`.** Zero numeric `Z` anywhere; zero files
+      lacking a `Z` field. **The absence is a NAMED STATUS in every one of the fifty-two places it could have been a
+      number**, which is rule 4 done exactly right by the producer — the artifacts do not let a reader mistake a
+      missing control for a passed one. **My files quote the status, never a Z, for these days.**
+  SO_THE_FINDING_STANDS_CAN_ONLY_MEAN_THE_POINT_ESTIMATE_STANDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      The consequence written out, because the four limits now compound and a reader meeting them one at a time will
+      under-count them: the four percentages are (1) **a point estimate with no null**, (2) built over a reference
+      assembled with `gaps=[]`, (3) whose ungapped robustness check rests on a **non-random subsample** that is
+      **thinnest on the most exposed day**, and (4) whose absolutes are **withdrawn**. **Each limit is stated by the
+      seat that found it and none is mine to relax.** What survives is a large, consistently-signed point estimate
+      with four named limits — which is a real thing, and is not a result with a control.
+  REV_115_RE_DERIVED_THE_NULL_MACHINERY_AND_IT_HOLDS_TO_THE_LAST_DIGIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      **REV 115 examined the null's machinery and it HOLDS**: the receipts' `null_mean`, `null_sd` and `Z`
+      **re-derive from the persisted draws to the last digit, both arms and both endpoints**, on a live run AND on
+      the landed **sealed 09-07** artifact. The sealed one is schema 2 and predates the settlement endpoint, so it
+      can only test the D_E0 half — **which is why the fixture run matters and REV says so**: it is the only way to
+      exercise both halves today. **A re-derivation on a real landed artifact plus a fixture that reaches the half
+      the artifact cannot** is the right shape for a claim about machinery.
+  AND_ITS_CONTROL_FLIPPED_A_SIGN_WHICH_IS_STRONGER_THAN_MY_OWN_ROUND_288_CLAIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      ***AND THE CONTROL IS THE PART THAT MATTERS, BECAUSE A RE-DERIVATION THAT AGREES PROVES NOTHING UNLESS IT
+      COULD HAVE DISAGREED.*** REV cross-derived ON PURPOSE against the **5-second** moments — R-825's own defect:
+      **`CONDVALUE: correct Z +0.011344 (sd 229.201) against +0.006874 (sd 91.445)`; `HAZARD: correct Z +0.032416
+      (sd 265.304) against −0.043431 (sd 99.466)`.** Different on both arms — **AND ON HAZARD THE SIGN FLIPS.**
+      **The wrong moments can change the DIRECTION of an excess, not only its size.**
+  MY_ALWAYS_TOWARD_OVERSTATING_WAS_POPULATION_SPECIFIC_NOT_A_GENERAL_LAW:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      ***A REFINEMENT OF MY OWN ROUND-288 FINDING, AND REV'S VERSION IS THE STRONGER ONE.*** I measured that
+      re-deriving Z from the persisted (diagnostic) draws gave **2.2×–5.4× more extreme on every one of four
+      arm-days** and wrote that **"the error runs toward OVERSTATING significance"**. That was true of those four
+      arm-days and **it is not a general law**: REV 115's case flips a sign. **The general property is "can change
+      the direction", and mine was a population-specific instance of it.** REV also identifies the operative factor
+      I did not name — **the sd ratio** (about 2.5× in its case) — which is what makes the magnitude predictable and
+      the sign not.
+  R_825_IS_CLOSED_BY_RE_DERIVATION_AND_NOT_BY_READING_THE_FIX:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      **R-825 — the finding I filed at round 288, that the persisted draws were the diagnostic's — is CLOSED, and
+      closed the right way: by RE-DERIVATION, not by reading the fix.** The distinction is the whole of rule 1: a
+      repair that is read and looks correct is a claim; a statistic that re-derives from its own persisted rows to
+      the last digit, with a cross-derivation that could have disagreed and did, is a measurement. **The defect I
+      named, the fix that closed it, and the control that proved the closure are now three different seats' work**,
+      which is the strongest form a closure takes here.
+  GATE_ITEM_4_IS_REOPENED_BECAUSE_DE_162_WAS_ACCURATE_ON_ONE_AND_OVER_CONFIDENT_ON_THE_OTHER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      ***GATE ITEM 4 IS REOPENED — the first item to go BACKWARD, and it went backward under verification rather
+      than in production.*** DA 143 verified DE 162 and found it **accurate on 361 and OVER-CONFIDENT on 362**.
+      What is genuinely closed: `generation_scores` now excludes `t > t1 + 1e-9` as `ROW_AFTER_GENERATION_END`
+      (driven on an abutting reference, gen 0 `[100,200]` and gen 1 `[200,300]`: a row at `t = 250.0` excluded,
+      `ROWS_SCORED 2 == len(scores) 2`), **and DA 361's own invariant works — two rows at the same float `t` now
+      REFUSE `SCORE_KEY_COLLISION` instead of one silently overwriting the other.** 361 is closed by making the
+      collision REFUSE, not by making it impossible.
+  THE_t1_BOUND_HOLDS_INSIDE_A_GENERATION_AND_FAILS_AT_THE_ABUTTING_BOUNDARY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      What is NOT closed, stated as DA states it: **the `t1` bound holds strictly INSIDE a generation and fails at
+      the ABUTTING BOUNDARY — the case the policy module documents as ROUTINE.** Driven both ways, end to end
+      **through the fixed pipeline rather than a hand-made stream**, DA produced **gen 1 served gen 0's score**.
+      ***A bound that is correct in the interior and wrong at the edge is the shape that survives a battery***,
+      because interior cases are what fixtures are usually built from — and the edge here is not exotic, it is the
+      documented normal case.
+  AND_THE_GUARD_DE_PRESERVED_SAID_NOTHING_THERE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      And the part that makes it a rule-16 instance rather than a missed case: **the guard DE preserved said
+      NOTHING at the abutting boundary** — DA's filing calls it *"a control that cannot fire there"*. So the repair
+      shipped with a control, the control was real, and **the control's coverage stopped exactly where the defect
+      continued**. This register's own rule 16 is phrased on the control side for this reason: *the next instance
+      will wear a shape none of the previous four had*, and this one wears "fires in the interior, silent at the
+      edge".
+  THE_COORDINATOR_CHOSE_ROUTING_OVER_A_ONE_CHARACTER_BOUND_AND_DISCLOSED_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      **RULED, and the reasoning disclosed for the user to overrule (rule 14):** DA's option **(b) — require `gen`
+      on the event and route by it** — over option (a)'s one-character `t >= t1`, **because (a) DROPS REAL ROWS at a
+      generation's close in order to work around a ROUTING bug.** ***That is the right axis to choose on***: (a) is
+      cheaper and smaller and pays for it in data, (b) is more work and pays for it in code. **A fix that silently
+      discards admissible rows to avoid fixing attribution would be a second defect wearing the first one's
+      remedy.** It goes to DE 164; the user may overrule.
+  ITEM_5_IS_THE_ONLY_VERIFIED_CLOSURE_AND_ITS_EQUIVALENCE_IS_EXACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      **Gate arithmetic, exact: item 5 is the ONLY verified closure.** DA 142 drove BE 112 against a reference and
+      an assembly **DA constructed, never BE's fixture**, and reports **new equals old EXACTLY at every level:
+      all-covered 24/24, partial 14/14, empty 0/0**; the missing-`gen` path is **not reachable in production**
+      (`HSP._GEN_REQUIRED` contains `gen`, `validate_reference` refuses by name) and **fails LOUD**. The rest of the
+      board: **item 4 REOPENED; items 2, 3 and 6 closed-unverified; items 1, 7 and 8 open** — and item 1, the
+      builder's era, is still the largest and still has no landed code against it.
+  THE_PAIR_OF_RECORD_IS_v24_PLUS_v32_AND_I_RE_MEASURED_BOTH:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      Re-measured at HEAD this round rather than carried from last: **`params_v23` is 9/10** against disk —
+      `de_phase4_diag_runner.py` moved under DE 162 — **and `params_v24` is 10/10 with zero mismatches**, matching
+      the coordinator's own drive at 07:52Z. With design v32 pinning v24's digest `1cf512b5cbd9cdad…` and
+      superseding v31 PAIR_OK (verified last round), **the pair of record is params v24 + design v32**, and DA 142's
+      re-pin blocker is answered in the direction I measured: **v24 is clean, so the blocker is about what still
+      resolves v23.**
+  THE_R_835_PIN_BLOCKER_DID_NOT_RECUR_BECAUSE_THE_CRANK_TURNED_IN_THE_SAME_COMMIT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      ***A DEFECT CLASS THAT DID NOT RECUR, RECORDED BECAUSE NON-RECURRENCE IS ONLY VISIBLE IF SOMEONE NAMES IT.***
+      At R-835 a repair moved four cascade modules while the params pinned their pre-fix digests, **no day could
+      run, and it took THREE pin pairs to close** (v21+v29, v22+v30, v23+v31, the third because v22 missed a second
+      site). This round DE 162 moved a pinned module again — **and shipped `params_v24` IN THE SAME COMMIT**, so the
+      blocker cost **zero** pin pairs. **The lesson took**, and the difference between the two rounds is that the
+      pin crank turned inside the fix rather than after it.
+  STILL_NO_BUILD_NO_LOCK_AND_NO_CORRECTED_NUMBER_COMPUTABLE_FROM_DISK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:03:41Z
+    said: >-
+      Unchanged and verified at the machine at 08:00:28Z: **no holders on `data/.heavy_run.lock`, no live heavy
+      unit, no build dispatched, no corrected book.** And the stronger form still holds from DA 141: **no corrected
+      number is COMPUTABLE from disk** — it needs a rebuild with the era resolved from the day, and **item 1 is
+      open**. The R-839 stand-down holds. **These files quote no day total as final and no `Z` for any
+      point-estimate day.**
   # --- MEM round 295, 2026-09-09T07:52:10Z (the clock read by which every measurement below was complete) ---
   MY_STRANDED_STATE_COMMIT_WAS_REBASED_AND_ITS_BYTES_ARE_PROVEN_INTACT:
     prov: CHECKED

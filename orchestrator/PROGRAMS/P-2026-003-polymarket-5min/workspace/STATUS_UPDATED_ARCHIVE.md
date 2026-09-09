@@ -20877,3 +20877,42 @@ generation and the window went 4 → 3. Nothing rewritten.
   gone into exactly the corrected books the stood-down queue was about to build -- and it came from the
   DELIBERATELY UNTARGETED hunt, which is the pattern R-839 sent it to exploit. MEM asserts no result.)
 ```
+
+## Batch 278 — archived 2026-09-09T08:03:41Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T07:38:05Z (MEM ROUND 293 -- R-840, R-841 AND R-842 SWEPT as a numbered queue under
+  rule 23, from my round-292 tip `d7de95e` to `c0e19ad`, sixteen commits. STATE ONLY. ***IN ABOUT THIRTY MINUTES OF
+  ISSUE-CLEARING, THREE SEATS HUNTING UNTARGETED FOUND SIX DEFECTS ON THE PATH THE REBUILD WOULD HAVE RUN, AND THE
+  BUILD GATE NOW STANDS AT SEVEN ITEMS WHERE IT STOOD AT ONE LAST NIGHT.*** The severest, REPRODUCED BY ME END TO
+  END RATHER THAN RELAYED: ***THE BUILDER NEVER ASKS THE DAY ITS ERA.*** `be_daybook_build.py:616` calls
+  `_era_or_refuse(fi, None, ...)` -- the era argument LITERALLY `None` -- then `gaps = fi.gaps_by_slug(era)`; driven,
+  that returns `'clob_v3_1'`, a module literal its own docstring calls "an era that closed"; the two eras' gap
+  tables hold 1,143 and 727 slugs with an ***INTERSECTION OF ZERO***; and of 09-03's 247 supplied btc slugs, ZERO
+  are in the era the builder reads while 160 are in the era the day is in. Over those 160 windows I summed
+  ***376 GAP RECORDS TOTALLING 2,294.7 s -- 38.2 MINUTES*** of missing tape, reproducing REV 112's figure to the
+  tenth of a second, all of it assembled as if continuous. THE ZERO INTERSECTION IS WHY IT IS SILENT: a partly
+  overlapping table would have looked wrong somewhere; complete disjointness means every September slug looks up
+  cleanly and gets NOTHING. ***AND THE EXPOSURE THIS CREATES, STATED WITHOUT A NUMBER AND WITHOUT A RULING***: the
+  era resolution is day-independent, so EVERY BOOK ON DISK was assembled over gaps it was told did not exist; the
+  retracted arm results were computed from those books; ***AND THE 0-CANCEL BASELINE RUNS OVER THE SAME
+  REFERENCE***. The surviving latency finding survived the two retractions because the baseline makes no CANCEL
+  DECISIONS -- an argument about the decision path that says nothing about the reference. ***ITS INDEPENDENCE FROM
+  THE ERA DEFECT HAS NOT BEEN ESTABLISHED BY ANYONE***, and a correction to what this file has said since round 291
+  follows: the three derivations I called independent all consumed THE SAME BOOKS, so they establish that the
+  ARITHMETIC over the given fills is right and NOT that the fills are what a gap-aware assembly would have produced.
+  I do not extend the retraction, I quote no number, I withdraw nothing -- a retraction is a ruling and rulings are
+  not mine -- and I FILE the exposure and its one open question for the coordinator to route. Also swept: the
+  unread `producing_code.import_closure` (R-840); the score key and the engine as ONE root, with a misattributed
+  cancel INVISIBLE in every artifact this programme produces (R-842); the coverage evidence's pre-fix membership
+  test (R-841); BE 111's repoint guard and DE 161's numeric comparison, both landed as code and neither reviewed.
+  Flags 2409 -> 2424, prov 1954 -> 1969; window trimmed 4 -> 3, Batch 275 archived. Verified at the machine
+  07:34:29Z: **NO CORRECTED BOOK, NO CORRECTED NUMBER, NO BUILD, NO LOCK.** ***ADDENDUM 07:39:23Z, AFTER THIS ROUND'S
+  WINDOW CLOSED AND VERIFIED AT ITS ROW BEFORE RECORDING***: DA 140 (Q-DA-363) drove the question DA 137 explicitly
+  had not -- whether an L = 250 book represents 250 ms -- with five checks each carrying a control, and found
+  NOTHING WRONG: the units are right at `:506` and the L = 250 books contain EXACTLY the L = 0 fills surviving the
+  predicate on all four days, by set equality. ***THAT STRENGTHENS THE FINDING'S MECHANISM AND LEAVES ITS INPUT
+  UNTOUCHED***: DA 140's own 'areas avoided as instructed' names REV 112's builder/era gaps, so the independence
+  question filed above REMAINS OPEN, and R-843's phrase 'day-independent by construction' describes the DEFECT and
+  not the finding. MEM asserts no result.)
+```

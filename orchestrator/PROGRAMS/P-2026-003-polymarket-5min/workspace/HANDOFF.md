@@ -1,3 +1,107 @@
+# READ FIRST — round 296 (MEM, 2026-09-09T08:03:41Z, tip `9312227`)
+
+**R-846 swept as a numbered queue under rule 23 — from my round-295 tip `9fe6317` to `9312227`, fourteen commits.**
+STATE ONLY.
+
+## ⚠ THE SURVIVING FINDING IS A POINT ESTIMATE WITH NO CONTROL AT ALL
+
+**Measured across every artifact, not sampled: 14 point-estimate artifacts, 52 `Z` fields, and every one is the
+string `"NULL_NOT_DRAWN_POINT_ESTIMATE_RUN"`. Zero numeric `Z` anywhere. Zero files without a `Z` field.**
+
+Not a weak null, not a wide one — **none drawn**. The absence is a **named status in all fifty-two places it could
+have been a number**, which is rule 4 done right by the producer.
+
+**⇒ "The latency finding stands" can only ever mean "the POINT ESTIMATE stands."** Everything it has survived — two
+retractions, the era exposure, DA 140's mechanism drive — it survived as a point estimate.
+
+**The four limits now compound.** The percentages are (1) a point estimate with **no null**, (2) over a reference
+assembled with **`gaps=[]`**, (3) whose ungapped robustness check rests on a **non-random subsample, thinnest on the
+most exposed day**, and (4) whose **absolutes are withdrawn**. Each was stated by the seat that found it; **none is
+mine to relax.**
+
+## REV 115 — the null's machinery HOLDS, and the control flipped a sign
+
+`null_mean`, `null_sd` and `Z` **re-derive from the persisted draws to the last digit**, both arms and both
+endpoints, on a live run **and** on the landed sealed 09-07 artifact. (That one is schema 2 and predates the
+settlement endpoint, so it tests only the D_E0 half — **which is why the fixture run matters, and REV says so.**)
+
+**The control could have disagreed and did.** Cross-derived on purpose against the 5-second moments —
+R-825's own defect: **CONDVALUE `+0.011344` (sd 229.201) vs `+0.006874` (sd 91.445); HAZARD `+0.032416` (sd 265.304)
+vs `−0.043431` (sd 99.466).** Different on both arms, **and on HAZARD the sign flips.**
+
+**⚠ That refines my own round-288 claim, and REV's version is the stronger one.** I measured 2.2×–5.4× more extreme
+on four arm-days and wrote *"the error runs toward overstating significance."* **True of those four; not a general
+law.** The general property is **"can change the direction"**, and the operative factor is the **sd ratio** — which
+makes the magnitude predictable and the sign not. **R-825 is closed by re-derivation, not by reading the fix.**
+
+## ⚠ GATE ITEM 4 IS REOPENED — the first item to go backward, and it went backward under verification
+
+**DA 143 found DE 162 accurate on 361 and over-confident on 362.**
+
+- **Closed:** `generation_scores` excludes `t > t1 + 1e-9` as `ROW_AFTER_GENERATION_END` (driven on an abutting
+  reference: a row at `t = 250.0` excluded, `ROWS_SCORED 2 == len(scores) 2`), **and two rows at the same float `t`
+  now REFUSE `SCORE_KEY_COLLISION`** instead of one silently overwriting the other — closed by making the collision
+  *refuse*, not impossible.
+- **Not closed:** the `t1` bound holds **strictly inside** a generation and **fails at the abutting boundary — the
+  case the policy module documents as routine.** Driven end to end through the fixed pipeline: **gen 1 served gen
+  0's score.** *A bound correct in the interior and wrong at the edge is the shape that survives a battery.*
+- **And the guard DE preserved said nothing there** — DA calls it *"a control that cannot fire there"*. Rule 16's
+  next shape: **fires in the interior, silent at the edge.**
+
+**Ruled (disclosed for the user to overrule):** DA's option **(b) — require `gen` on the event and route by it** —
+over (a)'s one-character `t >= t1`, **because (a) drops real rows at a generation's close to work around a routing
+bug.** A fix that silently discards admissible rows to avoid fixing attribution would be a second defect wearing the
+first one's remedy. → DE 164.
+
+## GATE ARITHMETIC
+
+| item | state |
+|---|---|
+| 5 | **the ONLY verified closure** — DA 142: new equals old **exactly**, 24/24, 14/14, 0/0, against an assembly **DA constructed** |
+| 4 | **REOPENED** |
+| 2, 3, 6 | closed **in code, unverified** |
+| 1, 7, 8 | **open** — and **1 (the builder's era) is the largest, with no landed code against it** |
+
+## THE PAIR OF RECORD, AND A CLASS THAT DID NOT RECUR
+
+Re-measured at HEAD: **`params_v23` 9/10** (`de_phase4_diag_runner.py` moved under DE 162), **`params_v24` 10/10,
+zero mismatches** → **params v24 + design v32**. DA 142's re-pin blocker resolves in the direction I measured:
+**v24 is clean, so it is about what still resolves v23.**
+
+**And the R-835 pin blocker did not recur.** Last time a repair moved four pinned modules, no day could run, and it
+took **three pin pairs** to close. This time DE 162 moved a pinned module **and shipped `params_v24` in the same
+commit** — **zero pin pairs.** *Non-recurrence is only visible if someone names it.*
+
+## STATE
+
+Verified 08:00:28Z: **no lock holders, no live heavy unit, no build, no corrected book** — and **no corrected number
+computable from disk** (it needs a rebuild with the era resolved from the day; item 1 is open). **These files quote
+no day total as final and no `Z` for any point-estimate day.**
+
+Counts: flags 2454 → 2469, provenance 1999 → 2014 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,724 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 278
+archived. MEM asserts no result.
+
+---
+
+## ADDENDUM 08:04:48Z — the pair of record advanced again while this round was written
+
+Verified at both files before recording, **because the block above names v24 + v32 as the pair of record and that is
+now one version behind**: **`params_v25` is on disk and 10/10 against the cascade at HEAD**; **design v33 pins
+`de_multiday_gate1_params_v25.json`, its digest matches disk, and v33 supersedes v32 PAIR_OK.** **⇒ The pair of
+record is now params v25 + design v33** — and the R-835 class again did not recur, the crank turning inside DE 163's
+own landing.
+
+DE 163 (`9b15eda`) closed **REV 113's tokeniser hole with a 408-case differential** — the shape rule 27 asks for,
+since the question is *"is there a form the OLD one caught that the NEW one does not"* and a differential over a
+corpus is how that is answered rather than asserted — recorded the cache's closure, and **armed DA 140's expired
+guard**. Landed; **unreviewed**, and this file asserts nothing about its behaviour.
+
+R-847 also records the abutting-boundary defect as **a class REV has now found three times**. I have not verified
+the three instances and do not restate them here.
+
+---
+
 # READ FIRST — round 295 (MEM, 2026-09-09T07:52:10Z, tip `9fe6317`)
 
 **R-845 swept as a numbered queue under rule 23 — from my round-294 tip `0713049` to `9fe6317`, fifteen commits.**
