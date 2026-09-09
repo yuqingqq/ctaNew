@@ -712,6 +712,90 @@ def _producing_closure_block(stamp: dict) -> dict:
                     "receipt (rule 4)."}
 
 
+#: A zero-length generation is a BOUNDARY ARTEFACT, not a population.
+#: If the fraction is larger than this, the shape is not a boundary case
+#: and dropping it silently would be the fix that hides the defect -- so
+#: the build REFUSES instead. 9 of 313,149 on 09-03 is 0.0029 %.
+ZERO_LENGTH_FRACTION_REFUSE_ABOVE = 0.001          # 0.1 %
+
+
+def exclude_zero_length_generations(
+        ref: dict, day: str, *,
+        refuse_above: float = ZERO_LENGTH_FRACTION_REFUSE_ABOVE) -> dict:
+    """DROP generations with `t0 == t1`, COUNTED AND NAMED (rule 4).
+
+    WHY THEY EXIST, established at BE 129 and not guessed. The era fix
+    (BE 113) attaches the day's REAL gaps to `build_reference` for the
+    first time; a gap START truncates the generation that is live at that
+    instant; and where a NEW generation is created at the same instant the
+    gap begins, it is born and immediately terminated -- `t0 == t1`, zero
+    tranches. MEASURED on the first corrected 09-03 book: **all nine sit at
+    a gap START**, eight of them within 3.7 microseconds and one within
+    68 ms, and **all seven affected slugs carry gaps under `clob_v4_1` and
+    none under `clob_v3_1`**. The pre-fix book, built with `gaps=[]` for
+    every window, has ZERO of them. Same phenomenon as the +35 generations:
+    a gap SPLITS a generation, so the corrected path produces more of them,
+    and nine of the new boundaries land exactly on their own start.
+
+    WHY THEY ARE EXCLUDED RATHER THAN ADMITTED. A zero-length generation is
+    a real state of the feed -- a quote posted at the instant the feed gaps
+    -- but it is NOT A DECISION-TIME EXPOSURE (CLAUDE.md rule 1): zero
+    elapsed time, no tranches, nothing can be decided, cancelled or filled
+    in it. It is not in the population because it cannot be a row.
+
+    AND `validate_reference` IS NOT WEAKENED. DE declined to admit these
+    and was right; the guard keeps its exact predicate. What changes is
+    that the builder no longer PRODUCES a thing the guard must refuse."""
+    n0 = 0
+    dropped = []
+    for slug in sorted(ref):
+        by_side = ref[slug] or {}
+        for side in ("BUY_UP", "SELL_UP"):
+            gens = by_side.get(side)
+            if not gens:
+                continue
+            n0 += len(gens)
+            keep = []
+            for g in gens:
+                t0, t1 = g.get("t0"), g.get("t1")
+                if t0 is not None and t1 is not None and t0 == t1:
+                    dropped.append({"slug": slug, "side": side,
+                                    "gen": g.get("gen"), "t0": t0, "t1": t1,
+                                    "n_tranches": len(g.get("tranches") or [])})
+                    continue
+                keep.append(g)
+            if len(keep) != len(gens):
+                by_side[side] = keep
+    frac = (len(dropped) / n0) if n0 else 0.0
+    if frac > refuse_above:
+        raise BookRefused(
+            f"REFUSED -- ZERO_LENGTH_GENERATIONS_ARE_NOT_A_BOUNDARY_CASE: "
+            f"{len(dropped)} of {n0} generations on {day} have t0 == t1 "
+            f"({frac:.4%}, above {refuse_above:.1%}). "
+            f"At that scale this is a mechanism and not a gap boundary, and "
+            f"dropping them with a count would be the fix that hides it.")
+    return {
+        "status": "ZERO_LENGTH_GENERATION_EXCLUDED",
+        "n_excluded": len(dropped),
+        "n_generations_before": n0,
+        "n_generations_after": n0 - len(dropped),
+        "fraction": frac,
+        "refuse_above": refuse_above,
+        "refuse_above_is_the_default": refuse_above
+        == ZERO_LENGTH_FRACTION_REFUSE_ABOVE,
+        "n_tranches_on_them": sum(d["n_tranches"] for d in dropped),
+        "excluded": dropped,
+        "predicate": "t0 == t1",
+        "why": "a gap START truncates the generation live at that instant; "
+               "one created at that same instant is born terminated. Not a "
+               "decision-time exposure (rule 1), so not in the population",
+        "the_guard_is_unchanged": "harmful_stateful_policy."
+                                  "validate_reference keeps its exact "
+                                  "predicate (finite t0 < t1); the builder "
+                                  "no longer produces what it must refuse",
+    }
+
+
 def mask_block(sup: dict, day: str, coin: str, n_wanted: int) -> dict:
     """THE DAY'S DENOMINATOR, AND WHAT WAS TAKEN OUT OF IT (REV 114 §3).
 
@@ -1118,6 +1202,11 @@ def build(day: str, *, coin: str = COIN,
                            placement_latency_ms=placement_latency_ms)
     stages.done("A0_reference", t)
     ref = fr["reference"]
+    # BE 129: THE GAPS CUT GENERATIONS, AND A CUT AT A GENERATION'S OWN
+    # START LEAVES A ZERO-LENGTH ONE. Excluded HERE -- before `n_gen`,
+    # before the assembly, before anything counts them -- with a status
+    # and a count (rule 4).
+    obs["zero_length_generations"] = exclude_zero_length_generations(ref, day)
     obs["reference_s"] = round(time.time() - t, 1)
     obs["reference_peak_gb"] = _rss_gb()
     n_gen = sum(len(ref[s][sd]) for s in ref for sd in ("BUY_UP", "SELL_UP")
@@ -1327,6 +1416,9 @@ def build(day: str, *, coin: str = COIN,
         # BE 101: the value USED, its SOURCE and the dropped-tranche count,
         # all three read back from the reference's own report.
         "placement_latency": _pl,
+        # BE 129: the exclusion travels with its count and its identities
+        # (rule 4) -- a reader of `generations` sees what was taken out.
+        "zero_length_generations": obs.get("zero_length_generations"),
         "reference": {"windows": len(ref), "generations": n_gen,
                       # DA 147 / BE 116: THE STATUS SITS BESIDE THE COUNT,
                       # in the same block, because that is where a reader
@@ -1465,7 +1557,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 166
+EXPECTED_CHECKS = 169
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1735,6 +1827,60 @@ def selftest() -> int:
            f"what any guarantee rests on and it is intact; the derivation "
            f"is the convenience, and losing it must not cost a finished "
            f"build its receipt")
+
+    # ---- BE 129: THE ZERO-LENGTH GENERATION, EXCLUDED AND COUNTED -----
+    # The nine the first corrected book produced are reproduced here as a
+    # fixture: a generation whose gap-truncated `t1` lands on its own `t0`.
+    def _mkref():
+        return {"s1": {"BUY_UP": [{"gen": 0, "t0": 1.0, "t1": 5.0,
+                                   "tranches": [{"t": 2.0}]},
+                                  {"gen": 1, "t0": 7.0, "t1": 7.0,
+                                   "tranches": []}],
+                       "SELL_UP": [{"gen": 2, "t0": 3.0, "t1": 9.0,
+                                    "tranches": []}]},
+                "s2": {"BUY_UP": [{"gen": 3, "t0": 4.0, "t1": 4.0,
+                                   "tranches": []}], "SELL_UP": []}}
+    _r129 = _mkref()
+    # `refuse_above` is passed ONLY here, so the MECHANICS can be driven
+    # apart from the FRACTION guard, which has its own known-bad below.
+    # The production call passes nothing and gets the declared default.
+    _x129 = exclude_zero_length_generations(_r129, "d", refuse_above=1.0)
+    _left = [g["gen"] for sd in _r129.values() for gs in sd.values()
+             for g in gs]
+    ok(_x129["n_excluded"] == 2 and _x129["n_generations_before"] == 4
+       and _x129["n_generations_after"] == 2 and sorted(_left) == [0, 2]
+       and _x129["n_tranches_on_them"] == 0
+       and {d["gen"] for d in _x129["excluded"]} == {1, 3}
+       and _x129["refuse_above_is_the_default"] is False,
+       f"THE ZERO-LENGTH GENERATION IS EXCLUDED AND COUNTED: "
+       f"{_x129['n_excluded']} of {_x129['n_generations_before']} dropped "
+       f"(gens {sorted(d['gen'] for d in _x129['excluded'])}, "
+       f"{_x129['n_tranches_on_them']} tranches between them), "
+       f"{sorted(_left)} kept -- an exclusion with a STATUS, a COUNT and "
+       f"the IDENTITIES, never a silent drop (rule 4)")
+    _clean = {"s1": {"BUY_UP": [{"gen": 0, "t0": 1.0, "t1": 5.0,
+                                 "tranches": []}], "SELL_UP": []}}
+    _xc = exclude_zero_length_generations(_clean, "d")   # default threshold
+    ok(_xc["n_excluded"] == 0
+       and _xc["n_generations_before"] == _xc["n_generations_after"] == 1
+       and _clean["s1"]["BUY_UP"]
+       and _xc["refuse_above_is_the_default"] is True,
+       "POSITIVE CONTROL: a reference with no zero-length generation is "
+       "returned UNTOUCHED and the count is 0 -- the exclusion fires on the "
+       "bad case and admits the good one (rule 16)")
+    try:
+        exclude_zero_length_generations(
+            {"s1": {"BUY_UP": [{"gen": i, "t0": 1.0, "t1": 1.0,
+                                "tranches": []} for i in range(50)],
+                    "SELL_UP": []}}, "d")
+        ok(False, "an implausible fraction must refuse")
+    except BookRefused as e:
+        ok("ZERO_LENGTH_GENERATIONS_ARE_NOT_A_BOUNDARY_CASE" in str(e),
+           f"KNOWN-BAD: 50 of 50 zero-length REFUSES rather than dropping "
+           f"them with a tidy count -- above "
+           f"{ZERO_LENGTH_FRACTION_REFUSE_ABOVE:.1%} it is a MECHANISM and "
+           f"not a gap boundary, and a count would be the fix that hides "
+           f"it. On 09-03 the real figure was 9 of 313,149 = 0.0029 %")
 
     # ---- BE 116: REV 121's NUMBER AND DA 147's STATUS -----------------
     _c116ref, _c116gs = _COV._fixture(per_row=True)
