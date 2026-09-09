@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 419
+EXPECTED_CHECKS = 420
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -6256,6 +6256,18 @@ ACCEPT_UNVERIFIABLE_MEMBERSHIP = "ACCEPT_MEMBERSHIP_NOT_ESTABLISHED"
 #: any digest that differs. The recording's honesty is the producer's, and
 #: it is guarded on the producing side by rule 22's import-closure capture,
 #: not here.
+#: DE 179 / DA 168 / REV 146, USER RULING. A book whose scoring code moved
+#: refuses -- and on 2026-09-09 establishing that NOTHING WHICH MOVED could
+#: change that book's scores cost a seat five minutes of investigation the
+#: refusal should have carried. DA's design answer, adopted: **do not narrow
+#: the condition, widen the payload.** The waiver that rests on the widened
+#: payload is a PREDICATE (`de_scoring_path_delta.waiver_available`), never a
+#: judgement: a caller TYPES the token to ask, and the predicate decides. A
+#: waiver a human can assert without the predicate holding is not a waiver,
+#: it is a bypass, and the difference is that this one can say NO.
+BOOK_SCORING_WAIVER_NOT_AVAILABLE = "BOOK_SCORING_WAIVER_NOT_AVAILABLE"
+BOOK_SCORING_WAIVER_TOKEN_WRONG = "BOOK_SCORING_WAIVER_TOKEN_NOT_THE_TOKEN"
+WAIVED_SCORING_PATH = "WAIVED_SCORING_PATH_BYTE_IDENTICAL"
 MEMBERSHIP_LIMIT = (
     "THIS PREDICATE CANNOT DETECT A RECEIPT THAT UNDER-RECORDS ITS OWN "
     "IMPORT CLOSURE. Reachability is monotone in the closure, so a smaller "
@@ -6340,7 +6352,8 @@ def ruled_lazy_exemption(root) -> dict:
                 "OWED TO BE: publish the set machine-readably")}
 
 
-def _refuse_scoring(code: str, where: str, body: str):
+def _refuse_scoring(code: str, where: str, body: str,
+                    evidence: dict | None = None):
     """RAISE a scoring refusal WITH THE LIMIT ON IT -- DE 169 / REV 134.
 
     DE 168's report claimed `MEMBERSHIP_LIMIT` was "named in every result".
@@ -6361,12 +6374,120 @@ def _refuse_scoring(code: str, where: str, body: str):
     exc.membership_limit = MEMBERSHIP_LIMIT
     exc.refusal_code = code
     exc.where = where
+    # DE 179: THE EVIDENCE RIDES ON THE EXCEPTION, not only in the prose.
+    # A consumer that wants the delta without parsing a message reads
+    # `exc.scoring_path_delta`; rule 28's shape, closed at the producer.
+    if evidence is not None:
+        exc.scoring_path_delta = evidence
     raise exc
+
+
+def _scoring_path_delta_for(differ, root) -> dict:
+    """The delta a `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` refusal owes.
+
+    **NEVER RAISES.** This runs on a path that is already refusing, and an
+    exception raised while GATHERING EVIDENCE would replace the refusal
+    with a different error -- the run would still stop, and it would stop
+    saying the wrong thing. A failure here is a STATUS, and a status that
+    cannot be mistaken for an empty intersection."""
+    try:
+        import de_scoring_path_delta as SPD
+        return SPD.delta(differ, root=root)
+    except Exception as e:                                   # noqa: BLE001
+        return {"status": "PAYLOAD_NOT_COMPUTED",
+                "why": f"{type(e).__name__}: {e}",
+                "consequence": ("the refusal stands and NOTHING is "
+                                "waivable: an uncomputed delta is not an "
+                                "empty one"),
+                "modules": {}}
+
+
+def _scoring_path_waiver(token, delta_payload: dict, *, where: str,
+                         differ: list) -> dict:
+    """GRANT or REFUSE. There is no third exit, and no caller can invent one.
+
+    Returns only when the waiver is GRANTED; every other outcome refuses by
+    name. That shape is deliberate: a function that could return
+    `{"granted": False}` would let a caller proceed by not reading it,
+    which is the defect class this programme has spent a night closing."""
+    import de_scoring_path_delta as SPD
+    _summary = _delta_summary(delta_payload)
+    if token is None:
+        _refuse_scoring(
+            BOOK_SCORING_DIFFERS, where,
+            f"this book's assembly was produced by scoring code that is "
+            f"not the code on disk -- {differ}. The book's own digest "
+            f"verifies and says nothing about this: the scores are IN the "
+            f"book, so different scoring code makes it a different book. "
+            f"Rebuild it, or read it with the code that made it. "
+            f"[SCORING-PATH DELTA] {_summary}",
+            evidence=delta_payload)
+    if token != SPD.WAIVER_TOKEN:
+        _refuse_scoring(
+            BOOK_SCORING_WAIVER_TOKEN_WRONG, where,
+            f"a waiver was requested with {token!r}, which is not the "
+            f"token. The token is {SPD.WAIVER_TOKEN!r} and it exists so "
+            f"that asking for a waiver is a DELIBERATE, RECORDED act -- a "
+            f"near-miss must not resolve to one. "
+            f"[SCORING-PATH DELTA] {_summary}",
+            evidence=delta_payload)
+    verdict = SPD.waiver_available(delta_payload)
+    if not verdict.get("available"):
+        _refuse_scoring(
+            BOOK_SCORING_WAIVER_NOT_AVAILABLE, where,
+            f"a waiver was asked for and the PREDICATE SAYS NO. Failing "
+            f"conditions: {verdict.get('why_not')}. The differing modules "
+            f"are {differ}. [SCORING-PATH DELTA] {_summary} -- asking does "
+            f"not grant; that is the whole difference between a waiver and "
+            f"a bypass.",
+            evidence={"delta": delta_payload, "waiver": verdict})
+    return {"granted": True,
+            "token_supplied_by_the_caller": token,
+            "CAUTION": SPD.WAIVER_CAUTION,
+            "ruling": ("USER, 2026-09-09 -- waive AS A PREDICATE. The "
+                       "evidence is DA 168's and REV 146's, each derived "
+                       "independently: the moved module is reached at "
+                       "exactly one attribute, and the intersection of the "
+                       "reachable closure with what changed is EMPTY"),
+            "what_was_overridden": BOOK_SCORING_DIFFERS,
+            "differing_modules": differ,
+            "predicate": verdict,
+            "evidence": delta_payload,
+            "decided_by": ("the predicate above, on the evidence beside "
+                           "it. The caller only ASKED (rule 14: a model "
+                           "estimates, the policy layer decides -- and "
+                           "here the policy layer had to type a token "
+                           "into a launch form that is recorded)")}
+
+
+def _delta_summary(payload: dict) -> str:
+    """One line a human reads in a refusal message. COMPUTED, not typed."""
+    mods = (payload or {}).get("modules") or {}
+    if not mods:
+        return (f"NOT COMPUTED -- {(payload or {}).get('status')}: "
+                f"{(payload or {}).get('why')}")
+    bits = []
+    for name, m in sorted(mods.items()):
+        if not m.get("intersection_known"):
+            bits.append(f"{name}: {m.get('status')} (NOT an empty "
+                        f"intersection -- nothing was compared)")
+            continue
+        inter = m["INTERSECTION"]
+        bits.append(
+            f"{name}: on the path "
+            f"{m['on_the_path']['defs']}"
+            f"{'+' + str(m['on_the_path']['module_level_names_read_by_them']) if m['on_the_path']['module_level_names_read_by_them'] else ''}; "
+            f"changed {m['what_moved']['n_defs_changed']} def(s) / "
+            f"{m['what_moved']['n_module_level_changed']} name(s); "
+            f"INTERSECTION "
+            f"{'EMPTY' if inter['is_empty'] else inter['defs'] + inter['module_level_names']}")
+    return " | ".join(bits) + f" || {(payload.get('READING') or {}).get('what_this_supports')}"
 
 
 def assert_book_scoring_code(receipt: dict, *, where: str,
                              root=None,
-                             membership_unverifiable: str | None = None
+                             membership_unverifiable: str | None = None,
+                             scoring_path_waiver: str | None = None
                              ) -> dict:
     """The book's scores were produced by THESE bytes -- checked.
 
@@ -6477,14 +6598,15 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
         if not actual.startswith(str(declared)[:16]):
             differ.append({"module": name, "declared": str(declared),
                            "actual": actual})
+    _waiver = None
     if differ:
-        _refuse_scoring(
-            BOOK_SCORING_DIFFERS, where,
-            f"this book's assembly was produced by scoring code that is "
-            f"not the code on disk -- {differ}. The book's own digest "
-            f"verifies and says nothing about this: the scores are IN the "
-            f"book, so different scoring code makes it a different book. "
-            f"Rebuild it, or read it with the code that made it.")
+        # THE PAYLOAD IS COMPUTED FIRST AND UNCONDITIONALLY -- a refusal
+        # with no token still carries the evidence, because the point of
+        # DA 168's design is that the rebuild-versus-supersede decision be
+        # READABLE FROM THE REFUSAL rather than cost an investigation.
+        _delta = _scoring_path_delta_for(differ, root)
+        _waiver = _scoring_path_waiver(scoring_path_waiver, _delta,
+                                       where=where, differ=differ)
     # NOT A REFUSAL WHEN MEMBERS ARE UNNAMED -- BE 122's rule is explicit
     # that absence may not be refused on, and refusing would refuse the
     # newest real receipt today (13 of 15 named). The caller gets a result
@@ -6525,6 +6647,21 @@ def assert_book_scoring_code(receipt: dict, *, where: str,
                 round(len(recorded) / _expected_n, 4) if _expected_n
                 else None)},
     }
+    if _waiver is not None:
+        # NOT A MATCH, AND IT NEVER BECOMES ONE. The book and the code
+        # disagree; what the predicate established is that the
+        # disagreement cannot reach the scores. A reader that wants the
+        # weaker claim has to read the word WAIVED.
+        return {**_base, "status": WAIVED_SCORING_PATH,
+                "is_a_match": False,
+                "every_named_member_digest_matched": False,
+                "scoring_path_waiver": _waiver,
+                "why_not_a_match": (
+                    "a module the receipt names does NOT digest-match the "
+                    "file on disk. The book-code predicate refused and the "
+                    "refusal was overridden by a WAIVER whose conditions "
+                    "are computed and recorded in `scoring_path_waiver`. "
+                    "This day did not run on code that matches its book")}
     if _complete:
         return {**_base, "status": "BOOK_SCORING_CODE_MATCHES",
                 "is_a_match": True}
@@ -8245,6 +8382,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             ledger_anchor=None,
             winners: dict | None = None,
             point_estimate: bool = False,
+            scoring_path_waiver: str | None = None,
             before_work=None) -> dict:
     """ONE RULED DAY, SEALED. The path the smoke runs.
 
@@ -8370,7 +8508,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     else:
         _scode = assert_book_scoring_code(
             json.loads(Path(receipt).read_text()),
-            where=f"the day path for {day}")
+            where=f"the day path for {day}",
+            scoring_path_waiver=scoring_path_waiver)
         # ---- DE 169: THE VERDICT IS READ, NOT JUST STORED -------------
         # `assert_book_scoring_code` can now return WITHOUT raising and
         # WITHOUT being a match: BE 122's rule forbids refusing on a set
@@ -8417,6 +8556,19 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                     f"(DE 174 (2)) covers {_lazy['exempt']} and nothing "
                     f"else: that is the difference between a ruled "
                     f"exemption and a hole.")
+            if _scode.get("status") == WAIVED_SCORING_PATH:
+                _scode["FLAG_FOR_THE_READER_ABOUT_THE_WAIVER"] = (
+                    "THIS DAY RAN ON A BOOK WHOSE SCORING CODE DOES NOT "
+                    "MATCH THE CODE ON DISK. The book-code predicate "
+                    "refused BY NAME and the refusal was OVERRIDDEN by a "
+                    "waiver -- a check that is firing CORRECTLY, "
+                    "overridden on evidence, not a check that is wrong. "
+                    "The evidence is in `scoring_path_waiver`: the "
+                    "reachable closure from the scoring entry points, an "
+                    "EMPTY intersection with what changed, and the "
+                    "byte-identity of every unit on that path. Its limits "
+                    "are there too, and they are the reason this is a "
+                    "decision rather than a pass.")
             _scode["FLAG_FOR_THE_READER"] = (
                 "THIS DAY RAN ON A BOOK WHOSE SCORING-CODE MEMBERSHIP WAS "
                 "NOT COMPLETE. Every module the receipt NAMES matched its "
@@ -10981,6 +11133,99 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
 
 
 
+    # ---- DE 179: THE WIDENED PAYLOAD, AND THE WAIVER AS A PREDICATE --
+    # DA 168's design and the USER's ruling, driven through THIS
+    # PREDICATE'S OWN ENTRY POINT (rule 33) over a FIXTURE TREE that costs
+    # nothing to walk.
+    #
+    # WHY A FIXTURE AND NOT THE REAL TREE, stated because the weaker
+    # fixture is a real cost: the real-tree payload was MEASURED at ~140
+    # MB, this battery high-waters ~838 MB, and rule 20 refuses a fixture
+    # day above 1.0 GiB WITHOUT THE LOCK. The first version of these cells
+    # took the battery to 1.01 GiB and a FIXTURE DAY REFUSED AS HEAVY --
+    # and it also broke the peak-argmax cell, whose planted 9,000 MB is a
+    # LITERAL that silently assumed this process stays under 1 GiB. So the
+    # entry-point drive lives here on a tree of two small modules, and the
+    # REAL 09-03 EV21 book is driven in `de_scoring_path_delta --falsify`,
+    # which is its own process and pays its own memory.
+    import de_scoring_path_delta as _SPD179
+    import tempfile as _tf179
+    with _tf179.TemporaryDirectory() as _td179:
+        _pkg179 = _SPD179.fixture_tree(Path(_td179))
+        _mods179 = {n: hashlib.sha256((_pkg179 / n).read_bytes()).hexdigest()
+                    for n in ("de_phase4_diag_runner.py",
+                              "de_multiday_gate1_runner.py")}
+        # THE BOOK'S BYTES, then the module MOVED ON DISK exactly the way
+        # the EV21 book's runner did: an OFF-PATH function only.
+        _rcpt179 = {"producing_code": {"import_closure":
+                                       {"modules": dict(_mods179)}}}
+        _f179 = _pkg179 / "de_multiday_gate1_runner.py"
+        _f179.write_text(_f179.read_text().replace("return OFF_CONST",
+                                                   "return OFF_CONST + 1"))
+        _w1 = _w2 = _w4 = None
+        _exc179 = None
+        try:
+            assert_book_scoring_code(_rcpt179, where="the battery",
+                                     root=_pkg179)
+        except RunnerRefused as _e:
+            _exc179 = _e
+            _w1 = str(_e).split(":")[0].replace("REFUSED ", "").split(
+                " at ")[0]
+        try:
+            assert_book_scoring_code(_rcpt179, where="the battery",
+                                     root=_pkg179,
+                                     scoring_path_waiver="yes please")
+        except RunnerRefused as _e:
+            _w2 = str(_e).split(":")[0].replace("REFUSED ", "").split(
+                " at ")[0]
+        _w3 = assert_book_scoring_code(
+            _rcpt179, where="the battery", root=_pkg179,
+            scoring_path_waiver=_SPD179.WAIVER_TOKEN)
+        # AND THE ON-PATH CHANGE, WHICH MUST NOT BE WAIVABLE.
+        _f179.write_text(_f179.read_text().replace(
+            'PARAMS_REL = "params_v29.json"', 'PARAMS_REL = "params_v30.json"'))
+        _rcpt179b = {"producing_code": {"import_closure":
+                                        {"modules": dict(_mods179)}}}
+        try:
+            assert_book_scoring_code(_rcpt179b, where="the battery",
+                                     root=_pkg179,
+                                     scoring_path_waiver=_SPD179.WAIVER_TOKEN)
+        except RunnerRefused as _e:
+            _w4 = str(_e).split(":")[0].replace("REFUSED ", "").split(
+                " at ")[0]
+        _pay179 = getattr(_exc179, "scoring_path_delta", None) or {}
+        _m179 = (_pay179.get("modules") or {}).get(
+            "de_multiday_gate1_runner.py") or {}
+        ok(_w1 == BOOK_SCORING_DIFFERS
+           and "[SCORING-PATH DELTA]" in str(_exc179)
+           and _m179.get("on_the_path", {}).get("defs") == ["ruled_day_set"]
+           and _m179.get("on_the_path", {}).get(
+               "module_level_names_read_by_them") == ["PARAMS_REL"]
+           and _m179.get("INTERSECTION", {}).get("is_empty") is True
+           and _m179.get("what_moved", {}).get("defs_modified") == ["run_day"]
+           and _w2 == BOOK_SCORING_WAIVER_TOKEN_WRONG
+           and _w3["status"] == WAIVED_SCORING_PATH
+           and _w3["is_a_match"] is False
+           and _w3["every_named_member_digest_matched"] is False
+           and "OVERRIDE A CHECK THAT IS FIRING CORRECTLY"
+               in _w3["scoring_path_waiver"]["CAUTION"]
+           and _w3["scoring_path_waiver"]["predicate"]["available"] is True
+           and _w4 == BOOK_SCORING_WAIVER_NOT_AVAILABLE,
+           f"DE 179 THE REFUSAL CARRIES ITS OWN EVIDENCE AND THE WAIVER IS "
+           f"A PREDICATE, DRIVEN BOTH WAYS: an OFF-PATH change still "
+           f"refuses `{_w1}` AND the exception now carries the delta -- "
+           f"the path is {_m179.get('on_the_path', {}).get('defs')} reading "
+           f"{_m179.get('on_the_path', {}).get('module_level_names_read_by_them')}, "
+           f"what moved is "
+           f"{_m179.get('what_moved', {}).get('defs_modified')}, and the "
+           f"INTERSECTION IS EMPTY, which is the shape of the 09-03 EV21 "
+           f"book and the fact that cost a seat an investigation; a WRONG "
+           f"token refuses `{_w2}` rather than resolving to a waiver; the "
+           f"right token GRANTS `{_w3['status']}` and the result is still "
+           f"NOT A MATCH and carries REV's caution; and an ON-PATH change "
+           f"-- `PARAMS_REL`, the one name that path reads -- refuses "
+           f"`{_w4}` WITH the same token. Asking does not grant")
+
     # ---- DE 161: THE GUARD COMPARES NUMBERS, NOT SUBSTRINGS ----------
     # It flagged `len(f) >= 3 and f in text`. That is wrong in BOTH
     # directions of magnitude and it was luck that only one path reached a
@@ -13393,22 +13638,40 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
         # high-waters at 838 MB (measured; 26 MB retained), S1_load's own
         # delta on a real day is ~1196 MB after it, and a flip would
         # REFUSE the day over a stage the 8 GiB ceiling does not rest on.
+        # ---- DE 179: THE PLANT IS RELATIVE TO THE PROCESS, NOT ABSOLUTE.
+        # This planted 9,000 MB against a threshold of 8,000 and the
+        # hook's delta is `9,000 - S_start's high-water` -- so the cell
+        # was really asserting THAT THIS PROCESS STAYS BELOW 1,000 MB.
+        # MEASURED: the margin was NINE MEGABYTES (8,009 at HEAD), and
+        # adding ONE cell that allocates ~21 MB turned it red. That is a
+        # cell measuring HISTORY, not a property (REV 83 section 5), and a
+        # literal that has to track a moving thing. It now plants relative
+        # to the run's own baseline, so the planted delta is 9,000 BY
+        # CONSTRUCTION whatever the process has done, and the assertion
+        # below checks the ARITHMETIC (the delta is taken against S_start)
+        # rather than a threshold that drifts.
         _fat = dict(_with["memory_plan"]["observed"])
-        _fat[HOOK_STAGE] = {"peak_rss_mb_highwater": 9_000.0,
-                            "rss_mb_current": 9_000.0}
+        _b179 = (_fat.get("S_start", {}) or {}).get("peak_rss_mb_highwater")
+        _b179 = _b179 if isinstance(_b179, float) else 0.0
+        _fat[HOOK_STAGE] = {"peak_rss_mb_highwater": _b179 + 9_000.0,
+                            "rss_mb_current": _b179 + 9_000.0}
         for _k in ("S1_load", "S2_population", "S3_baseline", "S4_null",
                    "S5_seal"):
-            _fat[_k] = {"peak_rss_mb_highwater": 9_001.0,
+            _fat[_k] = {"peak_rss_mb_highwater": _b179 + 9_001.0,
                         "rss_mb_current": 20.0}
         _pf = peak_stage_predicate(_fat, declared=declared_peak_stage())
         ok(_pf["measured_peak_stage"] == "S1_load"
            and HOOK_STAGE not in _pf["argmax_taken_over"]
-           and _pf["before_work_hook_highwater_delta_mb"] > 8_000.0
+           and abs(_pf["before_work_hook_highwater_delta_mb"]
+                   - 9_000.0) < 0.001
            and assert_peak_stage(_pf, fixture=False,
                                  day="2026-09-03")["asserted"] is True,
            f"AND THE ARGMAX EXCLUDES THE HOOK, DRIVEN AT THE EXTREME: a "
            f"battery high-watering "
-           f"{_pf['before_work_hook_highwater_delta_mb']:.0f} MB -- more "
+           f"{_pf['before_work_hook_highwater_delta_mb']:.0f} MB above this "
+           f"run's own baseline (planted RELATIVE, so the cell stops "
+           f"asserting that this process stays under 1,000 MB -- its "
+           f"margin was NINE MB) -- more "
            f"than every day stage -- still leaves the measured peak at "
            f"{_pf['measured_peak_stage']} and a REAL day passes. Its "
            f"delta is REPORTED, and counted in the growth budget; only "
@@ -16171,6 +16434,19 @@ def main() -> int:
                           "SUPERSEDING receipt carrying {path, sha256}). "
                           "The named target must be the CHAIN HEAD -- "
                           "superseding anything else leaves two heads"))
+    ap.add_argument("--waive-scoring-path", action="store_true",
+                    help=("ASK for the scoring-path waiver when the book's "
+                          "scoring code does not match the code on disk. "
+                          "ASKING IS NOT GRANTING: the waiver is a "
+                          "PREDICATE (`de_scoring_path_delta."
+                          "waiver_available`) and it refuses "
+                          "BOOK_SCORING_WAIVER_NOT_AVAILABLE unless every "
+                          "unit on the scoring path is byte-identical to "
+                          "disk, the intersection of the reachable closure "
+                          "with what changed is EMPTY, and no top-level "
+                          "statement moved. The flag exists so that asking "
+                          "is a DELIBERATE act recorded in the launch form "
+                          "and in the receipt (USER ruling, 2026-09-09)"))
     a = ap.parse_args()
     if a.falsify_skipped:
         global PLANT_ONE_UNNAMED_SKIP
@@ -16243,6 +16519,10 @@ def main() -> int:
 def _main_day(a) -> int:
     """`--day` and `--synthetic-day`, one code path with one difference:
     where the book comes from and whether the run is a fixture."""
+    # THE TOKEN IS READ FROM THE MODULE THAT DEFINES IT, never retyped: a
+    # constant typed twice is a constant that can disagree with itself,
+    # and this one is the difference between a waiver and a bypass.
+    import de_scoring_path_delta as _SPD
     params = load_params()
     if a.output is None:
         raise RunnerRefused(
@@ -16348,6 +16628,9 @@ def _main_day(a) -> int:
     # refused DECISION_LEDGER_HAS_NO_ANCHOR before its work.
     proof = day_split_residency_proof(
         day, book, params=params, fixture=fixture,
+        scoring_path_waiver=(_SPD.WAIVER_TOKEN
+                             if getattr(a, "waive_scoring_path", False)
+                             else None),
         n_days_complete=(a.n_days_complete if fixture
                          else _dc["n_days_complete"]),
         ledger_anchor=day_run_ledger_anchor(a.output, fixture=fixture),
