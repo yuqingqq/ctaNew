@@ -20805,3 +20805,35 @@ generation and the window went 4 → 3. Nothing rewritten.
   archived. **NOTHING CORRECTED IS QUOTED HERE AND BOTH USER RULINGS ARE STILL OPEN.** `p003ev200903b` running since
   06:59:59Z; `wt-de` `5020f96` / `?? data`, the SIXTEENTH consecutive round. MEM asserts no result.)
 ```
+
+## Batch 276 — archived 2026-09-09T07:44:37Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T07:16:02Z (MEM ROUND 291 -- R-836 AND R-837 SWEPT as a numbered queue under rule 23,
+  from my round-290 tip `6120e61` to `726f785`, eleven commits. STATE ONLY. ***THREE USER RULINGS, RECORDED AS RULED
+  AND NO LONGER AS OPEN***: (a) the null's sampling unit is **B, MATCH ON CANCELS** -- under first-crossing a
+  generation yields at most one cancel, so the cancel IS the action and B is the only option matching on the
+  DECISION variable (rule 7); the seed cost is REPLACED rather than absorbed, DE 160 persisting the DRAWN CONTROL
+  SET as an artifact with a can-fail control, and theta is NOT re-fitted by ruling. (b) `research.slice` is APPROVED
+  at N = 8 and -- as I wrote that -- ALREADY APPLIED: I measured 200 % at 07:11:39Z and wrote "not applied" at
+  07:16:02Z, while the drop-in went to `CPUQuota=1000%` at 07:12 and R-838 landed 07:13Z; re-measured 07:17:10Z the
+  manager reports 10s = 1000 %. ***MY OWN READING WENT STALE INSIDE THE ROUND***, which is the class I keep flagging
+  in others. ***AND I TRACED THAT OVERRIDE, WHICH R-837 CALLS "OF UNKNOWN PROVENANCE"***: it is
+  `~/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf`, dated Sep 6 03:53, whose own header says it
+  was "created via `systemctl set-property`" -- persistent, not runtime -- and its 200 % is **SEAT_PROTOCOL rule
+  20's own documented number**, R-551 having LOWERED the slice from 800 %, which rule 8 explicitly permits.
+  ***SO THE HAZARD IS INVERTED***: drop-ins override the fragment, and the running state proves it, so a
+  `daemon-reload` does NOT jump to 1200 % -- the dangerous act is REMOVING the drop-in, which would expose the
+  fragment's 1200 %, four times the approved 1000 %. The same directory supplies the slice's `MemoryMax`
+  15,032,385,536 and `MemoryHigh` 12,884,901,888, ***WHICH PLACES THE RATIFIED ENVELOPE PRECISELY***: 11,869,652,313
+  sits BELOW the 12 GiB throttle point, so a build reaches its own cap without the slice reclaiming. (c) the memory
+  envelope is RATIFIED FOR THE EV20 FIVE-DAY QUEUE ONLY and expires with it -- my round-290 flag is RESOLVED, and
+  the SCOPE is what this file now carries. My rounding observation is in R-837 as I wrote it. ***AND THE ONE
+  SURVIVING FINDING IS NOW DERIVED THREE INDEPENDENT WAYS***: DA 137 recomputed all four percentages by a SECOND
+  IMPLEMENTATION from the baseline fill rows and `resolutions.jsonl` -- -53.9219, -62.3725, -97.5694, -55.4347 --
+  every absolute and percentage IDENTICAL to what I read from DE's artifacts at round 289, and it tested the
+  survival claim at the code with a POSITIVE CONTROL that fires and by FINDING the one real channel rather than
+  assuming it away. Flags 2379 -> 2394, prov 1924 -> 1939; window trimmed 4 -> 3, Batch 273 archived. **THE
+  RETRACTION IS UNCHANGED: NO CORRECTED NUMBER EXISTS AND THESE FILES QUOTE NOTHING CORRECTED.** MEM asserts no
+  result.)
+```

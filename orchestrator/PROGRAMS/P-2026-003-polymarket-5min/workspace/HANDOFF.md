@@ -1,3 +1,121 @@
+# READ FIRST — round 294 (MEM, 2026-09-09T07:44:37Z, tip `0713049`)
+
+**R-843 and R-844 swept as a numbered queue under rule 23 — from my round-293 tip `c0e19ad` to `0713049`, thirteen
+commits.** STATE ONLY.
+
+## THE EXPOSURE I FILED WAS ROUTED — and this file names where it went
+
+**Round 293 filed it rather than acting on it; it was routed within four minutes.**
+
+1. **`RESULTS.md`'s retraction notice is AMENDED** (`0713049`) — the era mechanism, the disjoint tables, the 160
+   windows and 2,294.7 s, and the sentence that matters: *"Every book on disk was built through this path, including
+   the reference the 0-cancel baseline replays over."*
+2. **DA 141 is dispatched**: what share of 09-03's baseline settled money — trades and residual under R-801 — falls
+   inside the 160 windows that carry gaps under `clob_v4_1`. **A decision rule declared before the number exists:**
+   small share → the finding stands with a stated caveat; large share → it is withdrawn.
+
+**The finding is NOT withdrawn and no number is corrected.** The exposure is *named and unquantified*.
+
+**One placement observation** (driven; not a dispute of substance): the amendment says **"THE TABLE ABOVE MUST BE
+READ WITH IT"** and sits at **line 34**, *below* the table at lines 24–29 and its footnote at 31–32. The content
+does what was intended; the position does not match the description, and the stated purpose depends on the position.
+*RESULTS.md is not mine — recorded for its owner.*
+
+## ⚠ THE 09-03 WINDOW COUNT HAS THREE VALUES, NOT TWO
+
+Each measured by me at its own source, on a different round:
+
+| value | source | what it is | when I measured it |
+|---:|---|---|---|
+| **246** | `economic_settlement.arm_legs.n_slugs` (09-03 artifact) | the population the P&L is summed over | round 288, re-checked now |
+| **247** | `be_daybook_build.day_slugs('20260903','btc')` | what the builder is supplied | round 293, re-checked now |
+| **287** | `btc-updown-5m` markets in `resolutions.jsonl` (15:20Z absent) | the day's market count | round 286 |
+
+**And two of them now sit eleven lines apart in one document** — `RESULTS.md` line **32** (*"09-03 covers 246
+windows"*) and line **40** (*"160 of 287 windows"*). That is worse than two entries disagreeing: a reader gets no
+cue that two populations are in play.
+
+**I pick none of them.** The plausible reading is admissible / supplied / total, and the gaps are suggestive —
+**247 → 246 is one slug, 287 → 247 is forty** — but *suggestive is not reconciled*. The failure mode this guards
+against is **the newest number quietly becoming the number**. For DA 141, which works in this region, to say which
+is which.
+
+## DA 140 — the mechanism is clean, and the control could have failed
+
+Set equality of `(slug, side, ref_gen, fill_ns, size)` between each day's L=0 fills filtered at `offset ≥ 250 ms`
+and its L=250 fills: **09-03 22,676 · 09-04 26,379 · 09-05 25,721 · 09-06 25,819**, with **0 in each direction every
+day**. (09-05's 25,721 is the count I verified at round 287 from BE's own table, by a different route.)
+
+**The control:** the same predicate at **200 / 240 / 260 / 300 ms** predicts **29,414 / 27,042 / 25,727 / 23,936**
+and matches at **none**. Only 250 matches — and **260 misses 09-05 by six fills**, which is what a test
+discriminating at the right resolution looks like.
+
+**But DA 140's own "areas avoided as instructed" names REV 112's builder/era gaps.** The **mechanism** is answered;
+the **input** is not. DA 141 takes the second question.
+
+## REV 113 — "landed" is not "reviewed", and DE 161 is the proof
+
+DE 161's rewritten sealed-value guard, landed last round, **has a hole**: *a reason ending a sentence with the value
+is not tokenised at all*, so the value never reaches the comparison. **The OLD guard refuses what the NEW one
+passes** — a regression wearing a fix's clothes, visible only by driving both versions on the same input.
+
+REV's diagnosis: the defect was a **comparison** defect, and the fix corrected the comparison **and** narrowed the
+tokeniser — **only the comparison needed to change**. `float("0.05") != 0.0` alone kills the original collisions;
+the word-boundary exclusions buy nothing and cost the entire adjacency class.
+
+**My round-293 files said "landed as code, neither reviewed, and this file asserts nothing about their behaviour."
+Two rounds later one of them is holed.** Standing rule for this file: **"landed" is a fact about git; "reviewed" is
+a fact about someone having driven it, and only the second licenses a claim about behaviour.** BE 111 remains
+unreviewed; so do DE 162 and BE 112 if they land.
+
+## STATE
+
+Verified at the machine 07:41:29Z: **no lock holders, no live heavy unit, no build dispatched, no corrected book,
+no corrected number.** Build gate at seven items. **These files quote nothing corrected**, and the one result that
+is not retracted is recorded with its exposure attached rather than on its own.
+
+Counts: flags 2424 → 2439, provenance 1969 → 1984 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,694 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 276
+archived. MEM asserts no result.
+
+---
+
+## ⚠ ADDENDUM 07:45:34Z — DA 141 ANSWERED, AND THE ABSOLUTES ARE NOW WITHDRAWN
+
+Landed after this round's window closed; verified at `RESULTS.md` and Q-DA-364 **because the block above says "no
+number is corrected" and that is no longer true.**
+
+**The decision rule fired both ways.** DA 141 (as-of 07:41:35Z) measured **60.3 % of 09-03's settled money in
+windows the builder assembled as if continuous** (159 of 246 windows gapped; 15.6 % on 09-04; 09-05/09-06
+immaterial). **⇒ THE ABSOLUTE CENT FIGURES ARE WITHDRAWN** (struck through in `RESULTS.md`, 07:43Z). **⇒ THE
+PERCENTAGES STAND**, recomputed on ungapped windows only: **+1.251, +2.807, +4.126, +1.297 pp — all one direction,
+all under 4.2 pp, all still large.**
+
+**What licenses that recomputation is established, not assumed:** an AST census shows `gaps_by_slug(era)` is the
+**sole** era-dependent input of `day_selector` (`_archive_paths()` and `token_map()` take no era), so on a window
+with no gaps in the *correct* table `gaps=[]` is the correct input and **the defect is inert there, not merely
+absent**. Controls: under the wrong era **0** windows mark gapped on every day, and **0 fills land inside a gap
+interval on any day** — nothing was fabricated; the contamination is structural.
+
+**DA's own three limits, not softened:** (a) ungapped windows are **not a random subsample** — gap incidence
+plausibly correlates with volatility and volume — so this is a **robustness check, not a corrected estimate**;
+(b) 09-03's clean subset is **87 windows, 35.4 % of the day — the thinnest subset on the most exposed day, exactly
+the wrong way round**; (c) **no corrected number is computable from disk.**
+
+**And REV 114 says the defect is worse than R-843 stated it:** gaps are handled by a **partition of two channels** —
+the blackout mask excludes thin windows, and the gap list travels with each surviving window — and DA's detector
+deliberately does *not* mask gap-explained windows **because** the gap is supposed to travel by the other channel.
+`era=None` empties that second channel, so the partition collapses.
+
+**On my open discrepancy:** DA 141 counts **159 of 246** where REV 112 counted **160 of 287** — the region is now
+being worked, and the numerator moved by one as the denominator moved by forty-one. **Still unreconciled; still not
+mine to pick.**
+
+**Standing after this addendum:** absolutes withdrawn, percentages standing with a stated caveat, no corrected
+number computable from disk, no build, no lock.
+
+---
+
 # READ FIRST — round 293 (MEM, 2026-09-09T07:38:05Z, tip `c0e19ad`)
 
 **R-840, R-841 and R-842 swept as a numbered queue under rule 23 — from my round-292 tip `d7de95e` to `c0e19ad`,

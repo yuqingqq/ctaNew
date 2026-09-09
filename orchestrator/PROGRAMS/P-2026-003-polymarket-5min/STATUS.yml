@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T07:44:37Z (MEM ROUND 294 -- R-843 AND R-844 SWEPT as a numbered queue under rule 23,
+  from my round-293 tip `c0e19ad` to `0713049`, thirteen commits. STATE ONLY. ***THE EXPOSURE ROUND 293 FILED WAS
+  ROUTED WITHIN FOUR MINUTES AND THIS FILE NOW NAMES WHERE IT WENT***: `RESULTS.md`'s retraction notice is AMENDED
+  (`0713049`) with the era mechanism, the disjoint tables, the 160 windows and 2,294.7 s, and the sentence "Every
+  book on disk was built through this path, including the reference the 0-cancel baseline replays over"; and
+  **DA 141** is dispatched to measure what share of 09-03's baseline settled money falls inside the 160 gapped
+  windows -- ***A DECISION RULE DECLARED BEFORE THE NUMBER EXISTS***: a small share bounds it and the finding stands
+  with a caveat, a large share and it is withdrawn. **THE FINDING IS NOT WITHDRAWN AND NO NUMBER IS CORRECTED.** One
+  placement observation, driven and not a dispute of substance: the amendment says "THE TABLE ABOVE MUST BE READ
+  WITH IT" and sits at line 34 BELOW the table at lines 24-29, so a reader stopping at the footnote has all four
+  percentages and none of the exposure. ***AND THE 09-03 WINDOW COUNT HAS THREE VALUES, NOT TWO***, each measured
+  by me at its own source on a different round: **246** the settlement artifact's `arm_legs.n_slugs`, the population
+  the P&L is summed over; **247** `day_slugs`, what the builder is supplied; **287** the day's markets in
+  `resolutions.jsonl` with 15:20Z absent. ***TWO OF THEM NOW SIT ELEVEN LINES APART IN ONE DOCUMENT*** -- RESULTS
+  line 32 says 246 and line 40 says 287 -- which is worse than two entries disagreeing because a reader gets no cue
+  that two populations are in play. **I pick none**; 247->246 is ONE slug and 287->247 is FORTY, suggestive is not
+  reconciled, and the failure mode guarded against is the newest number quietly becoming THE number. DA 140 drove
+  the latency MECHANISM clean with a control that could have failed -- set equality on all four days, zero both ways,
+  while 200/240/260/300 ms predict 29,414/27,042/25,727/23,936 and match at NONE (260 misses 09-05 by six fills) --
+  ***but its own avoided-areas list names the builder/era gaps, so the mechanism is answered and the INPUT is not***.
+  REV 113 found DE 161's rewritten sealed-value guard HOLED two rounds after it landed: a value ending a sentence is
+  not tokenised at all, ***THE OLD GUARD REFUSES WHAT THE NEW ONE PASSES***, and only the COMPARISON needed to
+  change. ***SO "LANDED" IS NOT "REVIEWED"***, my round-293 caution earning its keep in two rounds, and this file
+  asserts nothing about BE 111's or any unreviewed behaviour. Flags 2424 -> 2439, prov 1969 -> 1984; window trimmed
+  4 -> 3, Batch 276 archived. Verified 07:41:29Z: **NO BUILD, NO LOCK, NO CORRECTED BOOK, NO CORRECTED NUMBER.**
+  ***ADDENDUM 07:45:34Z, AFTER THIS ROUND'S WINDOW CLOSED AND VERIFIED BEFORE RECORDING BECAUSE IT MAKES THE LINE
+  ABOVE FALSE***: DA 141 answered and THE DECISION RULE FIRED BOTH WAYS -- 60.3 % of 09-03's settled money sits in
+  windows built as if continuous (159 of 246 gapped; 15.6 % on 09-04; 09-05/09-06 immaterial), so ***THE ABSOLUTE
+  CENT FIGURES ARE WITHDRAWN*** (struck through in RESULTS at 07:43Z) while ***THE PERCENTAGES STAND***, moving
+  +1.251, +2.807, +4.126 and +1.297 pp when recomputed on ungapped windows only -- one direction, under 4.2 pp,
+  still large. What licenses that is ESTABLISHED: an AST census shows `gaps_by_slug(era)` is the SOLE era-dependent
+  input, so where the correct table has no gaps the defect is INERT rather than merely absent; controls show 0
+  windows gapped under the wrong era and 0 fills inside any gap interval, so nothing was fabricated and the
+  contamination is structural. DA's own three limits are kept unsoftened: the ungapped windows are NOT a random
+  subsample, 09-03's clean subset is only 87 windows (35.4 %) -- the thinnest subset on the most exposed day -- and
+  NO CORRECTED NUMBER IS COMPUTABLE FROM DISK. REV 114 adds that the defect is worse than R-843 stated: gaps travel
+  by a TWO-CHANNEL partition and `era=None` empties the second, so the partition collapses. And on my open
+  discrepancy, DA 141 counts 159 of 246 where REV 112 counted 160 of 287 -- STILL UNRECONCILED AND STILL NOT MINE
+  TO PICK. MEM asserts no result.)
   2026-09-09T07:38:05Z (MEM ROUND 293 -- R-840, R-841 AND R-842 SWEPT as a numbered queue under
   rule 23, from my round-292 tip `d7de95e` to `c0e19ad`, sixteen commits. STATE ONLY. ***IN ABOUT THIRTY MINUTES OF
   ISSUE-CLEARING, THREE SEATS HUNTING UNTARGETED FOUND SIX DEFECTS ON THE PATH THE REBUILD WOULD HAVE RUN, AND THE
@@ -136,33 +175,6 @@ updated: >-
   instrument. ***REACHABLE ONLY ON A POST-DE-155 BOOK***, so it is a defect the repair INTRODUCED and it would have
   gone into exactly the corrected books the stood-down queue was about to build -- and it came from the
   DELIBERATELY UNTARGETED hunt, which is the pattern R-839 sent it to exploit. MEM asserts no result.)
-  2026-09-09T07:16:02Z (MEM ROUND 291 -- R-836 AND R-837 SWEPT as a numbered queue under rule 23,
-  from my round-290 tip `6120e61` to `726f785`, eleven commits. STATE ONLY. ***THREE USER RULINGS, RECORDED AS RULED
-  AND NO LONGER AS OPEN***: (a) the null's sampling unit is **B, MATCH ON CANCELS** -- under first-crossing a
-  generation yields at most one cancel, so the cancel IS the action and B is the only option matching on the
-  DECISION variable (rule 7); the seed cost is REPLACED rather than absorbed, DE 160 persisting the DRAWN CONTROL
-  SET as an artifact with a can-fail control, and theta is NOT re-fitted by ruling. (b) `research.slice` is APPROVED
-  at N = 8 and -- as I wrote that -- ALREADY APPLIED: I measured 200 % at 07:11:39Z and wrote "not applied" at
-  07:16:02Z, while the drop-in went to `CPUQuota=1000%` at 07:12 and R-838 landed 07:13Z; re-measured 07:17:10Z the
-  manager reports 10s = 1000 %. ***MY OWN READING WENT STALE INSIDE THE ROUND***, which is the class I keep flagging
-  in others. ***AND I TRACED THAT OVERRIDE, WHICH R-837 CALLS "OF UNKNOWN PROVENANCE"***: it is
-  `~/.config/systemd/user.control/research.slice.d/50-CPUQuota.conf`, dated Sep 6 03:53, whose own header says it
-  was "created via `systemctl set-property`" -- persistent, not runtime -- and its 200 % is **SEAT_PROTOCOL rule
-  20's own documented number**, R-551 having LOWERED the slice from 800 %, which rule 8 explicitly permits.
-  ***SO THE HAZARD IS INVERTED***: drop-ins override the fragment, and the running state proves it, so a
-  `daemon-reload` does NOT jump to 1200 % -- the dangerous act is REMOVING the drop-in, which would expose the
-  fragment's 1200 %, four times the approved 1000 %. The same directory supplies the slice's `MemoryMax`
-  15,032,385,536 and `MemoryHigh` 12,884,901,888, ***WHICH PLACES THE RATIFIED ENVELOPE PRECISELY***: 11,869,652,313
-  sits BELOW the 12 GiB throttle point, so a build reaches its own cap without the slice reclaiming. (c) the memory
-  envelope is RATIFIED FOR THE EV20 FIVE-DAY QUEUE ONLY and expires with it -- my round-290 flag is RESOLVED, and
-  the SCOPE is what this file now carries. My rounding observation is in R-837 as I wrote it. ***AND THE ONE
-  SURVIVING FINDING IS NOW DERIVED THREE INDEPENDENT WAYS***: DA 137 recomputed all four percentages by a SECOND
-  IMPLEMENTATION from the baseline fill rows and `resolutions.jsonl` -- -53.9219, -62.3725, -97.5694, -55.4347 --
-  every absolute and percentage IDENTICAL to what I read from DE's artifacts at round 289, and it tested the
-  survival claim at the code with a POSITIVE CONTROL that fires and by FINDING the one real channel rather than
-  assuming it away. Flags 2379 -> 2394, prov 1924 -> 1939; window trimmed 4 -> 3, Batch 273 archived. **THE
-  RETRACTION IS UNCHANGED: NO CORRECTED NUMBER EXISTS AND THESE FILES QUOTE NOTHING CORRECTED.** MEM asserts no
-  result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -334,6 +346,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 294, R-843/R-844 swept; the exposure routed (c0e19ad -> 0713049) ---
+  THE_EXPOSURE_I_FILED_WAS_ROUTED_AND_MY_FILES_NOW_NAME_WHERE_IT_WENT: RESULTS-AMENDED-AND-DA-141-DISPATCHED
+  THE_AMENDMENT_SAYS_THE_TABLE_MUST_BE_READ_WITH_IT_AND_SITS_BELOW_THE_TABLE: LINE-34-AGAINST-LINES-24-29
+  DA_141_IS_THE_MEASUREMENT_THAT_WOULD_BOUND_OR_WITHDRAW_THE_FINDING: THE-SHARE-INSIDE-THE-160-GAPPED-WINDOWS
+  AND_THE_FINDING_IS_NOT_WITHDRAWN_AND_NO_NUMBER_IS_CORRECTED: EXPOSURE-NAMED-AND-UNQUANTIFIED
+  THE_09_03_WINDOW_COUNT_HAS_THREE_VALUES_NOT_TWO: 246-AND-247-AND-287
+  AND_TWO_OF_THEM_NOW_SIT_ELEVEN_LINES_APART_IN_ONE_DOCUMENT: RESULTS-LINE-32-AND-LINE-40
+  I_PICK_NONE_OF_THE_THREE_AND_RECORD_EACH_AT_ITS_OWN_SOURCE: FOR-DA-141-TO-SAY-WHICH-IS-WHICH
+  DA_140s_CONTROL_COULD_HAVE_FAILED_AND_DID_NOT: SET-EQUALITY-ZERO-BOTH-WAYS-ON-FOUR-DAYS
+  ONLY_250_MATCHES_AND_FOUR_NEIGHBOURING_LATENCIES_MATCH_NOTHING: 29414-27042-25727-23936
+  BUT_DA_140_AVOIDED_THE_ERA_AREA_BY_INSTRUCTION: MECHANISM-DRIVEN-INPUT-UNTOUCHED
+  REV_113_FOUND_THE_REWRITTEN_SEALED_VALUE_GUARD_HOLED: A-VALUE-ENDING-A-SENTENCE-IS-NOT-TOKENISED
+  THE_OLD_GUARD_REFUSED_WHAT_THE_NEW_ONE_PASSES: A-FIX-THAT-NARROWED-MORE-THAN-IT-NEEDED
+  SO_LANDED_IS_NOT_REVIEWED_AND_DE_161_IS_THE_PROOF: TWO-ROUNDS-FROM-LANDING-TO-HOLED
+  MY_FILES_ASSERT_NOTHING_ABOUT_UNREVIEWED_BEHAVIOUR: BE-111-AND-DE-162-STILL-UNREAD
+  STILL_NO_BUILD_NO_LOCK_NO_CORRECTED_BOOK_AND_NO_CORRECTED_NUMBER: VERIFIED-AT-THE-MACHINE
   # --- MEM round 293, R-840/R-841/R-842 swept; the era defect (d7de95e -> c0e19ad) ---
   THE_ERA_DEFECT_IS_REPRODUCED_END_TO_END_AT_THE_CODE_AND_THE_TABLES: DRIVEN-NOT-READ
   THE_BUILDER_PASSES_None_AND_GETS_A_CLOSED_ERA_DAY_INDEPENDENTLY: be_daybook_build-616
@@ -26783,6 +26811,169 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 294, 2026-09-09T07:44:37Z (the clock read by which every measurement below was complete) ---
+  THE_EXPOSURE_I_FILED_WAS_ROUTED_AND_MY_FILES_NOW_NAME_WHERE_IT_WENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      Round 293 filed the era exposure for the coordinator to route rather than acting on it, and **it was routed
+      within four minutes**. Two destinations, both recorded here so this file no longer leaves it open-ended:
+      **(1) `RESULTS.md`'s retraction notice is AMENDED** (`0713049`) with a block headed *"AMENDED
+      2026-09-09T07:41Z (R-843) — THE SURVIVING FINDING NOW CARRIES A NAMED, UNQUANTIFIED EXPOSURE, AND THE TABLE
+      ABOVE MUST BE READ WITH IT"*, carrying REV 112's mechanism, the disjoint tables, the 160 windows and
+      2,294.7 s, and the sentence that matters: **"Every book on disk was built through this path, including the
+      reference the 0-cancel baseline replays over."** **(2) DA 141 is dispatched** as the measurement.
+  THE_AMENDMENT_SAYS_THE_TABLE_MUST_BE_READ_WITH_IT_AND_SITS_BELOW_THE_TABLE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      ***ONE PLACEMENT OBSERVATION, DRIVEN, AND IT IS NOT A DISPUTE OF THE AMENDMENT'S SUBSTANCE.*** The dispatch
+      describes the exposure as now sitting **ABOVE** the four percentages "so the finding cannot be read without
+      it". Measured in the file: the table occupies **lines 24-29**, its window-count footnote **31-32**, and the
+      amendment begins at **line 34** — **BELOW**. Its own text says *"THE TABLE ABOVE MUST BE READ WITH IT"*, which
+      is the correct instruction and also an acknowledgement of the order. **The content does what was intended; the
+      position does not match the description, and the stated purpose depends on the position** — a reader who stops
+      at the footnote has all four percentages and none of the exposure. Recorded for the file's owner; RESULTS.md is
+      not mine.
+  DA_141_IS_THE_MEASUREMENT_THAT_WOULD_BOUND_OR_WITHDRAW_THE_FINDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      The question round 293 filed now has an owner and a shape: **DA 141 — what share of 09-03's baseline settled
+      money, trades and residual under R-801, falls inside the 160 windows that carry gaps under `clob_v4_1`.**
+      **A small share bounds the exposure and the finding stands with a stated caveat; a large share and the
+      coordinator withdraws it.** ***THAT IS A DECISION RULE DECLARED BEFORE THE NUMBER EXISTS***, which is what
+      rule 6 asks for and what makes the answer usable whichever way it falls. This file records the rule and will
+      record the number when it lands, and neither before the other.
+  AND_THE_FINDING_IS_NOT_WITHDRAWN_AND_NO_NUMBER_IS_CORRECTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      Stated because the distance between "exposed" and "withdrawn" is exactly where a state file goes wrong:
+      **the finding is NOT withdrawn, no percentage is corrected, and the exposure is NAMED AND UNQUANTIFIED.** The
+      amendment's own words. What changed between round 293 and now is that the exposure has a destination and a
+      measurement, not that anything about the four percentages has moved. **They stand, they are triple-derived on
+      the arithmetic, and their input is under a question nobody has answered.**
+  THE_09_03_WINDOW_COUNT_HAS_THREE_VALUES_NOT_TWO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      ***THE DISCREPANCY IS WIDER THAN THE TWO NUMBERS I WAS ASKED TO RECORD, AND I MEASURED ALL THREE AT THEIR OWN
+      SOURCES ON THREE DIFFERENT ROUNDS.*** **246** — `economic_settlement.arm_legs.n_slugs`, equal to
+      `zero_cancel_baseline_legs.n_slugs`, in the 09-03 settlement artifact: **the population the P&L is actually
+      summed over** (verified round 288 and again now). **247** — `be_daybook_build.day_slugs('20260903','btc')`:
+      **what the builder is supplied** (verified round 293 and again now). **287** — `btc-updown-5m` markets for the
+      day in `resolutions.jsonl`, the 15:20Z window absent: **the day's market count** (verified round 286).
+      **Three numbers, three sources, one day.**
+  AND_TWO_OF_THEM_NOW_SIT_ELEVEN_LINES_APART_IN_ONE_DOCUMENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/RESULTS.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      And the reason this cannot be left to settle itself: **`RESULTS.md` now states two of the three about the same
+      day, eleven lines apart** — the footnote at **line 32**, *"09-03 covers 246 windows, the rest 288"*, and the
+      amendment at **line 40**, *"160 of 287 windows"*. **A single document disagreeing with itself about one day's
+      population is a stronger version of the problem than two entries disagreeing**, because a reader has no cue
+      that two populations are in play. Neither line is wrong on its own terms; nothing on the page says they are
+      different questions.
+  I_PICK_NONE_OF_THE_THREE_AND_RECORD_EACH_AT_ITS_OWN_SOURCE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_early_read_day_20260903__20260907T171619Z.json
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      **I pick none of them.** The plausible reconciliation is that they are admissible / supplied / total, and the
+      gaps are suggestive — **247 → 246 is ONE slug** and **287 → 247 is FORTY** — but *suggestive is not
+      reconciled*, and I have not established which loss is which. **The failure mode this guards against is the
+      newest entry quietly becoming the number**: 287 is the most recently written and the least likely to be the
+      P&L's denominator, since the artifact says 246. Recorded as OPEN with all three sources named, for DA 141 —
+      which works in exactly this region — to say which is which.
+  DA_140s_CONTROL_COULD_HAVE_FAILED_AND_DID_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      DA 140 drove the question DA 137 explicitly had not — **does an L = 250 book represent 250 ms?** — and the
+      decisive test is at the artifacts: set equality of `(slug, side, ref_gen, fill_ns, size)` between each day's
+      L = 0 baseline fills filtered at `offset >= 250 ms` and its L = 250 baseline fills. **09-03 22,676; 09-04
+      26,379; 09-05 25,721; 09-06 25,819, with `in L250 not predicted: 0` and `predicted not in L250: 0` EVERY
+      DAY.** 09-05's 25,721 is the same fill count I verified at round 287 from BE's own rebuild table, by a
+      different route.
+  ONLY_250_MATCHES_AND_FOUR_NEIGHBOURING_LATENCIES_MATCH_NOTHING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      ***AND THE CONTROL IS WHAT MAKES THAT EQUALITY A MEASUREMENT RATHER THAN A TAUTOLOGY***: the same predicate at
+      **L = 200 / 240 / 260 / 300 ms predicts 29,414 / 27,042 / 25,727 / 23,936 fills and matches the book at NONE
+      of them.** **Only 250 matches.** Note 260 ms predicts 25,727 against 09-05's actual 25,721 — **six fills
+      apart, and still a non-match** — which is exactly the kind of near-miss that shows the test discriminates at
+      the resolution that matters. **A control that could have failed and did not is worth more than an equality
+      reported alone**, and this is the shape rule 16 asks for.
+  BUT_DA_140_AVOIDED_THE_ERA_AREA_BY_INSTRUCTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      Carried so nobody reads DA 140 as closing the round-293 question: its own **"areas avoided as instructed"**
+      list names **REV 112's builder/era gaps**, alongside the per-row root and REV 111's `import_closure`. So the
+      surviving finding's **MECHANISM** is now driven and clean — the latency does what it says on all four days —
+      while its **INPUT**, the reference assembled with `gaps=[]`, is untouched by that work. **Two different
+      questions, one answered and one open**, and DA 141 is the one that takes the second.
+  REV_113_FOUND_THE_REWRITTEN_SEALED_VALUE_GUARD_HOLED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      DE 161's rewritten sealed-value guard — landed last round — **has a hole, found by REV 113 within two
+      rounds**: *a reason ending a sentence with the value is not tokenised at all*, so the value never reaches the
+      comparison. REV's diagnosis is the interesting half: **the defect was a COMPARISON defect and the fix
+      corrected the comparison AND narrowed the tokeniser — only the comparison needed to change.** The original
+      collisions (`0.05` against a sealed `0.0`, `21.53` against `1.5`) are killed by `float("0.05") != 0.0` alone;
+      **the tokeniser's word-boundary exclusions buy nothing on top of that and cost the entire adjacency class.**
+  THE_OLD_GUARD_REFUSED_WHAT_THE_NEW_ONE_PASSES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      The sharpest form of it, and the reason it is a finding rather than a nit: **the OLD guard REFUSES the case
+      the NEW one PASSES.** A repair that removes a refusal the previous version made is a regression wearing a
+      fix's clothes, and it is only visible if someone drives both versions on the same input — which REV did.
+      **REV's fix keeps the numeric comparison and narrows the tokeniser's exclusion to digit/dot continuation
+      only**, driven in both directions. Recorded as REV's proposal, not as landed behaviour.
+  SO_LANDED_IS_NOT_REVIEWED_AND_DE_161_IS_THE_PROOF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      ***MY ROUND-293 FILES SAID "BOTH LANDED AS CODE AND NEITHER REVIEWED, AND THIS FILE ASSERTS NOTHING ABOUT
+      THEIR BEHAVIOUR." TWO ROUNDS LATER ONE OF THEM IS HOLED.*** That is the caution earning its keep in the
+      shortest possible time, and it is worth stating as a standing rule of this file rather than as an anecdote:
+      **"landed" is a fact about git and "reviewed" is a fact about someone having driven it, and only the second
+      licenses a claim about behaviour.** DE 161 is now the named instance.
+  MY_FILES_ASSERT_NOTHING_ABOUT_UNREVIEWED_BEHAVIOUR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      Applied forward, not just backward: **BE 111's repoint guard remains unreviewed at this writing**, as do
+      DE 162 and BE 112 if they land while this round is being written. This file records them as LANDED CODE with
+      their commit and their claim, and **asserts nothing about whether they do what they say** until a seat has
+      driven them. The same discipline is why the four percentages are described as triple-derived **on the
+      arithmetic** and not as verified outright.
+  STILL_NO_BUILD_NO_LOCK_NO_CORRECTED_BOOK_AND_NO_CORRECTED_NUMBER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T07:44:37Z
+    said: >-
+      Verified at the machine at 07:41:29Z: **no holders on `data/.heavy_run.lock` and no live heavy unit.** The
+      R-839 stand-down holds, **no build has been dispatched, no corrected book exists and no corrected number
+      exists.** The build gate stands at seven items. **These files quote nothing corrected**, and the one result
+      that is not retracted is recorded with its exposure attached rather than on its own.
   # --- MEM round 293, 2026-09-09T07:38:05Z (the clock read by which every measurement below was complete) ---
   THE_ERA_DEFECT_IS_REPRODUCED_END_TO_END_AT_THE_CODE_AND_THE_TABLES:
     prov: CHECKED
