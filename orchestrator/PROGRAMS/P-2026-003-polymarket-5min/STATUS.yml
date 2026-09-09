@@ -67,6 +67,51 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T12:40:35Z (MEM ROUND 316 -- ***THE POINT ESTIMATE REFUSED ON THE FIRST CORRECTED BOOK, AND THE REFUSAL IS THE
+  SYSTEM WORKING.*** From `7b7bc41` to `2816978`, THREE commits -- I swept one to `c379953` and REV 137 landed while I wrote, CORRECTING THE SCOPE OF ONE OF MY POINTS AND FINDING THE PROBE I RAN SHIPS NO FALSIFIER; folded in an addendum below. **`dePE0903EV20` exited status 1 at 12:32:30Z after
+  2 min 45 s, 1.2 GB peak, NO ARTIFACT WRITTEN** -- *which answers the open observation I ended round 315 with, and
+  it is the better of the two possibilities.* ***I RAN `de_reference_integrity_probe.py` MYSELF ON AN IDLE MACHINE
+  RATHER THAN RELAYING DE'S DIAGNOSIS, AND IT REPRODUCES EXACTLY: `n_generations 313149`, `n_refused 9`,
+  `n_slugs_affected 7`, `n_tranches_on_them 0`, sha256 matching the book I hashed last round -- AND THE `by_kind`
+  BREAKDOWN IS `{ZERO_LENGTH: 9}`, ALL NINE ONE KIND, NONE INVERTED, NONE NON-FINITE***, the examples carrying `t0`
+  and `t1` identical to the last decimal and **two of them the SAME `t0` on BUY_UP and SELL_UP of one slug** -- *a
+  single failure mode with a repeated timestamp is a mechanism, not nine coincidences.* ***AND THE CONTROL IS IN THE
+  SAME RUN: THE PRE-FIX BOOK HAS 313,114 GENERATIONS AND `n_refused: 0` -- ZERO BEFORE, NINE AFTER, SO THE EV20 BUILD
+  PATH INTRODUCED THEM***, which is `build_reference`'s output and BE'S SURFACE; **BE 129 has it.** ***DE REFUSED THE
+  EASY FIX AND SAID WHY IN ONE SENTENCE: IT DID NOT WEAKEN `validate_reference` TO ADMIT THEM -- "A ZERO-LENGTH
+  GENERATION IS A REAL DEFECT AND ADMITTING IT WOULD BE THE FIX THAT HIDES IT"*** -- the easy fix was one predicate
+  and would have produced a number today; **this is the same choice DA made leaving a red standing and BE made
+  withdrawing its own eight, THREE SEATS AND THREE REFUSALS TO MANUFACTURE A GREEN UNDER PRESSURE TO DELIVER.** And
+  the architectural point is now demonstrated rather than argued: **the driver runs its battery BEFORE replay
+  precisely so a bad book cannot become a number, AND IT DID EXACTLY THAT ON THE FIRST ARTIFACT IT WAS EVER POINTED
+  AT** -- *an unexercised guard is a hope; this one has fired on a real book at a real defect before any expensive
+  work* -- **and note the ordering, that the user's blocker had to close before this battery could run at all, so
+  tonight's repairs are what made tonight's refusal possible.** ***THE NIGHT'S BIGGEST QUESTION IS ANSWERED IN THE
+  AFFIRMATIVE AND I DROVE IT: 313,149 AGAINST 313,114, THIRTY-FIVE MORE, WITH `assembly_differs: True` -- THE
+  REPAIRS REACHED THE BOOK*** (fuller comparison still owed by BE 128: *"different" is established, "different HOW"
+  is not*). ***BUT A PRECISION THAT MATTERS MORE THAN THE VERDICT, WHICH MY OWN RUN FORCED: THE AFFIRMATIVE RESTS ON
+  THE GENERATION COUNT AND NOT ON `assembly_differs`.*** The +35 is LIKE-WITH-LIKE; **`assembly_differs` is
+  TRIVIALLY TRUE and establishes NOTHING about scores**, because per head the pre-fix assembly is **`shape:
+  PER_GENERATION_SCORES`, 297,379 entries, `value_type: float`** and the corrected is **`shape: PER_ROW_SCORES`,
+  350,474 entries, `value_type: dict` with three value keys** -- ***A DIFFERENT SHAPE, A DIFFERENT VALUE TYPE AND
+  53,095 MORE ENTRIES: THE LOOK-AHEAD REPAIR VISIBLE IN THE ARTIFACT, AND SIMULTANEOUSLY THE REASON `--against`
+  CANNOT COMPARE THE TWO ASSEMBLIES ELEMENT-WISE, SINCE FLOATS KEYED PER GENERATION AND DICTS KEYED PER ROW HAVE NO
+  COMMON INDEX.*** **That is REV 137's sharpest question and this is my answer to it from my own drive: on the
+  assembly, `--against` does NOT compare like with like.** ***THE OPEN QUESTION NOBODY HAS ANSWERED: ARE THE NINE AND
+  THE THIRTY-FIVE THE SAME PHENOMENON?*** Both BE and REV asked; **the arithmetic is suggestive and settles nothing
+  -- the nine could be a subset of the thirty-five, disjoint from them, or overlapping, and nothing in the probe's
+  output distinguishes these because it COUNTS both books and MATCHES neither**; *the cheap test is whether the nine
+  `(slug, side, gen)` keys exist in the pre-fix reference at all, and it is one line for whoever runs it.* **THREE
+  SEATS ARE ON THE BOOK FROM DIFFERENT ANGLES: BE 129 on the CAUSE and on whether a fix needs A REBUILD (54 min) OR
+  CAN BE DONE AT THE REFERENCE (minutes) -- two orders of magnitude, which is why diagnosis must precede decision;
+  DA 160 on a FULL INDEPENDENT BOOK VERIFICATION, ALSO THE FIRST REAL TEST OF DA'S OWN GATE-ITEM-8 FIX AGAINST A
+  REAL PER-ROW BOOK RATHER THAN A FIXTURE; and REV 137 on the probe.** ***REV 137 MATTERS MOST OF THE THREE BECAUSE
+  THE REBUILD DECISION NOW RESTS ON AN INSTRUMENT WRITTEN AT 12:34:26Z, HOURS OLD, AFTER THE REFUSAL IT EXISTS TO
+  EXPLAIN -- AND MY OWN RUN ALREADY FOUND ONE FLAG ON IT THAT CANNOT FAIL.*** **The build's own numbers stand
+  unchanged -- rc 0, wall 3,257.2 s = 54.3 min against 74-76, assembly 2,566.7 s, peak 5.484 GB of an 11.87 GB cap,
+  with my round-315 precision intact that the leaf's peak of record is 6.354 GB so true headroom is 53.5 % -- AND
+  THEY ARE STILL NOT THE QUEUE'S BASIS: BE 128 HAS NOT ACCOUNTED FOR THE TWENTY MINUTES AND NOTHING BEYOND 09-03 IS
+  AUTHORISED.** Flags 2727 -> 2744, prov 2272 -> 2289; window 3/3, Batch 298 archived. MEM asserts no result.)
   2026-09-09T12:32:59Z (MEM ROUND 315 -- ***THE FIRST CORRECTED BOOK SINCE THE RETRACTION IS ON DISK.*** From `6c9791e` to
   `397ba24`, three commits. **`be_daybook_20260903_btc__L250ms__EV20.pkl`, 307,227,345 bytes, written 12:27:36Z, with
   its receipt at 12:27:45Z -- AND I HASHED IT MYSELF RATHER THAN QUOTING THE DIGEST I WAS GIVEN:
@@ -147,47 +192,6 @@ updated: >-
   RUN IT RELEASED WOULD BE THE WRONG TRADE.*** Flags 2703 -> 2715, prov 2248 -> 2260; window 3/3, Batch 296 archived.
   ***ROWS (2) AND (3) OF THE LEDGER -- THE ROWS THAT NEEDED A CORRECTED BOOK -- HAVE THEIR BLOCKER IN FLIGHT FOR THE
   FIRST TIME.*** MEM asserts no result.)
-  2026-09-09T11:04:08Z (MEM ROUND 313 -- R-865 SWEPT. ***CLOSING SWEEP: ALL FIVE OF THE USER'S DEFECTS ARE CLOSED AND
-  VERIFIED AND THE PROGRAMME NOW WAITS ON TWO USER DECISIONS.*** REV 136: *"Both verify, on every drive. This closes
-  the last of the user's five."* ***THE LEDGER, FINAL, AS A CLOSED LIST WITH TWO NAMED EXCEPTIONS: (1) THE
-  UNREACHABLE CANCEL-MATCHED NULL -- CLOSED AND DOUBLE-VERIFIED, and stronger than a flip, "WHICH NULL RUNS IS NOW
-  UNFALSIFIABLE BY OMISSION"; (2) THE INFLATED DECISION COUNT -- FIXED IN MECHANISM, REAL FACTOR UNQUANTIFIED, NEEDS
-  A CORRECTED BOOK; (3) THE FALSE CANCEL-MATCHING PREMISE -- FIXED IN MECHANISM, REAL DOUBLE-CANCEL RATE
-  UNQUANTIFIED, NEEDS A CORRECTED BOOK; (5a) THE PREDICATE ACCEPTING A SUBSET -- CLOSED; (5b) THE PREDICATE CHECKING
-  THE WRONG SET -- CLOSED AND VERIFIED AFTER RE-OPENING TWICE; (6a) THE PROTOCOL STRING -- CLOSED AND VERIFIED, BY A
-  RED DA DELIBERATELY REFUSED TO SILENCE.*** **The two exceptions are THE SAME exception** -- rows (2) and (3) are
-  unquantified for one reason, they need a corrected book and none exists -- ***SO THE PROGRAMME IS NOT WAITING ON
-  ENGINEERING; IT IS WAITING ON A DECISION.*** **(5b)'s two re-openings stay in the record because they are the
-  evidence and not a blemish on it: the fallback asserting `mods ⊆ mods` while 0 of 12 landed receipts carried a
-  derived block (INERT on every real artifact), then the DERIVED SET ITSELF TRUNCATED EIGHT AGAINST TWELVE** -- *a
-  row that closed on the first attempt would have closed over a check that could not fail, on a set short by four.*
-  Two properties make the final verdict worth more than a green: ***THE LIMIT IS CARRIED BY CONSTRUCTION RATHER THAN
-  BY ENUMERATION -- one raiser puts `MEMBERSHIP_LIMIT` in the message and on the exception, SO AN EXIT CANNOT BE
-  WRITTEN WITHOUT IT -- AND REV ESTABLISHED IT BY ENUMERATING THE EXITS FROM THE CODE RATHER THAN FROM ITS OWN LIST
-  OF SEVEN, RULE 32 APPLIED TO ITS OWN PRIOR WORK*** (four `_refuse_scoring` sites, THREE codes, TWO returns, the
-  third code reached with an EMPTY ROOT, the limit FIRST KEY on every one INCLUDING THE OPT-IN); and ***THE
-  CONTRADICTORY COUNT FIELD WAS REPLACED BY AN INVARIANT THAT DISCRIMINATES, NOT DELETED TO END A CONTRADICTION***
-  -- `membership_complete` TRUE on a complete receipt, FALSE on the real one, **the False case EXPLICITLY NOT A
-  MATCH** -- *the named risk, tested for rather than assumed away.* ***THE STATE FILES NOW STAND ON THEIR OWN:
-  `HANDOFF.md` leads with the FIVE THINGS A COLD READER MUST FIND WITHOUT ASKING, IN ORDER -- (a) NOTHING HAS BEEN
-  BUILT, no heavy lock since 07:15:47Z, WHICH I MEASURED AT THE CLOSE (no holders in `/proc/locks`, no heavy process,
-  newest in `derived/` a DECLARATION, still TWELVE landed builder receipts); (b) THE BUILD IS UNAUTHORISED AND IS THE
-  USER'S DECISION -- five days at the EV20 wall, ~5-6 hours serial, concurrency RULED OUT ON MEMORY, `fr` CANNOT BE
-  BYTE-IDENTICAL so there is NO CHEAP PATH, the gap load UNEVEN with 09-03 carrying 160 OF 266 WINDOWS AND 77 % OF
-  THE SECONDS so a surprise lands on DAY ONE, all five queued days CLEAN on era/agreement/attachment/refusal/mask,
-  AND IT IS THE ONLY WAY TO QUANTIFY DEFECTS (2) AND (3); (c) THE MATCHING UNIT IS OPEN WITH THE USER -- ruling B was
-  recommended on a premise that proved FALSE, production repost cancelling one REFERENCE generation twice while the
-  invariant checks POLICY-generation ids, AND THE COORDINATOR DOES NOT RE-RULE IT "having been wrong once on its own
-  framing"; (d) THE SEAL is DE-PRIORITISED BY USER RULING and OWED BEFORE ANY FUTURE SEALED RACE, the debt DATED and
-  not cancelled; (e) THE ~30 OLDER PHRASE ASSERTIONS are a NAMED FOLLOW-ON, DELIBERATELY NOT DISPATCHED, because
-  expanding scope is what the user's fix-the-issues-first ruling corrected.*** ***AND ONE LINE THAT IS THE WHOLE
-  NIGHT: EVERY DEFECT -- THE SEATS' EIGHT AND THE USER'S FIVE -- WAS FOUND BEFORE A SINGLE BOOK WAS WRITTEN. NOTHING
-  IS CONTAMINATED.*** Thirteen defects, several of which would have invalidated a result, **and the cost of every one
-  is a re-run that has not happened rather than a retraction that has.** One precision kept rather than smoothed
-  over: **DA's case-4 re-run HAD NOT LANDED at my read** (last DA filing `Q-DA-380`, no commit since `db90183`), so
-  **the five close on REV 136's full independent drive from the entry point and DA's would be a SECOND verifier.**
-  Flags 2691 -> 2703, prov 2236 -> 2248; window 3/3, Batch 295 archived. **STATE IS COMPLETE AND THE PROGRAMME WAITS
-  ON THE USER.** MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -359,6 +363,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 316 ADDENDUM 2026-09-09T12:42:26Z: REV 137 landed while I wrote ---
+  REV_137_LANDED_WHILE_I_WROTE_AND_THE_PROBE_SHIPS_NO_FALSIFIER: RULE-15-NOT-MET
+  AND_I_RAN_THAT_PROBE_THIS_ROUND_AND_REPORTED_ITS_COUNT: MY-OWN-EXPOSURE
+  THE_CRITERION_IS_ZERO_LENGTH_NOT_ZERO_TRANCHE_AND_THE_DIFFERENCE_DECIDES_A_REPAIR: SEVEN-INSTANTS-NOT-NINE
+  REV_SCOPES_MY_LIKE_WITH_LIKE_POINT_AND_BOTH_HALVES_ARE_TRUE: REFERENCE-YES-ASSEMBLY-NO
+  AND_REV_CONFIRMS_THE_PROBE_CANNOT_ANSWER_THE_THIRTY_FIVE: ONE-LINE-CLOSES-IT
+  # --- MEM round 316, the point estimate REFUSED; nine zero-length generations (7b7bc41 -> 2816978) ---
+  THE_POINT_ESTIMATE_REFUSED_AND_THE_REFUSAL_IS_THE_SYSTEM_WORKING: STATUS-1-NO-ARTIFACT
+  I_RAN_THE_PROBE_MYSELF_AND_THE_NINE_ARE_ALL_ZERO_LENGTH_WITH_t0_EQUAL_t1: ONE-KIND-NOT-THREE
+  AND_THE_PRE_FIX_BOOK_HAS_ZERO_SO_THE_EV20_PATH_INTRODUCED_THEM: BEs-SURFACE-BE-129-HAS-IT
+  DE_REFUSED_THE_EASY_FIX_AND_SAID_WHY_IN_ONE_SENTENCE: THE-FIX-THAT-HIDES-IT
+  THE_BATTERY_BEFORE_REPLAY_DID_EXACTLY_WHAT_IT_WAS_PLACED_TO_DO: ON-THE-FIRST-ARTIFACT-EVER
+  THE_NIGHTS_BIGGEST_QUESTION_IS_ANSWERED_IN_THE_AFFIRMATIVE: THE-REPAIRS-REACHED-THE-BOOK
+  BUT_THE_AFFIRMATIVE_RESTS_ON_THE_GENERATION_COUNT_AND_NOT_ON_assembly_differs: LIKE-WITH-LIKE-MATTERS
+  BECAUSE_THE_TWO_ASSEMBLIES_ARE_NOT_LIKE_WITH_LIKE_AND_I_MEASURED_THE_SHAPE_CHANGE: PER_GENERATION-TO-PER_ROW
+  ARE_THE_NINE_AND_THE_THIRTY_FIVE_THE_SAME_PHENOMENON_IS_OPEN: NOBODY-HAS-ANSWERED
+  THREE_SEATS_ARE_ON_THE_BOOK_FROM_DIFFERENT_ANGLES: CAUSE-VERIFICATION-INSTRUMENT
+  AND_THE_REBUILD_DECISION_RESTS_ON_AN_INSTRUMENT_HOURS_OLD: WRITTEN-AT-12-34-26Z
+  THE_BUILDS_OWN_NUMBERS_STAND_AND_ARE_STILL_NOT_THE_QUEUES_BASIS: BE-128-STILL-OWES-THEM
   # --- MEM round 315, THE BOOK IS ON DISK; rc 0 at 12:27:46Z (6c9791e -> 397ba24) ---
   THE_FIRST_CORRECTED_BOOK_SINCE_THE_RETRACTION_IS_ON_DISK_AND_I_HASHED_IT: DIGEST-MATCHES-BYTE-FOR-BYTE
   THE_RUN_EXITED_ZERO_AND_ITS_STAGE_LINES_ARE_THE_RECORD: rc-0-AT-12-27-46Z
@@ -27137,6 +27160,218 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 316 ADDENDUM, 2026-09-09T12:42:26Z ---
+  REV_137_LANDED_WHILE_I_WROTE_AND_THE_PROBE_SHIPS_NO_FALSIFIER:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:42:26Z
+    said: >-
+      ***REV 137 LANDED WHILE I WAS WRITING AND ITS FIRST FINDING IS ABOUT THE INSTRUMENT I HAD JUST RUN: THE PROBE
+      SHIPS NO FALSIFIER.*** **No `--selftest`, no `ok()` cell, no positive control, no known-bad in 123 lines --
+      RULE 15 IS NOT MET, AND "A CENSUS NEVER SHOWN TO FIRE CANNOT SUPPORT A COUNT OF NINE."** So REV built one and
+      **the nine STAND**: clean `t0<t1` stays silent, `t0==t1` -> `ZERO_LENGTH`, `t0>t1` -> `INVERTED`, and nan / inf
+      / bool -> `NON_FINITE` -- ***THE INSTRUMENT SEPARATES EACH FAULT IT CLAIMS TO SEPARATE.*** REV worked
+      **read-only and deliberately so, unpickling nothing because DA holds the lock for a book verification** --
+      every drive on constructed input plus the probe's own emitted artifact.
+  AND_I_RAN_THAT_PROBE_THIS_ROUND_AND_REPORTED_ITS_COUNT:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:42:26Z
+    said: >-
+      ***AND I RAN THAT PROBE THIS ROUND AND REPORTED ITS COUNT, WHICH IS MY OWN EXPOSURE AND I RECORD IT AS MINE.***
+      I reproduced `n_refused: 9` and `by_kind {ZERO_LENGTH: 9}` and treated the reproduction as verification --
+      **but reproducing a number from an instrument that has never been shown to FIRE only proves the instrument is
+      deterministic, not that it is right.** *Running someone else's checker is not the same as checking it, and
+      this seat has spent the night saying so about other seats.* **The count survives because REV supplied the
+      falsifier afterwards, not because I re-ran the census.**
+  THE_CRITERION_IS_ZERO_LENGTH_NOT_ZERO_TRANCHE_AND_THE_DIFFERENCE_DECIDES_A_REPAIR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:42:26Z
+    said: >-
+      ***THE CRITERION IS ZERO-LENGTH, NOT ZERO-TRANCHE, AND THE DIFFERENCE DECIDES WHAT A REPAIR TARGETS.*** REV
+      drove it: **a generation with ZERO tranches and a good window is NOT counted; one with FIVE tranches and
+      `t0==t1` IS.** `n_tranches_on_them` is **a property reported ABOUT the refused set, never the test** -- so
+      *"nine zero-tranche generations" should read **"nine ZERO-LENGTH generations that happen to carry no
+      tranches"**, or a repair targets the wrong property.* **And REV's characterisation of the real nine is sharper
+      than mine**: real finite floats, `t0==t1` to the last digit, **7 slugs and 7 DISTINCT INSTANTS, two slugs
+      failing on BOTH sides at the identical instant** -- ***ONE TAPE EVENT PER AFFECTED SLUG, NOT NINE.*** I had
+      said "a mechanism, not nine coincidences"; **REV counted the mechanism.**
+  REV_SCOPES_MY_LIKE_WITH_LIKE_POINT_AND_BOTH_HALVES_ARE_TRUE:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:42:26Z
+    said: >-
+      ***REV'S (3) SAYS `--against` DOES COMPARE LIKE WITH LIKE, AND IT SCOPES MY POINT RATHER THAN CONTRADICTING
+      IT -- BOTH HALVES ARE TRUE AND THEY ARE DIFFERENT COMPARISONS.*** **REV is right about the REFERENCE CENSUS,
+      which is the comparison carrying the +35**, and its evidence is the artifact rather than the code asserting
+      it: ***the corrected book's assembly is 350,474 PER_ROW entries while its reference census is 313,149 -- HAD
+      `fr.reference` BECOME PER-ROW THE TWO WOULD AGREE***, both branches call the same census on the same key, and
+      `assembly_shape` resolves shape **BY TYPE, NOT BY COUNT**. **My point was about the ASSEMBLY blocks, where
+      `assembly_differs: True` is trivially true because `PER_GENERATION_SCORES` floats and `PER_ROW_SCORES` dicts
+      have no common index.** ***SO: THE CENSUS IS LIKE-WITH-LIKE AND CARRIES THE ANSWER; `assembly_differs` IS NOT
+      AND CARRIES NONE.***
+  AND_REV_CONFIRMS_THE_PROBE_CANNOT_ANSWER_THE_THIRTY_FIVE:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:42:26Z
+    said: >-
+      **And REV's (4) confirms independently what I recorded as open: THE PROBE CANNOT ANSWER THE 35.** *"The census
+      returns totals plus `first_20` and no per-generation key set, so the two books' generation sets cannot be
+      differenced. It cannot say whether the nine are among the 35 new generations or were present before with
+      `t0<t1`."* ***AND REV NAMES THE SAME ONE-LINE FIX I DID -- EMIT THE SORTED `(slug, side, gen)` KEYS FOR BOTH
+      BOOKS.*** **Two seats reached the same missing line from opposite directions**, which is the cheapest possible
+      confirmation that it is the right line. **REV also lists THREE DEFECTS, NONE MOVING TONIGHT'S NUMBER: no
+      falsifier; `"ZERO_LENGTH" if t0 == t1` EVALUATED BEFORE FINITENESS, so `None`/`None`, MISSING KEYS and equal
+      STRINGS all report `ZERO_LENGTH` -- *a generation with no timestamps at all is reported as a zero-length
+      window, and the claim "none non-finite" rests on a classifier that cannot say "ABSENT"* -- and a side outside
+      `HSP.SIDES` DROPPED SILENTLY (driven: three generations with two bad on a third side report `n_generations 1,
+      n_refused 0`), the third latent because REV could not check the real book's side set.**
+  # --- MEM round 316, 2026-09-09T12:40:35Z ---
+  THE_POINT_ESTIMATE_REFUSED_AND_THE_REFUSAL_IS_THE_SYSTEM_WORKING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***THE POINT ESTIMATE REFUSED ON THE FIRST CORRECTED BOOK, AND THE REFUSAL IS THE SYSTEM WORKING -- IT IS
+      RECORDED THAT WAY AND NOT AS A FAILURE.*** **`dePE0903EV20` exited status 1 at 12:32:30Z after 2 min 45 s,
+      1.2 GB peak, NO ARTIFACT WRITTEN.** *I noted at the end of round 315 that the process had vanished with no new
+      artifact and said I could not tell whether it finished or exited early; this is the answer, and it is the
+      better of the two.* **A run that produces nothing because it refused is a run that cost 2 min 45 s; a run
+      that produced a number from a defective book would have cost the programme its second retraction.**
+  I_RAN_THE_PROBE_MYSELF_AND_THE_NINE_ARE_ALL_ZERO_LENGTH_WITH_t0_EQUAL_t1:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***I RAN `de_reference_integrity_probe.py` MYSELF ON THE CORRECTED BOOK RATHER THAN RELAYING DE'S DIAGNOSIS --
+      the machine was idle, no heavy lock, load 0.47 -- AND IT REPRODUCES EXACTLY.*** **`n_generations: 313149`,
+      `n_refused: 9`, `n_slugs_affected: 7`, `n_tranches_on_them: 0`, `sha256` matching the book I hashed last
+      round.** ***AND THE `by_kind` BREAKDOWN IS THE PART WORTH HAVING: `{ZERO_LENGTH: 9}` -- ALL NINE ARE ONE KIND.
+      NONE INVERTED, NONE NON-FINITE.*** The examples carry it plainly: `t0` and `t1` **identical to the last
+      decimal** (`237.128174031`, `119.221239236`), **two of them the SAME `t0` on BUY_UP and SELL_UP of one slug.**
+      *A single failure mode with a repeated timestamp is a mechanism, not nine coincidences.*
+  AND_THE_PRE_FIX_BOOK_HAS_ZERO_SO_THE_EV20_PATH_INTRODUCED_THEM:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***AND THE CONTROL IS IN THE SAME RUN, WHICH IS WHAT MAKES IT A DIAGNOSIS: THE PRE-FIX BOOK HAS
+      `n_generations: 313114` AND `n_refused: 0`, `by_kind` EMPTY.*** **Zero such failures before, nine after -- SO
+      THE EV20 BUILD PATH INTRODUCED THEM.** That is ***`build_reference`'s OUTPUT, WHICH IS BE'S SURFACE***, and
+      **BE 129 has it.** *The probe compares the new book against the old one in a single invocation, so the "was it
+      always like this" question cannot be left hanging* -- which is the shape every diagnosis in this programme has
+      had to be dragged into, and here it is built into the instrument.
+  DE_REFUSED_THE_EASY_FIX_AND_SAID_WHY_IN_ONE_SENTENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***RECORD DE'S REFUSAL TO TAKE THE EASY FIX, IN ITS OWN WORDS, BECAUSE IT IS THE JUDGEMENT THE WHOLE NIGHT WAS
+      ABOUT: IT DID NOT WEAKEN `validate_reference` TO ADMIT THEM -- "A ZERO-LENGTH GENERATION IS A REAL DEFECT AND
+      ADMITTING IT WOULD BE THE FIX THAT HIDES IT."*** **The easy fix was available, it was one predicate, and it
+      would have produced a number today.** *This is the same choice DA made when it left a red standing rather than
+      silencing it, and the same one BE made when it withdrew its own eight* -- **three seats, three chances to make
+      a green appear, three refusals.** ***THE PROGRAMME'S RECURRING LESSON HAS BEEN THAT A CHECK TOO WEAK TO FAIL IS
+      WORTHLESS; TONIGHT A SEAT DECLINED TO CREATE ONE UNDER PRESSURE TO DELIVER.***
+  THE_BATTERY_BEFORE_REPLAY_DID_EXACTLY_WHAT_IT_WAS_PLACED_TO_DO:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      **And the architectural point, now demonstrated rather than argued: the point-estimate driver runs its battery
+      BEFORE replay (`de_point_estimate_day.py:359`) PRECISELY SO A BAD BOOK CANNOT BECOME A NUMBER --
+      ***AND IT DID EXACTLY THAT ON THE FIRST ARTIFACT IT WAS EVER POINTED AT.*** I recorded last round that a
+      completed point estimate would be evidence the repairs reached a result; **the refusal is evidence of
+      something narrower and just as valuable -- that the guard reaches the artifact.** *An unexercised guard is a
+      hope; this one has now fired on a real book, at a real defect, before any expensive work.* **Note the ordering
+      of two facts: the user's blocker had to close BEFORE this battery could run at all, so tonight's repairs are
+      what made tonight's refusal possible.**
+  THE_NIGHTS_BIGGEST_QUESTION_IS_ANSWERED_IN_THE_AFFIRMATIVE:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***AND THE INCIDENTAL ANSWER TO THE NIGHT'S BIGGEST QUESTION, WHICH I DROVE RATHER THAN TOOK: DOES THE
+      CORRECTED `asm` DIFFER FROM THE PRE-FIX BOOK'S? YES.*** **313,149 generations against the pre-fix 313,114 --
+      THIRTY-FIVE MORE -- and the probe reports `assembly_differs: True`.** ***IDENTICAL SCORES WOULD HAVE MEANT THE
+      NIGHT'S WORK NEVER ARRIVED IN THE ARTIFACT; THEY ARE NOT IDENTICAL. THE REPAIRS REACHED THE BOOK.*** The item
+      is marked **ANSWERED IN THE AFFIRMATIVE**, with **the fuller comparison still owed by BE 128** -- *"different"
+      is established, "different HOW" is not.*
+  BUT_THE_AFFIRMATIVE_RESTS_ON_THE_GENERATION_COUNT_AND_NOT_ON_assembly_differs:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***AND A PRECISION THAT MATTERS MORE THAN THE VERDICT, WHICH MY OWN RUN FORCED: THE AFFIRMATIVE RESTS ON THE
+      GENERATION COUNT AND NOT ON `assembly_differs`.*** **The +35 generations is a LIKE-WITH-LIKE comparison -- both
+      books count generations the same way -- so it establishes a real difference in the reference.** ***BUT
+      `assembly_differs: True` IS TRIVIALLY TRUE AND ESTABLISHES NOTHING ABOUT SCORES***, because the two assemblies
+      are **not the same kind of object at all.** *A flag that must be True whatever the scores did is a flag that
+      cannot answer a question about the scores* -- rule 16 arriving on the instrument the rebuild decision now rests
+      on, **which is exactly REV 137's sharpest question and this is my answer to it from my own drive.**
+  BECAUSE_THE_TWO_ASSEMBLIES_ARE_NOT_LIKE_WITH_LIKE_AND_I_MEASURED_THE_SHAPE_CHANGE:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      **The measurement behind that, per head and identical on both heads (`btc/incumbent_linear_d` and
+      `btc/q1_arrival_composed_lgbm`):** ***PRE-FIX `shape: PER_GENERATION_SCORES`, `n_entries: 297379`,
+      `value_type: float`; CORRECTED `shape: PER_ROW_SCORES`, `n_entries: 350474`, `value_type: dict` WITH THREE
+      VALUE KEYS.*** **A different shape, a different value type, and 53,095 more entries.** ***THIS IS THE
+      LOOK-AHEAD REPAIR (R-834, each row at its own `t_start`) VISIBLE IN THE ARTIFACT, AND IT IS FAR STRONGER
+      EVIDENCE THAN THE COUNT*** -- but it is also **precisely why `--against` cannot compare the two assemblies
+      element-wise**: floats keyed per generation against dicts keyed per row have **no common index.** *So the
+      shape change proves the repairs arrived and simultaneously makes the score-level comparison a harder problem
+      than the flag suggests.*
+  ARE_THE_NINE_AND_THE_THIRTY_FIVE_THE_SAME_PHENOMENON_IS_OPEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***THE OPEN QUESTION NOBODY HAS ANSWERED, RECORDED AS OPEN: ARE THE NINE AND THE THIRTY-FIVE THE SAME
+      PHENOMENON?*** **Both BE and REV have been asked.** The arithmetic is suggestive and settles nothing: **the
+      corrected book has 35 MORE generations and 9 BAD ones, so the nine could be a subset of the thirty-five (new
+      generations that should not exist), or entirely disjoint (pre-existing generations newly malformed), or
+      overlapping.** ***NOTHING IN THE PROBE'S OUTPUT DISTINGUISHES THESE, BECAUSE IT COUNTS BOTH BOOKS AND MATCHES
+      NEITHER.*** *The cheap test is whether the nine `(slug, side, gen)` keys exist in the pre-fix reference at
+      all; I did not run it, and it is one line for whoever does.*
+  THREE_SEATS_ARE_ON_THE_BOOK_FROM_DIFFERENT_ANGLES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      **Three seats are on the book from different angles, and the angles are the point:** ***BE 129 on THE CAUSE
+      and on WHETHER A FIX NEEDS A REBUILD (54 min) OR CAN BE DONE AT THE REFERENCE (minutes)*** -- a cost
+      difference of two orders of magnitude, which is why the diagnosis has to precede the decision; ***DA 160 on A
+      FULL INDEPENDENT BOOK VERIFICATION, WHICH IS ALSO THE FIRST REAL TEST OF DA'S OWN GATE-ITEM-8 FIX AGAINST A
+      REAL PER-ROW BOOK RATHER THAN A FIXTURE*** -- *a verifier that has only ever seen fixtures is a verifier
+      nobody has tested*; and ***REV 137 on the probe itself.*** **No two of them would find the same thing, which
+      is the whole argument for a seam.
+  AND_THE_REBUILD_DECISION_RESTS_ON_AN_INSTRUMENT_HOURS_OLD:
+    prov: CHECKED
+    artifact: live/pm_research/de_reference_integrity_probe.py
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      ***AND THE REASON REV 137 MATTERS MOST OF THE THREE: THE REBUILD DECISION NOW RESTS ON AN INSTRUMENT THAT IS
+      HOURS OLD.*** `de_reference_integrity_probe.py` was **written at 12:34:26Z, 4,872 bytes**, after the refusal
+      it exists to explain. **Its own commit states the case for it honestly -- `validate_reference` names ONE
+      generation, "right for a guard, useless for a diagnosis" -- and that is true and is a good reason to write
+      it.** ***BUT A NEW INSTRUMENT DECIDING A 54-MINUTE REBUILD IS EXACTLY THE SHAPE RULE 15 AND RULE 33 EXIST FOR,
+      AND MY OWN RUN ALREADY FOUND ONE FLAG ON IT THAT CANNOT FAIL.*** **The sharpest question is whether `--against`
+      compares like with like given the two books are keyed differently -- and on the assembly it does NOT.**
+  THE_BUILDS_OWN_NUMBERS_STAND_AND_ARE_STILL_NOT_THE_QUEUES_BASIS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:40:35Z
+    said: >-
+      **The build's own numbers are unchanged by any of this and stand as recorded: `rc 0`, wall 3,257.2 s = 54.3
+      min against a 74-76 min forecast, assembly 2,566.7 s, peak 5.484 GB of an 11.87 GB cap** (with my round-315
+      precision intact -- **the leaf's peak of record is 6.354 GB, so true headroom is 53.5 %, not 46.2 %**).
+      ***AND THEY ARE STILL NOT THE QUEUE'S BASIS: BE 128 HAS NOT YET ACCOUNTED FOR THE TWENTY MINUTES, AND NOTHING
+      BEYOND 09-03 IS AUTHORISED.*** *A book that refused its first consumer is an even weaker basis for pricing
+      four more days than a book that succeeded* -- **the queue remains the USER's call and now has a defect in
+      front of it.**
   # --- MEM round 315, 2026-09-09T12:32:59Z ---
   THE_FIRST_CORRECTED_BOOK_SINCE_THE_RETRACTION_IS_ON_DISK_AND_I_HASHED_IT:
     prov: CHECKED

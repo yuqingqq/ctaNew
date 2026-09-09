@@ -21768,3 +21768,49 @@ generation and the window went 4 → 3. Nothing rewritten.
   PANE READING "BUILD AUTHORISED" IS THE TERMINAL'S GHOST TEXT AND IS NOT A USER INSTRUCTION.*** MEM asserts no
   result.)
 ```
+
+## Batch 298 — archived 2026-09-09T12:40:35Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T11:04:08Z (MEM ROUND 313 -- R-865 SWEPT. ***CLOSING SWEEP: ALL FIVE OF THE USER'S DEFECTS ARE CLOSED AND
+  VERIFIED AND THE PROGRAMME NOW WAITS ON TWO USER DECISIONS.*** REV 136: *"Both verify, on every drive. This closes
+  the last of the user's five."* ***THE LEDGER, FINAL, AS A CLOSED LIST WITH TWO NAMED EXCEPTIONS: (1) THE
+  UNREACHABLE CANCEL-MATCHED NULL -- CLOSED AND DOUBLE-VERIFIED, and stronger than a flip, "WHICH NULL RUNS IS NOW
+  UNFALSIFIABLE BY OMISSION"; (2) THE INFLATED DECISION COUNT -- FIXED IN MECHANISM, REAL FACTOR UNQUANTIFIED, NEEDS
+  A CORRECTED BOOK; (3) THE FALSE CANCEL-MATCHING PREMISE -- FIXED IN MECHANISM, REAL DOUBLE-CANCEL RATE
+  UNQUANTIFIED, NEEDS A CORRECTED BOOK; (5a) THE PREDICATE ACCEPTING A SUBSET -- CLOSED; (5b) THE PREDICATE CHECKING
+  THE WRONG SET -- CLOSED AND VERIFIED AFTER RE-OPENING TWICE; (6a) THE PROTOCOL STRING -- CLOSED AND VERIFIED, BY A
+  RED DA DELIBERATELY REFUSED TO SILENCE.*** **The two exceptions are THE SAME exception** -- rows (2) and (3) are
+  unquantified for one reason, they need a corrected book and none exists -- ***SO THE PROGRAMME IS NOT WAITING ON
+  ENGINEERING; IT IS WAITING ON A DECISION.*** **(5b)'s two re-openings stay in the record because they are the
+  evidence and not a blemish on it: the fallback asserting `mods ⊆ mods` while 0 of 12 landed receipts carried a
+  derived block (INERT on every real artifact), then the DERIVED SET ITSELF TRUNCATED EIGHT AGAINST TWELVE** -- *a
+  row that closed on the first attempt would have closed over a check that could not fail, on a set short by four.*
+  Two properties make the final verdict worth more than a green: ***THE LIMIT IS CARRIED BY CONSTRUCTION RATHER THAN
+  BY ENUMERATION -- one raiser puts `MEMBERSHIP_LIMIT` in the message and on the exception, SO AN EXIT CANNOT BE
+  WRITTEN WITHOUT IT -- AND REV ESTABLISHED IT BY ENUMERATING THE EXITS FROM THE CODE RATHER THAN FROM ITS OWN LIST
+  OF SEVEN, RULE 32 APPLIED TO ITS OWN PRIOR WORK*** (four `_refuse_scoring` sites, THREE codes, TWO returns, the
+  third code reached with an EMPTY ROOT, the limit FIRST KEY on every one INCLUDING THE OPT-IN); and ***THE
+  CONTRADICTORY COUNT FIELD WAS REPLACED BY AN INVARIANT THAT DISCRIMINATES, NOT DELETED TO END A CONTRADICTION***
+  -- `membership_complete` TRUE on a complete receipt, FALSE on the real one, **the False case EXPLICITLY NOT A
+  MATCH** -- *the named risk, tested for rather than assumed away.* ***THE STATE FILES NOW STAND ON THEIR OWN:
+  `HANDOFF.md` leads with the FIVE THINGS A COLD READER MUST FIND WITHOUT ASKING, IN ORDER -- (a) NOTHING HAS BEEN
+  BUILT, no heavy lock since 07:15:47Z, WHICH I MEASURED AT THE CLOSE (no holders in `/proc/locks`, no heavy process,
+  newest in `derived/` a DECLARATION, still TWELVE landed builder receipts); (b) THE BUILD IS UNAUTHORISED AND IS THE
+  USER'S DECISION -- five days at the EV20 wall, ~5-6 hours serial, concurrency RULED OUT ON MEMORY, `fr` CANNOT BE
+  BYTE-IDENTICAL so there is NO CHEAP PATH, the gap load UNEVEN with 09-03 carrying 160 OF 266 WINDOWS AND 77 % OF
+  THE SECONDS so a surprise lands on DAY ONE, all five queued days CLEAN on era/agreement/attachment/refusal/mask,
+  AND IT IS THE ONLY WAY TO QUANTIFY DEFECTS (2) AND (3); (c) THE MATCHING UNIT IS OPEN WITH THE USER -- ruling B was
+  recommended on a premise that proved FALSE, production repost cancelling one REFERENCE generation twice while the
+  invariant checks POLICY-generation ids, AND THE COORDINATOR DOES NOT RE-RULE IT "having been wrong once on its own
+  framing"; (d) THE SEAL is DE-PRIORITISED BY USER RULING and OWED BEFORE ANY FUTURE SEALED RACE, the debt DATED and
+  not cancelled; (e) THE ~30 OLDER PHRASE ASSERTIONS are a NAMED FOLLOW-ON, DELIBERATELY NOT DISPATCHED, because
+  expanding scope is what the user's fix-the-issues-first ruling corrected.*** ***AND ONE LINE THAT IS THE WHOLE
+  NIGHT: EVERY DEFECT -- THE SEATS' EIGHT AND THE USER'S FIVE -- WAS FOUND BEFORE A SINGLE BOOK WAS WRITTEN. NOTHING
+  IS CONTAMINATED.*** Thirteen defects, several of which would have invalidated a result, **and the cost of every one
+  is a re-run that has not happened rather than a retraction that has.** One precision kept rather than smoothed
+  over: **DA's case-4 re-run HAD NOT LANDED at my read** (last DA filing `Q-DA-380`, no commit since `db90183`), so
+  **the five close on REV 136's full independent drive from the entry point and DA's would be a SECOND verifier.**
+  Flags 2691 -> 2703, prov 2236 -> 2248; window 3/3, Batch 295 archived. **STATE IS COMPLETE AND THE PROGRAMME WAITS
+  ON THE USER.** MEM asserts no result.)
+```
