@@ -5070,21 +5070,25 @@ def selftest() -> int:
     _m_c, _ex_c = _route165(_base165 + [{"slug": "s1", "side": HSP.SIDES[0],
                                          "gen": 1, "t_start": 350.0}], 1)
     _k165 = f"s1|{HSP.SIDES[0]}|1"
+    # ---- DE 167: THE CELL PARSES TOKENS, IT DOES NOT MATCH PROSE -----
+    # DE 166's version of this cell asserted `"OWN window bounds" in msg`
+    # and `"NO_ROWS_KEPT is the feature pass" not in msg` -- and I had
+    # already had to correct one of them for CASE. An assertion on English
+    # goes red when the sentence is reworded and stays green when the
+    # ROUTING breaks and the sentence does not. The message now emits
+    # `REASON: <code>. SUBSYSTEM: <token>.` and this reads those.
+    def _tok165(msg, field):
+        return msg.split(f"{field}: ", 1)[1].split(".")[0].strip()
+    _r_a, _s_a = _tok165(_m_a, "REASON"), _tok165(_m_a, "SUBSYSTEM")
+    _r_b, _s_b = _tok165(_m_b, "REASON"), _tok165(_m_b, "SUBSYSTEM")
+    _r_c, _s_c = _tok165(_m_c, "REASON"), _tok165(_m_c, "SUBSYSTEM")
     ok(_ex_a[_k165] == "NO_ROWS_KEPT"
        and _ex_b[_k165] == "ROW_AFTER_GENERATION_END"
        and _ex_c[_k165] == "ROW_BEFORE_GENERATION_START"
-       and "NO_ROWS_KEPT" in _m_a and "feature pass" in _m_a
-       and "ROW_AFTER_GENERATION_END" in _m_b
-       and "ROW_BEFORE_GENERATION_START" in _m_c
-       and "OWN window bounds" in _m_b and "OWN window bounds" in _m_c
-       # THE TEST IS THE ATTRIBUTION, NOT THE PHRASE. My first version of
-       # this cell asked `"feature pass" not in _m_b` and went red on the
-       # fixed code, because the ROW_ message says "NOT the feature pass"
-       # -- a spelling check on my own instrument, one round after rule 32
-       # named the class. What must be absent is the CLAIM.
-       and "NO_ROWS_KEPT is the feature pass" in _m_a
-       and "NO_ROWS_KEPT is the feature pass" not in _m_b
-       and "NO_ROWS_KEPT is the feature pass" not in _m_c
+       and (_r_a, _r_b, _r_c) == (_ex_a[_k165], _ex_b[_k165], _ex_c[_k165])
+       and (_s_a, _s_b, _s_c) == ("FEATURE_PASS",
+                                  "GENERATION_SCORES_WINDOW_BOUNDS",
+                                  "GENERATION_SCORES_WINDOW_BOUNDS")
        and len({_m_a, _m_b, _m_c}) == 3,
        f"GATE ITEM 6 CLOSED: the three routes to `scorer#2` now give THREE "
        f"DIFFERENT reasons -- {_ex_a[_k165]} / {_ex_b[_k165]} / "
@@ -5102,8 +5106,9 @@ def selftest() -> int:
             {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t": 400.0})
     except DiagRefused as _e:
         _m_none = str(_e)
-    ok(_m_none is not None and "NOT AVAILABLE AT THIS CALL" in _m_none
-       and "does not guess" in _m_none
+    ok(_m_none is not None
+       and _tok165(_m_none, "REASON") == "UNAVAILABLE"
+       and _tok165(_m_none, "SUBSYSTEM") == "UNDETERMINED"
        and "ROW_BEFORE_GENERATION_START" in _m_none
        and "NO_ROWS_KEPT" in _m_none,
        f"AND A CALLER THAT PASSES NO MAP GETS 'REASON: NOT AVAILABLE AT "
@@ -9652,8 +9657,21 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None,
                        if "gen" in row else None)
                 _why = (excluded or {}).get(_gk) if _gk else None
                 if _why:
+                    # ---- DE 167: THE SUBSYSTEM IS A TOKEN, NOT PROSE ---
+                    # My DE 166 cell asserted `"OWN window bounds" in msg`
+                    # and `"NO_ROWS_KEPT is the feature pass" not in msg`
+                    # -- assertions on ENGLISH. Reword the sentence and a
+                    # correct guard goes red; change the ROUTING and keep
+                    # the sentence and a broken guard stays green. That is
+                    # rule 33's class in my own work, and the repair is to
+                    # emit the attribution as a PARSEABLE VALUE that the
+                    # cell compares, leaving the prose free to be prose.
+                    _subs = sorted(
+                        {"GENERATION_SCORES_WINDOW_BOUNDS" if
+                         _r.startswith("ROW_") else "FEATURE_PASS"
+                         for _r in _why.split("+")})
                     _blame = (
-                        f"REASON: {_why}. "
+                        f"REASON: {_why}. SUBSYSTEM: {','.join(_subs)}. "
                         + ("ROW_AFTER_GENERATION_END and "
                            "ROW_BEFORE_GENERATION_START are "
                            "`generation_scores`' OWN window bounds -- NOT "
@@ -9663,7 +9681,8 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None,
                            "NO_ROWS_KEPT" in _why else ""))
                 elif excluded is not None:
                     _blame = (
-                        "REASON: this generation is not in "
+                        "REASON: NOT_AN_EXCLUSION. SUBSYSTEM: NONE. "
+                        "This generation is not in "
                         "`EXCLUDED_BY_GENERATION` at all, so it was "
                         "neither dropped by the feature pass nor excluded "
                         "by a window bound -- the key looked up here does "
@@ -9671,7 +9690,8 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None,
                         "reference this assembly was built over. ")
                 else:
                     _blame = (
-                        "REASON: NOT AVAILABLE AT THIS CALL -- the caller "
+                        "REASON: UNAVAILABLE. SUBSYSTEM: UNDETERMINED. "
+                        "The caller "
                         "passed no `excluded` map, so this refusal cannot "
                         "say WHICH exclusion applied and does not guess. "
                         "The three candidates are distinct subsystems and "

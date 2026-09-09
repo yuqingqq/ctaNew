@@ -672,7 +672,7 @@ def recompute(led: dict, arm: str) -> dict:
 
 # ------------------------------------------------------- the battery
 
-EXPECTED_CHECKS = 24
+EXPECTED_CHECKS = 25
 
 
 def selftest(quiet: bool = False) -> int:
@@ -1121,6 +1121,38 @@ def selftest(quiet: bool = False) -> int:
        f"numbers to 1e-9 against an independent computation, and the "
        f"settlement null still re-derives. The fix adds a branch for the "
        f"empty case; it does not change the populated one")
+
+    # ---- DE 167: WHY THE PAIRING IS NOT BOOKKEEPING -------------------
+    # REV 115 drove R-825's consequence and found the wrong moments FLIP
+    # THE SIGN of Z on HAZARD (+0.032416 against -0.043431). That is REV's
+    # measurement on REV's data; this is the same statement on THIS
+    # battery's own fixture, so the module carries its own reason for the
+    # guards above rather than citing someone else's. The observed value
+    # is placed BETWEEN the two nulls' means, which is the whole condition
+    # for a sign flip -- and nothing about that placement is exotic: the
+    # two endpoints value the same draws differently, so their means
+    # differ, and any observed value between them flips.
+    _obs167 = 16.0
+    _m_settle = statistics.fmean(_sv143)
+    _m_5s = statistics.fmean(_per143["A"]["null_values"])
+    _z_right = (_obs167 - _m_settle) / statistics.pstdev(_sv143)
+    _z_wrong = ((_obs167 - _m_5s)
+                / statistics.pstdev(_per143["A"]["null_values"]))
+    ok(_m_settle < _obs167 < _m_5s
+       and _z_right > 0 > _z_wrong
+       and abs(_z_right - _z_wrong) > 0.1,
+       f"DE 167: THE WRONG MOMENTS FLIP THE SIGN, ON THIS FIXTURE'S OWN "
+       f"NUMBERS. The settlement null's mean is {_m_settle:.4f} and the "
+       f"5-second null's is {_m_5s:.4f}; an observed settlement excess of "
+       f"{_obs167} sits BETWEEN them, so deriving Z from the settlement "
+       f"draws gives {_z_right:+.6f} and deriving it from the 5-second "
+       f"draws -- R-825's actual defect -- gives {_z_wrong:+.6f}. **A "
+       f"DIFFERENT DIRECTION, not a different size.** That is why the "
+       f"length check and the index pairing above are guards and not "
+       f"bookkeeping: a parallel list that is short, unrecorded or "
+       f"mis-ordered is how the wrong numbers get into the moments in the "
+       f"first place. REV 115 measured the same flip on the real "
+       f"artifacts (+0.032416 against -0.043431)")
 
     # ---- REV 116 / Q-REV-117 (DE 164): THE DIGEST IS NO LONGER OPTIONAL -
     # REV drove the consequence of the `None` default on a real 09-07

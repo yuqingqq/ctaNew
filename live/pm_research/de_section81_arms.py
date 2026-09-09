@@ -227,7 +227,68 @@ def per_unit_figures(net_cents: float, n_cancels: int, n_lost: int) -> dict:
 
 if "--selftest" in sys.argv:
     pass
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 24
+
+
+ASSEMBLY_SHAPE_UNDECIDABLE = "SECTION81_ASSEMBLY_SHAPE_UNDECIDABLE"
+ASSEMBLY_EMPTY = "SECTION81_ASSEMBLY_IS_EMPTY"
+
+
+class Section81Refused(RuntimeError):
+    """A named refusal. Every message begins with its own reason code."""
+
+
+def assembly_shape(gen_scores: dict) -> str:
+    """PER_ROW_SCORES or PER_GENERATION_SCORES -- DECIDED over the WHOLE
+    assembly, and REFUSED when it cannot be.
+
+    DE 167, rule 33's third drive on my own DE 166 fix. That fix closed the
+    LOOKUP and left the DETECTOR matching on whatever it happened to find:
+
+        _per_row = any(isinstance(v, dict) and "gen" in v for v in ...)
+
+    Driven, and both answers were wrong in the way that matters most for
+    THIS module, whose published output is an EXCLUSION COUNT:
+      * a MIXED assembly (per-row dicts beside a bare float) raised a bare
+        `TypeError: 'float' object is not subscriptable` -- a crash, not a
+        named refusal; and
+      * an assembly of dicts CARRYING NO `gen` read as PER_GENERATION,
+        looked every generation up at its `t0`, found none, and reported
+        **3 of 3 dropped** -- a SILENT bogus exclusion fraction, which is
+        exactly the class REVIEW 122 says makes this module and
+        `da_de53_exclusion` the worse two of the five.
+
+    `any` asks "is at least one entry per-row"; the question is "is EVERY
+    entry the same shape". Rule 33: a checker that matches on whatever it
+    happens to find is not a checker."""
+    if not gen_scores:
+        raise Section81Refused(
+            f"{ASSEMBLY_EMPTY}: the assembly has no entries, so its shape "
+            f"cannot be decided and there is no population to exclude "
+            f"from. An empty assembly is a refusal, never a 100 % "
+            f"exclusion rate.")
+    kinds: dict = {}
+    for k, v in gen_scores.items():
+        if isinstance(v, dict):
+            kind = "PER_ROW_SCORES" if "gen" in v else "DICT_WITHOUT_GEN"
+        elif isinstance(v, (int, float)) and not isinstance(v, bool):
+            kind = "PER_GENERATION_SCORES"
+        else:
+            kind = f"UNKNOWN_{type(v).__name__}"
+        kinds.setdefault(kind, []).append(k)
+    if set(kinds) == {"PER_ROW_SCORES"}:
+        return "PER_ROW_SCORES"
+    if set(kinds) == {"PER_GENERATION_SCORES"}:
+        return "PER_GENERATION_SCORES"
+    raise Section81Refused(
+        f"{ASSEMBLY_SHAPE_UNDECIDABLE}: this assembly holds "
+        f"{ {k: len(v) for k, v in kinds.items()} } -- not one shape. "
+        f"First offending key per kind: "
+        f"{ {k: v[0] for k, v in kinds.items() if k not in ('PER_ROW_SCORES', 'PER_GENERATION_SCORES')} }. "
+        f"A PER_ROW value is a dict carrying `gen`; a PER_GENERATION value "
+        f"is a bare number. Reading a mixed assembly one way or the other "
+        f"publishes an EXCLUSION COUNT computed against the wrong "
+        f"eligibility test, and this module's whole output is that count.")
 
 
 def eligible_rows(ref: dict, gen_scores: dict):
@@ -251,9 +312,8 @@ def eligible_rows(ref: dict, gen_scores: dict):
     under-covered book must STILL be flagged. Eligibility is now "this
     generation has AT LEAST ONE scored row"; a generation with none is
     still counted, which is the property the repair must not lose."""
-    _per_row = any(isinstance(v, dict) and "gen" in v
-                   for v in gen_scores.values())
-    shape = "PER_ROW_SCORES" if _per_row else "PER_GENERATION_SCORES"
+    shape = assembly_shape(gen_scores)
+    _per_row = shape == "PER_ROW_SCORES"
     by_gen: dict = {}
     if _per_row:
         for (_sl, _sd, _t), _v in gen_scores.items():
@@ -534,6 +594,46 @@ def selftest() -> int:
        f"({_sh81b}) and gives the same 2 eligible / {_d81b} dropped -- the "
        f"shape is DETECTED, and each book is read the way its own bytes "
        f"were written")
+
+
+    # ---- DE 167, RULE 33's THIRD DRIVE: REFUSE A PARTIAL INPUT --------
+    # "Drive it to PASS on the real thing, to FAIL on a known-bad, AND to
+    # REFUSE a partial input -- a checker that matches on whatever it
+    # happens to find is not a checker." DE 166 closed the LOOKUP and left
+    # the DETECTOR doing exactly that (`any(... "gen" in v ...)`), and the
+    # two partial inputs below were the two worst answers a module whose
+    # output is an EXCLUSION COUNT can give.
+    _mixed81 = {**_pr81, ("w1", _S81, 300.0): 0.7}
+    _nogen81 = {("w1", _S81, 137.0): {"score": 0.4, "t0": 100.0}}
+    _res81: dict = {}
+    for _lbl, _gs in (("mixed", _mixed81), ("dict_without_gen", _nogen81),
+                      ("empty", {}), ("string_value",
+                                      {("w1", _S81, 1.0): "0.4"})):
+        try:
+            _res81[_lbl] = "ADMITTED/" + eligible_rows(_ref81, _gs)[2]
+        except Section81Refused as _e:
+            _res81[_lbl] = str(_e).split(":")[0]
+        except Exception as _e:
+            _res81[_lbl] = f"UNNAMED_{type(_e).__name__}"
+    ok(_res81 == {"mixed": ASSEMBLY_SHAPE_UNDECIDABLE,
+                  "dict_without_gen": ASSEMBLY_SHAPE_UNDECIDABLE,
+                  "empty": ASSEMBLY_EMPTY,
+                  "string_value": ASSEMBLY_SHAPE_UNDECIDABLE},
+       f"DE 167 RULE 33 (3): a PARTIAL assembly is REFUSED BY NAME "
+       f"({_res81}). Pre-fix, driven: the MIXED case raised a bare "
+       f"`TypeError: 'float' object is not subscriptable` -- a crash, not "
+       f"a refusal -- and an assembly of dicts CARRYING NO `gen` read as "
+       f"PER_GENERATION, looked every generation up at its `t0`, found "
+       f"none and reported **3 of 3 dropped**: a SILENT bogus exclusion "
+       f"fraction, on the module REVIEW 122 names as one of the two worst "
+       f"because its whole output IS that fraction. `any` asks 'is at "
+       f"least one entry per-row'; the question is 'is EVERY entry the "
+       f"same shape'")
+    ok(assembly_shape(_pr81) == "PER_ROW_SCORES"
+       and assembly_shape(_pg81) == "PER_GENERATION_SCORES",
+       f"POSITIVE CONTROL for the same predicate: both REAL shapes are "
+       f"still decided, so the refusals above are about the partial input "
+       f"and not about the detector having been made unable to decide")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
