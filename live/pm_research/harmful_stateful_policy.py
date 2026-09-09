@@ -107,7 +107,7 @@ import json
 import math
 from typing import Any, Sequence
 
-EXPECTED_CHECKS = 90          # asserted by selftest(); update together
+EXPECTED_CHECKS = 91          # asserted by selftest(); update together
 
 SIDES = ("BUY_UP", "SELL_UP")
 RANK_GEN_START, RANK_FILL, RANK_GEN_END, RANK_SCORE = 0, 1, 2, 3
@@ -397,11 +397,20 @@ def validate_scores(scores: Sequence[dict[str, Any]]) -> None:
             raise ReferenceIntegrityError(
                 f"score[{i}]: side {s['side']!r} not in {SIDES}")
         v = s["score"]
-        if isinstance(v, bool) or not isinstance(v, (int, float)) \
-                or math.isnan(v):
+        # DE 155 (3): NON-FINITE, not merely NaN. The old test was
+        # `math.isnan(v)`, so +/-inf passed: `+inf >= theta_cancel` is True
+        # for EVERY threshold, so an infinite score cancels every
+        # generation it touches, and `-inf` never cancels one. Neither is a
+        # silent no-op like NaN -- they are silent DECISIONS -- and both
+        # reached here from a feature that overflowed. `_fin` is the same
+        # predicate `t` is already held to, three lines up.
+        if not _fin(v):
             raise ReferenceIntegrityError(
-                f"score[{i}]: score {v!r} refused (NaN/non-number would "
-                f"compare False everywhere and become a silent no-op)")
+                f"score[{i}]: score {v!r} refused as non-finite. NaN "
+                f"compares False against every threshold (a silent "
+                f"no-op); +inf compares True against every threshold (a "
+                f"silent cancel of everything) and -inf against none. A "
+                f"score that is not a finite number is not a decision")
 
 
 # ---------------------------------------------------------------------------
@@ -1777,6 +1786,27 @@ def selftest() -> int:
         "a disabled predictor still validates its declared thetas")
 
     _selftest_more(ok, refuses, ref, scores, ena)
+
+    # ---- DE 155 (3): NON-FINITE SCORES, BOTH DIRECTIONS ---------------
+    # The old test was `math.isnan(v)`. NaN is a silent NO-OP (False
+    # against every threshold); +/-inf are silent DECISIONS (+inf True
+    # against every threshold, -inf against none) and both passed.
+    _ok155 = [{"t": 0.0, "slug": "s", "side": SIDES[0], "gen": 0,
+               "score": 0.5}]
+    validate_scores(_ok155)
+    _ref155 = []
+    for _bad in (float("inf"), float("-inf"), float("nan")):
+        try:
+            validate_scores([dict(_ok155[0], score=_bad)])
+            _ref155.append("ADMITTED")
+        except ReferenceIntegrityError:
+            _ref155.append("REFUSED")
+    ok(_ref155 == ["REFUSED", "REFUSED", "REFUSED"],
+       f"DE 155 (3): a FINITE score is admitted and +inf / -inf / NaN are "
+       f"all REFUSED ({_ref155}). Before this only NaN was: an infinite "
+       f"score compares True against every theta_cancel, so it cancelled "
+       f"every generation it touched, and -inf cancelled none -- neither "
+       f"is a no-op, both are decisions nobody made")
 
     if checks != EXPECTED_CHECKS:
         raise AssertionError(

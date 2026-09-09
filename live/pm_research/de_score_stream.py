@@ -55,10 +55,22 @@ MANIFEST = FITS / "fit_manifest.json"
 #: The two heads the diagnostic names, and the files each is made of.
 HEADS = {
     "incumbent_linear_d": ("linear_d_{coin}.json",),
+    # DE 155 (2): `linear_{coin}.json` IS ONE OF THIS HEAD'S FILES. It
+    # carries `norm_mu`/`norm_sd` -- the z-scale the booster was fitted
+    # through -- and `de_head_scoring.load_lgbm_normalisers` reads it on
+    # every score. It was absent from this tuple and from the params
+    # `model_digests`, so its bytes could change every score the LGBM head
+    # produced WITHOUT invalidating the declared model identity: the four
+    # files below would still verify and the receipt would still say the
+    # model was the declared one. It was already in the manifest's
+    # `file_hashes` (nothing had to be added there) -- it was simply never
+    # looked at. Note it is NOT `linear_d_{coin}.json`, which is the
+    # incumbent head's model; two different files, one letter apart.
     "q1_arrival_composed_lgbm": ("lgbm_haz_{coin}.txt",
                                  "lgbm_val_{coin}.txt",
                                  "val_models.json",
-                                 "lgbm_thresholds_{coin}.json"),
+                                 "lgbm_thresholds_{coin}.json",
+                                 "linear_{coin}.json"),
 }
 COINS = ("btc", "eth")
 
@@ -232,8 +244,11 @@ def selftest() -> int:
     v_q1 = verify_head("q1_arrival_composed_lgbm", "btc")
     ok(v_inc == {"linear_d_btc.json": "18701008c2bd18c6"},
        f"INCUMBENT HEAD VERIFIED at the bytes: {v_inc}")
+    # DE 155 (2): FIVE files, not four -- `linear_btc.json` is the z-scale
+    # every LGBM score is computed through and was verified by nothing.
     ok(set(v_q1) == {"lgbm_haz_btc.txt", "lgbm_val_btc.txt",
-                     "val_models.json", "lgbm_thresholds_btc.json"}
+                     "val_models.json", "lgbm_thresholds_btc.json",
+                     "linear_btc.json"}
        and all(v_q1[k] == h[k] for k in v_q1),
        f"HEAD UNDER TEST VERIFIED at the bytes -- R-424's component of "
        f"record, Q1_arrival of composed_lgbm: {v_q1}")

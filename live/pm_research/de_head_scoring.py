@@ -49,7 +49,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 37
+EXPECTED_CHECKS = 40
 
 #: The thresholds persisted by ``phase2_arms.freeze_thresholds`` are
 #: quantiles of ``p_fill * conditional_value``.  This is therefore the only
@@ -105,7 +105,7 @@ def verify_fit_code(names=PINNED_CODE, *, manifest: Path | None = None,
     return out
 
 
-def load_incumbent(coin: str) -> dict:
+def _load_incumbent_uncached(coin: str) -> dict:
     """The incumbent head, verified and shape-checked at load."""
     SS.verify_head("incumbent_linear_d", coin)
     d = json.loads((FITS / f"linear_d_{coin}.json").read_text())
@@ -198,7 +198,7 @@ def score_lgbm(booster, width: int, raw: list[float]) -> float:
             f"objection, converted at its boundary") from exc
 
 
-def load_lgbm_condvalue(coin: str):
+def _load_lgbm_condvalue_uncached(coin: str):
     """Verified hazard and value boosters for the frozen LGBM policy."""
     SS.verify_head("q1_arrival_composed_lgbm", coin)
     record = json.loads((FITS / "val_models.json").read_text())
@@ -256,8 +256,69 @@ def score_contract(head: str) -> dict:
     }
 
 
-def load_lgbm_normalisers(coin: str) -> dict:
+#: DE 155 (7): THE MODELS ARE LOADED ONCE PER SET OF BYTES, NOT PER CALL.
+#: `generation_scores` calls all three loaders on EVERY head of EVERY
+#: chunk: a 42-chunk day scoring two heads paid ~84 loads of the boosters,
+#: the incumbent and the z-scale, and an LGBM `Booster(model_file=...)` is
+#: a parse of the whole model text.
+#:
+#: THE KEY IS THE DIGEST, NOT THE COIN. Keying on the coin alone would
+#: cache across a change to the bytes and quietly defeat DE 155 (2) -- the
+#: whole point of which is that a moved file must be noticed. Keying on
+#: the digest means changed bytes are a different entry: they are loaded
+#: again AND verified again, and the cache can only ever return the
+#: object that was built from exactly those bytes.
+_MODEL_CACHE: dict = {}
+
+
+def _fits_digest(*names: str) -> str:
+    """The cache key: the named fit files' bytes AND what the manifest
+    says they should be.
+
+    THE MANIFEST BELONGS IN THE KEY, and leaving it out was a real hole
+    this module's own battery caught. `load_lgbm_normalisers` does not
+    just parse bytes -- it VERIFIES them against the manifest and refuses
+    on a mismatch (DE 155 (2)). So the cached value is the result of a
+    computation over BOTH, and keying on the bytes alone let a successful
+    load under one manifest be served to a caller whose manifest declared
+    something else -- turning a refusal into a hit. Same bytes plus a
+    different declaration is a different question."""
+    h = hashlib.sha256()
+    try:
+        _decl = SS.manifest_hashes()
+    except Exception:                                    # noqa: BLE001
+        _decl = {}
+    for n in names:
+        h.update(n.encode())
+        h.update((FITS / n).read_bytes())
+        h.update(str(_decl.get(n)).encode())
+    return h.hexdigest()
+
+
+def model_cache_stats() -> dict:
+    """What the cache holds and what it saved -- measured, not asserted."""
+    return {"entries": len(_MODEL_CACHE),
+            "keys": sorted(k[0] for k in _MODEL_CACHE),
+            "hits": _MODEL_CACHE.get(("__hits__",), 0),
+            "misses": _MODEL_CACHE.get(("__misses__",), 0)}
+
+
+def _cached(kind: str, names: tuple, build):
+    key = (kind, _fits_digest(*names))
+    if key in _MODEL_CACHE:
+        _MODEL_CACHE[("__hits__",)] = _MODEL_CACHE.get(("__hits__",), 0) + 1
+        return _MODEL_CACHE[key]
+    _MODEL_CACHE[("__misses__",)] = _MODEL_CACHE.get(("__misses__",), 0) + 1
+    val = build()
+    _MODEL_CACHE[key] = val
+    return val
+
+
+def _load_lgbm_normalisers_uncached(coin: str) -> dict:
     """The z-scale the LGBM head was FITTED THROUGH, read off the fit.
+
+    DE 155 (7): cached on the file's DIGEST (see `_MODEL_CACHE`), so the
+    verification below still runs for any bytes not seen before.
 
     `phase2_arms:1481-1482` builds `XF = PM + FN + ST` and then
     `Xf, mu, sd = fc.fast_zscale(XF, XF)`; `:1550-1552` fits the booster on
@@ -266,6 +327,30 @@ def load_lgbm_normalisers(coin: str) -> dict:
     `[1.0] + (raw - mu) / sd`, and `mu`/`sd` are what arm B persisted to
     `linear_{coin}.json` -- 105 long against 106 columns."""
     f = FITS / f"linear_{coin}.json"
+    # ---- DE 155 (2): THE BYTES ARE BOUND AT THE POINT OF READING -------
+    # `verify_head` now lists this file, so the run path checks it; this
+    # check is here as well because THIS is the function that reads the
+    # bytes, and a caller that reaches it without having verified the head
+    # would otherwise scale every vector through an unbound transform. The
+    # digest is the manifest's -- the same authority the head's other four
+    # files are bound by -- and a mismatch REFUSES rather than scoring.
+    _mh = SS.manifest_hashes()
+    if f.name not in _mh:
+        # SITE: lgbmnorm#3
+        raise HeadRefused(
+            f"LGBM_NORMALISER_NOT_IN_MANIFEST: {f.name} carries the "
+            f"z-scale every LGBM score is computed through and the "
+            f"manifest does not name it, so nothing says which bytes it "
+            f"should have")
+    _got = SS._sha16(f.read_bytes())
+    if _got != _mh[f.name]:
+        # SITE: lgbmnorm#4
+        raise HeadRefused(
+            f"LGBM_NORMALISER_DIGEST_DIFFERS: {f.name} has sha {_got} and "
+            f"the manifest says {_mh[f.name]}. The transform every LGBM "
+            f"score is computed through moved under a bound name -- the "
+            f"declared model identity would not have noticed, which is "
+            f"what this refusal exists for")
     d = json.loads(f.read_text())
     for k in ("norm_mu", "norm_sd"):
         if k not in d:
@@ -323,9 +408,34 @@ def compose_head_inputs(pm, fn, st, *, norms, incumbent_width, lgbm_width):
             f"`[1.0] + zscaled`, so these must differ by exactly the "
             f"intercept -- if they do not, the two artifacts are from "
             f"different fits and nothing composed here is that model's input")
-    return {"incumbent_linear_d": raw_d,
+    # ---- DE 155 (3): NON-FINITE FEATURES REFUSE, AT THE FUNNEL --------
+    # Both heads take their vector from here, so this is the one place
+    # that can hold both to the same predicate. It matters because
+    # NEITHER head fails loudly on an infinite input: the incumbent's
+    # `1/(1+exp(-z))` maps +inf to 1.0 and -inf to 0.0 -- a PLAUSIBLE
+    # SATURATED PROBABILITY, indistinguishable in the receipt from a
+    # confident model -- and the LGBM path divides by `sd`, so an
+    # overflowed raw feature or a zero sd propagates a non-finite column
+    # into the booster. A feature that is not a finite number is not a
+    # measurement, and a score computed from one is not a decision.
+    _out = {"incumbent_linear_d": raw_d,
             "q1_arrival_composed_lgbm":
                 [1.0] + [(raw_b[i] - mu[i]) / sd[i] for i in range(len(mu))]}
+    for _h, _vec in _out.items():
+        _bad = [(_i, _x) for _i, _x in enumerate(_vec)
+                if isinstance(_x, bool)
+                or not isinstance(_x, (int, float))
+                or not math.isfinite(float(_x))]
+        if _bad:
+            # SITE: compose#nonfinite
+            raise HeadRefused(
+                f"NON_FINITE_FEATURE: {_h} would be scored from a vector "
+                f"whose column(s) {[i for i, _ in _bad[:5]]} are "
+                f"{[repr(x) for _, x in _bad[:5]]}. The incumbent's "
+                f"sigmoid maps an infinite input to a plausible saturated "
+                f"probability and the LGBM path carries it through the "
+                f"z-scale, so neither head would have refused it")
+    return _out
 
 
 def thresholds(coin: str, head: str, *, fits: Path | None = None,
@@ -365,6 +475,30 @@ def thresholds(coin: str, head: str, *, fits: Path | None = None,
             f"{head}/{coin} carries non-finite expected-value threshold(s) "
             f"for {bad}")
     return out
+
+
+# ---- DE 155 (7): the public loaders, cached on the bytes -------------
+def load_lgbm_normalisers(coin: str) -> dict:
+    """The LGBM z-scale. Loaded once per set of bytes (DE 155 (7))."""
+    return _cached("norms", (f"linear_{coin}.json",),
+                   lambda: _load_lgbm_normalisers_uncached(coin))
+
+
+def load_incumbent(coin: str):
+    """The incumbent model. Loaded once per set of bytes (DE 155 (7))."""
+    return _cached("incumbent", (f"linear_d_{coin}.json",),
+                   lambda: _load_incumbent_uncached(coin))
+
+
+def load_lgbm_condvalue(coin: str):
+    """The hazard and value boosters. Once per set of bytes (DE 155 (7)).
+
+    An LGBM `Booster(model_file=...)` parses the whole model text, and a
+    42-chunk day scoring two heads did that ~84 times."""
+    return _cached("lgbm_condvalue",
+                   ("val_models.json", f"lgbm_haz_{coin}.txt",
+                    f"lgbm_val_{coin}.txt"),
+                   lambda: _load_lgbm_condvalue_uncached(coin))
 
 
 def selftest() -> int:
@@ -635,7 +769,18 @@ def selftest() -> int:
         _bad = json.loads((FITS / "linear_btc.json").read_text())
         _bad.pop("norm_mu")
         (Path(d) / "linear_btc.json").write_text(json.dumps(_bad))
+        # DE 155 (2): THE FIXTURE'S BYTES ARE BOUND TO ITS OWN MANIFEST, so
+        # what this cell measures is still the STRUCTURAL refusal (no
+        # `norm_mu`) and not the new digest refusal firing first. Leaving
+        # it unbound would have quietly turned a structural known-bad into
+        # a digest known-bad wearing the same label.
+        _mf = json.loads(SS.MANIFEST.read_text())
+        _mf["file_hashes"]["linear_btc.json"] = SS._sha16(
+            (Path(d) / "linear_btc.json").read_bytes())
+        (Path(d) / "fit_manifest.json").write_text(json.dumps(_mf))
         _sv = globals()["FITS"]
+        _svM, _svF = SS.MANIFEST, SS.FITS
+        SS.MANIFEST, SS.FITS = Path(d) / "fit_manifest.json", Path(d)
         globals()["FITS"] = Path(d)
         try:
             refuses(lambda: load_lgbm_normalisers("btc"),
@@ -644,8 +789,141 @@ def selftest() -> int:
                     "right width and refuse nothing", needle="carries no")
         finally:
             globals()["FITS"] = _sv
+            SS.MANIFEST, SS.FITS = _svM, _svF
     ok(load_lgbm_normalisers("btc")["n_raw"] == _nr,
        "POSITIVE CONTROL: the real fit still answers after that injection")
+
+    # ---- DE 155 (7): LOADED ONCE PER SET OF BYTES, AND MEASURED -------
+    # Both halves: repeated calls HIT, and a change to the bytes MISSES --
+    # because keying on the coin alone would cache across a change and
+    # quietly defeat DE 155 (2).
+    import time as _t155
+    _MODEL_CACHE.clear()
+    _t0155 = _t155.perf_counter()
+    _first = load_lgbm_condvalue("btc")
+    _cold155 = _t155.perf_counter() - _t0155
+    _t0155 = _t155.perf_counter()
+    for _ in range(20):
+        load_lgbm_condvalue("btc")
+        load_incumbent("btc")
+        load_lgbm_normalisers("btc")
+    _warm155 = _t155.perf_counter() - _t0155
+    _st155 = model_cache_stats()
+    # THE DIGEST KEY, DRIVEN: point FITS at a copy with one byte changed
+    # and the cache must MISS rather than hand back the old object.
+    import shutil as _sh7, tempfile as _tf7, json as _j7
+    _d7 = Path(_tf7.mkdtemp(prefix="de155_7_"))
+    for _f in SS.FITS.glob("*"):
+        if _f.is_file():
+            _sh7.copy2(_f, _d7 / _f.name)
+    _nrm7 = _j7.loads((_d7 / "linear_btc.json").read_text())
+    _nrm7["norm_mu"][0] = float(_nrm7["norm_mu"][0]) + 1.0
+    (_d7 / "linear_btc.json").write_text(_j7.dumps(_nrm7))
+    _mf7 = _j7.loads(SS.MANIFEST.read_text())
+    _mf7["file_hashes"]["linear_btc.json"] = SS._sha16(
+        (_d7 / "linear_btc.json").read_bytes())
+    (_d7 / "fit_manifest.json").write_text(_j7.dumps(_mf7))
+    _oF7, _oSF7, _oSM7 = FITS, SS.FITS, SS.MANIFEST
+    try:
+        globals()["FITS"] = _d7
+        SS.FITS, SS.MANIFEST = _d7, _d7 / "fit_manifest.json"
+        _miss_before = model_cache_stats()["misses"]
+        _changed = load_lgbm_normalisers("btc")
+        _miss_after = model_cache_stats()["misses"]
+    finally:
+        globals()["FITS"] = _oF7
+        SS.FITS, SS.MANIFEST = _oSF7, _oSM7
+        _sh7.rmtree(_d7, ignore_errors=True)
+    _per_warm = _warm155 / 60.0
+    ok(_st155["hits"] >= 57 and _st155["misses"] == 3
+       and _per_warm < _cold155
+       and _miss_after == _miss_before + 1
+       and _changed["norm_mu"][0] != _nb["norm_mu"][0],
+       f"DE 155 (7) LOADED ONCE PER SET OF BYTES: 60 loader calls cost "
+       f"{_st155['misses']} actual loads and {_st155['hits']} hits. Per "
+       f"call: {_cold155 * 1000:.1f} ms COLD for the two boosters against "
+       f"{_per_warm * 1000:.2f} ms warm -- the parse is what is saved; a "
+       f"hit still stats and digests the files, which is the price of the "
+       f"safe key. A 42-chunk day scoring two heads made ~84 such loads. "
+       f"AND THE KEY IS THE DIGEST, NOT THE COIN: one "
+       f"changed byte of the z-scale is a cache MISS "
+       f"({_miss_before} -> {_miss_after}) and returns the NEW value, so "
+       f"the cache cannot serve stale bytes past DE 155 (2)'s check")
+
+    # ---- DE 155 (3): A NON-FINITE FEATURE REFUSES AT THE FUNNEL -------
+    # AND THE KNOWN-BAD ESTABLISHES ITS OWN BASELINE: the same infinite
+    # feature is pushed through the incumbent's own sigmoid first, to show
+    # what it WOULD have produced -- a plausible saturated probability,
+    # not an error. That is why this refusal is here and not left to the
+    # heads.
+    _sat155 = 1.0 / (1.0 + math.exp(-float("inf")))
+    _fin155 = compose_head_inputs(_pm, _fn, _st, norms=_nb,
+                                  incumbent_width=_iw, lgbm_width=_wl)
+    _pmbad = list(_pm); _pmbad[0] = float("inf")
+    _r3 = None
+    try:
+        compose_head_inputs(_pmbad, _fn, _st, norms=_nb,
+                            incumbent_width=_iw, lgbm_width=_wl)
+    except HeadRefused as _e:
+        _r3 = str(_e).split(":")[0]
+    _pmnan = list(_pm); _pmnan[0] = float("nan")
+    _r3n = None
+    try:
+        compose_head_inputs(_pmnan, _fn, _st, norms=_nb,
+                            incumbent_width=_iw, lgbm_width=_wl)
+    except HeadRefused as _e:
+        _r3n = str(_e).split(":")[0]
+    ok(_sat155 == 1.0 and len(_fin155["incumbent_linear_d"]) == _iw
+       and _r3 == "NON_FINITE_FEATURE" and _r3n == "NON_FINITE_FEATURE",
+       f"DE 155 (3) A NON-FINITE FEATURE REFUSES, AND THE BASELINE SHOWS "
+       f"WHY: the incumbent's sigmoid maps an infinite input to "
+       f"{_sat155} -- a plausible saturated probability, not an error, so "
+       f"nothing downstream would have flagged it. A finite triple still "
+       f"composes ({len(_fin155['incumbent_linear_d'])} columns), while "
+       f"+inf and NaN in one raw column both refuse `{_r3}`")
+
+    # ---- DE 155 (2): THE NORMALIZER IS BOUND, DRIVEN BOTH WAYS --------
+    # On COPIES in a temp dir: the real fit files are never written to.
+    import shutil as _sh155, tempfile as _tf155, json as _j155
+    _d155 = Path(_tf155.mkdtemp(prefix="de155_fits_"))
+    for _f in SS.FITS.glob("*"):
+        if _f.is_file():
+            _sh155.copy2(_f, _d155 / _f.name)
+    _oldF, _oldSF, _oldSM = FITS, SS.FITS, SS.MANIFEST
+    try:
+        globals()["FITS"] = _d155
+        SS.FITS, SS.MANIFEST = _d155, _d155 / "fit_manifest.json"
+        _pos155 = load_lgbm_normalisers("btc")
+        _vh155 = SS.verify_head("q1_arrival_composed_lgbm", "btc")
+        # THE KNOWN-BAD: one byte of the z-scale, changed. Nothing about
+        # the four model files moves, so the declared model identity is
+        # untouched -- which is exactly the hole.
+        _nrm = _j155.loads((_d155 / "linear_btc.json").read_text())
+        _nrm["norm_mu"][0] = float(_nrm["norm_mu"][0]) + 1.0
+        (_d155 / "linear_btc.json").write_text(_j155.dumps(_nrm))
+        _r1, _r2 = None, None
+        try:
+            load_lgbm_normalisers("btc")
+        except HeadRefused as _e:
+            _r1 = str(_e).split(":")[0]
+        try:
+            SS.verify_head("q1_arrival_composed_lgbm", "btc")
+        except SS.ScoreStreamRefused as _e:
+            _r2 = "VERIFY_HEAD_REFUSED"
+    finally:
+        globals()["FITS"] = _oldF
+        SS.FITS, SS.MANIFEST = _oldSF, _oldSM
+        _sh155.rmtree(_d155, ignore_errors=True)
+    ok("linear_btc.json" in _vh155 and _pos155["n_raw"] > 0
+       and _r1 == "LGBM_NORMALISER_DIGEST_DIFFERS" and _r2 is not None,
+       f"DE 155 (2) THE UNBOUND NORMALIZER IS BOUND, BOTH DIRECTIONS: "
+       f"`linear_btc.json` -- the z-scale EVERY LGBM score is computed "
+       f"through -- is now one of the head's verified files "
+       f"({len(_vh155)} files) and ADMITS at its manifest digest, while a "
+       f"single changed byte of `norm_mu` refuses `{_r1}` at the point of "
+       f"reading and refuses `verify_head` too. Before this, that byte "
+       f"could change every score and the four model files would still "
+       f"verify -- the declared model identity would not have moved")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

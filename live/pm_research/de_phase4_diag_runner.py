@@ -8613,6 +8613,9 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
     scores: dict = {(c, h): {} for c in coins for h in heads}
     statuses: dict = {(c, h): {} for c in coins for h in heads}
     split_by_gen: dict = {c: {} for c in coins}
+    # DE 155 (4): the generations ANY chunk covered, per arm. The corrected
+    # NO_ROWS_KEPT is a fact about this UNION, not a per-chunk count.
+    _seen_gens: dict = {(c, h): set() for c in coins for h in heads}
     drops: dict = {c: {} for c in coins}
     kept_total: dict = {c: 0 for c in coins}
     n_chunks = 0
@@ -8660,14 +8663,44 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                     if not b["kept"]:
                         continue
                     for head in heads:
+                        # DE 155 (4): this chunk does NOT get to count the
+                        # day's uncovered generations -- see below.
                         sc, st, sb = generation_scores(
                             b, refs[coin], coin=coin, head=head,
-                            split_of=tp["split_of"])
-                        scores[(coin, head)].update(sc)
+                            split_of=tp["split_of"], count_missing=False)
+                        # ---- DE 155 (6): A MERGE THAT COMBINES ---------
+                        # `.update()` let a later chunk OVERWRITE a key an
+                        # earlier one had produced. Under DE 155 (1) the
+                        # key is (slug, side, t_start) -- ONE ROW -- so a
+                        # collision means two chunks scored the SAME row,
+                        # and the rule that governs it is the one (1) uses
+                        # WITHIN a generation: at the same instant the
+                        # higher score is what that instant knew. It is
+                        # NOT a global maximum over the generation -- that
+                        # is precisely the aggregation (1) removed -- and
+                        # it cannot be, because these keys are per row.
+                        for _k, _v in sc.items():
+                            _prev = scores[(coin, head)].get(_k)
+                            if _prev is None or _v["score"] > _prev["score"]:
+                                scores[(coin, head)][_k] = _v
                         for kk, vv in st.items():
-                            statuses[(coin, head)][kk] = \
-                                statuses[(coin, head)].get(kk, 0) + vv
-                        split_by_gen[coin].update(sb)
+                            if isinstance(vv, (int, float)):
+                                statuses[(coin, head)][kk] = \
+                                    statuses[(coin, head)].get(kk, 0) + vv
+                            else:
+                                statuses[(coin, head)][kk] = vv
+                        # AND THE SPLIT LABELS COMBINE rather than
+                        # overwrite: two chunks disagreeing about a
+                        # generation's split makes it MIXED, which is what
+                        # the label means. `.update()` kept whichever
+                        # chunk ran last.
+                        for _g, _lab in sb.items():
+                            _p = split_by_gen[coin].get(_g)
+                            split_by_gen[coin][_g] = (
+                                _lab if _p is None or _p == _lab
+                                else "MIXED")
+                        _seen_gens[(coin, head)].update(
+                            (k[0], k[1], v["gen"]) for k, v in sc.items())
                 del blocks
                 chunk_path.unlink(missing_ok=True)
                 if log:
@@ -8679,6 +8712,25 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                 del tp                       # release this split's index
     finally:
         tmp.cleanup()
+    # ---- DE 155 (4): THE CORRECTED EXCLUSION COUNT ---------------------
+    # `NO_ROWS_KEPT` was counted INSIDE each chunk against the WHOLE day's
+    # reference and then SUMMED: every generation a chunk did not cover
+    # was counted once per chunk. On 09-03 that reported 12,853,409 across
+    # 42 chunks for a day whose true uncovered count is 15,735 -- three
+    # orders of magnitude, and it read as a catastrophic exclusion rate.
+    # A generation is uncovered only if NO chunk covered it, so it is
+    # computed here, once, from the union.
+    for (_c, _h), _seen in _seen_gens.items():
+        _all = {(sl, sd, g["gen"])
+                for sl, sides in refs[_c].items()
+                for sd in HSP.SIDES for g in sides[sd]}
+        statuses[(_c, _h)]["NO_ROWS_KEPT"] = len(_all - _seen)
+        statuses[(_c, _h)]["N_REFERENCE_GENERATIONS"] = len(_all)
+        statuses[(_c, _h)]["NO_ROWS_KEPT_SCOPE"] = (
+            "generations in the day's reference that NO chunk covered, "
+            "computed once from the union -- not the per-chunk count "
+            "summed, which counted every generation outside a chunk once "
+            "per chunk")
     out = {"assembly": {"splits": list(got),
                         "split_set": split_set_name(got),
                         "stages": stages,
@@ -8743,7 +8795,8 @@ def _fragment_chunks(dst_dir: Path, *, chunk_windows: int,
 
 
 def generation_scores(blocks: dict, reference: dict, *, coin: str,
-                      head: str, split_of: dict | None = None) -> tuple:
+                      head: str, split_of: dict | None = None,
+                      count_missing: bool = True) -> tuple:
     """(slug, side, t0) -> one score per GENERATION, the exclusions, and
     THE SPLIT EACH GENERATION'S ROWS CAME FROM.
 
@@ -8810,7 +8863,16 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
             for g in sides[side]:
                 got = by_gen.get((slug, side, g["gen"]))
                 if not got:
-                    statuses["NO_ROWS_KEPT"] += 1
+                    # DE 155 (4): ONLY THE CALLER THAT SEES THE WHOLE DAY
+                    # MAY COUNT THIS. On a chunked run this function is
+                    # handed ONE CHUNK's rows and the WHOLE DAY's
+                    # reference, so every generation outside the chunk
+                    # looks "kept nothing" -- and the counts were summed
+                    # over 42 chunks. A generation is only truly uncovered
+                    # if NO chunk covered it, which is a fact about the
+                    # union and cannot be computed here.
+                    if count_missing:
+                        statuses["NO_ROWS_KEPT"] += 1
                     continue
                 # ---- DE 155 (1): ONE ENTRY PER ROW, AT ITS OWN TIME ----
                 # WHAT THIS REPLACED, and why it was a defect:
@@ -8845,7 +8907,8 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
                     # higher score is what that instant knew.
                     per_t[t] = sc if t not in per_t else max(per_t[t], sc)
                 if not per_t:
-                    statuses["NO_ROWS_KEPT"] += 1
+                    if count_missing:
+                        statuses["NO_ROWS_KEPT"] += 1
                     continue
                 for t, sc in per_t.items():
                     scores[(slug, side, t)] = {"score": sc,
@@ -8868,9 +8931,19 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
     # (`blocks["drops"]` is aggregate, by reason, for the whole coin).
     statuses["PARTIAL_ROWS_STATUS"] = (
         "NOT_COMPUTABLE_NO_PER_GENERATION_INPUT_COUNT: `_rows_expected` "
-        "returns 0, so PARTIAL_ROWS is 0 by construction and is NOT "
-        "evidence that no generation was partial. Closing it requires the "
-        "feature pass to report rows-in per generation.")
+        "returns 0, so PARTIAL_ROWS is 0 BY CONSTRUCTION and is NOT "
+        "evidence that no generation was partial (rule 11). WHAT IS "
+        "MISSING, EXACTLY: `phase2_arms._feature_pass` returns per coin "
+        "{PM, FN, ST, kept, drops} -- `kept` is the SURVIVING rows and "
+        "`drops` is a counter BY REASON over the whole coin. The rows it "
+        "dropped are not returned and their generation identity is not "
+        "retained, so no caller can know how many rows a generation "
+        "STARTED with. Closing this needs ONE additional return value "
+        "from that function: rows-in per (slug, side, gen), counted "
+        "before the drops. THAT FUNCTION IS NOT DE's SURFACE, so it is "
+        "named here rather than changed. It matters more since DE 155 "
+        "(1): a MAXIMUM is insensitive to a missing row, a FIRST CROSSING "
+        "is not.")
     return scores, statuses, split_by_gen
 
 
@@ -8882,7 +8955,12 @@ def _rows_expected(key, reference: dict) -> int:
     comparison is left to the run, which has both. Returns the observed
     count so `PARTIAL_ROWS` is 0 until the run supplies the fit's own
     per-generation row counts -- an honest zero, declared here rather than
-    a number computed from the wrong table."""
+    a number computed from the wrong table.
+
+    DE 155 (5): STILL ZERO, and the exact missing input is named in
+    `PARTIAL_ROWS_STATUS` -- `phase2_arms._feature_pass` discards which
+    generation each DROPPED row belonged to, so rows-in per generation
+    exists nowhere. That function is not DE's surface."""
     return 0
 
 
@@ -8929,7 +9007,26 @@ def _head_scorer(head: str, coin: str, gen_scores: dict | None = None):
             # DE 155 (1): the value is {score, gen, t0} -- the score's own
             # generation and start travel with it, because the stream is
             # now per-ROW and the key alone no longer names the generation.
-            return gen_scores[k]["score"]
+            _v = gen_scores[k]
+            if not isinstance(_v, dict):
+                # SITE: scorer#3
+                # DE 155 (1): AN ASSEMBLY BUILT BEFORE THE REPAIR. Day
+                # books CACHE `asm["by_arm"]`, and one built by the old
+                # `generation_scores` holds a bare float per GENERATION,
+                # keyed at the generation's start, with the row times
+                # already discarded. It cannot be replayed causally --
+                # there is nothing left to say when each score existed --
+                # and scoring from it would produce "corrected" numbers
+                # from uncorrected inputs. Every book must be REBUILT.
+                raise DiagRefused(
+                    f"ASSEMBLY_PREDATES_CAUSAL_SCORING: the assembled "
+                    f"score for {k} is a bare {type(_v).__name__}, which "
+                    f"is the pre-DE-155 shape: one MAXIMUM per generation "
+                    f"stamped at the generation's start. The row times it "
+                    f"was built from are gone, so this book cannot be "
+                    f"scored under the first-crossing rule. Rebuild the "
+                    f"book's assembly.")
+            return _v["score"]
         return _score
     # SITE: scorer#1
     raise DiagRefused(

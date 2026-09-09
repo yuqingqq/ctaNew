@@ -8226,7 +8226,7 @@ def synthetic_day_book(day: str, *, n_slugs: int = 24, n_gens: int = 2,
                 mk = (-20.0 if harmful else 20.0) + rnd.uniform(-2.0, 2.0)
                 gens.append(_gen(g + 1, t0, t0 + 20.0,
                                  [(t0 + 5.0, 1.0, mk)]))
-                harm[(s, sd, float(t0))] = harmful
+                harm[(s, sd, float(t0))] = (harmful, g + 1, float(t0))
             reference[s][sd] = gens
         statuses[s] = "OK"
         terminal_marks[s] = {"t": base_t + i * 300 + 300, "mid_cents": 0.5}
@@ -8236,14 +8236,20 @@ def synthetic_day_book(day: str, *, n_slugs: int = 24, n_gens: int = 2,
     #: DIFFERENT values, because two heads that agree on every score are
     #: one head and would drive only one branch.
     def _scores(pol):
+        # DE 155 (1): the assembled value is {score, gen, t0} -- the shape
+        # a per-ROW stream needs, because the key alone no longer names
+        # the generation. The synthetic day has ONE row per generation, at
+        # the generation's own t0, so the fixture is causal by
+        # construction and exercises the same code path a real day does.
         out = {}
-        for k, is_harm in harm.items():
+        for k, (is_harm, gen, t0) in harm.items():
             if pol == "thin":
-                out[k] = 0.01
+                v = 0.01
             elif pol == "harmful":
-                out[k] = 0.90 if is_harm else 0.05
+                v = 0.90 if is_harm else 0.05
             else:
-                out[k] = 0.05 if is_harm else 0.90
+                v = 0.05 if is_harm else 0.90
+            out[k] = {"score": v, "gen": gen, "t0": t0}
         return out
 
     asm = {"by_arm": {("btc", spec["head"]): (
