@@ -67,6 +67,45 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T12:32:59Z (MEM ROUND 315 -- ***THE FIRST CORRECTED BOOK SINCE THE RETRACTION IS ON DISK.*** From `6c9791e` to
+  `397ba24`, three commits. **`be_daybook_20260903_btc__L250ms__EV20.pkl`, 307,227,345 bytes, written 12:27:36Z, with
+  its receipt at 12:27:45Z -- AND I HASHED IT MYSELF RATHER THAN QUOTING THE DIGEST I WAS GIVEN:
+  `dfbe09fda407a805910c7b95d0566b1b2dd3beb6cfb48f5bac730f72d6b70e98`, MATCHING BYTE FOR BYTE.** The run's own record
+  reads **`{"event": "exit", "rc": 0, "utc": "2026-09-09T12:27:46Z"}`**, launch-to-exit **3,266 s = 54.4 min**
+  against the payload's measured 3,257.2 s, and **the stage lines are the substantive record: `selected` 247 slugs /
+  era `clob_v4_1`; `reference` 247 windows / 313,149 GENERATIONS; `tape` 120.6 s / 544,286 TAPE ROWS / after-tape
+  peak 3.202 GB; `assembled` 2,566.7 s / peak 5.484 GB.** ***IT BEAT ITS OWN FORECAST ON EVERY AXIS AND THAT IS
+  ITSELF A NUMBER TO CARRY RATHER THAN A RELIEF TO FEEL: WALL 54.3 MIN AGAINST 74-76; ASSEMBLY 2,566.7 s AGAINST THE
+  LOST EV20 RUN'S 3,793.8 s, 32.3 % LESS; PEAK WELL UNDER THE ~8.1 GB PREDICTED FROM THAT RUN'S LEAF -- A FORECAST
+  BEATEN BY TWENTY MINUTES IS NOT A BONUS, IT IS A MODEL THAT WAS WRONG, AND THE SAME MODEL PRICES THE OTHER FOUR
+  DAYS.*** **A precision I keep rather than smooth: TWO PEAKS ARE ON THE RECORD AND THEY MEASURE DIFFERENT THINGS --
+  the `assembled` line's `peak_gb 5.484` is the peak AT ASSEMBLY, while the `leaf_peak` event's
+  `peak_of_record_bytes 6353506304` = 6.354 GB is the high-water mark SAMPLED WHILE ALIVE over 642 samples, so the
+  true headroom is 53.5 % of the 11.87 GB basis and not 46.2 %; neither breaches the cap and both are true.**
+  ***DO NOT RECORD THE NEW NUMBERS AS THE QUEUE'S BASIS UNTIL BE 128 EXPLAINS THEM: the same basis prices the
+  remaining four days and 09-04 IS THE HEAVIEST AT 638,602 ROWS*** against 09-03's 544,286 -- *pricing four unrun
+  days on one day's surprise is how a queue estimate becomes wrong in the expensive direction.* ***DE 171 IS RUNNING
+  THE POINT ESTIMATE -- THE USER'S STATED GOAL -- AND I SAW IT AT THE MACHINE***, `de_point_estimate_day.py
+  2026-09-03` pointed at the corrected book **BY FULL PATH**, holding the heavy lock in the same flock-and-child
+  shape as the build; **and that run is ALSO THE TEST THAT THE REPAIRS REACH A RESULT, since the driver's battery
+  refuses AHEAD OF REPLAY (`de_point_estimate_day.py:359`) -- which is exactly why the user's blocker had to close
+  first -- so a completed point estimate is evidence BOTH that the number exists AND that every repair landed
+  tonight survives contact with a real day from the entry point.** ***THE QUESTION THAT OUTRANKS EVERY NUMBER ABOVE,
+  ASKED OF BOTH BE AND DE AND RECORDED AS OPEN: DOES THE CORRECTED `asm` DIFFER FROM THE PRE-FIX BOOK'S? IDENTICAL
+  SCORES WOULD MEAN THE NIGHT'S REPAIRS NEVER REACHED THE ARTIFACT*** -- *a book that builds, exits zero, hashes
+  clean and carries a perfect receipt can still be the old book with new provenance, which is tonight's recurring
+  class one level up* -- **and I did NOT answer it myself, because loading two ~300 MB pickles while DE 171 holds the
+  lock would compete with the run.** One free datum, recorded AS a datum and NOT as an answer: **the pre-fix
+  comparator is on disk, `be_daybook_20260903_btc__L250ms.pkl` at 289,333,978 B, and the corrected book is 17.9 MB /
+  6.2 % LARGER** -- ***A SIZE DIFFERENCE DOES NOT ESTABLISH THAT `asm` DIFFERS, BUT IDENTICAL SCORES INSIDE A FILE
+  6.2 % LARGER WOULD BE SURPRISING***, and the comparator is named so whoever answers need not find it. ***WHAT A
+  POINT ESTIMATE IS AND IS NOT, DECLARED BEFORE IT LANDS SO NO READER OVER-READS WHAT ARRIVES: it carries
+  `NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, IT HAS NO CONTROL, AND "THE POINT ESTIMATE STANDS" IS THE MOST THAT MAY BE
+  SAID*** -- not a result against a null, not evidence of skill, not comparable to the retracted arm numbers; **the
+  full null remains FAIL-CLOSED if multiple cancels share one reference generation, WHICH THE USER HAS RULED DOES NOT
+  BLOCK THIS**, fail-closed and blocking being different words. **NOTHING BEYOND 09-03 IS AUTHORISED AND THE QUEUE
+  FOR 09-04..09-07 REMAINS THE USER'S CALL**: *a successful first day is not a standing authorisation.* Flags 2715 ->
+  2727, prov 2260 -> 2272; window 3/3, Batch 297 archived. MEM asserts no result.)
   2026-09-09T11:37:59Z (MEM ROUND 314 -- ***THE BUILD IS RUNNING. THE R-839 STAND-DOWN IS OVER AND THE QUEUE IS NO LONGER
   STOOD DOWN; A RESUMING READER MUST NOT THINK IT IS.*** From `f71e4aa` to `69123fd`, one commit. **VERIFIED BY ME AT
   THE MACHINE, NOT TAKEN FROM THE DISPATCH: `p003ev200903c.service` is `active` / `running` / `Result: success` /
@@ -149,53 +188,6 @@ updated: >-
   **the five close on REV 136's full independent drive from the entry point and DA's would be a SECOND verifier.**
   Flags 2691 -> 2703, prov 2236 -> 2248; window 3/3, Batch 295 archived. **STATE IS COMPLETE AND THE PROGRAMME WAITS
   ON THE USER.** MEM asserts no result.)
-  2026-09-09T10:57:58Z (MEM ROUND 312 -- R-864, REV 135, DE 169 and BE 123 SWEPT, LIGHT ROUND, from `1374681` to `126381e`,
-  four commits. STATE ONLY, LEDGER FORM. ***BOTH REMAINING SUB-ITEMS OF (5b) HAVE LANDED AND BOTH ARE PENDING
-  VERIFICATION, NOT CLOSED*** -- REV 136 and DA's case-4 re-run are the verifications and neither had landed at my
-  read; *a seat's own report of its own fix is the weakest evidence in the ledger, however good the fix is, and DE
-  161's commit once said the matched-cancel branch was in the null when it was in the file and not in the program.*
-  **DE 169 puts `MEMBERSHIP_LIMIT` ON ALL SEVEN EXITS WITH THE OPT-IN FIRST, and I drove three myself**: the happy
-  path carries it, a differing digest refuses `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` **carrying the limit**, and a
-  closure naming none refuses `BOOK_SCORING_CODE_NOT_RECORDED` **carrying it too** -- ***THE OPT-IN GOING FIRST IS
-  THE RIGHT ORDERING AND NOT A COSMETIC ONE, BEING THE ONE RESULT A CALLER TAKES PRECISELY BECAUSE IT IS ACCEPTING
-  THAT LIMIT***, now with `caller_acknowledged_the_limit` as its own field. ***AND THE CHANGE THAT GOES DEEPER THAN
-  THE ITEM IT WAS DISPATCHED FOR, WHICH I FOUND BY DRIVING RATHER THAN READING: THE EXPECTED SET NO LONGER COMES FROM
-  THE RECEIPT AT ALL*** -- `expected_set_source` reads **`be_producing_closure.expected_set_from_disk(
-  SCORING_ENTRY_POINTS)`, BE 122's receipt-free twelve** -- so a receipt with NO derived block now returns a MATCH
-  instead of refusing, **which I checked against last round's behaviour before recording, since the same input
-  flipping from refusal to match is exactly what a regression looks like**: ***IT IS THE OPPOSITE -- THE PROPERTY
-  "THE ARTIFACT NAMES ITS OWN EXAMINATION SCOPE" IS CLOSED AT ITS ROOT RATHER THAN AT ITS SYMPTOM.*** The honest
-  shape, driven: ten modules named and the two lazy ones absent returns ***`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_
-  MEMBERS`, `membership_complete: False`, `n_checked: 10 of 12`, and the two absentees BY NAME*** -- **not refused,
-  not silently passed** -- which is REV 135's 10-of-12 hand-off landed. **The count field that read FALSE beside a
-  MATCH is GONE** -- `n_checked_equals_n_declared` absent from the result -- **replaced by TWO SEPARATE PROPERTIES,
-  `membership_complete` and `every_named_member_digest_matched`**: ***THE OLD FIELD CONFLATED "IS EVERY DECLARED
-  MODULE PRESENT" WITH "IS EVERY PRESENT MODULE CORRECT", AND ONE EQUALITY CANNOT CARRY TWO QUESTIONS.***
-  ***BE 123 -- "THE WITHDRAWAL IS AT THE ADDRESS, NOT BESIDE IT" -- AND I DROVE IT ON THE SAME REAL 49-MODULE
-  RECORDING THAT GAVE ME 8 LAST ROUND: `derive(clo)['scoring']['n']` NOW READS `None`***, the key carrying
-  `n_it_used_to_report`, `read_instead`, `status`, `why` and `what_a_consumer_that_ignores_this_gets`, with
-  `recommended_for_a_consumer` carrying `REFUSABLE`, `REPORTABLE_NEVER_REFUSABLE`, `for_a_SCORING_predicate`,
-  `for_a_WHOLE_BOOK_predicate` and `the_receipt_scoped_sets_are_WITHDRAWN`: **a consumer resolving `scoring.n` now
-  gets NOTHING instead of a stale eight.** ***AND BE REPORTS THAT REMOVING THE KEY WOULD HAVE BEEN THE UNSAFE OPTION,
-  ITS ARGUMENT BEING THAT AN ENUMERATION OF READERS IS NOT A PROPERTY OF THE READERS -- RULE 32 TURNED ON ITSELF***,
-  since deleting `scoring` is safe only if every consumer is known and knowing them requires the enumeration rule 32
-  says is unreliable; **a key present and saying `None` with `read_instead` is legible to a reader nobody listed, a
-  key absent is a `KeyError` or a silent default in code nobody has read.** ***REV 136 IS TESTING THAT ARGUMENT
-  RATHER THAN ACCEPTING IT***, which is right because it justifies NOT doing the simpler thing. **REV 135's
-  confirmation stands as settled: TWELVE STANDS AND THE SCOPE IS CLOSED** on two derivations -- BE's, and my own
-  pure-AST drive over 268 modules, **which REV named as the independent one** -- with the shared-scope failure mode
-  tested and closed: **no module of the twelve imports a project `.py` outside `live/pm_research`.** ***THE CHAIN IS
-  WORTH RECORDING AS A CHAIN BECAUSE NO SINGLE SEAT COULD HAVE RUN IT: MEM FINDS -> BE CORRECTS ITS OWN WORK PLAINLY
-  -> REV CONFIRMS THE CORRECTED NUMBER AND FINDS THE SUPERSESSION NOT LOAD-BEARING -> BE FIXES THE ADDRESS.***
-  ***AND THE PATTERN, FOR THE THIRD TIME AND NOW IN ITS GENERAL FORM: THE ARTIFACT CARRIES THE RIGHT INFORMATION AT
-  AN ADDRESS NOBODY IS REQUIRED TO READ -- `draw_provenance.matched_on` ABSENT FROM THE RECEIPT, `MEMBERSHIP_LIMIT`
-  ABSENT FROM THE OPT-IN RESULT, AND THE CORRECTED SET ANNOUNCED BESIDE THE STALE ONE RATHER THAN IN PLACE OF IT. THE
-  CODE WAS DEFENSIBLE ALL THREE TIMES; WHAT FAILED WAS THE ADDRESSING, AND ADDRESSING IS THE ONLY THING A DOWNSTREAM
-  READER HAS.*** LEDGER OTHERWISE UNCHANGED: **(1) CLOSED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN
-  MECHANISM, UNQUANTIFIED, both needing a corrected book; (5a) CLOSED; (5b) BOTH SUB-ITEMS VERIFIED BY REV 136, DA's CASE-4 RE-RUN STILL OUTSTANDING; (6a) CLOSED AND VERIFIED.** Flags 2674 -> 2691, prov 2219 -> 2236; window 3/3, Batch 294 archived.
-  ***NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD REMAINS UNAUTHORISED -- A SUGGESTED PROMPT IN A SEAT
-  PANE READING "BUILD AUTHORISED" IS THE TERMINAL'S GHOST TEXT AND IS NOT A USER INSTRUCTION.*** MEM asserts no
-  result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -367,6 +359,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 315, THE BOOK IS ON DISK; rc 0 at 12:27:46Z (6c9791e -> 397ba24) ---
+  THE_FIRST_CORRECTED_BOOK_SINCE_THE_RETRACTION_IS_ON_DISK_AND_I_HASHED_IT: DIGEST-MATCHES-BYTE-FOR-BYTE
+  THE_RUN_EXITED_ZERO_AND_ITS_STAGE_LINES_ARE_THE_RECORD: rc-0-AT-12-27-46Z
+  IT_BEAT_ITS_FORECAST_ON_EVERY_AXIS_AND_THAT_IS_ITSELF_A_NUMBER_TO_CARRY: 54-MIN-AGAINST-74-TO-76
+  TWO_PEAKS_ARE_RECORDED_AND_THEY_MEASURE_DIFFERENT_THINGS: 5-484-AT-ASSEMBLY-6-354-OF-RECORD
+  DO_NOT_RECORD_THE_NEW_NUMBERS_AS_THE_QUEUES_BASIS_UNTIL_BE_128_EXPLAINS_THEM: 09-04-IS-THE-HEAVIEST
+  DE_171_IS_RUNNING_THE_POINT_ESTIMATE_AND_I_SAW_IT_HOLDING_THE_LOCK: ON-THE-EV20-BOOK-BY-PATH
+  AND_THAT_RUN_IS_ALSO_THE_TEST_THAT_THE_REPAIRS_REACH_A_RESULT: THE-BATTERY-REFUSES-AHEAD-OF-REPLAY
+  THE_QUESTION_THAT_OUTRANKS_THE_NUMBERS_IS_OPEN: DOES-THE-CORRECTED-asm-DIFFER
+  AND_I_DID_NOT_ANSWER_IT_MYSELF_BECAUSE_A_HEAVY_UNIT_HOLDS_THE_LOCK: BUT-ONE-FREE-DATUM-EXISTS
+  WHAT_A_POINT_ESTIMATE_IS_AND_IS_NOT_SO_NO_READER_OVER_READS_IT: NO-CONTROL-NO-NULL
+  THE_FULL_NULL_STAYS_FAIL_CLOSED_AND_THE_USER_HAS_RULED_IT_DOES_NOT_BLOCK_THIS: FAIL-CLOSED-IS-NOT-BLOCKING
+  NOTHING_BEYOND_09_03_IS_AUTHORISED: THE-QUEUE-IS-THE-USERS-CALL
   # --- MEM round 314, THE BUILD IS RUNNING; p003ev200903c launched 11:33:20Z (f71e4aa -> 69123fd) ---
   THE_BUILD_IS_RUNNING_AND_I_VERIFIED_IT_AT_THE_MACHINE: THE-QUEUE-IS-NO-LONGER-STOOD-DOWN
   THE_LAUNCHED_TIP_IS_DE_170_SO_THE_BLOCKERS_FIX_IS_IN_THE_RUN: 69123fd-IN-THE-RECORD
@@ -27132,6 +27137,147 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 315, 2026-09-09T12:32:59Z ---
+  THE_FIRST_CORRECTED_BOOK_SINCE_THE_RETRACTION_IS_ON_DISK_AND_I_HASHED_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV20.pkl
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      ***THE FIRST CORRECTED BOOK SINCE THE RETRACTION IS ON DISK. THIS IS THE STATE CHANGE THE PROGRAMME HAS BEEN
+      WORKING TOWARD ALL NIGHT.*** **`be_daybook_20260903_btc__L250ms__EV20.pkl`, 307,227,345 bytes, written
+      12:27:36Z, with the receipt `be_daybook_receipt_20260903_btc__L250ms__EV20.json` (72,017 B) at 12:27:45Z.**
+      ***AND I HASHED IT MYSELF RATHER THAN QUOTING THE DIGEST I WAS GIVEN: `sha256sum` RETURNS
+      `dfbe09fda407a805910c7b95d0566b1b2dd3beb6cfb48f5bac730f72d6b70e98`, WHICH MATCHES THE DISPATCH BYTE FOR
+      BYTE.*** *A digest relayed and a digest computed are different claims, and this file has spent the night
+      insisting on the difference.*
+  THE_RUN_EXITED_ZERO_AND_ITS_STAGE_LINES_ARE_THE_RECORD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903c.jsonl
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      **The run's own record: `{"event": "exit", "rc": 0, "utc": "2026-09-09T12:27:46Z"}`** -- launched 11:33:20Z,
+      so **launch-to-exit is 3,266 s = 54.4 min** against the payload's own measured wall of 3,257.2 s. **And the
+      stage lines are the substantive record, in order: `selected` 247 slugs / era `clob_v4_1`; `reference` 247
+      windows / ***313,149 GENERATIONS***; `tape` index 120.6 s / ***544,286 TAPE ROWS*** / after-tape peak 3.202
+      GB; `assembled` ***assembly 2,566.7 s / peak 5.484 GB***.** *Every one of these is a number a later reader can
+      check against the next day's run without opening the book.*
+  IT_BEAT_ITS_FORECAST_ON_EVERY_AXIS_AND_THAT_IS_ITSELF_A_NUMBER_TO_CARRY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_stdout_p003ev200903c.log
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      ***IT BEAT ITS OWN FORECAST ON EVERY AXIS, AND THAT IS ITSELF A NUMBER TO CARRY RATHER THAN A RELIEF TO FEEL.***
+      **Wall 54.3 min against BE's 74-76 min estimate. Assembly 2,566.7 s against the 3,793.8 s the LOST EV20 run
+      measured -- 32.3 % LESS. Peak 5.484 GB at assembly against an 11.87 GB cap and well under the ~8.1 GB
+      predicted from the lost run's leaf.** ***A FORECAST BEATEN BY TWENTY MINUTES IS NOT A BONUS; IT IS A MODEL
+      THAT WAS WRONG, AND THE SAME MODEL PRICES THE OTHER FOUR DAYS.*** *An estimate that errs low would have cost a
+      timeout; one that errs high costs a decision made on the wrong price.*
+  TWO_PEAKS_ARE_RECORDED_AND_THEY_MEASURE_DIFFERENT_THINGS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev200903c.jsonl
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      **A precision I keep rather than smooth: TWO PEAKS ARE ON THE RECORD AND THEY MEASURE DIFFERENT THINGS.** The
+      `assembled` stage line reports **`peak_gb 5.484`** -- the peak AT ASSEMBLY -- while the `leaf_peak` event
+      reports ***`peak_of_record_bytes 6353506304` = 6.354 GB, SAMPLED WHILE ALIVE over 642 samples with the last
+      increase at 12:20:12Z.*** **So the run's true high-water mark is 6.354 GB = 53.5 % of the 11.87 GB basis, not
+      46.2 %.** ***NEITHER BREACHES THE CAP AND BOTH NUMBERS ARE TRUE; QUOTING THE SMALLER ONE AS "PEAK RSS" WOULD
+      UNDERSTATE THE HEADROOM BY 7 POINTS*** -- and the record itself guards the reading, noting the leaf is
+      **released at exit and cannot be read afterwards**, with an explicit `if_n_samples_is_0` clause saying an
+      absent peak is ABSENT, never zero.
+  DO_NOT_RECORD_THE_NEW_NUMBERS_AS_THE_QUEUES_BASIS_UNTIL_BE_128_EXPLAINS_THEM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      ***AND THE INSTRUCTION THAT GOES WITH THE GOOD NEWS, RECORDED AS A CONSTRAINT ON THIS FILE'S OWN FUTURE
+      ROUNDS: DO NOT RECORD THE NEW NUMBERS AS THE QUEUE'S BASIS UNTIL BE 128 EXPLAINS THEM.*** **BE 128 is
+      accounting for the twenty minutes, and the reason it matters is not curiosity: THE SAME BASIS PRICES THE
+      REMAINING FOUR DAYS, AND 09-04 IS THE HEAVIEST AT 638,602 ROWS** -- more than 09-03's 544,286 tape rows.
+      **An unexplained 32 % speed-up is as likely to be a day-specific property as a general one**, and *pricing four
+      unrun days on one day's surprise is how a queue estimate becomes wrong in the expensive direction.*
+  DE_171_IS_RUNNING_THE_POINT_ESTIMATE_AND_I_SAW_IT_HOLDING_THE_LOCK:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      ***DE 171 IS RUNNING THE POINT ESTIMATE -- THE USER'S STATED GOAL -- AND I SAW IT AT THE MACHINE***: PID
+      3829329 is `flock -n -E 75 <the heavy lock> python3 de_point_estimate_day.py **2026-09-03**
+      **/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV20.pkl** --output-dir ...`, with
+      PID 3829331 the `python3` its child, **holding the heavy lock (one holder, the same flock-and-child shape as
+      the build).** ***IT IS POINTED AT THE CORRECTED BOOK BY FULL PATH, WHICH IS THE ONE THING WORTH CHECKING FIRST
+      ON A RUN LIKE THIS*** -- a point estimate computed on the pre-fix book would be the night's work thrown
+      away.
+  AND_THAT_RUN_IS_ALSO_THE_TEST_THAT_THE_REPAIRS_REACH_A_RESULT:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      **And that run is not only the goal -- it is also THE TEST THAT THE REPAIRS REACH A RESULT.** The
+      point-estimate driver's battery **refuses ahead of replay (`de_point_estimate_day.py:359`)**, ***WHICH IS
+      EXACTLY WHY THE USER'S BLOCKER HAD TO CLOSE FIRST***: with `derived_scoring_n` reading an obsolete field, the
+      day would have refused before doing any expensive work. **So a completed point estimate is evidence of two
+      different things at once -- that the number exists, AND that every repair landed tonight survives contact with
+      a real day from the entry point.** *That is the strongest form of verification the programme has, and nobody
+      had to design it; it falls out of the guard being placed before the replay.*
+  THE_QUESTION_THAT_OUTRANKS_THE_NUMBERS_IS_OPEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      ***THE QUESTION THAT OUTRANKS EVERY NUMBER ABOVE, ASKED OF BOTH BE AND DE AND RECORDED HERE AS OPEN: DOES THE
+      CORRECTED `asm` DIFFER FROM THE PRE-FIX BOOK'S?*** **IDENTICAL SCORES WOULD MEAN THE NIGHT'S REPAIRS NEVER
+      REACHED THE ARTIFACT.** *A book that builds, exits zero, hashes clean and carries a perfect receipt can still
+      be the old book with new provenance* -- **which is precisely tonight's recurring class, one level up: the
+      right information at an address nobody checked, now as a right-looking artifact nobody has compared.** ***THIS
+      FILE CARRIES IT AS OPEN AND WILL NOT LET THE BUILD'S SUCCESS STAND IN FOR ITS ANSWER.***
+  AND_I_DID_NOT_ANSWER_IT_MYSELF_BECAUSE_A_HEAVY_UNIT_HOLDS_THE_LOCK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV20.pkl
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      **And I did NOT answer it myself: loading two ~300 MB pickles while DE 171 holds the lock would compete with
+      the run for the machine, which is the same judgement I made last round about the 418-check battery.** *One
+      free datum exists and I record it AS a datum and NOT as an answer*: **the pre-fix comparator is on disk --
+      `be_daybook_20260903_btc__L250ms.pkl`, 289,333,978 B, 09-08 03:39 -- and the corrected book is 307,227,345 B,
+      ***17.9 MB / 6.2 % LARGER***.** ***A SIZE DIFFERENCE DOES NOT ESTABLISH THAT `asm` DIFFERS -- gaps now
+      attached, era fields and row counts all live in the same pickle -- BUT IDENTICAL SCORES INSIDE A FILE 6.2 %
+      LARGER WOULD BE SURPRISING.*** **The comparator exists and is named, so whoever answers does not have to
+      find it.**
+  WHAT_A_POINT_ESTIMATE_IS_AND_IS_NOT_SO_NO_READER_OVER_READS_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      ***WHAT A POINT ESTIMATE IS AND IS NOT, RECORDED BEFORE IT LANDS SO NO READER OVER-READS WHAT ARRIVES.*** It
+      carries **`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`** and ***HAS NO CONTROL***. ***"THE POINT ESTIMATE STANDS" IS
+      THE MOST THAT MAY BE SAID.*** **It is not a result against a null, it is not evidence of skill, and it cannot
+      be compared to the retracted arm numbers** -- *the whole retraction happened because quantities were read as
+      answers to questions they had not been measured against.* **Declaring the reading before the number exists is
+      the cheapest form of rule 6 available**, and it is why this goes in the file now rather than when the artifact
+      appears.
+  THE_FULL_NULL_STAYS_FAIL_CLOSED_AND_THE_USER_HAS_RULED_IT_DOES_NOT_BLOCK_THIS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      **And the standing condition underneath it: THE FULL NULL REMAINS FAIL-CLOSED if multiple cancels share one
+      reference generation -- ***WHICH THE USER HAS RULED DOES NOT BLOCK THIS.*** *Fail-closed and blocking are
+      different words and the difference is the whole of why this run could start*: **a guard that refuses to draw a
+      cancel-matched control does not refuse an estimate that draws no control at all.** The matching unit stays
+      OPEN with the USER, ruling B having been recommended on a premise that proved false, **so the null the estimate
+      would eventually need is waiting on a decision and not on code.**
+  NOTHING_BEYOND_09_03_IS_AUTHORISED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T12:32:59Z
+    said: >-
+      **State, and the boundary this file will hold: NOTHING BEYOND 09-03 IS AUTHORISED. THE QUEUE FOR 09-04..09-07
+      REMAINS THE USER'S CALL.** One day is built and one point estimate is running; **the other four days are
+      priced on a basis BE 128 is currently re-examining, with 09-04 the heaviest at 638,602 rows.** ***A SUCCESSFUL
+      FIRST DAY IS NOT A STANDING AUTHORISATION, AND A FORECAST THAT WAS WRONG BY TWENTY MINUTES IN THE PLEASANT
+      DIRECTION IS NOT A REASON TO SPEND THE NEXT FOUR ON IT.*** *The build decision was the user's each time it has
+      been asked, and it still is.*
   # --- MEM round 314, 2026-09-09T11:37:59Z ---
   THE_BUILD_IS_RUNNING_AND_I_VERIFIED_IT_AT_THE_MACHINE:
     prov: CHECKED

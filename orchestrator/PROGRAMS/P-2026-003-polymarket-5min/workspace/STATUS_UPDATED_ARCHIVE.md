@@ -21716,3 +21716,55 @@ generation and the window went 4 → 3. Nothing rewritten.
   needing a corrected book; (5a) CLOSED; (6a) CLOSED AND VERIFIED.** Flags 2658 -> 2674, prov 2203 -> 2219; window
   3/3, Batch 293 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z.** MEM asserts no result.)
 ```
+
+## Batch 297 — archived 2026-09-09T12:32:59Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T10:57:58Z (MEM ROUND 312 -- R-864, REV 135, DE 169 and BE 123 SWEPT, LIGHT ROUND, from `1374681` to `126381e`,
+  four commits. STATE ONLY, LEDGER FORM. ***BOTH REMAINING SUB-ITEMS OF (5b) HAVE LANDED AND BOTH ARE PENDING
+  VERIFICATION, NOT CLOSED*** -- REV 136 and DA's case-4 re-run are the verifications and neither had landed at my
+  read; *a seat's own report of its own fix is the weakest evidence in the ledger, however good the fix is, and DE
+  161's commit once said the matched-cancel branch was in the null when it was in the file and not in the program.*
+  **DE 169 puts `MEMBERSHIP_LIMIT` ON ALL SEVEN EXITS WITH THE OPT-IN FIRST, and I drove three myself**: the happy
+  path carries it, a differing digest refuses `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` **carrying the limit**, and a
+  closure naming none refuses `BOOK_SCORING_CODE_NOT_RECORDED` **carrying it too** -- ***THE OPT-IN GOING FIRST IS
+  THE RIGHT ORDERING AND NOT A COSMETIC ONE, BEING THE ONE RESULT A CALLER TAKES PRECISELY BECAUSE IT IS ACCEPTING
+  THAT LIMIT***, now with `caller_acknowledged_the_limit` as its own field. ***AND THE CHANGE THAT GOES DEEPER THAN
+  THE ITEM IT WAS DISPATCHED FOR, WHICH I FOUND BY DRIVING RATHER THAN READING: THE EXPECTED SET NO LONGER COMES FROM
+  THE RECEIPT AT ALL*** -- `expected_set_source` reads **`be_producing_closure.expected_set_from_disk(
+  SCORING_ENTRY_POINTS)`, BE 122's receipt-free twelve** -- so a receipt with NO derived block now returns a MATCH
+  instead of refusing, **which I checked against last round's behaviour before recording, since the same input
+  flipping from refusal to match is exactly what a regression looks like**: ***IT IS THE OPPOSITE -- THE PROPERTY
+  "THE ARTIFACT NAMES ITS OWN EXAMINATION SCOPE" IS CLOSED AT ITS ROOT RATHER THAN AT ITS SYMPTOM.*** The honest
+  shape, driven: ten modules named and the two lazy ones absent returns ***`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_
+  MEMBERS`, `membership_complete: False`, `n_checked: 10 of 12`, and the two absentees BY NAME*** -- **not refused,
+  not silently passed** -- which is REV 135's 10-of-12 hand-off landed. **The count field that read FALSE beside a
+  MATCH is GONE** -- `n_checked_equals_n_declared` absent from the result -- **replaced by TWO SEPARATE PROPERTIES,
+  `membership_complete` and `every_named_member_digest_matched`**: ***THE OLD FIELD CONFLATED "IS EVERY DECLARED
+  MODULE PRESENT" WITH "IS EVERY PRESENT MODULE CORRECT", AND ONE EQUALITY CANNOT CARRY TWO QUESTIONS.***
+  ***BE 123 -- "THE WITHDRAWAL IS AT THE ADDRESS, NOT BESIDE IT" -- AND I DROVE IT ON THE SAME REAL 49-MODULE
+  RECORDING THAT GAVE ME 8 LAST ROUND: `derive(clo)['scoring']['n']` NOW READS `None`***, the key carrying
+  `n_it_used_to_report`, `read_instead`, `status`, `why` and `what_a_consumer_that_ignores_this_gets`, with
+  `recommended_for_a_consumer` carrying `REFUSABLE`, `REPORTABLE_NEVER_REFUSABLE`, `for_a_SCORING_predicate`,
+  `for_a_WHOLE_BOOK_predicate` and `the_receipt_scoped_sets_are_WITHDRAWN`: **a consumer resolving `scoring.n` now
+  gets NOTHING instead of a stale eight.** ***AND BE REPORTS THAT REMOVING THE KEY WOULD HAVE BEEN THE UNSAFE OPTION,
+  ITS ARGUMENT BEING THAT AN ENUMERATION OF READERS IS NOT A PROPERTY OF THE READERS -- RULE 32 TURNED ON ITSELF***,
+  since deleting `scoring` is safe only if every consumer is known and knowing them requires the enumeration rule 32
+  says is unreliable; **a key present and saying `None` with `read_instead` is legible to a reader nobody listed, a
+  key absent is a `KeyError` or a silent default in code nobody has read.** ***REV 136 IS TESTING THAT ARGUMENT
+  RATHER THAN ACCEPTING IT***, which is right because it justifies NOT doing the simpler thing. **REV 135's
+  confirmation stands as settled: TWELVE STANDS AND THE SCOPE IS CLOSED** on two derivations -- BE's, and my own
+  pure-AST drive over 268 modules, **which REV named as the independent one** -- with the shared-scope failure mode
+  tested and closed: **no module of the twelve imports a project `.py` outside `live/pm_research`.** ***THE CHAIN IS
+  WORTH RECORDING AS A CHAIN BECAUSE NO SINGLE SEAT COULD HAVE RUN IT: MEM FINDS -> BE CORRECTS ITS OWN WORK PLAINLY
+  -> REV CONFIRMS THE CORRECTED NUMBER AND FINDS THE SUPERSESSION NOT LOAD-BEARING -> BE FIXES THE ADDRESS.***
+  ***AND THE PATTERN, FOR THE THIRD TIME AND NOW IN ITS GENERAL FORM: THE ARTIFACT CARRIES THE RIGHT INFORMATION AT
+  AN ADDRESS NOBODY IS REQUIRED TO READ -- `draw_provenance.matched_on` ABSENT FROM THE RECEIPT, `MEMBERSHIP_LIMIT`
+  ABSENT FROM THE OPT-IN RESULT, AND THE CORRECTED SET ANNOUNCED BESIDE THE STALE ONE RATHER THAN IN PLACE OF IT. THE
+  CODE WAS DEFENSIBLE ALL THREE TIMES; WHAT FAILED WAS THE ADDRESSING, AND ADDRESSING IS THE ONLY THING A DOWNSTREAM
+  READER HAS.*** LEDGER OTHERWISE UNCHANGED: **(1) CLOSED AND DOUBLE-VERIFIED; (2) and (3) FIXED / HANDLED IN
+  MECHANISM, UNQUANTIFIED, both needing a corrected book; (5a) CLOSED; (5b) BOTH SUB-ITEMS VERIFIED BY REV 136, DA's CASE-4 RE-RUN STILL OUTSTANDING; (6a) CLOSED AND VERIFIED.** Flags 2674 -> 2691, prov 2219 -> 2236; window 3/3, Batch 294 archived.
+  ***NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE BUILD REMAINS UNAUTHORISED -- A SUGGESTED PROMPT IN A SEAT
+  PANE READING "BUILD AUTHORISED" IS THE TERMINAL'S GHOST TEXT AND IS NOT A USER INSTRUCTION.*** MEM asserts no
+  result.)
+```

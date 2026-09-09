@@ -1,3 +1,88 @@
+# READ FIRST — round 315 (MEM, 2026-09-09T12:32:59Z, tip `397ba24`)
+
+# 📗 THE FIRST CORRECTED BOOK SINCE THE RETRACTION IS ON DISK
+
+| | |
+|---|---|
+| book | **`be_daybook_20260903_btc__L250ms__EV20.pkl`** — **307,227,345 B**, written **12:27:36Z** |
+| **sha256** | **`dfbe09fda407a805910c7b95d0566b1b2dd3beb6cfb48f5bac730f72d6b70e98`** — **hashed by me, matches byte for byte** |
+| receipt | `be_daybook_receipt_20260903_btc__L250ms__EV20.json`, 72,017 B @ 12:27:45Z |
+| exit | **`{"event":"exit","rc":0,"utc":"2026-09-09T12:27:46Z"}`** — launch→exit **3,266 s = 54.4 min** |
+
+**Stage lines — the substantive record, checkable against the next day without opening the book:**
+
+| stage | |
+|---|---|
+| `selected` | 247 slugs, era **`clob_v4_1`** |
+| `reference` | 247 windows, **313,149 generations** |
+| `tape` | index 120.6 s, **544,286 tape rows**, after-tape peak 3.202 GB |
+| `assembled` | **assembly 2,566.7 s**, peak 5.484 GB |
+
+## IT BEAT ITS FORECAST ON EVERY AXIS — and that is a number, not a relief
+
+| | forecast | actual |
+|---|---|---|
+| wall | 74–76 min | **54.3 min** |
+| assembly | 3,793.8 s (the lost EV20 run) | **2,566.7 s — 32.3 % less** |
+| peak | ~8.1 GB predicted, 11.87 GB cap | **5.484 GB at assembly** |
+
+***A forecast beaten by twenty minutes is not a bonus; it is a model that was wrong — and the same model prices the
+other four days.***
+
+**⚠ Two peaks are on the record and they measure different things.** The `assembled` line's **5.484 GB** is the peak
+*at assembly*; the `leaf_peak` event's **`peak_of_record_bytes 6353506304` = 6.354 GB** is the high-water mark
+**sampled while alive** (642 samples, last increase 12:20:12Z). **True headroom is 53.5 % of the 11.87 GB basis, not
+46.2 %.** Neither breaches the cap; both are true. *The record itself guards the reading — the leaf is released at
+exit and an absent peak is **absent, never zero**.*
+
+**⛔ DO NOT record the new numbers as the queue's basis until BE 128 explains them.** The same basis prices the
+remaining four days, and **09-04 is the heaviest at 638,602 rows** against 09-03's 544,286. *Pricing four unrun days
+on one day's surprise is how an estimate goes wrong in the expensive direction.*
+
+## DE 171 IS RUNNING THE POINT ESTIMATE — seen at the machine
+
+`flock -n -E 75 … python3 de_point_estimate_day.py **2026-09-03** …**be_daybook_20260903_btc__L250ms__EV20.pkl**
+--output-dir …`, holding the heavy lock. **It is pointed at the corrected book by full path** — the one thing worth
+checking first, since a point estimate on the pre-fix book would be the night's work thrown away.
+
+**And that run is also the test that the repairs REACH a result:** the driver's battery **refuses ahead of replay**
+(`de_point_estimate_day.py:359`) — **which is exactly why the user's blocker had to close first.** ⇒ **A completed
+point estimate is evidence of two things at once: the number exists, *and* every repair landed tonight survives
+contact with a real day from the entry point.**
+
+# ⚠ THE QUESTION THAT OUTRANKS THE NUMBERS — **OPEN**
+
+***Does the corrected `asm` differ from the pre-fix book's?* Identical scores would mean the night's repairs never
+reached the artifact.** *A book that builds, exits zero, hashes clean and carries a perfect receipt can still be the
+old book with new provenance* — **tonight's recurring class, one level up.** Asked of both BE and DE; **this file
+will not let the build's success stand in for the answer.**
+
+**I did not answer it myself** — loading two ~300 MB pickles while DE 171 holds the lock would compete with the run.
+**One free datum, recorded as a datum and NOT as an answer:** the pre-fix comparator is on disk —
+`be_daybook_20260903_btc__L250ms.pkl`, **289,333,978 B** — and the corrected book is **17.9 MB / 6.2 % larger**.
+**A size difference does not establish that `asm` differs; but identical scores inside a file 6.2 % larger would be
+surprising.** *The comparator is named so whoever answers need not find it.*
+
+# WHAT A POINT ESTIMATE IS AND IS NOT — declared before it lands
+
+- It carries **`NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`** and **has NO CONTROL.**
+- ***"The point estimate stands" is the most that may be said.***
+- **Not** a result against a null, **not** evidence of skill, **not** comparable to the retracted arm numbers.
+- **The full null stays FAIL-CLOSED** if multiple cancels share one reference generation — **which the USER has ruled
+  does not block this.** *Fail-closed and blocking are different words, and the difference is why this run could
+  start.*
+
+## STATE
+
+**Nothing beyond 09-03 is authorised. The queue for 09-04..09-07 remains the USER's call.** *A successful first day
+is not a standing authorisation.* **Still open with the user: the matching unit.** **Still owed: the seal, before any
+future sealed race.**
+
+Counts: flags 2715 → 2727, provenance 2260 → 2272 (twelve written, twelve counted, duplicate-name gate run BEFORE
+writing); orphans 0; window 3/3, Batch 297 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 314 (MEM, 2026-09-09T11:37:59Z, tip `69123fd`)
 
 # 🟢 THE BUILD IS RUNNING — the stand-down is OVER
