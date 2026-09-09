@@ -5934,26 +5934,62 @@ def point_estimate_arm_day(day: str, arm: str, observed: float,
     }
 
 
-def test_statistic_from(receipt: dict, field: str = "Z"):
+#: THE BLOCKS AN ARM-DAY CARRIES A TEST STATISTIC IN. `economic` is the
+#: 5-second DIAGNOSTIC; `economic_settlement` is the RULED PRIMARY
+#: ENDPOINT under R-801. A guard that reads one block is a guard over the
+#: block it happens to name.
+STATISTIC_BLOCKS = ("economic_settlement", "economic")
+
+
+def test_statistic_from(receipt: dict, field: str = "Z", *,
+                        block: str | None = None):
     """ASKING A POINT-ESTIMATE RECEIPT FOR A TEST STATISTIC REFUSES.
 
     R-828 (3). The status is a STRING where a number belongs, so a
     careless reader gets a type error at best; this makes it a refusal
-    BY NAME at worst and at best."""
-    for a in (receipt.get("day_run") or receipt).get(
-            "per_day_sealed_artifacts", []) or []:
-        v = ((a.get("economic") or {}).get(field))
-        if v == NULL_NOT_DRAWN_STATUS:
-            raise RunnerRefused(
-                f"REFUSED {POINT_ESTIMATE_REFUSAL}: arm {a.get('arm')!r} "
-                f"carries `{field}` = {NULL_NOT_DRAWN_STATUS}. This "
-                f"artifact is a POINT-ESTIMATE run: S4 was skipped, no "
-                f"null was drawn, and no test statistic exists to read. "
-                f"A full run at the same (day, L) is a DIFFERENT "
-                f"artifact, not a successor to this one.")
-    return {a.get("arm"): (a.get("economic") or {}).get(field)
-            for a in (receipt.get("day_run") or receipt).get(
-                "per_day_sealed_artifacts", []) or []}
+    BY NAME at worst and at best.
+
+    ---- DE 175 (1), REV 139: IT READ ONE BLOCK, HARDCODED ----------
+    `v = ((a.get("economic") or {}).get(field))` -- so it protected the
+    5-SECOND DIAGNOSTIC and left `economic_settlement`, **the ruled
+    primary endpoint under R-801**, unguarded. The DATA was honest (both
+    arms carry the status in both blocks); the GUARD was not, and a reader
+    asking this function for the settlement Z of a point estimate got no
+    refusal from the block it would actually quote.
+
+    **THIS IS THE THIRD TIME TONIGHT A GUARD HAS PROTECTED THE DIAGNOSTIC
+    AND LEFT THE RULED RESULT EXPOSED** -- `ECONOMIC_FIELDS` was the first
+    (REV 123) and the USER found the second. The repair is the same each
+    time: name the blocks in one place and sweep them all, so adding an
+    endpoint does not mean remembering a guard.
+
+    THE REFUSAL sweeps every block in `STATISTIC_BLOCKS`; THE READ answers
+    about ONE -- `economic` by default, unchanged, so this repair moves no
+    number -- and a caller wanting the ruled endpoint passes
+    `block="economic_settlement"`."""
+    arms = (receipt.get("day_run") or receipt).get(
+        "per_day_sealed_artifacts", []) or []
+    for a in arms:
+        for blk in STATISTIC_BLOCKS:
+            if ((a.get(blk) or {}).get(field)) == NULL_NOT_DRAWN_STATUS:
+                raise RunnerRefused(
+                    f"REFUSED {POINT_ESTIMATE_REFUSAL}: arm "
+                    f"{a.get('arm')!r} carries `{blk}.{field}` = "
+                    f"{NULL_NOT_DRAWN_STATUS}. This artifact is a "
+                    f"POINT-ESTIMATE run: S4 was skipped, no null was "
+                    f"drawn, and no test statistic exists to read -- in "
+                    f"the RULED endpoint (`economic_settlement`, R-801) "
+                    f"any more than in the 5-second diagnostic. A full run "
+                    f"at the same (day, L) is a DIFFERENT artifact, not a "
+                    f"successor to this one.")
+    # THE RETURN SHAPE DOES NOT MOVE. My first version returned a dict of
+    # blocks per arm and broke a caller that expected the value -- a
+    # silent API change riding along with a guard fix, which is the thing
+    # I would refuse from anyone else. The REFUSAL sweeps every block; the
+    # READ still answers about ONE, `economic` by default exactly as
+    # before, and a caller wanting the ruled endpoint names it.
+    _b = block or "economic"
+    return {a.get("arm"): (a.get(_b) or {}).get(field) for a in arms}
 
 
 def settlement_not_valued_reason(status: str, admissibility: dict) -> str:
@@ -6063,6 +6099,16 @@ BOOK_SCORING_UNRECORDED = "BOOK_SCORING_CODE_NOT_RECORDED"
 #: saying nothing about the other four -- and `not recorded` only caught
 #: the case where it named NONE. A predicate that matches on what it finds
 #: reports agreement about a set it never saw.
+#: DE 174: THE STATUSES AN ARM-DAY CARRIES ECONOMICS FOR, IN ONE PLACE.
+#: DE_PROCEDURE section 8 names this defect class -- "a status compared by
+#: EQUALITY where MEMBERSHIP was meant" -- and it has now cost three
+#: patches in one night once and two sites here. Adding
+#: `NULL_FAIL_CLOSED_CANCEL_UNIT_EXCEPTION` would have silently dropped
+#: the settlement block and the ledger's settlement rows for the
+#: fail-closed arm, which is the arm whose POINT ESTIMATE the USER ruling
+#: says is unaffected.
+_ARM_DAY_VALUED_STATUSES = ("OK", "OK_POINT_ESTIMATE",
+                            "NULL_FAIL_CLOSED_CANCEL_UNIT_EXCEPTION")
 BOOK_SCORING_INCOMPLETE = "BOOK_SCORING_CODE_RECEIPT_INCOMPLETE"
 #: DE 167 (second amendment) / REV 129, BE 117-119. The expected set is
 #: READ FROM THE RECEIPT, never typed. `SCORING_PATH_MODULES` above stays
@@ -6127,6 +6173,78 @@ MEMBERSHIP_LIMIT = (
     "digest that differs. The recording's own honesty is guarded on the "
     "PRODUCING side by rule 22's import-closure capture (DE 168 / REV 132)")
 PARAMS_VERSION_DISAGREES = "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE"
+
+
+LAZY_ONLY_EXEMPTION = "BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET"
+
+
+#: THE RULED EXEMPTION'S SET (USER, DE 174 (2)), DECLARED WITH ITS
+#: PROVENANCE AND THEN CHECKED -- not derived, and the reason is worth the
+#: lines because I tried twice to derive it and both attempts were wrong.
+#:
+#:   ATTEMPT 1, "no module in the PACKAGE imports it at module level":
+#:     returned the EMPTY set. `harmful_hazard_model.py` is imported at
+#:     top level by `de_section81_arms.py` and `phase2_increment_null.py`
+#:     -- modules that are not on the scoring path at all.
+#:   ATTEMPT 2, "no module OF THE SCORING SET imports it at module level":
+#:     returned FIVE, including `phase2_arms.py` and both runners, which
+#:     are lazily imported within the set and are nonetheless in every
+#:     real recording because a build loads them.
+#:
+#: The property that decides membership is EMPIRICAL -- "absent from an
+#: honest build's recording" -- and static reachability cannot see it.
+#: BE 122 established it by MEASUREMENT and names the pair with the lines
+#: that make it true. So the set is DECLARED here, with that citation, and
+#: the claim BE made about it is CHECKED below rather than trusted.
+#: OWED TO BE: publish it machine-readably, so this declaration can be
+#: replaced by a read (rule 32's preference, unavailable today).
+RULED_LAZY_EXEMPT = ("harmful_hazard_model.py",
+                     "phase2_state_schema_freeze.py")
+RULED_LAZY_SOURCE = ("BE 122, measured: both are reachable from "
+                     "`phase2_arms` through LAZY imports (phase2_arms:57, "
+                     ":515, :766, :768, :1851) and are absent from a real "
+                     "build's recording because those branches did not run")
+LAZY_ONLY_EXEMPTION = "BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET"
+
+
+def ruled_lazy_exemption(root) -> dict:
+    """The declared exempt set, WITH BE's claim about it re-checked here.
+
+    The claim is specific: each member is imported by `phase2_arms` ONLY
+    inside a function body. That is checkable, and it is checked -- a
+    declaration nobody verifies is the shape this programme keeps
+    catching, and it would be absurd to add one while closing another."""
+    import ast as _a
+    root = Path(root)
+    src = root / "phase2_arms.py"
+    top, deep = set(), set()
+    if src.is_file():
+        tree = _a.parse(src.read_text())
+        body_ids = {id(n) for n in tree.body}
+        for node in _a.walk(tree):
+            if not isinstance(node, (_a.Import, _a.ImportFrom)):
+                continue
+            names = ([x.name.split(".")[0] for x in node.names]
+                     if isinstance(node, _a.Import)
+                     else [(node.module or "").split(".")[0]])
+            for nm in names:
+                (top if id(node) in body_ids else deep).add(nm + ".py")
+    checked = {m: {"imported_by_phase2_arms_inside_a_function": m in deep,
+                   "imported_by_phase2_arms_at_module_level": m in top}
+               for m in RULED_LAZY_EXEMPT}
+    holds = all(v["imported_by_phase2_arms_inside_a_function"]
+                and not v["imported_by_phase2_arms_at_module_level"]
+                for v in checked.values())
+    return {"exempt": list(RULED_LAZY_EXEMPT),
+            "source": RULED_LAZY_SOURCE,
+            "BEs_claim_rechecked_here": checked,
+            "claim_holds": holds,
+            "why_declared_and_not_derived": (
+                "the property is EMPIRICAL -- absent from an honest "
+                "build's recording -- and static reachability cannot see "
+                "it: deriving over the package gives {} and over the "
+                "scoring set gives 5, including `phase2_arms` itself. "
+                "OWED TO BE: publish the set machine-readably")}
 
 
 def _refuse_scoring(code: str, where: str, body: str):
@@ -8173,6 +8291,39 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # THE DAY DOES NOT DECIDE IT (rule 14): the flag is RAISED where a
         # reader cannot miss it and the ruling is the coordinator's.
         if not _scode.get("is_a_match"):
+            # ---- DE 174 (2): THE RULED EXEMPTION, AS A PREDICATE ------
+            # The USER ruled that a `MATCHES_WITH_UNNAMED_MEMBERS` day MAY
+            # be quoted PROVIDED the unnamed are the known lazy-import
+            # pair. Making that a convention would be a hole; it is a
+            # predicate, and the exempt set is DERIVED from the tree
+            # rather than typed.
+            _unnamed = set(_scode.get(
+                "in_the_set_and_NOT_named_by_the_receipt") or [])
+            _lazy = ruled_lazy_exemption(Path(__file__).resolve().parent)
+            _beyond = sorted(_unnamed - set(_lazy["exempt"]))
+            _scode["ruled_exemption"] = {
+                "ruling": "USER, DE 174 (2)",
+                "condition": ("the unnamed set must be a SUBSET of the "
+                              "modules reachable ONLY through a lazy "
+                              "import; any OTHER unnamed module refuses"),
+                "lazy_only_set": _lazy["exempt"],
+                "source": _lazy["source"],
+                "BEs_claim_rechecked_here": _lazy["BEs_claim_rechecked_here"],
+                "claim_holds": _lazy["claim_holds"],
+                "unnamed": sorted(_unnamed),
+                "beyond_the_lazy_set": _beyond,
+                "satisfied": not _beyond}
+            if _beyond:
+                raise RunnerRefused(
+                    f"REFUSED {LAZY_ONLY_EXEMPTION} for {day}: the book's "
+                    f"receipt does not name {_beyond}, and "
+                    f"{_beyond} is NOT reachable only through a lazy "
+                    f"import -- it is imported at module "
+                    f"level somewhere in the package, so an honest build "
+                    f"WOULD have recorded it. The USER's exemption "
+                    f"(DE 174 (2)) covers {_lazy['exempt']} and nothing "
+                    f"else: that is the difference between a ruled "
+                    f"exemption and a hole.")
             _scode["FLAG_FOR_THE_READER"] = (
                 "THIS DAY RAN ON A BOOK WHOSE SCORING-CODE MEMBERSHIP WAS "
                 "NOT COMPLETE. Every module the receipt NAMES matched its "
@@ -8382,6 +8533,37 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # unique per run: day, arm, the book's digest, and this run's own
         # start stamp. (The battery found this immediately: it runs the
         # fixture day more than once in one process.)
+        # ---- DE 174 (1): THE RULED EXCEPTION, MEASURED AND RECORDED ---
+        # USER ruling: matching on CANCELS stands, and the double-cancelled
+        # reference generation is a NAMED, MEASURED EXCEPTION IN THE
+        # RECEIPT -- not a caveat in prose. A reader must be able to find
+        # it AND ITS DENOMINATOR, so both travel.
+        import de_matched_cancel_control as _MCC174
+        _dc174 = _MCC174.cancels_per_reference_generation(_arm_cancels)
+        _cancel_unit_exception = {
+            "ruling": "USER, DE 174 (1) -- ruling B stands, the exception "
+                      "is named",
+            "matching_unit": "CANCELS",
+            "n_cancels": _dc174["n_cancels"],
+            "n_reference_generations_cancelled":
+                _dc174["n_reference_generations"],
+            "n_cancelled_more_than_once":
+                _dc174["n_reference_generations_cancelled_more_than_once"],
+            "max_cancels_on_one_reference_generation":
+                _dc174["max_cancels_on_one_reference_generation"],
+            "rate": (round(
+                _dc174["n_reference_generations_cancelled_more_than_once"]
+                / _dc174["n_reference_generations"], 8)
+                if _dc174["n_reference_generations"] else None),
+            "which": _dc174["which"],
+            "premise_holds": _dc174["premise_holds"],
+            "the_invariant_cannot_see_it": _dc174[
+                "why_the_invariant_missed_it"],
+            "consequence": ("the null is FAIL-CLOSED for this arm when the "
+                            "premise does not hold, and OPEN when it does "
+                            "-- per arm, so one arm's exception does not "
+                            "cost the other its control"),
+        }
         _cs_path = (Path(book_path).parent
                     / f"p003_de_null_control_set_{day.replace('-', '')}"
                       f"_{arm}_{book_sha[:12]}"
@@ -8396,6 +8578,31 @@ def run_day(day: str, book_path, *, params: dict, module=None,
             r = point_estimate_arm_day(day, arm, observed,
                                        pop["decisions"], params)
             _mark("S4_null_SKIPPED_POINT_ESTIMATE")
+        elif not _dc174["premise_holds"]:
+            # ---- DE 174 (1): FAIL-CLOSED PER ARM, NOT PER DAY ---------
+            # `demand_from_arm` refuses when a reference generation carries
+            # more than one cancel, and it is right to: the demand counts
+            # CANCELS while the draw samples DISTINCT generations. But
+            # letting that refusal propagate would cost the OTHER arm its
+            # null for a defect it does not have. The USER ruled CONDVALUE
+            # fail-closed and HAZARD's null free to run; that is a
+            # per-ARM status, and this is it.
+            nul = None
+            r = point_estimate_arm_day(day, arm, observed,
+                                       pop["decisions"], params)
+            r["status"] = "NULL_FAIL_CLOSED_CANCEL_UNIT_EXCEPTION"
+            r["why_no_null"] = (
+                f"{_cancel_unit_exception['n_cancelled_more_than_once']} of "
+                f"{_cancel_unit_exception['n_reference_generations_cancelled']} "
+                f"cancelled reference generations carry MORE THAN ONE "
+                f"cancel (max "
+                f"{_cancel_unit_exception['max_cancels_on_one_reference_generation']}), "
+                f"so the cancel-matched control's premise does not hold for "
+                f"this arm and `demand_from_arm` refuses "
+                f"`{_MCC174.PREMISE_VIOLATED}`. The POINT ESTIMATE is "
+                f"unaffected and is reported; the NULL is fail-closed for "
+                f"THIS ARM ONLY (USER ruling, DE 174 (1)).")
+            _mark("S4_null_FAIL_CLOSED")
         else:
             nul = null_draws_valued(
                 mod, bk, base["fills"], pop["by_side"],
@@ -8435,11 +8642,12 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                         elapsed_s=time.time() - t_start,
                         draw_provenance=prov, book_digest=book_sha,
                         verified_module_sha=cite["sha256"])
+        r["cancel_unit_exception"] = _cancel_unit_exception
         # ---- R-801: THE RULED P&L FOR THIS ARM-DAY -------------------
         # Beside D(E0), never instead of it: the 5-second markout stays
         # as the short-horizon DIAGNOSTIC the design declared, and the
         # ruled quantity is the one the user named.
-        if _win801 is not None and r.get("status") in ("OK", "OK_POINT_ESTIMATE"):
+        if _win801 is not None and r.get("status") in _ARM_DAY_VALUED_STATUSES:
             _sarm801 = settle_value_cents(arm_replay["fills"],
                                           _win801["winners"])
             _armlegs801 = settlement_legs_by_slug(arm_replay["fills"],
@@ -8491,7 +8699,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "what_D_E0_is_now": ("a DIAGNOSTIC of short-horizon "
                                      "adverse selection, not the result"),
             }
-        elif r.get("status") in ("OK", "OK_POINT_ESTIMATE"):
+        elif r.get("status") in _ARM_DAY_VALUED_STATUSES:
             _st801 = ("NO_WINNER_SOURCE_ON_A_FIXTURE"
                       if (fixture and _adm801["admissible"])
                       else "NOT_VALUED_DAY_NOT_ADMISSIBLE")
@@ -8562,7 +8770,7 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "baseline_total_cents": _base801["total_cents"],
                 "D_E_settle": _obs801,
                 "unit": VALUATION_UNIT,
-            } if (_win801 is not None and r.get("status") in ("OK", "OK_POINT_ESTIMATE"))
+            } if (_win801 is not None and r.get("status") in _ARM_DAY_VALUED_STATUSES)
                 else None),
             "observed": observed,
             "arm_value": _value_cents(arm_replay["fills"]),
