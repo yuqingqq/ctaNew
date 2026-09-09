@@ -43,6 +43,7 @@ said.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import pickle
 import sys
@@ -58,6 +59,51 @@ SIDES = ("BUY_UP", "SELL_UP")
 
 class ReconcileRefused(RuntimeError):
     """A named refusal."""
+
+
+#: THE NAME A NON-FINITE VALUE EARNS. A reader must be able to tell "the
+#: two sides agreed" from "no comparison was possible", and before BE 144
+#: they were the same outcome.
+NOT_FINITE = "VALUE_NOT_FINITE_NO_COMPARISON_POSSIBLE"
+NOT_FINITE_INPUT = "TRANCHE_VALUE_NOT_FINITE"
+
+
+def _is_finite(x) -> bool:
+    """A real, finite NUMBER. `bool` is excluded because `True == 1.0`."""
+    return (isinstance(x, (int, float)) and not isinstance(x, bool)
+            and x == x and abs(x) != float("inf"))
+
+
+def _differs(a, b, tol: float, *, what: str, where: str) -> bool:
+    """FINITENESS FIRST, THEN THE TOLERANCE -- and never the other order.
+
+    THE DEFECT THIS CLOSES (DE 181, found while proving its own falsifier
+    could fire). Every guard in this module was written as *refuse if the
+    difference EXCEEDS tol*. **NaN compares False to everything**, so
+    `abs(nan - 700.0) > 1e-6` is `False` and the guard is SATISFIED by a
+    NaN rather than tripped by it. One `shares: nan` reconciled cleanly on
+    both sides -- `legs_close` true, `kept == baseline` true, both
+    cross-checks agreeing -- while the dropped total was nan. **That is a
+    fail-OPEN in a checker whose entire job is to refuse**, and since
+    DE 181 this checker sits on the point-estimate path between a
+    corrupted valuation and a published artifact.
+
+    What saved that run was the DRIVER's own independent non-finite
+    refusal, one layer out. A second line of defence catching what the
+    first let through is not a fix, and every other consumer of
+    `reconcile()` inherited the hole.
+
+    So the predicate is: FINITE, then compare. Not-finite is its own
+    named refusal, never a silent agreement."""
+    if not (_is_finite(a) and _is_finite(b)):
+        raise ReconcileRefused(
+            f"REFUSED -- {NOT_FINITE} comparing {what} at {where}: "
+            f"{a!r} against {b!r}. A NaN or infinity compares False to "
+            f"everything, so a tolerance test is SATISFIED by it rather "
+            f"than tripped by it -- this is NOT agreement, it is the "
+            f"absence of a comparison, and the two must never read the "
+            f"same.")
+    return abs(float(a) - float(b)) > tol
 
 
 def _fills_from(ref: dict, key: str) -> list:
@@ -81,9 +127,23 @@ def _fills_from(ref: dict, key: str) -> list:
                             f"tranche nor its generation carries one, so it "
                             f"cannot be valued and a total that skipped it "
                             f"would be short by an unknown amount.")
+                    sz = t.get("shares") or 0.0
+                    # BEYOND THE LITERAL ASK, and stated as such: the
+                    # comparison guards above already REFUSE a NaN, but
+                    # they can only say "the totals are not finite". This
+                    # names the tranche, which is what an operator needs
+                    # to act on it.
+                    if not (_is_finite(lvl) and _is_finite(sz)):
+                        raise ReconcileRefused(
+                            f"REFUSED -- {NOT_FINITE_INPUT} at "
+                            f"{slug}/{side}/gen {g.get('gen')} in {key!r}: "
+                            f"level={lvl!r}, shares={sz!r}. A non-finite "
+                            f"tranche cannot be valued, and valuing it "
+                            f"anyway makes every total downstream a NaN "
+                            f"that no tolerance test can catch.")
                     out.append({"slug": slug, "side": side,
                                 "px_cents": float(lvl) * 100.0,
-                                "size": float(t.get("shares") or 0.0)})
+                                "size": float(sz)})
     return out
 
 
@@ -127,7 +187,8 @@ def _cross_check(name: str, viaDE: dict, direct: dict, tol: float) -> dict:
     """Both legs, both ways -- refuse by name on either."""
     for leg in ("trades_leg_cents", "residual_leg_cents", "total_cents"):
         a, b = viaDE.get(leg), direct.get(leg)
-        if a is None or abs(float(a) - float(b)) > tol:
+        if a is None or _differs(a, b, tol, what=f"{name} {leg}",
+                                 where="the direct-arithmetic cross-check"):
             raise ReconcileRefused(
                 f"REFUSED -- {name}_LEGS_DISAGREE_WITH_DIRECT_ARITHMETIC on "
                 f"{leg}: `settlement_legs_by_slug` gives {a!r} and direct "
@@ -194,14 +255,18 @@ def reconcile(ref: dict, winners: dict, baseline_total_cents: float,
     dropped_x = _cross_check("DROPPED", dropped,
                              legs_directly(ref, DROPPED_KEY, winners), tol)
     sum_total = kept["total_cents"] + dropped["total_cents"]
-    if abs(sum_total - allv["total_cents"]) > tol:
+    if _differs(sum_total, allv["total_cents"], tol,
+                what="KEPT + DROPPED against ALL-TRANCHE",
+                where="the partition identity"):
         raise ReconcileRefused(
             f"REFUSED -- LEGS_DO_NOT_CLOSE: KEPT {kept['total_cents']!r} + "
             f"DROPPED {dropped['total_cents']!r} = {sum_total!r} against "
             f"ALL-TRANCHE {allv['total_cents']!r}, a difference of "
             f"{sum_total - allv['total_cents']!r}. The two views must "
             f"partition the valued tranches exactly.")
-    if abs(kept["total_cents"] - float(baseline_total_cents)) > tol:
+    if _differs(kept["total_cents"], baseline_total_cents, tol,
+                what="the book's KEPT total against the ledger's baseline",
+                where="the baseline anchor"):
         raise ReconcileRefused(
             f"REFUSED -- KEPT_VALUE_DOES_NOT_MATCH_THE_BASELINE: the book's "
             f"kept tranches value to {kept['total_cents']!r} and the "
@@ -248,6 +313,19 @@ def reconcile(ref: dict, winners: dict, baseline_total_cents: float,
                                             "here.",
         "valuation_owner": "de_multiday_gate1_runner.settlement_legs_by_slug,"
                            " CALLED and not re-implemented",
+        "what_a_NON_FINITE_VALUE_EARNS": {
+            "comparison": NOT_FINITE,
+            "input": NOT_FINITE_INPUT,
+            "why_it_has_its_own_name": (
+                "so a reader can tell 'the two sides AGREED' from 'no "
+                "comparison was POSSIBLE'. Before BE 144 they were the "
+                "same outcome: NaN compares False to everything, so every "
+                "`abs(a - b) > tol` guard was satisfied by a NaN instead "
+                "of tripped by it, and one `shares: nan` reconciled "
+                "cleanly on both sides while the dropped total was nan."),
+            "the_predicate_now": "FINITE FIRST, THEN THE TOLERANCE, at "
+                                 "every comparison in this module",
+        },
     }
 
 
@@ -304,7 +382,7 @@ def value_all(ref: dict, winners: dict) -> dict:
             "n_slugs": legs.get("n_slugs")}
 
 
-EXPECTED_CHECKS = 14
+EXPECTED_CHECKS = 21
 
 
 def falsify() -> int:
@@ -481,6 +559,74 @@ def falsify() -> int:
         for _ in range(2):
             ok(False, "no EV2x receipt on disk, so today's real state could "
                       "not be driven")
+
+    # ---- BE 144: A NaN MUST REFUSE, ON EITHER SIDE --------------------
+    # DE 181 found this by proving its own falsifier could fire. NaN
+    # compares False to everything, so every `abs(a - b) > tol` guard was
+    # SATISFIED by a NaN rather than tripped by it -- a fail-OPEN in a
+    # checker whose whole job is to refuse, now on the point-estimate path.
+    _NAN = float("nan")
+    _old_predicate = abs(_NAN - 700.0) > 1e-6
+    ok(_old_predicate is False,
+       f"THE MECHANISM, SHOWN RATHER THAN DESCRIBED: "
+       f"`abs(nan - 700.0) > 1e-6` is {_old_predicate} -- so the OLD "
+       f"predicate, written as 'refuse if the difference EXCEEDS tol', was "
+       f"SATISFIED by a NaN rather than tripped by it. Every guard in this "
+       f"module had that shape")
+    for _side, _K, _D in (
+            ("DROPPED", [{"t": 0.4, "shares": 10.0, "level": 0.60}],
+             [{"t": 0.05, "shares": _NAN, "level": 0.25}]),
+            ("KEPT", [{"t": 0.4, "shares": _NAN, "level": 0.60}],
+             [{"t": 0.05, "shares": 4.0, "level": 0.25}])):
+        _r = ref_of(_K, _D)
+        refuses(lambda _r=_r: reconcile(_r, W, 400.0),
+                NOT_FINITE_INPUT,
+                f"KNOWN-BAD, {_side} SIDE: one `shares: nan` REFUSES by "
+                f"name and names the tranche. **Before this it PASSED** -- "
+                f"legs_close true, kept_equals_the_baseline true, both "
+                f"cross-checks agreeing, and the {_side.lower()} total nan")
+    # AND THE COMPARISON GUARD ITSELF, reached directly: a non-finite
+    # value that never passes through `_fills_from` must still refuse.
+    refuses(lambda: _differs(_NAN, 700.0, 1e-6, what="a total",
+                             where="a drive"),
+            NOT_FINITE,
+            "and the comparison guard REFUSES a NaN on its own, reached "
+            "directly -- so a non-finite total arriving from anywhere, not "
+            "only from a tranche, is a refusal and never a silent "
+            "agreement")
+    refuses(lambda: _differs(700.0, float("inf"), 1e-6, what="a total",
+                             where="a drive"),
+            NOT_FINITE,
+            "INFINITY TOO, which the same predicate covers and which a "
+            "NaN-only test would have missed")
+    ok(_differs(700.0, 700.0, 1e-6, what="x", where="y") is False
+       and _differs(700.0, 701.0, 1e-6, what="x", where="y") is True,
+       "POSITIVE CONTROL for the guard: finite values still compare "
+       "normally -- equal is False, different is True -- so the fix "
+       "refuses the uncomparable without refusing the comparable "
+       "(rule 16)")
+    # BY OPERATION, NOT BY SPELLING (rule 32). The property is: NO
+    # tolerance comparison decides a refusal OUTSIDE the one guarded
+    # helper. The helper's own body is the single sanctioned site --
+    # after its finiteness gate -- so it is excluded BY NAME rather than
+    # by the shape of its text, and anything else is a finding.
+    _tree = ast.parse(Path(__file__).read_text())
+    _guarded = {n for fn in ast.walk(_tree)
+                if isinstance(fn, ast.FunctionDef) and fn.name == "_differs"
+                for n in ast.walk(fn)}
+    _sites = [(n.lineno, ast.unparse(n)) for n in ast.walk(_tree)
+              if isinstance(n, ast.Compare) and n not in _guarded
+              and "abs(" in ast.unparse(n)
+              and any(isinstance(o, (ast.Gt, ast.GtE)) for o in n.ops)
+              and "tol" in ast.unparse(n)]
+    ok(_sites == [],
+       f"AND THE ENUMERATION IS BY OPERATION, NOT BY SPELLING (rule 32): "
+       f"an AST walk of THIS FILE finds {len(_sites)} tolerance "
+       f"comparisons deciding a refusal OUTSIDE `_differs` ({_sites}). "
+       f"Every refusal-deciding comparison goes through the one guarded "
+       f"helper, so a new one added later -- in any spelling -- fails "
+       f"this cell. It already caught one: `_differs`'s own body, which "
+       f"is the single sanctioned site and is excluded BY NAME")
 
     # ---- WHAT IT DOES WHEN IT FAILS (REV 144 item 2) ------------------
     _bad_ref = {"s1": {"BUY_UP": [{"gen": 0, "t0": 0.0, "t1": 9.0,
