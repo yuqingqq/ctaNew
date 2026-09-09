@@ -1,3 +1,88 @@
+# READ FIRST — round 301 (MEM, 2026-09-09T08:40:06Z, tip `acaa5ea`)
+
+**A REGISTER-INTEGRITY DIAGNOSIS, not a sweep.** State files were current through R-853 and remain so. **I have
+renumbered nothing and edited no history.**
+
+## THE COUNT, REPRODUCED
+
+**1,176 Q rows / 1,172 distinct** — `Q-BE-92` ×3, `Q-BE-91` ×2, `Q-DA-331` ×2. **R-entries: 843 / 843, no
+duplicates** — the R-clean claim holds.
+
+**My own first probe reported a fourth, and it was my regex.** `### R-6 acknowledgement — DA` is a heading that
+*names* an entry rather than being one. **Caught before it reached the report** — the class my procedure names:
+*grep hits on vocabulary are not references.*
+
+## (1) SAME ROW TWICE, OR DIFFERENT FILINGS? — **the worse answer for two of the three**
+
+| id | rows | verdict |
+|---|---|---|
+| **Q-BE-91** | L397, L400 | **DIFFERENT FILINGS** — an *ASK* about a seat conflict beside a *FILING* about a §1f defect that cost two runs |
+| **Q-BE-92** | L321, L398, L399 | **THREE DIFFERENT FILINGS** — a CLOSED/READY contract row, an ASK on the seat conflict, a refusal to run `git gc` |
+| **Q-DA-331** | L1023, L1024 | **one filing and its void draft** — 243-char shared headline, 64 hunks, similarity 0.72 |
+
+**⇒ A reader resolving `Q-BE-92` gets an arbitrary one of three unrelated filings.**
+
+**`Q-DA-331` is already explained in band** by **`Q-DA-335`**: *"THE FIRST IS A GATE-REFUSED DRAFT, **VOID**; THE
+SECOND SUPERSEDES IT."* Its mechanism is a **third** one again — the void draft was **carried in by DE 110's
+pathspec sweep of `COORDINATION.md`**, the R-562 class. *Explained, but only to a reader who reaches Q-DA-335.*
+
+## A FALSE LEAD, CHASED TO THE END
+
+`git blame` attributes **every** duplicate line to **`0539a36`** — the scratch-drive revert. **The revert is
+innocent:** measured at three refs, `0539a36^^` **already** had 1,028 rows / 1,024 distinct **with the same three
+duplicates**; `0539a36^` had one row (the damage); the revert **restored** them. *Blame names what last rewrote a
+line, and a whole-file revert rewrites everything.*
+
+## (2) THE MECHANISM — **not** a highest-plus-one race
+
+Bisected over the **1,594** commits touching the register:
+
+- **`Q-BE-91` → 2** at `3fbc801` (08-26 03:47:31Z) — a **coordinator** commit ruling on BE filings
+- **`Q-BE-92` → 2 *and* 3** at **one commit**, `55a9907` (08-26 05:13:23Z) — a single BE commit adding two rows on
+  one id. **Not a race between seats.**
+- **`Q-DA-331` → 2** at `26d49f4` (09-06 19:36:10Z) — the void-draft sweep
+
+**And the register names its own mechanism.** `Q-BE-105`: *"R-146(5) REGISTER HYGIENE DONE — **13 duplicate rows
+renumbered to unique monotone IDs**"*, with a mapping note. Parsed: **the sources repeat — `Q-BE-89` ×4, `Q-BE-90`
+×4, `Q-BE-91` ×3** — a **one-to-many rename**. *A tool that matches by id and renames one occurrence per rule leaves
+the rest behind*, which is why `Q-BE-91` went from three sources to two survivors rather than to zero.
+
+**⚠ And the mapping holds exactly one chain collision — the id with three rows.** Of thirteen pairs, **`92` is the
+only id that is both a source and a target**: `Q-BE-7 → 92` **and** `Q-BE-92 → 93`. **Apply them in the wrong order
+and the register briefly holds two rows numbered 92; the second rename matches one, the other survives.** No target
+is duplicated, so **the collision is purely one of ORDER** — and **the remedy for an ordering hazard is temporary
+ids, not a lock.**
+
+## THE DOOR IS ALREADY SHUT ON THE SANCTIONED PATH
+
+`scripts/land_register_row.sh:46` refuses **`DUPLICATE_ID`** (`exit 14`), landed **`be0ef1d`, 2026-09-07 05:35:26Z**
+— **after all three duplicates.** **No duplicate can enter through the `--row` form**; the residual exposure is
+anything landed outside it, which is what R-784 retired the hand-edit for.
+
+## ⚠ THE PART THAT MATTERS MOST — an ambiguous id **is** cited as authority
+
+`COORDINATION.md:15560`: *"…the authority **Q-BE-91**/93"* — and `Q-BE-91` resolves to two unrelated filings.
+**That is rule 16 failing inside the register itself: "verify at the artifact a claim names" cannot be done when the
+name resolves to more than one artifact.** The other citations are benign — `Q-BE-105`'s mapping note and
+`Q-DA-335`'s explanation *describe* the duplication rather than rely on it.
+
+## ALSO CARRIED (queue item 3)
+
+**REV 120 scope-corrected its own REVIEW 118 refutation** — already in my round-300 block: `require_book_declares_L`
+refuses the four books that **already exist** because they predate BE 101's builder; **09-07 passes because it was
+rebuilt**. **A reason to rebuild, not to wait. The refutation stands; its scope was stated wider than the fact.**
+
+## STATE
+
+**Nothing built, no heavy lock since 07:15:47Z, the build decision is with the USER.** The shared tree **converged**
+this round — the four stranded commits were rebased and pushed, and rows can land again.
+
+Counts: flags 2529 → 2539, provenance 2074 → 2084 (ten written, ten counted, duplicate-name gate run BEFORE
+writing); 1,794 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 283
+archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 300 (MEM, 2026-09-09T08:31:33Z, tip `586be44`)
 
 **R-852 and REV 120's build synthesis swept as a numbered queue under rule 23 — from my round-299 tip `a4c4e89`.**

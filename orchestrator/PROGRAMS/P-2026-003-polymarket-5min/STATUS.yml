@@ -67,6 +67,34 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T08:40:06Z (MEM ROUND 301 -- A REGISTER-INTEGRITY DIAGNOSIS, NOT A SWEEP; the state
+  files were current through R-853 and remain so. STATE ONLY. **THE COUNT REPRODUCED**: 1,176 Q rows / 1,172
+  distinct -- `Q-BE-92` x3, `Q-BE-91` x2, `Q-DA-331` x2 -- and R-entries 843/843 with NO duplicates, so the
+  coordinator's R-clean claim holds. ***MY OWN FIRST PROBE REPORTED A FOURTH AND IT WAS MY REGEX***: `### R-6
+  acknowledgement -- DA` is a heading that NAMES an entry rather than being one, caught before it reached the
+  report. ***ANSWER TO THE FIRST QUESTION, AND IT IS THE WORSE ONE FOR TWO OF THE THREE***: `Q-BE-91` and `Q-BE-92`
+  are DIFFERENT FILINGS on one id -- an ASK about a seat conflict beside a FILING about a defect that cost two runs;
+  a contract row, an ASK and a refusal to run `git gc` -- ***so a reader resolving `Q-BE-92` gets an arbitrary one
+  of three unrelated filings***. `Q-DA-331` is the benign case and is ALREADY EXPLAINED IN BAND by `Q-DA-335` (the
+  first line is a GATE-REFUSED DRAFT, VOID; the second supersedes it), its own mechanism being a third one again --
+  a void draft carried in by DE 110's pathspec sweep, the R-562 class. ***A FALSE LEAD CHASED TO THE END***: blame
+  attributes every duplicate line to `0539a36`, the scratch-drive revert, but measured at three refs the duplicates
+  ALREADY EXISTED at `0539a36^^` (1,028/1,024, same three) -- ***THE REVERT RESTORED THEM AND DID NOT CREATE
+  THEM***. ***AND THE MECHANISM IS NOT A HIGHEST-PLUS-ONE RACE***: bisected over 1,594 register commits, `Q-BE-91`
+  reaches 2 at a COORDINATOR commit, `Q-BE-92` reaches 2 AND 3 at ONE BE commit, `Q-DA-331` at the void-draft sweep
+  -- three duplicates, three causes, and a single commit adding two rows on one id is not a race. ***THE REGISTER
+  NAMES ITS OWN MECHANISM***: `Q-BE-105` records R-146(5) renumbering THIRTEEN duplicate rows, and its mapping note
+  parses to sources repeating -- `Q-BE-89` four times, `Q-BE-90` four, `Q-BE-91` three -- a ONE-TO-MANY rename in
+  which a tool matching by id and renaming one occurrence per rule leaves the rest behind. ***AND THE MAPPING HOLDS
+  EXACTLY ONE CHAIN COLLISION, WHICH IS THE ID WITH THREE ROWS***: `92` is the only id that is BOTH a source and a
+  target (`Q-BE-7 -> 92` while `Q-BE-92 -> 93`), so applying them in the wrong order leaves two rows numbered 92 --
+  prediction and observation meet, and the remedy for an ORDERING hazard is temporary ids, not a lock. ***THE DOOR
+  IS ALREADY SHUT ON THE SANCTIONED PATH***: `land_register_row.sh:46` refuses `DUPLICATE_ID` with exit 14, landed
+  `be0ef1d` 2026-09-07, AFTER all three, so the residual exposure is anything landed outside the script. ***AND ONE
+  AMBIGUOUS ID IS CITED AS AUTHORITY*** -- `COORDINATION.md:15560`, "the authority Q-BE-91/93" -- which is rule 16
+  failing inside the register itself. I have renumbered NOTHING and edited NO history. Flags 2529 -> 2539, prov
+  2074 -> 2084; window trimmed 4 -> 3, Batch 283 archived. **NOTHING BUILT, NO HEAVY LOCK SINCE 07:15:47Z, AND THE
+  BUILD DECISION IS WITH THE USER.** MEM asserts no result.)
   2026-09-09T08:31:33Z (MEM ROUND 300 -- R-852 AND REV 120'S BUILD SYNTHESIS SWEPT as a numbered
   queue under rule 23, from my round-299 tip `a4c4e89` to `586be44`. STATE ONLY. ***THE SYNTHESIS IS THE MOST
   DECISION-RELEVANT DOCUMENT SINCE THE RETRACTION AND THIS FILE CARRIES ITS THREE CATEGORIES RATHER THAN A SUMMARY
@@ -129,48 +157,6 @@ updated: >-
   other, which is the strongest available evidence the cause is real. Flags 2499 -> 2514, prov 2044 -> 2059; window
   trimmed 4 -> 3, Batch 281 archived. **NOTHING BUILT AND NO HEAVY LOCK SINCE 07:15:47Z, NO CORRECTED BOOK, NO
   CORRECTED NUMBER, AND THE STOPPING CRITERION IS STILL UNRULED.** MEM asserts no result.)
-  2026-09-09T08:17:59Z (MEM ROUND 298 -- R-848, R-849 AND R-850 SWEPT as a numbered queue under
-  rule 23, from my round-297 tip `97731e3` to `ac505b3`, fifteen commits. STATE ONLY. ***GATE ITEM 1 IS CLOSED --
-  the largest defect of the night -- AND THE FIX'S SHAPE WAS FORCED, NOT CHOSEN***: `_era_or_refuse` was NOT edited
-  because it lives inside `fit_manifest.json`'s `fit_code_files`, A SECOND PIN SURFACE NOBODY HAD WRITTEN DOWN, so
-  editing it would have been BLOCKING (R-835's class through a door nobody had opened) and would have falsified its
-  own DECLARED_ADDITIVE reason. I counted that surface at BOTH manifests: TWELVE entries including
-  `harmful_exposure_rows.py`, and ZERO `be_*.py` -- which is exactly why a NEW BE module can carry the resolver at no
-  pin cost. Closed UNVERIFIED; DA 145 verifies now. ***AND THE R-845 WINDOW-COUNT DISCREPANCY IS CLOSED, SO THE OPEN
-  ITEM I HAVE CARRIED SINCE ROUND 294 IS RETIRED***: 247 is the day's window count, 287 is `n_present` BEFORE the
-  mask, and 246 was NEVER a window count -- it is `arm_legs.n_slugs` over FILLS, equal to the supplied count on
-  09-04/05/06 (288 = 288, three times) and one short on 09-03 only, a property of ONE REPLAY that moves with arm,
-  latency and policy. TWO OF MY THREE VALUES WERE NEVER MEASURING THE SAME THING, which is why refusing to pick was
-  right and why calling 247->246 "one slug" was not. The mask now travels with identity, digest, as-of and counts,
-  `287 - 40 = 247` CHECKED with a `MASK_ARITHMETIC_DOES_NOT_CLOSE` refusal -- against ZERO of the twelve receipts on
-  disk naming a mask at all. `float("inf")` is not JSON so an open era end is `None` with `era_span_open_ended`, on
-  the reasoning that "jq accepting it is not the test". A THIRD call site, `de_v2_local_selector.py:151`, still
-  carries `(fi, None, ...)` and is CORRECT BY ACCIDENT AND NOT BY CONSTRUCTION -- routed to DE, so the era item is
-  two sites fixed and one open. ***AND MY OWN ROUND-297 CLOSURE IS REFUTED WITHIN ONE ROUND***: REV 118 finds
-  "ARMING DOES NOT COST NOTHING: FOUR OF FIVE DAYS REFUSE, AND THEY ARE THE FOUR DESIGN DAYS". My measurement stands
-  -- the key IS armed -- and the word "closes" was wrong: ***"ARMED" IS A FACT ABOUT A DECLARATION AND "RIGHT TO
-  ARM" IS A FACT ABOUT WHAT REFUSES AFTERWARDS***, the same shape as my own "landed is not reviewed", which I
-  applied to DE's code and not to my own conclusion. REV also marked its own verified item "an ASSERTION where a
-  CHECK is available -- rule 28 applied to the fix for rule 28's own site 4", the class reproducing INSIDE ITS OWN
-  REPAIR, and it took the shift on two findings that were its own rather than pushing back. Rule 29 explains a red
-  landing gate that was NOBODY'S DEFECT -- a checker resolving "the newest params present" changes verdict the
-  moment anyone lands a params version, which is CORRECT behaviour -- with the hardest clause being that a seat
-  landing past a refusing gate SAYS SO PLAINLY, since doing it quietly "is worse than the red". GATE: (5) and (8)
-  CLOSED AND VERIFIED, two of eight; (1) closed unverified; (2)(3)(6)(7) closed unverified with (3) REFUTED; (4)
-  REOPENED under ruling (b) with a reset DE. Flags 2484 -> 2499, prov 2029 -> 2044; window trimmed 4 -> 3, Batch 280
-  archived. **NOTHING BUILT AND NO HEAVY LOCK SINCE 07:15:47Z, AND THE STOPPING CRITERION PUT TO THE USER IS STILL
-  UNRULED.** ***ADDENDUM 08:19:09Z, VERIFIED BEFORE RECORDING BECAUSE THE GATE LINE ABOVE SAYS ITEM 1 IS UNVERIFIED
-  AND DA 145 HAS REPORTED***: item 1 is now CLOSED AND VERIFIED, driven at the integration rather than read --
-  `day_selector("20260903","btc")` built 247 entries of which 160 carry a non-empty gap list totalling 2,294.7 s,
-  `sel.era = 'clob_v4_1'`, no default anywhere, day-dependence established BY MEASUREMENT, six correct refusals.
-  ***THOSE ARE MY OWN ROUND-293 NUMBERS ARRIVED AT FROM THE OPPOSITE END OF THE FIX***: I measured 160 of 247 and
-  summed 376 gap records to 2,294.7 s as what the builder WAS NOT GETTING, and DA measures the same pair as what it
-  NOW GETS -- one defect and its repair described by one pair of numbers, measured independently on either side.
-  DA also swept for a third call site and found one AND FOUND IT CORRECT -- the same `de_v2_local_selector.py:151`
-  I confirmed above as correct by accident, two seats on one site in one round. And a scoping line this file now
-  carries from RESULTS: the exposure figures DESCRIBE THE BOOKS ON DISK, not a rebuild -- the defect is fixed and
-  the books built under it are not. GATE NOW: (1), (5) and (8) closed AND verified, three of eight. MEM asserts no
-  result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -342,6 +328,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 301, register-integrity diagnosis (not a sweep) ---
+  THE_REGISTER_CARRIES_THREE_DUPLICATE_Q_IDS_AND_I_REPRODUCED_THE_COUNT: 1176-ROWS-1172-DISTINCT
+  MY_OWN_FIRST_PROBE_REPORTED_A_FOURTH_AND_IT_WAS_MY_REGEX: AN-ACKNOWLEDGEMENT-HEADING-NOT-AN-ENTRY
+  ALL_THREE_ARE_DIFFERENT_FILINGS_NOT_ONE_ROW_LANDED_TWICE: THE-WORSE-OF-THE-TWO-CASES
+  EXCEPT_Q_DA_331_WHICH_IS_ONE_FILING_AND_ITS_VOID_DRAFT: ALREADY-EXPLAINED-IN-BAND-BY-Q-DA-335
+  THE_BLAME_POINTS_AT_THE_REVERT_AND_THE_REVERT_IS_INNOCENT: THEY-EXISTED-AT-0539a36-CARET-CARET
+  THE_MECHANISM_IS_NOT_A_HIGHEST_PLUS_ONE_RACE: THREE-DUPLICATES-THREE-CAUSES
+  IT_IS_THE_RESIDUE_OF_A_BULK_RENUMBERING_WITH_A_CHAIN_COLLISION: R-146-5-THIRTEEN-ROWS-RENUMBERED
+  AND_THE_ONE_ID_THAT_IS_BOTH_A_SOURCE_AND_A_TARGET_IS_THE_ONE_WITH_THREE_ROWS: 7-TO-92-WHILE-92-TO-93
+  THE_SANCTIONED_PATH_ALREADY_REFUSES_A_DUPLICATE_ID_BY_NAME: REFUSED-DUPLICATE_ID-EXIT-14
+  BUT_ONE_AMBIGUOUS_ID_IS_CITED_AS_AUTHORITY_WHICH_IS_RULE_16_IN_THE_REGISTER: THE-AUTHORITY-Q-BE-91-SLASH-93
   # --- MEM round 300, R-852 and REV 120's build synthesis swept (a4c4e89 -> 586be44) ---
   THE_BUILD_SYNTHESIS_IS_THE_MOST_DECISION_RELEVANT_DOCUMENT_SINCE_THE_RETRACTION: THREE-CATEGORIES-NOT-A-SUMMARY
   CATEGORY_A_IS_A_NEGATIVE_WORTH_SOMETHING_BECAUSE_IT_LISTS_WHAT_WAS_CHECKED: SEVEN-CANDIDATES-NAMED
@@ -26903,6 +26900,116 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 301, 2026-09-09T08:40:06Z (the clock read by which every measurement below was complete) ---
+  THE_REGISTER_CARRIES_THREE_DUPLICATE_Q_IDS_AND_I_REPRODUCED_THE_COUNT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      Reproduced independently at my own clock rather than accepted: **1,176 Q rows, 1,172 distinct** — the four-row
+      surplus being **`Q-BE-92` ×3, `Q-BE-91` ×2, `Q-DA-331` ×2**, exactly the three the coordinator drove at 08:14Z
+      (its 1,171/1,167 differs only by the rows landed since). **R-entries: 843 entries, 843 distinct, no
+      duplicates** — the coordinator's claim holds.
+  MY_OWN_FIRST_PROBE_REPORTED_A_FOURTH_AND_IT_WAS_MY_REGEX:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      ***AND MY FIRST PASS REPORTED A DUPLICATE `R-6`, WHICH WAS MY INSTRUMENT AND NOT THE REGISTER.*** My pattern
+      `^### (R-\d+)\b` matched **two** lines: `### R-6 — parameter authority RATIFIED…` (the entry) and
+      **`### R-6 acknowledgement — DA`** — a heading that NAMES an entry rather than being one. Excluding
+      acknowledgement headings gives 843/843. **A heading that begins with an id is not an entry with that id**, and
+      this is the same class my own procedure names — *grep hits on vocabulary are not references; match identity*.
+      Caught before it reached the report.
+  ALL_THREE_ARE_DIFFERENT_FILINGS_NOT_ONE_ROW_LANDED_TWICE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      **The answer to the coordinator's first question is the worse one for two of the three: they are DIFFERENT
+      FILINGS, not one row landed repeatedly.** `Q-BE-91`'s two rows are an **ASK about a seat conflict** (L397) and
+      a **FILING about a §1f defect that cost two runs** (L400) — unrelated subjects. `Q-BE-92`'s three are a
+      **CLOSED/READY contract row** (L321), an **ASK on the same seat conflict** (L398) and a **FILING declining a
+      `git gc`** (L399). ***SO A READER RESOLVING `Q-BE-92` GETS AN ARBITRARY ONE OF THREE UNRELATED FILINGS.***
+  EXCEPT_Q_DA_331_WHICH_IS_ONE_FILING_AND_ITS_VOID_DRAFT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      `Q-DA-331` is the **benign** case and it is **already explained in band**: the two rows share a 243-character
+      headline, differ in 64 hunks at similarity 0.72, and **`Q-DA-335` says so in the register itself** — *"THE TWO
+      `Q-DA-331` LINES, EXPLAINED IN THE FILE: THE FIRST IS A GATE-REFUSED DRAFT, **VOID**; THE SECOND SUPERSEDES
+      IT."* Its mechanism is a third one again: the void draft **was carried into the file by DE 110's pathspec
+      sweep of `COORDINATION.md`** — the R-562 class, a broad `git add` sweeping another seat's refused work.
+      **Explained, but only to a reader who reaches Q-DA-335; resolving `Q-DA-331` directly is still ambiguous.**
+  THE_BLAME_POINTS_AT_THE_REVERT_AND_THE_REVERT_IS_INNOCENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      ***A FALSE LEAD I CHASED TO THE END RATHER THAN REPORTING IT.*** `git blame` attributes **every** duplicate
+      line to **`0539a36` "Revert 'b' — a coordinator scratch test ran in the shared tree and replaced the
+      register"** — the R-756 incident. But blame names the commit that last **rewrote** a line, and a whole-file
+      revert rewrites everything. **Measured at three refs: `0539a36^^` already had 1,028 rows / 1,024 distinct with
+      the SAME three duplicates; `0539a36^` had ONE row (the damage); `0539a36` restored 1,028/1,024.** ***THE
+      REVERT RESTORED THE DUPLICATES; IT DID NOT CREATE THEM***, and the scratch-drive incident is not their
+      cause.
+  THE_MECHANISM_IS_NOT_A_HIGHEST_PLUS_ONE_RACE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      **The coordinator's hypothesis — two seats colliding by "read the highest and add one" — is NOT what happened,
+      and the three duplicates have THREE DIFFERENT CAUSES.** Bisected over the 1,594 commits touching the register:
+      **`Q-BE-91` reaches 2 at `3fbc801`** (2026-08-26 03:47:31Z, a COORDINATOR commit ruling on BE filings);
+      **`Q-BE-92` reaches 2 AND 3 at the SAME commit `55a9907`** (2026-08-26 05:13:23Z, a single BE commit adding
+      two rows on one id); **`Q-DA-331` reaches 2 at `26d49f4`** (2026-09-06 19:36:10Z, the void-draft sweep).
+      **A single commit adding two rows on one id is not a race between seats.**
+  IT_IS_THE_RESIDUE_OF_A_BULK_RENUMBERING_WITH_A_CHAIN_COLLISION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      ***THE REGISTER NAMES ITS OWN MECHANISM, AND IT IS A RENAME CHAIN.*** `Q-BE-105`: *"R-146(5) REGISTER HYGIENE
+      DONE — **13 duplicate rows renumbered to unique monotone IDs**, content unchanged"*, with an explicit MAPPING
+      NOTE. Parsed: **the sources repeat — `Q-BE-89` FOUR times, `Q-BE-90` FOUR times, `Q-BE-91` THREE times** — so
+      the pre-existing state was many rows sharing one id, and the campaign was a **one-to-many rename**. ***A RENAME
+      TOOL THAT MATCHES BY ID AND RENAMES ONE OCCURRENCE PER RULE LEAVES THE REST BEHIND***, which is why
+      `Q-BE-91` went from three sources to two surviving rows rather than to zero.
+  AND_THE_ONE_ID_THAT_IS_BOTH_A_SOURCE_AND_A_TARGET_IS_THE_ONE_WITH_THREE_ROWS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      ***AND THE MAPPING CONTAINS EXACTLY ONE CHAIN COLLISION, WHICH IS THE ID WITH THREE ROWS.*** Of the thirteen
+      pairs, **`92` is the ONLY id that is both a SOURCE and a TARGET**: the note maps **`Q-BE-7 → 92`** *and*
+      **`Q-BE-92 → 93`**. **Apply `7→92` before `92→93` and the register briefly holds two rows numbered 92; the
+      second rename then matches one of them and the other survives.** No target is duplicated in the mapping, so
+      the collision is purely one of ORDER. **`Q-BE-92` is the id with three rows today** — the prediction and the
+      observation meet. *The remedy for an ordering hazard is temporary ids, not a lock.*
+  THE_SANCTIONED_PATH_ALREADY_REFUSES_A_DUPLICATE_ID_BY_NAME:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      **The door is already shut on the sanctioned path, which bounds the exposure to history.**
+      `scripts/land_register_row.sh:46` refuses by name: *"REFUSED DUPLICATE_ID: … is already in the register
+      (supersede in band with a new id)"*, `exit 14`. It landed at **`be0ef1d`, 2026-09-07 05:35:26Z** — **after all
+      three duplicates** (08-26, 08-26, 09-06). ***SO NO DUPLICATE CAN ENTER THROUGH THE `--row` FORM, AND THE
+      RESIDUAL EXPOSURE IS ANYTHING LANDED OUTSIDE IT*** — which is exactly what R-784 retired the hand-edit for.
+      **Three historical instances, one closed door, and no recurrence path through the script.**
+  BUT_ONE_AMBIGUOUS_ID_IS_CITED_AS_AUTHORITY_WHICH_IS_RULE_16_IN_THE_REGISTER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T08:40:06Z
+    said: >-
+      ***AND THE COORDINATOR'S FRAMING IS RIGHT WHERE IT MATTERS MOST: ONE OF THE AMBIGUOUS IDS IS CITED AS
+      AUTHORITY.*** `COORDINATION.md:15560` reads *"…the authority **Q-BE-91**/93"* — and `Q-BE-91` resolves to two
+      unrelated filings. **That is rule 16 failing inside the register itself: "verify at the artifact a claim
+      names" cannot be done when the name resolves to more than one artifact.** The other citations are benign —
+      `Q-BE-105`'s mapping note and `Q-DA-335`'s explanation both *describe* the duplication rather than rely on it,
+      and my own rows cite `Q-DA-331` only as a neighbour. **I have renumbered nothing and edited no history; this
+      is the diagnosis and the repair is the coordinator's to rule.**
   # --- MEM round 300, 2026-09-09T08:31:33Z (the clock read by which every measurement below was complete) ---
   THE_BUILD_SYNTHESIS_IS_THE_MOST_DECISION_RELEVANT_DOCUMENT_SINCE_THE_RETRACTION:
     prov: CHECKED
