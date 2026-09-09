@@ -1,3 +1,99 @@
+# READ FIRST — round 330 (MEM, 2026-09-09T17:55:27Z, tip `1652b4a`)
+
+*Landed before the 09-04 retry's result arrives.*
+
+# 📜 TWO NEW STANDING RULES — they bind every seat, including me
+
+## RULE 34 (`SEAT_PROTOCOL:482`) — days from **2026-09-08** are PROTECTED
+
+**No probe, diagnostic, smoke test or quick look.** *Every day the programme holds is **already spent**: 09-03..09-06
+are the latency days; 09-07 carries a sealed run with 500 drawn nulls REV 115 re-derived.* **So the untouched set
+starts at 09-08 and reaches five — rule 8's minimum — around 2026-09-13.**
+
+***I have hashed books, driven predicates and parsed receipts all night, and every one was on a consumed day. From
+here that is something I check BEFORE touching a file, not after.***
+
+**The constructive half:** *exercise corrected pipelines on **consumed** days — free to re-run precisely because they
+are spent.* ***A day that can no longer validate anything has exactly one remaining use, and it is a good one: it
+costs nothing to break.***
+
+## RULE 35 (`:494`) — a limit that lives only in a declaration does **not** bind the result
+
+**The output carries it as a REQUIRED FIELD and the guard tests the PROPERTY, never the text.** *This is the rule
+this file has been arguing toward for four rounds without a number to attach to it.*
+
+**REV has now found that shape FIVE times:** `MEMBERSHIP_LIMIT` · `matched_on` · the superseded set · the null's
+cannot-validate clause · **the no-split `split_book: False` boolean.** *The fifth is the sharpest — **a boolean is
+the shortest possible declaration and still does not bind unless something tests it.***
+
+# ⏳ R-873 — VALIDATION HAS A DATE: ~2026-09-13, and it is a CONSTRAINT
+
+**`days_complete_now` (located by me at `:1403`) returns 5 — 09-03..09-07 — and all five are consumed.** *The
+programme already has rule 8's five days and none can be used for what five days are FOR.*
+
+# 🦙 R-874 — the five-day guard was `"5" in <prose>`: **"we have 5 llamas" PASSED**
+
+*Rule 35's worked example, found the day the rule was written* — **the fourth relative of the family this file has
+recorded** (the regex that could not see an f-string; phrase-not-property assertions; the `3862` hits that were
+Chainlink drift bounds; now livestock). **DA fixed it in rule 35's shape.**
+
+***And DA found a text-match defect of its own INSIDE the falsifiers it was writing for a text-match defect.*** **The
+seat most primed to avoid it, in the file most about it, committed it anyway.** ***So the remedy cannot be attention.
+It has to be the structure rule 35 names.***
+
+# 📉 R-875 — the operating concurrency is **N = 2**, not 3
+
+| N | ceiling | |
+|---|---|---|
+| 1 / 2 / 3 | **9.000 / 4.500 / 3.000 GiB** | measured draw **2.621 GiB** |
+| **at N=3** | headroom **0.379 GiB** | **CANCELS `_sets` alone ≈ 0.476 GiB — EXCEEDS** |
+
+*Last round I recorded N=3 from `floor(9/2.621)`; **the flaw was mine as much as anyone's** — a floor division
+answers "how many fit" and says nothing about what else the process is about to allocate.* **The ceiling is not the
+footprint.**
+
+***And the reasoning to preserve is better than the number: N=2 was adopted BEFORE the confirming measurement on
+purpose, because the user's constraint is ASYMMETRIC — wrong toward 2 costs wall-clock, wrong toward 3 costs the box
+death `research.slice` was created after. "A measurement justifies the RISKY choice, never the SAFE one."***
+
+**And the coordinator records its own correction history unsmoothed: a "200 % slice cap" that does not exist, then
+N=3, and it is N=2.** *Three statements, two corrections, one quantity, three rounds — **a number that has moved
+twice should be read as still capable of moving.***
+
+# ✅ THE 09-04 GUARD IS FIXED AND VERIFIED
+
+**DE 185 at `:11339`** — I read the line: *"A split book is not an ambiguous one."* **REV 150 drove five refusals
+individually and confirms it PARTITIONS rather than widens**: a receipt with two **declared** values still refuses
+`..._AMBIGUOUS`; **no false accept**; `--waive-scoring-path` cannot let a placement-latency failure through. ***The
+verification that matters is not "the split book now passes" but "the corrupt book still fails."***
+
+***REV singled out the design: `_L = _dvals[0]` from a set asserted to hold exactly one element, leg-selection API
+declined deliberately — "stronger than the caller must name a leg". A guard that CANNOT pick beats one that picks
+correctly.*** *The same move as one raiser carrying `MEMBERSHIP_LIMIT`, and as deriving a set rather than typing
+one.*
+
+## ⚠ And my own attempt to reproduce REV's scope FAILED — I say so rather than publish the number
+
+**My function-boundary heuristic scanned back for a `def ` at column zero and landed on an enclosing region of 3,011
+lines, where I counted 6 and 8 occurrences — of a scope REV never claimed anything about.** ***I did not reproduce
+REV's finding and I did not contradict it; I measured a different thing.*** *Third time tonight my own instrument has
+been the error — the `grep -c` that wrapped a line, the probe with an invalid side, and now this — and each time what
+caught it was asking what my tool actually examined.*
+
+## STATE
+
+**09-05 built clean** — rc 0 at 17:50:10Z, 48 units, peak 6.40 GB — **and I hashed the book myself: 295,157,948 B,
+sha256 opening `2df450c5a3081caa`**, with **`era "clob_v4_1"` from the day, 13 gap-bearing windows, split present.**
+**09-06 armed behind the retry.**
+
+***The 09-04 retry is running now. If it lands: a POINT ESTIMATE, NO NULL, BTC-ONLY, on a book over 52 gap-bearing
+windows where the retracted figure had ZERO — so not a revision but a different measurement.***
+
+Counts: flags 2929 → 2943, provenance 2474 → 2488 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 312 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 329 (MEM, 2026-09-09T17:15:06Z, tip `9beae2d`)
 
 # ⛔ THE 09-04 POINT ESTIMATE **REFUSED** — a refusal, not a failure

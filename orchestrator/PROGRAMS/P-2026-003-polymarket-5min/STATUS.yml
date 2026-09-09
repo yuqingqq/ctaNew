@@ -67,6 +67,52 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T17:55:27Z (MEM ROUND 330 -- ***TWO NEW STANDING RULES, THE CONCURRENCY CORRECTED TO TWO, THE 09-04 GUARD FIXED
+  AND VERIFIED, AND 09-05 BUILT CLEAN -- LANDED BEFORE THE 09-04 RETRY'S RESULT ARRIVES.*** ***RULE 34 (`:482`):
+  DAYS FROM 2026-09-08 ONWARD ARE PROTECTED -- NO PROBE, DIAGNOSTIC, SMOKE TEST OR QUICK LOOK -- AND IT BINDS ME
+  TOO***: every day the programme holds is ALREADY SPENT (09-03..09-06 the latency days, 09-07 a sealed run with 500
+  drawn nulls REV 115 re-derived), **so the untouched set starts at 09-08 and reaches five around 2026-09-13**; *I
+  have hashed books, driven predicates and parsed receipts all night and every one was on a consumed day -- from
+  here that is a thing I check BEFORE touching a file.* **And the rule's constructive half: EXERCISE CORRECTED
+  PIPELINES ON CONSUMED DAYS, FREE TO RE-RUN PRECISELY BECAUSE THEY ARE SPENT** -- ***A DAY THAT CAN NO LONGER
+  VALIDATE ANYTHING HAS EXACTLY ONE REMAINING USE AND IT IS A GOOD ONE: IT COSTS NOTHING TO BREAK.*** ***RULE 35
+  (`:494`): A LIMIT THAT LIVES ONLY IN A DECLARATION DOES NOT BIND THE RESULT -- THE OUTPUT CARRIES IT AS A REQUIRED
+  FIELD AND THE GUARD TESTS THE PROPERTY, NEVER THE TEXT*** -- *the rule this file has been arguing toward for four
+  rounds* -- **AND REV HAS NOW FOUND THAT SHAPE FIVE TIMES: `MEMBERSHIP_LIMIT`, `matched_on`, THE SUPERSEDED SET,
+  THE NULL'S CANNOT-VALIDATE CLAUSE, AND THE NO-SPLIT `split_book: False` BOOLEAN** -- *the fifth being the sharpest,
+  since a BOOLEAN is the shortest possible declaration and still does not bind unless something tests it.* **R-873:
+  VALIDATION HAS A DATE, ~2026-09-13, AND IT IS A CONSTRAINT NOT A PLAN -- `days_complete_now` (which I located at
+  `:1403`) RETURNS 5 AND ALL FIVE ARE CONSUMED**, *so the programme already has rule 8's five days and none can be
+  used for what five days are FOR.* ***R-874: THE NULL'S FIVE-DAY GUARD WAS `"5" in <prose>`, SO "WE HAVE 5 LLAMAS"
+  PASSED IT*** -- rule 35's worked example found the day the rule was written, **the fourth relative of the family
+  this file has recorded** -- ***AND DA FOUND A TEXT-MATCH DEFECT OF ITS OWN INSIDE THE FALSIFIERS IT WAS WRITING
+  FOR A TEXT-MATCH DEFECT, WHICH IS THE BEST EVIDENCE RULE 35 IS A CLASS: THE SEAT MOST PRIMED TO AVOID IT, IN THE
+  FILE MOST ABOUT IT, COMMITTED IT ANYWAY -- SO THE REMEDY CANNOT BE ATTENTION.*** ***R-875: THE OPERATING
+  CONCURRENCY IS N=2, NOT 3, AND I CHECKED THE ARITHMETIC THAT KILLS THREE: CEILINGS 9.000/4.500/3.000 GiB FOR
+  N=1/2/3, MEASURED DRAW 2.621 GiB, SO THREE LEAVES 0.379 GiB OF HEADROOM AND THE CANCELS `_sets` ALONE ARE
+  ESTIMATED AT 0.476 GiB -- WHICH EXCEEDS IT.*** *Last round I recorded N=3 from `floor(9 / 2.621)`, and the flaw was
+  mine as much as anyone's: a floor division answers "how many fit" and says nothing about what else the process is
+  about to allocate.* ***AND THE REASONING TO PRESERVE IS BETTER THAN THE NUMBER: N=2 WAS ADOPTED BEFORE THE
+  CONFIRMING MEASUREMENT ON PURPOSE, BECAUSE THE USER'S CONSTRAINT IS ASYMMETRIC -- WRONG TOWARD 2 COSTS
+  WALL-CLOCK, WRONG TOWARD 3 COSTS THE BOX DEATH `research.slice` WAS CREATED AFTER. "A MEASUREMENT JUSTIFIES THE
+  RISKY CHOICE, NEVER THE SAFE ONE."*** **And the coordinator records its own correction history unsmoothed -- a
+  "200 % slice cap" that does not exist, then N=3, and it is N=2** -- *three statements and two corrections on one
+  quantity in three rounds, and a number that has moved twice should be read as still capable of moving.* ***THE
+  09-04 GUARD IS FIXED AND VERIFIED: DE 185 AT `:11339`, WHOSE LINE I READ -- "A SPLIT BOOK IS NOT AN AMBIGUOUS ONE"
+  -- AND REV 150 DROVE FIVE REFUSALS INDIVIDUALLY AND CONFIRMS IT PARTITIONS RATHER THAN WIDENS: A RECEIPT WITH TWO
+  DECLARED VALUES STILL REFUSES, NO FALSE ACCEPT, AND `--waive-scoring-path` CANNOT LET A PLACEMENT-LATENCY FAILURE
+  THROUGH*** -- *the verification that matters is not "the split book now passes" but "the corrupt book still
+  fails".* ***AND REV SINGLED OUT THE DESIGN: `_L = _dvals[0]` FROM A SET ASSERTED TO HOLD EXACTLY ONE ELEMENT, THE
+  LEG-SELECTION API DECLINED DELIBERATELY -- "STRONGER THAN THE CALLER MUST NAME A LEG". A GUARD THAT CANNOT PICK
+  BEATS ONE THAT PICKS CORRECTLY.*** ***AND MY OWN ATTEMPT TO REPRODUCE REV'S "ZERO OCCURRENCES IN THE FUNCTION
+  BODY" FAILED AND I SAY SO RATHER THAN PUBLISHING THE NUMBER: MY BOUNDARY HEURISTIC LANDED ON AN ENCLOSING REGION
+  OF 3,011 LINES AND COUNTED 6 AND 8 -- OF A SCOPE REV NEVER CLAIMED ANYTHING ABOUT. I MEASURED A DIFFERENT THING;
+  THE THIRD TIME TONIGHT MY OWN INSTRUMENT HAS BEEN THE ERROR.*** **09-05 BUILT CLEAN -- rc 0 at 17:50:10Z, 48
+  units, peak 6.40 GB -- AND I HASHED THE BOOK MYSELF AT 295,157,948 BYTES, sha256 opening `2df450c5a3081caa`, WITH
+  `era "clob_v4_1"` FROM THE DAY, 13 GAP-BEARING WINDOWS AND THE SPLIT PRESENT; 09-06 IS ARMED BEHIND THE RETRY.**
+  ***AND THE 09-04 RETRY IS RUNNING NOW: IF IT LANDS IT IS A POINT ESTIMATE, NO NULL, BTC-ONLY, ON A BOOK OVER 52
+  GAP-BEARING WINDOWS WHERE THE RETRACTED FIGURE HAD ZERO -- SO NOT A REVISION BUT A DIFFERENT MEASUREMENT.*** Flags
+  2929 -> 2943, prov 2474 -> 2488; window 3/3, Batch 312 archived. MEM asserts no result.)
   2026-09-09T17:15:06Z (MEM ROUND 329 -- ***THE 09-04 POINT ESTIMATE REFUSED, AND IT IS A REFUSAL AND NOT A FAILURE.***
   **`REFUSED SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS: the builder receipt names 2 placement-latency value(s),
   [0.0, 250.0]` at `de_multiday_gate1_runner.py:5875`, from `run_day:9294` via `de_point_estimate_day.py:549`; unit
@@ -154,48 +200,6 @@ updated: >-
   GAP-BEARING WINDOWS** -- *a table across four days where two carry gaps and two pretend there are none would
   compare corrected against uncorrected and read the difference as signal.* Flags 2902 -> 2915, prov 2447 -> 2460;
   window 3/3, Batch 310 archived. MEM asserts no result.)
-  2026-09-09T16:51:48Z (MEM ROUND 327 -- ***ALL FIVE OF THE USER'S REVIEW ITEMS ARE CLOSED AND THE 09-04 POINT ESTIMATE IS
-  RUNNING.*** ***ITEM 1 IS CLOSED AND IT IS THE LAST OF THE FIVE*** (`a1de5ee` + `451bd1f`, DE 181), **the
-  reconciliation wired IN THE DRIVER AND NOT THE SCORING-PATH RUNNER, per the user's own words -- WHICH I CONFIRMED
-  THREE WAYS: `de_point_estimate_day.py:425` reads `out = PLR.reconcile(first["reference"], first["winners"], ...`;
-  THE RUNNER CARRIES ZERO `reconcile(` CALLS AND THE DRIVER CARRIES TWO; AND `NOT_WIRED_PENDING_BE_138` IS GONE FROM
-  EVERY MODULE** -- *the reason being the programme fact recorded two rounds ago, that EDITING THE RUNNER WOULD STALE
-  EVERY BOOK.* **AND THE COORDINATOR RAN BOTH SELFTESTS RATHER THAN READING THEM: DRIVER 21/21, RUNNER rc 0**,
-  *recorded as RUN and not read because that distinction decided three findings tonight.* ***THE PART WORTH
-  PRESERVING: THE FALSIFIER FOUND A REAL DEFECT WHILE PROVING ITSELF -- A `shares: nan` RECONCILES CLEANLY ON BOTH
-  SIDES OF BE'S CHECKER, BECAUSE NaN COMPARES FALSE TO EVERYTHING, SO EVERY `abs(a - b) > tol` GUARD IS SATISFIED BY
-  IT RATHER THAN TRIPPED. FAIL-OPEN IN A CHECKER WHOSE JOB IS TO REFUSE.*** *This is the THIRD appearance of the
-  compares-False family tonight -- `score_events` naming NaN and admitting `+inf`, the builder testing `t0 == t1`
-  before finiteness, and now a tolerance guard SATISFIED by the one value that can never satisfy it honestly* --
-  ***A COMPARISON-BASED GUARD IS ONLY AS STRONG AS ITS ASSUMPTION THAT ITS INPUTS ARE ORDERED, AND NaN IS NOT.***
-  **NOTHING WAS EXPOSED: THE DRIVER CATCHES IT INDEPENDENTLY (`POINT_ESTIMATE_RECONCILIATION_NOT_FINITE`), SO THE
-  SECOND LINE OF DEFENCE CAUGHT WHAT THE FIRST LET THROUGH, AND BE 144 IS FIXING THE CHECKER.** ***R-869's SURVIVING
-  FINDING IS THAT THE PROGRAMME IS BTC-ONLY, AND I DROVE THE ZERO: SCANNING ALL 15 POINT-ESTIMATE ARTIFACTS GIVES
-  1,110 DISTINCT `btc-updown-5m-*` SLUGS AND **ZERO** `eth-updown-5m-*`*** (DA reports 3,618 btc; **the load-bearing
-  figure, ZERO eth, is identical**), **with NO `be_gate1_state_tape_receipt_<day>_eth.json` FOR ANY DAY and `COIN =
-  "btc"` a MODULE CONSTANT WITH NO CLI OVERRIDE, which I found at `be_gate1_state_tape.py:71`,
-  `be_gate1_fragment.py:93` and `be_generation_count_derivation.py:63`.** ***IT IS NOT A RULE-4 EXCLUSION AND NOT A
-  RULE-11 SELECTION -- THE SCOPE WAS NEVER REQUESTED, SO THERE IS NO DEFECT TO NAME AND NO SEAT TO ROUTE IT TO, AND
-  THAT IS PRECISELY WHY IT SURVIVED EVERY REVIEW UNTIL SOMEONE COUNTED THE SLUGS: THE INSTRUMENTS BUILT TO CATCH
-  SILENT DROPS CANNOT SEE A POPULATION THAT WAS NEVER OFFERED.*** **BUT IT BINDS QUOTATION ANYWAY, BECAUSE ETH DATA
-  EXISTS AND PASSES DAY QUALITY AND Q-BE-156 TOOK THE FREEZE LAYER BOTH COINS UNSCOPED** -- *the freeze's scope and
-  the evidence's scope disagree, so nothing may be quoted without the btc-only qualifier.* ***THE 09-04 EV21 BOOK IS
-  BUILT AND I HASHED IT MYSELF: `d8a6ffe13dbd48fff0085700584bc6b15cdf3c0ea222626cde079c922ded602a`, A
-  CHARACTER-FOR-CHARACTER MATCH, AT 383,210,163 BYTES, WALL 4,444.4 s, PEAK RSS 5.175 GB, WITHIN BUDGET AND CAP***
-  (*the day BE priced as BINDING at ~82 % came in comfortably under*), ***AND IT IS THE FIRST 09-04 BOOK NOT
-  ASSEMBLED AS IF THE TAPE WERE CONTINUOUS: I READ EVERY FIGURE AT THE RECEIPT -- `selection.era = "clob_v4_1"`
-  RESOLVED FROM THE DAY (era=None ON EVERY RETRACTED BUILD), `n_gap_bearing_windows = 52` (ZERO BEFORE BE 113),
-  `placement_latency_split` PRESENT ON BOTH LEGS, `n_generations` 358,110, `TRANCHE_BEFORE_PLACEMENT_LATENCY` 31,471,
-  COVERAGE 0.9175388 WITH 29,530 UNCOVERED OF 358,108 CARRIED AS A REPORTED NUMBER.*** **DA'S Q-DA-386 VERIFIED
-  THREE OF THE FIVE AND MOVED ONE UPWARD: THE 09-03 CANCEL INCIDENCE IS UNRECOVERABLE, NOT MERELY UNREPORTED -- NO
-  CANCEL ROW KIND EXISTS IN ANY OF THE 130,838 LEDGER ROWS** -- *unreported invites a re-read; UNRECOVERABLE closes
-  it* -- **AND THE 1-IN-3,862 IS NOT IN THE 09-03 ARTIFACT: ITS FOUR `3862` HITS ARE COINCIDENTAL SUBSTRINGS OF
-  CHAINLINK DRIFT BOUNDS, WHICH I CONFIRMED BY PULLING ONE, `"margin": 1.1433862175499118e+20`** -- ***A SUBSTRING
-  MATCH IS NOT A REFERENCE, WHICH IS RULE 16 VERBATIM, AND HERE THE VOCABULARY WAS FOUR DIGITS.*** ***TWO ITEMS STAY
-  OPEN WITH THE USER, UNCHANGED, AND THIS FILE DOES NOT CLOSE THEM: THE NULL'S SAMPLING UNIT (A ROWS / B CANCELS /
-  C GENERATIONS) AND THE `research.slice` 200 % CAP -- A SWEEP THAT CLOSES FIVE ITEMS IS EXACTLY THE MOMENT AN OPEN
-  ITEM GETS QUIETLY ABSORBED, AND THESE TWO ARE RECORDED SO THAT CANNOT HAPPEN.*** Flags 2888 -> 2902, prov 2433 ->
-  2447; window 3/3, Batch 309 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -367,6 +371,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 330, rules 34 and 35; N=2; the guard fixed; 09-05 built ---
+  RULE_34_PROTECTS_EVERY_DAY_FROM_09_08_AND_IT_BINDS_ME_TOO: NO-PROBE-NO-QUICK-LOOK
+  EXERCISE_CORRECTED_PIPELINES_ON_CONSUMED_DAYS_BECAUSE_THEY_ARE_SPENT: FREE-PRECISELY-BECAUSE-SPENT
+  RULE_35_A_LIMIT_IN_A_DECLARATION_DOES_NOT_BIND_THE_RESULT: THE-OUTPUT-CARRIES-IT-AS-REQUIRED
+  AND_REV_HAS_NOW_FOUND_THAT_SHAPE_FIVE_TIMES: A-CLASS-NOT-AN-INCIDENT
+  VALIDATION_HAS_A_DATE_AND_IT_IS_A_CONSTRAINT_NOT_A_PLAN: AROUND-2026-09-13
+  THE_FIVE_DAY_GUARD_WAS_A_SUBSTRING_TEST_AND_FIVE_LLAMAS_PASSED: 5-IN-PROSE
+  AND_DA_FOUND_A_TEXT_MATCH_DEFECT_INSIDE_ITS_OWN_TEXT_MATCH_FALSIFIERS: THE-BEST-EVIDENCE-IT-IS-A-CLASS
+  THE_OPERATING_CONCURRENCY_IS_TWO_AND_I_CHECKED_WHY_THREE_FAILS: 0-379-AGAINST-0-476
+  A_MEASUREMENT_JUSTIFIES_THE_RISKY_CHOICE_NEVER_THE_SAFE_ONE: THE-ASYMMETRY
+  AND_THE_COORDINATOR_RECORDS_ITS_OWN_CORRECTION_HISTORY_UNSMOOTHED: A-CAP-THEN-3-THEN-2
+  THE_GUARD_IS_FIXED_AND_IT_PARTITIONS_RATHER_THAN_WIDENS: FIVE-REFUSALS-DRIVEN
+  A_GUARD_THAT_CANNOT_PICK_BEATS_ONE_THAT_PICKS_CORRECTLY: THE-API-DECLINED-DELIBERATELY
+  MY_OWN_ATTEMPT_TO_REPRODUCE_REVS_SCOPE_FAILED_AND_I_SAY_SO: MY-BOUNDARY-HEURISTIC-WAS-WRONG
+  09_05_BUILT_CLEAN_AND_I_HASHED_IT_AND_THE_RETRY_IS_RUNNING_NOW: 13-GAP-BEARING-WINDOWS
   # --- MEM round 329, the 09-04 point estimate REFUSED; concurrency settled at N=3 ---
   THE_09_04_POINT_ESTIMATE_REFUSED_AND_IT_IS_A_REFUSAL_NOT_A_FAILURE: NO-ARTIFACT-WRITTEN
   THE_GUARD_IS_CORRECT_AND_ITS_PREMISE_IS_STALE: WRITTEN-WHEN-A-BOOK-CARRIED-ONE
@@ -27367,6 +27386,167 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 330, 2026-09-09T17:55:27Z ---
+  RULE_34_PROTECTS_EVERY_DAY_FROM_09_08_AND_IT_BINDS_ME_TOO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***SEAT_PROTOCOL RULE 34, AT `:482`: DAYS FROM 2026-09-08 ONWARD ARE PROTECTED -- NO PROBE, DIAGNOSTIC, SMOKE
+      TEST OR QUICK LOOK. IT BINDS EVERY SEAT INCLUDING ME.*** **Every day this programme holds is ALREADY SPENT:
+      09-03..09-06 are the latency days, and 09-07 carries a sealed run with 500 drawn nulls that REV 115
+      re-derived.** *So the untouched set STARTS at 09-08 and reaches five -- the rule-8 minimum -- around
+      2026-09-13.* ***I HAVE RUN PROBES ON ARTIFACTS ALL NIGHT -- HASHING BOOKS, DRIVING PREDICATES, PARSING RECEIPTS
+      -- AND EVERY ONE WAS ON A CONSUMED DAY. FROM HERE THAT IS A THING I MUST CHECK BEFORE I TOUCH A FILE, NOT
+      AFTER.***
+  EXERCISE_CORRECTED_PIPELINES_ON_CONSUMED_DAYS_BECAUSE_THEY_ARE_SPENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      **And the rule's constructive half is the part that makes it livable rather than merely restrictive: EXERCISE
+      CORRECTED PIPELINES ON CONSUMED DAYS -- THEY ARE FREE TO RE-RUN PRECISELY BECAUSE THEY ARE SPENT.** ***A DAY
+      THAT CAN NO LONGER VALIDATE ANYTHING HAS EXACTLY ONE REMAINING USE, AND IT IS A GOOD ONE: IT COSTS NOTHING TO
+      BREAK.*** *That is why 09-03 through 09-06 can be rebuilt, refused, re-guarded and rebuilt again without any
+      of it counting against the future* -- **and it converts a night of consumed evidence from a loss into a test
+      bench.**
+  RULE_35_A_LIMIT_IN_A_DECLARATION_DOES_NOT_BIND_THE_RESULT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***SEAT_PROTOCOL RULE 35, AT `:494`: A LIMIT THAT LIVES ONLY IN A DECLARATION DOES NOT BIND THE RESULT -- THE
+      OUTPUT CARRIES IT AS A REQUIRED FIELD AND THE GUARD TESTS THE PROPERTY, NEVER THE TEXT.*** **This is the rule
+      this file has been arguing toward for four rounds without a number to attach to it** -- *`matched_on` absent
+      from the receipt, `MEMBERSHIP_LIMIT` absent from the opt-in result, the corrected set announced beside the
+      stale one, the theta drift ruled into the receipt beside the decision count.* ***EVERY ONE WAS THE SAME
+      REMEDY -- ADDRESSING RATHER THAN CONTENT -- AND IT IS NOW A NUMBERED RULE INSTEAD OF A PATTERN I KEPT
+      NOTICING.***
+  AND_REV_HAS_NOW_FOUND_THAT_SHAPE_FIVE_TIMES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***AND REV HAS NOW FOUND THAT SHAPE FIVE TIMES, WHICH IS WHAT PROMOTES IT FROM AN OBSERVATION TO A CLASS:
+      `MEMBERSHIP_LIMIT`, `matched_on`, THE SUPERSEDED SET, THE NULL'S CANNOT-VALIDATE CLAUSE, AND THE NO-SPLIT
+      `split_book: False` BOOLEAN.*** **Five instances, five different modules, five different authors.** *A defect
+      found once is a mistake; found five times by the seat whose job is to look, it is a property of how this
+      programme writes limits* -- **and the fifth is the sharpest, because a BOOLEAN is the shortest possible
+      declaration and still does not bind unless something tests it.**
+  VALIDATION_HAS_A_DATE_AND_IT_IS_A_CONSTRAINT_NOT_A_PLAN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***R-873: VALIDATION HAS A DATE -- ~2026-09-13 -- AND IT IS A CONSTRAINT, NOT A PLAN.*** **`days_complete_now`
+      (which I located at `de_multiday_gate1_runner.py:1403`) RETURNS 5 -- 09-03..09-07 -- AND ALL FIVE ARE
+      CONSUMED.** *So the programme already has rule 8's five complete days and none of them can be used for the
+      thing five days are FOR.* ***A DATE THAT ARRIVES BY CALENDAR RATHER THAN BY WORK CANNOT BE PULLED FORWARD BY
+      EFFORT, WHICH IS WHY IT IS A CONSTRAINT*** -- **and stating it as a date rather than as "later" is what stops
+      it being quietly reinterpreted as soon.
+  THE_FIVE_DAY_GUARD_WAS_A_SUBSTRING_TEST_AND_FIVE_LLAMAS_PASSED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***R-874: REV 149 FOUND THE NULL'S FIVE-DAY GUARD WAS `"5" in <prose>` -- SO "WE HAVE 5 LLAMAS" PASSED IT.***
+      **A guard for the programme's most important limit, testing whether a digit appears in a sentence.** *This is
+      rule 35's own worked example, found the day the rule was written* -- **and it is the fourth relative of the
+      family this file has recorded: the regex that could not see an f-string, the phrase-not-property assertions,
+      the `4373a46` substring hits that were Chainlink drift bounds, and now a five-day requirement satisfied by
+      livestock.** **DA fixed it IN RULE 35's SHAPE (`b31bcc3`, `27dea0d`, Q-DA-388).**
+  AND_DA_FOUND_A_TEXT_MATCH_DEFECT_INSIDE_ITS_OWN_TEXT_MATCH_FALSIFIERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***AND THE DETAIL THAT MAKES IT THE BEST EVIDENCE RULE 35 IS A CLASS RATHER THAN A HABIT: DA FOUND A
+      TEXT-MATCH DEFECT OF ITS OWN INSIDE THE FALSIFIERS IT WAS WRITING FOR A TEXT-MATCH DEFECT.*** **The seat
+      actively hunting the class committed it in the act of hunting it.** *You cannot ask for a cleaner
+      demonstration that this is not carelessness: the person most primed to avoid it, in the file most about it,
+      did it anyway* -- ***WHICH MEANS THE REMEDY CANNOT BE ATTENTION. IT HAS TO BE THE STRUCTURE RULE 35 NAMES:
+      THE GUARD TESTS THE PROPERTY, NEVER THE TEXT.***
+  THE_OPERATING_CONCURRENCY_IS_TWO_AND_I_CHECKED_WHY_THREE_FAILS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***R-875: THE OPERATING CONCURRENCY IS N=2, NOT 3 -- AND I CHECKED THE ARITHMETIC THAT KILLS THREE: CEILINGS
+      ARE 9.000 / 4.500 / 3.000 GiB FOR N=1/2/3, THE MEASURED DRAW IS 2.621 GiB, SO THREE LEAVES 0.379 GiB OF
+      HEADROOM -- AND THE CANCELS `_sets` ALONE ARE ESTIMATED AT 0.476 GiB, WHICH EXCEEDS IT.*** **Last round I
+      recorded N=3 from `floor(9 / 2.621)`; the flaw in that was mine as much as anyone's** -- *a floor division
+      answers "how many fit" and says nothing about what else the process is about to allocate.* **The ceiling is
+      not the footprint.**
+  A_MEASUREMENT_JUSTIFIES_THE_RISKY_CHOICE_NEVER_THE_SAFE_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***AND THE REASONING TO PRESERVE, WHICH IS BETTER THAN THE NUMBER: THE COORDINATOR ADOPTED N=2 BEFORE THE
+      CONFIRMING MEASUREMENT ON PURPOSE, BECAUSE THE USER'S CONSTRAINT IS ASYMMETRIC -- WRONG TOWARD 2 COSTS
+      WALL-CLOCK, WRONG TOWARD 3 COSTS THE BOX DEATH `research.slice` WAS CREATED AFTER.*** **"A MEASUREMENT
+      JUSTIFIES THE RISKY CHOICE, NEVER THE SAFE ONE."** *That inverts the usual instinct -- wait for data before
+      acting -- and it is right whenever the two errors cost differently: **you may act on a hunch toward safety and
+      must not act on one toward risk.*** **This programme has spent two days learning that a guard must be able to
+      fail; this is the same idea applied to a decision.**
+  AND_THE_COORDINATOR_RECORDS_ITS_OWN_CORRECTION_HISTORY_UNSMOOTHED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      **AND THE COORDINATOR RECORDS ITS OWN CORRECTION HISTORY ON THIS NUMBER, UNSMOOTHED, AS IT ASKED ME TO: IT
+      QUOTED A "200 % SLICE CAP" THAT DOES NOT EXIST, THEN N=3, AND IT IS N=2.** ***THREE STATEMENTS, TWO
+      CORRECTIONS, ON ONE QUANTITY, INSIDE THREE ROUNDS -- AND THE VALUE OF RECORDING IT IS THAT THE NEXT READER
+      SEES THE TRAJECTORY AND NOT JUST THE ENDPOINT.*** *I carried the first of those three into my own files and
+      corrected it at round 328; the second I carried and am correcting here.* **A number that has moved twice
+      should be read as still capable of moving.**
+  THE_GUARD_IS_FIXED_AND_IT_PARTITIONS_RATHER_THAN_WIDENS:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***THE 09-04 REFUSAL'S GUARD IS FIXED AND VERIFIED: DE 185 AT `de_multiday_gate1_runner.py:11339` -- I READ
+      THE LINE, "A SPLIT BOOK IS NOT AN AMBIGUOUS ONE" -- AND REV 150 DROVE FIVE REFUSALS INDIVIDUALLY AND CONFIRMS
+      IT PARTITIONS RATHER THAN WIDENS.*** **A receipt with two DECLARED values STILL REFUSES `..._AMBIGUOUS`; no
+      false accept; and `--waive-scoring-path` CANNOT let a placement-latency failure through.** *A fix to a
+      too-strict guard is exactly where a programme accidentally loosens the guard's real job* -- ***AND THE
+      VERIFICATION THAT MATTERS IS NOT "THE SPLIT BOOK NOW PASSES" BUT "THE CORRUPT BOOK STILL FAILS".***
+  A_GUARD_THAT_CANNOT_PICK_BEATS_ONE_THAT_PICKS_CORRECTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***AND REV SINGLED OUT THE DESIGN, WHICH IS THE ROUND'S BEST SENTENCE: `_L = _dvals[0]` FROM A SET ASSERTED TO
+      HOLD EXACTLY ONE ELEMENT, WITH A LEG-SELECTION API DECLINED DELIBERATELY -- "STRONGER THAN THE CALLER MUST
+      NAME A LEG". A GUARD THAT CANNOT PICK BEATS ONE THAT PICKS CORRECTLY.*** **An API that lets a caller choose a
+      leg is an API where a caller can choose the wrong one, forever, in code nobody has written yet.** *Asserting
+      the set is a singleton and indexing it removes the choice from the language* -- **the same move as one raiser
+      carrying `MEMBERSHIP_LIMIT` so an exit cannot be written without it, and as deriving a set rather than typing
+      one.**
+  MY_OWN_ATTEMPT_TO_REPRODUCE_REVS_SCOPE_FAILED_AND_I_SAY_SO:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      ***AND MY OWN ATTEMPT TO REPRODUCE REV'S "ZERO OCCURRENCES OF waive/scoring_path IN THE FUNCTION BODY" FAILED,
+      AND I SAY SO RATHER THAN PUBLISHING THE NUMBER IT GAVE ME.*** **My function-boundary heuristic scanned
+      backwards for a `def ` at column zero and landed on an enclosing region of 3,011 lines, where I counted 6 and
+      8 occurrences** -- *of a scope REV never claimed anything about.* ***I DID NOT REPRODUCE REV'S FINDING AND I
+      DID NOT CONTRADICT IT; I MEASURED A DIFFERENT THING.*** **REV drove five refusals individually; I ran a
+      grep over the wrong span** -- *the third time tonight my own instrument has been the error (the `grep -c`
+      that wrapped a line, the probe with an invalid side, and now this), and each time the check that caught it was
+      asking what my tool actually examined.*
+  09_05_BUILT_CLEAN_AND_I_HASHED_IT_AND_THE_RETRY_IS_RUNNING_NOW:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc__L250ms__EV21.json
+    as_of: 2026-09-09T17:55:27Z
+    said: >-
+      **09-05 BUILT CLEAN -- rc 0 at 17:50:10Z, 48 units, peak 6.40 GB -- AND I HASHED THE BOOK MYSELF:
+      `be_daybook_20260905_btc__L250ms__EV21.pkl`, 295,157,948 BYTES, written 17:49:52Z, sha256 opening
+      `2df450c5a3081caac073eb30859e8637`.** **I read the receipt too: `era "clob_v4_1"` FROM THE DAY,
+      ***13 GAP-BEARING WINDOWS***, `placement_latency_split` PRESENT.** *09-06 is armed behind the retry.* ***AND
+      THE 09-04 RETRY IS RUNNING NOW: IF IT LANDS IT IS A POINT ESTIMATE, NO NULL, BTC-ONLY, ON A BOOK OVER 52
+      GAP-BEARING WINDOWS WHERE THE RETRACTED FIGURE HAD ZERO -- SO NOT A REVISION BUT A DIFFERENT MEASUREMENT.***
   # --- MEM round 329, 2026-09-09T17:15:06Z ---
   THE_09_04_POINT_ESTIMATE_REFUSED_AND_IT_IS_A_REFUSAL_NOT_A_FAILURE:
     prov: CHECKED
