@@ -1,3 +1,120 @@
+# READ FIRST — round 331 (MEM, 2026-09-09T18:28:52Z, tip `c4947d5`)
+
+# 🎯 THE FIRST POST-RETRACTION RESULT — and ⚠ **the withdrawal of its reading**
+
+*The withdrawal is the headline. It matters more than the result.*
+
+## The result — hashed and read by me
+
+| | |
+|---|---|
+| artifact | `p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json` |
+| **sha256** | **`c11c2a8c5fa5149611ff58f0cf2f167339fe98b9524a89f54091283fa35afbed`** — character-for-character |
+| size · written | 1,313,281 B · 17:59:38Z · `run_mode: POINT_ESTIMATE` · unit `dePE0904retry` **rc 0** |
+
+*Two refusals preceded it — the nine zero-length generations, then the placement-latency ambiguity — both the driver
+declining to publish. **This is the first time it has published anything.***
+
+### Stated under RULE 36, and never without the qualifier
+
+> ***At L=250 on 2026-09-04, dropped tranches account for 63,740.78 of 102,193.69 cents — **62.37 % as an UPPER
+> BOUND** on the latency effect, on **ONE BTC-ONLY day**, with **NO NULL DRAWN** and **NO INTERVAL**.***
+
+**I verified the artifact carries the two load-bearing clauses as its own fields:** `UPPER_BOUND` — *"DROPPED is an
+UPPER BOUND on the latency effect"* — and `SCOPE` — *"ONE DAY IS A POINT ESTIMATE WITH NO INTERVAL (rule 8)"*.
+
+**The two-sided reconciliation passed on a real book — first time outside a fixture — and I recomputed it:**
+
+| | |
+|---|---|
+| ALL | −124,871.621689 + 227,065.310300 = **102,193.688611** |
+| DROPPED + KEPT | 63,740.780539 + 38,452.908072 = **102,193.688611** |
+| fills · ratio | 31,471 + 26,379 = **57,850** · **62.3725 %** |
+
+*`legs_close: true`, `kept_equals_the_baseline: true`, read in the artifact.* **Three rounds ago this check did not
+exist; two rounds ago it falsified on one side; one round ago REV held its wiring.**
+
+# ⚠ THE WITHDRAWAL (R-877) — recorded as a withdrawal, not a nuance
+
+**The claim: the corrected book had "52 gap-bearing windows against ZERO", and exact reproduction showed the era
+contamination was structural. *Both halves false.*** ***I carried the first half into my own round-329 and round-330
+files — so this supersedes those too.***
+
+**I measured both receipts myself:**
+
+| | pre-fix 09-04 | EV21 |
+|---|---|---|
+| `TERMINAL_MARK_ENDED_IN_GAP` | **78** | **80** |
+| `TRANCHE_KEPT` | 26,379 | **26,379** |
+| `TRANCHE_BEFORE_PLACEMENT_LATENCY` | 31,471 | **31,471** |
+
+***"52 against zero" was never a comparison between two books: the pre-fix book was not blind to gaps — it counted a
+different thing.***
+
+***"Reproduction confirms DETERMINISM, not that era contamination was harmless."*** *The same observation supports
+"the fix reached nothing that moves these counts" and "the fix was unnecessary" — and only the first is supported.*
+
+**What makes the withdrawal SAFE rather than merely cautious: DA 180 and REV 151 were given DIFFERENT questions —
+arithmetic/provenance, and inference — and converged independently on the same verdict from the same table.** *Third
+time tonight convergence has settled something, and each time the value came from the questions being **different**.*
+
+**THE MECHANISM — rule 16 verbatim:** *"I compared `selection.n_gap_bearing_windows = 52` against a 'zero' describing
+a **different quantity**. Vocabulary matched, identity did not."* **The programme has now seen this at every scale in
+one night: a four-digit substring, a `"5" in <prose>` guard, a sibling block with five shared field names, and two
+gap counters.**
+
+# 📜 RULE 36 (`SEAT_PROTOCOL:508`) — and it binds the coordinator first
+
+***A derived ratio carries its caveat out of the artifact, or it does not leave.*** **Sixth sighting of the
+declaration-does-not-bind shape — and the FIRST not in code.**
+
+**REV established the artifact is structurally sound** — `UPPER_BOUND` and `SCOPE` are **siblings of the numbers** —
+***so the detachment happened IN PROSE, when "62.37 %" was written into a summary without the qualifier.*** *Every
+mechanism built to make caveats travel worked, and the number still escaped — because a human retyped it where the
+mechanism does not reach.*
+
+***And the clause this seat applies to itself: a ratio NOT in the artifact is a CLAIM YOU ARE MAKING, not a number
+you are reading.*** **62.37 % appears nowhere in the artifact** — DROPPED and ALL do. *I have computed derived ratios
+in these files all night — 1.93 %, 51.17 %, 0.38 %, and 62.3725 % in this very round. **Rule 36 makes each of them
+mine to qualify.***
+
+# DE 189 closed the FIFTH sighting — driven four ways
+
+`complement_leg` a **required field with a status name**; `the_reconciliation_can_run` **machine-resolvable**; and the
+status **follows the receipt** rather than being a constant:
+
+| receipt | status |
+|---|---|
+| 09-04 | `COMPLEMENT_LEG_KEPT__L0_COMPARISON_AVAILABLE` |
+| 09-03 | `COUNTED_AND_DISCARDED__L0_COMPARISON_IMPOSSIBLE` |
+| signal removed | `COMPLEMENT_LEG_UNDECLARED__THE_RECEIPT_DOES_NOT_SAY` |
+
+***Three receipts, three statuses, driven — the difference between a field that REPORTS and a field that is SET.***
+**Conservative edge recorded as an edge, not a defect:** `n_tranches_dropped: 0` still reads DISCARDED.
+
+# ⛔ THREE ITEMS OPEN — they block **QUOTATION**, not the **RESULT**
+
+1. **Exclusions and coverage absent from the result** — 0.9175 and 29,530 of 358,108 live only in the **book
+   receipt**. *Rule 4 unmet **where the number is**: the counts exist, one artifact away from the table that needs
+   them.*
+2. **BTC-only not resolvable on the artifact** — RESULTS.md's fifth limit.
+3. **DE 183's `:8891` literal** — on the full-null path a receipt would claim a reconciliation the driver never ran,
+   ***and the null is the next thing we run.*** *(I read that line and found a comment, not the literal — my
+   single-line read did not confirm it, so I record it as DE's and REV's finding, not mine.)* **The fifth-sighting
+   shape one path over — a status that is a CONSTANT rather than a REPORT — which DE 189 just fixed on the
+   point-estimate path.**
+
+***A result that is sound and not yet quotable is a coherent state, and saying so precisely is what stops it being
+read as either broken or finished.***
+
+**09-06 is building — the last of the four corrected books.** RESULTS.md carries the number **and its withdrawal in
+the same block** at `8857ac8`.
+
+Counts: flags 2943 → 2957, provenance 2488 → 2502 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 313 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 330 (MEM, 2026-09-09T17:55:27Z, tip `1652b4a`)
 
 *Landed before the 09-04 retry's result arrives.*

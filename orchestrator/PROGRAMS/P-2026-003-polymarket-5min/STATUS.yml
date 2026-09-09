@@ -67,6 +67,56 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T18:28:52Z (MEM ROUND 331 -- ***THE PROGRAMME'S FIRST POST-RETRACTION RESULT, AND THE WITHDRAWAL OF THE
+  COORDINATOR'S OWN READING OF IT -- THE WITHDRAWAL LANDED AS THE HEADLINE BECAUSE IT MATTERS MORE THAN THE
+  RESULT.*** **I hashed the artifact rather than quoting the digest:
+  `p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json`, `c11c2a8c5fa5149611ff58f0cf2f167339fe98b95
+  24a89f54091283fa35afbed`, A CHARACTER-FOR-CHARACTER MATCH, 1,313,281 BYTES, 17:59:38Z, `run_mode: POINT_ESTIMATE`,
+  unit `dePE0904retry` rc 0** -- *two refusals preceded it and both were the driver declining to publish; this is
+  the first time it has published anything.* ***STATED UNDER RULE 36 AND NEVER WITHOUT THE QUALIFIER: AT L=250 ON
+  2026-09-04, DROPPED TRANCHES ACCOUNT FOR 63,740.78 OF 102,193.69 CENTS -- 62.37 % AS AN UPPER BOUND ON THE LATENCY
+  EFFECT, ON ONE BTC-ONLY DAY, WITH NO NULL DRAWN AND NO INTERVAL***, and I verified the artifact carries the two
+  clauses that matter as ITS OWN FIELDS, `UPPER_BOUND` ("DROPPED is an UPPER BOUND on the latency effect") and
+  `SCOPE` ("ONE DAY IS A POINT ESTIMATE WITH NO INTERVAL (rule 8)"). ***THE TWO-SIDED RECONCILIATION PASSED ON A REAL
+  BOOK, THE FIRST TIME OUTSIDE A FIXTURE, AND I RECOMPUTED DA'S ARITHMETIC: ALL = -124,871.621689 + 227,065.310300 =
+  102,193.688611 AND DROPPED + KEPT = 63,740.780539 + 38,452.908072 = 102,193.688611 -- THE SAME NUMBER FROM BOTH
+  DIRECTIONS TO THE LAST DIGIT, FILLS 31,471 + 26,379 = 57,850, RATIO 62.3725 %, WITH `legs_close: true` AND
+  `kept_equals_the_baseline: true` READ IN THE ARTIFACT.*** ***AND THE COORDINATOR WITHDREW ITS OWN INFERENCE IN BAND
+  (R-877): THE CLAIM THAT THE CORRECTED BOOK HAD "52 GAP-BEARING WINDOWS AGAINST ZERO" AND THAT EXACT REPRODUCTION
+  SHOWED THE ERA CONTAMINATION WAS STRUCTURAL. BOTH HALVES FALSE -- AND I CARRIED THE FIRST HALF INTO MY OWN ROUND-329
+  AND ROUND-330 FILES, SO THIS SUPERSEDES THOSE TOO.*** **I MEASURED BOTH RECEIPTS MYSELF: THE PRE-FIX 09-04 BOOK
+  ALREADY CARRIED `TERMINAL_MARK_ENDED_IN_GAP = 78` AND THE EV21 BOOK CARRIES 80 -- THE FIX MOVED IT 78 -> 80 AND
+  ADDED ONE GENERATION -- WHILE `TRANCHE_KEPT` 26,379 AND `TRANCHE_BEFORE_PLACEMENT_LATENCY` 31,471 ARE IDENTICAL IN
+  BOTH.** ***SO "52 AGAINST ZERO" WAS NEVER A COMPARISON BETWEEN TWO BOOKS: THE PRE-FIX BOOK WAS NOT BLIND TO GAPS,
+  IT COUNTED A DIFFERENT THING.*** **The sentence to keep is the coordinator's own: "REPRODUCTION CONFIRMS
+  DETERMINISM, NOT THAT ERA CONTAMINATION WAS HARMLESS"** -- *the same observation supports "the fix reached nothing
+  that moves these counts" and "the fix was unnecessary", and only the first is supported.* ***AND WHAT MAKES THE
+  WITHDRAWAL SAFE RATHER THAN MERELY CAUTIOUS: DA 180 AND REV 151 WERE GIVEN DIFFERENT QUESTIONS -- ARITHMETIC AND
+  PROVENANCE, AND INFERENCE -- AND CONVERGED INDEPENDENTLY ON THE SAME VERDICT FROM THE SAME TABLE; THE THIRD TIME
+  TONIGHT CONVERGENCE HAS SETTLED SOMETHING, AND EACH TIME THE VALUE CAME FROM THE QUESTIONS BEING DIFFERENT.***
+  ***THE MECHANISM IS RULE 16 VERBATIM: "I COMPARED `selection.n_gap_bearing_windows = 52` AGAINST A 'ZERO'
+  DESCRIBING A DIFFERENT QUANTITY. VOCABULARY MATCHED, IDENTITY DID NOT"*** -- *and the programme has now seen this
+  at every scale in one night: a four-digit substring, a `"5" in <prose>` guard, a sibling block with five shared
+  field names, and two gap counters.* ***SEAT_PROTOCOL RULE 36 (`:508`): A DERIVED RATIO CARRIES ITS CAVEAT OUT OF
+  THE ARTIFACT OR IT DOES NOT LEAVE -- BINDING THE COORDINATOR FIRST, BECAUSE THAT IS WHERE IT BROKE. SIXTH SIGHTING
+  OF THE SHAPE AND THE FIRST NOT IN CODE*** -- **REV established the ARTIFACT IS SOUND, `UPPER_BOUND` and `SCOPE`
+  being SIBLINGS OF THE NUMBERS, so THE DETACHMENT HAPPENED IN PROSE when "62.37 %" was written into a summary
+  without the qualifier**; *every mechanism built to make caveats travel WORKED and the number still escaped,
+  because a human retyped it where the mechanism does not reach.* ***AND THE CLAUSE THIS SEAT APPLIES TO ITSELF: A
+  RATIO NOT IN THE ARTIFACT IS A CLAIM YOU ARE MAKING, NOT A NUMBER YOU ARE READING -- 62.37 % APPEARS NOWHERE IN
+  THE ARTIFACT, AND I HAVE COMPUTED DERIVED RATIOS IN THESE FILES ALL NIGHT, 62.3725 % AMONG THEM.*** **DE 189
+  CLOSED THE FIFTH SIGHTING (`51ebf13`) AND REV DROVE IT FOUR WAYS -- `complement_leg` A REQUIRED FIELD WITH A
+  STATUS NAME, `the_reconciliation_can_run` MACHINE-RESOLVABLE, AND THE STATUS FOLLOWING THE RECEIPT: 09-04 ->
+  `COMPLEMENT_LEG_KEPT__L0_COMPARISON_AVAILABLE`, 09-03 -> `COUNTED_AND_DISCARDED__L0_COMPARISON_IMPOSSIBLE`, SIGNAL
+  REMOVED -> `COMPLEMENT_LEG_UNDECLARED__THE_RECEIPT_DOES_NOT_SAY`, with the conservative edge recorded as an edge
+  and not a defect.** ***THREE ITEMS ARE OPEN AND THEY BLOCK QUOTATION, NOT THE RESULT: EXCLUSIONS AND COVERAGE
+  ABSENT FROM THE RESULT (0.9175 AND 29,530 OF 358,108 LIVE ONLY IN THE BOOK RECEIPT, SO RULE 4 IS UNMET WHERE THE
+  NUMBER IS); BTC-ONLY NOT RESOLVABLE ON THE ARTIFACT; AND DE 183's `:8891` LITERAL, WHICH MATTERS NOW BECAUSE THE
+  NULL IS THE NEXT THING WE RUN.*** *I read `:8891` and found a comment rather than the literal, so my single-line
+  read did not confirm it and I record the finding as DE's and REV's, not as mine.* **A RESULT THAT IS SOUND AND NOT
+  YET QUOTABLE IS A COHERENT STATE.** 09-06 is building, the last of the four corrected books; RESULTS.md carries the
+  number and its withdrawal in the SAME block at `8857ac8`. Flags 2943 -> 2957, prov 2488 -> 2502; window 3/3, Batch
+  313 archived. MEM asserts no result.)
   2026-09-09T17:55:27Z (MEM ROUND 330 -- ***TWO NEW STANDING RULES, THE CONCURRENCY CORRECTED TO TWO, THE 09-04 GUARD FIXED
   AND VERIFIED, AND 09-05 BUILT CLEAN -- LANDED BEFORE THE 09-04 RETRY'S RESULT ARRIVES.*** ***RULE 34 (`:482`):
   DAYS FROM 2026-09-08 ONWARD ARE PROTECTED -- NO PROBE, DIAGNOSTIC, SMOKE TEST OR QUICK LOOK -- AND IT BINDS ME
@@ -159,47 +209,6 @@ updated: >-
   ONE THAT LANDS WITH THE SPLIT WILL MEET THE SAME AMBIGUITY GUARD, SO THE REFUSAL IS THE QUEUE'S PROBLEM AND NOT
   ONE DAY'S, WHICH IS BETTER KNOWN WITH TWO BUILDS IN FLIGHT THAN AFTER FOUR.*** Flags 2915 -> 2929, prov 2460 ->
   2474; window 3/3, Batch 311 archived. MEM asserts no result.)
-  2026-09-09T16:59:32Z (MEM ROUND 328 -- ***A CORRECTION TO MY ROUND-327 FILES AND A USER RULING THAT CLOSES ONE OF THE TWO
-  OPEN ITEMS.*** ***I CARRIED "THE `research.slice` 200 % CAP" AS AN OPEN USER ITEM AND IT DOES NOT EXIST; R-870
-  SUPERSEDES IT IN BAND.*** The coordinator says the error was its own, and that is true of where the sentence came
-  from -- **but I recorded it as an open item in a round whose whole point was that open items get quietly absorbed,
-  and I DID NOT CHECK IT AT THE FILE; the slice is one `cat` away and I had read `/proc/locks` twice that night for
-  less.** ***MEASURED BY ME AT BOTH FILES: `research.slice` GRANTS `CPUQuota=1200%` ON A 16-CORE BOX AND THE ACTUAL
-  LIMITER IS A HARDCODED `-p CPUQuota=100%` PER UNIT AT `be_heavy_run.sh:515` -- SO A UNIT IS PINNED TO ONE CORE
-  INSIDE AN ALLOWANCE OF TWELVE, THE QUESTION WAS NEVER "RAISE A SLICE CAP" BUT "RAISE A PER-UNIT QUOTA INTO
-  HEADROOM THE SLICE ALREADY GRANTS", AND CPU WAS NEVER THE CONSTRAINT AT ALL.*** **THE CONSTRAINT IS MEMORY AND I
-  CONFIRMED THE HARD PART, `MemorySwapMax=0` -- THERE IS NO SWAP ESCAPE**, with the slice setting `MemoryMax=60%`
-  and pre-arming `ManagedOOMMemoryPressure=kill` at an 80 % pressure limit; **and the slice's own header records why
-  it exists -- "BORN FROM THE 03:55 UTC BOX DEATH (AGGREGATE MEMORY EXHAUSTION) -- A SINGLE-JOB CAP CANNOT BOUND THE
-  SUM".** ***THE USER HAS RULED HARD: "DON'T 8x IF IT WILL CAUSE OOM" -- THE DEFAULT IS NO CHANGE, ONE UNIT, AND 8
-  IS A CEILING THE MEASUREMENT MUST EARN, NOT A TARGET; BUDGET AGAINST `MemoryHigh` 12 GB NOT `MemoryMax` 14 GB,
-  MARGIN 0.75 SO USABLE = 9 GB, N = floor(9 / MEASURED PEAK) CAPPED AT 8, AND N < 2 MEANS WE CHANGE NOTHING.***
-  ***AND I APPLIED THAT RULE TO THE PEAKS ALREADY ON THE RECORD: `floor(9/5.175) = 1`, `floor(9/5.484) = 1`,
-  `floor(9/6.354) = 1`, AND 0 AT BE'S COLD 09-04 ESTIMATE OF 9.70 GB -- EVERY PEAK THIS PROGRAMME HAS MEASURED GIVES
-  N = 1, WHICH IS THE RULING'S OWN "CHANGE NOTHING"*** -- **with the qualification stated rather than glossed: THOSE
-  ARE BOOK-BUILD PEAKS, NOT NULL-DRAW PEAKS.** ***AND A DISCREPANCY I FILE FOR DA AND THE COORDINATOR RATHER THAN
-  DISPUTE, BECAUSE IT MOVES N: I COULD NOT LOCATE `MemoryHigh` ANYWHERE, NOT IN THE SLICE AND NOT IN
-  `be_heavy_run.sh`. THE SLICE SETS `MemoryMax=60%` OF A 30 GB BOX = 18 GB AGGREGATE, AND THE PER-UNIT DEFAULT IS
-  `MEMMAX="${BE_MEMORY_MAX:-8G}"` AT `:475` -- SO 12 AND 14 LOOK LIKE PER-UNIT FIGURES WHILE THE CEILING THAT BOUNDS
-  N CONCURRENT UNITS IS THE SLICE'S 18 GB, WHICH IS THE HEADER'S OWN POINT. AT 0.75 THAT IS USABLE 13.5 GB AND N = 2
-  AT EVERY BOOK-BUILD PEAK AGAINST N = 1 UNDER 12 GB.*** *The ruling's ceiling, its prohibition and its N<2 no-op
-  bind either way; only the arithmetic between them moves.* **AND THE NUMBER THAT ACTUALLY DECIDES IT IS NEITHER:
-  WHETHER N DRAWS' FOOTPRINTS ADD (EACH WORKER LOADS ITS OWN REFERENCE) OR OVERLAP BY COPY-ON-WRITE (THEY FORK FROM
-  A PARENT ALREADY HOLDING IT) -- A FACTOR OF SEVERAL IN EITHER DIRECTION. DA 172/173 IS MEASURING IT.** ***THE USER
-  HAS RULED THE NULL'S SAMPLING UNIT: A DRAW RESAMPLES THE CANCELLABLE GENERATION (OPTION C), n = 358,108 REFERENCE
-  GENERATIONS ON 09-04, BINDING EVERY NULL FROM HERE*** -- **the reasoning being the programme's own rules applied
-  by elimination: ROWS ARE NOT ACTIONS (1.99 rows/fill, max 23, so a row-matched control is not matched on the
-  decision variable, rule 7) AND CANCELS ARE OUTCOME-SELECTED (rule 1's endogeneity trap, with DA's seal that the
-  ledger carries NO CANCEL ROW KIND TO DRAW FROM).** ***SO THE TWO ITEMS I REFUSED TO CLOSE LAST ROUND ARE NOW ONE,
-  NOT TWO: THE SAMPLING UNIT IS RULED AND CLOSED; THE CONCURRENCY IS OPEN PENDING DA'S MEASUREMENT UNDER A HARD
-  NO-OOM CONSTRAINT -- AND THE OPEN ONE IS NOT THE ITEM I RECORDED. MY ROUND-327 INSTINCT WAS RIGHT THAT A SWEEP
-  CLOSING FIVE ITEMS IS WHEN AN OPEN ONE GETS ABSORBED, AND THE FAILURE MODE TURNED OUT TO BE THE ADJACENT ONE: NOT
-  AN ITEM QUIETLY CLOSED, BUT AN ITEM CARRIED FORWARD IN THE WRONG TERMS.*** **THE USER RULED 09-05 AND 09-06
-  REBUILD, QUEUED AFTER THE 09-04 POINT ESTIMATE, ~74 MIN EACH -- AND UNTIL THEY EXIST THE FOUR-DAY TABLE CANNOT BE
-  REQUOTED, SINCE 09-03 AND 09-04 HAVE CORRECTED EV21 BOOKS WHILE 09-05 AND 09-06 ARE STILL era=None OVER ZERO
-  GAP-BEARING WINDOWS** -- *a table across four days where two carry gaps and two pretend there are none would
-  compare corrected against uncorrected and read the difference as signal.* Flags 2902 -> 2915, prov 2447 -> 2460;
-  window 3/3, Batch 310 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -371,6 +380,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 331, the first post-retraction result AND the withdrawal of its reading ---
+  THE_FIRST_POST_RETRACTION_RESULT_EMITTED_AND_I_HASHED_IT: c11c2a8c5fa51496
+  THE_NUMBER_NEVER_TRAVELS_WITHOUT_ITS_QUALIFIER: UPPER-BOUND-ONE-DAY-BTC-ONLY-NO-NULL
+  THE_TWO_SIDED_RECONCILIATION_PASSED_ON_A_REAL_BOOK_AND_I_RECOMPUTED_IT: FIRST-TIME-OUTSIDE-A-FIXTURE
+  THE_COORDINATOR_WITHDREW_ITS_OWN_INFERENCE_AND_I_RECORD_A_WITHDRAWAL: NOT-A-NUANCE
+  THE_PRE_FIX_BOOK_ALREADY_CARRIED_SEVENTY_EIGHT_AND_I_MEASURED_BOTH: 78-TO-80-NOT-ZERO-TO-52
+  REPRODUCTION_CONFIRMS_DETERMINISM_NOT_THAT_CONTAMINATION_WAS_HARMLESS: THE-SENTENCE-TO-KEEP
+  TWO_SEATS_GIVEN_DIFFERENT_QUESTIONS_CONVERGED_AND_THAT_IS_THE_EVIDENCE: SAFE-NOT-MERELY-CAUTIOUS
+  THE_MECHANISM_IS_RULE_16_VOCABULARY_MATCHED_IDENTITY_DID_NOT: A-ZERO-DESCRIBING-ANOTHER-QUANTITY
+  RULE_36_IS_NEW_AND_IT_BINDS_THE_COORDINATOR_FIRST: SIXTH-SIGHTING-FIRST-NOT-IN-CODE
+  AND_THE_ARTIFACT_WAS_SOUND_THE_DETACHMENT_HAPPENED_IN_PROSE: SIBLINGS-OF-THE-NUMBERS
+  A_RATIO_NOT_IN_THE_ARTIFACT_IS_A_CLAIM_YOU_ARE_MAKING: NOT-A-NUMBER-YOU-ARE-READING
+  DE_189_CLOSED_THE_FIFTH_SIGHTING_WITH_A_STATUS_THAT_FOLLOWS_THE_RECEIPT: THREE-DIFFERENT-STATUSES-DRIVEN
+  THREE_ITEMS_BLOCK_QUOTATION_AND_NOT_THE_RESULT: THE-DISTINCTION-IS-THE-POINT
+  AND_THE_NULL_IS_THE_NEXT_THING_WE_RUN: WHICH-IS-WHY-8891-MATTERS-NOW
   # --- MEM round 330, rules 34 and 35; N=2; the guard fixed; 09-05 built ---
   RULE_34_PROTECTS_EVERY_DAY_FROM_09_08_AND_IT_BINDS_ME_TOO: NO-PROBE-NO-QUICK-LOOK
   EXERCISE_CORRECTED_PIPELINES_ON_CONSUMED_DAYS_BECAUSE_THEY_ARE_SPENT: FREE-PRECISELY-BECAUSE-SPENT
@@ -27386,6 +27410,171 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 331, 2026-09-09T18:28:52Z ---
+  THE_FIRST_POST_RETRACTION_RESULT_EMITTED_AND_I_HASHED_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***THE PROGRAMME'S FIRST POST-RETRACTION RESULT EMITTED, AND I HASHED IT RATHER THAN QUOTING THE DIGEST:
+      `p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json`, `sha256sum` RETURNING
+      `c11c2a8c5fa5149611ff58f0cf2f167339fe98b9524a89f54091283fa35afbed` -- A CHARACTER-FOR-CHARACTER MATCH -- AT
+      1,313,281 BYTES, 17:59:38Z, `run_mode: POINT_ESTIMATE`, unit `dePE0904retry` rc 0.*** *Two refusals preceded
+      it -- the nine zero-length generations on 09-03 and the placement-latency ambiguity on 09-04 -- and both were
+      the driver declining to publish.* **This is the first time that driver has published anything.**
+  THE_NUMBER_NEVER_TRAVELS_WITHOUT_ITS_QUALIFIER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***STATED UNDER RULE 36 AND NEVER WITHOUT THE QUALIFIER: AT L=250 ON 2026-09-04, DROPPED TRANCHES ACCOUNT FOR
+      63,740.78 OF 102,193.69 CENTS -- 62.37 % AS AN UPPER BOUND ON THE LATENCY EFFECT, ON ONE BTC-ONLY DAY, WITH NO
+      NULL DRAWN AND NO INTERVAL.*** **Every clause is load-bearing and I verified the artifact carries the two that
+      matter most as its own fields: `UPPER_BOUND` reads "DROPPED is an UPPER BOUND on the latency effect" and
+      `SCOPE` reads "ONE DAY IS A POINT ESTIMATE WITH NO INTERVAL (rule 8)".** *DA's criterion (b) demanded the
+      upper-bound label be IN the artifact; it is* -- **and the fill-probability assumption it encodes is what makes
+      "upper bound" the honest word rather than a hedge.**
+  THE_TWO_SIDED_RECONCILIATION_PASSED_ON_A_REAL_BOOK_AND_I_RECOMPUTED_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***THE TWO-SIDED RECONCILIATION PASSED ON A REAL BOOK -- THE FIRST TIME OUTSIDE A FIXTURE -- AND I RECOMPUTED
+      DA'S ARITHMETIC MYSELF: `ALL = -124,871.621689 + 227,065.310300 = 102,193.688611`, AND `DROPPED + KEPT =
+      63,740.780539 + 38,452.908072 = 102,193.688611` -- THE SAME NUMBER FROM BOTH DIRECTIONS, TO THE LAST DIGIT --
+      WITH FILLS 31,471 + 26,379 = 57,850 AND THE RATIO 62.3725 %.*** **I read `legs_close: true` and
+      `kept_equals_the_baseline: true` in the artifact.** *Three rounds ago this check did not exist; two rounds ago
+      it existed and falsified on ONE side; one round ago REV held its wiring* -- **and it has now anchored a real
+      number against a ledger baseline produced by a different code path.**
+  THE_COORDINATOR_WITHDREW_ITS_OWN_INFERENCE_AND_I_RECORD_A_WITHDRAWAL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***AND THE COORDINATOR WITHDREW ITS OWN INFERENCE ABOUT THE RESULT IN BAND (R-877) -- RECORDED HERE AS A
+      WITHDRAWAL AND NOT AS A NUANCE, BECAUSE THE WITHDRAWAL MATTERS MORE THAN THE RESULT.*** **The claim was that
+      the corrected book had "52 gap-bearing windows against ZERO", and that the exact reproduction of the tranche
+      counts was evidence the era contamination had been STRUCTURAL.** ***BOTH HALVES FALSE.*** *I carried the first
+      half into my own round-329 and round-330 files -- "a book over 52 gap-bearing windows where the retracted
+      figure had ZERO" -- so this correction lands on my files too, and it lands the same way: superseded in band,
+      not deleted.*
+  THE_PRE_FIX_BOOK_ALREADY_CARRIED_SEVENTY_EIGHT_AND_I_MEASURED_BOTH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms.json
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***I MEASURED BOTH RECEIPTS MYSELF RATHER THAN TAKING THE CORRECTION: THE PRE-FIX 09-04 BOOK ALREADY CARRIED
+      `TERMINAL_MARK_ENDED_IN_GAP = 78`, AND THE EV21 BOOK CARRIES 80. THE ERA FIX MOVED IT 78 -> 80 AND ADDED ONE
+      GENERATION.*** **And the two numbers the whole reading rested on are IDENTICAL IN BOTH BOOKS: `TRANCHE_KEPT` =
+      26,379 AND `TRANCHE_BEFORE_PLACEMENT_LATENCY` = 31,471.** ***SO "52 AGAINST ZERO" WAS NEVER A COMPARISON
+      BETWEEN TWO BOOKS -- THE PRE-FIX BOOK WAS NOT BLIND TO GAPS, IT SIMPLY COUNTED A DIFFERENT THING.*** *A
+      correction I can reproduce from disk in one command is a correction that ends the question.*
+  REPRODUCTION_CONFIRMS_DETERMINISM_NOT_THAT_CONTAMINATION_WAS_HARMLESS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***AND THE SENTENCE TO KEEP IS THE COORDINATOR'S OWN: "REPRODUCTION CONFIRMS DETERMINISM, NOT THAT ERA
+      CONTAMINATION WAS HARMLESS."*** **Identical tranche counts across a corrected and an uncorrected build tell
+      you the pipeline is deterministic with respect to what changed** -- *they say nothing about whether what
+      changed mattered elsewhere, and reading them as reassurance inverts the inference.* ***THE SAME OBSERVATION
+      SUPPORTS "THE FIX REACHED NOTHING THAT MOVES THESE COUNTS" AND "THE FIX WAS UNNECESSARY", AND ONLY THE FIRST
+      IS SUPPORTED BY THE DATA.***
+  TWO_SEATS_GIVEN_DIFFERENT_QUESTIONS_CONVERGED_AND_THAT_IS_THE_EVIDENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***AND THE PART THAT MAKES THE WITHDRAWAL SAFE RATHER THAN MERELY CAUTIOUS: DA 180 AND REV 151 WERE GIVEN
+      DIFFERENT QUESTIONS -- ARITHMETIC AND PROVENANCE FOR ONE, INFERENCE FOR THE OTHER -- AND CONVERGED
+      INDEPENDENTLY ON THE SAME VERDICT FROM THE SAME TABLE.*** **A withdrawal made on one seat's objection is a
+      judgement call; a withdrawal made where two seats asking different questions arrive at the same place is a
+      finding.** *This is the third time tonight that convergence has settled something -- the flake premise refuted
+      by DA and REV independently, the reachable set derived twice, and now this* -- **and each time the value came
+      from the questions being DIFFERENT, not from the answers agreeing.**
+  THE_MECHANISM_IS_RULE_16_VOCABULARY_MATCHED_IDENTITY_DID_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***THE MECHANISM, AND IT IS RULE 16 VERBATIM: "I COMPARED `selection.n_gap_bearing_windows = 52` AGAINST A
+      'ZERO' DESCRIBING A DIFFERENT QUANTITY. VOCABULARY MATCHED, IDENTITY DID NOT."*** **Rule 16 says verify at the
+      artifact a claim names, match IDENTITY (Type.field), and know what KIND of document you are reading** -- *and
+      this is the failure in its purest form: two fields whose names both contain "gap", holding counts of different
+      things, subtracted.* ***THE PROGRAMME HAS NOW SEEN THIS AT EVERY SCALE IN ONE NIGHT -- A FOUR-DIGIT SUBSTRING,
+      A `"5" in <prose>` GUARD, A SIBLING BLOCK WITH FIVE SHARED FIELD NAMES, AND NOW TWO GAP COUNTERS.***
+  RULE_36_IS_NEW_AND_IT_BINDS_THE_COORDINATOR_FIRST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***SEAT_PROTOCOL RULE 36, AT `:508`: A DERIVED RATIO CARRIES ITS CAVEAT OUT OF THE ARTIFACT, OR IT DOES NOT
+      LEAVE -- AND IT BINDS THE COORDINATOR FIRST, BECAUSE THE COORDINATOR IS WHERE IT BROKE.*** **This is the SIXTH
+      sighting of the declaration-does-not-bind shape and THE FIRST THAT WAS NOT IN CODE.** *The previous five were
+      `MEMBERSHIP_LIMIT`, `matched_on`, the superseded set, the null's cannot-validate clause and the
+      `split_book: False` boolean -- all fields in artifacts* -- ***AND THE SIXTH IS A SENTENCE IN A SUMMARY, WHICH
+      MEANS THE CLASS IS NOT ABOUT CODE AT ALL. IT IS ABOUT WHAT TRAVELS WHEN A NUMBER IS COPIED OUT OF THE PLACE
+      THAT QUALIFIES IT.***
+  AND_THE_ARTIFACT_WAS_SOUND_THE_DETACHMENT_HAPPENED_IN_PROSE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_point_estimate_day_20260904_L250ms__20260909T175938Z.json
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      **And REV established the artifact is STRUCTURALLY SOUND, which I confirmed by reading it: `UPPER_BOUND` and
+      `SCOPE` are SIBLINGS OF THE NUMBERS, not a footnote below them.** ***SO THE DETACHMENT DID NOT HAPPEN IN THE
+      PIPELINE -- IT HAPPENED IN PROSE, WHEN "62.37 %" WAS WRITTEN INTO A SUMMARY WITHOUT THE QUALIFIER.*** *That is
+      an important exoneration of the engineering and an indictment of the reporting: every mechanism the programme
+      built to make caveats travel WORKED, and the number still escaped* -- **because a human retyped it
+      somewhere the mechanism does not reach.**
+  A_RATIO_NOT_IN_THE_ARTIFACT_IS_A_CLAIM_YOU_ARE_MAKING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***AND THE CLAUSE THAT GENERALISES IT, WHICH THIS SEAT WILL APPLY TO ITSELF: A RATIO NOT IN THE ARTIFACT IS A
+      CLAIM YOU ARE MAKING, NOT A NUMBER YOU ARE READING.*** **62.37 % appears nowhere in the artifact -- DROPPED
+      and ALL do, and the ratio is a division somebody performed.** *The moment a reader computes rather than reads,
+      they have authored something, and authorship carries the obligation to restate the scope.* ***I HAVE COMPUTED
+      DERIVED RATIOS IN THESE FILES ALL NIGHT -- 1.93 %, 51.17 %, 0.38 %, 62.3725 % IN THIS VERY ROUND -- AND RULE 36
+      MAKES EACH OF THEM MINE TO QUALIFY.***
+  DE_189_CLOSED_THE_FIFTH_SIGHTING_WITH_A_STATUS_THAT_FOLLOWS_THE_RECEIPT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      **DE 189 CLOSED THE FIFTH SIGHTING (`51ebf13`) AND REV DROVE IT FOUR WAYS: `complement_leg` A REQUIRED FIELD
+      WITH A STATUS NAME, `the_reconciliation_can_run: False` MACHINE-RESOLVABLE, AND THE STATUS FOLLOWING THE
+      RECEIPT RATHER THAN BEING A CONSTANT** -- **09-04 -> `COMPLEMENT_LEG_KEPT__L0_COMPARISON_AVAILABLE`, 09-03 ->
+      `COUNTED_AND_DISCARDED__L0_COMPARISON_IMPOSSIBLE`, SIGNAL REMOVED ->
+      `COMPLEMENT_LEG_UNDECLARED__THE_RECEIPT_DOES_NOT_SAY`.** ***THREE DIFFERENT RECEIPTS, THREE DIFFERENT
+      STATUSES, DRIVEN -- WHICH IS THE DIFFERENCE BETWEEN A FIELD THAT REPORTS AND A FIELD THAT IS SET.*** **And the
+      conservative edge is recorded as an edge and NOT a defect: `n_tranches_dropped: 0` still reads DISCARDED.**
+  THREE_ITEMS_BLOCK_QUOTATION_AND_NOT_THE_RESULT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***THREE ITEMS ARE OPEN AND THEY BLOCK QUOTATION, NOT THE RESULT -- THE DISTINCTION IS THE POINT AND THIS FILE
+      KEEPS IT.*** **(i) EXCLUSIONS AND COVERAGE ARE ABSENT FROM THE RESULT: 0.9175 and 29,530 of 358,108 live only
+      in the BOOK RECEIPT, so rule 4 is unmet WHERE THE NUMBER IS.** *Rule 4 says report exclusion counts with every
+      table; the counts exist, one artifact away from the table that needs them.* **(ii) BTC-ONLY IS NOT RESOLVABLE
+      ON THE ARTIFACT** -- *the fifth RESULTS.md limit, and rule 36's own logic says a scope that cannot be resolved
+      on the artifact is a scope the reader must be told.* **(iii) DE 183's literal.** ***A RESULT THAT IS SOUND AND
+      NOT YET QUOTABLE IS A COHERENT STATE, AND SAYING SO PRECISELY IS WHAT STOPS IT BEING READ AS EITHER
+      BROKEN OR FINISHED.***
+  AND_THE_NULL_IS_THE_NEXT_THING_WE_RUN:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-09T18:28:52Z
+    said: >-
+      ***AND THE THIRD OPEN ITEM IS URGENT FOR A REASON THAT IS ABOUT TIMING RATHER THAN SEVERITY: DE 183 REPORTS
+      `:8891` STILL SETS `PERFORMED_BY_POINT_ESTIMATE_DRIVER` AS A LITERAL WITH NO CONDITIONAL, SO ON THE FULL-NULL
+      PATH A RECEIPT WOULD CLAIM A RECONCILIATION THE DRIVER NEVER RAN -- AND THE NULL IS THE NEXT THING WE RUN.***
+      *I read that line and found a comment rather than the literal, so my single-line read did not confirm it; I
+      record the finding as DE's and REV's, not as mine.* **This is the fifth-sighting shape one path over: a status
+      that is a CONSTANT rather than a REPORT** -- ***AND DE 189 JUST FIXED EXACTLY THAT ON THE POINT-ESTIMATE PATH,
+      WHICH IS WHY ITS SURVIVAL ON THE NULL PATH IS BOTH UNSURPRISING AND UNACCEPTABLE.*** **09-06 is building, the
+      last of the four corrected books.**
   # --- MEM round 330, 2026-09-09T17:55:27Z ---
   RULE_34_PROTECTS_EVERY_DAY_FROM_09_08_AND_IT_BINDS_ME_TOO:
     prov: CHECKED
