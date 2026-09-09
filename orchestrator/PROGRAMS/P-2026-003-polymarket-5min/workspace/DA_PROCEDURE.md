@@ -109,6 +109,45 @@ is not R-818's "quotable as final"** until DE 142 lands.
 **Populations so far: 09-03 = 246 slugs (42 of its 288 windows absent), 09-04 = 288
 (full).** Never one column.
 
+## Hunting untargeted (DA 138/139) — what actually worked
+
+Two defects in two rounds, both in code declared complete. Neither came from
+reading documents. The method that found them:
+
+- **Ask what a change made INDISTINGUISHABLE.** DE 155 re-keyed scores from
+  per-generation to per-row. The question that found 361 was not "is the new
+  key right" but "what can this key no longer tell apart?" — it dropped `gen`.
+- **Find the sentence that says a thing was NOT re-tested.** DE 155's own
+  commit says "THE ENGINE WAS ALREADY CORRECT … Nothing in the policy is
+  changed" — while handing that engine an input shape it had never seen. That
+  sentence is where 362 was.
+- **Read the fixture, not just the assertion.** DE's case (c) fixture has ONE
+  generation, so it can only show a late event vanishing. Add a successor and
+  the same event cancels it. A fixture's missing dimension is where the
+  untested case lives.
+- **Ask what the artifacts would show if it happened.** The cancel record
+  carries the RECORD's `gen`, never the score event's — so 362 is invisible in
+  every receipt. Defects that leave no trace are the ones no review finds.
+
+## The instrument failure I committed (DA 139) — read this before quoting a count
+
+**Q-DA-361 cited "2.29 % of generations have fills past the next generation's
+t0". It was wrong and it was mine.** `last_fill = defaultdict(float)` defaults to
+**0.0** while `fill_ns` on this tape is **NEGATIVE**, so `max(0.0, negative)`
+stayed 0.0 for every generation and `0.0 > next_t0` was trivially true. Truth:
+**0 of 49,240.**
+
+**The rule this cost, stated so the next DA does not repeat it: a NUMBER offered
+as evidence needs a control exactly as much as a checker does.** I applied that
+standard to the code I was auditing and not to the statistic I was quoting in
+the same row. The repaired measurement carries both directions — plant one
+overlap and the detector reports 1; re-run with the old initialiser and it
+reproduces 1129, which *identifies* the error instead of merely fixing it.
+
+**A defaultdict's default is a silent assumption about the sign of your data.**
+On this tape times are negative up to the window close. Check the sign before
+any `max`/`min` accumulator.
+
 ## The baseline/arm seam (DA 137) — where a retraction stops
 
 When an ARM result is retracted, the question is always whether the 0-cancel
