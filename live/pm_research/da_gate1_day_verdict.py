@@ -2940,6 +2940,141 @@ def selftest() -> tuple:                                      # noqa: C901
        f"CLI flags {sorted(cli_flags)}; none matches now/clock/force/"
        f"override/skip/unsafe/go")
 
+    # ---- DA 164 / REVIEW 140: THE TWO SIBLING BLOCKS ------------------
+    #: THE FORM THE CLASS DEMANDS: every cell below drives a receipt where
+    #: the two blocks DISAGREE -- same field name, different value -- so
+    #: reading the wrong one gives a WRONG ANSWER rather than the same
+    #: answer. A site fixed against a receipt whose blocks agree proves
+    #: nothing, which is exactly how five of these six sites survived.
+    def _two_block_arm(*, diag=True, ruled=True, disagree=True):
+        """An arm carrying both sibling blocks, deliberately in conflict."""
+        a = {"arm": "A", "status": "OK"}
+        if diag:
+            a[DIAGNOSTIC_BLOCK] = {"D_E0": 1.0, "Z": 111.0,
+                                   "p_location": 0.111, "null_mean": 11.0,
+                                   "null_sd": 1.1,
+                                   "null_draws_summary": {"n": 500}}
+        if ruled:
+            #: every shared name carries a DIFFERENT value here
+            a[SETTLEMENT_BLOCK] = {
+                "D_E_settle": 11191.244402,
+                "arm_total_cents": 48506.795833,
+                "zero_cancel_baseline_total_cents": 37315.551431,
+                "Z": (999.0 if disagree else 111.0),
+                "p_location": (0.999 if disagree else 0.111),
+                "null_mean": (99.0 if disagree else 11.0),
+                "null_sd": (9.9 if disagree else 1.1),
+                "null_draws_summary": {"n": (7 if disagree else 500)}}
+        return a
+
+    _both = _two_block_arm()
+    _ruled_only = _two_block_arm(diag=False)
+    _diag_only = _two_block_arm(ruled=False)
+    _neither = _two_block_arm(diag=False, ruled=False)
+    _s_both = receipt_is_sealed(_both)
+    _s_ruled = receipt_is_sealed(_ruled_only)
+    _s_diag = receipt_is_sealed(_diag_only)
+    _s_none = receipt_is_sealed(_neither)
+
+    ck("DA 164 (a) THE SEAL NO LONGER REPORTS `sealed: True` ON A RECEIPT "
+       "CARRYING THE RULED ENDPOINT. ***This module contained ZERO "
+       "occurrences of `economic_settlement`: a receipt whose DIAGNOSTIC "
+       "was stripped while `D_E_settle` and BOTH arm totals sat beside it "
+       "read as SEALED -- the primary endpoint hidden behind the "
+       "diagnostic's absence, in the module whose job is the independent "
+       "read***",
+       _s_ruled["sealed"] is False
+       and _s_ruled["sealed_diagnostic"] is True
+       and _s_ruled["sealed_ruled"] is False
+       and _s_ruled["settlement_fields_present"] == list(SETTLEMENT_FIELDS),
+       f"diagnostic stripped, ruled present -> sealed "
+       f"{_s_ruled['sealed']} (diagnostic {_s_ruled['sealed_diagnostic']}, "
+       f"ruled {_s_ruled['sealed_ruled']}), settlement fields "
+       f"{_s_ruled['settlement_fields_present']}")
+
+    ck("DA 164 (b) AND IT STILL SEALS WHEN BOTH ARE GONE, AND STILL "
+       "REPORTS EACH HALF WHEN ONLY ONE IS -- ***removing a false pass is "
+       "how a real one gets through***, so the OLD true cases must "
+       "survive: neither block -> sealed, diagnostic-only -> not sealed "
+       "with the RULED half named absent",
+       _s_none["sealed"] is True
+       and _s_none["sealed_diagnostic"] is True
+       and _s_none["sealed_ruled"] is True
+       and _s_diag["sealed"] is False
+       and _s_diag["sealed_ruled"] is True
+       and _s_both["sealed"] is False,
+       f"neither -> {_s_none['sealed']}; diagnostic only -> "
+       f"{_s_diag['sealed']} (ruled half sealed "
+       f"{_s_diag['sealed_ruled']}); both -> {_s_both['sealed']}")
+
+    ck("DA 164 (c) AND THE REASON THE OLD SEAL WAS BLIND IS MEASURED, NOT "
+       "ASSERTED: `ECONOMIC_FIELDS` is DE's list and it names NEITHER the "
+       "ruled endpoint NOR the arm totals, so a seal keyed on it alone "
+       "protects the DIAGNOSTIC and not the RESULT (REVIEW 123, reaching "
+       "this module through the import)",
+       _s_both["ECONOMIC_FIELDS_names_the_ruled_endpoint"] is False
+       and "D_E_settle" not in ECONOMIC_FIELDS
+       and "arm_total_cents" not in ECONOMIC_FIELDS
+       and "D_E_settle" in SETTLEMENT_FIELDS,
+       f"ECONOMIC_FIELDS {list(ECONOMIC_FIELDS)} names D_E_settle: "
+       f"{'D_E_settle' in ECONOMIC_FIELDS}; this module's own "
+       f"SETTLEMENT_FIELDS {list(SETTLEMENT_FIELDS)} does")
+
+    #: the five names that are readable from EITHER block with no error --
+    #: the property that makes the class silent, asserted on the fixture
+    _shared = sorted(set(_both[DIAGNOSTIC_BLOCK]) & set(_both[SETTLEMENT_BLOCK]))
+    ck("DA 164 (d) THE CLASS'S OWN PREMISE, ASSERTED: the five names "
+       "`Z, null_draws_summary, null_mean, null_sd, p_location` exist in "
+       "BOTH blocks, so reading one from the wrong sibling returns a "
+       "NUMBER AND NO ERROR. ***That is why the enumeration is mechanical "
+       "and why a cell whose two blocks AGREE cannot detect the defect***",
+       _shared == sorted(FIELDS_IN_BOTH_BLOCKS)
+       and _both[DIAGNOSTIC_BLOCK]["Z"] != _both[SETTLEMENT_BLOCK]["Z"],
+       f"shared names on the fixture {_shared}; the fixture makes them "
+       f"DISAGREE (Z {_both[DIAGNOSTIC_BLOCK]['Z']} against "
+       f"{_both[SETTLEMENT_BLOCK]['Z']}) so a wrong-block read is visible")
+
+    _r_ok = _compare_ruled_endpoint(_both, lambda *a, **k: None)
+    _bad = _two_block_arm()
+    _bad[SETTLEMENT_BLOCK]["D_E_settle"] = 11191.244402 + 1.0
+    _r_bad = _compare_ruled_endpoint(_bad, lambda *a, **k: None)
+    _r_absent = _compare_ruled_endpoint(_diag_only, lambda *a, **k: None)
+    _part = _two_block_arm()
+    del _part[SETTLEMENT_BLOCK]["arm_total_cents"]
+    _r_part = _compare_ruled_endpoint(_part, lambda *a, **k: None)
+
+    ck("DA 164 (e) THE RULED ENDPOINT IS NOW CHECKED WHERE IT CAN BE: "
+       "`D_E_settle` must equal `arm_total - zero_cancel_baseline_total`, "
+       "an identity inside the ruled block that needs no ledger and was "
+       "NEVER BEING MADE. It PASSES on the real 09-03 numbers and FAILS "
+       "on one cent of drift -- pass on the real thing, fail on a "
+       "known-bad (rule 33)",
+       _r_ok["agrees"] is True
+       and _r_ok["status"] == "RULED_ENDPOINT_INTERNALLY_CONSISTENT"
+       and abs(_r_ok["D_E_settle_implied_by_the_legs"] - 11191.244402) < 1e-6
+       and _r_bad["agrees"] is False
+       and _r_bad["status"] == "RULED_ENDPOINT_INTERNALLY_INCONSISTENT",
+       f"48506.795833 - 37315.551431 = "
+       f"{_r_ok['D_E_settle_implied_by_the_legs']:.6f} against declared "
+       f"{_r_ok['D_E_settle_declared']:.6f} -> {_r_ok['status']}; "
+       f"+1.0 planted -> {_r_bad['status']}")
+
+    ck("DA 164 (f) AND A MISSING OR PARTIAL RULED BLOCK IS A STATUS, "
+       "NEVER A PASS (rule 4) -- and NEITHER is ever reported as a "
+       "verification, because ***this module replays the NULL and loads NO "
+       "LEDGER, so it cannot re-derive the settlement P&L and must not "
+       "imply that it did***",
+       _r_absent["status"] == "RULED_ENDPOINT_ABSENT"
+       and _r_absent["is_a_verification"] is False
+       and _r_part["status"] == "RULED_ENDPOINT_INCOMPLETE"
+       and _r_part["missing"] == ["arm_total_cents"]
+       and _r_part["is_a_verification"] is False
+       and _r_ok["is_a_verification"] is False,
+       f"no settlement block -> {_r_absent['status']}; one leg removed -> "
+       f"{_r_part['status']} missing {_r_part['missing']}; and even the "
+       f"consistent case reports is_a_verification "
+       f"{_r_ok['is_a_verification']}")
+
     checks.extend(selftest_pre_read())
 
     n_fail = sum(1 for c in checks if not c["passed"])
