@@ -84,7 +84,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 219
+EXPECTED_CHECKS = 220
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -4824,6 +4824,65 @@ def selftest() -> int:
        f"old stream issues {_c_old[0]} cancel at {_c_old[1][0]} and the "
        f"new issues {_c_new[0]} -- a cancellation that only ever existed "
        f"because a score was moved backwards in time")
+
+    # ---- DE 158: THE READER'S ROWS ARE THE OTHER HALF OF DE 155 (1) ---
+    # `be_cancel_axis_null.load()` derives the decision stream from the
+    # REFERENCE, one row per generation at `g["t0"]`, filtered on
+    # `(slug, side, t0) in scored`. Against the per-row `scored` dict that
+    # key exists only for a generation's FIRST row, so the policy still
+    # sees one event per generation and first-crossing CANNOT FIRE -- the
+    # arm behaves as FIRST-ROW-ONLY, which is neither the old max nor the
+    # specified rule. That module is BE's pinned surface and DE does not
+    # edit it; this cell DRIVES the property so the spec routed to BE
+    # (`drafts/DE158_be_cancel_axis_null_reader_SPEC.md`) is a
+    # measurement and not an assertion.
+    # TWO SLUGS, not two generations of one slug: the policy's hold/repost
+    # state is per slug/side, so a second generation behind a cancelled one
+    # is not live to cancel and the cell would measure the state machine
+    # rather than the reader.
+    _sc158 = {  # what the repaired assembly produces: per ROW, at its time
+        ("s1", HSP.SIDES[0], 0.0): {"score": 0.2, "gen": 0, "t0": 0.0},
+        ("s1", HSP.SIDES[0], 6.0): {"score": 0.9, "gen": 0, "t0": 0.0},
+        # s2: a generation whose FIRST row the feature pass dropped -- no
+        # key at its t0 (0.0), only a later one
+        ("s2", HSP.SIDES[0], 6.0): {"score": 0.9, "gen": 0, "t0": 0.0},
+    }
+    _ref158 = {
+        "s1": {HSP.SIDES[0]: [HSP._gen(0, 0.0, 10.0, [(1.0, 2.0, 3.0)])],
+               HSP.SIDES[1]: []},
+        "s2": {HSP.SIDES[0]: [HSP._gen(0, 0.0, 10.0, [(1.0, 2.0, 3.0)])],
+               HSP.SIDES[1]: []}}
+    # THE READER AS IT IS: one row per generation at t0, key must exist
+    _rows_old158 = [{"t": g["t0"], "slug": s_, "side": sd, "gen": g["gen"]}
+                    for s_, sides in sorted(_ref158.items())
+                    for sd in HSP.SIDES for g in sides[sd]
+                    if (s_, sd, float(g["t0"])) in _sc158]
+    # THE READER AS THE SPEC ASKS: one row per SCORED ROW, at its own time
+    _rows_new158 = [{"t": t, "slug": s_, "side": sd, "gen": v["gen"]}
+                    for (s_, sd, t), v in sorted(_sc158.items())]
+
+    def _cx158(rows):
+        evs = [dict(r, score=_sc158[(r["slug"], r["side"], r["t"])]["score"])
+               for r in rows]
+        o = HSP.replay_policy(_ref158, evs, _p155(0.6))
+        return (o["counters"].get("cancels_issued", 0),
+                sorted(c["t_request"] for c in o["cancels"]))
+    _old158, _new158 = _cx158(_rows_old158), _cx158(_rows_new158)
+    _gens_old = {(r["slug"], r["gen"]) for r in _rows_old158}
+    _gens_new = {(r["slug"], r["gen"]) for r in _rows_new158}
+    ok(_old158 == (0, []) and _new158 == (2, [6.0, 6.0])
+       and _gens_old == {("s1", 0)} and _gens_new == {("s1", 0), ("s2", 0)},
+       f"DE 158 THE READER IS THE OTHER HALF OF THE REPAIR: with rows "
+       f"keyed ONE PER GENERATION AT t0 the policy issues {_old158[0]} "
+       f"cancels -- both crossings happen at t=6.0, after their "
+       f"generations started, and neither is in the stream at all -- and "
+       f"with rows PER SCORED ROW it issues "
+       f"{_new158[0]} at {_new158[1]}. AND A GENERATION VANISHES "
+       f"SILENTLY: s2's first row was dropped by the feature pass, so no "
+       f"key exists at its t0 and the current reader drops the whole "
+       f"generation with no status ({sorted(_gens_old)} against "
+       f"{sorted(_gens_new)}). `be_cancel_axis_null.load()` is BE's "
+       f"pinned surface -- routed, not edited")
 
     refuses(lambda: generation_scores(
         {"PM": _blk(_rows)["PM"][:2], "FN": _blk(_rows)["FN"],

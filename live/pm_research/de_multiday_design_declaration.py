@@ -50,7 +50,21 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: The six ruled days are already consumed, so this declaration authorises
 #: correction replays as exploratory supersessions only; it does not create a
 #: new confirmatory population.
-VERSION = 28
+#: DE 158: 29. **A PURE RE-POINT.** No estimand, bar, threshold, arm,
+#: horizon or day set differs from v28. Its only content is that it names
+#: params **v21**, whose only content is the four cascade module digests
+#: moved by DE 155's six defect repairs (the look-ahead in the cancel
+#: decision, the unbound LGBM normaliser, non-finite scores and features,
+#: the inflated exclusion count, the unsafe chunk merge and the repeated
+#: model loads) plus `linear_btc.json` joining the LGBM arm's
+#: `model_digests`. A version whose reason is "the code it pins was
+#: repaired" is a legitimate version; the alternative is an unpinned run.
+#: THE NUMBERS WILL MOVE and that is not a design change: theta is NOT
+#: re-fitted, so re-timing the decision to the first crossing shifts the
+#: selected count for a reason that is not a market reason -- recorded on
+#: every receipt as `scoring_timing`, and the before/after cancel count is
+#: the evidence the USER rules a re-fit on.
+VERSION = 29
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
 EXPECTED_CHECKS = 134
 
@@ -167,6 +181,10 @@ V27_DECLARATION = ("p003_de_multiday_gate1_design_v27.json",
                    "3bcdf3c234cb7d4e4be116c2d97a28293c37f419d9a0b062125b"
                    "0f1f151e272b")
 
+V28_DECLARATION = ("p003_de_multiday_gate1_design_v28.json",
+                   "07e567b08818779dc8bc96828276d7453f988e418ce6b4ed6161"
+                   "9d747710d826")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -177,7 +195,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V21_DECLARATION, V22_DECLARATION,
                     V23_DECLARATION, V24_DECLARATION,
                     V25_DECLARATION, V26_DECLARATION,
-                    V27_DECLARATION)
+                    V27_DECLARATION,
+                    V28_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -650,7 +669,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 #: USER's ruling retiring R5. The move is permitted by this caller's own
 #: predicate (i) only because v18 supersedes v15 by a verifying pair --
 #: through v16 and v17 -- and the digest verifies (DE 124).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v20.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v21.json"
 
 
 def _params_path() -> Path:
