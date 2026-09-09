@@ -538,6 +538,58 @@ and left the baseline untouched.
   cannot be produced today. The Chainlink S60 stream: cadence p50 ≈ 0.93–0.96 s, world→us
   ≈ 1.68 s p50, per-window coverage p50 ≈ 0.997.
 
+## A modified file in a worktree is not always the tip's (DA 157)
+
+My predecessor disclosed ONE uncommitted file in `wt-da`, "byte-identical to what
+landed". There were **two**, and the undisclosed one was identical to **`8cea440`
+(DA 132, two days back)**, not to the tip -- 2,648 lines against 2,966.
+
+**Identify such a file by BLOB ID against history, never by "is it the tip".** Content
+sha256 and `git rev-parse <sha>:<path>` both landed on the same commit in one pass; that
+is what turns "an unexplained modified file" into "a recoverable landed copy" and
+licenses the discard.
+
+**And a stale copy of an INSTRUMENT is not inert.** That copy predates DA 133, so it has
+no `settlement_statistics` at all: it is this reader without the primary endpoint's test
+beside `D_E_settle` -- the exact defect this seat's own file records paying for. The risk
+in a stale checkout is not losing work, it is *reading through the pre-fix instrument*.
+
+**`wt_refresh.sh` is a real falsifier here and it is free:** it restores files whose bytes
+equal `$REF`'s blob and REFUSES the checkout (rc 3, naming the file) on one that differs,
+so it both admits and refuses in one run. **Its bound: it compares against ONE ref**, so a
+file identical to an OLDER landed commit reads to it as a real edit. Conservative in the
+safe direction -- but the identification is still DA's to do.
+
+## Verifying a tree-dependent cell: drive the STATE, not the tree count (DA 157)
+
+`committed_state`'s fix was claimed "green from both trees". Two trees is not the test --
+**the reported state must MOVE, or the cell may be passing on a constant.** Three drives on
+the same bytes: main -> `COMMITTED_IN_THIS_TREE`, `wt-da` dirty at a stale HEAD ->
+`PRESENT_BUT_NOT_COMMITTED`, `wt-da` **spotless** -> `COMMITTED_IN_THIS_TREE`. 23/0 each.
+
+**The spotless worktree is the drive that matters, because it is the input the rival
+explanation named.** REV 131's red was blamed on rule-31 dirtiness; DA 156 answered that a
+spotless worktree fails identically. Driving the OLD expression there -- `returncode=128 ->
+NOT_IN_THIS_TREE` with zero uncommitted bytes, cell conjunct False under OLD and True under
+NEW -- **refutes the narrative at the input rather than by argument.** REV 134 drove the
+same fix the other way (re-introducing both defects from `wt-rev`); backwards-through-the-
+code and forwards-through-the-input are complementary, and neither substitutes.
+
+**Check that a new provenance field is EMITTED, not merely present in the source.** Ran
+`--sweep` and read the artifact: `committed_state_asked_of` on 12 of 12 rows, each equal to
+`read_from_tree`. A field added to answer a finding is a source edit until an artifact
+carries it.
+
+**Residual, checked and correct -- do not re-find it as a miss:** `committed_in_that_tree`
+(`:1408`) asks the FILE'S OWN tree via `_is_committed` while sitting beside
+`read_from_tree: <AUDIT_ROOT>` and naming *that* tree -- the same conflation one field left
+of where it was fixed. **Unreachable by construction**, established by AST over
+`audit_module` call sites rather than by grep (rule 32): every path is either
+`AUDIT_ROOT / rel` or a `/tmp` scratch path, and both questions agree on each. **LOUD if
+reached, driven rather than reasoned**: a `wt-da` path emits one row carrying
+`committed_state: NOT_IN_THIS_TREE` beside `committed_in_that_tree: True`. Rule 32's
+loud-or-silent test answered by measurement.
+
 ## Open conditions
 
 - **CLOSED at the artifact by the coordinator, 2026-09-07T20:1xZ:** DA carried
@@ -549,7 +601,7 @@ and left the baseline untouched.
 - The four-day table must be re-run as the 09-04/05/06 settlement re-runs land, and must
   carry the population difference. Those are coordinator GOs.
 - **`wt-da`'s HEAD goes stale** and then DA's own landed work looks uncommitted there.
-  **Refresh before believing its status.**
+  **Refresh before believing its status.** (Refreshed to `5c7d220` at DA 157; spotless.)
 - No factual correction is outstanding against a landed row (DA 117's mistyped digest
   corrected in band at Q-DA-343; DA 128's repetition of DE's `inventory_leg` claim
   corrected in band; DA 132's silent control reported in DA's own report before any of its
