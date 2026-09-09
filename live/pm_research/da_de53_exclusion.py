@@ -10,6 +10,8 @@ it says about the distribution is worth reading.
 import sys, json, pickle, datetime as dt
 sys.path.insert(0, "live/pm_research")
 import da_population_audit as PA
+import da_book_verify as BV
+import harmful_stateful_policy as HSP
 
 CACHE = "/home/yuqing/ctaNew/data/pm_5min/derived/de_section81_cache_12.pkl"
 d = pickle.loads(open(CACHE, "rb").read())
@@ -22,6 +24,18 @@ def hour_of(slug):
 out = {}
 for (coin, head), val in sorted(asm["by_arm"].items()):
     gen_scores = val[0]
+    # DA 149 (REV 122): SHAPE-AWARE MEMBERSHIP. This classified a
+    # generation with `key = (slug, side, float(g["t0"])); key in
+    # gen_scores` -- a PER_GENERATION test spelled `key in gen_scores`,
+    # which is why DA 148's own sweep for `... in gs` did not see it.
+    # THE COST HERE IS LARGER THAN A MISLABEL: this module computes
+    # `n_excluded` / `excluded_fraction` AND FEEDS THE SPLIT TO A
+    # PERMUTATION AUDIT, so on a PER_ROW book nearly every generation
+    # would be classed EXCLUDED and `PA.compare` would be run on a
+    # population that is an artefact of the test. Membership now comes
+    # from the shared builder's covered set (one implementation).
+    _rows, _info = BV.scored_stream_rows(ref, gen_scores, HSP.SIDES)
+    _covered = _info["covered_generation_keys"]
     excluded, retained = [], []
     for slug, sides in sorted(ref.items()):
         for side, gens in sorted(sides.items()):
@@ -30,9 +44,10 @@ for (coin, head), val in sorted(asm["by_arm"].items()):
                        "duration": float(g["t1"]) - float(g["t0"]),
                        "n_tranches": len(g.get("tranches") or []),
                        "level": g.get("level")}
-                key = (slug, side, float(g["t0"]))
-                (retained if key in gen_scores else excluded).append(rec)
+                key = (slug, side, g["gen"])
+                (retained if key in _covered else excluded).append(rec)
     rep = {"head": head,
+           "score_shape": _info["score_shape"],
            "n_excluded": len(excluded), "n_retained": len(retained),
            "n_reference": len(excluded) + len(retained),
            "excluded_fraction": round(len(excluded) /
