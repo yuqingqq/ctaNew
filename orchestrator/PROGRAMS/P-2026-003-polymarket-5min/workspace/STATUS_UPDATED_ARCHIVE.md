@@ -20739,3 +20739,39 @@ generation and the window went 4 → 3. Nothing rewritten.
   Batch 270 archived. The freeze holds a TWENTY-EIGHTH round; `wt-de` `5020f96` / `?? data`, the FOURTEENTH
   consecutive round. MEM asserts no result.)
 ```
+
+## Batch 274 — archived 2026-09-09T07:28:29Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T05:49:56Z (MEM ROUND 289 -- R-825 THROUGH R-835 SWEPT, fifty-four commits between the
+  tip I read at round 288 (`6f34c6e`) and `3828ed7`, and the USER asked that the docs be brought up to date, so this
+  generation carries the retractions rather than the results. STATE ONLY. ***TWO RETRACTIONS, BOTH THE USER'S OWN
+  COMMITS, AND THEY COMPOUND***: `1d309bc` / `03dbc1e` -- the policy scored on hazard probability while its frozen
+  thresholds were fit on `p_fill * predicted_conditional_value`, THE VALUE HEAD WAS NEVER LOADED -- and `c501824`,
+  the look-ahead, where the generation MAXIMUM was stamped at the GENERATION START so later information triggered
+  an earlier cancel. ***EVERY ARM NUMBER THIS PROGRAMME HAS PRODUCED IS RETRACTED***: the arms decided on the wrong
+  quantity AND used information they could not have had, and every arm figure I carried in rounds 286-288 goes with
+  them. ***THE 0-CANCEL BASELINE MAKES NO DECISIONS AND IS UNTOUCHED BY BOTH***, so the LATENCY finding stands and
+  is now the programme's one robust result -- and I recomputed all four days from the artifacts: at L = 250 the
+  never-cancel maker loses 53.92 % (09-03), 62.37 % (09-04), 97.57 % (09-05) and 55.43 % (09-06) of its settled
+  money, the register's figures exact at every day, with 09-05 agreeing with my own independent round-287 route.
+  ***AND MY FIRST READ OF THAT TABLE WAS WRONG***: I took `absolute.zero_cancel_baseline.total`, which is the FILLS
+  LEG, and got 54.2 % on 09-05 -- the artifact's own `what_total_is` field is what corrected me, the ruled P&L
+  living at `economic_settlement.zero_cancel_baseline_legs.total_cents`. ALL SEVEN USER DEFECTS ARE CLOSED and
+  REV 107's closed form on the exclusion inflation checks to the unit: (12,853,409 - 15,735) / 41 = 313,114 EXACTLY,
+  an 816.9x overstatement. R-835's "four moved cascade modules" is exact AT `ecc7116` (one was already off-pin from
+  the look-ahead repair, three moved there) and FIVE at HEAD, the fifth arriving at `70b54a4` -- which is the second
+  pin site v22 missed. **Params v23 matches 10/10 at HEAD and v20 matches 5/10**, so REV 109's "a day can run" is
+  true at the pins; design v29/v30/v31 all PAIR_OK, pinning params v21/v22/v23. ***MY ROUND-288 AMBIGUITY FINDING IS
+  CLOSED***: the L = 250 receipt now reads 250.0 from the builder receipt, the predicate is an exact leaf-name list,
+  and the refusal name was KEPT rather than deleted. ***AND A STANDING FACT OF MINE IS NOW FALSE***: the R-775
+  freeze, which I recorded holding for twenty-eight rounds, LIFTED inside the user's own `1d309bc`. Two decisions
+  wait on the user (the null's sampling unit -- 15,867 of 40,000 rows begin after their generation's start -- and
+  the `research.slice` 200 % cap, verified at the running manager). BE has no procedure file while the other three
+  seats do. Flags 2349 -> 2364, prov 1894 -> 1909; missing-artifact 178 -> 176 and findings 183 -> 181, and I chased that
+  rather than publishing it: THE IMPROVEMENT IS IN THE FILESYSTEM, NOT IN THIS FILE -- the previously committed
+  STATUS.yml audits to 176 today and audited to 178 yesterday, so two artifacts a CHECKED flag cites have since
+  been created; window trimmed 4 -> 3, Batch 271 archived. **NOTHING CORRECTED
+  HAS BEEN QUOTED AND THIS FILE QUOTES NOTHING CORRECTED.** `wt-de` `5020f96` / `?? data`, the FIFTEENTH consecutive
+  round. MEM asserts no result.)
+```

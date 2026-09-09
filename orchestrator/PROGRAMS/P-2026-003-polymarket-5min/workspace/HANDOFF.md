@@ -1,3 +1,106 @@
+# READ FIRST — round 292 (MEM, 2026-09-09T07:28:29Z, tip `d7de95e`)
+
+**R-838 and R-839 swept as a numbered queue under rule 23 — from my round-291 tip `726f785` to `d7de95e`, thirteen
+commits.** STATE ONLY.
+
+## ⚠ THE HEADLINE, WHICH HAS NOT CHANGED ALL NIGHT
+
+**There is NO corrected book and NO corrected number. Every arm result remains RETRACTED.** What changed tonight is
+only the ground under a future correction, never a number.
+
+## THE BUILD QUEUE IS STOOD DOWN — by USER ruling, and real at the machine
+
+**R-839, verbatim: *"dont have to build now, we clear issues first"*.** The five-day EV20 queue is stood down and
+**no seat takes the heavy lock until a build is dispatched explicitly.** Verified at 07:21:36Z: **no holders on
+`data/.heavy_run.lock`**, **no live `p003ev` / `be1x` / `dePE` / `deRR` unit.**
+
+`p003ev200903b` stopped **07:15:47Z** — `Result=success`, **nothing written, no partial book**, lock freed,
+**15 min 48 s discarded**. Its record ends at a `[leaf_peak]` (peak 6,387,798,016 B, 187 samples) with **no `[exit]`
+event** — the shape a deliberate stop leaves, unlike the first run's `[exit] rc 1`.
+
+## REV 111 WAS SENT TO PROVE THERE IS NO THIRD PIN SITE — AND CAME BACK REFUTED
+
+**SITE 3: the day book's own `producing_code.import_closure` — 49 module digests, recorded by the builder and read
+by nobody.** The book carries the scores; the scores are computed at build time by the scoring closure; the receipt
+records exactly which bytes did it; **and no consumer compares that record to the code consuming the book.** Both
+existing checks (book bytes, cascade pins) are LOUD and would pass.
+
+**I measured it on three real books rather than taking the number.** Each records **49** modules; each reads
+**41 identical at the tip, 8 MOVED, 0 not found** — identical on all three, which is what a closure nothing reads
+looks like.
+
+**And the eight are the retractions by name:** `de_head_scoring.py`, `de_phase4_diag_runner.py`,
+`de_multiday_gate1_runner.py`, `be_daybook_build.py`, `be_rule22.py`, `de_multiday_design_declaration.py`, +2.
+**Every book on disk carries pre-fix scores and says so in digests nothing reads.** This is the strongest argument
+on the record for the stand-down — found by a seat sent to prove the opposite.
+
+## REV 110 — the cancel-count instrument is SOUND, proven by mutation
+
+Falsifiers shown to **fire**: `old_stream` returning `new_stream` → red at cell 1; the known-bad gate made a no-op →
+red after two passes. And **REV extracted the pre-fix runner at `c501824^` and ran it** — identical **event for
+event to twelve decimals**. Cell 4 refuses the real stale cache **by name**; an empty assembly refuses
+`CANCEL_DELTA_NO_ASSEMBLED_SCORES` — **a refusal, not a zero dressed as a measurement.** **One divergence, in the
+safe direction**, named rather than reported clean. Findings (B) and (C) go to DE's next round, not a batch in
+flight.
+
+## RULE 11 HOLDS — driven at three artifacts, not asserted
+
+1. `be_operating_point_declaration_v1.json`: `fit_artifact.frozen_at_utc` **2026-08-26T10:21:49Z** (LINEAR).
+2. The SENSITIVITY declaration derives its quantile from **`days: ["2026-08-29"]` only**, and states its own
+   exposure in band: *"08-29's results have been seen … the exposure is named rather than argued away"*, with
+   *"08-29 was WITHDRAWN from the race at R-500 and consumed as development evidence."*
+3. The three phase2 LGBM freezes (Aug 28 06:09 / 06:59, Aug 29 03:41): a scan for any `2026-09-0x` returns **zero
+   occurrences in all three.**
+
+**The days being scored (09-03..09-07) appear in none of them** — dates show they *could* not have seen them; the
+absence inside the artifacts shows they *did* not.
+
+**One honest gap:** the quoted **2026-08-28T05:52:14Z** appears in none of the freezes (which carry no ISO
+timestamps), the params v23, or either operating-point declaration. **The conclusion does not depend on it** — but
+if it is to be quoted it needs its own artifact named.
+
+## WHAT A BUILD NOW WAITS ON
+
+**BE 111** (two-pin-site guard refusing *at the repoint*, landed `ec3073f`/`d7de95e`; then BE's ranked list of what
+a book built today would still embed that nobody has driven) · **REV 111** (answered, refuted) · **DE 161** (the
+substring-matching sealed-value guard, the null wiring, REV 110's B and C) · **DA 138** — **an untargeted hunt, no
+target named, deliberately**: every defect that mattered was found by someone not told where to look, and *"I looked
+in these six places, drove these controls, and found nothing"* is an accepted answer. **DE 160** landed ruling (a)
+(`1d859a5`), recorded as landed code — REV has not reviewed it and this file asserts nothing about its behaviour.
+
+Closed and not re-filed: the runbook now reads **§7e, §7f, §7g** in file order, and §7g's dead in-flight item is
+superseded.
+
+Counts: flags 2394 → 2409, provenance 1939 → 1954 (fifteen written, fifteen counted, duplicate-name gate run BEFORE
+writing); 1,664 CHECKED / 285 RELAYED / 5 MALFORMED / 455 UNMARKED; orphans 0; window trimmed 4 → 3, Batch 274
+archived. MEM asserts no result.
+
+---
+
+## ADDENDUM 07:29:33Z — DA 138 SAYS **STOP THE BUILD**, and it landed after this round's window closed
+
+Verified at its row (`a4ab070`, Q-DA-361, as-of 07:22:40Z, read-only, no lock) because it changes "what a build
+waits on" above. **The look-ahead repair introduced a key that does not name the generation.** DE 155 (1) re-keyed
+assembled scores from one entry per GENERATION to one per ROW — `scores[(slug, side, t)]` (`:9089`) — and the code
+says it itself at `:9226`: *"the key alone no longer names the generation."* The `per_t` de-duplication is built
+**inside** the per-generation loop, so it merges only within one generation; **two generations of the same
+`(slug, side)` holding a row at the same float `t` overwrite, last writer wins, and because the reference is
+iterated in generation order the EARLIER generation always loses.**
+
+**Driven, mode A:** `ROWS_SCORED = 3` while `len(scores) = 2`, and **every status reports health**
+(`SCORED 2, NO_ROWS_KEPT 0, ROW_BEFORE_GENERATION_START 0`) — a scored row vanishes and nothing counts it.
+**Positive control** (the battery's own fixture, generations 300 s apart): 3 and 3 agree — *the checker can show the
+property, so the disagreement is the defect and not the instrument.*
+
+**Reachable ONLY on a post-DE-155 book** — pre-fix books had one key per generation and could not collide. **So it
+is a defect the repair introduced, and it would have gone into exactly the corrected books the stood-down queue was
+about to build.** The user's "clear issues first" avoided it.
+
+**And it came from DA 138 — the deliberately UNTARGETED hunt**, which is the pattern R-839 named as the reason to
+send a seat with no target: every defect that mattered was found by someone not told where to look.
+
+---
+
 # READ FIRST — round 291 (MEM, 2026-09-09T07:16:02Z, tip `726f785`)
 
 **R-836 and R-837 swept as a numbered queue under rule 23 — from my round-290 tip `6120e61` to `726f785`, eleven
