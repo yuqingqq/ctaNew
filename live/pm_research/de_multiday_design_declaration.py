@@ -64,7 +64,7 @@ import de_multiday_gate1_runner as RUNNER  # noqa: E402
 #: selected count for a reason that is not a market reason -- recorded on
 #: every receipt as `scoring_timing`, and the before/after cancel count is
 #: the evidence the USER rules a re-fit on.
-VERSION = 29
+VERSION = 30
 PROTOCOL = f"P003_DE_MULTIDAY_GATE1_DESIGN_DECLARATION_V{VERSION}"
 EXPECTED_CHECKS = 134
 
@@ -185,6 +185,10 @@ V28_DECLARATION = ("p003_de_multiday_gate1_design_v28.json",
                    "07e567b08818779dc8bc96828276d7453f988e418ce6b4ed6161"
                    "9d747710d826")
 
+V29_DECLARATION = ("p003_de_multiday_gate1_design_v29.json",
+                   "e4487d077c2364449e5e98ccb806b6487ad927d1b5010671a06b"
+                   "510fbb505699")
+
 DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V4_DECLARATION, V5_DECLARATION, V6_DECLARATION,
                     V7_DECLARATION, V8_DECLARATION, V9_DECLARATION,
@@ -196,7 +200,8 @@ DECLARATION_CHAIN = (V1_DECLARATION, V2_DECLARATION, V3_DECLARATION,
                     V23_DECLARATION, V24_DECLARATION,
                     V25_DECLARATION, V26_DECLARATION,
                     V27_DECLARATION,
-                    V28_DECLARATION)
+                    V28_DECLARATION,
+                    V29_DECLARATION)
 
 #: (1) R2's FLOOR, CALIBRATED -- measured on the consumed 08-24 hour, the
 #: one population already seen, exactly as R4's 0.25 was set against
@@ -669,7 +674,7 @@ SERIAL_BUILD_S = sum(MEASURED_CADENCE_S.values())
 #: USER's ruling retiring R5. The move is permitted by this caller's own
 #: predicate (i) only because v18 supersedes v15 by a verifying pair --
 #: through v16 and v17 -- and the digest verifies (DE 124).
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v21.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v22.json"
 
 
 def _params_path() -> Path:

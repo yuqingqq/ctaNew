@@ -67,7 +67,7 @@ EXPECTED_CHECKS = 402
 #: R-765: v18 carries the USER's ruling that retires R5. Moving the
 #: pointer here is what collapses the sealed path and the early-read
 #: path into ONE path with ONE emission.
-PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v21.json"
+PARAMS_REL = "live/pm_research/declarations/de_multiday_gate1_params_v22.json"
 
 #: R5 -- the fields that do not exist in a per-day artifact until every day
 #: is complete. Named once, so the guard and the emitter cannot disagree.
