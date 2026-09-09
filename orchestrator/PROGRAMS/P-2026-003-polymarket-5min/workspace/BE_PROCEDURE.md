@@ -567,6 +567,30 @@ wholly-swept and a wholly-missed payload and no partial one. I relayed
 `sites_agree: True` as "ten cascade pins verified" at BE 115 and BE 117; the
 `10` came from a field I READ and never asserted.
 
+## 6k. FINITENESS BEFORE EQUALITY (REV 138, BE 130)
+
+**`inf == inf` is True, `"x" == "x"` is True, `None == None` is True, and
+none of them is a zero-length generation.** A predicate written
+`t0 == t1` without a finiteness test first DROPS all three and reports them
+under a name that is false. In a probe that is a mislabelled count; **in a
+builder it is a silent drop from the population.**
+
+The exact ordering DE 172 removed from `de_reference_integrity_probe.py`
+reappeared in `be_daybook_build` **forty minutes later** — the third time in
+one night that one seat's fixed defect turned up in another seat's code.
+**When another seat fixes an ordering or a predicate, check your own copy of
+the same shape in the same round.**
+
+Test `_finite_time(x)` — a real number, not `bool` (`True == 1.0`), not NaN
+(`x == x` is False), not `inf` — **before** any comparison. Then each shape
+gets its own name: `ZERO_LENGTH_GENERATION_EXCLUDED` (excluded and counted),
+`NON_FINITE_GENERATION_BOUND` and `MALFORMED_GENERATION_BOUND` (**counted and
+REFUSED, never dropped** — they have no account, where the zero-length nine
+were established as a gap boundary by measurement), `INVERTED_GENERATION`
+(counted and **left in place**, because `validate_reference`'s predicate
+already covers it and removing it would take a real defect out of the guard's
+reach).
+
 ## 7. What I have learned the hard way
 
 * **`?? data` is correct**; anything more is not. See §0.

@@ -712,6 +712,17 @@ def _producing_closure_block(stamp: dict) -> dict:
                     "receipt (rule 4)."}
 
 
+def _finite_time(x) -> bool:
+    """A real, finite NUMBER -- the predicate DE's probe uses.
+
+    `bool` is excluded because `True == 1.0`; NaN because `x == x` is
+    False for it; `inf` because it is not a time. A string is not a
+    number at all, and `"x" == "x"` is the second half of REV 138's
+    finding."""
+    return (isinstance(x, (int, float)) and not isinstance(x, bool)
+            and x == x and abs(x) != float("inf"))
+
+
 #: A zero-length generation is a BOUNDARY ARTEFACT, not a population.
 #: If the fraction is larger than this, the shape is not a boundary case
 #: and dropping it silently would be the fix that hides the defect -- so
@@ -747,7 +758,7 @@ def exclude_zero_length_generations(
     and was right; the guard keeps its exact predicate. What changes is
     that the builder no longer PRODUCES a thing the guard must refuse."""
     n0 = 0
-    dropped = []
+    dropped, nonfinite, malformed, inverted = [], [], [], []
     for slug in sorted(ref):
         by_side = ref[slug] or {}
         for side in ("BUY_UP", "SELL_UP"):
@@ -757,15 +768,55 @@ def exclude_zero_length_generations(
             n0 += len(gens)
             keep = []
             for g in gens:
-                t0, t1 = g.get("t0"), g.get("t1")
-                if t0 is not None and t1 is not None and t0 == t1:
-                    dropped.append({"slug": slug, "side": side,
-                                    "gen": g.get("gen"), "t0": t0, "t1": t1,
-                                    "n_tranches": len(g.get("tranches") or [])})
+                row = {"slug": slug, "side": side, "gen": g.get("gen"),
+                       "t0": g.get("t0"), "t1": g.get("t1"),
+                       "n_tranches": len(g.get("tranches") or [])}
+                # FINITENESS BEFORE EQUALITY (REV 138). `inf == inf` is
+                # True and `"x" == "x"` is True, and NEITHER is a
+                # zero-length generation. Testing equality first drops
+                # both and reports them under a name that is false --
+                # the same ordering DE 172 removed from its probe, and
+                # WORSE here, because in a probe it is a mislabelled
+                # count and in the builder it is a silent drop from the
+                # population.
+                if "t0" not in g or "t1" not in g:
+                    malformed.append(dict(row, why="t0 or t1 absent"))
+                    keep.append(g)
                     continue
+                t0, t1 = g["t0"], g["t1"]
+                if not (_finite_time(t0) and _finite_time(t1)):
+                    nonfinite.append(dict(
+                        row, t0_type=type(t0).__name__,
+                        t1_type=type(t1).__name__))
+                    keep.append(g)
+                    continue
+                if t0 == t1:
+                    dropped.append(row)
+                    continue
+                if t0 > t1:
+                    # NOT a zero-length generation either, and NOT
+                    # excluded: it is left where it is and refused by
+                    # `validate_reference`, whose predicate already
+                    # covers it. Counted here so the census is complete.
+                    inverted.append(row)
                 keep.append(g)
             if len(keep) != len(gens):
                 by_side[side] = keep
+    # NON-FINITE AND MALFORMED ARE NOT DROPPED AND NOT BUILT. They have no
+    # account -- tonight's zero-length nine were established as a gap
+    # boundary by measurement, and these are established as nothing. So
+    # they are counted under their OWN names and the build REFUSES, which
+    # costs seconds; letting them through costs 54 minutes and then DE's
+    # refusal, and dropping them would be the fix that hides the defect.
+    if nonfinite or malformed:
+        raise BookRefused(
+            f"REFUSED -- GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS on {day}: "
+            f"{len(nonfinite)} NON_FINITE_GENERATION_BOUND and "
+            f"{len(malformed)} MALFORMED_GENERATION_BOUND of {n0} "
+            f"generations. First: {(nonfinite + malformed)[0]}. These are "
+            f"NOT zero-length generations -- `inf == inf` and `'x' == 'x'` "
+            f"are both True -- and they are neither excluded under that "
+            f"name nor built.")
     frac = (len(dropped) / n0) if n0 else 0.0
     if frac > refuse_above:
         raise BookRefused(
@@ -785,7 +836,23 @@ def exclude_zero_length_generations(
         == ZERO_LENGTH_FRACTION_REFUSE_ABOVE,
         "n_tranches_on_them": sum(d["n_tranches"] for d in dropped),
         "excluded": dropped,
-        "predicate": "t0 == t1",
+        "predicate": "finite(t0) and finite(t1) and t0 == t1 -- FINITENESS "
+                     "BEFORE EQUALITY (REV 138)",
+        # THE OTHER SHAPES, EACH UNDER ITS OWN NAME so a reader can never
+        # read one of them as a zero-length generation (rule 4).
+        "NON_FINITE_GENERATION_BOUND": {"n": len(nonfinite),
+                                        "rows": nonfinite,
+                                        "disposition": "REFUSED, not "
+                                                       "excluded"},
+        "MALFORMED_GENERATION_BOUND": {"n": len(malformed),
+                                       "rows": malformed,
+                                       "disposition": "REFUSED, not "
+                                                      "excluded"},
+        "INVERTED_GENERATION": {"n": len(inverted), "rows": inverted,
+                                "disposition": "counted here, LEFT IN THE "
+                                               "REFERENCE and refused by "
+                                               "validate_reference, whose "
+                                               "predicate already covers it"},
         "why": "a gap START truncates the generation live at that instant; "
                "one created at that same instant is born terminated. Not a "
                "decision-time exposure (rule 1), so not in the population",
@@ -1557,7 +1624,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 169
+EXPECTED_CHECKS = 175
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1858,6 +1925,61 @@ def selftest() -> int:
        f"{_x129['n_tranches_on_them']} tranches between them), "
        f"{sorted(_left)} kept -- an exclusion with a STATUS, a COUNT and "
        f"the IDENTITIES, never a silent drop (rule 4)")
+    # ---- REV 138: FINITENESS BEFORE EQUALITY --------------------------
+    # `inf == inf` is True and `"x" == "x"` is True and NEITHER is a
+    # zero-length generation. Each shape must land under its OWN name and
+    # never under ZERO_LENGTH_GENERATION_EXCLUDED -- in a probe that is a
+    # mislabelled count, in a builder it is a silent drop from the
+    # population.
+    _INF = float("inf")
+    for _lbl, _t0, _t1, _kind in (
+            ("inf / inf", _INF, _INF, "NON_FINITE_GENERATION_BOUND"),
+            ("nan / nan", float("nan"), float("nan"),
+             "NON_FINITE_GENERATION_BOUND"),
+            ("two equal strings", "x", "x", "NON_FINITE_GENERATION_BOUND"),
+            ("None / None", None, None, "NON_FINITE_GENERATION_BOUND")):
+        _rr = {"s1": {"BUY_UP": [{"gen": 0, "t0": 2.0, "t1": 6.0,
+                                  "tranches": []},
+                                 {"gen": 1, "t0": _t0, "t1": _t1,
+                                  "tranches": []}], "SELL_UP": []}}
+        try:
+            exclude_zero_length_generations(_rr, "d", refuse_above=1.0)
+            ok(False, f"{_lbl} must not pass")
+        except BookRefused as _e:
+            _gens = [g["gen"] for sd in _rr.values() for gs in sd.values()
+                     for g in gs]
+            ok("GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS" in str(_e)
+               and "zero-length" not in str(_e).split("--")[1].split(":")[0]
+               and sorted(_gens) == [0, 1],
+               f"KNOWN-BAD `{_lbl}`: REFUSED as "
+               f"GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS, **not** dropped "
+               f"as a zero-length generation -- and both generations are "
+               f"still in the reference ({sorted(_gens)}), so nothing "
+               f"vanished from the population on the way to the refusal")
+    _miss = {"s1": {"BUY_UP": [{"gen": 0, "t0": 1.0, "t1": 5.0,
+                                "tranches": []},
+                               {"gen": 9, "tranches": []}], "SELL_UP": []}}
+    try:
+        exclude_zero_length_generations(_miss, "d", refuse_above=1.0)
+        ok(False, "a generation with no t0/t1 must not pass")
+    except BookRefused as _e:
+        ok("MALFORMED_GENERATION_BOUND" in str(_e)
+           or "GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS" in str(_e),
+           "KNOWN-BAD, THE MISSING KEY: a generation carrying no `t0`/`t1` "
+           "at all REFUSES under MALFORMED_GENERATION_BOUND -- `.get()` "
+           "returns None for both and `None == None` is True, so the "
+           "pre-REV-138 order would have dropped it as zero-length")
+    _inv = {"s1": {"BUY_UP": [{"gen": 0, "t0": 9.0, "t1": 4.0,
+                               "tranches": []}], "SELL_UP": []}}
+    _xi = exclude_zero_length_generations(_inv, "d", refuse_above=1.0)
+    ok(_xi["n_excluded"] == 0 and _xi["INVERTED_GENERATION"]["n"] == 1
+       and [g["gen"] for g in _inv["s1"]["BUY_UP"]] == [0],
+       f"AND AN INVERTED GENERATION (t0 > t1) IS COUNTED UNDER ITS OWN NAME "
+       f"AND LEFT WHERE IT IS -- {_xi['INVERTED_GENERATION']['n']} counted, "
+       f"{_xi['n_excluded']} excluded -- because "
+       f"`validate_reference`'s predicate already covers it and removing it "
+       f"here would take a real defect out of the guard's reach")
+
     _clean = {"s1": {"BUY_UP": [{"gen": 0, "t0": 1.0, "t1": 5.0,
                                  "tranches": []}], "SELL_UP": []}}
     _xc = exclude_zero_length_generations(_clean, "d")   # default threshold
