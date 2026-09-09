@@ -87,6 +87,59 @@ def _fills_from(ref: dict, key: str) -> list:
     return out
 
 
+def legs_directly(ref: dict, key: str, winners: dict) -> dict:
+    """THE SAME LEGS BY A SECOND, INDEPENDENT ARITHMETIC PATH.
+
+    REV 144: with KEPT anchored by the ledger's baseline and only the SUM
+    checked, **a wrong DROPPED passes** -- the sum is satisfied by two
+    compensating errors, and a bug in the valuation moves DROPPED and
+    ALL together so `KEPT + DROPPED == ALL` still holds. One side was
+    anchored and the other was not.
+
+    So each side gets its own anchor. KEPT's is the ledger's baseline
+    total; DROPPED's is THIS: the R-801 legs computed by direct summation
+    rather than through `settlement_legs_by_slug`.
+
+    THIS IS A CHECK, NOT A PUBLICATION. DE's function remains the one
+    whose number is published; this exists only to DISAGREE with it. Two
+    implementations, one authority -- the do-not-harmonize principle
+    (R-235) pointed at a number instead of a seat."""
+    trades = residual = 0.0
+    net: dict = {}
+    for f in _fills_from(ref, key):
+        sgn = 1.0 if f["side"] == SIDES[0] else -1.0
+        trades += -sgn * f["px_cents"] * f["size"]
+        net[f["slug"]] = net.get(f["slug"], 0.0) + sgn * f["size"]
+    for slug, sh in net.items():
+        w = (winners or {}).get(slug)
+        if w is None:
+            raise ReconcileRefused(
+                f"REFUSED -- WINNER_MISSING_FOR_SLUG {slug!r}: the direct "
+                f"leg arithmetic has no settlement to value the residual "
+                f"at, and a residual valued at zero would understate the "
+                f"total by an unknown amount.")
+        residual += sh * float(w["settle_cents"])
+    return {"trades_leg_cents": trades, "residual_leg_cents": residual,
+            "total_cents": trades + residual}
+
+
+def _cross_check(name: str, viaDE: dict, direct: dict, tol: float) -> dict:
+    """Both legs, both ways -- refuse by name on either."""
+    for leg in ("trades_leg_cents", "residual_leg_cents", "total_cents"):
+        a, b = viaDE.get(leg), direct.get(leg)
+        if a is None or abs(float(a) - float(b)) > tol:
+            raise ReconcileRefused(
+                f"REFUSED -- {name}_LEGS_DISAGREE_WITH_DIRECT_ARITHMETIC on "
+                f"{leg}: `settlement_legs_by_slug` gives {a!r} and direct "
+                f"summation gives {b!r}, a difference of "
+                f"{None if a is None else float(a) - float(b)!r}. Two "
+                f"implementations of one estimand disagree, so one of them "
+                f"is wrong and neither may be published.")
+    return {"trades_leg_cents": direct["trades_leg_cents"],
+            "residual_leg_cents": direct["residual_leg_cents"],
+            "total_cents": direct["total_cents"], "agrees": True}
+
+
 def value(ref: dict, key: str, winners: dict) -> dict:
     """R-801 legs for one tranche set -- DE's function, called."""
     import de_multiday_gate1_runner as G
@@ -133,6 +186,13 @@ def reconcile(ref: dict, winners: dict, baseline_total_cents: float,
     kept = value(ref, "tranches", winners)
     dropped = value(ref, DROPPED_KEY, winners)
     allv = value_all(ref, winners)
+    # EACH SIDE ANCHORED SEPARATELY (REV 144). KEPT's anchor is the
+    # ledger's baseline, below; DROPPED's is the independent arithmetic,
+    # here -- and KEPT gets it too, so neither side rests on the sum.
+    kept_x = _cross_check("KEPT", kept,
+                          legs_directly(ref, "tranches", winners), tol)
+    dropped_x = _cross_check("DROPPED", dropped,
+                             legs_directly(ref, DROPPED_KEY, winners), tol)
     sum_total = kept["total_cents"] + dropped["total_cents"]
     if abs(sum_total - allv["total_cents"]) > tol:
         raise ReconcileRefused(
@@ -158,6 +218,15 @@ def reconcile(ref: dict, winners: dict, baseline_total_cents: float,
         "baseline_total_cents_from_the_ledger": float(baseline_total_cents),
         "legs_close": True,
         "kept_equals_the_baseline": True,
+        "KEPT_cross_checked_by_direct_arithmetic": kept_x,
+        "DROPPED_cross_checked_by_direct_arithmetic": dropped_x,
+        "why_both_sides_are_anchored": (
+            "REV 144: the sum alone cannot anchor DROPPED -- a bug in the "
+            "valuation moves DROPPED and ALL together and `KEPT + DROPPED "
+            "== ALL` still holds. KEPT is anchored by the ledger's "
+            "baseline; DROPPED is anchored by a SECOND arithmetic path "
+            "that exists only to disagree. Two implementations, one "
+            "authority."),
         "UPPER_BOUND": (
             "DROPPED is an UPPER BOUND on the latency effect, not the "
             "effect: a dropped tranche arrived BEFORE OUR QUOTE COULD REST, "
@@ -182,6 +251,45 @@ def reconcile(ref: dict, winners: dict, baseline_total_cents: float,
     }
 
 
+def reconcile_status(ref: dict, winners: dict, baseline_total_cents: float,
+                     **kw) -> dict:
+    """THE NON-THROWING FORM, FOR A CONSUMER INSIDE A DAY RUN.
+
+    REV 144 item 2: a reconciliation that fails SILENTLY inside a day run
+    is worse than none. `reconcile` RAISES, which is right for a checker
+    and wrong for a diagnostic wired into a long run that should not die
+    for it. So the choice is made explicit rather than left to a caller's
+    `try/except`:
+
+      * the refusal's NAME is in the result, never swallowed;
+      * `ok` is False and `MUST_BE_SURFACED` is True, so a consumer that
+        records the block without reading it still carries a field whose
+        name says it must be read;
+      * and there is no third state -- it either reconciles or names why
+        it did not.
+
+    A caller wanting the run to STOP calls `reconcile` and lets it raise.
+    A caller wanting the run to CONTINUE calls this and must surface the
+    block. Neither can fail quietly."""
+    try:
+        out = reconcile(ref, winners, baseline_total_cents, **kw)
+        return dict(out, ok=True, MUST_BE_SURFACED=False)
+    except ReconcileRefused as e:
+        name = str(e).split(":")[0].replace("REFUSED -- ", "").strip()
+        return {"protocol": "BE_PLACEMENT_LATENCY_RECONCILE_V1",
+                "ok": False,
+                "MUST_BE_SURFACED": True,
+                "refusal": name,
+                "detail": str(e),
+                "what_a_consumer_must_do": (
+                    "surface this block. A day run may continue -- the "
+                    "reconciliation is a diagnostic, not a gate -- but a "
+                    "run that records `ok: false` without reporting it has "
+                    "made the check equivalent to not having one."),
+                "baseline_total_cents_from_the_ledger":
+                    float(baseline_total_cents)}
+
+
 def value_all(ref: dict, winners: dict) -> dict:
     """Both sets together -- the L=0 valuation."""
     import de_multiday_gate1_runner as G
@@ -196,7 +304,7 @@ def value_all(ref: dict, winners: dict) -> dict:
             "n_slugs": legs.get("n_slugs")}
 
 
-EXPECTED_CHECKS = 10
+EXPECTED_CHECKS = 14
 
 
 def falsify() -> int:
@@ -256,27 +364,54 @@ def falsify() -> int:
        "carries the upper-bound label, the scope sentence and the "
        "statement that the markout is not the valuation")
 
-    # ---- DRIVEN TO FAIL, which is the whole point (REV 142) -----------
-    class _Wrong(dict):
-        pass
+    # ---- DRIVEN TO FAIL ON EACH SIDE SEPARATELY (REV 144) -------------
+    # REV 144: with KEPT anchored by the baseline and only the SUM
+    # checked, a wrong DROPPED PASSES -- a bug in the valuation moves
+    # DROPPED and ALL together and the sum still closes. The stub below
+    # is written to do exactly that, CONSISTENTLY across every call, so
+    # it reproduces a real bug rather than an artefact of the stub.
     import de_multiday_gate1_runner as _G
     _real = _G.settlement_legs_by_slug
-    try:
-        def _bad(fills, winners):
+
+    def _biased(target_size):
+        def _f(fills, winners):
             out = _real(fills, winners)
-            # a DELIBERATELY WRONG dropped value: inflate any valuation of
-            # the 4-share tranche by 1 cent
-            if any(abs(f["size"] - 4.0) < 1e-9 for f in fills) and \
-                    len(fills) == 1:
-                out = dict(out, total_cents=out["total_cents"] + 1.0)
-            return out
-        _G.settlement_legs_by_slug = _bad
+            bump = sum(1.0 for f in fills
+                       if abs(f["size"] - target_size) < 1e-9)
+            per = dict(out.get("per_slug") or {})
+            return dict(out, total_cents=out["total_cents"] + bump,
+                        per_slug=per)
+        return _f
+
+    try:
+        _G.settlement_legs_by_slug = _biased(4.0)      # the DROPPED tranche
+        _k = value(ref, "tranches", W)
+        _d = value(ref, DROPPED_KEY, W)
+        _a = value_all(ref, W)
+        ok(abs(_k["total_cents"] + _d["total_cents"]
+               - _a["total_cents"]) < 1e-9,
+           f"**THE WEAKNESS REV 144 NAMED, REPRODUCED**: with the "
+           f"valuation biased on the DROPPED tranche consistently, "
+           f"KEPT {_k['total_cents']:.2f} + DROPPED {_d['total_cents']:.2f} "
+           f"still equals ALL {_a['total_cents']:.2f} -- **the sum closes "
+           f"and the dropped total is wrong**. A check that only tested the "
+           f"sum would pass here")
         refuses(lambda: reconcile(ref, W, kv["total_cents"]),
-                "LEGS_DO_NOT_CLOSE",
-                "KNOWN-BAD: a DELIBERATELY WRONG dropped value (one cent "
-                "too high) BREAKS the reconciliation by name -- the "
-                "falsifier fires, so its passing above is a result and not "
-                "a check that has only ever been satisfied")
+                "DROPPED_LEGS_DISAGREE_WITH_DIRECT_ARITHMETIC",
+                "AND THE FIX CATCHES IT: the same biased valuation now "
+                "REFUSES on the DROPPED side by name, because DROPPED has "
+                "its own anchor -- a second arithmetic path that exists "
+                "only to disagree. The sum is no longer the only test")
+    finally:
+        _G.settlement_legs_by_slug = _real
+    try:
+        _G.settlement_legs_by_slug = _biased(10.0)     # the KEPT tranche
+        refuses(lambda: reconcile(ref, W, kv["total_cents"]),
+                "KEPT_LEGS_DISAGREE_WITH_DIRECT_ARITHMETIC",
+                "AND ON THE KEPT SIDE TOO, ON ITS OWN: a valuation biased "
+                "on the kept tranche refuses before the baseline "
+                "comparison is even reached. **Each side now falsifies "
+                "separately; neither rests on the sum**")
     finally:
         _G.settlement_legs_by_slug = _real
     refuses(lambda: reconcile(ref, W, kv["total_cents"] + 0.01),
@@ -346,6 +481,27 @@ def falsify() -> int:
         for _ in range(2):
             ok(False, "no EV2x receipt on disk, so today's real state could "
                       "not be driven")
+
+    # ---- WHAT IT DOES WHEN IT FAILS (REV 144 item 2) ------------------
+    _bad_ref = {"s1": {"BUY_UP": [{"gen": 0, "t0": 0.0, "t1": 9.0,
+                                   "level": 0.5, "tranches": list(K)}],
+                       "SELL_UP": []}}
+    _st = reconcile_status(_bad_ref, W, 0.0)
+    ok(_st["ok"] is False and _st["MUST_BE_SURFACED"] is True
+       and _st["refusal"] == "DROPPED_TRANCHES_ABSENT_FROM_THE_BOOK"
+       and "detail" in _st,
+       f"THE NON-THROWING FORM CANNOT FAIL QUIETLY: `ok: False`, "
+       f"`MUST_BE_SURFACED: True` and the refusal NAMED "
+       f"({_st['refusal']}) -- so a day run that records the block without "
+       f"reading it still carries a field whose NAME says it must be read. "
+       f"A reconciliation that failed silently inside a day run would be "
+       f"worse than none")
+    _stg = reconcile_status(ref, W, kv["total_cents"])
+    ok(_stg["ok"] is True and _stg["MUST_BE_SURFACED"] is False
+       and _stg["legs_close"] is True,
+       "POSITIVE CONTROL for the non-throwing form: a coherent book "
+       "returns ok True with the full block -- the wrapper adds a verdict, "
+       "it does not swallow one")
 
     print()
     if fails:

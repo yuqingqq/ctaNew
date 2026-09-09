@@ -528,9 +528,18 @@ class _Stages:
     derived from. Nothing is relaxed overall -- one check became two, each
     against the quantity it actually names."""
 
-    def __init__(self, budgets: dict, *, cap_gb: float = CAP_GB):
+    def __init__(self, budgets: dict, *, cap_gb: float = CAP_GB,
+                 emit: bool = True):
         self.budgets = dict(budgets)
         self.cap_gb = cap_gb
+        #: BE 137: EACH STAGE ROW IS EMITTED AS IT COMPLETES, so the stage
+        #: table survives a run that never reaches its receipt. R-836's
+        #: killed run preserved only `assembly_s` and `peak_gb` -- the
+        #: launcher's leaf sampler survived the kill, the stage table did
+        #: not -- and I named that gap myself at BE 128 when the 09-03 pair
+        #: could not be compared stage by stage. The default is ON,
+        #: because the default that records is the safe one (rule 28).
+        self.emit = emit
         #: CURRENT RSS, not the high-water. REV 59 §3: round 60 took BOTH
         #: terms of the growth from `ru_maxrss`, which never falls -- so a
         #: SECOND `_Stages` in the same process read growth 0.000 and its
@@ -547,6 +556,7 @@ class _Stages:
         peak = _rss_gb()                      # process high-water: the CAP
         cur = _rss_now_gb()                   # falls: the BUDGET
         row = {"stage": name, "wall_s": round(time.time() - t0, 1),
+               "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                "peak_gb": peak,
                "baseline_gb": self.baseline_gb,
                "growth_gb": round(cur - self.baseline_gb, 3),
@@ -567,6 +577,12 @@ class _Stages:
         row["within_budget"] = (b is None or row["growth_gb"] <= b)
         row["within_cap"] = peak <= self.cap_gb
         self.rows.append(row)
+        # EMITTED BEFORE THE REFUSALS BELOW, deliberately: a stage that
+        # BREACHES its budget or the cap is exactly the stage whose row a
+        # later reader most needs, and a row emitted only on the happy
+        # path would be missing from every run that failed.
+        if self.emit:
+            print(json.dumps({"stage_done": row}), flush=True)
         if not row["within_budget"]:
             raise BookRefused(
                 f"REFUSED at stage {name}: this run GREW {row['growth_gb']} "
@@ -1440,7 +1456,7 @@ def build(day: str, *, coin: str = COIN,
     obs["started_utc"] = subprocess.run(
         ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], capture_output=True,
         text=True, timeout=30).stdout.strip()
-    stages = _Stages(FIXTURE_STAGE_BUDGETS_GB if fixture
+    stages = _Stages(emit=progress, budgets=FIXTURE_STAGE_BUDGETS_GB if fixture
                      else STAGE_BUDGETS_GB)
     obs["wrapper"] = assert_rule20(fixture=fixture)
     sel = day_selector(day, coin)
@@ -1840,7 +1856,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 181
+EXPECTED_CHECKS = 184
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -2141,6 +2157,53 @@ def selftest() -> int:
        f"{_x129['n_tranches_on_them']} tranches between them), "
        f"{sorted(_left)} kept -- an exclusion with a STATUS, a COUNT and "
        f"the IDENTITIES, never a silent drop (rule 4)")
+    # ---- BE 137: THE STAGE TABLE SURVIVES A RUN THAT NEVER EMITS -----
+    # R-836's killed run preserved only `assembly_s` and `peak_gb`; its
+    # stage table died with it, which is why the 09-03 pair could not be
+    # compared stage by stage until BE 128 had two SURVIVING receipts.
+    # Each row is now printed as it completes, to a stdout the launcher
+    # appends to AS IT RUNS -- so a build that dies at minute 60 still
+    # leaves A0/A1 behind.
+    import io as _io137
+    import contextlib as _cx137
+    _buf137 = _io137.StringIO()
+    _st137 = _Stages({"S": 99.0}, cap_gb=99.0, emit=True)
+    with _cx137.redirect_stdout(_buf137):
+        _st137.done("S", time.time() - 1.0)
+    _lines = [json.loads(l) for l in _buf137.getvalue().splitlines() if l]
+    ok(len(_lines) == 1 and "stage_done" in _lines[0]
+       and _lines[0]["stage_done"]["stage"] == "S"
+       and "peak_gb" in _lines[0]["stage_done"]
+       and "utc" in _lines[0]["stage_done"]
+       and _lines[0]["stage_done"]["wall_s"] >= 1.0,
+       f"THE STAGE ROW IS EMITTED AS IT COMPLETES: one "
+       f"`stage_done` line carrying the stage, its wall "
+       f"({_lines[0]['stage_done']['wall_s']} s), its peak and its own UTC "
+       f"-- to a stdout the launcher appends to live, so a run killed "
+       f"before its receipt still leaves its stage table behind")
+    _buf2 = _io137.StringIO()
+    _st2 = _Stages({"S": 0.0}, cap_gb=99.0, emit=True)
+    _st2.baseline_gb = -50.0          # force a budget breach
+    try:
+        with _cx137.redirect_stdout(_buf2):
+            _st2.done("S", time.time())
+        ok(False, "a budget breach must refuse")
+    except BookRefused:
+        _l2 = [json.loads(l) for l in _buf2.getvalue().splitlines() if l]
+        ok(len(_l2) == 1 and _l2[0]["stage_done"]["within_budget"] is False,
+           "AND IT IS EMITTED BEFORE THE REFUSAL, so the stage that "
+           "BREACHES its budget -- the one a later reader most needs -- is "
+           "the one whose row survives. A row printed only on the happy "
+           "path would be missing from every run that failed")
+    _buf3 = _io137.StringIO()
+    with _cx137.redirect_stdout(_buf3):
+        _Stages({"S": 99.0}, cap_gb=99.0, emit=False).done("S", time.time())
+    ok(_buf3.getvalue() == "",
+       "POSITIVE CONTROL for the flag: `emit=False` prints nothing, so the "
+       "battery's own stage rows do not pollute a caller's stdout -- and "
+       "the DEFAULT is True, because the default that RECORDS is the safe "
+       "one (rule 28)")
+
     # ---- BE 133: ONE BOOK, BOTH VALUATIONS ---------------------------
     # THE EQUIVALENCE CLAIM IS PROVABLE WITHOUT AN L=0 BUILD, and this is
     # why: `apply_placement_latency` is a PURE FUNCTION of (t, t0, L) and
