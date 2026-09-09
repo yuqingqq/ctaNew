@@ -542,12 +542,26 @@ its controls at both endpoints; Gate 1's three sampler refusals stand.
 **A cleared coordinator loses three things and NOTHING ELSE: the live Monitors, the
 `/loop` duty, and the scratchpad. Everything else is in git.** Re-establish in this order.
 
+**CORRECTED 2026-09-09T07:04Z (R-836): a clear does NOT kill a Monitor.** Three Monitors
+armed before the 06:58Z clear survived it and delivered events into the fresh context. What a
+clear loses is the `/loop` duty and the scratchpad; a Monitor still ends at its own TIMEOUT
+(the build watch expired ~07:02Z and was re-armed `persistent`). So on resume: CHECK what is
+still alive before re-arming, and re-arm only what has expired.
+
+**STANDING (R-836): while a build holds the heavy lock, ITS WORKTREE IS FROZEN.** The owning
+seat lands from the SHARED tree or it does not land. `p003ev200903` assembled for 74 minutes
+and was refused at the write because BE's own BE 109 commit went into wt-be at 05:58:16Z under
+a run that had started from `c9f8b31` at 05:09:52Z. Second loss of this class.
+
 1. **Re-arm the unit watch immediately.** Seat in-pane watchers are DEAD (R-821), so a
    heavy unit that exits with no coordinator Monitor leaves its seat idling indefinitely —
    this cost ~47 minutes in one session. Check for a running unit first:
    `systemctl --user list-units --type=service --no-legend | grep -E 'p003ev|be10|dePE|deRR'`
    and `fuser data/.heavy_run.lock`.
-2. **IN FLIGHT AT THIS WRITING:** `p003ev200903` — BE's **09-03 book at revision EV20**,
+2. **SUPERSEDED — that run died at 06:24:20Z (R-836); the relaunch `p003ev200903b` started
+   06:59:59Z, InvocationID `d60d8b7b8807402c876dc606c7cdecce`, envelope raised to
+   11,869,652,313 B (flagged, NOT ratified). The exit report owed is unchanged, below.**
+   IN FLIGHT AT THE EARLIER WRITING: `p003ev200903` — BE's **09-03 book at revision EV20**,
    the FIRST built through the repaired scorer, started 05:09:52Z, ~35 min expected.
    **At its exit: prompt BE** for the book path+sha, wall, peak, and the two things that
    pass only this build can show — (a) the receipt's manifest including `linear_{coin}.json`
