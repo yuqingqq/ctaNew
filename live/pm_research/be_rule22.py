@@ -222,10 +222,91 @@ class PinSitesDisagree(RuntimeError):
 #: The families whose payload carries BE's module pins in TWO places.
 PIN_SITE_FAMILIES = ("de_multiday_gate1_params",)
 
+#: KEYS THAT NAME THE CODE THAT PRODUCED AN ARTIFACT, as opposed to the
+#: code a declaration PINS. `be_cascade.modules` is also a list of
+#: `{path, sha256}` pairs, so the scan matches on the NAME of the site and
+#: not on the shape of its contents -- the shape is identical and only the
+#: name distinguishes "the cascade this params version pins" from "the
+#: closure that built this artifact".
+CLOSURE_IDENTITY_KEYS = ("import_closure", "producing_code", "closure_drift",
+                         "closure_digests")
+
+#: THE PIN SITES ON THE CRITICAL PATH, ENUMERATED -- INCLUDING THE ONE THIS
+#: GUARD CANNOT SEE. BE 111 published a list of TWO and REV 111 refuted it
+#: (`e98707b`, `reviews/REVIEW_111_PIN_SITE_ENUMERATION_2026-09-09.md`,
+#: R-840). The third site is the silent one, and a reader who found two
+#: sites named here would reasonably conclude two is the whole set.
+#:
+#: REV's enumeration is CONSTRUCTIVE rather than an argument from absence: a
+#: pin is (1) a stored identity plus (2) a consumer that recomputes it and
+#: compares, so the SILENT set is exactly the identities that are recorded
+#: and never recomputed. Site 3 is recorded by BE's own builder and
+#: recomputed by nobody.
+PIN_SITES = (
+    {"site": "params.be_module",
+     "identity": "{path, sha256} of the cascade's ENTRY POINT",
+     "checked_by_this_guard": True,
+     "recomputed_by": "de_multiday_gate1_runner.verify_be_module, first, on "
+                      "every path"},
+    {"site": "params.be_cascade.modules[*]",
+     "identity": "{path, sha256} of all ten cascade modules",
+     "checked_by_this_guard": True,
+     "recomputed_by": "de_multiday_gate1_runner.verify_be_module -> "
+                      "BE_CASCADE_DIFFERS"},
+    {"site": "the day book RECEIPT's producing_code.import_closure",
+     "identity": "the digest of every module in the BUILDER's import "
+                 "closure under live/ (49 of them) plus the worktree HEAD, "
+                 "captured by be_rule22.init/stamp at build time",
+     "checked_by_this_guard": False,
+     "why_this_guard_CANNOT_see_it":
+         "THIS GUARD READS A PARAMS PAYLOAD, AND THAT IDENTITY IS NOT IN "
+         "THE PARAMS AT ALL. `be_cascade.modules` and `be_module` pin the "
+         "code a day RUN executes; the book's closure records the code that "
+         "PRODUCED the scores the run consumes. No sweep of either params "
+         "site can agree or disagree with a digest that lives in a receipt. "
+         "The predicate over it is a CONSUMER-side one and it is DE's "
+         "(REV 111 routing (2)): compare the book receipt's scoring-path "
+         "module digests against the files on disk at the start of "
+         "`run_day` and in `de_cancel_count_delta.measure_book`, refusing "
+         "BOOK_BUILT_BY_DIFFERENT_SCORING_CODE.",
+     "why_it_matters":
+         "it is true of EVERY book on disk right now -- all four scoring "
+         "modules have moved under "
+         "be_daybook_receipt_20260907_btc__L250ms.json -- so a receipt "
+         "cites the CURRENT scoring code for numbers OLDER code produced. "
+         "The only thing between that and a silently wrong run is DE 155's "
+         "ASSEMBLY_PREDATES_CAUSAL_SCORING shape guard, which fires on the "
+         "float->dict transition and is therefore a ONE-OFF.",
+     "refuted_the_two_site_list": "REV 111, e98707b, R-840"},
+)
+
+
+def _closure_identity_sites(payload, path="payload") -> list:
+    """Every place in a payload that names an ARTIFACT'S PRODUCING CODE.
+
+    Rule 15 applied to `PIN_SITES` itself: the third site is out of this
+    guard's reach because that identity is not in the params, and THAT is a
+    claim about the params, so it is computed here rather than asserted in
+    prose. If a future version of the family starts carrying a closure pin,
+    this returns it, the guard refuses, and the site list is re-derived
+    before anything lands -- which is the same discipline as re-pinning in
+    the round that touches a pinned surface."""
+    found = []
+    if isinstance(payload, dict):
+        for k, v in payload.items():
+            here = f"{path}.{k}"
+            if isinstance(k, str) and k.lower() in CLOSURE_IDENTITY_KEYS:
+                found.append(here)
+            found.extend(_closure_identity_sites(v, here))
+    elif isinstance(payload, (list, tuple)):
+        for i, v in enumerate(payload):
+            found.extend(_closure_identity_sites(v, f"{path}[{i}]"))
+    return found
+
 
 def assert_pin_sites_agree(payload: dict, *, root: Path | None = None,
                            require_on_disk: bool = True) -> dict:
-    """REFUSE AT THE REPOINT if the two pin sites disagree.
+    """REFUSE AT THE REPOINT if the two params pin sites disagree.
 
     THE TRAP THIS CLOSES. BE's cascade is pinned twice in one payload:
     `be_cascade.modules` pins all ten modules, and `be_module` pins the
@@ -236,8 +317,39 @@ def assert_pin_sites_agree(payload: dict, *, root: Path | None = None,
     is two versions behind. It cost three pin pairs (v21+v29, v22+v30,
     v23+v31) before anyone named the shape.
 
-    So the disagreement is caught where it is CREATED, not where it is
-    consumed. Four refusals, each by name:
+    THE SITE LIST IS THREE, NOT TWO, AND THIS GUARD COVERS THE FIRST TWO.
+    BE 111 closed this guard over a two-site enumeration and REV 111
+    REFUTED it (`e98707b`, R-840): there is a THIRD pin site and it is the
+    SILENT one -- the day book receipt's `producing_code.import_closure`,
+    49 module digests recorded by BE's own builder and recomputed by NO
+    consumer, so a receipt cites the CURRENT scoring code for numbers OLDER
+    code produced. It is true of every book on disk today.
+
+    **A GUARD OVER `be_cascade.modules` AND `be_module` CANNOT SEE IT,
+    BECAUSE THAT IDENTITY IS NOT IN THE PARAMS AT ALL.** These two sites pin
+    the code a day RUN executes; the book's closure records the code that
+    PRODUCED the scores that run consumes, and it lives in a receipt. No
+    sweep of either params site can agree or disagree with it. The predicate
+    over site 3 is a CONSUMER-side one and it is DE's (REV 111 routing (2)):
+    `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE`, at the start of `run_day` and in
+    `de_cancel_count_delta.measure_book`. The full enumeration, with the
+    consumer that recomputes each identity, is `PIN_SITES` above, and it is
+    RETURNED by this function so a caller reads the whole set rather than
+    inferring it from what happened to be checked.
+
+    That the third site is out of reach is itself a claim about the params,
+    so it is COMPUTED and not asserted (rule 15): the payload is scanned for
+    any key naming an artifact's producing code, and a hit REFUSES --
+    because a params family that started carrying a closure pin would make
+    this site list stale, and a stale site list is exactly what REV 111
+    found.
+
+    Five refusals, each by name:
+
+      SITE_LIST_STALE_PARAMS_CARRY_A_CLOSURE_PIN
+                                   the payload names an artifact's
+                                   producing code, so `PIN_SITES` no longer
+                                   describes this family;
 
       ENTRY_MODULE_ABSENT          no `be_module.path` to check;
       ENTRY_MODULE_NOT_IN_CASCADE  the entry point is not one of the ten --
@@ -252,6 +364,15 @@ def assert_pin_sites_agree(payload: dict, *, root: Path | None = None,
                                    is not being written from.
     """
     root = Path(root) if root else Path(__file__).resolve().parents[2]
+    closure_sites = _closure_identity_sites(payload or {})
+    if closure_sites:
+        raise PinSitesDisagree(
+            f"SITE_LIST_STALE_PARAMS_CARRY_A_CLOSURE_PIN: this payload "
+            f"names an artifact's PRODUCING CODE at {closure_sites}. "
+            f"`PIN_SITES` records that identity as site 3 and as one this "
+            f"guard cannot see BECAUSE it is not in the params; if the "
+            f"params now carry it, the enumeration is stale and must be "
+            f"re-derived before this pair lands.")
     entry = (payload or {}).get("be_module") or {}
     casc = ((payload or {}).get("be_cascade") or {}).get("modules") or []
     if not entry.get("path"):
@@ -296,7 +417,22 @@ def assert_pin_sites_agree(payload: dict, *, root: Path | None = None,
     return {"entry": entry["path"], "n_cascade_modules": len(by_path),
             "sites_agree": True, "checked_on_disk": require_on_disk,
             "why": "the entry point's digest is identical at both pin sites "
-                   "and every pinned module matches its file"}
+                   "and every pinned module matches its file",
+            # THE WHOLE SITE LIST TRAVELS WITH THE VERDICT, so a caller
+            # cannot read "sites_agree" as "every pin site agrees". REV 111
+            # refuted exactly that inference.
+            "pin_sites": PIN_SITES,
+            "n_pin_sites": len(PIN_SITES),
+            "n_pin_sites_checked_here": sum(1 for s in PIN_SITES
+                                            if s["checked_by_this_guard"]),
+            "sites_NOT_checked_here": [s["site"] for s in PIN_SITES
+                                       if not s["checked_by_this_guard"]],
+            "params_carry_no_closure_identity": True,
+            "what_sites_agree_does_NOT_mean": (
+                "that the artifact a run consumes was produced by the code "
+                "the run executes. That is site 3 and it is not in the "
+                "params; DE owns its predicate "
+                "(BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, REV 111).")}
 
 
 def write_declaration_version(family: str, payload: dict,
@@ -1133,6 +1269,79 @@ def selftest() -> int:
        f"it is {_stale}, while the same payload with the disk check off is "
        f"{_stale_off} -- a payload composed for another tree is not a "
        f"half-swept repoint and is not refused as one")
+
+    # ---- BE 112: THE SITE LIST IS THREE, AND THE THIRD IS COMPUTED ----
+    # REV 111 refuted BE 111's two-site enumeration (e98707b, R-840). The
+    # claim that closes the gap on THIS side is "that identity is not in
+    # the params at all", which is a claim about the params -- so it is
+    # measured on the real artifacts, in both directions, rather than
+    # written down.
+    _sites = [x["site"] for x in PIN_SITES]
+    _unchecked = [x for x in PIN_SITES if not x["checked_by_this_guard"]]
+    ok(len(PIN_SITES) == 3 and len(_unchecked) == 1
+       and "import_closure" in _unchecked[0]["site"]
+       and "not in the params" in _unchecked[0][
+           "why_this_guard_CANNOT_see_it"].lower(),
+       f"THE SITE LIST NAMES THREE SITES AND MARKS THE ONE THIS GUARD "
+       f"CANNOT SEE: {_sites}. A reader who found two sites here would "
+       f"reasonably conclude two is the whole set -- which is the inference "
+       f"REV 111 refuted")
+    _params_p = DECLARATIONS / "de_multiday_gate1_params_v23.json"
+    _params = json.loads(_params_p.read_text()) if _params_p.exists() else None
+    #: The ledger's derived/ THROUGH THIS TREE, so the cell reads whatever
+    #: tree it is run from rather than a literal home path.
+    _rcp = sorted((Path(__file__).resolve().parents[2]
+                   / "data" / "pm_5min" / "derived").glob(
+                      "be_daybook_receipt_*.json"))
+    _rc = json.loads(_rcp[-1].read_text()) if _rcp else None
+    if _params is None or _rc is None:
+        for _ in range(2):
+            ok(False, "the real params head or a real book receipt is "
+                      "absent, so the two-direction scan cannot run -- an "
+                      "absent measurement is not a passed one")
+    else:
+        _in_params = _closure_identity_sites(_params)
+        _in_receipt = _closure_identity_sites(_rc)
+        _nmod = len((((_rc.get("producing_code") or {}).get("import_closure")
+                      or {}).get("modules")) or {})
+        ok(_in_params == [] and _in_receipt,
+           f"BOTH DIRECTIONS, ON THE REAL ARTIFACTS: the params head "
+           f"{_params_p.name} carries NO producing-code identity "
+           f"({_in_params}), and {_rcp[-1].name} carries "
+           f"{len(_in_receipt)} of them ({_in_receipt[:2]}) over {_nmod} "
+           f"module digests. So the zero on the params is a READING and not "
+           f"a scanner that never proved it can fire (rule 16) -- and site "
+           f"3 is where REV 111 said it is")
+        _agree = assert_pin_sites_agree(_params.get("doc", _params),
+                                        require_on_disk=False)
+        ok(_agree["n_pin_sites"] == 3
+           and _agree["n_pin_sites_checked_here"] == 2
+           and _agree["sites_NOT_checked_here"] == [_unchecked[0]["site"]]
+           and _agree["params_carry_no_closure_identity"] is True,
+           f"and the REAL params head ADMITS while carrying the whole list "
+           f"out with it: {_agree['n_pin_sites_checked_here']} of "
+           f"{_agree['n_pin_sites']} sites checked here, NOT checked "
+           f"{_agree['sites_NOT_checked_here']}. `sites_agree` can no "
+           f"longer be read as `every pin site agrees`")
+    _stale_pl = {"be_module": {"path": _pa, "sha256": _da},
+                 "be_cascade": {"modules": [{"path": _pa, "sha256": _da}]},
+                 "producing_code": {"import_closure": {"modules": {}}}}
+    _stale_v = _drive(_stale_pl, require_on_disk=False)
+    _clean_v = _drive({k: v for k, v in _stale_pl.items()
+                       if k != "producing_code"}, require_on_disk=False)
+    ok(_stale_v == "SITE_LIST_STALE_PARAMS_CARRY_A_CLOSURE_PIN"
+       and _clean_v == "ADMITTED",
+       f"KNOWN-BAD: a params payload that DOES carry a closure pin REFUSES "
+       f"as {_stale_v} -- because the site list would then be stale, and a "
+       f"stale site list is exactly what REV 111 found. The SAME payload "
+       f"with only that key removed is {_clean_v}, so the refusal is the "
+       f"closure identity and nothing else in it")
+    ok(_closure_identity_sites(
+        {"be_cascade": {"modules": [{"path": "a.py", "sha256": "x"}]}}) == [],
+       "and the scan matches on the SITE NAME, not the shape: "
+       "`be_cascade.modules` is also a list of {path, sha256} pairs and is "
+       "NOT flagged -- only the name distinguishes the code a params "
+       "version PINS from the closure that BUILT an artifact")
 
     import tempfile as _tf2
     kb = Path(_tf2.mkdtemp(prefix="be94_rule22_kb_")) / "declaration_chain.py"

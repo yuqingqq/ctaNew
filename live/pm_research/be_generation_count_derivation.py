@@ -20,6 +20,18 @@ its own docstring: the scorer refuses a generation whose rows the feature
 pass dropped, "since scoring it would be scoring from nothing", and counts
 the drop as `excluded_no_assembled_score` (rule 4).
 
+V3 (BE 112, R-841 [2]) -- WHY THE MEMBERSHIP TEST MOVED OUT OF THIS FILE.
+STAGE 2 was `(slug, side, float(g["t0"])) in gen_scores` and `len(gs)` was
+published beside it as `len_gen_scores`. Both are correct on a
+PER_GENERATION assembly and BOTH BREAK on a PER_ROW one: the test becomes
+first-row-only, so `dropped` inflates by every generation whose first scored
+row is not at its start, and `len(gs)` silently becomes a count of ROWS
+inside an artifact whose whole output is a GENERATION census. This module
+now delegates to `be_score_coverage`, which resolves either shape and gives
+every count its unit. The numbers on `de_section81_cache_12.pkl` are
+UNCHANGED -- 31,122 / 29,813 / 1,309, asserted below -- because that cache
+is PER_GENERATION and on that shape the two tests are the same question.
+
 THE FACT THAT DECIDES WHETHER THIS IS A HEAD-SPECIFIC FILTER: the count is
 computed for BOTH pinned heads separately. If they agree, the drop is a
 property of the ASSEMBLY, not of either model.
@@ -37,6 +49,8 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import be_data_root as _BDR
+import be_rule22 as _R22
+import be_score_coverage as _COV
 
 ROOT = HERE.parents[1]
 #: READ root resolves through the shared helper (R-559(C));
@@ -70,27 +84,62 @@ def derive(path: Path | None = None) -> dict:
             per_head[head] = {"status": "NOT_ASSEMBLED_IN_THIS_CACHE"}
             continue
         gs = asm["by_arm"][key][0]
-        kept = sum(1 for s in sorted(ref) for sd in HSP.SIDES
-                   for g in ref[s][sd] if (s, sd, float(g["t0"])) in gs)
+        c = _COV.generation_coverage(ref, gs, sides=HSP.SIDES)
+        if c["n_reference_generations"] != stage1:
+            raise CountRefused(
+                f"REFUSED -- STAGE_1_DISAGREES: this module counted {stage1} "
+                f"reference generations and be_score_coverage counted "
+                f"{c['n_reference_generations']} walking the same reference. "
+                f"Two independent walks of one population disagree, so the "
+                f"gap this file exists to publish would be over neither.")
         per_head[head] = {
-            "len_gen_scores": len(gs),
-            "stage2_rows_kept": kept,
-            "dropped": stage1 - kept,
-            "membership_test": "(slug, side, float(g['t0'])) in gen_scores",
+            "score_shape": c["score_shape"],
+            "n_scored_keys": c["n_scored_keys"],
+            "n_scored_keys_unit": c["n_scored_keys_unit"],
+            "n_scored_keys_is_commensurable_with_the_covered_count":
+                c["n_scored_keys_is_commensurable_with_n_covered"],
+            "stage2_generations_covered": c["n_covered"],
+            "dropped": stage1 - c["n_covered"],
+            "membership_test": (
+                "be_score_coverage.generation_coverage -- under "
+                "PER_ROW_SCORES a generation is covered when a scored "
+                "value NAMES it (`gen`), under PER_GENERATION_SCORES when a "
+                "key sits at its t0"),
+            "membership_test_before_v3": _COV.PRE_FIX_TEST,
+            "what_the_pre_fix_test_says_on_this_file": c["pre_fix"],
+            "coverage": c,
         }
     got = {h: v.get("dropped") for h, v in per_head.items()
            if "dropped" in v}
     vals = sorted(set(got.values()))
     return {
-        "protocol": "BE_GENERATION_COUNT_DERIVATION_V2",
+        "protocol": "BE_GENERATION_COUNT_DERIVATION_V3",
         "supersedes": {
             "artifact": "data/pm_5min/derived/"
-                        "be_generation_count_derivation_v1.json",
-            "rule": "13 -- vN+1; v1 is NOT edited and stays at its bytes",
-            "what_changed": "PROVENANCE ONLY: the resolved data root and the "
-                            "branch taken now travel in the receipt "
-                            "(R-559(C)). Every count is unchanged and the "
-                            "checker asserts them.",
+                        "be_generation_count_derivation_v2.json",
+            "rule": "13 -- vN+1; v1 and v2 are NOT edited and stay at their "
+                    "bytes",
+            "what_changed": (
+                "THE MEMBERSHIP TEST (R-841 [2], BE 112). STAGE 2 was "
+                "`(slug, side, float(g['t0'])) in gen_scores` computed "
+                "here; it is now `be_score_coverage.generation_coverage`, "
+                "which resolves BOTH assembly shapes. On a PER_ROW book the "
+                "old test was first-row-only and `len_gen_scores` was a ROW "
+                "count inside a GENERATION census."),
+            "what_did_NOT_change": (
+                "every count on `de_section81_cache_12.pkl`: 31,122 / "
+                "29,813 / 1,309, identical across both pinned heads. That "
+                "cache is PER_GENERATION and on that shape the two tests "
+                "are the same question -- which is why the numbers are the "
+                "POSITIVE CONTROL of the change rather than a casualty of "
+                "it."),
+            "field_renames": {
+                "len_gen_scores": "n_scored_keys, now beside "
+                                  "n_scored_keys_unit",
+                "stage2_rows_kept": "stage2_generations_covered -- it always "
+                                    "counted GENERATIONS and the v2 name "
+                                    "said ROWS",
+            },
         },
         "data_root": _BDR.receipt_block(),
         "as_of_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -135,7 +184,7 @@ def derive(path: Path | None = None) -> dict:
     }
 
 
-EXPECTED_CHECKS = 6
+EXPECTED_CHECKS = 11
 
 
 def selftest() -> int:
@@ -153,11 +202,45 @@ def selftest() -> int:
     ok(s1 == 31122,
        f"STAGE 1 is {s1:,} reference generations -- the same number the filed "
        f"arms artifact carries as `population.generations`")
-    ok(all(v.get("len_gen_scores") == v.get("stage2_rows_kept")
+    ok(all(v.get("n_scored_keys") == v.get("stage2_generations_covered")
+           and v.get("n_scored_keys_unit") == "GENERATIONS"
+           and v.get("score_shape") == _COV.SHAPE_PER_GENERATION
            for v in d["stage_2_by_head"].values() if "dropped" in v),
-       "and for each head the assembled-score COUNT equals the rows the "
-       "membership test KEEPS -- so the gap is not an artefact of the test "
-       "disagreeing with the map it reads")
+       "and for each head the assembled-score COUNT equals the generations "
+       "the membership test COVERS -- so the gap is not an artefact of the "
+       "test disagreeing with the map it reads. THE UNIT IS NOW PUBLISHED "
+       "with the count, and this equality is asserted only because the "
+       "shape is PER_GENERATION; on a PER_ROW assembly the left side is a "
+       "ROW count and the equality would be a category error, not a check")
+    ok(all(v["what_the_pre_fix_test_says_on_this_file"]["n_covered"]
+           == v["stage2_generations_covered"]
+           and v["what_the_pre_fix_test_says_on_this_file"][
+               "understated_coverage_by"] == 0
+           for v in d["stage_2_by_head"].values() if "dropped" in v),
+       "POSITIVE CONTROL FOR THE V3 CHANGE, ON REAL DATA: the PRE-FIX test "
+       "and the corrected one give the SAME answer on this cache, so v3 "
+       "moves no number that v2 published. A correction that changed the "
+       "numbers on a PER_GENERATION file would be a re-specification")
+    ok(all(v["coverage"]["exclusions"][
+               "SCORED_KEY_NAMES_NO_REFERENCE_GENERATION"] == 0
+           and v["coverage"]["exclusions"]["DUPLICATE_GENERATION_ID"] == 0
+           and v["coverage"]["exclusions"]["TWO_GENERATIONS_SHARE_A_T0"] == 0
+           for v in d["stage_2_by_head"].values() if "dropped" in v),
+       "and no scored key names a generation this reference lacks, no "
+       "generation identity repeats and no two share a t0 -- the three "
+       "population faults that would make the gap ambiguous, each counted "
+       "rather than assumed away")
+    _hz = [v["coverage"]["key_collision_hazard"]
+           for v in d["stage_2_by_head"].values() if "dropped" in v]
+    ok(all(h["status"] == "COMPUTED"
+           and h["n_generations_starting_inside_an_earlier_one"] == 0
+           for h in _hz),
+       f"AND Q-DA-361's NECESSARY CONDITION IS MEASURED ON THIS REAL "
+       f"REFERENCE AND IS ZERO: no generation of one (slug, side) starts "
+       f"before an earlier one of the same (slug, side) has ended over "
+       f"{d['stage_1']['count']:,} generations, so on THIS population no "
+       f"per-row key time could belong to two generations. It is 12 windows, "
+       f"not a day; DA's reachability question stays open for the days")
     ok(d["THE_GAP"]["value"] == 1309 and d["THE_GAP"]["identical_across_both_pinned_heads"],
        f"THE GAP IS {d['THE_GAP']['value']:,} AND IT IS IDENTICAL ACROSS BOTH "
        f"PINNED HEADS ({d['THE_GAP']['per_head']}) -- a property of the "
@@ -177,6 +260,36 @@ def selftest() -> int:
            "KNOWN-BAD: a missing cache REFUSES rather than reporting a gap "
            "of zero over an empty reference")
 
+    # ---- THE KNOWN-BAD THIS FILE COULD NOT HAVE HAD BEFORE V3 ----------
+    # No PER_ROW cache exists on disk, so the defect is driven against the
+    # shared module's synthetic assembly -- the fixture proves the
+    # membership test, and a book would prove nothing it cannot (rule 15).
+    import harmful_stateful_policy as HSP
+    _fref, _fgs = _COV._fixture(per_row=True)
+    _fs1 = sum(len(_fref[s][sd]) for s in _fref for sd in HSP.SIDES)
+    _old_kept = sum(1 for s in sorted(_fref) for sd in HSP.SIDES
+                    for g in _fref[s][sd] if (s, sd, float(g["t0"])) in _fgs)
+    _new = _COV.generation_coverage(_fref, _fgs, sides=HSP.SIDES)
+    ok(_fs1 == 4 and _old_kept == 1 and _fs1 - _old_kept == 3
+       and _new["n_covered"] == 3 and _fs1 - _new["n_covered"] == 1
+       and len(_fgs) == 6,
+       f"KNOWN-BAD, DRIVEN: on a PER_ROW assembly THIS FILE'S v2 STAGE 2 "
+       f"keeps {_old_kept} of {_fs1} generations and would have published "
+       f"`dropped` = {_fs1 - _old_kept}; the v3 test covers "
+       f"{_new['n_covered']} and drops {_fs1 - _new['n_covered']}. And "
+       f"`len_gen_scores` would have read {len(_fgs)} -- a count of ROWS "
+       f"inside an artifact whose every other number is GENERATIONS")
+
+    # ---- THE SHARED MODULE'S FALSIFIER IS A CELL HERE (REV 84 3.2) -----
+    _scf = _R22.shared_falsifier(prog=HERE / "be_score_coverage.py")
+    ok(_scf["ok"],
+       f"ONE IMPLEMENTATION, N DETECTORS: this battery RUNS "
+       f"`be_score_coverage.py --falsify` as a subprocess -> rc "
+       f"{_scf['rc']}, {_scf['summary']!r}. The membership test now lives in "
+       f"one module that this file and `be_daybook_build` both import, so a "
+       f"regression in it fails both batteries. "
+       f"{_scf['failed_cells'] or _scf['stderr_tail'] or ''}")
+
     print()
     if fails:
         print(f"{len(fails)} FAILURES of {checks} checks")
@@ -194,7 +307,12 @@ def main(argv=None) -> int:
         return selftest()
     if "--emit" in argv:
         out = derive()
-        dst = DERIVED / "be_generation_count_derivation_v2.json"
+        dst = DERIVED / "be_generation_count_derivation_v3.json"
+        if dst.exists():
+            raise CountRefused(
+                f"REFUSED: {dst} already exists. A correction supersedes "
+                f"in-band as vN+1 and never overwrites landed bytes "
+                f"(rule 13).")
         dst.write_text(json.dumps(out, indent=1, sort_keys=True))
         print(json.dumps({"written": str(dst),
                           "stage_1": out["stage_1"]["count"],

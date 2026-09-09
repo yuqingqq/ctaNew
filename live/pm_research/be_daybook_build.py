@@ -47,6 +47,7 @@ sys.path.insert(0, str(HERE))
 
 import be_data_root as _BDR
 import be_rule22 as _R22
+import be_score_coverage as _COV
 
 #: RULE 22 AS AMENDED (R-605). The CAPTURE happens here, at import,
 #: before any work: the digest of every module of this run's import
@@ -651,21 +652,174 @@ def assert_pool_equality(a: set, b: set) -> bool:
     return True
 
 
-def assert_coverage(cov: dict, n_gen: int, day: str) -> bool:
-    """A day the tape does not reach is REFUSED, never emitted empty.
+#: The floor is a PARAMETER, and its absence is RECORDED rather than
+#: silently treated as zero. No PER_ROW book exists to calibrate a
+#: coverage floor against, so BE 112 declares none: inventing one would
+#: refuse a legitimate forty-minute build on a number nobody measured.
+#: What replaces it is the set of predicates below, none of which needs a
+#: threshold to have teeth.
+MIN_COVERAGE_DEFAULT = None
 
-    An empty decision population is the failure mode that looks like a
-    result -- the reviewer's own words about the wrong ledger root, and the
-    same shape here."""
+
+def _pre_fix_coverage_block(ref: dict, gs: dict, n_gen: int) -> dict:
+    """THE BLOCK THIS SITE EMITTED BEFORE BE 112, at `6377f20`.
+
+    Kept so the known-bad drives the ACTUAL old code rather than a
+    description of it, and so the receipt-shaped difference between the two
+    blocks is visible in the battery's own output."""
+    scored = sum(1 for s in sorted(ref) for side in ("BUY_UP", "SELL_UP")
+                 for g in (ref[s] or {}).get(side, [])
+                 if (s, side, float(g["t0"])) in gs)
+    return {"n_scored_keys": len(gs), "n_reference_generations": n_gen,
+            "n_covered": scored, "n_uncovered": n_gen - scored,
+            "coverage": scored / n_gen if n_gen else None}
+
+
+def assert_coverage(cov: dict, n_gen: int, day: str, *,
+                    min_coverage: float | None = MIN_COVERAGE_DEFAULT) -> dict:
+    """A COVERAGE guard. Before BE 112 it was a NOT-EMPTY guard (R-841 [1]).
+
+    The old predicate was `all(n_covered == 0)`: it refused only a day on
+    which EVERY head covered nothing. So a book whose coverage block was
+    arithmetically incoherent -- a ROW count subtracted from a GENERATION
+    count -- passed it and was emitted into the receipt, which is where a
+    later reader resolves it.
+
+    Seven predicates now, none of which needs an invented threshold:
+
+      COVERAGE_BLOCK_INCOMPLETE            a field this guard reads is
+                                           absent, so it refuses rather
+                                           than passing by absence (rule 11)
+      EMPTY decision population             ANY head covering zero, not
+                                           only every head
+      REFERENCE_GENERATION_COUNT_DISAGREES  the coverage module's own walk
+                                           of the reference against the
+                                           builder's `n_gen` -- two
+                                           independent counts of one thing
+      COVERAGE_ARITHMETIC_INCOHERENT        n_uncovered must be
+                                           n_reference_generations minus
+                                           n_covered, both GENERATIONS
+      COVERED_COUNTS_DISAGREE               the set-based covered count
+                                           against the entry-based one
+      GENERATION_IDENTITY_NOT_UNIQUE        a duplicate `gen` or a shared
+                                           `t0`, which is what makes those
+                                           two counts diverge
+      SCORED_KEY_NAMES_NO_REFERENCE_GENERATION
+                                           the assembly scored something
+                                           the reference does not have
+      COVERAGE_BELOW_THE_PRE_FIX_TEST       the corrected test must be a
+                                           SUPERSET of the pre-fix one; a
+                                           shortfall is Q-DA-361's key
+                                           collision surfacing in the
+                                           coverage block
+
+    RETURNS THE PREDICATES IT EVALUATED (rule 10) so the receipt carries
+    them: a guard that leaves no trace of what it checked is one a later
+    reader has to take on faith."""
     if not cov:
         raise BookRefused(f"REFUSED: no coverage computed for {day}.")
-    if all(v["n_covered"] == 0 for v in cov.values()):
+    need = ("n_covered", "n_uncovered", "n_reference_generations",
+            "n_covered_reference_entries", "coverage", "score_shape",
+            "n_scored_keys", "n_scored_keys_unit", "exclusions", "pre_fix")
+    for h, v in sorted(cov.items()):
+        missing = [f for f in need if f not in v]
+        if missing:
+            raise BookRefused(
+                f"REFUSED -- COVERAGE_BLOCK_INCOMPLETE: head {h} carries no "
+                f"{missing}. This guard reads fields, and a field it cannot "
+                f"read must REFUSE rather than pass by absence (rule 11).")
+    zero = sorted(h for h, v in cov.items() if not v["n_covered"])
+    if zero:
         raise BookRefused(
-            f"REFUSED: NO generation of {day} carries an assembled score "
-            f"(0 of {n_gen}). The tape does not cover this day, so the book "
-            f"would have an EMPTY decision population -- an empty answer "
-            f"that looks like a result.")
-    return True
+            f"REFUSED: head(s) {zero} carry NO generation of {day} with an "
+            f"assembled score (0 of {n_gen}), so the book would have an "
+            f"EMPTY decision population -- an empty answer that looks like a "
+            f"result. This refuses on ANY head; before BE 112 it refused "
+            f"only when EVERY head was zero.")
+    ran = []
+    for h, v in sorted(cov.items()):
+        ex = v["exclusions"]
+        if v["n_reference_generations"] != n_gen:
+            raise BookRefused(
+                f"REFUSED -- REFERENCE_GENERATION_COUNT_DISAGREES: head {h} "
+                f"walked {v['n_reference_generations']} reference "
+                f"generations where the builder counted {n_gen}. Two "
+                f"independent walks of one reference disagree, so at least "
+                f"one of them is over a different population.")
+        if v["n_uncovered"] != v["n_reference_generations"] - v["n_covered"]:
+            raise BookRefused(
+                f"REFUSED -- COVERAGE_ARITHMETIC_INCOHERENT: head {h} "
+                f"reports {v['n_uncovered']} uncovered against "
+                f"{v['n_reference_generations']} - {v['n_covered']}. THIS IS "
+                f"THE R-841 [1] DEFECT'S SIGNATURE: the two sides were in "
+                f"different units, ROWS against GENERATIONS.")
+        if (ex["DUPLICATE_GENERATION_ID"]
+                or ex["TWO_GENERATIONS_SHARE_A_T0"]):
+            raise BookRefused(
+                f"REFUSED -- GENERATION_IDENTITY_NOT_UNIQUE: head {h} sees "
+                f"{ex['DUPLICATE_GENERATION_ID']} duplicate generation "
+                f"id(s) and {ex['TWO_GENERATIONS_SHARE_A_T0']} pair(s) "
+                f"sharing a t0. A generation that cannot be named uniquely "
+                f"makes every count over it ambiguous.")
+        if v["n_covered"] != v["n_covered_reference_entries"]:
+            raise BookRefused(
+                f"REFUSED -- COVERED_COUNTS_DISAGREE: head {h} covers "
+                f"{v['n_covered']} distinct generations but "
+                f"{v['n_covered_reference_entries']} reference entries, with "
+                f"no duplicate identity to explain it.")
+        if ex["SCORED_KEY_NAMES_NO_REFERENCE_GENERATION"]:
+            raise BookRefused(
+                f"REFUSED -- SCORED_KEY_NAMES_NO_REFERENCE_GENERATION: head "
+                f"{h} carries {ex['SCORED_KEY_NAMES_NO_REFERENCE_GENERATION']}"
+                f" scored key(s) naming a generation the reference does not "
+                f"have. The assembly and the reference are not describing "
+                f"one day.")
+        if v["n_covered"] < v["pre_fix"]["n_covered"]:
+            raise BookRefused(
+                f"REFUSED -- COVERAGE_BELOW_THE_PRE_FIX_TEST: head {h} "
+                f"covers {v['n_covered']} generations where the PRE-FIX t0 "
+                f"membership test covers {v['pre_fix']['n_covered']}. The "
+                f"corrected test admits every generation the old one did and "
+                f"more, so a shortfall means a scored row at a generation's "
+                f"t0 names a DIFFERENT generation -- Q-DA-361's key "
+                f"collision, surfacing here.")
+        if min_coverage is not None and (v["coverage"] or 0.0) < min_coverage:
+            raise BookRefused(
+                f"REFUSED -- COVERAGE_BELOW_FLOOR: head {h} covers "
+                f"{v['coverage']} against the declared floor "
+                f"{min_coverage}.")
+        ran.append(h)
+    shapes = sorted({v["score_shape"] for v in cov.values()})
+    return {
+        "guard": "assert_coverage",
+        "heads_checked": ran,
+        "n_reference_generations": n_gen,
+        "score_shapes": shapes,
+        "score_shape_identical_across_heads": len(shapes) == 1,
+        "n_covered_by_head": {h: v["n_covered"] for h, v in sorted(cov.items())},
+        "coverage_by_head": {h: v["coverage"] for h, v in sorted(cov.items())},
+        "n_covered_identical_across_heads":
+            len({v["n_covered"] for v in cov.values()}) == 1,
+        "pre_fix_understatement_by_head":
+            {h: v["pre_fix"]["understated_coverage_by"]
+             for h, v in sorted(cov.items())},
+        "min_coverage": min_coverage,
+        "min_coverage_enforced": min_coverage is not None,
+        "why_no_floor_if_absent": (
+            "no PER_ROW book exists to calibrate a coverage floor against, "
+            "so BE 112 declares none rather than inventing a number that "
+            "could refuse a legitimate build. RECORDED as not enforced "
+            "rather than defaulted to zero, which would read as a floor "
+            "that passed (rule 11)."),
+        "predicates": [
+            "COVERAGE_BLOCK_INCOMPLETE", "EMPTY_DECISION_POPULATION_ANY_HEAD",
+            "REFERENCE_GENERATION_COUNT_DISAGREES",
+            "COVERAGE_ARITHMETIC_INCOHERENT",
+            "GENERATION_IDENTITY_NOT_UNIQUE", "COVERED_COUNTS_DISAGREE",
+            "SCORED_KEY_NAMES_NO_REFERENCE_GENERATION",
+            "COVERAGE_BELOW_THE_PRE_FIX_TEST", "COVERAGE_BELOW_FLOOR",
+        ],
+    }
 
 
 def build(day: str, *, coin: str = COIN,
@@ -818,18 +972,24 @@ def build(day: str, *, coin: str = COIN,
                 f"null cannot drive for the other arm.")
         gs = asm["by_arm"][k][0]
         keys[head] = set(gs)
-        scored = sum(1 for s in sorted(ref) for side in ("BUY_UP", "SELL_UP")
-                     for g in ref[s].get(side, [])
-                     if (s, side, float(g["t0"])) in gs)
-        cov[head] = {"n_scored_keys": len(gs), "n_reference_generations": n_gen,
-                     "n_covered": scored, "n_uncovered": n_gen - scored,
-                     "coverage": scored / n_gen if n_gen else None,
-                     "theta": float(R.theta_for(coin, head, BUDGET)),
-                     "score_contract": R.HS.score_contract(head)}
+        # R-841 [1], FIXED AT BE 112. What stood here was
+        #   scored = sum(... if (s, side, float(g["t0"])) in gs)
+        # with `n_scored_keys = len(gs)` beside it. Under PER_ROW_SCORES
+        # that test admits a generation only when a scored row sits exactly
+        # at its start -- and `len(gs)` becomes a count of ROWS reported
+        # next to, and subtracted from, counts of GENERATIONS. The shape-
+        # aware resolution now lives in ONE module that both of this seat's
+        # sites import, ships its own falsifier, and is driven against
+        # `be_cancel_axis_null.load()`'s independent implementation over a
+        # synthetic per-row book.
+        cov[head] = dict(
+            _COV.generation_coverage(ref, gs, sides=("BUY_UP", "SELL_UP")),
+            theta=float(R.theta_for(coin, head, BUDGET)),
+            score_contract=R.HS.score_contract(head))
     a, b = (keys[h] for h in (HEADS["CONDVALUE_X_SKEW"],
                               HEADS["HAZARD_OVER_SKEWED_REF"]))
     equal = assert_pool_equality(a, b)
-    assert_coverage(cov, n_gen, day)
+    obs["coverage_guard"] = assert_coverage(cov, n_gen, day)
 
     _BDR.require_ledger()          # result-bearing: refuse a non-ledger tree
     # RULE 22 (R-605): REFUSE BEFORE ANYTHING IS WRITTEN, not after. DE's
@@ -910,6 +1070,11 @@ def build(day: str, *, coin: str = COIN,
                                                 rows_pin=_tpin),
         "asm": {"by_arm_keys": [list(k) for k in asm["by_arm"]],
                 "coverage_by_head": cov,
+                # BE 112: WHAT THE GUARD ACTUALLY EVALUATED, as fields.
+                # `assert_coverage` used to return a bare True, so a receipt
+                # recorded that a guard had run and nothing about what it
+                # tested (rule 10).
+                "coverage_guard": obs.get("coverage_guard"),
                 "both_heads_present": True,
                 "set_equality_asserted": True,
                 "sets_are_equal": equal,
@@ -1005,7 +1170,7 @@ def build(day: str, *, coin: str = COIN,
     }
 
 
-EXPECTED_CHECKS = 132
+EXPECTED_CHECKS = 142
 
 
 def artifact_paths(day: str, coin: str, placement_latency_ms,
@@ -1181,16 +1346,118 @@ def selftest() -> int:
            "KNOWN-BAD: sets differing by one element each REFUSE the DAY, "
            "naming the symmetric difference -- the shared pool is only sound "
            "while they are identical, and this day would make it a choice")
-    ok(assert_coverage({"h": {"n_covered": 5}}, 10, "d") is True,
-       "POSITIVE CONTROL: a day with ANY covered generation passes")
+    # ---- THE COVERAGE GUARD, DRIVEN BOTH WAYS (R-841 [1], BE 112) -----
+    # EVERY block below comes from `_COV.generation_coverage` -- the
+    # producer -- never typed here: a fixture must not supply what the code
+    # under test should produce (rule 2). The known-bads then MUTATE one
+    # field of a real block, so each drives exactly one predicate.
+    _cref, _cgs = _COV._fixture(per_row=True)
+    _cblk = _COV.generation_coverage(_cref, _cgs, sides=("BUY_UP", "SELL_UP"))
+    _cev = assert_coverage({"h1": _cblk, "h2": _cblk}, 4, "d")
+    ok(_cev["heads_checked"] == ["h1", "h2"]
+       and _cev["score_shapes"] == ["PER_ROW_SCORES"]
+       and _cev["min_coverage_enforced"] is False
+       and len(_cev["predicates"]) == 9,
+       f"POSITIVE CONTROL: a real PER_ROW coverage block ADMITS, and the "
+       f"guard RETURNS what it evaluated -- {len(_cev['predicates'])} "
+       f"predicates over heads {_cev['heads_checked']}, shape "
+       f"{_cev['score_shapes'][0]}, floor not enforced and SAID so rather "
+       f"than defaulted to zero")
+    _empty = _COV.generation_coverage(_cref, {}, sides=("BUY_UP", "SELL_UP"))
     try:
-        assert_coverage({"h1": {"n_covered": 0}, "h2": {"n_covered": 0}},
-                        10, "20260903")
-        ok(False, "zero coverage must refuse")
+        assert_coverage({"h1": _cblk, "h2": _empty}, 4, "20260903")
+        ok(False, "zero coverage on ONE head must refuse")
+    except BookRefused as e:
+        ok("EMPTY decision population" in str(e) and "['h2']" in str(e),
+           f"KNOWN-BAD, AND THIS IS THE WIDENING: ONE head covering zero "
+           f"REFUSES and is NAMED. The pre-BE-112 predicate was "
+           f"`all(n_covered == 0)`, so this exact pair PASSED -- a book the "
+           f"null cannot drive for one of its two arms")
+    try:
+        assert_coverage({"h1": _empty, "h2": _empty}, 4, "20260903")
+        ok(False, "zero coverage on every head must refuse")
     except BookRefused as e:
         ok("EMPTY decision population" in str(e),
-           "KNOWN-BAD: zero coverage on every head REFUSES -- an empty "
-           "decision population is the failure that looks like a result")
+           "and the ORIGINAL case still refuses: zero on every head is an "
+           "empty decision population, the failure that looks like a result")
+    _pre = _pre_fix_coverage_block(_cref, _cgs, 4)
+    try:
+        assert_coverage({"h": _pre}, 4, "d")
+        ok(False, "the pre-fix block must refuse")
+    except BookRefused as e:
+        ok("COVERAGE_BLOCK_INCOMPLETE" in str(e) and "score_shape" in str(e),
+           f"KNOWN-BAD: THE BLOCK THE OLD SITE EMITTED is now refused by "
+           f"name -- it carries no `score_shape`, no unit and no exclusions, "
+           f"and a guard that cannot read its fields must refuse rather than "
+           f"pass by absence (rule 11)")
+    try:
+        assert_coverage({"h": dict(_cblk, n_uncovered=_pre["n_uncovered"])},
+                        4, "d")
+        ok(False, "an incoherent block must refuse")
+    except BookRefused as e:
+        ok("COVERAGE_ARITHMETIC_INCOHERENT" in str(e),
+           f"KNOWN-BAD, WITH THE DEFECT'S OWN NUMBER: substituting the "
+           f"pre-fix `n_uncovered` ({_pre['n_uncovered']}, a count inflated "
+           f"by every generation whose first scored row is not at its start) "
+           f"into an otherwise correct block REFUSES as "
+           f"COVERAGE_ARITHMETIC_INCOHERENT against "
+           f"{_cblk['n_reference_generations']} - {_cblk['n_covered']}")
+    try:
+        assert_coverage({"h": _cblk}, 5, "d")
+        ok(False, "a reference-count disagreement must refuse")
+    except BookRefused as e:
+        ok("REFERENCE_GENERATION_COUNT_DISAGREES" in str(e),
+           "KNOWN-BAD: the coverage module's own walk of the reference "
+           "against the builder's `n_gen` -- two independent counts of one "
+           "thing, and a disagreement REFUSES")
+    try:
+        assert_coverage(
+            {"h": dict(_cblk, pre_fix=dict(_cblk["pre_fix"], n_covered=99))},
+            4, "d")
+        ok(False, "coverage below the pre-fix test must refuse")
+    except BookRefused as e:
+        ok("COVERAGE_BELOW_THE_PRE_FIX_TEST" in str(e),
+           "KNOWN-BAD: the corrected test must be a SUPERSET of the pre-fix "
+           "one, so a shortfall REFUSES -- that is Q-DA-361's key collision "
+           "surfacing in the coverage block")
+    _dupref = {"s1": {"BUY_UP": [{"gen": 0, "t0": 1.0, "t1": 2.0},
+                                 {"gen": 0, "t0": 3.0, "t1": 4.0}],
+                      "SELL_UP": []}}
+    try:
+        assert_coverage({"h": _COV.generation_coverage(
+            _dupref, {("s1", "BUY_UP", 1.0): 0.5},
+            sides=("BUY_UP", "SELL_UP"))}, 2, "d")
+        ok(False, "a duplicate generation identity must refuse")
+    except BookRefused as e:
+        ok("GENERATION_IDENTITY_NOT_UNIQUE" in str(e),
+           "KNOWN-BAD: a reference carrying one `gen` twice REFUSES -- a "
+           "generation that cannot be named uniquely makes every count over "
+           "it ambiguous")
+    try:
+        assert_coverage({"h": _COV.generation_coverage(
+            _cref, {**_cgs, ("s9", "BUY_UP", 1.0): {"score": 0.1, "gen": 77,
+                                                    "t0": 1.0}},
+            sides=("BUY_UP", "SELL_UP"))}, 4, "d")
+        ok(False, "a scored key naming no generation must refuse")
+    except BookRefused as e:
+        ok("SCORED_KEY_NAMES_NO_REFERENCE_GENERATION" in str(e),
+           "KNOWN-BAD: a scored key naming a generation the reference does "
+           "not have REFUSES -- the assembly and the reference would not be "
+           "describing one day")
+    try:
+        assert_coverage({"h": _cblk}, 4, "d", min_coverage=0.99)
+        ok(False, "the floor must refuse when it is given")
+    except BookRefused as e:
+        ok("COVERAGE_BELOW_FLOOR" in str(e),
+           f"KNOWN-BAD: the floor is a PARAMETER and it CAN fire -- "
+           f"{_cblk['coverage']} against 0.99. It is not enforced by "
+           f"default because no PER_ROW book exists to calibrate one, and "
+           f"that absence is a recorded field rather than a silent zero")
+    ok(assert_coverage({"h": _cblk}, 4, "d",
+                       min_coverage=0.5)["min_coverage_enforced"] is True,
+       f"POSITIVE CONTROL for the floor: the same block ADMITS at 0.5 and "
+       f"the receipt records the floor that was enforced -- a guard shown "
+       f"only to refuse has proved half of itself (rule 16)")
 
     # ROUND 51's BLOCKER IS CLEARED BY ROUND 52's ITEM 1, so this check
     # asserts the NEW truth: the day tape ADMITS, bound to the digest its
@@ -2370,6 +2637,21 @@ def selftest() -> int:
        f"module fails every importer's battery at once, and no importer "
        f"re-implements the logic. "
        f"{_dcf['failed_cells'] or _dcf['stderr_tail'] or ''}")
+    # ...and the same discipline for the module BE 112 added. This builder
+    # and `be_generation_count_derivation` both import
+    # `be_score_coverage`; its falsifier is a cell of BOTH batteries, so a
+    # regression in the one implementation of the membership test fails
+    # every site that depends on it.
+    _scf = _R22.shared_falsifier(
+        prog=Path(__file__).resolve().parent / "be_score_coverage.py")
+    ok(_scf["ok"],
+       f"AND THE SAME FOR `be_score_coverage.py --falsify` -> rc "
+       f"{_scf['rc']}, {_scf['summary']!r}. It carries the corrected "
+       f"membership test that this file's coverage block and "
+       f"`be_generation_count_derivation` both read, AND the seam cell that "
+       f"drives it against `be_cancel_axis_null.load()`'s independent "
+       f"implementation over a synthetic per-row book. "
+       f"{_scf['failed_cells'] or _scf['stderr_tail'] or ''}")
 
 
     # ---- BE 101: THE PLACEMENT LATENCY REACHES THE BOOK -----------------
