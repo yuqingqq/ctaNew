@@ -22057,3 +22057,52 @@ generation and the window went 4 → 3. Nothing rewritten.
   were found by someone looking at the ARTIFACT rather than at the guard.* Flags 2761 -> 2773, prov 2306 -> 2318;
   window 3/3, Batch 300 archived. MEM asserts no result.)
 ```
+
+## Batch 304 — archived 2026-09-09T15:18:59Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T14:57:56Z (MEM ROUND 319 -- ***THE PROGRAMME HAS PRODUCED ITS FIRST CORRECTED NUMBER SINCE THE RETRACTION, AND
+  THE USER HAS RULED ON FOUR THINGS.*** From `e975d81` to `ac99226`. **I read every figure at the artifact rather
+  than taking the dispatch**: `p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json` on book **EV21
+  (`ae98b92219940c19...`)**, exit rc 0 at 14:05Z -- ***`D_E_settle` +11,191.244402***, arm total **48,506.795833**
+  (trades **-179,803.284167**, residual **+228,310.08**) against a zero-cancel baseline of **37,315.551431** (trades
+  **-226,590.602369**, residual **+263,906.1538**), **20,682 arm fills against 22,675 baseline, 3,863 cancels over
+  19,523 decisions, 246 slugs on both legs, `theta_was_not_refitted_here: True`** -- ***AND THE ESTIMAND'S OWN
+  ARITHMETIC CLOSES THREE WAYS EXACTLY, TO THE LAST DECIMAL: THE ARM LEGS SUM TO THE ARM TOTAL, THE BASELINE LEGS TO
+  THE BASELINE TOTAL, AND THEIR DIFFERENCE TO `D_E_settle`.*** The artifact carries R-801's definition in
+  `what_total_is` -- *the same field that corrected ME at round 289 when I read the fills leg as the total.* ***AND
+  ITS LIMITS ARE IN THE ARTIFACT, NOT ONLY IN THE PROSE: `run_mode: POINT_ESTIMATE` AT THREE LEVELS AND
+  `result_contract.null_status: NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, NO NULL, NO Z, NO p, NO CONTROL, AND ASKING IT
+  FOR A TEST STATISTIC REFUSES BY NAME. "THE POINT ESTIMATE STANDS" IS THE MOST THAT MAY BE SAID*** -- *I declared
+  that reading in round 315 before the number existed and the artifact now enforces it, so a reader who never saw
+  this file cannot over-read it either.* ***AND THE FACT EASIEST TO CELEBRATE AND MOST IMPORTANT NOT TO: THE SIGN IS
+  A REVERSAL -- THE RETRACTED ARMS LOST HEAVILY AND THIS ONE IS POSITIVE -- WHICH DA 162 IS EXAMINING AS POSSIBLY
+  THE POPULATION RATHER THAN THE REPAIRS, SINCE THE BOOK IS BUILT OVER A DIFFERENT ERA WITH REAL GAPS ATTACHED***;
+  **two things changed at once, the code AND the data the code sees, and this file asserts no explanation until DA
+  reports.** ***I PRE-REGISTERED THREE EXIT NUMBERS LAST ROUND AND SCORED THEM MYSELF AGAINST THE EV21 RECEIPT: ALL
+  THREE LANDED -- `n_excluded = 9`; the new statuses PRESENT WITH EXPLICIT ZEROS; `generations = 313140`, exactly
+  313,149 - 9*** -- and the second landed **better than I asked for**, since each zero carries a `disposition`
+  (`NON_FINITE`/`MALFORMED` "REFUSED, not excluded"; `INVERTED` "counted here, LEFT IN THE REFERENCE and refused by
+  `validate_reference`") -- ***A ZERO WITH A DISPOSITION ANSWERS THE QUESTION A BARE ZERO LEAVES OPEN.*** **THE FOUR
+  USER RULINGS. (a) THE MATCHING UNIT IS B, WITH THE 1-IN-3,862 DOUBLE-CANCELLED REFERENCE GENERATION RECORDED AS A
+  NAMED, MEASURED EXCEPTION IN THE RECEIPT -- CONDVALUE FAIL-CLOSED UNTIL ITS SINGLE COLLISION IS HANDLED, HAZARD'S
+  NULL FREE TO RUN -- WHICH CLOSES THE ITEM OPEN SINCE THE COORDINATOR'S PREMISE FOR B PROVED FALSE**, *the ruling
+  not restoring the premise but replacing the assumption with a COUNT.* **(b) THE MONEY-LEVEL LATENCY COMPARISON
+  WILL BE CLOSED BY BE VALUING DROPPED TRANCHES AT BUILD SO ONE BOOK CARRIES BOTH L=0 AND L=250, NOT BY A SECOND L=0
+  BUILD, BECAUSE THE ONLY L=0 09-03 BOOK IS PRE-FIX AND BUILT OVER THE WRONG ERA AND WOULD CONFOUND ERA WITH
+  LATENCY** -- *answering DA's own named limit by changing the BUILD rather than accepting a contaminated
+  comparator.* **(c) THE 09-04..09-07 QUEUE IS HELD UNTIL (a) AND (b) SETTLE** -- *not a refusal but a SEQUENCE,
+  since four days built before either settles are four days built to a specification about to change.* **(d) A DAY
+  WHOSE BOOK-CODE VERDICT IS `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED PROVIDED THE UNNAMED ARE THE
+  KNOWN LAZY-IMPORT PAIR -- AND DE IS TO MAKE THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED -- WHICH REV 139 HAS NOW DRIVEN AND IT IS **NOT A PREDICATE YET**; SEE THE ADDENDUM**,
+  *which is the difference between a ruling and a loophole.* ***THE LATENCY STATUS, PRECISELY: THE 51.17 % TRANCHE
+  EFFECT REPRODUCES ON THE CORRECTED BOOK -- 23,765 AGAINST 22,675 OF 46,440, IDENTICAL TO DA'S EV20 FIGURE -- SO
+  THE MECHANISM SURVIVES THE ERA FIX, THE CAUSAL-SCORING REPAIR AND THE ZERO-LENGTH EXCLUSION; BUT THE MONEY-LEVEL
+  54 / 62 / 98 / 55 % IS NOT YET REPRODUCED***, with DA's warning governing the reading -- **a COUNT of tranches and
+  a SHARE of settled money are different estimands.** ***AND DE DECLINED THE AVAILABLE SHORTCUT IN ONE SENTENCE: IT
+  WOULD NOT USE THE PRE-FIX L=0 BOOK -- "I WON'T DRESS THE SECOND UP AS THE FIRST" -- WHICH MAKES FOUR SEATS IN ONE
+  NIGHT DECLINING A RESULT THEY COULD HAVE HAD.*** Finally, **BE's cold-cache correction moves the queue's price in
+  the expensive direction: 09-04 REACHES 9.70 GB, 82 % OF THE ENVELOPE, NOT THE 63 % REPORTED FROM A SINGLE WARM
+  RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2790, prov 2318 -> 2335; window 3/3, Batch
+  301 archived. MEM asserts no result.)
+```

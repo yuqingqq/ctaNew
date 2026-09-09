@@ -1,3 +1,93 @@
+# READ FIRST — round 322 (MEM, 2026-09-09T15:18:59Z, tip `7cf8a9d`)
+
+# ⚠ (1) A CORRECTION THAT LANDS ON MY OWN FILES — the relocated falsifier does not exist
+
+**I drove it rather than accepting it.** `tranches_before_placement_latency` and `KEPT-VALUE`, grepped by me:
+
+| module | occurrences |
+|---|---|
+| `de_point_estimate_day.py` · `de_multiday_gate1_runner.py` · `de_phase4_diag_runner.py` | **0 / 0** each |
+| `be_cancel_axis_null.py` · `da_gate1_day_verdict.py` | **0 / 0** each |
+
+***Ten zeroes. The check BE said was "falsifiable one seam over" is not at that seam, or at any other. It is a
+SPECIFICATION, NOT A CHECK.***
+
+**My round-321 record is superseded in band, not quietly.** I wrote that BE's answer should be recorded *"as the
+standard rather than as a note"*, that the programme had found a second move — *"keep the check and change where it
+runs"* — and that **"the USER's ruling (b) therefore stands and no L=0 build is needed."** ***The first two described
+code that does not exist.*** *The ruling may still stand — that is the user's — but **my** reason for saying so was
+that the falsifier had been relocated, and it has not been.* **I recorded a design as a landing, which is precisely
+the error I have recorded against three other seats tonight.**
+
+***BE's sentence is true as a design claim and false as a description of the code, and both the coordinator and I
+read it as the second.*** **A sentence that is true in the subjunctive and false in the indicative will be read in
+the indicative.**
+
+**⇒ THE L=0 VALUATION IS RECORDED AS UNVERIFIED — not wrong, unverified. No number from it may be quoted as
+reconciled.** *The specification is good, the location is agreed, and the code is absent — three facts easy to
+compress into "it is handled".*
+
+**What DID verify, recorded with the same precision** *(a correction that reports only the failure is as misleading
+as the claim it corrects)*:
+- **`both_legs_computable_for_every_tranche` is genuinely computed** — I confirmed `_legs_fields_present` and the
+  field itself in `be_daybook_build.py`.
+- **DA's narrative clauses verify STRUCTURALLY** — **the function has one result exit, so there is no happy path to
+  lose them down.** *The exact repair shape DE 172 used for `MEMBERSHIP_LIMIT`: one raiser, so an exit cannot be
+  written without it.*
+
+# ✅ (2) THE POINT ESTIMATE REPRODUCES TO THE DIGIT — independently
+
+**DA 164 (`Q-DA-383`):** `D_E_settle` **+11,191.244402** and the second arm **+12,381.557663**, **by a second
+implementation from the fill rows, zero per-slug disagreements across 246 slugs × 2 books × 2 arms** — 984 cells.
+*At round 319 I checked the artifact's arithmetic closed three ways; **this is the stronger claim** — recomputed from
+the underlying rows by different code.*
+
+**The sign reversal is the repairs — 98.1 % — and the argument is STRUCTURAL, not statistical:** *the 0-cancel
+baseline makes no decisions, so any change in it is pure population.* **No modelling assumption, no adjustment — a
+channel closed by construction.**
+
+| the baseline's fill set | |
+|---|---|
+| shared | **22,674** |
+| dropped · added | **2 · 1** |
+| identical | **99.987 %** |
+
+***Three rows.*** **The population barely moved; the arms did** — *which is why the split can be stated without an
+interval: the population channel is not small relative to noise, it is small **absolutely**.*
+
+# ⚠ (3) THE CAVEAT — it must TRAVEL WITH the numbers, not sit below them
+
+***At unchanged theta, decisions went 1,398 → 14,893 on HAZARD — 10.7× — so a threshold chosen under the defective
+scoring now selects a different quantile of the score distribution.***
+
+*This programme has spent the night on one lesson — `matched_on` absent from the receipt, `MEMBERSHIP_LIMIT` absent
+from the opt-in result, the corrected set announced beside the stale one — and every time the information existed and
+the **address** was wrong.* ***A caveat printed under a number is at the wrong address. It belongs in the field the
+reader resolves, like `WHAT_MUST_NOT_BE_SAID`.***
+
+**Theta was frozen BY RULING for comparability, and the distribution it was calibrated against HAS CHANGED.** *Both
+halves true, pulling against each other: freezing bought comparability with the pre-fix arms and spent the property
+that theta selects the quantile it was chosen to select.* **Rule 11 forbids choosing a threshold after seeing the
+data — nothing was chosen here; the threshold stayed still and the data moved under it.**
+
+**REV 143 is measuring:** the quantile · **whether the 10.7× is uniform or concentrated** · what re-fitting would
+trade away · whether a fit made on 08-29 is still the fit it claims to be. ***The second decides how bad this is: a
+uniform 10.7× is a rescaling and the policy is recognisably the same policy more often; a concentrated one means the
+extra decisions come from somewhere particular and the policy is a different policy.***
+
+## (5) DA's own sweep — its surface is TWO sites, not more
+
+**`da_early_read_verify.py` already reads `economic_settlement` at four real sites and is NOT blind** — I counted it
+too: only two DA modules name `economic` literally at all (8/4 and 10/8). **The class is two sites on DA's surface,
+both now fixed, with falsifiers driven on blocks that DISAGREE** — *the right falsifier, since two blocks carrying
+the same values cannot distinguish a checker that reads the right one from one that reads either.* **A seat sweeping
+its own surface and finding the count smaller than feared is worth as much as one finding it larger.**
+
+Counts: flags 2822 → 2835, provenance 2367 → 2380 (thirteen written, thirteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 304 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 321 (MEM, 2026-09-09T15:13:26Z, tip `412a89e`)
 
 **R-868 swept.** Three things: **a class closed**, **a falsifier relocated**, and **the first null since the

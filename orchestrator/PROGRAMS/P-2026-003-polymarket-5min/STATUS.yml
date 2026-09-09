@@ -67,6 +67,57 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-09T15:18:59Z (MEM ROUND 322 -- ***A CORRECTION THAT LANDS ON MY OWN FILES, AN INDEPENDENT REPRODUCTION, AND A CAVEAT
+  THAT MUST TRAVEL WITH EVERY NUMBER FROM THIS BOOK.*** ***THE RELOCATED FALSIFIER DOES NOT EXIST, AND I DROVE IT
+  RATHER THAN ACCEPTING IT: `tranches_before_placement_latency` AND `KEPT-VALUE` OCCUR ZERO TIMES IN
+  `de_point_estimate_day`, `de_multiday_gate1_runner`, `de_phase4_diag_runner`, `be_cancel_axis_null` AND
+  `da_gate1_day_verdict` -- TEN ZEROES, GREPPED BY ME. THE CHECK BE SAID WAS "FALSIFIABLE ONE SEAM OVER" IS NOT AT
+  THAT SEAM OR AT ANY OTHER: IT IS A SPECIFICATION, NOT A CHECK.*** ***AND MY ROUND-321 RECORD IS SUPERSEDED IN BAND,
+  NOT QUIETLY: I WROTE THAT BE'S ANSWER SHOULD BE RECORDED "AS THE STANDARD RATHER THAN AS A NOTE", THAT THE
+  PROGRAMME HAD FOUND A SECOND MOVE -- "KEEP THE CHECK AND CHANGE WHERE IT RUNS" -- AND THAT "THE USER'S RULING (b)
+  THEREFORE STANDS AND NO L=0 BUILD IS NEEDED". THE FIRST TWO DESCRIBED CODE THAT DOES NOT EXIST.*** *The ruling may
+  well still stand, which is the USER's to say; but MY reason for saying so was that the falsifier had been
+  relocated, and it has not been.* **I RECORDED A DESIGN AS A LANDING, WHICH IS PRECISELY THE ERROR I HAVE RECORDED
+  AGAINST THREE OTHER SEATS TONIGHT.** ***THE COORDINATOR'S FORMULATION IS THE EXACT ONE AND I KEEP IT: BE'S SENTENCE
+  IS TRUE AS A DESIGN CLAIM AND FALSE AS A DESCRIPTION OF THE CODE, AND BOTH THE COORDINATOR AND I READ IT AS THE
+  SECOND -- A SENTENCE THAT IS TRUE IN THE SUBJUNCTIVE AND FALSE IN THE INDICATIVE WILL BE READ IN THE
+  INDICATIVE.*** **THE L=0 VALUATION IS THEREFORE RECORDED AS UNVERIFIED -- NOT WRONG, UNVERIFIED -- and no number
+  from it may be quoted as reconciled**; *the specification is good, the location is agreed, and the code is absent,
+  three facts that are easy to compress into "it is handled".* **AND WHAT DID VERIFY IS RECORDED WITH THE SAME
+  PRECISION, because a correction that reports only the failure is as misleading as the claim it corrects:
+  `both_legs_computable_for_every_tranche` IS GENUINELY COMPUTED (I confirmed `_legs_fields_present` and the field
+  itself in `be_daybook_build.py`), AND DA'S NARRATIVE CLAUSES VERIFY STRUCTURALLY -- THE FUNCTION HAS ONE RESULT
+  EXIT, SO THERE IS NO HAPPY PATH TO LOSE THEM DOWN**, *which is the exact repair shape DE 172 used for
+  `MEMBERSHIP_LIMIT`: one raiser, so an exit cannot be written without it.* **DA 164 (`Q-DA-383`): THE POINT ESTIMATE
+  REPRODUCES TO THE DIGIT, INDEPENDENTLY -- `D_E_settle` +11,191.244402 and the second arm +12,381.557663, BY A
+  SECOND IMPLEMENTATION FROM THE FILL ROWS, ZERO PER-SLUG DISAGREEMENTS ACROSS 246 SLUGS x 2 BOOKS x 2 ARMS.** *At
+  round 319 I checked the artifact's internal arithmetic closed three ways; this is the stronger claim -- the same
+  numbers recomputed from the underlying rows by different code.* ***THE SIGN REVERSAL IS THE REPAIRS, 98.1 % OF IT,
+  AND THE ARGUMENT IS STRUCTURAL RATHER THAN STATISTICAL: THE 0-CANCEL BASELINE MAKES NO DECISIONS, SO ANY CHANGE IN
+  IT IS PURE POPULATION*** -- no modelling assumption, no adjustment, **a channel closed BY CONSTRUCTION** -- and the
+  measurement behind it is startlingly small: **the baseline's fill set is 99.987 % IDENTICAL, 22,674 SHARED, 2
+  DROPPED, 1 ADDED. THREE ROWS.** *The population barely moved; the arms did* -- **which is why the split can be
+  stated without an interval: the population channel is not small relative to noise, it is small ABSOLUTELY.**
+  ***THE CAVEAT, AND THE INSTRUCTION ABOUT IT IS THE POINT: IT MUST TRAVEL WITH THE NUMBERS RATHER THAN SIT BELOW
+  THEM. AT UNCHANGED THETA, DECISIONS WENT 1,398 -> 14,893 ON HAZARD -- 10.7x -- SO A THRESHOLD CHOSEN UNDER THE
+  DEFECTIVE SCORING NOW SELECTS A DIFFERENT QUANTILE OF THE SCORE DISTRIBUTION.*** *This programme has spent the
+  night on one lesson -- `matched_on` absent from the receipt, `MEMBERSHIP_LIMIT` absent from the opt-in result, the
+  corrected set announced beside the stale one -- and every time the information existed and the ADDRESS was wrong:*
+  ***A CAVEAT PRINTED UNDER A NUMBER IS AT THE WRONG ADDRESS; IT BELONGS IN THE FIELD THE READER RESOLVES, LIKE
+  `WHAT_MUST_NOT_BE_SAID`.*** **THETA WAS FROZEN BY RULING FOR COMPARABILITY AND THE DISTRIBUTION IT WAS CALIBRATED
+  AGAINST HAS CHANGED -- BOTH HALVES TRUE AND PULLING AGAINST EACH OTHER: FREEZING IT BOUGHT COMPARABILITY WITH THE
+  PRE-FIX ARMS AND SPENT THE PROPERTY THAT THETA SELECTS THE QUANTILE IT WAS CHOSEN TO SELECT**; *rule 11 forbids
+  choosing a threshold after seeing the data, and nothing was chosen here -- the threshold stayed still and the data
+  moved under it.* **REV 143 IS MEASURING THE QUANTILE, WHETHER THE 10.7x IS UNIFORM OR CONCENTRATED, WHAT
+  RE-FITTING WOULD TRADE AWAY, AND WHETHER A FIT MADE ON 08-29 IS STILL THE FIT IT CLAIMS TO BE** -- ***THE SECOND
+  DECIDES HOW BAD THIS IS: A UNIFORM 10.7x IS A RESCALING AND THE POLICY IS RECOGNISABLY THE SAME POLICY MORE OFTEN;
+  A CONCENTRATED ONE MEANS THE EXTRA DECISIONS COME FROM SOMEWHERE PARTICULAR AND THE POLICY IS A DIFFERENT
+  POLICY.*** Finally, **DA's own AST sweep of its surface, which I counted too: `da_early_read_verify.py` ALREADY
+  READS `economic_settlement` AT FOUR REAL SITES AND IS NOT BLIND, SO THE CLASS IS TWO SITES ON DA'S SURFACE, BOTH
+  NOW FIXED, WITH FALSIFIERS DRIVEN ON BLOCKS THAT DISAGREE** -- *the right falsifier, since two blocks carrying the
+  same values cannot distinguish a checker that reads the right one from a checker that reads either* -- **and a seat
+  sweeping its own surface and finding the count SMALLER than feared is worth as much as one finding it larger.**
+  Flags 2822 -> 2835, prov 2367 -> 2380; window 3/3, Batch 304 archived. MEM asserts no result.)
   2026-09-09T15:13:26Z (MEM ROUND 321 -- R-868 SWEPT. ***THE SIBLING-BLOCK CLASS IS CLOSED, BE RELOCATED A FALSIFIER RATHER
   THAN DROPPING IT, AND THE FIRST NULL SINCE THE RETRACTION IS RUNNING.*** ***THE CLASS CLOSES BECAUSE ITS MEMBERSHIP
   TEST IS MECHANICAL, WHICH I DROVE MYSELF ON THE REAL POINT-ESTIMATE ARTIFACT RATHER THAN TAKING THE LIST: a site is
@@ -163,50 +214,6 @@ updated: >-
   BY ACCIDENT OR BY THE USER AND NEVER BY LOOKING -- AND THE FOURTH, FIFTH AND SIXTH ARRIVED WITHIN ONE ROUND OF
   SOMEBODY DECIDING TO ENUMERATE BY OPERATION. THE THREE NEW SITES ARE THE MEASURE OF WHAT THE OTHER APPROACH WAS
   COSTING.*** Flags 2790 -> 2808, prov 2335 -> 2353; window 3/3, Batch 302 archived. MEM asserts no result.)
-  2026-09-09T14:57:56Z (MEM ROUND 319 -- ***THE PROGRAMME HAS PRODUCED ITS FIRST CORRECTED NUMBER SINCE THE RETRACTION, AND
-  THE USER HAS RULED ON FOUR THINGS.*** From `e975d81` to `ac99226`. **I read every figure at the artifact rather
-  than taking the dispatch**: `p003_de_point_estimate_day_20260903_L250ms__20260909T140532Z.json` on book **EV21
-  (`ae98b92219940c19...`)**, exit rc 0 at 14:05Z -- ***`D_E_settle` +11,191.244402***, arm total **48,506.795833**
-  (trades **-179,803.284167**, residual **+228,310.08**) against a zero-cancel baseline of **37,315.551431** (trades
-  **-226,590.602369**, residual **+263,906.1538**), **20,682 arm fills against 22,675 baseline, 3,863 cancels over
-  19,523 decisions, 246 slugs on both legs, `theta_was_not_refitted_here: True`** -- ***AND THE ESTIMAND'S OWN
-  ARITHMETIC CLOSES THREE WAYS EXACTLY, TO THE LAST DECIMAL: THE ARM LEGS SUM TO THE ARM TOTAL, THE BASELINE LEGS TO
-  THE BASELINE TOTAL, AND THEIR DIFFERENCE TO `D_E_settle`.*** The artifact carries R-801's definition in
-  `what_total_is` -- *the same field that corrected ME at round 289 when I read the fills leg as the total.* ***AND
-  ITS LIMITS ARE IN THE ARTIFACT, NOT ONLY IN THE PROSE: `run_mode: POINT_ESTIMATE` AT THREE LEVELS AND
-  `result_contract.null_status: NULL_NOT_DRAWN_POINT_ESTIMATE_RUN`, NO NULL, NO Z, NO p, NO CONTROL, AND ASKING IT
-  FOR A TEST STATISTIC REFUSES BY NAME. "THE POINT ESTIMATE STANDS" IS THE MOST THAT MAY BE SAID*** -- *I declared
-  that reading in round 315 before the number existed and the artifact now enforces it, so a reader who never saw
-  this file cannot over-read it either.* ***AND THE FACT EASIEST TO CELEBRATE AND MOST IMPORTANT NOT TO: THE SIGN IS
-  A REVERSAL -- THE RETRACTED ARMS LOST HEAVILY AND THIS ONE IS POSITIVE -- WHICH DA 162 IS EXAMINING AS POSSIBLY
-  THE POPULATION RATHER THAN THE REPAIRS, SINCE THE BOOK IS BUILT OVER A DIFFERENT ERA WITH REAL GAPS ATTACHED***;
-  **two things changed at once, the code AND the data the code sees, and this file asserts no explanation until DA
-  reports.** ***I PRE-REGISTERED THREE EXIT NUMBERS LAST ROUND AND SCORED THEM MYSELF AGAINST THE EV21 RECEIPT: ALL
-  THREE LANDED -- `n_excluded = 9`; the new statuses PRESENT WITH EXPLICIT ZEROS; `generations = 313140`, exactly
-  313,149 - 9*** -- and the second landed **better than I asked for**, since each zero carries a `disposition`
-  (`NON_FINITE`/`MALFORMED` "REFUSED, not excluded"; `INVERTED` "counted here, LEFT IN THE REFERENCE and refused by
-  `validate_reference`") -- ***A ZERO WITH A DISPOSITION ANSWERS THE QUESTION A BARE ZERO LEAVES OPEN.*** **THE FOUR
-  USER RULINGS. (a) THE MATCHING UNIT IS B, WITH THE 1-IN-3,862 DOUBLE-CANCELLED REFERENCE GENERATION RECORDED AS A
-  NAMED, MEASURED EXCEPTION IN THE RECEIPT -- CONDVALUE FAIL-CLOSED UNTIL ITS SINGLE COLLISION IS HANDLED, HAZARD'S
-  NULL FREE TO RUN -- WHICH CLOSES THE ITEM OPEN SINCE THE COORDINATOR'S PREMISE FOR B PROVED FALSE**, *the ruling
-  not restoring the premise but replacing the assumption with a COUNT.* **(b) THE MONEY-LEVEL LATENCY COMPARISON
-  WILL BE CLOSED BY BE VALUING DROPPED TRANCHES AT BUILD SO ONE BOOK CARRIES BOTH L=0 AND L=250, NOT BY A SECOND L=0
-  BUILD, BECAUSE THE ONLY L=0 09-03 BOOK IS PRE-FIX AND BUILT OVER THE WRONG ERA AND WOULD CONFOUND ERA WITH
-  LATENCY** -- *answering DA's own named limit by changing the BUILD rather than accepting a contaminated
-  comparator.* **(c) THE 09-04..09-07 QUEUE IS HELD UNTIL (a) AND (b) SETTLE** -- *not a refusal but a SEQUENCE,
-  since four days built before either settles are four days built to a specification about to change.* **(d) A DAY
-  WHOSE BOOK-CODE VERDICT IS `MATCHES_WITH_UNNAMED_MEMBERS` MAY BE QUOTED AS RULED PROVIDED THE UNNAMED ARE THE
-  KNOWN LAZY-IMPORT PAIR -- AND DE IS TO MAKE THAT A PREDICATE, REFUSING BY NAME IF ANY OTHER MODULE IS UNNAMED -- WHICH REV 139 HAS NOW DRIVEN AND IT IS **NOT A PREDICATE YET**; SEE THE ADDENDUM**,
-  *which is the difference between a ruling and a loophole.* ***THE LATENCY STATUS, PRECISELY: THE 51.17 % TRANCHE
-  EFFECT REPRODUCES ON THE CORRECTED BOOK -- 23,765 AGAINST 22,675 OF 46,440, IDENTICAL TO DA'S EV20 FIGURE -- SO
-  THE MECHANISM SURVIVES THE ERA FIX, THE CAUSAL-SCORING REPAIR AND THE ZERO-LENGTH EXCLUSION; BUT THE MONEY-LEVEL
-  54 / 62 / 98 / 55 % IS NOT YET REPRODUCED***, with DA's warning governing the reading -- **a COUNT of tranches and
-  a SHARE of settled money are different estimands.** ***AND DE DECLINED THE AVAILABLE SHORTCUT IN ONE SENTENCE: IT
-  WOULD NOT USE THE PRE-FIX L=0 BOOK -- "I WON'T DRESS THE SECOND UP AS THE FIRST" -- WHICH MAKES FOUR SEATS IN ONE
-  NIGHT DECLINING A RESULT THEY COULD HAVE HAD.*** Finally, **BE's cold-cache correction moves the queue's price in
-  the expensive direction: 09-04 REACHES 9.70 GB, 82 % OF THE ENVELOPE, NOT THE 63 % REPORTED FROM A SINGLE WARM
-  RUN, AND THE QUEUE MUST BE PLANNED ON THE COLD BASIS.** Flags 2773 -> 2790, prov 2318 -> 2335; window 3/3, Batch
-  301 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -378,6 +385,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 322, the relocated falsifier does not exist; my round-321 record superseded (f05a6a5 -> 7cf8a9d) ---
+  THE_RELOCATED_FALSIFIER_DOES_NOT_EXIST_AND_I_DROVE_THE_ZERO_MYSELF: FIVE-MODULES-ZERO-OCCURRENCES
+  SO_MY_ROUND_321_RECORD_IS_SUPERSEDED_IN_BAND: I-READ-A-DESIGN-AS-A-LANDING
+  TRUE_AS_A_DESIGN_CLAIM_AND_FALSE_AS_A_DESCRIPTION_OF_THE_CODE: BOTH-READINGS-AVAILABLE
+  THE_L0_VALUATION_IS_RECORDED_AS_UNVERIFIED: NOT-WRONG-UNVERIFIED
+  AND_WHAT_DID_VERIFY_IS_RECORDED_WITH_THE_SAME_PRECISION: TWO-THINGS-NOT-NONE
+  THE_NARRATIVE_CLAUSES_VERIFY_STRUCTURALLY_ON_ONE_RESULT_EXIT: NO-HAPPY-PATH-TO-LOSE-THEM-DOWN
+  THE_POINT_ESTIMATE_REPRODUCES_TO_THE_DIGIT_BY_A_SECOND_IMPLEMENTATION: 984-CELLS-ZERO-DISAGREEMENTS
+  THE_SIGN_REVERSAL_ARGUMENT_IS_STRUCTURAL_RATHER_THAN_STATISTICAL: NO-DECISIONS-THEREFORE-PURE-POPULATION
+  AND_THE_BASELINE_FILL_SET_MOVED_BY_THREE_ROWS: 22674-SHARED-2-DROPPED-1-ADDED
+  THE_CAVEAT_MUST_TRAVEL_WITH_THE_NUMBERS_NOT_SIT_BELOW_THEM: AN-ADDRESS-NOT-A-FOOTNOTE
+  THETA_WAS_FROZEN_BY_RULING_AND_THE_DISTRIBUTION_HAS_MOVED_UNDER_IT: COMPARABILITY-BOUGHT-SOMETHING-ELSE
+  REV_143_IS_MEASURING_WHETHER_THE_TEN_POINT_SEVEN_IS_UNIFORM: AND-WHAT-A-REFIT-WOULD-TRADE-AWAY
+  DAS_OWN_SWEEP_SHOWS_ITS_SURFACE_IS_TWO_SITES_NOT_MORE: AND-I-COUNTED-IT-TOO
   # --- MEM round 321, R-868 swept; the sibling-block class CLOSED at six sites (e975d81 -> 412a89e) ---
   THE_SIBLING_BLOCK_CLASS_IS_CLOSED_AND_I_DROVE_ITS_MEMBERSHIP_TEST: FIVE-SHARED-NAMES-MEASURED
   SIX_SITES_THREE_MODULES_THREE_NEW_OVER_A_STATED_SCOPE: ENUMERABLE-THEREFORE-CLOSABLE
@@ -27261,6 +27282,160 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 322, 2026-09-09T15:18:59Z ---
+  THE_RELOCATED_FALSIFIER_DOES_NOT_EXIST_AND_I_DROVE_THE_ZERO_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      ***THE CORRECTION THAT LANDS ON MY OWN FILES, AND I DROVE IT RATHER THAN ACCEPTING IT: THE RELOCATED FALSIFIER
+      DOES NOT EXIST.*** REV 142 reports zero occurrences of `tranches_before_placement_latency` and `KEPT-VALUE`
+      across five modules, and **I grepped all five myself: `de_point_estimate_day.py` 0/0,
+      `de_multiday_gate1_runner.py` 0/0, `de_phase4_diag_runner.py` 0/0, `be_cancel_axis_null.py` 0/0,
+      `da_gate1_day_verdict.py` 0/0.** ***TEN ZEROES. THE CHECK BE SAID WAS "FALSIFIABLE ONE SEAM OVER" IS NOT AT
+      THAT SEAM, OR AT ANY OTHER.*** **It is a SPECIFICATION, NOT A CHECK.**
+  SO_MY_ROUND_321_RECORD_IS_SUPERSEDED_IN_BAND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      ***AND MY ROUND-321 RECORD IS SUPERSEDED IN BAND, NOT QUIETLY.*** I wrote that BE's answer should be recorded
+      **"as the standard rather than as a note"**, that *"the programme's standing remedy has been to strengthen a
+      check in place; this is the other move -- keep the check and change where it runs"*, and that **"the USER'S
+      RULING (b) THEREFORE STANDS AND NO L=0 BUILD IS NEEDED."** ***THE FIRST TWO DESCRIBED CODE THAT DOES NOT
+      EXIST.*** *The ruling may well still stand -- that is the USER's -- but MY reason for saying so was that the
+      falsifier had been relocated, and it has not been.* **I recorded a design as a landing, which is precisely the
+      error I have recorded against three other seats tonight.**
+  TRUE_AS_A_DESIGN_CLAIM_AND_FALSE_AS_A_DESCRIPTION_OF_THE_CODE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      ***THE COORDINATOR'S OWN FORMULATION IS THE EXACT ONE AND I KEEP IT: BE'S SENTENCE IS "TRUE AS A DESIGN CLAIM
+      AND FALSE AS A DESCRIPTION OF THE CODE", AND BOTH THE COORDINATOR AND I READ IT AS THE SECOND.*** **The
+      sentence -- *"the equivalence is not unfalsifiable; it is falsifiable one seam over, where DA specified it"* --
+      is grammatically a statement about where a check CAN live, and was read as a statement about where a check
+      DOES live.** *This is tonight's recurring class arriving in PROSE rather than in code: the right information
+      at an address nobody is required to read, now as a right claim in a tense nobody is required to notice.*
+      ***A SENTENCE THAT IS TRUE IN THE SUBJUNCTIVE AND FALSE IN THE INDICATIVE WILL BE READ IN THE
+      INDICATIVE.***
+  THE_L0_VALUATION_IS_RECORDED_AS_UNVERIFIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      ***THE L=0 VALUATION IS RECORDED AS UNVERIFIED -- WHICH IS NOT THE SAME AS WRONG, AND THIS FILE WILL NOT LET
+      IT DRIFT TO EITHER.*** **No number from it may be quoted as reconciled, because the reconciliation that would
+      have checked it has not been written.** *DA's criterion (3) asked for `kept + dropped = all-tranche` with
+      `kept == 37,315.551431` to the digit; BE explained why it cannot run at build and named where it could run;
+      nobody has written it there.* **The specification is good, the location is agreed, and the code is absent** --
+      ***THREE FACTS THAT ARE EASY TO COMPRESS INTO "IT IS HANDLED", AND THIS ENTRY EXISTS TO STOP THAT.***
+  AND_WHAT_DID_VERIFY_IS_RECORDED_WITH_THE_SAME_PRECISION:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **And what DID verify is recorded with the same precision, because a correction that reports only the failure
+      is as misleading as the claim it corrects: `both_legs_computable_for_every_tranche` IS GENUINELY COMPUTED.** I
+      confirmed it at the code -- **`_legs_fields_present` and `both_legs_computable_for_every_tranche` both live in
+      `be_daybook_build.py`** -- so DA's clause about a missing field silently omitting a tranche from a total is
+      **not assumed but evaluated.** ***TWO OF DA'S FIVE CRITERIA ARE REAL IN THE CODE TODAY AND ONE IS NOT; SAYING
+      WHICH IS THE DIFFERENCE BETWEEN A CORRECTION AND A COMPLAINT.***
+  THE_NARRATIVE_CLAUSES_VERIFY_STRUCTURALLY_ON_ONE_RESULT_EXIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **The other thing that verified, and it verified STRUCTURALLY rather than by inspection: DA's narrative
+      clauses -- `WHAT_THE_DROPPED_SET_IS`, `HOW_IT_MUST_BE_SAID`, `WHAT_MUST_NOT_BE_SAID` -- are carried because
+      THE FUNCTION HAS ONE RESULT EXIT, SO THERE IS NO HAPPY PATH TO LOSE THEM DOWN.** ***THAT IS THE EXACT REPAIR
+      SHAPE DE 172 USED FOR `MEMBERSHIP_LIMIT`: one raiser, so an exit cannot be written without it.*** *A property
+      that holds because of control-flow structure survives the next edit; a property that holds because someone
+      remembered to add a key to four returns does not.* **The programme has now used this shape twice in a day, and
+      both times it was the difference between a guarantee and a habit.**
+  THE_POINT_ESTIMATE_REPRODUCES_TO_THE_DIGIT_BY_A_SECOND_IMPLEMENTATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **DA 164 (`Q-DA-383`): THE POINT ESTIMATE REPRODUCES TO THE DIGIT, INDEPENDENTLY.** `D_E_settle` **+11,191.244402**
+      and the second arm at **+12,381.557663**, ***BY A SECOND IMPLEMENTATION FROM THE FILL ROWS, WITH ZERO PER-SLUG
+      DISAGREEMENTS ACROSS 246 SLUGS x 2 BOOKS x 2 ARMS*** -- **984 per-slug cells, not one disagreement.** *At round
+      319 I checked the artifact's internal arithmetic closed three ways; that showed the totals were consistent
+      with their own legs.* ***THIS IS THE STRONGER CLAIM: THE SAME NUMBERS RECOMPUTED FROM THE UNDERLYING ROWS BY
+      DIFFERENT CODE.*** **The first corrected number since the retraction is now independently reproduced.**
+  THE_SIGN_REVERSAL_ARGUMENT_IS_STRUCTURAL_RATHER_THAN_STATISTICAL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      ***AND THE SIGN REVERSAL IS THE REPAIRS -- 98.1 % OF IT -- WITH AN ARGUMENT THAT IS STRUCTURAL RATHER THAN
+      STATISTICAL, WHICH IS WHY IT IS WORTH MORE THAN A DECOMPOSITION: THE 0-CANCEL BASELINE MAKES NO DECISIONS, SO
+      ANY CHANGE IN IT IS PURE POPULATION.*** **No modelling assumption, no covariate adjustment, no counterfactual
+      -- a channel that is closed BY CONSTRUCTION.** *For thirty rounds this baseline was described as the thing
+      that SURVIVED the scoring defects; the same property that made it survive makes it a clean instrument for
+      separating data from policy, and nobody had used it that way.* **A control that was already in every artifact,
+      re-read as an instrument.**
+  AND_THE_BASELINE_FILL_SET_MOVED_BY_THREE_ROWS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **And the measurement behind it is almost startlingly small: the baseline's fill set is 99.987 % IDENTICAL --
+      ***22,674 SHARED, 2 DROPPED, 1 ADDED.*** THREE ROWS.** *Between a book built over the wrong era with no gaps
+      attached and a book built over the corrected era with real gaps, the policy-free baseline moved by three
+      fills.* ***THE POPULATION BARELY MOVED; THE ARMS DID*** -- which is exactly the shape that makes "the repairs,
+      not the data" a finding rather than an assertion, **and it is why the 1.9 % / 98.1 % split can be stated
+      without an interval: the population channel is not small relative to noise, it is small ABSOLUTELY.**
+  THE_CAVEAT_MUST_TRAVEL_WITH_THE_NUMBERS_NOT_SIT_BELOW_THEM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      ***THE CAVEAT, AND THE INSTRUCTION ABOUT IT IS THE POINT: IT MUST TRAVEL WITH THE NUMBERS RATHER THAN SIT
+      BELOW THEM.*** **AT UNCHANGED THETA, DECISIONS WENT 1,398 -> 14,893 ON HAZARD -- 10.7x -- SO A THRESHOLD
+      CHOSEN UNDER THE DEFECTIVE SCORING NOW SELECTS A DIFFERENT QUANTILE OF THE SCORE DISTRIBUTION.** *This
+      programme has spent the night on exactly one lesson -- `matched_on` absent from the receipt, `MEMBERSHIP_LIMIT`
+      absent from the opt-in result, the corrected set announced beside the stale one -- and every time the
+      information existed and the ADDRESS was wrong.* ***A CAVEAT PRINTED UNDER A NUMBER IS AT THE WRONG ADDRESS.
+      IT BELONGS IN THE FIELD THE READER RESOLVES, LIKE `WHAT_MUST_NOT_BE_SAID`.***
+  THETA_WAS_FROZEN_BY_RULING_AND_THE_DISTRIBUTION_HAS_MOVED_UNDER_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **The precise statement, which is neither a defect nor a dismissal: THETA WAS FROZEN BY RULING FOR
+      COMPARABILITY, AND THE DISTRIBUTION IT WAS CALIBRATED AGAINST HAS CHANGED.** ***BOTH HALVES ARE TRUE AND THEY
+      PULL AGAINST EACH OTHER: FREEZING IT BOUGHT COMPARABILITY WITH THE PRE-FIX ARMS AND SPENT THE PROPERTY THAT
+      THETA SELECTS THE QUANTILE IT WAS CHOSEN TO SELECT.*** *Rule 11 forbids choosing a threshold after seeing the
+      data; nothing was chosen after seeing anything here -- the threshold stayed still and the data moved under
+      it.* **`theta_was_not_refitted_here: True` is honest and correct, and it is exactly the field that makes this
+      caveat necessary rather than optional.**
+  REV_143_IS_MEASURING_WHETHER_THE_TEN_POINT_SEVEN_IS_UNIFORM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **REV 143 is measuring four things, and the list is the right list: THE QUANTILE; WHETHER THE 10.7x IS UNIFORM
+      OR CONCENTRATED; WHAT RE-FITTING WOULD TRADE AWAY; AND WHETHER A FIT MADE ON 08-29 IS STILL THE FIT IT CLAIMS
+      TO BE NOW THE DISTRIBUTION HAS MOVED.** ***THE SECOND IS THE ONE THAT DECIDES HOW BAD THIS IS: A UNIFORM 10.7x
+      IS A RESCALING AND THE POLICY IS RECOGNISABLY THE SAME POLICY MORE OFTEN; A CONCENTRATED ONE MEANS THE EXTRA
+      DECISIONS COME FROM SOMEWHERE PARTICULAR AND THE POLICY IS A DIFFERENT POLICY.*** *And the fourth is the
+      hardest and the most necessary: a frozen fit is only a frozen decision if the world it was fitted to is still
+      the world.*
+  DAS_OWN_SWEEP_SHOWS_ITS_SURFACE_IS_TWO_SITES_NOT_MORE:
+    prov: CHECKED
+    artifact: live/pm_research/da_early_read_verify.py
+    as_of: 2026-09-09T15:18:59Z
+    said: >-
+      **DA's own AST sweep of its surface, and I counted it too: `da_early_read_verify.py` ALREADY READS
+      `economic_settlement` AT FOUR REAL SITES AND IS NOT BLIND** -- *so the module that looked like a second victim
+      is not one.* ***THE CLASS IS TWO SITES ON DA'S SURFACE, BOTH NOW FIXED, WITH FALSIFIERS DRIVEN ON BLOCKS THAT
+      DISAGREE*** -- **which is the right falsifier: two blocks carrying the SAME values cannot distinguish a
+      checker that reads the right one from a checker that reads either.** My own count agrees: **only two DA
+      modules name `economic` literally at all** (`da_early_read_verify.py` 8 literal / 4 settlement,
+      `da_gate1_day_verdict.py` 10 / 8), *and a seat sweeping its own surface and finding the count SMALLER than
+      feared is worth as much as one finding it larger.*
   # --- MEM round 321, 2026-09-09T15:13:26Z ---
   THE_SIBLING_BLOCK_CLASS_IS_CLOSED_AND_I_DROVE_ITS_MEMBERSHIP_TEST:
     prov: CHECKED
