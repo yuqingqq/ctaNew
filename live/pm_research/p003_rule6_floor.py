@@ -38,6 +38,24 @@ DECL = HERE / "declarations" / "p003_rule6_floor_v1.json"
 DIVERGED = "RULE6_FLOOR_DIVERGED"
 UNREADABLE = "CARRIER_UNREADABLE"
 
+#: REV 167. `floor()` raised `DIVERGED` for a TYPE fault, and DIVERGED is the
+#: name the declaration gives to CARRIER DIVERGENCE (`refusal_name`, known_bad
+#: "a carrier whose value is 199"). Two different faults under one name is
+#: rule 16, and the name promised a guarantee the code did not provide:
+#: DRIVEN, `THE_NUMBER = 150` -- BELOW rule 6's floor -- was RETURNED, not
+#: refused. The check tested that the value is A number, not that it is THE
+#: number. Both halves are closed here and each fault now has its own name.
+NOT_A_NUMBER = "RULE6_FLOOR_NOT_A_USABLE_NUMBER"
+BELOW_THE_RULE = "RULE6_FLOOR_BELOW_THE_RULE"
+
+#: NOT a second copy of `THE_NUMBER`, and the distinction is the whole reason
+#: this constant may live in code: `THE_NUMBER` is THIS PROGRAMME'S floor and
+#: the declaration says it "may be RAISED by a declared amendment. It may
+#: never be lowered". This is the bound it may never be lowered THROUGH --
+#: CLAUDE.md reliability rule 6's own ">= 200 permutations / draws". A raised
+#: floor still satisfies it; a lowered one cannot.
+RULE_6_ABSOLUTE_MINIMUM = 200
+
 
 class FloorDiverged(Exception):
     pass
@@ -52,8 +70,15 @@ def floor(path=None) -> int:
     n = declaration(path).get("THE_NUMBER")
     if not isinstance(n, int) or isinstance(n, bool) or n < 1:
         raise FloorDiverged(
-            f"REFUSED {DIVERGED}: the authority's THE_NUMBER is {n!r}, which "
-            f"is not a usable floor. Nothing may derive from it.")
+            f"REFUSED {NOT_A_NUMBER}: the authority's THE_NUMBER is {n!r}, "
+            f"which is not a usable floor. Nothing may derive from it.")
+    if n < RULE_6_ABSOLUTE_MINIMUM:
+        raise FloorDiverged(
+            f"REFUSED {BELOW_THE_RULE}: the authority's THE_NUMBER is {n}, "
+            f"below CLAUDE.md reliability rule 6's minimum of "
+            f"{RULE_6_ABSOLUTE_MINIMUM}. A floor may be RAISED by a declared "
+            f"amendment; it may never be lowered through the rule it "
+            f"enforces. Nothing may derive from it.")
     return n
 
 
