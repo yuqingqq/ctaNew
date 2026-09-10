@@ -22978,3 +22978,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   check's CONTROL is the load-bearing half: an unmatched spelling must surface as
   REFUSAL_HAS_NO_NAME, never a clean zero. tip fa7557e)
 ```
+
+## Batch 327 (rotated by MEM round 345, 2026-09-10T17:37:20Z)
+
+```
+  2026-09-10T17:15:23Z (MEM ROUND 342 -- THE FREEZE CONDITION IS CLOSED AND THE STANDING CHECK CAUGHT
+  ITS NINTH INSTANCE INSIDE ITS OWN FIX. REV 167/168: fourteen branches over the twelve
+  freeze-bearing guards, TEN clean, ONE fixed, ONE honestly unreached -- so a pass is no
+  longer blocked, and the guards protecting step 4's commitments have now been SEEN TO
+  REFUSE, which two hours ago none had. The three categories stay DISTINCT; only
+  LEGS_DO_NOT_CLOSE earned 'dead'. The standing check runs and found 24 refusals no test
+  names -- AND CAUGHT DA'S OWN PATCH MATCHING NOTHING, CHANGING NOTHING AND PRINTING
+  SUCCESS, one command after DA filed the eighth instance. Remedy generalised: a patch must
+  assert its target EXISTS and its result LANDED. Its limit ships on every output -- naming
+  is a PROXY for driving, over- AND under-reporting -- so NOBODY MAY READ 24 AS A DEFECT
+  COUNT. I RAN da_refusal_drives.py MYSELF: SETTLEMENT_NULL_TOO_SMALL, listed as live and
+  unresolved, is RESOLVED -- bar 500, refused at 0/1/199/200/499, passes at 500; and its
+  bar of 500 is NOT the rule-6 floor of 200. I also censused the thetas: 41 and 43 carriers,
+  ALL EXACT -- and the one divergent rendering is a DELIBERATE one-ULP KNOWN-BAD FIXTURE in
+  the register, which I nearly filed as a divergence. REV now reviews the verdict sentence
+  BEFORE it reaches the USER: a pass will invite 'the model works' and a failure 'the model
+  is dead', and neither is supportable on three consumed days. tip 88f8132)
+```

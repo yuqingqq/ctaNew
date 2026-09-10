@@ -1,3 +1,128 @@
+# READ FIRST — round 345 (MEM, 2026-09-10T17:37:54Z, tip `f68694e`)
+# 🏁 THE CLOSING PICTURE BEFORE THE VERDICT
+
+# ✅ THE FREEZE IS CLEAR ON THE TREE'S CONDITION
+
+R-896 (`8b4e41c`) — BE's triage of the 101 off-path guards:
+
+| status | count |
+|---|---|
+| excluded (entry points, harness wrappers, a certified-retired guard) | **11** |
+| dormant and passing | **13** |
+| **not evaluable as a standing condition** | **76** |
+| **4 raises resolving to ONE distinct real violation** | **1** |
+
+**The cascade drift — the one I drove into raising at round 340.**
+
+> ***The repo is NOT carrying a pile of silent failures. A freeze against this
+> tree would not be committing over hidden breakage.***
+
+**The arithmetic closes only under one reading, so I record the reading:**
+11 + 13 + 76 = **100**, leaving exactly **one** of 101 for the violated bucket.
+**The four are RAISE EVENTS, not a fourth disjoint category.** *A reader who adds
+4 to 100 gets 104 and concludes the census doesn't close — same shape as coverage
+0.7419 against 247-of-288: two numbers in one sentence, counted in different
+units, only one of which partitions the set.*
+
+# 🆕 A THIRD STATUS, NAMED FOR THE FIRST TIME
+
+**NOT EVALUABLE AS A STANDING CONDITION** — neither dormant-and-passing nor
+violated, *because the condition cannot be evaluated without running something.*
+
+**Nothing in this programme had named that state before.** Every previous census
+forced each guard into passing or failing — **which is why every previous census
+produced a number that felt harder than it was.** *A residual category honestly
+named is worth more than a binary that is quietly wrong.*
+
+## …and BE's follow-up is sharper than the question that was asked
+
+For **52 of the 76**, "would it refuse today" is cheap to ask — **and it asks
+about a FIXTURE, not about the TREE.**
+
+> **Driving a guard with a synthetic input proves THE INSTRUMENT WORKS. It does
+> not tell you whether the tree violates the guard's condition.**
+
+**Two different questions, and the cheap one answers the less useful of them.**
+*This is the proxy-for-property class again — the fourth time tonight, and the
+first time caught BEFORE the measurement was bought rather than after it was
+quoted.*
+
+**So the remainder of step 1 is not "a week or an afternoon" — it is A CHOICE
+ABOUT WHICH QUESTION TO BUY.** *A duration invites a schedule; a choice invites a
+decision, and this is a decision.*
+
+# 6️⃣ A SIXTH SHAPE — a docstring naming a location the running path skips
+
+`de_matched_cancel_control.py:241`:
+
+```
+"""`n_draws` control sets. Rule 6's minimum is enforced HERE."""
+```
+
+**I read it, and line 242 does enforce it — so the sentence is TRUE about the
+function.** What misleads is the word **HERE**, which reads as naming where
+enforcement happens *in the system*, **while the running loop takes the route
+that skips this function entirely.** Satisfied today (500 vs 200), so nothing is
+lost.
+
+**RECORDED RATHER THAN SILENTLY FIXED** — *a docstring corrected without a record
+leaves no trace that the class had a sixth shape.*
+
+# 👁 THE COORDINATOR'S NEAR-MISS, recorded for the same reason as the others
+
+They read *"the lock just freed"* in BE's pane and nearly reported the run had
+ended early. **It was Claude Code's dimmed prompt suggestion, not a fact** — the
+ghost-text trap, **already written down.** They checked the lock, the unit and
+the workers before saying anything.
+
+> ***The recorded part is not the check. It is that the note existed and was
+> nearly not used — that is how these get through: not because the lesson is
+> missing, but because nothing prompts you to reach for it when it applies.***
+
+# 📡 MEASURED AT THE CLOSE
+
+```
+deSettle212.service   active / running   Slice=research.slice
+MainPID 1252859 → /…/research.slice/deSettle212.service   1 live worker
+MemoryCurrent 2.419 GiB   against the 9 GiB unit cap
+```
+
+Step 2 at ~1,340/4,000, landing ~19:25Z. *A snapshot; the peak is not the current.*
+
+**And I did NOT establish which process holds the flock, so I do not say.**
+`fuser` shows two processes with the lock file **open** — a `python3` and a
+`tail`, consistent with BE's armed waiter. **An open descriptor is not a held
+lock**, and reading `fuser` as a lock-holder claim would be exactly the
+proxy-for-property error this session has catalogued four times.
+
+# 🚚 LANDING STATE — checked with `merge-base`, not assumed
+
+| commit | on this branch? |
+|---|---|
+| `0147ff2` REV 171 — the two sentences, written blind | **YES** |
+| `a8567d1` BE 161 — 09-07 protected by its name | **no** |
+| `a35c889` BE 165 — *the live set is ONE; the 101 is a cleanup backlog, not hidden failures* | **no** |
+
+BE's two are staged in `wt-be` behind the armed waiter and **land without the
+coordinator** when the run exits.
+
+**Landing detector still reads 188** against its 185 baseline — **agreeing with
+`merge-base` from a different instrument** (a git ancestry query vs a filesystem
+existence check inside the provenance audit). **When it returns to 185, the merge
+happened.**
+
+# 🎬 THE CLOSING SENTENCE
+
+Under-sampling guard driven at four faults · generator guard refusing
+`STRATUM_TOO_SMALL` · twelve freeze-bearing guards driven to fourteen branches ·
+thetas re-verified by **two different instruments** · the p fixed two-sided **in
+the declaration before any draw** and again in §7j **before the number exists** ·
+both verdict paragraphs **written blind** · the coordinator **under a written
+control for the first time**.
+
+> ***Whatever the number is, the machinery that will report it has been tested
+> against the case where it is wrong.***
+
 # READ FIRST — round 344 (MEM, 2026-09-10T17:31:00Z, tip `8b4e41c`)
 
 # ✅ THE LAST BLOCKING ITEM CLOSED — THE THETAS ARE CLEAN

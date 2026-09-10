@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T17:37:20Z (MEM ROUND 345 -- THE CLOSING PICTURE BEFORE THE VERDICT. THE FREEZE IS CLEAR ON
+  THE TREE'S CONDITION: BE's triage of the 101 gives 11 excluded, 13 dormant-and-passing, 76
+  NOT EVALUABLE AS STANDING CONDITIONS, and 4 raises resolving to ONE distinct real
+  violation -- the cascade drift I drove into raising at round 340. THE REPO IS NOT CARRYING
+  A PILE OF SILENT FAILURES. The arithmetic closes only under one reading (11+13+76 = 100,
+  plus ONE violated; the 4 are RAISE EVENTS, not a fourth bucket) and I record the reading.
+  A THIRD STATUS IS NAMED FOR THE FIRST TIME -- neither passing nor violated, because the
+  condition cannot be evaluated without running something -- and BE's follow-up is sharper
+  than the question asked: for 52 of them the cheap check ASKS ABOUT A FIXTURE, NOT ABOUT
+  THE TREE, so step 1's remainder is A CHOICE ABOUT WHICH QUESTION TO BUY, not a duration.
+  A SIXTH SHAPE: draw_many's docstring says rule 6's minimum is enforced HERE and the
+  running loop skips that route -- true about the function, misleading about the system,
+  RECORDED RATHER THAN SILENTLY FIXED. I measured the unit at the close (active, in
+  research.slice, 2.419 GiB, one live worker) and did NOT assert who holds the flock,
+  because an open descriptor is not a held lock. REV's blind paragraphs (0147ff2) ARE on
+  this branch; BE's a8567d1 and a35c889 are NOT, and the landing detector still reads 188.
+  EVERY PROTECTION AROUND STEP 2 WAS DRIVEN RATHER THAN ASSUMED. tip 2c1fa8b)
   2026-09-10T17:30:21Z (MEM ROUND 344 -- THE LAST BLOCKING ITEM CLOSED AND THE COORDINATOR IS NOW UNDER
   A WRITTEN CONTROL. The thetas are clean and re-verified live (263e41d, Q-DA-405) -- the one
   answer that could have UNMADE the four-day table, the asymmetry null and step 2 together;
@@ -99,23 +116,6 @@ updated: >-
   EXACTLY YES. 09-07 is protected by a NAME now (reserved_days ['2026-09-07']) and NOT by
   admissible_days, which is STILL None -- and a8567d1 is COMMITTED BUT NOT LANDED on this
   branch, with a waiter armed on the lock. tip f67165e)
-  2026-09-10T17:15:23Z (MEM ROUND 342 -- THE FREEZE CONDITION IS CLOSED AND THE STANDING CHECK CAUGHT
-  ITS NINTH INSTANCE INSIDE ITS OWN FIX. REV 167/168: fourteen branches over the twelve
-  freeze-bearing guards, TEN clean, ONE fixed, ONE honestly unreached -- so a pass is no
-  longer blocked, and the guards protecting step 4's commitments have now been SEEN TO
-  REFUSE, which two hours ago none had. The three categories stay DISTINCT; only
-  LEGS_DO_NOT_CLOSE earned 'dead'. The standing check runs and found 24 refusals no test
-  names -- AND CAUGHT DA'S OWN PATCH MATCHING NOTHING, CHANGING NOTHING AND PRINTING
-  SUCCESS, one command after DA filed the eighth instance. Remedy generalised: a patch must
-  assert its target EXISTS and its result LANDED. Its limit ships on every output -- naming
-  is a PROXY for driving, over- AND under-reporting -- so NOBODY MAY READ 24 AS A DEFECT
-  COUNT. I RAN da_refusal_drives.py MYSELF: SETTLEMENT_NULL_TOO_SMALL, listed as live and
-  unresolved, is RESOLVED -- bar 500, refused at 0/1/199/200/499, passes at 500; and its
-  bar of 500 is NOT the rule-6 floor of 200. I also censused the thetas: 41 and 43 carriers,
-  ALL EXACT -- and the one divergent rendering is a DELIBERATE one-ULP KNOWN-BAD FIXTURE in
-  the register, which I nearly filed as a divergence. REV now reviews the verdict sentence
-  BEFORE it reaches the USER: a pass will invite 'the model works' and a failure 'the model
-  is dead', and neither is supportable on three consumed days. tip 88f8132)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -287,6 +287,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 345, the closing picture before the verdict ---
+  THE_FREEZE_IS_CLEAR_ON_THE_TREES_CONDITION_AND_THE_REPO_CARRIES_NO_PILE_OF_SILENT_FAILURES: "R-896 at 8b4e41c. BE's triage of the 101 off-path guards: 11 EXCLUDED (entry points, harness wrappers, a certified-retired guard -- not really guards), 13 DORMANT AND PASSING, 76 NOT EVALUABLE AS STANDING CONDITIONS, and 4 raises resolving to ONE DISTINCT REAL VIOLATION -- the cascade drift verify_run_inputs already found and that I drove into raising at round 340. A freeze against this tree would NOT be committing over hidden breakage. That is the question round 340 said the triage existed to answer, and the answer is the good one."
+  AND_THE_TRIAGE_ARITHMETIC_CLOSES_ONLY_UNDER_ONE_READING_SO_I_RECORD_THE_READING: "11 + 13 + 76 = 100, which leaves exactly ONE of the 101 for the violated bucket. The FOUR are RAISE EVENTS, not a fourth disjoint category -- four raises resolving to one distinct violation. A reader who adds 4 to 100 gets 104 and concludes the census does not close. Recorded because this is the same shape as coverage 0.7419 against 247 of 288: two numbers in one sentence, counted in different units, where only one of them partitions the set."
+  THE_THIRD_STATUS_IS_NAMED_FOR_THE_FIRST_TIME_AND_IT_IS_A_CONTRIBUTION_NOT_A_LEFTOVER: "NOT EVALUABLE AS A STANDING CONDITION: 76 guards that are neither dormant-and-passing nor violated, because their condition CANNOT BE EVALUATED WITHOUT RUNNING SOMETHING. Nothing in this programme had named that state before -- every previous census forced each guard into passing or failing, which is why every previous census produced a number that felt harder than it was. A residual category that is honestly named is worth more than a binary that is quietly wrong."
+  AND_BES_FOLLOW_UP_IS_SHARPER_THAN_THE_QUESTION_THE_COORDINATOR_ASKED: For 52 of the 76, 'would it refuse today' is CHEAP to ask -- and it ASKS ABOUT A FIXTURE, NOT ABOUT THE TREE. Driving a guard with a synthetic input proves THE INSTRUMENT WORKS; it does not tell you whether the tree violates the guard's condition. Two different questions, and the cheap one answers the less useful of them. This is the proxy-for-property class again, caught BEFORE the measurement was bought rather than after it was quoted -- the fourth time tonight and the first time in advance.
+  SO_THE_REMAINDER_OF_STEP_ONE_IS_A_CHOICE_ABOUT_WHICH_QUESTION_TO_BUY: Not 'a week or an afternoon'. The cheap question (does the instrument fire on a fixture) and the expensive one (does the tree violate the condition) have different prices AND different values, and the honest framing puts the choice in front of whoever decides rather than quoting a duration that hides it. Recorded in this form because a duration invites a schedule and a choice invites a decision, and this is a decision.
+  A_SIXTH_SHAPE_THE_DOCSTRING_CLAIMS_A_LOCATION_THE_RUNNING_PATH_DOES_NOT_TRAVERSE: "de_matched_cancel_control.draw_many, line 241: '`n_draws` control sets. Rule 6's minimum is enforced HERE.' I read it, and line 242 does enforce it -- so the sentence is TRUE ABOUT THE FUNCTION. What is misleading is the word HERE, which reads as naming WHERE enforcement happens in the system, while the running loop takes the route that skips this function entirely. Satisfied today at 500 against 200, so nothing is lost. RECORDED RATHER THAN SILENTLY FIXED, which is the right call: a docstring corrected without a record leaves no trace that the class had a sixth shape."
+  THE_COORDINATORS_NEAR_MISS_IS_RECORDED_FOR_THE_SAME_REASON_THE_OTHERS_ARE: "They read 'the lock just freed' in BE's pane and nearly reported the run had ended early. It was Claude Code's DIMMED PROMPT SUGGESTION, not a fact -- the ghost-text trap, which is already written down. They checked the lock, the unit and the workers before saying anything. The recorded part is not the check; it is that THE NOTE EXISTED AND WAS NEARLY NOT USED. That is how these get through: not because the lesson is missing, but because nothing prompts you to reach for it at the moment it applies."
+  I_MEASURED_THE_UNIT_AT_THE_CLOSE_AND_IT_IS_ALIVE_AND_IN_SLICE: "At this sweep: deSettle212.service ActiveState=active, SubState=running, Slice=research.slice, MainPID 1252859 resolving through /proc to research.slice/deSettle212.service, ONE live worker under it, MemoryCurrent 2597048320 bytes = 2.419 GiB against the 9 GiB unit cap. Step 2 at about 1,340 of 4,000, landing around 19:25Z. A snapshot of a running job, and the peak is not the current."
+  AND_I_DID_NOT_ESTABLISH_WHICH_PROCESS_HOLDS_THE_FLOCK_SO_I_DO_NOT_SAY: fuser on data/.heavy_run.lock shows two processes with the file OPEN -- a python3 and a tail, consistent with the waiter BE armed. It does NOT show which process holds the flock, and an open descriptor is not a held lock. Reading fuser output as a lock-holder claim would be exactly the proxy-for-property error this session has catalogued four times, so I record what the instrument shows and not what it suggests.
+  REVS_TWO_PARAGRAPHS_ARE_ON_THIS_BRANCH_AND_BES_TWO_COMMITS_ARE_NOT: "I checked each with merge-base rather than assuming. 0147ff2, 'REV 171: the two sentences, written blind, with the PRIMARY pool's own shape numbers', IS an ancestor of HEAD. a8567d1 (BE 161, 09-07 protected by its name) and a35c889 ('BE 165: the live set is ONE -- the 101 is a cleanup backlog, not hidden failures') are NOT -- they are staged in wt-be behind the armed waiter and will land WITHOUT the coordinator when the run exits."
+  AND_THE_LANDING_DETECTOR_STILL_READS_188_WHICH_MEANS_THEY_HAVE_NOT_MERGED: "The three flags I left pointing at the in-commit params v30 path still resolve to nothing, so missing-artifact stands at 188 against its 185 baseline. That agrees with merge-base, from a different instrument: one is a git ancestry query and the other is a filesystem existence check inside a provenance audit. When it returns to 185 the merge has happened, and if it does not, it has not."
+  THE_CLOSING_PICTURE_IS_THAT_EVERY_PROTECTION_AROUND_STEP_TWO_WAS_DRIVEN_RATHER_THAN_ASSUMED: The under-sampling guard driven at four faults; the generator-level guard refusing STRATUM_TOO_SMALL; the twelve freeze-bearing guards driven to fourteen branches; the thetas re-verified by two different instruments; the p fixed as two-sided in the declaration BEFORE any draw and again in section 7j before the number exists; both verdict paragraphs written blind; and the coordinator under a written control for the first time. Whatever the number is, the machinery that will report it has been tested against the case where it is wrong.
   # --- MEM round 344, the last blocking item closed and 7j binds the coordinator ---
   THE_THETAS_ARE_CLEAN_AND_THAT_WAS_THE_LAST_BLOCKING_ITEM_BEFORE_THE_VERDICT: "263e41d, 'DA 200/201 (Q-DA-405): thetas clean, re-verified live'. Every armed figure this programme produced tonight rests on those two values and they are consistent across their carriers. It is the one answer that could have UNMADE the four-day table, the asymmetry null and step 2 together, and it came back clean -- so all three are firmer than they were this morning, on a check that was designed to be able to break them."
   AND_THIS_TIME_THE_AGREEMENT_IS_REAL_CORROBORATION_BECAUSE_THE_INSTRUMENTS_DIFFERED: I answered the same question independently at rounds 342 and 343, by a text census over file contents split by suffix, and got 43 carriers each with NO non-exact rendering in any .py or .json. DA answered it live by re-verification. Under rule 38 that is genuine corroboration and not a repetition -- which I say explicitly because I have spent six rounds refusing to call agreement corroboration when it came through one operation. Two different instruments, same answer, and the answer is clean.
@@ -27529,6 +27542,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 345, 2026-09-10T17:37:20Z ---
+  THE_FREEZE_IS_CLEAR_ON_THE_TREES_CONDITION_AND_THE_REPO_CARRIES_NO_PILE_OF_SILENT_FAILURES:
+    prov: RELAYED
+    from: BE via coordinator MEM 345 (R-896)
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      the four categories and their counts as dispatched; the single real violation is the one I established by execution at round 340.
+  AND_THE_TRIAGE_ARITHMETIC_CLOSES_ONLY_UNDER_ONE_READING_SO_I_RECORD_THE_READING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      11+13+76 computed as 100 against a stated total of 101, and the 4-raises-to-1-violation reading identified as the one under which the partition closes.
+  THE_THIRD_STATUS_IS_NAMED_FOR_THE_FIRST_TIME_AND_IT_IS_A_CONTRIBUTION_NOT_A_LEFTOVER:
+    prov: RELAYED
+    from: BE via coordinator MEM 345
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      the category and its definition as dispatched; recorded as a naming contribution rather than as an unexamined remainder.
+  AND_BES_FOLLOW_UP_IS_SHARPER_THAN_THE_QUESTION_THE_COORDINATOR_ASKED:
+    prov: RELAYED
+    from: BE via coordinator MEM 345
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      BE's distinction as dispatched; the class it belongs to is recorded at rounds 339, 342 and 343.
+  SO_THE_REMAINDER_OF_STEP_ONE_IS_A_CHOICE_ABOUT_WHICH_QUESTION_TO_BUY:
+    prov: RELAYED
+    from: BE via coordinator MEM 345
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      the reframing as dispatched; recorded as the form the question should reach the USER in.
+  A_SIXTH_SHAPE_THE_DOCSTRING_CLAIMS_A_LOCATION_THE_RUNNING_PATH_DOES_NOT_TRAVERSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_matched_cancel_control.py
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      line 241 read verbatim and the enforcement at 242-246 confirmed present; the running loop's bypass of draw_many is recorded at round 343 from BE's finding.
+  THE_COORDINATORS_NEAR_MISS_IS_RECORDED_FOR_THE_SAME_REASON_THE_OTHERS_ARE:
+    prov: RELAYED
+    from: coordinator MEM 345
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      the near-miss as the coordinator's own account; the ghost-text trap is a standing note in this programme's memory and its third pane-misreading form is recorded at round 336.
+  I_MEASURED_THE_UNIT_AT_THE_CLOSE_AND_IT_IS_ALIVE_AND_IN_SLICE:
+    prov: CHECKED
+    artifact: /proc/1252859/cgroup
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      systemctl --user show for ActiveState, SubState, Slice, MainPID and MemoryCurrent; /proc/1252859/cgroup read directly; child count taken with pgrep -P.
+  AND_I_DID_NOT_ESTABLISH_WHICH_PROCESS_HOLDS_THE_FLOCK_SO_I_DO_NOT_SAY:
+    prov: CHECKED
+    artifact: /proc/1252859/cgroup
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      fuser -v on the lock file returning pids 1298867 (python3) and 1298869 (tail) as having it open; no flock ownership was queried and none is asserted.
+  REVS_TWO_PARAGRAPHS_ARE_ON_THIS_BRANCH_AND_BES_TWO_COMMITS_ARE_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      git merge-base --is-ancestor run for all three commits against HEAD; each commit's subject read from its object.
+  AND_THE_LANDING_DETECTOR_STILL_READS_188_WHICH_MEANS_THEY_HAVE_NOT_MERGED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      the provenance audit re-run at this round returning 188 checked-artifact-missing entries; merge-base independently returning false for a8567d1.
+  THE_CLOSING_PICTURE_IS_THAT_EVERY_PROTECTION_AROUND_STEP_TWO_WAS_DRIVEN_RATHER_THAN_ASSUMED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:37:20Z
+    said: >-
+      each element listed is recorded in my files with its own provenance at rounds 337 through 344; this flag asserts the conjunction and names where each part is verifiable.
   # --- MEM round 344, 2026-09-10T17:30:21Z ---
   THE_THETAS_ARE_CLEAN_AND_THAT_WAS_THE_LAST_BLOCKING_ITEM_BEFORE_THE_VERDICT:
     prov: CHECKED
