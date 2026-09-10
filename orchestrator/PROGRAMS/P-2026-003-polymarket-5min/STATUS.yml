@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T10:33:05Z (MEM ROUND 336 -- THE DECISIVE EXPERIMENT IS DECLARED AND RUNNING. R-891's
+  asymmetry null asks whether the arms' tail-clipping is SKILL or DE-LEVERING: the LEFT
+  tail shrinks 21-36 (HAZARD) / 58-62 (CONDVALUE) per cent and the RIGHT TAIL SHRINKS BY A
+  SIMILAR AMOUNT, which needs no skill. Declared BEFORE any draw at e7d5d3f + v2 dea8c42,
+  filed c07e03a, DECLARED-NOT-RUN, RULE_6_FLOOR = 200, A = ret_pos - ret_neg, matched
+  SIMULTANEOUSLY on count, side and hour; population 09-03..09-06 ALL CONSUMED, so it costs
+  ZERO validation days. R-892 rules the matching unit the REFERENCE GENERATION, distinct
+  count, on two PRE-EXISTING grounds -- and item_15 states the bias DIRECTION: distinct
+  matching under-matches exposure and runs TOWARD FINDING THE ARM SKILFUL, so the advantage
+  is an UPPER BOUND. Rule 39: checkpoint through maintenance, NEVER TRIM TO FIT. TWO
+  CORRECTIONS CARRIED: 'invariant'/'EXACTLY ZERO' are struck, and verify_run_inputs is
+  called from EXACTLY ONE site -- inside def selftest -- which I drove by AST: a working
+  guard off the path it guards, UNFIXED. REV 162 found rule 35's shape inside the
+  instrument built to prevent it (seventh instance); DA 192's three-valued fix is ALREADY
+  IN THE TREE. The 25-draw number is REFUSED-BELOW-FLOOR, never a preview -- and it sits
+  INSIDE its own 25-draw interval at 83.4 per cent. tip afcccf8)
   2026-09-10T08:07:45Z (MEM ROUND 335 -- R-889 and R-890 swept, and both change what may be SAID.
   R-889's four independent legs (rule 38 applied BY DESIGN) say CORRECT: YES, RELIABLE AS
   AN EDGE: NO -- 11/12 figures reproduce exactly, 16 books' trades close to 1.3e-9, replay
@@ -94,51 +110,6 @@ updated: >-
   ARM NUMBERS SINCE THE RETRACTION, UNVERIFIED, DA 188 checking: HAZARD 4/4, CONDVALUE
   3/4, and CONDVALUE crosses zero on 09-05, the day latency costs most. Rules 36-38
   were already in these files from rounds 332-333 and are NOT refiled. tip 0da40bb)
-  2026-09-10T02:25:06Z (MEM ROUND 333 -- ***THREE OF FOUR DAYS MEASURED AND RECONCILED, A CORRECTION REVERSED, AND A RULE
-  THAT NAMES A SENTENCE I WROTE.*** **I RECOMPUTED ALL THREE RATHER THAN COPYING THEM: 09-04 KEPT + DROPPED =
-  102,193.688611 AGAINST ALL 102,193.688611 (delta -1.5e-11); 09-05 = 81,238.299665 EXACTLY, DELTA ZERO; 09-06 =
-  46,408.943945 AGAINST 46,408.943946 (delta -1.0e-06) -- SHARES 62.3725 %, 97.5694 % AND 54.9212 % TO THE DIGIT,
-  `legs_close` AND `kept == baseline` TRUE ON ALL THREE.** ***RULE 36 BINDS EVERY ONE: "AS AN UPPER BOUND ON THE
-  LATENCY EFFECT, ON ONE BTC-ONLY DAY, WITH NO NULL DRAWN" -- AND 09-05 IS THE SUBSTANTIVE OUTLIER, A NEVER-CANCEL
-  MAKER KEEPING UNDER 2 % OF SETTLED MONEY AT 250 ms***, *which against 09-04's 37.6 % and 09-06's 45.1 % kept is a
-  different regime and not a different magnitude; no artifact answers why, and this entry does not speculate.*
-  ***R-883 SUPERSEDES R-877 AND REVERSES A CORRECTION: DA 184, UNPROMPTED -- "I OWE YOU A CORRECTION, AND IT IS THE
-  SAME ERROR I CORRECTED YOU FOR. YOUR '52 GAP-BEARING WINDOWS AGAINST ZERO' WAS RIGHT" -- DA 180 HAVING COMPARED
-  `n_gap_bearing_windows` AGAINST `TERMINAL_MARK_ENDED_IN_GAP`, TWO DIFFERENT FIELDS BOTH ABOUT GAPS, RULE 16.***
-  **I confirmed it at the artifact with the right field this time: THE PRE-FIX 09-04 RECEIPT CARRIES ZERO
-  OCCURRENCES OF `n_gap_bearing_windows` AND RESOLVES `clob_v3_1`** -- ***A MISSING KEY AND A KEY HOLDING ZERO ARE
-  DIFFERENT FACTS, AND ONLY ONE SAYS THE PIPELINE NEVER ASKED THE QUESTION.*** ***AND MY OWN SHARE IS THE SHARPEST
-  THING HERE: AT ROUND 331 I WROTE "I MEASURED BOTH RECEIPTS MYSELF" AND REPORTED 78 -> 80. I DID -- AND I MEASURED
-  `TERMINAL_MARK_ENDED_IN_GAP`, BECAUSE THAT IS THE FIELD THE CORRECTION HANDED ME. I REPRODUCED DA'S INSTRUMENT AND
-  RECORDED IT AS CORROBORATION. A THIRD PASS THROUGH ONE INSTRUMENT IS NOT A THIRD OPINION*** -- *I have spent this
-  thread insisting seats verify at the artifact rather than accept a claim, and walked into the adjacent failure:
-  verifying at the artifact THE CLAIM CHOSE.* ***THE MECHANISM IS SETTLED: THE ERA FIX IS REAL AND REACHES THE MONEY
-  ON ONE DAY OF THREE. ALL THREE BOOKS DIFFER AT THE GENERATION LEVEL (358,107->358,108; 266,592->266,593;
-  300,177->300,147, WHICH I CHECKED AS -30) AND ONLY 09-06's REACHED A TRANCHE*** -- **so the contamination was
-  neither structural-everywhere nor harmless: REAL ON EVERY DAY AND CONSEQUENTIAL ON ONE**, *the reading neither
-  earlier inference could reach because both were arguing from counts that did not move.* **The -30 IS NOT THE
-  ZERO-LENGTH EXCLUSION -- IT CAME OUT OF THE REPLAY, WHICH IS WHERE GAPS ACT: two different ways a gap removes a
-  generation, one counted at build and one emergent in replay, and only the second can move a tranche.** ***AND THE
-  SENSITIVITY IS THE NUMBER TO CARRY: 3 TRANCHES OF 49,568 -- 0.0061 % -- MOVED THE HEADLINE 0.5138 pp, WITH THE
-  MONEY CLOSING TO 1e-6 AT KEPT +169.996591 AND DROPPED -323.232645 SUMMING TO -153.236054, WHICH I RECOMPUTED.***
-  ***SEAT_PROTOCOL RULE 38 (`:552`): CONVERGENCE IS EVIDENCE ONLY IF THE INSTRUMENTS DIFFERED. TWO SEATS CONVERGING
-  THROUGH ONE INSTRUMENT IS ONE OBSERVATION, NOT TWO -- AND IT NAMES A SENTENCE I WROTE AND AMPLIFIED: AT ROUND 331
-  I RECORDED THE CONVERGENCE AS "WHAT MAKES THE WITHDRAWAL SAFE RATHER THAN MERELY CAUTIOUS" AND ADDED THAT "EACH
-  TIME THE VALUE CAME FROM THE QUESTIONS BEING DIFFERENT", WHICH LOCATES THE INDEPENDENCE IN THE QUESTIONS WHEN IT
-  LIVES IN THE INSTRUMENTS. I DID NOT MERELY RELAY THAT FRAMING -- I GENERALISED IT INTO A PRINCIPLE AND WROTE IT
-  INTO THE STATE FILES AS ONE.*** **INDEPENDENCE IS A PROPERTY OF THE INSTRUMENT, NOT OF THE DISPATCH** -- *so the
-  check is mechanical now: name the field, the file and the operation each seat used, and if they match, the
-  agreement is a repetition;* ***I RECORDED CONVERGENCE AS EVIDENCE FOUR TIMES IN THREE ROUNDS AND CHECKED THE
-  INSTRUMENTS IN EXACTLY ONE.*** **DE 191's FIX IS A GATE, NOT A FIELD ADDITION -- `de_point_estimate_day.py:319`
-  REFUSES THE EMIT WITHOUT `population_and_coverage` AND `scope`, WHICH I READ AT THE LINE -- RULE 35 IMPLEMENTED
-  RATHER THAN QUOTED: THE OUTPUT CANNOT EXIST WITHOUT THE LIMIT**, closing the first of the three items I recorded
-  as blocking quotation; **and the second closes in the same shape, `scope.BTC_ONLY` DERIVED VIA `resolved_from
-  {book_filename, builder_receipt_coin, they_agree: true}` ON ALL THREE DAYS -- TWO INDEPENDENT SOURCES AND AN
-  EXPLICIT AGREEMENT FLAG, WHICH IS RULE 38's OWN LOGIC INSIDE A SINGLE FIELD.** Selftest 32 checks. **09-03's EV22
-  rebuild has run since 02:02:24Z and lands ~03:15, CLEARING THE 03:53 PIPELINE WINDOW I RECORDED LAST ROUND** --
-  *a constraint written into these files one round ago because it existed nowhere else, and used to place a build
-  one round later, where the previous attempt died as a bystander.* Flags 2971 -> 2985, prov 2516 -> 2530; window
-  3/3, Batch 315 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -310,6 +281,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 336, the decisive experiment is declared and running ---
+  THE_ASYMMETRY_NULL_IS_DECLARED_AND_RUNNING_AND_IT_SETTLES_THE_WHOLE_CANCELLATION_LINE: "R-891, the decisive experiment. It asks whether the arms' tail-clipping is SKILL or DE-LEVERING: the LEFT tail shrinks 21-36 per cent under HAZARD and 58-62 per cent under CONDVALUE, but the RIGHT tail shrinks by a similar amount -- which is what de-levering looks like and requires no skill at all. Estimand A = ret_pos - ret_neg, control matched SIMULTANEOUSLY on count, side and hour (rule 7, all three at once rather than one at a time)."
+  AND_THE_DECLARATION_IS_REAL_AT_ALL_THREE_COMMITS_I_CHECKED: "e7d5d3f reads 'DA 191: the asymmetry null, DECLARED BEFORE ANY DRAW (rule 6)'; dea8c42 reads 'DE 209: the matching unit is RULED, and the null fires on a REAL cell'; c07e03a is the Q-DA-396 filing naming e7d5d3f. RULE_6_FLOOR = 200 exists in code, and da_asymmetry_null.py:13 states in its own header that nothing there draws and STATUS is DECLARED-NOT-RUN. Rule 12's form is satisfied: the declaration is a commit, not a sentence."
+  THE_POPULATION_IS_ALL_CONSUMED_SO_THIS_NULL_COSTS_NO_VALIDATION_DAYS: "09-03..09-06 are ALREADY consumed for this line, so running the asymmetry null on them spends nothing that rule 11 protects. This is the rare case where the seen days are the right population BECAUSE they are seen: the question is mechanical, not predictive. The untouched days remain untouched, and validation still has its date."
+  THE_MATCHING_UNIT_IS_THE_REFERENCE_GENERATION_BY_USER_RULING_WITH_DISTINCT_COUNT: "R-892. One generation can be cancelled up to 23 times (measured, 09-04 CONDVALUE), so 'cancel-count-matched' was genuinely ambiguous -- and demand_from_arm REFUSED rather than guessing, which is the behaviour the programme has been trying to build for twenty rounds. The ruling rests on two PRE-EXISTING grounds, not a fresh preference: rule 2's de-duplicate-to-actions, and R-870's requirement that the unit matched on equal the unit resampled."
+  AND_THE_TWO_TWENTY_THREES_ARE_A_COINCIDENCE_OF_MAGNITUDE_NOT_A_SECOND_MEASUREMENT: Worth one careful line under rule 38. Rule 2's parenthetical max of 23 is rows-per-fill in P-2026-002, a different programme, unit and population; this 23 is cancels-per-generation on 09-04 CONDVALUE. Both are 23 and the coordinator states that accurately. But it is a numerical coincidence, not a second instrument agreeing -- so the ruling's weight sits on rule 2's PRINCIPLE, which is sound, and none of it should sit on the two numbers matching.
+  ITEM_15_IS_A_CAVEAT_THAT_CUTS_AGAINST_THE_RESULT_WRITTEN_BEFORE_THE_RESULT_EXISTS: "Recorded in the ruled phrasing exactly: distinct-generation matching UNDER-matches raw exposure, and the bias runs TOWARD FINDING THE ARM SKILFUL, so the arm's advantage is an UPPER BOUND on the non-exposure part. It is a FIELD with its direction stated, not a footnote. A caveat naming the direction it biases, written while the number is still unknown, is the strongest form this programme has produced -- it cannot be tuned to the answer because the answer does not exist yet."
+  RULE_39_SAYS_CHECKPOINT_THROUGH_MAINTENANCE_AND_NEVER_TRIM_TO_FIT: "USER ruling, landed at SEAT_PROTOCOL.md:576: do not schedule around maintenance windows -- CHECKPOINT so the run survives them. The second half is the part that mattered: with windows bounding the run, 500 draws would have been trimmed to the declared floor of 200 to fit. DA's standard is recorded verbatim -- 'split across windows or use the declared floor and record it; NEVER TRIM TO FIT.' A floor reached by trimming is not a floor, it is a ceiling wearing the word."
+  THE_INVARIANCE_CLAIM_IS_WITHDRAWN_AND_EXACTLY_ZERO_MUST_NOT_BE_SAID: "Coordinator's own correction, carried: A was described as INVARIANT to de-levering and it is NOT exactly -- the matched control removes the FIRST-ORDER effect only. REV's instruction is to strike 'invariant' and 'EXACTLY ZERO' from anything said about the result. My files say neither, and this flag exists so that a reader who met the earlier phrasing elsewhere finds the withdrawal here."
+  A_WORKING_GUARD_SITS_OFF_THE_PATH_IT_GUARDS_AND_I_DROVE_THE_CENSUS_MYSELF: "The coordinator's second correction, and I confirmed it by AST rather than by reading: verify_run_inputs is defined at de_multiday_gate1_runner.py:972 and called from EXACTLY ONE site in the entire package -- :10568, inside def selftest. run_day never invokes it. So the tip would NOT refuse BE_CASCADE_DIFFERS on a real run. This is the same class as the ruled null that was never wired: a guard that works perfectly, on a path nothing takes. It is UNFIXED and it is not part of the null's repair, so it needs its own owner."
+  REV_162_FOUND_RULE_35S_SHAPE_INSIDE_THE_INSTRUMENT_BUILT_TO_PREVENT_IT: "Six of the declaration's own item predicates check WORDING, not PROPERTY, and the selftest emitted '30/30, 11/11 items HOLD' -- which reads as verifying content and verifies spelling. REV's sentence: 'A v2 that weakens any of these six clauses passes unchanged.' Seventh instance tonight, first inside an instrument built for exactly this, and written by the seat that caught the llama predicate this morning. Structural, not a lapse -- a seat's own recent success does not immunise its next instrument."
+  AND_DA_192S_FIX_IS_ALREADY_IN_THE_TREE_NOT_PENDING: "The dispatch says DA 192 is fixing it. It is fixed at HEAD and I read it: da_asymmetry_null.py now carries a THREE-VALUED verdict -- HOLDS_WITH_UNCHECKED_CLAUSES, with the comment 'An unverifiable clause must not read as a verified one; that is what 11/11 items HOLD did' -- plus a decidable() predicate demanding a QUANTITY ('do well is not a bar'), execution predicates that DRIVE behaviour, and an EXCEPTION_MARKERS tuple documented as 'Driven both ways by the selftest (rule 15): a clean absolute clause must pass, and each marker must be caught'. The falsifier the dispatch asks for is in the file."
+  THE_NUMBER_SEEN_AT_TWENTY_FIVE_DRAWS_IS_REFUSED_BELOW_FLOOR_AND_IS_NOT_A_PREVIEW: 09-06 HAZARD A = 0.0716, p = 0.077, at 25 draws -- refused by the contract, recorded because DE judged that a number seen and unreported is worse than one reported with its limits. It is recorded here as REFUSED-BELOW-FLOOR. It is not a preview, not an indication and not a direction, and no downstream document may cite it as any of those.
+  AND_IT_SITS_INSIDE_ITS_OWN_TWENTY_FIVE_DRAW_INTERVAL_AT_EIGHTY_THREE_PER_CENT: The declaration commit dea8c42 records NULL A in [-0.047296, +0.095254] over 25 matched-random draws. A = 0.0716 lies INSIDE that band, 83.4 per cent of the way up it. So the seen number is not merely below the sample floor -- it fails to exclude even against its own under-powered null. That is a stronger reason to refuse it than the draw count alone, and it is the reason to record it rather than merely suppress it.
+  AND_TWENTY_FIVE_IS_AN_EIGHTH_OF_THE_DECLARED_FLOOR_NOT_A_TWENTIETH: A small arithmetic correction to the dispatch, recorded because the number will be re-quoted. 25 draws against the DECLARED FLOOR of 200 is one EIGHTH (12.5 per cent); one twentieth is 25 against the PLANNED 500 that rule 39 stopped anyone trimming. Both denominators are real and the dispatch attached the wrong one to the wrong word. Nothing about the refusal changes -- an eighth of the floor is as refused as a twentieth.
+  TWO_UNBOUND_COPIES_OF_RULE_6_FLOOR_EXIST_AND_NOTHING_TIES_THEM_TOGETHER: "Found while checking the floor: RULE_6_FLOOR = 200 is defined INDEPENDENTLY at da_null_design.py:35 and da_hazard_null_cases.py:164, and neither module imports the other's. They agree today. Nothing makes them agree tomorrow -- a revision to one leaves the other silently asserting the old bar, in a constant whose whole purpose is to be the bar a result is refused against. This is the literals-that-must-track-a-moving-thing class, in the one place it would be worst. OPEN, and it needs an owner."
   # --- MEM round 335 addendum, 2026-09-10T08:09:10Z ---
   THE_WITHDRAWN_PHRASING_IS_FILED_IN_THE_REGISTER_AND_ITS_REPLACEMENT_IS_NOT: "Checking my own two artifacts turned this up. R-889 in COORDINATION.md carries the three win rates itself -- 38.2, 43.1 and 43.8 per cent, for a claim about FOUR days, so the disclosure gap is in the REGISTER and not merely in a dispatch. And the ruled sentence, \"a direction worth a declared null on untouched days, not a measured edge\", returns ZERO occurrences there, while the phrasing the coordinator WITHDREW, \"beats baseline\", returns one. A reader resolving the register today still meets the withdrawn form and never meets its replacement. My files now carry the replacement; the register does not, and that is the coordinator's to land."
   # --- MEM round 335, the verification round: correct yes, an edge no ---
@@ -27407,6 +27394,97 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 336, 2026-09-10T10:33:05Z ---
+  THE_ASYMMETRY_NULL_IS_DECLARED_AND_RUNNING_AND_IT_SETTLES_THE_WHOLE_CANCELLATION_LINE:
+    prov: RELAYED
+    from: R-891 via coordinator MEM 336
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the tail-shrink percentages are DA's/DE's measurement; I verified the declaration's existence and status at the artifacts below but drew nothing.
+  AND_THE_DECLARATION_IS_REAL_AT_ALL_THREE_COMMITS_I_CHECKED:
+    prov: CHECKED
+    artifact: live/pm_research/da_asymmetry_null.py
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the three commit subjects read at git log; RULE_6_FLOOR = 200 located at da_null_design.py:35 and da_hazard_null_cases.py:164; the DECLARED-NOT-RUN status read in the module header.
+  THE_POPULATION_IS_ALL_CONSUMED_SO_THIS_NULL_COSTS_NO_VALIDATION_DAYS:
+    prov: RELAYED
+    from: R-891 via coordinator MEM 336
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the consumed status of 09-03..09-06 is the programme's standing record; I did not re-derive it this round.
+  THE_MATCHING_UNIT_IS_THE_REFERENCE_GENERATION_BY_USER_RULING_WITH_DISTINCT_COUNT:
+    prov: RELAYED
+    from: R-892 via coordinator MEM 336
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the ruling, the 23 and the refusal are as dispatched; the two grounds are pre-existing and I read them where they stand.
+  AND_THE_TWO_TWENTY_THREES_ARE_A_COINCIDENCE_OF_MAGNITUDE_NOT_A_SECOND_MEASUREMENT:
+    prov: CHECKED
+    artifact: CLAUDE.md
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      reliability rule 2 in CLAUDE.md records 'measured: 1.99 rows/fill, max 23' for the market-making programme's fill population -- a different unit from cancels-per-generation.
+  ITEM_15_IS_A_CAVEAT_THAT_CUTS_AGAINST_THE_RESULT_WRITTEN_BEFORE_THE_RESULT_EXISTS:
+    prov: RELAYED
+    from: R-892 via coordinator MEM 336
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the phrasing is the ruling's own and is recorded verbatim rather than compressed, as instructed.
+  RULE_39_SAYS_CHECKPOINT_THROUGH_MAINTENANCE_AND_NEVER_TRIM_TO_FIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the rule and DA's quoted standard read at line 576.
+  THE_INVARIANCE_CLAIM_IS_WITHDRAWN_AND_EXACTLY_ZERO_MUST_NOT_BE_SAID:
+    prov: RELAYED
+    from: coordinator MEM 336 carrying REV
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the correction and the two struck phrasings are the coordinator's and REV's; recorded as a withdrawal, not restated in a weakened form.
+  A_WORKING_GUARD_SITS_OFF_THE_PATH_IT_GUARDS_AND_I_DROVE_THE_CENSUS_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      an AST call-site census over live/pm_research: one call to verify_run_inputs, enclosing function 'selftest'. No other module calls it.
+  REV_162_FOUND_RULE_35S_SHAPE_INSIDE_THE_INSTRUMENT_BUILT_TO_PREVENT_IT:
+    prov: RELAYED
+    from: REV 162 via coordinator MEM 336
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the six predicates and REV's sentence are REV's; what I verified is the fix below.
+  AND_DA_192S_FIX_IS_ALREADY_IN_THE_TREE_NOT_PENDING:
+    prov: CHECKED
+    artifact: live/pm_research/da_asymmetry_null.py
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      read at lines 50-70: the UNCHECKED constant, the three-valued verdict, the decidable() quantity requirement and the both-ways-driven EXCEPTION_MARKERS.
+  THE_NUMBER_SEEN_AT_TWENTY_FIVE_DRAWS_IS_REFUSED_BELOW_FLOOR_AND_IS_NOT_A_PREVIEW:
+    prov: RELAYED
+    from: DE via coordinator MEM 336
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the value, the p and the draw count are DE's; the two observations below are mine.
+  AND_IT_SITS_INSIDE_ITS_OWN_TWENTY_FIVE_DRAW_INTERVAL_AT_EIGHTY_THREE_PER_CENT:
+    prov: CHECKED
+    artifact: live/pm_research/da_asymmetry_null.py
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      the interval read from commit dea8c42's message; 0.0716 tested against [-0.047296, 0.095254] and its position in the band computed.
+  AND_TWENTY_FIVE_IS_AN_EIGHTH_OF_THE_DECLARED_FLOOR_NOT_A_TWENTIETH:
+    prov: CHECKED
+    artifact: live/pm_research/da_null_design.py
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      200/25 = 8 and 500/25 = 20 computed; RULE_6_FLOOR = 200 read at da_null_design.py:35.
+  TWO_UNBOUND_COPIES_OF_RULE_6_FLOOR_EXIST_AND_NOTHING_TIES_THEM_TOGETHER:
+    prov: CHECKED
+    artifact: live/pm_research/da_null_design.py
+    as_of: 2026-09-10T10:33:05Z
+    said: >-
+      both definitions located and their values read; grep for a cross-import between the two modules returns nothing.
   # --- MEM round 335 addendum, 2026-09-10T08:09:10Z ---
   THE_WITHDRAWN_PHRASING_IS_FILED_IN_THE_REGISTER_AND_ITS_REPLACEMENT_IS_NOT:
     prov: CHECKED

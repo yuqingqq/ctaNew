@@ -1,3 +1,114 @@
+# READ FIRST — round 336 (MEM, 2026-09-10T10:33:42Z, tip `afcccf8`)
+
+# 🎲 THE DECISIVE EXPERIMENT IS DECLARED AND RUNNING
+
+R-891 asks the question the whole cancellation line rests on: **is the arms'
+tail-clipping SKILL, or DE-LEVERING?** The left tail shrinks **21–36 %**
+(HAZARD) / **58–62 %** (CONDVALUE) — **but the right tail shrinks by a similar
+amount, which is what de-levering looks like and requires no skill at all.**
+
+**Declared before any draw, and I checked all three commits:**
+
+| artifact | subject |
+|---|---|
+| `e7d5d3f` | *DA 191: the asymmetry null, DECLARED BEFORE ANY DRAW (rule 6)* |
+| `dea8c42` | *DE 209: the matching unit is RULED, and the null fires on a REAL cell* |
+| `c07e03a` | the Q-DA-396 filing, naming `e7d5d3f` |
+
+`RULE_6_FLOOR = 200` exists in code; `da_asymmetry_null.py:13` states in its own
+header that nothing there draws and `STATUS` is `DECLARED-NOT-RUN`. Estimand
+**A = ret_pos − ret_neg**, control matched **simultaneously** on count, side and
+hour. **Rule 12's form is satisfied: the declaration is a commit, not a sentence.**
+
+**Population 09-03..09-06 is ALL CONSUMED — this null costs zero validation
+days.** The rare case where seen days are the right population *because* they
+are seen: the question is mechanical, not predictive.
+
+# ⚖️ R-892 — THE MATCHING UNIT IS THE REFERENCE GENERATION, DISTINCT COUNT
+
+One generation can be cancelled **up to 23 times** (measured, 09-04 CONDVALUE),
+so "cancel-count-matched" was genuinely ambiguous — **and `demand_from_arm`
+REFUSED rather than guessing.** Ruled on two **pre-existing** grounds: rule 2's
+de-duplicate-to-actions, and R-870's unit-matched = unit-resampled.
+
+> **`item_15`: distinct-generation matching UNDER-matches raw exposure, and the
+> bias runs TOWARD FINDING THE ARM SKILFUL, so the arm's advantage is an UPPER
+> BOUND on the non-exposure part.**
+
+**A caveat that names the direction it biases, written while the number is still
+unknown — it cannot be tuned to the answer because the answer does not exist yet.**
+
+*One careful line under rule 38:* rule 2's max of 23 is **rows-per-fill in
+P-2026-002** — different programme, unit and population. Both are 23 and the
+dispatch says so accurately, but **that is a coincidence of magnitude, not a
+second instrument agreeing.** The ruling's weight sits on rule 2's *principle*.
+
+# 📏 RULE 39 — CHECKPOINT THROUGH MAINTENANCE, NEVER TRIM TO FIT
+
+USER ruling at `SEAT_PROTOCOL.md:576`. The second half is what mattered: with
+windows bounding the run, **500 draws would have been trimmed to the floor of
+200 to fit.** DA's standard, verbatim: *"split across windows or use the declared
+floor and record it; NEVER TRIM TO FIT."* **A floor reached by trimming is not a
+floor — it is a ceiling wearing the word.**
+
+# ✋ TWO CORRECTIONS CARRIED
+
+**(a) "Invariant" and "EXACTLY ZERO" are struck** from anything said about the
+result. A is *not* exactly invariant to de-levering — the matched control removes
+the **first-order effect only.**
+
+**(b) A WORKING GUARD SITS OFF THE PATH IT GUARDS — and I drove the census
+myself.** `verify_run_inputs` is defined at `de_multiday_gate1_runner.py:972`
+and called from **exactly one site in the whole package — `:10568`, inside
+`def selftest`.** `run_day` never invokes it, so the tip would **not** refuse
+`BE_CASCADE_DIFFERS` on a real run.
+
+**This is the same class as the ruled null that was never wired: a guard that
+works perfectly, on a path nothing takes.** It is **UNFIXED**, and it is not part
+of the null's repair — **it needs its own owner.**
+
+# 🔁 REV 162 FOUND RULE 35'S SHAPE INSIDE THE INSTRUMENT BUILT TO PREVENT IT
+
+Six item predicates check **wording, not property**; the selftest emitted
+`30/30, 11/11 items HOLD`, which reads as verifying content and verifies
+spelling. *"A v2 that weakens any of these six clauses passes unchanged."*
+
+**Seventh instance tonight, first inside an instrument built for exactly this,
+written by the seat that caught the llama predicate this morning. Structural,
+not a lapse — a seat's own recent success does not immunise its next instrument.**
+
+**AND DA 192's FIX IS ALREADY IN THE TREE, not pending.** `da_asymmetry_null.py`
+now carries a **three-valued verdict** — `HOLDS_WITH_UNCHECKED_CLAUSES`, with the
+comment *"An unverifiable clause must not read as a verified one; that is what
+11/11 items HOLD did"* — plus `decidable()` demanding a **quantity** (*"do well
+is not a bar"*), execution predicates that **drive** behaviour, and
+`EXCEPTION_MARKERS` documented as *"Driven both ways by the selftest (rule 15):
+a clean absolute clause must pass, and each marker must be caught."*
+
+# 🚫 THE 25-DRAW NUMBER: **REFUSED BELOW FLOOR**, NEVER A PREVIEW
+
+09-06 HAZARD **A = 0.0716, p = 0.077, at 25 draws** — refused by the contract,
+reported because *"a number seen and unreported is worse than one reported with
+its limits."* **Not a preview, not an indication, not a direction.**
+
+**And it sits INSIDE its own 25-draw interval.** `dea8c42` records
+`A in [−0.047296, +0.095254]` over 25 matched-random draws; 0.0716 lies inside
+it, **83.4 % of the way up.** So the number **fails to exclude even against its
+own under-powered null** — a stronger reason to refuse it than the draw count.
+
+*Small arithmetic correction, since this will be re-quoted:* **25 draws is an
+EIGHTH of the declared floor of 200** (a twentieth is 25 against the *planned
+500* that rule 39 stopped anyone trimming). Both denominators are real; the
+words were attached to the wrong one. Nothing about the refusal changes.
+
+# 🔓 OPEN — TWO UNBOUND COPIES OF THE FLOOR
+
+`RULE_6_FLOOR = 200` is defined **independently** at `da_null_design.py:35` and
+`da_hazard_null_cases.py:164`, with **no import between them.** They agree today;
+**nothing makes them agree tomorrow** — and this is the constant whose entire
+purpose is to be the bar a result is refused against. Literals-that-must-track-a-
+moving-thing, in the one place it would be worst. **Needs an owner.**
+
 # READ FIRST — round 335 ADDENDUM (MEM, 2026-09-10T08:09:23Z) — the withdrawn phrasing is filed; its replacement is not
 
 Checking my own two artifacts turned this up:
