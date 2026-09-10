@@ -21,6 +21,11 @@
    "guard": "placement_latency_of",
    "module": "be_daybook_build.py",
    "why": "a helper for the 184-check battery; test-only by design."
+  },
+  {
+   "guard": "refuses(label, exc, fn) helpers",
+   "module": "various",
+   "why": "test-harness wrappers, guard-shaped by the detector and test-only by design (5 definitions)"
   }
  ],
  "confirmed_by_hand": [
@@ -846,5 +851,44 @@
   "resolution is BY NAME, so the sweep is conservative: it cannot invent an orphan, it can miss one",
   "a call through a value or getattr is invisible (the same limit be_producing_closure.KNOWN_DYNAMIC_SITES records)",
   "only live/pm_research is scanned"
- ]
+ ],
+ "CURRENTLY_VIOLATED_TRIAGE": {
+  "question": "of the off-path guards, how many guard a condition that is ALREADY VIOLATED -- where the absence of the guard COSTS something now, rather than merely leaving us unprotected?",
+  "answer_n_distinct_violated_conditions": 1,
+  "the_one": {
+   "condition": "be_cascade pin drift",
+   "refusal": "BE_CASCADE_DIFFERS",
+   "detail": "2 of 10 cited cascade modules differ against params v29 (de_head_scoring.py, de_phase4_diag_runner.py)",
+   "surfaced_by": [
+    "verify_run_inputs",
+    "verify_be_module"
+   ],
+   "note": "one condition, two guards -- verify_run_inputs calls verify_be_module"
+  },
+  "method": "each off-path guard callable with NO run-specific argument was executed in its own subprocess against the current tree and params v29",
+  "driven": 18,
+  "of_definitions": 104,
+  "outcomes": {
+   "RETURNED_condition_satisfied": 13,
+   "RAISED": 4,
+   "TIMEOUT": 1
+  },
+  "raised_BY_DESIGN_not_a_violation": [
+   {
+    "guard": "v2_mask_windows",
+    "why": "the v2 absolute-floor mask is DRAFT and not user-frozen; refusing is the seam working"
+   },
+   {
+    "guard": "verify_pinned_feeds",
+    "why": "refuses to open a pinned feed to 'check the checker', because that would spend the read the gate exists to schedule"
+   }
+  ],
+  "why_18_is_the_right_denominator": "a guard that needs a book, a day, a ctx or a row checks a PER-RUN condition, which cannot be 'currently violated' outside a run. Standing invariants -- pins, declarations, frozen constants, contracts -- are exactly the ones callable without run-specific arguments.",
+  "limits": [
+   "4 guards take a `path` and might be standing; no defensible path could be supplied, so they are unevaluated",
+   "mutation_audit (be_forward_day.py) TIMED OUT at 25 s and is unevaluated",
+   "5 definitions of shape (label, exc, fn) are `refuses(...)` test-harness helpers -- guard-shaped by the detector, test infrastructure by design"
+  ],
+  "verdict": "the 101 is HOUSEKEEPING, not a live liability: one violated standing invariant, already known, already specced in WIRING_VERIFY_RUN_INPUTS."
+ }
 }

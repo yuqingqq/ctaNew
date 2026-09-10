@@ -1,0 +1,51 @@
+{
+ "protocol": "BE_0907_RESERVATION_FINDING_V1",
+ "version": 1,
+ "declared_by": "BE 160",
+ "declared_at_utc": "2026-09-10T17:04:50Z",
+ "THE_FINDING": "A protection that WORKS while the thing documented as protecting it does NOT. p003_day_status_20260907_v1.json credits `assert_settlement_day_admissible` -- 'the rule-11 guard has been holding it shut'. That function is called ONLY from selftest (be_offpath_guards_v1.json). What actually held is its non-raising twin.",
+ "what_actually_gated_09_07": {
+  "computing_twin": "de_multiday_gate1_runner.settlement_admissibility",
+  "on_the_path_at": [
+   "de_multiday_gate1_runner.run_day:9131 (computes)",
+   "de_multiday_gate1_runner.run_day:9133 (branches)"
+  ],
+  "raising_twin": "de_multiday_gate1_runner.assert_settlement_day_admissible",
+  "raising_twin_call_sites": [
+   "selftest:13859",
+   "selftest:14254"
+  ],
+  "evidence_artifact": "data/pm_5min/derived/p003_de_point_estimate_day_20260907_L250ms__20260908T122617Z.json",
+  "evidence_fields": {
+   "status": "NOT_VALUED_DAY_NOT_ADMISSIBLE",
+   "admissibility.admissible": false,
+   "class": "NOT_ADMISSIBLE",
+   "refusal_name": "SETTLEMENT_DAY_NOT_ADMISSIBLE",
+   "both_arms": true,
+   "day_run_performed_utc": "2026-09-08T12:26:17Z"
+  },
+  "conclusion": "09-07 is genuinely reserved, not lucky. A day run WAS performed and live code declined to value it."
+ },
+ "the_residual_exposure": {
+  "who_is_gated_today": "a caller reaching the endpoint THROUGH run_day",
+  "who_is_NOT": "a caller invoking the settlement estimator DIRECTLY -- the backstop written for exactly that case is reachable only from selftest",
+  "the_receipts_own_sentence": "The estimator REFUSES if asked directly (SETTLEMENT_DAY_NOT_ADMISSIBLE); this receipt records that it was not asked.",
+  "why_it_matters": "'not asked' and 'would have refused' are different guarantees. Only the first is evidenced for 09-07."
+ },
+ "THE_SWITCH_IS_AN_ABSENCE": {
+  "field": "settlement_endpoint.admissible_days",
+  "value_in_params_v29": null,
+  "consequence": "09-07's reservation rests on a field being UNSET. That is robust today and SILENTLY REVERSIBLE: setting admissible_days for an unrelated reason -- e.g. to name 09-03..09-06 explicitly -- opens 09-07 as a SIDE EFFECT, and no diff would mention 09-07."
+ },
+ "BE_RECOMMENDED_SAFE_FORM": {
+  "judgement": "YES -- the day should be protected by something that NAMES it. An absence cannot be read, cannot be reviewed in a diff, and cannot be cited.",
+  "shape": [
+   "add `settlement_endpoint.reserved_days` naming 2026-09-07 with a per-day reason, so OPENING the day requires REMOVING ITS NAME -- a deliberate act visible in a diff",
+   "make admissibility require BOTH `day in admissible_days` AND `day not in reserved_days`, so setting admissible_days for other days cannot open a reserved one as a side effect",
+   "carry `reserved_days` and the per-day verdict onto the artifact as REQUIRED fields and test the PROPERTY, never the text (rule 35)",
+   "put the raising twin ON the path, so a direct caller meets a refusal by name rather than nothing"
+  ],
+  "why_rule_35": "a limit that lives only in the absence of a declaration does not bind the result; the output must carry it and the guard must test it.",
+  "decides_nothing": "this artifact REPORTS a recommendation (rule 14). Whether to adopt it is the USER's ruling."
+ }
+}
