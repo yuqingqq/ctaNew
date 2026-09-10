@@ -1,0 +1,132 @@
+{
+  "declaration": "SETTLEMENT_PL_MATCHED_RANDOM_CONTROL",
+  "version": 2,
+  "status": "DECLARED-NOT-RUN",
+  "declared_by": "DE 212",
+  "governing_plan": {
+    "path": "live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md",
+    "commit": "09ced57",
+    "step": "2 -- the missing decision-endpoint control"
+  },
+  "why_this_is_not_the_asymmetry_null": "the asymmetry null tested A = ret_pos - ret_neg, a TAIL-SHAPE statistic. Rule 7 requires the comparison to be on the DECISION metric, not a proxy. A was arguably a proxy; this tests the endpoint itself -- R-801 settlement P&L.",
+  "estimand": {
+    "per_cell": "D = settle(arm) - settle(zero_model_cancel_baseline), in CENTS, under R-801 (trades cash flow + residual x settlement)",
+    "valued_by": "de_multiday_gate1_runner.settlement_legs_by_slug -- the SAME estimator the day artifacts use, called and not re-implemented",
+    "NOT": "the 5-second markout, the mean of anything, or any tail-shape statistic"
+  },
+  "population": {
+    "PRIMARY": [
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06"
+    ],
+    "COMPANION_ONLY": [
+      "2026-09-03"
+    ],
+    "09_03_is_companion_only_and_may_never_be_promoted": "fixed HERE, before any draw. It was excluded from PRIMARY in the asymmetry run before those draws and cannot be promoted after it was seen to change that verdict. Its four marks stand: coverage 0.7419, 247 of 288 windows, a 40-window recorded mask, and an UNADJUDICABLE settlement window (drift bound 2.859 USD exceeds margin 1.154 USD).",
+    "all_four_days_are_CONSUMED": "rule 11. A pass here is DEVELOPMENT evidence and NEVER validation."
+  },
+  "control": {
+    "form": "random cancellation policy",
+    "matched_SIMULTANEOUSLY_on": [
+      "distinct_reference_generation_count",
+      "side",
+      "utc_hour"
+    ],
+    "matching_unit_ruling": "USER, R-892 / DE 209 -- DISTINCT REFERENCE GENERATIONS, not raw cancel actions",
+    "n_draws": 500,
+    "floor": 200,
+    "floor_is": "FAIL-CLOSED. A run completing fewer than 200 draws REFUSES rather than reporting; the floor is never a draw count chosen to fit a maintenance window.",
+    "draws_are_checkpointed_per_draw": true,
+    "matched_count_FIELD_PATH_not_phrase": {
+      "the_universe": "bk['rows'] -- the PUBLISHED decision rows, reached as `be_cancel_axis_null.arm_stream(bk, head)`, which is literally `[dict(r, score=...) for r in bk['rows']]`",
+      "the_quantity": "the number of DISTINCT (slug, side, int(gen)) among THE ARM'S OWN above-theta rows, grouped by (side, utc_hour)",
+      "code_path": "de_settlement_control_run.run_one_day_arm -> above = [r for r in rows if score >= theta] -> demand_distinct_reference_generations(arm_cancels)",
+      "established_by": "READING the code, not inferring from the phrase (BE 157's instruction)",
+      "NOT_a_day_level_count": "both of BE's candidates are DAY-LEVEL generation counts. The matched quantity is ARM-LEVEL: how many distinct reference generations THIS ARM cancelled. A day-level count was never the demand."
+    },
+    "the_other_candidate_and_why_it_cannot_matter": {
+      "the_other_candidate": "assembly_evidence.UNCOVERED_GENERATIONS.n_reference_generations (the fr.reference count)",
+      "measured_values": {
+        "20260903": 313140,
+        "20260904": 358108,
+        "20260905": 266593,
+        "20260906": 300147
+      },
+      "delta_against_the_published_rows_figure": {
+        "20260903": 9,
+        "20260904": 2,
+        "20260905": 0,
+        "20260906": 0
+      },
+      "CAN_THE_CHOICE_MOVE_THE_VERDICT": "NO -- and the reason is stronger than the delta being small.",
+      "why_not": "`fr.reference` (bk['ref']) is NEVER READ by this runner: verified by grep, zero occurrences. BOTH the demand and the POOL are built from the SAME object, bk['rows'] -- the demand from the arm's above-theta subset of it, the pool from all of it (`build_pool_from_rows(rows)`). A demand and a pool drawn from one universe cannot disagree about that universe's size, so the alternative count has no path into the matching at all.",
+      "what_would_have_made_it_matter": "a demand read from one count and a pool built from the other. That is the failure this names and it is not present.",
+      "the_delta_is_recorded_anyway": "so a reader can see the size of what was NOT chosen (9 on 09-03, 2 on 09-04, 0 elsewhere) rather than take the immateriality on trust",
+      "rule_16": "vocabulary matched and identity did not -- the same shape as n_gap_bearing_windows against TERMINAL_MARK_ENDED_IN_GAP this morning. Naming the field rather than the phrase is the fix."
+    },
+    "no_restart_was_needed": "the draws already taken are matched on the count named above, which is the CORRECT one (the arm's own cancelled distinct reference generations, from the rows it decided over). Naming it is a documentation fix, not a re-run."
+  },
+  "combination_rule": {
+    "declared_before_any_draw": true,
+    "one_sentence": "the VERDICT is decided by TWO arm-level pooled tests and by nothing else; per-cell outcomes are DESCRIPTIVE and are never counted into a verdict.",
+    "step_1_pool_within_an_arm": {
+      "statistic": "D_arm = the SUM of that arm's per-day D over the PRIMARY pool, in cents",
+      "why_a_SUM_and_not_a_weighted_mean": "the endpoint is CASH and cash ADDS. v3's asymmetry statistic was scale-free, so a mass-weighted mean was right there; a mean here would answer 'the average day' which is not the decision quantity. The sum is what a maker would have earned or lost across the pool.",
+      "no_weights_to_choose": "summing removes the weight choice entirely, so no drawn policy can move its own weight and no weighting can be revisited after the numbers exist."
+    },
+    "step_2_the_null": {
+      "construction": "for draw index i in 0..499, take day d's i-th MATCHED draw for every day in the pool and SUM its per-day D, giving one pooled null value per index",
+      "why_pool_the_DRAWS_and_not_the_p_values": "combining per-day p-values would assume the days are exchangeable units of a common test; pooling the draws keeps the day structure, which is the same construction v3 used",
+      "p_two_sided": "(1 + #{|D_null| >= |D_arm|}) / (1 + n_draws)",
+      "why_two_sided": "the declared direction is post-hoc relative to the point estimates already seen, so every arm-level and cell-level number is two-sided",
+      "n_draws": 500
+    },
+    "step_3_the_family": {
+      "verdict_bearing_tests": 2,
+      "which": [
+        "CONDVALUE_X_SKEW arm-level pooled",
+        "HAZARD_OVER_SKEWED_REF arm-level pooled"
+      ],
+      "correction": "HOLM over the 2 arm-level tests",
+      "alpha": 0.05
+    },
+    "step_4_the_mixed_cases_explicitly": {
+      "why_enumerated": "a rule that handles only the clean cases is a rule invented after the fact for the messy one",
+      "both_arms_pass_same_sign": "SETTLEMENT_SKILL_SUPPORTED_ON_THE_DEVELOPMENT_SET",
+      "exactly_one_arm_passes": "SUPPORTED_FOR_THAT_ARM_ONLY -- NOT a programme-level pass. The arms are two candidates in a race; one clearing its own control is not the programme clearing it.",
+      "neither_arm_passes": "NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM -- and this triggers the plan's STEP 3: do not spend untouched days on these frozen arms.",
+      "both_pass_with_OPPOSITE_signs": "NOT_ONE_MECHANISM -- this OVERRIDES any pass; two opposite significant effects are not one mechanism."
+    }
+  },
+  "published_together_not_as_separate_artifacts": [
+    "the zero-model-cancel baseline settled total per day",
+    "EVERY random-control distribution (all 500 per cell, in the checkpoints, summarised in the verdict)",
+    "coverage and exclusion counts per day",
+    "settlement finality per day"
+  ],
+  "what_this_cannot_establish": {
+    "effective_independent_units": "FOUR days, THREE in the PRIMARY -- not eight cells. The two arms within a day share the day, the book, the reference path and a BITWISE IDENTICAL baseline, so they are two policies read off ONE realisation.",
+    "no_interval": "rule 8 forbids an interval below five complete days; the PRIMARY has three",
+    "validation": "these are CONSUMED days. A pass is development evidence and never validation.",
+    "the_matching_bias": "distinct-generation matching UNDER-matches raw exposure (max 23 cancels on one reference generation). THE BIAS RUNS TOWARD FINDING THE ARM SKILFUL, so any arm advantage is an UPPER BOUND on the part that is not exposure."
+  },
+  "supersedes": {
+    "version": 1,
+    "path": "live/pm_research/declarations/de_settlement_control_declaration_v1.json",
+    "rule": "13 -- v1 is NOT edited and stays as provenance",
+    "what_v2_adds": "THE FIELD PATH of the matched count. v1 said 'distinct reference-generation count', which is PROSE, and BE 157 established that TWO different counts answer to that phrase."
+  },
+  "v2_amended_by": "DE 213, on BE 157's finding, with the draws still early",
+  "published_together_where": {
+    "clause": "step 2 requires the zero-model-cancel baseline, every random-control distribution, coverage/exclusion counts and settlement finality PUBLISHED TOGETHER",
+    "where": "the VERDICT artifact, which is written at aggregation and carries all four beside the number",
+    "why_not_in_the_per_cell_runner": "the run is LIVE and its worktree is FROZEN (rule 22). Editing the running module would change a module of the run's own import closure underneath it -- the exact refusal that cost a run at 02:48Z. Coverage, exclusions and the 40-window mask are read from the book receipts AT AGGREGATION, which is where 'published together' is satisfied.",
+    "mask_fields_forwarded": [
+      "selection.mask.n_present",
+      "selection.mask.n_masked",
+      "selection.mask.n_supplied",
+      "selection.mask.mask_identity_hash"
+    ]
+  }
+}
