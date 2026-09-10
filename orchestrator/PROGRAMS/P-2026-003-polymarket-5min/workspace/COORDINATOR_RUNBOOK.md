@@ -776,3 +776,95 @@ its own falsifier. **The list is a snapshot; the check is a floor.**
 **THE TELL:** if the standing check itself cannot be made to fail, STOP — that is the
 ninth instance of tonight's class, inside the tool built to end it.
 
+
+---
+
+## §7j — WHAT MAY BE SAID ABOUT STEP 2's NUMBER (REV 169, written 2026-09-10T17:13Z with ZERO cells of the verdict visible)
+
+**This is a control ON THE COORDINATOR and it must outlive this session.** It was written
+before either number existed, for the same reason a null is declared before drawing: a
+standard chosen after the result is a standard chosen to fit it. Twice on 2026-09-10 the
+coordinator told the user something stronger than the evidence carried — that 09-07 was
+consumed when it was not, and that tail-shrinking showed skill when de-levering was not
+excluded. **Both were TRUE OBSERVATIONS CARRIED ONE STEP FURTHER THAN THE EVIDENCE WENT.**
+That is the failure mode; a number is at its most quotable in the minute it lands.
+
+### The ceiling on each verdict
+
+| | supports | does NOT support |
+|---|---|---|
+| **PASS** | on three consumed days, each arm's settled P&L beat a cancel-count/side/hour-matched random canceller after Holm over two; de-levering is excluded as the SOLE explanation there | that the model works, generalises, or is validated; anything about a fourth day. **Exclusion of one rival is not confirmation of one candidate.** |
+| **FAILURE** | matched random cancellation explains the advantage on the development set; step 3 fires and no untouched day is spent | that the model is dead, or that cancellation does not work. **The ceiling is: two frozen policies do not beat their own control on three consumed days.** |
+
+### The seven tests — run the sentence against each before sending
+
+1. **"Validated" / "confirmed" / "established."** PRIMARY is 09-04/05/06, all CONSUMED.
+   The declaration's own field says *development evidence and NEVER validation*.
+2. **An interval, an SE, or "significant" without its correction.** Rule 8: G = 3 complete
+   days against a bar of 5. Point estimates and p-values only, and the p is TWO-SIDED
+   because the direction was chosen after the point estimates were seen.
+3. **Counting cells.** Eight cells are not eight observations — the two arms on a day share
+   the day, the book, the reference path and a BITWISE IDENTICAL baseline. There are TWO
+   verdict-bearing tests. **"Six of eight cleared" is not a result.**
+4. **Dropping the bias direction.** Distinct-generation matching UNDER-matches raw exposure
+   (max 23 cancels on one generation); the bias runs TOWARD finding the arm skilful, so any
+   arm advantage is an UPPER BOUND on the part that is not exposure. **That clause travels
+   in the same sentence as the number** (rule 36 — this is where 62.37 % detached).
+5. **Promoting 09-03.** COMPANION-ONLY, fixed before any draw, may never be promoted. Its
+   four marks travel with any 09-03 figure: coverage 0.7419, 247 of 288 windows, a 40-window
+   recorded mask, and an unadjudicable settlement window (drift bound 2.859 USD > margin
+   1.154 USD).
+6. **Letting a pass overwrite the shape.** The shape does not change either way: day totals
+   decided by ONE OR TWO windows of ~288, the arm LOSING IN THE MEDIAN WINDOW on every day,
+   net/gross 0.007–0.112. **A pass says random cancellation does not explain it; it does not
+   say the effect is broad or robust.**
+7. **Saying the provenance is closed.** The scoring-path waiver is
+   **OBSERVED_AND_NOT_REFUTED**, never closed. Guards SEEN TO REFUSE is not VERIFIED CORRECT.
+
+### The two templates — fill the numbers, move no word that matters
+
+**PASS:**
+
+> On the PRIMARY pool of three consumed UTC days (2026-09-04/05/06), each arm's R-801
+> settlement P&L — trades cash flow plus residual valued at settlement, by the same
+> estimator the day artifacts use — was compared against **N** random cancellation policies
+> matched simultaneously on distinct reference-generation count, side and UTC hour.
+> CONDVALUE_X_SKEW scored **D = … c, two-sided p = …**; HAZARD_OVER_SKEWED_REF **D = … c,
+> p = …**; after Holm over the **two** verdict-bearing arm-level tests at α = 0.05 the
+> verdict is **…**. **The matching under-matches raw exposure, so any arm advantage here is
+> an upper bound on the part that is not exposure.** The effective independent units are
+> three days, not eight cells: the two arms on a day share the book, the reference path and
+> a bitwise identical baseline. 09-03 is companion-only and was not promoted. **This is
+> development evidence on days already seen — not validation**; rule 8 forbids an interval
+> below five complete days, so no interval is quoted. **What this does not change:** the day
+> totals are still decided by one or two windows out of ~288, the arm still loses in the
+> median window on every day, and the effect is still a small residue of two large opposing
+> legs. The scoring-path provenance is **OBSERVED_AND_NOT_REFUTED**, not closed.
+
+**FAILURE:**
+
+> On the PRIMARY pool of three consumed UTC days (2026-09-04/05/06), neither arm's R-801
+> settlement P&L beat a random canceller matched on distinct reference-generation count,
+> side and UTC hour, after Holm over the **two** verdict-bearing tests at α = 0.05
+> (CONDVALUE **D = … c, p = …**; HAZARD **D = … c, p = …**, against **N** draws).
+> **Matched random cancellation explains the observed advantage on the development set**,
+> and this is the branch the plan pre-decided: step 3 fires, no untouched day is spent on
+> these frozen arms, QR_SKEW_ONLY remains the reference, and any redesign starts a new
+> freeze and a new validation clock. **The ceiling on this claim is exact: two frozen
+> policies did not beat their own control on three consumed days.** It says nothing about
+> cancellation as a strategy, nothing about a redesigned arm, and nothing about a fourth
+> day. The matching under-matched raw exposure — a bias TOWARD the arm — so the arms
+> failed against a control that was, in that respect, weaker than they were. The shape
+> measurements stand unchanged, and the scoring-path provenance remains
+> **OBSERVED_AND_NOT_REFUTED**.
+
+### Two slots that must be filled before either template is sent
+
+- **The control generator.** If `MCC.draw_one` cannot refuse a malformed draw, the verdict
+  compares the arm against N UNVALIDATED objects and the sentence must say so. (REV 165 READ
+  its `STRATUM_TOO_SMALL` refusal in source and credited it as refusing-not-clamping; **it
+  did not DRIVE it.** BE is driving it. Until that lands the status is READ, NOT DRIVEN.)
+- **The null's own floor.** `SETTLEMENT_NULL_TOO_SMALL` — DA 199 drove it (`74f3e65`). The
+  caller-side floor was driven at REV 167 (5 and 199 refuse, 200 passes) with the standing
+  qualification that it guards the PARAMETER, not the OUTCOME: a run killed mid-loop never
+  reaches it, and under-sampling by interruption is caught by the gap/dup refusals instead.
