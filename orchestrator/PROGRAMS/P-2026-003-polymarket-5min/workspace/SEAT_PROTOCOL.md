@@ -578,3 +578,19 @@ except where marked USER-ONLY.
     yourself mid-flight and prove it resumes without double-counting or gapping a
     unit. A resume path that has never been exercised is not a resume path.
     (R-891)
+
+40. **A heavy run goes into `research.slice`, and the placement is VERIFIED by
+    reading the cgroup — never assumed from the flag.** The asymmetry null, the
+    most important run of the programme, spent its first two hours in
+    `run-u32934.scope` — a Claude shell scope — because it was launched under bare
+    `flock` from a bash script instead of `systemd-run --slice=research.slice`.
+    **`MemoryCurrent` for the slice read 0.0 GB while the worker peaked at
+    3.30 GiB.** Every protection reasoned about in R-880 — the 14 GB `MemoryMax`,
+    `MemorySwapMax=0`, the oomd arming — was INERT for it, while every BE build
+    that night went through the slice correctly. **The check is one line:
+    `cat /proc/<pid>/cgroup` after launch, and confirm `research.slice` appears.**
+    A cap that is configured, documented, reasoned about in the register and not
+    applied to the process is worth exactly nothing — the same shape as a guard
+    that sits off the path it guards (`verify_run_inputs`, called only from the
+    selftest) and a field that asserts a property the code never evaluates.
+    **Configured is not applied; applied is not verified.** (R-893)
