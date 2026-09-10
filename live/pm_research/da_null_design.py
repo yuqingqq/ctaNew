@@ -32,7 +32,10 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 DECL = HERE / "declarations" / "da_null_design_v1.json"
 HOLDS, VIOLATED = "DECLARED_AND_CONSISTENT", "DECLARATION_VIOLATED"
-RULE_6_FLOOR = 200
+# DA 195 / plan v2 step 1: DERIVED, never typed. The floor lived in
+# THIRTEEN carriers under FOUR spellings; `p003_rule6_floor` is the one
+# authority and this name now reads from it.
+from p003_rule6_floor import FLOOR as RULE_6_FLOOR  # noqa: E402
 FORBIDDEN = ("harm_share", "harmful_share", "harmful_fraction",
              "markout", "D_E0")
 

@@ -27,7 +27,10 @@ PARAMS = HERE / "declarations" / "de_multiday_gate1_params_v29.json"
 HOLDS = "HOLDS"
 FAILS = "FAILS"
 
-RULE_6_FLOOR = 200
+# DA 195 / plan v2 step 1: DERIVED, never typed. The floor lived in
+# THIRTEEN carriers under FOUR spellings; `p003_rule6_floor` is the one
+# authority and this name now reads from it.
+from p003_rule6_floor import FLOOR as RULE_6_FLOOR  # noqa: E402
 MATCH_KEYS = ("cancel_count", "side", "hour")
 FORBIDDEN_STATISTIC = ("mean", "day_mean", "net_value_cents")
 

@@ -36,7 +36,10 @@ from pathlib import Path
 from typing import Any
 
 EXPECTED_CHECKS = 17
-MIN_PERMUTATIONS = 200
+# DA 195 / plan v2 step 1: DERIVED, never typed. The floor lived in
+# THIRTEEN carriers under FOUR spellings; `p003_rule6_floor` is the one
+# authority and this name now reads from it.
+from p003_rule6_floor import FLOOR as MIN_PERMUTATIONS  # noqa: E402
 
 #: Integer attributes with at most this many distinct values are compared
 #: level-by-level rather than bucketed: `hour` (24), a side code, a small

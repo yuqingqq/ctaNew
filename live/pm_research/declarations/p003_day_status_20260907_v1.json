@@ -1,0 +1,94 @@
+{
+ "protocol": "P003_DAY_STATUS_20260907_V1",
+ "version": 1,
+ "day": "2026-09-07",
+ "declared_by": "DA 195",
+ "declared_at_utc": "2026-09-10T16:43:38Z",
+ "authorised_by": "HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2 (09ced57), '09-07 status' block",
+ "supersedes_the_prose": "the coordinator's relay 'DA 194 establishes 09-07 is clean'. THAT SENTENCE IS NOT AVAILABLE FROM THIS RECORD -- see NO_BROAD_CLEAN_FIELD_EXISTS.",
+ "NO_BROAD_CLEAN_FIELD_EXISTS": {
+  "value": true,
+  "why": "there is no field on this record that says 09-07 is clean, and there never will be. 'clean' and 'clean for one endpoint' are DIFFERENT CLAIMS and the shorter one is the one that gets quoted. A reader resolves fields; if a broad field existed it would be read (rule 35).",
+  "the_only_status_fields_are_PER_ENDPOINT": true,
+  "refusal_name": "DAY_STATUS_CLAIMED_WITHOUT_AN_ENDPOINT",
+  "on_violation": "any result, receipt or summary attaching a cleanliness claim to 09-07 WITHOUT naming an endpoint REFUSES"
+ },
+ "what_is_true_of_BOTH_endpoints": {
+  "no_fitted_component_or_threshold_ever_saw_09_07": true,
+  "evidence": {
+   "fit_population_days": [
+    "2026-08-24",
+    "2026-08-25"
+   ],
+   "fit_population_source": "data/pm_5min/derived/phase2_fits/fit_slugs.json -- 471 slugs, window-start epochs decoded to exactly two days (122 + 115 windows)",
+   "fit_finished_utc": "2026-08-28T05:52:14Z",
+   "fit_manifest": "data/pm_5min/derived/phase2_fits/fit_manifest.json",
+   "model_digests_all_MATCH_params_v29": [
+    "lgbm_haz_btc.txt",
+    "lgbm_val_btc.txt",
+    "lgbm_thresholds_btc.json",
+    "linear_btc.json",
+    "linear_d_btc.json",
+    "val_models.json"
+   ],
+   "independent_bound": "the theta literal 0.32450609461933483 first entered git at 8b930b4, 2026-09-05T16:08:11Z -- 32 hours BEFORE the 2026-09-07 UTC day began. A float committed before the data existed cannot have been fitted on it.",
+   "isotonic_and_sigma": "not on the scoring path -- zero hits for isotonic/IsotonicRegression/sigma_fit in phase2_arms.py, de_head_scoring.py, harmful_stateful_policy.py; the only sigma artifact is dated 2026-08-20",
+   "winner_selection": "NOT FITTED -- the Chainlink convention S60(T) >= S60(t0), reproduced 1,110/1,110 by an independent reader (DA 189)"
+  },
+  "two_independent_routes": "the fit manifest and the git-first-appearance bound. One instrument is one observation (rule 38)."
+ },
+ "endpoint_status": {
+  "SETTLEMENT_R801": {
+   "estimand": "trades cash flow + residual x settlement (R-801)",
+   "ever_computed_for_this_day": false,
+   "null_draws_taken": 0,
+   "evidence": "arm_total_cents x0 and D_E_settle x0 across ALL TWELVE 09-07 artifacts; zero SETTLEMENT_SCALARS and zero SETTLEMENT_SLUG rows in either 09-07 ledger; the point estimate records NOT_VALUED_DAY_NOT_ADMISSIBLE on both arms",
+   "why_it_was_never_computed": "assert_settlement_day_admissible REFUSES SETTLEMENT_DAY_NOT_ADMISSIBLE for 2026-09-07 BY NAME unless a params file carries settlement_endpoint.admissible_days. 09-07 was designated this endpoint's validation day IN ADVANCE and the rule-11 guard has been holding it shut.",
+   "status": "NOT_CONSUMED_FOR_THIS_ENDPOINT",
+   "usable_as": "A COMPANION ONLY, and only under an EXPLICIT USER RULING",
+   "usable_as_PRIMARY_validation": false,
+   "may_replace_the_primary_population": false,
+   "the_plan_clause_this_encodes": "'The conservative plan does not use 09-07 as PRIMARY validation. An endpoint-specific companion use requires an explicit user ruling and may never replace the primary population.'"
+  },
+  "MARKOUT_5S_D_E0": {
+   "estimand": "the five-second markout D(E0) -- the DIAGNOSTIC, never the ruled endpoint",
+   "ever_computed_for_this_day": true,
+   "null_draws_taken": 1000,
+   "evidence": "p003_de_decision_ledger_20260907__20260908T030447Z.jsonl.gz carries NULL_DRAW x1000 (500 x 2 arms) and ARM_SCALARS x2 whose keys include observed_D_E0, arm_value_cents, baseline_value_cents",
+   "status": "COMPUTED_AND_NULLED",
+   "consumed": "FOR THIS ENDPOINT, YES -- a complete drawn null exists",
+   "was_it_read_by_a_seat": "narrowly: REV 116 read the 09-07 receipt and its digest-verified ledger as a ONE-DRAW TAMPER CONTROL -- instrument verification, not a result read. No arm-level 09-07 figure is quoted anywhere in the register.",
+   "usable_as_PRIMARY_validation": false
+  }
+ },
+ "the_limit_DA_194_named_and_will_not_soften": {
+  "claim": "D_E0 and D_E_settle are computed over THE SAME FILL SETS -- DA 189 established the arm's fills are a strict SUBSET of the baseline's, 0 added, on every day checked.",
+  "consequence": "a seat that had seen 09-07's D_E0 would have seen a related function of the same book. Nobody appears to have.",
+  "why_it_is_stated": "that is a WEAKER guarantee than 'never computed', and the settlement endpoint's NOT_CONSUMED status must not be read as stronger than the evidence for it."
+ },
+ "the_identity_trap_found_mid_audit": {
+  "what_happened": "a naive grep for '2026-09-07' in COORDINATION.md returned 413 hits and made 09-07 look as though it were all over the register. THE HITS WERE OVERWHELMINGLY TIMESTAMPS -- things DONE on 09-07, including the USER's own messages from that date -- not 09-07 DATA.",
+  "the_class": "SEAT_PROTOCOL rule 16 -- verify at the artifact a claim names; grep hits on vocabulary are not references; match IDENTITY, and know what KIND of document you are reading.",
+  "why_it_is_filed_rather_than_noted": "this is the EIGHTH appearance of this shape in this programme, and it caught a SEAT MID-AUDIT on the very question it was auditing. A careless count would have reported 'the day is thoroughly consumed' about a day nobody had looked at -- a FALSE POSITIVE, where the same shape has previously produced false all-clears.",
+  "the_operation_that_distinguishes_them": "a DATE STRING in this register is a TIMESTAMP unless it appears as a day-key, a filename day segment, or beside a per-day quantity. The vocabulary is identical; the identity is not.",
+  "the_general_remedy": "count what the hits ARE before counting how many there are."
+ },
+ "day_is_in_the_ruled_set": {
+  "params": "de_multiday_gate1_params_v29.json",
+  "days": [
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06",
+   "2026-09-07",
+   "2026-09-08"
+  ],
+  "note": "09-07 is not a bonus day found lying around; it is a ruled day the programme reserved, and settlement_endpoint.admissible_days is the switch that opens it."
+ },
+ "nothing_was_spent_establishing_this": true,
+ "no_protected_day_was_touched": {
+  "value": true,
+  "rule_34_boundary": "2026-09-08",
+  "what_was_read_of_09_07": "artifact FILENAMES, row-kind CENSUS and ARM_SCALARS KEY SHAPE. NO draw value and no per-arm number was read."
+ }
+}

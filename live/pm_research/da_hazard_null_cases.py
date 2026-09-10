@@ -161,7 +161,10 @@ def case_1_matching_unit_declared_and_enforced(artifact, *, entry=None,
 
 
 # ---------------------------------------------------------------- case 2
-RULE_6_FLOOR = 200
+# DA 195 / plan v2 step 1: DERIVED, never typed. The floor lived in
+# THIRTEEN carriers under FOUR spellings; `p003_rule6_floor` is the one
+# authority and this name now reads from it.
+from p003_rule6_floor import FLOOR as RULE_6_FLOOR  # noqa: E402
 
 
 def case_2_rule_6_declared_before_the_result(artifact, params, *,

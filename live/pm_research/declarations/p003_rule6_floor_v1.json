@@ -1,0 +1,127 @@
+{
+ "protocol": "P003_RULE6_FLOOR_V1",
+ "version": 1,
+ "declared_by": "DA 195",
+ "declared_at_utc": "2026-09-10T16:40:52Z",
+ "authorised_by": "HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2 step 1 -- 'bind the duplicated rule-6 floor to one authority' (09ced57)",
+ "THE_NUMBER": 200,
+ "what_it_is": "the MINIMUM number of permutations / draws any null in this programme may report on. It is a FAIL-CLOSED FLOOR, never a draw count.",
+ "source_of_the_rule": "CLAUDE.md reliability rule 6 -- 'Declare the null before the result: design AND minimum sample (>=200 permutations / draws). A null max is an extreme-order statistic -- an under-sampled correct null flatters as much as a wrong one.'",
+ "THIS_IS_THE_ONE_AUTHORITY": true,
+ "every_other_copy_DERIVES": "a module or declaration may carry the value for readability, but it must be RECONCILED against this file. p003_rule6_floor.reconcile() refuses on divergence.",
+ "why_one_authority": "the floor was found in THIRTEEN places under FOUR spellings (MIN_DRAWS, RULE_6_FLOOR, MIN_PERMUTATIONS, MIN_DRAWS_011). They agree today. The failure mode is SILENT: the day two disagree, whichever the code happens to read wins and nothing says so.",
+ "it_is_a_FLOOR_not_a_TARGET": "a run's draw count is declared per run (e.g. de_multiday_gate1_params_v29.min_draws_per_arm_day = 500). The floor never selects a draw count and a draw count never lowers the floor.",
+ "raising_it": "a floor may be RAISED by a declared amendment. It may never be lowered, and never to fit a maintenance window (plan v2 step 2).",
+ "carriers": {
+  "why_enumerated_here": "so a NEW carrier is a deliberate addition to this list rather than a silent fourteenth copy. SEAT_PROTOCOL rule 32: the set is built by the OPERATION -- 'carries or enforces the minimum-draw floor' -- not by one spelling.",
+  "code": [
+   {
+    "path": "live/pm_research/be_cancel_axis_null.py",
+    "name": "MIN_DRAWS",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/be_ceiling_null.py",
+    "name": "MIN_DRAWS",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/phase2_iter011.py",
+    "name": "MIN_DRAWS_011",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/da_asymmetry_null.py",
+    "name": "RULE_6_FLOOR",
+    "owner": "DA",
+    "binding": "DERIVED"
+   },
+   {
+    "path": "live/pm_research/da_hazard_null_cases.py",
+    "name": "RULE_6_FLOOR",
+    "owner": "DA",
+    "binding": "DERIVED"
+   },
+   {
+    "path": "live/pm_research/da_null_design.py",
+    "name": "RULE_6_FLOOR",
+    "owner": "DA",
+    "binding": "DERIVED"
+   },
+   {
+    "path": "live/pm_research/da_population_audit.py",
+    "name": "MIN_PERMUTATIONS",
+    "owner": "DA",
+    "binding": "DERIVED"
+   }
+  ],
+  "declarations": [
+   {
+    "path": "live/pm_research/declarations/be_cancel_axis_null_declaration_v1.json",
+    "field": "N_AND_ITS_HEADROOM_DECLARED_FROM_A_MEASUREMENT_NOT_AFTER_SEEING.min_draws_enforced",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/declarations/be_ceiling_null_declaration_v1.json",
+    "field": "N_DRAWS_AND_ITS_HEADROOM.min_draws_enforced",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/declarations/be_ceiling_null_declaration_v2.json",
+    "field": "EVERYTHING_ELSE_CARRIES_FORWARD_UNCHANGED_FROM_v1.min_draws_enforced",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/declarations/be_q4_matched_random_null_v2.json",
+    "field": "min_draws_enforced",
+    "owner": "BE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/declarations/da_asymmetry_null_declaration_v1.json",
+    "field": "minimum_sample.rule_6_floor",
+    "owner": "DA",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/declarations/da_null_design_v1.json",
+    "field": "minimum_sample.rule_6_floor",
+    "owner": "DA",
+    "binding": "LITERAL"
+   }
+  ],
+  "spellings_found": [
+   "MIN_DRAWS",
+   "MIN_DRAWS_011",
+   "RULE_6_FLOOR",
+   "MIN_PERMUTATIONS",
+   "min_draws_enforced",
+   "rule_6_floor"
+  ],
+  "n_carriers": 13,
+  "field_paths_are_DOTTED": "four of the six live NESTED. The first reconcile() run reported them CARRIER_UNREADABLE rather than agreeing -- which is the instrument doing its job on its own carrier list.",
+  "binding_kinds": {
+   "DERIVED": "the name is IMPORTED from p003_rule6_floor. It cannot drift, because there is nothing to drift. Verified by AST: the assignment must NOT be a literal and must name the authority module.",
+   "LITERAL": "the value is typed and RECONCILED against the authority. It CAN drift, and reconcile() makes that LOUD instead of silent.",
+   "why_both_exist": "DA converted the four carriers it owns to DERIVED. BE's three code carriers and the six declaration carriers are RECONCILED, not edited -- converting them is their owners' act (rule 13, seat ownership). A declaration field is a RECORD and is expected to stay literal; a code constant is not.",
+   "owed": "BE's be_cancel_axis_null.MIN_DRAWS, be_ceiling_null.MIN_DRAWS and phase2_iter011.MIN_DRAWS_011 remain LITERAL. They are reconciled every run; converting them to DERIVED removes the last three code copies."
+  }
+ },
+ "cross_seat_note": "DA owns four code carriers and two declaration carriers. The BE ones are NOT edited by this act (rule 13 and seat ownership); they are RECONCILED, so a BE copy that drifts becomes LOUD instead of silent. Converting them to derive is BE's to do.",
+ "on_divergence": {
+  "refusal_name": "RULE6_FLOOR_DIVERGED",
+  "behaviour": "reconcile() RAISES and names every carrier that disagrees, with its value and its path",
+  "why_refuse_rather_than_report": "a report beside a number is what let thirteen copies accumulate. The check must stop the run."
+ },
+ "falsifier": {
+  "positive_control": "reconcile() over the real tree returns AGREED with n_carriers == 13",
+  "known_bad": "a fixture copy of a carrier whose value is 199 (or 201) must make reconcile() RAISE RULE6_FLOOR_DIVERGED and NAME that carrier",
+  "partial_input": "a carrier path that does not exist, or whose constant is absent, is CARRIER_UNREADABLE -- a named status, never treated as agreement"
+ }
+}
