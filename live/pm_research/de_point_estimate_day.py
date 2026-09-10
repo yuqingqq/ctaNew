@@ -316,6 +316,16 @@ def write_artifact(path: Path, payload: dict) -> dict:
         raise R.RunnerRefused(
             f"REFUSED POINT_ESTIMATE_OUTPUT_EXISTS: {path} already exists; "
             "a result artifact is never overwritten.")
+    # ---- DE 204: A FALLBACK THAT OCCURRED MUST BE DISCLOSED ----------
+    _fb = ((payload.get("day_run") or {}).get("settlement_source_fallback")
+           or payload.get("settlement_source_fallback"))
+    if _fb is not None and _fb.get("any_fallback") and not _fb.get("windows"):
+        raise R.RunnerRefused(
+            f"REFUSED {R.SETTLEMENT_FALLBACK_UNDISCLOSED}: the run reports "
+            f"a settlement-source fallback and names no windows. DA 189 "
+            f"found this class by rebuilding twelve figures from the raw "
+            f"tape; a fallback that is invisible in the number makes the "
+            f"figure unreadable without doing that again.")
     _missing_req = [k for k in ("population_and_coverage", "scope",
                                 "arm_provenance_caveat")
                     if not payload.get(k)]

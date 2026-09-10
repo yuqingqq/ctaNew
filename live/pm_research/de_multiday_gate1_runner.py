@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 426
+EXPECTED_CHECKS = 427
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -5354,6 +5354,112 @@ def chainlink_streams(days, *, coin: str = "btc"):
     return out
 
 
+SETTLEMENT_FALLBACK_UNDISCLOSED = "SETTLEMENT_FALLBACK_NOT_DISCLOSED"
+
+
+def settlement_fallback_disclosure(verification: dict, winners: dict,
+                                   fills_by_name: dict) -> dict:
+    """WHICH WINDOWS WERE VALUED AT THE VENUE BECAUSE CHAINLINK COULD NOT
+    SETTLE THEM -- AND WHAT THE DAY WOULD BE UNDER THE OTHER CHOICE.
+
+    DA 189 rebuilt all twelve figures from the raw tape with its own
+    reader, its own boundaries and its own valuation. ELEVEN REPRODUCE
+    EXACTLY. The three 09-03 figures differ by ~2,675.85 c, and the cause
+    is ONE window -- `btc-updown-5m-1788469500` -- where a 12,140 ms
+    GLOBAL_SOCKET_SILENCE gap covers the T boundary: Chainlink reads Down,
+    the venue resolved Up.
+
+    **THE TWO READERS DO NOT DISAGREE.** They agree on all 1,110 windows
+    including this one, down to the same stale sample. What differs is the
+    POLICY: when our capture cannot settle a boundary, this runner values
+    at the VENUE (that is where the cash settles, and R-801 is cash flow
+    plus settlement); DA values at the ruled Chainlink convention.
+
+    **NEITHER IS RIGHT ON THE EVIDENCE.** This module's own measured bound
+    says the gap could have hidden 2.859 USD of drift against a margin of
+    1.154 USD -- MORE THAN THE MARGIN -- so the window is genuinely
+    UNADJUDICABLE. The defect DA found is not the choice; it is that THE
+    CHOICE WAS INVISIBLE IN THE NUMBER THAT LEFT. In DA's words, the
+    artifact honestly carried 7.17 % of itself.
+
+    So the fallback becomes a FIELD: which windows, why, what each source
+    said, the drift bound against the margin, and THE DAY'S FIGURE UNDER
+    THE OTHER CHOICE -- so a reader sees both horns without recomputing."""
+    per = (verification or {}).get("per_slug") or {}
+    fell_back = {}
+    for sl, rec in sorted(per.items()):
+        if rec.get("status") == "VERIFIED_AGREE":
+            continue
+        v_up, c_up = rec.get("venue_up_won"), rec.get("chainlink_up_won")
+        if c_up is None or v_up is None or bool(v_up) == bool(c_up):
+            continue                      # no CASH consequence
+        vb = rec.get("verifiability") or {}
+        fell_back[sl] = {
+            "status": rec.get("status"),
+            "venue_said": "UP" if v_up else "DOWN",
+            "chainlink_said": "UP" if c_up else "DOWN",
+            "valued_at": "THE VENUE",
+            "margin_usd": vb.get("margin_usd"),
+            "could_have_hidden_usd": vb.get("could_have_hidden_usd"),
+            "the_gap_could_hide_more_than_the_margin": (
+                vb.get("could_have_hidden") is not None
+                and vb.get("margin") is not None
+                and vb["could_have_hidden"] >= vb["margin"]),
+            "a_gap_covers_a_boundary": vb.get("a_gap_covers_a_boundary"),
+            "verifiable": vb.get("verifiable"),
+        }
+    if not fell_back:
+        return {"any_fallback": False,
+                "n_windows": 0,
+                "why_this_field_exists": (
+                    "DA 189: a settlement-source fallback that is not "
+                    "disclosed makes the figure unreadable without "
+                    "recomputing it from the raw tape")}
+    # THE OTHER HORN, VALUED. Flip only the fallen-back slugs to what
+    # Chainlink read, and re-value every book with the SAME estimator.
+    alt = dict(winners)
+    for sl, rec in fell_back.items():
+        w = dict(alt.get(sl) or {})
+        up = rec["chainlink_said"] == "UP"
+        w["up_won"] = up
+        if "settle_cents" in w:
+            w["settle_cents"] = 100.0 if up else 0.0
+        alt[sl] = w
+    under = {}
+    for name, fills in (fills_by_name or {}).items():
+        as_is = settle_value_cents(fills, winners)
+        other = settle_value_cents(fills, alt)
+        under[name] = {"as_emitted_cents": as_is,
+                       "under_the_chainlink_convention_cents": other,
+                       "difference_cents": other - as_is}
+    return {
+        "any_fallback": True,
+        "n_windows": len(fell_back),
+        "windows": fell_back,
+        "the_policy_applied": (
+            "VALUED AT THE VENUE. That is where the cash settles, and "
+            "R-801 is trades cash flow plus settlement"),
+        "the_other_policy": (
+            "the ruled Chainlink convention, which is what DA 189's "
+            "independent recomputation applies"),
+        "the_two_readers_do_NOT_disagree": (
+            "DA 189: both Chainlink readers agree on all 1,110 windows "
+            "including this one, down to the same stale sample. What "
+            "differs is the POLICY for a boundary our capture cannot "
+            "settle, not the reading"),
+        "neither_is_right_on_the_evidence": (
+            "the measured drift bound EXCEEDS the margin on the affected "
+            "window(s), so the boundary is genuinely UNADJUDICABLE. This "
+            "field exists so the choice is visible in the number, not so "
+            "one horn can be called correct"),
+        "what_the_day_would_be_under_the_other_choice": under,
+        "what_must_not_be_said": (
+            "that either figure is the corrected one. They are the two "
+            "horns of an unadjudicable window; adopting the other horn "
+            "would not be a fix (DA 189 recommends against it)"),
+    }
+
+
 def verify_winners_against_chainlink(winners: dict, slugs, *, streams,
                                      coin: str = "btc",
                                      stream_provenance=None,
@@ -9143,6 +9249,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     # ---- S4: the null and the observed value, per arm. -----------------
     results, per_arm_detail = [], {}
+    _fills801: dict = {}          # DE 204: per-arm fills for the
+                                  # settlement-fallback counterfactual
     _ledger765: dict = {}          # R-765: what each arm-day held
     for arm, spec in sorted(params["arms"].items()):
         pop = pops[arm]
@@ -9309,6 +9417,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                         elapsed_s=time.time() - t_start,
                         draw_provenance=prov, book_digest=book_sha,
                         verified_module_sha=cite["sha256"])
+        if _win801 is not None:
+            _fills801[arm] = arm_replay["fills"]
         r["cancel_unit_exception"] = _cancel_unit_exception
         if _win801 is not None:
             # DE 190: EMITTED ON BOTH PATHS. The previous change gated the
@@ -9641,6 +9751,16 @@ def run_day(day: str, book_path, *, params: dict, module=None,
 
     wall = time.time() - t_start
     peak = max(v["peak_rss_mb_highwater"] for v in stages.values())
+    # ---- DE 204 / DA 189: THE SETTLEMENT-SOURCE FALLBACK, DISCLOSED --
+    # A fallback to the venue that is invisible in the number makes the
+    # figure unreadable without rebuilding it from the raw tape, which is
+    # what DA had to do to find it.
+    _fallback204 = None
+    if _win801 is not None:
+        _fallback204 = settlement_fallback_disclosure(
+            _win801.get("chainlink_verification") or {},
+            _win801["winners"],
+            {"zero_cancel_baseline": base["fills"], **_fills801})
     _plat = placement_latency_from_the_book(
         json.loads(Path(receipt).read_text()),
         book_path=book_path, book_sha256=book_sha,
@@ -9771,6 +9891,9 @@ def run_day(day: str, book_path, *, params: dict, module=None,
         # R-810: WHAT MAKER THIS DAY MEASURED, from the book's own
         # builder receipt rather than from a sentence here.
         "placement_latency": _plat,
+        # DE 204: REQUIRED whenever a winner source was resolved. The emit
+        # refuses if a fallback occurred and this is absent.
+        "settlement_source_fallback": _fallback204,
         "book_scoring_code": _scode,
         # ---- DE 155 (1): THE DECISION IS CAUSAL NOW, AND THE THRESHOLD
         # ---- IT IS COMPARED AGAINST WAS NOT FITTED FOR IT.
@@ -11571,6 +11694,64 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"predates the causal repair")
 
 
+
+    # ---- DE 204 / DA 189: THE SETTLEMENT-SOURCE FALLBACK, DISCLOSED --
+    # The 09-03 window DA found: a gap covers T, Chainlink reads Down, the
+    # venue resolved Up, and the drift bound EXCEEDS the margin -- so the
+    # boundary is unadjudicable and the choice must be visible.
+    _ver204 = {"per_slug": {
+        "btc-updown-5m-1788469500": {
+            "status": "BOUNDARY_NOT_IN_CAPTURE",
+            "venue_up_won": True, "chainlink_up_won": False,
+            "verifiability": {"margin_usd": 1.154, "margin": 1.154e18,
+                              "could_have_hidden_usd": 2.859,
+                              "could_have_hidden": 2.859e18,
+                              "a_gap_covers_a_boundary": True,
+                              "verifiable": False}},
+        "btc-updown-5m-agrees": {
+            "status": "VERIFIED_AGREE",
+            "venue_up_won": True, "chainlink_up_won": True,
+            "verifiability": {"verifiable": True}},
+        "btc-updown-5m-unverified-but-same": {
+            "status": "BOUNDARY_NOT_IN_CAPTURE",
+            "venue_up_won": False, "chainlink_up_won": False,
+            "verifiability": {"verifiable": False}}}}
+    _win204 = {"btc-updown-5m-1788469500": {"up_won": True,
+                                            "settle_cents": 100.0},
+               "btc-updown-5m-agrees": {"up_won": True,
+                                        "settle_cents": 100.0}}
+    _f204 = [{"slug": "btc-updown-5m-1788469500", "side": "BUY_UP",
+              "px_cents": 40.0, "size": 10.0}]
+    _d204 = settlement_fallback_disclosure(_ver204, _win204,
+                                           {"zero_cancel_baseline": _f204})
+    _none204 = settlement_fallback_disclosure(
+        {"per_slug": {k: v for k, v in _ver204["per_slug"].items()
+                      if k != "btc-updown-5m-1788469500"}},
+        _win204, {"zero_cancel_baseline": _f204})
+    _u204 = _d204["what_the_day_would_be_under_the_other_choice"][
+        "zero_cancel_baseline"]
+    ok(_d204["any_fallback"] is True
+       and _d204["n_windows"] == 1
+       and "btc-updown-5m-1788469500" in _d204["windows"]
+       and _d204["windows"]["btc-updown-5m-1788469500"][
+           "the_gap_could_hide_more_than_the_margin"] is True
+       and _u204["difference_cents"] != 0
+       and _none204["any_fallback"] is False
+       and _none204["n_windows"] == 0,
+       f"DE 204 THE SETTLEMENT-SOURCE FALLBACK IS A FIELD WITH BOTH "
+       f"HORNS: the one window whose venue and Chainlink readings DIFFER "
+       f"is named, with its drift bound EXCEEDING its margin "
+       f"({_d204['windows']['btc-updown-5m-1788469500']['could_have_hidden_usd']} "
+       f"USD against "
+       f"{_d204['windows']['btc-updown-5m-1788469500']['margin_usd']} USD, "
+       f"so the boundary is UNADJUDICABLE), and the day is VALUED BOTH "
+       f"WAYS -- {_u204['as_emitted_cents']} as emitted against "
+       f"{_u204['under_the_chainlink_convention_cents']} under the "
+       f"Chainlink convention, a difference of "
+       f"{_u204['difference_cents']}. A window where the two AGREE, and "
+       f"one that is merely unverified WITHOUT a cash consequence, are "
+       f"both correctly absent -- so the field reports POLICY DIVERGENCE, "
+       f"not every imperfect boundary")
 
     # ---- DE 203 / DA 188: THE RULE-11 BLOCK IS COMPUTED, NOT TYPED ---
     # Two defects in the one block a reader consults to check that nothing
